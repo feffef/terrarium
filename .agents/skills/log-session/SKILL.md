@@ -1,9 +1,12 @@
 ---
 name: log-session
-description: Write this Claude session's honest self-report — its goal, outcome, what it read, which Skills it used, and every friction it hit — and commit it to the Journal. Use when wrapping up or ending a session, when the user asks to log/record the session, or when a Stop hook requests a session log.
+description: Write this Claude session's honest self-report — goal, outcome, docs read, Skills used, and every friction — and commit it to the Journal.
+disable-model-invocation: true
 ---
 
 Append one honest **session log** for this Claude session to the Journal. Author the entry, then hand it to the helper — it validates and commits the file **directly to `main`** (never a PR; ADR-0009).
+
+Run this only when the session is *actually* ending — invoked by the user, or by the PR3 Stop hook (a deterministic session-end signal). Don't self-invoke on a hunch the session is done: the human may not be, and a premature or duplicate log would land straight on `main`.
 
 Be honest, **especially about friction** — a flattering log is worse than none.
 
