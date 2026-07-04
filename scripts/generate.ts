@@ -132,8 +132,9 @@ ${entries}
 function renderRouting(cols: ExpandedCollection[]): string {
   const map: Record<string, Record<string, Record<string, string>>> = {}
   for (const c of cols) {
-    ;(map[c.tenant] ??= {})[c.space] ??= {}
-    map[c.tenant][c.space][c.collection] = c.key
+    const spaces = (map[c.tenant] ??= {})
+    const collections = (spaces[c.space] ??= {})
+    collections[c.collection] = c.key
   }
 
   const entryRoutes = [

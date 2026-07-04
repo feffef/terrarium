@@ -26,7 +26,11 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 export const SESSIONS_DIR = 'tenants/journal/content/current/sessions'
 
 /** The frozen `sessions` schema (ADR-0009). Single source of truth — never restated here. */
-const sessionsSchema = journal.collections.sessions.schema!
+const sessionsCollection = journal.collections.sessions
+if (!sessionsCollection?.schema) {
+  throw new Error('journal manifest is missing the sessions collection schema')
+}
+const sessionsSchema = sessionsCollection.schema
 
 export interface SessionEntry {
   session: string
@@ -134,8 +138,14 @@ function sleep(ms: number): void {
  *  "rebase": a parallel session that advanced `main` only moves the parent, never conflicts,
  *  because filenames are globally unique. */
 function pushWithRetry(relPath: string, absPath: string, remote: string): string {
+  // One immediate attempt, then one retry before each growing backoff.
+  const backoffs = [0, ...RETRY_DELAYS_MS]
   let lastErr: unknown
-  for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
+  for (const [attempt, delay] of backoffs.entries()) {
+    if (delay > 0) {
+      console.error(`push attempt ${attempt} failed; retrying in ${delay / 1000}s…`)
+      sleep(delay)
+    }
     try {
       git(['fetch', remote, 'main'])
       const commit = buildLogCommit(relPath, absPath, remote)
@@ -143,11 +153,6 @@ function pushWithRetry(relPath: string, absPath: string, remote: string): string
       return commit
     } catch (err) {
       lastErr = err
-      if (attempt < RETRY_DELAYS_MS.length) {
-        const delay = RETRY_DELAYS_MS[attempt]
-        console.error(`push attempt ${attempt + 1} failed; retrying in ${delay / 1000}s…`)
-        sleep(delay)
-      }
     }
   }
   throw lastErr
@@ -162,13 +167,19 @@ function main(): void {
   const argv = process.argv.slice(2)
   const dryRun = argv.includes('--dry-run')
   const remoteIdx = argv.indexOf('--remote')
-  const remote = remoteIdx >= 0 ? argv[remoteIdx + 1] : 'origin'
+  let remote = 'origin'
+  if (remoteIdx >= 0) {
+    const value = argv[remoteIdx + 1]
+    if (value === undefined) fail('--remote requires a value')
+    remote = value
+  }
   const positional = argv.filter((a, i) => !a.startsWith('--') && argv[i - 1] !== '--remote')
-  if (positional.length !== 1) {
+  const [inputPath] = positional
+  if (positional.length !== 1 || inputPath === undefined) {
     fail('expected exactly one argument: the path to the session-log .yml file')
   }
 
-  const absPath = resolve(positional[0])
+  const absPath = resolve(inputPath)
   const relPath = absPath.startsWith(root + '/') ? absPath.slice(root.length + 1) : absPath
 
   // Scope guard — the entire ADR-0009 loophole is this one directory.

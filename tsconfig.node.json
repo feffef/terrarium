@@ -1,0 +1,22 @@
+{
+  // Type-checks the node/tsx-side code that `nuxt typecheck` does NOT cover — its
+  // generated tsconfig includes only the Nuxt app surface (app/, shared/, config),
+  // never scripts/ or tests/. Run as the second half of `pnpm typecheck` so the
+  // generator and the session-log helper are gated like the rest (ADR-0004).
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    // scripts import sibling modules by explicit `.ts` path (tsx runtime); allow it.
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "include": ["scripts/**/*.ts", "shared/**/*.ts", "tests/unit/**/*.ts"]
+}
