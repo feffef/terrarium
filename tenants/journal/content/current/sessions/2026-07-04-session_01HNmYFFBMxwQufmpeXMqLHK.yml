@@ -1,0 +1,33 @@
+session: session_01HNmYFFBMxwQufmpeXMqLHK
+date: 2026-07-04
+kind: interactive
+goal: Refine journal session-log schema for issue #2
+status: partial
+outcome: Schema frozen, collection added, gate green
+summary: >-
+  Grilled issue #2 to a shared design: froze the sessions schema, added Session/
+  Friction glossary terms, wrote ADR-0009 (session logs commit direct to main as a
+  bounded gate exception) and an ADR-0003 note. Applied a purpose-lens critique that
+  added status/kind and dropped the premature tag field. Landed the collection + schema
+  in PR #4 with the full safety gate green. The log-session Skill and Stop hook remain.
+prs: ["4"]
+docsRead:
+  - { path: CONTEXT.md, reason: domain model / ubiquitous language }
+  - { path: docs/adr/0003-agent-operating-model-and-governance.md, reason: the no-self-merge rule ADR-0009 excepts }
+  - { path: docs/adr/0005-skill-model.md, reason: log-session is the first platform-operation Skill }
+  - { path: docs/adr/0008-self-documentation-tenant-is-a-journal.md, reason: the deferral this issue picks up }
+  - { path: shared/manifest.ts, reason: manifest types the schema must satisfy }
+  - { path: scripts/generate.ts, reason: understand regeneration before editing }
+skillsUsed:
+  - { name: grilling, reason: stress-test the design one branch at a time }
+  - { name: domain-modeling, reason: write glossary terms + ADRs as decisions crystallised }
+frictions:
+  - description: Declared the schema "frozen" before a purpose-lens pass caught missing status/kind and the premature tag.
+    solution: Run the "what does the consumer need?" critique before calling a schema frozen, not after.
+    severity: minor
+  - description: Edit tool rejected the manifest change because the file was read via Bash cat, not the Read tool.
+    solution: Always Read a file with the Read tool before Editing; don't substitute Bash cat.
+    severity: nit
+  - description: gate:drift reports failure on uncommitted regenerated files mid-work, which reads as alarming.
+    solution: Document that drift is expected-red until regenerated files are committed; it is not a real failure.
+    severity: nit
