@@ -1,0 +1,6 @@
+name: grill-with-docs
+category: general-engineering
+importance: supporting
+role: >-
+  Stress-test a plan or design against the relevant documentation before
+  building — useful ahead of a milestone or a structural ADR.

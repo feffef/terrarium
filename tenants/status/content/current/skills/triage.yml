@@ -1,0 +1,6 @@
+name: triage
+category: general-engineering
+importance: supporting
+role: >-
+  Implement a filed backlog item — the manual counterpart to the chartered
+  (planned) `triage` autonomous job.

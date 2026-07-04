@@ -1,0 +1,6 @@
+name: code-review
+category: general-engineering
+importance: supporting
+role: >-
+  Review the working diff for correctness and simplification before opening the
+  gated PR every change must go through (ADR-0003, ADR-0004).

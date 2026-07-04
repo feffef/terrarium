@@ -1,0 +1,6 @@
+name: claude-handoff
+category: general-engineering
+importance: supporting
+role: >-
+  Capture session state so a later — often cold, scheduled — session can resume
+  cleanly. Directly relevant to the planned autonomous jobs, which start fresh.

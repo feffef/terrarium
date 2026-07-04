@@ -1,0 +1,6 @@
+name: research
+category: general-engineering
+importance: supporting
+role: >-
+  Gather facts from primary sources into the repo — e.g. pulling Nuxt Content
+  docs when the docs host is unreachable — so decisions rest on verified sources.
