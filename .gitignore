@@ -1,0 +1,21 @@
+# Dependencies
+node_modules
+
+# Nuxt build output
+.nuxt
+.output
+.nitro
+.cache
+dist
+
+# Nuxt Content local data (generated SQLite lives here)
+.data
+
+# Env & secrets
+.env
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
