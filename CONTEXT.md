@@ -80,6 +80,15 @@ A Claude Code skill (`.claude/skills/*`) that encodes a repeatable capability fo
 developing or consolidating the Platform. The Skill set is a first-class,
 ever-growing part of the project — as much a deliverable as the Nuxt code.
 
+### Codify
+The Platform's self-improvement loop: an autonomous job that turns a repeated
+manual pattern into a new, committed Skill. It is one of a small set of chartered
+autonomous jobs — alongside `sync`, `drift-check`, `consolidate`, and `triage` —
+that *tend and consolidate* the Platform rather than decide what should exist.
+**Planned concept, not yet built:** no autonomous jobs run today. The term is
+defined here so Skills and status content can refer to it consistently until it
+exists.
+
 ### Spawn (a Tenant / Space)
 To add a new Tenant or Space to the Platform via source changes on a feature
 branch (agent-authored), reviewed and merged, then shipped by tagging a release.
