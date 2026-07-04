@@ -10,17 +10,17 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 - **`CONTEXT.md`** — the domain model and ubiquitous language. Use these exact
   terms (Platform, Tenant, Space, Collection, Document, Skill, …). If you catch
   yourself using a word that conflicts with the glossary, stop and reconcile it.
-- **`docs/adr/`** — Architecture Decision Records. Every structural decision and
-  its rationale lives here. **Read the relevant ADR before changing anything
-  structural.**
+- **`docs/adr/`** — Architecture Decision Records. **Read *all* of them before
+  any planning or structural work.** The set is deliberately kept small, and each
+  records a decision that is easy to violate by accident. Don't rely on a
+  hand-maintained list of ADRs anywhere (it rots) — read the directory.
 - **Skills** live in `.agents/skills/` (surfaced through `.claude/skills/`
   symlinks). The **`domain-modeling`** skill owns the conventions for the two
   files above: `CONTEXT.md` stays **glossary-only** (no implementation detail),
   and it defines the 3-part test for *when* a decision earns an ADR — **hard to
-  reverse · surprising without context · a real trade-off**. Note: this repo
-  writes ADRs in the fuller `Context / Decision / Consequences` form
-  (0001–0007) — keep that for consistency rather than the skill's minimal
-  template.
+  reverse · surprising without context · a real trade-off**. Note: every ADR in
+  this repo uses the fuller `Context / Decision / Consequences` form — match it
+  for consistency rather than the skill's minimal template.
 
 ## Ground rules (from the ADRs)
 
@@ -44,7 +44,7 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 
 ```
 CONTEXT.md                          # domain model / ubiquitous language (glossary only)
-docs/adr/                           # Architecture Decision Records (0001–NNNN)
+docs/adr/                           # Architecture Decision Records (read all before planning)
 tenants/<tenant>/tenant.config.ts   # the manifest an agent edits (declarative intent)
 tenants/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Space
 shared/manifest.ts                  # manifest types + defineTenant() + validation

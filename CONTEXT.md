@@ -39,10 +39,11 @@ worth the coupling — but it is not assumed, not designed for, and not a Tenant
 An isolated content variant within a Tenant. Spaces of the same Tenant share the
 Tenant's components and content *model* but have completely separated content
 *data*. The **set of Spaces is defined per-Tenant** — names, count, and meaning
-vary by Tenant; the Platform treats them generically. One Tenant's website
-Spaces might be `prod` (live content), `it` (integration-test content), `uat`
-(customer testing), `dev` (developer playground); the living-documentation
-Tenant may have exactly one Space.
+vary by Tenant; the Platform treats them generically. For example, the
+Living-Documentation Tenant uses `current` (live docs) and `archived` (retired
+snapshots). A customer-facing website Tenant might instead use `prod` (live
+content), `uat` (customer testing), and `dev` (developer playground) — the same
+Collections in each, but fully separated content *data* per Space.
 
 ### Collection
 The structure of one *type* of content within a Space (e.g. `blog`, `pages`,
@@ -63,7 +64,8 @@ CONTEXT.md, git log, Skills, CI) by the `sync` job and written to committed
 files, with a small fenced narrative/vision section as the only curated prose.
 It is a Tenant like any other — no authorship asymmetry (see Agent Authorship);
 it merely derives its input from repo state rather than from a human
-conversation. Typically one Space.
+conversation. Its Spaces are `current` (live documentation) and `archived`
+(retired snapshots).
 
 ### Agent Authorship
 Platform-wide invariant: **agents are the authors of record for essentially all
