@@ -7,11 +7,13 @@ export const routingMap = {
   "journal": {
     "current": {
       "pages": "journal_current_pages",
-      "skills": "journal_current_skills"
+      "skills": "journal_current_skills",
+      "sessions": "journal_current_sessions"
     },
     "archived": {
       "pages": "journal_archived_pages",
-      "skills": "journal_archived_skills"
+      "skills": "journal_archived_skills",
+      "sessions": "journal_archived_sessions"
     }
   }
 } as const

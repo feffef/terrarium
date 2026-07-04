@@ -21,6 +21,11 @@ export default defineContentConfig({
       source: { cwd: dir('tenants/journal/content/current/skills'), include: '**/*.yml' },
       schema: journalManifest.collections.skills.schema,
     }),
+    journal_current_sessions: defineCollection({
+      type: 'data',
+      source: { cwd: dir('tenants/journal/content/current/sessions'), include: '**/*.yml' },
+      schema: journalManifest.collections.sessions.schema,
+    }),
     journal_archived_pages: defineCollection({
       type: 'page',
       source: { cwd: dir('tenants/journal/content/archived/pages'), include: '**/*.md', prefix: '/' },
@@ -30,6 +35,11 @@ export default defineContentConfig({
       type: 'data',
       source: { cwd: dir('tenants/journal/content/archived/skills'), include: '**/*.yml' },
       schema: journalManifest.collections.skills.schema,
+    }),
+    journal_archived_sessions: defineCollection({
+      type: 'data',
+      source: { cwd: dir('tenants/journal/content/archived/sessions'), include: '**/*.yml' },
+      schema: journalManifest.collections.sessions.schema,
     }),
   },
 })
