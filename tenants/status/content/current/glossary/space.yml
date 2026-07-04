@@ -1,4 +1,0 @@
-term: Space
-definition: >-
-  An isolated content variant within a Tenant. Spaces share the Tenant's
-  components and content model but have completely separated content data.

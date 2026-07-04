@@ -18,14 +18,17 @@ export default defineTenant({
         badge: z.string().optional(),
       }),
     },
-    // Structured glossary terms — queryable data, not routed. Strict → L1 contract.
-    glossary: {
+    // The Platform's Skill catalog — structured data, not routed. Strict → L1
+    // contract. `category` mirrors the ADR-0005 split; the `sync` job would
+    // derive these entries from `.agents/skills/` once it exists.
+    skills: {
       type: 'data',
       source: '**/*.yml',
       schema: z
         .object({
-          term: z.string(),
-          definition: z.string(),
+          name: z.string(),
+          category: z.enum(['platform-operation', 'general-engineering']),
+          summary: z.string(),
         })
         .strict(),
     },

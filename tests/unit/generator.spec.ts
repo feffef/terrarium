@@ -24,7 +24,7 @@ function tenant(name: string, spaces: string[], collections: string[]): LoadedMa
 
 describe('expand() — cross-product & keying', () => {
   const cols = expand([
-    tenant('docs', ['current', 'archived'], ['pages', 'glossary']),
+    tenant('docs', ['current', 'archived'], ['pages', 'skills']),
     tenant('marketing', ['prod', 'dev'], ['pages']),
   ])
 

@@ -7,11 +7,11 @@ export const routingMap = {
   "status": {
     "current": {
       "pages": "status_current_pages",
-      "glossary": "status_current_glossary"
+      "skills": "status_current_skills"
     },
     "archived": {
       "pages": "status_archived_pages",
-      "glossary": "status_archived_glossary"
+      "skills": "status_archived_skills"
     }
   }
 } as const

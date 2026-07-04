@@ -1,4 +1,0 @@
-term: Platform
-definition: >-
-  The single Nuxt Content codebase, repository, and deployable container that
-  hosts every Tenant and every Space. There is exactly one Platform.

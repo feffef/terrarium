@@ -1,4 +1,0 @@
-term: Tenant
-definition: >-
-  A logically distinct product/site within the Platform, with its own Vue/Nuxt
-  components and content model. Implemented as a Nuxt layer.

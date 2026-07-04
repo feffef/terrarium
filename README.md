@@ -30,7 +30,7 @@ derived from repo ground truth.
 
 **Milestone 1 (foundation) is in place** — the manifest → generator →
 gated-render pipeline runs end-to-end for one Tenant (`status`) with Spaces
-`current`/`archived` and Collections `pages`/`glossary`, behind a green safety
+`current`/`archived` and Collections `pages`/`skills`, behind a green safety
 gate. Additional Tenants, Skills, and the autonomous jobs are deliberately
 deferred (see the ADRs).
 

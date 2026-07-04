@@ -84,7 +84,7 @@ Never hand-edit the `GENERATED` files — the drift gate will reject it.
 
 Milestone 1 (foundation) exists: manifest → generator → gated-render pipeline for
 one Tenant (`status`) with two Spaces (`current`, `archived`) and two Collections
-(`pages`, `glossary`); full safety gate green (ADR-0006/0007). Still deferred:
+(`pages`, `skills`); full safety gate green (ADR-0006/0007). Still deferred:
 more Tenants, the platform-operation Skills (`spawn-tenant`, `add-space`, …), and
 the autonomous jobs (`sync`, `drift-check`, …). Consult the ADRs for what is
 decided vs. deliberately left open before building.

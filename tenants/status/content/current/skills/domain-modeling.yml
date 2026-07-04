@@ -1,0 +1,5 @@
+name: domain-modeling
+category: general-engineering
+summary: >-
+  Build and sharpen the domain model; owns the CONTEXT.md glossary and the ADR
+  conventions the Platform follows.

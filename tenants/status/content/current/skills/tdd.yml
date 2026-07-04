@@ -1,0 +1,5 @@
+name: tdd
+category: general-engineering
+summary: >-
+  Test-driven development — red/green/refactor with integration tests, used when
+  building features or fixing bugs test-first.

@@ -16,20 +16,20 @@ export default defineContentConfig({
       source: { cwd: dir('tenants/status/content/current/pages'), include: '**/*.md', prefix: '/' },
       schema: statusManifest.collections.pages.schema,
     }),
-    status_current_glossary: defineCollection({
+    status_current_skills: defineCollection({
       type: 'data',
-      source: { cwd: dir('tenants/status/content/current/glossary'), include: '**/*.yml' },
-      schema: statusManifest.collections.glossary.schema,
+      source: { cwd: dir('tenants/status/content/current/skills'), include: '**/*.yml' },
+      schema: statusManifest.collections.skills.schema,
     }),
     status_archived_pages: defineCollection({
       type: 'page',
       source: { cwd: dir('tenants/status/content/archived/pages'), include: '**/*.md', prefix: '/' },
       schema: statusManifest.collections.pages.schema,
     }),
-    status_archived_glossary: defineCollection({
+    status_archived_skills: defineCollection({
       type: 'data',
-      source: { cwd: dir('tenants/status/content/archived/glossary'), include: '**/*.yml' },
-      schema: statusManifest.collections.glossary.schema,
+      source: { cwd: dir('tenants/status/content/archived/skills'), include: '**/*.yml' },
+      schema: statusManifest.collections.skills.schema,
     }),
   },
 })

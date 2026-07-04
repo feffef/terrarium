@@ -1,0 +1,6 @@
+name: scaffold-tenant
+category: platform-operation
+summary: >-
+  Illustrative retired platform-operation Skill. It exists only in the archived
+  Space — there is no such Skill in `current` — to show the catalog is isolated
+  per Space, just like the pages collection.
