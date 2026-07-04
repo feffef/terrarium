@@ -95,3 +95,19 @@ one Tenant (`journal`) with two Spaces (`current`, `archived`) and two Collectio
 more Tenants, the platform-operation Skills (`spawn-tenant`, `add-space`, …), and
 the autonomous jobs (`sync`, `drift-check`, …). Consult the ADRs for what is
 decided vs. deliberately left open before building.
+
+## Agent skills
+
+Per-repo configuration for Matt Pocock's engineering skills lives in `docs/agents/`.
+
+### Issue tracker
+
+Issues and PRDs are tracked as GitHub issues in `feffef/terrarium` (via the `gh` CLI); external PRs are also pulled into the triage queue. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Canonical label vocabulary — `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
