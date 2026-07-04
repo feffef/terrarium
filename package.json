@@ -13,7 +13,7 @@
     "build": "pnpm gen && nuxt build",
     "generate": "pnpm gen && nuxt generate",
     "preview": "nuxt preview",
-    "typecheck": "pnpm gen && nuxt typecheck",
+    "typecheck": "pnpm gen && nuxt typecheck && tsc -p tsconfig.node.json",
     "lint": "eslint .",
     "test": "vitest run tests/unit",
     "test:e2e": "vitest run tests/e2e",
@@ -27,11 +27,13 @@
   "devDependencies": {
     "@nuxt/eslint": "^1.9.0",
     "@nuxt/test-utils": "^3.19.2",
+    "@types/node": "^22.10.0",
     "eslint": "^9.0.0",
     "tsx": "^4.19.0",
     "typescript": "^5.6.0",
     "vitest": "^3.0.0",
     "vue-tsc": "^2.1.0",
+    "yaml": "^2.9.0",
     "zod-to-json-schema": "^3.23.5"
   }
 }
