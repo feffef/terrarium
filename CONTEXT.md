@@ -81,12 +81,13 @@ are ground truth, not a projection of repo state (see Journal).
 
 ### Friction
 A single recorded pain-point within a Session: something that went wrong, was
-unnecessarily complex, or wasted effort or tokens. Each carries a free-form
-**tag** (the aggregation handle) and a **severity** graded `nit` → `blocker`.
-Frictions are the primary signal the self-improvement jobs (`consolidate`,
-`codify`) mine for recurring pain, so agents report **every** friction honestly —
-even nits — because the taxonomy is an *output* of clustering the tags, not a
-fixed input.
+unnecessarily complex, or wasted effort or tokens. Each carries a **description**,
+a possible **solution**, and a **severity** graded `nit` → `blocker`. Frictions
+are the primary signal the self-improvement jobs (`consolidate`, `codify`) mine
+for recurring pain, so agents report **every** friction honestly — even nits. A
+tagging taxonomy is deliberately *not* fixed up front: it is meant to **emerge**
+from clustering real frictions once enough have accumulated, rather than be
+guessed before there is data.
 
 ### Agent Authorship
 Platform-wide invariant: **agents are the authors of record for essentially all
