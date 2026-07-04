@@ -1,5 +1,6 @@
 session: session_01HNmYFFBMxwQufmpeXMqLHK
-date: 2026-07-04
+startedAt: 2026-07-04T22:45:00Z   # approximate — hand-authored (see frictions)
+endedAt: 2026-07-04T23:27:08Z
 kind: interactive
 goal: Refine journal session-log schema for issue #2
 status: partial
@@ -30,4 +31,7 @@ frictions:
     severity: nit
   - description: gate:drift reports failure on uncommitted regenerated files mid-work, which reads as alarming.
     solution: Document that drift is expected-red until regenerated files are committed; it is not a real failure.
+    severity: nit
+  - description: Hand-authored bootstrap entry cannot know exact startedAt/endedAt; the timestamps here are estimated.
+    solution: The Stop hook (PR3) must capture both timestamps mechanically from the transcript, not the agent.
     severity: nit

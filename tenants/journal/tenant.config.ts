@@ -48,7 +48,8 @@ export default defineTenant({
       schema: z
         .object({
           session: z.string(), // Claude session id — stable identity
-          date: z.date(),
+          startedAt: z.date(), // UTC ISO-8601 — session start (ordering anchor)
+          endedAt: z.date(), //   UTC ISO-8601 — session end / log authored
           kind: z.enum(['interactive', 'autonomous']),
           goal: z.string(), // ≤ 8 words — what the session set out to do
           status: z.enum(['completed', 'partial', 'blocked', 'abandoned']),
