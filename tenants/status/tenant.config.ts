@@ -18,9 +18,12 @@ export default defineTenant({
         badge: z.string().optional(),
       }),
     },
-    // The Platform's Skill catalog — structured data, not routed. Strict → L1
-    // contract. `category` mirrors the ADR-0005 split; the `sync` job would
-    // derive these entries from `.agents/skills/` once it exists.
+    // The Platform's Skill catalogue — structured data, not routed. Strict → L1.
+    // Its purpose is NOT to restate each Skill's own description, but to record
+    // its *role and importance to this project*. Skills are installed wholesale
+    // from an external pack (skills-lock.json), so this is where they get
+    // Terrarium-specific context; CLAUDE.md points agents here. The planned
+    // `sync`/`codify` jobs would maintain it once they exist.
     skills: {
       type: 'data',
       source: '**/*.yml',
@@ -28,7 +31,8 @@ export default defineTenant({
         .object({
           name: z.string(),
           category: z.enum(['platform-operation', 'general-engineering']),
-          summary: z.string(),
+          importance: z.enum(['core', 'supporting', 'peripheral']),
+          role: z.string(),
         })
         .strict(),
     },

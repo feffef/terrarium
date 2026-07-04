@@ -21,6 +21,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   reverse · surprising without context · a real trade-off**. Note: every ADR in
   this repo uses the fuller `Context / Decision / Consequences` form — match it
   for consistency rather than the skill's minimal template.
+- **Which Skills to actually use** is curated in the `status` Tenant's **Skill
+  catalogue** — `tenants/status/content/current/skills/`, rendered at
+  `/t/status/current`. It records each installed Skill's *role and importance to
+  this project* (not a copy of the Skill's own description), because the Skills
+  come from an external pack. Treat it as the authoritative "use these" list:
+  take these Skills seriously and prefer them over ad-hoc approaches, guided by
+  each entry's `importance` and `role`.
 
 ## Ground rules (from the ADRs)
 

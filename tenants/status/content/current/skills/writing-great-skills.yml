@@ -1,5 +1,6 @@
 name: writing-great-skills
 category: general-engineering
-summary: >-
-  The standard for authoring new Skills — the reference the `codify` job follows
-  when it turns a repeated pattern into a committed Skill.
+importance: core
+role: >-
+  The standard for authoring Skills — the reference the planned `codify` job
+  will follow. Use when writing the platform-operation Skills this repo still owes.

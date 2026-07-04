@@ -1,5 +1,6 @@
 name: tdd
 category: general-engineering
-summary: >-
-  Test-driven development — red/green/refactor with integration tests, used when
-  building features or fixing bugs test-first.
+importance: supporting
+role: >-
+  Test-first discipline for the generator, isolation, and app logic that the
+  safety gate protects. Reach for it when adding behaviour to those surfaces.
