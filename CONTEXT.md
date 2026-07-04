@@ -70,6 +70,25 @@ Authorship). Typically one such Tenant; its Spaces are `current` (live) and
 derived status report"; renamed once it became clear its essence is an
 append-only journal, not a current-state readout.)
 
+### Session
+One continuous Claude Code working session against the Platform, identified by a
+stable Claude session id. It is the unit of self-reporting: at its end a session
+authors a **session log** — a Journal entry recording, honestly, its goal, how
+far it got, what it read, which Skills it used, and every **Friction** it hit. A
+session may span several branches or PRs, or none; its log is authored regardless
+of where the work went, or whether any code was committed at all. Session logs
+are ground truth, not a projection of repo state (see Journal).
+
+### Friction
+A single recorded pain-point within a Session: something that went wrong, was
+unnecessarily complex, or wasted effort or tokens. Each carries a **description**,
+a possible **solution**, and a **severity** graded `nit` → `blocker`. Frictions
+are the primary signal the self-improvement jobs (`consolidate`, `codify`) mine
+for recurring pain, so agents report **every** friction honestly — even nits. A
+tagging taxonomy is deliberately *not* fixed up front: it is meant to **emerge**
+from clustering real frictions once enough have accumulated, rather than be
+guessed before there is data.
+
 ### Agent Authorship
 Platform-wide invariant: **agents are the authors of record for essentially all
 content and code.** Humans converse, direct, and review; agents write to the

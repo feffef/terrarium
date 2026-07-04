@@ -41,6 +41,11 @@ Skill, each producing scoped PRs with a known expected shape):
 **Merge is always gated. No self-merge.** Every change — interactive or
 autonomous — lands as a PR on a feature branch. Merge → tag release → the single
 container redeploys.
+- **One bounded exception (ADR-0009):** a session's own **session-log** Journal
+  entry is committed **directly to `main`** by a helper script — never via a
+  PR — because it is inert, schema-validated content the gate cannot protect and
+  the PR ceremony would suppress. Strictly limited to a single session-log file;
+  all other changes remain gated. See ADR-0009 for the boundary and rationale.
 - **Now:** the human reviews and merges PRs manually on GitHub.
 - **Mid-term:** a dedicated scheduled **review-agent** merges PRs that pass an
   objective safety gate (see ADR-0004, TBD); riskier PRs still escalate to the
