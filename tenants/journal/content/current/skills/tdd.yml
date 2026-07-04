@@ -1,0 +1,6 @@
+name: tdd
+category: general-engineering
+importance: supporting
+role: >-
+  Test-first discipline for the generator, isolation, and app logic that the
+  safety gate protects. Reach for it when adding behaviour to those surfaces.

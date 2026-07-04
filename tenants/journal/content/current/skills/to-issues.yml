@@ -1,0 +1,6 @@
+name: to-issues
+category: general-engineering
+importance: supporting
+role: >-
+  Turn findings into tracked issues — the intake for net-new work that
+  governance requires a human to green-light (ADR-0003), and input to `triage`.

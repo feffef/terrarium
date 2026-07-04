@@ -1,0 +1,51 @@
+# Objective safety gate (ADR-0004). Layered, cheapest-first; every PR must clear it.
+# The generator, routing, isolation logic, and this workflow are human-only.
+#
+# INSTALL: a maintainer must copy this file to `.github/workflows/gate.yml` for it
+# to run. It ships under `ci/` because the agent's push token lacks the GitHub
+# `workflow` scope — which is fine, since landing CI is a human-only action anyway.
+name: safety-gate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # L0 — the manifest is the source of truth; the committed generated config
+      # must match a fresh regeneration (this is also the ADR-0003 drift-check).
+      - name: 'L0 · drift (manifest ⇒ generated config)'
+        run: pnpm gate:drift
+
+      - name: 'L0 · lint'
+        run: pnpm lint
+
+      - name: 'L0 · typecheck'
+        run: pnpm typecheck
+
+      # L3 — isolation invariant: unique, correctly-scoped collection keys.
+      - name: 'L3 · isolation'
+        run: pnpm test
+
+      # L0 + L1 — build succeeds and all content validates against strict schemas.
+      - name: 'L0/L1 · build + content validation'
+        run: pnpm build
+
+      # L2 — every (Tenant, Space) entry route renders 200 with content.
+      - name: 'L2 · smoke render'
+        run: pnpm test:e2e

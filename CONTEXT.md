@@ -39,10 +39,11 @@ worth the coupling — but it is not assumed, not designed for, and not a Tenant
 An isolated content variant within a Tenant. Spaces of the same Tenant share the
 Tenant's components and content *model* but have completely separated content
 *data*. The **set of Spaces is defined per-Tenant** — names, count, and meaning
-vary by Tenant; the Platform treats them generically. One Tenant's website
-Spaces might be `prod` (live content), `it` (integration-test content), `uat`
-(customer testing), `dev` (developer playground); the living-documentation
-Tenant may have exactly one Space.
+vary by Tenant; the Platform treats them generically. For example, the
+Journal Tenant uses `current` (live) and `archived` (retired snapshots). A
+customer-facing website Tenant might instead use `prod` (live
+content), `uat` (customer testing), and `dev` (developer playground) — the same
+Collections in each, but fully separated content *data* per Space.
 
 ### Collection
 The structure of one *type* of content within a Space (e.g. `blog`, `pages`,
@@ -54,16 +55,20 @@ keying each generated collection as Tenant × Space × type
 ### Document
 An individual content entry within a Collection — one row / one file.
 
-### Living Documentation (Tenant)
-The one Tenant whose content is the Platform's own documentation and status
-report — the inventory of Tenants/Spaces/Collections, the ADRs and glossary,
-change/PR activity, backlog, autonomous-job runs, CI/drift health, and the Skill
-catalog. Its content is **derived from repo ground truth** (manifests, ADRs,
-CONTEXT.md, git log, Skills, CI) by the `sync` job and written to committed
-files, with a small fenced narrative/vision section as the only curated prose.
-It is a Tenant like any other — no authorship asymmetry (see Agent Authorship);
-it merely derives its input from repo state rather than from a human
-conversation. Typically one Space.
+### Journal (Tenant)
+The one Tenant whose content is the Platform's documentation *of itself*. It
+holds two kinds of content. **Inventories** are curated/derived current-state
+readouts — the Skill catalogue today; the inventory of Tenants/Spaces/Collections
+and CI/drift health later, via the `sync` job. **Journal entries** are primary,
+append-only records the agents author themselves — session logs, research
+write-ups, and nascent ideas (planned). The journal entries are honest
+self-reports — what a session did, what it read, where it struggled — and are the
+key signal the self-improvement jobs (`consolidate`, `codify`) mine for recurring
+friction. It is a Tenant like any other — no authorship asymmetry (see Agent
+Authorship). Typically one such Tenant; its Spaces are `current` (live) and
+`archived` (retired snapshots). (Earlier framed as "Living Documentation / a
+derived status report"; renamed once it became clear its essence is an
+append-only journal, not a current-state readout.)
 
 ### Agent Authorship
 Platform-wide invariant: **agents are the authors of record for essentially all
@@ -77,6 +82,15 @@ everything, so machine-checkable contracts are the guardrail.
 A Claude Code skill (`.claude/skills/*`) that encodes a repeatable capability for
 developing or consolidating the Platform. The Skill set is a first-class,
 ever-growing part of the project — as much a deliverable as the Nuxt code.
+
+### Codify
+The Platform's self-improvement loop: an autonomous job that turns a repeated
+manual pattern into a new, committed Skill. It is one of a small set of chartered
+autonomous jobs — alongside `sync`, `drift-check`, `consolidate`, and `triage` —
+that *tend and consolidate* the Platform rather than decide what should exist.
+**Planned concept, not yet built:** no autonomous jobs run today. The term is
+defined here so Skills and journal content can refer to it consistently until it
+exists.
 
 ### Spawn (a Tenant / Space)
 To add a new Tenant or Space to the Platform via source changes on a feature
