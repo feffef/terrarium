@@ -30,5 +30,8 @@ Guidance for Claude Code agents working in this repo. Terrarium is developed
 
 ## Status
 
-Early design. Domain model and ADRs exist; the Nuxt implementation does not yet.
-Consult the ADRs for what is decided vs. deliberately left open before building.
+Milestone 1 (foundation) exists: manifest → generator → gated-render pipeline for
+one Tenant (`status`) with two Spaces and two Collections; full safety gate green
+(see README "Layout"/"Commands", and ADR-0006/0007). Still deferred: more Tenants,
+Skills, and the autonomous jobs. Consult the ADRs for what is decided vs.
+deliberately left open before building.

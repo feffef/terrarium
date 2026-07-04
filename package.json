@@ -1,0 +1,37 @@
+{
+  "name": "terrarium",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "gen": "tsx scripts/generate.ts",
+    "postinstall": "pnpm gen && nuxt prepare",
+    "dev": "pnpm gen && nuxt dev",
+    "build": "pnpm gen && nuxt build",
+    "generate": "pnpm gen && nuxt generate",
+    "preview": "nuxt preview",
+    "typecheck": "pnpm gen && nuxt typecheck",
+    "lint": "eslint .",
+    "test": "vitest run tests/unit",
+    "test:e2e": "vitest run tests/e2e",
+    "gate:drift": "pnpm gen && git diff --exit-code content.config.ts shared/routing.generated.ts"
+  },
+  "dependencies": {
+    "@nuxt/content": "^3.7.1",
+    "nuxt": "^4.0.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.9.0",
+    "@nuxt/test-utils": "^3.19.2",
+    "eslint": "^9.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^3.0.0",
+    "vue-tsc": "^2.1.0",
+    "zod-to-json-schema": "^3.23.5"
+  }
+}
