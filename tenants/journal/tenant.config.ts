@@ -1,10 +1,10 @@
-// Manifest for the Living-Documentation Tenant (CONTEXT.md).
+// Manifest for the Journal Tenant — the Platform's self-documentation (CONTEXT.md).
 // Declarative intent only — the generator expands this into keyed collections.
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
 
 export default defineTenant({
-  name: 'status',
+  name: 'journal',
   // Two Spaces so the isolation invariant (ADR-0004 L3) is actually exercised:
   // same collections, physically separate content per Space.
   spaces: ['current', 'archived'],

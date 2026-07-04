@@ -4,32 +4,32 @@
 
 import { defineCollection, defineContentConfig } from '@nuxt/content'
 import { fileURLToPath } from 'node:url'
-import statusManifest from './tenants/status/tenant.config'
+import journalManifest from './tenants/journal/tenant.config'
 
 // Absolute path to a (Tenant, Space, Collection) content dir, resolved from this file.
 const dir = (p: string) => fileURLToPath(new URL('./' + p, import.meta.url))
 
 export default defineContentConfig({
   collections: {
-    status_current_pages: defineCollection({
+    journal_current_pages: defineCollection({
       type: 'page',
-      source: { cwd: dir('tenants/status/content/current/pages'), include: '**/*.md', prefix: '/' },
-      schema: statusManifest.collections.pages.schema,
+      source: { cwd: dir('tenants/journal/content/current/pages'), include: '**/*.md', prefix: '/' },
+      schema: journalManifest.collections.pages.schema,
     }),
-    status_current_skills: defineCollection({
+    journal_current_skills: defineCollection({
       type: 'data',
-      source: { cwd: dir('tenants/status/content/current/skills'), include: '**/*.yml' },
-      schema: statusManifest.collections.skills.schema,
+      source: { cwd: dir('tenants/journal/content/current/skills'), include: '**/*.yml' },
+      schema: journalManifest.collections.skills.schema,
     }),
-    status_archived_pages: defineCollection({
+    journal_archived_pages: defineCollection({
       type: 'page',
-      source: { cwd: dir('tenants/status/content/archived/pages'), include: '**/*.md', prefix: '/' },
-      schema: statusManifest.collections.pages.schema,
+      source: { cwd: dir('tenants/journal/content/archived/pages'), include: '**/*.md', prefix: '/' },
+      schema: journalManifest.collections.pages.schema,
     }),
-    status_archived_skills: defineCollection({
+    journal_archived_skills: defineCollection({
       type: 'data',
-      source: { cwd: dir('tenants/status/content/archived/skills'), include: '**/*.yml' },
-      schema: statusManifest.collections.skills.schema,
+      source: { cwd: dir('tenants/journal/content/archived/skills'), include: '**/*.yml' },
+      schema: journalManifest.collections.skills.schema,
     }),
   },
 })

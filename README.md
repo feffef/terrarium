@@ -23,13 +23,14 @@ Code agents** — interactively (a human directs a change) and autonomously
 (scheduled jobs that sync docs, check drift, consolidate, triage, and codify new
 Skills). Every change lands as a gated PR; agents are the authors of record.
 
-One Tenant is the Platform's own **living documentation** — a status report
-derived from repo ground truth.
+One Tenant is the Platform's own **journal** — its self-documentation: curated
+inventories derived from repo ground truth, plus append-only, agent-authored
+session logs, research, and ideas that drive self-improvement.
 
 ## Status
 
 **Milestone 1 (foundation) is in place** — the manifest → generator →
-gated-render pipeline runs end-to-end for one Tenant (`status`) with Spaces
+gated-render pipeline runs end-to-end for one Tenant (`journal`) with Spaces
 `current`/`archived` and Collections `pages`/`skills`, behind a green safety
 gate. Additional Tenants, Skills, and the autonomous jobs are deliberately
 deferred (see the ADRs).
