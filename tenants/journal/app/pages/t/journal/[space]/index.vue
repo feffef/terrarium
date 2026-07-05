@@ -192,7 +192,7 @@ useHead({ title: `${title.value} · journal/${space}` })
         </div>
         <div class="snapshot">
           <span class="live">live snapshot</span><br >
-          from <code>journal_{{ space }}_*</code>
+          updates as sessions are logged
         </div>
       </div>
     </header>
@@ -283,11 +283,15 @@ useHead({ title: `${title.value} · journal/${space}` })
             <h2>Friction signal</h2>
             <span class="count">{{ frictionCount }} across {{ sessions.length }} session{{ sessions.length === 1 ? '' : 's' }}</span>
           </div>
+          <p class="panel-intro">
+            Pain-points agents log about their own work — recorded so the
+            platform can improve. More logged is better, not worse.
+          </p>
           <JournalFrictionStrata :counts="frictionTotals" :total="frictionCount" />
           <p v-if="frictionCount" class="friction-note">
-            Graded <span class="mono">nit → blocker</span> — the raw sediment the
-            future <span class="mono">consolidate</span> / <span class="mono">codify</span>
-            jobs mine for recurring pain.
+            Graded <span class="mono">nit → blocker</span>. These are
+            pain-points agents honestly log about their own work, recorded so
+            the platform can later spot recurring problems on its own.
           </p>
         </section>
 
