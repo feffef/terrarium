@@ -2,7 +2,7 @@
 // Agents edit `tenants/<tenant>/tenant.config.ts`; the generator expands the
 // Tenant × Space × Collection cross-product into the keyed collections in the
 // generated `content.config.ts`. Agents never hand-write the keyed explosion.
-import type { ZodObject, ZodRawShape } from 'zod'
+import { z, type ZodObject, type ZodRawShape } from 'zod'
 
 export type CollectionType = 'page' | 'data'
 
@@ -28,6 +28,41 @@ export interface TenantManifest {
 // is always unambiguous to parse back.
 const SLUG = /^[a-z][a-z0-9]*$/
 
+// A labelled slug schema: reused for the tenant name, each space, and each
+// collection key. The label makes the path-qualified error name the offender.
+const slug = (label: string) =>
+  z.string().regex(SLUG, `${label} must be a lowercase slug (letters/digits, starting with a letter)`)
+
+// Duck-typed "is this a zod schema?" — the manifest holds *runtime* zod objects
+// (Collection schemas), so we probe for `.safeParse` rather than import a brand.
+const collectionDefSchema = z
+  .object({
+    type: z.enum(['page', 'data'], { message: 'has an invalid type (expected "page" or "data")' }),
+    source: z.string().optional(),
+    schema: z
+      .custom<ZodObject<ZodRawShape>>(
+        (v) => typeof (v as { safeParse?: unknown })?.safeParse === 'function',
+        'schema is not a zod schema',
+      )
+      .optional(),
+  })
+  .strict()
+
+// `.strict()` on both objects is deliberate: an unknown manifest key (e.g. a
+// `space:` typo for `spaces:`) becomes an error instead of passing silently.
+const tenantManifestSchema = z
+  .object({
+    name: slug('tenant name'),
+    spaces: z
+      .array(slug('space'))
+      .nonempty('tenant declares no spaces')
+      .refine((s) => new Set(s).size === s.length, 'tenant has duplicate spaces'),
+    collections: z
+      .record(slug('collection'), collectionDefSchema)
+      .refine((c) => Object.keys(c).length > 0, 'tenant declares no collections'),
+  })
+  .strict()
+
 /** Author-facing helper: declares a Tenant's intent. The generator does the rest. */
 export function defineTenant(manifest: TenantManifest): TenantManifest {
   return manifest
@@ -38,35 +73,17 @@ export function collectionKey(tenant: string, space: string, collection: string)
   return `${tenant}_${space}_${collection}`
 }
 
-/** Structural validation run by the generator; fails fast before any codegen. */
+/**
+ * Structural validation run by the generator; fails fast before any codegen.
+ * Backed by a zod schema (ADR-0002: "manifests are schema-validated") — the same
+ * tool the Platform uses for every Collection schema. Returns one path-qualified
+ * message per problem so the generator can list them all at once.
+ */
 export function validateManifest(m: TenantManifest): string[] {
-  const errors: string[] = []
-  if (!m || typeof m !== 'object') return ['manifest is not an object']
-  if (!SLUG.test(m.name ?? '')) errors.push(`tenant name "${m.name}" must match ${SLUG}`)
-
-  if (!Array.isArray(m.spaces) || m.spaces.length === 0) {
-    errors.push(`tenant "${m.name}" declares no spaces`)
-  } else {
-    for (const s of m.spaces) {
-      if (!SLUG.test(s)) errors.push(`space "${s}" in tenant "${m.name}" must match ${SLUG}`)
-    }
-    if (new Set(m.spaces).size !== m.spaces.length) {
-      errors.push(`tenant "${m.name}" has duplicate spaces`)
-    }
-  }
-
-  const names = Object.keys(m.collections ?? {})
-  if (names.length === 0) errors.push(`tenant "${m.name}" declares no collections`)
-  for (const c of names) {
-    if (!SLUG.test(c)) errors.push(`collection "${c}" in tenant "${m.name}" must match ${SLUG}`)
-    const def = m.collections[c]
-    if (!def) continue
-    if (def.type !== 'page' && def.type !== 'data') {
-      errors.push(`collection "${m.name}.${c}" has invalid type "${def.type}"`)
-    }
-    if (def.schema && typeof (def.schema as { safeParse?: unknown }).safeParse !== 'function') {
-      errors.push(`collection "${m.name}.${c}" schema is not a zod schema`)
-    }
-  }
-  return errors
+  const res = tenantManifestSchema.safeParse(m)
+  if (res.success) return []
+  return res.error.issues.map((i) => {
+    const where = i.path.join('.')
+    return where ? `${where}: ${i.message}` : i.message
+  })
 }

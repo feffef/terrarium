@@ -100,4 +100,9 @@ describe('validateManifest()', () => {
     const bad = { ...ok, collections: { pages: { type: 'weird' as never } } }
     expect(validateManifest(bad).join()).toMatch(/invalid type/)
   })
+
+  it('rejects an unknown top-level key (e.g. a `space:` typo for `spaces:`)', () => {
+    const bad = { ...ok, space: ['current'] } as unknown as TenantManifest
+    expect(validateManifest(bad).join()).toMatch(/[Uu]nrecognized key/)
+  })
 })
