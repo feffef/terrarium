@@ -205,9 +205,8 @@ useHead({ title: `${title.value} · journal/${space}` })
         <span class="count">newest first</span>
       </div>
       <p class="panel-intro">
-        A short, plain-language recap of what happened across the whole project
-        each day — written up from that day's code changes and work sessions. Skim
-        them to catch up at a glance; open one for the full story.
+        A plain recap of what changed across the project each day — click any day
+        for the full story.
       </p>
       <ul class="digest-list">
         <li v-for="d in digests" :key="d.to">
