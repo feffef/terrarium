@@ -20,7 +20,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   and it defines the 3-part test for *when* a decision earns an ADR — **hard to
   reverse · surprising without context · a real trade-off**. Note: every ADR in
   this repo uses the fuller `Context / Decision / Consequences` form — match it
-  for consistency rather than the skill's minimal template.
+  for consistency rather than the skill's minimal template. It also owns the
+  **rule of two** for new vocabulary (coin a glossary/ADR term only on a
+  concept's *second* instance) — see `docs/agents/domain.md`.
 - **Which Skills to actually use** is curated in the `journal` Tenant's **Skill
   catalogue** — `tenants/journal/content/current/skills/`, rendered at
   `/t/journal/current`. It records each installed Skill's *role and importance to
@@ -55,6 +57,16 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 
 ## Working conventions
 
+- **Single-home every fact — one home, everywhere else points, never restates.**
+  Each fact lives in exactly one place; every other surface *references* it. This
+  file is the home for repo-wide conventions and an **index** into the ADRs — so
+  where it would restate ADR detail, link the ADR instead of copying it (the
+  "Ground rules" index-with-pointers below is the right shape; a restated *status
+  narrative* is not). `CONTEXT.md` stays **glossary-only**; the ADRs are the
+  historical record. When a fact and reality diverge, fix the one home (an
+  amending note or superseding ADR), don't fork a second copy. Duplication is how
+  contradictory guidance and doc-rot start — and agents act on documented state,
+  so in this repo a stale copy is a *behavioral* bug.
 - Inspect files with the **Read tool, not `cat`** — the Edit tool refuses to edit
   a file it hasn't seen via Read, so `cat`-then-Edit forces a wasteful re-read.
 - **Keep a PR's description in sync with its content — hard rule.** If you
@@ -154,12 +166,12 @@ A *deterministic* end-of-session trigger for **autonomous** sessions is
 
 ## Status
 
-Milestone 1 (foundation) exists: manifest → generator → gated-render pipeline for
-one Tenant (`journal`) with two Spaces (`current`, `archived`) and two Collections
-(`pages`, `skills`); full safety gate green (ADR-0006/0007/0013). Still deferred:
-more Tenants, the platform-operation Skills (`spawn-tenant`, `add-space`, …), and
-the autonomous jobs (`sync`, `drift-check`, …). Consult the ADRs for what is
-decided vs. deliberately left open before building.
+Current-state facts — which Tenants, Spaces, and Collections exist, and what's
+still deferred (more Tenants, the platform-operation Skills, the autonomous jobs)
+— are single-homed elsewhere, not restated here where they rot: the **ADRs**
+record what is *decided vs. deliberately left open*, and the `journal` Tenant
+(`/t/journal/current`) narrates where the build actually is. Read those before
+building rather than a milestone summary duplicated in this file.
 
 ## Agent skills
 
