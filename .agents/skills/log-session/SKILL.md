@@ -39,6 +39,11 @@ frictions:                         # REQUIRED (may be []) — list EVERY frictio
 
 The word limits are **not** schema-enforced — you hold them.
 
+**Write `goal`/`outcome` for a stranger.** They're the most-visible copy on the
+public dashboard, so name the thing worked on, not just "the issue" or "a PR"
+(good: `goal: Add session-log Skill`; bad: `goal: Implement open issue #7`) —
+still within the 8-word cap.
+
 **frictions is the point.** List *every* one, not one or two — including anything that felt unnecessarily complex, token-heavy, or repetitive. `nit` is the floor for trivia, so `[]` means the session genuinely hit nothing (rare). Don't sand down the honest edges.
 
 **Timestamps:** run `date -u +%Y-%m-%dT%H:%M:%SZ` to get an exact UTC ISO-8601 `endedAt` (and `startedAt`, if you can pin the session's start) instead of estimating. The true start/end *capture* stays deferred to the autonomous end-of-session trigger — so if a value is still a hand-estimate, log a `nit` friction saying so.
