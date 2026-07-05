@@ -1,0 +1,68 @@
+session: session_01DViREryVaf1n156ZxY7Nfb
+startedAt: 2026-07-05T13:55:00Z
+endedAt: 2026-07-05T14:10:00Z
+kind: interactive
+goal: Style standalone journal Document pages
+status: completed
+outcome: PR #26 merged; pages themed
+summary: >-
+  Implemented issue #25. Added a journal-layer override at
+  `[space]/[...slug].vue` that out-ranks the Platform catch-all for journal
+  Document routes and renders them in the `.jd` theme via the shared,
+  unit-tested `resolveSpaceRoute` (read-only, isolation intact). Extracted the
+  shared `.jd` tokens + base/breadcrumb/prose into `app/assets/theme.css`
+  registered globally in the layer config, so the landing and the new page stop
+  duplicating the token block. Added e2e assertions (themed standalone docs +
+  archived-Space isolation). Full safety gate green locally; verified the about
+  page render with a Chromium screenshot in light and dark. Opened PR #26,
+  watched CI, and it merged.
+prs: ["26"]
+docsRead:
+  - { path: "GitHub issue #25", reason: the spec and acceptance criteria }
+  - { path: docs/adr/0004-objective-safety-gate.md, reason: presentation-only / human-only-surface constraints }
+  - { path: docs/adr/0010-digests-derived-append-only-journal-pages.md, reason: why standalone digest permalinks still exist }
+  - { path: shared/routing.ts, reason: reuse resolveSpaceRoute without duplicating isolation logic }
+  - { path: "tenants/journal/app/pages/t/journal/[space]/index.vue", reason: mirror the landing theme and trim the shared token block }
+  - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: the generic catch-all being overridden }
+  - { path: tenants/journal/content/archived/pages/index.md, reason: archived Space deliberately has no about page (isolation probe) }
+  - { path: tests/e2e/smoke.spec.ts, reason: where to add the themed-render assertion }
+skillsUsed:
+  - { name: log-session, reason: author this session log }
+frictions:
+  - description: >-
+      Playwright is not a project dependency; the screenshot script failed with
+      ERR_MODULE_NOT_FOUND, and NODE_PATH is ignored for ESM imports.
+    solution: >-
+      Import chromium from the absolute path of the global playwright install
+      (/opt/node22/lib/node_modules/playwright/index.mjs). A documented
+      screenshot recipe would have saved two failed attempts.
+    severity: minor
+  - description: >-
+      Extracting the scoped .jd theme to a global CSS file risked regressing the
+      tested landing; needed care about custom-property inheritance and selector
+      specificity before trusting it.
+    solution: >-
+      Verified via full build + e2e that global .jd tokens still cascade into the
+      scoped children. Went smoothly, but the risk assessment cost thought.
+    severity: nit
+  - description: >-
+      CSS path resolution inside a Nuxt layer's config is ambiguous — `~/` alias
+      behaviour in a layer is not obvious.
+    solution: >-
+      Used fileURLToPath(new URL('./app/assets/theme.css', import.meta.url)) to
+      resolve unambiguously. A layer-conventions note would help.
+    severity: nit
+  - description: >-
+      The log-session Skill refuses the Skill tool by design
+      (disable-model-invocation); the first invocation attempt returned an error.
+    solution: >-
+      Expected and documented in the SKILL.md — read the steps and ran them
+      manually. Cost one wasted tool call.
+    severity: nit
+  - description: >-
+      startedAt is a hand-estimate — there is no reliable session-start capture
+      in an interactive session yet (deferred to the autonomous end-of-session trigger).
+    solution: >-
+      Estimated from the first timestamps in the transcript. The deferred
+      capture mechanism would make it exact.
+    severity: nit
