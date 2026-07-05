@@ -19,7 +19,9 @@ export interface SessionDoc {
   goal: string
   status: Status
   outcome: string
+  summary: string
   prs: string[]
+  docsRead: { path: string; reason: string }[]
   skillsUsed: { name: string; reason: string }[]
   frictions: Friction[]
 }
@@ -50,7 +52,9 @@ export interface DigestView {
 
 // A session prepared for display in the recent-activity feed — the page derives
 // this from a SessionDoc (formats dates, counts frictions) so the card component
-// stays a dumb renderer.
+// stays a dumb renderer. The `collapsed` fields drive the summary row; the rest
+// fill the expand-on-click detail (the full log, which has no route of its own
+// since sessions are a `data` collection).
 export interface SessionCardView {
   when: string
   duration: number
@@ -62,4 +66,9 @@ export interface SessionCardView {
   frictionTotal: number
   skills: string[]
   sid: string
+  // Expanded detail:
+  summary: string
+  docsRead: { path: string; reason: string }[]
+  skillsUsed: { name: string; reason: string }[]
+  frictions: Friction[]
 }

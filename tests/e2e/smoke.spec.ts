@@ -26,6 +26,15 @@ describe('L2 smoke render — entry routes', async () => {
     expect(html).toContain('Skill catalogue')
   })
 
+  // Session cards are expand-on-click disclosures — sessions are a `data`
+  // collection with no route of their own, so the full log is revealed inline.
+  // Assert the control is wired (SSR-collapsed) and the detail data is delivered.
+  it('renders session cards as expandable disclosures', async () => {
+    const html = await $fetch('/t/journal/current')
+    expect(html).toContain('aria-expanded="false"')
+    expect(html).toMatch(/role="button"/)
+  })
+
   // A Digest surfaced on the landing must link to its real, browsable route.
   // Content `path` is Space-relative (/digests/<date>), so the link has to carry
   // the /t/<tenant>/<space> prefix — else it 404s at the site root.

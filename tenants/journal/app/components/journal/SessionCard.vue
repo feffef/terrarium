@@ -1,24 +1,69 @@
 <script setup lang="ts">
-// One session log in the recent-activity feed. The page derives the display-ready
-// view from this Space's `sessions` collection; this component just renders it.
+// One session log in the recent-activity feed. The collapsed head is a summary;
+// clicking it expands the full log in place — its narrative, docs read, skills
+// used, and every friction. Sessions are a `data` collection with no route of
+// their own, so this inline disclosure is how the detail is reached.
 import type { SessionCardView } from '../../types/journal'
 
 const { card } = defineProps<{ card: SessionCardView }>()
+const expanded = ref(false)
+const detailId = useId()
+const toggle = () => (expanded.value = !expanded.value)
 </script>
 
 <template>
-  <article class="card">
-    <div class="top">
-      <span class="when">{{ card.when }} <span class="dur">· {{ card.duration }} min</span></span>
-      <JournalStatusPill :status="card.status" />
+  <article class="card" :class="{ open: expanded }">
+    <div
+      class="head"
+      role="button"
+      tabindex="0"
+      :aria-expanded="expanded"
+      :aria-controls="detailId"
+      @click="toggle"
+      @keydown.enter.prevent="toggle"
+      @keydown.space.prevent="toggle"
+    >
+      <div class="top">
+        <span class="when">{{ card.when }} <span class="dur">· {{ card.duration }} min</span></span>
+        <JournalStatusPill :status="card.status" />
+      </div>
+      <h3 class="goal">{{ card.goal }}</h3>
+      <p class="outcome">{{ card.outcome }}</p>
+      <div class="foot">
+        <span v-for="pr in card.prs" :key="pr" class="chip pr">PR {{ pr.startsWith('#') ? pr : '#' + pr }}</span>
+        <JournalFrictionStrata variant="inline" :counts="card.frictionCounts" :total="card.frictionTotal" />
+        <span v-if="card.skills.length" class="skills">{{ card.skills.join(' · ') }}</span>
+        <span class="sid">{{ card.sid }}</span>
+        <span class="caret" aria-hidden="true">{{ expanded ? '▾' : '▸' }}</span>
+      </div>
     </div>
-    <h3 class="goal">{{ card.goal }}</h3>
-    <p class="outcome">{{ card.outcome }}</p>
-    <div class="foot">
-      <span v-for="pr in card.prs" :key="pr" class="chip pr">PR {{ pr.startsWith('#') ? pr : '#' + pr }}</span>
-      <JournalFrictionStrata variant="inline" :counts="card.frictionCounts" :total="card.frictionTotal" />
-      <span v-if="card.skills.length" class="skills">{{ card.skills.join(' · ') }}</span>
-      <span class="sid">{{ card.sid }}</span>
+
+    <div v-if="expanded" :id="detailId" class="detail">
+      <p v-if="card.summary" class="summary">{{ card.summary }}</p>
+
+      <div v-if="card.docsRead.length" class="block">
+        <h4>Docs read</h4>
+        <ul>
+          <li v-for="d in card.docsRead" :key="d.path"><code>{{ d.path }}</code> — {{ d.reason }}</li>
+        </ul>
+      </div>
+
+      <div v-if="card.skillsUsed.length" class="block">
+        <h4>Skills used</h4>
+        <ul>
+          <li v-for="s in card.skillsUsed" :key="s.name"><span class="mono">{{ s.name }}</span> — {{ s.reason }}</li>
+        </ul>
+      </div>
+
+      <div v-if="card.frictions.length" class="block">
+        <h4>Frictions</h4>
+        <ul class="frictions">
+          <li v-for="(f, i) in card.frictions" :key="i">
+            <span class="sev" :data-sev="f.severity">{{ f.severity }}</span>
+            <span class="fdesc">{{ f.description }}<span v-if="f.solution" class="fsol"> → {{ f.solution }}</span></span>
+          </li>
+        </ul>
+      </div>
     </div>
   </article>
 </template>
@@ -32,10 +77,10 @@ const { card } = defineProps<{ card: SessionCardView }>()
   box-shadow: var(--jd-shadow);
   transition: transform 0.15s ease, border-color 0.15s ease;
 }
-.card:hover {
-  transform: translateY(-2px);
-  border-color: color-mix(in oklab, var(--jd-accent) 40%, var(--jd-line));
-}
+.card:hover { border-color: color-mix(in oklab, var(--jd-accent) 40%, var(--jd-line)); }
+.card:not(.open):hover { transform: translateY(-2px); }
+.head { cursor: pointer; display: block; border-radius: 6px; }
+.head:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 4px; }
 .top {
   display: flex;
   align-items: center;
@@ -82,6 +127,41 @@ const { card } = defineProps<{ card: SessionCardView }>()
   font-size: 0.7rem;
   color: var(--jd-faint);
 }
+.caret { color: var(--jd-faint); font-size: 0.78rem; }
+
+.detail {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px dashed var(--jd-line);
+}
+.summary { margin: 0 0 0.95rem; color: var(--jd-ink); font-size: 0.95rem; line-height: 1.55; }
+.block { margin: 0 0 0.9rem; }
+.block:last-child { margin-bottom: 0; }
+.block h4 {
+  margin: 0 0 0.45rem;
+  font-family: var(--jd-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--jd-faint);
+}
+.block ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.block li { font-size: 0.88rem; color: var(--jd-muted); line-height: 1.5; }
+.block code, .mono { font-family: var(--jd-mono); font-size: 0.82em; color: var(--jd-ink); }
+.frictions li { display: grid; grid-template-columns: max-content 1fr; gap: 0.6rem; align-items: baseline; }
+.sev {
+  font-family: var(--jd-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.sev[data-sev='nit'] { color: var(--jd-sev-nit); }
+.sev[data-sev='minor'] { color: var(--jd-sev-minor); }
+.sev[data-sev='moderate'] { color: var(--jd-sev-moderate); }
+.sev[data-sev='major'] { color: var(--jd-sev-major); }
+.sev[data-sev='blocker'] { color: var(--jd-sev-blocker); }
+.fsol { color: var(--jd-faint); }
 @media (max-width: 460px) {
   .sid { display: none; }
 }

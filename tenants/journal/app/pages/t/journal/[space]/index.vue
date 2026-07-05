@@ -96,6 +96,11 @@ const cards = computed<(SessionCardView & { key: string })[]>(() =>
     frictionTotal: s.frictions.length,
     skills: s.skillsUsed.map((x) => x.name),
     sid: shortId(s.session),
+    // Expanded detail — the full log, revealed on click (no route of its own).
+    summary: s.summary,
+    docsRead: s.docsRead ?? [],
+    skillsUsed: s.skillsUsed ?? [],
+    frictions: s.frictions,
   })),
 )
 
