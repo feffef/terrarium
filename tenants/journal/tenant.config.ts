@@ -16,6 +16,10 @@ export default defineTenant({
       schema: z.object({
         // `page` type already supplies path/title/description/body/seo.
         badge: z.string().optional(),
+        // A Digest's one-line day-headline (ADR-0010): the source the `digest`
+        // Skill bakes into the index's "recent digests" preview. Optional and
+        // non-strict, so ordinary pages (index/about) simply omit it.
+        summary: z.string().optional(),
       }),
     },
     // The Platform's Skill catalogue — structured data, not routed. Strict → L1.

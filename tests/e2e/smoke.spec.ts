@@ -23,7 +23,26 @@ describe('L2 smoke render — entry routes', async () => {
     const html = await $fetch('/t/journal/current')
     expect(html).toContain('Recent activity')
     expect(html).toContain('Friction signal')
-    expect(html).toContain('Skill catalogue')
+    expect(html).toContain('Platform Skills')
+  })
+
+  // Session cards are expand-on-click disclosures — sessions are a `data`
+  // collection with no route of their own, so the full log is revealed inline.
+  // Assert the control is wired (SSR-collapsed) and the detail data is delivered.
+  it('renders session cards as expandable disclosures', async () => {
+    const html = await $fetch('/t/journal/current')
+    expect(html).toContain('aria-expanded="false"')
+    expect(html).toMatch(/role="button"/)
+  })
+
+  // Digests expand inline on the landing (like the session cards): the body is
+  // preloaded for zero-request expansion, and the standalone page route still works.
+  it('shows daily digests inline and keeps the digest route', async () => {
+    const html = await $fetch('/t/journal/current')
+    expect(html).toContain('Daily digests')
+    expect(html).toContain('went from empty repo') // the Digest body, preloaded inline
+    const digest = await $fetch('/t/journal/current/digests/2026-07-04')
+    expect(digest).toMatch(/<h1[ >]/) // the standalone route still renders
   })
 
   // A Space with no sessions (archived) must render the same dashboard without

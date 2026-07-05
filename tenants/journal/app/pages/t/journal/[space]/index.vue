@@ -28,13 +28,35 @@ const sessionsKey = spaceCollections.sessions as keyof Collections | undefined
 const spaces = Object.keys((routingMap as Map)[tenant] ?? {})
 
 const { data } = await useAsyncData(route.path, async () => {
-  const page = await queryCollection(pagesKey).path('/').first()
+  const pages = await queryCollection(pagesKey).all()
   const skills = skillsKey ? await queryCollection(skillsKey).all() : []
   const sessions = sessionsKey ? await queryCollection(sessionsKey).all() : []
-  return { page, skills, sessions }
+  return { pages, skills, sessions }
 })
 
-const page = computed(() => (data.value?.page ?? null) as PageDoc | null)
+// `.all()` returns the full page Documents with their parsed body, so the root's
+// editorial intro AND each Digest's body are already loaded — Digests expand inline
+// here with no extra request, consistent with the session cards (ADR-0010).
+const allPages = computed(() => data.value?.pages ?? [])
+const rootDoc = computed(() => allPages.value.find((p) => p.path === '/') ?? null)
+const page = computed(() => (rootDoc.value ?? null) as PageDoc | null)
+const digests = computed(() =>
+  allPages.value
+    .filter((p) => p.path.startsWith('/digests/'))
+    .sort((a, b) => b.path.localeCompare(a.path))
+    .map((p) => ({
+      date: p.path.slice('/digests/'.length),
+      summary: p.summary ?? p.description ?? '',
+      doc: p,
+    })),
+)
+
+// Which Digests are expanded, keyed by content path — an inline disclosure, the
+// same interaction as the session cards.
+const openDigests = reactive<Record<string, boolean>>({})
+const toggleDigest = (path: string) => {
+  openDigests[path] = !openDigests[path]
+}
 const skills = computed(() => (data.value?.skills ?? []) as unknown as SkillDoc[])
 const sessions = computed(() =>
   ((data.value?.sessions ?? []) as unknown as SessionDoc[])
@@ -78,6 +100,11 @@ const cards = computed<(SessionCardView & { key: string })[]>(() =>
     frictionTotal: s.frictions.length,
     skills: s.skillsUsed.map((x) => x.name),
     sid: shortId(s.session),
+    // Expanded detail — the full log, revealed on click (no route of its own).
+    summary: s.summary,
+    docsRead: s.docsRead ?? [],
+    skillsUsed: s.skillsUsed ?? [],
+    frictions: s.frictions,
   })),
 )
 
@@ -93,18 +120,31 @@ const kindCounts = computed(() => ({
   autonomous: sessions.value.filter((s) => s.kind === 'autonomous').length,
 }))
 
-const importanceCounts = computed(() => ({
-  core: skills.value.filter((s) => s.importance === 'core').length,
-  supporting: skills.value.filter((s) => s.importance === 'supporting').length,
-  peripheral: skills.value.filter((s) => s.importance === 'peripheral').length,
-}))
+// The dashboard advertises only the Platform's OWN Skills — the platform-operation
+// ones it authors and evolves. The general-engineering pack (Matt Pocock's) is
+// used, not evolved here, so it is acknowledged as a count, not showcased.
+const ownSkills = computed(() => skills.value.filter((s) => s.category === 'platform-operation'))
+const externalSkillCount = computed(() => skills.value.length - ownSkills.value.length)
+
+const skillsSub = computed(() => {
+  const by = (i: Importance) => ownSkills.value.filter((s) => s.importance === i).length
+  const parts = ([
+    ['core', by('core')],
+    ['supporting', by('supporting')],
+    ['peripheral', by('peripheral')],
+  ] as const)
+    .filter(([, n]) => n > 0)
+    .map(([label, n]) => `${n} ${label}`)
+  const own = parts.join(' · ') || 'none yet'
+  return externalSkillCount.value ? `${own} · ${externalSkillCount.value} external` : own
+})
 
 const skillGroups = computed(() => {
   const order: Importance[] = ['core', 'supporting', 'peripheral']
   return order
     .map((importance) => ({
       importance,
-      skills: skills.value
+      skills: ownSkills.value
         .filter((s) => s.importance === importance)
         .sort((a, b) => a.name.localeCompare(b.name)),
     }))
@@ -157,6 +197,48 @@ useHead({ title: `${title.value} · journal/${space}` })
       </div>
     </header>
 
+    <!-- Free-form editorial intro — the root page's Markdown body -->
+    <section v-if="rootDoc" class="intro">
+      <ContentRenderer :value="rootDoc" />
+    </section>
+
+    <!-- Daily digests — a plain-language, day-by-day recap of project activity -->
+    <section v-if="digests.length" class="panel digests">
+      <div class="section-head">
+        <h2>Daily digests</h2>
+        <span class="count">newest first</span>
+      </div>
+      <p class="panel-intro">
+        A plain recap of what changed across the project each day — click any day
+        to read the full story.
+      </p>
+      <ul class="digest-list">
+        <li
+          v-for="d in digests"
+          :key="d.doc.path"
+          class="digest"
+          :class="{ open: openDigests[d.doc.path] }"
+        >
+          <div
+            class="drow"
+            role="button"
+            tabindex="0"
+            :aria-expanded="!!openDigests[d.doc.path]"
+            @click="toggleDigest(d.doc.path)"
+            @keydown.enter.prevent="toggleDigest(d.doc.path)"
+            @keydown.space.prevent="toggleDigest(d.doc.path)"
+          >
+            <span class="digest-date">{{ d.date }}</span>
+            <span class="digest-summary">{{ d.summary }}</span>
+            <span class="caret" aria-hidden="true">{{ openDigests[d.doc.path] ? '▾' : '▸' }}</span>
+          </div>
+          <div v-if="openDigests[d.doc.path]" class="digest-body">
+            <ContentRenderer :value="d.doc" />
+          </div>
+        </li>
+      </ul>
+    </section>
+
     <!-- State of this Space -->
     <section class="tiles" aria-label="State of this Space">
       <JournalStatTile
@@ -165,9 +247,9 @@ useHead({ title: `${title.value} · journal/${space}` })
         :sub="`${kindCounts.interactive} interactive · ${kindCounts.autonomous} autonomous`"
       />
       <JournalStatTile
-        label="Skills catalogued"
-        :value="skills.length"
-        :sub="`${importanceCounts.core} core · ${importanceCounts.supporting} supporting · ${importanceCounts.peripheral} peripheral`"
+        label="Platform Skills"
+        :value="ownSkills.length"
+        :sub="skillsSub"
       />
       <JournalStatTile
         label="Frictions surfaced"
@@ -211,11 +293,15 @@ useHead({ title: `${title.value} · journal/${space}` })
 
         <section class="panel">
           <div class="section-head">
-            <h2>Skill catalogue</h2>
-            <span class="count">{{ skills.length }} installed</span>
+            <h2>Platform Skills</h2>
+            <span class="count">{{ ownSkills.length }} authored here</span>
           </div>
           <JournalSkillCatalogue v-if="skillGroups.length" :groups="skillGroups" />
-          <p v-else class="empty">No Skills catalogued in this Space.</p>
+          <p v-else class="empty">No Platform Skills authored in this Space yet.</p>
+          <p v-if="externalSkillCount" class="skill-note">
+            Backed by {{ externalSkillCount }} general-engineering Skills from an
+            external pack — <span class="mono">used</span>, not evolved here.
+          </p>
         </section>
       </aside>
     </div>
@@ -322,6 +408,28 @@ h1 {
 }
 .lede { margin: 0; max-width: 54ch; color: var(--jd-muted); font-size: 1.02rem; }
 
+.intro { margin: 1.6rem 0 0; max-width: 68ch; font-size: 1.04rem; }
+.intro :deep(p) { margin: 0 0 0.8rem; color: var(--jd-muted); }
+.intro :deep(p:last-child) { margin-bottom: 0; }
+.intro :deep(a) { color: var(--jd-accent); text-decoration: none; }
+.intro :deep(a:hover) { text-decoration: underline; }
+.intro :deep(strong) { color: var(--jd-ink); font-weight: 600; }
+.intro :deep(code) {
+  font-family: var(--jd-mono);
+  font-size: 0.88em;
+  background: var(--jd-surface-2);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+.intro :deep(h2) {
+  font-family: var(--jd-mono);
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--jd-ink);
+  margin: 1.3rem 0 0.5rem;
+}
+
 .spaces { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; }
 .space-toggle {
   display: inline-flex;
@@ -371,6 +479,42 @@ h1 {
 
 .grid { display: grid; grid-template-columns: 1.7fr 1fr; gap: 1.6rem; align-items: start; }
 
+.digests { margin-top: 1.75rem; }
+.panel-intro { margin: 0 0 0.95rem; max-width: 72ch; color: var(--jd-muted); font-size: 0.92rem; line-height: 1.5; }
+.digest-list { list-style: none; margin: 0; padding: 0; }
+.digest { border-top: 1px solid var(--jd-line); }
+.digest:first-child { border-top: 0; }
+.drow {
+  display: grid;
+  grid-template-columns: max-content 1fr max-content;
+  gap: 0.1rem 0.9rem;
+  align-items: baseline;
+  padding: 0.7rem 0;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.drow:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 3px; }
+.digest-date { font-family: var(--jd-mono); font-size: 0.82rem; color: var(--jd-accent); white-space: nowrap; }
+.digest-summary { color: var(--jd-ink); font-size: 0.96rem; }
+.digest.open .digest-summary { color: var(--jd-muted); }
+.caret { color: var(--jd-faint); font-size: 0.78rem; }
+
+.digest-body { padding: 0 0 1rem; }
+.digest-body :deep(h1) { display: none; } /* the row already shows the date */
+.digest-body :deep(p) { margin: 0 0 0.7rem; color: var(--jd-muted); font-size: 0.95rem; line-height: 1.6; }
+.digest-body :deep(p:last-child) { margin-bottom: 0; }
+.digest-body :deep(a) { color: var(--jd-accent); text-decoration: none; }
+.digest-body :deep(a:hover) { text-decoration: underline; }
+.digest-body :deep(strong) { color: var(--jd-ink); font-weight: 600; }
+.digest-body :deep(code) {
+  font-family: var(--jd-mono);
+  font-size: 0.85em;
+  background: var(--jd-surface-2);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+.digest-body :deep(ul) { margin: 0 0 0.7rem; padding-left: 1.1rem; color: var(--jd-muted); }
+
 .section-head {
   display: flex;
   align-items: baseline;
@@ -404,6 +548,8 @@ h1 {
 }
 .friction-note { margin: 0.9rem 0 0; font-size: 0.82rem; color: var(--jd-muted); }
 .friction-note .mono { color: var(--jd-ink); }
+.skill-note { margin: 0.9rem 0 0; font-size: 0.8rem; color: var(--jd-muted); }
+.skill-note .mono { color: var(--jd-ink); }
 
 @media (max-width: 900px) {
   .tiles { grid-template-columns: repeat(2, 1fr); }

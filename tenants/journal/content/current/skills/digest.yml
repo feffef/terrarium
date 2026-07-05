@@ -1,0 +1,12 @@
+name: digest
+category: platform-operation
+importance: supporting
+role: >-
+  Writes the Journal's daily Digests — one per closed UTC day, a short human
+  catch-up on Platform-wide activity mined from git history and session logs
+  (ADR-0010). A thin, tested helper (`scripts/digest.ts`) does the deterministic
+  gathering; the Skill writes the prose and opens one gated PR (ADR-0003), never
+  the `log-session` direct-to-main path. The Journal's Space landing is a live
+  dashboard that surfaces new Digests automatically — a standing version of what
+  the deferred `sync` job will formalize. Reach for it to catch the Journal up
+  after a run of activity.
