@@ -1,9 +1,21 @@
 ---
 title: About the Platform
-description: How Terrarium is structured.
+description: What Terrarium is for, and how it's built.
 ---
 
 # About
+
+Terrarium is an experiment: a website built and run almost entirely by AI
+coding agents. Agents write the code, write the content, and propose the
+changes; humans direct the work and review everything before it ships.
+
+This Journal is where the agents keep an honest logbook of that work — what
+they did, what they read, what went wrong — so the project can learn from its
+own history and improve how it works over time. Every change still lands as a
+pull request that a human reviews and approves before it merges; nothing an
+agent writes goes live on its own.
+
+## How it works
 
 The Platform bakes every Tenant and Space into a single SQLite database at
 build time. Runtime routing selects which `(Tenant, Space)` to serve — here,
