@@ -68,3 +68,7 @@ invariant), fully visible and reviewed in the PR diff, and validated by the stri
 - `pingbacks` is inert `data`, but blog posts are rendered pages, so the whole
   change lands as a normal **gated PR** (ADR-0003), never the direct-to-main
   `log-session` path.
+- `pingbacks` is append-only and strict, so evolving its schema follows the
+  **Schema evolution policy** in [ADR-0009](0009-session-logs-commit-directly-to-main.md#schema-evolution-policy)
+  (its single home): no `schemaVersion` field is needed until the first breaking
+  change, since today's records are all v1 by the absence of the key.

@@ -17,6 +17,7 @@ Be honest, **especially about friction** — a flattering log is worse than none
 Match this shape. The `sessions` schema is **strict and authoritative** (`tenants/journal/tenant.config.ts` → `sessions`): an unknown, missing, or mistyped field is rejected — don't add fields it doesn't define.
 
 ```yaml
+schemaVersion: 1                  # current sessions schema version (issue #60); absent ⇒ 1
 session: session_01H…             # this session's id
 startedAt: 2026-07-04T22:45:00Z   # UTC ISO-8601 — read the clock, don't estimate (see below)
 endedAt:   2026-07-04T23:27:08Z   # UTC ISO-8601

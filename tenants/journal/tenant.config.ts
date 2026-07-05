@@ -70,6 +70,7 @@ export default defineTenant({
       source: '**/*.yml',
       schema: z
         .object({
+          schemaVersion: z.literal(1).optional(), // absent ⇒ 1; evolution policy: ADR-0009
           session: z.string(), // Claude session id — stable identity
           startedAt: utcTimestamp, // UTC ISO-8601 — session start (ordering anchor)
           endedAt: utcTimestamp, //   UTC ISO-8601 — session end / log authored

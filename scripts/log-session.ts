@@ -31,9 +31,13 @@ if (!sessionsCollection?.schema) {
 }
 const sessionsSchema = sessionsCollection.schema
 
+/** The `schemaVersion` newly authored logs should carry; evolution policy: ADR-0009. */
+export const CURRENT_SESSIONS_SCHEMA_VERSION = 1
+
 export interface SessionEntry {
   session: string
   startedAt: string
+  schemaVersion?: number
   [k: string]: unknown
 }
 

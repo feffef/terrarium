@@ -6,7 +6,12 @@ import { existsSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { expectedFilename, land, validateEntry } from '../../scripts/log-session.ts'
+import {
+  CURRENT_SESSIONS_SCHEMA_VERSION,
+  expectedFilename,
+  land,
+  validateEntry,
+} from '../../scripts/log-session.ts'
 
 const valid = {
   session: 'session_01HNmYFFBMxwQufmpeXMqLHK',
@@ -70,6 +75,31 @@ describe('validateEntry() — the L1 stand-in', () => {
 
   it('rejects an unparseable timestamp', () => {
     expect(validateEntry({ ...valid, startedAt: 'not-a-date' }).ok).toBe(false)
+  })
+})
+
+describe('schemaVersion — the evolution spine (issue #60)', () => {
+  it('accepts a v1-absent entry (all pre-versioning history — absent ⇒ 1)', () => {
+    // The `valid` fixture omits schemaVersion, exactly like every existing log
+    // on disk. Zero migration: they stay valid forever.
+    expect('schemaVersion' in valid).toBe(false)
+    expect(validateEntry(valid).ok).toBe(true)
+  })
+
+  it('accepts a v1-present entry (new logs write it explicitly)', () => {
+    const res = validateEntry({ ...valid, schemaVersion: CURRENT_SESSIONS_SCHEMA_VERSION })
+    expect(res.ok).toBe(true)
+    if (res.ok) expect(res.data.schemaVersion).toBe(1)
+  })
+
+  it('rejects an unknown future version until the union is added', () => {
+    // Bumping to v2 is a deliberate schema change (new object + z.union), not a
+    // value any current file may carry.
+    expect(validateEntry({ ...valid, schemaVersion: 2 }).ok).toBe(false)
+  })
+
+  it('pins the current version at 1', () => {
+    expect(CURRENT_SESSIONS_SCHEMA_VERSION).toBe(1)
   })
 })
 
