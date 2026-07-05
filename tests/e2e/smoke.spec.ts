@@ -40,7 +40,7 @@ describe('L2 smoke render — entry routes', async () => {
   // the /t/<tenant>/<space> prefix — else it 404s at the site root.
   it('links recent digests to their browsable route', async () => {
     const html = await $fetch('/t/journal/current')
-    expect(html).toContain('Recent digests')
+    expect(html).toContain('Daily digests')
     const href = html.match(/href="(\/t\/journal\/current\/digests\/[^"]+)"/)
     expect(href).not.toBeNull()
     const digest = await $fetch(href![1]!) // throws on the old Space-relative 404

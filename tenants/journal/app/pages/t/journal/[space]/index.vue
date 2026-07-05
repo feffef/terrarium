@@ -198,6 +198,25 @@ useHead({ title: `${title.value} · journal/${space}` })
       <ContentRenderer :value="rootDoc" />
     </section>
 
+    <!-- Daily digests — a plain-language, day-by-day recap of project activity -->
+    <section v-if="digests.length" class="panel digests">
+      <div class="section-head">
+        <h2>Daily digests</h2>
+        <span class="count">newest first</span>
+      </div>
+      <p class="panel-intro">
+        A short, plain-language recap of what happened across the whole project
+        each day — written up from that day's code changes and work sessions. Skim
+        them to catch up at a glance; open one for the full story.
+      </p>
+      <ul class="digest-list">
+        <li v-for="d in digests" :key="d.to">
+          <NuxtLink :to="d.to" class="digest-date">{{ d.date }}</NuxtLink>
+          <span class="digest-summary">{{ d.summary }}</span>
+        </li>
+      </ul>
+    </section>
+
     <!-- State of this Space -->
     <section class="tiles" aria-label="State of this Space">
       <JournalStatTile
@@ -223,33 +242,17 @@ useHead({ title: `${title.value} · journal/${space}` })
     </section>
 
     <div class="grid">
-      <div class="mainstack">
-        <!-- Daily digests — a live catch-up on Platform-wide activity (ADR-0010) -->
-        <section v-if="digests.length" class="panel digests">
-          <div class="section-head">
-            <h2>Recent digests</h2>
-            <span class="count">daily catch-up, newest first</span>
-          </div>
-          <ul class="digest-list">
-            <li v-for="d in digests" :key="d.to">
-              <NuxtLink :to="d.to" class="digest-date">{{ d.date }}</NuxtLink>
-              <span class="digest-summary">{{ d.summary }}</span>
-            </li>
-          </ul>
-        </section>
-
-        <!-- Recent activity -->
-        <section class="feed">
-          <div class="section-head">
-            <h2>Recent activity</h2>
-            <span class="count">session logs, newest first</span>
-          </div>
-          <div v-if="cards.length" class="cards">
-            <JournalSessionCard v-for="c in cards" :key="c.key" :card="c" />
-          </div>
-          <p v-else class="empty">No sessions logged in this Space yet.</p>
-        </section>
-      </div>
+      <!-- Recent activity -->
+      <section class="feed">
+        <div class="section-head">
+          <h2>Recent activity</h2>
+          <span class="count">session logs, newest first</span>
+        </div>
+        <div v-if="cards.length" class="cards">
+          <JournalSessionCard v-for="c in cards" :key="c.key" :card="c" />
+        </div>
+        <p v-else class="empty">No sessions logged in this Space yet.</p>
+      </section>
 
       <!-- Rail -->
       <aside class="rail">
@@ -453,8 +456,9 @@ h1 {
 }
 
 .grid { display: grid; grid-template-columns: 1.7fr 1fr; gap: 1.6rem; align-items: start; }
-.mainstack { display: flex; flex-direction: column; gap: 1.6rem; min-width: 0; }
 
+.digests { margin-top: 1.75rem; }
+.panel-intro { margin: 0 0 0.95rem; max-width: 72ch; color: var(--jd-muted); font-size: 0.92rem; line-height: 1.5; }
 .digest-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
 .digest-list li {
   display: grid;
