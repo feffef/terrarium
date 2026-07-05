@@ -1,19 +1,53 @@
 ---
 title: The Platform Journal — current
-description: The Platform's own journal and domain model (current Space).
+description: The Platform's own journal, inventory, and daily digests (current Space).
 badge: current
 ---
 
 # The Platform Journal
 
-This is the **`current`** Space of the `journal` Tenant — the Platform's own
-self-documentation: its narrative, its [inventories](/t/journal/current/about)
-(like the Skill catalogue below), and — planned — append-only session logs,
-research, and ideas that drive self-improvement.
+**Terrarium** is one **Platform** — a single Nuxt app baked into one container at
+build time — hosting many **Tenants**, each with its own **Spaces** and
+**Collections**. This is the `journal` Tenant's `current` Space: the Platform's
+self-documentation — its [inventory](#platform-state), its daily
+[digests](#recent-digests), and its append-only session logs.
 
-Terrarium is one Platform (one Nuxt app, one container) hosting many Tenants,
-each with its own Spaces and Collections. This page is a real Document served
-from the generated `journal_current_pages` collection.
+## Platform state
 
-- See the [about page](/t/journal/current/about)
-- Compare with the [archived Space](/t/journal/archived)
+- **journal** — the self-documentation Tenant
+  - `current` — pages, skills, sessions
+  - `archived` — pages, skills, sessions
+
+**Skills:** 13 installed. The `core` ones: **domain-modeling** (owns the glossary
+and ADR conventions), **log-session** (every session's honest self-report), and
+**writing-great-skills** (the standard for authoring Skills). See the full
+[Skill catalogue](/t/journal/current) below.
+
+## Capabilities
+
+What the Platform can do today, grounded in what exists:
+
+- **Spawn structure declaratively** — a Tenant's manifest declares Spaces and
+  Collections; a generator expands the keyed cross-product and a drift-checked
+  safety gate keeps the generated config honest.
+- **Serve isolated content** — every `(Tenant, Space, Collection)` is its own
+  keyed collection, so Spaces never leak into one another.
+- **Self-report** — the `log-session` Skill appends each session's goal, outcome,
+  and frictions to this Journal.
+- **Digest itself** — the `digest` Skill writes a daily catch-up per closed UTC
+  day and refreshes this overview.
+
+The chartered autonomous jobs (`sync`, `drift-check`, `consolidate`, `codify`,
+`triage`) are **planned, not yet running** — today's Skills are their manual
+precursors.
+
+## Recent digests
+
+- [2026-07-04](/t/journal/current/digests/2026-07-04) — Foundation day: the
+  manifest→generator→gated-render pipeline, the Journal Tenant, and the
+  session-log mechanism all landed.
+
+## Elsewhere
+
+- [About the Platform](/t/journal/current/about)
+- [The archived Space](/t/journal/archived)
