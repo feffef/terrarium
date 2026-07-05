@@ -18,7 +18,7 @@ Match this shape. The `sessions` schema is **strict and authoritative** (`tenant
 
 ```yaml
 session: session_01H…             # this session's id
-startedAt: 2026-07-04T22:45:00Z   # UTC ISO-8601 — hand-authored values are estimates (see below)
+startedAt: 2026-07-04T22:45:00Z   # UTC ISO-8601 — read the clock, don't estimate (see below)
 endedAt:   2026-07-04T23:27:08Z   # UTC ISO-8601
 kind: interactive                 # interactive | autonomous (a scheduled/cold job)
 goal: Ship the log-session Skill   # ≤ 8 words
@@ -41,7 +41,7 @@ The word limits are **not** schema-enforced — you hold them.
 
 **frictions is the point.** List *every* one, not one or two — including anything that felt unnecessarily complex, token-heavy, or repetitive. `nit` is the floor for trivia, so `[]` means the session genuinely hit nothing (rare). Don't sand down the honest edges.
 
-**Timestamps:** authored by hand, `startedAt`/`endedAt` are estimates — log a `nit` friction saying so. Exact capture waits on the deferred autonomous end-of-session trigger.
+**Timestamps:** run `date -u +%Y-%m-%dT%H:%M:%SZ` to get an exact UTC ISO-8601 `endedAt` (and `startedAt`, if you can pin the session's start) instead of estimating. The true start/end *capture* stays deferred to the autonomous end-of-session trigger — so if a value is still a hand-estimate, log a `nit` friction saying so.
 
 ## 2. Save it at the canonical path
 
