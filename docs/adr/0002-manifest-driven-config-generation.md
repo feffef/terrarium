@@ -3,6 +3,13 @@
 Date: 2026-07-04
 Status: Accepted
 
+> **Amended (2026-07-05):** the "drop a folder and config regenerates"
+> consequence below is incomplete. Spawning a Tenant *also* requires registering
+> its layer in `nuxt.config.ts` `extends` by hand — the generator produces the
+> keyed `content.config.ts` but does not touch `nuxt.config.ts`. See #55 / PR #81
+> for the real requirement. Manifest-driven generation of the keyed collections
+> is unchanged; only the "one step" framing is corrected here.
+
 ## Context
 
 The Platform is developed primarily by Claude Code agents. Agent-drivability
