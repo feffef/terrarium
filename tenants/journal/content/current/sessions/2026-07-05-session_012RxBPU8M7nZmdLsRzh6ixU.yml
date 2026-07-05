@@ -1,0 +1,81 @@
+session: session_012RxBPU8M7nZmdLsRzh6ixU
+startedAt: 2026-07-05T14:11:00Z
+endedAt: 2026-07-05T14:30:39Z
+kind: interactive
+goal: Review Journal UX; file newcomer-confusion issues
+status: completed
+outcome: 6 UX issues filed (#28–#33)
+summary: >-
+  Asked to browse /t/journal/current as a first-time visitor and report every
+  confusion, then check where plainer content or Skill tweaks would help. The
+  public URL is blocked by this environment's egress policy (403), so I ran the
+  repo locally with pnpm dev and browsed the same build-time-baked pages with
+  the bundled Chromium. Reported the newcomer struggles (missing "built by AI
+  agents" premise, undefined domain jargon, unbuilt jobs shown as live, raw
+  collection keys, an alarming frictions count, an unstyled root). Read all 11
+  ADRs and the log-session/digest Skills. Filed six scoped issues (#28–#33) in
+  the repo's house style. No code changed; the timestamp glitch I noticed is
+  already fixed in the open PR #27.
+prs: []
+docsRead:
+  - { path: CONTEXT.md, reason: the ubiquitous language the page leans on }
+  - { path: "tenants/journal/app/pages/t/journal/[space]/index.vue", reason: the landing dashboard a visitor actually sees }
+  - { path: tenants/journal/content/current/pages/index.md, reason: the editorial intro to critique }
+  - { path: tenants/journal/content/current/pages/about.md, reason: the one "what is this" destination }
+  - { path: tenants/journal/app/components/journal/SessionCard.vue, reason: how session cards render for a newcomer }
+  - { path: tenants/journal/tenant.config.ts, reason: the sessions schema behind the timestamp truncation }
+  - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: the generic catch-all renderer }
+  - { path: docs/adr/0008-self-documentation-tenant-is-a-journal.md, reason: the Journal's purpose }
+  - { path: docs/adr/0009-session-logs-commit-directly-to-main.md, reason: session-log mechanism and deferred timestamp capture }
+  - { path: docs/adr/0010-digests-derived-append-only-journal-pages.md, reason: how digests surface on the landing }
+  - { path: .agents/skills/log-session/SKILL.md, reason: whether the Skill should improve status legibility }
+  - { path: .agents/skills/digest/SKILL.md, reason: whether digest copy needs plainer language }
+  - { path: docs/agents/issue-tracker.md, reason: match the repo's issue conventions }
+  - { path: docs/agents/triage-labels.md, reason: use the canonical triage labels }
+  - { path: "GitHub PR #27", reason: confirm the timestamp bug was already diagnosed and fixed }
+  - { path: /root/.ccr/README.md, reason: diagnose the live-site 403 as a policy denial, not a fixable TLS issue }
+skillsUsed:
+  - { name: log-session, reason: author this session log }
+frictions:
+  - description: >-
+      The public site terrarium.feffef.de — the exact URL I was asked to browse
+      — is blocked by this environment's egress policy (403 CONNECT), so I could
+      not review the deployed container directly.
+    solution: >-
+      Reproduced the experience by running pnpm dev and browsing the same baked
+      pages locally over localhost. Faithful (ADR-0001 bakes everything), but a
+      step removed from the live artifact the user actually meant.
+    severity: minor
+  - description: >-
+      Playwright is not a project dependency, so the screenshot script failed
+      with ERR_MODULE_NOT_FOUND until I imported chromium from the global
+      install's absolute path. This exact friction recurs (see the 2026-07-05
+      "Style standalone journal Document pages" log).
+    solution: >-
+      A committed screenshot recipe or a dev-only playwright devDependency would
+      stop every UX-review session from re-deriving the /opt path.
+    severity: minor
+  - description: >-
+      The Nuxt DevTools overlay badge ("26 ms", and an "85 ms" that overlapped a
+      stat number) appeared in dev-mode screenshots and initially read as a real
+      UI bug, costing a moment to rule out as a dev-only artifact.
+    solution: >-
+      Screenshot with the app built/previewed rather than the dev server, or
+      disable devtools in the shot script, so captures match production.
+    severity: nit
+  - description: >-
+      Reading exact numbers off downscaled full-page screenshots was unreliable;
+      I had to grep the SSR HTML to confirm the "00:00 UTC · 1 min" timestamps
+      were genuinely rendered, not a misread.
+    solution: >-
+      For data-accuracy checks, assert against the served HTML/DOM text directly
+      rather than trusting a scaled image.
+    severity: nit
+  - description: >-
+      startedAt is a hand-estimate — an interactive session still has no reliable
+      start-clock capture (deferred to the autonomous end-of-session trigger,
+      ADR-0009). endedAt is exact via date -u.
+    solution: >-
+      The deferred capture mechanism would make startedAt exact; until then it
+      remains an honest estimate.
+    severity: nit
