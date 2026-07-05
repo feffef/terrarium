@@ -23,7 +23,7 @@ describe('L2 smoke render — entry routes', async () => {
     const html = await $fetch('/t/journal/current')
     expect(html).toContain('Recent activity')
     expect(html).toContain('Friction signal')
-    expect(html).toContain('Skill catalogue')
+    expect(html).toContain('Platform Skills')
   })
 
   // Session cards are expand-on-click disclosures — sessions are a `data`

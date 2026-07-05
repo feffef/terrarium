@@ -116,18 +116,31 @@ const kindCounts = computed(() => ({
   autonomous: sessions.value.filter((s) => s.kind === 'autonomous').length,
 }))
 
-const importanceCounts = computed(() => ({
-  core: skills.value.filter((s) => s.importance === 'core').length,
-  supporting: skills.value.filter((s) => s.importance === 'supporting').length,
-  peripheral: skills.value.filter((s) => s.importance === 'peripheral').length,
-}))
+// The dashboard advertises only the Platform's OWN Skills — the platform-operation
+// ones it authors and evolves. The general-engineering pack (Matt Pocock's) is
+// used, not evolved here, so it is acknowledged as a count, not showcased.
+const ownSkills = computed(() => skills.value.filter((s) => s.category === 'platform-operation'))
+const externalSkillCount = computed(() => skills.value.length - ownSkills.value.length)
+
+const skillsSub = computed(() => {
+  const by = (i: Importance) => ownSkills.value.filter((s) => s.importance === i).length
+  const parts = ([
+    ['core', by('core')],
+    ['supporting', by('supporting')],
+    ['peripheral', by('peripheral')],
+  ] as const)
+    .filter(([, n]) => n > 0)
+    .map(([label, n]) => `${n} ${label}`)
+  const own = parts.join(' · ') || 'none yet'
+  return externalSkillCount.value ? `${own} · ${externalSkillCount.value} external` : own
+})
 
 const skillGroups = computed(() => {
   const order: Importance[] = ['core', 'supporting', 'peripheral']
   return order
     .map((importance) => ({
       importance,
-      skills: skills.value
+      skills: ownSkills.value
         .filter((s) => s.importance === importance)
         .sort((a, b) => a.name.localeCompare(b.name)),
     }))
@@ -193,9 +206,9 @@ useHead({ title: `${title.value} · journal/${space}` })
         :sub="`${kindCounts.interactive} interactive · ${kindCounts.autonomous} autonomous`"
       />
       <JournalStatTile
-        label="Skills catalogued"
-        :value="skills.length"
-        :sub="`${importanceCounts.core} core · ${importanceCounts.supporting} supporting · ${importanceCounts.peripheral} peripheral`"
+        label="Platform Skills"
+        :value="ownSkills.length"
+        :sub="skillsSub"
       />
       <JournalStatTile
         label="Frictions surfaced"
@@ -255,11 +268,15 @@ useHead({ title: `${title.value} · journal/${space}` })
 
         <section class="panel">
           <div class="section-head">
-            <h2>Skill catalogue</h2>
-            <span class="count">{{ skills.length }} installed</span>
+            <h2>Platform Skills</h2>
+            <span class="count">{{ ownSkills.length }} authored here</span>
           </div>
           <JournalSkillCatalogue v-if="skillGroups.length" :groups="skillGroups" />
-          <p v-else class="empty">No Skills catalogued in this Space.</p>
+          <p v-else class="empty">No Platform Skills authored in this Space yet.</p>
+          <p v-if="externalSkillCount" class="skill-note">
+            Backed by {{ externalSkillCount }} general-engineering Skills from an
+            external pack — <span class="mono">used</span>, not evolved here.
+          </p>
         </section>
       </aside>
     </div>
@@ -488,6 +505,8 @@ h1 {
 }
 .friction-note { margin: 0.9rem 0 0; font-size: 0.82rem; color: var(--jd-muted); }
 .friction-note .mono { color: var(--jd-ink); }
+.skill-note { margin: 0.9rem 0 0; font-size: 0.8rem; color: var(--jd-muted); }
+.skill-note .mono { color: var(--jd-ink); }
 
 @media (max-width: 900px) {
   .tiles { grid-template-columns: repeat(2, 1fr); }
