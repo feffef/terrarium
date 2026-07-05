@@ -42,17 +42,33 @@ redeploys the image** — the container updates itself.
 
 ## One-time bootstrap
 
-1. **Fine-grained PAT.** GitHub → Settings → Developer settings → Fine-grained
-   tokens. Repository access: **only `feffef/terrarium`**. Permissions:
-   **Contents → Read-only**. Copy the token.
+> **Run everything as your non-root Docker operator user** — the account that's a
+> member of the `docker` group (on this host that's `deploy`, matching
+> feffef-fotos; *not* `root`, and *not* a user that merely has a GitHub SSH key).
+> A user outside the `docker` group gets `permission denied … /var/run/docker.sock`
+> on the first `docker compose`. `chown -R deploy:deploy /opt/terrarium` so the
+> deploy dir is owned by that user, then `sudo -iu deploy` and do the rest there.
 
-2. **Clone + configure.**
+1. **Fine-grained PAT.** <https://github.com/settings/personal-access-tokens/new>
+   (Settings → Developer settings → **Fine-grained** tokens — *not* a classic
+   token). Resource owner: your account. Repository access: **only
+   `feffef/terrarium`**. Permissions: **Contents → Read-only** (Metadata
+   auto-selects — that's required). Copy the `github_pat_…` value; it's shown once.
+
+2. **Clone + configure.** The repo is **private**, so this host clone needs auth
+   too — GitHub no longer accepts a password, so pass the PAT in the URL (or use
+   SSH if this user has a key registered on GitHub):
    ```sh
-   sudo mkdir -p /opt/terrarium && cd /opt/terrarium
-   git clone https://github.com/feffef/terrarium.git repo
+   sudo mkdir -p /opt/terrarium && sudo chown deploy:deploy /opt/terrarium
+   sudo -iu deploy; cd /opt/terrarium
+   git clone https://x-access-token:github_pat_xxxx@github.com/feffef/terrarium.git repo
+   git -C repo remote set-url origin https://github.com/feffef/terrarium.git  # drop the token from .git/config
    cp repo/deploy/.env.example .env
+   chmod 600 .env                       # holds the PAT
    # edit .env: paste GITHUB_PAT (GIT_REPO_URL is already correct)
    ```
+   (This host checkout is only the build context. The **container** does its own
+   clone and keeps the PAT out of `.git/config` via `GIT_ASKPASS` — see below.)
 
 3. **Shared proxy network.** Terrarium is reached by the existing Caddy over a
    shared network called `web`. Create it once:
@@ -90,7 +106,14 @@ redeploys the image** — the container updates itself.
    docker compose logs -f      # watch: clone -> install -> build -> serving
    ```
    The **first boot** clones and does a full build (a few minutes) before the
-   server answers — the healthcheck stays `starting` until then.
+   server answers — the healthcheck stays `starting` until then, then flips to
+   `healthy` once `/` returns 200 (`docker compose ps` to check).
+
+   > If `up` fails with **`network web declared as external, but could not be
+   > found`**, you skipped `docker network create web` in step 3 — create it and
+   > re-run. Confirm both containers share it:
+   > `docker network inspect web --format '{{range .Containers}}{{.Name}} {{end}}'`
+   > → should list the Caddy container **and** `terrarium-terrarium-1`.
 
 ## Operations
 
@@ -104,6 +127,26 @@ redeploys the image** — the container updates itself.
 - **Rotate the PAT:** edit `/opt/terrarium/.env`, then
   `docker compose up -d` (recreates with the new token).
 - **Tune cadence:** set `POLL_INTERVAL` in `.env` (seconds; default 120).
+
+### Trying a branch before it merges
+
+To smoke-test a feature branch in the real container before merging it, point the
+supervisor at that branch — it drives both the initial clone and the poll loop:
+
+```sh
+# /opt/terrarium/.env
+BRANCH=deploy/self-updating-container   # any branch
+```
+`docker compose up -d`, and the container serves (and keeps pulling) that branch.
+After the PR merges, set `BRANCH=main` (or delete the line — `main` is the
+default) and `docker compose up -d`; the volume checkout switches refs cleanly
+(`fetch` + `reset --hard`), no volume wipe needed. This is exactly how this
+deployment was first brought up and validated live before #24 merged.
+
+> For a quick look **without** wiring Caddy/DNS, temporarily add
+> `ports: ["3080:3000"]` to the `terrarium` service and `curl -I
+> http://localhost:3080/`. Remove it once Caddy fronts the site over `web` — no
+> host port is needed in normal operation.
 
 ## Notes & caveats (PoC)
 
