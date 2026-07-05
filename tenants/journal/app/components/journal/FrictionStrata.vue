@@ -21,7 +21,11 @@ const sevVar = (s: Severity) => `var(--jd-sev-${s})`
   <!-- Compact bar for a session card -->
   <div v-if="variant === 'inline'" class="fbar">
     <template v-if="total > 0">
-      <span class="track">
+      <span
+        class="track"
+        :title="`Friction severity: ${ORDER.map((s) => counts[s] + ' ' + s).join(', ')}`"
+        :aria-label="`Friction severity: ${ORDER.map((s) => counts[s] + ' ' + s).join(', ')}`"
+      >
         <template v-for="s in ORDER" :key="s">
           <span v-if="counts[s] > 0" :style="{ flex: counts[s], background: sevVar(s) }" />
         </template>
