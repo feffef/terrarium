@@ -1,8 +1,9 @@
-// The manifest → keyed-collection expansion (ADR-0002), extracted from the
-// generator so it can be evaluated in two places from one source of truth:
+// The manifest → keyed-collection expansion (ADR-0002), extracted so it can be
+// evaluated in two places from one source of truth:
 //  - `content.config.ts` builds the live Nuxt Content collections from it at
 //    config-evaluation time (ADR-0013 — dynamic content config), and
-//  - `scripts/generate.ts` still emits the committed `shared/routing.generated.ts`.
+//  - `modules/routing.ts` derives the runtime routing map at prepare/build time
+//    and exposes it as the `#routing` virtual module (ADR-0014).
 //
 // The cross-product expansion is the mechanical, error-prone part, so it is code.
 // `expand()` is a pure function exported for the L3 isolation test (ADR-0004).

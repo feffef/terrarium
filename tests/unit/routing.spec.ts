@@ -97,9 +97,9 @@ describe('resolveSpaceRoute() — the isolation guarantee', () => {
   })
 })
 
-describe('resolveSpaceRoute() — default (generated) map', () => {
-  // Omitting `map` must read the real generated routing map, not throw.
-  it('resolves a real Space against the committed routing map', () => {
+describe('resolveSpaceRoute() — default (build-time) map', () => {
+  // Omitting `map` must read the real build-time routing map (ADR-0014), not throw.
+  it('resolves a real Space against the build-time routing map', () => {
     const r = resolveSpaceRoute('journal', 'current', '')
     expect(r).not.toBeNull()
     expect(r!.pagesKey).toBe('journal_current_pages')

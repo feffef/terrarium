@@ -1,11 +1,15 @@
 # 13. Dynamic content.config.ts; only the routing map stays committed
 
 Date: 2026-07-05
-Status: Accepted
+Status: Accepted — the content.config.ts decision stands; the retained routing-map
+decision is superseded by [ADR-0014](0014-build-time-virtual-routing-module.md)
 
-Amends ADR-0007 (which committed *both* generated artifacts and drift-checked
-them). ADR-0007's decision to commit `content.config.ts` is **superseded** here;
-its decision to commit `shared/routing.generated.ts` is **retained**.
+> **Amends ADR-0007** (which committed *both* generated artifacts and drift-checked
+> them). ADR-0007's decision to commit `content.config.ts` is **superseded** here;
+> its decision to commit `shared/routing.generated.ts` was **retained** here but is
+> now **further superseded by ADR-0014** (2026-07-05), which replaces the committed
+> routing map with a build-time virtual module (`#routing`). No committed `GENERATED`
+> file remains.
 
 ## Context
 

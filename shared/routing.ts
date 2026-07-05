@@ -4,7 +4,7 @@
 // generation time). This is human-only surface: a bug here could cross-wire Spaces.
 // The `[...slug].vue` page keeps only the Nuxt concerns (useRoute, createError, and
 // the `keyof Collections` casts).
-import { routingMap } from './routing.generated'
+import { routingMap } from '#routing'
 
 /** Tenant → Space → Collection → generated collection key. */
 export type RoutingMap = Record<string, Record<string, Record<string, string>>>

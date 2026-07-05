@@ -1,10 +1,15 @@
 // L2 — Smoke render (ADR-0004): every (Tenant, Space) entry route returns 200
-// and renders content without erroring. The target list is generated
-// (shared/routing.generated.ts), so new Spaces are covered automatically.
+// and renders content without erroring. The target list is derived at build time
+// from the manifests (ADR-0014), so new Spaces are covered automatically.
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { $fetch, setup } from '@nuxt/test-utils/e2e'
-import { entryRoutes } from '../../shared/routing.generated.ts'
+import { expand, loadManifests } from '../../shared/expand.ts'
+
+const cols = expand(loadManifests())
+const entryRoutes = [
+  ...new Set(cols.filter((c) => c.type === 'page').map((c) => `/t/${c.tenant}/${c.space}`)),
+].sort()
 
 describe('L2 smoke render — entry routes', async () => {
   await setup({ rootDir: fileURLToPath(new URL('../..', import.meta.url)) })

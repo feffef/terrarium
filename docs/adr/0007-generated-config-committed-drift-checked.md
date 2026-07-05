@@ -1,17 +1,18 @@
 # 7. Generated config is committed and drift-checked via diff
 
 Date: 2026-07-04
-Status: Accepted — partially superseded by ADR-0013
+Status: Superseded — by ADR-0013 (content.config.ts half) and ADR-0014 (routing map half)
 
 > **Amended by [ADR-0013](0013-dynamic-content-config-committed-routing-map.md)
 > (2026-07-05).** The decision to commit **`content.config.ts`** is superseded:
 > it is now an ordinary module that builds the keyed collections dynamically from
 > the manifests at config-evaluation time (no committed file, no banner, no drift
 > gate, and it is now linted). The decision to commit **`shared/routing.generated.ts`**
-> is **retained** — the client needs it at runtime, and its diff remains the
-> reviewable "which tables did this manifest change" signal. Read this ADR for the
-> original both-artifacts reasoning; read ADR-0013 for the amendment and why the
-> routing map alone stays committed.
+> was **retained** in ADR-0013 — but is now **also superseded** by
+> [ADR-0014](0014-build-time-virtual-routing-module.md) (2026-07-05), which
+> replaces the committed routing map with a build-time virtual module (`#routing`).
+> No committed `GENERATED` file remains. Read this ADR for the original
+> both-artifacts reasoning; read ADR-0013 and ADR-0014 for the amendments.
 
 ## Context
 

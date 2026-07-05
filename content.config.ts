@@ -3,10 +3,9 @@
 //
 // It builds the keyed `tenant_space_collection` collections at config-evaluation
 // time by enumerating every Tenant manifest and running the same pure `expand()`
-// the generator uses (shared/expand.ts). A manifest edit is therefore picked up by
-// `nuxt dev`/`build`/`prepare` with no regenerate step. The routing map still needs
-// to be committed for the runtime/client (shared/routing.generated.ts, produced by
-// `pnpm gen`) — see ADR-0013.
+// the routing module uses (shared/expand.ts). A manifest edit is therefore picked
+// up by `nuxt dev`/`build`/`prepare` with no regenerate step for anything.
+// The routing map is derived the same way in modules/routing.ts (ADR-0014).
 import { defineCollection, defineContentConfig } from '@nuxt/content'
 import { fileURLToPath } from 'node:url'
 import { expand, loadManifests } from './shared/expand'
