@@ -1,0 +1,54 @@
+session: 576a49a2-1f18-4be4-8cf7-68173ee336b9
+startedAt: 2026-07-05T12:50:00Z
+endedAt: 2026-07-05T13:46:25Z
+kind: interactive
+goal: Deploy Terrarium as a public self-updating container
+status: completed
+outcome: Live at terrarium.feffef.de; PR #24 merged
+summary: >-
+  Planned and shipped a PoC deployment on the operator's Hetzner Docker host: a
+  thin runner+builder container that clones main via a read-only PAT, builds it,
+  serves a decoupled copy of .output, and self-updates on each push with a
+  background build + atomic swap (a failed build never swaps). Fronted by the
+  existing shared Caddy over an external `web` network — no host port published.
+  Added ADR-0011 for the scoped relaxation of ADR-0001's immutable-image model.
+  Brought it up live from the feature branch, validated public HTTPS 200 and the
+  full self-update loop end to end, then merged PR #24 and switched it to main.
+prs: ["24"]
+docsRead:
+  - { path: docs/adr/0001-single-container-baked-multitenancy.md, reason: deployment must respect the baked-content model }
+  - { path: ../feffef-fotos/docker-compose.yml, reason: match the host's existing Caddy/compose conventions }
+  - { path: ../feffef-fotos/Caddyfile, reason: how Caddy fronts apps by service name over a network }
+  - { path: ../feffef-fotos/docs/bootstrap.md, reason: the host's deploy-user and directory conventions }
+  - { path: nuxt.config.ts, reason: confirm node-server preset and native node:sqlite requirement }
+  - { path: docs/adr/0009-session-logs-commit-directly-to-main.md, reason: match the ADR format }
+skillsUsed:
+  - { name: log-session, reason: author this session log }
+frictions:
+  - description: Assumed the SSH-key host user (dockeruser) was the Docker operator; it was not, costing several round-trips.
+    solution: Read the neighbouring repo's bootstrap doc — the operator is a non-root `deploy` user in the docker group.
+    severity: moderate
+  - description: Private-repo host clone failed — GitHub no longer accepts password auth, and the user entered an account password.
+    solution: Clone over HTTPS with the PAT in the URL (or SSH as a user with a registered key).
+    severity: minor
+  - description: SSH clone as root failed with publickey denied because the registered key lived in another host user's ~/.ssh.
+    solution: Run the clone as the user that owns the key, or use the PAT over HTTPS.
+    severity: minor
+  - description: docker compose failed with permission denied on docker.sock because the invoking user was outside the docker group.
+    solution: Operate as the docker-group `deploy` user; documented as a prerequisite in the deploy README.
+    severity: minor
+  - description: docker compose up failed — external network `web` was referenced before it existed.
+    solution: Run `docker network create web` once before the first up; noted in the README troubleshooting.
+    severity: nit
+  - description: A fine-grained PAT cannot be created via gh/CLI/API — GitHub only mints them in the web UI.
+    solution: Accept the manual web step; `gh auth token` exists but is account-wide and unsuitable for a long-running container.
+    severity: nit
+  - description: Could not verify the live URL myself — the agent sandbox cannot resolve external DNS (WebFetch ENOTFOUND).
+    solution: Relied on the user to curl; a network-permitted fetch path would let the agent self-verify deploys.
+    severity: nit
+  - description: The canonical `session_01…` id was not exposed in-env (only a CLAUDE_CODE_SESSION_ID UUID, flagged a child session).
+    solution: Logged with the UUID, which diverges from prior logs' id format; a stable exposed session id would fix it.
+    severity: nit
+  - description: startedAt is a hand-estimate — no reliable session-start clock was available to read.
+    solution: The deferred autonomous end-of-session trigger should capture true start/end timestamps.
+    severity: nit
