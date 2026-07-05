@@ -1,0 +1,62 @@
+session: session_019vTUPeTCdHWJ8uSTKsnmmN
+startedAt: 2026-07-05T09:17:00Z   # estimate — hand-authored (see frictions)
+endedAt: 2026-07-05T09:38:21Z     # exact — read from `date -u`
+kind: interactive
+goal: Improve code and process quality
+status: completed
+outcome: Test/doc quality PR #22 merged
+summary: >-
+  Reviewed the full history and HEAD (all merged, no open issues/PRs) and found the
+  quality imbalance: docs, process, and the generator were well-covered while the two
+  most runtime-critical paths were the least-tested. With a green-light, shipped three
+  fixes on one branch (PR #22, merged): extracted the isolation-critical route resolver
+  into shared/routing.ts and unit-tested its 404 + isolation paths (previously only
+  L3-tested at generation time); made log-session's git cwd injectable and drove the
+  real direct-to-main push loop against a throwaway bare remote; and corrected a stale
+  ci/gate.yml reference in CLAUDE.md. Full safety gate green. Left the workflow file's
+  own stale header for a human — the agent token lacks GitHub's workflow scope.
+prs: ["22"]
+docsRead:
+  - { path: CLAUDE.md, reason: repo entry point, ground rules, safety gate, wrap-up rule }
+  - { path: CONTEXT.md, reason: mentioned as required domain-model read (not deeply needed this session) }
+  - { path: docs/adr/0004-objective-safety-gate.md, reason: confirm routing/CI are human-only surfaces }
+  - { path: shared/manifest.ts, reason: manifest types + validation the generator relies on }
+  - { path: scripts/generate.ts, reason: understand the generated routing map the resolver reads }
+  - { path: scripts/log-session.ts, reason: the push loop to make cwd-injectable and test }
+  - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: the resolver to extract + the isolation logic }
+  - { path: tenants/journal/tenant.config.ts, reason: the strict sessions schema this log must satisfy }
+  - { path: tenants/journal/content/current/sessions/, reason: mine prior frictions for the review }
+  - { path: .agents/skills/frictions-to-fixes/SKILL.md, reason: the established fix-dispatch workflow }
+  - { path: .agents/skills/log-session/SKILL.md, reason: authoring steps for this log (followed manually) }
+skillsUsed:
+  - { name: log-session, reason: authoring and committing this log (followed manually) }
+frictions:
+  - description: >-
+      The three fixes were distinct concerns (routing tests, push tests, a doc fix) but
+      the task pinned one branch, so they rode one PR/review instead of separating.
+    solution: For multi-concern quality work, ask up front whether to split branches/PRs per concern.
+    severity: minor
+  - description: >-
+      Could not finish #3 cleanly — the gate.yml header still lies about ci/ — because the
+      agent push token lacks GitHub's workflow scope, so editing .github/workflows/ would
+      be rejected and could block the branch. Fixed only the agent-facing CLAUDE.md.
+    solution: A human maintainer fixes the one-line header; agents should never touch .github/workflows/.
+    severity: minor
+  - description: >-
+      The log-session Skill is user-invocation-only (disable-model-invocation), so /log-session
+      was refused; followed SKILL.md manually. Same friction logged in prior sessions.
+    solution: The Skill already documents "invoked manually — follow the steps"; this is working as designed.
+    severity: nit
+  - description: >-
+      The github MCP server disconnected and reconnected twice mid-session, needing ToolSearch
+      reloads to look up the merged PR number.
+    solution: Transient infrastructure; no action.
+    severity: nit
+  - description: startedAt is hand-estimated — no exact session-start clock was available; endedAt is exact via date -u.
+    solution: The deferred autonomous end-of-session trigger would capture both mechanically.
+    severity: nit
+  - description: >-
+      The push integration test emits git fetch/push progress to stderr, cluttering test output;
+      swallowing it would hurt the helper's real diagnostics, so I left it.
+    solution: Acceptable noise; a test-only stderr redirect could quiet it if it ever bothers.
+    severity: nit
