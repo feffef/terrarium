@@ -1,0 +1,90 @@
+session: session_01ByEM8M1y2n95jyQC2K97x3
+startedAt: 2026-07-05T09:50:00Z   # estimate — hand-authored (see frictions)
+endedAt:   2026-07-05T13:58:44Z   # exact — read from `date -u`
+kind: interactive
+goal: Build the digest Skill and journal landing
+status: completed
+outcome: PR #23 merged; digests live
+summary: >-
+  Ran a grill-with-docs session to scope, then built the `digest` platform-operation
+  Skill: a thin, unit-tested helper (list/gather) plus a user-invoked Skill that writes
+  one Digest per closed UTC day from git + session logs. Added the Digest glossary term
+  (CONTEXT.md) and ADR-0010. Reworked the journal landing: a full-width, inline-expanding
+  Daily digests section, an editorial intro rendered from index.md, expandable session
+  cards, and a Platform-own Skills filter. Filed issue #25 for standalone-page theming.
+  Resolved a merge conflict with the merged deploy PoC. PR #23 merged; verified end-to-end
+  with headless-Chromium screenshots throughout.
+prs: ["23"]
+docsRead:
+  - { path: CONTEXT.md, reason: extend the glossary with the Digest term }
+  - { path: CLAUDE.md, reason: ground rules, human-only surfaces, wrap-up convention }
+  - { path: docs/adr/0003-agent-operating-model-and-governance.md, reason: gated-PR vs direct-to-main governance }
+  - { path: docs/adr/0004-objective-safety-gate.md, reason: which surfaces are human-only }
+  - { path: docs/adr/0008-self-documentation-tenant-is-a-journal.md, reason: the Journal's content kinds }
+  - { path: docs/adr/0009-session-logs-commit-directly-to-main.md, reason: the bounded exception digests deliberately do NOT use }
+  - { path: shared/manifest.ts, reason: collection def types for the summary field }
+  - { path: scripts/generate.ts, reason: confirm a schema-only change causes no generated drift }
+  - { path: shared/routing.generated.ts, reason: routing map for the resolver + inventory }
+  - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: the generic catch-all — only `pages` is routed (the routing constraint) }
+  - { path: tenants/journal/tenant.config.ts, reason: the pages/sessions schemas }
+  - { path: "tenants/journal/app/pages/t/journal/[space]/index.vue", reason: the custom dashboard that ignores index.md body — root cause of the invisible index }
+  - { path: tenants/journal/app/components/journal/SessionCard.vue, reason: model the digest disclosure on the session-card expand }
+  - { path: tenants/journal/app/components/journal/SkillCatalogue.vue, reason: filter the panel to platform-operation Skills }
+  - { path: tenants/journal/content/current/sessions/, reason: mine prior frictions + gather digest materials }
+  - { path: .agents/skills/frictions-to-fixes/SKILL.md, reason: model the platform-operation Skill format }
+  - { path: "https://content.nuxt.com/docs/collections/types", reason: page vs data collections; routing; prefix (via web search — host was Cloudflare-blocked) }
+skillsUsed:
+  - { name: grill-with-docs, reason: scope the whole feature before building }
+  - { name: grilling, reason: one-question-at-a-time design tree (via grill-with-docs) }
+  - { name: domain-modeling, reason: coin and define the Digest term in CONTEXT.md }
+  - { name: log-session, reason: authoring and committing this log (followed manually) }
+frictions:
+  - description: >-
+      Proposed a dedicated `digests` collection as an equal option before checking that the
+      runtime resolver routes ONLY the `pages` collection; the collision forced an A→B→"simpler?"
+      →research→A reversal that cost several turns and tokens.
+    solution: Surface the "only `pages` is routed" constraint up front (CLAUDE.md / a routing README) so a dedicated page-collection isn't offered without its isolation-critical routing cost.
+    severity: moderate
+  - description: >-
+      Authored a full index.md overview and reported it working, but the journal Space root is a
+      custom dashboard that never renders index.md's body — the content was invisible until the
+      user loaded the page.
+    solution: Know the journal landing is a custom component; verify presentational changes against the rendered DOM, not the page source.
+    severity: major
+  - description: >-
+      "Verified" render by grepping the SSR HTML for content strings — which matched the serialized
+      useAsyncData payload, not the rendered DOM, giving false confidence twice.
+    solution: For UI changes, assert against a headless-browser screenshot / rendered DOM, not a payload grep.
+    severity: moderate
+  - description: >-
+      The digests link used the Space-relative content `path` (/digests/…) as a URL and 404'd; it
+      needed the /t/<tenant>/<space> route prefix.
+    solution: Build browsable routes from content paths via a helper; the added e2e guard now covers it. (Later mooted by moving to inline expansion.)
+    severity: minor
+  - description: >-
+      Individual journal documents (about, digest permalinks) render through the minimal generic
+      catch-all, so they are unthemed; discovered only by opening the page.
+    solution: Filed issue #25 to add a journal-layer document page; inline expansion sidesteps it on the dashboard.
+    severity: minor
+  - description: >-
+      PR #23 accreted several concerns (digest Skill + repeated dashboard iterations) on one branch,
+      because the shared dashboard file plus the pinned designated branch made a parallel PR conflict-prone.
+      Same class of friction logged in a prior session.
+    solution: Recurring — for coupled presentation work on one file, splitting PRs is costly; accept or plan the file seam up front.
+    severity: minor
+  - description: >-
+      No Playwright module is installed, so screenshots needed the pre-installed Chromium binary
+      driven directly (had to locate /opt/pw-browsers/.../chrome and use --headless=new --screenshot).
+    solution: Record the headless-Chromium screenshot recipe (or add playwright-core) for visual verification.
+    severity: nit
+  - description: >-
+      Inline digest/session expansion is client-side, so a static screenshot can't show the open
+      state; had to temporarily default one open to capture it.
+    solution: Acceptable workaround; a browser-driving test util would let us screenshot post-click.
+    severity: nit
+  - description: The github MCP server disconnected and reconnected several times mid-session, needing tool reloads.
+    solution: Transient infrastructure; no action.
+    severity: nit
+  - description: startedAt is hand-estimated — no exact session-start clock was available; endedAt is exact via date -u. Recurs every session.
+    solution: The deferred autonomous end-of-session trigger would capture both mechanically.
+    severity: nit
