@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 Append one honest **session log** for this Claude session to the Journal. Author the entry, then hand it to the helper — it validates and commits the file **directly to `main`** (never a PR; ADR-0009).
 
+> **Invoked manually — follow the steps below.** The Skill tool refuses this Skill by design (`disable-model-invocation: true`, so it can't self-fire on a premature session end); that refusal is not a dead-end. Just execute the steps below yourself.
+
 Run this only when the session is *actually* ending — when the user invokes it, or confirms wrap-up after you ask (the reminder convention in `CLAUDE.md`). Don't self-invoke on a hunch the session is done: the human may not be, and a premature or duplicate log would land straight on `main`.
 
 Be honest, **especially about friction** — a flattering log is worse than none.
