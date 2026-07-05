@@ -51,6 +51,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 
 - Inspect files with the **Read tool, not `cat`** — the Edit tool refuses to edit
   a file it hasn't seen via Read, so `cat`-then-Edit forces a wasteful re-read.
+- **Keep a PR's description in sync with its content — hard rule.** If you
+  fundamentally change what a PR does (switch approach, swap the files it touches,
+  answer review with a different solution), update the PR title/description in the
+  same push. A description that still sells the old approach is a defect, not a
+  nit: reviewers gate on it.
 
 ## Repo layout
 
