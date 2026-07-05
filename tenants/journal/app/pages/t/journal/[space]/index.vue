@@ -49,7 +49,8 @@ const digests = computed<DigestView[]>(() =>
     .map((p) => ({
       date: p.path.replace('/digests/', ''),
       summary: p.summary ?? p.description ?? '',
-      path: p.path,
+      // Content `path` is Space-relative; the browsable route carries the /t prefix.
+      to: `/t/${tenant}/${space}${p.path}`,
     })),
 )
 const skills = computed(() => (data.value?.skills ?? []) as unknown as SkillDoc[])
@@ -212,8 +213,8 @@ useHead({ title: `${title.value} · journal/${space}` })
             <span class="count">daily catch-up, newest first</span>
           </div>
           <ul class="digest-list">
-            <li v-for="d in digests" :key="d.path">
-              <NuxtLink :to="d.path" class="digest-date">{{ d.date }}</NuxtLink>
+            <li v-for="d in digests" :key="d.to">
+              <NuxtLink :to="d.to" class="digest-date">{{ d.date }}</NuxtLink>
               <span class="digest-summary">{{ d.summary }}</span>
             </li>
           </ul>
