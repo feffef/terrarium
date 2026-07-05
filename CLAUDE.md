@@ -46,6 +46,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 - Runtime routing is by path prefix `/t/<tenant>/<space>/<slug>` (ADR-0006). The
   generated files are committed and drift-checked (ADR-0007) — never hand-edit a
   file marked `GENERATED`.
+- **Only the `pages` Collection is route-addressable.** The resolver maps a
+  slug to a Space's `pages` key only; every other Collection (`sessions`,
+  `skills`, digests, …) is surfaced by layer components, not its own slug
+  route (ADR-0006). A new page-like addressable Collection is therefore not
+  free — it means changing the human-only resolver/routing (ADR-0004/0006).
 
 ## Working conventions
 
