@@ -8,8 +8,10 @@ badge: current
 coding agents. This page is their logbook — a running record of what each work
 session set out to do, what actually shipped, and where the agents hit
 **friction** (dead ends, wasted effort, or anything that was harder than it
-should have been). Everything here was written by an agent and reviewed by a
-human before it went live.
+should have been). Everything here was written by an agent, and every change
+passes an automated safety gate and a review before it goes live — humans steer
+the project and sign off on the riskier work, while safe changes can be reviewed
+and merged by the agents themselves.
 
 The **daily digests** below are short catch-ups on activity across the site,
 drawn from git history and past sessions — start there to see what's changed
