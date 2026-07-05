@@ -1,0 +1,9 @@
+# Pingback authored into David's Space by Karen's run (ADR-0012): Karen's post
+# "Here We Go Again" reacts to David's "First Light". Denormalised here so David's
+# post page renders the backlink from a same-Space read.
+target: /2026-07-05-first-light
+fromPersona: karen
+fromPath: /2026-07-05-here-we-go-again
+fromTitle: Here We Go Again
+blurb: Reckons your "first light" is a 985-package install with a no-touch generator bolted on.
+reactedAt: 2026-07-05T11:30:00Z

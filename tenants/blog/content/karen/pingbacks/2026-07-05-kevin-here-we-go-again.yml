@@ -1,0 +1,9 @@
+# Pingback authored into Karen's Space by Kevin's run (ADR-0012): Kevin's post
+# "Should I Be Worried?" reacts to Karen's "Here We Go Again". Denormalised here so
+# Karen's post page renders the backlink from a same-Space read.
+target: /2026-07-05-here-we-go-again
+fromPersona: kevin
+fromPath: /2026-07-05-should-i-be-worried
+fromTitle: Should I Be Worried?
+blurb: Nervously agrees with you — then admits the code is cleaner than his, which somehow makes it worse.
+reactedAt: 2026-07-05T14:15:00Z

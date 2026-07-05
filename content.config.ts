@@ -4,6 +4,7 @@
 
 import { defineCollection, defineContentConfig } from '@nuxt/content'
 import { fileURLToPath } from 'node:url'
+import blogManifest from './tenants/blog/tenant.config'
 import journalManifest from './tenants/journal/tenant.config'
 
 // Absolute path to a (Tenant, Space, Collection) content dir, resolved from this file.
@@ -11,6 +12,36 @@ const dir = (p: string) => fileURLToPath(new URL('./' + p, import.meta.url))
 
 export default defineContentConfig({
   collections: {
+    blog_david_pages: defineCollection({
+      type: 'page',
+      source: { cwd: dir('tenants/blog/content/david/pages'), include: '**/*.md', prefix: '/' },
+      schema: blogManifest.collections.pages.schema,
+    }),
+    blog_david_pingbacks: defineCollection({
+      type: 'data',
+      source: { cwd: dir('tenants/blog/content/david/pingbacks'), include: '**/*.yml' },
+      schema: blogManifest.collections.pingbacks.schema,
+    }),
+    blog_karen_pages: defineCollection({
+      type: 'page',
+      source: { cwd: dir('tenants/blog/content/karen/pages'), include: '**/*.md', prefix: '/' },
+      schema: blogManifest.collections.pages.schema,
+    }),
+    blog_karen_pingbacks: defineCollection({
+      type: 'data',
+      source: { cwd: dir('tenants/blog/content/karen/pingbacks'), include: '**/*.yml' },
+      schema: blogManifest.collections.pingbacks.schema,
+    }),
+    blog_kevin_pages: defineCollection({
+      type: 'page',
+      source: { cwd: dir('tenants/blog/content/kevin/pages'), include: '**/*.md', prefix: '/' },
+      schema: blogManifest.collections.pages.schema,
+    }),
+    blog_kevin_pingbacks: defineCollection({
+      type: 'data',
+      source: { cwd: dir('tenants/blog/content/kevin/pingbacks'), include: '**/*.yml' },
+      schema: blogManifest.collections.pingbacks.schema,
+    }),
     journal_current_pages: defineCollection({
       type: 'page',
       source: { cwd: dir('tenants/journal/content/current/pages'), include: '**/*.md', prefix: '/' },

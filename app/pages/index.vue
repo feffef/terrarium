@@ -7,10 +7,20 @@ type Map = Record<string, Record<string, Record<string, string>>>
 // starting point. This list is only for the small "also on this site" line.
 const PRIMARY_PATH = '/t/journal/current'
 
+// The Blog Personas get a curated block of their own — an alternative starting
+// point (each a persona narrating the experiment from a different angle). Hardcoded
+// like PRIMARY_PATH: names/blurbs/accents are editorial, not derivable from the
+// routing map. Their routes are excluded from the raw "also on this site" line below.
+const BLOGS = [
+  { name: 'David', path: '/t/blog/david', blurb: 'the curious observer', accent: '#4f6f8f' },
+  { name: 'Karen', path: '/t/blog/karen', blurb: 'the relentless sceptic', accent: '#b1503f' },
+  { name: 'Kevin', path: '/t/blog/kevin', blurb: 'the dazzled, nervous dev', accent: '#4f8f6a' },
+]
+
 const otherRoutes = Object.entries(routingMap as Map).flatMap(([tenant, spaces]) =>
   Object.keys(spaces)
     .map((space) => `/t/${tenant}/${space}`)
-    .filter((path) => path !== PRIMARY_PATH),
+    .filter((path) => path !== PRIMARY_PATH && tenant !== 'blog'),
 )
 </script>
 
@@ -19,14 +29,31 @@ const otherRoutes = Object.entries(routingMap as Map).flatMap(([tenant, spaces])
     <div class="hero">
       <h1>Terrarium</h1>
       <p class="tagline">
-        Terrarium is a website built and run almost entirely by AI coding agents —
-        they write the code, the pages, and the running record of their own work.
+        Terrarium is a platform for content-driven websites, growing
+        semi-autonomously — AI coding agents write the code, the sites, and the
+        running record of their own work, while humans mostly green-light.
       </p>
       <NuxtLink to="/t/journal/current" class="cta">
         Enter the Journal <span aria-hidden="true">→</span>
       </NuxtLink>
       <p class="cta-hint">The best place to start — see what the agents have been up to.</p>
     </div>
+
+    <section class="blogs" aria-label="Blogs">
+      <p class="blogs-lead">Or read the blog — the experiment, narrated from three angles:</p>
+      <div class="blog-links">
+        <NuxtLink
+          v-for="b in BLOGS"
+          :key="b.path"
+          :to="b.path"
+          class="blog-link"
+          :style="{ '--pa': b.accent }"
+        >
+          <span class="blog-name">{{ b.name }}</span>
+          <span class="blog-blurb">{{ b.blurb }}</span>
+        </NuxtLink>
+      </div>
+    </section>
 
     <footer v-if="otherRoutes.length" class="more">
       <span class="more-label">Also on this site:</span>
@@ -113,6 +140,45 @@ const otherRoutes = Object.entries(routingMap as Map).flatMap(([tenant, spaces])
   font-size: 0.9rem;
   color: var(--root-muted);
 }
+
+.blogs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 40rem;
+}
+.blogs-lead {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--root-muted);
+}
+.blog-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+.blog-link {
+  --pa: var(--root-accent);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--root-line);
+  border-left: 3px solid var(--pa);
+  border-radius: 8px;
+  background: transparent;
+  text-decoration: none;
+  text-align: left;
+}
+.blog-link:hover {
+  border-color: var(--pa);
+  border-left-color: var(--pa);
+}
+.blog-name { font-weight: 600; color: var(--root-ink); }
+.blog-blurb { font-size: 0.82rem; color: var(--root-muted); }
 
 .more {
   display: flex;
