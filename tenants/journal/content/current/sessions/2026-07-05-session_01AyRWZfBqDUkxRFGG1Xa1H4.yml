@@ -1,0 +1,53 @@
+session: session_01AyRWZfBqDUkxRFGG1Xa1H4
+startedAt: 2026-07-05T06:28:00Z
+endedAt: 2026-07-05T06:50:00Z
+kind: interactive
+goal: Implement open issue #7
+status: completed
+outcome: Fix landed via PR #8, merged
+summary: >-
+  Implemented the sole open issue, #7: the log-session helper committed session
+  logs directly to main via a throwaway index (ADR-0009) but left the authored
+  .yml behind as an untracked file — a recurring papercut whose obvious "fix"
+  (commit it to the feature branch) would route a log through a PR, exactly what
+  ADR-0009 forbids. Took the issue's preferred option: after a successful push,
+  rm the working-copy scratch file and print what it removed; never on
+  --dry-run. Extracted a testable land() seam with an injectable push so both
+  the cleanup and dry-run branches are unit tested without touching git. Added
+  two tests, ran the full safety gate green, and verified the CLI end-to-end.
+  Shipped as PR #8, merged.
+prs: ["8"]
+docsRead:
+  - { path: "GitHub issue #7", reason: the spec and its preferred fix }
+  - { path: scripts/log-session.ts, reason: the helper to change }
+  - { path: tests/unit/log-session.spec.ts, reason: existing test shape to extend }
+  - { path: docs/adr/0009-session-logs-commit-directly-to-main.md, reason: the boundary the fix must respect }
+  - { path: .agents/skills/log-session/SKILL.md, reason: authoring steps for this log }
+  - { path: CLAUDE.md, reason: repo entry point, safety gate, wrap-up convention }
+skillsUsed:
+  - { name: log-session, reason: authoring and committing this log }
+frictions:
+  - description: >-
+      Cleanup-on-success can't be unit tested against a real push to main, so I
+      had to introduce a dependency-injection seam (land() with an injectable
+      push) purely to make the branch reachable in a test.
+    solution: >-
+      The injected-push pattern works and reads cleanly, but a lighter test
+      harness for the git plumbing would let coverage follow the code more directly.
+    severity: nit
+  - description: >-
+      startedAt/endedAt are hand-estimated — no exact session clock was available
+      when authoring this log by hand.
+    solution: The deferred autonomous end-of-session trigger, or a readable live clock.
+    severity: nit
+  - description: >-
+      The log-session Skill is user-invocation-only, so the Skill tool refused it;
+      I followed SKILL.md manually. Same friction logged in the prior session — a
+      documented "follow the steps manually" note in the Skill would close it.
+    severity: nit
+    solution: Add a "invoked manually — follow these steps" note to the Skill body.
+  - description: >-
+      Cold container had no deps; pnpm install had to run before the safety gate,
+      adding a step to first verification. Recurring across sessions.
+    solution: A SessionStart hook that pre-installs deps (the session-start-hook Skill exists for this).
+    severity: nit
