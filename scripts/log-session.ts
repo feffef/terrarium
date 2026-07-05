@@ -74,22 +74,24 @@ export function expectedFilename(entry: SessionEntry): string {
   return `${date}-${entry.session}.yml`
 }
 
-function git(args: string[], env?: NodeJS.ProcessEnv): string {
+/** Run git. `cwd` defaults to the project root; it is injectable so the push loop can
+ *  be exercised end-to-end against a throwaway repo + bare remote in tests. */
+function git(args: string[], opts?: { env?: NodeJS.ProcessEnv; cwd?: string }): string {
   return execFileSync('git', args, {
-    cwd: root,
+    cwd: opts?.cwd ?? root,
     encoding: 'utf8',
-    env: env ?? process.env,
+    env: opts?.env ?? process.env,
   }).trim()
 }
 
 /** git identity for the log commit — configured identity, or a stable fallback so a
  *  cold autonomous session can still author its log. */
-function commitEnv(): NodeJS.ProcessEnv {
+function commitEnv(cwd: string = root): NodeJS.ProcessEnv {
   let name = ''
   let email = ''
   try {
-    name = git(['config', 'user.name'])
-    email = git(['config', 'user.email'])
+    name = git(['config', 'user.name'], { cwd })
+    email = git(['config', 'user.email'], { cwd })
   } catch {
     /* unset — fall through to defaults */
   }
@@ -102,21 +104,26 @@ function commitEnv(): NodeJS.ProcessEnv {
 /** Build a commit off `origin/main`'s tree containing EXACTLY the one log file, using a
  *  throwaway index so the working tree and current branch are never touched. Returns the
  *  new commit sha. Asserts the commit changes exactly `relPath` — the "only one file" guard. */
-function buildLogCommit(relPath: string, absPath: string, remote: string): string {
+export function buildLogCommit(
+  relPath: string,
+  absPath: string,
+  remote: string,
+  cwd: string = root,
+): string {
   const base = `${remote}/main`
-  const env = commitEnv()
+  const env = commitEnv(cwd)
   const indexDir = mkdtempSync(join(tmpdir(), 'log-session-'))
   const indexFile = join(indexDir, 'index')
   const idxEnv = { ...env, GIT_INDEX_FILE: indexFile }
   try {
-    git(['read-tree', base], idxEnv) // start from main's tree
-    const blob = git(['hash-object', '-w', absPath])
-    git(['update-index', '--add', '--cacheinfo', `100644,${blob},${relPath}`], idxEnv)
-    const tree = git(['write-tree'], idxEnv)
+    git(['read-tree', base], { env: idxEnv, cwd }) // start from main's tree
+    const blob = git(['hash-object', '-w', absPath], { cwd })
+    git(['update-index', '--add', '--cacheinfo', `100644,${blob},${relPath}`], { env: idxEnv, cwd })
+    const tree = git(['write-tree'], { env: idxEnv, cwd })
     const msg = `journal(sessions): log ${basename(relPath, '.yml')}`
-    const commit = git(['commit-tree', tree, '-p', base, '-m', msg], env)
+    const commit = git(['commit-tree', tree, '-p', base, '-m', msg], { env, cwd })
 
-    const changed = git(['diff', '--name-only', base, commit]).split('\n').filter(Boolean)
+    const changed = git(['diff', '--name-only', base, commit], { cwd }).split('\n').filter(Boolean)
     if (changed.length !== 1 || changed[0] !== relPath) {
       throw new Error(
         `refusing to push: commit would change ${JSON.stringify(changed)}, expected only [${relPath}]`,
@@ -137,7 +144,12 @@ function sleep(ms: number): void {
 /** fetch → (rebuild off fresh main) → push, with retry. Rebuilding on every attempt is the
  *  "rebase": a parallel session that advanced `main` only moves the parent, never conflicts,
  *  because filenames are globally unique. */
-function pushWithRetry(relPath: string, absPath: string, remote: string): string {
+export function pushWithRetry(
+  relPath: string,
+  absPath: string,
+  remote: string,
+  cwd: string = root,
+): string {
   // One immediate attempt, then one retry before each growing backoff.
   const backoffs = [0, ...RETRY_DELAYS_MS]
   let lastErr: unknown
@@ -147,9 +159,9 @@ function pushWithRetry(relPath: string, absPath: string, remote: string): string
       sleep(delay)
     }
     try {
-      git(['fetch', remote, 'main'])
-      const commit = buildLogCommit(relPath, absPath, remote)
-      git(['push', remote, `${commit}:refs/heads/main`])
+      git(['fetch', remote, 'main'], { cwd })
+      const commit = buildLogCommit(relPath, absPath, remote, cwd)
+      git(['push', remote, `${commit}:refs/heads/main`], { cwd })
       return commit
     } catch (err) {
       lastErr = err
