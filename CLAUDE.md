@@ -155,3 +155,7 @@ Canonical label vocabulary — `needs-triage`, `needs-info`, `ready-for-agent`, 
 ### Domain docs
 
 Single-context: one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+
+### Tenant-layer conventions
+
+Nuxt-layer gotchas for editing a Tenant (alias resolution, layer-local imports, CSS token inheritance). See `docs/agents/tenant-layers.md`.
