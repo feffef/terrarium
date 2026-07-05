@@ -2,10 +2,10 @@
 // layer"). Its fit-out — a simple blog theme plus a Persona landing and a post
 // page — overriding the Platform's generic catch-all renderer for `/t/blog/*`.
 //
-// Purely presentational: it reads the already-generated, per-Space keyed
-// collections through the shared routing map, defines NO content collections of
-// its own (those stay in the generated root content.config.ts, ADR-0002/0007), and
-// touches none of the isolation-critical routing/generator logic (ADR-0004).
+// Purely presentational: it reads the per-Space keyed collections through the
+// shared routing map, defines NO content collections of its own (those stay in the
+// root content.config.ts, ADR-0002/0013), and touches none of the
+// isolation-critical routing/generator logic (ADR-0004).
 import { fileURLToPath } from 'node:url'
 
 export default defineNuxtConfig({

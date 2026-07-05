@@ -1,76 +1,31 @@
-// ⚠️  GENERATED FILE — DO NOT EDIT.
-// Produced by scripts/generate.ts from tenants/*/tenant.config.ts (ADR-0002).
-// Edit a Tenant's manifest and run `pnpm gen`. CI drift-checks this file.
-
+// Dynamic Nuxt Content config (ADR-0013, supersedes the committed-codegen half of
+// ADR-0007). This is an ORDINARY module — NOT generated, hand-edit freely.
+//
+// It builds the keyed `tenant_space_collection` collections at config-evaluation
+// time by enumerating every Tenant manifest and running the same pure `expand()`
+// the generator uses (shared/expand.ts). A manifest edit is therefore picked up by
+// `nuxt dev`/`build`/`prepare` with no regenerate step. The routing map still needs
+// to be committed for the runtime/client (shared/routing.generated.ts, produced by
+// `pnpm gen`) — see ADR-0013.
 import { defineCollection, defineContentConfig } from '@nuxt/content'
 import { fileURLToPath } from 'node:url'
-import blogManifest from './tenants/blog/tenant.config'
-import journalManifest from './tenants/journal/tenant.config'
+import { expand, loadManifests } from './shared/expand'
 
 // Absolute path to a (Tenant, Space, Collection) content dir, resolved from this file.
 const dir = (p: string) => fileURLToPath(new URL('./' + p, import.meta.url))
 
 export default defineContentConfig({
-  collections: {
-    blog_david_pages: defineCollection({
-      type: 'page',
-      source: { cwd: dir('tenants/blog/content/david/pages'), include: '**/*.md', prefix: '/' },
-      schema: blogManifest.collections.pages.schema,
-    }),
-    blog_david_pingbacks: defineCollection({
-      type: 'data',
-      source: { cwd: dir('tenants/blog/content/david/pingbacks'), include: '**/*.yml' },
-      schema: blogManifest.collections.pingbacks.schema,
-    }),
-    blog_karen_pages: defineCollection({
-      type: 'page',
-      source: { cwd: dir('tenants/blog/content/karen/pages'), include: '**/*.md', prefix: '/' },
-      schema: blogManifest.collections.pages.schema,
-    }),
-    blog_karen_pingbacks: defineCollection({
-      type: 'data',
-      source: { cwd: dir('tenants/blog/content/karen/pingbacks'), include: '**/*.yml' },
-      schema: blogManifest.collections.pingbacks.schema,
-    }),
-    blog_kevin_pages: defineCollection({
-      type: 'page',
-      source: { cwd: dir('tenants/blog/content/kevin/pages'), include: '**/*.md', prefix: '/' },
-      schema: blogManifest.collections.pages.schema,
-    }),
-    blog_kevin_pingbacks: defineCollection({
-      type: 'data',
-      source: { cwd: dir('tenants/blog/content/kevin/pingbacks'), include: '**/*.yml' },
-      schema: blogManifest.collections.pingbacks.schema,
-    }),
-    journal_current_pages: defineCollection({
-      type: 'page',
-      source: { cwd: dir('tenants/journal/content/current/pages'), include: '**/*.md', prefix: '/' },
-      schema: journalManifest.collections.pages.schema,
-    }),
-    journal_current_skills: defineCollection({
-      type: 'data',
-      source: { cwd: dir('tenants/journal/content/current/skills'), include: '**/*.yml' },
-      schema: journalManifest.collections.skills.schema,
-    }),
-    journal_current_sessions: defineCollection({
-      type: 'data',
-      source: { cwd: dir('tenants/journal/content/current/sessions'), include: '**/*.yml' },
-      schema: journalManifest.collections.sessions.schema,
-    }),
-    journal_archived_pages: defineCollection({
-      type: 'page',
-      source: { cwd: dir('tenants/journal/content/archived/pages'), include: '**/*.md', prefix: '/' },
-      schema: journalManifest.collections.pages.schema,
-    }),
-    journal_archived_skills: defineCollection({
-      type: 'data',
-      source: { cwd: dir('tenants/journal/content/archived/skills'), include: '**/*.yml' },
-      schema: journalManifest.collections.skills.schema,
-    }),
-    journal_archived_sessions: defineCollection({
-      type: 'data',
-      source: { cwd: dir('tenants/journal/content/archived/sessions'), include: '**/*.yml' },
-      schema: journalManifest.collections.sessions.schema,
-    }),
-  },
+  collections: Object.fromEntries(
+    expand(loadManifests()).map((c) => [
+      c.key,
+      defineCollection({
+        type: c.type,
+        source:
+          c.type === 'page'
+            ? { cwd: dir(c.cwdRel), include: c.include, prefix: '/' }
+            : { cwd: dir(c.cwdRel), include: c.include },
+        schema: c.schema,
+      }),
+    ]),
+  ),
 })

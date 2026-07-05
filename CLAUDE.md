@@ -33,9 +33,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 
 - One repo, one container, build-time-baked; nothing is created at runtime
   (ADR-0001).
-- Agents edit a Tenant's **manifest** (declarative intent); a generator produces
-  `content.config.ts`. Don't hand-write the keyed collection cross-product
-  (ADR-0002).
+- Agents edit a Tenant's **manifest** (declarative intent); `content.config.ts`
+  builds the keyed collections dynamically from the manifests at
+  config-evaluation time (ADR-0002/0013). Don't hand-write the keyed cross-product.
 - Every change lands as a **gated PR** on a feature branch — no self-merge.
   Autonomy may *propose* freely but *implements* net-new only on human
   green-light (ADR-0003).
@@ -44,8 +44,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   auto-merge changes touching them.
 - **Skills** are generic, repo-committed, and first-class (ADR-0005).
 - Runtime routing is by path prefix `/t/<tenant>/<space>/<slug>` (ADR-0006). The
-  generated files are committed and drift-checked (ADR-0007) — never hand-edit a
-  file marked `GENERATED`.
+  routing map `shared/routing.generated.ts` is committed and drift-checked
+  (ADR-0007/0013) — never hand-edit a file marked `GENERATED`. `content.config.ts`
+  is NOT generated: it is an ordinary, hand-editable module (ADR-0013).
 - **Only the `pages` Collection is route-addressable.** The resolver maps a
   slug to a Space's `pages` key only; every other Collection (`sessions`,
   `skills`, digests, …) is surfaced by layer components, not its own slug
@@ -70,9 +71,10 @@ docs/adr/                           # Architecture Decision Records (read all be
 tenants/<tenant>/tenant.config.ts   # the manifest an agent edits (declarative intent)
 tenants/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Space
 shared/manifest.ts                  # manifest types + defineTenant() + validation
-scripts/generate.ts                 # generator: manifests → keyed collections
-content.config.ts                   # GENERATED — keyed Nuxt Content collections
-shared/routing.generated.ts         # GENERATED — routing map + L2 entry routes
+shared/expand.ts                    # pure manifest→keyed-collection expansion (expand(), L3-tested)
+scripts/generate.ts                 # generator: manifests → routing map (only)
+content.config.ts                   # ordinary module — builds keyed collections dynamically (ADR-0013)
+shared/routing.generated.ts         # GENERATED — routing map + L2 entry routes (the one committed codegen)
 app/pages/t/[tenant]/[space]/[...slug].vue   # runtime routing + ContentRenderer
 tests/unit/                         # L3 isolation (generator/keying)
 tests/e2e/                          # L2 smoke render
@@ -84,12 +86,13 @@ tests/e2e/                          # L2 smoke render
 ## Self-verification — the safety gate (ADR-0004)
 
 Run this before proposing any change. CI (`.github/workflows/gate.yml`) runs the same set,
-cheapest-first. Everything is baked from the manifests, so always regenerate first.
+cheapest-first. The keyed collections build dynamically from the manifests
+(ADR-0013); only the routing map is regenerated, so regenerate it first.
 
 ```
 pnpm install     # installs deps, then runs `pnpm gen` + `nuxt prepare`
-pnpm gen         # regenerate content.config.ts + shared/routing.generated.ts
-pnpm gate:drift  # L0 — regenerate and fail if the committed GENERATED files drifted
+pnpm gen         # regenerate shared/routing.generated.ts (content.config.ts is dynamic — no regen)
+pnpm gate:drift  # L0 — regenerate and fail if the committed routing map drifted
 pnpm lint        # L0
 pnpm typecheck   # L0
 pnpm test        # L3 — generator/isolation unit tests (unique, scoped keys)
@@ -119,9 +122,11 @@ dependency or browser download required.
   not change what most of that page shows; check the `.vue` file too.
 
 To **add a Space or Collection**: edit the Tenant's `tenant.config.ts`, run
-`pnpm gen`, then commit the regenerated files alongside it. To **spawn a Tenant**:
-drop a `tenants/<name>/` folder with a manifest and content, then regenerate.
-Never hand-edit the `GENERATED` files — the drift gate will reject it.
+`pnpm gen`, then commit the regenerated `shared/routing.generated.ts` alongside it
+(the keyed collections update themselves — `content.config.ts` is dynamic). To
+**spawn a Tenant**: drop a `tenants/<name>/` folder with a manifest and content,
+then `pnpm gen`. Never hand-edit the `GENERATED` routing map — the drift gate will
+reject it. Debug the expanded collection set with `pnpm gen --print`.
 
 ## Logging your session
 
@@ -151,7 +156,7 @@ A *deterministic* end-of-session trigger for **autonomous** sessions is
 
 Milestone 1 (foundation) exists: manifest → generator → gated-render pipeline for
 one Tenant (`journal`) with two Spaces (`current`, `archived`) and two Collections
-(`pages`, `skills`); full safety gate green (ADR-0006/0007). Still deferred:
+(`pages`, `skills`); full safety gate green (ADR-0006/0007/0013). Still deferred:
 more Tenants, the platform-operation Skills (`spawn-tenant`, `add-space`, …), and
 the autonomous jobs (`sync`, `drift-check`, …). Consult the ADRs for what is
 decided vs. deliberately left open before building.
