@@ -1,0 +1,110 @@
+schemaVersion: 1
+session: session_015ZNHhdyJDmUJLhGc6Ww3oW
+startedAt: 2026-07-05T19:10:00Z
+endedAt: 2026-07-05T22:28:21Z
+kind: interactive
+goal: Implement the fable code-review issues
+status: completed
+outcome: Seven PRs merged; two gate PRs parked
+summary: >-
+  Orchestrated parallel worktree agents to implement the fable code-review
+  issues #54–#63. Reviewed every PR diff myself and merged seven low-risk ones
+  on green CI (#63, #54, #58, #61, #59, #60, #62), re-verifying integrated main
+  stayed green. Left the two gate-touching PRs (#55, #56) for human review per
+  ADR-0004. For #59 I ran the feasibility spike first, shipped the smaller
+  dynamic-config variant (ADR-0013), and filed #89 for the full generator
+  removal. Rebased #82/#88 after sibling merges and relocated #82's inline
+  policy prose into ADR-0009. Closed all ten review issues.
+prs: ["78", "79", "80", "82", "84", "86", "88"]
+docsRead:
+  - { path: CLAUDE.md, reason: human-only surfaces + ADR merge gating }
+  - { path: "docs/adr/", reason: which surfaces are human-only (ADR-0003/0004) }
+  - { path: "https://github.com/feffef/terrarium/issues/59", reason: gauge ADR-0007 supersession risk }
+  - { path: "https://github.com/feffef/terrarium/issues/60", reason: schema-versioning scope }
+  - { path: "https://github.com/feffef/terrarium/issues/62", reason: governance decision to record }
+  - { path: "https://github.com/feffef/terrarium/pull/86", reason: review dynamic-config diff before merge }
+skillsUsed:
+  - { name: log-session, reason: author this session log }
+frictions:
+  - description: >-
+      A stop hook fired every single turn warning that already-merged main
+      commits (incl. GitHub's merge-bot) were "unverified", urging a rebase of
+      merged history.
+    solution: >-
+      Scope the check to unpushed local commits only; never flag merge-bot or
+      already-on-origin commits — following its advice would rewrite merged
+      history destructively.
+    severity: minor
+  - description: >-
+      log-session's "most recent Claude-Session trailer in git log" heuristic
+      returned a DIFFERENT session's id, because other sessions committed logs
+      and blog content to main meanwhile.
+    solution: >-
+      Grep git log for commits carrying THIS session's trailer instead of taking
+      the latest; or pass the id explicitly. Used the grep workaround.
+    severity: minor
+  - description: >-
+      Merging #54/#61 before the typecheck-coverage PR (#55) let a latent
+      auto-import-shadowing bug (`v-if="frictionCount"`) reach main; only the
+      still-unmerged #81 fixes it.
+    solution: >-
+      Sequence coverage-expanding gate work before the refactors it protects, or
+      accept the window and track it — main carries a known type-latent (runtime-
+      harmless) defect until #81 lands.
+    severity: moderate
+  - description: >-
+      Subagent worktrees have no node_modules, so each of ~9 parallel agents ran
+      `pnpm install` before the gate — repeated multi-second setup and token
+      cost across the fan-out.
+    solution: >-
+      Share/symlink a node_modules store into worktrees, or pre-warm it, so
+      isolated agents don't each reinstall 985 packages.
+    severity: minor
+  - description: >-
+      The gate CI workflow emits no completion event, so I polled check_runs and
+      used sleep timers to wait for green before each merge — extra round-trips
+      per PR.
+    solution: >-
+      A push/webhook signal on gate completion would remove the polling; for now
+      background-sleep + re-poll is the workaround.
+    severity: minor
+  - description: >-
+      PRs branched before sibling merges (#81, #82, #88) conflicted on shared
+      files (index.vue, CLAUDE.md, log-session, nuxt.config.ts) and each needed a
+      dedicated rebase pass.
+    solution: >-
+      Inherent to parallel PRs touching the same files; sequencing same-file
+      issues (as I did for #54→#61) avoids it, but cross-file overlap still bit.
+    severity: minor
+  - description: >-
+      #82's first pass inlined ~40 lines of schema-evolution policy prose in the
+      manifests; the maintainer wanted it in an ADR, forcing a second relocation
+      round.
+    solution: >-
+      Anticipate #62's single-homing rule up front — put policy in one ADR home
+      with one-line pointers inline from the start.
+    severity: nit
+  - description: >-
+      Several subagents ran `git checkout -b` in the shared checkout before
+      moving into their assigned worktree, leaving stray branch pointers I had to
+      reset.
+    solution: >-
+      Have the worktree agent create its branch inside the worktree from the
+      first command; don't touch the shared checkout.
+    severity: nit
+  - description: >-
+      The first `pnpm lint` on integrated main reported "4 problems" because it
+      raced a concurrent gen/gate:drift regenerating files; a clean re-run
+      passed. Briefly misleading.
+    solution: >-
+      Run gate steps sequentially, not batched with regeneration, when
+      confirming a clean tree.
+    severity: nit
+  - description: >-
+      startedAt is a hand estimate — there is still no exact session-start
+      capture for interactive sessions (deferred to the future autonomous
+      trigger).
+    solution: >-
+      The deferred end-of-session trigger should stamp real start/end; until then
+      startedAt is approximate.
+    severity: nit
