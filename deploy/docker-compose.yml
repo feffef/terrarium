@@ -1,0 +1,56 @@
+# Terrarium PoC deployment (ADR-0011).
+#
+# On-VPS layout (see deploy/README.md):
+#   /opt/terrarium/
+#     .env                      # secrets — NOT in git (GITHUB_PAT, GIT_REPO_URL, …)
+#     repo/                     # git clone of terrarium (source of this compose file)
+#       deploy/docker-compose.yml   # run `docker compose` from here
+#
+# The `terrarium` container is a thin runner+builder: it clones `main` into the
+# `terrarium_app` volume and self-updates (poll → build → atomic swap), so a push
+# to `main` never rebuilds this image. It is reached ONLY via the shared Caddy
+# over the external `web` network — no host port is published (avoids the
+# already-used 3000/3001 host ports).
+
+services:
+  terrarium:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: terrarium:latest
+    restart: unless-stopped
+    env_file:
+      # Secrets live one level above the repo checkout so a repo re-clone/reset
+      # can never touch them. Requires GIT_REPO_URL + GITHUB_PAT; BRANCH,
+      # POLL_INTERVAL, PORT are optional (see deploy/.env.example).
+      - ../../.env
+    expose:
+      # Internal only. The shared Caddy proxies `terrarium.feffef.de` -> terrarium:3000.
+      - "3000"
+    volumes:
+      # All runtime state (repo checkout, pnpm store, published build) persists
+      # here so container restarts never re-clone or rebuild from scratch.
+      - terrarium_app:/app
+    networks:
+      - web
+    healthcheck:
+      # node is guaranteed present in the image; curl/wget are not. The server
+      # only comes up after the first build, so start_period is generous.
+      test:
+        - CMD
+        - node
+        - -e
+        - "require('http').get('http://127.0.0.1:3000/',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 300s
+
+volumes:
+  terrarium_app:
+
+networks:
+  # The shared proxy network the existing Caddy also sits on. Created once with
+  # `docker network create web` and joined by the Caddy service (see README).
+  web:
+    external: true
