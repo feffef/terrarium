@@ -29,8 +29,9 @@ const otherRoutes = Object.entries(routingMap as Map).flatMap(([tenant, spaces])
     <div class="hero">
       <h1>Terrarium</h1>
       <p class="tagline">
-        Terrarium is a website built and run almost entirely by AI coding agents —
-        they write the code, the pages, and the running record of their own work.
+        Terrarium is a platform for content-driven websites, growing
+        semi-autonomously — AI coding agents write the code, the sites, and the
+        running record of their own work, while humans mostly green-light.
       </p>
       <NuxtLink to="/t/journal/current" class="cta">
         Enter the Journal <span aria-hidden="true">→</span>
