@@ -71,14 +71,14 @@ shared/routing.generated.ts         # GENERATED — routing map + L2 entry route
 app/pages/t/[tenant]/[space]/[...slug].vue   # runtime routing + ContentRenderer
 tests/unit/                         # L3 isolation (generator/keying)
 tests/e2e/                          # L2 smoke render
-ci/gate.yml                         # the safety gate; a maintainer installs it to
-                                    #   .github/workflows/ (CI is human-only, ADR-0004)
+.github/workflows/gate.yml          # the safety gate (installed & live); human-only —
+                                    #   CI is never agent-edited (ADR-0004)
 .agents/skills/ , .claude/skills/   # committed Skills (general + platform-operation)
 ```
 
 ## Self-verification — the safety gate (ADR-0004)
 
-Run this before proposing any change. CI (`ci/gate.yml`) runs the same set,
+Run this before proposing any change. CI (`.github/workflows/gate.yml`) runs the same set,
 cheapest-first. Everything is baked from the manifests, so always regenerate first.
 
 ```

@@ -3,37 +3,27 @@
 // to serve. We resolve it to generated collection keys and query only those
 // collections — physical table-level isolation means no cross-Space leakage.
 import type { Collections } from '@nuxt/content'
-import { routingMap } from '~~/shared/routing.generated'
-
-type Map = Record<string, Record<string, Record<string, string>>>
+import { resolveSpaceRoute } from '~~/shared/routing'
 
 const route = useRoute()
 const tenant = String(route.params.tenant)
 const space = String(route.params.space)
 
-const slugParam = route.params.slug
-const joined = Array.isArray(slugParam) ? slugParam.join('/') : (slugParam ?? '')
-const path = joined ? `/${joined}`.replace(/\/$/, '') : '/'
-
-const spaceCollections = (routingMap as Map)[tenant]?.[space]
-
-if (!spaceCollections?.pages) {
+// Pure isolation-critical resolution lives in shared/routing.ts (unit-tested).
+const resolved = resolveSpaceRoute(tenant, space, route.params.slug)
+if (!resolved) {
   throw createError({
     statusCode: 404,
     statusMessage: `Unknown Tenant/Space: ${tenant}/${space}`,
   })
 }
 
-const pagesKey = spaceCollections.pages as keyof Collections
-
-// Convention: `pages` is the routed collection; every other collection in the
-// Space is queryable `data`, surfaced as a catalog on the Space landing. Each is
-// still keyed per (Tenant, Space), so this stays fully isolated.
-const dataCollections = Object.entries(spaceCollections)
-  .filter(([name]) => name !== 'pages')
-  .map(([name, key]) => ({ name, key: key as keyof Collections }))
-
-const atRoot = path === '/'
+const { path, atRoot } = resolved
+const pagesKey = resolved.pagesKey as keyof Collections
+const dataCollections = resolved.dataCollections.map(({ name, key }) => ({
+  name,
+  key: key as keyof Collections,
+}))
 
 const { data } = await useAsyncData(route.path, async () => {
   const page = await queryCollection(pagesKey).path(path).first()
