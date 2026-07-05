@@ -8,24 +8,27 @@
 // read-only import — no isolation logic is duplicated or changed), then reads
 // only `journal_<space>_{pages,skills,sessions}`. Spaces cannot leak.
 import type { Collections } from '@nuxt/content'
+import { resolveSpaceRoute, type RoutingMap } from '~~/shared/routing'
 import { routingMap } from '~~/shared/routing.generated'
 import type { Friction, Importance, PageDoc, SessionCardView, SessionDoc, Severity, SkillDoc } from '../../../../types/journal'
-
-type RoutingMap = Record<string, Record<string, Record<string, string>>>
 
 const route = useRoute()
 const tenant = 'journal'
 const space = String(route.params.space)
 
-const spaceCollections = (routingMap as RoutingMap)[tenant]?.[space]
-if (!spaceCollections?.pages) {
+// Resolve through the SAME shared, unit-tested resolver the catch-all uses — no
+// isolation logic is duplicated here; it reads only this (Tenant, Space)'s keys.
+const resolved = resolveSpaceRoute(tenant, space, undefined)
+if (!resolved) {
   throw createError({ statusCode: 404, statusMessage: `Unknown Space: ${tenant}/${space}` })
 }
-const pagesKey = spaceCollections.pages as keyof Collections
-const skillsKey = spaceCollections.skills as keyof Collections | undefined
-const sessionsKey = spaceCollections.sessions as keyof Collections | undefined
+const pagesKey = resolved.pagesKey as keyof Collections
+const skillsKey = resolved.dataCollections.find((d) => d.name === 'skills')?.key as keyof Collections | undefined
+const sessionsKey = resolved.dataCollections.find((d) => d.name === 'sessions')?.key as keyof Collections | undefined
 
-const spaces = Object.keys((routingMap as Map)[tenant] ?? {})
+// The resolver deliberately exposes only the one resolved Space, so read the map
+// directly (with the shared type) for the Space-toggle's list of sibling Spaces.
+const spaces = Object.keys((routingMap as RoutingMap)[tenant] ?? {})
 
 const { data } = await useAsyncData(route.path, async () => {
   const pages = await queryCollection(pagesKey).all()
