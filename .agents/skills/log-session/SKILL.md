@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 Append one honest **session log** for this Claude session to the Journal. Author the entry, then hand it to the helper — it validates and commits the file **directly to `main`** (never a PR; ADR-0009).
 
-Run this only when the session is *actually* ending — invoked by the user, or by the PR3 Stop hook (a deterministic session-end signal). Don't self-invoke on a hunch the session is done: the human may not be, and a premature or duplicate log would land straight on `main`.
+Run this only when the session is *actually* ending — when the user invokes it, or confirms wrap-up after you ask (the reminder convention in `CLAUDE.md`). Don't self-invoke on a hunch the session is done: the human may not be, and a premature or duplicate log would land straight on `main`.
 
 Be honest, **especially about friction** — a flattering log is worse than none.
 
@@ -39,7 +39,7 @@ The word limits are **not** schema-enforced — you hold them.
 
 **frictions is the point.** List *every* one, not one or two — including anything that felt unnecessarily complex, token-heavy, or repetitive. `nit` is the floor for trivia, so `[]` means the session genuinely hit nothing (rare). Don't sand down the honest edges.
 
-**Timestamps:** by hand you can only estimate `startedAt`/`endedAt` — log a `nit` friction saying so (the PR3 Stop hook will capture them exactly).
+**Timestamps:** authored by hand, `startedAt`/`endedAt` are estimates — log a `nit` friction saying so. Exact capture waits on the deferred autonomous end-of-session trigger.
 
 ## 2. Save it at the canonical path
 

@@ -7,4 +7,5 @@ role: >-
   and above all its frictions — appended to this Journal. Commits the log direct
   to `main` via the gated helper (the bounded ADR-0009 exception), so the
   `consolidate`/`codify` jobs have raw material to mine. Reach for it when ending
-  a session; the planned Stop hook will make it fire on every one.
+  a session — the user invokes it, or confirms the wrap-up reminder (`CLAUDE.md`);
+  an automatic every-session trigger for autonomous runs is deferred.

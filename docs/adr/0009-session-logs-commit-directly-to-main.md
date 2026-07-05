@@ -51,7 +51,19 @@ to ADR-0003's no-self-merge rule. The boundary:
 The mechanism ships incrementally: first the `sessions` schema + a hand-authored
 entry (in a *normal* gated PR, because introducing the collection regenerates
 config); then a `log-session` platform-operation Skill wrapping the helper
-script; then a `Stop` hook that makes "every session" actually hold.
+script.
+
+A third increment — a `Stop` hook to make logging fire automatically on *every*
+session — was explored and **dropped** (2026-07-05). A `Stop` hook fires once
+per turn, when the agent finishes responding, **not** at session end; in an
+interactive session it cannot tell a genuine wrap-up from a mid-session pause,
+so a block-until-logged hook would force a log the first time the agent yields.
+(It *could* be scoped to remote/autonomous runs via `CLAUDE_CODE_REMOTE`, but an
+autonomous session driven by webhooks/triggers is not reliably one-shot either.)
+Interactive logging is therefore a **reminder convention** — at wrap-up the agent
+asks the user, then logs on confirmation (see `CLAUDE.md`) — and a *deterministic*
+end-of-session trigger for autonomous sessions is deferred until those sessions
+exist and can be built with one.
 
 ## Consequences
 

@@ -87,6 +87,25 @@ To **add a Space or Collection**: edit the Tenant's `tenant.config.ts`, run
 drop a `tenants/<name>/` folder with a manifest and content, then regenerate.
 Never hand-edit the `GENERATED` files — the drift gate will reject it.
 
+## Logging your session
+
+Every session ends with an honest **session log** in the Journal (ADR-0009,
+issue #2) — goal, outcome, docs read, Skills used, and *every* friction — the
+raw signal the future `consolidate`/`codify` jobs mine. The **`log-session`**
+Skill authors one and commits it directly to `main`.
+
+There is **no reliable automatic "we're done" signal** for an interactive
+session (a `Stop` hook fires every turn, not at session end — explored and
+deliberately not used; see ADR-0009). So this is a **reminder, not a gate**:
+when the work is clearly wrapping up — the user signals they're done, or the
+last task is complete with nothing queued — ask once, e.g. *"Are we done? If so
+I'll log this session,"* and on a yes invoke `/log-session`. Never log on a
+hunch — the entry lands straight on `main`, so a premature or duplicate log is
+worse than a late one.
+
+A *deterministic* end-of-session trigger for **autonomous** sessions is
+**deferred** until those sessions exist and can be built with one.
+
 ## Status
 
 Milestone 1 (foundation) exists: manifest → generator → gated-render pipeline for
