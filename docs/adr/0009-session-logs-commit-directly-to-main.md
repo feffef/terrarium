@@ -3,6 +3,11 @@
 Date: 2026-07-04
 Status: Accepted
 
+> **Amended (2026-07-05):** added the **Schema evolution policy** section below
+> (issue #60). It is the single home for how an append-only strict `data`
+> collection may change its schema — `sessions` here, blog `pingbacks`
+> (ADR-0012) being the second instance that generalizes it.
+
 ## Context
 
 The Journal Tenant introduces **session logs** (ADR-0008, issue #2): one honest
@@ -83,3 +88,56 @@ exist and can be built with one.
 - **Aging is deferred.** Session logs accumulate in `current` unbounded; a future
   `consolidate`/aging job owns any `current → archived` migration (an ordinary
   gated move). At expected volume this is a non-issue.
+
+## Schema evolution policy
+
+> **Amended (2026-07-05, issue #60).** This is the single home for how an
+> **append-only, strict `data` collection** may change its schema over time.
+> `sessions` is the primary instance; the Blog's `pingbacks` (ADR-0012) is the
+> second — a second append-only strict collection facing the same question is
+> what generalizes this from a `sessions`-only note into a policy, so it lives
+> here once and ADR-0012 points back to it.
+
+**Why a policy is needed.** These collections are `.strict()` and validated at
+the L1 gate, where **one** invalid file fails the *whole* build. Their history is
+**append-only ground truth** (ADR-0009): entries are never rewritten and never
+migrated. Together that means the schema may only ever change in
+**history-preserving** ways — a change that would invalidate any existing file is
+not an option, because there is no migration pass that could fix the file, and
+rewriting history is forbidden by this ADR.
+
+The rules:
+
+- **Adding an OPTIONAL field — allowed anytime.** A `.strict()` schema still
+  accepts old files that omit the new field; no migration, no version bump.
+- **Adding a REQUIRED field, renaming a field, or narrowing a field's type — NOT
+  allowed in place.** It would invalidate every historical file at once. (The
+  `tag` taxonomy CONTEXT.md plans for `sessions` is the canonical example of a
+  change that looks small but is breaking.) Instead **bump the version:**
+  - define a new object schema carrying `schemaVersion: z.literal(2)` (plus the
+    new required/renamed/narrowed shape);
+  - keep the current shape as v1, with `schemaVersion: z.literal(1).optional()`;
+  - make the collection schema `z.union([v1, v2])`.
+
+  Old files — which carry no `schemaVersion` — match v1 (absent ⇒ v1) and stay
+  valid **forever**; new files opt into v2 by writing `schemaVersion: 2`. History
+  is **never** migrated.
+- **`schemaVersion` is `z.literal(1).optional()`, NOT `z.default(1)`.** With one
+  version live there is *zero* migration to do now: `.optional()` lets every
+  pre-versioning file validate untouched, which is the whole point of laying the
+  spine down early. A Nuxt Content `default` would **not** retroactively rewrite
+  the stored rows on disk, and it would muddy the `absent ⇒ v1` discriminator the
+  future `z.union` relies on. New entries SHOULD still write `schemaVersion: 1`
+  explicitly (the `log-session` Skill's template does) so a file is
+  self-describing on disk.
+- **Consumers read old/unknown versions leniently.** `scripts/digest.ts`, the
+  dashboard, and the future `consolidate`/`codify` jobs must tolerate an
+  older-or-unknown `schemaVersion` rather than assume the latest shape — they
+  already do, via defensive `String(raw.x ?? '')`-style reads.
+
+**How pingbacks (ADR-0012) fit.** Blog `pingbacks` need **no** `schemaVersion`
+field yet: every pingback on disk today is retroactively distinguishable as v1 by
+the *absence* of the key, exactly as v1 session logs are. A field is added only
+when pingbacks take their first breaking change — at which point the same
+`z.literal(2)` + `z.union([v1, v2])` recipe above applies, with v1 keyed on the
+absent `schemaVersion`.

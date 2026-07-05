@@ -49,6 +49,8 @@ export default defineTenant({
     // Pingbacks — inbound reaction records (ADR-0012). A Pingback lives in the
     // *reacted-to* Persona's Space, denormalised at author time so the post page
     // renders its backlinks from a same-Space read. Strict → free L1 validation.
+    // Append-only + strict: schema-evolution policy in ADR-0009 (no schemaVersion
+    // needed until the first breaking change).
     pingbacks: {
       type: 'data',
       source: '**/*.yml',
