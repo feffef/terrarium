@@ -97,10 +97,15 @@ Skill authors one and commits it directly to `main`.
 There is **no reliable automatic "we're done" signal** for an interactive
 session (a `Stop` hook fires every turn, not at session end — explored and
 deliberately not used; see ADR-0009). So this is a **reminder, not a gate**:
-when the work is clearly wrapping up — the user signals they're done, or the
-last task is complete with nothing queued — ask once, e.g. *"Are we done? If so
-I'll log this session,"* and on a yes invoke `/log-session`. Never log on a
-hunch — the entry lands straight on `main`, so a premature or duplicate log is
+when the work has actually **landed**, ask once, e.g. *"Are we done? If so I'll
+log this session,"* and on a yes invoke `/log-session`.
+
+**Pushing is not landing.** A session isn't over the moment you commit, push, or
+open a PR — review, CI, and merge are all still queued, and the frictions from
+that follow-up belong in the *same* log. Don't offer to log while a PR you
+opened is still in review or CI. A session ends when its work has **merged or
+been abandoned**, or the **user calls it** — not at push time. Never log on a
+hunch: the entry lands straight on `main`, so a premature or duplicate log is
 worse than a late one.
 
 A *deterministic* end-of-session trigger for **autonomous** sessions is
