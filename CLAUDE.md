@@ -47,6 +47,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   generated files are committed and drift-checked (ADR-0007) — never hand-edit a
   file marked `GENERATED`.
 
+## Working conventions
+
+- Inspect files with the **Read tool, not `cat`** — the Edit tool refuses to edit
+  a file it hasn't seen via Read, so `cat`-then-Edit forces a wasteful re-read.
+
 ## Repo layout
 
 ```
