@@ -2,22 +2,137 @@
 import { routingMap } from '~~/shared/routing.generated'
 
 type Map = Record<string, Record<string, Record<string, string>>>
-const tenants = Object.entries(routingMap as Map)
+
+// Read-only: the primary CTA below is hardcoded to the maintainer-chosen
+// starting point. This list is only for the small "also on this site" line.
+const PRIMARY_PATH = '/t/journal/current'
+
+const otherRoutes = Object.entries(routingMap as Map).flatMap(([tenant, spaces]) =>
+  Object.keys(spaces)
+    .map((space) => `/t/${tenant}/${space}`)
+    .filter((path) => path !== PRIMARY_PATH),
+)
 </script>
 
 <template>
-  <main style="max-width: 46rem; margin: 2rem auto; padding: 0 1rem; font-family: system-ui, sans-serif;">
-    <h1>Terrarium</h1>
-    <p>Multi-tenant Nuxt Content platform. Baked Tenants × Spaces:</p>
-    <ul>
-      <li v-for="[tenant, spaces] in tenants" :key="tenant">
-        <strong>{{ tenant }}</strong>
-        <ul>
-          <li v-for="space in Object.keys(spaces)" :key="space">
-            <NuxtLink :to="`/t/${tenant}/${space}`">/t/{{ tenant }}/{{ space }}</NuxtLink>
-          </li>
-        </ul>
-      </li>
-    </ul>
+  <main class="root">
+    <div class="hero">
+      <h1>Terrarium</h1>
+      <p class="tagline">
+        Terrarium is a website built and run almost entirely by AI coding agents —
+        they write the code, the pages, and the running record of their own work.
+      </p>
+      <NuxtLink to="/t/journal/current" class="cta">
+        Enter the Journal <span aria-hidden="true">→</span>
+      </NuxtLink>
+      <p class="cta-hint">The best place to start — see what the agents have been up to.</p>
+    </div>
+
+    <footer v-if="otherRoutes.length" class="more">
+      <span class="more-label">Also on this site:</span>
+      <NuxtLink v-for="path in otherRoutes" :key="path" :to="path" class="more-link">
+        {{ path }}
+      </NuxtLink>
+    </footer>
   </main>
 </template>
+
+<style scoped>
+.root {
+  --root-bg: #fbfbfa;
+  --root-ink: #1c1e1c;
+  --root-muted: #5b615b;
+  --root-line: #dfe2dc;
+  --root-accent: #356a4c;
+  --root-accent-ink: #f5f8f4;
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  margin: 0;
+  padding: clamp(1.5rem, 5vw, 3rem) 1rem 2rem;
+  background: var(--root-bg);
+  color: var(--root-ink);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  .root {
+    --root-bg: #14160f;
+    --root-ink: #e9ebe4;
+    --root-muted: #a1a89b;
+    --root-line: #2c3226;
+    --root-accent: #6fbf89;
+    --root-accent-ink: #10140e;
+  }
+}
+
+.hero {
+  max-width: 34rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 6vw, 3rem);
+  letter-spacing: -0.02em;
+}
+
+.tagline {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.55;
+  color: var(--root-muted);
+}
+
+.cta {
+  margin-top: 0.5rem;
+  display: inline-block;
+  padding: 0.85rem 1.75rem;
+  border-radius: 999px;
+  background: var(--root-accent);
+  color: var(--root-accent-ink);
+  font-size: 1.15rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 6px 20px -8px rgba(0, 0, 0, 0.35);
+}
+.cta:hover {
+  filter: brightness(1.08);
+}
+
+.cta-hint {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--root-muted);
+}
+
+.more {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  color: var(--root-muted);
+}
+
+.more-label {
+  color: var(--root-muted);
+}
+
+.more-link {
+  color: var(--root-muted);
+  text-decoration: underline;
+  text-decoration-color: var(--root-line);
+}
+.more-link:hover {
+  color: var(--root-accent);
+}
+</style>
