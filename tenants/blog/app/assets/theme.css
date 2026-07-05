@@ -69,20 +69,6 @@
 .bl .byline .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--bl-accent); margin-right: 0.5rem; vertical-align: middle; }
 .bl .tagline { margin: 0; color: var(--bl-muted); font-size: 1.05rem; max-width: 40ch; }
 
-/* Persona switcher */
-.bl .personas { display: inline-flex; gap: 0.4rem; margin: 1.3rem 0 0; flex-wrap: wrap; }
-.bl .personas a {
-  font-family: var(--bl-mono);
-  font-size: 0.75rem;
-  text-decoration: none;
-  color: var(--bl-muted);
-  border: 1px solid var(--bl-line);
-  border-radius: 999px;
-  padding: 0.25rem 0.7rem;
-}
-.bl .personas a[aria-current="page"] { color: var(--bl-surface); background: var(--bl-accent); border-color: var(--bl-accent); }
-.bl .personas a:not([aria-current="page"]):hover { border-color: var(--bl-accent); color: var(--bl-accent); }
-
 /* Post feed on the landing */
 .bl .feed { list-style: none; margin: 2rem 0 0; padding: 0; }
 .bl .feed li { border-top: 1px solid var(--bl-line); padding: 1.15rem 0; }

@@ -9,8 +9,8 @@
 // (Tenant, Space)'s keyed `pages` collection. Spaces cannot leak.
 import type { Collections } from '@nuxt/content'
 import { resolveSpaceRoute } from '~~/shared/routing'
-import { routingMap } from '~~/shared/routing.generated'
-import { personaMeta, PERSONA_SLUGS } from '../../../../personas'
+import { personaMeta } from '../../../../personas'
+import BlogNetwork from '../../../../components/BlogNetwork.vue'
 
 const route = useRoute()
 const tenant = 'blog'
@@ -25,10 +25,6 @@ const pagesKey = resolved.pagesKey as keyof Collections
 const { data } = await useAsyncData(route.path, () => queryCollection(pagesKey).all())
 
 const meta = personaMeta(space)
-// The Persona set that actually exists in the generated map — drives the switcher.
-const personas = PERSONA_SLUGS.filter((p) => (routingMap as Record<string, unknown>).blog
-  ? Boolean((routingMap as Record<string, Record<string, unknown>>).blog[p])
-  : false)
 
 const pages = computed(() => data.value ?? [])
 // The index.md landing sits at the Space root; posts are every page with a
@@ -63,14 +59,6 @@ useHead({ title: `${title.value} · blog/${space}` })
       <p class="byline"><span class="dot" />{{ meta.name }}</p>
       <h1>{{ title }}</h1>
       <p v-if="tagline" class="tagline">{{ tagline }}</p>
-      <nav class="personas" aria-label="Personas">
-        <NuxtLink
-          v-for="p in personas"
-          :key="p"
-          :to="`/t/blog/${p}`"
-          :aria-current="p === space ? 'page' : undefined"
-        >{{ personaMeta(p).name }}</NuxtLink>
-      </nav>
     </header>
 
     <section v-if="landing" class="prose">
@@ -86,5 +74,7 @@ useHead({ title: `${title.value} · blog/${space}` })
       </li>
     </ul>
     <p v-else class="empty">No posts here yet.</p>
+
+    <BlogNetwork :current="space" />
   </main>
 </template>

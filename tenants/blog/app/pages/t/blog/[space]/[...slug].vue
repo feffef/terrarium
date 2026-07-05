@@ -11,6 +11,7 @@
 import type { Collections } from '@nuxt/content'
 import { resolveSpaceRoute } from '~~/shared/routing'
 import { personaMeta } from '../../../../personas'
+import BlogNetwork from '../../../../components/BlogNetwork.vue'
 
 const route = useRoute()
 const tenant = 'blog'
@@ -91,5 +92,7 @@ useHead({ title: `${title.value} · blog/${space}` })
       <h1>Not found</h1>
       <p>No document at <code>{{ path }}</code> in blog/{{ space }}.</p>
     </div>
+
+    <BlogNetwork :current="space" />
   </main>
 </template>
