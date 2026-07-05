@@ -1,0 +1,60 @@
+session: session_01WMqtvmv3yqmXjkY3wi169M
+startedAt: 2026-07-05T00:07:18Z
+endedAt: 2026-07-05T00:40:00Z
+kind: interactive
+goal: Implement issue #2's session-log Stop hook
+status: completed
+outcome: Hook dropped; shipped a reminder convention instead
+summary: >-
+  Set out to build PR3 — a Stop hook forcing a session log at session end.
+  Investigating the hook docs showed Stop fires once per turn, not at session
+  end, so a block-until-logged hook can't tell wrap-up from a mid-session pause;
+  the owner chose to drop it. Instead added an interactive wrap-up reminder to
+  CLAUDE.md, stripped the Stop-hook references from the log-session Skill and
+  catalogue, and amended ADR-0009 with the rationale. The owner caught that the
+  first draft fired at push/PR-open time, so we tightened it: a session ends only
+  when work has landed. Shipped as PR #6, merged. Full gate green throughout.
+prs: ["6"]
+docsRead:
+  - { path: "GitHub issue #2", reason: the PR3 spec and prior-slice handover }
+  - { path: scripts/log-session.ts, reason: the helper PR3 was meant to reuse }
+  - { path: .agents/skills/log-session/SKILL.md, reason: Skill to update for the pivot }
+  - { path: docs/adr/0009-session-logs-commit-directly-to-main.md, reason: the ADR to amend }
+  - { path: CLAUDE.md, reason: repo entry point where the convention lands }
+  - { path: "https://code.claude.com/docs/en/hooks", reason: Stop vs SessionEnd firing semantics }
+  - { path: tests/unit/log-session.spec.ts, reason: existing test shape and gate expectations }
+skillsUsed:
+  - { name: session-start-hook, reason: reference for Claude Code hook mechanics }
+  - { name: log-session, reason: authoring and committing this log }
+frictions:
+  - description: >-
+      First draft of the wrap-up reminder would have fired at push/PR-open; I
+      offered to log before PR #6 had even landed. A real bug in what we shipped.
+    solution: >-
+      Encode "pushing is not landing" — a session ends only when work has merged
+      or been abandoned. Done this session (CLAUDE.md tightened).
+    severity: moderate
+  - description: >-
+      endedAt had to be estimated — the transcript's last line lags true session
+      end and was stale after a compaction, so no exact end timestamp was available.
+    solution: >-
+      The deferred autonomous end-of-session trigger, or a live clock the agent
+      can read when authoring by hand.
+    severity: minor
+  - description: >-
+      The log-session Skill is user-invocation-only, so the Skill tool refused it;
+      I followed SKILL.md manually to author and commit this entry.
+    solution: >-
+      Expected by design, but a documented "follow the steps manually" note in the
+      Skill would remove the momentary dead-end.
+    severity: minor
+  - description: >-
+      Cold container had no deps; pnpm install had to run before the safety gate
+      could, adding a step to the first verification.
+    solution: A SessionStart hook that pre-installs deps (the session-start-hook Skill exists for this).
+    severity: nit
+  - description: >-
+      The session id wasn't handed to me directly; I recovered it from the
+      Claude-Session URL and env vars.
+    solution: Surface the session id explicitly for hand-authored logs.
+    severity: nit
