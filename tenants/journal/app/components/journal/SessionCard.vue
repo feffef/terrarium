@@ -1,35 +1,24 @@
 <script setup lang="ts">
-// One session log in the recent-activity feed. All display values are computed by
-// the page (this Space's `sessions` collection) and passed in as primitives.
-import type { Severity, Status } from '../../types/journal'
+// One session log in the recent-activity feed. The page derives the display-ready
+// view from this Space's `sessions` collection; this component just renders it.
+import type { SessionCardView } from '../../types/journal'
 
-defineProps<{
-  when: string
-  duration: number
-  goal: string
-  status: Status
-  outcome: string
-  prs: string[]
-  frictionCounts: Record<Severity, number>
-  frictionTotal: number
-  skills: string[]
-  sid: string
-}>()
+const { card } = defineProps<{ card: SessionCardView }>()
 </script>
 
 <template>
   <article class="card">
     <div class="top">
-      <span class="when">{{ when }} <span class="dur">· {{ duration }} min</span></span>
-      <JournalStatusPill :status="status" />
+      <span class="when">{{ card.when }} <span class="dur">· {{ card.duration }} min</span></span>
+      <JournalStatusPill :status="card.status" />
     </div>
-    <h3 class="goal">{{ goal }}</h3>
-    <p class="outcome">{{ outcome }}</p>
+    <h3 class="goal">{{ card.goal }}</h3>
+    <p class="outcome">{{ card.outcome }}</p>
     <div class="foot">
-      <span v-for="pr in prs" :key="pr" class="chip pr">PR {{ pr.startsWith('#') ? pr : '#' + pr }}</span>
-      <JournalFrictionStrata variant="inline" :counts="frictionCounts" :total="frictionTotal" />
-      <span v-if="skills.length" class="skills">{{ skills.join(' · ') }}</span>
-      <span class="sid">{{ sid }}</span>
+      <span v-for="pr in card.prs" :key="pr" class="chip pr">PR {{ pr.startsWith('#') ? pr : '#' + pr }}</span>
+      <JournalFrictionStrata variant="inline" :counts="card.frictionCounts" :total="card.frictionTotal" />
+      <span v-if="card.skills.length" class="skills">{{ card.skills.join(' · ') }}</span>
+      <span class="sid">{{ card.sid }}</span>
     </div>
   </article>
 </template>

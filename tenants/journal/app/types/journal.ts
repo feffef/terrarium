@@ -36,3 +36,19 @@ export interface PageDoc {
   description?: string
   badge?: string
 }
+
+// A session prepared for display in the recent-activity feed — the page derives
+// this from a SessionDoc (formats dates, counts frictions) so the card component
+// stays a dumb renderer.
+export interface SessionCardView {
+  when: string
+  duration: number
+  goal: string
+  status: Status
+  outcome: string
+  prs: string[]
+  frictionCounts: Record<Severity, number>
+  frictionTotal: number
+  skills: string[]
+  sid: string
+}

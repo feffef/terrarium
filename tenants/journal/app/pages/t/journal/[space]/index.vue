@@ -9,7 +9,7 @@
 // only `journal_<space>_{pages,skills,sessions}`. Spaces cannot leak.
 import type { Collections } from '@nuxt/content'
 import { routingMap } from '~~/shared/routing.generated'
-import type { Friction, Importance, PageDoc, SessionDoc, Severity, SkillDoc } from '../../../../types/journal'
+import type { Friction, Importance, PageDoc, SessionCardView, SessionDoc, Severity, SkillDoc } from '../../../../types/journal'
 
 type RoutingMap = Record<string, Record<string, Record<string, string>>>
 
@@ -65,7 +65,7 @@ function countFrictions(list: Friction[]): Record<Severity, number> {
   return c
 }
 
-const cards = computed(() =>
+const cards = computed<(SessionCardView & { key: string })[]>(() =>
   sessions.value.map((s) => ({
     key: s.session,
     when: fmtWhen(s.endedAt),
@@ -189,20 +189,7 @@ useHead({ title: `${title.value} · journal/${space}` })
           <span class="count">session logs, newest first</span>
         </div>
         <div v-if="cards.length" class="cards">
-          <JournalSessionCard
-            v-for="c in cards"
-            :key="c.key"
-            :when="c.when"
-            :duration="c.duration"
-            :goal="c.goal"
-            :status="c.status"
-            :outcome="c.outcome"
-            :prs="c.prs"
-            :friction-counts="c.frictionCounts"
-            :friction-total="c.frictionTotal"
-            :skills="c.skills"
-            :sid="c.sid"
-          />
+          <JournalSessionCard v-for="c in cards" :key="c.key" :card="c" />
         </div>
         <p v-else class="empty">No sessions logged in this Space yet.</p>
       </section>
