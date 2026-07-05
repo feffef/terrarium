@@ -1,0 +1,10 @@
+name: frictions-to-fixes
+category: platform-operation
+importance: supporting
+role: >-
+  The consuming half of the self-improvement loop `log-session` feeds: it reads
+  the Journal's accumulated session-log frictions and ships the ripe ones — simple,
+  autonomous, off the human-only surfaces — as one issue and one dispatched agent
+  each, landing every fix as a gated PR (ADR-0003). A manual precursor to the
+  deferred `consolidate`/`codify` jobs (ADR-0009); reach for it when frictions have
+  piled up and you want them retired in a batch.
