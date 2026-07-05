@@ -1,0 +1,73 @@
+session: session_01TXpuDppHQ52ZNLD7gVd4kt
+startedAt: 2026-07-05T13:45:00Z   # estimate — hand-authored (see frictions)
+endedAt: 2026-07-05T14:25:51Z     # exact — read from `date -u`
+kind: interactive
+goal: Fix session-log timestamps truncated to date-only
+status: completed
+outcome: Root-caused, fixed, tightened, merged (PR #27)
+summary: >-
+  Chased the recent-activity dashboard bug — every session at 00:00 UTC, 1- or
+  1440-minute durations, random same-day order. Root cause: the sessions schema
+  used `z.date()`, which Nuxt Content maps to a SQL DATE column that stores only
+  YYYY-MM-DD, dropping the time-of-day. Confirmed by reading @nuxt/content
+  internals and decoding the built content DB. Fixed by storing ISO strings
+  (VARCHAR, verbatim); rejected `.datetime()` since its DATETIME writer
+  re-renders in local time and drops the Z. Opened PR #27, ran /code-review; a
+  research agent verified empirically that string+refine is the only correct
+  encoding. Review caught the validator advertising UTC but accepting
+  offset/zone-less values — tightened to require canonical `…Z`. Merged.
+prs: ["27"]
+docsRead:
+  - { path: CLAUDE.md, reason: repo conventions, safety gate, wrap-up rule }
+  - { path: tenants/journal/tenant.config.ts, reason: the sessions schema — root of the bug }
+  - { path: node_modules/@nuxt/content/dist/module.mjs, reason: formatDate/formatDateTime + per-column writer dispatch }
+  - { path: node_modules/@nuxt/content/dist/runtime/internal/schema.js, reason: how zod type/format maps to the SQL column type }
+  - { path: node_modules/@nuxt/content/dist/chunks/zod4.mjs, reason: the date→format:date conversion }
+  - { path: "tenants/journal/app/pages/t/journal/[space]/index.vue", reason: the consuming dashboard — fmtWhen/durMin/sort }
+  - { path: scripts/log-session.ts, reason: coerceDates + expectedFilename affected by the string type change }
+  - { path: scripts/digest.ts, reason: confirm the other timestamp reader is string-tolerant }
+  - { path: .agents/skills/log-session/SKILL.md, reason: authoring steps for this log }
+skillsUsed:
+  - { name: code-review, reason: two-axis review of the fix; both axes plus research converged on the UTC-enforcement nit }
+frictions:
+  - description: >-
+      `z.date()` silently truncates to a SQL DATE column in Nuxt Content — no
+      warning, valid build, but every stored time-of-day is dropped. A footgun.
+    solution: Store ISO strings (VARCHAR, verbatim); documented the trap in the schema comment.
+    severity: moderate
+  - description: >-
+      Verifying the stored values meant decoding the content DB — sql_dump.txt is
+      base64+gzip, not human-readable, with no repo affordance to inspect baked content.
+    solution: Decoded via `base64 -d | gunzip`; a `pnpm content:dump` helper would save the dance.
+    severity: minor
+  - description: >-
+      The .output/.nuxt content dumps were wiped between commands (a later gen /
+      nuxt prepare cleaned them), so a re-verification grep failed mid-check.
+    solution: Captured the evidence on first decode; re-checking needs a fresh rebuild.
+    severity: minor
+  - description: >-
+      `git diff origin/main...HEAD` for the review ballooned to 149 files because
+      origin/main lagged far behind the branch's merge-base.
+    solution: Pin the review fixed point to the commit under review (HEAD~1), not the stale default branch.
+    severity: minor
+  - description: >-
+      Set a Monitor to wait on the background research agent, which was needless —
+      the harness auto-notifies on agent completion; I had to stop it.
+    solution: Rely on the completion notification for harness-tracked agents; don't poll.
+    severity: nit
+  - description: >-
+      The Skill tool refused log-session (disable-model-invocation), so I followed
+      the SKILL.md steps by hand.
+    solution: Expected by design; the refusal message points at the manual path. No action.
+    severity: nit
+  - description: startedAt is a hand-estimate — no exact session-start clock was available; endedAt is exact via date -u.
+    solution: The deferred autonomous end-of-session trigger would capture both mechanically.
+    severity: nit
+  - description: The session id was not handed to me directly; I recovered it from the Claude-Session git-trailer URL. Recurring.
+    solution: Surface the session id explicitly for hand-authored logs.
+    severity: nit
+  - description: >-
+      A docsRead path with route brackets (`[space]`) broke the log's YAML — an
+      unquoted `[` starts a flow sequence, so the helper's parse failed first try.
+    solution: Quote any path containing `[` / `{`; the log-session template could note it.
+    severity: nit
