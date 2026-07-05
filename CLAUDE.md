@@ -87,11 +87,6 @@ To **add a Space or Collection**: edit the Tenant's `tenant.config.ts`, run
 drop a `tenants/<name>/` folder with a manifest and content, then regenerate.
 Never hand-edit the `GENERATED` files — the drift gate will reject it.
 
-Expect `gate:drift` to be **red mid-work**: after a manifest edit but before you
-commit the regenerated files, it fails by design — that is the "regenerated files
-not committed yet" state, not a real breakage. It turns green once you commit the
-regenerated `GENERATED` files alongside the manifest change.
-
 ## Logging your session
 
 Every session ends with an honest **session log** in the Journal (ADR-0009,
