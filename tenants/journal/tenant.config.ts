@@ -9,14 +9,17 @@ import { defineTenant } from '../../shared/manifest'
 // what collapsed every session in the dashboard to `00:00 UTC` with 1- or
 // 1440-minute durations and unstable same-day ordering. A plain string is stored
 // verbatim (VARCHAR), so the full instant round-trips through the content DB.
-// The refine preserves the old validation's intent — a real datetime, not a bare
-// date — and, unlike `.datetime()` (which re-introduces a `DATETIME` column that
-// re-renders in local time), leaves the raw UTC string untouched.
+// The refine enforces the UTC the field name and comment promise — a canonical
+// `…Z` instant, not a bare date and not a local/offset time. A zone-less value
+// like `2026-07-04T22:45` would be re-parsed in the *viewer's* zone (the dashboard
+// renders client-side), reintroducing the very drift this fix removes; and unlike
+// `.datetime()` — which routes to a `DATETIME` column that re-renders in local time
+// and drops the `Z` — a plain string leaves the raw UTC value untouched.
 const utcTimestamp = z
   .string()
   .refine(
-    (v) => /T\d{2}:\d{2}/.test(v) && !Number.isNaN(Date.parse(v)),
-    'must be a full ISO-8601 UTC timestamp, e.g. 2026-07-05T08:57:53Z',
+    (v) => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(v) && !Number.isNaN(Date.parse(v)),
+    'must be a UTC ISO-8601 timestamp ending in Z, e.g. 2026-07-05T08:57:53Z',
   )
 
 export default defineTenant({
