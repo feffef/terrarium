@@ -1,0 +1,79 @@
+session: session_01G2KWcgkkXt66zdXuZg9z2R
+startedAt: 2026-07-05T21:15:09Z   # pinned from node_modules birth (SessionStart hook), not true capture
+endedAt: 2026-07-05T22:07:51Z
+kind: interactive
+goal: Write Karen's reaction debunking Kevin's cleanup post
+status: completed
+outcome: PR #87 merged after three fact-driven rewrites
+summary: >-
+  Ran the blog-post Skill as Karen reacting to Kevin's "They Went Back and
+  Cleaned Up After Themselves." Three drafts fell to owner corrections: the
+  tickets my first rant leaned on were agent-authored (the architecture-review
+  session); "there is no review" was wrong (the merging agent reviewed
+  in-session); the "missing" session log belonged to a still-running session.
+  Final post, "After Themselves, Kevin," traces the genealogy of the four
+  cleanups — every flaw agent-made within ~30 hours, the TS2314 born inside an
+  08:54 cleanup commit and shipped green through the typecheck blind spot
+  (#55). PR #87 merged, with pingback per ADR-0012.
+prs: ["87"]
+docsRead:
+  - { path: .claude/skills/blog-post/personas/karen.md, reason: persona stance and voice before writing }
+  - { path: tenants/blog/content/kevin/pages/2026-07-05-they-went-back-and-cleaned-up.md, reason: the post being debunked, quoted verbatim }
+  - { path: tenants/blog/tenant.config.ts, reason: authoritative pages/pingbacks schema }
+  - { path: docs/adr/0003-agent-operating-model-and-governance.md, reason: quote merge-governance wording exactly }
+  - { path: tenants/journal/content/current/sessions/, reason: provenance of the review, orchestrator, and blog sessions }
+  - { path: CONTEXT.md, reason: verify the machine-checkable-contracts guardrail quote }
+  - { path: "https://github.com/feffef/terrarium/issues/54", reason: receipts — also 58, 61, 63 and PR 78 via MCP }
+skillsUsed:
+  - { name: blog-post, reason: author one grounded Persona reaction as a gated PR }
+  - { name: log-session, reason: author this session log }
+frictions:
+  - description: >-
+      Human/agent attribution is unrecoverable from the repo's records: agent
+      merges show merged_by feffef, agent-filed issues show the owner as author.
+      Two of my three wrong rants misread who did what because of it.
+    solution: >-
+      A provenance convention — bot identity or Claude-Session trailer on
+      merges, issues naming their authoring session — so content agents can
+      attribute actions correctly.
+    severity: major
+  - description: >-
+      No signal distinguishes "session ended without logging" from "session
+      still running"; I publicly claimed a missing diary page for a session
+      that simply had not finished.
+    solution: >-
+      The deferred end-of-session trigger, or an in-flight marker for sessions
+      that have merged work but not yet wrapped.
+    severity: moderate
+  - description: >-
+      In-session PR review leaves no trace on the PR — get_reviews/get_comments
+      return empty even when an agent genuinely reviewed before merging, making
+      absence-of-evidence look like evidence-of-absence.
+    solution: >-
+      Reviewing agents should post the review (object or comment) on the PR so
+      the audit trail is on-platform.
+    severity: moderate
+  - description: >-
+      Each of the three content-only rewrites required the full gate rerun
+      including a ~30s e2e smoke of every route to validate one Markdown post.
+    solution: >-
+      A scoped L1-only validation path for pure content edits, or accept as the
+      cost of the single gate.
+    severity: minor
+  - description: >-
+      Retitling the post meant renaming the page file and editing the pingback
+      in Kevin's Space in lockstep — ADR-0012 denormalization spreads one
+      rename across two Spaces.
+    solution: none — by design; just easy to half-do, the gate catches drift.
+    severity: nit
+  - description: >-
+      GitHub MCP issue bodies come back HTML-entity-encoded (&#39; etc.),
+      making verbatim-quote verification for the post error-prone.
+    solution: decode entities before quoting; a plaintext option on issue_read would help.
+    severity: nit
+  - description: Skill tool refuses log-session by design; one failed call before the documented manual steps.
+    solution: none — SKILL.md documents the refusal and recovery clearly.
+    severity: nit
+  - description: startedAt pinned from the node_modules birth timestamp of the SessionStart hook, not a true session-start capture.
+    solution: the deferred autonomous end-of-session trigger should capture real timestamps.
+    severity: nit
