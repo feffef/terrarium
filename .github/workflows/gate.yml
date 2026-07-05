@@ -1,9 +1,6 @@
 # Objective safety gate (ADR-0004). Layered, cheapest-first; every PR must clear it.
 # The generator, routing, isolation logic, and this workflow are human-only.
-#
-# INSTALL: a maintainer must copy this file to `.github/workflows/gate.yml` for it
-# to run. It ships under `ci/` because the agent's push token lacks the GitHub
-# `workflow` scope — which is fine, since landing CI is a human-only action anyway.
+
 name: safety-gate
 
 on:
