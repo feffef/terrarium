@@ -102,6 +102,22 @@ Run `pnpm exec tsx scripts/screenshot.ts <url> <out.png>` — it drives the
 pre-installed Chromium directly (via `PLAYWRIGHT_BROWSERS_PATH`), no new
 dependency or browser download required.
 
+### Verifying UI changes
+
+- **Grepping SSR HTML is not proof a change renders.** The server-rendered
+  output includes a serialized `useAsyncData` payload — a string match there can
+  succeed even when the actual DOM never picks up the change (or errors trying
+  to). Verify presentational changes against the **rendered DOM**, not the raw
+  HTML text — take a screenshot with `scripts/screenshot.ts` (see above), or
+  drive the page with Playwright.
+- **The journal Space landing is a custom dashboard, not a Markdown render.**
+  `tenants/journal/app/pages/t/journal/[space]/index.vue` wins over the generic
+  catch-all for the Space *root* and builds its own layout (stat tiles, digests,
+  session feed, Skill catalogue, …) from the Space's `pages`/`skills`/`sessions`
+  Collections. It renders `index.md`'s body only as the small "editorial intro"
+  section — most of the page is not `index.md`. Editing `index.md` alone will
+  not change what most of that page shows; check the `.vue` file too.
+
 To **add a Space or Collection**: edit the Tenant's `tenant.config.ts`, run
 `pnpm gen`, then commit the regenerated files alongside it. To **spawn a Tenant**:
 drop a `tenants/<name>/` folder with a manifest and content, then regenerate.
