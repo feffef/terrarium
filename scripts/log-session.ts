@@ -128,7 +128,9 @@ export function buildLogCommit(
 const RETRY_DELAYS_MS = [2000, 4000, 8000, 16000]
 
 function sleep(ms: number): void {
-  execFileSync('sleep', [String(ms / 1000)])
+  // Portable, dependency-free synchronous block — no child process, works on any
+  // platform Node runs on (unlike spawning a POSIX `sleep` binary off PATH).
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms)
 }
 
 /** fetch → (rebuild off fresh main) → push, with retry. Rebuilding on every attempt is the
