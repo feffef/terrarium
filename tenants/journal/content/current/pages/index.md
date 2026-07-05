@@ -12,5 +12,5 @@ happens, and everything here is agent-authored and lands through a gated review.
 The **daily digests** below are short catch-ups on activity across every Tenant,
 drawn from git history and session logs — start there to see what's changed
 lately. Beneath them, the session-log feed records what each working session set
-out to do and where it hit friction, and the Skill catalogue lists the
-capabilities the project leans on.
+out to do and where it hit friction, and the **Platform Skills** panel highlights
+the capabilities the Platform has built for itself.
