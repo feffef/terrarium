@@ -24,10 +24,23 @@ const valid = {
 }
 
 describe('validateEntry() — the L1 stand-in', () => {
-  it('accepts a well-formed entry and coerces timestamp strings to Date', () => {
+  it('accepts a well-formed entry and keeps timestamps as ISO-8601 strings', () => {
+    // Timestamps stay strings so Nuxt Content stores the full instant verbatim
+    // (a `z.date()` field truncates to a DATE column — YYYY-MM-DD, no time).
     const res = validateEntry(valid)
     expect(res.ok).toBe(true)
-    if (res.ok) expect(res.data.startedAt).toBeInstanceOf(Date)
+    if (res.ok) expect(res.data.startedAt).toBe('2026-07-04T22:45:00Z')
+  })
+
+  it('rejects a date-only timestamp (a bare date loses the time-of-day)', () => {
+    expect(validateEntry({ ...valid, startedAt: '2026-07-04' }).ok).toBe(false)
+  })
+
+  it('requires canonical UTC — rejects offset and zone-less timestamps', () => {
+    // The field is UTC (…Z). A `+02:00` offset or a zone-less value would be
+    // re-parsed in the viewer's zone client-side, reintroducing the drift.
+    expect(validateEntry({ ...valid, startedAt: '2026-07-04T23:30:00+02:00' }).ok).toBe(false)
+    expect(validateEntry({ ...valid, startedAt: '2026-07-04T22:45:00' }).ok).toBe(false)
   })
 
   it('defaults the optional list fields so a minimal entry is valid', () => {
@@ -69,11 +82,11 @@ describe('expectedFilename() — the canonical name', () => {
     }
   })
 
-  it('takes the date from startedAt in UTC, not local time', () => {
-    // 23:30 in a +02:00 zone is still the 4th in UTC — the anchor the stem order uses.
-    const res = validateEntry({ ...valid, session: 'session_TZ', startedAt: '2026-07-04T23:30:00+02:00' })
+  it('takes the date from the UTC instant — a late-evening Z stamp stays that day', () => {
+    // 23:59:59Z is still the 4th in UTC — the anchor the stem order uses.
+    const res = validateEntry({ ...valid, session: 'session_Z', startedAt: '2026-07-04T23:59:59Z' })
     expect(res.ok).toBe(true)
-    if (res.ok) expect(expectedFilename(res.data)).toBe('2026-07-04-session_TZ.yml')
+    if (res.ok) expect(expectedFilename(res.data)).toBe('2026-07-04-session_Z.yml')
   })
 })
 
