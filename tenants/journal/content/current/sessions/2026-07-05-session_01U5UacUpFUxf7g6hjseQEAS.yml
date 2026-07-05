@@ -1,0 +1,80 @@
+session: session_01U5UacUpFUxf7g6hjseQEAS
+startedAt: 2026-07-05T14:44:00Z
+endedAt: 2026-07-05T15:51:39Z
+kind: interactive
+goal: Autonomously implement & merge 12 backlog issues
+status: completed
+outcome: All 12 merged; worktree race caught, recovered
+summary: >-
+  Asked to coordinate autonomous implementation of the open backlog without
+  babysitting. Dispatched sonnet sub-agents per issue, reviewed each PR, and
+  auto-merged the safe (content / single-tenant-layer) ones after CI, leaving
+  Platform-level and high-risk changes for the human. Landed all 12 issues
+  (#28–#39) plus a self-correction (#52) after the user noticed autonomous
+  merging had made the "reviewed by a human" copy false. Biggest wobble: the
+  first parallel dispatch never actually enabled worktree isolation, so five
+  agents raced in one checkout; caught early via the stop-hook, nothing bad
+  reached the remote, recovered by switching to strictly sequential agents.
+prs: ["40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52"]
+docsRead:
+  - { path: CLAUDE.md, reason: repo conventions & safety gate }
+  - { path: docs/adr/0003-agent-operating-model-and-governance.md, reason: autonomy & no-self-merge rules }
+  - { path: docs/adr/0004-objective-safety-gate.md, reason: auto-merge blast-radius policy }
+  - { path: "tenants/journal/app/pages/t/journal/[space]/index.vue", reason: dashboard copy review }
+  - { path: tenants/journal/app/components/journal/FrictionStrata.vue, reason: inline friction legend }
+  - { path: tenants/journal/content/current/pages/index.md, reason: landing copy fix }
+  - { path: tenants/journal/content/current/pages/about.md, reason: About copy fix }
+  - { path: tests/e2e/smoke.spec.ts, reason: which copy strings are asserted }
+  - { path: .github/workflows/gate.yml, reason: confirm CI triggers on PRs }
+skillsUsed:
+  - { name: log-session, reason: authoring this session log }
+frictions:
+  - description: >-
+      Dispatched five agents "in parallel" but never passed isolation:worktree to
+      the Agent tool, so they raced in one shared checkout, scrambling branches.
+    solution: >-
+      Isolation is an explicit Agent-tool parameter, not implied by the prompt;
+      pass it, or (what worked) run strictly one agent at a time in the checkout.
+    severity: major
+  - description: >-
+      The shared-checkout race was silent — the only signal was the stop-hook's
+      generic "uncommitted changes"; git worktree list then showed a single tree.
+    solution: >-
+      Verify isolation actually took effect (git worktree list) before trusting
+      that concurrently-dispatched agents are isolated.
+    severity: moderate
+  - description: >-
+      Auto-merging agent PRs made the live landing/About copy ("reviewed by a
+      human before it went live") false; the user caught it, not me.
+    solution: >-
+      When the operating model changes (e.g. enabling auto-merge), audit content
+      that describes that model in the same breath.
+    severity: moderate
+  - description: >-
+      Recovery needed forensics to tell a legitimate ADR-0009 direct-to-main
+      session log (from another session) apart from agent damage on main.
+    solution: >-
+      Check git ls-remote and the commit's identity/parent before assuming main
+      moved due to damage.
+    severity: minor
+  - description: >-
+      Webhooks never deliver CI success, only failure, so every green merge
+      required polling the PR's check-runs at a checkpoint or a scheduled wake.
+    solution: >-
+      Known limitation; poll get_check_runs at agent-completion checkpoints and
+      use send_later when no agent is running to provide one.
+    severity: minor
+  - description: >-
+      Running a subagent in the shared checkout trips the stop-hook every turn —
+      its in-progress edits read as "uncommitted changes" the orchestrator must ignore.
+    solution: >-
+      The hook can't distinguish a working subagent from an idle tree; noise, but
+      it cost a read-only status check each turn to reconfirm.
+    severity: nit
+  - description: >-
+      startedAt is a hand-estimate — the session's true start clock was not
+      available to me at wrap-up.
+    solution: >-
+      Deferred to the autonomous end-of-session trigger (ADR-0009) that will
+      capture real start/end mechanically.
+    severity: nit
