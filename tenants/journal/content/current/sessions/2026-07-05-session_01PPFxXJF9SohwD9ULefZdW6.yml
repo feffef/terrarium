@@ -1,0 +1,94 @@
+session: session_01PPFxXJF9SohwD9ULefZdW6
+startedAt: 2026-07-05T18:34:38Z
+endedAt: 2026-07-05T19:12:30Z
+kind: interactive
+goal: Critical architecture review; file findings as issues
+status: completed
+outcome: Review delivered; issues 54-63 filed
+summary: >-
+  Read the whole repo (ADRs, generator, resolver, gate, both Tenant layers,
+  deploy) and delivered a critical architecture review. Strongest findings: the
+  L0 typecheck gate silently excludes all Tenant layer code (a live TS2314 in
+  the journal landing proves it), the L2 smoke gate asserts SSR strings rather
+  than rendered DOM, the committed-codegen/drift apparatus is the largest
+  recurring ceremony, and two doc-rot contradictions. Mid-session main gained
+  the Blog Tenant (PR 53), which strengthened the findings; re-verified against
+  it. Filed ten detailed issues (54-63) with reasoning, rejected alternatives,
+  blast-radius classification, and acceptance criteria. No code changed, no PR.
+prs: []
+docsRead:
+  - { path: CONTEXT.md, reason: domain model before judging concepts }
+  - { path: docs/adr/, reason: all twelve ADRs, decisions vs accidents }
+  - { path: shared/manifest.ts, reason: manifest contract and validation }
+  - { path: scripts/generate.ts, reason: generator mechanics and keying }
+  - { path: shared/routing.ts, reason: isolation-critical resolver }
+  - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: runtime routing }
+  - { path: "tenants/journal/app/pages/t/journal/[space]/index.vue", reason: dashboard code quality }
+  - { path: scripts/log-session.ts, reason: ADR-0009 boundary mechanics }
+  - { path: scripts/digest.ts, reason: digest machinery cost assessment }
+  - { path: tests/, reason: what the gate actually proves }
+  - { path: .github/workflows/gate.yml, reason: CI vs documented gate }
+  - { path: deploy/entrypoint.sh, reason: PoC deploy review }
+  - { path: docs/agents/issue-tracker.md, reason: issue conventions before filing }
+  - { path: docs/agents/triage-labels.md, reason: label vocabulary }
+  - { path: docs/agents/tenant-layers.md, reason: layer gotchas }
+skillsUsed:
+  - { name: log-session, reason: author this entry }
+frictions:
+  - description: >-
+      nuxt typecheck silently skips tenants/*/app entirely; the gate reports L0
+      coverage it does not have, and proving the hole required digging through
+      generated .nuxt tsconfigs and a manual tsc repro.
+    solution: Move Tenants under layers/ or add a tsconfig include (issue 55).
+    severity: major
+  - description: >-
+      Stop hook flagged already-merged origin/main commits as unverified and
+      advised amend/rebase - rewriting merged mainline history - because the
+      session branch had no commits of its own.
+    solution: Hook should ignore commits reachable from origin/main.
+    severity: moderate
+  - description: >-
+      docs/agents/issue-tracker.md mandates the gh CLI for all issue operations,
+      but remote sessions have no gh; every command had to be re-mapped to
+      GitHub MCP tools by hand.
+    solution: Document the MCP fallback alongside each gh recipe.
+    severity: moderate
+  - description: >-
+      gate.yml header still claims the workflow ships uninstalled under ci/,
+      contradicting CLAUDE.md; reconciling which was true cost a detour
+      mid-review.
+    solution: Fix the stale comment (issue 57, human-only).
+    severity: minor
+  - description: >-
+      tests/e2e asserts SSR HTML strings - the exact pattern CLAUDE.md warns is
+      not proof of rendering - leaving it ambiguous which checks are deliberate
+      payload checks.
+    solution: Add a DOM-level smoke layer and label payload checks (issue 56).
+    severity: minor
+  - description: >-
+      main advanced mid-session (blog Tenant, PR 53) after the review snapshot;
+      findings had to be re-verified against 28 new files and the branch reset.
+    solution: Fetch and re-anchor immediately before publishing findings.
+    severity: minor
+  - description: >-
+      log-session id recipe derives the session id from git trailers, which
+      fails for a commit-less session; recovered it from the harness-provided
+      trailer template instead.
+    solution: SKILL.md should name a fallback for sessions with no commits.
+    severity: minor
+  - description: >-
+      Issue cross-references need numbers that only exist after creation;
+      issue 54 had to be edited post-hoc to cite 55.
+    solution: Create in dependency order; accept one edit pass.
+    severity: nit
+  - description: >-
+      startedAt pinned from the node_modules birth timestamp of the
+      SessionStart hook, not a true session-start capture.
+    solution: Deferred autonomous end-of-session trigger owns real capture.
+    severity: nit
+  - description: >-
+      The environment's pre-cloned origin/main ref was stale (behind the
+      checked-out HEAD), so the first since-last-merge diff was misleading
+      until re-anchored on the merge-base.
+    solution: Diff against merge-base, not the cached origin ref.
+    severity: nit
