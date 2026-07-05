@@ -29,6 +29,7 @@ summary: >-                        # ≤ 100 words — the fuller narrative
 prs: ["5"]                         # work-PRs already landed this session ([] if none)
 docsRead:                          # each doc/URL you actually opened; reason = why, not what
   - { path: CONTEXT.md, reason: domain model }
+  - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: routing }
 skillsUsed:                        # each Skill you invoked; name cross-refs the Skill catalogue
   - { name: tdd, reason: test-first the helper }
 frictions:                         # REQUIRED (may be []) — list EVERY friction
@@ -38,6 +39,10 @@ frictions:                         # REQUIRED (may be []) — list EVERY frictio
 ```
 
 The word limits are **not** schema-enforced — you hold them.
+
+**Quote any `path` (or value) containing `[` or `{`** (e.g. a catch-all route
+file like above) — unquoted, it starts a YAML flow sequence/map and breaks the
+inline-flow `docsRead`/`skillsUsed` entry.
 
 **Write `goal`/`outcome` for a stranger.** They're the most-visible copy on the
 public dashboard, so name the thing worked on, not just "the issue" or "a PR"
