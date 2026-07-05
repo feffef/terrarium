@@ -1,0 +1,67 @@
+// Manifest for the Blog Tenant — a simple blog reporting on the Terrarium from
+// several angles (CONTEXT.md: Blog / Persona / Pingback). Declarative intent only;
+// the generator expands this into keyed collections.
+//
+// Each Space IS a Persona (its slug is the persona's name): `david` (neutral
+// observer), `karen` (snarky sceptic), `kevin` (dazzled dev). Two collections per
+// Space: `pages` (the routed blog — an index.md landing + posts) and `pingbacks`
+// (inbound reactions authored here by *other* Personas; ADR-0012).
+import { z } from 'zod'
+import { defineTenant } from '../../shared/manifest'
+
+// A UTC ISO-8601 timestamp kept as a *string* on purpose (NOT `z.date()`, which
+// truncates to a DATE column and drops the time-of-day). Copied locally rather
+// than shared: Tenants share no code (CONTEXT.md isolation stance).
+const utcTimestamp = z
+  .string()
+  .refine(
+    (v) => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(v) && !Number.isNaN(Date.parse(v)),
+    'must be a UTC ISO-8601 timestamp ending in Z, e.g. 2026-07-05T08:57:53Z',
+  )
+
+// The Persona set, doubling as the Space slugs. Used to type the ends of a
+// Pingback so a reaction can only name a Persona that exists.
+const persona = z.enum(['david', 'karen', 'kevin'])
+
+export default defineTenant({
+  name: 'blog',
+  // Personas-as-Spaces: same content model, physically isolated content per
+  // Persona. The slug is the persona's name (CONTEXT.md: Persona).
+  spaces: ['david', 'karen', 'kevin'],
+  collections: {
+    // The routed blog. Named `pages` per the Platform convention the shared
+    // resolver enforces (ADR-0006) though it holds blog *posts*. Non-strict: the
+    // `page` type injects path/title/description/body/seo.
+    pages: {
+      type: 'page',
+      source: '**/*.md',
+      schema: z.object({
+        // Posts carry a publish instant (drives the reverse-chron feed); the
+        // Space's index.md landing omits it — hence optional.
+        publishedAt: utcTimestamp.optional(),
+        // Present only on a *reaction* post: the outbound "in reply to" ref. The
+        // target's title is inlined so the header renders with no cross-Space read.
+        reactsTo: z
+          .object({ persona, path: z.string(), title: z.string() })
+          .optional(),
+      }),
+    },
+    // Pingbacks — inbound reaction records (ADR-0012). A Pingback lives in the
+    // *reacted-to* Persona's Space, denormalised at author time so the post page
+    // renders its backlinks from a same-Space read. Strict → free L1 validation.
+    pingbacks: {
+      type: 'data',
+      source: '**/*.yml',
+      schema: z
+        .object({
+          target: z.string(), // Space-relative path of the post here being reacted to
+          fromPersona: persona, // the reacting Persona (a sibling Space)
+          fromPath: z.string(), // the reacting post's Space-relative path
+          fromTitle: z.string(), // the reacting post's title — inlined, no cross-Space query
+          blurb: z.string(), // one-line gist of the reaction
+          reactedAt: utcTimestamp, // UTC ISO-8601 — when the reaction was authored
+        })
+        .strict(),
+    },
+  },
+})
