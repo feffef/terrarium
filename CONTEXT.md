@@ -71,6 +71,34 @@ Authorship). Typically one such Tenant; its Spaces are `current` (live) and
 derived status report"; renamed once it became clear its essence is an
 append-only journal, not a current-state readout.)
 
+### Blog (Tenant)
+The Platform's second Tenant: a simple blog reporting on the Terrarium experiment
+itself, from several angles. Its Spaces are **Personas** (see Persona) — each an
+isolated `pages` collection of blog posts plus a `pingbacks` collection. Distinct
+from the **Journal**: the Journal is honest, primary/derived self-*documentation*
+(session logs, digests, inventories); the Blog is *in-character commentary* —
+subjective, voice-driven, and explicitly non-authoritative. Its routed collection
+is named `pages` per the Platform convention (ADR-0006), though it holds what the
+UI and the `blog-post` Skill call **posts**.
+
+### Persona
+A Space of the Blog Tenant, embodying one authorial voice reporting on the
+Terrarium. Three today: `researcher` (neutral, curious, watching without drawing
+early conclusions), `sceptic` (hostile to agentic AI development, snarky, seizes
+on what failed), and `dev` (easily impressed, fears agents will take his job). A
+Persona authors posts only into its **own** Space; the one exception is writing a
+**Pingback** stub into another Persona's Space. Each Persona's voice/stance is
+defined in the `blog-post` Skill. "Persona" is the Blog Tenant's word for a Space
+— say "Persona" in blog/product sentences, "Space" for the Platform mechanism.
+
+### Pingback
+A record that one Persona's blog post reacted to another Persona's post. Modeled
+as a Document in a `pingbacks` **data** collection living in the *reacted-to*
+Persona's Space — denormalized there at author time (persona/path/title/blurb
+inlined), so surfacing it is a **same-Space read**, never a cross-Space runtime
+query (ADR-0012). The reacting post is itself a first-class post in its own Space,
+optionally headed by a `reactsTo` reference to the post it answers.
+
 ### Session
 One continuous Claude Code working session against the Platform, identified by a
 stable Claude session id. It is the unit of self-reporting: at its end a session
