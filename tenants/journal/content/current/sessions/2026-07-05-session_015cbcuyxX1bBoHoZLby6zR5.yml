@@ -1,0 +1,72 @@
+session: session_015cbcuyxX1bBoHoZLby6zR5
+startedAt: 2026-07-05T06:55:00Z   # estimate — hand-authored (see frictions)
+endedAt: 2026-07-05T08:57:53Z     # exact — read from `date -u` (the #15 fix)
+kind: interactive
+goal: Turn session-log frictions into merged fixes
+status: completed
+outcome: 5 fixes, a hard rule, and a skill merged
+summary: >-
+  Read all four session logs, selected five recurring frictions fixable by simple
+  autonomous changes, and filed issues #9–#13 (three options each, simplest
+  recommended). Dispatched one worktree-isolated agent per issue; all shipped as
+  gated PRs #14–#18 and merged. Review drove two approach changes: #14's hook was
+  scoped for overhead, #17 switched to a gate:drift output message. Added a CLAUDE.md
+  hard rule (keep PR descriptions in sync, #20) after missing it on those two.
+  Finally built the frictions-to-fixes Skill encoding the whole workflow — with
+  screening, regression alerts, and batched doc PRs — merged as #21.
+prs: ["14", "15", "16", "17", "18", "20", "21"]
+docsRead:
+  - { path: CLAUDE.md, reason: repo entry point, conventions, safety gate, wrap-up rule }
+  - { path: tenants/journal/content/current/sessions/, reason: the raw friction signal to mine }
+  - { path: .agents/skills/log-session/SKILL.md, reason: authoring steps for this log }
+  - { path: .agents/skills/writing-great-skills/SKILL.md, reason: the standard the new Skill must follow }
+  - { path: .agents/skills/to-issues/SKILL.md, reason: an existing platform-operation Skill as a template }
+  - { path: tenants/journal/tenant.config.ts, reason: the strict skills + sessions schemas }
+  - { path: tenants/journal/content/current/skills/to-issues.yml, reason: catalogue entry shape }
+  - { path: package.json, reason: the gate:drift script edited for PR 17 }
+  - { path: "https://code.claude.com/docs/en/claude-code-on-the-web", reason: SessionStart overhead research for PR 14 }
+  - { path: "https://code.claude.com/docs/en/hooks", reason: SessionStart firing semantics for PR 14 }
+skillsUsed:
+  - { name: log-session, reason: authoring and committing this log (followed manually) }
+frictions:
+  - description: >-
+      Did not update PR descriptions when I fundamentally changed #14 and #17;
+      the user caught it. The stale descriptions still sold the old approach.
+    solution: Added the "keep PR description in sync" hard rule to CLAUDE.md (#20); also step 6 of the new Skill.
+    severity: moderate
+  - description: >-
+      Cold container had no node_modules; pnpm install had to run before the gate
+      could, while testing gate:drift and building the Skill. Recurs every session.
+    solution: PR #14's SessionStart hook (merged this session) fixes it; the friction I was fixing bit me mid-fix.
+    severity: minor
+  - description: >-
+      Edit refused CLAUDE.md with "File has not been read yet" after an external
+      modification — the exact cat-then-Edit papercut #18 documents, hit live.
+    solution: Re-Read before Edit; the Read-before-Edit convention (#18) landed this session.
+    severity: minor
+  - description: >-
+      My first gate:drift failure test falsely passed — `pnpm gen` regenerated the
+      file and wiped the injected drift before the diff ran.
+    solution: Test the message branch in isolation (git diff || msg) since gen overwrites manual edits.
+    severity: minor
+  - description: >-
+      Two PRs needed review-driven rework (#14 scoped for overhead, #17 switched to
+      Option 2), each a re-checkout, re-edit, re-verify, re-push cycle.
+    solution: Inherent to gated review; the cost was real but expected, not a defect.
+    severity: nit
+  - description: >-
+      pull_request_read returned mergeable_state "unknown" right after each merge,
+      forcing a second poll to confirm same-file PRs had not conflicted.
+    solution: GitHub computes mergeability async; a brief wait or a single retry is enough.
+    severity: nit
+  - description: >-
+      The github MCP server disconnected then reconnected mid-session, dropping its
+      tools and requiring ToolSearch reloads to continue.
+    solution: Transient infrastructure; no action, but it interrupted the PR-watch flow.
+    severity: nit
+  - description: startedAt is hand-estimated — no exact session-start clock was available; endedAt is exact via date -u.
+    solution: The deferred autonomous end-of-session trigger would capture both mechanically.
+    severity: nit
+  - description: The session id was not handed to me directly; I recovered it from the Claude-Session git-trailer URL. Recurring.
+    solution: Surface the session id explicitly for hand-authored logs.
+    severity: nit
