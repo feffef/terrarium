@@ -1,6 +1,6 @@
 ---
 name: frictions-to-fixes
-description: Mine the Journal's session-log frictions and ship the simple, autonomous ones as gated PRs — one issue and one dispatched agent per friction.
+description: Mine the Journal's session-log frictions and ship the simple, autonomous ones as gated PRs — screening out already-fixed ones and flagging regressions.
 disable-model-invocation: true
 ---
 
@@ -17,16 +17,36 @@ Run it when asked, or after a batch of sessions has piled up unaddressed frictio
 ## 1. Read every session log
 
 Read **all** of `tenants/journal/content/current/sessions/*.yml` — not a sample.
-For each, pull its `frictions[]`: the `description`, `solution`, and `severity`.
+For each, pull its `frictions[]` (`description`, `solution`, `severity`) and keep
+its `startedAt` — you need the date to catch regressions in step 2.
 
 Done when every log is read and you hold one flat list of frictions, each tagged
-with which session(s) raised it and at what severity.
+with its session(s), severity, and date.
 
-## 2. Pick the ripe ones
+## 2. Screen against fixes already shipped
 
-Rank by **recurrence × severity** — a friction logged across sessions, or at
-`moderate`+, outranks a lone `nit`. Then keep only those that pass the **ripeness
-test**, all three:
+Never re-fix what is already fixed. For each friction, check the tracker for a
+**closed issue or merged PR** that already addressed it, then branch:
+
+- **Never fixed** — carries on to step 3.
+- **Fixed, and not logged since the fix merged** — drop it. Done is done; spending
+  a PR here is duplicate work.
+- **Reappeared _after_ its fix merged** (a friction logged in a session that
+  started later than the fixing PR landed) — this is a **regression**: the fix that
+  was supposed to be in place did not hold. Do **not** route it through the ordinary
+  simplest-fix dispatch — a change that already failed once needs human eyes, not a
+  second run of the same idea. Instead file a distinct issue that flags the earlier
+  fix as ineffective (link the prior issue/PR and quote both the original and the
+  recurring friction), and **alert the user**.
+
+Done when every friction is labelled never-fixed, drop, or regression — and every
+regression has its own alerting issue filed.
+
+## 3. Pick the ripe ones
+
+From the never-fixed frictions, rank by **recurrence × severity** — one logged
+across sessions, or at `moderate`+, outranks a lone `nit`. Keep only those passing
+the **ripeness test**, all three:
 
 - **Simple** — one small code or config change, no redesign.
 - **Autonomous** — an agent can land it start-to-finish with no human decision
@@ -34,35 +54,43 @@ test**, all three:
 - **Safe surface** — touches none of the human-only surfaces (generator, routing,
   isolation logic, CI / the safety gate — ADR-0004). Those are never in scope here.
 
-Drop one-offs, anything needing a human judgement call, and anything deferred by an
-ADR. Stop when you have the agreed number of ripe frictions (ask the user how many
-if unset).
+Drop one-offs, anything needing a human judgement call, and anything an ADR defers.
+Stop at the agreed number of ripe frictions (ask the user how many if unset).
 
-Done when each selected friction names its evidence (session ids + severity) and
-you can state in one line why it is ripe.
+Done when each selected friction names its evidence and you can state in one line
+why it is ripe.
 
-## 3. One issue per friction — three options, simplest recommended
+## 4. One issue per friction — three options, simplest recommended
 
-File one issue on the tracker per ripe friction. Each issue states the **problem**
-with its evidence (quote the logging sessions + severities), then proposes **three
-solutions** and recommends the **simplest**. Naming the simplest here is what step
-4 implements, so make it unambiguous. Search the tracker first to avoid duplicates.
+File one issue on the tracker per ripe friction: the **problem** with its evidence
+(quote the logging sessions + severities), **three solutions**, and the **simplest**
+recommended. Naming the simplest here is what step 5 implements, so make it
+unambiguous. Search the tracker first to avoid duplicates.
 
 Done when every selected friction has an open issue whose recommended option is a
 single, simple change.
 
-## 4. Dispatch one agent per issue
+## 5. Dispatch agents — batch the doc fixes
 
-Spawn one agent per issue, each in its **own git worktree** (parallel PRs must not
-share a working tree). Give each agent a self-contained brief: read the issue,
-branch from `origin/main`, implement the issue's **simplest** option only, clear
-the **safety gate**, push, and open a **gated PR** (`Closes #N`). Never self-merge
-and never enable auto-merge (ADR-0003) — every fix lands human-reviewed.
+Split the issues by fix type and dispatch each agent in its **own git worktree**
+(parallel PRs must not share a working tree):
 
-Done when each issue has a pushed gated PR implementing its recommended option,
-gate green.
+- **Doc-only fixes** (Markdown / prose — CLAUDE.md, a SKILL, a catalogue entry):
+  hand them **all to one agent as a single grouped PR** that `Closes` every one of
+  their issues. Many one-line doc PRs are pure review overhead; one batched PR is
+  cheaper to review and still traces back to each issue.
+- **Code or config fixes**: one PR each — they carry distinct review and CI surface
+  and shouldn't ride on each other.
 
-## 5. Shepherd to merge
+Every agent's brief is self-contained: read the issue(s), branch from `origin/main`,
+implement the **simplest** option only, clear the **safety gate**, push, open a
+**gated PR**. Never self-merge or enable auto-merge (ADR-0003) — every fix lands
+human-reviewed.
+
+Done when every issue is covered by a pushed gated PR (doc issues by the one grouped
+PR, each code/config issue by its own), gate green.
+
+## 6. Shepherd to merge
 
 Watch each PR to a terminal state. On review that **fundamentally changes** a PR,
 apply the change **and update the PR title/description in the same push** (the
