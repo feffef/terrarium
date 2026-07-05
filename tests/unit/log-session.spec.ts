@@ -24,10 +24,16 @@ const valid = {
 }
 
 describe('validateEntry() — the L1 stand-in', () => {
-  it('accepts a well-formed entry and coerces timestamp strings to Date', () => {
+  it('accepts a well-formed entry and keeps timestamps as ISO-8601 strings', () => {
+    // Timestamps stay strings so Nuxt Content stores the full instant verbatim
+    // (a `z.date()` field truncates to a DATE column — YYYY-MM-DD, no time).
     const res = validateEntry(valid)
     expect(res.ok).toBe(true)
-    if (res.ok) expect(res.data.startedAt).toBeInstanceOf(Date)
+    if (res.ok) expect(res.data.startedAt).toBe('2026-07-04T22:45:00Z')
+  })
+
+  it('rejects a date-only timestamp (a bare date loses the time-of-day)', () => {
+    expect(validateEntry({ ...valid, startedAt: '2026-07-04' }).ok).toBe(false)
   })
 
   it('defaults the optional list fields so a minimal entry is valid', () => {

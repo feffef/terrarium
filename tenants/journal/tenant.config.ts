@@ -3,6 +3,22 @@
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
 
+// A UTC ISO-8601 timestamp, kept as a *string* on purpose — NOT `z.date()`.
+// Nuxt Content maps a `z.date()` field to a SQL `DATE` column and persists only
+// the `YYYY-MM-DD` part, silently dropping the time-of-day. That truncation is
+// what collapsed every session in the dashboard to `00:00 UTC` with 1- or
+// 1440-minute durations and unstable same-day ordering. A plain string is stored
+// verbatim (VARCHAR), so the full instant round-trips through the content DB.
+// The refine preserves the old validation's intent — a real datetime, not a bare
+// date — and, unlike `.datetime()` (which re-introduces a `DATETIME` column that
+// re-renders in local time), leaves the raw UTC string untouched.
+const utcTimestamp = z
+  .string()
+  .refine(
+    (v) => /T\d{2}:\d{2}/.test(v) && !Number.isNaN(Date.parse(v)),
+    'must be a full ISO-8601 UTC timestamp, e.g. 2026-07-05T08:57:53Z',
+  )
+
 export default defineTenant({
   name: 'journal',
   // Two Spaces so the isolation invariant (ADR-0004 L3) is actually exercised:
@@ -52,8 +68,8 @@ export default defineTenant({
       schema: z
         .object({
           session: z.string(), // Claude session id — stable identity
-          startedAt: z.date(), // UTC ISO-8601 — session start (ordering anchor)
-          endedAt: z.date(), //   UTC ISO-8601 — session end / log authored
+          startedAt: utcTimestamp, // UTC ISO-8601 — session start (ordering anchor)
+          endedAt: utcTimestamp, //   UTC ISO-8601 — session end / log authored
           kind: z.enum(['interactive', 'autonomous']),
           goal: z.string(), // ≤ 8 words — what the session set out to do
           status: z.enum(['completed', 'partial', 'blocked', 'abandoned']),

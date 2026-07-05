@@ -17,7 +17,6 @@ import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
-import { z } from 'zod'
 import journal from '../tenants/journal/tenant.config.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -34,30 +33,21 @@ const sessionsSchema = sessionsCollection.schema
 
 export interface SessionEntry {
   session: string
-  startedAt: Date
+  startedAt: string
   [k: string]: unknown
 }
 
-/** Nuxt Content coerces YAML timestamps to Date for `z.date()` fields; mirror that
- *  before validating so our check matches the build's L1 validation exactly. */
-function coerceDates(raw: Record<string, unknown>): Record<string, unknown> {
-  const out = { ...raw }
-  for (const [key, field] of Object.entries(sessionsSchema.shape)) {
-    if (field instanceof z.ZodDate && typeof out[key] === 'string') {
-      out[key] = new Date(out[key] as string)
-    }
-  }
-  return out
-}
-
-/** Validate a parsed entry against the frozen schema. Pure — the testable core. */
+/** Validate a parsed entry against the frozen schema. Pure — the testable core.
+ *  Timestamps are plain ISO-8601 strings (see the `utcTimestamp` note in the
+ *  manifest): the YAML parser hands them over as strings and the schema keeps
+ *  them that way, so no Date coercion is needed to match the build's L1 pass. */
 export function validateEntry(raw: unknown):
   | { ok: true; data: SessionEntry }
   | { ok: false; errors: string } {
   if (raw === null || typeof raw !== 'object') {
     return { ok: false, errors: 'entry is not a YAML mapping' }
   }
-  const res = sessionsSchema.safeParse(coerceDates(raw as Record<string, unknown>))
+  const res = sessionsSchema.safeParse(raw as Record<string, unknown>)
   if (!res.success) {
     const errors = res.error.issues
       .map((i) => `  ${i.path.join('.') || '(root)'}: ${i.message}`)
@@ -70,7 +60,7 @@ export function validateEntry(raw: unknown):
 /** The canonical filename an entry must be stored under: `<startedAt-date>-<session>.yml`.
  *  Date prefix gives chronological `stem` order; the full session id is collision-free. */
 export function expectedFilename(entry: SessionEntry): string {
-  const date = entry.startedAt.toISOString().slice(0, 10) // YYYY-MM-DD (UTC)
+  const date = new Date(entry.startedAt).toISOString().slice(0, 10) // YYYY-MM-DD (UTC)
   return `${date}-${entry.session}.yml`
 }
 
