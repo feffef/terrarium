@@ -1,16 +1,133 @@
-// L2 — Smoke render (ADR-0004): every (Tenant, Space) entry route returns 200
-// and renders content without erroring. The target list is derived at build time
-// from the manifests (ADR-0014), so new Spaces are covered automatically.
+// L2 — Smoke render (ADR-0004): every (Tenant, Space) entry route returns 200,
+// renders content, and — in a REAL browser — hydrates with no console/page
+// errors. The target list is derived at build time from the manifests
+// (ADR-0014), so new Spaces are covered automatically.
+//
+// Two layered tiers, cheapest-first (the gate's own design principle, ADR-0004):
+//   Tier 1 — fast SSR `$fetch`: the route serves 200, the server-rendered HTML
+//            carries the expected structure, and isolation leaks are caught in
+//            the payload (presence in the payload IS a leak regardless of render).
+//   Tier 2 — real browser (`createPage`): the client bundle actually executes.
+//            This is the half CLAUDE.md warns a string match on SSR HTML cannot
+//            prove. Two error classes are covered together:
+//              • Uncaught errors (bad client-only code, `window`/`document`
+//                misuse, third-party throws) → console.error / pageerror, which
+//                the listeners below assert stay empty.
+//              • A throw inside a Vue lifecycle hook is caught by Vue and, since
+//                Nuxt registers its own errorHandler, is *silent* on the console
+//                in a production build — but it breaks client reactivity, so the
+//                expand-on-click interaction (which needs a working client to
+//                mount the digest body) fails. That interaction is the load-
+//                bearing proof the client truly rendered: an <h1> alone can be
+//                the SSR DOM persisting through a failed hydration.
+//
+// The browser is located, never downloaded — no `playwright install` anywhere:
+// first the pre-installed Playwright Chromium via PLAYWRIGHT_BROWSERS_PATH
+// (exactly as scripts/screenshot.ts does; the agent sandbox), then the system
+// Chrome/Chromium (CHROME_BIN or well-known paths; GitHub's ubuntu runners ship
+// /usr/bin/google-chrome), so CI needs no browser-provisioning step (issue #97).
 import { fileURLToPath } from 'node:url'
+import { accessSync, constants, readdirSync, statSync } from 'node:fs'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { $fetch, setup } from '@nuxt/test-utils/e2e'
+import { $fetch, createPage, setup, url } from '@nuxt/test-utils/e2e'
 import { entryRoutesFrom, expand, loadManifests } from '../../shared/expand.ts'
 
 const entryRoutes = entryRoutesFrom(expand(loadManifests()))
 
-describe('L2 smoke render — entry routes', async () => {
-  await setup({ rootDir: fileURLToPath(new URL('../..', import.meta.url)) })
+/**
+ * Find the pre-installed Chromium under a Playwright browsers cache dir, the
+ * same way scripts/screenshot.ts does. The installed build (e.g. chromium-1194)
+ * need not match playwright-core's own pinned revision, so we launch it by
+ * explicit executablePath rather than letting playwright resolve its default.
+ */
+function findChromium(browsersDir: string): string | undefined {
+  const convenience = join(browsersDir, 'chromium')
+  if (isExecutable(convenience)) return convenience
 
+  let entries: string[]
+  try {
+    entries = readdirSync(browsersDir)
+  } catch {
+    return undefined
+  }
+  const versioned = entries
+    .filter((name) => name.startsWith('chromium-') && !name.includes('headless_shell'))
+    .sort()
+    .reverse() // prefer the newest-looking version directory
+  for (const dir of versioned) {
+    const candidate = join(browsersDir, dir, 'chrome-linux', 'chrome')
+    if (isExecutable(candidate)) return candidate
+  }
+  return undefined
+}
+
+/**
+ * Fall back to a system-installed Chrome/Chromium (CHROME_BIN, then well-known
+ * paths). playwright-core drives it over CDP by explicit executablePath, same
+ * as the pre-installed build — the exact browser revision need not match.
+ */
+function findSystemChrome(): string | undefined {
+  const candidates = [
+    process.env.CHROME_BIN,
+    '/usr/bin/google-chrome',
+    '/usr/bin/google-chrome-stable',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/chromium',
+  ].filter((p): p is string => Boolean(p))
+  return candidates.find(isExecutable)
+}
+
+function isExecutable(path: string): boolean {
+  try {
+    accessSync(path, constants.X_OK)
+    return statSync(path).isFile() || statSync(path).isSymbolicLink()
+  } catch {
+    return false
+  }
+}
+
+const chromiumPath
+  = findChromium(process.env.PLAYWRIGHT_BROWSERS_PATH ?? '/opt/pw-browsers') ?? findSystemChrome()
+
+/**
+ * Navigate to `route` in a fresh page, capturing every console *error* and
+ * uncaught page error from before navigation until the network settles. Returns
+ * the page (for DOM assertions) and the collected error strings.
+ */
+async function renderAndCollectErrors(route: string) {
+  const errors: string[] = []
+  // Un-navigated page (createPage() with no path skips its own goto), so the
+  // listeners are attached BEFORE the client bundle runs and can see hydration
+  // errors that fire on first paint.
+  const page = await createPage()
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') errors.push(`console.error: ${msg.text()}`)
+  })
+  page.on('pageerror', (err) => {
+    errors.push(`pageerror: ${err.message}`)
+  })
+  // waitUntil: 'hydration' blocks until Nuxt reports isHydrating === false, so a
+  // throw during hydration surfaces as a pageerror we then assert on.
+  await page.goto(url(route), { waitUntil: 'hydration' })
+  await page.waitForLoadState('networkidle')
+  return { page, errors }
+}
+
+describe('L2 smoke render — entry routes', async () => {
+  await setup({
+    rootDir: fileURLToPath(new URL('../..', import.meta.url)),
+    browser: true,
+    browserOptions: {
+      type: 'chromium',
+      launch: {
+        ...(chromiumPath ? { executablePath: chromiumPath } : {}),
+        args: ['--no-sandbox', '--disable-gpu'],
+      },
+    },
+  })
+
+  // ── Tier 1: fast SSR checks (cheap first tier) ──────────────────────────────
   for (const route of entryRoutes) {
     it(`renders ${route}`, async () => {
       const html = await $fetch(route) // throws on non-2xx
@@ -79,5 +196,44 @@ describe('L2 smoke render — entry routes', async () => {
     const html = await $fetch('/t/journal/archived')
     expect(html).toContain('No sessions logged in this Space yet.')
     expect(html).not.toContain('No document at')
+  })
+
+  // ── Tier 2: real browser render — hydrates cleanly and the DOM is present ────
+  // Every entry route is loaded in Chromium, the client bundle runs, and we
+  // assert (a) an <h1> exists in the *rendered DOM* (not the SSR string) and
+  // (b) nothing logged a console error or threw during hydration.
+  for (const route of entryRoutes) {
+    it(`hydrates ${route} in a browser with no console/page errors`, async () => {
+      const { page, errors } = await renderAndCollectErrors(route)
+      try {
+        expect(await page.locator('h1').count()).toBeGreaterThan(0)
+        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
+      } finally {
+        await page.close()
+      }
+    })
+  }
+
+  // ── Tier 2: interaction — expand-on-click renders in the live DOM ────────────
+  // The digest body ships only in the useAsyncData payload until a click mounts
+  // it (openDigests defaults false) — this is precisely the case the SSR-string
+  // "went from empty repo" check above CANNOT prove renders. Click a real row
+  // and assert the body becomes *visible* in the DOM.
+  it('expands a journal digest on click (live DOM, not payload)', async () => {
+    const route = '/t/journal/current'
+    expect(entryRoutes).toContain(route)
+    const { page, errors } = await renderAndCollectErrors(route)
+    try {
+      const firstRow = page.locator('.digest .drow').first()
+      expect(await firstRow.count()).toBeGreaterThan(0)
+      expect(await page.locator('.digest-body').count()).toBe(0) // collapsed: not mounted
+      await firstRow.click()
+      const body = page.locator('.digest-body').first()
+      await body.waitFor({ state: 'visible' })
+      expect(await body.isVisible()).toBe(true)
+      expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
+    } finally {
+      await page.close()
+    }
   })
 })
