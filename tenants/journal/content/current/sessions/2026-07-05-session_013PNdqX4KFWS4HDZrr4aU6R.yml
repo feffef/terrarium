@@ -1,0 +1,82 @@
+session: session_013PNdqX4KFWS4HDZrr4aU6R
+startedAt: 2026-07-05T06:50:00Z   # estimate — hand-authored (see frictions)
+endedAt: 2026-07-05T09:16:00Z     # estimate — hand-authored
+kind: interactive
+goal: Build journal UI layer overview dashboard
+status: completed
+outcome: Dashboard layer shipped via PR #19, merged
+summary: >-
+  Planned and built the journal Tenant's first Nuxt-layer fit-out: a Space-landing
+  overview dashboard (state tiles, a recent-activity session feed, friction "soil
+  strata", and the grouped Skill catalogue) that overrides the generic catch-all
+  for the Space root only, leaving Documents on it. Pitched it as an Artifact mock
+  (dropped a platform-structure block on feedback), then implemented five
+  components + page reading only this Space's keyed collections — presentation
+  only, no generator/isolation changes. A vue-tsc whole-program quirk surfaced a
+  latent type hole in the human-only catch-all, forcing a flagged type-only fix.
+  Ran a two-axis code review and applied all three cleanups. Shipped as PR #19,
+  merged.
+prs: ["19"]
+docsRead:
+  - { path: CONTEXT.md, reason: domain model — Tenant-as-layer, Journal, Session, Friction }
+  - { path: CLAUDE.md, reason: repo entry point, ground rules, safety gate }
+  - { path: docs/adr/0001-single-container-baked-multitenancy.md, reason: baked multi-tenancy / runtime-routing constraints }
+  - { path: docs/adr/0006-runtime-routing-path-prefix.md, reason: routing resolver is isolation-critical/human-only }
+  - { path: docs/adr/0008-self-documentation-tenant-is-a-journal.md, reason: the Journal's two content kinds the UI renders }
+  - { path: tenants/journal/tenant.config.ts, reason: sessions/skills schemas the dashboard reads }
+  - { path: scripts/generate.ts, reason: confirm the layer needs no generator change }
+  - { path: shared/routing.generated.ts, reason: the routing map the page resolves through }
+  - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: the generic catch-all the layer overrides + the type fix }
+  - { path: .agents/skills/log-session/SKILL.md, reason: authoring steps for this log }
+skillsUsed:
+  - { name: artifact-design, reason: design + build the dashboard mock before writing Vue }
+  - { name: code-review, reason: two-axis (Standards + Spec) review of the diff }
+  - { name: log-session, reason: authoring and committing this log }
+frictions:
+  - description: >-
+      Adding the layer page tipped vue-tsc's whole-program inference and surfaced a
+      latent type hole in the isolation-critical catch-all (fields() param), which
+      passed on HEAD. Cost ~5 probe pages to bisect.
+    solution: >-
+      Fixed at source (Record<string,unknown> → object, type-only) rather than
+      contorting the new page; the catch-all was on a knife's edge and is now robust.
+    severity: moderate
+  - description: >-
+      A layer-internal shared type module needs ugly relative imports
+      (../../../../types/journal) because ~/@ aliases resolve to the main app, not
+      the layer.
+    solution: A per-layer path alias, or documenting the relative-import convention for Tenant layers.
+    severity: minor
+  - description: >-
+      Told the user "no PR opened yet" when PR #19 had been auto-created on the
+      first branch push; they corrected me. Wasted a round.
+    solution: After the first push, check for an auto-created PR before claiming none exists.
+    severity: minor
+  - description: >-
+      git commit --amend was blocked by the auto-mode classifier (rewriting a pushed
+      commit); fell back to a follow-up commit — arguably the safer outcome.
+    solution: Prefer follow-up commits over amending already-pushed history; the block was reasonable.
+    severity: nit
+  - description: >-
+      Cross-scope CSS token sharing relied on custom properties inheriting through
+      the DOM into scoped child components — works, but needed care and a render check.
+    solution: A documented note that --jd-* tokens on the layer wrapper inherit into scoped children.
+    severity: nit
+  - description: >-
+      Cold container had no deps; pnpm install had to run before the safety gate.
+      Recurring across sessions.
+    solution: A SessionStart hook that pre-installs deps (the session-start-hook Skill exists for this).
+    severity: nit
+  - description: >-
+      The log-session Skill is user-invocation-only (disable-model-invocation), so I
+      followed SKILL.md manually to author this entry. Logged in prior sessions too.
+    solution: Add a "invoked manually — follow these steps" note to the Skill body.
+    severity: nit
+  - description: startedAt/endedAt are hand-estimated — no exact session clock when authoring by hand.
+    solution: The deferred autonomous end-of-session trigger, or a readable live clock.
+    severity: nit
+  - description: >-
+      A docsRead path containing [brackets] (the catch-all route file) broke the
+      inline flow-map YAML until quoted — the helper only reported it on dry-run.
+    solution: Quote path values, or note the bracket-quoting gotcha in the log-session Skill.
+    severity: nit
