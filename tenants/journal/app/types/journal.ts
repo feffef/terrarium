@@ -41,15 +41,6 @@ export interface PageDoc {
   summary?: string
 }
 
-// A Digest prepared for the Space overview's "Recent digests" list — derived from
-// a Digest page Document (path under '/digests/') so the template stays dumb.
-// `to` is the full browsable route, not the Space-relative content path.
-export interface DigestView {
-  date: string
-  summary: string
-  to: string
-}
-
 // A session prepared for display in the recent-activity feed — the page derives
 // this from a SessionDoc (formats dates, counts frictions) so the card component
 // stays a dumb renderer. The `collapsed` fields drive the summary row; the rest

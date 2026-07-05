@@ -35,16 +35,14 @@ describe('L2 smoke render — entry routes', async () => {
     expect(html).toMatch(/role="button"/)
   })
 
-  // A Digest surfaced on the landing must link to its real, browsable route.
-  // Content `path` is Space-relative (/digests/<date>), so the link has to carry
-  // the /t/<tenant>/<space> prefix — else it 404s at the site root.
-  it('links recent digests to their browsable route', async () => {
+  // Digests expand inline on the landing (like the session cards): the body is
+  // preloaded for zero-request expansion, and the standalone page route still works.
+  it('shows daily digests inline and keeps the digest route', async () => {
     const html = await $fetch('/t/journal/current')
     expect(html).toContain('Daily digests')
-    const href = html.match(/href="(\/t\/journal\/current\/digests\/[^"]+)"/)
-    expect(href).not.toBeNull()
-    const digest = await $fetch(href![1]!) // throws on the old Space-relative 404
-    expect(digest).toMatch(/<h1[ >]/)
+    expect(html).toContain('went from empty repo') // the Digest body, preloaded inline
+    const digest = await $fetch('/t/journal/current/digests/2026-07-04')
+    expect(digest).toMatch(/<h1[ >]/) // the standalone route still renders
   })
 
   // A Space with no sessions (archived) must render the same dashboard without

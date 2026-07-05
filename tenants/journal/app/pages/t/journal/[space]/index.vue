@@ -9,7 +9,7 @@
 // only `journal_<space>_{pages,skills,sessions}`. Spaces cannot leak.
 import type { Collections } from '@nuxt/content'
 import { routingMap } from '~~/shared/routing.generated'
-import type { DigestView, Friction, Importance, PageDoc, SessionCardView, SessionDoc, Severity, SkillDoc } from '../../../../types/journal'
+import type { Friction, Importance, PageDoc, SessionCardView, SessionDoc, Severity, SkillDoc } from '../../../../types/journal'
 
 type RoutingMap = Record<string, Record<string, Record<string, string>>>
 
@@ -28,31 +28,35 @@ const sessionsKey = spaceCollections.sessions as keyof Collections | undefined
 const spaces = Object.keys((routingMap as Map)[tenant] ?? {})
 
 const { data } = await useAsyncData(route.path, async () => {
-  // The root Document ('/') — its body is the free-form editorial intro; the full
-  // page list drives the '/digests/' panel. The index is a live view: a new Digest
-  // page appears with no baking (ADR-0010).
-  const page = await queryCollection(pagesKey).path('/').first()
   const pages = await queryCollection(pagesKey).all()
   const skills = skillsKey ? await queryCollection(skillsKey).all() : []
   const sessions = sessionsKey ? await queryCollection(sessionsKey).all() : []
-  return { page, pages, skills, sessions }
+  return { pages, skills, sessions }
 })
 
-// `rootDoc` keeps the parsed body for <ContentRenderer>; `page` is the typed view
-// for the masthead's title/description.
-const rootDoc = computed(() => data.value?.page ?? null)
-const page = computed(() => (data.value?.page ?? null) as PageDoc | null)
-const digests = computed<DigestView[]>(() =>
-  ((data.value?.pages ?? []) as unknown as (PageDoc & { path: string })[])
+// `.all()` returns the full page Documents with their parsed body, so the root's
+// editorial intro AND each Digest's body are already loaded — Digests expand inline
+// here with no extra request, consistent with the session cards (ADR-0010).
+const allPages = computed(() => data.value?.pages ?? [])
+const rootDoc = computed(() => allPages.value.find((p) => p.path === '/') ?? null)
+const page = computed(() => (rootDoc.value ?? null) as PageDoc | null)
+const digests = computed(() =>
+  allPages.value
     .filter((p) => p.path.startsWith('/digests/'))
     .sort((a, b) => b.path.localeCompare(a.path))
     .map((p) => ({
-      date: p.path.replace('/digests/', ''),
+      date: p.path.slice('/digests/'.length),
       summary: p.summary ?? p.description ?? '',
-      // Content `path` is Space-relative; the browsable route carries the /t prefix.
-      to: `/t/${tenant}/${space}${p.path}`,
+      doc: p,
     })),
 )
+
+// Which Digests are expanded, keyed by content path — an inline disclosure, the
+// same interaction as the session cards.
+const openDigests = reactive<Record<string, boolean>>({})
+const toggleDigest = (path: string) => {
+  openDigests[path] = !openDigests[path]
+}
 const skills = computed(() => (data.value?.skills ?? []) as unknown as SkillDoc[])
 const sessions = computed(() =>
   ((data.value?.sessions ?? []) as unknown as SessionDoc[])
@@ -206,12 +210,31 @@ useHead({ title: `${title.value} · journal/${space}` })
       </div>
       <p class="panel-intro">
         A plain recap of what changed across the project each day — click any day
-        for the full story.
+        to read the full story.
       </p>
       <ul class="digest-list">
-        <li v-for="d in digests" :key="d.to">
-          <NuxtLink :to="d.to" class="digest-date">{{ d.date }}</NuxtLink>
-          <span class="digest-summary">{{ d.summary }}</span>
+        <li
+          v-for="d in digests"
+          :key="d.doc.path"
+          class="digest"
+          :class="{ open: openDigests[d.doc.path] }"
+        >
+          <div
+            class="drow"
+            role="button"
+            tabindex="0"
+            :aria-expanded="!!openDigests[d.doc.path]"
+            @click="toggleDigest(d.doc.path)"
+            @keydown.enter.prevent="toggleDigest(d.doc.path)"
+            @keydown.space.prevent="toggleDigest(d.doc.path)"
+          >
+            <span class="digest-date">{{ d.date }}</span>
+            <span class="digest-summary">{{ d.summary }}</span>
+            <span class="caret" aria-hidden="true">{{ openDigests[d.doc.path] ? '▾' : '▸' }}</span>
+          </div>
+          <div v-if="openDigests[d.doc.path]" class="digest-body">
+            <ContentRenderer :value="d.doc" />
+          </div>
         </li>
       </ul>
     </section>
@@ -458,22 +481,39 @@ h1 {
 
 .digests { margin-top: 1.75rem; }
 .panel-intro { margin: 0 0 0.95rem; max-width: 72ch; color: var(--jd-muted); font-size: 0.92rem; line-height: 1.5; }
-.digest-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-.digest-list li {
+.digest-list { list-style: none; margin: 0; padding: 0; }
+.digest { border-top: 1px solid var(--jd-line); }
+.digest:first-child { border-top: 0; }
+.drow {
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: max-content 1fr max-content;
   gap: 0.1rem 0.9rem;
   align-items: baseline;
+  padding: 0.7rem 0;
+  cursor: pointer;
+  border-radius: 6px;
 }
-.digest-date {
+.drow:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 3px; }
+.digest-date { font-family: var(--jd-mono); font-size: 0.82rem; color: var(--jd-accent); white-space: nowrap; }
+.digest-summary { color: var(--jd-ink); font-size: 0.96rem; }
+.digest.open .digest-summary { color: var(--jd-muted); }
+.caret { color: var(--jd-faint); font-size: 0.78rem; }
+
+.digest-body { padding: 0 0 1rem; }
+.digest-body :deep(h1) { display: none; } /* the row already shows the date */
+.digest-body :deep(p) { margin: 0 0 0.7rem; color: var(--jd-muted); font-size: 0.95rem; line-height: 1.6; }
+.digest-body :deep(p:last-child) { margin-bottom: 0; }
+.digest-body :deep(a) { color: var(--jd-accent); text-decoration: none; }
+.digest-body :deep(a:hover) { text-decoration: underline; }
+.digest-body :deep(strong) { color: var(--jd-ink); font-weight: 600; }
+.digest-body :deep(code) {
   font-family: var(--jd-mono);
-  font-size: 0.82rem;
-  color: var(--jd-accent);
-  text-decoration: none;
-  white-space: nowrap;
+  font-size: 0.85em;
+  background: var(--jd-surface-2);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
 }
-.digest-date:hover { text-decoration: underline; }
-.digest-summary { color: var(--jd-muted); font-size: 0.96rem; }
+.digest-body :deep(ul) { margin: 0 0 0.7rem; padding-left: 1.1rem; color: var(--jd-muted); }
 
 .section-head {
   display: flex;
@@ -520,6 +560,5 @@ h1 {
 }
 @media (max-width: 460px) {
   .tiles { grid-template-columns: 1fr 1fr; }
-  .digest-list li { grid-template-columns: 1fr; gap: 0.15rem; }
 }
 </style>
