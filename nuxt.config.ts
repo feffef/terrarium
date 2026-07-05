@@ -4,6 +4,12 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-04',
 
+  // Tenants are Nuxt layers (CONTEXT.md). Each Tenant that has grown its own
+  // fit-out is extended here; a Tenant without a layer falls back to the
+  // Platform's generic catch-all renderer. Presentation only — layers never
+  // define content collections (that stays in the generated content.config.ts).
+  extends: ['./tenants/journal'],
+
   modules: ['@nuxt/content', '@nuxt/eslint'],
 
   content: {

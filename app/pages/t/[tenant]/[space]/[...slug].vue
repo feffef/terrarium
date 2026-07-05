@@ -52,7 +52,10 @@ const { data } = await useAsyncData(route.path, async () => {
 const HIDDEN = new Set([
   'id', 'stem', 'extension', 'meta', 'path', 'title', 'description', 'seo', 'body', 'navigation',
 ])
-function fields(item: Record<string, unknown>): [string, unknown][] {
+// `object`, not `Record<string, unknown>`: generated Content item types are
+// concrete interfaces (no string index signature), so they satisfy `object` but
+// not `Record<string, unknown>`. Type-only — behaviour is unchanged.
+function fields(item: object): [string, unknown][] {
   return Object.entries(item).filter(
     ([k, v]) => !k.startsWith('_') && !HIDDEN.has(k) && typeof v !== 'object',
   )
