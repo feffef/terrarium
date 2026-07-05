@@ -1,0 +1,53 @@
+session: session_01WzJC3i8ssDb1R6PDUVoPzF
+startedAt: 2026-07-05T18:54:10Z
+endedAt: 2026-07-05T20:10:30Z
+kind: interactive
+goal: Design Atlas showcase Tenant concept and PRD
+status: completed
+outcome: PRD #64 and twelve linked stories filed
+summary: >-
+  Explored the platform to propose a third, design-heavy showcase Tenant and
+  pitched the Atlas of the Terrarium — a fictional natural-history field guide
+  with biomes as Spaces, specimen entries, a food web, and a field log. Filed
+  concept-only PRD #64 with an explicit implementation hold pending the open
+  review items, broke the idea into twelve user stories (#65–#76) linked as
+  native sub-issues, then added engraved-style ASCII plates and a Mermaid
+  food-web sketch to all thirteen issues. No code changed; the designated
+  feature branch stays untouched until the hold clears.
+prs: []
+docsRead:
+  - { path: CONTEXT.md, reason: domain model and existing Space meanings }
+  - { path: shared/manifest.ts, reason: what a Tenant manifest can declare }
+  - { path: tenants/blog/tenant.config.ts, reason: prior-art tenant patterns }
+  - { path: docs/agents/tenant-layers.md, reason: layer fit-out mechanics }
+  - { path: docs/agents/issue-tracker.md, reason: issue and PRD conventions }
+  - { path: docs/agents/triage-labels.md, reason: label vocabulary decision }
+  - { path: tenants/journal/tenant.config.ts, reason: sessions schema for this log }
+  - { path: .agents/skills/log-session/SKILL.md, reason: session log steps }
+skillsUsed:
+  - { name: log-session, reason: author this session log }
+frictions:
+  - description: issue-tracker.md prescribes the gh CLI, which the remote environment lacks; mapped every operation to GitHub MCP tools by hand
+    solution: note the GitHub MCP equivalents (or a remote-session section) in docs/agents/issue-tracker.md
+    severity: minor
+  - description: sub_issue_write returns the full parent issue JSON with repo metadata on every call; twelve sequential link calls flooded the transcript
+    solution: a minimal-output option or batch add for sub-issue writes
+    severity: moderate
+  - description: list_issues survey output (55KB) blew the tool-result limit and its double-encoded JSON took two parse attempts from the saved file
+    solution: paginate with minimal output up front; flatten the persisted result encoding
+    severity: minor
+  - description: no PRD conventions existed (no label, no precedent); invented the sub-issue linking and no-triage-label stance ad hoc
+    solution: document PRD conventions (labeling, linking, hold semantics) in docs/agents/issue-tracker.md
+    severity: minor
+  - description: GitHub issue bodies strip inline SVG and cannot render private-repo images, so issue artwork had to fall back to ASCII plates and Mermaid
+    solution: none needed here (the fallback suited the Atlas), but document the constraint for future issue art
+    severity: nit
+  - description: the GitHub MCP server disconnected and reconnected several times mid-session, briefly hiding its tools between turns
+    solution: none — reconnects were automatic and cost only a re-check
+    severity: nit
+  - description: Skill tool refuses log-session by design; one failed call before falling back to the documented manual steps
+    solution: none — SKILL.md documents the refusal and recovery clearly
+    severity: nit
+  - description: startedAt derived from node_modules install mtimes rather than captured; true start/end capture remains deferred
+    solution: the deferred autonomous end-of-session trigger would capture real timestamps
+    severity: nit
