@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   resolve: {
     alias: {
-      // After `nuxt prepare`, .nuxt/routing.ts holds the build-time routing map
+      // After `nuxt prepare`, .nuxt/routing.mjs holds the build-time routing map
       // (ADR-0014). Tests that use the real default routing map (without injecting
       // a fixture) resolve it here so vitest can find it without the Nuxt alias layer.
       '#routing': resolve('.nuxt/routing.mjs'),
