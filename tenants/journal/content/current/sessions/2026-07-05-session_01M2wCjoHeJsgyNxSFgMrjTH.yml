@@ -1,0 +1,66 @@
+session: session_01M2wCjoHeJsgyNxSFgMrjTH
+startedAt: 2026-07-05T15:00:00Z
+endedAt: 2026-07-05T18:47:47Z
+kind: interactive
+goal: Add a personas blog Tenant with pingbacks
+status: completed
+outcome: Merged blog Tenant, 3 personas, skill
+summary: >-
+  Introduced the Platform's second Tenant: a blog whose three Spaces are personas
+  (david, karen, kevin) reporting on Terrarium from different angles. Grilled the
+  design first, then wrote ADR-0012 (cross-persona pingbacks via author-time
+  denormalization) plus glossary terms. Built the manifest, a deliberately simple
+  Nuxt layer (persona landings, post pages, pingback rendering), seed content with
+  a live reaction chain, and the blog-post Skill. Added front-door blog links on /
+  and a Blogger Network footer, and reframed copy from "a website" to a
+  content-website platform. Full safety gate green throughout; PR #53 merged.
+prs: ["53"]
+docsRead:
+  - { path: CONTEXT.md, reason: domain model before adding new terms }
+  - { path: docs/adr/0006-runtime-routing-path-prefix.md, reason: routed-collection + isolation constraints }
+  - { path: docs/adr/0008-self-documentation-tenant-is-a-journal.md, reason: match the repo's ADR format }
+  - { path: shared/manifest.ts, reason: manifest schema and slug rules }
+  - { path: scripts/generate.ts, reason: how collections + routing are generated }
+  - { path: shared/routing.ts, reason: the isolation-critical resolver, central to pingback design }
+  - { path: tenants/journal/tenant.config.ts, reason: an existing manifest to mirror }
+  - { path: "tenants/journal/app/pages/t/journal/[space]/index.vue", reason: Space-landing pattern }
+  - { path: tests/unit/generator.spec.ts, reason: ensure a second tenant would not break isolation tests }
+  - { path: docs/agents/tenant-layers.md, reason: Tenant-layer authoring conventions (from main) }
+  - { path: scripts/screenshot.ts, reason: screenshot recipe for verifying the root page }
+skillsUsed:
+  - { name: grill-with-docs, reason: grill the blog design and produce docs as we went }
+  - { name: domain-modeling, reason: wrote CONTEXT glossary terms + ADR-0012 }
+  - { name: log-session, reason: authored this session log }
+frictions:
+  - description: >-
+      After adding the new blog Nuxt layer, `pnpm lint` failed with
+      vue/multi-word-component-names on the blog pages, because `.nuxt` had not been
+      re-prepared to recognise the layer's page dir.
+    solution: >-
+      Re-run `nuxt prepare` after adding a layer (or have install/the gate do it);
+      worth a note in docs/agents/tenant-layers.md.
+    severity: moderate
+  - description: >-
+      A `git commit -m` message containing backticks was mangled by the shell's
+      command substitution, producing a garbled commit body I had to amend.
+    solution: Use `git commit -F <file>` for messages that contain backticks or backquotes.
+    severity: minor
+  - description: >-
+      Unsure whether a `data` collection with no documents (kevin/pingbacks) would
+      break the generator/build, so I added a .gitkeep defensively.
+    solution: Generator could scaffold empty collection dirs, or docs could state the placeholder need.
+    severity: nit
+  - description: >-
+      Iterating on the root/blog UI meant a full `pnpm build` + node server for each
+      screenshot, which was slow.
+    solution: Use `pnpm dev` for faster visual iteration when only checking a render.
+    severity: nit
+  - description: >-
+      Persona naming took ~5 back-and-forth rounds; without an upfront naming brief,
+      several suggestions were proposed and discarded.
+    solution: Ask for naming constraints/tone up front before proposing candidates.
+    severity: nit
+  - description: >-
+      startedAt in this log is a hand-estimate; the session's true start was not captured.
+    solution: The deferred end-of-session trigger should capture real start/end timestamps.
+    severity: nit
