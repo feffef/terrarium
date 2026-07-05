@@ -126,6 +126,15 @@ const kindCounts = computed(() => ({
 const ownSkills = computed(() => skills.value.filter((s) => s.category === 'platform-operation'))
 const externalSkillCount = computed(() => skills.value.length - ownSkills.value.length)
 
+// Headline label carries the external-pack count as a parenthetical so it never
+// reads as contradicting the headline number (which stays the platform's OWN
+// authored count) — the "3 … but 10?" nit from issue #31.
+const skillsLabel = computed(() =>
+  externalSkillCount.value
+    ? `Platform Skills (+${externalSkillCount.value} from an external pack)`
+    : 'Platform Skills',
+)
+
 const skillsSub = computed(() => {
   const by = (i: Importance) => ownSkills.value.filter((s) => s.importance === i).length
   const parts = ([
@@ -135,8 +144,7 @@ const skillsSub = computed(() => {
   ] as const)
     .filter(([, n]) => n > 0)
     .map(([label, n]) => `${n} ${label}`)
-  const own = parts.join(' · ') || 'none yet'
-  return externalSkillCount.value ? `${own} · ${externalSkillCount.value} external` : own
+  return parts.join(' · ') || 'none yet'
 })
 
 const skillGroups = computed(() => {
@@ -247,7 +255,7 @@ useHead({ title: `${title.value} · journal/${space}` })
         :sub="`${kindCounts.interactive} interactive · ${kindCounts.autonomous} autonomous`"
       />
       <JournalStatTile
-        label="Platform Skills"
+        :label="skillsLabel"
         :value="ownSkills.length"
         :sub="skillsSub"
       />
