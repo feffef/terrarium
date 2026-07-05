@@ -92,6 +92,11 @@ pnpm build       # L0/L1 — build; strict schemas fail the build on invalid con
 pnpm test:e2e    # L2 — smoke-render every (Tenant, Space) entry route (200, renders)
 ```
 
+**Need a screenshot of a running page** (e.g. to eyeball a render during a session)?
+Run `pnpm exec tsx scripts/screenshot.ts <url> <out.png>` — it drives the
+pre-installed Chromium directly (via `PLAYWRIGHT_BROWSERS_PATH`), no new
+dependency or browser download required.
+
 To **add a Space or Collection**: edit the Tenant's `tenant.config.ts`, run
 `pnpm gen`, then commit the regenerated files alongside it. To **spawn a Tenant**:
 drop a `tenants/<name>/` folder with a manifest and content, then regenerate.
