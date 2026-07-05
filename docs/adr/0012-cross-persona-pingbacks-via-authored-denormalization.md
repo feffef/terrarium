@@ -5,8 +5,8 @@ Status: Accepted
 
 ## Context
 
-The Blog Tenant models each **Persona** as a **Space** (`researcher`, `sceptic`,
-`dev`), so a Persona's posts are a physically isolated `pages` collection —
+The Blog Tenant models each **Persona** as a **Space** (`david`, `karen`,
+`kevin`), so a Persona's posts are a physically isolated `pages` collection —
 `blog_<persona>_pages`. A **pingback** must show, on a post, that *another*
 Persona reacted to it (wrote a post replying to it). That relationship inherently
 spans two Spaces, which collides head-on with the isolation invariant (ADR-0004

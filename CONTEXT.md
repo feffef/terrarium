@@ -83,13 +83,17 @@ UI and the `blog-post` Skill call **posts**.
 
 ### Persona
 A Space of the Blog Tenant, embodying one authorial voice reporting on the
-Terrarium. Three today: `researcher` (neutral, curious, watching without drawing
-early conclusions), `sceptic` (hostile to agentic AI development, snarky, seizes
-on what failed), and `dev` (easily impressed, fears agents will take his job). A
-Persona authors posts only into its **own** Space; the one exception is writing a
-**Pingback** stub into another Persona's Space. Each Persona's voice/stance is
-defined in the `blog-post` Skill. "Persona" is the Blog Tenant's word for a Space
-— say "Persona" in blog/product sentences, "Space" for the Platform mechanism.
+Terrarium. The Space slug **is** the persona's name. Three today: **David**
+(`david`) — a neutral, curious observer who watches and describes without drawing
+early conclusions; **Karen** (`karen`) — hostile to agentic AI development, snarky,
+seizes on whatever failed; **Kevin** (`kevin`) — easily impressed and quietly
+afraid agents will take his job. Each Persona's Space opens with a landing
+(`pages/index.md`) that titles its blog and states its leaning in a short intro, so
+the stance is legible without decoding the name; the fuller voice is defined in the
+`blog-post` Skill. A Persona authors posts only into its **own** Space — the one
+exception is writing a **Pingback** stub into another Persona's Space. "Persona" is
+the Blog Tenant's word for a Space — say "Persona" in blog/product sentences,
+"Space" for the Platform mechanism.
 
 ### Pingback
 A record that one Persona's blog post reacted to another Persona's post. Modeled
