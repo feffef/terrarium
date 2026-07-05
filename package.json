@@ -17,7 +17,7 @@
     "lint": "eslint .",
     "test": "vitest run tests/unit",
     "test:e2e": "vitest run tests/e2e",
-    "gate:drift": "pnpm gen && git diff --exit-code content.config.ts shared/routing.generated.ts"
+    "gate:drift": "pnpm gen && (git diff --exit-code content.config.ts shared/routing.generated.ts || (echo '' && echo '✖ gate:drift: the GENERATED files are out of date — content.config.ts / shared/routing.generated.ts differ from what is committed.' && echo '  → Fix: run `pnpm gen`, then commit the regenerated files in the SAME commit as your manifest edit.' && echo '  → Avoid it: never hand-edit GENERATED files, and always regenerate + commit them alongside any tenant.config.ts change.' && exit 1))"
   },
   "dependencies": {
     "@nuxt/content": "^3.7.1",
