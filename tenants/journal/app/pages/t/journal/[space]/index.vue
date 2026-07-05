@@ -10,7 +10,24 @@
 import type { Collections } from '@nuxt/content'
 import { resolveSpaceRoute, type RoutingMap } from '~~/shared/routing'
 import { routingMap } from '~~/shared/routing.generated'
-import type { Friction, Importance, PageDoc, SessionCardView, SessionDoc, Severity, SkillDoc } from '../../../../types/journal'
+import type { PageDoc, SessionDoc, SkillDoc } from '../../../../types/journal'
+// Pure aggregation/formatting lives in a layer-local, unit-tested module (issue
+// #61) — imported by relative path (the `~/` alias would resolve to the main
+// app, not this layer; see docs/agents/tenant-layers.md §1). The SFC keeps only
+// the thin `computed()` wrappers below.
+import {
+  cards as buildCards,
+  digestList,
+  externalSkillCount as countExternalSkills,
+  frictionCount as countFrictionTotal,
+  frictionTotals as rollupFrictions,
+  kindCounts as countKinds,
+  ownSkills as selectOwnSkills,
+  prRefs as dedupePrRefs,
+  skillGroups as groupSkills,
+  skillsLabel as buildSkillsLabel,
+  skillsSub as buildSkillsSub,
+} from '../../../../utils/dashboard'
 
 const route = useRoute()
 const tenant = 'journal'
@@ -43,16 +60,7 @@ const { data } = await useAsyncData(route.path, async () => {
 const allPages = computed(() => data.value?.pages ?? [])
 const rootDoc = computed(() => allPages.value.find((p) => p.path === '/') ?? null)
 const page = computed(() => (rootDoc.value ?? null) as PageDoc | null)
-const digests = computed(() =>
-  allPages.value
-    .filter((p) => p.path.startsWith('/digests/'))
-    .sort((a, b) => b.path.localeCompare(a.path))
-    .map((p) => ({
-      date: p.path.slice('/digests/'.length),
-      summary: p.summary ?? p.description ?? '',
-      doc: p,
-    })),
-)
+const digests = computed(() => digestList(allPages.value))
 
 // Which Digests are expanded, keyed by content path — an inline disclosure, the
 // same interaction as the session cards.
@@ -67,106 +75,18 @@ const sessions = computed(() =>
     .sort((a, b) => new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime()),
 )
 
-// ── Formatting helpers ───────────────────────────────────
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-const pad = (n: number) => String(n).padStart(2, '0')
-function fmtWhen(iso: string): string {
-  const d = new Date(iso)
-  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()} · ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())} UTC`
-}
-function durMin(a: string, b: string): number {
-  return Math.max(1, Math.round((new Date(b).getTime() - new Date(a).getTime()) / 60000))
-}
-function shortId(s: string): string {
-  return s.length > 18 ? `${s.slice(0, 13)}…${s.slice(-4)}` : s
-}
+// ── Derived dashboard data — thin wrappers over the pure module ──
+const cards = computed(() => buildCards(sessions.value))
+const frictionTotals = computed(() => rollupFrictions(sessions.value))
+const frictionCount = computed(() => countFrictionTotal(sessions.value))
+const kindCounts = computed(() => countKinds(sessions.value))
+const prRefs = computed(() => dedupePrRefs(sessions.value))
 
-// ── Aggregations (scoped to this Space) ──────────────────
-const emptySev = (): Record<Severity, number> => ({ nit: 0, minor: 0, moderate: 0, major: 0, blocker: 0 })
-
-function countFrictions(list: Friction[]): Record<Severity, number> {
-  const c = emptySev()
-  for (const f of list) if (f.severity in c) c[f.severity]++
-  return c
-}
-
-const cards = computed<(SessionCardView & { key: string })[]>(() =>
-  sessions.value.map((s) => ({
-    key: s.session,
-    when: fmtWhen(s.endedAt),
-    duration: durMin(s.startedAt, s.endedAt),
-    goal: s.goal,
-    status: s.status,
-    outcome: s.outcome,
-    prs: s.prs,
-    frictionCounts: countFrictions(s.frictions),
-    frictionTotal: s.frictions.length,
-    skills: s.skillsUsed.map((x) => x.name),
-    sid: shortId(s.session),
-    // Expanded detail — the full log, revealed on click (no route of its own).
-    summary: s.summary,
-    docsRead: s.docsRead ?? [],
-    skillsUsed: s.skillsUsed ?? [],
-    frictions: s.frictions,
-  })),
-)
-
-const frictionTotals = computed(() => {
-  const c = emptySev()
-  for (const s of sessions.value) for (const f of s.frictions) if (f.severity in c) c[f.severity]++
-  return c
-})
-const frictionCount = computed(() => sessions.value.reduce((n, s) => n + s.frictions.length, 0))
-
-const kindCounts = computed(() => ({
-  interactive: sessions.value.filter((s) => s.kind === 'interactive').length,
-  autonomous: sessions.value.filter((s) => s.kind === 'autonomous').length,
-}))
-
-// The dashboard advertises only the Platform's OWN Skills — the platform-operation
-// ones it authors and evolves. The general-engineering pack (Matt Pocock's) is
-// used, not evolved here, so it is acknowledged as a count, not showcased.
-const ownSkills = computed(() => skills.value.filter((s) => s.category === 'platform-operation'))
-const externalSkillCount = computed(() => skills.value.length - ownSkills.value.length)
-
-// Headline label carries the external-pack count as a parenthetical so it never
-// reads as contradicting the headline number (which stays the platform's OWN
-// authored count) — the "3 … but 10?" nit from issue #31.
-const skillsLabel = computed(() =>
-  externalSkillCount.value
-    ? `Platform Skills (+${externalSkillCount.value} from an external pack)`
-    : 'Platform Skills',
-)
-
-const skillsSub = computed(() => {
-  const by = (i: Importance) => ownSkills.value.filter((s) => s.importance === i).length
-  const parts = ([
-    ['core', by('core')],
-    ['supporting', by('supporting')],
-    ['peripheral', by('peripheral')],
-  ] as const)
-    .filter(([, n]) => n > 0)
-    .map(([label, n]) => `${n} ${label}`)
-  return parts.join(' · ') || 'none yet'
-})
-
-const skillGroups = computed(() => {
-  const order: Importance[] = ['core', 'supporting', 'peripheral']
-  return order
-    .map((importance) => ({
-      importance,
-      skills: ownSkills.value
-        .filter((s) => s.importance === importance)
-        .sort((a, b) => a.name.localeCompare(b.name)),
-    }))
-    .filter((g) => g.skills.length > 0)
-})
-
-const prRefs = computed(() => {
-  const seen = new Set<string>()
-  for (const s of sessions.value) for (const pr of s.prs) seen.add(pr.replace(/^#/, ''))
-  return [...seen].sort((a, b) => Number(a) - Number(b))
-})
+const ownSkills = computed(() => selectOwnSkills(skills.value))
+const externalSkillCount = computed(() => countExternalSkills(skills.value))
+const skillsLabel = computed(() => buildSkillsLabel(externalSkillCount.value))
+const skillsSub = computed(() => buildSkillsSub(ownSkills.value))
+const skillGroups = computed(() => groupSkills(ownSkills.value))
 
 const title = computed(() => page.value?.title ?? `The Platform Journal — ${space}`)
 const lede = computed(() => page.value?.description ?? `The ${space} Space of the journal Tenant.`)
