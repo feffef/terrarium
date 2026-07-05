@@ -40,6 +40,8 @@ frictions:                         # REQUIRED (may be []) — list EVERY frictio
 
 The word limits are **not** schema-enforced — you hold them.
 
+**Recovering the id by hand:** the canonical `session_01…` id isn't handed to you — derive it from the most recent `Claude-Session: https://claude.ai/code/session_01…` trailer in `git log`, e.g. `git log --format='%(trailers:key=Claude-Session,valueonly)' | grep -m1 .` (the `session_01…` after the final `/` is the id — use it verbatim for both `session:` and the filename). **Do not** use the in-environment `CLAUDE_CODE_SESSION_ID` — it's a different UUID, not the canonical id; a past log used it by mistake and had to be fixed.
+
 **Quote any `path` (or value) containing `[` or `{`** (e.g. a catch-all route
 file like above) — unquoted, it starts a YAML flow sequence/map and breaks the
 inline-flow `docsRead`/`skillsUsed` entry.
