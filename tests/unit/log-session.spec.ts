@@ -2,8 +2,11 @@
 // (fetch → rebuild → push) is side-effecting and exercised via `--dry-run`; here we
 // pin the two guards that decide whether an entry is safe to land on `main`:
 // schema validation (the L1 stand-in) and the canonical `<date>-<session>.yml` filename.
-import { describe, expect, it } from 'vitest'
-import { expectedFilename, validateEntry } from '../../scripts/log-session.ts'
+import { existsSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { expectedFilename, land, validateEntry } from '../../scripts/log-session.ts'
 
 const valid = {
   session: 'session_01HNmYFFBMxwQufmpeXMqLHK',
@@ -71,5 +74,37 @@ describe('expectedFilename() — the canonical name', () => {
     const res = validateEntry({ ...valid, session: 'session_TZ', startedAt: '2026-07-04T23:30:00+02:00' })
     expect(res.ok).toBe(true)
     if (res.ok) expect(expectedFilename(res.data)).toBe('2026-07-04-session_TZ.yml')
+  })
+})
+
+describe('land() — cleanup after landing (issue #7)', () => {
+  let absPath: string
+  const relPath = 'tenants/journal/content/current/sessions/2026-07-04-session_x.yml'
+
+  beforeEach(() => {
+    const dir = mkdtempSync(join(tmpdir(), 'log-session-test-'))
+    absPath = join(dir, '2026-07-04-session_x.yml')
+    writeFileSync(absPath, 'session: x\n')
+    vi.spyOn(console, 'log').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('removes the working-copy scratch file after a successful push', () => {
+    const push = vi.fn().mockReturnValue('abc123def456789')
+    land(relPath, absPath, 'origin', { dryRun: false, push })
+    expect(push).toHaveBeenCalledOnce()
+    expect(existsSync(absPath)).toBe(false)
+  })
+
+  it('keeps the working-copy file on --dry-run (nothing pushed, nothing removed)', () => {
+    const push = vi.fn()
+    const build = vi.fn().mockReturnValue('abc123def456789')
+    land(relPath, absPath, 'origin', { dryRun: true, push, build })
+    expect(build).toHaveBeenCalledOnce()
+    expect(push).not.toHaveBeenCalled()
+    expect(existsSync(absPath)).toBe(true)
   })
 })

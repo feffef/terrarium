@@ -158,6 +158,40 @@ function pushWithRetry(relPath: string, absPath: string, remote: string): string
   throw lastErr
 }
 
+/** Land a validated entry: on `--dry-run`, build + validate the commit but neither
+ *  push nor delete; otherwise push it and then remove the working-copy file.
+ *
+ *  That removal is the point of ADR-0009's boundary made tidy: the log's canonical
+ *  home is `main`, so the working-copy copy is pure scratch. Leaving it behind as an
+ *  untracked file trips "you have uncommitted changes" checks, and the obvious
+ *  reaction — committing it to the current feature branch — would route a session log
+ *  through a PR, exactly what ADR-0009 forbids. So the helper cleans up after itself.
+ *
+ *  `push`/`build` are injected so tests can drive the cleanup branch without git. */
+export function land(
+  relPath: string,
+  absPath: string,
+  remote: string,
+  opts: {
+    dryRun: boolean
+    push?: (relPath: string, absPath: string, remote: string) => string
+    build?: (relPath: string, absPath: string, remote: string) => string
+  },
+): string {
+  const push = opts.push ?? pushWithRetry
+  const build = opts.build ?? buildLogCommit
+  if (opts.dryRun) {
+    const commit = build(relPath, absPath, remote)
+    console.log(`✓ valid; would push ${relPath} as ${commit.slice(0, 12)} to ${remote}/main (dry run)`)
+    return commit
+  }
+  const commit = push(relPath, absPath, remote)
+  rmSync(absPath, { force: true })
+  console.log(`✓ logged ${relPath} → ${remote}/main (${commit.slice(0, 12)})`)
+  console.log(`  removed working-copy scratch ${relPath} — its home is now ${remote}/main`)
+  return commit
+}
+
 function fail(msg: string): never {
   console.error(`log-session: ${msg}`)
   process.exit(1)
@@ -206,14 +240,7 @@ function main(): void {
     fail(`filename must be ${expected} (from startedAt + session id), got ${basename(relPath)}`)
   }
 
-  if (dryRun) {
-    const commit = buildLogCommit(relPath, absPath, remote)
-    console.log(`✓ valid; would push ${relPath} as ${commit.slice(0, 12)} to ${remote}/main (dry run)`)
-    return
-  }
-
-  const commit = pushWithRetry(relPath, absPath, remote)
-  console.log(`✓ logged ${relPath} → ${remote}/main (${commit.slice(0, 12)})`)
+  land(relPath, absPath, remote, { dryRun })
 }
 
 // Only run when executed directly (not when imported by the unit test).
