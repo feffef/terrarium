@@ -1,5 +1,5 @@
 // ⚠️  GENERATED FILE — DO NOT EDIT.
-// Produced by scripts/generate.ts from tenants/*/tenant.config.ts (ADR-0002).
+// Produced by scripts/generate.ts from tenants/*/tenant.config.ts (ADR-0002/0013).
 // Edit a Tenant's manifest and run `pnpm gen`. CI drift-checks this file.
 
 // Runtime routing map: Tenant → Space → Collection → generated collection key.

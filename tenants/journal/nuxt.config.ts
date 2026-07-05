@@ -3,11 +3,10 @@
 // page that render its content nicely, overriding the Platform's generic catch-all
 // renderer for `/t/journal/<space>` only.
 //
-// Purely presentational: it reads the already-generated, per-Space keyed
-// collections through the shared routing map. It defines NO content collections
-// of its own — those stay governed solely by the generated root content.config.ts
-// (ADR-0002/0007) — and touches none of the isolation-critical routing/generator
-// logic (ADR-0004).
+// Purely presentational: it reads the per-Space keyed collections through the
+// shared routing map. It defines NO content collections of its own — those stay
+// governed solely by the root content.config.ts (ADR-0002/0013) — and touches
+// none of the isolation-critical routing/generator logic (ADR-0004).
 import { fileURLToPath } from 'node:url'
 
 export default defineNuxtConfig({

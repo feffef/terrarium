@@ -4,7 +4,7 @@
 // table, correct + unique keys are exactly what guarantees no cross-Space leak.
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { expand, type LoadedManifest } from '../../scripts/generate.ts'
+import { expand, type LoadedManifest } from '../../shared/expand.ts'
 import { collectionKey, validateManifest, type TenantManifest } from '../../shared/manifest.ts'
 
 const KEY = /^[a-z][a-z0-9]*_[a-z][a-z0-9]*_[a-z][a-z0-9]*$/
