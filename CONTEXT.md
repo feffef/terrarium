@@ -57,11 +57,12 @@ An individual content entry within a Collection — one row / one file.
 
 ### Journal (Tenant)
 The one Tenant whose content is the Platform's documentation *of itself*. It
-holds two kinds of content. **Inventories** are curated/derived current-state
+holds three kinds of content. **Inventories** are curated/derived current-state
 readouts — the Skill catalogue today; the inventory of Tenants/Spaces/Collections
 and CI/drift health later, via the `sync` job. **Journal entries** are primary,
 append-only records the agents author themselves — session logs, research
-write-ups, and nascent ideas (planned). The journal entries are honest
+write-ups, and nascent ideas (planned). **Digests** are derived, append-only
+daily summaries of Platform activity (see Digest). The journal entries are honest
 self-reports — what a session did, what it read, where it struggled — and are the
 key signal the self-improvement jobs (`consolidate`, `codify`) mine for recurring
 friction. It is a Tenant like any other — no authorship asymmetry (see Agent
@@ -88,6 +89,17 @@ for recurring pain, so agents report **every** friction honestly — even nits. 
 tagging taxonomy is deliberately *not* fixed up front: it is meant to **emerge**
 from clustering real frictions once enough have accumulated, rather than be
 guessed before there is data.
+
+### Digest
+A derived, append-only, time-boxed Journal Document: one immutable page per
+**closed UTC day**, summarizing Platform activity across all Tenants, mined from
+git history and session logs. It differs from the two other Journal content kinds
+on one axis each: unlike an **Inventory** (also derived, but a current-state
+readout that is *overwritten* each sync) a Digest is historical and never
+rewritten once its day closes; unlike a **Journal entry** (also append-only, but
+*primary* — authored from scratch by the agent) a Digest is *derived* by
+condensing existing records. The Platform's `index` overview is an Inventory; the
+per-day summaries are Digests.
 
 ### Agent Authorship
 Platform-wide invariant: **agents are the authors of record for essentially all
