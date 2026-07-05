@@ -309,86 +309,9 @@ useHead({ title: `${title.value} · journal/${space}` })
 </template>
 
 <style scoped>
-.jd {
-  /* Palette — humus & foliage neutrals with a fern accent; earthy severity ramp.
-     Tokens live on the wrapper so every child component inherits them. */
-  --jd-ground: #f3f5ef;
-  --jd-surface: #fbfcf9;
-  --jd-surface-2: #ecf0e6;
-  --jd-ink: #1a2420;
-  --jd-muted: #586359;
-  --jd-faint: #8a9488;
-  --jd-line: #dbe0d5;
-  --jd-accent: #356a4c;
-  --jd-accent-bright: #4e9e6a;
-
-  --jd-sev-nit: #7e9384;
-  --jd-sev-minor: #be9c40;
-  --jd-sev-moderate: #ce823a;
-  --jd-sev-major: #c6603c;
-  --jd-sev-blocker: #a8331f;
-
-  --jd-status-completed: var(--jd-accent);
-  --jd-status-partial: #be9c40;
-  --jd-status-blocked: #a8331f;
-  --jd-status-abandoned: var(--jd-faint);
-
-  --jd-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
-  --jd-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'JetBrains Mono', 'Roboto Mono', Menlo, monospace;
-  --jd-radius: 10px;
-  --jd-shadow: 0 1px 2px rgba(26, 36, 32, 0.05), 0 6px 20px -12px rgba(26, 36, 32, 0.18);
-
-  display: block;
-  min-height: 100vh;
-  margin: 0;
-  background: var(--jd-ground);
-  color: var(--jd-ink);
-  font-family: var(--jd-serif);
-  line-height: 1.5;
-  max-width: 1120px;
-  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2.25rem) 3rem;
-  margin-inline: auto;
-}
-
-@media (prefers-color-scheme: dark) {
-  .jd {
-    --jd-ground: #10140e;
-    --jd-surface: #171c15;
-    --jd-surface-2: #1f251c;
-    --jd-ink: #e7ebe0;
-    --jd-muted: #9da995;
-    --jd-faint: #6e7a68;
-    --jd-line: #2a3327;
-    --jd-accent: #6fbf89;
-    --jd-accent-bright: #8fd9a5;
-
-    --jd-sev-nit: #8aa093;
-    --jd-sev-minor: #d6bc68;
-    --jd-sev-moderate: #e39a55;
-    --jd-sev-major: #de7a55;
-    --jd-sev-blocker: #d0563f;
-
-    --jd-status-partial: #d6bc68;
-    --jd-status-blocked: #d0563f;
-    --jd-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -14px rgba(0, 0, 0, 0.6);
-  }
-}
-
-.mono { font-family: var(--jd-mono); }
-
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1.1rem;
-  font-family: var(--jd-mono);
-  font-size: 0.8rem;
-}
-.breadcrumb .sep { color: var(--jd-line); }
-.breadcrumb a { color: var(--jd-muted); text-decoration: none; }
-.breadcrumb a:hover { color: var(--jd-accent); }
-.breadcrumb .here { color: var(--jd-ink); }
-
+/* The `.jd` tokens + base layout, `.mono`, and the breadcrumb live in the shared
+   theme (tenants/journal/app/assets/theme.css, registered globally in the layer's
+   nuxt.config). This block holds only the landing-page-specific styling. */
 .masthead {
   display: grid;
   grid-template-columns: 1fr auto;
