@@ -2,7 +2,7 @@
 // Frictions rendered as soil strata — the accumulated sediment the future
 // `codify`/`consolidate` jobs mine (CONTEXT.md). `full` is the panel readout
 // (strata + legend); `inline` is the compact per-session bar on a card.
-type Severity = 'nit' | 'minor' | 'moderate' | 'major' | 'blocker'
+import type { Severity } from '../../types/journal'
 
 withDefaults(
   defineProps<{

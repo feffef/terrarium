@@ -1,13 +1,13 @@
 <script setup lang="ts">
 // One session log in the recent-activity feed. All display values are computed by
 // the page (this Space's `sessions` collection) and passed in as primitives.
-type Severity = 'nit' | 'minor' | 'moderate' | 'major' | 'blocker'
+import type { Severity, Status } from '../../types/journal'
 
 defineProps<{
   when: string
   duration: number
   goal: string
-  status: 'completed' | 'partial' | 'blocked' | 'abandoned'
+  status: Status
   outcome: string
   prs: string[]
   frictionCounts: Record<Severity, number>

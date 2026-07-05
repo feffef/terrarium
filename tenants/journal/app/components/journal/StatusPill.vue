@@ -1,8 +1,10 @@
 <script setup lang="ts">
 // A session's `status` rendered as state-in-form: colour + glyph, not just a word,
 // so completed / partial / blocked / abandoned read at a glance.
+import type { Status } from '../../types/journal'
+
 defineProps<{
-  status: 'completed' | 'partial' | 'blocked' | 'abandoned'
+  status: Status
 }>()
 </script>
 

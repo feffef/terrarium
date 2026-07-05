@@ -9,33 +9,15 @@
 // only `journal_<space>_{pages,skills,sessions}`. Spaces cannot leak.
 import type { Collections } from '@nuxt/content'
 import { routingMap } from '~~/shared/routing.generated'
+import type { Friction, Importance, PageDoc, SessionDoc, Severity, SkillDoc } from '../../../../types/journal'
 
-type Severity = 'nit' | 'minor' | 'moderate' | 'major' | 'blocker'
-type Importance = 'core' | 'supporting' | 'peripheral'
-
-interface Friction { description: string; solution: string; severity: Severity }
-interface SessionDoc {
-  session: string
-  startedAt: string
-  endedAt: string
-  kind: 'interactive' | 'autonomous'
-  goal: string
-  status: 'completed' | 'partial' | 'blocked' | 'abandoned'
-  outcome: string
-  prs: string[]
-  skillsUsed: { name: string; reason: string }[]
-  frictions: Friction[]
-}
-interface SkillDoc { name: string; category: 'platform-operation' | 'general-engineering'; importance: Importance; role: string }
-interface PageDoc { title?: string; description?: string; badge?: string }
-
-type Map = Record<string, Record<string, Record<string, string>>>
+type RoutingMap = Record<string, Record<string, Record<string, string>>>
 
 const route = useRoute()
 const tenant = 'journal'
 const space = String(route.params.space)
 
-const spaceCollections = (routingMap as Map)[tenant]?.[space]
+const spaceCollections = (routingMap as RoutingMap)[tenant]?.[space]
 if (!spaceCollections?.pages) {
   throw createError({ statusCode: 404, statusMessage: `Unknown Space: ${tenant}/${space}` })
 }

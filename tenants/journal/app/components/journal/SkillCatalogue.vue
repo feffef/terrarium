@@ -2,14 +2,10 @@
 // The Space's Skill catalogue grouped by importance — the curated "use these"
 // list CLAUDE.md points agents at. `core` Skills show their role; supporting /
 // peripheral collapse to compact chips.
-interface Skill {
-  name: string
-  category: 'platform-operation' | 'general-engineering'
-  importance: 'core' | 'supporting' | 'peripheral'
-  role: string
-}
+import type { Importance, SkillDoc } from '../../types/journal'
+
 defineProps<{
-  groups: { importance: 'core' | 'supporting' | 'peripheral'; skills: Skill[] }[]
+  groups: { importance: Importance; skills: SkillDoc[] }[]
 }>()
 </script>
 
