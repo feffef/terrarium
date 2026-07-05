@@ -9,7 +9,7 @@
 // only `journal_<space>_{pages,skills,sessions}`. Spaces cannot leak.
 import type { Collections } from '@nuxt/content'
 import { routingMap } from '~~/shared/routing.generated'
-import type { Friction, Importance, PageDoc, SessionCardView, SessionDoc, Severity, SkillDoc } from '../../../../types/journal'
+import type { DigestView, Friction, Importance, PageDoc, SessionCardView, SessionDoc, Severity, SkillDoc } from '../../../../types/journal'
 
 type RoutingMap = Record<string, Record<string, Record<string, string>>>
 
@@ -28,13 +28,30 @@ const sessionsKey = spaceCollections.sessions as keyof Collections | undefined
 const spaces = Object.keys((routingMap as Map)[tenant] ?? {})
 
 const { data } = await useAsyncData(route.path, async () => {
+  // The root Document ('/') — its body is the free-form editorial intro; the full
+  // page list drives the '/digests/' panel. The index is a live view: a new Digest
+  // page appears with no baking (ADR-0010).
   const page = await queryCollection(pagesKey).path('/').first()
+  const pages = await queryCollection(pagesKey).all()
   const skills = skillsKey ? await queryCollection(skillsKey).all() : []
   const sessions = sessionsKey ? await queryCollection(sessionsKey).all() : []
-  return { page, skills, sessions }
+  return { page, pages, skills, sessions }
 })
 
+// `rootDoc` keeps the parsed body for <ContentRenderer>; `page` is the typed view
+// for the masthead's title/description.
+const rootDoc = computed(() => data.value?.page ?? null)
 const page = computed(() => (data.value?.page ?? null) as PageDoc | null)
+const digests = computed<DigestView[]>(() =>
+  ((data.value?.pages ?? []) as unknown as (PageDoc & { path: string })[])
+    .filter((p) => p.path.startsWith('/digests/'))
+    .sort((a, b) => b.path.localeCompare(a.path))
+    .map((p) => ({
+      date: p.path.replace('/digests/', ''),
+      summary: p.summary ?? p.description ?? '',
+      path: p.path,
+    })),
+)
 const skills = computed(() => (data.value?.skills ?? []) as unknown as SkillDoc[])
 const sessions = computed(() =>
   ((data.value?.sessions ?? []) as unknown as SessionDoc[])
@@ -157,6 +174,11 @@ useHead({ title: `${title.value} · journal/${space}` })
       </div>
     </header>
 
+    <!-- Free-form editorial intro — the root page's Markdown body -->
+    <section v-if="rootDoc" class="intro">
+      <ContentRenderer :value="rootDoc" />
+    </section>
+
     <!-- State of this Space -->
     <section class="tiles" aria-label="State of this Space">
       <JournalStatTile
@@ -182,17 +204,33 @@ useHead({ title: `${title.value} · journal/${space}` })
     </section>
 
     <div class="grid">
-      <!-- Recent activity -->
-      <section class="feed">
-        <div class="section-head">
-          <h2>Recent activity</h2>
-          <span class="count">session logs, newest first</span>
-        </div>
-        <div v-if="cards.length" class="cards">
-          <JournalSessionCard v-for="c in cards" :key="c.key" :card="c" />
-        </div>
-        <p v-else class="empty">No sessions logged in this Space yet.</p>
-      </section>
+      <div class="mainstack">
+        <!-- Daily digests — a live catch-up on Platform-wide activity (ADR-0010) -->
+        <section v-if="digests.length" class="panel digests">
+          <div class="section-head">
+            <h2>Recent digests</h2>
+            <span class="count">daily catch-up, newest first</span>
+          </div>
+          <ul class="digest-list">
+            <li v-for="d in digests" :key="d.path">
+              <NuxtLink :to="d.path" class="digest-date">{{ d.date }}</NuxtLink>
+              <span class="digest-summary">{{ d.summary }}</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- Recent activity -->
+        <section class="feed">
+          <div class="section-head">
+            <h2>Recent activity</h2>
+            <span class="count">session logs, newest first</span>
+          </div>
+          <div v-if="cards.length" class="cards">
+            <JournalSessionCard v-for="c in cards" :key="c.key" :card="c" />
+          </div>
+          <p v-else class="empty">No sessions logged in this Space yet.</p>
+        </section>
+      </div>
 
       <!-- Rail -->
       <aside class="rail">
@@ -322,6 +360,28 @@ h1 {
 }
 .lede { margin: 0; max-width: 54ch; color: var(--jd-muted); font-size: 1.02rem; }
 
+.intro { margin: 1.6rem 0 0; max-width: 68ch; font-size: 1.04rem; }
+.intro :deep(p) { margin: 0 0 0.8rem; color: var(--jd-muted); }
+.intro :deep(p:last-child) { margin-bottom: 0; }
+.intro :deep(a) { color: var(--jd-accent); text-decoration: none; }
+.intro :deep(a:hover) { text-decoration: underline; }
+.intro :deep(strong) { color: var(--jd-ink); font-weight: 600; }
+.intro :deep(code) {
+  font-family: var(--jd-mono);
+  font-size: 0.88em;
+  background: var(--jd-surface-2);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+.intro :deep(h2) {
+  font-family: var(--jd-mono);
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--jd-ink);
+  margin: 1.3rem 0 0.5rem;
+}
+
 .spaces { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; }
 .space-toggle {
   display: inline-flex;
@@ -370,6 +430,24 @@ h1 {
 }
 
 .grid { display: grid; grid-template-columns: 1.7fr 1fr; gap: 1.6rem; align-items: start; }
+.mainstack { display: flex; flex-direction: column; gap: 1.6rem; min-width: 0; }
+
+.digest-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+.digest-list li {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.1rem 0.9rem;
+  align-items: baseline;
+}
+.digest-date {
+  font-family: var(--jd-mono);
+  font-size: 0.82rem;
+  color: var(--jd-accent);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.digest-date:hover { text-decoration: underline; }
+.digest-summary { color: var(--jd-muted); font-size: 0.96rem; }
 
 .section-head {
   display: flex;
@@ -414,5 +492,6 @@ h1 {
 }
 @media (max-width: 460px) {
   .tiles { grid-template-columns: 1fr 1fr; }
+  .digest-list li { grid-template-columns: 1fr; gap: 0.15rem; }
 }
 </style>

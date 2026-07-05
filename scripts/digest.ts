@@ -9,20 +9,21 @@
 // Usage:  tsx scripts/digest.ts <command> [args]
 //   list [--now <iso>]     print closed UTC days that have activity but no digest
 //   gather <YYYY-MM-DD>     print one day's materials as JSON
-//   index-data             print the inventory + recent-digest previews as JSON
+//
+// (The index overview needs no command: the Journal's Space landing is a live
+// dashboard that queries the digest pages directly — a new Digest appears with
+// no baking. See ADR-0010.)
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
-import { routingMap } from '../shared/routing.generated.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 /** The Journal paths this helper reads. Digests are pages under a subfolder (ADR-0010). */
 export const DIGESTS_DIR = 'tenants/journal/content/current/pages/digests'
 export const SESSIONS_DIR = 'tenants/journal/content/current/sessions'
-export const SKILLS_DIR = 'tenants/journal/content/current/skills'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -150,17 +151,6 @@ export function closedUndigestedDays(
     .sort()
 }
 
-/** Parse a Markdown file's YAML front matter block ({} if absent/invalid). */
-export function readFrontMatter(md: string): Record<string, unknown> {
-  const m = md.match(/^---\n([\s\S]*?)\n---/)
-  if (!m) return {}
-  try {
-    return (parseYaml(m[1] ?? '') as Record<string, unknown>) ?? {}
-  } catch {
-    return {}
-  }
-}
-
 // ── Git / FS IO (thin shell) ──────────────────────────────────────────────────
 
 const SEP = '\x1f' // field separator (unit sep)
@@ -243,58 +233,6 @@ export function cmdGather(date: string, cwd = root): DayMaterials {
   return buildDayMaterials(date, commits, sessions)
 }
 
-export interface SkillEntry {
-  name: string
-  category: string
-  importance: string
-  role: string
-}
-export interface IndexData {
-  tenants: Record<string, Record<string, string[]>> // tenant → space → collection names
-  skills: SkillEntry[]
-  recentDigests: { date: string; summary: string }[]
-}
-
-export function cmdIndexData(cwd = root, limit = 14): IndexData {
-  const map = routingMap as Record<string, Record<string, Record<string, string>>>
-  const tenants: Record<string, Record<string, string[]>> = {}
-  for (const [tenant, spaces] of Object.entries(map)) {
-    tenants[tenant] = {}
-    for (const [space, cols] of Object.entries(spaces)) tenants[tenant][space] = Object.keys(cols)
-  }
-
-  const skillsDir = join(cwd, SKILLS_DIR)
-  const skills: SkillEntry[] = !existsSync(skillsDir)
-    ? []
-    : readdirSync(skillsDir)
-        .filter((f) => f.endsWith('.yml'))
-        .map((f) => {
-          const y = parseYaml(readFileSync(join(skillsDir, f), 'utf8')) as Record<string, unknown>
-          return {
-            name: String(y.name ?? f.replace(/\.yml$/, '')),
-            category: String(y.category ?? ''),
-            importance: String(y.importance ?? ''),
-            role: String(y.role ?? '').replace(/\s+/g, ' ').trim(),
-          }
-        })
-        .sort((a, b) => a.name.localeCompare(b.name))
-
-  const digestsDir = join(cwd, DIGESTS_DIR)
-  const recentDigests = !existsSync(digestsDir)
-    ? []
-    : readdirSync(digestsDir)
-        .filter((f) => /^\d{4}-\d{2}-\d{2}\.md$/.test(f))
-        .sort()
-        .reverse()
-        .slice(0, limit)
-        .map((f) => ({
-          date: f.slice(0, 10),
-          summary: String(readFrontMatter(readFileSync(join(digestsDir, f), 'utf8')).summary ?? ''),
-        }))
-
-  return { tenants, skills, recentDigests }
-}
-
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
 function fail(msg: string): never {
@@ -314,10 +252,8 @@ function main(): void {
     const date = argv[1]
     if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) fail('gather requires a YYYY-MM-DD date')
     process.stdout.write(JSON.stringify(cmdGather(date), null, 2) + '\n')
-  } else if (cmd === 'index-data') {
-    process.stdout.write(JSON.stringify(cmdIndexData(), null, 2) + '\n')
   } else {
-    fail(`unknown command "${cmd ?? ''}" — expected: list | gather <date> | index-data`)
+    fail(`unknown command "${cmd ?? ''}" — expected: list | gather <date>`)
   }
 }
 

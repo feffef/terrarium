@@ -32,9 +32,19 @@ export interface SkillDoc {
 }
 
 export interface PageDoc {
+  path?: string
   title?: string
   description?: string
   badge?: string
+  summary?: string
+}
+
+// A Digest prepared for the Space overview's "Recent digests" list — derived from
+// a Digest page Document (path under '/digests/') so the template stays dumb.
+export interface DigestView {
+  date: string
+  summary: string
+  path: string
 }
 
 // A session prepared for display in the recent-activity feed — the page derives

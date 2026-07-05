@@ -7,7 +7,6 @@ import {
   closedUndigestedDays,
   dayIsClosed,
   prFromCommit,
-  readFrontMatter,
   utcDay,
   type Commit,
   type SessionMaterial,
@@ -111,14 +110,5 @@ describe('closedUndigestedDays()', () => {
   })
   it('is empty when nothing is both closed and undigested', () => {
     expect(closedUndigestedDays(['2026-07-06'], new Set(), now)).toEqual([])
-  })
-})
-
-describe('readFrontMatter()', () => {
-  it('parses a leading YAML front-matter block', () => {
-    expect(readFrontMatter('---\nsummary: the day\n---\n\n# body')).toEqual({ summary: 'the day' })
-  })
-  it('returns {} when there is no front matter', () => {
-    expect(readFrontMatter('# just a body')).toEqual({})
   })
 })

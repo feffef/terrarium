@@ -46,22 +46,24 @@ model, how it lands, and what authors it.
 - **A `digest` platform-operation Skill authors them**, backed by a thin,
   unit-tested `scripts/digest.ts` helper that does only the deterministic work
   (enumerate closed-and-undigested days; gather a day's git + session-log
-  materials as compact JSON). The Skill writes the prose. The same run also
-  **regenerates the Journal index** as an Inventory overview of the Platform's
-  current state and capabilities — a manual precursor to the chartered, still-
-  deferred `sync` job (ADR-0003), which will one day own that refresh; the Skill
-  does not claim the `sync` name.
+  materials as compact JSON). The Skill writes the prose. **The Journal index
+  needs no regeneration:** its Space landing is a live dashboard that queries this
+  Space's collections — including a *Recent digests* panel that reads the digest
+  pages — so a new Digest surfaces automatically, with no baked overview. That
+  standing live overview is what the chartered, still-deferred `sync` job (ADR-0003)
+  will one day formalize; the Skill does not claim the `sync` name.
 
 ## Consequences
 
-- The `pages` schema gains an optional `summary` field (the day's headline,
-  source of the index's "recent digests" preview). Optional and non-strict, so
+- The `pages` schema gains an optional `summary` field (the day's headline, which
+  feeds the dashboard's *Recent digests* panel). Optional and non-strict, so
   `index`/`about` are unaffected and no generated config drifts.
-- Because Digests share the `pages` collection key, they are not independently
-  queryable by collection — the index preview is *baked* by the Skill from each
-  file's front matter rather than queried at runtime. Acceptable while the Skill
-  owns the index anyway; the deferred dedicated-collection upgrade would restore
-  runtime queryability if ever wanted.
+- Because Digests share the `pages` collection key, they are not a *separate* Nuxt
+  collection — but they are still surfaced by path: the Space landing's live
+  dashboard filters the `pages` collection to `/digests/*` to render the recent-
+  digests panel, so previews are runtime-live, not baked. The deferred dedicated-
+  collection upgrade would make them independently queryable by collection if ever
+  wanted.
 - Digests surface **frictions** (as a rollup) in a human-facing page — visible
   self-improvement, consistent with the Journal's purpose.
 - Backfill is unbounded by design (every missing closed day), which is a non-issue

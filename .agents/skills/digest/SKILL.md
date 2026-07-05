@@ -81,26 +81,20 @@ the GitHub MCP, but degrade gracefully to git-only when it is unavailable.
 Done when every listed day has a `<date>.md` whose `summary` is set and whose body
 leads with narrative and carries the skim footer.
 
-## 4. Regenerate the index overview
+## 4. The index refreshes itself — nothing to bake
 
-```
-pnpm exec tsx scripts/digest.ts index-data
-```
+The Journal's Space landing (`/t/journal/current`) is a **live dashboard**: it
+queries this Space's collections at request time — state tiles, the session-log
+feed, the friction signal, the Skill catalogue, and a **Recent digests** panel
+that reads the digest pages directly. A Digest you wrote in step 3 therefore
+appears with **no edit to `index.md`**.
 
-Rewrite `tenants/journal/content/current/pages/index.md` from it — the index is an
-**Inventory**, regenerated to match current state:
+`index.md` still owns two things — its **free-form editorial intro** (its Markdown
+body, rendered above the dashboard) and its title/description. Touch those only
+when the standing introduction itself should change, **never** to bake a per-run
+overview or a digest list (the dashboard already lists them, live).
 
-1. A short intro (what Terrarium is: one Platform, many Tenants, baked at build).
-2. **Platform state** — every Tenant → its Spaces → its Collections, and the
-   installed **Skills** (count + the `core` ones). Enumerate fully.
-3. **Capabilities** — what the Platform can do *today*, grounded in the Skills
-   that exist and the manifest→generator→gated-render pipeline. Do not claim the
-   still-deferred autonomous jobs as if they run.
-4. **Recent digests** — from `recentDigests`, newest first:
-   `- [<date>](/t/journal/current/digests/<date>) — <summary>`.
-5. Footer links (about, the archived Space).
-
-Done when `index.md` reflects the current inventory and lists the recent Digests.
+Done when you have confirmed the new Digest(s) will show — no index edit is needed.
 
 ## 5. Clear the safety gate
 
