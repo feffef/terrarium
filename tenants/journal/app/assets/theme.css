@@ -1,0 +1,147 @@
+/* The Journal Tenant's shared theme — the `.jd` design tokens and the base
+   layout / breadcrumb / prose that every journal page wears.
+   Registered globally via tenants/journal/nuxt.config.ts `css: [...]` so both the
+   Space landing (`[space]/index.vue`) and the standalone document page
+   (`[space]/[...slug].vue`) consume one source of truth instead of copy-pasting the
+   token block. Presentation only (ADR-0004): no content collections, no routing. */
+
+.jd {
+  /* Palette — humus & foliage neutrals with a fern accent; earthy severity ramp.
+     Tokens live on the wrapper so every child component inherits them. */
+  --jd-ground: #f3f5ef;
+  --jd-surface: #fbfcf9;
+  --jd-surface-2: #ecf0e6;
+  --jd-ink: #1a2420;
+  --jd-muted: #586359;
+  --jd-faint: #8a9488;
+  --jd-line: #dbe0d5;
+  --jd-accent: #356a4c;
+  --jd-accent-bright: #4e9e6a;
+
+  --jd-sev-nit: #7e9384;
+  --jd-sev-minor: #be9c40;
+  --jd-sev-moderate: #ce823a;
+  --jd-sev-major: #c6603c;
+  --jd-sev-blocker: #a8331f;
+
+  --jd-status-completed: var(--jd-accent);
+  --jd-status-partial: #be9c40;
+  --jd-status-blocked: #a8331f;
+  --jd-status-abandoned: var(--jd-faint);
+
+  --jd-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+  --jd-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'JetBrains Mono', 'Roboto Mono', Menlo, monospace;
+  --jd-radius: 10px;
+  --jd-shadow: 0 1px 2px rgba(26, 36, 32, 0.05), 0 6px 20px -12px rgba(26, 36, 32, 0.18);
+
+  display: block;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--jd-ground);
+  color: var(--jd-ink);
+  font-family: var(--jd-serif);
+  line-height: 1.5;
+  max-width: 1120px;
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2.25rem) 3rem;
+  margin-inline: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+  .jd {
+    --jd-ground: #10140e;
+    --jd-surface: #171c15;
+    --jd-surface-2: #1f251c;
+    --jd-ink: #e7ebe0;
+    --jd-muted: #9da995;
+    --jd-faint: #6e7a68;
+    --jd-line: #2a3327;
+    --jd-accent: #6fbf89;
+    --jd-accent-bright: #8fd9a5;
+
+    --jd-sev-nit: #8aa093;
+    --jd-sev-minor: #d6bc68;
+    --jd-sev-moderate: #e39a55;
+    --jd-sev-major: #de7a55;
+    --jd-sev-blocker: #d0563f;
+
+    --jd-status-partial: #d6bc68;
+    --jd-status-blocked: #d0563f;
+    --jd-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -14px rgba(0, 0, 0, 0.6);
+  }
+}
+
+.jd .mono { font-family: var(--jd-mono); }
+
+/* ── Breadcrumb ─────────────────────────────────────────── */
+.jd .breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.1rem;
+  font-family: var(--jd-mono);
+  font-size: 0.8rem;
+}
+.jd .breadcrumb .sep { color: var(--jd-line); }
+.jd .breadcrumb a { color: var(--jd-muted); text-decoration: none; }
+.jd .breadcrumb a:hover { color: var(--jd-accent); }
+.jd .breadcrumb .here { color: var(--jd-ink); }
+
+/* ── Prose ──────────────────────────────────────────────────
+   A reusable wrapper for rendered Document bodies (ContentRenderer output).
+   Global, so it styles the un-scoped Markdown DOM without `:deep`. */
+.jd-prose { max-width: 68ch; font-size: 1.04rem; color: var(--jd-ink); }
+.jd-prose > :first-child { margin-top: 0; }
+.jd-prose > :last-child { margin-bottom: 0; }
+.jd-prose h1 {
+  font-family: var(--jd-serif);
+  font-weight: 600;
+  font-size: clamp(1.9rem, 4.2vw, 2.7rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.9rem;
+  text-wrap: balance;
+}
+.jd-prose h2 {
+  font-family: var(--jd-mono);
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--jd-ink);
+  margin: 1.8rem 0 0.6rem;
+}
+.jd-prose h3 {
+  font-family: var(--jd-serif);
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin: 1.5rem 0 0.5rem;
+}
+.jd-prose p { margin: 0 0 0.9rem; color: var(--jd-muted); }
+.jd-prose a { color: var(--jd-accent); text-decoration: none; }
+.jd-prose a:hover { text-decoration: underline; }
+.jd-prose strong { color: var(--jd-ink); font-weight: 600; }
+.jd-prose ul, .jd-prose ol { margin: 0 0 0.9rem; padding-left: 1.2rem; color: var(--jd-muted); }
+.jd-prose li { margin: 0.25rem 0; }
+.jd-prose code {
+  font-family: var(--jd-mono);
+  font-size: 0.88em;
+  background: var(--jd-surface-2);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+.jd-prose pre {
+  background: var(--jd-surface-2);
+  border: 1px solid var(--jd-line);
+  border-radius: var(--jd-radius);
+  padding: 0.9rem 1.1rem;
+  overflow-x: auto;
+  margin: 0 0 0.9rem;
+}
+.jd-prose pre code { background: none; padding: 0; font-size: 0.85em; }
+.jd-prose blockquote {
+  margin: 0 0 0.9rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--jd-line);
+  color: var(--jd-muted);
+}
+.jd-prose hr { border: 0; border-top: 1px solid var(--jd-line); margin: 1.8rem 0; }

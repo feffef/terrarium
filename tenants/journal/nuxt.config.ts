@@ -8,4 +8,12 @@
 // of its own — those stay governed solely by the generated root content.config.ts
 // (ADR-0002/0007) — and touches none of the isolation-critical routing/generator
 // logic (ADR-0004).
-export default defineNuxtConfig({})
+import { fileURLToPath } from 'node:url'
+
+export default defineNuxtConfig({
+  // The `.jd` theme tokens + base layout / breadcrumb / prose, shared by the
+  // Space landing and the standalone document page so neither copy-pastes them.
+  // Resolved from this config's own URL so it's unambiguous regardless of layer
+  // alias resolution.
+  css: [fileURLToPath(new URL('./app/assets/theme.css', import.meta.url))],
+})
