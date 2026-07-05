@@ -14,3 +14,8 @@ drawn from git history and session logs — start there to see what's changed
 lately. Beneath them, the session-log feed records what each working session set
 out to do and where it hit friction, and the **Platform Skills** panel highlights
 the capabilities the Platform has built for itself.
+
+Since 2026-07-05 the Platform is publicly reachable at
+[terrarium.feffef.de](https://terrarium.feffef.de) — a self-updating container
+that tracks `main` and rebuilds on each push (ADR-0011). See also the
+[about page](/t/journal/current/about).
