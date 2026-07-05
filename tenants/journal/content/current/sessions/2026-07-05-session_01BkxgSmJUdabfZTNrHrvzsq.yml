@@ -1,0 +1,67 @@
+session: session_01BkxgSmJUdabfZTNrHrvzsq
+startedAt: 2026-07-05T14:33:00Z   # estimate — hand-authored (see frictions)
+endedAt:   2026-07-05T14:42:01Z   # exact — read from `date -u`
+kind: interactive
+goal: File today's session frictions as issues
+status: completed
+outcome: 6 issues filed (#34–#39); none implemented
+summary: >-
+  Ran the frictions-to-fixes workflow in issues-only mode. Read all 11 of today's
+  session logs, flattened their frictions, and screened each against the tracker.
+  Dropped what was already fixed with no post-fix recurrence (cold-start deps #9,
+  log-session Skill-tool refusal #11, hand-authored timestamps #10) and the
+  ADR-deferred / non-autonomous ones (start-clock capture, live-site 403, MCP
+  drops, multi-concern PRs). Found no regressions. Filed six ripe issues (#34–#39):
+  a committed screenshot recipe, the undocumented "only pages is routed" constraint,
+  SSR-grep-vs-rendered-DOM guidance, and three log-session/layer doc notes — each
+  with quoted evidence, three options, simplest recommended. Left the lone
+  content-dump one-off unfiled. No code changed; stopped at issue creation per the
+  user's instruction.
+prs: []
+docsRead:
+  - { path: .claude/skills/frictions-to-fixes/SKILL.md, reason: the workflow being run (issues-only mode) }
+  - { path: tenants/journal/content/current/sessions/, reason: the raw friction signal — read all 11 of today's logs }
+  - { path: .agents/skills/log-session/SKILL.md, reason: authoring steps for this log (followed manually) + confirm the manual-invocation note already exists }
+  - { path: "GitHub issues (open #28–#33, closed #7,#9–#13,#25,#2)", reason: screen frictions against already-shipped fixes and avoid duplicates }
+skillsUsed:
+  - { name: frictions-to-fixes, reason: read logs, screen against tracker, file one issue per ripe friction }
+  - { name: log-session, reason: authoring and committing this log (followed manually) }
+frictions:
+  - description: >-
+      The opening prompt was a single word ("starta"), ambiguous on its own; I began
+      investigating git/issues before the real intent (the /frictions-to-fixes command)
+      arrived and my first tool batch was interrupted.
+    solution: >-
+      A one-word prompt carries little intent; waiting for the slash-command that
+      followed would have saved the throwaway investigation.
+    severity: nit
+  - description: >-
+      ToolSearch returned "No matching deferred tools found" when I queried the github
+      tools by bare name (list_issues, search_issues); it only resolved once I used the
+      fully-qualified mcp__github__ prefix.
+    solution: Query deferred MCP tools by their full mcp__<server>__<name> id, not the bare name.
+    severity: minor
+  - description: >-
+      The canonical session_01… id was not handed to me; `git log` had no Claude-Session
+      trailer to grep (the latest commit was a prior session's log), so I recovered it from
+      the run's trailer in the environment instead. This is the exact friction I filed as #39.
+    solution: >-
+      Documented recovery recipe (issue #39); the deferred autonomous trigger would
+      capture it mechanically.
+    severity: nit
+  - description: >-
+      The log-session Skill refused invocation via the Skill tool (disable-model-invocation);
+      I followed SKILL.md manually. Expected and already documented (#11) — working as designed.
+    solution: None needed; the SKILL.md manual-invocation note already signposts this.
+    severity: nit
+  - description: >-
+      Authoring this very log, a multi-line plain-scalar `solution:` value tripped the
+      helper's YAML parse ("mapping items must start at the same column") until I switched
+      the wrapped values to `>-` block scalars — the same YAML-authoring class as issue #37.
+    solution: >-
+      Use `>-` block scalars for any friction field that wraps; a template note (adjacent to
+      #37's bracket-quoting fix) would pre-empt it.
+    severity: minor
+  - description: startedAt is a hand-estimate — no exact session-start clock was available; endedAt is exact via date -u.
+    solution: The deferred autonomous end-of-session trigger would capture both mechanically (ADR-0009).
+    severity: nit
