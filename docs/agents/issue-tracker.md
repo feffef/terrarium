@@ -21,12 +21,19 @@ class to its MCP equivalent:
   `search_issues` / `search_pull_requests` with a targeted query for a narrow
   lookup; when a full list is genuinely unavoidable, use a small `perPage`
   (5–10) and page through it, expecting to slice the persisted file by hand for
-  large sets. Page both open and closed/merged.
+  large sets. Page both open and closed/merged. **A broad `search_*` query
+  overflows the same way** — a wide `search_issues`/`search_pull_requests`
+  query is not a free escape from the `list_*` overflow; always scope the
+  query narrowly (state/label/keyword) or expect to slice the persisted file
+  by hand just as you would for a full list.
 - **Read a PR or its diff** → `pull_request_read`
 - **Check a PR's gate status** → `pull_request_read` with method `get_check_runs`,
   *not* `get_status`: the combined-status API reports `total_count: 0` /
   pending for Actions-based gates and misleads you into thinking the gate
-  hasn't run.
+  hasn't run. **Gate completion is not webhook-delivered** — there's no event
+  to wait on, so to babysit a PR to green you must poll `get_check_runs`
+  yourself (e.g. re-poll at agent-completion checkpoints, or `send_later` a
+  wake when no agent is running to re-poll).
 - **List / search PRs** → `list_pull_requests` / `search_pull_requests`
 - **Link sub-issues** → `sub_issue_write`
 

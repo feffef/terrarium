@@ -1,0 +1,10 @@
+name: review
+category: general-engineering
+importance: supporting
+role: >-
+  Review a GitHub pull request (an external/incoming PR) — distinct from
+  `code-review`, which reviews the working diff before opening a gated PR.
+
+  Note: this external skill's text prescribes the `gh` CLI, which remote
+  sessions don't have — use the `mcp__github__*` equivalents instead (see
+  `docs/agents/issue-tracker.md`).
