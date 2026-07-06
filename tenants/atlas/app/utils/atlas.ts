@@ -147,6 +147,42 @@ export function slugOf(path: string): string {
   return path.replace(/^\//, '')
 }
 
+/** The subset of a queried `pages` Document the view is built from — a structural
+ *  type so the pure mapper stays Nuxt-free while accepting the generated item. */
+export interface RawSpecimenDoc {
+  path: string
+  title?: string
+  description?: string
+  commonName?: string
+  classification?: string
+  rarity?: Rarity
+  size?: string
+  diet?: string
+  activity?: { label: string; bands: Band[] }
+  signature?: { colors: SignatureColor[]; gloss: string }
+  plate?: { number: string; conjectural?: boolean }
+  illustration?: string
+}
+
+/** Project a queried Specimen Document into the view model the components read. */
+export function toSpecimenView(d: RawSpecimenDoc): SpecimenView {
+  return {
+    slug: slugOf(d.path),
+    path: d.path,
+    binomial: d.title ?? slugOf(d.path),
+    common: d.commonName ?? d.description ?? '',
+    blurb: d.description ?? '',
+    classification: d.classification,
+    rarity: d.rarity,
+    size: d.size,
+    diet: d.diet,
+    activity: d.activity,
+    signature: d.signature,
+    plate: d.plate,
+    illustration: d.illustration,
+  }
+}
+
 /** Inline CSS custom properties for a specimen's color signature — `--sig-1..3`,
  *  with `--sig-1` doubling as the catch-all accent. Applied to the specimen's own
  *  artifacts only; the biome palette still owns the frame (#68). */

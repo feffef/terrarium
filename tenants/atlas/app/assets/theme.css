@@ -288,8 +288,9 @@
 
 /* ── Field-note essay (#67/#75): the prose ─────────────────────────────────*/
 .atlas-fieldnote { margin-top: 1.8rem; font-size: 1.08rem; }
-.atlas-fieldnote > :deep(p:first-of-type)::first-letter,
-.atlas-fieldnote .drop::first-letter {
+/* Drop-cap the essay's first paragraph. ContentRenderer nests the prose, so this
+   can't be a direct-child selector; `:first-of-type` still lands on the opener. */
+.atlas-fieldnote :deep(p:first-of-type)::first-letter {
   float: left;
   font-family: var(--atlas-display);
   font-size: 3.5rem;
@@ -382,7 +383,7 @@
 .atlas-web .node circle { fill: var(--atlas-paper-2); stroke-width: 1.5; transition: stroke-width 0.15s ease; }
 .atlas-web .node text { fill: var(--atlas-ink); font-size: 10px; }
 .atlas-web .node .nm { font-style: italic; font-family: var(--atlas-display); font-size: 11px; }
-.atlas-web .node .mk { font-size: 9px; fill: var(--atlas-muted); }
+.atlas-web .node .mk { font-size: 12px; fill: var(--atlas-muted); }
 .atlas-web .node.dim { opacity: 0.28; }
 .atlas-web .strand.dim { opacity: 0.12; }
 .atlas-web .strand.hot { stroke-width: 2.4; }
