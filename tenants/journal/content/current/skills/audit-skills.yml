@@ -1,0 +1,8 @@
+name: audit-skills
+category: platform-operation
+importance: supporting
+role: >-
+  The `sync`-family Skill that keeps the Skill Inventory honest: from the last 40
+  session logs it re-grades each Skill's `importance` (conditional, not frequency)
+  and refreshes its `role`, and flags Skills whose frontmatter may mis-fire
+  (ADR-0015). A tested helper gathers; the Skill judges and opens one gated PR.
