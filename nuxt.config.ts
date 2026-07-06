@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   // fit-out is extended here; a Tenant without a layer falls back to the
   // Platform's generic catch-all renderer. Presentation only — layers never
   // define content collections (that stays in the root content.config.ts).
-  extends: ['./tenants/journal', './tenants/blog'],
+  extends: ['./tenants/journal', './tenants/blog', './tenants/atlas'],
 
   modules: ['./modules/routing', '@nuxt/content', '@nuxt/eslint'],
 

@@ -1,0 +1,405 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   The Atlas of the Terrarium — theme (PRD #64)
+
+   A Victorian specimen-plate field guide. Self-contained tokens (no sharing with
+   other Tenants; CONTEXT.md isolation stance). Registered globally by the layer's
+   nuxt.config, so every layer view and every nested component inherits the tokens
+   (docs/agents/tenant-layers.md §2).
+
+   Three layers of colour, each owning its own scope so they never fight (#68):
+     1. base Atlas ink/paper          — the book itself, on `.atlas`
+     2. per-biome palette             — the wing/room, on `.atlas--<slug>`
+     3. per-specimen colour signature — one creature, inline `--sig-1..3`
+   The biome palette always wins the frame; the signature only tints a specimen's
+   own artifacts.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Type — a book-plate serif for the guide's voice, a humanist sans for the
+     museum-label small-caps, a mono for catalogued data (plate nº, dates). */
+  --atlas-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, ui-serif, serif;
+  --atlas-text: "Iowan Old Style", Palatino, "Book Antiqua", Georgia, ui-serif, serif;
+  --atlas-label: Optima, Candara, "Gill Sans", "Gill Sans MT", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --atlas-data: ui-monospace, "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+
+  /* Base ink & paper — aged laid paper under glass; iron-gall brown-black ink.
+     Deliberately greyer/cooler than the AI-default cream so it reads "old plate",
+     not "warm blog". */
+  --atlas-paper: #e8e2d3;
+  --atlas-paper-2: #f1ebdf;
+  --atlas-ink: #2a251d;
+  --atlas-muted: #736a58;
+  --atlas-faint: #a89c83;
+  --atlas-line: #c9bea7;
+  --atlas-rule: #b0a687;
+
+  /* Neutral biome fallbacks (overridden per wing below). --sig-* default to the
+     biome accent so a component that reads them before a signature is set on an
+     ancestor still renders in-palette rather than transparent. */
+  --biome-accent: #6f6656;
+  --biome-accent-2: #9a927e;
+  --biome-tint: rgba(0, 0, 0, 0.03);
+  --sig-1: var(--biome-accent);
+  --sig-2: var(--biome-accent-2);
+  --sig-3: var(--biome-accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* The specimen cabinet after hours: deep green-black case, warm ivory ink. */
+    --atlas-paper: #181a12;
+    --atlas-paper-2: #20221a;
+    --atlas-ink: #e9e2cf;
+    --atlas-muted: #a49a82;
+    --atlas-faint: #6f6752;
+    --atlas-line: #33352a;
+    --atlas-rule: #40422f;
+  }
+}
+
+/* ── Per-biome palettes (#66): one grammar, three rooms ─────────────────────
+   Each wing shifts the paper hue (you feel you've walked into another room) and
+   sets its two accents + a tint wash. */
+.atlas--canopy {
+  --atlas-paper: #e6e6cf;
+  --atlas-paper-2: #eff0dd;
+  --biome-accent: #3f6b3e; /* leaf */
+  --biome-accent-2: #b8952f; /* dapple gold */
+  --biome-tint: rgba(63, 107, 62, 0.05);
+}
+.atlas--floor {
+  --atlas-paper: #e7ddc8;
+  --atlas-paper-2: #f0e8d6;
+  --biome-accent: #8a4f26; /* umber */
+  --biome-accent-2: #a85a2c; /* rust */
+  --biome-tint: rgba(138, 79, 38, 0.06);
+}
+.atlas--pool {
+  --atlas-paper: #dfe6e3;
+  --atlas-paper-2: #ecf1ee;
+  --biome-accent: #356f7e; /* pondlight */
+  --biome-accent-2: #5f97a1; /* glass */
+  --biome-tint: rgba(63, 127, 143, 0.05);
+}
+@media (prefers-color-scheme: dark) {
+  .atlas--canopy {
+    --atlas-paper: #14170f;
+    --atlas-paper-2: #1c2015;
+    --biome-accent: #7cae6e;
+    --biome-accent-2: #d4b455;
+  }
+  .atlas--floor {
+    --atlas-paper: #191510;
+    --atlas-paper-2: #221c14;
+    --biome-accent: #cc8a52;
+    --biome-accent-2: #d98a4a;
+  }
+  .atlas--pool {
+    --atlas-paper: #101817;
+    --atlas-paper-2: #17201f;
+    --biome-accent: #6fb2c1;
+    --biome-accent-2: #8fbcc4;
+  }
+}
+
+/* ── Shell ──────────────────────────────────────────────────────────────── */
+.atlas {
+  color: var(--atlas-ink);
+  background-color: var(--atlas-paper);
+  /* A whisper of the biome tint over the paper, plus a faint laid-paper grain. */
+  background-image:
+    linear-gradient(var(--biome-tint), var(--biome-tint)),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.012) 0 1px, transparent 1px 4px);
+  font-family: var(--atlas-text);
+  line-height: 1.62;
+  min-height: 100vh;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.atlas *::selection {
+  background: var(--sig-1);
+  color: var(--atlas-paper-2);
+}
+.atlas-page {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 2.4rem 1.35rem 5rem;
+}
+
+/* Crumb — a catalogue coordinate line. */
+.atlas-crumb {
+  font-family: var(--atlas-data);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--atlas-faint);
+  margin: 0 0 2.2rem;
+  text-transform: none;
+}
+.atlas-crumb a { color: var(--atlas-faint); text-decoration: none; border-bottom: 1px solid transparent; }
+.atlas-crumb a:hover { color: var(--biome-accent); border-bottom-color: currentColor; }
+.atlas-crumb .sep { margin: 0 0.5ch; opacity: 0.55; }
+.atlas-crumb .here { color: var(--atlas-muted); }
+
+/* Small-caps museum eyebrow, used for every section label. */
+.atlas-eyebrow {
+  font-family: var(--atlas-label);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: var(--biome-accent);
+}
+
+/* A ruled section head: eyebrow + a hairline that runs to the margin. */
+.atlas-sechead {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin: 3rem 0 1.2rem;
+}
+.atlas-sechead::after {
+  content: "";
+  flex: 1;
+  height: 0;
+  border-top: 1px solid var(--atlas-rule);
+  transform: translateY(-0.15em);
+}
+
+/* ── The plate (#67/#74): the signature element ─────────────────────────────
+   A framed engraving with a letterpress caption. A double rule, hatched corner
+   ticks, and a tint drawn from the specimen's signature — never flooding the line
+   work, only warming it. */
+.atlas-plate {
+  position: relative;
+  background: var(--atlas-paper-2);
+  border: 1px solid var(--atlas-rule);
+  box-shadow: 0 0 0 1px var(--atlas-paper-2), 0 1px 0 var(--atlas-rule), 0 14px 30px -22px rgba(0, 0, 0, 0.5);
+  padding: 1.4rem 1.4rem 0.5rem;
+}
+.atlas-plate::before {
+  /* inner keyline */
+  content: "";
+  position: absolute;
+  inset: 0.5rem;
+  border: 1px solid var(--atlas-line);
+  pointer-events: none;
+}
+.atlas-plate .plate-figure {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  /* the signature's faintest wash behind the engraving */
+  background:
+    radial-gradient(120% 90% at 50% 15%, color-mix(in srgb, var(--sig-1) 12%, transparent), transparent 70%);
+}
+.atlas-plate .plate-figure svg {
+  width: 100%;
+  height: 100%;
+  color: var(--atlas-ink);
+  overflow: visible;
+}
+/* The signature tint is exposed to authored SVGs as currentColor overrides via
+   these utility vars the illustration can reference (stroke=var(--sig-1)). */
+.atlas-plate.is-conjectural .plate-figure { opacity: 0.9; }
+.atlas-plate.is-conjectural .plate-figure::after {
+  content: "reconstructed from a partial sighting";
+  position: absolute;
+  bottom: 0.4rem;
+  font-family: var(--atlas-data);
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  color: var(--atlas-faint);
+  font-style: italic;
+}
+.atlas-plate .plate-caption {
+  font-family: var(--atlas-data);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--atlas-muted);
+  text-align: center;
+  padding: 0.7rem 0 0.2rem;
+  border-top: 1px solid var(--atlas-line);
+  margin-top: 0.6rem;
+}
+.atlas-plate .plate-caption .binomial { font-style: italic; text-transform: none; letter-spacing: 0.01em; color: var(--atlas-ink); }
+
+/* ── The museum label (#67) ────────────────────────────────────────────────
+   A caption card: binomial, common name, then a data grid of the record. */
+.atlas-label {
+  margin-top: 1.6rem;
+}
+.atlas-label .binomial {
+  font-family: var(--atlas-display);
+  font-style: italic;
+  font-size: clamp(1.9rem, 5vw, 2.7rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-wrap: balance;
+}
+.atlas-label .common {
+  font-family: var(--atlas-label);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  color: var(--atlas-muted);
+  margin: 0.3rem 0 0;
+}
+.atlas-label .record {
+  margin: 1.2rem 0 0;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.05rem 1.2rem;
+  border-top: 1px solid var(--atlas-line);
+  border-bottom: 1px solid var(--atlas-line);
+  padding: 0.9rem 0;
+}
+.atlas-label .record dt {
+  font-family: var(--atlas-label);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--atlas-faint);
+  align-self: baseline;
+  padding-top: 0.28rem;
+}
+.atlas-label .record dd {
+  margin: 0;
+  font-size: 0.98rem;
+  color: var(--atlas-ink);
+  padding-bottom: 0.15rem;
+}
+
+/* ── Rarity mark (#69) ─────────────────────────────────────────────────────*/
+.atlas-rarity { display: inline-flex; align-items: center; gap: 0.5ch; font-family: var(--atlas-data); }
+.atlas-rarity .dots { letter-spacing: 0.12em; color: var(--sig-1); }
+.atlas-rarity .dots .off { color: var(--atlas-faint); opacity: 0.5; }
+.atlas-rarity .grade {
+  font-family: var(--atlas-label);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--atlas-muted);
+}
+.atlas-rarity.is-mythic .star { color: var(--sig-1); font-size: 1.1em; }
+.atlas-rarity.is-mythic .grade { color: var(--sig-1); }
+
+/* ── Field-note essay (#67/#75): the prose ─────────────────────────────────*/
+.atlas-fieldnote { margin-top: 1.8rem; font-size: 1.08rem; }
+.atlas-fieldnote > :deep(p:first-of-type)::first-letter,
+.atlas-fieldnote .drop::first-letter {
+  float: left;
+  font-family: var(--atlas-display);
+  font-size: 3.5rem;
+  line-height: 0.72;
+  padding: 0.3rem 0.5rem 0 0;
+  color: var(--sig-1);
+}
+.atlas-prose :deep(p) { margin: 0 0 1.15rem; }
+.atlas-prose :deep(h2) { font-family: var(--atlas-display); font-size: 1.4rem; margin: 2.2rem 0 0.7rem; }
+.atlas-prose :deep(h3) { font-family: var(--atlas-label); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--atlas-muted); margin: 1.8rem 0 0.5rem; }
+.atlas-prose :deep(em) { font-style: italic; }
+.atlas-prose :deep(a) { color: var(--biome-accent); text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+.atlas-prose :deep(blockquote) {
+  border-left: 2px solid var(--sig-1);
+  margin: 1.4rem 0;
+  padding: 0.1rem 0 0.1rem 1.1rem;
+  color: var(--atlas-muted);
+  font-style: italic;
+}
+.atlas-prose :deep(ul) { margin: 0 0 1.15rem; padding-left: 1.2rem; list-style: none; }
+.atlas-prose :deep(ul li) { position: relative; margin: 0.3rem 0; }
+.atlas-prose :deep(ul li)::before { content: "·"; position: absolute; left: -1rem; color: var(--sig-1); font-weight: 700; }
+.atlas-prose :deep(code) { font-family: var(--atlas-data); font-size: 0.86em; }
+
+/* ── Specimen index (#66) — the catalogue rows ─────────────────────────────*/
+.atlas-index { list-style: none; margin: 0; padding: 0; }
+.atlas-index li { border-top: 1px solid var(--atlas-line); }
+.atlas-index li:first-child { border-top: 0; }
+.atlas-index .row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 0.4rem 1rem;
+  padding: 0.95rem 0.7rem;
+  margin: 0 -0.7rem;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 3px;
+  transition: background 0.15s ease;
+}
+.atlas-index .row:hover { background: var(--atlas-paper-2); }
+.atlas-index .swatches { display: inline-flex; gap: 3px; align-self: center; }
+.atlas-index .swatches i { width: 9px; height: 9px; border-radius: 50%; display: block; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15); }
+.atlas-index .naming .binomial { font-family: var(--atlas-display); font-style: italic; font-size: 1.14rem; }
+.atlas-index .naming .common { font-family: var(--atlas-label); font-size: 0.8rem; color: var(--atlas-muted); }
+.atlas-index .naming .char { display: block; font-size: 0.9rem; color: var(--atlas-muted); margin-top: 0.1rem; }
+.atlas-index .row:hover .naming .binomial { color: var(--biome-accent); }
+
+/* ── Relations (#71) ───────────────────────────────────────────────────────*/
+.atlas-relations { list-style: none; margin: 0; padding: 0; }
+.atlas-relations li { display: grid; grid-template-columns: 8.5rem 1fr; gap: 0.3rem 1.1rem; padding: 0.75rem 0; border-top: 1px dashed var(--atlas-line); }
+.atlas-relations li:first-child { border-top: 0; }
+.atlas-relations .kind { font-family: var(--atlas-label); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--atlas-muted); padding-top: 0.15rem; }
+.atlas-relations .who { font-family: var(--atlas-display); font-style: italic; text-decoration: none; color: var(--atlas-ink); }
+.atlas-relations .who:hover { color: var(--biome-accent); }
+.atlas-relations .who .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 0.4ch; vertical-align: baseline; }
+.atlas-relations .rel-note { color: var(--atlas-muted); font-size: 0.92rem; }
+.atlas-relations .empty { color: var(--atlas-faint); font-style: italic; }
+
+/* ── Field log (#72) ───────────────────────────────────────────────────────*/
+.atlas-log { list-style: none; margin: 0; padding: 0; }
+.atlas-log li { display: grid; grid-template-columns: 6.5rem 4rem 1fr; gap: 0.6rem; padding: 0.62rem 0; border-top: 1px solid var(--atlas-line); font-size: 0.95rem; align-items: baseline; }
+.atlas-log li:first-child { border-top: 0; }
+.atlas-log .when { font-family: var(--atlas-data); font-size: 0.76rem; color: var(--atlas-faint); }
+.atlas-log .tod { font-family: var(--atlas-label); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--biome-accent); }
+.atlas-log .obs { color: var(--atlas-ink); }
+.atlas-log .obs .who { font-style: italic; text-decoration: none; color: inherit; border-bottom: 1px solid var(--atlas-line); }
+.atlas-log .obs .who:hover { color: var(--biome-accent); }
+.atlas-log .empty { color: var(--atlas-faint); font-style: italic; }
+
+/* ── Rhythm band (#73) ─────────────────────────────────────────────────────
+   A beautiful clock, not a chart: ticks + filled hour-cells in the engraved ink. */
+.atlas-rhythm { font-family: var(--atlas-data); }
+.atlas-rhythm .track { display: grid; grid-template-columns: repeat(24, 1fr); height: 1.1rem; border: 1px solid var(--atlas-rule); }
+.atlas-rhythm .track i { border-right: 1px solid color-mix(in srgb, var(--atlas-rule) 45%, transparent); }
+.atlas-rhythm .track i:last-child { border-right: 0; }
+.atlas-rhythm .track i.on { background: var(--sig-1); }
+.atlas-rhythm .track i.dawn-tick { box-shadow: inset 1px 0 0 var(--atlas-rule); }
+.atlas-rhythm .scale { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--atlas-faint); margin-top: 0.25rem; }
+.atlas-rhythm .rlabel { font-family: var(--atlas-label); font-size: 0.7rem; letter-spacing: 0.06em; color: var(--atlas-muted); margin-top: 0.4rem; text-transform: lowercase; }
+
+/* ── Food web (#70): the wanderable diagram ────────────────────────────────*/
+.atlas-web { position: relative; }
+.atlas-web svg { width: 100%; height: auto; display: block; overflow: visible; font-family: var(--atlas-data); }
+.atlas-web .strand { stroke: var(--atlas-rule); fill: none; stroke-width: 1.25; transition: stroke 0.15s ease, stroke-width 0.15s ease; }
+.atlas-web .strand.mimics { stroke-dasharray: 2 4; }
+.atlas-web .strand.shelters { stroke-dasharray: 6 3; }
+.atlas-web .strand.pollinates { stroke-dasharray: 1 3; stroke-width: 1.6; }
+.atlas-web .node-hit { cursor: pointer; }
+.atlas-web .node circle { fill: var(--atlas-paper-2); stroke-width: 1.5; transition: stroke-width 0.15s ease; }
+.atlas-web .node text { fill: var(--atlas-ink); font-size: 10px; }
+.atlas-web .node .nm { font-style: italic; font-family: var(--atlas-display); font-size: 11px; }
+.atlas-web .node .mk { font-size: 9px; fill: var(--atlas-muted); }
+.atlas-web .node.dim { opacity: 0.28; }
+.atlas-web .strand.dim { opacity: 0.12; }
+.atlas-web .strand.hot { stroke-width: 2.4; }
+.atlas-web .node.hot circle { stroke-width: 3; }
+.atlas-web-legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; margin-top: 1rem; font-family: var(--atlas-label); font-size: 0.72rem; color: var(--atlas-muted); }
+.atlas-web-legend .k { display: inline-flex; align-items: center; gap: 0.5ch; }
+.atlas-web-legend svg { width: 26px; height: 8px; overflow: visible; }
+.atlas-web .empty { color: var(--atlas-faint); font-style: italic; text-align: center; padding: 2rem; }
+
+/* ── Rarity legend (#69) ───────────────────────────────────────────────────*/
+.atlas-rarity-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
+.atlas-rarity-legend li { display: grid; grid-template-columns: 7rem 5rem 1fr; gap: 0.8rem; align-items: baseline; font-size: 0.9rem; }
+.atlas-rarity-legend .g { font-family: var(--atlas-label); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--atlas-muted); }
+.atlas-rarity-legend .m { font-family: var(--atlas-data); color: var(--biome-accent); }
+.atlas-rarity-legend .d { color: var(--atlas-muted); font-style: italic; }
+
+/* ── Reduced motion ───────────────────────────────────────────────────────*/
+@media (prefers-reduced-motion: reduce) {
+  .atlas * { transition: none !important; animation: none !important; }
+}
