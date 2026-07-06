@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01FmradS479ibZQrDbRGtQnW
 startedAt: 2026-07-06T21:18:10Z
-endedAt: 2026-07-06T21:36:24Z
+endedAt: 2026-07-06T21:37:37Z
 kind: interactive
 goal: Show mechanical trace in Journal cards
 status: completed
-outcome: Trace surfaced, tested, PR
-summary: "The SessionEnd extractor already derived a mechanical trace (models, toolCounts, filesEdited, subagents) into every session log, but the dashboard card ignored it. Weighted the display by interest per the user's steer: model is an always-visible chip in the collapsed foot (short id, busiest-first for multi-tier sessions); subagents render directly in the expanded detail; and the verbose files-read/files-edited/tools-used lists sit behind per-list native <details> disclosures so they inform without cluttering (\"docsRead\" relabelled \"Files read\"). Skills and frictions stay always-visible. Added formatModels/toolEntries to the pure dashboard module with unit tests (102 pass), then verified the real render — collapsed and expanded — with a Playwright screenshot. Opened PR #151, in review."
+outcome: "Trace surfaced, tested, merged as PR #151"
+summary: "The SessionEnd extractor already derived a mechanical trace (models, toolCounts, filesEdited, subagents) into every session log, but the dashboard card ignored it. Weighted the display by interest per the user's steer: model is an always-visible chip in the collapsed foot (short id, busiest-first for multi-tier sessions); subagents render directly in the expanded detail; and the verbose files-read/files-edited/tools-used lists sit behind per-list native <details> disclosures so they inform without cluttering (\"docsRead\" relabelled \"Files read\"). Skills and frictions stay always-visible. Added formatModels/toolEntries to the pure dashboard module with unit tests (102 pass), then verified the real render — collapsed and expanded — with a Playwright screenshot. Opened PR #151; reviewed, gate-green, and merged."
 prs:
   - "151"
 docsRead:
@@ -17,7 +17,7 @@ docsRead:
   - path: tenants/journal/app/types/journal.ts
     reason: SessionCardView shape
   - path: CLAUDE.md
-    reason: UI-verification rule (render DOM
+    reason: UI-verification rule (render DOM, not SSR HTML)
   - path: tenants/journal/app/pages/t/journal/[space]/index.vue
     reason: (unknown)
   - path: tests/unit/journal-dashboard.spec.ts
@@ -37,13 +37,16 @@ frictions:
   - description: tsx in this repo emits CJS, so a top-level await in a scratch script fails; had to wrap the driver in an async IIFE.
     solution: Wrap ad-hoc tsx scripts in (async () => {...})() rather than relying on top-level await.
     severity: nit
-durationSec: 1094
+  - description: My first authored log landed on main with `outcome` truncated to "…PR" and a docsRead reason cut at a comma — an unquoted '#' and a flow-map ',' each silently ate the tail; re-authored quoted and re-ran session-end to fix.
+    solution: The log-session skill already says to quote '[' and '{' values; broaden it to also quote any value containing '#' (YAML comment) or a ',' inside a flow map, and cover the top-level outcome/goal fields, not just reasons.
+    severity: minor
+durationSec: 1167
 models:
-  claude-opus-4-8: 156
+  claude-opus-4-8: 170
 toolCounts:
-  Bash: 40
-  Read: 10
-  Edit: 15
+  Bash: 42
+  Read: 11
+  Edit: 19
   Skill: 1
   Write: 1
   SendUserFile: 3
