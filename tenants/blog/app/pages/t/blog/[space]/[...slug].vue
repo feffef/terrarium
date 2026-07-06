@@ -8,7 +8,6 @@
 // Space's keyed `pages` and `pingbacks` collections. The pingback list is a
 // SAME-Space read — the cross-Persona relationship was denormalised here at author
 // time (ADR-0012), so nothing queries a sibling Space at render.
-import type { Collections } from '@nuxt/content'
 import { resolveSpaceRoute } from '~~/shared/routing'
 import { personaMeta } from '../../../../personas'
 import BlogNetwork from '../../../../components/BlogNetwork.vue'
@@ -21,17 +20,11 @@ const resolved = resolveSpaceRoute(tenant, space, route.params.slug)
 if (!resolved) {
   throw createError({ statusCode: 404, statusMessage: `Unknown Persona: ${tenant}/${space}` })
 }
-const { path } = resolved
-// Narrow each key to this Tenant's own collections of that type
-// (`blog_<persona>_pages` / `blog_<persona>_pingbacks`) rather than the whole
-// `keyof Collections` union: `queryCollection(key)` is generic in the key, so a
-// wide key widens its result to every collection's item type and loses the
-// post/pingback fields the UI reads. The narrowed `pages` result also stays
-// `<ContentRenderer>`-compatible. (#55)
-const pagesKey = resolved.pagesKey as Extract<keyof Collections, `blog_${string}_pages`>
-const pingbacksKey = resolved.dataCollections.find((d) => d.name === 'pingbacks')?.key as
-  | Extract<keyof Collections, `blog_${string}_pingbacks`>
-  | undefined
+// `resolved` already carries this Tenant's own literal collection keys — the
+// resolver derives them from the generated `#routing` type (shared/routing.ts,
+// #96/#55) — so both queries keep the blog item types with no casts.
+const { path, pagesKey } = resolved
+const pingbacksKey = resolved.dataCollections.find((d) => d.name === 'pingbacks')?.key
 
 const { data } = await useAsyncData(route.path, async () => {
   const post = await queryCollection(pagesKey).path(path).first()

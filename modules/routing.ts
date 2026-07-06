@@ -20,6 +20,11 @@ export default defineNuxtModule({
 
     const entryRoutes = entryRoutesFrom(cols)
 
+    // One JSON literal serves as BOTH the runtime data (routing.mjs) and the
+    // precise declared type (routing.d.ts): every leaf is a string literal, so
+    // the stringified map is itself a valid TS type literal.
+    const mapJson = JSON.stringify(map, null, 2)
+
     // Plain JavaScript (.mjs) so Nitro's Rollup bundler can parse it without a
     // TypeScript plugin. A companion .d.ts provides the types for tsc / vue-tsc.
     const template = addTemplate({
@@ -30,7 +35,7 @@ export default defineNuxtModule({
           '// Build-time routing data (ADR-0014). Written to .nuxt/ at prepare/build time.',
           '// Derived from tenant manifests via expand(). Do not edit — change the manifests.',
           '',
-          `export const routingMap = ${JSON.stringify(map, null, 2)}`,
+          `export const routingMap = ${mapJson}`,
           '',
           `export const entryRoutes = ${JSON.stringify(entryRoutes, null, 2)}`,
           '',
@@ -38,13 +43,17 @@ export default defineNuxtModule({
     })
 
     // Type declarations (.d.ts) — addTemplate auto-sets write:true for .d.ts files.
-    // Static types: no consumer uses the precise map shape, so widening to Record
-    // avoids churn on every manifest edit and drops the fragile JSON-as-type codegen.
+    // `routingMap` is declared with its precise literal type — the same `mapJson`
+    // string the runtime data is written from, so type and data cannot diverge and
+    // the key scheme stays single-homed in `collectionKey()` (shared/manifest.ts).
+    // shared/routing.ts derives per-Tenant key unions from this type, which is what
+    // lets every `Extract<keyof Collections, …>` cast at the call sites go (#96).
+    // Churn is a non-issue: the file is generated into .nuxt/ and never committed.
     addTemplate({
       filename: 'routing.d.ts',
       getContents: () =>
         [
-          'export declare const routingMap: Record<string, Record<string, Record<string, string>>>',
+          `export declare const routingMap: ${mapJson}`,
           'export declare const entryRoutes: string[]',
           '',
         ].join('\n'),

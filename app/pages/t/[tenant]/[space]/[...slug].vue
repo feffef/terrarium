@@ -2,7 +2,6 @@
 // Runtime routing (ADR-0001): the request path selects which baked (Tenant, Space)
 // to serve. We resolve it to generated collection keys and query only those
 // collections — physical table-level isolation means no cross-Space leakage.
-import type { Collections } from '@nuxt/content'
 import { resolveSpaceRoute } from '~~/shared/routing'
 
 const route = useRoute()
@@ -18,12 +17,7 @@ if (!resolved) {
   })
 }
 
-const { path, atRoot } = resolved
-const pagesKey = resolved.pagesKey as keyof Collections
-const dataCollections = resolved.dataCollections.map(({ name, key }) => ({
-  name,
-  key: key as keyof Collections,
-}))
+const { path, atRoot, pagesKey, dataCollections } = resolved
 
 const { data } = await useAsyncData(route.path, async () => {
   const page = await queryCollection(pagesKey).path(path).first()

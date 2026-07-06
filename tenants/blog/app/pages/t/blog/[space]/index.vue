@@ -7,7 +7,6 @@
 // through the SAME shared, unit-tested `resolveSpaceRoute` the catch-all uses (a
 // read-only import — no isolation logic duplicated), then reads only this
 // (Tenant, Space)'s keyed `pages` collection. Spaces cannot leak.
-import type { Collections } from '@nuxt/content'
 import { resolveSpaceRoute } from '~~/shared/routing'
 import { personaMeta } from '../../../../personas'
 import BlogNetwork from '../../../../components/BlogNetwork.vue'
@@ -20,11 +19,9 @@ const resolved = resolveSpaceRoute(tenant, space, route.params.slug)
 if (!resolved) {
   throw createError({ statusCode: 404, statusMessage: `Unknown Persona: ${tenant}/${space}` })
 }
-// Narrow to this Tenant's `pages` collections (`blog_<persona>_pages`) rather
-// than the whole `keyof Collections` union, so `queryCollection(...).all()` keeps
-// the post item's fields (path/title/description/publishedAt/reactsTo) instead of
-// widening to every collection's type. Stays `<ContentRenderer>`-compatible. (#55)
-const pagesKey = resolved.pagesKey as Extract<keyof Collections, `blog_${string}_pages`>
+// `pagesKey` is already this Tenant's own literal `pages` keys — the resolver
+// derives them from the generated `#routing` type (shared/routing.ts, #96/#55).
+const pagesKey = resolved.pagesKey
 
 const { data } = await useAsyncData(route.path, () => queryCollection(pagesKey).all())
 

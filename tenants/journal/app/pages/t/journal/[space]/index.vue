@@ -7,8 +7,7 @@
 // collections through the SAME build-time routing map the catch-all uses (a
 // read-only import — no isolation logic is duplicated or changed), then reads
 // only `journal_<space>_{pages,skills,sessions}`. Spaces cannot leak.
-import type { Collections } from '@nuxt/content'
-import { resolveSpaceRoute, type RoutingMap } from '~~/shared/routing'
+import { resolveSpaceRoute } from '~~/shared/routing'
 import { routingMap } from '#routing'
 import type { PageDoc, SessionDoc, SkillDoc } from '../../../../types/journal'
 // Pure aggregation/formatting lives in a layer-local, unit-tested module (issue
@@ -39,20 +38,16 @@ const resolved = resolveSpaceRoute(tenant, space, undefined)
 if (!resolved) {
   throw createError({ statusCode: 404, statusMessage: `Unknown Space: ${tenant}/${space}` })
 }
-// Narrow each key to the concrete set of journal collections of that type
-// (`journal_<space>_pages`, …) rather than the whole `keyof Collections` union.
-// `queryCollection(key)` is generic in the key, so a wide key widens its result
-// to every collection's item type (union) — losing the page/data fields the UI
-// reads, and (for #55's now-enforced typecheck) failing on them. These template-
-// literal Extracts keep the result typed as this Tenant's own collection items,
-// which also stay `<ContentRenderer>`-compatible.
-const pagesKey = resolved.pagesKey as Extract<keyof Collections, `journal_${string}_pages`>
-const skillsKey = resolved.dataCollections.find((d) => d.name === 'skills')?.key as Extract<keyof Collections, `journal_${string}_skills`> | undefined
-const sessionsKey = resolved.dataCollections.find((d) => d.name === 'sessions')?.key as Extract<keyof Collections, `journal_${string}_sessions`> | undefined
+// `resolved` already carries this Tenant's own literal collection keys — the
+// resolver derives them from the generated `#routing` type (shared/routing.ts,
+// #96) — so `queryCollection` keeps the journal item types (#55) with no casts.
+const pagesKey = resolved.pagesKey
+const skillsKey = resolved.dataCollections.find((d) => d.name === 'skills')?.key
+const sessionsKey = resolved.dataCollections.find((d) => d.name === 'sessions')?.key
 
 // The resolver deliberately exposes only the one resolved Space, so read the map
-// directly (with the shared type) for the Space-toggle's list of sibling Spaces.
-const spaces = Object.keys((routingMap as RoutingMap)[tenant] ?? {})
+// directly for the Space-toggle's list of sibling Spaces.
+const spaces = Object.keys(routingMap[tenant])
 
 const { data } = await useAsyncData(route.path, async () => {
   const pages = await queryCollection(pagesKey).all()
