@@ -12,12 +12,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createJiti } from 'jiti'
 import type { ZodObject, ZodRawShape } from 'zod'
-import {
-  collectionKey,
-  validateManifest,
-  type CollectionType,
-  type TenantManifest,
-} from './manifest'
+import { collectionKey, validateManifest, type TenantManifest } from './manifest'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const tenantsDir = join(root, 'tenants')
@@ -27,18 +22,29 @@ export interface LoadedManifest {
   manifest: TenantManifest
 }
 
-export interface ExpandedCollection {
+interface ExpandedCollectionBase {
   key: string
   tenant: string
   space: string
   collection: string
-  type: CollectionType
   include: string
   /** Content dir for this (tenant, space, collection), relative to project root (posix). */
   cwdRel: string
-  /** The Collection's Zod schema, carried through so consumers needn't re-import the manifest. */
-  schema?: ZodObject<ZodRawShape>
 }
+
+// Discriminated on `type` — mirrors `CollectionDef` (shared/manifest.ts) so the
+// required-schema-for-`data` invariant survives the manifest → expansion step
+// and reaches `content.config.ts` still statically checkable (issue #93).
+export type ExpandedCollection =
+  | (ExpandedCollectionBase & {
+      type: 'page'
+      /** The Collection's Zod schema, carried through so consumers needn't re-import the manifest. */
+      schema?: ZodObject<ZodRawShape>
+    })
+  | (ExpandedCollectionBase & {
+      type: 'data'
+      schema: ZodObject<ZodRawShape>
+    })
 
 /**
  * Synchronously load every Tenant manifest under `tenants/`.
@@ -92,16 +98,22 @@ export function expand(manifests: LoadedManifest[]): ExpandedCollection[] {
     }
     for (const space of manifest.spaces) {
       for (const [collection, def] of Object.entries(manifest.collections)) {
-        out.push({
+        const base = {
           key: collectionKey(manifest.name, space, collection),
           tenant: manifest.name,
           space,
           collection,
-          type: def.type,
           include: def.source ?? '**',
           cwdRel: `tenants/${manifest.name}/content/${space}/${collection}`,
-          schema: def.schema,
-        })
+        }
+        // Branch on `def.type` (rather than spreading `def` in) so TS narrows
+        // `def.schema` per-variant and the pushed object matches the matching
+        // half of the `ExpandedCollection` discriminated union.
+        out.push(
+          def.type === 'page'
+            ? { ...base, type: 'page', schema: def.schema }
+            : { ...base, type: 'data', schema: def.schema },
+        )
       }
     }
   }

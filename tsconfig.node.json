@@ -3,6 +3,15 @@
   // generated tsconfig includes only the Nuxt app surface (app/, shared/, config),
   // never scripts/ or tests/. Run as the second half of `pnpm typecheck` so the
   // session-log helper and the shared isolation code are gated like the rest (ADR-0004).
+  //
+  // `content.config.ts` belongs here rather than in the Nuxt program: it runs in
+  // the node/config context (evaluated by jiti at `nuxt prepare`/`build` time, not
+  // inside the Vue/app compile), and it already imports `shared/expand.ts` — which
+  // this program covers. It defines the very `Collections` keys other code depends
+  // on (issue #93), and until now sat in NO tsconfig, so a type error there was
+  // invisible to `pnpm typecheck`. (The tenant manifests it loads are typechecked
+  // separately, via the Nuxt program's `../tenants/*/tenant.config.*` include in
+  // `nuxt.config.ts` — a file should be typechecked by exactly one program.)
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2023"],
@@ -24,5 +33,5 @@
       "#routing": ["./.nuxt/routing.d.ts"]
     }
   },
-  "include": ["scripts/**/*.ts", "shared/**/*.ts", "tests/unit/**/*.ts"]
+  "include": ["scripts/**/*.ts", "shared/**/*.ts", "tests/unit/**/*.ts", "content.config.ts"]
 }
