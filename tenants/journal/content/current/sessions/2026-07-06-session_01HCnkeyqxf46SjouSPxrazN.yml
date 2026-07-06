@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_01HCnkeyqxf46SjouSPxrazN
+startedAt: 2026-07-06T19:01:46Z
+endedAt: 2026-07-06T20:20:08Z
+kind: interactive
+goal: Audit the Skill Inventory against usage
+status: completed
+outcome: Re-graded four Skills, added one, PR merged
+summary: "Ran the audit-skills Skill over the 40-session window (37 available). The tested helper gathered the scorecard; I made every grade judgement. Corrected a single-home divergence — blog-post was graded supporting though CONTEXT.md names it the canonical specialist example — and promoted digest and audit-skills to specialist for parity (same \"the Skill is the session\" shape). Demoted writing-great-skills essential→supporting on strong opportunity-missed evidence (absent from several Skill-authoring sessions) and rewrote its role. Created a grilling entry (observed, on disk, uninventoried). Held frictions-to-fixes / log-session / domain-modeling at essential — each used in every session of its kind. No frontmatter issues warranted. Full gate green; opened PR #146, which the user merged. On resume, found this session's own log had never landed and recovered it by running the handler directly against the transcript."
+prs:
+  - "146"
+docsRead:
+  - path: CONTEXT.md
+    reason: importance grade definitions (single home)
+  - path: tenants/journal/tenant.config.ts
+    reason: skills collection schema (enum + strict)
+  - path: scripts/audit-skills.ts
+    reason: understand scorecard shape
+  - path: scripts/session-end.ts
+    reason: diagnose why the log never landed
+  - path: .claude/skills/audit-skills/SKILL.md
+    reason: (unknown)
+  - path: /root/.claude/projects/-home-user-terrarium/95f1da8f-cb43-5c37-84a2-27534706be31/tool-results/bz9cw5se0.txt
+    reason: (unknown)
+  - path: tenants/journal/content/current/skills/blog-post.yml
+    reason: (unknown)
+  - path: tenants/journal/content/current/skills/digest.yml
+    reason: (unknown)
+  - path: tenants/journal/content/current/skills/audit-skills.yml
+    reason: (unknown)
+  - path: tenants/journal/content/current/skills/writing-great-skills.yml
+    reason: (unknown)
+skillsUsed:
+  - name: audit-skills
+    reason: the session was this workflow
+  - name: log-session
+    reason: author this entry
+frictions:
+  - description: This session's authored scratch never became a committed log — no sessions/ entry on main after the web freeze/resume; the scratch was lost.
+    solution: The scratch lives in gitignored, container-local .session-logs/, so a container reclaim on resume erases it before a teardown commits. The SessionEnd hook also swallows all errors (session-end.ts:148), so a failed land is silent. Consider a resume-time recovery path or a non-cosmetic surfacing when a scratch is dropped without landing.
+    severity: major
+  - description: An early cd into the skills dir silently changed the shell's persistent cwd, so later repo-root greps failed with "No such file or directory".
+    solution: CLAUDE.md warns cd in a compound command is risky; a stronger note to use absolute paths in Bash (never a bare persistent cd) would have avoided it.
+    severity: minor
+  - description: Had to Read four .yml files the Edit tool refused to touch after I'd only cat'd them via a for-loop, forcing a re-read.
+    solution: Known CLAUDE.md guidance (inspect with Read, not cat); I violated it by batch-catting for overview. Use Read from the start for anything editable.
+    severity: nit
+durationSec: 4703
+models:
+  claude-opus-4-8: 102
+toolCounts:
+  Bash: 37
+  Read: 9
+  Edit: 5
+  Write: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  Skill: 1
+filesEdited:
+  - tenants/journal/content/current/skills/blog-post.yml
+  - tenants/journal/content/current/skills/digest.yml
+  - tenants/journal/content/current/skills/audit-skills.yml
+  - tenants/journal/content/current/skills/writing-great-skills.yml
+  - tenants/journal/content/current/skills/grilling.yml
+gitBranch: claude/audit-skills-ckctpc
+entrypoint: remote_mobile
+cliVersion: 2.1.201
