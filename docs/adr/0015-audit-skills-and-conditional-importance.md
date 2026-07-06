@@ -62,6 +62,16 @@ already defines this readout as an **Inventory** (ADR-0008), and routing used
     the signature of a `description` that mis-fires. Importance does not gate this:
     a low-graded Skill is exactly where a broken `description` hides.
 
+- **Scope: tune both categories, refer only our own.** `importance`/`role` tuning
+  covers **all** catalogued Skills, external pack Skills included — their Inventory
+  entry records their *fit to this project* (the majority of entries), which drifts
+  like any other; grading a pack Skill's importance-here is not *evolving the Skill*,
+  so ADR-0005's "used, not evolved here" stance holds. But the **frontmatter-suspect
+  referral is our-own-Skills-only**: a pack Skill's SKILL.md is not ours to patch (a
+  re-install clobbers edits), so `audit-skills` never refers it to `frictions-to-fixes`.
+  The helper marks pack Skills `external` (from `skills-lock.json`) so the split is
+  robust regardless of whether a Skill is catalogued yet.
+
 - **Split of mechanics vs judgement, per the `digest` pattern.** A unit-tested
   `scripts/audit-skills.ts` joins the three sources (on-disk Skills, Inventory
   entries, windowed `skillsUsed`) into a compact scorecard; the Skill's session makes

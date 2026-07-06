@@ -24,6 +24,10 @@ export const DEFAULT_WINDOW = 40
 export const SESSIONS_DIR = 'tenants/journal/content/current/sessions'
 export const INVENTORY_DIR = 'tenants/journal/content/current/skills'
 export const SKILLS_DIR = '.agents/skills'
+/** The lockfile of externally-sourced Skills (the pack). A Skill named here is
+ *  NOT ours to edit — its SKILL.md is pack-owned (ADR-0005), so `audit-skills`
+ *  tunes its Inventory grade but never refers its frontmatter to `frictions-to-fixes`. */
+export const SKILLS_LOCK = 'skills-lock.json'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -56,6 +60,8 @@ export interface SkillRow {
   name: string
   onDisk: boolean
   catalogued: boolean
+  /** In the external pack (`skills-lock.json`) — its SKILL.md is not ours to patch. */
+  external: boolean
   category: string | null
   importance: string | null
   role: string | null
@@ -97,13 +103,15 @@ export function tallyUsage(window: WindowSession[]): Map<string, UsageHit[]> {
   return byName
 }
 
-/** Join the three sources into one row per Skill — the union of every name that
- *  is on disk, catalogued, or observed in use — so orphans surface both ways:
- *  on-disk-but-uncatalogued AND catalogued-but-gone. Sorted by name. */
+/** Join the sources into one row per Skill — the union of every name that is on
+ *  disk, catalogued, or observed in use — so orphans surface both ways:
+ *  on-disk-but-uncatalogued AND catalogued-but-gone. `external` marks pack Skills
+ *  (their frontmatter is not ours to patch). Sorted by name. */
 export function buildSkillRows(
   onDisk: Map<string, OnDiskSkill>,
   catalogued: Map<string, InventoryEntry>,
   usage: Map<string, UsageHit[]>,
+  external: Set<string>,
 ): SkillRow[] {
   const names = new Set<string>([...onDisk.keys(), ...catalogued.keys(), ...usage.keys()])
   return [...names].sort().map((name) => {
@@ -113,6 +121,7 @@ export function buildSkillRows(
       name,
       onDisk: onDisk.has(name),
       catalogued: catalogued.has(name),
+      external: external.has(name),
       category: entry?.category ?? null,
       importance: entry?.importance ?? null,
       role: entry?.role ?? null,
@@ -185,12 +194,20 @@ function readInventory(cwd = root): Map<string, InventoryEntry> {
   return out
 }
 
+/** The names of externally-packed Skills (keys of `skills-lock.json` → `skills`). */
+function readLock(cwd = root): Set<string> {
+  const file = join(cwd, SKILLS_LOCK)
+  if (!existsSync(file)) return new Set()
+  const lock = JSON.parse(readFileSync(file, 'utf8')) as { skills?: Record<string, unknown> }
+  return new Set(Object.keys(lock.skills ?? {}))
+}
+
 // ── Command ─────────────────────────────────────────────────────────────────
 
 export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
   const all = readSessions(cwd)
   const window = pickWindow(all, windowSize)
-  const rows = buildSkillRows(readOnDiskSkills(cwd), readInventory(cwd), tallyUsage(window))
+  const rows = buildSkillRows(readOnDiskSkills(cwd), readInventory(cwd), tallyUsage(window), readLock(cwd))
   return { windowSize, sessionsConsidered: all.length, window, skills: rows }
 }
 

@@ -92,18 +92,24 @@ describe('buildSkillRows()', () => {
   const usage = new Map<string, UsageHit[]>([
     ['blog-post', [{ session: 's1', kind: 'interactive', goal: 'blog' }]],
   ])
-  const rows = buildSkillRows(onDisk, catalogued, usage)
+  const external = new Set<string>(['ghost']) // ghost is a pack Skill
+  const rows = buildSkillRows(onDisk, catalogued, usage, external)
   const row = (n: string) => rows.find((r) => r.name === n)!
 
-  it('unions every name across the three sources, sorted', () => {
+  it('unions every name across the sources, sorted', () => {
     expect(rows.map((r) => r.name)).toEqual(['blog-post', 'ghost', 'retired'])
   })
 
   it('joins on-disk description, Inventory grade, and windowed usage', () => {
     expect(row('blog-post')).toMatchObject({
       onDisk: true, catalogued: true, importance: 'specialist',
-      description: 'author a post', useCount: 1,
+      description: 'author a post', useCount: 1, external: false,
     })
+  })
+
+  it('marks pack Skills external (frontmatter not ours to patch)', () => {
+    expect(row('ghost').external).toBe(true)
+    expect(row('blog-post').external).toBe(false)
   })
 
   it('flags an on-disk Skill with no Inventory entry (coverage gap)', () => {

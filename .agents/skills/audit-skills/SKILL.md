@@ -69,6 +69,10 @@ window — *never* raw frequency. For each Skill, read `usedIn` **and the `goal`
 - **Create a missing entry** for any `onDisk && !catalogued` Skill you observed in
   use — write it from what the sessions show. Leave *never-observed* uncatalogued
   Skills alone (that coverage is other `sync` work).
+- **External (`external: true`) Skills are tuned too.** Their Inventory grade + role
+  record their *fit to this project*, which drifts like any other — grading a pack
+  Skill's importance-here is not *evolving the Skill*, so "used, not evolved here"
+  holds. (Only step 4 differs for them.)
 - Refresh `role` when usage contradicts it. **Keep `role` ≤ ~50 words** (schema
   guideline): role + importance-to-project, not a copy of the Skill's own description.
 
@@ -79,7 +83,15 @@ evidence, and observed-but-uncatalogued Skills have entries.
 
 A Skill that was **absent from ≥2 windowed sessions whose work was clearly in its
 domain** probably has a `description` that mis-fires (progressive disclosure: the
-frontmatter alone decides whether it triggers). For each such Skill:
+frontmatter alone decides whether it triggers).
+
+**This step is for our own (`external: false`) Skills only.** A pack Skill's
+SKILL.md is not ours to patch (a re-install would clobber it, ADR-0005), so never
+refer its frontmatter to `frictions-to-fixes`. If an *external* Skill looks
+under-used despite the opportunity, the only lever we own is its Inventory `role`
+(already handled in step 3) — reflect the mismatch there and move on.
+
+For each own opportunity-missed Skill:
 
 - **Search first** (`search_issues`, `is:issue is:open audit-skills <name>`): if an
   open issue already names it, skip — never re-file.
@@ -89,8 +101,8 @@ frontmatter alone decides whether it triggers). For each such Skill:
   Label `needs-triage`. Do **not** propose the SKILL.md edit yourself.
 
 Importance is **not** a gate here — a low-graded Skill is exactly where a broken
-`description` hides. Done when every opportunity-missed Skill is either flagged or
-already tracked.
+`description` hides. Done when every own opportunity-missed Skill is either flagged
+or already tracked.
 
 ## 5. Clear the safety gate
 
