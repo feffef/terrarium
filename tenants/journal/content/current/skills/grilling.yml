@@ -1,0 +1,8 @@
+name: grilling
+category: general-engineering
+importance: supporting
+role: >-
+  The one-question-at-a-time interrogation that stress-tests a plan or design
+  before building — used standalone (the schema-refinement session) or as the
+  engine inside `grill-with-docs` (the digest and audit-skills builds). Reach for
+  it to pressure-test a design tree branch by branch.

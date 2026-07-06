@@ -1,6 +1,8 @@
 name: writing-great-skills
 category: general-engineering
-importance: essential
+importance: supporting
 role: >-
-  The standard for authoring Skills — the reference the planned `codify` job
-  will follow. Use when writing the platform-operation Skills this repo still owes.
+  The reference standard for authoring Skills — and what the planned `codify` job
+  will follow. Notably *not* reached for across the window's several Skill-authoring
+  sessions (`digest`, `blog-post`, `audit-skills` were all written without it), so
+  a useful reference rather than load-bearing in practice today.
