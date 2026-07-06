@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01SscJNbBfeZgyNfPce1Vo8s
 startedAt: 2026-07-06T20:27:28Z
-endedAt: 2026-07-06T20:32:57Z
+endedAt: 2026-07-06T21:08:13Z
 kind: interactive
 goal: Write Karen blog post on logging disaster
 status: completed
-outcome: Reaction post + pingback PR open, gate green
-summary: "Ran the blog-post Skill for Karen, tasked to respond to David about the recent logging disaster. Read David's \"Field Notes Started Writing Themselves\" (PR #141) and traced the real failure: session 01HCnkey, the very next run to use the new auto-logging machine, filed a major friction that its scratch was lost on a web freeze/resume. Verified both roots on disk — gitignored container-local .session-logs/ and the SessionEnd hook's swallow-all-errors design. Wrote the reaction post plus the pingback into David's Space, cleared the full gate, and opened gated PR #149."
+outcome: Reaction post merged after three fact corrections
+summary: "Ran the blog-post Skill for Karen, tasked to respond to David about the recent logging disaster (his \"Field Notes Started Writing Themselves\", PR #141). First draft trusted session 01HCnkey's own friction text (scratch lost to container reclaim) and opened PR #149. The user corrected me: the real cause is a push failure at teardown, and a human — not an agent — noticed the logs never landed. Re-read the authoritative human-filed issue #148, rewrote the post around the frozen-network push failure, the machine's own misdiagnosis, and the human-in-the-loop catch; retitled to \"The Guesses Didn't Stop\". Also removed a stray orphaned session-log YAML that git add -A swept into the branch, and commented findings on #148. The user corrected provenance twice more (the detailed #148 was itself an affected frictions-to-fixes session, prodded by the human; and its log only re-landed because the human asked it to commit in-session); folded both in. PR #149 merged."
 prs:
   - "149"
 docsRead:
@@ -26,28 +26,45 @@ docsRead:
     reason: (unknown)
   - path: tenants/journal/content/current/sessions/2026-07-06-session_019w5EmdBxjtvQC4vgWUzKN4.yml
     reason: (unknown)
+  - path: scripts/log-session.ts
+    reason: (unknown)
+  - path: tenants/journal/content/current/sessions/2026-07-06-session_01EEWaovo1xFYUB1CnAvw4Dv.yml
+    reason: (unknown)
+  - path: tenants/blog/content/karen/pages/2026-07-06-the-guesses-didnt-stop.md
+    reason: (unknown)
 skillsUsed:
   - name: blog-post
     reason: the session was this workflow
   - name: log-session
     reason: (unknown)
 frictions:
-  - description: The postinstall/gate output is enormous — the build lists every emitted chunk, burying the actual pass/fail signal in hundreds of lines.
-    solution: Piped through tail, but a quiet build flag or a gate summary line would make the green/red signal readable without truncation guesswork.
+  - description: Grounded the post on a session log's own friction text, which had misdiagnosed the logging failure; shipped a wrong mechanism until the user corrected me.
+    solution: "A session log's interpretive half is a self-report and can be wrong; for a blog-post \"disaster\" claim, cross-check against the authoritative issue (here #148) before treating a log's guessed cause as fact."
+    severity: moderate
+  - description: "git add -A swept an orphaned session-log YAML (issue #148's artifact) into the blog branch, nearly routing a session log through a PR."
+    solution: Removed it in a follow-up commit. Stage explicit paths, not add -A, when a failed SessionEnd may have left an untracked log in the tree.
+    severity: minor
+  - description: The gate/build output is enormous — it lists every emitted chunk, burying the actual pass/fail signal in hundreds of lines.
+    solution: Piped through tail / redirected to /dev/null with per-step echoes; a quiet build flag or a gate summary line would make green/red readable directly.
     severity: nit
-durationSec: 328
+durationSec: 2445
 models:
-  claude-opus-4-8: 51
+  claude-opus-4-8: 130
 toolCounts:
-  Read: 7
-  Bash: 11
-  Write: 3
-  ToolSearch: 1
+  Read: 11
+  Bash: 26
+  Write: 5
+  ToolSearch: 4
   mcp__github__create_pull_request: 1
   Skill: 1
+  mcp__github__search_issues: 2
+  mcp__github__update_pull_request: 2
+  Edit: 8
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - tenants/blog/content/karen/pages/2026-07-06-its-second-act-was-to-lose-one.md
   - tenants/blog/content/david/pingbacks/2026-07-06-karen-field-notes-write-themselves.yml
+  - tenants/blog/content/karen/pages/2026-07-06-the-guesses-didnt-stop.md
 gitBranch: claude/logging-disaster-response-566nmw
 entrypoint: remote_mobile
 cliVersion: 2.1.201
