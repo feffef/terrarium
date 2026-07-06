@@ -9,6 +9,26 @@
             "command": "[ -d node_modules ] || pnpm install"
           }
         ]
+      },
+      {
+        "matcher": "resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -f .session-logs/pending.scratch.json ] && pnpm exec tsx scripts/session-end.ts || true"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -f .session-logs/pending.scratch.json ] && pnpm exec tsx scripts/session-end.ts || true"
+          }
+        ]
       }
     ],
     "SessionEnd": [

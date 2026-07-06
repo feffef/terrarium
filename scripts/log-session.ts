@@ -222,13 +222,15 @@ export function pushWithRetry(
 }
 
 /** Land a validated entry: on `--dry-run`, build + validate the commit but neither
- *  push nor delete; otherwise push it and then remove the working-copy file.
+ *  push nor delete; otherwise push it and remove the scratch byte-source `absPath`.
  *
- *  That removal is the point of ADR-0009's boundary made tidy: the log's canonical
- *  home is `main`, so the working-copy copy is pure scratch. Leaving it behind as an
- *  untracked file trips "you have uncommitted changes" checks, and the obvious
- *  reaction — committing it to the current feature branch — would route a session log
- *  through a PR, exactly what ADR-0009 forbids. So the helper cleans up after itself.
+ *  `absPath` is pure scratch — the log's canonical home is `main`, and the SessionEnd
+ *  handler now writes it to a gitignored staging path (`STAGING_DIR`), never the tree.
+ *  The removal runs in a `finally` so a *failed* push cleans up too: an interrupted
+ *  freeze must not leave the file behind. That mattered even when the copy lived in
+ *  the tree — an untracked session log trips "uncommitted changes" checks, and the
+ *  obvious reaction (committing it to the feature branch) would route a log through a
+ *  PR, exactly what ADR-0009 forbids (#148). Staging + finally closes both holes.
  *
  *  `push`/`build` are injected so tests can drive the cleanup branch without git. */
 export function land(
@@ -248,11 +250,13 @@ export function land(
     console.log(`✓ valid; would push ${relPath} as ${commit.slice(0, 12)} to ${remote}/main (dry run)`)
     return commit
   }
-  const commit = push(relPath, absPath, remote)
-  rmSync(absPath, { force: true })
-  console.log(`✓ logged ${relPath} → ${remote}/main (${commit.slice(0, 12)})`)
-  console.log(`  removed working-copy scratch ${relPath} — its home is now ${remote}/main`)
-  return commit
+  try {
+    const commit = push(relPath, absPath, remote)
+    console.log(`✓ logged ${relPath} → ${remote}/main (${commit.slice(0, 12)})`)
+    return commit
+  } finally {
+    rmSync(absPath, { force: true })
+  }
 }
 
 function fail(msg: string): never {

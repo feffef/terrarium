@@ -142,6 +142,16 @@ describe('land() — cleanup after landing (issue #7)', () => {
     expect(existsSync(absPath)).toBe(false)
   })
 
+  it('removes the scratch even when the push fails — never orphans it (#148)', () => {
+    // A frozen-network push throws; the `finally` cleanup must still fire, so an
+    // interrupted freeze leaves no file behind (in staging or, historically, the tree).
+    const push = vi.fn().mockImplementation(() => {
+      throw new Error('frozen network')
+    })
+    expect(() => land(relPath, absPath, 'origin', { dryRun: false, push })).toThrow('frozen network')
+    expect(existsSync(absPath)).toBe(false)
+  })
+
   it('keeps the working-copy file on --dry-run (nothing pushed, nothing removed)', () => {
     const push = vi.fn()
     const build = vi.fn().mockReturnValue('abc123def456789')
