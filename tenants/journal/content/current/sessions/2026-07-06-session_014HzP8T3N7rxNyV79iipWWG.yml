@@ -1,0 +1,137 @@
+schemaVersion: 1
+session: session_014HzP8T3N7rxNyV79iipWWG
+startedAt: 2026-07-06T21:20:50Z
+endedAt: 2026-07-06T22:22:11Z
+kind: interactive
+goal: Build the Atlas field-guide Tenant
+status: completed
+outcome: All 12 stories merged to main
+summary: "Implemented the Atlas of the Terrarium PRD (#64) and its twelve stories on branch claude/atlas-integration-fpk2q0: a new design-heavy field-guide Tenant with three biomes as Spaces, 12 specimens (each a hand-drawn engraved SVG plate + naturalist field note), 15 food-web edges, 18 observations. Built the layer, design system, and components myself; spawned three Fable subagents (one per biome) for the creative content, guided by a new atlas-specimen Skill homing the voice (#75) and plate art direction (#74). Added CONTEXT glossary terms, ADR-0016, Skill Inventory, root link. Gate green (lint/typecheck/109 unit/build/23 e2e). All 13 issues updated; PR #158 opened and merged to main this session."
+prs:
+  - "158"
+docsRead:
+  - path: CONTEXT.md
+    reason: domain model + where new Atlas terms fit
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: routing constraint the front door extends
+  - path: docs/agents/tenant-layers.md
+    reason: layer alias + global-CSS-token gotchas
+  - path: shared/routing.ts
+    reason: the shared resolver the pages reuse
+  - path: tenants/blog/tenant.config.ts
+    reason: manifest + page/data collection pattern to mirror
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: the voice-consistency model for atlas-specimen
+  - path: shared/manifest.ts
+    reason: (unknown)
+  - path: shared/expand.ts
+    reason: (unknown)
+  - path: content.config.ts
+    reason: (unknown)
+  - path: tenants/blog/nuxt.config.ts
+    reason: (unknown)
+  - path: tenants/blog/app/pages/t/blog/[space]/index.vue
+    reason: (unknown)
+  - path: tenants/blog/app/pages/t/blog/[space]/[...slug].vue
+    reason: (unknown)
+  - path: tenants/blog/app/assets/theme.css
+    reason: (unknown)
+  - path: app/pages/t/[tenant]/[space]/[...slug].vue
+    reason: (unknown)
+  - path: tenants/blog/app/personas.ts
+    reason: (unknown)
+  - path: nuxt.config.ts
+    reason: (unknown)
+  - path: /mnt/skills/public/frontend-design/SKILL.md
+    reason: (unknown)
+  - path: tenants/blog/app/components/BlogNetwork.vue
+    reason: (unknown)
+  - path: tenants/atlas/content/canopy/pages/lumina-fabulae.md
+    reason: (unknown)
+  - path: scripts/screenshot.ts
+    reason: (unknown)
+  - path: app/pages/index.vue
+    reason: (unknown)
+  - path: scripts/session-end.ts
+    reason: (unknown)
+skillsUsed:
+  - name: frontend-design
+    reason: design direction — avoided the AI-default cream/terracotta look
+  - name: atlas-specimen
+    reason: authored this session; the three Fable subagents wrote content to it
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Wrote the global theme.css using Vue's `:deep()`, which is a scoped-SFC construct — browsers drop it as an invalid selector in a plain css:[] file, silently killing all field-note prose styling (drop cap, blockquotes, bullets, h2).
+    solution: Use plain descendant selectors in global stylesheets; `:deep()` only works in SFC <style scoped>. Caught via screenshot, not the gate.
+    severity: minor
+  - description: The blog Tenant's theme.css has the same latent `:deep()`-in-global-CSS bug (.bl .prose :deep(p) …); I mirrored its pattern before realising it was dead.
+    solution: Fix tenants/blog/app/assets/theme.css the same way, and note the rule in docs/agents/tenant-layers.md so it isn't re-copied. Out of scope this session.
+    severity: minor
+  - description: '`pkill -f "index.mjs"` matched its own shell command line and SIGTERM-killed the invoking shell (exit 144), dropping the chained build+screenshot after it.'
+    solution: CLAUDE.md already warns about this; I still hit it. Prefer a port-specific preview (PORT=3100) over pkill, or match a pattern that excludes the pkill line.
+    severity: nit
+  - description: The GitHub list_issues MCP tool returned 63KB (one long line), too large to read directly; had to fall back to search_issues + a subagent to gather stories.
+    solution: Use search_issues or per-issue issue_read from the start for bulk story reads.
+    severity: nit
+  - description: Parallel Fable content subagents shared one scratchpad dir and overwrote each other's preview HTML mid-run (harmless — repo content trees never overlapped).
+    solution: Give each parallel content agent a distinct scratch subdirectory in its prompt.
+    severity: nit
+durationSec: 3681
+models:
+  claude-opus-4-8: 326
+toolCounts:
+  Bash: 53
+  Read: 29
+  ToolSearch: 8
+  mcp__github__search_issues: 2
+  mcp__github__list_issues: 1
+  mcp__github__issue_read: 1
+  Agent: 4
+  Write: 22
+  Edit: 19
+  mcp__github__add_issue_comment: 13
+  Skill: 1
+  SendUserFile: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__issue_write: 1
+filesEdited:
+  - tenants/atlas/tenant.config.ts
+  - tenants/atlas/nuxt.config.ts
+  - tenants/atlas/app/biomes.ts
+  - nuxt.config.ts
+  - tenants/atlas/app/utils/atlas.ts
+  - tenants/atlas/app/assets/theme.css
+  - .agents/skills/atlas-specimen/SKILL.md
+  - tenants/atlas/app/components/atlas/RarityMark.vue
+  - tenants/atlas/app/components/atlas/RhythmBand.vue
+  - tenants/atlas/app/components/atlas/ColorSignature.vue
+  - tenants/atlas/app/components/atlas/SpecimenPlate.vue
+  - tenants/atlas/app/components/atlas/SpecimenIndex.vue
+  - tenants/atlas/app/components/atlas/RelationsList.vue
+  - tenants/atlas/app/components/atlas/FieldLog.vue
+  - tenants/atlas/app/components/atlas/RarityLegend.vue
+  - tenants/atlas/app/components/atlas/FoodWeb.vue
+  - tenants/atlas/app/pages/t/atlas/[space]/index.vue
+  - tenants/atlas/app/pages/t/atlas/[space]/[...slug].vue
+  - tenants/atlas/app/pages/t/atlas/index.vue
+  - tests/unit/atlas.spec.ts
+  - CONTEXT.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - tenants/journal/content/current/skills/atlas-specimen.yml
+  - app/pages/index.vue
+subagents:
+  - type: general-purpose
+    task: Read all Atlas sub-issues
+  - type: general-purpose
+    task: Author Canopy biome content
+    model: fable
+  - type: general-purpose
+    task: Author Floor biome content
+    model: fable
+  - type: general-purpose
+    task: Author Pool biome content
+    model: fable
+gitBranch: claude/atlas-integration-fpk2q0
+entrypoint: remote
+cliVersion: 2.1.201
