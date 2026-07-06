@@ -1,0 +1,41 @@
+schemaVersion: 1
+session: session_01Kq7AXXaCe7ZXfhDaG1EFYs
+startedAt: 2026-07-06T17:45:00Z
+endedAt: 2026-07-06T17:57:41Z
+kind: interactive
+goal: Clarify severity priority in frictions-to-fixes
+status: completed
+outcome: Ranking bullet clarified, PR merged
+summary: >-
+  Clarified the frictions-to-fixes skill's ranking so moderate/major/blocker
+  frictions are prioritized on severity alone, while recurring, easy-to-fix nits
+  and minors are still addressed rather than dropped — only the lone low-severity
+  one-off is dropped. Checked the real severity vocabulary in the sessions schema
+  (nit/minor/moderate/major/blocker) so "blocking" maps to blocker. Edited §1's
+  "Group and rank" bullet, single-homing the rule there. Committed and pushed to
+  the feature branch; PR #139 was opened from the UI and merged.
+prs: ["139"]
+docsRead:
+  - { path: .agents/skills/frictions-to-fixes/SKILL.md, reason: the skill to clarify }
+  - { path: tenants/journal/tenant.config.ts, reason: confirm severity enum }
+skillsUsed: []
+frictions:
+  - description: >-
+      Skill said rank by "recurrence × severity" but never stated the
+      moderate+-vs-recurring-nit policy crisply, leaving it to interpretation.
+    solution: >-
+      Made §1's ranking bullet explicit — prioritize moderate/major/blocker,
+      keep recurring easy nits, drop only lone low-severity one-offs.
+    severity: minor
+  - description: >-
+      User wrote "blocking" but the schema enum is "blocker"; had to grep the
+      config to reconcile the term before editing.
+    solution: >-
+      Checked tenant.config.ts severity enum first; used the schema term.
+    severity: nit
+  - description: >-
+      startedAt is a hand-estimate — no reliable automatic session-start capture
+      exists yet (deferred to the autonomous end-of-session trigger).
+    solution: >-
+      Land the deferred start/end capture so timestamps stop being estimates.
+    severity: nit

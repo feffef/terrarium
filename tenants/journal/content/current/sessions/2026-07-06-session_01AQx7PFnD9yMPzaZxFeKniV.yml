@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: session_01AQx7PFnD9yMPzaZxFeKniV
+startedAt: 2026-07-06T16:00:00Z   # estimate — hand-authored (see frictions)
+endedAt:   2026-07-06T18:26:29Z   # exact — read from `date -u`
+kind: interactive
+goal: Refine and build the audit-skills auditor
+status: completed
+outcome: PR #140 merged; audit-skills live
+summary: >-
+  Ran a grill-with-docs session to refine issue #136 (`skill-vitals`) into
+  `audit-skills` — a `sync`-family Skill that tunes the Skill Inventory from the
+  last 40 session logs. The grill narrowed scope (dropped helpfulness), redefined
+  `importance` as conditional essentialness (`core`→`essential`, added
+  `specialist`), retired the overloaded "catalogue" jargon → Skill Inventory, and
+  set tune-both / refer-own scoping. Built the tested helper + SKILL.md + ADR-0015,
+  rewrote #136, opened PR #140, then ran a two-axis /code-review that caught a
+  single-home doc divergence and a term I had re-coined; fixed both. Merged.
+prs: ["140"]
+docsRead:
+  - { path: CLAUDE.md, reason: conventions, wrap-up, single-home principle }
+  - { path: CONTEXT.md, reason: glossary — add importance grades + the sync-remit clause }
+  - { path: docs/adr/0003-agent-operating-model-and-governance.md, reason: chartered-jobs list / two-tier autonomy }
+  - { path: docs/adr/0010-digests-derived-append-only-journal-pages.md, reason: the digest ADR as a template }
+  - { path: tenants/journal/tenant.config.ts, reason: the skills + sessions strict schemas }
+  - { path: scripts/digest.ts, reason: helper template — pure-core / thin-IO split }
+  - { path: .agents/skills/digest/SKILL.md, reason: SKILL.md structure to mirror }
+  - { path: tenants/journal/app/utils/dashboard.ts, reason: importance grouping + external-pack count }
+  - { path: skills-lock.json, reason: the external-pack marker source for own-vs-pack }
+  - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: the routing "catalog" sense to rename }
+skillsUsed:
+  - { name: grill-with-docs, reason: "refine #136 before building" }
+  - { name: grilling, reason: one-question-at-a-time design tree (via grill-with-docs) }
+  - { name: domain-modeling, reason: coin the importance grades + Skill Inventory term in CONTEXT.md }
+  - { name: code-review, reason: two-axis Standards/Spec review of the PR }
+  - { name: log-session, reason: authoring and committing this log }
+frictions:
+  - description: >-
+      The github MCP server disconnected and reconnected several times mid-session,
+      forcing tool reloads; an early `select:` ToolSearch returned "no match" during a blip.
+    solution: Transient infra; when `select:` returns nothing, fall back to a keyword ToolSearch and retry.
+    severity: minor
+  - description: >-
+      AskUserQuestion failed with "permission stream closed" mid-question, so the
+      multiple-choice refinement options had to be re-asked as plain prose.
+    solution: Fall back to plain-text numbered options when the structured-question tool errors.
+    severity: minor
+  - description: >-
+      Edit refused files read only via bash/grep or a partial range ("File has not been
+      read yet"), forcing extra Read calls before editing (tenant.config.ts, journal.ts).
+    solution: Read (the tool) the exact target range before Edit; bash/grep reads don't satisfy it.
+    severity: nit
+  - description: >-
+      The catalogue→Inventory rename spanned ~17 files; the read-before-Edit rule made
+      per-file Edits costly, so I used `sed -i` — mild tension with CLAUDE.md's "inspect with Read, not cat".
+    solution: Note that sed is the right tool for a bulk mechanical rename; the guidance targets cat-then-Edit, not sed sweeps.
+    severity: nit
+  - description: >-
+      Doc contradiction: ADR-0003 said chartered jobs are "each a Skill" while the design
+      reframed `sync` as a remit realised by several Skills — surfaced only by /code-review.
+    solution: Amended ADR-0003 + CONTEXT (single home); a reframe touching an ADR should amend it in the same change.
+    severity: minor
+  - description: >-
+      I re-coined the just-retired "catalogue" root as `catalogued` in the new helper/SKILL.md;
+      the rename didn't propagate to my own new naming, and review caught it, not me.
+    solution: When retiring a term, grep new code for its root before committing.
+    severity: minor
+  - description: >-
+      startedAt is a hand-estimate — no exact session-start clock was available; endedAt is exact via `date -u`. Recurs every session.
+    solution: The deferred autonomous end-of-session trigger would capture both mechanically.
+    severity: nit

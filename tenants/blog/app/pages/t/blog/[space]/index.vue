@@ -50,31 +50,43 @@ useHead({ title: `${title.value} · blog/${space}` })
 </script>
 
 <template>
-  <main class="bl" :style="{ '--bl-accent': meta.accent }">
+  <main class="bl bl--landing" :style="{ '--bl-accent': meta.accent }">
     <p class="crumb">
       <NuxtLink to="/">terrarium</NuxtLink>
       <span class="sep">/</span>blog<span class="sep">/</span><span class="here">{{ space }}</span>
     </p>
 
-    <header class="masthead">
-      <p class="byline"><span class="dot" />{{ meta.name }}</p>
-      <h1>{{ title }}</h1>
-      <p v-if="tagline" class="tagline">{{ tagline }}</p>
-    </header>
+    <div class="landing-grid">
+      <header class="masthead">
+        <p class="byline"><span class="dot" />{{ meta.name }}</p>
+        <h1>{{ title }}</h1>
+        <p v-if="tagline" class="tagline">{{ tagline }}</p>
+      </header>
 
-    <section v-if="landing" class="prose">
-      <ContentRenderer :value="landing" />
-    </section>
+      <!-- The intro sits between the masthead and the feed in the DOM, so on
+           narrow viewports it stacks slogan → About → posts. On wide viewports
+           the grid areas float it into a sticky panel at the top-right. -->
+      <aside v-if="landing" class="about" aria-label="About me">
+        <p class="about-label">About me</p>
+        <div class="prose about-prose">
+          <ContentRenderer :value="landing" />
+        </div>
+      </aside>
 
-    <ul v-if="posts.length" class="feed">
-      <li v-for="post in posts" :key="post.path">
-        <div class="when">{{ fmtDate(post.publishedAt as string) }}</div>
-        <h2><NuxtLink :to="`/t/blog/${space}${post.path}`">{{ post.title }}</NuxtLink></h2>
-        <p v-if="post.reactsTo" class="reply">↳ in reply to {{ post.reactsTo.persona }}</p>
-        <p v-if="post.description" class="excerpt">{{ post.description }}</p>
-      </li>
-    </ul>
-    <p v-else class="empty">No posts here yet.</p>
+      <div class="landing-feed">
+        <ul v-if="posts.length" class="feed">
+          <li v-for="post in posts" :key="post.path">
+            <NuxtLink class="post-link" :to="`/t/blog/${space}${post.path}`">
+              <div class="when">{{ fmtDate(post.publishedAt as string) }}</div>
+              <h2>{{ post.title }}</h2>
+              <p v-if="post.reactsTo" class="reply">↳ in reply to {{ post.reactsTo.persona }}</p>
+              <p v-if="post.description" class="excerpt">{{ post.description }}</p>
+            </NuxtLink>
+          </li>
+        </ul>
+        <p v-else class="empty">No posts here yet.</p>
+      </div>
+    </div>
 
     <BlogNetwork :current="space" />
   </main>

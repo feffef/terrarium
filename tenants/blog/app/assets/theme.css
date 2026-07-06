@@ -71,15 +71,73 @@
 
 /* Post feed on the landing */
 .bl .feed { list-style: none; margin: 2rem 0 0; padding: 0; }
-.bl .feed li { border-top: 1px solid var(--bl-line); padding: 1.15rem 0; }
+.bl .feed li { border-top: 1px solid var(--bl-line); }
 .bl .feed li:first-child { border-top: 0; }
+/* The whole teaser is one click target, not just the headline. */
+.bl .feed .post-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: 1.15rem 0.9rem;
+  margin: 0 -0.9rem;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+.bl .feed .post-link:hover { background: var(--bl-surface); }
 .bl .feed .when { font-family: var(--bl-mono); font-size: 0.74rem; color: var(--bl-faint); }
-.bl .feed h2 { font-family: var(--bl-serif); font-size: 1.35rem; line-height: 1.2; margin: 0.25rem 0 0.35rem; }
-.bl .feed h2 a { color: var(--bl-ink); text-decoration: none; }
-.bl .feed h2 a:hover { color: var(--bl-accent); }
+.bl .feed h2 { font-family: var(--bl-serif); font-size: 1.35rem; line-height: 1.2; margin: 0.25rem 0 0.35rem; color: var(--bl-ink); }
+.bl .feed .post-link:hover h2 { color: var(--bl-accent); }
 .bl .feed .excerpt { margin: 0; color: var(--bl-muted); font-size: 0.96rem; }
 .bl .feed .reply { font-family: var(--bl-mono); font-size: 0.72rem; color: var(--bl-accent); }
 .bl .empty { color: var(--bl-faint); font-style: italic; }
+
+/* Landing layout — the intro lives in an "About me" panel. In the DOM it sits
+   between the masthead and the feed, so a narrow (single-column) viewport reads
+   slogan → About → posts. On a wide viewport the grid areas float it into a
+   sticky panel at the top-right, letting the feed rise beside it. */
+.bl--landing { position: relative; }
+.bl--landing .about {
+  background: var(--bl-surface);
+  border: 1px solid var(--bl-line);
+  border-top: 2px solid var(--bl-accent);
+  border-radius: 10px;
+  padding: 1.1rem 1.2rem 1.25rem;
+}
+.bl--landing .about .about-label {
+  font-family: var(--bl-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--bl-accent);
+  margin: 0 0 0.6rem;
+}
+.bl--landing .about .about-prose { font-size: 0.92rem; line-height: 1.55; color: var(--bl-muted); }
+.bl--landing .about .about-prose p { margin: 0 0 0.7rem; }
+.bl--landing .about .about-prose p:last-child { margin-bottom: 0; }
+
+/* Narrow: single column, panel sitting between the masthead and the feed. */
+.bl--landing .about { margin: 1.4rem 0 0.4rem; }
+
+@media (min-width: 60rem) {
+  .bl--landing { max-width: 60rem; }
+  .bl--landing .landing-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 15rem;
+    grid-template-areas:
+      "masthead about"
+      "feed     about";
+    column-gap: 2.75rem;
+    align-items: start;
+  }
+  .bl--landing .masthead { grid-area: masthead; }
+  .bl--landing .landing-feed { grid-area: feed; }
+  .bl--landing .about {
+    grid-area: about;
+    position: sticky;
+    top: 1.5rem;
+    margin: 0;
+  }
+}
 
 /* Single post */
 .bl .post-head { border-bottom: 1px solid var(--bl-line); padding-bottom: 1.1rem; margin-bottom: 1.6rem; }

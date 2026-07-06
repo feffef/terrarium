@@ -1,0 +1,47 @@
+schemaVersion: 1
+session: session_01WH82Vpf3W4K3nLAjstB4Zn
+startedAt: 2026-07-06T17:00:00Z
+endedAt: 2026-07-06T17:24:17Z
+kind: interactive
+goal: Float blog intro into About panel
+status: completed
+outcome: Panel and clickable teasers shipped; PR open
+summary: >-
+  Reworked the Blog Tenant's Persona landing so each index.md intro renders as a
+  floating "About me" side panel (top-right, sticky, accent-bordered card) on
+  wide viewports, lifting the post feed higher. Made the whole post teaser one
+  block-level link, not just the headline. A follow-up moved the panel between
+  the masthead and feed in the DOM (grid-template-areas driving the wide layout)
+  so narrow viewports read slogan → About → posts instead of dropping it to the
+  bottom. Verified with production-build screenshots of all three Spaces plus a
+  DOM dump of the click target; full gate green. PR #138 opened, still in review.
+prs: []
+docsRead:
+  - { path: CLAUDE.md, reason: repo conventions and UI-verification rules }
+  - { path: "tenants/blog/app/pages/t/blog/[space]/index.vue", reason: landing to restructure }
+  - { path: "tenants/blog/app/pages/t/blog/[space]/[...slug].vue", reason: check shared .bl usage }
+  - { path: tenants/blog/app/assets/theme.css, reason: blog theme styles to extend }
+  - { path: tenants/blog/app/personas.ts, reason: per-persona accent/name }
+  - { path: tenants/blog/nuxt.config.ts, reason: how theme.css is registered (global, not scoped) }
+  - { path: tenants/blog/content/karen/pages/index.md, reason: the intro copy being moved }
+  - { path: scripts/screenshot.ts, reason: how it drives Chromium without playwright-core }
+skillsUsed: []
+frictions:
+  - description: >-
+      Base `.bl .prose` font-size sits later in theme.css and won over my
+      equal-specificity about-prose override, silently defeating it.
+    solution: Bumped the override to `.about .about-prose` (extra class) to win on specificity.
+    severity: minor
+  - description: >-
+      Couldn't drive a Playwright click test — playwright-core isn't a
+      resolvable dependency here, so scripted `.click()` navigation failed.
+    solution: Verified the whole-teaser link via Chromium `--dump-dom` and inspecting the anchor's children instead.
+    severity: minor
+  - description: >-
+      tsx rejected a top-level-await test script with a cryptic "cjs output
+      format" error until renamed to .mts, which then hit the same resolution wall.
+    solution: Abandon the scripted-browser route earlier; reach for the dump-dom check first.
+    severity: nit
+  - description: startedAt is a hand estimate; only endedAt was read from the clock.
+    solution: The deferred autonomous end-of-session trigger should capture true start/end.
+    severity: nit

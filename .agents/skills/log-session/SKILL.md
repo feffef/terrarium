@@ -43,8 +43,8 @@ prs: ["42"]                        # work-PR refs (in-review is fine); [] if non
 docsRead:                          # OPTIONAL, curated — the docs that MATTERED, with why.
   - { path: CONTEXT.md, reason: domain model }   # transcript-observed reads you omit
   - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: routing }  # are folded
-skillsUsed:                        # in automatically with a (unknown) reason, deduped.
-  - { name: tdd, reason: test-first the helper }
+skillsUsed:                        # in automatically (name cross-refs the Skill Inventory),
+  - { name: tdd, reason: test-first the helper }  # deduped, uncited ones get (unknown)
 frictions:                         # REQUIRED (may be []) — list EVERY friction
   - description: …                 # ~20 words, honest
     solution: …                    # the fix, or what would have helped

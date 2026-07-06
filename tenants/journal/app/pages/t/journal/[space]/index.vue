@@ -242,7 +242,7 @@ useHead({ title: `${title.value} · journal/${space}` })
             <h2>Platform Skills</h2>
             <span class="count">{{ platformSkills.length }} authored here</span>
           </div>
-          <JournalSkillCatalogue v-if="groupedSkills.length" :groups="groupedSkills" />
+          <JournalSkillInventory v-if="groupedSkills.length" :groups="groupedSkills" />
           <p v-else class="empty">No Platform Skills authored in this Space yet.</p>
           <p v-if="externalSkillTotal" class="skill-note">
             Backed by {{ externalSkillTotal }} general-engineering Skills from an

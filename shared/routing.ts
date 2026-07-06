@@ -50,7 +50,7 @@ export interface ResolvedRoute<T extends string = string> {
   path: string
   /** The routed `pages` collection key for this (Tenant, Space). */
   pagesKey: PagesKeyOf<T>
-  /** Every non-`pages` collection in the Space — surfaced as the landing-page catalog. */
+  /** Every non-`pages` collection in the Space — surfaced as the Space-landing collection index. */
   dataCollections: DataCollectionOf<T>[]
   /** True when the request targets the Space root ('/'). */
   atRoot: boolean
@@ -79,8 +79,8 @@ export function resolveSpaceRoute<T extends string>(
   if (!spaceCollections?.pages) return null
 
   // Convention: `pages` is the routed collection; every other collection in the Space
-  // is queryable `data`, surfaced as a catalog on the Space landing. Each stays keyed
-  // per (Tenant, Space), so the catalog is fully isolated too.
+  // is queryable `data`, surfaced as a collection index on the Space landing. Each stays keyed
+  // per (Tenant, Space), so the index is fully isolated too.
   const dataCollections = Object.entries(spaceCollections)
     .filter(([name]) => name !== 'pages')
     .map(([name, key]) => ({ name, key }))

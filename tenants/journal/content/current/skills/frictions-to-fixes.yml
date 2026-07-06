@@ -1,6 +1,6 @@
 name: frictions-to-fixes
 category: platform-operation
-importance: core
+importance: essential
 role: >-
   The consuming half of the self-improvement loop `log-session` feeds, and the
   first place the project's autonomy actually closes end-to-end: it reads the
