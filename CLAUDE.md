@@ -111,9 +111,10 @@ pnpm test:e2e    # L2 — smoke-render every (Tenant, Space) entry route (200, r
 ```
 
 **Need a screenshot of a running page** (e.g. to eyeball a render during a session)?
-Run `pnpm exec tsx scripts/screenshot.ts <url> <out.png>` — it drives the
+Run `pnpm exec tsx scripts/screenshot.ts <url> <out.png> [WxH]` — it drives the
 pre-installed Chromium directly (via `PLAYWRIGHT_BROWSERS_PATH`), no new
-dependency or browser download required.
+dependency or browser download required. The optional `WxH` (e.g. `1280x1600`)
+sets the window size — use it to reach below-the-fold content.
 
 ### Verifying UI changes
 
