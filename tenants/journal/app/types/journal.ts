@@ -95,9 +95,18 @@ export interface SessionCardView {
   frictionTotal: number
   skills: string[]
   sid: string
+  // Model(s) that drove the session, formatted short (e.g. `opus-4-8`), busiest
+  // first — an always-visible summary chip. Empty for older, authored-only logs.
+  model: string
   // Expanded detail:
   summary: string
+  subagents: Subagent[]
   docsRead: { path: string; reason: string }[]
   skillsUsed: { name: string; reason: string }[]
   frictions: Friction[]
+  // Mechanical trace, tucked behind in-card disclosures so the verbose lists
+  // inform without cluttering. All may be empty (older logs, or a session that
+  // edited nothing / spawned no subagent).
+  filesEdited: string[]
+  tools: { name: string; count: number }[]
 }
