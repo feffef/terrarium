@@ -3,6 +3,16 @@
 Date: 2026-07-04
 Status: Accepted
 
+> **Amended (2026-07-06).** The **mid-term review-agent** described below is now
+> **live in a bounded form**: the `frictions-to-fixes` Skill's main session reviews
+> and merges the PRs authored by its dispatched (Sonnet) impl agents. "No
+> self-merge" is **preserved** — the merging session is never the author of the
+> diff it merges; it is a distinct reviewer gating on ADR-0004. It merges green,
+> low-risk PRs and escalates high-risk ones to a human (see ADR-0004's amended
+> high-risk list). This **activates**, and does not reverse, the "Now → Mid-term"
+> transition below. Scope today is that one Skill; a broader standing
+> agent-reviewer capability would warrant its own ADR.
+
 ## Context
 
 The Platform is developed primarily by Claude Code agents, in two ways: humans
