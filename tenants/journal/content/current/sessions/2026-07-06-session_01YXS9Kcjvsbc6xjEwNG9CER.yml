@@ -1,0 +1,46 @@
+schemaVersion: 1
+session: session_01YXS9Kcjvsbc6xjEwNG9CER
+startedAt: 2026-07-06T13:25:00Z
+endedAt: 2026-07-06T15:22:13Z
+kind: interactive
+goal: Propose three new self-improvement routines
+status: completed
+outcome: Three researched proposal issues filed
+summary: >-
+  Designed three additional scheduled self-improvement routines beyond the
+  ADR-0003 chartered jobs — efficacy-watch (verifies merged friction-fixes
+  actually retired their frictions), tracker-gardener (issue-tracker hygiene),
+  and skill-vitals (audits the Skill set against usage evidence). Grounded each
+  in CONTEXT.md, all fourteen ADRs, and the existing loop; a background research
+  agent gathered external prior art (SRE postmortem discipline, stale-bot
+  backlash, Voyager skill debt, LangMem). Filed as issues #134, #135, #136,
+  each with three implementation options, pros/cons, and a recommendation,
+  framed as human-green-light proposals per ADR-0003. No code changed.
+prs: []
+docsRead:
+  - { path: CONTEXT.md, reason: domain model and chartered-job vocabulary }
+  - { path: docs/adr (all fourteen), reason: repo rule before planning work }
+  - { path: docs/agents/issue-tracker.md, reason: MCP issue-filing conventions }
+  - { path: docs/agents/triage-labels.md, reason: label vocabulary for proposals }
+  - { path: .agents/skills/frictions-to-fixes/SKILL.md, reason: existing self-improvement loop shape }
+skillsUsed:
+  - { name: log-session, reason: author this entry }
+frictions:
+  - description: startedAt is hand-estimated; no exact session-start clock was available. Recurring known gap.
+    solution: Deferred autonomous end-of-session trigger would capture it mechanically (ADR-0009).
+    severity: nit
+  - description: Broad search_issues query overflowed the tool-result limit (55KB persisted file); parsed the persisted JSON by hand.
+    solution: issue-tracker.md warns for list_issues only; note search_issues also overflows on broad queries — always scope or slice.
+    severity: minor
+  - description: Monitor tool call failed InputValidationError because deferred-tool schema was not loaded via ToolSearch first.
+    solution: Document that deferred tools need a ToolSearch select before first call; error text did explain it.
+    severity: nit
+  - description: Scheduled a fallback wakeup for the background research agent; it fired after work finished, spending a redundant turn.
+    solution: Trust the automatic task-notification; skip fallback wakeups for harness-tracked subagents.
+    severity: nit
+  - description: Cross-linking three sibling issues meant re-sending issue one's full body via issue_write update, since update overwrites the description.
+    solution: Accept a sibling-links comment instead, or create issues then batch-edit; body re-send is error-prone.
+    severity: nit
+  - description: GitHub MCP server disconnected mid-session, tools vanished then reconnected; injected noise though nothing was lost.
+    solution: None actionable in-repo; harness-side reconnect was automatic.
+    severity: nit
