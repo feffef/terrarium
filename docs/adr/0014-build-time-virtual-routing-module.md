@@ -1,7 +1,7 @@
 # 14. Build-time virtual routing module supersedes committed routing map
 
 Date: 2026-07-05
-Status: Proposed — supersedes both halves of ADR-0007; amends ADR-0013
+Status: Accepted — supersedes both halves of ADR-0007; amends ADR-0013
 
 > **Supersedes ADR-0007** (both halves — the committed `content.config.ts` half was
 > already superseded by ADR-0013; this supersedes the retained committed
@@ -65,6 +65,10 @@ Nuxt module (`modules/routing.ts`) that computes and registers `#routing`.**
   not committed" failure mode is eliminated (prevention over detection).
   **Caveat:** `nuxt dev` does not watch `tenants/*/tenant.config.ts`; a mid-session
   manifest edit requires a dev-server restart to pick up the updated routing map.
+- **The CI workflow still carries a now-dead `L0 · drift` step** (`pnpm gate:drift`
+  in `.github/workflows/gate.yml`). CI is human-only (ADR-0004), so this change
+  cannot remove it; a human must delete that step **in lockstep with merging this
+  change**, or the gate fails on every run with `Missing script: gate:drift`.
 - Deleted: `scripts/generate.ts`, `pnpm gen`, `pnpm gate:drift`,
   `shared/routing.generated.ts`, its ESLint ignore, and the CLAUDE.md/docs passages
   explaining regeneration. One mechanism remains: manifests → `expand()` → both
