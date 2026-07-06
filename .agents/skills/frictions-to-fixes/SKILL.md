@@ -37,8 +37,13 @@ Its brief:
   `node_modules`). Pull each friction's `description`, `solution`, `severity`, and
   the session's `startedAt` date — the date is what catches regressions in step 2.
 - **Group and rank.** Fold related/recurring frictions (shared root cause or single
-  fix) into one candidate; rank by **recurrence × severity** — one logged across
-  sessions, or at `moderate`+, outranks a lone `nit`.
+  fix) into one candidate; rank by **recurrence × severity**. **Prioritize
+  `moderate`, `major`, and `blocker` frictions** — these earn a fix on severity
+  alone, even logged once. **But a low-severity friction is not automatically
+  dropped:** a `nit` or `minor` that **recurs across sessions _and_ is easy to
+  fix** should still be addressed — cheap, repeated papercuts add up and are worth
+  retiring. What gets dropped is the lone, low-severity one-off (a single `nit`
+  with a non-trivial fix), not every `nit`.
 - **Screen against the tracker** — apply the §2 rules to every candidate.
 - **GitHub-MCP hygiene** (these are themselves recurring frictions — heed them):
   call the tools by their **fully-qualified `mcp__github__*` names** (bare names
