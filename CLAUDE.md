@@ -153,6 +153,13 @@ can overlap real content and read as a UI bug.
   to). Verify presentational changes against the **rendered DOM**, not the raw
   HTML text — take a screenshot with `scripts/screenshot.ts` (see above), or
   drive the page with Playwright.
+- **To verify a click/interaction, not just a static render**, write a small
+  ad-hoc `playwright-core` script against the same pre-installed Chromium
+  `scripts/screenshot.ts` locates (via `PLAYWRIGHT_BROWSERS_PATH`) — launch it
+  with `chromium.launch({ executablePath })`. Two gotchas: (1) `tsx` runs the
+  ad-hoc script as CJS, so wrap top-level `await` in an `async` IIFE; (2) write
+  the script **inside the repo tree** so its imports resolve against
+  `node_modules` (`playwright-core` is a devDependency here, not global).
 - **The journal Space landing is a custom dashboard, not a Markdown render.**
   `tenants/journal/app/pages/t/journal/[space]/index.vue` wins over the generic
   catch-all for the Space *root* and builds its own layout (stat tiles, digests,

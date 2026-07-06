@@ -6,10 +6,12 @@
 //
 // The optional third argument sets the capture window size (e.g. `1280x1600`
 // to reach below-the-fold content); it defaults to `1280x800`.
-// Why this shape: `playwright-core` is NOT a resolvable dependency in this
-// repo (it's not hoisted transitively from @nuxt/test-utils), so rather than
-// add a new dependency this spawns the pre-installed Chromium binary
-// directly with its built-in headless screenshot flags. The binary is
+// Why this shape: `playwright-core` IS a resolvable devDependency today (added
+// for the L2 browser-tier e2e gate, see `package.json` / commit d7bf21f), but
+// this script still deliberately spawns the pre-installed Chromium binary
+// directly with its built-in headless screenshot flags rather than driving it
+// through a full Playwright browser instance — there's no need to spin up a
+// Playwright driver just for a plain, no-interaction capture. The binary is
 // resolved via `PLAYWRIGHT_BROWSERS_PATH` (falling back to the conventional
 // `/opt/pw-browsers` default some environments set) — never a hardcoded
 // absolute path baked into the script.

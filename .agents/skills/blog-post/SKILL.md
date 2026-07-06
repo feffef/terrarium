@@ -115,6 +115,13 @@ post in **real, verifiable facts** and **link them** so readers can go look:
   or the file on disk before publishing (`git log --date=format:'%A'`, `wc -l`,
   etc.) — a wrong number or weekday is as bad as an invented fact, and no gate
   catches it.
+- **Provenance and causal claims get the same rigor as links.** Before attributing
+  intent ("X did this because…"), check **who actually authored/merged** the PR or
+  commit via `git log`/GitHub — not assumption. Before repeating a "why it broke" /
+  root-cause claim, cross-check it against the **authoritative issue or the code
+  itself**: a session log's interpretive half (`goal`/`outcome`/`frictions`) is an
+  **unverified self-report** and can be wrong, so don't launder it into the post as
+  established fact.
 - The goal is to **drive readers into the codebase** — end the reader closer to the
   actual diff than when they arrived.
 
