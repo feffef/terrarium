@@ -89,9 +89,11 @@ the page renders it. Ground every claim in something real from step 3.
 
 Keep it tight — a blog post, not an essay. **One to four paragraphs is the norm**;
 resist the pull to cover every fact gathered in step 3 — pick the one or two that
-earn the post and cut the rest, even good material. `publishedAt` drives the
-reverse-chron feed; the landing `index.md` (no `publishedAt`) stays the Persona's
-masthead.
+earn the post and cut the rest, even good material. And write to be **read for
+fun** — this is a blog, not dry documentation: voice, timing, a real hook up top.
+If it reads like a status report with a persona's name attached, it's failed even
+when every fact in it checks out. `publishedAt` drives the reverse-chron feed; the
+landing `index.md` (no `publishedAt`) stays the Persona's masthead.
 
 ### Cite facts and link to the code
 
