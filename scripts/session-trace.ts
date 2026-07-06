@@ -22,6 +22,20 @@ import { pathToFileURL } from 'node:url'
 export const SCRATCH_DIR = '.session-logs'
 export const SCRATCH_FILE = join(SCRATCH_DIR, 'pending.scratch.json')
 
+/** Where the log lands from before it is pushed: a gitignored staging copy, never
+ *  the working tree. `absPath` is only a byte source for `git hash-object` (the
+ *  commit's tree location is the separate `relPath`), so the tree never holds an
+ *  untracked session log — a frozen-network push failure leaves nothing outside
+ *  gitignored `.session-logs/` for a stray `git add -A` to sweep into a PR (#148). */
+export const STAGING_DIR = join(SCRATCH_DIR, 'staged')
+
+/** The gitignored sentinel recording the last scratch we landed: `{ scratchHash,
+ *  relPath }`. The landing gate keys on the *authored scratch* changing, not the
+ *  stitched output — the derived trace grows every turn, so an output-keyed gate
+ *  would push on every turn after closure. Same home as the scratch, so it is
+ *  durable across container reclaim and the resume flush sees it (#148). */
+export const LAST_LANDED_FILE = join(SCRATCH_DIR, 'last-landed.json')
+
 /** One entry the extractor folds into `docsRead`/`skillsUsed`; `reason` is absent
  *  for derived entries (the agent supplies reasons, the transcript does not). */
 export interface DerivedRef {
