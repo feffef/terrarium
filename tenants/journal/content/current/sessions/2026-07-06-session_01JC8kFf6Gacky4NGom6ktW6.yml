@@ -1,0 +1,76 @@
+schemaVersion: 1
+session: session_01JC8kFf6Gacky4NGom6ktW6
+startedAt: 2026-07-06T21:52:44Z
+endedAt: 2026-07-06T22:15:07Z
+kind: interactive
+goal: Turn logged frictions into merged fixes
+status: completed
+outcome: Three doc fixes merged (PR 157)
+summary: "Ran frictions-to-fixes over the latest 20 session logs. A survey subagent screened candidates against the tracker; most high-recurrence frictions were already fixed. Three never-fixed, safe-surface doc candidates survived, filed as issues 154/155/156: broaden log-session YAML quoting to cover the hash and comma chars plus top-level fields; make blog-post verify provenance/causal claims at link-rigor; and correct stale screenshot.ts doc-rot about playwright-core resolvability. A key screening catch: what looked like a playwright regression was actually a stale comment, verified against main. One Sonnet agent implemented all three as a grouped PR; gate went green; I reviewed, commented, and squash-merged it. No escalation needed."
+prs:
+  - "157"
+docsRead:
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: the workflow being run
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: human-only-surface screening
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: review-agent mandate
+  - path: scripts/screenshot.ts
+    reason: verifying the stale playwright-core claim
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (unknown)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (unknown)
+  - path: docs/adr/0005-skill-model.md
+    reason: (unknown)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (unknown)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (unknown)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (unknown)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the session's driving workflow
+  - name: log-session
+    reason: recording this run
+frictions:
+  - description: GitHub MCP tools resolve only by fully-qualified mcp__github__* names; bare names fail ToolSearch selection.
+    solution: Already documented in issue-tracker.md (#122); recurred anyway. Consider surfacing the full-name rule earlier in the MCP hygiene note.
+    severity: nit
+  - description: The survey subagent's tsx parse output (31.6KB) overflowed the tool-result cap and had to be auto-persisted and re-read.
+    solution: Recurring large-output friction; scripts should write compact/summarized output to a file by default rather than dumping to stdout.
+    severity: nit
+  - description: The Sonnet impl agent ran git checkout -B in the shared main checkout, not its worktree, because Bash cwd resets between calls.
+    solution: Caught before any edit and restored. CLAUDE.md already warns worktree agents to pin their root; the briefs should show the explicit cd-to-worktree-root-first pattern.
+    severity: minor
+  - description: Could not query GitHub Actions gate status from bash (no gh CLI or token), so CI polling had to go through the GitHub MCP tool with a manual background-sleep timer.
+    solution: A thin gate-status helper, or documenting the MCP-poll-plus-background-timer pattern, would smooth review-agent CI waits.
+    severity: minor
+durationSec: 1343
+models:
+  claude-opus-4-8: 110
+  <synthetic>: 1
+toolCounts:
+  Bash: 12
+  Agent: 2
+  Read: 9
+  ToolSearch: 3
+  TaskList: 1
+  mcp__github__search_issues: 4
+  mcp__github__issue_write: 3
+  mcp__github__pull_request_read: 6
+  mcp__github__add_issue_comment: 1
+  mcp__github__merge_pull_request: 1
+  Skill: 1
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Implement grouped doc-fix PR
+    model: sonnet
+gitBranch: claude/frictions-to-fixes-h91i2w
+entrypoint: remote
+cliVersion: 2.1.201
