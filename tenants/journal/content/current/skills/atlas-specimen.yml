@@ -1,0 +1,11 @@
+name: atlas-specimen
+category: platform-operation
+importance: specialist
+role: >-
+  Authors one Atlas Specimen — a fictional creature of the field-guide Tenant
+  (PRD #64) — plus its food-web Interactions and field-log Observations, through
+  a gated PR (ADR-0003). It is the single home for the two things that keep the
+  Atlas coherent across the many sessions that grow it: the naturalist's voice
+  (#75) and the engraved-plate art direction (#74), the same move `blog-post`
+  makes for the Personas. Essential whenever the Atlas is extended; without it a
+  new specimen drifts out of register and the guide stops reading as one hand.

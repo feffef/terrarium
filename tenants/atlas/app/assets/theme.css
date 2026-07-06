@@ -288,9 +288,10 @@
 
 /* ── Field-note essay (#67/#75): the prose ─────────────────────────────────*/
 .atlas-fieldnote { margin-top: 1.8rem; font-size: 1.08rem; }
-/* Drop-cap the essay's first paragraph. ContentRenderer nests the prose, so this
-   can't be a direct-child selector; `:first-of-type` still lands on the opener. */
-.atlas-fieldnote :deep(p:first-of-type)::first-letter {
+/* Drop-cap the essay's first paragraph. This is a GLOBAL stylesheet (not an SFC
+   `<style scoped>`), so it uses plain descendant selectors — `:deep()` is a Vue
+   scoped-style construct that browsers treat as an invalid pseudo and drop. */
+.atlas-fieldnote p:first-of-type::first-letter {
   float: left;
   font-family: var(--atlas-display);
   font-size: 3.5rem;
@@ -298,22 +299,22 @@
   padding: 0.3rem 0.5rem 0 0;
   color: var(--sig-1);
 }
-.atlas-prose :deep(p) { margin: 0 0 1.15rem; }
-.atlas-prose :deep(h2) { font-family: var(--atlas-display); font-size: 1.4rem; margin: 2.2rem 0 0.7rem; }
-.atlas-prose :deep(h3) { font-family: var(--atlas-label); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--atlas-muted); margin: 1.8rem 0 0.5rem; }
-.atlas-prose :deep(em) { font-style: italic; }
-.atlas-prose :deep(a) { color: var(--biome-accent); text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
-.atlas-prose :deep(blockquote) {
+.atlas-prose p { margin: 0 0 1.15rem; }
+.atlas-prose h2 { font-family: var(--atlas-display); font-size: 1.4rem; margin: 2.2rem 0 0.7rem; }
+.atlas-prose h3 { font-family: var(--atlas-label); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--atlas-muted); margin: 1.8rem 0 0.5rem; }
+.atlas-prose em { font-style: italic; }
+.atlas-prose a { color: var(--biome-accent); text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+.atlas-prose blockquote {
   border-left: 2px solid var(--sig-1);
   margin: 1.4rem 0;
   padding: 0.1rem 0 0.1rem 1.1rem;
   color: var(--atlas-muted);
   font-style: italic;
 }
-.atlas-prose :deep(ul) { margin: 0 0 1.15rem; padding-left: 1.2rem; list-style: none; }
-.atlas-prose :deep(ul li) { position: relative; margin: 0.3rem 0; }
-.atlas-prose :deep(ul li)::before { content: "·"; position: absolute; left: -1rem; color: var(--sig-1); font-weight: 700; }
-.atlas-prose :deep(code) { font-family: var(--atlas-data); font-size: 0.86em; }
+.atlas-prose ul { margin: 0 0 1.15rem; padding-left: 1.2rem; list-style: none; }
+.atlas-prose ul li { position: relative; margin: 0.3rem 0; }
+.atlas-prose ul li::before { content: "·"; position: absolute; left: -1rem; color: var(--sig-1); font-weight: 700; }
+.atlas-prose code { font-family: var(--atlas-data); font-size: 0.86em; }
 
 /* ── Specimen index (#66) — the catalogue rows ─────────────────────────────*/
 .atlas-index { list-style: none; margin: 0; padding: 0; }
