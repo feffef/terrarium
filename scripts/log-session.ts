@@ -12,12 +12,14 @@
 //   --dry-run  do everything except the final push (builds + validates the commit)
 //   --remote   push target remote (default: origin)
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
+import { z } from 'zod'
 import journal from '../tenants/journal/tenant.config.ts'
+import { SCRATCH_FILE, type AuthoredScratch } from './session-trace.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -66,6 +68,54 @@ export function validateEntry(raw: unknown):
 export function expectedFilename(entry: SessionEntry): string {
   const date = new Date(entry.startedAt).toISOString().slice(0, 10) // YYYY-MM-DD (UTC)
   return `${date}-${entry.session}.yml`
+}
+
+// ── Authoring the scratch (ADR-0009 amendment) ──────────────────────────────
+// The interpretive half the live agent writes DURING the session (SessionEnd
+// cannot prompt). Mechanical fields — timings, models, files, subagents — are
+// NOT authored; the handler derives them from the transcript and stitches. This
+// light schema gives the agent early feedback; the authoritative check is the
+// full-schema validation the handler runs on the stitched entry before landing.
+// Enum values mirror the sessions schema (single home: the manifest).
+const authoredScratchSchema = z
+  .object({
+    session: z.string(),
+    kind: z.enum(['interactive', 'autonomous']).optional(),
+    goal: z.string(),
+    status: z.enum(['completed', 'partial', 'blocked', 'abandoned']),
+    outcome: z.string(),
+    summary: z.string(),
+    prs: z.array(z.string()).optional(),
+    docsRead: z.array(z.object({ path: z.string(), reason: z.string() })).optional(),
+    skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).optional(),
+    frictions: z.array(
+      z.object({
+        description: z.string(),
+        solution: z.string(),
+        severity: z.enum(['nit', 'minor', 'moderate', 'major', 'blocker']),
+      }),
+    ),
+  })
+  .strict()
+
+export function validateAuthored(
+  raw: unknown,
+): { ok: true; data: AuthoredScratch } | { ok: false; errors: string } {
+  const res = authoredScratchSchema.safeParse(raw)
+  if (!res.success) {
+    const errors = res.error.issues
+      .map((i) => `  ${i.path.join('.') || '(root)'}: ${i.message}`)
+      .join('\n')
+    return { ok: false, errors }
+  }
+  return { ok: true, data: res.data as AuthoredScratch }
+}
+
+/** Write the authored scratch to its canonical, gitignored home. Its existence is
+ *  the wrap-up signal the SessionEnd handler gates on; re-authoring overwrites it. */
+export function writeScratch(authored: AuthoredScratch, scratchAbs: string): void {
+  mkdirSync(dirname(scratchAbs), { recursive: true })
+  writeFileSync(scratchAbs, JSON.stringify(authored, null, 2))
 }
 
 /** Run git. `cwd` defaults to the project root; it is injectable so the push loop can
@@ -205,8 +255,34 @@ function fail(msg: string): never {
   process.exit(1)
 }
 
+/** `--author <authored.yml>`: validate the interpretive fields and write the
+ *  scratch. This is what the model-invocable `log-session` Skill calls at
+ *  closure; it does NOT commit — the SessionEnd handler does, at teardown. */
+function authorMain(argv: string[]): void {
+  const positional = argv.filter((a) => !a.startsWith('--'))
+  const [inputPath] = positional
+  if (positional.length !== 1 || inputPath === undefined) {
+    fail('--author expects exactly one argument: the path to the authored .yml')
+  }
+  let parsed: unknown
+  try {
+    parsed = parseYaml(readFileSync(resolve(inputPath), 'utf8'))
+  } catch (err) {
+    fail(`could not parse authored YAML: ${err instanceof Error ? err.message : err}`)
+  }
+  const result = validateAuthored(parsed)
+  if (!result.ok) fail(`authored scratch is invalid:\n${result.errors}`)
+  writeScratch(result.data, join(root, SCRATCH_FILE))
+  console.log(`✓ authored scratch written → ${SCRATCH_FILE}`)
+  console.log('  the SessionEnd hook will stitch it with the derived trace and commit at session end.')
+}
+
 function main(): void {
   const argv = process.argv.slice(2)
+  if (argv.includes('--author')) {
+    authorMain(argv)
+    return
+  }
   const dryRun = argv.includes('--dry-run')
   const remoteIdx = argv.indexOf('--remote')
   let remote = 'origin'

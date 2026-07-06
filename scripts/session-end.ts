@@ -19,16 +19,10 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { stringify as stringifyYaml } from 'yaml'
-import { extractTrace, parseTranscript, stitch, type AuthoredScratch } from './session-trace.ts'
+import { extractTrace, parseTranscript, stitch, SCRATCH_FILE, type AuthoredScratch } from './session-trace.ts'
 import { validateEntry, expectedFilename, SESSIONS_DIR, land } from './log-session.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-
-/** The one authored-scratch file per container (one session per container in the
- *  remote model). Gitignored; the `log-session` authoring helper writes it, this
- *  handler consumes it. Absent ⇒ the session never declared closure ⇒ no log. */
-export const SCRATCH_DIR = '.session-logs'
-export const SCRATCH_FILE = join(SCRATCH_DIR, 'pending.scratch.json')
 
 function readStdin(): string {
   try {

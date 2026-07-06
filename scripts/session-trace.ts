@@ -12,7 +12,15 @@
 // Usage:  tsx scripts/session-trace.ts <transcript.jsonl>
 //   Prints the derived trace as JSON.
 import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
+
+/** The one authored-scratch file per container (one session per container in the
+ *  remote model). Gitignored — its home is `main`, written by the `--author` mode
+ *  of log-session.ts and consumed by the SessionEnd handler. Single-homed here so
+ *  both agree without a circular import. Repo-relative; each caller joins its root. */
+export const SCRATCH_DIR = '.session-logs'
+export const SCRATCH_FILE = join(SCRATCH_DIR, 'pending.scratch.json')
 
 /** One entry the extractor folds into `docsRead`/`skillsUsed`; `reason` is absent
  *  for derived entries (the agent supplies reasons, the transcript does not). */
