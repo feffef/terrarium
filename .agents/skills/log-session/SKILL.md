@@ -44,7 +44,7 @@ docsRead:                          # OPTIONAL, curated — the docs that MATTERE
   - { path: CONTEXT.md, reason: domain model }   # transcript-observed reads you omit
   - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: routing }  # are folded
 skillsUsed:                        # in automatically (name cross-refs the Skill Inventory),
-  - { name: tdd, reason: test-first the helper }  # deduped, uncited ones get (unknown)
+  - { name: tdd, reason: "test-first the helper (see #99)" }  # deduped, uncited ones get (unknown)
 frictions:                         # REQUIRED (may be []) — list EVERY friction
   - description: …                 # ~20 words, honest
     solution: …                    # the fix, or what would have helped
@@ -60,8 +60,11 @@ frictions:                         # REQUIRED (may be []) — list EVERY frictio
 - **frictions is the point.** List *every* one — anything that felt unnecessarily
   complex, token-heavy, or repetitive. A **doc contradiction found mid-session** is
   itself a friction: record it with a `solution` pointing at the single home to fix.
-- **Quote any `path`/value containing `[` or `{`** — unquoted it starts a YAML flow
-  sequence/map and breaks the entry.
+- **Quote any scalar value containing `[`, `{`, `#`, or `,`** — this applies to
+  the top-level `goal`/`outcome` strings just as much as `path`/`reason` values.
+  Unquoted, `[` or `{` starts a YAML flow sequence/map; `#` starts a YAML comment
+  and truncates everything after it; `,` inside a flow map (`{ … }`) ends the
+  current value early. Any of these silently mangles the entry instead of erroring.
 - Word limits are intent, not enforced — you hold them. Write `goal`/`outcome` for a
   stranger (name the thing, not "the issue"): they are the public dashboard's copy.
 
