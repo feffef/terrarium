@@ -87,8 +87,11 @@ Body in the Persona's voice. No leading `#` — the title comes from frontmatter
 the page renders it. Ground every claim in something real from step 3.
 ```
 
-Keep it tight — a blog post, not an essay. `publishedAt` drives the reverse-chron
-feed; the landing `index.md` (no `publishedAt`) stays the Persona's masthead.
+Keep it tight — a blog post, not an essay. **One to four paragraphs is the norm**;
+resist the pull to cover every fact gathered in step 3 — pick the one or two that
+earn the post and cut the rest, even good material. `publishedAt` drives the
+reverse-chron feed; the landing `index.md` (no `publishedAt`) stays the Persona's
+masthead.
 
 ### Cite facts and link to the code
 
