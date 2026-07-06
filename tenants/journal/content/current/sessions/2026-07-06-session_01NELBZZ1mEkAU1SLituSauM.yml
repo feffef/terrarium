@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_01NELBZZ1mEkAU1SLituSauM
 startedAt: 2026-07-06T21:05:04Z
-endedAt: 2026-07-06T21:39:33Z
+endedAt: 2026-07-06T21:48:36Z
 kind: interactive
 goal: Fix session-log loss on frozen-suspend teardown
 status: completed
-outcome: Live-Stop landing built, tested, pushed
-summary: "Issue #148: session logs vanish when SessionEnd fires on a network-freezing suspend. Discussed the user's idea (a background agent for finalization), concluded the win is timing not the agent — a subagent shares the container and freezes too. Reframed and speced the fix into #148, then implemented it: land the log on a live Stop hook (plus SessionEnd/resume backstops), gated on the authored scratch changing via a sentinel so per-turn re-runs are cheap; write the YAML to gitignored staging so a failed push never orphans a tree file. Full gate green (104 unit + 17 e2e). Pushed; no PR opened yet."
-prs: []
+outcome: Merged to main via PR
+summary: "Issue #148: session logs vanish when SessionEnd fires on a network-freezing suspend. Discussed the user's idea (a background agent for finalization), concluded the win is timing not the agent — a subagent shares the container and freezes too. Reframed and speced the fix into #148, then implemented it: land the log on a live Stop hook (plus SessionEnd/resume backstops), gated on the authored scratch changing via a sentinel so per-turn re-runs are cheap; write the YAML to gitignored staging so a failed push never orphans a tree file. Full gate green (104 unit + 17 e2e); PR #152 opened, watched, merged. The fix landed this very log live via the new Stop hook — not at teardown, proving itself."
+prs:
+  - "152"
 docsRead:
   - path: scripts/session-end.ts
     reason: the landing handler being rewired
@@ -29,18 +30,23 @@ frictions:
   - description: Could not exercise the handler live end-to-end — a --dry-run hung on git fetch origin main (proxy latency here), so the mainVersion network path is covered only by injected fakes.
     solution: A reviewer should run one real dry-run before merge; consider a fetch timeout so the handler degrades instead of hanging a turn.
     severity: minor
-durationSec: 2069
+durationSec: 2612
 models:
-  claude-opus-4-8: 102
+  claude-opus-4-8: 137
 toolCounts:
-  ToolSearch: 2
+  ToolSearch: 6
   mcp__github__issue_read: 3
   Read: 5
-  Bash: 17
+  Bash: 22
   mcp__github__issue_write: 1
-  Edit: 11
+  Edit: 12
   Write: 2
   Skill: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/session-trace.ts
   - scripts/log-session.ts
