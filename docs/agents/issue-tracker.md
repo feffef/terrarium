@@ -15,7 +15,10 @@ class to its MCP equivalent:
 - **Comment on an issue or PR** → `add_issue_comment` (not `issue_write`:
   its `update` + `body` *overwrites the issue description*)
 - **Read an issue, its comments, or sub-issues** → `issue_read`
-- **List / search issues** → `list_issues` / `search_issues`
+- **List / search issues** → `list_issues` / `search_issues`. Always paginate
+  `list_issues` (`perPage: 30` or less) and pass `minimal_output: true` — an
+  unpaginated call returns the whole issue set and overflows the tool-result
+  limit, landing as a base64 file you then have to slice by hand.
 - **Read a PR or its diff** → `pull_request_read`
 - **List / search PRs** → `list_pull_requests` / `search_pull_requests`
 - **Link sub-issues** → `sub_issue_write`
