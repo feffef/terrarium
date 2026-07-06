@@ -8,7 +8,12 @@
 // itself protected by the gate it steps around). Only the session-log *content*
 // it produces travels the direct-to-`main` path.
 //
-// Usage:  tsx scripts/log-session.ts <path-to-entry.yml> [--dry-run] [--remote <name>]
+// Usage:
+//   tsx scripts/log-session.ts --author <authored.yml>
+//       validate the interpretive fields and write the SessionEnd scratch (the
+//       model-invocable path; does NOT commit — the SessionEnd hook does).
+//   tsx scripts/log-session.ts <path-to-entry.yml> [--dry-run] [--remote <name>]
+//       land a fully-formed entry directly (the original manual path).
 //   --dry-run  do everything except the final push (builds + validates the commit)
 //   --remote   push target remote (default: origin)
 import { execFileSync } from 'node:child_process'

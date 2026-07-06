@@ -185,5 +185,5 @@ above. A PR is finished only when **merged** (by you) or **escalated/abandoned**
 not at push time (`CLAUDE.md`: pushing is not landing).
 
 Done when every dispatched PR carries a posted review comment and is merged or
-escalated/abandoned. Then it is a genuine end-of-session — offer to `/log-session`,
-and log this run's own frictions too.
+escalated/abandoned. Then it is a genuine end-of-session — invoke `log-session`
+(you judge closure), logging this run's own frictions too.

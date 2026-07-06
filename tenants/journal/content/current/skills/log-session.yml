@@ -4,8 +4,10 @@ importance: core
 role: >-
   The Platform's first platform-operation Skill, and the source of its primary
   self-improvement signal: every session's honest self-report — goal, outcome,
-  and above all its frictions — appended to this Journal. Commits the log direct
-  to `main` via the gated helper (the bounded ADR-0009 exception), so the
-  `consolidate`/`codify` jobs have raw material to mine. Reach for it when ending
-  a session — the user invokes it, or confirms the wrap-up reminder (`CLAUDE.md`);
-  an automatic every-session trigger for autonomous runs is deferred.
+  and above all its frictions — appended to this Journal. You author only that
+  interpretive half; the mechanical trace (timings, models, tools, files,
+  subagents) is derived from the transcript and stitched by the committed
+  `SessionEnd` hook, which commits the merged log direct to `main` (the bounded
+  ADR-0009 exception) for the `consolidate`/`codify` jobs to mine. Model-invocable:
+  reach for it yourself when you judge the session has reached closure — no human
+  prompt, and it serves autonomous runs too.

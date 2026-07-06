@@ -89,6 +89,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   answer review with a different solution), update the PR title/description in the
   same push. A description that still sells the old approach is a defect, not a
   nit: reviewers gate on it.
+- **Pushing is not landing.** A PR is finished only when it is **merged** or
+  **abandoned/escalated** — not at push time; review, CI, and merge are all still
+  queued. Babysit the PR you opened through to that terminal state. (This is a
+  PR-completion discipline, distinct from *session logging*, which now fires at
+  self-judged closure and records an in-review PR honestly — see "Logging your
+  session".)
 - **When dispatching parallel subagents that touch git, pass `isolation: 'worktree'`
   explicitly** — it is an Agent-tool parameter, not implied by the prompt. Without
   it, "parallel" agents share one checkout and race on branches. Each worktree
