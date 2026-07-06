@@ -1,6 +1,19 @@
 // Content-shape types for the journal Tenant's UI layer, mirroring the manifest's
 // `sessions` and `skills` collection schemas (tenants/journal/tenant.config.ts).
 // Kept in one place so the layer's page and components can't drift on them.
+//
+// Deliberately NOT aliases of `@nuxt/content`'s generated `Collections[...]`
+// item types: `dashboard.ts`'s own header comment (and tests/unit/journal-
+// dashboard.spec.ts) call out that this module is pure and unit-tested outside
+// the Nuxt app, via `tsc -p tsconfig.node.json` / vitest — neither program
+// includes `.nuxt/content/types.d.ts`, so `Collections` resolves with no
+// journal keys there and any alias built from it collapses to `never`. Instead
+// these stay hand-maintained, but shaped to match the *generated* item type
+// field-for-field (down to which fields are optional, per each Collection's
+// `.default(...)` in the manifest) — so a plain, uncast assignment from
+// `queryCollection(...)`'s real result in `[space]/index.vue` either
+// typechecks (shapes agree) or fails loudly (issue #94), with no `as unknown
+// as` escape hatch erasing the check either way.
 export type Severity = 'nit' | 'minor' | 'moderate' | 'major' | 'blocker'
 export type Importance = 'core' | 'supporting' | 'peripheral'
 export type Status = 'completed' | 'partial' | 'blocked' | 'abandoned'
@@ -20,9 +33,15 @@ export interface SessionDoc {
   status: Status
   outcome: string
   summary: string
-  prs: string[]
-  docsRead: { path: string; reason: string }[]
-  skillsUsed: { name: string; reason: string }[]
+  // Optional: the manifest's `z.array(...).default([])` (tenant.config.ts)
+  // makes these optional on the generated collection item type — always
+  // populated by the time content is queried, but not guaranteed by the type,
+  // so readers must fall back (`?? []`) rather than assume.
+  prs?: string[]
+  docsRead?: { path: string; reason: string }[]
+  skillsUsed?: { name: string; reason: string }[]
+  // Required: no `.default()` on `frictions` — the manifest forces every
+  // session log to state its frictions explicitly (may be `[]`, not omitted).
   frictions: Friction[]
 }
 

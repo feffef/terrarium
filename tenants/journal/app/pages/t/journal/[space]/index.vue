@@ -75,25 +75,34 @@ const openDigests = reactive<Record<string, boolean>>({})
 const toggleDigest = (path: string) => {
   openDigests[path] = !openDigests[path]
 }
-const skills = computed(() => (data.value?.skills ?? []) as unknown as SkillDoc[])
-const sessions = computed(() =>
-  ((data.value?.sessions ?? []) as unknown as SessionDoc[])
+// No cast: `skillsKey`/`sessionsKey` above are narrowed to this Tenant's own
+// collection keys, so `data.value.{skills,sessions}` already carry the real,
+// generated item types — the SAME types `SkillDoc`/`SessionDoc` alias (issue
+// #94). A schema edit that drops a field now fails to typecheck right here
+// instead of being silently erased by an `as unknown as` cast.
+const skills = computed<SkillDoc[]>(() => data.value?.skills ?? [])
+const sessions = computed<SessionDoc[]>(() =>
+  (data.value?.sessions ?? [])
     .slice()
     .sort((a, b) => new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime()),
 )
 
 // ── Derived dashboard data — thin wrappers over the pure module ──
-const cards = computed(() => buildCards(sessions.value))
-const frictionTotals = computed(() => rollupFrictions(sessions.value))
-const frictionCount = computed(() => countFrictionTotal(sessions.value))
-const kindCounts = computed(() => countKinds(sessions.value))
-const prRefs = computed(() => dedupePrRefs(sessions.value))
+// Named to stay distinct from `dashboard.ts`'s own exports (issue #95): Nuxt
+// auto-imports those exports globally, and a same-named local binding here
+// would merge with the auto-import and fail vue-tsc (TS2774) — see
+// dashboard.ts's header comment.
+const sessionCards = computed(() => buildCards(sessions.value))
+const frictionSeverityTotals = computed(() => rollupFrictions(sessions.value))
+const totalFrictions = computed(() => countFrictionTotal(sessions.value))
+const sessionKindCounts = computed(() => countKinds(sessions.value))
+const referencedPrs = computed(() => dedupePrRefs(sessions.value))
 
-const ownSkills = computed(() => selectOwnSkills(skills.value))
-const externalSkillCount = computed(() => countExternalSkills(skills.value))
-const skillsLabel = computed(() => buildSkillsLabel(externalSkillCount.value))
-const skillsSub = computed(() => buildSkillsSub(ownSkills.value))
-const skillGroups = computed(() => groupSkills(ownSkills.value))
+const platformSkills = computed(() => selectOwnSkills(skills.value))
+const externalSkillTotal = computed(() => countExternalSkills(skills.value))
+const skillsHeading = computed(() => buildSkillsLabel(externalSkillTotal.value))
+const skillsSubtext = computed(() => buildSkillsSub(platformSkills.value))
+const groupedSkills = computed(() => groupSkills(platformSkills.value))
 
 const title = computed(() => page.value?.title ?? `The Platform Journal — ${space}`)
 const lede = computed(() => page.value?.description ?? `The ${space} Space of the journal Tenant.`)
@@ -182,22 +191,22 @@ useHead({ title: `${title.value} · journal/${space}` })
       <JournalStatTile
         label="Sessions logged"
         :value="sessions.length"
-        :sub="`${kindCounts.interactive} interactive · ${kindCounts.autonomous} autonomous`"
+        :sub="`${sessionKindCounts.interactive} interactive · ${sessionKindCounts.autonomous} autonomous`"
       />
       <JournalStatTile
-        :label="skillsLabel"
-        :value="ownSkills.length"
-        :sub="skillsSub"
+        :label="skillsHeading"
+        :value="platformSkills.length"
+        :sub="skillsSubtext"
       />
       <JournalStatTile
         label="Frictions surfaced"
-        :value="frictionCount"
-        :sub="`${frictionTotals.blocker} blockers · ${frictionTotals.major} major`"
+        :value="totalFrictions"
+        :sub="`${frictionSeverityTotals.blocker} blockers · ${frictionSeverityTotals.major} major`"
       />
       <JournalStatTile
         label="PRs referenced"
-        :value="prRefs.length"
-        :sub="prRefs.length ? prRefs.map((p) => '#' + p).join(' · ') : 'none yet'"
+        :value="referencedPrs.length"
+        :sub="referencedPrs.length ? referencedPrs.map((p) => '#' + p).join(' · ') : 'none yet'"
       />
     </section>
 
@@ -208,8 +217,8 @@ useHead({ title: `${title.value} · journal/${space}` })
           <h2>Recent activity</h2>
           <span class="count">session logs, newest first</span>
         </div>
-        <div v-if="cards.length" class="cards">
-          <JournalSessionCard v-for="c in cards" :key="c.key" :card="c" />
+        <div v-if="sessionCards.length" class="cards">
+          <JournalSessionCard v-for="c in sessionCards" :key="c.key" :card="c" />
         </div>
         <p v-else class="empty">No sessions logged in this Space yet.</p>
       </section>
@@ -219,14 +228,14 @@ useHead({ title: `${title.value} · journal/${space}` })
         <section class="panel">
           <div class="section-head">
             <h2>Friction signal</h2>
-            <span class="count">{{ frictionCount }} across {{ sessions.length }} session{{ sessions.length === 1 ? '' : 's' }}</span>
+            <span class="count">{{ totalFrictions }} across {{ sessions.length }} session{{ sessions.length === 1 ? '' : 's' }}</span>
           </div>
           <p class="panel-intro">
             Pain-points agents log about their own work — recorded so the
             platform can improve. More logged is better, not worse.
           </p>
-          <JournalFrictionStrata :counts="frictionTotals" :total="frictionCount" />
-          <p v-if="frictionCount > 0" class="friction-note">
+          <JournalFrictionStrata :counts="frictionSeverityTotals" :total="totalFrictions" />
+          <p v-if="totalFrictions" class="friction-note">
             Graded <span class="mono">nit → blocker</span>. These are
             pain-points agents honestly log about their own work, recorded so
             the platform can later spot recurring problems on its own.
@@ -236,12 +245,12 @@ useHead({ title: `${title.value} · journal/${space}` })
         <section class="panel">
           <div class="section-head">
             <h2>Platform Skills</h2>
-            <span class="count">{{ ownSkills.length }} authored here</span>
+            <span class="count">{{ platformSkills.length }} authored here</span>
           </div>
-          <JournalSkillCatalogue v-if="skillGroups.length" :groups="skillGroups" />
+          <JournalSkillCatalogue v-if="groupedSkills.length" :groups="groupedSkills" />
           <p v-else class="empty">No Platform Skills authored in this Space yet.</p>
-          <p v-if="externalSkillCount" class="skill-note">
-            Backed by {{ externalSkillCount }} general-engineering Skills from an
+          <p v-if="externalSkillTotal" class="skill-note">
+            Backed by {{ externalSkillTotal }} general-engineering Skills from an
             external pack — <span class="mono">used</span>, not evolved here.
           </p>
         </section>
