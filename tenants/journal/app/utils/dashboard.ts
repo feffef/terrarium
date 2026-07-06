@@ -11,9 +11,13 @@
 // a Nuxt layer the `~/` alias resolves to the MAIN app, not this layer, so it
 // would not find `../types/journal` (see docs/agents/tenant-layers.md §1).
 //
-// Nuxt auto-imports these named exports into the layer's app — that is fine
-// (they are namespaced by intent) — but this module never relies on auto-import
-// itself: it stays dependency-free and explicit.
+// Nuxt auto-imports these named exports into the layer's app. That auto-import
+// is real, global, and can collide: a same-named local `const`/`computed` in a
+// consuming SFC (e.g. `frictionCount`) merges with this module's export and
+// vue-tsc rejects the ambiguity (issue #95) — auto-import does NOT namespace
+// these by intent. So the SFC keeps its local binding names distinct from every
+// export below; this module, for its part, never relies on auto-import itself:
+// it stays dependency-free and explicit.
 import type { Friction, Importance, SessionCardView, SessionDoc, Severity, SkillDoc } from '../types/journal'
 
 // ── Formatting helpers ───────────────────────────────────
@@ -60,9 +64,12 @@ export function kindCounts(sessions: SessionDoc[]): { interactive: number; auton
 }
 
 // De-duplicated, numerically sorted PR references (strips a leading `#`).
+// `prs` carries a manifest `.default([])` (tenant.config.ts), so the generated
+// collection type marks it optional even though it is always populated by the
+// time content is queried — guard it structurally rather than assume that.
 export function prRefs(sessions: SessionDoc[]): string[] {
   const seen = new Set<string>()
-  for (const s of sessions) for (const pr of s.prs) seen.add(pr.replace(/^#/, ''))
+  for (const s of sessions) for (const pr of s.prs ?? []) seen.add(pr.replace(/^#/, ''))
   return [...seen].sort((a, b) => Number(a) - Number(b))
 }
 
@@ -124,10 +131,10 @@ export function cards(sessions: SessionDoc[]): (SessionCardView & { key: string 
     goal: s.goal,
     status: s.status,
     outcome: s.outcome,
-    prs: s.prs,
+    prs: s.prs ?? [],
     frictionCounts: countFrictions(s.frictions),
     frictionTotal: s.frictions.length,
-    skills: s.skillsUsed.map((x) => x.name),
+    skills: (s.skillsUsed ?? []).map((x) => x.name),
     sid: shortId(s.session),
     // Expanded detail — the full log, revealed on click (no route of its own).
     summary: s.summary,
