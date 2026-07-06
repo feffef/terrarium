@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { routingMap } from '#routing'
-import type { RoutingMap } from '~~/shared/routing'
 
 // Read-only: the primary CTA below is hardcoded to the maintainer-chosen
 // starting point. This list is only for the small "also on this site" line.
@@ -16,7 +15,7 @@ const BLOGS = [
   { name: 'Kevin', path: '/t/blog/kevin', blurb: 'the dazzled, nervous dev', accent: '#4f8f6a' },
 ]
 
-const otherRoutes = Object.entries(routingMap as RoutingMap).flatMap(([tenant, spaces]) =>
+const otherRoutes = Object.entries(routingMap).flatMap(([tenant, spaces]) =>
   Object.keys(spaces)
     .map((space) => `/t/${tenant}/${space}`)
     .filter((path) => path !== PRIMARY_PATH && tenant !== 'blog'),

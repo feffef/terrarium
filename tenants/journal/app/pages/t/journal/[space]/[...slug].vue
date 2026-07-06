@@ -10,7 +10,6 @@
 // through the SAME shared, unit-tested `resolveSpaceRoute` the catch-all uses (a
 // read-only import — no isolation logic duplicated or changed), then reads only
 // that one (Tenant, Space)'s keyed `pages` collection. Spaces cannot leak.
-import type { Collections } from '@nuxt/content'
 import { resolveSpaceRoute } from '~~/shared/routing'
 
 const route = useRoute()
@@ -21,12 +20,9 @@ const resolved = resolveSpaceRoute(tenant, space, route.params.slug)
 if (!resolved) {
   throw createError({ statusCode: 404, statusMessage: `Unknown Space: ${tenant}/${space}` })
 }
-const { path } = resolved
-// Narrow to this Tenant's `pages` collections (`journal_<space>_pages`) rather
-// than the whole `keyof Collections` union, so `queryCollection(...).first()`
-// keeps the page item's fields (e.g. `title`) instead of widening to every
-// collection's type. Stays `<ContentRenderer>`-compatible. (#55)
-const pagesKey = resolved.pagesKey as Extract<keyof Collections, `journal_${string}_pages`>
+// `pagesKey` is already this Tenant's own literal `pages` keys — the resolver
+// derives them from the generated `#routing` type (shared/routing.ts, #96/#55).
+const { path, pagesKey } = resolved
 
 const { data: page } = await useAsyncData(route.path, () =>
   queryCollection(pagesKey).path(path).first(),

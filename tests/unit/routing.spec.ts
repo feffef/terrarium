@@ -77,7 +77,11 @@ describe('resolveSpaceRoute() — resolution', () => {
       { name: 'skills', key: 'journal_current_skills' },
       { name: 'sessions', key: 'journal_current_sessions' },
     ])
-    expect(r.dataCollections.some((d) => d.name === 'pages')).toBe(false)
+    // Widened to string[] on purpose: the return TYPE already excludes 'pages'
+    // (#96), but the resolver asserts that type via a cast — this line guards the
+    // runtime filter itself, which the type system therefore does not.
+    const names: string[] = r.dataCollections.map((d) => d.name)
+    expect(names).not.toContain('pages')
   })
 })
 
