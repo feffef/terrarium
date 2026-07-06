@@ -31,7 +31,7 @@ prs: ["5"]                         # work-PRs already landed this session ([] if
 docsRead:                          # each doc/URL you actually opened; reason = why, not what
   - { path: CONTEXT.md, reason: domain model }
   - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: routing }
-skillsUsed:                        # each Skill you invoked; name cross-refs the Skill catalogue
+skillsUsed:                        # each Skill you invoked; name cross-refs the Skill Inventory
   - { name: tdd, reason: test-first the helper }
 frictions:                         # REQUIRED (may be []) — list EVERY friction
   - description: …                 # ~20 words, honest

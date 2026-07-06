@@ -133,7 +133,7 @@ Dispatch the implementation to **Sonnet** agents (`model: sonnet`) — the impl 
 is well-scoped once §4 named the fix, so it doesn't need the main model. Each agent
 runs in its **own git worktree** (parallel PRs must not share a working tree):
 
-- **Doc-only fixes** (Markdown / prose — CLAUDE.md, a SKILL, a catalogue entry):
+- **Doc-only fixes** (Markdown / prose — CLAUDE.md, a SKILL, a Skill Inventory entry):
   hand them **all to one agent as a single grouped PR** that `Closes` every one of
   their issues. Many one-line doc PRs are pure review overhead; one batched PR is
   cheaper to review and still traces back to each issue.

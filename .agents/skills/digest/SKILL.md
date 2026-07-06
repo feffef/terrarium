@@ -87,7 +87,7 @@ leads with narrative and carries the skim footer.
 
 The Journal's Space landing (`/t/journal/current`) is a **live dashboard**: it
 queries this Space's collections at request time — state tiles, the session-log
-feed, the friction signal, the Skill catalogue, and a **Recent digests** panel
+feed, the friction signal, the Skill Inventory, and a **Recent digests** panel
 that reads the digest pages directly. A Digest you wrote in step 3 therefore
 appears with **no edit to `index.md`**.
 

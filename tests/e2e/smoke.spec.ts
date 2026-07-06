@@ -139,7 +139,7 @@ describe('L2 smoke render — entry routes', async () => {
   }
 
   // The journal Tenant's layer replaces the generic Space landing with an
-  // overview dashboard (state + recent activity + Skill catalogue).
+  // overview dashboard (state + recent activity + Skill Inventory).
   it('renders the journal overview dashboard', async () => {
     const html = await $fetch('/t/journal/current')
     expect(html).toContain('Recent activity')

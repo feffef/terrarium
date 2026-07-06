@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// The Space's Skill catalogue grouped by importance — the curated "use these"
+// The Space's Skill Inventory grouped by importance — the curated "use these"
 // list CLAUDE.md points agents at. `essential` / `specialist` Skills show their
 // role; supporting / peripheral collapse to compact chips.
 import type { Importance, SkillDoc } from '../../types/journal'

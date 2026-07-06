@@ -21,7 +21,7 @@ const { path, atRoot, pagesKey, dataCollections } = resolved
 
 const { data } = await useAsyncData(route.path, async () => {
   const page = await queryCollection(pagesKey).path(path).first()
-  const catalog = atRoot
+  const collections = atRoot
     ? await Promise.all(
         dataCollections.map(async ({ name, key }) => ({
           name,
@@ -29,7 +29,7 @@ const { data } = await useAsyncData(route.path, async () => {
         })),
       )
     : []
-  return { page, catalog }
+  return { page, collections }
 })
 
 // Show only authored fields — drop Nuxt Content's built-in/page fields.
@@ -58,7 +58,7 @@ function fields(item: object): [string, unknown][] {
       <p>No document at <code>{{ path }}</code> in {{ tenant }}/{{ space }}.</p>
     </div>
 
-    <section v-for="c in data?.catalog" :key="c.name" style="margin-top: 2rem;">
+    <section v-for="c in data?.collections" :key="c.name" style="margin-top: 2rem;">
       <h2 style="text-transform: capitalize;">{{ c.name }}</h2>
       <ul style="list-style: none; padding: 0; margin: 0;">
         <li

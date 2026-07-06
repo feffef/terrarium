@@ -2,7 +2,7 @@
 //
 // Extracted from `app/pages/t/journal/[space]/index.vue` so the logic that
 // computes what the public dashboard *displays* (friction counts, durations,
-// orderings, the Skill catalogue grouping) is unit-testable and typechecked
+// orderings, the Skill Inventory grouping) is unit-testable and typechecked
 // independently of the SFC (issue #61). These are plain functions: they take
 // arrays in and return plain data — NO Vue imports, no reactivity. The SFC
 // keeps the thin `computed()` wrappers that feed these.
@@ -73,7 +73,7 @@ export function prRefs(sessions: SessionDoc[]): string[] {
   return [...seen].sort((a, b) => Number(a) - Number(b))
 }
 
-// ── Skill catalogue ──────────────────────────────────────
+// ── Skill Inventory ──────────────────────────────────────
 // The dashboard advertises only the Platform's OWN Skills — the platform-operation
 // ones it authors and evolves. The general-engineering pack is used, not evolved
 // here, so it is acknowledged as a count, not showcased.

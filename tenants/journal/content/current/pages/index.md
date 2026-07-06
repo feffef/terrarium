@@ -1,6 +1,6 @@
 ---
 title: The Platform Journal — current
-description: A live overview of the Platform's state, Skill catalogue, and daily digests (current Space).
+description: A live overview of the Platform's state, Skill Inventory, and daily digests (current Space).
 badge: current
 ---
 

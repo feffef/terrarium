@@ -24,7 +24,7 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   **rule of two** for new vocabulary (coin a glossary/ADR term only on a
   concept's *second* instance) — see `docs/agents/domain.md`.
 - **Which Skills to actually use** is curated in the `journal` Tenant's **Skill
-  catalogue** — `tenants/journal/content/current/skills/`, rendered at
+  Inventory** — `tenants/journal/content/current/skills/`, rendered at
   `/t/journal/current`. It records each installed Skill's *role and importance to
   this project* (not a copy of the Skill's own description), because the Skills
   come from an external pack. Treat it as the authoritative "use these" list:
@@ -150,7 +150,7 @@ can overlap real content and read as a UI bug.
 - **The journal Space landing is a custom dashboard, not a Markdown render.**
   `tenants/journal/app/pages/t/journal/[space]/index.vue` wins over the generic
   catch-all for the Space *root* and builds its own layout (stat tiles, digests,
-  session feed, Skill catalogue, …) from the Space's `pages`/`skills`/`sessions`
+  session feed, Skill Inventory, …) from the Space's `pages`/`skills`/`sessions`
   Collections. It renders `index.md`'s body only as the small "editorial intro"
   section — most of the page is not `index.md`. Editing `index.md` alone will
   not change what most of that page shows; check the `.vue` file too.

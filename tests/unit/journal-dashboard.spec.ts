@@ -1,6 +1,6 @@
 // Unit tests for the Journal dashboard's pure aggregation/formatting module
 // (issue #61) — the logic that computes what the public dashboard displays
-// (friction counts, durations, orderings, the Skill catalogue grouping). It was
+// (friction counts, durations, orderings, the Skill Inventory grouping). It was
 // extracted verbatim from `tenants/journal/app/pages/t/journal/[space]/index.vue`,
 // so these lock in the behavior the SFC used to embed.
 //
@@ -145,7 +145,7 @@ describe('prRefs', () => {
   })
 })
 
-describe('skill catalogue', () => {
+describe('skill inventory', () => {
   const skills = [
     skill({ name: 'edit-content', category: 'platform-operation', importance: 'essential' }),
     skill({ name: 'add-space', category: 'platform-operation', importance: 'essential' }),

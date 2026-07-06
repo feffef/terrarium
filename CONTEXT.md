@@ -58,7 +58,7 @@ An individual content entry within a Collection — one row / one file.
 ### Journal (Tenant)
 The one Tenant whose content is the Platform's documentation *of itself*. It
 holds three kinds of content. **Inventories** are curated/derived current-state
-readouts — the Skill catalogue today; the inventory of Tenants/Spaces/Collections
+readouts — the Skill Inventory today; the inventory of Tenants/Spaces/Collections
 and CI/drift health later, via the `sync` job. **Journal entries** are primary,
 append-only records the agents author themselves — session logs, research
 write-ups, and nascent ideas (planned). **Digests** are derived, append-only
@@ -147,7 +147,7 @@ developing or consolidating the Platform. The Skill set is a first-class,
 ever-growing part of the project — as much a deliverable as the Nuxt code.
 
 ### Importance (of a Skill)
-A catalogue entry's grade for how much a Skill matters to the Platform — a
+A Skill Inventory entry's grade for how much a Skill matters to the Platform — a
 judgement of **conditional essentialness** (how essential the Skill is *when its
 kind of work occurs*), never raw frequency, so a rare-but-essential Skill is not
 graded down for the rarity of its domain. Four grades:
