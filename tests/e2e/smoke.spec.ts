@@ -21,11 +21,13 @@
 //                bearing proof the client truly rendered: an <h1> alone can be
 //                the SSR DOM persisting through a failed hydration.
 //
-// The browser is located, never downloaded — no `playwright install` anywhere:
-// first the pre-installed Playwright Chromium via PLAYWRIGHT_BROWSERS_PATH
-// (exactly as scripts/screenshot.ts does; the agent sandbox), then the system
-// Chrome/Chromium (CHROME_BIN or well-known paths; GitHub's ubuntu runners ship
-// /usr/bin/google-chrome), so CI needs no browser-provisioning step (issue #97).
+// The browser is located, not resolved by playwright's own pinned revision:
+// first a Chromium under PLAYWRIGHT_BROWSERS_PATH (exactly as scripts/screenshot.ts
+// does — the agent sandbox's pre-installed build, or the one CI provisions there),
+// then the system Chrome/Chromium (CHROME_BIN or well-known paths; GitHub's ubuntu
+// runners ship /usr/bin/google-chrome). CI pins a Playwright-managed Chromium via
+// that first path for determinism; the system-Chrome fallback keeps every other
+// environment provisioning-free (issue #97).
 import { fileURLToPath } from 'node:url'
 import { accessSync, constants, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'

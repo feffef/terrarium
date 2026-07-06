@@ -11,12 +11,18 @@ on:
 jobs:
   gate:
     runs-on: ubuntu-latest
+    # Pin the L2 browser to a Playwright-managed Chromium instead of tracking the
+    # runner image's system Chrome. The install step below writes here; the smoke
+    # spec reads PLAYWRIGHT_BROWSERS_PATH to find it (falling back to system Chrome
+    # if absent). A workspace path — not /opt/pw-browsers — so no sudo is needed.
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.pw-browsers
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: pnpm
@@ -39,5 +45,7 @@ jobs:
         run: pnpm build
 
       # L2 — every (Tenant, Space) entry route renders 200 with content.
+      - name: Install Chromium for the L2 browser smoke gate
+        run: pnpm exec playwright-core install --with-deps chromium
       - name: 'L2 · smoke render'
         run: pnpm test:e2e
