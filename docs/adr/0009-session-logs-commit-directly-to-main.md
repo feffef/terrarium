@@ -240,12 +240,19 @@ distinguish a mid-session freeze from a true end** — both are `other`. Also:
 - **Residual edge.** A session frozen and reclaimed **without ever resuming** keeps
   its last committed state; if that predates the scratch file, the session is
   unlogged — graceful degradation over a partial log.
-- **Schema impact (per the policy above).** Additive mechanical fields (`models`,
-  `subagents`, …) are **optional** → allowed anytime. Changing `docsRead`/
-  `skillsUsed` from `string` to `{path|name, source, reason?}` **narrows** existing
-  entries → it takes the `schemaVersion: 2` + `z.union([v1, v2])` path, *or* the
-  new shape is added as new optional fields beside the retained string form. Which,
-  is an implementation decision for the follow-up PR.
+- **Schema impact — additive only, no version bump (per the policy above).** The
+  `sessions` schema is `.strict()`, so the derived fields must be *declared* to be
+  stored — but all of them go in as **optional** keys (`models`, `subagents`,
+  `toolCounts`, `filesRead`, `durationSec`, …), which the policy allows anytime;
+  old logs omit them and stay valid. Provenance on `docsRead`/`skillsUsed` (already
+  `{path|name, reason}` objects, not strings) is likewise non-breaking: either add
+  an optional `source` and relax `reason` to `.optional()` (both accept every
+  existing entry — required→optional is *widening*, not the narrowing that forces a
+  bump), **or** leave those two fields untouched and union the derived reads (a new
+  optional `filesRead`) at read time in the dashboard/`consolidate`. Nothing
+  narrows, renames, or adds a required field, so **no `schemaVersion: 2` / `z.union`
+  is needed.** The read-time-union option is the lightest and is the default unless
+  the follow-up PR finds a reason to store the merged shape.
 
 **Not yet built (follow-up gated PR).** `scripts/session-trace.ts` (port of the
 validated proof-of-concept); the `SessionEnd` handler; the scratch-writing helper;
