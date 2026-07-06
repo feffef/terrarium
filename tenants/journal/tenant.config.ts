@@ -54,7 +54,7 @@ export default defineTenant({
         .object({
           name: z.string(),
           category: z.enum(['platform-operation', 'general-engineering']),
-          importance: z.enum(['core', 'supporting', 'peripheral']),
+          importance: z.enum(['essential', 'specialist', 'supporting', 'peripheral']),
           role: z.string(),
         })
         .strict(),

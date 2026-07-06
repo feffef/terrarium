@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // The Space's Skill catalogue grouped by importance — the curated "use these"
-// list CLAUDE.md points agents at. `core` Skills show their role; supporting /
-// peripheral collapse to compact chips.
+// list CLAUDE.md points agents at. `essential` / `specialist` Skills show their
+// role; supporting / peripheral collapse to compact chips.
 import type { Importance, SkillDoc } from '../../types/journal'
 
 defineProps<{
@@ -18,7 +18,7 @@ defineProps<{
         <span class="n">{{ g.skills.length }}</span>
       </div>
 
-      <template v-if="g.importance === 'core'">
+      <template v-if="g.importance === 'essential' || g.importance === 'specialist'">
         <div v-for="s in g.skills" :key="s.name" class="skill">
           <div class="name">
             {{ s.name }}

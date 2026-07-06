@@ -1,6 +1,6 @@
 name: domain-modeling
 category: general-engineering
-importance: core
+importance: essential
 role: >-
   Owns the CONTEXT.md glossary and the ADR conventions. Use before any
   structural change, and whenever introducing or challenging a domain term.

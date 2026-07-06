@@ -146,6 +146,22 @@ A Claude Code skill (`.claude/skills/*`) that encodes a repeatable capability fo
 developing or consolidating the Platform. The Skill set is a first-class,
 ever-growing part of the project — as much a deliverable as the Nuxt code.
 
+### Importance (of a Skill)
+A catalogue entry's grade for how much a Skill matters to the Platform — a
+judgement of **conditional essentialness** (how essential the Skill is *when its
+kind of work occurs*), never raw frequency, so a rare-but-essential Skill is not
+graded down for the rarity of its domain. Four grades:
+- **essential** — essential *and broad*: its absence would be felt across many
+  kinds of session (e.g. `log-session`, `domain-modeling`).
+- **specialist** — essential *within a specific kind* of work, even when that work
+  is rare (e.g. `blog-post`).
+- **supporting** — genuinely useful but not essential; work proceeds without it.
+- **peripheral** — marginal or superseded: little observed pull even when it could
+  have applied.
+Disuse *alone* never lowers a grade; a grade drops only on evidence that a Skill
+was **not used in sessions of the kind it serves** (opportunity missed, not merely
+absent).
+
 ### Codify
 The Platform's self-improvement loop: an autonomous job that turns a repeated
 manual pattern into a new, committed Skill. It is one of a small set of chartered

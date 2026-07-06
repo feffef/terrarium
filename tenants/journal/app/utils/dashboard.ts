@@ -96,7 +96,8 @@ export function skillsLabel(externalCount: number): string {
 export function skillsSub(own: SkillDoc[]): string {
   const by = (i: Importance) => own.filter((s) => s.importance === i).length
   const parts = ([
-    ['core', by('core')],
+    ['essential', by('essential')],
+    ['specialist', by('specialist')],
     ['supporting', by('supporting')],
     ['peripheral', by('peripheral')],
   ] as const)
@@ -105,10 +106,10 @@ export function skillsSub(own: SkillDoc[]): string {
   return parts.join(' · ') || 'none yet'
 }
 
-// Own Skills grouped by importance (core → supporting → peripheral), alpha within
-// a group, empty groups dropped.
+// Own Skills grouped by importance (essential → specialist → supporting →
+// peripheral), alpha within a group, empty groups dropped.
 export function skillGroups(own: SkillDoc[]): { importance: Importance; skills: SkillDoc[] }[] {
-  const order: Importance[] = ['core', 'supporting', 'peripheral']
+  const order: Importance[] = ['essential', 'specialist', 'supporting', 'peripheral']
   return order
     .map((importance) => ({
       importance,

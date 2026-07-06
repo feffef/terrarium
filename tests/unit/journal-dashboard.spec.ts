@@ -50,7 +50,7 @@ function session(over: Partial<SessionDoc> = {}): SessionDoc {
 }
 
 function skill(over: Partial<SkillDoc> = {}): SkillDoc {
-  return { name: 'a', category: 'platform-operation', importance: 'core', role: 'role', ...over }
+  return { name: 'a', category: 'platform-operation', importance: 'essential', role: 'role', ...over }
 }
 
 describe('countFrictions', () => {
@@ -147,10 +147,10 @@ describe('prRefs', () => {
 
 describe('skill catalogue', () => {
   const skills = [
-    skill({ name: 'edit-content', category: 'platform-operation', importance: 'core' }),
-    skill({ name: 'add-space', category: 'platform-operation', importance: 'core' }),
+    skill({ name: 'edit-content', category: 'platform-operation', importance: 'essential' }),
+    skill({ name: 'add-space', category: 'platform-operation', importance: 'essential' }),
     skill({ name: 'triage', category: 'platform-operation', importance: 'supporting' }),
-    skill({ name: 'tdd', category: 'general-engineering', importance: 'core' }),
+    skill({ name: 'tdd', category: 'general-engineering', importance: 'essential' }),
     skill({ name: 'code-review', category: 'general-engineering', importance: 'supporting' }),
   ]
 
@@ -168,14 +168,14 @@ describe('skill catalogue', () => {
   })
 
   it('skillsSub joins non-empty importance buckets, else "none yet"', () => {
-    expect(skillsSub(ownSkills(skills))).toBe('2 core · 1 supporting')
+    expect(skillsSub(ownSkills(skills))).toBe('2 essential · 1 supporting')
     expect(skillsSub([])).toBe('none yet')
   })
 
-  it('skillGroups orders core → supporting → peripheral, alpha within a group, dropping empties', () => {
+  it('skillGroups orders essential → specialist → supporting → peripheral, alpha within a group, dropping empties', () => {
     const groups = skillGroups(ownSkills(skills))
-    expect(groups.map((g) => g.importance)).toEqual(['core', 'supporting']) // peripheral empty → dropped
-    expect(groups[0]!.skills.map((s) => s.name)).toEqual(['add-space', 'edit-content']) // alpha within core
+    expect(groups.map((g) => g.importance)).toEqual(['essential', 'supporting']) // specialist + peripheral empty → dropped
+    expect(groups[0]!.skills.map((s) => s.name)).toEqual(['add-space', 'edit-content']) // alpha within essential
     expect(groups[1]!.skills.map((s) => s.name)).toEqual(['triage'])
   })
 })
