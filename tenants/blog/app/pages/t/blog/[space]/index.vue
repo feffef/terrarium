@@ -57,13 +57,23 @@ useHead({ title: `${title.value} · blog/${space}` })
     </p>
 
     <div class="landing-grid">
-      <div class="landing-main">
-        <header class="masthead">
-          <p class="byline"><span class="dot" />{{ meta.name }}</p>
-          <h1>{{ title }}</h1>
-          <p v-if="tagline" class="tagline">{{ tagline }}</p>
-        </header>
+      <header class="masthead">
+        <p class="byline"><span class="dot" />{{ meta.name }}</p>
+        <h1>{{ title }}</h1>
+        <p v-if="tagline" class="tagline">{{ tagline }}</p>
+      </header>
 
+      <!-- The intro sits between the masthead and the feed in the DOM, so on
+           narrow viewports it stacks slogan → About → posts. On wide viewports
+           the grid areas float it into a sticky panel at the top-right. -->
+      <aside v-if="landing" class="about" aria-label="About me">
+        <p class="about-label">About me</p>
+        <div class="prose about-prose">
+          <ContentRenderer :value="landing" />
+        </div>
+      </aside>
+
+      <div class="landing-feed">
         <ul v-if="posts.length" class="feed">
           <li v-for="post in posts" :key="post.path">
             <NuxtLink class="post-link" :to="`/t/blog/${space}${post.path}`">
@@ -76,13 +86,6 @@ useHead({ title: `${title.value} · blog/${space}` })
         </ul>
         <p v-else class="empty">No posts here yet.</p>
       </div>
-
-      <aside v-if="landing" class="about" aria-label="About me">
-        <p class="about-label">About me</p>
-        <div class="prose about-prose">
-          <ContentRenderer :value="landing" />
-        </div>
-      </aside>
     </div>
 
     <BlogNetwork :current="space" />

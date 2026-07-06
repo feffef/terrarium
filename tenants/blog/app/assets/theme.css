@@ -91,11 +91,18 @@
 .bl .feed .reply { font-family: var(--bl-mono); font-size: 0.72rem; color: var(--bl-accent); }
 .bl .empty { color: var(--bl-faint); font-style: italic; }
 
-/* Landing layout — the intro moves into a floating "About me" side panel at the
-   top-right, so the post feed sits higher and is the first thing you see. On
-   wide viewports it's a two-column grid with a sticky aside; it collapses to a
-   single column (feed first, About below) when there's no room. */
+/* Landing layout — the intro lives in an "About me" panel. In the DOM it sits
+   between the masthead and the feed, so a narrow (single-column) viewport reads
+   slogan → About → posts. On a wide viewport the grid areas float it into a
+   sticky panel at the top-right, letting the feed rise beside it. */
 .bl--landing { position: relative; }
+.bl--landing .about {
+  background: var(--bl-surface);
+  border: 1px solid var(--bl-line);
+  border-top: 2px solid var(--bl-accent);
+  border-radius: 10px;
+  padding: 1.1rem 1.2rem 1.25rem;
+}
 .bl--landing .about .about-label {
   font-family: var(--bl-mono);
   font-size: 0.72rem;
@@ -108,31 +115,27 @@
 .bl--landing .about .about-prose p { margin: 0 0 0.7rem; }
 .bl--landing .about .about-prose p:last-child { margin-bottom: 0; }
 
+/* Narrow: single column, panel sitting between the masthead and the feed. */
+.bl--landing .about { margin: 1.4rem 0 0.4rem; }
+
 @media (min-width: 60rem) {
   .bl--landing { max-width: 60rem; }
   .bl--landing .landing-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 15rem;
-    gap: 2.75rem;
+    grid-template-areas:
+      "masthead about"
+      "feed     about";
+    column-gap: 2.75rem;
     align-items: start;
   }
+  .bl--landing .masthead { grid-area: masthead; }
+  .bl--landing .landing-feed { grid-area: feed; }
   .bl--landing .about {
+    grid-area: about;
     position: sticky;
     top: 1.5rem;
-    background: var(--bl-surface);
-    border: 1px solid var(--bl-line);
-    border-top: 2px solid var(--bl-accent);
-    border-radius: 10px;
-    padding: 1.1rem 1.2rem 1.25rem;
-  }
-}
-
-/* Narrow: the panel drops below the feed as a bordered card. */
-@media (max-width: 59.99rem) {
-  .bl--landing .about {
-    margin-top: 2.5rem;
-    border-top: 1px solid var(--bl-line);
-    padding-top: 1.5rem;
+    margin: 0;
   }
 }
 
