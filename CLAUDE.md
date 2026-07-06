@@ -76,6 +76,14 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   match the invoking shell's own command line and kill the whole chain
   mid-flight — either way everything after the `&&` is silently dropped,
   e.g. a chained `git add` never runs and no error points at it.
+- **Commit messages containing backticks or `$(...)` must be written with
+  `git commit -F <file>`** (or a quoted heredoc), never `git commit -m` —
+  inside a double-quoted `-m` argument the shell runs the backtick/`$()` span
+  as a command and mangles the commit body.
+- **For any since-last-merge diff or review, run `git fetch origin main` first
+  and anchor on the merge-base** (`git merge-base origin/main HEAD`) or the
+  commit under review (`HEAD~1`) — the environment's pre-cloned `origin/main`
+  is often stale and inflates the diff to 100+ unrelated files.
 - **Keep a PR's description in sync with its content — hard rule.** If you
   fundamentally change what a PR does (switch approach, swap the files it touches,
   answer review with a different solution), update the PR title/description in the
@@ -120,7 +128,11 @@ pnpm test:e2e    # L2 — smoke-render every (Tenant, Space) entry route (200, r
 Run `pnpm exec tsx scripts/screenshot.ts <url> <out.png> [WxH]` — it drives the
 pre-installed Chromium directly (via `PLAYWRIGHT_BROWSERS_PATH`), no new
 dependency or browser download required. The optional `WxH` (e.g. `1280x1600`)
-sets the window size — use it to reach below-the-fold content.
+sets the window size — use it to reach below-the-fold content. Use `pnpm dev`
+for fast visual iteration when you only need to eyeball a render. For a
+production-accurate shot use a built `pnpm preview` instead — the dev server
+injects a Nuxt DevTools overlay badge (e.g. a small "26 ms" timing pill) that
+can overlap real content and read as a UI bug.
 
 ### Verifying UI changes
 
