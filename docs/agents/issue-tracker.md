@@ -15,10 +15,13 @@ class to its MCP equivalent:
 - **Comment on an issue or PR** → `add_issue_comment` (not `issue_write`:
   its `update` + `body` *overwrites the issue description*)
 - **Read an issue, its comments, or sub-issues** → `issue_read`
-- **List / search issues** → `list_issues` / `search_issues`. Always paginate
-  `list_issues` (`perPage: 30` or less) and pass `minimal_output: true` — an
-  unpaginated call returns the whole issue set and overflows the tool-result
-  limit, landing as a base64 file you then have to slice by hand.
+- **List / search issues** → `list_issues` / `search_issues`. **`list_issues` and
+  `list_pull_requests` have no `minimal_output` param** — they always return full
+  bodies, so even a paginated call can overflow the tool-result limit. Prefer
+  `search_issues` / `search_pull_requests` with a targeted query for a narrow
+  lookup; when a full list is genuinely unavoidable, use a small `perPage`
+  (5–10) and page through it, expecting to slice the persisted file by hand for
+  large sets. Page both open and closed/merged.
 - **Read a PR or its diff** → `pull_request_read`
 - **Check a PR's gate status** → `pull_request_read` with method `get_check_runs`,
   *not* `get_status`: the combined-status API reports `total_count: 0` /
@@ -50,6 +53,30 @@ tools. Use the `Blocked by: #<n>` body-line fallback described under
 - **Close**: `gh issue close <number> --comment "..."`
 
 Infer the repo from `git remote -v` — `gh` does this automatically when run inside a clone.
+
+## PRDs
+
+A PRD is an ordinary GitHub issue — no dedicated label. The precedent is #64
+(the Atlas PRD):
+
+- **Label**: none. A PRD carries **no triage label** (not `needs-triage`, not
+  `ready-for-agent`) while it's a concept document rather than actionable work —
+  the triage-labels vocabulary (`docs/agents/triage-labels.md`) doesn't apply
+  until the hold below clears.
+- **Sub-issue linking**: link each user story to the PRD as a **native GitHub
+  sub-issue** (`sub_issue_write` / `gh api` on the sub-issues endpoint, same
+  mechanism as [Wayfinding's child tickets](#wayfinding-operations)), *and* put
+  a `Part of #<prd>` line at the top of the child's body — the same
+  belt-and-suspenders pattern used there, so the link still reads even where
+  native sub-issues aren't rendered.
+- **Hold semantics**: a PRD that isn't yet actionable says so in its own body,
+  e.g. *"On hold: implementation starts only after \[condition] — read, discuss,
+  refine the idea, don't build."* Every sub-issue **inherits the same hold** and
+  repeats the on-hold line at the top of its own body, so a reader who lands
+  directly on a user story sees the hold without having to open the parent.
+  There is no label for "on hold" — the body text is the single source of truth
+  until the condition clears, at which point the PRD (and its sub-issues) pick
+  up ordinary triage labels like any other issue.
 
 ## Pull requests as a triage surface
 
