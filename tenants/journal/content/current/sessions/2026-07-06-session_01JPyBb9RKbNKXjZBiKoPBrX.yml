@@ -1,0 +1,66 @@
+schemaVersion: 1
+session: session_01JPyBb9RKbNKXjZBiKoPBrX
+startedAt: 2026-07-06T04:51:18Z
+endedAt: 2026-07-06T05:49:15Z
+kind: interactive
+goal: Resolve all open PRs without CI edits
+status: completed
+outcome: Three PRs merged; five follow-up issues filed
+summary: >-
+  Assessed all three open PRs, then landed them. Reviewed #81 with an
+  eight-angle finder/verifier sweep (several of its claims needed empirical
+  correction), merged it, and filed follow-ups #93-#96. Unblocked #90
+  (generator removal, ADR-0014) without the lockstep gate.yml edit it demanded,
+  via an honest gate:drift compat shim; merged green. Rebased #83 onto
+  post-#90 main, swapped the deleted routing.generated import for the manifest
+  derivation, and added a system-Chrome fallback so the browser tier runs on
+  stock CI runners — merged green with gate.yml untouched. Human CI cleanup
+  single-homed in #97.
+prs: ["81", "90", "83"]
+docsRead:
+  - { path: "docs/agents/issue-tracker.md", reason: issue conventions }
+  - { path: "docs/agents/triage-labels.md", reason: label vocabulary }
+  - { path: ".github/workflows/gate.yml", reason: which steps blocked the PRs }
+  - { path: "tests/e2e/smoke.spec.ts", reason: adapt browser tier to ADR-0014 }
+skillsUsed:
+  - { name: review, reason: full verified review of PR 81 }
+  - { name: log-session, reason: this entry }
+frictions:
+  - description: >-
+      docs/agents/issue-tracker.md and the review skill both prescribe the gh
+      CLI, but the remote environment has none — every operation had to be
+      re-translated to GitHub MCP tools.
+    solution: >-
+      Note the GitHub-MCP fallback in docs/agents/issue-tracker.md (its single
+      home) so agents stop rediscovering the mismatch.
+    severity: minor
+  - description: >-
+      Human-only gate.yml blocked both remaining PRs: #90 deleted a script CI
+      still invokes, #83 needed a browser the runner lacks; each originally
+      demanded a lockstep human CI edit.
+    solution: >-
+      Solved in-repo (gate:drift compat shim; system-Chrome executablePath
+      fallback) with the CI cleanup single-homed in #97; consider documenting
+      this CI-compat pattern for future human-only-surface collisions.
+    severity: moderate
+  - description: >-
+      Semantic cross-PR conflict: #83 imported shared/routing.generated.ts,
+      which #90 deletes — textual merge tooling underreports this class of
+      conflict between in-flight PRs.
+    solution: >-
+      Land the structural PR first and rebase dependents onto it, checking
+      pairwise merges before choosing order.
+    severity: minor
+  - description: >-
+      PR #81 over-claimed its typecheck coverage; the gaps (unchecked tenant
+      configs, narrowing erased by as-unknown casts) surfaced only through
+      empirical injection testing during review.
+    solution: >-
+      Filed #93-#96; review PRs that expand gate coverage by injecting a
+      deliberate error behind each coverage claim.
+    severity: minor
+  - description: >-
+      startedAt was recovered from the session directory's birth timestamp
+      rather than captured; endedAt is exact.
+    solution: Deferred autonomous end-of-session trigger would capture both.
+    severity: nit
