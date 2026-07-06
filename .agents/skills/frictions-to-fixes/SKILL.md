@@ -55,7 +55,9 @@ the **ripeness test**, all three:
   isolation logic, CI / the safety gate — ADR-0004). Those are never in scope here.
 
 Drop one-offs, anything needing a human judgement call, and anything an ADR defers.
-Stop at the agreed number of ripe frictions (ask the user how many if unset).
+Stop at the agreed number of ripe frictions; if the count is unset and no user is
+reachable (autonomous run), default to all that pass the ripeness test, capped at
+~5.
 
 Done when each selected friction names its evidence and you can state in one line
 why it is ripe.
