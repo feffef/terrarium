@@ -70,6 +70,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   so in this repo a stale copy is a *behavioral* bug.
 - Inspect files with the **Read tool, not `cat`** — the Edit tool refuses to edit
   a file it hasn't seen via Read, so `cat`-then-Edit forces a wasteful re-read.
+- **Run process-killing teardown as its own command, never `&&`-chained** before
+  steps that must run. `pkill` (or killing a preview server) exits non-zero in
+  normal operation, and inside an `&&` chain that status silently aborts
+  everything after it — e.g. a chained `git add` is dropped with no error.
 - **Keep a PR's description in sync with its content — hard rule.** If you
   fundamentally change what a PR does (switch approach, swap the files it touches,
   answer review with a different solution), update the PR title/description in the
