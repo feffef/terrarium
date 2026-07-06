@@ -1,0 +1,47 @@
+schemaVersion: 1
+session: session_01DtjNo13eoz5wYHEWDheM4y
+startedAt: 2026-07-06T11:27:54Z
+endedAt: 2026-07-06T12:07:00Z
+kind: interactive
+goal: Ship typed routing keys, session-id recipe
+status: completed
+outcome: PRs 119 and 120 merged
+summary: >-
+  Read issues #96 and #99 with the owner's comments, posted the simplest full
+  solution to each: thread precise literal key types from the #routing virtual
+  module through resolveSpaceRoute so every Extract/keyof-Collections cast goes
+  (#96), and rewrite log-session's id recipe to read the harness-provided
+  trailer template and CLAUDE_CODE_REMOTE_SESSION_ID cross-check instead of
+  git-log archaeology (#99, verified empirically in this live session). Two
+  parallel agents implemented both; full safety gate green; split the shared
+  branch into two PRs on request. Both merged within the session — this log's
+  own id was recovered via the new recipe.
+prs: ["119", "120"]
+docsRead:
+  - { path: CLAUDE.md, reason: repo conventions and gate }
+  - { path: "https://github.com/feffef/terrarium/issues/96", reason: deep-fix scope and owner comment }
+  - { path: "https://github.com/feffef/terrarium/issues/99", reason: regression history and trailer question }
+  - { path: modules/routing.ts, reason: locate the d.ts widening root cause }
+  - { path: shared/routing.ts, reason: resolver type surface to deepen }
+  - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: catch-all casts }
+  - { path: "tenants/journal/app/pages/t/journal/[space]/index.vue", reason: Extract casts and literal tenant }
+  - { path: .agents/skills/log-session/SKILL.md, reason: old id recipe to replace }
+  - { path: tenants/journal/tenant.config.ts, reason: sessions schema and session field type }
+skillsUsed:
+  - { name: log-session, reason: author this log }
+frictions:
+  - description: MCP servers disconnected mid-turn; send_later failed with permission-stream error and GitHub tools vanished until reconnect forced a retry.
+    solution: Harness should retry transient MCP permission-stream failures transparently.
+    severity: minor
+  - description: Stop hook flagged commits as Unverified (committer email) with amend instructions; unclear if config was wrong — PRs merged unverified anyway.
+    solution: Preconfigure git user.email/user.name in environment setup so the hook never fires.
+    severity: minor
+  - description: Designated branch bundled two independent issues; separate-PRs request forced a cherry-pick split and force-with-lease rebase afterwards.
+    solution: Provision one branch per issue when a task spans independent issues.
+    severity: minor
+  - description: One-shot PR check-in trigger stayed armed after both PRs merged; deletion was interrupted, so it fires once uselessly.
+    solution: Auto-expire babysit check-ins when their subscribed PRs close.
+    severity: nit
+  - description: PR-subscription boilerplate arrived twice per PR — four near-identical webhook instruction messages, token-heavy noise.
+    solution: Deduplicate subscription confirmation messages.
+    severity: nit
