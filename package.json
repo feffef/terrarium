@@ -13,6 +13,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "typecheck": "nuxt typecheck && tsc -p tsconfig.node.json",
+    "gate:drift": "echo 'ADR-0014: the routing map is generated at build time from the manifests; there is no committed artifact to drift. Compat no-op until the L0 drift step is removed from gate.yml (issue #97).'",
     "lint": "eslint .",
     "test": "nuxt prepare && vitest run tests/unit",
     "test:e2e": "vitest run tests/e2e"
