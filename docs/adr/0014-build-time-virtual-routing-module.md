@@ -69,6 +69,8 @@ Nuxt module (`modules/routing.ts`) that computes and registers `#routing`.**
   in `.github/workflows/gate.yml`). CI is human-only (ADR-0004), so this change
   cannot remove it; a human must delete that step **in lockstep with merging this
   change**, or the gate fails on every run with `Missing script: gate:drift`.
+  *(Resolved by #97: the `L0 · drift` step and its `gate:drift` compat shim were
+  removed once the branch had merged.)*
 - Deleted: `scripts/generate.ts`, `pnpm gen`, `pnpm gate:drift`,
   `shared/routing.generated.ts`, its ESLint ignore, and the CLAUDE.md/docs passages
   explaining regeneration. One mechanism remains: manifests → `expand()` → both

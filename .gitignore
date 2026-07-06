@@ -11,6 +11,9 @@ dist
 # Nuxt Content local data (generated SQLite lives here)
 .data
 
+# Playwright-managed Chromium the L2 gate pins (PLAYWRIGHT_BROWSERS_PATH)
+.pw-browsers
+
 # Env & secrets
 .env
 
