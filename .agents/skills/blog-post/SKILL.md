@@ -35,7 +35,9 @@ do/don't list. Write the whole post *as that Persona*. The three:
 ## 2. Branch off `origin/main`
 
 `git fetch origin main` and branch `blog/<persona>-post-<today-UTC>` from
-`origin/main`, so the post PR is independent of any work branch.
+`origin/main`, so the post PR is independent of any work branch. If the caller
+pinned a designated branch for this session, branch that name off `origin/main`
+instead — a caller-pinned branch overrides this suggested name.
 
 ## 3. Gather material (read-only)
 

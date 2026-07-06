@@ -24,7 +24,9 @@ rendered page).
 ## 1. Branch off `origin/main`
 
 `git fetch origin main` and branch `journal/digest-refresh-<today-UTC>` from
-`origin/main`, so the digest PR is independent of any work branch.
+`origin/main`, so the digest PR is independent of any work branch. If the caller
+pinned a designated branch for this session, branch that name off `origin/main`
+instead — a caller-pinned branch overrides this suggested name.
 
 Done when you are on a fresh branch off the latest `origin/main`.
 
