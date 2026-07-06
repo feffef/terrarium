@@ -1,0 +1,91 @@
+schemaVersion: 1
+session: session_01PZN8TGWGFKiXuXvnDU5BGA
+startedAt: 2026-07-06T17:03:31Z
+endedAt: 2026-07-06T18:55:00Z
+kind: interactive
+goal: Rethink and rebuild session logging
+status: completed
+outcome: Shipped derive+author logging via SessionEnd hook
+summary: "Ending sessions was manual and self-report unreliable. Confirmed only this session's transcript is reachable, then split logs into a derived mechanical half (extracted from the transcript) and an authored interpretive half. Probed SessionEnd empirically: a web freeze fires reason=other, so the commit is summary-gated and idempotent (diff-guarded overwrite). Built the extractor, pure stitch, the handler, an --author mode; flipped log-session to model-invocable; amended ADR-0009 and CLAUDE.md; opened PR #141, resolved a merge conflict with main, merged. This entry is the first log produced by the new mechanism."
+prs:
+  - "141"
+docsRead:
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: the mechanism being amended
+  - path: tenants/journal/tenant.config.ts
+    reason: the sessions schema to extend
+  - path: scripts/log-session.ts
+    reason: existing helper to reuse for landing
+  - path: tenants/journal/content/current/sessions/2026-07-05-session_012RxBPU8M7nZmdLsRzh6ixU.yml
+    reason: (unknown)
+  - path: .gitignore
+    reason: (unknown)
+  - path: tenants/journal/app/types/journal.ts
+    reason: (unknown)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (unknown)
+  - path: CLAUDE.md
+    reason: (unknown)
+  - path: tenants/journal/content/current/skills/log-session.yml
+    reason: (unknown)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (unknown)
+  - path: .claude/settings.json
+    reason: (unknown)
+skillsUsed: []
+frictions:
+  - description: Web SessionEnd freeze behaviour is undocumented; needed a probe hook to find a freeze fires reason=other, not reason=resume.
+    solution: Recorded in ADR-0009; an upstream docs note on web freeze would save the probe.
+    severity: moderate
+  - description: Writing hook config (settings.local.json) prompted for permission even in accept-edits mode — a potential blocker for autonomous runs.
+    solution: It is the ADR-0004 human-only-hook boundary; committed hooks then run unprompted. Verified via the resume.
+    severity: minor
+  - description: I over-stated the schema change in the ADR as a breaking narrowing needing schemaVersion 2; the user caught it — it is additive.
+    solution: Read the actual schema before claiming a migration; corrected the ADR.
+    severity: minor
+  - description: The utcTimestamp schema rejects millisecond precision, but toISOString() emits .000Z, so extracted timestamps failed validation.
+    solution: A toUtcSeconds helper strips millis to the required second precision.
+    severity: nit
+  - description: Derived reads are absolute paths while agents cite repo-relative, so the same file appeared twice in docsRead; caught in dry-run.
+    solution: Relativize derived paths against the transcript cwd before dedup.
+    severity: minor
+  - description: The data contract churned mid-design (source tag added then dropped, reason optional then required, filesRead vs merged docsRead), costing several ADR rewrites.
+    solution: Converge the stored shape with the user earlier, before writing it up.
+    severity: minor
+  - description: Resolving the merge conflict I left a duplicate skillsUsed line in the Skill example.
+    solution: Re-read the resolved region before staging.
+    severity: nit
+durationSec: 6688
+models:
+  claude-opus-4-8: 333
+toolCounts:
+  Bash: 62
+  Read: 13
+  Agent: 1
+  Write: 8
+  Edit: 44
+  Grep: 1
+  ToolSearch: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__pull_request_read: 2
+filesEdited:
+  - .claude/settings.local.json
+  - .gitignore
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - tenants/journal/tenant.config.ts
+  - scripts/session-trace.ts
+  - tenants/journal/app/types/journal.ts
+  - scripts/session-end.ts
+  - tests/unit/session-trace.spec.ts
+  - scripts/log-session.ts
+  - .agents/skills/log-session/SKILL.md
+  - CLAUDE.md
+  - tenants/journal/content/current/skills/log-session.yml
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .claude/settings.json
+subagents:
+  - type: claude-code-guide
+    task: SessionEnd hook semantics
+gitBranch: claude/session-logs-rethink-d3qgza
+entrypoint: remote
+cliVersion: 2.1.201
