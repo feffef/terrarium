@@ -31,6 +31,7 @@ const toggle = () => (expanded.value = !expanded.value)
       <p class="outcome">{{ card.outcome }}</p>
       <div class="foot">
         <span v-for="pr in card.prs" :key="pr" class="chip pr">PR {{ pr.startsWith('#') ? pr : '#' + pr }}</span>
+        <span v-if="card.model" class="chip model" title="Model(s) that drove this session">{{ card.model }}</span>
         <JournalFrictionStrata variant="inline" :counts="card.frictionCounts" :total="card.frictionTotal" />
         <span v-if="card.skills.length" class="skills">{{ card.skills.join(' · ') }}</span>
         <span class="sid">{{ card.sid }}</span>
@@ -41,10 +42,14 @@ const toggle = () => (expanded.value = !expanded.value)
     <div v-if="expanded" :id="detailId" class="detail">
       <p v-if="card.summary" class="summary">{{ card.summary }}</p>
 
-      <div v-if="card.docsRead.length" class="block">
-        <h4>Docs read</h4>
+      <div v-if="card.subagents.length" class="block">
+        <h4>Subagents</h4>
         <ul>
-          <li v-for="d in card.docsRead" :key="d.path"><code>{{ d.path }}</code> — {{ d.reason }}</li>
+          <li v-for="(a, i) in card.subagents" :key="i">
+            <span class="mono">{{ a.type || 'agent' }}</span
+            ><span v-if="a.model" class="amodel"> · {{ a.model }}</span
+            ><template v-if="a.task"> — {{ a.task }}</template>
+          </li>
         </ul>
       </div>
 
@@ -63,6 +68,31 @@ const toggle = () => (expanded.value = !expanded.value)
             <span class="fdesc">{{ f.description }}<span v-if="f.solution" class="fsol"> → {{ f.solution }}</span></span>
           </li>
         </ul>
+      </div>
+
+      <!-- Mechanical trace — verbose, transcript-derived lists. Tucked behind
+           individual disclosures so they inform without swamping the narrative. -->
+      <div v-if="card.docsRead.length || card.filesEdited.length || card.tools.length" class="trace-group">
+        <details v-if="card.docsRead.length" class="trace">
+          <summary>Files read <span class="n">{{ card.docsRead.length }}</span></summary>
+          <ul>
+            <li v-for="d in card.docsRead" :key="d.path"><code>{{ d.path }}</code> — {{ d.reason }}</li>
+          </ul>
+        </details>
+        <details v-if="card.filesEdited.length" class="trace">
+          <summary>Files edited <span class="n">{{ card.filesEdited.length }}</span></summary>
+          <ul>
+            <li v-for="f in card.filesEdited" :key="f"><code>{{ f }}</code></li>
+          </ul>
+        </details>
+        <details v-if="card.tools.length" class="trace">
+          <summary>Tools used <span class="n">{{ card.tools.length }}</span></summary>
+          <div class="tools">
+            <span v-for="t in card.tools" :key="t.name" class="tool"
+              ><span class="mono">{{ t.name }}</span><span class="tcount">×{{ t.count }}</span></span
+            >
+          </div>
+        </details>
       </div>
     </div>
   </article>
@@ -120,6 +150,17 @@ const toggle = () => (expanded.value = !expanded.value)
   border-radius: 6px;
 }
 .chip.pr { color: var(--jd-accent); }
+.chip.model { color: var(--jd-ink); }
+.chip.model::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--jd-accent);
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
 .skills { font-family: var(--jd-mono); font-size: 0.7rem; color: var(--jd-faint); }
 .sid {
   margin-left: auto;
@@ -162,6 +203,57 @@ const toggle = () => (expanded.value = !expanded.value)
 .sev[data-sev='major'] { color: var(--jd-sev-major); }
 .sev[data-sev='blocker'] { color: var(--jd-sev-blocker); }
 .fsol { color: var(--jd-faint); }
+.amodel { font-family: var(--jd-mono); color: var(--jd-accent); font-size: 0.82em; }
+
+/* Mechanical-trace disclosures — native <details>, one per verbose list. */
+.trace-group { display: flex; flex-direction: column; gap: 0.4rem; }
+.trace {
+  border: 1px solid var(--jd-line);
+  border-radius: 6px;
+  background: var(--jd-surface-2);
+}
+.trace > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.6rem;
+  font-family: var(--jd-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--jd-faint);
+  border-radius: 6px;
+}
+.trace > summary::-webkit-details-marker { display: none; }
+.trace > summary::before { content: '▸'; font-size: 0.72em; color: var(--jd-faint); }
+.trace[open] > summary::before { content: '▾'; }
+.trace > summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px; }
+.trace .n {
+  font-size: 0.92em;
+  color: var(--jd-muted);
+  background: var(--jd-surface);
+  border: 1px solid var(--jd-line);
+  border-radius: 999px;
+  padding: 0 0.42rem;
+  font-variant-numeric: tabular-nums;
+}
+.trace > ul { margin: 0; padding: 0 0.7rem 0.6rem; list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+.trace li { font-size: 0.84rem; color: var(--jd-muted); line-height: 1.45; }
+.tools { display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0 0.7rem 0.6rem; }
+.tool {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.28rem;
+  background: var(--jd-surface);
+  border: 1px solid var(--jd-line);
+  border-radius: 5px;
+  padding: 0.14rem 0.42rem;
+  font-size: 0.75rem;
+  color: var(--jd-muted);
+}
+.tool .tcount { color: var(--jd-faint); font-variant-numeric: tabular-nums; }
 @media (max-width: 460px) {
   .sid { display: none; }
 }

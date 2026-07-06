@@ -15,6 +15,7 @@ import {
   durMin,
   externalSkillCount,
   fmtWhen,
+  formatModels,
   frictionCount,
   frictionTotals,
   kindCounts,
@@ -24,6 +25,7 @@ import {
   skillGroups,
   skillsLabel,
   skillsSub,
+  toolEntries,
 } from '../../tenants/journal/app/utils/dashboard.ts'
 import type { Friction, SessionDoc, Severity, SkillDoc } from '../../tenants/journal/app/types/journal.ts'
 
@@ -180,6 +182,30 @@ describe('skill inventory', () => {
   })
 })
 
+describe('formatModels', () => {
+  it('strips the claude- prefix and joins busiest-first', () => {
+    expect(formatModels({ 'claude-opus-4-8': 137 })).toBe('opus-4-8')
+    expect(formatModels({ 'claude-sonnet-5': 4, 'claude-opus-4-8': 137 })).toBe('opus-4-8 · sonnet-5')
+  })
+
+  it('breaks equal counts by id and returns "" when absent', () => {
+    expect(formatModels({ 'claude-b': 2, 'claude-a': 2 })).toBe('a · b')
+    expect(formatModels(undefined)).toBe('')
+    expect(formatModels({})).toBe('')
+  })
+})
+
+describe('toolEntries', () => {
+  it('sorts by count desc then name, and handles absent', () => {
+    expect(toolEntries({ Bash: 19, Read: 5, Edit: 5 })).toEqual([
+      { name: 'Bash', count: 19 },
+      { name: 'Edit', count: 5 },
+      { name: 'Read', count: 5 },
+    ])
+    expect(toolEntries(undefined)).toEqual([])
+  })
+})
+
 describe('cards', () => {
   it('maps a SessionDoc to its display view, including shortId truncation', () => {
     const s = session({
@@ -202,6 +228,28 @@ describe('cards', () => {
     expect(c!.prs).toEqual(['#7'])
     expect(c!.goal).toBe('goal')
     expect(c!.docsRead).toEqual([{ path: 'CLAUDE.md', reason: 'r' }])
+  })
+
+  it('surfaces the mechanical trace: model, subagents, files edited, tools', () => {
+    const s = session({
+      models: { 'claude-opus-4-8': 100, 'claude-sonnet-5': 3 },
+      subagents: [{ type: 'general-purpose', task: 'survey', model: 'sonnet' }],
+      filesEdited: ['a.ts', 'b.vue'],
+      toolCounts: { Bash: 9, Read: 2 },
+    })
+    const [c] = cards([s])
+    expect(c!.model).toBe('opus-4-8 · sonnet-5')
+    expect(c!.subagents).toEqual([{ type: 'general-purpose', task: 'survey', model: 'sonnet' }])
+    expect(c!.filesEdited).toEqual(['a.ts', 'b.vue'])
+    expect(c!.tools).toEqual([{ name: 'Bash', count: 9 }, { name: 'Read', count: 2 }])
+  })
+
+  it('defaults the trace fields for an older, authored-only log', () => {
+    const [c] = cards([session()])
+    expect(c!.model).toBe('')
+    expect(c!.subagents).toEqual([])
+    expect(c!.filesEdited).toEqual([])
+    expect(c!.tools).toEqual([])
   })
 })
 

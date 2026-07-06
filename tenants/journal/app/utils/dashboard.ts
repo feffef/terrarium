@@ -37,6 +37,24 @@ export function shortId(s: string): string {
   return s.length > 18 ? `${s.slice(0, 13)}…${s.slice(-4)}` : s
 }
 
+// ── Mechanical-trace formatting ──────────────────────────
+// Model ids are verbose (`claude-opus-4-8`); the summary chip shows the short,
+// human tail. A session may span more than one model (a subagent on a cheaper
+// tier), so join them busiest-first. Empty ⇒ an older, authored-only log.
+export function formatModels(models?: Record<string, number>): string {
+  return Object.entries(models ?? {})
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .map(([id]) => id.replace(/^claude-/, ''))
+    .join(' · ')
+}
+
+// tool name → call count as a display list, busiest-first then alpha.
+export function toolEntries(counts?: Record<string, number>): { name: string; count: number }[] {
+  return Object.entries(counts ?? {})
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+}
+
 // ── Aggregations (scoped to one Space) ───────────────────
 export const emptySev = (): Record<Severity, number> => ({ nit: 0, minor: 0, moderate: 0, major: 0, blocker: 0 })
 
@@ -137,11 +155,15 @@ export function cards(sessions: SessionDoc[]): (SessionCardView & { key: string 
     frictionTotal: s.frictions.length,
     skills: (s.skillsUsed ?? []).map((x) => x.name),
     sid: shortId(s.session),
+    model: formatModels(s.models),
     // Expanded detail — the full log, revealed on click (no route of its own).
     summary: s.summary,
+    subagents: s.subagents ?? [],
     docsRead: s.docsRead ?? [],
     skillsUsed: s.skillsUsed ?? [],
     frictions: s.frictions,
+    filesEdited: s.filesEdited ?? [],
+    tools: toolEntries(s.toolCounts),
   }))
 }
 
