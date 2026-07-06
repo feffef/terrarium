@@ -19,6 +19,19 @@ Status: Accepted
 > high-risk list). This **activates**, and does not reverse, the "Now → Mid-term"
 > transition below. Scope today is that one Skill; a broader standing
 > agent-reviewer capability would warrant its own ADR.
+>
+> **Amended (2026-07-06).** The **`digest` Skill's gated PR auto-merges on a
+> green gate**: after opening the PR, the authoring session enables GitHub
+> auto-merge (or, where that is unavailable, merges only after the gate
+> reports green). This activates ADR-0004's **low-risk auto-merge tier**
+> ("content only — auto-mergeable when green") for this one chartered job: the
+> merge decision is delegated to the **objective gate**, not made by the
+> author's judgement, and the PR's expected shape is fixed and known (digest
+> pages under `tenants/journal/content/current/pages/digests/`, at most plus
+> the Journal index's editorial intro). Bounded: if anything **outside that
+> scope** rides in the PR it is left for human review, and a **red gate is
+> never merged** — fix on the branch or escalate. Everything else keeps
+> ADR-0003's default: gated PR, human merge.
 
 ## Context
 
