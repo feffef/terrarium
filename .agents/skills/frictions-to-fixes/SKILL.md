@@ -17,14 +17,21 @@ without touching a human-only surface — but keep the hard ones rare (§3).
 
 Run it when asked, or after a batch of sessions has piled up unaddressed friction.
 
-## 1. Read every session log
+## 1. Read the latest 20 session logs
 
-Read **all** of `tenants/journal/content/current/sessions/*.yml` — not a sample.
+Session logs live in `tenants/journal/content/current/sessions/*.yml`, each named
+with an ISO date prefix (`YYYY-MM-DD-…`) so a plain filename sort is chronological.
+Read the **latest 20** — take the last 20 filenames sorted ascending (e.g.
+`ls -1 tenants/journal/content/current/sessions/*.yml | tail -20`). This is a
+**recency window, not a sample**: read every log inside it, but don't chase
+frictions from older sessions that are likely long gone. (If there are fewer than
+20 logs, read them all.)
+
 For each, pull its `frictions[]` (`description`, `solution`, `severity`) and keep
 its `startedAt` — you need the date to catch regressions in step 2.
 
-Done when every log is read and you hold one flat list of frictions, each tagged
-with its session(s), severity, and date.
+Done when every log in the latest-20 window is read and you hold one flat list of
+frictions, each tagged with its session(s), severity, and date.
 
 ## 2. Screen against fixes already shipped
 

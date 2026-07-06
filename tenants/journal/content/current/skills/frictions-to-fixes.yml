@@ -1,12 +1,17 @@
 name: frictions-to-fixes
 category: platform-operation
-importance: supporting
+importance: core
 role: >-
-  The consuming half of the self-improvement loop `log-session` feeds: it reads
-  the Journal's accumulated session-log frictions, screens out the ones already
-  fixed, and ships the ripe remainder — simple, autonomous, off the human-only
-  surfaces — as gated PRs (ADR-0003), batching doc-only fixes into one PR. When a
-  friction reappears after its fix merged it flags the regression as its own
-  alerting issue rather than re-fixing blindly. A manual precursor to the deferred
-  `consolidate`/`codify` jobs (ADR-0009); reach for it when frictions have piled up
-  and you want them retired in a batch.
+  The consuming half of the self-improvement loop `log-session` feeds, and the
+  first place the project's autonomy actually closes end-to-end: it reads the
+  latest 20 session logs, screens out already-fixed frictions, and turns the rest
+  into up to 10 issues (at most 2 hard) — grouping related frictions where it
+  helps. It dispatches Sonnet impl agents to open gated PRs, then acts as the
+  ADR-0003 mid-term review-agent: it code-reviews each sibling-authored PR against
+  the ADR-0004 gate and merges it autonomously (or amends small fixes first),
+  always leaving a review comment as an audit trace, and escalates to a human only
+  when a change is genuinely high-risk (new dependency, untested/untestable
+  behaviour, or a human-only surface). Regressions — a friction back after its fix
+  merged — are flagged as their own alerting issue, never re-fixed blindly. The
+  manual precursor to the deferred `consolidate`/`codify` jobs (ADR-0009); reach
+  for it when frictions have piled up and you want them retired in a batch.
