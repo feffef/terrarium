@@ -98,3 +98,10 @@ implications:
   browser defaults, check whether it's actually mounted under the wrapper
   element (`.jd`) in the render tree — a component rendered outside that
   wrapper (e.g. via `<Teleport>` to `<body>`) won't see the tokens.
+
+## 3. A new Tenant/layer needs `nuxt prepare` before `pnpm lint`
+
+After adding a new Tenant/layer, run `nuxt prepare` (or `pnpm install`, which
+runs it) before `pnpm lint` — a stale `.nuxt` doesn't yet know the layer's
+`app/pages/` directory and mis-fires `vue/multi-word-component-names` on the
+layer's pages.
