@@ -60,6 +60,12 @@ function dedup(xs: (string | undefined)[]): string[] {
   return [...new Set(xs.filter((x): x is string => !!x))]
 }
 
+/** Second-precision UTC (`…:SSZ`) — the canonical form the `sessions` schema's
+ *  `utcTimestamp` refine requires; `toISOString()`'s millisecond `.000Z` is rejected. */
+function toUtcSeconds(ms: number): string {
+  return new Date(ms).toISOString().replace(/\.\d{3}Z$/, 'Z')
+}
+
 /** Parse a transcript jsonl into records, skipping unparseable lines. */
 export function parseTranscript(jsonl: string): Record<string, unknown>[] {
   const out: Record<string, unknown>[] = []
@@ -130,22 +136,98 @@ export function extractTrace(records: Record<string, unknown>[]): MechanicalTrac
   const started = stamps.length ? Math.min(...stamps) : undefined
   const ended = stamps.length ? Math.max(...stamps) : undefined
 
+  // Relativize repo paths to match how the agent cites them (`docs/adr/…`, not
+  // `/home/user/terrarium/docs/adr/…`) so the stitch dedups a curated entry
+  // against its observed twin instead of listing the file twice. Applied AFTER
+  // the noise filter, which keys on absolute paths. Reads outside the repo stay
+  // absolute — honestly flagging an external file.
+  const cwd = typeof meta.cwd === 'string' ? meta.cwd : ''
+  const rel = (p: string): string => (cwd && p.startsWith(cwd + '/') ? p.slice(cwd.length + 1) : p)
+
   return {
     session: meta.sessionId as string | undefined,
     gitBranch: meta.gitBranch as string | undefined,
     entrypoint: meta.entrypoint as string | undefined,
     cliVersion: meta.version as string | undefined,
-    startedAt: started !== undefined ? new Date(started).toISOString() : undefined,
-    endedAt: ended !== undefined ? new Date(ended).toISOString() : undefined,
+    startedAt: started !== undefined ? toUtcSeconds(started) : undefined,
+    endedAt: ended !== undefined ? toUtcSeconds(ended) : undefined,
     durationSec: started !== undefined && ended !== undefined ? Math.round((ended - started) / 1000) : undefined,
     models,
     toolCounts,
-    filesRead: dedup(reads).filter(isContentPath),
-    filesEdited: dedup(edits).filter(isContentPath),
+    filesRead: dedup(reads).filter(isContentPath).map(rel),
+    filesEdited: dedup(edits).filter(isContentPath).map(rel),
     skillsUsed: dedup(skills),
     subagents,
     prSignals,
   }
+}
+
+// ── Stitch ────────────────────────────────────────────────────────────────
+
+/** The reason a transcript-observed read carries when the agent never annotated
+ *  it — the lightweight marker of a mechanically-folded-in entry (ADR-0009). */
+export const DERIVED_REASON = '(unknown)'
+
+/** The interpretive half the live agent writes to the scratch during the session.
+ *  Timings/models/etc. are NOT here — those are derived. `session`/`kind` are the
+ *  only identity fields the agent must supply; everything mechanical comes from
+ *  the trace. */
+export interface AuthoredScratch {
+  session: string
+  kind?: 'interactive' | 'autonomous'
+  goal: string
+  status: 'completed' | 'partial' | 'blocked' | 'abandoned'
+  outcome: string
+  summary: string
+  prs?: string[]
+  docsRead?: { path: string; reason: string }[]
+  skillsUsed?: { name: string; reason: string }[]
+  frictions: { description: string; solution: string; severity: string }[]
+}
+
+function mergeRefs<T extends Record<string, string>>(
+  authored: T[],
+  derivedKeys: string[],
+  keyField: 'path' | 'name',
+): T[] {
+  const seen = new Set(authored.map((a) => a[keyField]))
+  const folded = derivedKeys
+    .filter((k) => !seen.has(k))
+    .map((k) => ({ [keyField]: k, reason: DERIVED_REASON }) as unknown as T)
+  return [...authored, ...folded]
+}
+
+/** Combine the authored scratch with the derived trace into a full session-log
+ *  entry. Pure — the testable core of the stitch. Mechanical fields come only
+ *  from `trace`; `docsRead`/`skillsUsed` union the curated entries with observed
+ *  reads (folded in with a placeholder reason). Empty mechanical collections are
+ *  dropped so a minimal session stays clean. */
+export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Record<string, unknown> {
+  const entry: Record<string, unknown> = {
+    schemaVersion: 1,
+    session: authored.session,
+    startedAt: trace.startedAt,
+    endedAt: trace.endedAt,
+    kind: authored.kind ?? 'interactive',
+    goal: authored.goal,
+    status: authored.status,
+    outcome: authored.outcome,
+    summary: authored.summary,
+    prs: authored.prs ?? [],
+    docsRead: mergeRefs(authored.docsRead ?? [], trace.filesRead, 'path'),
+    skillsUsed: mergeRefs(authored.skillsUsed ?? [], trace.skillsUsed, 'name'),
+    frictions: authored.frictions,
+  }
+  // Mechanical fields — include only when they carry signal.
+  if (trace.durationSec !== undefined) entry.durationSec = trace.durationSec
+  if (Object.keys(trace.models).length) entry.models = trace.models
+  if (Object.keys(trace.toolCounts).length) entry.toolCounts = trace.toolCounts
+  if (trace.filesEdited.length) entry.filesEdited = trace.filesEdited
+  if (trace.subagents.length) entry.subagents = trace.subagents
+  if (trace.gitBranch) entry.gitBranch = trace.gitBranch
+  if (trace.entrypoint) entry.entrypoint = trace.entrypoint
+  if (trace.cliVersion) entry.cliVersion = trace.cliVersion
+  return entry
 }
 
 function main(): void {

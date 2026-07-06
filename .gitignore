@@ -28,3 +28,7 @@ dist
 
 # Claude Code per-machine local settings (never committed)
 .claude/settings.local.json
+
+# Authored session-log scratch — the SessionEnd handler's input, never committed
+# (its home is main, written by the handler; ADR-0009 amendment)
+.session-logs/
