@@ -105,6 +105,11 @@ post in **real, verifiable facts** and **link them** so readers can go look:
   elegant commit/file that impressed him.
 - Never link something you didn't verify exists (`git log`, `gh`/GitHub MCP, or the
   file on disk). A dead or wrong link is as bad as an invented fact.
+- **This rule isn't just for links — verify every factual claim**, not only the
+  ones you're linking. Re-derive any weekday, count, or date straight from `git`
+  or the file on disk before publishing (`git log --date=format:'%A'`, `wc -l`,
+  etc.) — a wrong number or weekday is as bad as an invented fact, and no gate
+  catches it.
 - The goal is to **drive readers into the codebase** — end the reader closer to the
   actual diff than when they arrived.
 
@@ -128,6 +133,12 @@ This is the only time a Persona writes outside its own Space, and it's bounded t
 the target's `pingbacks` collection — never another Persona's `pages`.
 
 ## 7. Clear the gate, then open the PR
+
+**Before opening the PR, re-read the draft against `personas/<persona>.md`'s
+do/don't list.** Confirm it actually reads *in that Persona's voice* and is
+*interesting* — not a generic point-by-point rebuttal — and fix it now if it
+isn't. Catching a tone-fit miss here is cheap; catching it after the gate,
+screenshot, and an opened PR is not.
 
 Run the safety gate (a new post adds no collection, but a malformed
 `reactsTo`/pingback fails L1):

@@ -89,6 +89,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   answer review with a different solution), update the PR title/description in the
   same push. A description that still sells the old approach is a defect, not a
   nit: reviewers gate on it.
+- **When dispatching parallel subagents that touch git, pass `isolation: 'worktree'`
+  explicitly** — it is an Agent-tool parameter, not implied by the prompt. Without
+  it, "parallel" agents share one checkout and race on branches. Each worktree
+  agent must also pin its worktree root (operate from that path) before any git
+  op, so it never runs git in the shared main checkout.
 
 ## Repo layout
 
