@@ -15,10 +15,21 @@ const BLOGS = [
   { name: 'Kevin', path: '/t/blog/kevin', blurb: 'the dazzled, nervous dev', accent: '#4f8f6a' },
 ]
 
+// The Atlas gets its own curated block — the design-heavy showpiece Tenant, with a
+// single front door at its Tenant root (ADR-0016) rather than a per-Space list.
+const ATLAS = {
+  path: '/t/atlas',
+  biomes: [
+    { name: 'Canopy', accent: '#4b7a4a' },
+    { name: 'Floor', accent: '#9a5a2b' },
+    { name: 'Pool', accent: '#3f7f8f' },
+  ],
+}
+
 const otherRoutes = Object.entries(routingMap).flatMap(([tenant, spaces]) =>
   Object.keys(spaces)
     .map((space) => `/t/${tenant}/${space}`)
-    .filter((path) => path !== PRIMARY_PATH && tenant !== 'blog'),
+    .filter((path) => path !== PRIMARY_PATH && tenant !== 'blog' && tenant !== 'atlas'),
 )
 </script>
 
@@ -51,6 +62,17 @@ const otherRoutes = Object.entries(routingMap).flatMap(([tenant, spaces]) =>
           <span class="blog-blurb">{{ b.blurb }}</span>
         </NuxtLink>
       </div>
+    </section>
+
+    <section class="atlas-feature" aria-label="The Atlas">
+      <p class="blogs-lead">Or wander the Atlas — a field guide to an ecosystem that does not exist:</p>
+      <NuxtLink :to="ATLAS.path" class="atlas-card">
+        <span class="atlas-swatches" aria-hidden="true">
+          <span v-for="b in ATLAS.biomes" :key="b.name" class="sw" :style="{ background: b.accent }" />
+        </span>
+        <span class="atlas-name">The Atlas of the Terrarium</span>
+        <span class="atlas-blurb">Engraved plates, a wanderable food web, and a resident naturalist — grown one specimen at a time.</span>
+      </NuxtLink>
     </section>
 
     <footer v-if="otherRoutes.length" class="more">
@@ -177,6 +199,32 @@ const otherRoutes = Object.entries(routingMap).flatMap(([tenant, spaces]) =>
 }
 .blog-name { font-weight: 600; color: var(--root-ink); }
 .blog-blurb { font-size: 0.82rem; color: var(--root-muted); }
+
+.atlas-feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 40rem;
+}
+.atlas-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.3rem 1.6rem;
+  border: 1px solid var(--root-line);
+  border-radius: 12px;
+  background: transparent;
+  text-decoration: none;
+  max-width: 30rem;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.atlas-card:hover { border-color: var(--root-accent); transform: translateY(-2px); }
+.atlas-swatches { display: inline-flex; gap: 5px; margin-bottom: 0.2rem; }
+.atlas-swatches .sw { width: 16px; height: 16px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); }
+.atlas-name { font-weight: 650; font-size: 1.15rem; color: var(--root-ink); letter-spacing: -0.01em; }
+.atlas-blurb { font-size: 0.9rem; color: var(--root-muted); line-height: 1.5; }
 
 .more {
   display: flex;

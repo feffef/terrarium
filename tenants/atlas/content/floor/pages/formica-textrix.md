@@ -1,0 +1,70 @@
+---
+title: Formica textrix
+description: the weaver-ant, which is always at work and has never once been seen to finish.
+commonName: the weaver-ant
+classification: tunnelwright
+rarity: abundant
+size: 4 mm
+diet: leaf and labour
+activity:
+  label: dawn and dusk
+  bands: [[5, 9], [16, 20]]
+signature:
+  colors:
+    - { name: soil brown, hex: "#6b4a2a" }
+    - { name: amber, hex: "#c88a3a" }
+  gloss: soil brown shot with amber
+plate:
+  number: I
+illustration: |
+  <g stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none">
+    <!-- the ground -->
+    <path d="M36 236 q90 6 176 2 t152 -6" stroke-width="1.1" />
+    <path d="M60 242 q40 3 78 1 M250 240 q46 2 92 -3" stroke-width="0.8" opacity="0.6" />
+    <!-- head -->
+    <path d="M118 152 q1 -14 17 -15 q16 -1 17 13 q1 13 -16 14 q-16 0 -18 -12 z" />
+    <circle cx="128" cy="148" r="1.6" fill="currentColor" stroke="none" />
+    <!-- mandibles -->
+    <path d="M118 148 q-9 2 -12 9 M119 157 q-8 0 -11 5" />
+    <!-- antennae -->
+    <path d="M126 141 l-12 -19 l-23 -9" />
+    <path d="M136 139 l-4 -22 l-17 -16" />
+    <!-- thorax -->
+    <path d="M152 151 q10 -12 26 -10 q16 2 20 13 q-3 11 -19 12 q-18 1 -27 -15 z" />
+    <!-- petiole -->
+    <path d="M198 158 q6 -5 10 0 q3 5 -3 8 q-6 2 -7 -8 z" />
+    <!-- gaster -->
+    <path d="M208 163 q10 -16 30 -15 q22 1 26 19 q-3 18 -26 19 q-22 0 -30 -23 z" />
+    <g stroke-width="0.7" opacity="0.7">
+      <path d="M214 166 q14 11 32 12" />
+      <path d="M216 173 q12 9 26 9" />
+      <path d="M220 179 q9 5 18 5" />
+      <path d="M218 158 q4 4 8 6" />
+    </g>
+    <!-- near legs -->
+    <path d="M157 163 l-21 19 l-13 49" />
+    <path d="M172 166 l1 30 l4 36" />
+    <path d="M188 165 l28 18 l16 48" />
+    <!-- far legs -->
+    <g opacity="0.45">
+      <path d="M164 164 l-11 25 l-3 41" />
+      <path d="M180 166 l17 24 l7 40" />
+    </g>
+  </g>
+  <!-- the work in hand: thread and tunnel-arch, tinted -->
+  <g stroke="var(--sig-1)" stroke-width="1.4" stroke-linecap="round" fill="none">
+    <path d="M112 156 q-22 16 -32 38 q-5 12 -8 26" />
+    <path d="M50 234 q19 -28 46 -2" />
+    <g stroke-width="0.8" opacity="0.7">
+      <path d="M96 176 l7 5 M87 192 l8 4 M80 208 l8 3 M76 222 l8 2" />
+    </g>
+  </g>
+---
+
+The column was at work when we first lowered the lamp below the leaf line, and it has been at work on every visit since. We have come at dawn and found them weaving; at dusk, and found them weaving; we came once at an hour we are not proud of and found the galleries empty but freshly mended, as though the work had only just stepped out of the room.
+
+*Formica textrix* does not dig so much as weave. Soil crumb, leaf-vein, root-hair, and a dark thread of its own spinning are drawn together into galleries that hold the loose litter the way warp holds weft. The remarkable thing — stated plainly, as it deserves — is that the weaving is never finished. A gallery completed at dawn is as likely to be unpicked at dusk and worked again a thumb's width to the left, for reasons the column does not disclose. We mapped the western workings twice in one week and produced, in good faith, two different maps.
+
+On the twenty-second of June we dusted one worker with a little chalk so as to follow her. She took a leaf-fragment three times her own length down the long gallery, surrendered it, returned, took another, and was still at it when the light failed and we, not she, gave up. The chalk was gone by morning. We suspect the column disapproved of it.
+
+We have never observed a weaver-ant at rest. We do not conclude that it never rests; only that it is better at not being watched resting than we are at watching.

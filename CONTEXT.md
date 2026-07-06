@@ -43,7 +43,9 @@ vary by Tenant; the Platform treats them generically. For example, the
 Journal Tenant uses `current` (live) and `archived` (retired snapshots). A
 customer-facing website Tenant might instead use `prod` (live
 content), `uat` (customer testing), and `dev` (developer playground) — the same
-Collections in each, but fully separated content *data* per Space.
+Collections in each, but fully separated content *data* per Space. The Atlas
+Tenant uses them as **places** (Biomes) — a third distinct Space semantics
+alongside the Journal's lifecycle and the Blog's Personas.
 
 ### Collection
 The structure of one *type* of content within a Space (e.g. `blog`, `pages`,
@@ -102,6 +104,53 @@ Persona's Space — denormalized there at author time (persona/path/title/blurb
 inlined), so surfacing it is a **same-Space read**, never a cross-Space runtime
 query (ADR-0012). The reacting post is itself a first-class post in its own Space,
 optionally headed by a `reactsTo` reference to the post it answers.
+
+### Atlas (Tenant)
+The Platform's third Tenant: a lavishly designed natural-history **field guide** to
+a fictional ecosystem observed under glass — the Platform's design-heavy showpiece.
+Where the Journal is honest self-documentation and the Blog is in-character
+commentary, the Atlas is pure fit-out: the Tenant you open to show what a complex,
+agent-grown site looks like. Its Spaces are **Biomes** (see Biome), and its content
+is both record and prose — each **Specimen** is at once a structured catalogue entry
+and a piece of writing. It is endlessly extensible one Specimen / Interaction /
+Observation at a time; some Specimens are quiet portraits of the Platform's own
+habits, kept as **subtext, never named**. Everything textual speaks in one
+**naturalist's voice**, and every plate is drawn in one **engraved style** — both
+defined by the `atlas-specimen` Skill so any session can extend the guide in register.
+
+### Biome (Space)
+A Space of the Atlas Tenant, embodying one **place** in the sealed world —
+`canopy`, `floor`, `pool` today. This is the Atlas's word for a Space (say "Biome"
+in Atlas/product sentences, "Space" for the Platform mechanism). Biomes share the
+guide's structure but hold fully separate populations: a Specimen belongs to exactly
+one Biome, so a Biome's food web is always a same-Space read. Each Biome carries its
+own palette and character (*dappled, patient*; *dark, industrious*; *cool, glassy*).
+
+### Specimen
+The Atlas's atomic unit of contribution: one invented creature, catalogued as one
+Document in a Biome's routed `pages` collection. It is simultaneously a **record**
+(an invented Latin binomial, common name, classification, a **rarity** grade —
+*abundant* → *mythic* — size, diet, an activity **rhythm**, and a 2–3 hue **color
+signature** that is part of its identity) and a **field note** (the naturalist's
+prose essay), fronted by a hand-drawn **engraved plate**.
+
+### Interaction
+A single directed relationship between two Specimens **of the same Biome** — one of
+*preys-on, pollinates, mimics, shelters, fears*. Authored once as a directed edge (a
+Document in the Biome's `interactions` data collection); the reverse label ("preyed
+on by") is *derived*, so a Specimen's own Relations and the Biome's food-web diagram
+are two views of the one single-homed fact. Contrast the Blog's **Pingback**, which
+*denormalizes* a cross-Space fact: an Interaction is same-Space, so it is derived,
+not copied.
+
+### Observation
+A dated sighting in a Biome's **field log** (a Document in its `observations` data
+collection): a date, a coarse time-of-day, an optional Specimen, and a terse
+in-fiction note. Append-only in spirit — the log only ever grows, old entries never
+rewritten. The cheapest unit of contribution: a session can leave the world visibly
+alive without adding a Specimen. (Kin to the Journal's **Digest** in being
+append-only and dated, but primary and in-fiction rather than derived
+self-documentation.)
 
 ### Session
 One continuous Claude Code working session against the Platform, identified by a
