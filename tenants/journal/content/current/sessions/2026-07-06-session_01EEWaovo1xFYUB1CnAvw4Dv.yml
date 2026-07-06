@@ -1,0 +1,72 @@
+schemaVersion: 1
+session: session_01EEWaovo1xFYUB1CnAvw4Dv
+startedAt: 2026-07-06T19:00:56Z
+endedAt: 2026-07-06T20:21:47Z
+kind: interactive
+goal: Turn logged frictions into merged fixes
+status: completed
+outcome: Three residual doc gaps fixed and merged
+summary: "Ran frictions-to-fixes over the latest 20 session logs. A survey subagent found the window dominated by frictions this workflow already retired the past two days — no never-fixed moderate+ candidates left. Harvested three thin residual doc gaps: broad search_* overflow (#143), a missing review-skill Inventory entry (#144), and an undocumented poll-until-green gate pattern (#145). Filed all three, dispatched one Sonnet worktree agent that shipped them as one grouped doc PR (#147), reviewed it, waited on the gate polling (CI success isn't webhook-delivered), and merged squash — all three auto-closed. Surfaced provenance #124 as still-stinging but human-only, not dispatched."
+prs:
+  - "147"
+docsRead:
+  - path: docs/agents/issue-tracker.md
+    reason: "target surface for #143/#145 doc fixes"
+  - path: tenants/journal/content/current/skills/code-review.yml
+    reason: "precedent to mirror for #144 review.yml"
+  - path: scripts/session-end.ts
+    reason: (unknown)
+  - path: scripts/log-session.ts
+    reason: (unknown)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the workflow this session ran
+  - name: log-session
+    reason: closing the run honestly
+frictions:
+  - description: send_later tool failed under lowercase mcp__claude-code-remote__ name; real id is PascalCase mcp__Claude_Code_Remote__send_later.
+    solution: Note the MCP server prefix is Claude_Code_Remote (PascalCase), not claude-code-remote, in agent-facing docs where send_later is referenced.
+    severity: nit
+  - description: Broad search_issues/search_pull_requests queries overflowed the tool-result limit (83KB, 61KB) during the survey, forcing a manual slice of the persisted file.
+    solution: "Retired this run — #143 documents that broad search_* overflows like list_*; scope narrowly or slice."
+    severity: minor
+  - description: Parsing GitHub MCP search JSON needs care — items under .items, labels are objects, persisted files single-line so Read offset/limit doesn't help.
+    solution: Slice the persisted file via python read()[A:B]/json.load rather than Read offset/limit; unchanged since prior runs.
+    severity: nit
+  - description: TaskCreate rejected a tasks-array call — its schema wasn't loaded and it takes one task per call (subject/description), needing ToolSearch first.
+    solution: Load deferred tool schemas via ToolSearch before first call; skipped task tracking here as the workflow steps were already explicit.
+    severity: nit
+  - description: A '#' in a log-session flow-map reason value (e.g. an issue ref) is parsed as a YAML comment and broke the authored entry, needing a re-run.
+    solution: Extend the log-session skill's quoting rule beyond '[' and '{' to also cover '#' in any inline value.
+    severity: nit
+  - description: An hour-long Android-app suspend fired SessionEnd but froze the network, so pushWithRetry's ~30s window (0+2+4+8+16s) all failed; the log never reached main and the un-cleaned working-tree YAML tripped the git-check stop hook.
+    solution: "Flush pending logs at SessionStart/resume (live network) instead of only at the freeze-fired end, and clean up the orphaned working-tree artifact on push failure. Filed as #148; reported across three sessions."
+    severity: major
+durationSec: 4851
+models:
+  claude-opus-4-8: 137
+toolCounts:
+  Bash: 19
+  Agent: 2
+  ToolSearch: 2
+  TaskCreate: 1
+  Read: 5
+  mcp__github__search_issues: 4
+  mcp__github__issue_write: 4
+  mcp__github__pull_request_read: 4
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  Skill: 1
+  Write: 1
+  Edit: 5
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Implement grouped doc-fix PR
+    model: sonnet
+gitBranch: claude/frictions-to-fixes-v8d5fj
+entrypoint: remote_mobile
+cliVersion: 2.1.201
