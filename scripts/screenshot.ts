@@ -2,8 +2,10 @@
 // pre-installed Chromium — no new npm dependency, no browser download.
 //
 // Usage:
-//   pnpm exec tsx scripts/screenshot.ts <url> <out.png>
+//   pnpm exec tsx scripts/screenshot.ts <url> <out.png> [WxH]
 //
+// The optional third argument sets the capture window size (e.g. `1280x1600`
+// to reach below-the-fold content); it defaults to `1280x800`.
 // Why this shape: `playwright-core` is NOT a resolvable dependency in this
 // repo (it's not hoisted transitively from @nuxt/test-utils), so rather than
 // add a new dependency this spawns the pre-installed Chromium binary
@@ -48,10 +50,33 @@ function existsAndExecutable(path: string): boolean {
   }
 }
 
+const USAGE =
+  'Usage: pnpm exec tsx scripts/screenshot.ts <url> <out.png> [WxH]\n' +
+  '  [WxH]  optional window size, two positive integers (e.g. 1280x1600); ' +
+  'defaults to 1280x800.\n' +
+  'Note: headless Chromium prints harmless dbus "Failed to connect to the bus" ' +
+  'ERRORs in containers — expected noise, not a failure.'
+
+/** Parse an optional `WxH` size argument into `W,H` for `--window-size`. */
+function parseSize(size: string): string | undefined {
+  const match = /^(\d+)x(\d+)$/.exec(size)
+  if (!match) return undefined
+  const [width, height] = [Number(match[1]), Number(match[2])]
+  if (width <= 0 || height <= 0) return undefined
+  return `${width},${height}`
+}
+
 function main(): void {
-  const [url, out] = process.argv.slice(2)
+  const [url, out, size] = process.argv.slice(2)
   if (!url || !out) {
-    console.error('Usage: pnpm exec tsx scripts/screenshot.ts <url> <out.png>')
+    console.error(USAGE)
+    process.exit(1)
+  }
+
+  const windowSize = size === undefined ? '1280,800' : parseSize(size)
+  if (!windowSize) {
+    console.error(`Invalid size "${size}" — expected <width>x<height>, e.g. 1280x1600.`)
+    console.error(USAGE)
     process.exit(1)
   }
 
@@ -74,7 +99,7 @@ function main(): void {
       '--disable-gpu',
       '--no-sandbox',
       '--hide-scrollbars',
-      '--window-size=1280,800',
+      `--window-size=${windowSize}`,
       `--screenshot=${out}`,
       url,
     ],
