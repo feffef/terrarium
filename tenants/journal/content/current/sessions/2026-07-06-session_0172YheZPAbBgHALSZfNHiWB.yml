@@ -1,0 +1,66 @@
+schemaVersion: 1
+session: session_0172YheZPAbBgHALSZfNHiWB
+startedAt: 2026-07-06T06:24:55Z   # pinned from node_modules birth (SessionStart hook), not true capture
+endedAt: 2026-07-06T10:30:46Z
+kind: interactive
+goal: Review open PRs and apply fixes
+status: completed
+outcome: "Findings fixed; #103–#105 all merged"
+summary: >-
+  Reviewed the two open PRs (#103 docs, #104 screenshot size arg) via the
+  review skill: parallel finder angles, then one adversarial verifier per
+  candidate — seven verified, four confirmed. #104's code was sound; its one
+  gap (CLAUDE.md's recipe missing the new [WxH] arg) merged before the fix
+  could land on its branch, so it became follow-up PR #105. #103 carried
+  three factual errors — commenting mapped to issue_write (whose update+body
+  overwrites an issue description), a false "covers them all" claim, and a
+  wrong pkill exit-status rationale (both real mechanisms reproduced
+  in-container, including issue #102's exit 144 via pkill -f self-match) —
+  fixed on its branch with the PR description re-synced. All three merged.
+prs: ["103", "105"]
+docsRead:
+  - { path: CLAUDE.md, reason: review baseline — conventions, single-homing rule, screenshot recipe }
+  - { path: docs/agents/issue-tracker.md, reason: "review target of #103; source for the mapping fixes" }
+  - { path: scripts/screenshot.ts, reason: "review target of #104 (base and PR-head versions)" }
+  - { path: "GitHub PRs #103/#104 (diffs, statuses), issues #100–#102", reason: review scope and the specs each PR claimed to implement }
+  - { path: tenants/journal/content/current/sessions/, reason: finder agents traced the frictions behind both PRs to their originating logs }
+skillsUsed:
+  - { name: review, reason: "the PR-review harness — finder angles + verify pass — run on both PRs" }
+  - { name: log-session, reason: author and commit this entry (followed manually) }
+frictions:
+  - description: >-
+      The review skill's instructions prescribe gh CLI commands (gh pr view,
+      gh pr diff) but the remote environment has no gh; re-mapped to GitHub
+      MCP tools by hand. Same class as issue #100, but the surface is the
+      external skill pack, not issue-tracker.md.
+    solution: >-
+      The skill catalogue entry for review could note the MCP re-mapping,
+      since the pack's own text can't be edited here.
+    severity: minor
+  - description: >-
+      The GitHub MCP server disconnected and reconnected three times
+      mid-session, each time dropping loaded tool schemas and forcing
+      ToolSearch reloads before the next call.
+    solution: none — reconnects are automatic; recurring transient, already logged in prior sessions.
+    severity: nit
+  - description: >-
+      PR #104 merged mid-session while its confirmed review finding was
+      still unapplied, so the one-line CLAUDE.md fix had to restart as a
+      separate gated PR (#105) instead of amending the PR branch.
+    solution: >-
+      Hold merges briefly while a review session is actively pushing fixes,
+      or accept the follow-up-PR cost as normal.
+    severity: minor
+  - description: >-
+      Neither PR head reported any CI state via the commit-status API at
+      review time (state pending, 0 checks), so the gate couldn't be
+      confirmed from statuses; the gate runs as check runs instead.
+    solution: >-
+      Query check runs (pull_request_read get_check_runs), not combined
+      status, when verifying the gate on a PR.
+    severity: nit
+  - description: >-
+      startedAt is pinned from node_modules' birth timestamp (SessionStart
+      hook), not a true session-start capture; endedAt is exact via date -u.
+    solution: Deferred to the autonomous end-of-session trigger (ADR-0009).
+    severity: nit
