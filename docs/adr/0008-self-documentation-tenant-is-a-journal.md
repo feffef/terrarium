@@ -8,7 +8,7 @@ Status: Accepted
 The Platform hosts one Tenant that documents itself. ADR-0003 called it the
 "living-documentation Tenant / status report" and framed its content as **derived
 from repo ground truth** by the `sync` job — a current-state readout (inventory,
-CI/drift health, the Skill catalogue).
+CI/drift health, the Skill Inventory).
 
 Designing the next content types for it changed that picture. The most valuable
 content is a per-session **self-report**: what a session discussed and
@@ -23,7 +23,7 @@ overwritten status snapshot. "Status" mislabels what is really a logbook.
 Name this Tenant **`journal`** (retiring the "Living Documentation" term). It
 holds two kinds of content:
 
-- **Inventories** — curated/derived current-state readouts (the Skill catalogue
+- **Inventories** — curated/derived current-state readouts (the Skill Inventory
   today; the Tenant/Space inventory and CI/drift health later, via `sync`).
 - **Journal entries** — primary, append-only records the agents author
   themselves: session logs, research, and ideas (forthcoming).

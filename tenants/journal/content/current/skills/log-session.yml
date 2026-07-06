@@ -1,6 +1,6 @@
 name: log-session
 category: platform-operation
-importance: core
+importance: essential
 role: >-
   The Platform's first platform-operation Skill, and the source of its primary
   self-improvement signal: every session's honest self-report — goal, outcome,

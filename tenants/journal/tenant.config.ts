@@ -41,7 +41,7 @@ export default defineTenant({
         summary: z.string().optional(),
       }),
     },
-    // The Platform's Skill catalogue — structured data, not routed. Strict → L1.
+    // The Platform's Skill Inventory — structured data, not routed. Strict → L1.
     // Its purpose is NOT to restate each Skill's own description, but to record
     // its *role and importance to this project*. Skills are installed wholesale
     // from an external pack (skills-lock.json), so this is where they get
@@ -54,7 +54,10 @@ export default defineTenant({
         .object({
           name: z.string(),
           category: z.enum(['platform-operation', 'general-engineering']),
-          importance: z.enum(['core', 'supporting', 'peripheral']),
+          importance: z.enum(['essential', 'specialist', 'supporting', 'peripheral']),
+          // ≤ ~50 words — a tight paragraph on the Skill's role + importance to
+          // this project, NOT a copy of its own description; deeper detail lives
+          // in the Skill's own docs. ~80 is the outer limit; beyond that, trim.
           role: z.string(),
         })
         .strict(),

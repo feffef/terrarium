@@ -58,7 +58,7 @@ An individual content entry within a Collection — one row / one file.
 ### Journal (Tenant)
 The one Tenant whose content is the Platform's documentation *of itself*. It
 holds three kinds of content. **Inventories** are curated/derived current-state
-readouts — the Skill catalogue today; the inventory of Tenants/Spaces/Collections
+readouts — the Skill Inventory today; the inventory of Tenants/Spaces/Collections
 and CI/drift health later, via the `sync` job. **Journal entries** are primary,
 append-only records the agents author themselves — session logs, research
 write-ups, and nascent ideas (planned). **Digests** are derived, append-only
@@ -146,11 +146,29 @@ A Claude Code skill (`.claude/skills/*`) that encodes a repeatable capability fo
 developing or consolidating the Platform. The Skill set is a first-class,
 ever-growing part of the project — as much a deliverable as the Nuxt code.
 
+### Importance (of a Skill)
+A Skill Inventory entry's grade for how much a Skill matters to the Platform — a
+judgement of **conditional essentialness** (how essential the Skill is *when its
+kind of work occurs*), never raw frequency, so a rare-but-essential Skill is not
+graded down for the rarity of its domain. Four grades:
+- **essential** — essential *and broad*: its absence would be felt across many
+  kinds of session (e.g. `log-session`, `domain-modeling`).
+- **specialist** — essential *within a specific kind* of work, even when that work
+  is rare (e.g. `blog-post`).
+- **supporting** — genuinely useful but not essential; work proceeds without it.
+- **peripheral** — marginal or superseded: little observed pull even when it could
+  have applied.
+Disuse *alone* never lowers a grade; a grade drops only on evidence that a Skill
+was **not used in sessions of the kind it serves** (opportunity missed, not merely
+absent).
+
 ### Codify
 The Platform's self-improvement loop: an autonomous job that turns a repeated
 manual pattern into a new, committed Skill. It is one of a small set of chartered
 autonomous jobs — alongside `sync`, `drift-check`, `consolidate`, and `triage` —
-that *tend and consolidate* the Platform rather than decide what should exist.
+that *tend and consolidate* the Platform rather than decide what should exist. (A
+chartered job is a *remit*, realised by one or more Skills: `sync` is served by
+`digest` and `audit-skills` today — see ADR-0003/0015.)
 **Planned concept, not yet built:** no autonomous jobs run today. The term is
 defined here so Skills and journal content can refer to it consistently until it
 exists.

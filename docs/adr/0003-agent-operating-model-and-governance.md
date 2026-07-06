@@ -3,6 +3,13 @@
 Date: 2026-07-04
 Status: Accepted
 
+> **Amended (2026-07-06, ADR-0015).** A chartered job is a **remit**, realised by
+> **one or more Skills** — not necessarily a single Skill. `sync` ("keep living
+> documentation matching real repo state") is realised by several: `digest` keeps
+> the digest feed current, `audit-skills` keeps the Skill Inventory honest. Read
+> "each a Skill" in the list below as "each a Skill *or a family of Skills under one
+> remit*". See ADR-0015.
+>
 > **Amended (2026-07-06).** The **mid-term review-agent** described below is now
 > **live in a bounded form**: the `frictions-to-fixes` Skill's main session reviews
 > and merges the PRs authored by its dispatched (Sonnet) impl agents. "No

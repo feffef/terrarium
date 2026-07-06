@@ -6,7 +6,7 @@ Status: Accepted
 ## Context
 
 The Journal Tenant (ADR-0008) named two content kinds: **Inventories** (curated,
-derived from repo state, **overwritten** each sync — the Skill catalogue today)
+derived from repo state, **overwritten** each sync — the Skill Inventory today)
 and **Journal entries** (**primary**, append-only, agent-authored — session logs,
 research, ideas). A new need does not fit either: a short, human-facing **daily
 catch-up** of everything that happened across the Platform on a given day, mined

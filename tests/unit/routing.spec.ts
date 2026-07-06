@@ -71,7 +71,7 @@ describe('resolveSpaceRoute() — resolution', () => {
     expect(r.atRoot).toBe(false)
   })
 
-  it('surfaces every non-pages collection as the catalog, excluding pages', () => {
+  it('surfaces every non-pages collection as the collection index, excluding pages', () => {
     const r = resolveSpaceRoute('journal', 'current', '', MAP)!
     expect(r.dataCollections).toEqual([
       { name: 'skills', key: 'journal_current_skills' },
