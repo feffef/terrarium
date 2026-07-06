@@ -7,17 +7,16 @@
     "node": ">=22.5.0"
   },
   "scripts": {
-    "gen": "tsx scripts/generate.ts",
-    "postinstall": "pnpm gen && nuxt prepare",
-    "dev": "pnpm gen && nuxt dev",
-    "build": "pnpm gen && nuxt build",
-    "generate": "pnpm gen && nuxt generate",
+    "postinstall": "nuxt prepare",
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "typecheck": "pnpm gen && nuxt typecheck && tsc -p tsconfig.node.json",
+    "typecheck": "nuxt typecheck && tsc -p tsconfig.node.json",
+    "gate:drift": "echo 'ADR-0014: the routing map is generated at build time from the manifests; there is no committed artifact to drift. Compat no-op until the L0 drift step is removed from gate.yml (issue #97).'",
     "lint": "eslint .",
-    "test": "vitest run tests/unit",
-    "test:e2e": "vitest run tests/e2e",
-    "gate:drift": "pnpm gen && (git diff --exit-code shared/routing.generated.ts || (echo '' && echo '✖ gate:drift: the GENERATED routing map is out of date — shared/routing.generated.ts differs from what is committed.' && echo '  → Fix: run `pnpm gen`, then commit the regenerated file in the SAME commit as your manifest edit.' && echo '  → Avoid it: never hand-edit shared/routing.generated.ts, and always regenerate + commit it alongside any tenant.config.ts change. (content.config.ts is dynamic now — no regen needed.)' && exit 1))"
+    "test": "nuxt prepare && vitest run tests/unit",
+    "test:e2e": "vitest run tests/e2e"
   },
   "dependencies": {
     "@nuxt/content": "^3.7.1",
@@ -26,6 +25,7 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.9.0",
+    "@nuxt/kit": "^4.4.8",
     "@nuxt/test-utils": "^3.19.2",
     "@types/node": "^22.10.0",
     "eslint": "^9.0.0",

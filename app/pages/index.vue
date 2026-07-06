@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { routingMap } from '~~/shared/routing.generated'
+import { routingMap } from '#routing'
 import type { RoutingMap } from '~~/shared/routing'
 
 // Read-only: the primary CTA below is hardcoded to the maintainer-chosen

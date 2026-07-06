@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   // define content collections (that stays in the root content.config.ts).
   extends: ['./tenants/journal', './tenants/blog'],
 
-  modules: ['@nuxt/content', '@nuxt/eslint'],
+  modules: ['./modules/routing', '@nuxt/content', '@nuxt/eslint'],
 
   content: {
     // Native node:sqlite (Node >= 22.5) — no better-sqlite3 native build in CI.

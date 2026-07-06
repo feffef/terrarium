@@ -4,12 +4,12 @@
 // the Space *root* only — individual Documents still render via the catch-all.
 //
 // Isolation-respecting and presentation-only: it resolves the Space to its keyed
-// collections through the SAME generated routing map the catch-all uses (a
+// collections through the SAME build-time routing map the catch-all uses (a
 // read-only import — no isolation logic is duplicated or changed), then reads
 // only `journal_<space>_{pages,skills,sessions}`. Spaces cannot leak.
 import type { Collections } from '@nuxt/content'
 import { resolveSpaceRoute, type RoutingMap } from '~~/shared/routing'
-import { routingMap } from '~~/shared/routing.generated'
+import { routingMap } from '#routing'
 import type { PageDoc, SessionDoc, SkillDoc } from '../../../../types/journal'
 // Pure aggregation/formatting lives in a layer-local, unit-tested module (issue
 // #61) — imported by relative path (the `~/` alias would resolve to the main

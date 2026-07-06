@@ -1,6 +1,16 @@
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      // After `nuxt prepare`, .nuxt/routing.mjs holds the build-time routing map
+      // (ADR-0014). Tests that use the real default routing map (without injecting
+      // a fixture) resolve it here so vitest can find it without the Nuxt alias layer.
+      // fileURLToPath+URL keeps resolution correct regardless of invocation cwd.
+      '#routing': fileURLToPath(new URL('.nuxt/routing.mjs', import.meta.url)),
+    },
+  },
   test: {
     include: ['tests/**/*.spec.ts'],
     // e2e (L2) builds the app and is slow; unit (L0/L1/L3) is fast.

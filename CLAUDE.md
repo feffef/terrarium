@@ -42,13 +42,14 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   Autonomy may *propose* freely but *implements* net-new only on human
   green-light (ADR-0003).
 - All work must clear the **safety gate** (build/validate/isolation, ADR-0004).
-  The generator, routing, isolation logic, and CI are **human-only** — never
+  The routing module, isolation logic, and CI are **human-only** — never
   auto-merge changes touching them.
 - **Skills** are generic, repo-committed, and first-class (ADR-0005).
 - Runtime routing is by path prefix `/t/<tenant>/<space>/<slug>` (ADR-0006). The
-  routing map `shared/routing.generated.ts` is committed and drift-checked
-  (ADR-0007/0013) — never hand-edit a file marked `GENERATED`. `content.config.ts`
-  is NOT generated: it is an ordinary, hand-editable module (ADR-0013).
+  routing map is derived at build time from the manifests via `modules/routing.ts`
+  and exposed as the `#routing` virtual module (ADR-0014) — no committed `GENERATED`
+  file remains. `content.config.ts` is NOT generated: it is an ordinary,
+  hand-editable module (ADR-0013).
 - **Only the `pages` Collection is route-addressable.** The resolver maps a
   slug to a Space's `pages` key only; every other Collection (`sessions`,
   `skills`, digests, …) is surfaced by layer components, not its own slug
@@ -84,11 +85,10 @@ tenants/<tenant>/tenant.config.ts   # the manifest an agent edits (declarative i
 tenants/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Space
 shared/manifest.ts                  # manifest types + defineTenant() + validation
 shared/expand.ts                    # pure manifest→keyed-collection expansion (expand(), L3-tested)
-scripts/generate.ts                 # generator: manifests → routing map (only)
+modules/routing.ts                  # build-time Nuxt module: manifests → #routing virtual module (ADR-0014)
 content.config.ts                   # ordinary module — builds keyed collections dynamically (ADR-0013)
-shared/routing.generated.ts         # GENERATED — routing map + L2 entry routes (the one committed codegen)
 app/pages/t/[tenant]/[space]/[...slug].vue   # runtime routing + ContentRenderer
-tests/unit/                         # L3 isolation (generator/keying)
+tests/unit/                         # L3 isolation (keying)
 tests/e2e/                          # L2 smoke render
 .github/workflows/gate.yml          # the safety gate (installed & live); human-only —
                                     #   CI is never agent-edited (ADR-0004)
@@ -98,16 +98,14 @@ tests/e2e/                          # L2 smoke render
 ## Self-verification — the safety gate (ADR-0004)
 
 Run this before proposing any change. CI (`.github/workflows/gate.yml`) runs the same set,
-cheapest-first. The keyed collections build dynamically from the manifests
-(ADR-0013); only the routing map is regenerated, so regenerate it first.
+cheapest-first. Both the keyed collections and the routing map (`#routing`) are derived
+from the manifests at build time (ADR-0013/0014) — no regenerate step needed.
 
 ```
-pnpm install     # installs deps, then runs `pnpm gen` + `nuxt prepare`
-pnpm gen         # regenerate shared/routing.generated.ts (content.config.ts is dynamic — no regen)
-pnpm gate:drift  # L0 — regenerate and fail if the committed routing map drifted
+pnpm install     # installs deps, then runs `nuxt prepare` (derives #routing + collections)
 pnpm lint        # L0
 pnpm typecheck   # L0
-pnpm test        # L3 — generator/isolation unit tests (unique, scoped keys)
+pnpm test        # L3 — isolation unit tests (unique, scoped keys)
 pnpm build       # L0/L1 — build; strict schemas fail the build on invalid content
 pnpm test:e2e    # L2 — smoke-render every (Tenant, Space) entry route (200, renders)
 ```
@@ -133,12 +131,11 @@ dependency or browser download required.
   section — most of the page is not `index.md`. Editing `index.md` alone will
   not change what most of that page shows; check the `.vue` file too.
 
-To **add a Space or Collection**: edit the Tenant's `tenant.config.ts`, run
-`pnpm gen`, then commit the regenerated `shared/routing.generated.ts` alongside it
-(the keyed collections update themselves — `content.config.ts` is dynamic). To
-**spawn a Tenant**: drop a `tenants/<name>/` folder with a manifest and content,
-then `pnpm gen`. Never hand-edit the `GENERATED` routing map — the drift gate will
-reject it. Debug the expanded collection set with `pnpm gen --print`.
+To **add a Space or Collection**: edit the Tenant's `tenant.config.ts`. The keyed
+collections update automatically via `content.config.ts`, and the routing map
+(`#routing`) is re-derived at the next `nuxt prepare`/`build`. No regenerate step
+needed. To **spawn a Tenant**: drop a `tenants/<name>/` folder with a manifest and
+content, then run `pnpm install` (or `nuxt prepare`) to pick it up.
 
 ## Logging your session
 

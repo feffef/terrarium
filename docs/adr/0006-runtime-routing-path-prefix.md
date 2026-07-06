@@ -1,7 +1,15 @@
 # 6. Runtime routing selects Tenant + Space by path prefix
 
 Date: 2026-07-04
-Status: Accepted
+Status: Accepted — routing-map delivery amended by ADR-0014
+
+> **Amended by [ADR-0014](0014-build-time-virtual-routing-module.md) (2026-07-05).**
+> The path-prefix decision and the isolation model below stand unchanged, but the
+> routing map's delivery has moved since this was written: it is no longer a
+> committed `shared/routing.generated.ts` produced by a generator — the map and the
+> `entryRoutes` list are derived from the manifests at build time by
+> `modules/routing.ts` and imported as the `#routing` virtual module. Read the
+> mechanism references below as historical.
 
 ## Context
 
