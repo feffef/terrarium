@@ -17,14 +17,24 @@ export default defineContentConfig({
   collections: Object.fromEntries(
     expand(loadManifests()).map((c) => [
       c.key,
-      defineCollection({
-        type: c.type,
-        source:
-          c.type === 'page'
-            ? { cwd: dir(c.cwdRel), include: c.include, prefix: '/' }
-            : { cwd: dir(c.cwdRel), include: c.include },
-        schema: c.schema,
-      }),
+      // Branch on `c.type` per call (rather than one `defineCollection({ type:
+      // c.type, ... })`) so TS narrows `c` to the matching half of the
+      // `ExpandedCollection` union in each branch — @nuxt/content's own
+      // `PageCollection`/`DataCollection` types are likewise discriminated on
+      // `type`, with `DataCollection.schema` required rather than optional
+      // (issue #93: this constructed a value TS couldn't verify against
+      // either variant, sailing through untyped until now).
+      c.type === 'page'
+        ? defineCollection({
+            type: 'page',
+            source: { cwd: dir(c.cwdRel), include: c.include, prefix: '/' },
+            schema: c.schema,
+          })
+        : defineCollection({
+            type: 'data',
+            source: { cwd: dir(c.cwdRel), include: c.include },
+            schema: c.schema,
+          }),
     ]),
   ),
 })

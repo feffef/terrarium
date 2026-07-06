@@ -27,8 +27,21 @@ export default defineNuxtConfig({
     // Tenant fit-out code. Add the Tenant glob so every `tenants/*/app/**` file
     // is typechecked. Path is relative to the buildDir (`.nuxt/`), matching the
     // style of Nuxt's own `../layers/*/app/**/*` entry.
+    //
+    // Also mirror Nuxt's own `../layers/*/nuxt.config.*` entry for the two config
+    // surfaces `tenants/` holds instead of `layers/`: each Tenant's own
+    // `nuxt.config.ts` (layer fit-out config) and its `tenant.config.ts` (the
+    // manifest — the primary agent-edit surface, ADR-0002). Neither was covered
+    // before (issue #93): both are evaluated only via jiti at build time, so a
+    // type error in either previously sailed through `pnpm typecheck` and only
+    // surfaced later as a build-time jiti/zod failure — or never, for a silently
+    // ignored Nuxt option.
     tsConfig: {
-      include: ['../tenants/*/app/**/*'],
+      include: [
+        '../tenants/*/app/**/*',
+        '../tenants/*/nuxt.config.*',
+        '../tenants/*/tenant.config.*',
+      ],
     },
   },
 })

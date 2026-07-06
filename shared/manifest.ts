@@ -6,14 +6,30 @@ import { z, type ZodObject, type ZodRawShape } from 'zod'
 
 export type CollectionType = 'page' | 'data'
 
-export interface CollectionDef {
-  /** How Nuxt Content processes files: 'page' (1:1 file→route) or 'data' (structured). */
-  type: CollectionType
-  /** Glob relative to the Space's collection dir. Defaults to '**'. */
-  source?: string
-  /** Zod schema validating each Document. Strict schemas give free L1 validation (ADR-0004). */
-  schema?: ZodObject<ZodRawShape>
-}
+// Discriminated on `type` rather than one interface with an optional `schema`,
+// mirroring @nuxt/content's own `PageCollection`/`DataCollection` split (its
+// `DataCollection.schema` is required, not optional — only `PageCollection`'s
+// is). Every actual `data` collection in this repo already carries a schema
+// (it's how structured content gets any shape at all); this makes that
+// existing invariant checkable at the manifest-authoring surface itself,
+// instead of only failing later inside `content.config.ts` (issue #93).
+export type CollectionDef =
+  | {
+      /** 1:1 file→route content, rendered by the generic catch-all or a Tenant layer. */
+      type: 'page'
+      /** Glob relative to the Space's collection dir. Defaults to '**'. */
+      source?: string
+      /** Zod schema validating each Document. Strict schemas give free L1 validation (ADR-0004). */
+      schema?: ZodObject<ZodRawShape>
+    }
+  | {
+      /** Structured, non-routed content (e.g. Skills, session logs, Pingbacks). */
+      type: 'data'
+      /** Glob relative to the Space's collection dir. Defaults to '**'. */
+      source?: string
+      /** Required — @nuxt/content's `DataCollection` has no untyped-blob mode. */
+      schema: ZodObject<ZodRawShape>
+    }
 
 export interface TenantManifest {
   /** Tenant name; MUST equal its folder name under `tenants/`. Lowercase slug. */
