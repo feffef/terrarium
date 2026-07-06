@@ -187,12 +187,30 @@ distinguish a mid-session freeze from a true end** — both are `other`. Also:
      signal — a `cat`-inspected file, a subagent's read, or a self-report that
      drifted from what actually happened.
 
-2. **The scratch file is the wrap-up signal.** The agent writes its authored part
-   via a helper script (wrapped by the `log-session` Skill) to a **scratch file
-   outside git** (the harness scratchpad). The `SessionEnd` hook **commits only if
-   that scratch file exists.** The agent choosing to write it *is* its in-the-loop
-   assertion that the work has landed — a more reliable "done" than any `reason`
-   value. A freeze mid-work (no scratch yet) → the hook does nothing.
+2. **The scratch file is the wrap-up signal, and closure is the model's call.**
+   The agent writes its authored part via a helper (wrapped by the `log-session`
+   Skill) to a **scratch file outside git** (the harness scratchpad); the
+   `SessionEnd` hook **commits only if that scratch exists**. The agent choosing to
+   write it *is* its in-the-loop assertion of **closure** — a more reliable "done"
+   than any `reason` value, and the model **self-judges** it rather than asking the
+   human (this replaces the Decision's reminder-convention).
+
+   **Closure means *active work complete and in a coherent, honest state* — not
+   merged.** An ephemeral container rarely hosts a live agent at the later merge
+   moment, so the Decision's "a session ends when its work has merged" stance
+   *cannot be honoured automatically*; the automatic log fires at work-completion
+   and honestly records in-review PRs (`prs`, `status`/`outcome`). This is a
+   deliberate reframing of a session log from *post-landing* to *post-work* ground
+   truth, forced by the ephemeral-container reality.
+
+   Because invoking `log-session` now only *writes the scratch* — it no longer
+   commits — the Skill flips from **`disable-model-invocation: true`** (set
+   precisely to stop a premature self-fire from landing on `main`) to
+   **model-invocable**, with its `description` rewritten as a closure *trigger*. A
+   premature self-fire is now cheap (a scratch write, not a `main` commit) and
+   **self-heals**: if work continues the agent re-invokes `log-session`, and the
+   next `SessionEnd` overwrites the log with the superset. A freeze mid-work (no
+   scratch yet) → the hook does nothing.
 
 3. **Idempotent overwrite, diff-guarded.** The log is the single file
    `<date>-<sessionId>.yml`. On a resumed-then-ended-again session the hook
@@ -230,6 +248,10 @@ distinguish a mid-session freeze from a true end** — both are `other`. Also:
   is an implementation decision for the follow-up PR.
 
 **Not yet built (follow-up gated PR).** `scripts/session-trace.ts` (port of the
-validated proof-of-concept), the `SessionEnd` handler, the scratch-writing helper
-+ `log-session` Skill update, the committed `.claude/settings.json` hook entry, and
-the `sessions` schema change. Recorded here as **decided**, to land gated.
+validated proof-of-concept); the `SessionEnd` handler; the scratch-writing helper;
+the **`log-session` Skill update** (flip to model-invocable — drop
+`disable-model-invocation: true`; rewrite `description` as a closure trigger;
+author-to-scratch, no commit); the **`CLAUDE.md`** wrap-up guidance (self-judge
+closure → invoke `log-session`; drop the ask-the-human step); the committed
+`.claude/settings.json` hook entry; and the `sessions` schema change. Recorded here
+as **decided**, to land gated.
