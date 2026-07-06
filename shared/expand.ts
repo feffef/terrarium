@@ -114,3 +114,14 @@ export function expand(manifests: LoadedManifest[]): ExpandedCollection[] {
   }
   return out
 }
+
+/**
+ * Derive the L2 entry-route list from an expanded collection set.
+ * Single-homed here so `modules/routing.ts` (build-time) and
+ * `tests/e2e/smoke.spec.ts` (test-time) stay in sync automatically.
+ */
+export function entryRoutesFrom(cols: ExpandedCollection[]): string[] {
+  return [
+    ...new Set(cols.filter((c) => c.type === 'page').map((c) => `/t/${c.tenant}/${c.space}`)),
+  ].sort()
+}

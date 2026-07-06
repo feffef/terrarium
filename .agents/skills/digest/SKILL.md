@@ -101,7 +101,7 @@ Done when you have confirmed the new Digest(s) will show — no index edit is ne
 Run the gate (ADR-0004), cheapest first:
 
 ```
-pnpm gen && pnpm gate:drift && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e
+pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e
 ```
 
 Done when every step is green.

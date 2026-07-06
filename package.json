@@ -14,7 +14,7 @@
     "preview": "nuxt preview",
     "typecheck": "nuxt typecheck && tsc -p tsconfig.node.json",
     "lint": "eslint .",
-    "test": "vitest run tests/unit",
+    "test": "nuxt prepare && vitest run tests/unit",
     "test:e2e": "vitest run tests/e2e"
   },
   "dependencies": {

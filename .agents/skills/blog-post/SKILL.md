@@ -127,11 +127,11 @@ the target's `pingbacks` collection — never another Persona's `pages`.
 
 ## 7. Clear the gate, then open the PR
 
-Run the safety gate (regenerate first — a new post adds no collection, but a
-malformed `reactsTo`/pingback fails L1):
+Run the safety gate (a new post adds no collection, but a malformed
+`reactsTo`/pingback fails L1):
 
 ```
-pnpm gen && pnpm gate:drift && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e
+pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e
 ```
 
 Then open a **gated PR** (ADR-0003) titled for the post, body summarising: which

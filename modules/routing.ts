@@ -3,7 +3,7 @@
 // content.config.ts — so a manifest edit is picked up with no regenerate step
 // for anything. Supersedes scripts/generate.ts + shared/routing.generated.ts.
 import { addTemplate, defineNuxtModule } from '@nuxt/kit'
-import { expand, loadManifests, type ExpandedCollection } from '../shared/expand'
+import { entryRoutesFrom, expand, loadManifests, type ExpandedCollection } from '../shared/expand'
 
 export default defineNuxtModule({
   meta: { name: 'terrarium:routing' },
@@ -18,9 +18,7 @@ export default defineNuxtModule({
       collections[c.collection] = c.key
     }
 
-    const entryRoutes = [
-      ...new Set(cols.filter((c) => c.type === 'page').map((c) => `/t/${c.tenant}/${c.space}`)),
-    ].sort()
+    const entryRoutes = entryRoutesFrom(cols)
 
     // Plain JavaScript (.mjs) so Nitro's Rollup bundler can parse it without a
     // TypeScript plugin. A companion .d.ts provides the types for tsc / vue-tsc.
@@ -40,12 +38,13 @@ export default defineNuxtModule({
     })
 
     // Type declarations (.d.ts) — addTemplate auto-sets write:true for .d.ts files.
+    // Static types: no consumer uses the precise map shape, so widening to Record
+    // avoids churn on every manifest edit and drops the fragile JSON-as-type codegen.
     addTemplate({
       filename: 'routing.d.ts',
       getContents: () =>
         [
-          'export declare const routingMap: ' + JSON.stringify(map),
-          'export type TenantName = keyof typeof routingMap',
+          'export declare const routingMap: Record<string, Record<string, Record<string, string>>>',
           'export declare const entryRoutes: string[]',
           '',
         ].join('\n'),

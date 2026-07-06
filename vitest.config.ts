@@ -1,4 +1,4 @@
-import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -7,7 +7,8 @@ export default defineConfig({
       // After `nuxt prepare`, .nuxt/routing.mjs holds the build-time routing map
       // (ADR-0014). Tests that use the real default routing map (without injecting
       // a fixture) resolve it here so vitest can find it without the Nuxt alias layer.
-      '#routing': resolve('.nuxt/routing.mjs'),
+      // fileURLToPath+URL keeps resolution correct regardless of invocation cwd.
+      '#routing': fileURLToPath(new URL('.nuxt/routing.mjs', import.meta.url)),
     },
   },
   test: {

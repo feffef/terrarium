@@ -4,12 +4,9 @@
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { $fetch, setup } from '@nuxt/test-utils/e2e'
-import { expand, loadManifests } from '../../shared/expand.ts'
+import { entryRoutesFrom, expand, loadManifests } from '../../shared/expand.ts'
 
-const cols = expand(loadManifests())
-const entryRoutes = [
-  ...new Set(cols.filter((c) => c.type === 'page').map((c) => `/t/${c.tenant}/${c.space}`)),
-].sort()
+const entryRoutes = entryRoutesFrom(expand(loadManifests()))
 
 describe('L2 smoke render — entry routes', async () => {
   await setup({ rootDir: fileURLToPath(new URL('../..', import.meta.url)) })

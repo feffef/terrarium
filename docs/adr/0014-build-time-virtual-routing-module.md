@@ -1,7 +1,7 @@
 # 14. Build-time virtual routing module supersedes committed routing map
 
 Date: 2026-07-05
-Status: Accepted — supersedes both halves of ADR-0007; amends ADR-0013
+Status: Proposed — supersedes both halves of ADR-0007; amends ADR-0013
 
 > **Supersedes ADR-0007** (both halves — the committed `content.config.ts` half was
 > already superseded by ADR-0013; this supersedes the retained committed
@@ -24,7 +24,7 @@ as plain data** — it does *not* force it to be a *committed, drift-checked* fi
 Nuxt's `addTemplate` API writes arbitrary content into `.nuxt/` at `prepare`/`build`
 time and registers it as an alias. This gives us a **build-time virtual module**: the
 routing map and entry-route list are derived from `expand(loadManifests())` once per
-build, written to `.nuxt/routing.ts`, and made importable as `#routing` — a plain
+build, written to `.nuxt/routing.mjs`, and made importable as `#routing` — a plain
 static import, no Nuxt composable required — so the isolation-critical
 `resolveSpaceRoute` function and its L3 unit tests are unchanged.
 
@@ -36,25 +36,35 @@ Nuxt module (`modules/routing.ts`) that computes and registers `#routing`.**
 - `modules/routing.ts` runs `expand(loadManifests())` at module setup time (same
   as `content.config.ts`), builds `routingMap` and `entryRoutes` from the result, and
   calls `addTemplate` + `nuxt.options.alias['#routing']` to expose them as the
-  `#routing` virtual module (written to `.nuxt/routing.ts`).
+  `#routing` virtual module. The template is written as **plain JavaScript**
+  (`.nuxt/routing.mjs`) because Nitro's Rollup bundler cannot parse TypeScript syntax.
+  A companion `.nuxt/routing.d.ts` carries the type declarations for `tsc`/`vue-tsc`.
 - `shared/routing.ts` changes one import: `'./routing.generated'` → `'#routing'`.
   The resolver logic and signature are **unchanged**.
-- The L3 unit tests (`tests/unit/routing.spec.ts`) add a vitest alias
-  `'#routing' → '.nuxt/routing.ts'` in `vitest.config.ts` so the "default map" test
-  continues to resolve without fixture injection (requires `nuxt prepare` first,
-  already guaranteed by `pnpm install`'s `postinstall` hook).
+- Three alias wirings connect `#routing` to the generated file:
+  1. `nuxt.options.alias['#routing']` (Nuxt/Vite, set by the module) → `.nuxt/routing.mjs`
+  2. `vitest.config.ts` `resolve.alias['#routing']` → `.nuxt/routing.mjs` (vitest
+     runs outside the Nuxt alias layer; uses `fileURLToPath(new URL(..., import.meta.url))`
+     for cwd-independent resolution; requires `nuxt prepare` first, guaranteed by
+     `pnpm install`'s `postinstall` hook and prefixed on `pnpm test`)
+  3. `tsconfig.node.json` `paths['#routing']` → `.nuxt/routing.d.ts` (for the
+     `tsc -p tsconfig.node.json` second pass in `pnpm typecheck`)
 - `scripts/generate.ts`, `pnpm gen`, `pnpm gate:drift`, `shared/routing.generated.ts`,
   and the ESLint ignore for it are **deleted**. No committed `GENERATED` file remains.
 - `package.json` scripts lose the `pnpm gen &&` prefix everywhere; `postinstall`
-  is now simply `nuxt prepare`.
-- The e2e smoke test (`tests/e2e/smoke.spec.ts`) derives its `entryRoutes` list
-  directly from `expand(loadManifests())` instead of importing from the deleted file.
+  is now simply `nuxt prepare`; `pnpm test` is prefixed with `nuxt prepare &&` to
+  ensure the unit tests never resolve a stale `.nuxt/routing.mjs`.
+- The e2e smoke test (`tests/e2e/smoke.spec.ts`) derives its `entryRoutes` list via
+  `entryRoutesFrom(expand(loadManifests()))` — a helper single-homed in
+  `shared/expand.ts` and shared with `modules/routing.ts` to prevent divergence.
 
 ## Consequences
 
 - A manifest edit is picked up by `dev`/`build`/`prepare`/`typecheck` with **no
   regenerate step for anything** — the last remaining "manifest edited, regeneration
   not committed" failure mode is eliminated (prevention over detection).
+  **Caveat:** `nuxt dev` does not watch `tenants/*/tenant.config.ts`; a mid-session
+  manifest edit requires a dev-server restart to pick up the updated routing map.
 - Deleted: `scripts/generate.ts`, `pnpm gen`, `pnpm gate:drift`,
   `shared/routing.generated.ts`, its ESLint ignore, and the CLAUDE.md/docs passages
   explaining regeneration. One mechanism remains: manifests → `expand()` → both

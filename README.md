@@ -29,7 +29,7 @@ session logs, research, and ideas that drive self-improvement.
 
 ## Status
 
-**Milestone 1 (foundation) is in place** — the manifest → generator →
+**Milestone 1 (foundation) is in place** — the manifest → build-time routing →
 gated-render pipeline runs end-to-end for one Tenant (`journal`) with Spaces
 `current`/`archived` and Collections `pages`/`skills`, behind a green safety
 gate. Additional Tenants, Skills, and the autonomous jobs are deliberately
