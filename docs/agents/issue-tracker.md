@@ -7,14 +7,23 @@ Issues and PRDs for this repo live as GitHub issues. Use the `gh` CLI for all op
 Remote/managed agent sessions have **no `gh` binary** — GitHub access goes
 through the GitHub MCP tools (`mcp__github__*`). The recipes below stay written
 as `gh` commands (the canonical form); when `gh` is absent, map each recipe
-class to its MCP equivalent — this one table covers them all:
+class to its MCP equivalent:
 
-- **Create / edit / comment / label / close an issue** → `issue_write`
+- **Create / edit / label / close an issue** → `issue_write` (labeling and
+  closing a *PR* also go through `issue_write` — issues and PRs share one
+  number space)
+- **Comment on an issue or PR** → `add_issue_comment` (not `issue_write`:
+  its `update` + `body` *overwrites the issue description*)
 - **Read an issue, its comments, or sub-issues** → `issue_read`
 - **List / search issues** → `list_issues` / `search_issues`
 - **Read a PR or its diff** → `pull_request_read`
 - **List / search PRs** → `list_pull_requests` / `search_pull_requests`
 - **Link sub-issues** → `sub_issue_write`
+
+**Known gap:** the wayfinding *Blocking* recipes (`gh api …/dependencies/blocked_by`)
+have **no MCP equivalent** — native issue dependencies aren't exposed as MCP
+tools. Use the `Blocked by: #<n>` body-line fallback described under
+[Wayfinding operations](#wayfinding-operations) instead.
 
 ## Conventions
 

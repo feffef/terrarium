@@ -71,9 +71,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 - Inspect files with the **Read tool, not `cat`** — the Edit tool refuses to edit
   a file it hasn't seen via Read, so `cat`-then-Edit forces a wasteful re-read.
 - **Run process-killing teardown as its own command, never `&&`-chained** before
-  steps that must run. `pkill` (or killing a preview server) exits non-zero in
-  normal operation, and inside an `&&` chain that status silently aborts
-  everything after it — e.g. a chained `git add` is dropped with no error.
+  steps that must run. Two failure modes, both observed here: `pkill` exits 1
+  when nothing matched (routine in idempotent teardown), and `pkill -f` can
+  match the invoking shell's own command line and kill the whole chain
+  mid-flight — either way everything after the `&&` is silently dropped,
+  e.g. a chained `git add` never runs and no error points at it.
 - **Keep a PR's description in sync with its content — hard rule.** If you
   fundamentally change what a PR does (switch approach, swap the files it touches,
   answer review with a different solution), update the PR title/description in the
@@ -180,7 +182,7 @@ Per-repo configuration for Matt Pocock's engineering skills lives in `docs/agent
 
 ### Issue tracker
 
-Issues and PRDs are tracked as GitHub issues in `feffef/terrarium` (via the `gh` CLI); external PRs are also pulled into the triage queue. See `docs/agents/issue-tracker.md`.
+Issues and PRDs are tracked as GitHub issues in `feffef/terrarium` (via the `gh` CLI, or the GitHub MCP tools when `gh` is absent); external PRs are also pulled into the triage queue. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 
