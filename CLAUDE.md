@@ -89,6 +89,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   answer review with a different solution), update the PR title/description in the
   same push. A description that still sells the old approach is a defect, not a
   nit: reviewers gate on it.
+- **Pushing is not landing.** A PR is finished only when it is **merged** or
+  **abandoned/escalated** — not at push time; review, CI, and merge are all still
+  queued. Babysit the PR you opened through to that terminal state. (This is a
+  PR-completion discipline, distinct from *session logging*, which now fires at
+  self-judged closure and records an in-review PR honestly — see "Logging your
+  session".)
 - **When dispatching parallel subagents that touch git, pass `isolation: 'worktree'`
   explicitly** — it is an Agent-tool parameter, not implied by the prompt. Without
   it, "parallel" agents share one checkout and race on branches. Each worktree
@@ -164,26 +170,27 @@ content, then run `pnpm install` (or `nuxt prepare`) to pick it up.
 ## Logging your session
 
 Every session ends with an honest **session log** in the Journal (ADR-0009,
-issue #2) — goal, outcome, docs read, Skills used, and *every* friction — the
-raw signal the future `consolidate`/`codify` jobs mine. The **`log-session`**
-Skill authors one and commits it directly to `main`.
+issue #2) — the raw signal the future `consolidate`/`codify` jobs mine. A log
+has two halves (ADR-0009 amendment): the **mechanical** trace (timings, models,
+tools, files read/edited, subagents) is **derived from the transcript** by a
+committed `SessionEnd` hook — never self-reported; the **interpretive** half
+(goal, outcome, summary, and *every* friction) only you can write. The
+**`log-session`** Skill authors the interpretive half to a scratch file; the
+hook stitches the two and commits to `main` at teardown.
 
-There is **no reliable automatic "we're done" signal** for an interactive
-session (a `Stop` hook fires every turn, not at session end — explored and
-deliberately not used; see ADR-0009). So this is a **reminder, not a gate**:
-when the work has actually **landed**, ask once, e.g. *"Are we done? If so I'll
-log this session,"* and on a yes invoke `/log-session`.
+**You self-judge closure — invoke `log-session` when the session's active work
+is complete and coherent.** No "are we done?" ask, no waiting for merge: closure
+means the work is in an honest, coherent state (a log records an in-review PR
+truthfully). Authoring the scratch *is* the "done" signal — the hook commits
+**only if** it exists, so a mid-work freeze logs nothing. Re-invoking is safe:
+it refreshes the scratch, and the hook overwrites the single per-session log
+with a superset (diff-guarded — an unchanged re-derive never touches `main`). So
+if you call closure and then do more, just invoke `log-session` again.
 
-**Pushing is not landing.** A session isn't over the moment you commit, push, or
-open a PR — review, CI, and merge are all still queued, and the frictions from
-that follow-up belong in the *same* log. Don't offer to log while a PR you
-opened is still in review or CI. A session ends when its work has **merged or
-been abandoned**, or the **user calls it** — not at push time. Never log on a
-hunch: the entry lands straight on `main`, so a premature or duplicate log is
-worse than a late one.
-
-A *deterministic* end-of-session trigger for **autonomous** sessions is
-**deferred** until those sessions exist and can be built with one.
+Because authoring no longer commits and re-firing self-heals, `log-session` is
+**model-invocable** — invoke it yourself at closure rather than on a human
+prompt. This mechanism serves autonomous sessions too: they write the scratch
+before ending, on purpose.
 
 ## Status
 

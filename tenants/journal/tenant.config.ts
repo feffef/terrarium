@@ -83,12 +83,36 @@ export default defineTenant({
           outcome: z.string(), // ≤ 8 words — prose nuance on `status`
           summary: z.string(), // ≤ 100 words — the fuller narrative
           prs: z.array(z.string()).default([]), // 0..N already-landed work-PR refs
+          // docsRead/skillsUsed are a *merged* field (ADR-0009 amendment): the
+          // agent's curated entries plus transcript-observed reads the SessionEnd
+          // extractor folds in. Shape is unchanged — `reason` stays required; a
+          // derived entry the agent never annotated gets a `(unknown)` placeholder.
           docsRead: z
             .array(z.object({ path: z.string(), reason: z.string() }))
             .default([]),
           skillsUsed: z
             .array(z.object({ name: z.string(), reason: z.string() }))
             .default([]),
+          // Mechanical trace — derived from the session transcript by the
+          // SessionEnd extractor (ADR-0009 amendment), never self-reported. All
+          // optional: absent ⇒ an older, authored-only log. Additive per the
+          // schema-evolution policy (no version bump).
+          durationSec: z.number().int().nonnegative().optional(),
+          models: z.record(z.string(), z.number().int()).optional(), // model id → assistant-turn count
+          toolCounts: z.record(z.string(), z.number().int()).optional(), // tool name → call count
+          filesEdited: z.array(z.string()).optional(),
+          subagents: z
+            .array(
+              z.object({
+                type: z.string().optional(),
+                task: z.string().optional(),
+                model: z.string().optional(),
+              }),
+            )
+            .optional(),
+          gitBranch: z.string().optional(),
+          entrypoint: z.string().optional(),
+          cliVersion: z.string().optional(),
           // List EVERY friction — not just one or two — including anything that
           // felt unnecessarily complex or token-heavy. No `tag` yet: the
           // taxonomy is meant to emerge from clustering, once there is data.
