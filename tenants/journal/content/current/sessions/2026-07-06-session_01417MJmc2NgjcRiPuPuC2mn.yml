@@ -1,0 +1,80 @@
+schemaVersion: 1
+session: session_01417MJmc2NgjcRiPuPuC2mn
+startedAt: 2026-07-06T00:02:14Z
+endedAt: 2026-07-06T00:11:51Z
+kind: interactive
+goal: Write 2026-07-05 daily digest
+status: completed
+outcome: Digest merged via PR #92
+summary: >-
+  Ran the digest Skill. `scripts/digest.ts list` returned one closed day
+  (2026-07-05); gathered it and authored a narrative catch-up for the
+  Platform's big build-out — Blog Tenant, live deploy, dashboard, the digest
+  Skill itself, an autonomous 12-issue batch, and self-review cleanup — with a
+  skim footer and frictions rollup. Confirmed no index.md edit was warranted:
+  the standing intro is already current and the dashboard lists digests live.
+  Verified the digest renders against the DOM (not SSR HTML) via screenshot,
+  cleared the full safety gate, and opened one gated PR (#92), which the user
+  merged.
+prs: ["92"]
+docsRead:
+  - { path: "tenants/journal/content/current/pages/digests/2026-07-04.md", reason: match digest format and voice }
+  - { path: "tenants/journal/content/current/pages/index.md", reason: judge whether the standing intro needed a change }
+  - { path: "scripts/screenshot.ts", reason: check viewport / full-page screenshot options }
+skillsUsed:
+  - { name: digest, reason: author the per-day digest and refresh the index }
+  - { name: log-session, reason: author this session log }
+frictions:
+  - description: >-
+      The digest Skill prescribes a journal/digest-refresh-<date> branch, but
+      the session's hard requirement pinned claude/digest-feature-374142 — two
+      guidance surfaces disagreeing.
+    solution: >-
+      Branched the pinned name off origin/main, honouring the Skill's real
+      intent (a digest PR independent of any work branch). A note in the Skill
+      that a caller-pinned branch overrides the suggested name would remove the
+      ambiguity.
+    severity: minor
+  - description: >-
+      digest.ts gather emitted 45KB, over the tool-result limit; it was saved
+      to a file I then had to Read separately to see the sessions and rollup.
+    solution: >-
+      Expected for a heavy backfill day; reading the persisted file worked. A
+      --summary flag on gather could keep routine days inline.
+    severity: nit
+  - description: >-
+      screenshot.ts hardcodes an 800px window height, so the digests panel sat
+      below the fold and the first capture proved nothing.
+    solution: >-
+      Drove the pre-installed Chromium directly with --window-size=1280,1600 to
+      capture the panel. A full-page or height flag on the script would avoid
+      the workaround.
+    severity: minor
+  - description: >-
+      Headless Chromium printed dbus "Failed to connect to the bus" ERRORs that
+      read as failures but are harmless container noise.
+    solution: Ignored them; the screenshot was written. Recurring, already noted in prior logs.
+    severity: nit
+  - description: >-
+      pkill of the preview server returned exit 144 inside a compound command,
+      aborting the chained git add so the digest went unstaged.
+    solution: Re-ran git add on its own. Keep teardown separate from the next step.
+    severity: nit
+  - description: >-
+      The per-day rollup (19 sessions, 140 frictions) diverges from the
+      dashboard's whole-Space aggregate (20/144); took a moment to trust the
+      day-scoped numbers in the footer.
+    solution: >-
+      Reconciled — the delta is exactly the 2026-07-04 session (1 session, 4
+      frictions). Working as designed; the footer correctly scopes to the day.
+    severity: nit
+  - description: >-
+      Cold container had no node_modules; the SessionStart hook ran pnpm install
+      before the gate could. Recurs every session.
+    solution: Known cold-start cost; the scoped hook already minimises it.
+    severity: nit
+  - description: >-
+      startedAt is a hand-estimate from node_modules' birth timestamp, not a
+      true session-start capture.
+    solution: Deferred to the autonomous end-of-session trigger (ADR-0009); endedAt is exact via date -u.
+    severity: nit

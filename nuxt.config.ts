@@ -19,5 +19,16 @@ export default defineNuxtConfig({
 
   // Typecheck is run explicitly via `pnpm typecheck` (part of the L0 gate),
   // not on every dev/build, to keep the inner loop fast.
-  typescript: { typeCheck: false },
+  typescript: {
+    typeCheck: false,
+    // Tenant layers live under `tenants/`, not Nuxt's conventional `layers/`,
+    // so Nuxt's generated tsconfig includes (`../app/**`, `../layers/*/app/**`)
+    // never see them — `nuxt typecheck` (the L0 gate, ADR-0004) would skip all
+    // Tenant fit-out code. Add the Tenant glob so every `tenants/*/app/**` file
+    // is typechecked. Path is relative to the buildDir (`.nuxt/`), matching the
+    // style of Nuxt's own `../layers/*/app/**/*` entry.
+    tsConfig: {
+      include: ['../tenants/*/app/**/*'],
+    },
+  },
 })

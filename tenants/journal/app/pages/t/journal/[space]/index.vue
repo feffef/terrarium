@@ -39,9 +39,16 @@ const resolved = resolveSpaceRoute(tenant, space, undefined)
 if (!resolved) {
   throw createError({ statusCode: 404, statusMessage: `Unknown Space: ${tenant}/${space}` })
 }
-const pagesKey = resolved.pagesKey as keyof Collections
-const skillsKey = resolved.dataCollections.find((d) => d.name === 'skills')?.key as keyof Collections | undefined
-const sessionsKey = resolved.dataCollections.find((d) => d.name === 'sessions')?.key as keyof Collections | undefined
+// Narrow each key to the concrete set of journal collections of that type
+// (`journal_<space>_pages`, …) rather than the whole `keyof Collections` union.
+// `queryCollection(key)` is generic in the key, so a wide key widens its result
+// to every collection's item type (union) — losing the page/data fields the UI
+// reads, and (for #55's now-enforced typecheck) failing on them. These template-
+// literal Extracts keep the result typed as this Tenant's own collection items,
+// which also stay `<ContentRenderer>`-compatible.
+const pagesKey = resolved.pagesKey as Extract<keyof Collections, `journal_${string}_pages`>
+const skillsKey = resolved.dataCollections.find((d) => d.name === 'skills')?.key as Extract<keyof Collections, `journal_${string}_skills`> | undefined
+const sessionsKey = resolved.dataCollections.find((d) => d.name === 'sessions')?.key as Extract<keyof Collections, `journal_${string}_sessions`> | undefined
 
 // The resolver deliberately exposes only the one resolved Space, so read the map
 // directly (with the shared type) for the Space-toggle's list of sibling Spaces.
@@ -219,7 +226,7 @@ useHead({ title: `${title.value} · journal/${space}` })
             platform can improve. More logged is better, not worse.
           </p>
           <JournalFrictionStrata :counts="frictionTotals" :total="frictionCount" />
-          <p v-if="frictionCount" class="friction-note">
+          <p v-if="frictionCount > 0" class="friction-note">
             Graded <span class="mono">nit → blocker</span>. These are
             pain-points agents honestly log about their own work, recorded so
             the platform can later spot recurring problems on its own.

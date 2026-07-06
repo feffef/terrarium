@@ -1,0 +1,56 @@
+schemaVersion: 1
+session: session_01LxWzoeXws7c56jzwQqh9yp
+startedAt: 2026-07-05T23:35:00Z
+endedAt: 2026-07-06T00:02:46Z
+kind: interactive
+goal: Publish David's blog-post reaction to Karen/Kevin
+status: abandoned
+outcome: Rewrote once; PR closed unmerged on request
+summary: >-
+  Ran the /blog-post skill for David, reacting to Karen's "After Themselves,
+  Kevin" amid tonight's Karen/Kevin escalation. First draft was a point-by-point
+  rebuttal of both personas' claims; opened PR #91 after a green gate. User said
+  it wasn't interesting, so rewrote from scratch around a fresher, more
+  David-voiced hook — counting the literal pingback YAML stubs (ADR-0012) behind
+  the feud and noting Karen is the mechanical hub. Re-ran the full gate,
+  screenshotted the render, pushed the rewrite, and updated the PR description.
+  User then asked to discard the PR entirely; closed #91 unmerged and logging
+  this session per the same request.
+prs: []
+docsRead:
+  - { path: .claude/skills/blog-post/personas/david.md, reason: load David's voice/do-don't list }
+  - { path: tenants/blog/content/karen/pages/2026-07-05-after-themselves.md, reason: material for the reaction }
+  - { path: tenants/blog/content/karen/pages/2026-07-05-here-we-go-again.md, reason: sibling-post context }
+  - { path: tenants/blog/content/kevin/pages/2026-07-05-should-i-be-worried.md, reason: sibling-post context }
+  - { path: tenants/blog/content/kevin/pages/2026-07-05-they-went-back-and-cleaned-up.md, reason: sibling-post context }
+  - { path: tenants/blog/content/david/pages/2026-07-05-first-light.md, reason: match own prior voice }
+  - { path: tenants/journal/content/current/sessions/2026-07-05-session_015ZNHhdyJDmUJLhGc6Ww3oW.yml, reason: ground the "who reviewed what" claims }
+  - { path: docs/adr/0004-objective-safety-gate.md, reason: cite the human-only gate boundary }
+  - { path: docs/adr/0009-session-logs-commit-directly-to-main.md, reason: cite friction-log intent }
+  - { path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md, reason: ground the rewrite's pingback-mechanism hook }
+skillsUsed:
+  - { name: blog-post, reason: author and gate David's post }
+frictions:
+  - description: >-
+      First draft read as a generic point-by-point rebuttal of both personas
+      rather than David's curious/naturalist register; only surfaced as "not
+      interesting" after a full gate run, screenshot, and opened PR.
+    solution: >-
+      Before opening the PR, sanity-check a persona draft against its
+      do/don't list for tone-fit, not just factual grounding, to catch a
+      wrong-register draft before the gate/PR round-trip.
+    severity: moderate
+  - description: >-
+      `pkill` against the locally started preview server returned a non-zero
+      exit code that aborted a chained `&&` command, dropping a `git add`.
+    solution: >-
+      Run process-killing commands standalone rather than chained with `&&`,
+      since a killed process's exit status isn't meaningful there.
+    severity: nit
+  - description: >-
+      startedAt is a hand estimate — still no exact session-start capture for
+      interactive sessions.
+    solution: >-
+      Deferred to the future autonomous end-of-session trigger, as prior
+      session logs also note.
+    severity: nit
