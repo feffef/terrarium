@@ -1,0 +1,72 @@
+schemaVersion: 1
+session: session_019w5EmdBxjtvQC4vgWUzKN4
+startedAt: 2026-07-06T13:12:00Z
+endedAt: 2026-07-06T13:39:09Z
+kind: interactive
+goal: Turn logged frictions into merged doc fixes
+status: completed
+outcome: 4 doc fixes merged, 3 escalated
+summary: >-
+  Ran the frictions-to-fixes workflow. A subagent surveyed the last 20 session
+  logs and screened them against the tracker — clean, zero regressions, most
+  frictions already retired by the 07-06 fix wave. Selected four never-fixed doc
+  frictions (worktree isolation, blog-post pre-publish checks, PRD conventions,
+  ineffective minimal_output guidance), filed #128–#131, dispatched one Sonnet
+  agent to batch them into PR #132, reviewed against the gate and the #64/#65
+  precedent, and merged. Three human-only frictions escalated: stop-hook
+  history-rewrite advice, a scoped content-only gate path, and provenance #124
+  (which blocked my own self-approval of the PR).
+prs: ["132"]
+docsRead:
+  - { path: .claude/skills/frictions-to-fixes/SKILL.md, reason: the workflow being run }
+  - { path: docs/adr/, reason: know the human-only surfaces before selecting }
+  - { path: docs/agents/issue-tracker.md, reason: verify the minimal_output guidance defect }
+  - { path: .agents/skills/blog-post/SKILL.md, reason: scope the pre-publish checklist fix }
+  - { path: "GitHub issue #124", reason: confirm provenance already open and escalated }
+  - { path: "GitHub issue #64", reason: ground the PRD-conventions doc in real precedent }
+  - { path: "GitHub issue #65", reason: confirm the Part-of / on-hold sub-issue pattern }
+skillsUsed:
+  - { name: frictions-to-fixes, reason: the session was this workflow }
+frictions:
+  - description: >-
+      Could not formally Approve PR #132 — GitHub blocks self-approval and the
+      agent authored it under the same identity as the reviewer.
+    solution: >-
+      Posted the review as a COMMENT instead; the real fix is provenance #124
+      (distinct agent/bot identity) — this session is concrete evidence for it.
+    severity: minor
+  - description: >-
+      Impl agent's Read/Edit initially resolved against the shared main checkout
+      instead of its worktree copy — ironic, given issue #128 is that exact class.
+    solution: >-
+      Agent recovered by using worktree-prefixed paths; a tool that pinned
+      file ops to the agent's worktree root would remove the trap.
+    severity: moderate
+  - description: >-
+      list_issues / list_pull_requests overflow the tool-result limit even
+      paginated; the documented minimal_output remedy is a no-op (no such param).
+    solution: >-
+      Fixed this run as #131 — docs now steer to search_* + small perPage;
+      confirmed the param genuinely doesn't exist on those tools.
+    severity: moderate
+  - description: >-
+      Survey subagent's scratch .ts parse script was left untracked in the repo
+      root and tripped the stop-hook "untracked files" warning.
+    solution: >-
+      Removed it manually after the survey. Subagents writing scratch files in
+      the repo tree should clean up, or write to the scratchpad dir.
+    severity: minor
+  - description: >-
+      No way to reach the GitHub MCP gate status from bash/Monitor, and CI
+      success isn't webhook-delivered, so I background-slept and re-polled MCP.
+    solution: >-
+      Worked, but clunky; a poll-until-green helper for the gate check would
+      save the manual timer + re-query loop.
+    severity: minor
+  - description: >-
+      startedAt is a hand-estimate — no precise session-start clock was available
+      to read.
+    solution: >-
+      Deferred to the autonomous end-of-session trigger (issue #10) that will
+      capture true start/end; logging the nit per convention.
+    severity: nit
