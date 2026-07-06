@@ -83,9 +83,9 @@ describe('tallyUsage()', () => {
 describe('buildSkillRows()', () => {
   const onDisk = new Map<string, OnDiskSkill>([
     ['blog-post', { description: 'author a post' }],
-    ['ghost', { description: 'never catalogued' }],
+    ['ghost', { description: 'never inventoried' }],
   ])
-  const catalogued = new Map<string, InventoryEntry>([
+  const inventory = new Map<string, InventoryEntry>([
     ['blog-post', { category: 'platform-operation', importance: 'specialist', role: 'blogs' }],
     ['retired', { category: 'general-engineering', importance: 'peripheral', role: 'gone from disk' }],
   ])
@@ -93,7 +93,7 @@ describe('buildSkillRows()', () => {
     ['blog-post', [{ session: 's1', kind: 'interactive', goal: 'blog' }]],
   ])
   const external = new Set<string>(['ghost']) // ghost is a pack Skill
-  const rows = buildSkillRows(onDisk, catalogued, usage, external)
+  const rows = buildSkillRows(onDisk, inventory, usage, external)
   const row = (n: string) => rows.find((r) => r.name === n)!
 
   it('unions every name across the sources, sorted', () => {
@@ -102,7 +102,7 @@ describe('buildSkillRows()', () => {
 
   it('joins on-disk description, Inventory grade, and windowed usage', () => {
     expect(row('blog-post')).toMatchObject({
-      onDisk: true, catalogued: true, importance: 'specialist',
+      onDisk: true, inventoried: true, importance: 'specialist',
       description: 'author a post', useCount: 1, external: false,
     })
   })
@@ -113,10 +113,10 @@ describe('buildSkillRows()', () => {
   })
 
   it('flags an on-disk Skill with no Inventory entry (coverage gap)', () => {
-    expect(row('ghost')).toMatchObject({ onDisk: true, catalogued: false, importance: null, useCount: 0 })
+    expect(row('ghost')).toMatchObject({ onDisk: true, inventoried: false, importance: null, useCount: 0 })
   })
 
-  it('flags a catalogued Skill gone from disk (stale entry)', () => {
-    expect(row('retired')).toMatchObject({ onDisk: false, catalogued: true, description: null })
+  it('flags an inventoried Skill gone from disk (stale entry)', () => {
+    expect(row('retired')).toMatchObject({ onDisk: false, inventoried: true, description: null })
   })
 })

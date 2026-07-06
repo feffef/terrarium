@@ -6,9 +6,9 @@
 // which role prose to rewrite); keeping judgement out of here is the point
 // (predictable process, low token cost, no re-improvised parser each run).
 //
-// Usage:  tsx scripts/audit-skills.ts [--window N] [--now <iso>]
+// Usage:  tsx scripts/audit-skills.ts [--window N]
 //   Prints a scorecard: the window of sessions considered (newest first) and,
-//   per Skill, whether it is on disk / catalogued, its current importance+role,
+//   per Skill, whether it is on disk / in the Inventory, its current importance+role,
 //   its SKILL.md description, and every windowed session that used it.
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -59,7 +59,7 @@ export interface UsageHit {
 export interface SkillRow {
   name: string
   onDisk: boolean
-  catalogued: boolean
+  inventoried: boolean
   /** In the external pack (`skills-lock.json`) — its SKILL.md is not ours to patch. */
   external: boolean
   category: string | null
@@ -104,23 +104,23 @@ export function tallyUsage(window: WindowSession[]): Map<string, UsageHit[]> {
 }
 
 /** Join the sources into one row per Skill — the union of every name that is on
- *  disk, catalogued, or observed in use — so orphans surface both ways:
- *  on-disk-but-uncatalogued AND catalogued-but-gone. `external` marks pack Skills
- *  (their frontmatter is not ours to patch). Sorted by name. */
+ *  disk, inventoried, or observed in use — so orphans surface both ways:
+ *  on-disk-but-not-inventoried AND inventoried-but-gone. `external` marks pack
+ *  Skills (their frontmatter is not ours to patch). Sorted by name. */
 export function buildSkillRows(
   onDisk: Map<string, OnDiskSkill>,
-  catalogued: Map<string, InventoryEntry>,
+  inventory: Map<string, InventoryEntry>,
   usage: Map<string, UsageHit[]>,
   external: Set<string>,
 ): SkillRow[] {
-  const names = new Set<string>([...onDisk.keys(), ...catalogued.keys(), ...usage.keys()])
+  const names = new Set<string>([...onDisk.keys(), ...inventory.keys(), ...usage.keys()])
   return [...names].sort().map((name) => {
-    const entry = catalogued.get(name)
+    const entry = inventory.get(name)
     const hits = usage.get(name) ?? []
     return {
       name,
       onDisk: onDisk.has(name),
-      catalogued: catalogued.has(name),
+      inventoried: inventory.has(name),
       external: external.has(name),
       category: entry?.category ?? null,
       importance: entry?.importance ?? null,

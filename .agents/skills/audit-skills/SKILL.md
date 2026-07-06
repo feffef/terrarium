@@ -41,24 +41,19 @@ pnpm exec tsx scripts/audit-skills.ts
 ```
 
 It prints JSON: the **window** (the 40 newest sessions by `endedAt`, each with
-`kind`/`goal`/`summary`/`skillsUsed`) and, per Skill, `onDisk`, `catalogued`,
-current `importance`/`role`, its SKILL.md `description`, and `usedIn` (every
-windowed session that invoked it). Pass `--window N` to widen/narrow.
+`kind`/`goal`/`summary`/`skillsUsed`) and, per Skill, `onDisk`, `inventoried`,
+`external`, current `importance`/`role`, its SKILL.md `description`, and `usedIn`
+(every windowed session that invoked it). Pass `--window N` to widen/narrow.
 
 Done when you hold the scorecard.
 
 ## 3. Re-grade importance and refresh role
 
-`importance` is **conditional essentialness** (`CONTEXT.md`), re-derived from the
-window — *never* raw frequency. For each Skill, read `usedIn` **and the `goal`/
-`summary`/`kind` of the sessions that used it** (and the sessions that plausibly
-*should* have), then set the grade:
-
-- **essential** — used across *many kinds* of session; its absence would be felt broadly.
-- **specialist** — *the* tool for a specific kind of work, even if that work is rare
-  (used in ~all sessions of its kind, few overall — e.g. `blog-post` in blog sessions).
-- **supporting** — useful but not essential; work proceeds without it.
-- **peripheral** — little pull even when it could have applied.
+`importance` is **conditional essentialness** — *never* raw frequency. The four
+grades (`essential | specialist | supporting | peripheral`) are defined in
+`CONTEXT.md` (the single home) — read them there. For each Skill, read `usedIn`
+**and the `goal`/`summary`/`kind` of the sessions that used it** (and the sessions
+that plausibly *should* have), then set the grade per those definitions.
 
 **Rules:**
 - **Rarity alone never lowers a grade.** A Skill unused only because *its kind of
@@ -66,9 +61,11 @@ window — *never* raw frequency. For each Skill, read `usedIn` **and the `goal`
   the grade.
 - **Demote only on opportunity-missed evidence** (the step-4 signal): a Skill absent
   from **≥2 windowed sessions of the kind it serves** drops toward `peripheral`.
-- **Create a missing entry** for any `onDisk && !catalogued` Skill you observed in
-  use — write it from what the sessions show. Leave *never-observed* uncatalogued
-  Skills alone (that coverage is other `sync` work).
+- **Create a missing entry** for any `onDisk && !inventoried` Skill you observed in
+  use: `name` is the Skill's directory name; `category` is `general-engineering`
+  when `external`, else `platform-operation`; write the `role` + grade from what the
+  sessions show. Leave *never-observed* un-inventoried Skills alone (that coverage is
+  other `sync` work).
 - **External (`external: true`) Skills are tuned too.** Their Inventory grade + role
   record their *fit to this project*, which drifts like any other — grading a pack
   Skill's importance-here is not *evolving the Skill*, so "used, not evolved here"
@@ -77,7 +74,7 @@ window — *never* raw frequency. For each Skill, read `usedIn` **and the `goal`
   guideline): role + importance-to-project, not a copy of the Skill's own description.
 
 Edit the `.yml` files in place. Done when every entry's grade + role matches the
-evidence, and observed-but-uncatalogued Skills have entries.
+evidence, and observed-but-un-inventoried Skills have entries.
 
 ## 4. Flag frontmatter-suspect Skills (issues)
 

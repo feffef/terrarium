@@ -166,7 +166,9 @@ absent).
 The Platform's self-improvement loop: an autonomous job that turns a repeated
 manual pattern into a new, committed Skill. It is one of a small set of chartered
 autonomous jobs — alongside `sync`, `drift-check`, `consolidate`, and `triage` —
-that *tend and consolidate* the Platform rather than decide what should exist.
+that *tend and consolidate* the Platform rather than decide what should exist. (A
+chartered job is a *remit*, realised by one or more Skills: `sync` is served by
+`digest` and `audit-skills` today — see ADR-0003/0015.)
 **Planned concept, not yet built:** no autonomous jobs run today. The term is
 defined here so Skills and journal content can refer to it consistently until it
 exists.
