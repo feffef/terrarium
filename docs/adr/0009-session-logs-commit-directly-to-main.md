@@ -7,6 +7,12 @@ Status: Accepted
 > (issue #60). It is the single home for how an append-only strict `data`
 > collection may change its schema — `sessions` here, blog `pingbacks`
 > (ADR-0012) being the second instance that generalizes it.
+>
+> **Amended (2026-07-06):** added **Automatic logging via a `SessionEnd` hook**
+> below — supersedes the *deferred end-of-session trigger* left open in the
+> Decision, records the measured Claude-Code-on-the-web freeze behaviour, and
+> fixes the derive-vs-author split and the commit rule. Decision accepted;
+> implementation is a follow-up gated PR.
 
 ## Context
 
@@ -141,3 +147,89 @@ the *absence* of the key, exactly as v1 session logs are. A field is added only
 when pingbacks take their first breaking change — at which point the same
 `z.literal(2)` + `z.union([v1, v2])` recipe above applies, with v1 keyed on the
 absent `schemaVersion`.
+
+## Automatic logging via a `SessionEnd` hook
+
+> **Amended (2026-07-06, this session).** Supersedes the *deferred end-of-session
+> trigger* left open in the Decision above. **Decision accepted; implementation is
+> a follow-up gated PR** — see "Not yet built" at the end.
+
+**Why revisit.** Two frictions with the reminder-convention model: (1) a session
+must be *explicitly* wrapped up and logged, which is manual and easily skipped;
+(2) the self-reported fields (`docsRead`, `skillsUsed`, `startedAt`, `prs`) proved
+unreliable against ground truth — yet the session's **transcript jsonl** already
+records, deterministically, every tool call, file read, subagent, model, and
+exact timestamp.
+
+**What the web harness actually does (measured, CLI 2.1.201).** A passive probe
+hook found that on Claude Code on the web a **freeze/resume fires `SessionEnd`
+with `reason: "other"`** — *not* the documented `reason: "resume"` (that value is
+the CLI `--resume`/`--continue` path). Resume then fires `SessionStart
+source: "resume"` with **no approval prompt**. Consequence: **`reason` cannot
+distinguish a mid-session freeze from a true end** — both are `other`. Also:
+`SessionEnd` is fire-and-forget (cannot block, cannot prompt the model), and
+`SessionStart`/`SessionEnd` firings are not written to the transcript.
+
+**Decision.**
+
+1. **Two kinds of content, two authors.**
+   - *Mechanical (derived, never self-reported):* timings, `models` (per-turn
+     counts — captures mid-session switches), tool counts, `filesRead`,
+     `filesEdited`, `skillsUsed`, `subagents` `{type, task, model}`, PR signals,
+     git branch / entrypoint / CLI version. Extracted from the transcript by a
+     committed extractor (`scripts/session-trace.ts`).
+   - *Authored (irreducible):* `goal`, `outcome`, `summary`, `frictions`, and any
+     per-item `reason`. The **live agent** writes these *during* the session —
+     `SessionEnd` cannot prompt, so authoring cannot happen at teardown.
+   - *Stitch:* `docsRead`/`skillsUsed` **union** the derived + authored entries,
+     keyed by path/name and tagged `source: derived | authored | both`. An
+     `authored`-only entry (claimed but no tool call backs it) is preserved as
+     signal — a `cat`-inspected file, a subagent's read, or a self-report that
+     drifted from what actually happened.
+
+2. **The scratch file is the wrap-up signal.** The agent writes its authored part
+   via a helper script (wrapped by the `log-session` Skill) to a **scratch file
+   outside git** (the harness scratchpad). The `SessionEnd` hook **commits only if
+   that scratch file exists.** The agent choosing to write it *is* its in-the-loop
+   assertion that the work has landed — a more reliable "done" than any `reason`
+   value. A freeze mid-work (no scratch yet) → the hook does nothing.
+
+3. **Idempotent overwrite, diff-guarded.** The log is the single file
+   `<date>-<sessionId>.yml`. On a resumed-then-ended-again session the hook
+   **re-derives and overwrites** it; the transcript only grows, so a later extract
+   is a **superset** of an earlier one. A **diff-guard** skips the commit when the
+   re-derived log is byte-identical to what is on `main` — so a freeze/resume with
+   no new work never touches `main`. Push reuses this ADR's `fetch → rebase →
+   push`-with-retry; the filename is globally unique per session, so parallel
+   sessions never collide. This overwrite is a **same-session finalization**, not a
+   rewrite of another session's entry — cross-session history stays append-only.
+
+**Consequences.**
+
+- Coverage now depends on the agent **authoring a summary** (a low bar, still
+  nudged by the reminder convention) rather than on catching a clean end event.
+  No summary → no log: the same gap as today, no worse, and never a
+  partial/dishonest one.
+- The self-reported mechanical fields disappear; the previously admitted-guess
+  `startedAt` becomes exact.
+- **Human-gated install, prompt-free thereafter (ADR-0004).** The hook +
+  extractor ship **once** via a gated PR and are inherited by every session.
+  *Installing* hook config is the only step that prompts (correctly — a hook is
+  code that runs automatically), so autonomous runs, which only *inherit* the
+  committed hook, execute it unprompted. Verified this session: the committed
+  `pnpm install` `SessionStart` hook and the resume both ran with no prompt; only
+  the agent *writing* new hook config prompted.
+- **Residual edge.** A session frozen and reclaimed **without ever resuming** keeps
+  its last committed state; if that predates the scratch file, the session is
+  unlogged — graceful degradation over a partial log.
+- **Schema impact (per the policy above).** Additive mechanical fields (`models`,
+  `subagents`, …) are **optional** → allowed anytime. Changing `docsRead`/
+  `skillsUsed` from `string` to `{path|name, source, reason?}` **narrows** existing
+  entries → it takes the `schemaVersion: 2` + `z.union([v1, v2])` path, *or* the
+  new shape is added as new optional fields beside the retained string form. Which,
+  is an implementation decision for the follow-up PR.
+
+**Not yet built (follow-up gated PR).** `scripts/session-trace.ts` (port of the
+validated proof-of-concept), the `SessionEnd` handler, the scratch-writing helper
++ `log-session` Skill update, the committed `.claude/settings.json` hook entry, and
+the `sessions` schema change. Recorded here as **decided**, to land gated.
