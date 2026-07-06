@@ -1,0 +1,102 @@
+schemaVersion: 1
+session: session_01N3AUGgvpYEjciCZmPzf2hN
+startedAt: 2026-07-06T05:53:56Z   # pinned from node_modules birth (SessionStart hook), not true capture
+endedAt: 2026-07-06T06:25:53Z
+kind: interactive
+goal: Turn session-log frictions into dispatched fixes
+status: partial
+outcome: Four issues filed; two gated PRs open
+summary: >-
+  Ran the frictions-to-fixes workflow: read all 24 session logs (~150
+  frictions) and screened them against the tracker. Found one regression —
+  issue #39's session-id recovery recipe (PR #49) failed in two sessions
+  after its fix merged — filed as #99 for human eyes. Selected three ripe
+  frictions and filed #100–#102 (gh-CLI vs GitHub-MCP doc mismatch,
+  screenshot.ts fixed window height plus dbus noise, pkill-in-&&-chain
+  convention). Dispatched two worktree agents: grouped doc PR #103 (closes
+  #100+#102) and code PR #104 (closes #101); both gates green. The user
+  called the session with the PRs still in review; shepherding continues via
+  subscriptions and a timed check-in.
+prs: []
+docsRead:
+  - { path: .claude/skills/frictions-to-fixes/SKILL.md, reason: the workflow being run }
+  - { path: tenants/journal/content/current/sessions/, reason: all 24 logs — the raw friction signal }
+  - { path: docs/agents/issue-tracker.md, reason: verify the gh-CLI friction was still unfixed }
+  - { path: scripts/screenshot.ts, reason: verify the hardcoded window size was still present }
+  - { path: .agents/skills/log-session/SKILL.md, reason: confirm the shipped id recipe for the regression check + authoring steps }
+  - { path: docs/agents/tenant-layers.md, reason: check whether the nuxt-prepare gotcha was already covered }
+  - { path: docs/adr/0014-build-time-virtual-routing-module.md, reason: check the CI-compat pattern was already recorded }
+  - { path: .claude/settings.json, reason: confirm the noisy Stop hook is not a repo surface }
+  - { path: "GitHub issues #2–#97, issue #39, PR #49", reason: screen frictions against shipped fixes and date the regression }
+skillsUsed:
+  - { name: frictions-to-fixes, reason: the whole session runs this workflow }
+  - { name: log-session, reason: author and commit this entry (followed manually) }
+frictions:
+  - description: >-
+      Unpaginated list_issues returned 157KB, far over the tool-result limit;
+      had to slice the persisted file with python to recover numbers and
+      titles. Same class as the 55KB survey friction already logged.
+    solution: >-
+      Paginate with minimal output up front — and the issue-tracker doc's MCP
+      section (PR #103) could carry that hint.
+    severity: minor
+  - description: >-
+      All 24 session logs concatenated exceed the Read cap (~39k tokens), so
+      holding the complete friction list took a persisted dump read in two
+      pages.
+    solution: >-
+      Fine at this scale; the future consolidate job should aggregate
+      frictions instead of every run re-reading raw logs.
+    severity: nit
+  - description: >-
+      frictions-to-fixes says to ask the user how many ripe frictions to take,
+      but the session ran autonomously where a blocking question stalls
+      everything; proceeded with the natural count (three).
+    solution: >-
+      Give the Skill a default (all that pass the ripeness test, capped ~5) so
+      autonomous runs need no mid-run question.
+    severity: minor
+  - description: >-
+      The pinned designated branch conflicted with the Skill's
+      one-branch-per-PR dispatch; resolved by namespacing agent branches under
+      the pinned prefix. Same class as the digest session's pinned-branch
+      friction.
+    solution: >-
+      The Skill could state that dispatch branches are derived from (and
+      override) a caller-pinned branch name.
+    severity: minor
+  - description: >-
+      The Stop hook read the finished agents' worktrees under
+      .claude/worktrees/ as untracked files and urged committing them —
+      following that advice would commit harness infrastructure; removed the
+      worktrees instead.
+    solution: >-
+      The hook should ignore .claude/worktrees/ (and git-worktree paths
+      generally); it lives user-side, so only the user can fix it.
+    severity: minor
+  - description: >-
+      The recurring Stop-hook-noise friction (three sessions) proved
+      unfixable by this workflow — the hook is environment config, not a repo
+      surface, so it could only be reported, not dispatched.
+    solution: >-
+      User-side hook fix; flagged in the run report since no repo PR can
+      carry it.
+    severity: nit
+  - description: >-
+      The GitHub MCP server disconnected right as /log-session arrived;
+      recurring transient, harmless here since the helper only needs git.
+    solution: none — reconnects are automatic; already logged in prior sessions.
+    severity: nit
+  - description: >-
+      The session ended by user call while PRs #103/#104 were still in
+      review, so whatever friction their review round-trips produce cannot
+      reach this log.
+    solution: >-
+      The armed check-in keeps shepherding; a future amendment mechanism (or
+      the consolidate job) could pick up post-log friction.
+    severity: nit
+  - description: >-
+      startedAt is pinned from node_modules' birth timestamp (SessionStart
+      hook), not a true session-start capture; endedAt is exact via date -u.
+    solution: Deferred to the autonomous end-of-session trigger (ADR-0009).
+    severity: nit
