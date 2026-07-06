@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: session_01UcVGfCE9qxbT1um1wVxK32
+startedAt: 2026-07-06T05:54:18Z
+endedAt: 2026-07-06T06:05:35Z
+kind: interactive
+goal: Write David's blog post
+status: completed
+outcome: Post merged via PR #98
+summary: >-
+  Ran the blog-post Skill for the david Persona. Gathered the weekend's real
+  signal — PR #90 deleting the generator for the #routing virtual module
+  (ADR-0014), the gate:drift compat shim, the #81/#83 gate hardening — and
+  found the hook in David's own First Light post, whose two links to
+  scripts/generate.ts now 404. Wrote a standalone post (no reactsTo) treating
+  the deletion as a molt, flagging the shim as ambiguous, and noting Karen's
+  issue-55 blind spot closed overnight. Cleared the full safety gate, opened
+  gated PR #98; the user merged it.
+prs: ["98"]
+docsRead:
+  - { path: ".claude/skills/blog-post/personas/david.md", reason: persona stance and voice }
+  - { path: "tenants/blog/content/david/pages/2026-07-05-first-light.md", reason: prior post — became the hook }
+  - { path: "tenants/blog/content/karen/pages/2026-07-05-after-themselves.md", reason: standalone-vs-reaction decision }
+  - { path: "tenants/blog/content/kevin/pages/2026-07-05-they-went-back-and-cleaned-up.md", reason: standalone-vs-reaction decision }
+  - { path: "tenants/journal/content/current/sessions/2026-07-06-session_01JPyBb9RKbNKXjZBiKoPBrX.yml", reason: post material }
+  - { path: "docs/adr/0014-build-time-virtual-routing-module.md", reason: the post's subject }
+  - { path: "tenants/blog/tenant.config.ts", reason: pages schema for frontmatter }
+skillsUsed:
+  - { name: blog-post, reason: author David's post via gated PR }
+  - { name: log-session, reason: this entry }
+frictions:
+  - description: >-
+      blog-post Skill prescribes a blog/<persona>-post-<date> branch, but the
+      session pinned claude/blog-david-935d5c — the exact two-surfaces-disagree
+      friction the digest session already logged for its Skill.
+    solution: >-
+      Used the pinned name off origin/main, honouring the Skill's intent. Add
+      one shared note (caller-pinned branch overrides the suggested name) to
+      the PR-opening Skills rather than rediscovering this per Skill.
+    severity: minor
+  - description: >-
+      The pinned branch already existed locally at session start, so a
+      compound `git branch -m && commit && push` failed at the rename and the
+      work had to be re-staged after switching branches.
+    solution: >-
+      Check for the pre-created pinned branch first; keep branch plumbing
+      separate from commit/push in compound commands.
+    severity: nit
+  - description: >-
+      Draft post contained two factual slips — a wrong weekday and a wrong
+      line-count claim — that no gate checks; only manual re-verification
+      against commit timestamps and file sizes caught them.
+    solution: >-
+      The Skill's verify-every-link rule works; extend its spirit to numeric
+      and date claims (re-derive each from git before publishing).
+    severity: minor
+  - description: >-
+      Typing /blog failed with "Unknown command" before /blog-post resolved —
+      the Skill name only matches exactly, with no alias or fuzzy hint.
+    solution: Mention the exact Skill names in the blog Tenant docs, or accept the retry cost.
+    severity: nit
+  - description: >-
+      Cold container ran the full pnpm install at session start before any
+      work could begin. Recurs every session; already noted in prior logs.
+    solution: Known cold-start cost; the scoped SessionStart hook already minimises it.
+    severity: nit
+  - description: >-
+      startedAt is recovered from the git reflog's first checkout timestamp,
+      not a true session-start capture; endedAt is exact via date -u.
+    solution: Deferred autonomous end-of-session trigger (ADR-0009) would capture both.
+    severity: nit
