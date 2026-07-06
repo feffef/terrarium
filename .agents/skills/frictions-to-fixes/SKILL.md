@@ -17,48 +17,78 @@ without touching a human-only surface — but keep the hard ones rare (§3).
 
 Run it when asked, or after a batch of sessions has piled up unaddressed friction.
 
-## 1. Read the latest 20 session logs
+## 1. Survey & screen the frictions — in a subagent
 
-Session logs live in `tenants/journal/content/current/sessions/*.yml`, each named
-with an ISO date prefix (`YYYY-MM-DD-…`) so a plain filename sort is chronological.
-Read the **latest 20** — take the last 20 filenames sorted ascending (e.g.
-`ls -1 tenants/journal/content/current/sessions/*.yml | tail -20`). This is a
-**recency window, not a sample**: read every log inside it, but don't chase
-frictions from older sessions that are likely long gone. (If there are fewer than
-20 logs, read them all.)
+Reading 20 logs and surveying the whole tracker is context-heavy (the tracker JSON
+alone overflows the tool-result limit), so **delegate steps 1–2 to a single
+subagent** (`general-purpose`, so it can run `tsx` and the GitHub MCP tools). It
+surveys, screens, and returns a **distilled, ranked report**; the main session
+works only from that report and never re-reads the raw corpus. The subagent
+**surveys only** — it files no issues, opens no PRs, changes no code.
 
-For each, pull its `frictions[]` (`description`, `solution`, `severity`) and keep
-its `startedAt` — you need the date to catch regressions in step 2.
+Its brief:
 
-Done when every log in the latest-20 window is read and you hold one flat list of
-frictions, each tagged with its session(s), severity, and date.
+- **Read the latest 20 session logs.** `tenants/journal/content/current/sessions/*.yml`
+  are ISO-date-prefixed, so a filename sort is chronological; take the last 20
+  (`ls -1 … | tail -20`; all of them if fewer than 20). This is a **recency window,
+  not a sample** — read every log in it, don't chase frictions from older,
+  likely-gone sessions. Parse the YAML with a short `tsx` script written **inside
+  the repo tree** (so `import { parse } from 'yaml'` resolves against
+  `node_modules`). Pull each friction's `description`, `solution`, `severity`, and
+  the session's `startedAt` date — the date is what catches regressions in step 2.
+- **Group and rank.** Fold related/recurring frictions (shared root cause or single
+  fix) into one candidate; rank by **recurrence × severity** — one logged across
+  sessions, or at `moderate`+, outranks a lone `nit`.
+- **Screen against the tracker** — apply the §2 rules to every candidate.
+- **GitHub-MCP hygiene** (these are themselves recurring frictions — heed them):
+  call the tools by their **fully-qualified `mcp__github__*` names** (bare names
+  don't resolve via ToolSearch), and always paginate `list_issues` /
+  `list_pull_requests` with `perPage: 30` + `minimal_output: true` (an unpaginated
+  call overflows the tool-result limit); page both open and closed/merged.
 
-## 2. Screen against fixes already shipped
+**The subagent also reports its own frictions.** Whatever it hits while running the
+survey — an MCP disconnect, a tool that only resolved under its full id, an
+oversized result it had to slice — it records and **returns alongside** the
+screened list, so this run's own frictions feed the next cycle (they belong in this
+session's log too, §6). Don't let the survey's frictions evaporate just because it
+ran in a subagent.
 
-Never re-fix what is already fixed. For each friction, check the tracker for a
-**closed issue or merged PR** that already addressed it, then branch:
+Done when the subagent returns a structured report: **(a) ranked actionable
+candidates** — each with title, severity, recurrence (N/20), sessions, tracker
+classification (never-fixed / open-already #N / regression of #N), fix type
+(doc/code/config), human-only-surface flag, difficulty (simple/hard), a one-line
+recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons;
+and **(c) the subagent's own frictions** from the run.
 
-- **Never fixed** — carries on to step 3.
-- **Fixed, and not logged since the fix merged** — drop it. Done is done; spending
-  a PR here is duplicate work.
+## 2. Screen against fixes already shipped (the subagent's rules)
+
+Never re-fix what is already fixed. The §1 subagent applies these rules to every
+candidate, checking the tracker for an issue or PR that already covers it — and
+confirming against **`main`** where cheap (a "solution" isn't ripe if main already
+has it). Classify each into one branch:
+
+- **Never fixed** — no issue/PR addresses it. Carries on to step 3.
+- **Fixed, and not logged since the fix merged** — drop it (cite the issue/PR).
+  Done is done; spending a PR here is duplicate work.
+- **Open already** — an **open** issue or **open** PR already tracks it (cite the
+  number). Don't file a duplicate; surface it so the main session can pick up the
+  existing thread instead.
 - **Reappeared _after_ its fix merged** (a friction logged in a session that
   started later than the fixing PR landed) — this is a **regression**: the fix that
   was supposed to be in place did not hold. Do **not** route it through the ordinary
   simplest-fix dispatch — a change that already failed once needs human eyes, not a
-  second run of the same idea. Instead file a distinct issue that flags the earlier
-  fix as ineffective (link the prior issue/PR and quote both the original and the
-  recurring friction), and **alert the user**.
+  second run of the same idea. The main session files a distinct issue that flags
+  the earlier fix as ineffective (link the prior issue/PR and quote both the
+  original and the recurring friction), and **alerts the user**.
 
-Done when every friction is labelled never-fixed, drop, or regression — and every
-regression has its own alerting issue filed.
+Done when every candidate is labelled never-fixed, drop, open-already, or
+regression — each with its citing issue/PR number where one exists.
 
 ## 3. Pick what to fix — up to 10, at most 2 hard
 
-From the never-fixed frictions, rank by **recurrence × severity** — one logged
-across sessions, or at `moderate`+, outranks a lone `nit`. **Group related
-frictions** as you go: several that share a root cause or a single fix become one
-selection, not several. Select **up to 10** issues total for this run, sorted into
-two buckets:
+From the subagent's ranked never-fixed candidates (already grouped by root cause,
+§1), select **up to 10** for this run, sorted into two buckets. (Adjust the grouping
+if your judgement differs, but don't re-derive the ranking from scratch.)
 
 - **Simple (the bulk).** Passes the **ripeness test**, all three: **simple** (one
   small code or config change, no redesign), **autonomous** (an agent lands it
