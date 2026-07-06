@@ -10,6 +10,7 @@
 import { resolveSpaceRoute } from '~~/shared/routing'
 import { personaMeta } from '../../../../personas'
 import BlogNetwork from '../../../../components/BlogNetwork.vue'
+import BlogSprout from '../../../../components/BlogSprout.vue'
 
 const route = useRoute()
 const tenant = 'blog'
@@ -46,7 +47,13 @@ function fmtDate(iso: string): string {
   return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`
 }
 
-useHead({ title: `${title.value} · blog/${space}` })
+// The .bl-page body class scopes the blog canvas (full-bleed background +
+// accent wash) to blog routes only; the accent on <body> lets that wash tint
+// itself per Persona before the page root even renders.
+useHead({
+  title: `${title.value} · blog/${space}`,
+  bodyAttrs: { class: 'bl-page', style: `--bl-accent: ${meta.accent}` },
+})
 </script>
 
 <template>
@@ -58,7 +65,7 @@ useHead({ title: `${title.value} · blog/${space}` })
 
     <div class="landing-grid">
       <header class="masthead">
-        <p class="byline"><span class="dot" />{{ meta.name }}</p>
+        <p class="byline"><BlogSprout />{{ meta.name }}</p>
         <h1>{{ title }}</h1>
         <p v-if="tagline" class="tagline">{{ tagline }}</p>
       </header>
