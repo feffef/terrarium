@@ -1,0 +1,63 @@
+schemaVersion: 1
+session: session_01FmradS479ibZQrDbRGtQnW
+startedAt: 2026-07-06T21:18:10Z
+endedAt: 2026-07-06T21:36:24Z
+kind: interactive
+goal: Show mechanical trace in Journal cards
+status: completed
+outcome: Trace surfaced, tested, PR
+summary: "The SessionEnd extractor already derived a mechanical trace (models, toolCounts, filesEdited, subagents) into every session log, but the dashboard card ignored it. Weighted the display by interest per the user's steer: model is an always-visible chip in the collapsed foot (short id, busiest-first for multi-tier sessions); subagents render directly in the expanded detail; and the verbose files-read/files-edited/tools-used lists sit behind per-list native <details> disclosures so they inform without cluttering (\"docsRead\" relabelled \"Files read\"). Skills and frictions stay always-visible. Added formatModels/toolEntries to the pure dashboard module with unit tests (102 pass), then verified the real render — collapsed and expanded — with a Playwright screenshot. Opened PR #151, in review."
+prs:
+  - "151"
+docsRead:
+  - path: tenants/journal/app/components/journal/SessionCard.vue
+    reason: the card being extended
+  - path: tenants/journal/app/utils/dashboard.ts
+    reason: pure view-model builder
+  - path: tenants/journal/app/types/journal.ts
+    reason: SessionCardView shape
+  - path: CLAUDE.md
+    reason: UI-verification rule (render DOM
+  - path: tenants/journal/app/pages/t/journal/[space]/index.vue
+    reason: (unknown)
+  - path: tests/unit/journal-dashboard.spec.ts
+    reason: (unknown)
+  - path: scripts/session-end.ts
+    reason: (unknown)
+skillsUsed:
+  - name: log-session
+    reason: record this session honestly
+frictions:
+  - description: screenshot.ts spawns Chromium directly and exposes no click API, so screenshotting an expand-on-click card needed an ad-hoc Playwright script.
+    solution: A committed screenshot helper variant that accepts a pre-shot interaction (click selector) would remove the per-session bespoke driver.
+    severity: minor
+  - description: playwright-core is not hoisted, so a scratch Playwright script fails to resolve it until NODE_PATH is pointed at the pnpm store path.
+    solution: Note the NODE_PATH=node_modules/.pnpm/playwright-core@*/node_modules recipe alongside the screenshot docs for anyone driving the browser via the API.
+    severity: nit
+  - description: tsx in this repo emits CJS, so a top-level await in a scratch script fails; had to wrap the driver in an async IIFE.
+    solution: Wrap ad-hoc tsx scripts in (async () => {...})() rather than relying on top-level await.
+    severity: nit
+durationSec: 1094
+models:
+  claude-opus-4-8: 156
+toolCounts:
+  Bash: 40
+  Read: 10
+  Edit: 15
+  Skill: 1
+  Write: 1
+  SendUserFile: 3
+  ToolSearch: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+filesEdited:
+  - tenants/journal/app/types/journal.ts
+  - tenants/journal/app/utils/dashboard.ts
+  - tenants/journal/app/components/journal/SessionCard.vue
+  - tests/unit/journal-dashboard.spec.ts
+gitBranch: claude/session-logs-journal-display-gam49z
+entrypoint: remote
+cliVersion: 2.1.201
