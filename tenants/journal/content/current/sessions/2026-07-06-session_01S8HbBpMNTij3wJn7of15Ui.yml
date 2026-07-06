@@ -1,0 +1,68 @@
+schemaVersion: 1
+session: session_01S8HbBpMNTij3wJn7of15Ui
+startedAt: 2026-07-06T21:58:12Z
+endedAt: 2026-07-06T22:19:25Z
+kind: interactive
+goal: Polish blog theme past prototype look
+status: completed
+outcome: Editorial theme shipped, gate green, pushed
+summary: Visually polished the blog Tenant so it stops reading as a tech prototype, keeping it simple with a few terrarium-style ornaments. Blog pages now tag the body to get a full-bleed canvas with a per-Persona accent wash; a new BlogSprout glyph recurs in the byline, as an end-of-post sprig, and on the blogger-network footer, now a glass "tank" panel matching a glass-pane About panel. Added a drop cap, double-rule masthead, refined prose/feed/pingback styling, selection and focus states, and dark-mode variants. Verified against the rendered DOM in light/dark and wide/narrow, ran the full gate, and pushed the branch; no PR was requested.
+prs: []
+docsRead:
+  - path: CLAUDE.md
+    reason: conventions
+  - path: tenants/blog/tenant.config.ts
+    reason: Persona/Space content model
+  - path: scripts/screenshot.ts
+    reason: committed screenshot recipe
+  - path: tenants/blog/app/assets/theme.css
+    reason: (unknown)
+  - path: tenants/blog/app/pages/t/blog/[space]/index.vue
+    reason: (unknown)
+  - path: tenants/blog/app/pages/t/blog/[space]/[...slug].vue
+    reason: (unknown)
+  - path: tenants/blog/app/components/BlogNetwork.vue
+    reason: (unknown)
+  - path: tenants/blog/app/personas.ts
+    reason: (unknown)
+  - path: app.vue
+    reason: (unknown)
+skillsUsed:
+  - name: log-session
+    reason: session closure log
+frictions:
+  - description: Downscaled Chromium --screenshot PNGs made applied-but-subtle scoped styles look missing; burned a restart and probing detour.
+    solution: Probe computed styles via playwright-core (a devDependency) before distrusting CSS; screenshot post-hydration with an explicit settle wait.
+    severity: moderate
+  - description: No image crop/zoom tooling in the container (no PIL, ImageMagick); inspecting screenshot regions needed a chromium file:// crop-page hack.
+    solution: A small crop/zoom helper next to scripts/screenshot.ts, or document the file:// img-offset trick.
+    severity: minor
+  - description: tsx scripts in the scratchpad cannot resolve repo dependencies like playwright-core; probe scripts had to live in the repo root.
+    solution: Run one-off tsx probes from inside the repo (or pass an absolute import path).
+    severity: nit
+  - description: theme.css used Vue :deep() selectors in a plain global stylesheet, ambiguous whether they applied and by what mechanism.
+    solution: Replaced with plain descendant selectors; global stylesheets should never use SFC-only pseudo-selectors.
+    severity: minor
+  - description: The user invoked /frontend-design, which does not exist in this environment; intent had to be inferred from the raw prompt.
+    solution: None needed — the plain-text request carried the intent.
+    severity: nit
+durationSec: 1273
+models:
+  claude-fable-5: 131
+toolCounts:
+  Bash: 40
+  Glob: 1
+  Read: 22
+  Write: 3
+  Edit: 9
+  Skill: 1
+  SendUserFile: 1
+filesEdited:
+  - tenants/blog/app/components/BlogSprout.vue
+  - tenants/blog/app/assets/theme.css
+  - tenants/blog/app/components/BlogNetwork.vue
+  - tenants/blog/app/pages/t/blog/[space]/index.vue
+  - tenants/blog/app/pages/t/blog/[space]/[...slug].vue
+gitBranch: claude/blog-design-polish-ihjbir
+entrypoint: remote
+cliVersion: 2.1.201
