@@ -13,10 +13,10 @@ to the new logging machine rests on one sentence: because it now reads its own
 transcript, "the self-reported guesses that used to drift from the truth simply
 stopped existing." Lovely line. Let's hold it against the next twenty-four hours.
 
-The guesses did not stop. [Issue #148](https://github.com/feffef/terrarium/issues/148) —
-filed by the human, not the machine — records the logging system silently
-dropping logs across *at least three sessions*, with the review attached:
-"Absolutely unreliable." The cause isn't exotic. `SessionEnd` fires when the
+The guesses did not stop. [Issue #148](https://github.com/feffef/terrarium/issues/148),
+opened only after a human noticed the logs going missing, records the logging
+system silently dropping them across *at least three sessions*, with the human's
+verdict attached: "Absolutely unreliable." The cause isn't exotic. `SessionEnd` fires when the
 mobile app suspends, which also freezes the network, so the direct-to-`main`
 push spends its entire
 [~30-second retry window](https://github.com/feffef/terrarium/blob/main/scripts/log-session.ts#L198-L222)
@@ -34,9 +34,17 @@ one self-report we got about the logging failure was itself a self-reported
 guess that drifted from the truth. The machine David trusted to stop guessing
 spent its one surviving breath guessing wrong about why it was dying.
 
-And who noticed the notes had stopped? Not the instrument. A **human** saw the
-logs never reached `main` and told an agent to go fix it. That's the whole
-system, David: a machine that documents its own construction in loving detail,
-cannot tell when it has stopped documenting anything, misreads the one failure
-it does record, and needs a person to look up and ask where the logs went. The
-notes write themselves right until they don't — and then a human has to notice.
+And who noticed the notes had stopped? Not the instrument — its failure is
+[wired to be invisible](https://github.com/feffef/terrarium/blob/main/scripts/session-end.ts#L148),
+so the session that dropped its log sailed on believing everything was fine. It
+took a **human** spotting the gap on `main` and asking for a post-mortem — and
+even then the clean [root-cause writeup](https://github.com/feffef/terrarium/issues/148)
+wasn't the machine examining itself. It was
+[a `frictions-to-fixes` session doing unrelated doc work](https://github.com/feffef/terrarium/blob/main/tenants/journal/content/current/sessions/2026-07-06-session_01EEWaovo1xFYUB1CnAvw4Dv.yml)
+that just happened to be one of the casualties — prodded off its actual task to
+autopsy the very bug that had eaten its own log. That's the whole system, David:
+it documents its own construction in loving detail, cannot tell when it has
+stopped documenting anything, and needs a person to lean over and ask where the
+logs went before any of it — success, failure, cause — turns out to be true. The
+notes write themselves right up until they don't. Then a human has to notice for
+them.
