@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_01FYqSJdxgB35bXo6s8ZNaxz
+startedAt: 2026-07-06T10:32:00Z
+endedAt: 2026-07-06T10:47:00Z
+kind: interactive
+goal: File low-hanging friction-fix issues
+status: completed
+outcome: Eight grouped issues filed, none fixed
+summary: >-
+  Ran frictions-to-fixes in issues-only mode: read all 27 session logs (199
+  frictions) and the full tracker (53 issues, 52 PRs) via subagents to keep the
+  raw dumps out of context, screened every friction against already-shipped
+  fixes, and dropped everything fixed (cat-then-Edit, screenshot recipe,
+  gh→MCP for issue-tracker.md, teardown-chaining, typecheck gaps) or ADR-0009
+  deferred. Filed eight never-fixed, ripe, doc/config-only issues (#106–#113),
+  grouping related findings (branch-pinning across two Skills, two screenshot
+  nits). Each carries quoted evidence, three solutions, and a recommended
+  simplest option. Per the user's instruction, stopped at issue creation — no
+  worktree dispatch, no PRs.
+prs: []
+docsRead:
+  - { path: CLAUDE.md, reason: ground rules + human-only safe surfaces }
+  - { path: .claude/skills/frictions-to-fixes/SKILL.md, reason: the workflow steps }
+  - { path: docs/agents/issue-tracker.md, reason: confirm MCP section, avoid dup fix }
+  - { path: docs/agents/tenant-layers.md, reason: confirm nuxt-prepare gotcha absent }
+  - { path: .agents/skills/digest/SKILL.md, reason: confirm branch-pinning note absent }
+  - { path: .agents/skills/blog-post/SKILL.md, reason: confirm branch-pinning note absent }
+skillsUsed:
+  - { name: frictions-to-fixes, reason: harvest ripe frictions into issues }
+frictions:
+  - description: >-
+      Commit-less session — only MCP issue calls, no git commits — so the
+      log-session id heuristic (`git log` Claude-Session trailer) returned a
+      prior session's id; used the harness trailer template instead.
+    solution: >-
+      Same class as #39/#99. SKILL.md already names a fallback for commit-less
+      sessions; surfacing the canonical id explicitly would end the recovery.
+    severity: minor
+  - description: >-
+      An unpaginated list_issues returned 168KB and overflowed the tool-result
+      limit, forcing a python-slice recovery in a subagent to read it.
+    solution: >-
+      Exactly the friction I filed as #108 this run — paginate with
+      minimal_output; the issue-tracker MCP section should carry the hint.
+    severity: minor
+  - description: >-
+      The 27 concatenated session logs and the full tracker JSON both exceed the
+      context/Read caps, so each survey had to run in a subagent returning a
+      distilled list.
+    solution: >-
+      Fine at this scale; the deferred consolidate job should aggregate frictions
+      once rather than every run re-reading the raw corpus.
+    severity: nit
+  - description: >-
+      ToolSearch did not resolve the github tools via `select:list_issues,...`
+      by bare name; had to query by keywords and full mcp__github__ ids.
+    solution: >-
+      Query deferred MCP tools by keyword or their fully-qualified id, not the
+      bare name — already logged in a prior session.
+    severity: nit
+  - description: >-
+      startedAt is a hand-estimate from node_modules' birth mtime (SessionStart
+      hook), not a true session-start capture; endedAt is exact via date -u.
+    solution: >-
+      Deferred to the autonomous end-of-session trigger (ADR-0009), which would
+      capture both mechanically.
+    severity: nit
