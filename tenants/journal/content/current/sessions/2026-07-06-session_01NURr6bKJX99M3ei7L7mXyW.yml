@@ -1,0 +1,78 @@
+schemaVersion: 1
+session: session_01NURr6bKJX99M3ei7L7mXyW
+startedAt: 2026-07-06T15:15:00Z
+endedAt: 2026-07-06T17:01:38Z
+kind: interactive
+goal: Write and correct Kevin's blog-post reaction to David
+outcome: PR #137 open, post corrected and trimmed
+status: completed
+summary: >-
+  Ran /blog-post kevin: gathered real signal (git log, session logs, GitHub
+  issues/PRs, sibling Personas' posts) and wrote a reaction to David's "The
+  Generator Is Gone," anchored in PR #127 (the human-gated review-and-merge
+  capability) and PR #132 (the agent's unsupervised exercise of it). The first
+  draft wrongly implied the capability itself was agent-initiated; the user
+  corrected me — PR #127 was explicitly human-requested and human-merged — and
+  I rewrote the post's framing to match. Then trimmed the post from nine
+  paragraphs to two on feedback, and added length and tone guidance ("1-4
+  paragraphs", "entertaining, not dry docs") to the blog-post Skill itself so
+  future runs don't repeat either miss. PR #137 open and green, awaiting review.
+prs: []
+docsRead:
+  - { path: .agents/skills/blog-post/SKILL.md, reason: the workflow being run }
+  - { path: .agents/skills/blog-post/personas/kevin.md, reason: voice and do/don't list }
+  - { path: tenants/blog/content/david/pages/2026-07-06-the-generator-is-gone.md, reason: the post being reacted to }
+  - { path: tenants/blog/content/kevin/pages/2026-07-05-should-i-be-worried.md, reason: prior post length/voice reference }
+  - { path: tenants/blog/content/karen/pages/2026-07-05-after-themselves.md, reason: reaction-post precedent }
+  - { path: .agents/skills/frictions-to-fixes/SKILL.md, reason: verify the review-and-merge capability's actual scope }
+  - { path: docs/adr/0003-agent-operating-model-and-governance.md, reason: verify the amendment being cited }
+  - { path: "GitHub PR #127", reason: verify who requested/merged the skill change }
+  - { path: "GitHub PR #132", reason: verify the review comment and merge attribution }
+  - { path: "GitHub issue #124", reason: verify the provenance-gap claim }
+skillsUsed:
+  - { name: blog-post, reason: the session was this workflow }
+frictions:
+  - description: >-
+      First draft implied the frictions-to-fixes review-and-merge capability
+      was an agent-initiated change agents normalized among themselves; the
+      user had to correct me that PR #127 (the capability itself) was
+      explicitly human-requested and human-merged. The underlying facts cited
+      were true but the causal narrative around them was misleading.
+    solution: >-
+      Should have checked who authored/merged the *skill-modification* PR
+      itself, not just the PR produced by running the skill, before drawing
+      the "agents did this to themselves" conclusion. Verify provenance at
+      the same rigor as any other cited fact.
+    severity: major
+  - description: >-
+      AskUserQuestion failed twice — once with a malformed-JSON input error
+      from an incorrectly nested raw payload, once with a permission-stream
+      error on a correctly formed call — forcing a fallback to a plain-text
+      question in chat.
+    solution: >-
+      Fall back to a plain-text question immediately after the first
+      tool-level failure instead of retrying the same tool a second time.
+    severity: minor
+  - description: >-
+      The blog-post Skill's only length guidance was "keep it tight — a blog
+      post, not an essay," which let a reaction post balloon to ~9 paragraphs
+      across revisions before the user asked for a 2-paragraph trim.
+    solution: >-
+      Fixed this session — added explicit "1-4 paragraphs is the norm" and
+      "pick the one or two facts that earn the post" guidance to SKILL.md §5.
+    severity: moderate
+  - description: >-
+      The Skill also had no guidance that posts should be entertaining rather
+      than read as a status report with a Persona's name attached; had to be
+      told explicitly after the length fix.
+    solution: >-
+      Fixed this session — added a "write to be read for fun" line to the
+      same §5 section.
+    severity: minor
+  - description: >-
+      startedAt is a hand-estimate (research began before any commit, so no
+      exact clock reading exists for session start) — recurring known gap.
+    solution: >-
+      Deferred to the autonomous end-of-session trigger (issue #10) that
+      would capture true start/end mechanically.
+    severity: nit
