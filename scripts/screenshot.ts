@@ -6,11 +6,6 @@
 //
 // The optional third argument sets the capture window size (e.g. `1280x1600`
 // to reach below-the-fold content); it defaults to `1280x800`.
-//
-// Note: in containers, headless Chromium prints dbus "Failed to connect to
-// the bus" ERRORs to stderr on every run. They are expected, harmless noise —
-// not a failure signal; trust the exit status and the written PNG instead.
-//
 // Why this shape: `playwright-core` is NOT a resolvable dependency in this
 // repo (it's not hoisted transitively from @nuxt/test-utils), so rather than
 // add a new dependency this spawns the pre-installed Chromium binary
