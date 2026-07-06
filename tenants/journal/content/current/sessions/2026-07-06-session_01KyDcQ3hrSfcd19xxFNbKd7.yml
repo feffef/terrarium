@@ -1,0 +1,92 @@
+session: session_01KyDcQ3hrSfcd19xxFNbKd7
+startedAt: 2026-07-06T10:50:00Z
+endedAt: 2026-07-06T11:25:00Z
+kind: interactive
+goal: Land open improvement issues autonomously
+status: completed
+outcome: 11 issues merged across 5 PRs
+summary: >-
+  Triaged every open non-Atlas improvement issue, verified each still applied to
+  current main, and grouped them by touched file into 5 PRs — three doc-only
+  (CLAUDE.md conventions, docs/agents notes, Skill guidance) and two code
+  (typecheck config coverage #93; journal dashboard type-safety #94/#95). Each
+  PR was built by a Sonnet subagent in an isolated worktree; the code agents ran
+  the full gate and carried load-bearing proofs. I reviewed every diff (not the
+  self-reports), left a review comment on each, merged on green, and confirmed
+  the post-merge integration gate on main was green. Left #96, #97, #99 for a
+  human as genuinely requiring human input.
+prs: ["114", "115", "116", "117", "118"]
+docsRead:
+  - path: CLAUDE.md
+    reason: human-only surfaces and single-home rule
+  - path: tenants/journal/tenant.config.ts
+    reason: sessions schema for this log
+  - path: docs/agents/issue-tracker.md
+    reason: "verify #108 relevance and MCP fallback"
+  - path: "tenants/journal/app/pages/t/journal/[space]/index.vue"
+    reason: "verify #94/#95 still applied"
+  - path: tenants/journal/app/utils/dashboard.ts
+    reason: "verify #95 auto-import collision"
+skillsUsed:
+  - { name: log-session, reason: author this session log }
+frictions:
+  - description: >-
+      Unpaginated list_issues returned 59KB and overflowed the tool-result
+      limit, forcing a python slice of the persisted file to read issues.
+    solution: >-
+      Exactly issue #108 (fixed this session) — paginate with perPage and
+      minimal_output up front.
+    severity: minor
+  - description: >-
+      actions_list workflow-runs output was ~347KB and overflowed the
+      tool-result limit twice; had to python-slice the saved file to read run
+      statuses.
+    solution: >-
+      The GitHub MCP actions_list has no minimal_output and returns full run
+      objects; a lean status-only mode (or a get-run-by-sha) would fit the
+      "is main green" check.
+    severity: minor
+  - description: >-
+      The combined-status API (pull_request_read get_status) returned
+      total_count 0 / pending for gate runs, which are GitHub check-runs, not
+      legacy statuses — misleading until I switched to get_check_runs.
+    solution: >-
+      Use get_check_runs for Actions-based gates; a doc note on the status-vs-
+      check-runs distinction would save the dead end.
+    severity: minor
+  - description: >-
+      ToolSearch "select:" with bare tool names (list_issues, get_me) found
+      nothing; the MCP tools only resolved under their fully-qualified
+      mcp__github__ prefix.
+    solution: >-
+      Prefix MCP tool names in select: queries, or have select: fall back to a
+      suffix match.
+    severity: nit
+  - description: >-
+      One doc subagent briefly ran git in the shared main checkout instead of
+      its assigned worktree, leaving main on a feature branch before it
+      self-recovered.
+    solution: >-
+      Worktree agents should cd to and pin the worktree root before any git op;
+      the prompt could state the worktree path explicitly.
+    severity: minor
+  - description: >-
+      The stop hook flagged .claude/worktrees/ as untracked and asked me to
+      commit it, but it is transient worktree metadata that should not be
+      committed.
+    solution: >-
+      Gitignore .claude/worktrees/ so the stop-hook cleanliness check ignores
+      harness-managed worktree state.
+    severity: nit
+  - description: >-
+      A first python parse of the issues JSON threw KeyError on the label
+      structure (labels are objects, not strings), needing a defensive retry.
+    solution: >-
+      Normalize label shape defensively on the first pass.
+    severity: nit
+  - description: >-
+      startedAt/endedAt here are hand-estimated, not captured — the known gap
+      pending the deferred autonomous end-of-session trigger (ADR-0009).
+    solution: >-
+      Capture real timestamps mechanically once that trigger exists.
+    severity: nit
