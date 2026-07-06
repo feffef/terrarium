@@ -38,11 +38,30 @@ export interface SessionDoc {
   // populated by the time content is queried, but not guaranteed by the type,
   // so readers must fall back (`?? []`) rather than assume.
   prs?: string[]
+  // Merged reads/skills (ADR-0009 amendment): the agent's curated entries plus
+  // transcript-observed ones the SessionEnd extractor folds in with a `(unknown)`
+  // placeholder reason. Shape unchanged from the authored-only era.
   docsRead?: { path: string; reason: string }[]
   skillsUsed?: { name: string; reason: string }[]
+  // Mechanical trace — derived from the transcript (ADR-0009 amendment), never
+  // self-reported. All optional: absent ⇒ an older, authored-only log.
+  durationSec?: number
+  models?: Record<string, number>
+  toolCounts?: Record<string, number>
+  filesEdited?: string[]
+  subagents?: Subagent[]
+  gitBranch?: string
+  entrypoint?: string
+  cliVersion?: string
   // Required: no `.default()` on `frictions` — the manifest forces every
   // session log to state its frictions explicitly (may be `[]`, not omitted).
   frictions: Friction[]
+}
+
+export interface Subagent {
+  type?: string
+  task?: string
+  model?: string
 }
 
 export interface SkillDoc {

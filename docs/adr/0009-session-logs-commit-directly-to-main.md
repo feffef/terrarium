@@ -181,11 +181,11 @@ distinguish a mid-session freeze from a true end** — both are `other`. Also:
    - *Authored (irreducible):* `goal`, `outcome`, `summary`, `frictions`, and any
      per-item `reason`. The **live agent** writes these *during* the session —
      `SessionEnd` cannot prompt, so authoring cannot happen at teardown.
-   - *Stitch:* `docsRead`/`skillsUsed` **union** the derived + authored entries,
-     keyed by path/name and tagged `source: derived | authored | both`. An
-     `authored`-only entry (claimed but no tool call backs it) is preserved as
-     signal — a `cat`-inspected file, a subagent's read, or a self-report that
-     drifted from what actually happened.
+   - *Stitch:* `docsRead`/`skillsUsed` **union** the agent's curated entries with
+     the transcript-observed reads, keyed by path/name. The entry shape is
+     unchanged (no `source` field): a read the agent never annotated is folded in
+     with a `(unknown)` placeholder `reason`, which doubles as the lightweight
+     marker of a mechanically-observed read.
 
 2. **The scratch file is the wrap-up signal, and closure is the model's call.**
    The agent writes its authored part via a helper (wrapped by the `log-session`
@@ -242,24 +242,20 @@ distinguish a mid-session freeze from a true end** — both are `other`. Also:
   unlogged — graceful degradation over a partial log.
 - **`docsRead`/`skillsUsed` stay a *single* merged field — no parallel
   `filesRead`.** Transcript-observed reads are folded *into* the agent's curated
-  list by the stitch (above), not stored in a separate collection of "files read" —
-  that would fragment one fact across two homes and force every consumer to
-  re-union them. The `source` tag carries the only real distinction inside the one
-  field: curated-with-`reason` (`authored`/`both`) vs exhaustive-mechanical
-  (`derived`, no reason). The stitch skips obvious non-content paths (scratchpad,
-  `node_modules`, `.nuxt`, …) before folding the rest in, so the mechanical half
-  doesn't drown the curated one.
+  list by the stitch (above), not stored in a separate "files read" home — that
+  would fragment one fact across two homes and force every consumer to re-union
+  them. The entry shape is unchanged: a folded-in read carries a `(unknown)`
+  placeholder `reason` (no `source` field). The stitch skips obvious non-content
+  paths (scratchpad, `node_modules`, `.nuxt`, …) before folding the rest in, so the
+  mechanical half doesn't drown the curated one.
 - **Schema impact — additive only, no version bump (per the policy above).** The
   `sessions` schema is `.strict()`, so derived fields must be *declared* to be
   stored — but all go in as **optional** keys (`models`, `subagents`, `toolCounts`,
-  `filesEdited`, `durationSec`, …), which the policy allows anytime; old logs omit
-  them and stay valid. The merged `docsRead`/`skillsUsed` (already `{path|name,
-  reason}` objects, not strings) need only two additive/widening tweaks to their
-  entry object: add an optional `source`, and relax `reason` to `.optional()` (a
-  `derived` entry has a path/name and a `source` but no interpretive reason). Every
-  existing entry — which has a `reason` and no `source` — still validates.
-  Required→optional is *widening*, not narrowing; nothing renames or adds a required
-  field. So **no `schemaVersion: 2` / `z.union` is needed.**
+  `filesEdited`, `durationSec`, `gitBranch`, …), which the policy allows anytime;
+  old logs omit them and stay valid. `docsRead`/`skillsUsed` are **unchanged** — a
+  folded-in read just fills the required `reason` with a `(unknown)` placeholder, so
+  their `{path|name, reason}` shape is untouched. Nothing narrows, renames, or adds
+  a required field, so **no `schemaVersion: 2` / `z.union` is needed.**
 
 **Not yet built (follow-up gated PR).** `scripts/session-trace.ts` (port of the
 validated proof-of-concept); the `SessionEnd` handler; the scratch-writing helper;
