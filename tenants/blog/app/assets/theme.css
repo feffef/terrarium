@@ -1,7 +1,10 @@
-/* Blog Tenant theme — deliberately simple. Self-contained tokens (no sharing with
-   the journal Tenant; CONTEXT.md isolation stance). Registered globally by the
-   layer's nuxt.config. Light/dark aware; a per-Persona accent (--bl-accent) is set
-   inline on the <main> from a small map in each page. */
+/* Blog Tenant theme — deliberately simple, but finished. Self-contained tokens
+   (no sharing with the journal Tenant; CONTEXT.md isolation stance). Registered
+   globally by the layer's nuxt.config. Light/dark aware; the per-Persona accent
+   (--bl-accent) is set from personas.ts on <body> (via useHead) and on the page
+   root. Ornament budget is deliberately small and terrarium-flavoured: a sprout
+   glyph (BlogSprout.vue), a glass-pane About panel, a glass-tank network footer,
+   and a soft accent wash behind the masthead — nothing louder. */
 :root {
   --bl-bg: #fbfaf7;
   --bl-surface: #ffffff;
@@ -10,7 +13,11 @@
   --bl-faint: #9a968e;
   --bl-line: #e7e3db;
   --bl-accent: #4f6f8f;
-  --bl-serif: ui-serif, Georgia, "Times New Roman", serif;
+  /* Glass-pane highlights (the About panel + network "tank"). */
+  --bl-glass-edge: rgba(255, 255, 255, 0.7);
+  --bl-glass-shine: rgba(255, 255, 255, 0.55);
+  --bl-shadow: 0 1px 2px rgba(28, 27, 25, 0.04), 0 14px 36px -28px rgba(28, 27, 25, 0.4);
+  --bl-serif: ui-serif, "Iowan Old Style", Georgia, Cambria, "Times New Roman", serif;
   --bl-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
   --bl-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
 }
@@ -23,7 +30,21 @@
     --bl-faint: #726e66;
     --bl-line: #2c2a26;
     --bl-accent: #86a7c6;
+    --bl-glass-edge: rgba(255, 255, 255, 0.07);
+    --bl-glass-shine: rgba(255, 255, 255, 0.045);
+    --bl-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 14px 36px -28px rgba(0, 0, 0, 0.9);
   }
+}
+
+/* The page canvas. Only blog pages tag <body> with .bl-page (via useHead), so
+   nothing here leaks onto other Tenants. The radial wash is the light falling
+   through the glass — it picks up the Persona accent set on the body, so each
+   blog is faintly tinted its own colour before a single element renders. */
+body.bl-page {
+  margin: 0;
+  background:
+    radial-gradient(70rem 32rem at 50% -8rem, color-mix(in srgb, var(--bl-accent) 9%, transparent), transparent 70%),
+    var(--bl-bg);
 }
 
 .bl {
@@ -32,45 +53,79 @@
   padding: 2.5rem 1.25rem 4rem;
   font-family: var(--bl-sans);
   color: var(--bl-ink);
-  background: var(--bl-bg);
   min-height: 100vh;
   line-height: 1.6;
+}
+
+.bl ::selection {
+  background: color-mix(in srgb, var(--bl-accent) 24%, transparent);
+}
+.bl a:focus-visible {
+  outline: 2px solid var(--bl-accent);
+  outline-offset: 2px;
+  border-radius: 3px;
 }
 
 .bl .crumb {
   font-family: var(--bl-mono);
   font-size: 0.78rem;
   color: var(--bl-faint);
-  margin: 0 0 2rem;
+  margin: 0 0 2.5rem;
 }
 .bl .crumb a { color: var(--bl-faint); text-decoration: none; }
 .bl .crumb a:hover { color: var(--bl-accent); }
 .bl .crumb .sep { margin: 0 0.4rem; opacity: 0.6; }
 .bl .crumb .here { color: var(--bl-muted); }
 
-/* Masthead — the blog title + tagline from the Persona's index.md */
-.bl .masthead { border-bottom: 2px solid var(--bl-accent); padding-bottom: 1.4rem; margin-bottom: 1.2rem; }
+/* Masthead — the blog title + tagline from the Persona's index.md. The double
+   rule is the one typographic flourish; the byline carries the sprout. */
+.bl .masthead { border-bottom: 4px double var(--bl-accent); padding-bottom: 1.5rem; margin-bottom: 1.2rem; }
 .bl .masthead h1 {
   font-family: var(--bl-serif);
-  font-size: clamp(2rem, 5vw, 2.9rem);
+  font-size: clamp(2.1rem, 5vw, 3rem);
   line-height: 1.05;
   letter-spacing: -0.015em;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.6rem;
   text-wrap: balance;
 }
 .bl .byline {
   font-family: var(--bl-mono);
   font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   color: var(--bl-accent);
-  margin: 0 0 0.7rem;
+  margin: 0 0 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
 }
-.bl .byline .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--bl-accent); margin-right: 0.5rem; vertical-align: middle; }
-.bl .tagline { margin: 0; color: var(--bl-muted); font-size: 1.05rem; max-width: 40ch; }
+.bl .byline .bl-sprout { width: 14px; height: 14px; flex: none; }
+.bl .tagline {
+  margin: 0;
+  color: var(--bl-muted);
+  font-family: var(--bl-serif);
+  font-style: italic;
+  font-size: 1.12rem;
+  line-height: 1.5;
+  max-width: 44ch;
+}
+
+/* Sprig — a centred sprout between two hairlines that fade out. Marks the end
+   of a post and seats the network footer; the accent colours the leaves. */
+.bl .sprig {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--bl-accent);
+  margin: 2.75rem 0 0;
+}
+.bl .sprig::before,
+.bl .sprig::after { content: ''; height: 1px; flex: 1; }
+.bl .sprig::before { background: linear-gradient(to left, var(--bl-line), transparent); }
+.bl .sprig::after { background: linear-gradient(to right, var(--bl-line), transparent); }
 
 /* Post feed on the landing */
-.bl .feed { list-style: none; margin: 2rem 0 0; padding: 0; }
+.bl .feed { list-style: none; margin: 1.6rem 0 0; padding: 0; }
 .bl .feed li { border-top: 1px solid var(--bl-line); }
 .bl .feed li:first-child { border-top: 0; }
 /* The whole teaser is one click target, not just the headline. */
@@ -78,42 +133,74 @@
   display: block;
   text-decoration: none;
   color: inherit;
-  padding: 1.15rem 0.9rem;
-  margin: 0 -0.9rem;
-  border-radius: 8px;
-  transition: background 0.15s ease;
+  padding: 1.2rem 1rem;
+  margin: 0 -1rem;
+  border-radius: 10px;
+  transition: background 0.18s ease, box-shadow 0.18s ease;
 }
-.bl .feed .post-link:hover { background: var(--bl-surface); }
-.bl .feed .when { font-family: var(--bl-mono); font-size: 0.74rem; color: var(--bl-faint); }
-.bl .feed h2 { font-family: var(--bl-serif); font-size: 1.35rem; line-height: 1.2; margin: 0.25rem 0 0.35rem; color: var(--bl-ink); }
+.bl .feed .post-link:hover {
+  background: var(--bl-surface);
+  box-shadow: var(--bl-shadow), inset 0 1px 0 var(--bl-glass-edge);
+}
+.bl .feed .when {
+  font-family: var(--bl-mono);
+  font-size: 0.74rem;
+  color: var(--bl-faint);
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+/* A small accent tick anchors each date — an editorial datum mark. */
+.bl .feed .when::before {
+  content: '';
+  width: 14px;
+  height: 1px;
+  background: var(--bl-accent);
+  opacity: 0.75;
+}
+.bl .feed h2 {
+  font-family: var(--bl-serif);
+  font-size: 1.4rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0.3rem 0 0.35rem;
+  color: var(--bl-ink);
+  transition: color 0.15s ease;
+}
 .bl .feed .post-link:hover h2 { color: var(--bl-accent); }
 .bl .feed .excerpt { margin: 0; color: var(--bl-muted); font-size: 0.96rem; }
-.bl .feed .reply { font-family: var(--bl-mono); font-size: 0.72rem; color: var(--bl-accent); }
-.bl .empty { color: var(--bl-faint); font-style: italic; }
+.bl .feed .reply { font-family: var(--bl-mono); font-size: 0.72rem; color: var(--bl-accent); margin: 0 0 0.2rem; }
+.bl .empty { color: var(--bl-faint); font-style: italic; font-family: var(--bl-serif); }
 
 /* Landing layout — the intro lives in an "About me" panel. In the DOM it sits
    between the masthead and the feed, so a narrow (single-column) viewport reads
    slogan → About → posts. On a wide viewport the grid areas float it into a
    sticky panel at the top-right, letting the feed rise beside it. */
 .bl--landing { position: relative; }
+/* The About panel is a pane of the tank: surface glass with a diagonal shine,
+   an accent top edge, and a faint accent-tinted drop shadow. */
 .bl--landing .about {
-  background: var(--bl-surface);
+  background:
+    linear-gradient(160deg, var(--bl-glass-shine), transparent 45%),
+    var(--bl-surface);
   border: 1px solid var(--bl-line);
   border-top: 2px solid var(--bl-accent);
-  border-radius: 10px;
-  padding: 1.1rem 1.2rem 1.25rem;
+  border-radius: 12px;
+  padding: 1.15rem 1.25rem 1.3rem;
+  box-shadow:
+    var(--bl-shadow),
+    0 10px 30px -22px color-mix(in srgb, var(--bl-accent) 55%, transparent),
+    inset 0 1px 0 var(--bl-glass-edge);
 }
 .bl--landing .about .about-label {
   font-family: var(--bl-mono);
   font-size: 0.72rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   color: var(--bl-accent);
   margin: 0 0 0.6rem;
 }
 .bl--landing .about .about-prose { font-size: 0.92rem; line-height: 1.55; color: var(--bl-muted); }
-.bl--landing .about .about-prose p { margin: 0 0 0.7rem; }
-.bl--landing .about .about-prose p:last-child { margin-bottom: 0; }
 
 /* Narrow: single column, panel sitting between the masthead and the feed. */
 .bl--landing .about { margin: 1.4rem 0 0.4rem; }
@@ -140,11 +227,18 @@
 }
 
 /* Single post */
-.bl .post-head { border-bottom: 1px solid var(--bl-line); padding-bottom: 1.1rem; margin-bottom: 1.6rem; }
-.bl .post-head .when { font-family: var(--bl-mono); font-size: 0.74rem; color: var(--bl-faint); }
-.bl .post-head h1 { font-family: var(--bl-serif); font-size: clamp(1.7rem, 4vw, 2.4rem); line-height: 1.1; letter-spacing: -0.01em; margin: 0.35rem 0 0; text-wrap: balance; }
+.bl .post-head { border-bottom: 1px solid var(--bl-line); padding-bottom: 1.2rem; margin-bottom: 1.8rem; }
+.bl .post-head .when { font-family: var(--bl-mono); font-size: 0.74rem; color: var(--bl-faint); letter-spacing: 0.04em; }
+.bl .post-head h1 {
+  font-family: var(--bl-serif);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0.4rem 0 0;
+  text-wrap: balance;
+}
 .bl .replyto {
-  margin: 0.9rem 0 0;
+  margin: 1rem 0 0;
   font-family: var(--bl-mono);
   font-size: 0.8rem;
   color: var(--bl-muted);
@@ -154,26 +248,88 @@
 .bl .replyto a { color: var(--bl-accent); text-decoration: none; }
 .bl .replyto a:hover { text-decoration: underline; }
 
-/* Prose (index.md intro + post body) */
+/* Prose (index.md intro + post body). Plain descendant selectors on purpose —
+   this is a global stylesheet, and ContentRenderer output is ordinary DOM. */
 .bl .prose { font-size: 1.06rem; }
-.bl .prose :deep(p) { margin: 0 0 1.1rem; }
-.bl .prose :deep(h2) { font-family: var(--bl-serif); font-size: 1.4rem; margin: 2rem 0 0.7rem; }
-.bl .prose :deep(h3) { font-family: var(--bl-serif); font-size: 1.15rem; margin: 1.6rem 0 0.5rem; }
-.bl .prose :deep(a) { color: var(--bl-accent); }
-.bl .prose :deep(strong) { color: var(--bl-ink); font-weight: 650; }
-.bl .prose :deep(blockquote) { border-left: 3px solid var(--bl-line); margin: 0 0 1.1rem; padding: 0.2rem 0 0.2rem 1rem; color: var(--bl-muted); font-style: italic; }
-.bl .prose :deep(code) { font-family: var(--bl-mono); font-size: 0.88em; background: var(--bl-surface); border: 1px solid var(--bl-line); padding: 0.08em 0.35em; border-radius: 4px; }
-.bl .prose :deep(ul), .bl .prose :deep(ol) { margin: 0 0 1.1rem; padding-left: 1.3rem; }
-.bl .prose :deep(li) { margin: 0.25rem 0; }
+.bl .prose p { margin: 0 0 1.15rem; }
+.bl .prose h2 { font-family: var(--bl-serif); font-size: 1.45rem; line-height: 1.25; margin: 2.1rem 0 0.7rem; }
+.bl .prose h3 { font-family: var(--bl-serif); font-size: 1.18rem; margin: 1.6rem 0 0.5rem; }
+.bl .prose a {
+  color: var(--bl-accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--bl-accent) 45%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s ease;
+}
+.bl .prose a:hover { text-decoration-color: var(--bl-accent); }
+.bl .prose strong { color: var(--bl-ink); font-weight: 650; }
+.bl .prose blockquote {
+  border-left: 2px solid var(--bl-accent);
+  margin: 0 0 1.15rem;
+  padding: 0.2rem 0 0.2rem 1.1rem;
+  color: var(--bl-muted);
+  font-family: var(--bl-serif);
+  font-style: italic;
+  font-size: 1.04em;
+}
+.bl .prose code {
+  font-family: var(--bl-mono);
+  font-size: 0.88em;
+  background: var(--bl-surface);
+  border: 1px solid var(--bl-line);
+  padding: 0.08em 0.35em;
+  border-radius: 4px;
+}
+.bl .prose pre {
+  background: var(--bl-surface);
+  border: 1px solid var(--bl-line);
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  overflow-x: auto;
+  margin: 0 0 1.15rem;
+  box-shadow: inset 0 1px 0 var(--bl-glass-edge);
+}
+.bl .prose pre code { background: none; border: 0; padding: 0; font-size: 0.86rem; line-height: 1.55; }
+.bl .prose ul, .bl .prose ol { margin: 0 0 1.15rem; padding-left: 1.3rem; }
+.bl .prose li { margin: 0.25rem 0; }
+.bl .prose li::marker { color: var(--bl-accent); }
+.bl .prose hr {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--bl-line), transparent);
+  margin: 2rem auto;
+}
 
-/* Pingbacks — inbound reactions, rendered from a same-Space read (ADR-0012) */
-.bl .pingbacks { margin-top: 2.75rem; border-top: 1px solid var(--bl-line); padding-top: 1.3rem; }
-.bl .pingbacks h2 { font-family: var(--bl-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--bl-faint); margin: 0 0 0.9rem; }
+/* Post body only: an accent drop cap opens the piece. Both selectors cover
+   ContentRenderer with and without its wrapper element. */
+.bl .prose--post > p:first-child::first-letter,
+.bl .prose--post > div > p:first-child::first-letter {
+  font-family: var(--bl-serif);
+  font-size: 3.1em;
+  font-weight: 600;
+  float: left;
+  line-height: 0.8;
+  padding: 0.08em 0.1em 0 0;
+  color: var(--bl-accent);
+}
+
+/* Pingbacks — inbound reactions, rendered from a same-Space read (ADR-0012).
+   Each `who` is tinted the reacting Persona's accent inline by the page. */
+.bl .pingbacks { margin-top: 2rem; }
+.bl .pingbacks h2 {
+  font-family: var(--bl-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--bl-faint);
+  margin: 0 0 0.9rem;
+}
 .bl .pingbacks ul { list-style: none; margin: 0; padding: 0; }
-.bl .pingbacks li { padding: 0.65rem 0; border-top: 1px dashed var(--bl-line); }
+.bl .pingbacks li { padding: 0.7rem 0; border-top: 1px dashed var(--bl-line); }
 .bl .pingbacks li:first-child { border-top: 0; }
 .bl .pingbacks .who { font-family: var(--bl-mono); font-size: 0.74rem; color: var(--bl-accent); text-transform: capitalize; }
-.bl .pingbacks .pb-title { display: block; margin: 0.1rem 0; }
+.bl .pingbacks .pb-title { display: block; margin: 0.15rem 0; font-family: var(--bl-serif); font-size: 1.05rem; }
 .bl .pingbacks .pb-title a { color: var(--bl-ink); text-decoration: none; font-weight: 600; }
 .bl .pingbacks .pb-title a:hover { color: var(--bl-accent); }
-.bl .pingbacks .blurb { color: var(--bl-muted); font-size: 0.92rem; }
+.bl .pingbacks .blurb { color: var(--bl-muted); font-size: 0.92rem; font-style: italic; }

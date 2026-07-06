@@ -11,6 +11,7 @@
 import { resolveSpaceRoute } from '~~/shared/routing'
 import { personaMeta } from '../../../../personas'
 import BlogNetwork from '../../../../components/BlogNetwork.vue'
+import BlogSprout from '../../../../components/BlogSprout.vue'
 
 const route = useRoute()
 const tenant = 'blog'
@@ -48,7 +49,13 @@ function fmtDate(iso: string): string {
 }
 
 const title = computed(() => post.value?.title ?? 'Not found')
-useHead({ title: `${title.value} · blog/${space}` })
+// The .bl-page body class scopes the blog canvas (full-bleed background +
+// accent wash) to blog routes only; the accent on <body> lets that wash tint
+// itself per Persona before the page root even renders.
+useHead({
+  title: `${title.value} · blog/${space}`,
+  bodyAttrs: { class: 'bl-page', style: `--bl-accent: ${meta.accent}` },
+})
 </script>
 
 <template>
@@ -69,15 +76,19 @@ useHead({ title: `${title.value} · blog/${space}` })
         </p>
       </header>
 
-      <div class="prose">
+      <div class="prose prose--post">
         <ContentRenderer :value="post" />
       </div>
+
+      <!-- End-of-post mark: the sprout closes the piece whether or not
+           anyone has reacted yet. -->
+      <div class="sprig" role="presentation"><BlogSprout /></div>
 
       <section v-if="pingbacks.length" class="pingbacks">
         <h2>Reactions from other personas</h2>
         <ul>
           <li v-for="pb in pingbacks" :key="`${pb.fromPersona}${pb.fromPath}`">
-            <span class="who">{{ personaMeta(pb.fromPersona).name }} reacted</span>
+            <span class="who" :style="{ color: personaMeta(pb.fromPersona).accent }">{{ personaMeta(pb.fromPersona).name }} reacted</span>
             <span class="pb-title">
               <NuxtLink :to="`/t/blog/${pb.fromPersona}${pb.fromPath}`">{{ pb.fromTitle }}</NuxtLink>
             </span>
