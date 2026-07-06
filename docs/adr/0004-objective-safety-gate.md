@@ -3,6 +3,13 @@
 Date: 2026-07-04
 Status: Accepted
 
+> **Amended (2026-07-06).** The high-risk (always human-only) set is extended
+> beyond the path-based blast-radius to two axes a path classifier can't see: a PR
+> that **introduces a new dependency**, or that **changes untested/untestable
+> runtime behaviour** (no gate layer can vouch for it). An agent reviewer
+> (ADR-0003) escalates these to a human even when the gate is green and the
+> surface is otherwise low-risk.
+
 ## Context
 
 Both the human reviewer (now) and the scheduled review-agent (mid-term, ADR-0003)
