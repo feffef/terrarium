@@ -51,6 +51,11 @@ const toggle = () => (expanded.value = !expanded.value)
             ><template v-if="a.task"> — {{ a.task }}</template>
           </li>
         </ul>
+        <p class="subnote">
+          The tools, Skills, and files below are the main session's only — each
+          subagent works in its own context, so its internal activity isn't
+          traced here.
+        </p>
       </div>
 
       <div v-if="card.skillsUsed.length" class="block">
@@ -204,6 +209,7 @@ const toggle = () => (expanded.value = !expanded.value)
 .sev[data-sev='blocker'] { color: var(--jd-sev-blocker); }
 .fsol { color: var(--jd-faint); }
 .amodel { font-family: var(--jd-mono); color: var(--jd-accent); font-size: 0.82em; }
+.subnote { margin: 0.55rem 0 0; font-size: 0.8rem; font-style: italic; color: var(--jd-faint); line-height: 1.5; }
 
 /* Mechanical-trace disclosures — native <details>, one per verbose list. */
 .trace-group { display: flex; flex-direction: column; gap: 0.4rem; }
