@@ -1,0 +1,57 @@
+schemaVersion: 1
+session: session_0186tsRmADJ2CKQ71gk93W9D
+startedAt: 2026-07-06T20:50:44Z
+endedAt: 2026-07-06T21:06:25Z
+kind: interactive
+goal: Make digest PRs auto-merge on green gate
+status: completed
+outcome: Shipped and merged as PR
+summary: "The digest Skill's step 6 forbade auto-merge, citing ADR-0003's no-self-merge rule, so the change had to land in the rule's single home first. Amended ADR-0003 with a bounded exception activating ADR-0004's content-only low-risk tier for the digest job: after opening the gated PR the session enables GitHub auto-merge (or merges only after the gate reports green when auto-merge is unavailable); a red gate is never merged and anything outside the digest content scope stays human-reviewed. Rewrote the skill's step 6 with those guardrails and synced the Skill Inventory entry. Full gate green; opened PR #150, which was reviewed and merged."
+prs:
+  - "150"
+docsRead:
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: single home of the no-self-merge rule being amended
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: defines the content-only auto-merge tier this activates
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: precedent for a bounded gate exception
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: confirm digests stay gated-PR
+  - path: .agents/skills/digest/SKILL.md
+    reason: the skill being changed
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: wording precedent for an agent merge step
+  - path: .github/workflows/gate.yml
+    reason: (unknown)
+  - path: tenants/journal/content/current/skills/digest.yml
+    reason: (unknown)
+skillsUsed:
+  - name: log-session
+    reason: closure log
+frictions:
+  - description: Edit old_string failed because ADR-0003 uses curly quotes; straight-quote match silently differs.
+    solution: Anchor Edit old_strings on quote-free spans, or copy exact text from Read output.
+    severity: nit
+  - description: Pre-cloned origin/main was one commit old again; first log/merge-base looked wildly wrong.
+    solution: Already documented in CLAUDE.md — fetch first; worked once followed.
+    severity: nit
+durationSec: 941
+models:
+  claude-fable-5: 57
+  claude-opus-4-8: 24
+toolCounts:
+  Bash: 21
+  Read: 7
+  Edit: 7
+  Skill: 1
+  Write: 1
+  ToolSearch: 2
+  mcp__github__create_pull_request: 1
+filesEdited:
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - .agents/skills/digest/SKILL.md
+  - tenants/journal/content/current/skills/digest.yml
+gitBranch: claude/digest-skill-auto-merge-b005at
+entrypoint: remote
+cliVersion: 2.1.201
