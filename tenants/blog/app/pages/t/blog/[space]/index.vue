@@ -20,7 +20,11 @@ const resolved = resolveSpaceRoute(tenant, space, route.params.slug)
 if (!resolved) {
   throw createError({ statusCode: 404, statusMessage: `Unknown Persona: ${tenant}/${space}` })
 }
-const pagesKey = resolved.pagesKey as keyof Collections
+// Narrow to this Tenant's `pages` collections (`blog_<persona>_pages`) rather
+// than the whole `keyof Collections` union, so `queryCollection(...).all()` keeps
+// the post item's fields (path/title/description/publishedAt/reactsTo) instead of
+// widening to every collection's type. Stays `<ContentRenderer>`-compatible. (#55)
+const pagesKey = resolved.pagesKey as Extract<keyof Collections, `blog_${string}_pages`>
 
 const { data } = await useAsyncData(route.path, () => queryCollection(pagesKey).all())
 

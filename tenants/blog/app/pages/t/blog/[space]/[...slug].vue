@@ -22,9 +22,15 @@ if (!resolved) {
   throw createError({ statusCode: 404, statusMessage: `Unknown Persona: ${tenant}/${space}` })
 }
 const { path } = resolved
-const pagesKey = resolved.pagesKey as keyof Collections
+// Narrow each key to this Tenant's own collections of that type
+// (`blog_<persona>_pages` / `blog_<persona>_pingbacks`) rather than the whole
+// `keyof Collections` union: `queryCollection(key)` is generic in the key, so a
+// wide key widens its result to every collection's item type and loses the
+// post/pingback fields the UI reads. The narrowed `pages` result also stays
+// `<ContentRenderer>`-compatible. (#55)
+const pagesKey = resolved.pagesKey as Extract<keyof Collections, `blog_${string}_pages`>
 const pingbacksKey = resolved.dataCollections.find((d) => d.name === 'pingbacks')?.key as
-  | keyof Collections
+  | Extract<keyof Collections, `blog_${string}_pingbacks`>
   | undefined
 
 const { data } = await useAsyncData(route.path, async () => {
