@@ -1,0 +1,44 @@
+schemaVersion: 1
+session: session_01JAoAVU3Anwa8HoFebmt21L
+startedAt: 2026-07-06T19:02:22Z
+endedAt: 2026-07-06T20:21:52Z
+kind: interactive
+goal: Write a David blog post
+status: completed
+outcome: Post merged via gated PR
+summary: "Ran /blog-post david. Gathered real signal from git history and session logs, and found the strongest hook in the just-merged session-logging rethink (PR #141): logs now split into a transcript-derived mechanical half and an agent-authored interpretive half, stitched by a SessionEnd hook. Wrote a standalone post in David's naturalist voice — grounded in PR #141, scripts/session-trace.ts, ADR-0009, and the first auto-generated log (which documents its own construction). Cleared the full safety gate, opened gated PR #142; the user merged it. On follow-up, discovered this session's own log was never committed — the scratch was lost when the container was reclaimed before SessionEnd committed — and re-authored it."
+prs:
+  - "142"
+docsRead:
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: persona voice and do/don't list
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: the mechanism the post is about
+  - path: tenants/blog/content/david/pages/2026-07-06-the-generator-is-gone.md
+    reason: David's prior post
+  - path: tenants/journal/content/current/sessions/2026-07-06-session_01PZN8TGWGFKiXuXvnDU5BGA.yml
+    reason: the first auto-generated log
+  - path: scripts/session-end.ts
+    reason: (unknown)
+skillsUsed:
+  - name: log-session
+    reason: (unknown)
+frictions:
+  - description: This session's own log was never committed on first closure — the gitignored scratch lived only in the ephemeral container, which was reclaimed before SessionEnd committed the log to main. Nothing was logged.
+    solution: Re-authored the scratch in the live resumed container so the next teardown commits it. Root cause is ADR-0009's acknowledged residual edge; a durable (committed-branch or remote) scratch, or a commit-on-author path, would close it — worth an issue if it recurs.
+    severity: moderate
+durationSec: 4771
+models:
+  claude-opus-4-8: 56
+toolCounts:
+  Read: 5
+  Bash: 13
+  Write: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  Skill: 1
+filesEdited:
+  - tenants/blog/content/david/pages/2026-07-06-field-notes-write-themselves.md
+gitBranch: claude/blog-david-63p572
+entrypoint: remote_mobile
+cliVersion: 2.1.201
