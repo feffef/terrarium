@@ -20,8 +20,20 @@ class to its MCP equivalent:
   unpaginated call returns the whole issue set and overflows the tool-result
   limit, landing as a base64 file you then have to slice by hand.
 - **Read a PR or its diff** → `pull_request_read`
+- **Check a PR's gate status** → `pull_request_read` with method `get_check_runs`,
+  *not* `get_status`: the combined-status API reports `total_count: 0` /
+  pending for Actions-based gates and misleads you into thinking the gate
+  hasn't run.
 - **List / search PRs** → `list_pull_requests` / `search_pull_requests`
 - **Link sub-issues** → `sub_issue_write`
+
+Deferred MCP tools resolve only by **fully-qualified name** — `ToolSearch
+select:` needs `mcp__github__<name>` (e.g. `mcp__github__list_issues`); a bare
+name like `list_issues` won't resolve.
+
+`actions_list` has no `minimal_output` and returns full run objects (~300KB),
+which overflow the tool-result limit — for an "is main green" check, slice the
+persisted file or query by SHA instead of pulling the full list.
 
 **Known gap:** the wayfinding *Blocking* recipes (`gh api …/dependencies/blocked_by`)
 have **no MCP equivalent** — native issue dependencies aren't exposed as MCP
@@ -50,6 +62,8 @@ When set to `yes`, PRs run through the same labels and states as issues, using t
 - **Comment / label / close**: `gh pr comment`, `gh pr edit --add-label`/`--remove-label`, `gh pr close`.
 
 GitHub shares one number space across issues and PRs, so a bare `#42` may be either — resolve with `gh pr view 42` and fall back to `gh issue view 42`.
+
+A reviewing agent must post its verdict as a PR review or comment **before merging** — every time, even on a clean "merging as-is" verdict — so the audit trail lives on the PR; otherwise `get_reviews`/`get_comments` return empty and a real review reads as none having happened.
 
 ## When a skill says "publish to the issue tracker"
 
