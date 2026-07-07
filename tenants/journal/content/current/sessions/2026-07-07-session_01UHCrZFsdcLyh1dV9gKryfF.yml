@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01UHCrZFsdcLyh1dV9gKryfF
 startedAt: 2026-07-07T17:44:33Z
-endedAt: 2026-07-07T18:36:28Z
+endedAt: 2026-07-07T18:40:08Z
 kind: interactive
 goal: Review then standardise Nuxt presentation code
 status: completed
-outcome: "PR #208 merged"
-summary: "Critically reviewed all Nuxt-facing code against stock Nuxt 4 / Nuxt Content v3 conventions, then (on green-light) implemented everything presentation-side: deleted the dead repo-root app.vue (Nuxt 4 never loads it), added a useSpace() composable folding the repeated resolve/404/key-picking prologue out of seven pages, switched components and layer utils to Nuxt auto-imports (killing the issue-95 rename workaround), moved filtering/sorting into queryCollection where/order/select, made head/SEO meta reactive, adopted the #shared alias, and single-homed the smoke test's Chromium discovery. Merged as PR 208. Full gate green plus a DOM probe for silent auto-import failures. Deferred findings filed as issues 209-212 (layers/ auto-extend, resolver record shape, addTypeTemplate, HTMLUnknownElement gate assertion); layouts consciously not pursued."
+outcome: "PR #208 merged, follow-ups filed"
+summary: "Critically reviewed all Nuxt-facing code against stock Nuxt 4 / Nuxt Content v3 conventions, then (on green-light) implemented everything presentation-side: deleted the dead repo-root app.vue, added a useSpace() composable folding the resolve/404/key-picking prologue out of seven pages, switched components and layer utils to Nuxt auto-imports (killing the issue-95 rename workaround), moved filtering/sorting into queryCollection where/order/select, made head/SEO meta reactive, adopted the #shared alias, and single-homed the smoke test's Chromium discovery. Merged as PR 208 with the gate green plus a DOM probe for silent auto-import failures. Deferred findings filed as issues 209-212; per-tenant layouts consciously not pursued."
 prs:
   - "208"
 docsRead:
@@ -20,6 +20,8 @@ docsRead:
     reason: atlas front door is not a Space route
   - path: docs/agents/tenant-layers.md
     reason: layer alias gotchas the refactor rewrites
+  - path: docs/agents/issue-tracker.md
+    reason: issue conventions and redundancy check
   - path: nuxt.config.ts
     reason: (unknown)
   - path: content.config.ts
@@ -89,19 +91,22 @@ skillsUsed:
     reason: (unknown)
 frictions:
   - description: TS cannot verify Extract on a deferred conditional type, so useSpace's dataKey helper needed a documented cast after two failed typed attempts.
-    solution: Accepted - mirrors the resolver's own single-homed cast pattern (issue 96); nothing repo-side to fix.
+    solution: Accepted - mirrors the resolver's own single-homed cast (issue 96); a record-shaped resolver return would remove it entirely (filed as issue 210).
     severity: nit
   - description: An unresolved auto-imported component renders silently as an unknown element in prod - neither vue-tsc nor the e2e h1/hydration checks catch a typo'd name.
-    solution: Ad-hoc Playwright probe asserting no HTMLUnknownElement; could graduate into the L2 smoke suite as a cheap per-route assertion.
+    solution: Verified via ad-hoc Playwright HTMLUnknownElement probe this session; filed issue 212 to make it a permanent L2 assertion.
     severity: minor
-durationSec: 3115
+  - description: First send_later call failed with a transient "permission stream closed" error; the identical retry succeeded.
+    solution: Environment-side hiccup; nothing repo-side - retry once before assuming unavailable.
+    severity: nit
+durationSec: 3335
 models:
-  claude-fable-5: 273
+  claude-fable-5: 279
 toolCounts:
-  Bash: 49
-  Read: 40
+  Bash: 50
+  Read: 41
   Skill: 2
-  Write: 6
+  Write: 8
   ToolSearch: 3
   TaskCreate: 7
   TaskUpdate: 10
