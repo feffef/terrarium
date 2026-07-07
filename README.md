@@ -5,6 +5,8 @@ A multi-tenant, **agent-driven** content platform built on
 many independent products and evolves itself under observation — a sealed little
 world you plant tenants in and watch grow.
 
+**Live:** [terrarium.feffef.de](https://terrarium.feffef.de)
+
 ## The idea
 
 - **One Platform** — a single Nuxt app / repo / container hosting everything.
@@ -29,11 +31,17 @@ session logs, research, and ideas that drive self-improvement.
 
 ## Status
 
-**Milestone 1 (foundation) is in place** — the manifest → build-time routing →
-gated-render pipeline runs end-to-end for one Tenant (`journal`) with Spaces
-`current`/`archived` and Collections `pages`/`skills`, behind a green safety
-gate. Additional Tenants, Skills, and the autonomous jobs are deliberately
-deferred (see the ADRs).
+The manifest → build-time routing → gated-render pipeline runs end-to-end and is
+publicly deployed. Three Tenants are live: **`journal`** (the Platform's own
+self-documentation, Spaces `current`/`archived`), **`blog`** (Personas-as-Spaces —
+`david`/`karen`/`kevin` — reporting on the Platform itself), and **`atlas`** (a
+field-guide Tenant using Spaces as biomes). Deployment is a self-updating
+container that tracks `main` (see [`deploy/README.md`](deploy/README.md) and
+ADR-0011). Further Tenants, Skills, and the autonomous jobs continue to land as
+gated PRs — see the `journal` Tenant's own digests
+([terrarium.feffef.de/t/journal/current](https://terrarium.feffef.de/t/journal/current))
+for the day-by-day narrative, and the ADRs for what's decided vs. deliberately
+left open.
 
 ## Where to look
 
