@@ -1,0 +1,87 @@
+schemaVersion: 1
+session: session_01Nq6Pyzp3j3C2w6ttU5SZbV
+startedAt: 2026-07-07T10:10:17Z
+endedAt: 2026-07-07T10:43:29Z
+kind: interactive
+goal: Add learnings and ideas to session logs
+status: completed
+outcome: Shipped, reviewed, merged
+summary: Added two optional authored fields — learnings (knowledge inferred, not read from the repo) and ideas (rough future-work sparks) — to the sessions schema. Threaded them through the authored-scratch validator, the stitch (emitted only when non-empty), the journal UI types, dashboard cards() mapping, and the SessionCard expanded detail, plus SKILL.md and the CONTEXT.md Session glossary entry. Additive-optional, so no schemaVersion bump per ADR-0009. Added unit tests; lint/typecheck/131 tests green. A two-axis code-review caught over-documentation in the schema comment and an invented "nascent-ideas entries" phrase; both fixed. PR merged.
+prs: []
+docsRead:
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: schema-evolution policy for adding optional fields
+  - path: scripts/session-trace.ts
+    reason: AuthoredScratch type + stitch() to thread fields through
+  - path: scripts/log-session.ts
+    reason: authored-scratch validator to extend
+  - path: tenants/journal/tenant.config.ts
+    reason: the sessions schema — home of the new fields
+  - path: tenants/journal/app/components/journal/SessionCard.vue
+    reason: where authored content renders
+  - path: CONTEXT.md
+    reason: Session glossary entry — single home for field meaning
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (unknown)
+  - path: tenants/journal/app/types/journal.ts
+    reason: (unknown)
+  - path: tenants/journal/app/utils/dashboard.ts
+    reason: (unknown)
+  - path: tests/unit/session-trace.spec.ts
+    reason: (unknown)
+  - path: tests/unit/log-session.spec.ts
+    reason: (unknown)
+  - path: tests/unit/journal-dashboard.spec.ts
+    reason: (unknown)
+skillsUsed:
+  - name: log-session
+    reason: authoring this log
+  - name: code-review
+    reason: two-axis Standards/Spec review before merge
+frictions:
+  - description: Over-documented the new fields in the schema comment, restating the glossary definition — a single-home violation the review flagged.
+    solution: Keep schema comments terse and point at the CONTEXT.md glossary as the one home; match the density of surrounding field comments.
+    severity: nit
+  - description: CONTEXT.md edit invented a "nascent-ideas entries" mechanism the spec never asked for; both review axes flagged it independently.
+    solution: In a glossary-only file, define the term and stop; don't assert unbuilt downstream pipeline artifacts.
+    severity: nit
+durationSec: 1992
+models:
+  claude-opus-4-8: 132
+toolCounts:
+  Bash: 19
+  Read: 15
+  ToolSearch: 1
+  TaskCreate: 5
+  TaskUpdate: 10
+  Edit: 16
+  Grep: 1
+  Agent: 2
+  Skill: 1
+  Write: 1
+filesEdited:
+  - tenants/journal/tenant.config.ts
+  - scripts/log-session.ts
+  - scripts/session-trace.ts
+  - tenants/journal/app/types/journal.ts
+  - tenants/journal/app/utils/dashboard.ts
+  - tenants/journal/app/components/journal/SessionCard.vue
+  - .agents/skills/log-session/SKILL.md
+  - CONTEXT.md
+  - tests/unit/session-trace.spec.ts
+  - tests/unit/log-session.spec.ts
+  - tests/unit/journal-dashboard.spec.ts
+subagents:
+  - type: general-purpose
+    task: Standards axis review
+  - type: general-purpose
+    task: Spec axis review
+gitBranch: claude/session-logs-learnings-ideas-2nrtpa
+entrypoint: remote_mobile
+cliVersion: 2.1.202
+learnings:
+  - 'An "additive optional field" has a wider blast radius than it looks: one field touches schema, scratch validator, stitch, UI type, dashboard mapping, and render — six coordinated edits, not one.'
+  - A two-axis review's real value shows when both axes converge on the same line from different framings (glossary-creep vs scope-creep) — that overlap is a stronger fix signal than either finding alone.
+ideas:
+  - A journal-dashboard "sparks" feed aggregating learnings and ideas across all sessions — right now they are buried in per-card expanded detail with no cross-session view.
+  - A consolidate/codify pass could promote recurring session ideas into GitHub issues automatically, closing the loop from spark to backlog item.
