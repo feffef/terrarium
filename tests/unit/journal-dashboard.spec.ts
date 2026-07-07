@@ -21,6 +21,8 @@ import {
   kindCounts,
   ownSkills,
   prRefs,
+  prRefsParts,
+  prUrl,
   shortId,
   skillGroups,
   skillsLabel,
@@ -144,6 +146,34 @@ describe('prRefs', () => {
   it('sorts numerically, not lexically', () => {
     const sessions = [session({ prs: ['#2', '#10', '#1'] })]
     expect(prRefs(sessions)).toEqual(['1', '2', '10'])
+  })
+})
+
+describe('prRefsParts', () => {
+  it('is empty with no overflow when no PRs are referenced', () => {
+    expect(prRefsParts([])).toEqual({ shown: [], rest: 0 })
+  })
+
+  it('shows all PRs newest-first when they fit', () => {
+    expect(prRefsParts(['3', '12'])).toEqual({ shown: ['12', '3'], rest: 0 })
+    expect(prRefsParts(['1', '2', '10'])).toEqual({ shown: ['10', '2', '1'], rest: 0 })
+  })
+
+  it('folds the overflow into a rest count', () => {
+    expect(prRefsParts(['1', '2', '3', '4', '5'])).toEqual({ shown: ['5', '4', '3'], rest: 2 })
+  })
+
+  it('does not mutate the input list', () => {
+    const refs = ['1', '2', '3', '4']
+    prRefsParts(refs)
+    expect(refs).toEqual(['1', '2', '3', '4'])
+  })
+})
+
+describe('prUrl', () => {
+  it('links a PR number to the repo, stripping a leading #', () => {
+    expect(prUrl('166')).toBe('https://github.com/feffef/terrarium/pull/166')
+    expect(prUrl('#166')).toBe('https://github.com/feffef/terrarium/pull/166')
   })
 })
 
