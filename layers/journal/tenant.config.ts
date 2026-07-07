@@ -90,7 +90,9 @@ export default defineTenant({
           // docsRead/skillsUsed are a *merged* field (ADR-0009 amendment): the
           // agent's curated entries plus transcript-observed reads the SessionEnd
           // extractor folds in. Shape is unchanged — `reason` stays required; a
-          // derived entry the agent never annotated gets a `(unknown)` placeholder.
+          // derived entry the agent never annotated gets a placeholder —
+          // `(read before editing)` for a docsRead path also edited, `(no reason
+          // given)` otherwise.
           docsRead: z
             .array(z.object({ path: z.string(), reason: z.string() }))
             .default([]),

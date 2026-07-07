@@ -304,3 +304,29 @@ turns after closure doesn't re-push on each one. Net effect: **"lands on `main`
 at teardown via the `SessionEnd` hook" is no longer an accurate description of
 the common case** — the common case is landing live, mid-session, on `Stop`;
 `SessionEnd` only covers the sessions `Stop` missed.
+
+## Folded-in `docsRead` reason split in two (2026-07-07)
+
+> **Amended.** The Decision and Consequences above describe a single
+> `(unknown)` placeholder `reason` for every folded-in read. That's now split
+> into two derived placeholders, `docsRead`-only (`skillsUsed` still gets one
+> plain placeholder — there's no analogous "edited" signal for a Skill):
+
+- **`(read before editing)`** — the path also appears in `filesEdited`. The
+  Edit tool (and Write on a file that already existed) refuses to run unless
+  the path was `Read` first in the same session, so this read wasn't
+  unexplained — it was a harness-enforced precondition of the edit that
+  happened to go uncited. Worded as "before", not "required for": the trace is
+  derived from `tool_use` calls, not results, so a `Read` attempted against a
+  path that didn't exist yet still lands in `filesRead` even though it errored
+  and read nothing.
+- **`(no reason given)`** — every other folded-in read, and any folded-in
+  skill. Renamed from the original `(unknown)` for the same reason: a plain
+  read genuinely carries no derivable signal for *why*, whereas an edited
+  path's read does.
+
+Shape is unchanged (still `{path|name, reason}`, no `source` field) — this is
+a same-field wording refinement, not a schema change, so it needs no
+`schemaVersion` bump per the policy above. Older logs already committed with
+the literal `(unknown)` string stay valid history; only newly-derived entries
+use the split wording.
