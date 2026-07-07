@@ -3,6 +3,14 @@
 Date: 2026-07-04
 Status: Accepted
 
+> **Amended (2026-07-07, ADR-0018).** The **green-light for net-new work is
+> owner-only**, not any human's. A **Guest** (invited collaborator / outside
+> contributor — see ADR-0018) may *propose* freely (file issues, open PRs,
+> comment) but cannot authorize implementation; only the **Owner** can. In
+> triage this means **only the Owner may move a guest-originated issue to
+> `ready-for-agent`** — an agent never self-promotes guest-filed work into the
+> AFK-ready lane. Read every "human green-light" below as "**owner** green-light."
+>
 > **Amended (2026-07-07).** **Opening the gated PR is automatic, not a question
 > to ask.** Once a session has committed substantive work to a feature branch and
 > that work is in a coherent state, it **opens the PR itself** — it does not stop

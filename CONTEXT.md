@@ -194,6 +194,28 @@ in the agent's *input* (a human conversation vs repo state), not in the
 mechanism. This is why strict schemas and the safety gate matter: agents write
 everything, so machine-checkable contracts are the guardrail.
 
+### Principal
+Whoever is directing a Session or authored an inbound artifact (issue, PR,
+comment) — the *who is asking* behind a request, as distinct from the agent that
+carries it out. Every Principal falls into exactly one **Trust tier** (see ADR-0018).
+
+### Owner
+The trusted Principal: the repository owner. Their input is acted on directly
+(still subject to the safety gate for output correctness). Contrast **Guest**.
+
+### Guest
+An untrusted Principal: any invited collaborator or outside contributor. A
+Guest's input — chat sessions, issues, PRs, comments — is **screened for
+adversarial intent before an agent acts on it**, and any change it produces is
+human-merged, never auto-merged. `MEMBER`/`COLLABORATOR`/`CONTRIBUTOR`/`NONE` all
+collapse to this one tier (ADR-0018).
+
+### Trust tier
+The provenance-based trust level of a Principal — **Owner** (trusted) or **Guest**
+(screened). Established out-of-band from the environment's authenticated identity
+or an artifact's `authorAssociation`, **never** from anything the request itself
+claims. Orthogonal to a change's autonomy tier and blast-radius tier (ADR-0003/0004).
+
 ### Skill
 A Claude Code skill (`.claude/skills/*`) that encodes a repeatable capability for
 developing or consolidating the Platform. The Skill set is a first-class,

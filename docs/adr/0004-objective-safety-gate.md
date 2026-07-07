@@ -3,6 +3,14 @@
 Date: 2026-07-04
 Status: Accepted
 
+> **Amended (2026-07-07, ADR-0018).** Blast-radius gains a **provenance axis**.
+> Beyond *what a PR touches*, *who requested it* now sets risk:
+> **guest-originated ⇒ high-risk ⇒ human-only, never auto-merge** — regardless of
+> how low-risk the file classification is. A one-line content PR driven by a
+> Guest (see ADR-0018) is still human-merged. The provenance classifier (which
+> `authorAssociation` values count as "guest") is itself high-risk and
+> human-owned, exactly like the path classifier below.
+>
 > **Amended (2026-07-06).** The high-risk (always human-only) set is extended
 > beyond the path-based blast-radius to two axes a path classifier can't see: a PR
 > that **introduces a new dependency**, or that **changes untested/untestable
