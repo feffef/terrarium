@@ -87,7 +87,7 @@ const authoredScratchSchema = z
     session: z.string(),
     kind: z.enum(['interactive', 'autonomous']).optional(),
     goal: z.string(),
-    status: z.enum(['completed', 'partial', 'blocked', 'abandoned']),
+    status: z.enum(['completed', 'in-review', 'partial', 'blocked', 'abandoned']),
     outcome: z.string(),
     summary: z.string(),
     prs: z.array(z.string()).optional(),

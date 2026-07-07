@@ -79,7 +79,11 @@ export default defineTenant({
           endedAt: utcTimestamp, //   UTC ISO-8601 — session end / log authored
           kind: z.enum(['interactive', 'autonomous']),
           goal: z.string(), // ≤ 8 words — what the session set out to do
-          status: z.enum(['completed', 'partial', 'blocked', 'abandoned']),
+          // `in-review` is the honest state of a session that opened a gated PR
+          // but hasn't seen it merged — the norm at closure (ADR-0003/0009), not
+          // `completed`, which is reserved for work that actually landed (or
+          // needed no PR). A later session flips it to `completed` on merge.
+          status: z.enum(['completed', 'in-review', 'partial', 'blocked', 'abandoned']),
           outcome: z.string(), // ≤ 8 words — prose nuance on `status`
           summary: z.string(), // ≤ 100 words — the fuller narrative
           prs: z.array(z.string()).default([]), // 0..N already-landed work-PR refs

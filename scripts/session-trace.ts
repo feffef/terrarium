@@ -198,7 +198,7 @@ export interface AuthoredScratch {
   session: string
   kind?: 'interactive' | 'autonomous'
   goal: string
-  status: 'completed' | 'partial' | 'blocked' | 'abandoned'
+  status: 'completed' | 'in-review' | 'partial' | 'blocked' | 'abandoned'
   outcome: string
   summary: string
   prs?: string[]
