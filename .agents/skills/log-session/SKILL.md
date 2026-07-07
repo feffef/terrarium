@@ -1,6 +1,6 @@
 ---
 name: log-session
-description: Record this Claude session's honest self-report when its work reaches closure. Invoke when the session's active work is complete and coherent — you author the goal/outcome/summary and every friction; the mechanical trace (timings, models, tools, files read/edited, subagents) is derived automatically. Writes an authored scratch; a live `Stop` hook (with `SessionEnd`/resume as fallbacks for whatever `Stop` misses) stitches it with the trace and commits to the Journal.
+description: Record this Claude session's honest self-report when its work reaches closure. Invoke when the session's active work is complete and coherent — you author the goal/outcome/summary and every friction; the mechanical trace (timings, models, tools, files read/edited, subagents) is derived automatically. Writes an authored scratch; a committed hook stitches it with the trace and commits it to the Journal, live (see below for which hook and when).
 ---
 
 Record one honest **session log** for this Claude session. You author only the
@@ -103,12 +103,9 @@ pnpm exec tsx scripts/log-session.ts --author <path-to-authored.yml>
 ```
 
 It validates the interpretive fields and writes `.session-logs/pending.scratch.json`
-(gitignored). That's all you do. At the end of this turn the committed `Stop` hook
-derives the mechanical trace, stitches it with your scratch, and commits the merged
-log directly to `main` (the ADR-0009 boundary) — **only if** the scratch exists,
-which is why authoring it *is* your "this session is done" signal. `SessionEnd` and
-a resumed `SessionStart` run the same script as fallbacks, catching whatever `Stop`
-didn't land (PR #148); by the time either fires, the log has usually already landed.
+(gitignored). That's all you do — the hook described above (the ADR-0009 boundary)
+takes it from here, **only if** the scratch exists, which is why authoring it *is*
+your "this session is done" signal.
 
 The helper is gated code (ADR-0009): changing `log-session.ts` / `session-trace.ts`
 / `session-end.ts` is a normal PR.

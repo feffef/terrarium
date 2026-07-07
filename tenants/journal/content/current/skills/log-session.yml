@@ -5,12 +5,8 @@ role: >-
   The Platform's first platform-operation Skill, and the source of its primary
   self-improvement signal: every session's honest self-report — goal, outcome,
   and above all its frictions — appended to this Journal. You author only that
-  interpretive half; the mechanical trace (timings, models, tools, files,
-  subagents) is derived from the transcript and stitched in by a committed hook,
-  which commits the merged log direct to `main` (the bounded ADR-0009 exception)
-  for the `consolidate`/`codify` jobs to mine. That hook lands live on `Stop`, at
-  the end of the turn you invoke this Skill in — `SessionEnd`/resume only serve
-  as fallbacks, catching whatever `Stop` misses, since `SessionEnd` alone was
-  found (PR #148) to fail silently on a network-freezing suspend. Model-invocable: reach for it yourself when you
-  judge the session has reached closure — no human prompt, and it serves
-  autonomous runs too.
+  interpretive half; a committed hook derives the rest and lands the merged log
+  direct to `main` (the bounded ADR-0009 exception), live and normally well
+  before session teardown, for the `consolidate`/`codify` jobs to mine.
+  Model-invocable: reach for it yourself when you judge the session has reached
+  closure — no human prompt, and it serves autonomous runs too.

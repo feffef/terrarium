@@ -204,14 +204,9 @@ has two halves (ADR-0009 amendment): the **mechanical** trace (timings, models,
 tools, files read/edited, subagents) is **derived from the transcript** by a
 committed hook — never self-reported; the **interpretive** half (goal, outcome,
 summary, and *every* friction) only you can write. The **`log-session`** Skill
-authors the interpretive half to a scratch file; the hook derives the rest and
-commits to `main`. That hook fires on **`Stop` (primary)** — live, at the end
-of the turn where you invoked `log-session`, before any teardown — with
-`SessionEnd` and a resumed `SessionStart` kept only as fallbacks (they catch a
-session `Stop` never fired for), because `SessionEnd` alone was found to fail
-silently on a network-freezing suspend
-(ADR-0009, PR #148). So the log is normally already on `main` well before the
-session ends, not landed at teardown.
+authors the interpretive half to a scratch file; a committed hook derives the
+rest and commits to `main` **live, normally well before session teardown** —
+see the `log-session` Skill for which hook lands it and why.
 
 **You self-judge closure — invoke `log-session` when the session's active work
 is complete and coherent.** No "are we done?" ask, no waiting for merge: closure

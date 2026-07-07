@@ -146,6 +146,6 @@ notice a missing log and prompt you to add one (issue #176), so the scratch you
 author now is the only thing that makes any of the logging hooks commit a log
 at all.
 
-Done when the scratch is authored — the committed `Stop` hook lands it live at
-the end of this same turn (not at teardown); `SessionEnd`/resume are only a
-fallback for whatever `Stop` misses (PR #148).
+Done when the scratch is authored — a committed hook lands it on `main` from
+there, live and normally well before this run ends (see the `log-session`
+Skill for which hook and when).
