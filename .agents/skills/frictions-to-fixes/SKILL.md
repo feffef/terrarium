@@ -71,7 +71,11 @@ and **(c) the subagent's own frictions** from the run.
 Never re-fix what is already fixed. The §1 subagent applies these rules to every
 candidate, checking the tracker for an issue or PR that already covers it — and
 confirming against **`main`** where cheap (a "solution" isn't ripe if main already
-has it). Classify each into one branch:
+has it). `tsx scripts/merged-since.ts <friction session's startedAt>` lists every
+`origin/main` commit landed after that instant (UTC-normalized, newest-first,
+`isMerge`-flagged) — scan it for the fixing commit/PR to turn the
+already-fixed/regression join into a direct comparison instead of manual
+git-timestamp archaeology. Classify each into one branch:
 
 - **Never fixed** — no issue/PR addresses it. Carries on to step 3.
 - **Fixed, and not logged since the fix merged** — drop it (cite the issue/PR).
