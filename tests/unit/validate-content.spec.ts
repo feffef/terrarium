@@ -20,8 +20,9 @@ afterEach(() => {
   rmSync(dir, { recursive: true, force: true })
 })
 
-/** A `data`-typed ExpandedCollection rooted at `<dir>/<cwdRel>`. */
-function dataCollection(cwdRel: string, schema: z.ZodObject<z.ZodRawShape>, include = '**/*.yml'): ExpandedCollection {
+/** An ExpandedCollection rooted at `<dir>/<cwdRel>`, defaulting to `data` — callers
+ *  building a `page` collection spread this and override `type`. */
+function baseCollection(cwdRel: string, schema: z.ZodObject<z.ZodRawShape>, include = '**/*.yml'): ExpandedCollection {
   return { key: `t_s_${cwdRel}`, tenant: 't', space: 's', collection: cwdRel, include, cwdRel, type: 'data', schema }
 }
 
@@ -30,7 +31,7 @@ describe('validateContent() — data collections (strict schema)', () => {
 
   it('passes a Document that matches its schema', () => {
     writeFileSync(join(dir, 'ok.yml'), 'note: fine\nkind: a\n')
-    const report = validateContent([dataCollection('.', schema)], dir)
+    const report = validateContent([baseCollection('.', schema)], dir)
     expect(report.violations).toEqual([])
     expect(report.documentsChecked).toBe(1)
     expect(report.collectionsChecked).toBe(1)
@@ -38,7 +39,7 @@ describe('validateContent() — data collections (strict schema)', () => {
 
   it('fails a Document with an out-of-enum value', () => {
     writeFileSync(join(dir, 'bad.yml'), 'note: fine\nkind: nope\n')
-    const report = validateContent([dataCollection('.', schema)], dir)
+    const report = validateContent([baseCollection('.', schema)], dir)
     expect(report.violations).toHaveLength(1)
     expect(report.violations[0]?.file).toContain('bad.yml')
     expect(report.violations[0]?.messages.join()).toMatch(/kind/)
@@ -46,14 +47,14 @@ describe('validateContent() — data collections (strict schema)', () => {
 
   it('fails a Document with an extra field the strict schema disallows', () => {
     writeFileSync(join(dir, 'extra.yml'), 'note: fine\nkind: a\nsurprise: true\n')
-    const report = validateContent([dataCollection('.', schema)], dir)
+    const report = validateContent([baseCollection('.', schema)], dir)
     expect(report.violations).toHaveLength(1)
     expect(report.violations[0]?.messages.join()).toMatch(/surprise/)
   })
 
   it('fails a Document missing a required field', () => {
     writeFileSync(join(dir, 'missing.yml'), 'kind: a\n')
-    const report = validateContent([dataCollection('.', schema)], dir)
+    const report = validateContent([baseCollection('.', schema)], dir)
     expect(report.violations).toHaveLength(1)
     expect(report.violations[0]?.messages.join()).toMatch(/note/)
   })
@@ -64,7 +65,7 @@ describe('validateContent() — page collections (frontmatter-only, non-strict)'
 
   it('validates only the frontmatter, ignoring the Markdown body', () => {
     writeFileSync(join(dir, 'page.md'), '---\ntitle: Hello\nbadge: current\n---\n\nBody text here.\n')
-    const report = validateContent([{ ...dataCollection('.', schema, '**/*.md'), type: 'page' }], dir)
+    const report = validateContent([{ ...baseCollection('.', schema, '**/*.md'), type: 'page' }], dir)
     expect(report.violations).toEqual([])
   })
 
@@ -72,14 +73,14 @@ describe('validateContent() — page collections (frontmatter-only, non-strict)'
     // Non-strict page schemas only describe *additional* fields — built-ins
     // are synthesized by @nuxt/content itself, so extras must not fail here.
     writeFileSync(join(dir, 'index.md'), '---\ntitle: Landing\ndescription: hi\n---\nBody\n')
-    const report = validateContent([{ ...dataCollection('.', schema, '**/*.md'), type: 'page' }], dir)
+    const report = validateContent([{ ...baseCollection('.', schema, '**/*.md'), type: 'page' }], dir)
     expect(report.violations).toEqual([])
   })
 
   it('still catches a genuine schema violation in page frontmatter', () => {
     const strictish = z.object({ badge: z.enum(['current', 'archived']) })
     writeFileSync(join(dir, 'page.md'), '---\nbadge: not-a-real-badge\n---\nBody\n')
-    const report = validateContent([{ ...dataCollection('.', strictish, '**/*.md'), type: 'page' }], dir)
+    const report = validateContent([{ ...baseCollection('.', strictish, '**/*.md'), type: 'page' }], dir)
     expect(report.violations).toHaveLength(1)
   })
 
