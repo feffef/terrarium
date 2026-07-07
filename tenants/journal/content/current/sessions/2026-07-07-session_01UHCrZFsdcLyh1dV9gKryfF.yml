@@ -1,26 +1,25 @@
 schemaVersion: 1
 session: session_01UHCrZFsdcLyh1dV9gKryfF
 startedAt: 2026-07-07T17:44:33Z
-endedAt: 2026-07-07T17:51:59Z
+endedAt: 2026-07-07T18:30:53Z
 kind: interactive
-goal: Critical review of Nuxt code
-status: completed
-outcome: Review delivered in chat; dead app.vue found
-summary: "Reviewed all Nuxt-facing code (nuxt.config, content.config, modules/routing, shared/routing, platform catch-all, three tenant layers) against standard Nuxt 4 / Nuxt Content v3 conventions, respecting the ADR-mandated keyed-collection isolation model. Key findings: the root-level app.vue is dead code (Nuxt 4 only resolves app/app.vue), tenant pages hand-import components and utils that Nuxt already auto-imports, per-page resolve/404/key boilerplate could fold into one composable, and filtering/sorting done in JS could move into queryCollection's where/order/select. Answer-only session; no code changed, no PR."
-prs: []
+goal: Review then standardise Nuxt presentation code
+status: in-review
+outcome: "PR #208 open, gate green"
+summary: "Critically reviewed all Nuxt-facing code against stock Nuxt 4 / Nuxt Content v3 conventions, then (on green-light) implemented everything presentation-side: deleted the dead repo-root app.vue (Nuxt 4 never loads it), added a useSpace() composable folding the repeated resolve/404/key-picking prologue out of seven pages, switched components and layer utils to Nuxt auto-imports (killing the issue-95 rename workaround), moved filtering/sorting into queryCollection where/order/select, made head/SEO meta reactive, adopted the #shared alias, and single-homed the smoke test's Chromium discovery. Full gate green plus a DOM probe for silent auto-import failures. Deferred as proposals: layouts, layers/ auto-extend, resolver-shape changes (human-only)."
+prs:
+  - "208"
 docsRead:
   - path: CLAUDE.md
     reason: conventions and ground rules
-  - path: docs/adr/0006-runtime-routing-path-prefix.md
-    reason: routing model is deliberate
   - path: docs/adr/0013-dynamic-content-config-committed-routing-map.md
     reason: dynamic content.config rationale
   - path: docs/adr/0014-build-time-virtual-routing-module.md
     reason: "#routing virtual module rationale"
   - path: docs/adr/0016-tenant-root-layer-routes.md
-    reason: tenant-root layer routes
+    reason: atlas front door is not a Space route
   - path: docs/agents/tenant-layers.md
-    reason: layer alias gotchas the review touches
+    reason: layer alias gotchas the refactor rewrites
   - path: nuxt.config.ts
     reason: (unknown)
   - path: content.config.ts
@@ -67,27 +66,77 @@ docsRead:
     reason: (unknown)
   - path: tenants/atlas/app/pages/t/atlas/[space]/index.vue
     reason: (unknown)
+  - path: scripts/chromium-path.ts
+    reason: (unknown)
+  - path: tenants/journal/app/utils/dashboard.ts
+    reason: (unknown)
+  - path: tenants/blog/app/personas.ts
+    reason: (unknown)
+  - path: tenants/atlas/app/biomes.ts
+    reason: (unknown)
+  - path: tenants/journal/app/components/journal/SessionCard.vue
+    reason: (unknown)
+  - path: tenants/blog/app/utils/personas.ts
+    reason: (unknown)
+  - path: tenants/atlas/app/utils/biomes.ts
+    reason: (unknown)
+  - path: tenants/blog/app/components/BlogNetwork.vue
+    reason: (unknown)
+  - path: tenants/atlas/app/pages/t/atlas/index.vue
+    reason: (unknown)
 skillsUsed:
   - name: log-session
     reason: (unknown)
 frictions:
-  - description: Judging which non-standard Nuxt patterns are deliberate required reading four ADRs plus tenant-layers.md before any finding could be trusted.
-    solution: Working as intended (ADRs are the record); no fix needed, but a one-line "deliberate divergences from stock Nuxt" index in CLAUDE.md could shortcut it.
+  - description: TS cannot verify Extract on a deferred conditional type, so useSpace's dataKey helper needed a documented cast after two failed typed attempts.
+    solution: Accepted - mirrors the resolver's own single-homed cast pattern (issue 96); nothing repo-side to fix.
     severity: nit
-durationSec: 447
+  - description: An unresolved auto-imported component renders silently as an unknown element in prod - neither vue-tsc nor the e2e h1/hydration checks catch a typo'd name.
+    solution: Ad-hoc Playwright probe asserting no HTMLUnknownElement; could graduate into the L2 smoke suite as a cheap per-route assertion.
+    severity: minor
+durationSec: 2780
 models:
-  claude-fable-5: 64
+  claude-fable-5: 251
 toolCounts:
-  Bash: 12
-  Read: 24
-  Skill: 1
-  Write: 1
+  Bash: 46
+  Read: 40
+  Skill: 2
+  Write: 6
+  ToolSearch: 2
+  TaskCreate: 7
+  TaskUpdate: 10
+  Edit: 33
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - app/composables/space.ts
+  - app/pages/t/[tenant]/[space]/[...slug].vue
+  - tenants/journal/app/utils/dashboard.ts
+  - tenants/journal/app/pages/t/journal/[space]/index.vue
+  - tenants/journal/app/pages/t/journal/[space]/[...slug].vue
+  - tenants/journal/app/components/journal/SessionCard.vue
+  - tenants/blog/app/utils/format.ts
+  - tenants/blog/app/utils/personas.ts
+  - tenants/atlas/app/utils/biomes.ts
+  - tenants/blog/app/pages/t/blog/[space]/index.vue
+  - tenants/blog/app/pages/t/blog/[space]/[...slug].vue
+  - tenants/blog/app/components/BlogNetwork.vue
+  - tenants/atlas/app/pages/t/atlas/index.vue
+  - tenants/atlas/app/pages/t/atlas/[space]/index.vue
+  - tenants/atlas/app/pages/t/atlas/[space]/[...slug].vue
+  - docs/agents/tenant-layers.md
+  - scripts/chromium-path.ts
+  - tests/e2e/smoke.spec.ts
+  - probe-tmp.ts
+  - CLAUDE.md
 gitBranch: claude/nuxt-code-review-a7djed
 entrypoint: remote_mobile
 cliVersion: 2.1.202
 learnings:
-  - Nuxt 4 resolves the main component only from each layer's app/ dir; a repo-root app.vue is silently ignored and Nuxt's own runtime app.vue (NuxtLayout + NuxtRouteAnnouncer + NuxtPage) serves instead
-  - Tenant-layer components and utils are already auto-import-registered (.nuxt/components.d.ts, imports.d.ts) despite every page deep-relative-importing them
+  - Nuxt 4 resolves the main component only from each layer's app/ dir; a repo-root app.vue is silently ignored and Nuxt's runtime app.vue (with NuxtRouteAnnouncer) serves instead
+  - vue-tsc accepts template component names it cannot resolve, so auto-import renames need a rendered-DOM check (HTMLUnknownElement probe), not just typecheck
 ideas:
-  - A read-only useSpace(tenant) composable could fold the repeated resolveSpaceRoute/404/key-picking boilerplate out of all seven tenant pages
+  - Add a no-HTMLUnknownElement assertion to the L2 browser tier - it would catch silent component-name typos on every entry route for free
   - Moving tenants/ under Nuxt's layers/ auto-extend convention would delete the hand-maintained extends list and the tsconfig include patch - ADR-worthy trade-off against the ubiquitous-language directory name
