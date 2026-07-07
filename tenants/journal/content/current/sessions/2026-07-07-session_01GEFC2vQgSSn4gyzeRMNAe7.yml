@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_01GEFC2vQgSSn4gyzeRMNAe7
+startedAt: 2026-07-07T11:53:43Z
+endedAt: 2026-07-07T12:05:39Z
+kind: interactive
+goal: Triage the open issue tracker
+status: completed
+outcome: Tracker triaged; obsolete closes; one fix merged
+summary: "Ran /triage over all 10 open issues. Closed #159 (Vue :deep() selector bug — already fixed by a commit that landed 2 minutes before filing). Reconciled conflicting needs-triage+ready-for-human labels on #124/#133, tagged #170/#171 ready-for-human matching their own asks. Implemented #176 (digest Skill now logs the session before an autonomous run ends), opened and babysat PR #186 to merge. Initially left the three chartered-job proposals (#134/#135/#136) as pending greenlight — the user then asked \"wasn't one of these done under a different name?\", which led to discovering #136 (audit-skills) had in fact already shipped via PR #140 two days earlier and was just never closed. Closed it with the cross-reference."
+prs:
+  - "186"
+docsRead:
+  - path: docs/agents/issue-tracker.md
+    reason: GitHub MCP conventions for this repo's tracker
+  - path: docs/agents/triage-labels.md
+    reason: canonical triage label vocabulary
+  - path: .claude/skills/triage/OUT-OF-SCOPE.md
+    reason: when wontfix writes to the out-of-scope KB vs. not
+  - path: .agents/skills/digest/SKILL.md
+    reason: "edited to add the log-session step for #176"
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: (unknown)
+  - path: scripts/session-end.ts
+    reason: (unknown)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (unknown)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (unknown)
+skillsUsed:
+  - name: triage
+    reason: drove the whole session
+frictions:
+  - description: 'Skipped the "search for an existing implementation" redundancy check on the three governance proposals (#134/#135/#136) because they read as not-yet-actioned by design (awaiting greenlight). #136 had actually already shipped via PR #140; only caught after the user pushed back.'
+    solution: Apply the redundancy/already-implemented check uniformly to every open issue during triage, including proposals awaiting greenlight — a tracked proposal can still get built and merged before anyone loops back to close it.
+    severity: major
+  - description: "issue_read and list_issues both returned #159's body truncated at the exact same mid-sentence point (inside a code fence), so the full acceptance detail was unavailable via the API."
+    solution: When a fetched issue body looks truncated, verify the underlying claim directly against the codebase rather than relying on the partial body text.
+    severity: minor
+  - description: git log --all -- <path> combined with an ancestry-path check pointed at the wrong PR (#146) as the one that added the audit-skills Skill files, because a later PR (#146) also touched files under a similar history shape.
+    solution: For "which PR introduced this path" questions, use git log --first-parent -- <path> against the default branch and confirm with git show <merge>:<path> rather than trusting a plain ancestry-path/--all query.
+    severity: nit
+durationSec: 716
+models:
+  claude-sonnet-5: 110
+toolCounts:
+  Read: 8
+  Bash: 22
+  ToolSearch: 4
+  mcp__github__list_issues: 1
+  Grep: 4
+  Glob: 1
+  mcp__github__issue_read: 2
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__issue_write: 6
+  mcp__github__add_issue_comment: 7
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/digest/SKILL.md
+gitBranch: claude/triage-open-issues-i9z41d
+entrypoint: remote_mobile
+cliVersion: 2.1.202
+learnings:
+  - "This repo's sync-family Skills (digest, audit-skills) share one shape: a tested deterministic helper script (scripts/*.ts) does the gathering, the agent supplies judgement, and output lands via one gated PR."
