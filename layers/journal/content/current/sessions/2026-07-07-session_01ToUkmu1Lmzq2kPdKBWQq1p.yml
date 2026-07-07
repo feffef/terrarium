@@ -1,10 +1,10 @@
 schemaVersion: 1
 session: session_01ToUkmu1Lmzq2kPdKBWQq1p
 startedAt: 2026-07-07T21:47:29Z
-endedAt: 2026-07-07T21:55:25Z
+endedAt: 2026-07-07T21:56:18Z
 kind: interactive
 goal: Split "(unknown)" docsRead reason by edit correlation
-status: in-review
+status: completed
 outcome: Implemented, tested, PR
 summary: 'User asked whether an "(unknown)" docsRead reason correlated with the same path also appearing in filesEdited can safely be reworded to something like "(required before editing)", with a separate placeholder for the rest. Investigated session-trace.ts and confirmed the Edit/Write tool does mechanically require a prior Read on an existing file, so the correlation is a real signal, with one caveat: the trace derives filesRead from attempted tool_use calls, not results, so a Read against a not-yet-created path still counts even though it errored and read nothing. Implemented two derived placeholders — "(read before editing)" and "(no reason given)" — updated tests, SKILL.md, and added an ADR-0009 amendment note rather than rewriting the historical decision text. Ran lint/typecheck/ test/build, all green, then opened PR #221 and subscribed to it.'
 prs:
@@ -27,20 +27,21 @@ frictions:
   - description: The trace derives filesRead/filesEdited purely from tool_use calls, not results, so a failed Read against a not-yet-created path still counts as "read" — a subtlety not obvious from the field names alone.
     solution: Worded the new placeholder as "(read before editing)" rather than "(required before editing)" to avoid overclaiming certainty in that edge case; documented the caveat in a code comment and the ADR note.
     severity: nit
-durationSec: 476
+durationSec: 529
 models:
-  claude-sonnet-5: 81
+  claude-sonnet-5: 86
 toolCounts:
   Grep: 2
   Read: 10
-  Bash: 15
-  Edit: 14
+  Bash: 16
+  Edit: 15
   ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Write: 1
   mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/session-trace.ts
   - tests/unit/session-trace.spec.ts
