@@ -1,0 +1,63 @@
+schemaVersion: 1
+session: session_01R7jzvjrAiZyj2Xz5oj5CRi
+startedAt: 2026-07-07T11:13:24Z
+endedAt: 2026-07-07T11:36:32Z
+kind: interactive
+goal: Run a frictions-to-fixes cycle
+status: completed
+outcome: 4 doc fixes merged, 1 regression flagged for a human
+summary: "Ran the frictions-to-fixes workflow end to end. A general-purpose subagent surveyed the last 20 session logs, ranked frictions, and screened them against the tracker (finding, along the way, that the skill's own \"filename sort is chronological\" assumption is false and had silently dropped a load-bearing session from a prior run). Filed issues #179-182 for four never-fixed, doc-only candidates and #183 for a genuine regression (the pkill/&&-chaining convention from #102 recurred ~11h after that fix merged). Dispatched a Sonnet impl agent in its own worktree, which batched the four doc fixes into one PR (#184); reviewed the diff against each issue, posted a review comment, and merged after the gate went green. Left #183 (and the already-open #170/#171 regressions) for human review per the regression-handling rule."
+prs:
+  - "184"
+docsRead:
+  - path: CLAUDE.md
+    reason: working conventions + regression-handling rules for this workflow
+  - path: docs/agents/triage-labels.md
+    reason: correct label strings (ready-for-agent vs ready-for-human)
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (unknown)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the whole session is one run of this skill
+  - name: log-session
+    reason: (unknown)
+frictions:
+  - description: A bare `sleep N` Bash call is blocked outright (even a single 60-90s wait for CI); only wrapping it in run_in_background:true or a Monitor until-loop works.
+    solution: "Default to `run_in_background: true` for any fixed-duration wait on external state (CI, a webhook) instead of reaching for a plain sleep first."
+    severity: nit
+  - description: Tried a Monitor bash poll-loop against the GitHub REST API directly with curl to watch PR check-run status; got 403 'Resource not accessible by integration' since only the authenticated github MCP tool carries credentials, not the plain shell's network egress.
+    solution: For any GitHub state that needs auth, poll via the mcp__github__* tool itself (spaced with run_in_background sleeps), not a bash-based Monitor loop — curl/gh from Bash has no GitHub credentials in this environment.
+    severity: minor
+  - description: The survey subagent left three scratch `.ts` parsing scripts untracked in the repo root instead of deleting them as instructed, which tripped the stop-hook's untracked-file check in the main session.
+    solution: Either have the parent session proactively `rm` subagent scratch files before ending a turn, or make 'delete your scratch script' an explicit last tool call in the subagent's brief rather than a closing-paragraph instruction easy to skip.
+    severity: nit
+durationSec: 1388
+models:
+  claude-sonnet-5: 117
+toolCounts:
+  Bash: 10
+  Agent: 2
+  ScheduleWakeup: 1
+  ToolSearch: 5
+  mcp__github__search_issues: 7
+  Read: 2
+  mcp__github__issue_write: 10
+  TaskCreate: 6
+  TaskUpdate: 10
+  mcp__github__pull_request_read: 8
+  Grep: 1
+  Monitor: 1
+  TaskStop: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__merge_pull_request: 1
+  Skill: 1
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Batched doc-fix PR for 4 issues
+    model: sonnet
+gitBranch: claude/frictions-to-fixes-pmsext
+entrypoint: remote_mobile
+cliVersion: 2.1.202
