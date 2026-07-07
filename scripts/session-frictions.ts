@@ -13,8 +13,8 @@
 //
 // Usage:  tsx scripts/session-frictions.ts [--window N]
 //   Prints the N most-recent sessions (by startedAt, oldest of the window first)
-//   as JSON: id, file, startedAt, kind, goal, status, outcome, prs, and every
-//   friction's description/solution/severity.
+//   as JSON: id, file, startedAt, goal, outcome, prs, and every friction's
+//   description/solution/severity.
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -42,9 +42,7 @@ export interface TriageSession {
   id: string
   file: string
   startedAt: string
-  kind: string
   goal: string
-  status: string
   outcome: string
   prs: string[]
   frictions: TriageFriction[]
@@ -70,9 +68,7 @@ export function toTriageSession(raw: Record<string, unknown>, file: string): Tri
     id: String(raw.session ?? ''),
     file,
     startedAt: String(raw.startedAt ?? ''),
-    kind: String(raw.kind ?? ''),
     goal: String(raw.goal ?? ''),
-    status: String(raw.status ?? ''),
     outcome: String(raw.outcome ?? ''),
     prs: prs.map((p) => String(p)),
     frictions: frictions.map((fr: Record<string, unknown>) => ({
