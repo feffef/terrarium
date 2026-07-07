@@ -4,29 +4,18 @@
 // Space root; specimen entries render via the sibling `[...slug].vue`.
 //
 // Isolation-respecting and presentation-only (ADR-0004): it resolves the Space
-// through the SAME shared, unit-tested `resolveSpaceRoute` the catch-all uses,
-// then reads only this biome's keyed pages/interactions/observations. Biomes
-// cannot leak — the whole wing is a same-Space read.
-import { resolveSpaceRoute } from '~~/shared/routing'
-import { biomeMeta } from '../../../../biomes'
-import { signatureVars, toSpecimenView, type Edge, type SpecimenView } from '../../../../utils/atlas'
-import SpecimenIndex from '../../../../components/atlas/SpecimenIndex.vue'
-import FoodWeb from '../../../../components/atlas/FoodWeb.vue'
-import FieldLog from '../../../../components/atlas/FieldLog.vue'
-import RhythmBand from '../../../../components/atlas/RhythmBand.vue'
-import RarityLegend from '../../../../components/atlas/RarityLegend.vue'
+// through the SAME shared, unit-tested `resolveSpaceRoute` the catch-all uses
+// (via the read-only useSpace composable), then reads only this biome's keyed
+// pages/interactions/observations. Biomes cannot leak — the whole wing is a
+// same-Space read. `biomeMeta`, the utils (`toSpecimenView`, `signatureVars`)
+// and the Atlas* components arrive via Nuxt's layer-wide auto-imports; only the
+// types still import relatively.
+import type { Edge, SpecimenView } from '../../../../utils/atlas'
 
 const route = useRoute()
-const tenant = 'atlas'
-const space = String(route.params.space)
-
-const resolved = resolveSpaceRoute(tenant, space, undefined)
-if (!resolved) {
-  throw createError({ statusCode: 404, statusMessage: `Unknown biome: ${tenant}/${space}` })
-}
-const pagesKey = resolved.pagesKey
-const interactionsKey = resolved.dataCollections.find((d) => d.name === 'interactions')?.key
-const observationsKey = resolved.dataCollections.find((d) => d.name === 'observations')?.key
+const { space, pagesKey, dataKey } = useSpace('atlas')
+const interactionsKey = dataKey('interactions')
+const observationsKey = dataKey('observations')
 
 const { data } = await useAsyncData(route.path, async () => {
   const pages = await queryCollection(pagesKey).all()
@@ -73,12 +62,12 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
 
       <section>
         <div class="atlas-sechead"><span class="atlas-eyebrow">The catalogue</span></div>
-        <SpecimenIndex :specimens="specimens" :biome="space" />
+        <AtlasSpecimenIndex :specimens="specimens" :biome="space" />
       </section>
 
       <section>
         <div class="atlas-sechead"><span class="atlas-eyebrow">The food web</span></div>
-        <FoodWeb :specimens="specimens" :edges="edges" :biome="space" />
+        <AtlasFoodWeb :specimens="specimens" :edges="edges" :biome="space" />
       </section>
 
       <section v-if="withRhythm.length">
@@ -86,19 +75,19 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
         <ul class="choreo">
           <li v-for="s in withRhythm" :key="s.slug" :style="sigStyle(s)">
             <NuxtLink class="cname" :to="`/t/atlas/${space}/${s.slug}`">{{ s.binomial }}</NuxtLink>
-            <RhythmBand :bands="s.activity!.bands" :label="s.activity!.label" />
+            <AtlasRhythmBand :bands="s.activity!.bands" :label="s.activity!.label" />
           </li>
         </ul>
       </section>
 
       <section>
         <div class="atlas-sechead"><span class="atlas-eyebrow">Field log</span></div>
-        <FieldLog :observations="observations" :specimens-by-slug="specimensBySlug" :biome="space" :limit="8" />
+        <AtlasFieldLog :observations="observations" :specimens-by-slug="specimensBySlug" :biome="space" :limit="8" />
       </section>
 
       <section>
         <div class="atlas-sechead"><span class="atlas-eyebrow">On rarity</span></div>
-        <RarityLegend />
+        <AtlasRarityLegend />
       </section>
     </div>
   </main>

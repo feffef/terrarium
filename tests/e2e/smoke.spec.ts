@@ -22,75 +22,22 @@
 //                the SSR DOM persisting through a failed hydration.
 //
 // The browser is located, not resolved by playwright's own pinned revision:
-// first a Chromium under PLAYWRIGHT_BROWSERS_PATH (exactly as scripts/screenshot.ts
-// does — the agent sandbox's pre-installed build, or the one CI provisions there),
-// then the system Chrome/Chromium (CHROME_BIN or well-known paths; GitHub's ubuntu
-// runners ship /usr/bin/google-chrome). CI pins a Playwright-managed Chromium via
-// that first path for determinism; the system-Chrome fallback keeps every other
-// environment provisioning-free (issue #97).
+// first a Chromium under PLAYWRIGHT_BROWSERS_PATH (the agent sandbox's
+// pre-installed build, or the one CI provisions there), then the system
+// Chrome/Chromium. Both lookups are single-homed in scripts/chromium-path.ts,
+// shared with scripts/screenshot.ts and ad-hoc probes (issue #202). CI pins a
+// Playwright-managed Chromium via the first path for determinism; the
+// system-Chrome fallback keeps every other environment provisioning-free
+// (issue #97).
 import { fileURLToPath } from 'node:url'
-import { accessSync, constants, readdirSync, statSync } from 'node:fs'
-import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { $fetch, createPage, setup, url } from '@nuxt/test-utils/e2e'
 import { entryRoutesFrom, expand, loadManifests } from '../../shared/expand.ts'
+import { findPreinstalledChromium, findSystemChrome } from '../../scripts/chromium-path.ts'
 
 const entryRoutes = entryRoutesFrom(expand(loadManifests()))
 
-/**
- * Find the pre-installed Chromium under a Playwright browsers cache dir, the
- * same way scripts/screenshot.ts does. The installed build (e.g. chromium-1194)
- * need not match playwright-core's own pinned revision, so we launch it by
- * explicit executablePath rather than letting playwright resolve its default.
- */
-function findChromium(browsersDir: string): string | undefined {
-  const convenience = join(browsersDir, 'chromium')
-  if (isExecutable(convenience)) return convenience
-
-  let entries: string[]
-  try {
-    entries = readdirSync(browsersDir)
-  } catch {
-    return undefined
-  }
-  const versioned = entries
-    .filter((name) => name.startsWith('chromium-') && !name.includes('headless_shell'))
-    .sort()
-    .reverse() // prefer the newest-looking version directory
-  for (const dir of versioned) {
-    const candidate = join(browsersDir, dir, 'chrome-linux', 'chrome')
-    if (isExecutable(candidate)) return candidate
-  }
-  return undefined
-}
-
-/**
- * Fall back to a system-installed Chrome/Chromium (CHROME_BIN, then well-known
- * paths). playwright-core drives it over CDP by explicit executablePath, same
- * as the pre-installed build — the exact browser revision need not match.
- */
-function findSystemChrome(): string | undefined {
-  const candidates = [
-    process.env.CHROME_BIN,
-    '/usr/bin/google-chrome',
-    '/usr/bin/google-chrome-stable',
-    '/usr/bin/chromium-browser',
-    '/usr/bin/chromium',
-  ].filter((p): p is string => Boolean(p))
-  return candidates.find(isExecutable)
-}
-
-function isExecutable(path: string): boolean {
-  try {
-    accessSync(path, constants.X_OK)
-    return statSync(path).isFile() || statSync(path).isSymbolicLink()
-  } catch {
-    return false
-  }
-}
-
-const chromiumPath
-  = findChromium(process.env.PLAYWRIGHT_BROWSERS_PATH ?? '/opt/pw-browsers') ?? findSystemChrome()
+const chromiumPath = findPreinstalledChromium() ?? findSystemChrome()
 
 /**
  * Navigate to `route` in a fresh page, capturing every console *error* and

@@ -4,58 +4,43 @@
 // theme with their pingbacks rather than falling through to the unstyled renderer.
 //
 // Isolation-respecting and presentation-only (ADR-0004): it resolves the request
-// through the SAME shared, unit-tested `resolveSpaceRoute`, then reads only this
-// Space's keyed `pages` and `pingbacks` collections. The pingback list is a
-// SAME-Space read — the cross-Persona relationship was denormalised here at author
-// time (ADR-0012), so nothing queries a sibling Space at render.
-import { resolveSpaceRoute } from '~~/shared/routing'
-import { personaMeta } from '../../../../personas'
-import BlogNetwork from '../../../../components/BlogNetwork.vue'
-import BlogSprout from '../../../../components/BlogSprout.vue'
-
+// through the SAME shared, unit-tested `resolveSpaceRoute` (via the read-only
+// useSpace composable), then reads only this Space's keyed `pages` and
+// `pingbacks` collections. The pingback list is a SAME-Space read — the
+// cross-Persona relationship was denormalised here at author time (ADR-0012),
+// so nothing queries a sibling Space at render. The resolved keys are already
+// this Tenant's own literal collection keys (#96/#55), so both queries keep the
+// blog item types with no casts; `personaMeta`/`formatBlogDate`/the components
+// arrive via Nuxt auto-imports.
 const route = useRoute()
-const tenant = 'blog'
-const space = String(route.params.space)
-
-const resolved = resolveSpaceRoute(tenant, space, route.params.slug)
-if (!resolved) {
-  throw createError({ statusCode: 404, statusMessage: `Unknown Persona: ${tenant}/${space}` })
-}
-// `resolved` already carries this Tenant's own literal collection keys — the
-// resolver derives them from the generated `#routing` type (shared/routing.ts,
-// #96/#55) — so both queries keep the blog item types with no casts.
-const { path, pagesKey } = resolved
-const pingbacksKey = resolved.dataCollections.find((d) => d.name === 'pingbacks')?.key
+const { space, path, pagesKey, dataKey } = useSpace('blog')
+const pingbacksKey = dataKey('pingbacks')
 
 const { data } = await useAsyncData(route.path, async () => {
   const post = await queryCollection(pagesKey).path(path).first()
-  const pingbacks = pingbacksKey ? await queryCollection(pingbacksKey).all() : []
+  // Inbound reactions to THIS post, newest first — filtered and ordered in SQL.
+  const pingbacks = pingbacksKey
+    ? await queryCollection(pingbacksKey)
+        .where('target', '=', path)
+        .order('reactedAt', 'DESC')
+        .all()
+    : []
   return { post, pingbacks }
 })
 
 const meta = personaMeta(space)
 const post = computed(() => data.value?.post ?? null)
-// Inbound reactions to THIS post, from the same-Space pingbacks collection.
-const pingbacks = computed(() =>
-  (data.value?.pingbacks ?? [])
-    .filter((p) => p.target === path)
-    .sort((a, b) => new Date(b.reactedAt).getTime() - new Date(a.reactedAt).getTime()),
-)
-
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-function fmtDate(iso: string): string {
-  const d = new Date(iso)
-  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`
-}
+const pingbacks = computed(() => data.value?.pingbacks ?? [])
 
 const title = computed(() => post.value?.title ?? 'Not found')
 // The .bl-page body class scopes the blog canvas (full-bleed background +
 // accent wash) to blog routes only; the accent on <body> lets that wash tint
 // itself per Persona before the page root even renders.
-useHead({
+useHead(() => ({
   title: `${title.value} · blog/${space}`,
   bodyAttrs: { class: 'bl-page', style: `--bl-accent: ${meta.accent}` },
-})
+}))
+useSeoMeta({ description: () => post.value?.description })
 </script>
 
 <template>
@@ -68,7 +53,7 @@ useHead({
 
     <article v-if="post">
       <header class="post-head">
-        <div v-if="post.publishedAt" class="when">{{ fmtDate(post.publishedAt as string) }}</div>
+        <div v-if="post.publishedAt" class="when">{{ formatBlogDate(post.publishedAt) }}</div>
         <h1>{{ post.title }}</h1>
         <p v-if="post.reactsTo" class="replyto">
           ↳ In reply to {{ post.reactsTo.persona }}'s

@@ -5,8 +5,8 @@
 // interactions, and observations all live in the keyed collections. The full
 // palette (CSS custom properties) lives in `app/assets/theme.css`, keyed by the
 // `.atlas--<slug>` wrapper class; this module only mirrors the two accent hues
-// that JS has to draw with. Imported relatively by the layer's pages (aliases
-// resolve to the main app, not the layer — docs/agents/tenant-layers.md §1).
+// that JS has to draw with. Lives in `utils/` so Nuxt auto-imports the exports
+// into the layer's pages and components.
 export interface BiomeMeta {
   /** Space slug — the biome's identity. */
   slug: string

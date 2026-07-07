@@ -41,6 +41,33 @@ function findChromium(browsersDir: string): string | undefined {
 }
 
 /**
+ * Find the pre-installed Chromium under the Playwright browsers cache dir
+ * (`PLAYWRIGHT_BROWSERS_PATH`, defaulting to `/opt/pw-browsers`), or
+ * `undefined` when there is none. Non-throwing variant for callers with their
+ * own fallback (the L2 smoke test chains findSystemChrome() after it).
+ */
+export function findPreinstalledChromium(): string | undefined {
+  return findChromium(process.env.PLAYWRIGHT_BROWSERS_PATH ?? '/opt/pw-browsers')
+}
+
+/**
+ * Fall back to a system-installed Chrome/Chromium (CHROME_BIN, then well-known
+ * paths — GitHub's ubuntu runners ship /usr/bin/google-chrome). playwright-core
+ * drives it over CDP by explicit executablePath, same as the pre-installed
+ * build — the exact browser revision need not match.
+ */
+export function findSystemChrome(): string | undefined {
+  const candidates = [
+    process.env.CHROME_BIN,
+    '/usr/bin/google-chrome',
+    '/usr/bin/google-chrome-stable',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/chromium',
+  ].filter((p): p is string => Boolean(p))
+  return candidates.find(existsAndExecutable)
+}
+
+/**
  * Resolve the pre-installed Chromium executable path: checks the `chromium`
  * convenience symlink first, then falls back to scanning for a versioned
  * `chromium-` directory's `chrome-linux/chrome` under the Playwright browsers
@@ -49,11 +76,11 @@ function findChromium(browsersDir: string): string | undefined {
  * Throws if no pre-installed Chromium can be found.
  */
 export function resolveChromiumPath(): string {
-  const browsersDir = process.env.PLAYWRIGHT_BROWSERS_PATH ?? '/opt/pw-browsers'
-  const chromium = findChromium(browsersDir)
+  const chromium = findPreinstalledChromium()
   if (!chromium) {
     throw new Error(
-      `Could not find a pre-installed Chromium under "${browsersDir}" ` +
+      `Could not find a pre-installed Chromium under ` +
+        `"${process.env.PLAYWRIGHT_BROWSERS_PATH ?? '/opt/pw-browsers'}" ` +
         '(checked for a `chromium` convenience symlink and a versioned ' +
         '`chromium-*/chrome-linux/chrome`). Set PLAYWRIGHT_BROWSERS_PATH to ' +
         'the directory containing the pre-installed browser.',

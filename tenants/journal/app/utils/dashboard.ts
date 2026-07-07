@@ -11,18 +11,23 @@
 // a Nuxt layer the `~/` alias resolves to the MAIN app, not this layer, so it
 // would not find `../types/journal` (see docs/agents/tenant-layers.md §1).
 //
-// Nuxt auto-imports these named exports into the layer's app. That auto-import
-// is real, global, and can collide: a same-named local `const`/`computed` in a
-// consuming SFC (e.g. `frictionCount`) merges with this module's export and
-// vue-tsc rejects the ambiguity (issue #95) — auto-import does NOT namespace
-// these by intent. So the SFC keeps its local binding names distinct from every
-// export below; this module, for its part, never relies on auto-import itself:
-// it stays dependency-free and explicit.
+// Nuxt auto-imports these named exports into the layer's app — the SFCs use
+// them directly, with no import block. The auto-import namespace is global
+// across every layer, which cuts two ways: a same-named local `const`/
+// `computed` in a consuming SFC merges with the export and vue-tsc rejects the
+// ambiguity (issue #95), and a generic export name can collide with another
+// Tenant's utils. So: export names stay distinctive (session/skill/friction/pr
+// vocabulary), consuming SFCs keep local binding names distinct from every
+// export below, and truly generic helpers stay module-private. This module,
+// for its part, never relies on auto-import itself: it stays dependency-free
+// and explicit.
 import type { Friction, Importance, SessionCardView, SessionDoc, Severity, SkillDoc } from '../types/journal'
 
 // ── Formatting helpers ───────────────────────────────────
-export const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-export const pad = (n: number) => String(n).padStart(2, '0')
+// Module-private: too generically named to put in the global auto-import
+// namespace (every layer's utils share it).
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const pad = (n: number) => String(n).padStart(2, '0')
 
 export function fmtWhen(iso: string): string {
   const d = new Date(iso)
@@ -56,7 +61,7 @@ export function toolEntries(counts?: Record<string, number>): { name: string; co
 }
 
 // ── Aggregations (scoped to one Space) ───────────────────
-export const emptySev = (): Record<Severity, number> => ({ nit: 0, minor: 0, moderate: 0, major: 0, blocker: 0 })
+const emptySev = (): Record<Severity, number> => ({ nit: 0, minor: 0, moderate: 0, major: 0, blocker: 0 })
 
 export function countFrictions(list: Friction[]): Record<Severity, number> {
   const c = emptySev()
@@ -164,7 +169,7 @@ export function skillGroups(own: SkillDoc[]): { importance: Importance; skills: 
 // Maps each SessionDoc to the display view the session card renders (formats
 // dates, counts frictions, truncates the session id), so the card stays a dumb
 // renderer. `key` is the stable session id for the v-for.
-export function cards(sessions: SessionDoc[]): (SessionCardView & { key: string })[] {
+export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { key: string })[] {
   return sessions.map((s) => ({
     key: s.session,
     when: fmtWhen(s.endedAt),

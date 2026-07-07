@@ -5,43 +5,32 @@
 // unstyled fallback.
 //
 // Isolation-respecting and presentation-only (ADR-0004): resolves through the
-// SAME shared, unit-tested `resolveSpaceRoute`, then reads only this biome's keyed
-// collections. Relations (#71) and sightings are same-Space reads — the food-web
-// edges were authored in-biome (mirrors ADR-0012), so nothing queries a sibling.
-import { resolveSpaceRoute } from '~~/shared/routing'
-import { biomeMeta } from '../../../../biomes'
-import { relationsFor, signatureVars, toSpecimenView, type Edge, type SpecimenView } from '../../../../utils/atlas'
-import SpecimenPlate from '../../../../components/atlas/SpecimenPlate.vue'
-import RarityMark from '../../../../components/atlas/RarityMark.vue'
-import RhythmBand from '../../../../components/atlas/RhythmBand.vue'
-import ColorSignature from '../../../../components/atlas/ColorSignature.vue'
-import RelationsList from '../../../../components/atlas/RelationsList.vue'
-import FieldLog from '../../../../components/atlas/FieldLog.vue'
+// SAME shared, unit-tested `resolveSpaceRoute` (via the read-only useSpace
+// composable), then reads only this biome's keyed collections. Relations (#71)
+// and sightings are same-Space reads — the food-web edges were authored
+// in-biome (mirrors ADR-0012), so nothing queries a sibling. `biomeMeta`, the
+// utils and the Atlas* components arrive via Nuxt's layer-wide auto-imports;
+// only the types still import relatively.
+import type { Edge, SpecimenView } from '../../../../utils/atlas'
 
 const route = useRoute()
-const tenant = 'atlas'
-const space = String(route.params.space)
-
-const resolved = resolveSpaceRoute(tenant, space, route.params.slug)
-if (!resolved) {
-  throw createError({ statusCode: 404, statusMessage: `Unknown biome: ${tenant}/${space}` })
-}
-const { path, pagesKey } = resolved
-const interactionsKey = resolved.dataCollections.find((d) => d.name === 'interactions')?.key
-const observationsKey = resolved.dataCollections.find((d) => d.name === 'observations')?.key
+const { space, path, pagesKey, dataKey } = useSpace('atlas')
+const interactionsKey = dataKey('interactions')
+const observationsKey = dataKey('observations')
 
 const { data } = await useAsyncData(route.path, async () => {
-  const doc = await queryCollection(pagesKey).path(path).first()
-  // The rest of the wing, for counterpart names on relations + log mentions.
+  // One query serves both the entry itself and the rest of the wing (for
+  // counterpart names on relations + log mentions) — the doc is in `pages`.
   const pages = await queryCollection(pagesKey).all()
   const interactions = interactionsKey ? await queryCollection(interactionsKey).all() : []
   const observations = observationsKey ? await queryCollection(observationsKey).all() : []
-  return { doc, pages, interactions, observations }
+  return { pages, interactions, observations }
 })
 
 const meta = biomeMeta(space)
+const doc = computed(() => data.value?.pages.find((p) => p.path === path) ?? null)
 const specimen = computed<SpecimenView | null>(() =>
-  data.value?.doc ? toSpecimenView(data.value.doc) : null,
+  doc.value ? toSpecimenView(doc.value) : null,
 )
 const specimensBySlug = computed(() =>
   Object.fromEntries(
@@ -58,7 +47,10 @@ const sightings = computed(() =>
 const sigStyle = computed(() => signatureVars(specimen.value?.signature?.colors))
 
 const title = computed(() => specimen.value?.binomial ?? 'Not found')
-useHead({ title: `${title.value} · The Atlas of the Terrarium` })
+useSeoMeta({
+  title: () => `${title.value} · The Atlas of the Terrarium`,
+  description: () => specimen.value?.common,
+})
 </script>
 
 <template>
@@ -71,7 +63,7 @@ useHead({ title: `${title.value} · The Atlas of the Terrarium` })
       </p>
 
       <article v-if="specimen">
-        <SpecimenPlate
+        <AtlasSpecimenPlate
           :illustration="specimen.illustration"
           :number="specimen.plate?.number"
           :binomial="specimen.binomial"
@@ -87,7 +79,7 @@ useHead({ title: `${title.value} · The Atlas of the Terrarium` })
               <dt>class</dt><dd>{{ specimen.classification }}</dd>
             </template>
             <template v-if="specimen.rarity">
-              <dt>rarity</dt><dd><RarityMark :grade="specimen.rarity" :show-grade="true" /></dd>
+              <dt>rarity</dt><dd><AtlasRarityMark :grade="specimen.rarity" :show-grade="true" /></dd>
             </template>
             <template v-if="specimen.size">
               <dt>size</dt><dd>{{ specimen.size }}</dd>
@@ -100,11 +92,11 @@ useHead({ title: `${title.value} · The Atlas of the Terrarium` })
             </template>
             <template v-if="specimen.signature">
               <dt>signature</dt>
-              <dd><ColorSignature :colors="specimen.signature.colors" :gloss="specimen.signature.gloss" /></dd>
+              <dd><AtlasColorSignature :colors="specimen.signature.colors" :gloss="specimen.signature.gloss" /></dd>
             </template>
           </dl>
 
-          <RhythmBand
+          <AtlasRhythmBand
             v-if="specimen.activity"
             class="entry-rhythm"
             :bands="specimen.activity.bands"
@@ -113,17 +105,17 @@ useHead({ title: `${title.value} · The Atlas of the Terrarium` })
         </div>
 
         <div class="atlas-fieldnote atlas-prose">
-          <ContentRenderer :value="data!.doc!" />
+          <ContentRenderer :value="doc!" />
         </div>
 
         <section class="entry-section">
           <div class="atlas-sechead"><span class="atlas-eyebrow">Relations · {{ specimen.binomial }}</span></div>
-          <RelationsList :relations="relations" :specimens-by-slug="specimensBySlug" :biome="space" />
+          <AtlasRelationsList :relations="relations" :specimens-by-slug="specimensBySlug" :biome="space" />
         </section>
 
         <section class="entry-section">
           <div class="atlas-sechead"><span class="atlas-eyebrow">Recent sightings</span></div>
-          <FieldLog :observations="sightings" :specimens-by-slug="specimensBySlug" :biome="space" />
+          <AtlasFieldLog :observations="sightings" :specimens-by-slug="specimensBySlug" :biome="space" />
         </section>
       </article>
 

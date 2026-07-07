@@ -7,22 +7,13 @@
 // the Platform's deliberately unstyled catch-all and rendered off-brand (#25).
 //
 // Isolation-respecting and presentation-only (ADR-0004): it resolves the request
-// through the SAME shared, unit-tested `resolveSpaceRoute` the catch-all uses (a
-// read-only import — no isolation logic duplicated or changed), then reads only
-// that one (Tenant, Space)'s keyed `pages` collection. Spaces cannot leak.
-import { resolveSpaceRoute } from '~~/shared/routing'
-
+// through the SAME shared, unit-tested `resolveSpaceRoute` the catch-all uses
+// (via the read-only useSpace composable — no isolation logic duplicated or
+// changed), then reads only that one (Tenant, Space)'s keyed `pages` collection.
+// Spaces cannot leak. `pagesKey` is already this Tenant's own literal `pages`
+// keys — derived from the generated `#routing` type (shared/routing.ts, #96/#55).
 const route = useRoute()
-const tenant = 'journal'
-const space = String(route.params.space)
-
-const resolved = resolveSpaceRoute(tenant, space, route.params.slug)
-if (!resolved) {
-  throw createError({ statusCode: 404, statusMessage: `Unknown Space: ${tenant}/${space}` })
-}
-// `pagesKey` is already this Tenant's own literal `pages` keys — the resolver
-// derives them from the generated `#routing` type (shared/routing.ts, #96/#55).
-const { path, pagesKey } = resolved
+const { space, path, pagesKey } = useSpace('journal')
 
 const { data: page } = await useAsyncData(route.path, () =>
   queryCollection(pagesKey).path(path).first(),
@@ -36,7 +27,10 @@ const crumbs = computed(() =>
 )
 
 const title = computed(() => page.value?.title ?? 'Not found')
-useHead({ title: `${title.value} · journal/${space}` })
+useSeoMeta({
+  title: () => `${title.value} · journal/${space}`,
+  description: () => page.value?.description,
+})
 </script>
 
 <template>

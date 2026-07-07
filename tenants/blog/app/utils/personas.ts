@@ -1,8 +1,8 @@
 // Presentational metadata for the three Personas (CONTEXT.md: Persona). The Space
 // slug IS the persona's name; this only adds a display capitalisation and a per-
 // persona accent colour. NOT the voice/stance — that lives in the `blog-post`
-// Skill and each Persona's index.md landing. Imported relatively by the layer's
-// pages (mirrors how the journal layer imports its types).
+// Skill and each Persona's index.md landing. Lives in `utils/` so Nuxt
+// auto-imports the exports into the layer's pages and components.
 export interface PersonaMeta {
   /** Display name shown in the byline. */
   name: string

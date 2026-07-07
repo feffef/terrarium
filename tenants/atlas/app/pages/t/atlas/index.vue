@@ -3,9 +3,10 @@
 // foreword, and the biome directory. A layer route at the Tenant root (not a
 // Space), so it doesn't touch the isolation-critical resolver; it reads each
 // biome's keyed collections through the SAME shared resolver the wings use, only
-// to count specimens and find the last observation for the colophon.
-import { resolveSpaceRoute } from '~~/shared/routing'
-import { BIOMES } from '../../../biomes'
+// to count specimens and find the last observation for the colophon. (`BIOMES`
+// arrives via the utils auto-import; useSpace doesn't apply here — this route
+// has no `space` param.)
+import { resolveSpaceRoute } from '#shared/routing'
 
 interface WingStat { count: number; lastObs: string | null }
 
@@ -17,13 +18,14 @@ const { data } = await useAsyncData('atlas-front', async () => {
       stats[b.slug] = { count: 0, lastObs: null }
       continue
     }
-    const pages = await queryCollection(r.pagesKey).all()
+    // Counted/ordered in SQL: specimens are every page but the wing landing;
+    // the colophon needs only the newest observation date.
+    const count = await queryCollection(r.pagesKey).where('path', '<>', '/').count()
     const obsKey = r.dataCollections.find((d) => d.name === 'observations')?.key
-    const obs = obsKey ? await queryCollection(obsKey).all() : []
-    stats[b.slug] = {
-      count: pages.filter((p) => p.path !== '/').length,
-      lastObs: obs.map((o) => o.date).sort().at(-1) ?? null,
-    }
+    const lastObs = obsKey
+      ? (await queryCollection(obsKey).order('date', 'DESC').first())?.date ?? null
+      : null
+    stats[b.slug] = { count, lastObs }
   }
   return stats
 })
