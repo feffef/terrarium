@@ -1,0 +1,68 @@
+schemaVersion: 1
+session: session_015mcvjXBvuL9nHAyv5hUAWX
+startedAt: 2026-07-07T10:12:42Z
+endedAt: 2026-07-07T10:46:39Z
+kind: interactive
+goal: Pin blog file links to immutable commit SHAs
+status: completed
+outcome: 34 links retrofitted; skill fixed; guardrail added; pushed
+summary: "The task prompt never arrived — the session opened with only a branch slug (github-links-commit-ids) and \"Nothing in here?\", so I first mis-inferred a journal commit-link feature and built it before the user stopped me and clarified the real intent: blog posts must never carry stale links, so a file/line reference should use an immutable commit-SHA permalink, not blob/main. Discarded the wrong work. Fixed it in three parts: retrofitted all 34 blob/main file links across the 10 blog pages to blob/<40-char-sha>/<path> (each SHA = last commit touching that path at/before the post's publishedAt, anchors preserved); updated the blog-post Skill to require SHA-pinned file links; added a unit-test guardrail that fails the gate on any branch-ref file link. Full gate green. No PR opened yet."
+prs: []
+docsRead:
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: the link convention's single home (edited)
+  - path: CLAUDE.md
+    reason: repo conventions, ADR-0004 human-only gate boundary
+  - path: tenants/journal/app/utils/dashboard.ts
+    reason: prUrl pattern I first mis-followed for the wrong guess
+  - path: tenants/journal/app/components/journal/SessionCard.vue
+    reason: (unknown)
+  - path: tenants/journal/app/types/journal.ts
+    reason: (unknown)
+  - path: tests/unit/journal-dashboard.spec.ts
+    reason: (unknown)
+  - path: tenants/journal/app/pages/t/journal/[space]/index.vue
+    reason: (unknown)
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: (unknown)
+  - path: tests/unit/typecheck-coverage.spec.ts
+    reason: (unknown)
+skillsUsed:
+  - name: log-session
+    reason: this log
+frictions:
+  - description: The initial task prompt was lost in transit (Android app sent a title but no body); I inferred a whole feature from the branch slug and built+tested it before the user halted me.
+    solution: An empty task description is a hard stop-and-ask signal, not a blank to fill from the branch name or a matching repo pattern.
+    severity: major
+  - description: The clone was shallow (110 commits, nothing before 2026-07-06T15:10), so resolving historical SHAs for the earlier posts returned NO-SHA.
+    solution: git fetch --unshallow before any git archaeology across dated content.
+    severity: minor
+  - description: One backdated post (first-light, publishedAt before ADR-0011 landed on main) had no at-publish commit for the referenced file.
+    solution: Fall back to the file's first commit — still immutable, closest to when it was written.
+    severity: nit
+  - description: The branch name (github-links-commit-ids) describes the garbled task title, not the real work (immutable file permalinks).
+    solution: Kept the designated branch as instructed; flagged the mismatch to the user.
+    severity: nit
+durationSec: 2037
+models:
+  claude-opus-4-8: 161
+toolCounts:
+  Bash: 41
+  Read: 7
+  ToolSearch: 2
+  mcp__github__search_issues: 3
+  Edit: 8
+  Write: 3
+  AskUserQuestion: 1
+  Skill: 1
+filesEdited:
+  - tenants/journal/app/utils/dashboard.ts
+  - tenants/journal/app/components/journal/LinkedText.vue
+  - tenants/journal/app/components/journal/SessionCard.vue
+  - tenants/journal/app/pages/t/journal/[space]/index.vue
+  - tests/unit/journal-dashboard.spec.ts
+  - .claude/skills/blog-post/SKILL.md
+  - tests/unit/blog-immutable-links.spec.ts
+gitBranch: claude/github-links-commit-ids-1c76fr
+entrypoint: remote_mobile
+cliVersion: 2.1.202
