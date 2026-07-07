@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01PUsZ6WCwZqhGMhqXZDaZu9
 startedAt: 2026-07-07T15:24:58Z
-endedAt: 2026-07-07T15:58:15Z
+endedAt: 2026-07-07T16:01:12Z
 kind: interactive
 goal: Auto-open + auto-watch PRs; add in-review status
-status: in-review
-outcome: Merged
+status: completed
+outcome: Both
 summary: "The user was annoyed at being asked, per PR-lifecycle step, \"shall I open a PR?\", \"shall I watch it?\", and a permission dialog per tool. Changed all three defaults: a session with committed work now auto-opens its gated PR at closure, auto-subscribes to watch it to merge/close, and the open/watch/babysit tools are allowlisted in .claude/settings.json (ADR-0003 amendment + CLAUDE.md conventions), bounded so it gates opening/watching only, not deciding to do the work. Opening the PR is now the first log-session trigger, logged with a new in-review status (open-but-unmerged, distinct from completed) — added to all five status homes plus a blue StatusPill with light/dark tokens. Verified the full gate and probed the pill's computed colour, dogfooded it all on #192, resolved a CLAUDE.md merge conflict, and saw #192 merged."
 prs:
   - "192"
@@ -50,13 +50,13 @@ frictions:
   - description: Cancelling the self check-in still hit a permission dialog — the allowlist added send_later but not delete_trigger, the same server's teardown tool.
     solution: Allowlist the trigger-management tools as a set (delete_trigger alongside send_later), not just the create half, so the arm/cancel pair is symmetric.
     severity: nit
-durationSec: 1997
+durationSec: 2174
 models:
-  claude-opus-4-8: 231
+  claude-opus-4-8: 237
 toolCounts:
-  Bash: 49
+  Bash: 50
   Read: 24
-  Edit: 29
+  Edit: 30
   ToolSearch: 4
   mcp__github__create_pull_request: 2
   Skill: 2
@@ -65,7 +65,7 @@ toolCounts:
   mcp__github__pull_request_read: 5
   mcp__Claude_Code_Remote__send_later: 2
   mcp__github__update_pull_request: 1
-  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__delete_trigger: 2
 filesEdited:
   - tenants/journal/tenant.config.ts
   - tenants/journal/app/types/journal.ts
