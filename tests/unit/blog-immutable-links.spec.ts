@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const BLOG_CONTENT = resolve(root, 'tenants/blog/content')
+const BLOG_CONTENT = resolve(root, 'layers/blog/content')
 
 // Only file-serving GitHub routes take a ref that can be a branch; `commit`,
 // `pull`, `issues`, `compare`, … don't, so they can't rot this way.

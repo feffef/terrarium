@@ -23,13 +23,13 @@ import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
 import { z } from 'zod'
-import journal from '../tenants/journal/tenant.config.ts'
+import journal from '../layers/journal/tenant.config.ts'
 import { SCRATCH_FILE, type AuthoredScratch } from './session-trace.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 /** The one directory session logs may live in — the whole of the ADR-0009 scope. */
-export const SESSIONS_DIR = 'tenants/journal/content/current/sessions'
+export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
 
 /** The frozen `sessions` schema (ADR-0009). Single source of truth — never restated here. */
 const sessionsCollection = journal.collections.sessions

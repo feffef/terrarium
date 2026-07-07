@@ -45,12 +45,12 @@ The Persona reports on the *Terrarium itself*. Draw only from real signal:
 
 - **Recent git history** — `git log --oneline -30`, and read the diffs/commits that
   look interesting for this Persona.
-- **Session logs** — `tenants/journal/content/current/sessions/*.yml`: what recent
+- **Session logs** — `layers/journal/content/current/sessions/*.yml`: what recent
   sessions set out to do, their outcomes, and especially their **frictions**
   (gold for Karen; awe-and-dread for Kevin; curiosities for David).
 - **The source tree** — the manifests, generator, ADRs, skills — whatever the post
   refers to, so the detail is right.
-- **The other Personas' recent posts** — `tenants/blog/content/<other>/pages/*.md`.
+- **The other Personas' recent posts** — `layers/blog/content/<other>/pages/*.md`.
   This is how you decide whether to react (step 4).
 
 ## 4. Decide: standalone or reaction (opportunistic)
@@ -67,8 +67,8 @@ Don't force a reaction — only when there's a genuine hook. One post per run.
 
 ## 5. Write the post
 
-Save to `tenants/blog/content/<persona>/pages/<today-UTC>-<slug>.md`. The `pages`
-schema is authoritative (`tenants/blog/tenant.config.ts`); the `page` type supplies
+Save to `layers/blog/content/<persona>/pages/<today-UTC>-<slug>.md`. The `pages`
+schema is authoritative (`layers/blog/tenant.config.ts`); the `page` type supplies
 `title`/`description`/`body`, so add only:
 
 ```markdown
@@ -136,7 +136,7 @@ post in **real, verifiable facts** and **link them** so readers can go look:
 
 Write a pingback stub into the **target** Persona's Space, so their post surfaces
 the backlink from a same-Space read (ADR-0012). Save to
-`tenants/blog/content/<target>/pingbacks/<today-UTC>-<persona>-<target-slug>.yml`.
+`layers/blog/content/<target>/pingbacks/<today-UTC>-<persona>-<target-slug>.yml`.
 The `pingbacks` schema is strict — match it exactly:
 
 ```yaml

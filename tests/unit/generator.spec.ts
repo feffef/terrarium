@@ -47,7 +47,7 @@ describe('expand() — cross-product & keying', () => {
   it('every key maps to a distinct, correctly-scoped content dir', () => {
     const dirs = new Map<string, string>()
     for (const c of cols) {
-      expect(c.cwdRel).toBe(`tenants/${c.tenant}/content/${c.space}/${c.collection}`)
+      expect(c.cwdRel).toBe(`layers/${c.tenant}/content/${c.space}/${c.collection}`)
       expect(dirs.has(c.key)).toBe(false)
       dirs.set(c.key, c.cwdRel)
     }

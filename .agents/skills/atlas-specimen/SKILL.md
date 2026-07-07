@@ -110,11 +110,11 @@ A minimal, in-style plate (a moth with a tinted lamp):
 
 ## 3. Author the specimen file
 
-Write to `tenants/atlas/content/<biome>/pages/<slug>.md` where `<biome>` is one of
+Write to `layers/atlas/content/<biome>/pages/<slug>.md` where `<biome>` is one of
 `canopy | floor | pool` and `<slug>` is a hyphenated latinate id
 (`lumina-fabulae`). The `page` type supplies `title`/`description`/`body`; add the
 museum-label record. The full schema is authoritative in
-`tenants/atlas/tenant.config.ts`:
+`layers/atlas/tenant.config.ts`:
 
 ```markdown
 ---
@@ -147,7 +147,7 @@ was found, its habits, one anecdote. No leading `#` — the binomial comes from 
 frontmatter. Three or four short paragraphs is plenty.
 ```
 
-The biome's own landing intro is `tenants/atlas/content/<biome>/pages/index.md` —
+The biome's own landing intro is `layers/atlas/content/<biome>/pages/index.md` —
 a plain page (title + description + body, none of the record fields). Leave it be
 unless you're founding a new wing.
 
@@ -157,7 +157,7 @@ Each relationship is **one authored directed edge**, single-homed — the diagra
 and both specimens' Relations sections all derive from it (the reverse label is
 computed, so author each fact once). Same-biome only.
 
-Write to `tenants/atlas/content/<biome>/interactions/<from>-<kind>-<to>.yml`:
+Write to `layers/atlas/content/<biome>/interactions/<from>-<kind>-<to>.yml`:
 ```yaml
 from: lumina-fabulae      # actor slug
 to: mycora-susurrans      # acted-upon slug
@@ -173,7 +173,7 @@ the actor's side.
 The cheapest contribution: leave a dated sighting even when you add no creature, so
 the world stays alive. Append-only in spirit — never rewrite old ones.
 
-Write to `tenants/atlas/content/<biome>/observations/<date>-<slug-or-note>.yml`:
+Write to `layers/atlas/content/<biome>/observations/<date>-<slug-or-note>.yml`:
 ```yaml
 date: 2026-07-06          # YYYY-MM-DD
 time: dusk                # dawn | noon | dusk | night

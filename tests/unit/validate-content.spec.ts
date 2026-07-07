@@ -1,6 +1,6 @@
 // Unit tests for `validateContent()` (issue #133) — the pure-ish core of
 // `pnpm validate:content` (`scripts/validate-content.ts`). Exercises it against
-// real fixture files under a throwaway temp dir (not the real `tenants/` tree)
+// real fixture files under a throwaway temp dir (not the real `layers/` tree)
 // so a schema regression here is caught in isolation from the actual content.
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'

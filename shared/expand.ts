@@ -15,7 +15,10 @@ import type { ZodObject, ZodRawShape } from 'zod'
 import { collectionKey, validateManifest, type TenantManifest } from './manifest'
 
 export const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const tenantsDir = join(root, 'tenants')
+// The Tenant manifests live one per layer under `layers/` (Nuxt's conventional
+// layer directory — ADR-0018). This module only enumerates that directory; the
+// auto-extend / typecheck-coverage consequences of the location are ADR-0018's.
+const layersDir = join(root, 'layers')
 
 export interface LoadedManifest {
   dir: string
@@ -47,7 +50,7 @@ export type ExpandedCollection =
     })
 
 /**
- * Synchronously load every Tenant manifest under `tenants/`.
+ * Synchronously load every Tenant manifest under `layers/`.
  *
  * Uses jiti — the same TypeScript loader Nuxt Content already uses to evaluate
  * `content.config.ts` — so the manifests (which carry live Zod schema objects)
@@ -56,10 +59,10 @@ export type ExpandedCollection =
  * test, which builds `LoadedManifest`s by hand) never constructs one.
  */
 export function loadManifests(): LoadedManifest[] {
-  const dirs = readdirSync(tenantsDir)
+  const dirs = readdirSync(layersDir)
     .filter((d) => {
       try {
-        return statSync(join(tenantsDir, d)).isDirectory()
+        return statSync(join(layersDir, d)).isDirectory()
       } catch {
         return false
       }
@@ -69,7 +72,7 @@ export function loadManifests(): LoadedManifest[] {
   const load = createLoader()
   const loaded: LoadedManifest[] = []
   for (const dir of dirs) {
-    const file = join(tenantsDir, dir, 'tenant.config.ts')
+    const file = join(layersDir, dir, 'tenant.config.ts')
     const mod = load(file)
     const manifest: TenantManifest = mod.default ?? mod
     if (manifest?.name !== dir) {
@@ -104,7 +107,7 @@ export function expand(manifests: LoadedManifest[]): ExpandedCollection[] {
           space,
           collection,
           include: def.source ?? '**',
-          cwdRel: `tenants/${manifest.name}/content/${space}/${collection}`,
+          cwdRel: `layers/${manifest.name}/content/${space}/${collection}`,
         }
         // Branch on `def.type` (rather than spreading `def` in) so TS narrows
         // `def.schema` per-variant and the pushed object matches the matching

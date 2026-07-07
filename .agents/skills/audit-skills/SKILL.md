@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Audit Skills
 
-Keep the **Skill Inventory** (`tenants/journal/content/current/skills/`) honest
+Keep the **Skill Inventory** (`layers/journal/content/current/skills/`) honest
 against how Skills are *actually used*. This is a `sync`-family maintenance Skill
 (sibling of `digest`, ADR-0003/0015): `digest` keeps the digest feed honest, this
 keeps the Inventory honest. A thin, tested helper (`scripts/audit-skills.ts`) does

@@ -1,7 +1,7 @@
 // Unit tests for the Journal dashboard's pure aggregation/formatting module
 // (issue #61) — the logic that computes what the public dashboard displays
 // (friction counts, durations, orderings, the Skill Inventory grouping). It was
-// extracted verbatim from `tenants/journal/app/pages/t/journal/[space]/index.vue`,
+// extracted verbatim from `layers/journal/app/pages/t/journal/[space]/index.vue`,
 // so these lock in the behavior the SFC used to embed.
 //
 // Importing the module here also pulls it into `tsc -p tsconfig.node.json` (the
@@ -28,8 +28,8 @@ import {
   skillsLabel,
   skillsSub,
   toolEntries,
-} from '../../tenants/journal/app/utils/dashboard.ts'
-import type { Friction, SessionDoc, Severity, SkillDoc } from '../../tenants/journal/app/types/journal.ts'
+} from '../../layers/journal/app/utils/dashboard.ts'
+import type { Friction, SessionDoc, Severity, SkillDoc } from '../../layers/journal/app/types/journal.ts'
 
 function friction(severity: string): Friction {
   return { description: 'd', solution: 's', severity: severity as Severity }

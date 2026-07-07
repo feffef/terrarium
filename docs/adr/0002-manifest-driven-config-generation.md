@@ -3,6 +3,13 @@
 Date: 2026-07-04
 Status: Accepted
 
+> **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
+> Tenant layers moved to Nuxt's conventional `layers/` directory, which
+> auto-extends every `layers/*` — so the 2026-07-05 amendment just below is now
+> **moot**: spawning a Tenant no longer needs any `nuxt.config.ts` `extends`
+> edit, and "drop a folder + `pnpm install`" is once again the whole story.
+> `tenants/…` paths below reflect the pre-rename layout.
+
 > **Amended (2026-07-05):** the "drop a folder and config regenerates"
 > consequence below is incomplete. Spawning a Tenant *also* requires registering
 > its layer in `nuxt.config.ts` `extends` by hand — the generator produces the

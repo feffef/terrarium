@@ -3,6 +3,10 @@
 Date: 2026-07-05
 Status: Accepted — supersedes both halves of ADR-0007; amends ADR-0013
 
+> **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
+> Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
+> `tenants/…` paths below reflect the pre-rename layout.
+
 > **Supersedes ADR-0007** (both halves — the committed `content.config.ts` half was
 > already superseded by ADR-0013; this supersedes the retained committed
 > `shared/routing.generated.ts` half). **Amends ADR-0013** (which retained the

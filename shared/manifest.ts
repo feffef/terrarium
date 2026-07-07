@@ -1,5 +1,5 @@
 // The Tenant manifest: the small, declarative unit an agent authors (ADR-0002).
-// Agents edit `tenants/<tenant>/tenant.config.ts`; the generator expands the
+// Agents edit `layers/<tenant>/tenant.config.ts`; the generator expands the
 // Tenant × Space × Collection cross-product into the keyed collections in the
 // generated `content.config.ts`. Agents never hand-write the keyed explosion.
 import { z, type ZodObject, type ZodRawShape } from 'zod'
@@ -32,7 +32,7 @@ export type CollectionDef =
     }
 
 export interface TenantManifest {
-  /** Tenant name; MUST equal its folder name under `tenants/`. Lowercase slug. */
+  /** Tenant name; MUST equal its folder name under `layers/`. Lowercase slug. */
   name: string
   /** The Spaces this Tenant declares (e.g. `current`, `archived`). Per-Tenant set. */
   spaces: string[]

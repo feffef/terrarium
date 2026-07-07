@@ -3,6 +3,10 @@
 Date: 2026-07-05
 Status: Accepted
 
+> **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
+> Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
+> `tenants/…` paths below reflect the pre-rename layout.
+
 ## Context
 
 The Journal Tenant (ADR-0008) named two content kinds: **Inventories** (curated,

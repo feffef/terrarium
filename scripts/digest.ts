@@ -22,8 +22,8 @@ import { parse as parseYaml } from 'yaml'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 /** The Journal paths this helper reads. Digests are pages under a subfolder (ADR-0010). */
-export const DIGESTS_DIR = 'tenants/journal/content/current/pages/digests'
-export const SESSIONS_DIR = 'tenants/journal/content/current/sessions'
+export const DIGESTS_DIR = 'layers/journal/content/current/pages/digests'
+export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 

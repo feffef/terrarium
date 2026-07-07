@@ -56,7 +56,7 @@ pnpm exec tsx scripts/digest.ts gather <date>
 The JSON gives you `prs` (merged/referenced), `otherCommits` (direct-to-main
 work), `sessions` (goal/outcome/status + frictions), and a `rollup`. Author a
 short catch-up from it and save to
-`tenants/journal/content/current/pages/digests/<date>.md`:
+`layers/journal/content/current/pages/digests/<date>.md`:
 
 ```markdown
 ---

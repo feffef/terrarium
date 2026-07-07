@@ -24,7 +24,7 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   **rule of two** for new vocabulary (coin a glossary/ADR term only on a
   concept's *second* instance) — see `docs/agents/domain.md`.
 - **Which Skills to actually use** is curated in the `journal` Tenant's **Skill
-  Inventory** — `tenants/journal/content/current/skills/`, rendered at
+  Inventory** — `layers/journal/content/current/skills/`, rendered at
   `/t/journal/current`. It records each installed Skill's *role and importance to
   this project* (not a copy of the Skill's own description), because the Skills
   come from an external pack. Treat it as the authoritative "use these" list:
@@ -187,8 +187,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 ```
 CONTEXT.md                          # domain model / ubiquitous language (glossary only)
 docs/adr/                           # Architecture Decision Records (read all before planning)
-tenants/<tenant>/tenant.config.ts   # the manifest an agent edits (declarative intent)
-tenants/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Space
+layers/<tenant>/tenant.config.ts    # the manifest an agent edits (declarative intent)
+layers/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Space
+                                    #   (Tenant layers live under Nuxt's `layers/`, auto-extended — ADR-0018)
 shared/manifest.ts                  # manifest types + defineTenant() + validation
 shared/expand.ts                    # pure manifest→keyed-collection expansion (expand(), L3-tested)
 modules/routing.ts                  # build-time Nuxt module: manifests → #routing virtual module (ADR-0014)
@@ -263,7 +264,7 @@ can overlap real content and read as a UI bug.
   screenshot confirms a render happened; computed-style probing confirms a
   *specific* style took effect.
 - **The journal Space landing is a custom dashboard, not a Markdown render.**
-  `tenants/journal/app/pages/t/journal/[space]/index.vue` wins over the generic
+  `layers/journal/app/pages/t/journal/[space]/index.vue` wins over the generic
   catch-all for the Space *root* and builds its own layout (stat tiles, digests,
   session feed, Skill Inventory, …) from the Space's `pages`/`skills`/`sessions`
   Collections. It renders `index.md`'s body only as the small "editorial intro"
@@ -273,8 +274,10 @@ can overlap real content and read as a UI bug.
 To **add a Space or Collection**: edit the Tenant's `tenant.config.ts`. The keyed
 collections update automatically via `content.config.ts`, and the routing map
 (`#routing`) is re-derived at the next `nuxt prepare`/`build`. No regenerate step
-needed. To **spawn a Tenant**: drop a `tenants/<name>/` folder with a manifest and
-content, then run `pnpm install` (or `nuxt prepare`) to pick it up.
+needed. To **spawn a Tenant**: drop a `layers/<name>/` folder with a manifest and
+content, then run `pnpm install` (or `nuxt prepare`) to pick it up — Nuxt
+auto-extends every `layers/*`, so no `nuxt.config.ts` `extends` edit is needed
+(ADR-0018).
 
 ## Logging your session
 
