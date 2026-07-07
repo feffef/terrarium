@@ -160,6 +160,13 @@ can overlap real content and read as a UI bug.
   ad-hoc script as CJS, so wrap top-level `await` in an `async` IIFE; (2) write
   the script **inside the repo tree** so its imports resolve against
   `node_modules` (`playwright-core` is a devDependency here, not global).
+- **A screenshot can't be trusted to rule out a subtle/scoped CSS change** —
+  downscaled or compressed PNGs can mask a style that actually applied. Before
+  concluding a scoped style is missing, probe the element's *computed* style
+  with the same `playwright-core` pattern above, e.g.
+  `page.$eval(selector, el => getComputedStyle(el).propertyName)`. A
+  screenshot confirms a render happened; computed-style probing confirms a
+  *specific* style took effect.
 - **The journal Space landing is a custom dashboard, not a Markdown render.**
   `tenants/journal/app/pages/t/journal/[space]/index.vue` wins over the generic
   catch-all for the Space *root* and builds its own layout (stat tiles, digests,
