@@ -269,7 +269,9 @@ function fail(msg: string): never {
 
 /** `--author <authored.yml>`: validate the interpretive fields and write the
  *  scratch. This is what the model-invocable `log-session` Skill calls at
- *  closure; it does NOT commit — the SessionEnd handler does, at teardown. */
+ *  closure; it does NOT commit — the session-end handler does, live on the
+ *  next `Stop` (with `SessionEnd`/resume only as fallbacks for whatever `Stop`
+ *  misses, PR #148). */
 function authorMain(argv: string[]): void {
   const positional = argv.filter((a) => !a.startsWith('--'))
   const [inputPath] = positional
@@ -286,7 +288,7 @@ function authorMain(argv: string[]): void {
   if (!result.ok) fail(`authored scratch is invalid:\n${result.errors}`)
   writeScratch(result.data, join(root, SCRATCH_FILE))
   console.log(`✓ authored scratch written → ${SCRATCH_FILE}`)
-  console.log('  the SessionEnd hook will stitch it with the derived trace and commit at session end.')
+  console.log('  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.')
 }
 
 function main(): void {

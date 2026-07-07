@@ -13,6 +13,13 @@ Status: Accepted
 > Decision, records the measured Claude-Code-on-the-web freeze behaviour, and
 > fixes the derive-vs-author split and the commit rule. Decision accepted;
 > implementation is a follow-up gated PR.
+>
+> **Amended (2026-07-06, PR #148):** the follow-up implementation landed with a
+> correction to the section below — added **Landing mechanism as shipped** at
+> the end. `SessionEnd` turned out to be an unreliable *sole* committer (it
+> fires fire-and-forget and a network-freezing suspend makes its push throw
+> silently), so the shipped mechanism lands primarily on the live `Stop` hook
+> instead, with `SessionEnd` kept only as a fallback for whatever `Stop` misses.
 
 ## Context
 
@@ -265,3 +272,30 @@ author-to-scratch, no commit); the **`CLAUDE.md`** wrap-up guidance (self-judge
 closure → invoke `log-session`; drop the ask-the-human step); the committed
 `.claude/settings.json` hook entry; and the `sessions` schema change. Recorded here
 as **decided**, to land gated.
+
+## Landing mechanism as shipped (PR #148)
+
+> **Amended (2026-07-06, PR #148).** The follow-up PR above shipped, but not as
+> pure `SessionEnd`-lands-at-teardown: a network-freezing suspend was found to
+> make `SessionEnd`'s push throw into a dead network, silently orphaning the
+> log. The same `scripts/session-end.ts` script is wired to **three** hook
+> events instead of one, in priority order:
+
+- **`Stop` (primary).** Fires at the end of the turn in which the agent invoked
+  `log-session` and wrote the scratch — the session is healthy and the network
+  is live, so the log lands promptly, well before any teardown.
+- **`SessionEnd` (fallback — catches what `Stop` missed).** Fires at teardown,
+  including a web freeze (`reason: "other"`). Best-effort only now, not the sole
+  chance — on a network-freezing suspend it can still fail silently, but `Stop`
+  has usually already landed the log.
+- **`SessionStart` matcher `resume` (deepest fallback).** A resumed session
+  always has a live network, so this catches anything neither `Stop` nor
+  `SessionEnd` managed to land.
+
+A sentinel (`.session-logs/last-landed.json`) keyed on the authored scratch's
+hash makes re-running the script on every `Stop` cheap: it only fetches/pushes
+when the scratch has changed since the last landing, so a session with many
+turns after closure doesn't re-push on each one. Net effect: **"lands on `main`
+at teardown via the `SessionEnd` hook" is no longer an accurate description of
+the common case** — the common case is landing live, mid-session, on `Stop`;
+`SessionEnd` only covers the sessions `Stop` missed.
