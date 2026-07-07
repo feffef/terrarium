@@ -1,0 +1,85 @@
+schemaVersion: 1
+session: session_01LLDh6CroudWEvPjP9hpyoA
+startedAt: 2026-07-07T22:30:43Z
+endedAt: 2026-07-07T22:46:02Z
+kind: interactive
+goal: Return Space Collections as a keyed record
+status: in-review
+outcome: Resolver reshaped, dataKey removed, PR open
+summary: "Implemented issue #210: reworked the runtime routing resolver so a Space's non-`pages` Collections surface as a record keyed by Collection name (`collections.skills`) instead of an array of `{ name, key }`, typed off the generated `#routing` literal. Removed `useSpace()`'s `dataKey()` helper and its documented cast; migrated the Platform catch-all and the atlas/blog/journal layer pages to `collections.<name>` (their `key ? query : []` guards fell away as the record properties are non-optional per Tenant). Updated the L3 isolation tests to the record shape. Full safety gate green (lint, typecheck, 171 unit, build, 23 e2e). Two-axis code review clean. Opened gated PR #223, subscribed."
+prs:
+  - "223"
+docsRead:
+  - path: shared/routing.ts
+    reason: the isolation-critical resolver being reshaped
+  - path: app/composables/space.ts
+    reason: dataKey helper + cast to remove
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: checking a dataCollections prose reference
+  - path: shared/manifest.ts
+    reason: (no reason given)
+  - path: app/pages/t/[tenant]/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (read before editing)
+  - path: layers/atlas/app/pages/t/atlas/[space]/index.vue
+    reason: (read before editing)
+  - path: layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/blog/app/pages/t/blog/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/atlas/app/pages/t/atlas/index.vue
+    reason: (read before editing)
+  - path: tests/unit/routing.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: two-axis Standards/Spec review of the diff
+  - name: close-session
+    reason: closure sequence at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Renaming the resolver field forced touching five layer pages beyond the two surfaces the issue named — necessary API fallout, but a wide edit for a small change.
+    solution: Expected shotgun surgery for an API rename; centralising through useSpace already minimised it. No structural fix — the blast radius is inherent.
+    severity: nit
+  - description: ADR-0012 prose still says pingbacks ride along as one of its `dataCollections`, a now-renamed identifier — doc drift the rename introduced.
+    solution: Left as historical record per CLAUDE.md's ADR stance; an amending note is the prescribed fix if the drift ever matters, but disproportionate for one incidental reference.
+    severity: nit
+durationSec: 919
+models:
+  claude-opus-4-8: 112
+toolCounts:
+  ToolSearch: 5
+  Bash: 16
+  mcp__github__issue_read: 1
+  Read: 11
+  Grep: 1
+  Edit: 13
+  Skill: 3
+  Agent: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Write: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - shared/routing.ts
+  - app/composables/space.ts
+  - app/pages/t/[tenant]/[space]/[...slug].vue
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - layers/atlas/app/pages/t/atlas/[space]/index.vue
+  - layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+  - layers/blog/app/pages/t/blog/[space]/[...slug].vue
+  - layers/atlas/app/pages/t/atlas/index.vue
+  - tests/unit/routing.spec.ts
+subagents:
+  - type: general-purpose
+    task: "Standards review of issue #210 diff"
+  - type: general-purpose
+    task: "Spec review of issue #210 diff"
+gitBranch: claude/issue-210-95hvr6
+entrypoint: remote
+cliVersion: 2.1.203
+learnings:
+  - "A distributive conditional (`R extends Record<string,string> ? {...} : never`) over the Space-record union drops each member's `pages` while keeping per-Tenant record shapes distinct — a record property then typechecks only when present in every Space of the Tenant."
