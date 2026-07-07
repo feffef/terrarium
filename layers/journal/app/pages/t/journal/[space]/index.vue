@@ -22,10 +22,9 @@ const tenant = 'journal'
 
 // `useSpace` already carries this Tenant's own literal collection keys — the
 // resolver derives them from the generated `#routing` type (shared/routing.ts,
-// #96) — so `queryCollection` keeps the journal item types (#55) with no casts.
-const { space, pagesKey, dataKey } = useSpace(tenant)
-const skillsKey = dataKey('skills')
-const sessionsKey = dataKey('sessions')
+// #96) — so `queryCollection(collections.<name>)` keeps the journal item types
+// (#55) with no casts.
+const { space, pagesKey, collections } = useSpace(tenant)
 
 // The resolver deliberately exposes only the one resolved Space, so read the map
 // directly for the Space-toggle's list of sibling Spaces.
@@ -33,11 +32,9 @@ const spaces = Object.keys(routingMap[tenant])
 
 const { data } = await useAsyncData(route.path, async () => {
   const pages = await queryCollection(pagesKey).all()
-  const skills = skillsKey ? await queryCollection(skillsKey).all() : []
+  const skills = await queryCollection(collections.skills).all()
   // Newest-first, ordered in SQL rather than re-sorted client-side.
-  const sessions = sessionsKey
-    ? await queryCollection(sessionsKey).order('endedAt', 'DESC').all()
-    : []
+  const sessions = await queryCollection(collections.sessions).order('endedAt', 'DESC').all()
   return { pages, skills, sessions }
 })
 
@@ -55,11 +52,11 @@ const openDigests = reactive<Record<string, boolean>>({})
 const toggleDigest = (path: string) => {
   openDigests[path] = !openDigests[path]
 }
-// No cast: `skillsKey`/`sessionsKey` above are narrowed to this Tenant's own
-// collection keys, so `data.value.{skills,sessions}` already carry the real,
-// generated item types — the SAME types `SkillDoc`/`SessionDoc` alias (issue
-// #94). A schema edit that drops a field now fails to typecheck right here
-// instead of being silently erased by an `as unknown as` cast.
+// No cast: `collections.skills`/`collections.sessions` are this Tenant's own
+// literal collection keys, so `data.value.{skills,sessions}` already carry the
+// real, generated item types — the SAME types `SkillDoc`/`SessionDoc` alias
+// (issue #94). A schema edit that drops a field now fails to typecheck right
+// here instead of being silently erased by an `as unknown as` cast.
 const skills = computed<SkillDoc[]>(() => data.value?.skills ?? [])
 const sessions = computed<SessionDoc[]>(() => data.value?.sessions ?? [])
 

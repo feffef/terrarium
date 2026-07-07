@@ -14,16 +14,14 @@
 import type { Edge, SpecimenView } from '../../../../utils/atlas'
 
 const route = useRoute()
-const { space, path, pagesKey, dataKey } = useSpace('atlas')
-const interactionsKey = dataKey('interactions')
-const observationsKey = dataKey('observations')
+const { space, path, pagesKey, collections } = useSpace('atlas')
 
 const { data } = await useAsyncData(route.path, async () => {
   // One query serves both the entry itself and the rest of the wing (for
   // counterpart names on relations + log mentions) — the doc is in `pages`.
   const pages = await queryCollection(pagesKey).all()
-  const interactions = interactionsKey ? await queryCollection(interactionsKey).all() : []
-  const observations = observationsKey ? await queryCollection(observationsKey).all() : []
+  const interactions = await queryCollection(collections.interactions).all()
+  const observations = await queryCollection(collections.observations).all()
   return { pages, interactions, observations }
 })
 
