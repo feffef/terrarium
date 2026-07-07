@@ -1,0 +1,102 @@
+schemaVersion: 1
+session: session_01VbZs6fhvMuCqxNxWXE3qY3
+startedAt: 2026-07-07T22:54:14Z
+endedAt: 2026-07-07T23:16:30Z
+kind: interactive
+goal: Add a fifth specimen to each Atlas wing
+status: in-review
+outcome: "PR #225 open, gate green, renders verified"
+summary: "Added one specimen per biome, chosen to complete each wing's rarity ladder: Umbra vacans (canopy, mythic, conjectural plate), Textor absens (floor, mythic, conjectural plate), Geminella sequax (pool, abundant). Each landed with museum-label frontmatter, an engraved SVG plate, a field-note essay, two same-biome food-web edges, and two field-log entries. Full gate run locally; all six affected pages screenshot-verified. On request, both conjectural plates were redrawn denser, and origin/main (which had restructured tests per-layer meanwhile) was merged in with the gate re-run green."
+prs:
+  - "225"
+docsRead:
+  - path: layers/atlas/tenant.config.ts
+    reason: museum-label / interaction / observation schemas
+  - path: app/../layers/atlas/app/utils/atlas.ts
+    reason: rarity ladder and specimen view model
+  - path: layers/atlas/content/canopy/pages/lumina-fabulae.md
+    reason: voice and plate exemplar
+  - path: layers/atlas/content/canopy/pages/index.md
+    reason: (no reason given)
+  - path: layers/atlas/content/canopy/pages/aranea-patiens.md
+    reason: (no reason given)
+  - path: layers/atlas/content/canopy/pages/folium-mendax.md
+    reason: (no reason given)
+  - path: layers/atlas/content/canopy/pages/mycora-susurrans.md
+    reason: (no reason given)
+  - path: layers/atlas/content/floor/pages/index.md
+    reason: (no reason given)
+  - path: layers/atlas/content/floor/pages/formica-textrix.md
+    reason: (no reason given)
+  - path: layers/atlas/content/floor/pages/clathrina-vigil.md
+    reason: (no reason given)
+  - path: layers/atlas/content/floor/pages/rubra-territa.md
+    reason: (no reason given)
+  - path: layers/atlas/content/floor/pages/driftophaga-vigilans.md
+    reason: (no reason given)
+  - path: layers/atlas/content/pool/pages/index.md
+    reason: (no reason given)
+  - path: layers/atlas/content/pool/pages/vitrea-placida.md
+    reason: (no reason given)
+  - path: layers/atlas/content/pool/pages/echo-cantans.md
+    reason: (no reason given)
+  - path: layers/atlas/content/pool/pages/luciola-mersa.md
+    reason: (no reason given)
+  - path: layers/atlas/content/pool/pages/nocturna-brevis.md
+    reason: (no reason given)
+  - path: layers/atlas/app/utils/atlas.ts
+    reason: (no reason given)
+  - path: layers/atlas/app/utils/biomes.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: atlas-specimen
+    reason: single home for the naturalist's voice and plate style
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read all twelve existing specimen pages to reverse-engineer voice and plate conventions before the user manually invoked /atlas-specimen, which already single-homes both.
+    solution: A pointer from CLAUDE.md or the Skill Inventory to atlas-specimen for any Atlas content task would let sessions find it unprompted despite disable-model-invocation.
+    severity: minor
+  - description: origin/main was force-updated mid-session (tests restructured per-layer), requiring a merge and a second full gate run before push.
+    solution: Expected cost of parallel sessions; merge was clean, nothing to fix.
+    severity: nit
+durationSec: 1336
+models:
+  claude-fable-5: 129
+toolCounts:
+  Bash: 24
+  Read: 26
+  Write: 16
+  SendUserFile: 2
+  ToolSearch: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Edit: 2
+  Skill: 2
+filesEdited:
+  - layers/atlas/content/canopy/pages/umbra-vacans.md
+  - layers/atlas/content/floor/pages/textor-absens.md
+  - layers/atlas/content/pool/pages/geminella-sequax.md
+  - layers/atlas/content/canopy/interactions/umbra-vacans-shelters-mycora-susurrans.yml
+  - layers/atlas/content/canopy/interactions/umbra-vacans-fears-lumina-fabulae.yml
+  - layers/atlas/content/floor/interactions/textor-absens-shelters-formica-textrix.yml
+  - layers/atlas/content/floor/interactions/rubra-territa-fears-textor-absens.yml
+  - layers/atlas/content/pool/interactions/luciola-mersa-preys-on-geminella-sequax.yml
+  - layers/atlas/content/pool/interactions/geminella-sequax-fears-nocturna-brevis.yml
+  - layers/atlas/content/canopy/observations/2026-06-24-shade-against-the-drift.yml
+  - layers/atlas/content/canopy/observations/2026-07-04-umbra-vacans.yml
+  - layers/atlas/content/floor/observations/2026-06-28-the-west-gallery-mended.yml
+  - layers/atlas/content/floor/observations/2026-07-05-textor-absens.yml
+  - layers/atlas/content/pool/observations/2026-06-21-geminella-sequax.yml
+  - layers/atlas/content/pool/observations/2026-07-07-geminella-sequax.yml
+gitBranch: claude/atlas-fifth-specimen-81j7h6
+entrypoint: remote
+cliVersion: 2.1.203
+learnings:
+  - Biome landings derive catalogue, food web, rhythm bands, and field log entirely from the collections — a new specimen needs zero component edits.
+ideas:
+  - The canopy landing intro enumerates its four founding inhabitants; a once-per-wing intro refresh when the population grows would keep it honest without violating the leave-intros-be rule.
