@@ -206,9 +206,15 @@ The trusted Principal: the repository owner. Their input is acted on directly
 ### Guest
 An untrusted Principal: any invited collaborator or outside contributor. A
 Guest's input — chat sessions, issues, PRs, comments — is **screened for
-adversarial intent before an agent acts on it**, and any change it produces is
-human-merged, never auto-merged. `MEMBER`/`COLLABORATOR`/`CONTRIBUTOR`/`NONE` all
-collapse to this one tier (ADR-0018).
+adversarial intent before an agent acts on it**. A Guest **may drive content
+work** (including spawning a new content Tenant — whose fit-out is executable
+Vue, see *Tenant*, so guest code is human-reviewed as executable, not inert),
+always human-merged and never auto-merged; but **may not modify the ADRs or any
+other human-only surface**
+(generator, routing, isolation, CI), nor ship content that *ignores* an ADR —
+guests work within the ADRs, never on or around them.
+`MEMBER`/`COLLABORATOR`/`CONTRIBUTOR`/`NONE` all collapse to this one tier
+(ADR-0018).
 
 ### Trust tier
 The provenance-based trust level of a Principal — **Owner** (trusted) or **Guest**

@@ -3,11 +3,17 @@
 Date: 2026-07-04
 Status: Accepted
 
-> **Amended (2026-07-07, ADR-0018).** Blast-radius gains a **provenance axis**.
-> Beyond *what a PR touches*, *who requested it* now sets risk:
-> **guest-originated ⇒ high-risk ⇒ human-only, never auto-merge** — regardless of
-> how low-risk the file classification is. A one-line content PR driven by a
-> Guest (see ADR-0018) is still human-merged. The provenance classifier (which
+> **Amended (2026-07-07, ADR-0018).** Blast-radius gains a **provenance axis** —
+> *who requested it*, alongside *what it touches*. A **Guest** (ADR-0018) **may
+> drive low-risk changes** (content, or a single Tenant's layer/manifest —
+> including a whole new **content Tenant**); these are permitted but always
+> **human-merged, never auto-merged**, regardless of how low-risk the file
+> classification is. Because a Tenant's layer is **executable Vue**, that human
+> merge is a **security review of runtime code** (the 2026-07-06 "untestable
+> runtime behaviour" note above) — the gate can't vet what a component *does*. A
+> Guest **may not drive high-risk changes at all** — the
+> generator, routing, isolation, CI, or governance/ADRs are refused and escalated
+> to the Owner, not merely human-merged. The provenance classifier (which
 > `authorAssociation` values count as "guest") is itself high-risk and
 > human-owned, exactly like the path classifier below.
 >

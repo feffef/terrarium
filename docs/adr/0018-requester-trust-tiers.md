@@ -80,12 +80,40 @@ still human-merged. This rides on the mechanism ADR-0004 already defines; the
 provenance classifier (which `authorAssociation` values are "guest") is itself
 high-risk and human-owned, exactly like the path classifier.
 
-**Green-light is owner-only (tightens ADR-0003).** Net-new work requires the
-**owner's** green-light, not any human's. A guest may *propose* freely — file
-issues, open PRs, comment — but cannot authorize implementation. Concretely, in
-triage, **only the owner may move a guest-originated issue to `ready-for-agent`**
-(`docs/agents/triage-labels.md`); an agent never self-promotes guest-filed work
-into the AFK-ready lane.
+**Guests may drive content, never governance — the permission envelope.** A
+guest may drive **content work**, including spawning a **new content Tenant** and
+adding Spaces/Collections/Documents. This needs **no owner green-light** — it is
+ordinary interactive work (the guest is the human prompting it), merely screened
+and human-merged. What stays **owner-only** is authorizing or performing changes
+to **governance or any human-only surface** — the ADRs, the generator, routing,
+isolation logic, or CI (ADR-0004's high-risk set). A guest-driven change that
+would touch those is refused and **escalated to the owner**, not merged; and in
+triage **only the owner may move a governance/high-risk issue to
+`ready-for-agent`** (`docs/agents/triage-labels.md`) — a content-scoped guest
+issue may proceed normally.
+
+**A Tenant's fit-out is *executable Vue code*, and the gate cannot vouch for its
+intent.** A Tenant is a Nuxt layer with its own Vue/Nuxt components (CONTEXT.md,
+*Tenant*), so "content work" is **not all inert Markdown** — spawning a Tenant
+means authoring components that run in every visitor's browser and in SSR. The
+safety gate builds, typechecks, and smoke-renders that code, but **no gate layer
+vouches for what it *does*** (ADR-0004's own "untested/untestable runtime
+behaviour" note). So a guest's Tenant Vue is human-merged as a genuine **security
+review of executable code** — read for data exfiltration, injected script, or
+off-charter behaviour — never a correctness rubber-stamp, and never auto-merged.
+The intent screen carries real weight here precisely because the objective gate is
+blind to it. "A single Tenant's layer" means that Tenant's **own** components
+only: a guest component may not reach into shared platform code (routing,
+isolation, the generator) — that is the human-only surface above, code or not.
+
+**Guests work *within* the ADRs, never *on* them, and never *around* them.** Two
+distinct protections. A guest may not **modify** an ADR (the envelope above). And
+guest content work may not **ignore** one: it must comply with every ADR, which
+the safety gate (L0–L3 — manifest-driven config, strict schemas, Space isolation)
+plus the intent screen enforce. A guest cannot ship a component that bypasses the
+manifest pattern or breaks Space isolation any more than the owner can — the ADRs
+bind guest-driven work as fully as owner-driven work; they are simply not
+guest-*editable*.
 
 **Provenance is recorded, not just enforced.** A session's log and any PR it
 opens record the requesting principal's tier, so a downstream agent or reviewer
@@ -95,9 +123,13 @@ request drove it*.
 
 ## Consequences
 
-- **Collaborator friction is deliberate.** Every guest-originated change is
-  human-merged and every guest request is screened. That is the cost of the
-  boundary; it is priced in, not a bug.
+- **Guests are enabled, not walled out.** A collaborator can drive real content
+  work — up to standing up a whole new content Tenant — without waiting on an
+  owner green-light. The residual cost is only that guest-originated changes are
+  screened and human-merged, never auto-merged; the hard block is narrow, on
+  governance and the human-only surfaces alone. That split is the point of the
+  refinement: collaboration on content is cheap, tampering with the rules is not
+  possible.
 - **The screen is a behavioral convention, not gate-enforced** — like ADR-0017's
   footer. An agent must actually perform it; a lapse degrades to today's
   status quo (no screen) rather than being caught mechanically. The **one**
