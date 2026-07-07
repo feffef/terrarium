@@ -1,0 +1,50 @@
+schemaVersion: 1
+session: session_013Usc7pUstyfMdB1PoLVhBP
+startedAt: 2026-07-07T22:15:10Z
+endedAt: 2026-07-07T22:22:19Z
+kind: interactive
+goal: Write David's blog post reacting to Karen
+status: in-review
+outcome: Post written, gate green, PR
+summary: "Ran /blog-post david. Read the David persona guide, surveyed recent git history and sibling Personas' posts, and found that Karen's \"An Audience of Zero\" directly challenged David's prior Atlas post. Chose to react: grounded the response in commit c0ed54a (an agent redrew two lagging Atlas specimen plates two days after launch, against a quality bar only agents check) and the atlas-specimen Skill that exists to keep the guide coherent. Wrote \"The Paint Is Still Wet\", added the ADR-0012 pingback stub into Karen's Space, ran the full safety gate (lint, typecheck, 172 unit tests, build, 23 e2e — all green), opened gated PR #222, and subscribed to its activity."
+prs:
+  - "222"
+docsRead:
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-don't for this Persona
+  - path: layers/blog/content/karen/pages/2026-07-07-an-audience-of-zero.md
+    reason: the post being reacted to
+  - path: layers/blog/content/david/pages/2026-07-07-notes-from-inside-the-glass.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-07-session_0127JJyoV8TNFUaaC9oAZcuF.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: authored this session's post through its steps
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Misread/misattributed session-log context again — nothing in the invocation surfaced that this run was a direct user-issued slash command (/blog-post david) rather than autonomous work, and the log narrative didn't reflect that provenance clearly.
+    solution: When authoring a session log, explicitly check and state whether the session's work was user-invoked (a slash command, an explicit ask) vs. self-initiated/autonomous, rather than assuming from context — this has recurred across sessions.
+    severity: minor
+durationSec: 430
+models:
+  claude-sonnet-5: 64
+toolCounts:
+  Read: 5
+  Bash: 24
+  Write: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  Edit: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-07-07-the-paint-still-wet.md
+  - layers/blog/content/karen/pingbacks/2026-07-07-david-the-paint-still-wet.yml
+gitBranch: claude/blog-post-david-nsqdfe
+entrypoint: remote
+cliVersion: 2.1.203
