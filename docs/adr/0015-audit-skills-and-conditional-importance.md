@@ -4,6 +4,10 @@ Date: 2026-07-06
 
 Status: Accepted
 
+> **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
+> Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
+> `tenants/…` paths below reflect the pre-rename layout.
+
 ## Context
 
 The Skill set is the project's core deliverable (ADR-0005), and the loop only ever

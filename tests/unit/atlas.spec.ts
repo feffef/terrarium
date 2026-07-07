@@ -1,4 +1,4 @@
-// Unit tests for the Atlas layer's pure logic (tenants/atlas/app/utils/atlas.ts).
+// Unit tests for the Atlas layer's pure logic (layers/atlas/app/utils/atlas.ts).
 // The correctness-sensitive parts are the food-web reverse-edge derivation (both
 // directions from one authored fact, #71) and the wrap-past-midnight rhythm math
 // (#73) — a bug in either is invisible in a screenshot, so it's pinned here.
@@ -11,7 +11,7 @@ import {
   rhythmCells,
   signatureVars,
   type Edge,
-} from '../../tenants/atlas/app/utils/atlas.ts'
+} from '../../layers/atlas/app/utils/atlas.ts'
 
 describe('relationLabel()', () => {
   it('reads forward from the actor and reverse from the acted-upon', () => {

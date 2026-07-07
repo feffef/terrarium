@@ -1,5 +1,5 @@
 // Content-shape types for the journal Tenant's UI layer, mirroring the manifest's
-// `sessions` and `skills` collection schemas (tenants/journal/tenant.config.ts).
+// `sessions` and `skills` collection schemas (layers/journal/tenant.config.ts).
 // Kept in one place so the layer's page and components can't drift on them.
 //
 // Deliberately NOT aliases of `@nuxt/content`'s generated `Collections[...]`

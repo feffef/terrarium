@@ -10,7 +10,7 @@
   // this program covers. It defines the very `Collections` keys other code depends
   // on (issue #93), and until now sat in NO tsconfig, so a type error there was
   // invisible to `pnpm typecheck`. (The tenant manifests it loads are typechecked
-  // separately, via the Nuxt program's `../tenants/*/tenant.config.*` include in
+  // separately, via the Nuxt program's `../layers/*/tenant.config.*` include in
   // `nuxt.config.ts` — a file should be typechecked by exactly one program.)
   "compilerOptions": {
     "target": "ES2022",

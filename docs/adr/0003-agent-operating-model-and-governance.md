@@ -3,6 +3,10 @@
 Date: 2026-07-04
 Status: Accepted
 
+> **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
+> Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
+> `tenants/…` paths below reflect the pre-rename layout.
+
 > **Amended (2026-07-07).** **Opening the gated PR is automatic, not a question
 > to ask.** Once a session has committed substantive work to a feature branch and
 > that work is in a coherent state, it **opens the PR itself** — it does not stop

@@ -26,7 +26,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
  *  `frictions-to-fixes` Skill's survey step. */
 export const DEFAULT_WINDOW = 20
 
-export const SESSIONS_DIR = 'tenants/journal/content/current/sessions'
+export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 

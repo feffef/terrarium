@@ -1,6 +1,6 @@
 /* The Journal Tenant's shared theme — the `.jd` design tokens and the base
    layout / breadcrumb / prose that every journal page wears.
-   Registered globally via tenants/journal/nuxt.config.ts `css: [...]` so both the
+   Registered globally via layers/journal/nuxt.config.ts `css: [...]` so both the
    Space landing (`[space]/index.vue`) and the standalone document page
    (`[space]/[...slug].vue`) consume one source of truth instead of copy-pasting the
    token block. Presentation only (ADR-0004): no content collections, no routing. */

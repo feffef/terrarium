@@ -132,7 +132,7 @@ describe('expectedFilename() — the canonical name', () => {
 
 describe('land() — cleanup after landing (issue #7)', () => {
   let absPath: string
-  const relPath = 'tenants/journal/content/current/sessions/2026-07-04-session_x.yml'
+  const relPath = 'layers/journal/content/current/sessions/2026-07-04-session_x.yml'
 
   beforeEach(() => {
     const dir = mkdtempSync(join(tmpdir(), 'log-session-test-'))

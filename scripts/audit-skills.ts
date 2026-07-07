@@ -21,8 +21,8 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 export const DEFAULT_WINDOW = 40
 
 /** Paths this helper reads. */
-export const SESSIONS_DIR = 'tenants/journal/content/current/sessions'
-export const INVENTORY_DIR = 'tenants/journal/content/current/skills'
+export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
+export const INVENTORY_DIR = 'layers/journal/content/current/skills'
 export const SKILLS_DIR = '.agents/skills'
 /** The lockfile of externally-sourced Skills (the pack). A Skill named here is
  *  NOT ours to edit — its SKILL.md is pack-owned (ADR-0005), so `audit-skills`

@@ -4,6 +4,10 @@ Date: 2026-07-05
 Status: Accepted — the content.config.ts decision stands; the retained routing-map
 decision is superseded by [ADR-0014](0014-build-time-virtual-routing-module.md)
 
+> **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
+> Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
+> `tenants/…` paths below reflect the pre-rename layout.
+
 > **Amends ADR-0007** (which committed *both* generated artifacts and drift-checked
 > them). ADR-0007's decision to commit `content.config.ts` is **superseded** here;
 > its decision to commit `shared/routing.generated.ts` was **retained** here but is

@@ -1,11 +1,18 @@
 // Guards issue #93's finding 5: a tsconfig `include` glob that matches nothing
-// is NOT an error, so if `tenants/` is ever restructured (renamed, moved, a
-// Tenant's config file relocated) the tenant/content-config typecheck coverage
-// added for #93 would silently evaporate while `pnpm typecheck` — and the L0
-// gate — stayed green. This test fails loudly instead: it re-derives the
-// actual configured globs from the real config files (not a hand-copied
-// duplicate of them — that would itself drift, CLAUDE.md's single-home rule)
-// and asserts each still matches a real, known file on disk.
+// is NOT an error, so if `layers/` is ever restructured (renamed, moved, a
+// Tenant's config file relocated) the manifest typecheck coverage would silently
+// evaporate while `pnpm typecheck` — and the L0 gate — stayed green. This test
+// fails loudly instead: it re-derives the actual configured globs from the real
+// config files (not a hand-copied duplicate of them — that would itself drift,
+// CLAUDE.md's single-home rule) and asserts each still matches a real, known
+// file on disk.
+//
+// Scope narrowed by ADR-0018 (issue #209): Tenant layers moved to Nuxt's
+// conventional `layers/` directory, so Nuxt's generated tsconfig now covers
+// `layers/*/app/**/*` and `layers/*/nuxt.config.*` natively. The only manual
+// glob left to guard is `layers/*/tenant.config.*` (the manifest — jiti-only,
+// invisible to Nuxt's program). The retired `nuxt.config.ts` canary is gone
+// with the patch it guarded.
 import { existsSync, readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -41,25 +48,13 @@ function readTsconfigNode(): { include: string[] } {
   return JSON.parse(stripped)
 }
 
-describe('L0 typecheck coverage canary (issue #93)', () => {
-  it('the Nuxt program has an include glob that actually matches a real Tenant nuxt.config.ts', () => {
+describe('L0 typecheck coverage canary (issue #93, narrowed by ADR-0018)', () => {
+  it('the Nuxt program has an include glob that actually matches a real Tenant tenant.config.ts (the manifest)', () => {
     const includes = readNuxtConfigTsIncludes()
     // These globs are buildDir-relative (`.nuxt/../…` = repo-root-relative); strip the leading `../`.
     const repoRelative = includes.map((g) => g.replace(/^\.\.\//, ''))
 
-    const knownFile = 'tenants/blog/nuxt.config.ts'
-    expect(existsSync(resolve(root, knownFile)), `${knownFile} must exist for this canary to mean anything`).toBe(
-      true,
-    )
-    const matched = repoRelative.some((glob) => globToRegExp(glob).test(knownFile))
-    expect(matched, `no include glob (${JSON.stringify(includes)}) matches ${knownFile}`).toBe(true)
-  })
-
-  it('the Nuxt program has an include glob that actually matches a real Tenant tenant.config.ts (the manifest)', () => {
-    const includes = readNuxtConfigTsIncludes()
-    const repoRelative = includes.map((g) => g.replace(/^\.\.\//, ''))
-
-    const knownFile = 'tenants/blog/tenant.config.ts'
+    const knownFile = 'layers/blog/tenant.config.ts'
     expect(existsSync(resolve(root, knownFile)), `${knownFile} must exist for this canary to mean anything`).toBe(
       true,
     )

@@ -8,7 +8,7 @@ import { pickRecencyWindow, toTriageSession, type TriageSession } from '../../sc
 function session(id: string, startedAt: string, opts: Partial<TriageSession> = {}): TriageSession {
   return {
     id,
-    file: `tenants/journal/content/current/sessions/${id}.yml`,
+    file: `layers/journal/content/current/sessions/${id}.yml`,
     startedAt,
     goal: 'g',
     outcome: 'o',

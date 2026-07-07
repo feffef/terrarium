@@ -53,5 +53,5 @@ agents actually work:
   unit, which keeps the whole Platform fast, reproducible, and free of runtime
   provisioning.
 
-This document lives at `tenants/journal/content/current/pages/about.md` and is
+This document lives at `layers/journal/content/current/pages/about.md` and is
 served at `/t/journal/current/about`.

@@ -1,16 +1,17 @@
 # Tenant layers: Nuxt-layer authoring conventions
 
-A Tenant is implemented as a Nuxt layer (`tenants/<tenant>/`) that extends the
-main app (CONTEXT.md, ADR-0001). Nuxt layers have two gotchas that get
-re-discovered from scratch most sessions. Read this before editing a layer's
-`nuxt.config.ts`, pages, or components.
+A Tenant is implemented as a Nuxt layer under `layers/<tenant>/` — Nuxt's
+conventional layer directory, so every `layers/*` is auto-extended with no
+`extends` list (ADR-0018). It extends the main app (CONTEXT.md, ADR-0001). Nuxt
+layers have two gotchas that get re-discovered from scratch most sessions. Read
+this before editing a layer's `nuxt.config.ts`, pages, or components.
 
 ## 1. Auto-imports first; aliases resolve to the main app, not the layer
 
 **Reach for Nuxt's auto-imports before writing any import.** A layer's
 `app/components/`, `app/composables/`, and `app/utils/` directories are all
 scanned, layer-aware, and shared app-wide — components resolve under their
-directory-prefixed name (`tenants/atlas/app/components/atlas/SpecimenPlate.vue`
+directory-prefixed name (`layers/atlas/app/components/atlas/SpecimenPlate.vue`
 → `<AtlasSpecimenPlate>`), and utils/composables exports resolve by name in
 every SFC and every layer, with no import block at all. The root app's
 `useSpace()` composable and each layer's own utils (`personaMeta`,
@@ -36,11 +37,11 @@ in) the root app instead. Two ways layer code deals with this:
   imports the journal Tenant's own types with a relative path, not an alias:
 
   ```ts
-  // tenants/journal/app/pages/t/journal/[space]/index.vue
+  // layers/journal/app/pages/t/journal/[space]/index.vue
   import type { PageDoc, SessionDoc, SkillDoc } from '../../../../types/journal'
   ```
 
-  That resolves to `tenants/journal/app/types/journal.ts` — a layer-local file
+  That resolves to `layers/journal/app/types/journal.ts` — a layer-local file
   — via plain relative traversal, sidestepping alias resolution entirely.
   (Types are *not* auto-imported; only values from the scanned dirs are.)
 
@@ -51,7 +52,7 @@ in) the root app instead. Two ways layer code deals with this:
   location:
 
   ```ts
-  // tenants/journal/nuxt.config.ts
+  // layers/journal/nuxt.config.ts
   import { fileURLToPath } from 'node:url'
 
   export default defineNuxtConfig({
@@ -76,7 +77,7 @@ The journal Tenant defines its design tokens (`--jd-ground`, `--jd-ink`,
 layer's top-level wrapper element:
 
 ```css
-/* tenants/journal/app/assets/theme.css */
+/* layers/journal/app/assets/theme.css */
 .jd {
   --jd-ground: #f3f5ef;
   --jd-surface: #fbfcf9;
@@ -95,7 +96,7 @@ can read those tokens in their own **scoped** `<style>` blocks with no
 re-declaration and no prop-drilling:
 
 ```css
-/* tenants/journal/app/components/journal/StatTile.vue — scoped, no --jd-* here */
+/* layers/journal/app/components/journal/StatTile.vue — scoped, no --jd-* here */
 .tile {
   background: var(--jd-surface);
   border: 1px solid var(--jd-line);

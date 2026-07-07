@@ -82,7 +82,7 @@ function parseDocument(absPath: string): Record<string, unknown> {
 
 /** Validate every Document in every expanded Collection that carries a schema.
  *  Pure aside from the file reads — takes the already-expanded collections so
- *  it's testable against a hand-built list, not just the real `tenants/` tree. */
+ *  it's testable against a hand-built list, not just the real `layers/` tree. */
 export function validateContent(cols: ExpandedCollection[], projectRoot = root): ValidationReport {
   let documentsChecked = 0
   let collectionsChecked = 0

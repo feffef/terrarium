@@ -3,6 +3,11 @@
 Date: 2026-07-06
 Status: Accepted
 
+> **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
+> Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
+> the `tenants/atlas/app/pages/t/atlas/index.vue` path in the Decision below is now
+> `layers/atlas/app/pages/t/atlas/index.vue`.
+
 ## Context
 
 ADR-0006 routes every request by the path prefix `/t/<tenant>/<space>/<slug>`:

@@ -4,12 +4,12 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-04',
 
-  // Tenants are Nuxt layers (CONTEXT.md). Each Tenant that has grown its own
-  // fit-out is extended here; a Tenant without a layer falls back to the
-  // Platform's generic catch-all renderer. Presentation only — layers never
-  // define content collections (that stays in the root content.config.ts).
-  extends: ['./tenants/journal', './tenants/blog', './tenants/atlas'],
-
+  // Tenants are Nuxt layers (CONTEXT.md). They live under Nuxt's conventional
+  // `layers/` directory (ADR-0018), so Nuxt auto-extends every `layers/*` — no
+  // hand-curated `extends` list. A Tenant without its own fit-out simply has no
+  // presentational code and falls back to the Platform's generic catch-all
+  // renderer. Layers are presentation only — they never define content
+  // collections (that stays in the root content.config.ts).
   modules: ['./modules/routing', '@nuxt/content', '@nuxt/eslint'],
 
   content: {
@@ -21,27 +21,19 @@ export default defineNuxtConfig({
   // not on every dev/build, to keep the inner loop fast.
   typescript: {
     typeCheck: false,
-    // Tenant layers live under `tenants/`, not Nuxt's conventional `layers/`,
-    // so Nuxt's generated tsconfig includes (`../app/**`, `../layers/*/app/**`)
-    // never see them — `nuxt typecheck` (the L0 gate, ADR-0004) would skip all
-    // Tenant fit-out code. Add the Tenant glob so every `tenants/*/app/**` file
-    // is typechecked. Path is relative to the buildDir (`.nuxt/`), matching the
-    // style of Nuxt's own `../layers/*/app/**/*` entry.
-    //
-    // Also mirror Nuxt's own `../layers/*/nuxt.config.*` entry for the two config
-    // surfaces `tenants/` holds instead of `layers/`: each Tenant's own
-    // `nuxt.config.ts` (layer fit-out config) and its `tenant.config.ts` (the
-    // manifest — the primary agent-edit surface, ADR-0002). Neither was covered
-    // before (issue #93): both are evaluated only via jiti at build time, so a
-    // type error in either previously sailed through `pnpm typecheck` and only
-    // surfaced later as a build-time jiti/zod failure — or never, for a silently
-    // ignored Nuxt option.
+    // Tenant layers now live under Nuxt's conventional `layers/` directory
+    // (ADR-0018), so Nuxt's generated tsconfig already includes their fit-out
+    // (`../layers/*/app/**/*`) and layer config (`../layers/*/nuxt.config.*`) —
+    // no manual glob needed for those (issue #209). The one surface Nuxt does
+    // NOT know about is each Tenant's `tenant.config.ts` (the manifest — the
+    // primary agent-edit surface, ADR-0002): it is evaluated only via jiti at
+    // build time, so a type error there would sail through `pnpm typecheck`
+    // (the L0 gate, ADR-0004) and only surface later as a jiti/zod failure —
+    // or never, for a silently ignored option (issue #93). Add just that glob.
+    // Path is relative to the buildDir (`.nuxt/`), matching the style of Nuxt's
+    // own `../layers/*/app/**/*` entry.
     tsConfig: {
-      include: [
-        '../tenants/*/app/**/*',
-        '../tenants/*/nuxt.config.*',
-        '../tenants/*/tenant.config.*',
-      ],
+      include: ['../layers/*/tenant.config.*'],
     },
   },
 })

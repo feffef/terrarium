@@ -3,6 +3,11 @@
 Date: 2026-07-04
 Status: Accepted
 
+> **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
+> Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
+> `tenants/…` paths below (e.g. `layers/journal/content/current/sessions/`) reflect
+> the pre-rename layout.
+
 > **Amended (2026-07-05):** added the **Schema evolution policy** section below
 > (issue #60). It is the single home for how an append-only strict `data`
 > collection may change its schema — `sessions` here, blog `pingbacks`

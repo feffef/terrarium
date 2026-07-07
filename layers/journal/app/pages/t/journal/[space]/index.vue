@@ -248,7 +248,7 @@ useSeoMeta({
 
 <style scoped>
 /* The `.jd` tokens + base layout, `.mono`, and the breadcrumb live in the shared
-   theme (tenants/journal/app/assets/theme.css, registered globally in the layer's
+   theme (layers/journal/app/assets/theme.css, registered globally in the layer's
    nuxt.config). This block holds only the landing-page-specific styling. */
 .masthead {
   display: grid;
