@@ -57,7 +57,7 @@ function readStdin(): string {
  *  Used by the diff-guard so an unchanged re-derive never commits. */
 function mainVersion(relPath: string, remote: string): string | null {
   try {
-    execFileSync('git', ['fetch', remote, 'main'], { cwd: root, stdio: 'ignore' })
+    execFileSync('git', ['fetch', remote, 'main'], { cwd: root, stdio: 'ignore', timeout: 10_000 })
   } catch {
     /* offline / no remote — fall through; the push loop will surface it */
   }
