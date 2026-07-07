@@ -205,6 +205,8 @@ export interface AuthoredScratch {
   docsRead?: { path: string; reason: string }[]
   skillsUsed?: { name: string; reason: string }[]
   frictions: { description: string; solution: string; severity: string }[]
+  learnings?: string[]
+  ideas?: string[]
 }
 
 function mergeRefs<T extends Record<string, string>>(
@@ -249,6 +251,11 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   if (trace.gitBranch) entry.gitBranch = trace.gitBranch
   if (trace.entrypoint) entry.entrypoint = trace.entrypoint
   if (trace.cliVersion) entry.cliVersion = trace.cliVersion
+  // Optional authored fields — carried only when the session actually noted one,
+  // never emitted empty (matching their `.optional()` schema, so a bare log has
+  // no dangling `learnings: []`).
+  if (authored.learnings?.length) entry.learnings = authored.learnings
+  if (authored.ideas?.length) entry.ideas = authored.ideas
   return entry
 }
 

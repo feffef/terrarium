@@ -56,6 +56,11 @@ export interface SessionDoc {
   // Required: no `.default()` on `frictions` — the manifest forces every
   // session log to state its frictions explicitly (may be `[]`, not omitted).
   frictions: Friction[]
+  // Optional authored spark fields (tenant.config.ts): knowledge the session
+  // inferred (`learnings`) and rough future-work ideas (`ideas`). Absent unless
+  // the session actually noted one — never padded to `[]`.
+  learnings?: string[]
+  ideas?: string[]
 }
 
 export interface Subagent {
@@ -104,6 +109,9 @@ export interface SessionCardView {
   docsRead: { path: string; reason: string }[]
   skillsUsed: { name: string; reason: string }[]
   frictions: Friction[]
+  // Authored spark fields — normalized to arrays (empty ⇒ the card hides them).
+  learnings: string[]
+  ideas: string[]
   // Mechanical trace, tucked behind in-card disclosures so the verbose lists
   // inform without cluttering. All may be empty (older logs, or a session that
   // edited nothing / spawned no subagent).

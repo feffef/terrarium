@@ -184,6 +184,8 @@ export function cards(sessions: SessionDoc[]): (SessionCardView & { key: string 
     docsRead: s.docsRead ?? [],
     skillsUsed: s.skillsUsed ?? [],
     frictions: s.frictions,
+    learnings: s.learnings ?? [],
+    ideas: s.ideas ?? [],
     filesEdited: s.filesEdited ?? [],
     tools: toolEntries(s.toolCounts),
   }))

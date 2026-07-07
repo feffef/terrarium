@@ -156,8 +156,12 @@ self-documentation.)
 One continuous Claude Code working session against the Platform, identified by a
 stable Claude session id. It is the unit of self-reporting: at its end a session
 authors a **session log** — a Journal entry recording, honestly, its goal, how
-far it got, what it read, which Skills it used, and every **Friction** it hit. A
-session may span several branches or PRs, or none; its log is authored regardless
+far it got, what it read, which Skills it used, and every **Friction** it hit. It
+may also carry, *only when the work sparked them*, two optional notes: **learnings**
+(useful knowledge the session inferred during the work — not read from the repo,
+which would be a doc read — a Friction's positive twin) and **ideas** (rough sparks
+for the Platform's or a Tenant's future, too nascent to be an issue). A session may
+span several branches or PRs, or none; its log is authored regardless
 of where the work went, or whether any code was committed at all. Session logs
 are ground truth, not a projection of repo state (see Journal).
 

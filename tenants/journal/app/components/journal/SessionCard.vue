@@ -79,6 +79,20 @@ const toggle = () => (expanded.value = !expanded.value)
         </ul>
       </div>
 
+      <div v-if="card.learnings.length" class="block">
+        <h4>Learnings</h4>
+        <ul class="sparks">
+          <li v-for="(l, i) in card.learnings" :key="i">{{ l }}</li>
+        </ul>
+      </div>
+
+      <div v-if="card.ideas.length" class="block">
+        <h4>Ideas</h4>
+        <ul class="sparks">
+          <li v-for="(idea, i) in card.ideas" :key="i">{{ idea }}</li>
+        </ul>
+      </div>
+
       <!-- Mechanical trace — verbose, transcript-derived lists. Tucked behind
            individual disclosures so they inform without swamping the narrative. -->
       <div v-if="card.docsRead.length || card.filesEdited.length || card.tools.length" class="trace-group">
@@ -200,6 +214,8 @@ const toggle = () => (expanded.value = !expanded.value)
 .block li { font-size: 0.88rem; color: var(--jd-muted); line-height: 1.5; }
 .block code, .mono { font-family: var(--jd-mono); font-size: 0.82em; color: var(--jd-ink); }
 .frictions li { display: grid; grid-template-columns: max-content 1fr; gap: 0.6rem; align-items: baseline; }
+.sparks li { display: grid; grid-template-columns: max-content 1fr; gap: 0.55rem; align-items: baseline; }
+.sparks li::before { content: '›'; color: var(--jd-accent); font-weight: 600; }
 .sev {
   font-family: var(--jd-mono);
   font-size: 0.66rem;

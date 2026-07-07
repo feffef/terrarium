@@ -281,6 +281,15 @@ describe('cards', () => {
     expect(c!.filesEdited).toEqual([])
     expect(c!.tools).toEqual([])
   })
+
+  it('surfaces authored learnings/ideas, and defaults them to [] when absent', () => {
+    const [with_] = cards([session({ learnings: ['a thing'], ideas: ['a spark'] })])
+    expect(with_!.learnings).toEqual(['a thing'])
+    expect(with_!.ideas).toEqual(['a spark'])
+    const [without] = cards([session()])
+    expect(without!.learnings).toEqual([])
+    expect(without!.ideas).toEqual([])
+  })
 })
 
 describe('digestList', () => {
