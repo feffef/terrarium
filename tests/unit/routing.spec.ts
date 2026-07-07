@@ -71,32 +71,31 @@ describe('resolveSpaceRoute() — resolution', () => {
     expect(r.atRoot).toBe(false)
   })
 
-  it('surfaces every non-pages collection as the collection index, excluding pages', () => {
+  it('surfaces every non-pages collection as a record keyed by name, excluding pages', () => {
     const r = resolveSpaceRoute('journal', 'current', '', MAP)!
-    expect(r.dataCollections).toEqual([
-      { name: 'skills', key: 'journal_current_skills' },
-      { name: 'sessions', key: 'journal_current_sessions' },
-    ])
-    // Widened to string[] on purpose: the return TYPE already excludes 'pages'
-    // (#96), but the resolver asserts that type via a cast — this line guards the
-    // runtime filter itself, which the type system therefore does not.
-    const names: string[] = r.dataCollections.map((d) => d.name)
-    expect(names).not.toContain('pages')
+    expect(r.collections).toEqual({
+      skills: 'journal_current_skills',
+      sessions: 'journal_current_sessions',
+    })
+    // The return TYPE already excludes 'pages' (#96), but the resolver asserts
+    // that type via a cast — this line guards the runtime filter itself, which
+    // the type system therefore does not.
+    expect(Object.keys(r.collections)).not.toContain('pages')
   })
 })
 
 describe('resolveSpaceRoute() — the isolation guarantee', () => {
   it('names ONLY the requested Space’s keys — never another Space’s', () => {
     const r = resolveSpaceRoute('journal', 'current', '', MAP)!
-    const keys = [r.pagesKey, ...r.dataCollections.map((d) => d.key)]
+    const keys = [r.pagesKey, ...Object.values(r.collections)]
     for (const key of keys) expect(key.startsWith('journal_current_')).toBe(true)
   })
 
   it('resolves the same collection name to disjoint keys across Spaces', () => {
     const cur = resolveSpaceRoute('journal', 'current', '', MAP)!
     const arc = resolveSpaceRoute('journal', 'archived', '', MAP)!
-    const curKeys = new Set([cur.pagesKey, ...cur.dataCollections.map((d) => d.key)])
-    const arcKeys = new Set([arc.pagesKey, ...arc.dataCollections.map((d) => d.key)])
+    const curKeys = new Set([cur.pagesKey, ...Object.values(cur.collections)])
+    const arcKeys = new Set([arc.pagesKey, ...Object.values(arc.collections)])
     for (const key of arcKeys) expect(curKeys.has(key)).toBe(false)
   })
 })

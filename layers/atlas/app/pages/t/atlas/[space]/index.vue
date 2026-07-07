@@ -13,14 +13,12 @@
 import type { Edge, SpecimenView } from '../../../../utils/atlas'
 
 const route = useRoute()
-const { space, pagesKey, dataKey } = useSpace('atlas')
-const interactionsKey = dataKey('interactions')
-const observationsKey = dataKey('observations')
+const { space, pagesKey, collections } = useSpace('atlas')
 
 const { data } = await useAsyncData(route.path, async () => {
   const pages = await queryCollection(pagesKey).all()
-  const interactions = interactionsKey ? await queryCollection(interactionsKey).all() : []
-  const observations = observationsKey ? await queryCollection(observationsKey).all() : []
+  const interactions = await queryCollection(collections.interactions).all()
+  const observations = await queryCollection(collections.observations).all()
   return { pages, interactions, observations }
 })
 

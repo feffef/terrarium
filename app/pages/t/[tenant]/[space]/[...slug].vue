@@ -6,19 +6,19 @@
 // useSpace (app/composables/space.ts) wraps it read-only and 404s the unknown.
 const route = useRoute()
 const tenant = String(route.params.tenant)
-const { space, path, atRoot, pagesKey, dataCollections } = useSpace(tenant)
+const { space, path, atRoot, pagesKey, collections } = useSpace(tenant)
 
 const { data } = await useAsyncData(route.path, async () => {
   const page = await queryCollection(pagesKey).path(path).first()
-  const collections = atRoot
+  const sections = atRoot
     ? await Promise.all(
-        dataCollections.map(async ({ name, key }) => ({
+        Object.entries(collections).map(async ([name, key]) => ({
           name,
           items: await queryCollection(key).all(),
         })),
       )
     : []
-  return { page, collections }
+  return { page, collections: sections }
 })
 
 // Show only authored fields — drop Nuxt Content's built-in/page fields.

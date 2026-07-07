@@ -13,18 +13,15 @@
 // blog item types with no casts; `personaMeta`/`formatBlogDate`/the components
 // arrive via Nuxt auto-imports.
 const route = useRoute()
-const { space, path, pagesKey, dataKey } = useSpace('blog')
-const pingbacksKey = dataKey('pingbacks')
+const { space, path, pagesKey, collections } = useSpace('blog')
 
 const { data } = await useAsyncData(route.path, async () => {
   const post = await queryCollection(pagesKey).path(path).first()
   // Inbound reactions to THIS post, newest first — filtered and ordered in SQL.
-  const pingbacks = pingbacksKey
-    ? await queryCollection(pingbacksKey)
-        .where('target', '=', path)
-        .order('reactedAt', 'DESC')
-        .all()
-    : []
+  const pingbacks = await queryCollection(collections.pingbacks)
+    .where('target', '=', path)
+    .order('reactedAt', 'DESC')
+    .all()
   return { post, pingbacks }
 })
 

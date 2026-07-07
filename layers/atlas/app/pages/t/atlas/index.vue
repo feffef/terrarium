@@ -21,10 +21,8 @@ const { data } = await useAsyncData('atlas-front', async () => {
     // Counted/ordered in SQL: specimens are every page but the wing landing;
     // the colophon needs only the newest observation date.
     const count = await queryCollection(r.pagesKey).where('path', '<>', '/').count()
-    const obsKey = r.dataCollections.find((d) => d.name === 'observations')?.key
-    const lastObs = obsKey
-      ? (await queryCollection(obsKey).order('date', 'DESC').first())?.date ?? null
-      : null
+    const lastObs =
+      (await queryCollection(r.collections.observations).order('date', 'DESC').first())?.date ?? null
     stats[b.slug] = { count, lastObs }
   }
   return stats

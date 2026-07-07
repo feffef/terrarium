@@ -37,21 +37,24 @@ type PagesKeyIn<R> = R extends { pages: infer P extends string } ? P : never
 /** Union of `pages` collection keys reachable by Tenant `T`. */
 export type PagesKeyOf<T extends string> = PagesKeyIn<SpaceRecordsOf<T>>
 
-type DataCollectionsIn<R> = R extends Record<string, string>
-  ? Values<{ [C in Exclude<keyof R, 'pages'> & string]: { name: C; key: R[C] } }>
+// Distributes over the union of Space records so each member drops its own
+// `pages`, keeping the per-Tenant record shapes distinct.
+type CollectionsIn<R> = R extends Record<string, string>
+  ? { [C in Exclude<keyof R, 'pages'> & string]: R[C] }
   : never
-/** Every non-`pages` Collection reachable by Tenant `T`, as a union discriminated
- *  on `name` — so `dataCollections.find((d) => d.name === 'skills')?.key` narrows
- *  to that Collection's keys without a cast (TS 5.5+ inferred type predicates). */
-export type DataCollectionOf<T extends string> = DataCollectionsIn<SpaceRecordsOf<T>>
+/** Every non-`pages` Collection reachable by Tenant `T`, as a record keyed by
+ *  Collection name → generated key — so a page reads `collections.skills`
+ *  directly, precisely typed per Tenant, with no find-by-name and no cast. */
+export type CollectionsOf<T extends string> = CollectionsIn<SpaceRecordsOf<T>>
 
 export interface ResolvedRoute<T extends string = string> {
   /** Space-relative document path: leading '/', no trailing '/'. '/' at the Space root. */
   path: string
   /** The routed `pages` collection key for this (Tenant, Space). */
   pagesKey: PagesKeyOf<T>
-  /** Every non-`pages` collection in the Space — surfaced as the Space-landing collection index. */
-  dataCollections: DataCollectionOf<T>[]
+  /** Every non-`pages` collection in the Space, keyed by Collection name → generated
+   *  key — the Space-landing collection index reads `Object.entries(collections)`. */
+  collections: CollectionsOf<T>
   /** True when the request targets the Space root ('/'). */
   atRoot: boolean
 }
@@ -81,13 +84,13 @@ export function resolveSpaceRoute<T extends string>(
   // Convention: `pages` is the routed collection; every other collection in the Space
   // is queryable `data`, surfaced as a collection index on the Space landing. Each stays keyed
   // per (Tenant, Space), so the index is fully isolated too.
-  const dataCollections = Object.entries(spaceCollections)
-    .filter(([name]) => name !== 'pages')
-    .map(([name, key]) => ({ name, key }))
+  const collections = Object.fromEntries(
+    Object.entries(spaceCollections).filter(([name]) => name !== 'pages'),
+  )
 
   // The cast narrows the wide `map` lookups (`string`) to the generated literal
   // unions above — a deliberate, single-homed assertion that the injectable map
   // matches the generated one in production (#96). Tests inject crafted maps and
   // only ever compare the strings, so the assertion is confined to this line.
-  return { path, pagesKey: spaceCollections.pages, dataCollections, atRoot: path === '/' } as ResolvedRoute<T>
+  return { path, pagesKey: spaceCollections.pages, collections, atRoot: path === '/' } as ResolvedRoute<T>
 }
