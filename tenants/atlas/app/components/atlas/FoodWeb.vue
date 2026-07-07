@@ -1,10 +1,11 @@
 <script setup lang="ts">
 // The food web (#70): the biome landing's centerpiece and its proof of life.
-// Specimens are nodes (wearing their color signature + rarity mark), interactions
-// are annotated strands (each kind visually distinct). Every node is a doorway to
-// its entry; hovering/focusing a node lights its strands and dims the rest — the
+// Specimens are nodes — each wearing its own engraved plate (#67/#74), the same
+// SVG rendering the specimen page shows, seated in a medallion; interactions are
+// annotated strands (each kind visually distinct). Every node is a doorway to its
+// entry; hovering/focusing a node lights its strands and dims the rest — the
 // "wander". Drawn in the engraved register, and charming when sparse.
-import { rarityMeta, type Edge, type SpecimenView } from '../../utils/atlas'
+import { rarityMeta, signatureVars, type Edge, type SpecimenView } from '../../utils/atlas'
 
 const props = defineProps<{ specimens: SpecimenView[]; edges: Edge[]; biome: string }>()
 
@@ -12,7 +13,13 @@ const W = 640
 const H = 440
 const cx = W / 2
 const cy = H / 2
-const R = 26 // node radius
+const R = 40 // medallion radius — the seat the plate sits in, and the strand-trim edge
+
+// The authored illustrations use a 0 0 400 300 viewBox, drawn about their centre
+// (~200,150). We scale each into the medallion and re-centre it on the node.
+const FIG_CX = 200
+const FIG_CY = 150
+const FIG_SCALE = 0.2
 
 interface Node { s: SpecimenView; x: number; y: number }
 
@@ -20,8 +27,8 @@ interface Node { s: SpecimenView; x: number; y: number }
 // the handful of specimens a young wing holds; grows gracefully as sessions add more.
 const nodes = computed<Node[]>(() => {
   const n = props.specimens.length
-  const rx = W / 2 - 96
-  const ry = H / 2 - 78
+  const rx = W / 2 - 110
+  const ry = H / 2 - 96
   return props.specimens.map((s, i) => {
     // A lone specimen sits at center; otherwise spread around the ring.
     if (n === 1) return { s, x: cx, y: cy }
@@ -36,6 +43,16 @@ const nodeBySlug = computed<Record<string, Node>>(() =>
 
 function sig(s: SpecimenView | undefined): string {
   return s?.signature?.colors?.[0]?.hex || 'var(--biome-accent)'
+}
+
+// Seat a specimen's engraved plate inside its medallion: re-centre the drawing on
+// the node and scale it down. `currentColor` (the linework) and `--sig-*` (the one
+// tinted feature) are supplied by the node group's style below.
+function figTransform(n: Node): string {
+  return `translate(${n.x.toFixed(1)} ${n.y.toFixed(1)}) scale(${FIG_SCALE}) translate(${-FIG_CX} ${-FIG_CY})`
+}
+function figStyle(s: SpecimenView) {
+  return { ...signatureVars(s.signature?.colors), color: 'var(--atlas-ink)' }
 }
 
 // Trim an endpoint back along the a→b line so a strand meets the node edge (and
@@ -145,9 +162,15 @@ const usedKinds = computed(() => new Set(props.edges.map((e) => e.kind)))
           @focus="hot = n.s.slug"
           @blur="hot = null"
         >
-          <g class="node" :class="nodeClass(n.s.slug)">
-            <circle :cx="n.x" :cy="n.y" :r="R" :style="{ stroke: sig(n.s) }" />
-            <text class="mk" :x="n.x" :y="n.y + 3.5" text-anchor="middle">{{ rarityMeta(n.s.rarity).mark }}</text>
+          <g class="node" :class="nodeClass(n.s.slug)" :style="figStyle(n.s)">
+            <!-- the medallion: a paper seat that masks strands and carries the
+                 specimen's signature as a hairline ring -->
+            <circle class="halo" :cx="n.x" :cy="n.y" :r="R" :style="{ stroke: sig(n.s) }" />
+            <!-- the engraved plate, seated and scaled. v-html is safe: the
+                 illustration is agent-authored, repo-committed markup (see Plate). -->
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <g v-if="n.s.illustration" class="figure" :transform="figTransform(n)" v-html="n.s.illustration" />
+            <text v-else class="mk" :x="n.x" :y="n.y + 3.5" text-anchor="middle">{{ rarityMeta(n.s.rarity).mark }}</text>
             <text class="nm" :x="n.x" :y="n.y + R + 15" text-anchor="middle">{{ n.s.binomial }}</text>
           </g>
         </a>

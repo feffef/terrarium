@@ -381,14 +381,17 @@
 .atlas-web .strand.shelters { stroke-dasharray: 6 3; }
 .atlas-web .strand.pollinates { stroke-dasharray: 1 3; stroke-width: 1.6; }
 .atlas-web .node-hit { cursor: pointer; }
-.atlas-web .node circle { fill: var(--atlas-paper-2); stroke-width: 1.5; transition: stroke-width 0.15s ease; }
+/* the medallion the engraved plate sits in — paper seat + faint signature ring */
+.atlas-web .node .halo { fill: var(--atlas-paper-2); stroke-width: 1.25; stroke-opacity: 0.5; transition: stroke-width 0.15s ease, stroke-opacity 0.15s ease; }
+/* the seated illustration: same engraved linework as the specimen plate */
+.atlas-web .node .figure { color: var(--atlas-ink); pointer-events: none; }
 .atlas-web .node text { fill: var(--atlas-ink); font-size: 10px; }
 .atlas-web .node .nm { font-style: italic; font-family: var(--atlas-display); font-size: 11px; }
 .atlas-web .node .mk { font-size: 12px; fill: var(--atlas-muted); }
 .atlas-web .node.dim { opacity: 0.28; }
 .atlas-web .strand.dim { opacity: 0.12; }
 .atlas-web .strand.hot { stroke-width: 2.4; }
-.atlas-web .node.hot circle { stroke-width: 3; }
+.atlas-web .node.hot .halo { stroke-width: 2.5; stroke-opacity: 0.95; }
 .atlas-web-legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; margin-top: 1rem; font-family: var(--atlas-label); font-size: 0.72rem; color: var(--atlas-muted); }
 .atlas-web-legend .k { display: inline-flex; align-items: center; gap: 0.5ch; }
 .atlas-web-legend svg { width: 26px; height: 8px; overflow: visible; }
