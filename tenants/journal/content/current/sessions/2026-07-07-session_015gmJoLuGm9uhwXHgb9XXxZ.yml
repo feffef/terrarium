@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015gmJoLuGm9uhwXHgb9XXxZ
 startedAt: 2026-07-07T17:48:47Z
-endedAt: 2026-07-07T18:02:08Z
+endedAt: 2026-07-07T18:11:57Z
 kind: interactive
 goal: Add owner/guest trust-tier governance policies
 status: in-review
 outcome: New ADR plus amendments drafted, PR opened
-summary: "The owner invited collaborators and asked which policies should distinguish trusted owner input from screened guest input. Researched the governance model (ADR-0003/0004/0017, CONTEXT.md, issue-tracker triage) and confirmed no trust vocabulary existed — only the authorAssociation filter for external PRs. After a scope check, drafted ADR-0018 (Owner/Guest Principal trust tiers, tier derived out-of-band never from request content), amended ADR-0004 with a provenance axis (guest-originated is human-only merge) and ADR-0003 (owner-only green-light), added CONTEXT.md glossary terms and a CLAUDE.md pointer. Full gate green. Opened PR #207, subscribed."
+summary: "The owner invited collaborators and asked which policies distinguish trusted owner input from screened guest input. Researched the governance model (ADR-0003/0004/0017, CONTEXT.md, triage) — no trust vocabulary existed, only the authorAssociation filter. Drafted ADR-0018 (Owner/Guest Principal tiers, tier derived out-of-band never from request content), amended ADR-0003/0004, added glossary terms and a CLAUDE.md pointer, opened PR #207. Owner then refined it twice: guests should be allowed to spawn a content Tenant (not blocked from all net-new) — only ADRs/human-only surfaces are protected; and content includes executable Vue, so guest components need a runtime-code security review the gate can't provide. Reworked all files to match and kept the PR description in sync."
 prs:
   - "207"
 docsRead:
@@ -31,23 +31,24 @@ frictions:
   - description: Harness undercover rule forbids the model identifier in repo artifacts, but ADR-0017 requires a model name in the PR-body provenance footer.
     solution: Used the marketing name (Claude Opus 4.8) in the footer, not the model ID; the two rules could name this carve-out explicitly to save re-deriving it.
     severity: minor
-durationSec: 801
+durationSec: 1391
 models:
-  claude-opus-4-8: 82
+  claude-opus-4-8: 123
 toolCounts:
-  Bash: 14
-  Read: 8
+  Bash: 20
+  Read: 9
   Grep: 1
   AskUserQuestion: 1
   Write: 2
-  Edit: 4
-  ToolSearch: 2
+  Edit: 17
+  ToolSearch: 3
   mcp__github__get_me: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 1
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - docs/adr/0018-requester-trust-tiers.md
   - CONTEXT.md
@@ -59,5 +60,6 @@ entrypoint: remote_mobile
 cliVersion: 2.1.202
 learnings:
   - get_me returns the connector's authorized identity, not proof of who is typing — it verifies the environment's owner, which validates ADR-0018's one-principal-per-environment caveat live.
+  - "A Tenant's content is not inert: it includes executable Vue components (a Nuxt layer's fit-out), so a guest-authored Tenant ships code the objective gate builds but never vets for intent — the real security-review burden is on the human merge."
 ideas:
   - A CI check that auto-labels each PR by authorAssociation would make ADR-0018's guest-to-human-only-merge rule mechanically visible rather than convention-only.
