@@ -18,48 +18,72 @@ plate:
   number: XXII
   conjectural: true
 illustration: |
-  <!-- the bough at noon -->
+  <!-- the bough, and the leaves that own the honest shade -->
   <g stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none">
-    <path d="M26 192 q92 -18 184 -14 q86 4 164 20" />
-    <path d="M30 210 q90 -16 180 -12 q86 4 160 18" stroke-width="1" />
-    <g stroke-width="0.7" opacity="0.55">
-      <path d="M84 186 q-2 8 0 16" />
-      <path d="M130 182 q-2 9 -1 19" />
-      <path d="M262 182 q1 9 2 18" />
-      <path d="M318 188 q2 8 3 15" />
+    <path d="M18 206 q70 -16 150 -16 q110 0 214 26" />
+    <path d="M22 224 q68 -14 146 -14 q108 0 210 24" stroke-width="1.1" />
+    <g stroke-width="0.7" opacity="0.5">
+      <path d="M56 199 q-2 7 -1 14" />
+      <path d="M92 195 q-2 8 -1 15" />
+      <path d="M128 192 q-1 8 0 16" />
+      <path d="M164 191 q-1 8 0 16" />
+      <path d="M246 194 q0 8 1 15" />
+      <path d="M282 199 q1 7 2 14" />
+      <path d="M316 205 q1 7 2 13" />
+      <path d="M348 212 q1 6 2 12" />
     </g>
-    <!-- the leaves that own the honest shade -->
-    <path d="M70 60 q28 -18 58 -12 q6 22 -12 38 q-22 18 -46 10 q-8 -20 0 -36 z" />
-    <path d="M72 92 q26 -22 54 -28" stroke-width="0.8" opacity="0.7" />
-    <path d="M296 48 q30 -10 54 4 q0 22 -22 32 q-26 12 -44 -2 q0 -20 12 -34 z" />
-    <path d="M300 78 q22 -16 48 -22" stroke-width="0.8" opacity="0.7" />
+    <!-- a twig rising from the fork -->
+    <path d="M120 193 q-6 -30 8 -56 q10 -18 28 -28" stroke-width="1" />
+    <!-- the leaf cluster on the twig -->
+    <path d="M156 106 q26 -20 54 -16 q4 20 -14 34 q-20 16 -42 8 q-4 -16 2 -26 z" />
+    <path d="M158 128 q24 -18 50 -32" stroke-width="0.8" opacity="0.7" />
+    <g stroke-width="0.7" opacity="0.6">
+      <path d="M170 122 q4 -8 12 -13" />
+      <path d="M184 116 q4 -8 12 -13" />
+    </g>
+    <path d="M126 84 q14 -26 40 -34 q12 16 2 34 q-10 18 -32 20 q-10 -8 -10 -20 z" />
+    <path d="M130 102 q16 -26 34 -48" stroke-width="0.8" opacity="0.7" />
+    <!-- a second clump, farther off -->
+    <path d="M300 44 q28 -12 54 0 q2 20 -18 30 q-24 12 -44 0 q-2 -18 8 -30 z" />
+    <path d="M304 72 q22 -16 48 -26" stroke-width="0.8" opacity="0.7" />
+    <g stroke-width="0.7" opacity="0.6">
+      <path d="M316 64 q3 -7 10 -12" />
+      <path d="M330 58 q3 -7 10 -12" />
+    </g>
   </g>
-  <!-- the dapple, all of it lying with the light -->
-  <g stroke="currentColor" fill="none" stroke-width="0.8" opacity="0.5">
-    <ellipse cx="96" cy="198" rx="16" ry="6" />
-    <ellipse cx="150" cy="194" rx="13" ry="5" />
-    <ellipse cx="330" cy="202" rx="14" ry="5" />
+  <!-- the honest dapple, all of it lying with the light -->
+  <g stroke="currentColor" fill="none" stroke-width="0.75" opacity="0.55">
+    <ellipse cx="70" cy="208" rx="17" ry="6" transform="rotate(-4 70 208)" />
+    <ellipse cx="248" cy="206" rx="14" ry="5" transform="rotate(4 248 206)" />
+    <ellipse cx="330" cy="220" rx="15" ry="5" transform="rotate(7 330 220)" />
     <g stroke-width="0.6">
-      <line x1="88" y1="196" x2="102" y2="200" />
-      <line x1="144" y1="192" x2="156" y2="196" />
-      <line x1="324" y1="200" x2="336" y2="204" />
+      <line x1="60" y1="205" x2="66" y2="211" />
+      <line x1="68" y1="204" x2="74" y2="210" />
+      <line x1="76" y1="204" x2="82" y2="210" />
+      <line x1="240" y1="203" x2="246" y2="209" />
+      <line x1="248" y1="203" x2="254" y2="209" />
+      <line x1="322" y1="217" x2="328" y2="223" />
+      <line x1="330" y1="217" x2="336" y2="223" />
     </g>
   </g>
   <!-- the shade itself, lying against the drift: the one tinted feature -->
-  <path d="M180 178 q34 -12 68 -4 q30 8 46 26 q-26 16 -64 12 q-38 -4 -58 -18 q-2 -10 8 -16 z"
-    fill="var(--sig-1)" fill-opacity="0.16" stroke="var(--sig-1)" stroke-width="1.1" />
-  <g stroke="var(--sig-1)" stroke-width="0.7" opacity="0.55" fill="none">
-    <line x1="196" y1="182" x2="186" y2="196" />
-    <line x1="216" y1="180" x2="204" y2="198" />
-    <line x1="238" y1="180" x2="226" y2="200" />
-    <line x1="260" y1="184" x2="248" y2="202" />
-    <line x1="280" y1="192" x2="270" y2="204" />
+  <path d="M148 196 q30 -14 64 -12 q36 2 62 18 q6 4 4 10 q-24 14 -62 12 q-40 -2 -66 -16 q-6 -6 -2 -12 z"
+    fill="var(--sig-1)" fill-opacity="0.15" stroke="var(--sig-1)" stroke-width="1.1" />
+  <g stroke="var(--sig-1)" stroke-width="0.7" opacity="0.6" fill="none">
+    <line x1="168" y1="196" x2="158" y2="208" />
+    <line x1="186" y1="192" x2="174" y2="210" />
+    <line x1="204" y1="190" x2="192" y2="212" />
+    <line x1="222" y1="190" x2="210" y2="213" />
+    <line x1="240" y1="191" x2="228" y2="214" />
+    <line x1="258" y1="194" x2="247" y2="213" />
+    <line x1="274" y1="199" x2="265" y2="212" />
   </g>
   <!-- the caster, wanting -->
   <g stroke="currentColor" fill="none" stroke-linecap="round">
-    <path d="M214 92 q26 -18 56 -10 q18 6 20 22 q-2 18 -24 24 q-30 8 -52 -8 q-8 -16 0 -28 z"
-      stroke-width="1" stroke-dasharray="5 7" opacity="0.35" />
-    <path d="M246 128 q2 16 -2 32" stroke-width="0.8" stroke-dasharray="3 8" opacity="0.25" />
+    <path d="M226 128 q22 -20 52 -16 q20 4 24 20 q2 18 -20 26 q-30 10 -54 -6 q-10 -12 -2 -24 z"
+      stroke-width="1" stroke-dasharray="5 7" opacity="0.32" />
+    <path d="M262 158 q0 14 -4 26" stroke-width="0.8" stroke-dasharray="3 8" opacity="0.22" />
+    <path d="M242 132 q-8 -10 -8 -20" stroke-width="0.8" stroke-dasharray="3 8" opacity="0.2" />
   </g>
 ---
 

@@ -20,38 +20,57 @@ plate:
 illustration: |
   <!-- the surface, far above the work -->
   <g stroke="currentColor" stroke-width="1.1" stroke-linecap="round" fill="none">
-    <path d="M28 56 q90 8 180 5 t164 -7" />
+    <path d="M24 48 q90 8 182 5 t170 -7" />
     <g stroke-width="0.7" opacity="0.5">
-      <path d="M70 50 l14 -4 M120 52 l12 3 M210 50 l14 -2 M300 48 l12 4" />
+      <path d="M62 42 l14 -4 M108 45 l12 3 M172 42 l13 -2 M232 44 l12 2 M296 40 l13 3 M342 40 l10 -3" />
     </g>
+  </g>
+  <!-- the soil between, in its small parcels -->
+  <g stroke="currentColor" stroke-width="0.7" fill="none" opacity="0.4">
+    <circle cx="70" cy="84" r="3" />
+    <circle cx="150" cy="72" r="2.2" />
+    <circle cx="262" cy="80" r="2.6" />
+    <circle cx="330" cy="92" r="2" />
+    <path d="M100 96 q8 -4 16 -2" />
+    <path d="M200 88 q8 -3 15 0" />
+    <path d="M300 70 q7 -4 14 -3" />
+    <path d="M46 110 q7 -4 14 -2" />
+  </g>
+  <!-- a root, crossing on its own business -->
+  <g stroke="currentColor" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.75">
+    <path d="M348 64 q-20 34 -14 66 q3 16 12 26" />
+    <path d="M342 96 q-8 4 -16 4" stroke-width="0.7" opacity="0.7" />
   </g>
   <!-- the long gallery, in section -->
   <g stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none">
-    <path d="M44 148 q60 -18 130 -14 q86 6 182 30" />
-    <path d="M40 216 q70 16 150 14 q92 -2 172 -26" />
-    <!-- the old weave, worked and reworked -->
+    <path d="M36 156 q66 -22 140 -18 q92 4 190 34" />
+    <path d="M32 226 q74 18 156 16 q96 -2 178 -30" />
+    <!-- the column's own weave, worked and reworked -->
     <g stroke-width="0.7" opacity="0.6">
-      <path d="M76 146 q-3 8 -2 14 M112 140 q-3 9 -2 16 M150 137 q-2 9 -1 17 M262 146 q-1 9 0 16 M312 156 q-1 8 1 14" />
-      <path d="M84 226 q2 -8 1 -14 M130 230 q2 -9 1 -16 M180 231 q1 -9 1 -16 M270 224 q2 -8 1 -14 M318 212 q2 -7 2 -12" />
+      <path d="M64 148 q-3 8 -2 15 M80 145 l8 10 M104 141 q-3 9 -2 16 M120 139 l8 11 M144 137 q-2 9 -1 17 M160 137 l7 11 M250 146 q-1 9 0 16 M266 150 l6 11 M292 156 q-1 8 0 15 M308 161 l6 10 M334 168 q0 8 1 14" />
+      <path d="M68 232 q2 -8 1 -15 M92 236 l6 -11 M118 239 q2 -9 1 -16 M146 241 l5 -12 M176 242 q1 -9 1 -16 M210 241 l3 -12 M244 238 q1 -8 1 -15 M276 232 l2 -12 M308 224 q2 -7 2 -13" />
     </g>
     <!-- the worn place, as it was -->
-    <path d="M196 134 q10 -6 22 -4" stroke-width="0.8" opacity="0.4" stroke-dasharray="2 5" />
+    <path d="M192 142 q12 -7 26 -5" stroke-width="0.8" opacity="0.35" stroke-dasharray="2 5" />
   </g>
   <!-- the mend: finer thread, tighter laid — the one tinted feature -->
   <g stroke="var(--sig-1)" stroke-width="1" stroke-linecap="round" fill="none">
-    <path d="M192 138 q16 -10 34 -6" />
-    <path d="M194 144 q15 -9 32 -6" stroke-width="0.85" />
-    <path d="M196 150 q14 -8 28 -6" stroke-width="0.7" />
+    <path d="M186 148 q18 -12 40 -8" />
+    <path d="M188 154 q17 -11 38 -8" stroke-width="0.85" />
+    <path d="M190 160 q16 -10 34 -7" stroke-width="0.7" />
+    <path d="M192 166 q14 -8 30 -6" stroke-width="0.6" opacity="0.85" />
     <g stroke-width="0.6" opacity="0.7">
-      <path d="M198 136 l3 10 M208 132 l3 12 M218 130 l2 13 M228 130 l1 13" />
+      <path d="M192 146 l4 12 M202 141 l4 14 M212 138 l3 15 M222 136 l2 16 M232 136 l1 15" />
     </g>
   </g>
   <!-- the mender, as far as one lamplit half-second allows -->
   <g stroke="currentColor" fill="none" stroke-linecap="round">
-    <path d="M306 170 q22 -8 40 2 q10 6 8 16 q-4 12 -22 14 q-22 2 -34 -10 q-2 -14 8 -22 z"
+    <path d="M296 178 q16 -12 38 -8 q16 4 18 16 q0 14 -18 18 q-24 6 -40 -6 q-8 -10 2 -20 z"
       stroke-width="1" stroke-dasharray="5 6" opacity="0.4" />
-    <path d="M314 200 l-4 12 M330 202 l0 12 M344 198 l5 11" stroke-width="0.8" stroke-dasharray="2 5" opacity="0.3" />
-    <path d="M304 176 q-12 -2 -20 -8" stroke-width="0.8" stroke-dasharray="3 5" opacity="0.3" />
+    <path d="M310 178 q2 12 0 24 M326 174 q3 13 1 26 M342 176 q3 11 2 22" stroke-width="0.7" stroke-dasharray="3 5" opacity="0.3" />
+    <path d="M308 202 l-6 12 M324 206 l-2 12 M340 202 l4 11" stroke-width="0.8" stroke-dasharray="2 5" opacity="0.3" />
+    <path d="M294 182 q-12 -4 -18 -12" stroke-width="0.8" stroke-dasharray="3 5" opacity="0.3" />
+    <path d="M298 190 q-14 0 -22 -4" stroke-width="0.8" stroke-dasharray="3 5" opacity="0.25" />
   </g>
 ---
 
