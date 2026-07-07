@@ -1,0 +1,46 @@
+schemaVersion: 1
+session: session_01AnKvSbaKmZLbDgmVj9LqEm
+startedAt: 2026-07-07T08:43:15Z
+endedAt: 2026-07-07T09:21:32Z
+kind: interactive
+goal: Update README to match project state
+status: completed
+outcome: PR merged with live-site link added
+summary: "Read CLAUDE.md/CONTEXT.md/ADRs and the tenant configs to find that README.md's Status section was stale (claimed only the journal Tenant existed under \"Milestone 1\"), when three Tenants (journal, blog, atlas) are actually live behind a public self-updating deployment. Rewrote the Status section and added a terrarium.feffef.de live-site link, committed, pushed, and confirmed via the GitHub MCP tools that PR #175 merged to main."
+prs:
+  - "175"
+docsRead:
+  - path: CLAUDE.md
+    reason: repo conventions, logging requirement
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: public deploy details for the Status rewrite
+  - path: deploy/README.md
+    reason: confirm terrarium.feffef.de is the live public URL
+  - path: README.md
+    reason: (unknown)
+  - path: tenants/journal/content/current/pages/digests/2026-07-06.md
+    reason: (unknown)
+skillsUsed:
+  - name: log-session
+    reason: (unknown)
+frictions:
+  - description: Forgot to invoke log-session at closure even though CLAUDE.md states logging is model-invocable and self-judged at closure, not something to wait on a human prompt for. I treated "PR confirmed merged" as the end of the task and stopped there instead of checking CLAUDE.md's own closure checklist; nothing in the transcript re-surfaced that requirement once the GitHub-facing work was done, and the user had to explicitly ask "did you log the session" before I did it.
+    solution: Treat PR-merge confirmation as an explicit trigger to re-check CLAUDE.md's "Logging your session" section and invoke log-session proactively, rather than only doing it when directly asked.
+    severity: major
+durationSec: 2296
+models:
+  claude-sonnet-5: 40
+toolCounts:
+  Bash: 11
+  Read: 4
+  Grep: 1
+  Edit: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  Skill: 1
+  Write: 1
+filesEdited:
+  - README.md
+gitBranch: claude/update-readme-terrarium-8hgz04
+entrypoint: remote_mobile
+cliVersion: 2.1.202
