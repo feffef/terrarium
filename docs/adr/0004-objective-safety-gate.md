@@ -10,6 +10,28 @@ Status: Accepted
 > (ADR-0003) escalates these to a human even when the gate is green and the
 > surface is otherwise low-risk.
 
+> **Amended (2026-07-07).** *Where the gate's tests live, as the Platform grows.*
+> A test is **homed with the code it exercises**: a Tenant-specific test lives in
+> that layer under `layers/<tenant>/tests/`; a Platform test (exercising
+> `shared/`, `scripts/`, `modules/`, routing, isolation) lives in the root
+> `tests/`. This keeps "which tests are this Tenant's vs. global" legible and lets
+> the suite grow additively with each spawned Tenant.
+>
+> **L2 (smoke render) stays a SINGLE Nuxt build regardless of Tenant count.** The
+> `@nuxt/test-utils` `setup()` that L2 needs performs a full `nuxt build`, and
+> vitest isolates each *spec file* into its own worker — so every additional e2e
+> `*.spec.ts` re-runs `setup()` and pays for another build, multiplying the gate's
+> slowest step per Tenant. Therefore the L2 gate is **one** platform smoke spec
+> (`tests/e2e/smoke.spec.ts`, owner of the sole `setup()`), and each Tenant's
+> L2 assertions are contributed as an imported `register…()` **module**
+> (`layers/<tenant>/tests/e2e/*.e2e.ts`, not a `.spec.ts`) that the smoke spec
+> invokes inside its single `describe`. This is the surprising, deliberately
+> not-to-be-"cleaned-up" shape: splitting tenant assertions back into sibling
+> spec files is the exact regression this records against. (The cross-Tenant
+> entry-route sweep, derived from the manifests per ADR-0014, stays in the
+> platform spec and covers every Tenant uniformly.) L0/L1/L3 tests have no such
+> per-file build cost and are simply homed per the rule above.
+
 ## Context
 
 Both the human reviewer (now) and the scheduled review-agent (mid-term, ADR-0003)

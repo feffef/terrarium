@@ -12,7 +12,11 @@ export default defineConfig({
     },
   },
   test: {
-    include: ['tests/**/*.spec.ts'],
+    // Platform tests live under `tests/`; Tenant-specific tests live in their
+    // layer under `layers/<tenant>/tests/` (see tests/README.md). Only `.spec.ts`
+    // is collected — tenant e2e modules use `.e2e.ts` and run via the platform
+    // smoke spec's single build, so they are never collected standalone.
+    include: ['tests/**/*.spec.ts', 'layers/*/tests/**/*.spec.ts'],
     // e2e (L2) builds the app and is slow; unit (L0/L1/L3) is fast.
     // `pnpm test` runs unit only; `pnpm test:e2e` runs the smoke render.
     testTimeout: 120_000,
