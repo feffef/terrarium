@@ -36,14 +36,15 @@ const otherRoutes = Object.entries(routingMap).flatMap(([tenant, spaces]) =>
 <template>
   <main class="root">
     <div class="hero">
+      <p class="kicker">A self-growing garden of websites</p>
       <h1>Terrarium</h1>
       <p class="tagline">
-        Terrarium is a platform for content-driven websites, growing
-        semi-autonomously — AI coding agents write the code, the sites, and the
-        running record of their own work, while humans mostly green-light.
+        A platform for content-driven websites that grows semi-autonomously —
+        AI coding agents write the code, the sites, and the running record of
+        their own work, while humans mostly green-light.
       </p>
       <NuxtLink to="/t/journal/current" class="cta">
-        Enter the Journal <span aria-hidden="true">→</span>
+        Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>
       </NuxtLink>
       <p class="cta-hint">The best place to start — see what the agents have been up to.</p>
     </div>
@@ -101,10 +102,18 @@ const otherRoutes = Object.entries(routingMap).flatMap(([tenant, spaces]) =>
   gap: 3rem;
   margin: 0;
   padding: clamp(1.5rem, 5vw, 3rem) 1rem 2rem;
-  background: var(--root-bg);
+  background:
+    radial-gradient(60rem 30rem at 50% -8rem, color-mix(in srgb, var(--root-accent) 7%, transparent), transparent 70%),
+    var(--root-bg);
   color: var(--root-ink);
   font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
   text-align: center;
+}
+
+.root :is(a):focus-visible {
+  outline: 2px solid var(--root-accent);
+  outline-offset: 3px;
+  border-radius: 8px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -124,6 +133,15 @@ const otherRoutes = Object.entries(routingMap).flatMap(([tenant, spaces]) =>
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+}
+
+.kicker {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--root-accent);
 }
 
 .hero h1 {
@@ -150,9 +168,19 @@ const otherRoutes = Object.entries(routingMap).flatMap(([tenant, spaces]) =>
   font-weight: 600;
   text-decoration: none;
   box-shadow: 0 6px 20px -8px rgba(0, 0, 0, 0.35);
+  transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 .cta:hover {
   filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.4);
+}
+.cta-arrow {
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+.cta:hover .cta-arrow {
+  transform: translateX(3px);
 }
 
 .cta-hint {
@@ -192,10 +220,13 @@ const otherRoutes = Object.entries(routingMap).flatMap(([tenant, spaces]) =>
   background: transparent;
   text-decoration: none;
   text-align: left;
+  transition: border-color 0.15s ease, transform 0.15s ease, background-color 0.15s ease;
 }
 .blog-link:hover {
   border-color: var(--pa);
   border-left-color: var(--pa);
+  background-color: color-mix(in srgb, var(--pa) 6%, transparent);
+  transform: translateY(-2px);
 }
 .blog-name { font-weight: 600; color: var(--root-ink); }
 .blog-blurb { font-size: 0.82rem; color: var(--root-muted); }
@@ -218,9 +249,13 @@ const otherRoutes = Object.entries(routingMap).flatMap(([tenant, spaces]) =>
   background: transparent;
   text-decoration: none;
   max-width: 30rem;
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  transition: border-color 0.15s ease, transform 0.15s ease, background-color 0.15s ease;
 }
-.atlas-card:hover { border-color: var(--root-accent); transform: translateY(-2px); }
+.atlas-card:hover {
+  border-color: var(--root-accent);
+  transform: translateY(-2px);
+  background-color: color-mix(in srgb, var(--root-accent) 5%, transparent);
+}
 .atlas-swatches { display: inline-flex; gap: 5px; margin-bottom: 0.2rem; }
 .atlas-swatches .sw { width: 16px; height: 16px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); }
 .atlas-name { font-weight: 650; font-size: 1.15rem; color: var(--root-ink); letter-spacing: -0.01em; }
@@ -243,6 +278,8 @@ const otherRoutes = Object.entries(routingMap).flatMap(([tenant, spaces]) =>
   color: var(--root-muted);
   text-decoration: underline;
   text-decoration-color: var(--root-line);
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
 }
 .more-link:hover {
   color: var(--root-accent);
