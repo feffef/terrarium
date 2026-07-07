@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01VbZs6fhvMuCqxNxWXE3qY3
 startedAt: 2026-07-07T22:54:14Z
-endedAt: 2026-07-07T23:16:30Z
+endedAt: 2026-07-07T23:27:52Z
 kind: interactive
 goal: Add a fifth specimen to each Atlas wing
 status: in-review
 outcome: "PR #225 open, gate green, renders verified"
-summary: "Added one specimen per biome, chosen to complete each wing's rarity ladder: Umbra vacans (canopy, mythic, conjectural plate), Textor absens (floor, mythic, conjectural plate), Geminella sequax (pool, abundant). Each landed with museum-label frontmatter, an engraved SVG plate, a field-note essay, two same-biome food-web edges, and two field-log entries. Full gate run locally; all six affected pages screenshot-verified. On request, both conjectural plates were redrawn denser, and origin/main (which had restructured tests per-layer meanwhile) was merged in with the gate re-run green."
+summary: "Added one specimen per biome, chosen to complete each wing's rarity ladder: Umbra vacans (canopy, mythic, conjectural plate), Textor absens (floor, mythic, conjectural plate), Geminella sequax (pool, abundant). Each landed with museum-label frontmatter, an engraved SVG plate, a field-note essay, two same-biome food-web edges, and two field-log entries. Full gate run locally; all six affected pages screenshot-verified. On request, both conjectural plates were redrawn denser, and origin/main (which had restructured tests per-layer meanwhile) was merged in with the gate re-run green. The two conjectural plates took three authored passes total — the user twice judged them weak against the established plates — before they carried a dense engraved centerpiece (hatched shade on a veined leaf; a woven wall with a gold mend)."
 prs:
   - "225"
 docsRead:
@@ -62,21 +62,25 @@ frictions:
   - description: origin/main was force-updated mid-session (tests restructured per-layer), requiring a merge and a second full gate run before push.
     solution: Expected cost of parallel sessions; merge was clean, nothing to fix.
     severity: nit
-durationSec: 1336
+  - description: Authoring plate SVGs blind (hand-computed coordinates) needed five build-plus-screenshot loops before the conjectural plates matched the volume's density; each loop pays a full nuxt build.
+    solution: The atlas-specimen Skill could name the failure mode directly — give the plate one dense engraved centerpiece, render shadow as hatch, never an outlined filled panel — and suggest comparing against an existing plate before the first build.
+    severity: minor
+durationSec: 2018
 models:
-  claude-fable-5: 129
+  claude-fable-5: 174
 toolCounts:
-  Bash: 24
-  Read: 26
+  Bash: 35
+  Read: 32
   Write: 16
-  SendUserFile: 2
+  SendUserFile: 3
   ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 1
-  Edit: 2
+  Edit: 11
   Skill: 2
+  AskUserQuestion: 1
 filesEdited:
   - layers/atlas/content/canopy/pages/umbra-vacans.md
   - layers/atlas/content/floor/pages/textor-absens.md
@@ -98,5 +102,6 @@ entrypoint: remote
 cliVersion: 2.1.203
 learnings:
   - Biome landings derive catalogue, food web, rhythm bands, and field log entirely from the collections — a new specimen needs zero component edits.
+  - A tinted SVG region with fill+stroke reads as a flat UI panel inside an engraving; the same region as parallel sig-tint hatch strokes reads as engraved shadow.
 ideas:
   - The canopy landing intro enumerates its four founding inhabitants; a once-per-wing intro refresh when the population grows would keep it honest without violating the leave-intros-be rule.
