@@ -28,8 +28,8 @@ import {
   skillsLabel,
   skillsSub,
   toolEntries,
-} from '../../layers/journal/app/utils/dashboard.ts'
-import type { Friction, SessionDoc, Severity, SkillDoc } from '../../layers/journal/app/types/journal.ts'
+} from '../../app/utils/dashboard.ts'
+import type { Friction, SessionDoc, Severity, SkillDoc } from '../../app/types/journal.ts'
 
 function friction(severity: string): Friction {
   return { description: 'd', solution: 's', severity: severity as Severity }

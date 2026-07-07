@@ -190,14 +190,16 @@ docs/adr/                           # Architecture Decision Records (read all be
 layers/<tenant>/tenant.config.ts    # the manifest an agent edits (declarative intent)
 layers/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Space
                                     #   (Tenant layers live under Nuxt's `layers/`, auto-extended — ADR-0018)
+layers/<tenant>/tests/              # this Tenant's OWN tests (unit + e2e module) — see tests/README.md
 shared/manifest.ts                  # manifest types + defineTenant() + validation
 shared/expand.ts                    # pure manifest→keyed-collection expansion (expand(), L3-tested)
 modules/routing.ts                  # build-time Nuxt module: manifests → #routing virtual module (ADR-0014)
 content.config.ts                   # ordinary module — builds keyed collections dynamically (ADR-0013)
 app/composables/space.ts            # useSpace(): route → keyed collections or 404 (auto-imported wrapper)
 app/pages/t/[tenant]/[space]/[...slug].vue   # runtime routing + ContentRenderer
-tests/unit/                         # L3 isolation (keying)
-tests/e2e/                          # L2 smoke render
+tests/unit/                         # PLATFORM unit tests (L3 isolation, shared/, scripts/)
+tests/e2e/smoke.spec.ts             # the ONE L2 smoke build; imports each Tenant's e2e module
+tests/support/ , tests/README.md    # shared e2e helpers + the test-homing convention (ADR-0004)
 .github/workflows/gate.yml          # the safety gate (installed & live); human-only —
                                     #   CI is never agent-edited (ADR-0004)
 .agents/skills/ , .claude/skills/   # committed Skills (general + platform-operation)

@@ -11,7 +11,7 @@ import {
   rhythmCells,
   signatureVars,
   type Edge,
-} from '../../layers/atlas/app/utils/atlas.ts'
+} from '../../app/utils/atlas.ts'
 
 describe('relationLabel()', () => {
   it('reads forward from the actor and reverse from the acted-upon', () => {
