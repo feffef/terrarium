@@ -58,6 +58,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 
 ## Working conventions
 
+- **An empty or missing task prompt (body lost in transit, only a title
+  present) is a hard stop-and-ask signal.** Ask the user what they want —
+  don't infer a feature from the branch name, prior commits, or a matching
+  repo pattern.
 - **Single-home every fact — one home, everywhere else points, never restates.**
   Each fact lives in exactly one place; every other surface *references* it. This
   file is the home for repo-wide conventions and an **index** into the ADRs — so
@@ -76,6 +80,16 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   match the invoking shell's own command line and kill the whole chain
   mid-flight — either way everything after the `&&` is silently dropped,
   e.g. a chained `git add` never runs and no error points at it.
+- **Don't `&&`-chain a branch rename/creation with the commit/push steps that
+  follow it** — the same silent-drop failure mode as the pkill bullet above:
+  `git branch -m ... && git commit ... && git push` (or `checkout -b`) fails at
+  the rename/create when the branch already exists locally, and every step
+  after the `&&` never runs. Check existence first (e.g. `git rev-parse
+  --verify <branch>`) and handle the already-exists case explicitly instead of
+  chaining blindly.
+- **Keep session-log-only commits content-only.** Never let substantive work
+  ride along inside a commit titled as a session-log commit — title the commit
+  for the work it actually contains instead.
 - **Commit messages containing backticks or `$(...)` must be written with
   `git commit -F <file>`** (or a quoted heredoc), never `git commit -m` —
   inside a double-quoted `-m` argument the shell runs the backtick/`$()` span
@@ -159,7 +173,8 @@ can overlap real content and read as a UI bug.
   with `chromium.launch({ executablePath })`. Two gotchas: (1) `tsx` runs the
   ad-hoc script as CJS, so wrap top-level `await` in an `async` IIFE; (2) write
   the script **inside the repo tree** so its imports resolve against
-  `node_modules` (`playwright-core` is a devDependency here, not global).
+  `node_modules` (any devDependency used in an ad-hoc script — `playwright-core`,
+  `yaml`, etc. — is scoped to this repo's `node_modules`, not global).
 - **A screenshot can't be trusted to rule out a subtle/scoped CSS change** —
   downscaled or compressed PNGs can mask a style that actually applied. Before
   concluding a scoped style is missing, probe the element's *computed* style

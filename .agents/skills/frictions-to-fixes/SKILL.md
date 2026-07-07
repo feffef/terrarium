@@ -29,13 +29,15 @@ works only from that report and never re-reads the raw corpus. The subagent
 Its brief:
 
 - **Read the latest 20 session logs.** `tenants/journal/content/current/sessions/*.yml`
-  are ISO-date-prefixed, so a filename sort is chronological; take the last 20
-  (`ls -1 … | tail -20`; all of them if fewer than 20). This is a **recency window,
-  not a sample** — read every log in it, don't chase frictions from older,
-  likely-gone sessions. Parse the YAML with a short `tsx` script written **inside
-  the repo tree** (so `import { parse } from 'yaml'` resolves against
-  `node_modules`). Pull each friction's `description`, `solution`, `severity`, and
-  the session's `startedAt` date — the date is what catches regressions in step 2.
+  are ISO-date-prefixed, but a filename/`ls` sort is **not** reliably chronological —
+  sessions sharing a date prefix can have an unordered session-ID suffix. Parse the
+  YAML with a short `tsx` script written **inside the repo tree** (so
+  `import { parse } from 'yaml'` resolves against `node_modules`), sort every log by
+  its parsed `startedAt` field, then take the last 20 (all of them if fewer than 20).
+  This is a **recency window, not a sample** — read every log in it, don't chase
+  frictions from older, likely-gone sessions. Pull each friction's `description`,
+  `solution`, `severity`, and the session's `startedAt` date — the date is what
+  catches regressions in step 2.
 - **Group and rank.** Fold related/recurring frictions (shared root cause or single
   fix) into one candidate; rank by **recurrence × severity**. **Prioritize
   `moderate`, `major`, and `blocker` frictions** — these earn a fix on severity
