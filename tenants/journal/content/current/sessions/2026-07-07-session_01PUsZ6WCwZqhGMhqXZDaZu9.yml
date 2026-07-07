@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01PUsZ6WCwZqhGMhqXZDaZu9
 startedAt: 2026-07-07T15:24:58Z
-endedAt: 2026-07-07T15:35:18Z
+endedAt: 2026-07-07T15:43:53Z
 kind: interactive
-goal: Auto-open PR at closure; add in-review status
+goal: Auto-open + auto-watch PRs; add in-review status
 status: in-review
-outcome: Convention + new status shipped, gate green
-summary: "The user was annoyed that sessions with committed work stop to ask \"shall I open a PR?\". Changed the default: a session that committed substantive work now opens its gated PR automatically at closure (ADR-0003 amendment + two CLAUDE.md conventions), bounded so it gates opening only, not deciding to do the work. Opening the PR is now the first log-session trigger, logged with a new in-review status (open-but-unmerged, distinct from completed). Added in-review to all five status homes plus a blue StatusPill and its light/dark theme tokens. Verified the full gate and probed the pill's computed colour, then dogfooded the whole thing by auto-opening PR #192 and logging this in-review."
+outcome: Conventions, status, allowlist shipped; gate green
+summary: "The user was annoyed at being asked, per PR-lifecycle step, \"shall I open a PR?\", \"shall I watch it?\", and a permission dialog per tool. Changed all three defaults: a session with committed work now auto-opens its gated PR at closure, auto-subscribes to watch it to merge/close, and the open/watch/babysit tools are allowlisted in .claude/settings.json (ADR-0003 amendment + CLAUDE.md conventions), bounded so it gates opening/watching only, not deciding to do the work. Opening the PR is now the first log-session trigger, logged with a new in-review status (open-but-unmerged, distinct from completed) — added to all five status homes plus a blue StatusPill with light/dark tokens. Verified the full gate and probed the pill's computed colour, then dogfooded it all on #192."
 prs:
   - "192"
 docsRead:
@@ -32,9 +32,13 @@ docsRead:
     reason: (unknown)
   - path: CLAUDE.md
     reason: (unknown)
+  - path: .claude/settings.json
+    reason: (unknown)
 skillsUsed:
   - name: log-session
     reason: author this in-review log at PR-open, per the new convention
+  - name: update-config
+    reason: add the permissions.allow allowlist to .claude/settings.json
 frictions:
   - description: The session status enum is single-homed nowhere — the same list lives in five files (manifest, UI type, trace type, validator, pill CSS + tokens).
     solution: Derive the UI/script status types and pill classes from the manifest enum, or at least add a test asserting the five stay in sync.
@@ -42,17 +46,21 @@ frictions:
   - description: Ad-hoc playwright-core probe failed twice — once on import resolution outside the repo tree, once because chromium.executablePath() was wrong.
     solution: A tiny committed helper that returns the pre-installed Chromium path (the logic already in screenshot.ts) would stop each session re-deriving it.
     severity: nit
-durationSec: 620
+durationSec: 1134
 models:
-  claude-opus-4-8: 112
+  claude-opus-4-8: 164
 toolCounts:
-  Bash: 28
-  Read: 15
-  Edit: 14
-  ToolSearch: 1
+  Bash: 34
+  Read: 20
+  Edit: 21
+  ToolSearch: 4
   mcp__github__create_pull_request: 1
-  Skill: 1
+  Skill: 2
   Write: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - tenants/journal/tenant.config.ts
   - tenants/journal/app/types/journal.ts
@@ -63,6 +71,7 @@ filesEdited:
   - .agents/skills/log-session/SKILL.md
   - docs/adr/0003-agent-operating-model-and-governance.md
   - CLAUDE.md
+  - .claude/settings.json
 gitBranch: claude/auto-open-pr-commits-hj3oc2
 entrypoint: remote
 cliVersion: 2.1.202
