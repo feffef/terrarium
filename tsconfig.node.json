@@ -33,5 +33,15 @@
       "#routing": ["./.nuxt/routing.d.ts"]
     }
   },
-  "include": ["scripts/**/*.ts", "shared/**/*.ts", "tests/unit/**/*.ts", "content.config.ts"]
+  // Platform unit tests live in `tests/unit/`; Tenant-specific unit tests live in
+  // their layer under `layers/<tenant>/tests/unit/` (tests/README.md). Both globs
+  // keep every unit spec in this node program (e2e specs stay out — they need the
+  // Nuxt/browser libs, not the node ones).
+  "include": [
+    "scripts/**/*.ts",
+    "shared/**/*.ts",
+    "tests/unit/**/*.ts",
+    "layers/*/tests/unit/**/*.ts",
+    "content.config.ts"
+  ]
 }

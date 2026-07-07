@@ -3,8 +3,8 @@
 // Kept in one place so the layer's page and components can't drift on them.
 //
 // Deliberately NOT aliases of `@nuxt/content`'s generated `Collections[...]`
-// item types: `dashboard.ts`'s own header comment (and tests/unit/journal-
-// dashboard.spec.ts) call out that this module is pure and unit-tested outside
+// item types: `dashboard.ts`'s own header comment (and the layer's
+// tests/unit/journal-dashboard.spec.ts) call out that this module is pure and unit-tested outside
 // the Nuxt app, via `tsc -p tsconfig.node.json` / vitest — neither program
 // includes `.nuxt/content/types.d.ts`, so `Collections` resolves with no
 // journal keys there and any alias built from it collapses to `never`. Instead
