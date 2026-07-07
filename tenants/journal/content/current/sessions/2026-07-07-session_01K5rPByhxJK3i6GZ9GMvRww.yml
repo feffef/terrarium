@@ -1,0 +1,56 @@
+schemaVersion: 1
+session: session_01K5rPByhxJK3i6GZ9GMvRww
+startedAt: 2026-07-07T11:05:47Z
+endedAt: 2026-07-07T11:12:33Z
+kind: interactive
+goal: Use specimen SVG plates as food-web nodes
+status: completed
+outcome: Nodes render engraved plates; three biomes shot
+summary: The Atlas food web drew each specimen as a plain circle plus a rarity glyph. Replaced those nodes with each specimen's own engraved illustration (the same inner SVG the specimen plate renders), scaled into a paper medallion that carries the colour signature as a hairline ring, masks strands passing behind it, and keeps the hover/dim wander and arrowhead trimming. Widened the ring layout and bumped the node radius to seat the larger plates. Verified via lint, typecheck, build, and a production preview screenshot of all three biomes (canopy, floor, pool). Pushed to the feature branch; PR not yet opened.
+prs: []
+docsRead:
+  - path: tenants/atlas/app/components/atlas/FoodWeb.vue
+    reason: the component changed
+  - path: tenants/atlas/app/components/atlas/SpecimenPlate.vue
+    reason: how illustrations render (v-html, viewBox)
+  - path: tenants/atlas/app/utils/atlas.ts
+    reason: SpecimenView shape + signatureVars
+  - path: tenants/atlas/app/assets/theme.css
+    reason: node/plate styling tokens
+  - path: tenants/atlas/content/canopy/pages/lumina-fabulae.md
+    reason: (unknown)
+  - path: tenants/atlas/app/pages/t/atlas/[space]/index.vue
+    reason: (unknown)
+  - path: tenants/atlas/app/biomes.ts
+    reason: (unknown)
+skillsUsed:
+  - name: log-session
+    reason: (unknown)
+frictions:
+  - description: The 400x300 illustration viewBox and its drawing centre (~200,150) are implicit conventions, not recorded anywhere machine-readable.
+    solution: SpecimenPlate hardcodes viewBox 0 0 400 300; I mirrored the constants in FoodWeb. A shared constant would single-home it.
+    severity: nit
+  - description: pkill of the preview server matched its own shell and returned exit 144, as CLAUDE.md warns about chained teardown.
+    solution: Ran it standalone; verified state separately. Harmless here.
+    severity: nit
+durationSec: 406
+models:
+  claude-opus-4-8: 78
+toolCounts:
+  Bash: 12
+  Grep: 5
+  Read: 10
+  Edit: 5
+  Write: 2
+  SendUserFile: 1
+  Skill: 1
+filesEdited:
+  - tenants/atlas/app/components/atlas/FoodWeb.vue
+  - tenants/atlas/app/assets/theme.css
+  - scripts/_shot-web.ts
+gitBranch: claude/food-web-svg-specimens-d0s8a0
+entrypoint: remote_mobile
+cliVersion: 2.1.202
+learnings:
+  - Vue v-html on an SVG <g> parses in the SVG namespace, so authored inner markup renders (same as SpecimenPlate's <svg>).
+  - SVG paint order plus a paper-filled medallion disc cleanly occludes strands crossing behind a node.
