@@ -186,9 +186,19 @@ export function extractTrace(records: Record<string, unknown>[]): MechanicalTrac
 
 // ── Stitch ────────────────────────────────────────────────────────────────
 
-/** The reason a transcript-observed read carries when the agent never annotated
- *  it — the lightweight marker of a mechanically-folded-in entry (ADR-0009). */
-export const DERIVED_REASON = '(unknown)'
+/** The reason a transcript-observed read/skill carries when the agent never
+ *  annotated it — the lightweight marker of a mechanically-folded-in entry
+ *  (ADR-0009). */
+export const DERIVED_REASON = '(no reason given)'
+
+/** The reason for a folded-in `docsRead` entry whose path also appears in
+ *  `filesEdited`. The Edit tool (and Write-on-an-existing-file) refuses to run
+ *  unless the path was `Read` first in the same session — so for these paths
+ *  the read wasn't unexplained, it was a harness-enforced precondition of the
+ *  edit. Worded as "before", not "required for", because the trace is derived
+ *  from tool_use calls, not results: a Read attempted against a not-yet-created
+ *  path still lands in `filesRead` even though it errored and read nothing. */
+export const DERIVED_REASON_EDITED = '(read before editing)'
 
 /** The interpretive half the live agent writes to the scratch during the session.
  *  Timings/models/etc. are NOT here — those are derived. `session`/`kind` are the
@@ -213,11 +223,12 @@ function mergeRefs<T extends Record<string, string>>(
   authored: T[],
   derivedKeys: string[],
   keyField: 'path' | 'name',
+  reasonFor: (key: string) => string = () => DERIVED_REASON,
 ): T[] {
   const seen = new Set(authored.map((a) => a[keyField]))
   const folded = derivedKeys
     .filter((k) => !seen.has(k))
-    .map((k) => ({ [keyField]: k, reason: DERIVED_REASON }) as unknown as T)
+    .map((k) => ({ [keyField]: k, reason: reasonFor(k) }) as unknown as T)
   return [...authored, ...folded]
 }
 
@@ -227,6 +238,7 @@ function mergeRefs<T extends Record<string, string>>(
  *  reads (folded in with a placeholder reason). Empty mechanical collections are
  *  dropped so a minimal session stays clean. */
 export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Record<string, unknown> {
+  const editedSet = new Set(trace.filesEdited)
   const entry: Record<string, unknown> = {
     schemaVersion: 1,
     session: authored.session,
@@ -238,7 +250,9 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
     outcome: authored.outcome,
     summary: authored.summary,
     prs: authored.prs ?? [],
-    docsRead: mergeRefs(authored.docsRead ?? [], trace.filesRead, 'path'),
+    docsRead: mergeRefs(authored.docsRead ?? [], trace.filesRead, 'path', (path) =>
+      editedSet.has(path) ? DERIVED_REASON_EDITED : DERIVED_REASON,
+    ),
     skillsUsed: mergeRefs(authored.skillsUsed ?? [], trace.skillsUsed, 'name'),
     frictions: authored.frictions,
   }

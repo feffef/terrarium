@@ -55,7 +55,7 @@ docsRead:                          # OPTIONAL, curated — the docs that MATTERE
   - { path: CONTEXT.md, reason: domain model }   # transcript-observed reads you omit
   - { path: "app/pages/t/[tenant]/[space]/[...slug].vue", reason: routing }  # are folded
 skillsUsed:                        # in automatically (name cross-refs the Skill Inventory),
-  - { name: tdd, reason: "test-first the helper (see #99)" }  # deduped, uncited ones get (unknown)
+  - { name: tdd, reason: "test-first the helper (see #99)" }  # deduped, uncited ones get (no reason given)
 frictions:                         # REQUIRED (may be []) — list EVERY friction
   - description: …                 # ~20 words, honest
     solution: …                    # the fix, or what would have helped
@@ -82,7 +82,10 @@ ideas:                             # OPTIONAL — omit unless something sparked
   hand-estimated `startedAt` friction: the timestamps are now exact.
 - `docsRead`/`skillsUsed` are your **curated** picks (the ones worth a `reason`).
   You don't have to list everything you touched — the extractor folds observed
-  reads in. A read you *do* cite keeps your `reason`; the rest get `(unknown)`.
+  reads in. A read you *do* cite keeps your `reason`; the rest get a derived
+  placeholder — `(read before editing)` if the same path was also edited (the
+  Edit/Write tool requires reading it first, so that read wasn't unexplained,
+  just uncited), otherwise `(no reason given)`.
 - **frictions is the point.** List *every* one — anything that felt unnecessarily
   complex, token-heavy, or repetitive. A **doc contradiction found mid-session** is
   itself a friction: record it with a `solution` pointing at the single home to fix.
