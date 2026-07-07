@@ -1,0 +1,93 @@
+schemaVersion: 1
+session: session_01UHCrZFsdcLyh1dV9gKryfF
+startedAt: 2026-07-07T17:44:33Z
+endedAt: 2026-07-07T17:51:59Z
+kind: interactive
+goal: Critical review of Nuxt code
+status: completed
+outcome: Review delivered in chat; dead app.vue found
+summary: "Reviewed all Nuxt-facing code (nuxt.config, content.config, modules/routing, shared/routing, platform catch-all, three tenant layers) against standard Nuxt 4 / Nuxt Content v3 conventions, respecting the ADR-mandated keyed-collection isolation model. Key findings: the root-level app.vue is dead code (Nuxt 4 only resolves app/app.vue), tenant pages hand-import components and utils that Nuxt already auto-imports, per-page resolve/404/key boilerplate could fold into one composable, and filtering/sorting done in JS could move into queryCollection's where/order/select. Answer-only session; no code changed, no PR."
+prs: []
+docsRead:
+  - path: CLAUDE.md
+    reason: conventions and ground rules
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: routing model is deliberate
+  - path: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    reason: dynamic content.config rationale
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: "#routing virtual module rationale"
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: tenant-root layer routes
+  - path: docs/agents/tenant-layers.md
+    reason: layer alias gotchas the review touches
+  - path: nuxt.config.ts
+    reason: (unknown)
+  - path: content.config.ts
+    reason: (unknown)
+  - path: modules/routing.ts
+    reason: (unknown)
+  - path: shared/expand.ts
+    reason: (unknown)
+  - path: shared/manifest.ts
+    reason: (unknown)
+  - path: shared/routing.ts
+    reason: (unknown)
+  - path: app/pages/t/[tenant]/[space]/[...slug].vue
+    reason: (unknown)
+  - path: tenants/journal/nuxt.config.ts
+    reason: (unknown)
+  - path: tenants/journal/tenant.config.ts
+    reason: (unknown)
+  - path: tenants/blog/nuxt.config.ts
+    reason: (unknown)
+  - path: tenants/atlas/nuxt.config.ts
+    reason: (unknown)
+  - path: tenants/journal/app/pages/t/journal/[space]/[...slug].vue
+    reason: (unknown)
+  - path: tenants/blog/app/pages/t/blog/[space]/[...slug].vue
+    reason: (unknown)
+  - path: tenants/blog/app/pages/t/blog/[space]/index.vue
+    reason: (unknown)
+  - path: app.vue
+    reason: (unknown)
+  - path: app/pages/index.vue
+    reason: (unknown)
+  - path: vitest.config.ts
+    reason: (unknown)
+  - path: package.json
+    reason: (unknown)
+  - path: tenants/journal/app/pages/t/journal/[space]/index.vue
+    reason: (unknown)
+  - path: tenants/atlas/app/pages/t/atlas/[space]/[...slug].vue
+    reason: (unknown)
+  - path: tests/e2e/smoke.spec.ts
+    reason: (unknown)
+  - path: eslint.config.mjs
+    reason: (unknown)
+  - path: tenants/atlas/app/pages/t/atlas/[space]/index.vue
+    reason: (unknown)
+skillsUsed:
+  - name: log-session
+    reason: (unknown)
+frictions:
+  - description: Judging which non-standard Nuxt patterns are deliberate required reading four ADRs plus tenant-layers.md before any finding could be trusted.
+    solution: Working as intended (ADRs are the record); no fix needed, but a one-line "deliberate divergences from stock Nuxt" index in CLAUDE.md could shortcut it.
+    severity: nit
+durationSec: 447
+models:
+  claude-fable-5: 64
+toolCounts:
+  Bash: 12
+  Read: 24
+  Skill: 1
+  Write: 1
+gitBranch: claude/nuxt-code-review-a7djed
+entrypoint: remote_mobile
+cliVersion: 2.1.202
+learnings:
+  - Nuxt 4 resolves the main component only from each layer's app/ dir; a repo-root app.vue is silently ignored and Nuxt's own runtime app.vue (NuxtLayout + NuxtRouteAnnouncer + NuxtPage) serves instead
+  - Tenant-layer components and utils are already auto-import-registered (.nuxt/components.d.ts, imports.d.ts) despite every page deep-relative-importing them
+ideas:
+  - A read-only useSpace(tenant) composable could fold the repeated resolveSpaceRoute/404/key-picking boilerplate out of all seven tenant pages
+  - Moving tenants/ under Nuxt's layers/ auto-extend convention would delete the hand-maintained extends list and the tsconfig include patch - ADR-worthy trade-off against the ubiquitous-language directory name
