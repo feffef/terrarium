@@ -1,0 +1,66 @@
+schemaVersion: 1
+session: session_018xMFqb4etS4pNw2nFxEx8T
+startedAt: 2026-07-07T16:58:43Z
+endedAt: 2026-07-07T17:15:31Z
+kind: interactive
+goal: Run frictions-to-fixes end to end
+status: completed
+outcome: 4 issues filed, 2 PRs merged
+summary: "Ran the frictions-to-fixes skill: a subagent surveyed the latest 20 session logs, grouped/ranked frictions, and screened them against the GitHub tracker (confirming several were already fixed or open-already, and finding no regressions). Selected 4 never-fixed, simple, safe-surface candidates — no hard picks this round. Filed issues #199-202, then dispatched two Sonnet agents in separate worktrees: one grouped PR (#204) for the three doc-only fixes, one PR (#205) extracting a shared Chromium-path helper. Reviewed both diffs against their issues, confirmed green gates, posted review comments, and merged both."
+prs:
+  - "204"
+  - "205"
+docsRead:
+  - path: CLAUDE.md
+    reason: worktree-isolation and PR/provenance conventions
+  - path: docs/agents/issue-tracker.md
+    reason: triage and PR-review conventions to fix
+  - path: scripts/screenshot.ts
+    reason: source of the Chromium-path extraction
+  - path: docs/agents/triage-labels.md
+    reason: (unknown)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: this run's driving skill
+  - name: log-session
+    reason: (unknown)
+frictions:
+  - description: Confirming a friction was "already fixed, not logged since" required manually cross-referencing a session's startedAt timestamp against the fixing PR's merge timestamp by hand, with no automated join — the exact cost a prior frictions-to-fixes session already flagged as its own friction (2026-07-07T07:59:04) without it being retired since.
+    solution: A small script joining session startedAt against issue/merge timestamps, or a friction-log field for the fixing issue/PR number, would remove this recurring manual archaeology.
+    severity: minor
+  - description: "Tracker screening doubled as reading this skill's own prior output — several issues (#101, #124, #148, #169, #174, #176) are themselves frictions-to-fixes artifacts from earlier runs, which is mildly recursive and easy to lose track of at larger scale."
+    solution: No action needed this run; flagging for awareness if the tracker grows enough that distinguishing "new" from "this skill's own history" gets genuinely confusing.
+    severity: nit
+  - description: The survey subagent needed a ToolSearch warm-up before its first mcp__github__* call since those tools are deferred — expected harness behavior, no real cost, but worth noting as a first-call tax on every GitHub-touching subagent.
+    solution: Document as known/expected; no fix needed.
+    severity: nit
+durationSec: 1008
+models:
+  claude-sonnet-5: 94
+toolCounts:
+  Bash: 4
+  Agent: 3
+  ToolSearch: 4
+  Read: 3
+  mcp__github__search_issues: 4
+  TaskCreate: 8
+  TaskUpdate: 16
+  mcp__github__issue_write: 4
+  mcp__github__pull_request_read: 11
+  ScheduleWakeup: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__merge_pull_request: 2
+  Skill: 1
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Implement grouped doc-fix PR for 3 frictions
+    model: sonnet
+  - type: general-purpose
+    task: Implement chromium path helper extraction PR
+    model: sonnet
+gitBranch: claude/frictions-to-fixes-bhb4k5
+entrypoint: remote_mobile
+cliVersion: 2.1.202
