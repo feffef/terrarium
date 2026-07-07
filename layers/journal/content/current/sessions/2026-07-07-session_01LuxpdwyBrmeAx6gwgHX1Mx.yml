@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01LuxpdwyBrmeAx6gwgHX1Mx
 startedAt: 2026-07-07T22:42:18Z
-endedAt: 2026-07-07T23:05:28Z
+endedAt: 2026-07-07T23:07:11Z
 kind: interactive
 goal: Structure tests by Tenant vs. Platform
-status: in-review
-outcome: Restructured, gated green, PR
+status: completed
+outcome: Restructured, gate green, PR
 summary: "Tests were dumped flat into tests/unit and one e2e smoke spec. Homed each test with the code it exercises: tenant-specific unit tests moved into layers/<tenant>/tests/unit (atlas, blog, journal); platform tests stayed in tests/. The L2 e2e stays a SINGLE nuxt build — the cross-tenant entry-route sweep remains in tests/e2e/smoke.spec.ts and journal-specific assertions became a registerJournalE2E() module imported into that one describe, with shared helpers single-homed in tests/support/e2e.ts. Broadened vitest and tsconfig.node includes. Ran a domain-modeling ADR check first, then amended ADR-0004 (homing rule + single-build-e2e constraint), added tests/README.md, updated CLAUDE.md. Verified test-count parity rigorously (unit 172, e2e 23, identical before/after) since the user conditioned auto-merge on it."
 prs:
   - "224"
@@ -49,22 +49,24 @@ frictions:
   - description: Honestly verifying the e2e test count needed two full builds because vitest list itself triggers setup()'s build (setup runs inside the describe callback).
     solution: Accept the two builds, or lift setup() to top-level so collection is build-free; no cheap static count exists today.
     severity: nit
-durationSec: 1389
+durationSec: 1493
 models:
-  claude-opus-4-8: 174
+  claude-opus-4-8: 190
 toolCounts:
-  Bash: 30
+  Bash: 31
   Read: 12
   AskUserQuestion: 1
   Grep: 1
-  Edit: 13
+  Edit: 14
   Write: 7
-  ToolSearch: 2
+  ToolSearch: 4
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 3
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__enable_pr_auto_merge: 1
+  mcp__github__merge_pull_request: 1
 filesEdited:
   - layers/atlas/tests/unit/atlas.spec.ts
   - layers/journal/tests/unit/journal-dashboard.spec.ts
