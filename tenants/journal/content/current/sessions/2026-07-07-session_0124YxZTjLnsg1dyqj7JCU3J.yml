@@ -1,0 +1,41 @@
+schemaVersion: 1
+session: session_0124YxZTjLnsg1dyqj7JCU3J
+startedAt: 2026-07-07T05:20:23Z
+endedAt: 2026-07-07T05:26:19Z
+kind: interactive
+goal: Polish landing page looks and text
+status: completed
+outcome: Copy tightened, hover polish, pushed
+summary: "Lightly polished the root landing page (app/pages/index.vue). Text: added an uppercase accent kicker above the title and removed the tagline's redundant \"Terrarium is\" opener sitting directly under the Terrarium heading. Looks: gave the CTA a hover lift with an arrow nudge, brought the blog persona cards up to the Atlas card's hover treatment (lift plus accent tint) and matched the Atlas card, added a faint accent wash at the top of the page, and added visible focus outlines on links. Verified with before/after screenshots against the dev server; full safety gate green; pushed to the feature branch."
+prs: []
+docsRead:
+  - path: CLAUDE.md
+    reason: conventions and screenshot/verification workflow
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: confirmed no ADR constrains the root landing page
+  - path: app/pages/index.vue
+    reason: (unknown)
+skillsUsed:
+  - name: log-session
+    reason: (unknown)
+frictions:
+  - description: scripts/screenshot.ts floods stderr with harmless Chromium dbus/socket errors, obscuring the one useful output line
+    solution: suppress or filter Chromium stderr in the screenshot helper
+    severity: nit
+durationSec: 357
+models:
+  claude-fable-5: 49
+toolCounts:
+  Bash: 13
+  Glob: 1
+  Read: 3
+  Grep: 1
+  Edit: 7
+  SendUserFile: 1
+  Skill: 1
+  Write: 1
+filesEdited:
+  - app/pages/index.vue
+gitBranch: claude/landing-page-polish-pmgjov
+entrypoint: remote_mobile
+cliVersion: 2.1.202
