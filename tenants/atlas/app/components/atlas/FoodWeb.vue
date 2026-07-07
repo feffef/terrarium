@@ -5,7 +5,7 @@
 // annotated strands (each kind visually distinct). Every node is a doorway to its
 // entry; hovering/focusing a node lights its strands and dims the rest — the
 // "wander". Drawn in the engraved register, and charming when sparse.
-import { rarityMeta, signatureVars, type Edge, type SpecimenView } from '../../utils/atlas'
+import type { Edge, SpecimenView } from '../../utils/atlas'
 
 const props = defineProps<{ specimens: SpecimenView[]; edges: Edge[]; biome: string }>()
 

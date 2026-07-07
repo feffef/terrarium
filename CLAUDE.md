@@ -193,6 +193,7 @@ shared/manifest.ts                  # manifest types + defineTenant() + validati
 shared/expand.ts                    # pure manifest→keyed-collection expansion (expand(), L3-tested)
 modules/routing.ts                  # build-time Nuxt module: manifests → #routing virtual module (ADR-0014)
 content.config.ts                   # ordinary module — builds keyed collections dynamically (ADR-0013)
+app/composables/space.ts            # useSpace(): route → keyed collections or 404 (auto-imported wrapper)
 app/pages/t/[tenant]/[space]/[...slug].vue   # runtime routing + ContentRenderer
 tests/unit/                         # L3 isolation (keying)
 tests/e2e/                          # L2 smoke render

@@ -3,11 +3,9 @@
 // Persona landing and the post page, replacing the old in-masthead switcher.
 // Styled as a pane of the tank: a rounded glass panel with a sprout perched on
 // its rim. Each link carries its own Persona accent (--pa), so the row reads as
-// a little network of three blogs rather than a generic nav. Layer-local import
-// per the Tenant-layer alias convention (docs/agents/tenant-layers.md §1).
-import { PERSONA_SLUGS, personaMeta } from '../personas'
-import BlogSprout from './BlogSprout.vue'
-
+// a little network of three blogs rather than a generic nav.
+// `PERSONA_SLUGS`/`personaMeta` (utils/) and `BlogSprout` arrive via Nuxt's
+// layer-wide auto-imports.
 defineProps<{ current: string }>()
 </script>
 

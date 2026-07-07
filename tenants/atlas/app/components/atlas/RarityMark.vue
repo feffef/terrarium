@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // The rarity mark (#69): a five-dot ladder for the graded scale, a lone star for
 // mythic. Appears on the museum label, the specimen index, and the food web.
-import { rarityMeta, type Rarity } from '../../utils/atlas'
+import type { Rarity } from '../../utils/atlas'
 
 const props = defineProps<{ grade: Rarity | undefined; showGrade?: boolean }>()
 const meta = computed(() => rarityMeta(props.grade))

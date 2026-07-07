@@ -9,7 +9,7 @@
 // typechecked before #55 lands (see the issue).
 import { describe, expect, it } from 'vitest'
 import {
-  cards,
+  sessionCardViews,
   countFrictions,
   digestList,
   durMin,
@@ -236,7 +236,7 @@ describe('toolEntries', () => {
   })
 })
 
-describe('cards', () => {
+describe('sessionCardViews', () => {
   it('maps a SessionDoc to its display view, including shortId truncation', () => {
     const s = session({
       session: 'session_0123456789abcdefXYZW',
@@ -247,7 +247,7 @@ describe('cards', () => {
       skillsUsed: [{ name: 'tdd', reason: 'r' }],
       docsRead: [{ path: 'CLAUDE.md', reason: 'r' }],
     })
-    const [c] = cards([s])
+    const [c] = sessionCardViews([s])
     expect(c!.key).toBe('session_0123456789abcdefXYZW')
     expect(c!.sid).toBe('session_01234…XYZW')
     expect(c!.when).toBe('Jul 5 · 11:30 UTC')
@@ -267,7 +267,7 @@ describe('cards', () => {
       filesEdited: ['a.ts', 'b.vue'],
       toolCounts: { Bash: 9, Read: 2 },
     })
-    const [c] = cards([s])
+    const [c] = sessionCardViews([s])
     expect(c!.model).toBe('opus-4-8 · sonnet-5')
     expect(c!.subagents).toEqual([{ type: 'general-purpose', task: 'survey', model: 'sonnet' }])
     expect(c!.filesEdited).toEqual(['a.ts', 'b.vue'])
@@ -275,7 +275,7 @@ describe('cards', () => {
   })
 
   it('defaults the trace fields for an older, authored-only log', () => {
-    const [c] = cards([session()])
+    const [c] = sessionCardViews([session()])
     expect(c!.model).toBe('')
     expect(c!.subagents).toEqual([])
     expect(c!.filesEdited).toEqual([])
@@ -283,10 +283,10 @@ describe('cards', () => {
   })
 
   it('surfaces authored learnings/ideas, and defaults them to [] when absent', () => {
-    const [with_] = cards([session({ learnings: ['a thing'], ideas: ['a spark'] })])
+    const [with_] = sessionCardViews([session({ learnings: ['a thing'], ideas: ['a spark'] })])
     expect(with_!.learnings).toEqual(['a thing'])
     expect(with_!.ideas).toEqual(['a spark'])
-    const [without] = cards([session()])
+    const [without] = sessionCardViews([session()])
     expect(without!.learnings).toEqual([])
     expect(without!.ideas).toEqual([])
   })

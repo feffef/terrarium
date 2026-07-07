@@ -2,22 +2,11 @@
 // Runtime routing (ADR-0001): the request path selects which baked (Tenant, Space)
 // to serve. We resolve it to generated collection keys and query only those
 // collections — physical table-level isolation means no cross-Space leakage.
-import { resolveSpaceRoute } from '~~/shared/routing'
-
+// Pure isolation-critical resolution lives in shared/routing.ts (unit-tested);
+// useSpace (app/composables/space.ts) wraps it read-only and 404s the unknown.
 const route = useRoute()
 const tenant = String(route.params.tenant)
-const space = String(route.params.space)
-
-// Pure isolation-critical resolution lives in shared/routing.ts (unit-tested).
-const resolved = resolveSpaceRoute(tenant, space, route.params.slug)
-if (!resolved) {
-  throw createError({
-    statusCode: 404,
-    statusMessage: `Unknown Tenant/Space: ${tenant}/${space}`,
-  })
-}
-
-const { path, atRoot, pagesKey, dataCollections } = resolved
+const { space, path, atRoot, pagesKey, dataCollections } = useSpace(tenant)
 
 const { data } = await useAsyncData(route.path, async () => {
   const page = await queryCollection(pagesKey).path(path).first()

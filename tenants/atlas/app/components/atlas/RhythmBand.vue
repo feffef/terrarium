@@ -2,7 +2,7 @@
 // Activity rhythm (#73): a beautiful clock, not a chart. 24 hour-cells,
 // midnight→midnight, filled where the creature stirs. Bands may wrap past
 // midnight; the geometry lives in the pure `rhythmCells` helper.
-import { rhythmCells, type Band } from '../../utils/atlas'
+import type { Band } from '../../utils/atlas'
 
 const props = defineProps<{ bands: Band[]; label?: string }>()
 const cells = computed(() => rhythmCells(props.bands))

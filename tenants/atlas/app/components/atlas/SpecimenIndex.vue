@@ -3,7 +3,6 @@
 // binomial (its color signature worn as a swatch trio), common name, one-line
 // character, and the rarity mark. Every row a doorway to the entry.
 import type { SpecimenView } from '../../utils/atlas'
-import RarityMark from './RarityMark.vue'
 
 defineProps<{ specimens: SpecimenView[]; biome: string }>()
 </script>
@@ -20,7 +19,7 @@ defineProps<{ specimens: SpecimenView[]; biome: string }>()
           <span class="common"> · {{ s.common }}</span>
           <span v-if="s.blurb" class="char">{{ s.blurb }}</span>
         </span>
-        <RarityMark :grade="s.rarity" />
+        <AtlasRarityMark :grade="s.rarity" />
       </NuxtLink>
     </li>
   </ul>

@@ -4,48 +4,28 @@
 // the Space *root* only — individual Documents still render via the catch-all.
 //
 // Isolation-respecting and presentation-only: it resolves the Space to its keyed
-// collections through the SAME build-time routing map the catch-all uses (a
-// read-only import — no isolation logic is duplicated or changed), then reads
-// only `journal_<space>_{pages,skills,sessions}`. Spaces cannot leak.
-import { resolveSpaceRoute } from '~~/shared/routing'
+// collections through the SAME shared, unit-tested resolver the catch-all uses
+// (via the read-only useSpace composable — no isolation logic is duplicated or
+// changed), then reads only `journal_<space>_{pages,skills,sessions}`. Spaces
+// cannot leak.
+//
+// Pure aggregation/formatting lives in the layer-local, unit-tested
+// `app/utils/dashboard.ts` (issue #61); Nuxt auto-imports its exports, so the
+// SFC keeps only the thin `computed()` wrappers below — under local names
+// distinct from the exports, or the bindings merge and vue-tsc rejects the
+// ambiguity (issue #95; see dashboard.ts's header comment).
 import { routingMap } from '#routing'
 import type { PageDoc, SessionDoc, SkillDoc } from '../../../../types/journal'
-// Pure aggregation/formatting lives in a layer-local, unit-tested module (issue
-// #61) — imported by relative path (the `~/` alias would resolve to the main
-// app, not this layer; see docs/agents/tenant-layers.md §1). The SFC keeps only
-// the thin `computed()` wrappers below.
-import {
-  cards as buildCards,
-  digestList,
-  externalSkillCount as countExternalSkills,
-  frictionCount as countFrictionTotal,
-  frictionTotals as rollupFrictions,
-  kindCounts as countKinds,
-  ownSkills as selectOwnSkills,
-  prRefs as dedupePrRefs,
-  prRefsParts as splitPrRefs,
-  prUrl as buildPrUrl,
-  skillGroups as groupSkills,
-  skillsLabel as buildSkillsLabel,
-  skillsSub as buildSkillsSub,
-} from '../../../../utils/dashboard'
 
 const route = useRoute()
 const tenant = 'journal'
-const space = String(route.params.space)
 
-// Resolve through the SAME shared, unit-tested resolver the catch-all uses — no
-// isolation logic is duplicated here; it reads only this (Tenant, Space)'s keys.
-const resolved = resolveSpaceRoute(tenant, space, undefined)
-if (!resolved) {
-  throw createError({ statusCode: 404, statusMessage: `Unknown Space: ${tenant}/${space}` })
-}
-// `resolved` already carries this Tenant's own literal collection keys — the
+// `useSpace` already carries this Tenant's own literal collection keys — the
 // resolver derives them from the generated `#routing` type (shared/routing.ts,
 // #96) — so `queryCollection` keeps the journal item types (#55) with no casts.
-const pagesKey = resolved.pagesKey
-const skillsKey = resolved.dataCollections.find((d) => d.name === 'skills')?.key
-const sessionsKey = resolved.dataCollections.find((d) => d.name === 'sessions')?.key
+const { space, pagesKey, dataKey } = useSpace(tenant)
+const skillsKey = dataKey('skills')
+const sessionsKey = dataKey('sessions')
 
 // The resolver deliberately exposes only the one resolved Space, so read the map
 // directly for the Space-toggle's list of sibling Spaces.
@@ -54,7 +34,10 @@ const spaces = Object.keys(routingMap[tenant])
 const { data } = await useAsyncData(route.path, async () => {
   const pages = await queryCollection(pagesKey).all()
   const skills = skillsKey ? await queryCollection(skillsKey).all() : []
-  const sessions = sessionsKey ? await queryCollection(sessionsKey).all() : []
+  // Newest-first, ordered in SQL rather than re-sorted client-side.
+  const sessions = sessionsKey
+    ? await queryCollection(sessionsKey).order('endedAt', 'DESC').all()
+    : []
   return { pages, skills, sessions }
 })
 
@@ -78,34 +61,31 @@ const toggleDigest = (path: string) => {
 // #94). A schema edit that drops a field now fails to typecheck right here
 // instead of being silently erased by an `as unknown as` cast.
 const skills = computed<SkillDoc[]>(() => data.value?.skills ?? [])
-const sessions = computed<SessionDoc[]>(() =>
-  (data.value?.sessions ?? [])
-    .slice()
-    .sort((a, b) => new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime()),
-)
+const sessions = computed<SessionDoc[]>(() => data.value?.sessions ?? [])
 
 // ── Derived dashboard data — thin wrappers over the pure module ──
-// Named to stay distinct from `dashboard.ts`'s own exports (issue #95): Nuxt
-// auto-imports those exports globally, and a same-named local binding here
-// would merge with the auto-import and fail vue-tsc (TS2774) — see
-// dashboard.ts's header comment.
-const sessionCards = computed(() => buildCards(sessions.value))
-const frictionSeverityTotals = computed(() => rollupFrictions(sessions.value))
-const totalFrictions = computed(() => countFrictionTotal(sessions.value))
-const sessionKindCounts = computed(() => countKinds(sessions.value))
-const referencedPrs = computed(() => dedupePrRefs(sessions.value))
-const referencedPrParts = computed(() => splitPrRefs(referencedPrs.value))
+// The wrapped functions (sessionCardViews, frictionTotals, …) are dashboard.ts
+// exports arriving via auto-import; each local name is distinct (issue #95).
+const sessionCards = computed(() => sessionCardViews(sessions.value))
+const frictionSeverityTotals = computed(() => frictionTotals(sessions.value))
+const totalFrictions = computed(() => frictionCount(sessions.value))
+const sessionKindCounts = computed(() => kindCounts(sessions.value))
+const referencedPrs = computed(() => prRefs(sessions.value))
+const referencedPrParts = computed(() => prRefsParts(referencedPrs.value))
 
-const platformSkills = computed(() => selectOwnSkills(skills.value))
-const externalSkillTotal = computed(() => countExternalSkills(skills.value))
-const skillsHeading = computed(() => buildSkillsLabel(externalSkillTotal.value))
-const skillsSubtext = computed(() => buildSkillsSub(platformSkills.value))
-const groupedSkills = computed(() => groupSkills(platformSkills.value))
+const platformSkills = computed(() => ownSkills(skills.value))
+const externalSkillTotal = computed(() => externalSkillCount(skills.value))
+const skillsHeading = computed(() => skillsLabel(externalSkillTotal.value))
+const skillsSubtext = computed(() => skillsSub(platformSkills.value))
+const groupedSkills = computed(() => skillGroups(platformSkills.value))
 
 const title = computed(() => page.value?.title ?? `The Platform Journal — ${space}`)
 const lede = computed(() => page.value?.description ?? `The ${space} Space of the journal Tenant.`)
 
-useHead({ title: `${title.value} · journal/${space}` })
+useSeoMeta({
+  title: () => `${title.value} · journal/${space}`,
+  description: () => lede.value,
+})
 </script>
 
 <template>
@@ -208,7 +188,7 @@ useHead({ title: `${title.value} · journal/${space}` })
         <template #sub>
           <template v-if="referencedPrParts.shown.length">
             <template v-for="(p, i) in referencedPrParts.shown" :key="p">
-              <template v-if="i"> · </template><a class="pr-link" :href="buildPrUrl(p)">#{{ p }}</a>
+              <template v-if="i"> · </template><a class="pr-link" :href="prUrl(p)">#{{ p }}</a>
             </template>
             <template v-if="referencedPrParts.rest"> +{{ referencedPrParts.rest }} earlier</template>
           </template>

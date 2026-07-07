@@ -5,26 +5,44 @@ main app (CONTEXT.md, ADR-0001). Nuxt layers have two gotchas that get
 re-discovered from scratch most sessions. Read this before editing a layer's
 `nuxt.config.ts`, pages, or components.
 
-## 1. Aliases resolve to the main app, not the layer
+## 1. Auto-imports first; aliases resolve to the main app, not the layer
 
-Inside a layer, the usual Nuxt aliases (`~`, `@`, `~~`, `@@`) resolve relative
-to the **main app's** root, not the layer directory the file physically lives
-in. A layer file can't `import '~/types/foo'` and expect Nuxt to look inside
-the layer for it — it will look in (and usually fail to find it in) the root
-app instead.
+**Reach for Nuxt's auto-imports before writing any import.** A layer's
+`app/components/`, `app/composables/`, and `app/utils/` directories are all
+scanned, layer-aware, and shared app-wide — components resolve under their
+directory-prefixed name (`tenants/atlas/app/components/atlas/SpecimenPlate.vue`
+→ `<AtlasSpecimenPlate>`), and utils/composables exports resolve by name in
+every SFC and every layer, with no import block at all. The root app's
+`useSpace()` composable and each layer's own utils (`personaMeta`,
+`biomeMeta`, `sessionCardViews`, …) reach layer pages this way. Two rules keep
+the shared namespace safe:
 
-Two ways layer code deals with this, both used in `tenants/journal/`:
+- **The auto-import namespace is global across all layers** — name exports
+  distinctively (tenant vocabulary, e.g. `formatBlogDate`, not `fmtDate`), and
+  keep truly generic helpers module-private.
+- **A local binding must not shadow an auto-imported export's name** — the two
+  merge and vue-tsc rejects the ambiguity (TS2774, issue #95). Consuming SFCs
+  keep local names distinct (`const sessionCards = computed(() =>
+  sessionCardViews(...))`).
 
-- **Layer-local TS/JS imports → plain relative paths.** The Space-landing page
+For what auto-import does *not* cover (type-only imports, assets), know the
+alias gotcha: inside a layer, the usual Nuxt aliases (`~`, `@`, `~~`, `@@`)
+resolve relative to the **main app's** root, not the layer directory the file
+physically lives in. A layer file can't `import '~/types/foo'` and expect Nuxt
+to look inside the layer for it — it will look in (and usually fail to find it
+in) the root app instead. Two ways layer code deals with this:
+
+- **Layer-local type imports → plain relative paths.** The Space-landing page
   imports the journal Tenant's own types with a relative path, not an alias:
 
   ```ts
   // tenants/journal/app/pages/t/journal/[space]/index.vue
-  import type { Friction, Importance, PageDoc, SessionCardView, SessionDoc, Severity, SkillDoc } from '../../../../types/journal'
+  import type { PageDoc, SessionDoc, SkillDoc } from '../../../../types/journal'
   ```
 
   That resolves to `tenants/journal/app/types/journal.ts` — a layer-local file
   — via plain relative traversal, sidestepping alias resolution entirely.
+  (Types are *not* auto-imported; only values from the scanned dirs are.)
 
 - **Layer-local asset paths in `nuxt.config.ts` → `fileURLToPath` from the
   config's own URL.** Registering the layer's CSS by aliased path (e.g.
@@ -44,12 +62,12 @@ Two ways layer code deals with this, both used in `tenants/journal/`:
   This is unambiguous regardless of how layer aliases resolve, because it
   never goes through the alias system at all.
 
-Note the main app's own routing code, reached from a layer page, still uses
-the main-app-rooted alias correctly — e.g. `tenants/journal/app/pages/t/journal/[space]/[...slug].vue`
-imports `import { resolveSpaceRoute } from '~~/shared/routing'`, which is
-right precisely *because* `shared/routing.ts` lives in the main app, not the
-layer. The rule is "which app root does the target file actually live under,"
-not "always avoid aliases in a layer."
+Main-app modules that a layer page genuinely needs to import (rare now that
+`useSpace()` covers routing) use the root aliases correctly — e.g.
+`#shared/routing` (Nuxt's own alias for the root `shared/` directory) is right
+precisely *because* `shared/routing.ts` lives in the main app, not the layer.
+The rule is "which app root does the target file actually live under," not
+"always avoid aliases in a layer."
 
 ## 2. Layer-wrapper CSS custom properties inherit into scoped children
 

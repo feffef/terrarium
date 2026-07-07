@@ -3,10 +3,9 @@
 // clicking it expands the full log in place — its narrative, docs read, skills
 // used, and every friction. Sessions are a `data` collection with no route of
 // their own, so this inline disclosure is how the detail is reached.
+// Types are imported relatively (`~/` resolves to the main app in a layer —
+// docs/agents/tenant-layers.md §1); `prUrl` arrives via the utils auto-import.
 import type { SessionCardView } from '../../types/journal'
-// Relative path + alias, like the landing SFC: `~/` resolves to the main app in
-// a layer, and a distinct local name avoids the auto-import merge (issue #95).
-import { prUrl as buildPrUrl } from '../../utils/dashboard'
 
 const { card } = defineProps<{ card: SessionCardView }>()
 const expanded = ref(false)
@@ -34,7 +33,7 @@ const toggle = () => (expanded.value = !expanded.value)
       <p class="outcome">{{ card.outcome }}</p>
       <div class="foot">
         <!-- @click.stop: the whole head toggles the card; a PR chip navigates instead -->
-        <a v-for="pr in card.prs" :key="pr" class="chip pr" :href="buildPrUrl(pr)" @click.stop>PR {{ pr.startsWith('#') ? pr : '#' + pr }}</a>
+        <a v-for="pr in card.prs" :key="pr" class="chip pr" :href="prUrl(pr)" @click.stop>PR {{ pr.startsWith('#') ? pr : '#' + pr }}</a>
         <span v-if="card.model" class="chip model" title="Model(s) that drove this session">{{ card.model }}</span>
         <JournalFrictionStrata variant="inline" :counts="card.frictionCounts" :total="card.frictionTotal" />
         <span v-if="card.skills.length" class="skills">{{ card.skills.join(' · ') }}</span>
