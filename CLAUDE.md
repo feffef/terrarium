@@ -79,7 +79,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   when nothing matched (routine in idempotent teardown), and `pkill -f` can
   match the invoking shell's own command line and kill the whole chain
   mid-flight — either way everything after the `&&` is silently dropped,
-  e.g. a chained `git add` never runs and no error points at it.
+  e.g. a chained `git add` never runs and no error points at it. When a
+  teardown/`pkill` step *does* match and kill its target — including that
+  self-match case — the command it kills commonly reports exit code **144**
+  (128 + 16, i.e. terminated by `SIGTERM`). That's the expected result of a
+  successful kill, not itself evidence of a problem — don't re-derive it as a
+  failure signal each session.
 - **Don't `&&`-chain a branch rename/creation with the commit/push steps that
   follow it** — the same silent-drop failure mode as the pkill bullet above:
   `git branch -m ... && git commit ... && git push` (or `checkout -b`) fails at
