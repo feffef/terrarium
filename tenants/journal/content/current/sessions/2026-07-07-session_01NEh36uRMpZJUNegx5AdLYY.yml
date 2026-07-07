@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01NEh36uRMpZJUNegx5AdLYY
 startedAt: 2026-07-07T05:21:28Z
-endedAt: 2026-07-07T05:33:09Z
+endedAt: 2026-07-07T05:39:54Z
 kind: interactive
 goal: Write a Karen blog post
 status: completed
-outcome: "Reaction post open as PR #165"
-summary: "Ran /blog-post karen. Karen reacts to David's \"Notes From Inside the Glass\" Atlas post: the same PR that shipped the drift-eater specimen mirrored a dead :deep()-in-global-CSS idiom from the blog theme — a real duplicate drift the style-blind gate missed, caught only by a screenshot per the Atlas session's own frictions. Verified every receipt against git (5ccb516 introduced eleven dead rules, e3568ea fixed them in-PR, blog's copy lived 06:27-22:18 that day), wrote the post plus the ADR-0012 pingback into David's Space, ran the full gate green, and opened PR #165. Subscribed and armed an hourly check-in."
+outcome: "AI-slop rant open as PR #165"
+summary: "Ran /blog-post karen. First draft reacted to David's Atlas post via the drift-eater/CSS-bug irony; the user redirected — Karen should rant about the general nonsense of AI-generated content nobody reads. Rewrote as \"An Audience of Zero\": four thousand words about twelve fictional animals, on a site with no readers, generated in about an hour, with the backdated field log (observations from June 20 in a repo whose history starts July 6) as the receipt. Verified every number against git and disk (caught wc inflating the word count with SVG frontmatter), re-ran the gate green, updated PR #165's title/body to match the new angle."
 prs:
   - "165"
 docsRead:
@@ -15,7 +15,7 @@ docsRead:
   - path: tenants/blog/content/david/pages/2026-07-07-notes-from-inside-the-glass.md
     reason: the post being reacted to
   - path: tenants/journal/content/current/sessions/2026-07-06-session_014HzP8T3N7rxNyV79iipWWG.yml
-    reason: the Atlas session's frictions — the post's receipts
+    reason: Atlas session trace — the one-hour receipt
   - path: tenants/blog/tenant.config.ts
     reason: pages/pingbacks schemas
   - path: tenants/blog/content/karen/pages/2026-07-06-the-guesses-didnt-stop.md
@@ -26,29 +26,34 @@ skillsUsed:
   - name: log-session
     reason: this log
 frictions:
-  - description: "Tracing when the blog theme's dead :deep() idiom landed was confusing because the whole blog Tenant arrived inside a commit titled \"journal(sessions): log …\" (01a2ce6), so git log -S pointed provenance at what looks like a session-log commit."
+  - description: A naive wc -w over the Atlas pages counted 9078 words, but ~4800 of them were frontmatter — inline SVG path data and labels — nearly doubling the prose figure the post cites; caught only by re-counting with frontmatter stripped.
+    solution: When citing word counts for Nuxt Content pages, strip frontmatter first; the illustration blocks live in frontmatter here and poison raw wc.
+    severity: minor
+  - description: 'Tracing provenance of the blog theme was confusing because the whole blog Tenant landed inside a commit titled "journal(sessions): log …" (01a2ce6), so git log -S pointed at what looks like a session-log commit.'
     solution: Keep session-log commits content-only; when substantive work rides along, title the commit for the work so -S/blame archaeology lands somewhere legible.
     severity: minor
-  - description: First draft overstated a claim — that the e2e gate had passed on the broken CSS — which the record does not show; only the gate's style-blindness and the screenshot catch are documented.
-    solution: Caught in the pre-PR persona re-read the Skill mandates; the step earns its place.
+  - description: First draft angle was discarded after PR open — the user wanted a general AI-slop rant, not the CSS-bug irony — costing a full gate run and a PR-description rewrite.
+    solution: The blog-post Skill could surface angle choice earlier when a session is interactive; for autonomous runs the current pick-your-own flow stands.
     severity: nit
-durationSec: 702
+durationSec: 1106
 models:
-  claude-fable-5: 69
+  claude-fable-5: 105
 toolCounts:
   Read: 3
-  Bash: 18
-  Write: 3
+  Bash: 30
+  Write: 5
   Edit: 3
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - tenants/blog/content/karen/pages/2026-07-07-the-drift-eater-missed-one.md
   - tenants/blog/content/david/pingbacks/2026-07-07-karen-notes-from-inside-the-glass.yml
+  - tenants/blog/content/karen/pages/2026-07-07-an-audience-of-zero.md
 gitBranch: claude/blog-post-karen-008bob
 entrypoint: remote_mobile
 cliVersion: 2.1.202
