@@ -72,6 +72,14 @@ tools. Use the `Blocked by: #<n>` body-line fallback described under
 
 ## Conventions
 
+- **`/triage`'s redundancy check applies to every open issue, no exemptions.**
+  "Search for an existing implementation before actioning this issue" is not
+  optional for issues that read as *not yet actionable by design* — e.g. a
+  governance proposal intentionally sitting on a human greenlight.
+  Unactionable-by-design and unimplemented are two independent facts, not one:
+  a proposal can quietly ship anyway (via a different issue or PR) while it's
+  still open and unlabeled, and the redundancy check is exactly what catches
+  that. Check both, every time, even when an issue looks obviously pending.
 - **Create an issue**: `gh issue create --title "..." --body "..."`. Use a heredoc for multi-line bodies.
 - **Read an issue**: `gh issue view <number> --comments`, filtering comments by `jq` and also fetching labels.
 - **List issues**: `gh issue list --state open --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'` with appropriate `--label` and `--state` filters.
@@ -118,6 +126,8 @@ When set to `yes`, PRs run through the same labels and states as issues, using t
 GitHub shares one number space across issues and PRs, so a bare `#42` may be either — resolve with `gh pr view 42` and fall back to `gh issue view 42`.
 
 A reviewing agent must post its verdict as a PR review or comment **before merging** — every time, even on a clean "merging as-is" verdict — so the audit trail lives on the PR; otherwise `get_reviews`/`get_comments` return empty and a real review reads as none having happened.
+
+**A "you already have a pending review" error is a stop-and-ask signal, never a call-`delete_pending`-and-retry one.** This can surface from `pull_request_review_write` (or the raw GitHub review API) mid-triage. Because agent-driven GitHub API calls run under the human owner's own authorized connection (ADR-0017), there is no reliable way to tell whether the pending review is the agent's own leftover state or the maintainer's own in-progress draft. Deleting the wrong one permanently erases the maintainer's unsubmitted draft text, with no undo. On this error, stop and ask the user before touching `delete_pending` — don't guess.
 
 ## When a skill says "publish to the issue tracker"
 
