@@ -9,3 +9,7 @@ You've reached **Session closure** — run the two closing actions:
   open, else `completed`.
 - **For any gated PR, follow CLAUDE.md's discipline:** open it, subscribe to its
   activity, and babysit it to merge/close.
+
+**Closing isn't one-shot.** If you do more work after closing, invoke
+`/close-session` again — re-logging self-heals, overwriting the log with the
+fuller state.
