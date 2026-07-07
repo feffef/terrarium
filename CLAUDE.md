@@ -157,6 +157,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
     worktree, then run these git commands," since that reads as a one-time
     setup step the subagent will (correctly, given how the tool actually
     behaves) fail to repeat.
+  - **A mechanism-2 worktree has also been observed starting from a stale or
+    unrelated HEAD instead of `origin/<default-branch>`** — this has hit
+    multiple parallel worktree-isolated subagents in the same session. Don't
+    assume the freshly provisioned worktree is already on top of
+    `origin/<default-branch>`: after dispatch, verify the worktree's branch
+    HEAD matches `origin/<default-branch>` before any commit, and rebranch
+    explicitly if it doesn't.
 - **Every agent-authored interaction with GitHub, or any other external
   system, carries a two-line provenance footer, no exemptions** (ADR-0017):
   ```
