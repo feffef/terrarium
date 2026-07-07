@@ -1,0 +1,72 @@
+schemaVersion: 1
+session: session_01HPGApXfA98dPyH2zJP9Fge
+startedAt: 2026-07-07T19:02:44Z
+endedAt: 2026-07-07T19:31:00Z
+kind: interactive
+goal: Turn logged session frictions into fixes
+status: completed
+outcome: One fix merged, one escalated to human
+summary: "Ran the frictions-to-fixes workflow. A survey subagent read the latest 20 session logs, grouped and ranked frictions, and screened them against the tracker. I re-verified every candidate against main before filing — which caught the survey over-counting: two \"never-fixed\" candidates were already shipped (the delete_pending guardrail in PR #204; the GitHub-MCP deferred-tools note already documented). Genuinely-ripe work reduced to one dispatchable fix (#214, a merged-since helper that retires the survey's own timestamp archaeology) and one human-only escalation (#215, the interactive log-session closure gap that reverses PR #176's deliberate decline). Dispatched a Sonnet agent for #214, reviewed the PR, gate green, merged #216."
+prs:
+  - "216"
+docsRead:
+  - path: docs/agents/issue-tracker.md
+    reason: caught the already-shipped delete_pending guardrail + MCP hygiene
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: footer + shared-identity limits
+  - path: scripts/session-frictions.ts
+    reason: "survey mechanism + structural template for #214"
+  - path: CLAUDE.md
+    reason: worktree/git discipline for the impl agent brief
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the driving workflow
+  - name: log-session
+    reason: this log
+frictions:
+  - description: 'Survey subagent classified an already-fixed friction (delete_pending, fixed by PR #204) as never-fixed, and flagged an already-documented one, because its "confirm against main" step was manual and imperfect.'
+    solution: "The main session must re-verify each candidate against main before filing, never trusting the survey's classification. This is exactly the archaeology #214's merged-since helper now makes reliable (dogfooded its own premise)."
+    severity: moderate
+  - description: Screening "fixed-since vs regression" required comparing a session's UTC startedAt against git commits' local-offset timestamps by hand, repeated ~10x in one pass. Reported by the survey subagent and hit again manually.
+    solution: "Retired by #214 (scripts/merged-since.ts) — lists origin/main commits after an instant, UTC-normalized and isMerge-flagged. Now wired into the SKILL §2."
+    severity: minor
+  - description: GitHub and Claude_Code_Remote MCP servers disconnected mid-call; send_later failed with "permission stream closed". Recovered by warming tools via ToolSearch after reconnect. Matches prior sessions' transient-flake friction.
+    solution: Retry once after the reconnect settles; no repo fix — an environment/MCP transport flake, already the converged coping strategy.
+    severity: nit
+  - description: Could not post an APPROVE review on the dispatched PR — GitHub rejects approving a PR opened under the same owner connection (shared identity).
+    solution: Downgrade the review to a COMMENT event carrying the same verdict; the audit trace is what §6 requires. Known ADR-0017/#132 limit, recurred in review-merge.
+    severity: minor
+  - description: "GitHub MCP tools are deferred — each GitHub-touching subagent pays a ToolSearch select: warm-up tax before its first mcp__github__* call."
+    solution: Already documented at issue-tracker.md:40-62; recurrence is guidance-not-heeded by fresh subagents, not a missing doc. No new fix warranted.
+    severity: nit
+durationSec: 1695
+models:
+  claude-opus-4-8: 78
+toolCounts:
+  Agent: 2
+  Bash: 6
+  ToolSearch: 3
+  Read: 3
+  mcp__github__search_issues: 1
+  mcp__github__get_me: 1
+  Glob: 1
+  mcp__github__issue_write: 2
+  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_review_write: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  Skill: 1
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Implement merged-since helper (#214)
+    model: sonnet
+gitBranch: claude/frictions-to-fixes-ce83jh
+entrypoint: remote_mobile
+cliVersion: 2.1.202
+learnings:
+  - A frictions survey's "already-fixed" verdict must be re-checked against main before filing — the subagent's manual timestamp join is error-prone, which is the very premise
+ideas:
+  - The survey subagent could auto-run merged-since per candidate and fold the result into its report, closing the loop the main session had to do by hand this run.
