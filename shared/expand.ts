@@ -132,8 +132,8 @@ export function expand(manifests: LoadedManifest[]): ExpandedCollection[] {
 
 /**
  * Derive the L2 entry-route list from an expanded collection set.
- * Single-homed here so `modules/routing.ts` (build-time) and
- * `tests/e2e/smoke.spec.ts` (test-time) stay in sync automatically.
+ * Single-homed here so `modules/routing.ts` (build-time) and the L2 smoke
+ * support (`tests/support/e2e.ts`, test-time) stay in sync automatically.
  */
 export function entryRoutesFrom(cols: ExpandedCollection[]): string[] {
   return [
