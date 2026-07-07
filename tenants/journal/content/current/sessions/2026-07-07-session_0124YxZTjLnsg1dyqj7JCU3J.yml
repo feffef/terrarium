@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_0124YxZTjLnsg1dyqj7JCU3J
 startedAt: 2026-07-07T05:20:23Z
-endedAt: 2026-07-07T05:26:19Z
+endedAt: 2026-07-07T05:32:44Z
 kind: interactive
 goal: Polish landing page looks and text
 status: completed
-outcome: Copy tightened, hover polish, pushed
-summary: "Lightly polished the root landing page (app/pages/index.vue). Text: added an uppercase accent kicker above the title and removed the tagline's redundant \"Terrarium is\" opener sitting directly under the Terrarium heading. Looks: gave the CTA a hover lift with an arrow nudge, brought the blog persona cards up to the Atlas card's hover treatment (lift plus accent tint) and matched the Atlas card, added a faint accent wash at the top of the page, and added visible focus outlines on links. Verified with before/after screenshots against the dev server; full safety gate green; pushed to the feature branch."
-prs: []
+outcome: "Merged to main as PR #164"
+summary: "Lightly polished the root landing page (app/pages/index.vue). Text: added an uppercase accent kicker above the title and removed the tagline's redundant \"Terrarium is\" opener sitting directly under the Terrarium heading. Looks: gave the CTA a hover lift with an arrow nudge, brought the blog persona cards up to the Atlas card's hover treatment (lift plus accent tint) and matched the Atlas card, added a faint accent wash at the top of the page, and added visible focus outlines on links. Verified with before/after screenshots against the dev server; full safety gate green; merged to main as PR 164."
+prs:
+  - "164"
 docsRead:
   - path: CLAUDE.md
     reason: conventions and screenshot/verification workflow
@@ -22,15 +23,15 @@ frictions:
   - description: scripts/screenshot.ts floods stderr with harmless Chromium dbus/socket errors, obscuring the one useful output line
     solution: suppress or filter Chromium stderr in the screenshot helper
     severity: nit
-durationSec: 357
+durationSec: 742
 models:
-  claude-fable-5: 49
+  claude-fable-5: 58
 toolCounts:
-  Bash: 13
+  Bash: 15
   Glob: 1
   Read: 3
   Grep: 1
-  Edit: 7
+  Edit: 9
   SendUserFile: 1
   Skill: 1
   Write: 1
