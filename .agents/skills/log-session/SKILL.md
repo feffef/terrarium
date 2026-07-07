@@ -49,7 +49,22 @@ frictions:                         # REQUIRED (may be []) — list EVERY frictio
   - description: …                 # ~20 words, honest
     solution: …                    # the fix, or what would have helped
     severity: nit                  # nit < minor < moderate < major < blocker
+learnings:                         # OPTIONAL — omit unless something sparked
+  - Nuxt layer `~/` resolves to the main app, not the layer  # each a short string
+ideas:                             # OPTIONAL — omit unless something sparked
+  - A consolidate job could cluster frictions into a tag taxonomy
 ```
+
+- **`learnings`/`ideas` are optional sparks — leave them off unless the session
+  genuinely produced one.** Don't pad them; an empty session log carries neither.
+  - `learnings` — useful knowledge you *inferred during the work* that you neither
+    knew up front nor read from the repo. A fact you read from a file is a
+    `docsRead` entry, not a learning. Some things you'd log as a `nit` friction are
+    better here — a learning is a friction's positive twin (what you gained, not
+    where it hurt), and research/interactive sessions often end with learnings and
+    no friction at all.
+  - `ideas` — rough sparks for the Platform's or a Tenant's future: too nascent to
+    be a GitHub issue, just something that might grow into a backlog item later.
 
 - **Do NOT write** `startedAt`/`endedAt`, `durationSec`, `models`, `toolCounts`,
   `filesEdited`, `subagents`, `gitBranch`, … — all derived. This kills the old

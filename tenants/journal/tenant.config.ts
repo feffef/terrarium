@@ -123,6 +123,14 @@ export default defineTenant({
               severity: z.enum(['nit', 'minor', 'moderate', 'major', 'blocker']),
             }),
           ),
+          // Two OPTIONAL authored spark fields (not derivable, unlike the
+          // mechanical trace above) — see the `learnings`/`ideas` definitions on
+          // the Session glossary entry (CONTEXT.md). Filled in only when the
+          // session actually sparked one; `.optional()`, not `.default([])`, so an
+          // empty log stays truly empty. Additive per the ADR-0009 schema-evolution
+          // policy — no version bump.
+          learnings: z.array(z.string()).optional(),
+          ideas: z.array(z.string()).optional(),
         })
         .strict(),
     },

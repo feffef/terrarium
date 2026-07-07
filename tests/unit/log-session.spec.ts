@@ -68,6 +68,16 @@ describe('validateEntry() — the L1 stand-in', () => {
     expect(validateEntry(noFrictions).ok).toBe(false)
   })
 
+  it('accepts optional learnings/ideas string arrays, and a log that omits them', () => {
+    expect(validateEntry({ ...valid, learnings: ['inferred a thing'], ideas: ['a spark'] }).ok).toBe(true)
+    expect('learnings' in valid).toBe(false) // absent is fine — they are optional
+    expect(validateEntry(valid).ok).toBe(true)
+  })
+
+  it('rejects a non-string entry in learnings (must be a plain string array)', () => {
+    expect(validateEntry({ ...valid, learnings: [{ note: 'x' }] }).ok).toBe(false)
+  })
+
   it('rejects a non-mapping', () => {
     expect(validateEntry('nope').ok).toBe(false)
     expect(validateEntry(null).ok).toBe(false)

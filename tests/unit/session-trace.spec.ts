@@ -91,4 +91,19 @@ describe('stitch()', () => {
     const res = validateEntry(entry)
     expect(res.ok).toBe(true)
   })
+
+  it('omits learnings/ideas entirely when the scratch has none', () => {
+    expect('learnings' in entry).toBe(false)
+    expect('ideas' in entry).toBe(false)
+  })
+
+  it('carries authored learnings/ideas through and stays schema-valid', () => {
+    const withSparks = stitch(
+      { ...scratch, learnings: ['layer `~/` resolves to the main app'], ideas: ['cluster frictions into tags'] },
+      trace,
+    )
+    expect(withSparks.learnings).toEqual(['layer `~/` resolves to the main app'])
+    expect(withSparks.ideas).toEqual(['cluster frictions into tags'])
+    expect(validateEntry(withSparks).ok).toBe(true)
+  })
 })

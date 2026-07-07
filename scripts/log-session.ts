@@ -100,6 +100,9 @@ const authoredScratchSchema = z
         severity: z.enum(['nit', 'minor', 'moderate', 'major', 'blocker']),
       }),
     ),
+    // Optional authored fields (single home: the manifest) — omit when empty.
+    learnings: z.array(z.string()).optional(),
+    ideas: z.array(z.string()).optional(),
   })
   .strict()
 
