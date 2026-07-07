@@ -246,12 +246,14 @@ can overlap real content and read as a UI bug.
   drive the page with Playwright.
 - **To verify a click/interaction, not just a static render**, write a small
   ad-hoc `playwright-core` script against the same pre-installed Chromium
-  `scripts/screenshot.ts` locates (via `PLAYWRIGHT_BROWSERS_PATH`) — launch it
-  with `chromium.launch({ executablePath })`. Two gotchas: (1) `tsx` runs the
-  ad-hoc script as CJS, so wrap top-level `await` in an `async` IIFE; (2) write
-  the script **inside the repo tree** so its imports resolve against
-  `node_modules` (any devDependency used in an ad-hoc script — `playwright-core`,
-  `yaml`, etc. — is scoped to this repo's `node_modules`, not global).
+  `scripts/screenshot.ts` uses — import `resolveChromiumPath()` from
+  `scripts/chromium-path.ts` rather than re-deriving the `PLAYWRIGHT_BROWSERS_PATH`
+  lookup by hand, and launch it with `chromium.launch({ executablePath: resolveChromiumPath() })`.
+  Two gotchas: (1) `tsx` runs the ad-hoc script as CJS, so wrap top-level `await`
+  in an `async` IIFE; (2) write the script **inside the repo tree** so its imports
+  resolve against `node_modules` (any devDependency used in an ad-hoc script —
+  `playwright-core`, `yaml`, etc. — is scoped to this repo's `node_modules`, not
+  global).
 - **A screenshot can't be trusted to rule out a subtle/scoped CSS change** —
   downscaled or compressed PNGs can mask a style that actually applied. Before
   concluding a scoped style is missing, probe the element's *computed* style
