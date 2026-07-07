@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01HRQ1Cu3PVpbeDKbe7TECt6
 startedAt: 2026-07-07T19:49:31Z
-endedAt: 2026-07-07T21:04:28Z
+endedAt: 2026-07-07T21:27:14Z
 kind: interactive
 goal: Move tenants/ dir to layers/ (#209)
 status: in-review
@@ -48,6 +48,8 @@ docsRead:
     reason: (unknown)
   - path: docs/adr/0018-tenant-layers-under-layers-directory.md
     reason: (unknown)
+  - path: README.md
+    reason: (unknown)
 skillsUsed:
   - name: implement
     reason: drove the change end-to-end
@@ -71,17 +73,20 @@ frictions:
   - description: An amending banner I wrote contradicted itself — a new-layout path used as the example of a pre-rename path. A positive read did not catch it.
     solution: A second review with a different model (fable) caught it; reword to match sibling banners.
     severity: nit
-durationSec: 4498
+  - description: "A directory rename in an open branch collides with ADR-0009 direct-to-main session logging: this session's log-session hook wrote to main at a layers/ path that does not exist elsewhere on main yet, while other sessions still log under tenants/ — a split-brain until #217 merges."
+    solution: Merge rename PRs promptly; or have the log hook resolve the sessions dir from main's tree, not the branch working copy.
+    severity: minor
+durationSec: 5864
 models:
-  claude-opus-4-8: 273
+  claude-opus-4-8: 311
 toolCounts:
   ToolSearch: 10
   mcp__github__issue_read: 1
-  Bash: 33
-  Read: 23
-  Grep: 8
+  Bash: 44
+  Read: 24
+  Grep: 9
   TaskCreate: 6
-  Edit: 35
+  Edit: 36
   Write: 4
   TaskUpdate: 8
   Skill: 2
