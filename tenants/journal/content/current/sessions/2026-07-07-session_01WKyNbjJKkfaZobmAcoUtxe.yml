@@ -1,0 +1,60 @@
+schemaVersion: 1
+session: session_01WKyNbjJKkfaZobmAcoUtxe
+startedAt: 2026-07-07T17:02:46Z
+endedAt: 2026-07-07T17:40:25Z
+kind: interactive
+goal: Add reusable session-frictions triage extractor
+status: completed
+outcome: PR
+summary: "The frictions-to-fixes Skill's survey step relied on a subagent re-improvising an on-the-fly tsx parser each run to pull triage-essential fields out of session logs. Built scripts/session-frictions.ts (following the digest.ts/audit-skills.ts pure-core-plus-thin-IO-shell pattern), unit-tested it, and pointed the Skill at it instead of describing an ad-hoc parser. Every record carries the session id and source file path so a candidate can be traced back to the full log later. After review feedback, trimmed the SKILL.md bullet down to just \"what to run\" (removed the restated sort/parse mechanics now owned by the script's own comments), and dropped the kind/status fields from the extractor's output since neither is referenced by the triage logic (grouping/ranking is by severity+recurrence, screening is by PR/issue citation). Gate stayed green throughout; PR #203 merged."
+prs:
+  - "203"
+docsRead:
+  - path: scripts/digest.ts
+    reason: pure-core/thin-IO-shell/CLI pattern to mirror
+  - path: scripts/audit-skills.ts
+    reason: closest precedent — recency-window session survey
+  - path: tenants/journal/tenant.config.ts
+    reason: session-log zod schema, to know every available field
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: the Skill this script serves — what it actually needs
+  - path: tests/unit/digest.spec.ts
+    reason: (unknown)
+  - path: scripts/session-frictions.ts
+    reason: (unknown)
+  - path: tests/unit/session-frictions.spec.ts
+    reason: (unknown)
+skillsUsed:
+  - name: log-session
+    reason: (unknown)
+frictions:
+  - description: The claude-code-remote MCP server's send_later tool flaked twice mid-call ("Tool permission stream closed before response received"), with the server briefly disconnecting/reconnecting around the same calls.
+    solution: Fall back to the built-in ScheduleWakeup tool for a self check-in when an MCP-backed scheduling tool repeatedly fails rather than retrying the same flaky call.
+    severity: nit
+  - description: Initially included kind/status in the triage-essential field list by analogy with the session schema's shape, without checking whether the Skill's own triage logic actually reads them — the user had to point out neither is used.
+    solution: When extracting a 'triage-essential' field set for a specific consumer, check the consumer's actual logic for which fields it references before including a field, not just what the source schema happens to offer.
+    severity: nit
+durationSec: 2259
+models:
+  claude-sonnet-5: 105
+toolCounts:
+  Bash: 28
+  Read: 10
+  Write: 3
+  Edit: 7
+  ToolSearch: 5
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 2
+  ScheduleWakeup: 1
+  Skill: 1
+filesEdited:
+  - scripts/session-frictions.ts
+  - tests/unit/session-frictions.spec.ts
+  - .agents/skills/frictions-to-fixes/SKILL.md
+gitBranch: claude/session-log-extraction-ro04y5
+entrypoint: remote
+cliVersion: 2.1.202
+learnings:
+  - "This repo's convention for a script that backs a Skill's mechanical step is: pure, unit-tested core functions plus a thin FS-IO shell plus a small CLI — see digest.ts and audit-skills.ts as the two existing instances."
