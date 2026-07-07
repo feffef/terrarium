@@ -1,0 +1,113 @@
+schemaVersion: 1
+session: session_012JSpzWCNJ1iZNDxKu1i9ah
+startedAt: 2026-07-07T14:59:10Z
+endedAt: 2026-07-07T15:54:54Z
+kind: interactive
+goal: Grill the provenance-attribution design in issue
+status: completed
+outcome: "ADR-0017 + CLAUDE.md shipped, merged, #124 closed"
+summary: "Ran a /grill-with-docs session on #124 (agent-vs-human attribution unrecoverable from GitHub records). Read all 16 ADRs, CONTEXT.md, and the grilling/domain-modeling skills first. Interviewed the owner branch-by-branch: chose a content-stamp footer over fixing GitHub's actor fields, investigated bot identity concretely (confirmed commits already use a distinct `Claude` git identity vs. the API's `feffef`) and deferred it as an environment- connector problem rather than a repo change, then broadened the footer to every external interaction with no exemptions per owner pushback on an earlier, narrower draft. Shipped ADR-0017 + a CLAUDE.md bullet, rebased through a concurrent CLAUDE.md edit landing on main, merged as PR #194, and closed #124 recording both the shipped half and the deliberately deferred bot-identity half."
+prs:
+  - "194"
+docsRead:
+  - path: CONTEXT.md
+    reason: glossary check before any provenance vocabulary
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: governance/ADR changes are always human-merge
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: confirm GitHub content isn't gate-checkable, governance is human-only blast radius
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: the existing Claude-Session trailer convention this ADR extends
+  - path: .agents/skills/grilling/SKILL.md
+    reason: one-question-at-a-time interview mechanics
+  - path: .agents/skills/domain-modeling/SKILL.md
+    reason: 3-part ADR test, CONTEXT.md glossary-only rule
+  - path: docs/agents/issue-tracker.md
+    reason: existing issue/PR/comment conventions, checked for prior art
+  - path: .agents/skills/grill-with-docs/SKILL.md
+    reason: (unknown)
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: (unknown)
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: (unknown)
+  - path: docs/adr/0005-skill-model.md
+    reason: (unknown)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (unknown)
+  - path: docs/adr/0007-generated-config-committed-drift-checked.md
+    reason: (unknown)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (unknown)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (unknown)
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: (unknown)
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: (unknown)
+  - path: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    reason: (unknown)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (unknown)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (unknown)
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: (unknown)
+  - path: .agents/skills/domain-modeling/ADR-FORMAT.md
+    reason: (unknown)
+  - path: .agents/skills/domain-modeling/CONTEXT-FORMAT.md
+    reason: (unknown)
+  - path: tenants/blog/content/kevin/pages/2026-07-06-same-login-both-sides.md
+    reason: (unknown)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (unknown)
+  - path: CLAUDE.md
+    reason: (unknown)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (unknown)
+skillsUsed:
+  - name: grill-with-docs
+    reason: the invoked skill for this whole session
+  - name: grilling
+    reason: one-question-at-a-time interview discipline
+  - name: domain-modeling
+    reason: ADR-worthiness test, ADR/CONTEXT.md format
+frictions:
+  - description: AskUserQuestion call failed once mid-session with 'Tool permission stream closed before response received'; had to retry verbatim.
+    solution: Treat as transient — just retry the identical call; no repo-side fix apparent.
+    severity: nit
+  - description: The GitHub MCP server disconnected and reconnected mid-session (during an AskUserQuestion call), briefly making all mcp__github__* tools unavailable.
+    solution: None needed here — it self-reconnected within the same turn — but worth knowing this can happen mid-flow.
+    severity: nit
+  - description: First scoping question defaulted to a narrower footer (top-level comments only, GitHub only); the user reversed it twice (once to 'any GitHub interaction', once to 'or another external system') after reflecting further.
+    solution: When a convention's whole point is 'no exceptions to misremember', default the first offered option to the maximal scope rather than a narrower one — cheaper to narrow later than to walk back a carve-out across an ADR + doc bullet + already-open PR.
+    severity: minor
+  - description: Resolving the CLAUDE.md rebase conflict required two rounds (one per commit being replayed) because a concurrent PR (#190/#191) had rewritten the adjacent worktree-isolation bullet in the same 'Working conventions' list main landed while this branch was open.
+    solution: Not really fixable — a flat bullet list in one file is a natural hot spot when multiple agent sessions edit CLAUDE.md concurrently. Just flagging that a since-last-merge diff/rebase should be expected on any CLAUDE.md-touching PR that sits open for a while.
+    severity: nit
+durationSec: 3345
+models:
+  claude-sonnet-5: 167
+toolCounts:
+  Bash: 29
+  ToolSearch: 5
+  mcp__github__issue_read: 3
+  Read: 31
+  Grep: 4
+  AskUserQuestion: 7
+  mcp__github__get_me: 1
+  Write: 2
+  Edit: 7
+  mcp__github__create_pull_request: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+  mcp__github__issue_write: 1
+filesEdited:
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - CLAUDE.md
+gitBranch: claude/grill-with-docs-ipjyzs
+entrypoint: remote
+cliVersion: 2.1.202
+learnings:
+  - "This environment's git identity is already `Claude <noreply@anthropic.com>` (distinct from the human) for commit author/committer — separate and already-solved from the GitHub API actor identity (`mcp__github__get_me` resolves to the human owner), which is the actual gap #124 was about."
+  - The harness's own commit template already appends a `Co-Authored-By`/`Claude-Session` trailer to every commit; `log-session` already depended on it (ADR-0009) but no ADR had named it as a deliberate repo convention before ADR-0017.
