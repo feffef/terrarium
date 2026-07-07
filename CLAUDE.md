@@ -143,6 +143,22 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
     worktree, then run these git commands," since that reads as a one-time
     setup step the subagent will (correctly, given how the tool actually
     behaves) fail to repeat.
+- **Every agent-authored commit, issue, PR body, and top-level comment carries a
+  two-line provenance footer** (ADR-0017):
+  ```
+  Co-Authored-By: <model name> <noreply@anthropic.com>
+  Claude-Session: <session URL>
+  ```
+  Commits already get this for free from the harness's own commit template —
+  nothing to do there. Issues, PR descriptions, and top-level PR/issue comments
+  don't: append the same two lines yourself as the last lines of the body.
+  Inline PR review comments are exempt (the parent review carries it once).
+  This exists because agent-driven GitHub API calls run under the human owner's
+  own authorized connection, so `user`/`merged_by`/comment-author always read as
+  the owner regardless — the footer is how attribution survives anyway, without
+  fixing (or needing to fix) those fields. It's a **documented convention, not
+  gate-enforced**: GitHub content isn't part of the build the safety gate
+  checks.
 
 ## Repo layout
 
