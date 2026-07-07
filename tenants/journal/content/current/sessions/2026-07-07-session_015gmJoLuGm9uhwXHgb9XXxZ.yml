@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015gmJoLuGm9uhwXHgb9XXxZ
 startedAt: 2026-07-07T17:48:47Z
-endedAt: 2026-07-07T18:11:57Z
+endedAt: 2026-07-07T18:39:38Z
 kind: interactive
 goal: Add owner/guest trust-tier governance policies
-status: in-review
-outcome: New ADR plus amendments drafted, PR opened
-summary: "The owner invited collaborators and asked which policies distinguish trusted owner input from screened guest input. Researched the governance model (ADR-0003/0004/0017, CONTEXT.md, triage) — no trust vocabulary existed, only the authorAssociation filter. Drafted ADR-0018 (Owner/Guest Principal tiers, tier derived out-of-band never from request content), amended ADR-0003/0004, added glossary terms and a CLAUDE.md pointer, opened PR #207. Owner then refined it twice: guests should be allowed to spawn a content Tenant (not blocked from all net-new) — only ADRs/human-only surfaces are protected; and content includes executable Vue, so guest components need a runtime-code security review the gate can't provide. Reworked all files to match and kept the PR description in sync."
+status: abandoned
+outcome: "PR #207 closed; decisions captured in issue #213"
+summary: "The owner invited collaborators and asked which policies distinguish trusted owner input from screened guest input. Researched the governance model (ADR-0003/0004/0017, CONTEXT.md, triage) — no trust vocabulary existed, only the authorAssociation filter. Drafted ADR-0018 (Owner/Guest Principal tiers, tier derived out-of-band never from request content), amended ADR-0003/0004, added glossary terms and a CLAUDE.md pointer, opened PR #207. Owner then refined it twice: guests should be allowed to spawn a content Tenant (not blocked from all net-new) — only ADRs/human-only surfaces are protected; and content includes executable Vue, so guest components need a runtime-code security review the gate can't provide. Reworked all files to match and kept the PR description in sync. Owner then chose to abandon for more thinking: closed PR #207 and filed issue #213 capturing the decisions and open questions for human finalization."
 prs:
   - "207"
 docsRead:
@@ -31,24 +31,28 @@ frictions:
   - description: Harness undercover rule forbids the model identifier in repo artifacts, but ADR-0017 requires a model name in the PR-body provenance footer.
     solution: Used the marketing name (Claude Opus 4.8) in the footer, not the model ID; the two rules could name this carve-out explicitly to save re-deriving it.
     severity: minor
-durationSec: 1391
+durationSec: 3051
 models:
-  claude-opus-4-8: 123
+  claude-opus-4-8: 145
 toolCounts:
-  Bash: 20
-  Read: 9
+  Bash: 21
+  Read: 10
   Grep: 1
   AskUserQuestion: 1
   Write: 2
-  Edit: 17
-  ToolSearch: 3
+  Edit: 20
+  ToolSearch: 4
   mcp__github__get_me: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 1
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 1
-  mcp__github__update_pull_request: 1
+  mcp__github__update_pull_request: 2
+  mcp__github__issue_write: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/adr/0018-requester-trust-tiers.md
   - CONTEXT.md
