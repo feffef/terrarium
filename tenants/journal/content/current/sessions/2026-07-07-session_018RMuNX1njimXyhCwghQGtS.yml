@@ -1,0 +1,48 @@
+schemaVersion: 1
+session: session_018RMuNX1njimXyhCwghQGtS
+startedAt: 2026-07-07T10:05:51Z
+endedAt: 2026-07-07T10:26:24Z
+kind: interactive
+goal: Audit repo for sessions that acted without logging
+status: completed
+outcome: "One silent miss found; issue #176 opened"
+summary: "Investigated all repo activity since the last logging fix (d9b68e2 / #148, \"land session logs on live Stop\"). Built the acted-vs-logged cross-reference: extracted session/gitBranch/prs from every session log, enumerated all post-fix merged PRs, remote branches, and non-session-log commits on main. Every PR #152-#175 mapped to a log except #162 — the autonomous daily-digest run (branch claude/compassionate-lovelace-o1rhme) that opened and auto-merged with no session log at all, independently corroborated by session_01M5tMJt's own log. The user's spotted case (update-README session) had actually logged, but only after being prompted — a human-rescued near-miss it records as a major friction. Opened issue #176 with findings and a proposed fix."
+prs: []
+docsRead:
+  - path: CLAUDE.md
+    reason: logging model, session-log conventions
+  - path: docs/agents/triage-labels.md
+    reason: canonical label vocabulary for the issue
+  - path: docs/agents/issue-tracker.md
+    reason: GitHub MCP issue recipes when gh is absent
+  - path: tenants/journal/content/current/sessions/2026-07-07-session_01AnKvSbaKmZLbDgmVj9LqEm.yml
+    reason: the README session the user spotted
+  - path: tenants/journal/content/current/sessions/2026-07-07-session_01M5tMJtEd85gZXsBNewbKf8.yml
+    reason: "corroborates #162 was a separate unlogged session"
+skillsUsed:
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Session logs record gitBranch and prs, but the acted-vs-logged join had to be assembled by hand across yml frontmatter, the PR list, and git — no single view of "which sessions acted but never logged".
+    solution: A small audit script (or digest job check) that diffs merged-PR branches against session-log gitBranch/prs would surface silent misses automatically.
+    severity: minor
+  - description: list_pull_requests returned 120k chars and overflowed the tool-result limit, forcing a python character-slice of the persisted file to extract PR fields.
+    solution: issue-tracker.md already warns about this; prefer search_pull_requests with a narrow query or small perPage when only a field subset is needed.
+    severity: nit
+  - description: Initially counted the README session as "logged" from its commit alone, missing that the user's point was it logged only after being prompted; the clarification turn realigned the whole framing (silent miss vs human-rescued near-miss).
+    solution: When a user says a session "didn't log results", read the log body for a logging-related friction before concluding it logged cleanly.
+    severity: minor
+durationSec: 1233
+models:
+  claude-opus-4-8: 67
+toolCounts:
+  Bash: 20
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
+  Write: 1
+gitBranch: claude/repo-activity-logging-audit-s6vyfg
+entrypoint: remote_mobile
+cliVersion: 2.1.202
