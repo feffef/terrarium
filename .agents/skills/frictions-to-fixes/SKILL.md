@@ -28,16 +28,19 @@ works only from that report and never re-reads the raw corpus. The subagent
 
 Its brief:
 
-- **Read the latest 20 session logs.** `tenants/journal/content/current/sessions/*.yml`
-  are ISO-date-prefixed, but a filename/`ls` sort is **not** reliably chronological —
-  sessions sharing a date prefix can have an unordered session-ID suffix. Parse the
-  YAML with a short `tsx` script written **inside the repo tree** (so
-  `import { parse } from 'yaml'` resolves against `node_modules`), sort every log by
-  its parsed `startedAt` field, then take the last 20 (all of them if fewer than 20).
-  This is a **recency window, not a sample** — read every log in it, don't chase
-  frictions from older, likely-gone sessions. Pull each friction's `description`,
-  `solution`, `severity`, and the session's `startedAt` date — the date is what
-  catches regressions in step 2.
+- **Read the latest 20 session logs** via `tsx scripts/session-frictions.ts` (no
+  ad-hoc parsing script — this is the reusable extractor). It parses every log
+  under `tenants/journal/content/current/sessions/*.yml`, sorts by the parsed
+  `startedAt` field (a filename/`ls` sort is **not** reliably chronological —
+  sessions sharing a date prefix can have an unordered session-ID suffix), and
+  prints the newest-20 window (`--window N` to change it) as JSON: each
+  session's `id`, `file`, `startedAt`, `kind`, `goal`, `status`, `outcome`,
+  `prs`, and every friction's `description`/`solution`/`severity`. This is a
+  **recency window, not a sample** — read every session in it, don't chase
+  frictions from older, likely-gone sessions. The `id`/`file` on every record
+  are the pointer back to the full log (summary, docsRead, learnings, …) —
+  re-read the file directly when a candidate needs more context than the
+  triage extract carries.
 - **Group and rank.** Fold related/recurring frictions (shared root cause or single
   fix) into one candidate; rank by **recurrence × severity**. **Prioritize
   `moderate`, `major`, and `blocker` frictions** — these earn a fix on severity
