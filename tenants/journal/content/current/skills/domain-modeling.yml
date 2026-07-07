@@ -2,5 +2,8 @@ name: domain-modeling
 category: general-engineering
 importance: essential
 role: >-
-  Owns the CONTEXT.md glossary and the ADR conventions. Use before any
-  structural change, and whenever introducing or challenging a domain term.
+  Owns the CONTEXT.md glossary and the ADR conventions — CONTEXT.md's own
+  canonical `essential` example. Use before any structural change or ADR
+  amendment; this window still saw four ADR-0003/0009 amendments (auto-open
+  PR status, digest auto-merge, the session-logging rework, and its stale-claim
+  follow-up) ship without it — worth reaching for more consistently.
