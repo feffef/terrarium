@@ -1,0 +1,28 @@
+schemaVersion: 1
+session: session_014XwbnSBrJxFQf5pvQSNHBb
+startedAt: 2026-07-07T16:07:54Z
+endedAt: 2026-07-07T16:18:25Z
+kind: interactive
+goal: Assess value of the new sessions learnings/ideas field
+status: completed
+outcome: No action taken; field judged premature to build on
+summary: "Asked whether the new learnings/ideas fields on session logs were producing anything useful. Grepped all session YAMLs, found 8 of 53 populated, and summarized the content. Pushed for a critical second pass: most entries were either already single-homed elsewhere (a playwright executablePath gotcha already documented in CLAUDE.md), one-off trivia, or ideas blocked by existing constraints (a lint/CI idea runs into ADR-0004's human-only CI rule). The one concrete, buildable idea — a cross-session \"sparks\" feed aggregating learnings/ideas on the journal dashboard — was judged premature at only 8 populated entries, better revisited once there's a real backlog. No code changes made; this was pure investigation and analysis, no PR."
+prs: []
+docsRead: []
+skillsUsed: []
+frictions:
+  - description: No aggregate view over learnings/ideas across sessions existed, so answering "did anything useful come out of this" required manually grepping and eyeballing every session YAML by hand.
+    solution: Build the "sparks" cross-session feed idea already logged by another session, once there's a large enough backlog of populated entries to justify it.
+    severity: minor
+durationSec: 631
+models:
+  claude-sonnet-5: 15
+toolCounts:
+  Grep: 2
+  Bash: 4
+  Write: 1
+gitBranch: claude/learnings-ideas-field-review-u7e0f7
+entrypoint: remote
+cliVersion: 2.1.202
+learnings:
+  - A repeated "learning" that just restates a fact already single-homed in CLAUDE.md (e.g. the playwright executablePath workaround) is noise, not signal — the learnings field needs some check against existing docs to stay useful, or it will just accumulate redundant restatements.
