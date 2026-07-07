@@ -1,0 +1,68 @@
+schemaVersion: 1
+session: session_018Xcba6gJzTBRZW33jqZgWu
+startedAt: 2026-07-07T07:59:04Z
+endedAt: 2026-07-07T08:19:32Z
+kind: interactive
+goal: Turn logged session frictions into merged fixes
+status: completed
+outcome: 3 fixes merged, 2 regressions escalated
+summary: "Ran the frictions-to-fixes process end to end. A subagent surveyed the last 20 session logs and screened candidates against the tracker; it surfaced 2 never-fixed candidates (a git-fetch timeout gap and a screenshot-verification doc gap) plus a third real gap it found while checking a closed issue (dbus stderr noise documented but never actually suppressed), and 2 regressions where an earlier doc-only fix (#122/#126, #128) did not survive into a later session. Filed 5 issues (#167-171), dispatched 3 Sonnet impl agents in worktrees for the 3 simple/safe candidates, reviewed each diff and CI result, posted a review comment on every PR, and merged all three (#172, #173, #174). The 2 regressions were filed and left for human review per the skill's rule, not auto-dispatched."
+prs:
+  - "172"
+  - "173"
+  - "174"
+docsRead:
+  - path: CLAUDE.md
+    reason: frictions-to-fixes + review/merge conventions
+  - path: scripts/session-end.ts
+    reason: "verify mainVersion() fetch-timeout gap before filing #167"
+  - path: scripts/screenshot.ts
+    reason: "verify dbus-noise gap before filing #169"
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the whole session followed this skill's survey/screen/file/dispatch/review loop
+  - name: log-session
+    reason: authoring this entry
+frictions:
+  - description: The survey subagent's tsx parser for session-log YAML failed with "Cannot find module 'yaml'" when run from the scratchpad dir; had to copy the script into the repo tree to resolve against node_modules.
+    solution: CLAUDE.md's "write scripts inside the repo tree" guidance is currently framed around playwright-core specifically - generalize the wording to "any devDependency" so agents don't rediscover this per-package.
+    severity: nit
+  - description: Confirming whether a candidate friction was already fixed required manual git log -S archaeology against CLAUDE.md/docs, since frictions rarely cite the fixing issue/PR number directly even when one exists.
+    solution: No clean tooling fix identified; accepted as a recurring manual cost of this audit shape. Worth reconsidering if frictions-to-fixes runs become much more frequent.
+    severity: minor
+  - description: Regression-checking required comparing a session's UTC startedAt against a commit's local-offset timestamp from git show, a manual timezone conversion repeated roughly ten times in one survey pass.
+    solution: A one-line helper (or an agent instruction to always request --format with a UTC-normalized date) would remove the repeated conversion.
+    severity: nit
+durationSec: 1227
+models:
+  claude-sonnet-5: 113
+toolCounts:
+  Bash: 3
+  Agent: 4
+  ScheduleWakeup: 3
+  ToolSearch: 4
+  mcp__github__search_issues: 5
+  Read: 2
+  TaskCreate: 8
+  TaskUpdate: 16
+  mcp__github__issue_write: 5
+  mcp__github__pull_request_read: 16
+  mcp__github__add_issue_comment: 3
+  mcp__github__merge_pull_request: 3
+  Skill: 1
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey session frictions and screen tracker
+  - type: general-purpose
+    task: Fix session-end.ts fetch timeout
+    model: sonnet
+  - type: general-purpose
+    task: Fix screenshot.ts dbus stderr noise
+    model: sonnet
+  - type: general-purpose
+    task: Fix CLAUDE.md computed-style guidance
+    model: sonnet
+gitBranch: claude/frictions-to-fixes-crj7pe
+entrypoint: remote_mobile
+cliVersion: 2.1.202
