@@ -114,11 +114,35 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   PR-completion discipline, distinct from *session logging*, which now fires at
   self-judged closure and records an in-review PR honestly — see "Logging your
   session".)
-- **When dispatching parallel subagents that touch git, pass `isolation: 'worktree'`
-  explicitly** — it is an Agent-tool parameter, not implied by the prompt. Without
-  it, "parallel" agents share one checkout and race on branches. Each worktree
-  agent must also pin its worktree root (operate from that path) before any git
-  op, so it never runs git in the shared main checkout.
+- **Three distinct worktree-isolation mechanisms exist in this environment — pick
+  the one that matches the task, don't conflate them:**
+  1. **`EnterWorktree`/`ExitWorktree`** (interactive, session-level) — switches
+     *this whole session's* working directory into a new git worktree. Use it
+     only when the user explicitly says "worktree", or CLAUDE.md/memory directs
+     the current task to run in one — never invoke it proactively for routine
+     work.
+  2. **The Agent tool's `isolation: 'worktree'` parameter** (per-subagent) — the
+     mechanism for dispatched subagents, especially parallel ones, that will
+     touch git. Pass it **explicitly** — it is an Agent-tool parameter, not
+     implied by the prompt. Without it, "parallel" agents share one checkout and
+     race on branches.
+  3. **Plain manual `git worktree add`** — an ordinary git operation with no
+     session-switching or Agent-tool wiring. Use it only for an ad-hoc, one-off
+     worktree you'll manage by hand yourself (e.g. inspecting another branch's
+     tree side by side) — it is not a substitute for either tool above, and a
+     subagent brief that says "use `git worktree add`" instead of passing
+     `isolation: 'worktree'` is doing mechanism 2's job with the wrong mechanism.
+  - **For mechanism 2, "pin its worktree root" is not enough on its own — the
+    sharp edge is that a dispatched subagent's Bash tool does not preserve
+    working directory across separate tool calls.** A single `cd` into the
+    worktree root early in a subagent's work does **not** carry over to a later,
+    separate Bash invocation — each call starts from whatever cwd the harness
+    resets to. So when briefing a worktree-isolated subagent, **every
+    git-touching command in the brief must itself include the
+    `cd <worktree-root> &&` step** — never phrase the brief as "cd into your
+    worktree, then run these git commands," since that reads as a one-time
+    setup step the subagent will (correctly, given how the tool actually
+    behaves) fail to repeat.
 
 ## Repo layout
 
