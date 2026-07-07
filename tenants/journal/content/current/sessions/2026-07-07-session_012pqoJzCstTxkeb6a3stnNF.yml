@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_012pqoJzCstTxkeb6a3stnNF
 startedAt: 2026-07-07T05:44:32Z
-endedAt: 2026-07-07T05:53:40Z
+endedAt: 2026-07-07T06:03:13Z
 kind: interactive
-goal: Fix overflowing PRs-referenced dashboard tile
+goal: Fix and link PRs-referenced dashboard tile
 status: completed
-outcome: Compact sub-line shipped, PR in review
-summary: The Journal dashboard's "PRs referenced" stat tile enumerated every distinct PR number in its sub-line, which overflowed the box at 69 PRs. Added a pure prRefsSub() helper to the layer-local dashboard module that shows the three newest PRs and folds the rest into a "+N earlier" tail, wired the tile to it, and unit-tested the helper (empty, fits, overflow, no mutation). Full safety gate green locally; verified against the rendered DOM via production preview and screenshot. Opened PR "#166", subscribed to its activity, and armed an hourly self check-in.
+outcome: Compact linked sub shipped, PR in review
+summary: The Journal dashboard's "PRs referenced" stat tile enumerated every distinct PR number, overflowing the box at 69 PRs. First shipped a compact sub-line (three newest PRs plus a "+N earlier" tail) via a pure helper in the layer-local dashboard module. Then, on follow-up, made every PR number a link to the actual GitHub PR — the tile sub (through a new StatTile "#sub" slot) and the session cards' PR chips (anchors with click.stop so the card doesn't toggle). Repo URL single-homed as REPO_URL/prUrl(). Gate green, behavior verified in the live DOM with playwright-core. Both commits on PR "#166", babysitting armed.
 prs:
   - "166"
 docsRead:
@@ -15,7 +15,9 @@ docsRead:
   - path: tenants/journal/app/pages/t/journal/[space]/index.vue
     reason: the tile being fixed
   - path: tenants/journal/app/utils/dashboard.ts
-    reason: pure module the helper belongs in
+    reason: pure module the helpers belong in
+  - path: tenants/journal/app/components/journal/SessionCard.vue
+    reason: PR chips to turn into links
   - path: tenants/journal/utils/dashboard.ts
     reason: (unknown)
   - path: tenants/journal/app/components/journal/StatTile.vue
@@ -29,29 +31,37 @@ frictions:
   - description: The designated feature branch already existed locally with two identical-message session-log commits on it, muddying what a fresh work branch should contain.
     solution: Have the environment provision feature branches clean off origin/main, or keep session-log commits off work branches entirely.
     severity: minor
-  - description: pkill teardown of the preview server exits 144 even on success, which reads as a failure; CLAUDE.md's own-command rule avoids chain loss but the exit code still needs interpreting every time.
+  - description: pkill teardown of the preview server exits 144 even on success, which reads as a failure and needs interpreting every time.
     solution: A small scripts/ helper (or documented "expect nonzero" note) for stopping preview servers.
     severity: nit
-durationSec: 548
+  - description: Playwright locator filter({ has }) matched nothing against article.card even though both elements existed; and verifying the chips' click.stop needed a capture-phase preventDefault because stop blocks bubble listeners — two dead-ends before the interaction check passed.
+    solution: Extend the verifying-UI docs with a recipe for asserting stopPropagation behavior (capture-phase preventDefault, not route abort).
+    severity: minor
+durationSec: 1121
 models:
-  claude-fable-5: 65
+  claude-fable-5: 133
 toolCounts:
-  Grep: 2
-  Read: 7
+  Grep: 4
+  Read: 9
   Glob: 2
-  Bash: 13
-  Edit: 6
-  Write: 2
-  ToolSearch: 3
+  Bash: 26
+  Edit: 18
+  Write: 8
+  ToolSearch: 4
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - tenants/journal/app/utils/dashboard.ts
   - tenants/journal/app/pages/t/journal/[space]/index.vue
   - tests/unit/journal-dashboard.spec.ts
+  - tenants/journal/app/components/journal/StatTile.vue
+  - tenants/journal/app/components/journal/SessionCard.vue
+  - scripts/.tmp-verify-pr-links.ts
+  - scripts/.tmp-verify-click.ts
 gitBranch: claude/journal-pr-box-space-jpg8ir
 entrypoint: remote_mobile
 cliVersion: 2.1.202
