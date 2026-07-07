@@ -1,0 +1,59 @@
+schemaVersion: 1
+session: session_0127JJyoV8TNFUaaC9oAZcuF
+startedAt: 2026-07-07T20:56:11Z
+endedAt: 2026-07-07T21:13:00Z
+kind: interactive
+goal: Redraw two lagging atlas specimen plates
+status: in-review
+outcome: Both plates redrawn to quality bar, PR open
+summary: "Echo cantans and luciola mersa had thin, undersized SVG plates that read as doodles beside the other eight specimens. Built a throwaway gallery harness replicating the real SpecimenPlate styling (viewBox, currentColor ink, per-specimen tint, light+dark) to judge against the quality bar, then redrew both: luciola as a fully realized planktonic swimmer with the gold lamp at its core, echo as a composed but deliberately conjectural half-seen singer with an open throat and a distant silver glow. Validated content, lint, and typecheck; opened gated PR #218 and subscribed to it."
+prs:
+  - "218"
+docsRead:
+  - path: CLAUDE.md
+    reason: gated-PR and verification conventions
+  - path: tenants/atlas/app/components/atlas/SpecimenPlate.vue
+    reason: plate viewBox and tint contract
+  - path: tenants/atlas/app/assets/theme.css
+    reason: paper/ink/sig-1 colors for faithful preview
+  - path: tenants/atlas/content/pool/pages/echo-cantans.md
+    reason: (unknown)
+  - path: tenants/atlas/content/pool/pages/luciola-mersa.md
+    reason: (unknown)
+  - path: tenants/atlas/content/pool/pages/nocturna-brevis.md
+    reason: (unknown)
+  - path: tenants/atlas/content/pool/pages/vitrea-placida.md
+    reason: (unknown)
+  - path: scripts/screenshot.ts
+    reason: (unknown)
+skillsUsed:
+  - name: log-session
+    reason: record this session at PR-open closure
+frictions:
+  - description: No committed way to preview a specimen plate in isolation or compare plates side by side, so I wrote a throwaway gallery generator to judge new art against the existing quality bar.
+    solution: A small committed plate-preview/gallery script (like scripts/screenshot.ts) would let future art-editing sessions eyeball plates against each other without rebuilding the harness each time.
+    severity: minor
+durationSec: 1009
+models:
+  claude-opus-4-8: 105
+toolCounts:
+  Bash: 27
+  Read: 14
+  Write: 4
+  Edit: 1
+  ToolSearch: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  SendUserFile: 1
+filesEdited:
+  - scripts/plate-gallery.ts
+  - scratch-cand/luciola-mersa.svg
+  - scratch-cand/echo-cantans.svg
+gitBranch: claude/svg-echo-cantans-luciola-mersa-ejypna
+entrypoint: remote
+cliVersion: 2.1.202
+learnings:
+  - The Atlas plate grammar is strict but implicit — frame-filling subject, currentColor linework, layered 0.7-width hatch, exactly one var(--sig-1) accent — and a plate reads as low-quality mainly when it under-fills the 400x300 frame.
