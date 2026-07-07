@@ -1,0 +1,118 @@
+schemaVersion: 1
+session: session_01HRQ1Cu3PVpbeDKbe7TECt6
+startedAt: 2026-07-07T19:49:31Z
+endedAt: 2026-07-07T20:11:28Z
+kind: interactive
+goal: Move tenants/ dir to layers/ (#209)
+status: in-review
+outcome: "Rename done, docs updated, PR #217 open"
+summary: "Implemented issue #209: renamed the tenants/ directory to Nuxt's conventional layers/ directory (keeping \"Tenant\" as the domain term), so Nuxt auto-extends every layers/* and the extends list plus most of the tsConfig.include patch disappear. Empirically confirmed Nuxt natively covers layers/*/app/** and nuxt.config.* but not the jiti-only tenant.config.*, so kept exactly that one glob and retired the now-dead canary check. Updated all live code, scripts, tests, and docs (CLAUDE.md, tenant-layers.md, four skills, about.md); wrote ADR-0018 and added amending banners to eight affected ADRs (annotate, not rewrite). Left session logs and blog posts with their historical paths. Full gate green; opened gated PR #217 and subscribed to it."
+prs:
+  - "217"
+docsRead:
+  - path: CLAUDE.md
+    reason: repo conventions, human-only surfaces, single-home rule
+  - path: CONTEXT.md
+    reason: confirm Tenant is the concept, layer the mechanism
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: ADR format + amendment style
+  - path: docs/agents/tenant-layers.md
+    reason: layer authoring paths to update
+  - path: nuxt.config.ts
+    reason: extends list + tsConfig.include patch to simplify
+  - path: shared/expand.ts
+    reason: human-only manifest loader (tenantsDir, cwdRel)
+  - path: tests/unit/typecheck-coverage.spec.ts
+    reason: (unknown)
+  - path: tsconfig.node.json
+    reason: (unknown)
+  - path: tenants/journal/content/current/pages/about.md
+    reason: (unknown)
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (unknown)
+  - path: layers/journal/content/current/pages/about.md
+    reason: (unknown)
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: (unknown)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (unknown)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (unknown)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (unknown)
+  - path: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    reason: (unknown)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (unknown)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (unknown)
+skillsUsed:
+  - name: implement
+    reason: drove the change end-to-end
+  - name: code-review
+    reason: two-axis Standards/Spec review before finalizing
+  - name: log-session
+    reason: this log
+frictions:
+  - description: 'Issue #209 said "delete the tsConfig.include patch" but stock Nuxt does not cover the jiti-only tenant.config.ts manifest, so a blanket delete would silently drop #93 typecheck coverage.'
+    solution: Verified against .nuxt/tsconfig.app.json and kept exactly one glob (../layers/*/tenant.config.*); ADR-0018 and the PR now document why.
+    severity: minor
+  - description: A scoped sed loop over live files broke on the bracketed path layers/journal/app/pages/t/journal/[space]/index.vue because the shell glob-expanded the brackets.
+    solution: Handle bracketed-name files with a direct Edit rather than a sed loop.
+    severity: nit
+  - description: Files moved by git mv had to be re-Read before the Edit tool would touch them (about.md), even though their content was already known verbatim.
+    solution: Expected harness behavior; batch a Read of moved files before editing them.
+    severity: nit
+durationSec: 1317
+models:
+  claude-opus-4-8: 230
+toolCounts:
+  ToolSearch: 10
+  mcp__github__issue_read: 1
+  Bash: 28
+  Read: 21
+  Grep: 8
+  TaskCreate: 6
+  Edit: 30
+  Write: 4
+  TaskUpdate: 8
+  Skill: 2
+  Agent: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - shared/expand.ts
+  - nuxt.config.ts
+  - scripts/digest.ts
+  - scripts/log-session.ts
+  - scripts/session-frictions.ts
+  - scripts/audit-skills.ts
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - tests/unit/typecheck-coverage.spec.ts
+  - CLAUDE.md
+  - docs/agents/tenant-layers.md
+  - layers/journal/content/current/pages/about.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - docs/adr/0013-dynamic-content-config-committed-routing-map.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+subagents:
+  - type: general-purpose
+    task: Standards review of the rename
+  - type: general-purpose
+    task: Spec review of the rename
+gitBranch: claude/doc-updates-209-ww7k9h
+entrypoint: remote_mobile
+cliVersion: 2.1.202
+learnings:
+  - Nuxt 4's generated tsconfig natively includes ../layers/*/app/**/* and ../layers/*/nuxt.config.* but NOT tenant.config.* (jiti-only) — visible in .nuxt/tsconfig.app.json
+  - Nuxt auto-extends every layers/* directory, so no nuxt.config.ts extends list is needed once Tenant layers live there
+ideas:
+  - A lint/canary that reads .nuxt/tsconfig.app.json could assert Nuxt's native layer globs stay present, guarding the 'coverage for free forever' claim
