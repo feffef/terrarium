@@ -1,22 +1,23 @@
 schemaVersion: 1
 session: session_01XHqKRJBoCmV9RKh9Wv74X9
 startedAt: 2026-07-07T12:08:02Z
-endedAt: 2026-07-07T12:18:27Z
+endedAt: 2026-07-07T12:44:36Z
 kind: interactive
 goal: Fix stale "SessionEnd lands at teardown" claim
 status: completed
-outcome: ADR amended, 5 docs corrected, pushed
-summary: "User flagged that most sessions still claim the scratch lands on main \"at teardown via the SessionEnd hook,\" even though SessionEnd is known unreliable. Investigated the git history: PR #148 (d9b68e2) rewired landing onto a live `Stop` hook as primary, demoting `SessionEnd`/resume to backstops, because SessionEnd was found to fail silently on a network-freezing suspend. That fix never got folded back into the docs describing the mechanism. Found and fixed five stale spots (CLAUDE.md, log-session SKILL.md, its Skill Inventory entry, digest SKILL.md, and scripts/log-session.ts's own author-time console output), plus amended ADR-0009 with a new \"Landing mechanism as shipped\" section. Verified lint/typecheck/tests all pass, committed, and pushed to the designated branch."
-prs: []
+outcome: PR
+summary: "User flagged that most sessions still claim the scratch lands on main \"at teardown via the SessionEnd hook,\" even though SessionEnd is known unreliable. Investigated the git history: PR #148 rewired landing onto a live `Stop` hook as primary, demoting `SessionEnd`/resume to fallbacks, because SessionEnd fails silently on a network-freezing suspend — but that fix never got folded back into the docs describing the mechanism. Fixed five stale spots plus an ADR-0009 amendment (round 1); replaced the unclear \"backstop\" jargon with \"fallback\" everywhere, including the original scripts/session-end.ts comment (round 2); then, prompted by the user questioning whether independent restatements in 7 places matched the repo's own single-home rule, collapsed to ADR-0009 as the full home plus one full explanation in log-session/SKILL.md (read at actual invocation time), with CLAUDE.md/Skill Inventory/digest/SKILL.md trimmed to the one essential fact and a pointer (round 3). PR #187 merged."
+prs:
+  - "187"
 docsRead:
   - path: docs/adr/0009-session-logs-commit-directly-to-main.md
-    reason: the ADR describing the mechanism, and the amendment I added to it
+    reason: the ADR describing the mechanism, and the amendments I added to it
   - path: scripts/session-end.ts
     reason: ground truth for how Stop/SessionEnd/resume actually wire together post-#148
   - path: .claude/settings.json
     reason: confirm the three hook events wired to session-end.ts
   - path: .agents/skills/log-session/SKILL.md
-    reason: one of the stale spots
+    reason: one of the stale spots, and where the one full explanation should live
   - path: .agents/skills/digest/SKILL.md
     reason: "another stale spot, edited after #148 shipped yet still wrong"
   - path: tenants/journal/content/current/skills/log-session.yml
@@ -29,23 +30,31 @@ skillsUsed:
   - name: log-session
     reason: closing out this session
 frictions:
-  - description: "PR #148 shipped a mechanism change (code + settings.json) with no corresponding update to CLAUDE.md/SKILL.md/ADR describing that mechanism, so the stale claim propagated to 5 independent spots."
-    solution: When a PR changes a documented mechanism, its own diff should update every doc that describes that mechanism, not just the code — the same discipline this repo already applies to PR descriptions vs. content.
+  - description: "PR #148 shipped a mechanism change (code + settings.json) with no corresponding update to CLAUDE.md/SKILL.md/ADR describing that mechanism, so the stale claim propagated to 5+ independent spots."
+    solution: When a PR changes a documented mechanism, its own diff should update every doc that describes that mechanism, not just the code.
     severity: minor
+  - description: User's initial 'no dedup, short explanation everywhere' instruction fixed the stale claim but reproduced the exact duplication shape that caused it — I complied without flagging the tension against CLAUDE.md's own single-home rule.
+    solution: When an explicit instruction conflicts with a documented repo convention, surface the tension at the time instead of waiting for the user to notice and ask.
+    severity: minor
+  - description: Used 'backstop' (baseball jargon) in the corrected docs without noticing it was unclear without context, needing a follow-up pass to replace it with 'fallback'.
+    solution: Prefer plain, universally-understood words over domain/sports jargon in docs meant for a general audience, even when the jargon feels natural mid-explanation.
+    severity: nit
   - description: Guessed line-wrapping when constructing old_string for an Edit on log-session/SKILL.md; the actual wrap didn't match and the edit failed once.
     solution: Read the exact surrounding lines before writing old_string instead of reconstructing wrapped prose from memory.
     severity: nit
-durationSec: 625
+durationSec: 2194
 models:
-  claude-sonnet-5: 94
+  claude-sonnet-5: 156
 toolCounts:
-  Bash: 18
+  Bash: 25
   Glob: 2
-  Read: 11
-  Grep: 10
-  Edit: 12
+  Read: 17
+  Grep: 12
+  Edit: 28
   Skill: 1
-  Write: 1
+  Write: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
 filesEdited:
   - docs/adr/0009-session-logs-commit-directly-to-main.md
   - CLAUDE.md
@@ -53,8 +62,11 @@ filesEdited:
   - tenants/journal/content/current/skills/log-session.yml
   - .agents/skills/digest/SKILL.md
   - scripts/log-session.ts
+  - scripts/session-end.ts
 gitBranch: claude/sessionend-hook-logging-v0ebak
 entrypoint: remote_mobile
 cliVersion: 2.1.202
+learnings:
+  - A Skill's body is read at actual invocation time, so pointing a passive doc at a Skill for detail is safe; pointing at an ADR is not, since nothing forces an ADR to be read unless a doc explicitly walks the reader there.
 ideas:
   - A lint/CI check that greps for `SessionEnd` outside session-end.ts/ADR-0009 and flags it for a human to confirm it's still accurate, to catch this class of drift automatically.
