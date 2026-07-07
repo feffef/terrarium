@@ -132,14 +132,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
     working directory across separate tool calls.** A single `cd` into the
     worktree root early in a subagent's work does **not** carry over to a later,
     separate Bash invocation — each call starts from whatever cwd the harness
-    resets to. This is exactly how issue #171 regressed: a subagent ran
-    `git checkout -B` back in the shared main checkout because an earlier `cd`
-    had already been forgotten by the time that later call ran. So when briefing
-    a worktree-isolated subagent, **every git-touching command in the brief must
-    itself include the `cd <worktree-root> &&` step** — never phrase the brief
-    as "cd into your worktree, then run these git commands," since that reads
-    as a one-time setup step the subagent will (correctly, given how the tool
-    actually behaves) fail to repeat.
+    resets to. So when briefing a worktree-isolated subagent, **every
+    git-touching command in the brief must itself include the
+    `cd <worktree-root> &&` step** — never phrase the brief as "cd into your
+    worktree, then run these git commands," since that reads as a one-time
+    setup step the subagent will (correctly, given how the tool actually
+    behaves) fail to repeat.
 
 ## Repo layout
 
