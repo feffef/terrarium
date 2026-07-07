@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: session_01PUsZ6WCwZqhGMhqXZDaZu9
+startedAt: 2026-07-07T15:24:58Z
+endedAt: 2026-07-07T15:35:18Z
+kind: interactive
+goal: Auto-open PR at closure; add in-review status
+status: in-review
+outcome: Convention + new status shipped, gate green
+summary: "The user was annoyed that sessions with committed work stop to ask \"shall I open a PR?\". Changed the default: a session that committed substantive work now opens its gated PR automatically at closure (ADR-0003 amendment + two CLAUDE.md conventions), bounded so it gates opening only, not deciding to do the work. Opening the PR is now the first log-session trigger, logged with a new in-review status (open-but-unmerged, distinct from completed). Added in-review to all five status homes plus a blue StatusPill and its light/dark theme tokens. Verified the full gate and probed the pill's computed colour, then dogfooded the whole thing by auto-opening PR #192 and logging this in-review."
+prs:
+  - "192"
+docsRead:
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: home of the gated-PR/no-self-merge operating model I amended
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: the direct-to-main session-log exception the auto-open rule must not disturb
+  - path: tenants/journal/tenant.config.ts
+    reason: sessions status enum — one of five status homes
+  - path: tenants/journal/app/types/journal.ts
+    reason: the Status UI type
+  - path: tenants/journal/app/components/journal/StatusPill.vue
+    reason: where each status becomes colour+glyph
+  - path: tenants/journal/app/assets/theme.css
+    reason: the --jd-status-* tokens, light and dark
+  - path: scripts/session-trace.ts
+    reason: AuthoredScratch status type
+  - path: scripts/log-session.ts
+    reason: author-scratch status validator
+  - path: CONTEXT.md
+    reason: (unknown)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (unknown)
+  - path: CLAUDE.md
+    reason: (unknown)
+skillsUsed:
+  - name: log-session
+    reason: author this in-review log at PR-open, per the new convention
+frictions:
+  - description: The session status enum is single-homed nowhere — the same list lives in five files (manifest, UI type, trace type, validator, pill CSS + tokens).
+    solution: Derive the UI/script status types and pill classes from the manifest enum, or at least add a test asserting the five stay in sync.
+    severity: minor
+  - description: Ad-hoc playwright-core probe failed twice — once on import resolution outside the repo tree, once because chromium.executablePath() was wrong.
+    solution: A tiny committed helper that returns the pre-installed Chromium path (the logic already in screenshot.ts) would stop each session re-deriving it.
+    severity: nit
+durationSec: 620
+models:
+  claude-opus-4-8: 112
+toolCounts:
+  Bash: 28
+  Read: 15
+  Edit: 14
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  Skill: 1
+  Write: 1
+filesEdited:
+  - tenants/journal/tenant.config.ts
+  - tenants/journal/app/types/journal.ts
+  - scripts/session-trace.ts
+  - scripts/log-session.ts
+  - tenants/journal/app/components/journal/StatusPill.vue
+  - tenants/journal/app/assets/theme.css
+  - .agents/skills/log-session/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - CLAUDE.md
+gitBranch: claude/auto-open-pr-commits-hj3oc2
+entrypoint: remote
+cliVersion: 2.1.202
+learnings:
+  - playwright-core's default executablePath() points at a version that isn't installed; the working path is scanned from PLAYWRIGHT_BROWSERS_PATH like screenshot.ts does.
