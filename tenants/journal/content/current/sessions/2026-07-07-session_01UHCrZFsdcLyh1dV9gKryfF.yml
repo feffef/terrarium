@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01UHCrZFsdcLyh1dV9gKryfF
 startedAt: 2026-07-07T17:44:33Z
-endedAt: 2026-07-07T18:30:53Z
+endedAt: 2026-07-07T18:32:43Z
 kind: interactive
 goal: Review then standardise Nuxt presentation code
-status: in-review
-outcome: "PR #208 open, gate green"
-summary: "Critically reviewed all Nuxt-facing code against stock Nuxt 4 / Nuxt Content v3 conventions, then (on green-light) implemented everything presentation-side: deleted the dead repo-root app.vue (Nuxt 4 never loads it), added a useSpace() composable folding the repeated resolve/404/key-picking prologue out of seven pages, switched components and layer utils to Nuxt auto-imports (killing the issue-95 rename workaround), moved filtering/sorting into queryCollection where/order/select, made head/SEO meta reactive, adopted the #shared alias, and single-homed the smoke test's Chromium discovery. Full gate green plus a DOM probe for silent auto-import failures. Deferred as proposals: layouts, layers/ auto-extend, resolver-shape changes (human-only)."
+status: completed
+outcome: "PR #208 merged"
+summary: "Critically reviewed all Nuxt-facing code against stock Nuxt 4 / Nuxt Content v3 conventions, then (on green-light) implemented everything presentation-side: deleted the dead repo-root app.vue (Nuxt 4 never loads it), added a useSpace() composable folding the repeated resolve/404/key-picking prologue out of seven pages, switched components and layer utils to Nuxt auto-imports (killing the issue-95 rename workaround), moved filtering/sorting into queryCollection where/order/select, made head/SEO meta reactive, adopted the #shared alias, and single-homed the smoke test's Chromium discovery. Merged as PR 208. Full gate green plus a DOM probe for silent auto-import failures. Deferred as proposals: layouts, layers/ auto-extend, resolver-shape changes (human-only)."
 prs:
   - "208"
 docsRead:
@@ -94,11 +94,11 @@ frictions:
   - description: An unresolved auto-imported component renders silently as an unknown element in prod - neither vue-tsc nor the e2e h1/hydration checks catch a typo'd name.
     solution: Ad-hoc Playwright probe asserting no HTMLUnknownElement; could graduate into the L2 smoke suite as a cheap per-route assertion.
     severity: minor
-durationSec: 2780
+durationSec: 2890
 models:
-  claude-fable-5: 251
+  claude-fable-5: 256
 toolCounts:
-  Bash: 46
+  Bash: 47
   Read: 40
   Skill: 2
   Write: 6
@@ -110,6 +110,7 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 2
   mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - app/composables/space.ts
   - app/pages/t/[tenant]/[space]/[...slug].vue
