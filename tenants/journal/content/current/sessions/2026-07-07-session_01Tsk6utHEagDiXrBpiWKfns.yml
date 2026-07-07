@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Tsk6utHEagDiXrBpiWKfns
 startedAt: 2026-07-07T17:38:36Z
-endedAt: 2026-07-07T17:48:08Z
+endedAt: 2026-07-07T17:54:36Z
 kind: interactive
 goal: Audit the Skill Inventory against usage
-status: in-review
-outcome: Two re-grades landed, PR opened
-summary: "Ran the audit-skills Skill over the 40-newest-session window via scripts/audit-skills.ts. Demoted writing-great-skills supporting->peripheral on persistent opportunity-missed evidence (two consecutive audit windows, now six more Skill-authoring sessions shipped without it). Held domain-modeling at essential (CONTEXT.md's own canonical example for that grade) but refreshed its role to note four ADR-0003/0009 amendments this window that shipped without it. Checked all other Skills for opportunity- missed patterns; found none crossing the >=2-session bar, so filed no frontmatter-suspect issues (both flagged Skills are external/pack-owned anyway, so step 4 doesn't apply to them). Full gate green, PR #206 opened and subscribed."
+status: completed
+outcome: Two re-grades landed, PR merged
+summary: "Ran the audit-skills Skill over the 40-newest-session window via scripts/audit-skills.ts. Demoted writing-great-skills supporting->peripheral on persistent opportunity-missed evidence (two consecutive audit windows, now six more Skill-authoring sessions shipped without it). Held domain-modeling at essential (CONTEXT.md's own canonical example for that grade) but refreshed its role to note four ADR-0003/0009 amendments this window that shipped without it. Checked all other Skills for opportunity- missed patterns; found none crossing the >=2-session bar, so filed no frontmatter-suspect issues (both flagged Skills are external/pack-owned anyway, so step 4 doesn't apply to them). Full gate green, PR #206 opened, subscribed, and merged."
 prs:
   - "206"
 docsRead:
@@ -29,13 +29,13 @@ frictions:
   - description: "The scorecard's onDisk/external fields surfaced a subtlety not spelled out in SKILL.md: some Skills used in sessions (frontend-design, update-config) are onDisk:false because they're global harness/plugin skills, not repo-committed ones, so the \"create a missing entry\" rule correctly excludes them — but it took cross-checking .agents/skills and skills-lock.json by hand to be sure that was the right call rather than a gap."
     solution: A one-line SKILL.md note that onDisk:false && useCount>0 usually means a global/plugin skill outside this repo's committed set, not a missing Inventory entry, would save that cross-check next time.
     severity: nit
-durationSec: 572
+durationSec: 960
 models:
-  claude-sonnet-5: 74
+  claude-sonnet-5: 81
 toolCounts:
-  Bash: 24
-  Read: 5
-  Edit: 4
+  Bash: 25
+  Read: 6
+  Edit: 5
   ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
@@ -43,6 +43,7 @@ toolCounts:
   Write: 1
   mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - tenants/journal/content/current/skills/writing-great-skills.yml
   - tenants/journal/content/current/skills/domain-modeling.yml
