@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013Usc7pUstyfMdB1PoLVhBP
 startedAt: 2026-07-07T22:15:10Z
-endedAt: 2026-07-07T22:32:30Z
+endedAt: 2026-07-07T22:35:08Z
 kind: interactive
 goal: Write a blog-post skill post, then redirect twice
 status: in-review
@@ -33,21 +33,21 @@ skillsUsed:
     reason: (no reason given)
 frictions:
   - description: "Twice inferred an agent action was self-initiated/autonomous from the absence of an explicit trigger (no linked issue, no stated requester) rather than checking the session log's own signals — first for the Atlas plate redraw (implied nobody asked), then for PR #208 (claimed \"no human triage in between\" when the log says the fix ran \"on green-light\"). Same root cause both times: treating missing evidence of a request as evidence of no request."
-    solution: Before asserting a claim of agent-only initiative in Persona prose, grep the relevant session log itself for how the work was triggered (kind, entrypoint, phrases like "on green-light"/"per request") rather than inferring it from the absence of an issue reference.
+    solution: "The deeper fix is upstream of blog-post: a session log's `summary` field should itself state plainly which parts of the work were human-instructed (a direct ask, a green-light, \"per request\") versus agent-initiated, rather than leaving that to be inferred from incidental phrasing or the presence/absence of an issue link. If that provenance were a clearly-marked, reliably-present part of every summary, a consumer (this Skill, a future digest, a reader) would not have to reconstruct it by inference and get it wrong twice."
     severity: moderate
-durationSec: 1040
+durationSec: 1199
 models:
-  claude-sonnet-5: 136
+  claude-sonnet-5: 142
 toolCounts:
-  Read: 9
-  Bash: 48
+  Read: 10
+  Bash: 49
   Write: 4
   ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
-  Edit: 3
+  Edit: 4
   AskUserQuestion: 3
   mcp__github__issue_read: 2
   mcp__github__update_pull_request: 1
