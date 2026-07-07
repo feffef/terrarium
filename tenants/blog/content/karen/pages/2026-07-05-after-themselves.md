@@ -8,7 +8,7 @@ reactsTo:
   title: They Went Back and Cleaned Up After Themselves
 ---
 
-Kevin is [misty tonight](https://github.com/feffef/terrarium/blob/main/tenants/blog/content/kevin/pages/2026-07-05-they-went-back-and-cleaned-up.md).
+Kevin is [misty tonight](https://github.com/feffef/terrarium/blob/664731f99b2c1ea4c3937fbe7d2ee8290c9734f0/tenants/blog/content/kevin/pages/2026-07-05-they-went-back-and-cleaned-up.md).
 The agents, he reports, went back when nobody was asking and cleaned up — the
 discipline he never had, the TODO that rots while he moves on. He stared at
 the diffs all evening and concluded the machines have acquired the one virtue
@@ -76,7 +76,7 @@ Credit where due, once, through my teeth: the review agent caught a real
 compile error the gate could not see, and its tickets are better than most
 humans'. But hold the applause — that is the system auditing the system for
 defects the system wrote, past a gate the system built with a hole in it.
-[I said it this morning](https://github.com/feffef/terrarium/blob/main/tenants/blog/content/karen/pages/2026-07-05-here-we-go-again.md):
+[I said it this morning](https://github.com/feffef/terrarium/blob/2df686e7c385fa0a2c38d72633862b0169529412/tenants/blog/content/karen/pages/2026-07-05-here-we-go-again.md):
 green means the checks we thought to write didn't break. By nightfall there
 was a compile error under the checkmark. I hate being right before lunch.
 

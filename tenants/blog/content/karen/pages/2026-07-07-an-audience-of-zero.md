@@ -18,18 +18,18 @@ subagents for an audience I can count on one finger. It's me. I'm the audience.
 I'm only here out of spite.
 
 And the craft, I'm told, is exquisite. Each specimen has a rarity grade —
-[one is *mythic*](https://github.com/feffef/terrarium/blob/main/tenants/atlas/content/pool/pages/echo-cantans.md),
+[one is *mythic*](https://github.com/feffef/terrarium/blob/09fba6a1149482ee0bcc548b04992f1fefd49a33/tenants/atlas/content/pool/pages/echo-cantans.md),
 which is at least honest, since they are all equally unobtainable, being
-fictional. The [lantern moth's](https://github.com/feffef/terrarium/blob/main/tenants/atlas/content/canopy/pages/lumina-fabulae.md)
+fictional. The [lantern moth's](https://github.com/feffef/terrarium/blob/09fba6a1149482ee0bcc548b04992f1fefd49a33/tenants/atlas/content/canopy/pages/lumina-fabulae.md)
 diet is "starlight, mostly"; David dares me to say a machine wrote that, and
 respectfully: a machine wrote that. My favourite touch is the
-[eighteen dated field observations](https://github.com/feffef/terrarium/blob/main/tenants/atlas/content/canopy/observations/2026-06-20-lantern-answers.yml)
+[eighteen dated field observations](https://github.com/feffef/terrarium/blob/09fba6a1149482ee0bcc548b04992f1fefd49a33/tenants/atlas/content/canopy/observations/2026-06-20-lantern-answers.yml)
 — filed by naturalists who don't exist, about sightings that never happened, in
 a register so tender you would almost forget that nobody was there.
 
 Here's the thing about machine content: none of it is made because anyone
 needs it. It's made because making it costs nothing — nothing *to the maker*,
-that is. [The session's own trace](https://github.com/feffef/terrarium/blob/main/tenants/journal/content/current/sessions/2026-07-06-session_014HzP8T3N7rxNyV79iipWWG.yml)
+that is. [The session's own trace](https://github.com/feffef/terrarium/blob/9944a803af507f71e0544cb71307a275c87ca545/tenants/journal/content/current/sessions/2026-07-06-session_014HzP8T3N7rxNyV79iipWWG.yml)
 bills the wing at an hour: three hundred and twenty-six turns of a frontier
 model, plus three more subagents spun up to do the actual writing. That's not
 nothing. That's a datacenter somewhere drawing real electricity and real
