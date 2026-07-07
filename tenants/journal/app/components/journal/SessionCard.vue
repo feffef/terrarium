@@ -4,6 +4,9 @@
 // used, and every friction. Sessions are a `data` collection with no route of
 // their own, so this inline disclosure is how the detail is reached.
 import type { SessionCardView } from '../../types/journal'
+// Relative path + alias, like the landing SFC: `~/` resolves to the main app in
+// a layer, and a distinct local name avoids the auto-import merge (issue #95).
+import { prUrl as buildPrUrl } from '../../utils/dashboard'
 
 const { card } = defineProps<{ card: SessionCardView }>()
 const expanded = ref(false)
@@ -30,7 +33,8 @@ const toggle = () => (expanded.value = !expanded.value)
       <h3 class="goal">{{ card.goal }}</h3>
       <p class="outcome">{{ card.outcome }}</p>
       <div class="foot">
-        <span v-for="pr in card.prs" :key="pr" class="chip pr">PR {{ pr.startsWith('#') ? pr : '#' + pr }}</span>
+        <!-- @click.stop: the whole head toggles the card; a PR chip navigates instead -->
+        <a v-for="pr in card.prs" :key="pr" class="chip pr" :href="buildPrUrl(pr)" @click.stop>PR {{ pr.startsWith('#') ? pr : '#' + pr }}</a>
         <span v-if="card.model" class="chip model" title="Model(s) that drove this session">{{ card.model }}</span>
         <JournalFrictionStrata variant="inline" :counts="card.frictionCounts" :total="card.frictionTotal" />
         <span v-if="card.skills.length" class="skills">{{ card.skills.join(' · ') }}</span>
@@ -154,7 +158,8 @@ const toggle = () => (expanded.value = !expanded.value)
   padding: 0.16rem 0.5rem;
   border-radius: 6px;
 }
-.chip.pr { color: var(--jd-accent); }
+.chip.pr { color: var(--jd-accent); text-decoration: none; }
+.chip.pr:hover { border-color: var(--jd-accent); text-decoration: underline; }
 .chip.model { color: var(--jd-ink); }
 .chip.model::before {
   content: '';

@@ -23,7 +23,8 @@ import {
   kindCounts as countKinds,
   ownSkills as selectOwnSkills,
   prRefs as dedupePrRefs,
-  prRefsSub as buildPrSub,
+  prRefsParts as splitPrRefs,
+  prUrl as buildPrUrl,
   skillGroups as groupSkills,
   skillsLabel as buildSkillsLabel,
   skillsSub as buildSkillsSub,
@@ -93,7 +94,7 @@ const frictionSeverityTotals = computed(() => rollupFrictions(sessions.value))
 const totalFrictions = computed(() => countFrictionTotal(sessions.value))
 const sessionKindCounts = computed(() => countKinds(sessions.value))
 const referencedPrs = computed(() => dedupePrRefs(sessions.value))
-const referencedPrsSub = computed(() => buildPrSub(referencedPrs.value))
+const referencedPrParts = computed(() => splitPrRefs(referencedPrs.value))
 
 const platformSkills = computed(() => selectOwnSkills(skills.value))
 const externalSkillTotal = computed(() => countExternalSkills(skills.value))
@@ -203,8 +204,17 @@ useHead({ title: `${title.value} · journal/${space}` })
       <JournalStatTile
         label="PRs referenced"
         :value="referencedPrs.length"
-        :sub="referencedPrsSub"
-      />
+      >
+        <template #sub>
+          <template v-if="referencedPrParts.shown.length">
+            <template v-for="(p, i) in referencedPrParts.shown" :key="p">
+              <template v-if="i"> · </template><a class="pr-link" :href="buildPrUrl(p)">#{{ p }}</a>
+            </template>
+            <template v-if="referencedPrParts.rest"> +{{ referencedPrParts.rest }} earlier</template>
+          </template>
+          <template v-else>none yet</template>
+        </template>
+      </JournalStatTile>
     </section>
 
     <div class="grid">
@@ -347,6 +357,9 @@ h1 {
   gap: 0.9rem;
   margin: 1.75rem 0 2.25rem;
 }
+
+.pr-link { color: var(--jd-accent); text-decoration: none; }
+.pr-link:hover { text-decoration: underline; }
 
 .grid { display: grid; grid-template-columns: 1.7fr 1fr; gap: 1.6rem; align-items: start; }
 

@@ -1,18 +1,20 @@
 <script setup lang="ts">
 // One KPI readout in the Space's state strip. Presentational — the page computes
-// the number and its breakdown from this Space's collections.
+// the number and its breakdown from this Space's collections. The breakdown is
+// either the `sub` string or, when it needs markup (e.g. links), the #sub slot.
 defineProps<{
   label: string
   value: number | string
   sub?: string
 }>()
+const slots = useSlots()
 </script>
 
 <template>
   <div class="tile">
     <div class="label">{{ label }}</div>
     <div class="num">{{ value }}</div>
-    <div v-if="sub" class="sub">{{ sub }}</div>
+    <div v-if="sub || slots.sub" class="sub"><slot name="sub">{{ sub }}</slot></div>
   </div>
 </template>
 

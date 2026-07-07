@@ -91,17 +91,26 @@ export function prRefs(sessions: SessionDoc[]): string[] {
   return [...seen].sort((a, b) => Number(a) - Number(b))
 }
 
+// Single home for the repo the Journal's PR references point at — every PR
+// number the dashboard renders links through prUrl().
+export const REPO_URL = 'https://github.com/feffef/terrarium'
+
+export function prUrl(pr: string): string {
+  return `${REPO_URL}/pull/${pr.replace(/^#/, '')}`
+}
+
 // Compact sub-line for the "PRs referenced" stat tile. Enumerating every PR
 // stopped fitting once the list grew past a handful, so show only the newest
 // few (highest-numbered first) and fold the rest into a "+N earlier" tail.
+// Returns structure, not a string, so the tile can link each shown PR.
 export const PR_SUB_MAX = 3
 
-export function prRefsSub(refs: string[]): string {
-  if (!refs.length) return 'none yet'
+export function prRefsParts(refs: string[]): { shown: string[]; rest: number } {
   const newestFirst = refs.slice().reverse()
-  const shown = newestFirst.slice(0, PR_SUB_MAX).map((p) => `#${p}`)
-  const rest = newestFirst.length - shown.length
-  return rest > 0 ? `${shown.join(' · ')} +${rest} earlier` : shown.join(' · ')
+  return {
+    shown: newestFirst.slice(0, PR_SUB_MAX),
+    rest: Math.max(0, newestFirst.length - PR_SUB_MAX),
+  }
 }
 
 // ── Skill Inventory ──────────────────────────────────────
