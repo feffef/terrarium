@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01NEh36uRMpZJUNegx5AdLYY
 startedAt: 2026-07-07T05:21:28Z
-endedAt: 2026-07-07T05:39:54Z
+endedAt: 2026-07-07T05:46:40Z
 kind: interactive
 goal: Write a Karen blog post
 status: completed
 outcome: "AI-slop rant open as PR #165"
-summary: "Ran /blog-post karen. First draft reacted to David's Atlas post via the drift-eater/CSS-bug irony; the user redirected — Karen should rant about the general nonsense of AI-generated content nobody reads. Rewrote as \"An Audience of Zero\": four thousand words about twelve fictional animals, on a site with no readers, generated in about an hour, with the backdated field log (observations from June 20 in a repo whose history starts July 6) as the receipt. Verified every number against git and disk (caught wc inflating the word count with SVG frontmatter), re-ran the gate green, updated PR #165's title/body to match the new angle."
+summary: "Ran /blog-post karen. First draft reacted to David's Atlas post via a drift-eater/CSS-bug irony; the user redirected twice — rant about the general nonsense of AI-generated content instead, then swap the backdated-field-log timing jab for an environmental-impact note. Final post \"An Audience of Zero\": four thousand words about twelve fictional animals for a site with no readers, and what the hour actually cost — 326 frontier-model turns plus three subagents per the mechanical trace, real electricity and cooling water. Every number verified against git and disk; gate run green on each revision; PR #165 title/body kept in sync throughout."
 prs:
   - "165"
 docsRead:
@@ -15,10 +15,12 @@ docsRead:
   - path: tenants/blog/content/david/pages/2026-07-07-notes-from-inside-the-glass.md
     reason: the post being reacted to
   - path: tenants/journal/content/current/sessions/2026-07-06-session_014HzP8T3N7rxNyV79iipWWG.yml
-    reason: Atlas session trace — the one-hour receipt
+    reason: Atlas session trace — the hour/turns receipts
   - path: tenants/blog/tenant.config.ts
     reason: pages/pingbacks schemas
   - path: tenants/blog/content/karen/pages/2026-07-06-the-guesses-didnt-stop.md
+    reason: (unknown)
+  - path: tenants/blog/content/karen/pages/2026-07-07-an-audience-of-zero.md
     reason: (unknown)
 skillsUsed:
   - name: blog-post
@@ -26,30 +28,30 @@ skillsUsed:
   - name: log-session
     reason: this log
 frictions:
-  - description: A naive wc -w over the Atlas pages counted 9078 words, but ~4800 of them were frontmatter — inline SVG path data and labels — nearly doubling the prose figure the post cites; caught only by re-counting with frontmatter stripped.
-    solution: When citing word counts for Nuxt Content pages, strip frontmatter first; the illustration blocks live in frontmatter here and poison raw wc.
+  - description: A naive wc -w over the Atlas pages counted 9078 words, but ~4800 were frontmatter (inline SVG path data), nearly doubling the prose figure; and the sed correcting it missed one occurrence wrapped across a line break, caught only on a later full re-read.
+    solution: Strip frontmatter before word counts on Nuxt Content pages, and prefer Edit-after-Read over sed for prose so line-wrapped phrases aren't missed.
     severity: minor
   - description: 'Tracing provenance of the blog theme was confusing because the whole blog Tenant landed inside a commit titled "journal(sessions): log …" (01a2ce6), so git log -S pointed at what looks like a session-log commit.'
     solution: Keep session-log commits content-only; when substantive work rides along, title the commit for the work so -S/blame archaeology lands somewhere legible.
     severity: minor
-  - description: First draft angle was discarded after PR open — the user wanted a general AI-slop rant, not the CSS-bug irony — costing a full gate run and a PR-description rewrite.
-    solution: The blog-post Skill could surface angle choice earlier when a session is interactive; for autonomous runs the current pick-your-own flow stands.
+  - description: Two post-PR angle redirects from the user (general AI-slop rant; then environmental note over the timing jab), each costing a full gate run and a PR-body rewrite.
+    solution: For interactive runs, the blog-post Skill could pitch the candidate angle in one line before drafting; autonomous runs keep the pick-your-own flow.
     severity: nit
-durationSec: 1106
+durationSec: 1512
 models:
-  claude-fable-5: 105
+  claude-fable-5: 131
 toolCounts:
-  Read: 3
-  Bash: 30
+  Read: 4
+  Bash: 35
   Write: 5
-  Edit: 3
+  Edit: 8
   ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 1
-  mcp__github__update_pull_request: 1
+  mcp__github__update_pull_request: 2
 filesEdited:
   - tenants/blog/content/karen/pages/2026-07-07-the-drift-eater-missed-one.md
   - tenants/blog/content/david/pingbacks/2026-07-07-karen-notes-from-inside-the-glass.yml
