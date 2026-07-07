@@ -31,13 +31,16 @@
 // full gate, and is not wired into `.github/workflows/gate.yml` — the full
 // gate (build + e2e) remains the mandatory merge gate (CLAUDE.md).
 import { globSync, readFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
-import type { ZodObject, ZodRawShape } from 'zod'
-import { expand, loadManifests, type ExpandedCollection } from '../shared/expand.ts'
+import { expand, loadManifests, root, type ExpandedCollection } from '../shared/expand.ts'
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+/** Coerce a parsed YAML/JSON value into a plain object, or `{}` for anything
+ *  else (`null`, a scalar, an array) — a Document's data is always a record. */
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' ? (value as Record<string, unknown>) : {}
+}
 
 export interface SchemaViolation {
   /** The collection key, e.g. `blog_david_pingbacks`. */
@@ -62,8 +65,7 @@ export interface ValidationReport {
 function readFrontmatter(text: string): Record<string, unknown> {
   const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/)
   if (!m) return {}
-  const parsed = parseYaml(m[1] as string) as unknown
-  return parsed && typeof parsed === 'object' ? (parsed as Record<string, unknown>) : {}
+  return asRecord(parseYaml(m[1] as string))
 }
 
 /** Parse one content file into the plain object its Collection schema validates
@@ -73,14 +75,8 @@ function readFrontmatter(text: string): Record<string, unknown> {
 function parseDocument(absPath: string): Record<string, unknown> {
   const raw = readFileSync(absPath, 'utf8')
   if (absPath.endsWith('.md')) return readFrontmatter(raw)
-  if (absPath.endsWith('.yml') || absPath.endsWith('.yaml')) {
-    const parsed = parseYaml(raw) as unknown
-    return parsed && typeof parsed === 'object' ? (parsed as Record<string, unknown>) : {}
-  }
-  if (absPath.endsWith('.json')) {
-    const parsed = JSON.parse(raw) as unknown
-    return parsed && typeof parsed === 'object' ? (parsed as Record<string, unknown>) : {}
-  }
+  if (absPath.endsWith('.yml') || absPath.endsWith('.yaml')) return asRecord(parseYaml(raw))
+  if (absPath.endsWith('.json')) return asRecord(JSON.parse(raw))
   throw new Error(`don't know how to parse "${absPath}" (unsupported extension)`)
 }
 
@@ -93,7 +89,7 @@ export function validateContent(cols: ExpandedCollection[], projectRoot = root):
   const violations: SchemaViolation[] = []
 
   for (const col of cols) {
-    const schema = col.schema as ZodObject<ZodRawShape> | undefined
+    const schema = col.schema
     if (!schema) continue // page Collection with no additional schema — nothing authored to check
     collectionsChecked++
 

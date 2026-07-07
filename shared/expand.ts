@@ -14,7 +14,7 @@ import { createJiti } from 'jiti'
 import type { ZodObject, ZodRawShape } from 'zod'
 import { collectionKey, validateManifest, type TenantManifest } from './manifest'
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+export const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const tenantsDir = join(root, 'tenants')
 
 export interface LoadedManifest {
