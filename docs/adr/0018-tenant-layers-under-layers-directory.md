@@ -50,7 +50,10 @@ directory (`git mv tenants layers`; content moves with them to
   `../layers/*/app/**/*` and `../layers/*/nuxt.config.*` (confirmed by
   inspecting `.nuxt/tsconfig.app.json`); the manifest `tenant.config.ts` is the
   one surface it does **not** know about (jiti-only at build time), so that
-  single glob is retained to keep the #93 coverage.
+  single glob is retained to keep the #93 coverage. Both halves were confirmed
+  by the #55 **negative test** — a deliberate type error injected into a layer
+  `app/**` file and into a `tenant.config.ts` each makes `pnpm typecheck` fail,
+  and reverts clean — not just by inspecting the generated includes.
 - **The coverage canary narrows accordingly.** The retired `nuxt.config.ts`
   glob's canary is removed; the canary now guards only the surviving
   `tenant.config.*` glob and `content.config.ts` in `tsconfig.node.json`.
