@@ -15,7 +15,9 @@ Status: Accepted
 > session-log-only change still never gets a PR. Opening the PR is also a **session
 > closure point**: it triggers the session's first `log-session`, logged with
 > status **`in-review`** (the PR is open, not merged — see ADR-0009 / the
-> `log-session` Skill).
+> `log-session` Skill). The same no-ask default extends to **babysitting**: on
+> opening the PR the session **subscribes to its activity automatically** (CI,
+> reviews) and follows it to merge/close — it does not ask "shall I watch it?".
 >
 > **Amended (2026-07-06, ADR-0015).** A chartered job is a **remit**, realised by
 > **one or more Skills** — not necessarily a single Skill. `sync` ("keep living

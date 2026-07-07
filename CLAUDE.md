@@ -45,7 +45,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   coherent; it doesn't stop to ask "shall I open a PR?" (more commits can always
   follow). This gates *opening*, not *deciding to do the work* — net-new
   autonomous work still needs a green-light first (ADR-0003 amendment). The
-  session-log direct-to-`main` exception (ADR-0009) is untouched.
+  session-log direct-to-`main` exception (ADR-0009) is untouched. **Watching the
+  PR is automatic too** — on opening it, subscribe to its activity and babysit it
+  to merge/close; don't ask "shall I watch it?".
 - All work must clear the **safety gate** (build/validate/isolation, ADR-0004).
   The routing module, isolation logic, and CI are **human-only** — never
   auto-merge changes touching them.
@@ -110,7 +112,8 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   nit: reviewers gate on it.
 - **Pushing is not landing.** A PR is finished only when it is **merged** or
   **abandoned/escalated** — not at push time; review, CI, and merge are all still
-  queued. Babysit the PR you opened through to that terminal state. (This is a
+  queued. Babysit the PR you opened through to that terminal state — **subscribe
+  to its activity automatically when you open it, don't ask first**. (This is a
   PR-completion discipline, distinct from *session logging*, which now fires at
   self-judged closure and records an in-review PR honestly — see "Logging your
   session".)
