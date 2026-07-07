@@ -25,6 +25,14 @@ Status: Accepted
 > fires fire-and-forget and a network-freezing suspend makes its push throw
 > silently), so the shipped mechanism lands primarily on the live `Stop` hook
 > instead, with `SessionEnd` kept only as a fallback for whatever `Stop` misses.
+>
+> **Amended (2026-07-07, issue #215):** added **Closure invoked via a
+> `close-session` front door** below. The closure *trigger* moves off
+> `log-session`'s description onto a dedicated model-facing `close-session` Skill;
+> `log-session` becomes a capability it calls. The general *no-scratch
+> reminder/block* `Stop` hook (issue #215 option A / issue #176 option 2) is
+> **again declined** — in favour of this measurable authoring affordance. **The
+> existing `Stop` *committer* is untouched.**
 
 ## Context
 
@@ -304,3 +312,69 @@ turns after closure doesn't re-push on each one. Net effect: **"lands on `main`
 at teardown via the `SessionEnd` hook" is no longer an accurate description of
 the common case** — the common case is landing live, mid-session, on `Stop`;
 `SessionEnd` only covers the sessions `Stop` missed.
+
+## Closure invoked via a `close-session` front door
+
+> **Amended (2026-07-07, issue #215).** Refines *how the model is triggered to
+> author*, not how the log lands. **Nothing about the committer changes.**
+
+**The problem.** The mechanism above made logging *self-judged and
+model-invocable*: the agent should invoke `log-session` the moment its work is
+coherent. Interactive sessions still forget — they finish substantive work
+(commits, an opened PR) and never author the scratch, so the committer (which
+fires **only if** a scratch exists) commits nothing and the session leaves no
+honest log. Issue #215 recorded this recurring 2/20 in one window; the fix a
+prior run reached for — a general `Stop` hook that reminds/blocks when work
+happened but no scratch exists (issue #176's declined "option 2") — is
+**untested runtime behaviour the safety gate cannot vouch for (ADR-0004)** and
+reverses a prior deliberate decision, so it was escalated rather than built.
+
+**Two `Stop`-hook roles, do not conflate them.** The word "`Stop` hook" covers
+two different things here:
+
+- **The committer (`scripts/session-end.ts`) — unchanged, load-bearing.** Fires
+  every `Stop`; does real work *only* when a scratch exists; derives the trace,
+  stitches, and lands the log to `main`. This is the "Landing mechanism as
+  shipped" above and it is **not touched**.
+- **A hypothetical *reminder/block* hook — the thing #215/#176 proposed and this
+  amendment *again declines*.** It would fire when a session *acted but authored
+  no scratch*, to nudge or force the model into authoring one.
+
+**Decision.**
+
+1. **A model-facing `close-session` Skill is the single front door for Session
+   closure.** Its `description` is the closure *trigger* — a deliberately loose,
+   early "am I wrapping up?" signal, looser than "work complete and coherent" so
+   it trips while the agent can still act. Invoking it runs the closing sequence:
+   coherent state → gated-PR discipline (ADR-0003, in CLAUDE.md) → the session
+   log, which it authors **by calling `log-session`**. The existing committer then
+   lands that scratch, exactly as before.
+
+2. **`log-session` demotes from trigger to capability.** Its `description` stops
+   advertising a closure trigger (that now single-homes in `close-session`) and
+   becomes capability-shaped — *create **or update** the log* — so the model sees
+   **one** closure trigger, not two competing ones. It stays directly invocable to
+   *amend* an already-authored log.
+
+3. **The reminder/block hook stays declined — but now measurably so.** We bet a
+   better-shaped *affordance* (a discrete, named, freshly-surfaced Skill) fixes
+   more forgetting than buried prose (issue #215's rejected "option B") without
+   the ADR-0004 cost of ungateable runtime code. Crucially this is **not
+   prose-only**: `close-session`'s **invocation rate is an observable metric**.
+   That metric is the success criterion — if forgetting persists despite the
+   affordance, the heavier automatic net returns to the table with data behind it,
+   rather than being built on a hunch.
+
+**Consequences.**
+
+- **De-escalation.** The fix ships as an ordinary Skill (ADR-0005) + doc/glossary
+  edits — first-class, repo-committed, clears the normal gate. It touches **no**
+  runtime hook code, so it is *not* the human-only, ungateable change #215 was
+  escalated as.
+- **No mechanical guarantee — by design.** If the model never senses closure,
+  nothing fires, same as before this change; the affordance improves the odds, it
+  does not force. The invocation metric is what makes that acceptable: we measure
+  before spending the ADR-0004 budget on a hard net.
+- **Coverage still depends on authoring a scratch**, and the committer, sentinel,
+  diff-guard, and three-event landing are all unchanged. This amendment is purely
+  about *what triggers the authoring*.

@@ -8,5 +8,6 @@ role: >-
   interpretive half; a committed hook derives the rest and lands the merged log
   direct to `main` (the bounded ADR-0009 exception), live and normally well
   before session teardown, for the `consolidate`/`codify` jobs to mine.
-  Model-invocable: reach for it yourself when you judge the session has reached
-  closure — no human prompt, and it serves autonomous runs too.
+  Normally invoked *by* `close-session` (the closure front door), which authors
+  the log as one step of its closing sequence; callable directly only to amend an
+  already-written log.
