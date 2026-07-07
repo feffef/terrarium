@@ -16,41 +16,7 @@
 // `/opt/pw-browsers` default some environments set) — never a hardcoded
 // absolute path baked into the script.
 import { spawnSync } from 'node:child_process'
-import { accessSync, constants, readdirSync, statSync } from 'node:fs'
-import { join } from 'node:path'
-
-/** Find the Chromium executable under a Playwright browsers cache dir. */
-function findChromium(browsersDir: string): string | undefined {
-  // The conventional convenience symlink Playwright installs.
-  const convenience = join(browsersDir, 'chromium')
-  if (existsAndExecutable(convenience)) return convenience
-
-  // Fall back to scanning for a versioned `chromium-*/chrome-linux/chrome`.
-  let entries: string[]
-  try {
-    entries = readdirSync(browsersDir)
-  } catch {
-    return undefined
-  }
-  const versioned = entries
-    .filter((name) => name.startsWith('chromium-') && !name.includes('headless_shell'))
-    .sort()
-    .reverse() // prefer the newest-looking version directory
-  for (const dir of versioned) {
-    const candidate = join(browsersDir, dir, 'chrome-linux', 'chrome')
-    if (existsAndExecutable(candidate)) return candidate
-  }
-  return undefined
-}
-
-function existsAndExecutable(path: string): boolean {
-  try {
-    accessSync(path, constants.X_OK)
-    return statSync(path).isFile() || statSync(path).isSymbolicLink()
-  } catch {
-    return false
-  }
-}
+import { resolveChromiumPath } from './chromium-path'
 
 const USAGE =
   'Usage: pnpm exec tsx scripts/screenshot.ts <url> <out.png> [WxH]\n' +
@@ -100,15 +66,11 @@ function main(): void {
     process.exit(1)
   }
 
-  const browsersDir = process.env.PLAYWRIGHT_BROWSERS_PATH ?? '/opt/pw-browsers'
-  const chromium = findChromium(browsersDir)
-  if (!chromium) {
-    console.error(
-      `Could not find a pre-installed Chromium under "${browsersDir}" ` +
-        '(checked for a `chromium` convenience symlink and a versioned ' +
-        '`chromium-*/chrome-linux/chrome`). Set PLAYWRIGHT_BROWSERS_PATH to ' +
-        'the directory containing the pre-installed browser.',
-    )
+  let chromium: string
+  try {
+    chromium = resolveChromiumPath()
+  } catch (err) {
+    console.error(err instanceof Error ? err.message : String(err))
     process.exit(1)
   }
 
