@@ -1,0 +1,60 @@
+schemaVersion: 1
+session: session_01XHqKRJBoCmV9RKh9Wv74X9
+startedAt: 2026-07-07T12:08:02Z
+endedAt: 2026-07-07T12:18:27Z
+kind: interactive
+goal: Fix stale "SessionEnd lands at teardown" claim
+status: completed
+outcome: ADR amended, 5 docs corrected, pushed
+summary: "User flagged that most sessions still claim the scratch lands on main \"at teardown via the SessionEnd hook,\" even though SessionEnd is known unreliable. Investigated the git history: PR #148 (d9b68e2) rewired landing onto a live `Stop` hook as primary, demoting `SessionEnd`/resume to backstops, because SessionEnd was found to fail silently on a network-freezing suspend. That fix never got folded back into the docs describing the mechanism. Found and fixed five stale spots (CLAUDE.md, log-session SKILL.md, its Skill Inventory entry, digest SKILL.md, and scripts/log-session.ts's own author-time console output), plus amended ADR-0009 with a new \"Landing mechanism as shipped\" section. Verified lint/typecheck/tests all pass, committed, and pushed to the designated branch."
+prs: []
+docsRead:
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: the ADR describing the mechanism, and the amendment I added to it
+  - path: scripts/session-end.ts
+    reason: ground truth for how Stop/SessionEnd/resume actually wire together post-#148
+  - path: .claude/settings.json
+    reason: confirm the three hook events wired to session-end.ts
+  - path: .agents/skills/log-session/SKILL.md
+    reason: one of the stale spots
+  - path: .agents/skills/digest/SKILL.md
+    reason: "another stale spot, edited after #148 shipped yet still wrong"
+  - path: tenants/journal/content/current/skills/log-session.yml
+    reason: (unknown)
+  - path: CLAUDE.md
+    reason: (unknown)
+  - path: scripts/log-session.ts
+    reason: (unknown)
+skillsUsed:
+  - name: log-session
+    reason: closing out this session
+frictions:
+  - description: "PR #148 shipped a mechanism change (code + settings.json) with no corresponding update to CLAUDE.md/SKILL.md/ADR describing that mechanism, so the stale claim propagated to 5 independent spots."
+    solution: When a PR changes a documented mechanism, its own diff should update every doc that describes that mechanism, not just the code — the same discipline this repo already applies to PR descriptions vs. content.
+    severity: minor
+  - description: Guessed line-wrapping when constructing old_string for an Edit on log-session/SKILL.md; the actual wrap didn't match and the edit failed once.
+    solution: Read the exact surrounding lines before writing old_string instead of reconstructing wrapped prose from memory.
+    severity: nit
+durationSec: 625
+models:
+  claude-sonnet-5: 94
+toolCounts:
+  Bash: 18
+  Glob: 2
+  Read: 11
+  Grep: 10
+  Edit: 12
+  Skill: 1
+  Write: 1
+filesEdited:
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - CLAUDE.md
+  - .agents/skills/log-session/SKILL.md
+  - tenants/journal/content/current/skills/log-session.yml
+  - .agents/skills/digest/SKILL.md
+  - scripts/log-session.ts
+gitBranch: claude/sessionend-hook-logging-v0ebak
+entrypoint: remote_mobile
+cliVersion: 2.1.202
+ideas:
+  - A lint/CI check that greps for `SessionEnd` outside session-end.ts/ADR-0009 and flags it for a human to confirm it's still accurate, to catch this class of drift automatically.
