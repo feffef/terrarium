@@ -1,0 +1,10 @@
+name: close-session
+category: platform-operation
+importance: essential
+role: >-
+  The model-facing front door for Session closure: invoked when a session is
+  wrapping up, it runs the closing sequence — coherent state, gated-PR discipline,
+  and the session log (which it authors via `log-session`). It exists to make the
+  self-judged "invoke at closure" rule reliably fire; its invocation rate is the
+  measurable signal behind ADR-0009's choice of a skill affordance over an
+  automatic safety net.

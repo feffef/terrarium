@@ -154,9 +154,11 @@ self-documentation.)
 
 ### Session
 One continuous Claude Code working session against the Platform, identified by a
-stable Claude session id. It is the unit of self-reporting: at its end a session
-authors a **session log** — a Journal entry recording, honestly, its goal, how
-far it got, what it read, which Skills it used, and every **Friction** it hit. It
+stable Claude session id. It is the unit of self-reporting: at **Session closure**
+a session authors a **session log** — a Journal entry recording, honestly, its
+goal, how far it got, what it read, which Skills it used, and every **Friction**
+it hit. (Closure is the trigger, and it is typically reached *before* the session
+literally ends — see Session closure.) It
 may also carry, *only when the work sparked them*, two optional notes: **learnings**
 (useful knowledge the session inferred during the work — not read from the repo,
 which would be a doc read — a Friction's positive twin) and **ideas** (rough sparks
@@ -164,6 +166,16 @@ for the Platform's or a Tenant's future, too nascent to be an issue). A session 
 span several branches or PRs, or none; its log is authored regardless
 of where the work went, or whether any code was committed at all. Session logs
 are ground truth, not a projection of repo state (see Journal).
+
+### Session closure
+The point at which a **Session**'s active work is **complete and in a coherent,
+honest state** — the trigger for authoring its **session log**. Closure is
+**not** the same as merged: a Session usually reaches closure with its PR still
+in review (it merges later, often in another Session), and a Session that opens
+no PR at all — research, a question answered — reaches closure too. It is the
+Session's own **self-judged** call, typically reached *before* the Session
+literally ends. (Always say "**Session** closure," never bare "closure," which
+in a JS/TS codebase also reads as a lexical closure — a different thing.)
 
 ### Friction
 A single recorded pain-point within a Session: something that went wrong, was

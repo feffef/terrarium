@@ -123,11 +123,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   self-judged closure and records an in-review PR honestly — see "Logging your
   session".)
 - **Opening the PR is the first session log.** The moment you open the gated PR
-  is a closure point: author the session's first `log-session` right then, with
-  status **`in-review`** (the PR is open, not merged — never `completed`). It's
-  not finished; more commits and a re-fired log can follow (re-invoking is safe,
-  the last landed state wins), and a later session flips the status to
-  `completed` on merge.
+  is a closure point: invoke `close-session` right then (it authors the log via
+  `log-session`), with status **`in-review`** (the PR is open, not merged — never
+  `completed`). It's not finished; more commits and a re-fired log can follow
+  (re-invoking is safe, the last landed state wins), and a later session flips the
+  status to `completed` on merge.
 - **Three distinct worktree-isolation mechanisms exist in this environment — pick
   the one that matches the task, don't conflate them:**
   1. **`EnterWorktree`/`ExitWorktree`** (interactive, session-level) — switches
@@ -291,19 +291,28 @@ authors the interpretive half to a scratch file; a committed hook derives the
 rest and commits to `main` **live, normally well before session teardown** —
 see the `log-session` Skill for which hook lands it and why.
 
-**You self-judge closure — invoke `log-session` when the session's active work
-is complete and coherent.** No "are we done?" ask, no waiting for merge: closure
-means the work is in an honest, coherent state (a log records an in-review PR
-truthfully). Authoring the scratch *is* the "done" signal — the hook commits
-**only if** it exists, so a mid-work freeze logs nothing. Re-invoking is safe:
-it refreshes the scratch, and the hook overwrites the single per-session log
-with a superset (diff-guarded — an unchanged re-derive never touches `main`). So
-if you call closure and then do more, just invoke `log-session` again.
+**You self-judge closure — invoke the `close-session` Skill when the session is
+wrapping up.** `close-session` is the single **front door** for Session closure
+(glossary): it runs the closing sequence — coherent state → gated-PR discipline
+(if any) → the session log, which it authors by calling `log-session`. Its
+trigger is deliberately **loose and early** ("am I winding down?"), so reach for
+it while you can still act rather than after checking out. No "are we done?" ask,
+no waiting for merge: closure means the work is in an honest, coherent state (a
+log records an in-review PR truthfully).
 
-Because authoring no longer commits and re-firing self-heals, `log-session` is
-**model-invocable** — invoke it yourself at closure rather than on a human
-prompt. This mechanism serves autonomous sessions too: they write the scratch
-before ending, on purpose.
+Authoring the scratch *is* the "done" signal — the committed `Stop` hook lands it
+**only if** it exists, so a mid-work freeze logs nothing. Re-invoking is safe: it
+refreshes the scratch, and the hook overwrites the single per-session log with a
+superset (diff-guarded — an unchanged re-derive never touches `main`). So if you
+call closure and then do more, just invoke `close-session` again.
+
+Because authoring no longer commits and re-firing self-heals, both Skills are
+**model-invocable** — invoke `close-session` yourself at closure rather than on a
+human prompt (call `log-session` directly only to *amend* an already-written
+log). This mechanism serves autonomous sessions too: they close before ending, on
+purpose. Whether the affordance actually gets invoked is measurable — the
+`close-session` invocation rate is the signal that would justify (or retire) a
+heavier automatic safety net (ADR-0009).
 
 ## Status
 

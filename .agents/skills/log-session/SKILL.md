@@ -1,6 +1,6 @@
 ---
 name: log-session
-description: Record this Claude session's honest self-report when its work reaches closure. Invoke when the session's active work is complete and coherent — you author the goal/outcome/summary and every friction; the mechanical trace (timings, models, tools, files read/edited, subagents) is derived automatically. Writes an authored scratch; a committed hook stitches it with the trace and commits it to the Journal, live (see below for which hook and when).
+description: Create **or update** this session's log entry — the authored half (goal, outcome, summary, and every friction); the mechanical trace (timings, models, tools, files read/edited, subagents) is derived automatically. Writes an authored scratch; a committed hook stitches it with the trace and commits it to the Journal, live. Usually invoked *by* `close-session` at closure, but callable directly to amend an already-written log.
 ---
 
 Record one honest **session log** for this Claude session. You author only the
@@ -16,11 +16,17 @@ primary after PR #148 found it fails silently on a network-freezing suspend.
 
 ## When to invoke
 
-Invoke when you judge the session has reached **closure** — its active work is
-**complete and in a coherent, honest state**. Closure does **not** mean the PR is
-merged (it usually merges later, in another session): a log honestly records an
-in-review PR. **You decide this yourself** — no need to ask the user "are we
-done?".
+**The normal front door is `close-session`, not this Skill directly.**
+`close-session` owns the closure *trigger* (the "am I wrapping up?" judgment) and
+runs the whole closing sequence, of which authoring this log is one step — invoke
+that at closure and it calls this. Reach for `log-session` **directly** only to
+**update** an already-authored log (a new friction, a changed outcome) after
+you've closed.
+
+Whichever way you arrive here, a log records the session at **closure** — its
+active work **complete and in a coherent, honest state**. Closure does **not**
+mean the PR is merged (it usually merges later, in another session): a log
+honestly records an in-review PR.
 
 **Opening a gated PR is a closure point — log at that moment.** A session that
 committed substantive work opens its PR automatically when the work is coherent
