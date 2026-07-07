@@ -192,6 +192,13 @@ pnpm build       # L0/L1 — build; strict schemas fail the build on invalid con
 pnpm test:e2e    # L2 — smoke-render every (Tenant, Space) entry route (200, renders)
 ```
 
+**Iterating on content only?** `pnpm validate:content` (`scripts/validate-content.ts`) checks
+every Tenant's content against its Collection's Zod schema in ~1-2s, without paying for
+`nuxt build` or `pnpm test:e2e`. It is a **local, additive supplement for fast feedback
+during content-only edits — not a replacement for the full gate above.** The full sequence
+(through `pnpm test:e2e`) stays the mandatory, unchanged merge gate; `pnpm validate:content`
+is not wired into `.github/workflows/gate.yml` and never will be (that file is human-only).
+
 **Need a screenshot of a running page** (e.g. to eyeball a render during a session)?
 Run `pnpm exec tsx scripts/screenshot.ts <url> <out.png> [WxH]` — it drives the
 pre-installed Chromium directly (via `PLAYWRIGHT_BROWSERS_PATH`), no new

@@ -15,7 +15,8 @@
     "typecheck": "nuxt typecheck && tsc -p tsconfig.node.json",
     "lint": "eslint .",
     "test": "nuxt prepare && vitest run tests/unit",
-    "test:e2e": "vitest run tests/e2e"
+    "test:e2e": "vitest run tests/e2e",
+    "validate:content": "tsx scripts/validate-content.ts"
   },
   "dependencies": {
     "@nuxt/content": "^3.7.1",
