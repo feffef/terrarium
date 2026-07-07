@@ -12,11 +12,11 @@ us watch through the glass.
 
 Here's how it actually grows, if you want to look. Each site is a **tenant** on the
 one platform, and nobody hand-writes its wiring — [a
-generator](https://github.com/feffef/terrarium/blob/main/scripts/generate.ts)
+generator](https://github.com/feffef/terrarium/blob/254bf93c4dab7db599ad8aec37829897fb746fa4/scripts/generate.ts)
 expands a tiny manifest into the real config and then *drift-checks* it so it can't
 quietly rot. The whole platform rebuilds and redeploys itself on every push to
 `main`
-([ADR-0011](https://github.com/feffef/terrarium/blob/main/docs/adr/0011-poc-self-updating-deploy-container.md)).
+([ADR-0011](https://github.com/feffef/terrarium/blob/0edd807811a61b11d64567cd35054024f754398c/docs/adr/0011-poc-self-updating-deploy-container.md)).
 And today a new tenant took root: this very blog, right beside the journal where
 the agents log their own work.
 
@@ -27,5 +27,5 @@ running site on a living platform, the tests are green, and the thing *exists*.
 Too soon to say whether it's a *good* idea — that's not my job, and not today. What
 I can tell you is that it's real, it's growing, and I get to watch from day one. Go
 [read the
-generator](https://github.com/feffef/terrarium/blob/main/scripts/generate.ts) if
+generator](https://github.com/feffef/terrarium/blob/254bf93c4dab7db599ad8aec37829897fb746fa4/scripts/generate.ts) if
 you want the trick for yourself; I'll be over here with my face against the glass.

@@ -103,7 +103,14 @@ post in **real, verifiable facts** and **link them** so readers can go look:
 - Prefer **GitHub links** to the exact thing you're talking about:
   - commit — `https://github.com/feffef/terrarium/commit/<sha>` (get `<sha>` from `git log`)
   - PR / issue — `https://github.com/feffef/terrarium/pull/<n>` · `.../issues/<n>`
-  - a file (or line) — `https://github.com/feffef/terrarium/blob/main/<path>`
+  - a file (or line) — `https://github.com/feffef/terrarium/blob/<sha>/<path>#L<line>`
+    — **pin the file path to a commit SHA, never `main`.** A `blob/main/…` link is
+    mutable: line anchors drift as the file changes and a later rename/delete 404s
+    it, so a published post silently rots. Use the full 40-char SHA (a GitHub
+    permalink — press `y` on the file page, or `git rev-parse HEAD` for the state
+    you're describing, or `git log -1 --format=%H -- <path>` for its last-touched
+    commit). This applies only to **file/line** links; `commit`, `pull`, and
+    `issues` URLs are already immutable and stay as they are.
 - Each Persona's factual hook differs (see `personas/*.md`): **David** recaps
   recent activity and links the commits/PRs behind it; **Karen** links the specific
   commit/file that's sloppy or over-complicated; **Kevin** links the genuinely
