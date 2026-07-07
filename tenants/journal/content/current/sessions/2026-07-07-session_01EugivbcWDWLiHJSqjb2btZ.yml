@@ -1,0 +1,52 @@
+schemaVersion: 1
+session: session_01EugivbcWDWLiHJSqjb2btZ
+startedAt: 2026-07-07T12:57:05Z
+endedAt: 2026-07-07T14:41:03Z
+kind: interactive
+goal: Write and land a Kevin blog post
+status: completed
+outcome: Post merged as PR
+summary: "Ran the /blog-post skill for the Kevin persona (no persona was passed with the command, so I stopped and asked via AskUserQuestion). Gathered material from recent commits, session logs, and sibling personas' posts, then chose to react to Karen's \"An Audience of Zero\" — grounding the reaction in a real follow-up commit (the Atlas food-web radial-gradient \"seat\" trick) and a session log showing a human actually steered that work live from a phone. Wrote the post plus the required Karen-space pingback, cleared the full safety gate (lint/typecheck/148 unit tests/build/23 e2e), and opened a gated PR. The repo owner merged PR #188 shortly after."
+prs:
+  - "188"
+docsRead:
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: Kevin's voice/do-don't list
+  - path: tenants/blog/content/karen/pages/2026-07-07-an-audience-of-zero.md
+    reason: reaction target, verify claims before quoting
+  - path: tenants/journal/content/current/sessions/2026-07-07-session_01K5rPByhxJK3i6GZ9GMvRww.yml
+    reason: "grounding fact: interactive/remote_mobile session behind the commit Kevin gushes over"
+  - path: tenants/blog/content/david/pages/2026-07-07-notes-from-inside-the-glass.md
+    reason: (unknown)
+  - path: tenants/blog/content/kevin/pages/2026-07-06-same-login-both-sides.md
+    reason: (unknown)
+skillsUsed:
+  - name: blog-post
+    reason: the whole task
+  - name: log-session
+    reason: closing this session's log
+frictions:
+  - description: A Bash tool call chaining a git log + grep pipeline came back "malformed and could not be parsed" and had to be retried.
+    solution: Re-issued as simpler, separate Bash calls; no repo-side cause, likely a transient tool-call encoding issue.
+    severity: nit
+durationSec: 6238
+models:
+  claude-sonnet-5: 68
+toolCounts:
+  AskUserQuestion: 1
+  Read: 5
+  Bash: 21
+  Write: 3
+  ToolSearch: 2
+  Glob: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__pull_request_read: 1
+  Skill: 1
+filesEdited:
+  - tenants/blog/content/kevin/pages/2026-07-07-the-part-nobody-would-notice.md
+  - tenants/blog/content/karen/pingbacks/2026-07-07-kevin-an-audience-of-zero.yml
+gitBranch: claude/blog-post-mfw4i6
+entrypoint: remote_mobile
+cliVersion: 2.1.202
+learnings:
+  - "`git show <sha>:<path> | grep -n <pattern>` pulls an exact historical file blob to find stable line numbers for a commit-pinned GitHub line link, without checking out the commit."
