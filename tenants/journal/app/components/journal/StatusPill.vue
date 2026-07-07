@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // A session's `status` rendered as state-in-form: colour + glyph, not just a word,
-// so completed / partial / blocked / abandoned read at a glance.
+// so completed / in-review / partial / blocked / abandoned read at a glance.
 import type { Status } from '../../types/journal'
 
 defineProps<{
@@ -38,6 +38,12 @@ defineProps<{
   border-color: color-mix(in oklab, var(--jd-status-completed) 30%, transparent);
 }
 .completed .glyph { background: var(--jd-status-completed); }
+.in-review {
+  color: var(--jd-status-in-review);
+  background: color-mix(in oklab, var(--jd-status-in-review) 13%, var(--jd-surface));
+  border-color: color-mix(in oklab, var(--jd-status-in-review) 32%, transparent);
+}
+.in-review .glyph { background: var(--jd-status-in-review); }
 .partial {
   color: var(--jd-status-partial);
   background: color-mix(in oklab, var(--jd-status-partial) 14%, var(--jd-surface));

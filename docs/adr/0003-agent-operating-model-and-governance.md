@@ -3,6 +3,22 @@
 Date: 2026-07-04
 Status: Accepted
 
+> **Amended (2026-07-07).** **Opening the gated PR is automatic, not a question
+> to ask.** Once a session has committed substantive work to a feature branch and
+> that work is in a coherent state, it **opens the PR itself** — it does not stop
+> to ask "shall I open a PR?". Pre-PR abandonment is rare, and more commits can
+> always be pushed to an open PR, so the ask only costs a round-trip. This governs
+> **opening** the PR, not **deciding to do the work**: the two-tier rule below is
+> untouched — net-new autonomous work still needs a human green-light *before*
+> implementation; this only removes the second gate once legitimate work exists.
+> The session-log direct-to-`main` exception (ADR-0009) is unaffected — a
+> session-log-only change still never gets a PR. Opening the PR is also a **session
+> closure point**: it triggers the session's first `log-session`, logged with
+> status **`in-review`** (the PR is open, not merged — see ADR-0009 / the
+> `log-session` Skill). The same no-ask default extends to **babysitting**: on
+> opening the PR the session **subscribes to its activity automatically** (CI,
+> reviews) and follows it to merge/close — it does not ask "shall I watch it?".
+>
 > **Amended (2026-07-06, ADR-0015).** A chartered job is a **remit**, realised by
 > **one or more Skills** — not necessarily a single Skill. `sync` ("keep living
 > documentation matching real repo state") is realised by several: `digest` keeps

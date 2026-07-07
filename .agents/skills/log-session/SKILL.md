@@ -22,6 +22,13 @@ merged (it usually merges later, in another session): a log honestly records an
 in-review PR. **You decide this yourself** — no need to ask the user "are we
 done?".
 
+**Opening a gated PR is a closure point — log at that moment.** A session that
+committed substantive work opens its PR automatically when the work is coherent
+(CLAUDE.md / ADR-0003), and that first push is exactly when to write this log.
+Its `status` is then **`in-review`** — the PR is open but not merged — never
+`completed`, which is reserved for work that actually landed (a later session
+flips it to `completed` on merge) or a session that needed no PR at all.
+
 Re-invoking is cheap and safe: authoring only rewrites the scratch, and the next
 live `Stop` (or, failing that, a `SessionEnd`/resume fallback) overwrites the
 single per-session log with a superset. So if you call closure and then more work happens, just
@@ -39,7 +46,7 @@ is ignored at best and rejected at worst.
 session: session_01H…              # this session's canonical id (see "Recovering the id")
 kind: interactive                  # interactive | autonomous (a scheduled/cold job)
 goal: Rethink session logs         # ≤ 8 words — what the session set out to do
-status: completed                  # completed | partial | blocked | abandoned
+status: in-review                  # completed | in-review | partial | blocked | abandoned
 outcome: Mechanism built and tested # ≤ 8 words — nuance on status
 summary: >-                        # ≤ 100 words — the fuller narrative
   What you set out to do and what actually happened.

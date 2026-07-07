@@ -40,7 +40,14 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   config-evaluation time (ADR-0002/0013). Don't hand-write the keyed cross-product.
 - Every change lands as a **gated PR** on a feature branch — no self-merge.
   Autonomy may *propose* freely but *implements* net-new only on human
-  green-light (ADR-0003).
+  green-light (ADR-0003). **Opening that PR is automatic — don't ask.** A session
+  that committed substantive work opens the gated PR itself once the work is
+  coherent; it doesn't stop to ask "shall I open a PR?" (more commits can always
+  follow). This gates *opening*, not *deciding to do the work* — net-new
+  autonomous work still needs a green-light first (ADR-0003 amendment). The
+  session-log direct-to-`main` exception (ADR-0009) is untouched. **Watching the
+  PR is automatic too** — on opening it, subscribe to its activity and babysit it
+  to merge/close; don't ask "shall I watch it?".
 - All work must clear the **safety gate** (build/validate/isolation, ADR-0004).
   The routing module, isolation logic, and CI are **human-only** — never
   auto-merge changes touching them.
@@ -110,10 +117,17 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   nit: reviewers gate on it.
 - **Pushing is not landing.** A PR is finished only when it is **merged** or
   **abandoned/escalated** — not at push time; review, CI, and merge are all still
-  queued. Babysit the PR you opened through to that terminal state. (This is a
+  queued. Babysit the PR you opened through to that terminal state — **subscribe
+  to its activity automatically when you open it, don't ask first**. (This is a
   PR-completion discipline, distinct from *session logging*, which now fires at
   self-judged closure and records an in-review PR honestly — see "Logging your
   session".)
+- **Opening the PR is the first session log.** The moment you open the gated PR
+  is a closure point: author the session's first `log-session` right then, with
+  status **`in-review`** (the PR is open, not merged — never `completed`). It's
+  not finished; more commits and a re-fired log can follow (re-invoking is safe,
+  the last landed state wins), and a later session flips the status to
+  `completed` on merge.
 - **Three distinct worktree-isolation mechanisms exist in this environment — pick
   the one that matches the task, don't conflate them:**
   1. **`EnterWorktree`/`ExitWorktree`** (interactive, session-level) — switches

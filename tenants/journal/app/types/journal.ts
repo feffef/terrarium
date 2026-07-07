@@ -16,7 +16,7 @@
 // as` escape hatch erasing the check either way.
 export type Severity = 'nit' | 'minor' | 'moderate' | 'major' | 'blocker'
 export type Importance = 'essential' | 'specialist' | 'supporting' | 'peripheral'
-export type Status = 'completed' | 'partial' | 'blocked' | 'abandoned'
+export type Status = 'completed' | 'in-review' | 'partial' | 'blocked' | 'abandoned'
 
 export interface Friction {
   description: string
