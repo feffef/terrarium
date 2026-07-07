@@ -205,16 +205,19 @@ pnpm install     # installs deps, then runs `nuxt prepare` (derives #routing + c
 pnpm lint        # L0
 pnpm typecheck   # L0
 pnpm test        # L3 — isolation unit tests (unique, scoped keys)
-pnpm build       # L0/L1 — build; strict schemas fail the build on invalid content
+pnpm build       # L0/L1 — build; derives each Collection's SQL types from its schema,
+                 #   but does not reject invalid content — see `pnpm validate:content` below
 pnpm test:e2e    # L2 — smoke-render every (Tenant, Space) entry route (200, renders)
 ```
 
-**Iterating on content only?** `pnpm validate:content` (`scripts/validate-content.ts`) checks
-every Tenant's content against its Collection's Zod schema in ~1-2s, without paying for
-`nuxt build` or `pnpm test:e2e`. It is a **local, additive supplement for fast feedback
-during content-only edits — not a replacement for the full gate above.** The full sequence
-(through `pnpm test:e2e`) stays the mandatory, unchanged merge gate; `pnpm validate:content`
-is not wired into `.github/workflows/gate.yml` and never will be (that file is human-only).
+**Iterating on content only?** `pnpm validate:content` (`scripts/validate-content.ts`) is the
+one step above that actually runs each Document's data through its Collection's Zod schema
+(`.safeParse()`) — `pnpm build` only uses the schema to derive SQL column types, it never
+validates real content against it. `validate:content` checks every Tenant's content in ~1-2s,
+without paying for `nuxt build` or `pnpm test:e2e`. It is a **local, additive supplement for
+fast feedback during content-only edits — not a replacement for the full gate above**, which
+stays the mandatory, unchanged merge gate (ADR-0004; see Ground rules above — CI is never
+agent-edited).
 
 **Need a screenshot of a running page** (e.g. to eyeball a render during a session)?
 Run `pnpm exec tsx scripts/screenshot.ts <url> <out.png> [WxH]` — it drives the
