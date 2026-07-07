@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01K5rPByhxJK3i6GZ9GMvRww
 startedAt: 2026-07-07T11:05:47Z
-endedAt: 2026-07-07T11:12:33Z
+endedAt: 2026-07-07T11:20:35Z
 kind: interactive
 goal: Use specimen SVG plates as food-web nodes
 status: completed
 outcome: Nodes render engraved plates; three biomes shot
-summary: The Atlas food web drew each specimen as a plain circle plus a rarity glyph. Replaced those nodes with each specimen's own engraved illustration (the same inner SVG the specimen plate renders), scaled into a paper medallion that carries the colour signature as a hairline ring, masks strands passing behind it, and keeps the hover/dim wander and arrowhead trimming. Widened the ring layout and bumped the node radius to seat the larger plates. Verified via lint, typecheck, build, and a production preview screenshot of all three biomes (canopy, floor, pool). Pushed to the feature branch; PR not yet opened.
+summary: The Atlas food web drew each specimen as a plain circle plus a rarity glyph. Replaced those nodes with each specimen's own engraved illustration (the same inner SVG the specimen plate renders), scaled and drawn straight onto the page. First cut seated them in bordered paper medallions; the user found the discs off-register for the engraved style, so a second pass dropped the disc for a borderless page-coloured radial vignette (only softens strands passing under a specimen) and moved the colour signature from a ring to a short engraved rule under the name. Verified via lint, typecheck, build, and a production preview screenshot of all three biomes (canopy, floor, pool). Pushed to the feature branch across two commits; PR not yet opened.
 prs: []
 docsRead:
   - path: tenants/atlas/app/components/atlas/FoodWeb.vue
@@ -33,16 +33,22 @@ frictions:
   - description: pkill of the preview server matched its own shell and returned exit 144, as CLAUDE.md warns about chained teardown.
     solution: Ran it standalone; verified state separately. Harmless here.
     severity: nit
-durationSec: 406
+  - description: First node treatment (bordered paper medallions) missed the engraved register and needed a full restyle after user feedback.
+    solution: Should have leaned on the page paper colour and plate idiom from the start rather than a lighter disc with a coloured ring.
+    severity: minor
+  - description: A vertical strand between the top and bottom ring nodes crosses the top node's name label — pre-existing layout artifact, now more visible.
+    solution: Offset labels off the strand path, or route the strand around the label; left untouched as out of scope.
+    severity: nit
+durationSec: 888
 models:
-  claude-opus-4-8: 78
+  claude-opus-4-8: 115
 toolCounts:
-  Bash: 12
+  Bash: 22
   Grep: 5
-  Read: 10
-  Edit: 5
-  Write: 2
-  SendUserFile: 1
+  Read: 15
+  Edit: 11
+  Write: 3
+  SendUserFile: 2
   Skill: 1
 filesEdited:
   - tenants/atlas/app/components/atlas/FoodWeb.vue
@@ -53,4 +59,5 @@ entrypoint: remote_mobile
 cliVersion: 2.1.202
 learnings:
   - Vue v-html on an SVG <g> parses in the SVG namespace, so authored inner markup renders (same as SpecimenPlate's <svg>).
-  - SVG paint order plus a paper-filled medallion disc cleanly occludes strands crossing behind a node.
+  - A radialGradient stop-color of var(--atlas-paper) resolves per-biome from the defs' inherited custom props, so one gradient serves every node in the wing.
+  - An SVG radial vignette in the page's own colour hides strands with no visible edge — a bordered disc reads as an inserted bubble; a same-colour fade reads as the page.
