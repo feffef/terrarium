@@ -19,7 +19,7 @@ Status: Accepted
 > the end. `SessionEnd` turned out to be an unreliable *sole* committer (it
 > fires fire-and-forget and a network-freezing suspend makes its push throw
 > silently), so the shipped mechanism lands primarily on the live `Stop` hook
-> instead, with `SessionEnd` kept only as a backstop.
+> instead, with `SessionEnd` kept only as a fallback for whatever `Stop` misses.
 
 ## Context
 
@@ -284,11 +284,11 @@ as **decided**, to land gated.
 - **`Stop` (primary).** Fires at the end of the turn in which the agent invoked
   `log-session` and wrote the scratch — the session is healthy and the network
   is live, so the log lands promptly, well before any teardown.
-- **`SessionEnd` (backstop).** Fires at teardown, including a web freeze
-  (`reason: "other"`). Best-effort only now, not the sole chance — on a
-  network-freezing suspend it can still fail silently, but `Stop` has usually
-  already landed the log.
-- **`SessionStart` matcher `resume` (deepest backstop).** A resumed session
+- **`SessionEnd` (fallback — catches what `Stop` missed).** Fires at teardown,
+  including a web freeze (`reason: "other"`). Best-effort only now, not the sole
+  chance — on a network-freezing suspend it can still fail silently, but `Stop`
+  has usually already landed the log.
+- **`SessionStart` matcher `resume` (deepest fallback).** A resumed session
   always has a live network, so this catches anything neither `Stop` nor
   `SessionEnd` managed to land.
 

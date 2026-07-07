@@ -207,8 +207,9 @@ summary, and *every* friction) only you can write. The **`log-session`** Skill
 authors the interpretive half to a scratch file; the hook derives the rest and
 commits to `main`. That hook fires on **`Stop` (primary)** — live, at the end
 of the turn where you invoked `log-session`, before any teardown — with
-`SessionEnd` and a resumed `SessionStart` kept only as backstops, because
-`SessionEnd` alone was found to fail silently on a network-freezing suspend
+`SessionEnd` and a resumed `SessionStart` kept only as fallbacks (they catch a
+session `Stop` never fired for), because `SessionEnd` alone was found to fail
+silently on a network-freezing suspend
 (ADR-0009, PR #148). So the log is normally already on `main` well before the
 session ends, not landed at teardown.
 

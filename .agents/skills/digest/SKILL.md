@@ -147,5 +147,5 @@ author now is the only thing that makes any of the logging hooks commit a log
 at all.
 
 Done when the scratch is authored — the committed `Stop` hook lands it live at
-the end of this same turn (not at teardown); `SessionEnd`/resume only backstop
-whatever `Stop` misses (PR #148).
+the end of this same turn (not at teardown); `SessionEnd`/resume are only a
+fallback for whatever `Stop` misses (PR #148).

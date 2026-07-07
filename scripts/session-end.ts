@@ -5,10 +5,10 @@
 //   • `Stop` (primary) — fires at the end of the turn in which the agent invoked
 //     `log-session` and wrote the scratch. Live network, so the log lands promptly
 //     while the session is healthy — the fix for the freeze-races-a-dead-network case.
-//   • `SessionEnd` (backstop) — teardown, including a web freeze (`reason: other`).
+//   • `SessionEnd` (fallback) — teardown, including a web freeze (`reason: other`).
 //     Best-effort now, not the only chance: on a network-freezing suspend it fails
 //     silently as before, but `Stop` already landed the log.
-//   • `SessionStart` matcher `resume` (deepest backstop) — a resumed session always
+//   • `SessionStart` matcher `resume` (deepest fallback) — a resumed session always
 //     has a live network; lands a scratch that no `Stop`/`SessionEnd` managed to.
 //
 // Flow: read the hook payload on stdin → if no authored scratch exists, do NOTHING

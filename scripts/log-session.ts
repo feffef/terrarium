@@ -270,7 +270,8 @@ function fail(msg: string): never {
 /** `--author <authored.yml>`: validate the interpretive fields and write the
  *  scratch. This is what the model-invocable `log-session` Skill calls at
  *  closure; it does NOT commit — the session-end handler does, live on the
- *  next `Stop` (with `SessionEnd`/resume only as backstops, PR #148). */
+ *  next `Stop` (with `SessionEnd`/resume only as fallbacks for whatever `Stop`
+ *  misses, PR #148). */
 function authorMain(argv: string[]): void {
   const positional = argv.filter((a) => !a.startsWith('--'))
   const [inputPath] = positional
