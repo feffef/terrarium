@@ -21,6 +21,7 @@ import {
   kindCounts,
   ownSkills,
   prRefs,
+  prRefsSub,
   shortId,
   skillGroups,
   skillsLabel,
@@ -144,6 +145,27 @@ describe('prRefs', () => {
   it('sorts numerically, not lexically', () => {
     const sessions = [session({ prs: ['#2', '#10', '#1'] })]
     expect(prRefs(sessions)).toEqual(['1', '2', '10'])
+  })
+})
+
+describe('prRefsSub', () => {
+  it('is "none yet" when no PRs are referenced', () => {
+    expect(prRefsSub([])).toBe('none yet')
+  })
+
+  it('lists all PRs newest-first when they fit', () => {
+    expect(prRefsSub(['3', '12'])).toBe('#12 · #3')
+    expect(prRefsSub(['1', '2', '10'])).toBe('#10 · #2 · #1')
+  })
+
+  it('folds the overflow into a "+N earlier" tail', () => {
+    expect(prRefsSub(['1', '2', '3', '4', '5'])).toBe('#5 · #4 · #3 +2 earlier')
+  })
+
+  it('does not mutate the input list', () => {
+    const refs = ['1', '2', '3', '4']
+    prRefsSub(refs)
+    expect(refs).toEqual(['1', '2', '3', '4'])
   })
 })
 

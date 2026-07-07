@@ -91,6 +91,19 @@ export function prRefs(sessions: SessionDoc[]): string[] {
   return [...seen].sort((a, b) => Number(a) - Number(b))
 }
 
+// Compact sub-line for the "PRs referenced" stat tile. Enumerating every PR
+// stopped fitting once the list grew past a handful, so show only the newest
+// few (highest-numbered first) and fold the rest into a "+N earlier" tail.
+export const PR_SUB_MAX = 3
+
+export function prRefsSub(refs: string[]): string {
+  if (!refs.length) return 'none yet'
+  const newestFirst = refs.slice().reverse()
+  const shown = newestFirst.slice(0, PR_SUB_MAX).map((p) => `#${p}`)
+  const rest = newestFirst.length - shown.length
+  return rest > 0 ? `${shown.join(' · ')} +${rest} earlier` : shown.join(' · ')
+}
+
 // ── Skill Inventory ──────────────────────────────────────
 // The dashboard advertises only the Platform's OWN Skills — the platform-operation
 // ones it authors and evolves. The general-engineering pack is used, not evolved

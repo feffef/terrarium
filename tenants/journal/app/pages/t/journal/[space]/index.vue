@@ -23,6 +23,7 @@ import {
   kindCounts as countKinds,
   ownSkills as selectOwnSkills,
   prRefs as dedupePrRefs,
+  prRefsSub as buildPrSub,
   skillGroups as groupSkills,
   skillsLabel as buildSkillsLabel,
   skillsSub as buildSkillsSub,
@@ -92,6 +93,7 @@ const frictionSeverityTotals = computed(() => rollupFrictions(sessions.value))
 const totalFrictions = computed(() => countFrictionTotal(sessions.value))
 const sessionKindCounts = computed(() => countKinds(sessions.value))
 const referencedPrs = computed(() => dedupePrRefs(sessions.value))
+const referencedPrsSub = computed(() => buildPrSub(referencedPrs.value))
 
 const platformSkills = computed(() => selectOwnSkills(skills.value))
 const externalSkillTotal = computed(() => countExternalSkills(skills.value))
@@ -201,7 +203,7 @@ useHead({ title: `${title.value} · journal/${space}` })
       <JournalStatTile
         label="PRs referenced"
         :value="referencedPrs.length"
-        :sub="referencedPrs.length ? referencedPrs.map((p) => '#' + p).join(' · ') : 'none yet'"
+        :sub="referencedPrsSub"
       />
     </section>
 
