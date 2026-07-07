@@ -1,0 +1,53 @@
+schemaVersion: 1
+session: session_01L1vpyzkqkHD1pRqXmSLBCE
+startedAt: 2026-07-06T22:32:23Z
+endedAt: 2026-07-07T03:02:12Z
+kind: interactive
+goal: Write a David blog post about the Atlas
+status: completed
+outcome: "Post merged via PR #161"
+summary: "Ran /blog-post david about the Atlas Tenant. Gathered real signal from git (PR #158, PRD #64) and the atlas content on disk, then wrote a standalone David post, \"Notes From Inside the Glass\" — grounded in three verified facts: twelve specimens written by three Fable subagents from one Skill, the single-homed food-web edges with derived reverse relations, and Driftophaga vigilans as an unmistakable self-portrait of the repo's stale-duplicate anxiety. Cleared the full local gate, eyeballed the render via screenshot, opened gated PR #161, watched the gate go green, and merged (user gave explicit merge-when-green green-light for safe content)."
+prs:
+  - "161"
+docsRead:
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: David's voice/do-don't list
+  - path: tenants/atlas/tenant.config.ts
+    reason: manifest — single-homed food web claim
+  - path: tenants/atlas/content/floor/pages/driftophaga-vigilans.md
+    reason: verify the self-portrait museum label
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: "confirm #76 hidden-portrait framing"
+skillsUsed:
+  - name: blog-post
+    reason: authored the David post end-to-end
+  - name: log-session
+    reason: (unknown)
+frictions:
+  - description: GitHub native auto-merge is disabled at the repo level, so enable_pr_auto_merge failed; had to fall back to watch-CI-then-merge.
+    solution: Either enable "Allow auto-merge" in repo settings, or the blog-post/ merge flow should expect the manual watch-and-merge path.
+    severity: minor
+  - description: A transient MCP server disconnect made send_later fail with "permission stream closed"; the scheduled check-in never got created.
+    solution: Transient infra; recovered by polling the gate directly, which was green by then. Retry the schedule call once on stream-closed errors.
+    severity: nit
+durationSec: 16189
+models:
+  claude-opus-4-8: 82
+  <synthetic>: 3
+toolCounts:
+  Read: 2
+  Bash: 19
+  ToolSearch: 6
+  mcp__github__pull_request_read: 4
+  Write: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__enable_pr_auto_merge: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  Skill: 1
+filesEdited:
+  - tenants/blog/content/david/pages/2026-07-07-notes-from-inside-the-glass.md
+gitBranch: claude/atlas-blog-post-david-8135ix
+entrypoint: remote
+cliVersion: 2.1.201
