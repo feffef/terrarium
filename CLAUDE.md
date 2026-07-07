@@ -86,7 +86,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   when nothing matched (routine in idempotent teardown), and `pkill -f` can
   match the invoking shell's own command line and kill the whole chain
   mid-flight — either way everything after the `&&` is silently dropped,
-  e.g. a chained `git add` never runs and no error points at it.
+  e.g. a chained `git add` never runs and no error points at it. When a
+  teardown/`pkill` step *does* match and kill its target — including that
+  self-match case — the command it kills commonly reports exit code **144**
+  (128 + 16, i.e. terminated by `SIGTERM`). That's the expected result of a
+  successful kill, not itself evidence of a problem — don't re-derive it as a
+  failure signal each session.
 - **Don't `&&`-chain a branch rename/creation with the commit/push steps that
   follow it** — the same silent-drop failure mode as the pkill bullet above:
   `git branch -m ... && git commit ... && git push` (or `checkout -b`) fails at
@@ -123,11 +128,35 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   not finished; more commits and a re-fired log can follow (re-invoking is safe,
   the last landed state wins), and a later session flips the status to
   `completed` on merge.
-- **When dispatching parallel subagents that touch git, pass `isolation: 'worktree'`
-  explicitly** — it is an Agent-tool parameter, not implied by the prompt. Without
-  it, "parallel" agents share one checkout and race on branches. Each worktree
-  agent must also pin its worktree root (operate from that path) before any git
-  op, so it never runs git in the shared main checkout.
+- **Three distinct worktree-isolation mechanisms exist in this environment — pick
+  the one that matches the task, don't conflate them:**
+  1. **`EnterWorktree`/`ExitWorktree`** (interactive, session-level) — switches
+     *this whole session's* working directory into a new git worktree. Use it
+     only when the user explicitly says "worktree", or CLAUDE.md/memory directs
+     the current task to run in one — never invoke it proactively for routine
+     work.
+  2. **The Agent tool's `isolation: 'worktree'` parameter** (per-subagent) — the
+     mechanism for dispatched subagents, especially parallel ones, that will
+     touch git. Pass it **explicitly** — it is an Agent-tool parameter, not
+     implied by the prompt. Without it, "parallel" agents share one checkout and
+     race on branches.
+  3. **Plain manual `git worktree add`** — an ordinary git operation with no
+     session-switching or Agent-tool wiring. Use it only for an ad-hoc, one-off
+     worktree you'll manage by hand yourself (e.g. inspecting another branch's
+     tree side by side) — it is not a substitute for either tool above, and a
+     subagent brief that says "use `git worktree add`" instead of passing
+     `isolation: 'worktree'` is doing mechanism 2's job with the wrong mechanism.
+  - **For mechanism 2, "pin its worktree root" is not enough on its own — the
+    sharp edge is that a dispatched subagent's Bash tool does not preserve
+    working directory across separate tool calls.** A single `cd` into the
+    worktree root early in a subagent's work does **not** carry over to a later,
+    separate Bash invocation — each call starts from whatever cwd the harness
+    resets to. So when briefing a worktree-isolated subagent, **every
+    git-touching command in the brief must itself include the
+    `cd <worktree-root> &&` step** — never phrase the brief as "cd into your
+    worktree, then run these git commands," since that reads as a one-time
+    setup step the subagent will (correctly, given how the tool actually
+    behaves) fail to repeat.
 
 ## Repo layout
 

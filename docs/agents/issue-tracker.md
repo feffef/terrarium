@@ -39,7 +39,27 @@ class to its MCP equivalent:
 
 Deferred MCP tools resolve only by **fully-qualified name** — `ToolSearch
 select:` needs `mcp__github__<name>` (e.g. `mcp__github__list_issues`); a bare
-name like `list_issues` won't resolve.
+name like `list_issues` won't resolve. This is host tooling (Claude Code's
+deferred-tool/`ToolSearch` mechanism), not something this repo controls, so
+documenting the failure modes precisely is the most this repo can do.
+
+**Verified query forms:** `select:` + fully-qualified name resolves (comma-separated
+names too). `select:` + a bare or typo'd name fails with `No matching deferred
+tools found`. ⚠️ **Mixing a valid and a bare name in one `select:` call
+silently partial-succeeds** — it returns only the valid tool, no error about the
+dropped one. A bare name used as a plain keyword query (no `select:` prefix)
+resolves fine via semantic match — that's the recovery path when a `select:`
+guess fails.
+
+**The bad-name trap:** calling a tool directly by an unrecognized name — bare or
+a fully-qualified typo — gives the same generic `Error: No such tool available:
+<name>` either way, with no "did you mean" and no hint to retry via `ToolSearch`.
+That's the moment a plausible bare name gets wrongly abandoned as unsupported
+instead of retried as a keyword query.
+
+**Practical rule:** always use a tool's fully-qualified name (bare or with
+`select:`), never a bare short name. If a `select:` lookup comes back empty,
+retry the same string as a plain keyword query, or broaden it into a phrase.
 
 `actions_list` has no `minimal_output` and returns full run objects (~300KB),
 which overflow the tool-result limit — for an "is main green" check, slice the
