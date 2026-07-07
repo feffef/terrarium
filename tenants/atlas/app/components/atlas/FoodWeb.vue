@@ -131,6 +131,13 @@ const usedKinds = computed(() => new Set(props.edges.map((e) => e.kind)))
         >
           <path d="M0,1 L9,5 L0,9" fill="none" stroke="context-stroke" stroke-width="1.4" />
         </marker>
+        <!-- A borderless seat in the page's own paper colour: solid at the centre,
+             fading to nothing at the rim. Invisible on empty paper; it only reveals
+             itself by quietly softening the strands that pass under a specimen. -->
+        <radialGradient id="atlas-web-seat">
+          <stop offset="52%" stop-color="var(--atlas-paper)" stop-opacity="1" />
+          <stop offset="100%" stop-color="var(--atlas-paper)" stop-opacity="0" />
+        </radialGradient>
       </defs>
 
       <!-- strands first, under the nodes -->
@@ -163,14 +170,16 @@ const usedKinds = computed(() => new Set(props.edges.map((e) => e.kind)))
           @blur="hot = null"
         >
           <g class="node" :class="nodeClass(n.s.slug)" :style="figStyle(n.s)">
-            <!-- the medallion: a paper seat that masks strands and carries the
-                 specimen's signature as a hairline ring -->
-            <circle class="halo" :cx="n.x" :cy="n.y" :r="R" :style="{ stroke: sig(n.s) }" />
-            <!-- the engraved plate, seated and scaled. v-html is safe: the
+            <!-- the seat: a borderless page-coloured vignette that softens the
+                 strands beneath the specimen, and the hover/click hit target -->
+            <circle class="seat" :cx="n.x" :cy="n.y" :r="R" fill="url(#atlas-web-seat)" />
+            <!-- the engraved plate, drawn straight onto the page. v-html is safe: the
                  illustration is agent-authored, repo-committed markup (see Plate). -->
             <!-- eslint-disable-next-line vue/no-v-html -->
             <g v-if="n.s.illustration" class="figure" :transform="figTransform(n)" v-html="n.s.illustration" />
             <text v-else class="mk" :x="n.x" :y="n.y + 3.5" text-anchor="middle">{{ rarityMeta(n.s.rarity).mark }}</text>
+            <!-- the specimen's colour, carried as a short engraved rule under the name -->
+            <line class="sigrule" :x1="n.x - 13" :x2="n.x + 13" :y1="n.y + R + 22" :y2="n.y + R + 22" :style="{ stroke: sig(n.s) }" />
             <text class="nm" :x="n.x" :y="n.y + R + 15" text-anchor="middle">{{ n.s.binomial }}</text>
           </g>
         </a>
