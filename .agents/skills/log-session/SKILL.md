@@ -1,14 +1,18 @@
 ---
 name: log-session
-description: Record this Claude session's honest self-report when its work reaches closure. Invoke when the session's active work is complete and coherent — you author the goal/outcome/summary and every friction; the mechanical trace (timings, models, tools, files read/edited, subagents) is derived automatically. Writes an authored scratch; the SessionEnd hook stitches it with the trace and commits to the Journal.
+description: Record this Claude session's honest self-report when its work reaches closure. Invoke when the session's active work is complete and coherent — you author the goal/outcome/summary and every friction; the mechanical trace (timings, models, tools, files read/edited, subagents) is derived automatically. Writes an authored scratch; a live `Stop` hook (with `SessionEnd`/resume as backstops) stitches it with the trace and commits to the Journal.
 ---
 
 Record one honest **session log** for this Claude session. You author only the
 **interpretive** half — goal, outcome, summary, and every friction. The
 **mechanical** half — exact timings, models, tool counts, files read/edited,
-subagents, branch — is *derived from the transcript* by the `SessionEnd` hook, so
+subagents, branch — is *derived from the transcript* by a committed hook, so
 **do not write it** (ADR-0009 amendment). Authoring just writes a scratch file;
-the hook stitches the two and commits to `main` at session end.
+the hook stitches the two and commits to `main`. That commit normally happens
+live, on the `Stop` hook at the end of the turn you invoke this Skill in —
+**not** at session teardown: `SessionEnd` is only a backstop, kept because it
+can still catch a session `Stop` never fired for, but it was demoted from
+primary after PR #148 found it fails silently on a network-freezing suspend.
 
 ## When to invoke
 
@@ -18,10 +22,10 @@ merged (it usually merges later, in another session): a log honestly records an
 in-review PR. **You decide this yourself** — no need to ask the user "are we
 done?".
 
-Re-invoking is cheap and safe: authoring only rewrites the scratch, and the
-`SessionEnd` hook overwrites the single per-session log with a superset. So if you
-call closure and then more work happens, just **invoke again** to refresh the
-scratch — the last state before teardown wins.
+Re-invoking is cheap and safe: authoring only rewrites the scratch, and the next
+live `Stop` (or a `SessionEnd`/resume backstop) overwrites the single per-session
+log with a superset. So if you call closure and then more work happens, just
+**invoke again** to refresh the scratch — the last landed state wins.
 
 Be honest, **especially about friction** — a flattering log is worse than none.
 
@@ -99,10 +103,12 @@ pnpm exec tsx scripts/log-session.ts --author <path-to-authored.yml>
 ```
 
 It validates the interpretive fields and writes `.session-logs/pending.scratch.json`
-(gitignored). That's all you do. At session teardown the committed `SessionEnd` hook
+(gitignored). That's all you do. At the end of this turn the committed `Stop` hook
 derives the mechanical trace, stitches it with your scratch, and commits the merged
 log directly to `main` (the ADR-0009 boundary) — **only if** the scratch exists,
-which is why authoring it *is* your "this session is done" signal.
+which is why authoring it *is* your "this session is done" signal. `SessionEnd` and
+a resumed `SessionStart` run the same script as backstops for whatever `Stop` didn't
+land (PR #148); by the time either fires, the log has usually already landed.
 
 The helper is gated code (ADR-0009): changing `log-session.ts` / `session-trace.ts`
 / `session-end.ts` is a normal PR.

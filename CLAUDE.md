@@ -202,10 +202,15 @@ Every session ends with an honest **session log** in the Journal (ADR-0009,
 issue #2) — the raw signal the future `consolidate`/`codify` jobs mine. A log
 has two halves (ADR-0009 amendment): the **mechanical** trace (timings, models,
 tools, files read/edited, subagents) is **derived from the transcript** by a
-committed `SessionEnd` hook — never self-reported; the **interpretive** half
-(goal, outcome, summary, and *every* friction) only you can write. The
-**`log-session`** Skill authors the interpretive half to a scratch file; the
-hook stitches the two and commits to `main` at teardown.
+committed hook — never self-reported; the **interpretive** half (goal, outcome,
+summary, and *every* friction) only you can write. The **`log-session`** Skill
+authors the interpretive half to a scratch file; the hook derives the rest and
+commits to `main`. That hook fires on **`Stop` (primary)** — live, at the end
+of the turn where you invoked `log-session`, before any teardown — with
+`SessionEnd` and a resumed `SessionStart` kept only as backstops, because
+`SessionEnd` alone was found to fail silently on a network-freezing suspend
+(ADR-0009, PR #148). So the log is normally already on `main` well before the
+session ends, not landed at teardown.
 
 **You self-judge closure — invoke `log-session` when the session's active work
 is complete and coherent.** No "are we done?" ask, no waiting for merge: closure

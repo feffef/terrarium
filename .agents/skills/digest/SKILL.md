@@ -141,9 +141,11 @@ cases above, is open and honestly awaiting a human.
 Invoke `log-session` (CLAUDE.md) before ending, even though this run is likely
 **autonomous**: mark `kind: autonomous`, list this PR under `prs`, and note any
 friction from the run (e.g. a red gate you had to fix). This matters more here
-than in an interactive session — a scheduled digest run has no human present at
-teardown to notice a missing log and prompt you to add one (issue #176), so the
-scratch you author now is the only thing that makes the `SessionEnd` hook commit
-a log at all.
+than in an interactive session — a scheduled digest run has no human present to
+notice a missing log and prompt you to add one (issue #176), so the scratch you
+author now is the only thing that makes any of the logging hooks commit a log
+at all.
 
-Done when the scratch is authored — the hook lands it at teardown from there.
+Done when the scratch is authored — the committed `Stop` hook lands it live at
+the end of this same turn (not at teardown); `SessionEnd`/resume only backstop
+whatever `Stop` misses (PR #148).
