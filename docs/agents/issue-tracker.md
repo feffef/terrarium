@@ -39,7 +39,53 @@ class to its MCP equivalent:
 
 Deferred MCP tools resolve only by **fully-qualified name** — `ToolSearch
 select:` needs `mcp__github__<name>` (e.g. `mcp__github__list_issues`); a bare
-name like `list_issues` won't resolve.
+name like `list_issues` won't resolve. This one line is easy to skim past mid-session
+and reach for a plausible bare name out of habit anyway — the regression this doc
+section exists to prevent. The behavior below is host tooling (the Claude Code
+deferred-tool/`ToolSearch` mechanism), not something this repo controls; documenting
+it precisely is the most this repo can do; it can't fix the underlying UX (no
+"did you mean", silent partial failures — see below).
+
+**What actually happens, verified query-by-query:**
+
+| Query form | Example | Result |
+| --- | --- | --- |
+| `select:` + fully-qualified name | `select:mcp__github__list_issues` | ✅ resolves |
+| `select:` + comma-separated fully-qualified names | `select:mcp__github__list_issues,mcp__github__search_issues` | ✅ both resolve |
+| `select:` + bare name | `select:list_issues` | ❌ `No matching deferred tools found` |
+| `select:` + near-miss/typo'd fully-qualified name | `select:mcp__github__list_isue` | ❌ `No matching deferred tools found` |
+| `select:` mixing one valid + one bare name | `select:mcp__github__get_release_by_tag,list_tags` | ⚠️ **silently partial-succeeds** — returns only the valid tool, with no error or warning that the bare one was dropped |
+| plain keyword query (no `select:`), a bare name used as the keyword | `list_issues` | ✅ resolves via semantic match — this is the recovery path when a `select:` guess fails |
+| plain keyword query, a descriptive phrase | `github list issues search` | ✅ returns several ranked, topically related tools (`list_issues`, `search_issues`, `search_pull_requests`, `actions_list`, `list_branches`, …) — useful when you don't know the exact name, but noisy enough that you must eyeball the list rather than trust the top hit blindly |
+
+**What you actually see on a bad name, and why it's a trap:** calling a tool
+directly by a name the harness doesn't recognize — whether a bare guess or a
+fully-qualified typo — returns the *same generic error* either way:
+
+```
+Error: No such tool available: list_issues
+Error: No such tool available: mcp__github__list_isue
+```
+
+Both read as "this capability doesn't exist," not "you have the right idea, wrong
+spelling/form." There's no fuzzy suggestion and no hint to try `ToolSearch`. That's
+exactly the moment a plausible-sounding bare name gets abandoned as "not supported
+here" instead of retried as a `ToolSearch` keyword query.
+
+**One more wrinkle:** you don't strictly need `ToolSearch` first if you already
+know a tool's exact fully-qualified name and its parameters — calling
+`mcp__github__get_me` or `mcp__github__get_latest_release` cold, with no prior
+`ToolSearch` in the session, dispatched successfully both times in testing. The
+gate is really "is the fully-qualified name exactly right," not "did you call
+`ToolSearch` first." `ToolSearch` matters for discovering the name/schema when
+you don't already know it — and per the mixed-list wrinkle above, for confirming
+every name you asked for actually came back.
+
+**Practical rule:** when reaching for any `mcp__github__*` tool, use its
+fully-qualified name from the list in this file, or the `select:` prefix with
+that full name — never a bare short name. If a `select:` lookup comes back
+empty, don't conclude the tool doesn't exist: retry the same string as a plain
+keyword query (drop `select:`), or broaden it into a descriptive phrase.
 
 `actions_list` has no `minimal_output` and returns full run objects (~300KB),
 which overflow the tool-result limit — for an "is main green" check, slice the
