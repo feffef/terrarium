@@ -68,6 +68,24 @@ function parseSize(size: string): string | undefined {
   return `${width},${height}`
 }
 
+// Headless Chromium in a container reliably prints harmless dbus ERROR lines
+// to stderr — see the USAGE note above (issue #101). Observed variants include
+// "Failed to connect to the bus" (dbus/bus.cc) and "Failed to call method: ...
+// org.freedesktop.DBus..." (dbus/object_proxy.cc); both come from Chromium's
+// `dbus/` source directory, hence the `ERROR:dbus/` half of the pattern. It's
+// noise, not a failure signal, but it must not swallow a *genuine* Chromium
+// error, so we filter by line rather than dropping stderr wholesale.
+const DBUS_NOISE_PATTERN = /Failed to connect to the bus|ERROR:dbus\//
+
+/** Re-emit captured stderr lines, dropping known-harmless dbus noise. */
+function emitFilteredStderr(stderr: string): void {
+  const lines = stderr.split('\n').filter((line) => line.length > 0)
+  const real = lines.filter((line) => !DBUS_NOISE_PATTERN.test(line))
+  for (const line of real) {
+    process.stderr.write(`${line}\n`)
+  }
+}
+
 function main(): void {
   const [url, out, size] = process.argv.slice(2)
   if (!url || !out) {
@@ -105,8 +123,10 @@ function main(): void {
       `--screenshot=${out}`,
       url,
     ],
-    { stdio: 'inherit' },
+    { stdio: ['inherit', 'inherit', 'pipe'], encoding: 'utf8' },
   )
+
+  if (result.stderr) emitFilteredStderr(result.stderr)
 
   if (result.error) {
     console.error(`Failed to launch Chromium at "${chromium}":`, result.error.message)
