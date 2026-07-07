@@ -1,0 +1,57 @@
+schemaVersion: 1
+session: session_012pqoJzCstTxkeb6a3stnNF
+startedAt: 2026-07-07T05:44:32Z
+endedAt: 2026-07-07T05:53:40Z
+kind: interactive
+goal: Fix overflowing PRs-referenced dashboard tile
+status: completed
+outcome: Compact sub-line shipped, PR in review
+summary: The Journal dashboard's "PRs referenced" stat tile enumerated every distinct PR number in its sub-line, which overflowed the box at 69 PRs. Added a pure prRefsSub() helper to the layer-local dashboard module that shows the three newest PRs and folds the rest into a "+N earlier" tail, wired the tile to it, and unit-tested the helper (empty, fits, overflow, no mutation). Full safety gate green locally; verified against the rendered DOM via production preview and screenshot. Opened PR "#166", subscribed to its activity, and armed an hourly self check-in.
+prs:
+  - "166"
+docsRead:
+  - path: CLAUDE.md
+    reason: conventions, safety gate, DOM-not-SSR verification rule
+  - path: tenants/journal/app/pages/t/journal/[space]/index.vue
+    reason: the tile being fixed
+  - path: tenants/journal/app/utils/dashboard.ts
+    reason: pure module the helper belongs in
+  - path: tenants/journal/utils/dashboard.ts
+    reason: (unknown)
+  - path: tenants/journal/app/components/journal/StatTile.vue
+    reason: (unknown)
+  - path: tests/unit/journal-dashboard.spec.ts
+    reason: (unknown)
+skillsUsed:
+  - name: log-session
+    reason: (unknown)
+frictions:
+  - description: The designated feature branch already existed locally with two identical-message session-log commits on it, muddying what a fresh work branch should contain.
+    solution: Have the environment provision feature branches clean off origin/main, or keep session-log commits off work branches entirely.
+    severity: minor
+  - description: pkill teardown of the preview server exits 144 even on success, which reads as a failure; CLAUDE.md's own-command rule avoids chain loss but the exit code still needs interpreting every time.
+    solution: A small scripts/ helper (or documented "expect nonzero" note) for stopping preview servers.
+    severity: nit
+durationSec: 548
+models:
+  claude-fable-5: 65
+toolCounts:
+  Grep: 2
+  Read: 7
+  Glob: 2
+  Bash: 13
+  Edit: 6
+  Write: 2
+  ToolSearch: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 1
+filesEdited:
+  - tenants/journal/app/utils/dashboard.ts
+  - tenants/journal/app/pages/t/journal/[space]/index.vue
+  - tests/unit/journal-dashboard.spec.ts
+gitBranch: claude/journal-pr-box-space-jpg8ir
+entrypoint: remote_mobile
+cliVersion: 2.1.202
