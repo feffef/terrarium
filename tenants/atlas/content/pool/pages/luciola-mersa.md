@@ -19,52 +19,94 @@ plate:
 illustration: |
   <g stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none">
     <!-- the surface, far above -->
-    <path d="M28 64 q28 -7 56 0 q28 7 56 0 q28 -7 56 0 q28 7 56 0 q28 -7 56 0 q28 7 56 0" stroke-width="1.1" />
+    <path d="M22 48 q28 -8 56 0 q28 8 56 0 q28 -8 56 0 q28 8 56 0 q28 -8 56 0 q28 8 56 0" stroke-width="1.1" />
     <g stroke-width="0.7" opacity="0.5">
-      <line x1="70" y1="73" x2="98" y2="73" />
-      <line x1="182" y1="75" x2="212" y2="75" />
-      <line x1="298" y1="72" x2="324" y2="72" />
+      <line x1="70" y1="56" x2="98" y2="56" />
+      <line x1="182" y1="58" x2="212" y2="58" />
+      <line x1="298" y1="55" x2="324" y2="55" />
+    </g>
+    <!-- the light that reaches down, thinning -->
+    <g stroke-width="0.7" opacity="0.26">
+      <line x1="150" y1="60" x2="182" y2="150" />
+      <line x1="205" y1="60" x2="198" y2="150" />
+      <line x1="256" y1="58" x2="220" y2="150" />
     </g>
     <!-- the deep, hatched -->
-    <g stroke-width="0.7" opacity="0.45">
-      <line x1="36" y1="252" x2="120" y2="252" />
-      <line x1="280" y1="256" x2="364" y2="256" />
-      <line x1="48" y1="266" x2="140" y2="266" />
-      <line x1="262" y1="270" x2="352" y2="270" />
-      <line x1="60" y1="280" x2="150" y2="280" />
-      <line x1="250" y1="284" x2="340" y2="284" />
+    <g stroke-width="0.7" opacity="0.42">
+      <line x1="34" y1="254" x2="118" y2="254" />
+      <line x1="282" y1="258" x2="366" y2="258" />
+      <line x1="46" y1="268" x2="138" y2="268" />
+      <line x1="264" y1="272" x2="354" y2="272" />
+      <line x1="60" y1="282" x2="150" y2="282" />
+      <line x1="252" y1="286" x2="342" y2="286" />
     </g>
-    <!-- the swimmer, head up -->
-    <path d="M200 156 q13 7 12 24 q-1 17 -12 24 q-11 -7 -12 -24 q-1 -17 12 -24" />
-    <path d="M188 174 q-12 2 -18 10" stroke-width="1" />
-    <path d="M212 174 q12 2 18 10" stroke-width="1" />
-    <path d="M200 204 q3 10 -3 18 q-5 8 -1 16" stroke-width="0.9" />
-    <!-- fringe -->
-    <g stroke-width="0.8" opacity="0.8">
-      <line x1="192" y1="198" x2="186" y2="206" />
-      <line x1="208" y1="198" x2="214" y2="206" />
-      <line x1="200" y1="203" x2="200" y2="211" />
+    <!-- the swimmer, head up, hanging -->
+    <path d="M200 106 q28 4 30 34 q2 26 -8 50 q-6 14 -22 24 q-16 -10 -22 -24 q-10 -24 -8 -50 q2 -30 30 -34 z" />
+    <!-- the body, seen through: its rings -->
+    <g stroke-width="0.8" opacity="0.6">
+      <path d="M176 128 q24 7 48 0" />
+      <path d="M171 146 q29 8 58 0" />
+      <path d="M176 164 q24 7 48 0" />
+      <path d="M182 182 q18 6 36 0" />
+      <path d="M190 198 q10 4 20 0" />
     </g>
-    <!-- the dark halo the light does not reach -->
-    <circle cx="200" cy="158" r="19" stroke-width="0.8" stroke-dasharray="1 5" opacity="0.35" />
+    <!-- the head, and its one eye -->
+    <path d="M184 120 q16 -12 32 0" stroke-width="1" />
+    <circle cx="200" cy="126" r="1.8" fill="currentColor" stroke="none" />
+    <!-- antennae, held out -->
+    <path d="M188 116 q-28 -10 -40 -38" stroke-width="1" />
+    <path d="M212 116 q28 -10 40 -38" stroke-width="1" />
+    <g stroke-width="0.6" opacity="0.7">
+      <path d="M174 104 l-9 -2 M166 92 l-9 -2 M159 80 l-8 -1" />
+      <path d="M226 104 l9 -2 M234 92 l9 -2 M241 80 l8 -1" />
+    </g>
+    <!-- swimming legs -->
+    <g stroke-width="0.85" opacity="0.85">
+      <path d="M174 150 q-18 2 -28 12" />
+      <path d="M226 150 q18 2 28 12" />
+      <path d="M176 166 q-16 4 -24 14" />
+      <path d="M224 166 q16 4 24 14" />
+    </g>
+    <g stroke-width="0.6" opacity="0.6">
+      <path d="M158 158 l-4 5 M150 162 l-4 5" />
+      <path d="M242 158 l4 5 M250 162 l4 5" />
+    </g>
+    <!-- the tail fork, fringed -->
+    <path d="M194 212 q-3 10 -9 16" stroke-width="0.9" />
+    <path d="M206 212 q3 10 9 16" stroke-width="0.9" />
+    <g stroke-width="0.7" opacity="0.8">
+      <line x1="183" y1="230" x2="178" y2="240" />
+      <line x1="192" y1="224" x2="190" y2="236" />
+      <line x1="208" y1="224" x2="210" y2="236" />
+      <line x1="217" y1="230" x2="222" y2="240" />
+    </g>
+    <!-- the dark the dim light does not reach -->
+    <circle cx="200" cy="158" r="46" stroke-width="0.8" stroke-dasharray="1 7" opacity="0.22" />
     <!-- motes, its slow harvest -->
     <g stroke-width="0.8" opacity="0.55">
-      <circle cx="122" cy="122" r="1.2" />
-      <circle cx="152" cy="202" r="1.1" />
-      <circle cx="262" cy="140" r="1.2" />
-      <circle cx="288" cy="212" r="1" />
-      <circle cx="98" cy="182" r="1" />
-      <circle cx="308" cy="108" r="1.1" />
+      <circle cx="112" cy="118" r="1.2" />
+      <circle cx="300" cy="128" r="1.1" />
+      <circle cx="96" cy="196" r="1" />
+      <circle cx="306" cy="204" r="1.1" />
+      <circle cx="132" cy="96" r="0.9" />
+      <circle cx="286" cy="90" r="1" />
+    </g>
+    <g stroke-width="0.6" opacity="0.3" stroke-dasharray="1 4">
+      <path d="M150 130 q22 6 40 18" />
+      <path d="M250 132 q-22 6 -40 18" />
     </g>
   </g>
   <!-- the lamp: the one tinted feature -->
-  <circle cx="200" cy="158" r="6.5" fill="var(--sig-1)" fill-opacity="0.28" stroke="var(--sig-1)" stroke-width="1.3" />
+  <circle cx="200" cy="160" r="7" fill="var(--sig-1)" fill-opacity="0.32" stroke="var(--sig-1)" stroke-width="1.4" />
+  <circle cx="200" cy="160" r="13" fill="none" stroke="var(--sig-1)" stroke-width="0.7" opacity="0.4" />
   <g stroke="var(--sig-1)" stroke-width="0.9" stroke-linecap="round" opacity="0.75" fill="none">
-    <line x1="200" y1="148" x2="200" y2="139" />
-    <line x1="190" y1="151" x2="183" y2="144" />
-    <line x1="210" y1="151" x2="217" y2="144" />
-    <line x1="187" y1="158" x2="178" y2="156" />
-    <line x1="213" y1="158" x2="222" y2="156" />
+    <line x1="200" y1="148" x2="200" y2="140" />
+    <line x1="189" y1="151" x2="182" y2="145" />
+    <line x1="211" y1="151" x2="218" y2="145" />
+    <line x1="187" y1="160" x2="178" y2="160" />
+    <line x1="213" y1="160" x2="222" y2="160" />
+    <line x1="189" y1="170" x2="182" y2="176" />
+    <line x1="211" y1="170" x2="218" y2="176" />
   </g>
 ---
 
