@@ -39,8 +39,9 @@ export interface SessionDoc {
   // so readers must fall back (`?? []`) rather than assume.
   prs?: string[]
   // Merged reads/skills (ADR-0009 amendment): the agent's curated entries plus
-  // transcript-observed ones the SessionEnd extractor folds in with a `(unknown)`
-  // placeholder reason. Shape unchanged from the authored-only era.
+  // transcript-observed ones the SessionEnd extractor folds in with a derived
+  // placeholder reason — `(read before editing)` for a docsRead path also
+  // edited, `(no reason given)` otherwise. Shape unchanged from the authored-only era.
   docsRead?: { path: string; reason: string }[]
   skillsUsed?: { name: string; reason: string }[]
   // Mechanical trace — derived from the transcript (ADR-0009 amendment), never

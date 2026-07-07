@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01HRQ1Cu3PVpbeDKbe7TECt6
 startedAt: 2026-07-07T19:49:31Z
-endedAt: 2026-07-07T21:27:14Z
+endedAt: 2026-07-07T21:32:36Z
 kind: interactive
 goal: Move tenants/ dir to layers/ (#209)
-status: in-review
-outcome: "Rename done, docs updated, PR #217 open"
-summary: "Implemented issue #209: renamed the tenants/ directory to Nuxt's conventional layers/ directory (keeping \"Tenant\" as the domain term), so Nuxt auto-extends every layers/* and the extends list plus most of the tsConfig.include patch disappear. Empirically confirmed Nuxt natively covers layers/*/app/** and nuxt.config.* but not the jiti-only tenant.config.*, so kept exactly that one glob and retired the now-dead canary check. Updated all live code, scripts, tests, and docs (CLAUDE.md, tenant-layers.md, four skills, about.md); wrote ADR-0018 and added amending banners to eight affected ADRs (annotate, not rewrite). Left session logs and blog posts with their historical paths. Full gate green; opened gated PR #217 and subscribed to it. A second code-review pass (fable) then caught a self-contradicting ADR banner and an unmet #55 acceptance criterion; fixed both, ran the negative test, and pushed. Human affirmed keeping \"Tenant\" as the concept with the layers/ directory (the concept/path split), rather than collapsing the vocabulary to \"Layer\"."
+status: completed
+outcome: "Rename shipped; PR #217 merged, #209 closed"
+summary: "Implemented issue #209: renamed the tenants/ directory to Nuxt's conventional layers/ directory (keeping \"Tenant\" as the domain term), so Nuxt auto-extends every layers/* and the extends list plus most of the tsConfig.include patch disappear. Empirically confirmed Nuxt natively covers layers/*/app/** and nuxt.config.* but not the jiti-only tenant.config.*, so kept exactly that one glob and retired the now-dead canary check. Updated all live code, scripts, tests, and docs (CLAUDE.md, tenant-layers.md, four skills, about.md); wrote ADR-0018 and added amending banners to eight affected ADRs (annotate, not rewrite). Left session logs and blog posts with their historical paths. Full gate green; opened gated PR #217 and subscribed to it. A second code-review pass (fable) then caught a self-contradicting ADR banner and an unmet #55 acceptance criterion; fixed both, ran the negative test, and pushed. Human affirmed keeping \"Tenant\" as the concept with the layers/ directory (the concept/path split), rather than collapsing the vocabulary to \"Layer\". Merged origin/main in (atlas plate redraws relocated to layers/atlas/, session logs reconciled via git directory-rename detection); PR #217 then merged, closing #209."
 prs:
   - "217"
 docsRead:
@@ -76,17 +76,17 @@ frictions:
   - description: "A directory rename in an open branch collides with ADR-0009 direct-to-main session logging: this session's log-session hook wrote to main at a layers/ path that does not exist elsewhere on main yet, while other sessions still log under tenants/ — a split-brain until #217 merges."
     solution: Merge rename PRs promptly; or have the log hook resolve the sessions dir from main's tree, not the branch working copy.
     severity: minor
-durationSec: 5864
+durationSec: 6185
 models:
-  claude-opus-4-8: 311
+  claude-opus-4-8: 318
 toolCounts:
   ToolSearch: 10
   mcp__github__issue_read: 1
-  Bash: 44
+  Bash: 45
   Read: 24
   Grep: 9
   TaskCreate: 6
-  Edit: 36
+  Edit: 38
   Write: 4
   TaskUpdate: 8
   Skill: 2
@@ -96,6 +96,7 @@ toolCounts:
   mcp__github__pull_request_read: 4
   mcp__Claude_Code_Remote__send_later: 2
   AskUserQuestion: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - shared/expand.ts
   - nuxt.config.ts

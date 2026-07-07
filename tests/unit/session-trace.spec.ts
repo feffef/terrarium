@@ -6,6 +6,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   DERIVED_REASON,
+  DERIVED_REASON_EDITED,
   extractTrace,
   parseTranscript,
   stitch,
@@ -22,6 +23,7 @@ const transcript = [
     { type: 'tool_use', name: 'Read', input: { file_path: '/repo/node_modules/dep/index.js' } },
   ] } },
   { type: 'assistant', timestamp: '2026-07-06T10:05:00Z', message: { model: 'claude-opus-4-8', content: [
+    { type: 'tool_use', name: 'Read', input: { file_path: '/repo/app.ts' } },
     { type: 'tool_use', name: 'Edit', input: { file_path: '/repo/app.ts' } },
     { type: 'tool_use', name: 'Skill', input: { skill: 'tdd' } },
     { type: 'tool_use', name: 'Agent', input: { subagent_type: 'Explore', description: 'find X' } },
@@ -42,12 +44,12 @@ describe('extractTrace()', () => {
 
   it('counts models + tools and captures subagents', () => {
     expect(trace.models).toEqual({ 'claude-opus-4-8': 2 })
-    expect(trace.toolCounts).toEqual({ Read: 2, Edit: 1, Skill: 1, Agent: 1 })
+    expect(trace.toolCounts).toEqual({ Read: 3, Edit: 1, Skill: 1, Agent: 1 })
     expect(trace.subagents).toEqual([{ type: 'Explore', task: 'find X', model: undefined }])
   })
 
   it('filters noise, then relativizes repo paths to how the agent cites them', () => {
-    expect(trace.filesRead).toEqual(['CONTEXT.md']) // node_modules dropped, cwd stripped
+    expect(trace.filesRead).toEqual(['CONTEXT.md', 'app.ts']) // node_modules dropped, cwd stripped
     expect(trace.filesEdited).toEqual(['app.ts'])
     expect(trace.skillsUsed).toEqual(['tdd'])
   })
@@ -80,6 +82,12 @@ describe('stitch()', () => {
     const ctx = docs.filter((d) => d.path === 'CONTEXT.md')
     expect(ctx).toHaveLength(1)
     expect(ctx[0]?.reason).toBe('the domain model') // authored reason preserved, not clobbered
+  })
+
+  it('folds an uncited-but-also-edited read in with the edited-specific reason', () => {
+    const docs = entry.docsRead as { path: string; reason: string }[]
+    const appTs = docs.filter((d) => d.path === 'app.ts')
+    expect(appTs).toEqual([{ path: 'app.ts', reason: DERIVED_REASON_EDITED }])
   })
 
   it('folds an observed-but-uncited skill in with the placeholder reason', () => {
