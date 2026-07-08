@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01MrvTarxkHq6XwSFpz4FWTZ
 startedAt: 2026-07-08T05:33:06Z
-endedAt: 2026-07-08T06:31:05Z
+endedAt: 2026-07-08T07:04:50Z
 kind: interactive
 goal: Make session logs capture autonomy honestly
 status: in-review
 outcome: "Extractor + kind enum extended, PR #233 in review"
-summary: "Diagnosed why the Routine-fired nightly digest run's log showed kind autonomous and entrypoint remote_trigger yet no digest entry in skillsUsed: the extractor derived skills only from Skill tool_use blocks, and a slash-command prompt (every Routine firing's shape) is expanded by the harness before the model runs, so no tool call exists. Extended extractTrace to scan user turns for command-name expansion tags, stitched with a provenance reason \"(invoked as a slash command)\", excluding tool_result blocks. Then, on request, widened the session kind enum with \"delegated\" — exactly one human prompt (the kickoff), hands-off from there — across schema, validator, types, kindCounts, dashboard tile, and SKILL.md guidance; harness-injected user turns don't count as human prompts. A domain-modeling pass then found ADR-0003's two-mode taxonomy and no-self-merge rule needed reconciling: amended ADR-0003 (kind is descriptive, not a merge permission), made CONTEXT.md's Session entry the single home of the kind definitions, and slimmed the schema comment and SKILL.md to pointers. Full gate green after each commit; all four commits ride PR 233."
+summary: "Diagnosed why the Routine-fired nightly digest run's log showed kind autonomous and entrypoint remote_trigger yet no digest entry in skillsUsed: the extractor derived skills only from Skill tool_use blocks, and a slash-command prompt (every Routine firing's shape) is expanded by the harness before the model runs, so no tool call exists. Extended extractTrace to scan user turns for command-name expansion tags, stitched with a provenance reason \"(invoked as a slash command)\", excluding tool_result blocks. Then, on request, widened the session kind enum with \"delegated\" — exactly one human prompt (the kickoff), hands-off from there — across schema, validator, types, kindCounts, dashboard tile, and SKILL.md guidance; harness-injected user turns don't count as human prompts. A domain-modeling pass then found ADR-0003's two-mode taxonomy and no-self-merge rule needed reconciling: amended ADR-0003 (kind is descriptive, not a merge permission), made CONTEXT.md's Session entry the single home of the kind definitions, and slimmed the schema comment and SKILL.md to pointers. Finally swept live docs for stale \"no autonomous jobs run today\" claims (the digest and frictions-to-fixes Routines have been live since 07-06/07-07): fixed CONTEXT.md's Codify entry, amended ADR-0010/0015, cut CLAUDE.md's rotted example list, and updated both Skills' SKILL.md + Inventory entries. Full gate green after each commit; all five commits ride PR 233."
 prs:
   - "233"
 docsRead:
@@ -36,6 +36,22 @@ docsRead:
     reason: (read before editing)
   - path: CONTEXT.md
     reason: (read before editing)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (read before editing)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/digest.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/frictions-to-fixes.yml
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
 skillsUsed:
   - name: domain-modeling
     reason: cross-check the delegated kind against ADR-0003's two-mode taxonomy
@@ -47,23 +63,23 @@ frictions:
   - description: The only routine-fired transcript (the digest session's) lives in a reclaimed container, so the command-name detector was initially built against the documented expansion format without a live specimen.
     solution: "Resolved in-session: a human /domain-modeling invocation later provided a live expansion turn and the extractor detected it correctly; tomorrow's nightly digest log is the remaining end-to-end confirmation."
     severity: minor
-durationSec: 3479
+durationSec: 5504
 models:
-  claude-fable-5: 197
+  claude-fable-5: 252
 toolCounts:
-  Bash: 25
-  Grep: 16
-  Read: 14
+  Bash: 31
+  Grep: 19
+  Read: 25
   mcp__Claude_Code_Remote__list_triggers: 1
-  Edit: 32
-  Write: 6
+  Edit: 44
+  Write: 7
   ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 3
-  mcp__github__pull_request_read: 1
-  mcp__Claude_Code_Remote__send_later: 1
-  mcp__github__update_pull_request: 3
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__update_pull_request: 4
 filesEdited:
   - scripts/session-trace.ts
   - tests/unit/session-trace.spec.ts
@@ -76,10 +92,18 @@ filesEdited:
   - layers/journal/tests/unit/journal-dashboard.spec.ts
   - docs/adr/0003-agent-operating-model-and-governance.md
   - CONTEXT.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - CLAUDE.md
+  - layers/journal/content/current/skills/digest.yml
+  - layers/journal/content/current/skills/frictions-to-fixes.yml
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/digest/SKILL.md
 gitBranch: claude/digest-autonomy-skill-tagging-ez1yfm
 entrypoint: remote_mobile
 cliVersion: 2.1.204
 learnings:
+  - "CLAUDE.md's own Status section demonstrated the rot rule it states: its parenthetical example list of deferred things (including 'the autonomous jobs') went stale the day Routines went live — concrete example lists inside anti-duplication prose rot like any other copy."
   - list_triggers confirms Routine prompts for scheduled Skills are literally the slash command (e.g. /digest), so every Routine-fired session's entry Skill enters via prompt expansion — structurally invisible to Skill-tool-only derivation.
   - The kind enum had six coordinated homes (sessions schema, scratch validator, AuthoredScratch type, UI type, kindCounts, stat tile) plus SKILL.md guidance — matching the prior session's 'additive optional field' blast-radius learning.
 ideas:
