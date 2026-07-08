@@ -95,6 +95,11 @@ ideas:                             # OPTIONAL — omit unless something sparked
 - **frictions is the point.** List *every* one — anything that felt unnecessarily
   complex, token-heavy, or repetitive. A **doc contradiction found mid-session** is
   itself a friction: record it with a `solution` pointing at the single home to fix.
+- **`summary` must state plainly which parts of the session's work were
+  human-instructed (a direct ask, or an explicit green-light) versus
+  agent-initiated** — don't leave that provenance to be inferred from context.
+  ADR-0003's autonomy gate (net-new work needs a human green-light) depends on
+  this being legible to a later reader, not reconstructed after the fact.
 - **Quote any scalar value containing `[`, `{`, `#`, or `,`** — this applies to
   the top-level `goal`/`outcome` strings just as much as `path`/`reason` values.
   Unquoted, `[` or `{` starts a YAML flow sequence/map; `#` starts a YAML comment

@@ -34,6 +34,11 @@ class to its MCP equivalent:
   to wait on, so to babysit a PR to green you must poll `get_check_runs`
   yourself (e.g. re-poll at agent-completion checkpoints, or `send_later` a
   wake when no agent is running to re-poll).
+- **`send_later` occasionally fails with a transient "permission stream
+  closed" error.** Converged workaround (mirrors the poll-until-green pattern
+  above, issue #145): retry the same `send_later` call once after reconnect;
+  if it fails again, fall back to the built-in `ScheduleWakeup` tool instead
+  of retrying further (issue #229).
 - **List / search PRs** → `list_pull_requests` / `search_pull_requests`
 - **Link sub-issues** → `sub_issue_write`
 
