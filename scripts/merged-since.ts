@@ -71,7 +71,18 @@ export function mergedSince(commits: RawCommit[], sinceUtcIso: string): MergedCo
 
 const FIELD_SEP = '\x1f'
 
+/** Bring the local `origin/main` ref up to date before it's read. Without
+ *  this, a stale local ref silently returns an empty (or truncated) result
+ *  that reads identically to "genuinely nothing landed" — the exact failure
+ *  mode this helper exists to avoid (see issue #246). Errors (e.g. offline)
+ *  are intentionally fatal rather than silently swallowed: a result computed
+ *  against a ref we couldn't confirm is fresh is worse than no result. */
+function fetchOriginMain(cwd = root): void {
+  execFileSync('git', ['fetch', 'origin', 'main'], { cwd, stdio: ['ignore', 'ignore', 'inherit'] })
+}
+
 function readCommits(cwd = root): RawCommit[] {
+  fetchOriginMain(cwd)
   const raw = execFileSync(
     'git',
     ['log', 'origin/main', '--date=iso-strict', `--format=%H${FIELD_SEP}%cd${FIELD_SEP}%s`],
