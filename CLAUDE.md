@@ -99,6 +99,15 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   after the `&&` never runs. Check existence first (e.g. `git rev-parse
   --verify <branch>`) and handle the already-exists case explicitly instead of
   chaining blindly.
+- **A session-closure Stop hook "Unverified" commit flag isn't automatically
+  this session's to fix.** The hook can flag commits that are actually
+  inherited history — landed on `main` before this branch existed, reachable
+  from `origin/main`. Before acting on the flag, run `git log
+  origin/main..HEAD`: if the flagged commits aren't in that list, they predate
+  this branch and must **not** be rebased/rewritten (e.g. via the hook's
+  suggested `--reset-author`) — doing so would rewrite public history. Only
+  commits that *are* in `origin/main..HEAD` are this session's own and fair
+  game to fix.
 - **Keep session-log-only commits content-only.** Never let substantive work
   ride along inside a commit titled as a session-log commit — title the commit
   for the work it actually contains instead.
@@ -121,7 +130,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   to its activity automatically when you open it, don't ask first**. (This is a
   PR-completion discipline, distinct from *session logging*, which now fires at
   self-judged closure and records an in-review PR honestly — see "Logging your
-  session".)
+  session".) **Repo-level GitHub auto-merge (`enable_pr_auto_merge`) is
+  currently unavailable on this repo pending a repo-owner Settings change**
+  (`Settings → General → Allow auto-merge`, tracked in #231) — don't attempt to
+  enable it yourself; merge manually once the gate reports green instead.
 - **Opening the PR is the first session log.** The moment you open the gated PR
   is a closure point: invoke `close-session` right then (it authors the log via
   `log-session`), with status **`in-review`** (the PR is open, not merged — never
