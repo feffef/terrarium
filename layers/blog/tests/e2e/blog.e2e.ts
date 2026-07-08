@@ -14,10 +14,20 @@
 // that blip and asserts the content still arrives without a reload.
 import { describe, expect, it } from 'vitest'
 import { createPage, url } from '@nuxt/test-utils/e2e'
+import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 
 /** Register the blog Tenant's L2 assertions under the caller's active suite. */
 export function registerBlogE2E(): void {
   describe('blog Tenant', () => {
+    // The entry-route sweep in `tests/e2e/smoke.spec.ts` only reaches each
+    // Persona's landing (`/t/blog/<persona>`) — an individual post is a deeper
+    // route the sweep never visits. Cover one representative post here so a
+    // typo'd/renamed auto-import component on that page can't ship silently
+    // (issue #212).
+    it('hydrates a post with no unresolved components', async () => {
+      await expectCleanHydration('/t/blog/karen/2026-07-08-a-fix-for-a-bug-you-cant-find')
+    })
+
     it('recovers content after a transient dump-fetch blip on client navigation', async () => {
       const page = await createPage()
       try {
