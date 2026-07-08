@@ -2,7 +2,7 @@
 // and the L2 entry-route list from the same expand(loadManifests()) used by
 // content.config.ts — so a manifest edit is picked up with no regenerate step
 // for anything. Supersedes scripts/generate.ts + shared/routing.generated.ts.
-import { addTemplate, defineNuxtModule } from '@nuxt/kit'
+import { addTemplate, addTypeTemplate, defineNuxtModule } from '@nuxt/kit'
 import { entryRoutesFrom, expand, loadManifests, type ExpandedCollection } from '../shared/expand'
 
 export default defineNuxtModule({
@@ -42,14 +42,20 @@ export default defineNuxtModule({
         ].join('\n'),
     })
 
-    // Type declarations (.d.ts) — addTemplate auto-sets write:true for .d.ts files.
+    // Type declarations (.d.ts) — `addTypeTemplate` is the idiomatic Kit API for a
+    // companion type file (#211): it writes the .d.ts (auto-setting write:true) AND
+    // self-registers it in Nuxt's generated type references (via the `prepare:types`
+    // hook), so the app-side wiring needs no hand-paired reference. The separate
+    // `tsconfig.node.json` `paths['#routing']` mapping still stands on its own — that
+    // `tsc -p tsconfig.node.json` pass runs outside Nuxt's generated references
+    // (ADR-0014, wiring #3).
     // `routingMap` is declared with its precise literal type — the same `mapJson`
     // string the runtime data is written from, so type and data cannot diverge and
     // the key scheme stays single-homed in `collectionKey()` (shared/manifest.ts).
     // shared/routing.ts derives per-Tenant key unions from this type, which is what
     // lets every `Extract<keyof Collections, …>` cast at the call sites go (#96).
     // Churn is a non-issue: the file is generated into .nuxt/ and never committed.
-    addTemplate({
+    addTypeTemplate({
       filename: 'routing.d.ts',
       getContents: () =>
         [

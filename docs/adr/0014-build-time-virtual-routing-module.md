@@ -7,6 +7,12 @@ Status: Accepted — supersedes both halves of ADR-0007; amends ADR-0013
 > Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
 > `tenants/…` paths below reflect the pre-rename layout.
 
+> **Amended by #211 (2026-07-08).** The companion `.nuxt/routing.d.ts` is now written
+> with Kit's `addTypeTemplate` (not the plain `addTemplate` the Decision describes), so
+> the `.d.ts` self-registers into Nuxt's generated type references for the app-side
+> `vue-tsc` pass. Behaviour-neutral; the three alias wirings below are unchanged, and the
+> `tsconfig.node.json` `paths['#routing']` entry (wiring #3) still stands on its own.
+
 > **Supersedes ADR-0007** (both halves — the committed `content.config.ts` half was
 > already superseded by ADR-0013; this supersedes the retained committed
 > `shared/routing.generated.ts` half). **Amends ADR-0013** (which retained the
