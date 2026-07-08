@@ -5,10 +5,11 @@ description: The workflow behind Terrarium — from a human's Claude Code sessio
 
 # How It Works
 
-A human with access to the repo opens [claude.ai/code](https://claude.ai/code),
-connects to `feffef/terrarium` via the built-in GitHub MCP integration, and
-starts a regular Claude Code session — asking for a feature, a fix, an
-investigation, whatever. The agent then works largely on its own: guided by
+A human with access to the repo opens [claude.ai/code](https://claude.ai/code)
+— or the Claude mobile app, which reaches the same sessions — connects to
+`feffef/terrarium` via the built-in GitHub MCP integration, and starts a
+regular Claude Code session — asking for a feature, a fix, an investigation,
+whatever. The agent then works largely on its own: guided by
 this repo's own conventions plus [Matt Pocock's engineering
 skills](https://github.com/mattpocock/skills), it plans, writes the code and
 content, self-verifies against the safety gate, and opens a pull request for a
