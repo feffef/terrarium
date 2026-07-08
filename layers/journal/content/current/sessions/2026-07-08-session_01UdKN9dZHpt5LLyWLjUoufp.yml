@@ -1,0 +1,68 @@
+schemaVersion: 1
+session: session_01UdKN9dZHpt5LLyWLjUoufp
+startedAt: 2026-07-08T22:39:31Z
+endedAt: 2026-07-08T22:49:47Z
+kind: interactive
+goal: "Use addTypeTemplate for #routing declarations (#211)"
+status: in-review
+outcome: Swapped to addTypeTemplate; gate green, PR opened
+summary: "Human-instructed via `/implement #211` (the explicit green-light for this human-only surface). Swapped the second `addTemplate` call in `modules/routing.ts` — the one writing `routing.d.ts` — for Kit's idiomatic `addTypeTemplate`, which self-registers the `.d.ts` into Nuxt's generated type references via the `prepare:types` hook. Left the runtime `nuxt.options.alias` (→ `routing.mjs`) and `tsconfig.node.json paths['#routing']` untouched, so ADR-0014's three alias wirings all still stand. Verified the full safety gate plus the issue's negative probe (`routingMap.nosuch` fails with the precise literal type in both an SFC and a tests/unit file). Ran `/code-review`; its one legitimate finding (ADR text drift) prompted an amending note on ADR-0014. Opened gated PR #249 and subscribed to it."
+prs:
+  - "249"
+docsRead:
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: governs modules/routing.ts; verified the three alias wirings survive
+  - path: tsconfig.node.json
+    reason: "confirm wiring #3 paths['#routing'] stays"
+  - path: modules/routing.ts
+    reason: the file changed
+  - path: docs/adr/0014-routing-virtual-module.md
+    reason: (no reason given)
+  - path: tsconfig.json
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: two-axis review of the diff before commit
+  - name: close-session
+    reason: closure sequence at PR open
+  - name: log-session
+    reason: (no reason given)
+  - name: implement
+    reason: (invoked as a slash command)
+frictions:
+  - description: Guessed the ADR filename (0014-routing-virtual-module.md) from the ADR number; actual slug was 0014-build-time-virtual-routing-module.md.
+    solution: Glob docs/adr/*.md first rather than constructing the path — CLAUDE.md already says read the directory.
+    severity: nit
+durationSec: 616
+models:
+  claude-opus-4-8: 96
+toolCounts:
+  ToolSearch: 5
+  Bash: 17
+  mcp__github__issue_read: 2
+  Read: 7
+  Glob: 1
+  Edit: 5
+  Write: 3
+  Skill: 3
+  Agent: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - modules/routing.ts
+  - app/pages/_probe211.vue
+  - tests/unit/_probe211.spec.ts
+  - docs/adr/0014-build-time-virtual-routing-module.md
+subagents:
+  - type: general-purpose
+    task: Standards review of routing.ts change
+  - type: general-purpose
+    task: Spec review of routing.ts change
+gitBranch: claude/issue-211-cbe5q4
+entrypoint: remote
+cliVersion: 2.1.205
+learnings:
+  - "App-side #routing types already resolve via the auto-generated alias paths entry + basename match to routing.d.ts; addTypeTemplate adds a prepare:types reference (and Vue globalTypeFiles) on top, so it is idiomatic-and-additive here, not load-bearing for resolution."
