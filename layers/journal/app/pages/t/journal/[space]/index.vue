@@ -46,6 +46,20 @@ const rootDoc = computed(() => allPages.value.find((p) => p.path === '/') ?? nul
 const page = computed(() => (rootDoc.value ?? null) as PageDoc | null)
 const digests = computed(() => digestList(allPages.value))
 
+// ── Newcomer on-ramp — two labelled doors to the explainer pages ──
+// Rendered only where these Documents actually exist (the `current` Space), and
+// isolation-respecting: sourced from THIS Space's own `pages`, never a hardcoded
+// cross-Space link. Each card shows only if its Document is present here.
+const ONRAMP = [
+  { slug: 'architecture', title: "How it's built & deployed", blurb: 'The tech foundation — Tenants, Spaces, and the deployment model.' },
+  { slug: 'how-it-works', title: 'How humans + agents work', blurb: 'The loop — from a prompt to a reviewed, gated PR.' },
+]
+const onrampCards = computed(() =>
+  ONRAMP
+    .filter((c) => allPages.value.some((p) => p.path === `/${c.slug}`))
+    .map((c) => ({ ...c, to: `/t/${tenant}/${space}/${c.slug}` })),
+)
+
 // Which Digests are expanded, keyed by content path — an inline disclosure, the
 // same interaction as the session cards.
 const openDigests = reactive<Record<string, boolean>>({})
@@ -118,6 +132,17 @@ useSeoMeta({
         </div>
       </div>
     </header>
+
+    <!-- Newcomer on-ramp — the two explainer pages surfaced as visible doors -->
+    <section v-if="onrampCards.length" class="onramp" aria-label="Start here">
+      <p class="onramp-lead">New here? Start with the short version:</p>
+      <div class="onramp-cards">
+        <NuxtLink v-for="c in onrampCards" :key="c.slug" :to="c.to" class="onramp-card">
+          <span class="onramp-card-title">{{ c.title }}<span class="onramp-arrow" aria-hidden="true">→</span></span>
+          <span class="onramp-blurb">{{ c.blurb }}</span>
+        </NuxtLink>
+      </div>
+    </section>
 
     <!-- Free-form editorial intro — the root page's Markdown body -->
     <section v-if="rootDoc" class="intro">
@@ -288,6 +313,45 @@ h1 {
   margin: 1.3rem 0 0.5rem;
 }
 
+.onramp { margin: 1.6rem 0 0; }
+.onramp-lead {
+  margin: 0 0 0.7rem;
+  font-family: var(--jd-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--jd-muted);
+}
+.onramp-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+.onramp-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.95rem 1.1rem;
+  background: var(--jd-surface);
+  border: 1px solid var(--jd-line);
+  border-left: 3px solid var(--jd-accent);
+  border-radius: var(--jd-radius);
+  box-shadow: var(--jd-shadow);
+  text-decoration: none;
+  transition: border-color 0.15s ease, transform 0.15s ease, background-color 0.15s ease;
+}
+.onramp-card:hover {
+  transform: translateY(-2px);
+  background-color: color-mix(in srgb, var(--jd-accent) 5%, transparent);
+}
+.onramp-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  color: var(--jd-ink);
+  font-size: 1rem;
+}
+.onramp-arrow { color: var(--jd-accent); transition: transform 0.15s ease; }
+.onramp-card:hover .onramp-arrow { transform: translateX(3px); }
+.onramp-blurb { color: var(--jd-muted); font-size: 0.88rem; line-height: 1.45; }
+
 .spaces { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; }
 .space-toggle {
   display: inline-flex;
@@ -418,6 +482,7 @@ h1 {
   .masthead { grid-template-columns: 1fr; }
   .spaces { align-items: flex-start; }
   .snapshot { text-align: left; }
+  .onramp-cards { grid-template-columns: 1fr; }
 }
 @media (max-width: 460px) {
   .tiles { grid-template-columns: 1fr 1fr; }

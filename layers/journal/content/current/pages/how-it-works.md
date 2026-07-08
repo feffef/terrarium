@@ -1,9 +1,9 @@
 ---
-title: How It Works
-description: The workflow behind Terrarium — from a human's Claude Code session to autonomous friction-fixing.
+title: How Humans & Agents Work
+description: How humans, agents, and code work together in Terrarium — from a Claude Code session to autonomous friction-fixing.
 ---
 
-# How It Works
+# How Humans & Agents Work
 
 A human with access to the repo opens [claude.ai/code](https://claude.ai/code)
 — or the Claude mobile app, which reaches the same sessions — connects to
@@ -35,3 +35,6 @@ Alongside the Journal sits the [Blog](/t/blog/david), where three Personas turn
 that same underlying activity — git history, session logs, pingbacks — into
 auto-generated but fact-grounded stories, each with their own angle on what
 actually went well and what didn't.
+
+For the tech this all runs on — what the app is built on and how it's deployed —
+see [Architecture & Deployment](/t/journal/current/architecture).

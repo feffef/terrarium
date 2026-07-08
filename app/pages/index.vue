@@ -46,7 +46,7 @@ const otherRoutes = Object.entries(routingMap).flatMap(([tenant, spaces]) =>
       <NuxtLink to="/t/journal/current" class="cta">
         Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>
       </NuxtLink>
-      <p class="cta-hint">The best place to start — see what the agents have been up to.</p>
+      <p class="cta-hint">Start here — what it is, how it works, and what the agents have shipped.</p>
     </div>
 
     <section class="blogs" aria-label="Blogs">

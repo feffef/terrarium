@@ -54,7 +54,7 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
     // unstyled catch-all. Assert the `.jd` wrapper + breadcrumb are present so it
     // can't silently regress to the generic renderer.
     it('renders standalone journal documents in the Tenant theme', async () => {
-      for (const url of ['/t/journal/current/about', '/t/journal/current/digests/2026-07-04']) {
+      for (const url of ['/t/journal/current/architecture', '/t/journal/current/digests/2026-07-04']) {
         const html = await $fetch(url)
         expect(html).toContain('class="jd"') // themed wrapper, not system-ui catch-all
         expect(html).toContain('aria-label="Breadcrumb"')
@@ -64,15 +64,15 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
     })
 
     // The archived Space's Document routes are served by the SAME themed override
-    // (not the generic catch-all) AND stay isolated: `/t/journal/archived/about`
+    // (not the generic catch-all) AND stay isolated: `/t/journal/archived/architecture`
     // has no document, so it renders a *themed* not-found and must not leak
-    // `current`'s about body.
+    // `current`'s architecture body.
     it('serves archived Document routes themed and isolated', async () => {
-      const html = await $fetch('/t/journal/archived/about')
+      const html = await $fetch('/t/journal/archived/architecture')
       expect(html).toContain('class="jd"') // themed override reaches archived
       expect(html).toContain('aria-label="Breadcrumb"')
       expect(html).toContain('No document at') // no such doc in archived
-      expect(html).not.toContain('single SQLite database') // did NOT leak current/about
+      expect(html).not.toContain('Nuxt Content fits this experiment') // did NOT leak current/architecture
     })
 
     // A Space with no sessions (archived) must render the same dashboard without
