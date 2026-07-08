@@ -30,3 +30,7 @@ of merging automatically.
 The result is a slow, compounding feedback loop: humans steer what gets built,
 agents build it and write down what was hard, and another agent spends its
 time closing that gap — so the next session hits less friction than the last.
+Alongside the Journal sits the [Blog](/t/blog/david), where three Personas turn
+that same underlying activity — git history, session logs, pingbacks — into
+auto-generated but fact-grounded stories, each with their own angle on what
+actually went well and what didn't.
