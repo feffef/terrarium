@@ -1,0 +1,74 @@
+schemaVersion: 1
+session: session_01T7kgUg6m6Kc7JayKdoMLEa
+startedAt: 2026-07-08T22:41:31Z
+endedAt: 2026-07-08T23:12:38Z
+kind: interactive
+goal: Pick and build a fix for pkill teardown regression (#240)
+status: in-review
+outcome: "Built scripts/preview.ts lifecycle tool; PR #252 open, gate running"
+summary: 'Human invoked /grill-with-docs to read #240 (third occurrence of `pkill -f` teardown silently dropping chained steps, after two doc-only fixes failed) and pick a solution. Grilled down the design tree; the human green-lit each decision and said "go" — so all implementation here is human-directed, not agent-initiated. Agreed doc-only was dead and built a code-level tool: `scripts/preview.ts` with `shot`/`start`/`stop` verbs that own the server lifecycle, bind an ephemeral port per instance (the human raised the multi-agent-per-container case, which killed the fixed-port idea), and key teardown on a specific child PID — never a pattern or shared port. `stop` always exits 0; failed startups print a "likely causes" diagnostic (the human asked for this). Refactored screenshot.ts to export captureScreenshot() and guard its CLI. Full gate green; exercised all verbs incl. concurrency.'
+prs:
+  - "252"
+docsRead:
+  - path: scripts/screenshot.ts
+    reason: the capture tool to reuse + refactor
+  - path: scripts/chromium-path.ts
+    reason: how Chromium is resolved
+  - path: scripts/plate-gallery.ts
+    reason: the persistent-server consumer to point at start/stop
+  - path: layers/journal/content/current/sessions/2026-07-08-session_014i7ctF8d56WnSorhtSNTUw.yml
+    reason: "the session friction that filed #240"
+  - path: .claude/skills/grill-with-docs/SKILL.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (read before editing)
+skillsUsed:
+  - name: grilling
+    reason: walk the design tree one decision at a time
+  - name: domain-modeling
+    reason: applied the 3-part ADR test — decided NOT an ADR
+  - name: close-session
+    reason: closure front door
+  - name: log-session
+    reason: this log
+  - name: model
+    reason: (invoked as a slash command)
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: The pre-cloned origin/main was an unrelated root (empty merge-base, 104-commit divergence) — resetting onto it would have destroyed real history.
+    solution: Recognize the environment's origin/main can be a stale seed; build on the branch HEAD as-is, don't re-anchor. CLAUDE.md warns of staleness but not this extreme.
+    severity: minor
+  - description: Importing screenshot.ts ran its bottom-of-file main() on import, consuming preview.ts's argv — a real bug caught only by exercising the tool.
+    solution: Guard main() behind an invokedDirectly() check; verify tools by running them, not just typecheck.
+    severity: minor
+durationSec: 1867
+models:
+  claude-opus-4-8: 141
+toolCounts:
+  ToolSearch: 4
+  Read: 8
+  Skill: 4
+  mcp__github__issue_read: 4
+  Bash: 20
+  Grep: 3
+  Edit: 7
+  Write: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - scripts/screenshot.ts
+  - scripts/preview.ts
+  - CLAUDE.md
+  - scripts/plate-gallery.ts
+gitBranch: claude/terrarium-issue-240-0u05t5
+entrypoint: remote
+cliVersion: 2.1.205
+learnings:
+  - Nitro's default node-server preset entry is .output/server/index.mjs and honors PORT/NITRO_PORT; spawning it detached makes child.pid the process-group leader, so kill(-pid) reaps the whole tree.
+  - A bare main() at the bottom of a committed tsx script runs on import too — guard it (realpathSync(argv[1]) === realpathSync(fileURLToPath(import.meta.url))) before exporting anything from that file.
+ideas:
+  - plate-gallery.ts could self-manage its server via preview.ts start/stop instead of requiring an externally-started one.
