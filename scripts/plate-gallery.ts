@@ -20,9 +20,11 @@
 // Usage:
 //   pnpm exec tsx scripts/plate-gallery.ts <base-url> <out.png> [biome/slug ...]
 //
-// Requires a running `pnpm dev` or `pnpm preview` server at <base-url> (e.g.
-// http://localhost:3000) — this script only navigates to it, it doesn't start
-// one. With no `biome/slug` args, it renders every specimen plate in every
+// Requires a running server at <base-url> — this script only navigates to it,
+// it doesn't start one. Bring one up with `pnpm exec tsx scripts/preview.ts
+// start` (it prints the `URL=` to pass here) and tear it down with `preview.ts
+// stop <pid>` when done. With no `biome/slug` args, it renders every specimen
+// plate in every
 // Atlas biome (discovered from `layers/atlas/content/*/pages/*.md`). Pass
 // specific refs to compare a subset, e.g.:
 //   pnpm exec tsx scripts/plate-gallery.ts http://localhost:3000 /tmp/gallery.png \
