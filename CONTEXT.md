@@ -161,8 +161,9 @@ it hit. (Closure is the trigger, and it is typically reached *before* the sessio
 literally ends — see Session closure.) It
 may also carry, *only when the work sparked them*, two optional notes: **learnings**
 (useful knowledge the session inferred during the work — not read from the repo,
-which would be a doc read — a Friction's positive twin) and **ideas** (rough sparks
-for the Platform's or a Tenant's future, too nascent to be an issue). A session may
+which would be a doc read — a Friction's positive twin) and **ideas** (an ambitious, concrete proposal for the
+Platform's or a Tenant's future — creative and specific enough that a later
+reader could turn it straight into a GitHub issue, not a vague hunch). A session may
 span several branches or PRs, or none; its log is authored regardless
 of where the work went, or whether any code was committed at all. Session logs
 are ground truth, not a projection of repo state (see Journal).
