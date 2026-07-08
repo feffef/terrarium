@@ -1,0 +1,60 @@
+schemaVersion: 1
+session: session_018vgJFw71niBijmttBu6qCv
+startedAt: 2026-07-08T17:34:08Z
+endedAt: 2026-07-08T17:54:03Z
+kind: autonomous
+goal: Run frictions-to-fixes over recent session logs
+status: completed
+outcome: 6/7 issues fixed and merged; 1 escalated
+summary: "Autonomous scheduled run of frictions-to-fixes (no direct human prompt this turn beyond the standing Routine). Delegated survey/screen of the last 20 session logs to a subagent, which ranked candidates against the GitHub tracker and origin/main. Filed 7 issues: #240 flags a regression (3rd occurrence of pkill/teardown chaining silently dropping a step, after #102's doc fix and #183's human-escalated-but-code-unchanged regression) and was deliberately left for human review with no auto-fix dispatched, per the regression-handling rule — the user was alerted via push notification. #241-246 were simple, safe-surface doc/code fixes. Dispatched two Sonnet worktree-isolated impl agents (one grouped doc PR #248 closing #241-245, one standalone code PR #247 closing #246); reviewed both diffs against each issue's recommended fix, confirmed CI green, posted a review comment on each before merging, then merged both via squash. All agent- initiated; the only human-directed action was the standing schedule that fired this run."
+prs:
+  - "247"
+  - "248"
+docsRead: []
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the process this whole run followed
+  - name: close-session
+    reason: closing this run
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: GitHub search_issues/search_pull_requests fuzzy-matches even scoped multi-term queries, returning irrelevant hits that all needed eyeballing to discard (recurring across sessions, still unfixed).
+    solution: No fix identified yet beyond tighter queries and manual filtering; worth a doc note in docs/agents/issue-tracker.md if it keeps recurring.
+    severity: nit
+  - description: A broad search_issues call (is:closed, no query) returned an oversized 233k+ char result that had to be recovered from the saved tool-result file and sliced manually.
+    solution: Already documented in docs/agents/issue-tracker.md as expected behavior for broad search calls; no new fix needed, just confirms the guidance.
+    severity: nit
+durationSec: 1195
+models:
+  claude-sonnet-5: 108
+toolCounts:
+  Bash: 3
+  Agent: 3
+  ScheduleWakeup: 3
+  ToolSearch: 4
+  TaskCreate: 10
+  mcp__github__get_me: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 7
+  TaskUpdate: 13
+  PushNotification: 1
+  mcp__github__pull_request_read: 12
+  mcp__github__add_issue_comment: 2
+  mcp__github__merge_pull_request: 2
+  Skill: 2
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Grouped doc-fix PR for 5 issues
+    model: sonnet
+  - type: general-purpose
+    task: merged-since.ts stale-ref fix PR
+    model: sonnet
+gitBranch: claude/serene-goldberg-rtai4p
+entrypoint: remote_trigger
+cliVersion: 2.1.204
+learnings:
+  - A regression that already survived one human-escalated "fix" (closed with no code change) should get a fresh issue rather than a third dispatch attempt — re-escalating with the full history (both prior issues quoted) is more useful to the human than trying yet another autonomous guess.
