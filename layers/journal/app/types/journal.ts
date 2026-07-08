@@ -28,7 +28,7 @@ export interface SessionDoc {
   session: string
   startedAt: string
   endedAt: string
-  kind: 'interactive' | 'autonomous'
+  kind: 'interactive' | 'delegated' | 'autonomous'
   goal: string
   status: Status
   outcome: string

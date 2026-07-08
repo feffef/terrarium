@@ -255,7 +255,7 @@ export const DERIVED_REASON_COMMAND = '(invoked as a slash command)'
  *  the trace. */
 export interface AuthoredScratch {
   session: string
-  kind?: 'interactive' | 'autonomous'
+  kind?: 'interactive' | 'delegated' | 'autonomous'
   goal: string
   status: 'completed' | 'in-review' | 'partial' | 'blocked' | 'abandoned'
   outcome: string

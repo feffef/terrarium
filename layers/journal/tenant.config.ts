@@ -77,7 +77,10 @@ export default defineTenant({
           session: z.string(), // Claude session id — stable identity
           startedAt: utcTimestamp, // UTC ISO-8601 — session start (ordering anchor)
           endedAt: utcTimestamp, //   UTC ISO-8601 — session end / log authored
-          kind: z.enum(['interactive', 'autonomous']),
+          // interactive: human in the loop during the work; delegated: a human
+          // fired the prompt, then the session ran hands-off through merge;
+          // autonomous: no human at all — fired by a Routine/schedule.
+          kind: z.enum(['interactive', 'delegated', 'autonomous']),
           goal: z.string(), // ≤ 8 words — what the session set out to do
           // `in-review` is the honest state of a session that opened a gated PR
           // but hasn't seen it merged — the norm at closure (ADR-0003/0009), not

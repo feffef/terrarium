@@ -166,7 +166,7 @@ useSeoMeta({
       <JournalStatTile
         label="Sessions logged"
         :value="sessions.length"
-        :sub="`${sessionKindCounts.interactive} interactive · ${sessionKindCounts.autonomous} autonomous`"
+        :sub="`${sessionKindCounts.interactive} interactive · ${sessionKindCounts.delegated} delegated · ${sessionKindCounts.autonomous} autonomous`"
       />
       <JournalStatTile
         :label="skillsHeading"

@@ -50,7 +50,7 @@ is ignored at best and rejected at worst.
 
 ```yaml
 session: session_01H…              # this session's canonical id (see "Recovering the id")
-kind: interactive                  # interactive | autonomous (a scheduled/cold job)
+kind: interactive                  # interactive | delegated | autonomous — see below
 goal: Rethink session logs         # ≤ 8 words — what the session set out to do
 status: in-review                  # completed | in-review | partial | blocked | abandoned
 outcome: Mechanism built and tested # ≤ 8 words — nuance on status
@@ -72,6 +72,14 @@ ideas:                             # OPTIONAL — omit unless something sparked
   - A consolidate job could cluster frictions into a tag taxonomy
 ```
 
+- **`kind` is the autonomy spectrum, judged by who was in the loop:**
+  `interactive` — a human steered during the work (follow-up prompts, answered
+  questions, reviewed/merged); `delegated` — a human fired the initial prompt but
+  the session then ran hands-off end to end, *including merging its own PR*;
+  `autonomous` — no human at all: fired by a Routine/schedule (a scheduled/cold
+  job). The trigger decides interactive-vs-the-rest; the merge decides
+  delegated-vs-not — a human-fired session whose PR waits for human review/merge
+  is `interactive`, not `delegated`.
 - **`learnings`/`ideas` are optional sparks — leave them off unless the session
   genuinely produced one.** Don't pad them; an empty session log carries neither.
   - `learnings` — useful knowledge you *inferred during the work* that you neither

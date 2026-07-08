@@ -127,13 +127,14 @@ describe('frictionTotals / frictionCount', () => {
 })
 
 describe('kindCounts', () => {
-  it('counts interactive vs autonomous sessions', () => {
+  it('counts interactive, delegated, and autonomous sessions', () => {
     const sessions = [
       session({ kind: 'interactive' }),
       session({ kind: 'autonomous' }),
+      session({ kind: 'delegated' }),
       session({ kind: 'interactive' }),
     ]
-    expect(kindCounts(sessions)).toEqual({ interactive: 2, autonomous: 1 })
+    expect(kindCounts(sessions)).toEqual({ interactive: 2, delegated: 1, autonomous: 1 })
   })
 })
 
