@@ -1,74 +1,95 @@
 schemaVersion: 1
 session: session_014i7ctF8d56WnSorhtSNTUw
 startedAt: 2026-07-08T05:54:20Z
-endedAt: 2026-07-08T06:58:43Z
+endedAt: 2026-07-08T07:31:23Z
 kind: interactive
-goal: Fix blog About section rendering empty on nav
+goal: Fix component rendering permanently empty on nav
 status: in-review
-outcome: Root-caused and fixed with a client warm plugin
-summary: "Human-reported bug: following a link occasionally landed on a page with an empty component (the About section on /t/blog/David), fixed by a reload. I reproduced it in a production build by driving client-side navigations with Chromium and instrumenting the timeline, root-causing it to @nuxt/content v3 loading its client WASM SQLite engine and per-collection SQL dumps lazily over the network AFTER navigation — so queryCollection returns empty until the dump lands, and the page commits first. Fix (agent-chosen, on the user's implicit green-light to fix the reported bug): a client-only plugin warms every collection on idle after hydration, collapsing the empty window from ~80ms (unbounded on slow links) to one frame. Full gate green; PR #235 opened."
+outcome: Root-caused to @nuxt/content client DB; patched + regression test
+summary: "Human-reported bug: following a link occasionally left a component (the About section on a blog Persona page) PERMANENTLY empty until a full reload. I first misdiagnosed it as a transient latency flash (client content dumps load lazily after nav) and shipped a warm-the-DB plugin + opened PR #235 — WRONG: I never reproduced the permanent case, only a self-correcting transient. After the user corrected me (it stays empty until reload), I built a deterministic red-capable loop (abort the first N sql_dump.txt fetches during a client nav) and found the true root cause: @nuxt/content's client loader caches the collection load promise and only evicts it on success, so a transient dump-fetch failure that outlasts $fetch's one retry leaves a REJECTED promise cached, poisoning that collection until reload. Fix (agent-authored on the user's bug report): a committed pnpm patch of @nuxt/content — retry the dump fetch + evict the promise on failure — plus a red-capable e2e regression test. Replaced the warming commit via force-push; full gate green."
 prs:
   - "235"
 docsRead:
+  - path: node_modules/@nuxt/content/dist/runtime/internal/database.client.js
+    reason: the client DB loader — where the promise poison lives
+  - path: node_modules/@nuxt/content/dist/runtime/internal/api.js
+    reason: fetchDatabase — the dump fetch and its retry config
+  - path: node_modules/@nuxt/content/dist/runtime/client.js
+    reason: queryCollection client dispatch to the WASM adapter
+  - path: layers/journal/tests/e2e/journal.e2e.ts
+    reason: pattern for a layer e2e module registered under the single smoke build
   - path: layers/blog/app/pages/t/blog/[space]/index.vue
-    reason: the page rendering the empty About aside
-  - path: app/composables/space.ts
-    reason: how useSpace resolves route to keyed collections
-  - path: shared/routing.ts
-    reason: checked case-sensitivity/resolution theory
-  - path: nuxt.config.ts
-    reason: content module config (client sqlite)
+    reason: (read before editing)
   - path: layers/blog/app/pages/t/blog/[space]/[...slug].vue
+    reason: (no reason given)
+  - path: app/composables/space.ts
+    reason: (no reason given)
+  - path: shared/routing.ts
     reason: (no reason given)
   - path: app/pages/t/[tenant]/[space]/[...slug].vue
     reason: (no reason given)
   - path: layers/blog/app/components/BlogNetwork.vue
     reason: (no reason given)
+  - path: nuxt.config.ts
+    reason: (no reason given)
   - path: app/plugins/warm-content.client.ts
     reason: (read before editing)
+  - path: tests/e2e/smoke.spec.ts
+    reason: (read before editing)
+  - path: tests/support/e2e.ts
+    reason: (no reason given)
+  - path: pnpm-workspace.yaml
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
 frictions:
-  - description: A newly-added Nuxt plugin under app/plugins/ registered in types but not at runtime across several production builds; window state showed it never ran.
-    solution: Stale incremental .nuxt cache. `rm -rf .nuxt .output` before the build picked it up; a fresh nuxt prepare alone updated types but not the runtime plugin registry.
+  - description: I shipped a fix and opened a PR before reproducing the user's ACTUAL symptom (permanent empty), fixing a transient flash instead. The user had to correct me.
+    solution: Reproduce the user's exact symptom with a red-capable loop BEFORE hypothesising a fix — the diagnosing-bugs Phase 1 discipline. A transient that self-corrects is a different bug from one that persists until reload.
+    severity: major
+  - description: A pkill teardown chained with `;` before mv/rm/build silently killed the whole command (self-match, exit 144), so a "differential" build was never rebuilt — both arms tested the same binary and looked identical.
+    solution: CLAUDE.md already warns this; run process-killing teardown as its own command, never chained before steps that must run. I hit it anyway.
     severity: moderate
-  - description: Prod builds strip console.log (terser), so plugin diagnostics via console were invisible and misled me into thinking the plugin errored.
-    solution: Record state on a window global the Playwright probe can read instead of relying on console in a production build.
+  - description: A newly added app/plugins plugin registered in types but not at runtime across several prod builds (stale .nuxt); wasted rebuilds before a clean rm -rf .nuxt .output picked it up. (Plugin later removed as the wrong fix.)
+    solution: A fresh plugin's runtime registration can need a clean .nuxt; rm -rf .nuxt .output when a plugin seems bundled-but-not-running.
     severity: minor
-  - description: definePageMeta({ key }) looked like the fix (component-reuse theory) but changed nothing; cost a rebuild before instrumentation disproved it.
-    solution: Instrument the actual network/timeline before committing to a mechanism — the dump-fetch-after-nav timeline was the decisive evidence.
-    severity: nit
-durationSec: 3863
+durationSec: 5823
 models:
-  claude-opus-4-8: 298
+  claude-opus-4-8: 464
 toolCounts:
-  Bash: 104
-  Read: 15
-  ToolSearch: 5
+  Bash: 163
+  Read: 23
+  ToolSearch: 6
   mcp__github__search_issues: 1
-  Write: 15
-  Edit: 13
+  Write: 23
+  Edit: 17
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 3
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
+  mcp__github__update_pull_request: 1
 filesEdited:
   - scripts/repro-empty-about.ts
   - layers/blog/app/pages/t/blog/[space]/index.vue
   - scripts/probe-nav.ts
   - app/plugins/warm-content.client.ts
   - scripts/check-warm.ts
+  - scripts/loop-empty-about.ts
+  - scripts/diag-prefetch.ts
+  - scripts/loop-evict.ts
+  - layers/blog/tests/e2e/blog.e2e.ts
+  - tests/e2e/smoke.spec.ts
 gitBranch: claude/empty-component-render-bug-hx38yo
 entrypoint: remote_mobile
 cliVersion: 2.1.204
 learnings:
-  - "@nuxt/content v3 client queries load the WASM engine + per-collection sql_dump.txt lazily on first query, after client navigation — the source of empty-on-nav content flashes."
-  - "@nuxt/content caches decompressed dumps in localStorage (prod) keyed by checksum, so warming is paid once per client, not per navigation."
-  - On client-side nav Nuxt commits the route and renders the page before useAsyncData's client query resolves, so a still-null result renders for a frame regardless.
+  - "@nuxt/content client queries run on a WASM SQLite DB whose per-collection sql_dump.txt loads lazily on first query; the load promise is cached in a module Map and only evicted on success — a rejected load poisons that collection until a full page reload."
+  - $fetch/ofetch default retry for GET is 1 (two attempts); one dropped dump fetch self-heals, two consecutive drops are what poison the collection.
+  - A committed pnpm patch lands as pnpm-workspace.yaml patchedDependencies + a patches/*.patch file and re-applies on install; CI's pnpm install covers it.
 ideas:
-  - A prefetch-on-hover of a link's target collection dump could warm just-in-time instead of warming everything on idle.
+  - File the @nuxt/content promise-poisoning bug upstream — the finally-evict is a small, general fix that belongs in the library.
+  - A content-dump prefetch-on-hover (or warming) could still cut the benign first-nav latency flash, as a separate enhancement from this correctness fix.
