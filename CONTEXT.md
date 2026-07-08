@@ -245,9 +245,10 @@ autonomous jobs — alongside `sync`, `drift-check`, `consolidate`, and `triage`
 that *tend and consolidate* the Platform rather than decide what should exist. (A
 chartered job is a *remit*, realised by one or more Skills: `sync` is served by
 `digest` and `audit-skills` today — see ADR-0003/0015.)
-**Planned concept, not yet built:** no autonomous jobs run today. The term is
-defined here so Skills and journal content can refer to it consistently until it
-exists.
+**Codify itself is planned, not yet built** — no `codify` job runs today. (Chartered
+jobs in general are no longer hypothetical: the `sync` remit's `digest` Skill runs
+on a nightly schedule — see ADR-0003/0015.) The term is defined here so Skills and
+journal content can refer to it consistently until it exists.
 
 ### Spawn (a Tenant / Space)
 To add a new Tenant or Space to the Platform via source changes on a feature

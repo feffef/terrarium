@@ -319,8 +319,8 @@ heavier automatic safety net (ADR-0009).
 ## Status
 
 Current-state facts — which Tenants, Spaces, and Collections exist, and what's
-still deferred (more Tenants, the platform-operation Skills, the autonomous jobs)
-— are single-homed elsewhere, not restated here where they rot: the **ADRs**
+still deferred — are single-homed elsewhere, not restated here where they rot
+(an earlier example list in this very sentence rotted and had to be cut): the **ADRs**
 record what is *decided vs. deliberately left open*, and the `journal` Tenant
 (`/t/journal/current`) narrates where the build actually is. Read those before
 building rather than a milestone summary duplicated in this file.

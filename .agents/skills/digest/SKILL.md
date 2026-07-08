@@ -12,10 +12,11 @@ across the Platform that day (ADR-0010) — and a regenerated **index** overview
 the Platform's current state and capabilities. A thin, tested helper
 (`scripts/digest.ts`) does the deterministic gathering; **you write the prose**.
 
-> **Invoked manually — follow the steps.** Like `log-session`, this Skill is
-> user-invoked (`disable-model-invocation: true`) so it never self-fires; run it
-> when asked, or as a future scheduled job would. It is a manual precursor to the
-> chartered `sync` job (ADR-0003) — do not call it `sync`.
+> **Invoked, never self-fired — follow the steps.** This Skill is user-invoked
+> (`disable-model-invocation: true`): a nightly Routine fires `/digest` on a
+> schedule, and a human can run it on demand, but a session never reaches for it
+> unprompted. Scheduled, it is the first live piece of the chartered `sync`
+> remit (ADR-0003/0015) — still do not call it `sync`.
 
 Digests land through the **ordinary gated PR** (ADR-0003) — *not* the `log-session`
 direct-to-main path (that exception is bounded to inert `data`; a Digest is a
