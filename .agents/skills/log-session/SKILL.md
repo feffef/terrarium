@@ -69,7 +69,7 @@ frictions:                         # REQUIRED (may be []) — list EVERY frictio
 learnings:                         # OPTIONAL — omit unless something sparked
   - Nuxt layer `~/` resolves to the main app, not the layer  # each a short string
 ideas:                             # OPTIONAL — omit unless something sparked
-  - A consolidate job could cluster frictions into a tag taxonomy
+  - Auto-cluster recurring `ideas` entries into GitHub issues weekly, so a spark doesn't die in a YAML file no one re-reads
 ```
 
 - **`kind` is the autonomy spectrum — judged by who prompted, not by what the
@@ -86,8 +86,12 @@ ideas:                             # OPTIONAL — omit unless something sparked
     better here — a learning is a friction's positive twin (what you gained, not
     where it hurt), and research/interactive sessions often end with learnings and
     no friction at all.
-  - `ideas` — rough sparks for the Platform's or a Tenant's future: too nascent to
-    be a GitHub issue, just something that might grow into a backlog item later.
+  - `ideas` — a genuine, ambitious swing at what the Platform or a Tenant could
+    become next, not a vague hunch. Be creative *and* be concrete: name the actual
+    thing to build and say why it's worth doing — a fast tactical win and a big
+    structural bet are equally welcome, but "someone should look into X" isn't
+    specific enough. Write it so a later reader could turn it straight into a
+    GitHub issue without having to re-derive your reasoning.
 
 - **Do NOT write** `startedAt`/`endedAt`, `durationSec`, `models`, `toolCounts`,
   `filesEdited`, `subagents`, `gitBranch`, … — all derived. This kills the old
