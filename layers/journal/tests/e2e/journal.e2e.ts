@@ -11,6 +11,7 @@
 // (ADR-0004 amendment; tests/README.md).
 import { describe, expect, it } from 'vitest'
 import { $fetch } from '@nuxt/test-utils/e2e'
+import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 import type { renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
 
 export interface JournalE2EContext {
@@ -61,6 +62,15 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         expect(html).toContain('jd-prose')
         expect(html).not.toContain('No document at')
       }
+    })
+
+    // The entry-route sweep in `tests/e2e/smoke.spec.ts` only reaches the Space
+    // landing (`/t/journal/<space>`) — a standalone Document is a deeper route
+    // the sweep never visits. Cover one representative Document here so a
+    // typo'd/renamed auto-import component on that page can't ship silently
+    // (issue #212).
+    it('hydrates a standalone document with no unresolved components', async () => {
+      await expectCleanHydration('/t/journal/current/architecture')
     })
 
     // The archived Space's Document routes are served by the SAME themed override

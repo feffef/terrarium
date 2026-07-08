@@ -33,10 +33,11 @@
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { $fetch, setup } from '@nuxt/test-utils/e2e'
-import { entryRoutes, renderAndCollectErrors } from '../support/e2e.ts'
+import { entryRoutes, expectCleanHydration, renderAndCollectErrors } from '../support/e2e.ts'
 import { findPreinstalledChromium, findSystemChrome } from '../../scripts/chromium-path.ts'
 import { registerJournalE2E } from '../../layers/journal/tests/e2e/journal.e2e.ts'
 import { registerBlogE2E } from '../../layers/blog/tests/e2e/blog.e2e.ts'
+import { registerAtlasE2E } from '../../layers/atlas/tests/e2e/atlas.e2e.ts'
 
 const chromiumPath = findPreinstalledChromium() ?? findSystemChrome()
 
@@ -66,17 +67,14 @@ describe('L2 smoke render', async () => {
 
     // Tier 2: real browser render — hydrates cleanly and the DOM is present.
     // Every entry route is loaded in Chromium, the client bundle runs, and we
-    // assert (a) an <h1> exists in the *rendered DOM* (not the SSR string) and
-    // (b) nothing logged a console error or threw during hydration.
+    // assert (a) an <h1> exists in the *rendered DOM* (not the SSR string), (b)
+    // nothing logged a console error or threw during hydration, and (c) no
+    // unresolved auto-import component silently rendered as an unknown custom
+    // element (issue #212) — vue-tsc and (a)/(b) all stay green on that failure
+    // mode, so it needs its own assertion.
     for (const route of entryRoutes) {
       it(`hydrates ${route} in a browser with no console/page errors`, async () => {
-        const { page, errors } = await renderAndCollectErrors(route)
-        try {
-          expect(await page.locator('h1').count()).toBeGreaterThan(0)
-          expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
-        } finally {
-          await page.close()
-        }
+        await expectCleanHydration(route)
       })
     }
   })
@@ -84,4 +82,5 @@ describe('L2 smoke render', async () => {
   // ── Per-Tenant assertions, homed in each layer, sharing this one build ───────
   registerJournalE2E({ entryRoutes, renderAndCollectErrors })
   registerBlogE2E()
+  registerAtlasE2E()
 })

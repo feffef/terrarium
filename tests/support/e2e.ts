@@ -5,6 +5,7 @@
 // `setup()`/build the smoke spec owns (see tests/README.md and ADR-0004's
 // amendment: the L2 gate stays a single Nuxt build as Tenants multiply).
 import type { Page } from 'playwright-core'
+import { expect } from 'vitest'
 import { createPage, url } from '@nuxt/test-utils/e2e'
 import { entryRoutesFrom, expand, loadManifests } from '../../shared/expand.ts'
 
@@ -35,4 +36,40 @@ export async function renderAndCollectErrors(route: string): Promise<{ page: Pag
   await page.goto(url(route), { waitUntil: 'hydration' })
   await page.waitForLoadState('networkidle')
   return { page, errors }
+}
+
+/**
+ * Returns the deduped, lowercased tag names of any `HTMLUnknownElement`s in
+ * `page`'s live DOM — the signature of a typo'd or renamed auto-imported Vue
+ * component: Vue emits the unresolved tag as-is, the browser parses it as a
+ * custom element, and the page renders around the gap silently (issue #212).
+ * An empty array is the passing case; the repo has no genuine custom elements
+ * to allowlist today.
+ */
+export async function collectUnknownElementTags(page: Page): Promise<string[]> {
+  return page.evaluate(() =>
+    [...new Set(
+      [...document.querySelectorAll('*')]
+        .filter((e) => Object.getPrototypeOf(e).constructor.name === 'HTMLUnknownElement')
+        .map((e) => e.tagName.toLowerCase()),
+    )],
+  )
+}
+
+/**
+ * Navigates to `route`, then asserts (a) an `<h1>` exists in the rendered
+ * DOM, (b) no console/page error fired, and (c) no unresolved auto-import
+ * component rendered as an `HTMLUnknownElement` (issue #212). Closes the page
+ * itself (success or failure) so call sites don't each repeat the try/finally.
+ */
+export async function expectCleanHydration(route: string): Promise<void> {
+  const { page, errors } = await renderAndCollectErrors(route)
+  try {
+    expect(await page.locator('h1').count()).toBeGreaterThan(0)
+    expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
+    const unknownTags = await collectUnknownElementTags(page)
+    expect(unknownTags, `unresolved components on ${route}: ${unknownTags.join(', ')}`).toEqual([])
+  } finally {
+    await page.close()
+  }
 }
