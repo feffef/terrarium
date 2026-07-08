@@ -1,0 +1,110 @@
+schemaVersion: 1
+session: session_011PJWxYuA2VCCkhvxZDmM2P
+startedAt: 2026-07-08T10:04:49Z
+endedAt: 2026-07-08T15:31:16Z
+kind: interactive
+goal: Split About/How-It-Works, surface on dashboard
+status: completed
+outcome: "Merged: pages reframed, on-ramp homed in frontmatter"
+summary: "Human-directed throughout. The user flagged that the merged How-It-Works page overlapped About and a reviewer couldn't grasp the site from browsing. Grilled the design to a shared understanding, then reframed the two pages into distinct stories — Architecture & Deployment (about renamed, slug /architecture) and How Humans & Agents Work — added a frontmatter-homed \"New here?\" on-ramp to the journal dashboard, trimmed index.md, and reworded the root CTA. A background agent researched MDC (rejected for the cards); at the user's request its note was generalized into a reusable \"when to use MDC\" guide. Every design choice was the user's; PR #239 was opened, watched, and merged."
+prs:
+  - "239"
+docsRead:
+  - path: CLAUDE.md
+    reason: single-home rule, gated-PR discipline, journal-dashboard-is-not-index.md note
+  - path: layers/journal/tenant.config.ts
+    reason: where the pages schema lives, to add the onramp fields
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: confirm only pages is route-addressable before renaming a slug
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/about.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (read before editing)
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (read before editing)
+  - path: app/pages/index.vue
+    reason: (read before editing)
+  - path: layers/journal/tests/e2e/journal.e2e.ts
+    reason: (read before editing)
+  - path: layers/journal/content/archived/pages/index.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (read before editing)
+  - path: shared/manifest.ts
+    reason: (no reason given)
+  - path: layers/journal/app/types/journal.ts
+    reason: (read before editing)
+  - path: docs/research/mdc-onramp.md
+    reason: (no reason given)
+  - path: docs/research/mdc-when-to-use.md
+    reason: (read before editing)
+skillsUsed:
+  - name: grilling
+    reason: stress-test the About/How-It-Works split before building
+  - name: research
+    reason: background agent investigated MDC against primary sources
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Kept telling the user I was ready to open the PR while #239 was already open on the branch; only noticed when they asked."
+    solution: After committing substantive work, proactively query for an existing PR on the branch instead of assuming none exists.
+    severity: moderate
+  - description: The journal isolation e2e's leak-canary asserted not.toContain of a phrase the target page didn't even contain — a dead assertion that always passed.
+    solution: Re-pointed the canary at a real unique phrase from the renamed page; a not.toContain of a stale string silently passes and proves nothing.
+    severity: minor
+  - description: SendUserFile rejected four calls because I passed files as a bare path; it needs a JSON array.
+    solution: Always pass files as a JSON array, even for a single file.
+    severity: minor
+  - description: The research agent's fetcher got HTTP 403 from the hosted MDC docs (remark-mdc.nuxt.space, content.nuxt.com).
+    solution: Fall back to the vendored node_modules README as the version-pinned primary source.
+    severity: nit
+  - description: delete_trigger failed repeatedly with a permission-stream error, so the post-merge check-in couldn't be cancelled.
+    solution: Harmless — the pending check-in self-terminates on the next firing since the PR is merged; no manual cancel needed.
+    severity: nit
+durationSec: 19588
+models:
+  claude-opus-4-8: 247
+toolCounts:
+  Skill: 3
+  Grep: 4
+  Read: 19
+  Bash: 40
+  Glob: 1
+  Write: 4
+  Edit: 19
+  SendUserFile: 9
+  Agent: 1
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__update_pull_request: 2
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__Claude_Code_Remote__delete_trigger: 3
+filesEdited:
+  - layers/journal/content/current/pages/architecture.md
+  - app/pages/index.vue
+  - layers/journal/content/current/pages/index.md
+  - layers/journal/content/current/pages/how-it-works.md
+  - layers/journal/tests/e2e/journal.e2e.ts
+  - layers/journal/content/archived/pages/index.md
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - layers/journal/tenant.config.ts
+  - layers/journal/app/types/journal.ts
+  - docs/research/mdc-when-to-use.md
+subagents:
+  - type: general-purpose
+    task: Research Nuxt Content MDC for on-ramp cards
+gitBranch: claude/how-it-works-about-overlap-5ih60m
+entrypoint: remote_mobile
+cliVersion: 2.1.204
+learnings:
+  - Body MDC bypasses the Zod schema entirely; only frontmatter is validated by validate:content.
+  - Nuxt Content resolves MDC tags from each layer's app/components/content/ dir, and body MDC placement is tied to document flow with no hoist-to-layout affordance.
+ideas:
+  - If orphaned explainer pages become a pattern, revisit the deferred persistent site nav (grill Option B).
+  - The onramp frontmatter opt-in could generalize to other Tenants' dashboards as a reusable "surface a page as a card" convention.
