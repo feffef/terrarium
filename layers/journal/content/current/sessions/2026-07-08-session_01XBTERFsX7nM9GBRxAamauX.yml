@@ -1,0 +1,56 @@
+schemaVersion: 1
+session: session_01XBTERFsX7nM9GBRxAamauX
+startedAt: 2026-07-08T09:31:52Z
+endedAt: 2026-07-08T09:53:43Z
+kind: interactive
+goal: Add a Journal "How It Works" page
+status: completed
+outcome: Page shipped, linked, PR merged
+summary: "Human asked for a new Journal page summarizing the agent workflow (Claude Code session → gated PR → session-log frictions → autonomous frictions-to-fixes routine), linked from index.md alongside about.md. Wrote how-it-works.md, trimmed index.md's overlapping prose, verified against the full safety gate (lint/typecheck/test/validate:content/build/e2e) plus screenshots of both pages, opened PR #238, subscribed to its activity. Two follow-up asks from the human, both applied as additional commits to the same PR before merge: mention the Blog Tenant's fact-grounded Persona stories, and mention the Claude mobile app as an alternative entry point to Claude Code sessions. PR #238 merged."
+prs:
+  - "238"
+docsRead:
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: chartered-job self-merge tier + human green-light rule, cited on the new page
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: human-only high-risk areas (routing/isolation/CI) the autonomous fixer must escalate
+  - path: layers/journal/content/current/pages/about.md
+    reason: avoid duplicating its architecture/why-Nuxt-Content content
+  - path: layers/blog/tenant.config.ts
+    reason: confirm Blog Personas/pingbacks model before describing it accurately
+  - path: layers/journal/content/current/pages/index.md
+    reason: (read before editing)
+  - path: layers/blog/content/david/pages/index.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: get_status pull_request_read call failed once with 'unable to resolve session repo allowlist' during a CI check
+    solution: transient MCP hiccup — retried via get_check_runs successfully; no repo change needed
+    severity: nit
+durationSec: 1311
+models:
+  claude-sonnet-5: 89
+toolCounts:
+  Bash: 26
+  Read: 9
+  Write: 2
+  Edit: 3
+  ToolSearch: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__list_triggers: 2
+filesEdited:
+  - layers/journal/content/current/pages/how-it-works.md
+  - layers/journal/content/current/pages/index.md
+gitBranch: claude/journal-how-it-works-page-xgi7di
+entrypoint: remote
+cliVersion: 2.1.204
