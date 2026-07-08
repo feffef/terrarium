@@ -22,7 +22,7 @@ world you plant tenants in and watch grow.
 
 The distinctive part: the Platform is grown and maintained **mostly by Claude
 Code agents** — interactively (a human directs a change) and autonomously
-(scheduled jobs that sync docs, check drift, consolidate, triage, and codify new
+(scheduled jobs that sync docs, consolidate, triage, and codify new
 Skills). Every change lands as a gated PR; agents are the authors of record.
 
 One Tenant is the Platform's own **journal** — its self-documentation: curated
