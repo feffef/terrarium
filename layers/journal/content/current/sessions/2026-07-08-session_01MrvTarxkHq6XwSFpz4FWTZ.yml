@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01MrvTarxkHq6XwSFpz4FWTZ
 startedAt: 2026-07-08T05:33:06Z
-endedAt: 2026-07-08T06:09:41Z
+endedAt: 2026-07-08T06:17:38Z
 kind: interactive
 goal: Make session logs capture autonomy honestly
 status: in-review
 outcome: "Extractor + kind enum extended, PR #233 in review"
-summary: "Diagnosed why the Routine-fired nightly digest run's log showed kind autonomous and entrypoint remote_trigger yet no digest entry in skillsUsed: the extractor derived skills only from Skill tool_use blocks, and a slash-command prompt (every Routine firing's shape) is expanded by the harness before the model runs, so no tool call exists. Extended extractTrace to scan user turns for command-name expansion tags, stitched with a provenance reason \"(invoked as a slash command)\", excluding tool_result blocks. Then, on request, widened the session kind enum with \"delegated\" — human-fired but hands-off through self-merge — across schema, validator, types, kindCounts, dashboard tile, and SKILL.md guidance. Full gate green twice; both changes ride PR 233."
+summary: "Diagnosed why the Routine-fired nightly digest run's log showed kind autonomous and entrypoint remote_trigger yet no digest entry in skillsUsed: the extractor derived skills only from Skill tool_use blocks, and a slash-command prompt (every Routine firing's shape) is expanded by the harness before the model runs, so no tool call exists. Extended extractTrace to scan user turns for command-name expansion tags, stitched with a provenance reason \"(invoked as a slash command)\", excluding tool_result blocks. Then, on request, widened the session kind enum with \"delegated\" — exactly one human prompt (the kickoff), hands-off from there — across schema, validator, types, kindCounts, dashboard tile, and SKILL.md guidance; harness-injected user turns don't count as human prompts. Full gate green after each commit; all three commits ride PR 233."
 prs:
   - "233"
 docsRead:
@@ -41,23 +41,23 @@ frictions:
   - description: The only real routine-fired transcript (the digest session's) lives in a reclaimed container, so the command-name detector was built against the documented expansion format without a live specimen.
     solution: Verify against tomorrow's nightly digest log — its skillsUsed should show digest with the new (invoked as a slash command) reason; a committed transcript fixture from a routine-fired session would remove this blind spot.
     severity: minor
-durationSec: 2195
+durationSec: 2672
 models:
-  claude-fable-5: 151
+  claude-fable-5: 165
 toolCounts:
-  Bash: 17
+  Bash: 20
   Grep: 15
   Read: 12
   mcp__Claude_Code_Remote__list_triggers: 1
-  Edit: 22
-  Write: 4
+  Edit: 25
+  Write: 5
   ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 3
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 1
-  mcp__github__update_pull_request: 1
+  mcp__github__update_pull_request: 2
 filesEdited:
   - scripts/session-trace.ts
   - tests/unit/session-trace.spec.ts
