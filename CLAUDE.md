@@ -47,7 +47,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   autonomous work still needs a green-light first (ADR-0003 amendment). The
   session-log direct-to-`main` exception (ADR-0009) is untouched. **Watching the
   PR is automatic too** — on opening it, subscribe to its activity and babysit it
-  to merge/close; don't ask "shall I watch it?".
+  to merge/close; don't ask "shall I watch it?". **Before announcing intent to
+  open a PR, check whether one already exists on the current branch** (e.g.
+  `mcp__github__search_pull_requests` or `list_pull_requests` scoped to the
+  branch) — don't tell the user you're about to open one without checking first.
 - All work must clear the **safety gate** (build/validate/isolation, ADR-0004).
   The routing module, isolation logic, and CI are **human-only** — never
   auto-merge changes touching them.
