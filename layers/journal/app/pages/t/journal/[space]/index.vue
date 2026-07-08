@@ -133,7 +133,13 @@ useSeoMeta({
       </div>
     </header>
 
-    <!-- Newcomer on-ramp — the two explainer pages surfaced as visible doors -->
+    <!-- Free-form editorial intro — the root page's Markdown body -->
+    <section v-if="rootDoc" class="intro">
+      <ContentRenderer :value="rootDoc" />
+    </section>
+
+    <!-- Newcomer on-ramp — the two explainer pages surfaced as visible doors, set
+         between the intro and the data-heavy digests/feed below. -->
     <section v-if="onrampCards.length" class="onramp" aria-label="Start here">
       <p class="onramp-lead">New here? Start with the short version:</p>
       <div class="onramp-cards">
@@ -142,11 +148,6 @@ useSeoMeta({
           <span class="onramp-blurb">{{ c.blurb }}</span>
         </NuxtLink>
       </div>
-    </section>
-
-    <!-- Free-form editorial intro — the root page's Markdown body -->
-    <section v-if="rootDoc" class="intro">
-      <ContentRenderer :value="rootDoc" />
     </section>
 
     <!-- Daily digests — a plain-language, day-by-day recap of project activity -->
