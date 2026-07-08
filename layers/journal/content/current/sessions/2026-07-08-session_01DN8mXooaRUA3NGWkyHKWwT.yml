@@ -1,0 +1,68 @@
+schemaVersion: 1
+session: session_01DN8mXooaRUA3NGWkyHKWwT
+startedAt: 2026-07-08T05:34:50Z
+endedAt: 2026-07-08T07:53:30Z
+kind: autonomous
+goal: Run frictions-to-fixes to retire recurring session friction
+status: in-review
+outcome: Filed 5 issues, merged 2 fixing PRs, 1 issue left for human
+summary: "Ran the frictions-to-fixes routine end-to-end: surveyed the last 20 session logs via a subagent, screened against the tracker (no regressions found), and filed issues #227-#231 for 5 never-fixed candidates. Dispatched two Sonnet impl agents in worktree isolation — a batched doc-only PR (#232, closing #227/#228/#229 plus the doc portion of #231) and a code PR (#234, closing #230, adding scripts/plate-gallery.ts). Reviewed both myself as the ADR-0003 review-agent, posted review comments, and merged both after confirming green gates. #231 stays open pending a repo-owner Settings toggle, with a comment documenting what shipped. This whole run was agent-initiated (the standing routine, no per-task human ask) — the human's only inputs mid-run were two corrective nudges after the session stalled (see frictions)."
+prs:
+  - "232"
+  - "234"
+docsRead:
+  - path: scripts/session-frictions.ts
+    reason: understand the survey subagent's data source
+  - path: CLAUDE.md
+    reason: repo conventions, worktree isolation rules, PR/review discipline
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "This session is a scheduled routine — the point is unattended operation — but it stalled for roughly two hours waiting on PR #234's CI completion, needing the human to manually nudge it twice (\"still waiting? why didn't complete this autonomously\" / \"the whole point of routines is that I shouldn't have to\"). Root cause: CI success is never delivered via the github-webhook-activity subscription (only failures, review comments, and merge/close are pushed), so it must be actively polled. This session repeatedly called ScheduleWakeup({stop: true}) intending it to \"wait\", but that tool is scoped to /loop dynamic-mode pacing and is a no-op outside it — it scheduled nothing, so nothing resumed the session on its own."
+    solution: docs/agents/issue-tracker.md already flags the CI-success-has-no-webhook gap and says to poll get_check_runs yourself (e.g. send_later a wake) — but doesn't warn against the ScheduleWakeup mistake specifically. Add a note there or in CLAUDE.md that ScheduleWakeup is /loop-dynamic-mode-only and a no-op elsewhere; the correct tool for a routine to schedule a genuine self-check-in on non-webhook-delivered state (like CI success) is mcp__claude-code-remote__send_later.
+    severity: major
+  - description: Two worktree-isolated Sonnet impl agents dispatched by this session each invoked close-session/log-session under the SAME parent session id, and each wrote to the same shared scratch path — the second subagent's log silently clobbered the first's, entirely omitting the orchestrating session's own work (survey, issue filing, review, merge) until this final re-author overwrote it with the full picture.
+    solution: Document that a dispatched subagent's own close-session/log-session invocation is redundant and risks clobbering when it shares the parent session's id — either the orchestrator should be the sole author of the session log (briefing dispatched impl agents not to self-invoke close-session), or the scratch path/session id needs to be worktree/subagent-scoped so parallel logs don't collide.
+    severity: moderate
+  - description: The frictions-to-fixes skill's own step 1 instructions say to run "tsx scripts/session-frictions.ts", but tsx isn't directly on PATH — the survey subagent had to discover "pnpm exec tsx ..." works instead.
+    solution: Update the frictions-to-fixes SKILL.md's step 1 instructions to say "pnpm exec tsx scripts/session-frictions.ts".
+    severity: minor
+  - description: scripts/merged-since.ts silently returned an empty array when run against a stale local origin/main ref (before an explicit git fetch forced it forward) — indistinguishable from a genuine "no commits landed" result, with no warning the local ref was stale.
+    solution: Add a freshness check/warning inside merged-since.ts, or always fetch before reading, so a stale ref produces a visible warning instead of a silently-empty, misleading result.
+    severity: moderate
+  - description: mcp__github__search_issues with a broad, unquoted two-word query hit a 93KB token-limit error; the quoted retry avoided the size problem but fuzzy term matching still surfaced loosely-relevant, noisy matches.
+    solution: Doc note in docs/agents/issue-tracker.md that GitHub issue search does fuzzy matching even on quoted multi-term queries, so results still need eyeballing for relevance.
+    severity: nit
+durationSec: 8320
+models:
+  claude-sonnet-5: 110
+toolCounts:
+  Bash: 5
+  Agent: 3
+  ScheduleWakeup: 7
+  ToolSearch: 4
+  mcp__github__search_issues: 5
+  mcp__github__issue_write: 5
+  mcp__github__pull_request_read: 13
+  mcp__github__add_issue_comment: 3
+  mcp__github__merge_pull_request: 2
+  mcp__github__issue_read: 3
+  Skill: 2
+  Write: 2
+  Read: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - task: Doc fixes for 4 frictions-to-fixes issues
+    model: sonnet
+  - task: Add Atlas plate preview script
+    model: sonnet
+gitBranch: claude/serene-goldberg-rbm4ib
+entrypoint: remote_trigger
+cliVersion: 2.1.204
+learnings:
+  - The github-webhook-activity PR subscription delivers CI failures, review comments, and merge/close — but never CI success. Babysitting a PR through a full gate requires actively re-polling get_check_runs; there's no passive wake on green.
+  - ScheduleWakeup is exclusively the /loop-dynamic-mode pacing primitive. In a plain or routine session it just cancels/no-ops. send_later is the correct tool for a genuine self-check-in outside /loop.
