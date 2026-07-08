@@ -1,0 +1,55 @@
+schemaVersion: 1
+session: session_01MrvTarxkHq6XwSFpz4FWTZ
+startedAt: 2026-07-08T05:33:06Z
+endedAt: 2026-07-08T05:49:58Z
+kind: interactive
+goal: Tag slash-command-invoked Skills in session logs
+status: in-review
+outcome: "Extractor extended, PR #233 in review"
+summary: "Investigated why the Routine-fired nightly digest session's log showed kind autonomous and entrypoint remote_trigger but no digest entry in skillsUsed: the extractor derived skills only from Skill tool_use blocks, and a slash-command prompt (the shape every Routine firing uses) is expanded by the harness before the model runs, so no tool call exists. Extended extractTrace to scan user turns for command-name expansion tags, union them into skillsUsed, and stitch them with a provenance reason \"(invoked as a slash command)\"; tool_result blocks are excluded so log tooling reading other transcripts can't inherit invocations. Full gate green; opened PR 233."
+prs:
+  - "233"
+docsRead:
+  - path: scripts/session-trace.ts
+    reason: the extractor/stitch being extended
+  - path: layers/journal/content/current/sessions/2026-07-08-session_01CZYmcDKaynM5m9et97xV62.yml
+    reason: the untagged digest run — the symptom under diagnosis
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: confirm the merged {name, reason} entry shape stays unchanged
+  - path: tests/unit/session-trace.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The only real routine-fired transcript (the digest session's) lives in a reclaimed container, so the command-name detector was built against the documented expansion format without a live specimen.
+    solution: Verify against tomorrow's nightly digest log — its skillsUsed should show digest with the new (invoked as a slash command) reason; a committed transcript fixture from a routine-fired session would remove this blind spot.
+    severity: minor
+durationSec: 1012
+models:
+  claude-fable-5: 95
+toolCounts:
+  Bash: 13
+  Grep: 9
+  Read: 5
+  mcp__Claude_Code_Remote__list_triggers: 1
+  Edit: 12
+  Write: 2
+  ToolSearch: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - scripts/session-trace.ts
+  - tests/unit/session-trace.spec.ts
+gitBranch: claude/digest-autonomy-skill-tagging-ez1yfm
+entrypoint: remote_mobile
+cliVersion: 2.1.204
+learnings:
+  - list_triggers confirms Routine prompts for scheduled Skills are literally the slash command (e.g. /digest), so every Routine-fired session's entry Skill enters via prompt expansion — structurally invisible to Skill-tool-only derivation.
+ideas:
+  - The session log records entrypoint remote_trigger but not WHICH Routine fired it; the trigger name/prompt lives only in the trigger system and could be worth surfacing in the Journal.
