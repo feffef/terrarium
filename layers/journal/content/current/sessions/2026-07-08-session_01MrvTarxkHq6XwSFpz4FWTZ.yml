@@ -1,15 +1,17 @@
 schemaVersion: 1
 session: session_01MrvTarxkHq6XwSFpz4FWTZ
 startedAt: 2026-07-08T05:33:06Z
-endedAt: 2026-07-08T06:17:38Z
+endedAt: 2026-07-08T06:31:05Z
 kind: interactive
 goal: Make session logs capture autonomy honestly
 status: in-review
 outcome: "Extractor + kind enum extended, PR #233 in review"
-summary: "Diagnosed why the Routine-fired nightly digest run's log showed kind autonomous and entrypoint remote_trigger yet no digest entry in skillsUsed: the extractor derived skills only from Skill tool_use blocks, and a slash-command prompt (every Routine firing's shape) is expanded by the harness before the model runs, so no tool call exists. Extended extractTrace to scan user turns for command-name expansion tags, stitched with a provenance reason \"(invoked as a slash command)\", excluding tool_result blocks. Then, on request, widened the session kind enum with \"delegated\" — exactly one human prompt (the kickoff), hands-off from there — across schema, validator, types, kindCounts, dashboard tile, and SKILL.md guidance; harness-injected user turns don't count as human prompts. Full gate green after each commit; all three commits ride PR 233."
+summary: "Diagnosed why the Routine-fired nightly digest run's log showed kind autonomous and entrypoint remote_trigger yet no digest entry in skillsUsed: the extractor derived skills only from Skill tool_use blocks, and a slash-command prompt (every Routine firing's shape) is expanded by the harness before the model runs, so no tool call exists. Extended extractTrace to scan user turns for command-name expansion tags, stitched with a provenance reason \"(invoked as a slash command)\", excluding tool_result blocks. Then, on request, widened the session kind enum with \"delegated\" — exactly one human prompt (the kickoff), hands-off from there — across schema, validator, types, kindCounts, dashboard tile, and SKILL.md guidance; harness-injected user turns don't count as human prompts. A domain-modeling pass then found ADR-0003's two-mode taxonomy and no-self-merge rule needed reconciling: amended ADR-0003 (kind is descriptive, not a merge permission), made CONTEXT.md's Session entry the single home of the kind definitions, and slimmed the schema comment and SKILL.md to pointers. Full gate green after each commit; all four commits ride PR 233."
 prs:
   - "233"
 docsRead:
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: the two-mode + no-self-merge decisions the delegated kind had to reconcile with
   - path: scripts/session-trace.ts
     reason: the extractor/stitch being extended
   - path: layers/journal/content/current/sessions/2026-07-08-session_01CZYmcDKaynM5m9et97xV62.yml
@@ -32,32 +34,36 @@ docsRead:
     reason: (read before editing)
   - path: layers/journal/tests/unit/journal-dashboard.spec.ts
     reason: (read before editing)
+  - path: CONTEXT.md
+    reason: (read before editing)
 skillsUsed:
+  - name: domain-modeling
+    reason: cross-check the delegated kind against ADR-0003's two-mode taxonomy
   - name: close-session
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
 frictions:
-  - description: The only real routine-fired transcript (the digest session's) lives in a reclaimed container, so the command-name detector was built against the documented expansion format without a live specimen.
-    solution: Verify against tomorrow's nightly digest log — its skillsUsed should show digest with the new (invoked as a slash command) reason; a committed transcript fixture from a routine-fired session would remove this blind spot.
+  - description: The only routine-fired transcript (the digest session's) lives in a reclaimed container, so the command-name detector was initially built against the documented expansion format without a live specimen.
+    solution: "Resolved in-session: a human /domain-modeling invocation later provided a live expansion turn and the extractor detected it correctly; tomorrow's nightly digest log is the remaining end-to-end confirmation."
     severity: minor
-durationSec: 2672
+durationSec: 3479
 models:
-  claude-fable-5: 165
+  claude-fable-5: 197
 toolCounts:
-  Bash: 20
-  Grep: 15
-  Read: 12
+  Bash: 25
+  Grep: 16
+  Read: 14
   mcp__Claude_Code_Remote__list_triggers: 1
-  Edit: 25
-  Write: 5
+  Edit: 32
+  Write: 6
   ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 3
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 1
-  mcp__github__update_pull_request: 2
+  mcp__github__update_pull_request: 3
 filesEdited:
   - scripts/session-trace.ts
   - tests/unit/session-trace.spec.ts
@@ -68,6 +74,8 @@ filesEdited:
   - layers/journal/app/pages/t/journal/[space]/index.vue
   - .agents/skills/log-session/SKILL.md
   - layers/journal/tests/unit/journal-dashboard.spec.ts
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - CONTEXT.md
 gitBranch: claude/digest-autonomy-skill-tagging-ez1yfm
 entrypoint: remote_mobile
 cliVersion: 2.1.204
