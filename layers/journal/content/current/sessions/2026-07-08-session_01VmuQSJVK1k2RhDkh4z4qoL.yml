@@ -1,0 +1,72 @@
+schemaVersion: 1
+session: session_01VmuQSJVK1k2RhDkh4z4qoL
+startedAt: 2026-07-08T22:44:03Z
+endedAt: 2026-07-08T23:01:39Z
+kind: delegated
+goal: Close issue
+status: completed
+outcome: Assertion added, verified, PR
+summary: "Fully agent-driven implementation of a human-filed GitHub issue (#212): the L2 browser tier didn't catch a typo'd/renamed auto-import component, since Vue silently renders it as an unknown custom element. Added a shared collectUnknownElementTags()/expectCleanHydration() helper to tests/support/e2e.ts, wired into smoke.spec.ts's Tier-2 entry-route sweep, and extended it to one representative deep (non-entry) route per Tenant — a Specimen entry (atlas, new layers/atlas/tests/e2e/atlas.e2e.ts), a post (blog), and a standalone Document (journal) — since entry routes alone don't reach where these components render. Ran a manual negative test (misspelled AtlasSpecimenPlate, confirmed the new assertion failed with the exact tag, reverted) per the issue's acceptance criterion. Full gate (lint/typecheck/unit/build/e2e) green; a /code-review pass flagged one duplicated-assertion smell, which was fixed by extracting the shared helper before committing. PR #250 opened and subscribed."
+prs:
+  - "250"
+docsRead:
+  - path: tests/README.md
+    reason: test-homing convention (register-module pattern, single e2e spec)
+  - path: tests/support/e2e.ts
+    reason: existing renderAndCollectErrors idiom to extend
+  - path: tests/e2e/smoke.spec.ts
+    reason: (read before editing)
+  - path: layers/journal/tests/e2e/journal.e2e.ts
+    reason: (read before editing)
+  - path: layers/blog/tests/e2e/blog.e2e.ts
+    reason: (read before editing)
+  - path: layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+    reason: (no reason given)
+  - path: layers/atlas/tests/e2e/atlas.e2e.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: two-axis review before commit; caught a duplicated-assertion smell
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: implement
+    reason: (invoked as a slash command)
+frictions:
+  - description: The issue's proposed snippet targeted only the entry-route sweep, but entry routes never reach the deep pages (specimen/post/document) where the motivating regression (AtlasSpecimenPlate) actually renders — had to infer and add per-Tenant deep-route coverage to actually close the gap the issue was filed for.
+    solution: Issue text did flag this ("adding one representative deep URL per Tenant... is in scope") so no doc fix needed — just required reading shared/expand.ts's entryRoutesFrom() to confirm entry routes are Space-landing-only before trusting the issue's own scoping note.
+    severity: nit
+durationSec: 1055
+models:
+  claude-sonnet-5: 136
+toolCounts:
+  ToolSearch: 3
+  mcp__github__issue_read: 1
+  Read: 9
+  Bash: 33
+  Grep: 1
+  Edit: 21
+  Write: 2
+  Skill: 3
+  Agent: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+filesEdited:
+  - tests/support/e2e.ts
+  - tests/e2e/smoke.spec.ts
+  - layers/atlas/tests/e2e/atlas.e2e.ts
+  - layers/blog/tests/e2e/blog.e2e.ts
+  - layers/journal/tests/e2e/journal.e2e.ts
+subagents:
+  - type: general-purpose
+    task: Standards review of issue-212 diff
+  - type: general-purpose
+    task: Spec review of issue-212 diff
+gitBranch: claude/issue-212-h9u567
+entrypoint: remote
+cliVersion: 2.1.205
