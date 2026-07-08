@@ -72,14 +72,15 @@ ideas:                             # OPTIONAL — omit unless something sparked
   - A consolidate job could cluster frictions into a tag taxonomy
 ```
 
-- **`kind` is the autonomy spectrum, judged by who was in the loop:**
-  `interactive` — a human steered during the work (follow-up prompts, answered
-  questions, reviewed/merged); `delegated` — a human fired the initial prompt but
-  the session then ran hands-off end to end, *including merging its own PR*;
-  `autonomous` — no human at all: fired by a Routine/schedule (a scheduled/cold
-  job). The trigger decides interactive-vs-the-rest; the merge decides
-  delegated-vs-not — a human-fired session whose PR waits for human review/merge
-  is `interactive`, not `delegated`.
+- **`kind` is the autonomy spectrum, and the test is who prompted:**
+  `interactive` — a human prompted again after kickoff (steered, answered,
+  redirected); `delegated` — a human gave exactly **one** prompt, the kickoff,
+  and no human prompt followed (such sessions typically run end to end,
+  including merging their own PR); `autonomous` — no human prompt at all: fired
+  by a Routine/schedule (a scheduled/cold job). Harness-injected user turns are
+  **not** human prompts — a `send_later` self check-in, a PR webhook event, or a
+  hook reminder arrives as a user message but doesn't make a session
+  interactive.
 - **`learnings`/`ideas` are optional sparks — leave them off unless the session
   genuinely produced one.** Don't pad them; an empty session log carries neither.
   - `learnings` — useful knowledge you *inferred during the work* that you neither
