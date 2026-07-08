@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01DN8mXooaRUA3NGWkyHKWwT
 startedAt: 2026-07-08T05:34:50Z
-endedAt: 2026-07-08T07:53:30Z
+endedAt: 2026-07-08T08:02:22Z
 kind: autonomous
 goal: Run frictions-to-fixes to retire recurring session friction
-status: in-review
-outcome: Filed 5 issues, merged 2 fixing PRs, 1 issue left for human
+status: completed
+outcome: Filed 5 issues, merged 2 fixing PRs, 1 issue left open for human
 summary: "Ran the frictions-to-fixes routine end-to-end: surveyed the last 20 session logs via a subagent, screened against the tracker (no regressions found), and filed issues #227-#231 for 5 never-fixed candidates. Dispatched two Sonnet impl agents in worktree isolation — a batched doc-only PR (#232, closing #227/#228/#229 plus the doc portion of #231) and a code PR (#234, closing #230, adding scripts/plate-gallery.ts). Reviewed both myself as the ADR-0003 review-agent, posted review comments, and merged both after confirming green gates. #231 stays open pending a repo-owner Settings toggle, with a comment documenting what shipped. This whole run was agent-initiated (the standing routine, no per-task human ask) — the human's only inputs mid-run were two corrective nudges after the session stalled (see frictions)."
 prs:
   - "232"
@@ -36,11 +36,11 @@ frictions:
   - description: mcp__github__search_issues with a broad, unquoted two-word query hit a 93KB token-limit error; the quoted retry avoided the size problem but fuzzy term matching still surfaced loosely-relevant, noisy matches.
     solution: Doc note in docs/agents/issue-tracker.md that GitHub issue search does fuzzy matching even on quoted multi-term queries, so results still need eyeballing for relevance.
     severity: nit
-durationSec: 8320
+durationSec: 8852
 models:
-  claude-sonnet-5: 110
+  claude-sonnet-5: 117
 toolCounts:
-  Bash: 5
+  Bash: 6
   Agent: 3
   ScheduleWakeup: 7
   ToolSearch: 4
@@ -52,7 +52,8 @@ toolCounts:
   mcp__github__issue_read: 3
   Skill: 2
   Write: 2
-  Read: 1
+  Read: 2
+  Edit: 1
 subagents:
   - type: general-purpose
     task: Survey and screen session frictions
