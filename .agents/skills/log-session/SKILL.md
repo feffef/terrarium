@@ -72,15 +72,12 @@ ideas:                             # OPTIONAL — omit unless something sparked
   - A consolidate job could cluster frictions into a tag taxonomy
 ```
 
-- **`kind` is the autonomy spectrum, and the test is who prompted:**
-  `interactive` — a human prompted again after kickoff (steered, answered,
-  redirected); `delegated` — a human gave exactly **one** prompt, the kickoff,
-  and no human prompt followed (such sessions typically run end to end,
-  including merging their own PR); `autonomous` — no human prompt at all: fired
-  by a Routine/schedule (a scheduled/cold job). Harness-injected user turns are
-  **not** human prompts — a `send_later` self check-in, a PR webhook event, or a
-  hook reminder arrives as a user message but doesn't make a session
-  interactive.
+- **`kind` is the autonomy spectrum — judged by who prompted, not by what the
+  session did.** The canonical definitions of `interactive` / `delegated` /
+  `autonomous` (including what does *not* count as a human prompt) live in
+  `CONTEXT.md` → **Session** — classify against that entry, not from memory.
+  Kind is descriptive; it grants nothing (merge governance is ADR-0003's,
+  unchanged by kind).
 - **`learnings`/`ideas` are optional sparks — leave them off unless the session
   genuinely produced one.** Don't pad them; an empty session log carries neither.
   - `learnings` — useful knowledge you *inferred during the work* that you neither

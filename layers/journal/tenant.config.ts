@@ -77,10 +77,8 @@ export default defineTenant({
           session: z.string(), // Claude session id — stable identity
           startedAt: utcTimestamp, // UTC ISO-8601 — session start (ordering anchor)
           endedAt: utcTimestamp, //   UTC ISO-8601 — session end / log authored
-          // The test is who prompted. interactive: a human prompted again after
-          // kickoff; delegated: exactly one human prompt (the kickoff), hands-off
-          // from there — typically through merging its own PR; autonomous: no
-          // human prompt at all — fired by a Routine/schedule.
+          // Autonomy spectrum, judged by who prompted — canonical definitions:
+          // CONTEXT.md → Session.
           kind: z.enum(['interactive', 'delegated', 'autonomous']),
           goal: z.string(), // ≤ 8 words — what the session set out to do
           // `in-review` is the honest state of a session that opened a gated PR

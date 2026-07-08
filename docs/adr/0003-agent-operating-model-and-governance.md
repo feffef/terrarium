@@ -40,6 +40,17 @@ Status: Accepted
 > transition below. Scope today is that one Skill; a broader standing
 > agent-reviewer capability would warrant its own ADR.
 >
+> **Amended (2026-07-08).** The **two operating modes below classify *initiation*
+> and are unchanged**; the session log's `kind` field (ADR-0009) now records a
+> finer, three-way autonomy spectrum: `interactive`, `delegated`, `autonomous` —
+> canonical definitions in `CONTEXT.md` → **Session**. In this ADR's terms, both
+> `interactive` and `delegated` sessions are Interactive-mode initiations (a human
+> opened the session); `delegated` marks that no human prompt followed the kickoff
+> and execution ran hands-off. **`kind` is descriptive log vocabulary, not a merge
+> permission:** a `delegated` session merges only what the carve-outs in the notes
+> above already allow (the digest auto-merge tier; the reviewer-not-author
+> pattern), and everything else keeps this ADR's default — gated PR, human merge.
+>
 > **Amended (2026-07-06).** The **`digest` Skill's gated PR auto-merges on a
 > green gate**: after opening the PR, the authoring session enables GitHub
 > auto-merge (or, where that is unavailable, merges only after the gate

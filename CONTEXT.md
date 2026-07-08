@@ -167,6 +167,17 @@ span several branches or PRs, or none; its log is authored regardless
 of where the work went, or whether any code was committed at all. Session logs
 are ground truth, not a projection of repo state (see Journal).
 
+Every session log records the Session's **kind** — where it sat on the autonomy
+spectrum, judged by **who prompted**: **interactive** (a human prompted again
+after kickoff — steered, answered, redirected), **delegated** (exactly one human
+prompt, the kickoff, with no human prompt after it), or **autonomous** (no human
+prompt at all — the Session was started by a schedule, not a person). Prompts
+injected by machinery — a scheduled self check-in, a webhook event, a hook
+reminder — arrive as user messages but are **not** human prompts and never make
+a Session interactive. Kind is descriptive of what happened, never a grant of
+authority: what a Session may merge is governed elsewhere and does not vary by
+kind.
+
 ### Session closure
 The point at which a **Session**'s active work is **complete and in a coherent,
 honest state** — the trigger for authoring its **session log**. Closure is
