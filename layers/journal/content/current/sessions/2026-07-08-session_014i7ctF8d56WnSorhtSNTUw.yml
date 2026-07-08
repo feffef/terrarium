@@ -1,0 +1,74 @@
+schemaVersion: 1
+session: session_014i7ctF8d56WnSorhtSNTUw
+startedAt: 2026-07-08T05:54:20Z
+endedAt: 2026-07-08T06:58:43Z
+kind: interactive
+goal: Fix blog About section rendering empty on nav
+status: in-review
+outcome: Root-caused and fixed with a client warm plugin
+summary: "Human-reported bug: following a link occasionally landed on a page with an empty component (the About section on /t/blog/David), fixed by a reload. I reproduced it in a production build by driving client-side navigations with Chromium and instrumenting the timeline, root-causing it to @nuxt/content v3 loading its client WASM SQLite engine and per-collection SQL dumps lazily over the network AFTER navigation — so queryCollection returns empty until the dump lands, and the page commits first. Fix (agent-chosen, on the user's implicit green-light to fix the reported bug): a client-only plugin warms every collection on idle after hydration, collapsing the empty window from ~80ms (unbounded on slow links) to one frame. Full gate green; PR #235 opened."
+prs:
+  - "235"
+docsRead:
+  - path: layers/blog/app/pages/t/blog/[space]/index.vue
+    reason: the page rendering the empty About aside
+  - path: app/composables/space.ts
+    reason: how useSpace resolves route to keyed collections
+  - path: shared/routing.ts
+    reason: checked case-sensitivity/resolution theory
+  - path: nuxt.config.ts
+    reason: content module config (client sqlite)
+  - path: layers/blog/app/pages/t/blog/[space]/[...slug].vue
+    reason: (no reason given)
+  - path: app/pages/t/[tenant]/[space]/[...slug].vue
+    reason: (no reason given)
+  - path: layers/blog/app/components/BlogNetwork.vue
+    reason: (no reason given)
+  - path: app/plugins/warm-content.client.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: A newly-added Nuxt plugin under app/plugins/ registered in types but not at runtime across several production builds; window state showed it never ran.
+    solution: Stale incremental .nuxt cache. `rm -rf .nuxt .output` before the build picked it up; a fresh nuxt prepare alone updated types but not the runtime plugin registry.
+    severity: moderate
+  - description: Prod builds strip console.log (terser), so plugin diagnostics via console were invisible and misled me into thinking the plugin errored.
+    solution: Record state on a window global the Playwright probe can read instead of relying on console in a production build.
+    severity: minor
+  - description: definePageMeta({ key }) looked like the fix (component-reuse theory) but changed nothing; cost a rebuild before instrumentation disproved it.
+    solution: Instrument the actual network/timeline before committing to a mechanism — the dump-fetch-after-nav timeline was the decisive evidence.
+    severity: nit
+durationSec: 3863
+models:
+  claude-opus-4-8: 298
+toolCounts:
+  Bash: 104
+  Read: 15
+  ToolSearch: 5
+  mcp__github__search_issues: 1
+  Write: 15
+  Edit: 13
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+filesEdited:
+  - scripts/repro-empty-about.ts
+  - layers/blog/app/pages/t/blog/[space]/index.vue
+  - scripts/probe-nav.ts
+  - app/plugins/warm-content.client.ts
+  - scripts/check-warm.ts
+gitBranch: claude/empty-component-render-bug-hx38yo
+entrypoint: remote_mobile
+cliVersion: 2.1.204
+learnings:
+  - "@nuxt/content v3 client queries load the WASM engine + per-collection sql_dump.txt lazily on first query, after client navigation — the source of empty-on-nav content flashes."
+  - "@nuxt/content caches decompressed dumps in localStorage (prod) keyed by checksum, so warming is paid once per client, not per navigation."
+  - On client-side nav Nuxt commits the route and renders the page before useAsyncData's client query resolves, so a still-null result renders for a frame regardless.
+ideas:
+  - A prefetch-on-hover of a link's target collection dump could warm just-in-time instead of warming everything on idle.
