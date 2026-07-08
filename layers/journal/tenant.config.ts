@@ -37,8 +37,16 @@ export default defineTenant({
         badge: z.string().optional(),
         // A Digest's one-line day-headline (ADR-0010): the source the `digest`
         // Skill bakes into the index's "recent digests" preview. Optional and
-        // non-strict, so ordinary pages (index/about) simply omit it.
+        // non-strict, so ordinary pages (index/architecture) simply omit it.
         summary: z.string().optional(),
+        // Dashboard on-ramp opt-in (the "New here?" cards on the Space landing).
+        // A page surfaces itself as a card by setting `onramp` to its sort order
+        // (lowest first); `onrampLabel`/`onrampBlurb` carry the card's teaser copy,
+        // kept distinct from the page's own title/description. Ordinary pages omit
+        // all three. Consumed in app/pages/t/journal/[space]/index.vue.
+        onramp: z.number().int().positive().optional(),
+        onrampLabel: z.string().optional(),
+        onrampBlurb: z.string().optional(),
       }),
     },
     // The Platform's Skill Inventory — structured data, not routed. Strict → L1.

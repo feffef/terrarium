@@ -1,6 +1,9 @@
 ---
 title: Architecture & Deployment
 description: The tech foundation Terrarium's generated app is built on, and how it ships.
+onramp: 1
+onrampLabel: How it's built & deployed
+onrampBlurb: The tech foundation — Tenants, Spaces, and the deployment model.
 ---
 
 # Architecture & Deployment

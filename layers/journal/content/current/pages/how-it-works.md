@@ -1,6 +1,9 @@
 ---
 title: How Humans & Agents Work
 description: How humans, agents, and code work together in Terrarium — from a Claude Code session to autonomous friction-fixing.
+onramp: 2
+onrampLabel: How humans + agents work
+onrampBlurb: The loop — from a prompt to a reviewed, gated PR.
 ---
 
 # How Humans & Agents Work

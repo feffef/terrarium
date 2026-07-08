@@ -46,18 +46,22 @@ const rootDoc = computed(() => allPages.value.find((p) => p.path === '/') ?? nul
 const page = computed(() => (rootDoc.value ?? null) as PageDoc | null)
 const digests = computed(() => digestList(allPages.value))
 
-// ── Newcomer on-ramp — two labelled doors to the explainer pages ──
-// Rendered only where these Documents actually exist (the `current` Space), and
-// isolation-respecting: sourced from THIS Space's own `pages`, never a hardcoded
-// cross-Space link. Each card shows only if its Document is present here.
-const ONRAMP = [
-  { slug: 'architecture', title: "How it's built & deployed", blurb: 'The tech foundation — Tenants, Spaces, and the deployment model.' },
-  { slug: 'how-it-works', title: 'How humans + agents work', blurb: 'The loop — from a prompt to a reviewed, gated PR.' },
-]
+// ── Newcomer on-ramp — labelled doors to the explainer pages ──
+// Content-homed: a page opts in through its OWN frontmatter (`onramp` sort order
+// plus `onrampLabel`/`onrampBlurb` teaser copy — see the `pages` schema), so
+// adding or reordering a door needs no edit here. Isolation-respecting: sourced
+// from THIS Space's own `pages`, so a page must exist in-Space to surface — the
+// archived Space, lacking these pages, shows none.
 const onrampCards = computed(() =>
-  ONRAMP
-    .filter((c) => allPages.value.some((p) => p.path === `/${c.slug}`))
-    .map((c) => ({ ...c, to: `/t/${tenant}/${space}/${c.slug}` })),
+  allPages.value
+    .filter((p) => p.onramp != null && p.onrampLabel && p.path)
+    .sort((a, b) => (a.onramp ?? 0) - (b.onramp ?? 0))
+    .map((p) => ({
+      key: p.path as string,
+      title: p.onrampLabel as string,
+      blurb: p.onrampBlurb,
+      to: `/t/${tenant}/${space}${p.path}`,
+    })),
 )
 
 // Which Digests are expanded, keyed by content path — an inline disclosure, the
@@ -143,7 +147,7 @@ useSeoMeta({
     <section v-if="onrampCards.length" class="onramp" aria-label="Start here">
       <p class="onramp-lead">New here? Start with the short version:</p>
       <div class="onramp-cards">
-        <NuxtLink v-for="c in onrampCards" :key="c.slug" :to="c.to" class="onramp-card">
+        <NuxtLink v-for="c in onrampCards" :key="c.key" :to="c.to" class="onramp-card">
           <span class="onramp-card-title">{{ c.title }}<span class="onramp-arrow" aria-hidden="true">→</span></span>
           <span class="onramp-blurb">{{ c.blurb }}</span>
         </NuxtLink>
