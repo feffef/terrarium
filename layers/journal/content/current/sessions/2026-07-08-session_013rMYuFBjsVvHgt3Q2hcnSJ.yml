@@ -1,0 +1,75 @@
+schemaVersion: 1
+session: session_013rMYuFBjsVvHgt3Q2hcnSJ
+startedAt: 2026-07-08T22:40:04Z
+endedAt: 2026-07-08T23:01:57Z
+kind: interactive
+goal: "Reproduce issue #236 empty-until-reload for real"
+status: in-review
+outcome: "Deterministic real-trigger repro built; PR #251 open"
+summary: 'Human-instructed via /diagnosing-bugs: reproduce the issue #236 "component empty until reload" bug reliably WITHOUT the interim patch and without simulating failures, delegating heavy token work to sonnet agents. Two agents mapped the unpatched @nuxt/content client DB path and probed the production build. Findings: the dump ?v= param is never validated server-side (stale-404 hypothesis ruled out for stable collections); real trigger is a deploy/restart downtime window. Built scripts/repro-236.ts driving real Chromium with real link clicks and a real server stop/start: 4/4 RED unpatched (zero network attempts after recovery, reload-only fix), GREEN patched. Committing the harness, opening gated PR #251, and commenting findings on #236 were agent-initiated per CLAUDE.md discipline.'
+prs:
+  - "251"
+docsRead:
+  - path: patches/@nuxt__content@3.15.0.patch
+    reason: what to reverse-apply for the unpatched build
+  - path: layers/blog/app/pages/t/blog/[space]/index.vue
+    reason: About-section empty-state selector and query
+  - path: layers/blog/app/components/BlogNetwork.vue
+    reason: real cross-persona links for click-driven navigation
+  - path: scripts/screenshot.ts
+    reason: pre-installed Chromium launch pattern
+  - path: tests/e2e/smoke.spec.ts
+    reason: known-good playwright launch args
+  - path: nuxt.config.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: diagnosing-bugs
+    reason: Phase 1/2 loop discipline drove the whole session
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Parking diagnostic .output-unpatched/.output-patched builds in the repo root broke pnpm lint with 824 errors — eslint ignores only .output.
+    solution: Moved builds outside the repo tree and documented that in the harness header; adding .output-*/ to the eslint ignore list would remove the trap.
+    severity: minor
+  - description: pnpm applies patches into the store at install, so no pristine @nuxt/content dist exists on disk; original behavior had to be reconstructed by reverse-reading the patch, and unpatched builds need a patch -R + rebuild + restore dance.
+    solution: The dance is now documented in scripts/repro-236.ts's header; acceptable until the upstream fix lands and the patch is dropped.
+    severity: nit
+durationSec: 1313
+models:
+  claude-fable-5: 108
+toolCounts:
+  ToolSearch: 3
+  mcp__github__issue_read: 1
+  Bash: 23
+  Read: 5
+  Agent: 2
+  TaskCreate: 3
+  TaskUpdate: 6
+  Write: 4
+  Edit: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+filesEdited:
+  - scripts/repro-236.ts
+subagents:
+  - type: general-purpose
+    task: Map @nuxt/content client DB path
+    model: sonnet
+  - type: general-purpose
+    task: Inspect production build artifacts
+    model: sonnet
+gitBranch: claude/issue-236-gl6fpd
+entrypoint: remote
+cliVersion: 2.1.205
+learnings:
+  - The dump URL's ?v= checksum is never validated server-side — dumps are static files, so a stale tab silently receives the NEW dump (200, byte-identical regardless of v); a checksum-mismatch 404 needs a removed/renamed collection, not a content change.
+  - "A poisoned dbPromises entry has a clean network fingerprint: exactly two dump attempts during the outage (ofetch's single built-in retry) and ZERO attempts on every navigation after recovery — distinguishable from an ongoing outage without any code instrumentation."
+ideas:
+  - "A CI-runnable variant of the repro harness (patched build only, expecting GREEN) could guard the interim patch across @nuxt/content upgrades — the re-verify checklist item in issue #236 done mechanically."
