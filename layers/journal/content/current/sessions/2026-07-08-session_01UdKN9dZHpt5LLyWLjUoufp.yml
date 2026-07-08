@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01UdKN9dZHpt5LLyWLjUoufp
 startedAt: 2026-07-08T22:39:31Z
-endedAt: 2026-07-08T22:49:47Z
+endedAt: 2026-07-08T22:52:57Z
 kind: interactive
 goal: "Use addTypeTemplate for #routing declarations (#211)"
-status: in-review
-outcome: Swapped to addTypeTemplate; gate green, PR opened
+status: completed
+outcome: "Swapped to addTypeTemplate; gate green, PR #249 merged"
 summary: "Human-instructed via `/implement #211` (the explicit green-light for this human-only surface). Swapped the second `addTemplate` call in `modules/routing.ts` — the one writing `routing.d.ts` — for Kit's idiomatic `addTypeTemplate`, which self-registers the `.d.ts` into Nuxt's generated type references via the `prepare:types` hook. Left the runtime `nuxt.options.alias` (→ `routing.mjs`) and `tsconfig.node.json paths['#routing']` untouched, so ADR-0014's three alias wirings all still stand. Verified the full safety gate plus the issue's negative probe (`routingMap.nosuch` fails with the precise literal type in both an SFC and a tests/unit file). Ran `/code-review`; its one legitimate finding (ADR text drift) prompted an amending note on ADR-0014. Opened gated PR #249 and subscribed to it."
 prs:
   - "249"
@@ -33,16 +33,16 @@ frictions:
   - description: Guessed the ADR filename (0014-routing-virtual-module.md) from the ADR number; actual slug was 0014-build-time-virtual-routing-module.md.
     solution: Glob docs/adr/*.md first rather than constructing the path — CLAUDE.md already says read the directory.
     severity: nit
-durationSec: 616
+durationSec: 806
 models:
-  claude-opus-4-8: 96
+  claude-opus-4-8: 102
 toolCounts:
   ToolSearch: 5
-  Bash: 17
+  Bash: 18
   mcp__github__issue_read: 2
   Read: 7
   Glob: 1
-  Edit: 5
+  Edit: 6
   Write: 3
   Skill: 3
   Agent: 2
@@ -51,6 +51,7 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - modules/routing.ts
   - app/pages/_probe211.vue
