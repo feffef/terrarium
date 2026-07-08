@@ -36,6 +36,7 @@ import { $fetch, setup } from '@nuxt/test-utils/e2e'
 import { entryRoutes, renderAndCollectErrors } from '../support/e2e.ts'
 import { findPreinstalledChromium, findSystemChrome } from '../../scripts/chromium-path.ts'
 import { registerJournalE2E } from '../../layers/journal/tests/e2e/journal.e2e.ts'
+import { registerBlogE2E } from '../../layers/blog/tests/e2e/blog.e2e.ts'
 
 const chromiumPath = findPreinstalledChromium() ?? findSystemChrome()
 
@@ -82,4 +83,5 @@ describe('L2 smoke render', async () => {
 
   // ── Per-Tenant assertions, homed in each layer, sharing this one build ───────
   registerJournalE2E({ entryRoutes, renderAndCollectErrors })
+  registerBlogE2E()
 })
