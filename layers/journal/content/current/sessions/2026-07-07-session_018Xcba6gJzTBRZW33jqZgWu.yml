@@ -2,7 +2,7 @@ schemaVersion: 1
 session: session_018Xcba6gJzTBRZW33jqZgWu
 startedAt: 2026-07-07T07:59:04Z
 endedAt: 2026-07-07T08:19:32Z
-kind: interactive
+kind: delegated
 goal: Turn logged session frictions into merged fixes
 status: completed
 outcome: 3 fixes merged, 2 regressions escalated

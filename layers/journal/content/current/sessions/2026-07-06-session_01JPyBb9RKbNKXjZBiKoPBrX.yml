@@ -2,7 +2,7 @@ schemaVersion: 1
 session: session_01JPyBb9RKbNKXjZBiKoPBrX
 startedAt: 2026-07-06T04:51:18Z
 endedAt: 2026-07-06T05:49:15Z
-kind: interactive
+kind: delegated
 goal: Resolve all open PRs without CI edits
 status: completed
 outcome: Three PRs merged; five follow-up issues filed

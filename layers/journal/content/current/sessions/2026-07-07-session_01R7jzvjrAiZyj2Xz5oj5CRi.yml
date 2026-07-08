@@ -2,7 +2,7 @@ schemaVersion: 1
 session: session_01R7jzvjrAiZyj2Xz5oj5CRi
 startedAt: 2026-07-07T11:13:24Z
 endedAt: 2026-07-07T11:36:32Z
-kind: interactive
+kind: delegated
 goal: Run a frictions-to-fixes cycle
 status: completed
 outcome: 4 doc fixes merged, 1 regression flagged for a human
