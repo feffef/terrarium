@@ -1,10 +1,44 @@
 diff --git a/dist/runtime/internal/api.js b/dist/runtime/internal/api.js
-index 1567999a8a4ef0bf0ec10418bfd3b1d1064af24b..70b2eb99a3d467fe4d2ba966e405bce8cbf073cd 100644
+index 1567999a8a4ef0bf0ec10418bfd3b1d1064af24b..9b773f757dfc40909d207b72bac6637da50d64cb 100644
 --- a/dist/runtime/internal/api.js
 +++ b/dist/runtime/internal/api.js
-@@ -17,6 +17,13 @@ async function fetchContent(event, collection, path, options) {
+@@ -14,13 +14,59 @@ async function fetchContent(event, collection, path, options) {
+   };
+   return event ? await event.$fetch(url, fetchOptions) : await $fetch(url, fetchOptions);
+ }
++// Diagnostic: record a client-side dump-fetch failure so the real-world trigger
++// of the "component renders empty" bug (network blip vs. a checksum-mismatch 404
++// after a deploy vs. a 5xx) is captured the next time it happens, even if no
++// devtools are open. Appends to a small localStorage ring buffer readable as
++// JSON.parse(localStorage.__content_db_errors) and warns to the console. Fires
++// only after the retries above are exhausted — i.e. exactly when the collection
++// would otherwise be left blank until recovery. Best-effort; never throws.
++function recordDumpFetchFailure(collection, error) {
++  const entry = {
++    t: new Date().toISOString(),
++    collection: String(collection),
++    status: error?.statusCode ?? error?.response?.status ?? null,
++    message: error?.message ? String(error.message).slice(0, 200) : String(error)
++  };
++  try {
++    console.warn(
++      `[content-db] dump fetch for "${entry.collection}" failed after retries (content may render empty until the next navigation or a reload):`,
++      entry
++    );
++  } catch {
++  }
++  try {
++    const key = "__content_db_errors";
++    const log = JSON.parse(window.localStorage.getItem(key) || "[]");
++    log.push(entry);
++    while (log.length > 25) log.shift();
++    window.localStorage.setItem(key, JSON.stringify(log));
++  } catch {
++  }
++}
  export async function fetchDatabase(event, collection) {
-   return fetchContent(event, collection, "sql_dump.txt", {
+-  return fetchContent(event, collection, "sql_dump.txt", {
++  const options = {
      responseType: "text",
 +    // Ride out a transient network blip within a single query. The stock $fetch
 +    // default (retry: 1 for GET) gives only two attempts; when both fail the
@@ -16,6 +50,20 @@ index 1567999a8a4ef0bf0ec10418bfd3b1d1064af24b..70b2eb99a3d467fe4d2ba966e405bce8
      headers: {
        "content-type": "text/plain"
      }
+-  });
++  };
++  if (!import.meta.client) {
++    return fetchContent(event, collection, "sql_dump.txt", options);
++  }
++  try {
++    return await fetchContent(event, collection, "sql_dump.txt", options);
++  } catch (error) {
++    recordDumpFetchFailure(collection, error);
++    throw error;
++  }
+ }
+ export async function fetchQuery(event, collection, sql) {
+   return fetchContent(event, collection, "query", {
 diff --git a/dist/runtime/internal/database.client.js b/dist/runtime/internal/database.client.js
 index deeb56132000a83f093493713d75856538863a3e..9be1d35a51eccb5ae4a190cb81e68410cb4ef5d7 100644
 --- a/dist/runtime/internal/database.client.js
