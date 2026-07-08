@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_014i7ctF8d56WnSorhtSNTUw
 startedAt: 2026-07-08T05:54:20Z
-endedAt: 2026-07-08T08:04:18Z
+endedAt: 2026-07-08T08:08:14Z
 kind: interactive
 goal: Fix component rendering permanently empty on nav
-status: in-review
-outcome: Root-caused to @nuxt/content client DB; patched + regression test
+status: completed
+outcome: Merged — @nuxt/content client DB patched + regression test + telemetry
 summary: "Human-reported bug: following a link occasionally left a component (the About section on a blog Persona page) PERMANENTLY empty until a full reload. I first misdiagnosed it as a transient latency flash (client content dumps load lazily after nav) and shipped a warm-the-DB plugin + opened PR #235 — WRONG: I never reproduced the permanent case, only a self-correcting transient. After the user corrected me (it stays empty until reload), I built a deterministic red-capable loop (abort the first N sql_dump.txt fetches during a client nav) and found the true root cause: @nuxt/content's client loader caches the collection load promise and only evicts it on success, so a transient dump-fetch failure that outlasts $fetch's one retry leaves a REJECTED promise cached, poisoning that collection until reload. Fix (agent-authored on the user's bug report): a committed pnpm patch of @nuxt/content — retry the dump fetch + evict the promise on failure — plus a red-capable e2e regression test. Replaced the warming commit via force-push; full gate green. On the user's request (and healthy skepticism of the analysis) I also added client-side telemetry (localStorage ring buffer of dump-fetch failures) and opened tracking issue #236 framing the root cause as an unconfirmed hypothesis to verify against a real occurrence."
 prs:
   - "235"
@@ -55,26 +55,27 @@ frictions:
   - description: A newly added app/plugins plugin registered in types but not at runtime across several prod builds (stale .nuxt); wasted rebuilds before a clean rm -rf .nuxt .output picked it up. (Plugin later removed as the wrong fix.)
     solution: A fresh plugin's runtime registration can need a clean .nuxt; rm -rf .nuxt .output when a plugin seems bundled-but-not-running.
     severity: minor
-durationSec: 7798
+durationSec: 8034
 models:
-  claude-opus-4-8: 528
+  claude-opus-4-8: 544
   <synthetic>: 1
 toolCounts:
-  Bash: 180
+  Bash: 181
   Read: 26
   ToolSearch: 8
   mcp__github__search_issues: 2
   Write: 25
-  Edit: 20
+  Edit: 21
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 3
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 6
+  mcp__Claude_Code_Remote__send_later: 2
   Skill: 2
   mcp__github__update_pull_request: 2
   WebFetch: 1
   mcp__github__issue_write: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/repro-empty-about.ts
   - layers/blog/app/pages/t/blog/[space]/index.vue
