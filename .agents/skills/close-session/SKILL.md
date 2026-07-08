@@ -13,3 +13,10 @@ You've reached **Session closure** — run the two closing actions:
 **Closing isn't one-shot.** If you do more work after closing, invoke
 `/close-session` again — re-logging self-heals, overwriting the log with the
 fuller state.
+
+**Dispatched worktree-isolated impl agents must NOT self-invoke this Skill.**
+Such agents share the parent session id with the orchestrator and with each
+other, and this Skill writes to a single shared per-session scratch file — a
+second invocation silently clobbers the first, erasing the orchestrating
+session's own log content. The orchestrating session is the sole log author for
+the run; a dispatched impl agent just implements, pushes, and hands back the PR.

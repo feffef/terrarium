@@ -54,6 +54,7 @@ Phase 1 is done when the loop is **tight** and **red-capable**: you can name **o
 
 - [ ] **Red-capable** — it drives the actual bug code path and asserts the **user's exact symptom**, so it can go red on this bug and green once fixed. Not "runs without erroring" — it must be able to _catch this specific bug_.
 - [ ] **Deterministic** — same verdict every run (flaky bugs: a pinned, high reproduction rate, per above).
+- [ ] **Persistent, if that's what was reported** — confirm the failure's *persistence* matches the user's report before hypothesizing a fix: a transient/self-healing occurrence and a persistent one are different bugs, and fixing the wrong one doesn't count as reproducing the user's symptom.
 - [ ] **Fast** — seconds, not minutes.
 - [ ] **Agent-runnable** — you can run it unattended; a human in the loop only via `scripts/hitl-loop.template.sh`.
 
