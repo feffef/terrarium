@@ -8,6 +8,7 @@ role: >-
   gathering; the Skill writes the prose and opens one gated PR (ADR-0003) that
   auto-merges once the safety gate is green, never the `log-session`
   direct-to-main path. The Journal's Space landing is a live
-  dashboard that surfaces new Digests automatically — a standing version of what
-  the deferred `sync` job will formalize. Reach for it to catch the Journal up
-  after a run of activity.
+  dashboard that surfaces new Digests automatically. Fired nightly by a Routine,
+  this Skill is the first live piece of the `sync` remit (ADR-0003/0015) — no
+  longer a deferred job. Reach for it manually to catch the Journal up after a
+  run of activity the schedule hasn't covered yet.

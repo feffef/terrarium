@@ -6,6 +6,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   DERIVED_REASON,
+  DERIVED_REASON_COMMAND,
   DERIVED_REASON_EDITED,
   extractTrace,
   parseTranscript,
@@ -15,9 +16,17 @@ import {
 import { validateEntry } from '../../scripts/log-session.ts'
 
 // A tiny synthetic transcript: two assistant turns, a Read, an Edit, a Skill, a
-// subagent, a noise read (node_modules), spanning two timestamps.
+// subagent, a noise read (node_modules), spanning two timestamps — plus the two
+// harness shapes a slash-command expansion arrives in (string content and a text
+// block), and a tool_result carrying a command tag that must NOT count.
 const transcript = [
-  { type: 'user', sessionId: 'session_01ABC', cwd: '/repo', gitBranch: 'feat/x', entrypoint: 'remote', version: '2.1.0', timestamp: '2026-07-06T10:00:00Z', message: { content: 'go' } },
+  { type: 'user', sessionId: 'session_01ABC', cwd: '/repo', gitBranch: 'feat/x', entrypoint: 'remote', version: '2.1.0', timestamp: '2026-07-06T10:00:00Z', message: { content: '<command-message>digest is running…</command-message>\n<command-name>/digest</command-name>' } },
+  { type: 'user', timestamp: '2026-07-06T10:00:01Z', message: { content: [
+    { type: 'text', text: '<command-name>frictions-to-fixes</command-name>\n<command-args></command-args>' },
+  ] } },
+  { type: 'user', timestamp: '2026-07-06T10:00:02Z', message: { content: [
+    { type: 'tool_result', content: 'transcript excerpt: <command-name>/not-invoked</command-name>' },
+  ] } },
   { type: 'assistant', timestamp: '2026-07-06T10:00:10.000Z', message: { model: 'claude-opus-4-8', content: [
     { type: 'tool_use', name: 'Read', input: { file_path: '/repo/CONTEXT.md' } },
     { type: 'tool_use', name: 'Read', input: { file_path: '/repo/node_modules/dep/index.js' } },
@@ -51,7 +60,12 @@ describe('extractTrace()', () => {
   it('filters noise, then relativizes repo paths to how the agent cites them', () => {
     expect(trace.filesRead).toEqual(['CONTEXT.md', 'app.ts']) // node_modules dropped, cwd stripped
     expect(trace.filesEdited).toEqual(['app.ts'])
-    expect(trace.skillsUsed).toEqual(['tdd'])
+  })
+
+  it('unions Skill tool calls with slash-command expansions, ignoring tool_results', () => {
+    expect(trace.skillsUsed).toEqual(['tdd', 'digest', 'frictions-to-fixes']) // '/not-invoked' excluded
+    expect(trace.commandSkills).toEqual(['digest', 'frictions-to-fixes'])
+    expect(trace.toolCounts.Skill).toBe(1) // the expansion is not a tool call
   })
 })
 
@@ -90,9 +104,13 @@ describe('stitch()', () => {
     expect(appTs).toEqual([{ path: 'app.ts', reason: DERIVED_REASON_EDITED }])
   })
 
-  it('folds an observed-but-uncited skill in with the placeholder reason', () => {
+  it('folds an observed-but-uncited skill in, with provenance for command-invoked ones', () => {
     const skills = entry.skillsUsed as { name: string; reason: string }[]
-    expect(skills).toEqual([{ name: 'tdd', reason: DERIVED_REASON }])
+    expect(skills).toEqual([
+      { name: 'tdd', reason: DERIVED_REASON },
+      { name: 'digest', reason: DERIVED_REASON_COMMAND },
+      { name: 'frictions-to-fixes', reason: DERIVED_REASON_COMMAND },
+    ])
   })
 
   it('drops empty mechanical collections but a stitched entry stays schema-valid', () => {

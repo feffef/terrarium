@@ -2,7 +2,7 @@ schemaVersion: 1
 session: session_014HzP8T3N7rxNyV79iipWWG
 startedAt: 2026-07-06T21:20:50Z
 endedAt: 2026-07-06T22:22:11Z
-kind: interactive
+kind: delegated
 goal: Build the Atlas field-guide Tenant
 status: completed
 outcome: All 12 stories merged to main

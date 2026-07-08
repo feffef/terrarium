@@ -1,7 +1,7 @@
 session: session_01KyDcQ3hrSfcd19xxFNbKd7
 startedAt: 2026-07-06T10:50:00Z
 endedAt: 2026-07-06T11:25:00Z
-kind: interactive
+kind: delegated
 goal: Land open improvement issues autonomously
 status: completed
 outcome: 11 issues merged across 5 PRs

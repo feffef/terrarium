@@ -79,9 +79,10 @@ export function frictionCount(sessions: SessionDoc[]): number {
   return sessions.reduce((n, s) => n + s.frictions.length, 0)
 }
 
-export function kindCounts(sessions: SessionDoc[]): { interactive: number; autonomous: number } {
+export function kindCounts(sessions: SessionDoc[]): { interactive: number; delegated: number; autonomous: number } {
   return {
     interactive: sessions.filter((s) => s.kind === 'interactive').length,
+    delegated: sessions.filter((s) => s.kind === 'delegated').length,
     autonomous: sessions.filter((s) => s.kind === 'autonomous').length,
   }
 }

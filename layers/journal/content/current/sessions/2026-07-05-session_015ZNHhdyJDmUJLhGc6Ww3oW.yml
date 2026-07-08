@@ -2,7 +2,7 @@ schemaVersion: 1
 session: session_015ZNHhdyJDmUJLhGc6Ww3oW
 startedAt: 2026-07-05T19:10:00Z
 endedAt: 2026-07-05T22:28:21Z
-kind: interactive
+kind: delegated
 goal: Implement the fable code-review issues
 status: completed
 outcome: Seven PRs merged; two gate PRs parked

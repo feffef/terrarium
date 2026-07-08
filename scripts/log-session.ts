@@ -85,7 +85,7 @@ export function expectedFilename(entry: SessionEntry): string {
 const authoredScratchSchema = z
   .object({
     session: z.string(),
-    kind: z.enum(['interactive', 'autonomous']).optional(),
+    kind: z.enum(['interactive', 'delegated', 'autonomous']).optional(),
     goal: z.string(),
     status: z.enum(['completed', 'in-review', 'partial', 'blocked', 'abandoned']),
     outcome: z.string(),

@@ -2,7 +2,7 @@ schemaVersion: 1
 session: session_01HPGApXfA98dPyH2zJP9Fge
 startedAt: 2026-07-07T19:02:44Z
 endedAt: 2026-07-07T19:31:00Z
-kind: interactive
+kind: delegated
 goal: Turn logged session frictions into fixes
 status: completed
 outcome: One fix merged, one escalated to human

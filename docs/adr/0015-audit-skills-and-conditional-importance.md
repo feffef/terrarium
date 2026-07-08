@@ -8,6 +8,13 @@ Status: Accepted
 > Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
 > `tenants/…` paths below reflect the pre-rename layout.
 
+> **Amended (2026-07-08).** "A schedule is deferred, exactly as `digest`'s trigger
+> is" (Decision, cadence bullet) is now historical: `digest` has since gained a
+> **nightly schedule** — an external Routine fires `/digest` daily, making it the
+> first live autonomous job (Skill + trigger, ADR-0005; its PR lands per
+> ADR-0003's digest auto-merge amendment). `audit-skills` itself remains
+> on-demand; **its** schedule is still deferred.
+
 ## Context
 
 The Skill set is the project's core deliverable (ADR-0005), and the loop only ever

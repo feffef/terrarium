@@ -9,6 +9,13 @@
 // IO is a thin shell. Read-tool paths are the only source of `filesRead` — a
 // `cat`/`grep` inspection is invisible here by design (see the ADR amendment).
 //
+// `skillsUsed` has two derived sources: `Skill` tool_use blocks, and slash-command
+// expansions in user turns (`<command-name>`). The second exists because a Skill
+// invoked as `/name` — the shape every Routine-fired session starts with, e.g. the
+// nightly `/digest` — is expanded by the harness *before* the model runs, so no
+// Skill tool call ever appears in the transcript and tool_use-only derivation
+// left every scheduled run's own entry Skill untagged.
+//
 // Usage:  tsx scripts/session-trace.ts <transcript.jsonl>
 //   Prints the derived trace as JSON.
 import { readFileSync } from 'node:fs'
@@ -65,6 +72,10 @@ export interface MechanicalTrace {
   filesRead: string[]
   filesEdited: string[]
   skillsUsed: string[]
+  /** The subset of `skillsUsed` seen only as a slash-command expansion — kept
+   *  alongside (not instead of) the union so the stitch can annotate provenance
+   *  without consumers having to re-union two lists. */
+  commandSkills: string[]
   subagents: SubagentRef[]
   prSignals: string[]
 }
@@ -80,6 +91,36 @@ export function isContentPath(p: string | undefined): p is string {
 
 function dedup(xs: (string | undefined)[]): string[] {
   return [...new Set(xs.filter((x): x is string => !!x))]
+}
+
+/** The marker the harness leaves in a user turn when a slash command ran: the
+ *  Skill's instructions are injected at expansion time, so the model is told NOT
+ *  to also call the Skill tool — this tag is the only transcript evidence. */
+const COMMAND_NAME_RE = /<command-name>([^<]*)<\/command-name>/g
+
+/** A user turn's own text — a plain string, or the `text` blocks of an array.
+ *  tool_result blocks are deliberately excluded: a session that Reads another
+ *  transcript (log tooling does) would otherwise "invoke" every command in it. */
+function userText(content: unknown): string[] {
+  if (typeof content === 'string') return [content]
+  if (!Array.isArray(content)) return []
+  return content
+    .filter((b): b is { type: string; text: string } =>
+      !!b && typeof b === 'object' && (b as { type?: string }).type === 'text'
+      && typeof (b as { text?: unknown }).text === 'string')
+    .map((b) => b.text)
+}
+
+/** Skill names invoked as slash commands in a user turn (`/digest` → `digest`). */
+export function commandSkillNames(content: unknown): string[] {
+  const names: string[] = []
+  for (const text of userText(content)) {
+    for (const m of text.matchAll(COMMAND_NAME_RE)) {
+      const name = (m[1] ?? '').trim().replace(/^\//, '')
+      if (name) names.push(name)
+    }
+  }
+  return names
 }
 
 /** Second-precision UTC (`…:SSZ`) — the canonical form the `sessions` schema's
@@ -110,6 +151,7 @@ export function extractTrace(records: Record<string, unknown>[]): MechanicalTrac
   const reads: (string | undefined)[] = []
   const edits: (string | undefined)[] = []
   const skills: (string | undefined)[] = []
+  const commandSkills: string[] = []
   const subagents: SubagentRef[] = []
   const prSignals: string[] = []
 
@@ -123,6 +165,7 @@ export function extractTrace(records: Record<string, unknown>[]): MechanicalTrac
     }
 
     const content = msg?.content
+    if (rec.type === 'user') commandSkills.push(...commandSkillNames(content))
     if (!Array.isArray(content)) continue
     for (const block of content) {
       if (!block || typeof block !== 'object') continue
@@ -178,7 +221,8 @@ export function extractTrace(records: Record<string, unknown>[]): MechanicalTrac
     toolCounts,
     filesRead: dedup(reads).filter(isContentPath).map(rel),
     filesEdited: dedup(edits).filter(isContentPath).map(rel),
-    skillsUsed: dedup(skills),
+    skillsUsed: dedup([...skills, ...commandSkills]),
+    commandSkills: dedup(commandSkills),
     subagents,
     prSignals,
   }
@@ -200,13 +244,18 @@ export const DERIVED_REASON = '(no reason given)'
  *  path still lands in `filesRead` even though it errored and read nothing. */
 export const DERIVED_REASON_EDITED = '(read before editing)'
 
+/** The reason for a folded-in `skillsUsed` entry observed only as a slash-command
+ *  expansion (see `commandSkillNames`) — the shape of every Routine-fired run. It
+ *  doubles as the explanation for why `toolCounts` shows no `Skill` call for it. */
+export const DERIVED_REASON_COMMAND = '(invoked as a slash command)'
+
 /** The interpretive half the live agent writes to the scratch during the session.
  *  Timings/models/etc. are NOT here — those are derived. `session`/`kind` are the
  *  only identity fields the agent must supply; everything mechanical comes from
  *  the trace. */
 export interface AuthoredScratch {
   session: string
-  kind?: 'interactive' | 'autonomous'
+  kind?: 'interactive' | 'delegated' | 'autonomous'
   goal: string
   status: 'completed' | 'in-review' | 'partial' | 'blocked' | 'abandoned'
   outcome: string
@@ -253,7 +302,9 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
     docsRead: mergeRefs(authored.docsRead ?? [], trace.filesRead, 'path', (path) =>
       editedSet.has(path) ? DERIVED_REASON_EDITED : DERIVED_REASON,
     ),
-    skillsUsed: mergeRefs(authored.skillsUsed ?? [], trace.skillsUsed, 'name'),
+    skillsUsed: mergeRefs(authored.skillsUsed ?? [], trace.skillsUsed, 'name', (name) =>
+      trace.commandSkills.includes(name) ? DERIVED_REASON_COMMAND : DERIVED_REASON,
+    ),
     frictions: authored.frictions,
   }
   // Mechanical fields — include only when they carry signal.

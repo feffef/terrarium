@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Frictions to Fixes
 
-The manual precursor to the deferred `consolidate`/`codify` jobs (ADR-0009): read
+The precursor to the deferred `consolidate`/`codify` jobs (ADR-0009): read
 the **frictions** every session honestly logged, turn the ones worth retiring into
 issues, dispatch fixes, then **review and land them yourself**. **Autonomy is the
 goal** — you act as the mid-term **review-agent** that ADR-0003 foresaw (the impl
@@ -15,7 +15,8 @@ escalating to a human only when a change is genuinely high-risk. Harvest broadly
 a friction is worth an issue when it recurs or stings and a change can retire it
 without touching a human-only surface — but keep the hard ones rare (§3).
 
-Run it when asked, or after a batch of sessions has piled up unaddressed friction.
+Run it when asked (a Routine also fires it on a schedule), or after a batch of
+sessions has piled up unaddressed friction.
 
 ## 1. Survey & screen the frictions — in a subagent
 

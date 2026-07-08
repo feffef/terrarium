@@ -167,6 +167,17 @@ span several branches or PRs, or none; its log is authored regardless
 of where the work went, or whether any code was committed at all. Session logs
 are ground truth, not a projection of repo state (see Journal).
 
+Every session log records the Session's **kind** — where it sat on the autonomy
+spectrum, judged by **who prompted**: **interactive** (a human prompted again
+after kickoff — steered, answered, redirected), **delegated** (exactly one human
+prompt, the kickoff, with no human prompt after it), or **autonomous** (no human
+prompt at all — the Session was started by a schedule, not a person). Prompts
+injected by machinery — a scheduled self check-in, a webhook event, a hook
+reminder — arrive as user messages but are **not** human prompts and never make
+a Session interactive. Kind is descriptive of what happened, never a grant of
+authority: what a Session may merge is governed elsewhere and does not vary by
+kind.
+
 ### Session closure
 The point at which a **Session**'s active work is **complete and in a coherent,
 honest state** — the trigger for authoring its **session log**. Closure is
@@ -234,9 +245,10 @@ autonomous jobs — alongside `sync`, `drift-check`, `consolidate`, and `triage`
 that *tend and consolidate* the Platform rather than decide what should exist. (A
 chartered job is a *remit*, realised by one or more Skills: `sync` is served by
 `digest` and `audit-skills` today — see ADR-0003/0015.)
-**Planned concept, not yet built:** no autonomous jobs run today. The term is
-defined here so Skills and journal content can refer to it consistently until it
-exists.
+**Codify itself is planned, not yet built** — no `codify` job runs today. (Chartered
+jobs in general are no longer hypothetical: the `sync` remit's `digest` Skill runs
+on a nightly schedule — see ADR-0003/0015.) The term is defined here so Skills and
+journal content can refer to it consistently until it exists.
 
 ### Spawn (a Tenant / Space)
 To add a new Tenant or Space to the Platform via source changes on a feature

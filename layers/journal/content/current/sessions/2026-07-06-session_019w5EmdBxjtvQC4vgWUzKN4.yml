@@ -2,7 +2,7 @@ schemaVersion: 1
 session: session_019w5EmdBxjtvQC4vgWUzKN4
 startedAt: 2026-07-06T13:12:00Z
 endedAt: 2026-07-06T13:39:09Z
-kind: interactive
+kind: delegated
 goal: Turn logged frictions into merged doc fixes
 status: completed
 outcome: 4 doc fixes merged, 3 escalated

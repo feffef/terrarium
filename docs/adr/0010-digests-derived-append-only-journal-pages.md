@@ -7,6 +7,13 @@ Status: Accepted
 > Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
 > `tenants/…` paths below reflect the pre-rename layout.
 
+> **Amended (2026-07-08).** The "chartered, still-deferred `sync` job" below is
+> **no longer fully deferred**: the `digest` Skill now runs nightly via an
+> external Routine (Skill + trigger = an autonomous job, ADR-0005), so the `sync`
+> remit is partially live — realised by `digest` (scheduled) and `audit-skills`
+> (still on-demand; see ADR-0015). The live-dashboard point below stands
+> unchanged.
+
 ## Context
 
 The Journal Tenant (ADR-0008) named two content kinds: **Inventories** (curated,

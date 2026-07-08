@@ -2,7 +2,7 @@ schemaVersion: 1
 session: session_018xMFqb4etS4pNw2nFxEx8T
 startedAt: 2026-07-07T16:58:43Z
 endedAt: 2026-07-07T17:15:31Z
-kind: interactive
+kind: delegated
 goal: Run frictions-to-fixes end to end
 status: completed
 outcome: 4 issues filed, 2 PRs merged
