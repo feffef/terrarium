@@ -1,0 +1,2 @@
+patchedDependencies:
+  '@nuxt/content@3.15.0': patches/@nuxt__content@3.15.0.patch

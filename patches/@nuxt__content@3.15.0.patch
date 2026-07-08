@@ -1,0 +1,59 @@
+diff --git a/dist/runtime/internal/api.js b/dist/runtime/internal/api.js
+index 1567999a8a4ef0bf0ec10418bfd3b1d1064af24b..70b2eb99a3d467fe4d2ba966e405bce8cbf073cd 100644
+--- a/dist/runtime/internal/api.js
++++ b/dist/runtime/internal/api.js
+@@ -17,6 +17,13 @@ async function fetchContent(event, collection, path, options) {
+ export async function fetchDatabase(event, collection) {
+   return fetchContent(event, collection, "sql_dump.txt", {
+     responseType: "text",
++    // Ride out a transient network blip within a single query. The stock $fetch
++    // default (retry: 1 for GET) gives only two attempts; when both fail the
++    // client DB caches a rejected load promise and the collection's content is
++    // stuck empty until a full page reload. A few backed-off retries turn the
++    // common short blip into a self-healing delay instead of a permanent blank.
++    retry: 4,
++    retryDelay: 300,
+     headers: {
+       "content-type": "text/plain"
+     }
+diff --git a/dist/runtime/internal/database.client.js b/dist/runtime/internal/database.client.js
+index deeb56132000a83f093493713d75856538863a3e..9be1d35a51eccb5ae4a190cb81e68410cb4ef5d7 100644
+--- a/dist/runtime/internal/database.client.js
++++ b/dist/runtime/internal/database.client.js
+@@ -12,16 +12,31 @@ export function loadDatabaseAdapter(collection) {
+       if (!dbPromises.has("_")) {
+         dbPromises.set("_", initializeDatabase());
+       }
+-      db = await dbPromises.get("_");
+-      dbPromises.delete("_");
++      try {
++        db = await dbPromises.get("_");
++      } finally {
++        // Evict even on rejection so a transient failure to init the WASM engine
++        // can be retried by a later query, instead of caching a rejected promise
++        // that poisons every subsequent load until a full page reload.
++        dbPromises.delete("_");
++      }
+     }
+     if (!loadedCollections.has(collectionKey)) {
+       if (!dbPromises.has(collectionKey)) {
+         dbPromises.set(collectionKey, loadCollectionDatabase(collection2));
+       }
+-      await dbPromises.get(collectionKey);
+-      loadedCollections.set(collectionKey, "loaded");
+-      dbPromises.delete(collectionKey);
++      try {
++        await dbPromises.get(collectionKey);
++        loadedCollections.set(collectionKey, "loaded");
++      } finally {
++        // Evict the in-flight load promise on BOTH success and failure. The stock
++        // code only deletes after a successful await, so a rejected load (e.g. a
++        // transient sql_dump.txt fetch failure that outlasts $fetch's retries)
++        // stays cached in dbPromises and every later query for this collection
++        // re-awaits the same rejected promise — leaving the component stuck empty
++        // for the life of the page. Deleting here lets the next query retry.
++        dbPromises.delete(collectionKey);
++      }
+     }
+     return db;
+   }
