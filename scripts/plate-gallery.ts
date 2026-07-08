@@ -18,16 +18,17 @@
 // full-page. The compositing happens in the browser's own layout engine.
 //
 // Usage:
-//   pnpm exec tsx scripts/plate-gallery.ts <base-url> <out.png> [biome/slug ...]
+//   pnpm exec tsx scripts/plate-gallery.ts [base-url] <out.png> [biome/slug ...] [--dev]
 //
-// Requires a running server at <base-url> — this script only navigates to it,
-// it doesn't start one. Bring one up with `pnpm exec tsx scripts/preview.ts
-// start` (it prints the `URL=` to pass here) and tear it down with `preview.ts
-// stop <pid>` when done. With no `biome/slug` args, it renders every specimen
-// plate in every
-// Atlas biome (discovered from `layers/atlas/content/*/pages/*.md`). Pass
-// specific refs to compare a subset, e.g.:
-//   pnpm exec tsx scripts/plate-gallery.ts http://localhost:3000 /tmp/gallery.png \
+// Omit `base-url` and the script starts its OWN preview server (on an ephemeral
+// port, via `scripts/preview.ts`) and tears it down when done — so there's no
+// separate server to start or `pkill` afterwards (#240). Pass an explicit
+// `base-url` (anything starting `http`) to point at an already-running server
+// instead. `--dev` uses `nuxt dev` for the self-started server. With no
+// `biome/slug` args, it renders every specimen plate in every Atlas biome
+// (discovered from `layers/atlas/content/*/pages/*.md`). Pass specific refs to
+// compare a subset, e.g.:
+//   pnpm exec tsx scripts/plate-gallery.ts /tmp/gallery.png \
 //     canopy/lumina-fabulae canopy/aranea-patiens
 import { existsSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -35,15 +36,19 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { chromium } from 'playwright-core'
 import { resolveChromiumPath } from './chromium-path'
+import { startPreview, stopPreview, type PreviewServer } from './preview'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const ATLAS_CONTENT_DIR = join(root, 'layers/atlas/content')
 
 const USAGE =
-  'Usage: pnpm exec tsx scripts/plate-gallery.ts <base-url> <out.png> [biome/slug ...]\n' +
-  '  <base-url>    a running pnpm dev/preview server, e.g. http://localhost:3000\n' +
+  'Usage: pnpm exec tsx scripts/plate-gallery.ts [base-url] <out.png> [biome/slug ...] [--dev]\n' +
+  '  [base-url]    a running server (e.g. http://localhost:3000); OMIT it and the\n' +
+  '                script starts and tears down its own preview server.\n' +
+  '  <out.png>     where to write the gallery image.\n' +
   '  [biome/slug]  zero or more specimen refs, e.g. canopy/lumina-fabulae; with\n' +
-  '                none given, every specimen plate in every Atlas biome is rendered.'
+  '                none given, every specimen plate in every Atlas biome is rendered.\n' +
+  '  --dev         when self-starting a server, use `nuxt dev` instead of preview.'
 
 interface PlateRef {
   space: string
@@ -153,8 +158,15 @@ function buildGalleryHtml(plates: CapturedPlate[], baseUrl: string): string {
 }
 
 async function main(): Promise<void> {
-  const [baseUrl, out, ...refArgs] = process.argv.slice(2)
-  if (!baseUrl || !out) {
+  const argv = process.argv.slice(2)
+  const dev = argv.includes('--dev')
+  const positionals = argv.filter((arg) => arg !== '--dev')
+
+  // A leading `http…` positional is an explicit base-url; otherwise we self-start
+  // a server and the positionals are just `<out.png> [refs…]`.
+  const providedBase = /^https?:\/\//.test(positionals[0] ?? '') ? positionals[0] : undefined
+  const [out, ...refArgs] = providedBase === undefined ? positionals : positionals.slice(1)
+  if (!out) {
     console.error(USAGE)
     process.exit(1)
   }
@@ -178,6 +190,19 @@ async function main(): Promise<void> {
   } catch (err) {
     console.error(err instanceof Error ? err.message : String(err))
     process.exit(1)
+  }
+
+  // Bring up our own server when no base-url was given; tear it down in `finally`.
+  let server: PreviewServer | undefined
+  let baseUrl = providedBase
+  if (baseUrl === undefined) {
+    try {
+      server = await startPreview({ dev })
+      baseUrl = server.url
+    } catch (err) {
+      console.error(err instanceof Error ? err.message : String(err))
+      process.exit(1)
+    }
   }
 
   const browser = await chromium.launch({ executablePath: chromiumPath, args: ['--no-sandbox'] })
@@ -208,6 +233,7 @@ async function main(): Promise<void> {
   } finally {
     await browser.close()
     rmSync(tmpDir, { recursive: true, force: true })
+    if (server) await stopPreview(server.pid)
   }
 }
 

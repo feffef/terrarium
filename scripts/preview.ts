@@ -43,9 +43,10 @@
 // overlay makes it wrong for a trusted screenshot — see CLAUDE.md).
 import { spawn, type ChildProcess } from 'node:child_process'
 import { createServer } from 'node:net'
-import { existsSync, openSync, closeSync, readFileSync, rmSync } from 'node:fs'
+import { existsSync, openSync, closeSync, readFileSync, realpathSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
+import { fileURLToPath } from 'node:url'
 import { captureScreenshot } from './screenshot'
 
 const HOST = '127.0.0.1'
@@ -115,6 +116,7 @@ function spawnServer(port: number, dev: boolean, logPath: string): ChildProcess 
         env,
       })
   closeSync(fd)
+  child.unref() // don't keep our own event loop alive on the child's account
   return child
 }
 
@@ -200,15 +202,61 @@ async function killGroup(pid: number): Promise<void> {
   signal('SIGKILL')
 }
 
-function ensureBuiltOrExit(dev: boolean): void {
+function ensureBuilt(dev: boolean): void {
   if (dev) return
   if (!existsSync(SERVER_ENTRY)) {
-    console.error(
+    throw new Error(
       `No built server at \`${SERVER_ENTRY}\`. Run \`pnpm build\` first, ` +
         'or pass --dev to use the dev server.',
     )
-    process.exit(1)
   }
+}
+
+/** A running server owned by the caller. `pid` is the process-group leader —
+ *  hand it to `stopPreview` (or `preview.ts stop`) to tear the server down. */
+export interface PreviewServer {
+  port: number
+  url: string
+  pid: number
+  logPath: string
+}
+
+/**
+ * Start a `preview` (or, with `dev`, a `nuxt dev`) server on its OWN ephemeral
+ * port and resolve once it answers HTTP. The returned handle's `pid` must be
+ * passed to `stopPreview` when done. Exported so other scripts
+ * (`scripts/plate-gallery.ts`, ad-hoc probes) can manage a server without
+ * re-hand-rolling the `pkill` dance this whole file exists to kill (#240).
+ *
+ * Throws — with a "likely causes" diagnostic already printed to stderr — if the
+ * server can't be built or fails to come up; the failed child is cleaned up
+ * first, so a throw never leaks a process.
+ */
+export async function startPreview(opts: { dev?: boolean } = {}): Promise<PreviewServer> {
+  const dev = opts.dev ?? false
+  ensureBuilt(dev)
+  const port = await pickFreePort()
+  const logPath = logPathFor(port)
+  const child = spawnServer(port, dev, logPath)
+  const pid = child.pid
+  if (!(await waitReady(port, child)) || pid === undefined) {
+    diagnose(port, child, dev, logPath)
+    if (pid !== undefined) await killGroup(pid)
+    try {
+      rmSync(logPath)
+    } catch {
+      // best-effort cleanup
+    }
+    throw new Error(`preview server did not become ready on port ${port}`)
+  }
+  return { port, url: `http://${HOST}:${port}`, pid, logPath }
+}
+
+/** Tear down a server started by `startPreview`. Always resolves — a process
+ *  that's already gone is success, not an error — so teardown is never a
+ *  dropped-step footgun. */
+export async function stopPreview(pid: number): Promise<void> {
+  await killGroup(pid)
 }
 
 async function doShot(args: string[], dev: boolean): Promise<number> {
@@ -222,18 +270,17 @@ async function doShot(args: string[], dev: boolean): Promise<number> {
     console.error(`Invalid size "${sizeArg}" — expected <width>x<height>, e.g. 1280x1600.`)
     return 1
   }
-  ensureBuiltOrExit(dev)
 
-  const port = await pickFreePort()
-  const logPath = logPathFor(port)
-  const child = spawnServer(port, dev, logPath)
-  const path = route.startsWith('/') ? route : `/${route}`
-  const url = `http://${HOST}:${port}${path}`
+  let server: PreviewServer
   try {
-    if (!(await waitReady(port, child))) {
-      diagnose(port, child, dev, logPath)
-      return 1
-    }
+    server = await startPreview({ dev })
+  } catch (err) {
+    console.error(err instanceof Error ? err.message : String(err))
+    return 1
+  }
+  const path = route.startsWith('/') ? route : `/${route}`
+  const url = `${server.url}${path}`
+  try {
     captureScreenshot(url, out, windowSize)
     console.log(`Wrote ${out} (${url})`)
     return 0
@@ -241,9 +288,9 @@ async function doShot(args: string[], dev: boolean): Promise<number> {
     console.error(err instanceof Error ? err.message : String(err))
     return 1
   } finally {
-    if (child.pid !== undefined) await killGroup(child.pid)
+    await stopPreview(server.pid)
     try {
-      rmSync(logPath)
+      rmSync(server.logPath)
     } catch {
       // best-effort cleanup
     }
@@ -251,21 +298,18 @@ async function doShot(args: string[], dev: boolean): Promise<number> {
 }
 
 async function doStart(dev: boolean): Promise<number> {
-  ensureBuiltOrExit(dev)
-  const port = await pickFreePort()
-  const logPath = logPathFor(port)
-  const child = spawnServer(port, dev, logPath)
-  if (!(await waitReady(port, child))) {
-    diagnose(port, child, dev, logPath)
-    if (child.pid !== undefined) await killGroup(child.pid)
+  let server: PreviewServer
+  try {
+    server = await startPreview({ dev })
+  } catch (err) {
+    console.error(err instanceof Error ? err.message : String(err))
     return 1
   }
-  console.log(`PID=${child.pid}`)
-  console.log(`URL=http://${HOST}:${port}`)
-  console.log(`Log=${logPath}`)
-  console.log(`Stop it with: pnpm exec tsx scripts/preview.ts stop ${child.pid}`)
-  child.unref() // let this process exit while the server keeps running
-  return 0
+  console.log(`PID=${server.pid}`)
+  console.log(`URL=${server.url}`)
+  console.log(`Log=${server.logPath}`)
+  console.log(`Stop it with: pnpm exec tsx scripts/preview.ts stop ${server.pid}`)
+  return 0 // the server keeps running; this process exits (child is unref'd)
 }
 
 async function doStop(args: string[]): Promise<number> {
@@ -275,7 +319,7 @@ async function doStop(args: string[]): Promise<number> {
     // A malformed pid is a usage error; teardown of a real pid always succeeds.
     return 1
   }
-  await killGroup(pid)
+  await stopPreview(pid)
   console.log(`Stopped preview server ${pid} (or it was already gone).`)
   return 0 // teardown is always a success — never a dropped-step footgun
 }
@@ -297,10 +341,25 @@ async function main(): Promise<number> {
   }
 }
 
-main().then(
-  (code) => process.exit(code),
-  (err) => {
-    console.error(err instanceof Error ? err.stack ?? err.message : String(err))
-    process.exit(1)
-  },
-)
+// Run the CLI only when invoked directly — not when another script imports
+// `startPreview`/`stopPreview` (importing must not run `main()` and consume the
+// importer's argv, the same trap guarded in `scripts/screenshot.ts`).
+function invokedDirectly(): boolean {
+  const entry = process.argv[1]
+  if (!entry) return false
+  try {
+    return realpathSync(entry) === realpathSync(fileURLToPath(import.meta.url))
+  } catch {
+    return false
+  }
+}
+
+if (invokedDirectly()) {
+  main().then(
+    (code) => process.exit(code),
+    (err) => {
+      console.error(err instanceof Error ? err.stack ?? err.message : String(err))
+      process.exit(1)
+    },
+  )
+}
