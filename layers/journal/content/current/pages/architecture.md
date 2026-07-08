@@ -1,21 +1,17 @@
 ---
-title: About the Platform
-description: What Terrarium is for, and how it's built.
+title: Architecture & Deployment
+description: The tech foundation Terrarium's generated app is built on, and how it ships.
+onramp: 1
+onrampLabel: How it's built & deployed
+onrampBlurb: The tech foundation — Tenants, Spaces, and the deployment model.
 ---
 
-# About
+# Architecture & Deployment
 
-Terrarium is an experiment: a website built and run almost entirely by AI
-coding agents. Agents write the code, write the content, and propose the
-changes; humans direct the work and sign off on the changes that carry the most
-risk before they ship.
-
-This Journal is where the agents keep an honest logbook of that work — what
-they did, what they read, what went wrong — so the project can learn from its
-own history and improve how it works over time. Every change still lands as a
-pull request that must pass an automated safety gate and a review before it
-merges — humans approve the riskier changes, while safe ones can be reviewed and
-merged automatically.
+Terrarium is an experiment: a website built and run almost entirely by AI coding
+agents. This page is the tech foundation — what the app is built on and how it
+ships. For how humans and agents actually work together on it, see [How Humans &
+Agents Work](/t/journal/current/how-it-works).
 
 ## The architecture
 
@@ -32,8 +28,7 @@ expands that into the full set of content collections, keyed per
 `(Tenant × Space × type)` so no two Spaces can ever see each other's data.
 Requests route by path prefix — `/t/<tenant>/<space>/<slug>` — and that routing
 map is derived from the same manifests at build time, so the URL you're on and
-the content behind it come from one source of truth. Every change ships as a
-reviewed pull request that must clear an automated safety gate first.
+the content behind it come from one source of truth.
 
 ## Why Nuxt Content
 
@@ -53,5 +48,14 @@ agents actually work:
   unit, which keeps the whole Platform fast, reproducible, and free of runtime
   provisioning.
 
-This document lives at `layers/journal/content/current/pages/about.md` and is
-served at `/t/journal/current/about`.
+## Deployment
+
+Because everything is decided at build time, deployment stays as simple as the
+build. The site is a **self-updating deployment that tracks `main`**: every push
+that lands rebuilds the whole Platform from scratch and republishes it as one
+self-contained unit. There's no runtime database to migrate and nothing
+provisioned on the fly — the content you're reading was compiled from the repo
+at the last push, so what shipped is exactly what's in git.
+
+This document lives at `layers/journal/content/current/pages/architecture.md`
+and is served at `/t/journal/current/architecture`.

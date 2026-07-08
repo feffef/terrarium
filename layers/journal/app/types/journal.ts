@@ -83,6 +83,12 @@ export interface PageDoc {
   description?: string
   badge?: string
   summary?: string
+  // Dashboard on-ramp opt-in (mirrors the `pages` schema): a page becomes a
+  // "New here?" card by setting `onramp` to its sort order, with `onrampLabel`/
+  // `onrampBlurb` as the card's teaser copy. Optional — ordinary pages omit them.
+  onramp?: number
+  onrampLabel?: string
+  onrampBlurb?: string
 }
 
 // A session prepared for display in the recent-activity feed — the page derives

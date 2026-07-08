@@ -11,5 +11,6 @@ content model (the same `pages` and `skills` collections) but its content is
 fully separate from the `current` Space — a different SQLite table
 (`journal_archived_pages`).
 
-There is deliberately **no** `about` page here, which the isolation gate uses
-to prove that `/t/journal/archived/about` does not fall through to `current`.
+There is deliberately **no** `architecture` page here, which the isolation gate
+uses to prove that `/t/journal/archived/architecture` does not fall through to
+`current`.
