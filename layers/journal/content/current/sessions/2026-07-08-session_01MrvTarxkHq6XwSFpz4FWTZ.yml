@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01MrvTarxkHq6XwSFpz4FWTZ
 startedAt: 2026-07-08T05:33:06Z
-endedAt: 2026-07-08T07:32:11Z
+endedAt: 2026-07-08T07:48:28Z
 kind: interactive
 goal: Make session logs capture autonomy honestly
-status: in-review
-outcome: "Extractor + kind enum extended, PR #233 in review"
+status: completed
+outcome: "All six commits merged via PR #233"
 summary: "Diagnosed why the Routine-fired nightly digest run's log showed kind autonomous and entrypoint remote_trigger yet no digest entry in skillsUsed: the extractor derived skills only from Skill tool_use blocks, and a slash-command prompt (every Routine firing's shape) is expanded by the harness before the model runs, so no tool call exists. Extended extractTrace to scan user turns for command-name expansion tags, stitched with a provenance reason \"(invoked as a slash command)\", excluding tool_result blocks. Then, on request, widened the session kind enum with \"delegated\" — exactly one human prompt (the kickoff), hands-off from there — across schema, validator, types, kindCounts, dashboard tile, and SKILL.md guidance; harness-injected user turns don't count as human prompts. A domain-modeling pass then found ADR-0003's two-mode taxonomy and no-self-merge rule needed reconciling: amended ADR-0003 (kind is descriptive, not a merge permission), made CONTEXT.md's Session entry the single home of the kind definitions, and slimmed the schema comment and SKILL.md to pointers. Finally swept live docs for stale \"no autonomous jobs run today\" claims (the digest and frictions-to-fixes Routines have been live since 07-06/07-07): fixed CONTEXT.md's Codify entry, amended ADR-0010/0015, cut CLAUDE.md's rotted example list, and updated both Skills' SKILL.md + Inventory entries. Last, an owner-approved retro-tagging pass flipped 11 historical logs to delegated where the summary clearly showed a hands-off self-merging run (7 ambiguous cases shown and left interactive; the 07-07 routine digest run has no log at all, issue 176). Full gate green after each commit; all six commits ride PR 233."
 prs:
   - "233"
@@ -65,11 +65,11 @@ frictions:
   - description: The only routine-fired transcript (the digest session's) lives in a reclaimed container, so the command-name detector was initially built against the documented expansion format without a live specimen.
     solution: "Resolved in-session: a human /domain-modeling invocation later provided a live expansion turn and the extractor detected it correctly; tomorrow's nightly digest log is the remaining end-to-end confirmation."
     severity: minor
-durationSec: 7146
+durationSec: 8122
 models:
-  claude-fable-5: 277
+  claude-fable-5: 285
 toolCounts:
-  Bash: 38
+  Bash: 39
   Grep: 19
   Read: 26
   mcp__Claude_Code_Remote__list_triggers: 1
@@ -78,11 +78,12 @@ toolCounts:
   ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 3
+  Skill: 4
   mcp__github__pull_request_read: 4
   mcp__Claude_Code_Remote__send_later: 2
   mcp__github__update_pull_request: 5
   AskUserQuestion: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/session-trace.ts
   - tests/unit/session-trace.spec.ts
