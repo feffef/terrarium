@@ -84,15 +84,21 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   so in this repo a stale copy is a *behavioral* bug.
 - Inspect files with the **Read tool, not `cat`** — the Edit tool refuses to edit
   a file it hasn't seen via Read, so `cat`-then-Edit forces a wasteful re-read.
-- **Run process-killing teardown as its own command, never `&&`-chained** before
-  steps that must run. Two failure modes, both observed here: `pkill` exits 1
-  when nothing matched (routine in idempotent teardown), and `pkill -f` can
-  match the invoking shell's own command line and kill the whole chain
-  mid-flight — either way everything after the `&&` is silently dropped,
-  e.g. a chained `git add` never runs and no error points at it. When a
-  teardown/`pkill` step *does* match and kill its target — including that
-  self-match case — the command it kills commonly reports exit code **144**
-  (128 + 16, i.e. terminated by `SIGTERM`). That's the expected result of a
+- **Don't tear down a preview/dev server with `pkill` — use `scripts/preview.ts`.**
+  (`shot` for a one-shot screenshot; `start`/`stop` to keep one running — see the
+  screenshot section below.) Hand-rolled `pkill -f <pattern>` teardown silently
+  corrupted work **three times** (#102 → #183 → #240) and the fix is now a tool,
+  not more prose: `pkill -f` matches the invoking shell's *own* command line
+  (self-match — it SIGTERM-kills the chain mid-flight) and, in a shared container,
+  *other agents'* servers too; `preview.ts` instead kills only the specific child
+  PID it started, on its own ephemeral port, and its `stop` always exits 0.
+- **For any *other* process-killing teardown, run it as its own command, never
+  `&&`- or `;`-chained** before steps that must run. Two failure modes: `pkill`
+  exits 1 when nothing matched (routine in idempotent teardown), and a kill that
+  matches the chain's *own* shell drops everything after the separator — a chained
+  `git add` never runs and no error points at it. When a teardown/`pkill` step
+  *does* match and kill its target the command it kills commonly reports exit code
+  **144** (128 + 16, i.e. terminated by `SIGTERM`); that's the expected result of a
   successful kill, not itself evidence of a problem — don't re-derive it as a
   failure signal each session.
 - **Don't `&&`-chain a branch rename/creation with the commit/push steps that
@@ -246,14 +252,23 @@ stays the mandatory, unchanged merge gate (ADR-0004; see Ground rules above — 
 agent-edited).
 
 **Need a screenshot of a running page** (e.g. to eyeball a render during a session)?
-Run `pnpm exec tsx scripts/screenshot.ts <url> <out.png> [WxH]` — it drives the
-pre-installed Chromium directly (via `PLAYWRIGHT_BROWSERS_PATH`), no new
-dependency or browser download required. The optional `WxH` (e.g. `1280x1600`)
-sets the window size — use it to reach below-the-fold content. Use `pnpm dev`
-for fast visual iteration when you only need to eyeball a render. For a
-production-accurate shot use a built `pnpm preview` instead — the dev server
-injects a Nuxt DevTools overlay badge (e.g. a small "26 ms" timing pill) that
-can overlap real content and read as a UI bug.
+Run `pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--dev]` — it
+starts a server on its own ephemeral port, screenshots the route, and tears the
+server down again, all in **one command**, so there is no separate server to
+start or `pkill` to get wrong (issue #240). It defaults to a production-accurate
+`preview` server (needs a prior `pnpm build`); pass `--dev` for fast iteration
+against `nuxt dev` — but the dev server injects a Nuxt DevTools overlay badge
+(e.g. a small "26 ms" timing pill) that can overlap real content and read as a
+UI bug, so prefer preview for a shot you're trusting. The optional `WxH` (e.g.
+`1280x1600`) sets the window size — use it to reach below-the-fold content.
+
+**Need the server to stay up** across several captures (e.g. `scripts/plate-gallery.ts`
+or an ad-hoc Playwright probe)? `scripts/preview.ts start [--dev]` prints a `PID=`
+and a `URL=` and leaves the server running; `scripts/preview.ts stop <pid>` tears
+it down (always exits 0 — safe to chain). To screenshot a URL that is *already*
+serving, `scripts/screenshot.ts <url> <out.png> [WxH]` drives the pre-installed
+Chromium directly (via `PLAYWRIGHT_BROWSERS_PATH`, no new dependency or browser
+download) — it's the lower-level capture that `preview.ts shot` uses under the hood.
 
 ### Verifying UI changes
 

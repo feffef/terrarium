@@ -16,6 +16,8 @@
 // `/opt/pw-browsers` default some environments set) — never a hardcoded
 // absolute path baked into the script.
 import { spawnSync } from 'node:child_process'
+import { realpathSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { resolveChromiumPath } from './chromium-path'
 
 const USAGE =
@@ -52,27 +54,16 @@ function emitFilteredStderr(stderr: string): void {
   }
 }
 
-function main(): void {
-  const [url, out, size] = process.argv.slice(2)
-  if (!url || !out) {
-    console.error(USAGE)
-    process.exit(1)
-  }
-
-  const windowSize = size === undefined ? '1280,800' : parseSize(size)
-  if (!windowSize) {
-    console.error(`Invalid size "${size}" — expected <width>x<height>, e.g. 1280x1600.`)
-    console.error(USAGE)
-    process.exit(1)
-  }
-
-  let chromium: string
-  try {
-    chromium = resolveChromiumPath()
-  } catch (err) {
-    console.error(err instanceof Error ? err.message : String(err))
-    process.exit(1)
-  }
+/**
+ * Capture a screenshot of `url` to `out` at `windowSize` (a already-parsed
+ * `W,H` string, e.g. `1280,800`), driving the pre-installed Chromium directly.
+ * Throws on failure (Chromium missing, launch error, or non-zero exit) — the
+ * caller decides how to report it. Exported so `scripts/preview.ts` can reuse
+ * the exact same Chromium invocation instead of re-deriving these flags (issue
+ * #240): the screenshot flags and dbus-noise filtering stay single-homed here.
+ */
+export function captureScreenshot(url: string, out: string, windowSize = '1280,800'): void {
+  const chromium = resolveChromiumPath()
 
   const result = spawnSync(
     chromium,
@@ -91,13 +82,46 @@ function main(): void {
   if (result.stderr) emitFilteredStderr(result.stderr)
 
   if (result.error) {
-    console.error(`Failed to launch Chromium at "${chromium}":`, result.error.message)
-    process.exit(1)
+    throw new Error(`Failed to launch Chromium at "${chromium}": ${result.error.message}`)
   }
   if (result.status !== 0) {
-    console.error(`Chromium exited with status ${result.status}`)
-    process.exit(result.status ?? 1)
+    throw new Error(`Chromium exited with status ${result.status}`)
   }
 }
 
-main()
+function main(): void {
+  const [url, out, size] = process.argv.slice(2)
+  if (!url || !out) {
+    console.error(USAGE)
+    process.exit(1)
+  }
+
+  const windowSize = size === undefined ? '1280,800' : parseSize(size)
+  if (!windowSize) {
+    console.error(`Invalid size "${size}" — expected <width>x<height>, e.g. 1280x1600.`)
+    console.error(USAGE)
+    process.exit(1)
+  }
+
+  try {
+    captureScreenshot(url, out, windowSize)
+  } catch (err) {
+    console.error(err instanceof Error ? err.message : String(err))
+    process.exit(1)
+  }
+}
+
+// Only run the CLI when this file is invoked directly, not when another script
+// (e.g. `scripts/preview.ts`) imports `captureScreenshot` — otherwise this
+// `main()` would run on import and consume the importer's argv (issue #240).
+function invokedDirectly(): boolean {
+  const entry = process.argv[1]
+  if (!entry) return false
+  try {
+    return realpathSync(entry) === realpathSync(fileURLToPath(import.meta.url))
+  } catch {
+    return false
+  }
+}
+
+if (invokedDirectly()) main()
