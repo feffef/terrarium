@@ -1,0 +1,8 @@
+name: diagnosing-bugs
+category: general-engineering
+importance: specialist
+role: >-
+  Drives hard-bug/perf-regression diagnosis via a red-then-green reproduction
+  loop before any fix is proposed. Essential once a bug resists a first-pass
+  theory — this window's issue #236 permanent-empty-until-reload repro ran
+  entirely on its Phase 1/2 loop discipline, catching an earlier misdiagnosis.
