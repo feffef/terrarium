@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01P2bYhoRUJm6efQfTk7VFHF
 startedAt: 2026-07-09T14:52:22Z
-endedAt: 2026-07-09T17:41:53Z
+endedAt: 2026-07-09T17:52:44Z
 kind: interactive
 goal: Grill and implement audit-skills self-merge
 status: in-review
 outcome: Design converged, PR open for review
-summary: "User asked (human-instructed) to make audit-skills self-merge autonomously on green CI, claiming zero risk. Ran /grill-with-docs (agent-chosen response to the ask) to pressure-test the claim before building. The design narrowed substantially through interactive grilling — self-merge scoped to Inventory-only edits citing an existing bright-line evidence rule, plus a new regression-watch capability and new/split/retire suggestions kept notes-only via existing session-log learnings/ideas fields, all user-directed choices made turn by turn. Implemented per the converged design, safety gate green, branch rebased onto a fast-moving main, PR #266 opened for human review (touches ADR/governance, human-only per ADR-0004)."
+summary: "User asked (human-instructed) to make audit-skills self-merge autonomously on green CI, claiming zero risk. Ran /grill-with-docs (agent-chosen response to the ask) to pressure-test the claim before building. The design narrowed substantially through interactive grilling — self-merge scoped to Inventory-only edits citing an existing bright-line evidence rule, plus a new regression-watch capability and new/split/retire suggestions kept notes-only via existing session-log learnings/ideas fields, all user-directed choices made turn by turn. Implemented per the converged design, safety gate green, branch rebased onto a fast-moving main, PR #266 opened for human review (touches ADR/governance, human-only per ADR-0004). Repo owner then left a review comment (human-instructed follow-up) flagging that the SKILL.md hardcoded the Routine's cron schedule, which drifts; fixed directly plus added a general CLAUDE.md rule generalizing the fix, gate green again, rebased and re-pushed, thread resolved. PR still open, gate re-running."
 prs:
   - "266"
 docsRead:
@@ -36,6 +36,8 @@ docsRead:
     reason: (read before editing)
   - path: .agents/skills/close-session/SKILL.md
     reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
 skillsUsed:
   - name: grill-with-docs
     reason: the task itself was to grill this proposal before implementing
@@ -58,23 +60,28 @@ frictions:
   - description: "Stashed WIP conflicted with ADR-0003 mid-rebase because audit-docs's own concurrent live sweep (PR #262/#263) edited the same amendment list."
     solution: In a fast-moving multi-agent repo, fetch/rebase onto origin/main earlier and more than once, not only right before the final push.
     severity: minor
-durationSec: 10171
+  - description: Hardcoded a Routine's cron expression (`0 2 * * *`) directly into the SKILL.md and an ADR amendment - exactly the class of drift-prone restatement CLAUDE.md's own 'single-home every fact' rule warns against, just not yet spelled out for external/Routine state.
+    solution: Reviewer caught it; fixed by removing the literal cadence and adding a CLAUDE.md rule. Should have generalized 'don't restate a fact with no in-repo home to sync against' myself before writing it, given I'd just fixed an instance of the same drift class (ADR-0015's stale cadence claim) minutes earlier in the same session.
+    severity: minor
+durationSec: 10822
 models:
-  claude-sonnet-5: 195
+  claude-sonnet-5: 255
 toolCounts:
-  Skill: 3
-  Bash: 43
+  Skill: 4
+  Bash: 58
   Grep: 1
-  Read: 18
+  Read: 23
   mcp__Claude_Code_Remote__list_triggers: 1
-  ToolSearch: 2
-  mcp__github__pull_request_read: 5
-  Edit: 14
+  ToolSearch: 3
+  mcp__github__pull_request_read: 8
+  Edit: 19
   Write: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__add_reply_to_pull_request_comment: 1
+  mcp__github__resolve_review_thread: 1
 filesEdited:
   - scripts/audit-skills.ts
   - tests/unit/audit-skills.spec.ts
@@ -83,6 +90,7 @@ filesEdited:
   - docs/adr/0015-audit-skills-and-conditional-importance.md
   - docs/adr/0003-agent-operating-model-and-governance.md
   - .agents/skills/close-session/SKILL.md
+  - CLAUDE.md
 gitBranch: claude/audit-skills-self-merge-fg99u4
 entrypoint: remote_mobile
 cliVersion: 2.1.205
