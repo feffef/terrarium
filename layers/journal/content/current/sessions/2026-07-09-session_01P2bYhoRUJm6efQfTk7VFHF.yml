@@ -1,0 +1,93 @@
+schemaVersion: 1
+session: session_01P2bYhoRUJm6efQfTk7VFHF
+startedAt: 2026-07-09T14:52:22Z
+endedAt: 2026-07-09T17:41:53Z
+kind: interactive
+goal: Grill and implement audit-skills self-merge
+status: in-review
+outcome: Design converged, PR open for review
+summary: "User asked (human-instructed) to make audit-skills self-merge autonomously on green CI, claiming zero risk. Ran /grill-with-docs (agent-chosen response to the ask) to pressure-test the claim before building. The design narrowed substantially through interactive grilling — self-merge scoped to Inventory-only edits citing an existing bright-line evidence rule, plus a new regression-watch capability and new/split/retire suggestions kept notes-only via existing session-log learnings/ideas fields, all user-directed choices made turn by turn. Implemented per the converged design, safety gate green, branch rebased onto a fast-moving main, PR #266 opened for human review (touches ADR/governance, human-only per ADR-0004)."
+prs:
+  - "266"
+docsRead:
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: no-self-merge rule and existing exemption patterns
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: auto-merge eligibility and human-only high-risk surfaces
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: audit-skills' own charter and bright-line evidence rule
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: existing self-merge precedent and its fact-check safety net
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: existing author-not-reviewer pipeline for SKILL.md/doc fixes
+  - path: CONTEXT.md
+    reason: Session glossary — learnings/ideas field definitions
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+  - path: scripts/audit-skills.ts
+    reason: (read before editing)
+  - path: tests/unit/audit-skills.spec.ts
+    reason: (read before editing)
+  - path: scripts/digest.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/audit-skills.yml
+    reason: (read before editing)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: grill-with-docs
+    reason: the task itself was to grill this proposal before implementing
+  - name: grilling
+    reason: invoked by grill-with-docs to interrogate the self-merge proposal one question at a time
+  - name: close-session
+    reason: opened a gated PR - session closure point
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: Asserted a demotion 'silently suppresses a Skill' without first checking the actual triggering mechanism (SKILL.md frontmatter, not the Inventory).
+    solution: Verify a behavioral/mechanism claim against the code before asserting it, not only after being challenged.
+    severity: minor
+  - description: Trusted ADR-0015's 'on-demand, schedule deferred' text at face value; it was stale, a live nightly Routine already existed.
+    solution: Check live trigger state (list_triggers) before reasoning from a doc's stated cadence in a fast-moving, multi-agent repo.
+    severity: minor
+  - description: First regression-watch unit test assumed an edit date could bracket to zero sessions on both sides given a nonempty session list - impossible by construction.
+    solution: Reason through a bracketing function's invariants before naming a test scenario, not just what sounds plausible.
+    severity: nit
+  - description: "Stashed WIP conflicted with ADR-0003 mid-rebase because audit-docs's own concurrent live sweep (PR #262/#263) edited the same amendment list."
+    solution: In a fast-moving multi-agent repo, fetch/rebase onto origin/main earlier and more than once, not only right before the final push.
+    severity: minor
+durationSec: 10171
+models:
+  claude-sonnet-5: 195
+toolCounts:
+  Skill: 3
+  Bash: 43
+  Grep: 1
+  Read: 18
+  mcp__Claude_Code_Remote__list_triggers: 1
+  ToolSearch: 2
+  mcp__github__pull_request_read: 5
+  Edit: 14
+  Write: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - scripts/audit-skills.ts
+  - tests/unit/audit-skills.spec.ts
+  - .agents/skills/audit-skills/SKILL.md
+  - layers/journal/content/current/skills/audit-skills.yml
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - .agents/skills/close-session/SKILL.md
+gitBranch: claude/audit-skills-self-merge-fg99u4
+entrypoint: remote_mobile
+cliVersion: 2.1.205
+learnings:
+  - The Skill Inventory (layers/journal/content/current/skills/) is advisory documentation agents are told to weigh, not a mechanical trigger gate - a Skill's own SKILL.md frontmatter description is what actually gates Skill-tool availability.
+  - frictions-to-fixes and audit-docs already cover the 'edit a SKILL.md/doc, self-merge the fix' surface from two angles (friction-driven, drift-driven); a third Skill claiming that surface directly would duplicate rather than add capability.
+ideas:
+  - A short 'exemption ledger' table in ADR-0003 (Skill, scope, date, PR) would make the growing self-merge exemption list legible at a glance instead of requiring a reader to parse N free-form amendment paragraphs - worth proposing once a 4th exemption is requested.
