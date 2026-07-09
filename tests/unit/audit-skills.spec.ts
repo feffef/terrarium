@@ -7,10 +7,12 @@ import {
   bracketSessions,
   buildRegressionChecks,
   buildSkillRows,
+  buildSkillSessionFiles,
   pickWindow,
   tallyUsage,
   type InventoryEntry,
   type OnDiskSkill,
+  type SessionFile,
   type SkillEdit,
   type UsageHit,
   type WindowSession,
@@ -24,6 +26,7 @@ function sess(over: Partial<WindowSession> = {}): WindowSession {
     summary: 'summary',
     endedAt: '2026-07-05T10:00:00Z',
     skillsUsed: [],
+    frictions: [],
     ...over,
   }
 }
@@ -210,5 +213,42 @@ describe('buildRegressionChecks()', () => {
     expect(checks).toHaveLength(2)
     // session 'b' brackets both edits (after s1, before s2) but appears once in the pool
     expect(pool.filter((s) => s.session === 'b')).toHaveLength(1)
+  })
+})
+
+describe('buildSkillSessionFiles()', () => {
+  function entry(file: string, over: Partial<WindowSession> = {}): SessionFile {
+    return { session: sess(over), file }
+  }
+
+  it('groups every session file by the Skills it used', () => {
+    const files = [
+      entry('a.yml', { session: 'a', skillsUsed: [{ name: 'tdd', reason: 'r' }] }),
+      entry('b.yml', { session: 'b', skillsUsed: [{ name: 'tdd', reason: 'r' }] }),
+      entry('c.yml', { session: 'c', skillsUsed: [{ name: 'digest', reason: 'r' }] }),
+    ]
+    expect(buildSkillSessionFiles(files)).toEqual({
+      tdd: ['a.yml', 'b.yml'],
+      digest: ['c.yml'],
+    })
+  })
+
+  it('de-dupes a Skill listed twice within the same session file', () => {
+    const files = [
+      entry('a.yml', {
+        skillsUsed: [
+          { name: 'tdd', reason: 'red' },
+          { name: 'tdd', reason: 'green' },
+        ],
+      }),
+    ]
+    expect(buildSkillSessionFiles(files)).toEqual({ tdd: ['a.yml'] })
+  })
+
+  it('is not bounded by any window — includes every entry passed in', () => {
+    const files = Array.from({ length: 5 }, (_, i) =>
+      entry(`s${i}.yml`, { session: `s${i}`, skillsUsed: [{ name: 'audit-skills', reason: 'r' }] }),
+    )
+    expect(buildSkillSessionFiles(files)['audit-skills']).toHaveLength(5)
   })
 })

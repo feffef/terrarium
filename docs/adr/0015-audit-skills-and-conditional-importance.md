@@ -18,10 +18,12 @@ Status: Accepted
 > only `layers/journal/content/current/skills/*.yml` edits citing the
 > bright-line evidence rule above (now symmetric for promote and demote). A
 > frontmatter concern citing that same rule may file/comment on a
-> `needs-triage` issue directly (search first); the lower-confidence
-> regression-watch signal never files or edits on its own — only a session-log
-> `learnings`/`ideas` note, or a comment corroborating an issue the bright-line
-> rule already opened. Full detail in `audit-skills/SKILL.md`.
+> `needs-triage` issue directly (search first). The regression watch (friction
+> severity/count plus usage, screened cheaply, then a full-log deep-read for
+> any suspected Skill before judging) may also file/comment, on a judgement
+> basis grounded in that deep-read's quoted evidence — never from the cheap
+> screen alone, and never a grade change either way. Full detail in
+> `audit-skills/SKILL.md`.
 
 ## Context
 

@@ -1,6 +1,6 @@
 ---
 name: audit-skills
-description: Tune the Skill Inventory to match real usage and watch for behavior regressions after a Skill's SKILL.md changes — re-grade importance/role from session history, self-merging bright-line-evidenced Inventory edits. A frontmatter concern with citable evidence gets a filed/commented issue; anything resting on softer evidence becomes this run's own learning/idea instead — never a direct edit.
+description: Tune the Skill Inventory to match real usage and watch for behavior regressions (usage AND friction-severity signals) after a Skill's SKILL.md changes — re-grade importance/role from session history, self-merging bright-line-evidenced Inventory edits. A suspected regression gets a full-log deep-read before any issue is filed/commented; a frontmatter concern rests as a learning/idea until it clears that bar — never a direct edit.
 disable-model-invocation: true
 ---
 
@@ -21,11 +21,12 @@ change:
 - an **Inventory PR** — `importance`/`role` edits that cite the bright-line
   evidence rule (step 3) — **self-merged on a green gate** (step 7, ADR-0004's
   low-risk content tier, ADR-0015);
-- a **filed or commented `needs-triage` issue**, only for step 3's bright-line
-  signal (≥2 sessions, citable evidence) — search first, comment on a match
-  instead of re-filing (step 5);
-- a **learning**, when the regression watch (step 4) turns up a plausible but
-  low-confidence behavioral signal — never enough on its own to file or comment;
+- a **filed or commented `needs-triage` issue** — for step 3's bright-line
+  signal (≥2 sessions, citable evidence), or for a step 4 regression that
+  survived a full-log deep-read — search first, comment on a match instead of
+  re-filing (step 5);
+- a **learning**, when the regression watch's initial screen (step 4) is
+  suggestive but the deep-read didn't turn up enough to act on;
 - an **idea**, when the evidence suggests a new Skill, or splitting/retiring an
   existing one (step 6) — concrete enough to become an issue, but not one you
   open yourself.
@@ -51,7 +52,9 @@ pnpm exec tsx scripts/audit-skills.ts
 
 It prints JSON:
 - the **window** (the 40 newest sessions by `endedAt`, each with
-  `kind`/`goal`/`summary`/`skillsUsed`) and, per Skill, `onDisk`, `inventoried`,
+  `kind`/`goal`/`summary`/`skillsUsed`, and `frictions` — that session's
+  friction **severities only**, e.g. `["minor","blocker"]`, not the full
+  description/solution text) and, per Skill, `onDisk`, `inventoried`,
   `external`, current `importance`/`role`, its SKILL.md `description`, and
   `usedIn` (every windowed session that invoked it). Pass `--window N` to
   widen/narrow.
@@ -61,6 +64,9 @@ It prints JSON:
   above — an edit can be older than the newest 40 sessions). Resolve ids
   against **`regressionSessions`** — a deduped pool, since the same session
   commonly brackets more than one Skill's edit.
+- **`skillSessionFiles`** — Skill name → every session log file path that
+  named it, across **all** history (not windowed, not bracketed). Paths only.
+  This is step 4's deep-read entry point, not something to read wholesale now.
 
 Done when you hold the scorecard.
 
@@ -101,55 +107,70 @@ evidence, and observed-but-un-inventoried Skills have entries.
 
 ## 4. Watch for behavior regressions after a Skill's own edits
 
-Read `regressionChecks`, resolving `before`/`after` ids against
-`regressionSessions`. For each bracketed edit, compare the `before`/`after`
-sessions' use of that Skill (did it fire in the sessions where its kind of work
-recurred?) and judge whether the edit plausibly **helped, hurt, or is
-inconclusive**.
+**Phase A — cheap screen.** Read `regressionChecks`, resolving `before`/`after`
+ids against `regressionSessions`. For each bracketed edit, compare the
+`before`/`after` sessions': did the Skill fire where its kind of work
+recurred, and **did friction severity/count look worse after** (more entries,
+or a shift toward `moderate`/`major`/`blocker`)? This screen only catches
+*usage-rate* and *coarse friction-count* shifts — it can't tell you the
+frictions were actually about this Skill's edited guidance rather than
+something unrelated, because it only has severities, not content. Treat a
+signal here as **suspected, not confirmed**.
 
-**This is a hypothesis, not a fact, and it never files or comments on an issue
-by itself — false positives here are cheap to make and expensive to act on.**
-The brackets are small (5 sessions a side) and confounded (other things changed
-too in that window); this signal is deliberately *not* the bright-line rule
-step 3 uses, and it never gates a grade change either. If a bracket turns up a
-credible concern, **record it as this run's own `learnings` entry** (CONTEXT.md
-→ Session glossary — "useful knowledge the session inferred... a Friction's
-positive twin") naming the edit and sessions — a note for a future reader, full
-stop. The one exception is step 5: if this signal corroborates a concern that
-already has an **open, bright-line-originated issue**, add a comment there
-instead of a fresh `learnings` note.
+**Phase B — deep-read, only for a suspected Skill.** Before judging anything,
+`Read` every file `skillSessionFiles[name]` lists — that Skill's **entire**
+usage history, not just the 5-session bracket — for the full, un-truncated
+record: full friction `description`/`solution` text, `outcome`, `status`,
+`summary`. This is what actually tells you whether the frictions are about
+this Skill, and whether the edit plausibly caused them. Never skip straight
+from Phase A's coarse signal to a judgement.
 
-Done when every bracketed edit with a real signal has a hedged `learnings` note
-or a corroborating comment (step 5), or was judged inconclusive (most will be —
-that's fine, say so silently by writing nothing).
+**Judging is a guideline, not a formula** — unlike step 3's bright-line rule,
+there is no fixed session-count threshold here. Weigh what the deep-read
+showed: do the post-edit frictions specifically implicate this Skill (not
+coincidental, unrelated pain in the same sessions)? Is the pattern more than
+one session's bad luck? Use judgement, but **always cite the specific evidence**
+(session ids, quoted friction text) for whatever you conclude — a citation-free
+"feels regressed" is not enough to act on, at any confidence level.
 
-## 5. File — or comment on — an issue for a frontmatter concern
+- **Confirmed enough to act on** → this Skill is a step-5 candidate, on equal
+  footing with step 3's signal (see step 5).
+- **Suggestive but not enough** → record it as this run's own `learnings` entry
+  (CONTEXT.md → Session glossary) naming the edit, the sessions, and why you
+  stopped short — a note for a future reader (or a future run's Phase A, which
+  may catch the same Skill again with more evidence by then).
+- **Inconclusive** → write nothing; most will land here, and that's fine.
 
-Only **step 3's bright-line rule** (≥2 windowed sessions, absent from work
-clearly in its domain) may **originate** a new issue — that's the one signal
-here with citable, objective evidence. Step 4's regression watch alone never
-originates one; it may only add a corroborating comment to an issue step 3
-already opened (see step 4).
+Done when every Phase-A signal has gone through Phase B and landed in one of
+the three buckets above.
+
+## 5. File — or comment on — an issue
+
+Two signals may originate a `needs-triage` issue, both requiring citable
+evidence: **step 3's bright-line rule** (≥2 windowed sessions, absent from work
+clearly in its domain — mechanical, objective) and **step 4's regression watch,
+after its Phase B deep-read** (judgement-based, but grounded in quoted evidence
+from the full logs, not the Phase A screen alone). Phase A's screen on its own
+never reaches this step — it must clear Phase B first.
 
 **This step is for our own (`external: false`) Skills only.** A pack Skill's
 SKILL.md is not ours to patch (ADR-0005) — for an under-used *external* Skill,
 the only lever we own is its Inventory `role` (step 3).
 
-For each own Skill step 3 flags:
+For each own Skill flagged by either signal:
 - **Search first** (`search_issues`, `is:issue is:open audit-skills <name>`).
 - **Found** — add a comment citing this run's fresh evidence. A concern that
   keeps recurring across runs is itself the strongest evidence it's real; that
   history belongs on one thread, not a pile of near-duplicate issues.
-- **Not found** — file one `needs-triage` issue naming the session ids as
-  evidence and your best-guess hypothesis. `triage` picks up any issue
-  regardless of source; you're not filing into a void.
+- **Not found** — file one `needs-triage` issue naming the session ids (and,
+  for a step-4 finding, the quoted friction evidence) plus your best-guess
+  hypothesis. `triage` picks up any issue regardless of source; you're not
+  filing into a void.
 
-Never patch `.agents/skills/` or any other doc yourself, and never file an
-issue for step 4's signal alone.
+Never patch `.agents/skills/` or any other doc yourself.
 
-Done when every step-3-flagged Skill has an issue filed or commented on (and
-every step-4 corroboration that found a matching open issue is a comment, not
-a new issue).
+Done when every step-3- or step-4-flagged Skill has an issue filed or
+commented on.
 
 ## 6. Suggest new Skills or Skill splits/cuts, as ideas
 

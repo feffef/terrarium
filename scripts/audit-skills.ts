@@ -9,11 +9,14 @@
 // process, low token cost, no re-improvised parser each run).
 //
 // Usage:  tsx scripts/audit-skills.ts [--window N]
-//   Prints a scorecard: the window of sessions considered (newest first),
-//   per-Skill usage/grade/description join, and `regressionChecks` — each own
-//   Skill's most recent edit commit with the sessions immediately before/after
-//   it (session ids only; resolve against `regressionSessions`, deduped since
-//   the same session commonly brackets more than one Skill's edit).
+//   Prints a scorecard: the window of sessions considered (newest first, each
+//   with a friction-severity summary), per-Skill usage/grade/description join,
+//   `regressionChecks` — each own Skill's most recent edit commit with the
+//   sessions immediately before/after it (session ids only; resolve against
+//   `regressionSessions`, deduped since the same session commonly brackets more
+//   than one Skill's edit) — and `skillSessionFiles`, a skill → file-path map
+//   (all-time, not windowed) for a targeted full-log deep-read once a
+//   regression is suspected for a specific Skill.
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -49,6 +52,12 @@ export interface WindowSession {
   summary: string
   endedAt: string
   skillsUsed: { name: string; reason: string }[]
+  /** Friction severities only (nit/minor/moderate/major/blocker) — a compact
+   *  count+severity signal for the regression watch. Full description/solution
+   *  text lives only in the session log itself; read that directly (via
+   *  `skillSessionFiles`) once a regression is actually suspected, rather than
+   *  paying for full friction text in every session up front. */
+  frictions: string[]
 }
 /** A Skill's on-disk facts: it exists, and its SKILL.md frontmatter `description`. */
 export interface OnDiskSkill {
@@ -107,9 +116,41 @@ export interface Scorecard {
   skills: SkillRow[]
   regressionChecks: RegressionCheck[]
   regressionSessions: WindowSession[]
+  /** Skill name → every session log file (repo-relative path) that named it in
+   *  `skillsUsed`, across ALL history — not windowed, not bracketed. Cheap
+   *  (paths only). The deep-read entry point once a regression is suspected for
+   *  a specific Skill: `Read` each file directly for its full, un-truncated
+   *  record (full friction text, outcome, status, …) rather than trusting the
+   *  compact extract used everywhere else in this scorecard. */
+  skillSessionFiles: Record<string, string[]>
+}
+
+/** A session paired with the repo-relative path it was read from. */
+export interface SessionFile {
+  session: WindowSession
+  file: string
 }
 
 // ── Pure core (unit-tested) ───────────────────────────────────────────────────
+
+/** Skill name → every session log file that named it in `skillsUsed`, across
+ *  ALL sessions passed in (the caller decides windowed vs. all-time — this
+ *  helper only groups). Paths only, no content, so it stays cheap regardless
+ *  of session count. */
+export function buildSkillSessionFiles(entries: SessionFile[]): Record<string, string[]> {
+  const out: Record<string, string[]> = {}
+  for (const { session, file } of entries) {
+    const seen = new Set<string>()
+    for (const u of session.skillsUsed) {
+      if (!u.name || seen.has(u.name)) continue
+      seen.add(u.name)
+      const files = out[u.name] ?? []
+      files.push(file)
+      out[u.name] = files
+    }
+  }
+  return out
+}
 
 /** The newest `n` sessions by `endedAt` (ISO), most-recent first. Ties broken by
  *  `session` id so the order is stable and deterministic across runs. */
@@ -214,24 +255,32 @@ export function buildRegressionChecks(
 
 // ── FS IO (thin shell) ────────────────────────────────────────────────────────
 
-function readSessions(cwd = root): WindowSession[] {
+/** Reads every session log with its source file path attached (`SessionFile`). */
+function readSessionFiles(cwd = root): SessionFile[] {
   const dir = join(cwd, SESSIONS_DIR)
   if (!existsSync(dir)) return []
-  const out: WindowSession[] = []
+  const out: SessionFile[] = []
   for (const f of readdirSync(dir).filter((f) => f.endsWith('.yml'))) {
     const raw = parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>
     if (!raw || typeof raw !== 'object') continue
     const used = Array.isArray(raw.skillsUsed) ? raw.skillsUsed : []
+    const frictions = Array.isArray(raw.frictions) ? raw.frictions : []
     out.push({
-      session: String(raw.session ?? ''),
-      kind: String(raw.kind ?? ''),
-      goal: String(raw.goal ?? ''),
-      summary: String(raw.summary ?? '').replace(/\s+/g, ' ').trim(),
-      endedAt: String(raw.endedAt ?? ''),
-      skillsUsed: used.map((u: Record<string, unknown>) => ({
-        name: String(u.name ?? ''),
-        reason: String(u.reason ?? '').replace(/\s+/g, ' ').trim(),
-      })),
+      session: {
+        session: String(raw.session ?? ''),
+        kind: String(raw.kind ?? ''),
+        goal: String(raw.goal ?? ''),
+        summary: String(raw.summary ?? '').replace(/\s+/g, ' ').trim(),
+        endedAt: String(raw.endedAt ?? ''),
+        skillsUsed: used.map((u: Record<string, unknown>) => ({
+          name: String(u.name ?? ''),
+          reason: String(u.reason ?? '').replace(/\s+/g, ' ').trim(),
+        })),
+        frictions: frictions
+          .map((fr: Record<string, unknown>) => String(fr.severity ?? ''))
+          .filter(Boolean),
+      },
+      file: `${SESSIONS_DIR}/${f}`,
     })
   }
   return out
@@ -335,7 +384,8 @@ function readSkillEdits(cwd = root): Map<string, SkillEdit[]> {
 // ── Command ─────────────────────────────────────────────────────────────────
 
 export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
-  const all = readSessions(cwd)
+  const files = readSessionFiles(cwd)
+  const all = files.map((e) => e.session)
   const window = pickWindow(all, windowSize)
   const external = readLock(cwd)
   const rows = buildSkillRows(readOnDiskSkills(cwd), readInventory(cwd), tallyUsage(window), external)
@@ -347,6 +397,7 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
     skills: rows,
     regressionChecks: checks,
     regressionSessions: sessions,
+    skillSessionFiles: buildSkillSessionFiles(files),
   }
 }
 
