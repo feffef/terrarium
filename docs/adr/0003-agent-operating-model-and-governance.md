@@ -63,6 +63,25 @@ Status: Accepted
 > scope** rides in the PR it is left for human review, and a **red gate is
 > never merged** — fix on the branch or escalate. Everything else keeps
 > ADR-0003's default: gated PR, human merge.
+>
+> **Amended (2026-07-09).** The **`audit-docs` Skill's gated PR auto-merges on
+> a green gate** — a second, bounded grant of the same kind as `digest`'s
+> above, not a generalization of it: after opening the PR, the authoring
+> session merges once the gate reports green (repo auto-merge is unavailable
+> pending #231). This activates ADR-0004's **low-risk auto-merge tier**
+> ("content only — auto-mergeable when green") for this one chartered job: the
+> PR carries only fact-checked reconciliations to *live* docs and Skills
+> (`audit-docs`'s own Live/Historical/Pack-generic tiering) that touch no
+> human-only surface. Bounded the same way as `digest`'s grant: an ADR
+> amendment banner, CI, isolation logic, or the manifest-expansion/routing
+> modules are explicitly **out of scope** for this PR and ride their own,
+> separately human-reviewed PR instead; if anything outside scope rides in the
+> PR it is left for human review, and a **red gate is never merged** — fix on
+> the branch or escalate. Everything else keeps ADR-0003's default: gated PR,
+> human merge. (Recorded after the fact: this exception was already the
+> intended design for `audit-docs` when it was authored, but the amendment was
+> missed at the time — filed once the gap surfaced during `audit-docs`'s own
+> first run, PR #262.)
 
 ## Context
 
