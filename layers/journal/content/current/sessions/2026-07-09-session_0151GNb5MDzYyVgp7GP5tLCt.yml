@@ -1,0 +1,61 @@
+schemaVersion: 1
+session: session_0151GNb5MDzYyVgp7GP5tLCt
+startedAt: 2026-07-09T02:08:54Z
+endedAt: 2026-07-09T02:20:14Z
+kind: autonomous
+goal: Audit the Skill Inventory against usage
+status: in-review
+outcome: Re-graded roles, filed a blocking-bug issue
+summary: "Fully autonomous run of the audit-skills Skill (no human prompt beyond the standing schedule). scripts/audit-skills.ts crashed on close-session/SKILL.md's invalid YAML frontmatter (an unquoted colon-space sequence reads as an illegal nested mapping); worked around it by temporarily moving the directory aside (never editing .agents/skills/, per this Skill's own rule), gathered the 40-session scorecard, then restored the file unedited. Refreshed domain-modeling's and writing-great-skills' role prose against this window's evidence (both cited stale examples from a prior audit run; writing-great-skills' \"zero pull\" claim was actually contradicted by one real use this window). Added missing Inventory entries for diagnosing-bugs and implement, both observed in use this window but never inventoried. No importance-grade demotions this run. Filed issue #257 combining the YAML parse bug with a plausibly-related pattern (two windowed sessions reached closure without invoking close-session). Full gate green; opened and subscribed to gated PR #258."
+prs:
+  - "258"
+docsRead:
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/domain-modeling.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/writing-great-skills.yml
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-skills
+    reason: this run's driving skill
+  - name: close-session
+    reason: closure sequence at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: scripts/audit-skills.ts uses a strict YAML parser and has no per-file error handling, so one malformed SKILL.md frontmatter crashes the entire scorecard gathering step for every Skill, not just the offending one.
+    solution: "Wrap the per-file readFrontmatter() parse in a try/catch so one bad SKILL.md degrades to a warning instead of aborting the whole run (see #257)."
+    severity: minor
+durationSec: 680
+models:
+  claude-sonnet-5: 100
+toolCounts:
+  Bash: 25
+  Read: 6
+  Grep: 1
+  ToolSearch: 2
+  mcp__github__search_issues: 2
+  Edit: 3
+  Write: 3
+  mcp__github__issue_write: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__actions_list: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  PushNotification: 1
+filesEdited:
+  - layers/journal/content/current/skills/domain-modeling.yml
+  - layers/journal/content/current/skills/writing-great-skills.yml
+  - layers/journal/content/current/skills/diagnosing-bugs.yml
+  - layers/journal/content/current/skills/implement.yml
+gitBranch: claude/vibrant-feynman-zfiddk
+entrypoint: remote_trigger
+cliVersion: 2.1.205
+learnings:
+  - 'A plain (unquoted) YAML scalar cannot safely contain a colon followed by a space (": ") anywhere in its text — it reads as an illegal nested mapping key to a strict parser, even mid-sentence in prose like "front door: it records".'
