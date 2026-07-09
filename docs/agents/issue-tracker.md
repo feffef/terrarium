@@ -34,9 +34,10 @@ class to its MCP equivalent:
   to wait on, so to babysit a PR to green you must poll `get_check_runs`
   yourself (e.g. re-poll at agent-completion checkpoints, or `send_later` a
   wake when no agent is running to re-poll). **`ScheduleWakeup` is scoped to
-  `/loop` dynamic-mode pacing and is a no-op if called outside it** — a
-  session polling non-webhook-delivered state (like CI completion) should use
-  `mcp__claude-code-remote__send_later` to schedule its own check-in instead.
+  `/loop` dynamic-mode pacing and is unreliable outside it** (treat it only as
+  the last-resort fallback below) — a session polling non-webhook-delivered
+  state (like CI completion) should use `mcp__claude-code-remote__send_later`
+  to schedule its own check-in instead.
 - **`send_later` occasionally fails with a transient "permission stream
   closed" error.** Converged workaround (mirrors the poll-until-green pattern
   above, issue #145): retry the same `send_later` call once after reconnect;

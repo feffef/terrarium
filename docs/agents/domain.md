@@ -51,10 +51,10 @@ If the concept you need isn't in the glossary yet, that's a signal — either yo
 
 A concept earns a glossary entry (in `CONTEXT.md`) or a named taxonomy slot (in an ADR) only when its **second** instance exists or is concretely scheduled. Before that, describe the first instance in plain words where it lives — don't mint a term, a typology, or a classification for a population of one.
 
-This **complements** the `domain-modeling` skill's 3-part ADR test (hard to reverse · surprising without context · a real trade-off) rather than replacing it: that test gates *decisions*; the rule of two gates *vocabulary*. Coined terms are a standing tax — CLAUDE.md makes every session read all ADRs and reconcile term conflicts against the glossary — so the second instance is what proves the abstraction is worth that tax. (The repo already applies the instinct: the friction-tag taxonomy is deferred "until it can emerge from clustering real frictions," and ADR-0010 deferred a dedicated `digests` collection.) It is a brake on future coinage, not a purge — anything already built stays.
+This **complements** the `domain-modeling` skill's 3-part ADR test (defined there) rather than replacing it: that test gates *decisions*; the rule of two gates *vocabulary*. Coined terms are a standing tax — CLAUDE.md makes every session read all ADRs and reconcile term conflicts against the glossary — so the second instance is what proves the abstraction is worth that tax. (The repo already applies the instinct: the friction-tag taxonomy is deferred "until it can emerge from clustering real frictions," and ADR-0010 deferred a dedicated `digests` collection.) It is a brake on future coinage, not a purge — anything already built stays.
 
 ## Flag ADR conflicts
 
 If your output contradicts an existing ADR, surface it explicitly rather than silently overriding:
 
-> _Contradicts ADR-0007 (generated config committed & drift-checked) — but worth reopening because…_
+> _Contradicts ADR-0006 (runtime routing by path prefix) — but worth reopening because…_

@@ -191,7 +191,8 @@ in a JS/TS codebase also reads as a lexical closure — a different thing.)
 ### Friction
 A single recorded pain-point within a Session: something that went wrong, was
 unnecessarily complex, or wasted effort or tokens. Each carries a **description**,
-a possible **solution**, and a **severity** graded `nit` → `blocker`. Frictions
+a possible **solution**, and a **severity** graded `nit < minor < moderate <
+major < blocker`. Frictions
 are the primary signal the self-improvement jobs (`consolidate`, `codify`) mine
 for recurring pain, so agents report **every** friction honestly — even nits. A
 tagging taxonomy is deliberately *not* fixed up front: it is meant to **emerge**

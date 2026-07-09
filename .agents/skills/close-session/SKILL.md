@@ -5,8 +5,11 @@ description: Invoke when this Claude session is wrapping up — coming to a clos
 
 You've reached **Session closure** — run the two closing actions:
 
-- **Record the session log: invoke `/log-session`.** Status `in-review` if a PR is
-  open, else `completed`.
+- **Record the session log: invoke `/log-session`.** Pick the honest status from
+  its full set (`completed | in-review | partial | blocked | abandoned`):
+  `in-review` while a PR is open, `completed` **only** when work actually landed,
+  and `partial`/`blocked`/`abandoned` when that's the truth — never default a
+  stalled or abandoned session to `completed`.
 - **For any gated PR, follow CLAUDE.md's discipline:** open it, subscribe to its
   activity, and babysit it to merge/close.
 
