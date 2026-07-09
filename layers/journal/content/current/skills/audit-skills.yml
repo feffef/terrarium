@@ -4,6 +4,6 @@ importance: specialist
 role: >-
   The `sync`-family Skill that keeps the Skill Inventory honest and watches for
   behavior regressions after a Skill's own `SKILL.md` edits. Self-merges
-  bright-line-evidenced Inventory changes (ADR-0004's low-risk tier); anything
-  needing a doc edit, or resting on softer evidence, becomes this run's own
-  friction/learning/idea instead — never a direct edit (ADR-0015).
+  bright-line-evidenced Inventory changes (ADR-0004's low-risk tier); a
+  citable frontmatter concern gets a filed/commented issue, anything softer
+  becomes a learning/idea instead — never a direct edit (ADR-0015).

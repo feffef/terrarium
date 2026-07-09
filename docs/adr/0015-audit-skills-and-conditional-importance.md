@@ -16,10 +16,12 @@ Status: Accepted
 > **Amended (2026-07-09).** `audit-skills` gains a bounded self-merge tier —
 > third name on ADR-0003's exemption list, after `digest`/`audit-docs`. Scope:
 > only `layers/journal/content/current/skills/*.yml` edits citing the
-> bright-line evidence rule above (now symmetric for promote and demote).
-> Regression-watch and new/split/retire suggestions are notes-only (session-log
-> `learnings`/`ideas`), never self-merged or directly edited. Full detail in
-> `audit-skills/SKILL.md`.
+> bright-line evidence rule above (now symmetric for promote and demote). A
+> frontmatter concern citing that same rule may file/comment on a
+> `needs-triage` issue directly (search first); the lower-confidence
+> regression-watch signal never files or edits on its own — only a session-log
+> `learnings`/`ideas` note, or a comment corroborating an issue the bright-line
+> rule already opened. Full detail in `audit-skills/SKILL.md`.
 
 ## Context
 

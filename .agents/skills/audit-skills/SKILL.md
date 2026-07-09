@@ -1,6 +1,6 @@
 ---
 name: audit-skills
-description: Tune the Skill Inventory to match real usage and watch for behavior regressions after a Skill's SKILL.md changes — re-grade importance/role from session history, self-merging bright-line-evidenced Inventory edits. Anything needing a doc/frontmatter change, or resting on softer evidence, becomes this run's own friction/learning/idea instead — never a direct edit.
+description: Tune the Skill Inventory to match real usage and watch for behavior regressions after a Skill's SKILL.md changes — re-grade importance/role from session history, self-merging bright-line-evidenced Inventory edits. A frontmatter concern with citable evidence gets a filed/commented issue; anything resting on softer evidence becomes this run's own learning/idea instead — never a direct edit.
 disable-model-invocation: true
 ---
 
@@ -21,20 +21,19 @@ change:
 - an **Inventory PR** — `importance`/`role` edits that cite the bright-line
   evidence rule (step 3) — **self-merged on a green gate** (step 7, ADR-0004's
   low-risk content tier, ADR-0015);
-- a **friction** in this run's own session log, when a Skill's frontmatter or
-  another doc genuinely looks like it needs to change (step 5) — never a direct
-  edit and never an issue you file yourself;
+- a **filed or commented `needs-triage` issue**, only for step 3's bright-line
+  signal (≥2 sessions, citable evidence) — search first, comment on a match
+  instead of re-filing (step 5);
 - a **learning**, when the regression watch (step 4) turns up a plausible but
-  low-confidence behavioral signal — a note for a future reader, not a verdict;
+  low-confidence behavioral signal — never enough on its own to file or comment;
 - an **idea**, when the evidence suggests a new Skill, or splitting/retiring an
   existing one (step 6) — concrete enough to become an issue, but not one you
   open yourself.
 
 **Never edit `.agents/skills/` or any other doc.** This Skill writes *only*
-Inventory `.yml` entries. A Skill's own `SKILL.md` and every other live doc are
-`audit-docs`'s (drift/contradiction) and `frictions-to-fixes`'s (friction-driven
-fixes) owned surfaces — you *refer*, via a friction in your own log (step 5),
-you never patch them yourself.
+Inventory `.yml` entries and, per step 5's evidence bar, issues — never a
+Skill's `SKILL.md` or any other doc. That's `audit-docs`'s (drift/contradiction)
+and `frictions-to-fixes`'s (friction-driven) surface.
 
 ## 1. Branch off `origin/main`
 
@@ -56,10 +55,12 @@ It prints JSON:
   `external`, current `importance`/`role`, its SKILL.md `description`, and
   `usedIn` (every windowed session that invoked it). Pass `--window N` to
   widen/narrow.
-- **`regressionChecks`** — for each of our own (non-external) Skills' most
-  recent `SKILL.md` edit commits, the sessions immediately before and after
-  that commit's date (independent of the primary window above — an edit can be
-  older than the newest 40 sessions).
+- **`regressionChecks`** — for each of our own (non-external) Skills' single
+  most recent `SKILL.md` edit commit, the ids of the sessions immediately
+  before and after that commit's date (independent of the primary window
+  above — an edit can be older than the newest 40 sessions). Resolve ids
+  against **`regressionSessions`** — a deduped pool, since the same session
+  commonly brackets more than one Skill's edit.
 
 Done when you hold the scorecard.
 
@@ -100,53 +101,55 @@ evidence, and observed-but-un-inventoried Skills have entries.
 
 ## 4. Watch for behavior regressions after a Skill's own edits
 
-Read `regressionChecks`. For each bracketed edit, compare the `before`/`after`
+Read `regressionChecks`, resolving `before`/`after` ids against
+`regressionSessions`. For each bracketed edit, compare the `before`/`after`
 sessions' use of that Skill (did it fire in the sessions where its kind of work
-recurred? did logged frictions involving it change?) and judge whether the edit
-plausibly **helped, hurt, or is inconclusive**.
+recurred?) and judge whether the edit plausibly **helped, hurt, or is
+inconclusive**.
 
-**This is a hypothesis, not a fact — always hedge it as one.** The brackets are
-small (default 10 sessions a side) and confounded (other things changed too in
-that window); this signal is deliberately *not* the bright-line rule step 3
-uses, and it never gates a grade change on its own. If a bracket turns up a
-credible concern (e.g. a Skill that fired reliably before an edit and not since,
-in sessions that plausibly needed it), **record it as this run's own `learnings`
-entry** (CONTEXT.md → Session glossary — "useful knowledge the session
-inferred... a Friction's positive twin") for a future reader to weigh, alongside
-which edit and sessions you're pointing at. Do not edit the Inventory or any doc
-from this signal alone.
+**This is a hypothesis, not a fact, and it never files or comments on an issue
+by itself — false positives here are cheap to make and expensive to act on.**
+The brackets are small (5 sessions a side) and confounded (other things changed
+too in that window); this signal is deliberately *not* the bright-line rule
+step 3 uses, and it never gates a grade change either. If a bracket turns up a
+credible concern, **record it as this run's own `learnings` entry** (CONTEXT.md
+→ Session glossary — "useful knowledge the session inferred... a Friction's
+positive twin") naming the edit and sessions — a note for a future reader, full
+stop. The one exception is step 5: if this signal corroborates a concern that
+already has an **open, bright-line-originated issue**, add a comment there
+instead of a fresh `learnings` note.
 
-Done when every bracketed edit with a real signal either has a hedged
-`learnings` note or was judged inconclusive (most will be — that's fine, say so
-silently by not writing a note).
+Done when every bracketed edit with a real signal has a hedged `learnings` note
+or a corroborating comment (step 5), or was judged inconclusive (most will be —
+that's fine, say so silently by writing nothing).
 
-## 5. Note frontmatter/doc concerns as a friction, not an edit
+## 5. File — or comment on — an issue for a frontmatter concern
 
-A Skill that was **absent from ≥2 windowed sessions whose work was clearly in
-its domain** (step 3's demotion signal), or a `regressionChecks` finding serious
-enough to act on (step 4), probably means a `description` or other doc needs a
-real edit — but that edit is not yours to make.
+Only **step 3's bright-line rule** (≥2 windowed sessions, absent from work
+clearly in its domain) may **originate** a new issue — that's the one signal
+here with citable, objective evidence. Step 4's regression watch alone never
+originates one; it may only add a corroborating comment to an issue step 3
+already opened (see step 4).
 
 **This step is for our own (`external: false`) Skills only.** A pack Skill's
-SKILL.md is not ours to patch (a re-install would clobber it, ADR-0005) — if an
-*external* Skill looks under-used despite the opportunity, the only lever we own
-is its Inventory `role` (already handled in step 3).
+SKILL.md is not ours to patch (ADR-0005) — for an under-used *external* Skill,
+the only lever we own is its Inventory `role` (step 3).
 
-For each own opportunity-missed or regression-flagged Skill: **log it as a
-friction in this run's own session log** — `description` (what looks wrong and
-why), `solution` (your best-guess fix, e.g. "`description` likely mis-triggers,
-reword to mention X"), `severity`. Do not file a GitHub issue yourself and do
-not patch `.agents/skills/` or any other doc yourself.
-`frictions-to-fixes` already mines the newest 20 session logs' frictions on its
-own cycle (a Routine also fires it) and owns the file-issue → dispatch →
-review-and-merge pipeline for exactly this surface (ADR-0003's mid-term
-review-agent, author ≠ merger) — routing through it, instead of a second
-issue-filing path, avoids two Skills contending for the same fix.
+For each own Skill step 3 flags:
+- **Search first** (`search_issues`, `is:issue is:open audit-skills <name>`).
+- **Found** — add a comment citing this run's fresh evidence. A concern that
+  keeps recurring across runs is itself the strongest evidence it's real; that
+  history belongs on one thread, not a pile of near-duplicate issues.
+- **Not found** — file one `needs-triage` issue naming the session ids as
+  evidence and your best-guess hypothesis. `triage` picks up any issue
+  regardless of source; you're not filing into a void.
 
-Done when every own opportunity-missed or regression-flagged Skill has a
-friction logged (or was already logged in a very recent prior run — don't
-duplicate a friction you already logged for the same Skill within the last few
-runs).
+Never patch `.agents/skills/` or any other doc yourself, and never file an
+issue for step 4's signal alone.
+
+Done when every step-3-flagged Skill has an issue filed or commented on (and
+every step-4 corroboration that found a matching open issue is a comment, not
+a new issue).
 
 ## 6. Suggest new Skills or Skill splits/cuts, as ideas
 
@@ -159,8 +162,8 @@ GitHub issue, not a vague hunch"). Name the evidence, not just the hunch.
 
 This Skill never creates, splits, or retires a Skill itself — that is net-new /
 creative work and stays human-green-lit (ADR-0003's two-tier autonomy split).
-`ideas` are read by the future `consolidate`/`codify` jobs, not
-`frictions-to-fixes` — don't also log it as a friction.
+`ideas` are read by the future `consolidate`/`codify` jobs — this is a distinct
+signal from step 5's issue, not a duplicate of it.
 
 Done when every credible new/split/retire signal from this run is captured as
 an idea (most runs will have none — that's fine).
@@ -173,9 +176,10 @@ it runs). Done when it's green.
 ## 8. Commit, push, open the gated PR — self-merge Inventory-only changes on green
 
 - **The PR must touch only `layers/journal/content/current/skills/*.yml`** —
-  confirm with `git diff --stat` before pushing. Steps 4-6's friction/learning/idea
-  live in this run's own session log, never in this PR's diff — keeping the two
-  apart is what makes the self-merge check a trivial file-list comparison.
+  confirm with `git diff --stat` before pushing. Step 5's issue and steps 4/6's
+  learnings/ideas never ride in this PR's diff (an issue is on the tracker, not
+  this repo; learnings/ideas belong in the session log) — keeping them apart is
+  what makes the self-merge check a trivial file-list comparison.
 - **Every grade/role change in the diff must cite the step-3 bright-line rule**
   (≥2 session ids, either direction, or a plain `usedIn` match for a role
   refresh). A change riding on step 4's regression signal alone does not belong
@@ -194,5 +198,6 @@ it runs). Done when it's green.
   (a human-only surface, or step 4-6 output that slipped in by mistake).
 
 Done when the gate is green and the PR is merged (by you), or open and honestly
-escalated. Then invoke `close-session` — this run's own frictions/learnings/ideas
-from steps 4-6 belong in its log.
+escalated. Then invoke `close-session` — this run's own `learnings`/`ideas` from
+steps 4 and 6 belong in its log, and its own frictions (if it hit any doing this
+work) belong there too.

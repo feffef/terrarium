@@ -11,7 +11,9 @@
 // Usage:  tsx scripts/audit-skills.ts [--window N]
 //   Prints a scorecard: the window of sessions considered (newest first),
 //   per-Skill usage/grade/description join, and `regressionChecks` — each own
-//   Skill's recent edit commits with the sessions immediately before/after them.
+//   Skill's most recent edit commit with the sessions immediately before/after
+//   it (session ids only; resolve against `regressionSessions`, deduped since
+//   the same session commonly brackets more than one Skill's edit).
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -23,9 +25,11 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 /** The default observation window: the 40 newest session logs (by `endedAt`). */
 export const DEFAULT_WINDOW = 40
 /** Sessions considered on each side of a Skill-edit commit for the regression watch. */
-export const REGRESSION_BRACKET = 10
-/** Most-recent edit commits considered per Skill, so a churny Skill doesn't flood the scorecard. */
-export const MAX_EDITS_PER_SKILL = 3
+export const REGRESSION_BRACKET = 5
+/** Most-recent edit commits considered per Skill — only the latest matters most
+ *  for "did the last change help", and every extra one multiplies the scorecard's
+ *  size across every own Skill with edit history. */
+export const MAX_EDITS_PER_SKILL = 1
 
 /** Paths this helper reads. */
 export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
@@ -85,12 +89,16 @@ export interface SkillEdit {
 /** One own-Skill edit, bracketed by up to `n` sessions immediately before and
  *  after its commit date — raw material for judging whether behavior around a
  *  Skill changed after a manual or `audit-docs` edit to its `SKILL.md`. Purely
- *  mechanical: it brackets, it does not conclude "regression" (ADR-0015). */
+ *  mechanical: it brackets, it does not conclude "regression" (ADR-0015).
+ *  `before`/`after` are session ids, not full objects — look them up in the
+ *  Scorecard's `regressionSessions` (deduped: the same session commonly
+ *  brackets several Skills' edits, and embedding it once per check bloated the
+ *  scorecard well past what's worth handing a Skill run in one shot). */
 export interface RegressionCheck {
   skill: string
   edit: SkillEdit
-  before: WindowSession[]
-  after: WindowSession[]
+  before: string[]
+  after: string[]
 }
 export interface Scorecard {
   windowSize: number
@@ -98,6 +106,7 @@ export interface Scorecard {
   window: WindowSession[]
   skills: SkillRow[]
   regressionChecks: RegressionCheck[]
+  regressionSessions: WindowSession[]
 }
 
 // ── Pure core (unit-tested) ───────────────────────────────────────────────────
@@ -173,25 +182,34 @@ export function bracketSessions(
 
 /** For each own (non-external) Skill's `maxEditsPerSkill` most recent edit
  *  commits, bracket the sessions around it. Skips a Skill with no edits, and
- *  skips an edit with no session data on either side (nothing to compare). */
+ *  skips an edit with no session data on either side (nothing to compare).
+ *  Returns checks referencing session ids plus the deduped pool of sessions
+ *  those ids resolve against — the same session routinely brackets more than
+ *  one Skill's edit, and embedding its full object every time is the single
+ *  biggest driver of scorecard size. */
 export function buildRegressionChecks(
   allSessions: WindowSession[],
   editsByName: Map<string, SkillEdit[]>,
   external: Set<string>,
   n = REGRESSION_BRACKET,
   maxEditsPerSkill = MAX_EDITS_PER_SKILL,
-): RegressionCheck[] {
-  const out: RegressionCheck[] = []
+): { checks: RegressionCheck[]; sessions: WindowSession[] } {
+  const checks: RegressionCheck[] = []
+  const pool = new Map<string, WindowSession>()
   for (const [name, edits] of editsByName) {
     if (external.has(name)) continue
     const recent = [...edits].sort((a, b) => b.date.localeCompare(a.date)).slice(0, maxEditsPerSkill)
     for (const edit of recent) {
       const { before, after } = bracketSessions(allSessions, edit.date, n)
       if (before.length === 0 && after.length === 0) continue
-      out.push({ skill: name, edit, before, after })
+      for (const s of before) pool.set(s.session, s)
+      for (const s of after) pool.set(s.session, s)
+      checks.push({ skill: name, edit, before: before.map((s) => s.session), after: after.map((s) => s.session) })
     }
   }
-  return out.sort((a, b) => a.skill.localeCompare(b.skill) || b.edit.date.localeCompare(a.edit.date))
+  checks.sort((a, b) => a.skill.localeCompare(b.skill) || b.edit.date.localeCompare(a.edit.date))
+  const sessions = [...pool.values()].sort((a, b) => a.endedAt.localeCompare(b.endedAt))
+  return { checks, sessions }
 }
 
 // ── FS IO (thin shell) ────────────────────────────────────────────────────────
@@ -321,8 +339,15 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
   const window = pickWindow(all, windowSize)
   const external = readLock(cwd)
   const rows = buildSkillRows(readOnDiskSkills(cwd), readInventory(cwd), tallyUsage(window), external)
-  const regressionChecks = buildRegressionChecks(all, readSkillEdits(cwd), external)
-  return { windowSize, sessionsConsidered: all.length, window, skills: rows, regressionChecks }
+  const { checks, sessions } = buildRegressionChecks(all, readSkillEdits(cwd), external)
+  return {
+    windowSize,
+    sessionsConsidered: all.length,
+    window,
+    skills: rows,
+    regressionChecks: checks,
+    regressionSessions: sessions,
+  }
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────────

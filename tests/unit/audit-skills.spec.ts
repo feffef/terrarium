@@ -162,29 +162,28 @@ describe('buildRegressionChecks()', () => {
     const edits = new Map<string, SkillEdit[]>([
       ['pack-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
     ])
-    expect(buildRegressionChecks(sessions, edits, new Set(['pack-skill']))).toEqual([])
+    expect(buildRegressionChecks(sessions, edits, new Set(['pack-skill']))).toEqual({ checks: [], sessions: [] })
   })
 
   it('skips a Skill absent from the edits map entirely', () => {
-    expect(buildRegressionChecks(sessions, new Map(), new Set())).toEqual([])
+    expect(buildRegressionChecks(sessions, new Map(), new Set())).toEqual({ checks: [], sessions: [] })
   })
 
   it('skips an edit with no session data on either side (empty session history)', () => {
     const edits = new Map<string, SkillEdit[]>([
       ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
     ])
-    expect(buildRegressionChecks([], edits, new Set())).toEqual([])
+    expect(buildRegressionChecks([], edits, new Set())).toEqual({ checks: [], sessions: [] })
   })
 
-  it('brackets an own Skill edit that falls within the session history', () => {
+  it('brackets an own Skill edit that falls within the session history, referencing sessions by id', () => {
     const edits = new Map<string, SkillEdit[]>([
       ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
     ])
-    const checks = buildRegressionChecks(sessions, edits, new Set())
+    const { checks, sessions: pool } = buildRegressionChecks(sessions, edits, new Set())
     expect(checks).toHaveLength(1)
-    expect(checks[0]).toMatchObject({ skill: 'our-skill', edit: { sha: 's1' } })
-    expect(checks[0]?.before.map((s) => s.session)).toEqual(['a'])
-    expect(checks[0]?.after.map((s) => s.session)).toEqual(['b'])
+    expect(checks[0]).toMatchObject({ skill: 'our-skill', edit: { sha: 's1' }, before: ['a'], after: ['b'] })
+    expect(pool.map((s) => s.session)).toEqual(['a', 'b'])
   })
 
   it('caps at the n most recent edits per Skill', () => {
@@ -198,7 +197,18 @@ describe('buildRegressionChecks()', () => {
         ],
       ],
     ])
-    const checks = buildRegressionChecks(sessions, edits, new Set(), 10, 2)
+    const { checks } = buildRegressionChecks(sessions, edits, new Set(), 10, 2)
     expect(checks.map((c) => c.edit.sha)).toEqual(['s3', 's2'])
+  })
+
+  it('dedupes a session referenced by more than one Skill\'s bracket into one pool entry', () => {
+    const edits = new Map<string, SkillEdit[]>([
+      ['skill-one', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
+      ['skill-two', [{ sha: 's2', date: '2026-07-04T00:00:00Z', subject: 'edit' }]],
+    ])
+    const { checks, sessions: pool } = buildRegressionChecks(sessions, edits, new Set())
+    expect(checks).toHaveLength(2)
+    // session 'b' brackets both edits (after s1, before s2) but appears once in the pool
+    expect(pool.filter((s) => s.session === 'b')).toHaveLength(1)
   })
 })
