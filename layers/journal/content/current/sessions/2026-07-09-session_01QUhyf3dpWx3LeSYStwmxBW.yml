@@ -1,0 +1,64 @@
+schemaVersion: 1
+session: session_01QUhyf3dpWx3LeSYStwmxBW
+startedAt: 2026-07-09T05:34:46Z
+endedAt: 2026-07-09T05:55:08Z
+kind: autonomous
+goal: Run frictions-to-fixes on the last 20 sessions
+status: completed
+outcome: One friction fixed, PR merged
+summary: "Scheduled autonomous run of the frictions-to-fixes skill. Delegated the survey (read 20 session logs, group/rank frictions, screen against the GitHub tracker) to a general-purpose subagent, which found only one never-fixed candidate — recurring, quoted GitHub search queries still fuzzy-match and surface noisy hits (2/20 sessions). Everything else in the window was already fixed by earlier frictions-to-fixes cycles (PRs #232, #234, #247, #248, #255, #256), already tracked by an open issue (#231, #257), or a genuine low-severity one-off. Filed issue #259, dispatched a worktree-isolated Sonnet impl agent that wrote the one-bullet doc fix to docs/agents/issue-tracker.md and opened PR #260. Reviewed the diff myself, posted the review verdict on the PR, waited for the CI gate to go green, and squash-merged. No human input was received at any point this run; every step (issue filing, dispatch, review, merge, closure) was self-directed per ADR-0003's review-agent role, with no escalation needed since the one selection was low-risk."
+prs:
+  - "260"
+docsRead:
+  - path: docs/agents/issue-tracker.md
+    reason: verify the recommended doc fix's placement and existing tone
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run itself
+  - name: close-session
+    reason: closure trigger
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: git log --all -S<string> mixes divergent/rewritten branch histories, once misreading an incrementally-built file as a brand-new-file commit
+    solution: always scope -S searches to origin/main specifically (git log origin/main -S...) when trying to date when content landed
+    severity: minor
+  - description: Grep tool returned no match for a literal substring present in CLAUDE.md, confirmed instantly by a plain Bash grep on the same file
+    solution: fall back to Bash grep when Grep reports an unexpected zero-match on a string known to be present
+    severity: nit
+  - description: confirming whether a doc fix predates a friction-log session required manually eyeballing local-offset git timestamps against each session's startedAt in UTC
+    solution: scripts/merged-since.ts lists commits after an instant but not which line of which file changed when; a small helper diffing a specific doc section's blame against a timestamp would remove the manual step
+    severity: minor
+  - description: "the github MCP server briefly disconnected and reconnected mid-run while polling PR #260's check runs"
+    solution: no action needed beyond a ToolSearch retry once tools reappeared; worth remembering GitHub MCP can drop mid-poll
+    severity: nit
+  - description: this is the third frictions-to-fixes cycle inside the same 20-session window, so most of the survey subagent's budget went to re-confirming already-fixed candidates rather than finding new signal
+    solution: consider widening the session-log window or spacing out the cadence so consecutive runs don't mostly re-tread the same recency window
+    severity: minor
+durationSec: 1222
+models:
+  claude-sonnet-5: 61
+toolCounts:
+  Bash: 4
+  Agent: 2
+  ScheduleWakeup: 2
+  Read: 1
+  ToolSearch: 3
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 1
+  mcp__github__pull_request_read: 4
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Skill: 2
+  Grep: 3
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - task: "Implement doc fix for issue #259"
+    model: sonnet
+gitBranch: claude/serene-goldberg-duxzl4
+entrypoint: remote_trigger
+cliVersion: 2.1.205
