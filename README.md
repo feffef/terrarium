@@ -22,7 +22,7 @@ world you plant tenants in and watch grow.
 
 The distinctive part: the Platform is grown and maintained **mostly by Claude
 Code agents** — interactively (a human directs a change) and autonomously
-(scheduled jobs that sync docs, check drift, consolidate, triage, and codify new
+(scheduled jobs that sync docs, consolidate, triage, and codify new
 Skills). Every change lands as a gated PR; agents are the authors of record.
 
 One Tenant is the Platform's own **journal** — its self-documentation: curated
@@ -32,10 +32,11 @@ session logs, research, and ideas that drive self-improvement.
 ## Status
 
 The manifest → build-time routing → gated-render pipeline runs end-to-end and is
-publicly deployed. Three Tenants are live: **`journal`** (the Platform's own
-self-documentation, Spaces `current`/`archived`), **`blog`** (Personas-as-Spaces —
-`david`/`karen`/`kevin` — reporting on the Platform itself), and **`atlas`** (a
-field-guide Tenant using Spaces as biomes). Deployment is a self-updating
+publicly deployed, hosting several Tenants — a self-documenting **`journal`**, a
+Persona-driven **`blog`**, and a design-showpiece **`atlas`** field guide. (The
+live roster of Tenants, Spaces, and Collections is single-homed in the `journal`
+Tenant and the ADRs — see the links below — not restated here, where it would
+rot.) Deployment is a self-updating
 container that tracks `main` (see [`deploy/README.md`](deploy/README.md) and
 ADR-0011). Further Tenants, Skills, and the autonomous jobs continue to land as
 gated PRs — see the `journal` Tenant's own digests

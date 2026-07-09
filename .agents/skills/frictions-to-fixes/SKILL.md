@@ -107,8 +107,8 @@ if your judgement differs, but don't re-derive the ranking from scratch.)
   none of the human-only surfaces — generator, routing, isolation logic, CI / the
   safety gate — ADR-0004; those are never dispatched here). These you review and
   merge yourself in §6.
-- **Hard (at most 2 per run).** A friction whose fix is a **large code change** or
-  is **expected to need human review**. These are still confined to safe surfaces —
+- **Hard (at most 2 per run).** A friction whose fix is a **large or multi-file
+  code change**, or one that turns on a **non-obvious design decision**. These are still confined to safe surfaces —
   "hard" buys ambition within the dispatchable surface, never a licence to touch a
   human-only one. Cap them at **2** so the review-and-merge load stays sane; if
   more than two hard frictions rank highly, take the top two and leave the rest for

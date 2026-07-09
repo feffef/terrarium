@@ -1,6 +1,6 @@
 ---
 name: digest
-description: Bring the Journal's front pages up to date — write a Digest for each closed UTC day (from git + session logs) and regenerate the index overview — then open one gated PR that auto-merges once the safety gate is green.
+description: Bring the Journal's front pages up to date — write a Digest for each closed UTC day (from git + session logs); the index overview refreshes itself live — then open one gated PR and merge it once the safety gate is green.
 disable-model-invocation: true
 ---
 
@@ -8,8 +8,8 @@ disable-model-invocation: true
 
 Bring the Journal's front pages up to date. Two products, one run: a **Digest**
 per closed UTC day — a short, human **catch-up** on everything that happened
-across the Platform that day (ADR-0010) — and a regenerated **index** overview of
-the Platform's current state and capabilities. A thin, tested helper
+across the Platform that day (ADR-0010) — and a live, self-refreshing **index**
+overview of the Platform's current state and capabilities. A thin, tested helper
 (`scripts/digest.ts`) does the deterministic gathering; **you write the prose**.
 
 > **Invoked, never self-fired — follow the steps.** This Skill is user-invoked
@@ -20,9 +20,10 @@ the Platform's current state and capabilities. A thin, tested helper
 
 Digests land through the **ordinary gated PR** (ADR-0003) — *not* the `log-session`
 direct-to-main path (that exception is bounded to inert `data`; a Digest is a
-rendered page). The PR **auto-merges once the gate is green** (ADR-0003
-amendment, activating ADR-0004's content-only low-risk tier) — see step 6 for
-the boundary.
+rendered page). The PR is **eligible to merge as soon as the gate is green**
+(ADR-0003 amendment, activating ADR-0004's content-only low-risk tier); until
+repo auto-merge is re-enabled (#231) you merge it manually on green — see step 6
+for the boundary and the merge mechanics.
 
 ## 1. Branch off `origin/main`
 
@@ -111,28 +112,29 @@ pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e
 
 Done when every step is green.
 
-## 6. Commit, push, open one gated PR — auto-merge on green
+## 6. Commit, push, open one gated PR — merge on green
 
 Commit the new Digest(s) (a backfill of several days rides one commit/PR), push
 the branch with retry, and open **one gated PR**. Keep the PR description in
 sync with what it contains (`CLAUDE.md`).
 
-Then set it to **merge automatically once the CI gate is green** (ADR-0003
-amendment; ADR-0004's content-only low-risk tier) — allowed **only** while the
-PR contains nothing beyond the digest scope (digest pages under
-`…/pages/digests/`, at most plus the index's editorial intro):
+Then **merge it once the CI gate is green** (ADR-0003 amendment; ADR-0004's
+content-only low-risk tier) — allowed **only** while the PR contains nothing
+beyond the digest scope (digest pages under `…/pages/digests/`, at most plus the
+index's editorial intro):
 
-- **Enable GitHub auto-merge** on the PR (`gh pr merge --auto`, or the GitHub
-  MCP `enable_pr_auto_merge`), then watch until the gate run completes and the
-  PR actually merges — pushing is not landing (`CLAUDE.md`).
-- If auto-merge is unavailable (repo setting / branch protection), watch the
-  gate instead and **merge only after it reports green** (`gh pr merge` / the
-  MCP `merge_pull_request`).
-- A **red gate is never merged.** Diagnose and fix on the branch (auto-merge
-  then lands the green re-run), or leave the PR open and escalate to a human
-  if the failure isn't yours.
-- If anything **outside the digest scope** rode into the PR, do **not**
-  auto-merge — leave it open for human review (ADR-0003's default).
+- **Merge manually on green.** Repo-level GitHub auto-merge is currently
+  unavailable pending a repo-owner setting (#231), so watch the gate yourself
+  (`pull_request_read` with `get_check_runs` — see `docs/agents/issue-tracker.md`)
+  and merge only after it reports green (the GitHub MCP `merge_pull_request`).
+  Pushing is not landing (`CLAUDE.md`).
+- **Once auto-merge is re-enabled (#231)** you may instead set the PR to merge
+  automatically on green (`enable_pr_auto_merge`) rather than watching it.
+- A **red gate is never merged.** Diagnose and fix on the branch (then merge the
+  green re-run), or leave the PR open and escalate to a human if the failure
+  isn't yours.
+- If anything **outside the digest scope** rode into the PR, do **not** merge on
+  green — leave it open for human review (ADR-0003's default).
 
 Done when the PR has **merged with a green gate** — or, in the escalation
 cases above, is open and honestly awaiting a human.

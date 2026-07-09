@@ -18,11 +18,14 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   symlinks). The **`domain-modeling`** skill owns the conventions for the two
   files above: `CONTEXT.md` stays **glossary-only** (no implementation detail),
   and it defines the 3-part test for *when* a decision earns an ADR — **hard to
-  reverse · surprising without context · a real trade-off**. Note: every ADR in
-  this repo uses the fuller `Context / Decision / Consequences` form — match it
-  for consistency rather than the skill's minimal template. It also owns the
-  **rule of two** for new vocabulary (coin a glossary/ADR term only on a
-  concept's *second* instance) — see `docs/agents/domain.md`.
+  reverse · surprising without context · a real trade-off**. Note: this repo
+  diverges from that skill's generic templates in two ways — every ADR uses the
+  fuller `Context / Decision / Consequences` form (not the skill's minimal
+  template), and `CONTEXT.md` is a `## Glossary` of `### Term` entries (not the
+  skill's `## Language`/`_Avoid_` layout); match the repo's actual files. This
+  repo's **rule of two** for new vocabulary (coin a glossary/ADR term only on a
+  concept's *second* instance) is defined in `docs/agents/domain.md`,
+  complementing that skill's 3-part test.
 - **Which Skills to actually use** is curated in the `journal` Tenant's **Skill
   Inventory** — `layers/journal/content/current/skills/`, rendered at
   `/t/journal/current`. It records each installed Skill's *role and importance to
@@ -52,8 +55,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   `mcp__github__search_pull_requests` or `list_pull_requests` scoped to the
   branch) — don't tell the user you're about to open one without checking first.
 - All work must clear the **safety gate** (build/validate/isolation, ADR-0004).
-  The routing module, isolation logic, and CI are **human-only** — never
-  auto-merge changes touching them.
+  The manifest-expansion and routing modules (`content.config.ts`,
+  `shared/expand.ts`, `modules/routing.ts`), isolation logic, CI, and
+  governance/ADRs are **human-only** — never auto-merge changes touching them
+  (ADR-0004's high-risk set). "Human-only" gates *merging*, not editing:
+  `content.config.ts` is hand-editable (below), but a PR touching it still
+  needs a human to merge.
 - **Skills** are generic, repo-committed, and first-class (ADR-0005).
 - Runtime routing is by path prefix `/t/<tenant>/<space>/<slug>` (ADR-0006). The
   routing map is derived at build time from the manifests via `modules/routing.ts`
@@ -142,7 +149,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   session".) **Repo-level GitHub auto-merge (`enable_pr_auto_merge`) is
   currently unavailable on this repo pending a repo-owner Settings change**
   (`Settings → General → Allow auto-merge`, tracked in #231) — don't attempt to
-  enable it yourself; merge manually once the gate reports green instead.
+  enable it yourself. Merge manually once the gate reports green **only where the
+  change is already auto-merge-eligible** (the digest / reviewer-agent tiers,
+  ADR-0003/0004); an ordinary work PR is still merged by a human, never
+  self-merged (see "no self-merge" above).
 - **Opening the PR is the first session log.** The moment you open the gated PR
   is a closure point: invoke `close-session` right then (it authors the log via
   `log-session`), with status **`in-review`** (the PR is open, not merged — never

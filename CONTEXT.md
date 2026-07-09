@@ -192,7 +192,8 @@ in a JS/TS codebase also reads as a lexical closure — a different thing.)
 ### Friction
 A single recorded pain-point within a Session: something that went wrong, was
 unnecessarily complex, or wasted effort or tokens. Each carries a **description**,
-a possible **solution**, and a **severity** graded `nit` → `blocker`. Frictions
+a possible **solution**, and a **severity** graded `nit < minor < moderate <
+major < blocker`. Frictions
 are the primary signal the self-improvement jobs (`consolidate`, `codify`) mine
 for recurring pain, so agents report **every** friction honestly — even nits. A
 tagging taxonomy is deliberately *not* fixed up front: it is meant to **emerge**
@@ -242,7 +243,7 @@ absent).
 ### Codify
 The Platform's self-improvement loop: an autonomous job that turns a repeated
 manual pattern into a new, committed Skill. It is one of a small set of chartered
-autonomous jobs — alongside `sync`, `drift-check`, `consolidate`, and `triage` —
+autonomous jobs — alongside `sync`, `consolidate`, and `triage` —
 that *tend and consolidate* the Platform rather than decide what should exist. (A
 chartered job is a *remit*, realised by one or more Skills: `sync` is served by
 `digest` and `audit-skills` today — see ADR-0003/0015.)
