@@ -1,0 +1,60 @@
+schemaVersion: 1
+session: session_01H2XgLoKgBhCdJFPoghoWMJ
+startedAt: 2026-07-09T14:20:05Z
+endedAt: 2026-07-09T16:08:41Z
+kind: interactive
+goal: Write and land David's blog-post reaction to Karen
+status: completed
+outcome: PR opened, gate green, merged by user
+summary: "User invoked /blog-post to pick the most interesting event since the last blog post and propose persona/story combinations. I surveyed git history and session logs since Karen's 2026-07-08 post and identified the audit-docs Skill's rapid escalation to self-merge/brave-by-default autonomy as the strongest hook, proposing three persona angles; the user chose David reacting to Karen. I drafted the post, re-verified every cited fact and SHA directly against git/GitHub rather than trusting the session log's self-report, and showed the draft before committing per the user's request. User approved as-is. I branched off origin/main, wrote the post and its pingback stub, ran the full safety gate (lint/typecheck/test/build/e2e, all green), and opened gated PR #261, subscribing to its activity per CLAUDE.md. The user then gave out-of-band background on the human intent behind the audit-docs commits (confirming, not contradicting, what the post already said) and explicitly instructed me to hold off merging myself; they merged it themselves later. I had skipped invoking close-session at PR-open time as CLAUDE.md specifies, and only logged this session now after the user asked whether it had been logged."
+prs:
+  - "261"
+docsRead:
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: persona voice for the post
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: verifying the self-merge exemption tier claim
+  - path: layers/blog/tenant.config.ts
+    reason: pingbacks schema
+  - path: layers/blog/content/karen/pages/2026-07-08-a-fix-for-a-bug-you-cant-find.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-08-session_01E7k5RakrzDarSNQHYteazD.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: authored the reaction post end to end
+  - name: close-session
+    reason: closure sequence, invoked late
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: Didn't invoke close-session at PR-open time as CLAUDE.md/ADR-0003 specify ("opening the PR is the first session log"); only logged after the user explicitly asked "Session logged?".
+    solution: Treat opening a gated PR as a hard trigger to invoke close-session in the same turn, not just subscribe/babysit.
+    severity: moderate
+  - description: First draft cited a session-log blob SHA from a garbled/repeated hex pattern instead of a real git-derived hash, caught only on a self-review pass before publishing.
+    solution: Always resolve blob SHAs via `git rev-parse`/`git log -1 --format=%H -- <path>` at the moment of writing the link, never reconstruct one from memory.
+    severity: minor
+  - description: mcp__Claude_Code_Remote__send_later failed once with "Tool permission stream closed before response received", coinciding with a GitHub MCP disconnect/reconnect cycle.
+    solution: Transient; retried successfully after the MCP server reconnected. No action needed beyond noticing the pattern.
+    severity: nit
+durationSec: 6516
+models:
+  claude-sonnet-5: 100
+toolCounts:
+  Bash: 23
+  Read: 5
+  Write: 3
+  Edit: 3
+  ToolSearch: 6
+  mcp__github__pull_request_read: 7
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 3
+  Skill: 2
+filesEdited:
+  - layers/blog/content/karen/pingbacks/2026-07-09-david-a-fix-for-a-bug-you-cant-find.yml
+gitBranch: claude/blog-story-personas-e13def
+entrypoint: remote
+cliVersion: 2.1.205
+learnings:
+  - merged_by on a GitHub PR always reads as the repo owner regardless of whether a human or an agent's API call (under the owner's connection) performed the merge — CLAUDE.md documents this, and it meant I had to use the session's own absence of a merge_pull_request tool call as the actual evidence for 'this session didn't self-merge,' not the merged_by field.
