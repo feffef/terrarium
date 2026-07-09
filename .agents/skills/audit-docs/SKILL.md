@@ -1,6 +1,6 @@
 ---
 name: audit-docs
-description: Audit every live doc and Skill for drift, duplication, contradiction, and ambiguity against the code — fact-check each finding, fix the safe ones, and file an issue (never ask) for anything needing a human call. Opens one gated PR.
+description: Audit every live doc and Skill for drift, duplication, contradiction, and ambiguity against the code — fact-check each finding, fix the safe ones, and file an issue (never ask) for anything needing a human call. Opens one gated PR and self-merges it on a green gate.
 disable-model-invocation: true
 ---
 
@@ -8,14 +8,17 @@ disable-model-invocation: true
 
 Keep the repo's prose honest against the code. Agents act on documented state, so
 here a stale doc is a **behavioural** bug (`CLAUDE.md`). This is a
-`consolidate`-family maintenance sweep (ADR-0003): it fixes drift and duplication
-directly and defers every genuine judgement call to an **issue**, never a
-question — it runs start to finish **without interaction**.
+`consolidate`-family maintenance sweep (ADR-0003): it fact-checks each finding and
+**fixes it bravely**, self-merging its own gated PR on green — filing an issue only
+for the rare case it genuinely can't tell which of two conflicting facts is
+correct. It runs start to finish **without interaction**.
 
-> **Autonomous, bounded.** Runs unattended: it edits only *live* docs, **never**
-> historical records or external-pack templates, **never** self-merges, and turns
-> every human-trade-off decision into a filed issue rather than a prompt. Opening
-> the gated PR and subscribing to it is automatic (`CLAUDE.md`).
+> **Autonomous, bounded.** Runs unattended and **self-merges** its gated PR on a
+> green gate — the PR carries only fact-checked reconciliations that touch no
+> human-only surface (ADR-0004's low-risk content tier). It edits only *live* docs,
+> **never** rewrites a historical record's decision or a pack template, and is
+> **brave by default**: it decides scope itself and fixes, escalating to an issue
+> only for an unresolvable factual conflict.
 
 ## The three tiers — what you may touch
 
@@ -25,9 +28,10 @@ Classify every surface **before** editing. This decides everything.
   `docs/agents/*`, `docs/research/*`, `tests/README.md`, `deploy/README.md`, and
   our own Skills' `SKILL.md` + sibling files (`external: false`). **Fix these.**
 - **Historical** — the append-only record: `docs/adr/*`, journal digests and
-  session logs, blog posts. **Never edit.** An ADR records a decision *as it was
-  made*; body drift is corrected by an amendment — a human call → an **issue** —
-  never by rewriting history (ADR-0018).
+  session logs, blog posts. **Never rewrite a decision.** A drifted ADR still gets
+  the brave fix — the repo's sanctioned **amendment banner / Status-line pointer**
+  (ADR-0018), never a rewrite of the decision — but ADRs are human-only (ADR-0004),
+  so that edit rides its own human-reviewed PR, not the self-merged one (step 7).
 - **Pack-generic** — external-pack Skills (`external: true`; e.g.
   `setup-matt-pocock-skills/*`, the `*-FORMAT.md` templates). Generic and
   re-installable, so a rewrite is clobbered on re-install (ADR-0005). **Never
@@ -60,27 +64,21 @@ checker that re-derives each claim from scratch and returns **CONFIRMED /
 CONFIRMED-BUT** (corrected line or quote) **/ WRONG**. Act only on CONFIRMED(-BUT).
 A plausible-but-wrong finding acted on is a fresh drift *you* authored.
 
-## Fix, or file — the autonomy line
+## Fix bravely — escalate only a true factual conflict
 
-For each confirmed finding, exactly one of:
+**Fix every confirmed finding. That is the default, and be brave about scope** —
+reconcile the doc to the code and primary sources, single-home the duplicates,
+resolve the contradiction by making the prose match reality, pin the undefined
+threshold, retire a term whose premise is dead. Don't stop to ask how far to
+reach, and don't file an issue for a judgement call — **decide it and fix it.**
 
-- **Fix it** when the target is **live**, the change is unambiguous, and it only
-  *reconciles the doc to an already-decided ADR or to reality* — it decides
-  nothing. (Aligning `CLAUDE.md`'s human-only list to ADR-0004, enumerating an
-  enum at its glossary home, collapsing a duplicate to a pointer: all fixes.)
-- **File an issue** — `needs-triage`, **never ask, never edit** — when the fix
-  needs a **human trade-off**: amending an ADR or governance prose; **coining or
-  retiring glossary vocabulary** (the rule of two is a human call —
-  `docs/agents/domain.md`); or choosing *how far a cleanup reaches*. State the
-  finding, the options, and your recommendation, then **proceed with the
-  conservative default** (leave untouched whatever needed the call) so the run
-  still completes. Append the provenance footer (ADR-0017).
-- **Skip** a pack-generic or historical target — record a reconciliation in a live
-  doc if warranted, else leave it.
-
-The reconciliation-to-an-existing-decision vs. deciding-something distinction *is*
-the line: match the doc to a decision already on record → fix; make or change a
-decision → file.
+**File a `needs-triage` issue for one thing only: a factual conflict you genuinely
+cannot resolve.** Two sources state contradictory facts and the primary sources
+(code, schemas, ADRs) don't settle which is correct — the right value turns on
+human-held intent you can't recover. Then file it (both readings + your best
+guess), leave that one finding, and move on. Search first (`search_issues`), never
+re-file an open one, and append the provenance footer (ADR-0017). This is the
+*sole* reason to file — everything else, you fix.
 
 ## 1. Branch off `origin/main`
 
@@ -105,12 +103,12 @@ Dispatch the independent checker over the pooled findings; drop every WRONG,
 apply every CONFIRMED-BUT correction. Done when each surviving finding is
 CONFIRMED(-BUT) with an accurate `file:line`.
 
-## 5. Fix, or file
+## 5. Fix bravely
 
-Apply the fix-or-file rule to each surviving finding. Edit live docs in place;
-file `needs-triage` issues for the human-call findings — **search first**
-(`search_issues`) and never re-file one already open. Done when every confirmed
-finding is fixed, filed, or explicitly skipped, with none left undecided.
+Fix every surviving finding in place, deciding scope yourself; file a
+`needs-triage` issue **only** for an unresolvable factual conflict (search first,
+never re-file). Done when every confirmed finding is fixed or — for a true factual
+conflict — filed, with none left undecided.
 
 ## 6. Clear the safety gate
 
@@ -121,11 +119,20 @@ pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e
 Most doc edits don't touch the build, but run it anyway (ADR-0004) — a Skill's
 frontmatter or a moved path can. Done when every step is green.
 
-## 7. Commit, push, open one gated PR
+## 7. Commit, push, open one gated PR, self-merge on green
 
-Commit the fixes (one run rides one commit/PR), push the branch with retry, and
-open **one gated PR** listing what was fixed and every issue filed. A **human
-merges** — never self-merge or enable auto-merge (these edits touch
-`CLAUDE.md`/`CONTEXT.md`, ADR-0004's human-only set). Subscribe to the PR and
-babysit it to merge/close; keep its description in sync with its content
-(`CLAUDE.md`). Done when the gate is green and the PR is open for review.
+Commit the fixes (one run rides one commit/PR), push with retry, and open **one
+gated PR** listing what was fixed and any issue filed. **Self-merge it once the
+gate is green** — the reconciliations are fact-checked and touch no human-only
+surface, so this is ADR-0004's low-risk content tier (like `digest`). Repo
+auto-merge is unavailable pending #231, so watch the gate yourself
+(`pull_request_read` `get_check_runs` — `docs/agents/issue-tracker.md`) and merge
+with the GitHub MCP `merge_pull_request`; pushing is not landing. Leave a one-line
+PR comment as the audit trail.
+
+**Escalate instead — leave the PR open for a human** — if the gate is red for a
+reason that isn't yours, or the sweep touched a **human-only surface** (an ADR
+amendment banner, CI, isolation, or the manifest-expansion/routing modules): those
+ride their own human-reviewed PR, never the self-merged one. Subscribe and babysit
+to the terminal state; keep the PR description in sync (`CLAUDE.md`). Done when the
+PR is merged green, or open and honestly escalated.
