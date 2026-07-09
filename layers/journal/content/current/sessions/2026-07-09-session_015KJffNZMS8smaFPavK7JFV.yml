@@ -1,18 +1,18 @@
 schemaVersion: 1
 session: session_015KJffNZMS8smaFPavK7JFV
 startedAt: 2026-07-09T15:09:30Z
-endedAt: 2026-07-09T15:47:59Z
+endedAt: 2026-07-09T16:27:41Z
 kind: autonomous
 goal: Run the audit-docs sweep across every live doc and Skill
-status: in-review
-outcome: 8 findings fixed across PR
-summary: "Scheduled /audit-docs run, no human prompt in this conversation. Fanned out four parallel read-only reviewers (drift, duplication, contradiction, ambiguity) over every live doc, ADR, and Skill; drift found nothing, the other three lenses returned 8 candidate findings. An independent fact-checker re-derived each against primary sources — all 8 came back CONFIRMED or CONFIRMED-BUT. Fixed all 8 in place: single-homed the safety-gate command chain and the chartered-job branch-off convention into CLAUDE.md instead of restating them across 5 and 4 SKILL.md files; noted the seed-template provenance of three docs/agents/*.md files; fixed a self-contradiction in README.md; spelled out CONTEXT.md's Specimen rarity enum in full; pinned CLAUDE.md's undefined \"substantive work\" threshold. Opened PR #262 for these. The most consequential finding: audit-docs's own SKILL.md/Skill Inventory entry falsely claimed an ADR-0004 self-merge exception ADR-0003 never actually granted it — corrected to the human-merge default. After #262 was opened, the repo owner commented directly on it (human-instructed, not agent-initiated) clarifying that the self-merge grant was actually intended when audit-docs was authored, just never recorded in an ADR — so I opened a second, separate PR (#263) amending ADR-0003 with that grant (mirroring digest's existing exception) and restoring audit-docs's self-merge language now correctly backed by it. Kept #263 separate from #262 per audit-docs's own tiering rule (ADR edits never ride the routine-reconciliation PR) — #263 is human-merge-only regardless, since ADRs are always a human-only merge surface. Also human-instructed: a reviewer comment on #262 asking for a single `pnpm gate` npm script instead of a prose pointer to CLAUDE.md, which I implemented and pushed to #262, and a question about whether \"gate\" was established terminology, which I verified (yes, predates this session — ADR-0004's title, the CI workflow filename) and answered on the PR. Full safety gate green on both branches throughout. No needs-triage issue was needed."
+status: completed
+outcome: 8 findings fixed and merged across PR
+summary: "Scheduled /audit-docs run, no human prompt in this conversation. Fanned out four parallel read-only reviewers (drift, duplication, contradiction, ambiguity) over every live doc, ADR, and Skill; drift found nothing, the other three lenses returned 8 candidate findings, all CONFIRMED or CONFIRMED-BUT by an independent fact-checker against primary sources. Fixed all 8: single-homed the safety-gate command chain and the chartered-job branch-off convention into CLAUDE.md instead of restating them across several SKILL.md files; noted the seed-template provenance of three docs/agents/*.md files; fixed a self-contradiction in README.md; spelled out CONTEXT.md's Specimen rarity enum in full; pinned CLAUDE.md's undefined \"substantive work\" threshold. Opened PR #262 for these. The most consequential finding: audit-docs's own SKILL.md/Skill Inventory entry falsely claimed an ADR-0004 self-merge exception ADR-0003 never actually granted it — initially corrected to the human-merge default. The repo owner then commented directly on #262 (human-instructed, not agent-initiated), clarifying the self-merge grant was actually intended when audit-docs was authored but the ADR amendment was never written — so I opened a second PR (#263) amending ADR-0003 with that grant (mirroring digest's exception) and restoring audit-docs's self-merge language, now correctly backed. Also human-instructed, across several more review rounds on #262: replaced a prose pointer to CLAUDE.md with a new `pnpm gate` npm script (single executable home instead of a restatable description); confirmed \"gate\" was pre-existing project jargon, not invented this session; and, after #263 merged first, trimmed the new ADR amendment for repeating digest's amendment nearly verbatim, then caught and fixed a second-order duplication where CLAUDE.md's gate description had started restating the new npm script's own step composition. Merging #263 before #262 landed created a real conflict (not just textual): #262's branch still had the since-superseded \"remove self-merge\" fix, which would have silently reverted the just-merged ADR grant on merge — resolved by hand, keeping both branches' independent fixes. Both PRs merged. Full safety gate green throughout on every iteration. No needs-triage issue was needed — every finding was resolvable."
 prs:
   - "262"
   - "263"
 docsRead:
   - path: docs/adr/0003-agent-operating-model-and-governance.md
-    reason: "verify the actual scope of the self-merge/auto-merge exceptions, twice: once to find the gap, once to draft the amendment"
+    reason: verify the actual scope of the self-merge/auto-merge exceptions, repeatedly, as the grant's provenance came into question and then got resolved
   - path: docs/adr/0004-objective-safety-gate.md
     reason: verify the low-risk auto-merge tier's actual scope
   - path: .agents/skills/audit-skills/SKILL.md
@@ -45,43 +45,44 @@ skillsUsed:
   - name: audit-docs
     reason: the sweep this session ran
   - name: log-session
-    reason: record this closure, twice as the run grew
+    reason: record this closure, refreshed three times as the run grew
   - name: close-session
     reason: closure trigger
 frictions:
-  - description: audit-docs's own SKILL.md asserted a self-merge authority not actually backed by ADR-0003/0004 text, discovered only via the contradiction lens mid-run — a meta case where the running instructions were themselves wrong.
-    solution: "Fixed audit-docs/SKILL.md and its Skill Inventory entry to match audit-skills's correct \"human merges, never self-merge\" pattern in #262. Turned out the fix was incomplete on its own — see the next friction."
-    severity: moderate
-  - description: "The \"unauthorized self-merge claim\" finding was CONFIRMED against primary sources (no ADR text granted it) but the repo owner's PR comment revealed the finding, while textually correct, missed the actual human intent: the grant was real, just never written down. A purely text-based fact-check can't distinguish \"this was never decided\" from \"this was decided but the paper trail is missing\" — both look identical against the ADRs alone."
-    solution: "Treated the owner's clarifying PR comment as authoritative and opened #263 to record the missing ADR-0003 amendment, rather than treating #262's fix as final. For a future sweep: when a Contradiction-lens finding is about an autonomous Skill's own granted authority (not a generic doc claim), the fact-check's CONFIRMED verdict should be read as \"undocumented\", not necessarily \"wrong\" — flag it as a candidate needs-triage/informational note for a human to confirm intent, rather than resolving it silently as pure removal."
+  - description: A text-only fact-check (no ADR text grants audit-docs self-merge) correctly found a real gap but couldn't distinguish "never decided" from "decided but undocumented" — both look identical against the ADRs alone. The initial fix (revert to human-merge) was the textually-safe default but not what the repo owner actually wanted; only a live PR comment revealed the true intent.
+    solution: "Treated the owner's clarifying PR comment as authoritative over the text-only fact-check and opened a follow-up ADR amendment PR rather than treating the first fix as final. For a future sweep: when a Contradiction finding is about an autonomous Skill's own granted authority, read a CONFIRMED verdict as \"undocumented\" rather than \"wrong,\" and weight a repo owner's direct clarification above the sweep's own prior conclusion."
     severity: minor
-  - description: "Pointing 5 SKILL.md files at CLAUDE.md's prose description of the gate (instead of restating the literal command) still left room for each Skill's invocation to drift slightly, per reviewer feedback on #262 — a prose pointer isn't as strong a single-home as an executable one."
-    solution: Added a `pnpm gate` npm script as the actual single source of truth and pointed CLAUDE.md and all 5 Skills at that command instead.
+  - description: Merging two PRs from one sweep that both touch the same Skill's self-merge language, in the wrong order (the ADR-granting PR before the routine-fix PR that had reverted that same language), produced a silent-revert risk — a plain merge of main into the stale branch would have quietly undone the just-landed ADR grant with no error or conflict on the file that mattered most (the actual conflict needed manual eyes, not just clean-vs-conflicted git status).
+    solution: "Caught it by inspecting the diff between origin/main and the stale branch before assuming a clean merge was safe, and hand-resolved. For next time: when two PRs from the same sweep touch the same file's core claim in opposite directions, land the ADR/authorizing PR first and rebase the dependent PR immediately, rather than letting both sit open in parallel."
+    severity: minor
+  - description: "Fixing one duplication (pointing 5 Skills at CLAUDE.md instead of restating a command chain) relocated rather than removed the risk: CLAUDE.md itself then restated the new pnpm gate script's exact step composition, recreating the same class of drift one layer up. Two review rounds were needed to fully collapse it to package.json as the sole source."
+    solution: When single-homing a fact into a new home, check that the new home doesn't itself restate detail that a still-more-authoritative source (here, package.json) already owns — single-homing is transitive, not one hop.
     severity: nit
   - description: The audit-docs SKILL.md's four Agent-tool calls for the lens reviewers were requested with run_in_background:false but the harness ran them asynchronously anyway, requiring a wait on task-notifications instead of getting results inline in the same turn.
     solution: Treat run_in_background:false as a preference, not a guarantee, for parallel same-message Agent calls; plan on waiting for notifications rather than assuming synchronous return.
     severity: nit
-durationSec: 2310
+durationSec: 4692
 models:
-  claude-sonnet-5: 292
+  claude-sonnet-5: 385
 toolCounts:
   Skill: 3
-  Bash: 59
+  Bash: 77
   Agent: 5
   ScheduleWakeup: 3
-  Read: 29
-  Edit: 35
+  Read: 38
+  Edit: 44
   ToolSearch: 4
   mcp__github__search_pull_requests: 2
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 9
   mcp__Claude_Code_Remote__send_later: 2
-  PushNotification: 1
-  mcp__github__add_reply_to_pull_request_comment: 2
+  PushNotification: 2
+  mcp__github__add_reply_to_pull_request_comment: 3
   mcp__github__update_pull_request: 1
   mcp__Claude_Code_Remote__list_triggers: 1
-  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__delete_trigger: 2
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - .agents/skills/audit-docs/SKILL.md
   - layers/journal/content/current/skills/audit-docs.yml
