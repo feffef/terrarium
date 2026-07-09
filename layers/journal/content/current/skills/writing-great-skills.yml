@@ -2,8 +2,8 @@ name: writing-great-skills
 category: general-engineering
 importance: peripheral
 role: >-
-  The reference standard for authoring Skills, per `codify`'s planned remit —
-  but two consecutive audit windows now show zero pull: six more
-  Skill-authoring/editing sessions (`audit-skills`, `blog-post` twice,
-  `atlas-specimen`, `digest`, `frictions-to-fixes`) shipped without it. A
-  reference to keep, not a habit anyone reaches for in practice.
+  The reference standard for authoring Skills, per `codify`'s planned remit.
+  Pull remains inconsistent, not zero: used once this window (the
+  close-session Skill build) but skipped for two other Skill-editing
+  sessions (the session-logs-autonomy SKILL.md rewrites; the audit-docs
+  Skill build). A reference to keep, not yet a reliable habit.

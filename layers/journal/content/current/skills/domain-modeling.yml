@@ -4,6 +4,7 @@ importance: essential
 role: >-
   Owns the CONTEXT.md glossary and the ADR conventions — CONTEXT.md's own
   canonical `essential` example. Use before any structural change or ADR
-  amendment; this window still saw four ADR-0003/0009 amendments (auto-open
-  PR status, digest auto-merge, the session-logging rework, and its stale-claim
-  follow-up) ship without it — worth reaching for more consistently.
+  amendment; reached for consistently this window (test restructuring,
+  close-session's design, the pkill-teardown fix, provenance-attribution
+  grilling) with one miss — #211's addTypeTemplate PR amended ADR-0014
+  without it.

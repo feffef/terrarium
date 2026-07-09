@@ -1,0 +1,8 @@
+name: implement
+category: general-engineering
+importance: specialist
+role: >-
+  Drives end-to-end implementation of an already-triaged, green-lit issue or
+  PRD via `/implement <issue>`. This window's default entry point for scoped,
+  human-directed changes — #211's addTypeTemplate swap, #209's tenants→layers
+  rename, and a delegated issue close — once triage has picked what to build.
