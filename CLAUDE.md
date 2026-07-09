@@ -101,15 +101,8 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   amending note or superseding ADR), don't fork a second copy. Duplication is how
   contradictory guidance and doc-rot start — and agents act on documented state,
   so in this repo a stale copy is a *behavioral* bug.
-- **Never restate a Routine's schedule (a cron expression, "nightly", etc.) in a
-  Skill, ADR, or any other committed doc.** A Routine lives entirely outside
-  git — it can be rescheduled, paused, or deleted (`update_trigger`,
-  `delete_trigger`) without a single commit, so a hardcoded cadence isn't a
-  same-repo duplicate the way two doc copies are; it's a claim about state this
-  repo has no way to keep in sync at all. There is no in-repo "one home" for a
-  Routine's schedule to point to — the live trigger registry (`list_triggers`)
-  is the only source of truth, and it isn't committed content. State that a Skill
-  *is* scheduled if that's relevant to how it behaves; don't state *when*.
+- **Don't restate a Routine's schedule in a committed doc** — it lives outside
+  git and can change without a commit. Say a Skill *is* scheduled; never say *when*.
 - Inspect files with the **Read tool, not `cat`** — the Edit tool refuses to edit
   a file it hasn't seen via Read, so `cat`-then-Edit forces a wasteful re-read.
 - **Don't tear down a preview/dev server with `pkill` — use `scripts/preview.ts`.**

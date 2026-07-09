@@ -75,13 +75,9 @@ Status: Accepted
 > amendment was missed; filed once the gap surfaced during its first run (PR
 > #262).
 >
-> **Amended (2026-07-09).** `audit-skills` joins the **low-risk auto-merge
-> tier** (ADR-0004) as a **third** named exemption to "no self-merge," after
-> `digest` and `audit-docs` above. Bounded to Inventory-only content
-> (`layers/journal/content/current/skills/*.yml`) citing an existing evidence
-> rule; see ADR-0015 for the exact scope, the evidence rule, and the two
-> notes-only capabilities (regression watch, new/split/retire suggestions)
-> that explicitly do **not** carry self-merge or direct-edit rights.
+> **Amended (2026-07-09).** `audit-skills` joins the low-risk auto-merge tier
+> (ADR-0004) as a third exemption, after `digest`/`audit-docs`. Bounded to
+> Inventory-only content citing an existing evidence rule; see ADR-0015.
 
 ## Context
 

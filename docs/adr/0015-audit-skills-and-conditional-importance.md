@@ -10,48 +10,16 @@ Status: Accepted
 
 > **Amended (2026-07-08).** "A schedule is deferred, exactly as `digest`'s trigger
 > is" (Decision, cadence bullet) is now historical: `digest` has since gained a
-> **nightly schedule** — an external Routine fires `/digest` daily, making it the
-> first live autonomous job (Skill + trigger, ADR-0005; its PR lands per
-> ADR-0003's digest auto-merge amendment). `audit-skills` itself remains
-> on-demand; **its** schedule is still deferred.
+> schedule, making it the first live autonomous job (Skill + trigger, ADR-0005).
+> `audit-skills` now also runs on a schedule, not on-demand-only.
 >
-> **Amended (2026-07-09).** The note directly above is now itself stale, and
-> this amendment both corrects it and grants `audit-skills` a bounded self-merge
-> tier — the drift between the two is worth naming plainly: `audit-skills`
-> **gained its own scheduled Routine** without this ADR being updated, so
-> "on-demand... deferred" no longer described reality. Caught only because it
-> came up in conversation, not because anything checks it — exactly the class of
-> drift `audit-docs` exists to catch, here in the ADR that defines this Skill's
-> own cadence. (The exact schedule is deliberately not restated here — a
-> Routine is external, mutable state with no in-repo home to keep in sync,
-> `CLAUDE.md`.)
->
-> **Self-merge**: `audit-skills` joins `digest` and `audit-docs` as the
-> **third** name on ADR-0003's "no self-merge" exemption list (ADR-0004's
-> low-risk content tier), bounded tightly: a run may self-merge its gated PR on
-> a green gate **only when the PR touches exclusively
-> `layers/journal/content/current/skills/*.yml`**, and only when every
-> grade/role change in it cites the Decision's bright-line evidence rule
-> (≥2-session opportunity-missed, **now symmetric** — a promotion needs the same
-> citable evidence a demotion does, not just a demotion). The "never touches
-> `.agents/skills/`" boundary from the original Decision is **unchanged** — a
-> frontmatter concern is now **logged as a friction in the run's own session
-> log** rather than filed as a GitHub issue directly, so it flows through
-> `frictions-to-fixes`'s existing file-issue → dispatch → review-and-merge
-> pipeline (ADR-0003's mid-term review-agent, author ≠ merger) instead of a
-> second, competing issue-filing path to the same surface.
->
-> **Two new capabilities, both notes-only — never self-merged, never a direct
-> edit:** a **regression watch** brackets the sessions immediately before/after
-> each of a Skill's own recent `SKILL.md` edit commits (manual or
-> `audit-docs`-authored) and judges whether behavior plausibly changed —
-> inherently a small-sample, confounded signal, so a finding is recorded only as
-> the run's own session-log **`learnings`** entry (CONTEXT.md → Session), a
-> hedged note for a future reader, never a trigger for a grade change on its
-> own. And the run may propose a **new Skill, or splitting/retiring an existing
-> one**, recorded as its own session-log **`ideas`** entry — concrete enough to
-> become an issue, but this Skill never creates, splits, or retires anything
-> itself (net-new/creative work stays human-green-lit, ADR-0003).
+> **Amended (2026-07-09).** `audit-skills` gains a bounded self-merge tier —
+> third name on ADR-0003's exemption list, after `digest`/`audit-docs`. Scope:
+> only `layers/journal/content/current/skills/*.yml` edits citing the
+> bright-line evidence rule above (now symmetric for promote and demote).
+> Regression-watch and new/split/retire suggestions are notes-only (session-log
+> `learnings`/`ideas`), never self-merged or directly edited. Full detail in
+> `audit-skills/SKILL.md`.
 
 ## Context
 
