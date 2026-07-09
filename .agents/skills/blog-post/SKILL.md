@@ -158,9 +158,8 @@ do/don't list.** Confirm it actually reads *in that Persona's voice* and is
 isn't. Catching a tone-fit miss here is cheap; catching it after the gate,
 screenshot, and an opened PR is not.
 
-Run the safety gate — see CLAUDE.md's **Self-verification** section for the
-exact, cheapest-first commands (a new post adds no collection, but a malformed
-`reactsTo`/pingback fails L1).
+Run `pnpm gate` (CLAUDE.md's **Self-verification** section owns what it runs) —
+a new post adds no collection, but a malformed `reactsTo`/pingback fails L1.
 
 Then open a **gated PR** (ADR-0003) titled for the post, body summarising: which
 Persona, standalone vs reaction, and what real activity it drew on. No self-merge.

@@ -103,8 +103,8 @@ Done when you have confirmed the new Digest(s) will show — no index edit is ne
 
 ## 5. Clear the safety gate
 
-Run the gate — see CLAUDE.md's **Self-verification** section for the exact,
-cheapest-first commands (ADR-0004). Done when every step is green.
+Run `pnpm gate` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
+it runs). Done when it's green.
 
 ## 6. Commit, push, open one gated PR — merge on green
 

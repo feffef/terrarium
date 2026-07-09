@@ -250,18 +250,19 @@ tests/support/ , tests/README.md    # shared e2e helpers + the test-homing conve
 
 ## Self-verification — the safety gate (ADR-0004)
 
-Run this before proposing any change. CI (`.github/workflows/gate.yml`) runs the same set,
-cheapest-first. Both the keyed collections and the routing map (`#routing`) are derived
-from the manifests at build time (ADR-0013/0014) — no regenerate step needed.
+Run this before proposing any change. **`pnpm gate`** is the one command — the actual
+single source of truth other docs and Skills should point to, not a restated
+`&&`-chain — and CI (`.github/workflows/gate.yml`) runs the same steps, cheapest-first.
+Both the keyed collections and the routing map (`#routing`) are derived from the
+manifests at build time (ADR-0013/0014) — no regenerate step needed.
 
 ```
 pnpm install     # installs deps, then runs `nuxt prepare` (derives #routing + collections)
-pnpm lint        # L0
-pnpm typecheck   # L0
-pnpm test        # L3 — isolation unit tests (unique, scoped keys)
-pnpm build       # L0/L1 — build; derives each Collection's SQL types from its schema,
-                 #   but does not reject invalid content — see `pnpm validate:content` below
-pnpm test:e2e    # L2 — smoke-render every (Tenant, Space) entry route (200, renders)
+pnpm gate        # = lint && typecheck && test && build && test:e2e, fails fast:
+                 #   lint/typecheck = L0; test = L3 (isolation, unique scoped keys);
+                 #   build = L0/L1 (derives SQL types from schema, doesn't reject invalid
+                 #   content — see `pnpm validate:content` below); test:e2e = L2 (smoke-render
+                 #   every (Tenant, Space) entry route, 200, renders)
 ```
 
 **Iterating on content only?** `pnpm validate:content` (`scripts/validate-content.ts`) is the

@@ -117,10 +117,9 @@ conflict — filed, with none left undecided.
 
 ## 6. Clear the safety gate
 
-Run the gate — see CLAUDE.md's **Self-verification** section for the exact,
-cheapest-first commands (ADR-0004). Most doc edits don't touch the build, but run
-it anyway — a Skill's frontmatter or a moved path can. Done when every step is
-green.
+Run `pnpm gate` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
+it runs). Most doc edits don't touch the build, but run it anyway — a Skill's
+frontmatter or a moved path can. Done when it's green.
 
 ## 7. Commit, push, open one gated PR
 
