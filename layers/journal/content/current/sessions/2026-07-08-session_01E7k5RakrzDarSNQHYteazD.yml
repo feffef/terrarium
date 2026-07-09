@@ -1,0 +1,126 @@
+schemaVersion: 1
+session: session_01E7k5RakrzDarSNQHYteazD
+startedAt: 2026-07-08T23:30:35Z
+endedAt: 2026-07-09T01:47:53Z
+kind: interactive
+goal: Audit docs for drift; codify as Skill
+status: in-review
+outcome: Cleanup merged (#255); audit-docs Skill (#256) in review
+summary: "Human-directed throughout. Asked to review every .md and Skill for drift and duplication, then — via further human asks — for contradictions and ambiguities, to prune the speculative chartered-job names, to fact-check the planned changes, to apply them all, and finally to codify the method as a directly-invokable Skill. Fanned out parallel review and fact-check subagents. Landed the drift/duplication/contradiction fixes in #255 (merged) after two scoping calls the human made (live-docs-only; leave codify/consolidate). Then built the audit-docs Skill (#256, in-review) that runs the whole method unattended; on further human direction, made it self-merge its own gated PR on green and be brave by default — fixing rather than filing, escalating an issue only for an unresolvable factual conflict."
+prs:
+  - "255"
+  - "256"
+docsRead:
+  - path: CLAUDE.md
+    reason: conventions + the human-only/self-merge rules under review
+  - path: CONTEXT.md
+    reason: glossary single-home; severity/importance enums
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: chartered jobs + autonomy gate
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: human-only surface set
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: template for the new Skill
+  - path: .agents/skills/writing-great-skills/SKILL.md
+    reason: skill-authoring conventions
+  - path: README.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/domain-modeling/CONTEXT-FORMAT.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/domain.md
+    reason: (read before editing)
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: closure sequence
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: "Recurring drift root cause: a reversed decision (generated config) was written up at its new ADR home but never swept back to referrers (ADR-0002/0004, drift-check)."
+    solution: When superseding, grep the removed noun across all docs and add the repo's existing amendment banner; audit-docs now encodes this.
+    severity: moderate
+  - description: My own drift-check removal created a fresh CONTEXT.md-vs-ADR divergence on the chartered-job list — a fix that introduced new drift.
+    solution: Fact-check the consequences of an edit, not only the finding; the fact-checker caught it (X1).
+    severity: minor
+  - description: Initial findings cited line numbers off by a few in ~8 places (agent-reported, not re-read), needing fact-checker correction.
+    solution: Cite file:line from a fresh Read at author time, not from a review subagent's memory.
+    severity: minor
+  - description: GitHub MCP server disconnected mid-turn, then reconnected; had to reload PR tools via ToolSearch.
+    solution: Transient; ToolSearch recovery worked, no action needed.
+    severity: nit
+  - description: First audit-docs design defaulted to timid — human-merged, and filing issues for judgement/scope calls; the owner corrected it twice toward self-merge and brave-by-default.
+    solution: Default a new autonomous maintenance Skill toward bravery + bounded self-merge, not deferral; reserve issues for unresolvable factual conflicts.
+    severity: minor
+durationSec: 8238
+models:
+  claude-opus-4-8: 277
+toolCounts:
+  Bash: 31
+  Read: 31
+  Agent: 6
+  Grep: 4
+  AskUserQuestion: 1
+  Edit: 33
+  Write: 4
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  ToolSearch: 3
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 2
+  Skill: 3
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__update_pull_request: 1
+filesEdited:
+  - CONTEXT.md
+  - README.md
+  - CLAUDE.md
+  - docs/agents/domain.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - layers/journal/content/current/skills/audit-docs.yml
+subagents:
+  - type: general-purpose
+    task: Review ADRs for drift
+  - type: general-purpose
+    task: Review docs/agents and misc docs
+  - type: general-purpose
+    task: Review project skills for drift
+  - type: general-purpose
+    task: Hunt cross-doc contradictions
+  - type: general-purpose
+    task: Hunt ambiguities and underspecification
+  - type: general-purpose
+    task: Fact-check planned doc changes
+    model: opus
+gitBranch: claude/docs-drift-duplication-review-wb45nz
+entrypoint: remote
+cliVersion: 2.1.205
+learnings:
+  - The repo already had an amendment-banner convention (ADR-0006 applies it); the drift in ADR-0002/0004 was inconsistent application of an existing convention, not its absence.
+  - The live / historical / pack-generic tiering is the decision that makes a doc sweep safe to run autonomously — it is what decides editability.
+ideas:
+  - Run audit-docs on a nightly Routine like digest so doc drift is caught continuously, not only when a human asks — pair it with a cheap CI grep that flags a removed-mechanism noun still referenced in a live doc.
