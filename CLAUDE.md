@@ -101,6 +101,8 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   amending note or superseding ADR), don't fork a second copy. Duplication is how
   contradictory guidance and doc-rot start — and agents act on documented state,
   so in this repo a stale copy is a *behavioral* bug.
+- **Don't restate a Routine's schedule in a committed doc** — it lives outside
+  git and can change without a commit. Say a Skill *is* scheduled; never say *when*.
 - Inspect files with the **Read tool, not `cat`** — the Edit tool refuses to edit
   a file it hasn't seen via Read, so `cat`-then-Edit forces a wasteful re-read.
 - **Don't tear down a preview/dev server with `pkill` — use `scripts/preview.ts`.**

@@ -10,10 +10,20 @@ Status: Accepted
 
 > **Amended (2026-07-08).** "A schedule is deferred, exactly as `digest`'s trigger
 > is" (Decision, cadence bullet) is now historical: `digest` has since gained a
-> **nightly schedule** — an external Routine fires `/digest` daily, making it the
-> first live autonomous job (Skill + trigger, ADR-0005; its PR lands per
-> ADR-0003's digest auto-merge amendment). `audit-skills` itself remains
-> on-demand; **its** schedule is still deferred.
+> schedule, making it the first live autonomous job (Skill + trigger, ADR-0005).
+> `audit-skills` now also runs on a schedule, not on-demand-only.
+>
+> **Amended (2026-07-09).** `audit-skills` gains a bounded self-merge tier —
+> third name on ADR-0003's exemption list, after `digest`/`audit-docs`. Scope:
+> only `layers/journal/content/current/skills/*.yml` edits citing the
+> bright-line evidence rule above (now symmetric for promote and demote). A
+> frontmatter concern citing that same rule may file/comment on a
+> `needs-triage` issue directly (search first). The regression watch (friction
+> severity/count plus usage, screened cheaply, then a full-log deep-read for
+> any suspected Skill before judging) may also file/comment, on a judgement
+> basis grounded in that deep-read's quoted evidence — never from the cheap
+> screen alone, and never a grade change either way. Full detail in
+> `audit-skills/SKILL.md`.
 
 ## Context
 

@@ -4,11 +4,16 @@
 // the Skill.
 import { describe, expect, it } from 'vitest'
 import {
+  bracketSessions,
+  buildRegressionChecks,
   buildSkillRows,
+  buildSkillSessionFiles,
   pickWindow,
   tallyUsage,
   type InventoryEntry,
   type OnDiskSkill,
+  type SessionFile,
+  type SkillEdit,
   type UsageHit,
   type WindowSession,
 } from '../../scripts/audit-skills.ts'
@@ -21,6 +26,7 @@ function sess(over: Partial<WindowSession> = {}): WindowSession {
     summary: 'summary',
     endedAt: '2026-07-05T10:00:00Z',
     skillsUsed: [],
+    frictions: [],
     ...over,
   }
 }
@@ -118,5 +124,131 @@ describe('buildSkillRows()', () => {
 
   it('flags an inventoried Skill gone from disk (stale entry)', () => {
     expect(row('retired')).toMatchObject({ onDisk: false, inventoried: true, description: null })
+  })
+})
+
+describe('bracketSessions()', () => {
+  const sessions = [
+    sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z' }),
+    sess({ session: 'b', endedAt: '2026-07-02T00:00:00Z' }),
+    sess({ session: 'c', endedAt: '2026-07-03T00:00:00Z' }),
+    sess({ session: 'd', endedAt: '2026-07-04T00:00:00Z' }),
+    sess({ session: 'e', endedAt: '2026-07-05T00:00:00Z' }),
+  ]
+
+  it('splits strictly-before vs at-or-after the edit date', () => {
+    const { before, after } = bracketSessions(sessions, '2026-07-03T00:00:00Z', 10)
+    expect(before.map((s) => s.session)).toEqual(['a', 'b'])
+    expect(after.map((s) => s.session)).toEqual(['c', 'd', 'e'])
+  })
+
+  it('keeps only the n nearest sessions on each side', () => {
+    const { before, after } = bracketSessions(sessions, '2026-07-03T00:00:00Z', 1)
+    expect(before.map((s) => s.session)).toEqual(['b'])
+    expect(after.map((s) => s.session)).toEqual(['c'])
+  })
+
+  it('returns empty brackets when the edit date falls outside all session dates', () => {
+    const { before, after } = bracketSessions(sessions, '2020-01-01T00:00:00Z', 10)
+    expect(before).toEqual([])
+    expect(after.map((s) => s.session)).toEqual(['a', 'b', 'c', 'd', 'e'])
+  })
+})
+
+describe('buildRegressionChecks()', () => {
+  const sessions = [
+    sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z' }),
+    sess({ session: 'b', endedAt: '2026-07-05T00:00:00Z' }),
+  ]
+
+  it('skips external (pack) Skills even if edits are known', () => {
+    const edits = new Map<string, SkillEdit[]>([
+      ['pack-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
+    ])
+    expect(buildRegressionChecks(sessions, edits, new Set(['pack-skill']))).toEqual({ checks: [], sessions: [] })
+  })
+
+  it('skips a Skill absent from the edits map entirely', () => {
+    expect(buildRegressionChecks(sessions, new Map(), new Set())).toEqual({ checks: [], sessions: [] })
+  })
+
+  it('skips an edit with no session data on either side (empty session history)', () => {
+    const edits = new Map<string, SkillEdit[]>([
+      ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
+    ])
+    expect(buildRegressionChecks([], edits, new Set())).toEqual({ checks: [], sessions: [] })
+  })
+
+  it('brackets an own Skill edit that falls within the session history, referencing sessions by id', () => {
+    const edits = new Map<string, SkillEdit[]>([
+      ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
+    ])
+    const { checks, sessions: pool } = buildRegressionChecks(sessions, edits, new Set())
+    expect(checks).toHaveLength(1)
+    expect(checks[0]).toMatchObject({ skill: 'our-skill', edit: { sha: 's1' }, before: ['a'], after: ['b'] })
+    expect(pool.map((s) => s.session)).toEqual(['a', 'b'])
+  })
+
+  it('caps at the n most recent edits per Skill', () => {
+    const edits = new Map<string, SkillEdit[]>([
+      [
+        'our-skill',
+        [
+          { sha: 's1', date: '2026-07-02T00:00:00Z', subject: 'first' },
+          { sha: 's2', date: '2026-07-03T00:00:00Z', subject: 'second' },
+          { sha: 's3', date: '2026-07-04T00:00:00Z', subject: 'third' },
+        ],
+      ],
+    ])
+    const { checks } = buildRegressionChecks(sessions, edits, new Set(), 10, 2)
+    expect(checks.map((c) => c.edit.sha)).toEqual(['s3', 's2'])
+  })
+
+  it('dedupes a session referenced by more than one Skill\'s bracket into one pool entry', () => {
+    const edits = new Map<string, SkillEdit[]>([
+      ['skill-one', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
+      ['skill-two', [{ sha: 's2', date: '2026-07-04T00:00:00Z', subject: 'edit' }]],
+    ])
+    const { checks, sessions: pool } = buildRegressionChecks(sessions, edits, new Set())
+    expect(checks).toHaveLength(2)
+    // session 'b' brackets both edits (after s1, before s2) but appears once in the pool
+    expect(pool.filter((s) => s.session === 'b')).toHaveLength(1)
+  })
+})
+
+describe('buildSkillSessionFiles()', () => {
+  function entry(file: string, over: Partial<WindowSession> = {}): SessionFile {
+    return { session: sess(over), file }
+  }
+
+  it('groups every session file by the Skills it used', () => {
+    const files = [
+      entry('a.yml', { session: 'a', skillsUsed: [{ name: 'tdd', reason: 'r' }] }),
+      entry('b.yml', { session: 'b', skillsUsed: [{ name: 'tdd', reason: 'r' }] }),
+      entry('c.yml', { session: 'c', skillsUsed: [{ name: 'digest', reason: 'r' }] }),
+    ]
+    expect(buildSkillSessionFiles(files)).toEqual({
+      tdd: ['a.yml', 'b.yml'],
+      digest: ['c.yml'],
+    })
+  })
+
+  it('de-dupes a Skill listed twice within the same session file', () => {
+    const files = [
+      entry('a.yml', {
+        skillsUsed: [
+          { name: 'tdd', reason: 'red' },
+          { name: 'tdd', reason: 'green' },
+        ],
+      }),
+    ]
+    expect(buildSkillSessionFiles(files)).toEqual({ tdd: ['a.yml'] })
+  })
+
+  it('is not bounded by any window — includes every entry passed in', () => {
+    const files = Array.from({ length: 5 }, (_, i) =>
+      entry(`s${i}.yml`, { session: `s${i}`, skillsUsed: [{ name: 'audit-skills', reason: 'r' }] }),
+    )
+    expect(buildSkillSessionFiles(files)['audit-skills']).toHaveLength(5)
   })
 })

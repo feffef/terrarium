@@ -74,6 +74,10 @@ Status: Accepted
 > fact — this was the intended design when `audit-docs` was authored, but the
 > amendment was missed; filed once the gap surfaced during its first run (PR
 > #262).
+>
+> **Amended (2026-07-09).** `audit-skills` joins the low-risk auto-merge tier
+> (ADR-0004) as a third exemption, after `digest`/`audit-docs`. Bounded to
+> Inventory-only content citing an existing evidence rule; see ADR-0015.
 
 ## Context
 

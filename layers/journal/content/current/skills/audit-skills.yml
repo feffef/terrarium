@@ -2,7 +2,8 @@ name: audit-skills
 category: platform-operation
 importance: specialist
 role: >-
-  The `sync`-family Skill that keeps the Skill Inventory honest: from the last 40
-  session logs it re-grades each Skill's `importance` (conditional, not frequency)
-  and refreshes its `role`, and flags Skills whose frontmatter may mis-fire
-  (ADR-0015). A tested helper gathers; the Skill judges and opens one gated PR.
+  The `sync`-family Skill that keeps the Skill Inventory honest and watches for
+  behavior regressions after a Skill's own `SKILL.md` edits. Self-merges
+  bright-line-evidenced Inventory changes (ADR-0004's low-risk tier); a
+  citable frontmatter concern gets a filed/commented issue, anything softer
+  becomes a learning/idea instead — never a direct edit (ADR-0015).
