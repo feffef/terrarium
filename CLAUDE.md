@@ -250,23 +250,19 @@ tests/support/ , tests/README.md    # shared e2e helpers + the test-homing conve
 
 ## Self-verification — the safety gate (ADR-0004)
 
-Run this before proposing any change. **`pnpm gate`** is the one command — the actual
-single source of truth other docs and Skills should point to, not a restated
-`&&`-chain — and CI (`.github/workflows/gate.yml`) runs the same steps, cheapest-first.
-Both the keyed collections and the routing map (`#routing`) are derived from the
-manifests at build time (ADR-0013/0014) — no regenerate step needed.
+Run this before proposing any change. **`pnpm gate`** is the one command — the exact
+steps it runs are single-homed in `package.json`'s `gate` script, not restated here,
+so this doc can't drift from it — and CI (`.github/workflows/gate.yml`) runs the same
+steps. Both the keyed collections and the routing map (`#routing`) are derived from
+the manifests at build time (ADR-0013/0014) — no regenerate step needed.
 
 ```
 pnpm install     # installs deps, then runs `nuxt prepare` (derives #routing + collections)
-pnpm gate        # = lint && typecheck && test && build && test:e2e, fails fast:
-                 #   lint/typecheck = L0; test = L3 (isolation, unique scoped keys);
-                 #   build = L0/L1 (derives SQL types from schema, doesn't reject invalid
-                 #   content — see `pnpm validate:content` below); test:e2e = L2 (smoke-render
-                 #   every (Tenant, Space) entry route, 200, renders)
+pnpm gate        # the layered gate, cheapest-first — L0/L1/L2/L3 are defined in ADR-0004
 ```
 
 **Iterating on content only?** `pnpm validate:content` (`scripts/validate-content.ts`) is the
-one step above that actually runs each Document's data through its Collection's Zod schema
+one command that actually runs each Document's data through its Collection's Zod schema
 (`.safeParse()`) — `pnpm build` only uses the schema to derive SQL column types, it never
 validates real content against it. `validate:content` checks every Tenant's content in ~1-2s,
 without paying for `nuxt build` or `pnpm test:e2e`. It is a **local, additive supplement for
