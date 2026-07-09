@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_0151GNb5MDzYyVgp7GP5tLCt
 startedAt: 2026-07-09T02:08:54Z
-endedAt: 2026-07-09T02:20:14Z
+endedAt: 2026-07-09T14:40:15Z
 kind: autonomous
 goal: Audit the Skill Inventory against usage
-status: in-review
-outcome: Re-graded roles, filed a blocking-bug issue
-summary: "Fully autonomous run of the audit-skills Skill (no human prompt beyond the standing schedule). scripts/audit-skills.ts crashed on close-session/SKILL.md's invalid YAML frontmatter (an unquoted colon-space sequence reads as an illegal nested mapping); worked around it by temporarily moving the directory aside (never editing .agents/skills/, per this Skill's own rule), gathered the 40-session scorecard, then restored the file unedited. Refreshed domain-modeling's and writing-great-skills' role prose against this window's evidence (both cited stale examples from a prior audit run; writing-great-skills' \"zero pull\" claim was actually contradicted by one real use this window). Added missing Inventory entries for diagnosing-bugs and implement, both observed in use this window but never inventoried. No importance-grade demotions this run. Filed issue #257 combining the YAML parse bug with a plausibly-related pattern (two windowed sessions reached closure without invoking close-session). Full gate green; opened and subscribed to gated PR #258."
+status: completed
+outcome: Re-graded roles, filed a blocking-bug issue, merged
+summary: "Fully autonomous run of the audit-skills Skill (no human prompt beyond the standing schedule). scripts/audit-skills.ts crashed on close-session/SKILL.md's invalid YAML frontmatter (an unquoted colon-space sequence reads as an illegal nested mapping); worked around it by temporarily moving the directory aside (never editing .agents/skills/, per this Skill's own rule), gathered the 40-session scorecard, then restored the file unedited. Refreshed domain-modeling's and writing-great-skills' role prose against this window's evidence (both cited stale examples from a prior audit run; writing-great-skills' \"zero pull\" claim was actually contradicted by one real use this window). Added missing Inventory entries for diagnosing-bugs and implement, both observed in use this window but never inventoried. No importance-grade demotions this run. Filed issue #257 combining the YAML parse bug with a plausibly-related pattern (two windowed sessions reached closure without invoking close-session). Full gate green; opened and subscribed to gated PR #258, babysat it through CI (green throughout) and a base-branch advance with no rebase needed, and it merged with no review comments — a human merged it (never self-merged, per ADR-0003)."
 prs:
   - "258"
 docsRead:
@@ -29,26 +29,27 @@ frictions:
   - description: scripts/audit-skills.ts uses a strict YAML parser and has no per-file error handling, so one malformed SKILL.md frontmatter crashes the entire scorecard gathering step for every Skill, not just the offending one.
     solution: "Wrap the per-file readFrontmatter() parse in a try/catch so one bad SKILL.md degrades to a warning instead of aborting the whole run (see #257)."
     severity: minor
-durationSec: 680
+durationSec: 45082
 models:
-  claude-sonnet-5: 100
+  claude-sonnet-5: 187
 toolCounts:
-  Bash: 25
-  Read: 6
+  Bash: 27
+  Read: 7
   Grep: 1
   ToolSearch: 2
   mcp__github__search_issues: 2
-  Edit: 3
+  Edit: 4
   Write: 3
   mcp__github__issue_write: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  Skill: 2
-  mcp__github__pull_request_read: 2
-  mcp__github__actions_list: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 3
+  mcp__github__pull_request_read: 35
+  mcp__github__actions_list: 3
+  mcp__Claude_Code_Remote__send_later: 12
   PushNotification: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/skills/domain-modeling.yml
   - layers/journal/content/current/skills/writing-great-skills.yml
