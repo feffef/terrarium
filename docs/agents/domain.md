@@ -1,5 +1,11 @@
 # Domain Docs
 
+*Seeded from `.agents/skills/setup-matt-pocock-skills/domain.md`'s generic
+template and substantially customized for this repo (repo-specific ADR
+references, the "rule of two" section below). This file is the live,
+repo-authoritative one — don't re-sync it against the pack template, which
+stays generic and reinstallable (ADR-0005).*
+
 How the engineering skills should consume this repo's domain documentation when exploring the codebase.
 
 This repo is **single-context**: one `CONTEXT.md` and one `docs/adr/` at the repo root.

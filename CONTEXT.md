@@ -130,7 +130,7 @@ own palette and character (*dappled, patient*; *dark, industrious*; *cool, glass
 The Atlas's atomic unit of contribution: one invented creature, catalogued as one
 Document in a Biome's routed `pages` collection. It is simultaneously a **record**
 (an invented Latin binomial, common name, classification, a **rarity** grade —
-*abundant* → *mythic* — size, diet, an activity **rhythm**, and a 2–3 hue **color
+*abundant | common | uncommon | rare | mythic* — size, diet, an activity **rhythm**, and a 2–3 hue **color
 signature** that is part of its identity) and a **field note** (the naturalist's
 prose essay), fronted by a hand-drawn **engraved plate**.
 

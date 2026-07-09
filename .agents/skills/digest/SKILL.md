@@ -27,10 +27,9 @@ for the boundary and the merge mechanics.
 
 ## 1. Branch off `origin/main`
 
-`git fetch origin main` and branch `journal/digest-refresh-<today-UTC>` from
-`origin/main`, so the digest PR is independent of any work branch. If the caller
-pinned a designated branch for this session, branch that name off `origin/main`
-instead — a caller-pinned branch overrides this suggested name.
+Branch `journal/digest-refresh-<today-UTC>` off `origin/main` (CLAUDE.md's
+chartered-job branch convention — a caller-pinned designated branch overrides
+this default name), so the digest PR is independent of any work branch.
 
 Done when you are on a fresh branch off the latest `origin/main`.
 
@@ -104,13 +103,8 @@ Done when you have confirmed the new Digest(s) will show — no index edit is ne
 
 ## 5. Clear the safety gate
 
-Run the gate (ADR-0004), cheapest first:
-
-```
-pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e
-```
-
-Done when every step is green.
+Run the gate — see CLAUDE.md's **Self-verification** section for the exact,
+cheapest-first commands (ADR-0004). Done when every step is green.
 
 ## 6. Commit, push, open one gated PR — merge on green
 

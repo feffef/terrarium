@@ -32,11 +32,11 @@ session logs, research, and ideas that drive self-improvement.
 ## Status
 
 The manifest → build-time routing → gated-render pipeline runs end-to-end and is
-publicly deployed, hosting several Tenants — a self-documenting **`journal`**, a
-Persona-driven **`blog`**, and a design-showpiece **`atlas`** field guide. (The
-live roster of Tenants, Spaces, and Collections is single-homed in the `journal`
-Tenant and the ADRs — see the links below — not restated here, where it would
-rot.) Deployment is a self-updating
+publicly deployed, hosting several Tenants spanning self-documentation,
+Persona-driven writing, and a design-showpiece field guide. (The live roster of
+Tenants, Spaces, and Collections is single-homed in the `journal` Tenant and the
+ADRs — see the links below — not restated here, where it would rot.) Deployment
+is a self-updating
 container that tracks `main` (see [`deploy/README.md`](deploy/README.md) and
 ADR-0011). Further Tenants, Skills, and the autonomous jobs continue to land as
 gated PRs — see the `journal` Tenant's own digests

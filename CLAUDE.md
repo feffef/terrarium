@@ -46,7 +46,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   green-light (ADR-0003). **Opening that PR is automatic — don't ask.** A session
   that committed substantive work opens the gated PR itself once the work is
   coherent; it doesn't stop to ask "shall I open a PR?" (more commits can always
-  follow). This gates *opening*, not *deciding to do the work* — net-new
+  follow). **"Substantive work" means at least one commit on the feature branch
+  beyond the session-log-only commit** (the ADR-0009 direct-to-`main` exception
+  below) — a real code/content/doc change, not just exploration or reading. A
+  session that commits nothing, or only a session log, isn't substantive and has
+  nothing to gate; a session that lands even one working commit is and opens the
+  PR itself. This gates *opening*, not *deciding to do the work* — net-new
   autonomous work still needs a green-light first (ADR-0003 amendment). The
   session-log direct-to-`main` exception (ADR-0009) is untouched. **Watching the
   PR is automatic too** — on opening it, subscribe to its activity and babysit it
@@ -79,6 +84,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   present) is a hard stop-and-ask signal.** Ask the user what they want —
   don't infer a feature from the branch name, prior commits, or a matching
   repo pattern.
+- **A chartered autonomous job's first step is always: `git fetch origin main`,
+  then branch off it with that job's own default branch name** (e.g.
+  `journal/audit-docs-<today-UTC>`, `journal/digest-<today-UTC>`). **A
+  caller-pinned designated branch overrides that default name** — branch the
+  pinned name off `origin/main` instead. This is the one canonical statement of
+  that step; a chartered job's own Skill only needs to give its default name and
+  point here, not restate the fetch/branch/override mechanics.
 - **Single-home every fact — one home, everywhere else points, never restates.**
   Each fact lives in exactly one place; every other surface *references* it. This
   file is the home for repo-wide conventions and an **index** into the ADRs — so

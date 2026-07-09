@@ -1,5 +1,10 @@
 # Triage Labels
 
+*Seeded from `.agents/skills/setup-matt-pocock-skills/triage-labels.md`'s generic
+template and never customized since — this repo's label vocabulary matches the
+pack default 1:1. If you change the right-hand column below, this file
+intentionally diverges from that template; don't re-sync it back.*
+
 The skills speak in terms of five canonical triage roles. This file maps those roles to the actual label strings used in this repo's issue tracker.
 
 | Label in mattpocock/skills | Label in our tracker | Meaning                                  |
