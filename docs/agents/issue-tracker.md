@@ -26,6 +26,12 @@ class to its MCP equivalent:
   query is not a free escape from the `list_*` overflow; always scope the
   query narrowly (state/label/keyword) or expect to slice the persisted file
   by hand just as you would for a full list.
+- **Scoping the query narrowly doesn't buy precision.** Even a narrowly
+  scoped, quoted, multi-term `search_issues`/`search_pull_requests` query
+  still does fuzzy term-matching under the hood, not exact-phrase matching —
+  it surfaces loosely-relevant, noisy hits alongside genuine ones. Eyeball
+  every result for actual relevance; don't trust hit count or ranking/order
+  as a precision signal.
 - **Read a PR or its diff** → `pull_request_read`
 - **Check a PR's gate status** → `pull_request_read` with method `get_check_runs`,
   *not* `get_status`: the combined-status API reports `total_count: 0` /
