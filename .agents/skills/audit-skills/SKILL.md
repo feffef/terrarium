@@ -14,8 +14,10 @@ behavior for the better. This is a `sync`-family maintenance Skill (sibling of
 (`scripts/audit-skills.ts`) does the deterministic gathering; **you make every
 judgement.**
 
-> **Runs nightly via a scheduled Routine** (`0 2 * * *`), same pattern as
-> `digest`. Also runnable on demand.
+> **Runs via a scheduled Routine**, same pattern as `digest` — also runnable on
+> demand. The exact cadence is external, mutable state (a Routine, not committed
+> content, `CLAUDE.md`) and isn't restated here; check `list_triggers` for the
+> live schedule.
 
 Every run produces up to four things, only the first of which is ever a code
 change:

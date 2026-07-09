@@ -18,11 +18,13 @@ Status: Accepted
 > **Amended (2026-07-09).** The note directly above is now itself stale, and
 > this amendment both corrects it and grants `audit-skills` a bounded self-merge
 > tier — the drift between the two is worth naming plainly: `audit-skills`
-> **gained its own nightly Routine** (`0 2 * * *`) without this ADR being
-> updated, so "on-demand... deferred" no longer described reality. Caught only
-> because it came up in conversation, not because anything checks it — exactly
-> the class of drift `audit-docs` exists to catch, here in the ADR that defines
-> this Skill's own cadence.
+> **gained its own scheduled Routine** without this ADR being updated, so
+> "on-demand... deferred" no longer described reality. Caught only because it
+> came up in conversation, not because anything checks it — exactly the class of
+> drift `audit-docs` exists to catch, here in the ADR that defines this Skill's
+> own cadence. (The exact schedule is deliberately not restated here — a
+> Routine is external, mutable state with no in-repo home to keep in sync,
+> `CLAUDE.md`.)
 >
 > **Self-merge**: `audit-skills` joins `digest` and `audit-docs` as the
 > **third** name on ADR-0003's "no self-merge" exemption list (ADR-0004's
