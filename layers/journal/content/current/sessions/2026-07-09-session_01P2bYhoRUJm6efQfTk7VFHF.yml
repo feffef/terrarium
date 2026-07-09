@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01P2bYhoRUJm6efQfTk7VFHF
 startedAt: 2026-07-09T14:52:22Z
-endedAt: 2026-07-09T17:52:44Z
+endedAt: 2026-07-09T18:31:57Z
 kind: interactive
 goal: Grill and implement audit-skills self-merge
 status: in-review
 outcome: Design converged, PR open for review
-summary: "User asked (human-instructed) to make audit-skills self-merge autonomously on green CI, claiming zero risk. Ran /grill-with-docs (agent-chosen response to the ask) to pressure-test the claim before building. The design narrowed substantially through interactive grilling — self-merge scoped to Inventory-only edits citing an existing bright-line evidence rule, plus a new regression-watch capability and new/split/retire suggestions kept notes-only via existing session-log learnings/ideas fields, all user-directed choices made turn by turn. Implemented per the converged design, safety gate green, branch rebased onto a fast-moving main, PR #266 opened for human review (touches ADR/governance, human-only per ADR-0004). Repo owner then left a review comment (human-instructed follow-up) flagging that the SKILL.md hardcoded the Routine's cron schedule, which drifts; fixed directly plus added a general CLAUDE.md rule generalizing the fix, gate green again, rebased and re-pushed, thread resolved. PR still open, gate re-running."
+summary: "User asked (human-instructed) to make audit-skills self-merge autonomously on green CI, claiming zero risk. Ran /grill-with-docs (agent-chosen response to the ask) to pressure-test the claim before building. The design narrowed substantially through interactive grilling — self-merge scoped to Inventory-only edits citing an existing bright-line evidence rule, plus a new regression-watch capability and new/split/retire suggestions kept notes-only via existing session-log learnings/ideas fields, all user-directed choices made turn by turn. Implemented per the converged design, safety gate green, branch rebased onto a fast-moving main, PR #266 opened for human review (touches ADR/governance, human-only per ADR-0004). Repo owner then left a review comment (human-instructed follow-up) flagging that the SKILL.md hardcoded the Routine's cron schedule, which drifts; fixed directly plus added a general CLAUDE.md rule generalizing the fix, gate green again, rebased and re-pushed, thread resolved. User then asked (human-instructed) a verification question about what session data the regression-watch actually reads, which surfaced two real defects: the SKILL.md's own instructions referenced a `frictions` field the script never extracted, and (once measured against real data, at the user's explicit request) the regressionChecks payload was 557KB/~140K tokens from unbounded edits x brackets x no dedup. Separately, user correctly identified that routing audit-skills' own analytical findings through the session log's `frictions` field was a domain-definition misuse (a friction is this session's own pain, not a finding about another Skill). Fixed both: dedup + tighter bounds cut the scorecard to ~111KB, and frontmatter concerns now file/comment on a `needs-triage` issue directly (only for step 3's objective bright-line signal; the low-confidence regression-watch signal never files alone). PR still open, gate re-running."
 prs:
   - "266"
 docsRead:
@@ -63,18 +63,27 @@ frictions:
   - description: Hardcoded a Routine's cron expression (`0 2 * * *`) directly into the SKILL.md and an ADR amendment - exactly the class of drift-prone restatement CLAUDE.md's own 'single-home every fact' rule warns against, just not yet spelled out for external/Routine state.
     solution: Reviewer caught it; fixed by removing the literal cadence and adding a CLAUDE.md rule. Should have generalized 'don't restate a fact with no in-repo home to sync against' myself before writing it, given I'd just fixed an instance of the same drift class (ADR-0015's stale cadence claim) minutes earlier in the same session.
     severity: minor
-durationSec: 10822
+  - description: Shipped SKILL.md instructions telling the regression-watch step to consider 'did logged frictions change' when the script never actually extracted the `frictions` field - wrote the instruction without checking the data backed it.
+    solution: When writing instructions that reference a data source, verify the field actually exists in that source's type/extraction code, don't just assume it based on what would be useful.
+    severity: minor
+  - description: Picked REGRESSION_BRACKET=10 and MAX_EDITS_PER_SKILL=3 as defaults without measuring real output size first; the combination produced a 557KB/~140K-token payload against the actual ~106-session repo, ~5x too large to hand a Skill run in one shot.
+    solution: "User's own suggestion was the fix: measure against real data before picking defaults for anything with combinatorial fan-out (N skills x M edits x K bracket size), not just reason abstractly about what 'seems bounded'."
+    severity: moderate
+  - description: Routed audit-skills' own analytical findings (about another Skill's usage pattern) through the session log's `frictions` field, which CONTEXT.md defines as this session's own experienced pain - a domain-vocabulary misuse, not just an implementation detail, caught by the user rather than by me checking the glossary against my own design.
+    solution: Re-check a term's actual glossary definition against the specific use I'm putting it to, especially when I'm reaching for an existing field because it's convenient (has an active consumer) rather than because it's the correct fit.
+    severity: moderate
+durationSec: 13174
 models:
-  claude-sonnet-5: 255
+  claude-sonnet-5: 386
 toolCounts:
   Skill: 4
-  Bash: 58
+  Bash: 80
   Grep: 1
-  Read: 23
+  Read: 41
   mcp__Claude_Code_Remote__list_triggers: 1
-  ToolSearch: 3
-  mcp__github__pull_request_read: 8
-  Edit: 19
+  ToolSearch: 4
+  mcp__github__pull_request_read: 9
+  Edit: 41
   Write: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
@@ -82,6 +91,7 @@ toolCounts:
   mcp__Claude_Code_Remote__send_later: 2
   mcp__github__add_reply_to_pull_request_comment: 1
   mcp__github__resolve_review_thread: 1
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - scripts/audit-skills.ts
   - tests/unit/audit-skills.spec.ts
@@ -97,5 +107,7 @@ cliVersion: 2.1.205
 learnings:
   - The Skill Inventory (layers/journal/content/current/skills/) is advisory documentation agents are told to weigh, not a mechanical trigger gate - a Skill's own SKILL.md frontmatter description is what actually gates Skill-tool availability.
   - frictions-to-fixes and audit-docs already cover the 'edit a SKILL.md/doc, self-merge the fix' surface from two angles (friction-driven, drift-driven); a third Skill claiming that surface directly would duplicate rather than add capability.
+  - The `triage` Skill is a live, generic consumer of any needs-triage issue regardless of who/what filed it - a Skill doesn't need to route through frictions-to-fixes specifically just to get an issue picked up; filing directly (with a search-first dedup check) is a legitimate, already-supported path.
+  - Recurrence across independent runs is itself a form of evidence for a low-confidence signal - 'comment on the existing issue instead of re-filing' turns repeated detections into a corroborating trail on one thread, which is a cheaper and more honest way to raise confidence than trying to make any single run's heuristic more sophisticated.
 ideas:
   - A short 'exemption ledger' table in ADR-0003 (Skill, scope, date, PR) would make the growing self-merge exemption list legible at a glance instead of requiring a reader to parse N free-form amendment paragraphs - worth proposing once a 4th exemption is requested.
