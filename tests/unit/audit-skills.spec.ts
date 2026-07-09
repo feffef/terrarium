@@ -4,11 +4,14 @@
 // the Skill.
 import { describe, expect, it } from 'vitest'
 import {
+  bracketSessions,
+  buildRegressionChecks,
   buildSkillRows,
   pickWindow,
   tallyUsage,
   type InventoryEntry,
   type OnDiskSkill,
+  type SkillEdit,
   type UsageHit,
   type WindowSession,
 } from '../../scripts/audit-skills.ts'
@@ -118,5 +121,84 @@ describe('buildSkillRows()', () => {
 
   it('flags an inventoried Skill gone from disk (stale entry)', () => {
     expect(row('retired')).toMatchObject({ onDisk: false, inventoried: true, description: null })
+  })
+})
+
+describe('bracketSessions()', () => {
+  const sessions = [
+    sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z' }),
+    sess({ session: 'b', endedAt: '2026-07-02T00:00:00Z' }),
+    sess({ session: 'c', endedAt: '2026-07-03T00:00:00Z' }),
+    sess({ session: 'd', endedAt: '2026-07-04T00:00:00Z' }),
+    sess({ session: 'e', endedAt: '2026-07-05T00:00:00Z' }),
+  ]
+
+  it('splits strictly-before vs at-or-after the edit date', () => {
+    const { before, after } = bracketSessions(sessions, '2026-07-03T00:00:00Z', 10)
+    expect(before.map((s) => s.session)).toEqual(['a', 'b'])
+    expect(after.map((s) => s.session)).toEqual(['c', 'd', 'e'])
+  })
+
+  it('keeps only the n nearest sessions on each side', () => {
+    const { before, after } = bracketSessions(sessions, '2026-07-03T00:00:00Z', 1)
+    expect(before.map((s) => s.session)).toEqual(['b'])
+    expect(after.map((s) => s.session)).toEqual(['c'])
+  })
+
+  it('returns empty brackets when the edit date falls outside all session dates', () => {
+    const { before, after } = bracketSessions(sessions, '2020-01-01T00:00:00Z', 10)
+    expect(before).toEqual([])
+    expect(after.map((s) => s.session)).toEqual(['a', 'b', 'c', 'd', 'e'])
+  })
+})
+
+describe('buildRegressionChecks()', () => {
+  const sessions = [
+    sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z' }),
+    sess({ session: 'b', endedAt: '2026-07-05T00:00:00Z' }),
+  ]
+
+  it('skips external (pack) Skills even if edits are known', () => {
+    const edits = new Map<string, SkillEdit[]>([
+      ['pack-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
+    ])
+    expect(buildRegressionChecks(sessions, edits, new Set(['pack-skill']))).toEqual([])
+  })
+
+  it('skips a Skill absent from the edits map entirely', () => {
+    expect(buildRegressionChecks(sessions, new Map(), new Set())).toEqual([])
+  })
+
+  it('skips an edit with no session data on either side (empty session history)', () => {
+    const edits = new Map<string, SkillEdit[]>([
+      ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
+    ])
+    expect(buildRegressionChecks([], edits, new Set())).toEqual([])
+  })
+
+  it('brackets an own Skill edit that falls within the session history', () => {
+    const edits = new Map<string, SkillEdit[]>([
+      ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
+    ])
+    const checks = buildRegressionChecks(sessions, edits, new Set())
+    expect(checks).toHaveLength(1)
+    expect(checks[0]).toMatchObject({ skill: 'our-skill', edit: { sha: 's1' } })
+    expect(checks[0]?.before.map((s) => s.session)).toEqual(['a'])
+    expect(checks[0]?.after.map((s) => s.session)).toEqual(['b'])
+  })
+
+  it('caps at the n most recent edits per Skill', () => {
+    const edits = new Map<string, SkillEdit[]>([
+      [
+        'our-skill',
+        [
+          { sha: 's1', date: '2026-07-02T00:00:00Z', subject: 'first' },
+          { sha: 's2', date: '2026-07-03T00:00:00Z', subject: 'second' },
+          { sha: 's3', date: '2026-07-04T00:00:00Z', subject: 'third' },
+        ],
+      ],
+    ])
+    const checks = buildRegressionChecks(sessions, edits, new Set(), 10, 2)
+    expect(checks.map((c) => c.edit.sha)).toEqual(['s3', 's2'])
   })
 })
