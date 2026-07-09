@@ -15,7 +15,8 @@ correct. It runs start to finish **without interaction**.
 
 > **Autonomous, bounded.** Runs unattended and **self-merges** its gated PR on a
 > green gate — the PR carries only fact-checked reconciliations that touch no
-> human-only surface (ADR-0004's low-risk content tier). It edits only *live* docs,
+> human-only surface (ADR-0003 amendment; ADR-0004's low-risk content tier). It
+> edits only *live* docs,
 > **never** rewrites a historical record's decision or a pack template, and is
 > **brave by default**: it decides scope itself and fixes, escalating to an issue
 > only for an unresolvable factual conflict.
@@ -123,9 +124,10 @@ frontmatter or a moved path can. Done when every step is green.
 
 Commit the fixes (one run rides one commit/PR), push with retry, and open **one
 gated PR** listing what was fixed and any issue filed. **Self-merge it once the
-gate is green** — the reconciliations are fact-checked and touch no human-only
-surface, so this is ADR-0004's low-risk content tier (like `digest`). Repo
-auto-merge is unavailable pending #231, so watch the gate yourself
+gate is green** (ADR-0003 amendment) — the reconciliations are fact-checked and
+touch no human-only surface, so this is ADR-0004's low-risk content tier (a
+second, bounded grant of the same kind as `digest`'s). Repo auto-merge is
+unavailable pending #231, so watch the gate yourself
 (`pull_request_read` `get_check_runs` — `docs/agents/issue-tracker.md`) and merge
 with the GitHub MCP `merge_pull_request`; pushing is not landing. Leave a one-line
 PR comment as the audit trail.
