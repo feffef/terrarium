@@ -1,0 +1,43 @@
+schemaVersion: 1
+session: session_01DVLnqForEdi4gbbtUFkCnH
+startedAt: 2026-07-09T16:29:11Z
+endedAt: 2026-07-09T16:35:53Z
+kind: delegated
+goal: Fix invalid YAML frontmatter in close-session's SKILL.md
+status: in-review
+outcome: Fixed, gate green, PR opened
+summary: "Human-filed issue #257 reported close-session/SKILL.md's description field is an unquoted YAML scalar containing a colon-space sequence, which is illegal YAML and crashes scripts/audit-skills.ts. The repo owner confirmed the fix approach directly on the issue (\"Add quotes\"). Restarted the stale designated branch off latest origin/main (it was 112 commits behind with only inherited history ahead), quoted the description string with no content change, verified the frontmatter now parses via this repo's yaml package and that audit-skills.ts runs without crashing, ran the full pnpm gate (all green), and opened gated PR #264 with Fixes #257, subscribing to its activity per CLAUDE.md."
+prs:
+  - "264"
+docsRead:
+  - path: .agents/skills/close-session/SKILL.md
+    reason: the file being fixed
+skillsUsed:
+  - name: close-session
+    reason: closure sequence
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 401
+models:
+  claude-sonnet-5: 60
+toolCounts:
+  ToolSearch: 4
+  mcp__github__issue_read: 2
+  Bash: 13
+  Read: 1
+  mcp__github__list_pull_requests: 1
+  Edit: 1
+  Glob: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  Skill: 2
+  Write: 1
+  Grep: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - .agents/skills/close-session/SKILL.md
+gitBranch: claude/issue-257-4zgu22
+entrypoint: remote_mobile
+cliVersion: 2.1.205
