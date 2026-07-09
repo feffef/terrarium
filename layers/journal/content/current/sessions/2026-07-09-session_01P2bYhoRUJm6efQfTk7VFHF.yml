@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01P2bYhoRUJm6efQfTk7VFHF
 startedAt: 2026-07-09T14:52:22Z
-endedAt: 2026-07-09T18:31:57Z
+endedAt: 2026-07-09T18:59:45Z
 kind: interactive
 goal: Grill and implement audit-skills self-merge
 status: in-review
 outcome: Design converged, PR open for review
-summary: "User asked (human-instructed) to make audit-skills self-merge autonomously on green CI, claiming zero risk. Ran /grill-with-docs (agent-chosen response to the ask) to pressure-test the claim before building. The design narrowed substantially through interactive grilling — self-merge scoped to Inventory-only edits citing an existing bright-line evidence rule, plus a new regression-watch capability and new/split/retire suggestions kept notes-only via existing session-log learnings/ideas fields, all user-directed choices made turn by turn. Implemented per the converged design, safety gate green, branch rebased onto a fast-moving main, PR #266 opened for human review (touches ADR/governance, human-only per ADR-0004). Repo owner then left a review comment (human-instructed follow-up) flagging that the SKILL.md hardcoded the Routine's cron schedule, which drifts; fixed directly plus added a general CLAUDE.md rule generalizing the fix, gate green again, rebased and re-pushed, thread resolved. User then asked (human-instructed) a verification question about what session data the regression-watch actually reads, which surfaced two real defects: the SKILL.md's own instructions referenced a `frictions` field the script never extracted, and (once measured against real data, at the user's explicit request) the regressionChecks payload was 557KB/~140K tokens from unbounded edits x brackets x no dedup. Separately, user correctly identified that routing audit-skills' own analytical findings through the session log's `frictions` field was a domain-definition misuse (a friction is this session's own pain, not a finding about another Skill). Fixed both: dedup + tighter bounds cut the scorecard to ~111KB, and frontmatter concerns now file/comment on a `needs-triage` issue directly (only for step 3's objective bright-line signal; the low-confidence regression-watch signal never files alone). PR still open, gate re-running."
+summary: "User asked (human-instructed) to make audit-skills self-merge autonomously on green CI, claiming zero risk. Ran /grill-with-docs (agent-chosen response to the ask) to pressure-test the claim before building. The design narrowed substantially through interactive grilling — self-merge scoped to Inventory-only edits citing an existing bright-line evidence rule, plus a new regression-watch capability and new/split/retire suggestions kept notes-only via existing session-log learnings/ideas fields, all user-directed choices made turn by turn. Implemented per the converged design, safety gate green, branch rebased onto a fast-moving main, PR #266 opened for human review (touches ADR/governance, human-only per ADR-0004). Repo owner then left a review comment (human-instructed follow-up) flagging that the SKILL.md hardcoded the Routine's cron schedule, which drifts; fixed directly plus added a general CLAUDE.md rule generalizing the fix, gate green again, rebased and re-pushed, thread resolved. User then asked (human-instructed) a verification question about what session data the regression-watch actually reads, which surfaced two real defects: the SKILL.md's own instructions referenced a `frictions` field the script never extracted, and (once measured against real data, at the user's explicit request) the regressionChecks payload was 557KB/~140K tokens from unbounded edits x brackets x no dedup. Separately, user correctly identified that routing audit-skills' own analytical findings through the session log's `frictions` field was a domain-definition misuse (a friction is this session's own pain, not a finding about another Skill). Fixed both: dedup + tighter bounds cut the scorecard to ~111KB, and frontmatter concerns now file/comment on a `needs-triage` issue directly (only for step 3's objective bright-line signal; the low-confidence regression-watch signal never files alone). User then pushed back further (human-instructed): only catching \"unused\" Skills via the bright-line rule was too narrow given the goal of catching ALL behavior regressions, not just usage-rate ones. Redesigned regression detection as two phases: a cheap screen (now including friction severity/count, not just usage) flags a suspected Skill, then a full-log deep-read (a new skillSessionFiles map, all-time, paths only) over that Skill's entire history grounds an actual judgement in real evidence before anything files or comments on an issue. Judging is deliberately a guideline, not a rigid formula, per explicit instruction - but citation of specific deep-read evidence is still required. Step 4 can now originate issues on equal footing with step 3, closing the original gap. PR still open, gate green, rebased clean."
 prs:
   - "266"
 docsRead:
@@ -72,26 +72,29 @@ frictions:
   - description: Routed audit-skills' own analytical findings (about another Skill's usage pattern) through the session log's `frictions` field, which CONTEXT.md defines as this session's own experienced pain - a domain-vocabulary misuse, not just an implementation detail, caught by the user rather than by me checking the glossary against my own design.
     solution: Re-check a term's actual glossary definition against the specific use I'm putting it to, especially when I'm reaching for an existing field because it's convenient (has an active consumer) rather than because it's the correct fit.
     severity: moderate
-durationSec: 13174
+  - description: Initial design gated regression-watch issue-filing on step 3's usage-absence rule alone, missing that this structurally excludes any regression that doesn't also show up as reduced firing (a quality regression at unchanged usage rate) - a real gap the user had to point out rather than one I derived myself while designing the false-positive safeguard.
+    solution: When adding a safeguard against one failure mode (false positives), explicitly check what it accidentally excludes on the other axis (true positives of a different shape), not just whether it blocks the bad case.
+    severity: moderate
+durationSec: 14842
 models:
-  claude-sonnet-5: 386
+  claude-sonnet-5: 482
 toolCounts:
   Skill: 4
-  Bash: 80
+  Bash: 93
   Grep: 1
-  Read: 41
+  Read: 54
   mcp__Claude_Code_Remote__list_triggers: 1
   ToolSearch: 4
-  mcp__github__pull_request_read: 9
-  Edit: 41
+  mcp__github__pull_request_read: 13
+  Edit: 60
   Write: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__Claude_Code_Remote__send_later: 2
+  mcp__Claude_Code_Remote__send_later: 3
   mcp__github__add_reply_to_pull_request_comment: 1
   mcp__github__resolve_review_thread: 1
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 3
 filesEdited:
   - scripts/audit-skills.ts
   - tests/unit/audit-skills.spec.ts
@@ -109,5 +112,6 @@ learnings:
   - frictions-to-fixes and audit-docs already cover the 'edit a SKILL.md/doc, self-merge the fix' surface from two angles (friction-driven, drift-driven); a third Skill claiming that surface directly would duplicate rather than add capability.
   - The `triage` Skill is a live, generic consumer of any needs-triage issue regardless of who/what filed it - a Skill doesn't need to route through frictions-to-fixes specifically just to get an issue picked up; filing directly (with a search-first dedup check) is a legitimate, already-supported path.
   - Recurrence across independent runs is itself a form of evidence for a low-confidence signal - 'comment on the existing issue instead of re-filing' turns repeated detections into a corroborating trail on one thread, which is a cheaper and more honest way to raise confidence than trying to make any single run's heuristic more sophisticated.
+  - "A useful pattern for bounding data-heavy analysis without either starving it or blowing up context: keep the default scorecard cheap and broad (paths/severities/counts, not full content), then add a narrow, targeted deep-read entry point (a name-keyed file-path map) that only pays the full cost for the specific thing flagged by the cheap pass. Scales the expensive part with the number of real concerns, not the number of things being watched."
 ideas:
   - A short 'exemption ledger' table in ADR-0003 (Skill, scope, date, PR) would make the growing self-merge exemption list legible at a glance instead of requiring a reader to parse N free-form amendment paragraphs - worth proposing once a 4th exemption is requested.
