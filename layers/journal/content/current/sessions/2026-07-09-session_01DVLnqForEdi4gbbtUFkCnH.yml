@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01DVLnqForEdi4gbbtUFkCnH
 startedAt: 2026-07-09T16:29:11Z
-endedAt: 2026-07-09T16:35:53Z
+endedAt: 2026-07-09T16:36:33Z
 kind: delegated
 goal: Fix invalid YAML frontmatter in close-session's SKILL.md
 status: in-review
@@ -17,17 +17,20 @@ skillsUsed:
     reason: closure sequence
   - name: log-session
     reason: (no reason given)
-frictions: []
-durationSec: 401
+frictions:
+  - description: This fix was a one-line quote around an existing string, root-caused and pre-approved by the repo owner in the issue's own comment ("Add quotes"). Filing a GitHub issue, then a separate session picking it up, branching, gating, and PR-ing it, was disproportionate process overhead for a change this small and this unambiguous.
+    solution: Let a trivially-scoped, owner-pre-approved one-line fix (no design judgment involved) land via a lighter path than the full issue-to-gated-PR pipeline — e.g. fix-and-PR directly, referencing the issue, without a separate triage/pickup round-trip.
+    severity: major
+durationSec: 442
 models:
-  claude-sonnet-5: 60
+  claude-sonnet-5: 65
 toolCounts:
   ToolSearch: 4
   mcp__github__issue_read: 2
-  Bash: 13
-  Read: 1
+  Bash: 14
+  Read: 2
   mcp__github__list_pull_requests: 1
-  Edit: 1
+  Edit: 2
   Glob: 2
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
