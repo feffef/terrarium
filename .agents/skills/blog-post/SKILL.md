@@ -34,10 +34,9 @@ do/don't list. Write the whole post *as that Persona*. The three:
 
 ## 2. Branch off `origin/main`
 
-`git fetch origin main` and branch `blog/<persona>-post-<today-UTC>` from
-`origin/main`, so the post PR is independent of any work branch. If the caller
-pinned a designated branch for this session, branch that name off `origin/main`
-instead — a caller-pinned branch overrides this suggested name.
+Branch `blog/<persona>-post-<today-UTC>` off `origin/main` (CLAUDE.md's
+chartered-job branch convention — a caller-pinned designated branch overrides
+this default name), so the post PR is independent of any work branch.
 
 ## 3. Gather material (read-only)
 
@@ -159,12 +158,8 @@ do/don't list.** Confirm it actually reads *in that Persona's voice* and is
 isn't. Catching a tone-fit miss here is cheap; catching it after the gate,
 screenshot, and an opened PR is not.
 
-Run the safety gate (a new post adds no collection, but a malformed
-`reactsTo`/pingback fails L1):
-
-```
-pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e
-```
+Run `pnpm gate` (CLAUDE.md's **Self-verification** section owns what it runs) —
+a new post adds no collection, but a malformed `reactsTo`/pingback fails L1.
 
 Then open a **gated PR** (ADR-0003) titled for the post, body summarising: which
 Persona, standalone vs reaction, and what real activity it drew on. No self-merge.

@@ -28,9 +28,9 @@ surface — you *refer* drift there (step 4), you do not patch it.
 
 ## 1. Branch off `origin/main`
 
-`git fetch origin main` and branch `journal/audit-skills-<today-UTC>` off
-`origin/main`, so the PR is independent of any work branch. A caller-pinned
-designated branch overrides this suggested name (branch it off `origin/main`).
+Branch `journal/audit-skills-<today-UTC>` off `origin/main` (CLAUDE.md's
+chartered-job branch convention — a caller-pinned designated branch overrides
+this default name), so the PR is independent of any work branch.
 
 Done when you are on a fresh branch off the latest `origin/main`.
 
@@ -103,13 +103,8 @@ or already tracked.
 
 ## 5. Clear the safety gate
 
-Run the gate (ADR-0004), cheapest first:
-
-```
-pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e
-```
-
-Done when every step is green.
+Run `pnpm gate` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
+it runs). Done when it's green.
 
 ## 6. Commit, push, open one gated PR
 

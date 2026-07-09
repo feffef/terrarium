@@ -14,12 +14,12 @@ for the rare case it genuinely can't tell which of two conflicting facts is
 correct. It runs start to finish **without interaction**.
 
 > **Autonomous, bounded.** Runs unattended and **self-merges** its gated PR on a
-> green gate — the PR carries only fact-checked reconciliations that touch no
-> human-only surface (ADR-0003 amendment; ADR-0004's low-risk content tier). It
-> edits only *live* docs,
-> **never** rewrites a historical record's decision or a pack template, and is
-> **brave by default**: it decides scope itself and fixes, escalating to an issue
-> only for an unresolvable factual conflict.
+> green gate (ADR-0003 amendment) — the PR carries only fact-checked
+> reconciliations that touch no human-only surface (ADR-0004's low-risk content
+> tier). It edits only *live* docs, **never** rewrites a historical record's
+> decision or a pack template, and is **brave by default**: it decides scope
+> itself and fixes, escalating to an issue only for an unresolvable factual
+> conflict.
 
 ## The three tiers — what you may touch
 
@@ -83,9 +83,10 @@ re-file an open one, and append the provenance footer (ADR-0017). This is the
 
 ## 1. Branch off `origin/main`
 
-`git fetch origin main` and branch `journal/audit-docs-<today-UTC>` off
-`origin/main`. A caller-pinned designated branch overrides this name (branch it
-off `origin/main`). Done when you are on a fresh branch off the latest `origin/main`.
+Branch `journal/audit-docs-<today-UTC>` off `origin/main` (CLAUDE.md's
+chartered-job branch convention — a caller-pinned designated branch overrides
+this default name). Done when you are on a fresh branch off the latest
+`origin/main`.
 
 ## 2. Inventory & classify
 
@@ -113,12 +114,9 @@ conflict — filed, with none left undecided.
 
 ## 6. Clear the safety gate
 
-```
-pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e
-```
-
-Most doc edits don't touch the build, but run it anyway (ADR-0004) — a Skill's
-frontmatter or a moved path can. Done when every step is green.
+Run `pnpm gate` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
+it runs). Most doc edits don't touch the build, but run it anyway — a Skill's
+frontmatter or a moved path can. Done when it's green.
 
 ## 7. Commit, push, open one gated PR, self-merge on green
 
@@ -132,9 +130,11 @@ unavailable pending #231, so watch the gate yourself
 with the GitHub MCP `merge_pull_request`; pushing is not landing. Leave a one-line
 PR comment as the audit trail.
 
-**Escalate instead — leave the PR open for a human** — if the gate is red for a
-reason that isn't yours, or the sweep touched a **human-only surface** (an ADR
-amendment banner, CI, isolation, or the manifest-expansion/routing modules): those
-ride their own human-reviewed PR, never the self-merged one. Subscribe and babysit
-to the terminal state; keep the PR description in sync (`CLAUDE.md`). Done when the
-PR is merged green, or open and honestly escalated.
+**Keep human-only-surface fixes out of this PR — those escalate instead.** A fix
+that touches an ADR's amendment banner, CI, isolation logic, or the
+manifest-expansion/routing modules never rides in the self-merged routine PR
+above — file it as its own, separately human-reviewed PR (see the Historical-tier
+note above), subscribe, and babysit it to merge/close. Likewise, if the gate is
+red for a reason that isn't yours, leave the PR open for a human rather than
+merging red — fix on the branch or escalate honestly instead. Done when the PR
+is merged green, or open and honestly escalated.

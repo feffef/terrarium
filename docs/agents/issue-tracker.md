@@ -1,5 +1,11 @@
 # Issue tracker: GitHub
 
+*Seeded from `.agents/skills/setup-matt-pocock-skills/issue-tracker-github.md`'s
+generic template and customized for this repo (the remote-session MCP-tool
+mapping below is repo-specific, not part of the pack). Don't re-sync the two —
+this file is the live, repo-authoritative one; the pack template stays generic
+and reinstallable (ADR-0005).*
+
 Issues and PRDs for this repo live as GitHub issues. Use the `gh` CLI for all operations.
 
 ## No `gh`? Remote sessions: use the GitHub MCP tools
