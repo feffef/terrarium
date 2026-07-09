@@ -1,6 +1,6 @@
 ---
 name: audit-docs
-description: Audit every live doc and Skill for drift, duplication, contradiction, and ambiguity against the code — fact-check each finding, fix the safe ones, and file an issue (never ask) for anything needing a human call. Opens one gated PR for a human to merge.
+description: Audit every live doc and Skill for drift, duplication, contradiction, and ambiguity against the code — fact-check each finding, fix the safe ones, and file an issue (never ask) for anything needing a human call. Opens one gated PR and self-merges it on a green gate.
 disable-model-invocation: true
 ---
 
@@ -9,19 +9,17 @@ disable-model-invocation: true
 Keep the repo's prose honest against the code. Agents act on documented state, so
 here a stale doc is a **behavioural** bug (`CLAUDE.md`). This is a
 `consolidate`-family maintenance sweep (ADR-0003): it fact-checks each finding and
-**fixes it bravely**, opening one gated PR for a human to merge — filing an issue
-only for the rare case it genuinely can't tell which of two conflicting facts is
+**fixes it bravely**, self-merging its own gated PR on green — filing an issue only
+for the rare case it genuinely can't tell which of two conflicting facts is
 correct. It runs start to finish **without interaction**.
 
-> **Autonomous, bounded.** Runs unattended, fact-checks every finding, and
-> **fixes bravely** — but the merge itself follows ADR-0003's default for
-> `consolidate`-family jobs: **gated PR, human merge.** `audit-docs` has no
-> auto-merge exception of its own (`digest`'s is the sole named one, scoped to
-> that one Skill — ADR-0003 amendment); claiming one here would be exactly the
-> kind of unauthorized-overclaim this Skill exists to catch elsewhere. It edits
-> only *live* docs, **never** rewrites a historical record's decision or a pack
-> template, and is **brave by default**: it decides scope itself and fixes,
-> escalating to an issue only for an unresolvable factual conflict.
+> **Autonomous, bounded.** Runs unattended and **self-merges** its gated PR on a
+> green gate (ADR-0003 amendment) — the PR carries only fact-checked
+> reconciliations that touch no human-only surface (ADR-0004's low-risk content
+> tier). It edits only *live* docs, **never** rewrites a historical record's
+> decision or a pack template, and is **brave by default**: it decides scope
+> itself and fixes, escalating to an issue only for an unresolvable factual
+> conflict.
 
 ## The three tiers — what you may touch
 
@@ -34,8 +32,7 @@ Classify every surface **before** editing. This decides everything.
   session logs, blog posts. **Never rewrite a decision.** A drifted ADR still gets
   the brave fix — the repo's sanctioned **amendment banner / Status-line pointer**
   (ADR-0018), never a rewrite of the decision — but ADRs are human-only (ADR-0004),
-  so that edit rides its own PR, kept separate from step 7's routine reconciliations
-  (both are human-merged, but reviewed independently).
+  so that edit rides its own human-reviewed PR, not the self-merged one (step 7).
 - **Pack-generic** — external-pack Skills (`external: true`; e.g.
   `setup-matt-pocock-skills/*`, the `*-FORMAT.md` templates). Generic and
   re-installable, so a rewrite is clobbered on re-install (ADR-0005). **Never
@@ -121,21 +118,23 @@ Run `pnpm gate` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
 it runs). Most doc edits don't touch the build, but run it anyway — a Skill's
 frontmatter or a moved path can. Done when it's green.
 
-## 7. Commit, push, open one gated PR
+## 7. Commit, push, open one gated PR, self-merge on green
 
 Commit the fixes (one run rides one commit/PR), push with retry, and open **one
-gated PR** listing what was fixed and any issue filed. **A human merges it** —
-never self-merge or enable auto-merge (ADR-0003): `consolidate`-family sweeps get
-the same gated-PR/human-merge default as any other autonomous job, and
-`audit-docs` carries no auto-merge exception of its own (`digest` is the sole
-named one, scoped to that one Skill). Subscribe to the PR's activity and babysit
-it to merge/close (CLAUDE.md); keep the PR description in sync with what it
-contains. Leave a one-line PR comment as the audit trail.
+gated PR** listing what was fixed and any issue filed. **Self-merge it once the
+gate is green** (ADR-0003 amendment) — the reconciliations are fact-checked and
+touch no human-only surface, so this is ADR-0004's low-risk content tier (a
+second, bounded grant of the same kind as `digest`'s). Repo auto-merge is
+unavailable pending #231, so watch the gate yourself
+(`pull_request_read` `get_check_runs` — `docs/agents/issue-tracker.md`) and merge
+with the GitHub MCP `merge_pull_request`; pushing is not landing. Leave a one-line
+PR comment as the audit trail.
 
-**Keep human-only-surface fixes out of this PR.** A fix that touches an ADR's
-amendment banner, CI, isolation logic, or the manifest-expansion/routing modules
-never rides in the routine-reconciliation PR above — file it as its own, separate
-PR (see the Historical-tier note above). If the gate is red for a reason that
-isn't yours, diagnose and fix on the branch rather than merging red; if it's
-genuinely not yours to fix, say so honestly in the PR instead. Done when the PR
-is merged, or open and honestly escalated.
+**Keep human-only-surface fixes out of this PR — those escalate instead.** A fix
+that touches an ADR's amendment banner, CI, isolation logic, or the
+manifest-expansion/routing modules never rides in the self-merged routine PR
+above — file it as its own, separately human-reviewed PR (see the Historical-tier
+note above), subscribe, and babysit it to merge/close. Likewise, if the gate is
+red for a reason that isn't yours, leave the PR open for a human rather than
+merging red — fix on the branch or escalate honestly instead. Done when the PR
+is merged green, or open and honestly escalated.
