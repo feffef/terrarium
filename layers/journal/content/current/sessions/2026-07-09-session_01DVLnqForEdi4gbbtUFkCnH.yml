@@ -1,36 +1,38 @@
 schemaVersion: 1
 session: session_01DVLnqForEdi4gbbtUFkCnH
 startedAt: 2026-07-09T16:29:11Z
-endedAt: 2026-07-09T16:49:01Z
+endedAt: 2026-07-09T17:10:03Z
 kind: delegated
 goal: Fix invalid YAML frontmatter in close-session's SKILL.md
 status: completed
 outcome: Fixed, gate green, PR merged
-summary: "Human-filed issue #257 reported close-session/SKILL.md's description field is an unquoted YAML scalar containing a colon-space sequence, which is illegal YAML and crashes scripts/audit-skills.ts. The repo owner confirmed the fix approach directly on the issue (\"Add quotes\"). Restarted the stale designated branch off latest origin/main (it was 112 commits behind with only inherited history ahead), quoted the description string with no content change, verified the frontmatter now parses via this repo's yaml package and that audit-skills.ts runs without crashing, ran the full pnpm gate (all green), and opened gated PR #264 with Fixes #257, subscribing to its activity per CLAUDE.md. PR #264 merged, closing #257."
+summary: "Issue #257 (agent-filed, not human: a prior autonomous audit-skills session, per its own Co-Authored-By/Claude-Session footer — GitHub shows it as authored by the repo owner only because agent API calls run under the owner's own authorized connection, ADR-0017) reported close-session/SKILL.md's description field is an unquoted YAML scalar containing a colon-space sequence, which is illegal YAML and crashes scripts/audit-skills.ts. The human repo owner then confirmed the fix approach directly on the issue (\"Add quotes\"). Restarted the stale designated branch off latest origin/main (it was 112 commits behind with only inherited history ahead), quoted the description string with no content change, verified the frontmatter now parses via this repo's yaml package and that audit-skills.ts runs without crashing, ran the full pnpm gate (all green), and opened gated PR #264 with Fixes #257, subscribing to its activity per CLAUDE.md. PR #264 merged, closing #257."
 prs:
   - "264"
 docsRead:
   - path: .agents/skills/close-session/SKILL.md
     reason: the file being fixed
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: closure sequence
   - name: log-session
     reason: (no reason given)
 frictions:
-  - description: This fix was a one-line quote around an existing string, root-caused and pre-approved by the repo owner in the issue's own comment ("Add quotes"). Filing a GitHub issue, then a separate session picking it up, branching, gating, and PR-ing it, was disproportionate process overhead for a change this small and this unambiguous.
-    solution: Let a trivially-scoped, owner-pre-approved one-line fix (no design judgment involved) land via a lighter path than the full issue-to-gated-PR pipeline — e.g. fix-and-PR directly, referencing the issue, without a separate triage/pickup round-trip.
+  - description: "Opening issue #257 at all was the overhead, not the later PR. The prior audit-skills session that discovered the crash was blocked by that Skill's own blanket \"Never edit `.agents/skills/`\" rule, which does not distinguish semantic edits (a Skill's description/role content, which legitimately need human judgment since they change trigger behavior) from purely mechanical, non-semantic fixes (quoting a YAML scalar so it parses — zero content change). That blanket rule forced a one-character, zero-judgment syntax fix through a full issue-file, later-session rediscovery, branch, gate, and PR round-trip — confirmed over-cautious by the human owner's entire review consisting of \"Add quotes.\""
+    solution: Give audit-skills' (and any similar skill-auditing job's) "never edit" rule a narrow carve-out for purely mechanical, non-semantic fixes to a Skill's own SKILL.md (encoding/syntax validity, not description/role wording) — propose those as a one-line diff inline (in the same PR, or an issue with an attached patch a human can approve with one click) instead of routing them through the full separate-session issue-to-gated-PR pipeline built for judgment calls.
     severity: major
-durationSec: 1190
+durationSec: 2451
 models:
-  claude-sonnet-5: 73
+  claude-sonnet-5: 88
 toolCounts:
   ToolSearch: 4
   mcp__github__issue_read: 2
-  Bash: 15
-  Read: 3
+  Bash: 17
+  Read: 5
   mcp__github__list_pull_requests: 1
-  Edit: 4
+  Edit: 8
   Glob: 2
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
@@ -45,3 +47,8 @@ filesEdited:
 gitBranch: claude/issue-257-4zgu22
 entrypoint: remote_mobile
 cliVersion: 2.1.205
+learnings:
+  - "A GitHub issue/PR/comment's \"user\" field is not evidence of human authorship — agent-driven API calls run under the repo owner's own authorized connection (ADR-0017), so `user` always reads as the owner regardless of who actually wrote it. The only reliable signal is the Co-Authored-By/Claude-Session footer in the body; its absence (as in the \"Add quotes\" comment on #257) is what actually marks a human's own words."
+  - "audit-skills' \"Never edit `.agents/skills/`\" rule (SKILL.md step 4) is currently one blanket prohibition covering two different things it should treat differently: changing a Skill's semantic description/role content (a real judgment call, rightly gated) versus a purely mechanical fix like YAML syntax validity (no judgment call at all)."
+ideas:
+  - "Split audit-skills' \"never edit .agents/skills/\" rule into two tiers: semantic changes (description/role wording — stays issue-only, human judgment required) versus mechanical fixes (encoding/syntax validity, broken code fences, stale internal links — propose as an attached one-line patch a human can approve inline) so a crash-on-parse bug like #257 doesn't cost a full separate fix-it session for a one-character change the human ends up rubber-stamping anyway."
