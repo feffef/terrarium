@@ -1,0 +1,98 @@
+schemaVersion: 1
+session: session_015KJffNZMS8smaFPavK7JFV
+startedAt: 2026-07-09T15:09:30Z
+endedAt: 2026-07-09T15:29:10Z
+kind: autonomous
+goal: Run the audit-docs sweep across every live doc and Skill
+status: in-review
+outcome: 8 findings confirmed and fixed; PR
+summary: "Scheduled /audit-docs run, no human prompt in this conversation. Fanned out four parallel read-only reviewers (drift, duplication, contradiction, ambiguity) over every live doc, ADR, and Skill; drift found nothing, the other three lenses returned 8 candidate findings. An independent fact-checker re-derived each against primary sources — all 8 came back CONFIRMED or CONFIRMED-BUT. Fixed all 8 in place: single-homed the safety-gate command chain and the chartered-job branch-off convention into CLAUDE.md instead of restating them across 5 and 4 SKILL.md files; noted the seed-template provenance of three docs/agents/*.md files against their setup-matt-pocock-skills originals; fixed a self-contradiction in README.md; spelled out CONTEXT.md's Specimen rarity enum in full; pinned CLAUDE.md's undefined \"substantive work\" threshold with a concrete rule. The most consequential fix: audit-docs's own SKILL.md and Skill Inventory entry falsely claimed an ADR-0004 self-merge exception that ADR-0003 never actually grants it (only digest and frictions-to-fixes are named exceptions) — corrected to the standard gated-PR/human-merge default used by its sibling audit-skills. Because that fix lands in this very PR, this run followed the corrected policy for its own close-out: opened PR #262 and left it for human merge rather than self-merging, even though the pre-fix SKILL.md instructions (present at the start of this run) said to self-merge. Full safety gate green throughout (174 unit tests, 27 e2e tests). No needs-triage issue was needed — every finding was resolvable from primary sources."
+prs:
+  - "262"
+docsRead:
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: verify the actual scope of the self-merge/auto-merge exceptions
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: verify the low-risk auto-merge tier's actual scope
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: control case for the correct human-merge pattern
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/audit-docs.yml
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: docs/agents/triage-labels.md
+    reason: (read before editing)
+  - path: docs/agents/issue-tracker.md
+    reason: (read before editing)
+  - path: docs/agents/domain.md
+    reason: (read before editing)
+  - path: README.md
+    reason: (read before editing)
+  - path: CONTEXT.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: the sweep this session ran
+  - name: log-session
+    reason: record this closure
+  - name: close-session
+    reason: closure trigger
+frictions:
+  - description: audit-docs's own SKILL.md asserted a self-merge authority not actually backed by ADR-0003/0004 text, discovered only via the contradiction lens mid-run — a meta case where the running instructions were themselves wrong.
+    solution: Fixed audit-docs/SKILL.md and its Skill Inventory entry to match audit-skills's correct "human merges, never self-merge" pattern; this run's own PR (#262) followed the corrected policy rather than the stale instruction it started with.
+    severity: moderate
+  - description: The audit-docs SKILL.md's four Agent-tool calls for the lens reviewers were requested with run_in_background:false but the harness ran them asynchronously anyway, requiring a wait on task-notifications instead of getting results inline in the same turn.
+    solution: Treat run_in_background:false as a preference, not a guarantee, for parallel same-message Agent calls; plan on waiting for notifications rather than assuming synchronous return.
+    severity: nit
+durationSec: 1180
+models:
+  claude-sonnet-5: 179
+toolCounts:
+  Skill: 3
+  Bash: 34
+  Agent: 5
+  ScheduleWakeup: 3
+  Read: 19
+  Edit: 23
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  PushNotification: 1
+filesEdited:
+  - .agents/skills/audit-docs/SKILL.md
+  - layers/journal/content/current/skills/audit-docs.yml
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - CLAUDE.md
+  - docs/agents/triage-labels.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/domain.md
+  - README.md
+  - CONTEXT.md
+subagents:
+  - type: general-purpose
+    task: Drift lens doc audit
+  - type: general-purpose
+    task: Duplication lens doc audit
+  - type: general-purpose
+    task: Contradiction lens doc audit
+  - type: general-purpose
+    task: Ambiguity lens doc audit
+  - type: general-purpose
+    task: Fact-check pooled audit findings
+gitBranch: claude/intelligent-babbage-f7ywx6
+entrypoint: remote_trigger
+cliVersion: 2.1.205
