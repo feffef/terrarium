@@ -1,0 +1,97 @@
+schemaVersion: 1
+session: session_01QxEToo6MA65uDa4vo3AwCh
+startedAt: 2026-07-10T16:40:05Z
+endedAt: 2026-07-10T18:46:43Z
+kind: interactive
+goal: Assess GitHub-ops skill extraction; fix MCP frictions
+status: in-review
+outcome: Doorbell issue filed; casing-fix PR open
+summary: "Human-directed throughout. User asked whether to extract GitHub docs/hints into one/many skills; I analyzed via writing-great-skills and recommended NOT a skill (the material is reference, already single-homed) — splitting docs by concern (issue-tracking vs outbound-PR lifecycle vs shared MCP substrate) rather than by \"GitHub\". User then asked to survey 50 sessions' GitHub-MCP frictions (17/50 hit them; one major: autonomous CI-poll stall). On the user's green-light I ran a spike (throwaway PR #277, since closed) that CONFIRMED a github-actions[bot] comment wakes a subscribed session while CI-success does not — a repo-only \"doorbell\" fix, written up in issue #278 with apply instructions (user chose document-only, comment on every green run). User then reported recurring permission dialogs; I diagnosed a mis-cased allowlist (claude-code-remote vs the real Claude_Code_Remote) and, at the user's request, tested that pushing gate.yml is not blocked on a feature branch (git+API both succeeded; reverted), then opened clean PR #287 fixing the casing in settings and docs."
+prs:
+  - "287"
+docsRead:
+  - path: CLAUDE.md
+    reason: repo conventions, PR/provenance discipline
+  - path: docs/agents/issue-tracker.md
+    reason: GitHub MCP mechanics; home of the mis-cased send_later reference
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: human-only CI/merge surface
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: footer + shared-identity attribution
+  - path: docs/adr/0005-skill-model.md
+    reason: generic-vs-pack skill boundary for the extraction question
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: .agents/skills/setup-matt-pocock-skills/issue-tracker-github.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .github/workflows/gate.yml
+    reason: (read before editing)
+  - path: .claude/settings.json
+    reason: (read before editing)
+skillsUsed:
+  - name: writing-great-skills
+    reason: framed the skill-vs-doc extraction analysis
+  - name: update-config
+    reason: fix the mis-cased permission allowlist in settings.json
+  - name: close-session
+    reason: closure sequence
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: Permission allowlist entries were mis-cased (claude-code-remote vs the real Claude_Code_Remote), so dialogs fired despite the entries being present.
+    solution: "Match the exact tool identifier; fixed in settings.json and the docs source (issue-tracker.md) in PR #287."
+    severity: moderate
+  - description: GitHub MCP server disconnected/reconnected several times mid-session, forcing ToolSearch reloads of mcp__github__* tools.
+    solution: Known transient flake; reload and retry. No repo fix available.
+    severity: nit
+  - description: An Edit call failed with 'Tool permission stream closed before response received' and had to be retried.
+    solution: Retry once after reconnect (same pattern as send_later flake).
+    severity: nit
+  - description: The doorbell spike's first bot comment posted ~5s after PR open, racing the subscription, so its non-delivery was inconclusive.
+    solution: Re-triggered via a synchronize push to get a comment strictly after the subscription was live; that one delivered.
+    severity: minor
+durationSec: 7598
+models:
+  claude-opus-4-8: 225
+toolCounts:
+  Read: 13
+  Bash: 24
+  Grep: 6
+  Agent: 1
+  Monitor: 1
+  Write: 2
+  ToolSearch: 8
+  mcp__github__search_pull_requests: 2
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__pull_request_read: 3
+  mcp__github__update_pull_request: 2
+  AskUserQuestion: 1
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Skill: 4
+  Edit: 6
+  mcp__github__create_or_update_file: 1
+filesEdited:
+  - .github/workflows/doorbell-spike.yml
+  - .claude/settings.json
+  - .github/workflows/gate.yml
+  - docs/agents/issue-tracker.md
+subagents:
+  - type: Explore
+    task: Survey GitHub usage in skills
+gitBranch: claude/review-hints-github-mcp-x1xjn9
+entrypoint: remote_mobile
+cliVersion: 2.1.206
+learnings:
+  - A github-actions[bot] comment posted AFTER a live subscribe_pr_activity IS delivered as a github-webhook-activity wake event; CI-success is not — so a CI job can post a 'gate green' comment as a wake doorbell.
+  - "Permission-rule matching is exact on the MCP server segment's casing and separators: Claude_Code_Remote != claude-code-remote, so a mis-cased allow entry silently no-ops and still prompts."
+  - In this remote env both git push and the GitHub API can write .github/workflows files to a feature branch (no workflow-scope block observed); the human-only gate is at merge, not the branch write.
+ideas:
+  - "Split the GitHub docs by concern, not by substrate: issue-tracking (issue-tracker.md), outbound-PR lifecycle (a new pr-workflow.md), and a small shared MCP-substrate note — then collapse the self-merge landing recipe currently restated across frictions-to-fixes/audit-docs/audit-skills/digest into that single home."
