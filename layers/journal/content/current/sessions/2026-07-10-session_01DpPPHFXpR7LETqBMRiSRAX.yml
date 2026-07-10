@@ -1,0 +1,46 @@
+schemaVersion: 1
+session: session_01DpPPHFXpR7LETqBMRiSRAX
+startedAt: 2026-07-10T21:33:12Z
+endedAt: 2026-07-10T21:40:46Z
+kind: interactive
+goal: "Test #288 Claude_Code_Remote permission prompt"
+status: completed
+outcome: Confirmed real bug; fix is environment-level
+summary: "Human-instructed: ran issue #288's fresh-session reproduction to tell reload-lag from a real allowlist bug. Exercised send_later + delete_trigger (both correctly allowlisted) and, as control, two github tools. The session owner reported Android-app observations live: both Claude_Code_Remote calls prompted; both github calls (one NOT allowlisted) ran silently. Conclusion is explanation (2) — a real bug: project .claude/settings.json allow-rules do not suppress MCP prompts for Claude_Code_Remote in the remote/Android session, while github is trusted by a separate platform mechanism. The Android dialog offers only Accept/Deny (no \"Don't ask again\"), so no ground-truth rule string is capturable. Posted findings to #288 and left it open; no repo fix exists."
+prs: []
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The agent cannot observe the client-side permission dialog, so a "does it prompt?" test needs a human on the app to report each outcome.
+    solution: Expose live permission-decision events to the session transcript, or a self-introspect of effective permission state, so prompt/no-prompt is machine-observable.
+    severity: moderate
+  - description: "Project .claude/settings.json permissions.allow is inert for MCP tools in the remote session; #287's correctly-cased entries still prompt for Claude_Code_Remote."
+    solution: Fix at environment/client level — trust the Claude_Code_Remote server like github, or require MCP allow-rules in user-level/managed settings; document which the env honors.
+    severity: minor
+  - description: Android permission dialog has no "Don't ask again"/"Always allow", so the client can never persist an allow decision and every session re-prompts.
+    solution: Add a persist-allow affordance to the app's MCP permission dialog.
+    severity: minor
+durationSec: 454
+models:
+  claude-opus-4-8: 46
+toolCounts:
+  ToolSearch: 2
+  mcp__github__issue_read: 1
+  Bash: 5
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__pull_request_read: 1
+  AskUserQuestion: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+  Write: 1
+gitBranch: claude/android-app-test-288-ecwmzg
+entrypoint: remote_mobile
+cliVersion: 2.1.206
+learnings:
+  - In this remote session github MCP runs silently even for non-allowlisted tools — it is trusted by a platform mechanism, not by the project allowlist.
+  - Project-scoped .claude/settings.json allow-rules do not suppress MCP prompts here; the lever is user-level/managed/environment trust.
