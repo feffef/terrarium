@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01QxEToo6MA65uDa4vo3AwCh
 startedAt: 2026-07-10T16:40:05Z
-endedAt: 2026-07-10T19:00:10Z
+endedAt: 2026-07-10T21:26:43Z
 kind: interactive
 goal: Assess GitHub-ops skill extraction; fix MCP frictions
 status: completed
@@ -43,8 +43,11 @@ skillsUsed:
     reason: authoring this log
 frictions:
   - description: Permission allowlist entries were mis-cased (claude-code-remote vs the real Claude_Code_Remote), so dialogs fired despite the entries being present.
-    solution: "Match the exact tool identifier; fixed in settings.json and the docs source (issue-tracker.md) in PR #287."
+    solution: "Match the exact tool identifier; fixed in settings.json and the docs source (issue-tracker.md) in PR #287 (merged)."
     severity: moderate
+  - description: Even after the corrected allowlist was on disk, delete_trigger still prompted in-session; couldn't tell reload-lag from a wrong rule format, and the session can't restart / see its own permission dialog to verify.
+    solution: "Filed #288 with a fresh-session repro plan (cold-start, exercise send_later->delete_trigger, capture the exact 'don't ask again' rule string + which settings file it lands in)."
+    severity: minor
   - description: GitHub MCP server disconnected/reconnected several times mid-session, forcing ToolSearch reloads of mcp__github__* tools.
     solution: Known transient flake; reload and retry. No repo fix available.
     severity: nit
@@ -54,17 +57,17 @@ frictions:
   - description: The doorbell spike's first bot comment posted ~5s after PR open, racing the subscription, so its non-delivery was inconclusive.
     solution: Re-triggered via a synchronize push to get a comment strictly after the subscription was live; that one delivered.
     severity: minor
-durationSec: 8404
+durationSec: 17197
 models:
-  claude-opus-4-8: 268
+  claude-opus-4-8: 287
 toolCounts:
   Read: 14
-  Bash: 28
+  Bash: 30
   Grep: 6
   Agent: 1
   Monitor: 1
   Write: 2
-  ToolSearch: 10
+  ToolSearch: 11
   mcp__github__search_pull_requests: 2
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
@@ -72,11 +75,11 @@ toolCounts:
   mcp__github__pull_request_read: 3
   mcp__github__update_pull_request: 3
   AskUserQuestion: 1
-  mcp__github__search_issues: 2
-  mcp__github__issue_write: 3
+  mcp__github__search_issues: 3
+  mcp__github__issue_write: 4
   mcp__Claude_Code_Remote__delete_trigger: 2
   Skill: 4
-  Edit: 11
+  Edit: 12
   mcp__github__create_or_update_file: 1
   mcp__github__add_issue_comment: 1
 filesEdited:
