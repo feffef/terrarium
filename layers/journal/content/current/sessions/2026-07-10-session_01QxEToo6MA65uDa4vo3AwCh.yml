@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01QxEToo6MA65uDa4vo3AwCh
 startedAt: 2026-07-10T16:40:05Z
-endedAt: 2026-07-10T18:54:19Z
+endedAt: 2026-07-10T19:00:10Z
 kind: interactive
 goal: Assess GitHub-ops skill extraction; fix MCP frictions
-status: in-review
-outcome: "Casing + doorbell fix in PR #287"
-summary: "Human-directed throughout. User asked whether to extract GitHub docs/hints into one/many skills; I analyzed via writing-great-skills and recommended NOT a skill (the material is reference, already single-homed) — splitting docs by concern (issue-tracking vs outbound-PR lifecycle vs shared MCP substrate) rather than by \"GitHub\". User then asked to survey 50 sessions' GitHub-MCP frictions (17/50 hit them; one major: autonomous CI-poll stall). On the user's green-light I ran a spike (throwaway PR #277, since closed) that CONFIRMED a github-actions[bot] comment wakes a subscribed session while CI-success does not — a repo-only \"doorbell\" fix, documented in issue #278. User then reported recurring permission dialogs; I diagnosed a mis-cased allowlist (claude-code-remote vs the real Claude_Code_Remote) and, at the user's request, tested that pushing gate.yml is not blocked on a feature branch (git+API both succeeded; reverted). Opened PR #287 with the casing fix (settings + docs); then, on the user's go-ahead, added the gate.yml gate-green doorbell step to the same PR (implements #278). #287 is human-merge (touches gate.yml, ADR-0004)."
+status: completed
+outcome: "Casing + doorbell merged (PR #287); #278 closed"
+summary: "Human-directed throughout. User asked whether to extract GitHub docs/hints into one/many skills; I analyzed via writing-great-skills and recommended NOT a skill (the material is reference, already single-homed) — splitting docs by concern (issue-tracking vs outbound-PR lifecycle vs shared MCP substrate) rather than by \"GitHub\". User then asked to survey 50 sessions' GitHub-MCP frictions (17/50 hit them; one major: autonomous CI-poll stall). On the user's green-light I ran a spike (throwaway PR #277, since closed) that CONFIRMED a github-actions[bot] comment wakes a subscribed session while CI-success does not — a repo-only \"doorbell\" fix, documented in issue #278. User then reported recurring permission dialogs; I diagnosed a mis-cased allowlist (claude-code-remote vs the real Claude_Code_Remote) and, at the user's request, tested that pushing gate.yml is not blocked on a feature branch (git+API both succeeded; reverted). Opened PR #287 with the casing fix (settings + docs); then, on the user's go-ahead, added the gate.yml gate-green doorbell step to the same PR (implements #278). User human-merged #287 (it touches gate.yml, ADR-0004); the doorbell then fired live on #287's own green gate and woke this session — end-to-end proof — and #278 was closed as completed."
 prs:
   - "287"
 docsRead:
@@ -54,17 +54,17 @@ frictions:
   - description: The doorbell spike's first bot comment posted ~5s after PR open, racing the subscription, so its non-delivery was inconclusive.
     solution: Re-triggered via a synchronize push to get a comment strictly after the subscription was live; that one delivered.
     severity: minor
-durationSec: 8053
+durationSec: 8404
 models:
-  claude-opus-4-8: 250
+  claude-opus-4-8: 268
 toolCounts:
   Read: 14
-  Bash: 27
+  Bash: 28
   Grep: 6
   Agent: 1
   Monitor: 1
   Write: 2
-  ToolSearch: 9
+  ToolSearch: 10
   mcp__github__search_pull_requests: 2
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
@@ -73,11 +73,12 @@ toolCounts:
   mcp__github__update_pull_request: 3
   AskUserQuestion: 1
   mcp__github__search_issues: 2
-  mcp__github__issue_write: 2
-  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__issue_write: 3
+  mcp__Claude_Code_Remote__delete_trigger: 2
   Skill: 4
-  Edit: 9
+  Edit: 11
   mcp__github__create_or_update_file: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .github/workflows/doorbell-spike.yml
   - .claude/settings.json
