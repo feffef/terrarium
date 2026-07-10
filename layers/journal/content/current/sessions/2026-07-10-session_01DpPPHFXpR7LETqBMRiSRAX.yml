@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01DpPPHFXpR7LETqBMRiSRAX
 startedAt: 2026-07-10T21:33:12Z
-endedAt: 2026-07-10T22:12:40Z
+endedAt: 2026-07-10T22:25:44Z
 kind: interactive
 goal: "Test #288 Claude_Code_Remote permission prompt"
 status: completed
 outcome: "Root cause found: untrusted workspace drops allow-rules"
-summary: "Human-instructed: ran issue #288's fresh-session reproduction to tell reload-lag from a real allowlist bug. Exercised send_later + delete_trigger (both correctly allowlisted) and, as control, two github tools. The session owner reported Android-app observations live: both Claude_Code_Remote calls prompted; both github calls (one NOT allowlisted) ran silently. Posted first findings, then the owner pushed back (user-level settings are ephemeral; had I actually web-researched?). I had not — so I ran the Claude-Code guide agent against official docs. I posted a doc-backed correction claiming github is built-in (not MCP) — but the owner's /context panel showed BOTH github and Claude_Code_Remote registered as MCP servers, disproving it. Posted a third, retraction comment with the corrected diagnosis: both are MCP, the github control is valid, and the differentiator is a per-server auto-trust applied to github but not Claude_Code_Remote. Net: #287's casing fix is inert here; likely a platform per-server-trust limitation/bug, no repo-side fix. Left #288 open, recommending an Anthropic /feedback report. No edit-comment tool exists, so the wrong comment was superseded by a retraction rather than edited in place. When the owner pushed (\"so you give up?\"), I stopped guessing and read Claude Code's own debug log (/tmp/claude-code.log, CLAUDE_CODE_DEBUG=1): it names the cause verbatim — the workspace is untrusted (hasTrustDialogAccepted:false), so ALL 8 project permissions.allow entries are dropped at startup; github survives only via platform auto-approval. Verified via permissionDecisionMs (24400/6167ms human-wait for CCR vs 0-1ms for github) and confirmed trust is startup-only (mid-session ~/.claude.json edit didn't take effect). Posted the definitive root cause + fix (platform should trust cloned cloud workspaces; or an env setup script pre-sets the flag before claude launches) to #288, re-scoping it from 'fix the allowlist string'."
+summary: "Human-instructed: ran issue #288's fresh-session reproduction to tell reload-lag from a real allowlist bug. Exercised send_later + delete_trigger (both correctly allowlisted) and, as control, two github tools. The session owner reported Android-app observations live: both Claude_Code_Remote calls prompted; both github calls (one NOT allowlisted) ran silently. Posted first findings, then the owner pushed back (user-level settings are ephemeral; had I actually web-researched?). I had not — so I ran the Claude-Code guide agent against official docs. I posted a doc-backed correction claiming github is built-in (not MCP) — but the owner's /context panel showed BOTH github and Claude_Code_Remote registered as MCP servers, disproving it. Posted a third, retraction comment with the corrected diagnosis: both are MCP, the github control is valid, and the differentiator is a per-server auto-trust applied to github but not Claude_Code_Remote. Net: #287's casing fix is inert here; likely a platform per-server-trust limitation/bug, no repo-side fix. Left #288 open, recommending an Anthropic /feedback report. No edit-comment tool exists, so the wrong comment was superseded by a retraction rather than edited in place. When the owner pushed (\"so you give up?\"), I stopped guessing and read Claude Code's own debug log (/tmp/claude-code.log, CLAUDE_CODE_DEBUG=1): it names the cause verbatim — the workspace is untrusted (hasTrustDialogAccepted:false), so ALL 8 project permissions.allow entries are dropped at startup; github survives only via platform auto-approval. Verified via permissionDecisionMs (24400/6167ms human-wait for CCR vs 0-1ms for github) and confirmed trust is startup-only (mid-session ~/.claude.json edit didn't take effect). Posted the definitive root cause + fix (platform should trust cloned cloud workspaces; or an env setup script pre-sets the flag before claude launches) to #288, re-scoping it from 'fix the allowlist string'. Confirmed this environment has no init script (has_init_script:false in the environment-manager container-init log) and posted a setup-script workaround snippet plus a ready-to-submit platform /feedback draft."
 prs: []
 docsRead: []
 skillsUsed:
@@ -35,22 +35,22 @@ frictions:
   - description: Android permission dialog has no "Don't ask again"/"Always allow", so the client can never persist an allow decision and every session re-prompts.
     solution: Add a persist-allow affordance to the app's MCP permission dialog.
     severity: minor
-durationSec: 2368
+durationSec: 3152
 models:
-  claude-opus-4-8: 128
+  claude-opus-4-8: 140
 toolCounts:
   ToolSearch: 3
   mcp__github__issue_read: 1
-  Bash: 18
+  Bash: 20
   mcp__Claude_Code_Remote__send_later: 3
   mcp__Claude_Code_Remote__delete_trigger: 2
   mcp__github__pull_request_read: 1
   AskUserQuestion: 1
-  mcp__github__add_issue_comment: 5
+  mcp__github__add_issue_comment: 6
   Skill: 2
   Write: 1
   Agent: 1
-  Edit: 11
+  Edit: 12
   Read: 1
 subagents:
   - type: claude-code-guide
