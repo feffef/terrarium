@@ -11,6 +11,9 @@ on:
 jobs:
   gate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     # Pin the L2 browser to a Playwright-managed Chromium instead of tracking the
     # runner image's system Chrome. The install step below writes here; the smoke
     # spec reads PLAYWRIGHT_BROWSERS_PATH to find it (falling back to system Chrome
@@ -49,3 +52,16 @@ jobs:
         run: pnpm exec playwright-core install --with-deps chromium
       - name: 'L2 · smoke render'
         run: pnpm test:e2e
+
+      # Doorbell — CI success is not delivered to subscribed sessions (only comments
+      # and CI failures are), so post a fresh comment on green to wake a session
+      # waiting to act on the gate. New comment each run, not a sticky edit (edits
+      # may not fire a webhook). See issue #278.
+      - name: 'Doorbell · comment on green so a subscribed session wakes'
+        if: success() && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} \
+            -R ${{ github.repository }} \
+            --body "✅ safety-gate green on ${{ github.sha }}"

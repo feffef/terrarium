@@ -48,7 +48,7 @@ class to its MCP equivalent:
   wake when no agent is running to re-poll). **`ScheduleWakeup` is scoped to
   `/loop` dynamic-mode pacing and is unreliable outside it** (treat it only as
   the last-resort fallback below) — a session polling non-webhook-delivered
-  state (like CI completion) should use `mcp__claude-code-remote__send_later`
+  state (like CI completion) should use `mcp__Claude_Code_Remote__send_later`
   to schedule its own check-in instead.
 - **`send_later` occasionally fails with a transient "permission stream
   closed" error.** Converged workaround (mirrors the poll-until-green pattern
