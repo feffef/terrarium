@@ -148,7 +148,15 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 - **For any since-last-merge diff or review, run `git fetch origin main` first
   and anchor on the merge-base** (`git merge-base origin/main HEAD`) or the
   commit under review (`HEAD~1`) — the environment's pre-cloned `origin/main`
-  is often stale and inflates the diff to 100+ unrelated files.
+  is often stale and inflates the diff to 100+ unrelated files. The same
+  staleness bites two related cases: scope any `-S`/pickaxe search
+  (`git log -S<string>`) to `origin/main` specifically, never `--all`, which
+  mixes divergent/rewritten branch histories and can misread an
+  incrementally-built file as a brand-new-file commit; and don't assume a
+  nonempty merge-base — check `git merge-base origin/main HEAD` first and be
+  ready for the pre-cloned repo to be a fully unrelated root (empty
+  merge-base, 100+ commits of divergence), not just stale — resetting onto it
+  blindly would destroy real history.
 - **Keep a PR's description in sync with its content — hard rule.** If you
   fundamentally change what a PR does (switch approach, swap the files it touches,
   answer review with a different solution), update the PR title/description in the
