@@ -114,7 +114,16 @@ Write to `layers/atlas/content/<biome>/pages/<slug>.md` where `<biome>` is one o
 `canopy | floor | pool` and `<slug>` is a hyphenated latinate id
 (`lumina-fabulae`). The `page` type supplies `title`/`description`/`body`; add the
 museum-label record. The full schema is authoritative in
-`layers/atlas/tenant.config.ts`:
+`layers/atlas/tenant.config.ts`.
+
+**Give every new specimen its year.** The engraved almanac dial — not the old
+24-hour rhythm band — is the specimen page's primary instrument, and it reads
+the `phenology` block below. Add `phenology` as a matter of course when
+authoring a specimen, not as an afterthought: a creature with no phases is a
+creature the dial has nothing to show. `activity` still carries the daily fact
+as the museum-label caption (`activity.label` — "a dusk-flier"); its hour
+`bands` no longer drive the page's primary visual, so don't labor over them —
+one honest band is enough.
 
 ```markdown
 ---
@@ -126,8 +135,23 @@ rarity: rare                      # abundant | common | uncommon | rare | mythic
 size: 3 cm at rest
 diet: starlight, mostly
 activity:
-  label: a dusk-flier             # short phrase in-voice
-  bands: [[18, 23]]               # active hour-ranges on a 0–24 clock; may wrap ([20,4])
+  label: a dusk-flier             # short phrase in-voice; the museum-label caption
+  bands: [[18, 23]]               # active hour-ranges on a 0–24 clock; may wrap ([20,4]) — a supporting fact now, not the page's main instrument
+phenology:
+  phases:                         # the almanac dial's own data; see below
+    - name: first-glow
+      label: the first glow
+      span: [70, 100]             # day-of-year; the year's earliest dusks warm enough to fly
+      gloss: the earliest dusks warm enough to fly; the ledger's first entries of the year.
+    - name: long-dusk
+      label: the long dusk
+      span: [100, 280]            # the flight season proper
+      gloss: the flight season proper, riding every dusk the canopy allows.
+    - name: lantern-swell
+      label: the lantern swell
+      span: [280, 70]             # wraps the year: mid-autumn through early spring
+      gloss: sightings dwindle to rumor; what light is reported comes rarer, and brighter for the rarity.
+      quiet: true                # a going-dark phase — the dial hatches it inverse
 signature:
   colors:                         # 2–3 named hues that ARE the creature
     - { name: lantern gold, hex: "#e8b84b" }
@@ -146,6 +170,29 @@ The field-note essay, in the naturalist's voice (§1). Prose, not bullets. How i
 was found, its habits, one anecdote. No leading `#` — the binomial comes from the
 frontmatter. Three or four short paragraphs is plenty.
 ```
+
+**`phenology.phases`** (#279) is the annual sibling of `activity`: where `activity`
+places the creature on the day, `phenology` places it on the **Glass Year** — the
+real 365-day calendar a specimen's `date`-bearing facts already live on, not an
+invented one. Each phase is free-form and per-creature (unlike the six Glass-Year
+*seasons*, which are a tenant-wide constant defined once in `utils/almanac.ts` —
+don't restate or invent season names here; a phase is a different, creature-scoped
+thing that happens to sit on the same wheel):
+
+- `name` — a slug a `::phase` component binds to (later ticket).
+- `label` — in-voice, the way `activity.label` is: "the lantern swell", not
+  "winter dormancy".
+- `span` — `[startDayOfYear, endDayOfYear]`, 0–365. **May wrap the year**
+  (`[300, 45]`) exactly as an `activity` band may wrap midnight — a phase
+  crossing the New Year is ordinary, not an edge case.
+- `gloss` — optional, one line in the voice, same register as an `activity`
+  caption or a field note.
+- `quiet` — optional; mark a phase where the creature goes dark or scarce. The
+  dial draws it hatched inverse rather than omitting it — silence is still
+  data in this Atlas.
+
+At least one phase per specimen; two or three is typical. Keep spans coherent
+with the essay below them — the dial and the field note describe one creature.
 
 The biome's own landing intro is `layers/atlas/content/<biome>/pages/index.md` —
 a plain page (title + description + body, none of the record fields). Leave it be
