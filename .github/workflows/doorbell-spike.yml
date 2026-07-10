@@ -1,0 +1,33 @@
+name: doorbell-spike
+
+# THROWAWAY SPIKE — DO NOT MERGE.
+# Question under test: does a github-actions[bot] PR comment get delivered as a
+# <github-webhook-activity> wake event to a session subscribed via
+# subscribe_pr_activity? The wake subscription is documented to deliver *comments*
+# and *CI failures* but NOT *CI success* — so if a bot comment wakes the session,
+# a CI job can convert its own undelivered "gate green" into a delivered comment
+# (the "doorbell"), fixing the autonomous CI-poll stall with a repo-only change
+# (no MCP-integration or repo-settings change required).
+#
+# This job just posts the comment on PR open — it does NOT wait on the real gate,
+# so it isolates the delivery question from CI timing. Delete this file once the
+# experiment has answered the question.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  doorbell:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post simulated gate-green doorbell comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} \
+            -R ${{ github.repository }} \
+            --body "DOORBELL-SPIKE ✅ simulated gate-green signal — testing whether a github-actions[bot] comment wakes a subscribed session."
