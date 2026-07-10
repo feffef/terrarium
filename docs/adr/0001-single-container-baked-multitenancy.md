@@ -3,6 +3,15 @@
 Date: 2026-07-04
 Status: Accepted
 
+> **Amended by [ADR-0011](0011-poc-self-updating-deploy-container.md)
+> (2026-07-05).** The live PoC deployment deliberately relaxes this ADR's
+> "nothing is created at runtime" assumption for the `deploy/` runner only:
+> the build itself now runs at runtime, inside the serving container. This
+> decision's content model is otherwise unchanged and still the long-term
+> target — collections are still declared and baked at build time, and
+> nothing creates Tenants/collections at runtime. Read ADR-0011 for the scoped
+> trade-off and its migration path back to an immutable, CI-built image.
+
 ## Context
 
 The Platform must host multiple Tenants, each with multiple Spaces (e.g. `prod`,
