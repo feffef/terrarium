@@ -1,8 +1,10 @@
 name: implement
 category: general-engineering
-importance: specialist
+importance: supporting
 role: >-
-  Drives end-to-end implementation of an already-triaged, green-lit issue or
-  PRD via `/implement <issue>`. This window's default entry point for scoped,
-  human-directed changes — #211's addTypeTemplate swap, #209's tenants→layers
-  rename, and a delegated issue close — once triage has picked what to build.
+  Drives end-to-end implementation of an already-triaged, green-lit issue via
+  `/implement`. Used for #212, #211, #209 — but skipped for two other in-window
+  issue implementations that matched its domain (#210's keyed-Collections
+  rework, session_01LLDh6CroudWEvPjP9hpyoA; the #196 validate-content cleanup,
+  session_01Hbebuj8a8mikceSf3Jry2s), so adoption is inconsistent, not reliable
+  yet.

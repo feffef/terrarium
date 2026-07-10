@@ -2,9 +2,9 @@ name: code-review
 category: general-engineering
 importance: supporting
 role: >-
-  Review the working diff for correctness and simplification before opening the
-  gated PR every change must go through (ADR-0003, ADR-0004).
-
-  Note: this external skill's text prescribes the `gh` CLI, which remote
-  sessions don't have — use the `mcp__github__*` equivalents instead (see
-  `docs/agents/issue-tracker.md`).
+  Review the working diff (Standards+Spec) before the gated PR (ADR-0003/0004).
+  Used for #212, #211, #210, #209, #196 — but skipped in other code-landing
+  sessions this window (pkill-teardown fix, component-empty fix, About/How-Works
+  split, test restructuring, triage extractor): adoption is inconsistent, not
+  universal. Prescribes `gh` CLI, absent on remote sessions — use
+  `mcp__github__*` instead.
