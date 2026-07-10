@@ -1,0 +1,65 @@
+schemaVersion: 1
+session: session_01A4EU1nR7X6xovXfKrT6p6Z
+startedAt: 2026-07-10T22:38:02Z
+endedAt: 2026-07-10T23:01:34Z
+kind: interactive
+goal: "Verify #288 permission-prompt bug on desktop web"
+status: in-review
+outcome: Confirmed root cause; removed inert entries
+summary: "User asked to verify #288 (Claude_Code_Remote prompts persist despite the #287 allowlist fix) in a fresh desktop-web session. Confirmed the root cause on a second client: the cloud workspace boots untrusted, so Claude Code drops all project permissions.allow entries at startup (debug log names it verbatim); user confirmed web/mobile never show a trust dialog, and send_later/delete_trigger prompted at 50s/5s vs 0-1ms for github. Posted the findings (user-approved). On the user's explicit instruction, removed the four inert mcp__Claude_Code_Remote__* allow entries and documented the untrusted-workspace allow-drop as a CLAUDE.md gotcha; opened gated PR #290, CI green. Addressed the owner's review comment scoping the doc bullet to Claude_Code_Remote (local-CLI allowlisting still works)."
+prs:
+  - "290"
+docsRead:
+  - path: CLAUDE.md
+    reason: homing the allow-drop gotcha + single-home check
+  - path: .claude/settings.json
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: closure front door at PR-open
+  - name: log-session
+    reason: author this in-review log
+frictions:
+  - description: Provenance trailer was not auto-appended when committing with `git commit -F`; had to amend to add the ADR-0017 two-line footer.
+    solution: The harness commit template only injects on interactive/-m commits; when using -F, append the Co-Authored-By/Claude-Session lines in the message file yourself.
+    severity: nit
+  - description: Every mcp__Claude_Code_Remote__* call (send_later/delete_trigger for the test and the check-in) prompted the user — the exact bug under investigation.
+    solution: "Platform-side fix (default cloud workspaces to trusted) tracked for /feedback in #288; repo-side cleanup + doc note landed in PR #290."
+    severity: minor
+  - description: "GitHub MCP tool discovery: guessed tool names get_issue/get_issue_comments that do not exist (the tool is issue_read with a method), costing an extra ToolSearch."
+    solution: Reach for issue_read/pull_request_read with method args rather than per-verb tool names.
+    severity: nit
+durationSec: 1412
+models:
+  claude-opus-4-8: 112
+toolCounts:
+  ToolSearch: 4
+  mcp__github__issue_read: 2
+  Bash: 13
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__add_issue_comment: 2
+  Read: 2
+  AskUserQuestion: 1
+  Edit: 3
+  Grep: 1
+  Write: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_reply_to_pull_request_comment: 1
+  mcp__github__resolve_review_thread: 1
+  Skill: 2
+filesEdited:
+  - .claude/settings.json
+  - CLAUDE.md
+gitBranch: claude/issue-288-review-nv28ds
+entrypoint: remote
+cliVersion: 2.1.206
+learnings:
+  - Cloud (web/mobile) sessions boot untrusted (hasTrustDialogAccepted:false) so Claude Code drops the ENTIRE permissions.allow array at startup — project allow-rules can never apply there; github stays silent only via a separate platform auto-approval, not the allowlist.
+  - Workspace trust is read once at startup; flipping hasTrustDialogAccepted mid-session does not re-enable the dropped rules.
+  - mcp__Claude_Code_Remote__* is a cloud-only server, so its allow entries are inert even in a local CLI (no such server to match), not just in cloud.
+ideas:
+  - Add an environment setup-script step that pre-sets projects["/home/user/terrarium"].hasTrustDialogAccepted=true in ~/.claude.json before claude launches, so committed permissions.allow rules actually apply in cloud sessions (a SessionStart hook is too late — trust is evaluated at startup).
