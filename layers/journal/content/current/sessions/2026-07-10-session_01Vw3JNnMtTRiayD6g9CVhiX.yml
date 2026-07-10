@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Vw3JNnMtTRiayD6g9CVhiX
 startedAt: 2026-07-10T18:18:30Z
-endedAt: 2026-07-10T18:42:03Z
+endedAt: 2026-07-10T19:00:38Z
 kind: interactive
 goal: Chart an Atlas Phase-2 wayfinder map
 status: completed
-outcome: Map plus seven Sprint-1 tickets charted
-summary: "The user invoked /wayfinder to autonomously chart a Phase-2 map for the atlas Tenant around a key concept and pitch three same-scope extensions. Human-instructed: the whole charting-and-pitch mandate, plus two mid-session asks (enumerate all concepts; fold in the atlas-specimen Skill). Agent-initiated within that mandate: choosing the Field-Note MDC suite as Sprint 1 (atlas has zero custom MDC components) and the specific 7-ticket breakdown. Explore + two creative agents (opus/fable) fed the design. Output landed on the tracker only (no code): map #279 with build tickets #280-286, frontier = the MDC seam #280. No building done — ADR-0003 green-light still pending. atlas-specimen (voice/art single home) was folded into the map and tickets #283/#286 after the user flagged it."
+outcome: "Fused Sprint 2 charted: the Almanac wheel"
+summary: 'The user invoked /wayfinder to autonomously chart a Phase-2 map for the atlas Tenant and pitch same-scope extensions. Human-instructed: the charting mandate, and three mid-session corrections — enumerate all concepts, fold in the atlas-specimen Skill, and (the big one) re-frame Phase 2 so Sprint 1 = the original PRD and Sprint 2 = ONE fused thing (a few MDC components married to one creative extension), spawning a fable agent to stitch it. Agent-initiated within that: the specific ticket breakdowns. Explore + three creative agents (opus/fable) fed the design. Final tracker state (no code): map #279 charted around a single fused sprint, "The Wheel of the Year Under Glass" (a phenology almanac dial + three MDC components on a shared day-of-year axis), decomposed into build tickets #280-285 (frontier = #280 + #281); #286 closed as superseded. No building done — ADR-0003 green-light still pending.'
 prs: []
 docsRead:
   - path: docs/agents/issue-tracker.md
@@ -14,7 +14,7 @@ docsRead:
   - path: .agents/skills/atlas-specimen/SKILL.md
     reason: single home for naturalist voice (#75) + engraved-plate art (#74)
   - path: CLAUDE.md
-    reason: ground rules, ADR index, human-only surfaces
+    reason: ground rules, ADR index, human-only surfaces, ADR-0017 provenance footer
 skillsUsed:
   - name: wayfinder
     reason: chart-the-map mode — the session's driving skill
@@ -23,35 +23,43 @@ skillsUsed:
   - name: log-session
     reason: (no reason given)
 frictions:
-  - description: The atlas-specimen Skill (disable-model-invocation) never surfaced in the auto-listed skills, so I missed it until the user flagged it mid-session.
+  - description: "I mis-framed the effort: read the request as \"MDC suite = Sprint 1\" rather than \"Sprint 2 = a fused MDC-plus-extension sprint on top of the shipped PRD\". The user had to correct me and re-scope after I'd already charted 7 tickets."
+    solution: In a wayfinder charting session, confirm what counts as the prior sprint / baseline and whether the destination wants fusion vs a component grab-bag before decomposing into tickets — a cheap grilling question up front.
+    severity: moderate
+  - description: I created the map + 7 tickets without the ADR-0017 two-line provenance footer; only caught it on the re-framing rewrite (issue bodies are agent-authored GitHub artifacts and need it).
+    solution: Append the Co-Authored-By / Claude-Session footer at issue-creation time, not just on comments — the wayfinder tracker doc could show it in the create recipe.
+    severity: minor
+  - description: The atlas-specimen Skill (disable-model-invocation) never surfaced in the auto-listed skills, so I missed it until the user flagged it.
     solution: An as-is exploration brief for a Tenant should enumerate .agents/skills/ for Tenant-scoped manually-invoked skills; or CLAUDE.md's Skill-Inventory pointer should name atlas-specimen as required reading for atlas work.
     severity: moderate
   - description: sub_issue_write returns the ENTIRE parent issue body on every call (no minimal_output), so linking 7 children dumped the full map body 7x into context.
-    solution: Note the verbosity in the tracker doc's wayfinding section; batch-link and expect the echo, or request a minimal_output on that MCP tool.
+    solution: Note the verbosity in the tracker doc's wayfinding section; expect the echo, or request a minimal_output on that MCP tool.
     severity: minor
   - description: AskUserQuestion failed with "permission stream closed" and the GitHub MCP server briefly disconnected mid-turn.
-    solution: Transient; fell back to presenting the two decisions as plain text since the full pitch was already delivered. Retry-once is the documented pattern.
-    severity: minor
-  - description: No create-label MCP tool exists and wayfinder:map/wayfinder:task did not pre-exist; had to trust issue-create to auto-create them.
-    solution: It worked (the REST create-issue path auto-creates labels); worth noting in the tracker doc so a future session doesn't stall on the missing label.
+    solution: Transient; fell back to plain-text since the pitch was already delivered.
     severity: nit
-durationSec: 1413
+  - description: No create-label MCP tool exists and wayfinder:map/wayfinder:task did not pre-exist; had to trust issue-create to auto-create them.
+    solution: It worked (the REST create-issue path auto-creates labels); worth a note in the tracker doc so a future session doesn't stall on the missing label.
+    severity: nit
+durationSec: 2528
 models:
-  claude-opus-4-8: 97
+  claude-opus-4-8: 127
 toolCounts:
-  Agent: 3
+  Agent: 4
   Read: 2
-  Bash: 5
-  ToolSearch: 4
+  Bash: 6
+  ToolSearch: 5
   mcp__github__get_me: 1
   Monitor: 1
   mcp__github__get_label: 1
-  mcp__github__issue_write: 11
+  mcp__github__issue_write: 19
   mcp__github__issue_read: 1
   mcp__github__sub_issue_write: 7
   AskUserQuestion: 1
   Skill: 2
-  Write: 1
+  Write: 2
+  mcp__github__add_issue_comment: 1
+  Edit: 1
 subagents:
   - type: Explore
     task: Explore atlas tenant as-is
@@ -61,11 +69,16 @@ subagents:
   - type: general-purpose
     task: Brainstorm sprint-sized atlas extensions
     model: fable
+  - type: general-purpose
+    task: Fuse MDC + extension into one sprint
+    model: fable
 gitBranch: claude/atlas-phase-2-map-rxey8p
 entrypoint: remote
 cliVersion: 2.1.206
 learnings:
   - GitHub's create-issue REST path auto-creates non-existent labels (unlike gh, which validates client-side and errors) — so the first wayfinder:map issue minted the label.
-  - atlas-specimen is disable-model-invocation, so Tenant-scoped manually-invoked skills won't appear in the auto-surfaced skill list — they must be discovered by reading .agents/skills/.
+  - atlas-specimen is disable-model-invocation, so Tenant-scoped manually-invoked skills won't appear in the auto-surfaced skill list — discover them by reading .agents/skills/.
+  - "A phenology 'wheel of the year' is the annual twin of the shipped 24h rhythm band: the same wrap-around interval math (activeAt / Band) and signatureVars projection generalize from a 24h clock to a 365-day dial — reuse, not reinvention."
 ideas:
-  - Give each Tenant a tiny committed skills-index (or a Skill-Inventory cross-ref) listing the manually-invoked, Tenant-scoped skills a session must fold in (e.g. atlas-specimen for atlas), so charting/authoring sessions can't silently miss a disable-model-invocation skill the way this one nearly did.
+  - "Adopt 'fused sprint' as the standing shape for Terrarium feature maps: every content-showcase sprint = a few load-bearing MDC components welded to one interactive extension over a shared data axis, so the authoring surface and the payoff can't drift apart. Sprint 2's phenology wheel is the template; the Naturalist's Key (dichotomous-key wizard + :tell/::diagnosis over a couplet tree) is the ready runner-up."
+  - Give each Tenant a tiny committed skills-index (or Skill-Inventory cross-ref) naming the manually-invoked, Tenant-scoped skills a session must fold in (e.g. atlas-specimen for atlas), so charting/authoring sessions can't silently miss a disable-model-invocation skill the way this one nearly did.
