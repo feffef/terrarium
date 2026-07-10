@@ -9,6 +9,21 @@ diet: starlight, mostly
 activity:
   label: a dusk-flier
   bands: [[18, 23]]
+phenology:
+  phases:
+    - name: first-glow
+      label: the first glow
+      span: [70, 100]
+      gloss: the earliest dusks warm enough to fly; the ledger's first entries of the year.
+    - name: long-dusk
+      label: the long dusk
+      span: [100, 280]
+      gloss: the flight season proper, riding every dusk the canopy allows.
+    - name: lantern-swell
+      label: the lantern swell
+      span: [280, 70]
+      gloss: sightings dwindle to rumor; what light is reported comes rarer, and brighter for the rarity.
+      quiet: true
 signature:
   colors:
     - { name: lantern gold, hex: "#e8b84b" }
