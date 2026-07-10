@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_011wnRcHQ58DnbmpaHp3Tfhx
 startedAt: 2026-07-10T00:15:30Z
-endedAt: 2026-07-10T00:19:25Z
+endedAt: 2026-07-10T01:21:15Z
 kind: autonomous
 goal: Refresh the Journal's Digest pages (nightly digest run)
-status: in-review
-outcome: 2026-07-09 digest authored, gate green, PR opened
-summary: "Fully agent-initiated: the digest Skill is fired by a nightly Routine with no human prompt this run. Followed the digest Skill's steps end to end — branched (the caller-pinned branch overrode the Skill's suggested journal/digest-refresh-<date> name, per CLAUDE.md's override rule), ran scripts/digest.ts list/gather for the one outstanding day (2026-07-09), authored the digest narrating the audit-docs Skill's launch and first live sweep, audit-skills' new self-merge tier, and the David/Karen blog exchange reacting to it. pnpm gate was green on the first run. Opened PR #267, subscribed to its activity, and scheduled a ~1hr check-in per the PR-babysit discipline."
+status: completed
+outcome: 2026-07-09 digest authored, gate green, PR
+summary: "Fully agent-initiated: the digest Skill is fired by a nightly Routine with no human prompt this run. Followed the digest Skill's steps end to end — branched (the caller-pinned branch overrode the Skill's suggested journal/digest-refresh-<date> name, per CLAUDE.md's override rule), ran scripts/digest.ts list/gather for the one outstanding day (2026-07-09), authored the digest narrating the audit-docs Skill's launch and first live sweep, audit-skills' new self-merge tier, and the David/Karen blog exchange reacting to it. pnpm gate was green on the first run. Opened PR #267, subscribed to its activity, scheduled a ~1hr check-in, and on that check-in found the gate green with no review comments and only the digest file in scope, so merged it manually (repo auto-merge still disabled pending #231) and unsubscribed."
 prs:
   - "267"
 docsRead:
@@ -22,20 +22,23 @@ skillsUsed:
   - name: digest
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 235
+durationSec: 3945
 models:
-  claude-sonnet-5: 44
+  claude-sonnet-5: 60
 toolCounts:
-  Bash: 11
+  Bash: 12
   Read: 1
   Write: 2
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  Skill: 2
-  mcp__github__pull_request_read: 2
+  Skill: 3
+  mcp__github__pull_request_read: 6
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  Edit: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-09.md
 gitBranch: claude/compassionate-lovelace-offtyi
