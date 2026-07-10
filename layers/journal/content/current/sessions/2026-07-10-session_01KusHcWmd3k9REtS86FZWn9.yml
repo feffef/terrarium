@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_01KusHcWmd3k9REtS86FZWn9
+startedAt: 2026-07-10T06:40:41Z
+endedAt: 2026-07-10T06:49:01Z
+kind: interactive
+goal: Write David's blog post on the night's audit-docs self-merge
+status: in-review
+outcome: 'Post "The Count Moved" written, PR #274 opened, gate green'
+summary: "Human asked (via the /blog-post david command) for a standalone David post about last night's successful audit-docs run, briefly covering the night's other autonomous runs. Loaded the david persona, gathered material from git log, four 2026-07-10 session logs (audit-docs, digest, audit-skills, frictions-to-fixes), and the prior David/Karen post exchange. Found that David's own prior post (\"The Self-Merge Tier Just Grew By One\") and Karen's reaction (\"Zero for Two\") had both been waiting to see the first actual self-merged audit-docs PR; last night's audit-docs sweep (PR #272) supplied it, verified via the PR's own timestamped self-merge comment rather than inferred from commit-author fields (merged_by reads as the shared repo-owner identity for both human and agent merges in this repo, so it can't distinguish the two on its own). Wrote the post as a standalone (not a reaction — no reactsTo/pingback), citing PRs #267, #268, #271, #272, #273 and cross-checking every timestamp, count, and self-merge claim against git log and the GitHub API directly. Ran pnpm gate (green, 27/27 e2e), opened PR #274, and subscribed to its activity. All steps agent-executed from the single human command invocation; no further human input during the work."
+prs:
+  - "274"
+docsRead:
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: load the Persona's voice/do-don't list
+  - path: layers/blog/content/david/pages/2026-07-09-the-self-merge-tier-just-grew-by-one.md
+    reason: the post being followed up on
+  - path: layers/blog/content/karen/pages/2026-07-09-zero-for-two.md
+    reason: the reaction being answered
+  - path: layers/journal/content/current/sessions/2026-07-10-session_012CWnr9jdma8DEPcEPeESGu.yml
+    reason: "primary source: the audit-docs run"
+  - path: layers/journal/content/current/sessions/2026-07-10-session_011wnRcHQ58DnbmpaHp3Tfhx.yml
+    reason: "primary source: the digest run"
+  - path: layers/journal/content/current/sessions/2026-07-10-session_01XEVnpTVNioTLn42f2STY1V.yml
+    reason: "primary source: the audit-skills run"
+  - path: layers/journal/content/current/sessions/2026-07-10-session_01WqEfzd3NqTU8HDpAirN9fe.yml
+    reason: "primary source: the frictions-to-fixes run"
+  - path: layers/journal/content/current/sessions/2026-07-09-session_01GfNRVdY8VqX8zc1rUXwXie.yml
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-10-the-count-moved.md
+    reason: (read before editing)
+skillsUsed:
+  - name: blog-post
+    reason: "the whole task: write and land a standalone Persona post"
+  - name: close-session
+    reason: closure trigger on PR open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: An early Edit call to fix a fabricated-looking commit SHA in a draft link failed with "String to replace not found" even though a subsequent Read showed the exact string present in the file.
+    solution: Re-read the file immediately after the failed Edit and retried the identical old_string/new_string pair, which then succeeded — treat a same-turn Edit failure as possibly transient rather than assuming the string is genuinely absent.
+    severity: nit
+  - description: First draft of the post included a placeholder/truncated commit SHA ("commit hash truncated for my own sanity") for a PR link instead of a verified full SHA, catching my own violation of the Skill's link-verification rule before publishing.
+    solution: Replaced it with a direct PR link (verified to exist via the GitHub API) instead of a commit link, and re-verified every other SHA/PR link in the post against git log or the GitHub API before opening the PR.
+    severity: minor
+durationSec: 501
+models:
+  claude-sonnet-5: 97
+toolCounts:
+  Read: 9
+  Bash: 22
+  ToolSearch: 3
+  mcp__github__pull_request_read: 9
+  Write: 2
+  Edit: 6
+  TaskOutput: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-07-10-the-count-moved.md
+gitBranch: claude/audit-docs-run-summary-droxdg
+entrypoint: remote_mobile
+cliVersion: 2.1.206
+learnings:
+  - "merged_by on a GitHub PR is not evidence of human-vs-agent merge in this repo: both read as the shared repo-owner identity (feffef). Distinguishing a genuine self-merge requires corroborating evidence like the agent's own timestamped PR-thread comment, not the merged_by field alone."
