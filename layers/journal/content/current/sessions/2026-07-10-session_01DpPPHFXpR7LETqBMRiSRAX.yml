@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01DpPPHFXpR7LETqBMRiSRAX
 startedAt: 2026-07-10T21:33:12Z
-endedAt: 2026-07-10T21:40:46Z
+endedAt: 2026-07-10T21:47:36Z
 kind: interactive
 goal: "Test #288 Claude_Code_Remote permission prompt"
 status: completed
 outcome: Confirmed real bug; fix is environment-level
-summary: "Human-instructed: ran issue #288's fresh-session reproduction to tell reload-lag from a real allowlist bug. Exercised send_later + delete_trigger (both correctly allowlisted) and, as control, two github tools. The session owner reported Android-app observations live: both Claude_Code_Remote calls prompted; both github calls (one NOT allowlisted) ran silently. Conclusion is explanation (2) — a real bug: project .claude/settings.json allow-rules do not suppress MCP prompts for Claude_Code_Remote in the remote/Android session, while github is trusted by a separate platform mechanism. The Android dialog offers only Accept/Deny (no \"Don't ask again\"), so no ground-truth rule string is capturable. Posted findings to #288 and left it open; no repo fix exists."
+summary: "Human-instructed: ran issue #288's fresh-session reproduction to tell reload-lag from a real allowlist bug. Exercised send_later + delete_trigger (both correctly allowlisted) and, as control, two github tools. The session owner reported Android-app observations live: both Claude_Code_Remote calls prompted; both github calls (one NOT allowlisted) ran silently. Posted first findings, then the owner pushed back (user-level settings are ephemeral; had I actually web-researched?). I had not — so I ran the Claude-Code guide agent against official docs. Doc-backed correction: github tools are likely built-in cloud tools (not MCP), so the control was invalid; project allow-rules for MCP appear gated on workspace-trust unavailable in an ephemeral container. Net: #287's casing fix is inert here; likely a platform limitation/bug, no repo-side fix. Posted a correction comment and left #288 open, recommending an Anthropic /feedback report."
 prs: []
 docsRead: []
 skillsUsed:
@@ -18,29 +18,38 @@ frictions:
   - description: The agent cannot observe the client-side permission dialog, so a "does it prompt?" test needs a human on the app to report each outcome.
     solution: Expose live permission-decision events to the session transcript, or a self-introspect of effective permission state, so prompt/no-prompt is machine-observable.
     severity: moderate
+  - description: I posted a confident diagnosis before doing any web research; the owner had to prod me to actually check docs, which then corrected the framing (github is built-in, not MCP).
+    solution: For behavior-of-the-harness questions, research authoritative docs BEFORE posting a conclusion, not after being challenged.
+    severity: moderate
   - description: "Project .claude/settings.json permissions.allow is inert for MCP tools in the remote session; #287's correctly-cased entries still prompt for Claude_Code_Remote."
     solution: Fix at environment/client level — trust the Claude_Code_Remote server like github, or require MCP allow-rules in user-level/managed settings; document which the env honors.
     severity: minor
   - description: Android permission dialog has no "Don't ask again"/"Always allow", so the client can never persist an allow decision and every session re-prompts.
     solution: Add a persist-allow affordance to the app's MCP permission dialog.
     severity: minor
-durationSec: 454
+durationSec: 864
 models:
-  claude-opus-4-8: 46
+  claude-opus-4-8: 59
 toolCounts:
   ToolSearch: 2
   mcp__github__issue_read: 1
-  Bash: 5
+  Bash: 6
   mcp__Claude_Code_Remote__send_later: 2
   mcp__Claude_Code_Remote__delete_trigger: 1
   mcp__github__pull_request_read: 1
   AskUserQuestion: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   Skill: 2
   Write: 1
+  Agent: 1
+  Edit: 3
+subagents:
+  - type: claude-code-guide
+    task: Research Claude Code MCP permissions on web
 gitBranch: claude/android-app-test-288-ecwmzg
 entrypoint: remote_mobile
 cliVersion: 2.1.206
 learnings:
-  - In this remote session github MCP runs silently even for non-allowlisted tools — it is trusted by a platform mechanism, not by the project allowlist.
-  - Project-scoped .claude/settings.json allow-rules do not suppress MCP prompts here; the lever is user-level/managed/environment trust.
+  - Claude Code on the web's github tools are built-in cloud tools (GitHub-proxy auth), not a user MCP server — so they bypass MCP permission rules entirely; a non-allowlisted github tool running silently is NOT evidence the allowlist works.
+  - Project-scoped .claude/settings.json allow-rules for user-added MCP servers appear inert in ephemeral cloud sessions (workspace-trust gated per docs); no documented repo-side lever reliably fixes it.
+  - In an ephemeral remote container, only repo-committed or Anthropic-server-side (managed/org) config is durable; a hand-written ~/.claude/settings.json evaporates and a SessionStart hook that writes it likely lands after permission load.
