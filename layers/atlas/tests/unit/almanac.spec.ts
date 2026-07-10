@@ -11,6 +11,7 @@ import {
   dayToAngle,
   GLASS_SEASONS,
   inSpan,
+  ringArcPath,
   seasonOf,
   spanLength,
   spanMidpoint,
@@ -266,5 +267,39 @@ describe('arcPath()', () => {
     const d = arcPath([300, 0], 50, 100)
     expect(d.match(/M /g)).toHaveLength(1)
     expect(d.match(/Z/g)).toHaveLength(1)
+  })
+})
+
+// ── Open stroked arcs (the #283 arc-glyphs) ──────────────────────────────────
+describe('ringArcPath()', () => {
+  it('draws an exact half-year arc (hand-derived: the 180° points are exact)', () => {
+    expect(ringArcPath([0, 182.5], 5)).toBe('M 0 -5 A 5 5 0 0 1 0 5')
+  })
+
+  it('is a single OPEN arc for a plain span — one M, no Z, no fill geometry', () => {
+    const d = ringArcPath([100, 200], 5)
+    expect(d.match(/M /g)).toHaveLength(1)
+    expect(d).not.toContain('Z')
+    expect(d).not.toContain('L')
+  })
+
+  it('sets the large-arc flag only past half the year', () => {
+    expect(ringArcPath([0, 100], 5)).toMatch(/A 5 5 0 0 1/) // ≈ 98.6°
+    expect(ringArcPath([0, 200], 5)).toMatch(/A 5 5 0 1 1/) // ≈ 197°
+  })
+
+  it('draws a wrapped span as ONE arc across the New Year (endpoints are periodic)', () => {
+    const d = ringArcPath([300, 45], 5)
+    expect(d.match(/M /g)).toHaveLength(1)
+    // Its endpoint is day 45's dial point — identical whether reached via day
+    // 410 (wrapped) or day 45 (plain): the two spellings must agree.
+    const end = ringArcPath([45, 100], 5).match(/^M (\S+ \S+)/)![1]
+    expect(d.endsWith(end!)).toBe(true)
+  })
+
+  it('draws a full-year span ([a, a]) as two half-circle arcs (one 360° arc degenerates)', () => {
+    const d = ringArcPath([120, 120], 5)
+    expect(d.match(/M /g)).toHaveLength(2)
+    expect(d.match(/A /g)).toHaveLength(2)
   })
 })

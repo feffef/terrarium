@@ -18,5 +18,12 @@ export function registerAtlasE2E(): void {
     it('hydrates a specimen entry with no unresolved components', async () => {
       await expectCleanHydration('/t/atlas/canopy/mycora-susurrans')
     })
+
+    it('hydrates the essay that carries the dial-driven MDC components (#283)', async () => {
+      // lumina-fabulae weaves :season / ::phase / ::sighting into its field
+      // note — an unresolved MDC tag or a hydration mismatch in the
+      // registration protocol surfaces here as a console error/unknown tag.
+      await expectCleanHydration('/t/atlas/canopy/lumina-fabulae')
+    })
   })
 }

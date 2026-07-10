@@ -6,12 +6,13 @@
 // glue (composables/almanac.ts) are exercised by the L2 smoke render.
 import { describe, expect, it } from 'vitest'
 import {
+  findObservationOn,
   glassDayOf,
   parseAlmanacDayParam,
   withAlmanacMark,
   withoutAlmanacMark,
 } from '../../app/utils/almanacState.ts'
-import type { AlmanacMark } from '../../app/utils/almanacState.ts'
+import type { AlmanacMark, AlmanacObservation } from '../../app/utils/almanacState.ts'
 
 describe('withAlmanacMark()', () => {
   it('registers, normalizes the day, and sorts by day then id', () => {
@@ -66,6 +67,33 @@ describe('parseAlmanacDayParam()', () => {
     expect(parseAlmanacDayParam(undefined)).toBeNull()
     expect(parseAlmanacDayParam(null)).toBeNull()
     expect(parseAlmanacDayParam([])).toBeNull()
+  })
+})
+
+describe('findObservationOn()', () => {
+  const ledger: AlmanacObservation[] = [
+    { date: '2026-06-20', time: 'dusk', specimen: 'lumina-fabulae', note: 'first lamp' },
+    { date: '2026-06-20', time: 'noon', specimen: 'folium-mendax', note: 'a leaf, walking' },
+    { date: '2026-07-04', time: 'night', note: 'an ambient note, no specimen' },
+  ]
+
+  it('prefers the named specimen’s own observation on a shared date', () => {
+    expect(findObservationOn(ledger, '2026-06-20', 'folium-mendax')?.note).toBe('a leaf, walking')
+    expect(findObservationOn(ledger, '2026-06-20', 'lumina-fabulae')?.note).toBe('first lamp')
+  })
+
+  it('falls back to the first in-list entry of that date — any observer’s', () => {
+    expect(findObservationOn(ledger, '2026-06-20')?.note).toBe('first lamp')
+    expect(findObservationOn(ledger, '2026-06-20', 'umbra-vacans')?.note).toBe('first lamp')
+    expect(findObservationOn(ledger, '2026-07-04', 'lumina-fabulae')?.note).toBe(
+      'an ambient note, no specimen',
+    )
+  })
+
+  it('is silent (undefined) when the date has no entry — exact string match only', () => {
+    expect(findObservationOn(ledger, '2026-06-21')).toBeUndefined()
+    expect(findObservationOn(ledger, '2026-6-20')).toBeUndefined()
+    expect(findObservationOn([], '2026-06-20')).toBeUndefined()
   })
 })
 

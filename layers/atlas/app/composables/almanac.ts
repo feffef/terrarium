@@ -29,6 +29,18 @@
 // reactively — client-side, post-hydration — by design, so the server-rendered
 // markup stays mismatch-free.
 //
+// ── #283 extensions ──────────────────────────────────────────────────────────
+// `engaged`/`engage()` — progressive-enhancement gate (map #279 decision 4):
+// false until the reader first takes hold of the needle (the wheel flips it on
+// first pointer grab or keyboard scrub; the prose handles that swing the
+// needle flip it too). `::phase` gates its ink↔pencil register on it, so the
+// essay server-renders fully inked and STAYS inked for a reader who never
+// touches the dial.
+// `observations`/`findSighting(date)` — the biome's dated ledger, provided by
+// the page alongside `phases`, so a `::sighting{date}` can quote the
+// observation's own note without retyping it (single-homed; lookup semantics
+// in utils/almanacState.ts's findObservationOn).
+//
 // ── SSR / hydration (#279 decision 4) ────────────────────────────────────────
 // `today` is computed once per request on the server and carried to the client
 // in the Nuxt payload (`useState`), so a request served across midnight — or a
@@ -38,7 +50,7 @@
 // parsing semantics are pure functions in `utils/almanacState.ts`, unit-tested
 // in `layers/atlas/tests/unit/almanac-state.spec.ts`.
 import type { InjectionKey, MaybeRefOrGetter, Ref } from 'vue'
-import type { AlmanacMark } from '../utils/almanacState'
+import type { AlmanacMark, AlmanacObservation } from '../utils/almanacState'
 import type { PhenologyPhase } from '../utils/atlas'
 
 /** The Almanac contract — what `useAlmanac()` returns (protocol in the file
@@ -62,6 +74,22 @@ export interface Almanac {
   register: (mark: AlmanacMark) => void
   /** Remove a mark by id — call on unmount. Unknown ids are a no-op. */
   unregister: (id: string) => void
+  /** True once the reader has taken hold of the needle — false on every fresh
+   *  render, server and client alike (#283 extension; see header). `::phase`
+   *  reads it so the essay stays fully inked until the dial is engaged. */
+  engaged: Readonly<Ref<boolean>>
+  /** Flip `engaged` (idempotent). Called by whichever interaction first hands
+   *  the reader the needle — the wheel's pointer/keyboard scrub, or a prose
+   *  handle's deliberate needle-swing. */
+  engage: () => void
+  /** This biome's dated field-log observations (empty when none provided) —
+   *  the ledger a `::sighting{date}` quotes. */
+  observations: Readonly<Ref<AlmanacObservation[]>>
+  /** The ledger's entry for a real date ('YYYY-MM-DD'): an observation of this
+   *  page's own specimen when there is one, else any in-biome entry of that
+   *  date; `undefined` when the ledger is silent. Reactive when called inside
+   *  a computed (it reads `observations`). */
+  findSighting: (date: string) => AlmanacObservation | undefined
 }
 
 export interface ProvideAlmanacOptions {
@@ -73,6 +101,12 @@ export interface ProvideAlmanacOptions {
   /** Where the needle parks initially — a parsed `?day=` param when present.
    *  `null`/`undefined` mean "no override": park at today. */
   initialDay?: number | null
+  /** This biome's dated observations, for `findSighting` — a getter/ref keeps
+   *  it live across page reuse (#283 extension). */
+  observations?: MaybeRefOrGetter<AlmanacObservation[] | undefined>
+  /** The page's own specimen slug — `findSighting` prefers its observations
+   *  over another inhabitant's on the same date. */
+  specimen?: MaybeRefOrGetter<string | undefined>
 }
 
 /** The provide/inject key — exported for tests; app code should use
@@ -85,6 +119,8 @@ export function provideAlmanac(options: ProvideAlmanacOptions = {}): Almanac {
   const today = normalizeDay(Math.round(options.today ?? useGlassToday()))
   const day = ref(normalizeDay(Math.round(options.initialDay ?? today)))
   const markList = ref<AlmanacMark[]>([])
+  const engaged = ref(false)
+  const observations = computed(() => toValue(options.observations) ?? [])
 
   const almanac: Almanac = {
     day,
@@ -100,6 +136,13 @@ export function provideAlmanac(options: ProvideAlmanacOptions = {}): Almanac {
     unregister: (id: string) => {
       markList.value = withoutAlmanacMark(markList.value, id)
     },
+    engaged,
+    engage: () => {
+      engaged.value = true
+    },
+    observations,
+    findSighting: (date: string) =>
+      findObservationOn(observations.value, date, toValue(options.specimen)),
   }
   provide(almanacInjectionKey, almanac)
   return almanac
