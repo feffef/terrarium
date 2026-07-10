@@ -75,6 +75,27 @@ export default defineTenant({
             bands: z.array(z.tuple([z.number().min(0).max(24), z.number().min(0).max(24)])),
           })
           .optional(),
+        // Phenology (#279): the annual sibling of `activity` — a creature's
+        // phases across the Glass Year, each a day-of-year `span` that may wrap
+        // ([300, 45]) exactly as the hour-bands above may wrap midnight. The
+        // Glass Year IS the real 365-day calendar; the six tenant-wide seasons
+        // it's divided into live in `utils/almanac.ts`, not here — a phase is
+        // the separate, free-form, per-creature thing the almanac dial reads.
+        phenology: z
+          .object({
+            phases: z
+              .array(
+                z.object({
+                  name: z.string(), // slug a ::phase binds to
+                  label: z.string(), // in-voice, e.g. "the lantern swell"
+                  span: z.tuple([z.number().min(0).max(365), z.number().min(0).max(365)]), // day-of-year; may wrap
+                  gloss: z.string().optional(),
+                  quiet: z.boolean().optional(), // a going-dark phase — hatched inverse
+                }),
+              )
+              .min(1),
+          })
+          .optional(),
         // Color signature (#68): 2–3 named hues that ARE the creature's identity.
         signature: z
           .object({
