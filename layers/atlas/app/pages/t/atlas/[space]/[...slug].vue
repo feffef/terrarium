@@ -10,10 +10,11 @@
 // and sightings are same-Space reads — the food-web edges were authored
 // in-biome (mirrors ADR-0012), so nothing queries a sibling. `biomeMeta`, the
 // utils and the Atlas* components arrive via Nuxt's layer-wide auto-imports;
-// only the types still import relatively — none needed directly here now that
-// `entry`'s shape (below) is left to inference. The three-`queryCollection`
-// load itself is single-homed in the `useAtlasWingData` composable — the
-// sibling `[space]/index.vue` landing needs the exact same load.
+// only the types still import relatively — `PhenologyPhase` types the almanac's
+// phase list below; `entry`'s shape (below) is otherwise left to inference. The
+// three-`queryCollection` load itself is single-homed in the `useAtlasWingData`
+// composable — the sibling `[space]/index.vue` landing needs the exact same load.
+import type { PhenologyPhase } from '../../../../utils/atlas'
 
 const route = useRoute()
 const { space, path, pagesKey, collections } = useSpace('atlas')
@@ -38,6 +39,19 @@ const sightings = computed(() =>
   observations.value.filter((o) => o.specimen === entry.value?.specimen.slug),
 )
 const sigStyle = computed(() => signatureVars(entry.value?.specimen.signature?.colors))
+
+// The almanac (#282): shared needle state for the dial and, later, the
+// dial-driven MDC components inside the essay (#283). Provided here — the page
+// owns the state; the wheel and any descendant inject it. The needle parks at
+// today unless a `?day=` param says otherwise (see composables/almanac.ts).
+const phenologyPhases = computed<PhenologyPhase[]>(() => entry.value?.specimen.phenology?.phases ?? [])
+provideAlmanac({
+  phases: phenologyPhases,
+  initialDay: parseAlmanacDayParam(route.query.day),
+})
+// The dial's rim ticks read the whole biome's dated ledger (map #279), not
+// just this specimen's sightings — only `date` is passed.
+const biomeObservations = computed(() => (data.value?.observations ?? []).map((o) => ({ date: o.date })))
 
 const title = computed(() => entry.value?.specimen.binomial ?? 'Not found')
 useSeoMeta({
@@ -88,14 +102,17 @@ useSeoMeta({
               <dd><AtlasColorSignature :colors="entry.specimen.signature.colors" :gloss="entry.specimen.signature.gloss" /></dd>
             </template>
           </dl>
-
-          <AtlasRhythmBand
-            v-if="entry.specimen.activity"
-            class="entry-rhythm"
-            :bands="entry.specimen.activity.bands"
-            :label="entry.specimen.activity.label"
-          />
         </div>
+
+        <!-- The almanac dial (#282) heads the field-note essay: the reader
+             meets the year, then the prose it drives. It replaced the 24-hour
+             rhythm band here (map #279, decision 3) — the daily fact lives on
+             as `activity.label` in the record above. -->
+        <AtlasPhenologyWheel
+          class="entry-almanac"
+          :phases="phenologyPhases"
+          :observations="biomeObservations"
+        />
 
         <div class="atlas-fieldnote atlas-prose">
           <ContentRenderer :value="entry.doc" />
@@ -123,6 +140,6 @@ useSeoMeta({
 
 <style scoped>
 .entry-section { margin-top: 0.5rem; }
-.entry-rhythm { margin-top: 1.2rem; max-width: 26rem; }
+.entry-almanac { margin: 2.4rem auto 0.4rem; max-width: 23rem; }
 .not-found h1 { font-family: var(--atlas-display); font-size: 2rem; margin: 0 0 0.6rem; }
 </style>
