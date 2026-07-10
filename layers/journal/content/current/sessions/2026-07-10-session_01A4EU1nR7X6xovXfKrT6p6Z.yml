@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01A4EU1nR7X6xovXfKrT6p6Z
 startedAt: 2026-07-10T22:38:02Z
-endedAt: 2026-07-10T23:01:34Z
+endedAt: 2026-07-10T23:08:31Z
 kind: interactive
 goal: "Verify #288 permission-prompt bug on desktop web"
-status: in-review
-outcome: Confirmed root cause; removed inert entries
-summary: "User asked to verify #288 (Claude_Code_Remote prompts persist despite the #287 allowlist fix) in a fresh desktop-web session. Confirmed the root cause on a second client: the cloud workspace boots untrusted, so Claude Code drops all project permissions.allow entries at startup (debug log names it verbatim); user confirmed web/mobile never show a trust dialog, and send_later/delete_trigger prompted at 50s/5s vs 0-1ms for github. Posted the findings (user-approved). On the user's explicit instruction, removed the four inert mcp__Claude_Code_Remote__* allow entries and documented the untrusted-workspace allow-drop as a CLAUDE.md gotcha; opened gated PR #290, CI green. Addressed the owner's review comment scoping the doc bullet to Claude_Code_Remote (local-CLI allowlisting still works)."
+status: completed
+outcome: Root cause confirmed; cleanup PR merged
+summary: "User asked to verify #288 (Claude_Code_Remote prompts persist despite the #287 allowlist fix) in a fresh desktop-web session. Confirmed the root cause on a second client: the cloud workspace boots untrusted, so Claude Code drops all project permissions.allow entries at startup (debug log names it verbatim); user confirmed web/mobile never show a trust dialog, and send_later/delete_trigger prompted at 50s/5s vs 0-1ms for github. Posted the findings (user-approved). On the user's explicit instruction, removed the four inert mcp__Claude_Code_Remote__* allow entries and documented the untrusted-workspace allow-drop as a CLAUDE.md gotcha; opened gated PR #290, CI green. Addressed the owner's review comment scoping the doc bullet to Claude_Code_Remote (local-CLI allowlisting still works). PR #290 was merged by the owner this session."
 prs:
   - "290"
 docsRead:
@@ -29,19 +29,19 @@ frictions:
   - description: "GitHub MCP tool discovery: guessed tool names get_issue/get_issue_comments that do not exist (the tool is issue_read with a method), costing an extra ToolSearch."
     solution: Reach for issue_read/pull_request_read with method args rather than per-verb tool names.
     severity: nit
-durationSec: 1412
+durationSec: 1829
 models:
-  claude-opus-4-8: 112
+  claude-opus-4-8: 124
 toolCounts:
   ToolSearch: 4
   mcp__github__issue_read: 2
-  Bash: 13
+  Bash: 14
   mcp__Claude_Code_Remote__send_later: 2
-  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__delete_trigger: 2
   mcp__github__add_issue_comment: 2
   Read: 2
   AskUserQuestion: 1
-  Edit: 3
+  Edit: 5
   Grep: 1
   Write: 3
   mcp__github__search_pull_requests: 1
