@@ -31,10 +31,17 @@ change:
   existing one (step 6) — concrete enough to become an issue, but not one you
   open yourself.
 
-**Never edit `.agents/skills/` or any other doc.** This Skill writes *only*
-Inventory `.yml` entries and, per step 5's evidence bar, issues — never a
-Skill's `SKILL.md` or any other doc. That's `audit-docs`'s (drift/contradiction)
-and `frictions-to-fixes`'s (friction-driven) surface.
+**Never edit `.agents/skills/` or any other doc for a semantic change** — a
+Skill's description, role, or behavior. This Skill writes *only* Inventory
+`.yml` entries and, per step 5's evidence bar, issues; a semantic edit is
+`audit-docs`'s (drift/contradiction) and `frictions-to-fixes`'s
+(friction-driven) surface, gated by human judgement. **Narrow exception — a
+purely mechanical fix** (invalid YAML/frontmatter, a broken markdown fence, a
+stale link, a zero-ambiguity typo) **may be proposed as a small,
+clearly-labeled inline patch suggestion for direct human approval**, instead
+of the full issue → later-session → branch → gate → PR round trip. Anything
+carrying the slightest semantic ambiguity is not mechanical — file it per
+step 5 instead.
 
 ## 1. Branch off `origin/main`
 
@@ -167,7 +174,10 @@ For each own Skill flagged by either signal:
   hypothesis. `triage` picks up any issue regardless of source; you're not
   filing into a void.
 
-Never patch `.agents/skills/` or any other doc yourself.
+Never patch `.agents/skills/` or any other doc yourself for a semantic
+concern — file per above (the narrow mechanical-fix exception is at the top
+of this doc, and doesn't apply here — a step-4 regression is never purely
+mechanical).
 
 Done when every step-3- or step-4-flagged Skill has an issue filed or
 commented on.
