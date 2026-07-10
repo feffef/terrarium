@@ -10,6 +10,19 @@ Status: Accepted
 > (ADR-0003) escalates these to a human even when the gate is green and the
 > surface is otherwise low-risk.
 
+> **Amended (2026-07-10).** The Decision's "generator" terminology below is
+> stale: [ADR-0013](0013-dynamic-content-config-committed-routing-map.md) made
+> `content.config.ts` an ordinary, hand-editable module (no generator produces
+> it), and [ADR-0014](0014-build-time-virtual-routing-module.md) deleted
+> `scripts/generate.ts` entirely — no "generator" exists anymore. Read the L0
+> bullet's "the generator produces `content.config.ts`", the Auto-merge
+> eligibility "generator, routing" phrase, and the Consequences' "generator
+> bug"/"generator/routing/isolation/CI" mentions below as historical framing
+> from before that split. The current human-only surface is named explicitly
+> in CLAUDE.md's Ground rules: `content.config.ts`, `shared/expand.ts`,
+> `modules/routing.ts`, `shared/routing.ts`, isolation logic, CI, and
+> governance/ADRs.
+
 > **Amended (2026-07-07).** *Where the gate's tests live, as the Platform grows.*
 > A test is **homed with the code it exercises**: a Tenant-specific test lives in
 > that layer under `layers/<tenant>/tests/`; a Platform test (exercising
