@@ -1,0 +1,55 @@
+schemaVersion: 1
+session: session_01XEVnpTVNioTLn42f2STY1V
+startedAt: 2026-07-10T00:45:55Z
+endedAt: 2026-07-10T00:57:11Z
+kind: autonomous
+goal: Audit the Skill Inventory against usage and watch for regressions
+status: in-review
+outcome: Two Inventory edits landed, no regressions confirmed
+summary: "Fully autonomous run of the audit-skills Skill (scheduled Routine, no human prompt beyond the standing charter). Gathered the scorecard via scripts/audit-skills.ts (31 skills, 40-session window, 8 regressionChecks). Re-graded two external Skills with bright-line (>=2 session) evidence: demoted `implement` from specialist to supporting (skipped in #210's keyed-Collections rework and the #196 validate-content cleanup, both squarely in its \"already-triaged issue\" domain), and refreshed `code-review`'s role to note inconsistent adoption (used for #212/#211/#210/ #209/#196 but skipped in the pkill-teardown fix, component-empty-render fix, About/How-Works split, test restructuring, and triage-extractor sessions) without changing its grade. Both are external Skills, so per the Skill's own step 5 no issue was filed for either. Ran Phase A/B regression watch on all 8 regressionChecks brackets — every friction shift traced on deep-read to unrelated causes (e.g. the close-session \"after\" bracket's one heavy-friction session was literally the session that authored that very edit — pre-edit pain, not a regression). No confirmed regressions. Gate green; PR #268 opened, scoped to only the two Inventory YAML files; subscribed to its activity and watching CI to self-merge."
+prs:
+  - "268"
+docsRead:
+  - path: /root/.claude/projects/-home-user-terrarium/10ae510b-a850-5fc2-ab42-30b9a45742de/tool-results/bpgmxb8kq.txt
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this run's driving skill
+  - name: close-session
+    reason: closure sequence at PR open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: The Inventory has a stale entry (review.yml) for a Skill with no corresponding directory anywhere on disk (not in .agents/skills, not a repo-committed pack Skill) - appears to be a built-in Claude Code CLI skill invisible to audit-skills.ts's scan. onDisk read false while inventoried read true, the mirror image of the "create a missing entry" case step 3 handles, with no prescribed handling.
+    solution: Left it untouched (no instruction covers deleting a phantom Inventory entry, and useCount is 0 so no bright-line evidence applies either way) - flagged as a learning for a future consolidate/audit-skills pass.
+    severity: minor
+  - description: The scorecard's window listed a used-skill entry named "model" (useCount 1, onDisk false, external false) - almost certainly an artifact of a "/model" slash command getting logged as if it were a Skill invocation.
+    solution: Ignored it in grading (onDisk false means nothing to inventory), but it's a small data-quality gap in how skillsUsed gets derived.
+    severity: nit
+durationSec: 676
+models:
+  claude-sonnet-5: 73
+toolCounts:
+  Bash: 24
+  Read: 2
+  Grep: 1
+  Edit: 2
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  Glob: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - layers/journal/content/current/skills/implement.yml
+  - layers/journal/content/current/skills/code-review.yml
+gitBranch: claude/upbeat-sagan-okfikd
+entrypoint: remote_trigger
+cliVersion: 2.1.206
+learnings:
+  - "Two data-quality gaps surfaced in this run's scorecard that are outside this Skill's remit to fix directly: a phantom Inventory entry (review.yml) with no on-disk Skill behind it, and a \"model\" pseudo-skill entry from a likely mislogged /model slash-command invocation. Neither affected this run's grading (zero session-level bright-line evidence either way), but a future consolidate/audit-docs-family pass could usefully sweep Inventory entries for on-disk existence and check whether audit-skills.ts's skillsUsed derivation is over-matching slash commands that aren't Skills."
