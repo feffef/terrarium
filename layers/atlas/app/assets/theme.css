@@ -459,6 +459,172 @@
 .atlas-rarity-legend .m { font-family: var(--atlas-data); color: var(--biome-accent); }
 .atlas-rarity-legend .d { color: var(--atlas-muted); font-style: italic; }
 
+/* ── Dial-driven prose (#283): :season / ::phase / ::sighting ──────────────
+   The MDC components that thread the essay onto the almanac dial. Engraved
+   register throughout: currentColor line, fill none; the pencil is a LEGIBLE
+   lighter ink (contrast-checked), never a ghost. */
+
+/* :season — a season's name as a letterpress small-caps handle. */
+.atlas-season {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.38ch;
+  margin: 0;
+  padding: 0 0.1ch;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-family: var(--atlas-label);
+  font-size: 0.82em;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  line-height: inherit;
+  vertical-align: baseline;
+}
+.atlas-season.is-live { cursor: pointer; }
+.atlas-season .season-glyph {
+  width: 0.85em;
+  height: 0.85em;
+  align-self: center;
+  flex: none;
+}
+.atlas-season .season-glyph .year { fill: none; stroke: currentColor; stroke-width: 1; opacity: 0.35; }
+.atlas-season .season-glyph .arc { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+.atlas-season .season-name {
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease, background-color 0.25s ease;
+}
+.atlas-season.is-live:hover .season-name,
+.atlas-season.is-live:focus-visible .season-name { border-bottom-color: currentColor; }
+/* the almanac wash: underlined while the needle rides inside the season */
+.atlas-season.is-now .season-name {
+  background: linear-gradient(
+    transparent 66%,
+    color-mix(in srgb, var(--biome-accent) 26%, transparent) 66%
+  );
+}
+/* the hovercard: a little museum label above the handle */
+.atlas-season .season-card {
+  position: absolute;
+  bottom: calc(100% + 0.55em);
+  left: 50%;
+  transform: translate(-50%, 0.25em);
+  z-index: 5;
+  width: max-content;
+  max-width: 17rem;
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.55rem 0.7rem 0.6rem;
+  background: var(--atlas-paper-2);
+  border: 1px solid var(--atlas-rule);
+  box-shadow: 0 8px 20px -12px rgba(0, 0, 0, 0.45);
+  text-align: left;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+}
+.atlas-season:hover .season-card,
+.atlas-season:focus-visible .season-card {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+.atlas-season .card-label {
+  font-family: var(--atlas-label);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--biome-accent);
+}
+.atlas-season .card-span { font-family: var(--atlas-data); font-size: 0.68rem; color: var(--atlas-faint); }
+.atlas-season .card-gloss { font-family: var(--atlas-text); font-size: 0.82rem; font-style: italic; color: var(--atlas-muted); line-height: 1.45; }
+
+/* ::phase — the passage's ink follows the needle, once the dial is engaged.
+   Pencil = 40% ink into muted: measurably legible on every biome's paper
+   (≈6.9:1 on the light papers, ≈9:1 on the dark), never a ghost. */
+.atlas-phase { position: relative; transition: color 0.45s ease; }
+.atlas-phase.is-penciled { color: color-mix(in srgb, var(--atlas-ink) 40%, var(--atlas-muted)); }
+/* pencil the whole passage uniformly — links and emphasis grey with the text */
+.atlas-phase.is-penciled :is(a, em, strong, code) { color: inherit; }
+.atlas-phase .phase-glyph {
+  position: absolute;
+  top: 0.25rem;
+  left: -2.7rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0.15rem;
+  border: 0;
+  background: none;
+  color: var(--atlas-muted);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.atlas-phase .phase-glyph:hover,
+.atlas-phase .phase-glyph:focus-visible { color: var(--biome-accent); }
+.atlas-phase .phase-glyph svg { display: block; width: 100%; height: 100%; }
+.atlas-phase .phase-glyph .year { fill: none; stroke: currentColor; stroke-width: 0.9; opacity: 0.4; }
+.atlas-phase .phase-glyph .arc { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.atlas-phase.is-now .phase-glyph .arc { stroke-width: 2.8; }
+/* no room in the margin on a narrow page: seat the glyph above the passage */
+@media (max-width: 62rem) {
+  .atlas-phase .phase-glyph { position: static; display: inline-flex; margin: 0 0 0.1rem -0.15rem; }
+}
+/* the essay's drop-cap belongs to the essay's opening paragraph only — a
+   passage's own first paragraph must not sprout one */
+.atlas-phase .phase-body p:first-of-type::first-letter,
+.atlas-sighting .s-quote p::first-letter {
+  float: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  padding: 0;
+  color: inherit;
+}
+
+/* ::sighting — an attributed pull-quote from the field log. */
+.atlas-sighting { margin: 1.6rem 0; }
+.atlas-sighting .s-quote {
+  /* inherits .atlas-prose blockquote's rule + italic; the flare warms it */
+  margin: 0;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.atlas-sighting .s-quote p { margin: 0 0 0.4rem; }
+.atlas-sighting .s-quote p:last-child { margin-bottom: 0; }
+.atlas-sighting .s-wanting { color: var(--atlas-faint); }
+.atlas-sighting .s-cite {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7ch;
+  margin-top: 0.4rem;
+  padding-left: calc(1.1rem + 2px); /* aligns under the quote's rule */
+  font-family: var(--atlas-label);
+  font-size: 0.72rem;
+  color: var(--atlas-muted);
+}
+.atlas-sighting .s-rosette { width: 0.8em; height: 0.8em; flex: none; align-self: center; }
+.atlas-sighting .s-rosette path { fill: none; stroke: currentColor; stroke-width: 1.1; transition: fill 0.2s ease; }
+.atlas-sighting .s-source { font-family: var(--atlas-text); font-style: italic; }
+.atlas-sighting .s-date { font-family: var(--atlas-data); font-size: 0.72rem; color: var(--atlas-faint); }
+.atlas-sighting .s-tod {
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--biome-accent);
+}
+/* the flare: the needle stands on this sighting's day */
+.atlas-sighting.is-hot .s-quote {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--sig-1) 10%, transparent), transparent 72%);
+}
+.atlas-sighting.is-hot .s-rosette path { fill: currentColor; }
+.atlas-sighting.is-hot .s-cite { color: var(--atlas-ink); }
+
 /* ── Reduced motion ───────────────────────────────────────────────────────*/
 @media (prefers-reduced-motion: reduce) {
   .atlas * { transition: none !important; animation: none !important; }

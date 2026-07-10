@@ -36,6 +36,30 @@ export function withoutAlmanacMark(marks: AlmanacMark[], id: string): AlmanacMar
   return marks.filter((m) => m.id !== id)
 }
 
+/** One dated field-log entry as the Almanac carries it (#283) — the subset of
+ *  an `observations` Document a `::sighting{date}` needs to quote the ledger
+ *  without retyping it (the note stays single-homed in the YAML). */
+export interface AlmanacObservation {
+  date: string
+  time?: string
+  specimen?: string
+  note?: string
+}
+
+/** The ledger's entry for a real date ('YYYY-MM-DD', exact string match).
+ *  Prefers an observation of `specimen` (the page's own inhabitant); falls
+ *  back to the first in-list observation of that date by anyone in the biome.
+ *  `undefined` when the ledger is silent — the caller decides how honest to
+ *  be about that. Pure. */
+export function findObservationOn(
+  observations: AlmanacObservation[],
+  date: string,
+  specimen?: string,
+): AlmanacObservation | undefined {
+  const onDate = observations.filter((o) => o.date === date)
+  return (specimen ? onDate.find((o) => o.specimen === specimen) : undefined) ?? onDate[0]
+}
+
 /** Parse a `?day=` query value (string | string[] | null from vue-router) into
  *  a day-of-year, or `null` when absent/malformed/out of range — strict on
  *  purpose so a garbled shared link falls back to today rather than snapping
