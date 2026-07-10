@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01DpPPHFXpR7LETqBMRiSRAX
 startedAt: 2026-07-10T21:33:12Z
-endedAt: 2026-07-10T21:59:15Z
+endedAt: 2026-07-10T22:01:59Z
 kind: interactive
 goal: "Test #288 Claude_Code_Remote permission prompt"
 status: completed
@@ -35,22 +35,22 @@ frictions:
   - description: Android permission dialog has no "Don't ask again"/"Always allow", so the client can never persist an allow decision and every session re-prompts.
     solution: Add a persist-allow affordance to the app's MCP permission dialog.
     severity: minor
-durationSec: 1563
+durationSec: 1727
 models:
-  claude-opus-4-8: 78
+  claude-opus-4-8: 89
 toolCounts:
   ToolSearch: 3
   mcp__github__issue_read: 1
-  Bash: 7
+  Bash: 9
   mcp__Claude_Code_Remote__send_later: 2
   mcp__Claude_Code_Remote__delete_trigger: 1
   mcp__github__pull_request_read: 1
   AskUserQuestion: 1
-  mcp__github__add_issue_comment: 3
+  mcp__github__add_issue_comment: 4
   Skill: 2
   Write: 1
   Agent: 1
-  Edit: 7
+  Edit: 8
   Read: 1
 subagents:
   - type: claude-code-guide
@@ -62,4 +62,5 @@ learnings:
   - "The /context panel is the ground-truth registry of what is an MCP server: it listed BOTH github and Claude_Code_Remote under MCP Tools, disproving the research agent's 'github is built-in, not MCP' inference."
   - In this cloud session the github MCP server is auto-trusted (silent even for non-allowlisted tools) while Claude_Code_Remote is not (prompts even when allowlisted) — a per-server trust difference, not casing/format and not the project allowlist.
   - Project-scoped .claude/settings.json allow-rules for a user-added MCP server appear inert in ephemeral cloud sessions; no documented repo-side lever reliably fixes it.
+  - Byte-comparing (od -tx1 / cmp) the allow entry against the working tool id proved them identical pure-ASCII (underscores 0x5f, correct casing) — definitively ruling out a hidden-character/normalization mismatch, which eyeballing cannot.
   - In an ephemeral remote container, only repo-committed or Anthropic-server-side (managed/org) config is durable; a hand-written ~/.claude/settings.json evaporates and a SessionStart hook that writes it likely lands after permission load.
