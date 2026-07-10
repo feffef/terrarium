@@ -111,6 +111,18 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   git and can change without a commit. Say a Skill *is* scheduled; never say *when*.
 - Inspect files with the **Read tool, not `cat`** — the Edit tool refuses to edit
   a file it hasn't seen via Read, so `cat`-then-Edit forces a wasteful re-read.
+- **Don't try to silence a `mcp__Claude_Code_Remote__*` permission prompt by adding a
+  `.claude/settings.json` `permissions.allow` entry — it can't work.** In cloud
+  (web/mobile) sessions the workspace starts **untrusted** (`~/.claude.json` →
+  `hasTrustDialogAccepted: false`), so Claude Code **drops the whole `permissions.allow`
+  array at startup**, before matching any rule — and web/mobile expose no trust dialog to
+  change that (`mcp__github__*` stays silent only because the platform auto-approves that
+  server by a separate path, not the allowlist). And `Claude_Code_Remote` is a cloud-only
+  server, so a local CLI never has it to allow either — the four entries were inert
+  everywhere and were removed from that file. Platform limitation, not a repo bug: don't
+  re-diagnose it or re-add them (full diagnosis: #288). This caveat is
+  `Claude_Code_Remote`-specific: in a **trusted local CLI**, `permissions.allow` entries
+  for MCP servers that are actually present *do* work.
 - **Don't tear down a preview/dev server with `pkill` — use `scripts/preview.ts`.**
   (`shot` for a one-shot screenshot; `start`/`stop` to keep one running — see the
   screenshot section below.) Hand-rolled `pkill -f <pattern>` teardown silently
