@@ -1,0 +1,104 @@
+schemaVersion: 1
+session: session_012CWnr9jdma8DEPcEPeESGu
+startedAt: 2026-07-10T04:08:36Z
+endedAt: 2026-07-10T06:32:34Z
+kind: autonomous
+goal: Audit live docs against code for drift/duplication/contradiction/ambiguity
+status: completed
+outcome: 16 findings fact-checked, 14 fixed and merged, 2 escalated and merged
+summary: "Fully autonomous run (fired by a scheduled Routine, no human prompt at any point — webhook PR-activity events don't count as human prompts). Followed the audit-docs Skill: inventoried and tiered every *.md + Skill surface, fanned out four parallel read-only lenses (drift, duplication, contradiction, ambiguity) across the Live/Historical tiers, pooled 16 candidate findings, and dispatched two independent fact-checkers that re-derived each claim from primary sources before anything was touched. Fixed all 14 CONFIRMED findings that touched only Live-tier surfaces (CLAUDE.md, CONTEXT.md, tests/README.md, shared/manifest.ts, three own Skills, one Journal Skill-Inventory entry) in one commit, cleared `pnpm gate`, opened PR #272, and self-merged it on green per the Skill's ADR-0003/0004 low-risk-content-tier grant. Two further CONFIRMED findings touched ADR files (human-only surface) — a stale \"generator\" mention in ADR-0004 predating ADR-0013/0014's removal of scripts/generate.ts, and ADR-0001 missing an amendment banner pointing to ADR-0011's deliberate runtime-build relaxation — so those rode a separate, human-reviewed PR (#273) instead of the self-merged one, per the Skill's explicit human-only-surface carve-out. A human merged #273 during the run."
+prs:
+  - "272"
+  - "273"
+docsRead:
+  - path: CLAUDE.md
+    reason: audit-docs Skill instructions + Ground rules to fix
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: stale generator terminology + amendment-banner convention
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: missing amendment banner
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: confirm the ADR-0001 relaxation it documents
+  - path: shared/routing.ts
+    reason: (no reason given)
+  - path: shared/manifest.ts
+    reason: (read before editing)
+  - path: CONTEXT.md
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/digest.yml
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: tests/README.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: the run's own operative Skill (loaded via the /audit-docs command, not the Skill tool — disable-model-invocation blocked that path)
+  - name: close-session
+    reason: closure trigger once both PRs landed
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Skill tool call for audit-docs failed (`disable-model-invocation`) even though its full instructions were already preloaded via the /audit-docs command message.
+    solution: Recognized the command-message already carried the Skill body and proceeded directly from it instead of re-invoking; worth noting in the Skill's own docs that /audit-docs is command-only, never Skill-tool-invocable, so an agent doesn't waste a call finding that out.
+    severity: nit
+  - description: Creating the second branch (`git checkout -b ... origin/main`) silently reset the working tree to pre-fix state, firing five separate 'file modified by user or linter' system-reminders that read as if something external had changed the files.
+    solution: Expected behavior from switching branches after committing the first PR's changes — no actual issue, but the reminder wording doesn't distinguish a branch-switch revert from a real external edit, which cost a moment of double-checking.
+    severity: nit
+durationSec: 8638
+models:
+  claude-sonnet-5: 218
+toolCounts:
+  Skill: 3
+  Bash: 29
+  ToolSearch: 6
+  mcp__github__list_pull_requests: 1
+  Grep: 3
+  TaskCreate: 6
+  TaskUpdate: 10
+  Agent: 6
+  ScheduleWakeup: 7
+  Read: 18
+  Edit: 18
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 3
+  mcp__github__merge_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  PushNotification: 1
+  Write: 1
+filesEdited:
+  - CLAUDE.md
+  - CONTEXT.md
+  - .agents/skills/digest/SKILL.md
+  - layers/journal/content/current/skills/digest.yml
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - shared/manifest.ts
+  - tests/README.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0001-single-container-baked-multitenancy.md
+subagents:
+  - type: general-purpose
+    task: Drift lens review
+  - type: general-purpose
+    task: Duplication lens review
+  - type: general-purpose
+    task: Contradiction lens review
+  - type: general-purpose
+    task: Ambiguity lens review
+  - type: general-purpose
+    task: Fact-check batch A findings
+  - type: general-purpose
+    task: Fact-check batch B findings
+gitBranch: claude/festive-mayer-90hq42
+entrypoint: remote_trigger
+cliVersion: 2.1.206
+learnings:
+  - Skill external/pack-generic status isn't a SKILL.md frontmatter field — the authoritative source is the top-level skills-lock.json (keys = pack Skill names), cross-referenced by scripts/audit-skills.ts's `external` Set.
