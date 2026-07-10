@@ -4,6 +4,7 @@
 // (reverse-edge derivation, band math) are unit-testable without Nuxt, matching
 // the journal Tenant's `utils/dashboard` pattern. Nuxt-free on purpose: the SFCs
 // pass plain data in.
+import type { Span } from './almanac'
 
 // ── Rarity (#69) ─────────────────────────────────────────────────────────────
 export type Rarity = 'abundant' | 'common' | 'uncommon' | 'rare' | 'mythic'
@@ -100,6 +101,20 @@ export function relationsFor(slug: string, edges: Edge[]): Relation[] {
   return out.sort((a, b) => a.label.localeCompare(b.label) || a.other.localeCompare(b.other))
 }
 
+// ── Phenology (#279/#282) ────────────────────────────────────────────────────
+/** One phase of a specimen's Glass Year (`phenology.phases[]` in the manifest
+ *  schema) — the annual sibling of an activity `Band`. `span` is a day-of-year
+ *  `Span` that may wrap the New Year; `quiet` marks a going-dark phase the
+ *  almanac dial draws in the inverse hatched register rather than omitting
+ *  (silence is still data in this Atlas). */
+export interface PhenologyPhase {
+  name: string
+  label: string
+  span: Span
+  gloss?: string
+  quiet?: boolean
+}
+
 // ── Activity rhythm (#73) ────────────────────────────────────────────────────
 export type Band = [number, number]
 
@@ -137,6 +152,7 @@ export interface SpecimenView {
   size?: string
   diet?: string
   activity?: { label: string; bands: Band[] }
+  phenology?: { phases: PhenologyPhase[] }
   signature?: { colors: SignatureColor[]; gloss: string }
   plate?: { number: string; conjectural?: boolean }
   illustration?: string
@@ -159,6 +175,7 @@ export interface RawSpecimenDoc {
   size?: string
   diet?: string
   activity?: { label: string; bands: Band[] }
+  phenology?: { phases: PhenologyPhase[] }
   signature?: { colors: SignatureColor[]; gloss: string }
   plate?: { number: string; conjectural?: boolean }
   illustration?: string
@@ -177,6 +194,7 @@ export function toSpecimenView(d: RawSpecimenDoc): SpecimenView {
     size: d.size,
     diet: d.diet,
     activity: d.activity,
+    phenology: d.phenology,
     signature: d.signature,
     plate: d.plate,
     illustration: d.illustration,

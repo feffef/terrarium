@@ -373,6 +373,58 @@
 .atlas-rhythm .scale { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--atlas-faint); margin-top: 0.25rem; }
 .atlas-rhythm .rlabel { font-family: var(--atlas-label); font-size: 0.7rem; letter-spacing: 0.06em; color: var(--atlas-muted); margin-top: 0.4rem; text-transform: lowercase; }
 
+/* ── Almanac dial (#282/#279) ──────────────────────────────────────────────
+   The rhythm band bent into a circle: the year under glass as an engraved
+   instrument. Ink and hatch only; the needle head is the ONE --sig-1 accent. */
+.atlas-almanac { margin: 0; }
+.atlas-almanac svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--atlas-ink);
+  cursor: pointer;
+  touch-action: none; /* the dial owns its own dragging */
+  user-select: none;
+  -webkit-user-select: none;
+}
+.atlas-almanac svg:focus-visible { outline: 2px solid var(--biome-accent); outline-offset: 6px; border-radius: 50%; }
+.atlas-almanac .bezel { fill: none; stroke: var(--atlas-rule); stroke-width: 1; }
+.atlas-almanac .bezel-in { stroke: var(--atlas-line); stroke-width: 0.5; }
+.atlas-almanac .season { fill: none; stroke: var(--atlas-rule); stroke-width: 1; }
+.atlas-almanac .season-tick { stroke: var(--atlas-rule); stroke-width: 1; }
+.atlas-almanac .rim-label {
+  font-family: var(--atlas-label);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  fill: var(--atlas-muted);
+}
+.atlas-almanac .month-tick { stroke: var(--atlas-rule); stroke-width: 0.75; opacity: 0.8; }
+.atlas-almanac .newyear-tick { stroke: currentColor; stroke-width: 1.2; }
+.atlas-almanac .phase { stroke: currentColor; stroke-width: 0.9; transition: stroke-width 0.15s ease; }
+.atlas-almanac .phase.is-quiet { stroke-dasharray: 3 3; stroke-width: 0.7; }
+.atlas-almanac .phase.is-now { stroke-width: 1.6; }
+.atlas-almanac .obs-tick { stroke: currentColor; stroke-width: 1; opacity: 0.55; }
+.atlas-almanac .mark line { stroke: currentColor; stroke-width: 1.4; }
+.atlas-almanac .mark .gem { fill: none; stroke: currentColor; stroke-width: 1; transition: fill 0.15s ease; }
+.atlas-almanac .mark.is-hot line { stroke-width: 2.2; }
+.atlas-almanac .mark.is-hot .gem { fill: currentColor; }
+.atlas-almanac .needle { transition: transform 0.22s ease; }
+.atlas-almanac.is-scrubbing .needle { transition: none; }
+.atlas-almanac .needle .shaft { stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+.atlas-almanac .needle .counterweight { fill: none; stroke: currentColor; stroke-width: 1.2; }
+.atlas-almanac .needle .head { fill: var(--sig-1); stroke: currentColor; stroke-width: 0.7; }
+.atlas-almanac .hub { fill: var(--atlas-paper-2); stroke: currentColor; stroke-width: 1.2; }
+.atlas-almanac .hub-dot { fill: currentColor; }
+.atlas-almanac .wcap { text-align: center; margin-top: 0.55rem; }
+.atlas-almanac .wread { margin: 0; font-size: 0.78rem; color: var(--atlas-muted); }
+.atlas-almanac .wday { font-family: var(--atlas-data); font-size: 0.74rem; color: var(--atlas-faint); }
+.atlas-almanac .wsep { margin: 0 0.5ch; color: var(--atlas-faint); }
+.atlas-almanac .wseason,
+.atlas-almanac .wphase { font-family: var(--atlas-label); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: lowercase; }
+.atlas-almanac .wempty { margin: 0.3rem 0 0; font-size: 0.85rem; color: var(--atlas-faint); font-style: italic; }
+
 /* ── Food web (#70): the wanderable diagram ────────────────────────────────*/
 .atlas-web { position: relative; }
 .atlas-web svg { width: 100%; height: auto; display: block; overflow: visible; font-family: var(--atlas-data); }
