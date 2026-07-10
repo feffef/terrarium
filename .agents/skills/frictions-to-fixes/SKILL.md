@@ -104,7 +104,8 @@ if your judgement differs, but don't re-derive the ranking from scratch.)
 - **Simple (the bulk).** Passes the **ripeness test**, all three: **simple** (one
   small code or config change, no redesign), **autonomous** (an agent lands it
   start-to-finish with no human decision mid-way), and **safe surface** (touches
-  none of the human-only surfaces — generator, routing, isolation logic, CI / the
+  none of the human-only surfaces — `content.config.ts`, `shared/expand.ts`,
+  `modules/routing.ts`, `shared/routing.ts`, isolation logic, CI / the
   safety gate — ADR-0004; those are never dispatched here). These you review and
   merge yourself in §6.
 - **Hard (at most 2 per run).** A friction whose fix is a **large or multi-file
@@ -188,9 +189,9 @@ review-agent, not a bystander waiting for a human. For each PR:
      - introduces a **new dependency**,
      - changes **untested or untestable runtime behaviour** (no gate coverage can
        vouch for it),
-     - or touches an **ADR-0004 human-only surface** (generator, routing,
-       isolation logic, CI, or governance/ADRs) — these are always human-only,
-       even if one slipped into a hard issue.
+     - or touches an **ADR-0004 human-only surface** (the manifest-expansion
+       and routing modules, isolation logic, CI, or governance/ADRs) — these
+       are always human-only, even if one slipped into a hard issue.
      Leave the PR open, say precisely why it is high-risk, and **alert the user**.
      A **hard** selection (§3) usually lands here — that is expected.
 

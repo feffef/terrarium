@@ -37,7 +37,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 ## Ground rules (from the ADRs)
 
 - One repo, one container, build-time-baked; nothing is created at runtime
-  (ADR-0001).
+  (ADR-0001) — except the scoped PoC deploy container, which deliberately
+  relaxes that for the live `deploy/` runner only, never the application
+  model itself (ADR-0011).
 - Agents edit a Tenant's **manifest** (declarative intent); `content.config.ts`
   builds the keyed collections dynamically from the manifests at
   config-evaluation time (ADR-0002/0013). Don't hand-write the keyed cross-product.
@@ -61,9 +63,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   branch) — don't tell the user you're about to open one without checking first.
 - All work must clear the **safety gate** (build/validate/isolation, ADR-0004).
   The manifest-expansion and routing modules (`content.config.ts`,
-  `shared/expand.ts`, `modules/routing.ts`), isolation logic, CI, and
-  governance/ADRs are **human-only** — never auto-merge changes touching them
-  (ADR-0004's high-risk set). "Human-only" gates *merging*, not editing:
+  `shared/expand.ts`, `modules/routing.ts`, `shared/routing.ts`), isolation
+  logic, CI, and governance/ADRs are **human-only** — never auto-merge changes
+  touching them (ADR-0004's high-risk set). ADR-0004 also escalates two axes a
+  path classifier can't see, on top of that file list: a PR that
+  **introduces a new dependency**, or one that **changes untested/untestable
+  runtime behaviour**, is always human-only even when it otherwise touches
+  only low-risk surface. "Human-only" gates *merging*, not editing:
   `content.config.ts` is hand-editable (below), but a PR touching it still
   needs a human to merge.
 - **Skills** are generic, repo-committed, and first-class (ADR-0005).
@@ -172,15 +178,14 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   currently unavailable on this repo pending a repo-owner Settings change**
   (`Settings → General → Allow auto-merge`, tracked in #231) — don't attempt to
   enable it yourself. Merge manually once the gate reports green **only where the
-  change is already auto-merge-eligible** (the digest / reviewer-agent tiers,
-  ADR-0003/0004); an ordinary work PR is still merged by a human, never
-  self-merged (see "no self-merge" above).
+  change is already auto-merge-eligible** (the `digest` / reviewer-agent /
+  `audit-docs` / `audit-skills` tiers, ADR-0003/0004); an ordinary work PR is
+  still merged by a human, never self-merged (see "no self-merge" above).
 - **Opening the PR is the first session log.** The moment you open the gated PR
   is a closure point: invoke `close-session` right then (it authors the log via
-  `log-session`), with status **`in-review`** (the PR is open, not merged — never
-  `completed`). It's not finished; more commits and a re-fired log can follow
-  (re-invoking is safe, the last landed state wins), and a later session flips the
-  status to `completed` on merge.
+  `log-session`). It's not finished; more commits and a re-fired log can follow
+  (re-invoking is safe, the last landed state wins) — see the `log-session`
+  Skill for the exact status semantics (`in-review` vs `completed`).
 - **Three distinct worktree-isolation mechanisms exist in this environment — pick
   the one that matches the task, don't conflate them:**
   1. **`EnterWorktree`/`ExitWorktree`** (interactive, session-level) — switches
@@ -218,7 +223,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
     HEAD matches `origin/<default-branch>` before any commit, and rebranch
     explicitly if it doesn't.
 - **Every agent-authored interaction with GitHub, or any other external
-  system, carries a two-line provenance footer, no exemptions** (ADR-0017):
+  system, carries a two-line provenance footer, no exemptions** (ADR-0017 —
+  read it for the full rationale and why this is convention, not
+  gate-enforced):
   ```
   Co-Authored-By: <model name> <noreply@anthropic.com>
   Claude-Session: <session URL>
@@ -228,12 +235,7 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   git history — issues, PR descriptions, PR/issue comments (top-level *and*
   inline review comments), or a post to any future non-GitHub integration —
   doesn't: append the same two lines yourself as the last lines of the body.
-  There is no "top-level only" carve-out. This exists because agent-driven
-  API calls run under the human owner's own authorized connection, so
-  `user`/`merged_by`/comment-author always read as the owner regardless — the
-  footer is how attribution survives anyway, without fixing (or needing to
-  fix) those fields. It's a **documented convention, not gate-enforced**:
-  external-system content isn't part of the build the safety gate checks.
+  There is no "top-level only" carve-out.
 
 ## Repo layout
 
@@ -246,6 +248,7 @@ layers/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Spa
 layers/<tenant>/tests/              # this Tenant's OWN tests (unit + e2e module) — see tests/README.md
 shared/manifest.ts                  # manifest types + defineTenant() + validation
 shared/expand.ts                    # pure manifest→keyed-collection expansion (expand(), L3-tested)
+shared/routing.ts                   # runtime route resolution: request → keyed collections (human-only, ADR-0006)
 modules/routing.ts                  # build-time Nuxt module: manifests → #routing virtual module (ADR-0014)
 content.config.ts                   # ordinary module — builds keyed collections dynamically (ADR-0013)
 app/composables/space.ts            # useSpace(): route → keyed collections or 404 (auto-imported wrapper)

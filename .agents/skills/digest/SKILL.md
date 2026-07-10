@@ -13,8 +13,8 @@ overview of the Platform's current state and capabilities. A thin, tested helper
 (`scripts/digest.ts`) does the deterministic gathering; **you write the prose**.
 
 > **Invoked, never self-fired — follow the steps.** This Skill is user-invoked
-> (`disable-model-invocation: true`): a nightly Routine fires `/digest` on a
-> schedule, and a human can run it on demand, but a session never reaches for it
+> (`disable-model-invocation: true`): a scheduled Routine fires `/digest`, and
+> a human can run it on demand, but a session never reaches for it
 > unprompted. Scheduled, it is the first live piece of the chartered `sync`
 > remit (ADR-0003/0015) — still do not call it `sync`.
 
@@ -117,8 +117,8 @@ content-only low-risk tier) — allowed **only** while the PR contains nothing
 beyond the digest scope (digest pages under `…/pages/digests/`, at most plus the
 index's editorial intro):
 
-- **Merge manually on green.** Repo-level GitHub auto-merge is currently
-  unavailable pending a repo-owner setting (#231), so watch the gate yourself
+- **Merge manually on green.** Repo-level GitHub auto-merge is unavailable
+  pending #231 (`CLAUDE.md`), so watch the gate yourself
   (`pull_request_read` with `get_check_runs` — see `docs/agents/issue-tracker.md`)
   and merge only after it reports green (the GitHub MCP `merge_pull_request`).
   Pushing is not landing (`CLAUDE.md`).

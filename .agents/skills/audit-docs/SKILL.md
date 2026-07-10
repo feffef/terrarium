@@ -125,7 +125,7 @@ gated PR** listing what was fixed and any issue filed. **Self-merge it once the
 gate is green** (ADR-0003 amendment) — the reconciliations are fact-checked and
 touch no human-only surface, so this is ADR-0004's low-risk content tier (a
 second, bounded grant of the same kind as `digest`'s). Repo auto-merge is
-unavailable pending #231, so watch the gate yourself
+unavailable pending #231 (`CLAUDE.md`), so watch the gate yourself
 (`pull_request_read` `get_check_runs` — `docs/agents/issue-tracker.md`) and merge
 with the GitHub MCP `merge_pull_request`; pushing is not landing. Leave a one-line
 PR comment as the audit trail.

@@ -220,7 +220,8 @@ mechanism. This is why strict schemas and the safety gate matter: agents write
 everything, so machine-checkable contracts are the guardrail.
 
 ### Skill
-A Claude Code skill (`.claude/skills/*`) that encodes a repeatable capability for
+A Claude Code skill (`.agents/skills/*`, surfaced through `.claude/skills/*`
+symlinks) that encodes a repeatable capability for
 developing or consolidating the Platform. The Skill set is a first-class,
 ever-growing part of the project — as much a deliverable as the Nuxt code.
 
@@ -249,7 +250,7 @@ chartered job is a *remit*, realised by one or more Skills: `sync` is served by
 `digest` and `audit-skills` today — see ADR-0003/0015.)
 **Codify itself is planned, not yet built** — no `codify` job runs today. (Chartered
 jobs in general are no longer hypothetical: the `sync` remit's `digest` Skill runs
-on a nightly schedule — see ADR-0003/0015.) The term is defined here so Skills and
+via a scheduled Routine — see ADR-0003/0015.) The term is defined here so Skills and
 journal content can refer to it consistently until it exists.
 
 ### Spawn (a Tenant / Space)
