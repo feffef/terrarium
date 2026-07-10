@@ -27,7 +27,7 @@ const props = defineProps<{
 // The shared state — normally provided by the specimen page; a wheel seated
 // without a provider (a gallery, a future composite) makes its own.
 const almanac = useAlmanac() ?? provideAlmanac({ phases: () => props.phases ?? [] })
-const { day, setDay, today, marks } = almanac
+const { day, setDay, today, marks, engage } = almanac
 
 // SSR-stable ids for the <defs> this instance owns (patterns, label paths).
 const uid = useId()
@@ -159,6 +159,7 @@ function pointerAngle(e: PointerEvent): number {
 
 function onPointerDown(e: PointerEvent) {
   if (!svgEl.value || (e.pointerType === 'mouse' && e.button !== 0)) return
+  engage() // the reader has the needle — the essay's ink may follow it now (#283)
   svgEl.value.setPointerCapture(e.pointerId)
   scrubbing.value = true
   dragAngle = unwrapAngle(displayAngle.value, pointerAngle(e))
@@ -208,6 +209,7 @@ function onKeydown(e: KeyboardEvent) {
       return
   }
   e.preventDefault()
+  engage() // a keyboard scrub engages the dial exactly as a pointer grab does
   setDay(next)
   commitDayToUrl()
 }

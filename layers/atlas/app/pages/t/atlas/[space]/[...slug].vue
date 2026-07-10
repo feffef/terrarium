@@ -11,9 +11,11 @@
 // in-biome (mirrors ADR-0012), so nothing queries a sibling. `biomeMeta`, the
 // utils and the Atlas* components arrive via Nuxt's layer-wide auto-imports;
 // only the types still import relatively — `PhenologyPhase` types the almanac's
-// phase list below; `entry`'s shape (below) is otherwise left to inference. The
+// phase list below, `AlmanacObservation` the ledger the essay's `::sighting`
+// quotes; `entry`'s shape (below) is otherwise left to inference. The
 // three-`queryCollection` load itself is single-homed in the `useAtlasWingData`
 // composable — the sibling `[space]/index.vue` landing needs the exact same load.
+import type { AlmanacObservation } from '../../../../utils/almanacState'
 import type { PhenologyPhase } from '../../../../utils/atlas'
 
 const route = useRoute()
@@ -48,6 +50,11 @@ const phenologyPhases = computed<PhenologyPhase[]>(() => entry.value?.specimen.p
 provideAlmanac({
   phases: phenologyPhases,
   initialDay: parseAlmanacDayParam(route.query.day),
+  // The biome's ledger + this page's own inhabitant, so a `::sighting{date}`
+  // in the essay can quote the observation's note without retyping it (#283).
+  // Same-Space reads only — `observations` is this biome's keyed collection.
+  observations: () => (data.value?.observations ?? []) as AlmanacObservation[],
+  specimen: () => entry.value?.specimen.slug,
 })
 // The dial's rim ticks read the whole biome's dated ledger (map #279), not
 // just this specimen's sightings — only `date` is passed.
