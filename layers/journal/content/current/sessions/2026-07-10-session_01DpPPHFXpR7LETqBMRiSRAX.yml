@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01DpPPHFXpR7LETqBMRiSRAX
 startedAt: 2026-07-10T21:33:12Z
-endedAt: 2026-07-10T21:47:36Z
+endedAt: 2026-07-10T21:59:15Z
 kind: interactive
 goal: "Test #288 Claude_Code_Remote permission prompt"
 status: completed
 outcome: Confirmed real bug; fix is environment-level
-summary: "Human-instructed: ran issue #288's fresh-session reproduction to tell reload-lag from a real allowlist bug. Exercised send_later + delete_trigger (both correctly allowlisted) and, as control, two github tools. The session owner reported Android-app observations live: both Claude_Code_Remote calls prompted; both github calls (one NOT allowlisted) ran silently. Posted first findings, then the owner pushed back (user-level settings are ephemeral; had I actually web-researched?). I had not — so I ran the Claude-Code guide agent against official docs. Doc-backed correction: github tools are likely built-in cloud tools (not MCP), so the control was invalid; project allow-rules for MCP appear gated on workspace-trust unavailable in an ephemeral container. Net: #287's casing fix is inert here; likely a platform limitation/bug, no repo-side fix. Posted a correction comment and left #288 open, recommending an Anthropic /feedback report."
+summary: "Human-instructed: ran issue #288's fresh-session reproduction to tell reload-lag from a real allowlist bug. Exercised send_later + delete_trigger (both correctly allowlisted) and, as control, two github tools. The session owner reported Android-app observations live: both Claude_Code_Remote calls prompted; both github calls (one NOT allowlisted) ran silently. Posted first findings, then the owner pushed back (user-level settings are ephemeral; had I actually web-researched?). I had not — so I ran the Claude-Code guide agent against official docs. I posted a doc-backed correction claiming github is built-in (not MCP) — but the owner's /context panel showed BOTH github and Claude_Code_Remote registered as MCP servers, disproving it. Posted a third, retraction comment with the corrected diagnosis: both are MCP, the github control is valid, and the differentiator is a per-server auto-trust applied to github but not Claude_Code_Remote. Net: #287's casing fix is inert here; likely a platform per-server-trust limitation/bug, no repo-side fix. Left #288 open, recommending an Anthropic /feedback report. No edit-comment tool exists, so the wrong comment was superseded by a retraction rather than edited in place."
 prs: []
 docsRead: []
 skillsUsed:
@@ -14,35 +14,44 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: context
+    reason: (invoked as a slash command)
 frictions:
   - description: The agent cannot observe the client-side permission dialog, so a "does it prompt?" test needs a human on the app to report each outcome.
     solution: Expose live permission-decision events to the session transcript, or a self-introspect of effective permission state, so prompt/no-prompt is machine-observable.
     severity: moderate
-  - description: I posted a confident diagnosis before doing any web research; the owner had to prod me to actually check docs, which then corrected the framing (github is built-in, not MCP).
+  - description: I posted a confident diagnosis before doing any web research; the owner had to prod me to actually check docs.
     solution: For behavior-of-the-harness questions, research authoritative docs BEFORE posting a conclusion, not after being challenged.
     severity: moderate
+  - description: I then posted the research agent's "github is built-in, not MCP" inference to the issue without verifying it; the /context tool registry (both are MCP servers) disproved it.
+    solution: Verify a subagent's doc-derived claim against locally observable ground truth before publishing it externally; the /context registry was the check I skipped.
+    severity: moderate
+  - description: No GitHub MCP tool (nor gh CLI) can edit an existing issue comment body, so a wrong published comment can only be superseded by a new retraction comment, not edited.
+    solution: Expose an update-issue-comment tool, or accept retraction-comment as the correction pattern.
+    severity: minor
   - description: "Project .claude/settings.json permissions.allow is inert for MCP tools in the remote session; #287's correctly-cased entries still prompt for Claude_Code_Remote."
     solution: Fix at environment/client level — trust the Claude_Code_Remote server like github, or require MCP allow-rules in user-level/managed settings; document which the env honors.
     severity: minor
   - description: Android permission dialog has no "Don't ask again"/"Always allow", so the client can never persist an allow decision and every session re-prompts.
     solution: Add a persist-allow affordance to the app's MCP permission dialog.
     severity: minor
-durationSec: 864
+durationSec: 1563
 models:
-  claude-opus-4-8: 59
+  claude-opus-4-8: 78
 toolCounts:
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__issue_read: 1
-  Bash: 6
+  Bash: 7
   mcp__Claude_Code_Remote__send_later: 2
   mcp__Claude_Code_Remote__delete_trigger: 1
   mcp__github__pull_request_read: 1
   AskUserQuestion: 1
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 3
   Skill: 2
   Write: 1
   Agent: 1
-  Edit: 3
+  Edit: 7
+  Read: 1
 subagents:
   - type: claude-code-guide
     task: Research Claude Code MCP permissions on web
@@ -50,6 +59,7 @@ gitBranch: claude/android-app-test-288-ecwmzg
 entrypoint: remote_mobile
 cliVersion: 2.1.206
 learnings:
-  - Claude Code on the web's github tools are built-in cloud tools (GitHub-proxy auth), not a user MCP server — so they bypass MCP permission rules entirely; a non-allowlisted github tool running silently is NOT evidence the allowlist works.
-  - Project-scoped .claude/settings.json allow-rules for user-added MCP servers appear inert in ephemeral cloud sessions (workspace-trust gated per docs); no documented repo-side lever reliably fixes it.
+  - "The /context panel is the ground-truth registry of what is an MCP server: it listed BOTH github and Claude_Code_Remote under MCP Tools, disproving the research agent's 'github is built-in, not MCP' inference."
+  - In this cloud session the github MCP server is auto-trusted (silent even for non-allowlisted tools) while Claude_Code_Remote is not (prompts even when allowlisted) — a per-server trust difference, not casing/format and not the project allowlist.
+  - Project-scoped .claude/settings.json allow-rules for a user-added MCP server appear inert in ephemeral cloud sessions; no documented repo-side lever reliably fixes it.
   - In an ephemeral remote container, only repo-committed or Anthropic-server-side (managed/org) config is durable; a hand-written ~/.claude/settings.json evaporates and a SessionStart hook that writes it likely lands after permission load.
