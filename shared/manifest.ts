@@ -1,7 +1,8 @@
 // The Tenant manifest: the small, declarative unit an agent authors (ADR-0002).
-// Agents edit `layers/<tenant>/tenant.config.ts`; the generator expands the
-// Tenant × Space × Collection cross-product into the keyed collections in the
-// generated `content.config.ts`. Agents never hand-write the keyed explosion.
+// Agents edit `layers/<tenant>/tenant.config.ts`; `shared/expand.ts` expands the
+// Tenant × Space × Collection cross-product into the keyed collections that
+// `content.config.ts` builds dynamically (ADR-0013). Agents never hand-write
+// the keyed explosion.
 import { z, type ZodObject, type ZodRawShape } from 'zod'
 
 export type CollectionType = 'page' | 'data'

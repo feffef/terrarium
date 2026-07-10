@@ -24,20 +24,15 @@ and lets the suite grow additively: spawning a Tenant that needs tests adds a
 
 ## The e2e gate is ONE build — do not split it
 
-L2 (smoke render) needs `@nuxt/test-utils`' `setup()`, which runs a full
-`nuxt build`. Vitest isolates each **spec file** into its own worker, so every
-extra e2e `*.spec.ts` re-runs `setup()` and pays for **another** build —
-multiplying the gate's slowest step by the number of Tenants.
-
-So there is exactly **one** e2e spec: `tests/e2e/smoke.spec.ts`. It owns the sole
+There is exactly **one** e2e spec: `tests/e2e/smoke.spec.ts`. It owns the sole
 `setup()` and runs the cross-Tenant entry-route sweep. Each Tenant's e2e
 assertions live in its layer as a `register…()` module (e.g.
 `layers/journal/tests/e2e/journal.e2e.ts`) that the smoke spec **imports and
 calls inside its single `describe`** — so they share the one build.
 
-**Do not "clean this up" into per-Tenant e2e spec files.** The register-module
-indirection is deliberate; sibling spec files are the regression ADR-0004's
-amendment records against. To add e2e coverage for a new Tenant: write
+**Do not "clean this up" into per-Tenant e2e spec files** — see ADR-0004's
+2026-07-07 amendment for why splitting them multiplies the gate's build cost.
+To add e2e coverage for a new Tenant: write
 `layers/<tenant>/tests/e2e/<tenant>.e2e.ts` exporting a `register…(ctx)`
 function, then add one import + one call in `tests/e2e/smoke.spec.ts`.
 
