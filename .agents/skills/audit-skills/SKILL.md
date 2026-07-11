@@ -161,7 +161,7 @@ from the full logs, not the Phase A screen alone). Phase A's screen on its own
 never reaches this step — it must clear Phase B first.
 
 **This step is for our own (`external: false`) Skills only.** A pack Skill's
-SKILL.md is not ours to patch (ADR-0005) — for an under-used *external* Skill,
+SKILL.md is not ours to patch (ADR-0015) — for an under-used *external* Skill,
 the only lever we own is its Inventory `role` (step 3).
 
 For each own Skill flagged by either signal:
