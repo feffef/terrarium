@@ -13,7 +13,7 @@
 // the shared `specimensBySlug` lookup) is single-homed in the
 // `useAtlasWingData` composable — the sibling `[...slug].vue` entry page needs
 // the exact same load (code review; see that composable's header for why).
-import type { PhenologyPhase, SpecimenView } from '../../../../utils/atlas'
+import type { SpecimenView } from '../../../../utils/atlas'
 
 const route = useRoute()
 const { space, pagesKey, collections } = useSpace('atlas')
@@ -45,20 +45,24 @@ const withRhythm = computed(() => specimens.value.filter((s) => s.activity))
 const almanac = provideAlmanac({ initialDay: parseAlmanacDayParam(route.query.day) })
 const withPhenology = computed(() => specimens.value.filter((s) => (s.phenology?.phases.length ?? 0) > 0))
 const currentSeason = computed(() => seasonOf(almanac.day.value))
+// Carry the wheel's day onto the specimen links, so clicking a name in the
+// roster opens that specimen's page on the same season the reader is viewing
+// here (dropped when it's today — keeps the canonical URL clean).
+const daySuffix = computed(() =>
+  almanac.day.value === almanac.today ? '' : `?day=${almanac.day.value}`,
+)
 // Who is astir on the needle's day — a specimen with a non-quiet phase covering
-// it — paired with that active phase's label. Turning the dial re-reads this,
-// so the wing's roster changes season by season with the needle.
-const astir = computed(() => {
-  const out: { s: SpecimenView; phase: PhenologyPhase }[] = []
-  for (const s of withPhenology.value) {
-    const phase = s.phenology!.phases.find((p) => !p.quiet && inSpan(almanac.day.value, p.span))
-    if (phase) out.push({ s, phase })
-  }
-  return out
-})
+// it. Turning the dial re-reads this, so the wing's roster changes season by
+// season with the needle. (We test the phases but never show their names — the
+// six seasons are the reader's vocabulary; the roster shows the common name.)
+const astir = computed(() =>
+  withPhenology.value.filter((s) =>
+    s.phenology!.phases.some((p) => !p.quiet && inSpan(almanac.day.value, p.span)),
+  ),
+)
 // The rest of the phenology-carrying wing — present, but keeping to itself.
 const resting = computed(() => {
-  const abroad = new Set(astir.value.map((x) => x.s.slug))
+  const abroad = new Set(astir.value.map((s) => s.slug))
   return withPhenology.value.filter((s) => !abroad.has(s.slug))
 })
 // Shared hover state: a roster row and the catalogue each set this one ref, so
@@ -117,14 +121,14 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
             <p class="roster-season">In {{ currentSeason.label }}</p>
             <ul v-if="astir.length" class="roster-astir">
               <li
-                v-for="a in astir"
-                :key="a.s.slug"
-                :style="sigStyle(a.s)"
-                @mouseenter="hoveredSpecimen = a.s.slug"
+                v-for="s in astir"
+                :key="s.slug"
+                :style="sigStyle(s)"
+                @mouseenter="hoveredSpecimen = s.slug"
                 @mouseleave="hoveredSpecimen = null"
               >
-                <NuxtLink class="rname" :to="`/t/atlas/${space}/${a.s.slug}`">{{ a.s.binomial }}</NuxtLink>
-                <span class="rphase">{{ a.phase.label }}</span>
+                <NuxtLink class="rname" :to="`/t/atlas/${space}/${s.slug}${daySuffix}`">{{ s.binomial }}</NuxtLink>
+                <span v-if="s.common" class="rcommon">{{ s.common }}</span>
               </li>
             </ul>
             <p v-else class="roster-none">Nothing is abroad; the wing keeps to itself this season.</p>
@@ -132,7 +136,7 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
               <span class="rq-label">Keeping quiet:</span>
               <span v-for="(r, i) in resting" :key="r.slug"
                 >{{ i ? ', ' : ' ' }}<NuxtLink
-                  :to="`/t/atlas/${space}/${r.slug}`"
+                  :to="`/t/atlas/${space}/${r.slug}${daySuffix}`"
                   @mouseenter="hoveredSpecimen = r.slug"
                   @mouseleave="hoveredSpecimen = null"
                   >{{ r.binomial }}</NuxtLink
@@ -220,11 +224,10 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
   border-bottom: 1px solid transparent;
 }
 .roster-astir .rname:hover { color: var(--biome-accent); border-bottom-color: currentColor; }
-.roster-astir .rphase {
-  font-family: var(--atlas-label);
-  font-size: 0.68rem;
-  text-transform: lowercase;
-  letter-spacing: 0.05em;
+.roster-astir .rcommon {
+  font-family: var(--atlas-text);
+  font-style: italic;
+  font-size: 0.82rem;
   color: var(--atlas-muted);
   text-align: right;
 }

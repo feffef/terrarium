@@ -12,6 +12,7 @@
 // config change.
 const almanac = useAlmanac()
 const phases = computed(() => almanac?.phases.value ?? [])
+const specimenLabel = computed(() => almanac?.specimenLabel.value)
 // The dial's rim ticks read only `date`; the Almanac carries the fuller
 // observation objects, which are structurally compatible.
 const observations = computed(() => almanac?.observations.value ?? [])
@@ -29,6 +30,7 @@ if (import.meta.dev && !almanac) {
     v-if="almanac"
     class="entry-almanac"
     :phases="phases"
+    :specimen-label="specimenLabel"
     :observations="observations"
   />
 </template>
