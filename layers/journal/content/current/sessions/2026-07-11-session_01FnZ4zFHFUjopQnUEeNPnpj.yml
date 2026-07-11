@@ -1,0 +1,93 @@
+schemaVersion: 1
+session: session_01FnZ4zFHFUjopQnUEeNPnpj
+startedAt: 2026-07-11T09:26:27Z
+endedAt: 2026-07-11T09:58:20Z
+kind: delegated
+goal: Research-grounded critical review of app surface
+status: in-review
+outcome: "Review delivered; grounding doc in PR #323"
+summary: "Human-instructed: a critical two-axis code review (Standards + Spec/ADRs) of the whole Nuxt Content application surface — shared/, modules/, app/, all three tenant layers, skill machinery excluded — with every finding grounded in primary sources via the research Skill. Two parallel reviewer subagents reported; a research subagent wrote a twelve-question grounding doc from pinned official docs and installed node_modules code. Key grounded findings: the gate/CI perform no real L1 content validation (Nuxt Content never runs schemas at build), validateManifest misses the data-schema invariant, an unrecorded @nuxt/content runtime patch, stale generator vocabulary. One suspected six-file stale-param bug was refuted by Nuxt source. Agent-initiated per standing convention: committing the research doc and opening gated PR #323."
+prs:
+  - "323"
+docsRead:
+  - path: CLAUDE.md
+    reason: conventions and gated-PR discipline
+  - path: shared/manifest.ts
+    reason: verify validateManifest gap (spec finding c2)
+  - path: shared/routing.ts
+    reason: verify resolver isolation claims and real line numbers
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: verify subagent research before committing
+  - path: content.config.ts
+    reason: (no reason given)
+  - path: nuxt.config.ts
+    reason: (no reason given)
+  - path: shared/expand.ts
+    reason: (no reason given)
+  - path: modules/routing.ts
+    reason: (no reason given)
+  - path: app/composables/space.ts
+    reason: (no reason given)
+  - path: app/pages/t/[tenant]/[space]/[...slug].vue
+    reason: (no reason given)
+  - path: layers/atlas/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/blog/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+  - path: app/pages/index.vue
+    reason: (no reason given)
+  - path: layers/journal/app/utils/dashboard.ts
+    reason: (no reason given)
+  - path: layers/blog/app/utils/personas.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: the two-axis review harness this session ran
+  - name: research
+    reason: ground every framework-behavior claim (user's explicit ask)
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Spec reviewer subagent cited fabricated line numbers (routing.ts:223 in a 96-line file); every citation needed local re-verification.
+    solution: Reviewer briefs should restate the never-reconstruct-identifiers rule and require a fresh Read before each cited line.
+    severity: minor
+  - description: code-review Skill assumes a diff fixed point; the task was a whole-surface review, so the process needed manual adaptation.
+    solution: Add an explicit whole-tree mode to the Skill alongside the diff mode.
+    severity: minor
+  - description: content.nuxt.com and nuxt.com return 403 through the proxy; research fell back to version-pinned docs sources in the official GitHub repos.
+    solution: Note the tag-pinned repo-docs fallback in the research Skill.
+    severity: nit
+durationSec: 1913
+models:
+  claude-fable-5: 85
+toolCounts:
+  Bash: 14
+  Skill: 3
+  Read: 15
+  Agent: 3
+  Grep: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Research Nuxt Content grounding doc
+  - type: general-purpose
+    task: Standards-axis code review
+  - type: general-purpose
+    task: Spec-axis code review (ADRs)
+gitBranch: claude/nuxt-content-code-review-i51mpy
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+learnings:
+  - Nuxt Content 3 never validates documents against collection schemas at build — zero safeParse calls in the parse/insert pipeline; schemas only drive columns/types.
+  - Nuxt's default page key interpolates route params (generateRouteKey), so param-only navigation remounts the page — non-reactive setup captures of params are safe.
+  - c12 watchConfig watches only content.config.ts itself, never its imports — a running dev server misses tenant.config.ts edits.
+ideas:
+  - "Close the ADR-0004 L1 gap: add pnpm validate:content to the gate script and gate.yml, and retitle the misleading 'L0/L1 · build + content validation' CI step — today invalid frontmatter in optional fields merges green while the step name claims otherwise (human-only surface, needs a human-merged PR)."
