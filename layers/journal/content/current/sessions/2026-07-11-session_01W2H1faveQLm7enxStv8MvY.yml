@@ -1,0 +1,61 @@
+schemaVersion: 1
+session: session_01W2H1faveQLm7enxStv8MvY
+startedAt: 2026-07-11T05:42:24Z
+endedAt: 2026-07-11T05:57:11Z
+kind: interactive
+goal: Make external pack skills off limits to edit
+status: in-review
+outcome: Reverted wayfinder; guarded frictions-to-fixes and CLAUDE.md
+summary: "User reported that PR #304 had patched the external wayfinder Skill, which should be off limits. Confirmed via skills-lock.json that wayfinder is a pinned pack Skill (from mattpocock/skills) and its on-disk content had drifted from the pinned hash. ADR-0015 already states pack SKILL.md files are not ours to patch, but only wired that boundary into the audit-skills referral stage, leaving frictions-to-fixes free to patch a pack Skill named by a friction directly (what happened via #296). All work was human-directed by the user's request: reverted wayfinder/SKILL.md to its install-commit content, added a CLAUDE.md ground-rule pointer, and closed the frictions-to-fixes loophole (screen out pack-Skill edits in section 2; corrected section 5 wording to \"a repo-owned SKILL\"). Gate green; opened PR #306."
+prs:
+  - "306"
+docsRead:
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: establishes pack SKILL.md is not ours to patch
+  - path: docs/adr/0005-skill-model.md
+    reason: "skill model: generic, repo-committed, first-class"
+  - path: skills-lock.json
+    reason: authoritative list of external pack Skills
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: the mechanism that produced the bad edit
+  - path: .agents/skills/wayfinder/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/wayfinder.yml
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "No gate/script verifies on-disk pack Skills against skills-lock.json's computedHash, so PR #304's wayfinder drift went undetected until a human noticed it."
+    solution: Add a lightweight lock-integrity check (drift-check style) that flags any skills-lock.json-keyed SKILL.md whose content no longer matches upstream.
+    severity: moderate
+  - description: The lock's computedHash did not match a plain sha256 of the installed SKILL.md (nor the install-commit blob), so I could not use it to confirm the correct revert target directly.
+    solution: Document how computedHash is derived (upstream source vs installed file) near skills-lock.json or in the install script.
+    severity: minor
+durationSec: 887
+models:
+  claude-opus-4-8: 80
+toolCounts:
+  ToolSearch: 2
+  Bash: 17
+  Read: 7
+  mcp__github__pull_request_read: 3
+  Edit: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - CLAUDE.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+gitBranch: claude/finder-skill-external-protection-7fntpn
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+ideas:
+  - Add a `verify:skills-lock` step that hashes each skills-lock.json-keyed SKILL.md and fails if it diverges from the pinned upstream, turning the "external skills are off limits" rule from prose-only into an enforced gate so a future frictions-to-fixes-style edit can't land silently.
