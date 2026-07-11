@@ -103,15 +103,18 @@ export function relationsFor(slug: string, edges: Edge[]): Relation[] {
 // ── Activity rhythm (#73) ────────────────────────────────────────────────────
 export type Band = [number, number]
 
-/** True when hour `h` (0–23) falls inside any active band. Bands may wrap past
- *  midnight (e.g. [20, 4] means 20:00→04:00), so the wrap case is handled. */
-export function activeAt(hour: number, bands: Band[]): boolean {
+/** True when hour `h` (0–23) falls inside any of a Specimen's active bands.
+ *  Bands may wrap past midnight (e.g. [20, 4] means 20:00→04:00), so the wrap
+ *  case is handled. Named with Specimen vocabulary, not generic `activeAt` —
+ *  the auto-import namespace is global across every layer (tenant-layers.md
+ *  §1), and `activeAt` is exactly generic enough for another Tenant to mint. */
+export function specimenActiveAt(hour: number, bands: Band[]): boolean {
   return bands.some(([a, b]) => (a <= b ? hour >= a && hour < b : hour >= a || hour < b))
 }
 
 /** 24 booleans, midnight→midnight — the rhythm band's cells. */
 export function rhythmCells(bands: Band[]): boolean[] {
-  return Array.from({ length: 24 }, (_, h) => activeAt(h, bands))
+  return Array.from({ length: 24 }, (_, h) => specimenActiveAt(h, bands))
 }
 
 // ── Color signature (#68) ────────────────────────────────────────────────────
@@ -142,8 +145,10 @@ export interface SpecimenView {
   illustration?: string
 }
 
-/** Path → slug: '/lumina-fabulae' → 'lumina-fabulae'; the Space root is ''. */
-export function slugOf(path: string): string {
+/** Specimen document path → slug: '/lumina-fabulae' → 'lumina-fabulae'; the Space
+ *  root is ''. Named with Specimen vocabulary, not generic `slugOf` — same
+ *  collision-risk reasoning as `specimenActiveAt` above (tenant-layers.md §1). */
+export function specimenSlugOf(path: string): string {
   return path.replace(/^\//, '')
 }
 
@@ -167,9 +172,9 @@ export interface RawSpecimenDoc {
 /** Project a queried Specimen Document into the view model the components read. */
 export function toSpecimenView(d: RawSpecimenDoc): SpecimenView {
   return {
-    slug: slugOf(d.path),
+    slug: specimenSlugOf(d.path),
     path: d.path,
-    binomial: d.title ?? slugOf(d.path),
+    binomial: d.title ?? specimenSlugOf(d.path),
     common: d.commonName ?? d.description ?? '',
     blurb: d.description ?? '',
     classification: d.classification,

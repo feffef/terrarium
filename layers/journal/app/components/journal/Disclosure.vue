@@ -17,7 +17,7 @@
 // (`useId()`) to point `aria-controls` at, but the digest rows' panel does
 // not — passing `undefined` simply omits the attribute, matching the digest
 // row's previous behavior exactly.
-const { expanded, controls } = defineProps<{ expanded: boolean; controls?: string }>()
+const { expanded, controls = undefined } = defineProps<{ expanded: boolean; controls?: string }>()
 const emit = defineEmits<{ toggle: [] }>()
 </script>
 

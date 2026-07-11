@@ -4,7 +4,7 @@
 // (#73) — a bug in either is invisible in a screenshot, so it's pinned here.
 import { describe, expect, it } from 'vitest'
 import {
-  activeAt,
+  specimenActiveAt,
   rarityMeta,
   relationLabel,
   relationsFor,
@@ -53,18 +53,18 @@ describe('relationsFor()', () => {
   })
 })
 
-describe('activeAt() / rhythmCells()', () => {
+describe('specimenActiveAt() / rhythmCells()', () => {
   it('matches a simple daytime band', () => {
-    expect(activeAt(10, [[8, 17]])).toBe(true)
-    expect(activeAt(17, [[8, 17]])).toBe(false) // end is exclusive
-    expect(activeAt(7, [[8, 17]])).toBe(false)
+    expect(specimenActiveAt(10, [[8, 17]])).toBe(true)
+    expect(specimenActiveAt(17, [[8, 17]])).toBe(false) // end is exclusive
+    expect(specimenActiveAt(7, [[8, 17]])).toBe(false)
   })
 
   it('handles a band that wraps past midnight', () => {
     const bands: [number, number][] = [[20, 4]]
-    expect(activeAt(22, bands)).toBe(true)
-    expect(activeAt(2, bands)).toBe(true)
-    expect(activeAt(12, bands)).toBe(false)
+    expect(specimenActiveAt(22, bands)).toBe(true)
+    expect(specimenActiveAt(2, bands)).toBe(true)
+    expect(specimenActiveAt(12, bands)).toBe(false)
   })
 
   it('renders 24 cells and counts an ever-waking creature as always on', () => {

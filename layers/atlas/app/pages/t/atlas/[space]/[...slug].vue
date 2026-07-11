@@ -10,44 +10,41 @@
 // and sightings are same-Space reads — the food-web edges were authored
 // in-biome (mirrors ADR-0012), so nothing queries a sibling. `biomeMeta`, the
 // utils and the Atlas* components arrive via Nuxt's layer-wide auto-imports;
-// only the types still import relatively.
-import type { Edge, SpecimenView } from '../../../../utils/atlas'
+// only the types still import relatively — none needed directly here now that
+// `entry`'s shape (below) is left to inference. The three-`queryCollection`
+// load itself is single-homed in the `useAtlasWingData` composable — the
+// sibling `[space]/index.vue` landing needs the exact same load (code review).
 
 const route = useRoute()
 const { space, path, pagesKey, collections } = useSpace('atlas')
-
-const { data } = await useAsyncData(route.path, async () => {
-  // One query serves both the entry itself and the rest of the wing (for
-  // counterpart names on relations + log mentions) — the doc is in `pages`.
-  const pages = await queryCollection(pagesKey).all()
-  const interactions = await queryCollection(collections.interactions).all()
-  const observations = await queryCollection(collections.observations).all()
-  return { pages, interactions, observations }
+const { data, edges, observations, specimensBySlug } = await useAtlasWingData(route.path, {
+  pagesKey,
+  collections,
 })
 
 const meta = biomeMeta(space)
-const doc = computed(() => data.value?.pages.find((p) => p.path === path) ?? null)
-const specimen = computed<SpecimenView | null>(() =>
-  doc.value ? toSpecimenView(doc.value) : null,
-)
-const specimensBySlug = computed(() =>
-  Object.fromEntries(
-    (data.value?.pages ?? []).filter((p) => p.path !== '/').map(toSpecimenView).map((s) => [s.slug, s]),
-  ),
-)
-const edges = computed<Edge[]>(() => (data.value?.interactions ?? []) as Edge[])
+// `doc` and `specimen` are bundled into one `entry` so the template narrows
+// both together from a single `v-if="entry"` — the code review flagged the
+// previous `doc!` non-null assertion in the template (the `specimen`/`doc`
+// computeds were separate refs, so narrowing one didn't narrow the other for
+// vue-tsc). No cast needed: the return type is left to inference so `doc`
+// keeps the exact generated `pages` item shape `ContentRenderer` expects.
+const entry = computed(() => {
+  const doc = data.value?.pages.find((p) => p.path === path) ?? null
+  return doc ? { doc, specimen: toSpecimenView(doc) } : null
+})
 const relations = computed(() =>
-  specimen.value ? relationsFor(specimen.value.slug, edges.value) : [],
+  entry.value ? relationsFor(entry.value.specimen.slug, edges.value) : [],
 )
 const sightings = computed(() =>
-  (data.value?.observations ?? []).filter((o) => o.specimen === specimen.value?.slug),
+  observations.value.filter((o) => o.specimen === entry.value?.specimen.slug),
 )
-const sigStyle = computed(() => signatureVars(specimen.value?.signature?.colors))
+const sigStyle = computed(() => signatureVars(entry.value?.specimen.signature?.colors))
 
-const title = computed(() => specimen.value?.binomial ?? 'Not found')
+const title = computed(() => entry.value?.specimen.binomial ?? 'Not found')
 useSeoMeta({
   title: () => `${title.value} · The Atlas of the Terrarium`,
-  description: () => specimen.value?.common,
+  description: () => entry.value?.specimen.common,
 })
 </script>
 
@@ -57,57 +54,57 @@ useSeoMeta({
       <p class="atlas-crumb">
         <NuxtLink to="/t/atlas">The Atlas</NuxtLink><span class="sep">·</span>
         <NuxtLink :to="`/t/atlas/${space}`">{{ meta.name }}</NuxtLink><span class="sep">·</span>
-        <span class="here">{{ specimen?.binomial ?? 'unknown' }}</span>
+        <span class="here">{{ entry?.specimen.binomial ?? 'unknown' }}</span>
       </p>
 
-      <article v-if="specimen">
+      <article v-if="entry">
         <AtlasSpecimenPlate
-          :illustration="specimen.illustration"
-          :number="specimen.plate?.number"
-          :binomial="specimen.binomial"
-          :conjectural="specimen.plate?.conjectural"
+          :illustration="entry.specimen.illustration"
+          :number="entry.specimen.plate?.number"
+          :binomial="entry.specimen.binomial"
+          :conjectural="entry.specimen.plate?.conjectural"
         />
 
         <div class="atlas-label">
-          <h1 class="binomial">{{ specimen.binomial }}</h1>
-          <p v-if="specimen.common" class="common">{{ specimen.common }}</p>
+          <h1 class="binomial">{{ entry.specimen.binomial }}</h1>
+          <p v-if="entry.specimen.common" class="common">{{ entry.specimen.common }}</p>
 
           <dl class="record">
-            <template v-if="specimen.classification">
-              <dt>class</dt><dd>{{ specimen.classification }}</dd>
+            <template v-if="entry.specimen.classification">
+              <dt>class</dt><dd>{{ entry.specimen.classification }}</dd>
             </template>
-            <template v-if="specimen.rarity">
-              <dt>rarity</dt><dd><AtlasRarityMark :grade="specimen.rarity" :show-grade="true" /></dd>
+            <template v-if="entry.specimen.rarity">
+              <dt>rarity</dt><dd><AtlasRarityMark :grade="entry.specimen.rarity" :show-grade="true" /></dd>
             </template>
-            <template v-if="specimen.size">
-              <dt>size</dt><dd>{{ specimen.size }}</dd>
+            <template v-if="entry.specimen.size">
+              <dt>size</dt><dd>{{ entry.specimen.size }}</dd>
             </template>
-            <template v-if="specimen.diet">
-              <dt>diet</dt><dd>{{ specimen.diet }}</dd>
+            <template v-if="entry.specimen.diet">
+              <dt>diet</dt><dd>{{ entry.specimen.diet }}</dd>
             </template>
-            <template v-if="specimen.activity">
-              <dt>active</dt><dd>{{ specimen.activity.label }}</dd>
+            <template v-if="entry.specimen.activity">
+              <dt>active</dt><dd>{{ entry.specimen.activity.label }}</dd>
             </template>
-            <template v-if="specimen.signature">
+            <template v-if="entry.specimen.signature">
               <dt>signature</dt>
-              <dd><AtlasColorSignature :colors="specimen.signature.colors" :gloss="specimen.signature.gloss" /></dd>
+              <dd><AtlasColorSignature :colors="entry.specimen.signature.colors" :gloss="entry.specimen.signature.gloss" /></dd>
             </template>
           </dl>
 
           <AtlasRhythmBand
-            v-if="specimen.activity"
+            v-if="entry.specimen.activity"
             class="entry-rhythm"
-            :bands="specimen.activity.bands"
-            :label="specimen.activity.label"
+            :bands="entry.specimen.activity.bands"
+            :label="entry.specimen.activity.label"
           />
         </div>
 
         <div class="atlas-fieldnote atlas-prose">
-          <ContentRenderer :value="doc!" />
+          <ContentRenderer :value="entry.doc" />
         </div>
 
         <section class="entry-section">
-          <div class="atlas-sechead"><span class="atlas-eyebrow">Relations · {{ specimen.binomial }}</span></div>
+          <div class="atlas-sechead"><span class="atlas-eyebrow">Relations · {{ entry.specimen.binomial }}</span></div>
           <AtlasRelationsList :relations="relations" :specimens-by-slug="specimensBySlug" :biome="space" />
         </section>
 
