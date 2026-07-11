@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01FnZ4zFHFUjopQnUEeNPnpj
 startedAt: 2026-07-11T09:26:27Z
-endedAt: 2026-07-11T20:02:43Z
+endedAt: 2026-07-11T20:19:03Z
 kind: delegated
 goal: Research-grounded review, then fix findings
-status: in-review
-outcome: "Fixes + docs on PR #323; CI runners down"
+status: completed
+outcome: "PR #323 merged; review + fixes landed"
 summary: "Human-instructed, two phases. First: a critical two-axis review (Standards + Spec/ADRs) of the whole application surface, every finding grounded in primary sources via the research Skill (grounding doc committed); one suspected six-file bug was refuted by Nuxt source. Second, on explicit instruction: six parallel Sonnet fix agents repaired everything autonomously fixable (real L1 gate wiring, validateManifest data-schema invariant, Object.hasOwn resolver hardening, layer dedups/renames, retroactive ADR-0019), issues #324/#325 filed for design-decision remainders, and a Fable reviewer vetted the final diff (its must-fix — an ADR overclaiming CI state — was corrected). Local pnpm gate fully green. Blocked externally: workflow files are unpushable (no workflow OAuth scope) and GitHub Actions starts no runners (3s failures), both handed to the human on PR #323. Third, on a further instruction: a Sonnet agent trimmed inline code comments across the app source that narrated previous code state or justified the change down to present-tense rationale (18 files, comment-only, gate green)."
 prs:
   - "323"
@@ -89,12 +89,12 @@ frictions:
   - description: An early `pnpm gate 2>&1 | tail` run masked the gate's exit code behind the pipe, briefly reading a failed gate as exit 0.
     solution: Check PIPESTATUS (or run without a pipe) when the exit code matters.
     severity: nit
-durationSec: 38175
+durationSec: 39156
 models:
   claude-fable-5: 230
-  claude-opus-4-8: 38
+  claude-opus-4-8: 59
 toolCounts:
-  Bash: 38
+  Bash: 41
   Skill: 4
   Read: 24
   Agent: 11
@@ -108,15 +108,16 @@ toolCounts:
   mcp__github__issue_write: 2
   ToolSearch: 2
   mcp__github__get_job_logs: 3
-  Edit: 15
+  Edit: 16
   mcp__github__get_check_run: 1
-  mcp__github__actions_get: 5
+  mcp__github__actions_get: 6
   mcp__github__get_file_contents: 1
   mcp__github__create_or_update_file: 1
   mcp__github__update_pull_request: 1
   mcp__github__add_issue_comment: 1
-  mcp__github__pull_request_read: 3
-  ScheduleWakeup: 1
+  mcp__github__pull_request_read: 4
+  ScheduleWakeup: 2
+  mcp__github__get_commit: 1
 filesEdited:
   - tests/unit/expand.spec.ts
   - layers/journal/app/components/journal/Disclosure.vue
