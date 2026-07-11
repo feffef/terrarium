@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019mWTw7pBb7Ju2wjNxrEDMU
 startedAt: 2026-07-11T09:41:01Z
-endedAt: 2026-07-11T10:11:58Z
+endedAt: 2026-07-11T10:21:45Z
 kind: interactive
 goal: Align frictions-to-fixes doc fixes with audit-docs rules
 status: in-review
-outcome: "Pointers added, gate green, PR #322 open"
-summary: "Human-instructed task: make frictions-to-fixes' self-merged doc commits already honour the refined house rules audit-docs verifies (its three tiers and eight lenses), so a friction fix doesn't ship the duplication / stale-narration / unlinked-doc / Historical-rewrite defect a later audit-docs sweep would raise. Confirmed both skills are repo-owned (not in skills-lock.json), then added two single-homed pointers to audit-docs at the places doc fixes are authored (step 5 dispatch brief) and reviewed (step 6), deferring the definitions to audit-docs/SKILL.md rather than restating them. pnpm gate green; opened gated PR #322 and subscribed to it."
+outcome: "Fixes pushed; PR #322 open, CI billing-blocked"
+summary: "Human-instructed task: make frictions-to-fixes' self-merged doc commits already honour the refined house rules audit-docs verifies (its three tiers and eight lenses), so a friction fix doesn't ship the duplication / stale-narration / unlinked-doc / Historical-rewrite defect a later audit-docs sweep would raise. Confirmed both skills are repo-owned, added two single-homed pointers to audit-docs at the author (step 5) and review (step 6) points, gated green, opened gated PR #322. User then asked whether the change would survive an audit-docs run; I self-audited it, found two real defects it had shipped (a wrong section cross-ref and a partial lens restatement) and fixed them in a follow-up commit. That commit's CI gate can't run — the repo's GitHub Actions is billing-blocked (runners never attach) — so the PR is open but unmergeable on CI, an external block, not the change."
 prs:
   - "322"
 docsRead:
@@ -26,28 +26,34 @@ frictions:
   - description: The pointer I first committed failed audit-docs' own lenses — a wrong section cross-ref and a partial lens-list restatement despite claiming "not restated". Ironic for a change about not shipping such defects.
     solution: Run the target Skill's own checks against an edit to it before committing; caught on a user prompt, fixed in a follow-up commit before merge.
     severity: minor
-durationSec: 1857
+  - description: CI gate failed three times in 3-5s with runner_id 0 and no runner — GitHub Actions billing-blocked, so the PR can't reach a green gate to merge.
+    solution: Diagnosed from the sub-10s no-runner signature (logs 404, empty output); stopped re-running, left PR open, armed an hourly backstop for recovery. Fix is repo-owner billing/spend-limit, outside the session's control.
+    severity: major
+durationSec: 2444
 models:
-  claude-opus-4-8: 100
+  claude-opus-4-8: 135
 toolCounts:
-  Bash: 20
-  Read: 2
-  Edit: 4
+  Bash: 22
+  Read: 3
+  Edit: 5
   ToolSearch: 5
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__Claude_Code_Remote__send_later: 2
+  mcp__Claude_Code_Remote__send_later: 3
   Skill: 2
-  Write: 1
+  Write: 2
   Monitor: 1
   mcp__github__get_job_logs: 2
   mcp__github__get_check_run: 1
-  mcp__github__actions_get: 2
-  mcp__github__actions_run_trigger: 1
-  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__actions_get: 3
+  mcp__github__actions_run_trigger: 2
+  mcp__Claude_Code_Remote__delete_trigger: 2
+  mcp__github__pull_request_read: 2
 filesEdited:
   - .agents/skills/frictions-to-fixes/SKILL.md
 gitBranch: claude/frictions-fixes-house-rules-auhs92
 entrypoint: remote_mobile
 cliVersion: 2.1.207
+learnings:
+  - A CI job that exits in under ~10s with `runner_id` 0 and no runner attached is a provisioning/billing block, not a test failure — distinguish it by duration and runner metadata, don't chase the diff.
