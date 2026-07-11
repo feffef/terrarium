@@ -9,6 +9,25 @@ diet: motes in the water
 activity:
   label: night
   bands: [[20, 24], [0, 4]]
+phenology:
+  phases:
+    - name: few-lights
+      label: the few lights
+      span: [95, 146]
+      gloss: the first lamps of the year, lit low and put out early, as though rationed.
+    - name: full-constellation
+      label: the full constellation
+      span: [146, 246]
+      gloss: eleven lights at middle depth on the good nights, counted twice and disagreed upon.
+    - name: last-lamps
+      label: the last lamps
+      span: [246, 308]
+      gloss: one by one the lights decline to rise; those that do burn later into the grey.
+    - name: dowsed
+      label: the dowsed months
+      span: [308, 95]
+      gloss: no light anywhere in the water; where a drowned star winters, the pool has not seen fit to tell us.
+      quiet: true
 signature:
   colors:
     - { name: drown gold, hex: "#d8b24a" }
@@ -116,4 +135,11 @@ By day there is nothing to find. The drowned star is a swimmer of scarcely a cen
 
 The lamp is dim, and this appears to be the whole art of it. Motes in the water — the fine drifting stuff too small for our lenses and too idle to name — come to that gold point the way dust comes to a sunbeam, and the star gathers them at its leisure. A brighter light would beckon larger company; the drowned star has concluded, we think correctly, that it is better to be a rumour than an announcement.
 
-We recorded eleven lights one night in June and could not swear to more than four the next. Whether they dowse, disperse, or merely decline to be counted twice, we cannot say. On the coldest mornings one will still be faintly alight at dawn, like a lamp forgotten in a distant room, and we have learned to leave it be.
+::phase{of="full-constellation"}
+We recorded eleven lights one night in June and could not swear to more than four the next. Whether they dowse, disperse, or merely decline to be counted twice, we cannot say; the counting is at its most hopeless in :season[the Long Damp]{of="long-damp"}, when the water is warmest and most of the year's lamps are lit.
+::
+
+::sighting{date="2026-06-26"}
+::
+
+On the coldest mornings one will still be faintly alight at dawn, like a lamp forgotten in a distant room, and we have learned to leave it be.
