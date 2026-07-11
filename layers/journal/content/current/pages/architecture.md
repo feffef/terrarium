@@ -8,9 +8,9 @@ onrampBlurb: The tech foundation — Tenants, Spaces, and the deployment model.
 
 # Architecture & Deployment
 
-Terrarium is an experiment: a website built and run almost entirely by AI coding
-agents. This page is the tech foundation — what the app is built on and how it
-ships. For how humans and agents actually work together on it, see [How Humans &
+Terrarium is an experiment: a content platform built and run almost entirely by
+AI coding agents. This page is the tech foundation — what the app is built on and
+how it ships. For how humans and agents actually work together on it, see [How Humans &
 Agents Work](/t/journal/current/how-it-works).
 
 ## The architecture
