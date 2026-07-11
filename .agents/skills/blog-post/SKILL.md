@@ -224,7 +224,14 @@ already in mind:
 
 - `git log --oneline -100` (further back than step 3's `-30` — this section is
   hunting for the best story, not confirming one already in mind), then read
-  the diffs/commits that look genuinely interesting.
+  the diffs/commits that look genuinely interesting. **Adjacency in this output
+  is not evidence of "same PR" or merge order** — this repo merges concurrent
+  branches interleaved, so two neighboring lines can belong to unrelated PRs in
+  either order (and `git blame`/`git log -S` dating against `origin/main` often
+  resolves to a squash-merge boundary commit, not the true origin). Before
+  asserting a PR boundary or ordering claim in the post, confirm it via the
+  GitHub API (`pull_request_read` `get_commits` / `merged_at`) or
+  `scripts/merged-since.ts`.
 - The last ~15–20 files in `layers/journal/content/current/sessions/*.yml`
   (most-recent first) — outcomes and, especially, frictions.
 - `layers/blog/content/*/pages/*.md` — every Persona's recent posts, so you know

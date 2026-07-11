@@ -29,6 +29,12 @@ works only from that report and never re-reads the raw corpus. The subagent
 
 Its brief:
 
+- **Steer the budget at the unfixed tail.** A recurring pattern across cycles: a
+  large share of the window's frictions turn out already resolved by a later
+  in-window session or a merged fix. When a friction is visibly resolved that
+  way, screen it out fast — it's a §2 `drop` — rather than re-deriving its full
+  history; save the deep archaeology for candidates with no in-window
+  resolution. Count recurrence from the **unresolved** occurrences only.
 - **Read the latest 20 session logs** via `pnpm exec tsx scripts/session-frictions.ts`
   (`--window N` to change the count; bare `tsx` isn't on PATH). This is a **recency window, not a
   sample** — read every session in it, don't chase frictions from older,
