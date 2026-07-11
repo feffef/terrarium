@@ -1,6 +1,7 @@
 name: wayfinder
 category: general-engineering
 importance: specialist
+installedSha256: bef437de697fb6984a8a90b7fd82f128609148d6e02f635ce419d03555b351e1
 role: >-
   Charts a shared map of investigation tickets for work too big to fit in one
   session — used once this window to chart the Atlas Phase-2 wayfinder map

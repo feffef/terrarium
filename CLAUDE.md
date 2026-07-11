@@ -81,9 +81,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   file; a genuine improvement to a pack Skill belongs upstream. Only our own
   Skills (those *not* in `skills-lock.json`) are agent-editable. This is
   **gate-enforced**: `pnpm verify:skills-lock` (part of `pnpm gate`) pins each
-  pack Skill's on-disk `SKILL.md` hash in `skills-lock.json` and fails on any
-  drift — after a *legitimate* pack install, re-pin with
-  `pnpm verify:skills-lock --write`.
+  pack Skill's installed `SKILL.md` hash in its **Skill Inventory** entry
+  (`installedSha256`) and fails on any drift — `skills-lock.json` is the
+  installer's file and is left untouched (read-only, only for the pack's key set).
+  After a *legitimate* pack install, re-pin with `pnpm verify:skills-lock --write`.
 - Runtime routing is by path prefix `/t/<tenant>/<space>/<slug>` (ADR-0006). The
   routing map is derived at build time from the manifests via `modules/routing.ts`
   and exposed as the `#routing` virtual module (ADR-0014) — no committed `GENERATED`

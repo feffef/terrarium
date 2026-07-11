@@ -67,6 +67,12 @@ export default defineTenant({
           // this project, NOT a copy of its own description; deeper detail lives
           // in the Skill's own docs. ~80 is the outer limit; beyond that, trim.
           role: z.string(),
+          // Integrity pin for EXTERNAL pack Skills only (those keyed in
+          // skills-lock.json): sha256 of the installed `SKILL.md`, verified by
+          // `pnpm verify:skills-lock` so a pack Skill can't be silently edited
+          // (ADR-0015). Machine-managed — do NOT hand-edit; regenerate with
+          // `pnpm verify:skills-lock --write`. Absent on our own Skills.
+          installedSha256: z.string().optional(),
         })
         .strict(),
     },

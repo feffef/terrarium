@@ -3,50 +3,62 @@
 // to edit**: their `SKILL.md` is not ours to patch, because a re-install of the
 // pack clobbers any local edit (CLAUDE.md "Skills … off limits to edit"). PR #304
 // patched `wayfinder/SKILL.md` — a pack Skill — and the drift went undetected
-// because nothing verified the on-disk files against their pins. This script is
-// that verification.
+// because nothing verified the on-disk files against a known-good reference.
+// This script is that verification.
 //
-// Why not reuse the lock's existing `computedHash`? That value is produced by the
-// external installer over the **upstream source** file (before install-time
-// frontmatter handling), so it does not match a hash of the installed file and is
-// not reproducible offline — unfit for a gate that must run in CI without network.
-// Instead we pin `installedSha256`: the sha256 of the SKILL.md **as it must sit on
-// disk**. `--write` regenerates those pins from the current tree (run it after a
-// legitimate pack install); the default (CI) mode verifies on-disk against them and
-// fails on any drift, missing file, or unpinned entry.
+// Where the reference lives — two files, two owners, kept strictly separate:
+//   • `skills-lock.json` is the **CLI's** file (written by the mattpocock/skills
+//     installer). READ-ONLY here — we read only its keys, to learn *which* Skills
+//     are the external pack, exactly as `audit-skills.ts` does. Never written.
+//   • The **Skill Inventory** (`layers/journal/content/current/skills/*.yml`) is
+//     **ours** — the repo-owned, per-Skill record already curated for role and
+//     importance. Each external pack Skill's entry carries an `installedSha256`
+//     pin: the sha256 of its installed `SKILL.md`. The gate compares on-disk
+//     content against that pin.
+//
+// Why not reuse the lock's `computedHash`? That value is the installer's hash of
+// the **upstream source** (before install-time frontmatter handling), so it does
+// not match a hash of the installed file and is not reproducible offline — unfit
+// for a CI gate. Hence our own `installedSha256` pins.
+//
+// `--write` regenerates the pins in the Inventory from the current tree (run it
+// after a legitimate pack install); the default (CI) mode verifies on-disk against
+// the pins and fails on any drift, missing file, uncatalogued pack Skill, or
+// unpinned entry.
 import { createHash } from 'node:crypto'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { parse as parseYaml } from 'yaml'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
-/** Where pack Skills live on disk, and the lockfile that names them. Kept in sync
- *  with `audit-skills.ts`'s own copies (the single home for "which Skills are the
- *  external pack" is `skills-lock.json` itself; these are just the paths to it). */
+/** Where pack Skills live on disk. */
 export const SKILLS_DIR = '.agents/skills'
+/** The CLI's lockfile — READ-ONLY here; we read only its keys (which Skills are
+ *  the external pack). The single home for "which Skills are external". */
 export const SKILLS_LOCK = 'skills-lock.json'
-
-export interface LockEntry {
-  installedSha256?: string
-  [k: string]: unknown
-}
-export interface SkillsLock {
-  version?: number
-  skills?: Record<string, LockEntry>
-  [k: string]: unknown
-}
+/** The Skill Inventory — our per-Skill record; holds each pack Skill's pin. */
+export const INVENTORY_DIR = 'layers/journal/content/current/skills'
 
 /** sha256 hex of a SKILL.md's raw bytes — the pinned identity of an installed file. */
 export function sha256(content: Buffer | string): string {
   return createHash('sha256').update(content).digest('hex')
 }
 
+/** What the Inventory knows about one pack Skill: whether it has an entry at all,
+ *  and the pin recorded in it (if any). */
+export interface InventoryPin {
+  cataloged: boolean
+  pin?: string
+}
+
 export interface DriftFinding {
   name: string
-  /** `missing` — the SKILL.md is gone; `unpinned` — no `installedSha256` in the
-   *  lock yet (run `--write`); `drifted` — on-disk content ≠ the pin (an edit). */
-  kind: 'missing' | 'unpinned' | 'drifted'
+  /** `missing` — the SKILL.md is gone; `uncataloged` — a pack Skill with no
+   *  Inventory entry (create one); `unpinned` — entry exists but no
+   *  installedSha256 (run `--write`); `drifted` — on-disk content ≠ pin. */
+  kind: 'missing' | 'uncataloged' | 'unpinned' | 'drifted'
   expected?: string
   actual?: string
 }
@@ -56,40 +68,68 @@ export interface VerifyResult {
   findings: DriftFinding[]
 }
 
-/** Pure core: compare each locked entry's pin against the on-disk hash the caller
- *  looked up. `onDisk` maps a pack-Skill name to its current sha256, or `null`
- *  when its SKILL.md is missing. IO lives in the wrappers below so this is unit-testable. */
+/** Pure core: for every external pack Skill, reconcile its Inventory pin against
+ *  the on-disk hash the caller looked up. `onDisk` maps a name to its current
+ *  sha256, or `null` when its SKILL.md is missing. `inv` maps a name to what the
+ *  Inventory holds. IO lives in the wrappers below so this is unit-testable. */
 export function diffLock(
-  skills: Record<string, LockEntry>,
+  externalNames: string[],
+  inv: Map<string, InventoryPin>,
   onDisk: Map<string, string | null>,
 ): VerifyResult {
   const findings: DriftFinding[] = []
-  const names = Object.keys(skills)
-  for (const name of names) {
+  for (const name of externalNames) {
     const actual = onDisk.get(name) ?? null
     if (actual === null) {
       findings.push({ name, kind: 'missing' })
       continue
     }
-    const expected = skills[name]?.installedSha256
-    if (!expected) {
+    const entry = inv.get(name)
+    if (!entry?.cataloged) {
+      findings.push({ name, kind: 'uncataloged', actual })
+      continue
+    }
+    if (!entry.pin) {
       findings.push({ name, kind: 'unpinned', actual })
       continue
     }
-    if (expected !== actual) {
-      findings.push({ name, kind: 'drifted', expected, actual })
+    if (entry.pin !== actual) {
+      findings.push({ name, kind: 'drifted', expected: entry.pin, actual })
     }
   }
-  return { checked: names.length, findings }
+  return { checked: externalNames.length, findings }
 }
 
-function readLock(cwd = root): SkillsLock {
+/** The external pack Skill names — the keys of the CLI's `skills-lock.json`.
+ *  Read-only: we never write this file. */
+function readExternalNames(cwd = root): string[] {
   const file = join(cwd, SKILLS_LOCK)
   if (!existsSync(file)) throw new Error(`${SKILLS_LOCK} not found at ${file}`)
-  return JSON.parse(readFileSync(file, 'utf8')) as SkillsLock
+  const lock = JSON.parse(readFileSync(file, 'utf8')) as { skills?: Record<string, unknown> }
+  return Object.keys(lock.skills ?? {})
 }
 
-/** Look up the on-disk sha256 of every locked Skill's SKILL.md (null if absent). */
+function invPath(name: string, cwd = root): string {
+  return join(cwd, INVENTORY_DIR, `${name}.yml`)
+}
+
+/** Read each pack Skill's Inventory entry: does it exist, and what pin does it hold. */
+function readInventory(names: string[], cwd = root): Map<string, InventoryPin> {
+  const out = new Map<string, InventoryPin>()
+  for (const name of names) {
+    const file = invPath(name, cwd)
+    if (!existsSync(file)) {
+      out.set(name, { cataloged: false })
+      continue
+    }
+    const parsed = parseYaml(readFileSync(file, 'utf8')) as { installedSha256?: unknown } | null
+    const pin = parsed && typeof parsed.installedSha256 === 'string' ? parsed.installedSha256 : undefined
+    out.set(name, { cataloged: true, pin })
+  }
+  return out
+}
+
+/** Look up the on-disk sha256 of each named Skill's SKILL.md (null if absent). */
 function readOnDisk(names: string[], cwd = root): Map<string, string | null> {
   const out = new Map<string, string | null>()
   for (const name of names) {
@@ -100,52 +140,79 @@ function readOnDisk(names: string[], cwd = root): Map<string, string | null> {
 }
 
 export function verify(cwd = root): VerifyResult {
-  const lock = readLock(cwd)
-  const skills = lock.skills ?? {}
-  return diffLock(skills, readOnDisk(Object.keys(skills), cwd))
+  const names = readExternalNames(cwd)
+  return diffLock(names, readInventory(names, cwd), readOnDisk(names, cwd))
 }
 
-/** Regenerate `installedSha256` from the current tree and rewrite the lockfile.
- *  Run after a legitimate pack install so the pins match the new upstream content. */
-export function write(cwd = root): { updated: string[]; missing: string[] } {
-  const lock = readLock(cwd)
-  const skills = lock.skills ?? {}
-  const onDisk = readOnDisk(Object.keys(skills), cwd)
-  const updated: string[] = []
+/** Set (or replace) the `installedSha256:` line in a YAML file's text, preserving
+ *  every other byte — a line edit, not a parse+reserialize, so the curated `role`
+ *  folded blocks and formatting are untouched. Inserts after the `importance:`
+ *  line when the key is absent (falling back to end-of-file). Exported for tests. */
+export function setPinLine(yaml: string, hash: string): string {
+  const line = `installedSha256: ${hash}`
+  const lines = yaml.split('\n')
+  const existing = lines.findIndex((l) => /^installedSha256:/.test(l))
+  if (existing !== -1) {
+    lines[existing] = line
+    return lines.join('\n')
+  }
+  const anchor = lines.findIndex((l) => /^importance:/.test(l))
+  if (anchor !== -1) {
+    lines.splice(anchor + 1, 0, line)
+    return lines.join('\n')
+  }
+  // No anchor — append, tolerating a missing trailing newline.
+  const sep = yaml.endsWith('\n') ? '' : '\n'
+  return `${yaml}${sep}${line}\n`
+}
+
+/** Regenerate the Inventory pins from the current tree and the CLI lock's key set.
+ *  Run after a legitimate pack install so the pins match new content. Skips (and
+ *  reports) pack Skills that have no Inventory entry or no SKILL.md — those are a
+ *  cataloguing gap for a human to close, not something to fabricate here. */
+export function write(cwd = root): { pinned: string[]; uncataloged: string[]; missing: string[] } {
+  const names = readExternalNames(cwd)
+  const onDisk = readOnDisk(names, cwd)
+  const pinned: string[] = []
+  const uncataloged: string[] = []
   const missing: string[] = []
-  for (const name of Object.keys(skills)) {
-    const entry = skills[name]
-    if (!entry) continue
+  for (const name of names) {
     const hash = onDisk.get(name) ?? null
     if (hash === null) {
       missing.push(name)
       continue
     }
-    if (entry.installedSha256 !== hash) updated.push(name)
-    entry.installedSha256 = hash
+    const file = invPath(name, cwd)
+    if (!existsSync(file)) {
+      uncataloged.push(name)
+      continue
+    }
+    writeFileSync(file, setPinLine(readFileSync(file, 'utf8'), hash))
+    pinned.push(name)
   }
-  writeFileSync(join(cwd, SKILLS_LOCK), `${JSON.stringify(lock, null, 2)}\n`)
-  return { updated, missing }
+  return { pinned, uncataloged, missing }
 }
 
 function reportLine(f: DriftFinding): string {
   const skill = `${SKILLS_DIR}/${f.name}/SKILL.md`
   switch (f.kind) {
     case 'missing':
-      return `  MISSING   ${skill} — locked but not on disk`
+      return `  MISSING      ${skill} — a pack Skill (in ${SKILLS_LOCK}) but not on disk`
+    case 'uncataloged':
+      return `  UNCATALOGED  ${f.name} — no Skill Inventory entry (${INVENTORY_DIR}/${f.name}.yml)`
     case 'unpinned':
-      return `  UNPINNED  ${f.name} — no installedSha256 (run \`pnpm verify:skills-lock --write\`)`
+      return `  UNPINNED     ${f.name} — Inventory entry has no installedSha256 (run \`pnpm verify:skills-lock --write\`)`
     case 'drifted':
-      return `  DRIFTED   ${skill} — on-disk content differs from its pin (a local edit?)`
+      return `  DRIFTED      ${skill} — on-disk content differs from its Inventory pin (a local edit?)`
   }
 }
 
 function main(argv: string[]): void {
   if (argv.includes('--write')) {
-    const { updated, missing } = write()
+    const { pinned, uncataloged, missing } = write()
     console.log(
-      `verify-skills-lock: wrote installedSha256 for ${Object.keys(readLock().skills ?? {}).length} pack Skill(s)` +
-        (updated.length ? ` — updated ${updated.length}: ${updated.join(', ')}` : ' — no changes') +
+      `verify-skills-lock: pinned ${pinned.length} pack Skill(s) in the Skill Inventory` +
+        (uncataloged.length ? `; ${uncataloged.length} uncatalogued (add an entry): ${uncataloged.join(', ')}` : '') +
         (missing.length ? `; ${missing.length} missing on disk: ${missing.join(', ')}` : ''),
     )
     return
@@ -157,7 +224,7 @@ function main(argv: string[]): void {
   }
   console.error(
     `\nverify-skills-lock: FAIL — external pack Skills are off limits to edit (ADR-0015).\n` +
-      `A SKILL.md keyed in ${SKILLS_LOCK} was edited, removed, or is unpinned:\n`,
+      `A SKILL.md for a pack Skill (keyed in ${SKILLS_LOCK}) drifted from, or lacks, its Inventory pin:\n`,
   )
   for (const f of findings) console.error(reportLine(f))
   console.error(

@@ -1,0 +1,8 @@
+name: grill-me
+category: general-engineering
+importance: peripheral
+installedSha256: 6189dfceb7304a6e5558f75d87e68fa3bc7fcf7ba120e44f21f8a61fe01eba54
+role: >-
+  A productivity variant of the grilling interview. `grilling` is the one
+  actually reached for in this repo (design and schema stress-tests), so this
+  variant is largely redundant here.

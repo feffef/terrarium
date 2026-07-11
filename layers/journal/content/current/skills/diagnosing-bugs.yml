@@ -1,6 +1,7 @@
 name: diagnosing-bugs
 category: general-engineering
 importance: specialist
+installedSha256: 0b561e84563f281e39b939e775d0a95d34c316bf212ba08989d547f1c14d2c58
 role: >-
   Drives hard-bug/perf-regression diagnosis via a red-then-green reproduction
   loop before any fix is proposed. Essential once a bug resists a first-pass

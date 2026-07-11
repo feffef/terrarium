@@ -1,0 +1,8 @@
+name: handoff
+category: general-engineering
+importance: peripheral
+installedSha256: 94bee8c16cbfcf9f1e15187f7e5d0d5a93c4adb7c512feceecaab80c8ff7c059
+role: >-
+  Compacts a conversation into a handoff doc for another agent. Overlaps the
+  repo's own session-closure machinery (close-session / log-session,
+  claude-handoff), so it is seldom the tool of choice here.

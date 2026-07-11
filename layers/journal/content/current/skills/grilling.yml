@@ -1,6 +1,7 @@
 name: grilling
 category: general-engineering
 importance: supporting
+installedSha256: 4fc8087fb48b0174b4f02e03a5ab7e331830f921fd440c51393895902d22e445
 role: >-
   The one-question-at-a-time interrogation that stress-tests a plan or design
   before building — used standalone (the schema-refinement session) or as the

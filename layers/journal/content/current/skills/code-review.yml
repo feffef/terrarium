@@ -1,6 +1,7 @@
 name: code-review
 category: general-engineering
 importance: supporting
+installedSha256: 6a65cc61114f96db07ec41e3920e67c9c5bf70dd6e0901eb9460ebcb2bdc209f
 role: >-
   Review the working diff (Standards+Spec) before the gated PR (ADR-0003/0004).
   Used for #212, #211, #210, #209, #196 — but skipped in other code-landing

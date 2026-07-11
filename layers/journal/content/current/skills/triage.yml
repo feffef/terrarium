@@ -1,6 +1,7 @@
 name: triage
 category: general-engineering
 importance: supporting
+installedSha256: d45827c299c021f77b0f146fefa3ee679b13f99e9a2ffdf48e8de2347adeefe1
 role: >-
   Implement a filed backlog item — the manual counterpart to the chartered
   (planned) `triage` autonomous job.

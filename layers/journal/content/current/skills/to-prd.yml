@@ -1,6 +1,7 @@
 name: to-prd
 category: general-engineering
 importance: peripheral
+installedSha256: db7e7188ac4fd47f4925ae6550e0233365b3b05be40f45235ab3a0a6b0165156
 role: >-
   Draft a product-requirements doc; occasionally useful when scoping a larger
   net-new Tenant before seeking the human green-light governance requires.

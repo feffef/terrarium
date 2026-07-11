@@ -1,0 +1,8 @@
+name: codebase-design
+category: general-engineering
+importance: specialist
+installedSha256: a8d50abac5a4018f60e1d911d4b6f4e36454ca14d6c390c0695a578c7de65dad
+role: >-
+  Shared vocabulary for designing deep modules — seams, interface depth,
+  testability. Narrow but valuable when shaping a module's boundary (e.g.
+  shared/expand.ts, routing); other Skills borrow its terms.

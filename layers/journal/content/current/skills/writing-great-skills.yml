@@ -1,6 +1,7 @@
 name: writing-great-skills
 category: general-engineering
 importance: peripheral
+installedSha256: 7c6ba7ec25bb2c0e173c52cdc2da878aef0b083ec19a9c1799934e480c8833cc
 role: >-
   The reference standard for authoring Skills, per `codify`'s planned remit.
   Pull remains inconsistent, not zero: used once this window (the
