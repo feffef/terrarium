@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_012MgmwGad8fk8B9r6Ah3ut6
 startedAt: 2026-07-11T11:15:57Z
-endedAt: 2026-07-11T15:25:12Z
+endedAt: 2026-07-11T20:06:41Z
 kind: interactive
 goal: Public-readiness review before repo goes public
-status: completed
-outcome: "Merged (PR #326): infra scrub + SECURITY.md + review docs"
-summary: "Human-instructed: critically review the repo, GitHub, and ADR/skill workflow for everything that must be addressed before public read access, using an Opus background security agent (full tree + all 92 commits) and a Sonnet research pass over primary GitHub Docs. Findings: no secret/credential blocker — tree and history are clean. Real items: deploy/README infra disclosure (a co-located sibling project + operator account), personal email baked into ~21 commits, missing LICENSE and SECURITY.md, and the single-trusted-human governance / prompt-injection gap (issue #213) plus merge-to-main RCE via the ADR-0011 deploy container. Agent-initiated the low-risk fixes: genericized deploy/README, added SECURITY.md, two docs/research notes; opened gated PR #326. LICENSE, email, and governance left as owner decisions."
+status: in-review
+outcome: "PR #326 merged; LICENSE + ADR-0019 proposal in PR #329"
+summary: "Human-instructed: critically review the repo, GitHub, and ADR/skill workflow for everything blocking public read access, using an Opus background security agent (full tree + all 92 commits) and a Sonnet research pass over primary GitHub Docs. Findings: no secret/credential blocker — tree and history clean. Real items: deploy/README infra disclosure (co-located sibling project + operator account), personal email in ~21 commits, missing LICENSE/SECURITY.md, and the single-trusted-human governance / prompt-injection gap (#213) plus merge-to-main RCE via the ADR-0011 deploy container. Agent-initiated low-risk fixes: genericized deploy/README, added SECURITY.md, two research docs — merged as PR #326. Then, on explicit owner requests: added the MIT LICENSE and drafted ADR-0019 (requester trust tiers, Status Proposed) refining #213 to a write-access-vs-read-only-public boundary — opened as gated PR #329. Also reopened #213, which PR #326's body had auto-closed via a stray \"Resolve #213\" keyword."
 prs:
   - "326"
+  - "329"
 docsRead:
   - path: docs/adr/0004-objective-safety-gate.md
     reason: gate scope + human-only surface for the workflow critique
@@ -21,6 +22,10 @@ docsRead:
   - path: nuxt.config.ts
     reason: (no reason given)
   - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: CONTEXT.md
     reason: (no reason given)
 skillsUsed:
   - name: research
@@ -36,36 +41,44 @@ frictions:
   - description: CI gate went red on a docs-only PR, which read as a real regression and forced a full local gate re-run to disprove.
     solution: Owner clarified CI doesn't currently run (known billing issue); a red 'gate' check on this repo is environmental right now, not a code signal.
     severity: minor
+  - description: "PR #326's body said \"Resolve #213\", a GitHub closing keyword, so merging it auto-closed the still-open governance issue #213."
+    solution: "Reopened #213 with an explaining comment; never use close/fix/resolve keywords for a tracking issue a PR only references."
+    severity: moderate
   - description: Provenance footer was not auto-injected into the cloud `git commit -m`, contra the usual harness behaviour.
     solution: Amended the two ADR-0017 footer lines in via `git commit --amend -F`; matches the CLAUDE.md caveat.
     severity: nit
   - description: get_job_logs download URL 404'd immediately (expired SAS token) and the check-run output was empty, so the failing CI step couldn't be read.
     solution: Fell back to reproducing the gate locally, which is the reliable primary source anyway.
     severity: nit
-durationSec: 14955
+durationSec: 31844
 models:
-  claude-opus-4-8: 146
+  claude-opus-4-8: 197
 toolCounts:
-  Bash: 27
+  Bash: 35
   Agent: 2
   Skill: 3
-  Read: 6
+  Read: 8
   mcp__github__run_secret_scanning: 1
   mcp__github__list_issues: 1
   mcp__github__list_repository_collaborators: 1
   AskUserQuestion: 1
-  Edit: 4
-  Write: 3
-  mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
+  Edit: 6
+  Write: 5
+  mcp__github__list_pull_requests: 2
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
   mcp__github__get_job_logs: 2
   mcp__github__get_check_run: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__issue_read: 1
+  mcp__github__issue_write: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - deploy/README.md
   - SECURITY.md
   - docs/research/public-readiness-review.md
+  - LICENSE
+  - docs/adr/0019-requester-trust-tiers.md
 subagents:
   - type: general-purpose
     task: Security review for public readiness
