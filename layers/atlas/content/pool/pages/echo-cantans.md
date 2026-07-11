@@ -87,34 +87,18 @@ The accounts agree on this much. Late in the night, from the far water, a call i
 
 The plate overleaf is offered with every reservation, reconstructed from the single partial sighting we credit — a lamplit half-second at the water's edge, a pale throat open on a borrowed voice — and the draughtsman has honestly left wanting what the witness could not swear to, which the reader will observe is most of it. Its size we do not record; its diet we do not record. A creature that answers every question in someone else's voice keeps its own particulars remarkably well.
 
-The nine reports do not fall evenly across the year. They cluster, all of them, between the first warm nights and the keeper's holiday, and for the long remainder the far water keeps a silence we have set down as honestly as the voices. Turn the almanac to move among them.
+The nine reports do not fall evenly across the year, and the mimic keeps two seasons of its own, only one of which speaks. What follows we have set down as the far water keeps it — not by our calendar but by its own: the far singing, when between the first warm nights and the keeper's holiday the pool is loudest and has the most voices to lend; and the still water, the long remainder in which it keeps its own counsel. Turn the almanac to move between them; the seasons on the rim only say where in our shared year each of the mimic's falls.
 
 ::almanac
 ::
 
-:::season-note{of="radiator-months"}
-Through the dry-warm months the far corner keeps its own counsel. No call, no light; the pool that lends every other creature a voice has, in this season, none to spare. We keep the vigil out of habit and the ledger empty out of honesty, which in this of all entries is the same thing.
-:::
-
-:::season-note{of="lamp-lengthening"}
-The keepers let the light run longer by their small, deniable increments, and still nothing answers from the far water. Whatever the mimic is, it does not wake for a longer lamp; the still water holds, and the company sleeps through it undisturbed.
-:::
-
-:::season-note{of="great-airing"}
-With the lid standing open an hour a day the draught carries a good many sounds across the pool, none of them the one we wait for. The corner stays silent through the airing, as it has stayed silent since the New Year, and we begin — foolishly, each spring — to wonder whether we imagined it.
-:::
-
-:::season-note{of="long-damp"}
-This is the season the far water finds its voices, for it is now the pool has the most to lend: the misting is at its most liberal, the water fullest and loudest, and all but a few of the nine reports we credit fall in these warm nights. The dusk-chronicler, the most methodical inhabitant of the wing, will not take its circuit past that corner now, and we have found its caution generally well placed. We keep the vigil in pairs — not from fear, we tell each other, but so that the next report may at last be confirmed by a second voice; we are aware of how that reads, in this of all entries. The ledger holds one such night and does not pretend to more than it heard:
+:::phase-note{of="far-singing"}
+The far water finds its voices now, for it is now the pool has the most to lend: the misting is at its most liberal, the water fullest and loudest, and all nine of the reports we credit fall between the first warm nights and the keeper's holiday. The dusk-chronicler, the most methodical inhabitant of the wing, will not take its circuit past that corner in these weeks, and we have found its caution generally well placed. We keep the vigil in pairs — not from fear, we tell each other, but so that the next report may at last be confirmed by a second voice; we are aware of how that reads, in this of all entries. Toward the holiday the voices come thin and far apart, as though the pool were running short of others to imitate. The ledger holds one such night and does not pretend to more than it heard:
 
 ::sighting{date="2026-07-02"}
 ::
 :::
 
-:::season-note{of="small-dry"}
-The misting lapses with the keeper's holiday, and the reports lapse with it. The last of the season's voices come thin and far apart, as though the pool were running short of others to imitate, and then the far corner falls quiet for the year. Where the borrowed voices go when there is no longer anyone about to lend them, we do not know, and have stopped keeping late enough to find out.
-:::
-
-:::season-note{of="settling"}
-After the great cleaning the pool re-arranges itself in silence. Nothing is heard from the far water through these weeks, and nothing seen but the occasional silver light that may or may not belong to anything at all. The mimic, if it is a mimic, has nothing left to answer, and neither, at this hour, have we.
+:::phase-note{of="still-water"}
+Then the far corner falls quiet for the year, and stays quiet through the long remainder. No call, no light; the pool that lends every other creature a voice has, in this stretch, none to spare. The keepers let the light run longer by their small, deniable increments, and still nothing answers; the lid stands open an hour a day and the draught carries a good many sounds across the water, none of them the one we wait for. We keep the vigil out of habit and the ledger empty out of honesty, which in this of all entries is the same thing, and we begin — foolishly, each spring — to wonder whether we imagined it. Where the borrowed voices go when there is no one about to lend them, we do not know, and have stopped keeping late enough to find out. The still water holds, and the company sleeps through it undisturbed.
 :::

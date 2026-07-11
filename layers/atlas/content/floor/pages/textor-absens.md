@@ -98,34 +98,18 @@ The reader of Plate I will recall that the weaver-ant's galleries are sometimes 
 
 The work, at least, can be described, and it is distinctive. The mend is always at the worn place and never at the showy one; the thread is laid finer and drawn tighter than the column's own, so that a repaired stretch of gallery can be told by the fingertip in the dark, which is chiefly where we have occasion to tell it. Nothing is ever added — no new gallery, no improvement, no opinion. What was fraying is made sound, and whatever slack the fraying left behind is gone by morning, which is the sole ground we have for entering a diet in the record at all.
 
-When the work can be seen for itself, and when it cannot, is a matter of the season — and chiefly of what the weaver-ant column is doing overhead. We have set the year down accordingly. Turn the almanac to move among them.
+When the work can be seen for itself, and when it cannot, is a matter of the mender's own year — and chiefly of what the weaver-ant column is doing overhead. What follows we have set down as the mender keeps it, not by our calendar: the scarce evidence and the quiet mending. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the mender's falls.
 
 ::almanac
 ::
 
-:::season-note{of="radiator-months"}
-With the ant column withdrawn below the reach of our lamps, the surface galleries stand empty — and are mended anyway, and mended best. These dry-warm weeks give us the finest of the work: a fraying set right with no working column anywhere near it to be mistaken for. If the mender is ever nearly caught, it is now, at the emptiest hour of the emptiest season, at the worn place and nowhere else.
-:::
-
-:::season-note{of="lamp-lengthening"}
-As the light lengthens the column begins to return to the surface, and the mender's hand grows harder to tell from its neighbours'. For a few weeks yet the finer thread can still be found; then the reviving traffic muddles the evidence, and a mend and the ordinary mending of the ant become, to the fingertip, one thing.
-:::
-
-:::season-note{of="great-airing"}
-With the column fully at work the mends cannot be distinguished from the mending. We credit nothing this season; the draught and the open lid give the whole surface a general air of having been tampered with, and a single finer thread is not to be found in all of it. The mender, if it works now, works entirely inside another's work.
-:::
-
-:::season-note{of="long-damp"}
-This is the scarcest season for evidence, the column at its busiest overhead — and yet the year's one sighting we are prepared to credit fell squarely in it, which the juniors find suggestive and the seniors find only typical. One night we possess: at the mouth of the long gallery the lamp's edge caught a paleness — low, unhurried, the colour of unbleached silk — and by the time the lamp itself was brought to bear there was gallery, and mend, and nothing else. The startle beetle bolted a half-second before the paleness went, which we no longer count as corroboration. The ledger keeps only this:
+:::phase-note{of="scarce-evidence"}
+As the light lengthens the column returns to the surface, and for a few weeks yet the finer thread can still be found; then the reviving traffic muddles the evidence, and a mend and the ordinary mending of the ant become, to the fingertip, one thing. With the column fully at work the mends cannot be distinguished from the mending, and we credit nothing — the draught and the open lid give the whole surface a general air of having been tampered with, and a single finer thread is not to be found in all of it. This is the scarcest stretch for evidence, the column at its busiest overhead, and yet the year's one sighting we are prepared to credit fell squarely in it, which the juniors find suggestive and the seniors find only typical. One night we possess: at the mouth of the long gallery the lamp's edge caught a paleness — low, unhurried, the colour of unbleached silk — and by the time the lamp itself was brought to bear there was gallery, and mend, and nothing else. The startle beetle bolted a half-second before the paleness went, which we no longer count as corroboration. The ledger keeps only this:
 
 ::sighting{date="2026-07-05"}
 ::
 :::
 
-:::season-note{of="small-dry"}
-The keeper's holiday lets the misting lapse, and something in the lapse seems to loosen the column's hold on the surface; toward the end of these weeks the first unmistakable mends of the coming season appear at the worn places. The evidence, scarce all summer, begins once more to keep.
-:::
-
-:::season-note{of="settling"}
-After the great cleaning the column withdraws toward its deep galleries, and the mender's own season opens behind it. Empty stretches of surface gallery are found sound again by morning — the finer thread, the tighter draw, at the worn place and never the showy one. The senior position in the company is that there is no mender at all: that the floor, being an occupation rather than a place, simply closes its own wounds. The junior position is that this is the same claim with fewer legs. The season settles it no more than the plate does.
+:::phase-note{of="quiet-mending"}
+As the misting lapses for the keeper's holiday, something in the lapse seems to loosen the column's hold on the surface, and toward the turn of the year the first unmistakable mends of the season appear at the worn places; the evidence, scarce all summer, begins once more to keep. After the great cleaning the column withdraws toward its deep galleries, and the mender's own season opens behind it: empty stretches of surface gallery are found sound again by morning — the finer thread, the tighter draw, at the worn place and never the showy one. These withdrawn weeks give us the finest of the work, a fraying set right with no working column anywhere near it to be mistaken for; if the mender is ever nearly caught, it is now, at the emptiest hour of the emptiest season. The senior position in the company is that there is no mender at all: that the floor, being an occupation rather than a place, simply closes its own wounds. The junior position is that this is the same claim with fewer legs. The year settles it no more than the plate does.
 :::
