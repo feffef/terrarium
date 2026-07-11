@@ -50,11 +50,12 @@ class to its MCP equivalent:
   the last-resort fallback below) — a session polling non-webhook-delivered
   state (like CI completion) should use `mcp__Claude_Code_Remote__send_later`
   to schedule its own check-in instead.
-- **`send_later` occasionally fails with a transient "permission stream
-  closed" error.** Converged workaround (mirrors the poll-until-green pattern
-  above, issue #145): retry the same `send_later` call once after reconnect;
-  if it fails again, fall back to the built-in `ScheduleWakeup` tool instead
-  of retrying further (issue #229).
+- **Any `mcp__Claude_Code_Remote__*` call — not just `send_later` — can fail
+  with a transient "permission stream closed before response received"
+  error.** Converged workaround (mirrors the poll-until-green pattern above,
+  issue #145): retry the same call once after reconnect; if it fails again,
+  route around it — for `send_later` specifically, fall back to the built-in
+  `ScheduleWakeup` tool instead of retrying further (issue #229).
 - **List / search PRs** → `list_pull_requests` / `search_pull_requests`
 - **Link sub-issues** → `sub_issue_write`
 
@@ -147,6 +148,8 @@ When set to `yes`, PRs run through the same labels and states as issues, using t
 GitHub shares one number space across issues and PRs, so a bare `#42` may be either — resolve with `gh pr view 42` and fall back to `gh issue view 42`.
 
 A reviewing agent must post its verdict as a PR review or comment **before merging** — every time, even on a clean "merging as-is" verdict — so the audit trail lives on the PR; otherwise `get_reviews`/`get_comments` return empty and a real review reads as none having happened.
+
+**Never submit an APPROVE-event review — use `add_issue_comment` or a COMMENT-event review instead.** The agent's GitHub identity under the shared connection is always the repo owner, and GitHub blocks a PR author from approving their own pull request.
 
 **A "you already have a pending review" error is a stop-and-ask signal, never a call-`delete_pending`-and-retry one.** This can surface from `pull_request_review_write` (or the raw GitHub review API) mid-triage. Because agent-driven GitHub API calls run under the human owner's own authorized connection (ADR-0017), there is no reliable way to tell whether the pending review is the agent's own leftover state or the maintainer's own in-progress draft. Deleting the wrong one permanently erases the maintainer's unsubmitted draft text, with no undo. On this error, stop and ask the user before touching `delete_pending` — don't guess.
 
