@@ -1,0 +1,56 @@
+schemaVersion: 1
+session: session_011LLGX1HahHKVg5sGcaRXtr
+startedAt: 2026-07-11T20:25:36Z
+endedAt: 2026-07-11T20:42:09Z
+kind: interactive
+goal: "Rebase PR #305 onto latest main"
+status: in-review
+outcome: "Rebased and pushed; PR #305 now conflict-free"
+summary: "Human-instructed throughout: the user asked to rebase PR #305 (Atlas Sprint 2 almanac, branch atlas/sprint-2-almanac) onto main, which had gone dirty. I reset the designated branch to the PR head and rebased its 7 substantive commits onto origin/main (git dropped the already-upstream integrate/journal commits). Resolved 3 conflicts, all from main's useAtlasWingData refactor landing under the PR: grafted the almanac state onto main's entry-based structure, kept both new e2e tests, dropped an unused import. Full pnpm gate passed locally (exit 0). On the user's explicit choice (AskUserQuestion), I force-pushed with lease onto the PR branch, flipping #305 from dirty to unstable."
+prs:
+  - "305"
+docsRead:
+  - path: CLAUDE.md
+    reason: rebase/branch + PR-gate conventions
+  - path: layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: closure front door
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: git's auto-merge silently left a stale `specimen.value?.slug` reference in the slug page after main renamed that ref to `entry.value?.specimen`.
+    solution: Read both sides in full and fix by hand; don't trust a clean auto-merge on a file both branches restructured. Caught before staging.
+    severity: moderate
+  - description: The CI safety-gate fails repo-wide in 3-5s on every run (main pushes and all open PRs), logs 404 — an Actions environment failure, likely a private-repo spending limit.
+    solution: "Repo-owner fix (billing/Actions settings); tracked-adjacent in docs/research/github-actions-public-vs-private-limits.md. PR #305 CI can't go green until it's resolved; local `pnpm gate` is the real signal."
+    severity: major
+  - description: mcp__github actions_list returned 361K chars, over the tool token cap, forcing a python character-slice workaround to read run summaries.
+    solution: Support a minimal/summary output mode or server-side field filtering.
+    severity: minor
+durationSec: 993
+models:
+  claude-opus-4-8: 127
+toolCounts:
+  Bash: 28
+  ToolSearch: 5
+  mcp__github__pull_request_read: 3
+  Read: 1
+  Edit: 7
+  AskUserQuestion: 1
+  mcp__github__get_job_logs: 1
+  mcp__github__actions_get: 1
+  mcp__github__actions_list: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+  - layers/atlas/tests/e2e/atlas.e2e.ts
+  - layers/atlas/app/pages/t/atlas/[space]/index.vue
+gitBranch: claude/rebase-pr-305-main-nfzk7o
+entrypoint: remote
+cliVersion: 2.1.207
+learnings:
+  - git rebase auto-drops a PR's merge-echo `integrate` and journal-log commits as already-upstream (patch-id match) — 10 PR commits collapsed to 7 replayed.
+  - A ~3s CI failure with 404 logs across every branch (main included) is the signature of a repo-wide Actions environment/billing failure, not a code defect.
