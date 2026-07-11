@@ -1,4 +1,5 @@
-// Presentational metadata for the three Personas (CONTEXT.md: Persona). The Space
+// Presentational metadata for the three Personas (layers/blog/CONTEXT.md:
+// Persona). The Space
 // slug IS the persona's name; this only adds a display capitalisation and a per-
 // persona accent colour. NOT the voice/stance — that lives in the `blog-post`
 // Skill and each Persona's index.md landing. Lives in `utils/` so Nuxt

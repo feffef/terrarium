@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Write **one** blog post for a Blog Persona, in that Persona's voice, grounded in
 what has actually been happening in the repo. Takes an **optional** single
-argument: the persona name — `david`, `karen`, or `kevin` (CONTEXT.md: Persona).
+argument: the persona name — `david`, `karen`, or `kevin` (layers/blog/CONTEXT.md: Persona).
 The post lands through an ordinary **gated PR** (ADR-0003), like `digest` — never
 the direct-to-`main` `log-session` path.
 
@@ -82,8 +82,8 @@ needs a fact A1 didn't capture.
 - **Session logs** — `layers/journal/content/current/sessions/*.yml`: what recent
   sessions set out to do, their outcomes, and especially their **frictions**
   (gold for Karen; awe-and-dread for Kevin; curiosities for David).
-- **The source tree** — the manifests, generator, ADRs, skills — whatever the post
-  refers to, so the detail is right.
+- **The source tree** — the manifests, `content.config.ts`, ADRs, skills — whatever
+  the post refers to, so the detail is right.
 - **The other Personas' recent posts** — `layers/blog/content/<other>/pages/*.md`.
   This is how you decide whether to react (step 4).
 

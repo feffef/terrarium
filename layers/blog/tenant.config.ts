@@ -1,5 +1,6 @@
 // Manifest for the Blog Tenant — a simple blog reporting on the Terrarium from
-// several angles (CONTEXT.md: Blog / Persona / Pingback). Declarative intent
+// several angles (CONTEXT.md Tenants roster: Blog; layers/blog/CONTEXT.md:
+// Persona / Pingback). Declarative intent
 // only; `content.config.ts` builds the keyed collections from this manifest at
 // config-evaluation time, and the routing map is derived at build time
 // (ADR-0013/0014) — there is no separate generator step.
@@ -34,7 +35,7 @@ const persona = z.enum(personaSlugs)
 export default defineTenant({
   name: 'blog',
   // Personas-as-Spaces: same content model, physically isolated content per
-  // Persona. The slug is the persona's name (CONTEXT.md: Persona).
+  // Persona. The slug is the persona's name (layers/blog/CONTEXT.md: Persona).
   spaces: [...personaSlugs],
   collections: {
     // The routed blog. Named `pages` per the Platform convention the shared

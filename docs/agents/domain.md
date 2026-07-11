@@ -8,44 +8,53 @@ stays generic and reinstallable (ADR-0005).*
 
 How the engineering skills should consume this repo's domain documentation when exploring the codebase.
 
-This repo is **single-context**: one `CONTEXT.md` and one `docs/adr/` at the repo root.
+This repo is **multi-context** (ADR-0021), in a **shared-kernel** shape: a
+Platform context at the root plus one context per Tenant, co-located with that
+Tenant's code.
 
 ## Before exploring, read these
 
-- **`CONTEXT.md`** at the repo root — the domain model / ubiquitous language.
+- **`CONTEXT-MAP.md`** at the repo root — the map: what contexts exist, where each
+  lives, and how they relate. Start here.
+- **`CONTEXT.md`** at the repo root — the **Platform context**: the concepts every
+  agent needs regardless of task, plus a roster of the Tenants. Always read this.
+- **`layers/<tenant>/CONTEXT.md`** — a Tenant's own vocabulary *and* its
+  reason-to-exist. Read the one for the Tenant you're working on.
 - **`docs/adr/`** — read ADRs that touch the area you're about to work in.
 
-(If a `CONTEXT-MAP.md` ever appears at the root, this repo has become multi-context: it points at one `CONTEXT.md` per context, and `src/<context>/docs/adr/` holds context-scoped decisions. Read each one relevant to the topic.)
+Note the local shape (a deliberate, ADR-0021-recorded divergence from the
+`domain-modeling` Skill's generic templates): the root `CONTEXT.md` doubles as the
+Platform context *and* carries the Tenants roster, and each per-Tenant `CONTEXT.md`
+carries a purpose narrative on top of its glossary (the Skill's template is
+glossary-only). Pointers between these files are navigation, not duplication — the
+single-home rule forbids copying substantive content, not references. All ADRs are
+Platform-wide today; there are no `layers/<tenant>/docs/adr/` directories, and a
+demo Tenant's reason-to-exist is product, not architecture, so it lives in that
+Tenant's `CONTEXT.md`, never an ADR.
 
 If any of these files don't exist, **proceed silently**. Don't flag their absence; don't suggest creating them upfront. The `/domain-modeling` skill (reached via `/grill-with-docs` and `/improve-codebase-architecture`) creates them lazily when terms or decisions actually get resolved.
 
 ## File structure
 
-Single-context repo (this repo):
+This repo's actual shape (multi-context, shared-kernel — ADR-0021):
 
 ```
 /
-├── CONTEXT.md
-├── docs/adr/
+├── CONTEXT-MAP.md                     ← the map: contexts + relationships
+├── CONTEXT.md                         ← the Platform context + Tenants roster
+├── docs/adr/                          ← all decisions (Platform-wide)
 │   ├── 0001-single-container-baked-multitenancy.md
-│   └── 0002-manifest-driven-config-generation.md
-└── …
+│   └── …
+└── layers/
+    ├── blog/CONTEXT.md                ← Blog vocabulary + purpose
+    ├── atlas/CONTEXT.md               ← Atlas vocabulary + purpose
+    └── journal/CONTEXT.md             ← Journal vocabulary + purpose
 ```
 
-Multi-context repo (would be signalled by a `CONTEXT-MAP.md` at the root):
-
-```
-/
-├── CONTEXT-MAP.md
-├── docs/adr/                          ← system-wide decisions
-└── src/
-    ├── ordering/
-    │   ├── CONTEXT.md
-    │   └── docs/adr/                  ← context-specific decisions
-    └── billing/
-        ├── CONTEXT.md
-        └── docs/adr/
-```
+The generic `domain-modeling` template puts contexts under `src/<context>/` with
+per-context `docs/adr/`; this repo co-locates them under `layers/<tenant>/`
+(where the Tenants already live) and keeps every ADR at the root, because all
+decisions so far are Platform-wide.
 
 ## Use the glossary's vocabulary
 
