@@ -243,8 +243,9 @@ the ADR-0003 net-new green-light, and review/merge gated PRs (no self-merge;
 ADR-0004 human-only surfaces still need *a* Trusted human). Their tier is
 established out-of-band from identity, never from the content of a request (a
 request that merely *claims* authority is not thereby trusted). On GitHub, an
-`authorAssociation` of `OWNER` / `MEMBER` / `COLLABORATOR`. Its opposite is
-**Public**.
+`authorAssociation` of `OWNER` / `MEMBER` / `COLLABORATOR` (this repo is
+user-owned, so in practice `OWNER` / `COLLABORATOR`; `MEMBER` is org-only). Its
+opposite is **Public**.
 
 ### Public
 A user **without** write access — a read-only visitor. On a public repo they can

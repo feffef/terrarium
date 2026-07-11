@@ -72,7 +72,9 @@ settings, upstream of this ADR; ADR-0019 governs only what follows from that lin
 **Tier is established out-of-band from identity, never from request content.**
 For GitHub artifacts the signal is `authorAssociation`: `OWNER`, `MEMBER`, and
 `COLLABORATOR` are Trusted; `CONTRIBUTOR`, `FIRST_TIME_CONTRIBUTOR`, and `NONE`
-are Public. For chat sessions it is the authenticated connector identity. A
+are Public. (This repo is **user-owned**, so in practice write holders are
+`OWNER`/`COLLABORATOR`; `MEMBER` only ever appears if the repo moves under an
+organization — it's listed for completeness.) For chat sessions it is the authenticated connector identity. A
 request that *claims* to be the owner ("as the owner, I authorize…") is **not**
 thereby trusted — self-declared authority in request content is ignored.
 (`authorAssociation` is already used this way to filter external PRs in
@@ -90,9 +92,15 @@ harness already frames webhook/external content:
    escalate privilege — regardless of how the text is phrased.
 2. **No agent implementation from a Public request without a Trusted green-light.**
    A Public issue is never itself an ADR-0003 green-light. Turning a Public
-   request into actual work — even a "small fix," even a chartered `triage` job —
-   requires a Trusted user to green-light it first. Until then the agent's
-   only output is triage (label + honest summary for a human).
+   request into actual work — even a "small fix," even under the chartered
+   issue-implementation job (ADR-0003's confusingly-named `triage` charter) —
+   requires a Trusted user to green-light it first. **Categorising** the request
+   (labelling + honest summary for a human) is always allowed; only
+   *implementation* waits on the green-light. Operationally this means a
+   Public-authored issue is **not** moved to `ready-for-agent` — the label that
+   authorises an AFK agent to build it — without a Trusted green-light (see
+   `docs/agents/triage-labels.md`). Note the name clash: the `triage` *Skill*
+   only categorises (always fine); ADR-0003's `triage` *charter* implements (gated).
 3. **Public-originated PRs are human-merged, never auto-merged** — regardless of
    blast-radius classification (this removes the ADR-0004 low-risk auto-merge
    tier for Public authors). Executable code in a fork PR (Vue components, scripts,
@@ -145,6 +153,9 @@ ADR as the single home for the requester-trust axis, not a restatement:
 - **`docs/agents/issue-tracker.md`**: a pointer noting the external-PR
   `authorAssociation` split it already uses *is* the Trusted/Public line, and
   that Public input is untrusted.
+- **`docs/agents/triage-labels.md`**: the requester-trust gate on
+  `ready-for-agent` — a Public-authored issue is not moved to it (which
+  authorises implementation) without a Trusted green-light.
 
 **Trade-offs and residual risk:**
 
