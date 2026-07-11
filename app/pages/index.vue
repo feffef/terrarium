@@ -57,7 +57,7 @@ const otherRoutes = Object.entries(routingMap).flatMap(([tenant, spaces]) =>
     </div>
 
     <section class="blogs" aria-label="Blogs">
-      <p class="blogs-lead">Or read the blog — the experiment, narrated from three angles:</p>
+      <p class="blogs-lead">Or read the blog — a plain-language take on the experiment for anyone not following every session, told from three angles: the same work seen as impressive, as flawed, or plainly observed.</p>
       <div class="blog-links">
         <NuxtLink
           v-for="b in BLOGS"
