@@ -47,18 +47,16 @@ const sigStyle = computed(() => signatureVars(entry.value?.specimen.signature?.c
 // owns the state; the wheel and any descendant inject it. The needle parks at
 // today unless a `?day=` param says otherwise (see composables/almanac.ts).
 const phenologyPhases = computed<PhenologyPhase[]>(() => entry.value?.specimen.phenology?.phases ?? [])
+// The `::almanac` dial in the essay and the whole biome's ledger of rim ticks
+// both read this provided state (map #279): the `observations` here are the
+// dated ledger the dial marks and a `::sighting{date}` quotes — same-Space reads
+// only, this biome's keyed collection.
 provideAlmanac({
   phases: phenologyPhases,
   initialDay: parseAlmanacDayParam(route.query.day),
-  // The biome's ledger + this page's own inhabitant, so a `::sighting{date}`
-  // in the essay can quote the observation's note without retyping it (#283).
-  // Same-Space reads only — `observations` is this biome's keyed collection.
   observations: () => (data.value?.observations ?? []) as AlmanacObservation[],
   specimen: () => entry.value?.specimen.slug,
 })
-// The dial's rim ticks read the whole biome's dated ledger (map #279), not
-// just this specimen's sightings — only `date` is passed.
-const biomeObservations = computed(() => (data.value?.observations ?? []).map((o) => ({ date: o.date })))
 
 const title = computed(() => entry.value?.specimen.binomial ?? 'Not found')
 useSeoMeta({
@@ -111,16 +109,11 @@ useSeoMeta({
           </dl>
         </div>
 
-        <!-- The almanac dial (#282) heads the field-note essay: the reader
-             meets the year, then the prose it drives. It replaced the 24-hour
-             rhythm band here (map #279, decision 3) — the daily fact lives on
-             as `activity.label` in the record above. -->
-        <AtlasPhenologyWheel
-          class="entry-almanac"
-          :phases="phenologyPhases"
-          :observations="biomeObservations"
-        />
-
+        <!-- The field-note essay carries the almanac itself: a general intro to
+             the specimen, then the `::almanac` dial, then the year season by
+             season (`::season-note`) — the reader's requested order. The dial
+             replaced the 24-hour rhythm band here (map #279, decision 3); the
+             daily fact lives on as `activity.label` in the record above. -->
         <div class="atlas-fieldnote atlas-prose">
           <ContentRenderer :value="entry.doc" />
         </div>
@@ -147,6 +140,5 @@ useSeoMeta({
 
 <style scoped>
 .entry-section { margin-top: 0.5rem; }
-.entry-almanac { margin: 2.4rem auto 0.4rem; max-width: 23rem; }
 .not-found h1 { font-family: var(--atlas-display); font-size: 2rem; margin: 0 0 0.6rem; }
 </style>

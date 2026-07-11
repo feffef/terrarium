@@ -381,6 +381,9 @@
    The rhythm band bent into a circle: the year under glass as an engraved
    instrument. Ink and hatch only; the needle head is the ONE --sig-1 accent. */
 .atlas-almanac { margin: 0; }
+/* the ::almanac dial seated in a specimen's field note — centred between the
+   introduction and the season notes it turns (feedback rework) */
+.atlas-fieldnote .entry-almanac { max-width: 23rem; margin: 2.4rem auto 1.8rem; }
 .atlas-almanac svg {
   display: block;
   width: 100%;
@@ -638,7 +641,8 @@
 /* the essay's drop-cap belongs to the essay's opening paragraph only — a
    passage's own first paragraph must not sprout one */
 .atlas-phase .phase-body p:first-of-type::first-letter,
-.atlas-sighting .s-quote p::first-letter {
+.atlas-sighting .s-quote p::first-letter,
+.atlas-almanac .wcap p::first-letter {
   float: none;
   font-family: inherit;
   font-size: inherit;
