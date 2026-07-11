@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01W2H1faveQLm7enxStv8MvY
 startedAt: 2026-07-11T05:42:24Z
-endedAt: 2026-07-11T05:57:11Z
+endedAt: 2026-07-11T06:09:33Z
 kind: interactive
 goal: Make external pack skills off limits to edit
 status: in-review
-outcome: Reverted wayfinder; guarded frictions-to-fixes and CLAUDE.md
-summary: "User reported that PR #304 had patched the external wayfinder Skill, which should be off limits. Confirmed via skills-lock.json that wayfinder is a pinned pack Skill (from mattpocock/skills) and its on-disk content had drifted from the pinned hash. ADR-0015 already states pack SKILL.md files are not ours to patch, but only wired that boundary into the audit-skills referral stage, leaving frictions-to-fixes free to patch a pack Skill named by a friction directly (what happened via #296). All work was human-directed by the user's request: reverted wayfinder/SKILL.md to its install-commit content, added a CLAUDE.md ground-rule pointer, and closed the frictions-to-fixes loophole (screen out pack-Skill edits in section 2; corrected section 5 wording to \"a repo-owned SKILL\"). Gate green; opened PR #306."
+outcome: Reverted wayfinder; added enforced verify:skills-lock gate
+summary: "User reported that PR #304 had patched the external wayfinder Skill, which should be off limits. Confirmed via skills-lock.json that wayfinder is a pinned pack Skill (from mattpocock/skills) and its on-disk content had drifted. ADR-0015 already states pack SKILL.md files are not ours to patch, but only wired that boundary into the audit-skills referral stage, leaving frictions-to-fixes free to patch a pack Skill named by a friction directly (what happened via #296). All work was human-directed. First: reverted wayfinder/SKILL.md to install content, added a CLAUDE.md ground rule, closed the frictions-to-fixes loophole. Then, on the user's explicit follow-up (\"include the gate in this PR\"): built scripts/verify-skills-lock.ts, pinned installedSha256 for all 22 pack Skills, wired verify:skills-lock first into pnpm gate, unit-tested it, and amended ADR-0015. Gate green (incl. a negative drift test); PR #306 open and updated."
 prs:
   - "306"
 docsRead:
@@ -24,38 +24,49 @@ docsRead:
     reason: (no reason given)
   - path: CLAUDE.md
     reason: (read before editing)
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+  - path: tests/unit/merged-since.spec.ts
+    reason: (no reason given)
+  - path: package.json
+    reason: (read before editing)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
 frictions:
-  - description: "No gate/script verifies on-disk pack Skills against skills-lock.json's computedHash, so PR #304's wayfinder drift went undetected until a human noticed it."
-    solution: Add a lightweight lock-integrity check (drift-check style) that flags any skills-lock.json-keyed SKILL.md whose content no longer matches upstream.
+  - description: "No gate verified on-disk pack Skills against the lock, so PR #304's wayfinder drift went undetected until a human noticed it — the rule was prose-only."
+    solution: Fixed this session — added verify:skills-lock (installedSha256 pins, run first in pnpm gate).
     severity: moderate
-  - description: The lock's computedHash did not match a plain sha256 of the installed SKILL.md (nor the install-commit blob), so I could not use it to confirm the correct revert target directly.
-    solution: Document how computedHash is derived (upstream source vs installed file) near skills-lock.json or in the install script.
+  - description: The lock's computedHash did not match a plain sha256 of the installed SKILL.md (nor the install-commit blob), so I could not verify against it directly and had to introduce a separate installedSha256 pin.
+    solution: Document how computedHash is derived (upstream source vs installed file) near skills-lock.json or in the install tooling.
     severity: minor
-durationSec: 887
+durationSec: 1629
 models:
-  claude-opus-4-8: 80
+  claude-opus-4-8: 153
 toolCounts:
   ToolSearch: 2
-  Bash: 17
-  Read: 7
+  Bash: 33
+  Read: 13
   mcp__github__pull_request_read: 3
-  Edit: 3
+  Edit: 11
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
+  Write: 3
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - CLAUDE.md
   - .agents/skills/frictions-to-fixes/SKILL.md
+  - scripts/verify-skills-lock.ts
+  - tests/unit/verify-skills-lock.spec.ts
+  - package.json
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
 gitBranch: claude/finder-skill-external-protection-7fntpn
 entrypoint: remote_mobile
 cliVersion: 2.1.207
-ideas:
-  - Add a `verify:skills-lock` step that hashes each skills-lock.json-keyed SKILL.md and fails if it diverges from the pinned upstream, turning the "external skills are off limits" rule from prose-only into an enforced gate so a future frictions-to-fixes-style edit can't land silently.
+learnings:
+  - skills-lock.json's computedHash is the installer's upstream-source hash, not a hash of the installed SKILL.md — so it can't back an offline integrity gate; pin the installed file's own hash instead.
