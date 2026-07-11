@@ -418,6 +418,11 @@
 .atlas-almanac .phase { stroke: currentColor; stroke-width: 0.9; transition: stroke-width 0.15s ease; }
 .atlas-almanac .phase.is-quiet { stroke-dasharray: 3 3; stroke-width: 0.7; }
 .atlas-almanac .phase.is-now { stroke-width: 1.6; }
+/* On a specimen the dial drives the creature's phases: the current phase arc is
+   the lit SELECTION (biome accent), and the season wedge stays but fainter, as
+   informational context only. */
+.atlas-almanac.is-phase-mode .phase.is-now { stroke: var(--biome-accent); stroke-width: 2.4; }
+.atlas-almanac.is-phase-mode .season-lit { opacity: 0.5; }
 
 /* clickable rim ticks — the ledger's dated observations and the essay's
    ::sighting marks. A wide transparent "hit" line over each hairline gives a
@@ -447,7 +452,9 @@
 .atlas-almanac .wval { display: inline-flex; align-items: baseline; gap: 0.6ch; }
 .atlas-almanac .wseason,
 .atlas-almanac .wphase { font-family: var(--atlas-label); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: lowercase; color: var(--atlas-ink); }
-.atlas-almanac .wphase-row .wphase { color: var(--atlas-muted); }
+/* phase mode: the phase line is primary (larger ink), the season line context */
+.atlas-almanac .wphase-row .wphase { font-size: 0.82rem; color: var(--atlas-ink); }
+.atlas-almanac.is-phase-mode .wseason-row .wseason { font-size: 0.68rem; color: var(--atlas-muted); }
 .atlas-almanac .wday { font-family: var(--atlas-data); font-size: 0.66rem; color: var(--atlas-faint); }
 .atlas-almanac .wempty { margin: 0.3rem 0 0; font-size: 0.85rem; color: var(--atlas-faint); font-style: italic; }
 

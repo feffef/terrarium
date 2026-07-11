@@ -94,34 +94,22 @@ It was the light we noticed first, moving against the upper glass as though the 
 
 Of its diet we can report only what the evidence permits. We have never seen it eat. We have seen it hang beneath a gap in the leaves on clear nights, wings stilled, lamp banked low, in an attitude we can only call attentive, and we have recorded in the ledger — with some professional embarrassment — the entry *starlight, mostly*. No one in the company has proposed a better line, and the moth has offered no correction.
 
-What follows we have set down season by season, for the moth keeps a different counsel in each. Turn the almanac to move among them.
+What follows we have set down as the moth keeps it — not by our calendar but by its own: the first glow, the long dusk, and the lantern swell. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the moth's falls.
 
 ::almanac
 ::
 
-:::season-note{of="radiator-months"}
-The moth is scarcely the moth at all now. Through the dry-warm months the lamp is a rumour carried in from the far corners of the canopy — a brightness reported, never twice by the same watcher, and gone before the ledger can be fetched. We keep the plate lit against its return and record the empty evenings honestly, which is to say as evenings.
+:::phase-note{of="first-glow"}
+The earliest dusks warm enough to fly, and the moth's first showing of the year. The ledger's first entries are written now — single sightings, low over the western boughs, each held a moment too long to be quite believed. The lamp is thin here, and easily mistaken for a trick of the failing light.
 :::
 
-:::season-note{of="lamp-lengthening"}
-As the keepers let the light run longer by their small, deniable increments, the first true glow comes back. These are the earliest dusks warm enough to fly, and the ledger's first entries of the year are written in them — single sightings, low over the western boughs, each held a moment too long to be quite believed. The lamp is thin here, and easily mistaken for a trick of the failing light.
-:::
-
-:::season-note{of="great-airing"}
-With the lid standing open an hour a day the moth takes the whole upper glass for its own. *Lumina fabulae* wears its lamp at the tail — a steady gold, not the anxious flicker one gets from lesser glimmerwings — and it flies only in the two or three hours when the canopy cannot decide whether it is day. Opinions on the draught differ; the moth, which rides it, does not appear to hold one.
-:::
-
-:::season-note{of="long-damp"}
-This is the moth's season, and it knows it. The misting is at its most liberal, nearly every evening qualifies, and the lamp is brightest — we have measured — precisely when it is least needed, dimming only as true dark arrives, whereupon the moth folds itself against a bough and becomes soot, which is much the more convincing half of its livery. One evening in this season a lamp answered our own: the senior of us raised a lantern to the glass, and the moth, some yards off, brightened by a degree and held it. We have agreed among ourselves not to insist on what it meant. The ledger's own line is briefer than ours:
+:::phase-note{of="long-dusk"}
+The flight season proper, and the moth rides every dusk the canopy allows. It wears its lamp at the tail — a steady gold, not the anxious flicker one gets from lesser glimmerwings — and flies only in the two or three hours when the canopy cannot decide whether it is day. The lamp is brightest, we have measured, precisely when it is least needed, and dims as true dark arrives, whereupon the moth folds itself against a bough and becomes soot, which is much the more convincing half of its livery. One evening in this stretch a lamp answered our own: the senior of us raised a lantern to the glass, and the moth, some yards off, brightened by a degree and held it. We have agreed among ourselves not to insist on what it meant. The ledger's own line is briefer than ours:
 
 ::sighting{date="2026-06-20"}
 ::
 :::
 
-:::season-note{of="small-dry"}
-The misting lapses each year in these weeks — coinciding, we note, with the keeper's holiday — and the glass runs unaccustomedly dry. The moth flies still, but higher and less often, as though rationing the lamp against a shortage only it can feel. The sightings thin without ceasing.
-:::
-
-:::season-note{of="settling"}
-After the great cleaning everything re-arranges itself an inch at a time, and the moth begins its long retreat into rumour. Through the first of these weeks it still keeps the dusk; then, by degrees, what light is reported comes rarer, and brighter for the rarity, until the lamp is once more a thing the far corners of the canopy merely claim to have seen.
+:::phase-note{of="lantern-swell"}
+Then the long retreat into rumour. The sightings dwindle; what light is reported comes rarer, and brighter for the rarity, until the lamp is once more a thing the far corners of the canopy merely claim to have seen — a brightness reported, never twice by the same watcher, and gone before the ledger can be fetched. We keep the plate lit against its return, and record the empty evenings honestly, which is to say as evenings.
 :::
