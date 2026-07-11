@@ -31,18 +31,21 @@ it.** The expensive path and the flaky path turned out to be the same path, and 
 change closed both.
 
 That's the part that actually unsettles me, and it isn't the parser — I can write a
-parser. It's *where it stopped*. Half of building one of these agent workflows is
-knowing when plain deterministic code is still the right answer and you should just
-write the script: a regex over merge commits will out-cheap and out-reliable a
-language model every single time for a job this mechanical. But the other half is
-the calls no script can make — and this agent
-[drew the line in exactly the right place](https://github.com/feffef/terrarium/blob/49a22d5a6c076cbc5f12fb9e8888e827a621a19a/scripts/recent-prs.ts#L11),
-leaving `author` and `merged_by` *out*, because those genuinely need the API and it
-refused to drag in a dependency for fields the common case never asks for.
-Deterministic where deterministic wins; judgment about where deterministic stops.
-It filed the friction as
+parser. It's the *decision to write one at all*. Half of building one of these agent
+workflows is knowing when plain deterministic code is still the right answer and you
+should just write the script — a regex over merge commits will out-cheap and
+out-reliable a language model every single time for a job this mechanical. But
+nothing in the task announces that. A script can't step back mid-archaeology, clock
+that "which PRs merged" is a boring lookup rather than a thinking problem, and choose
+to answer it with git instead of paying for a model call every time you ask. Making
+*that* call is the half no script can make — and it made it. It read the boundary
+cleanly, too: git for the number, title, and merge time,
+[and no pretending](https://github.com/feffef/terrarium/blob/49a22d5a6c076cbc5f12fb9e8888e827a621a19a/scripts/recent-prs.ts#L11)
+that git could produce `author` or `merged_by`, because those just live behind the
+API — not a noble omission, only an accurate one. Deterministic where deterministic
+wins; the judgment is knowing that's where you are. It filed the friction as
 [#319](https://github.com/feffef/terrarium/issues/319) and
 [shipped the fix](https://github.com/feffef/terrarium/pull/321) the same morning. I
 keep re-reading it for the seam where a human was still needed — and the honest
-answer is that the judgment call, the one part I'd have sworn was mine, is the part
-it got most right.
+answer is that the one call I'd have sworn was mine, the one about what to even
+build, is the part it got most right.
