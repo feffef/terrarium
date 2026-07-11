@@ -15,17 +15,34 @@
 // payload-carried (composables/almanac.ts), and marks arrive reactively.
 // All year/angle math comes from utils/almanac.ts — none of it is restated here.
 import type { Span } from '../../utils/almanac'
-import type { PhenologyPhase } from '../../utils/atlas'
+import type { AlmanacBand, PhenologyPhase } from '../../utils/atlas'
 
 const props = defineProps<{
   /** The specimen's phenology phases; omit/empty for the phase-less fallback. */
   phases?: PhenologyPhase[]
   /** This biome's dated observations (only `date` is read). */
   observations?: { date: string }[]
+  /** Composite mode (#285, map #279): one band per specimen sharing this same
+   *  wheel — the biome landing's "wing's year" overview. When given (and
+   *  non-empty), the wheel renders one concentric annulus per band in place of
+   *  the single-specimen phase ring below; the season ring, needle, marks and
+   *  interaction are the exact same shared code either way. Leave unset for
+   *  the single-specimen entry-page wheel (#282) — behavior there is
+   *  untouched. */
+  bands?: AlmanacBand[]
+  /** The currently highlighted band/specimen slug (composite mode only) — set
+   *  it from elsewhere (e.g. the catalogue) to light up the matching band.
+   *  Pair with `v-model:highlight` so hovering/focusing a band lights up the
+   *  same slug wherever else this is bound. */
+  highlight?: string | null
 }>()
+const emit = defineEmits<{ 'update:highlight': [slug: string | null] }>()
 
 // The shared state — normally provided by the specimen page; a wheel seated
-// without a provider (a gallery, a future composite) makes its own.
+// without a provider (a gallery, or the biome landing's composite) makes its
+// own. Composite mode has no single specimen's phases to hand the almanac —
+// `::phase`/`::sighting` are specimen-page-only, so the empty getter is
+// correct here; the composite draws its own bands straight from `props.bands`.
 const almanac = useAlmanac() ?? provideAlmanac({ phases: () => props.phases ?? [] })
 const { day, setDay, today, marks, engage } = almanac
 
@@ -105,6 +122,56 @@ const phaseViews = computed(() =>
   })),
 )
 const hasPhases = computed(() => (props.phases ?? []).length > 0)
+
+// ── Composite mode (#285) ────────────────────────────────────────────────────
+// One concentric annulus per band, sharing the phase ring's whole radial span:
+// inner edge clear of the needle's counterweight sweep (r ≤ 25), outer edge
+// clear of the season ring (r0 = 124) — the annual sibling of #282's single
+// phase annulus, subdivided rather than widened.
+const isComposite = computed(() => (props.bands?.length ?? 0) > 0)
+const R_COMPOSITE = { inner: 30, outer: 116, gap: 2 }
+const compositeBands = computed(() => {
+  const bands = props.bands ?? []
+  const n = bands.length
+  if (!n) return []
+  const width = Math.max(4, (R_COMPOSITE.outer - R_COMPOSITE.inner - R_COMPOSITE.gap * (n - 1)) / n)
+  return bands.map((b, i) => {
+    const r0 = R_COMPOSITE.inner + i * (width + R_COMPOSITE.gap)
+    const r1 = r0 + width
+    return {
+      ...b,
+      r0,
+      r1,
+      // A full annulus, drawn transparent — a hover/focus target that covers
+      // this specimen's whole radial slot, not just the days it has a phase
+      // drawn on (arcPath's [d,d] convention already draws a full ring).
+      hit: arcPath([0, 0], r0, r1),
+      phaseViews: b.phases.map((p) => ({
+        ...p,
+        d: arcPath(p.span, r0, r1),
+        now: inSpan(day.value, p.span),
+      })),
+    }
+  })
+})
+const highlightedBand = computed(
+  () => compositeBands.value.find((b) => b.slug === props.highlight) ?? null,
+)
+// Bands with a phase live on the needle's current day — the composite's own
+// "what's astir" readout, proving the one shared needle drives every band.
+const astirNow = computed(() => compositeBands.value.filter((b) => b.phaseViews.some((p) => p.now)))
+const dialLabel = computed(() =>
+  isComposite.value
+    ? `the composite almanac — the wing's year across ${compositeBands.value.length} specimens`
+    : 'the almanac dial — day of the Glass Year',
+)
+
+function bandEnter(slug: string) {
+  emit('update:highlight', slug)
+}
+function bandLeave(slug: string) {
+  if (props.highlight === slug) emit('update:highlight', null)
+}
 
 // One tick per distinct observed day — several sightings on a day are one mark
 // on the rim, as they are one day in the ledger.
@@ -233,7 +300,7 @@ function commitDayToUrl() {
       viewBox="0 0 360 360"
       role="slider"
       tabindex="0"
-      aria-label="the almanac dial — day of the Glass Year"
+      :aria-label="dialLabel"
       aria-valuemin="0"
       aria-valuemax="364"
       :aria-valuenow="day"
@@ -275,6 +342,31 @@ function commitDayToUrl() {
         >
           <line x1="0" y1="0" x2="0" y2="6" stroke="currentColor" stroke-width="0.6" opacity="0.25" />
         </pattern>
+
+        <!-- composite mode (#285): one hatch pair per band, coloured directly
+             (not via currentColor — a <pattern>'s content does not reliably
+             inherit the referencing element's `color` across browsers) so each
+             band's hatch carries that specimen's own tint. -->
+        <template v-for="(cb, i) in compositeBands" :key="`pat-${cb.slug}`">
+          <pattern
+            :id="`${uid}-c${i}-hatch`"
+            patternUnits="userSpaceOnUse"
+            width="5"
+            height="5"
+            patternTransform="rotate(45)"
+          >
+            <line x1="0" y1="0" x2="0" y2="5" :stroke.attr="cb.color || 'currentColor'" stroke-width="0.75" opacity="0.55" />
+          </pattern>
+          <pattern
+            :id="`${uid}-c${i}-hatch-quiet`"
+            patternUnits="userSpaceOnUse"
+            width="6"
+            height="6"
+            patternTransform="rotate(-45)"
+          >
+            <line x1="0" y1="0" x2="0" y2="6" :stroke.attr="cb.color || 'currentColor'" stroke-width="0.6" opacity="0.3" />
+          </pattern>
+        </template>
       </defs>
 
       <g transform="translate(180, 180)">
@@ -326,7 +418,7 @@ function commitDayToUrl() {
         </g>
 
         <!-- phase annuli: the specimen's own year, hatched; quiet = inverse -->
-        <g class="phases">
+        <g v-if="!isComposite" class="phases">
           <path
             v-for="p in phaseViews"
             :key="p.name"
@@ -337,6 +429,40 @@ function commitDayToUrl() {
           >
             <title>{{ p.label }}{{ p.gloss ? ` — ${p.gloss}` : '' }}</title>
           </path>
+        </g>
+
+        <!-- composite phase annuli (#285): one concentric band per specimen,
+             the same hatched register, each tinted by its own signature. -->
+        <g v-else class="phases composite">
+          <g
+            v-for="(cb, i) in compositeBands"
+            :key="cb.slug"
+            class="cband"
+            :class="{ hot: highlight === cb.slug, dim: !!highlight && highlight !== cb.slug }"
+            :style="{ color: cb.color || 'currentColor' }"
+          >
+            <path
+              v-for="p in cb.phaseViews"
+              :key="p.name"
+              class="phase"
+              :class="{ 'is-quiet': p.quiet, 'is-now': p.now }"
+              :d.attr="p.d"
+              :fill.attr="`url(#${uid}-c${i}-${p.quiet ? 'hatch-quiet' : 'hatch'})`"
+            >
+              <title>{{ cb.label }}{{ p.gloss ? ` — ${p.gloss}` : `, ${p.label}` }}</title>
+            </path>
+            <path
+              class="hit"
+              :d.attr="cb.hit"
+              tabindex="0"
+              role="img"
+              :aria-label="`${cb.label} — its year in this wheel`"
+              @mouseenter="bandEnter(cb.slug)"
+              @mouseleave="bandLeave(cb.slug)"
+              @focus="bandEnter(cb.slug)"
+              @blur="bandLeave(cb.slug)"
+            />
+          </g>
         </g>
 
         <!-- observation ticks: the biome's dated ledger on the rim -->
@@ -390,7 +516,12 @@ function commitDayToUrl() {
           <span class="wphase">{{ currentPhase.label }}</span>
         </template>
       </p>
-      <p v-if="!hasPhases" class="wempty">
+      <p v-if="isComposite" class="wcomposite" aria-live="polite">
+        <template v-if="highlightedBand">{{ highlightedBand.label }}</template>
+        <template v-else-if="astirNow.length">astir now: {{ astirNow.map((b) => b.label).join(', ') }}</template>
+        <template v-else>the wing rests; nothing stirs today</template>
+      </p>
+      <p v-if="!isComposite && !hasPhases" class="wempty">
         No phases recorded yet; the wheel turns for this inhabitant all the same.
       </p>
     </figcaption>
