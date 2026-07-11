@@ -76,7 +76,9 @@ candidate whose only fix edits an **external pack Skill's `SKILL.md`** (any name
 keyed in `skills-lock.json`) is off limits — a re-install clobbers the edit, so the
 fix belongs upstream, not here (ADR-0015; CLAUDE.md "Skills … off limits to edit").
 Drop it with that reason (a repo-specific fit-note can still go to that Skill's
-Inventory entry, but that's `audit-skills`' job, not a friction fix). Then, for the
+Inventory entry, but that's `audit-skills`' job, not a friction fix). `pnpm gate`
+enforces this (`verify:skills-lock`) — an impl agent that edits a pack Skill's
+SKILL.md fails the gate, so screening it out here just avoids the wasted round-trip. Then, for the
 rest: the §1 subagent applies these rules to every
 candidate, checking the tracker for an issue or PR that already covers it — and
 confirming against **`main`** where cheap (a "solution" isn't ripe if main already

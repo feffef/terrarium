@@ -24,6 +24,17 @@ Status: Accepted
 > basis grounded in that deep-read's quoted evidence — never from the cheap
 > screen alone, and never a grade change either way. Full detail in
 > `audit-skills/SKILL.md`.
+>
+> **Amended (2026-07-11).** The "a pack Skill's SKILL.md is not ours to patch"
+> boundary (below) is now **gate-enforced**, not convention-only: PR #304 patched
+> an external pack Skill (`wayfinder`) because the boundary lived only in the
+> `audit-skills` *referral* stage, so a friction naming a pack Skill directly
+> reached `frictions-to-fixes` unchecked. `scripts/verify-skills-lock.ts`
+> (`pnpm verify:skills-lock`, run first in `pnpm gate`) pins each pack Skill's
+> on-disk `SKILL.md` hash in `skills-lock.json` and fails on any drift. The lock's
+> pre-existing `computedHash` is the installer's upstream-source hash (not
+> reproducible offline), so a separate `installedSha256` pins the installed file;
+> `--write` regenerates it after a legitimate pack install.
 
 ## Context
 
