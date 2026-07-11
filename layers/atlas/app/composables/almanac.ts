@@ -82,6 +82,15 @@ export interface Almanac {
    *  the reader the needle — the wheel's pointer/keyboard scrub, or a prose
    *  handle's deliberate needle-swing. */
   engage: () => void
+  /** A monotonic pulse bumped by `focusDay` — the "take me to this exact day
+   *  AND draw the reader's eye there" signal the clickable dial ticks fire. A
+   *  `::sighting` watches it and scrolls its quote into view when its own day
+   *  is the target, so it reacts to a deliberate tap on its tick, not to every
+   *  drag that happens to cross its day. */
+  focusPulse: Readonly<Ref<number>>
+  /** Move the needle to `day` (engaging the dial) and bump `focusPulse` — the
+   *  clickable-tick path, distinct from the silent `setDay`. */
+  focusDay: (day: number) => void
   /** This biome's dated field-log observations (empty when none provided) —
    *  the ledger a `::sighting{date}` quotes. */
   observations: Readonly<Ref<AlmanacObservation[]>>
@@ -120,6 +129,7 @@ export function provideAlmanac(options: ProvideAlmanacOptions = {}): Almanac {
   const day = ref(normalizeDay(Math.round(options.initialDay ?? today)))
   const markList = ref<AlmanacMark[]>([])
   const engaged = ref(false)
+  const focusPulse = ref(0)
   const observations = computed(() => toValue(options.observations) ?? [])
 
   const almanac: Almanac = {
@@ -139,6 +149,12 @@ export function provideAlmanac(options: ProvideAlmanacOptions = {}): Almanac {
     engaged,
     engage: () => {
       engaged.value = true
+    },
+    focusPulse,
+    focusDay: (d: number) => {
+      engaged.value = true
+      day.value = normalizeDay(Math.round(d))
+      focusPulse.value++
     },
     observations,
     findSighting: (date: string) =>

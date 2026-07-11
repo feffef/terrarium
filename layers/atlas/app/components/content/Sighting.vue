@@ -69,6 +69,22 @@ if (almanac && sightingDay.value !== null) {
   onUnmounted(() => almanac.unregister(uid))
 }
 
+// Clickable dial ticks (feedback rework): when the reader taps this sighting's
+// tick, the dial calls `focusDay(day)` and bumps `focusPulse`. We answer by
+// scrolling this quote into view — after `nextTick`, so the season-note that
+// holds us has finished switching to visible. Only the sighting whose day is
+// the needle's target reacts; a drag that merely crosses the day does not.
+const rootEl = ref<HTMLElement | null>(null)
+if (almanac && sightingDay.value !== null) {
+  watch(
+    () => almanac.focusPulse.value,
+    () => {
+      if (almanac.day.value !== sightingDay.value) return
+      nextTick(() => rootEl.value?.scrollIntoView({ behavior: 'smooth', block: 'center' }))
+    },
+  )
+}
+
 /** Flare while the needle sits on this sighting's day. */
 const hot = computed(() =>
   Boolean(almanac && sightingDay.value !== null && almanac.day.value === sightingDay.value),
@@ -93,7 +109,7 @@ const hasBody = computed(() => vnodesHaveContent(slots.default?.() ?? []))
 </script>
 
 <template>
-  <figure class="atlas-sighting" :class="{ 'is-hot': hot }">
+  <figure ref="rootEl" class="atlas-sighting" :class="{ 'is-hot': hot }">
     <blockquote class="s-quote">
       <template v-if="hasBody"><slot /></template>
       <p v-else-if="obs?.note">{{ obs.note }}</p>

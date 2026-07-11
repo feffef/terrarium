@@ -394,8 +394,12 @@
 .atlas-almanac svg:focus-visible { outline: 2px solid var(--biome-accent); outline-offset: 6px; border-radius: 50%; }
 .atlas-almanac .bezel { fill: none; stroke: var(--atlas-rule); stroke-width: 1; }
 .atlas-almanac .bezel-in { stroke: var(--atlas-line); stroke-width: 0.5; }
-.atlas-almanac .season { fill: none; stroke: var(--atlas-rule); stroke-width: 1; }
+.atlas-almanac .season { fill: none; stroke: var(--atlas-rule); stroke-width: 1; cursor: pointer; transition: stroke 0.15s ease, stroke-width 0.15s ease; }
+.atlas-almanac .season.is-current { stroke: var(--biome-accent); stroke-width: 1.6; }
 .atlas-almanac .season-tick { stroke: var(--atlas-rule); stroke-width: 1; }
+/* the lit wedge of the season the needle rides — a faint accent wash under the
+   ring so the dial's current season reads at a glance (the season selector). */
+.atlas-almanac .season-lit { stroke: none; fill: color-mix(in srgb, var(--biome-accent) 12%, transparent); pointer-events: none; }
 .atlas-almanac .rim-label {
   font-family: var(--atlas-label);
   font-size: 8px;
@@ -403,31 +407,23 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   fill: var(--atlas-muted);
+  transition: fill 0.15s ease;
 }
+.atlas-almanac .rim-label.is-current { fill: var(--biome-accent); }
 .atlas-almanac .month-tick { stroke: var(--atlas-rule); stroke-width: 0.75; opacity: 0.8; }
 .atlas-almanac .newyear-tick { stroke: currentColor; stroke-width: 1.2; }
 .atlas-almanac .phase { stroke: currentColor; stroke-width: 0.9; transition: stroke-width 0.15s ease; }
 .atlas-almanac .phase.is-quiet { stroke-dasharray: 3 3; stroke-width: 0.7; }
 .atlas-almanac .phase.is-now { stroke-width: 1.6; }
 
-/* composite mode (#285): one band per specimen, hover/focus-linked to the
-   catalogue via `v-model:highlight` — dim the rest rather than hide them, so
-   the whole wing's year stays legible while one specimen reads clearly. */
-.atlas-almanac .cband .phase { transition: opacity 0.15s ease, stroke-width 0.15s ease; }
-.atlas-almanac .cband.dim { opacity: 0.32; }
-.atlas-almanac .cband.hot .phase { stroke-width: 1.4; }
-.atlas-almanac .cband.hot .phase.is-now { stroke-width: 1.9; }
-.atlas-almanac .hit { fill: transparent; stroke: none; cursor: pointer; }
-.atlas-almanac .hit:focus-visible { outline: 1.5px solid var(--biome-accent); outline-offset: -1px; }
-.atlas-almanac .wcomposite {
-  margin: 0.3rem 0 0;
-  min-height: 1.1em;
-  font-family: var(--atlas-label);
-  font-size: 0.76rem;
-  letter-spacing: 0.03em;
-  color: var(--atlas-muted);
-}
-.atlas-almanac .obs-tick { stroke: currentColor; stroke-width: 1; opacity: 0.55; }
+/* clickable rim ticks — the ledger's dated observations and the essay's
+   ::sighting marks. A wide transparent "hit" line over each hairline gives a
+   forgiving tap target that jumps the needle to that day. */
+.atlas-almanac .obs-tick { stroke: currentColor; stroke-width: 1; opacity: 0.55; pointer-events: none; }
+.atlas-almanac .obs { cursor: pointer; }
+.atlas-almanac .obs-hit,
+.atlas-almanac .mark-hit { stroke: transparent; stroke-width: 9; stroke-linecap: round; }
+.atlas-almanac .mark { cursor: pointer; }
 .atlas-almanac .mark line { stroke: currentColor; stroke-width: 1.4; }
 .atlas-almanac .mark .gem { fill: none; stroke: currentColor; stroke-width: 1; transition: fill 0.15s ease; }
 .atlas-almanac .mark.is-hot line { stroke-width: 2.2; }
@@ -567,6 +563,47 @@
 }
 .atlas-season .card-span { font-family: var(--atlas-data); font-size: 0.68rem; color: var(--atlas-faint); }
 .atlas-season .card-gloss { font-family: var(--atlas-text); font-size: 0.82rem; font-style: italic; color: var(--atlas-muted); line-height: 1.45; }
+
+/* ::season-note — one Glass-Year season's paragraph. The dial is the essay's
+   season selector; with JS on, only the note for the season the needle rides is
+   shown, so turning the dial fully swaps the prose. Every note server-renders
+   expanded and each is headed by its season, so no-JS/crawlers read the whole
+   year top to bottom. */
+.atlas-season-note { margin: 0; }
+.atlas-season-note + .atlas-season-note { margin-top: 1.7rem; }
+.atlas-season-note.sn-anim { animation: atlas-season-in 0.38s ease both; }
+.atlas-season-note .sn-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9ch;
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--atlas-line);
+}
+.atlas-season-note .sn-label {
+  font-family: var(--atlas-label);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--biome-accent);
+}
+.atlas-season-note .sn-span { font-family: var(--atlas-data); font-size: 0.68rem; color: var(--atlas-faint); }
+.atlas-season-note .sn-body > :first-child { margin-top: 0; }
+.atlas-season-note .sn-body > :last-child { margin-bottom: 0; }
+/* the essay's drop-cap belongs to its opening paragraph only, not each note's */
+.atlas-season-note .sn-body p:first-of-type::first-letter {
+  float: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  padding: 0;
+  color: inherit;
+}
+@keyframes atlas-season-in {
+  from { opacity: 0; transform: translateY(0.5rem); }
+  to { opacity: 1; transform: none; }
+}
 
 /* ::phase — the passage's ink follows the needle, once the dial is engaged.
    Pencil = 40% ink into muted: measurably legible on every biome's paper
