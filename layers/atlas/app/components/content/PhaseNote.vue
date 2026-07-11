@@ -54,7 +54,7 @@ const spanText = computed(() =>
 <template>
   <section
     v-show="show"
-    class="atlas-season-note"
+    class="atlas-phase-note"
     :class="{ 'sn-anim': show && mounted && !!almanac }"
   >
     <header v-if="phase" class="sn-head">

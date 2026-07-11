@@ -10,7 +10,7 @@
 // itself is content and server-renders; only the flare is JS enhancement.
 //
 // Resolution: `components/content/` + pascal-cased tag (`::sighting` →
-// Sighting), same mechanism as Season.vue — render-time only.
+// Sighting), the same render-time mechanism as its sibling MDC components.
 import { Comment, Fragment, Text, type VNode } from 'vue'
 
 const props = defineProps<{ date?: string }>()

@@ -169,17 +169,19 @@ illustration: |
 A general introduction to the specimen, in the naturalist's voice (§1) — how it
 was found, its character, one anecdote. Prose, not bullets. No leading `#` (the
 binomial comes from the frontmatter). One or two short paragraphs, ending with a
-nudge to the dial ("… Turn the almanac to move among them.").
+nudge to the dial ("… Turn the almanac to move through them; the seasons on the
+rim only say where in our shared year each falls.").
 
 ::almanac
 ::
 
-:::season-note{of="long-damp"}
-Then one season-note per Glass-Year season, IN YEAR ORDER (radiator-months,
-lamp-lengthening, great-airing, long-damp, small-dry, settling) — each a short
-paragraph of what the creature does in that season. A `::sighting{date}` that
-quotes a real dated observation nests inside the season whose span contains its
-date. The dial is the essay's season selector: it shows one note at a time.
+:::phase-note{of="long-dusk"}
+Then one phase-note per THIS specimen's own phenology phase, in order of ascending
+`span` start — each a short paragraph of what the creature does in that phase. The
+`of=` value is the phase's `name` from frontmatter (below). The dial is the essay's
+phase selector: it shows one note at a time, and the specimen's phases partition
+the year so there is always exactly one. A `::sighting{date}` that quotes a real
+dated observation nests inside the phase whose span contains its date.
 
 ::sighting{date="2026-06-20"}
 ::
@@ -189,14 +191,16 @@ date. The dial is the essay's season selector: it shows one note at a time.
 **`phenology.phases`** (#279) is the annual sibling of `activity`: where `activity`
 places the creature on the day, `phenology` places it on the **Glass Year** — the
 real 365-day calendar a specimen's `date`-bearing facts already live on, not an
-invented one. Each phase is free-form and per-creature (unlike the six Glass-Year
-*seasons*, which are a tenant-wide constant defined once in `utils/almanac.ts` —
-don't restate or invent season names here; a phase is a different, creature-scoped
-thing that happens to sit on the same wheel):
+invented one. Each phase is free-form and per-creature — and **the essay is
+structured by them**: one `::phase-note` per phase, so a specimen's field note
+follows its own arc. The six Glass-Year *seasons* (a tenant-wide constant in
+`utils/almanac.ts`) stay on the dial's rim as informational context — don't
+restate or invent season names here; a phase is the creature-scoped thing the
+content is tied to. **Author phases as a gapless partition of the year** (every
+day in exactly one phase), so the dial always has exactly one note to show.
 
-- `name` — the phase's slug; it drives the dial's hatched inner arcs. (The
-  essay is structured by the six Glass-Year *seasons* via `::season-note`, not by
-  these free-form phases — the phases are the dial's own annual ornament.)
+- `name` — the phase's slug; a `::phase-note{of="<name>"}` binds its paragraph to
+  this phase, and it drives the phase's lit arc on the dial.
 - `label` — in-voice, the way `activity.label` is: "the lantern swell", not
   "winter dormancy".
 - `span` — `[startDayOfYear, endDayOfYear]`, 0–365. **May wrap the year**

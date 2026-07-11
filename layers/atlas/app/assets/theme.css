@@ -492,103 +492,20 @@
 .atlas-rarity-legend .m { font-family: var(--atlas-data); color: var(--biome-accent); }
 .atlas-rarity-legend .d { color: var(--atlas-muted); font-style: italic; }
 
-/* ── Dial-driven prose: :season / ::almanac / ::season-note / ::sighting ────
-   The MDC components that thread the essay onto the almanac dial. The dial is
-   the essay's season selector: it shows one ::season-note at a time and turning
-   it swaps the prose. Engraved register throughout: currentColor line, fill
-   none; the one accent is the needle head. */
+/* ── Dial-driven prose: ::almanac / ::phase-note / ::sighting ───────────────
+   The MDC components that thread the essay onto the almanac dial. On a specimen
+   the dial drives the creature's own phenology phases: it shows one ::phase-note
+   at a time and turning it swaps the prose. Engraved register throughout:
+   currentColor line, fill none; the one accent is the needle head. */
 
-/* :season — a season's name as a letterpress small-caps handle. */
-.atlas-season {
-  position: relative;
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.38ch;
-  margin: 0;
-  padding: 0 0.1ch;
-  border: 0;
-  background: none;
-  color: inherit;
-  font-family: var(--atlas-label);
-  font-size: 0.82em;
-  font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  line-height: inherit;
-  vertical-align: baseline;
-}
-.atlas-season.is-live { cursor: pointer; }
-.atlas-season .season-glyph {
-  width: 0.85em;
-  height: 0.85em;
-  align-self: center;
-  flex: none;
-}
-.atlas-season .season-glyph .year { fill: none; stroke: currentColor; stroke-width: 1; opacity: 0.35; }
-.atlas-season .season-glyph .arc { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
-.atlas-season .season-name {
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.15s ease, background-color 0.25s ease;
-}
-.atlas-season.is-live:hover .season-name,
-.atlas-season.is-live:focus-visible .season-name { border-bottom-color: currentColor; }
-/* the almanac wash: underlined while the needle rides inside the season */
-.atlas-season.is-now .season-name {
-  background: linear-gradient(
-    transparent 66%,
-    color-mix(in srgb, var(--biome-accent) 26%, transparent) 66%
-  );
-}
-/* the hovercard: a little museum label above the handle */
-.atlas-season .season-card {
-  position: absolute;
-  bottom: calc(100% + 0.55em);
-  left: 50%;
-  transform: translate(-50%, 0.25em);
-  z-index: 5;
-  width: max-content;
-  max-width: 17rem;
-  display: grid;
-  gap: 0.15rem;
-  padding: 0.55rem 0.7rem 0.6rem;
-  background: var(--atlas-paper-2);
-  border: 1px solid var(--atlas-rule);
-  box-shadow: 0 8px 20px -12px rgba(0, 0, 0, 0.45);
-  text-align: left;
-  text-transform: none;
-  letter-spacing: normal;
-  font-weight: 400;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
-}
-.atlas-season:hover .season-card,
-.atlas-season:focus-visible .season-card {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, 0);
-}
-.atlas-season .card-label {
-  font-family: var(--atlas-label);
-  font-size: 0.68rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--biome-accent);
-}
-.atlas-season .card-span { font-family: var(--atlas-data); font-size: 0.68rem; color: var(--atlas-faint); }
-.atlas-season .card-gloss { font-family: var(--atlas-text); font-size: 0.82rem; font-style: italic; color: var(--atlas-muted); line-height: 1.45; }
-
-/* ::season-note — one Glass-Year season's paragraph. The dial is the essay's
-   season selector; with JS on, only the note for the season the needle rides is
-   shown, so turning the dial fully swaps the prose. Every note server-renders
-   expanded and each is headed by its season, so no-JS/crawlers read the whole
-   year top to bottom. */
-.atlas-season-note { margin: 0; }
-.atlas-season-note + .atlas-season-note { margin-top: 1.7rem; }
-.atlas-season-note.sn-anim { animation: atlas-season-in 0.38s ease both; }
-.atlas-season-note .sn-head {
+/* ::phase-note — one of the specimen's own phenology phases and its paragraph.
+   With JS on, only the note for the phase the needle rides is shown, so turning
+   the dial fully swaps the prose. Every note server-renders expanded and each is
+   headed by its phase, so no-JS/crawlers read the whole year top to bottom. */
+.atlas-phase-note { margin: 0; }
+.atlas-phase-note + .atlas-phase-note { margin-top: 1.7rem; }
+.atlas-phase-note.sn-anim { animation: atlas-note-in 0.38s ease both; }
+.atlas-phase-note .sn-head {
   display: flex;
   align-items: baseline;
   gap: 0.9ch;
@@ -596,7 +513,7 @@
   padding-bottom: 0.35rem;
   border-bottom: 1px solid var(--atlas-line);
 }
-.atlas-season-note .sn-label {
+.atlas-phase-note .sn-label {
   font-family: var(--atlas-label);
   font-size: 0.72rem;
   font-weight: 600;
@@ -604,11 +521,11 @@
   letter-spacing: 0.16em;
   color: var(--biome-accent);
 }
-.atlas-season-note .sn-span { font-family: var(--atlas-data); font-size: 0.68rem; color: var(--atlas-faint); }
-.atlas-season-note .sn-body > :first-child { margin-top: 0; }
-.atlas-season-note .sn-body > :last-child { margin-bottom: 0; }
+.atlas-phase-note .sn-span { font-family: var(--atlas-data); font-size: 0.68rem; color: var(--atlas-faint); }
+.atlas-phase-note .sn-body > :first-child { margin-top: 0; }
+.atlas-phase-note .sn-body > :last-child { margin-bottom: 0; }
 /* the essay's drop-cap belongs to its opening paragraph only, not each note's */
-.atlas-season-note .sn-body p:first-of-type::first-letter {
+.atlas-phase-note .sn-body p:first-of-type::first-letter {
   float: none;
   font-family: inherit;
   font-size: inherit;
@@ -616,7 +533,7 @@
   padding: 0;
   color: inherit;
 }
-@keyframes atlas-season-in {
+@keyframes atlas-note-in {
   from { opacity: 0; transform: translateY(0.5rem); }
   to { opacity: 1; transform: none; }
 }

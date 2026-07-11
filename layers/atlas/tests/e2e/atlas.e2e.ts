@@ -48,10 +48,10 @@ export function registerAtlasE2E(): void {
     })
 
     it('hydrates the essay that carries the dial-driven MDC components', async () => {
-      // lumina-fabulae weaves ::almanac / :season / ::season-note / ::sighting
-      // into its field note — an unresolved MDC tag, or a hydration mismatch in
-      // the season-note collapse or the ::sighting registration protocol,
-      // surfaces here as a console error/unknown tag.
+      // lumina-fabulae weaves ::almanac / ::phase-note / ::sighting into its
+      // field note — an unresolved MDC tag, or a hydration mismatch in the
+      // phase-note collapse or the ::sighting registration protocol, surfaces
+      // here as a console error/unknown tag.
       await expectCleanHydration('/t/atlas/canopy/lumina-fabulae')
     })
 

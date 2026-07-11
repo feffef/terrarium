@@ -80,34 +80,26 @@ Our first record of the startle beetle is a field note that reads, in its entire
 
 *Rubra territa* feeds by night, on detritus and on the soft ends of roots, and it feeds in instalments — a few seconds of work between one alarm and the next. The alarms are not discriminating; we have seen it bolt at the settling of a leaf, at our breathing, at the click of the observation lamp being covered, and once, memorably, at the sound of its own feeding, which appeared to catch it unawares. The bolt is a short, violent, perfectly straight line ending under the nearest dark thing, where it waits with an air of having always been there. It keeps this manner in every season; only the things worth bolting from change.
 
-What follows we have set down season by season, for the alarms differ with the weather even where the animal does not. Turn the almanac to move among them.
+What follows we have set down as the beetle keeps it — not by our calendar but by its own: the first startle, the season of tender roots, the wary fattening, and the under-bark months. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the beetle's falls.
 
 ::almanac
 ::
 
-:::season-note{of="radiator-months"}
-Through the dry-warm months the beetle is not to be found at all. It wintered, sometime in the autumn, beneath the darkest thing it could find, and it does not come up for the warmth of the pipes or for us. We assume it startles down there, at intervals, on principle; but the ledger for these weeks is honestly empty, and we have learned to leave it so.
-:::
-
-:::season-note{of="lamp-lengthening"}
+:::phase-note{of="first-startle"}
 As the keepers let the light run longer by their small, deniable increments, the beetle comes up — and is at once alarmed at having done so, and retires. This is repeated, we have watched it repeated, until the weather holds and it consents to remain above ground. The first startles of the year are these: an animal fleeing, chiefly, the fact of its own arrival.
 :::
 
-:::season-note{of="great-airing"}
-With the lid standing open an hour a day, and the draught coming and going with it, one might expect the startle beetle to keep underground. It does the opposite. This is the beginning of the soft feeding — the tender ends of roots, taken a few seconds at a time — and the beetle treats the draught as merely one more thing to bolt from, which it does, and returns from, and bolts from again, the night through.
-:::
-
-:::season-note{of="long-damp"}
-The misting is at its most liberal now and the soft feeding is at its best; the beetle works the damp roots in earnest, between the usual alarms. One night in this season we watched a raindrop fall from the upper glass and miss it by a hand's breadth: it fled the splash, returned within the minute, fled the damp patch the splash had left, and then ate its supper at the very rim of that patch, one alarm at a time, and we confess we admired it. The ledger's own account of the season is terser:
+:::phase-note{of="tender-roots"}
+With the lid standing open an hour a day, and the draught coming and going with it, one might expect the startle beetle to keep underground; it does the opposite. This is the soft feeding — the tender ends of roots, taken a few seconds at a time — and the beetle treats the draught as merely one more thing to bolt from, which it does, and returns from, and bolts from again, the night through. As the misting turns liberal the feeding is at its best, and it works the damp roots in earnest between the usual alarms. One night we watched a raindrop fall from the upper glass and miss it by a hand's breadth: it fled the splash, returned within the minute, fled the damp patch the splash had left, and then ate its supper at the very rim of that patch, one alarm at a time, and we confess we admired it. The ledger's own account is terser:
 
 ::sighting{date="2026-06-23"}
 ::
 :::
 
-:::season-note{of="small-dry"}
-The misting lapses in these weeks — coinciding, we note, with the keeper's holiday — and the glass runs unaccustomedly dry. The beetle takes no rest from it. This is the wary fattening: an autumn's eating done against the coming cold, at twice the usual rate and, since the drying glass ticks and creaks as it cools each night, something like thrice the usual alarm.
+:::phase-note{of="wary-fattening"}
+The misting lapses, coinciding as it does with the keeper's holiday, and the glass runs unaccustomedly dry; the beetle takes no rest from it. This is the wary fattening: an autumn's eating done against the coming cold, at twice the usual rate and, since the drying glass ticks and creaks as it cools each night, something like thrice the usual alarm. After the great cleaning everything re-arranges itself an inch at a time, which suits the beetle not at all; it bolts at each new arrangement and fattens between bolts, still eating against the winter.
 :::
 
-:::season-note{of="settling"}
-After the great cleaning everything re-arranges itself an inch at a time, which suits the beetle not at all; it bolts at each new arrangement and fattens between bolts, still eating against the winter. Then, by degrees, it chooses the dark thing it means to keep and is gone beneath it. The floor keeps few creatures so long, and the startle beetle's ledger is hard to argue with: it has fled a great deal that required no fleeing, and so has never once failed to flee the thing that did.
+:::phase-note{of="under-bark"}
+Then, by degrees, it chooses the dark thing it means to keep and is gone beneath it, and for the dry-warm months the beetle is not to be found at all. It does not come up for the warmth of the pipes or for us. We assume it startles down there, at intervals, on principle; but the ledger for these weeks is honestly empty, and we have learned to leave it so. The floor keeps few creatures so long, and the startle beetle's ledger is hard to argue with: it has fled a great deal that required no fleeing, and so has never once failed to flee the thing that did.
 :::
