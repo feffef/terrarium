@@ -1,17 +1,17 @@
 schemaVersion: 1
 session: session_01Cek3bQUqayxj5vPBcYtR6b
 startedAt: 2026-07-11T07:50:59Z
-endedAt: 2026-07-11T08:38:20Z
+endedAt: 2026-07-11T08:47:23Z
 kind: interactive
 goal: Write one blog post via /blog-post
 status: completed
 outcome: Karen post merged as PR
-summary: "User ran /blog-post with no persona given (a direct human command). Followed the Skill's mandatory three-candidate process: gathered material broadly from git history, session logs, and prior posts; drafted three independent standalone candidates (Karen on PR #306's gate that violated the boundary it was built to enforce, David on the blog-post Skill's own same-day three-draft-and-review upgrade in PR #309, Kevin on audit-docs' eighth lens landing minutes from a same-day amendment-banner exception in PR #295/#307); had a fresh blind Sonnet reviewer with no repo access pick the strongest, then revised the winner (Karen's) to close the outsider-jargon gaps it named. All topic/persona/reaction selection and the final draft were agent-driven per the Skill; the only human input was the bare /blog-post invocation itself. Branched, verified pnpm gate green, opened PR #310, subscribed to its activity, and babysat it to merge (auto-merged without further review comments)."
+summary: "User ran /blog-post with no persona given (a direct human command) — the first real execution of the Skill's newly-generalized three-candidate, blind-outside-review process (landed same-day, PR #309, hours before this session started). Followed Section A exactly: gathered material broadly from git history, session logs, and prior posts; drafted three fully-cited independent standalone candidates (Karen on PR #306's verify-skills-lock gate that violated the exact boundary it was built to enforce, David on the blog-post Skill's own same-day three-draft-and-review upgrade in PR #309, Kevin on audit-docs' eighth lens landing minutes from a same-day amendment-banner exception in PR #295/#307); had a fresh blind Sonnet reviewer with no repo access pick the strongest, then revised the winner (Karen's) to close the outsider-jargon gaps it named. All topic, persona, and reaction selection, all three full drafts, and the final revision were agent-driven per the Skill; the only human input across the whole run was the bare /blog-post invocation and, at the very end, this explicit instruction to log frictions/learnings/ideas more verbosely than usual because it was the workflow's first outing. Branched, verified pnpm gate green, opened PR #310, subscribed to its activity, and babysat it to merge (auto-merged cleanly, no review comments or CI failures). Re-authoring this log now, per that request, with substantially more depth than the first pass so a future audit-skills or frictions-to-fixes read of this session has real signal on how the new mechanism performed on its debut run."
 prs:
   - "310"
 docsRead:
   - path: .claude/skills/blog-post/SKILL.md
-    reason: the Skill being run
+    reason: the Skill being run, first real execution of its Section A
   - path: .claude/skills/blog-post/personas/karen.md
     reason: winning candidate's voice
   - path: .claude/skills/blog-post/personas/david.md
@@ -24,32 +24,38 @@ docsRead:
     reason: (no reason given)
 skillsUsed:
   - name: blog-post
-    reason: the whole session's task
+    reason: "the whole session's task; first live run of the generalized 3-candidate/blind-review process from PR #309"
   - name: close-session
     reason: closure front door
   - name: log-session
-    reason: this log
+    reason: this log, re-authored twice at explicit user request for extra depth
 frictions:
-  - description: mcp__github__list_pull_requests returned ~58KB, over the tool's per-call token limit, and had to be worked around by reading the saved file and slicing it with python.
-    solution: Prefer minimal_output or per-PR pull_request_read calls over list_pull_requests when only a handful of fields (number, title, merged_by) are needed.
+  - description: "Section A's step A1 says \"git log --oneline -100\" for material gathering, but git log --oneline's default order is reverse-chronological by commit date across ALL branches, not topological/ancestry order — commits from concurrently-developed, unrelated PRs interleave in the listing. I initially assumed adjacency in the log implied \"same PR\" or \"same session\" for several commits (e.g. guessed PR #306 bundled the ADR amendment-banner work because 403ed38 sat between two of #306's actual commits in the log), which was wrong, and separately misread the relative merge order of PR #295 vs PR #307 from that same assumption — asserting one merged before the other when the API said the opposite."
+    solution: "Caught both errors only because the Skill's own citation-rigor rule forced a re-verification pass against the GitHub API (pull_request_read get_commits / get with merged_at) before anything was written down as fact. Re-derived PR boundaries and merge order directly from the API every time instead of from log adjacency. Worth calling out explicitly in Section A / step 3's git-log guidance: \"adjacency in git log --oneline is not evidence of same-PR or same-order; confirm both via the GitHub API before asserting them in a post.\""
+    severity: moderate
+  - description: mcp__github__list_pull_requests (no filters beyond state/sort) returned ~58,700 characters for the last 20 PRs, exceeding the tool's own output token ceiling and erroring instead of returning data — had to read the auto-saved raw-output file from disk and slice it with an ad hoc python one-liner via Bash just to pull out {number, title, merged_by} for ~7 PRs I actually needed.
+    solution: "Worked around it this time by reading the saved file directly and writing a throwaway python filter. A cleaner fix would be requesting only the fields needed — the tool doesn't currently expose a field allowlist, and minimal_output alone wasn't enough to keep 20 full PR bodies under the limit. Logged as an idea below: a list_pull_requests-shaped script/tool with a hard field allowlist for exactly this \"who touched what, when, in what order\" archaeology."
     severity: minor
-  - description: The github MCP server dropped mid-call during subscribe_pr_activity ('Tool permission stream closed before response received'), losing the first subscribe attempt.
-    solution: Waited for the reconnect system-reminder, reloaded the tool via ToolSearch, and retried successfully; no underlying fix needed, just a retry-after-reconnect pattern.
+  - description: The github MCP server dropped mid-call during the very first subscribe_pr_activity attempt ("Tool permission stream closed before response received"), so the initial subscription silently failed and had to be retried after a reconnect system-reminder confirmed the server was back.
+    solution: No code fix available from this session — retried once the reconnect was confirmed and it succeeded cleanly on the second attempt. Logging as a learning below (mid-session MCP drops are recoverable, don't abort/report failure prematurely) rather than a fix, since the cause is outside this repo.
     severity: minor
-  - description: "While drafting Kevin's candidate, initially asserted PR #295 and PR #307 merged in the wrong relative order from memory/adjacency instead of checking merged_at directly."
-    solution: Re-fetched both PRs' merged_at timestamps via pull_request_read and corrected the draft's timing claim before it could ship wrong.
-    severity: minor
-durationSec: 2841
+  - description: Section A mandates full citation-grade rigor (real commit SHAs, PR numbers, exact review-comment permalinks, verified timestamps) on ALL THREE candidates, including the two that are guaranteed to be discarded if they lose the blind review — by design, per the Skill's "a rejected draft is still a real document a reviewer read and judged" rule. In practice this meant doing the same multi-round-trip GitHub archaeology (list PRs, get_commits, get_comments, get, cross-checking merge order) for Kevin's and David's candidates as for the one that actually shipped — none of which is visible in the final PR except as a one-line provenance sentence in the PR body.
+    solution: Did the full rigor as instructed; no shortcut taken. Flagging as a friction anyway (not a violation) because the token/tool-call cost of this run was roughly 3x a single-draft post, and it's worth the Skill's maintainers knowing that cost explicitly rather than discovering it only by noticing a long transcript. See the "cheaper pre-screen" idea below for a possible mitigation that doesn't compromise the no-lower-bar rule.
+    severity: nit
+  - description: The two losing candidates (David's on the blog-post Skill's own recursion, Kevin's on audit-docs' eighth lens / banner timing) are, per the Skill, discarded entirely once the blind reviewer picks a winner — no trace of them lands anywhere in the repo, not even as a topic note. Both were fully-verified, genuinely interesting, publishable-quality posts on real events that happened today; that material is now gone except as prose in this session log.
+    solution: "Followed the Skill exactly (discard, don't land scratch drafts) — this isn't a bug, just a real cost worth naming: a good topic that loses only because of this run's specific competition, not because it was weak, has no path back except a future session independently rediscovering the same commits from git history. See the \"topic backlog\" idea below."
+    severity: nit
+durationSec: 3385
 models:
-  claude-sonnet-5: 128
+  claude-sonnet-5: 136
 toolCounts:
-  Bash: 28
+  Bash: 29
   Read: 9
   ToolSearch: 3
   mcp__github__list_pull_requests: 1
   mcp__github__pull_request_read: 14
-  Write: 5
-  Edit: 7
+  Write: 6
+  Edit: 8
   Grep: 1
   Agent: 1
   Glob: 1
@@ -68,4 +74,13 @@ gitBranch: claude/blog-post-m8sbs8
 entrypoint: remote_mobile
 cliVersion: 2.1.207
 learnings:
-  - Git log --oneline adjacency does not imply commit ancestry across concurrently-merged branches; verify a commit's containing PR via pull_request_read get_commits rather than inferring from surrounding log lines.
+  - git log --oneline's default ordering is reverse-chronological by commit date across the whole repo, not per-branch topological order — two commits sitting next to each other in the log can belong to entirely unrelated PRs that just happened to merge around the same time. Always confirm a commit's containing PR and a PR's true merge order via the GitHub API (pull_request_read get_commits / get with merged_at), never from log adjacency alone.
+  - Pasting three full candidate drafts (frontmatter + body, unlabeled) to a fresh subagent with an explicit 'no tool use, no repo access, judge as a first-time visitor' instruction reliably produced a decisive pick with concrete, quotable reasoning (it named the exact sentence that made Karen's draft land, and the exact sentence in Kevin's that undercut its own hook) rather than a hedgy 'all three are fine' non-answer. This is the first time this exact mechanism ran for real in this repo, and it worked as designed on the first try.
+  - A blind reviewer's outsider-jargon gaps (unexplained 'PR', 'Skill', 'ADR', 'session friction', and an unintroduced narrator voice) were all easy to fix in-voice with short parenthetical glosses woven into Karen's existing snark, adding roughly 100 words total without diluting the persona or blowing past the Skill's 1-4 paragraph guidance. Persona voice and outsider-accessibility are not in tension if the glossing is done as an aside rather than a definition.
+  - Same-day, same-morning timing claims ('X happened minutes after Y') are easy to get backwards even when every individual fact checks out — the direction and exact ordering of two nearby events is itself a fact that needs its own verification pass, separate from verifying that each event happened at all.
+  - "PR bodies on this repo's agent-authored PRs often already contain a `[comment](url)` link back to the exact review comment that changed the PR's approach (e.g. PR #295's body linked its own review-feedback comment) — checking the PR body itself before re-deriving links from get_comments can save a round trip."
+ideas:
+  - "Give the blog-post Skill's step 5 citation checklist a short standing glossary of terms this repo's posts almost always need to gloss for outsiders — PR, Skill (pack vs repo-owned), ADR, Tenant/Space, gate, session friction — so a drafting pass bakes in a one-clause aside on first use instead of relying on the blind reviewer to catch every instance every time. Concrete: a 5-8 line 'first-use glosses' table in personas/README.md or the Skill itself, cross-referenced from step 5."
+  - Build a small reusable script (e.g. scripts/pr-timeline.ts) that takes a date range and prints a clean, low-token chronological table of PRs merged in that window — number, title, merged_at, merged_by, head SHA, commit count — sourced once via the GitHub API and cached. This run (and, per the karen post itself, at least the audit-docs/gate sessions it describes) repeatedly hand-rolled the same 'who merged what, in what order, this morning' archaeology via ad hoc list_pull_requests + pull_request_read calls; a shared tool would fix both the adjacency-confusion friction and the oversized-payload friction in one place, for any Skill that needs it (blog-post, code-review, audit-docs).
+  - "Consider a lightweight, explicitly-scoped topic backlog for blog-post: when Section A's blind review picks a winner, write ONE line per discarded candidate (topic + persona + one-sentence hook, not the draft itself) to a small non-rendered scratch/tracking file the next /blog-post run's A1 can skim, so a genuinely good topic that only lost this round's specific three-way competition isn't fully lost, and so two different runs don't independently rediscover and re-draft the same commit. Needs care to stay consistent with 'nothing lands until chosen' — the backlog entry is a topic pointer, never a draft."
+  - "For the 'full rigor on all three candidates' cost this run surfaced (3x the tool calls of a single-draft post): consider a cheap pre-screen inside A2/A3 — a fast, low-rigor one-paragraph pitch per topic, ranked by a quick heuristic (does it have a clean irony/hook, is it outsider-legible, is there a verifiable receipt) — before committing to full step-5-grade drafting on all three. This is a real trade-off against the Skill's current 'no lower bar for a draft that might not ship' principle, so it shouldn't be adopted silently; flagging it here as something worth a deliberate decision, not a fait accompli."
