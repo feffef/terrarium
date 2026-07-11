@@ -1,0 +1,84 @@
+schemaVersion: 1
+session: session_01SoBXSK23ik4nRSgybvfYgi
+startedAt: 2026-07-11T07:51:20Z
+endedAt: 2026-07-11T08:44:38Z
+kind: autonomous
+goal: Audit repo docs for drift and inconsistency
+status: in-review
+outcome: One PR merged, one escalated PR open
+summary: "Ran the /audit-docs chartered sweep end to end, unattended. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across the repo's Live/Historical/Pack-generic doc tiers, pooling 10 findings, then dispatched an independent fact-checker that re-derived each against primary sources (code, git history, ADRs) rather than trusting the reviewers' framing. 8 findings confirmed, 2 discarded as non-defects (intentional why/where doc splits, a defensible glossary judgement call). Fixed 6 Live-tier findings (a wrong ADR citation, an unlinked new research doc, two intra-CLAUDE.md duplications, and — most notably — a CI editability contradiction that git history proved factually false: CLAUDE.md claimed \"CI is never agent-edited\" but commit c580e73 is an agent-authored edit to the gate workflow, merged via a normal human-reviewed PR) in a self-merged PR (#311, merged on green gate). One finding (ADR-0010 restating a Routine's schedule cadence, violating CLAUDE.md's own rule against that) touches a human-only ADR surface, so it was escalated as its own PR (#312, still open, subscribed and check-in scheduled). All work this run was self-directed per the audit-docs charter; no human prompted or reviewed during the run."
+prs:
+  - "311"
+  - "312"
+docsRead:
+  - path: CLAUDE.md
+    reason: single-home rule, ground rules, the surfaces this sweep may touch
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: fact-check PR auto-open/watch duplication and reviewer-agent tier
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: fact-check the CI edit-vs-merge contradiction
+  - path: docs/adr/0005-skill-model.md
+    reason: verify it does NOT own the pack-Skill-not-ours-to-patch rule
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: verify the nightly-cadence rule violation
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: verify it IS the home of the pack-Skill rule
+  - path: CONTEXT.md
+    reason: check Codify entry against glossary-only rule
+  - path: tests/README.md
+    reason: check against ADR-0004 for a duplication defect
+  - path: docs/research/mdc-when-to-use.md
+    reason: verify orphan-addition finding
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the sweep this whole session executed
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Defaulted to the audit-docs Skill's own branch-naming convention (journal/audit-docs-<date>) instead of the caller-pinned designated branch (claude/audit-docs-7n2oja) named in this session's own task instructions — missed that CLAUDE.md's "a caller-pinned designated branch overrides this default name" applied here.
+    solution: "Check the task's own branch-pinning instructions first, before defaulting to a Skill's stated convention. By the time this was noticed, PR #311 had already merged onto the wrong-named branch; reverting good, fact-checked fixes over a naming technicality wasn't worth the churn, so this stands as a process deviation, not a functional defect."
+    severity: moderate
+  - description: subscribe_pr_activity failed once on the first call ("Tool permission stream closed before response received"); an immediate retry with identical arguments succeeded.
+    solution: No fix needed beyond retrying; noting in case it recurs.
+    severity: minor
+durationSec: 3197
+models:
+  claude-sonnet-5: 153
+toolCounts:
+  Bash: 29
+  Agent: 5
+  ScheduleWakeup: 1
+  TaskCreate: 1
+  ToolSearch: 4
+  Read: 12
+  Edit: 8
+  mcp__github__list_pull_requests: 2
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 3
+  mcp__github__pull_request_read: 3
+  mcp__github__merge_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - .agents/skills/audit-skills/SKILL.md
+  - CLAUDE.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+subagents:
+  - task: "Freshness lens: drift + orphan-addition"
+  - task: "Single-home lens: duplication + mis-location"
+  - task: "Concision lens: verbose + stale-narration"
+  - task: "Coherence lens: contradiction + ambiguity"
+  - task: Independent fact-check of pooled audit findings
+gitBranch: claude/audit-docs-7n2oja
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+learnings:
+  - Grepping commit authorship (git log --format='%an %ae' -- <path>) against a doc's behavioral claim is a fast, decisive way to fact-check drift — it turned a soft "these two CLAUDE.md sentences read as conflicting" hunch into a hard, provable falsehood (an agent-authored commit to CI that a doc claimed could never happen).
