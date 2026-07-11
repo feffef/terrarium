@@ -162,13 +162,12 @@ runs in its **own git worktree** (parallel PRs must not share a working tree):
     Skill self-merges its doc commits too (§6), they hold to the same standard the
     doc-audit sweep verifies. Two axes: (1) respect each surface's **tier** — Live
     is fixable, but **never rewrite a Historical decision** (ADRs/digests/session
-    logs — ADRs are human-only anyway, §3) **or a Pack-generic template**; (2)
-    don't *author* what audit-docs would later raise — **single-home rather than
-    restate** (per CLAUDE.md; no new duplication, drift, verbose filler,
-    stale-narration that strips a load-bearing "don't-regress" why, contradiction,
-    or ambiguity), and give any new `docs/agents/*`/`docs/research/*` file its
-    incoming CLAUDE.md-index link. A friction doc fix that would become the next
-    audit-docs finding isn't done. Put this in the doc-fix agent's brief.
+    logs — ADRs are human-only anyway, ADR-0004) **or a Pack-generic template**;
+    (2) don't *author* any defect audit-docs' eight lenses catch — above all
+    **single-home rather than restate** (the CLAUDE.md rule), and give any new
+    `docs/agents/*`/`docs/research/*` file its incoming CLAUDE.md-index link. A
+    friction doc fix that would become the next audit-docs finding isn't done.
+    Put this in the doc-fix agent's brief.
 - **Code or config fixes**: one PR each — they carry distinct review and CI surface
   and shouldn't ride on each other. (A single issue that already grouped related
   frictions is still one PR.)
