@@ -12,9 +12,9 @@ are generic or per-Tenant.
 Two categories exist and should not be conflated:
 - **Platform-operation Skills** — encode how to safely perform a Platform change
   (`spawn-tenant`, `add-space`, `add-collection`, `edit-content`, and the
-  chartered autonomous jobs `sync`, `drift-check`, `consolidate`, `triage`,
-  `codify`). They embed *this* Platform's conventions (manifest schema, layer
-  structure, safety gate). This is the first-class, ever-growing deliverable.
+  chartered autonomous jobs `sync`, `consolidate`, `triage`, `codify`). They
+  embed *this* Platform's conventions (manifest schema, layer structure,
+  safety gate). This is the first-class, ever-growing deliverable.
 - **General engineering Skills** — `tdd`, `code-review`, `domain-modeling`, etc.
   Inherited tooling, reusable anywhere, not part of the Platform's identity.
 

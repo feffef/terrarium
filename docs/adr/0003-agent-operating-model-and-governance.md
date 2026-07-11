@@ -100,8 +100,6 @@ and consolidate*; humans *decide what should exist*. The chartered jobs (each a
 Skill, each producing scoped PRs with a known expected shape):
 - **sync** — keep the living-documentation Tenant / status report matching real
   repo state
-- **drift-check** — detect manifest ↔ generated-config ↔ content mismatches, PR
-  the fix
 - **consolidate** — detect duplication/inconsistency across Tenants, propose
   refactors
 - **triage** — implement a backlog item (issue) filed by a human or agent

@@ -10,9 +10,8 @@ Status: Accepted
 > **Amended (2026-07-08).** The "chartered, still-deferred `sync` job" below is
 > **no longer fully deferred**: the `digest` Skill now runs nightly via an
 > external Routine (Skill + trigger = an autonomous job, ADR-0005), so the `sync`
-> remit is partially live — realised by `digest` (scheduled) and `audit-skills`
-> (still on-demand; see ADR-0015). The live-dashboard point below stands
-> unchanged.
+> remit is partially live — realised by `digest` and `audit-skills`, both now
+> scheduled (see ADR-0015). The live-dashboard point below stands unchanged.
 
 ## Context
 
