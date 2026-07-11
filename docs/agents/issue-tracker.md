@@ -38,6 +38,10 @@ class to its MCP equivalent:
   it surfaces loosely-relevant, noisy hits alongside genuine ones. Eyeball
   every result for actual relevance; don't trust hit count or ranking/order
   as a precision signal.
+- **"Which PRs merged recently, in what order, when" doesn't need `list_pull_requests`/
+  `search_issues` at all** — `tsx scripts/recent-prs.ts [N]` answers it straight
+  from `git log origin/main` (number/title/merge-time only; `author`/`merged_by`
+  are out of scope, since those need the API) with no overflow risk (issue #319).
 - **Read a PR or its diff** → `pull_request_read`
 - **Check a PR's gate status** → `pull_request_read` with method `get_check_runs`,
   *not* `get_status`: the combined-status API reports `total_count: 0` /
