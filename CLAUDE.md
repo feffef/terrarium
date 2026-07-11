@@ -111,6 +111,14 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   git and can change without a commit. Say a Skill *is* scheduled; never say *when*.
 - Inspect files with the **Read tool, not `cat`** — the Edit tool refuses to edit
   a file it hasn't seen via Read, so `cat`-then-Edit forces a wasteful re-read.
+- **Never predict or reconstruct an identifier — a line number, a blob SHA, an
+  issue/PR number — from memory.** Always resolve it via a fresh tool call
+  (a Read, `git rev-parse`/`git log -1 --format=%H`, or the actual `issue_write`
+  response) at the moment you write it down.
+- **Verify any subagent- or doc-derived factual or behavioral claim against a
+  locally observable primary source before publishing it externally** (an
+  issue/PR comment, an external post, etc.) — a subagent's inference or a
+  doc's claim can be wrong, and posting it unchecked ships that error outward.
 - **Don't try to silence a `mcp__Claude_Code_Remote__*` permission prompt by adding a
   `.claude/settings.json` `permissions.allow` entry — it can't work.** In cloud
   (web/mobile) sessions the workspace starts **untrusted** (`~/.claude.json` →
@@ -162,7 +170,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 - **Commit messages containing backticks or `$(...)` must be written with
   `git commit -F <file>`** (or a quoted heredoc), never `git commit -m` —
   inside a double-quoted `-m` argument the shell runs the backtick/`$()` span
-  as a command and mangles the commit body.
+  as a command and mangles the commit body. **The harness's automatic
+  Co-Authored-By/Claude-Session footer injection only applies to
+  interactive/`-m` commits, not `-F`** — when using `-F`, append both
+  provenance lines to the message file yourself.
 - **For any since-last-merge diff or review, run `git fetch origin main` first
   and anchor on the merge-base** (`git merge-base origin/main HEAD`) or the
   commit under review (`HEAD~1`) — the environment's pre-cloned `origin/main`
@@ -174,7 +185,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   nonempty merge-base — check `git merge-base origin/main HEAD` first and be
   ready for the pre-cloned repo to be a fully unrelated root (empty
   merge-base, 100+ commits of divergence), not just stale — resetting onto it
-  blindly would destroy real history.
+  blindly would destroy real history. **This isn't only a pre-diff step** —
+  in this fast-moving, multi-agent repo, re-fetch and rebase onto
+  `origin/main` periodically during a long-running session too, not just
+  right before a final push, especially before landing/merging a PR that
+  touches a shared doc or list other concurrent sessions likely edit.
 - **Keep a PR's description in sync with its content — hard rule.** If you
   fundamentally change what a PR does (switch approach, swap the files it touches,
   answer review with a different solution), update the PR title/description in the

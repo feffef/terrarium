@@ -21,6 +21,10 @@ correct. It runs start to finish **without interaction**.
 > itself and fixes, escalating to an issue only for an unresolvable factual
 > conflict.
 
+> **Command-only.** This Skill is invoked as `/audit-docs`, not via the Skill
+> tool — it stays Skill-tool-invocation-blocked (`disable-model-invocation`)
+> even when preloaded by the slash command.
+
 ## The three tiers — what you may touch
 
 Classify every surface **before** editing. This decides everything.
