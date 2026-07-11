@@ -1,0 +1,60 @@
+schemaVersion: 1
+session: session_017wZ1QrpEKVXSrfE3FqWW2U
+startedAt: 2026-07-11T04:18:08Z
+endedAt: 2026-07-11T04:39:05Z
+kind: autonomous
+goal: Run frictions-to-fixes to mine, screen, fix, and land recurring session frictions
+status: completed
+outcome: 8 doc frictions found, filed, fixed, and merged in one PR
+summary: Autonomous frictions-to-fixes cycle, triggered by a scheduled Routine (no live human prompt this session). Delegated the survey of the latest 20 session logs to a general-purpose subagent, which grouped and screened every friction against the GitHub tracker via search_issues/search_pull_requests and scripts/merged-since.ts. It returned 8 never-fixed, doc-only candidates (Skills/CLAUDE.md/docs/agents/issue-tracker.md), zero regressions, and zero hard/multi-file candidates. I filed one GitHub issue per candidate (#296-#303) with recommended fixes, then dispatched a single Sonnet impl agent in an isolated git worktree to land all 8 as one grouped doc-only PR (#304), per the skill's batching rule for doc fixes. I reviewed the diff myself, confirmed the safety-gate CI check succeeded, posted the review verdict as a PR comment, and merged via squash — all 8 issues auto-closed. All decisions in this run (screening, selection, review, merge) were agent-made per the skill's autonomous review-agent mandate; no human input occurred mid-session.
+prs:
+  - "304"
+docsRead: []
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the skill driving this entire run
+  - name: close-session
+    reason: session closure trigger
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: session-frictions.ts output piped through `| head -500` truncated a JSON record mid-way, before the real ~32.7KB persisted-output cutoff was reached
+    solution: Redirect survey script output to a file directly and read the file in full instead of piping through head
+    severity: nit
+  - description: mcp__github__search_issues with a broad `is:open` query (no keyword) overflowed the tool's own ~77k-char result limit despite a modest perPage
+    solution: Fell back to grepping the persisted result file for title/number fields; worth remembering keyword-less is:open searches are exactly the case that overflows
+    severity: nit
+  - description: git blame/`git log -S` against origin/main was noisy for dating when older CLAUDE.md rules were first introduced, often resolving to a squash-merge boundary commit rather than the true origin
+    solution: Cross-check ambiguous git-blame signal against scripts/merged-since.ts scoped to the friction's own session startedAt
+    severity: minor
+  - description: this is at least the third consecutive frictions-to-fixes cycle where a large share of the 20-session survey window's frictions were already fixed by later sessions in that same window, so most of the survey budget went to re-confirming already-fixed candidates rather than finding new signal — the prior cycle's own log made the identical observation
+    solution: Consider widening the survey window or spacing out the run cadence so the survey isn't repeatedly re-deriving the same already-fixed history
+    severity: moderate
+durationSec: 1257
+models:
+  claude-sonnet-5: 70
+toolCounts:
+  Bash: 3
+  ToolSearch: 4
+  Agent: 2
+  mcp__github__issue_write: 8
+  ScheduleWakeup: 1
+  mcp__github__pull_request_read: 8
+  mcp__github__actions_list: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Skill: 2
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Implement grouped doc-fix PR for 8 friction issues
+    model: sonnet
+gitBranch: claude/hopeful-brown-psm7oj
+entrypoint: remote_trigger
+cliVersion: 2.1.207
