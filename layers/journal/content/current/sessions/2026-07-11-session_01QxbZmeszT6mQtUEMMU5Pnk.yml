@@ -1,0 +1,59 @@
+schemaVersion: 1
+session: session_01QxbZmeszT6mQtUEMMU5Pnk
+startedAt: 2026-07-11T16:01:18Z
+endedAt: 2026-07-11T16:17:08Z
+kind: interactive
+goal: Write one Blog post via three-candidate review
+status: in-review
+outcome: "Kevin post shipped in PR #327; CI blocked by runner billing"
+summary: "Human-invoked `/blog-post` (no persona). Ran the Section-A candidate process: gathered material from 100 commits, session logs, and sibling posts; drafted three distinct standalone candidates (David on the public-readiness review #326, Karen on the six retired recurring frictions #313-#318, Kevin on the git-based recent-prs helper #319/#321). A fresh Sonnet outside-reader picked the Kevin draft as the most self-contained for a first-time visitor. Revised it per the reviewer's notes (ground what Terrarium and an \"agent\" are, gloss \"friction\", pay off the description hook), cleared local `pnpm gate` green, and opened gated PR #327. Every fact/link verified against the issue, PR, and file on disk. The whole run was the human's single ask; no net-new autonomous work."
+prs:
+  - "327"
+docsRead:
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice/do-don't for the winning draft
+  - path: docs/research/public-readiness-review.md
+    reason: grounding for the David candidate
+  - path: scripts/recent-prs.ts
+    reason: grounding + line anchors for the Kevin post
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the invoked workflow
+  - name: close-session
+    reason: closure front door
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "CI gate on PR #327 reported failure in 4s with runner_id 0 and 404 logs — the GitHub-hosted runner never started, a billing/dispatch block, not a real test failure."
+    solution: Known condition documented in commit 73722bd; resolve Actions billing or flip repo public (free standard runners) per docs/research. Not fixable by editing the post. Local `pnpm gate` passed fully.
+    severity: moderate
+durationSec: 950
+models:
+  claude-opus-4-8: 84
+toolCounts:
+  Bash: 16
+  Read: 3
+  Write: 5
+  Agent: 1
+  ToolSearch: 5
+  mcp__github__list_pull_requests: 1
+  mcp__github__issue_read: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__get_job_logs: 1
+  mcp__github__actions_get: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-07-11-it-hit-a-wall-and-built-a-tool.md
+subagents:
+  - task: Fresh outside read of three drafts
+    model: sonnet
+gitBranch: claude/blog-post-1hd2op
+entrypoint: remote_mobile
+cliVersion: 2.1.207
