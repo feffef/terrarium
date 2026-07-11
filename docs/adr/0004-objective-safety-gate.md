@@ -65,6 +65,17 @@ Status: Accepted
 > Decision that an L1 layer exists is unchanged — only the mechanism note
 > above is corrected.
 
+> **Amended by [ADR-0019](0019-requester-trust-tiers.md) (2026-07-11).** A third,
+> orthogonal axis joins the blast-radius policy below: **provenance of the
+> request.** A **Public**-originated PR (authored by someone without write
+> access — a read-only visitor's fork PR) is **human-merged regardless of file
+> classification** — the low-risk auto-merge tier does not apply to it — and its
+> executable code gets a genuine security review, never a gate rubber-stamp (the
+> gate is blind to malicious runtime behaviour by design). Enforcement note: the
+> gate/CI boundary is where this is mechanically enforceable (require fork-PR
+> workflow approval; human-only merge for Public PRs), so untrusted code never
+> runs in CI or lands without a **Trusted Principal**'s action. See ADR-0019.
+
 ## Context
 
 Both the human reviewer (now) and the scheduled review-agent (mid-term, ADR-0003)

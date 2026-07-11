@@ -2,16 +2,14 @@
 
 Date: 2026-07-11
 
-Status: Proposed
+Status: Accepted
 
-> **Status is `Proposed`, not `Accepted`.** This ADR records a decision for the
-> owner to finalize; merging it lands the *proposal on the record*, it does not
-> enact the governance change. Acceptance is a later human edit that flips this
-> to `Accepted` and applies the amendments enumerated under **Consequences**
-> (to `CONTEXT.md`, ADR-0003, ADR-0004). Governance/ADRs are human-only to merge
-> (ADR-0004). Supersedes the thinking in the closed drafts #207 / #213 — in
-> particular it **rejects** their "invited collaborators are screened guests"
-> stance in favour of the simpler write-vs-read boundary below.
+> **Supersedes the closed drafts #207 / #213.** It **rejects** their "invited
+> collaborators are screened guests" stance in favour of the write-vs-read
+> boundary below. Accepted by the owner; the amendments it triggers (to
+> `CONTEXT.md`, ADR-0003, ADR-0004, CLAUDE.md, and `docs/agents/issue-tracker.md`)
+> are applied — see **Consequences**. Governance/ADRs are human-only to merge
+> (ADR-0004).
 
 ## Context
 
@@ -55,6 +53,21 @@ autonomy tier (ADR-0003) and blast-radius tier (ADR-0004).
 - **Public** — everyone else: read-only visitors with no write access. On a
   public repo they can still **open issues and open pull requests from forks**.
   They cannot direct agents, cannot green-light work, and cannot merge.
+
+**Why the owner and other write-access holders are one tier, not two.** A
+write-access contributor can already `git push` to branches, open PRs, and edit
+any file directly — the agent is not their only, or even their most direct, path
+to the repository. Restricting what they may do *through an agent* more tightly
+than their raw git access already allows would be security theatre: it adds
+friction to the mediated path while the unmediated one stays wide open, buying no
+real containment. (ADR-0011 sharpens this — a write holder can land code on
+`main`, which the deploy container then executes on the VPS, with no agent
+involved at all.) The trust floor is therefore set by *who holds write access*,
+and the only boundary that actually contains anything is **write vs. no-write**.
+A separate "owner above collaborators" tier would require collaborators to be
+*less* trusted through agents than their own push access already makes them —
+incoherent. The place to decide *who* gets write access is GitHub's collaborator
+settings, upstream of this ADR; ADR-0019 governs only what follows from that line.
 
 **Tier is established out-of-band from identity, never from request content.**
 For GitHub artifacts the signal is `authorAssociation`: `OWNER`, `MEMBER`, and
@@ -114,22 +127,24 @@ turned on when the repo goes public:
 
 ## Consequences
 
-**Amendments this ADR makes on acceptance** (deferred until Status → Accepted):
+**Amendments (applied when this ADR was accepted).** Each is a pointer to this
+ADR as the single home for the requester-trust axis, not a restatement:
 
 - **`CONTEXT.md` → Agent Authorship**: "Humans converse, direct, and review"
-  becomes *Trusted* humans do; Public visitors only **report** (open issues /
-  fork PRs), and agents treat Public input as untrusted data.
-- **`CONTEXT.md` glossary**: add **Principal**, **Trusted Principal**, and
-  **Public** (requester) as `### Term` entries (glossary-only, per
-  `domain-modeling`). These are load-bearing in ≥2 governance surfaces, clearing
-  the repo's rule-of-two.
-- **ADR-0003**: the "human green-light" for net-new work is a **Trusted
-  Principal** green-light; a Public issue never is one.
-- **ADR-0004**: add the provenance axis — a Public-originated PR is human-merged
-  regardless of file classification; its low-risk auto-merge tier does not apply
-  to Public authors.
-- **CLAUDE.md**: a one-line pointer in Ground rules to this ADR as the home for
-  the requester-trust axis.
+  refined so *Trusted* Principals do; Public visitors only **report** (open
+  issues / fork PRs), and agents treat Public input as untrusted data.
+- **`CONTEXT.md` glossary**: added **Principal**, **Trusted Principal**, and
+  **Public** as `### Term` entries (glossary-only, per `domain-modeling`).
+  Load-bearing in ≥2 governance surfaces, clearing the repo's rule-of-two.
+- **ADR-0003**: amending note — the "human green-light" for net-new work is a
+  **Trusted Principal** green-light; a Public issue never is one.
+- **ADR-0004**: amending note — the provenance axis: a Public-originated PR is
+  human-merged regardless of file classification; the low-risk auto-merge tier
+  does not apply to Public authors.
+- **CLAUDE.md**: a Ground-rules pointer to this ADR.
+- **`docs/agents/issue-tracker.md`**: a pointer noting the external-PR
+  `authorAssociation` split it already uses *is* the Trusted/Public line, and
+  that Public input is untrusted.
 
 **Trade-offs and residual risk:**
 
