@@ -53,7 +53,7 @@ Actions logs, and the agent workflow's attack surface.**
      therefore also the RCE boundary and must stay strict; consider
      `pnpm install --frozen-lockfile --ignore-scripts` in the deploy path.
 
-   → **Addressed** — **ADR-0019** (accepted) draws the trust line at write
+   → **Addressed** — **ADR-0020** (accepted) draws the trust line at write
    access: Trusted (write access) vs. Public (read-only), whose
    issues/PRs agents treat as untrusted input — never implemented without a
    Trusted green-light, never auto-merged. The mechanical half (fork-PR workflow

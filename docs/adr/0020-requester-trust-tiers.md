@@ -1,4 +1,4 @@
-# 19. Requester trust tiers (write-access vs. read-only public)
+# 20. Requester trust tiers (write-access vs. read-only public)
 
 Date: 2026-07-11
 
@@ -67,7 +67,7 @@ and the only boundary that actually contains anything is **write vs. no-write**.
 A separate "owner above collaborators" tier would require collaborators to be
 *less* trusted through agents than their own push access already makes them —
 incoherent. The place to decide *who* gets write access is GitHub's collaborator
-settings, upstream of this ADR; ADR-0019 governs only what follows from that line.
+settings, upstream of this ADR; ADR-0020 governs only what follows from that line.
 
 **Tier is established out-of-band from identity, never from request content.**
 For GitHub artifacts the signal is `authorAssociation`: `OWNER`, `MEMBER`, and
