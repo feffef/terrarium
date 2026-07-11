@@ -1,0 +1,95 @@
+schemaVersion: 1
+session: session_01UfVh2uJR3kFNjddw7bKUiP
+startedAt: 2026-07-11T04:08:28Z
+endedAt: 2026-07-11T04:28:17Z
+kind: autonomous
+goal: Run the audit-docs sweep
+status: in-review
+outcome: 6 findings merged (#294), 2 ADR fixes await human review (#295)
+summary: "Autonomous audit-docs Routine. Fanned out four read-only lenses (drift, duplication, contradiction, ambiguity) across CLAUDE.md, CONTEXT.md, ADRs, and Skills, pooled 8 candidate findings, then dispatched an independent fact-checker that CONFIRMED all 8 against primary sources. Fixed live-doc findings (status-semantics duplication, worktree-clobbering duplication, a stale digest branch-name example, a missing ADR-0011 runtime-rebuild carve-out, and an undefined Friction-severity enum) on the designated branch, cleared pnpm gate, opened gated PR #294, and self-merged it per the audit-docs Skill's bounded auto-merge grant (no human-only surface touched). The remaining 2 findings amend ADR-0003/0005 (retiring the `drift-check` job, whose premise ADR-0014 eliminated) and ADR-0010 (a stale audit-skills scheduling claim contradicting ADR-0015) — these touch ADRs, a human-only surface (ADR-0004), so they ride a separate PR (#295), not self-merged, and are left open for human review with a check-in scheduled. No needs-triage issue was filed; every finding was resolvable."
+prs:
+  - "294"
+  - "295"
+docsRead:
+  - path: CLAUDE.md
+    reason: audit-docs tiering, branch/PR conventions
+  - path: CONTEXT.md
+    reason: glossary, Friction severity enum
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: drift-check retirement
+  - path: docs/adr/0005-skill-model.md
+    reason: drift-check retirement
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: stale audit-skills scheduling claim
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: runtime-rebuild carve-out
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: confirms drift-check's target was deleted
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: correct audit-skills scheduling fact
+  - path: .agents/skills/setup-matt-pocock-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: the sweep this whole session runs
+  - name: close-session
+    reason: session closure
+frictions:
+  - description: CLAUDE.md's digest branch example (journal/digest-<date>) didn't match digest/SKILL.md's real journal/digest-refresh-<date>
+    solution: "Fixed as part of this run's PR #294; a future doc edit near chartered-job examples should double check the owning Skill's actual convention, not just restate an example"
+    severity: minor
+  - description: Two same-day ADR amendment banners (ADR-0010 and ADR-0015) directly contradicted each other on audit-skills' scheduling from the moment they were written
+    solution: Fixed via a correcting amendment on ADR-0010 (#295); when two ADRs get same-day amendments touching the same fact, cross-check them against each other before landing either
+    severity: moderate
+durationSec: 1189
+models:
+  claude-sonnet-5: 148
+toolCounts:
+  Bash: 30
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  Read: 10
+  Agent: 5
+  TaskCreate: 1
+  ScheduleWakeup: 1
+  Edit: 11
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 4
+  mcp__github__merge_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 1
+  PushNotification: 1
+filesEdited:
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - CLAUDE.md
+  - layers/journal/content/current/pages/architecture.md
+  - CONTEXT.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+subagents:
+  - type: general-purpose
+    task: Drift lens doc audit
+  - type: general-purpose
+    task: Duplication lens doc audit
+  - type: general-purpose
+    task: Contradiction lens doc audit
+  - type: general-purpose
+    task: Ambiguity lens doc audit
+  - type: general-purpose
+    task: Fact-check pooled doc audit findings
+gitBranch: claude/festive-mayer-mxwr1h
+entrypoint: remote_trigger
+cliVersion: 2.1.207
