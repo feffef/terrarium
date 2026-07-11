@@ -1,0 +1,75 @@
+schemaVersion: 1
+session: session_01L3h7FzUR9QH7fLvztNmGJL
+startedAt: 2026-07-11T09:25:09Z
+endedAt: 2026-07-11T09:59:01Z
+kind: delegated
+goal: Turn logged session frictions into merged fixes
+status: completed
+outcome: Seven frictions fixed across two merged PRs
+summary: "Ran the frictions-to-fixes workflow (kicked off by the /frictions-to-fixes command; all later messages were machinery — webhooks and task notifications — so no human steering after kickoff). A survey subagent read the latest 20 session logs, grouped and screened frictions against the tracker and origin/main, and returned a ranked report. I selected seven never-fixed candidates (six simple doc, one hard code), filed issues #313-#319, and dispatched two Sonnet impl agents in isolated worktrees. Both handed back gate-green gated PRs; I reviewed each against the ADR-0004 gate and the issue's recommended option, posted a review comment on both, and merged them autonomously (neither was high-risk — no new dependency, unit-tested/observed runtime, safe surfaces only). PR #320 closed #313-#318, PR #321 closed #319. Acting as the ADR-0003 review-agent; no human green-light was needed for this chartered tier."
+prs:
+  - "320"
+  - "321"
+docsRead:
+  - path: CLAUDE.md
+    reason: ground rules, human-only surfaces, worktree discipline
+  - path: skills-lock.json
+    reason: screen candidate SKILL.md targets for off-limits pack skills
+  - path: scripts/merged-since.ts
+    reason: gauge candidate 4 feasibility as a git-only, no-dependency helper
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the workflow this session ran
+  - name: close-session
+    reason: closure front door
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: GitHub MCP server disconnected mid-run, dropping all 58 mcp__github__* tools right after the impl-agent phase; had to re-load schemas via ToolSearch to resume.
+    solution: Known transient (#145/#229); retry/reload is the converged coping strategy. No repo fix.
+    severity: minor
+  - description: send_later (Claude_Code_Remote) failed with "Tool permission stream closed" when scheduling a fallback CI check-in.
+    solution: Cloud-session permission-prompt limitation (#288); both PRs merged in-turn so no check-in was actually needed. No repo fix.
+    severity: minor
+  - description: Survey subagent's search_issues repeatedly overflowed its result-limit even with is:open + keywords, forcing a saved-file parse.
+    solution: "This is the friction candidate 4 fixes — now retired by scripts/recent-prs.ts (PR #321)."
+    severity: minor
+  - description: Survey subagent's tightly-scoped multi-keyword search_issues returned total_count:0 (fuzzy-AND over many terms too strict) — the inverse of the overflow failure.
+    solution: Reformulate to fewer keywords; a search-hygiene note could be added to issue-tracker.md if it recurs.
+    severity: nit
+  - description: Survey re-spent budget on frictions already fixed by later in-window sessions — the third consecutive cycle to observe this.
+    solution: "Fixed this run: PR #320 (issue #315) steers the survey budget at the unfixed tail."
+    severity: minor
+  - description: Doc impl agent found the -m commit's provenance-footer auto-injection did not fire — a live instance of the very friction it was fixing.
+    solution: "Confirmed and amended in-session; the guidance is now softened by PR #320 (issue #318)."
+    severity: nit
+durationSec: 2032
+models:
+  claude-opus-4-8: 93
+toolCounts:
+  Bash: 11
+  Agent: 3
+  ToolSearch: 2
+  Read: 1
+  mcp__github__search_issues: 4
+  mcp__github__issue_write: 7
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__merge_pull_request: 2
+  Skill: 2
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Batched doc-fix PR for 6 issues
+    model: sonnet
+  - type: general-purpose
+    task: recent-prs.ts helper PR
+    model: sonnet
+gitBranch: claude/frictions-to-fixes-uwbgv4
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+learnings:
+  - 'A "who-touched-what-when" PR-metadata lookup is fully derivable from git alone (Merge pull request #N subject + body-first-line title + commit time), so it needs neither the GitHub API nor a new dependency — the merged-since.ts shape generalizes.'
