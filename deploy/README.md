@@ -42,12 +42,13 @@ redeploys the image** — the container updates itself.
 
 ## One-time bootstrap
 
-> **Run everything as your non-root Docker operator user** — the account that's a
-> member of the `docker` group (on this host that's `deploy`, matching
-> feffef-fotos; *not* `root`, and *not* a user that merely has a GitHub SSH key).
+> **Run everything as your non-root Docker operator user** (`<deploy-user>` below —
+> substitute your host's actual account) — the account that's a member of the
+> `docker` group; *not* `root`, and *not* a user that merely has a GitHub SSH key.
 > A user outside the `docker` group gets `permission denied … /var/run/docker.sock`
-> on the first `docker compose`. `chown -R deploy:deploy /opt/terrarium` so the
-> deploy dir is owned by that user, then `sudo -iu deploy` and do the rest there.
+> on the first `docker compose`. `chown -R <deploy-user>:<deploy-user> /opt/terrarium`
+> so the deploy dir is owned by that user, then `sudo -iu <deploy-user>` and do the
+> rest there.
 
 1. **Fine-grained PAT.** <https://github.com/settings/personal-access-tokens/new>
    (Settings → Developer settings → **Fine-grained** tokens — *not* a classic
@@ -59,8 +60,8 @@ redeploys the image** — the container updates itself.
    too — GitHub no longer accepts a password, so pass the PAT in the URL (or use
    SSH if this user has a key registered on GitHub):
    ```sh
-   sudo mkdir -p /opt/terrarium && sudo chown deploy:deploy /opt/terrarium
-   sudo -iu deploy; cd /opt/terrarium
+   sudo mkdir -p /opt/terrarium && sudo chown <deploy-user>:<deploy-user> /opt/terrarium
+   sudo -iu <deploy-user>; cd /opt/terrarium
    git clone https://x-access-token:github_pat_xxxx@github.com/feffef/terrarium.git repo
    git -C repo remote set-url origin https://github.com/feffef/terrarium.git  # drop the token from .git/config
    cp repo/deploy/.env.example .env
@@ -75,8 +76,8 @@ redeploys the image** — the container updates itself.
    ```sh
    docker network create web
    ```
-   Then attach the **existing Caddy service** to it (one-time edit to the *other*
-   project's `docker-compose.yml`, e.g. `feffef-fotos`):
+   Then attach the **existing Caddy service** to it (one-time edit to whichever
+   *other* project on the host owns the shared Caddy `docker-compose.yml`):
    ```yaml
    services:
      caddy:
