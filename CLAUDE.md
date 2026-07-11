@@ -229,10 +229,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   PR-completion discipline, distinct from *session logging*, which now fires at
   self-judged closure and records an in-review PR honestly — see "Logging your
   session".) **Repo-level GitHub auto-merge (`enable_pr_auto_merge`) is
-  currently unavailable on this repo pending a repo-owner Settings change**
-  (`Settings → General → Allow auto-merge`, tracked in #231) — don't attempt to
-  enable it yourself. Merge manually once the gate reports green **only where the
-  change is already auto-merge-eligible** — the `digest` / `audit-docs` /
+  now available** on this repo (the repo owner enabled `Settings → General →
+  Allow auto-merge`; #231 resolved). For an **auto-merge-eligible** change you
+  may enable GitHub auto-merge so the PR lands automatically once the gate
+  reports green, instead of merging manually — the `digest` / `audit-docs` /
   `audit-skills` tiers merge on a green gate alone (ADR-0003/0004); the
   `reviewer-agent` tier (`frictions-to-fixes`) is not purely mechanical — it
   additionally requires the reviewing session's own risk judgement, escalating a
