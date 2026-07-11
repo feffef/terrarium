@@ -53,6 +53,7 @@ const phenologyPhases = computed<PhenologyPhase[]>(() => entry.value?.specimen.p
 // only, this biome's keyed collection.
 provideAlmanac({
   phases: phenologyPhases,
+  specimenLabel: () => entry.value?.specimen.binomial,
   initialDay: parseAlmanacDayParam(route.query.day),
   observations: () => (data.value?.observations ?? []) as AlmanacObservation[],
   specimen: () => entry.value?.specimen.slug,

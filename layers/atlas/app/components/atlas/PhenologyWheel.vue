@@ -29,6 +29,9 @@ const props = defineProps<{
   /** The specimen's phenology phases; omit/empty for the phase-less fallback
    *  (the biome-landing season dial passes none — it draws only the rim). */
   phases?: PhenologyPhase[]
+  /** The specimen's display name — labels its phase arcs as its own in the
+   *  caption, distinct from the shared seasons on the rim. */
+  specimenLabel?: string
   /** This biome's dated observations (only `date` is read) — the rim ticks. */
   observations?: { date: string }[]
   /** Landing/"wing" context: the season dial on a biome landing, which has no
@@ -143,14 +146,19 @@ const markViews = computed(() =>
 )
 
 // ── Readout ──────────────────────────────────────────────────────────────────
+// Two clearly-LABELLED lines so the dial's two vocabularies never blur into one:
+// "season" names one of the six shared Glass-Year seasons (the rim); the second
+// line names THIS specimen's own phenology phase (the inner arcs), captioned with
+// its binomial. Without the labels, "the Lamp's Lengthening — the new blade" read
+// as one compound; with them it reads as a season and a creature's phase.
 const season = computed(() => seasonOf(day.value))
 const currentPhase = computed(
   () => (props.phases ?? []).find((p) => inSpan(day.value, p.span)) ?? null,
 )
+const phaseLabelText = computed(() => `${props.specimenLabel ?? 'this inhabitant'} phase`)
 const valueText = computed(() => {
-  const parts = [`day ${day.value}`, season.value.label]
-  if (currentPhase.value) parts.push(currentPhase.value.label)
-  return parts.join(', ')
+  const base = `day ${day.value}, season ${season.value.label}`
+  return currentPhase.value ? `${base}; ${phaseLabelText.value}: ${currentPhase.value.label}` : base
 })
 const dialLabel = computed(() =>
   props.wing
@@ -458,15 +466,14 @@ function commitDayToUrl() {
       </g>
     </svg>
 
-    <figcaption class="wcap">
-      <p class="wread" aria-hidden="true">
-        <span class="wday">d. {{ day }}</span>
-        <span class="wsep">·</span>
-        <span class="wseason">{{ season.label }}</span>
-        <template v-if="currentPhase">
-          <span class="wsep">—</span>
-          <span class="wphase">{{ currentPhase.label }}</span>
-        </template>
+    <figcaption class="wcap" aria-hidden="true">
+      <p class="wread">
+        <span class="wlabel">season</span>
+        <span class="wval"><span class="wseason">{{ season.label }}</span><span class="wday">d. {{ day }}</span></span>
+      </p>
+      <p v-if="!wing && hasPhases" class="wread wphase-row">
+        <span class="wlabel">{{ phaseLabelText }}</span>
+        <span class="wval"><span class="wphase">{{ currentPhase ? currentPhase.label : 'at rest this season' }}</span></span>
       </p>
       <p v-if="!wing && !hasPhases" class="wempty">
         No phases recorded yet; the wheel turns for this inhabitant all the same.

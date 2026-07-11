@@ -58,16 +58,20 @@ import type { PhenologyPhase } from '../utils/atlas'
  *  header above). */
 export interface Almanac {
   /** The needle's current day-of-year, always normalized to 0..364. Reactive
-   *  and shared: the wheel writes it on drag, `::phase`/`:season` read it. */
+   *  and shared: the wheel writes it on drag, `::season-note`/`:season` read it. */
   day: Ref<number>
   /** Move the needle. Rounds + normalizes onto the wheel (365 → 0, -1 → 364). */
   setDay: (d: number) => void
   /** The real current day-of-year — the needle's home/reset position. */
   today: number
-  /** The specimen's phenology phases (empty array when it has none), so a
-   *  `::phase{of="name"}` can look up its span and compute `inSpan(day, span)`.
-   *  A Ref because the catch-all page instance can be reused across specimens. */
+  /** The specimen's phenology phases (empty array when it has none) — the dial's
+   *  hatched inner arcs. A Ref because the catch-all page instance can be reused
+   *  across specimens. */
   phases: Readonly<Ref<PhenologyPhase[]>>
+  /** The specimen's display name (binomial), so the dial can label its phase
+   *  arcs as this creature's own — distinct from the shared seasons on the rim.
+   *  Undefined off a specimen (e.g. the biome-landing season dial). */
+  specimenLabel: Readonly<Ref<string | undefined>>
   /** Marks registered by descendants, deduped by id and sorted by day (then
    *  id) — see `withAlmanacMark` in utils/almanacState.ts. */
   marks: Readonly<Ref<AlmanacMark[]>>
@@ -97,6 +101,8 @@ export interface Almanac {
 export interface ProvideAlmanacOptions {
   /** The specimen's phases; a getter/ref keeps it live across page reuse. */
   phases?: MaybeRefOrGetter<PhenologyPhase[] | undefined>
+  /** The specimen's display name, for the dial's phase-vs-season legend. */
+  specimenLabel?: MaybeRefOrGetter<string | undefined>
   /** Override the real current day (0..364) — for tests; defaults to
    *  `useGlassToday()`. */
   today?: number
@@ -131,6 +137,7 @@ export function provideAlmanac(options: ProvideAlmanacOptions = {}): Almanac {
     },
     today,
     phases: computed(() => toValue(options.phases) ?? []),
+    specimenLabel: computed(() => toValue(options.specimenLabel)),
     marks: computed(() => markList.value),
     register: (mark: AlmanacMark) => {
       markList.value = withAlmanacMark(markList.value, mark)
