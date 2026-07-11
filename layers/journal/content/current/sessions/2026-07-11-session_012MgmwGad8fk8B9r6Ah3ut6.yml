@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_012MgmwGad8fk8B9r6Ah3ut6
 startedAt: 2026-07-11T11:15:57Z
-endedAt: 2026-07-11T20:06:41Z
+endedAt: 2026-07-11T20:14:22Z
 kind: interactive
 goal: Public-readiness review before repo goes public
 status: in-review
-outcome: "PR #326 merged; LICENSE + ADR-0019 proposal in PR #329"
-summary: "Human-instructed: critically review the repo, GitHub, and ADR/skill workflow for everything blocking public read access, using an Opus background security agent (full tree + all 92 commits) and a Sonnet research pass over primary GitHub Docs. Findings: no secret/credential blocker — tree and history clean. Real items: deploy/README infra disclosure (co-located sibling project + operator account), personal email in ~21 commits, missing LICENSE/SECURITY.md, and the single-trusted-human governance / prompt-injection gap (#213) plus merge-to-main RCE via the ADR-0011 deploy container. Agent-initiated low-risk fixes: genericized deploy/README, added SECURITY.md, two research docs — merged as PR #326. Then, on explicit owner requests: added the MIT LICENSE and drafted ADR-0019 (requester trust tiers, Status Proposed) refining #213 to a write-access-vs-read-only-public boundary — opened as gated PR #329. Also reopened #213, which PR #326's body had auto-closed via a stray \"Resolve #213\" keyword."
+outcome: "PR #326 merged; LICENSE + ADR-0019 (accepted) + amendments in PR #329"
+summary: "Human-instructed: critically review the repo, GitHub, and ADR/skill workflow for everything blocking public read access, using an Opus background security agent (full tree + all 92 commits) and a Sonnet research pass over primary GitHub Docs. Findings: no secret/credential blocker — tree and history clean. Real items: deploy/README infra disclosure (co-located sibling project + operator account), personal email in ~21 commits, missing LICENSE/SECURITY.md, and the single-trusted-human governance / prompt-injection gap (#213) plus merge-to-main RCE via the ADR-0011 deploy container. Agent-initiated low-risk fixes: genericized deploy/README, added SECURITY.md, two research docs — merged as PR #326. Then, on explicit owner requests: added the MIT LICENSE and drafted ADR-0019 (requester trust tiers, Status Proposed) refining #213 to a write-access-vs-read-only-public boundary — opened as gated PR #329. Owner then accepted ADR-0019 and asked for the write-vs-owner reasoning plus the audit-docs-style amendments; applied them single-homed in ADR-0019 with CONTEXT.md (glossary terms + Agent Authorship), ADR-0003, ADR-0004, CLAUDE.md, and issue-tracker.md all pointing to it, and resynced PR #329's description. Also reopened #213, which PR #326's body had auto-closed via a stray \"Resolve #213\" keyword."
 prs:
   - "326"
   - "329"
@@ -24,9 +24,15 @@ docsRead:
   - path: docs/research/making-repo-public.md
     reason: (no reason given)
   - path: docs/adr/0003-agent-operating-model-and-governance.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: CONTEXT.md
-    reason: (no reason given)
+    reason: (read before editing)
+  - path: docs/agents/issue-tracker.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: docs/research/public-readiness-review.md
+    reason: (read before editing)
 skillsUsed:
   - name: research
     reason: background Sonnet pass on GitHub public-repo settings
@@ -50,19 +56,19 @@ frictions:
   - description: get_job_logs download URL 404'd immediately (expired SAS token) and the check-run output was empty, so the failing CI step couldn't be read.
     solution: Fell back to reproducing the gate locally, which is the reliable primary source anyway.
     severity: nit
-durationSec: 31844
+durationSec: 32305
 models:
-  claude-opus-4-8: 197
+  claude-opus-4-8: 252
 toolCounts:
-  Bash: 35
+  Bash: 41
   Agent: 2
   Skill: 3
-  Read: 8
+  Read: 11
   mcp__github__run_secret_scanning: 1
   mcp__github__list_issues: 1
   mcp__github__list_repository_collaborators: 1
   AskUserQuestion: 1
-  Edit: 6
+  Edit: 19
   Write: 5
   mcp__github__list_pull_requests: 2
   mcp__github__create_pull_request: 2
@@ -73,12 +79,18 @@ toolCounts:
   mcp__github__issue_read: 1
   mcp__github__issue_write: 1
   mcp__github__add_issue_comment: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - deploy/README.md
   - SECURITY.md
   - docs/research/public-readiness-review.md
   - LICENSE
   - docs/adr/0019-requester-trust-tiers.md
+  - CONTEXT.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0004-objective-safety-gate.md
+  - CLAUDE.md
+  - docs/agents/issue-tracker.md
 subagents:
   - type: general-purpose
     task: Security review for public readiness
