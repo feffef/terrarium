@@ -97,6 +97,7 @@ Of its diet we can report only what the evidence permits. We have never seen it 
 What follows we have set down season by season, for the moth keeps a different counsel in each. Turn the almanac to move among them.
 
 ::almanac
+::
 
 :::season-note{of="radiator-months"}
 The moth is scarcely the moth at all now. Through the dry-warm months the lamp is a rumour carried in from the far corners of the canopy — a brightness reported, never twice by the same watcher, and gone before the ledger can be fetched. We keep the plate lit against its return and record the empty evenings honestly, which is to say as evenings.

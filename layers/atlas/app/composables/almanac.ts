@@ -1,7 +1,10 @@
 // The Almanac — the shared reactive state under the specimen page's almanac
 // dial (#282, map #279), and THE contract the dial-driven MDC components
-// (#283: `:season`, `::phase`, `::sighting`) build against. Auto-imported
-// layer-wide (docs/agents/tenant-layers.md §1).
+// (`::almanac`, `:season`, `::season-note`, `::sighting`) build against. The
+// dial is the essay's season selector: the shared `day` decides which season
+// the needle rides, and each `::season-note` shows only in its own season, so
+// turning the dial swaps the prose. Auto-imported layer-wide
+// (docs/agents/tenant-layers.md §1).
 //
 // ── The contract ─────────────────────────────────────────────────────────────
 // The specimen page owns the state and provides it once in its setup:
@@ -20,22 +23,20 @@
 // state, so an MDC component pasted into a non-specimen Document degrades
 // gracefully instead of crashing the page — always null-check.
 //
-// Typical #283 usage: a `::phase{of="x"}` finds its span via
-// `almanac.phases.value.find(p => p.name === of)` and lights up when
-// `inSpan(almanac.day.value, span)`; a `::sighting{date}` does
-// `register({ id: useId(), day: dateToDay(date), kind: 'sighting' })` in setup
-// and `unregister(id)` in `onUnmounted`. Marks registered by components that
-// render after the wheel (everything inside the essay does) appear on the dial
-// reactively — client-side, post-hydration — by design, so the server-rendered
-// markup stays mismatch-free.
+// Typical usage: a `::season-note{of="x"}` shows while `seasonOf(day.value)` is
+// its season (collapsing to the needle's season on mount — see SeasonNote); a
+// `::sighting{date}` does `register({ id: useId(), day: dateToDay(date),
+// kind: 'sighting' })` in setup and `unregister(id)` in `onUnmounted`. Marks
+// registered by components that render after the wheel (everything inside the
+// essay does) appear on the dial reactively — client-side, post-hydration — by
+// design, so the server-rendered markup stays mismatch-free.
 //
-// ── #283 extensions ──────────────────────────────────────────────────────────
-// `engaged`/`engage()` — progressive-enhancement gate (map #279 decision 4):
-// false until the reader first takes hold of the needle (the wheel flips it on
-// first pointer grab or keyboard scrub; the prose handles that swing the
-// needle flip it too). `::phase` gates its ink↔pencil register on it, so the
-// essay server-renders fully inked and STAYS inked for a reader who never
-// touches the dial.
+// ── Extensions ───────────────────────────────────────────────────────────────
+// `focusPulse`/`focusDay(day)` — the clickable-tick path: tapping a dial tick
+// moves the needle to that exact day AND bumps `focusPulse`, and the matching
+// `::sighting` watches the pulse to scroll its quote into view. Distinct from
+// the silent `setDay` so a descendant reacts only to a deliberate "take me
+// there", not to every drag that crosses its day.
 // `observations`/`findSighting(date)` — the biome's dated ledger, provided by
 // the page alongside `phases`, so a `::sighting{date}` can quote the
 // observation's own note without retyping it (single-homed; lookup semantics
@@ -74,14 +75,6 @@ export interface Almanac {
   register: (mark: AlmanacMark) => void
   /** Remove a mark by id — call on unmount. Unknown ids are a no-op. */
   unregister: (id: string) => void
-  /** True once the reader has taken hold of the needle — false on every fresh
-   *  render, server and client alike (#283 extension; see header). `::phase`
-   *  reads it so the essay stays fully inked until the dial is engaged. */
-  engaged: Readonly<Ref<boolean>>
-  /** Flip `engaged` (idempotent). Called by whichever interaction first hands
-   *  the reader the needle — the wheel's pointer/keyboard scrub, or a prose
-   *  handle's deliberate needle-swing. */
-  engage: () => void
   /** A monotonic pulse bumped by `focusDay` — the "take me to this exact day
    *  AND draw the reader's eye there" signal the clickable dial ticks fire. A
    *  `::sighting` watches it and scrolls its quote into view when its own day
@@ -128,7 +121,6 @@ export function provideAlmanac(options: ProvideAlmanacOptions = {}): Almanac {
   const today = normalizeDay(Math.round(options.today ?? useGlassToday()))
   const day = ref(normalizeDay(Math.round(options.initialDay ?? today)))
   const markList = ref<AlmanacMark[]>([])
-  const engaged = ref(false)
   const focusPulse = ref(0)
   const observations = computed(() => toValue(options.observations) ?? [])
 
@@ -146,13 +138,8 @@ export function provideAlmanac(options: ProvideAlmanacOptions = {}): Almanac {
     unregister: (id: string) => {
       markList.value = withoutAlmanacMark(markList.value, id)
     },
-    engaged,
-    engage: () => {
-      engaged.value = true
-    },
     focusPulse,
     focusDay: (d: number) => {
-      engaged.value = true
       day.value = normalizeDay(Math.round(d))
       focusPulse.value++
     },

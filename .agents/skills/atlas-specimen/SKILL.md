@@ -166,9 +166,24 @@ illustration: |
   </g>
 ---
 
-The field-note essay, in the naturalist's voice (§1). Prose, not bullets. How it
-was found, its habits, one anecdote. No leading `#` — the binomial comes from the
-frontmatter. Three or four short paragraphs is plenty.
+A general introduction to the specimen, in the naturalist's voice (§1) — how it
+was found, its character, one anecdote. Prose, not bullets. No leading `#` (the
+binomial comes from the frontmatter). One or two short paragraphs, ending with a
+nudge to the dial ("… Turn the almanac to move among them.").
+
+::almanac
+::
+
+:::season-note{of="long-damp"}
+Then one season-note per Glass-Year season, IN YEAR ORDER (radiator-months,
+lamp-lengthening, great-airing, long-damp, small-dry, settling) — each a short
+paragraph of what the creature does in that season. A `::sighting{date}` that
+quotes a real dated observation nests inside the season whose span contains its
+date. The dial is the essay's season selector: it shows one note at a time.
+
+::sighting{date="2026-06-20"}
+::
+:::
 ```
 
 **`phenology.phases`** (#279) is the annual sibling of `activity`: where `activity`
@@ -179,7 +194,9 @@ invented one. Each phase is free-form and per-creature (unlike the six Glass-Yea
 don't restate or invent season names here; a phase is a different, creature-scoped
 thing that happens to sit on the same wheel):
 
-- `name` — a slug a `::phase` component binds to (later ticket).
+- `name` — the phase's slug; it drives the dial's hatched inner arcs. (The
+  essay is structured by the six Glass-Year *seasons* via `::season-note`, not by
+  these free-form phases — the phases are the dial's own annual ornament.)
 - `label` — in-voice, the way `activity.label` is: "the lantern swell", not
   "winter dormancy".
 - `span` — `[startDayOfYear, endDayOfYear]`, 0–365. **May wrap the year**

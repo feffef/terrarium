@@ -107,15 +107,36 @@ illustration: |
 
 *Mycora susurrans* is the most reliable inhabitant of the canopy, and it would be dishonest of us to pretend the distinction is contested. Wherever a bough has fallen, wherever the rain has been and the light has not, the whisper mold is already in residence — a company of pale sage caps standing shoulder to shoulder on the rot, dusting everything downwind a polite spore grey. We have stopped recording new colonies. One does not record the presence of air.
 
-Its common name is earned, and this is the part the visitor never quite credits until the canopy goes still around him. The colony makes a sound. It is very faint — the ear must be brought within a hand's breadth of the caps, and the observer must first quarrel with his own pulse — but it is continuous, a dry papery sibilance, as of a page being turned somewhere in the next room, forever. The caps never sleep and the whisper never stops. We have listened at dawn and at midnight and been told, each time, the same thing, whatever it is.
+Its common name is earned, and this is the part the visitor never quite credits until the canopy goes still around him. The colony makes a sound — very faint, a dry papery sibilance, as of a page being turned somewhere in the next room, forever. The caps never sleep and the whisper never stops; we have listened at dawn and at midnight and been told, each time, the same thing, whatever it is. We have grown fond of it, in the way one grows fond of a clock.
 
-::phase{of="full-voice"}
-We have debated the mechanism at more length than the reader needs to hear about. The junior members hold that it is merely the spores going — a rain of dust too fine to see, loud only in aggregate. The senior members hold the same thing, but stand nearer the caps while saying it. What we can attest is that the whisper swells after rain — through :season[the Long Damp]{of="long-damp"} the whole canopy sibilates — that it is at its softest in the driest hour of the afternoon, and that a colony sheltered under the false-leaf's shade talks measurably longer into :season[the Small Dry]{of="small-dry"} than one left in the open.
+What it says, and how much of it, turns with the year's damp, and we have set the account down season by season below. Turn the almanac to move among them.
+
+::almanac
 ::
 
-The ledger, which has no patience for mechanism, keeps its own account of the matter:
+:::season-note{of="radiator-months"}
+Through the dry-warm months the colony keeps to the shaded corners, where the pipes have not yet reached and a little damp outlasts the heat. It whispers still, but at a whisper even by its own standards — one must go looking, into the cool angles behind the far glass, to hear it at all. Out in the open, where the radiators have their way and the pool drops its inch, the caps stand dry and say nothing.
+:::
+
+:::season-note{of="lamp-lengthening"}
+As the keepers let the light run longer the glass holds its damp a little better, and the corners the mold has kept through the heat begin, cautiously, to spread. It is early work and quiet work: a colony gains a cap a week and mentions each one faintly. Nothing here is hurried, the mold least of all.
+:::
+
+:::season-note{of="great-airing"}
+The lid stands open an hour a day and the draught runs clean through the canopy — which the whisper mold, nearly alone among the inhabitants, appears to welcome. It holds to its damp corners out of the moving air and gathers itself, and the sibilance thickens week by week, as of a great many pages being made ready to turn. The full voice is not yet come, but one can hear it clearing its throat.
+:::
+
+:::season-note{of="long-damp"}
+This is the colony in full spate, and whatever it is saying, it says most of it now. The misting is at its most liberal, the whisper swells after every rain until the whole canopy sibilates, and the caps stand fattest and most talkative on the wettest boughs. We have debated the mechanism at more length than the reader needs to hear about: the junior members hold that it is merely the spores going, a rain of dust too fine to see and loud only in aggregate, and the senior members hold the same thing but stand nearer the caps while saying it. The ledger, which has no patience for mechanism, keeps its own account:
 
 ::sighting{date="2026-07-05"}
 ::
+:::
 
-It asks nothing, eats what the canopy discards, and keeps the only conversation up here that never once waits for a reply. We have grown fond of it, in the way one grows fond of a clock.
+:::season-note{of="small-dry"}
+The misting lapses for a fortnight — coinciding, we note, with the keeper's holiday — and the colonies in the open fall silent a cap at a time, murmuring where they lately spoke. It is the mold's one quiet season, and it keeps it honestly. A colony sheltered under the false-leaf's shade talks measurably longer into these dry weeks than one left in the sun, which is the nearest thing to cunning we have ever caught it at.
+:::
+
+:::season-note{of="settling"}
+After the great cleaning everything re-arranges itself, and every bared surface the cleaning leaves is spoken for within the week, politely. The mold does not race for the new ground so much as arrive at it — already in residence before we have noticed the ground was free. By the season's close the fresh boughs sibilate like the old, and we have gone back to not recording the colonies at all.
+:::

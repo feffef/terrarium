@@ -131,15 +131,41 @@ illustration: |
 
 We took it, the first night, for the reflection of our own lamp, and moved the lamp to prove it. The light in the water did not move. It hung at middle depth, a small gold point burning under two hands' breadth of dark water, and it is a measure of the pool's character that our first thought was not that a creature glowed there, but that a star had come down, gone under, and not been put out.
 
-By day there is nothing to find. The drowned star is a swimmer of scarcely a centimetre, pale and unremarkable when netted (we netted one, once, and felt so plainly that we had overstepped that we have not repeated it), and it spends the bright hours dowsed and hidden — often, we now know, in the blue shadow of the glass snail's shell. It rises when the pool goes black, lights its lamp somewhere below the surface, and hangs there patient as a held breath, drifting less than a hand's width in an hour.
+By day there is nothing to find. The drowned star is a swimmer of scarcely a centimetre, pale and unremarkable when netted — we netted one, once, and felt so plainly that we had overstepped that we have not repeated it — and it spends the bright hours dowsed and hidden, often in the blue shadow of the glass snail's shell. It rises when the pool goes black, lights its lamp somewhere below the surface, and hangs there patient as a held breath, drifting less than a hand's width in an hour. The lamp is dim, and this appears to be the whole art of it: motes come to that gold point the way dust comes to a sunbeam, and the star gathers them at its leisure, having concluded — we think correctly — that it is better to be a rumour than an announcement.
 
-The lamp is dim, and this appears to be the whole art of it. Motes in the water — the fine drifting stuff too small for our lenses and too idle to name — come to that gold point the way dust comes to a sunbeam, and the star gathers them at its leisure. A brighter light would beckon larger company; the drowned star has concluded, we think correctly, that it is better to be a rumour than an announcement.
+How many lamps the water shows, and whether it shows any at all, the year answers differently each time it is asked. We have set the count down season by season below. Turn the almanac to move among them.
 
-::phase{of="full-constellation"}
-We recorded eleven lights one night in June and could not swear to more than four the next. Whether they dowse, disperse, or merely decline to be counted twice, we cannot say; the counting is at its most hopeless in :season[the Long Damp]{of="long-damp"}, when the water is warmest and most of the year's lamps are lit.
+::almanac
 ::
+
+:::season-note{of="radiator-months"}
+No light anywhere in the water. The lamps are all put out, and where a drowned star winters — whether it dowses in the mud, or goes wherever the pool sends the things it is done showing us for a while — the pool has not seen fit to tell us. We record the dark water as dark water, and leave the corner unwatched a while.
+:::
+
+:::season-note{of="lamp-lengthening"}
+For most of the lengthening light the water stays dark, and then, late in the season, the first lamps of the year return — lit low and put out early, as though rationed against a shortage only the star can feel. One appears, then another a night or two later, never yet the constellation. The pool is only clearing its throat.
+:::
+
+:::season-note{of="great-airing"}
+The lamps come more freely now, though still few, and still shy of the draught: on the open-lidded nights they hang a little deeper, as if the moving air were something to burn beneath. We count three, four, lose them to a passing ripple, and are content to have counted at all.
+:::
+
+:::season-note{of="long-damp"}
+This is the full constellation, the water warmest and most of the year's lamps lit at once. We recorded eleven lights one night and could not swear to more than four the next; whether they dowse, disperse, or merely decline to be counted twice we cannot say, and the counting is at its most hopeless just here, when there is most to count. The ledger keeps our arithmetic and our doubts in the one line:
 
 ::sighting{date="2026-06-26"}
 ::
 
-On the coldest mornings one will still be faintly alight at dawn, like a lamp forgotten in a distant room, and we have learned to leave it be.
+Even at the height of the season some lamp is slow to be put out. On more than one midsummer dawn one has still been faintly alight at first grey, like a lamp forgotten in a distant room, and we have learned to leave it be:
+
+::sighting{date="2026-07-06"}
+::
+:::
+
+:::season-note{of="small-dry"}
+With the keeper's holiday and the lapse in the misting the count begins to fall: one by one the lights decline to rise, and those that do burn later into the grey, as though husbanding what warmth the cooling water still holds. The constellation loses its outlying stars first, from the shallows inward.
+:::
+
+:::season-note{of="settling"}
+After the great cleaning the last lamps keep to the deepest water and the latest hours. They come singly now, and later each night, until through the final weeks of the season the water more often than not shows nothing at all, and the lamps have gone out, one by one, wherever it is they go.
+:::

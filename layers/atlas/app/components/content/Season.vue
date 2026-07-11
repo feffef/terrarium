@@ -39,7 +39,6 @@ const glyphArc = computed(() => (season.value ? ringArcPath(season.value.span, 5
 
 function swing() {
   if (!almanac || !season.value) return
-  almanac.engage() // a deliberate needle-swing engages the dial (#279 decision 4)
   almanac.setDay(spanMidpoint(season.value.span))
 }
 </script>
