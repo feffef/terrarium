@@ -4,10 +4,17 @@
 // hatched arcs = this specimen's phenology phases (quiet phases in the inverse
 // register); rim ticks = the biome's dated observations plus any marks
 // descendants register through the Almanac; a brass needle points at the
-// shared `day` and is dragged (pointer capture + `unwrapAngle`, so crossing
-// 12 o'clock never snaps a year), stepped (arrows ±1 day, PageUp/PageDown ±1
-// season, Home = today), and round-tripped to `?day=` on scrub-end via
-// `history.replaceState` — shareable position, zero new routes.
+// shared `day`.
+//
+// The dial is the essay's SEASON SELECTOR (feedback rework): it is the one
+// control that turns the field note from season to season. A tap on a season
+// snaps the needle to that season's midpoint; a drag scrubs freely (the essay
+// still switches at each season boundary); the arrow/PageUp-Down/Home keys
+// step it; and every observation/sighting tick is clickable — a tap jumps the
+// needle straight to that day and asks the matching `::sighting` to scroll into
+// view (`focusDay`). The season the needle rides is lit on the rim so the link
+// between dial and prose is never in doubt. Position round-trips to `?day=` on
+// scrub-end via `history.replaceState` — shareable, zero new routes.
 //
 // Engraved register (/atlas-specimen §2): currentColor line and hatch, fill
 // none, and EXACTLY ONE `var(--sig-1)` accent — the needle head. Server-renders
@@ -16,36 +23,25 @@
 // All year/angle/point geometry comes from utils/almanac.ts; only the
 // presentational rounding of those points lives here.
 import type { Span } from '../../utils/almanac'
-import type { AlmanacBand, PhenologyPhase } from '../../utils/atlas'
+import type { PhenologyPhase } from '../../utils/atlas'
 
 const props = defineProps<{
-  /** The specimen's phenology phases; omit/empty for the phase-less fallback. */
+  /** The specimen's phenology phases; omit/empty for the phase-less fallback
+   *  (the biome-landing season dial passes none — it draws only the rim). */
   phases?: PhenologyPhase[]
-  /** This biome's dated observations (only `date` is read). */
+  /** This biome's dated observations (only `date` is read) — the rim ticks. */
   observations?: { date: string }[]
-  /** Composite mode (#285, map #279): one band per specimen sharing this same
-   *  wheel — the biome landing's "wing's year" overview. When given (and
-   *  non-empty), the wheel renders one concentric annulus per band in place of
-   *  the single-specimen phase ring below; the season ring, needle, marks and
-   *  interaction are the exact same shared code either way. Leave unset for
-   *  the single-specimen entry-page wheel (#282) — behavior there is
-   *  untouched. */
-  bands?: AlmanacBand[]
-  /** The currently highlighted band/specimen slug (composite mode only) — set
-   *  it from elsewhere (e.g. the catalogue) to light up the matching band.
-   *  Pair with `v-model:highlight` so hovering/focusing a band lights up the
-   *  same slug wherever else this is bound. */
-  highlight?: string | null
+  /** Landing/"wing" context: the season dial on a biome landing, which has no
+   *  single specimen and so no phase ring or "no phenology" note — it simply
+   *  turns the year for the roster beside it. Leave unset for a specimen entry. */
+  wing?: boolean
 }>()
-const emit = defineEmits<{ 'update:highlight': [slug: string | null] }>()
 
-// The shared state — normally provided by the specimen page; a wheel seated
-// without a provider (a gallery, or the biome landing's composite) makes its
-// own. Composite mode has no single specimen's phases to hand the almanac —
-// `::phase`/`::sighting` are specimen-page-only, so the empty getter is
-// correct here; the composite draws its own bands straight from `props.bands`.
+// The shared state — normally provided by the owning page (the specimen entry
+// or the biome landing); a wheel seated without a provider (e.g. a gallery)
+// makes its own.
 const almanac = useAlmanac() ?? provideAlmanac({ phases: () => props.phases ?? [] })
-const { day, setDay, today, marks, engage } = almanac
+const { day, setDay, today, marks, engage, focusDay } = almanac
 
 // SSR-stable ids for the <defs> this instance owns (patterns, label paths).
 const uid = useId()
@@ -91,9 +87,13 @@ function labelArc(span: Span, flip: boolean): string {
   return `M ${from.x} ${from.y} A ${r} ${r} 0 ${large} ${flip ? 0 : 1} ${to.x} ${to.y}`
 }
 
-// The six seasons: annular sectors + rim labels (static — GLASS_SEASONS is a
-// constant). Rim text drops a leading "the" (display trim only; the full label
-// stays in the tooltip and the caption below).
+// The season the needle currently rides — lit on the rim, and the axis the
+// essay's ::season-note blocks key on (they show iff their season is this one).
+const currentSeasonName = computed(() => seasonOf(day.value).name)
+
+// The six seasons: annular sectors + rim labels + a full-sector wash so a tap
+// anywhere in the sector selects it. GLASS_SEASONS is constant, so the static
+// parts are computed once; `isCurrent` is read reactively in the template.
 const seasonViews = GLASS_SEASONS.map((s) => {
   const mid = normalizeAngle(dayToAngle(spanMidpoint(s.span)))
   const flip = mid > 90 && mid < 270
@@ -101,6 +101,7 @@ const seasonViews = GLASS_SEASONS.map((s) => {
   return {
     ...s,
     ring: arcPath(s.span, R.ring0, R.ring1),
+    fill: arcPath(s.span, R.phase0 - 2, R.ring1), // the lit wedge, rim to hub
     labelPath: labelArc(s.span, flip),
     rim: s.label.replace(/^the\s+/i, ''),
     tick: { p0: polar(start, R.ring0), p1: polar(start, R.ring1) },
@@ -115,8 +116,7 @@ const monthTicks = Array.from({ length: 11 }, (_, i) => {
 })
 const newYearTick = { p0: polar(0, R.ring1), p1: polar(0, R.newYear) }
 
-// A phase drawn as an annulus between r0 and r1, lit when the needle is inside
-// it — the one shape shared by the single-specimen ring and every composite band.
+// A phase drawn as an annulus between r0 and r1, lit when the needle is inside it.
 function phaseView(p: PhenologyPhase, r0: number, r1: number) {
   return { ...p, d: arcPath(p.span, r0, r1), now: inSpan(day.value, p.span) }
 }
@@ -125,54 +125,8 @@ const phaseViews = computed(() =>
 )
 const hasPhases = computed(() => (props.phases ?? []).length > 0)
 
-// ── Composite mode (#285) ────────────────────────────────────────────────────
-// One concentric annulus per band, sharing the phase ring's whole radial span:
-// inner edge clear of the needle's counterweight sweep (r ≤ 25), outer edge
-// clear of the season ring (r0 = 124) — the annual sibling of #282's single
-// phase annulus, subdivided rather than widened.
-const isComposite = computed(() => (props.bands?.length ?? 0) > 0)
-const R_COMPOSITE = { inner: 30, outer: 116, gap: 2 }
-const compositeBands = computed(() => {
-  const bands = props.bands ?? []
-  const n = bands.length
-  if (!n) return []
-  const width = Math.max(4, (R_COMPOSITE.outer - R_COMPOSITE.inner - R_COMPOSITE.gap * (n - 1)) / n)
-  return bands.map((b, i) => {
-    const r0 = R_COMPOSITE.inner + i * (width + R_COMPOSITE.gap)
-    const r1 = r0 + width
-    return {
-      ...b,
-      r0,
-      r1,
-      // A full annulus, drawn transparent — a hover/focus target that covers
-      // this specimen's whole radial slot, not just the days it has a phase
-      // drawn on (arcPath's [d,d] convention already draws a full ring).
-      hit: arcPath([0, 0], r0, r1),
-      phaseViews: b.phases.map((p) => phaseView(p, r0, r1)),
-    }
-  })
-})
-const highlightedBand = computed(
-  () => compositeBands.value.find((b) => b.slug === props.highlight) ?? null,
-)
-// Bands with a phase live on the needle's current day — the composite's own
-// "what's astir" readout, proving the one shared needle drives every band.
-const astirNow = computed(() => compositeBands.value.filter((b) => b.phaseViews.some((p) => p.now)))
-const dialLabel = computed(() =>
-  isComposite.value
-    ? `the composite almanac — the wing's year across ${compositeBands.value.length} specimens`
-    : 'the almanac dial — day of the Glass Year',
-)
-
-function bandEnter(slug: string) {
-  emit('update:highlight', slug)
-}
-function bandLeave(slug: string) {
-  if (props.highlight === slug) emit('update:highlight', null)
-}
-
 // One tick per distinct observed day — several sightings on a day are one mark
-// on the rim, as they are one day in the ledger.
+// on the rim, as they are one day in the ledger. Each is clickable.
 const obsTicks = computed(() => {
   const days = new Set<number>()
   for (const o of props.observations ?? []) days.add(dateToDay(o.date))
@@ -198,6 +152,11 @@ const valueText = computed(() => {
   if (currentPhase.value) parts.push(currentPhase.value.label)
   return parts.join(', ')
 })
+const dialLabel = computed(() =>
+  props.wing
+    ? "the wing's almanac — turn it to read the year season by season"
+    : 'the almanac dial — turn it to read the field note season by season',
+)
 
 // ── The needle ───────────────────────────────────────────────────────────────
 // Rendered at an *unwrapped* angle so a step or drag across New Year turns the
@@ -212,6 +171,8 @@ watch(day, (d) => {
 const svgEl = ref<SVGSVGElement | null>(null)
 const scrubbing = ref(false)
 let dragAngle = 0 // unwrapped running angle during a drag
+let downAngle = 0 // where the current press began — to tell a tap from a drag
+let moved = false // did this press travel far enough to count as a scrub?
 
 function pointerAngle(e: PointerEvent): number {
   // The dial is centred in a square viewBox, so the element box's centre IS the
@@ -224,16 +185,20 @@ function pointerAngle(e: PointerEvent): number {
 
 function onPointerDown(e: PointerEvent) {
   if (!svgEl.value || (e.pointerType === 'mouse' && e.button !== 0)) return
-  engage() // the reader has the needle — the essay's ink may follow it now (#283)
+  engage() // the reader has the needle — the essay may follow it now
   svgEl.value.setPointerCapture(e.pointerId)
   scrubbing.value = true
-  dragAngle = unwrapAngle(displayAngle.value, pointerAngle(e))
+  moved = false
+  downAngle = pointerAngle(e)
+  dragAngle = unwrapAngle(displayAngle.value, downAngle)
   setDay(angleToDay(dragAngle))
   e.preventDefault()
 }
 function onPointerMove(e: PointerEvent) {
   if (!scrubbing.value) return
-  dragAngle = unwrapAngle(dragAngle, pointerAngle(e))
+  const a = pointerAngle(e)
+  if (Math.abs(unwrapAngle(downAngle, a) - downAngle) > 3) moved = true
+  dragAngle = unwrapAngle(dragAngle, a)
   setDay(angleToDay(dragAngle))
 }
 function endScrub(e: PointerEvent) {
@@ -241,6 +206,18 @@ function endScrub(e: PointerEvent) {
   scrubbing.value = false
   // A lifted touch pointer no longer exists — release only what is still held.
   if (svgEl.value?.hasPointerCapture(e.pointerId)) svgEl.value.releasePointerCapture(e.pointerId)
+  // A tap (no real travel) is a season pick: snap to the tapped season's
+  // midpoint so the needle "clicks in" rather than parking on an odd day. A
+  // real drag keeps the day the reader scrubbed to.
+  if (!moved) setDay(spanMidpoint(seasonOf(day.value).span))
+  commitDayToUrl()
+}
+
+/** A tap on a tick: jump the needle to that exact day and ask the matching
+ *  `::sighting` to scroll into view. `.stop` on the handlers keeps the dial's
+ *  own scrub/snap out of it, so the day stays exact. */
+function tapTick(d: number) {
+  focusDay(d)
   commitDayToUrl()
 }
 
@@ -292,7 +269,7 @@ function commitDayToUrl() {
 </script>
 
 <template>
-  <figure class="atlas-almanac" :class="{ 'is-scrubbing': scrubbing }">
+  <figure class="atlas-almanac" :class="{ 'is-scrubbing': scrubbing, 'is-wing': wing }">
     <svg
       ref="svgEl"
       viewBox="0 0 360 360"
@@ -340,31 +317,6 @@ function commitDayToUrl() {
         >
           <line x1="0" y1="0" x2="0" y2="6" stroke="currentColor" stroke-width="0.6" opacity="0.25" />
         </pattern>
-
-        <!-- composite mode (#285): one hatch pair per band, coloured directly
-             (not via currentColor — a <pattern>'s content does not reliably
-             inherit the referencing element's `color` across browsers) so each
-             band's hatch carries that specimen's own tint. -->
-        <template v-for="(cb, i) in compositeBands" :key="`pat-${cb.slug}`">
-          <pattern
-            :id="`${uid}-c${i}-hatch`"
-            patternUnits="userSpaceOnUse"
-            width="5"
-            height="5"
-            patternTransform="rotate(45)"
-          >
-            <line x1="0" y1="0" x2="0" y2="5" :stroke.attr="cb.color || 'currentColor'" stroke-width="0.75" opacity="0.55" />
-          </pattern>
-          <pattern
-            :id="`${uid}-c${i}-hatch-quiet`"
-            patternUnits="userSpaceOnUse"
-            width="6"
-            height="6"
-            patternTransform="rotate(-45)"
-          >
-            <line x1="0" y1="0" x2="0" y2="6" :stroke.attr="cb.color || 'currentColor'" stroke-width="0.6" opacity="0.3" />
-          </pattern>
-        </template>
       </defs>
 
       <g transform="translate(180, 180)">
@@ -372,9 +324,25 @@ function commitDayToUrl() {
         <circle class="bezel" r="176" />
         <circle class="bezel bezel-in" r="172.5" />
 
+        <!-- the lit wedge of the season the needle rides, drawn under the ring
+             so the rim and labels stay crisp on top -->
+        <path
+          v-for="s in seasonViews"
+          v-show="s.name === currentSeasonName"
+          :key="`lit-${s.name}`"
+          class="season-lit"
+          :d.attr="s.fill"
+        />
+
         <!-- season ring -->
         <g class="seasons">
-          <path v-for="s in seasonViews" :key="s.name" class="season" :d.attr="s.ring">
+          <path
+            v-for="s in seasonViews"
+            :key="s.name"
+            class="season"
+            :class="{ 'is-current': s.name === currentSeasonName }"
+            :d.attr="s.ring"
+          >
             <title>{{ s.label }}{{ s.gloss ? ` — ${s.gloss}` : '' }}</title>
           </path>
           <line
@@ -388,7 +356,12 @@ function commitDayToUrl() {
           />
         </g>
         <g class="rim-labels" aria-hidden="true">
-          <text v-for="(s, i) in seasonViews" :key="s.name" class="rim-label">
+          <text
+            v-for="(s, i) in seasonViews"
+            :key="s.name"
+            class="rim-label"
+            :class="{ 'is-current': s.name === currentSeasonName }"
+          >
             <textPath :href.attr="`#${uid}-sl${i}`" startOffset="50%" text-anchor="middle">
               {{ s.rim }}
             </textPath>
@@ -416,7 +389,7 @@ function commitDayToUrl() {
         </g>
 
         <!-- phase annuli: the specimen's own year, hatched; quiet = inverse -->
-        <g v-if="!isComposite" class="phases">
+        <g v-if="hasPhases" class="phases">
           <path
             v-for="p in phaseViews"
             :key="p.name"
@@ -429,55 +402,35 @@ function commitDayToUrl() {
           </path>
         </g>
 
-        <!-- composite phase annuli (#285): one concentric band per specimen,
-             the same hatched register, each tinted by its own signature. -->
-        <g v-else class="phases composite">
+        <!-- observation ticks: the biome's dated ledger on the rim, each a tap
+             target that jumps the needle to that day -->
+        <g class="observations">
           <g
-            v-for="(cb, i) in compositeBands"
-            :key="cb.slug"
-            class="cband"
-            :class="{ hot: highlight === cb.slug, dim: !!highlight && highlight !== cb.slug }"
-            :style="{ color: cb.color || 'currentColor' }"
+            v-for="t in obsTicks"
+            :key="t.day"
+            class="obs"
+            @pointerdown.stop
+            @click.stop="tapTick(t.day)"
           >
-            <path
-              v-for="p in cb.phaseViews"
-              :key="p.name"
-              class="phase"
-              :class="{ 'is-quiet': p.quiet, 'is-now': p.now }"
-              :d.attr="p.d"
-              :fill.attr="`url(#${uid}-c${i}-${p.quiet ? 'hatch-quiet' : 'hatch'})`"
-            >
-              <title>{{ cb.label }}{{ p.gloss ? ` — ${p.gloss}` : `, ${p.label}` }}</title>
-            </path>
-            <path
-              class="hit"
-              :d.attr="cb.hit"
-              tabindex="0"
-              role="img"
-              :aria-label="`${cb.label} — its year in this wheel`"
-              @mouseenter="bandEnter(cb.slug)"
-              @mouseleave="bandLeave(cb.slug)"
-              @focus="bandEnter(cb.slug)"
-              @blur="bandLeave(cb.slug)"
+            <line
+              class="obs-tick"
+              :x1.attr="t.p0.x"
+              :y1.attr="t.p0.y"
+              :x2.attr="t.p1.x"
+              :y2.attr="t.p1.y"
+            />
+            <line
+              class="obs-hit"
+              :x1.attr="t.p0.x"
+              :y1.attr="t.p0.y"
+              :x2.attr="t.p1.x"
+              :y2.attr="t.p1.y"
             />
           </g>
         </g>
 
-        <!-- observation ticks: the biome's dated ledger on the rim -->
-        <g class="observations">
-          <line
-            v-for="t in obsTicks"
-            :key="t.day"
-            class="obs-tick"
-            :x1.attr="t.p0.x"
-            :y1.attr="t.p0.y"
-            :x2.attr="t.p1.x"
-            :y2.attr="t.p1.y"
-          />
-        </g>
-
         <!-- registered marks (Almanac contract): distinguished ticks that flare
-             when the needle crosses them -->
+             when the needle crosses them, and tap to their sighting -->
         <g class="marks">
           <g
             v-for="m in markViews"
@@ -485,11 +438,14 @@ function commitDayToUrl() {
             class="mark"
             :class="[`mark--${m.kind ?? 'sighting'}`, { 'is-hot': m.hot }]"
             :transform.attr="`rotate(${m.angle})`"
+            @pointerdown.stop
+            @click.stop="tapTick(m.day)"
           >
             <line x1="0" y1="-104" x2="0" y2="-116" />
             <path class="gem" d="M 0 -126 L 3 -121 L 0 -116 L -3 -121 Z">
               <title v-if="m.label">{{ m.label }}</title>
             </path>
+            <line class="mark-hit" x1="0" y1="-102" x2="0" y2="-128" />
           </g>
         </g>
 
@@ -514,14 +470,10 @@ function commitDayToUrl() {
           <span class="wphase">{{ currentPhase.label }}</span>
         </template>
       </p>
-      <p v-if="isComposite" class="wcomposite" aria-live="polite">
-        <template v-if="highlightedBand">{{ highlightedBand.label }}</template>
-        <template v-else-if="astirNow.length">astir now: {{ astirNow.map((b) => b.label).join(', ') }}</template>
-        <template v-else>the wing rests; nothing stirs today</template>
-      </p>
-      <p v-if="!isComposite && !hasPhases" class="wempty">
+      <p v-if="!wing && !hasPhases" class="wempty">
         No phases recorded yet; the wheel turns for this inhabitant all the same.
       </p>
+      <slot name="caption" />
     </figcaption>
   </figure>
 </template>
