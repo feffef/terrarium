@@ -13,7 +13,8 @@
 // none, and EXACTLY ONE `var(--sig-1)` accent — the needle head. Server-renders
 // static and hydrates clean: geometry is deterministic, `today` is
 // payload-carried (composables/almanac.ts), and marks arrive reactively.
-// All year/angle math comes from utils/almanac.ts — none of it is restated here.
+// All year/angle/point geometry comes from utils/almanac.ts; only the
+// presentational rounding of those points lives here.
 import type { Span } from '../../utils/almanac'
 import type { AlmanacBand, PhenologyPhase } from '../../utils/atlas'
 
@@ -67,15 +68,15 @@ const R = {
   phase1: 100,
 }
 
-/** Origin-centred dial point (0° = 12 o'clock, clockwise), rounded for stable
- *  SSR markup. */
+/** `almanac.ts`'s `pointAt` geometry, rounded for stable SSR markup — the
+ *  trigonometry itself stays single-homed in the util. */
 function polar(angle: number, r: number): { x: number; y: number } {
-  const rad = (angle * Math.PI) / 180
+  const { x, y } = pointAt(angle, r)
   const rd = (n: number) => {
     const v = Math.round(n * 100) / 100
     return Object.is(v, -0) ? 0 : v
   }
-  return { x: rd(r * Math.sin(rad)), y: rd(-r * Math.cos(rad)) }
+  return { x: rd(x), y: rd(y) }
 }
 
 /** The arc a season's rim label rides. Bottom-half labels get a reversed arc at
@@ -94,7 +95,7 @@ function labelArc(span: Span, flip: boolean): string {
 // constant). Rim text drops a leading "the" (display trim only; the full label
 // stays in the tooltip and the caption below).
 const seasonViews = GLASS_SEASONS.map((s) => {
-  const mid = ((dayToAngle(spanMidpoint(s.span)) % 360) + 360) % 360
+  const mid = normalizeAngle(dayToAngle(spanMidpoint(s.span)))
   const flip = mid > 90 && mid < 270
   const start = dayToAngle(s.span[0])
   return {
@@ -114,12 +115,13 @@ const monthTicks = Array.from({ length: 11 }, (_, i) => {
 })
 const newYearTick = { p0: polar(0, R.ring1), p1: polar(0, R.newYear) }
 
+// A phase drawn as an annulus between r0 and r1, lit when the needle is inside
+// it — the one shape shared by the single-specimen ring and every composite band.
+function phaseView(p: PhenologyPhase, r0: number, r1: number) {
+  return { ...p, d: arcPath(p.span, r0, r1), now: inSpan(day.value, p.span) }
+}
 const phaseViews = computed(() =>
-  (props.phases ?? []).map((p) => ({
-    ...p,
-    d: arcPath(p.span, R.phase0, R.phase1),
-    now: inSpan(day.value, p.span),
-  })),
+  (props.phases ?? []).map((p) => phaseView(p, R.phase0, R.phase1)),
 )
 const hasPhases = computed(() => (props.phases ?? []).length > 0)
 
@@ -146,11 +148,7 @@ const compositeBands = computed(() => {
       // this specimen's whole radial slot, not just the days it has a phase
       // drawn on (arcPath's [d,d] convention already draws a full ring).
       hit: arcPath([0, 0], r0, r1),
-      phaseViews: b.phases.map((p) => ({
-        ...p,
-        d: arcPath(p.span, r0, r1),
-        now: inSpan(day.value, p.span),
-      })),
+      phaseViews: b.phases.map((p) => phaseView(p, r0, r1)),
     }
   })
 })

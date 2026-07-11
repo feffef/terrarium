@@ -133,8 +133,13 @@ export function dayToAngle(day: number): number {
  *  `dayToAngle` on whole days. Any real angle is accepted — it is normalized onto
  *  the dial first, and an angle rounding up to "day 365" wraps to day 0. */
 export function angleToDay(angle: number): number {
-  const normalized = ((angle % 360) + 360) % 360
-  return Math.round((normalized * DAYS_PER_YEAR) / 360) % DAYS_PER_YEAR
+  return Math.round((normalizeAngle(angle) * DAYS_PER_YEAR) / 360) % DAYS_PER_YEAR
+}
+
+/** Any real angle → its representative in [0, 360). The one home of the
+ *  "wrap an angle onto the dial" step (`angleToDay` and the dial SFC share it). */
+export function normalizeAngle(angle: number): number {
+  return ((angle % 360) + 360) % 360
 }
 
 /** Drag continuity: the representation of `next` (given modulo 360) closest to
@@ -149,8 +154,9 @@ export function unwrapAngle(prev: number, next: number): number {
 // ── Arc geometry ─────────────────────────────────────────────────────────────
 
 /** A dial point: angle in degrees (0° = 12 o'clock, clockwise) at radius r,
- *  centred on the origin. */
-function pointAt(angle: number, r: number): { x: number; y: number } {
+ *  centred on the origin. Exported as the one home of the dial's point geometry
+ *  — the SFC rounds these for markup but does not restate the trigonometry. */
+export function pointAt(angle: number, r: number): { x: number; y: number } {
   const rad = (angle * Math.PI) / 180
   return { x: r * Math.sin(rad), y: -r * Math.cos(rad) }
 }
