@@ -55,10 +55,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   nothing to gate; a session that lands even one working commit is and opens the
   PR itself. This gates *opening*, not *deciding to do the work* — net-new
   autonomous work still needs a green-light first (ADR-0003 amendment). The
-  session-log direct-to-`main` exception (ADR-0009) is untouched. **Watching the
-  PR is automatic too** — on opening it, subscribe to its activity and babysit it
-  to merge/close; don't ask "shall I watch it?". **Before announcing intent to
-  open a PR, check whether one already exists on the current branch** (e.g.
+  session-log direct-to-`main` exception (ADR-0009) is untouched. Watching the
+  PR through to merge/close is automatic too, on the same no-ask default — see
+  "Pushing is not landing" below for what that entails. **Before announcing
+  intent to open a PR, check whether one already exists on the current branch** (e.g.
   `mcp__github__search_pull_requests` or `list_pull_requests` scoped to the
   branch) — don't tell the user you're about to open one without checking first.
 - All work must clear the **safety gate** (build/validate/isolation, ADR-0004).
@@ -217,14 +217,17 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   currently unavailable on this repo pending a repo-owner Settings change**
   (`Settings → General → Allow auto-merge`, tracked in #231) — don't attempt to
   enable it yourself. Merge manually once the gate reports green **only where the
-  change is already auto-merge-eligible** (the `digest` / reviewer-agent /
-  `audit-docs` / `audit-skills` tiers, ADR-0003/0004); an ordinary work PR is
-  still merged by a human, never self-merged (see "no self-merge" above).
+  change is already auto-merge-eligible** — the `digest` / `audit-docs` /
+  `audit-skills` tiers merge on a green gate alone (ADR-0003/0004); the
+  `reviewer-agent` tier (`frictions-to-fixes`) is not purely mechanical — it
+  additionally requires the reviewing session's own risk judgement, escalating a
+  genuinely high-risk PR to a human even when green (ADR-0003). An ordinary work
+  PR is still merged by a human, never self-merged (see "no self-merge" above).
 - **Opening the PR is the first session log.** The moment you open the gated PR
   is a closure point: invoke `close-session` right then (it authors the log via
   `log-session`). It's not finished; more commits and a re-fired log can follow
-  (re-invoking is safe, the last landed state wins) — see the `log-session`
-  Skill for the exact status semantics (`in-review` vs `completed`).
+  — re-invoking is safe, see "Logging your session" below for why — and see the
+  `log-session` Skill for the exact status semantics (`in-review` vs `completed`).
 - **Three distinct worktree-isolation mechanisms exist in this environment — pick
   the one that matches the task, don't conflate them:**
   1. **`EnterWorktree`/`ExitWorktree`** (interactive, session-level) — switches
@@ -295,8 +298,8 @@ app/pages/t/[tenant]/[space]/[...slug].vue   # runtime routing + ContentRenderer
 tests/unit/                         # PLATFORM unit tests (L3 isolation, shared/, scripts/)
 tests/e2e/smoke.spec.ts             # the ONE L2 smoke build; imports each Tenant's e2e module
 tests/support/ , tests/README.md    # shared e2e helpers + the test-homing convention (ADR-0004)
-.github/workflows/gate.yml          # the safety gate (installed & live); human-only —
-                                    #   CI is never agent-edited (ADR-0004)
+.github/workflows/gate.yml          # the safety gate (installed & live); human-only to
+                                    #   merge — a PR touching it never auto-merges (ADR-0004)
 .agents/skills/ , .claude/skills/   # committed Skills (general + platform-operation)
 ```
 
@@ -319,8 +322,8 @@ one command that actually runs each Document's data through its Collection's Zod
 validates real content against it. `validate:content` checks every Tenant's content in ~1-2s,
 without paying for `nuxt build` or `pnpm test:e2e`. It is a **local, additive supplement for
 fast feedback during content-only edits — not a replacement for the full gate above**, which
-stays the mandatory, unchanged merge gate (ADR-0004; see Ground rules above — CI is never
-agent-edited).
+stays the mandatory, unchanged merge gate (ADR-0004; see Ground rules above — CI is
+human-only to merge, not to edit, and a PR touching it never auto-merges).
 
 **Need a screenshot of a running page** (e.g. to eyeball a render during a session)?
 Run `pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--dev]` — it
@@ -445,3 +448,7 @@ Single-context: one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agent
 ### Tenant-layer conventions
 
 Nuxt-layer gotchas for editing a Tenant (alias resolution, layer-local imports, CSS token inheritance). See `docs/agents/tenant-layers.md`.
+
+### Content authoring
+
+Deciding whether MDC (Nuxt Content's Markdown Components) is the right tool for a given piece of content, vs. frontmatter or a data collection. See `docs/research/mdc-when-to-use.md`.
