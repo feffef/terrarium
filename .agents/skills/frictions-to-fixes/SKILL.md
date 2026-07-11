@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Frictions to Fixes
 
-The precursor to the deferred `consolidate`/`codify` jobs (ADR-0009): read
+The precursor to fuller self-improvement automation (ADR-0009): read
 the **frictions** every session honestly logged, turn the ones worth retiring into
 issues, dispatch fixes, then **review and land them yourself**. **Autonomy is the
 goal** — you act as the mid-term **review-agent** that ADR-0003 foresaw (the impl

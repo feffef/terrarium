@@ -1,6 +1,7 @@
 // Manifest for the Atlas Tenant — a lavishly designed natural-history field guide
-// to a fictional ecosystem observed under glass (CONTEXT.md: Atlas / Biome /
-// Specimen / Interaction / Observation; PRD #64). Declarative intent only:
+// to a fictional ecosystem observed under glass (CONTEXT.md Tenants roster:
+// Atlas; layers/atlas/CONTEXT.md: Biome / Specimen / Interaction / Observation;
+// PRD #64). Declarative intent only:
 // `content.config.ts` builds the keyed collections from this manifest at
 // config-evaluation time, and the routing map is derived from it at build time
 // (ADR-0002/0013/0014) — no generated file involved.

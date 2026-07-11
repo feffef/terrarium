@@ -55,8 +55,8 @@ export default defineTenant({
     // Its purpose is NOT to restate each Skill's own description, but to record
     // its *role and importance to this project*. Skills are installed wholesale
     // from an external pack (skills-lock.json), so this is where they get
-    // Terrarium-specific context; CLAUDE.md points agents here. The planned
-    // `sync`/`codify` jobs would maintain it once they exist.
+    // Terrarium-specific context; CLAUDE.md points agents here. The
+    // `audit-skills` Skill keeps it current.
     skills: {
       type: 'data',
       source: '**/*.yml',
@@ -79,8 +79,9 @@ export default defineTenant({
         .strict(),
     },
     // Session logs — one append-only, honest self-report per Claude session
-    // (ADR-0009). Primary signal the `consolidate`/`codify` jobs mine for
-    // recurring friction, so the shape favours what aggregates: `status`/`kind`
+    // (ADR-0009). Primary signal the self-improvement Skills mine for recurring
+    // friction (`frictions-to-fixes` today), so the shape favours what
+    // aggregates: `status`/`kind`
     // are queryable spines; `frictions` is a required list (may be []) forcing
     // reflection. Strict → L1 validation. Length hints below are intent only,
     // NOT enforced — a friction log must never fail the build over word count.

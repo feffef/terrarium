@@ -9,7 +9,7 @@ disable-model-invocation: true
 Keep the **Skill Inventory** (`layers/journal/content/current/skills/`) honest
 against how Skills are *actually used*, and watch whether a Skill's own recent
 `SKILL.md` edits (yours, another human's, or `audit-docs`'s) actually changed
-behavior for the better. This is a `sync`-family maintenance Skill (sibling of
+behavior for the better. This is a self-improvement maintenance Skill (sibling of
 `digest`/`audit-docs`, ADR-0003/0015). A thin, tested helper
 (`scripts/audit-skills.ts`) does the deterministic gathering; **you make every
 judgement.**
@@ -101,7 +101,7 @@ that plausibly *should* have), then set the grade per those definitions.
   use: `name` is the Skill's directory name; `category` is `general-engineering`
   when `external`, else `platform-operation`; write the `role` + grade from what the
   sessions show. Leave *never-observed* un-inventoried Skills alone (that coverage is
-  other `sync` work).
+  other maintenance work).
 - **The mirror case — `inventoried && !onDisk`** (a phantom entry: the Inventory
   points at a Skill directory that no longer exists). If the entry maps to a
   built-in CLI Skill invisible to the on-disk scan, **leave it and flag it**
@@ -198,7 +198,7 @@ GitHub issue, not a vague hunch"). Name the evidence, not just the hunch.
 
 This Skill never creates, splits, or retires a Skill itself — that is net-new /
 creative work and stays human-green-lit (ADR-0003's two-tier autonomy split).
-`ideas` are read by the future `consolidate`/`codify` jobs — this is a distinct
+`ideas` are read by future self-improvement Skills — this is a distinct
 signal from step 5's issue, not a duplicate of it.
 
 Done when every credible new/split/retire signal from this run is captured as
