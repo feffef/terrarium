@@ -92,7 +92,7 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   repo pattern.
 - **A chartered autonomous job's first step is always: `git fetch origin main`,
   then branch off it with that job's own default branch name** (e.g.
-  `journal/audit-docs-<today-UTC>`, `journal/digest-<today-UTC>`). **A
+  `journal/audit-docs-<today-UTC>`, `journal/digest-refresh-<today-UTC>`). **A
   caller-pinned designated branch overrides that default name** — branch the
   pinned name off `origin/main` instead. This is the one canonical statement of
   that step; a chartered job's own Skill only needs to give its default name and

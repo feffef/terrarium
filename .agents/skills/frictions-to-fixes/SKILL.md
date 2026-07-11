@@ -36,7 +36,9 @@ Its brief:
   re-read it directly when a candidate needs more context than the triage
   extract carries.
 - **Group and rank.** Fold related/recurring frictions (shared root cause or single
-  fix) into one candidate; rank by **recurrence × severity**. **Prioritize
+  fix) into one candidate; rank by **recurrence and severity together** (severity
+  is an ordered rank, not a number — weigh it qualitatively, never multiply it).
+  **Prioritize
   `moderate`, `major`, and `blocker` frictions** — these earn a fix on severity
   alone, even logged once. **But a low-severity friction is not automatically
   dropped:** a `nit` or `minor` that **recurs across sessions _and_ is easy to
@@ -154,12 +156,11 @@ Every agent's brief is self-contained: read the issue(s), branch from `origin/ma
 implement the **recommended** option only, clear the **safety gate**, push, and open
 a **gated PR**. The impl agent **never merges and never enables auto-merge**
 (ADR-0003) — it hands the open PR back to you. You are the reviewer (§6).
-**Dispatched worktree-isolated impl agents share the parent session id with the
-orchestrator and with each other — they must NOT self-invoke `close-session` or
-`log-session`.** Doing so writes to the same shared per-session scratch file, and
-a second invocation silently clobbers the first, erasing the orchestrating
-session's own log content. The orchestrating session is the sole log author for
-the run; impl agents just implement, push, and hand back the PR.
+**Dispatched worktree-isolated impl agents must NOT self-invoke `close-session`
+or `log-session`** — see `close-session/SKILL.md` for why (they share the parent
+session id, so a second invocation clobbers the orchestrator's own log). The
+orchestrating session is the sole log author for the run; impl agents just
+implement, push, and hand back the PR.
 
 Done when every issue is covered by a pushed gated PR (doc issues by the one grouped
 PR, each code/config issue by its own), gate green, awaiting your review.

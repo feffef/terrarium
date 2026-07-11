@@ -35,6 +35,13 @@ Its `status` is then **`in-review`** — the PR is open but not merged — never
 `completed`, which is reserved for work that actually landed (a later session
 flips it to `completed` on merge) or a session that needed no PR at all.
 
+**The other three values, defined:** `partial` — some but not all of the goal
+landed, and what shipped is usable on its own; `blocked` — stopped by something
+outside the session's control (a missing permission, an unanswered question, a
+broken external dependency) that could still let the goal resume later;
+`abandoned` — deliberately dropped, with no intent to resume this goal. Pick
+whichever actually describes what happened.
+
 Re-invoking is cheap and safe: authoring only rewrites the scratch, and the next
 live `Stop` (or, failing that, a `SessionEnd`/resume fallback) overwrites the
 single per-session log with a superset. So if you call closure and then more work happens, just

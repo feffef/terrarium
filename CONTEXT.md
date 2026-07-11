@@ -193,7 +193,19 @@ in a JS/TS codebase also reads as a lexical closure — a different thing.)
 A single recorded pain-point within a Session: something that went wrong, was
 unnecessarily complex, or wasted effort or tokens. Each carries a **description**,
 a possible **solution**, and a **severity** graded `nit < minor < moderate <
-major < blocker`. Frictions
+major < blocker`:
+- `nit` — a small annoyance with no real cost (an awkward phrasing, a slightly
+  off default).
+- `minor` — a real but contained papercut (extra steps, a few wasted tokens)
+  that didn't change the outcome.
+- `moderate` — cost meaningful time or tokens, or forced a workaround, but the
+  session still reached its goal.
+- `major` — derailed part of the session (a wrong turn undone, a redo from
+  scratch) or degraded the outcome.
+- `blocker` — the session could not proceed on its goal at all without a
+  workaround or human help.
+
+Frictions
 are the primary signal the self-improvement jobs (`consolidate`, `codify`) mine
 for recurring pain, so agents report **every** friction honestly — even nits. A
 tagging taxonomy is deliberately *not* fixed up front: it is meant to **emerge**
