@@ -1,18 +1,20 @@
 // Manifest for the Journal Tenant — the Platform's self-documentation (CONTEXT.md).
-// Declarative intent only — the generator expands this into keyed collections.
+// Declarative intent only — `content.config.ts` builds the keyed collections
+// from this manifest at config-evaluation time (ADR-0002/0013); nothing is
+// generated into the repo.
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
 
 // A UTC ISO-8601 timestamp, kept as a *string* on purpose — NOT `z.date()`.
 // Nuxt Content maps a `z.date()` field to a SQL `DATE` column and persists only
-// the `YYYY-MM-DD` part, silently dropping the time-of-day. That truncation is
-// what collapsed every session in the dashboard to `00:00 UTC` with 1- or
+// the `YYYY-MM-DD` part, silently dropping the time-of-day. That truncation
+// would collapse every session in the dashboard to `00:00 UTC` with 1- or
 // 1440-minute durations and unstable same-day ordering. A plain string is stored
 // verbatim (VARCHAR), so the full instant round-trips through the content DB.
 // The refine enforces the UTC the field name and comment promise — a canonical
 // `…Z` instant, not a bare date and not a local/offset time. A zone-less value
 // like `2026-07-04T22:45` would be re-parsed in the *viewer's* zone (the dashboard
-// renders client-side), reintroducing the very drift this fix removes; and unlike
+// renders client-side), reintroducing the same drift; and unlike
 // `.datetime()` — which routes to a `DATETIME` column that re-renders in local time
 // and drops the `Z` — a plain string leaves the raw UTC value untouched.
 const utcTimestamp = z
@@ -105,10 +107,9 @@ export default defineTenant({
           prs: z.array(z.string()).default([]), // 0..N already-landed work-PR refs
           // docsRead/skillsUsed are a *merged* field (ADR-0009 amendment): the
           // agent's curated entries plus transcript-observed reads the SessionEnd
-          // extractor folds in. Shape is unchanged — `reason` stays required; a
-          // derived entry the agent never annotated gets a placeholder —
-          // `(read before editing)` for a docsRead path also edited, `(no reason
-          // given)` otherwise.
+          // extractor folds in. `reason` stays required; a derived entry the
+          // agent never annotated gets a placeholder — `(read before editing)`
+          // for a docsRead path also edited, `(no reason given)` otherwise.
           docsRead: z
             .array(z.object({ path: z.string(), reason: z.string() }))
             .default([]),

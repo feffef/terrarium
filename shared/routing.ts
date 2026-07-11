@@ -12,16 +12,14 @@ import { routingMap } from '#routing'
  *  the generated `routingMap` itself is declared with its precise literal type. */
 export type RoutingMap = Record<string, Record<string, Record<string, string>>>
 
-// ── Precise key types, derived from the generated routing map (#96) ──────────────
+// ── Precise key types, derived from the generated routing map ──────────────
 // `#routing` declares `routingMap` with the literal type of the same JSON its
 // runtime data is written from (modules/routing.ts), so the key scheme stays
 // single-homed in `collectionKey()` (shared/manifest.ts) and type and data cannot
 // diverge. The projections below turn that literal into the per-Tenant key unions
 // the pages need: `queryCollection(key)` is generic in the key, so a wide `string`
 // key would widen its result to every collection's item type and lose the fields
-// the UIs read (#55). Because the resolver's RETURN type carries these unions, no
-// call site needs an `Extract<keyof Collections, …>` or `as keyof Collections`
-// cast — this comment is the one home for that rationale.
+// the UIs read.
 
 type Values<T> = T[keyof T]
 type GeneratedMap = typeof routingMap
@@ -78,7 +76,17 @@ export function resolveSpaceRoute<T extends string>(
   map: RoutingMap = routingMap,
 ): ResolvedRoute<T> | null {
   const path = slugToPath(slugParam)
-  const spaceCollections = map[tenant]?.[space]
+  // `Object.hasOwn` guards, rather than `map[tenant]?.[space]` alone: a plain
+  // object lookup walks the prototype chain, so an unguarded index would resolve
+  // `tenant === '__proto__'` (or `'constructor'`/`'hasOwnProperty'`, …) to
+  // `Object.prototype` or one of its own members instead of failing closed.
+  // Nothing on `Object.prototype` carries a `pages` string today, so there is no
+  // live leak — but ADR-0006's isolation guarantee ("a resolved route can never
+  // name another Tenant's or Space's collections") shouldn't rest on that being an
+  // accident of what happens to live on `Object.prototype` right now.
+  const tenantSpaces = Object.hasOwn(map, tenant) ? map[tenant] : undefined
+  const spaceCollections =
+    tenantSpaces && Object.hasOwn(tenantSpaces, space) ? tenantSpaces[space] : undefined
   if (!spaceCollections?.pages) return null
 
   // Convention: `pages` is the routed collection; every other collection in the Space
@@ -90,7 +98,7 @@ export function resolveSpaceRoute<T extends string>(
 
   // The cast narrows the wide `map` lookups (`string`) to the generated literal
   // unions above — a deliberate, single-homed assertion that the injectable map
-  // matches the generated one in production (#96). Tests inject crafted maps and
+  // matches the generated one in production. Tests inject crafted maps and
   // only ever compare the strings, so the assertion is confined to this line.
   return { path, pagesKey: spaceCollections.pages, collections, atRoot: path === '/' } as ResolvedRoute<T>
 }

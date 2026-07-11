@@ -37,7 +37,7 @@ interface ExpandedCollectionBase {
 
 // Discriminated on `type` — mirrors `CollectionDef` (shared/manifest.ts) so the
 // required-schema-for-`data` invariant survives the manifest → expansion step
-// and reaches `content.config.ts` still statically checkable (issue #93).
+// and reaches `content.config.ts` still statically checkable.
 export type ExpandedCollection =
   | (ExpandedCollectionBase & {
       type: 'page'

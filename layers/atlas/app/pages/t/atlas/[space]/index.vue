@@ -9,21 +9,20 @@
 // pages/interactions/observations. Biomes cannot leak — the whole wing is a
 // same-Space read. `biomeMeta`, the utils (`toSpecimenView`, `signatureVars`)
 // and the Atlas* components arrive via Nuxt's layer-wide auto-imports; only the
-// types still import relatively.
-import type { Edge, SpecimenView } from '../../../../utils/atlas'
+// types still import relatively. The three-`queryCollection` load itself (and
+// the shared `specimensBySlug` lookup) is single-homed in the
+// `useAtlasWingData` composable — the sibling `[...slug].vue` entry page needs
+// the exact same load (code review; see that composable's header for why).
+import type { SpecimenView } from '../../../../utils/atlas'
 
 const route = useRoute()
 const { space, pagesKey, collections } = useSpace('atlas')
-
-const { data } = await useAsyncData(route.path, async () => {
-  const pages = await queryCollection(pagesKey).all()
-  const interactions = await queryCollection(collections.interactions).all()
-  const observations = await queryCollection(collections.observations).all()
-  return { pages, interactions, observations }
+const { pages, edges, observations, specimensBySlug } = await useAtlasWingData(route.path, {
+  pagesKey,
+  collections,
 })
 
 const meta = biomeMeta(space)
-const pages = computed(() => data.value?.pages ?? [])
 const landing = computed(() => pages.value.find((p) => p.path === '/') ?? null)
 const specimens = computed<SpecimenView[]>(() =>
   pages.value
@@ -31,11 +30,6 @@ const specimens = computed<SpecimenView[]>(() =>
     .map(toSpecimenView)
     .sort((a, b) => a.binomial.localeCompare(b.binomial)),
 )
-const specimensBySlug = computed(() =>
-  Object.fromEntries(specimens.value.map((s) => [s.slug, s])),
-)
-const edges = computed<Edge[]>(() => (data.value?.interactions ?? []) as Edge[])
-const observations = computed(() => data.value?.observations ?? [])
 const withRhythm = computed(() => specimens.value.filter((s) => s.activity))
 
 const sigStyle = (s: SpecimenView) => signatureVars(s.signature?.colors)

@@ -7,7 +7,7 @@
 // through the SAME shared, unit-tested `resolveSpaceRoute` the catch-all uses
 // (via the read-only useSpace composable — no isolation logic duplicated), then
 // reads only this (Tenant, Space)'s keyed `pages` collection. Spaces cannot
-// leak. `pagesKey` is already this Tenant's own literal `pages` keys (#96/#55);
+// leak. `pagesKey` is already this Tenant's own literal `pages` keys;
 // `personaMeta`/`formatBlogDate`/the components arrive via Nuxt auto-imports.
 const route = useRoute()
 const { space, pagesKey } = useSpace('blog')

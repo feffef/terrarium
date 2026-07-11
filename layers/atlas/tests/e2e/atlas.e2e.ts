@@ -9,7 +9,15 @@
 // `AtlasSpecimenPlate` and its sibling components render (issue #212's origin,
 // PR #208). Cover one representative Specimen route here so a typo'd/renamed
 // auto-import component on that page can't ship silently.
-import { describe, it } from 'vitest'
+//
+// The Atlas front door (`/t/atlas`) is a Tenant-root layer route, not a Space —
+// it is deliberately outside the manifest/routing map, so it is NOT in
+// `entryRoutes` and the platform sweep above never reaches it either
+// (ADR-0016). ADR-0016 says a Tenant relying on such a route "should assert it
+// in its own way" — this is that assertion, in the same `$fetch`-SSR-string
+// style the other Tenant-specific checks in this file use.
+import { describe, expect, it } from 'vitest'
+import { $fetch } from '@nuxt/test-utils/e2e'
 import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 
 /** Register the atlas Tenant's L2 assertions under the caller's active suite. */
@@ -17,6 +25,18 @@ export function registerAtlasE2E(): void {
   describe('atlas Tenant', () => {
     it('hydrates a specimen entry with no unresolved components', async () => {
       await expectCleanHydration('/t/atlas/canopy/mycora-susurrans')
+    })
+
+    // 200 + stable front-door content: the cover title and all three wing names
+    // (biomes.ts's `name` fields), so a broken front door or a wing dropped from
+    // the directory both fail loudly.
+    it('renders the Atlas front door', async () => {
+      const html = await $fetch('/t/atlas')
+      expect(html).toContain('The Atlas')
+      expect(html).toContain('of the Terrarium')
+      expect(html).toContain('The Canopy')
+      expect(html).toContain('The Floor')
+      expect(html).toContain('The Pool')
     })
   })
 }

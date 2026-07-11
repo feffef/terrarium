@@ -2,7 +2,10 @@
 // One session log in the recent-activity feed. The collapsed head is a summary;
 // clicking it expands the full log in place — its narrative, docs read, skills
 // used, and every friction. Sessions are a `data` collection with no route of
-// their own, so this inline disclosure is how the detail is reached.
+// their own, so this inline disclosure is how the detail is reached. The
+// clickable-row a11y wiring (role/tabindex/aria-expanded/keyboard) is single-homed
+// in `<JournalDisclosure>`, shared with the digest rows on the Space landing —
+// this component supplies only the head's own content via its default slot.
 // Types are imported relatively (`~/` resolves to the main app in a layer —
 // docs/agents/tenant-layers.md §1); `prUrl` arrives via the utils auto-import.
 import type { SessionCardView } from '../../types/journal'
@@ -15,16 +18,7 @@ const toggle = () => (expanded.value = !expanded.value)
 
 <template>
   <article class="card" :class="{ open: expanded }">
-    <div
-      class="head"
-      role="button"
-      tabindex="0"
-      :aria-expanded="expanded"
-      :aria-controls="detailId"
-      @click="toggle"
-      @keydown.enter.prevent="toggle"
-      @keydown.space.prevent="toggle"
-    >
+    <JournalDisclosure class="head" :expanded="expanded" :controls="detailId" @toggle="toggle">
       <div class="top">
         <span class="when">{{ card.when }} <span class="dur">· {{ card.duration }} min</span></span>
         <JournalStatusPill :status="card.status" />
@@ -40,7 +34,7 @@ const toggle = () => (expanded.value = !expanded.value)
         <span class="sid">{{ card.sid }}</span>
         <span class="caret" aria-hidden="true">{{ expanded ? '▾' : '▸' }}</span>
       </div>
-    </div>
+    </JournalDisclosure>
 
     <div v-if="expanded" :id="detailId" class="detail">
       <p v-if="card.summary" class="summary">{{ card.summary }}</p>

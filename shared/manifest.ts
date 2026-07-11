@@ -13,7 +13,7 @@ export type CollectionType = 'page' | 'data'
 // is). Every actual `data` collection in this repo already carries a schema
 // (it's how structured content gets any shape at all); this makes that
 // existing invariant checkable at the manifest-authoring surface itself,
-// instead of only failing later inside `content.config.ts` (issue #93).
+// instead of only failing later inside `content.config.ts`.
 export type CollectionDef =
   | {
       /** 1:1 file→route content, rendered by the generic catch-all or a Tenant layer. */
@@ -52,18 +52,38 @@ const slug = (label: string) =>
 
 // Duck-typed "is this a zod schema?" — the manifest holds *runtime* zod objects
 // (Collection schemas), so we probe for `.safeParse` rather than import a brand.
+const zodSchemaField = z.custom<ZodObject<ZodRawShape>>(
+  (v) => typeof (v as { safeParse?: unknown })?.safeParse === 'function',
+  'schema is not a zod schema',
+)
+
+// `schema` stays optional on the base object (a `page` never requires one) and a
+// `.superRefine` enforces the `type === 'data' ⇒ schema present` half — mirroring
+// the `CollectionDef` TS union above, where only the `data` branch requires
+// `schema`. A plain optional `schema` with no refinement would let a schema-less
+// `data` collection pass runtime validation even though the TS type forbids it at
+// compile time — it would fail only later, inside `content.config.ts`, instead
+// of at this manifest-authoring surface (ADR-0002's
+// "an agent's output can be checked before build" promise). (A `z.discriminatedUnion`
+// was the other option here, but its built-in "invalid discriminator" issue isn't
+// straightforwardly restyled into this file's labelled-message convention, so a
+// refinement on the existing object schema is the more surgical fix.)
 const collectionDefSchema = z
   .object({
     type: z.enum(['page', 'data'], { message: 'has an invalid type (expected "page" or "data")' }),
     source: z.string().optional(),
-    schema: z
-      .custom<ZodObject<ZodRawShape>>(
-        (v) => typeof (v as { safeParse?: unknown })?.safeParse === 'function',
-        'schema is not a zod schema',
-      )
-      .optional(),
+    schema: zodSchemaField.optional(),
   })
   .strict()
+  .superRefine((val, ctx) => {
+    if (val.type === 'data' && val.schema === undefined) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['schema'],
+        message: 'data collection requires a schema',
+      })
+    }
+  })
 
 // `.strict()` on both objects is deliberate: an unknown manifest key (e.g. a
 // `space:` typo for `spaces:`) becomes an error instead of passing silently.
@@ -80,7 +100,9 @@ const tenantManifestSchema = z
   })
   .strict()
 
-/** Author-facing helper: declares a Tenant's intent. The generator does the rest. */
+/** Author-facing helper: declares a Tenant's intent. `content.config.ts` and
+ *  `modules/routing.ts` do the rest, expanding it at config-evaluation/build
+ *  time (ADR-0013/0014) — there is no separate generator or codegen step. */
 export function defineTenant(manifest: TenantManifest): TenantManifest {
   return manifest
 }
@@ -91,10 +113,13 @@ export function collectionKey(tenant: string, space: string, collection: string)
 }
 
 /**
- * Structural validation run by the generator; fails fast before any codegen.
- * Backed by a zod schema (ADR-0002: "manifests are schema-validated") — the same
- * tool the Platform uses for every Collection schema. Returns one path-qualified
- * message per problem so the generator can list them all at once.
+ * Structural validation of a Tenant manifest, callable standalone (e.g. from an
+ * agent's own pre-flight check) before `content.config.ts`/`modules/routing.ts`
+ * ever expand it (ADR-0013/0014) — no separate generator or codegen step exists
+ * to "fail fast before". Backed by a zod schema (ADR-0002: "manifests are
+ * schema-validated") — the same tool the Platform uses for every Collection
+ * schema. Returns one path-qualified message per problem so every issue can be
+ * listed at once, rather than fixed one `safeParse` at a time.
  */
 export function validateManifest(m: TenantManifest): string[] {
   const res = tenantManifestSchema.safeParse(m)

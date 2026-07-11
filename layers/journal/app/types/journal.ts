@@ -12,7 +12,7 @@
 // field-for-field (down to which fields are optional, per each Collection's
 // `.default(...)` in the manifest) — so a plain, uncast assignment from
 // `queryCollection(...)`'s real result in `[space]/index.vue` either
-// typechecks (shapes agree) or fails loudly (issue #94), with no `as unknown
+// typechecks (shapes agree) or fails loudly, with no `as unknown
 // as` escape hatch erasing the check either way.
 export type Severity = 'nit' | 'minor' | 'moderate' | 'major' | 'blocker'
 export type Importance = 'essential' | 'specialist' | 'supporting' | 'peripheral'
@@ -41,7 +41,7 @@ export interface SessionDoc {
   // Merged reads/skills (ADR-0009 amendment): the agent's curated entries plus
   // transcript-observed ones the SessionEnd extractor folds in with a derived
   // placeholder reason — `(read before editing)` for a docsRead path also
-  // edited, `(no reason given)` otherwise. Shape unchanged from the authored-only era.
+  // edited, `(no reason given)` otherwise.
   docsRead?: { path: string; reason: string }[]
   skillsUsed?: { name: string; reason: string }[]
   // Mechanical trace — derived from the transcript (ADR-0009 amendment), never

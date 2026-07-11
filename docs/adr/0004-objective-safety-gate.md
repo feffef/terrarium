@@ -45,6 +45,26 @@ Status: Accepted
 > platform spec and covers every Tenant uniformly.) L0/L1/L3 tests have no such
 > per-file build cost and are simply homed per the rule above.
 
+> **Amended (2026-07-11).** The L1 bullet's premise below — "free with Nuxt
+> Content Zod schemas — invalid frontmatter fails the build" — is false. Verified
+> against the installed `@nuxt/content` source (see
+> `docs/research/nuxt-content-review-grounding.md` §2): Nuxt Content 3 never
+> calls `safeParse` (or any schema validation) in its parse/insert pipeline;
+> Collection schemas only derive SQL column types, wrong-typed frontmatter is
+> coerced, and an unparseable file is warn-skipped, not build-failed. `pnpm
+> build` therefore validates nothing. L1 is instead enforced by
+> `scripts/validate-content.ts` (`pnpm validate:content`), the only thing that
+> runs Documents through the Collection Zod schemas via `.safeParse()`. It is
+> now wired into the `gate` script in `package.json` (the single home CI
+> mirrors). The matching `.github/workflows/gate.yml` change — a dedicated
+> `'L1 · content validation'` step, plus renaming the former
+> `'L0/L1 · build + content validation'` step to `'L0 · build'` — must be
+> applied by a human: agent sessions cannot push workflow files (no `workflow`
+> OAuth scope). Until it lands, CI runs a subset of `pnpm gate` and its build
+> step's old label overstates what it checks (exact diff on PR #323). The
+> Decision that an L1 layer exists is unchanged — only the mechanism note
+> above is corrected.
+
 ## Context
 
 Both the human reviewer (now) and the scheduled review-agent (mid-term, ADR-0003)

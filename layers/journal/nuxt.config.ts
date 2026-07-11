@@ -6,7 +6,7 @@
 // Purely presentational: it reads the per-Space keyed collections through the
 // shared routing map. It defines NO content collections of its own — those stay
 // governed solely by the root content.config.ts (ADR-0002/0013) — and touches
-// none of the isolation-critical routing/generator logic (ADR-0004).
+// none of the isolation-critical routing/expansion logic (ADR-0004).
 import { fileURLToPath } from 'node:url'
 
 export default defineNuxtConfig({

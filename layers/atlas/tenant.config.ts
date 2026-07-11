@@ -1,7 +1,9 @@
 // Manifest for the Atlas Tenant — a lavishly designed natural-history field guide
 // to a fictional ecosystem observed under glass (CONTEXT.md: Atlas / Biome /
-// Specimen / Interaction / Observation; PRD #64). Declarative intent only; the
-// generator expands this into keyed collections (ADR-0002/0013).
+// Specimen / Interaction / Observation; PRD #64). Declarative intent only:
+// `content.config.ts` builds the keyed collections from this manifest at
+// config-evaluation time, and the routing map is derived from it at build time
+// (ADR-0002/0013/0014) — no generated file involved.
 //
 // The Atlas gives Spaces a third meaning: **places**. Where the Journal uses
 // Spaces as lifecycle (`current`/`archived`) and the Blog as voices (Personas),

@@ -1,7 +1,10 @@
-// L3 — Isolation invariant (ADR-0004), tested at the generator level where the
-// real risk lives: a generator bug that produces duplicate or mis-scoped keys
-// would silently cross-wire Spaces. Because each collection is its own SQLite
-// table, correct + unique keys are exactly what guarantees no cross-Space leak.
+// L3 — Isolation invariant (ADR-0004), tested at the manifest-expansion level
+// where the real risk lives: a bug in `expand()` (shared/expand.ts) that produced
+// duplicate or mis-scoped keys would silently cross-wire Spaces — it, not a
+// committed generator, is what `content.config.ts`/`modules/routing.ts` run at
+// config-evaluation/build time (ADR-0013/0014). Because each collection is its
+// own SQLite table, correct + unique keys are exactly what guarantees no
+// cross-Space leak.
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
 import { expand, type LoadedManifest } from '../../shared/expand.ts'
@@ -99,6 +102,17 @@ describe('validateManifest()', () => {
   it('rejects an invalid collection type', () => {
     const bad = { ...ok, collections: { pages: { type: 'weird' as never } } }
     expect(validateManifest(bad).join()).toMatch(/invalid type/)
+  })
+
+  it('rejects a `data` collection with no schema (issue #93)', () => {
+    // Cast: `CollectionDef` itself makes `schema` required on `data`, so TS
+    // rejects this literal — which is exactly the point. The runtime validator
+    // must catch the same invariant for manifests that never saw the
+    // typechecker (jiti evaluates tenant.config.ts at build time).
+    const bad = { ...ok, collections: { pings: { type: 'data' } } } as unknown as TenantManifest
+    const errors = validateManifest(bad)
+    expect(errors.length).toBeGreaterThan(0)
+    expect(errors.join()).toMatch(/pings/)
   })
 
   it('rejects an unknown top-level key (e.g. a `space:` typo for `spaces:`)', () => {

@@ -3,7 +3,7 @@
    globally by the layer's nuxt.config. Light/dark aware; the per-Persona accent
    (--bl-accent) is set from personas.ts on <body> (via useHead) and on the page
    root. Ornament budget is deliberately small and terrarium-flavoured: a sprout
-   glyph (BlogSprout.vue), a glass-pane About panel, a glass-tank network footer,
+   glyph (components/blog/Sprout.vue), a glass-pane About panel, a glass-tank network footer,
    and a soft accent wash behind the masthead — nothing louder. */
 :root {
   --bl-bg: #fbfaf7;

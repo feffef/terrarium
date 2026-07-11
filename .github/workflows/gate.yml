@@ -33,18 +33,35 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      # Pins each external pack Skill's installed SKILL.md hash against its
+      # Skill Inventory entry (ADR-0015 amendment) — a governance/provenance
+      # check, arguably its own layer rather than one of L0-L3, but the
+      # cheapest check available, so it runs first, mirroring `pnpm gate`'s order.
+      - name: 'L0 · skills-lock integrity'
+        run: pnpm verify:skills-lock
+
       - name: 'L0 · lint'
         run: pnpm lint
 
       - name: 'L0 · typecheck'
         run: pnpm typecheck
 
+      # L1 — content validates against strict Collection schemas via Zod
+      # .safeParse() (scripts/validate-content.ts). Nuxt Content 3 never
+      # validates content at build time (docs/research/nuxt-content-review-grounding.md
+      # §2) — this script is what actually enforces L1; see the ADR-0004
+      # amendment in this PR.
+      - name: 'L1 · content validation'
+        run: pnpm validate:content
+
       # L3 — isolation invariant: unique, correctly-scoped collection keys.
       - name: 'L3 · isolation'
         run: pnpm test
 
-      # L0 + L1 — build succeeds and all content validates against strict schemas.
-      - name: 'L0/L1 · build + content validation'
+      # L0 — build succeeds. Does NOT validate content against schemas — Nuxt
+      # Content 3 has no safeParse in its parse/insert pipeline; schemas only
+      # derive SQL column types (docs/research/nuxt-content-review-grounding.md §2).
+      - name: 'L0 · build'
         run: pnpm build
 
       # L2 — every (Tenant, Space) entry route renders 200 with content.

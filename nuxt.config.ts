@@ -24,12 +24,12 @@ export default defineNuxtConfig({
     // Tenant layers now live under Nuxt's conventional `layers/` directory
     // (ADR-0018), so Nuxt's generated tsconfig already includes their fit-out
     // (`../layers/*/app/**/*`) and layer config (`../layers/*/nuxt.config.*`) —
-    // no manual glob needed for those (issue #209). The one surface Nuxt does
+    // no manual glob needed for those. The one surface Nuxt does
     // NOT know about is each Tenant's `tenant.config.ts` (the manifest — the
     // primary agent-edit surface, ADR-0002): it is evaluated only via jiti at
     // build time, so a type error there would sail through `pnpm typecheck`
     // (the L0 gate, ADR-0004) and only surface later as a jiti/zod failure —
-    // or never, for a silently ignored option (issue #93). Add just that glob.
+    // or never, for a silently ignored option. Add just that glob.
     // Path is relative to the buildDir (`.nuxt/`), matching the style of Nuxt's
     // own `../layers/*/app/**/*` entry.
     tsConfig: {
