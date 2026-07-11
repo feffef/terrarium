@@ -1,0 +1,60 @@
+schemaVersion: 1
+session: session_016LKUTnKA8VZVQg39wWXmj4
+startedAt: 2026-07-11T04:11:48Z
+endedAt: 2026-07-11T04:26:24Z
+kind: autonomous
+goal: Run the audit-skills sweep against the 40-session window
+status: completed
+outcome: One Inventory entry added; PR
+summary: "Ran the audit-skills Skill end-to-end, autonomously (fired by its scheduled Routine, no human prompt). Gathered the scorecard via scripts/audit-skills.ts, re-graded every Skill against the bright-line evidence rule, and found only one actionable gap: wayfinder was onDisk but uninventoried despite one observed use this window, so added its Inventory entry (specialist). No other entry's grade or role needed a change — existing text already matched the evidence. Checked a plausible-looking demotion candidate (tdd, for three generator/routing-touching sessions that skipped the Skill by name) by reading those sessions' actual logs; each had in fact added tests, just without invoking the Skill ritually, so no demotion was warranted — worth recording so a future run doesn't re-flag it without also checking. For the regression watch, 4 of 8 bracketed edits (atlas-specimen, blog-post, close-session, log-session) turned out to be bracketed around this environment's shallow-clone horizon commit (a grafted, parent-less commit misread as a real SKILL.md edit), not a real edit at all — filed as its own tooling issue (#292) rather than acted on as a regression. The other 3 real edits (audit-skills #271, digest/frictions-to-fixes #272) had no post-edit invocations in this window to assess, so inconclusive. Opened, watched, and self-merged PR #293 (Inventory-YAML-only, ADR-0004's low-risk tier) — no human involvement at any point in this run."
+prs:
+  - "293"
+docsRead:
+  - path: CONTEXT.md
+    reason: importance grade definitions for step 3
+  - path: layers/journal/content/current/skills/digest.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/research.yml
+    reason: (no reason given)
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this run's driving skill
+  - name: close-session
+    reason: closure sequence at PR merge
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: scripts/audit-skills.ts's regressionChecks bracketed 4 Skills' edits around the same commit, which turned out to be this shallow clone's grafted, parent-less horizon commit rather than a real incremental edit — git shows every file it touches as newly-added, not modified.
+    solution: "Filed #292: detect a commit with no parent during edit-collection and skip attributing it as a real edit, same as the already-handled missing-history case."
+    severity: minor
+durationSec: 875
+models:
+  claude-sonnet-5: 126
+toolCounts:
+  Bash: 31
+  Grep: 7
+  Read: 5
+  Write: 2
+  ToolSearch: 5
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  PushNotification: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Skill: 2
+filesEdited:
+  - layers/journal/content/current/skills/wayfinder.yml
+gitBranch: claude/upbeat-sagan-yq50dh
+entrypoint: remote_trigger
+cliVersion: 2.1.207
+learnings:
+  - Before treating "a session skipped Skill X in X's stated domain" as a demotion signal, read the actual session log — it may show the desired outcome (e.g. tests written) was achieved without invoking the Skill by name, which is not evidence of a gap.
