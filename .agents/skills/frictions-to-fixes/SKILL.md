@@ -163,6 +163,17 @@ runs in its **own git worktree** (parallel PRs must not share a working tree):
   `Closes` every one of their issues. **Never an external pack Skill's `SKILL.md`**
   (a `skills-lock.json` name) — those are off limits (screened out in §2). Many one-line doc PRs are pure review overhead; one batched PR is
   cheaper to review and still traces back to each issue.
+  - **The doc fix must itself clear `audit-docs`' house rules** — that Skill is
+    the home for them (`audit-docs/SKILL.md`, not restated here), and since this
+    Skill self-merges its doc commits too (§6), they hold to the same standard the
+    doc-audit sweep verifies. Two axes: (1) respect each surface's **tier** — Live
+    is fixable, but **never rewrite a Historical decision** (ADRs/digests/session
+    logs — ADRs are human-only anyway, ADR-0004) **or a Pack-generic template**;
+    (2) don't *author* any defect audit-docs' eight lenses catch — above all
+    **single-home rather than restate** (the CLAUDE.md rule), and give any new
+    `docs/agents/*`/`docs/research/*` file its incoming CLAUDE.md-index link. A
+    friction doc fix that would become the next audit-docs finding isn't done.
+    Put this in the doc-fix agent's brief.
 - **Code or config fixes**: one PR each — they carry distinct review and CI surface
   and shouldn't ride on each other. (A single issue that already grouped related
   frictions is still one PR.)
@@ -189,7 +200,11 @@ review-agent, not a bystander waiting for a human. For each PR:
    A red gate is never mergeable — bounce it back to the agent or fix it yourself.
 2. **Code-review the diff** — run `/code-review` (or review directly for a small
    doc PR). Check it implements the issue's recommended option, matches repo
-   conventions, and confines itself to a safe surface.
+   conventions, and confines itself to a safe surface. **For a doc PR, also
+   confirm it clears `audit-docs`' house rules** (§5): a fix that would itself be
+   a future audit-docs finding — new duplication instead of a single-home
+   pointer, stale-narration, an unlinked new doc, a rewritten Historical
+   decision — is amended or bounced back, not merged.
    **Always post the review result as a PR comment before merging — every time,
    with no exception.** Even a clean, "looks perfect, merging as-is" verdict gets a
    comment. The merge must never be the only trace: an unreviewed-looking merge and
