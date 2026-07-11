@@ -1,0 +1,53 @@
+schemaVersion: 1
+session: session_01DBvdNe3uFebvNHii1btKvv
+startedAt: 2026-07-11T07:28:49Z
+endedAt: 2026-07-11T07:53:54Z
+kind: interactive
+goal: Fix yesterday's digest title/summary appearing cut off
+status: completed
+outcome: "Root-caused to unquoted YAML comment; PR #308 merged"
+summary: "User reported yesterday's (2026-07-10) digest title looked cut off on the Journal dashboard. Read the digest file directly first — frontmatter looked fine at a glance. Explored the dashboard render path (index.vue, dashboard.ts digestList()) for CSS truncation or string-slicing logic; found none. Screenshotted /t/journal/current via scripts/preview.ts, which showed only the 2026-07-10 row's summary stopping abruptly with no ellipsis, right where \"#288\" appeared in the text. Parsed the frontmatter directly with the yaml package, confirming the field was silently truncated at YAML-parse time: a space followed by \"#\" starts a plain-scalar comment, so everything from \"#288\" onward was dropped before any Vue/CSS rendering happened. Fixed by quoting the summary string, verified via re-parse and a second screenshot. Swept all other content frontmatter for the same unquoted-space-hash pattern; 2026-07-10 was the only hit. All work this session — diagnosis, fix, and the PR — was directly requested and steered by the human (initial bug report, then follow-up on logging). Committed, pushed, validated content, opened PR #308, subscribed to its activity per repo convention, and it merged with CI green and no review comments."
+prs:
+  - "308"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-07-10.md
+    reason: the reported digest, checked frontmatter first
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: ruled out CSS truncation/ellipsis in the dashboard render
+  - path: layers/journal/app/utils/dashboard.ts
+    reason: ruled out string-slicing/truncation in digestList()
+  - path: app/pages/t/[tenant]/[space]/[...slug].vue
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Assumed a visual/CSS bug ('title cut off') and started reading render code before taking a screenshot, when a screenshot would have pinpointed the exact truncation character immediately.
+    solution: For any 'looks cut off/wrong on the page' report, screenshot the actual render first, before diving into render-path source — the visual evidence narrows the search much faster than reading code top-down.
+    severity: nit
+durationSec: 1505
+models:
+  claude-sonnet-5: 86
+toolCounts:
+  Bash: 19
+  Glob: 1
+  Read: 7
+  Grep: 2
+  Edit: 1
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-07-10.md
+gitBranch: claude/digest-title-cutoff-2mghby
+entrypoint: remote_mobile
+cliVersion: 2.1.207
