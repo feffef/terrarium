@@ -1,0 +1,44 @@
+schemaVersion: 1
+session: session_019mWTw7pBb7Ju2wjNxrEDMU
+startedAt: 2026-07-11T09:41:01Z
+endedAt: 2026-07-11T09:55:48Z
+kind: interactive
+goal: Align frictions-to-fixes doc fixes with audit-docs rules
+status: in-review
+outcome: "Pointers added, gate green, PR #322 open"
+summary: "Human-instructed task: make frictions-to-fixes' self-merged doc commits already honour the refined house rules audit-docs verifies (its three tiers and eight lenses), so a friction fix doesn't ship the duplication / stale-narration / unlinked-doc / Historical-rewrite defect a later audit-docs sweep would raise. Confirmed both skills are repo-owned (not in skills-lock.json), then added two single-homed pointers to audit-docs at the places doc fixes are authored (step 5 dispatch brief) and reviewed (step 6), deferring the definitions to audit-docs/SKILL.md rather than restating them. pnpm gate green; opened gated PR #322 and subscribed to it."
+prs:
+  - "322"
+docsRead:
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: closure front door at PR open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: Single-home tension — the pointer names audit-docs' "three tiers"/"eight lenses" by label, which rots if that Skill renames them later.
+    solution: Kept the reference to concept labels plus the file path and deferred all definitions to audit-docs/SKILL.md; a rename there is the one home to fix.
+    severity: nit
+durationSec: 888
+models:
+  claude-opus-4-8: 52
+toolCounts:
+  Bash: 12
+  Read: 2
+  Edit: 2
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+gitBranch: claude/frictions-fixes-house-rules-auhs92
+entrypoint: remote_mobile
+cliVersion: 2.1.207
