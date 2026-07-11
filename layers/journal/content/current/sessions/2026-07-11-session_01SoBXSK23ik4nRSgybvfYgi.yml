@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01SoBXSK23ik4nRSgybvfYgi
 startedAt: 2026-07-11T07:51:20Z
-endedAt: 2026-07-11T08:44:38Z
-kind: autonomous
+endedAt: 2026-07-11T08:48:05Z
+kind: interactive
 goal: Audit repo docs for drift and inconsistency
-status: in-review
-outcome: One PR merged, one escalated PR open
-summary: "Ran the /audit-docs chartered sweep end to end, unattended. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across the repo's Live/Historical/Pack-generic doc tiers, pooling 10 findings, then dispatched an independent fact-checker that re-derived each against primary sources (code, git history, ADRs) rather than trusting the reviewers' framing. 8 findings confirmed, 2 discarded as non-defects (intentional why/where doc splits, a defensible glossary judgement call). Fixed 6 Live-tier findings (a wrong ADR citation, an unlinked new research doc, two intra-CLAUDE.md duplications, and — most notably — a CI editability contradiction that git history proved factually false: CLAUDE.md claimed \"CI is never agent-edited\" but commit c580e73 is an agent-authored edit to the gate workflow, merged via a normal human-reviewed PR) in a self-merged PR (#311, merged on green gate). One finding (ADR-0010 restating a Routine's schedule cadence, violating CLAUDE.md's own rule against that) touches a human-only ADR surface, so it was escalated as its own PR (#312, still open, subscribed and check-in scheduled). All work this run was self-directed per the audit-docs charter; no human prompted or reviewed during the run."
+status: completed
+outcome: Both PRs merged; workflow retro captured
+summary: "Ran the /audit-docs chartered sweep end to end. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across the repo's Live/Historical/Pack-generic doc tiers, pooling 10 findings, then dispatched an independent fact-checker that re-derived each against primary sources (code, git history, ADRs) rather than trusting the reviewers' framing. 8 findings confirmed, 2 discarded as non-defects (an intentional why/where doc split, a defensible glossary judgement call). Fixed 6 Live-tier findings (a wrong ADR citation, an unlinked new research doc, two intra-CLAUDE.md duplications, and — most notably — a CI editability contradiction that git history proved factually false: CLAUDE.md claimed \"CI is never agent-edited\" but commit c580e73 is an agent-authored edit to the gate workflow, merged via a normal human-reviewed PR) in a self-merged PR (#311, merged on green gate). One finding (ADR-0010 restating a Routine's schedule cadence, violating CLAUDE.md's own rule against that) touched a human-only ADR surface, so it was escalated as its own PR (#312) — left open for human review, subscribed, and a check-in scheduled; #312 merged shortly after and the check-in was cancelled. This was the first run of an updated version of this workflow; a human joined at the closing stage (after both PRs had already merged) to ask for an extra-verbose retro on frictions/learnings/ideas specifically because it was a first run — that request is why this log is heavier than a typical run's. All investigation, fact-checking, fixing, and both PRs were otherwise self-directed; no human steered the actual audit content."
 prs:
   - "311"
   - "312"
@@ -35,23 +35,32 @@ docsRead:
     reason: (no reason given)
 skillsUsed:
   - name: audit-docs
-    reason: the sweep this whole session executed
+    reason: the sweep this whole session executed — first run of its updated version
   - name: close-session
     reason: session closure
   - name: log-session
-    reason: this log
+    reason: this log, re-invoked to expand the retro after a human request
 frictions:
-  - description: Defaulted to the audit-docs Skill's own branch-naming convention (journal/audit-docs-<date>) instead of the caller-pinned designated branch (claude/audit-docs-7n2oja) named in this session's own task instructions — missed that CLAUDE.md's "a caller-pinned designated branch overrides this default name" applied here.
-    solution: "Check the task's own branch-pinning instructions first, before defaulting to a Skill's stated convention. By the time this was noticed, PR #311 had already merged onto the wrong-named branch; reverting good, fact-checked fixes over a naming technicality wasn't worth the churn, so this stands as a process deviation, not a functional defect."
+  - description: Defaulted to the audit-docs Skill's own branch-naming convention (journal/audit-docs-<date>) instead of the caller-pinned designated branch (claude/audit-docs-7n2oja) named in this session's own harness instructions ("Git Development Branch Requirements") — missed that CLAUDE.md's "a caller-pinned designated branch overrides this default name" applied here. The pin lived in a completely different part of the context (a harness-injected block near the very top of the system prompt) than the Skill's own step-1 branching instructions, so it was easy to have already mentally moved past it by the time step 1 ran.
+    solution: "Before branching, explicitly re-scan the session's own system-prompt/ task-setup instructions for a pinned branch name, not just CLAUDE.md's chartered-job convention — the Skill's step 1 could say this explicitly (\"check your own task instructions for a caller-pinned branch before defaulting to the name below\") rather than assuming the agent will cross-reference a different context section on its own. By the time this was noticed, PR #311 had already merged onto the wrong-named branch; reverting good, fact-checked fixes over a naming technicality wasn't worth the churn, so this stands as a process deviation, not a functional defect."
     severity: moderate
   - description: subscribe_pr_activity failed once on the first call ("Tool permission stream closed before response received"); an immediate retry with identical arguments succeeded.
     solution: No fix needed beyond retrying; noting in case it recurs.
     severity: minor
-durationSec: 3197
+  - description: The four-paired-lens fan-out plus the independent fact-checker used roughly 670k subagent tokens combined (five agents, ~150k-320k tokens and 150-420s each) for a sweep that ultimately produced a 6-line-net CLAUDE.md diff plus a 1-word ADR fix. The thoroughness bought real value here (the CI-edit contradiction in particular would have been easy to wave away as "probably fine" without the git-history dig one lens agent did), but the cost/output ratio is worth watching as a calibration question for future runs, especially on a quiet week with little real drift to find.
+    solution: No change made this run; flagging as an open calibration question for whoever tunes lens-agent scope/count — e.g. whether lens breadth should scale with how much changed in the last 48h rather than always running the full four-agent fan-out.
+    severity: nit
+  - description: "Two different lens-agents converged on overlapping text without either one noticing: Agent B (Single-home/Duplication) flagged ADR-0003's PR-auto-open/auto-watch amendment as restated in CLAUDE.md:46-63, while Agent C (Concision/Verbose), working independently and unaware of Agent B's finding, separately flagged CLAUDE.md:58-60 vs CLAUDE.md:210-213 as an intra-file redundancy of the same underlying \"auto-watch, don't ask\" fact. Both were correct, but describing facets of one defect (the fact lives in 3 places: 1 ADR + 2 CLAUDE.md spots), not two independent defects. The Skill's pooling step (step 3) doesn't currently ask for a dedupe pass across lenses before fact-checking, so recognizing the overlap and merging the two into one coherent single-home fix was left entirely to the orchestrating session's manual inspection at pooling time."
+    solution: "Consider adding an explicit dedupe micro-step between pooling (step 3) and fact-checking (step 4): before dispatching the fact-checker, scan the pooled findings for near-identical file:line ranges or quoted text across different lens-agents and merge them into one finding describing all the locations, rather than fact-checking (and then manually reconciling) overlapping findings separately. This would scale better as finding counts grow past what's easy to eyeball."
+    severity: minor
+  - description: "With exactly one human-only-surface escalation this run (ADR-0010), it needed its own full branch → gate → PR cycle, separate from the self-merged PR — including a second ~45s pnpm gate run and a fresh branch off the (by-then-updated) origin/main. That overhead is small for one escalation, but the Skill doesn't say what to do if a run surfaces *multiple* human-only-surface fixes in the same sweep: one PR per escalation (N gate runs, N PRs, N subscriptions to babysit) or one batched human-reviewed PR covering all of them."
+    solution: Not resolved this run (only one escalation existed, so the question never had to be answered). Worth the Skill author deciding explicitly for the next run that surfaces more than one human-only finding, so it isn't improvised ad hoc under time pressure.
+    severity: nit
+durationSec: 3405
 models:
-  claude-sonnet-5: 153
+  claude-sonnet-5: 161
 toolCounts:
-  Bash: 29
+  Bash: 30
   Agent: 5
   ScheduleWakeup: 1
   TaskCreate: 1
@@ -66,7 +75,8 @@ toolCounts:
   mcp__github__add_issue_comment: 1
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
-  Write: 1
+  Write: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/audit-skills/SKILL.md
   - CLAUDE.md
@@ -82,3 +92,10 @@ entrypoint: remote_mobile
 cliVersion: 2.1.207
 learnings:
   - Grepping commit authorship (git log --format='%an %ae' -- <path>) against a doc's behavioral claim is a fast, decisive way to fact-check drift — it turned a soft "these two CLAUDE.md sentences read as conflicting" hunch into a hard, provable falsehood (an agent-authored commit to CI that a doc claimed could never happen).
+  - Beyond just the authorship grep, confirming a suspicious commit actually landed through the *normal* gated-merge path (git log --merges / git branch -a --contains <sha>, then checking the merge commit's author) is what separated "an agent proposed this once, who knows what happened to it" from "this is load-bearing evidence the rule is routinely violated in practice" — the second is a much stronger basis for rewriting a doc than the first.
+  - When two independently-dispatched lens-agents (different lenses, different prompts, no visibility into each other's work) each flag overlapping text on their own, that convergence is itself a strong corroboration signal, worth treating as higher-confidence going into fact-checking even before the checker weighs in — independent agreement from different angles is harder to get by accident than one agent being thorough.
+  - For the self-merge decision specifically, "gate is green" alone wasn't what made self-merging feel safe — it was the combination of (a) gate green, (b) zero unresolved review-comment threads (checked explicitly via pull_request_read get_comments, even though none were expected on an unattended sweep's own PR), and (c) confirming via git diff --stat that the changed file set matched exactly what the Skill's Live tier allows. Any one of the three alone would have been a weaker basis for self-merging than checking all three.
+ideas:
+  - 'Add an explicit de-dup micro-step to audit-docs between "pool findings" (step 3) and "fact-check" (step 4): before the fact-checker agent is dispatched, have the orchestrating session (or a small dedicated agent) scan the pooled findings for overlapping file:line ranges or near-identical quoted text across different lens-agents, and merge them into one finding naming all contributing lenses and locations. This run needed a manual merge of a Duplication finding and a Verbose finding that were really one defect; an explicit step would make that systematic rather than dependent on the orchestrator noticing.'
+  - Decide and document, in the audit-docs Skill itself, whether multiple human-only-surface escalations from one sweep should ride one shared human-reviewed PR (one gate run, one PR, one subscription covering all of them) or stay one-PR-per-escalation as today. This run only surfaced one such finding so the question was moot, but a sweep that finds three ADR-tier violations at once would currently open three separate PRs and babysit three separate subscriptions for what a human reviewer would probably rather see as one batch.
+  - The Skill's own step 1 ("Branch off origin/main") could explicitly tell the agent to check its own session/task setup instructions for a caller-pinned branch name before defaulting to the journal/audit-docs-<date> convention — right now that override is only mentioned as a parenthetical, and the actual pin (when present) lives in a totally different, harness-injected part of the context that's easy to have scrolled past by the time step 1 executes. A first-run-of-an-updated-workflow retro is exactly the moment this kind of instruction-following gap is cheap to catch and fix before it repeats on every future run.
