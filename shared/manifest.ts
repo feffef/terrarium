@@ -13,7 +13,7 @@ export type CollectionType = 'page' | 'data'
 // is). Every actual `data` collection in this repo already carries a schema
 // (it's how structured content gets any shape at all); this makes that
 // existing invariant checkable at the manifest-authoring surface itself,
-// instead of only failing later inside `content.config.ts` (issue #93).
+// instead of only failing later inside `content.config.ts`.
 export type CollectionDef =
   | {
       /** 1:1 file→route content, rendered by the generic catch-all or a Tenant layer. */
@@ -62,8 +62,8 @@ const zodSchemaField = z.custom<ZodObject<ZodRawShape>>(
 // the `CollectionDef` TS union above, where only the `data` branch requires
 // `schema`. A plain optional `schema` with no refinement would let a schema-less
 // `data` collection pass runtime validation even though the TS type forbids it at
-// compile time — exactly the gap issue #93 found: it failed only later, inside
-// `content.config.ts`, instead of at this manifest-authoring surface (ADR-0002's
+// compile time — it would fail only later, inside `content.config.ts`, instead
+// of at this manifest-authoring surface (ADR-0002's
 // "an agent's output can be checked before build" promise). (A `z.discriminatedUnion`
 // was the other option here, but its built-in "invalid discriminator" issue isn't
 // straightforwardly restyled into this file's labelled-message convention, so a

@@ -3,7 +3,7 @@
 // Extracted from `app/pages/t/journal/[space]/index.vue` so the logic that
 // computes what the public dashboard *displays* (friction counts, durations,
 // orderings, the Skill Inventory grouping) is unit-testable and typechecked
-// independently of the SFC (issue #61). These are plain functions: they take
+// independently of the SFC. These are plain functions: they take
 // arrays in and return plain data — NO Vue imports, no reactivity. The SFC
 // keeps the thin `computed()` wrappers that feed these.
 //
@@ -15,7 +15,7 @@
 // them directly, with no import block. The auto-import namespace is global
 // across every layer, which cuts two ways: a same-named local `const`/
 // `computed` in a consuming SFC merges with the export and vue-tsc rejects the
-// ambiguity (issue #95), and a generic export name can collide with another
+// ambiguity, and a generic export name can collide with another
 // Tenant's utils. So: export names stay distinctive (session/skill/friction/pr
 // vocabulary), consuming SFCs keep local binding names distinct from every
 // export below, and truly generic helpers stay module-private. This module,

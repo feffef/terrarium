@@ -9,7 +9,7 @@
 // `pingbacks` collections. The pingback list is a SAME-Space read — the
 // cross-Persona relationship was denormalised here at author time (ADR-0012),
 // so nothing queries a sibling Space at render. The resolved keys are already
-// this Tenant's own literal collection keys (#96/#55), so both queries keep the
+// this Tenant's own literal collection keys, so both queries keep the
 // blog item types with no casts; `personaMeta`/`formatBlogDate`/the components
 // arrive via Nuxt auto-imports.
 const route = useRoute()

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // The "Terrarium Blogger Network" footer — cross-persona navigation shared by the
-// Persona landing and the post page, replacing the old in-masthead switcher.
+// Persona landing and the post page.
 // Styled as a pane of the tank: a rounded glass panel with a sprout perched on
 // its rim. Each link carries its own Persona accent (--pa), so the row reads as
 // a little network of three blogs rather than a generic nav.

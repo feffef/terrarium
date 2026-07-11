@@ -13,7 +13,7 @@
 // only the types still import relatively — none needed directly here now that
 // `entry`'s shape (below) is left to inference. The three-`queryCollection`
 // load itself is single-homed in the `useAtlasWingData` composable — the
-// sibling `[space]/index.vue` landing needs the exact same load (code review).
+// sibling `[space]/index.vue` landing needs the exact same load.
 
 const route = useRoute()
 const { space, path, pagesKey, collections } = useSpace('atlas')
@@ -24,11 +24,9 @@ const { data, edges, observations, specimensBySlug } = await useAtlasWingData(ro
 
 const meta = biomeMeta(space)
 // `doc` and `specimen` are bundled into one `entry` so the template narrows
-// both together from a single `v-if="entry"` — the code review flagged the
-// previous `doc!` non-null assertion in the template (the `specimen`/`doc`
-// computeds were separate refs, so narrowing one didn't narrow the other for
-// vue-tsc). No cast needed: the return type is left to inference so `doc`
-// keeps the exact generated `pages` item shape `ContentRenderer` expects.
+// both together from a single `v-if="entry"`. No cast needed: the return type
+// is left to inference so `doc` keeps the exact generated `pages` item shape
+// `ContentRenderer` expects.
 const entry = computed(() => {
   const doc = data.value?.pages.find((p) => p.path === path) ?? null
   return doc ? { doc, specimen: toSpecimenView(doc) } : null

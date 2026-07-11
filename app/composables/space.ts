@@ -1,13 +1,12 @@
 // The one presentation-side entry point to runtime routing: resolve the current
-// route's (Tenant, Space) to its keyed collections, or 404. Every Space-scoped
-// page — the Platform catch-all and each Tenant layer's overrides — used to
-// repeat this prologue (useRoute → resolveSpaceRoute → createError → read keys
-// off the resolved route); it is single-homed here as an auto-imported
-// composable instead.
+// route's (Tenant, Space) to its keyed collections, or 404. This single-homes
+// the prologue every Space-scoped page needs (the Platform catch-all and each
+// Tenant layer's overrides): useRoute → resolveSpaceRoute → createError → read
+// keys off the resolved route.
 //
 // Isolation-respecting (ADR-0004): this is a read-only wrapper around the SAME
 // shared, unit-tested `resolveSpaceRoute` — no isolation logic is duplicated or
-// changed, and the resolved keys stay precisely typed per Tenant (#96/#55).
+// changed, and the resolved keys stay precisely typed per Tenant.
 import { resolveSpaceRoute, type ResolvedRoute } from '#shared/routing'
 
 export interface SpaceContext<T extends string> extends ResolvedRoute<T> {

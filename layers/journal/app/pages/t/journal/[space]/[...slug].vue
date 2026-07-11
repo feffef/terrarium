@@ -3,15 +3,16 @@
 // Platform's generic catch-all (`/t/[tenant]/[space]/[...slug]`) because `journal`
 // is a static segment, so it wins for journal Documents — `about`, the standalone
 // `digests/<day>` permalinks (ADR-0010), and any future journal page — while the
-// sibling `index.vue` still owns the Space root. Without it these fell through to
-// the Platform's deliberately unstyled catch-all and rendered off-brand (#25).
+// sibling `index.vue` still owns the Space root. Without it, journal Documents
+// would fall through to the Platform's deliberately unstyled catch-all and
+// render off-brand.
 //
 // Isolation-respecting and presentation-only (ADR-0004): it resolves the request
 // through the SAME shared, unit-tested `resolveSpaceRoute` the catch-all uses
 // (via the read-only useSpace composable — no isolation logic duplicated or
 // changed), then reads only that one (Tenant, Space)'s keyed `pages` collection.
 // Spaces cannot leak. `pagesKey` is already this Tenant's own literal `pages`
-// keys — derived from the generated `#routing` type (shared/routing.ts, #96/#55).
+// keys — derived from the generated `#routing` type (shared/routing.ts).
 const route = useRoute()
 const { space, path, pagesKey } = useSpace('journal')
 

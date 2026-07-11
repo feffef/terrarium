@@ -10,10 +10,10 @@
 // cannot leak.
 //
 // Pure aggregation/formatting lives in the layer-local, unit-tested
-// `app/utils/dashboard.ts` (issue #61); Nuxt auto-imports its exports, so the
+// `app/utils/dashboard.ts`; Nuxt auto-imports its exports, so the
 // SFC keeps only the thin `computed()` wrappers below — under local names
 // distinct from the exports, or the bindings merge and vue-tsc rejects the
-// ambiguity (issue #95; see dashboard.ts's header comment).
+// ambiguity (see dashboard.ts's header comment).
 import { routingMap } from '#routing'
 import type { PageDoc, SessionDoc, SkillDoc } from '../../../../types/journal'
 
@@ -21,9 +21,9 @@ const route = useRoute()
 const tenant = 'journal'
 
 // `useSpace` already carries this Tenant's own literal collection keys — the
-// resolver derives them from the generated `#routing` type (shared/routing.ts,
-// #96) — so `queryCollection(collections.<name>)` keeps the journal item types
-// (#55) with no casts.
+// resolver derives them from the generated `#routing` type (shared/routing.ts)
+// — so `queryCollection(collections.<name>)` keeps the journal item types
+// with no casts.
 const { space, pagesKey, collections } = useSpace(tenant)
 
 // The resolver deliberately exposes only the one resolved Space, so read the map
@@ -72,15 +72,15 @@ const toggleDigest = (path: string) => {
 }
 // No cast: `collections.skills`/`collections.sessions` are this Tenant's own
 // literal collection keys, so `data.value.{skills,sessions}` already carry the
-// real, generated item types — the SAME types `SkillDoc`/`SessionDoc` alias
-// (issue #94). A schema edit that drops a field now fails to typecheck right
+// real, generated item types — the SAME types `SkillDoc`/`SessionDoc` alias.
+// A schema edit that drops a field now fails to typecheck right
 // here instead of being silently erased by an `as unknown as` cast.
 const skills = computed<SkillDoc[]>(() => data.value?.skills ?? [])
 const sessions = computed<SessionDoc[]>(() => data.value?.sessions ?? [])
 
 // ── Derived dashboard data — thin wrappers over the pure module ──
 // The wrapped functions (sessionCardViews, frictionTotals, …) are dashboard.ts
-// exports arriving via auto-import; each local name is distinct (issue #95).
+// exports arriving via auto-import; each local name is distinct.
 const sessionCards = computed(() => sessionCardViews(sessions.value))
 const frictionSeverityTotals = computed(() => frictionTotals(sessions.value))
 const totalFrictions = computed(() => frictionCount(sessions.value))

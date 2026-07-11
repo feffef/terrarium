@@ -1,7 +1,7 @@
 // Build-time virtual routing module (ADR-0014). Derives the runtime routing map
 // and the L2 entry-route list from the same expand(loadManifests()) used by
 // content.config.ts — so a manifest edit is picked up with no regenerate step
-// for anything. Supersedes scripts/generate.ts + shared/routing.generated.ts.
+// for anything.
 import { addTemplate, addTypeTemplate, defineNuxtModule } from '@nuxt/kit'
 import { entryRoutesFrom, expand, loadManifests, type ExpandedCollection } from '../shared/expand'
 
@@ -52,8 +52,7 @@ export default defineNuxtModule({
     // `routingMap` is declared with its precise literal type — the same `mapJson`
     // string the runtime data is written from, so type and data cannot diverge and
     // the key scheme stays single-homed in `collectionKey()` (shared/manifest.ts).
-    // shared/routing.ts derives per-Tenant key unions from this type, which is what
-    // lets every `Extract<keyof Collections, …>` cast at the call sites go (#96).
+    // shared/routing.ts derives per-Tenant key unions from this type.
     // Churn is a non-issue: the file is generated into .nuxt/ and never committed.
     addTypeTemplate({
       filename: 'routing.d.ts',
