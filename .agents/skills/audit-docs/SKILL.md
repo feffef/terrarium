@@ -204,14 +204,14 @@ frontmatter or a moved path can. Done when it's green.
 ## 7. Commit, push, open one gated PR, self-merge on green
 
 Commit the fixes (one run rides one commit/PR), push with retry, and open **one
-gated PR** listing what was fixed and any issue filed. **Self-merge it once the
-gate is green** (ADR-0003 amendment) — the reconciliations are fact-checked and
+gated PR** listing what was fixed and any issue filed. **This PR self-merges on a
+green gate** (ADR-0003 amendment) — the reconciliations are fact-checked and
 touch no human-only surface, so this is ADR-0004's low-risk content tier (a
-second, bounded grant of the same kind as `digest`'s). Repo auto-merge is
-unavailable pending #231 (`CLAUDE.md`), so watch the gate yourself
-(`pull_request_read` `get_check_runs` — `docs/agents/issue-tracker.md`) and merge
-with the GitHub MCP `merge_pull_request`; pushing is not landing. Leave a one-line
-PR comment as the audit trail.
+second, bounded grant of the same kind as `digest`'s). Repo-level GitHub
+auto-merge is available (`CLAUDE.md`), so **enable it** (`enable_pr_auto_merge`)
+right after opening the PR and it lands automatically once the gate reports green
+— no watching required, and a red gate simply never merges (see below). Leave a
+one-line PR comment as the audit trail.
 
 **Keep human-only-surface fixes out of this PR — those escalate instead.** A fix
 that touches an ADR's amendment banner, CI, isolation logic, or the
