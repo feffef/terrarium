@@ -100,6 +100,32 @@ describe('resolveSpaceRoute() — the isolation guarantee', () => {
   })
 })
 
+describe('resolveSpaceRoute() — prototype-pollution / accidental-lookup guard', () => {
+  // A plain-object lookup (`map[tenant]?.[space]`) walks the prototype chain, so
+  // these tenant/space names must resolve to `null` — never accidentally to
+  // `Object.prototype` or one of its own members — proving the `Object.hasOwn`
+  // guard in `resolveSpaceRoute` actually fails closed rather than leaking.
+  it('treats `__proto__`/`constructor` as unknown Tenant or Space names', () => {
+    expect(resolveSpaceRoute('__proto__', 'constructor', '', MAP)).toBeNull()
+    expect(resolveSpaceRoute('constructor', 'prototype', '', MAP)).toBeNull()
+    expect(resolveSpaceRoute('journal', '__proto__', '', MAP)).toBeNull()
+  })
+
+  it('resolves correctly when a Tenant is literally named `hasOwnProperty`', () => {
+    // A crafted map with an own-property key that collides with a name found on
+    // `Object.prototype` — the guard must still resolve the legitimate Tenant
+    // rather than being confused by the name shadowing a prototype method.
+    const craftedMap: RoutingMap = {
+      hasOwnProperty: {
+        current: { pages: 'hasOwnProperty_current_pages' },
+      },
+    }
+    const r = resolveSpaceRoute('hasOwnProperty', 'current', '', craftedMap)!
+    expect(r).not.toBeNull()
+    expect(r.pagesKey).toBe('hasOwnProperty_current_pages')
+  })
+})
+
 describe('resolveSpaceRoute() — default (build-time) map', () => {
   // Omitting `map` must read the real build-time routing map (ADR-0014), not throw.
   it('resolves a real Space against the build-time routing map', () => {

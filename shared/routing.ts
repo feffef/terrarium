@@ -78,7 +78,17 @@ export function resolveSpaceRoute<T extends string>(
   map: RoutingMap = routingMap,
 ): ResolvedRoute<T> | null {
   const path = slugToPath(slugParam)
-  const spaceCollections = map[tenant]?.[space]
+  // `Object.hasOwn` guards, rather than `map[tenant]?.[space]` alone: a plain
+  // object lookup walks the prototype chain, so an unguarded index would resolve
+  // `tenant === '__proto__'` (or `'constructor'`/`'hasOwnProperty'`, …) to
+  // `Object.prototype` or one of its own members instead of failing closed.
+  // Nothing on `Object.prototype` carries a `pages` string today, so there is no
+  // live leak — but ADR-0006's isolation guarantee ("a resolved route can never
+  // name another Tenant's or Space's collections") shouldn't rest on that being an
+  // accident of what happens to live on `Object.prototype` right now.
+  const tenantSpaces = Object.hasOwn(map, tenant) ? map[tenant] : undefined
+  const spaceCollections =
+    tenantSpaces && Object.hasOwn(tenantSpaces, space) ? tenantSpaces[space] : undefined
   if (!spaceCollections?.pages) return null
 
   // Convention: `pages` is the routed collection; every other collection in the Space

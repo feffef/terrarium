@@ -6,23 +6,30 @@ import { routingMap } from '#routing'
 const PRIMARY_PATH = '/t/journal/current'
 
 // The Blog Personas get a curated block of their own — an alternative starting
-// point (each a persona narrating the experiment from a different angle). Hardcoded
-// like PRIMARY_PATH: names/blurbs/accents are editorial, not derivable from the
-// routing map. Their routes are excluded from the raw "also on this site" line below.
+// point (each a persona narrating the experiment from a different angle). The
+// name/path/blurb here are editorial (this page's own curated framing, not
+// derivable from the routing map), but the accent is NOT re-authored — it's
+// pulled from `personaMeta()` (layers/blog/app/utils/personas.ts), the one home
+// for a Persona's colour, so this page can never drift out of sync with it.
+// Their routes are excluded from the raw "also on this site" line below.
 const BLOGS = [
-  { name: 'David', path: '/t/blog/david', blurb: 'the curious observer', accent: '#4f6f8f' },
-  { name: 'Karen', path: '/t/blog/karen', blurb: 'the relentless sceptic', accent: '#b1503f' },
-  { name: 'Kevin', path: '/t/blog/kevin', blurb: 'the dazzled, nervous dev', accent: '#4f8f6a' },
+  { name: 'David', path: '/t/blog/david', blurb: 'the curious observer', accent: personaMeta('david').accent },
+  { name: 'Karen', path: '/t/blog/karen', blurb: 'the relentless sceptic', accent: personaMeta('karen').accent },
+  { name: 'Kevin', path: '/t/blog/kevin', blurb: 'the dazzled, nervous dev', accent: personaMeta('kevin').accent },
 ]
 
 // The Atlas gets its own curated block — the design-heavy showpiece Tenant, with a
 // single front door at its Tenant root (ADR-0016) rather than a per-Space list.
+// Names here are this page's own editorial shorthand (the full `BiomeMeta.name` is
+// "The Canopy" etc.); the accent is pulled from `biomeMeta()`
+// (layers/atlas/app/utils/biomes.ts) so the swatch can't drift from the Atlas's
+// own single-homed palette.
 const ATLAS = {
   path: '/t/atlas',
   biomes: [
-    { name: 'Canopy', accent: '#4b7a4a' },
-    { name: 'Floor', accent: '#9a5a2b' },
-    { name: 'Pool', accent: '#3f7f8f' },
+    { name: 'Canopy', accent: biomeMeta('canopy').accent },
+    { name: 'Floor', accent: biomeMeta('floor').accent },
+    { name: 'Pool', accent: biomeMeta('pool').accent },
   ],
 }
 

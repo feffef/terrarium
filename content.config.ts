@@ -3,9 +3,16 @@
 //
 // It builds the keyed `tenant_space_collection` collections at config-evaluation
 // time by enumerating every Tenant manifest and running the same pure `expand()`
-// the routing module uses (shared/expand.ts). A manifest edit is therefore picked
-// up by `nuxt dev`/`build`/`prepare` with no regenerate step for anything.
-// The routing map is derived the same way in modules/routing.ts (ADR-0014).
+// the routing module uses (shared/expand.ts). There is no regenerate step for
+// anything: every `nuxt prepare`/`build`/dev-server-start re-derives the
+// collections from scratch (docs/research/nuxt-content-review-grounding.md §12).
+// But that "no regenerate step" claim is about those fresh runs, NOT about a
+// dev server already running — Nuxt Content's c12 config loader only watches
+// `content.config.ts` itself for changes; it does not watch this file's imports
+// (`shared/expand.ts`, or any Tenant's `tenant.config.ts`), so editing a manifest
+// while `nuxt dev` is already up needs a manual restart to be picked up (same
+// grounding doc, §12). The routing map is derived the same way in
+// modules/routing.ts (ADR-0014).
 import { defineCollection, defineContentConfig } from '@nuxt/content'
 import { fileURLToPath } from 'node:url'
 import { expand, loadManifests } from './shared/expand'
