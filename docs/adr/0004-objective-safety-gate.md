@@ -55,11 +55,15 @@ Status: Accepted
 > build` therefore validates nothing. L1 is instead enforced by
 > `scripts/validate-content.ts` (`pnpm validate:content`), the only thing that
 > runs Documents through the Collection Zod schemas via `.safeParse()`. It is
-> now wired into both the `gate` script in `package.json` and
-> `.github/workflows/gate.yml` (a dedicated `'L1 · content validation'` step),
-> and the workflow's former `'L0/L1 · build + content validation'` step is
-> renamed `'L0 · build'` to match. The Decision that an L1 layer exists is
-> unchanged — only the mechanism note above is corrected.
+> now wired into the `gate` script in `package.json` (the single home CI
+> mirrors). The matching `.github/workflows/gate.yml` change — a dedicated
+> `'L1 · content validation'` step, plus renaming the former
+> `'L0/L1 · build + content validation'` step to `'L0 · build'` — must be
+> applied by a human: agent sessions cannot push workflow files (no `workflow`
+> OAuth scope). Until it lands, CI runs a subset of `pnpm gate` and its build
+> step's old label overstates what it checks (exact diff on PR #323). The
+> Decision that an L1 layer exists is unchanged — only the mechanism note
+> above is corrected.
 
 ## Context
 

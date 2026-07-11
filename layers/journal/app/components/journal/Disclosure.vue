@@ -9,9 +9,10 @@
 // Callers keep their own markup (via the default slot), their own class for
 // styling (via Vue's attribute fallthrough onto this component's single root
 // element — the class ends up on the SAME div the a11y attributes are on),
-// and their own scoped CSS: a component's root node is affected by BOTH its
-// own scoped styles and its parent's, so `class="drow"`/`class="head"` here
-// still resolves against the caller's `<style scoped>` (docs/agents/tenant-layers.md).
+// and their own scoped CSS: per Vue's scoped-style rules, a child component's
+// ROOT node is affected by both its own scoped styles and its parent's, so
+// `class="drow"`/`class="head"` here still resolves against the caller's
+// `<style scoped>` (Vue docs, "Scoped CSS → child component root nodes").
 //
 // `controls` is optional: SessionCard's detail panel has a stable id
 // (`useId()`) to point `aria-controls` at, but the digest rows' panel does
