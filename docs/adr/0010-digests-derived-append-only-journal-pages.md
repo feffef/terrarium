@@ -8,7 +8,7 @@ Status: Accepted
 > `tenants/…` paths below reflect the pre-rename layout.
 
 > **Amended (2026-07-08).** The "chartered, still-deferred `sync` job" below is
-> **no longer fully deferred**: the `digest` Skill now runs nightly via an
+> **no longer fully deferred**: the `digest` Skill now runs on a schedule via an
 > external Routine (Skill + trigger = an autonomous job, ADR-0005), so the `sync`
 > remit is partially live — realised by `digest` and `audit-skills`, both now
 > scheduled (see ADR-0015). The live-dashboard point below stands unchanged.
