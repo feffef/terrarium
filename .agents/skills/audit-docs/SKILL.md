@@ -1,6 +1,6 @@
 ---
 name: audit-docs
-description: Audit every live doc and Skill for drift, duplication, contradiction, and ambiguity against the code — fact-check each finding, fix the safe ones, and file an issue (never ask) for anything needing a human call. Opens one gated PR and self-merges it on a green gate.
+description: Audit every live doc and Skill for drift, duplication, contradiction, ambiguity, verbosity, stale-narration of a superseded state, and mis-location against the code — fact-check each finding, fix the safe ones, and file an issue (never ask) for anything needing a human call. Opens one gated PR and self-merges it on a green gate.
 disable-model-invocation: true
 ---
 
@@ -30,9 +30,17 @@ correct. It runs start to finish **without interaction**.
 Classify every surface **before** editing. This decides everything.
 
 - **Live** — the editable guidance: `CLAUDE.md`, `CONTEXT.md`, `README.md`,
-  `docs/agents/*`, `docs/research/*`, `tests/README.md`, `deploy/README.md`, and
-  our own Skills' `SKILL.md` + sibling files (`external: false`). **Fix these.**
-- **Historical** — the append-only record: `docs/adr/*`, journal digests and
+  `docs/agents/*`, `docs/research/*`, `tests/README.md`, `deploy/README.md`, our
+  own Skills' `SKILL.md` + sibling files (`external: false`), and the **current
+  journal's facing pages** —
+  `layers/journal/content/current/pages/{architecture,how-it-works,index}.md`, the
+  descriptive front a reader lands on. **Fix these.** (Audit their *source* `.md`;
+  no rendering. `index.md` is only partially rendered by the dashboard, so a
+  finding on its body may not surface at `/t/journal/current` — that's fine, the
+  source is still Live prose worth keeping honest.)
+- **Historical** — the append-only record: `docs/adr/*`, journal digests
+  (`layers/journal/content/*/pages/digests/*.md` — they're pages, but the
+  `digest` job generates them, so Historical despite living under `pages/`) and
   session logs, blog posts. **Never rewrite a decision.** A drifted ADR still gets
   the brave fix — the repo's sanctioned **amendment banner / Status-line pointer**
   (ADR-0018), never a rewrite of the decision — but ADRs are human-only (ADR-0004),
@@ -43,19 +51,52 @@ Classify every surface **before** editing. This decides everything.
   rewrite them** — where they diverge from repo reality, note the reconciliation
   in a *live* doc instead.
 
-## The four lenses
+## The seven lenses, in four paired agents
 
-Fan out one read-only reviewer per lens (Agent tool, in parallel), each returning
-findings as `file:line + quoted evidence`:
+Seven lenses, fanned out as **four read-only reviewer agents** (Agent tool, in
+parallel) — each agent carries a **pair** of related lenses (Ambiguity rides
+solo), keeping agent count down while widening coverage. Every finding comes back
+as `file:line + quoted evidence`.
+
+**Agent A — Correctness** (doc vs reality):
 
 - **Drift** — a doc describes a mechanism, path, or term the code no longer
   matches. Sharpest source: a decision reversed at its *new* home but not swept
   back to its referrers — grep the removed noun (`generator`, a deleted job name,
   an old path) across all docs.
-- **Duplication** — a fact restated in >1 place instead of single-homed. The home
-  keeps it; every copy becomes a pointer.
 - **Contradiction** — two docs (or two parts of one) instruct opposite things, or
   assert facts that can't both be true *now*.
+
+**Agent B — Single-home** (right fact, right home, once):
+
+- **Duplication** — a fact restated in >1 place instead of single-homed. The home
+  keeps it; every copy becomes a pointer.
+- **Mis-location** — a fact living in the *wrong* home, or a whole file in the
+  wrong directory. Two forms: (1) **prose** in the wrong doc — implementation
+  detail in `CONTEXT.md` (glossary-only), a status narrative in `CLAUDE.md` (it
+  forbids those), a repo-wide convention buried in a `docs/agents/*` topic file;
+  fix = move the prose to its correct home + leave a pointer. (2) A **misfiled
+  file** — e.g. a research note under `docs/agents/` that belongs in
+  `docs/research/`; fix = `git mv`. **Caveat:** moving a journal `pages/*.md`
+  file changes its route (ADR-0006) — that move escalates, see step 7.
+
+**Agent C — Concision** (careful cuts only — never gut load-bearing "why"):
+
+- **Verbose** — **redundancy & filler only**: the same fact stated twice within
+  one doc, a restated section header, empty throat-clearing that carries zero
+  information. **Not** subjective "could be tighter" style edits — this repo
+  prizes dense, heavily-caveated prose, and tightening it is out of scope.
+- **Stale-narration** — a doc that is *correct about the present* but
+  over-narrates a **superseded pre-edit state** ("we used to do X"). Cut it
+  **only** where knowing that history changes no future reader action; **keep**
+  every load-bearing "don't regress to the old way" rationale (the pkill saga, the
+  worktree-HEAD and `permissions.allow` bullets in `CLAUDE.md` stay — their whole
+  point is preventing regression). When you do cut, cut to the **rule plus a
+  pointer** to the history's home (the issue/ADR), **never** to a bare ruleless
+  rule that strips the why with no forwarding address.
+
+**Agent D — Ambiguity** (solo):
+
 - **Ambiguity** — an undefined threshold that gates an action, an enum listed only
   by its endpoints at its own home, or a "see X" whose named owner doesn't hold
   the thing.
@@ -69,13 +110,27 @@ checker that re-derives each claim from scratch and returns **CONFIRMED /
 CONFIRMED-BUT** (corrected line or quote) **/ WRONG**. Act only on CONFIRMED(-BUT).
 A plausible-but-wrong finding acted on is a fresh drift *you* authored.
 
+The primary source depends on the lens: **Correctness** verifies against the
+**code**; **Duplication/Mis-location** against the repo's home convention (which
+doc actually owns the fact); **Verbose** against the **doc's own text** (is the
+fact genuinely stated twice?); **Stale-narration** against the **actual
+superseded state** (is the narrated old behaviour really gone?) *and* a second
+check the checker must make explicitly — that the proposed cut **preserves any
+load-bearing "don't regress" why**. A Stale-narration finding that would delete
+regression-preventing rationale is **WRONG**, not CONFIRMED.
+
 ## Fix bravely — escalate only a true factual conflict
 
 **Fix every confirmed finding. That is the default, and be brave about scope** —
 reconcile the doc to the code and primary sources, single-home the duplicates,
-resolve the contradiction by making the prose match reality, pin the undefined
-threshold, retire a term whose premise is dead. Don't stop to ask how far to
-reach, and don't file an issue for a judgement call — **decide it and fix it.**
+move mis-homed prose to its real home behind a pointer, cut redundant filler,
+trim superseded-state narration (carefully — rule-plus-pointer, never gutting the
+why), resolve the contradiction by making the prose match reality, pin the
+undefined threshold, retire a term whose premise is dead. Don't stop to ask how
+far to reach, and don't file an issue for a judgement call — **decide it and fix
+it.** The one fix that does *not* ride this brave, self-merged path is a
+**Mis-location file move that changes a journal page's route** — that escalates
+(step 7).
 
 **File a `needs-triage` issue for one thing only: a factual conflict you genuinely
 cannot resolve.** Two sources state contradictory facts and the primary sources
@@ -96,11 +151,14 @@ this default name). Done when you are on a fresh branch off the latest
 
 Glob every `*.md` outside `node_modules`, plus each `.agents/skills/*/`. Sort every
 surface into the three tiers above; a Skill's tier comes from its `external` flag
-(Skill Inventory `.yml` / its own frontmatter). Done when every surface is tiered.
+(Skill Inventory `.yml` / its own frontmatter). The current journal's three facing
+pages are **Live**; its `pages/digests/*.md` are **Historical** (see the tiers
+above). Done when every surface is tiered.
 
-## 3. Review across the four lenses
+## 3. Review across the seven lenses
 
-Fan out the four read-only reviewers and pool their findings. Done when all four
+Fan out the **four paired-lens reviewer agents** (A Correctness, B Single-home,
+C Concision, D Ambiguity — see above) and pool their findings. Done when all four
 have reported.
 
 ## 4. Fact-check the findings
@@ -136,9 +194,10 @@ PR comment as the audit trail.
 
 **Keep human-only-surface fixes out of this PR — those escalate instead.** A fix
 that touches an ADR's amendment banner, CI, isolation logic, or the
-manifest-expansion/routing modules never rides in the self-merged routine PR
-above — file it as its own, separately human-reviewed PR (see the Historical-tier
-note above), subscribe, and babysit it to merge/close. Likewise, if the gate is
+manifest-expansion/routing modules — **or a Mis-location file move that changes a
+journal `pages/*.md` file's route** (routing-adjacent, ADR-0006) — never rides in
+the self-merged routine PR above. File it as its own, separately human-reviewed PR
+(see the Historical-tier note above), subscribe, and babysit it to merge/close. Likewise, if the gate is
 red for a reason that isn't yours, leave the PR open for a human rather than
 merging red — fix on the branch or escalate honestly instead. Done when the PR
 is merged green, or open and honestly escalated.
