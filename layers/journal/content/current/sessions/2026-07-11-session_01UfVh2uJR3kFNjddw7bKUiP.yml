@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01UfVh2uJR3kFNjddw7bKUiP
 startedAt: 2026-07-11T04:08:28Z
-endedAt: 2026-07-11T04:28:17Z
+endedAt: 2026-07-11T06:06:26Z
 kind: autonomous
 goal: Run the audit-docs sweep
 status: in-review
-outcome: 6 findings merged (#294), 2 ADR fixes await human review (#295)
-summary: "Autonomous audit-docs Routine. Fanned out four read-only lenses (drift, duplication, contradiction, ambiguity) across CLAUDE.md, CONTEXT.md, ADRs, and Skills, pooled 8 candidate findings, then dispatched an independent fact-checker that CONFIRMED all 8 against primary sources. Fixed live-doc findings (status-semantics duplication, worktree-clobbering duplication, a stale digest branch-name example, a missing ADR-0011 runtime-rebuild carve-out, and an undefined Friction-severity enum) on the designated branch, cleared pnpm gate, opened gated PR #294, and self-merged it per the audit-docs Skill's bounded auto-merge grant (no human-only surface touched). The remaining 2 findings amend ADR-0003/0005 (retiring the `drift-check` job, whose premise ADR-0014 eliminated) and ADR-0010 (a stale audit-skills scheduling claim contradicting ADR-0015) — these touch ADRs, a human-only surface (ADR-0004), so they ride a separate PR (#295), not self-merged, and are left open for human review with a check-in scheduled. No needs-triage issue was filed; every finding was resolvable."
+outcome: 6 findings merged (#294), 2 ADR fixes await human merge (#295)
+summary: "Autonomous audit-docs Routine. Fanned out four read-only lenses (drift, duplication, contradiction, ambiguity), pooled 8 candidate findings, and an independent fact-checker CONFIRMED all 8 against primary sources. Fixed the 6 live-doc findings on the designated branch, cleared pnpm gate, opened PR #294, and self-merged it per the audit-docs Skill's bounded auto-merge grant (no human-only surface touched). The remaining 2 findings amend ADR-0003/0005 (retiring the drift-check job, whose premise ADR-0014 eliminated) and ADR-0010 (a stale audit-skills scheduling claim contradicting ADR-0015) — ADRs are human-only (ADR-0004), so PR #295 was opened separately, not self-merged. The repo owner then reviewed #295 and explicitly asked for a different fix style: replace the wrong ADR text in place instead of layering amendment banners, since banners were pure overhead for a plain factual correction. That request conflicted with the repo's documented \"never rewrite an ADR, only amend\" convention (CLAUDE.md, ADR-0018, audit-docs/SKILL.md), so I asked a clarifying question on the PR before acting rather than deciding unilaterally; the owner confirmed \"for this PR only,\" so I reverted the banners to in-place edits, scoped strictly to this PR, left the broader convention docs untouched, re-ran the gate (green), pushed, and synced the PR description to match the new approach. #295 is still open awaiting human merge."
 prs:
   - "294"
   - "295"
@@ -27,6 +27,8 @@ docsRead:
     reason: confirms drift-check's target was deleted
   - path: docs/adr/0015-audit-skills-and-conditional-importance.md
     reason: correct audit-skills scheduling fact
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: the amendment-banner convention being overridden
   - path: .agents/skills/setup-matt-pocock-skills/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/close-session/SKILL.md
@@ -41,34 +43,38 @@ skillsUsed:
   - name: audit-docs
     reason: the sweep this whole session runs
   - name: close-session
-    reason: session closure
+    reason: session closure, invoked twice as work continued
 frictions:
   - description: CLAUDE.md's digest branch example (journal/digest-<date>) didn't match digest/SKILL.md's real journal/digest-refresh-<date>
-    solution: "Fixed as part of this run's PR #294; a future doc edit near chartered-job examples should double check the owning Skill's actual convention, not just restate an example"
+    solution: "Fixed as part of this run's PR #294"
     severity: minor
   - description: Two same-day ADR amendment banners (ADR-0010 and ADR-0015) directly contradicted each other on audit-skills' scheduling from the moment they were written
-    solution: Fixed via a correcting amendment on ADR-0010 (#295); when two ADRs get same-day amendments touching the same fact, cross-check them against each other before landing either
+    solution: Fixed via an in-place correction on ADR-0010 (#295)
     severity: moderate
-durationSec: 1189
+  - description: The repo owner's PR feedback asked for a fix style (rewrite ADRs in place) that conflicts with the documented amend-only convention; no AskUserQuestion tool was available in this session to confirm scope interactively
+    solution: Used a PR comment as the clarifying-question channel instead, which worked fine since the reviewer was actively commenting there — but it's worth noting this session type has no synchronous ask path
+    severity: nit
+durationSec: 7079
 models:
-  claude-sonnet-5: 148
+  claude-sonnet-5: 198
 toolCounts:
-  Bash: 30
-  ToolSearch: 2
+  Bash: 37
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
-  Read: 10
+  Read: 14
   Agent: 5
   TaskCreate: 1
   ScheduleWakeup: 1
-  Edit: 11
+  Edit: 17
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
-  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_read: 5
   mcp__github__merge_pull_request: 1
-  mcp__github__add_issue_comment: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__send_later: 3
   Skill: 1
-  PushNotification: 1
+  PushNotification: 2
+  mcp__github__update_pull_request: 1
 filesEdited:
   - .agents/skills/close-session/SKILL.md
   - .agents/skills/log-session/SKILL.md
@@ -93,3 +99,5 @@ subagents:
 gitBranch: claude/festive-mayer-mxwr1h
 entrypoint: remote_trigger
 cliVersion: 2.1.207
+learnings:
+  - When a PR reviewer's instruction conflicts with a documented repo convention, a PR comment reply is a workable substitute for AskUserQuestion in sessions without that tool, since the reviewer is already watching that thread
