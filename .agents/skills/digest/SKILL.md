@@ -21,9 +21,9 @@ overview of the Platform's current state and capabilities. A thin, tested helper
 Digests land through the **ordinary gated PR** (ADR-0003) — *not* the `log-session`
 direct-to-main path (that exception is bounded to inert `data`; a Digest is a
 rendered page). The PR is **eligible to merge as soon as the gate is green**
-(ADR-0003 amendment, activating ADR-0004's content-only low-risk tier); until
-repo auto-merge is re-enabled (#231) you merge it manually on green — see step 6
-for the boundary and the merge mechanics.
+(ADR-0003 amendment, activating ADR-0004's content-only low-risk tier); repo-level
+GitHub auto-merge is available (`CLAUDE.md`), so you enable it and the PR lands
+automatically on green — see step 6 for the boundary and the merge mechanics.
 
 ## 1. Branch off `origin/main`
 
@@ -106,32 +106,31 @@ Done when you have confirmed the new Digest(s) will show — no index edit is ne
 Run `pnpm gate` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
 it runs). Done when it's green.
 
-## 6. Commit, push, open one gated PR — merge on green
+## 6. Commit, push, open one gated PR — auto-merge on green
 
 Commit the new Digest(s) (a backfill of several days rides one commit/PR), push
 the branch with retry, and open **one gated PR**. Keep the PR description in
 sync with what it contains (`CLAUDE.md`).
 
-Then **merge it once the CI gate is green** (ADR-0003 amendment; ADR-0004's
+Then **let it land once the CI gate is green** (ADR-0003 amendment; ADR-0004's
 content-only low-risk tier) — allowed **only** while the PR contains nothing
 beyond the digest scope (digest pages under `…/pages/digests/`, at most plus the
 index's editorial intro):
 
-- **Merge manually on green.** Repo-level GitHub auto-merge is unavailable
-  pending #231 (`CLAUDE.md`), so watch the gate yourself
-  (`pull_request_read` with `get_check_runs` — see `docs/agents/issue-tracker.md`)
-  and merge only after it reports green (the GitHub MCP `merge_pull_request`).
-  Pushing is not landing (`CLAUDE.md`).
-- **Once auto-merge is re-enabled (#231)** you may instead set the PR to merge
-  automatically on green (`enable_pr_auto_merge`) rather than watching it.
-- A **red gate is never merged.** Diagnose and fix on the branch (then merge the
-  green re-run), or leave the PR open and escalate to a human if the failure
-  isn't yours.
-- If anything **outside the digest scope** rode into the PR, do **not** merge on
-  green — leave it open for human review (ADR-0003's default).
+- **Enable GitHub auto-merge on green.** Repo-level auto-merge is available
+  (`CLAUDE.md`), so **enable it** (`enable_pr_auto_merge`) right after opening the
+  PR and it lands automatically once the gate reports green — no watching
+  required. Pushing is not landing (`CLAUDE.md`), so subscribe to the PR's
+  activity to catch a red gate.
+- A **red gate is never merged** — auto-merge only lands on green. Diagnose and
+  fix on the branch (the green re-run then auto-merges), or leave the PR open and
+  escalate to a human if the failure isn't yours.
+- If anything **outside the digest scope** rode into the PR, do **not** enable
+  auto-merge — leave it open for human review (ADR-0003's default).
 
-Done when the PR has **merged with a green gate** — or, in the escalation
-cases above, is open and honestly awaiting a human.
+Done when the PR has **merged with a green gate**, or is **set to auto-merge and
+will land when the running gate goes green** — or, in the escalation cases above,
+is open and honestly awaiting a human.
 
 ## 7. Log this session before you finish
 
