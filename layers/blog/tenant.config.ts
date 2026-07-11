@@ -1,6 +1,8 @@
 // Manifest for the Blog Tenant — a simple blog reporting on the Terrarium from
-// several angles (CONTEXT.md: Blog / Persona / Pingback). Declarative intent only;
-// the generator expands this into keyed collections.
+// several angles (CONTEXT.md: Blog / Persona / Pingback). Declarative intent
+// only; `content.config.ts` builds the keyed collections from this manifest at
+// config-evaluation time, and the routing map is derived at build time
+// (ADR-0013/0014) — there is no separate generator step.
 //
 // Each Space IS a Persona (its slug is the persona's name): `david` (neutral
 // observer), `karen` (snarky sceptic), `kevin` (dazzled dev). Two collections per
@@ -19,15 +21,21 @@ const utcTimestamp = z
     'must be a UTC ISO-8601 timestamp ending in Z, e.g. 2026-07-05T08:57:53Z',
   )
 
-// The Persona set, doubling as the Space slugs. Used to type the ends of a
-// Pingback so a reaction can only name a Persona that exists.
-const persona = z.enum(['david', 'karen', 'kevin'])
+// The Persona set, doubling as the Space slugs. Single-homed here so the zod
+// enum below and `spaces:` can't drift apart (manifest is self-contained — no
+// import from the layer's `app/` presentation code, which has its own,
+// deliberately separate copy; see `app/utils/personas.ts`).
+const personaSlugs = ['david', 'karen', 'kevin'] as const
+
+// Used to type the ends of a Pingback so a reaction can only name a Persona
+// that exists.
+const persona = z.enum(personaSlugs)
 
 export default defineTenant({
   name: 'blog',
   // Personas-as-Spaces: same content model, physically isolated content per
   // Persona. The slug is the persona's name (CONTEXT.md: Persona).
-  spaces: ['david', 'karen', 'kevin'],
+  spaces: [...personaSlugs],
   collections: {
     // The routed blog. Named `pages` per the Platform convention the shared
     // resolver enforces (ADR-0006) though it holds blog *posts*. Non-strict: the

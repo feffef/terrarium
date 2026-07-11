@@ -16,8 +16,12 @@ export const PERSONAS: Record<string, PersonaMeta> = {
   kevin: { name: 'Kevin', accent: '#4f8f6a' }, // eager green
 }
 
+// This slug set is also declared in `../../tenant.config.ts` (the `persona`
+// enum / `spaces:`) — that copy is deliberate, not drift to fix: the manifest
+// is self-contained (jiti-evaluated at build time) and must not import
+// presentation code, so the two sides can't share a single source.
 /** Persona slugs in a stable display order (matches the manifest's Space order). */
-export const PERSONA_SLUGS = ['david', 'karen', 'kevin'] as const
+export const PERSONA_SLUGS = Object.keys(PERSONAS)
 
 export function personaMeta(slug: string): PersonaMeta {
   return PERSONAS[slug] ?? { name: slug, accent: '#4f6f8f' }
