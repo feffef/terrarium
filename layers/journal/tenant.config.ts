@@ -1,5 +1,7 @@
 // Manifest for the Journal Tenant — the Platform's self-documentation (CONTEXT.md).
-// Declarative intent only — the generator expands this into keyed collections.
+// Declarative intent only — `content.config.ts` builds the keyed collections
+// from this manifest at config-evaluation time (ADR-0002/0013); nothing is
+// generated into the repo.
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
 

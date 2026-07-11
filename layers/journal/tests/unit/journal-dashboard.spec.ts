@@ -12,10 +12,10 @@ import {
   sessionCardViews,
   countFrictions,
   digestList,
-  durMin,
+  sessionDurationMin,
   externalSkillCount,
-  fmtWhen,
-  formatModels,
+  sessionWhen,
+  sessionModelsLabel,
   frictionCount,
   frictionTotals,
   kindCounts,
@@ -23,11 +23,11 @@ import {
   prRefs,
   prRefsParts,
   prUrl,
-  shortId,
+  sessionShortId,
   skillGroups,
   skillsLabel,
   skillsSub,
-  toolEntries,
+  sessionToolEntries,
 } from '../../app/utils/dashboard.ts'
 import type { Friction, SessionDoc, Severity, SkillDoc } from '../../app/types/journal.ts'
 
@@ -77,40 +77,40 @@ describe('countFrictions', () => {
   })
 })
 
-describe('durMin', () => {
+describe('sessionDurationMin', () => {
   it('rounds to the nearest minute', () => {
     // 90s → 1.5 min → rounds to 2
-    expect(durMin('2026-07-05T00:00:00Z', '2026-07-05T00:01:30Z')).toBe(2)
+    expect(sessionDurationMin('2026-07-05T00:00:00Z', '2026-07-05T00:01:30Z')).toBe(2)
     // 100 min exactly
-    expect(durMin('2026-07-05T10:00:00Z', '2026-07-05T11:40:00Z')).toBe(100)
+    expect(sessionDurationMin('2026-07-05T10:00:00Z', '2026-07-05T11:40:00Z')).toBe(100)
   })
 
   it('clamps zero and negative durations to at least 1', () => {
-    expect(durMin('2026-07-05T10:00:00Z', '2026-07-05T10:00:00Z')).toBe(1) // 0 → 1
-    expect(durMin('2026-07-05T11:00:00Z', '2026-07-05T10:00:00Z')).toBe(1) // negative → 1
+    expect(sessionDurationMin('2026-07-05T10:00:00Z', '2026-07-05T10:00:00Z')).toBe(1) // 0 → 1
+    expect(sessionDurationMin('2026-07-05T11:00:00Z', '2026-07-05T10:00:00Z')).toBe(1) // negative → 1
     // a sub-30s positive span rounds to 0 then clamps to 1
-    expect(durMin('2026-07-05T10:00:00Z', '2026-07-05T10:00:10Z')).toBe(1)
+    expect(sessionDurationMin('2026-07-05T10:00:00Z', '2026-07-05T10:00:10Z')).toBe(1)
   })
 })
 
-describe('shortId', () => {
+describe('sessionShortId', () => {
   it('leaves ids of 18 chars or fewer untouched', () => {
-    expect(shortId('short')).toBe('short')
-    expect(shortId('a'.repeat(18))).toBe('a'.repeat(18))
+    expect(sessionShortId('short')).toBe('short')
+    expect(sessionShortId('a'.repeat(18))).toBe('a'.repeat(18))
   })
 
   it('truncates ids longer than 18 chars to a 13…4 form', () => {
     const id = 'session_0123456789abcdefXYZW' // 28 chars
-    expect(shortId(id)).toBe('session_01234…XYZW')
+    expect(sessionShortId(id)).toBe('session_01234…XYZW')
     // first 13 chars, ellipsis, last 4 chars
-    expect(shortId(id)).toBe(`${id.slice(0, 13)}…${id.slice(-4)}`)
+    expect(sessionShortId(id)).toBe(`${id.slice(0, 13)}…${id.slice(-4)}`)
   })
 })
 
-describe('fmtWhen', () => {
+describe('sessionWhen', () => {
   it('formats an ISO instant as UTC month/day · HH:MM', () => {
-    expect(fmtWhen('2026-07-05T09:07:00Z')).toBe('Jul 5 · 09:07 UTC')
-    expect(fmtWhen('2026-01-31T23:04:00Z')).toBe('Jan 31 · 23:04 UTC')
+    expect(sessionWhen('2026-07-05T09:07:00Z')).toBe('Jul 5 · 09:07 UTC')
+    expect(sessionWhen('2026-01-31T23:04:00Z')).toBe('Jan 31 · 23:04 UTC')
   })
 })
 
@@ -213,32 +213,32 @@ describe('skill inventory', () => {
   })
 })
 
-describe('formatModels', () => {
+describe('sessionModelsLabel', () => {
   it('strips the claude- prefix and joins busiest-first', () => {
-    expect(formatModels({ 'claude-opus-4-8': 137 })).toBe('opus-4-8')
-    expect(formatModels({ 'claude-sonnet-5': 4, 'claude-opus-4-8': 137 })).toBe('opus-4-8 · sonnet-5')
+    expect(sessionModelsLabel({ 'claude-opus-4-8': 137 })).toBe('opus-4-8')
+    expect(sessionModelsLabel({ 'claude-sonnet-5': 4, 'claude-opus-4-8': 137 })).toBe('opus-4-8 · sonnet-5')
   })
 
   it('breaks equal counts by id and returns "" when absent', () => {
-    expect(formatModels({ 'claude-b': 2, 'claude-a': 2 })).toBe('a · b')
-    expect(formatModels(undefined)).toBe('')
-    expect(formatModels({})).toBe('')
+    expect(sessionModelsLabel({ 'claude-b': 2, 'claude-a': 2 })).toBe('a · b')
+    expect(sessionModelsLabel(undefined)).toBe('')
+    expect(sessionModelsLabel({})).toBe('')
   })
 })
 
-describe('toolEntries', () => {
+describe('sessionToolEntries', () => {
   it('sorts by count desc then name, and handles absent', () => {
-    expect(toolEntries({ Bash: 19, Read: 5, Edit: 5 })).toEqual([
+    expect(sessionToolEntries({ Bash: 19, Read: 5, Edit: 5 })).toEqual([
       { name: 'Bash', count: 19 },
       { name: 'Edit', count: 5 },
       { name: 'Read', count: 5 },
     ])
-    expect(toolEntries(undefined)).toEqual([])
+    expect(sessionToolEntries(undefined)).toEqual([])
   })
 })
 
 describe('sessionCardViews', () => {
-  it('maps a SessionDoc to its display view, including shortId truncation', () => {
+  it('maps a SessionDoc to its display view, including sessionShortId truncation', () => {
     const s = session({
       session: 'session_0123456789abcdefXYZW',
       startedAt: '2026-07-05T10:00:00Z',

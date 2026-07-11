@@ -29,16 +29,16 @@ import type { Friction, Importance, SessionCardView, SessionDoc, Severity, Skill
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const pad = (n: number) => String(n).padStart(2, '0')
 
-export function fmtWhen(iso: string): string {
+export function sessionWhen(iso: string): string {
   const d = new Date(iso)
   return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()} · ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())} UTC`
 }
 
-export function durMin(a: string, b: string): number {
+export function sessionDurationMin(a: string, b: string): number {
   return Math.max(1, Math.round((new Date(b).getTime() - new Date(a).getTime()) / 60000))
 }
 
-export function shortId(s: string): string {
+export function sessionShortId(s: string): string {
   return s.length > 18 ? `${s.slice(0, 13)}…${s.slice(-4)}` : s
 }
 
@@ -46,7 +46,7 @@ export function shortId(s: string): string {
 // Model ids are verbose (`claude-opus-4-8`); the summary chip shows the short,
 // human tail. A session may span more than one model (a subagent on a cheaper
 // tier), so join them busiest-first. Empty ⇒ an older, authored-only log.
-export function formatModels(models?: Record<string, number>): string {
+export function sessionModelsLabel(models?: Record<string, number>): string {
   return Object.entries(models ?? {})
     .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
     .map(([id]) => id.replace(/^claude-/, ''))
@@ -54,7 +54,7 @@ export function formatModels(models?: Record<string, number>): string {
 }
 
 // tool name → call count as a display list, busiest-first then alpha.
-export function toolEntries(counts?: Record<string, number>): { name: string; count: number }[] {
+export function sessionToolEntries(counts?: Record<string, number>): { name: string; count: number }[] {
   return Object.entries(counts ?? {})
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
@@ -173,8 +173,8 @@ export function skillGroups(own: SkillDoc[]): { importance: Importance; skills: 
 export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { key: string })[] {
   return sessions.map((s) => ({
     key: s.session,
-    when: fmtWhen(s.endedAt),
-    duration: durMin(s.startedAt, s.endedAt),
+    when: sessionWhen(s.endedAt),
+    duration: sessionDurationMin(s.startedAt, s.endedAt),
     goal: s.goal,
     status: s.status,
     outcome: s.outcome,
@@ -182,8 +182,8 @@ export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { k
     frictionCounts: countFrictions(s.frictions),
     frictionTotal: s.frictions.length,
     skills: (s.skillsUsed ?? []).map((x) => x.name),
-    sid: shortId(s.session),
-    model: formatModels(s.models),
+    sid: sessionShortId(s.session),
+    model: sessionModelsLabel(s.models),
     // Expanded detail — the full log, revealed on click (no route of its own).
     summary: s.summary,
     subagents: s.subagents ?? [],
@@ -193,7 +193,7 @@ export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { k
     learnings: s.learnings ?? [],
     ideas: s.ideas ?? [],
     filesEdited: s.filesEdited ?? [],
-    tools: toolEntries(s.toolCounts),
+    tools: sessionToolEntries(s.toolCounts),
   }))
 }
 

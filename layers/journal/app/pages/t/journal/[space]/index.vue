@@ -171,19 +171,15 @@ useSeoMeta({
           class="digest"
           :class="{ open: openDigests[d.doc.path] }"
         >
-          <div
+          <JournalDisclosure
             class="drow"
-            role="button"
-            tabindex="0"
-            :aria-expanded="!!openDigests[d.doc.path]"
-            @click="toggleDigest(d.doc.path)"
-            @keydown.enter.prevent="toggleDigest(d.doc.path)"
-            @keydown.space.prevent="toggleDigest(d.doc.path)"
+            :expanded="!!openDigests[d.doc.path]"
+            @toggle="toggleDigest(d.doc.path)"
           >
             <span class="digest-date">{{ d.date }}</span>
             <span class="digest-summary">{{ d.summary }}</span>
             <span class="caret" aria-hidden="true">{{ openDigests[d.doc.path] ? '▾' : '▸' }}</span>
-          </div>
+          </JournalDisclosure>
           <div v-if="openDigests[d.doc.path]" class="digest-body">
             <ContentRenderer :value="d.doc" />
           </div>
