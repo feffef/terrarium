@@ -3,13 +3,6 @@
 Date: 2026-07-04
 Status: Accepted
 
-> **Amended (2026-07-11).** **`drift-check` is retired**, not merely quiet:
-> ADR-0014 deleted the generated-config artifact (`shared/routing.generated.ts`,
-> `pnpm gate:drift`, `scripts/generate.ts`) it existed to check, eliminating its
-> premise entirely. It is no longer part of the chartered-job list below;
-> `CONTEXT.md`'s Codify entry already lists the current set as `sync`,
-> `consolidate`, and `triage` (see also ADR-0003).
-
 ## Context
 
 "An ever-growing set of Skills that develop the Platform" is the project's core
@@ -19,9 +12,9 @@ are generic or per-Tenant.
 Two categories exist and should not be conflated:
 - **Platform-operation Skills** — encode how to safely perform a Platform change
   (`spawn-tenant`, `add-space`, `add-collection`, `edit-content`, and the
-  chartered autonomous jobs `sync`, `drift-check`, `consolidate`, `triage`,
-  `codify`). They embed *this* Platform's conventions (manifest schema, layer
-  structure, safety gate). This is the first-class, ever-growing deliverable.
+  chartered autonomous jobs `sync`, `consolidate`, `triage`, `codify`). They
+  embed *this* Platform's conventions (manifest schema, layer structure,
+  safety gate). This is the first-class, ever-growing deliverable.
 - **General engineering Skills** — `tdd`, `code-review`, `domain-modeling`, etc.
   Inherited tooling, reusable anywhere, not part of the Platform's identity.
 

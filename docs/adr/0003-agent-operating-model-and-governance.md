@@ -78,13 +78,6 @@ Status: Accepted
 > **Amended (2026-07-09).** `audit-skills` joins the low-risk auto-merge tier
 > (ADR-0004) as a third exemption, after `digest`/`audit-docs`. Bounded to
 > Inventory-only content citing an existing evidence rule; see ADR-0015.
->
-> **Amended (2026-07-11).** **`drift-check` is retired**, not merely quiet:
-> ADR-0014 deleted the generated-config artifact (`shared/routing.generated.ts`,
-> `pnpm gate:drift`, `scripts/generate.ts`) it existed to check, eliminating its
-> premise entirely. It is no longer part of the live chartered-job set below;
-> `CONTEXT.md`'s Codify entry already lists the current set as `sync`,
-> `consolidate`, and `triage` (see also ADR-0005).
 
 ## Context
 
@@ -107,8 +100,6 @@ and consolidate*; humans *decide what should exist*. The chartered jobs (each a
 Skill, each producing scoped PRs with a known expected shape):
 - **sync** — keep the living-documentation Tenant / status report matching real
   repo state
-- **drift-check** — detect manifest ↔ generated-config ↔ content mismatches, PR
-  the fix
 - **consolidate** — detect duplication/inconsistency across Tenants, propose
   refactors
 - **triage** — implement a backlog item (issue) filed by a human or agent

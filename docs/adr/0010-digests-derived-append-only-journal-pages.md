@@ -10,16 +10,8 @@ Status: Accepted
 > **Amended (2026-07-08).** The "chartered, still-deferred `sync` job" below is
 > **no longer fully deferred**: the `digest` Skill now runs nightly via an
 > external Routine (Skill + trigger = an autonomous job, ADR-0005), so the `sync`
-> remit is partially live — realised by `digest` (scheduled) and `audit-skills`
-> (still on-demand; see ADR-0015). The live-dashboard point below stands
-> unchanged.
->
-> **Amended (2026-07-11).** The "still on-demand" claim above was already wrong
-> the day it was written: ADR-0015's own 2026-07-08 amendment says
-> `audit-skills` "now also runs on a schedule, not on-demand-only," matching
-> `.agents/skills/audit-skills/SKILL.md`'s current description. Read ADR-0015
-> for the correct, current statement — both `digest` and `audit-skills` are
-> scheduled autonomous jobs.
+> remit is partially live — realised by `digest` and `audit-skills`, both now
+> scheduled (see ADR-0015). The live-dashboard point below stands unchanged.
 
 ## Context
 
