@@ -1,0 +1,46 @@
+schemaVersion: 1
+session: session_01EchC97bGfA3TrJfWFg6muL
+startedAt: 2026-07-11T09:29:18Z
+endedAt: 2026-07-11T09:56:10Z
+kind: interactive
+goal: Analyze session-log ideas/learnings quality trend
+status: completed
+outcome: Clustered post-change sparks; found meta-focus
+summary: 'Human-instructed throughout (three direct questions, no agent-initiated work). First established whether the log-session `ideas`/`learnings` quality improved after the guidance was rebiased toward "ambitious and concrete" — pinned the pivot to c3e87e4 (2026-07-08), distinct from the 07-07 field introduction, and measured a real lift (ideas 25 to 67 words/item, more concrete/issue-ready), with honest caveats on sample size and confounds. Then clustered all ~71 post-change sparks into six themes and reported the headline: agents focus overwhelmingly on their own operating scaffolding (permissions, provenance, self-auditing Skills) over the product content. No code changed; answer-only.'
+prs: []
+docsRead:
+  - path: .agents/skills/log-session/SKILL.md
+    reason: ideas/learnings field semantics + the change under study
+  - path: CLAUDE.md
+    reason: session-log + closure conventions
+skillsUsed:
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: Shallow clone (89 commits) hid the skill's real history; git blame hit the shallow boundary, masking when the "encourage output" change actually landed.
+    solution: Fell back to the github MCP list_commits on the file path to recover full history and the true pivot commit.
+    severity: minor
+  - description: No committed tool to extract/aggregate ideas/learnings across session logs; hand-wrote a crude YAML block scraper to bucket by timestamp.
+    solution: Build the recurring "sparks feed" (see ideas) so this analysis is a query, not a one-off script re-derived each time.
+    severity: minor
+durationSec: 1612
+models:
+  claude-opus-4-8: 49
+toolCounts:
+  Bash: 13
+  Read: 1
+  ToolSearch: 1
+  mcp__github__list_commits: 1
+  Write: 1
+  Edit: 1
+gitBranch: claude/log-session-quality-impact-dn6cbl
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+learnings:
+  - The "encourage more output" change is c3e87e4 (2026-07-08 23:23Z), a wording rebias, distinct from 9f05f7d (07-07) which first added the ideas/learnings fields — measuring against the wrong pivot would fold in dozens of sessions that predate the fields entirely.
+  - After the change, ideas grew from ~25 to ~67 words/item (2.6x) and the extra length was genuine content (the why, the trade-off, issue-readiness), not padding — verified by reading the text, not just word counts.
+  - learnings also grew (31 to 44 words/item) despite the change only touching ideas, hinting part of the lift is a secular drift toward longer logs / different session mix, not purely the wording.
+  - Across ~71 post-change sparks, agents focus overwhelmingly on their own operating scaffolding (cloud permissions, human-vs-agent provenance, self-auditing Skills, subagent recovery) over the actual product/content — the fleet is highly introspective.
+  - That GitHub merged_by / user-field cannot distinguish a human from an agent was re-learned independently by at least three separate sessions — a recurring friction the fleet keeps rediscovering rather than fixing.
+ideas:
+  - Build a committed sparks-index script (e.g. scripts/sparks.ts) that parses every session log's ideas/learnings, clusters them by tag/theme, and emits per-cluster counts + a cross-session feed rendered on the journal dashboard — turning "what are agents focused on / what recurs" from a hand-rolled one-off scrape into a standing query, and giving the oft-proposed ideas-to-GitHub-issue auto-promotion its raw input. Concrete enough to file as a journal Tenant issue.
