@@ -33,11 +33,17 @@ const specimens = computed<SpecimenView[]>(() =>
 const withRhythm = computed(() => specimens.value.filter((s) => s.activity))
 
 // The composite almanac wheel (#285, map #279): the annual sibling of "Daily
-// choreography" above — one band per phenology-carrying specimen, stacked
-// into ONE wheel instead of one dial each. Only #284's specimens (today: just
-// `lumina-fabulae` in canopy) carry `phenology` yet; this reads the
-// collection at runtime, so it fills in as that content lands — nothing here
-// is hard-coded to a specimen.
+// choreography" above — one band per phenology-carrying specimen, stacked into
+// ONE wheel instead of one dial each. Read from the collection at runtime, so
+// it stays in step with the content (every catalogued specimen carries a
+// `phenology` block, #284) — nothing here is hard-coded to a specimen.
+//
+// The landing owns the shared needle state, so the composite's needle parks at
+// today, restores from a shared `?day=` link, AND its scrub writes back to that
+// param — the same round-trip the specimen entry has (composables/almanac.ts).
+// No `phases`: the `::phase`/`::sighting` MDC components are specimen-page-only;
+// the composite draws its bands straight from `phenologyBands`.
+provideAlmanac({ initialDay: parseAlmanacDayParam(route.query.day) })
 const withPhenology = computed(() => specimens.value.filter((s) => (s.phenology?.phases.length ?? 0) > 0))
 const phenologyBands = computed<AlmanacBand[]>(() =>
   withPhenology.value.map((s) => ({

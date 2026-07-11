@@ -11,6 +11,7 @@ import {
   dayToAngle,
   GLASS_SEASONS,
   inSpan,
+  normalizeAngle,
   ringArcPath,
   seasonOf,
   spanLength,
@@ -67,6 +68,16 @@ describe('dayToAngle() / angleToDay()', () => {
     expect(angleToDay(0.4)).toBe(0) // 0.4° ≈ 0.41 days
     expect(angleToDay(0.6)).toBe(1) // 0.6° ≈ 0.61 days
     expect(angleToDay(359.9)).toBe(0) // ≈ day 364.9 — nearest whole day is New Year, not 365
+  })
+})
+
+describe('normalizeAngle()', () => {
+  it('wraps any real angle onto [0, 360)', () => {
+    expect(normalizeAngle(0)).toBe(0)
+    expect(normalizeAngle(360)).toBe(0)
+    expect(normalizeAngle(450)).toBe(90)
+    expect(normalizeAngle(-90)).toBe(270)
+    expect(normalizeAngle(-360)).toBe(0)
   })
 })
 
