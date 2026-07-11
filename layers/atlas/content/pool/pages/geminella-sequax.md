@@ -9,6 +9,25 @@ diet: the morning film
 activity:
   label: dawn, on the film
   bands: [[4, 9]]
+phenology:
+  phases:
+    - name: first-pairs
+      label: the first pairs
+      span: [58, 118]
+      gloss: the film re-forms in patches, and every patch is grazed by its twos from the first morning; we have never caught the pairing happen.
+    - name: film-plenty
+      label: the film in plenty
+      span: [118, 236]
+      gloss: the morning film at its widest; forty pairs counted, and no singles.
+    - name: thin-film
+      label: the thin film
+      span: [236, 272]
+      gloss: the misting's lapse starves the film to ribbons; the pairs keep to what remains, in lanes.
+    - name: sunk-season
+      label: the sunk season
+      span: [272, 58]
+      gloss: the film fails and the pairs go down into the water, or somewhere; spring returns them in the same twos.
+      quiet: true
 signature:
   colors:
     - { name: pondlight silver, hex: "#8fb4ba" }

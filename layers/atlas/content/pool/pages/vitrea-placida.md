@@ -9,6 +9,25 @@ diet: algae grazed from the glass
 activity:
   label: day, slowly
   bands: [[8, 17]]
+phenology:
+  phases:
+    - name: first-grazing
+      label: the first grazing
+      span: [48, 110]
+      gloss: it returns to the pane with the lengthening light and begins where it left off, as though the interval were an administrative matter.
+    - name: green-harvest
+      label: the green harvest
+      span: [110, 258]
+      gloss: the film at its thickest; the ribbons of clean glass grow a finger wider by the day.
+    - name: slow-polish
+      label: the slow polish
+      span: [258, 318]
+      gloss: the film thins and the snail travels farther for less, which it does not appear to resent.
+    - name: sealed-season
+      label: the sealed months
+      span: [318, 48]
+      gloss: fastened somewhere secret below the waterline; the pane keeps its film until spring.
+      quiet: true
 signature:
   colors:
     - { name: pondlight blue, hex: "#4f8b9e" }

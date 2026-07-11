@@ -9,6 +9,21 @@ diet: whatever no longer matches its source
 activity:
   label: ever-waking
   bands: [[0, 24]]
+phenology:
+  phases:
+    - name: slow-straying
+      label: the slow straying
+      span: [110, 236]
+      gloss: the growing months put every copy of everything a little out of step; it feeds at leisure and is met with everywhere.
+    - name: reckoning
+      label: the reckoning
+      span: [236, 322]
+      gloss: the holiday's lapses and the great cleaning between them furnish the year's richest disagreements, taken one difference at a time.
+    - name: lean-agreement
+      label: the lean agreement
+      span: [322, 110]
+      gloss: the cold holds the floor still; where nothing changes, nothing strays, and it goes hungry and unseen.
+      quiet: true
 signature:
   colors:
     - { name: rust, hex: "#a5542a" }

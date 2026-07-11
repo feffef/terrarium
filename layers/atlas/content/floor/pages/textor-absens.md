@@ -9,6 +9,17 @@ diet: the frayed and the slack
 activity:
   label: the hours no one keeps
   bands: [[1, 5]]
+phenology:
+  phases:
+    - name: quiet-mending
+      label: the quiet mending
+      span: [258, 62]
+      gloss: the season of the column's withdrawal, and of the best of the work; the two facts are left for the reader to arrange.
+    - name: scarce-evidence
+      label: the scarce evidence
+      span: [62, 258]
+      gloss: with the column at work the mends cannot be told from the mending; the year's one credited sighting fell here, which the juniors find suggestive and the seniors find typical.
+      quiet: true
 signature:
   colors:
     - { name: new-thread gold, hex: "#c2a05c" }

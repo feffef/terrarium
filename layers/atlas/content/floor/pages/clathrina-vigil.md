@@ -9,6 +9,24 @@ diet: whatever fails to pass
 activity:
   label: the deep of night
   bands: [[21, 24], [0, 5]]
+phenology:
+  phases:
+    - name: restringing
+      label: the restringing
+      span: [62, 108]
+      gloss: the whole lattice down and re-spun over some ten nights; the gate stands shut until she is satisfied.
+    - name: long-keeping
+      label: the long keeping
+      span: [108, 262]
+      gloss: the year's traffic at its heaviest, and the standard no lower for it.
+    - name: thin-traffic
+      label: the thin traffic
+      span: [262, 322]
+      gloss: crossings grow scarce; she keeps the post regardless, which is rather the point of her.
+    - name: winter-watch
+      label: the winter watch
+      span: [322, 62]
+      gloss: little passes and less is caught; she neither leaves nor lowers the bar.
 signature:
   colors:
     - { name: iron grey, hex: "#6a6d6a" }

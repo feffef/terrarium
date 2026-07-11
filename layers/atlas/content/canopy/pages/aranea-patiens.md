@@ -9,6 +9,25 @@ diet: whatever the web keeps
 activity:
   label: night
   bands: [[20, 24], [0, 5]]
+phenology:
+  phases:
+    - name: first-stringing
+      label: the first stringing
+      span: [58, 122]
+      gloss: the year's first wheels, strung low and small, as though testing the air's opinion.
+    - name: high-wheeling
+      label: the high wheeling
+      span: [122, 242]
+      gloss: the great wheels of the damp months, wider each night than we would credit and replaced entire by dawn.
+    - name: taking-in
+      label: the taking-in
+      span: [242, 328]
+      gloss: the wheels come down a bough at a time; the silk is eaten and carried inward, as savings.
+    - name: close-sitting
+      label: the close sitting
+      span: [328, 58]
+      gloss: a season spent flat against the bark, spinning little and waiting, which it does supremely well.
+      quiet: true
 signature:
   colors:
     - { name: dew silver, hex: "#b9c2c4" }

@@ -9,6 +9,17 @@ diet: light, we suppose, by standing in it
 activity:
   label: noon, of all hours
   bands: [[10, 15]]
+phenology:
+  phases:
+    - name: bold-noons
+      label: the bold noons
+      span: [151, 212]
+      gloss: every entry in the audit that would not balance falls in these weeks, in the highest light of the year.
+    - name: accounted-for
+      label: the accounted months
+      span: [212, 151]
+      gloss: the audit balances; whether the shade is elsewhere or merely diligent, the record cannot say.
+      quiet: true
 signature:
   colors:
     - { name: cast violet, hex: "#5a5170" }

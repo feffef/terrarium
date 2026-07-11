@@ -9,6 +9,25 @@ diet: detritus and roots
 activity:
   label: night
   bands: [[19, 24], [0, 4]]
+phenology:
+  phases:
+    - name: first-startle
+      label: the first startle
+      span: [48, 92]
+      gloss: it emerges, is alarmed by the emergence, and retires; this is repeated until the weather holds.
+    - name: tender-roots
+      label: the season of tender roots
+      span: [92, 192]
+      gloss: the year's soft feeding, taken a few seconds at a time between alarms.
+    - name: wary-fattening
+      label: the wary fattening
+      span: [192, 302]
+      gloss: an autumn spent eating against the winter, at twice the usual rate and thrice the usual alarm.
+    - name: under-bark
+      label: the under-bark months
+      span: [302, 48]
+      gloss: it winters beneath the darkest thing it found in autumn, and is not seen; we assume it startles in there, at intervals, on principle.
+      quiet: true
 signature:
   colors:
     - { name: alarm red, hex: "#b23b2e" }
