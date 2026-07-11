@@ -1,0 +1,62 @@
+schemaVersion: 1
+session: session_011YkWZDFx2Ru7WktyKeTFB5
+startedAt: 2026-07-11T07:25:30Z
+endedAt: 2026-07-11T07:42:29Z
+kind: interactive
+goal: Make blog-post draft-and-review three candidates always
+status: completed
+outcome: "PR #309 merged; both invocation modes now use it"
+summary: "Human-instructed end to end: first asked to make the blog-post Skill callable without a persona, auto-selecting the angle by drafting three candidates (topic x persona x standalone-or-reaction) and having a fresh Sonnet subagent judge them blind as a first-time visitor with no repo access, then keeping only its pick through the normal branch/gate/PR flow. Rewrote .agents/skills/blog-post/SKILL.md and the Skill Inventory entry, ran pnpm gate clean, opened PR #309, and subscribed to its activity. The user then explicitly asked to also apply the same three-draft-and-review mechanism when a persona *is* given, not just the bare-invocation case, so restructured the Skill so Section A always runs (persona-given mode fixes the persona across all three candidates; persona-agnostic mode also lets Section A pick it). Re-ran the gate clean, pushed, updated the PR description to match, and babysat CI to a human merge."
+prs:
+  - "309"
+docsRead:
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: the Skill being rewritten
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: persona voice/do-don't for Section A's persona-fit calls
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: persona voice/do-don't for Section A's persona-fit calls
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: persona voice/do-don't for Section A's persona-fit calls
+  - path: layers/journal/content/current/skills/blog-post.yml
+    reason: Skill Inventory role/importance entry to keep in sync with the rewritten Skill
+  - path: CONTEXT.md
+    reason: Persona/Pingback/Blog glossary entries to ground the new Section A wording
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: pingback mechanics referenced by step 6
+  - path: layers/blog/tenant.config.ts
+    reason: pages/pingbacks schema referenced by steps 5-6
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Used ScheduleWakeup for a couple of short PR/gate check-in fallbacks even though its own tool description scopes it to /loop dynamic-mode pacing, not general "check back in N seconds" use outside a loop; ended up with it and send_later both scheduling overlapping check-ins for the same PR.
+    solution: Stick to send_later (or just rely on task-notification/webhook wakeups) for non-loop check-ins; reserve ScheduleWakeup strictly for /loop.
+    severity: nit
+durationSec: 1019
+models:
+  claude-sonnet-5: 158
+toolCounts:
+  Bash: 37
+  Read: 14
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  Edit: 11
+  Grep: 1
+  ScheduleWakeup: 4
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__actions_list: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__update_pull_request: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - .agents/skills/blog-post/SKILL.md
+  - layers/journal/content/current/skills/blog-post.yml
+gitBranch: claude/blog-skill-persona-agnostic-w1bsm8
+entrypoint: remote_mobile
+cliVersion: 2.1.207
