@@ -28,12 +28,10 @@ Actions logs, and the agent workflow's attack surface.**
 - **`SECURITY.md`** — added; routes reporting through GitHub private
   vulnerability reporting (no personal email exposed).
 
-## Open decisions for the owner (not actioned — genuine judgement calls)
+## Decisions for the owner (status noted inline; #2 still open)
 
-1. **LICENSE.** There is none. A public repo with no license is *all rights
-   reserved* — readers can't legally reuse, fork, or contribute. Add a license
-   (MIT / Apache-2.0) if reuse is intended, or keep all-rights-reserved
-   deliberately.
+1. **LICENSE.** ~~There is none.~~ **Resolved** — MIT `LICENSE` added (© 2026
+   Steffen Sauder), granting read/reuse rights.
 2. **Personal email in history.** `steffen.sauder@gmail.com` is baked into ~21
    commits' author/committer metadata and becomes permanently harvestable.
    History rewrite **cannot** fully undo this (forks + cached views persist —
@@ -55,7 +53,12 @@ Actions logs, and the agent workflow's attack surface.**
      therefore also the RCE boundary and must stay strict; consider
      `pnpm install --frozen-lockfile --ignore-scripts` in the deploy path.
 
-   → Resolve #213 (or record a deliberate interim stance) before the flip.
+   → **Addressed** — **ADR-0020** (accepted) draws the trust line at write
+   access: Trusted (write access) vs. Public (read-only), whose
+   issues/PRs agents treat as untrusted input — never implemented without a
+   Trusted green-light, never auto-merged. The mechanical half (fork-PR workflow
+   approval + human-only merge for Public PRs) still needs enabling at the flip.
+   The deploy-path `--ignore-scripts` hardening remains a separate open item.
 
 ## GitHub settings to configure at/after the flip
 
