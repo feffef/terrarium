@@ -9,6 +9,25 @@ diet: leaf and labour
 activity:
   label: dawn and dusk
   bands: [[5, 9], [16, 20]]
+phenology:
+  phases:
+    - name: great-reworking
+      label: the great reworking
+      span: [58, 146]
+      gloss: the winter's galleries judged wanting and worked again, a thumb's width to the left.
+    - name: double-shift
+      label: the double shift
+      span: [146, 236]
+      gloss: dawn and dusk shifts long enough to meet in the middle; the maps go out of date between breakfast and supper.
+    - name: provisioning
+      label: the provisioning
+      span: [236, 316]
+      gloss: the leaf-fragment traffic trebles; what the column is storing, and where, the column does not disclose.
+    - name: deep-galleries
+      label: the deep galleries
+      span: [316, 58]
+      gloss: the column withdraws below the reach of our lamps; the surface workings stand empty, and are mended anyway.
+      quiet: true
 signature:
   colors:
     - { name: soil brown, hex: "#6b4a2a" }
@@ -63,8 +82,17 @@ illustration: |
 
 The column was at work when we first lowered the lamp below the leaf line, and it has been at work on every visit since. We have come at dawn and found them weaving; at dusk, and found them weaving; we came once at an hour we are not proud of and found the galleries empty but freshly mended, as though the work had only just stepped out of the room.
 
-*Formica textrix* does not dig so much as weave. Soil crumb, leaf-vein, root-hair, and a dark thread of its own spinning are drawn together into galleries that hold the loose litter the way warp holds weft. The remarkable thing — stated plainly, as it deserves — is that the weaving is never finished. A gallery completed at dawn is as likely to be unpicked at dusk and worked again a thumb's width to the left, for reasons the column does not disclose. We mapped the western workings twice in one week and produced, in good faith, two different maps.
+::phase{of="double-shift"}
+*Formica textrix* does not dig so much as weave. Soil crumb, leaf-vein, root-hair, and a dark thread of its own spinning are drawn together into galleries that hold the loose litter the way warp holds weft. The remarkable thing — stated plainly, as it deserves — is that the weaving is never finished. A gallery completed at dawn is as likely to be unpicked at dusk and worked again a thumb's width to the left, for reasons the column does not disclose. We mapped the western workings twice in one week and produced, in good faith, two different maps. The confusion is at its richest in :season[the Long Damp]{of="long-damp"}, when the litter swells daily with what the canopy lets fall and the dawn and dusk shifts run long enough to meet in the middle.
+::
+
+::sighting{date="2026-07-06"}
+::
 
 On the twenty-second of June we dusted one worker with a little chalk so as to follow her. She took a leaf-fragment three times her own length down the long gallery, surrendered it, returned, took another, and was still at it when the light failed and we, not she, gave up. The chalk was gone by morning. We suspect the column disapproved of it.
+
+::phase{of="deep-galleries"}
+Only in :season[the Radiator Months]{of="radiator-months"} does the column grant us anything like an absence. The surface workings stand empty for weeks together, the weaving carried on somewhere below the reach of our lamps — and still the empty galleries are found mended at the worn places, an entry the ledger files under miscellaneous industry and the company has agreed to leave there.
+::
 
 We have never observed a weaver-ant at rest. We do not conclude that it never rests; only that it is better at not being watched resting than we are at watching.

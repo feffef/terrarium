@@ -9,6 +9,17 @@ diet: unknown
 activity:
   label: night, irregular
   bands: [[22, 24], [0, 3]]
+phenology:
+  phases:
+    - name: far-singing
+      label: the far singing
+      span: [154, 244]
+      gloss: all nine reports fall between the first warm nights and the keeper's holiday; the pool is loudest then, and has the most voices to lend.
+    - name: still-water
+      label: the still water
+      span: [244, 154]
+      gloss: no calls and no lights; the far corner keeps its own counsel, and the company sleeps.
+      quiet: true
 signature:
   colors:
     - { name: moon silver, hex: "#b6c2cc" }

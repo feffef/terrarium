@@ -9,6 +9,25 @@ diet: the unwary
 activity:
   label: day, still
   bands: [[7, 18]]
+phenology:
+  phases:
+    - name: new-blade
+      label: the new blade
+      span: [48, 108]
+      gloss: the old costume is shed and eaten — an economy we found faintly shocking — and a fresh one grown to the season's green.
+    - name: green-work
+      label: the green work
+      span: [108, 236]
+      gloss: the performance at its best; the honest foliage plentiful enough to hide one liar more.
+    - name: gilding
+      label: the gilding
+      span: [236, 302]
+      gloss: the vein gold spreads to the whole blade, matched leaf for leaf to the tiring foliage.
+    - name: stem-fast
+      label: the stem-fast months
+      span: [302, 48]
+      gloss: it hangs as the last leaf hangs, and does not feed, and does not fall.
+      quiet: true
 signature:
   colors:
     - { name: leaf green, hex: "#5f7d3a" }
