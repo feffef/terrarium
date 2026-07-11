@@ -8,5 +8,9 @@ role: >-
   never the `log-session` direct-to-main path. Personas are Spaces of the Blog
   Tenant; a post may optionally react to another Persona's post, emitting a
   Pingback stub into that Persona's Space (ADR-0012). The persona's voice lives in
-  the Skill's `personas/*.md` files. Reach for it to give the Terrarium a
+  the Skill's `personas/*.md` files. Callable with no persona argument too: it
+  then drafts three candidate posts (topic × best-fit Persona × standalone-or-
+  reaction, each independently chosen), has a fresh Sonnet subagent judge them
+  blind — as a first-time visitor, with no repo access — and carries only its
+  pick through to the gated PR. Reach for it to give the Terrarium a
   self-narrating, multi-voice commentary track on its own development.
