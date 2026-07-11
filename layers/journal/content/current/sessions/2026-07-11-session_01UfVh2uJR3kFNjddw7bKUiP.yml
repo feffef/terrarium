@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01UfVh2uJR3kFNjddw7bKUiP
 startedAt: 2026-07-11T04:08:28Z
-endedAt: 2026-07-11T06:06:26Z
+endedAt: 2026-07-11T07:13:36Z
 kind: autonomous
 goal: Run the audit-docs sweep
-status: in-review
-outcome: 6 findings merged (#294), 2 ADR fixes await human merge (#295)
-summary: "Autonomous audit-docs Routine. Fanned out four read-only lenses (drift, duplication, contradiction, ambiguity), pooled 8 candidate findings, and an independent fact-checker CONFIRMED all 8 against primary sources. Fixed the 6 live-doc findings on the designated branch, cleared pnpm gate, opened PR #294, and self-merged it per the audit-docs Skill's bounded auto-merge grant (no human-only surface touched). The remaining 2 findings amend ADR-0003/0005 (retiring the drift-check job, whose premise ADR-0014 eliminated) and ADR-0010 (a stale audit-skills scheduling claim contradicting ADR-0015) — ADRs are human-only (ADR-0004), so PR #295 was opened separately, not self-merged. The repo owner then reviewed #295 and explicitly asked for a different fix style: replace the wrong ADR text in place instead of layering amendment banners, since banners were pure overhead for a plain factual correction. That request conflicted with the repo's documented \"never rewrite an ADR, only amend\" convention (CLAUDE.md, ADR-0018, audit-docs/SKILL.md), so I asked a clarifying question on the PR before acting rather than deciding unilaterally; the owner confirmed \"for this PR only,\" so I reverted the banners to in-place edits, scoped strictly to this PR, left the broader convention docs untouched, re-ran the gate (green), pushed, and synced the PR description to match the new approach. #295 is still open awaiting human merge."
+status: completed
+outcome: "Both PRs merged: 6 live-doc fixes (#294) and 2 ADR corrections (#295)"
+summary: "Autonomous audit-docs Routine. Fanned out four read-only lenses (drift, duplication, contradiction, ambiguity), pooled 8 candidate findings, and an independent fact-checker CONFIRMED all 8 against primary sources. Fixed the 6 live-doc findings, cleared pnpm gate, opened PR #294, and self-merged it per the audit-docs Skill's bounded auto-merge grant (no human-only surface touched). The remaining 2 findings amended ADR-0003/0005 (retiring the drift-check job, whose premise ADR-0014 eliminated) and ADR-0010 (a stale audit-skills scheduling claim contradicting ADR-0015) — ADRs are human-only (ADR-0004), so PR #295 was opened separately, not self-merged. The repo owner then reviewed #295 and asked for a different fix style: replace the wrong ADR text in place instead of layering amendment banners, since banners were pure overhead for a plain factual correction. That conflicted with the repo's documented \"never rewrite an ADR, only amend\" convention (CLAUDE.md, ADR-0018, audit-docs/SKILL.md), so I asked a clarifying question on the PR before acting rather than deciding unilaterally; the owner confirmed \"for this PR only,\" so I reverted the banners to in-place edits scoped strictly to this PR, left the broader convention docs untouched, re-ran the gate (green), pushed, and synced the PR description. A human then reviewed and merged #295. Both PRs from this run are now merged; no needs-triage issue was needed anywhere in the sweep."
 prs:
   - "294"
   - "295"
@@ -52,13 +52,16 @@ frictions:
     solution: Fixed via an in-place correction on ADR-0010 (#295)
     severity: moderate
   - description: The repo owner's PR feedback asked for a fix style (rewrite ADRs in place) that conflicts with the documented amend-only convention; no AskUserQuestion tool was available in this session to confirm scope interactively
-    solution: Used a PR comment as the clarifying-question channel instead, which worked fine since the reviewer was actively commenting there — but it's worth noting this session type has no synchronous ask path
+    solution: Used a PR comment as the clarifying-question channel instead, which worked fine since the reviewer was actively commenting there — worth noting this session type has no synchronous ask path
     severity: nit
-durationSec: 7079
+  - description: Whether 'pure factual correction vs. decision reversal' should become the repo's general ADR-editing rule was left unresolved — the owner scoped their answer to this PR only
+    solution: A future session (or the owner directly) should decide whether to generalize this into CLAUDE.md/ADR-0018/audit-docs/SKILL.md, or leave amendment banners as the default elsewhere
+    severity: minor
+durationSec: 11108
 models:
-  claude-sonnet-5: 198
+  claude-sonnet-5: 217
 toolCounts:
-  Bash: 37
+  Bash: 38
   ToolSearch: 3
   mcp__github__list_pull_requests: 1
   Read: 14
@@ -68,13 +71,15 @@ toolCounts:
   Edit: 17
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 7
   mcp__github__merge_pull_request: 1
   mcp__github__add_issue_comment: 2
-  mcp__Claude_Code_Remote__send_later: 3
+  mcp__Claude_Code_Remote__send_later: 4
   Skill: 1
   PushNotification: 2
   mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__list_triggers: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/close-session/SKILL.md
   - .agents/skills/log-session/SKILL.md
