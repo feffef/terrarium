@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01QxbZmeszT6mQtUEMMU5Pnk
 startedAt: 2026-07-11T16:01:18Z
-endedAt: 2026-07-11T20:04:04Z
+endedAt: 2026-07-11T20:24:16Z
 kind: interactive
 goal: Write Blog post via three-candidate review
-status: in-review
-outcome: "Revised Kevin post shipped in clean PR #328; CI blocked by runner billing"
+status: completed
+outcome: "Revised Kevin post merged via PR #328; old branch/PR discarded"
 summary: "Human-invoked `/blog-post` (no persona). Ran the Section-A candidate process: gathered material from 100 commits, session logs, and sibling posts; drafted three distinct standalone candidates (David on the public-readiness review #326, Karen on the six retired recurring frictions #313-#318, Kevin on the git-based recent-prs helper #319/#321). A fresh Sonnet outside-reader ranked the Kevin draft the most self-contained; I revised it, cleared local `pnpm gate`, and opened gated PR #327. On follow-up asks the human had me add the David candidate to that PR, then revise Kevin's post (lighter intro, token+reliability, the deterministic-code-vs-judgment theme), then discard that branch/PR entirely in favour of a clean single-post branch. Final state: PR #328 off `origin/main` carries only the revised Kevin post; PR #327 closed and superseded; Karen's draft uncommitted. Every fact/link verified against the issue, PR, and file on disk. All work was the human's direct asks; no net-new autonomous work."
 prs:
   - "328"
@@ -31,14 +31,14 @@ frictions:
   - description: "CI gate on PR #327 reported failure in 4s with runner_id 0 and 404 logs — the GitHub-hosted runner never started, a billing/dispatch block, not a real test failure."
     solution: Known condition documented in commit 73722bd; resolve Actions billing or flip repo public (free standard runners) per docs/research. Not fixable by editing the post. Local `pnpm gate` passed fully.
     severity: moderate
-  - description: Deleting the old remote branch claude/blog-post-1hd2op failed repeatedly — `git push --delete` disconnects mid-sideband via the proxy, though create-push/fetch/ls-remote all work.
-    solution: "No GitHub-MCP delete-branch tool exists to route around it. Left the orphaned branch (its PR #327 is closed, so nothing references it) to prune later. Proxy quirk specific to git delete-ref pushes."
+  - description: "`git push --delete` of the old branch reported a mid-sideband disconnect on every attempt (client saw failure), yet the delete had actually landed server-side — hidden by the disconnect-after-pack proxy behaviour."
+    solution: Confirmed the real state via the GitHub API (list_branches), not the erroring git client — the branch was already gone. Don't trust a disconnect-after-pack as proof the operation failed; verify against the API. No GitHub-MCP delete-branch tool exists as a cleaner alternative.
     severity: minor
-durationSec: 14565
+durationSec: 15778
 models:
-  claude-opus-4-8: 186
+  claude-opus-4-8: 211
 toolCounts:
-  Bash: 33
+  Bash: 37
   Read: 3
   Write: 7
   Agent: 1
@@ -50,13 +50,14 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 2
   Skill: 2
   mcp__github__get_job_logs: 1
-  mcp__github__actions_get: 3
+  mcp__github__actions_get: 4
   mcp__Claude_Code_Remote__send_later: 6
   mcp__github__update_pull_request: 2
-  Edit: 3
+  Edit: 6
   mcp__github__add_issue_comment: 1
   mcp__github__unsubscribe_pr_activity: 1
-  mcp__Claude_Code_Remote__delete_trigger: 2
+  mcp__Claude_Code_Remote__delete_trigger: 4
+  mcp__github__list_branches: 1
 filesEdited:
   - layers/blog/content/kevin/pages/2026-07-11-it-hit-a-wall-and-built-a-tool.md
   - layers/blog/content/david/pages/2026-07-11-the-glass-is-about-to-go-clear.md
