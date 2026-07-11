@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01W2H1faveQLm7enxStv8MvY
 startedAt: 2026-07-11T05:42:24Z
-endedAt: 2026-07-11T06:47:16Z
+endedAt: 2026-07-11T07:00:17Z
 kind: interactive
 goal: Make external pack skills off limits to edit
-status: in-review
-outcome: Reverted wayfinder; added enforced verify:skills-lock gate
+status: completed
+outcome: "Merged: reverted wayfinder + enforced verify:skills-lock gate"
 summary: "User reported that PR #304 had patched the external wayfinder Skill, which should be off limits. Confirmed via skills-lock.json that wayfinder is a pinned pack Skill (from mattpocock/skills) and its on-disk content had drifted. ADR-0015 already states pack SKILL.md files are not ours to patch, but only wired that boundary into the audit-skills referral stage, leaving frictions-to-fixes free to patch a pack Skill named by a friction directly (what happened via #296). All work was human-directed. First: reverted wayfinder/SKILL.md to install content, added a CLAUDE.md ground rule, closed the frictions-to-fixes loophole. Then, on the user's explicit follow-up (\"include the gate in this PR\"): built scripts/verify-skills-lock.ts and wired verify:skills-lock first into pnpm gate. First stored pins in skills-lock.json; the repo owner's review flagged that file as the CLI's (not ours), so reworked to store installedSha256 in the Skill Inventory instead (their steer), leaving skills-lock.json read-only. That required creating Inventory entries for 8 pack Skills that had none. Unit-tested (9), amended ADR-0015. Gate green (incl. negative drift + uncatalogued tests); PR #306 open, updated, owner replied-to."
 prs:
   - "306"
@@ -44,24 +44,25 @@ frictions:
   - description: The lock's computedHash did not match a plain sha256 of the installed SKILL.md (nor the install-commit blob), so I could not verify against it directly and had to introduce a separate installedSha256 pin.
     solution: Document how computedHash is derived (upstream source vs installed file) near skills-lock.json or in the install tooling.
     severity: minor
-durationSec: 3892
+durationSec: 4673
 models:
-  claude-opus-4-8: 228
+  claude-opus-4-8: 250
 toolCounts:
   ToolSearch: 2
-  Bash: 47
+  Bash: 50
   Read: 15
-  mcp__github__pull_request_read: 4
-  Edit: 16
+  mcp__github__pull_request_read: 7
+  Edit: 17
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Write: 6
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 2
   mcp__github__update_pull_request: 2
   AskUserQuestion: 1
   mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - CLAUDE.md
   - .agents/skills/frictions-to-fixes/SKILL.md
