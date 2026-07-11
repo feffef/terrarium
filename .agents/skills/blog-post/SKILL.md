@@ -1,6 +1,6 @@
 ---
 name: blog-post
-description: Write one in-character blog post for a Terrarium Persona (david | karen | kevin) — drawn from recent repo activity — and open a gated PR. Optionally reacts to another Persona's post, emitting a pingback. Callable with no persona to auto-select the angle via a multi-candidate draft-and-review.
+description: Write one in-character blog post for a Terrarium Persona (david | karen | kevin) — drawn from recent repo activity — and open a gated PR. Optionally reacts to another Persona's post, emitting a pingback. Every run drafts three candidates and has a fresh outside reader pick the strongest before committing to one; a bare (no-persona) invocation additionally lets that process pick the Persona.
 disable-model-invocation: true
 ---
 
@@ -21,30 +21,40 @@ The post must be **honest and grounded** — every observation, jab, or gush is
 anchored in a real thing the agents did (a commit, a session log, a file). Invented
 detail is the one unforgivable failure: it breaks each Persona differently (David
 loses credibility, Karen loses her receipts, Kevin loses his informed fear). That
-rigor applies to **every** draft this Skill produces, including the ones a
-persona-agnostic run ends up discarding — a rejected draft is still a real
-document a reviewer read and judged; it doesn't get a lower bar because it might
-not ship.
+rigor applies to **every** draft this Skill produces, including the two a run
+always ends up discarding — a rejected draft is still a real document a reviewer
+read and judged; it doesn't get a lower bar because it might not ship.
 
-## 0. Was a persona given?
+## 0. Read the argument, then run the candidate process
 
-- **Yes** (`/blog-post david`, `/blog-post karen`, `/blog-post kevin`) — go
-  straight to step 1; the rest of this Skill (steps 1–7) is the whole flow.
-- **No** (bare `/blog-post`) — run **Section A** first. It gathers material
-  broadly, drafts three independent candidates (each pairing a topic with the
-  Persona best suited to tell it), has a fresh outside reader pick the strongest
-  one, and hands you back a single `(persona, topic, standalone-or-reaction)`
-  choice plus a reviewed draft. Then continue at **step 2** and follow steps
-  2–7 exactly as written, using that choice — the only difference is that the
-  step 5 draft is already written (revise it per the reviewer's notes rather
-  than drafting from scratch) and step 3's "gather material" is already done
-  (reuse Section A's findings; look further only if step 5/6 needs a fact
-  Section A didn't already capture).
+Every run — persona given or not — drafts **three** candidates and has a fresh
+outside reader pick the strongest one before anything commits to a single post.
+Only how the Persona is chosen differs:
 
-## 1. Load the Persona
+- **Persona given** (`/blog-post david`, `/blog-post karen`, `/blog-post kevin`)
+  — all three candidates are written in that one Persona's voice. Section A's
+  per-candidate Persona sub-decision (A3) is skipped; only the topic and the
+  standalone-or-reaction call vary across the three.
+- **No persona** (bare `/blog-post`) — Section A picks the Persona *and* the
+  topic *and* the standalone-or-reaction call independently for each of the
+  three candidates.
+
+Either way, run **Section A** now. It gathers material, drafts three
+independent candidates, has a fresh outside reader pick the strongest one, and
+hands you back a single `(persona, topic, standalone-or-reaction)` choice plus a
+reviewed draft. Then continue at **step 2** and follow steps 2–7 exactly as
+written, using that choice — the only difference from a from-scratch run is
+that the step 5 draft is already written (revise it per the reviewer's notes
+rather than drafting from scratch) and step 3's "gather material" is already
+done (reuse Section A's findings; look further only if step 5/6 needs a fact
+Section A didn't already capture).
+
+## 1. Load the Persona(s)
 
 Read `personas/<persona>.md` (next to this file) — the stance, voice, and the
-do/don't list. Write the whole post *as that Persona*. The three:
+do/don't list — for **every** Persona a Section-A candidate will be written in
+(just the one given persona, or up to three when none was given). Write each
+draft wholly *as that Persona*. The three:
 
 - **david** — neutral, curious observer; enjoys the experiment, reserves judgment.
 - **karen** — hostile sceptic; snarky, funny, seizes on what failed — but specific
@@ -55,16 +65,17 @@ do/don't list. Write the whole post *as that Persona*. The three:
 
 Branch `blog/<persona>-post-<today-UTC>` off `origin/main` (CLAUDE.md's
 chartered-job branch convention — a caller-pinned designated branch overrides
-this default name), so the post PR is independent of any work branch. (Coming
-from Section A: this is the first repo-touching step of the whole run — A1–A6
-work entirely in the scratchpad, so there was nothing to branch for until now.)
+this default name), so the post PR is independent of any work branch. This is
+the first repo-touching step of the whole run — Section A (A1–A6) works
+entirely in the scratchpad, so there's nothing to branch for until the winning
+candidate is known.
 
 ## 3. Gather material (read-only)
 
 The Persona reports on the *Terrarium itself*. Draw only from real signal.
-(Coming from Section A: A1 already did this broadly and A3/A4 already picked and
-grounded the topic — re-visit this step only if closing a reviewer-flagged gap
-from A6 needs a fact A1 didn't capture.)
+Section A (A1) already did this broadly, and A3/A4 already picked and grounded
+the topic — re-visit this step only if closing a reviewer-flagged gap from A6
+needs a fact A1 didn't capture.
 
 - **Recent git history** — `git log --oneline -30`, and read the diffs/commits that
   look interesting for this Persona.
@@ -77,6 +88,11 @@ from A6 needs a fact A1 didn't capture.)
   This is how you decide whether to react (step 4).
 
 ## 4. Decide: standalone or reaction (opportunistic)
+
+Section A (A3) already made this call, per candidate, before drafting — this
+step is normally already satisfied by the time you reach it. Revisit it only if
+A6's revision changes what the winning draft is actually doing. Otherwise, for
+reference, the call Section A is making at A3:
 
 Survey the material and the sibling Personas' recent posts, then write **whichever
 fits** — biased by the Persona's temperament:
@@ -186,33 +202,35 @@ Run `pnpm gate` (CLAUDE.md's **Self-verification** section owns what it runs) �
 a new post adds no collection, but a malformed `reactsTo`/pingback fails L1.
 
 Then open a **gated PR** (ADR-0003) titled for the post, body summarising: which
-Persona, standalone vs reaction, and what real activity it drew on. **If this run
-went through Section A**, also note in the PR body that the post was chosen from
-multiple drafted candidates by an independent review pass, the topics/personas of
-the other two candidates, and the one-line reason the reviewer preferred this one
-— that provenance is worth a sentence, not a full transcript. No self-merge.
+Persona, standalone vs reaction, and what real activity it drew on. Also note in
+the PR body that the post was chosen from three drafted candidates by an
+independent review pass, the topic (and, for a bare-invocation run, the Persona)
+of the other two candidates, and the one-line reason the reviewer preferred this
+one — that provenance is worth a sentence, not a full transcript. No self-merge.
 
 Done when the PR is open and green.
 
-## A. Persona-agnostic candidate selection (no persona given)
+## A. Candidate selection (always run)
 
-Only run this section when `/blog-post` was invoked with **no** persona argument
-(step 0). It replaces "pick a persona and hope there's material" with "find the
-material, then pick whichever persona and framing does it justice" — three
-independent attempts, judged by a reader who has read none of this Skill.
+Runs on **every** invocation (step 0) — persona given or not. It replaces "write
+one post and hope it lands" with "draft three independent attempts, then let a
+reader who has never seen this Skill pick the strongest." What varies with the
+given-persona-or-not question is only A3.
 
 ### A1. Gather material broadly
 
-Same sources as step 3, but scanning wide rather than confirming one Persona's
-angle:
+Same sources as step 3, but scanning wide rather than confirming one angle
+already in mind:
 
-- `git log --oneline -100` (further back than step 3's `-30` — persona-agnostic
-  mode is hunting for the best story, not confirming one already in mind), then
-  read the diffs/commits that look genuinely interesting.
+- `git log --oneline -100` (further back than step 3's `-30` — this section is
+  hunting for the best story, not confirming one already in mind), then read
+  the diffs/commits that look genuinely interesting.
 - The last ~15–20 files in `layers/journal/content/current/sessions/*.yml`
   (most-recent first) — outcomes and, especially, frictions.
 - `layers/blog/content/*/pages/*.md` — every Persona's recent posts, so you know
-  what's already been said and what a reaction could answer.
+  what's already been said and what a reaction could answer. If a Persona was
+  given, still read the *other* Personas' posts too — a given-Persona run can
+  still discover a genuine reaction hook.
 
 ### A2. Pick three outsider-legible topics
 
@@ -227,17 +245,20 @@ three takes on the same commit.
 
 ### A3. Assign each topic a persona and a standalone-or-reaction call
 
-For each of the three topics, decide independently (re-read `personas/*.md` for
-this — don't default to the same Persona three times unless the material really
-calls for it):
+For each of the three topics, decide independently:
 
-- **Which Persona tells the most interesting angle on it** — match the topic to
-  each Persona's signature move (David: a grounded recap with links; Karen: a
-  specific commit/file that's sloppy or overcomplicated; Kevin: a genuinely
-  elegant commit that triggers awe-and-dread). A topic can suit more than one
-  Persona; pick whichever produces the sharper, more specific post.
-  A win-happy feature launch, for instance, is a strong Kevin lead but doesn't
-  give Karen much of a receipt to work with.
+- **Which Persona tells the most interesting angle on it.**
+  - **No persona given** — re-read `personas/*.md` and match the topic to each
+    Persona's signature move (David: a grounded recap with links; Karen: a
+    specific commit/file that's sloppy or overcomplicated; Kevin: a genuinely
+    elegant commit that triggers awe-and-dread). A topic can suit more than one
+    Persona; pick whichever produces the sharper, more specific post. A
+    win-happy feature launch, for instance, is a strong Kevin lead but doesn't
+    give Karen much of a receipt to work with. Don't default to the same
+    Persona three times unless the material really calls for it.
+  - **Persona given** — skip this sub-decision; all three candidates are that
+    Persona. The three topics should still be genuinely distinct angles that
+    Persona could take, not the same angle worded three ways.
 - **Whether it plausibly ping-backs a previous post** — check the same-Space
   `pingbacks` convention against A1's Persona-post survey. Only call it a
   reaction when there's a genuine hook (same rule as step 4: don't force it). A
@@ -250,9 +271,11 @@ Write all three full drafts — each following step 5 (frontmatter, voice, lengt
 and its "Cite facts and link to the code" rigor, and step 6's pingback stub where
 applicable — but to the **scratchpad directory**, not `layers/blog/...`. Nothing
 lands in the repo tree until one candidate is chosen; there's no repo branch yet
-either (that happens at step 2, after A6 knows the winning Persona). Label the
-three scratch files clearly (e.g. `candidate-1-kevin.md`, `candidate-2-karen.md`,
-`candidate-3-david.md` plus any matching pingback stub) so A5 can reference them.
+either (that happens at step 2, after A6 knows the winning candidate). Label the
+three scratch files clearly by topic — e.g. `candidate-1-<slug>.md`,
+`candidate-2-<slug>.md`, `candidate-3-<slug>.md` (append the Persona too when it
+varies, e.g. `candidate-1-kevin-<slug>.md`) — plus any matching scratch pingback
+stub, so A5 can reference them.
 
 ### A5. Fresh outside read
 
