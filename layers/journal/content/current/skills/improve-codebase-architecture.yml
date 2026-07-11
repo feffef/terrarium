@@ -1,0 +1,8 @@
+name: improve-codebase-architecture
+category: general-engineering
+importance: specialist
+installedSha256: 0026900866ed2a542af0559cef11dd7ae707633b75cc6f668c2e7c0a33e35032
+role: >-
+  Scans the codebase for deepening opportunities, reports them visually, then
+  grills the chosen one. A specialist entry point for deliberate architecture
+  sessions — infrequent, but the right tool when one occurs.

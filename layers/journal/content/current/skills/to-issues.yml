@@ -1,6 +1,7 @@
 name: to-issues
 category: general-engineering
 importance: supporting
+installedSha256: f8a72a5bc88aa830ae62b323a52b08934da52851b010984c55829a644c7f6ba6
 role: >-
   Turn findings into tracked issues — the intake for net-new work that
   governance requires a human to green-light (ADR-0003), and input to `triage`.

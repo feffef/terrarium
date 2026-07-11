@@ -71,7 +71,15 @@ and **(c) the subagent's own frictions** from the run.
 
 ## 2. Screen against fixes already shipped (the subagent's rules)
 
-Never re-fix what is already fixed. The §1 subagent applies these rules to every
+Never re-fix what is already fixed. **First, drop what isn't ours to change:** a
+candidate whose only fix edits an **external pack Skill's `SKILL.md`** (any name
+keyed in `skills-lock.json`) is off limits — a re-install clobbers the edit, so the
+fix belongs upstream, not here (ADR-0015; CLAUDE.md "Skills … off limits to edit").
+Drop it with that reason (a repo-specific fit-note can still go to that Skill's
+Inventory entry, but that's `audit-skills`' job, not a friction fix). `pnpm gate`
+enforces this (`verify:skills-lock`) — an impl agent that edits a pack Skill's
+SKILL.md fails the gate, so screening it out here just avoids the wasted round-trip. Then, for the
+rest: the §1 subagent applies these rules to every
 candidate, checking the tracker for an issue or PR that already covers it — and
 confirming against **`main`** where cheap (a "solution" isn't ripe if main already
 has it). `pnpm exec tsx scripts/merged-since.ts <friction session's startedAt>` lists every
@@ -144,9 +152,10 @@ Dispatch the implementation to **Sonnet** agents (`model: sonnet`) — the impl 
 is well-scoped once §4 named the fix, so it doesn't need the main model. Each agent
 runs in its **own git worktree** (parallel PRs must not share a working tree):
 
-- **Doc-only fixes** (Markdown / prose — CLAUDE.md, a SKILL, a Skill Inventory entry):
-  hand them **all to one agent as a single grouped PR** that `Closes` every one of
-  their issues. Many one-line doc PRs are pure review overhead; one batched PR is
+- **Doc-only fixes** (Markdown / prose — CLAUDE.md, a **repo-owned** SKILL, a Skill
+  Inventory entry): hand them **all to one agent as a single grouped PR** that
+  `Closes` every one of their issues. **Never an external pack Skill's `SKILL.md`**
+  (a `skills-lock.json` name) — those are off limits (screened out in §2). Many one-line doc PRs are pure review overhead; one batched PR is
   cheaper to review and still traces back to each issue.
 - **Code or config fixes**: one PR each — they carry distinct review and CI surface
   and shouldn't ride on each other. (A single issue that already grouped related

@@ -17,7 +17,8 @@
     "test": "nuxt prepare && vitest run tests/unit",
     "test:e2e": "vitest run tests/e2e",
     "validate:content": "tsx scripts/validate-content.ts",
-    "gate": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e"
+    "verify:skills-lock": "tsx scripts/verify-skills-lock.ts",
+    "gate": "pnpm verify:skills-lock && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e"
   },
   "dependencies": {
     "@nuxt/content": "^3.7.1",

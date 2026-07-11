@@ -72,7 +72,19 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   only low-risk surface. "Human-only" gates *merging*, not editing:
   `content.config.ts` is hand-editable (below), but a PR touching it still
   needs a human to merge.
-- **Skills** are generic, repo-committed, and first-class (ADR-0005).
+- **Skills** are generic, repo-committed, and first-class (ADR-0005). But the
+  **external pack Skills** — the ones keyed in `skills-lock.json` (installed from
+  `mattpocock/skills`) — are **off limits to edit**: their `SKILL.md` is not ours
+  to patch, because a re-install clobbers any local edit (ADR-0015). Treat those
+  files as read-only — layer repo-specific guidance in the Skill Inventory entry
+  (`role`/`importance`) or a doc that references them, never by editing the pack
+  file; a genuine improvement to a pack Skill belongs upstream. Only our own
+  Skills (those *not* in `skills-lock.json`) are agent-editable. This is
+  **gate-enforced**: `pnpm verify:skills-lock` (part of `pnpm gate`) pins each
+  pack Skill's installed `SKILL.md` hash in its **Skill Inventory** entry
+  (`installedSha256`) and fails on any drift — `skills-lock.json` is the
+  installer's file and is left untouched (read-only, only for the pack's key set).
+  After a *legitimate* pack install, re-pin with `pnpm verify:skills-lock --write`.
 - Runtime routing is by path prefix `/t/<tenant>/<space>/<slug>` (ADR-0006). The
   routing map is derived at build time from the manifests via `modules/routing.ts`
   and exposed as the `#routing` virtual module (ADR-0014) — no committed `GENERATED`

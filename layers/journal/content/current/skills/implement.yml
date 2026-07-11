@@ -1,6 +1,7 @@
 name: implement
 category: general-engineering
 importance: supporting
+installedSha256: 5b55552c4a0d90fe15c9ee44abce4498faa03b73e332024e30ab69c2b7065770
 role: >-
   Drives end-to-end implementation of an already-triaged, green-lit issue via
   `/implement`. Used for #212, #211, #209 — but skipped for two other in-window

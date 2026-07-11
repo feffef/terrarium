@@ -1,6 +1,7 @@
 name: domain-modeling
 category: general-engineering
 importance: essential
+installedSha256: 152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa579
 role: >-
   Owns the CONTEXT.md glossary and the ADR conventions — CONTEXT.md's own
   canonical `essential` example. Use before any structural change or ADR
