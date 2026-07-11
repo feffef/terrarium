@@ -157,13 +157,15 @@ const currentPhase = computed(
 )
 const phaseLabelText = computed(() => `${props.specimenLabel ?? 'this inhabitant'} phase`)
 const valueText = computed(() => {
-  const base = `day ${day.value}, season ${season.value.label}`
-  return currentPhase.value ? `${base}; ${phaseLabelText.value}: ${currentPhase.value.label}` : base
+  const s = `season ${season.value.label}, day ${day.value}`
+  return hasPhases.value && currentPhase.value
+    ? `${phaseLabelText.value}: ${currentPhase.value.label}; ${s}`
+    : s
 })
 const dialLabel = computed(() =>
-  props.wing
-    ? "the wing's almanac — turn it to read the year season by season"
-    : 'the almanac dial — turn it to read the field note season by season',
+  hasPhases.value
+    ? 'the almanac dial — turn it to read the field note phase by phase'
+    : "the wing's almanac — turn it to read the year season by season",
 )
 
 // ── The needle ───────────────────────────────────────────────────────────────
@@ -213,10 +215,14 @@ function endScrub(e: PointerEvent) {
   scrubbing.value = false
   // A lifted touch pointer no longer exists — release only what is still held.
   if (svgEl.value?.hasPointerCapture(e.pointerId)) svgEl.value.releasePointerCapture(e.pointerId)
-  // A tap (no real travel) is a season pick: snap to the tapped season's
-  // midpoint so the needle "clicks in" rather than parking on an odd day. A
-  // real drag keeps the day the reader scrubbed to.
-  if (!moved) setDay(spanMidpoint(seasonOf(day.value).span))
+  // A tap (no real travel) snaps the needle to the midpoint of the unit it
+  // picked — this specimen's phase when the dial drives phases (the essay's
+  // axis), otherwise the season — so it "clicks in" rather than parking on an
+  // odd day. A real drag keeps the day the reader scrubbed to.
+  if (!moved) {
+    const span = hasPhases.value && currentPhase.value ? currentPhase.value.span : seasonOf(day.value).span
+    setDay(spanMidpoint(span))
+  }
   commitDayToUrl()
 }
 
@@ -234,6 +240,18 @@ function adjacentSeasonDay(step: 1 | -1): number {
   return Math.round(spanMidpoint(GLASS_SEASONS[(i + step + n) % n]!.span))
 }
 
+// PageUp/PageDown step by whole UNITS: this specimen's phases when the dial
+// drives them (so the reader pages through the creature's own arc), else the
+// shared seasons (the biome-landing dial). Phases ordered by span start.
+function adjacentUnitDay(step: 1 | -1): number {
+  const ps = props.phases ?? []
+  if (!hasPhases.value || ps.length === 0) return adjacentSeasonDay(step)
+  const ordered = [...ps].sort((a, b) => a.span[0] - b.span[0])
+  const i = ordered.findIndex((p) => p.name === currentPhase.value?.name)
+  const idx = (((i < 0 ? 0 : i) + step) % ordered.length + ordered.length) % ordered.length
+  return Math.round(spanMidpoint(ordered[idx]!.span))
+}
+
 function onKeydown(e: KeyboardEvent) {
   let next: number
   switch (e.key) {
@@ -246,10 +264,10 @@ function onKeydown(e: KeyboardEvent) {
       next = day.value - 1
       break
     case 'PageUp':
-      next = adjacentSeasonDay(1)
+      next = adjacentUnitDay(1)
       break
     case 'PageDown':
-      next = adjacentSeasonDay(-1)
+      next = adjacentUnitDay(-1)
       break
     case 'Home':
       next = today
@@ -275,7 +293,7 @@ function commitDayToUrl() {
 </script>
 
 <template>
-  <figure class="atlas-almanac" :class="{ 'is-scrubbing': scrubbing, 'is-wing': wing }">
+  <figure class="atlas-almanac" :class="{ 'is-scrubbing': scrubbing, 'is-wing': wing, 'is-phase-mode': hasPhases }">
     <svg
       ref="svgEl"
       viewBox="0 0 360 360"
@@ -467,16 +485,16 @@ function commitDayToUrl() {
     </svg>
 
     <figcaption class="wcap" aria-hidden="true">
-      <p class="wread">
+      <!-- On a specimen the dial drives the creature's own phases (the essay's
+           axis, read first); the season is shown beneath as informational
+           context. The biome-landing dial has no phases and reads season-only. -->
+      <p v-if="hasPhases" class="wread wphase-row">
+        <span class="wlabel">{{ phaseLabelText }}</span>
+        <span class="wval"><span class="wphase">{{ currentPhase ? currentPhase.label : '—' }}</span></span>
+      </p>
+      <p class="wread wseason-row">
         <span class="wlabel">season</span>
         <span class="wval"><span class="wseason">{{ season.label }}</span><span class="wday">d. {{ day }}</span></span>
-      </p>
-      <p v-if="!wing && hasPhases" class="wread wphase-row">
-        <span class="wlabel">{{ phaseLabelText }}</span>
-        <span class="wval"><span class="wphase">{{ currentPhase ? currentPhase.label : 'at rest this season' }}</span></span>
-      </p>
-      <p v-if="!wing && !hasPhases" class="wempty">
-        No phases recorded yet; the wheel turns for this inhabitant all the same.
       </p>
       <slot name="caption" />
     </figcaption>
