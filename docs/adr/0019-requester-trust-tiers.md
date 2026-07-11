@@ -42,14 +42,14 @@ autonomy tier (ADR-0003) and blast-radius tier (ADR-0004).
 
 ## Decision
 
-**Two Principal tiers, drawn at write access.**
+**Two tiers, drawn at write access.**
 
-- **Trusted Principal** — a Principal with **write access** to the repository:
-  the owner and the small set of invited collaborators. A Trusted Principal is
-  interchangeable with the owner for governance purposes: they may initiate
-  interactive work, give the ADR-0003 net-new green-light, and review/merge
-  gated PRs (the "no self-merge" rule and ADR-0004's human-only surfaces are
-  unchanged — but the "human" they require is *any* Trusted Principal).
+- **Trusted** — a user with **write access** to the repository: the owner and
+  the small set of invited collaborators. A Trusted user is interchangeable with
+  the owner for governance purposes: they may initiate interactive work, give the
+  ADR-0003 net-new green-light, and review/merge gated PRs (the "no self-merge"
+  rule and ADR-0004's human-only surfaces are unchanged — but the "human" they
+  require is *any* Trusted user).
 - **Public** — everyone else: read-only visitors with no write access. On a
   public repo they can still **open issues and open pull requests from forks**.
   They cannot direct agents, cannot green-light work, and cannot merge.
@@ -91,19 +91,19 @@ harness already frames webhook/external content:
 2. **No agent implementation from a Public request without a Trusted green-light.**
    A Public issue is never itself an ADR-0003 green-light. Turning a Public
    request into actual work — even a "small fix," even a chartered `triage` job —
-   requires a Trusted Principal to green-light it first. Until then the agent's
+   requires a Trusted user to green-light it first. Until then the agent's
    only output is triage (label + honest summary for a human).
 3. **Public-originated PRs are human-merged, never auto-merged** — regardless of
    blast-radius classification (this removes the ADR-0004 low-risk auto-merge
    tier for Public authors). Executable code in a fork PR (Vue components, scripts,
    workflows, dependencies) gets a **genuine security review** by a Trusted
-   Principal, never a gate rubber-stamp — the gate is blind to malicious runtime
+   user, never a gate rubber-stamp — the gate is blind to malicious runtime
    behaviour by design (ADR-0004's own untested-behaviour blind spot).
 4. **The `subscribe_pr_activity` autofix loop obeys the same rule.** On a
    Public-authored comment it may diagnose, but must **escalate to a human**
    rather than auto-push a fix the comment asked for.
 
-**What stays exactly as today.** For Trusted-Principal-driven work, nothing
+**What stays exactly as today.** For Trusted-user-driven work, nothing
 changes: ADR-0003's autonomy tiers and ADR-0004's blast-radius tiers and
 human-only surfaces apply unaltered. This ADR only adds the provenance axis;
 it does not loosen any existing control.
@@ -117,7 +117,7 @@ turned on when the repo goes public:
 
 - **Require approval to run fork-PR workflows** for all outside contributors
   (Actions setting) — so untrusted code never executes in CI without a Trusted
-  Principal's click. (Note `pull_request_target`/`workflow_run` bypass this — the
+  user's click. (Note `pull_request_target`/`workflow_run` bypass this — the
   repo must keep using plain `pull_request`; see `docs/research/making-repo-public.md`.)
 - **Human-only merge for Public-originated PRs** (rule 3), detectable via
   `authorAssociation`.
@@ -131,13 +131,13 @@ turned on when the repo goes public:
 ADR as the single home for the requester-trust axis, not a restatement:
 
 - **`CONTEXT.md` → Agent Authorship**: "Humans converse, direct, and review"
-  refined so *Trusted* Principals do; Public visitors only **report** (open
-  issues / fork PRs), and agents treat Public input as untrusted data.
-- **`CONTEXT.md` glossary**: added **Principal**, **Trusted Principal**, and
-  **Public** as `### Term` entries (glossary-only, per `domain-modeling`).
-  Load-bearing in ≥2 governance surfaces, clearing the repo's rule-of-two.
+  refined so *Trusted* users do; Public visitors only **report** (open issues /
+  fork PRs), and agents treat Public input as untrusted data.
+- **`CONTEXT.md` glossary**: added **Trusted** and **Public** as `### Term`
+  entries (glossary-only, per `domain-modeling`). Load-bearing in ≥2 governance
+  surfaces, clearing the repo's rule-of-two.
 - **ADR-0003**: amending note — the "human green-light" for net-new work is a
-  **Trusted Principal** green-light; a Public issue never is one.
+  **Trusted** green-light; a Public issue never is one.
 - **ADR-0004**: amending note — the provenance axis: a Public-originated PR is
   human-merged regardless of file classification; the low-risk auto-merge tier
   does not apply to Public authors.
@@ -153,7 +153,7 @@ ADR as the single home for the requester-trust axis, not a restatement:
   which is why rule 3 (no auto-merge for Public work) is non-negotiable even
   though rules 1–2 are convention.
 - **Shared-credential blind spot.** A Public user driving a session through a
-  Trusted Principal's own connector would read as Trusted and the input screen
+  Trusted user's own connector would read as Trusted and the input screen
   could not fire — only the merge backstop remains. Same limit as ADR-0017 / #124
   (bot identity); out of scope here.
 - **Two tiers, not a spectrum.** All non-write associations collapse to Public and

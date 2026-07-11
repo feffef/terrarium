@@ -54,7 +54,7 @@ Actions logs, and the agent workflow's attack surface.**
      `pnpm install --frozen-lockfile --ignore-scripts` in the deploy path.
 
    → **Addressed** — **ADR-0019** (accepted) draws the trust line at write
-   access: Trusted Principals (write access) vs. Public (read-only), whose
+   access: Trusted (write access) vs. Public (read-only), whose
    issues/PRs agents treat as untrusted input — never implemented without a
    Trusted green-light, never auto-merged. The mechanical half (fork-PR workflow
    approval + human-only merge for Public PRs) still needs enabling at the flip.

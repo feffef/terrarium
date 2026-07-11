@@ -74,7 +74,7 @@ Status: Accepted
 > gate is blind to malicious runtime behaviour by design). Enforcement note: the
 > gate/CI boundary is where this is mechanically enforceable (require fork-PR
 > workflow approval; human-only merge for Public PRs), so untrusted code never
-> runs in CI or lands without a **Trusted Principal**'s action. See ADR-0019.
+> runs in CI or lands without a **Trusted** user's action. See ADR-0019.
 
 ## Context
 
