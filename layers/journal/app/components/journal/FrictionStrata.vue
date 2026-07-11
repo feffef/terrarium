@@ -1,6 +1,7 @@
 <script setup lang="ts">
-// Frictions rendered as soil strata — the accumulated sediment the future
-// `codify`/`consolidate` jobs mine (CONTEXT.md). `full` is the panel readout
+// Frictions rendered as soil strata — the accumulated sediment the
+// self-improvement Skills mine (`frictions-to-fixes` today; CONTEXT.md:
+// Friction). `full` is the panel readout
 // (strata + legend); `inline` is the compact per-session bar on a card.
 import type { Severity } from '../../types/journal'
 

@@ -7,7 +7,7 @@ disable-model-invocation: true
 # atlas-specimen
 
 Add **one specimen** (or an interaction, or an observation) to the **Atlas of the
-Terrarium** — the design-heavy field-guide Tenant (PRD #64; CONTEXT.md: Atlas,
+Terrarium** — the design-heavy field-guide Tenant (PRD #64; layers/atlas/CONTEXT.md:
 Biome, Specimen, Interaction, Observation). A specimen is the Atlas's atomic unit
 of contribution: one Markdown file carrying the museum-label record in its
 frontmatter, the field-note essay in its body, and the engraved plate as an inline

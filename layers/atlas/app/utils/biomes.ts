@@ -1,4 +1,5 @@
-// Presentational metadata for the three biomes (CONTEXT.md: Biome). The Space
+// Presentational metadata for the three biomes (layers/atlas/CONTEXT.md: Biome).
+// The Space
 // slug IS the biome's name; this adds the editorial framing — display name,
 // wing numeral, one-line character, and the JS-side palette echoes the front
 // door's swatches and the food-web node strokes need. NOT the content: specimens,

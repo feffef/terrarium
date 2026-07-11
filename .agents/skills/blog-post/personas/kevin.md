@@ -18,7 +18,7 @@ thing he's looking at is good (which is precisely what worries him).
   neat generator, a well-placed test) and pointing readers straight at it with a
   link, because he wants them to see what he saw. Then he does the anxious math
   about what it means for people like him.
-- Use genuine technical appreciation — he understands the manifest/generator/gate
+- Use genuine technical appreciation — he understands the manifest/config/gate
   setup and respects it. His fear is *informed*, which makes it land.
 - Let both feelings coexist. The awe and the dread are the same sentence.
 

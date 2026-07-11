@@ -7,24 +7,32 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 
 ## Read these first
 
-- **`CONTEXT.md`** — the domain model and ubiquitous language. Use these exact
-  terms (Platform, Tenant, Space, Collection, Document, Skill, …). If you catch
-  yourself using a word that conflicts with the glossary, stop and reconcile it.
+- **`CONTEXT-MAP.md`, then `CONTEXT.md`** — the domain model and ubiquitous
+  language. The repo is **multi-context** (ADR-0021): the map indexes the
+  contexts; root `CONTEXT.md` is the **Platform context** (the terms every agent
+  needs regardless of task — Platform, Tenant, Space, Collection, Document, Skill,
+  …) plus a **Tenants** roster. A Tenant's own vocabulary and purpose live in
+  **`layers/<tenant>/CONTEXT.md`** — read that too when you work on that Tenant.
+  If you catch yourself using a word that conflicts with a glossary, stop and
+  reconcile it.
 - **`docs/adr/`** — Architecture Decision Records. **Read *all* of them before
   any planning or structural work.** The set is deliberately kept small, and each
   records a decision that is easy to violate by accident. Don't rely on a
   hand-maintained list of ADRs anywhere (it rots) — read the directory.
 - **Skills** live in `.agents/skills/` (surfaced through `.claude/skills/`
-  symlinks). The **`domain-modeling`** skill owns the conventions for the two
-  files above: `CONTEXT.md` stays **glossary-only** (no implementation detail),
-  and it defines the 3-part test for *when* a decision earns an ADR — **hard to
+  symlinks). The **`domain-modeling`** skill owns the conventions for the domain
+  docs above: each `CONTEXT.md` glossary stays free of implementation detail
+  (per-Tenant contexts add a short purpose narrative on top — ADR-0021), and it
+  defines the 3-part test for *when* a decision earns an ADR — **hard to
   reverse · surprising without context · a real trade-off**. Note: this repo
-  diverges from that skill's generic templates in two ways — every ADR uses the
+  diverges from that skill's generic templates in three ways — every ADR uses the
   fuller `Context / Decision / Consequences` form (not the skill's minimal
-  template), and `CONTEXT.md` is a `## Glossary` of `### Term` entries (not the
-  skill's `## Language`/`_Avoid_` layout); match the repo's actual files. This
-  repo's **rule of two** for new vocabulary (coin a glossary/ADR term only on a
-  concept's *second* instance) is defined in `docs/agents/domain.md`,
+  template); a `CONTEXT.md` is a `## Glossary` of `### Term` entries (not the
+  skill's `## Language`/`_Avoid_` layout); and the repo is multi-context with a
+  Platform context plus per-Tenant contexts co-located under `layers/` (ADR-0021;
+  the shape is documented in `docs/agents/domain.md`). Match the repo's actual
+  files. This repo's **rule of two** for new vocabulary (coin a glossary/ADR term
+  only on a concept's *second* instance) is defined in `docs/agents/domain.md`,
   complementing that skill's 3-part test.
 - **Which Skills to actually use** is curated in the `journal` Tenant's **Skill
   Inventory** — `layers/journal/content/current/skills/`, rendered at
@@ -306,8 +314,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 ## Repo layout
 
 ```
-CONTEXT.md                          # domain model / ubiquitous language (glossary only)
+CONTEXT-MAP.md                      # multi-context index: contexts + relationships (ADR-0021)
+CONTEXT.md                          # the Platform context (glossary) + the Tenants roster
 docs/adr/                           # Architecture Decision Records (read all before planning)
+layers/<tenant>/CONTEXT.md          # that Tenant's own vocabulary + purpose (ADR-0021)
 layers/<tenant>/tenant.config.ts    # the manifest an agent edits (declarative intent)
 layers/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Space
                                     #   (Tenant layers live under Nuxt's `layers/`, auto-extended — ADR-0018)
@@ -404,7 +414,7 @@ download) — it's the lower-level capture that `preview.ts shot` uses under the
 To **add a Space or Collection**: edit the Tenant's `tenant.config.ts`. The keyed
 collections update automatically via `content.config.ts`, and the routing map
 (`#routing`) is re-derived at the next `nuxt prepare`/`build`. No regenerate step
-needed. To **spawn a Tenant**: drop a `layers/<name>/` folder with a manifest and
+needed. To **add a Tenant**: drop a `layers/<name>/` folder with a manifest and
 content, then run `pnpm install` (or `nuxt prepare`) to pick it up — Nuxt
 auto-extends every `layers/*`, so no `nuxt.config.ts` `extends` edit is needed
 (ADR-0018).
@@ -412,7 +422,8 @@ auto-extends every `layers/*`, so no `nuxt.config.ts` `extends` edit is needed
 ## Logging your session
 
 Every session ends with an honest **session log** in the Journal (ADR-0009,
-issue #2) — the raw signal the future `consolidate`/`codify` jobs mine. A log
+issue #2) — the raw signal the self-improvement Skills mine (`frictions-to-fixes`
+today). A log
 has two halves (ADR-0009 amendment): the **mechanical** trace (timings, models,
 tools, files read/edited, subagents) is **derived from the transcript** by a
 committed hook — never self-reported; the **interpretive** half (goal, outcome,
