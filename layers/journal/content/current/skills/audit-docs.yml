@@ -3,8 +3,9 @@ category: platform-operation
 importance: supporting
 role: >-
   The prose counterpart to `audit-skills`: a one-shot, autonomous sweep that
-  audits every live doc and Skill for drift, duplication, contradiction, and
-  ambiguity against the code, fact-checks each finding, then fixes it bravely and
+  audits every live doc and Skill for correctness, single-homing, concision, and
+  clarity against the code (eight lenses in four paired reviewer agents),
+  fact-checks each finding, then fixes it bravely and
   self-merges its own gated PR on green (ADR-0003 amendment; ADR-0004's
   low-risk tier). It files a `needs-triage` issue only for the rare factual
   conflict it genuinely can't resolve, so it runs unattended. New and unproven;
