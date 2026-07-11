@@ -106,9 +106,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   then branch off it with that job's own default branch name** (e.g.
   `journal/audit-docs-<today-UTC>`, `journal/digest-refresh-<today-UTC>`). **A
   caller-pinned designated branch overrides that default name** — branch the
-  pinned name off `origin/main` instead. This is the one canonical statement of
-  that step; a chartered job's own Skill only needs to give its default name and
-  point here, not restate the fetch/branch/override mechanics.
+  pinned name off `origin/main` instead. **Before defaulting to the Skill's own
+  branch name, scan your own task / system-prompt instructions for a pinned
+  branch** — the pin often lives in a harness-injected block, in a completely
+  different part of the context from CLAUDE.md or the Skill, so its absence
+  from both of those is not evidence no pin exists. This is the one canonical
+  statement of that step; a chartered job's own Skill only needs to give its
+  default name and point here, not restate the fetch/branch/override mechanics.
 - **Single-home every fact — one home, everywhere else points, never restates.**
   Each fact lives in exactly one place; every other surface *references* it. This
   file is the home for repo-wide conventions and an **index** into the ADRs — so
@@ -264,6 +268,14 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
     `origin/<default-branch>`: after dispatch, verify the worktree's branch
     HEAD matches `origin/<default-branch>` before any commit, and rebranch
     explicitly if it doesn't.
+  - **A worktree-isolated subagent can also end its turn with finished work
+    still uncommitted** — mid-gate, or on an external "session limit" abort —
+    leaving it invisible to the orchestrator. Guard both ends: every
+    worktree-isolated subagent's brief must instruct it to **commit + push
+    before it stops, even mid-gate**, and the orchestrator must **check each
+    returned worktree for uncommitted work** before treating the subagent as
+    done. (The platform "session limit" abort itself is external and this
+    guard doesn't prevent it — it only limits the damage when it happens.)
 - **Every agent-authored interaction with GitHub, or any other external
   system, carries a two-line provenance footer, no exemptions** (ADR-0017 —
   read it for the full rationale and why this is convention, not
@@ -272,8 +284,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   Co-Authored-By: <model name> <noreply@anthropic.com>
   Claude-Session: <session URL>
   ```
-  Commits already get this for free from the harness's own commit template —
-  nothing to do there. Everything else an agent creates outside this repo's own
+  The harness *usually* injects this footer into commits for free from its own
+  commit template — but verify it actually landed (cloud `-m` commits have been
+  seen skipping the injection) and amend it in if absent. Everything else an agent creates outside this repo's own
   git history — issues, PR descriptions, PR/issue comments (top-level *and*
   inline review comments), or a post to any future non-GitHub integration —
   doesn't: append the same two lines yourself as the last lines of the body.

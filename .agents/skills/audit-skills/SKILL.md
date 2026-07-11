@@ -102,6 +102,11 @@ that plausibly *should* have), then set the grade per those definitions.
   when `external`, else `platform-operation`; write the `role` + grade from what the
   sessions show. Leave *never-observed* un-inventoried Skills alone (that coverage is
   other `sync` work).
+- **The mirror case — `inventoried && !onDisk`** (a phantom entry: the Inventory
+  points at a Skill directory that no longer exists). If the entry maps to a
+  built-in CLI Skill invisible to the on-disk scan, **leave it and flag it**
+  (note the mismatch in your run summary, don't touch the entry); otherwise
+  **propose removing** the stale entry.
 - **External (`external: true`) Skills are tuned too.** Their Inventory grade + role
   record their *fit to this project*, which drifts like any other — grading a pack
   Skill's importance-here is not *evolving the Skill*, so "used, not evolved here"
