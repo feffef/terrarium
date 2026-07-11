@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019mWTw7pBb7Ju2wjNxrEDMU
 startedAt: 2026-07-11T09:41:01Z
-endedAt: 2026-07-11T10:21:45Z
+endedAt: 2026-07-11T15:26:43Z
 kind: interactive
 goal: Align frictions-to-fixes doc fixes with audit-docs rules
-status: in-review
-outcome: "Fixes pushed; PR #322 open, CI billing-blocked"
-summary: "Human-instructed task: make frictions-to-fixes' self-merged doc commits already honour the refined house rules audit-docs verifies (its three tiers and eight lenses), so a friction fix doesn't ship the duplication / stale-narration / unlinked-doc / Historical-rewrite defect a later audit-docs sweep would raise. Confirmed both skills are repo-owned, added two single-homed pointers to audit-docs at the author (step 5) and review (step 6) points, gated green, opened gated PR #322. User then asked whether the change would survive an audit-docs run; I self-audited it, found two real defects it had shipped (a wrong section cross-ref and a partial lens restatement) and fixed them in a follow-up commit. That commit's CI gate can't run — the repo's GitHub Actions is billing-blocked (runners never attach) — so the PR is open but unmergeable on CI, an external block, not the change."
+status: completed
+outcome: "PR #322 merged into main"
+summary: "Human-instructed task: make frictions-to-fixes' self-merged doc commits already honour the refined house rules audit-docs verifies (its three tiers and eight lenses), so a friction fix doesn't ship the duplication / stale-narration / unlinked-doc / Historical-rewrite defect a later audit-docs sweep would raise. Confirmed both skills are repo-owned, added two single-homed pointers to audit-docs at the author (step 5) and review (step 6) points, gated green, opened gated PR #322. User then asked whether the change would survive an audit-docs run; I self-audited it, found two real defects it had shipped (a wrong section cross-ref and a partial lens restatement) and fixed them in a follow-up commit. A third user-requested commit added a GitHub Actions public-vs-private billing research note (docs/research). The hosted CI gate never ran — the repo's Actions was billing-blocked all session (runners never attach) — but the PR was merged into main regardless."
 prs:
   - "322"
 docsRead:
@@ -14,11 +14,15 @@ docsRead:
     reason: (read before editing)
   - path: .agents/skills/audit-docs/SKILL.md
     reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: closure front door at PR open
   - name: log-session
     reason: author this log
+  - name: research
+    reason: (invoked as a slash command)
 frictions:
   - description: Single-home tension — the pointer names audit-docs' "three tiers"/"eight lenses" by label, which rots if that Skill renames them later.
     solution: Kept the reference to concept labels plus the file path and deferred all definitions to audit-docs/SKILL.md; a rename there is the one home to fix.
@@ -29,14 +33,14 @@ frictions:
   - description: CI gate failed three times in 3-5s with runner_id 0 and no runner — GitHub Actions billing-blocked, so the PR can't reach a green gate to merge.
     solution: Diagnosed from the sub-10s no-runner signature (logs 404, empty output); stopped re-running, left PR open, armed an hourly backstop for recovery. Fix is repo-owner billing/spend-limit, outside the session's control.
     severity: major
-durationSec: 2444
+durationSec: 20742
 models:
-  claude-opus-4-8: 135
+  claude-opus-4-8: 180
 toolCounts:
-  Bash: 22
-  Read: 3
-  Edit: 5
-  ToolSearch: 5
+  Bash: 26
+  Read: 4
+  Edit: 7
+  ToolSearch: 6
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
@@ -46,12 +50,19 @@ toolCounts:
   Monitor: 1
   mcp__github__get_job_logs: 2
   mcp__github__get_check_run: 1
-  mcp__github__actions_get: 3
-  mcp__github__actions_run_trigger: 2
+  mcp__github__actions_get: 5
+  mcp__github__actions_run_trigger: 3
   mcp__Claude_Code_Remote__delete_trigger: 2
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 4
+  Agent: 1
+  AskUserQuestion: 1
+  mcp__github__update_pull_request: 1
+  ScheduleWakeup: 2
 filesEdited:
   - .agents/skills/frictions-to-fixes/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Research GitHub Actions public vs private limits
 gitBranch: claude/frictions-fixes-house-rules-auhs92
 entrypoint: remote_mobile
 cliVersion: 2.1.207
