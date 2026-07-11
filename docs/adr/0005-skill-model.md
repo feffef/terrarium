@@ -3,6 +3,13 @@
 Date: 2026-07-04
 Status: Accepted
 
+> **Amended (2026-07-11).** **`drift-check` is retired**, not merely quiet:
+> ADR-0014 deleted the generated-config artifact (`shared/routing.generated.ts`,
+> `pnpm gate:drift`, `scripts/generate.ts`) it existed to check, eliminating its
+> premise entirely. It is no longer part of the chartered-job list below;
+> `CONTEXT.md`'s Codify entry already lists the current set as `sync`,
+> `consolidate`, and `triage` (see also ADR-0003).
+
 ## Context
 
 "An ever-growing set of Skills that develop the Platform" is the project's core
