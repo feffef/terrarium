@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_019mWTw7pBb7Ju2wjNxrEDMU
 startedAt: 2026-07-11T09:41:01Z
-endedAt: 2026-07-11T09:55:48Z
+endedAt: 2026-07-11T10:11:58Z
 kind: interactive
 goal: Align frictions-to-fixes doc fixes with audit-docs rules
 status: in-review
@@ -23,20 +23,29 @@ frictions:
   - description: Single-home tension — the pointer names audit-docs' "three tiers"/"eight lenses" by label, which rots if that Skill renames them later.
     solution: Kept the reference to concept labels plus the file path and deferred all definitions to audit-docs/SKILL.md; a rename there is the one home to fix.
     severity: nit
-durationSec: 888
+  - description: The pointer I first committed failed audit-docs' own lenses — a wrong section cross-ref and a partial lens-list restatement despite claiming "not restated". Ironic for a change about not shipping such defects.
+    solution: Run the target Skill's own checks against an edit to it before committing; caught on a user prompt, fixed in a follow-up commit before merge.
+    severity: minor
+durationSec: 1857
 models:
-  claude-opus-4-8: 52
+  claude-opus-4-8: 100
 toolCounts:
-  Bash: 12
+  Bash: 20
   Read: 2
-  Edit: 2
-  ToolSearch: 2
+  Edit: 4
+  ToolSearch: 5
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 2
   Skill: 2
   Write: 1
+  Monitor: 1
+  mcp__github__get_job_logs: 2
+  mcp__github__get_check_run: 1
+  mcp__github__actions_get: 2
+  mcp__github__actions_run_trigger: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/SKILL.md
 gitBranch: claude/frictions-fixes-house-rules-auhs92
