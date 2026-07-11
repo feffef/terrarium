@@ -5,8 +5,8 @@
 // wholly swaps the prose from season to season (the reader's own words: "a
 // paragraph for each specific season … use the wheel to fully switch").
 //
-// Progressive enhancement, done the same way ::phase does it, so SSR stays
-// mismatch-free: every season-note server-renders EXPANDED, and the client's
+// Progressive enhancement kept SSR-mismatch-free by collapsing only after
+// hydration: every season-note server-renders EXPANDED, and the client's
 // first (hydrating) paint matches — all notes visible. Only in `onMounted`,
 // after hydration, does it collapse to the one the needle is on. So crawlers
 // and no-JS readers get the whole year top-to-bottom (each block headed by its

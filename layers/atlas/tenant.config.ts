@@ -86,7 +86,7 @@ export default defineTenant({
             phases: z
               .array(
                 z.object({
-                  name: z.string(), // slug a ::phase binds to
+                  name: z.string(), // slug for the phase (drives the dial's inner arcs)
                   label: z.string(), // in-voice, e.g. "the lantern swell"
                   span: z.tuple([z.number().min(0).max(365), z.number().min(0).max(365)]), // day-of-year; may wrap
                   gloss: z.string().optional(),

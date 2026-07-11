@@ -86,8 +86,36 @@ illustration: |
 
 There are three ways down through the old root-tangle at the western wall, and *Clathrina vigil* keeps the narrowest of them — which is to say that in practice there is one way, and it is hers. She is rare; we know of two others on the whole floor, each at a narrow place of its own, and none has ever been found anywhere else. A gatekeeper without a gate is, apparently, not a thing this creature consents to be.
 
-The web is not the airy wheel of the upper storeys. It is a lattice, square-set and severe, iron-grey in the lamp, strung from wall to wall of the gap with no slack in it anywhere. Each night, in the deep hours, she walks the whole of it before taking her post — every thread plucked once, listened to, and either let stand or eaten on the spot and re-spun. Only when the last thread has satisfied her does she settle, head-down at the centre, and the gate is open.
+The web is not the airy wheel of the upper storeys. It is a lattice, square-set and severe, iron-grey in the lamp, strung from wall to wall of the gap with no slack in it anywhere. Traffic crosses it all night, and most crosses unhindered; but let something arrive that is wrong — lame, sickening, carrying rot in with it — and it is held at the third thread, and it does not go on. We cannot name the standard by which she judges; we can only report that we have never seen her wave a thing through and regret it.
 
-Open, that is, in her particular sense. Traffic crosses the lattice all night, and most of it crosses unhindered; we have watched a weaver-ant pick her way over the threads and past the mistress of them without so much as a pause on either side. But let something arrive that is wrong — lame, sickening, carrying rot in with it — and it is held at the third thread, and it does not go on. We cannot name the standard by which she judges. We can only report that in a full season of watching we have never seen her wave a thing through and regret it.
+What follows we have set down season by season, for the traffic she keeps changes though her standard does not. Turn the almanac to move among them.
 
-Once, in the interests of science, we parted one thread of the lattice with a fine scissors. She mended it before all else — before feeding, before the several perfectly sound crossings that stood waiting at the edge of the gap, and who, we noted, waited. Nothing crossed until the mend was done and tested. We put the scissors away and have not brought them out since.
+::almanac
+::
+
+:::season-note{of="radiator-months"}
+Little passes the narrow place now, and less is caught; the cold has taken most of what would try the gate. She neither leaves the post nor lowers the bar for the want of custom. We have sat out a whole winter's night at the root-gap and recorded a single crossing, admitted — and the gatekeeper as wakeful over that one as over the summer's hundred.
+:::
+
+:::season-note{of="lamp-lengthening"}
+Once a year, over some ten nights as the light lengthens, she takes the whole lattice down and re-spins it — thread by thread, the old work eaten and the new drawn tighter — and the gate stands shut for the duration. Nothing crosses while she is at it; the few travellers that come are turned back to wait at the gap, and they wait. Only when the last new thread has satisfied her does the narrow place open again.
+:::
+
+:::season-note{of="great-airing"}
+The fresh lattice is barely strung before the year's traffic begins to rise against it, and the draught of the open lid is its first real test. She walks the whole of the new web each night before taking her post — every thread plucked once, listened to, and let stand or eaten and re-spun on the spot — and only then settles, head-down at the centre, and the gate is open in her particular sense.
+:::
+
+:::season-note{of="long-damp"}
+This is the heaviest traffic of the year, and the standard is no lower for it. We have watched a weaver-ant pick her way over the threads and past the mistress of them without so much as a pause on either side, while behind her something lame was held at the third thread and did not go on. Once, in this season, we parted a single thread of the lattice with a fine scissors; she mended it before all else — before feeding, before the several perfectly sound crossings that stood waiting at the edge of the gap, and who, we noted, waited. Nothing crossed until the mend was done and tested, and we have not brought the scissors out since. The ledger's account of a plainer night runs:
+
+::sighting{date="2026-07-03"}
+::
+:::
+
+:::season-note{of="small-dry"}
+The misting lapses for the keeper's holiday and the glass runs dry, and the traffic through the gap begins, by small degrees, to fall off with it. She keeps the post exactly as before. A slower night is not, to this creature, a lighter duty: she walks the same lattice, tests the same threads, and holds the same third thread against whatever the dry weeks send down it.
+:::
+
+:::season-note{of="settling"}
+After the great cleaning the crossings grow scarce in earnest, and here the whole point of her is made plain: she keeps the post regardless. There is little to admit and less to turn back, and she admits and turns back with the same care she gave the summer — at the narrowest way down through the western wall, which is to say the only one. We know of no night, in any season we have watched, on which the gate was left.
+:::

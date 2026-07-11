@@ -78,10 +78,38 @@ illustration: |
   </g>
 ---
 
-We cannot tell you where the drift-eater lives. We can only tell you where it turns up, which is wherever two copies of a thing no longer agree. A cached seed-hoard and the memory of it in a second hoard; a shed skin lying beside its owner; a leaf and the print that leaf has left in the mud — let any pair of the kind fall out of step, and by the next watch there will be a small rust-backed scavenger standing in the gap between them, feeding.
+We cannot tell you where the drift-eater lives. We can only tell you where it turns up, which is wherever two copies of a thing no longer agree — a cached seed-hoard and the memory of it in a second hoard; a shed skin lying beside its owner; a leaf and the print that leaf has left in the mud. Let any pair of the kind fall out of step, and by the next watch there will be a small rust-backed scavenger standing in the gap between them, feeding.
 
-Its manner of feeding is particular. While the pair agree it takes no interest in either — we have set out matched fragments by the dozen and it walked over them as over gravel. It eats only the difference: the strayed whorl, the miscounted seed, the margin that has curled away from its likeness. Whichever of the two has wandered from the other is the one diminished, and when the meal is done the pair agree again, though seldom in the way their owner might have chosen.
+Its manner of feeding is particular. While the pair agree it takes no interest in either — we have set out matched fragments by the dozen and it walked over them as over gravel. It eats only the difference: the strayed whorl, the miscounted seed, the margin that has curled away from its likeness. It does not sleep, so far as we can determine; drift, presumably, does not either. What changes with the season is not the animal but the world's supply of disagreement, on which it wholly depends.
 
-In June we pressed a fern frond and laid the pressed copy overnight beside the living one, in the interests of science. By morning the drift-eater had been and gone. The pressed frond was eaten precisely at the pinnae that had dried crooked, and nowhere else; the living frond was untouched. It had, in effect, corrected our specimen, and we have not entirely forgiven it.
+We have set the year down by that supply — the seasons that furnish drift, and the one that starves it. Turn the almanac to move among them.
 
-It does not sleep, so far as we can determine. Drift, presumably, does not either. Since keeping this creature's company we have taken to holding our field notes in a single copy, and we sleep the better for it.
+::almanac
+::
+
+:::season-note{of="radiator-months"}
+The cold holds the whole floor still, and a still floor is a floor in agreement with itself. Where nothing changes, nothing strays; and where nothing strays, the drift-eater has nothing to eat. We do not see it in these weeks — it goes hungry and unseen, we assume, wherever it keeps, against the first disagreement of the spring.
+:::
+
+:::season-note{of="lamp-lengthening"}
+The lean holds a while longer, but the lengthening light begins, by small increments, to set one copy of a thing a little ahead of its neighbour — a seedling that greens before its twin, a shadow that has shifted since it was last marked. The drift-eater is still scarce and still hungry here; but the year's first thin differences are being laid down for it, and it knows, as we do not, exactly where.
+:::
+
+:::season-note{of="great-airing"}
+With the lid open and the draught working, the growing months begin in earnest, and so does the straying: every copy of everything goes a little out of step with its source, and the drift-eater is once more met with wherever one looks for it. It feeds at leisure now, no longer fasting, taking the season's small new disagreements one at a time.
+:::
+
+:::season-note{of="long-damp"}
+This is the drift-eater's easy season: the growing at its height, every likeness quietly parting from its like, and the animal at leisure among the results. One night we pressed a fern frond and laid the pressed copy beside the living one, in the interests of science; by morning the drift-eater had been and gone. The pressed frond was eaten precisely at the pinnae that had dried crooked, and nowhere else; the living frond was untouched. It had, in effect, corrected our specimen, and we have not entirely forgiven it. The ledger notes a plainer instance:
+
+::sighting{date="2026-06-27"}
+::
+:::
+
+:::season-note{of="small-dry"}
+The keeper's holiday lets the misting lapse, and a lapsed routine is a great manufacturer of disagreement — a hoard recounted and not matching, a mark made and not kept. The reckoning begins here, the richest feeding of the year; though the drift-eater takes it as it takes everything, one difference at a time and without haste.
+:::
+
+:::season-note{of="settling"}
+After the great cleaning, when everything is put back an inch from where it stood and no two records of the floor agree for a fortnight, the drift-eater comes into its fullest table. It goes patiently down the year's accumulated strayings, eating each difference until the pair it stood between agree again — though seldom, we have noticed, in the way their owner would have chosen. Since keeping this creature's company we have taken to holding our own field notes in a single copy, and we sleep the better for it.
+:::

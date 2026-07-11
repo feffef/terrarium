@@ -41,7 +41,7 @@ const props = defineProps<{
 // or the biome landing); a wheel seated without a provider (e.g. a gallery)
 // makes its own.
 const almanac = useAlmanac() ?? provideAlmanac({ phases: () => props.phases ?? [] })
-const { day, setDay, today, marks, engage, focusDay } = almanac
+const { day, setDay, today, marks, focusDay } = almanac
 
 // SSR-stable ids for the <defs> this instance owns (patterns, label paths).
 const uid = useId()
@@ -185,7 +185,6 @@ function pointerAngle(e: PointerEvent): number {
 
 function onPointerDown(e: PointerEvent) {
   if (!svgEl.value || (e.pointerType === 'mouse' && e.button !== 0)) return
-  engage() // the reader has the needle — the essay may follow it now
   svgEl.value.setPointerCapture(e.pointerId)
   scrubbing.value = true
   moved = false
@@ -251,7 +250,6 @@ function onKeydown(e: KeyboardEvent) {
       return
   }
   e.preventDefault()
-  engage() // a keyboard scrub engages the dial exactly as a pointer grab does
   setDay(next)
   commitDayToUrl()
 }

@@ -82,17 +82,39 @@ illustration: |
 
 The column was at work when we first lowered the lamp below the leaf line, and it has been at work on every visit since. We have come at dawn and found them weaving; at dusk, and found them weaving; we came once at an hour we are not proud of and found the galleries empty but freshly mended, as though the work had only just stepped out of the room.
 
-::phase{of="double-shift"}
-*Formica textrix* does not dig so much as weave. Soil crumb, leaf-vein, root-hair, and a dark thread of its own spinning are drawn together into galleries that hold the loose litter the way warp holds weft. The remarkable thing — stated plainly, as it deserves — is that the weaving is never finished. A gallery completed at dawn is as likely to be unpicked at dusk and worked again a thumb's width to the left, for reasons the column does not disclose. We mapped the western workings twice in one week and produced, in good faith, two different maps. The confusion is at its richest in :season[the Long Damp]{of="long-damp"}, when the litter swells daily with what the canopy lets fall and the dawn and dusk shifts run long enough to meet in the middle.
+*Formica textrix* does not dig so much as weave. Soil crumb, leaf-vein, root-hair, and a dark thread of its own spinning are drawn together into galleries that hold the loose litter the way warp holds weft. The remarkable thing — stated plainly, as it deserves — is that the weaving is never finished: a gallery completed at dawn is as likely to be unpicked at dusk and worked again a thumb's width to the left, for reasons the column does not disclose. What it reworks, and how furiously, is the year's chief variable; that it is always reworking something is not.
+
+We have set the year down shift by shift. Turn the almanac to move among them.
+
+::almanac
+::
+
+:::season-note{of="radiator-months"}
+Only in the dry-warm months does the column grant us anything like an absence. The surface workings stand empty for weeks together, the weaving carried on somewhere below the reach of our lamps — and still the empty galleries are found mended at the worn places, an entry the ledger files under miscellaneous industry and the company has agreed to leave there. We have never observed a weaver-ant at rest, and we do not conclude from this quiet that it rests now; only that it is better, in these weeks, at not being watched.
+:::
+
+:::season-note{of="lamp-lengthening"}
+As the light lengthens the column comes back up to the surface with a settled opinion of the winter's galleries: that they are wanting, and must be worked again. The whole of the western workings is judged and re-laid, a thumb's width to the left, on grounds it keeps to itself. This is the great reworking, and it is the busiest we ever see an animal that is never idle.
+:::
+
+:::season-note{of="great-airing"}
+With the lid standing open an hour a day the litter comes down faster than the column can weave it in, and the reworking goes on among the fresh fall. The draught, which unsettles so much else on the floor, the column simply weaves around: a gallery a gust half-unpicks by noon is sound again, and moved, by dusk.
+:::
+
+:::season-note{of="long-damp"}
+This is the season of the double shift, and the confusion is at its richest in it: the litter swells daily with what the canopy lets fall, and the dawn and dusk shifts run long enough to meet in the middle. We mapped the western workings twice in one week and produced, in good faith, two different maps. On the twenty-second of June we dusted one worker with a little chalk so as to follow her: she took a leaf-fragment three times her own length down the long gallery, surrendered it, returned, took another, and was still at it when the light failed and we, not she, gave up. The chalk was gone by morning; we suspect the column disapproved of it. The ledger keeps the plainer entries of the season:
+
+::sighting{date="2026-06-20"}
 ::
 
 ::sighting{date="2026-07-06"}
 ::
+:::
 
-On the twenty-second of June we dusted one worker with a little chalk so as to follow her. She took a leaf-fragment three times her own length down the long gallery, surrendered it, returned, took another, and was still at it when the light failed and we, not she, gave up. The chalk was gone by morning. We suspect the column disapproved of it.
+:::season-note{of="small-dry"}
+As the misting lapses for the keeper's holiday the character of the work changes: the weaving slows and the carrying quickens. The leaf-fragment traffic trebles, the long galleries run one-way for hours together, and what the column is storing against the winter, and where, the column does not disclose. We have counted the traffic; we have not been permitted to audit the stores.
+:::
 
-::phase{of="deep-galleries"}
-Only in :season[the Radiator Months]{of="radiator-months"} does the column grant us anything like an absence. The surface workings stand empty for weeks together, the weaving carried on somewhere below the reach of our lamps — and still the empty galleries are found mended at the worn places, an entry the ledger files under miscellaneous industry and the company has agreed to leave there.
-::
-
-We have never observed a weaver-ant at rest. We do not conclude that it never rests; only that it is better at not being watched resting than we are at watching.
+:::season-note{of="settling"}
+After the great cleaning the provisioning runs on, and then the column begins its long descent toward the deep galleries, taking the year's stores down with it. The surface work thins by degrees until only the mending is left — the worn places kept sound by a column already half below our reach. It does not finish; it never finishes; it only goes where we cannot follow, and mends behind itself as it goes.
+:::
