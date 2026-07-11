@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01FnZ4zFHFUjopQnUEeNPnpj
 startedAt: 2026-07-11T09:26:27Z
-endedAt: 2026-07-11T09:58:20Z
+endedAt: 2026-07-11T10:28:34Z
 kind: delegated
-goal: Research-grounded critical review of app surface
+goal: Research-grounded review, then fix findings
 status: in-review
-outcome: "Review delivered; grounding doc in PR #323"
-summary: "Human-instructed: a critical two-axis code review (Standards + Spec/ADRs) of the whole Nuxt Content application surface — shared/, modules/, app/, all three tenant layers, skill machinery excluded — with every finding grounded in primary sources via the research Skill. Two parallel reviewer subagents reported; a research subagent wrote a twelve-question grounding doc from pinned official docs and installed node_modules code. Key grounded findings: the gate/CI perform no real L1 content validation (Nuxt Content never runs schemas at build), validateManifest misses the data-schema invariant, an unrecorded @nuxt/content runtime patch, stale generator vocabulary. One suspected six-file stale-param bug was refuted by Nuxt source. Agent-initiated per standing convention: committing the research doc and opening gated PR #323."
+outcome: "Fixes + docs on PR #323; CI runners down"
+summary: "Human-instructed, two phases. First: a critical two-axis review (Standards + Spec/ADRs) of the whole application surface, every finding grounded in primary sources via the research Skill (grounding doc committed); one suspected six-file bug was refuted by Nuxt source. Second, on explicit instruction: six parallel Sonnet fix agents repaired everything autonomously fixable (real L1 gate wiring, validateManifest data-schema invariant, Object.hasOwn resolver hardening, layer dedups/renames, retroactive ADR-0019), issues #324/#325 filed for design-decision remainders, and a Fable reviewer vetted the final diff (its must-fix — an ADR overclaiming CI state — was corrected). Local pnpm gate fully green. Blocked externally: workflow files are unpushable (no workflow OAuth scope) and GitHub Actions starts no runners (3s failures), both handed to the human on PR #323."
 prs:
   - "323"
 docsRead:
@@ -18,6 +18,8 @@ docsRead:
     reason: verify resolver isolation claims and real line numbers
   - path: docs/research/nuxt-content-review-grounding.md
     reason: verify subagent research before committing
+  - path: docs/agents/issue-tracker.md
+    reason: issue-filing and MCP-mapping conventions
   - path: content.config.ts
     reason: (no reason given)
   - path: nuxt.config.ts
@@ -42,13 +44,25 @@ docsRead:
     reason: (no reason given)
   - path: layers/blog/app/utils/personas.ts
     reason: (no reason given)
+  - path: tests/unit/expand.spec.ts
+    reason: (read before editing)
+  - path: layers/journal/app/components/journal/Disclosure.vue
+    reason: (read before editing)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (read before editing)
+  - path: layers/atlas/nuxt.config.ts
+    reason: (read before editing)
+  - path: layers/blog/nuxt.config.ts
+    reason: (read before editing)
+  - path: layers/journal/nuxt.config.ts
+    reason: (read before editing)
 skillsUsed:
   - name: code-review
     reason: the two-axis review harness this session ran
   - name: research
     reason: ground every framework-behavior claim (user's explicit ask)
   - name: close-session
-    reason: session closure
+    reason: session closure (invoked at each closure point)
   - name: log-session
     reason: (no reason given)
 frictions:
@@ -61,20 +75,50 @@ frictions:
   - description: content.nuxt.com and nuxt.com return 403 through the proxy; research fell back to version-pinned docs sources in the official GitHub repos.
     solution: Note the tag-pinned repo-docs fallback in the research Skill.
     severity: nit
-durationSec: 1913
+  - description: git push rejects any commit touching .github/workflows (no workflow OAuth scope) and the GitHub App contents API 404s on it too — the CI half of the L1 fix is unlandable by agents.
+    solution: Grant the integration workflow scope, or document workflow files as human-apply-only with a diff-handoff convention.
+    severity: major
+  - description: GitHub Actions starts no runners for this repo — three consecutive gate runs died in ~3s with runner_id 0 and no logs; CI cannot verify the PR.
+    solution: Human checks Actions billing/spending limit (Settings → Billing); local pnpm gate used as interim verification.
+    severity: major
+  - description: A fix agent wrote an ADR amendment asserting the gate.yml CI step already existed, which this session could not actually push — caught by the Fable review pass.
+    solution: Brief doc-writing agents that claims about CI state must describe what lands in the same PR, not the intended end state.
+    severity: moderate
+  - description: An early `pnpm gate 2>&1 | tail` run masked the gate's exit code behind the pipe, briefly reading a failed gate as exit 0.
+    solution: Check PIPESTATUS (or run without a pipe) when the exit code matters.
+    severity: nit
+durationSec: 3727
 models:
-  claude-fable-5: 85
+  claude-fable-5: 210
 toolCounts:
-  Bash: 14
-  Skill: 3
-  Read: 15
-  Agent: 3
+  Bash: 29
+  Skill: 4
+  Read: 23
+  Agent: 10
   Grep: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
-  Write: 1
+  Write: 2
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 2
+  ToolSearch: 2
+  mcp__github__get_job_logs: 3
+  Edit: 11
+  mcp__github__get_check_run: 1
+  mcp__github__actions_get: 4
+  mcp__github__get_file_contents: 1
+  mcp__github__create_or_update_file: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - tests/unit/expand.spec.ts
+  - layers/journal/app/components/journal/Disclosure.vue
+  - docs/adr/0004-objective-safety-gate.md
+  - layers/atlas/nuxt.config.ts
+  - layers/blog/nuxt.config.ts
+  - layers/journal/nuxt.config.ts
 subagents:
   - type: general-purpose
     task: Research Nuxt Content grounding doc
@@ -82,6 +126,27 @@ subagents:
     task: Standards-axis code review
   - type: general-purpose
     task: Spec-axis code review (ADRs)
+  - type: general-purpose
+    task: Fix journal layer findings
+    model: sonnet
+  - type: general-purpose
+    task: Fix atlas layer findings
+    model: sonnet
+  - type: general-purpose
+    task: Fix blog layer findings
+    model: sonnet
+  - type: general-purpose
+    task: Fix platform-core findings
+    model: sonnet
+  - type: general-purpose
+    task: Fix gate L1 gap + CI parity
+    model: sonnet
+  - type: general-purpose
+    task: Draft ADR for content patch
+    model: sonnet
+  - type: general-purpose
+    task: Fable review of PR diff
+    model: fable
 gitBranch: claude/nuxt-content-code-review-i51mpy
 entrypoint: remote_mobile
 cliVersion: 2.1.207
@@ -89,5 +154,6 @@ learnings:
   - Nuxt Content 3 never validates documents against collection schemas at build — zero safeParse calls in the parse/insert pipeline; schemas only drive columns/types.
   - Nuxt's default page key interpolates route params (generateRouteKey), so param-only navigation remounts the page — non-reactive setup captures of params are safe.
   - c12 watchConfig watches only content.config.ts itself, never its imports — a running dev server misses tenant.config.ts edits.
+  - A ~3s Actions job failure with runner_id 0 and unavailable logs means the workflow never reached a runner (account/billing level), not a code failure.
 ideas:
-  - "Close the ADR-0004 L1 gap: add pnpm validate:content to the gate script and gate.yml, and retitle the misleading 'L0/L1 · build + content validation' CI step — today invalid frontmatter in optional fields merges green while the step name claims otherwise (human-only surface, needs a human-merged PR)."
+  - "Add a repo convention + helper for workflow-file handoffs: agents can't push .github/workflows (no workflow scope), so a `docs/proposals/` drop-zone plus a one-line CLAUDE.md rule would replace ad-hoc PR-comment diffs like PR #323's."
