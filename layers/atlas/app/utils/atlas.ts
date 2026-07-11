@@ -115,6 +115,20 @@ export interface PhenologyPhase {
   quiet?: boolean
 }
 
+// ── Composite almanac (#285, map #279) ───────────────────────────────────────
+/** One specimen's band in the biome-landing composite almanac wheel — the
+ *  annual sibling of the single-specimen phenology dial (#282): one radial
+ *  slot per phenology-carrying specimen, all sharing the wheel's one needle. */
+export interface AlmanacBand {
+  slug: string
+  /** The specimen's binomial — the band's accessible name and caption text. */
+  label: string
+  phases: PhenologyPhase[]
+  /** The specimen's own `--sig-1` (via `signatureVars`), so its band reads as
+   *  its own ring rather than an anonymous stripe. */
+  color?: string
+}
+
 // ── Activity rhythm (#73) ────────────────────────────────────────────────────
 export type Band = [number, number]
 
