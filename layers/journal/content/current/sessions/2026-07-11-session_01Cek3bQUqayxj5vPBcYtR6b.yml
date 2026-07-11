@@ -1,0 +1,71 @@
+schemaVersion: 1
+session: session_01Cek3bQUqayxj5vPBcYtR6b
+startedAt: 2026-07-11T07:50:59Z
+endedAt: 2026-07-11T08:38:20Z
+kind: interactive
+goal: Write one blog post via /blog-post
+status: completed
+outcome: Karen post merged as PR
+summary: "User ran /blog-post with no persona given (a direct human command). Followed the Skill's mandatory three-candidate process: gathered material broadly from git history, session logs, and prior posts; drafted three independent standalone candidates (Karen on PR #306's gate that violated the boundary it was built to enforce, David on the blog-post Skill's own same-day three-draft-and-review upgrade in PR #309, Kevin on audit-docs' eighth lens landing minutes from a same-day amendment-banner exception in PR #295/#307); had a fresh blind Sonnet reviewer with no repo access pick the strongest, then revised the winner (Karen's) to close the outsider-jargon gaps it named. All topic/persona/reaction selection and the final draft were agent-driven per the Skill; the only human input was the bare /blog-post invocation itself. Branched, verified pnpm gate green, opened PR #310, subscribed to its activity, and babysat it to merge (auto-merged without further review comments)."
+prs:
+  - "310"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the Skill being run
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: winning candidate's voice
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: candidate 2's voice
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: candidate 3's voice
+  - path: layers/blog/content/karen/pages/2026-07-09-zero-for-two.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-10-it-checked-its-own-homework.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the whole session's task
+  - name: close-session
+    reason: closure front door
+  - name: log-session
+    reason: this log
+frictions:
+  - description: mcp__github__list_pull_requests returned ~58KB, over the tool's per-call token limit, and had to be worked around by reading the saved file and slicing it with python.
+    solution: Prefer minimal_output or per-PR pull_request_read calls over list_pull_requests when only a handful of fields (number, title, merged_by) are needed.
+    severity: minor
+  - description: The github MCP server dropped mid-call during subscribe_pr_activity ('Tool permission stream closed before response received'), losing the first subscribe attempt.
+    solution: Waited for the reconnect system-reminder, reloaded the tool via ToolSearch, and retried successfully; no underlying fix needed, just a retry-after-reconnect pattern.
+    severity: minor
+  - description: "While drafting Kevin's candidate, initially asserted PR #295 and PR #307 merged in the wrong relative order from memory/adjacency instead of checking merged_at directly."
+    solution: Re-fetched both PRs' merged_at timestamps via pull_request_read and corrected the draft's timing claim before it could ship wrong.
+    severity: minor
+durationSec: 2841
+models:
+  claude-sonnet-5: 128
+toolCounts:
+  Bash: 28
+  Read: 9
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__pull_request_read: 14
+  Write: 5
+  Edit: 7
+  Grep: 1
+  Agent: 1
+  Glob: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Skill: 2
+filesEdited:
+  - layers/blog/content/karen/pages/2026-07-11-the-gate-that-broke-its-own-gate.md
+subagents:
+  - task: Blind review of three blog candidates
+    model: sonnet
+gitBranch: claude/blog-post-m8sbs8
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+learnings:
+  - Git log --oneline adjacency does not imply commit ancestry across concurrently-merged branches; verify a commit's containing PR via pull_request_read get_commits rather than inferring from surrounding log lines.
