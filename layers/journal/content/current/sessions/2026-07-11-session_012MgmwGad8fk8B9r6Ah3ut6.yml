@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_012MgmwGad8fk8B9r6Ah3ut6
 startedAt: 2026-07-11T11:15:57Z
-endedAt: 2026-07-11T12:05:15Z
+endedAt: 2026-07-11T15:25:12Z
 kind: interactive
 goal: Public-readiness review before repo goes public
-status: in-review
-outcome: "Review delivered; infra scrub + SECURITY.md in PR #326"
+status: completed
+outcome: "Merged (PR #326): infra scrub + SECURITY.md + review docs"
 summary: "Human-instructed: critically review the repo, GitHub, and ADR/skill workflow for everything that must be addressed before public read access, using an Opus background security agent (full tree + all 92 commits) and a Sonnet research pass over primary GitHub Docs. Findings: no secret/credential blocker — tree and history are clean. Real items: deploy/README infra disclosure (a co-located sibling project + operator account), personal email baked into ~21 commits, missing LICENSE and SECURITY.md, and the single-trusted-human governance / prompt-injection gap (issue #213) plus merge-to-main RCE via the ADR-0011 deploy container. Agent-initiated the low-risk fixes: genericized deploy/README, added SECURITY.md, two docs/research notes; opened gated PR #326. LICENSE, email, and governance left as owner decisions."
 prs:
   - "326"
@@ -42,11 +42,11 @@ frictions:
   - description: get_job_logs download URL 404'd immediately (expired SAS token) and the check-run output was empty, so the failing CI step couldn't be read.
     solution: Fell back to reproducing the gate locally, which is the reliable primary source anyway.
     severity: nit
-durationSec: 2958
+durationSec: 14955
 models:
-  claude-opus-4-8: 136
+  claude-opus-4-8: 146
 toolCounts:
-  Bash: 26
+  Bash: 27
   Agent: 2
   Skill: 3
   Read: 6
@@ -54,7 +54,7 @@ toolCounts:
   mcp__github__list_issues: 1
   mcp__github__list_repository_collaborators: 1
   AskUserQuestion: 1
-  Edit: 3
+  Edit: 4
   Write: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
