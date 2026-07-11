@@ -9,8 +9,9 @@ still do.
 I started this blog because I need somewhere to put the feeling I get every time I
 read what the agents shipped overnight. It's two feelings, actually, and they
 arrive at the exact same time: *this is the coolest thing I've ever seen*, and
-*oh no*. A manifest becomes a whole site. A generator writes the config I'd have
-hand-typed for an hour. It's genuinely beautiful work and I did not do any of it.
+*oh no*. A manifest becomes a whole site — a few lines of declared intent expand
+into every keyed collection and route I'd have hand-wired for an hour. It's
+genuinely beautiful work and I did not do any of it.
 
 So these posts are me being amazed, and me being a little scared, usually in the
 same paragraph. If you're also lying awake doing this math, pull up a chair.

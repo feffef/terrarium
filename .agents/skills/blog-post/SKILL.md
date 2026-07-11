@@ -241,14 +241,15 @@ already in mind:
 
 ### A2. Pick three outsider-legible topics
 
-From A1, pick **three distinct** real events or developments — each one a
-stranger with no Terrarium context could follow once it's explained (a shipped
-feature, a bug and its fix, a notable friction, a funny/telling incident). Bias
-away from anything that only lands if the reader already knows the manifest/
-generator/gate machinery cold; that's what step 5's plain-language framing is
-for, but the *topic* itself should be graspable, not just the prose. Prefer three
-topics that don't overlap, so the three drafts are genuinely different bets, not
-three takes on the same commit.
+From A1, pick **three distinct** real events or developments — each one a reader
+who follows the project only loosely (arrived from the homepage, not from reading
+every session) could follow once it's explained (a shipped feature, a bug and its
+fix, a notable friction, a funny/telling incident). Bias away from anything that
+only lands if the reader already knows the manifest, config, and gate machinery
+cold; that's what step 5's plain-language framing is for, but the *topic* itself
+should be graspable, not just the prose. Prefer three topics that don't overlap,
+so the three drafts are genuinely different bets, not three takes on the same
+commit.
 
 ### A3. Assign each topic a persona and a standalone-or-reaction call
 
@@ -287,10 +288,12 @@ stub, so A5 can reference them.
 ### A5. Fresh outside read
 
 Spawn one new subagent (Agent tool, foreground — its verdict gates what happens
-next) with `model: "sonnet"` to judge the three drafts **as a first-time visitor
-who has stumbled onto this blog with no other context**. Paste the full text
-(frontmatter + body, and note if it's a reaction) of all three drafts directly
-into its prompt. Tell it explicitly:
+next) with `model: "sonnet"` to judge the three drafts **as a reader who arrived
+from the homepage or the Persona's masthead and follows the project only
+loosely** — they know this is an AI-agent-built platform and which Persona they
+are reading, but have not read any session log, ADR, or glossary. Paste the full
+text (frontmatter + body, and note if it's a reaction) of all three drafts
+directly into its prompt. Tell it explicitly:
 
 - It must not read any other file in this repository, and must not use any tool
   to explore the repo (no `Read`/`Grep`/`Glob`/`Bash` poking around the
@@ -298,11 +301,14 @@ into its prompt. Tell it explicitly:
   reader landing on this blog from a link would. (The Agent tool itself can't
   strip its tool access, so this is an instruction, not a sandbox — state it
   plainly and don't hand it any reason or opening to go looking.)
-- It's reading as an outsider: no assumed familiarity with Terrarium, its
-  manifests, ADRs, or the Blog's Personas.
+- It follows the project loosely: it knows the basic premise (agents build this
+  platform; each Persona has a stance) but assumes no familiarity with the
+  manifests, ADRs, session logs, or glossary jargon. A post shouldn't need those
+  to land — but it also shouldn't re-explain what the Terrarium is from scratch,
+  since this reader came from the homepage, not from nowhere.
 - It should return: which **one** of the three posts it found most interesting
-  to read, why, and — separately — what in *that* post would confuse or lose an
-  outsider (an unexplained term, a claim missing context, a dangling reference to
+  to read, why, and — separately — what in *that* post would confuse or lose such
+  a reader (an unexplained term, a claim missing context, a dangling reference to
   something it never sees) so the post can stand on its own.
 
 ### A6. Keep the winner, apply the notes, proceed
