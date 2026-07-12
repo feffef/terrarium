@@ -153,13 +153,11 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       }
     })
 
-    // Opening an item scrolls its top into view (like a deep-link load). The
-    // accordion is one-at-a-time, so opening one item collapses whatever else was
-    // open — a tall entry above the one just clicked would otherwise shrink out
-    // from under it and strand the new entry scrolled past its own top ("opened in
-    // the middle"). Park a card low in the viewport, open it, and assert its top
-    // settles at the viewport top rather than staying where it was clicked.
-    it('scrolls a newly opened item to the top of the viewport', async () => {
+    // Opening an item must not move it on screen: the click didn't move the
+    // user's eye, so the item they just acted on shouldn't jump. Park a card
+    // mid-viewport (nothing else is open, so nothing above it can reflow when
+    // it opens its own body below itself) and assert its top holds.
+    it('holds a newly opened item at its pre-click viewport position', async () => {
       const route = '/t/journal/current'
       const { page, errors } = await renderAndCollectErrors(route)
       try {
@@ -167,17 +165,56 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         const id = await card.getAttribute('id')
         const topOf = () =>
           page.evaluate((cardId) => document.getElementById(cardId!)!.getBoundingClientRect().top, id)
-        // Park the card near the bottom of the viewport so "opened → at top" is a
-        // real scroll, not a coincidence of where it already sat.
+        // Park the card mid-viewport, then let Playwright settle its OWN
+        // pre-click scroll-into-view first — `before` must be measured after
+        // that settles, or the click's implicit scroll (not the app) would
+        // account for part of the observed movement.
         await page.evaluate((cardId) => {
           const el = document.getElementById(cardId!)!
           window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top - (window.innerHeight - 120))
         }, id)
-        expect(await topOf()).toBeGreaterThan(250) // precondition: parked well below the top
+        await card.locator('.head').scrollIntoViewIfNeeded()
+        const before = await topOf()
+        expect(before).toBeGreaterThan(250) // precondition: parked well below the top
         await card.locator('.head').click()
-        // Poll past the (async, possibly animated) scroll: the opened card's top
-        // must settle at the viewport top (block:'start' + scroll-margin-top).
-        await expect.poll(async () => (await topOf()) <= 80).toBe(true)
+        await page.locator('.feed .card.open .detail').first().waitFor({ state: 'visible' })
+        // Poll past the (async, possibly animated) settle: with no sibling
+        // reflowing above it, the card's own top must be unchanged by opening.
+        await expect.poll(topOf).toBeGreaterThan(before - 15)
+        expect(await topOf()).toBeLessThan(before + 15)
+        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
+      } finally {
+        await page.close()
+      }
+    })
+
+    // The accordion is one-at-a-time, so opening this session card collapses an
+    // already-open digest ABOVE it, shrinking the page above the card. Assert the
+    // just-clicked card's own top still holds at its pre-click position — the
+    // sibling's collapse is exactly what the counter-scroll must absorb.
+    it('holds the clicked item at its pre-click position when a sibling above it collapses', async () => {
+      const route = '/t/journal/current'
+      const { page, errors } = await renderAndCollectErrors(route)
+      try {
+        await page.locator('.digest .drow').first().click()
+        await page.locator('.digest-body').first().waitFor({ state: 'visible' })
+        const card = page.locator('.feed .card').first()
+        const id = await card.getAttribute('id')
+        const topOf = () =>
+          page.evaluate((cardId) => document.getElementById(cardId!)!.getBoundingClientRect().top, id)
+        // Park mid-viewport, then let Playwright settle its OWN pre-click
+        // scroll-into-view before measuring `before` — see the previous test.
+        await page.evaluate((cardId) => {
+          const el = document.getElementById(cardId!)!
+          window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top - (window.innerHeight - 120))
+        }, id)
+        await card.locator('.head').scrollIntoViewIfNeeded()
+        const before = await topOf()
+        await card.locator('.head').click()
+        await page.locator('.feed .card.open .detail').first().waitFor({ state: 'visible' })
+        await expect.poll(() => page.locator('.digest-body').count()).toBe(0) // the digest collapsed, shrinking the page above the card
+        await expect.poll(topOf).toBeGreaterThan(before - 15)
+        expect(await topOf()).toBeLessThan(before + 15)
         expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
       } finally {
         await page.close()

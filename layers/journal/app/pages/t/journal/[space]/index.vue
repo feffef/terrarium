@@ -75,8 +75,9 @@ const openAnchor = ref<string | null>(null)
 const isOpen = (anchor: string) => openAnchor.value === anchor
 
 // replaceState (not `location.hash =`) so toggling neither floods history nor
-// triggers the browser's native jump-to-anchor scroll — we scroll deliberately,
-// in scrollToOpen(), when an item opens (toggle or deep-link load).
+// triggers the browser's native jump-to-anchor scroll — we scroll deliberately
+// instead: scrollPreservingTop() on a click-triggered open, scrollToOpen() on a
+// deep-link load (see each for why they differ).
 const syncHash = (anchor: string | null) => {
   history.replaceState(history.state, '', anchor ? `${route.path}#${anchor}` : route.path)
 }
@@ -84,14 +85,31 @@ const syncHash = (anchor: string | null) => {
 const toggle = (anchor: string) => {
   const opening = !isOpen(anchor)
   const next = opening ? anchor : null
+  // Captured BEFORE the state flips: the accordion is one-at-a-time, so opening
+  // this item can close another one elsewhere on the page (above or below it),
+  // reflowing everything between them. Comparing this item's own viewport
+  // position before vs. after — rather than assuming a direction — covers every
+  // case: another entry above collapsing out from under it, one below collapsing
+  // with no effect on it, or (on a deep-linked reload) no prior entry at all.
+  const el = opening ? document.getElementById(anchor) : null
+  const beforeTop = el?.getBoundingClientRect().top ?? null
   openAnchor.value = next
   syncHash(next)
-  // Opening collapses whatever else was open — and the accordion is one-at-a-time,
-  // so a tall entry above the one just clicked would shrink out from under it,
-  // stranding the new entry scrolled past its own top (it opened "in the middle").
-  // Bring the opened item's top back into view so it reads from the start; closing
-  // needs no scroll.
-  if (opening) nextTick(scrollToOpen)
+  // Closing needs no scroll — nothing above the (now-shorter) item moves.
+  if (opening) nextTick(() => scrollPreservingTop(el, beforeTop))
+}
+
+// On open, hold the clicked item's own top at the exact screen position it was
+// at before the click — a collapsing sibling elsewhere can shift it, but the
+// item the user just acted on shouldn't visually jump. Clamped to 0: near the
+// top of the page there may not be enough room above to fully compensate, so it
+// settles as close to the original position as the page start allows.
+const scrollPreservingTop = (el: HTMLElement | null, beforeTop: number | null) => {
+  if (!el || beforeTop == null) return
+  const delta = el.getBoundingClientRect().top - beforeTop
+  if (!delta) return
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  window.scrollTo({ top: Math.max(0, window.scrollY + delta), behavior: reduce ? 'auto' : 'smooth' })
 }
 
 const scrollToOpen = () => {
