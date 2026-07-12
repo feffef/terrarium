@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Rervdd6Jmtd7rtzpSqBxYq
 startedAt: 2026-07-12T17:33:16Z
-endedAt: 2026-07-12T18:17:49Z
+endedAt: 2026-07-12T18:21:13Z
 kind: interactive
 goal: Add a curated blog tag system with a cross-Persona browse page
-status: in-review
-outcome: "Grilled, built, refined via UI feedback, tested green, PR #380 open"
-summary: "User asked for a blog tagging system with a cross-Persona browse page above the Persona spaces. Ran /grill-with-docs (grilling + domain-modeling) across 9 sequential questions with recommendations, reaching explicit sign-off before implementing. Added a 15-tag curated z.enum vocabulary to the blog pages schema; read and tagged all 23 existing posts across david/karen/kevin; added a Tag glossary entry to layers/blog/CONTEXT.md; built /t/blog as a Tenant-root front door (ADR-0016 precedent) combining all three Personas' posts into one feed filterable by ?tag=. After the initial implementation and PR #380, the user gave two rounds of direct UI feedback I acted on without re-grilling (both explicit user asks, not agent-initiated redesign): first to move the tag directory and intro into a sidebar reusing the existing BlogNetwork component's label/style instead of inline links; then, after screenshotting, the user flagged the result as still \"a box in a box\" nearly duplicating content (the intro paragraph vs the Network's own hint line) — I traced this to the Network panel being stacked inside a second, separately-boxed \"About\" wrapper, and fixed it by giving BlogNetwork an optional #extra slot so the tag directory folds into the SAME box, with the wrapper reduced to a plain layout container. My first fix attempt for that didn't visually take because the override CSS rule had lower cascade priority (same specificity, but earlier in source order) than the base box-styling rule it needed to beat; fixed by adding a third class to win on specificity rather than reordering. The user also asked me to verify feed ordering against real timestamps twice (publishedAt vs. each other, then publishedAt vs. git commit time) rather than trusting memory — the second check surfaced a genuine, pre-existing data inconsistency (one post's publishedAt postdates its own commit by over 3 hours), which the user asked me to guard against going forward with a short blog-post Skill addition (published date should be roughly commit time, never a future timestamp) rather than fixing the existing post's data. Full local gate passed after every round (lint, typecheck, validate:content, 308 unit tests, build, 37 e2e tests). Verified visually via screenshot and computed-style probes. Two commits pushed to the PR; CI green on the first, not yet re-checked on the second at last note."
+status: completed
+outcome: "Grilled, built, refined via UI feedback, tested green, PR #380 merged"
+summary: "User asked for a blog tagging system with a cross-Persona browse page above the Persona spaces. Ran /grill-with-docs (grilling + domain-modeling) across 9 sequential questions with recommendations, reaching explicit sign-off before implementing. Added a 15-tag curated z.enum vocabulary to the blog pages schema; read and tagged all 23 existing posts across david/karen/kevin; added a Tag glossary entry to layers/blog/CONTEXT.md; built /t/blog as a Tenant-root front door (ADR-0016 precedent) combining all three Personas' posts into one feed filterable by ?tag=. After the initial implementation and PR #380, the user gave two rounds of direct UI feedback I acted on without re-grilling (both explicit user asks, not agent-initiated redesign): first to move the tag directory and intro into a sidebar reusing the existing BlogNetwork component's label/style instead of inline links; then, after screenshotting, the user flagged the result as still \"a box in a box\" nearly duplicating content (the intro paragraph vs the Network's own hint line) — I traced this to the Network panel being stacked inside a second, separately-boxed \"About\" wrapper, and fixed it by giving BlogNetwork an optional #extra slot so the tag directory folds into the SAME box, with the wrapper reduced to a plain layout container. My first fix attempt for that didn't visually take because the override CSS rule had lower cascade priority (same specificity, but earlier in source order) than the base box-styling rule it needed to beat; fixed by adding a third class to win on specificity rather than reordering. The user also asked me to verify feed ordering against real timestamps twice (publishedAt vs. each other, then publishedAt vs. git commit time) rather than trusting memory — the second check surfaced a genuine, pre-existing data inconsistency (one post's publishedAt postdates its own commit by over 3 hours), which the user asked me to guard against going forward with a short blog-post Skill addition (published date should be roughly commit time, never a future timestamp) rather than fixing the existing post's data. Full local gate passed after every round (lint, typecheck, validate:content, 308 unit tests, build, 37 e2e tests). Verified visually via screenshot and computed-style probes. Two commits pushed to the PR; CI green on both, no review comments, and the PR merged."
 prs:
   - "380"
 docsRead:
@@ -126,23 +126,25 @@ frictions:
   - description: My first CSS fix for the box-in-a-box (stripping the outer wrapper's background/border/shadow via a class override) didn't visually apply — the override rule had the same selector specificity as the base rule it needed to beat, but appeared earlier in the stylesheet, so the later base rule won the cascade.
     solution: When a targeted CSS override doesn't take effect, check rule order before assuming the selector is wrong — equal-specificity rules resolve by source order, so bumping specificity (an extra class) is a more robust fix than relying on placement.
     severity: nit
-durationSec: 2673
+durationSec: 2877
 models:
-  claude-sonnet-5: 348
+  claude-sonnet-5: 365
 toolCounts:
-  Bash: 67
+  Bash: 68
   Skill: 5
   Read: 58
   AskUserQuestion: 12
-  Edit: 41
+  Edit: 43
   Write: 4
   Grep: 3
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_read: 9
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__actions_list: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/tenant.config.ts
   - layers/blog/CONTEXT.md
