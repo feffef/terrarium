@@ -1,0 +1,73 @@
+schemaVersion: 1
+session: session_015NvNgY7GpPEfuXEwUJUZi8
+startedAt: 2026-07-11T21:23:32Z
+endedAt: 2026-07-11T23:26:30Z
+kind: interactive
+goal: Switch self-merge tiers to auto-merge flag
+status: completed
+outcome: Three skills updated; PR
+summary: 'The Trusted owner directed a doc sweep after #231 resolved (repo-level GitHub auto-merge now available, tested by #331): find and fix stale docs, and switch self-merge-eligible skills to the auto-merge flag where their PR matches the criteria. All work was human-instructed. Found the stale "auto-merge unavailable pending #231, merge manually" fallback in three low-risk self-merge tiers (audit-docs step 7, audit-skills step 8, digest intro + step 6) and switched them to enable_pr_auto_merge, preserving every bound. Left frictions-to-fixes untouched — its reviewer-agent tier needs a posted review and risk judgement before merge, so its PRs do not match the merge-on-green criteria. CLAUDE.md, how-it-works, inventory yml, ADRs already accurate. Full gate green; PR #332 rebased onto latest main and merged by the owner.'
+prs:
+  - "332"
+docsRead:
+  - path: CLAUDE.md
+    reason: single home for the auto-merge-available fact and no-self-merge rule
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: self-merge / auto-merge tier grants per chartered Skill
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: tier-classification method (Live vs Historical) and the edited step 7
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: confirm reviewer-agent tier needs review before merge, so it is not auto-merge-eligible
+  - path: /root/.claude/projects/-home-user-terrarium/4b660481-4496-5218-9ed3-2aaf76d8cd1c/tool-results/toolu_01JpaEXDTyJoTMKXvLo3iRkN.txt
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: front door for closure at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: The initial merge/self-merge grep returned ~50 matches dominated by Historical session logs, digests and blog posts, drowning the handful of actual Live-doc drift hits.
+    solution: Scope such a drift grep to non-Historical globs (.agents/skills, docs, CLAUDE.md) up front, per audit-docs' tier classification, rather than filtering the whole tree by hand.
+    severity: minor
+  - description: The provenance footer was not auto-injected into the cloud `-m` commit, so I had to amend it in via `git commit -F`.
+    solution: Already documented in CLAUDE.md ("cloud -m commits have been seen skipping the injection") — verify and amend, which is what happened.
+    severity: nit
+durationSec: 7378
+models:
+  claude-opus-4-8: 130
+toolCounts:
+  Bash: 19
+  Glob: 1
+  Grep: 4
+  Read: 10
+  mcp__github__pull_request_read: 2
+  mcp__github__issue_read: 1
+  mcp__github__get_commit: 1
+  Edit: 6
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
+filesEdited:
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/digest/SKILL.md
+gitBranch: claude/auto-merge-docs-update-b7bsvt
+entrypoint: remote
+cliVersion: 2.1.207
+learnings:
+  - '"self-merge" is the tier concept (author lands own PR without human review); auto-merge (the GitHub flag) is just one mechanism to do it — so a mechanism swap needed no renaming of the tier.'
+  - The auto-merge flag lands purely on a green gate, which is exactly why frictions-to-fixes cannot use it — its tier requires a posted review comment plus a risk judgement before the merge, a step the flag would silently bypass.
+ideas:
+  - Single-home the "land a low-risk gated PR" recipe (enable auto-merge on green, red-gate-never-merges, out-of-scope escalates) into one docs/agents/pr-workflow.md, referenced from digest/audit-docs/audit-skills — this session had to edit three files for one fact change, and the next mechanism change would too until the recipe stops being restated per Skill.
