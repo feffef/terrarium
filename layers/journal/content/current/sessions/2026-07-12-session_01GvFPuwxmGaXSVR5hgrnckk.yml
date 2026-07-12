@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01GvFPuwxmGaXSVR5hgrnckk
 startedAt: 2026-07-12T01:25:33Z
-endedAt: 2026-07-12T01:31:11Z
+endedAt: 2026-07-12T01:32:50Z
 kind: autonomous
 goal: Run /digest to author the 2026-07-11 Digest and refresh the Journal
-status: in-review
-outcome: Digest authored, gate green, PR open, auto-merge pending on CI
-summary: "Fully agent-initiated: a scheduled Routine fired /digest with no other human instruction this turn. Branched journal/digest-refresh-2026-07-12 off origin/main, found 2026-07-11 as the one closed day missing a Digest via scripts/digest.ts, authored layers/journal/content/current/pages/digests/2026-07-11.md narrating the day the repo went public (MIT LICENSE, ADR-0020 requester-trust tiers, GitHub auto-merge adoption) against recurring GitHub Actions runner_id-0 CI failures. pnpm gate passed clean (build + 28/28 e2e). Opened PR #337 and subscribed to its activity; enabling GitHub auto-merge was deferred because the gate run on the PR head was still in_progress at PR creation, so a follow-up self-check-in was scheduled via send_later to retry once CI resolves."
+status: completed
+outcome: Digest authored, gate green, PR
+summary: "Fully agent-initiated: a scheduled Routine fired /digest with no other human instruction this turn. Branched journal/digest-refresh-2026-07-12 off origin/main, found 2026-07-11 as the one closed day missing a Digest via scripts/digest.ts, authored layers/journal/content/current/pages/digests/2026-07-11.md narrating the day the repo went public (MIT LICENSE, ADR-0020 requester-trust tiers, GitHub auto-merge adoption) against recurring GitHub Actions runner_id-0 CI failures. pnpm gate passed clean (build + 28/28 e2e). Opened PR #337, subscribed to its activity, and scheduled a 5-minute self-check-in since the PR-head gate run was still in_progress at creation. On the check-in, GitHub Actions reported the gate green; enabling auto-merge was then rejected because the PR was already in clean/mergeable status, so the PR was merged directly and the subscription/check-in torn down."
 prs:
   - "337"
 docsRead:
@@ -31,24 +31,28 @@ frictions:
   - description: mcp__github__actions_list (list_workflow_runs, perPage 5, no minimal_output) overflowed the tool's ~58k-char output ceiling for a single-branch query.
     solution: Re-ran with minimal_output:true, which fit comfortably.
     severity: nit
-durationSec: 339
+durationSec: 438
 models:
-  claude-sonnet-5: 64
+  claude-sonnet-5: 79
 toolCounts:
-  Bash: 14
-  Read: 2
+  Bash: 15
+  Read: 3
   Write: 2
   ToolSearch: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
-  mcp__github__enable_pr_auto_merge: 2
+  mcp__github__enable_pr_auto_merge: 3
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 3
   mcp__github__actions_list: 2
   mcp__github__actions_get: 2
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
   PushNotification: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Edit: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-11.md
 gitBranch: claude/compassionate-lovelace-msu5dh
