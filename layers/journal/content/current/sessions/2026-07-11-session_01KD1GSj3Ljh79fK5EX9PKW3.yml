@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01KD1GSj3Ljh79fK5EX9PKW3
 startedAt: 2026-07-11T21:45:38Z
-endedAt: 2026-07-12T00:13:36Z
+endedAt: 2026-07-12T02:21:25Z
 kind: interactive
 goal: Rework Atlas Sprint 2 almanac per feedback
 status: in-review
-outcome: "Phase-driven dial shipped; PR #334 green, in review"
-summary: "Human-instructed throughout. The user (Trusted owner) gave feedback on Sprint 2's Wheel of the Year (#305): main UI element but subtle effect, sightings unfindable, the stacked composite wheel confusing. Via AskUserQuestion they chose the direction — dial as a season selector showing one paragraph at a time, a landing \"who's about this season\" roster, clickable sighting ticks. Three follow-up rounds refined it: layout order (intro, then wheel, then seasons); labelling the dial's two vocabularies (SEASON vs \"<binomial> PHASE\") after the user flagged a confusing season/phase compound; and carrying the wheel's ?day= through the landing's specimen links. Agent-initiated within that mandate: the implementation and the successive subagent conversions. The model then EVOLVED through the user's own insight: seasons are the shared terrarium calendar but phases are individual to each specimen, so the content should be tied to the creature's PHASES (its own arc) with seasons as informational rim context. That re-pointed the dial (phase-driven ::phase-note, seasons demoted to a labelled context line) and required re-converting all 15 essays a second time (season-buckets → each creature's own phases); the season-note/inline-season components were retired. Full gate + CI green throughout; Playwright probes verified per-creature phase switching, the clickable tick, the labelled caption, and the date-carrying landing roster. Awaiting human merge (not self-merged, ADR-0003)."
+outcome: "Phase-driven almanac shipped; PR #334 green, in review"
+summary: "Human-instructed throughout. The user (Trusted owner) gave iterative feedback on Sprint 2's Wheel of the Year (#305), which evolved across several rounds — each their call via AskUserQuestion or direct feedback. (1) Make the dial a selector that fully swaps one paragraph at a time, add a landing \"who's about\" roster, clickable sighting ticks. (2) Fix layout order: intro, then wheel, then content. (3) Label the dial's two vocabularies + carry ?day= through landing links. (4) The decisive pivot: content is tied to each specimen's OWN phenology phases (::phase-note), not the six shared seasons, which become informational rim context. Agent-initiated within the mandate: all implementation (::almanac/::phase-note MDC components, focusDay + specimenLabel contract, phase-mode wheel, post-mount collapse), converting all 15 essays TWICE (season-notes then phase-notes, via biome subagents each pass), retiring ::phase then the season-note components. Full gate + CI green at each stage; Playwright probes verified the mechanics. Awaiting human merge (not self-merged, ADR-0003)."
 prs:
   - "334"
 docsRead:
@@ -15,7 +15,7 @@ docsRead:
   - path: layers/atlas/app/composables/almanac.ts
     reason: the Almanac contract the dial + MDC components share
   - path: layers/atlas/app/components/atlas/PhenologyWheel.vue
-    reason: the dial to rework into a season selector
+    reason: the dial to rework into a phase selector
   - path: .agents/skills/atlas-specimen/SKILL.md
     reason: naturalist voice + the authoring pattern to update
   - path: layers/atlas/tests/e2e/atlas.e2e.ts
@@ -46,16 +46,16 @@ skillsUsed:
   - name: log-session
     reason: this log
 frictions:
-  - description: The 15 essays were mass-authored under the season-bucket model, then re-authored under the phase model when the design evolved — two full content passes (~6 opus subagents). The better axis (phases, not seasons) only emerged mid-build.
-    solution: Reference-first-then-scale contained the cost (one specimen proved each model before the fleet ran); for open-ended UI/content design, settle the organizing axis on one reference and confirm before the mass authoring pass.
+  - description: The design axis evolved mid-build (six shared seasons drive content → each specimen's own phases drive content), so all 15 essays were re-authored TWICE by subagents — a whole extra content pass.
+    solution: Grill the model harder up front on the load-bearing question (which axis — shared or per-specimen — is the content tied to?) before committing subagents to author 15 essays.
     severity: moderate
-  - description: I briefed the subagents (and wrote the reference) that "::almanac" needs no closing fence; MDC block components need a closing "::", so the bare form broke the following season-note parse and every note rendered as plain prose.
-    solution: An empty MDC block still needs its "::" close (like "::sighting"); fixed in all 15 files + the skill. Assert component presence in a probe, not just clean hydration.
+  - description: I briefed the subagents (and wrote the reference) that "::almanac" needs no closing fence; MDC block components need a closing "::", so the bare form broke the following note parse and every note rendered as plain prose.
+    solution: An empty MDC block still needs its "::" close (like "::sighting"). Assert component presence in a probe, not just clean hydration.
     severity: major
-  - description: The gate's e2e only hydrates two atlas specimen routes and checks for console errors, so a broken MDC component that degrades to prose (no error) escaped it entirely.
-    solution: A structural content check (assert each specimen renders six season-note components, valid "of=" names, real sighting dates) would catch this class at ~1-2s.
+  - description: The gate's e2e only hydrates two atlas specimen routes and checks for console errors, so a broken MDC component that degrades to prose (no error) escaped it entirely — caught only by an ad-hoc Playwright probe.
+    solution: A structural content check (assert each specimen renders one dial-note per phase with valid "of=" names and real sighting dates) would catch this class at ~1-2s.
     severity: moderate
-  - description: Three parallel subagents used inconsistent fence colon counts (pool wrote four, floor and canopy three) despite one shared brief; had to normalize afterward.
+  - description: Parallel biome subagents used inconsistent fence colon counts (one pass had a subagent write four colons where the others wrote three) despite one shared brief.
     solution: Pin the exact fence syntax with a canonical example in the brief; normalize in review.
     severity: minor
   - description: '"nuxt dev" content-DB-not-ready race rendered the first biome-landing dev screenshot empty.'
@@ -64,25 +64,28 @@ frictions:
   - description: Harness did not auto-inject the Co-Authored-By/Claude-Session footer on -m commits; amended it in each time.
     solution: "Verify and amend (the documented practice for the known #318 case)."
     severity: nit
-durationSec: 8878
+  - description: The claude-code-remote send_later re-arm of the PR check-in failed once with 'permission stream closed'.
+    solution: Transient; retry on the next turn. The PR webhook subscription still delivers CI/review events meanwhile.
+    severity: nit
+durationSec: 16547
 models:
-  claude-opus-4-8: 617
+  claude-opus-4-8: 652
   <synthetic>: 1
 toolCounts:
-  Bash: 92
+  Bash: 98
   Grep: 3
-  Read: 47
+  Read: 48
   ToolSearch: 5
   mcp__github__list_pull_requests: 1
   mcp__github__pull_request_read: 6
   AskUserQuestion: 2
-  Edit: 83
-  Write: 12
+  Edit: 91
+  Write: 13
   Agent: 6
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__Claude_Code_Remote__send_later: 2
+  mcp__Claude_Code_Remote__send_later: 3
   Skill: 2
   mcp__github__update_pull_request: 2
   SendUserFile: 3
@@ -126,9 +129,9 @@ gitBranch: claude/astlas-spring-2-feedback-t8hsgv
 entrypoint: remote
 cliVersion: 2.1.207
 learnings:
-  - "The decisive design move for this feature was matching the UI axis to the data's ownership: the SHARED thing (seasons) is context, the INDIVIDUAL thing (each specimen's phases) drives the per-specimen content. The user surfaced this; it resolved the whole 'what are phases / why are they here' confusion at once."
-  - When two overlapping vocabularies confuse a reader (here the six shared seasons vs a creature's own phenology phases), explicitly LABELLING each layer beat hiding one — the user preferred a labelled SEASON / PHASE caption over my first instinct to drop the phase names.
+  - "The clean domain split that resolved the confusion: SEASONS are global (shared across all specimens, a fixed partition), PHASES are per-specimen; tying the reader's content to the per-specimen axis (phases) and leaving the shared axis (seasons) as context is what finally made the dial legible."
+  - When two overlapping vocabularies confuse a reader, explicitly LABELLING each layer can beat hiding one — though here the deeper fix was re-rooting the content on the right axis entirely.
   - Nuxt Content v3 renders specimen essay content client-side (DB loads post-hydration), so curling SSR HTML shows component classes absent even when they render fine in the browser — verify against the rendered DOM.
   - A bare MDC block component "::name" (no closing "::") swallows/breaks the following sibling blocks; empty components still need the close, the component just ignores the empty slot.
 ideas:
-  - "Add an Atlas content-structure check (extend validate:content or a sibling script) that parses each specimen's MDC body and asserts invariants: exactly six ::season-note blocks with valid Glass-Year \"of=\" names, one ::almanac, and every ::sighting date resolving to a real in-biome observation. It catches the whole \"MDC degraded to prose / dangling reference\" class the error-only e2e hydration misses, in ~1-2s, and would have caught this session's ::almanac regression before CI."
+  - "Add an Atlas content-structure check (extend validate:content or a sibling script) that parses each specimen's MDC body and asserts invariants: exactly one dial-note per frontmatter phenology phase with a valid \"of=\" name, one ::almanac, and every ::sighting date resolving to a real in-biome observation. It catches the whole \"MDC degraded to prose / dangling reference\" class the error-only e2e hydration misses, in ~1-2s, and would have caught this session's ::almanac regression before CI."
