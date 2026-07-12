@@ -1,0 +1,150 @@
+schemaVersion: 1
+session: session_01TSJkr4NdvgyjFj5sRP7EC6
+startedAt: 2026-07-11T22:11:51Z
+endedAt: 2026-07-12T00:02:49Z
+kind: interactive
+goal: Clarify blog purpose; restructure domain docs multi-context
+status: completed
+outcome: Both PRs merged to main
+summary: "Human-directed throughout: two /grill-with-docs passes shaped the design before any build. The owner asked to (a) reword blog posts' \"first-time visitor\" audience to a loosely-following reader and (b) explain why the blog exists — which grew, at the owner's direction, into adopting a multi-context domain-doc structure (root Platform context + CONTEXT-MAP.md + per-tenant CONTEXT.md), retiring the speculative sync/consolidate/codify job-taxonomy and the Spawn/\"Journal entry\" terms, plus a living-doc sweep. Split into #335 (blog content — owner already reviewing, merged main in) and #336 (restructuring + ADR-0021, human-only merge). Every decision was owner-green-lit; nothing net-new was agent-initiated. Both merged to main this session."
+prs:
+  - "335"
+  - "336"
+docsRead:
+  - path: CONTEXT.md
+    reason: the glossary being restructured
+  - path: docs/agents/domain.md
+    reason: single vs multi-context conventions
+  - path: .agents/skills/domain-modeling/CONTEXT-FORMAT.md
+    reason: glossary-only rule
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: Journal-rationale ADR precedent
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: A2/A5 reader model to reword
+  - path: app/pages/index.vue
+    reason: (read before editing)
+  - path: layers/blog/content/david/pages/index.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/index.md
+    reason: (read before editing)
+  - path: layers/blog/content/kevin/pages/index.md
+    reason: (read before editing)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/setup-matt-pocock-skills/domain.md
+    reason: (no reason given)
+  - path: .agents/skills/domain-modeling/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/domain-modeling/ADR-FORMAT.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: layers/blog/app/utils/personas.ts
+    reason: (read before editing)
+  - path: layers/blog/tenant.config.ts
+    reason: (read before editing)
+  - path: layers/atlas/app/utils/biomes.ts
+    reason: (read before editing)
+  - path: layers/atlas/tenant.config.ts
+    reason: (read before editing)
+  - path: README.md
+    reason: (read before editing)
+  - path: layers/journal/tenant.config.ts
+    reason: (read before editing)
+  - path: layers/journal/app/components/journal/FrictionStrata.vue
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: grilling
+    reason: two /grill-with-docs passes to stress the design before building
+  - name: domain-modeling
+    reason: multi-context structure + ADR/glossary conventions
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+  - name: model
+    reason: (invoked as a slash command)
+  - name: context
+    reason: (invoked as a slash command)
+frictions:
+  - description: A git reset --soft to a freshly-fetched origin/main (advanced 2 commits mid-session) staged reverts of concurrent commits to files I never touched.
+    solution: Caught it via a stray audit-docs modification; recovered and rebased instead. CLAUDE.md's stale-origin/main warning applies to mid-session rebases, not just pre-diff — check before reset.
+    severity: moderate
+  - description: The provenance footer did not auto-inject on a cloud git commit -m; had to amend it in.
+    solution: Known issue (CLAUDE.md) — verify the footer landed and amend when absent.
+    severity: minor
+  - description: "Branch/PR-split ambiguity: the owner thought the blog-content branch already existed, and the pinned branch name matched both possible PRs."
+    solution: When a split is agreed, assign each PR its branch explicitly at that moment, not later.
+    severity: minor
+  - description: I mis-applied the single-home rule to pointers, briefly resisting a separate CONTEXT-MAP.md; the owner corrected that pointers are navigation, not duplication.
+    solution: Single-home forbids duplicating substantive content only; references to the one home are fine everywhere.
+    severity: nit
+durationSec: 6658
+models:
+  claude-sonnet-5: 75
+  claude-opus-4-8: 306
+toolCounts:
+  Agent: 2
+  Read: 37
+  Bash: 60
+  Skill: 4
+  AskUserQuestion: 2
+  TaskCreate: 1
+  Write: 10
+  Edit: 36
+  ToolSearch: 2
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__delete_trigger: 1
+filesEdited:
+  - docs/tenants/blog.md
+  - docs/tenants/atlas.md
+  - docs/tenants/journal.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - layers/blog/CONTEXT.md
+  - layers/atlas/CONTEXT.md
+  - layers/journal/CONTEXT.md
+  - CONTEXT-MAP.md
+  - CONTEXT.md
+  - docs/agents/domain.md
+  - layers/blog/content/karen/pages/index.md
+  - layers/blog/content/kevin/pages/index.md
+  - app/pages/index.vue
+  - .agents/skills/blog-post/SKILL.md
+  - CLAUDE.md
+  - layers/blog/app/utils/personas.ts
+  - layers/blog/tenant.config.ts
+  - layers/atlas/app/utils/biomes.ts
+  - layers/atlas/tenant.config.ts
+  - .agents/skills/atlas-specimen/SKILL.md
+  - README.md
+  - layers/journal/tenant.config.ts
+  - layers/journal/app/components/journal/FrictionStrata.vue
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/personas/kevin.md
+  - .agents/skills/digest/SKILL.md
+subagents:
+  - type: Explore
+    task: Find blog persona and intro content in repo
+  - type: Explore
+    task: Investigate Atlas tenant purpose and structure
+gitBranch: claude/blog-intro-purpose-v6qjbg
+entrypoint: remote
+cliVersion: 2.1.207
+learnings:
+  - Single-home rule forbids duplicating substantive content, not pointers — references to the one home belong wherever they aid navigation.
+  - "This repo's ADR boundary: ADRs record Platform architecture only; a demo Tenant's reason-to-exist is product and lives in its CONTEXT.md — the Journal is the exception because it is infrastructure (ADR-0008)."
+  - The CI safety-gate webhook reports green on merge-preview SHAs that differ from your pushed branch commits — don't mistake them for unexpected commits.
+ideas:
+  - Add a cheap CI/lint check that fails when a newly-introduced line in a living doc uses a retired glossary term (sync/consolidate/codify/Spawn/'Journal entry'), so retirement is enforced at PR time instead of relying on the nightly audit-docs sweep to catch re-introductions.
