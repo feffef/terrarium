@@ -22,19 +22,6 @@ carves its content into **Spaces** (isolated variants — this Journal keeps a
 `current` and an `archived` Space), and each Space holds typed **Collections**
 of **Documents** (the pages, session logs, and digests you're reading).
 
-That containment chain, with this Journal as the concrete example:
-
-```mermaid
-graph TD
-  Platform[Platform] --> Journal["Tenant: journal"]
-  Platform --> Others["…other Tenants"]
-  Journal --> Current["Space: current"]
-  Journal --> Archived["Space: archived"]
-  Current --> Pages["Collection: pages"]
-  Current --> Sessions["Collection: sessions"]
-  Pages --> Doc["Document: this page"]
-```
-
 Agents don't wire any of this by hand. Each Tenant declares its Spaces and
 Collections in a small **manifest** — a statement of intent — and the build
 expands that into the full set of content collections, keyed per

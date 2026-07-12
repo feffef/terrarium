@@ -93,13 +93,13 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       expect(html).not.toContain('No document at')
     })
 
-    // The `architecture` Document embeds a fenced ```mermaid block, rendered
+    // The `how-it-works` Document embeds a fenced ```mermaid block, rendered
     // client-only via a dynamic `import('mermaid')` (issue #364) — only a real
     // browser proves the fallback `<pre>` got replaced by an actual inline SVG,
     // since the SSR HTML can never contain it. Assert on the rendered DOM, not
     // the fetched markup.
     it('renders a mermaid diagram as an inline SVG', async () => {
-      const route = '/t/journal/current/architecture'
+      const route = '/t/journal/current/how-it-works'
       const { page, errors } = await renderAndCollectErrors(route)
       try {
         await page.locator('.mermaid-diagram svg').first().waitFor({ state: 'attached', timeout: 10_000 })
