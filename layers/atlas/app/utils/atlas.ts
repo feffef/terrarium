@@ -101,14 +101,6 @@ export function relationsFor(slug: string, edges: Edge[]): Relation[] {
   return out.sort((a, b) => a.label.localeCompare(b.label) || a.other.localeCompare(b.other))
 }
 
-/** A character-count estimate for a strand label's SVG background pill —
- *  safe without an actual text-measurement pass because the label vocabulary
- *  is closed (the 10 FORWARD/REVERSE phrases above). Shared by the biome-wide
- *  food web and a specimen's own relations web so their pills size alike. */
-export function relationLabelPillWidth(label: string): number {
-  return label.length * 7.2 + 16
-}
-
 // ── Phenology (#279/#282) ────────────────────────────────────────────────────
 /** One phase of a specimen's Glass Year (`phenology.phases[]` in the manifest
  *  schema) — the annual sibling of an activity `Band`. `span` is a day-of-year

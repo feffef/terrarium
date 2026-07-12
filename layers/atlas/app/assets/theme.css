@@ -485,7 +485,9 @@
 .atlas-web .node .seat { pointer-events: all; }
 /* the illustration, inked straight onto the page — same engraved linework as the plate */
 .atlas-web .node .figure { color: var(--atlas-ink); pointer-events: none; }
-.atlas-web .node text { fill: var(--atlas-ink); font-size: 10px; }
+/* paper halo (paint-order: stroke) so a strand or phrase crossing beneath a
+   name reads as passing behind it */
+.atlas-web .node text { fill: var(--atlas-ink); font-size: 10px; stroke: var(--atlas-paper); stroke-width: 3; stroke-linejoin: round; paint-order: stroke; }
 .atlas-web .node .nm { font-style: italic; font-family: var(--atlas-display); font-size: 11px; }
 .atlas-web .node .mk { font-size: 12px; fill: var(--atlas-muted); }
 /* the specimen's colour signature, a short engraved rule beneath the name */
@@ -494,20 +496,27 @@
 .atlas-web .strand.dim { opacity: 0.12; }
 .atlas-web .strand.hot { stroke-width: 2.4; }
 .atlas-web .node.hot .sigrule { opacity: 1; }
-/* the strand's own meaning, always seated at its curve — a pill so it stays
-   legible over whatever else crosses beneath it */
-.atlas-web .strand-label rect { fill: var(--atlas-paper); stroke: var(--atlas-rule); stroke-width: 1; opacity: 0.94; }
-.atlas-web .strand-label text {
-  font-family: var(--atlas-label);
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
+/* the strand's own meaning rides ALONG the strand — textPath on an invisible
+   rail lifted just above the curve, an italic annotation as on an engraved map
+   (the same register as the relations web's .rel-lbl below), with a paper halo
+   so it stays legible over whatever else crosses beneath it */
+.atlas-web .rail { fill: none; stroke: none; }
+.atlas-web .web-lbl {
+  font-family: var(--atlas-text);
+  font-style: italic;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
   fill: var(--atlas-muted);
+  stroke: var(--atlas-paper);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  paint-order: stroke;
+  pointer-events: none;
+  transition: opacity 0.15s ease, fill 0.15s ease;
 }
-.atlas-web .strand-label.dim { opacity: 0.12; }
-.atlas-web .strand-label.hot rect { stroke: var(--biome-accent); }
-.atlas-web .strand-label.hot text { fill: var(--atlas-ink); }
+.atlas-web .web-lbl.dim { opacity: 0.12; }
+.atlas-web .web-lbl.hot { fill: var(--atlas-ink); }
 
 /* ── Relations web (#71 ego view) ───────────────────────────────────────────
    A specimen's own reflection of the food web above — same `.atlas-web` node/
@@ -535,12 +544,8 @@
   paint-order: stroke;
   pointer-events: none;
 }
-.atlas-relweb .node text { stroke: var(--atlas-paper); stroke-width: 3; stroke-linejoin: round; paint-order: stroke; }
 .atlas-relweb .node-hit:hover .nm,
 .atlas-relweb .node-hit:focus-visible .nm { fill: var(--biome-accent); }
-.atlas-web-legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; margin-top: 1rem; font-family: var(--atlas-label); font-size: 0.72rem; color: var(--atlas-muted); }
-.atlas-web-legend .k { display: inline-flex; align-items: center; gap: 0.5ch; }
-.atlas-web-legend svg { width: 26px; height: 8px; overflow: visible; }
 .atlas-web .empty { color: var(--atlas-faint); font-style: italic; text-align: center; padding: 2rem; }
 
 /* ── Rarity legend (#69) ───────────────────────────────────────────────────*/
