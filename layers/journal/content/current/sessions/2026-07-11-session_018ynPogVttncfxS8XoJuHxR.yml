@@ -1,29 +1,34 @@
 schemaVersion: 1
 session: session_018ynPogVttncfxS8XoJuHxR
 startedAt: 2026-07-11T23:52:34Z
-endedAt: 2026-07-12T07:36:44Z
+endedAt: 2026-07-12T09:20:17Z
 kind: interactive
-goal: Investigate a change-scoped selective safety gate
-status: completed
-outcome: "Investigation delivered as issue #350; PR closed"
-summary: "The user asked (human-instructed) to investigate a gate script that skips unit/e2e when only .md files outside layers/ change. I verified the premise against the tree: nothing in build, the unit suite, or e2e/L2 consumes a .md outside layers/, and the two real-tree unit tests read config files, not docs. Designed an always-on cheap floor (verify:skills-lock covers the .agents/skills SKILL.md case) plus a fail-safe allowlist that skips test/build/test:e2e only when every changed path is inert, with local-vs-CI base-ref detection. I first (agent-initiated) captured this as a docs/research/ note and opened gated PR #339; the owner correctly pushed back that drafts/concepts for unimplemented work go in issues here, not committed docs on main. I moved the substance to issue #350 and closed PR #339 — nothing landed on main but the session log. The gate change itself remains unimplemented, pending an ADR-0003 green-light."
-prs: []
+goal: Build a change-scoped selective safety gate
+status: in-review
+outcome: "Additive pnpm gate:scoped built; PR #353 open"
+summary: "The user asked (human-instructed) to investigate a gate that skips unit/e2e when only .md files outside layers/ change. I verified the premise against the tree: nothing in build, the unit suite, or e2e consumes such a file. I first (agent-initiated) captured the design as a docs/research note and opened PR #339; the owner correctly pushed back that drafts/concepts go in issues here, not committed docs on main, so I moved the substance to issue #350 and closed #339 (nothing landed on main but the session log). The owner then named the additive variant gate:scoped and green-lit building it (human-instructed). I implemented scripts/gate.ts + a gate:scoped package script: cheap floor always, heavy layers (test/build/test:e2e) skipped only when every changed path is a .md outside layers/, fail-safe to the full gate otherwise. Pure helpers are unit-tested; pnpm gate green; opened PR #353. The real merge gate and CI are untouched (option 2 stays open on #350)."
+prs:
+  - "353"
 docsRead:
   - path: docs/adr/0004-objective-safety-gate.md
     reason: the gate's governing ADR and its human-only high-risk set
   - path: package.json
-    reason: single home of the gate step order
-  - path: .github/workflows/gate.yml
-    reason: the CI mirror agents cannot push
+    reason: single home of the gate step order; added gate:scoped here
+  - path: scripts/recent-prs.ts
+    reason: match the CLI/main-guard + git execFileSync conventions
   - path: scripts/validate-content.ts
-    reason: confirm L1 scope is layers-only
+    reason: match pure-core-plus-thin-shell test convention; confirm L1 scope
   - path: tests/unit/typecheck-coverage.spec.ts
     reason: confirm unit tests read config not docs
+  - path: .github/workflows/gate.yml
+    reason: (no reason given)
   - path: docs/adr/0004-safety-gate.md
     reason: (no reason given)
   - path: eslint.config.mjs
     reason: (no reason given)
   - path: layers/blog/content/karen/pages/2026-07-11-the-gate-that-broke-its-own-gate.md
+    reason: (no reason given)
+  - path: tests/unit/recent-prs.spec.ts
     reason: (no reason given)
 skillsUsed:
   - name: close-session
@@ -31,50 +36,53 @@ skillsUsed:
   - name: log-session
     reason: author this interpretive log
 frictions:
-  - description: I committed a design note for unimplemented work as a docs/research doc and opened a PR; the repo convention is to use GitHub issues for drafts/concepts, which the owner had to point out.
-    solution: Treat docs/research/ as verified references only; route designs-for-unimplemented-work to issues. Worth making this distinction explicit in a doc so the next session does not repeat it.
+  - description: I first committed a design note for unimplemented work as a docs/research doc and opened a PR; the repo convention is GitHub issues for drafts/concepts, which the owner had to point out.
+    solution: Treat docs/research/ as verified references only; route designs-for-unimplemented-work to issues. Worth stating this distinction in a doc so the next session does not repeat it.
     severity: moderate
-  - description: AskUserQuestion failed twice with permission-stream-closed, so I could not ask the user to pick implementation scope and had to choose a default (the doc/PR path, which turned out wrong).
-    solution: Fall back gracefully; but also prefer the lighter-weight artifact (an issue) when unsure, since it is easier to correct than a committed doc + PR.
+  - description: AskUserQuestion failed twice with permission-stream-closed, so I could not ask the user to pick scope and defaulted to the doc/PR path, which was wrong.
+    solution: Fall back gracefully; prefer the lighter-weight artifact (an issue) when unsure, since it is cheaper to correct than a committed doc + PR.
     severity: minor
-  - description: send_later failed four times with permission-stream-closed, so the ~1h PR check-in could never be armed (the known Claude_Code_Remote cloud limitation).
-    solution: Do not rely on send_later in cloud sessions; lean on the webhook subscription and treat the check-in as best-effort.
+  - description: send_later failed every attempt (5x) with permission-stream-closed across both PRs — the known Claude_Code_Remote cloud limitation — so the ~1h PR merge-detection check-in could never be armed.
+    solution: Do not rely on send_later in cloud sessions; lean on the webhook subscription and treat merge/close detection as best-effort.
     severity: minor
+  - description: git commit -m did not auto-inject the ADR-0017 provenance footer on either commit (known cloud behaviour), needing a manual amend each time.
+    solution: Verify the footer after every -m commit and amend if absent, as CLAUDE.md already warns.
+    severity: nit
   - description: The github and Claude_Code_Remote MCP servers flapped (connect/disconnect) repeatedly mid-session, forcing tool re-loads.
     solution: Re-load tools via ToolSearch on reconnect and retry; tolerate the flap rather than treat a disconnect as capability loss.
     severity: nit
-  - description: The git commit -m did not auto-inject the ADR-0017 provenance footer (known cloud behaviour), needing a manual amend.
-    solution: Verify the footer after every -m commit and amend if absent, as CLAUDE.md already warns.
-    severity: nit
-durationSec: 27850
+durationSec: 34063
 models:
-  claude-opus-4-8: 131
+  claude-opus-4-8: 184
   <synthetic>: 2
 toolCounts:
-  Read: 7
-  Bash: 24
+  Read: 9
+  Bash: 33
   AskUserQuestion: 1
-  Write: 3
+  Write: 6
   ToolSearch: 5
-  mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
+  mcp__github__list_pull_requests: 2
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 3
   Skill: 2
-  Edit: 1
+  Edit: 2
   mcp__github__search_issues: 1
-  mcp__github__issue_write: 1
+  mcp__github__issue_write: 2
   mcp__github__add_issue_comment: 1
   mcp__github__update_pull_request: 1
   mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/research/selective-gate-by-changed-scope.md
+  - scripts/gate.ts
+  - tests/unit/gate-scope.spec.ts
+  - package.json
 gitBranch: claude/gate-script-selective-tests-ybtqw2
 entrypoint: remote
 cliVersion: 2.1.207
 learnings:
-  - "docs/research/ here is for verified references, not speculative designs for unbuilt features; the latter are tracked as GitHub issues. Confirmed by the owner on PR #339."
+  - "docs/research/ here is for verified references, not speculative designs for unbuilt features; those are tracked as GitHub issues. Confirmed by the owner on PR #339."
   - No unit/e2e test or the build reads a .md outside layers/; the two real-tree unit tests read nuxt.config.ts/tsconfig.node.json/session YAML only.
 ideas:
-  - Ship an additive `pnpm gate:changed` first (zero governance risk, real gate untouched) as a low-stakes proving ground for the changed-scope classifier before touching the merge gate itself.
+  - "If gate:scoped proves useful locally, consider a follow-up that lets CI reuse the same scripts/gate.ts classifier via a job output + if-guards on the heavy steps (option 2 on #350) — human-applied, since agents cannot push gate.yml."
