@@ -376,6 +376,15 @@ fast feedback during content-only edits — not a replacement for the full gate 
 stays the mandatory, unchanged merge gate (ADR-0004; see Ground rules above — CI is
 human-only to merge, not to edit, and a PR touching it never auto-merges).
 
+**Changed only `.md` files outside `layers/`?** `pnpm gate:scoped` (`scripts/gate.ts`)
+runs the cheap floor (`verify:skills-lock`, `lint`, `typecheck`, `validate:content`)
+always and skips the heavy layers (`test`, `build`, `test:e2e`) only when *every*
+changed path is a `.md` outside `layers/` — the set nothing in build, the unit suite,
+or e2e consumes (rationale and the inert-set proof: #350). It fails safe: any other
+change, or an undeterminable diff base, runs the full gate. Like `validate:content`
+it is a **local, additive supplement, not a replacement** for `pnpm gate` / CI, which
+stay the mandatory merge gate (ADR-0004).
+
 **Need a screenshot of a running page** (e.g. to eyeball a render during a session)?
 Run `pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--dev]` — it
 starts a server on its own ephemeral port, screenshots the route, and tears the
