@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01YV8CUydPdRtn6o1fTGZegg
 startedAt: 2026-07-10T22:37:10Z
-endedAt: 2026-07-11T06:39:21Z
-kind: delegated
+endedAt: 2026-07-12T14:23:02Z
+kind: interactive
 goal: Orchestrate the Atlas Sprint 2 build
 status: in-review
-outcome: Sprint built, reviewed, PR open
-summary: "Human-instructed under one /implement kickoff carrying the ADR-0003 green-light for the whole sprint (no agent-initiated net-new scope). As build orchestrator for Atlas Sprint 2 (map #279), branched atlas/sprint-2-almanac off origin/main, then dispatched each of the six child tickets as an Agent-tool subagent with isolation:'worktree' on its assigned model — frontier #280 (fable) + #281 (sonnet) in parallel, then #282 → #283 → #284 + #285 — each briefed with the embedded spec and CLAUDE.md worktree discipline. Integrated every per-ticket branch onto the shared branch, running the full gate between tickets (all merges disjoint/clean). Opened gated PR #305, subscribed, ran the #289 review as two parallel fresh Opus axes, posted the verdict, applied the review-surfaced fixes (re-gated + DOM-verified), closed the tickets, and recorded the map decisions. Awaiting human merge — not self-merged (ADR-0003/0004)."
+outcome: Sprint built, reviewed, rebased; PR open
+summary: 'Human-instructed throughout: a /implement kickoff carrying the ADR-0003 green-light for the whole sprint, then several steering follow-ups (asked for screenshots, questioned the retained rhythm band, "keep", "stop watching the PR", "rebase to main"). As build orchestrator for Atlas Sprint 2 (map #279): branched atlas/sprint-2-almanac off main and dispatched the six child tickets as worktree-isolated subagents on their assigned models (#280+#281 parallel, then #282 → #283 → #284+#285), integrating each with a full gate between. Opened gated PR #305, ran the #289 two-axis Opus review, applied the fixes, closed the tickets. Later, on request, surfaced screenshots, unsubscribed from the PR, and rebased the (by-then heavily other-session-evolved) branch from 108 commits behind onto main — force-pushed, gate green. No agent-initiated net-new scope.'
 prs:
   - "305"
 docsRead:
@@ -52,6 +52,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/atlas/tests/unit/almanac.spec.ts
     reason: (read before editing)
+  - path: layers/atlas/tests/e2e/atlas.e2e.ts
+    reason: (read before editing)
 skillsUsed:
   - name: code-review
     reason: "the #289 two-axis Opus terminal review"
@@ -61,21 +63,32 @@ skillsUsed:
     reason: this log
   - name: implement
     reason: (invoked as a slash command)
+  - name: context
+    reason: (invoked as a slash command)
 frictions:
   - description: "The #280 (fable) subagent built utils/almanac.ts + spec but ended its turn while a background gate ran, leaving both files uncommitted in its worktree."
-    solution: Orchestrator detected the premature stop, reviewed + committed the files itself, and added a "complete the protocol before you stop" guard to every later brief (#282+), which stopped recurrence.
+    solution: 'Orchestrator detected the premature stop, reviewed + committed the files itself, and added a "complete the protocol before you stop" guard to every later brief (#282+), which stopped recurrence. Root: a subagent treating a launched background gate as terminal.'
     severity: moderate
-  - description: "The #284 (content) and #285 (composite) subagents both terminated mid-build with an API \"session limit\" error; #284's authoring and #285's implementation were complete but uncommitted in their worktrees."
-    solution: "Recovered both from their worktrees: committed + pushed as backup, verified #284 with validate:content plus a hand-written static referential-integrity script, integrated, and ran the full gate. Root cause: shared session usage limit exhausted by the many long-running subagents."
+  - description: 'The #284 (content) and #285 (composite) subagents both terminated mid-build with an API "session limit" error; their work was complete but uncommitted in their worktrees.'
+    solution: "Recovered both: committed + pushed as backup, verified #284 with validate:content plus a hand-written static referential-integrity script, integrated, ran the full gate. Root: shared session usage limit exhausted by the many long-running subagents."
     severity: major
-  - description: The claude-code-remote send_later tool failed all three attempts ("permission stream closed"), so the proactive ~1h babysit check-in could not be armed.
-    solution: Fell back to the PR webhook subscription (still delivers review comments + CI failures); gap is proactive detection of silent merge/close/conflict transitions, mitigated by an active PR author.
+  - description: "The integration branch was force-rebased by ANOTHER session while I finished, then further evolved (feedback reworks: season selector, retire ::phase, phase-notes; PR #334 merged in). My local diverged; I had to re-sync to the authoritative remote each time."
+    solution: Reset to origin before operating; used --force-with-lease so a rebase can't clobber a concurrent push. Cross-session concurrency on a shared integration branch is inherent — always re-fetch and reset to origin before touching it.
+    severity: moderate
+  - description: "CI went red because main added gate steps (verify:skills-lock, split content-validation; #323/#363) AFTER I branched — the branch was stale against them until rebased onto main."
+    solution: Rebased the branch onto latest main (108 → 0 behind); the newer gate steps then passed. The failure only surfaced via CI, which is why a rebase-current was the fix.
+    severity: moderate
+  - description: mcp__github__get_job_logs returned HTTP 404 for the failing gate job (both job_id and run_id+failed_only forms), so I couldn't read the CI failure from the API.
+    solution: Reproduced the gate locally after resetting to the rebased branch to diagnose instead.
+    severity: minor
+  - description: "Rebasing 14 commits produced recurring conflicts in the SAME file (atlas.e2e.ts) — main's #355/#363 MDC-fence test guards met the branch's repeatedly-reworked dial test."
+    solution: "Resolved the file twice with a consistent rule: keep main's additive mycora test, take the branch's latest dial-MDC test; verified the whole rebase with a green gate before force-push."
+    severity: minor
+  - description: "Two claude-code-remote-adjacent tools failed identically with \"Tool permission stream closed before response received\": send_later (3×, couldn't arm a babysit check-in) and AskUserQuestion (the option picker for the rhythm-band question)."
+    solution: Fell back to the PR webhook subscription and to plain-prose questions respectively. The MCP permission surface was intermittently unavailable; a retry/backoff on that path would help.
     severity: minor
   - description: The gate's e2e hydrates only a couple of atlas routes, so a broken MDC cross-reference on an un-hydrated specimen escapes the gate (runtime dev-warning only).
     solution: "Wrote a static ref-check to verify #284's woven content; longer-term, extend validate:content to check these references (see ideas)."
-    severity: nit
-  - description: origin/main advanced during the build (journal/session-log + docs commits); needed a check that it did not overlap the atlas layer before opening the PR.
-    solution: Confirmed non-overlapping (clean); no action beyond the check.
     severity: nit
   - description: mcp__github__issue_read returns the issue body HTML-escaped, so rewriting the map body in place would double-escape it.
     solution: 'Recorded "Decisions so far" as a comment on #279 instead of editing the body section.'
@@ -83,28 +96,32 @@ frictions:
   - description: PR-activity webhooks repeatedly re-delivered the orchestrator's own verdict comment and the CI-green status mid-turn, each needing a "no action / duplicate" judgment.
     solution: Treated as noise; no action. A dedupe or self-authored-comment filter on the webhook surface would remove the churn.
     severity: nit
-durationSec: 28931
+durationSec: 143151
 models:
-  claude-opus-4-8: 288
+  claude-opus-4-8: 371
   <synthetic>: 6
 toolCounts:
-  ToolSearch: 5
-  Bash: 35
+  ToolSearch: 6
+  Bash: 50
   mcp__github__issue_read: 9
-  Read: 25
+  Read: 27
   mcp__github__search_pull_requests: 1
   TaskCreate: 8
   TaskUpdate: 16
   Agent: 8
-  Write: 4
+  Write: 6
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
   Skill: 3
-  Edit: 10
+  Edit: 12
   mcp__github__add_issue_comment: 2
   mcp__github__issue_write: 7
   mcp__Claude_Code_Remote__send_later: 3
+  SendUserFile: 1
+  AskUserQuestion: 1
+  mcp__github__get_job_logs: 2
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - _refcheck.mjs
   - layers/atlas/app/utils/almanac.ts
@@ -112,6 +129,8 @@ filesEdited:
   - layers/atlas/app/pages/t/atlas/[space]/index.vue
   - layers/atlas/tests/unit/almanac.spec.ts
   - _daycheck.mjs
+  - _pencilshot.mjs
+  - layers/atlas/tests/e2e/atlas.e2e.ts
 subagents:
   - type: claude
     task: "Build #280 almanac utils"
@@ -141,8 +160,9 @@ gitBranch: claude/atlas-sprint-2-orchestrate-0iu92u
 entrypoint: remote
 cliVersion: 2.1.206
 learnings:
-  - Worktree-isolated subagents share the parent's .git, so a per-ticket branch they push (or that the orchestrator commits from their worktree when they stop early) integrates with a plain fetch+merge; disjoint file sets made every frontier integration conflict-free.
-  - vitest's `pnpm test` positional filter `tests/unit` matches by substring, so a Tenant-layer test at layers/atlas/tests/unit/*.spec.ts DOES run under the gate.
+  - A shared integration branch in this multi-agent repo is a moving target — other sessions force-rebase and merge feedback onto it. Always re-fetch and `git reset --hard origin/<branch>` to the authoritative tip before operating, and prefer --force-with-lease for any rewrite.
+  - When CI fails but its logs 404 from the API, the fastest diagnosis is to reset to the exact failing ref and reproduce `pnpm gate` locally — the new gate steps (verify:skills-lock, content-validation) run identically.
   - Both dispatched-subagent failure modes (premature stop before commit; hard session-limit termination) strand complete work uncommitted in the worktree — a "commit-and-push-as-backup on takeover" reflex plus reading the agent's final message reliably recovers it.
+  - vitest's `pnpm test` positional filter `tests/unit` matches by substring, so a Tenant-layer test at layers/atlas/tests/unit/*.spec.ts DOES run under the gate.
 ideas:
-  - Add a content referential-integrity check for MDC cross-references — extend validate:content (or a sibling script) to verify every ::phase{of} names a declared phenology phase on that specimen, every ::sighting{date} matches a real observation in that biome's log, and every :season{of} is a GLASS_SEASONS slug. Today these resolve only at render time (dev-warnings) and the gate's e2e can't hydrate every specimen, so a broken woven reference can ship silently. Concrete enough to file as an issue against the atlas Tenant / the gate.
+  - Add a content referential-integrity check for MDC cross-references — extend validate:content (or a sibling script) to verify every ::phase-note/::season-note `of` names a declared item, every ::sighting `date` matches a real observation in that biome's log, and every :season `of` is a real season slug. Today these resolve only at render time (dev-warnings) and the gate's e2e can't hydrate every specimen, so a broken woven reference can ship silently. Concrete enough to file as an issue against the atlas Tenant / the gate.
