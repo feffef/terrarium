@@ -9,6 +9,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   CURRENT_SESSIONS_SCHEMA_VERSION,
   expectedFilename,
+  findTruncatedScalars,
   land,
   validateEntry,
 } from '../../scripts/log-session.ts'
@@ -110,6 +111,36 @@ describe('schemaVersion — the evolution spine (issue #60)', () => {
 
   it('pins the current version at 1', () => {
     expect(CURRENT_SESSIONS_SCHEMA_VERSION).toBe(1)
+  })
+})
+
+describe('findTruncatedScalars() — the unquoted-`#` guard', () => {
+  it('catches an outcome truncated at an unquoted `#`, recovering the full value', () => {
+    // `outcome: PR #354 merged` parses as just "PR" (the rest is a YAML comment) —
+    // the exact footgun that produced the `outcome: PR` logs on main.
+    const hits = findTruncatedScalars('outcome: PR #354 merged\ngoal: hi\n')
+    expect(hits).toHaveLength(1)
+    expect(hits[0]).toMatchObject({ keyPath: 'outcome', value: 'PR', full: 'PR #354 merged' })
+  })
+
+  it('reports the nested key path for a truncated value inside a list', () => {
+    const yaml = 'docsRead:\n  - path: a.vue\n    reason: routing #the resolver\n'
+    const hits = findTruncatedScalars(yaml)
+    expect(hits).toHaveLength(1)
+    expect(hits[0]?.keyPath).toBe('docsRead.reason')
+  })
+
+  it('does not flag a properly quoted value containing `#`', () => {
+    expect(findTruncatedScalars('outcome: "PR #354 merged"\n')).toEqual([])
+  })
+
+  it('does not flag a `#` inside a block scalar (it is literal there)', () => {
+    // The Skill points agents at `>-` for summaries; a `#` in the body is content.
+    expect(findTruncatedScalars('summary: >-\n  landed PR #354 and closed it\n')).toEqual([])
+  })
+
+  it('returns [] on unparseable YAML (the parseYaml step surfaces that error)', () => {
+    expect(findTruncatedScalars('key: [unterminated\n')).toEqual([])
   })
 })
 

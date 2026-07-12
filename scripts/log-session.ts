@@ -21,7 +21,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { parse as parseYaml } from 'yaml'
+import { isPair, isScalar, parse as parseYaml, parseDocument, visit } from 'yaml'
 import { z } from 'zod'
 import journal from '../layers/journal/tenant.config.ts'
 import { SCRATCH_FILE, type AuthoredScratch } from './session-trace.ts'
@@ -117,6 +117,53 @@ export function validateAuthored(
     return { ok: false, errors }
   }
   return { ok: true, data: res.data as AuthoredScratch }
+}
+
+/** A scalar value the YAML parser silently truncated at an unquoted `#`. The lost
+ *  text survives on the parsed node's `.comment`, so the *full* value the agent
+ *  meant is recoverable — `keyPath` locates it, `value` is what landed, `full` is
+ *  what to quote instead. */
+export interface TruncatedScalar {
+  keyPath: string
+  value: string
+  full: string
+}
+
+/** Catch the recurring silent-truncation footgun the `log-session` Skill warns about
+ *  ("Quote any scalar value containing `#`"): an unquoted scalar containing ` #`
+ *  parses as the text before it, with everything after dropped as a YAML comment —
+ *  `outcome: PR #354 merged` becomes just `PR`. Documentation alone hasn't held
+ *  (issue: this branch), so the parse step fails loudly instead. The `yaml` parser
+ *  keeps the dropped span on the node's `.comment`, letting us both detect it and
+ *  report the intended value. Block scalars (`>-`/`|`) are unaffected — a `#` inside
+ *  them is literal and carries no `.comment` — so summaries never false-positive. */
+export function findTruncatedScalars(yamlText: string): TruncatedScalar[] {
+  let doc: ReturnType<typeof parseDocument>
+  try {
+    doc = parseDocument(yamlText)
+  } catch {
+    return [] // a genuine parse error is surfaced by the caller's parseYaml step
+  }
+  const found: TruncatedScalar[] = []
+  visit(doc, {
+    Scalar(_key, node, path) {
+      const dropped = typeof node.comment === 'string' ? node.comment.trim() : ''
+      if (!dropped) return
+      const keys: string[] = []
+      for (const ancestor of path) {
+        if (isPair(ancestor) && isScalar(ancestor.key)) keys.push(String(ancestor.key.value))
+      }
+      found.push({ keyPath: keys.join('.') || '(root)', value: String(node.value), full: `${node.value} #${dropped}` })
+    },
+  })
+  return found
+}
+
+/** Human-readable rejection for a set of truncated scalars, quoting the recovered
+ *  full value so the agent can paste it straight back in quoted. */
+function truncationError(hits: TruncatedScalar[]): string {
+  const lines = hits.map((h) => `  ${h.keyPath}: parsed as "${h.value}" — an unquoted \`#\` dropped the rest. Quote it: ${JSON.stringify(h.full)}`)
+  return `authored YAML has value(s) truncated at an unquoted '#':\n${lines.join('\n')}`
 }
 
 /** Write the authored scratch to its canonical, gitignored home. Its existence is
@@ -278,9 +325,12 @@ function authorMain(argv: string[]): void {
   if (positional.length !== 1 || inputPath === undefined) {
     fail('--author expects exactly one argument: the path to the authored .yml')
   }
+  const text = readFileSync(resolve(inputPath), 'utf8')
+  const truncated = findTruncatedScalars(text)
+  if (truncated.length > 0) fail(truncationError(truncated))
   let parsed: unknown
   try {
-    parsed = parseYaml(readFileSync(resolve(inputPath), 'utf8'))
+    parsed = parseYaml(text)
   } catch (err) {
     fail(`could not parse authored YAML: ${err instanceof Error ? err.message : err}`)
   }
@@ -319,9 +369,12 @@ function main(): void {
     fail(`file must live in ${SESSIONS_DIR}/, got ${relPath}`)
   }
 
+  const text = readFileSync(absPath, 'utf8')
+  const truncated = findTruncatedScalars(text)
+  if (truncated.length > 0) fail(truncationError(truncated))
   let parsed: unknown
   try {
-    parsed = parseYaml(readFileSync(absPath, 'utf8'))
+    parsed = parseYaml(text)
   } catch (err) {
     fail(`could not parse YAML: ${err instanceof Error ? err.message : err}`)
   }

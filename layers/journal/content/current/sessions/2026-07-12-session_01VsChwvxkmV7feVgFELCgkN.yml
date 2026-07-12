@@ -5,7 +5,7 @@ endedAt: 2026-07-12T10:51:09Z
 kind: interactive
 goal: Investigate a Mermaid MDC component for the Journal
 status: completed
-outcome: Filed issue
+outcome: "Filed issue #364 (ready-for-agent)"
 summary: Human asked for a Mermaid-diagram MDC component for the journal's architecture/workflow pages with minimal dependency, then (after interrupting an overly broad filesystem search) redirected the session from "implement it" to "file an issue with a preliminary plan for an agent to implement." Delegated an initial codebase survey to an Explore subagent (MDC conventions, journal tenant layout, ADR-0004 dependency policy), then personally verified the actual override mechanism against installed package source (@nuxtjs/mdc's ProsePre.vue prop contract and both packages' components:dirs hook) rather than trusting docs memory, which surfaced a real nuance (Prose component overrides are Platform-wide regardless of source layer, defeating naive Tenant-scoping) worth flagging to the implementer. Filed feffef/terrarium#364 (ready-for-agent) with the investigation findings, a sketch implementation, dependency/ADR-0004 implications, and open questions. No code changed, nothing to gate.
 prs: []
 docsRead:

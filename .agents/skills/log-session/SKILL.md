@@ -122,6 +122,9 @@ ideas:                             # OPTIONAL — omit unless something sparked
   Unquoted, `[` or `{` starts a YAML flow sequence/map; `#` starts a YAML comment
   and truncates everything after it; `,` inside a flow map (`{ … }`) ends the
   current value early. Any of these silently mangles the entry instead of erroring.
+  The `#` case (a bare `PR #354` truncating to `PR`) is now caught: the `--author`
+  step below rejects an unquoted-`#` truncation loudly and prints the value to
+  quote — but quote up front and you never see it.
 - Word limits are intent, not enforced — you hold them. Write `goal`/`outcome` for a
   stranger (name the thing, not "the issue"): they are the public dashboard's copy.
 
