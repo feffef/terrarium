@@ -31,6 +31,31 @@ bounds: anything touching the areas this project reserves for human review
 (the routing module, isolation logic, CI) always escalates to a person instead
 of merging automatically.
 
+The whole loop in one picture:
+
+```mermaid
+graph LR
+  subgraph routine ["frictions-to-fixes · scheduled, no human prompt"]
+    direction TB
+    Schedule(["Schedule fires"]) --> Fixer["frictions-to-fixes agent"]
+    Fixer --> FPR["Gated PR → main"]
+  end
+
+  subgraph impl ["Prompt-triggered · a regular session"]
+    direction TB
+    Prompt(["Human prompt"]) --> Session["Claude Code session"]
+    Session --> SPR["Gated PR → main"]
+  end
+
+  Logs[("Session-log<br/>storage")]
+  Instr[("Skills · docs · code")]
+
+  Session -->|writes| Logs
+  Logs -->|reads| Fixer
+  FPR -->|writes| Instr
+  Instr -->|guides| Session
+```
+
 The result is a slow, compounding feedback loop: humans steer what gets built,
 agents build it and write down what was hard, and another agent spends its
 time closing that gap — so the next session hits less friction than the last.

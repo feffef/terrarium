@@ -117,6 +117,14 @@ implications:
   browser defaults, check whether it's actually mounted under the wrapper
   element (`.jd`) in the render tree — a component rendered outside that
   wrapper (e.g. via `<Teleport>` to `<body>`) won't see the tokens.
+- **A Platform-generic component can theme itself from a Tenant this way too,
+  without coupling to that Tenant's token names — via an opt-in contract.**
+  `app/components/MermaidDiagram.vue` reads a small set of `--diagram-*` custom
+  properties off its mounted element and feeds them to mermaid; each Tenant
+  opts in by *mapping* its own tokens to that contract on its wrapper (journal
+  maps `--jd-*` → `--diagram-*` in `theme.css`). A Tenant that maps none keeps
+  the component's default look. Map via `var(--jd-…)` rather than literal
+  values so a dark-mode `--jd-*` override flows through the contract for free.
 
 ## 3. A new Tenant/layer needs `nuxt prepare` before `pnpm lint`
 
@@ -124,3 +132,15 @@ After adding a new Tenant/layer, run `nuxt prepare` (or `pnpm install`, which
 runs it) before `pnpm lint` — a stale `.nuxt` doesn't yet know the layer's
 `app/pages/` directory and mis-fires `vue/multi-word-component-names` on the
 layer's pages.
+
+## 4. Content-component overrides (`components/content/`) resolve Platform-wide
+
+A same-named file under any layer's `components/content/` directory overrides
+the matching bundled `@nuxtjs/mdc` prose component — Nuxt flattens every
+layer's component registry into one, so this is override *priority*, not
+per-Tenant scoping (there is no way to override a prose component for one
+Tenant only). The root Platform's `app/components/content/ProsePre.vue`
+(issue #364 — Mermaid diagram rendering for ` ```mermaid ` fenced blocks)
+lives at the app root rather than in a Tenant's `layers/` directory precisely
+because the override is global: placing it in a Tenant layer would suggest a
+scoping that doesn't exist.

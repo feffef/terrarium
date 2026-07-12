@@ -35,6 +35,18 @@
   --jd-radius: 10px;
   --jd-shadow: 0 1px 2px rgba(26, 36, 32, 0.05), 0 6px 20px -12px rgba(26, 36, 32, 0.18);
 
+  /* Opt into MermaidDiagram's `--diagram-*` theming contract by mapping our own
+     tokens to it (issue #364; app/components/MermaidDiagram.vue). Defined via
+     var() so a dark-mode `--jd-*` override flows through with no second block. */
+  --diagram-node-bg: var(--jd-surface-2);
+  --diagram-node-border: var(--jd-accent);
+  --diagram-node-text: var(--jd-ink);
+  --diagram-line: var(--jd-muted);
+  --diagram-font: var(--jd-serif);
+  --diagram-edge-label-bg: var(--jd-ground);
+  --diagram-cluster-bg: var(--jd-surface);
+  --diagram-cluster-border: var(--jd-line);
+
   display: block;
   min-height: 100vh;
   margin: 0;

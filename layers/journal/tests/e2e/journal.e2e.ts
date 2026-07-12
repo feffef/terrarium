@@ -93,6 +93,23 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       expect(html).not.toContain('No document at')
     })
 
+    // The `how-it-works` Document embeds a fenced ```mermaid block, rendered
+    // client-only via a dynamic `import('mermaid')` (issue #364) — only a real
+    // browser proves the fallback `<pre>` got replaced by an actual inline SVG,
+    // since the SSR HTML can never contain it. Assert on the rendered DOM, not
+    // the fetched markup.
+    it('renders a mermaid diagram as an inline SVG', async () => {
+      const route = '/t/journal/current/how-it-works'
+      const { page, errors } = await renderAndCollectErrors(route)
+      try {
+        await page.locator('.mermaid-diagram svg').first().waitFor({ state: 'attached', timeout: 10_000 })
+        expect(await page.locator('.mermaid-diagram svg').count()).toBeGreaterThan(0)
+        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
+      } finally {
+        await page.close()
+      }
+    })
+
     // ── Tier 2: interaction — expand-on-click renders in the live DOM ──────────
     // The digest body ships only in the useAsyncData payload until a click mounts
     // it (openDigests defaults false) — this is precisely the case the SSR-string
