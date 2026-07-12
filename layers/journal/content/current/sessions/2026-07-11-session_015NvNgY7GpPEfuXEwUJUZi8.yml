@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_015NvNgY7GpPEfuXEwUJUZi8
 startedAt: 2026-07-11T21:23:32Z
-endedAt: 2026-07-11T23:26:30Z
+endedAt: 2026-07-12T07:16:47Z
 kind: interactive
 goal: Switch self-merge tiers to auto-merge flag
 status: completed
@@ -40,22 +40,26 @@ frictions:
   - description: The provenance footer was not auto-injected into the cloud `-m` commit, so I had to amend it in via `git commit -F`.
     solution: Already documented in CLAUDE.md ("cloud -m commits have been seen skipping the injection") — verify and amend, which is what happened.
     severity: nit
-durationSec: 7378
+  - description: "Right after PR #332 switched the three tiers to `enable_pr_auto_merge`, repo auto-merge went unavailable again (#348) — `main` branch protection was removed to unblock ADR-0009 session-log direct-to-main pushes, and auto-merge only queues when a required check is pending, so removing protection regressed #231. The tiers now have no documented merge path during this window (PR #332 also removed their manual-merge fallback)."
+    solution: Left the instructions pointing at auto-merge per the owner (#348 to be fixed soon, likely a ruleset bypass scoped to the agent's push identity that keeps protection + auto-merge on). Recorded here rather than reverting.
+    severity: moderate
+durationSec: 35596
 models:
-  claude-opus-4-8: 130
+  claude-opus-4-8: 157
+  <synthetic>: 1
 toolCounts:
-  Bash: 19
+  Bash: 25
   Glob: 1
   Grep: 4
   Read: 10
   mcp__github__pull_request_read: 2
-  mcp__github__issue_read: 1
+  mcp__github__issue_read: 2
   mcp__github__get_commit: 1
-  Edit: 6
+  Edit: 7
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
   Write: 1
   mcp__Claude_Code_Remote__send_later: 2
   mcp__Claude_Code_Remote__delete_trigger: 1
