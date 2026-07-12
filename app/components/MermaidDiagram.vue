@@ -31,6 +31,7 @@ const DIAGRAM_TOKENS: Record<string, string> = {
   primaryTextColor: '--diagram-node-text',
   lineColor: '--diagram-line',
   fontFamily: '--diagram-font',
+  edgeLabelBackground: '--diagram-edge-label-bg',
 }
 
 function tenantThemeVariables(el: HTMLElement): Record<string, string> | undefined {
