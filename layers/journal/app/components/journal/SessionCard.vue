@@ -42,81 +42,85 @@ const detailId = useId()
       </div>
     </JournalDisclosure>
 
-    <div v-if="expanded" :id="detailId" class="detail">
-      <p v-if="card.summary" class="summary">{{ card.summary }}</p>
+    <Transition :css="false" @enter="expandOnEnter" @leave="expandOnLeave">
+      <div v-if="expanded" class="detail-clip">
+        <div :id="detailId" class="detail">
+          <p v-if="card.summary" class="summary">{{ card.summary }}</p>
 
-      <div v-if="card.subagents.length" class="block">
-        <h4>Subagents</h4>
-        <ul>
-          <li v-for="(a, i) in card.subagents" :key="i">
-            <span class="mono">{{ a.type || 'agent' }}</span
-            ><span v-if="a.model" class="amodel"> · {{ a.model }}</span
-            ><template v-if="a.task"> — {{ a.task }}</template>
-          </li>
-        </ul>
-        <p class="subnote">
-          The tools, Skills, and files below are the main session's only — each
-          subagent works in its own context, so its internal activity isn't
-          traced here.
-        </p>
-      </div>
-
-      <div v-if="card.skillsUsed.length" class="block">
-        <h4>Skills used</h4>
-        <ul>
-          <li v-for="s in card.skillsUsed" :key="s.name"><span class="mono">{{ s.name }}</span> — {{ s.reason }}</li>
-        </ul>
-      </div>
-
-      <div v-if="card.frictions.length" class="block">
-        <h4>Frictions</h4>
-        <ul class="frictions">
-          <li v-for="(f, i) in card.frictions" :key="i">
-            <span class="sev" :data-sev="f.severity">{{ f.severity }}</span>
-            <span class="fdesc">{{ f.description }}<span v-if="f.solution" class="fsol"> → {{ f.solution }}</span></span>
-          </li>
-        </ul>
-      </div>
-
-      <div v-if="card.learnings.length" class="block">
-        <h4>Learnings</h4>
-        <ul class="sparks">
-          <li v-for="(l, i) in card.learnings" :key="i">{{ l }}</li>
-        </ul>
-      </div>
-
-      <div v-if="card.ideas.length" class="block">
-        <h4>Ideas</h4>
-        <ul class="sparks">
-          <li v-for="(idea, i) in card.ideas" :key="i">{{ idea }}</li>
-        </ul>
-      </div>
-
-      <!-- Mechanical trace — verbose, transcript-derived lists. Tucked behind
-           individual disclosures so they inform without swamping the narrative. -->
-      <div v-if="card.docsRead.length || card.filesEdited.length || card.tools.length" class="trace-group">
-        <details v-if="card.docsRead.length" class="trace">
-          <summary>Files read <span class="n">{{ card.docsRead.length }}</span></summary>
-          <ul>
-            <li v-for="d in card.docsRead" :key="d.path"><code>{{ d.path }}</code> — {{ d.reason }}</li>
-          </ul>
-        </details>
-        <details v-if="card.filesEdited.length" class="trace">
-          <summary>Files edited <span class="n">{{ card.filesEdited.length }}</span></summary>
-          <ul>
-            <li v-for="f in card.filesEdited" :key="f"><code>{{ f }}</code></li>
-          </ul>
-        </details>
-        <details v-if="card.tools.length" class="trace">
-          <summary>Tools used <span class="n">{{ card.tools.length }}</span></summary>
-          <div class="tools">
-            <span v-for="t in card.tools" :key="t.name" class="tool"
-              ><span class="mono">{{ t.name }}</span><span class="tcount">×{{ t.count }}</span></span
-            >
+          <div v-if="card.subagents.length" class="block">
+            <h4>Subagents</h4>
+            <ul>
+              <li v-for="(a, i) in card.subagents" :key="i">
+                <span class="mono">{{ a.type || 'agent' }}</span
+                ><span v-if="a.model" class="amodel"> · {{ a.model }}</span
+                ><template v-if="a.task"> — {{ a.task }}</template>
+              </li>
+            </ul>
+            <p class="subnote">
+              The tools, Skills, and files below are the main session's only — each
+              subagent works in its own context, so its internal activity isn't
+              traced here.
+            </p>
           </div>
-        </details>
+
+          <div v-if="card.skillsUsed.length" class="block">
+            <h4>Skills used</h4>
+            <ul>
+              <li v-for="s in card.skillsUsed" :key="s.name"><span class="mono">{{ s.name }}</span> — {{ s.reason }}</li>
+            </ul>
+          </div>
+
+          <div v-if="card.frictions.length" class="block">
+            <h4>Frictions</h4>
+            <ul class="frictions">
+              <li v-for="(f, i) in card.frictions" :key="i">
+                <span class="sev" :data-sev="f.severity">{{ f.severity }}</span>
+                <span class="fdesc">{{ f.description }}<span v-if="f.solution" class="fsol"> → {{ f.solution }}</span></span>
+              </li>
+            </ul>
+          </div>
+
+          <div v-if="card.learnings.length" class="block">
+            <h4>Learnings</h4>
+            <ul class="sparks">
+              <li v-for="(l, i) in card.learnings" :key="i">{{ l }}</li>
+            </ul>
+          </div>
+
+          <div v-if="card.ideas.length" class="block">
+            <h4>Ideas</h4>
+            <ul class="sparks">
+              <li v-for="(idea, i) in card.ideas" :key="i">{{ idea }}</li>
+            </ul>
+          </div>
+
+          <!-- Mechanical trace — verbose, transcript-derived lists. Tucked behind
+               individual disclosures so they inform without swamping the narrative. -->
+          <div v-if="card.docsRead.length || card.filesEdited.length || card.tools.length" class="trace-group">
+            <details v-if="card.docsRead.length" class="trace">
+              <summary>Files read <span class="n">{{ card.docsRead.length }}</span></summary>
+              <ul>
+                <li v-for="d in card.docsRead" :key="d.path"><code>{{ d.path }}</code> — {{ d.reason }}</li>
+              </ul>
+            </details>
+            <details v-if="card.filesEdited.length" class="trace">
+              <summary>Files edited <span class="n">{{ card.filesEdited.length }}</span></summary>
+              <ul>
+                <li v-for="f in card.filesEdited" :key="f"><code>{{ f }}</code></li>
+              </ul>
+            </details>
+            <details v-if="card.tools.length" class="trace">
+              <summary>Tools used <span class="n">{{ card.tools.length }}</span></summary>
+              <div class="tools">
+                <span v-for="t in card.tools" :key="t.name" class="tool"
+                  ><span class="mono">{{ t.name }}</span><span class="tcount">×{{ t.count }}</span></span
+                >
+              </div>
+            </details>
+          </div>
+        </div>
       </div>
-    </div>
+    </Transition>
   </article>
 </template>
 
@@ -195,6 +199,11 @@ const detailId = useId()
 }
 .caret { color: var(--jd-faint); font-size: 0.78rem; }
 
+/* The clip wrapper is what expandOnEnter/expandOnLeave (utils/expandTransition.ts)
+   animate `height` on — it carries none of `.detail`'s own margin/padding/border,
+   so collapsing it to 0 needs no separate margin/padding animation to reach a
+   true zero size. */
+.detail-clip { overflow: hidden; }
 .detail {
   margin-top: 0.9rem;
   padding-top: 0.9rem;
