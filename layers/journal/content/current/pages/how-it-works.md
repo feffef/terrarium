@@ -35,17 +35,25 @@ The whole loop in one picture:
 
 ```mermaid
 graph TD
-  Session[Claude Code session] --> PR[Gated PR]
-  PR --> Gate{Gate green?}
-  Gate -->|no| Session
-  Gate -->|yes| Human[Human review + merge]
-  Gate -->|yes, chartered job| Self[Self-merge]
-  Session --> Log[Session log]
-  Log --> Fixer[frictions-to-fixes agent]
-  Fixer -->|ships fixes as its own PRs| PR
-  Human --> Next[Less friction next session]
-  Self --> Next
-  Next --> Session
+  Human(["Human prompt"]) --> Session
+
+  subgraph sess ["A regular session"]
+    Session["Claude Code session"] --> PR["Gated PR"]
+    Session --> Log["Session log"]
+  end
+
+  subgraph routine ["frictions-to-fixes · a scheduled routine, no human prompt"]
+    Pool[("Accumulated<br/>session logs")] --> Fixer["frictions-to-fixes agent"]
+    Fixer --> FixPR["Its own gated PRs"]
+  end
+
+  Log --> Pool
+  PR --> Gate{"Gate green?"}
+  FixPR --> Gate
+  Gate -->|no| Revise["Author revises"]
+  Revise --> Gate
+  Gate -->|yes| Merge["Merge to main<br/>human review, or self-merge when chartered &amp; bounded"]
+  Merge -.->|less friction next time| Session
 ```
 
 The result is a slow, compounding feedback loop: humans steer what gets built,

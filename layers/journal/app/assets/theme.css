@@ -44,6 +44,8 @@
   --diagram-line: var(--jd-muted);
   --diagram-font: var(--jd-serif);
   --diagram-edge-label-bg: var(--jd-ground);
+  --diagram-cluster-bg: var(--jd-surface);
+  --diagram-cluster-border: var(--jd-line);
 
   display: block;
   min-height: 100vh;
