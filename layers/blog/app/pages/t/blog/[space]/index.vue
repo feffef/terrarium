@@ -8,7 +8,8 @@
 // (via the read-only useSpace composable — no isolation logic duplicated), then
 // reads only this (Tenant, Space)'s keyed `pages` collection. Spaces cannot
 // leak. `pagesKey` is already this Tenant's own literal `pages` keys;
-// `personaMeta`/`formatBlogDate`/the components arrive via Nuxt auto-imports.
+// `personaMeta`/the components (incl. the shared `BlogFeedItem` feed row,
+// also used by the `/t/blog` front door) arrive via Nuxt auto-imports.
 const route = useRoute()
 const { space, pagesKey } = useSpace('blog')
 
@@ -69,19 +70,7 @@ useSeoMeta({ description: () => tagline.value })
 
       <div class="landing-feed">
         <ul v-if="posts.length" class="feed">
-          <li v-for="post in posts" :key="post.path">
-            <NuxtLink class="post-link" :to="`/t/blog/${space}${post.path}`">
-              <div class="when">{{ formatBlogDate(post.publishedAt) }}</div>
-              <h2>{{ post.title }}</h2>
-              <p v-if="post.reactsTo" class="reply">↳ in reply to {{ post.reactsTo.persona }}</p>
-              <p v-if="post.description" class="excerpt">{{ post.description }}</p>
-            </NuxtLink>
-            <ul v-if="post.tags?.length" class="tag-chips">
-              <li v-for="t in post.tags" :key="t">
-                <NuxtLink :to="`/t/blog?tag=${t}`" class="tag-chip" @click.stop>{{ t }}</NuxtLink>
-              </li>
-            </ul>
-          </li>
+          <BlogFeedItem v-for="post in posts" :key="post.path" :post="post" :link-prefix="space" />
         </ul>
         <p v-else class="empty">No posts here yet.</p>
       </div>
