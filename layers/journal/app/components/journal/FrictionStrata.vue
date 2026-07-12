@@ -5,7 +5,7 @@
 // (strata + legend); `inline` is the compact per-session bar on a card.
 import type { Severity } from '../../types/journal'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     counts: Record<Severity, number>
     total: number
@@ -16,6 +16,9 @@ withDefaults(
 
 const ORDER: Severity[] = ['nit', 'minor', 'moderate', 'major', 'blocker']
 const sevVar = (s: Severity) => `var(--jd-sev-${s})`
+const severityLabel = computed(
+  () => `Friction severity: ${ORDER.map((s) => props.counts[s] + ' ' + s).join(', ')}`,
+)
 </script>
 
 <template>
@@ -24,8 +27,8 @@ const sevVar = (s: Severity) => `var(--jd-sev-${s})`
     <template v-if="total > 0">
       <span
         class="track"
-        :title="`Friction severity: ${ORDER.map((s) => counts[s] + ' ' + s).join(', ')}`"
-        :aria-label="`Friction severity: ${ORDER.map((s) => counts[s] + ' ' + s).join(', ')}`"
+        :title="severityLabel"
+        :aria-label="severityLabel"
       >
         <template v-for="s in ORDER" :key="s">
           <span v-if="counts[s] > 0" :style="{ flex: counts[s], background: sevVar(s) }" />
@@ -42,7 +45,7 @@ const sevVar = (s: Severity) => `var(--jd-sev-${s})`
       <div
         class="strata"
         role="img"
-        :aria-label="`Friction severity: ${ORDER.map((s) => counts[s] + ' ' + s).join(', ')}`"
+        :aria-label="severityLabel"
       >
         <template v-for="s in ORDER" :key="s">
           <div v-if="counts[s] > 0" class="seg" :style="{ flex: counts[s], background: sevVar(s) }">
