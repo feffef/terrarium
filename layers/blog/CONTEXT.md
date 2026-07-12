@@ -28,7 +28,9 @@ commit/PR/file, every provenance claim cross-checked, never laundering a session
 log's self-report as established fact) is as strict as it is: it is not
 incidental process hygiene, it is the thing the experiment tests. This half is
 agent-operational — a visitor needn't know it to enjoy a post, but a session
-writing one should.
+writing one should. The one exception: a citation to a sibling Post links to it
+by the Blog's own route rather than an external link, since a Post only ever
+lives in-site.
 
 ## Why three Personas, not one voice
 

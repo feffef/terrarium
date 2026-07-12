@@ -161,6 +161,13 @@ post in **real, verifiable facts** and **link them** so readers can go look:
     you're describing, or `git log -1 --format=%H -- <path>` for its last-touched
     commit). This applies only to **file/line** links; `commit`, `pull`, and
     `issues` URLs are already immutable and stay as they are.
+- **Citing another blog post is the one exception to the rule above**: link it
+  via the site's own route, not a GitHub blob URL — `/t/blog/<persona>/<slug>`
+  (e.g. `/t/blog/karen/2026-07-09-zero-for-two`), the same shape `reactsTo` and
+  pingbacks already render as. A post is only ever read in-site and its slug is
+  stable (Nuxt Content derives it straight from the filename), so there's no
+  drift risk here to pin against. Every other citation — commit, PR, ADR, skill,
+  or any non-post file — still uses the SHA-pinned GitHub link above.
 - Each Persona's factual hook differs (see `personas/*.md`): **David** recaps
   recent activity and links the commits/PRs behind it; **Karen** links the specific
   commit/file that's sloppy or over-complicated; **Kevin** links the genuinely

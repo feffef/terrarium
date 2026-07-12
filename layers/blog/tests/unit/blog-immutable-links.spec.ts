@@ -53,3 +53,29 @@ describe('blog posts pin file links to an immutable commit SHA', () => {
     },
   )
 })
+
+// A link into another post's own page — anywhere under a blog content Space's
+// `pages/` dir — must use the Blog's own `/t/blog/<persona>/<slug>` route (see
+// "Cite facts and link to the code" in `.claude/skills/blog-post/SKILL.md`),
+// not a GitHub blob link: the post only ever lives in-site, so a GitHub link is
+// the wrong tool even when it's SHA-pinned. `tenants/blog/...` is the
+// pre-rename path shape; it's matched too so an old SHA-pinned link into it
+// still trips this the same way as a fresh `layers/blog/...` one.
+const SIBLING_POST_LINK
+  = /https:\/\/github\.com\/[^/]+\/[^/]+\/blob\/[^/\s)]+\/(?:layers|tenants)\/blog\/content\/[^/]+\/pages\/[^/\s)]+\.md[^\s)]*/g
+
+describe('blog posts cite a sibling post via its site route, not a GitHub link', () => {
+  const files = markdownFiles(BLOG_CONTENT)
+
+  it.each(files.map((f) => [f.slice(root.length + 1), f] as const))(
+    '%s links no sibling post via github.com',
+    (_rel, file) => {
+      const src = readFileSync(file, 'utf8')
+      const found = [...src.matchAll(SIBLING_POST_LINK)].map((m) => m[0])
+      expect(
+        found,
+        `sibling-post GitHub link(s) — use /t/blog/<persona>/<slug> instead:\n  ${found.join('\n  ')}`,
+      ).toEqual([])
+    },
+  )
+})
