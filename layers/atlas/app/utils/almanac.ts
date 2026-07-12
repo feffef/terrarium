@@ -246,15 +246,23 @@ export function ringArcPath(span: Span, r: number): string {
 const DAYS_BEFORE_MONTH = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
 const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
+/** Pattern-matches 'YYYY-MM-DD' into its raw parts, or null when the string
+ *  doesn't fit — the one place that parses the ISO date shape. `dateToDay`
+ *  and `formatIsoDate` both build on it, so no other module re-parses it. */
+function parseIsoDate(iso: string): { year: string; month: number; day: number } | null {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso)
+  if (!m) return null
+  return { year: m[1]!, month: Number(m[2]), day: Number(m[3]) }
+}
+
 /** Real ISO date ('YYYY-MM-DD') → day-of-year (0..364) in the fixed 365-day
  *  Glass Year. The year part is accepted and discarded (every Glass Year is the
  *  same wheel); 29 February clamps to day 58 (= 28 February). Throws on a
  *  malformed string or an impossible month/day. */
 export function dateToDay(iso: string): number {
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso)
-  if (!m) throw new TypeError(`dateToDay: expected 'YYYY-MM-DD', got '${iso}'`)
-  const month = Number(m[2])
-  const day = Number(m[3])
+  const parsed = parseIsoDate(iso)
+  if (!parsed) throw new TypeError(`dateToDay: expected 'YYYY-MM-DD', got '${iso}'`)
+  const { month, day } = parsed
   if (month < 1 || month > 12) throw new RangeError(`dateToDay: month out of range in '${iso}'`)
   const maxDay = DAYS_IN_MONTH[month - 1]!
   // Allow the one real-world overflow (Feb 29) by clamping; reject the rest.
@@ -262,4 +270,26 @@ export function dateToDay(iso: string): number {
     throw new RangeError(`dateToDay: day out of range in '${iso}'`)
   }
   return DAYS_BEFORE_MONTH[month - 1]! + Math.min(day, maxDay) - 1
+}
+
+const MONTH_NAMES = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+]
+
+/** Real ISO date ('YYYY-MM-DD') → its spoken form, e.g. '20 June 2026' — the
+ *  Sighting citation's display string. Shares `parseIsoDate` with `dateToDay`
+ *  and defers to `dateToDay` for acceptance, so a date this formats is always
+ *  exactly the set `dateToDay` also accepts. Unlike `dateToDay`, the day
+ *  printed is the one written, not clamped (29 February prints as 29): this
+ *  is for display, not wheel placement. Null on anything `dateToDay` rejects. */
+export function formatIsoDate(iso: string): string | null {
+  const parsed = parseIsoDate(iso)
+  if (!parsed) return null
+  try {
+    dateToDay(iso)
+  } catch {
+    return null
+  }
+  return `${parsed.day} ${MONTH_NAMES[parsed.month - 1]} ${parsed.year}`
 }
