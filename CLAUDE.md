@@ -225,6 +225,15 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   `origin/main` periodically during a long-running session too, not just
   right before a final push, especially before landing/merging a PR that
   touches a shared doc or list other concurrent sessions likely edit.
+  **A clean, no-conflict auto-merge/rebase is not proof of correctness on a
+  file both branches restructured.** Git only flags a conflict where the two
+  sides touched overlapping lines — a rename or refactor on one side can leave
+  a now-stale reference on the other with no conflict marker to catch it (e.g.
+  a rebase once silently kept a stale `specimen.value?.slug` reference after
+  `main` had renamed it to `entry.value?.specimen`). On any file both branches
+  actually restructured, read both sides **in full**, not just the (absent)
+  conflict markers, before trusting the merge — especially after a rename or
+  refactor on either side.
 - **Keep a PR's description in sync with its content — hard rule.** If you
   fundamentally change what a PR does (switch approach, swap the files it touches,
   answer review with a different solution), update the PR title/description in the
