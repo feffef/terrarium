@@ -1,54 +1,27 @@
-// `pnpm gate:scoped` — a change-scoped, fast-feedback wrapper around the gate
-// (issue #350). It is ADDITIVE and does not replace anything: `pnpm gate` and
-// CI (`.github/workflows/gate.yml`) are untouched and remain the mandatory merge
-// gate (ADR-0004). This script only ever runs the *same or a safe subset* of the
-// gate locally — never less than what a change needs.
-//
-// The optimisation: a cheap "floor" (verify:skills-lock, lint, typecheck,
-// validate:content) always runs; the expensive layers (test = unit/L3, build,
-// test:e2e = L2) are SKIPPED only when the whole changeset is provably inert —
-// i.e. every changed path is a `.md` file OUTSIDE `layers/` (ADRs, docs/,
-// README, CLAUDE.md, CONTEXT*.md, skill docs). Nothing under `build`, the unit
-// suite, or e2e consumes such a file (verified in issue #350), so skipping them
-// changes no signal for those changes. The `.agents/skills/**/SKILL.md` case is
-// covered because verify:skills-lock is in the always-on floor.
-//
-// Fail-safe by construction: this is an ALLOWLIST, and any uncertainty — a
-// non-`.md` path, anything under `layers/`, an empty changeset, or an
-// undeterminable diff base — falls back to the FULL gate. It never skips on doubt.
-//
-// Usage:
-//   pnpm gate:scoped          run the scoped gate
-//   pnpm gate:scoped --dry     print the decision + planned steps, run nothing
+// `pnpm gate:scoped` — additive, change-scoped wrapper around `pnpm gate` (#350).
+// Skips the heavy layers when the whole changeset is inert, else runs the full
+// gate. Design, safety argument, and the inert-set proof: issue #350.
+//   pnpm gate:scoped [--dry]
 import { execFileSync, spawnSync } from 'node:child_process'
 import { pathToFileURL } from 'node:url'
 import { root } from '../shared/expand.ts'
 
-/** The cheap checks that always run — individually fast, and collectively they
- *  cover every doc-adjacent failure mode (a pack SKILL.md edit, a broken content
- *  schema). Names are `package.json` script keys, run as `pnpm <name>`. */
 export const FLOOR = ['verify:skills-lock', 'lint', 'typecheck', 'validate:content'] as const
-
-/** The expensive layers, skipped only for a provably-inert changeset. */
 export const HEAVY = ['test', 'build', 'test:e2e'] as const
 
-/** A path is inert to build/unit/e2e iff it is a Markdown file outside every
- *  Tenant layer. Git emits repo-relative, forward-slash paths, so this is a
- *  plain prefix/suffix test. */
+// A `.md` under `layers/` is rendered content; `verify:skills-lock` (in FLOOR)
+// still covers `.agents/skills/**/SKILL.md`. Rationale: #350.
 export function isInert(path: string): boolean {
   return path.endsWith('.md') && !path.startsWith('layers/')
 }
 
 export interface Scope {
-  /** Skip the HEAVY layers? Only true when every changed path is inert. */
   skipHeavy: boolean
-  /** Human-readable justification, printed before anything runs. */
   reason: string
 }
 
-/** Decide the scope from a changed-file list. `null` means "could not be
- *  determined" — a distinct, always-full-gate case (never conflated with
- *  "nothing changed"). Pure and side-effect free, so it is unit-tested directly. */
+// `null` (undeterminable base) is kept distinct from `[]` (nothing changed); both
+// run the full gate, so the skip path is only ever reached on a proven inert set.
 export function decideScope(changed: string[] | null): Scope {
   if (changed === null) {
     return { skipHeavy: false, reason: 'could not determine changed files (no merge-base with origin/main) — running full gate' }
@@ -63,34 +36,26 @@ export function decideScope(changed: string[] | null): Scope {
   return { skipHeavy: false, reason: `changed set includes non-inert path (${firstNonInert}) — running full gate` }
 }
 
-/** The ordered list of `pnpm` scripts a scope implies. */
 export function planSteps(scope: Scope): string[] {
   return scope.skipHeavy ? [...FLOOR] : [...FLOOR, ...HEAVY]
 }
 
-/** stdout of a git command, trimmed; `''` on any failure (caller decides). */
 function git(args: string[]): string {
   return execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim()
 }
 
-/** Non-empty, de-duplicated lines. */
 function lines(out: string): string[] {
   return out.split('\n').map((l) => l.trim()).filter(Boolean)
 }
 
-/** Every path changed vs `origin/main`: committed since the merge-base, plus the
- *  live working tree (tracked modifications AND untracked new files — a plain
- *  `git diff` would miss the latter). Returns `null` — forcing the full gate —
- *  on any uncertainty (fetch is best-effort; an unresolvable merge-base, e.g. a
- *  fully unrelated pre-clone, is fatal to a scope decision). */
+// Untracked files are unioned in because a plain `git diff` omits them. Any
+// uncertainty returns `null` → full gate.
 export function changedPaths(): string[] | null {
   try {
-    // Best-effort refresh — the pre-cloned origin/main is routinely stale
-    // (CLAUDE.md). A failed fetch is tolerated; a missing base is not.
     try {
       execFileSync('git', ['fetch', 'origin', 'main'], { cwd: root, stdio: 'ignore' })
     } catch {
-      // offline / no remote — fall through and use whatever origin/main we have
+      // best-effort: a stale origin/main still yields a usable merge-base
     }
     let base: string
     try {
@@ -130,7 +95,6 @@ function main(): void {
   console.log('gate:scoped: ✓ all planned steps passed')
 }
 
-// Only run when executed directly (not when imported by the unit test).
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
   main()
 }

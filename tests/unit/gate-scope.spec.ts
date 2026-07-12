@@ -1,8 +1,5 @@
-// Unit tests for the `gate:scoped` helper's pure core — the inert-path
-// predicate and the scope decision, where a classification bug would let the
-// scoped gate skip a heavy layer it shouldn't (or vice versa). The git shell
-// (`changedPaths`) is a thin, fail-safe wrapper, exercised by running the script
-// directly (`tsx scripts/gate.ts --dry`). See issue #350.
+// Pure-core tests for gate:scoped (#350) — the inert predicate and scope
+// decision, where a misclassification would skip a heavy layer it shouldn't.
 import { describe, expect, it } from 'vitest'
 import { decideScope, isInert, planSteps, FLOOR, HEAVY } from '../../scripts/gate.ts'
 
