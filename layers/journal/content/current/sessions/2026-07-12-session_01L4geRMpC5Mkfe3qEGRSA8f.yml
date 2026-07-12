@@ -1,0 +1,76 @@
+schemaVersion: 1
+session: session_01L4geRMpC5Mkfe3qEGRSA8f
+startedAt: 2026-07-12T13:52:07Z
+endedAt: 2026-07-12T14:24:29Z
+kind: interactive
+goal: Improve the how-it-works loop diagram
+status: in-review
+outcome: "Diagram redesigned + enlarged; PR #374 open"
+summary: Human-instructed throughout, in several refinement rounds. Started as four label/precision tweaks to the mermaid loop diagram on /t/journal/current/how-it-works (guides -> governs; arrow onto the session node; log write at closure; frictions repo-write as the gated PR's output). The user then asked for a bigger font, then a structural redesign. Landed on a boxless top-to-bottom directed loop with an explicit "Session closure" node that writes the log, the frictions-to-fixes agent reading it, and its gated PR writing back to Skills/docs/code. Added a --diagram-font-size theming token (20px). The user chose (via a question) to group the two workflows by node border colour rather than boxes, since boxes clip the cross-arrows. Verified in light and dark. All agent-initiated only within these explicit asks.
+prs:
+  - "374"
+docsRead:
+  - path: app/components/MermaidDiagram.vue
+    reason: diagram theming contract; added font-size token
+  - path: layers/journal/app/assets/theme.css
+    reason: where the tenant sets --diagram-* tokens
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: the page holding the diagram
+  - path: app/utils/mermaid.ts
+    reason: (no reason given)
+  - path: tests/unit/mermaid.spec.ts
+    reason: (no reason given)
+  - path: app/components/content/ProsePre.vue
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: mermaid was declared in package.json but absent from node_modules, so the dev/preview render 500'd ("failed to resolve import mermaid") until a fresh pnpm install.
+    solution: Run pnpm install before previewing a diagram page; the pre-cloned container's node_modules can miss a dynamically-imported dep.
+    severity: minor
+  - description: mermaid subgraphs clip cross-lane arrows at the box border, so "group with boxes" and "arrows land on the exact node" are mutually exclusive — found empirically over several render iterations.
+    solution: Group by node border colour (classDef stroke) instead of subgraphs; worth a short note in a diagram-authoring doc so the next agent skips the loop.
+    severity: minor
+  - description: The default full-page screenshot renders the diagram too small to read edge labels/arrowheads; needed an ad-hoc high-DPI element screenshot.
+    solution: A preview.ts flag to shoot a single selector at a higher device scale factor would save writing a throwaway playwright script each time.
+    severity: nit
+  - description: "`preview.ts shot` failed to start its own server while a persistent `preview.ts start --dev` server was already running (port/startup race)."
+    solution: Reuse the running server's port for ad-hoc shots, or have `shot` detect and reuse an existing preview server.
+    severity: nit
+durationSec: 1942
+models:
+  claude-opus-4-8: 196
+toolCounts:
+  Bash: 40
+  Glob: 1
+  Read: 17
+  Grep: 1
+  Edit: 7
+  Write: 10
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  Skill: 2
+  SendUserFile: 5
+  AskUserQuestion: 1
+  mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/how-it-works.md
+  - scratch-diagram-shot.ts
+  - app/components/MermaidDiagram.vue
+  - layers/journal/app/assets/theme.css
+  - scratch-page-shot.ts
+  - scratch-dark-shot.ts
+gitBranch: claude/mermaid-diagram-improvements-ypj7zh
+entrypoint: remote
+cliVersion: 2.1.207
+learnings:
+  - A wide one-row mermaid graph is downscaled to the article column width (SVG max-width), shrinking its text; a narrow/tall layout renders at native size — orientation, not font-size, is the real legibility lever.
+  - A classDef that sets only `stroke` preserves the theme-driven fill, so nodes can be colour-grouped without breaking light/dark theming.
+  - In mermaid, an edge into a node inside a subgraph terminates at the cluster border; removing the subgraph makes the arrowhead land on the node itself.
