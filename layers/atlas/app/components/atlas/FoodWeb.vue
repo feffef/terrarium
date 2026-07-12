@@ -106,13 +106,11 @@ function strandClass(e: Edge) {
   return [e.kind, { hot: on, dim: hot.value && !on }]
 }
 
-const LEGEND: { kind: Edge['kind']; label: string }[] = [
-  { kind: 'preys-on', label: 'preys on' },
-  { kind: 'pollinates', label: 'pollinates' },
-  { kind: 'shelters', label: 'shelters' },
-  { kind: 'mimics', label: 'mimics' },
-  { kind: 'fears', label: 'fears' },
-]
+// Labels come from relationLabel so the legend can't drift from the wording the
+// Relations sections use; only the display order is authored here.
+const LEGEND: { kind: Edge['kind']; label: string }[] = (
+  ['preys-on', 'pollinates', 'shelters', 'mimics', 'fears'] as const
+).map((kind) => ({ kind, label: relationLabel(kind, 'out') }))
 const usedKinds = computed(() => new Set(props.edges.map((e) => e.kind)))
 </script>
 
