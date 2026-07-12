@@ -64,8 +64,8 @@ const view = computed(() => {
   })
   const angles = fanAngles(paired.length || 1)
   const half = RY * Math.max(0, ...angles.map((a) => Math.abs(Math.sin((a * Math.PI) / 180))))
-  const fy = Math.max(76, half + R + 18)
-  const H = fy + Math.max(RF + 52, half + R + 20)
+  const fy = Math.round(Math.max(76, half + R + 18))
+  const H = Math.round(fy + Math.max(RF + 52, half + R + 20))
   const spokes: Spoke[] = paired.map((p, i) => {
     const a = ((angles[i] ?? 0) * Math.PI) / 180
     return { ...p, x: FX + RX * Math.cos(a), y: fy + RY * Math.sin(a) }
