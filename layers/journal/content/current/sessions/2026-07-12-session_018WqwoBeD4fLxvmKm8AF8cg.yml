@@ -1,0 +1,89 @@
+schemaVersion: 1
+session: session_018WqwoBeD4fLxvmKm8AF8cg
+startedAt: 2026-07-12T14:55:38Z
+endedAt: 2026-07-12T15:25:47Z
+kind: interactive
+goal: Complete and polish the Atlas almanac wheel
+status: in-review
+outcome: Glass Year explained, sightings added, landing polished
+summary: "User-requested polish of the Atlas's almanac-dial feature (\"the new wheel\"). The phenology data was already complete on all 15 specimens, so the real gap was explanation: I added a quick Glass-Year intro to the front-door foreword and a fuller \"two clocks at once\" note where the wheel appears on each wing landing (shared seasons on the rim vs. each creature's own phases) — both explicitly asked for, one via a mid-turn steer. A Sonnet agent authored 15 new in-voice field-log observations (5 per wing) extending existing threads; I added a truncation indicator so the 8-entry wing log names what it hides, and reordered the wing landing to foreground the almanac beside the field log it feeds. Every part was human-instructed. Gate green; PR 377 in review."
+prs:
+  - "377"
+docsRead:
+  - path: CLAUDE.md
+    reason: conventions, gated-PR + footer discipline
+  - path: layers/atlas/CONTEXT.md
+    reason: Biome/Specimen/Observation vocabulary
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: naturalist voice + phenology authoring rules
+  - path: layers/atlas/app/utils/almanac.ts
+    reason: the six Glass-Year seasons — ground the explanation, never invent
+  - path: layers/atlas/app/components/atlas/PhenologyWheel.vue
+    reason: how the dial reads seasons vs phases
+  - path: layers/atlas/app/pages/t/atlas/[space]/index.vue
+    reason: (read before editing)
+  - path: layers/atlas/app/components/atlas/FieldLog.vue
+    reason: (read before editing)
+  - path: layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+    reason: (no reason given)
+  - path: layers/atlas/content/canopy/pages/lumina-fabulae.md
+    reason: (no reason given)
+  - path: layers/atlas/app/components/content/Sighting.vue
+    reason: (no reason given)
+  - path: layers/atlas/app/components/content/PhaseNote.vue
+    reason: (no reason given)
+  - path: layers/atlas/app/components/content/Almanac.vue
+    reason: (no reason given)
+  - path: layers/atlas/content/canopy/pages/index.md
+    reason: (no reason given)
+  - path: layers/atlas/app/pages/t/atlas/index.vue
+    reason: (read before editing)
+  - path: layers/atlas/tests/e2e/atlas.e2e.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: closure at PR open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: The harness skipped the provenance footer on both `git commit -m` commits (the documented cloud -m behaviour), leaving them without Co-Authored-By.
+    solution: Reset to origin/main and re-committed via `git commit -F` with the footer appended by hand; verified with git log before pushing.
+    severity: minor
+  - description: A backgrounded `pnpm gate:scoped 2>&1 | tail -40` left an empty output file — the piped tail output was lost, so the gate result was unreadable.
+    solution: Re-ran the gate steps in the foreground to confirm green; a backgrounded command whose output matters should redirect to a file, not pipe to tail.
+    severity: minor
+  - description: A `sleep 60 && tail` used to poll a background job was blocked by the harness, costing a round-trip to rediscover the wait pattern.
+    solution: Wait on the completion notification, or use Monitor with an until-loop.
+    severity: nit
+durationSec: 1809
+models:
+  claude-opus-4-8: 259
+toolCounts:
+  Bash: 52
+  Read: 29
+  Agent: 1
+  Edit: 8
+  Write: 4
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/atlas/app/pages/t/atlas/index.vue
+  - layers/atlas/app/pages/t/atlas/[space]/index.vue
+  - layers/atlas/app/components/atlas/FieldLog.vue
+  - layers/atlas/app/assets/theme.css
+  - scratch-probe.ts
+subagents:
+  - task: Author new atlas field-log sightings
+    model: sonnet
+gitBranch: claude/wheel-atlas-content-polish-3rrvga
+entrypoint: remote
+cliVersion: 2.1.207
+learnings:
+  - The Atlas wheel's per-specimen phenology data was already complete on all 15 specimens; the "completeness" gap the task named was the missing seasons-vs-phases explanation, not any missing data.
+ideas:
+  - A per-wing "full ledger" affordance on the field log — a client-side show-all toggle revealing the entries hidden by the limit=8 truncation, kept presentation-only so it needs no new route and leaves the ADR-0006 resolver (observations are deliberately not route-addressable) untouched.
