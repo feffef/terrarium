@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_011XVkYaR5AXC19ETQUqYToB
 startedAt: 2026-07-12T14:15:27Z
-endedAt: 2026-07-12T14:36:38Z
+endedAt: 2026-07-12T15:01:25Z
 kind: interactive
 goal: Fix journal expanded-entry scroll and digest styling
-status: in-review
-outcome: "Both fixed, e2e-tested; gated PR #376 in review"
+status: completed
+outcome: "Both fixed, e2e-tested; PR #376 merged"
 summary: "User directly asked (human-instructed) to fix two journal Space-landing bugs: (1) expanding an entry scrolled into its middle, forcing a scroll up, and (2) the open daily digest dimmed its summary so it read as disabled. I reproduced both in headless Chromium first. Issue 1 was the one-at-a-time accordion collapsing a taller open entry above the clicked one, stranding it above the fold (measured y=-807); fixed by scrolling the opened item's top into view on toggle, matching the deep-link path. Issue 2 replaced the muted summary with an active treatment (accent bar, tint, bold ink, accent caret). Added an e2e regression test; local gate green. Opened PR and subscribed on user green-light."
 prs:
   - "376"
@@ -39,21 +39,22 @@ frictions:
   - description: Issue 1 did not reproduce on a plain click or plain deep-link; it needed the specific accordion collapse-above condition, costing two repro attempts.
     solution: Inherent to the bug (a scroll-anchoring failure mode); captured in the test comment so the next reader need not re-derive it.
     severity: nit
-durationSec: 1272
+durationSec: 2758
 models:
-  claude-opus-4-8: 138
+  claude-opus-4-8: 148
 toolCounts:
-  Bash: 34
+  Bash: 35
   Read: 9
   Write: 5
-  Edit: 5
+  Edit: 6
   ToolSearch: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/repro-scroll.ts
   - layers/journal/app/pages/t/journal/[space]/index.vue
