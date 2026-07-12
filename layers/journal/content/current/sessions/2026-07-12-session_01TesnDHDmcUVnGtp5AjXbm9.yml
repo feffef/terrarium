@@ -1,0 +1,81 @@
+schemaVersion: 1
+session: session_01TesnDHDmcUVnGtp5AjXbm9
+startedAt: 2026-07-12T21:28:15Z
+endedAt: 2026-07-12T21:54:17Z
+kind: interactive
+goal: Blog posts cite sibling posts via /t/blog route
+status: in-review
+outcome: 4 links fixed, Skill + test updated, PR open
+summary: "User asked (direct prompt via /grill-with-docs) that inline links in blog posts to earlier blog posts use the site's own /t/blog/<persona>/<slug> route instead of a GitHub blob URL, and that the blog-post Skill's instructions be updated accordingly. Ran a grilling session (scope, regression-guard test, ADR-need) confirming: posts-only scope, extend the existing immutable-links test, no ADR needed. A research subagent found 3 existing GitHub-blob links to sibling posts; I found and fixed a 4th it missed, then exhaustively re-verified across all 136 github.com links in layers/blog/content that none remain. Updated .agents/skills/blog-post/SKILL.md with a carve-out bullet, added a clause to layers/blog/CONTEXT.md, extended layers/blog/tests/unit/blog-immutable-links.spec.ts to forbid future regressions, fixed the 4 links, ran pnpm gate:scoped (full gate, all green), committed, pushed, and opened PR #391. All decisions (scope, test guard, no ADR, proceed) were explicit human confirmations via AskUserQuestion, not agent-initiated judgment calls."
+prs:
+  - "391"
+docsRead:
+  - path: layers/blog/CONTEXT.md
+    reason: citation-rigor narrative
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: citation rule to amend
+  - path: layers/blog/tests/unit/blog-immutable-links.spec.ts
+    reason: existing regression-guard test to extend
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: confirm /t/blog/<persona>/<slug> resolution via research subagent
+  - path: .claude/skills/grill-with-docs/SKILL.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-09-zero-for-two.md
+    reason: (read before editing)
+  - path: layers/blog/content/kevin/pages/2026-07-10-it-checked-its-own-homework.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-07-05-after-themselves.md
+    reason: (read before editing)
+skillsUsed:
+  - name: grilling
+    reason: walked scope/test-guard/ADR decisions before implementing
+  - name: domain-modeling
+    reason: evaluated and declined an ADR; added a CONTEXT.md clause instead
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: A research subagent undercounted sibling-post GitHub links (found 3, missed a 4th in zero-for-two.md:12) despite an explicit instruction to list every one.
+    solution: Always re-verify a subagent's "exhaustive" link/grep survey with an independent, narrower grep before trusting the count as final — especially before treating it as the basis for "fix all existing entries."
+    severity: minor
+  - description: "pnpm gate:scoped failed on typecheck for an unrelated pre-existing issue: the `mermaid` package was declared in package.json but missing from node_modules (incomplete initial install)."
+    solution: Ran `pnpm install` to reconcile node_modules with the lockfile before re-running the gate; no lockfile/package.json diff resulted, confirming it was purely a stale install, not a real dependency change.
+    severity: minor
+  - description: AskUserQuestion calls twice failed with "Tool permission stream closed before response received" and had to be retried after a user "Continue from where you left off" nudge.
+    solution: Simply retrying the same AskUserQuestion call worked; no code change needed, but worth noting as an observed harness flake.
+    severity: nit
+durationSec: 1563
+models:
+  claude-sonnet-5: 144
+toolCounts:
+  Read: 10
+  Skill: 4
+  Agent: 1
+  Bash: 29
+  Glob: 1
+  Grep: 2
+  AskUserQuestion: 6
+  Edit: 8
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 4
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - .agents/skills/blog-post/SKILL.md
+  - layers/blog/CONTEXT.md
+  - layers/blog/tests/unit/blog-immutable-links.spec.ts
+  - layers/blog/content/kevin/pages/2026-07-10-it-checked-its-own-homework.md
+  - layers/blog/content/karen/pages/2026-07-05-after-themselves.md
+  - layers/blog/content/karen/pages/2026-07-09-zero-for-two.md
+subagents:
+  - type: Explore
+    task: Survey blog tenant structure and link conventions
+gitBranch: claude/blog-links-nuxt-routes-gv4zh8
+entrypoint: remote_mobile
+cliVersion: 2.1.207
