@@ -179,7 +179,9 @@ runs in its **own git worktree** (parallel PRs must not share a working tree):
 Every agent's brief is self-contained: read the issue(s), branch from `origin/main`,
 implement the **recommended** option only, clear the **safety gate**, push, and open
 a **gated PR**. The impl agent **never merges and never enables auto-merge**
-(ADR-0003) — it hands the open PR back to you. You are the reviewer (§6).
+(ADR-0003) — it hands the open PR back to you. You are the reviewer (§6). The
+impl agent also must **not call `subscribe_pr_activity`** on the PR it opens —
+the orchestrator (§6) owns that PR's lifecycle and subscribes if/when needed.
 **Dispatched worktree-isolated impl agents must NOT self-invoke `close-session`
 or `log-session`** — see `close-session/SKILL.md` for why (they share the parent
 session id, so a second invocation clobbers the orchestrator's own log). The

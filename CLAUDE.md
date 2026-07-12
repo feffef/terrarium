@@ -157,7 +157,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 - **Never predict or reconstruct an identifier — a line number, a blob SHA, an
   issue/PR number — from memory.** Always resolve it via a fresh tool call
   (a Read, `git rev-parse`/`git log -1 --format=%H`, or the actual `issue_write`
-  response) at the moment you write it down.
+  response) at the moment you write it down. For a session id specifically,
+  resolve it from the system-prompt commit-footer template / session context
+  at the moment of writing — never construct one from a plausible-looking
+  pattern.
 - **Verify any subagent- or doc-derived factual or behavioral claim against a
   locally observable primary source before publishing it externally** (an
   issue/PR comment, an external post, etc.) — a subagent's inference or a
@@ -312,6 +315,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
     returned worktree for uncommitted work** before treating the subagent as
     done. (The platform "session limit" abort itself is external and this
     guard doesn't prevent it — it only limits the damage when it happens.)
+- **Before dispatching multiple subagents on a large content-authoring pass,
+  grill any load-bearing/structural design axis — the thing every subagent's
+  output depends on — to a locked answer first**, using the `grilling` Skill
+  by name. A design axis that shifts mid-build after subagents have already
+  authored against the old answer forces a full re-authoring pass.
 - **Every agent-authored interaction with GitHub, or any other external
   system, carries a two-line provenance footer, no exemptions** (ADR-0017 —
   read it for the full rationale and why this is convention, not
@@ -535,4 +543,6 @@ on public vs. private repos (`docs/research/github-actions-public-vs-private-lim
 and whether a GitHub repository ruleset can let session-log direct-to-`main`
 pushes (ADR-0009) bypass branch protection without breaking repo auto-merge —
 the tension in issue #348
-(`docs/research/github-branch-protection-vs-autonomous-log-commits.md`).
+(`docs/research/github-branch-protection-vs-autonomous-log-commits.md`). For
+the line between this directory and a GitHub issue — verified reference vs.
+an unimplemented idea or proposal — see `docs/agents/issue-tracker.md`.
