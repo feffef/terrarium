@@ -47,7 +47,7 @@ useSeoMeta({ description: () => tagline.value })
   <main class="bl bl--landing" :style="{ '--bl-accent': meta.accent }">
     <p class="crumb">
       <NuxtLink to="/">terrarium</NuxtLink>
-      <span class="sep">/</span>blog<span class="sep">/</span><span class="here">{{ space }}</span>
+      <span class="sep">/</span><NuxtLink to="/t/blog">blog</NuxtLink><span class="sep">/</span><span class="here">{{ space }}</span>
     </p>
 
     <div class="landing-grid">

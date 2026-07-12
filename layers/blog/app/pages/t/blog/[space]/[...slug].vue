@@ -44,7 +44,7 @@ useSeoMeta({ description: () => post.value?.description })
   <main class="bl" :style="{ '--bl-accent': meta.accent }">
     <p class="crumb">
       <NuxtLink to="/">terrarium</NuxtLink>
-      <span class="sep">/</span>blog<span class="sep">/</span>
+      <span class="sep">/</span><NuxtLink to="/t/blog">blog</NuxtLink><span class="sep">/</span>
       <NuxtLink :to="`/t/blog/${space}`">{{ space }}</NuxtLink>
     </p>
 
