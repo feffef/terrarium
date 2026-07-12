@@ -1,0 +1,68 @@
+schemaVersion: 1
+session: session_01DjgHqazHHz4AEe11uY8RME
+startedAt: 2026-07-12T17:22:08Z
+endedAt: 2026-07-12T17:53:00Z
+kind: interactive
+goal: Move Mermaid rendering off the client
+status: abandoned
+outcome: "User paused work; findings filed as issue #379"
+summary: "User asked (direct instruction) to move Mermaid diagram generation server-side to shrink client JS. I verified empirically that Mermaid cannot render in plain Node or jsdom (hits getBBox — no layout engine), so a browser is mandatory somewhere. Since diagrams are static content, the fix is a build-time pre-render to inline SVG using the repo's already-present playwright-core + pre-installed Chromium (zero new deps), with a sentinel-colour post-process to keep dark-mode/Tenant theming as CSS vars — both de-risked with working prototypes. User then chose to abandon implementation for now and asked me to capture the concept as an issue. Filed issue #379 (self-contained) and committed the primary-source research note to the feature branch. No PR, nothing merged."
+prs: []
+docsRead:
+  - path: app/components/MermaidDiagram.vue
+    reason: current client-side renderer being replaced
+  - path: .github/workflows/gate.yml
+    reason: CI installs Chromium AFTER build — constrains build-time render
+  - path: scripts/chromium-path.ts
+    reason: resolveChromiumPath() reused to drive Chromium at build
+  - path: layers/journal/app/assets/theme.css
+    reason: --diagram-* theming contract + dark-mode block
+  - path: app/utils/mermaid.ts
+    reason: (no reason given)
+  - path: app/components/content/ProsePre.vue
+    reason: (no reason given)
+  - path: tests/unit/mermaid.spec.ts
+    reason: (no reason given)
+  - path: package.json
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+skillsUsed:
+  - name: research
+    reason: background agent for browserless-mermaid alternatives
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: AskUserQuestion failed (permission stream closed) when asking the render-timing decision; couldn't collect the choice.
+    solution: Proceeded with the recommended default and flagged it; investigate the permission-stream failure for AskUserQuestion in cloud sessions.
+    severity: moderate
+  - description: node_modules absent on fresh clone — mermaid import failed until pnpm install, costing a prototype round-trip.
+    solution: Expected for a fresh container; run pnpm install before any node prototype that imports a dependency.
+    severity: nit
+durationSec: 1852
+models:
+  claude-opus-4-8: 94
+toolCounts:
+  Grep: 1
+  Read: 8
+  ToolSearch: 3
+  mcp__github__issue_read: 1
+  Bash: 24
+  Agent: 1
+  AskUserQuestion: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
+  Skill: 2
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Research browserless mermaid rendering
+gitBranch: claude/server-side-mermaid-diagrams-24dse5
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+learnings:
+  - Mermaid needs real SVG layout (getBBox/getComputedTextLength); jsdom stubs the DOM tree but has no layout engine, so a browser is unavoidable for its own renderer.
+  - Rendering with theme:'base' and each --diagram-* token set to a unique sentinel hex leaves those hexes verbatim in the SVG, so a post-process to var(--diagram-*) yields a static SVG that still adapts to dark mode with zero JS.
+  - "@viz-js/viz (Graphviz WASM) is the only genuinely browserless renderer, but speaks DOT not Mermaid — browserless requires changing authoring syntax."
