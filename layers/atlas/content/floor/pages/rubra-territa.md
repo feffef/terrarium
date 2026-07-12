@@ -87,6 +87,9 @@ What follows we have set down as the beetle keeps it — not by our calendar but
 
 :::phase-note{of="first-startle"}
 As the keepers let the light run longer by their small, deniable increments, the beetle comes up — and is at once alarmed at having done so, and retires. This is repeated, we have watched it repeated, until the weather holds and it consents to remain above ground. The first startles of the year are these: an animal fleeing, chiefly, the fact of its own arrival.
+
+::sighting{date="2026-03-07"}
+::
 :::
 
 :::phase-note{of="tender-roots"}
@@ -97,7 +100,12 @@ With the lid standing open an hour a day, and the draught coming and going with 
 :::
 
 :::phase-note{of="wary-fattening"}
-The misting lapses, coinciding as it does with the keeper's holiday, and the glass runs unaccustomedly dry; the beetle takes no rest from it. This is the wary fattening: an autumn's eating done against the coming cold, at twice the usual rate and, since the drying glass ticks and creaks as it cools each night, something like thrice the usual alarm. After the great cleaning everything re-arranges itself an inch at a time, which suits the beetle not at all; it bolts at each new arrangement and fattens between bolts, still eating against the winter.
+The misting lapses, coinciding as it does with the keeper's holiday, and the glass runs unaccustomedly dry; the beetle takes no rest from it. This is the wary fattening: an autumn's eating done against the coming cold, at twice the usual rate and, since the drying glass ticks and creaks as it cools each night, something like thrice the usual alarm.
+
+::sighting{date="2026-08-19"}
+::
+
+After the great cleaning everything re-arranges itself an inch at a time, which suits the beetle not at all; it bolts at each new arrangement and fattens between bolts, still eating against the winter.
 :::
 
 :::phase-note{of="under-bark"}

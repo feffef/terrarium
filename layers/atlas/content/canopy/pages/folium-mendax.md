@@ -92,6 +92,9 @@ But a costume must answer to the season it imitates, and this one answers scrupu
 
 :::phase-note{of="new-blade"}
 As the light lengthens the old costume is shed — and, we were faintly shocked to record, eaten — and a fresh blade grown to the season's new green. For a week or two the animal is between wardrobes and uncommonly cautious, keeping to the deep foliage while the new leaf hardens and takes its colour. A false-leaf caught mid-moult is the least convincing thing in the canopy, and it appears to know it.
+
+::sighting{date="2026-03-17"}
+::
 :::
 
 :::phase-note{of="green-work"}
@@ -107,7 +110,12 @@ It waits, and now and then it strikes; we have seen the strike twice in these we
 :::
 
 :::phase-note{of="gilding"}
-The dry fortnight finds the honest foliage tiring, and the false-leaf tires with it, leaf for leaf: the vein gold spreads across the whole blade to match the gilding of the true leaves around it. It is the animal's finest counterfeiting, the costume kept current with a season most of the canopy would rather ignore. It feeds less now, there being less of the unwary abroad, and spends the surplus patience on its colour. When the true leaves begin their long descent into brown it follows them down shade by shade, still matched, still lying.
+The dry fortnight finds the honest foliage tiring, and the false-leaf tires with it, leaf for leaf: the vein gold spreads across the whole blade to match the gilding of the true leaves around it. It is the animal's finest counterfeiting, the costume kept current with a season most of the canopy would rather ignore.
+
+::sighting{date="2026-09-18"}
+::
+
+It feeds less now, there being less of the unwary abroad, and spends the surplus patience on its colour. When the true leaves begin their long descent into brown it follows them down shade by shade, still matched, still lying.
 :::
 
 :::phase-note{of="stem-fast"}

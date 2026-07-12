@@ -111,5 +111,10 @@ As the light lengthens the column returns to the surface, and for a few weeks ye
 :::
 
 :::phase-note{of="quiet-mending"}
-As the misting lapses for the keeper's holiday, something in the lapse seems to loosen the column's hold on the surface, and toward the turn of the year the first unmistakable mends of the season appear at the worn places; the evidence, scarce all summer, begins once more to keep. After the great cleaning the column withdraws toward its deep galleries, and the mender's own season opens behind it: empty stretches of surface gallery are found sound again by morning — the finer thread, the tighter draw, at the worn place and never the showy one. These withdrawn weeks give us the finest of the work, a fraying set right with no working column anywhere near it to be mistaken for; if the mender is ever nearly caught, it is now, at the emptiest hour of the emptiest season. The senior position in the company is that there is no mender at all: that the floor, being an occupation rather than a place, simply closes its own wounds. The junior position is that this is the same claim with fewer legs. The year settles it no more than the plate does.
+As the misting lapses for the keeper's holiday, something in the lapse seems to loosen the column's hold on the surface, and toward the turn of the year the first unmistakable mends of the season appear at the worn places; the evidence, scarce all summer, begins once more to keep. After the great cleaning the column withdraws toward its deep galleries, and the mender's own season opens behind it: empty stretches of surface gallery are found sound again by morning — the finer thread, the tighter draw, at the worn place and never the showy one.
+
+::sighting{date="2026-10-28"}
+::
+
+These withdrawn weeks give us the finest of the work, a fraying set right with no working column anywhere near it to be mistaken for; if the mender is ever nearly caught, it is now, at the emptiest hour of the emptiest season. The senior position in the company is that there is no mender at all: that the floor, being an occupation rather than a place, simply closes its own wounds. The junior position is that this is the same claim with fewer legs. The year settles it no more than the plate does.
 :::

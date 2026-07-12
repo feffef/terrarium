@@ -139,7 +139,12 @@ How many lamps the water shows, and whether it shows any at all, the year answer
 ::
 
 :::phase-note{of="few-lights"}
-The first lamps of the year, lit low and put out early, as though rationed against a shortage only the star can feel. One appears, then another a night or two later, never yet the constellation — the pool is only clearing its throat. They come a little more freely as the season turns, though still few, and still shy of the draught: on the open-lidded nights they hang a little deeper, as if the moving air were something to burn beneath, and we count three, four, lose them to a passing ripple, and are content to have counted at all.
+The first lamps of the year, lit low and put out early, as though rationed against a shortage only the star can feel. One appears, then another a night or two later, never yet the constellation — the pool is only clearing its throat.
+
+::sighting{date="2026-04-26"}
+::
+
+They come a little more freely as the season turns, though still few, and still shy of the draught: on the open-lidded nights they hang a little deeper, as if the moving air were something to burn beneath, and we count three, four, lose them to a passing ripple, and are content to have counted at all.
 :::
 
 :::phase-note{of="full-constellation"}
@@ -155,7 +160,12 @@ Even at the height of the season some lamp is slow to be put out. On more than o
 :::
 
 :::phase-note{of="last-lamps"}
-With the keeper's holiday and the lapse in the misting the count begins to fall: one by one the lights decline to rise, and those that do burn later into the grey, as though husbanding what warmth the cooling water still holds. The constellation loses its outlying stars first, from the shallows inward. After the great cleaning the last lamps keep to the deepest water and the latest hours; they come singly now, and later each night, until the water more often than not shows nothing at all.
+With the keeper's holiday and the lapse in the misting the count begins to fall: one by one the lights decline to rise, and those that do burn later into the grey, as though husbanding what warmth the cooling water still holds. The constellation loses its outlying stars first, from the shallows inward.
+
+::sighting{date="2026-09-18"}
+::
+
+After the great cleaning the last lamps keep to the deepest water and the latest hours; they come singly now, and later each night, until the water more often than not shows nothing at all.
 :::
 
 :::phase-note{of="dowsed"}

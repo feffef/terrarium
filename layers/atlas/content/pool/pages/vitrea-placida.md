@@ -85,6 +85,9 @@ What it grazes, and how far it must travel for it, the year decides — and we h
 
 :::phase-note{of="first-grazing"}
 It returns to the pane with the lengthening light and begins where it left off, as though the interval were an administrative matter and not a season. The first ribbons of clean glass appear low down, where the light reaches first, and lengthen by a finger's width in a patient afternoon.
+
+::sighting{date="2026-03-12"}
+::
 :::
 
 :::phase-note{of="green-harvest"}
@@ -98,6 +101,9 @@ Late in the harvest the misting lapses with the keeper's holiday and the film st
 
 :::phase-note{of="slow-polish"}
 After the great cleaning the film thins in earnest, and the snail travels farther for less, which it does not appear to resent. It crosses ground it has already cleaned to reach ground it has not, polishing where there is little left to graze, until the light shortens past use.
+
+::sighting{date="2026-10-08"}
+::
 :::
 
 :::phase-note{of="sealed-season"}

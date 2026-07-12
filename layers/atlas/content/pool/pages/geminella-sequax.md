@@ -89,6 +89,9 @@ The pairs are on the film only while there is a film to be on, and the year give
 
 :::phase-note{of="first-pairs"}
 As the light lengthens the film re-forms in patches, and every patch is grazed by its twos from the first morning. We have never once caught the pairing happen — the film is bare at dusk and paired by dawn — and spring returns them, so far as our lenses can tell, in the very same twos it took away.
+
+::sighting{date="2026-03-22"}
+::
 :::
 
 :::phase-note{of="film-plenty"}
@@ -105,6 +108,9 @@ The pairs are part of the pool's small economy, and the pool is not sentimental 
 
 :::phase-note{of="thin-film"}
 The misting's lapse starves the film to ribbons, and the pairs keep to what remains, in lanes narrower than before. They do not disperse to hunt the thinning film singly — nothing about them is ever single — but crowd the surviving patches two by two, and wait the shortage out.
+
+::sighting{date="2026-09-08"}
+::
 :::
 
 :::phase-note{of="sunk-season"}

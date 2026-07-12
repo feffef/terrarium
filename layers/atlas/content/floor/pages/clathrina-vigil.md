@@ -94,7 +94,12 @@ What follows we have set down as she keeps it, not by our calendar but by her ow
 ::
 
 :::phase-note{of="restringing"}
-Once a year, over some ten nights as the light lengthens, she takes the whole lattice down and re-spins it — thread by thread, the old work eaten and the new drawn tighter — and the gate stands shut for the duration. Nothing crosses while she is at it; the few travellers that come are turned back to wait at the gap, and they wait. Only when the last new thread has satisfied her does the narrow place open again.
+Once a year, over some ten nights as the light lengthens, she takes the whole lattice down and re-spins it — thread by thread, the old work eaten and the new drawn tighter — and the gate stands shut for the duration. Nothing crosses while she is at it; the few travellers that come are turned back to wait at the gap, and they wait.
+
+::sighting{date="2026-04-01"}
+::
+
+Only when the last new thread has satisfied her does the narrow place open again.
 :::
 
 :::phase-note{of="long-keeping"}
@@ -105,9 +110,19 @@ The fresh lattice is barely strung before the year's traffic begins to rise agai
 :::
 
 :::phase-note{of="thin-traffic"}
-As the misting lapses for the keeper's holiday and the glass runs dry, the traffic through the gap begins, by small degrees, to fall off with it. She keeps the post exactly as before: a slower night is not, to this creature, a lighter duty — she walks the same lattice, tests the same threads, and holds the same third thread against whatever the dry weeks send down it. After the great cleaning the crossings grow scarce in earnest, and here the whole point of her is made plain: she keeps the post regardless. There is little to admit and less to turn back, and she admits and turns back with the same care she gave the summer — at the narrowest way down through the western wall, which is to say the only one.
+As the misting lapses for the keeper's holiday and the glass runs dry, the traffic through the gap begins, by small degrees, to fall off with it. She keeps the post exactly as before: a slower night is not, to this creature, a lighter duty — she walks the same lattice, tests the same threads, and holds the same third thread against whatever the dry weeks send down it.
+
+::sighting{date="2026-10-13"}
+::
+
+After the great cleaning the crossings grow scarce in earnest, and here the whole point of her is made plain: she keeps the post regardless. There is little to admit and less to turn back, and she admits and turns back with the same care she gave the summer — at the narrowest way down through the western wall, which is to say the only one.
 :::
 
 :::phase-note{of="winter-watch"}
-Little passes the narrow place now, and less is caught; the cold has taken most of what would try the gate. She neither leaves the post nor lowers the bar for the want of custom. We have sat out a whole winter's night at the root-gap and recorded a single crossing, admitted — and the gatekeeper as wakeful over that one as over the summer's hundred. We know of no night, in any season we have watched, on which the gate was left.
+Little passes the narrow place now, and less is caught; the cold has taken most of what would try the gate. She neither leaves the post nor lowers the bar for the want of custom. We have sat out a whole winter's night at the root-gap and recorded a single crossing, admitted — and the gatekeeper as wakeful over that one as over the summer's hundred.
+
+::sighting{date="2026-01-11"}
+::
+
+We know of no night, in any season we have watched, on which the gate was left.
 :::

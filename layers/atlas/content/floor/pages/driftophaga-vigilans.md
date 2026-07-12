@@ -95,7 +95,12 @@ The lengthening light begins, by small increments, to set one copy of a thing a 
 :::
 
 :::phase-note{of="reckoning"}
-The keeper's holiday lets the misting lapse, and a lapsed routine is a great manufacturer of disagreement — a hoard recounted and not matching, a mark made and not kept. The reckoning begins here, the richest feeding of the year; and after the great cleaning, when everything is put back an inch from where it stood and no two records of the floor agree for a fortnight, the drift-eater comes into its fullest table. It goes patiently down the year's accumulated strayings, eating each difference until the pair it stood between agree again — though seldom, we have noticed, in the way their owner would have chosen, and it takes the whole of it as it takes everything, one difference at a time and without haste.
+The keeper's holiday lets the misting lapse, and a lapsed routine is a great manufacturer of disagreement — a hoard recounted and not matching, a mark made and not kept. The reckoning begins here, the richest feeding of the year.
+
+::sighting{date="2026-09-28"}
+::
+
+And after the great cleaning, when everything is put back an inch from where it stood and no two records of the floor agree for a fortnight, the drift-eater comes into its fullest table. It goes patiently down the year's accumulated strayings, eating each difference until the pair it stood between agree again — though seldom, we have noticed, in the way their owner would have chosen, and it takes the whole of it as it takes everything, one difference at a time and without haste.
 :::
 
 :::phase-note{of="lean-agreement"}

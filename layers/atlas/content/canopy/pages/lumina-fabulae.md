@@ -101,6 +101,9 @@ What follows we have set down as the moth keeps it — not by our calendar but b
 
 :::phase-note{of="first-glow"}
 The earliest dusks warm enough to fly, and the moth's first showing of the year. The ledger's first entries are written now — single sightings, low over the western boughs, each held a moment too long to be quite believed. The lamp is thin here, and easily mistaken for a trick of the failing light.
+
+::sighting{date="2026-03-24"}
+::
 :::
 
 :::phase-note{of="long-dusk"}
