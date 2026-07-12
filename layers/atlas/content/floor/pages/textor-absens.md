@@ -106,10 +106,15 @@ When the work can be seen for itself, and when it cannot, is a matter of the men
 :::phase-note{of="scarce-evidence"}
 As the light lengthens the column returns to the surface, and for a few weeks yet the finer thread can still be found; then the reviving traffic muddles the evidence, and a mend and the ordinary mending of the ant become, to the fingertip, one thing. With the column fully at work the mends cannot be distinguished from the mending, and we credit nothing — the draught and the open lid give the whole surface a general air of having been tampered with, and a single finer thread is not to be found in all of it. This is the scarcest stretch for evidence, the column at its busiest overhead, and yet the year's one sighting we are prepared to credit fell squarely in it, which the juniors find suggestive and the seniors find only typical. One night we possess: at the mouth of the long gallery the lamp's edge caught a paleness — low, unhurried, the colour of unbleached silk — and by the time the lamp itself was brought to bear there was gallery, and mend, and nothing else. The startle beetle bolted a half-second before the paleness went, which we no longer count as corroboration. The ledger keeps only this:
 
-::sighting{date="2026-07-05"}
+::sighting{date="2026-04-04"}
 ::
 :::
 
 :::phase-note{of="quiet-mending"}
-As the misting lapses for the keeper's holiday, something in the lapse seems to loosen the column's hold on the surface, and toward the turn of the year the first unmistakable mends of the season appear at the worn places; the evidence, scarce all summer, begins once more to keep. After the great cleaning the column withdraws toward its deep galleries, and the mender's own season opens behind it: empty stretches of surface gallery are found sound again by morning — the finer thread, the tighter draw, at the worn place and never the showy one. These withdrawn weeks give us the finest of the work, a fraying set right with no working column anywhere near it to be mistaken for; if the mender is ever nearly caught, it is now, at the emptiest hour of the emptiest season. The senior position in the company is that there is no mender at all: that the floor, being an occupation rather than a place, simply closes its own wounds. The junior position is that this is the same claim with fewer legs. The year settles it no more than the plate does.
+As the misting lapses for the keeper's holiday, something in the lapse seems to loosen the column's hold on the surface, and toward the turn of the year the first unmistakable mends of the season appear at the worn places; the evidence, scarce all summer, begins once more to keep. After the great cleaning the column withdraws toward its deep galleries, and the mender's own season opens behind it: empty stretches of surface gallery are found sound again by morning — the finer thread, the tighter draw, at the worn place and never the showy one.
+
+::sighting{date="2026-10-28"}
+::
+
+These withdrawn weeks give us the finest of the work, a fraying set right with no working column anywhere near it to be mistaken for; if the mender is ever nearly caught, it is now, at the emptiest hour of the emptiest season. The senior position in the company is that there is no mender at all: that the floor, being an occupation rather than a place, simply closes its own wounds. The junior position is that this is the same claim with fewer legs. The year settles it no more than the plate does.
 :::

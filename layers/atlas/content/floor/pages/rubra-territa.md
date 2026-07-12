@@ -87,17 +87,25 @@ What follows we have set down as the beetle keeps it — not by our calendar but
 
 :::phase-note{of="first-startle"}
 As the keepers let the light run longer by their small, deniable increments, the beetle comes up — and is at once alarmed at having done so, and retires. This is repeated, we have watched it repeated, until the weather holds and it consents to remain above ground. The first startles of the year are these: an animal fleeing, chiefly, the fact of its own arrival.
+
+::sighting{date="2026-03-07"}
+::
 :::
 
 :::phase-note{of="tender-roots"}
 With the lid standing open an hour a day, and the draught coming and going with it, one might expect the startle beetle to keep underground; it does the opposite. This is the soft feeding — the tender ends of roots, taken a few seconds at a time — and the beetle treats the draught as merely one more thing to bolt from, which it does, and returns from, and bolts from again, the night through. As the misting turns liberal the feeding is at its best, and it works the damp roots in earnest between the usual alarms. One night we watched a raindrop fall from the upper glass and miss it by a hand's breadth: it fled the splash, returned within the minute, fled the damp patch the splash had left, and then ate its supper at the very rim of that patch, one alarm at a time, and we confess we admired it. The ledger's own account is terser:
 
-::sighting{date="2026-06-23"}
+::sighting{date="2026-04-21"}
 ::
 :::
 
 :::phase-note{of="wary-fattening"}
-The misting lapses, coinciding as it does with the keeper's holiday, and the glass runs unaccustomedly dry; the beetle takes no rest from it. This is the wary fattening: an autumn's eating done against the coming cold, at twice the usual rate and, since the drying glass ticks and creaks as it cools each night, something like thrice the usual alarm. After the great cleaning everything re-arranges itself an inch at a time, which suits the beetle not at all; it bolts at each new arrangement and fattens between bolts, still eating against the winter.
+The misting lapses, coinciding as it does with the keeper's holiday, and the glass runs unaccustomedly dry; the beetle takes no rest from it. This is the wary fattening: an autumn's eating done against the coming cold, at twice the usual rate and, since the drying glass ticks and creaks as it cools each night, something like thrice the usual alarm.
+
+::sighting{date="2026-08-19"}
+::
+
+After the great cleaning everything re-arranges itself an inch at a time, which suits the beetle not at all; it bolts at each new arrangement and fattens between bolts, still eating against the winter.
 :::
 
 :::phase-note{of="under-bark"}

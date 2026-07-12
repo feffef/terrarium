@@ -88,18 +88,28 @@ The circuit is not the same length the year round, nor flown at all in the deep 
 ::
 
 :::phase-note{of="first-circuits"}
-The rounds resume with the lengthening light, brief at first, as though the days must earn the attention. It flies only a short arc of the margin and returns early to its reed, and the pale gold edging shows for a moment as it banks — the first sign, each year, that the chronicler is keeping its books again. As the light comes clearer the circuit lengthens to match; the draught of the open lid troubles it not at all, and it flies the same patient round, pausing where the day's small events have left their marks, with a good many more of them now to attend to.
+The rounds resume with the lengthening light, brief at first, as though the days must earn the attention. It flies only a short arc of the margin and returns early to its reed, and the pale gold edging shows for a moment as it banks — the first sign, each year, that the chronicler is keeping its books again.
+
+::sighting{date="2026-04-11"}
+::
+
+As the light comes clearer the circuit lengthens to match; the draught of the open lid troubles it not at all, and it flies the same patient round, pausing where the day's small events have left their marks, with a good many more of them now to attend to.
 :::
 
 :::phase-note{of="long-rounds"}
 These are the year's fullest evenings, and the circuit takes the whole of the dusk — there being, in this stretch, more to attend to than dusk to attend to it. The rounds are at their longest now, when the pool's evenings have the most in them worth a mark, and it is now the chronicler shuns the far corner where the call-mimic is reported and will not fly its circuit there; of everything in the pool, it alone seems to believe every account it hears. On the emptiest evening of one June, when rain had kept the pool dull and eventless from morning on, it came out all the same and flew its round in half the usual time, almost perfunctorily, as if there were simply less to attend to. We offer no explanation; the ledger gives that evening a single line, which we have not improved on:
 
-::sighting{date="2026-06-29"}
+::sighting{date="2026-06-15"}
 ::
 :::
 
 :::phase-note{of="brisk-rounds"}
-The misting lapses with the keeper's holiday and the days begin to thin; the rounds quicken with them. It flies all the same, a shade faster than before, as though aware the light it audits is being rationed, and the stations it keeps grow fewer, though it keeps every one that is left. After the great cleaning it has the busiest going-over of the year, for nothing sits where it sat; the days thin further and the rounds quicken to match, and it flies the shortening dusks briskly, marking a pool that will not hold still to be marked.
+The misting lapses with the keeper's holiday and the days begin to thin; the rounds quicken with them. It flies all the same, a shade faster than before, as though aware the light it audits is being rationed, and the stations it keeps grow fewer, though it keeps every one that is left.
+
+::sighting{date="2026-09-13"}
+::
+
+After the great cleaning it has the busiest going-over of the year, for nothing sits where it sat; the days thin further and the rounds quicken to match, and it flies the shortening dusks briskly, marking a pool that will not hold still to be marked.
 :::
 
 :::phase-note{of="unkept-dusks"}

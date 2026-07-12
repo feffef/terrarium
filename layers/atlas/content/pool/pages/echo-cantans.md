@@ -93,9 +93,14 @@ The nine reports do not fall evenly across the year, and the mimic keeps two sea
 ::
 
 :::phase-note{of="far-singing"}
-The far water finds its voices now, for it is now the pool has the most to lend: the misting is at its most liberal, the water fullest and loudest, and all nine of the reports we credit fall between the first warm nights and the keeper's holiday. The dusk-chronicler, the most methodical inhabitant of the wing, will not take its circuit past that corner in these weeks, and we have found its caution generally well placed. We keep the vigil in pairs — not from fear, we tell each other, but so that the next report may at last be confirmed by a second voice; we are aware of how that reads, in this of all entries. Toward the holiday the voices come thin and far apart, as though the pool were running short of others to imitate. The ledger holds one such night and does not pretend to more than it heard:
+The far water finds its voices now, for it is now the pool has the most to lend: the misting is at its most liberal, the water fullest and loudest, and all nine of the reports we credit fall between the first warm nights and the keeper's holiday. The first of the season came early, and near enough to shore that two of us heard it together and still could not agree on what it had borrowed:
 
-::sighting{date="2026-07-02"}
+::sighting{date="2026-06-12"}
+::
+
+The dusk-chronicler, the most methodical inhabitant of the wing, will not take its circuit past that corner in these weeks, and we have found its caution generally well placed. We keep the vigil in pairs — not from fear, we tell each other, but so that the next report may at last be confirmed by a second voice; we are aware of how that reads, in this of all entries. Toward the holiday the voices come thin and far apart, as though the pool were running short of others to imitate. The ledger holds one such night and does not pretend to more than it heard:
+
+::sighting{date="2026-06-20"}
 ::
 :::
 

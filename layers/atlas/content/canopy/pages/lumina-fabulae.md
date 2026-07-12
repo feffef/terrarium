@@ -101,12 +101,15 @@ What follows we have set down as the moth keeps it — not by our calendar but b
 
 :::phase-note{of="first-glow"}
 The earliest dusks warm enough to fly, and the moth's first showing of the year. The ledger's first entries are written now — single sightings, low over the western boughs, each held a moment too long to be quite believed. The lamp is thin here, and easily mistaken for a trick of the failing light.
+
+::sighting{date="2026-03-24"}
+::
 :::
 
 :::phase-note{of="long-dusk"}
 The flight season proper, and the moth rides every dusk the canopy allows. It wears its lamp at the tail — a steady gold, not the anxious flicker one gets from lesser glimmerwings — and flies only in the two or three hours when the canopy cannot decide whether it is day. The lamp is brightest, we have measured, precisely when it is least needed, and dims as true dark arrives, whereupon the moth folds itself against a bough and becomes soot, which is much the more convincing half of its livery. One evening in this stretch a lamp answered our own: the senior of us raised a lantern to the glass, and the moth, some yards off, brightened by a degree and held it. We have agreed among ourselves not to insist on what it meant. The ledger's own line is briefer than ours:
 
-::sighting{date="2026-06-20"}
+::sighting{date="2026-05-01"}
 ::
 :::
 

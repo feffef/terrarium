@@ -117,7 +117,7 @@ What it says, and how much of it, turns with the year's damp — and we have set
 :::phase-note{of="full-voice"}
 The lid comes to stand open an hour a day, and the mold — nearly alone among the inhabitants — welcomes the clean draught, holding to its damp corners out of the moving air and gathering itself until the sibilance thickens into full voice. This is the colony in full spate, and whatever it is saying, it says most of it now: the misting at its most liberal, the whisper swelling after every rain until the whole canopy sibilates, the caps standing fattest and most talkative on the wettest boughs. We have debated the mechanism at more length than the reader needs to hear about — the junior members hold that it is merely the spores going, a rain of dust too fine to see and loud only in aggregate, and the senior members hold the same thing but stand nearer the caps while saying it. The ledger, which has no patience for mechanism, keeps its own account:
 
-::sighting{date="2026-07-05"}
+::sighting{date="2026-06-10"}
 ::
 :::
 
@@ -126,9 +126,19 @@ The misting lapses for a fortnight — coinciding, we note, with the keeper's ho
 :::
 
 :::phase-note{of="new-ground"}
-After the great cleaning everything re-arranges itself, and every bared surface the cleaning leaves is spoken for within the week, politely. The mold does not race for the new ground so much as arrive at it — already in residence before we have noticed the ground was free. By its close the fresh boughs sibilate like the old, and we have gone back to not recording the colonies at all.
+After the great cleaning everything re-arranges itself, and every bared surface the cleaning leaves is spoken for within the week, politely. The mold does not race for the new ground so much as arrive at it — already in residence before we have noticed the ground was free.
+
+::sighting{date="2026-10-18"}
+::
+
+By its close the fresh boughs sibilate like the old, and we have gone back to not recording the colonies at all.
 :::
 
 :::phase-note{of="damp-corners"}
-Through the dry-warm months the colony keeps to the shaded corners, where the pipes have not yet reached and a little damp outlasts the heat. It whispers still, but at a whisper even by its own standards — one must go looking, into the cool angles behind the far glass, to hear it at all. Out in the open, where the radiators have their way and the pool drops its inch, the caps stand dry and say nothing. Only late, as the keepers let the light run longer and the glass holds its damp a little better, do the corners it has kept through the heat begin, cautiously, to spread: a colony gains a cap a week and mentions each one faintly. Nothing here is hurried, the mold least of all.
+Through the dry-warm months the colony keeps to the shaded corners, where the pipes have not yet reached and a little damp outlasts the heat. It whispers still, but at a whisper even by its own standards — one must go looking, into the cool angles behind the far glass, to hear it at all.
+
+::sighting{date="2026-01-21"}
+::
+
+Out in the open, where the radiators have their way and the pool drops its inch, the caps stand dry and say nothing. Only late, as the keepers let the light run longer and the glass holds its damp a little better, do the corners it has kept through the heat begin, cautiously, to spread: a colony gains a cap a week and mentions each one faintly. Nothing here is hurried, the mold least of all.
 :::

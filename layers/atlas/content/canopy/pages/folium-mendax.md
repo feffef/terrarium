@@ -92,22 +92,30 @@ But a costume must answer to the season it imitates, and this one answers scrupu
 
 :::phase-note{of="new-blade"}
 As the light lengthens the old costume is shed — and, we were faintly shocked to record, eaten — and a fresh blade grown to the season's new green. For a week or two the animal is between wardrobes and uncommonly cautious, keeping to the deep foliage while the new leaf hardens and takes its colour. A false-leaf caught mid-moult is the least convincing thing in the canopy, and it appears to know it.
+
+::sighting{date="2026-03-17"}
+::
 :::
 
 :::phase-note{of="green-work"}
 With the honest foliage coming in thick the performance resumes in earnest, one more liar hidden among the plentiful truth, and these are the ledger's fullest weeks. The draught troubles it not at all; it has studied the true leaves and sways as they do, a half-beat behind, and holds so still that a specimen has been known to sit two hours for its portrait before some small error — the eye, usually — gives it away. We note that its shade is popular: the whisper mold crowds into the shadow the false-leaf casts and thrives there, whispering away, unaware or unconcerned that its roof is an ambush.
 
-::sighting{date="2026-06-23"}
+::sighting{date="2026-05-06"}
 ::
 
 It waits, and now and then it strikes; we have seen the strike twice in these weeks, and both times the victim's chief mistake was botanical over-confidence. It fears exactly one thing, the patient weaver, so that a false-leaf drifting within sight of a web abandons stillness altogether and walks — quickly, on all six twigs, with the affronted air of an actor whose theatre has caught fire.
 
-::sighting{date="2026-07-02"}
+::sighting{date="2026-05-31"}
 ::
 :::
 
 :::phase-note{of="gilding"}
-The dry fortnight finds the honest foliage tiring, and the false-leaf tires with it, leaf for leaf: the vein gold spreads across the whole blade to match the gilding of the true leaves around it. It is the animal's finest counterfeiting, the costume kept current with a season most of the canopy would rather ignore. It feeds less now, there being less of the unwary abroad, and spends the surplus patience on its colour. When the true leaves begin their long descent into brown it follows them down shade by shade, still matched, still lying.
+The dry fortnight finds the honest foliage tiring, and the false-leaf tires with it, leaf for leaf: the vein gold spreads across the whole blade to match the gilding of the true leaves around it. It is the animal's finest counterfeiting, the costume kept current with a season most of the canopy would rather ignore.
+
+::sighting{date="2026-09-18"}
+::
+
+It feeds less now, there being less of the unwary abroad, and spends the surplus patience on its colour. When the true leaves begin their long descent into brown it follows them down shade by shade, still matched, still lying.
 :::
 
 :::phase-note{of="stem-fast"}

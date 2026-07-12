@@ -103,7 +103,13 @@ We have learned to audit the shade leaf by leaf, matching each patch to its cast
 :::phase-note{of="bold-noons"}
 Here, in the highest light of the year, the audit fails. Every entry that will not balance falls in these weeks, at noon, when the shade is boldest and least excusable — four such entries in the whole of the guide, and we present the total without embarrassment: it is four more than we can explain. Two regularities attend them. The whisper mold prospers in shade that nothing stands to cast, fat and talkative in the open mid-bough where the sun should have had it; and the untenanted shadow has never once been reported within the lantern moth's glow. Between them they describe a thing with preferences.
 
-::sighting{date="2026-07-04"}
+::sighting{date="2026-06-06"}
+::
+
+::sighting{date="2026-06-15"}
+::
+
+::sighting{date="2026-07-25"}
 ::
 :::
 

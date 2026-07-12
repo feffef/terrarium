@@ -100,20 +100,30 @@ That livelihood keeps a calendar of its own — first strung, then wheeled high,
 ::
 
 :::phase-note{of="first-stringing"}
-As the light lengthens the first wheels of the year go up, strung low and small, as though the weaver were testing the air's opinion before committing to it. They are modest things, easily missed, taken down some mornings and not replaced — the returning silk spent cautiously, on the chance the season is not yet in earnest. When the lid begins to stand open and the draught worries at the new webs, the weaver answers by building lower and anchoring harder rather than by giving up the fork, and by the last of these weeks the forks are furnished again, if sparely.
+As the light lengthens the first wheels of the year go up, strung low and small, as though the weaver were testing the air's opinion before committing to it. They are modest things, easily missed, taken down some mornings and not replaced — the returning silk spent cautiously, on the chance the season is not yet in earnest.
+
+::sighting{date="2026-03-27"}
+::
+
+When the lid begins to stand open and the draught worries at the new webs, the weaver answers by building lower and anchoring harder rather than by giving up the fork, and by the last of these weeks the forks are furnished again, if sparely.
 :::
 
 :::phase-note{of="high-wheeling"}
 The wheels widen as the season turns, and what began as a cautious test becomes, by degrees, the high wheeling — the great wheels of the damp months, wider each night than we would credit and replaced entire by dawn. What the day damages the night makes good, so that by first light the new wheel stands strung with dew, every spoke beaded, the animal amid its own accounting like a clerk who has balanced the books and sees no reason to say so.
 
-::sighting{date="2026-06-26"}
+::sighting{date="2026-05-21"}
 ::
 
 It hunts, in these weeks, only in the sense that it has arranged for hunting to come to it. We have seen the web keep a lantern moth — the lamp burning in the silk for a long minute, then banked, then dark — and we confess the company recorded that entry in silence and went early to supper. We have also seen it keep a false-leaf, which had made, that night, its second mistake.
 :::
 
 :::phase-note{of="taking-in"}
-As the misting lapses the great wheels come down, a bough at a time, and the silk is not discarded but eaten and carried inward, as savings against the lean months. A web taken in now will not be restrung until the damp comes back. The weaver reads the drying air a fortnight before we do, and begins its economies while the canopy still calls the season summer. After the great cleaning the work goes on in earnest, wheel by wheel, until the forks that hummed with silk all summer stand bare and the whole season's spinning has been carried inward as store, done without visible regret.
+As the misting lapses the great wheels come down, a bough at a time, and the silk is not discarded but eaten and carried inward, as savings against the lean months. A web taken in now will not be restrung until the damp comes back. The weaver reads the drying air a fortnight before we do, and begins its economies while the canopy still calls the season summer.
+
+::sighting{date="2026-10-03"}
+::
+
+After the great cleaning the work goes on in earnest, wheel by wheel, until the forks that hummed with silk all summer stand bare and the whole season's spinning has been carried inward as store, done without visible regret.
 :::
 
 :::phase-note{of="close-sitting"}
