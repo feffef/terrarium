@@ -1,0 +1,86 @@
+schemaVersion: 1
+session: session_019j7PL6pwXWTAa8HuhXfeuF
+startedAt: 2026-07-12T13:18:12Z
+endedAt: 2026-07-12T13:33:34Z
+kind: interactive
+goal: Write one blog post via the blog-post Skill
+status: in-review
+outcome: "PR #368 opened (David, standalone)"
+summary: "Human ran /blog-post with no persona argument. Followed the Skill's candidate process: gathered material broadly (git log -100, ~20 recent session logs, every Persona's recent posts), picked three distinct outsider-legible topics, and drafted full candidates for all three — Kevin on an audit-docs self-merged PR (#347) whose session never invoked session closure, the near-miss that followed, and the same-day orphaned-session detector (issue #349, commit 28505f6) built because of it; Karen on a silent YAML `#`-truncation bug (commit 5e43ce1) that had mangled seven landed session-log outcome fields; David on frictions-to-fixes' autonomous reviewer-agent tier self-merging PR #363 under the repo owner's own GitHub identity, verified against the live PR API (user/merged_by both \"feffef\"), following up his own 2026-07-09 post. A fresh sonnet subagent, given only the three pasted drafts and no repo access, picked David's post and flagged unexplained jargon (audit-docs, MDC, ADR, a dangling reference to David's own prior post); revised the winning draft to close those gaps before landing it. Branched, saved the post, ran the full pnpm gate (green — build, unit, 29-test e2e suite), opened PR #368, subscribed to its activity, and scheduled a 60-minute check-in. All Skill-directed; no scope beyond what /blog-post itself specifies."
+prs:
+  - "368"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the Skill being run
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-don't for the winning candidate
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice for a discarded candidate
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice for a discarded candidate
+  - path: layers/blog/content/david/pages/2026-07-09-the-self-merge-tier-just-grew-by-one.md
+    reason: the prior post David's winning draft follows up on
+  - path: layers/blog/content/karen/pages/2026-07-11-the-gate-that-broke-its-own-gate.md
+    reason: check for an available reaction hook
+  - path: layers/blog/content/kevin/pages/2026-07-12-it-read-its-own-bad-review.md
+    reason: check for an available reaction hook; already reacted to Karen's latest
+  - path: layers/karen/../blog/content/karen/pages/2026-07-11-the-gate-that-broke-its-own-gate.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-11-the-merge-button-runs-on-a-real-computer.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-12-session_01WcEGxLWEA9xravmPuFiBNU.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-12-session_01E6sk9B86K55383YN8iz9iQ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-12-session_01D5pGVkCskqxfcD9KDGpfi8.yml
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-10-session_012CWnr9jdma8DEPcEPeESGu.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-11-session_01SoBXSK23ik4nRSgybvfYgi.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-12-session_016r52n8F8uE8KAA45grM5Qo.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: Nearly reused a session id (session_01WcEGxLWEA9xravmPuFiBNU) surfaced during git-log research as this session's own Claude-Session commit trailer — CLAUDE.md explicitly warns against reconstructing an identifier from a plausible-looking pattern seen elsewhere in context.
+    solution: "Caught before push by cross-checking CLAUDE_CODE_REMOTE_SESSION_ID and the system-prompt commit-footer template, then amended the commit with the correct id (session_019j7PL6pwXWTAa8HuhXfeuF). Worth an explicit habit: grep the system prompt for the real id at the moment of writing any Claude-Session trailer, especially in a research-heavy session that has read many other sessions' ids."
+    severity: moderate
+  - description: GitHub secondary rate limit hit once on a search_issues call mid-research (403, 'exceeded a secondary rate limit').
+    solution: Not retried — the query wasn't load-bearing for the final draft, so dropped rather than waited out.
+    severity: nit
+durationSec: 922
+models:
+  claude-sonnet-5: 134
+toolCounts:
+  Bash: 33
+  Read: 16
+  ToolSearch: 2
+  mcp__github__pull_request_read: 4
+  Grep: 7
+  mcp__github__issue_read: 1
+  mcp__github__search_issues: 2
+  mcp__github__search_pull_requests: 2
+  Write: 4
+  Edit: 3
+  Agent: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/blog-post-qz9jqm
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+learnings:
+  - "The blog-post Skill's candidate process is worth its cost here: the outside-reader pass didn't just pick a winner, it caught real self-containedness gaps (unglossed audit-docs/MDC/ADR jargon, a dangling reference) in the winning draft that would have shipped otherwise."
