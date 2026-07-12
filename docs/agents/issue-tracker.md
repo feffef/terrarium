@@ -60,6 +60,10 @@ class to its MCP equivalent:
   issue #145): retry the same call once after reconnect; if it fails again,
   route around it — for `send_later` specifically, fall back to the built-in
   `ScheduleWakeup` tool instead of retrying further (issue #229).
+- **`AskUserQuestion` (a core tool, not a `Claude_Code_Remote` MCP tool) can hit
+  the same transient "permission stream closed" error.** Retry once; if it
+  fails again, don't retry-loop — fall back immediately to the safer default
+  option and note the fallback explicitly in the resulting output (issue #359).
 - **List / search PRs** → `list_pull_requests` / `search_pull_requests`
 - **Link sub-issues** → `sub_issue_write`
 
@@ -98,6 +102,10 @@ tools. Use the `Blocked by: #<n>` body-line fallback described under
 
 ## Conventions
 
+- **`docs/research/` vs. a GitHub issue.** `docs/research/` is for verified,
+  primary-source-grounded reference material — facts gathered and checked. An
+  unimplemented idea, design proposal, or open question belongs in a GitHub
+  issue instead (a PRD, see below, if it's substantial).
 - **`/triage`'s redundancy check applies to every open issue, no exemptions.**
   "Search for an existing implementation before actioning this issue" is not
   optional for issues that read as *not yet actionable by design* — e.g. a

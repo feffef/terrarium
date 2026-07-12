@@ -234,4 +234,6 @@ rides in the self-merged routine PR above. File it as its own, separately human-
 (see the Historical-tier note above), subscribe, and babysit it to merge/close. Likewise, if the gate is
 red for a reason that isn't yours, leave the PR open for a human rather than
 merging red — fix on the branch or escalate honestly instead. Done when the PR
-is merged green, or open and honestly escalated.
+is merged green, or open and honestly escalated. Then invoke `close-session` —
+its log records this run's PR (merged green, or open and escalated for a
+human-only-surface fix) and any `needs-triage` issue filed in step 6.
