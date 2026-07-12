@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_012MgmwGad8fk8B9r6Ah3ut6
 startedAt: 2026-07-11T11:15:57Z
-endedAt: 2026-07-11T20:48:20Z
+endedAt: 2026-07-11T21:37:14Z
 kind: interactive
 goal: Public-readiness review before repo goes public
 status: completed
-outcome: "Merged (PRs #326, #329): infra scrub, LICENSE, SECURITY.md, ADR-0020 trust tiers"
-summary: "Human-instructed: critically review the repo, GitHub, and ADR/skill workflow for everything blocking public read access, using an Opus background security agent (full tree + all 92 commits) and a Sonnet research pass over primary GitHub Docs. Findings: no secret/credential blocker — tree and history clean. Real items: deploy/README infra disclosure (co-located sibling project + operator account), personal email in ~21 commits, missing LICENSE/SECURITY.md, and the single-trusted-human governance / prompt-injection gap (#213) plus merge-to-main RCE via the ADR-0011 deploy container. Agent-initiated low-risk fixes: genericized deploy/README, added SECURITY.md, two research docs — merged as PR #326. Then, on explicit owner requests: added the MIT LICENSE and drafted ADR-0019 (requester trust tiers, Status Proposed) refining #213 to a write-access-vs-read-only-public boundary — opened as gated PR #329. Owner then accepted ADR-0019 and asked for the write-vs-owner reasoning plus the audit-docs-style amendments; applied them single-homed in ADR-0019 with CONTEXT.md (glossary terms + Agent Authorship), ADR-0003, ADR-0004, CLAUDE.md, and issue-tracker.md all pointing to it, and resynced PR #329's description. Also reopened #213, which PR #326's body had auto-closed via a stray \"Resolve #213\" keyword."
+outcome: "Public-ready: PRs #326/#329 merged; CI + auto-merge verified (#331, closed #231)"
+summary: "Human-instructed: critically review the repo, GitHub, and ADR/skill workflow for everything blocking public read access, using an Opus background security agent (full tree + all 92 commits) and a Sonnet research pass over primary GitHub Docs. Findings: no secret/credential blocker — tree and history clean. Real items: deploy/README infra disclosure (co-located sibling project + operator account), personal email in ~21 commits, missing LICENSE/SECURITY.md, and the single-trusted-human governance / prompt-injection gap (#213) plus merge-to-main RCE via the ADR-0011 deploy container. Agent-initiated low-risk fixes: genericized deploy/README, added SECURITY.md, two research docs — merged as PR #326. Then, on explicit owner requests: added the MIT LICENSE and drafted ADR-0019 (requester trust tiers, Status Proposed) refining #213 to a write-access-vs-read-only-public boundary — opened as gated PR #329. Owner then accepted ADR-0019 and asked for the write-vs-owner reasoning plus the audit-docs-style amendments; applied them single-homed in ADR-0019 with CONTEXT.md (glossary terms + Agent Authorship), ADR-0003, ADR-0004, CLAUDE.md, and issue-tracker.md all pointing to it, and resynced PR #329's description. Also reopened #213, which PR #326's body had auto-closed via a stray \"Resolve #213\" keyword. After the owner made the repo public and enabled auto-merge, verified both out-of-band changes: a throwaway smoke PR (#330) confirmed the CI gate runs again (public repos get free Actions, resolving the billing stop), and a real doc-rot fix (#331, marking auto-merge available) confirmed end-to-end auto-merge and closed #231."
 prs:
   - "326"
   - "329"
@@ -63,31 +63,34 @@ frictions:
   - description: get_job_logs download URL 404'd immediately (expired SAS token) and the check-run output was empty, so the failing CI step couldn't be read.
     solution: Fell back to reproducing the gate locally, which is the reliable primary source anyway.
     severity: nit
-durationSec: 34343
+durationSec: 37277
 models:
-  claude-opus-4-8: 380
+  claude-opus-4-8: 450
 toolCounts:
-  Bash: 63
+  Bash: 75
   Agent: 2
   Skill: 5
-  Read: 14
+  Read: 15
   mcp__github__run_secret_scanning: 1
   mcp__github__list_issues: 1
   mcp__github__list_repository_collaborators: 1
   AskUserQuestion: 1
-  Edit: 43
-  Write: 5
+  Edit: 46
+  Write: 6
   mcp__github__list_pull_requests: 2
-  mcp__github__create_pull_request: 2
-  mcp__github__subscribe_pr_activity: 2
+  mcp__github__create_pull_request: 4
+  mcp__github__subscribe_pr_activity: 3
   mcp__github__get_job_logs: 2
   mcp__github__get_check_run: 1
   mcp__Claude_Code_Remote__send_later: 1
   mcp__github__issue_read: 1
-  mcp__github__issue_write: 1
-  mcp__github__add_issue_comment: 1
-  mcp__github__update_pull_request: 3
-  mcp__github__pull_request_read: 1
+  mcp__github__issue_write: 2
+  mcp__github__add_issue_comment: 2
+  mcp__github__update_pull_request: 4
+  mcp__github__pull_request_read: 2
+  mcp__github__actions_list: 2
+  ToolSearch: 1
+  mcp__github__enable_pr_auto_merge: 1
 filesEdited:
   - deploy/README.md
   - SECURITY.md
@@ -100,6 +103,7 @@ filesEdited:
   - CLAUDE.md
   - docs/agents/issue-tracker.md
   - docs/agents/triage-labels.md
+  - GATE-SMOKE-TEST.md
 subagents:
   - type: general-purpose
     task: Security review for public readiness
