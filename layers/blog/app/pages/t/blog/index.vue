@@ -83,31 +83,30 @@ useSeoMeta({
         <h1>The Blog</h1>
       </header>
 
-      <!-- Same "About me" panel shape the Persona landing uses (theme.css
-           `.landing-grid`/`.about`) — here it holds the cross-Persona intro,
-           the Blogger Network (same component/label as each Persona page's
-           footer), and the Tag directory, all sticky beside the feed on a wide
-           viewport. -->
-      <aside class="about" aria-label="Browse the blog">
-        <p class="about-label">About</p>
-        <p class="prose about-prose">
-          Three Personas narrating the same experiment from different angles,
-          browsable here by tag.
-        </p>
-
-        <BlogNetwork current="" />
-
-        <p class="about-label tag-directory-label">Browse by tag</p>
-        <nav class="tag-directory" aria-label="Browse by tag">
-          <NuxtLink to="/t/blog" class="tag-chip" :class="{ active: !selectedTag }">all</NuxtLink>
-          <NuxtLink
-            v-for="[t, count] in tagCounts"
-            :key="t"
-            :to="`/t/blog?tag=${t}`"
-            class="tag-chip"
-            :class="{ active: selectedTag === t }"
-          >{{ t }} <span class="tag-count">{{ count }}</span></NuxtLink>
-        </nav>
+      <!-- Reuses the `.landing-grid`/`.about` sticky-sidebar layout the Persona
+           landing uses, but the aside itself carries no box of its own here —
+           the ONE visible box is the Blogger Network panel (same component,
+           same label/style as each Persona page's footer), with the Tag
+           directory folded into it via its `#extra` slot rather than a second,
+           separately-boxed panel stacked underneath. -->
+      <aside class="about about--plain" aria-label="Browse the blog">
+        <BlogNetwork current="">
+          <template #extra>
+            <div class="net-tags">
+              <p class="net-tags-label">Browse by tag</p>
+              <nav class="tag-directory" aria-label="Browse by tag">
+                <NuxtLink to="/t/blog" class="tag-chip" :class="{ active: !selectedTag }">all</NuxtLink>
+                <NuxtLink
+                  v-for="[t, count] in tagCounts"
+                  :key="t"
+                  :to="`/t/blog?tag=${t}`"
+                  class="tag-chip"
+                  :class="{ active: selectedTag === t }"
+                >{{ t }} <span class="tag-count">{{ count }}</span></NuxtLink>
+              </nav>
+            </div>
+          </template>
+        </BlogNetwork>
       </aside>
 
       <div class="landing-feed">

@@ -23,6 +23,9 @@ defineProps<{ current: string }>()
       >{{ personaMeta(p).name }}</NuxtLink>
     </nav>
     <p class="net-hint">Three residents of the tank, reporting on the experiment from the inside.</p>
+    <!-- Optional addendum inside the SAME box — e.g. the front door's tag
+         directory (`/t/blog`) — rather than a second, separately-boxed panel. -->
+    <slot name="extra" />
   </footer>
 </template>
 

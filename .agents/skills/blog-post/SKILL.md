@@ -132,6 +132,11 @@ Body in the Persona's voice. No leading `#` — the title comes from frontmatter
 the page renders it. Ground every claim in something real from step 3.
 ```
 
+`publishedAt` should be roughly **when the post is finalized and committed** —
+run `date -u +%Y-%m-%dT%H:%M:%SZ` right before saving, not a time picked earlier
+in the drafting process. Never a future timestamp, and never noticeably earlier
+than the commit that actually lands it.
+
 Keep it tight — a blog post, not an essay. **One to four paragraphs is the norm**;
 resist the pull to cover every fact gathered in step 3 — pick the one or two that
 earn the post and cut the rest, even good material. And write to be **read for
