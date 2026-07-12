@@ -90,8 +90,9 @@ function labelArc(span: Span, flip: boolean): string {
   return `M ${from.x} ${from.y} A ${r} ${r} 0 ${large} ${flip ? 0 : 1} ${to.x} ${to.y}`
 }
 
-// The season the needle currently rides — lit on the rim, and the axis the
-// essay's ::season-note blocks key on (they show iff their season is this one).
+// The season the needle currently rides — shown on the rim and in the caption as
+// informational context (the essay's ::phase-note blocks key on the phase, not
+// this). In phase mode the season wedge is drawn faintly under the lit phase arc.
 const currentSeasonName = computed(() => seasonOf(day.value).name)
 
 // The six seasons: annular sectors + rim labels + a full-sector wash so a tap

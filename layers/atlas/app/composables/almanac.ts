@@ -1,10 +1,11 @@
 // The Almanac — the shared reactive state under the specimen page's almanac
 // dial (#282, map #279), and THE contract the dial-driven MDC components
-// (`::almanac`, `:season`, `::season-note`, `::sighting`) build against. The
-// dial is the essay's season selector: the shared `day` decides which season
-// the needle rides, and each `::season-note` shows only in its own season, so
-// turning the dial swaps the prose. Auto-imported layer-wide
-// (docs/agents/tenant-layers.md §1).
+// (`::almanac`, `:season`, `::phase-note`, `::sighting`) build against. On a
+// specimen the dial drives that creature's own phenology PHASES: the shared
+// `day` decides which phase the needle rides, and each `::phase-note` shows only
+// in its own phase, so turning the dial swaps the prose. The six shared seasons
+// stay on the rim as informational context, not the content axis. Auto-imported
+// layer-wide (docs/agents/tenant-layers.md §1).
 //
 // ── The contract ─────────────────────────────────────────────────────────────
 // The specimen page owns the state and provides it once in its setup:
@@ -23,8 +24,8 @@
 // state, so an MDC component pasted into a non-specimen Document degrades
 // gracefully instead of crashing the page — always null-check.
 //
-// Typical usage: a `::season-note{of="x"}` shows while `seasonOf(day.value)` is
-// its season (collapsing to the needle's season on mount — see SeasonNote); a
+// Typical usage: a `::phase-note{of="x"}` shows while the needle sits in that
+// phase (collapsing to the needle's phase on mount — see PhaseNote); a
 // `::sighting{date}` does `register({ id: useId(), day: dateToDay(date),
 // kind: 'sighting' })` in setup and `unregister(id)` in `onUnmounted`. Marks
 // registered by components that render after the wheel (everything inside the
@@ -58,7 +59,7 @@ import type { PhenologyPhase } from '../utils/atlas'
  *  header above). */
 export interface Almanac {
   /** The needle's current day-of-year, always normalized to 0..364. Reactive
-   *  and shared: the wheel writes it on drag, `::season-note`/`:season` read it. */
+   *  and shared: the wheel writes it on drag, `::phase-note`/`:season` read it. */
   day: Ref<number>
   /** Move the needle. Rounds + normalizes onto the wheel (365 → 0, -1 → 364). */
   setDay: (d: number) => void
