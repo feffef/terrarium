@@ -1,0 +1,74 @@
+schemaVersion: 1
+session: session_01D5pGVkCskqxfcD9KDGpfi8
+startedAt: 2026-07-12T10:27:58Z
+endedAt: 2026-07-12T11:04:23Z
+kind: autonomous
+goal: Run frictions-to-fixes end to end
+status: completed
+outcome: 7 issues filed, 2 PRs merged
+summary: "Ran the frictions-to-fixes Skill autonomously (no human prompt in this session, dispatched via the scheduled Routine flow). Delegated the 20-session survey and tracker screening to a subagent, which returned 7 never-fixed candidates (all simple, none touching human-only surfaces) plus a large already-fixed/open-already drop list. Filed one GitHub issue per candidate (#355-#361), then dispatched two worktree-isolated Sonnet impl agents: one grouped PR (#362) batching the 6 doc-only fixes, one PR (#363) for the MDC closing-fence doc+e2e fix. Reviewed both diffs myself as the ADR-0003 review-agent (verified selectors/claims against the actual source rather than trusting agent reports, confirmed no pack-Skill files touched, confirmed gate green), posted a review comment on each, and merged both. No escalations needed this run — everything cleared the simple/safe-surface bar."
+prs:
+  - "362"
+  - "363"
+docsRead:
+  - path: CLAUDE.md
+    reason: ground rules for issue filing, PR review, and provenance footer discipline
+  - path: skills-lock.json
+    reason: confirm which Skills are pack-owned (off limits) before scoping fixes
+  - path: docs/agents/issue-tracker.md
+    reason: "existing permission-stream-closed guidance, to scope issue #359 precisely"
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: "confirm step 8's missing close-session pointer for issue #357"
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: "confirm §5's missing subscribe_pr_activity warning for issue #361"
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run itself
+  - name: close-session
+    reason: session closure front door
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: TaskCreate's schema wasn't loaded, so my first call used Agent-tool-shaped params (prompt/subagent_type) and errored.
+    solution: ToolSearch select:TaskCreate before the first call whenever a deferred tool hasn't been used yet this session, not just on error.
+    severity: nit
+  - description: "The github MCP server briefly disconnected mid-session while polling PR #363's gate, requiring a ToolSearch reload before the next call would resolve."
+    solution: No repo fix — transient harness/MCP connection flakiness, same class other sessions have logged and dropped as infra noise.
+    severity: nit
+  - description: (from the survey subagent) scripts/session-frictions.ts's output is long enough that piping through `tail -N` first silently dropped the earliest sessions in the 20-session window.
+    solution: Redirect full output to a file and Read it, rather than tailing; or add pagination/chunking to the script.
+    severity: minor
+  - description: (from the survey subagent) scripts/merged-since.ts against several closely-spaced session startedAt timestamps returned long, largely overlapping commit lists that `head -100` couldn't distinguish.
+    solution: Grep each result for candidate-specific keywords as a workaround; a --grep or --limit flag on the script would make this cheaper.
+    severity: minor
+durationSec: 2185
+models:
+  claude-sonnet-5: 111
+toolCounts:
+  Bash: 16
+  ToolSearch: 6
+  mcp__github__search_pull_requests: 1
+  Agent: 3
+  mcp__github__issue_write: 7
+  TaskCreate: 4
+  mcp__github__pull_request_read: 8
+  TaskUpdate: 3
+  mcp__github__add_issue_comment: 2
+  mcp__github__merge_pull_request: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__list_triggers: 1
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Batch doc-only friction fixes PR
+    model: sonnet
+  - type: general-purpose
+    task: MDC docs+e2e assertion fix PR
+    model: sonnet
+gitBranch: claude/frictions-to-fixes-2la8ik
+entrypoint: remote_mobile
+cliVersion: 2.1.207
