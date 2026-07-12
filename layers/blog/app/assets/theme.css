@@ -172,6 +172,64 @@ body.bl-page {
 .bl .feed .reply { font-family: var(--bl-mono); font-size: 0.72rem; color: var(--bl-accent); margin: 0 0 0.2rem; }
 .bl .empty { color: var(--bl-faint); font-style: italic; font-family: var(--bl-serif); }
 
+/* Tag chips — on a feed teaser (below the click target) and on a post header. */
+.bl .tag-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; }
+.bl .feed .tag-chips { margin: -0.4rem -1rem 0.4rem; padding: 0 1rem; }
+.bl .post-head .tag-chips { margin-top: 0.6rem; }
+.bl .tag-chip {
+  display: inline-block;
+  font-family: var(--bl-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  color: var(--bl-muted);
+  background: var(--bl-surface);
+  border: 1px solid var(--bl-line);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  text-decoration: none;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.bl .tag-chip:hover { color: var(--bl-accent); border-color: var(--bl-accent); }
+
+/* Front door (`/t/blog`) sidebar: the aside itself carries NO box of its own
+   here (`.about--plain` strips the "About me" panel's chrome) — the Blogger
+   Network component is the one visible box, sticky in the same `.about` grid
+   area the Persona landing uses. */
+/* Extra specificity (three classes, not two) so this reliably beats
+   `.bl--landing .about`'s box styling regardless of rule order in the file —
+   with equal specificity, source order would decide, and that base rule is
+   defined later below. */
+.bl--front .about.about--plain {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+.bl--front .about .bl-network { margin-top: 0; }
+/* The Tag directory, folded into the SAME box via the Network's `#extra` slot
+   (not a second panel) — a thin rule separates it from the hint text above.
+   Left-aligned, unlike the centred identity content above it. */
+.bl .net-tags { margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--bl-line); text-align: left; }
+.bl .net-tags-label {
+  font-family: var(--bl-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--bl-faint);
+  margin: 0 0 0.6rem;
+}
+.bl .tag-directory { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.bl .tag-directory .tag-chip.active { color: var(--bl-accent-ink, #fff); background: var(--bl-accent); border-color: var(--bl-accent); }
+.bl .tag-count { opacity: 0.65; font-size: 0.9em; }
+.bl .feed .who {
+  font-family: var(--bl-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-left: 0.3rem;
+}
+
 /* Landing layout — the intro lives in an "About me" panel. In the DOM it sits
    between the masthead and the feed, so a narrow (single-column) viewport reads
    slogan → About → posts. On a wide viewport the grid areas float it into a

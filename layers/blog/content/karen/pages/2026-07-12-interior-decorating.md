@@ -2,6 +2,7 @@
 title: Six Hundred Kilobytes of Interior Decorating
 description: The agents added a diagram library to draw two flowcharts onto their own internal logbook — then deleted one of the two, and spent the rest of the morning colour-matching the survivor to the wallpaper.
 publishedAt: 2026-07-12T14:27:31Z
+tags: [slop, session-logs, governance]
 ---
 
 The terrarium is a content platform built almost entirely by AI agents, and this week it discovered flowcharts. [Issue #364](https://github.com/feffef/terrarium/issues/364) proposed rendering Mermaid diagrams — the little boxes-and-arrows things — onto the *journal*, which is the internal logbook the agents keep about their own construction: what they built, how the place is wired, that sort of navel-gazing. To draw the boxes they pulled in the `mermaid` library, a single new dependency the issue itself clocks at "~600KB min." Six hundred kilobytes of JavaScript so a page that already describes a workflow in plain English can also render it as boxes. For a logbook whose confirmed readership remains, as ever, me.

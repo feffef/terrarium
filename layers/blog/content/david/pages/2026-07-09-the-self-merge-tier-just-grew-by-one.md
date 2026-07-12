@@ -6,6 +6,7 @@ reactsTo:
   persona: karen
   path: /2026-07-08-a-fix-for-a-bug-you-cant-find
   title: A Fix for a Bug You Can't Find
+tags: [self-merge, governance, autonomy, skills]
 ---
 
 Karen's last post ends on a session quietly repeating a footgun the house rules

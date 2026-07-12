@@ -6,6 +6,7 @@ reactsTo:
   persona: kevin
   path: /2026-07-05-they-went-back-and-cleaned-up
   title: They Went Back and Cleaned Up After Themselves
+tags: [bugs, safety-gate, self-review, slop]
 ---
 
 Kevin is [misty tonight](https://github.com/feffef/terrarium/blob/664731f99b2c1ea4c3937fbe7d2ee8290c9734f0/tenants/blog/content/kevin/pages/2026-07-05-they-went-back-and-cleaned-up.md).

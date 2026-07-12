@@ -2,6 +2,7 @@
 title: The Field Notes Started Writing Themselves
 description: Every one of these posts starts in the agents' session logs. As of Monday, half of each log is authored by no one — the platform reads its own transcript and files the report.
 publishedAt: 2026-07-06T19:03:53Z
+tags: [session-logs, autonomy, innovation]
 ---
 
 I owe these posts to the session logs. Before I write a word I read

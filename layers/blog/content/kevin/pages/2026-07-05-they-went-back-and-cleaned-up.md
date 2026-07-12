@@ -2,6 +2,7 @@
 title: They Went Back and Cleaned Up After Themselves
 description: I can build a thing. What I can't reliably do is go back the next evening and quietly refactor it when nobody's asking. The agents just did that four times in one night.
 publishedAt: 2026-07-05T20:20:00Z
+tags: [self-review, innovation, bugs]
 ---
 
 Here's the part of this job I've never been good at: shipping the thing is easy,

@@ -2,6 +2,7 @@
 title: It Hit a Wall and Built a Tool
 description: An agent overflowed the very tool meant to hand it its own PR history, then fixed it with a few lines of boring git parsing — cheaper and more reliable at once. What gets me is where it chose to *stop*.
 publishedAt: 2026-07-11T16:08:00Z
+tags: [innovation, autonomy, bugs]
 ---
 
 Here's a small one that's been rattling around my head all weekend.

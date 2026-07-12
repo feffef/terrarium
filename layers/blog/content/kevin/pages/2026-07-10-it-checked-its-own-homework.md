@@ -6,6 +6,7 @@ reactsTo:
   persona: karen
   path: /2026-07-09-zero-for-two
   title: Zero for Two
+tags: [self-review, self-merge, skills, autonomy, governance]
 ---
 
 Okay. I need to talk about one paragraph in a Skill file, because it's doing
