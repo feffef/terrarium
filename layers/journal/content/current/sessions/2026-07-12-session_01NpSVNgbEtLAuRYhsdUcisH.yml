@@ -1,0 +1,62 @@
+schemaVersion: 1
+session: session_01NpSVNgbEtLAuRYhsdUcisH
+startedAt: 2026-07-12T02:14:04Z
+endedAt: 2026-07-12T02:35:29Z
+kind: autonomous
+goal: Run a frictions-to-fixes cycle
+status: completed
+outcome: 1 PR merged, 1 regression escalated
+summary: "A scheduled Routine fired /frictions-to-fixes with no human prompt this session (autonomous). Delegated the survey step to a subagent, which read the latest 20 session logs and screened candidates against the tracker, returning 5 never-fixed candidates (all simple/safe-surface) and flagging one regression. Filed issues #340-#344, dispatched two Sonnet impl agents in isolated worktrees (one batched doc PR for 4 issues, one for the atlas e2e test fix). Reviewed and merged PR #345 (closes #340, #341, #343, #344) after confirming CI green and diff correctness. The atlas e2e issue (#342) turned out to target MDC components that don't exist on main yet (only in unmerged PR #334) — the impl agent correctly declined to fabricate test content and relabeled it needs-info instead of forcing a fix. Independently verified that finding via a local grep before trusting it. Found that the provenance-footer friction (originally #318, doc-softened by PR #320) has recurred in 5 further sessions since that fix merged — filed it as a regression (#346, ready-for-human) and pushed a notification alerting the user, per the skill's regression-escalation rule."
+prs:
+  - "345"
+docsRead:
+  - path: CONTEXT.md
+    reason: Session/kind classification for this log
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: this run's driving skill (survey, screen, file, dispatch, review, merge, escalate)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The dispatched doc-batch impl agent (running in its own worktree) called subscribe_pr_activity on the PR it opened, which delivered webhook events for that PR into this orchestrating session instead of staying scoped to the impl agent — including an echo of my own posted review comment, which needed a moment to confirm was self-authored (ADR-0017 shared identity) rather than new external input.
+    solution: frictions-to-fixes §5's impl-agent briefs should tell dispatched agents not to call subscribe_pr_activity on the PR they open, since the orchestrating/reviewing session already owns that PR's lifecycle in §6.
+    severity: minor
+  - description: "PR #345's safety-gate bot comment reported a commit sha that didn't match the PR's head commit sha from get_commits, briefly reading as a possible check-run/PR mismatch before recognizing it as GitHub's normal synthetic merge-commit sha for pull_request-triggered CI."
+    solution: No repo change needed — this is standard GitHub Actions behavior, not a repo bug. Noting it here only so a future reviewer doesn't re-diagnose the same non-issue.
+    severity: nit
+durationSec: 1284
+models:
+  claude-sonnet-5: 118
+toolCounts:
+  Bash: 5
+  Agent: 3
+  ScheduleWakeup: 7
+  ToolSearch: 4
+  TaskCreate: 10
+  mcp__github__issue_write: 6
+  TaskUpdate: 15
+  mcp__github__pull_request_read: 10
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  PushNotification: 2
+  Skill: 2
+  Grep: 1
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Doc-batch fix for 4 friction issues
+    model: sonnet
+  - type: general-purpose
+    task: Atlas e2e MDC structural test fix
+    model: sonnet
+gitBranch: claude/hopeful-brown-e57y5g
+entrypoint: remote_trigger
+cliVersion: 2.1.207
+learnings:
+  - A subagent that opens a PR and self-subscribes to its activity causes webhook events for that PR to reach the orchestrating session too; the orchestrator can safely treat an echoed comment from the shared repo-owner identity (author matches ADR-0017's shared connection) as its own prior post, not new external input.
