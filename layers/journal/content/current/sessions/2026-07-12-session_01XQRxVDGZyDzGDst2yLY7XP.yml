@@ -1,0 +1,63 @@
+schemaVersion: 1
+session: session_01XQRxVDGZyDzGDst2yLY7XP
+startedAt: 2026-07-12T01:48:42Z
+endedAt: 2026-07-12T02:01:26Z
+kind: autonomous
+goal: Run the audit-skills sweep against the 40-session window
+status: in-review
+outcome: Inventory PR open, gate green, tooling issue re-confirmed
+summary: "Fully autonomous run of the audit-skills Skill (fired by its scheduled Routine, no human prompt this session). Gathered the scorecard via scripts/audit-skills.ts (36 skills, 40-session window, 8 regressionChecks). Re-graded audit-docs supporting -> specialist on bright-line evidence (4 clean runs this window, matching digest/audit-skills' own grade for the same kind of chartered job). Found and fixed a real role-content bug in triage.yml (it described a wholly different Skill — \"implement a filed backlog item\" — instead of triage's actual categorise/verify/grill/brief function) and refreshed a stale usage citation in writing-great-skills.yml left over from an earlier audit window. Ran the Phase A/B regression watch on all 8 brackets: 6 traced to real-but-mechanical edits with flat-to- improved friction trends (no regression), and the close-session/log-session bracket was the already-tracked shallow-clone-horizon false positive (#292) recurring on a new boundary commit — commented on #292 with this run's fresh evidence rather than filing a duplicate. No new needs-triage issue originated this run. pnpm gate green (build + 28/28 e2e); opened PR #338 scoped to only the three Inventory YAML files, subscribed to its activity, and scheduled a 10-minute check-in to retry auto-merge once CI reports green. Every decision this run was agent-made per the Skill's own charter; no human input occurred."
+prs:
+  - "338"
+docsRead:
+  - path: CONTEXT.md
+    reason: importance-grade definitions + Session/learnings/ideas glossary
+  - path: layers/journal/content/current/skills/audit-docs.yml
+    reason: re-grading candidate
+  - path: layers/journal/content/current/skills/triage.yml
+    reason: role-refresh candidate
+  - path: layers/journal/content/current/skills/writing-great-skills.yml
+    reason: role-refresh candidate
+skillsUsed:
+  - name: audit-skills
+    reason: the sweep this session ran
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: triage.yml's role field described an entirely different Skill ("Implement a filed backlog item") rather than triage's actual categorise/verify/grill/brief function — a real content bug sitting undetected in the Inventory, not just a stale citation.
+    solution: Rewrote the role from the Skill's own SKILL.md description plus this window's one real usage session; fixed in this run's PR.
+    severity: minor
+  - description: Several Inventory role fields bake in session-window-relative phrasing ("this window", "used once this window") that reads as current but silently goes stale the moment the next 40-session window shifts — found three instances (audit-docs, code-review, writing-great-skills) this run alone, and only two were in clear-cut-enough scope to fix now.
+    solution: A future audit-skills or Inventory-schema pass could prefer session-id citations over window-relative phrasing in role prose, since an id stays true forever and a relative phrase doesn't.
+    severity: nit
+durationSec: 764
+models:
+  claude-sonnet-5: 92
+toolCounts:
+  Bash: 27
+  Read: 6
+  ToolSearch: 2
+  mcp__github__issue_read: 1
+  Edit: 3
+  mcp__github__add_issue_comment: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__enable_pr_auto_merge: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - layers/journal/content/current/skills/audit-docs.yml
+  - layers/journal/content/current/skills/triage.yml
+  - layers/journal/content/current/skills/writing-great-skills.yml
+gitBranch: claude/upbeat-sagan-4b4ipc
+entrypoint: remote_trigger
+cliVersion: 2.1.207
+learnings:
+  - A phantom Inventory entry (inventoried && !onDisk) can legitimately map to a built-in CLI Skill invisible to the on-disk scan (confirmed for `review`, listed as a built-in Skill in this environment) — leave-and-flag is correct there, not a removal candidate.
+ideas:
+  - Add an Inventory-schema convention (documented alongside CONTEXT.md's Importance definitions) that role prose should cite session ids/dates instead of relative phrasing like "this window" or "this run" — concrete enough that a future audit-skills or domain-modeling session could land it as a one-line addition to the Skill Inventory's schema guideline.
