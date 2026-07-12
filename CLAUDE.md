@@ -505,5 +505,9 @@ primary-source facts for code-review claims
 (`docs/research/nuxt-content-review-grounding.md`), what to review before
 flipping repo visibility to public
 (`docs/research/making-repo-public.md` and
-`docs/research/public-readiness-review.md`), and GitHub Actions billing/limits
-on public vs. private repos (`docs/research/github-actions-public-vs-private-limits.md`).
+`docs/research/public-readiness-review.md`), GitHub Actions billing/limits
+on public vs. private repos (`docs/research/github-actions-public-vs-private-limits.md`),
+and whether a GitHub repository ruleset can let session-log direct-to-`main`
+pushes (ADR-0009) bypass branch protection without breaking repo auto-merge —
+the tension in issue #348
+(`docs/research/github-branch-protection-vs-autonomous-log-commits.md`).
