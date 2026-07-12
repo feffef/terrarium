@@ -1,17 +1,17 @@
 schemaVersion: 1
 session: session_01TesnDHDmcUVnGtp5AjXbm9
 startedAt: 2026-07-12T21:28:15Z
-endedAt: 2026-07-12T21:54:17Z
+endedAt: 2026-07-12T22:02:29Z
 kind: interactive
 goal: Blog posts cite sibling posts via /t/blog route
-status: in-review
-outcome: 4 links fixed, Skill + test updated, PR open
-summary: "User asked (direct prompt via /grill-with-docs) that inline links in blog posts to earlier blog posts use the site's own /t/blog/<persona>/<slug> route instead of a GitHub blob URL, and that the blog-post Skill's instructions be updated accordingly. Ran a grilling session (scope, regression-guard test, ADR-need) confirming: posts-only scope, extend the existing immutable-links test, no ADR needed. A research subagent found 3 existing GitHub-blob links to sibling posts; I found and fixed a 4th it missed, then exhaustively re-verified across all 136 github.com links in layers/blog/content that none remain. Updated .agents/skills/blog-post/SKILL.md with a carve-out bullet, added a clause to layers/blog/CONTEXT.md, extended layers/blog/tests/unit/blog-immutable-links.spec.ts to forbid future regressions, fixed the 4 links, ran pnpm gate:scoped (full gate, all green), committed, pushed, and opened PR #391. All decisions (scope, test guard, no ADR, proceed) were explicit human confirmations via AskUserQuestion, not agent-initiated judgment calls."
+status: completed
+outcome: "4 links fixed, Skill + test updated, PR #391 merged"
+summary: "User asked (direct prompt via /grill-with-docs) that inline links in blog posts to earlier blog posts use the site's own /t/blog/<persona>/<slug> route instead of a GitHub blob URL, and that the blog-post Skill's instructions be updated accordingly. Ran a grilling session (scope, regression-guard test, ADR-need) confirming: posts-only scope, extend the existing immutable-links test, no ADR needed. A research subagent found 3 existing GitHub-blob links to sibling posts; I found and fixed a 4th it missed, then exhaustively re-verified across all 136 github.com links in layers/blog/content that none remain. Updated .agents/skills/blog-post/SKILL.md with a carve-out bullet, added a clause to layers/blog/CONTEXT.md, extended layers/blog/tests/unit/blog-immutable-links.spec.ts to forbid future regressions, fixed the 4 links, ran pnpm gate:scoped (full gate, all green), committed, pushed, and opened PR #391. All decisions (scope, test guard, no ADR, proceed) were explicit human confirmations via AskUserQuestion, not agent-initiated judgment calls. Gate came back green, the change fell under the blog-post auto-merge tier (doc/content/test-only, no high-risk files), and I merged it directly — PR #391 is merged."
 prs:
   - "391"
 docsRead:
   - path: layers/blog/CONTEXT.md
-    reason: citation-rigor narrative
+    reason: citation-rigor narrative, exception clause target
   - path: .agents/skills/blog-post/SKILL.md
     reason: citation rule to amend
   - path: layers/blog/tests/unit/blog-immutable-links.spec.ts
@@ -47,25 +47,28 @@ frictions:
   - description: AskUserQuestion calls twice failed with "Tool permission stream closed before response received" and had to be retried after a user "Continue from where you left off" nudge.
     solution: Simply retrying the same AskUserQuestion call worked; no code change needed, but worth noting as an observed harness flake.
     severity: nit
-durationSec: 1563
+durationSec: 2054
 models:
-  claude-sonnet-5: 144
+  claude-sonnet-5: 164
 toolCounts:
-  Read: 10
+  Read: 11
   Skill: 4
   Agent: 1
-  Bash: 29
+  Bash: 30
   Glob: 1
   Grep: 2
   AskUserQuestion: 6
-  Edit: 8
-  ToolSearch: 2
+  Edit: 10
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_read: 6
   Write: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/blog-post/SKILL.md
   - layers/blog/CONTEXT.md
