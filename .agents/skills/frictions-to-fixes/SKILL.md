@@ -120,10 +120,8 @@ if your judgement differs, but don't re-derive the ranking from scratch.)
 - **Simple (the bulk).** Passes the **ripeness test**, all three: **simple** (one
   small code or config change, no redesign), **autonomous** (an agent lands it
   start-to-finish with no human decision mid-way), and **safe surface** (touches
-  none of the human-only surfaces — `content.config.ts`, `shared/expand.ts`,
-  `modules/routing.ts`, `shared/routing.ts`, isolation logic, CI / the
-  safety gate — ADR-0004; those are never dispatched here). These you review and
-  merge yourself in §6.
+  none of the human-only surfaces — CLAUDE.md's Ground rules, ADR-0004; those are
+  never dispatched here). These you review and merge yourself in §6.
 - **Hard (at most 2 per run).** A friction whose fix is a **large or multi-file
   code change**, or one that turns on a **non-obvious design decision**. These are still confined to safe surfaces —
   "hard" buys ambition within the dispatchable surface, never a licence to touch a
@@ -231,5 +229,6 @@ above. A PR is finished only when **merged** (by you) or **escalated/abandoned**
 not at push time (`CLAUDE.md`: pushing is not landing).
 
 Done when every dispatched PR carries a posted review comment and is merged or
-escalated/abandoned. Then it is a genuine end-of-session — invoke `log-session`
-(you judge closure), logging this run's own frictions too.
+escalated/abandoned. Then it is a genuine end-of-session — invoke `close-session`
+(CLAUDE.md's front door for closure; you judge when), logging this run's own
+frictions too.
