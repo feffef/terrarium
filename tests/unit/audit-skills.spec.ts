@@ -8,11 +8,18 @@ import {
   buildRegressionChecks,
   buildSkillRows,
   buildSkillSessionFiles,
+  findOrphanedSessions,
+  groupSessionReferences,
+  parseSessionTrailers,
+  parseSkillEditLog,
   pickWindow,
+  REC,
+  SEP,
   tallyUsage,
   type InventoryEntry,
   type OnDiskSkill,
   type SessionFile,
+  type SessionTrailerRef,
   type SkillEdit,
   type UsageHit,
   type WindowSession,
@@ -250,5 +257,128 @@ describe('buildSkillSessionFiles()', () => {
       entry(`s${i}.yml`, { session: `s${i}`, skillsUsed: [{ name: 'audit-skills', reason: 'r' }] }),
     )
     expect(buildSkillSessionFiles(files)['audit-skills']).toHaveLength(5)
+  })
+})
+
+describe('parseSkillEditLog()', () => {
+  // Mirrors `git log --name-only --pretty=format:REC%H SEP %P SEP %aI SEP %s`.
+  function commitBlock(sha: string, parents: string, date: string, subject: string, paths: string[]): string {
+    return `${REC}${sha}${SEP}${parents}${SEP}${date}${SEP}${subject}\n${paths.join('\n')}`
+  }
+
+  it('attributes a normal (single-parent) commit to every Skill it touches', () => {
+    const raw = commitBlock('c1', 'p1', '2026-07-01T00:00:00Z', 'fix tdd', [
+      '.agents/skills/tdd/SKILL.md',
+      '.agents/skills/tdd/reference.md',
+    ])
+    const edits = parseSkillEditLog(raw)
+    expect(edits.get('tdd')).toEqual([{ sha: 'c1', date: '2026-07-01T00:00:00Z', subject: 'fix tdd' }])
+  })
+
+  it('skips a parentless commit — shallow-clone horizon or true repo root', () => {
+    const raw = commitBlock('boundary', '', '2026-07-01T00:00:00Z', 'grafted boundary', [
+      '.agents/skills/close-session/SKILL.md',
+      '.agents/skills/log-session/SKILL.md',
+    ])
+    expect(parseSkillEditLog(raw).size).toBe(0)
+  })
+
+  it('attributes a merge commit (more than one parent) exactly as before', () => {
+    const raw = commitBlock('m1', 'p1 p2', '2026-07-02T00:00:00Z', 'merge fix', [
+      '.agents/skills/digest/SKILL.md',
+    ])
+    expect(parseSkillEditLog(raw).get('digest')).toEqual([
+      { sha: 'm1', date: '2026-07-02T00:00:00Z', subject: 'merge fix' },
+    ])
+  })
+
+  it('drops only the parentless block, keeping real edits from other commits', () => {
+    const raw = [
+      commitBlock('boundary', '', '2026-07-01T00:00:00Z', 'grafted boundary', [
+        '.agents/skills/close-session/SKILL.md',
+      ]),
+      commitBlock('c2', 'p1', '2026-07-03T00:00:00Z', 'real edit', [
+        '.agents/skills/close-session/SKILL.md',
+      ]),
+    ].join('\n')
+    expect(parseSkillEditLog(raw).get('close-session')).toEqual([
+      { sha: 'c2', date: '2026-07-03T00:00:00Z', subject: 'real edit' },
+    ])
+  })
+})
+
+describe('parseSessionTrailers()', () => {
+  // Mirrors `git log --pretty=format:REC%H SEP %aI %n %B`.
+  function trailerBlock(sha: string, date: string, body: string[]): string {
+    return `${REC}${sha}${SEP}${date}\n${body.join('\n')}`
+  }
+
+  it('extracts the session id from a Claude-Session trailer', () => {
+    const raw = trailerBlock('c1', '2026-07-12T06:22:00Z', [
+      'docs: audit-docs sweep',
+      '',
+      'Co-Authored-By: Claude <noreply@anthropic.com>',
+      'Claude-Session: https://claude.ai/code/session_016r52n8F8uE8KAA45grM5Qo',
+    ])
+    expect(parseSessionTrailers(raw)).toEqual([
+      { sha: 'c1', date: '2026-07-12T06:22:00Z', session: 'session_016r52n8F8uE8KAA45grM5Qo' },
+    ])
+  })
+
+  it('skips a commit with no Claude-Session trailer', () => {
+    const raw = trailerBlock('c1', '2026-07-12T06:22:00Z', ['chore: bump deps'])
+    expect(parseSessionTrailers(raw)).toEqual([])
+  })
+
+  it('extracts a legacy bare-UUID session id, not just the current session_<id> shape', () => {
+    const raw = trailerBlock('c1', '2026-07-05T00:00:00Z', [
+      'journal: early session log',
+      '',
+      'Claude-Session: https://claude.ai/code/576a49a2-1f18-4be4-8cf7-68173ee336b9',
+    ])
+    expect(parseSessionTrailers(raw)).toEqual([
+      { sha: 'c1', date: '2026-07-05T00:00:00Z', session: '576a49a2-1f18-4be4-8cf7-68173ee336b9' },
+    ])
+  })
+
+  it('reads every commit in the log, in order', () => {
+    const raw = [
+      trailerBlock('c1', '2026-07-11T00:00:00Z', ['a', '', 'Claude-Session: https://claude.ai/code/session_A']),
+      trailerBlock('c2', '2026-07-12T00:00:00Z', ['b', '', 'Claude-Session: https://claude.ai/code/session_B']),
+    ].join('\n')
+    expect(parseSessionTrailers(raw).map((r) => r.session)).toEqual(['session_A', 'session_B'])
+  })
+})
+
+describe('groupSessionReferences()', () => {
+  it('groups multiple commits referencing the same session, keeping the earliest date', () => {
+    const refs: SessionTrailerRef[] = [
+      { sha: 'c2', date: '2026-07-12T00:00:00Z', session: 'session_A' },
+      { sha: 'c1', date: '2026-07-11T00:00:00Z', session: 'session_A' },
+    ]
+    const grouped = groupSessionReferences(refs)
+    expect(grouped.get('session_A')).toEqual({ commits: ['c2', 'c1'], date: '2026-07-11T00:00:00Z' })
+  })
+})
+
+describe('findOrphanedSessions()', () => {
+  it('flags a referenced session id with no matching log file', () => {
+    const refs: SessionTrailerRef[] = [{ sha: 'c1', date: '2026-07-12T00:00:00Z', session: 'session_orphan' }]
+    expect(findOrphanedSessions(refs, new Set())).toEqual([
+      { session: 'session_orphan', commits: ['c1'], date: '2026-07-12T00:00:00Z' },
+    ])
+  })
+
+  it('does not flag a session id that has a matching log file', () => {
+    const refs: SessionTrailerRef[] = [{ sha: 'c1', date: '2026-07-12T00:00:00Z', session: 'session_logged' }]
+    expect(findOrphanedSessions(refs, new Set(['session_logged']))).toEqual([])
+  })
+
+  it('sorts orphans by earliest referencing commit date, oldest first', () => {
+    const refs: SessionTrailerRef[] = [
+      { sha: 'c2', date: '2026-07-12T00:00:00Z', session: 'session_newer' },
+      { sha: 'c1', date: '2026-07-10T00:00:00Z', session: 'session_older' },
+    ]
+    expect(findOrphanedSessions(refs, new Set()).map((o) => o.session)).toEqual(['session_older', 'session_newer'])
   })
 })

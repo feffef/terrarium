@@ -144,6 +144,14 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   so in this repo a stale copy is a *behavioral* bug.
 - **Don't restate a Routine's schedule in a committed doc** — it lives outside
   git and can change without a commit. Say a Skill *is* scheduled; never say *when*.
+- **In TS/Vue code, an inline comment explains WHY, never WHAT — default to no
+  comment at all, and when the why isn't obvious, point at the existing doc
+  that owns it rather than restating the reasoning.** Well-named code already
+  says what it does; a comment repeating that just rots as the code changes.
+  Cite the source (an ADR, `issue #325`, a linked doc) instead of re-deriving
+  its argument inline — this is the single-home rule above, applied to code
+  comments specifically. Trim duplication between a comment and the
+  type/function/doc it's about, too: say a thing once, not once per site.
 - Inspect files with the **Read tool, not `cat`** — the Edit tool refuses to edit
   a file it hasn't seen via Read, so `cat`-then-Edit forces a wasteful re-read.
 - **Never predict or reconstruct an identifier — a line number, a blob SHA, an

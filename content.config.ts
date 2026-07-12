@@ -6,13 +6,10 @@
 // the routing module uses (shared/expand.ts). There is no regenerate step for
 // anything: every `nuxt prepare`/`build`/dev-server-start re-derives the
 // collections from scratch (docs/research/nuxt-content-review-grounding.md §12).
-// But that "no regenerate step" claim is about those fresh runs, NOT about a
-// dev server already running — Nuxt Content's c12 config loader only watches
-// `content.config.ts` itself for changes; it does not watch this file's imports
-// (`shared/expand.ts`, or any Tenant's `tenant.config.ts`), so editing a manifest
-// while `nuxt dev` is already up needs a manual restart to be picked up (same
-// grounding doc, §12). The routing map is derived the same way in
-// modules/routing.ts (ADR-0014).
+// That "no regenerate step" claim is about those fresh runs. Nuxt Content's c12
+// config loader only watches `content.config.ts` itself, not this file's imports
+// (docs/research/nuxt-content-review-grounding.md §12) — modules/routing.ts
+// (ADR-0014, issue #325) covers the dev-server gap that leaves.
 import { defineCollection, defineContentConfig } from '@nuxt/content'
 import { fileURLToPath } from 'node:url'
 import { expand, loadManifests } from './shared/expand'

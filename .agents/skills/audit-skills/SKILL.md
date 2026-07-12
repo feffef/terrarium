@@ -71,6 +71,13 @@ It prints JSON:
   above — an edit can be older than the newest 40 sessions). Resolve ids
   against **`regressionSessions`** — a deduped pool, since the same session
   commonly brackets more than one Skill's edit.
+- **`orphanedSessions`** — every session id referenced by a `Claude-Session:`
+  commit trailer on `origin/main` in the last few days (a calendar window,
+  independent of the primary window above — the point is catching **zero**-log
+  sessions, not recent ones) with **no** matching file anywhere in the sessions
+  Collection (current or archived). Each entry carries the referencing commit
+  sha(s) and date — a session that never invoked `close-session`/`log-session`
+  at all (ADR-0009).
 - **`skillSessionFiles`** — Skill name → every session log file path that
   named it, across **all** history (not windowed, not bracketed). Paths only.
   This is step 4's deep-read entry point, not something to read wholesale now.
@@ -158,34 +165,41 @@ the three buckets above.
 
 ## 5. File — or comment on — an issue
 
-Two signals may originate a `needs-triage` issue, both requiring citable
+Three signals may originate a `needs-triage` issue, all requiring citable
 evidence: **step 3's bright-line rule** (≥2 windowed sessions, absent from work
-clearly in its domain — mechanical, objective) and **step 4's regression watch,
+clearly in its domain — mechanical, objective), **step 4's regression watch,
 after its Phase B deep-read** (judgement-based, but grounded in quoted evidence
-from the full logs, not the Phase A screen alone). Phase A's screen on its own
-never reaches this step — it must clear Phase B first.
+from the full logs, not the Phase A screen alone), and **step 2's
+`orphanedSessions`** (mechanical, objective — a referenced session id with no
+matching log file is itself the evidence; no further screen needed). Phase A's
+regression screen on its own never reaches this step — it must clear Phase B
+first; `orphanedSessions` has no such gate.
 
-**This step is for our own (`external: false`) Skills only.** A pack Skill's
-SKILL.md is not ours to patch (ADR-0015) — for an under-used *external* Skill,
-the only lever we own is its Inventory `role` (step 3).
+**Step 3 and step 4 are for our own (`external: false`) Skills only.** A pack
+Skill's SKILL.md is not ours to patch (ADR-0015) — for an under-used *external*
+Skill, the only lever we own is its Inventory `role` (step 3).
+`orphanedSessions` is not about any one Skill (own or external) — it's a
+journal-completeness gap, so this scoping doesn't apply to it.
 
-For each own Skill flagged by either signal:
-- **Search first** (`search_issues`, `is:issue is:open audit-skills <name>`).
+For each own Skill flagged by step 3 or 4, and for each `orphanedSessions` entry:
+- **Search first** (`search_issues`, `is:issue is:open audit-skills <name>` for
+  a Skill finding, or the session id for an orphan).
 - **Found** — add a comment citing this run's fresh evidence. A concern that
   keeps recurring across runs is itself the strongest evidence it's real; that
   history belongs on one thread, not a pile of near-duplicate issues.
-- **Not found** — file one `needs-triage` issue naming the session ids (and,
-  for a step-4 finding, the quoted friction evidence) plus your best-guess
-  hypothesis. `triage` picks up any issue regardless of source; you're not
-  filing into a void.
+- **Not found** — file one `needs-triage` issue. For a Skill finding, name the
+  session ids (and, for a step-4 finding, the quoted friction evidence) plus
+  your best-guess hypothesis. For an orphan, name the session id, its
+  commit(s), and date. `triage` picks up any issue regardless of source; you're
+  not filing into a void.
 
 Never patch `.agents/skills/` or any other doc yourself for a semantic
 concern — file per above (the narrow mechanical-fix exception is at the top
 of this doc, and doesn't apply here — a step-4 regression is never purely
 mechanical).
 
-Done when every step-3- or step-4-flagged Skill has an issue filed or
-commented on.
+Done when every step-3-, step-4-, or `orphanedSessions`-flagged item has an
+issue filed or commented on.
 
 ## 6. Suggest new Skills or Skill splits/cuts, as ideas
 

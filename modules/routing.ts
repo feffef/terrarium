@@ -2,14 +2,16 @@
 // and the L2 entry-route list from the same expand(loadManifests()) used by
 // content.config.ts — so a manifest edit is picked up with no regenerate step
 // for anything.
+import { join } from 'node:path'
 import { addTemplate, addTypeTemplate, defineNuxtModule } from '@nuxt/kit'
-import { entryRoutesFrom, expand, loadManifests, type ExpandedCollection } from '../shared/expand'
+import { entryRoutesFrom, expand, loadManifests, root, type ExpandedCollection } from '../shared/expand'
 
 export default defineNuxtModule({
   meta: { name: 'terrarium:routing' },
 
   setup(_options, nuxt) {
-    const cols: ExpandedCollection[] = expand(loadManifests())
+    const manifests = loadManifests()
+    const cols: ExpandedCollection[] = expand(manifests)
 
     const map: Record<string, Record<string, Record<string, string>>> = {}
     for (const c of cols) {
@@ -67,5 +69,17 @@ export default defineNuxtModule({
     // Register #routing so shared/routing.ts (and any call site) can import it as
     // a plain static import, keeping the isolation-critical resolver context-free.
     nuxt.options.alias['#routing'] = template.dst
+
+    // Dev-only (issue #325): unlike content.config.ts, c12 doesn't watch these
+    // imports. Use nuxt.options.watch rather than a hand-rolled builder:watch
+    // restart hook — Nuxt core already wires that array to a restart, and a
+    // second listener would race it. Doesn't cover a brand-new layers/<tenant>/
+    // dir (layer auto-extension resolves before this module runs).
+    if (nuxt.options.dev) {
+      nuxt.options.watch.push(
+        ...manifests.map((m) => join(root, 'layers', m.dir, 'tenant.config.ts')),
+        join(root, 'shared', 'expand.ts'),
+      )
+    }
   },
 })
