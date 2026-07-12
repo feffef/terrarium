@@ -31,6 +31,7 @@ const DIAGRAM_TOKENS: Record<string, string> = {
   primaryTextColor: '--diagram-node-text',
   lineColor: '--diagram-line',
   fontFamily: '--diagram-font',
+  fontSize: '--diagram-font-size',
   edgeLabelBackground: '--diagram-edge-label-bg',
   clusterBkg: '--diagram-cluster-bg',
   clusterBorder: '--diagram-cluster-border',

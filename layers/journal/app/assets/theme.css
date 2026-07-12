@@ -43,6 +43,7 @@
   --diagram-node-text: var(--jd-ink);
   --diagram-line: var(--jd-muted);
   --diagram-font: var(--jd-serif);
+  --diagram-font-size: 20px;
   --diagram-edge-label-bg: var(--jd-ground);
   --diagram-cluster-bg: var(--jd-surface);
   --diagram-cluster-border: var(--jd-line);
