@@ -13,6 +13,14 @@ Status: Accepted — supersedes both halves of ADR-0007; amends ADR-0013
 > `vue-tsc` pass. Behaviour-neutral; the three alias wirings below are unchanged, and the
 > `tsconfig.node.json` `paths['#routing']` entry (wiring #3) still stands on its own.
 
+> **Amended by #325 (2026-07-12).** In dev, `modules/routing.ts` now pushes each
+> Tenant's `tenant.config.ts` and `shared/expand.ts` onto `nuxt.options.watch`, so
+> editing an *existing* Tenant's manifest auto-restarts the dev server. The
+> Consequences section's Caveat below (no-watch, manual restart required) is now
+> stale for that case — it still holds only for a brand-new `layers/<tenant>/`
+> directory, since layer auto-extension resolves before this module's watcher
+> registers.
+
 > **Supersedes ADR-0007** (both halves — the committed `content.config.ts` half was
 > already superseded by ADR-0013; this supersedes the retained committed
 > `shared/routing.generated.ts` half). **Amends ADR-0013** (which retained the
