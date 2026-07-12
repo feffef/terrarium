@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01TzvXVHT9zk5TDPhSpm7Vkb
 startedAt: 2026-07-12T10:54:48Z
-endedAt: 2026-07-12T12:00:10Z
+endedAt: 2026-07-12T13:27:06Z
 kind: interactive
 goal: Add a Mermaid MDC diagram component (#364)
-status: in-review
-outcome: "PR #366 open, gate green, human-only-to-merge"
-summary: "Implemented issue #364 (Trusted owner, ready-for-agent) via the model split the user asked for: Sonnet subagents built the core (mermaid dep, a Platform-level ProsePre.vue override, MermaidDiagram.vue, unit + e2e tests, a tenant-layers §4 note), Fable authored two graph TD diagrams, and Opus ran the two-axis code-review. A Sonnet agent found and fixed a real bug the first component shipped: a ClientOnly mount-order race left the diagram silently blank. Then, on direct follow-up human requests: extended scripts/preview.ts shot to wait for content before capturing (--wait default 2s via --virtual-time-budget, --wait-for <selector> via playwright-core); themed diagrams from the host Tenant via an opt-in --diagram-* contract; and dropped the architecture containment diagram as low-value (prose already conveys the linear hierarchy), keeping only the how-it-works loop. Five commits, full gate green (246 unit / 30 e2e), PR #366 open human-only-to-merge (ADR-0004 new-dependency axis), subscribed. All work was human-directed."
+status: completed
+outcome: "PR #366 merged to main"
+summary: "Implemented issue #364 (Trusted owner, ready-for-agent) via the model split the user asked for: Sonnet subagents built the core (mermaid dep, a Platform-level ProsePre.vue override, MermaidDiagram.vue, unit + e2e tests, a tenant-layers §4 note), Fable authored two graph TD diagrams, and Opus ran the two-axis code-review. A Sonnet agent found and fixed a real bug the first component shipped: a ClientOnly mount-order race left the diagram silently blank. Then, on direct follow-up human requests: extended scripts/preview.ts shot to wait for content before capturing (--wait default 2s via --virtual-time-budget, --wait-for <selector> via playwright-core); themed diagrams from the host Tenant via an opt-in --diagram-* contract; and dropped the architecture containment diagram as low-value (prose already conveys the linear hierarchy), keeping only the how-it-works loop; and iterated that loop diagram twice on human feedback until it modelled frictions-to-fixes as a separate scheduled actor and the two flows as independent pipelines sharing two stores (session-log storage, skills·docs·code) that close the loop. Seven commits, full gate green (246 unit / 30 e2e), PR #366 merged to main. All work was human-directed."
 prs:
   - "366"
 docsRead:
@@ -19,7 +19,7 @@ docsRead:
   - path: layers/journal/content/current/pages/architecture.md
     reason: (read before editing)
   - path: layers/journal/content/current/pages/how-it-works.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: tests/unit/routing.spec.ts
     reason: (no reason given)
   - path: app/components/MermaidDiagram.vue
@@ -60,28 +60,29 @@ frictions:
   - description: noUncheckedIndexedAccess rejected the new extractFlag index access and the windowSize destructure, needing two typecheck round-trips.
     solution: Capture args[i] into a narrowed const; give the WxH destructure defaults.
     severity: nit
-durationSec: 3922
+durationSec: 9138
 models:
-  claude-opus-4-8: 302
+  claude-opus-4-8: 384
 toolCounts:
   ToolSearch: 5
-  Bash: 46
+  Bash: 58
   mcp__github__issue_read: 1
-  Read: 30
+  Read: 41
   TaskCreate: 4
   TaskUpdate: 8
   Agent: 5
   TaskOutput: 3
-  Edit: 22
+  Edit: 33
   Skill: 3
-  Write: 8
+  Write: 10
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
-  SendUserFile: 2
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 2
+  SendUserFile: 4
+  mcp__Claude_Code_Remote__send_later: 2
   mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - app/components/MermaidDiagram.vue
   - app/components/content/ProsePre.vue
@@ -93,6 +94,7 @@ filesEdited:
   - docs/agents/tenant-layers.md
   - layers/journal/content/current/pages/architecture.md
   - layers/journal/tests/e2e/journal.e2e.ts
+  - layers/journal/content/current/pages/how-it-works.md
 subagents:
   - type: general-purpose
     task: Implement mermaid MDC component
