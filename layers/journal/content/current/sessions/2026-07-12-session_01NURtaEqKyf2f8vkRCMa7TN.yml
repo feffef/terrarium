@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01NURtaEqKyf2f8vkRCMa7TN
 startedAt: 2026-07-12T17:23:33Z
-endedAt: 2026-07-12T17:42:56Z
+endedAt: 2026-07-12T17:58:57Z
 kind: interactive
 goal: Distribute Atlas sightings across the whole Glass Year
 status: in-review
-outcome: 28 new Observations added, PR opened
-summary: Human asked (direct request, this session's only prompt) to distribute the Atlas Tenant's field-log sightings for all 15 specimens across the whole Glass Year and keep them consistent with each specimen's phenology phases. Read CONTEXT-MAP.md, the Atlas CONTEXT.md, the atlas-specimen Skill, and all 15 specimen pages plus the 39 existing Observations, and found every existing sighting clustered in a single ~3-week window (2026-06-20 to 2026-07-12), leaving most non-quiet phases with zero ledger entries. Wrote a small Python helper mirroring almanac.ts's day-of-year/inSpan math to pick and verify dates, added 28 new Observation files spread across all three Biomes and the full year, and cited each new sighting from its matching phase-note via ::sighting so the almanac dial reads across the year too. Verified every new date against its phase's span programmatically, ran pnpm validate:content and the full pnpm gate:scoped (escalated automatically since content is non-inert), and screenshotted a specimen page to confirm the dial and field log render the spread. Opened the gated PR (#378) and subscribed to its activity per ADR-0003/CLAUDE.md, all agent-initiated per that standing convention, no separate human green-light needed since it's on an already-designated branch.
+outcome: Full field-log rewritten, spread Jan-Dec, PR open
+summary: "Human directly asked to distribute the Atlas Tenant's field-log sightings for all 15 specimens across the whole Glass Year and keep them consistent with each specimen's phenology phases. First pass added 28 new Observation files spread across previously-uncited phases, leaving the original ~39 entries untouched (append-only). Human then followed up, pointing out the original entries still sat clustered in the June/July window (visible at the bottom of each specimen's Recent Sightings panel) and directly instructed rewriting and redating all of them too — an explicit, in-session override of the Atlas's own \"append-only in spirit\" convention, since the whole point was eliminating the cluster. Redated all ~39 original entries (renamed files, updated dates) to new days within each one's already-valid phenology phase, updated every essay ::sighting citation that pointed at an old date, and reworded several notes/essay lines that hard-coded a literal or relative date (e.g. \"since the fourth\", \"the one in June\") that broke once redated — including a genuine cross-reference contradiction the redate itself surfaced (formica-textrix's essay and textor-absens's ledger both claimed an ongoing \"miscellaneous industry\" habit the ledger's own retiring-miscellaneous entry, now dated later, had already retired). Both passes verified with a Python script mirroring almanac.ts's day-of-year/ inSpan math (0 violations both times) and the full pnpm gate:scoped. Opened PR #378, kept its description in sync across both commits, and subscribed to activity per ADR-0003/CLAUDE.md."
 prs:
   - "378"
 docsRead:
@@ -15,7 +15,7 @@ docsRead:
   - path: layers/atlas/CONTEXT.md
     reason: Biome/Specimen/Interaction/Observation glossary
   - path: .agents/skills/atlas-specimen/SKILL.md
-    reason: naturalist voice, Observation schema, phase-note/::sighting conventions
+    reason: naturalist voice, Observation schema, phase-note/::sighting conventions, append-only norm
   - path: layers/atlas/app/utils/almanac.ts
     reason: day-of-year and inSpan math to place dates correctly, including wrapped spans
   - path: layers/atlas/tenant.config.ts
@@ -56,6 +56,8 @@ docsRead:
     reason: (read before editing)
   - path: layers/atlas/content/pool/pages/vitrea-placida.md
     reason: (read before editing)
+  - path: layers/atlas/content/floor/observations/2026-12-07-mended-again-miscellaneous.yml
+    reason: (read before editing)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -65,28 +67,32 @@ frictions:
   - description: gate:scoped's full gate failed on typecheck/build because node_modules was missing the `mermaid` devDependency, unrelated to this content-only change
     solution: ran `pnpm install` to restore it; confirmed via git stash that the failure was pre-existing on a clean checkout, not caused by this change
     severity: minor
-  - description: the harness's automatic commit-footer injection did not land the Co-Authored-By/Claude-Session trailer on the first `git commit -m`
-    solution: amended the trailer in by hand per CLAUDE.md's documented caveat for this
+  - description: the harness's automatic commit-footer injection did not land the Co-Authored-By/Claude-Session trailer on either `git commit -m` in this session
+    solution: amended the trailer in by hand both times per CLAUDE.md's documented caveat for this
     severity: nit
-durationSec: 1162
+  - description: redating the original cluster surfaced several notes/essay lines that had silently hard-coded a literal date ("since the fourth", "on the sixth") or an ordinal implying a calendar day ("the walking of the second" = July 2nd) instead of a relative description, invisible until the underlying date actually moved
+    solution: grepped all pre-session observation notes for first/second/ordinal/date-literal language before redating, and reworded each to a date-independent relative phrasing; worth calling out in the atlas-specimen Skill as a thing to avoid when authoring a ledger note tied to a specific date
+    severity: minor
+durationSec: 2124
 models:
-  claude-sonnet-5: 236
+  claude-sonnet-5: 405
 toolCounts:
-  Bash: 38
-  Read: 31
-  Write: 29
+  Bash: 72
+  Read: 39
+  Write: 69
   TaskCreate: 1
-  Edit: 25
-  Grep: 14
-  ToolSearch: 4
-  Monitor: 1
+  Edit: 45
+  Grep: 16
+  ToolSearch: 5
+  Monitor: 2
   TaskOutput: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
   mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - layers/atlas/content/canopy/observations/2026-03-27-first-wheel-of-the-year.yml
   - layers/atlas/content/canopy/observations/2026-10-03-wheel-taken-in.yml
@@ -131,6 +137,47 @@ filesEdited:
   - layers/atlas/content/pool/pages/luciola-mersa.md
   - layers/atlas/content/pool/pages/nocturna-brevis.md
   - layers/atlas/content/pool/pages/vitrea-placida.md
+  - layers/atlas/content/canopy/observations/2026-05-01-lantern-answers.yml
+  - layers/atlas/content/canopy/observations/2026-05-06-drawn-as-a-leaf.yml
+  - layers/atlas/content/canopy/observations/2026-07-15-shade-against-the-drift.yml
+  - layers/atlas/content/canopy/observations/2026-05-21-web-remade.yml
+  - layers/atlas/content/canopy/observations/2026-08-19-something-fell.yml
+  - layers/atlas/content/canopy/observations/2026-05-31-false-leaf-walking.yml
+  - layers/atlas/content/canopy/observations/2026-06-15-umbra-vacans.yml
+  - layers/atlas/content/canopy/observations/2026-06-10-louder-after-rain.yml
+  - layers/atlas/content/canopy/observations/2026-08-29-second-lantern.yml
+  - layers/atlas/content/canopy/observations/2026-07-30-wheel-unrepaired.yml
+  - layers/atlas/content/canopy/observations/2026-07-20-shade-audit-balances.yml
+  - layers/atlas/content/canopy/observations/2026-08-09-still-among-foliage.yml
+  - layers/atlas/content/canopy/observations/2026-08-24-colony-quiet.yml
+  - layers/atlas/content/floor/observations/2026-05-31-weavers-at-first-light.yml
+  - layers/atlas/content/floor/observations/2026-04-21-a-small-alarm.yml
+  - layers/atlas/content/floor/observations/2026-06-05-two-counts.yml
+  - layers/atlas/content/floor/observations/2026-04-11-the-west-gallery-mended.yml
+  - layers/atlas/content/floor/observations/2026-09-08-the-floor-turning.yml
+  - layers/atlas/content/floor/observations/2026-05-11-the-narrow-place.yml
+  - layers/atlas/content/floor/observations/2026-04-04-textor-absens.yml
+  - layers/atlas/content/floor/observations/2026-07-20-the-evening-shift.yml
+  - layers/atlas/content/floor/observations/2026-08-09-gallery-mended-daylight.yml
+  - layers/atlas/content/floor/observations/2026-08-17-five-crossings.yml
+  - layers/atlas/content/floor/observations/2026-09-26-retiring-miscellaneous.yml
+  - layers/atlas/content/floor/observations/2026-08-04-cool-draught.yml
+  - layers/atlas/content/floor/observations/2026-08-14-evening-weaving-finished.yml
+  - layers/atlas/content/pool/observations/2026-05-11-vitrea-placida.yml
+  - layers/atlas/content/pool/observations/2026-05-06-geminella-sequax.yml
+  - layers/atlas/content/pool/observations/2026-03-02-ripple.yml
+  - layers/atlas/content/pool/observations/2026-06-10-luciola-mersa.yml
+  - layers/atlas/content/pool/observations/2026-06-15-nocturna-brevis.yml
+  - layers/atlas/content/pool/observations/2026-06-20-echo-cantans.yml
+  - layers/atlas/content/pool/observations/2026-07-20-luciola-mersa.yml
+  - layers/atlas/content/pool/observations/2026-07-30-geminella-sequax.yml
+  - layers/atlas/content/pool/observations/2026-08-14-one-mote-alone.yml
+  - layers/atlas/content/pool/observations/2026-09-03-second-ripple.yml
+  - layers/atlas/content/pool/observations/2026-07-24-lamp-still-burning.yml
+  - layers/atlas/content/pool/observations/2026-08-19-call-answered.yml
+  - layers/atlas/content/pool/observations/2026-08-29-crossing-alone.yml
 gitBranch: claude/atlas-sightings-phase-consistency-x3vga4
 entrypoint: remote_mobile
 cliVersion: 2.1.207
+learnings:
+  - In this Atlas Tenant, a ledger note's prose can silently encode its own date via an ordinal ("the second", "the sixth") or a callback ("since the fourth") — these don't show up in schema validation or the gate, only a targeted grep or a human re-reading the rendered page catches them before a redate breaks them
