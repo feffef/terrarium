@@ -1,0 +1,56 @@
+schemaVersion: 1
+session: session_01GvFPuwxmGaXSVR5hgrnckk
+startedAt: 2026-07-12T01:25:33Z
+endedAt: 2026-07-12T01:31:11Z
+kind: autonomous
+goal: Run /digest to author the 2026-07-11 Digest and refresh the Journal
+status: in-review
+outcome: Digest authored, gate green, PR open, auto-merge pending on CI
+summary: "Fully agent-initiated: a scheduled Routine fired /digest with no other human instruction this turn. Branched journal/digest-refresh-2026-07-12 off origin/main, found 2026-07-11 as the one closed day missing a Digest via scripts/digest.ts, authored layers/journal/content/current/pages/digests/2026-07-11.md narrating the day the repo went public (MIT LICENSE, ADR-0020 requester-trust tiers, GitHub auto-merge adoption) against recurring GitHub Actions runner_id-0 CI failures. pnpm gate passed clean (build + 28/28 e2e). Opened PR #337 and subscribed to its activity; enabling GitHub auto-merge was deferred because the gate run on the PR head was still in_progress at PR creation, so a follow-up self-check-in was scheduled via send_later to retry once CI resolves."
+prs:
+  - "337"
+docsRead:
+  - path: /root/.claude/projects/-home-user-terrarium/bd27b3aa-7d59-5245-accb-a91511f7b301/tool-results/b5uofmb9g.txt
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-07-10.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: The -m commit for the digest did not get the Co-Authored-By/Claude-Session footer auto-injected, contrary to CLAUDE.md's claim that commits get it for free — a recurring instance of a friction other sessions have also hit.
+    solution: Amended the commit locally to append the footer before pushing.
+    severity: nit
+  - description: mcp__github__enable_pr_auto_merge rejected the PR immediately after opening it with "unstable status (required checks are failing)", even though the actual gate run was merely in_progress, not failing — the error message reads as a real failure when it's really just "checks haven't finished yet".
+    solution: Confirmed via actions_list/actions_get that the run was in_progress (not the known billing-block failure mode, which dies in 3-5s), then scheduled a send_later check-in to retry enable_pr_auto_merge once the gate completes instead of treating the error as a red gate.
+    severity: minor
+  - description: mcp__github__actions_list (list_workflow_runs, perPage 5, no minimal_output) overflowed the tool's ~58k-char output ceiling for a single-branch query.
+    solution: Re-ran with minimal_output:true, which fit comfortably.
+    severity: nit
+durationSec: 339
+models:
+  claude-sonnet-5: 64
+toolCounts:
+  Bash: 14
+  Read: 2
+  Write: 2
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__enable_pr_auto_merge: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__actions_list: 2
+  mcp__github__actions_get: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  PushNotification: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-07-11.md
+gitBranch: claude/compassionate-lovelace-msu5dh
+entrypoint: remote_trigger
+cliVersion: 2.1.207
