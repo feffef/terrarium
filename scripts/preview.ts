@@ -47,7 +47,7 @@ import { existsSync, openSync, closeSync, readFileSync, realpathSync, rmSync } f
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
-import { captureScreenshot } from './screenshot'
+import { captureScreenshot, captureScreenshotWaitingFor } from './screenshot'
 
 const HOST = '127.0.0.1'
 const READY_TIMEOUT_MS = 45_000
@@ -57,15 +57,39 @@ const SERVER_ENTRY = '.output/server/index.mjs'
 
 const USAGE =
   'Usage:\n' +
-  '  pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--dev]\n' +
+  '  pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--wait <ms>] [--wait-for <selector>] [--dev]\n' +
   '  pnpm exec tsx scripts/preview.ts start [--dev]\n' +
   '  pnpm exec tsx scripts/preview.ts stop <pid>\n' +
-  '  <route>  a path on the site, e.g. /t/journal/current\n' +
-  '  [WxH]    optional window size (e.g. 1280x1600); defaults to 1280x800\n' +
-  '  --dev    use `nuxt dev` instead of a built `preview` server (fast, but the\n' +
-  '           DevTools overlay makes it unfit for a trusted screenshot)'
+  '  <route>            a path on the site, e.g. /t/journal/current\n' +
+  '  [WxH]              optional window size (e.g. 1280x1600); defaults to 1280x800\n' +
+  '  --wait <ms>        pre-capture wait so async content renders; defaults to 2000.\n' +
+  '                     Ignored when --wait-for is given\n' +
+  '  --wait-for <sel>   wait until <sel> attaches to the DOM instead of a fixed\n' +
+  "                     wait (e.g. '.mermaid-diagram svg' for an async diagram)\n" +
+  '  --dev              use `nuxt dev` instead of a built `preview` server (fast, but\n' +
+  '                     the DevTools overlay makes it unfit for a trusted screenshot)'
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
+
+/** Pull a `--flag value` pair out of `args`, returning the value (last wins if
+ *  repeated) and the args with every occurrence removed. Keeps the positional
+ *  `<route> <out> [WxH]` parsing downstream unaware of the value-taking flags.
+ *  Exported for unit testing (tests/unit/preview-flags.spec.ts). */
+export function extractFlag(args: string[], flag: string): { value: string | undefined; rest: string[] } {
+  const rest: string[] = []
+  let value: string | undefined
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i]
+    if (arg === flag) {
+      value = args[i + 1] // may be undefined if the flag is trailing; validated by the caller
+      i++ // consume the value too
+    }
+    else if (arg !== undefined) {
+      rest.push(arg)
+    }
+  }
+  return { value, rest }
+}
 
 /** Parse an optional `WxH` size argument into `W,H`, or `undefined` if invalid. */
 function parseSize(size: string): string | undefined {
@@ -259,7 +283,14 @@ export async function stopPreview(pid: number): Promise<void> {
   await killGroup(pid)
 }
 
-async function doShot(args: string[], dev: boolean): Promise<number> {
+interface ShotWait {
+  /** Raw `--wait` value (ms), still a string; validated here. */
+  waitMs?: string
+  /** Raw `--wait-for` value: a CSS selector to await before capturing. */
+  waitForSelector?: string
+}
+
+async function doShot(args: string[], dev: boolean, wait: ShotWait): Promise<number> {
   const [route, out, sizeArg] = args
   if (!route || !out) {
     console.error(USAGE)
@@ -269,6 +300,15 @@ async function doShot(args: string[], dev: boolean): Promise<number> {
   if (!windowSize) {
     console.error(`Invalid size "${sizeArg}" — expected <width>x<height>, e.g. 1280x1600.`)
     return 1
+  }
+  let waitMs = 2000
+  if (wait.waitMs !== undefined) {
+    const parsed = Number(wait.waitMs)
+    if (!Number.isInteger(parsed) || parsed < 0) {
+      console.error(`Invalid --wait "${wait.waitMs}" — expected a non-negative integer (ms).`)
+      return 1
+    }
+    waitMs = parsed
   }
 
   let server: PreviewServer
@@ -281,7 +321,12 @@ async function doShot(args: string[], dev: boolean): Promise<number> {
   const path = route.startsWith('/') ? route : `/${route}`
   const url = `${server.url}${path}`
   try {
-    captureScreenshot(url, out, windowSize)
+    if (wait.waitForSelector) {
+      await captureScreenshotWaitingFor(url, out, wait.waitForSelector, windowSize)
+    }
+    else {
+      captureScreenshot(url, out, windowSize, waitMs)
+    }
     console.log(`Wrote ${out} (${url})`)
     return 0
   } catch (err) {
@@ -327,10 +372,13 @@ async function doStop(args: string[]): Promise<number> {
 async function main(): Promise<number> {
   const [verb, ...rest] = process.argv.slice(2)
   const dev = rest.includes('--dev')
-  const args = rest.filter((arg) => arg !== '--dev')
+  const withoutDev = rest.filter((arg) => arg !== '--dev')
+  const waitFor = extractFlag(withoutDev, '--wait-for')
+  const waitMs = extractFlag(waitFor.rest, '--wait')
+  const args = waitMs.rest
   switch (verb) {
     case 'shot':
-      return doShot(args, dev)
+      return doShot(args, dev, { waitMs: waitMs.value, waitForSelector: waitFor.value })
     case 'start':
       return doStart(dev)
     case 'stop':
