@@ -1,0 +1,44 @@
+schemaVersion: 1
+session: session_01B1XvEy2kViKbJc7uGxEHxM
+startedAt: 2026-07-12T10:08:43Z
+endedAt: 2026-07-12T10:10:52Z
+kind: delegated
+goal: Implement issue
+status: completed
+outcome: Already merged via PR
+summary: "Human-dispatched (/implement #349) to extend audit-skills' scorecard with orphaned-session detection per issue #349. Investigation found the work was already fully implemented and merged to main in PR #352 (commit 28505f6), which added the orphanedSessions field to scripts/audit-skills.ts and wired it into the audit-skills SKILL.md as a step-5 signal, with 35 passing unit tests. Re-ran the unit test suite on a fresh origin/main checkout to confirm it's still green. No code changes were needed. Closed issue #349 manually with a comment citing PR #352, since GitHub's auto-close keyword (\"Closes #292, #349, #325\") only fired for #292 — #349 and #325 stayed open despite being resolved/addressed by that merged PR."
+prs: []
+docsRead:
+  - path: scripts/audit-skills.ts
+    reason: verify orphanedSessions already implemented
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: verify step-5 wiring for orphan signal
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: implement
+    reason: (invoked as a slash command)
+frictions:
+  - description: "PR #352's body said \"Closes #292, #349, #325\" but GitHub's auto-close keyword only closed #292 on merge, leaving #349 and #325 open despite being resolved."
+    solution: "Manually closed #349 with a comment citing the merged PR. Worth a closer look at why GitHub didn't honor the comma-separated closing-keyword list for all three issues (possibly a GitHub quirk, not a repo bug) if it recurs."
+    severity: minor
+durationSec: 129
+models:
+  claude-sonnet-5: 47
+toolCounts:
+  ToolSearch: 5
+  Bash: 7
+  mcp__github__issue_read: 5
+  Read: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__pull_request_read: 1
+  Grep: 2
+  mcp__github__issue_write: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+  Write: 1
+gitBranch: claude/issue-349-6enphc
+entrypoint: remote_mobile
+cliVersion: 2.1.207
