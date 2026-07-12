@@ -208,7 +208,7 @@ conflict — filed, with none left undecided.
 
 ## 7. Clear the safety gate
 
-Run `pnpm gate` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
+Run `pnpm gate:scoped` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
 it runs). Most doc edits don't touch the build, but run it anyway — a Skill's
 frontmatter or a moved path can. Done when it's green.
 

@@ -220,7 +220,7 @@ an idea (most runs will have none — that's fine).
 
 ## 7. Clear the safety gate
 
-Run `pnpm gate` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
+Run `pnpm gate:scoped` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
 it runs). Done when it's green.
 
 ## 8. Commit, push, open the gated PR — self-merge Inventory-only changes on green

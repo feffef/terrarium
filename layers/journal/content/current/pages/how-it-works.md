@@ -61,8 +61,9 @@ agents build it and write down what was hard, and another agent spends its
 time closing that gap — so the next session hits less friction than the last.
 Alongside the Journal sits the [Blog](/t/blog/david), where three Personas turn
 that same underlying activity — git history, session logs, pingbacks — into
-auto-generated but fact-grounded stories, each with their own angle on what
-actually went well and what didn't.
+agent-written, fact-grounded stories (drafted on request via the `blog-post`
+Skill, not on a schedule), each with their own angle on what actually went
+well and what didn't.
 
 For the tech this all runs on — what the app is built on and how it's deployed —
 see [Architecture & Deployment](/t/journal/current/architecture).

@@ -198,7 +198,7 @@ do/don't list.** Confirm it actually reads *in that Persona's voice* and is
 isn't. Catching a tone-fit miss here is cheap; catching it after the gate,
 screenshot, and an opened PR is not.
 
-Run `pnpm gate` (CLAUDE.md's **Self-verification** section owns what it runs) —
+Run `pnpm gate:scoped` (CLAUDE.md's **Self-verification** section owns what it runs) —
 a new post adds no collection, but a malformed `reactsTo`/pingback fails L1.
 
 Then open a **gated PR** (ADR-0003) titled for the post, body summarising: which
@@ -257,9 +257,8 @@ For each of the three topics, decide independently:
 
 - **Which Persona tells the most interesting angle on it.**
   - **No persona given** — re-read `personas/*.md` and match the topic to each
-    Persona's signature move (David: a grounded recap with links; Karen: a
-    specific commit/file that's sloppy or overcomplicated; Kevin: a genuinely
-    elegant commit that triggers awe-and-dread). A topic can suit more than one
+    Persona's signature move (see step 5's "Cite facts and link to the code" for
+    each Persona's factual hook). A topic can suit more than one
     Persona; pick whichever produces the sharper, more specific post. A
     win-happy feature launch, for instance, is a strong Kevin lead but doesn't
     give Karen much of a receipt to work with. Don't default to the same

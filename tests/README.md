@@ -8,7 +8,9 @@ How the test suite is laid out, and the one non-obvious rule about e2e. The
 
 - **Platform tests** — exercise `shared/`, `scripts/`, `modules/`, routing, the
   isolation invariant, or the cross-Tenant smoke — live here under `tests/`:
-  - `tests/unit/` — L0/L1/L3 fast tests.
+  - `tests/unit/` — L0/L3 fast tests. (L1 — content validation — is `pnpm
+    validate:content`, a separate script; `validate-content.spec.ts` here only
+    unit-tests the validator against synthetic fixtures, not real content.)
   - `tests/e2e/` — the L2 smoke render (see below).
   - `tests/support/` — shared test helpers (not specs; never collected alone).
 - **Tenant-specific tests** — exercise a single Tenant's layer
@@ -38,7 +40,7 @@ function, then add one import + one call in `tests/e2e/smoke.spec.ts`.
 
 ## Running
 
-- `pnpm test` — unit (L0/L1/L3), platform **and** tenant, fast. Filters by the
+- `pnpm test` — unit (L0/L3), platform **and** tenant, fast. Filters by the
   `tests/unit` path substring, which matches both `tests/unit/**` and
   `layers/*/tests/unit/**`.
 - `pnpm test:e2e` — the single L2 smoke build.

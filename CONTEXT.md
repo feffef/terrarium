@@ -53,10 +53,9 @@ Atlas give a Space a Tenant-specific name and meaning — a **Persona** and a
 
 ### Collection
 The structure of one *type* of content within a Space (e.g. `blog`, `pages`,
-`authors`). Maps 1:1 to a Nuxt Content `defineCollection` → one SQLite table.
-Several Collections live inside one Space. Physical isolation is achieved by
-keying each generated collection as Tenant × Space × type
-(e.g. `marketing_prod_blog`).
+`authors`). Several Collections live inside one Space; each is generated per
+Tenant × Space at build time (ADR-0002/0013) — see those ADRs for the
+mechanism.
 
 ### Document
 An individual content entry within a Collection — one row / one file.

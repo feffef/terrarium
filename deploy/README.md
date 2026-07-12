@@ -68,8 +68,9 @@ redeploys the image** — the container updates itself.
    chmod 600 .env                       # holds the PAT
    # edit .env: paste GITHUB_PAT (GIT_REPO_URL is already correct)
    ```
-   (This host checkout is only the build context. The **container** does its own
-   clone and keeps the PAT out of `.git/config` via `GIT_ASKPASS` — see below.)
+   (The container does its own clone, independent of this host checkout — see the
+   note above under **On-VPS layout**. It also keeps the PAT out of `.git/config`
+   via `GIT_ASKPASS` — see below.)
 
 3. **Shared proxy network.** Terrarium is reached by the existing Caddy over a
    shared network called `web`. Create it once:

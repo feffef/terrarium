@@ -198,7 +198,7 @@ innocent of the whole thing.
 
 ## 7. Verify
 
-Run `pnpm gate` before opening the PR (CLAUDE.md's **Self-verification** section
+Run `pnpm gate:scoped` before opening the PR (CLAUDE.md's **Self-verification** section
 owns what it runs). Then eyeball the render — a specimen is a visual artifact,
 so screenshot the entry and the biome landing
 (`pnpm exec tsx scripts/screenshot.ts <url> <out.png>`), don't trust the HTML text
