@@ -34,26 +34,26 @@ of merging automatically.
 The whole loop in one picture:
 
 ```mermaid
-graph TD
-  Human(["Human prompt"]) --> Session
-
-  subgraph sess ["A regular session"]
-    Session["Claude Code session"] --> PR["Gated PR"]
-    Session --> Log["Session log"]
+graph LR
+  subgraph routine ["frictions-to-fixes · scheduled, no human prompt"]
+    direction TB
+    Schedule(["Schedule fires"]) --> Fixer["frictions-to-fixes agent"]
+    Fixer --> FPR["Gated PR → main"]
   end
 
-  subgraph routine ["frictions-to-fixes · a scheduled routine, no human prompt"]
-    Pool[("Accumulated<br/>session logs")] --> Fixer["frictions-to-fixes agent"]
-    Fixer --> FixPR["Its own gated PRs"]
+  subgraph impl ["Prompt-triggered · a regular session"]
+    direction TB
+    Prompt(["Human prompt"]) --> Session["Claude Code session"]
+    Session --> SPR["Gated PR → main"]
   end
 
-  Log --> Pool
-  PR --> Gate{"Gate green?"}
-  FixPR --> Gate
-  Gate -->|no| Revise["Author revises"]
-  Revise --> Gate
-  Gate -->|yes| Merge["Merge to main<br/>human review, or self-merge when chartered &amp; bounded"]
-  Merge -.->|less friction next time| Session
+  Logs[("Session-log<br/>storage")]
+  Instr[("Skills · docs · code")]
+
+  Session -->|writes| Logs
+  Logs -->|reads| Fixer
+  FPR -->|writes| Instr
+  Instr -->|guides| Session
 ```
 
 The result is a slow, compounding feedback loop: humans steer what gets built,
