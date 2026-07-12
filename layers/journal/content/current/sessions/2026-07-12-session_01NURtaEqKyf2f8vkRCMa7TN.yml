@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01NURtaEqKyf2f8vkRCMa7TN
 startedAt: 2026-07-12T17:23:33Z
-endedAt: 2026-07-12T17:58:57Z
+endedAt: 2026-07-12T18:07:33Z
 kind: interactive
 goal: Distribute Atlas sightings across the whole Glass Year
-status: in-review
-outcome: Full field-log rewritten, spread Jan-Dec, PR open
+status: completed
+outcome: Full field-log rewritten, spread Jan-Dec, PR merged
 summary: "Human directly asked to distribute the Atlas Tenant's field-log sightings for all 15 specimens across the whole Glass Year and keep them consistent with each specimen's phenology phases. First pass added 28 new Observation files spread across previously-uncited phases, leaving the original ~39 entries untouched (append-only). Human then followed up, pointing out the original entries still sat clustered in the June/July window (visible at the bottom of each specimen's Recent Sightings panel) and directly instructed rewriting and redating all of them too — an explicit, in-session override of the Atlas's own \"append-only in spirit\" convention, since the whole point was eliminating the cluster. Redated all ~39 original entries (renamed files, updated dates) to new days within each one's already-valid phenology phase, updated every essay ::sighting citation that pointed at an old date, and reworded several notes/essay lines that hard-coded a literal or relative date (e.g. \"since the fourth\", \"the one in June\") that broke once redated — including a genuine cross-reference contradiction the redate itself surfaced (formica-textrix's essay and textor-absens's ledger both claimed an ongoing \"miscellaneous industry\" habit the ledger's own retiring-miscellaneous entry, now dated later, had already retired). Both passes verified with a Python script mirroring almanac.ts's day-of-year/ inSpan math (0 violations both times) and the full pnpm gate:scoped. Opened PR #378, kept its description in sync across both commits, and subscribed to activity per ADR-0003/CLAUDE.md."
 prs:
   - "378"
@@ -73,15 +73,15 @@ frictions:
   - description: redating the original cluster surfaced several notes/essay lines that had silently hard-coded a literal date ("since the fourth", "on the sixth") or an ordinal implying a calendar day ("the walking of the second" = July 2nd) instead of a relative description, invisible until the underlying date actually moved
     solution: grepped all pre-session observation notes for first/second/ordinal/date-literal language before redating, and reworded each to a date-independent relative phrasing; worth calling out in the atlas-specimen Skill as a thing to avoid when authoring a ledger note tied to a specific date
     severity: minor
-durationSec: 2124
+durationSec: 2639
 models:
-  claude-sonnet-5: 405
+  claude-sonnet-5: 415
 toolCounts:
-  Bash: 72
+  Bash: 73
   Read: 39
   Write: 69
   TaskCreate: 1
-  Edit: 45
+  Edit: 46
   Grep: 16
   ToolSearch: 5
   Monitor: 2
@@ -93,6 +93,8 @@ toolCounts:
   mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
   mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__list_triggers: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/atlas/content/canopy/observations/2026-03-27-first-wheel-of-the-year.yml
   - layers/atlas/content/canopy/observations/2026-10-03-wheel-taken-in.yml
