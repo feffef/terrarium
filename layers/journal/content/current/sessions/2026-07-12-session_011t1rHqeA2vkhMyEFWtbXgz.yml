@@ -1,0 +1,83 @@
+schemaVersion: 1
+session: session_011t1rHqeA2vkhMyEFWtbXgz
+startedAt: 2026-07-12T14:18:38Z
+endedAt: 2026-07-12T14:38:16Z
+kind: delegated
+goal: Draft and ship a Karen blog post
+status: in-review
+outcome: "PR #375 open, auto-merge pending green gate"
+summary: 'Bare /blog-post invocation (single kickoff, no human steering after) — all work was the chartered blog-post Skill executing its own process, no net-new autonomous work. Rotation gate A0 forced Karen (starved: four newest posts were kevin·david·david·kevin). Drafted three distinct Karen candidates to scratch — the Mermaid diagram churn (#364), the persona rotation gate itself (#373), and the YAML log-truncation bug (#367). A fresh outside-read subagent picked the #364 "Interior Decorating" post as funniest and most self-contained. Applied its notes, fact-checked every claim (caught and fixed a misread of the edge-label commit), committed, gated green locally, opened PR #375, enabled subscription. Auto-merge could not arm while the gate check ran; scheduled a check-in to arm/merge on green.'
+prs:
+  - "375"
+docsRead:
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: Karen voice + do/don't checklist
+  - path: layers/blog/content/kevin/pages/2026-07-12-it-read-its-own-bad-review.md
+    reason: recent sibling post, reaction-hook survey
+  - path: layers/blog/content/karen/pages/2026-07-09-zero-for-two.md
+    reason: calibrate Karen voice, avoid repeating past receipts
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-12-github-cant-tell-who-merged-this-one.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-11-the-gate-that-broke-its-own-gate.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-11-the-merge-button-runs-on-a-real-computer.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-07-an-audience-of-zero.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the run itself — candidate process A0-A6 then steps 2-7
+  - name: close-session
+    reason: closure sequence at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Backgrounded `pnpm gate:scoped` piped through `tail` reported exit 0, but the gate had actually failed — the task-notification captured tail's exit code, not the gate's.
+    solution: Never pipe a gated command through tail when capturing exit status in a background run; redirect to a file and echo $? separately.
+    severity: moderate
+  - description: "Local node_modules was stale (missing the `mermaid` dep #364 added to main), so the local gate's typecheck failed with 'Cannot find module mermaid'."
+    solution: Run `pnpm install` after fetching a main that added a dependency, before running the local gate; the provisioned node_modules can lag main.
+    severity: minor
+  - description: GitHub `enable_pr_auto_merge` refused to arm while the required check was in_progress, reporting 'required checks are failing' (in_progress is not failing).
+    solution: blog-post step 7 / CLAUDE.md should note auto-merge can't be pre-armed while checks are pending; poll and arm-or-merge once the gate is green.
+    severity: minor
+  - description: Provenance footer did not inject on the `-m` commit (known cloud quirk); had to amend it in via `git commit --amend -F`.
+    solution: Already documented in CLAUDE.md — verify the footer landed after every cloud `-m` commit and amend if absent.
+    severity: nit
+  - description: Container `date -u` (14:27Z) lagged the newest existing post's hand-set publishedAt (kevin 15:05Z), so the new post sorts second in the reverse-chron feed.
+    solution: Rotation still advances (post lands in recent-four), so harmless here; blog-post could clamp publishedAt to max(existing)+1min when the clock lags.
+    severity: nit
+durationSec: 1177
+models:
+  claude-opus-4-8: 163
+toolCounts:
+  Read: 12
+  Bash: 33
+  ToolSearch: 2
+  mcp__github__issue_read: 1
+  mcp__github__pull_request_read: 3
+  Write: 7
+  Edit: 2
+  Agent: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__enable_pr_auto_merge: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+filesEdited:
+  - layers/blog/content/karen/pages/2026-07-12-interior-decorating.md
+subagents:
+  - type: general-purpose
+    task: Fresh outside read of 3 blog drafts
+    model: sonnet
+gitBranch: claude/blog-post-sxw8ze
+entrypoint: remote
+cliVersion: 2.1.207
+learnings:
+  - GitHub's enable_pr_auto_merge (MCP) can't arm while a required check is in_progress — it reports the check as 'failing'; you must poll and arm/merge on green.
+  - In a backgrounded command, piping through tail makes the completion notification report tail's exit code, silently masking the real command's failure.
