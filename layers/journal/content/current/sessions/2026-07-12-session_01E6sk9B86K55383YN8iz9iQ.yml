@@ -1,0 +1,83 @@
+schemaVersion: 1
+session: session_01E6sk9B86K55383YN8iz9iQ
+startedAt: 2026-07-12T07:30:26Z
+endedAt: 2026-07-12T08:07:09Z
+kind: interactive
+goal: Implement every ready-for-agent issue
+status: in-review
+outcome: One PR covers all three; gate green
+summary: "Human-kicked via /implement \"all issues that are ready for agent\" (a slash command invocation, then a mid-session \"Continue from where you left off\" nudge after a tool-permission hiccup — both human prompts). Found four ready-for-agent issues, implemented three in one PR (#352): #292 (skip a parentless shallow-clone-horizon commit in audit-skills' edit attribution, extracted a pure parseSkillEditLog for testing), #349 (orphanedSessions scorecard signal cross-referencing Claude-Session trailers against known session logs, wired into the audit-skills SKILL.md per the maintainer's scoped comment thread), and #325 (dev-server manifest watching in modules/routing.ts via nuxt.options.watch). #288 needed no repo action — its root cause was already fixed via merged PR #290; the remaining fix is platform-side (Anthropic /feedback), out of this repo's reach. Two self-driven code-review sub-agents (Standards + Spec axes) caught real issues I fixed before pushing: a session-trailer regex that assumed the current session_<id> shape and would silently miss a legacy bare-UUID session id, and a redundant hand-rolled builder:watch restart hook that would have raced Nuxt core's own restart-on-watch-pattern mechanism for the same file paths — simplified to rely solely on the documented nuxt.options.watch mechanism instead. Manually verified the dev-restart fix interactively (nuxt dev, live manifest edits, confirmed exactly one restart per save, twice). pnpm gate green, PR opened, subscribed to PR activity, ~1hr check-in scheduled."
+prs:
+  - "352"
+docsRead:
+  - path: CLAUDE.md
+    reason: ground rules, branch/PR/closure conventions
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: step 2/5 wiring for the new orphan signal
+  - path: scripts/audit-skills.ts
+    reason: existing pure-core/FS-IO structure to extend
+  - path: modules/routing.ts
+    reason: "ADR-0014 routing module, the #325 edit target"
+  - path: shared/expand.ts
+    reason: manifest loading, root export reused for watch paths
+  - path: content.config.ts
+    reason: header caveat this PR corrects
+  - path: tests/unit/audit-skills.spec.ts
+    reason: (read before editing)
+  - path: layers/atlas/tenant.config.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: implement
+    reason: top-level workflow for this task
+  - name: code-review
+    reason: two-axis Standards/Spec review before push
+  - name: close-session
+    reason: session closure front door
+  - name: log-session
+    reason: record this log
+frictions:
+  - description: Fabricated a plausible-looking but wrong session id (session_01LfNHM1PBLbLo9hnLHbTErh) for the commit trailer instead of reading it from the system prompt first, violating CLAUDE.md's "never predict or reconstruct an identifier from memory" rule.
+    solution: Caught it before pushing by cross-checking against CLAUDE_CODE_REMOTE_SESSION_ID and the system-prompt commit template, then amended the commit. A pre-commit reminder to grep the system prompt for the real id before writing any Claude-Session trailer would prevent the guess in the first place.
+    severity: moderate
+  - description: pkill -f "nuxt dev --port 14173" self-matched the invoking Bash command's own argv (the pattern text appeared verbatim in the pkill invocation itself) and killed the current shell mid-chain, exactly the failure mode CLAUDE.md's pkill warning describes — hit it despite having read that warning earlier in the same session.
+    solution: Killed by PID instead once caught. CLAUDE.md's guidance is correct and sufficient; the friction is that it's easy to reach for pkill -f out of habit even with the warning fresh in context — a dedicated "kill dev server by PID" one-liner pattern next to the warning would reduce the temptation.
+    severity: minor
+  - description: My first pass at modules/routing.ts hand-rolled a second builder:watch hook for a hard restart, duplicating (and racing) Nuxt core's own built-in nuxt.options.watch restart mechanism for the same path array — extra code that a closer read of node_modules/nuxt's own source would have shown was unnecessary from the start.
+    solution: A background code-review sub-agent caught it before merge, and reading nuxt/dist/index.mjs's actual builder:watch/resolvePathsToWatch implementation resolved it cleanly. Worth internalizing as a general pattern - when wiring into a framework hook, grep the framework's own dist for existing handling of the same hook before adding a parallel one.
+    severity: minor
+durationSec: 2203
+models:
+  claude-sonnet-5: 274
+toolCounts:
+  ToolSearch: 5
+  mcp__github__list_issues: 1
+  mcp__github__issue_read: 4
+  Bash: 79
+  mcp__github__search_pull_requests: 1
+  Read: 20
+  TaskCreate: 6
+  TaskUpdate: 10
+  Edit: 20
+  Skill: 3
+  Agent: 2
+  ScheduleWakeup: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  Write: 1
+filesEdited:
+  - scripts/audit-skills.ts
+  - tests/unit/audit-skills.spec.ts
+  - .agents/skills/audit-skills/SKILL.md
+  - modules/routing.ts
+  - content.config.ts
+subagents:
+  - type: general-purpose
+    task: Standards-axis code review
+  - type: general-purpose
+    task: Spec-axis code review
+gitBranch: claude/issues-ready-agent-h77710
+entrypoint: remote_mobile
+cliVersion: 2.1.207
