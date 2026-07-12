@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01WcEGxLWEA9xravmPuFiBNU
 startedAt: 2026-07-12T13:00:19Z
-endedAt: 2026-07-12T13:09:55Z
+endedAt: 2026-07-12T13:16:45Z
 kind: interactive
 goal: Fix session-log outcomes truncated by unquoted YAML `#`
-status: in-review
-outcome: "Loud guard added; 3 logs repaired; PR #367"
+status: completed
+outcome: "Loud guard added; 3 logs repaired; PR #367 merged"
 summary: "Human reported two recent session logs rendering an incomplete `outcome`, and guessed the cause: missing quotes in YAML. Confirmed it — an authored value like `outcome: PR #354 merged` parses as just `PR`, because a space-`#` starts a YAML comment and the rest is dropped at the `log-session.ts --author` parse step. Found seven landed logs affected (`PR`, `Both`, `Filed issue`, …). The Skill already warned to quote such values, so documentation alone had failed. Added `findTruncatedScalars()` to `log-session.ts` (uses `parseDocument`; the parser keeps the dropped span on `node.comment`, so both the truncation and the intended value are recoverable) and wired it into both the `--author` and direct-land paths to fail loudly with the value to quote; block scalars never false-positive. Added unit tests, repaired the three recent 2026-07-12 logs (outcomes recovered faithfully from each summary), and noted the enforcement in the Skill. All human-instructed — the fix approach and the historical repair were my own calls within that ask, no net-new autonomous scope. Opened gated PR #367 (touches gated `log-session.ts`, so human-to-merge) and subscribed."
 prs:
   - "367"
@@ -32,13 +32,13 @@ frictions:
   - description: The truncation is silent and lossy — the dropped text is gone from the landed `.yml`, so the seven historical outcomes had to be reconstructed from summaries.
     solution: The new guard prevents recurrence; older affected logs beyond the three recent ones remain (`Both`, older `PR`) and could be swept in a follow-up.
     severity: minor
-durationSec: 576
+durationSec: 986
 models:
-  claude-opus-4-8: 103
+  claude-opus-4-8: 128
 toolCounts:
-  Bash: 21
+  Bash: 26
   Read: 6
-  Edit: 10
+  Edit: 11
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
@@ -46,6 +46,8 @@ toolCounts:
   Write: 1
   mcp__Claude_Code_Remote__send_later: 1
   mcp__github__pull_request_read: 1
+  AskUserQuestion: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/log-session.ts
   - tests/unit/log-session.spec.ts
