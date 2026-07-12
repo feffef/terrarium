@@ -17,6 +17,32 @@ const props = defineProps<{ code: string }>()
 const containerRef = ref<HTMLDivElement | null>(null)
 const id = useId()
 
+// Theme the diagram from the host Tenant's palette when it opts in (issue #364
+// follow-up). This component is Platform-generic, so it reads a small `--diagram-*`
+// contract off its own mounted element — inherited from whichever Tenant wrapper
+// it renders under (e.g. journal's `.jd`) — rather than any one Tenant's token
+// names; the Tenant maps its own tokens to this contract in its theme CSS
+// (docs/agents/tenant-layers.md §2). A Tenant that sets none keeps mermaid's
+// default theme. getComputedStyle resolves the vars live, so a Tenant's
+// dark-mode token overrides are picked up for free on the next render.
+const DIAGRAM_TOKENS: Record<string, string> = {
+  primaryColor: '--diagram-node-bg',
+  primaryBorderColor: '--diagram-node-border',
+  primaryTextColor: '--diagram-node-text',
+  lineColor: '--diagram-line',
+  fontFamily: '--diagram-font',
+}
+
+function tenantThemeVariables(el: HTMLElement): Record<string, string> | undefined {
+  const styles = getComputedStyle(el)
+  const vars: Record<string, string> = {}
+  for (const [themeVar, cssVar] of Object.entries(DIAGRAM_TOKENS)) {
+    const value = styles.getPropertyValue(cssVar).trim()
+    if (value) vars[themeVar] = value
+  }
+  return Object.keys(vars).length ? vars : undefined
+}
+
 // `<ClientOnly>` flips its own `mounted` flag inside ITS OWN `onMounted`, one
 // child-mount-order step ahead of this component's `onMounted` — but the
 // resulting re-render that actually attaches `containerRef`'s <div> is a
@@ -29,7 +55,8 @@ watch(containerRef, async (container) => {
   if (!container) return
   try {
     const mermaid = (await import('mermaid')).default
-    mermaid.initialize({ startOnLoad: false })
+    const themeVariables = tenantThemeVariables(container)
+    mermaid.initialize(themeVariables ? { startOnLoad: false, theme: 'base', themeVariables } : { startOnLoad: false })
     const renderId = `mermaid-${id.replace(/:/g, '')}`
     const { svg } = await mermaid.render(renderId, props.code)
     container.innerHTML = svg

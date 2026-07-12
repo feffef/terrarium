@@ -117,6 +117,14 @@ implications:
   browser defaults, check whether it's actually mounted under the wrapper
   element (`.jd`) in the render tree — a component rendered outside that
   wrapper (e.g. via `<Teleport>` to `<body>`) won't see the tokens.
+- **A Platform-generic component can theme itself from a Tenant this way too,
+  without coupling to that Tenant's token names — via an opt-in contract.**
+  `app/components/MermaidDiagram.vue` reads a small set of `--diagram-*` custom
+  properties off its mounted element and feeds them to mermaid; each Tenant
+  opts in by *mapping* its own tokens to that contract on its wrapper (journal
+  maps `--jd-*` → `--diagram-*` in `theme.css`). A Tenant that maps none keeps
+  the component's default look. Map via `var(--jd-…)` rather than literal
+  values so a dark-mode `--jd-*` override flows through the contract for free.
 
 ## 3. A new Tenant/layer needs `nuxt prepare` before `pnpm lint`
 
