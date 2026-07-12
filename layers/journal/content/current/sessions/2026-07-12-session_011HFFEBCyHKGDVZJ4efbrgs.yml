@@ -1,0 +1,53 @@
+schemaVersion: 1
+session: session_011HFFEBCyHKGDVZJ4efbrgs
+startedAt: 2026-07-12T18:28:27Z
+endedAt: 2026-07-12T18:39:37Z
+kind: interactive
+goal: Link the blog breadcrumb's "blog" segment to the blog index
+status: in-review
+outcome: Fixed, gated, pushed, PR opened and subscribed
+summary: "Human asked directly to make the \"blog\" segment of the blog breadcrumb link to the blog index. Found it plain text (unlike terrarium/persona, already links) in two files: layers/blog/app/pages/t/blog/[space]/index.vue and [space]/[...slug].vue. Linked both to /t/blog, matching the front door (t/blog/index.vue) which already marks its own \"blog\" as .here. Ran pnpm gate:scoped; typecheck initially failed on a missing mermaid module, traced to node_modules being incomplete in this environment (pre-existing, unrelated to the change) — ran pnpm install to restore it, then the full gate (lint, typecheck, validate:content, test, build, test:e2e) passed. Screenshotted /t/blog/david to confirm the link renders and is styled consistently. Committed, amended in the provenance footer (harness didn't auto-inject it on this -m commit), pushed, and opened PR #382. Subscribed to PR activity and scheduled a 1hr check-in; CI was still pending and no review comments existed at that point."
+prs:
+  - "382"
+docsRead:
+  - path: layers/blog/app/pages/t/blog/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/blog/app/pages/t/blog/[space]/index.vue
+    reason: (read before editing)
+  - path: layers/blog/app/pages/t/blog/index.vue
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: pnpm gate:scoped failed typecheck on a missing 'mermaid' module even though it's a declared dependency in package.json — node_modules was incomplete in this fresh environment.
+    solution: Ran `pnpm install` to restore the missing package before re-running the gate.
+    severity: minor
+  - description: The commit made with `git commit -m` did not get the Co-Authored-By/ Claude-Session provenance footer auto-injected, as CLAUDE.md warns can happen.
+    solution: Amended the commit to add the footer manually before pushing.
+    severity: nit
+durationSec: 670
+models:
+  claude-sonnet-5: 80
+toolCounts:
+  Grep: 5
+  Glob: 3
+  Read: 4
+  Edit: 2
+  Bash: 16
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - layers/blog/app/pages/t/blog/[space]/index.vue
+  - layers/blog/app/pages/t/blog/[space]/[...slug].vue
+gitBranch: claude/blog-breadcrumb-index-link-ibz2x4
+entrypoint: remote_mobile
+cliVersion: 2.1.207
