@@ -1,0 +1,82 @@
+schemaVersion: 1
+session: session_015WT68vuJGFSB2HGpysCUut
+startedAt: 2026-07-12T13:36:34Z
+endedAt: 2026-07-12T13:57:40Z
+kind: interactive
+goal: Accordion + deep-linkable expanded item in journal landing
+status: in-review
+outcome: PR 372 opened; full local gate green
+summary: "Human-instructed throughout: the user asked that the journal Space landing's recent-activity and daily-digest feeds each expand only one item at a time, with the open item deep-linkable via a URL fragment that opens it and scrolls it into view. Implemented as one page-wide single-open accordion (the only model faithful to a single URL fragment), lifting open state into the page, making SessionCard a controlled disclosure, adding pure sessionAnchor/ digestAnchor helpers, and mirroring the open anchor to the hash via replaceState. onMounted opens the linked item on the client (SSR-collapsed, no hydration mismatch). Added unit + e2e coverage (accordion across feeds, deep-link opens and scrolls into viewport, hash mirror/clear). No agent- initiated net-new scope beyond the ask."
+prs:
+  - "372"
+docsRead:
+  - path: CLAUDE.md
+    reason: conventions — PR/commit/footer/verify discipline
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: the landing that owns both feeds
+  - path: layers/journal/app/components/journal/SessionCard.vue
+    reason: made it a controlled disclosure
+  - path: layers/journal/app/components/journal/Disclosure.vue
+    reason: shared a11y disclosure contract
+  - path: layers/journal/app/utils/dashboard.ts
+    reason: home for pure anchor helpers
+  - path: layers/journal/tests/e2e/journal.e2e.ts
+    reason: e2e conventions + where to add interaction tests
+  - path: tests/support/e2e.ts
+    reason: renderAndCollectErrors navigation for the deep-link test
+  - path: layers/journal/app/types/journal.ts
+    reason: (no reason given)
+  - path: layers/journal/tests/unit/journal-dashboard.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: closure front door at PR open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: Pre-cloned node_modules was stale (mermaid missing), so typecheck failed on an unrelated file until pnpm install; had to prove it wasn't my change.
+    solution: SessionStart could run pnpm install (or verify lockfile freshness) so a stale pre-clone doesn't masquerade as a change-induced failure.
+    severity: minor
+  - description: Playwright's visible state (and isVisible) is true for elements outside the viewport, so my first deep-link e2e proved open but not scroll-into-view.
+    solution: Assert scroll with getBoundingClientRect vs innerHeight (done); worth a note in tests/README or e2e support so the next author skips the trap.
+    severity: minor
+  - description: The -m commit did not get the ADR-0017 provenance footer auto-injected; amended it in with -F, exactly as CLAUDE.md warns for cloud -m commits.
+    solution: Known/documented — verify-and-amend worked; a commit-msg hook could enforce it.
+    severity: nit
+  - description: Requirement was ambiguous between one-open-per-section and one-open-across -the-page; a single fragment only encodes one, so I chose global single-open.
+    solution: Resolved by reasoning and flagged the choice in the PR body for the user to veto.
+    severity: nit
+  - description: e2e setup() rebuilds Nuxt fully (~115s) per run, so iterating on the new interaction tests meant two full rebuilds for a test-only edit.
+    solution: Inherent to @nuxt/test-utils single-build model; no cheap fix, just a cost to note.
+    severity: nit
+durationSec: 1266
+models:
+  claude-opus-4-8: 151
+toolCounts:
+  Bash: 31
+  Glob: 3
+  Read: 8
+  TaskCreate: 1
+  Edit: 12
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__actions_list: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/app/components/journal/SessionCard.vue
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+  - layers/journal/tests/e2e/journal.e2e.ts
+gitBranch: claude/journal-accordion-deeplinking-79a7n9
+entrypoint: remote
+cliVersion: 2.1.207
+learnings:
+  - Playwright `state:'visible'`/`isVisible()` is true for off-screen elements with a box — proving scroll-into-view needs an explicit getBoundingClientRect vs viewport check.
+  - history.replaceState updates the URL hash without the browser's native jump-to-anchor scroll (unlike location.hash =) and never fires hashchange, so a hashchange listener can't feedback-loop on it.
+ideas:
+  - Add a small "copy link" affordance on each session/digest head that writes the item's deep-link URL to the clipboard, so a reader can share one specific log/digest without hand-crafting the hash — the anchors this PR adds already make the URLs stable.
