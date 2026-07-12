@@ -15,7 +15,7 @@
 // distinct from the exports, or the bindings merge and vue-tsc rejects the
 // ambiguity (see dashboard.ts's header comment).
 import { routingMap } from '#routing'
-import type { PageDoc, SessionDoc, SkillDoc } from '../../../../types/journal'
+import type { SessionDoc, SkillDoc } from '../../../../types/journal'
 
 const route = useRoute()
 const tenant = 'journal'
@@ -43,7 +43,6 @@ const { data } = await useAsyncData(route.path, async () => {
 // here with no extra request, consistent with the session cards (ADR-0010).
 const allPages = computed(() => data.value?.pages ?? [])
 const rootDoc = computed(() => allPages.value.find((p) => p.path === '/') ?? null)
-const page = computed(() => (rootDoc.value ?? null) as PageDoc | null)
 const digests = computed(() => digestList(allPages.value))
 
 // ── Newcomer on-ramp — labelled doors to the explainer pages ──
@@ -140,8 +139,8 @@ const skillsHeading = computed(() => skillsLabel(externalSkillTotal.value))
 const skillsSubtext = computed(() => skillsSub(platformSkills.value))
 const groupedSkills = computed(() => skillGroups(platformSkills.value))
 
-const title = computed(() => page.value?.title ?? `The Platform Journal — ${space}`)
-const lede = computed(() => page.value?.description ?? `The ${space} Space of the journal Tenant.`)
+const title = computed(() => rootDoc.value?.title ?? `The Platform Journal — ${space}`)
+const lede = computed(() => rootDoc.value?.description ?? `The ${space} Space of the journal Tenant.`)
 
 useSeoMeta({
   title: () => `${title.value} · journal/${space}`,
