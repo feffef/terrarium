@@ -45,13 +45,19 @@ A simple :inline-component[John Doe]
 
 `[...]` is the inline component's default-slot text.
 
-**Block component** — `::` — owns its own block and can hold slots:
+**Block component** — `::` — owns its own block and can hold slots, and
+**requires a closing `::`**:
 
 ```md
 ::card
 The content of the card
 ::
 ```
+
+**Drop the closing `::` and it silently degrades to plain prose** — no parse
+error, no console error, just wrong rendered output (issue #355; the content
+bug it caused: PR #334). Verify a block component actually rendered by
+checking the DOM, not by trusting a clean build/hydration.
 
 **Props, inline** via a `{}` scope after the tag:
 

@@ -151,6 +151,10 @@ The biome's own landing intro is `layers/atlas/content/<biome>/pages/index.md` �
 a plain page (title + description + body, none of the record fields). Leave it be
 unless you're founding a new wing.
 
+If a field note ever composes an MDC block component (`::foo ... ::`), it
+needs its closing `::` or it silently degrades to prose with no error — see
+`docs/research/mdc-when-to-use.md`.
+
 ## 4. Interactions (the food web, #70/#71)
 
 Each relationship is **one authored directed edge**, single-homed — the diagram
