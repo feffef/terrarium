@@ -1,16 +1,21 @@
 schemaVersion: 1
 session: session_01JGdaGGgRmMUAKyvCFfXNpx
 startedAt: 2026-07-12T18:33:53Z
-endedAt: 2026-07-12T18:43:23Z
-kind: delegated
-goal: Whole-codebase review for safe simplifications
-status: completed
-outcome: 16 verified findings reported, no code changed
-summary: "Human-instructed via a single kickoff prompt: run /code-review over the whole Nuxt Content application, prioritizing simplifications that preserve behavior. Adapted the diff-shaped code-review Skill to a whole-tree review (branch equals origin/main): two parallel sub-agents ran the Standards axis (repo standards + smell baseline) and a Spec axis using the ADRs as the spec. Their findings were spot-verified against source, one cross-axis conflict (the unused #routing entryRoutes export vs. the hand-rebuilt route list in app/pages/index.vue) reconciled, and the aggregated report delivered in chat. No code changes were made — review only, so no PR. All follow-up fixes are agent-initiated proposals awaiting a green-light."
-prs: []
+endedAt: 2026-07-12T19:22:25Z
+kind: interactive
+goal: Whole-codebase review, then implement all findings
+status: in-review
+outcome: 16 findings fixed in 15 commits, PR open
+summary: 'Human-instructed in two prompts: first a whole-tree /code-review of the Nuxt Content app prioritizing behavior-preserving simplifications (two parallel sub-agents: Standards axis vs repo standards + smell baseline, Spec axis vs the ADRs), then an explicit green-light to implement every finding via individual Sonnet agents with one commit per finding and a single PR. Twelve fix groups ran as parallel edit-only agents (orchestrator did all git); 15 commits landed on claude/nuxt-content-review-6oljd8, full gate green locally (37/37 e2e), PR "#389" opened, subscribed, check-in armed. All work was human-instructed; no agent-initiated scope was added.'
+prs:
+  - "389"
 docsRead:
   - path: docs/research/nuxt-content-review-grounding.md
     reason: grounded sub-agent Nuxt Content claims
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: footer fix spec
+  - path: scripts/log-session.ts
+    reason: (read before editing)
 skillsUsed:
   - name: code-review
     reason: two-axis parallel review structure
@@ -18,34 +23,89 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: context
+    reason: (invoked as a slash command)
 frictions:
   - description: Standards sub-agent died mid-run on an API server error and needed a manual SendMessage resume to finish.
     solution: Resume worked cleanly; nothing repo-side to fix.
     severity: minor
-  - description: Doc contradiction found mid-review; scripts/validate-content.ts:30-32 still claims it is not wired into gate.yml, but the gate runs it as an L1 step.
-    solution: "Delete/correct that sentence in scripts/validate-content.ts (single home: the script header)."
+  - description: Doc contradiction found mid-review; scripts/validate-content.ts header claimed it is not wired into gate.yml while the gate runs it as L1.
+    solution: "Fixed in this session's PR (single home: the script header)."
+    severity: minor
+  - description: Harness did not inject the provenance footer into cloud -m commits, and my commit-tree message rewrite re-parented the chain onto a newer main snapshot, silently reverting three session logs and CLAUDE.md; caught only when rebase conflicted, forcing a full branch rebuild via scoped first commit + cherry-picks.
+    solution: Never re-parent with commit-tree onto a ref that is not the chain's real parent; write footers via -F at commit time instead of rewriting after.
+    severity: major
+  - description: Sonnet impl agent's regex-group destructuring failed nuxt typecheck (TS18048); agents ran only targeted vitest specs, so the error surfaced one full gate run late.
+    solution: Have impl agents run tsc/typecheck on touched TS files, or accept one gate round-trip.
     severity: minor
   - description: code-review Skill is diff-shaped (requires a fixed point) but the task was a whole-tree review; had to adapt the process ad hoc.
     solution: Note a whole-tree mode in the Skill, or accept ad-hoc adaptation.
     severity: nit
-durationSec: 570
+durationSec: 2912
 models:
-  claude-fable-5: 42
+  claude-fable-5: 168
 toolCounts:
   Skill: 3
-  Bash: 9
-  Agent: 2
-  ToolSearch: 1
-  SendMessage: 1
-  Write: 1
-  Edit: 1
+  Bash: 40
+  Agent: 14
+  ToolSearch: 2
+  SendMessage: 4
+  Write: 2
+  Edit: 2
+  Read: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - scripts/log-session.ts
 subagents:
   - type: general-purpose
     task: Standards/simplification review
   - type: general-purpose
     task: Spec/ADR-conformance review
+  - type: general-purpose
+    task: Fix Mermaid token contract
+    model: sonnet
+  - type: general-purpose
+    task: Inline journal page middle-man
+    model: sonnet
+  - type: general-purpose
+    task: FoodWeb endStroke fix (phase 1)
+    model: sonnet
+  - type: general-purpose
+    task: Root index uses entryRoutes
+    model: sonnet
+  - type: general-purpose
+    task: Dashboard skillsSub dedup (phase 1)
+    model: sonnet
+  - type: general-purpose
+    task: FrictionStrata dedupe label
+    model: sonnet
+  - type: general-purpose
+    task: Extract blog post list item
+    model: sonnet
+  - type: general-purpose
+    task: Single-home Sighting date parse
+    model: sonnet
+  - type: general-purpose
+    task: Session-log provenance footer
+    model: sonnet
+  - type: general-purpose
+    task: Fix stale validate-content comment
+    model: sonnet
+  - type: general-purpose
+    task: Retire gate.yml generator wording
+    model: sonnet
+  - type: general-purpose
+    task: Dependency cleanup (phase 1)
+    model: sonnet
 gitBranch: claude/nuxt-content-review-6oljd8
 entrypoint: remote_mobile
 cliVersion: 2.1.207
 learnings:
-  - "The generated entryRoutes export in the #routing virtual module has no runtime consumer; e2e derives routes via entryRoutesFrom() directly, so the export and the hand-built list in app/pages/index.vue are two sides of one redundancy."
+  - "The generated entryRoutes export in the #routing virtual module had no runtime consumer; e2e derives routes via entryRoutesFrom() directly — the homepage now consumes it, closing the redundancy."
+  - entryRoutesFrom() sorts alphabetically while routingMap iteration follows manifest declaration order; unobservable today because the homepage's surviving list is one item, but it becomes visible if journal gains a third Space.
+  - Vue's whitespace-condense inserts a text-node space before a v-if sibling regardless of its outcome, so extracting conditional inline markup byte-identically needs whole-block v-if/v-else, not an inner v-if.
+ideas:
+  - "A gate-enforced provenance check: a tiny CI step that fails any PR whose commits lack the ADR-0017 two-line footer, closing the cloud -m injection gap mechanically instead of by convention — the session-log commit path just gained the footer, so the check could now be universal."
