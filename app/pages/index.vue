@@ -73,7 +73,7 @@ const otherRoutes = Object.entries(routingMap).flatMap(([tenant, spaces]) =>
     </section>
 
     <section class="atlas-feature" aria-label="The Atlas">
-      <p class="blogs-lead">Or wander the Atlas — a field guide to an ecosystem that does not exist:</p>
+      <p class="blogs-lead">Or wander the Atlas — unlike the Journal and Blog, it isn't about this experiment at all. It's a sample site agents build on for practice: a field guide to a fictional ecosystem.</p>
       <NuxtLink :to="ATLAS.path" class="atlas-card">
         <span class="atlas-swatches" aria-hidden="true">
           <span v-for="b in ATLAS.biomes" :key="b.name" class="sw" :style="{ background: b.accent }" />
