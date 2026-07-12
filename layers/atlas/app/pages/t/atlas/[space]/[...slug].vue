@@ -42,6 +42,11 @@ const sightings = computed(() =>
 )
 const sigStyle = computed(() => signatureVars(entry.value?.specimen.signature?.colors))
 
+// The Relations web's spokes drive this — hovering/focusing a spoke or its
+// arrow highlights the matching row(s) in AtlasRelationsList below (#71).
+// One-way: the list only reads it, it doesn't emit back.
+const hoveredRelation = ref<string | null>(null)
+
 // The almanac (#282): shared needle state for the dial and, later, the
 // dial-driven MDC components inside the essay (#283). Provided here — the page
 // owns the state; the wheel and any descendant inject it. The needle parks at
@@ -110,6 +115,24 @@ useSeoMeta({
           </dl>
         </div>
 
+        <section class="entry-section">
+          <div class="atlas-sechead"><span class="atlas-eyebrow">Relations · {{ entry.specimen.binomial }}</span></div>
+          <AtlasRelationsWeb
+            v-if="relations.length"
+            :specimen="entry.specimen"
+            :relations="relations"
+            :specimens-by-slug="specimensBySlug"
+            :biome="space"
+            @update:highlight="hoveredRelation = $event"
+          />
+          <AtlasRelationsList
+            :relations="relations"
+            :specimens-by-slug="specimensBySlug"
+            :biome="space"
+            :highlight="hoveredRelation"
+          />
+        </section>
+
         <!-- The field-note essay carries the almanac itself: a general intro to
              the specimen, then the `::almanac` dial, then the creature's year
              phase by phase (`::phase-note`) — the reader's requested order. The
@@ -118,11 +141,6 @@ useSeoMeta({
         <div class="atlas-fieldnote atlas-prose">
           <ContentRenderer :value="entry.doc" />
         </div>
-
-        <section class="entry-section">
-          <div class="atlas-sechead"><span class="atlas-eyebrow">Relations · {{ entry.specimen.binomial }}</span></div>
-          <AtlasRelationsList :relations="relations" :specimens-by-slug="specimensBySlug" :biome="space" />
-        </section>
 
         <section class="entry-section">
           <div class="atlas-sechead"><span class="atlas-eyebrow">Recent sightings</span></div>
@@ -141,5 +159,6 @@ useSeoMeta({
 
 <style scoped>
 .entry-section { margin-top: 0.5rem; }
+.entry-section .atlas-web + .atlas-relations { margin-top: 1.4rem; }
 .not-found h1 { font-family: var(--atlas-display); font-size: 2rem; margin: 0 0 0.6rem; }
 </style>

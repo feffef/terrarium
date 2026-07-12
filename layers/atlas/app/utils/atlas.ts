@@ -206,6 +206,13 @@ export function toSpecimenView(d: RawSpecimenDoc): SpecimenView {
   }
 }
 
+/** A specimen's primary signature color, or the biome accent fallback — the
+ *  color a food-web/relations-web strand or sigrule borrows from its node.
+ *  Shared so a specimen's strand color can't drift between the two diagrams. */
+export function specimenAccent(s: SpecimenView | undefined): string {
+  return s?.signature?.colors?.[0]?.hex || 'var(--biome-accent)'
+}
+
 /** Inline CSS custom properties for a specimen's color signature — `--sig-1..3`,
  *  with `--sig-1` doubling as the catch-all accent. Applied to the specimen's own
  *  artifacts only; the biome palette still owns the frame (#68). */
