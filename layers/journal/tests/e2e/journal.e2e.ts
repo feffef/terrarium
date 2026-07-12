@@ -153,6 +153,37 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       }
     })
 
+    // Opening an item scrolls its top into view (like a deep-link load). The
+    // accordion is one-at-a-time, so opening one item collapses whatever else was
+    // open — a tall entry above the one just clicked would otherwise shrink out
+    // from under it and strand the new entry scrolled past its own top ("opened in
+    // the middle"). Park a card low in the viewport, open it, and assert its top
+    // settles at the viewport top rather than staying where it was clicked.
+    it('scrolls a newly opened item to the top of the viewport', async () => {
+      const route = '/t/journal/current'
+      const { page, errors } = await renderAndCollectErrors(route)
+      try {
+        const card = page.locator('.feed .card').first()
+        const id = await card.getAttribute('id')
+        const topOf = () =>
+          page.evaluate((cardId) => document.getElementById(cardId!)!.getBoundingClientRect().top, id)
+        // Park the card near the bottom of the viewport so "opened → at top" is a
+        // real scroll, not a coincidence of where it already sat.
+        await page.evaluate((cardId) => {
+          const el = document.getElementById(cardId!)!
+          window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top - (window.innerHeight - 120))
+        }, id)
+        expect(await topOf()).toBeGreaterThan(250) // precondition: parked well below the top
+        await card.locator('.head').click()
+        // Poll past the (async, possibly animated) scroll: the opened card's top
+        // must settle at the viewport top (block:'start' + scroll-margin-top).
+        await expect.poll(async () => (await topOf()) <= 80).toBe(true)
+        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
+      } finally {
+        await page.close()
+      }
+    })
+
     // Deep-linking: loading the page with an item's anchor as the URL hash opens
     // that item on the client (the server never sees the fragment) AND scrolls it
     // into the viewport. `2026-07-04` is the oldest digest — last in the list,

@@ -77,15 +77,22 @@ const isOpen = (anchor: string) => openAnchor.value === anchor
 
 // replaceState (not `location.hash =`) so toggling neither floods history nor
 // triggers the browser's native jump-to-anchor scroll — we scroll deliberately,
-// and only on a deep-link load, in scrollToOpen().
+// in scrollToOpen(), when an item opens (toggle or deep-link load).
 const syncHash = (anchor: string | null) => {
   history.replaceState(history.state, '', anchor ? `${route.path}#${anchor}` : route.path)
 }
 
 const toggle = (anchor: string) => {
-  const next = isOpen(anchor) ? null : anchor
+  const opening = !isOpen(anchor)
+  const next = opening ? anchor : null
   openAnchor.value = next
   syncHash(next)
+  // Opening collapses whatever else was open — and the accordion is one-at-a-time,
+  // so a tall entry above the one just clicked would shrink out from under it,
+  // stranding the new entry scrolled past its own top (it opened "in the middle").
+  // Bring the opened item's top back into view so it reads from the start; closing
+  // needs no scroll.
+  if (opening) nextTick(scrollToOpen)
 }
 
 const scrollToOpen = () => {
@@ -470,10 +477,18 @@ h1 {
 .drow:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 3px; }
 .digest-date { font-family: var(--jd-mono); font-size: 0.82rem; color: var(--jd-accent); white-space: nowrap; }
 .digest-summary { color: var(--jd-ink); font-size: 0.96rem; }
-.digest.open .digest-summary { color: var(--jd-muted); }
 .caret { color: var(--jd-faint); font-size: 0.78rem; }
 
-.digest-body { padding: 0 0 1rem; }
+/* Open digest = the active row: mark it with an accent bar, faint tint, and a
+   bolder summary. It previously dimmed its summary to `--jd-muted`, which read as
+   disabled rather than expanded. */
+.digest.open { background: color-mix(in srgb, var(--jd-accent) 7%, transparent); border-radius: 8px; }
+.digest.open, .digest.open + .digest { border-top-color: transparent; }
+.digest.open .drow { padding-inline: 0.85rem; box-shadow: inset 3px 0 0 var(--jd-accent); }
+.digest.open .digest-summary { color: var(--jd-ink); font-weight: 600; }
+.digest.open .caret { color: var(--jd-accent); }
+
+.digest-body { padding: 0 0.85rem 1rem; }
 .digest-body :deep(h1) { display: none; } /* the row already shows the date */
 .digest-body :deep(p) { margin: 0 0 0.7rem; color: var(--jd-muted); font-size: 0.95rem; line-height: 1.6; }
 .digest-body :deep(p:last-child) { margin-bottom: 0; }
