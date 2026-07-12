@@ -14,9 +14,9 @@
 //   `regressionChecks` — each own Skill's most recent edit commit with the
 //   sessions immediately before/after it (session ids only; resolve against
 //   `regressionSessions`, deduped since the same session commonly brackets more
-//   than one Skill's edit) — and `skillSessionFiles`, a skill → file-path map
-//   (all-time, not windowed) for a targeted full-log deep-read once a
-//   regression is suspected for a specific Skill.
+//   than one Skill's edit) — `orphanedSessions` (issue #349) — and
+//   `skillSessionFiles`, a skill → file-path map (all-time, not windowed) for a
+//   targeted full-log deep-read once a regression is suspected for a specific Skill.
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -33,15 +33,23 @@ export const REGRESSION_BRACKET = 5
  *  for "did the last change help", and every extra one multiplies the scorecard's
  *  size across every own Skill with edit history. */
 export const MAX_EDITS_PER_SKILL = 1
+/** Calendar, not session-count, window (issue #349) — the point is catching
+ *  every zero-log session, not just the newest ones. */
+export const ORPHAN_WINDOW_DAYS = 4
 
 /** Paths this helper reads. */
 export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
+export const ARCHIVED_SESSIONS_DIR = 'layers/journal/content/archived/sessions'
 export const INVENTORY_DIR = 'layers/journal/content/current/skills'
 export const SKILLS_DIR = '.agents/skills'
 /** The lockfile of externally-sourced Skills (the pack). A Skill named here is
  *  NOT ours to edit — its SKILL.md is pack-owned (ADR-0005), so `audit-skills`
  *  tunes its Inventory grade but never refers its frontmatter to `frictions-to-fixes`. */
 export const SKILLS_LOCK = 'skills-lock.json'
+
+// Exported so the unit tests can build synthetic `git log` output with them.
+export const SEP = '\x1f' // field separator
+export const REC = '\x1e' // record separator
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -109,6 +117,12 @@ export interface RegressionCheck {
   before: string[]
   after: string[]
 }
+/** issue #349's orphaned-session signal. */
+export interface OrphanedSession {
+  session: string
+  commits: string[]
+  date: string
+}
 export interface Scorecard {
   windowSize: number
   sessionsConsidered: number
@@ -116,6 +130,7 @@ export interface Scorecard {
   skills: SkillRow[]
   regressionChecks: RegressionCheck[]
   regressionSessions: WindowSession[]
+  orphanedSessions: OrphanedSession[]
   /** Skill name → every session log file (repo-relative path) that named it in
    *  `skillsUsed`, across ALL history — not windowed, not bracketed. Cheap
    *  (paths only). The deep-read entry point once a regression is suspected for
@@ -253,6 +268,88 @@ export function buildRegressionChecks(
   return { checks, sessions }
 }
 
+/** Skips a parentless commit (empty `%P`) — issue #292: git diffs it against
+ *  the empty tree, so it would misattribute as a real edit to every Skill it
+ *  lists. Expects `readSkillEdits`'s `git log` format. */
+export function parseSkillEditLog(raw: string, skillsDir = SKILLS_DIR): Map<string, SkillEdit[]> {
+  const out = new Map<string, SkillEdit[]>()
+  const prefix = `${skillsDir}/`
+  for (const block of raw.split(REC).map((b) => b.trim()).filter(Boolean)) {
+    const lines = block.split('\n')
+    const header = lines[0] ?? ''
+    const [sha, parents, date, subject] = header.split(SEP)
+    if (!sha || !date || !parents) continue
+    const names = new Set<string>()
+    for (const path of lines.slice(1)) {
+      if (!path.startsWith(prefix)) continue
+      const name = path.slice(prefix.length).split('/')[0]
+      if (name) names.add(name)
+    }
+    for (const name of names) {
+      const list = out.get(name) ?? []
+      list.push({ sha, date, subject: subject ?? '' })
+      out.set(name, list)
+    }
+  }
+  return out
+}
+
+export interface SessionTrailerRef {
+  sha: string
+  date: string // commit author date, UTC ISO-8601 (git %aI)
+  session: string
+}
+
+// Not just the current `session_<id>` shape — captures whatever follows the
+// trailer URL's final slash, since at least one early session log used a
+// bare UUID instead (2026-07-05-576a49a2-*.yml).
+const SESSION_TRAILER = /Claude-Session:\s*\S*\/(\S+)/
+
+/** Expects `readSessionTrailers`'s `git log` format. */
+export function parseSessionTrailers(raw: string): SessionTrailerRef[] {
+  const out: SessionTrailerRef[] = []
+  for (const block of raw.split(REC).map((b) => b.trim()).filter(Boolean)) {
+    const nl = block.indexOf('\n')
+    const header = nl >= 0 ? block.slice(0, nl) : block
+    const body = nl >= 0 ? block.slice(nl + 1) : ''
+    const [sha, date] = header.split(SEP)
+    if (!sha || !date) continue
+    const m = body.match(SESSION_TRAILER)
+    if (!m) continue
+    out.push({ sha, date, session: m[1] as string })
+  }
+  return out
+}
+
+/** `date` is the earliest, not latest, commit referencing the session —
+ *  matches an orphan's own actual age. */
+export function groupSessionReferences(
+  refs: SessionTrailerRef[],
+): Map<string, { commits: string[]; date: string }> {
+  const out = new Map<string, { commits: string[]; date: string }>()
+  for (const { sha, date, session } of refs) {
+    const entry = out.get(session) ?? { commits: [], date }
+    entry.commits.push(sha)
+    if (date < entry.date) entry.date = date
+    out.set(session, entry)
+  }
+  return out
+}
+
+/** Sorted oldest-first — the most actionable triage order (issue #349). */
+export function findOrphanedSessions(
+  refs: SessionTrailerRef[],
+  knownSessionIds: Set<string>,
+): OrphanedSession[] {
+  const grouped = groupSessionReferences(refs)
+  const out: OrphanedSession[] = []
+  for (const [session, { commits, date }] of grouped) {
+    if (knownSessionIds.has(session)) continue
+    out.push({ session, commits, date })
+  }
+  return out.sort((a, b) => a.date.localeCompare(b.date))
+}
+
 // ── FS IO (thin shell) ────────────────────────────────────────────────────────
 
 /** Reads every session log with its source file path attached (`SessionFile`). */
@@ -284,6 +381,36 @@ function readSessionFiles(cwd = root): SessionFile[] {
     })
   }
   return out
+}
+
+/** An archived session is still a valid log, not an orphan. */
+function readKnownSessionIds(cwd = root): Set<string> {
+  const ids = new Set<string>()
+  for (const dir of [SESSIONS_DIR, ARCHIVED_SESSIONS_DIR]) {
+    const full = join(cwd, dir)
+    if (!existsSync(full)) continue
+    for (const f of readdirSync(full).filter((f) => f.endsWith('.yml'))) {
+      const raw = parseYaml(readFileSync(join(full, f), 'utf8')) as Record<string, unknown>
+      const id = raw && typeof raw === 'object' ? String(raw.session ?? '') : ''
+      if (id) ids.add(id)
+    }
+  }
+  return ids
+}
+
+/** Scoped to `origin/main` per CLAUDE.md's git-log guidance, not `--all`. */
+function readSessionTrailers(cwd = root, days = ORPHAN_WINDOW_DAYS): SessionTrailerRef[] {
+  let raw: string
+  try {
+    raw = execFileSync(
+      'git',
+      ['log', 'origin/main', `--since=${days} days ago`, `--pretty=format:${REC}%H${SEP}%aI%n%B`],
+      { cwd, encoding: 'utf8' },
+    )
+  } catch {
+    return []
+  }
+  return parseSessionTrailers(raw)
 }
 
 /** Parse a SKILL.md's YAML frontmatter (between the first two `---` fences). A
@@ -342,43 +469,19 @@ function readLock(cwd = root): Set<string> {
   return new Set(Object.keys(lock.skills ?? {}))
 }
 
-const SEP = '\x1f' // field separator
-const REC = '\x1e' // record separator
-
-/** Every commit touching `.agents/skills/<name>/`, grouped by the Skill dir(s)
- *  it touched (a commit spanning several Skills is attributed to each). Missing
- *  git history (e.g. a shallow clone) degrades to no edit data, not a crash. */
+/** Missing git history (e.g. a shallow clone) degrades to no edit data, not a crash. */
 function readSkillEdits(cwd = root): Map<string, SkillEdit[]> {
-  const out = new Map<string, SkillEdit[]>()
   let raw: string
   try {
     raw = execFileSync(
       'git',
-      ['log', '--name-only', `--pretty=format:${REC}%H${SEP}%aI${SEP}%s`, '--', SKILLS_DIR],
+      ['log', '--name-only', `--pretty=format:${REC}%H${SEP}%P${SEP}%aI${SEP}%s`, '--', SKILLS_DIR],
       { cwd, encoding: 'utf8' },
     )
   } catch {
-    return out
+    return new Map()
   }
-  const prefix = `${SKILLS_DIR}/`
-  for (const block of raw.split(REC).map((b) => b.trim()).filter(Boolean)) {
-    const lines = block.split('\n')
-    const header = lines[0] ?? ''
-    const [sha, date, subject] = header.split(SEP)
-    if (!sha || !date) continue
-    const names = new Set<string>()
-    for (const path of lines.slice(1)) {
-      if (!path.startsWith(prefix)) continue
-      const name = path.slice(prefix.length).split('/')[0]
-      if (name) names.add(name)
-    }
-    for (const name of names) {
-      const list = out.get(name) ?? []
-      list.push({ sha, date, subject: subject ?? '' })
-      out.set(name, list)
-    }
-  }
-  return out
+  return parseSkillEditLog(raw)
 }
 
 // ── Command ─────────────────────────────────────────────────────────────────
@@ -390,6 +493,7 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
   const external = readLock(cwd)
   const rows = buildSkillRows(readOnDiskSkills(cwd), readInventory(cwd), tallyUsage(window), external)
   const { checks, sessions } = buildRegressionChecks(all, readSkillEdits(cwd), external)
+  const orphanedSessions = findOrphanedSessions(readSessionTrailers(cwd), readKnownSessionIds(cwd))
   return {
     windowSize,
     sessionsConsidered: all.length,
@@ -397,6 +501,7 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
     skills: rows,
     regressionChecks: checks,
     regressionSessions: sessions,
+    orphanedSessions,
     skillSessionFiles: buildSkillSessionFiles(files),
   }
 }
