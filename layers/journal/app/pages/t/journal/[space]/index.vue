@@ -101,15 +101,18 @@ const toggle = (anchor: string) => {
 
 // On open, hold the clicked item's own top at the exact screen position it was
 // at before the click — a collapsing sibling elsewhere can shift it, but the
-// item the user just acted on shouldn't visually jump. Clamped to 0: near the
-// top of the page there may not be enough room above to fully compensate, so it
-// settles as close to the original position as the page start allows.
+// item the user just acted on shouldn't visually jump. Always instant ('auto'):
+// this is a correction for a reflow the click itself caused, not a navigation
+// to a new spot, so the goal is that the item's top is never seen to move at
+// all — an animated scroll here would show the very motion this is meant to
+// hide. Clamped to 0: near the top of the page there may not be enough room
+// above to fully compensate, so it settles as close to the original position
+// as the page start allows.
 const scrollPreservingTop = (el: HTMLElement | null, beforeTop: number | null) => {
   if (!el || beforeTop == null) return
   const delta = el.getBoundingClientRect().top - beforeTop
   if (!delta) return
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  window.scrollTo({ top: Math.max(0, window.scrollY + delta), behavior: reduce ? 'auto' : 'smooth' })
+  window.scrollTo({ top: Math.max(0, window.scrollY + delta), behavior: 'auto' })
 }
 
 const scrollToOpen = () => {
