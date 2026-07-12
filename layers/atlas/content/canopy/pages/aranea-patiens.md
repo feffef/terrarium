@@ -9,6 +9,25 @@ diet: whatever the web keeps
 activity:
   label: night
   bands: [[20, 24], [0, 5]]
+phenology:
+  phases:
+    - name: first-stringing
+      label: the first stringing
+      span: [58, 122]
+      gloss: the year's first wheels, strung low and small, as though testing the air's opinion.
+    - name: high-wheeling
+      label: the high wheeling
+      span: [122, 242]
+      gloss: the great wheels of the damp months, wider each night than we would credit and replaced entire by dawn.
+    - name: taking-in
+      label: the taking-in
+      span: [242, 328]
+      gloss: the wheels come down a bough at a time; the silk is eaten and carried inward, as savings.
+    - name: close-sitting
+      label: the close sitting
+      span: [328, 58]
+      gloss: a season spent flat against the bark, spinning little and waiting, which it does supremely well.
+      quiet: true
 signature:
   colors:
     - { name: dew silver, hex: "#b9c2c4" }
@@ -73,8 +92,30 @@ illustration: |
 
 *Aranea patiens* is common, and we set that word down with respect, because commonness on this scale is a kind of mastery. There is scarcely a fork of the upper boughs without its wheel of silk, hung at an angle to catch whatever the dusk shakes loose, and at the hub of each wheel the same small brown proprietor, head-down, legs at ease, doing the one thing it does supremely well, which is nothing at all.
 
-The web is built in darkness and built entire — begun after the last light fails and finished, so far as we can tell, before we have finished remarking that it has begun. What the day damages the night replaces without comment. By dawn the new wheel is strung with dew, and this is when the weaver is at its handsomest: the silk goes to silver, every spoke beaded, and the animal sits amid its own accounting like a clerk who has balanced the books and sees no reason to say so.
+The visitor inclined to pity the prey should sit with the weaver through one whole night, as we have: eight hours motionless in the cold, the web trembling with every false alarm, and no certainty at all that the canopy owes it breakfast. Everything up here waits; the weaver has merely gone further, and made of waiting a livelihood. We could not do it, and we have the advantage of knowing the kitchen is stocked.
 
-Its diet the ledger gives as *whatever the web keeps*, and the phrase was chosen for its honesty. The weaver does not hunt; it has arranged matters so that hunting comes to it. We have seen the web keep a lantern moth — the lamp burning in the silk for a long minute, then banked, then dark — and we confess the company recorded that entry in silence and went early to supper. We have also seen it keep a false-leaf, which had made, that night, its second mistake.
+That livelihood keeps a calendar of its own — first strung, then wheeled high, then quietly taken in, then sat out flat against the bark — and we have set it down not by our calendar but as the weaver keeps it: the first stringing, the high wheeling, the taking-in, and the close sitting. Turn the almanac to follow the year around the hub; the seasons on the rim only say where in our shared year each of the weaver's falls.
 
-The visitor inclined to pity the prey should sit with the weaver through one whole night, as we have. Eight hours motionless in the cold, the web trembling with every false alarm, and no certainty at all that the canopy owes it breakfast. Everything up here waits; the weaver has merely gone further, and made of waiting a livelihood. We could not do it, and we have the advantage of knowing the kitchen is stocked.
+::almanac
+::
+
+:::phase-note{of="first-stringing"}
+As the light lengthens the first wheels of the year go up, strung low and small, as though the weaver were testing the air's opinion before committing to it. They are modest things, easily missed, taken down some mornings and not replaced — the returning silk spent cautiously, on the chance the season is not yet in earnest. When the lid begins to stand open and the draught worries at the new webs, the weaver answers by building lower and anchoring harder rather than by giving up the fork, and by the last of these weeks the forks are furnished again, if sparely.
+:::
+
+:::phase-note{of="high-wheeling"}
+The wheels widen as the season turns, and what began as a cautious test becomes, by degrees, the high wheeling — the great wheels of the damp months, wider each night than we would credit and replaced entire by dawn. What the day damages the night makes good, so that by first light the new wheel stands strung with dew, every spoke beaded, the animal amid its own accounting like a clerk who has balanced the books and sees no reason to say so.
+
+::sighting{date="2026-06-26"}
+::
+
+It hunts, in these weeks, only in the sense that it has arranged for hunting to come to it. We have seen the web keep a lantern moth — the lamp burning in the silk for a long minute, then banked, then dark — and we confess the company recorded that entry in silence and went early to supper. We have also seen it keep a false-leaf, which had made, that night, its second mistake.
+:::
+
+:::phase-note{of="taking-in"}
+As the misting lapses the great wheels come down, a bough at a time, and the silk is not discarded but eaten and carried inward, as savings against the lean months. A web taken in now will not be restrung until the damp comes back. The weaver reads the drying air a fortnight before we do, and begins its economies while the canopy still calls the season summer. After the great cleaning the work goes on in earnest, wheel by wheel, until the forks that hummed with silk all summer stand bare and the whole season's spinning has been carried inward as store, done without visible regret.
+:::
+
+:::phase-note{of="close-sitting"}
+By its close the taking-in has spun the weaver down almost to nothing, and it sits closer to the bark each night, settling toward the long, flat patience of the cold. Through the dry-warm months it spins next to nothing at all: it sits flat against the bark, legs drawn in, and waits — which, having made a livelihood of waiting, it does supremely well and with no visible sign of hardship. A wheel strung now would catch only dust and dry air, and the weaver, who is nothing if not economical, declines to string one. We mark the empty forks and pass on.
+:::

@@ -9,6 +9,17 @@ diet: unknown
 activity:
   label: night, irregular
   bands: [[22, 24], [0, 3]]
+phenology:
+  phases:
+    - name: far-singing
+      label: the far singing
+      span: [154, 244]
+      gloss: all nine reports fall between the first warm nights and the keeper's holiday; the pool is loudest then, and has the most voices to lend.
+    - name: still-water
+      label: the still water
+      span: [244, 154]
+      gloss: no calls and no lights; the far corner keeps its own counsel, and the company sleeps.
+      quiet: true
 signature:
   colors:
     - { name: moon silver, hex: "#b6c2cc" }
@@ -72,8 +83,22 @@ illustration: |
 
 Of the call-mimic we possess a great deal of testimony and almost no evidence, and the guide asks the reader to weigh the following accordingly. It has been reported on nine occasions, at unsociable hours, and never twice by the same observer; the pool, it seems, grants each of us one audience and considers the matter settled.
 
-The accounts agree on this much. Late in the night, from the far water, a call is heard — and the call is always somebody else's. The junior observer heard the drowned star's faint chime (a sound we did not know the drowned star made until it was returned to us); the senior heard the dry whir of the dusk-chronicler, at an hour when no chronicler flies; one of us, who asks not to be named in the record, heard her own cough, given back with perfect gravity from the middle of the pool. In every account the voice is near, startlingly near — and far off, in quite another quarter, a small silver light rides the water. The call is close; the glow is not; and no observer has been able to say which of the two, if either, is the animal.
+The accounts agree on this much. Late in the night, from the far water, a call is heard — and the call is always somebody else's. The junior observer heard the drowned star's faint chime, a sound we did not know the drowned star made until it was returned to us; the senior heard the dry whir of the dusk-chronicler, at an hour when no chronicler flies; one of us, who asks not to be named in the record, heard her own cough, given back with perfect gravity from the middle of the pool. In every account the voice is near, startlingly near — and far off, in quite another quarter, a small silver light rides the water. The call is close; the glow is not; and no observer has been able to say which of the two, if either, is the animal.
 
-The plate overleaf is offered with every reservation. It is reconstructed from the single partial sighting we credit — a lamplit half-second at the water's edge, a pale throat open on a borrowed voice — and the draughtsman has honestly left wanting what the witness could not swear to, which the reader will observe is most of it. Its size we do not record. Its diet we do not record. A creature that answers every question in someone else's voice keeps its own particulars remarkably well.
+The plate overleaf is offered with every reservation, reconstructed from the single partial sighting we credit — a lamplit half-second at the water's edge, a pale throat open on a borrowed voice — and the draughtsman has honestly left wanting what the witness could not swear to, which the reader will observe is most of it. Its size we do not record; its diet we do not record. A creature that answers every question in someone else's voice keeps its own particulars remarkably well.
 
-We do not say it is dangerous; nothing in nine reports has come to harm. We note only that the dusk-chronicler, the most methodical inhabitant of this wing, will not take its circuit past that corner of the pool, and we have found its caution to be generally well placed. The naturalists keep the vigil in pairs now — not from fear, we tell each other, but so that the next report may at last be confirmed by a second voice. We are aware of how that sentence reads, in this of all entries.
+The nine reports do not fall evenly across the year, and the mimic keeps two seasons of its own, only one of which speaks. What follows we have set down as the far water keeps it — not by our calendar but by its own: the far singing, when between the first warm nights and the keeper's holiday the pool is loudest and has the most voices to lend; and the still water, the long remainder in which it keeps its own counsel. Turn the almanac to move between them; the seasons on the rim only say where in our shared year each of the mimic's falls.
+
+::almanac
+::
+
+:::phase-note{of="far-singing"}
+The far water finds its voices now, for it is now the pool has the most to lend: the misting is at its most liberal, the water fullest and loudest, and all nine of the reports we credit fall between the first warm nights and the keeper's holiday. The dusk-chronicler, the most methodical inhabitant of the wing, will not take its circuit past that corner in these weeks, and we have found its caution generally well placed. We keep the vigil in pairs — not from fear, we tell each other, but so that the next report may at last be confirmed by a second voice; we are aware of how that reads, in this of all entries. Toward the holiday the voices come thin and far apart, as though the pool were running short of others to imitate. The ledger holds one such night and does not pretend to more than it heard:
+
+::sighting{date="2026-07-02"}
+::
+:::
+
+:::phase-note{of="still-water"}
+Then the far corner falls quiet for the year, and stays quiet through the long remainder. No call, no light; the pool that lends every other creature a voice has, in this stretch, none to spare. The keepers let the light run longer by their small, deniable increments, and still nothing answers; the lid stands open an hour a day and the draught carries a good many sounds across the water, none of them the one we wait for. We keep the vigil out of habit and the ledger empty out of honesty, which in this of all entries is the same thing, and we begin — foolishly, each spring — to wonder whether we imagined it. Where the borrowed voices go when there is no one about to lend them, we do not know, and have stopped keeping late enough to find out. The still water holds, and the company sleeps through it undisturbed.
+:::

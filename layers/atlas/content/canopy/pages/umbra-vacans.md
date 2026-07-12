@@ -9,6 +9,17 @@ diet: light, we suppose, by standing in it
 activity:
   label: noon, of all hours
   bands: [[10, 15]]
+phenology:
+  phases:
+    - name: bold-noons
+      label: the bold noons
+      span: [151, 212]
+      gloss: every entry in the audit that would not balance falls in these weeks, in the highest light of the year.
+    - name: accounted-for
+      label: the accounted months
+      span: [212, 151]
+      gloss: the audit balances; whether the shade is elsewhere or merely diligent, the record cannot say.
+      quiet: true
 signature:
   colors:
     - { name: cast violet, hex: "#5a5170" }
@@ -82,8 +93,20 @@ illustration: |
 
 The first report is the junior draughtsman's, dated the twenty-fourth of June, and it is short: a patch of shade crossed the west bough at noon, against the drift of the dapple. Shade is the canopy's principal weather and we had thought ourselves fluent in it — it moves with the light, all of it together, like a tide obeying one moon. This patch went the other way. By the time a second observer had been fetched the bough wore only the shade it had earned, and the draughtsman was already unpopular.
 
-*Umbra vacans* — if it is a creature, a question the company is no longer permitted to debate at meals — keeps the boldest hours of anything in this guide. It is abroad at noon, when the light is sharpest and every shadow in the wing can be called to account; whatever else may be said of it, it does not skulk. We have learned to audit the shade in the bright hours, leaf by leaf, matching each patch to its caster the way one matches a ledger to a cash-box, and the audit has balanced on every day but four. Those four entries are the whole of our evidence, and we present the total without embarrassment: it is four more than we can explain.
+*Umbra vacans* — if it is a creature, a question the company is no longer permitted to debate at meals — keeps the boldest hours of anything in this guide, abroad at noon when the light is sharpest and every shadow in the wing can be called to account. Its plate is the only one in the guide that is a portrait of an absence — the shade drawn faithfully, the caster left a dashed guess hung in the air above — and we are uneasily aware that the absence sat for it more patiently than most of our specimens do.
 
-Two regularities have survived the company's scrutiny. The whisper mold prospers in shade that nothing stands to cast — we have found colonies fat and talkative in the open, mid-bough, where the sun should have had them — and the untenanted shadow has never once been reported within the lantern moth's glow. We set both facts down plainly and decline to build upon either, though the reader will notice, as we did, that between them they describe a thing with preferences.
+We have learned to audit the shade leaf by leaf, matching each patch to its caster the way one matches a ledger to a cash-box; and the audit does not fail evenly across the year, but in one bright stretch of it and nowhere else. We have set the record down not by our calendar but as the shade appears to keep it: the bold noons, and the long accounted months on either side. Turn the almanac to read them; the seasons on the rim only say where in our shared year each falls.
 
-The plate is conjectural, and more conjectural than most. The draughtsman has drawn the shade faithfully, lying against the grain of the honest dapple, and has left the caster wanting — a dashed guess, hung in the air above, which he begs the reader not to mistake for testimony. It is the only plate in this guide that is a portrait of an absence, and we are uneasily aware that the absence sat for it more patiently than most of our specimens do.
+::almanac
+::
+
+:::phase-note{of="bold-noons"}
+Here, in the highest light of the year, the audit fails. Every entry that will not balance falls in these weeks, at noon, when the shade is boldest and least excusable — four such entries in the whole of the guide, and we present the total without embarrassment: it is four more than we can explain. Two regularities attend them. The whisper mold prospers in shade that nothing stands to cast, fat and talkative in the open mid-bough where the sun should have had it; and the untenanted shadow has never once been reported within the lantern moth's glow. Between them they describe a thing with preferences.
+
+::sighting{date="2026-07-04"}
+::
+:::
+
+:::phase-note{of="accounted-for"}
+The rest of the year the audit balances, and the plate's one anomaly stays a memory. With the high sun past its peak the shade slants long again and each day closes in good order, as though whatever unbalanced it had gone off with the solstice; after the great cleaning the days draw in and the shade grows scarce and orderly, matched patch to caster with a tedium we have learned to be grateful for; and in the dry-warm months the light is thin and low and soon done, and the shade with it, so that the audit balances almost before we have begun it. Even as the keepers let the light run longer and the shadows take more of the afternoon, they still balance, patch for caster, down to the last leaf — and when the lid stands open the draught sets every shade in the wing moving at once, all together, like the honest tide it is, every patch going where the light sends it while half the company is faintly disappointed. Whether the shadow is elsewhere in these months or merely diligent, the record cannot say. We do not believe it has gone anywhere; but belief is not evidence, and we close each noon's audit, rule the line beneath it, and wait for the light to grow bold enough to be worth stealing again.
+:::

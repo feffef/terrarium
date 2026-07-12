@@ -9,6 +9,25 @@ diet: detritus and roots
 activity:
   label: night
   bands: [[19, 24], [0, 4]]
+phenology:
+  phases:
+    - name: first-startle
+      label: the first startle
+      span: [48, 92]
+      gloss: it emerges, is alarmed by the emergence, and retires; this is repeated until the weather holds.
+    - name: tender-roots
+      label: the season of tender roots
+      span: [92, 192]
+      gloss: the year's soft feeding, taken a few seconds at a time between alarms.
+    - name: wary-fattening
+      label: the wary fattening
+      span: [192, 302]
+      gloss: an autumn spent eating against the winter, at twice the usual rate and thrice the usual alarm.
+    - name: under-bark
+      label: the under-bark months
+      span: [302, 48]
+      gloss: it winters beneath the darkest thing it found in autumn, and is not seen; we assume it startles in there, at intervals, on principle.
+      quiet: true
 signature:
   colors:
     - { name: alarm red, hex: "#b23b2e" }
@@ -59,8 +78,28 @@ illustration: |
 
 Our first record of the startle beetle is a field note that reads, in its entirety, *gone*. The second reads the same. It was some weeks before we managed a description of anything but the departure: a hard black back, low and glossy as a wet stone, with one drop of red carried on the shoulders like a lamp it would rather not be carrying.
 
-*Rubra territa* feeds by night, on detritus and on the soft ends of roots, and it feeds in instalments — a few seconds of work between one alarm and the next. The alarms are not discriminating. We have seen it bolt at the settling of a leaf, at our breathing, at the click of the observation lamp being covered, and once, memorably, at the sound of its own feeding, which appeared to catch it unawares. The bolt is a short, violent, perfectly straight line ending under the nearest dark thing, where it waits with an air of having always been there.
+*Rubra territa* feeds by night, on detritus and on the soft ends of roots, and it feeds in instalments — a few seconds of work between one alarm and the next. The alarms are not discriminating; we have seen it bolt at the settling of a leaf, at our breathing, at the click of the observation lamp being covered, and once, memorably, at the sound of its own feeding, which appeared to catch it unawares. The bolt is a short, violent, perfectly straight line ending under the nearest dark thing, where it waits with an air of having always been there. It keeps this manner in every season; only the things worth bolting from change.
 
-On the third of July we watched a raindrop fall from the upper glass and miss it by a hand's breadth. The beetle fled the splash, returned within the minute, and fled the damp patch the splash had left. It then ate its supper at the very rim of that patch, one alarm at a time, and we confess we admired it.
+What follows we have set down as the beetle keeps it — not by our calendar but by its own: the first startle, the season of tender roots, the wary fattening, and the under-bark months. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the beetle's falls.
 
-It is easy to laugh at, and we have. But the floor keeps few creatures so long, and the startle beetle's ledger is hard to argue with: it has fled a great deal that required no fleeing, and so has never once failed to flee the thing that did.
+::almanac
+::
+
+:::phase-note{of="first-startle"}
+As the keepers let the light run longer by their small, deniable increments, the beetle comes up — and is at once alarmed at having done so, and retires. This is repeated, we have watched it repeated, until the weather holds and it consents to remain above ground. The first startles of the year are these: an animal fleeing, chiefly, the fact of its own arrival.
+:::
+
+:::phase-note{of="tender-roots"}
+With the lid standing open an hour a day, and the draught coming and going with it, one might expect the startle beetle to keep underground; it does the opposite. This is the soft feeding — the tender ends of roots, taken a few seconds at a time — and the beetle treats the draught as merely one more thing to bolt from, which it does, and returns from, and bolts from again, the night through. As the misting turns liberal the feeding is at its best, and it works the damp roots in earnest between the usual alarms. One night we watched a raindrop fall from the upper glass and miss it by a hand's breadth: it fled the splash, returned within the minute, fled the damp patch the splash had left, and then ate its supper at the very rim of that patch, one alarm at a time, and we confess we admired it. The ledger's own account is terser:
+
+::sighting{date="2026-06-23"}
+::
+:::
+
+:::phase-note{of="wary-fattening"}
+The misting lapses, coinciding as it does with the keeper's holiday, and the glass runs unaccustomedly dry; the beetle takes no rest from it. This is the wary fattening: an autumn's eating done against the coming cold, at twice the usual rate and, since the drying glass ticks and creaks as it cools each night, something like thrice the usual alarm. After the great cleaning everything re-arranges itself an inch at a time, which suits the beetle not at all; it bolts at each new arrangement and fattens between bolts, still eating against the winter.
+:::
+
+:::phase-note{of="under-bark"}
+Then, by degrees, it chooses the dark thing it means to keep and is gone beneath it, and for the dry-warm months the beetle is not to be found at all. It does not come up for the warmth of the pipes or for us. We assume it startles down there, at intervals, on principle; but the ledger for these weeks is honestly empty, and we have learned to leave it so. The floor keeps few creatures so long, and the startle beetle's ledger is hard to argue with: it has fled a great deal that required no fleeing, and so has never once failed to flee the thing that did.
+:::

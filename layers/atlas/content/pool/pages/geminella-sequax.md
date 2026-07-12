@@ -9,6 +9,25 @@ diet: the morning film
 activity:
   label: dawn, on the film
   bands: [[4, 9]]
+phenology:
+  phases:
+    - name: first-pairs
+      label: the first pairs
+      span: [58, 118]
+      gloss: the film re-forms in patches, and every patch is grazed by its twos from the first morning; we have never caught the pairing happen.
+    - name: film-plenty
+      label: the film in plenty
+      span: [118, 236]
+      gloss: the morning film at its widest; forty pairs counted, and no singles.
+    - name: thin-film
+      label: the thin film
+      span: [236, 272]
+      gloss: the misting's lapse starves the film to ribbons; the pairs keep to what remains, in lanes.
+    - name: sunk-season
+      label: the sunk season
+      span: [272, 58]
+      gloss: the film fails and the pairs go down into the water, or somewhere; spring returns them in the same twos.
+      quiet: true
 signature:
   colors:
     - { name: pondlight silver, hex: "#8fb4ba" }
@@ -59,10 +78,35 @@ illustration: |
   </g>
 ---
 
-The pool keeps a great deal of drifting stuff too small and too idle to name, and the guide has been content to leave it nameless — with one exception, which earns its page by arithmetic. Among the motes of the morning film there is a mote that is always two. A leader and a follower, half a breadth apart, the follower holding its station through every turn as though fastened there by something politer than thread: we have watched a pair graze the whole length of the snail's cleaned ribbon, keeping to it like a lane, and arrive at the far end in the order they set out.
+The pool keeps a great deal of drifting stuff too small and too idle to name, and the guide has been content to leave it nameless — with one exception, which earns its page by arithmetic. Among the motes of the morning film there is a mote that is always two: a leader and a follower, half a breadth apart, the follower holding its station through every turn as though fastened there by something politer than thread.
 
-A single *Geminella sequax* has never been recorded. We say this with the confidence of a company that has tried: on the twenty-first of June we counted forty pairs on the film and no singles, and the count has been repeated, by wagered biscuit, on four mornings since, with the same result. Once, in the interests of science, we parted a pair with a bristle drawn across the film. Both halves stopped dead. They hung a hand's breadth apart, doing nothing, with the air of finding the interruption beneath comment, until the film's slow turning brought them together again, whereupon they resumed grazing mid-stroke, as though the sentence had merely been waiting for its verb. We have not repeated the experiment; it felt like interrupting.
+A single *Geminella sequax* has never been recorded, and we say so with the confidence of a company that has tried. Once, in the interests of science, we parted a pair with a bristle drawn across the film. Both halves stopped dead, hung a hand's breadth apart doing nothing, with the air of finding the interruption beneath comment, until the film's slow turning brought them together again — whereupon they resumed grazing mid-stroke, as though the sentence had merely been waiting for its verb. We have not repeated the experiment; it felt like interrupting. Which of the two leads, and whether it is always the same one, we cannot answer: the follower is the greyer by a shade, the draughtsman insists, but we have never caught a pair changing places, and we have watched long enough to be embarrassed about it.
 
-The pairs are part of the pool's small economy, and the pool is not sentimental about them. They drift to the drowned star's lamp with the rest of the dust and are taken as they travel, two at a time — the follower making no attempt to escape that we can detect, though our lenses are candid about their limits at this scale. Around the dusk-chronicler's circuit the pairs part and close again behind it, like water remembering itself, and whether that is fear or courtesy the guide does not presume to say.
+The pairs are on the film only while there is a film to be on, and the year gives and takes it — by their reckoning, not ours: the first pairs, the film in plenty, the thin film, and the sunk season in which there is no film at all. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the pairs' falls.
 
-Which of the two leads, and whether it is always the same one, we cannot answer. The follower is the greyer by a shade — the draughtsman, given a lens and an afternoon, insists upon it — but we have never caught a pair changing places, and we have watched long enough to be embarrassed about it. The day we record a single, this page will want rewriting. We do not look forward to it.
+::almanac
+::
+
+:::phase-note{of="first-pairs"}
+As the light lengthens the film re-forms in patches, and every patch is grazed by its twos from the first morning. We have never once caught the pairing happen — the film is bare at dusk and paired by dawn — and spring returns them, so far as our lenses can tell, in the very same twos it took away.
+:::
+
+:::phase-note{of="film-plenty"}
+The morning film is at its widest now, and so is the census: the pairs widen their grazing to match, working the new film in their unhurried lanes. Where the dusk-chronicler's circuit crosses the surface they part and close again behind it, like water remembering itself, and whether that is fear or courtesy the guide does not presume to say. On the twenty-first of one June we counted forty pairs on the film and no singles, and the count has been repeated, by wagered biscuit, on mornings since, with the same result:
+
+::sighting{date="2026-06-21"}
+::
+
+The pairs are part of the pool's small economy, and the pool is not sentimental about them: they drift to the drowned star's lamp with the rest of the dust and are taken as they travel, two at a time, the follower making no attempt to escape that we can detect. Yet one sees best in this stretch how they keep to a lane — we watched a pair graze the whole length of the glass snail's cleaned ribbon, holding to it as though it were a road, and arrive at the far end in the order they set out:
+
+::sighting{date="2026-07-07"}
+::
+:::
+
+:::phase-note{of="thin-film"}
+The misting's lapse starves the film to ribbons, and the pairs keep to what remains, in lanes narrower than before. They do not disperse to hunt the thinning film singly — nothing about them is ever single — but crowd the surviving patches two by two, and wait the shortage out.
+:::
+
+:::phase-note{of="sunk-season"}
+After the great cleaning the film gives out for the year. For a little while the pairs work the last of it; then, patch by patch, they go down into the water, or wherever the pairs go, and the morning surface is left to the spent motes the drowned star has done with. Through the dry-warm months the surface shows nothing but its own grey, and the guide records the absence as it records everything else — plainly, and in twos where there is anything to count, which just now there is not. We do not see them off; we simply find, one morning, that there is nothing on the film to count, and find them again in spring in the same twos.
+:::

@@ -9,6 +9,25 @@ diet: the unwary
 activity:
   label: day, still
   bands: [[7, 18]]
+phenology:
+  phases:
+    - name: new-blade
+      label: the new blade
+      span: [48, 108]
+      gloss: the old costume is shed and eaten — an economy we found faintly shocking — and a fresh one grown to the season's green.
+    - name: green-work
+      label: the green work
+      span: [108, 236]
+      gloss: the performance at its best; the honest foliage plentiful enough to hide one liar more.
+    - name: gilding
+      label: the gilding
+      span: [236, 302]
+      gloss: the vein gold spreads to the whole blade, matched leaf for leaf to the tiring foliage.
+    - name: stem-fast
+      label: the stem-fast months
+      span: [302, 48]
+      gloss: it hangs as the last leaf hangs, and does not feed, and does not fall.
+      quiet: true
 signature:
   colors:
     - { name: leaf green, hex: "#5f7d3a" }
@@ -64,8 +83,33 @@ illustration: |
 
 The reader will forgive the draughtsman a certain defensiveness about Plate IX. He drew it from life, at a distance of two feet, over the better part of an afternoon, and for most of that afternoon he believed he was drawing a leaf. *Folium mendax* is a leaf in every respect but the ones that matter: the midrib is a spine, the veins are pigment laid on in vein gold, the chewed notch at the margin is a forgery of damage the animal has never suffered, and the stem, examined closely, is looking back at you.
 
-Its stillness is not the stillness of hiding but of profession. A true leaf trembles at every breath of the vents; the false-leaf has studied this and trembles too, a half-beat behind, which is the only flaw in the performance and requires a wind to expose. Through the bright hours it hangs among the honest foliage, six legs disposed like twigs, and waits. The ledger gives its diet as *the unwary*, which is as much precision as the ledger could bear; we have seen the strike twice, and both times the victim's chief mistake was botanical over-confidence.
+Its stillness is not the stillness of hiding but of profession. A true leaf trembles at every breath of the vents; the false-leaf has studied this and trembles too, a half-beat behind, which is the only flaw in the performance and requires a wind to expose. The ledger gives its diet as *the unwary*, which is as much precision as the ledger could bear.
 
-It fears exactly one thing, so far as we can establish, and that is the patient weaver. A false-leaf that drifts within sight of a web abandons stillness altogether and walks — quickly, on all six twigs, with the affronted air of an actor whose theatre has caught fire. This is the surest method we possess for telling the animal from its costume, and we do not use it often, because it seems unsporting to make a liar break character merely to satisfy the ledger.
+But a costume must answer to the season it imitates, and this one answers scrupulously — shedding, greening, gilding, and going fast to the bough each in its turn. We have set the year down not by our calendar but as the false-leaf keeps it: the new blade, the green work, the gilding, and the stem-fast months. Turn the almanac to follow the false-leaf through them; the seasons on the rim only say where in our shared year each of its falls.
 
-We note, for completeness, that its shade is popular. The whisper mold crowds into the shadow the false-leaf casts and thrives there, whispering away, unaware or unconcerned that its roof is an ambush. Neither party has ever acknowledged the arrangement. In the canopy this passes for friendship.
+::almanac
+::
+
+:::phase-note{of="new-blade"}
+As the light lengthens the old costume is shed — and, we were faintly shocked to record, eaten — and a fresh blade grown to the season's new green. For a week or two the animal is between wardrobes and uncommonly cautious, keeping to the deep foliage while the new leaf hardens and takes its colour. A false-leaf caught mid-moult is the least convincing thing in the canopy, and it appears to know it.
+:::
+
+:::phase-note{of="green-work"}
+With the honest foliage coming in thick the performance resumes in earnest, one more liar hidden among the plentiful truth, and these are the ledger's fullest weeks. The draught troubles it not at all; it has studied the true leaves and sways as they do, a half-beat behind, and holds so still that a specimen has been known to sit two hours for its portrait before some small error — the eye, usually — gives it away. We note that its shade is popular: the whisper mold crowds into the shadow the false-leaf casts and thrives there, whispering away, unaware or unconcerned that its roof is an ambush.
+
+::sighting{date="2026-06-23"}
+::
+
+It waits, and now and then it strikes; we have seen the strike twice in these weeks, and both times the victim's chief mistake was botanical over-confidence. It fears exactly one thing, the patient weaver, so that a false-leaf drifting within sight of a web abandons stillness altogether and walks — quickly, on all six twigs, with the affronted air of an actor whose theatre has caught fire.
+
+::sighting{date="2026-07-02"}
+::
+:::
+
+:::phase-note{of="gilding"}
+The dry fortnight finds the honest foliage tiring, and the false-leaf tires with it, leaf for leaf: the vein gold spreads across the whole blade to match the gilding of the true leaves around it. It is the animal's finest counterfeiting, the costume kept current with a season most of the canopy would rather ignore. It feeds less now, there being less of the unwary abroad, and spends the surplus patience on its colour. When the true leaves begin their long descent into brown it follows them down shade by shade, still matched, still lying.
+:::
+
+:::phase-note{of="stem-fast"}
+Toward the year's turn it feeds scarcely at all and moves less, edging by degrees into stillness: the false-leaf does not perform in the dry-warm months but hangs as the last leaf hangs, stem fast to the bough, and does not feed and does not fall. Whether this is sleep or only a longer patience we cannot say — it holds the pose so completely that twice we have marked a specimen down as a dead leaf and been quietly corrected in the spring. It is the one stretch the costume needs no maintaining, the honest leaves it imitates having mostly gone. We have watched a specimen choose its bough for the winter with more care than it has ever shown a meal.
+:::

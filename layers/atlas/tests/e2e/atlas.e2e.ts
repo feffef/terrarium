@@ -47,6 +47,14 @@ export function registerAtlasE2E(): void {
       }
     })
 
+    it('hydrates the essay that carries the dial-driven MDC components', async () => {
+      // lumina-fabulae weaves ::almanac / ::phase-note / ::sighting into its
+      // field note — an unresolved MDC tag, or a hydration mismatch in the
+      // phase-note collapse or the ::sighting registration protocol, surfaces
+      // here as a console error/unknown tag.
+      await expectCleanHydration('/t/atlas/canopy/lumina-fabulae')
+    })
+
     // 200 + stable front-door content: the cover title and all three wing names
     // (biomes.ts's `name` fields), so a broken front door or a wing dropped from
     // the directory both fail loudly.

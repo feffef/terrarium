@@ -10,10 +10,13 @@
 // and sightings are same-Space reads — the food-web edges were authored
 // in-biome (mirrors ADR-0012), so nothing queries a sibling. `biomeMeta`, the
 // utils and the Atlas* components arrive via Nuxt's layer-wide auto-imports;
-// only the types still import relatively — none needed directly here now that
-// `entry`'s shape (below) is left to inference. The three-`queryCollection`
-// load itself is single-homed in the `useAtlasWingData` composable — the
-// sibling `[space]/index.vue` landing needs the exact same load.
+// only the types still import relatively — `PhenologyPhase` types the almanac's
+// phase list below, `AlmanacObservation` the ledger the essay's `::sighting`
+// quotes; `entry`'s shape (below) is otherwise left to inference. The
+// three-`queryCollection` load itself is single-homed in the `useAtlasWingData`
+// composable — the sibling `[space]/index.vue` landing needs the exact same load.
+import type { AlmanacObservation } from '../../../../utils/almanacState'
+import type { PhenologyPhase } from '../../../../utils/atlas'
 
 const route = useRoute()
 const { space, path, pagesKey, collections } = useSpace('atlas')
@@ -38,6 +41,23 @@ const sightings = computed(() =>
   observations.value.filter((o) => o.specimen === entry.value?.specimen.slug),
 )
 const sigStyle = computed(() => signatureVars(entry.value?.specimen.signature?.colors))
+
+// The almanac (#282): shared needle state for the dial and, later, the
+// dial-driven MDC components inside the essay (#283). Provided here — the page
+// owns the state; the wheel and any descendant inject it. The needle parks at
+// today unless a `?day=` param says otherwise (see composables/almanac.ts).
+const phenologyPhases = computed<PhenologyPhase[]>(() => entry.value?.specimen.phenology?.phases ?? [])
+// The `::almanac` dial in the essay and the whole biome's ledger of rim ticks
+// both read this provided state (map #279): the `observations` here are the
+// dated ledger the dial marks and a `::sighting{date}` quotes — same-Space reads
+// only, this biome's keyed collection.
+provideAlmanac({
+  phases: phenologyPhases,
+  specimenLabel: () => entry.value?.specimen.binomial,
+  initialDay: parseAlmanacDayParam(route.query.day),
+  observations: () => (data.value?.observations ?? []) as AlmanacObservation[],
+  specimen: () => entry.value?.specimen.slug,
+})
 
 const title = computed(() => entry.value?.specimen.binomial ?? 'Not found')
 useSeoMeta({
@@ -88,15 +108,13 @@ useSeoMeta({
               <dd><AtlasColorSignature :colors="entry.specimen.signature.colors" :gloss="entry.specimen.signature.gloss" /></dd>
             </template>
           </dl>
-
-          <AtlasRhythmBand
-            v-if="entry.specimen.activity"
-            class="entry-rhythm"
-            :bands="entry.specimen.activity.bands"
-            :label="entry.specimen.activity.label"
-          />
         </div>
 
+        <!-- The field-note essay carries the almanac itself: a general intro to
+             the specimen, then the `::almanac` dial, then the creature's year
+             phase by phase (`::phase-note`) — the reader's requested order. The
+             dial replaced the 24-hour rhythm band here (map #279, decision 3);
+             the daily fact lives on as `activity.label` in the record above. -->
         <div class="atlas-fieldnote atlas-prose">
           <ContentRenderer :value="entry.doc" />
         </div>
@@ -123,6 +141,5 @@ useSeoMeta({
 
 <style scoped>
 .entry-section { margin-top: 0.5rem; }
-.entry-rhythm { margin-top: 1.2rem; max-width: 26rem; }
 .not-found h1 { font-family: var(--atlas-display); font-size: 2rem; margin: 0 0 0.6rem; }
 </style>

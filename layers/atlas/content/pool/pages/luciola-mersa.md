@@ -9,6 +9,25 @@ diet: motes in the water
 activity:
   label: night
   bands: [[20, 24], [0, 4]]
+phenology:
+  phases:
+    - name: few-lights
+      label: the few lights
+      span: [95, 146]
+      gloss: the first lamps of the year, lit low and put out early, as though rationed.
+    - name: full-constellation
+      label: the full constellation
+      span: [146, 246]
+      gloss: eleven lights at middle depth on the good nights, counted twice and disagreed upon.
+    - name: last-lamps
+      label: the last lamps
+      span: [246, 308]
+      gloss: one by one the lights decline to rise; those that do burn later into the grey.
+    - name: dowsed
+      label: the dowsed months
+      span: [308, 95]
+      gloss: no light anywhere in the water; where a drowned star winters, the pool has not seen fit to tell us.
+      quiet: true
 signature:
   colors:
     - { name: drown gold, hex: "#d8b24a" }
@@ -112,8 +131,33 @@ illustration: |
 
 We took it, the first night, for the reflection of our own lamp, and moved the lamp to prove it. The light in the water did not move. It hung at middle depth, a small gold point burning under two hands' breadth of dark water, and it is a measure of the pool's character that our first thought was not that a creature glowed there, but that a star had come down, gone under, and not been put out.
 
-By day there is nothing to find. The drowned star is a swimmer of scarcely a centimetre, pale and unremarkable when netted (we netted one, once, and felt so plainly that we had overstepped that we have not repeated it), and it spends the bright hours dowsed and hidden — often, we now know, in the blue shadow of the glass snail's shell. It rises when the pool goes black, lights its lamp somewhere below the surface, and hangs there patient as a held breath, drifting less than a hand's width in an hour.
+By day there is nothing to find. The drowned star is a swimmer of scarcely a centimetre, pale and unremarkable when netted — we netted one, once, and felt so plainly that we had overstepped that we have not repeated it — and it spends the bright hours dowsed and hidden, often in the blue shadow of the glass snail's shell. It rises when the pool goes black, lights its lamp somewhere below the surface, and hangs there patient as a held breath, drifting less than a hand's width in an hour. The lamp is dim, and this appears to be the whole art of it: motes come to that gold point the way dust comes to a sunbeam, and the star gathers them at its leisure, having concluded — we think correctly — that it is better to be a rumour than an announcement.
 
-The lamp is dim, and this appears to be the whole art of it. Motes in the water — the fine drifting stuff too small for our lenses and too idle to name — come to that gold point the way dust comes to a sunbeam, and the star gathers them at its leisure. A brighter light would beckon larger company; the drowned star has concluded, we think correctly, that it is better to be a rumour than an announcement.
+How many lamps the water shows, and whether it shows any at all, the year answers differently each time it is asked — and the star keeps its own count, not ours: the few lights, the full constellation, the last lamps, and the dowsed months in which the water shows none. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the star's falls.
 
-We recorded eleven lights one night in June and could not swear to more than four the next. Whether they dowse, disperse, or merely decline to be counted twice, we cannot say. On the coldest mornings one will still be faintly alight at dawn, like a lamp forgotten in a distant room, and we have learned to leave it be.
+::almanac
+::
+
+:::phase-note{of="few-lights"}
+The first lamps of the year, lit low and put out early, as though rationed against a shortage only the star can feel. One appears, then another a night or two later, never yet the constellation — the pool is only clearing its throat. They come a little more freely as the season turns, though still few, and still shy of the draught: on the open-lidded nights they hang a little deeper, as if the moving air were something to burn beneath, and we count three, four, lose them to a passing ripple, and are content to have counted at all.
+:::
+
+:::phase-note{of="full-constellation"}
+This is the full constellation, the water warmest and most of the year's lamps lit at once. We recorded eleven lights one night and could not swear to more than four the next; whether they dowse, disperse, or merely decline to be counted twice we cannot say, and the counting is at its most hopeless just here, when there is most to count. The ledger keeps our arithmetic and our doubts in the one line:
+
+::sighting{date="2026-06-26"}
+::
+
+Even at the height of the season some lamp is slow to be put out. On more than one midsummer dawn one has still been faintly alight at first grey, like a lamp forgotten in a distant room, and we have learned to leave it be:
+
+::sighting{date="2026-07-06"}
+::
+:::
+
+:::phase-note{of="last-lamps"}
+With the keeper's holiday and the lapse in the misting the count begins to fall: one by one the lights decline to rise, and those that do burn later into the grey, as though husbanding what warmth the cooling water still holds. The constellation loses its outlying stars first, from the shallows inward. After the great cleaning the last lamps keep to the deepest water and the latest hours; they come singly now, and later each night, until the water more often than not shows nothing at all.
+:::
+
+:::phase-note{of="dowsed"}
+Then the lamps have gone out, one by one, wherever it is they go, and no light shows anywhere in the water. Where a drowned star winters — whether it dowses in the mud, or goes wherever the pool sends the things it is done showing us for a while — the pool has not seen fit to tell us. We record the dark water as dark water, and leave the corner unwatched a while.
+:::

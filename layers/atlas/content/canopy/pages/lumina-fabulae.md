@@ -9,6 +9,21 @@ diet: starlight, mostly
 activity:
   label: a dusk-flier
   bands: [[18, 23]]
+phenology:
+  phases:
+    - name: first-glow
+      label: the first glow
+      span: [70, 100]
+      gloss: the earliest dusks warm enough to fly; the ledger's first entries of the year.
+    - name: long-dusk
+      label: the long dusk
+      span: [100, 280]
+      gloss: the flight season proper, riding every dusk the canopy allows.
+    - name: lantern-swell
+      label: the lantern swell
+      span: [280, 70]
+      gloss: sightings dwindle to rumor; what light is reported comes rarer, and brighter for the rarity.
+      quiet: true
 signature:
   colors:
     - { name: lantern gold, hex: "#e8b84b" }
@@ -77,8 +92,24 @@ illustration: |
 
 It was the light we noticed first, moving against the upper glass as though the evening had come indoors and was looking for a place to sit. By the time we thought to fetch the ledger there was only one, riding the last coin of dapple westward, and it had the patience to wait until we doubted we had seen it at all. This is, we have since learned, the animal's principal talent.
 
-*Lumina fabulae* wears its lamp at the tail — a steady gold, not the anxious flicker one gets from lesser glimmerwings — and it flies only in the two or three hours when the canopy cannot decide whether it is day. The lamp is brightest, we have measured, precisely when it is least needed, and dims as true dark arrives; the moth then folds itself against a bough and becomes soot, which is the other half of its livery and much the more convincing half.
-
 Of its diet we can report only what the evidence permits. We have never seen it eat. We have seen it hang beneath a gap in the leaves on clear nights, wings stilled, lamp banked low, in an attitude we can only call attentive, and we have recorded in the ledger — with some professional embarrassment — the entry *starlight, mostly*. No one in the company has proposed a better line, and the moth has offered no correction.
 
-One anecdote, and we tender it plainly. On the twentieth of June a lamp answered our own. The senior of us raised a lantern to the glass; the moth, some yards off, brightened by a degree and held it. The exchange lasted the better part of a minute and has not been repeated, and we have agreed among ourselves not to insist on what it meant.
+What follows we have set down as the moth keeps it — not by our calendar but by its own: the first glow, the long dusk, and the lantern swell. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the moth's falls.
+
+::almanac
+::
+
+:::phase-note{of="first-glow"}
+The earliest dusks warm enough to fly, and the moth's first showing of the year. The ledger's first entries are written now — single sightings, low over the western boughs, each held a moment too long to be quite believed. The lamp is thin here, and easily mistaken for a trick of the failing light.
+:::
+
+:::phase-note{of="long-dusk"}
+The flight season proper, and the moth rides every dusk the canopy allows. It wears its lamp at the tail — a steady gold, not the anxious flicker one gets from lesser glimmerwings — and flies only in the two or three hours when the canopy cannot decide whether it is day. The lamp is brightest, we have measured, precisely when it is least needed, and dims as true dark arrives, whereupon the moth folds itself against a bough and becomes soot, which is much the more convincing half of its livery. One evening in this stretch a lamp answered our own: the senior of us raised a lantern to the glass, and the moth, some yards off, brightened by a degree and held it. We have agreed among ourselves not to insist on what it meant. The ledger's own line is briefer than ours:
+
+::sighting{date="2026-06-20"}
+::
+:::
+
+:::phase-note{of="lantern-swell"}
+Then the long retreat into rumour. The sightings dwindle; what light is reported comes rarer, and brighter for the rarity, until the lamp is once more a thing the far corners of the canopy merely claim to have seen — a brightness reported, never twice by the same watcher, and gone before the ledger can be fetched. We keep the plate lit against its return, and record the empty evenings honestly, which is to say as evenings.
+:::

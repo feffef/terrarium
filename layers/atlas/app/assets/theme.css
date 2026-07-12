@@ -330,9 +330,13 @@
   text-decoration: none;
   color: inherit;
   border-radius: 3px;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, opacity 0.15s ease;
 }
 .atlas-index .row:hover { background: var(--atlas-paper-2); }
+/* externally driven (#285): the composite almanac wheel lighting up its match */
+.atlas-index .row.hot { background: var(--atlas-paper-2); }
+.atlas-index .row.hot .naming .binomial { color: var(--biome-accent); }
+.atlas-index .row.dim { opacity: 0.4; }
 .atlas-index .swatches { display: inline-flex; gap: 3px; align-self: center; }
 .atlas-index .swatches i { width: 9px; height: 9px; border-radius: 50%; display: block; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15); }
 .atlas-index .naming .binomial { font-family: var(--atlas-display); font-style: italic; font-size: 1.14rem; }
@@ -373,6 +377,87 @@
 .atlas-rhythm .scale { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--atlas-faint); margin-top: 0.25rem; }
 .atlas-rhythm .rlabel { font-family: var(--atlas-label); font-size: 0.7rem; letter-spacing: 0.06em; color: var(--atlas-muted); margin-top: 0.4rem; text-transform: lowercase; }
 
+/* ── Almanac dial (#282/#279) ──────────────────────────────────────────────
+   The rhythm band bent into a circle: the year under glass as an engraved
+   instrument. Ink and hatch only; the needle head is the ONE --sig-1 accent. */
+.atlas-almanac { margin: 0; }
+/* the ::almanac dial seated in a specimen's field note — centred between the
+   introduction and the season notes it turns (feedback rework) */
+.atlas-fieldnote .entry-almanac { max-width: 23rem; margin: 2.4rem auto 1.8rem; }
+.atlas-almanac svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--atlas-ink);
+  cursor: pointer;
+  touch-action: none; /* the dial owns its own dragging */
+  user-select: none;
+  -webkit-user-select: none;
+}
+.atlas-almanac svg:focus-visible { outline: 2px solid var(--biome-accent); outline-offset: 6px; border-radius: 50%; }
+.atlas-almanac .bezel { fill: none; stroke: var(--atlas-rule); stroke-width: 1; }
+.atlas-almanac .bezel-in { stroke: var(--atlas-line); stroke-width: 0.5; }
+.atlas-almanac .season { fill: none; stroke: var(--atlas-rule); stroke-width: 1; cursor: pointer; transition: stroke 0.15s ease, stroke-width 0.15s ease; }
+.atlas-almanac .season.is-current { stroke: var(--biome-accent); stroke-width: 1.6; }
+.atlas-almanac .season-tick { stroke: var(--atlas-rule); stroke-width: 1; }
+/* the lit wedge of the season the needle rides — a faint accent wash under the
+   ring so the dial's current season reads at a glance (the season selector). */
+.atlas-almanac .season-lit { stroke: none; fill: color-mix(in srgb, var(--biome-accent) 12%, transparent); pointer-events: none; }
+.atlas-almanac .rim-label {
+  font-family: var(--atlas-label);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  fill: var(--atlas-muted);
+  transition: fill 0.15s ease;
+}
+.atlas-almanac .rim-label.is-current { fill: var(--biome-accent); }
+.atlas-almanac .month-tick { stroke: var(--atlas-rule); stroke-width: 0.75; opacity: 0.8; }
+.atlas-almanac .newyear-tick { stroke: currentColor; stroke-width: 1.2; }
+.atlas-almanac .phase { stroke: currentColor; stroke-width: 0.9; transition: stroke-width 0.15s ease; }
+.atlas-almanac .phase.is-quiet { stroke-dasharray: 3 3; stroke-width: 0.7; }
+.atlas-almanac .phase.is-now { stroke-width: 1.6; }
+/* On a specimen the dial drives the creature's phases: the current phase arc is
+   the lit SELECTION (biome accent), and the season wedge stays but fainter, as
+   informational context only. */
+.atlas-almanac.is-phase-mode .phase.is-now { stroke: var(--biome-accent); stroke-width: 2.4; }
+.atlas-almanac.is-phase-mode .season-lit { opacity: 0.5; }
+
+/* clickable rim ticks — the ledger's dated observations and the essay's
+   ::sighting marks. A wide transparent "hit" line over each hairline gives a
+   forgiving tap target that jumps the needle to that day. */
+.atlas-almanac .obs-tick { stroke: currentColor; stroke-width: 1; opacity: 0.55; pointer-events: none; }
+.atlas-almanac .obs { cursor: pointer; }
+.atlas-almanac .obs-hit,
+.atlas-almanac .mark-hit { stroke: transparent; stroke-width: 9; stroke-linecap: round; }
+.atlas-almanac .mark { cursor: pointer; }
+.atlas-almanac .mark line { stroke: currentColor; stroke-width: 1.4; }
+.atlas-almanac .mark .gem { fill: none; stroke: currentColor; stroke-width: 1; transition: fill 0.15s ease; }
+.atlas-almanac .mark.is-hot line { stroke-width: 2.2; }
+.atlas-almanac .mark.is-hot .gem { fill: currentColor; }
+.atlas-almanac .needle { transition: transform 0.22s ease; }
+.atlas-almanac.is-scrubbing .needle { transition: none; }
+.atlas-almanac .needle .shaft { stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+.atlas-almanac .needle .counterweight { fill: none; stroke: currentColor; stroke-width: 1.2; }
+.atlas-almanac .needle .head { fill: var(--sig-1); stroke: currentColor; stroke-width: 0.7; }
+.atlas-almanac .hub { fill: var(--atlas-paper-2); stroke: currentColor; stroke-width: 1.2; }
+.atlas-almanac .hub-dot { fill: currentColor; }
+.atlas-almanac .wcap { text-align: center; margin-top: 0.6rem; }
+/* two labelled rows: "season <value>" and "<binomial> phase <value>", so the
+   dial's two vocabularies (shared seasons vs this specimen's phases) never blur */
+.atlas-almanac .wread { margin: 0.15rem 0 0; display: flex; align-items: baseline; justify-content: center; gap: 0.7ch; flex-wrap: wrap; }
+.atlas-almanac .wcap .wread:first-child { margin-top: 0; }
+.atlas-almanac .wlabel { font-family: var(--atlas-label); font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.13em; color: var(--atlas-faint); }
+.atlas-almanac .wval { display: inline-flex; align-items: baseline; gap: 0.6ch; }
+.atlas-almanac .wseason,
+.atlas-almanac .wphase { font-family: var(--atlas-label); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: lowercase; color: var(--atlas-ink); }
+/* phase mode: the phase line is primary (larger ink), the season line context */
+.atlas-almanac .wphase-row .wphase { font-size: 0.82rem; color: var(--atlas-ink); }
+.atlas-almanac.is-phase-mode .wseason-row .wseason { font-size: 0.68rem; color: var(--atlas-muted); }
+.atlas-almanac .wday { font-family: var(--atlas-data); font-size: 0.66rem; color: var(--atlas-faint); }
+.atlas-almanac .wempty { margin: 0.3rem 0 0; font-size: 0.85rem; color: var(--atlas-faint); font-style: italic; }
+
 /* ── Food web (#70): the wanderable diagram ────────────────────────────────*/
 .atlas-web { position: relative; }
 .atlas-web svg { width: 100%; height: auto; display: block; overflow: visible; font-family: var(--atlas-data); }
@@ -406,6 +491,101 @@
 .atlas-rarity-legend .g { font-family: var(--atlas-label); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--atlas-muted); }
 .atlas-rarity-legend .m { font-family: var(--atlas-data); color: var(--biome-accent); }
 .atlas-rarity-legend .d { color: var(--atlas-muted); font-style: italic; }
+
+/* ── Dial-driven prose: ::almanac / ::phase-note / ::sighting ───────────────
+   The MDC components that thread the essay onto the almanac dial. On a specimen
+   the dial drives the creature's own phenology phases: it shows one ::phase-note
+   at a time and turning it swaps the prose. Engraved register throughout:
+   currentColor line, fill none; the one accent is the needle head. */
+
+/* ::phase-note — one of the specimen's own phenology phases and its paragraph.
+   With JS on, only the note for the phase the needle rides is shown, so turning
+   the dial fully swaps the prose. Every note server-renders expanded and each is
+   headed by its phase, so no-JS/crawlers read the whole year top to bottom. */
+.atlas-phase-note { margin: 0; }
+.atlas-phase-note + .atlas-phase-note { margin-top: 1.7rem; }
+.atlas-phase-note.sn-anim { animation: atlas-note-in 0.38s ease both; }
+.atlas-phase-note .sn-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9ch;
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--atlas-line);
+}
+.atlas-phase-note .sn-label {
+  font-family: var(--atlas-label);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--biome-accent);
+}
+.atlas-phase-note .sn-span { font-family: var(--atlas-data); font-size: 0.68rem; color: var(--atlas-faint); }
+.atlas-phase-note .sn-body > :first-child { margin-top: 0; }
+.atlas-phase-note .sn-body > :last-child { margin-bottom: 0; }
+/* the essay's drop-cap belongs to its opening paragraph only, not each note's */
+.atlas-phase-note .sn-body p:first-of-type::first-letter {
+  float: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  padding: 0;
+  color: inherit;
+}
+@keyframes atlas-note-in {
+  from { opacity: 0; transform: translateY(0.5rem); }
+  to { opacity: 1; transform: none; }
+}
+
+/* the essay's drop-cap belongs to the essay's opening paragraph only — a
+   season-note or a quote's own first paragraph must not sprout one */
+.atlas-sighting .s-quote p::first-letter,
+.atlas-almanac .wcap p::first-letter {
+  float: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  padding: 0;
+  color: inherit;
+}
+
+/* ::sighting — an attributed pull-quote from the field log. */
+.atlas-sighting { margin: 1.6rem 0; }
+.atlas-sighting .s-quote {
+  /* inherits .atlas-prose blockquote's rule + italic; the flare warms it */
+  margin: 0;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.atlas-sighting .s-quote p { margin: 0 0 0.4rem; }
+.atlas-sighting .s-quote p:last-child { margin-bottom: 0; }
+.atlas-sighting .s-wanting { color: var(--atlas-faint); }
+.atlas-sighting .s-cite {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7ch;
+  margin-top: 0.4rem;
+  padding-left: calc(1.1rem + 2px); /* aligns under the quote's rule */
+  font-family: var(--atlas-label);
+  font-size: 0.72rem;
+  color: var(--atlas-muted);
+}
+.atlas-sighting .s-rosette { width: 0.8em; height: 0.8em; flex: none; align-self: center; }
+.atlas-sighting .s-rosette path { fill: none; stroke: currentColor; stroke-width: 1.1; transition: fill 0.2s ease; }
+.atlas-sighting .s-source { font-family: var(--atlas-text); font-style: italic; }
+.atlas-sighting .s-date { font-family: var(--atlas-data); font-size: 0.72rem; color: var(--atlas-faint); }
+.atlas-sighting .s-tod {
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--biome-accent);
+}
+/* the flare: the needle stands on this sighting's day */
+.atlas-sighting.is-hot .s-quote {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--sig-1) 10%, transparent), transparent 72%);
+}
+.atlas-sighting.is-hot .s-rosette path { fill: currentColor; }
+.atlas-sighting.is-hot .s-cite { color: var(--atlas-ink); }
 
 /* ── Reduced motion ───────────────────────────────────────────────────────*/
 @media (prefers-reduced-motion: reduce) {

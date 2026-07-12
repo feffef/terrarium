@@ -32,6 +32,43 @@ const specimens = computed<SpecimenView[]>(() =>
 )
 const withRhythm = computed(() => specimens.value.filter((s) => s.activity))
 
+// The wing's season dial (feedback rework, replacing the #285 composite): ONE
+// shared almanac the reader turns like a season selector, and beside it a
+// roster answering "who would I find abroad in this season?" — far more legible
+// than the old stack of one hatched band per specimen on a single needle.
+//
+// The landing owns the shared needle state (`provideAlmanac`), so the dial
+// parks at today, restores from a shared `?day=` link, AND its scrub writes
+// back to that param — the same round-trip the specimen entry has
+// (composables/almanac.ts). No `phases`: the dial draws only the year's rim
+// here; the roster below reads the shared `day`.
+const almanac = provideAlmanac({ initialDay: parseAlmanacDayParam(route.query.day) })
+const withPhenology = computed(() => specimens.value.filter((s) => (s.phenology?.phases.length ?? 0) > 0))
+const currentSeason = computed(() => seasonOf(almanac.day.value))
+// Carry the wheel's day onto the specimen links, so clicking a name in the
+// roster opens that specimen's page on the same season the reader is viewing
+// here (dropped when it's today — keeps the canonical URL clean).
+const daySuffix = computed(() =>
+  almanac.day.value === almanac.today ? '' : `?day=${almanac.day.value}`,
+)
+// Who is astir on the needle's day — a specimen with a non-quiet phase covering
+// it. Turning the dial re-reads this, so the wing's roster changes season by
+// season with the needle. (We test the phases but never show their names — the
+// six seasons are the reader's vocabulary; the roster shows the common name.)
+const astir = computed(() =>
+  withPhenology.value.filter((s) =>
+    s.phenology!.phases.some((p) => !p.quiet && inSpan(almanac.day.value, p.span)),
+  ),
+)
+// The rest of the phenology-carrying wing — present, but keeping to itself.
+const resting = computed(() => {
+  const abroad = new Set(astir.value.map((s) => s.slug))
+  return withPhenology.value.filter((s) => !abroad.has(s.slug))
+})
+// Shared hover state: a roster row and the catalogue each set this one ref, so
+// hovering a name in either lights up the same specimen in the other.
+const hoveredSpecimen = ref<string | null>(null)
+
 const sigStyle = (s: SpecimenView) => signatureVars(s.signature?.colors)
 
 useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
@@ -54,7 +91,7 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
 
       <section>
         <div class="atlas-sechead"><span class="atlas-eyebrow">The catalogue</span></div>
-        <AtlasSpecimenIndex :specimens="specimens" :biome="space" />
+        <AtlasSpecimenIndex v-model:highlight="hoveredSpecimen" :specimens="specimens" :biome="space" />
       </section>
 
       <section>
@@ -70,6 +107,43 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
             <AtlasRhythmBand :bands="s.activity!.bands" :label="s.activity!.label" />
           </li>
         </ul>
+      </section>
+
+      <section v-if="withPhenology.length" class="almanac-section">
+        <div class="atlas-sechead"><span class="atlas-eyebrow">The wing's year</span></div>
+        <p class="almanac-lede">
+          Turn the almanac to any season and the wing tells you who you would find abroad in
+          it — and who is keeping to itself.
+        </p>
+        <div class="wing-almanac">
+          <AtlasPhenologyWheel class="wing-wheel" wing :observations="observations" />
+          <div class="wing-roster">
+            <p class="roster-season">In {{ currentSeason.label }}</p>
+            <ul v-if="astir.length" class="roster-astir">
+              <li
+                v-for="s in astir"
+                :key="s.slug"
+                :style="sigStyle(s)"
+                @mouseenter="hoveredSpecimen = s.slug"
+                @mouseleave="hoveredSpecimen = null"
+              >
+                <NuxtLink class="rname" :to="`/t/atlas/${space}/${s.slug}${daySuffix}`">{{ s.binomial }}</NuxtLink>
+                <span v-if="s.common" class="rcommon">{{ s.common }}</span>
+              </li>
+            </ul>
+            <p v-else class="roster-none">Nothing is abroad; the wing keeps to itself this season.</p>
+            <p v-if="resting.length" class="roster-quiet">
+              <span class="rq-label">Keeping quiet:</span>
+              <span v-for="(r, i) in resting" :key="r.slug"
+                >{{ i ? ', ' : ' ' }}<NuxtLink
+                  :to="`/t/atlas/${space}/${r.slug}${daySuffix}`"
+                  @mouseenter="hoveredSpecimen = r.slug"
+                  @mouseleave="hoveredSpecimen = null"
+                  >{{ r.binomial }}</NuxtLink
+                ></span>
+            </p>
+          </div>
+        </div>
       </section>
 
       <section>
@@ -114,5 +188,63 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
 .choreo .cname:hover { color: var(--biome-accent); border-bottom-color: currentColor; }
 @media (max-width: 34rem) {
   .choreo li { grid-template-columns: 1fr; gap: 0.5rem; }
+}
+.almanac-lede { max-width: 34rem; color: var(--atlas-muted); margin: 0 0 1.3rem; font-size: 0.95rem; }
+.wing-almanac {
+  display: grid;
+  grid-template-columns: minmax(0, 20rem) 1fr;
+  gap: 1.5rem 2.4rem;
+  align-items: center;
+}
+.wing-wheel { width: 100%; }
+.wing-roster { min-width: 0; }
+.roster-season {
+  font-family: var(--atlas-label);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--biome-accent);
+  margin: 0 0 0.7rem;
+}
+.roster-astir { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: 0.55rem; }
+.roster-astir li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem 1rem;
+  align-items: baseline;
+  border-left: 2px solid var(--sig-1, var(--biome-accent));
+  padding-left: 0.7rem;
+}
+.roster-astir .rname {
+  font-family: var(--atlas-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--atlas-ink);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.roster-astir .rname:hover { color: var(--biome-accent); border-bottom-color: currentColor; }
+.roster-astir .rcommon {
+  font-family: var(--atlas-text);
+  font-style: italic;
+  font-size: 0.82rem;
+  color: var(--atlas-muted);
+  text-align: right;
+}
+.roster-none { color: var(--atlas-faint); font-style: italic; margin: 0 0 1rem; }
+.roster-quiet { font-size: 0.85rem; color: var(--atlas-muted); margin: 0; line-height: 1.7; }
+.roster-quiet .rq-label {
+  font-family: var(--atlas-label);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--atlas-faint);
+}
+.roster-quiet a { color: var(--atlas-muted); text-decoration: none; border-bottom: 1px solid var(--atlas-line); }
+.roster-quiet a:hover { color: var(--biome-accent); border-bottom-color: currentColor; }
+@media (max-width: 46rem) {
+  .wing-almanac { grid-template-columns: 1fr; justify-items: center; }
+  .wing-wheel { max-width: 22rem; }
+  .wing-roster { width: 100%; max-width: 30rem; }
 }
 </style>

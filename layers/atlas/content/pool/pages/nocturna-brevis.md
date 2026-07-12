@@ -9,6 +9,25 @@ diet: the day's last light
 activity:
   label: dusk only
   bands: [[17, 19]]
+phenology:
+  phases:
+    - name: first-circuits
+      label: the first circuits
+      span: [48, 146]
+      gloss: the rounds resume with the lengthening light, brief at first, as though the days must earn the attention.
+    - name: long-rounds
+      label: the long rounds
+      span: [146, 238]
+      gloss: the year's fullest evenings; the circuit takes the whole of the dusk, there being more to attend to than dusk to attend to it.
+    - name: brisk-rounds
+      label: the brisk rounds
+      span: [238, 318]
+      gloss: the days thin and the rounds quicken with them; it flies all the same.
+    - name: unkept-dusks
+      label: the unkept dusks
+      span: [318, 48]
+      gloss: through the deep of the year no circuit is flown; what the days do unrecorded, we are not the company to guess.
+      quiet: true
 signature:
   colors:
     - { name: ink blue, hex: "#34506e" }
@@ -61,8 +80,28 @@ illustration: |
 
 It keeps the strictest hours of anything in the pool, and they are the saddest hours there are. The dusk-chronicler is never abroad before the sun touches the water and never abroad after true dark: a duskwing of some three centimetres, ink blue with a pale gold edging that shows only when it banks against the last of the light, as though the day had signed it on the way out.
 
-What occupies those two hours is the thing we cannot stop watching. It does not feed as the others feed, nor court, nor squabble. It makes a circuit of the pool's margin — always the same direction, never quite the same route — and it pauses. It pauses where the glass snail crossed that morning; it pauses over the reed the drowned star favoured the night before; it hung a long moment, one evening, above the corner where our own net had disturbed the water. At each station it holds still with its antennae laid toward the fading west, and then goes on, and one cannot escape the impression of a creature going down the day and putting a small mark against each thing in it.
+What occupies those two hours is the thing we cannot stop watching. It does not feed as the others feed, nor court, nor squabble. It makes a circuit of the pool's margin — always the same direction, never quite the same route — and it pauses: where the glass snail crossed that morning, over the reed the drowned star favoured the night before, once a long moment above the corner where our own net had disturbed the water. At each station it holds still with its antennae laid toward the fading west, and then goes on, and one cannot escape the impression of a creature going down the day and putting a small mark against each thing in it.
 
-On the emptiest evening of June, when rain had kept the pool dull and eventless from morning on, it came out all the same and flew its round in half the usual time, briefly, almost perfunctorily — as if there were simply less to attend to. We offer no explanation. The guide records what was seen.
+The circuit is not the same length the year round, nor flown at all in the deep of it, and it is the chronicler's own year we have kept below, not ours: the first circuits, the long rounds, the brisk rounds, and the unkept dusks in which no round is flown at all. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the chronicler's falls.
 
-We list its diet as the day's last light because we have watched it closely and can find nothing else it takes. By full dark the pool holds no trace of it — where it lodges, and what becomes of whatever it has gathered in that patient going-over, we do not know. It shuns the far corner where the call-mimic is reported, and will not fly its circuit there; of everything in the pool, it alone seems to believe every account it hears.
+::almanac
+::
+
+:::phase-note{of="first-circuits"}
+The rounds resume with the lengthening light, brief at first, as though the days must earn the attention. It flies only a short arc of the margin and returns early to its reed, and the pale gold edging shows for a moment as it banks — the first sign, each year, that the chronicler is keeping its books again. As the light comes clearer the circuit lengthens to match; the draught of the open lid troubles it not at all, and it flies the same patient round, pausing where the day's small events have left their marks, with a good many more of them now to attend to.
+:::
+
+:::phase-note{of="long-rounds"}
+These are the year's fullest evenings, and the circuit takes the whole of the dusk — there being, in this stretch, more to attend to than dusk to attend to it. The rounds are at their longest now, when the pool's evenings have the most in them worth a mark, and it is now the chronicler shuns the far corner where the call-mimic is reported and will not fly its circuit there; of everything in the pool, it alone seems to believe every account it hears. On the emptiest evening of one June, when rain had kept the pool dull and eventless from morning on, it came out all the same and flew its round in half the usual time, almost perfunctorily, as if there were simply less to attend to. We offer no explanation; the ledger gives that evening a single line, which we have not improved on:
+
+::sighting{date="2026-06-29"}
+::
+:::
+
+:::phase-note{of="brisk-rounds"}
+The misting lapses with the keeper's holiday and the days begin to thin; the rounds quicken with them. It flies all the same, a shade faster than before, as though aware the light it audits is being rationed, and the stations it keeps grow fewer, though it keeps every one that is left. After the great cleaning it has the busiest going-over of the year, for nothing sits where it sat; the days thin further and the rounds quicken to match, and it flies the shortening dusks briskly, marking a pool that will not hold still to be marked.
+:::
+
+:::phase-note{of="unkept-dusks"}
+Then the light fails past use and the circuit is given up for the year. Through the deep of the year no round is flown; the dusks are too brief and too cold to earn the attention, and by full dark the pool holds no trace of it. Where it lodges through these unkept weeks, and what becomes of whatever it gathers in that patient going-over, we do not know. What the days do unrecorded, we are not the company to guess.
+:::
