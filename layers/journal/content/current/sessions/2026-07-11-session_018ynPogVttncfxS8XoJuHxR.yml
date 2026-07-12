@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_018ynPogVttncfxS8XoJuHxR
 startedAt: 2026-07-11T23:52:34Z
-endedAt: 2026-07-12T09:57:22Z
+endedAt: 2026-07-12T10:02:42Z
 kind: interactive
 goal: Build a change-scoped selective safety gate
-status: in-review
-outcome: "gate:scoped built; now the default local gate; PR #353"
+status: completed
+outcome: gate:scoped merged (#353); now the default local gate
 summary: "The user asked (human-instructed) to investigate a gate that skips unit/e2e when only .md files outside layers/ change. I verified the premise against the tree: nothing in build, the unit suite, or e2e consumes such a file. I first (agent-initiated) captured the design as a docs/research note and opened PR #339; the owner correctly pushed back that drafts/concepts go in issues here, not committed docs on main, so I moved the substance to issue #350 and closed #339 (nothing landed on main but the session log). The owner then named the additive variant gate:scoped and green-lit building it (human-instructed). I implemented scripts/gate.ts + a gate:scoped package script: cheap floor always, heavy layers (test/build/test:e2e) skipped only when every changed path is a .md outside layers/, fail-safe to the full gate otherwise. Pure helpers are unit-tested; pnpm gate green; opened PR #353. On owner direction I then made gate:scoped the standard LOCAL command in CLAUDE.md (CI stays the authoritative full gate) and added a rule: a CI full-gate failure where local gate:scoped passed is logged as a major friction. The real merge gate and CI are untouched (option 2 stays open on #350)."
 prs:
   - "353"
@@ -56,13 +56,13 @@ frictions:
   - description: The github and Claude_Code_Remote MCP servers flapped (connect/disconnect) repeatedly mid-session, forcing tool re-loads.
     solution: Re-load tools via ToolSearch on reconnect and retry; tolerate the flap rather than treat a disconnect as capability loss.
     severity: nit
-durationSec: 36288
+durationSec: 36607
 models:
-  claude-opus-4-8: 266
+  claude-opus-4-8: 275
   <synthetic>: 2
 toolCounts:
   Read: 11
-  Bash: 47
+  Bash: 48
   AskUserQuestion: 1
   Write: 7
   ToolSearch: 5
@@ -72,10 +72,10 @@ toolCounts:
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 3
   Skill: 2
-  Edit: 10
+  Edit: 11
   mcp__github__search_issues: 1
   mcp__github__issue_write: 2
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   mcp__github__update_pull_request: 3
   mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
