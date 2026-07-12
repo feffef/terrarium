@@ -28,8 +28,8 @@
 //   (with every violation listed: collection key, file, and the Zod issue).
 //
 // Scope: content only. Does NOT run `pnpm test:e2e` or any other part of the
-// full gate, and is not wired into `.github/workflows/gate.yml` — the full
-// gate (build + e2e) remains the mandatory merge gate (CLAUDE.md).
+// full gate, but IS wired in as its own `pnpm gate` step and CI's dedicated
+// 'L1 · content validation' job (ADR-0004 amendment, gate.yml).
 import { globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
