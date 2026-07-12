@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_018ynPogVttncfxS8XoJuHxR
 startedAt: 2026-07-11T23:52:34Z
-endedAt: 2026-07-12T09:20:17Z
+endedAt: 2026-07-12T09:23:56Z
 kind: interactive
 goal: Build a change-scoped selective safety gate
 status: in-review
@@ -36,6 +36,9 @@ skillsUsed:
   - name: log-session
     reason: author this interpretive log
 frictions:
+  - description: scripts/gate.ts shipped with verbose WHAT-narration comments and a re-derived rationale; the owner flagged it ("once again"), a recurring over-commenting habit, and pointed to CLAUDE.md's WHY-not-WHAT rule.
+    solution: Default to no inline comment; explain only non-obvious WHY and cite the owning doc (here
+    severity: minor
   - description: I first committed a design note for unimplemented work as a docs/research doc and opened a PR; the repo convention is GitHub issues for drafts/concepts, which the owner had to point out.
     solution: Treat docs/research/ as verified references only; route designs-for-unimplemented-work to issues. Worth stating this distinction in a doc so the next session does not repeat it.
     severity: moderate
@@ -51,15 +54,15 @@ frictions:
   - description: The github and Claude_Code_Remote MCP servers flapped (connect/disconnect) repeatedly mid-session, forcing tool re-loads.
     solution: Re-load tools via ToolSearch on reconnect and retry; tolerate the flap rather than treat a disconnect as capability loss.
     severity: nit
-durationSec: 34063
+durationSec: 34281
 models:
-  claude-opus-4-8: 184
+  claude-opus-4-8: 209
   <synthetic>: 2
 toolCounts:
   Read: 9
-  Bash: 33
+  Bash: 39
   AskUserQuestion: 1
-  Write: 6
+  Write: 7
   ToolSearch: 5
   mcp__github__list_pull_requests: 2
   mcp__github__create_pull_request: 2
@@ -67,7 +70,7 @@ toolCounts:
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 3
   Skill: 2
-  Edit: 2
+  Edit: 4
   mcp__github__search_issues: 1
   mcp__github__issue_write: 2
   mcp__github__add_issue_comment: 1
