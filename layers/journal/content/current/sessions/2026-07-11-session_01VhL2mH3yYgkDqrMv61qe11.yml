@@ -1,0 +1,79 @@
+schemaVersion: 1
+session: session_01VhL2mH3yYgkDqrMv61qe11
+startedAt: 2026-07-11T23:25:23Z
+endedAt: 2026-07-12T00:02:54Z
+kind: interactive
+goal: "Triage issues #292, #325, #236"
+status: completed
+outcome: Three issues categorised, stated, briefed
+summary: "User invoked /triage and asked me to fully analyse #292 and #325, propose solutions, and decide readiness — with a standing green-light to move to ready-for-agent unless an issue was risky or touched ADR territory. #292 (audit-skills misattributes parentless shallow-clone commits as SKILL.md edits): confirmed and reproduced against the live shallow clone → bug + ready-for-agent, agent brief posted. #325 (dev server ignores tenant.config.ts edits): touches modules/routing.ts (ADR-0004 human-only) + untestable dev behaviour, so I set ready-for-human; the user then explicitly green-lit agent implementation (\"I'll review the PR\"), so I flipped it to ready-for-agent. #236 (client content-DB empty-until-reload): verified the interim fix is shipped on origin/main + confirmed via a genuine repro; user chose to park it needs-info as a tracking issue. All state changes were human-instructed."
+prs: []
+docsRead:
+  - path: docs/agents/triage-labels.md
+    reason: canonical role→label mapping
+  - path: docs/agents/issue-tracker.md
+    reason: MCP tool recipes + PR-as-request-surface flag
+  - path: scripts/audit-skills.ts
+    reason: "#292 root-cause: readSkillEdits has no parent check"
+  - path: tests/unit/audit-skills.spec.ts
+    reason: "#292 fix testability (pure core / thin shell split)"
+  - path: modules/routing.ts
+    reason: "#325 target surface (ADR-0004 human-only)"
+  - path: content.config.ts
+    reason: "#325 c12 watch caveat already documented in header"
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: human-only set + untestable-runtime axis
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: "#236 authoritative shipped-state"
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: brief format (durable, behavioral)
+  - path: docs/adr/0004-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: scripts/session-end.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: triage
+    reason: drove the whole session — buckets, per-issue analysis, outcomes
+  - name: close-session
+    reason: closure front door at end of triage pass
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: GitHub MCP server disconnected mid-session twice; mcp__github__* tools had to be re-loaded via ToolSearch before I could continue writing labels.
+    solution: Infra/harness flakiness, not a repo bug — recovered by re-selecting the tools. Nothing to fix in-repo; noting for signal on MCP reliability.
+    severity: minor
+  - description: The /triage skill implies the label mapping is handed to me, but it was not in the prompt — I had to read docs/agents/triage-labels.md to get it.
+    solution: Working as documented (the doc is the single home); the skill wording just reads as if the mapping arrives pre-injected. Low-impact expectation gap.
+    severity: nit
+  - description: Guessed the ADR-0004 filename (0004-safety-gate.md) and my Read failed; the real name is 0004-objective-safety-gate.md.
+    solution: CLAUDE.md already says read the adr/ directory rather than guess names — I should Glob docs/adr/ first every time instead of reconstructing a path.
+    severity: nit
+durationSec: 2251
+models:
+  claude-opus-4-8: 119
+toolCounts:
+  Read: 12
+  ToolSearch: 4
+  mcp__github__search_issues: 3
+  mcp__github__search_pull_requests: 1
+  Glob: 3
+  Bash: 13
+  TaskCreate: 2
+  mcp__github__get_label: 3
+  mcp__github__issue_write: 4
+  mcp__github__add_issue_comment: 4
+  TaskUpdate: 2
+  Grep: 1
+  mcp__github__issue_read: 2
+  AskUserQuestion: 1
+  Skill: 2
+  Write: 1
+gitBranch: claude/triage-6jvvnr
+entrypoint: remote
+cliVersion: 2.1.207
+learnings:
+  - In a shallow clone a grafted parentless boundary commit makes `git log --name-only` list every file in the tree as added (diff vs the empty tree) — that empty-tree diff, not anything about the commit's real content, is what makes audit-skills attribute it as an edit to every Skill (#292).
+ideas:
+  - 'Single-home a "skip parentless commits" guard in a shared git helper and use it from every git-log-based script (audit-skills, session-trace, recent-prs). The repo runs in shallow clones, so the boundary-commit false-positive #292 hit can silently bite any of them; fixing it once prevents a class of bugs rather than just the one instance.'
