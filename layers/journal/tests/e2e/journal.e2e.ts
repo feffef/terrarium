@@ -112,7 +112,7 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
 
     // ── Tier 2: interaction — expand-on-click renders in the live DOM ──────────
     // The digest body ships only in the useAsyncData payload until a click mounts
-    // it (openDigests defaults false) — this is precisely the case the SSR-string
+    // it (the accordion defaults closed) — this is precisely the case the SSR-string
     // "went from empty repo" check above CANNOT prove renders. Click a real row
     // and assert the body becomes *visible* in the DOM.
     it('expands a journal digest on click (live DOM, not payload)', async () => {
@@ -127,6 +127,75 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         const body = page.locator('.digest-body').first()
         await body.waitFor({ state: 'visible' })
         expect(await body.isVisible()).toBe(true)
+        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
+      } finally {
+        await page.close()
+      }
+    })
+
+    // Both feeds are one page-wide accordion: opening a session card collapses an
+    // already-open digest (and vice versa), so at most one item is ever expanded.
+    it('keeps a single item open across both feeds (accordion)', async () => {
+      const route = '/t/journal/current'
+      const { page, errors } = await renderAndCollectErrors(route)
+      try {
+        await page.locator('.digest .drow').first().click()
+        await page.locator('.digest-body').first().waitFor({ state: 'visible' })
+        expect(await page.locator('.digest-body').count()).toBe(1)
+        // Opening a session card must collapse the open digest.
+        await page.locator('.feed .card .head').first().click()
+        await page.locator('.feed .card .detail').first().waitFor({ state: 'visible' })
+        await expect.poll(() => page.locator('.digest-body').count()).toBe(0)
+        expect(await page.locator('.feed .card.open').count()).toBe(1)
+        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
+      } finally {
+        await page.close()
+      }
+    })
+
+    // Deep-linking: loading the page with an item's anchor as the URL hash opens
+    // that item on the client (the server never sees the fragment) AND scrolls it
+    // into the viewport. `2026-07-04` is the oldest digest — last in the list,
+    // below the fold on load — so the viewport check genuinely exercises the
+    // scroll, not a coincidental already-visible target. The `<li>`'s id is the
+    // anchor, so the deep-linked digest body is scoped by id here.
+    it('opens the item named in the URL hash on load and scrolls it into view (deep-link)', async () => {
+      const route = '/t/journal/current#digest-2026-07-04'
+      const { page, errors } = await renderAndCollectErrors(route)
+      try {
+        const body = page.locator('#digest-2026-07-04 .digest-body')
+        await body.waitFor({ state: 'visible' })
+        expect(await body.isVisible()).toBe(true)
+        // Poll past the (async, possibly animated) scroll: the row's top edge
+        // must settle within the viewport.
+        await expect
+          .poll(() =>
+            page.evaluate(() => {
+              const el = document.getElementById('digest-2026-07-04')
+              if (!el) return false
+              const { top } = el.getBoundingClientRect()
+              return top >= 0 && top <= window.innerHeight
+            }),
+          )
+          .toBe(true)
+        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
+      } finally {
+        await page.close()
+      }
+    })
+
+    // The open item is mirrored to the URL hash so it can be shared, and the hash
+    // clears when the item is collapsed — the two halves of the deep-link contract.
+    it('mirrors the open item to the URL hash and clears it on collapse', async () => {
+      const route = '/t/journal/current'
+      const { page, errors } = await renderAndCollectErrors(route)
+      try {
+        const firstRow = page.locator('.digest .drow').first()
+        await firstRow.click()
+        await page.locator('.digest-body').first().waitFor({ state: 'visible' })
+        await expect.poll(() => page.evaluate(() => location.hash)).toMatch(/^#digest-/)
+        await firstRow.click() // collapse
+        await expect.poll(() => page.evaluate(() => location.hash)).toBe('')
         expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
       } finally {
         await page.close()

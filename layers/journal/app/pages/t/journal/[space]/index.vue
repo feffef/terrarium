@@ -64,12 +64,51 @@ const onrampCards = computed(() =>
     })),
 )
 
-// Which Digests are expanded, keyed by content path — an inline disclosure, the
-// same interaction as the session cards.
-const openDigests = reactive<Record<string, boolean>>({})
-const toggleDigest = (path: string) => {
-  openDigests[path] = !openDigests[path]
+// Page-wide accordion: a single item — one session card OR one digest — is open
+// at a time, tracked by its deep-link anchor. Both inline feeds share this one
+// piece of state, so opening either one collapses whatever else was open.
+//
+// The open anchor is mirrored to the URL hash so any open item is deep-linkable.
+// The hash is the source of truth on load: fragments aren't sent to the server,
+// so SSR always renders collapsed and `onMounted` opens the linked item on the
+// client (no hydration mismatch — both start from `null`).
+const openAnchor = ref<string | null>(null)
+const isOpen = (anchor: string) => openAnchor.value === anchor
+
+// replaceState (not `location.hash =`) so toggling neither floods history nor
+// triggers the browser's native jump-to-anchor scroll — we scroll deliberately,
+// and only on a deep-link load, in scrollToOpen().
+const syncHash = (anchor: string | null) => {
+  history.replaceState(history.state, '', anchor ? `${route.path}#${anchor}` : route.path)
 }
+
+const toggle = (anchor: string) => {
+  const next = isOpen(anchor) ? null : anchor
+  openAnchor.value = next
+  syncHash(next)
+}
+
+const scrollToOpen = () => {
+  if (!openAnchor.value) return
+  const el = document.getElementById(openAnchor.value)
+  if (!el) return
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
+}
+
+const openFromHash = () => {
+  const anchor = window.location.hash.slice(1)
+  openAnchor.value = anchor || null
+  if (anchor) nextTick(scrollToOpen)
+}
+
+onMounted(() => {
+  openFromHash()
+  // Honor a hash the user edits or an in-page anchor link. Our own replaceState
+  // never fires hashchange, so this can't loop back on syncHash().
+  window.addEventListener('hashchange', openFromHash)
+})
+onBeforeUnmount(() => window.removeEventListener('hashchange', openFromHash))
 // No cast: `collections.skills`/`collections.sessions` are this Tenant's own
 // literal collection keys, so `data.value.{skills,sessions}` already carry the
 // real, generated item types — the SAME types `SkillDoc`/`SessionDoc` alias.
@@ -167,20 +206,21 @@ useSeoMeta({
       <ul class="digest-list">
         <li
           v-for="d in digests"
+          :id="digestAnchor(d.date)"
           :key="d.doc.path"
           class="digest"
-          :class="{ open: openDigests[d.doc.path] }"
+          :class="{ open: isOpen(digestAnchor(d.date)) }"
         >
           <JournalDisclosure
             class="drow"
-            :expanded="!!openDigests[d.doc.path]"
-            @toggle="toggleDigest(d.doc.path)"
+            :expanded="isOpen(digestAnchor(d.date))"
+            @toggle="toggle(digestAnchor(d.date))"
           >
             <span class="digest-date">{{ d.date }}</span>
             <span class="digest-summary">{{ d.summary }}</span>
-            <span class="caret" aria-hidden="true">{{ openDigests[d.doc.path] ? '▾' : '▸' }}</span>
+            <span class="caret" aria-hidden="true">{{ isOpen(digestAnchor(d.date)) ? '▾' : '▸' }}</span>
           </JournalDisclosure>
-          <div v-if="openDigests[d.doc.path]" class="digest-body">
+          <div v-if="isOpen(digestAnchor(d.date))" class="digest-body">
             <ContentRenderer :value="d.doc" />
           </div>
         </li>
@@ -228,7 +268,14 @@ useSeoMeta({
           <span class="count">session logs, newest first</span>
         </div>
         <div v-if="sessionCards.length" class="cards">
-          <JournalSessionCard v-for="c in sessionCards" :key="c.key" :card="c" />
+          <JournalSessionCard
+            v-for="c in sessionCards"
+            :key="c.key"
+            :card="c"
+            :anchor="sessionAnchor(c.key)"
+            :expanded="isOpen(sessionAnchor(c.key))"
+            @toggle="toggle(sessionAnchor(c.key))"
+          />
         </div>
         <p v-else class="empty">No sessions logged in this Space yet.</p>
       </section>
@@ -408,7 +455,8 @@ h1 {
 .digests { margin-top: 1.75rem; }
 .panel-intro { margin: 0 0 0.95rem; max-width: 72ch; color: var(--jd-muted); font-size: 0.92rem; line-height: 1.5; }
 .digest-list { list-style: none; margin: 0; padding: 0; }
-.digest { border-top: 1px solid var(--jd-line); }
+/* scroll-margin-top: breathing room when a deep-linked digest is scrolled to the viewport top. */
+.digest { border-top: 1px solid var(--jd-line); scroll-margin-top: 1.5rem; }
 .digest:first-child { border-top: 0; }
 .drow {
   display: grid;

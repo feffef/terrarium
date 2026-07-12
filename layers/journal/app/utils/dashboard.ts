@@ -219,3 +219,17 @@ export function digestList<T extends { path: string; summary?: string; descripti
       doc: p,
     }))
 }
+
+// ── Deep-link anchors ────────────────────────────────────
+// Stable, URL-safe fragment ids for the two inline-expandable feeds on the Space
+// landing (session cards + daily digests). One item is open at a time across the
+// whole page and its anchor is mirrored to the URL hash, so the two feeds must
+// share NO id — hence the distinct `session-`/`digest-` namespaces. Both inputs
+// (a session id, a `YYYY-MM-DD` date) are already fragment-safe, so no escaping.
+export function sessionAnchor(key: string): string {
+  return `session-${key}`
+}
+
+export function digestAnchor(date: string): string {
+  return `digest-${date}`
+}

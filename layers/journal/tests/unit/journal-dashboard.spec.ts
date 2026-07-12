@@ -11,7 +11,9 @@ import { describe, expect, it } from 'vitest'
 import {
   sessionCardViews,
   countFrictions,
+  digestAnchor,
   digestList,
+  sessionAnchor,
   sessionDurationMin,
   externalSkillCount,
   sessionWhen,
@@ -290,6 +292,16 @@ describe('sessionCardViews', () => {
     const [without] = sessionCardViews([session()])
     expect(without!.learnings).toEqual([])
     expect(without!.ideas).toEqual([])
+  })
+})
+
+describe('deep-link anchors', () => {
+  it('namespaces the two feeds so their fragment ids never collide', () => {
+    expect(sessionAnchor('session_011Y8H9m3q94H3FMXkZMhztp')).toBe('session-session_011Y8H9m3q94H3FMXkZMhztp')
+    expect(digestAnchor('2026-07-04')).toBe('digest-2026-07-04')
+    // Distinct prefixes ⇒ a session id and a digest date can never map to the
+    // same anchor, which the page-wide single-open accordion relies on.
+    expect(sessionAnchor('x')).not.toBe(digestAnchor('x'))
   })
 })
 

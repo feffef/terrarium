@@ -8,17 +8,23 @@
 // this component supplies only the head's own content via its default slot.
 // Types are imported relatively (`~/` resolves to the main app in a layer —
 // docs/agents/tenant-layers.md §1); `prUrl` arrives via the utils auto-import.
+//
+// Open/closed state is owned by the parent page, not this card: the landing runs
+// both feeds as one page-wide accordion (a single item open at a time, mirrored
+// to the URL hash for deep-linking), so the card is a controlled disclosure —
+// it reports clicks via `toggle` and renders whatever `expanded` the page passes.
+// `anchor` is the card's deep-link fragment id, bound onto the root so the page
+// can scroll it into view.
 import type { SessionCardView } from '../../types/journal'
 
-const { card } = defineProps<{ card: SessionCardView }>()
-const expanded = ref(false)
+const { card, expanded, anchor } = defineProps<{ card: SessionCardView; expanded: boolean; anchor: string }>()
+const emit = defineEmits<{ toggle: [] }>()
 const detailId = useId()
-const toggle = () => (expanded.value = !expanded.value)
 </script>
 
 <template>
-  <article class="card" :class="{ open: expanded }">
-    <JournalDisclosure class="head" :expanded="expanded" :controls="detailId" @toggle="toggle">
+  <article :id="anchor" class="card" :class="{ open: expanded }">
+    <JournalDisclosure class="head" :expanded="expanded" :controls="detailId" @toggle="emit('toggle')">
       <div class="top">
         <span class="when">{{ card.when }} <span class="dur">· {{ card.duration }} min</span></span>
         <JournalStatusPill :status="card.status" />
@@ -122,6 +128,8 @@ const toggle = () => (expanded.value = !expanded.value)
   padding: 1rem 1.15rem 1.05rem;
   box-shadow: var(--jd-shadow);
   transition: transform 0.15s ease, border-color 0.15s ease;
+  /* Breathing room when a deep-linked card is scrolled to the viewport top. */
+  scroll-margin-top: 1.5rem;
 }
 .card:hover { border-color: color-mix(in oklab, var(--jd-accent) 40%, var(--jd-line)); }
 .card:not(.open):hover { transform: translateY(-2px); }
