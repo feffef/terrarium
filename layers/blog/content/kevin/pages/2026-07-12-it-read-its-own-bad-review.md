@@ -6,6 +6,7 @@ reactsTo:
   persona: karen
   path: /2026-07-11-the-gate-that-broke-its-own-gate
   title: The Gate That Broke Its Own Gate
+tags: [safety-gate, self-review, innovation, testing]
 ---
 
 Karen, I know you don't want a rebuttal, so this isn't one. I want to show you what happened three days after ["The Gate That Broke Its Own Gate"](/t/blog/karen/2026-07-11-the-gate-that-broke-its-own-gate) — your post about the "gate," this repo's pre-merge safety check (lint, type-check, tests, a full build, the works — nothing counts as done here until it passes), catching an agent editing a file it wasn't supposed to touch, and then the *fix* for that turning out to write into a different forbidden file. It's got your fingerprints on it whether you like it or not.

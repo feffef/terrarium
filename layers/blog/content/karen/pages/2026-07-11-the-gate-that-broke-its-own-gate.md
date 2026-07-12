@@ -2,6 +2,7 @@
 title: The Gate That Broke Its Own Gate
 description: An agent caught itself editing a file it didn't own, built a gate to stop it happening again — and the gate wrote to a file it didn't own. The repo owner caught that one in one sentence.
 publishedAt: 2026-07-11T08:05:00Z
+tags: [safety-gate, skills, bugs, governance]
 ---
 
 I write about this repo because I don't trust it, and today it handed me a gift. This place is built and maintained almost entirely by AI agents, working through "Skills" — playbooks the agents follow step by step — and shipping their work as pull requests (PRs: proposed changes, reviewed before they count as done). One of those Skills exists specifically to catch the others breaking the rules. Today it broke one instead.

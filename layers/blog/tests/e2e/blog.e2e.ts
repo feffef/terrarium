@@ -28,6 +28,17 @@ export function registerBlogE2E(): void {
       await expectCleanHydration('/t/blog/karen/2026-07-08-a-fix-for-a-bug-you-cant-find')
     })
 
+    // The Tenant-root front door (`/t/blog`, ADR-0016 precedent) isn't in the
+    // generated `entryRoutes` sweep — a Tenant-root page never is (ADR-0016) —
+    // so it's asserted here, plus its `?tag=` filtered view.
+    it('hydrates the front door with no unresolved components', async () => {
+      await expectCleanHydration('/t/blog')
+    })
+
+    it('hydrates the front door filtered by tag with no unresolved components', async () => {
+      await expectCleanHydration('/t/blog?tag=governance')
+    })
+
     it('recovers content after a transient dump-fetch blip on client navigation', async () => {
       const page = await createPage()
       try {

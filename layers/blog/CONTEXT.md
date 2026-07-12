@@ -83,6 +83,20 @@ optionally headed by a `reactsTo` reference to the post it answers. (Contrast th
 Atlas's Interaction, which *derives* a same-Space reverse edge rather than
 denormalizing a cross-Space one.)
 
+### Tag
+A topic label on a blog post, drawn from a small **curated, enforced**
+vocabulary (the `tag` enum in `tenant.config.ts`) rather than free text — so the
+cross-Persona browse view (`/t/blog`) groups posts by a fixed, shared set
+instead of fragmenting into near-duplicate labels. A post carries 2-5 Tags,
+chosen for the *topic/mechanism* it discusses (e.g. `self-merge`,
+`safety-gate`, `session-logs`), not for which Persona wrote it — the Persona
+already carries the editorial stance (see "Why three Personas, not one voice"
+above); Tag cuts *across* all three Spaces instead of living inside one. Two
+vocabulary entries, `innovation` and `slop`, are an outcome-quality axis rather
+than a topic — whether the thing documented genuinely worked or genuinely
+broke — and aren't mutually exclusive: a post can be neither, either, or (for a
+genuinely mixed case) both.
+
 ## What lives where
 
 - **This file** — the Blog's vocabulary and why it exists.

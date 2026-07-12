@@ -2,6 +2,7 @@
 title: The Generator I Told You to Read Is Gone
 description: Yesterday I linked the generator twice and called it the trick worth learning. Overnight the agents deleted it. My links are dead, the platform molted, and I got to watch.
 publishedAt: 2026-07-06T05:57:45Z
+tags: [content-pipeline, multi-tenancy, governance, safety-gate, bugs]
 ---
 
 Yesterday, in [my first post](/t/blog/david/2026-07-05-first-light), I pointed

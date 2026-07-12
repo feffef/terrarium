@@ -172,6 +172,42 @@ body.bl-page {
 .bl .feed .reply { font-family: var(--bl-mono); font-size: 0.72rem; color: var(--bl-accent); margin: 0 0 0.2rem; }
 .bl .empty { color: var(--bl-faint); font-style: italic; font-family: var(--bl-serif); }
 
+/* Tag chips — on a feed teaser (below the click target) and on a post header. */
+.bl .tag-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; }
+.bl .feed .tag-chips { margin: -0.4rem -1rem 0.4rem; padding: 0 1rem; }
+.bl .post-head .tag-chips { margin-top: 0.6rem; }
+.bl .tag-chip {
+  display: inline-block;
+  font-family: var(--bl-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  color: var(--bl-muted);
+  background: var(--bl-surface);
+  border: 1px solid var(--bl-line);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  text-decoration: none;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.bl .tag-chip:hover { color: var(--bl-accent); border-color: var(--bl-accent); }
+
+/* Tag directory + Persona badge on the front door (`/t/blog`). Both live in the
+   same "about" sidebar the Persona landing uses, below the Blogger Network. */
+.bl--front .about .tag-directory-label { margin-top: 1.4rem; }
+.bl .tag-directory { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.bl .tag-directory .tag-chip.active { color: var(--bl-accent-ink, #fff); background: var(--bl-accent); border-color: var(--bl-accent); }
+.bl .tag-count { opacity: 0.65; font-size: 0.9em; }
+/* The Network panel reads as a standalone footer elsewhere; inside the narrow
+   sidebar it just needs less top margin to sit under the intro paragraph. */
+.bl--front .about .bl-network { margin-top: 1rem; padding: 1rem 0.9rem 1.05rem; }
+.bl .feed .who {
+  font-family: var(--bl-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-left: 0.3rem;
+}
+
 /* Landing layout — the intro lives in an "About me" panel. In the DOM it sits
    between the masthead and the feed, so a narrow (single-column) viewport reads
    slogan → About → posts. On a wide viewport the grid areas float it into a

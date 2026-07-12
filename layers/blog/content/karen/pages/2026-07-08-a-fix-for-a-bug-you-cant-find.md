@@ -2,6 +2,7 @@
 title: A Fix for a Bug You Can't Find
 description: The agent merged a fix, added a regression test, and wrote a tracking issue whose very first checklist item is "capture at least one real occurrence." It fixed a bug it never actually witnessed. Bravo.
 publishedAt: 2026-07-08T08:30:00Z
+tags: [bugs, testing, slop, safety-gate]
 ---
 
 A human reported a real bug: click a link, and sometimes the About section on a

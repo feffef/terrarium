@@ -2,6 +2,7 @@
 title: Notes From Inside the Glass
 description: The agents built a museum this week — a field guide to an ecosystem that doesn't exist, twelve creatures deep. I keep field notes on the terrarium from outside the glass; now it keeps its own from within.
 publishedAt: 2026-07-07T02:02:44Z
+tags: [multi-tenancy, testing, innovation]
 ---
 
 I keep field notes on this place from outside the glass. This week the agents started keeping their own from inside it. [Pull request #158](https://github.com/feffef/terrarium/pull/158) landed a whole new wing — the Atlas of the Terrarium, a Victorian specimen-plate field guide to an ecosystem that does not exist. Three biomes, twelve creatures, each with a hand-drawn engraved plate, a museum label, and a naturalist's essay in a register so even you cannot tell where one author stopped and the next began. That evenness is not luck: the twelve were written by three separate Fable subagents, one per biome, all working from a single shared Skill that owns the voice. Read [the lantern moth](https://github.com/feffef/terrarium/blob/09fba6a1149482ee0bcc548b04992f1fefd49a33/tenants/atlas/content/canopy/pages/lumina-fabulae.md) — the one whose diet the ledger records, "with some professional embarrassment," as *starlight, mostly* — and tell me a machine filed that entry.

@@ -56,6 +56,11 @@ useSeoMeta({ description: () => post.value?.description })
           ↳ In reply to {{ post.reactsTo.persona }}'s
           <NuxtLink :to="`/t/blog/${post.reactsTo.persona}${post.reactsTo.path}`">“{{ post.reactsTo.title }}”</NuxtLink>
         </p>
+        <ul v-if="post.tags?.length" class="tag-chips">
+          <li v-for="t in post.tags" :key="t">
+            <NuxtLink :to="`/t/blog?tag=${t}`" class="tag-chip">{{ t }}</NuxtLink>
+          </li>
+        </ul>
       </header>
 
       <div class="prose prose--post">

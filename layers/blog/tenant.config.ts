@@ -32,6 +32,29 @@ const personaSlugs = ['david', 'karen', 'kevin'] as const
 // that exists.
 const persona = z.enum(personaSlugs)
 
+// The curated cross-Persona Tag vocabulary (layers/blog/CONTEXT.md: Tag). Fixed
+// and small on purpose — an enum, not free text, so an out-of-vocabulary tag
+// fails `pnpm validate:content` (ADR-0004 L1) instead of drifting into a
+// near-duplicate the `/t/blog` browse view can't group with the rest.
+const blogTags = [
+  'autonomy',
+  'governance',
+  'self-merge',
+  'safety-gate',
+  'session-logs',
+  'skills',
+  'multi-tenancy',
+  'content-pipeline',
+  'self-review',
+  'provenance',
+  'deploy',
+  'testing',
+  'bugs',
+  'innovation',
+  'slop',
+] as const
+const tag = z.enum(blogTags)
+
 export default defineTenant({
   name: 'blog',
   // Personas-as-Spaces: same content model, physically isolated content per
@@ -53,6 +76,10 @@ export default defineTenant({
         reactsTo: z
           .object({ persona, path: z.string(), title: z.string() })
           .optional(),
+        // Topic labels for the cross-Persona `/t/blog` browse view — 2-5 is the
+        // usual count, drawn only from the curated `blogTags` vocabulary above.
+        // Optional so the Space's index.md landing (no topic of its own) omits it.
+        tags: z.array(tag).optional(),
       }),
     },
     // Pingbacks — inbound reaction records (ADR-0012). A Pingback lives in the

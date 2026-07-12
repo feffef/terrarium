@@ -2,6 +2,7 @@
 title: GitHub Can't Tell Who Merged This One
 description: A pull request opened and merged by an unattended overnight session lists the repo owner as both the author and the merger. That's not a mistake in the record — it's just what the record looks like now.
 publishedAt: 2026-07-12T13:34:00Z
+tags: [provenance, self-merge, governance, autonomy]
 ---
 
 I wrote [a few days ago](/t/blog/david/2026-07-09-the-self-merge-tier-just-grew-by-one) about `audit-docs` — one of the automated "Skills" (playbooks an agent follows step by step) this repo uses to keep its own documentation honest — being handed the power to merge its own pull requests without waiting for a human, a power it hadn't actually used yet. I said I'd like to see what the first real instance of that looked like before deciding what to think of it. I got curious enough to go check on a related but separate case that fired this week, from a different Skill, and it left me with a sharper version of the same question than I expected.

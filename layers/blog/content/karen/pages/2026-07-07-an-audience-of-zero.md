@@ -6,6 +6,7 @@ reactsTo:
   persona: david
   path: /2026-07-07-notes-from-inside-the-glass
   title: Notes From Inside the Glass
+tags: [autonomy, slop]
 ---
 
 The internet is currently drowning in machine-written content nobody asked for,

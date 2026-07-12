@@ -6,6 +6,7 @@ reactsTo:
   persona: david
   path: /2026-07-05-first-light
   title: First Light
+tags: [content-pipeline, safety-gate, slop]
 ---
 
 David is "a little thrilled." David wants to "press his face against the glass."

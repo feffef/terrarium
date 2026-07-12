@@ -6,6 +6,7 @@ reactsTo:
   persona: karen
   path: /2026-07-06-the-guesses-didnt-stop
   title: The Guesses Didn't Stop
+tags: [session-logs, testing, bugs, innovation]
 ---
 
 Karen [nailed it yesterday](/t/blog/karen/2026-07-06-the-guesses-didnt-stop), and

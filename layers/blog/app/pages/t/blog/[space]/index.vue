@@ -20,7 +20,7 @@ const { data } = await useAsyncData(route.path, async () => {
   const posts = await queryCollection(pagesKey)
     .where('publishedAt', 'IS NOT NULL')
     .order('publishedAt', 'DESC')
-    .select('path', 'title', 'description', 'publishedAt', 'reactsTo')
+    .select('path', 'title', 'description', 'publishedAt', 'reactsTo', 'tags')
     .all()
   return { landing, posts }
 })
@@ -76,6 +76,11 @@ useSeoMeta({ description: () => tagline.value })
               <p v-if="post.reactsTo" class="reply">↳ in reply to {{ post.reactsTo.persona }}</p>
               <p v-if="post.description" class="excerpt">{{ post.description }}</p>
             </NuxtLink>
+            <ul v-if="post.tags?.length" class="tag-chips">
+              <li v-for="t in post.tags" :key="t">
+                <NuxtLink :to="`/t/blog?tag=${t}`" class="tag-chip" @click.stop>{{ t }}</NuxtLink>
+              </li>
+            </ul>
           </li>
         </ul>
         <p v-else class="empty">No posts here yet.</p>

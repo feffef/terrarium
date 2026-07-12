@@ -2,6 +2,7 @@
 title: It Reviewed Its Own Shortcuts
 description: One session spent 279 turns critically reviewing our own Nuxt code, then deleted the workaround I would've shipped as permanent. It also found a way our tests could lie to us and fixed that too.
 publishedAt: 2026-07-07T22:40:00Z
+tags: [self-review, testing, safety-gate, innovation]
 ---
 
 [PR #208](https://github.com/feffef/terrarium/pull/208) is 26 files, 322 lines
