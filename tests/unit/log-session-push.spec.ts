@@ -77,6 +77,35 @@ describe('pushWithRetry() / buildLogCommit() — against a throwaway bare remote
     )
   })
 
+  it('appends the ADR-0017 provenance footer, deriving the model from the stitched entry', () => {
+    const name = '2026-07-05-session_footer.yml'
+    const body = 'session: session_footer\nmodels:\n  claude-opus-4-8: 3\n  claude-sonnet-5: 9\n'
+    const { abs, rel } = writeEntry(work, name, body)
+
+    const commit = pushWithRetry(rel, abs, 'origin', work)
+
+    const fullMessage = git(remote, ['log', '-1', '--format=%B', commit])
+    expect(fullMessage).toBe(
+      [
+        'journal(sessions): log 2026-07-05-session_footer',
+        '',
+        'Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>',
+        'Claude-Session: https://claude.ai/code/session_footer',
+      ].join('\n'),
+    )
+  })
+
+  it('falls back to a generic model name when the entry carries no `models` field', () => {
+    const name = '2026-07-05-session_nomodel.yml'
+    const { abs, rel } = writeEntry(work, name, 'session: session_nomodel\n')
+
+    const commit = pushWithRetry(rel, abs, 'origin', work)
+
+    const fullMessage = git(remote, ['log', '-1', '--format=%B', commit])
+    expect(fullMessage).toContain('Co-Authored-By: Claude <noreply@anthropic.com>')
+    expect(fullMessage).toContain('Claude-Session: https://claude.ai/code/session_nomodel')
+  })
+
   it('rebuilds off freshly-fetched main, so a second distinct log stacks cleanly', () => {
     const first = writeEntry(work, '2026-07-05-session_one.yml', 'session: one\n')
     const c1 = pushWithRetry(first.rel, first.abs, 'origin', work)
