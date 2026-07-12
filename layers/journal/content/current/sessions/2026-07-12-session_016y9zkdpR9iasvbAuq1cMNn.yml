@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_016y9zkdpR9iasvbAuq1cMNn
 startedAt: 2026-07-12T22:22:41Z
-endedAt: 2026-07-12T23:07:27Z
+endedAt: 2026-07-12T23:41:58Z
 kind: interactive
 goal: Preserve item position on journal digest/session click
 status: completed
 outcome: Implemented, tested, PR merged
-summary: "Directly human-instructed: the user asked to improve the scroll behavior when clicking to expand a daily digest or session card on the journal Space dashboard, so the clicked item's top stays at the same viewport position after expanding, instead of jumping to the top of the screen — except when near the top of the page makes that impossible. Implemented in layers/journal/app/pages/t/journal/[space]/index.vue: toggle() now captures the clicked item's getBoundingClientRect().top before the accordion state flips, then a new scrollPreservingTop() counter-scrolls after Vue's DOM update by exactly the delta any collapsing sibling caused, clamped to window.scrollY >= 0 so a near-top item settles as close to its original position as the page start allows. The deep-link/page-load path (scrollToOpen) is untouched — no prior on-screen position exists to preserve on a fresh load. Updated layers/journal/tests/e2e/journal.e2e.ts, replacing the old \"scrolls to top\" assertion with two e2e tests covering the no-sibling and sibling-collapses-above cases. Full `pnpm gate` passes. Opened PR #393, subscribed to its activity, and it merged with the safety gate green and no review comments. After merge, the user reported the corrective scroll still animated (`behavior: 'smooth'`), which showed the very motion the fix was meant to hide since it's a click-caused reflow correction, not a navigation. Since #393 had already merged, restarted the branch from origin/main per CLAUDE.md's merged-PR convention, changed scrollPreservingTop to always scroll instantly (`behavior: 'auto'`), reran the full gate, and opened #394, which also merged clean."
+summary: "Directly human-instructed: the user asked to improve the scroll behavior when clicking to expand a daily digest or session card on the journal Space dashboard, so the clicked item's top stays at the same viewport position after expanding, instead of jumping to the top of the screen — except when near the top of the page makes that impossible. Implemented in layers/journal/app/pages/t/journal/[space]/index.vue: toggle() now captures the clicked item's getBoundingClientRect().top before the accordion state flips, then a new scrollPreservingTop() counter-scrolls after Vue's DOM update by exactly the delta any collapsing sibling caused, clamped to window.scrollY >= 0 so a near-top item settles as close to its original position as the page start allows. The deep-link/page-load path (scrollToOpen) is untouched — no prior on-screen position exists to preserve on a fresh load. Updated layers/journal/tests/e2e/journal.e2e.ts, replacing the old \"scrolls to top\" assertion with two e2e tests covering the no-sibling and sibling-collapses-above cases. Full `pnpm gate` passes. Opened PR #393, subscribed to its activity, and it merged with the safety gate green and no review comments. After merge, the user reported the corrective scroll still animated (`behavior: 'smooth'`), which showed the very motion the fix was meant to hide since it's a click-caused reflow correction, not a navigation. Since #393 had already merged, restarted the branch from origin/main per CLAUDE.md's merged-PR convention, changed scrollPreservingTop to always scroll instantly (`behavior: 'auto'`), reran the full gate, and opened #394, which also merged clean. The user then asked, directly, for a third change: keep the scroll correction instant but make the digest/session-card body's own expand/collapse visibly animated (grow/shrink quickly) instead of snapping. Restarted the branch again (per the same merged-PR convention, since #394 had also merged), added layers/journal/app/utils/expandTransition.ts — a pair of Vue <Transition> JS hooks (expandOnEnter/expandOnLeave, :css=\"false\") that grow/shrink height from `scrollHeight` over 160ms, respecting prefers-reduced-motion — and wrapped both the digest body and the session-card detail in an unpadded \"clip\" wrapper the hooks animate, leaving the existing padded content div untouched. Because the reflow now plays out over several animation frames instead of one DOM patch, replaced the one-shot scrollPreservingTop with pinTopAcrossTransition: a requestAnimationFrame loop that re-corrects the clicked item's screen position every frame (still always instant) until its own document position stops changing, with a frame-count backstop. Verified with an ad-hoc Playwright probe that the height genuinely ramps 0 to full over ~160ms while the clicked item's top holds to sub-pixel precision, including with a sibling digest collapsing above it at the same time. Full gate passed; opened #396, which also merged clean."
 prs:
   - "393"
   - "394"
+  - "396"
 docsRead:
   - path: layers/journal/app/pages/t/journal/[space]/index.vue
     reason: existing toggle/scroll logic to change
@@ -34,31 +35,34 @@ frictions:
   - description: "Shipped the position-preserving correction with `behavior: 'smooth'` in #393; the user caught in live use that the animated scroll itself was visible, defeating the point of a fix meant to make the item look like it never moved."
     solution: "An in-place layout-shift correction should always be instant (`behavior: 'auto'`), never animated — smooth easing only makes sense for a genuine navigation to a new position, not for hiding a reflow the click itself caused. Should have reasoned through that distinction up front rather than defaulting to 'smooth' for everything scroll-related."
     severity: minor
-durationSec: 2686
+durationSec: 4757
 models:
-  claude-sonnet-5: 154
+  claude-sonnet-5: 231
 toolCounts:
   Grep: 2
-  Read: 10
-  Glob: 2
-  Edit: 14
-  Bash: 34
-  Write: 2
+  Read: 20
+  Glob: 5
+  Edit: 23
+  Bash: 47
+  Write: 4
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 2
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 3
-  mcp__github__pull_request_read: 7
-  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__create_pull_request: 3
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 4
+  mcp__github__pull_request_read: 9
+  mcp__Claude_Code_Remote__send_later: 4
   Skill: 2
   mcp__Claude_Code_Remote__list_triggers: 1
-  mcp__Claude_Code_Remote__delete_trigger: 2
+  mcp__Claude_Code_Remote__delete_trigger: 3
 filesEdited:
   - layers/journal/app/pages/t/journal/[space]/index.vue
   - layers/journal/tests/e2e/journal.e2e.ts
   - tmp-probe.ts
+  - layers/journal/app/utils/expandTransition.ts
+  - layers/journal/app/components/journal/SessionCard.vue
 gitBranch: claude/journal-scroll-entry-click-qayyhj
 entrypoint: remote
 cliVersion: 2.1.207
 learnings:
   - Playwright's locator.click() silently scrolls the element into view before dispatching the click — call scrollIntoViewIfNeeded() first when a test measures exact geometry around a click.
+  - "A single 'is this scroll ever animated?' framing was too coarse: whether a scroll should ease depends on WHY it's happening — correcting a reflow the click itself caused should be instant (nothing should be seen moving), while animating the container's own height change is exactly the visible feedback the user wanted. Splitting those two questions up front would have avoided doing this in two follow-up rounds."
