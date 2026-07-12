@@ -421,9 +421,8 @@ download) — it's the lower-level capture that `preview.ts shot` uses under the
   not change what most of that page shows; check the `.vue` file too.
 
 To **add a Space or Collection**: edit the Tenant's `tenant.config.ts`. The keyed
-collections update automatically via `content.config.ts`, and the routing map
-(`#routing`) is re-derived at the next `nuxt prepare`/`build`. No regenerate step
-needed. To **add a Tenant**: drop a `layers/<name>/` folder with a manifest and
+collections and the routing map update automatically (see Self-verification
+above — no regenerate step needed). To **add a Tenant**: drop a `layers/<name>/` folder with a manifest and
 content, then run `pnpm install` (or `nuxt prepare`) to pick it up — Nuxt
 auto-extends every `layers/*`, so no `nuxt.config.ts` `extends` edit is needed
 (ADR-0018).
@@ -487,7 +486,9 @@ Canonical label vocabulary — `needs-triage`, `needs-info`, `ready-for-agent`, 
 
 ### Domain docs
 
-Single-context: one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+Multi-context (ADR-0021): `CONTEXT-MAP.md` indexes the contexts, root `CONTEXT.md`
+is the Platform context, and each Tenant's own vocabulary lives in
+`layers/<tenant>/CONTEXT.md`. See `docs/agents/domain.md`.
 
 ### Tenant-layer conventions
 
@@ -496,3 +497,13 @@ Nuxt-layer gotchas for editing a Tenant (alias resolution, layer-local imports, 
 ### Content authoring
 
 Deciding whether MDC (Nuxt Content's Markdown Components) is the right tool for a given piece of content, vs. frontmatter or a data collection. See `docs/research/mdc-when-to-use.md`.
+
+### Other research notes
+
+One-off grounding/reference notes, not living conventions: Nuxt/Nuxt Content
+primary-source facts for code-review claims
+(`docs/research/nuxt-content-review-grounding.md`), what to review before
+flipping repo visibility to public
+(`docs/research/making-repo-public.md` and
+`docs/research/public-readiness-review.md`), and GitHub Actions billing/limits
+on public vs. private repos (`docs/research/github-actions-public-vs-private-limits.md`).
