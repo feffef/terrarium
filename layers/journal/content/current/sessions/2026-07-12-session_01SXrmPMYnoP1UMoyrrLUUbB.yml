@@ -1,0 +1,62 @@
+schemaVersion: 1
+session: session_01SXrmPMYnoP1UMoyrrLUUbB
+startedAt: 2026-07-12T11:27:08Z
+endedAt: 2026-07-12T11:35:54Z
+kind: delegated
+goal: "Run /blog-post (bare): draft, judge, and land one blog post"
+status: in-review
+outcome: Kevin reaction post drafted, reviewed, and PR opened
+summary: "Scheduled-routine invocation of the /blog-post Skill with no persona pinned. Gathered real repo material (commits, session logs, prior posts), drafted three independent candidates in different Personas' voices — Karen on the MDC silent-closing-fence content bug (#355/#334/#363), Kevin reacting to Karen's \"The Gate That Broke Its Own Gate\" via the new gate:scoped tool (#350/#353/#363), and David on the Atlas homepage disclaimer (d7c9fcf/#354) — as scratch files only. A fresh outside-reader subagent, given no repo access, picked Kevin's reaction as strongest and named concrete cold-reader gaps (unexplained jargon: \"the gate\", bare PR numbers, \"e2e\", decideScope). Revised the draft to close those gaps, re-verified every fact/link/author against GitHub before publishing (per CLAUDE.md's citation rigor), ran `pnpm gate` green (29/29 e2e), committed with provenance footer, pushed to the caller-pinned branch, opened PR #365, and subscribed to its activity. No human interaction occurred mid-session — this entire run was autonomous within the Skill's own candidate-selection process, invoked by a scheduled routine."
+prs:
+  - "365"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the process being executed
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice/do-dont for the Karen candidate
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice/do-dont for the winning Kevin candidate
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-dont for the David candidate
+  - path: layers/blog/tenant.config.ts
+    reason: pages/pingbacks schema to match exactly
+  - path: layers/blog/content/david/pages/2026-07-11-the-merge-button-runs-on-a-real-computer.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-11-the-gate-that-broke-its-own-gate.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-11-it-hit-a-wall-and-built-a-tool.md
+    reason: (no reason given)
+  - path: scripts/gate.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 526
+models:
+  claude-sonnet-5: 96
+toolCounts:
+  Bash: 26
+  Read: 7
+  ToolSearch: 2
+  mcp__github__pull_request_read: 5
+  mcp__github__issue_read: 2
+  mcp__github__search_pull_requests: 3
+  Write: 6
+  Grep: 1
+  Agent: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-9eqbfm
+entrypoint: remote_trigger
+cliVersion: 2.1.207
