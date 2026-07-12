@@ -1,0 +1,68 @@
+schemaVersion: 1
+session: session_011XVkYaR5AXC19ETQUqYToB
+startedAt: 2026-07-12T14:15:27Z
+endedAt: 2026-07-12T14:36:38Z
+kind: interactive
+goal: Fix journal expanded-entry scroll and digest styling
+status: in-review
+outcome: "Both fixed, e2e-tested; gated PR #376 in review"
+summary: "User directly asked (human-instructed) to fix two journal Space-landing bugs: (1) expanding an entry scrolled into its middle, forcing a scroll up, and (2) the open daily digest dimmed its summary so it read as disabled. I reproduced both in headless Chromium first. Issue 1 was the one-at-a-time accordion collapsing a taller open entry above the clicked one, stranding it above the fold (measured y=-807); fixed by scrolling the opened item's top into view on toggle, matching the deep-link path. Issue 2 replaced the muted summary with an active treatment (accent bar, tint, bold ink, accent caret). Added an e2e regression test; local gate green. Opened PR and subscribed on user green-light."
+prs:
+  - "376"
+docsRead:
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: accordion state + scroll + digest CSS — the fix site
+  - path: layers/journal/app/components/journal/SessionCard.vue
+    reason: controlled disclosure that shares the toggle
+  - path: layers/journal/app/assets/theme.css
+    reason: jd-* tokens for the active-digest styling
+  - path: layers/journal/tests/e2e/journal.e2e.ts
+    reason: existing accordion/deep-link tests + where the regression test went
+  - path: tests/support/e2e.ts
+    reason: renderAndCollectErrors harness for the new test
+  - path: layers/journal/app/components/journal/Disclosure.vue
+    reason: (no reason given)
+  - path: layers/journal/app/utils/dashboard.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: session closure front door
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: Harness task instructions say never open a PR unless explicitly asked, but CLAUDE.md says opening the gated PR is automatic — a direct contradiction.
+    solution: "Single-home the PR-opening policy: reconcile the web/remote harness guardrail with CLAUDE.md's auto-open convention so an agent isn't forced to pause and ask."
+    severity: minor
+  - description: The Co-Authored-By/Claude-Session footer was not auto-injected on the cloud -m commit, so I had to amend it in manually.
+    solution: Known issue already noted in CLAUDE.md (verify footer landed, amend if absent); the injection itself is what should be fixed upstream.
+    severity: nit
+  - description: Issue 1 did not reproduce on a plain click or plain deep-link; it needed the specific accordion collapse-above condition, costing two repro attempts.
+    solution: Inherent to the bug (a scroll-anchoring failure mode); captured in the test comment so the next reader need not re-derive it.
+    severity: nit
+durationSec: 1272
+models:
+  claude-opus-4-8: 138
+toolCounts:
+  Bash: 34
+  Read: 9
+  Write: 5
+  Edit: 5
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - scripts/repro-scroll.ts
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - scripts/shot-digest.ts
+  - layers/journal/tests/e2e/journal.e2e.ts
+gitBranch: claude/journal-entry-expansion-scroll-swnyw9
+entrypoint: remote
+cliVersion: 2.1.207
+learnings:
+  - The scroll-to-middle was a scroll-anchoring failure — browsers keep content stable only when the collapsing element is fully off-screen; when it straddles the viewport top, collapsing it strands the clicked item above the fold.
+ideas:
+  - Extract the inline accordion logic in index.vue (open/close + scrollToOpen + hash mirroring) into a reusable useAccordionDeepLink composable, so a third inline-expandable feed can't re-implement (and re-break) the scroll contract.
