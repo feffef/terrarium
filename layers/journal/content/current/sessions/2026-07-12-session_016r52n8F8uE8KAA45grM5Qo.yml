@@ -1,0 +1,77 @@
+schemaVersion: 1
+session: session_016r52n8F8uE8KAA45grM5Qo
+startedAt: 2026-07-12T04:08:12Z
+endedAt: 2026-07-12T07:19:49Z
+kind: interactive
+goal: Run /audit-docs sweep across the repo
+status: completed
+outcome: 5 findings fixed, PR
+summary: 'Ran the /audit-docs chartered-job Skill (its own standing charter under ADR-0003 — no separate human green-light needed): fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over every *.md file, pooled and deduped their findings, fact-checked all five against primary sources with an independent checker agent, then fixed every confirmed finding directly (a stale "single-context" domain-docs blurb, four unlinked docs/research notes, a restated ADR-0004 surface list, a duplicated "no regenerate step" fact, and a real cross-Skill contradiction over which Skill is the closure front door). pnpm gate ran green, and the PR self-merged per the audit-docs self-merge tier. The only human-instructed part of this session was a follow-up: the human noticed no session log had been authored after the PR merged and asked why, which is what prompted this log (close-session/log-session were not invoked at PR-open time as CLAUDE.md directs — see frictions).'
+prs:
+  - "347"
+docsRead:
+  - path: CLAUDE.md
+    reason: closure convention, ground rules, single-home discipline
+  - path: .claude/skills/audit-docs/SKILL.md
+    reason: the skill being executed
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: verify the Drift finding
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: human-only surface list, self-merge tier scope
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: the invoked chartered job
+  - name: close-session
+    reason: invoked late, after a human pointed out the missing log
+  - name: log-session
+    reason: authoring this entry
+frictions:
+  - description: Never invoked close-session after opening/merging the PR, so no session log was authored until the human explicitly asked why one hadn't appeared — CLAUDE.md says opening a gated PR is a closure point that should trigger it immediately.
+    solution: audit-docs/SKILL.md's step 8 (commit/push/PR/self-merge) doesn't mention invoking close-session at all, unlike digest/SKILL.md's explicit step 7 and frictions-to-fixes/SKILL.md's closing line (both fixed to point at close-session in this very PR). Add the same explicit close-session pointer to audit-docs/SKILL.md's own step 8/completion criteria so the next autonomous audit-docs run doesn't rely on a human noticing.
+    severity: moderate
+durationSec: 11498
+models:
+  claude-sonnet-5: 121
+toolCounts:
+  Bash: 17
+  Agent: 5
+  TaskCreate: 1
+  ScheduleWakeup: 3
+  Read: 5
+  Edit: 5
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__enable_pr_auto_merge: 3
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__actions_list: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Skill: 2
+  Grep: 1
+  Write: 1
+filesEdited:
+  - CLAUDE.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/digest/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens audit (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens audit (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens audit (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens audit (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check pooled audit-docs findings
+gitBranch: claude/festive-mayer-7bma9f
+entrypoint: remote_trigger
+cliVersion: 2.1.207
