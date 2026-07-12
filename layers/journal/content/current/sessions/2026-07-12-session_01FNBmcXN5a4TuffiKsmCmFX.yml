@@ -1,0 +1,77 @@
+schemaVersion: 1
+session: session_01FNBmcXN5a4TuffiKsmCmFX
+startedAt: 2026-07-12T13:41:14Z
+endedAt: 2026-07-12T14:04:47Z
+kind: interactive
+goal: Rotate blog-post Personas and self-merge on green
+status: in-review
+outcome: "Both shipped in one gated PR #373"
+summary: 'Two human-instructed changes to the blog-post Skill, both requested this session (rotation first, self-merge as a mid-turn follow-up). Added a rotation gate (Section A0) that computes an eligible-Persona set from the global publishedAt ordering before drafting — never the same Persona twice in a row, and a Persona missing from the four newest posts is forced next — wired through step 0, A2, and A3. Made blog-post self-merge on a green gate (ADR-0004 content-only tier) via an ADR-0003 amendment, step 7, CLAUDE.md and the Skill Inventory. Full gate green locally and green in CI; opened PR #373 (itself human-merge-only, since it touches governance) and subscribed. The owner then reviewed: trimmed the over-detailed SKILL.md description to a one-liner and shortened the ADR amendment, dropping a wrong "human-invoked" assumption — blog-post is already scheduled, and self-merge is what makes it fully autonomous.'
+prs:
+  - "373"
+docsRead:
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: self-merge tier + amendment home
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: low-risk blast-radius tier
+  - path: .agents/skills/digest/SKILL.md
+    reason: auto-merge phrasing to mirror
+  - path: CLAUDE.md
+    reason: tier enumeration + rebase/staleness ground rules
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/blog-post.yml
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: closure front door at PR open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: Branch sat on a stale origin/main that had independently made two single-home edits to the same SKILL.md sections I was editing; rebase conflicted.
+    solution: Fetched and rebased onto origin/main, hand-merged the conflict to keep both of main's edits (gate:scoped rename, A3 step-5 pointer) instead of reverting them — the exact silent-staleness trap CLAUDE.md warns about.
+    severity: minor
+  - description: "`mermaid` was declared in package.json but missing from node_modules, so typecheck failed spuriously on an untouched component until reinstall."
+    solution: Ran `pnpm install` (postinstall runs nuxt prepare) before the gate.
+    severity: minor
+  - description: A prose-only edit to an inventory `.yml` under `layers/` pushed gate:scoped to the full heavy gate (build + e2e) though it can't affect rendering.
+    solution: None needed — the inert classifier fails safe by design; logged as a data point.
+    severity: nit
+durationSec: 1412
+models:
+  claude-opus-4-8: 190
+toolCounts:
+  Bash: 30
+  Glob: 1
+  Read: 16
+  Grep: 1
+  Edit: 17
+  Write: 3
+  ToolSearch: 4
+  mcp__github__list_pull_requests: 1
+  mcp__github__get_me: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_reply_to_pull_request_comment: 2
+filesEdited:
+  - .agents/skills/blog-post/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - CLAUDE.md
+  - layers/journal/content/current/skills/blog-post.yml
+gitBranch: claude/blog-post-persona-rotation-vo64gs
+entrypoint: remote
+cliVersion: 2.1.207
+learnings:
+  - Blog post order is global by `publishedAt` across all three Personas' Spaces, not per-Space — the rotation gate must read the merged sequence.
+  - "`blog-post` is `disable-model-invocation: true` yet already runs on a schedule — the two aren't contradictory: the flag stops the *model* self-firing it, a Routine still fires the command. Self-merge is what makes those scheduled runs fully autonomous."
+ideas:
+  - Add `scripts/blog-rotation.ts` that prints the current eligible-Persona set (last poster, starved Personas) so blog-post and a human don't re-derive the publishedAt sort by hand each run.
