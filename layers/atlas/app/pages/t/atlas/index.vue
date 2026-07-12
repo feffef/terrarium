@@ -64,7 +64,15 @@ useHead({ title: 'The Atlas of the Terrarium' })
         <p>
           We have sorted our observations into three wings, as one sorts a house
           into rooms. Each keeps a separate population and a separate weather; each
-          repays a slow visit. Choose one, and go quietly.
+          repays a slow visit.
+        </p>
+        <p>
+          One thing they hold in common: the year. The glass keeps six seasons —
+          ruled not by the sun but by the misting-can and the radiator below — and
+          everything under it lives by that shared calendar; yet each creature keeps
+          its own hours within it, a private round of waking and waning that answers
+          the season in its own way. We have drawn the year as a dial in every wing;
+          turn it, and the guide keeps pace. Choose a wing, and go quietly.
         </p>
       </section>
 
