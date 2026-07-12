@@ -101,6 +101,14 @@ export function relationsFor(slug: string, edges: Edge[]): Relation[] {
   return out.sort((a, b) => a.label.localeCompare(b.label) || a.other.localeCompare(b.other))
 }
 
+/** A character-count estimate for a strand label's SVG background pill —
+ *  safe without an actual text-measurement pass because the label vocabulary
+ *  is closed (the 10 FORWARD/REVERSE phrases above). Shared by the biome-wide
+ *  food web and a specimen's own relations web so their pills size alike. */
+export function relationLabelPillWidth(label: string): number {
+  return label.length * 7.2 + 16
+}
+
 // ── Phenology (#279/#282) ────────────────────────────────────────────────────
 /** One phase of a specimen's Glass Year (`phenology.phases[]` in the manifest
  *  schema) — the annual sibling of an activity `Band`. `span` is a day-of-year
@@ -204,6 +212,13 @@ export function toSpecimenView(d: RawSpecimenDoc): SpecimenView {
     plate: d.plate,
     illustration: d.illustration,
   }
+}
+
+/** A specimen's primary signature color, or the biome accent fallback — the
+ *  color a food-web/relations-web strand or sigrule borrows from its node.
+ *  Shared so a specimen's strand color can't drift between the two diagrams. */
+export function specimenAccent(s: SpecimenView | undefined): string {
+  return s?.signature?.colors?.[0]?.hex || 'var(--biome-accent)'
 }
 
 /** Inline CSS custom properties for a specimen's color signature — `--sig-1..3`,

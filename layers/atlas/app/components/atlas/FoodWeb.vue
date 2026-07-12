@@ -41,10 +41,6 @@ const nodeBySlug = computed<Record<string, Node>>(() =>
   Object.fromEntries(nodes.value.map((n) => [n.s.slug, n])),
 )
 
-function sig(s: SpecimenView | undefined): string {
-  return s?.signature?.colors?.[0]?.hex || 'var(--biome-accent)'
-}
-
 // Seat a specimen's engraved plate inside its medallion: re-centre the drawing on
 // the node and scale it down. `currentColor` (the linework) and `--sig-*` (the one
 // tinted feature) are supplied by the node group's style below.
@@ -64,25 +60,118 @@ function trim(a: Node, b: Node, r: number) {
   return { x: a.x + (dx / L) * r, y: a.y + (dy / L) * r }
 }
 
-interface Strand { e: Edge; d: string; endStroke: string }
+interface Strand { e: Edge; d: string; endStroke: string; labelX: number; labelY: number; label: string }
 
-const strands = computed<Strand[]>(() =>
-  props.edges
+// A busier web can still leave two UNRELATED strands' label pills seated close
+// enough to overlap by chance, even after the same-pair spread above — this
+// nudges any pill still overlapping another apart, a few passes of simple AABB
+// push-apart rather than a full force-directed layout (there are only ever a
+// handful of pills; this converges in practice).
+function resolveLabelCollisions(labels: { x: number; y: number; w: number }[]) {
+  const PILL_H = 18
+  for (let iter = 0; iter < 4; iter++) {
+    for (let i = 0; i < labels.length; i++) {
+      for (let j = i + 1; j < labels.length; j++) {
+        const A = labels[i]
+        const B = labels[j]
+        if (!A || !B) continue
+        const dx = B.x - A.x
+        const dy = B.y - A.y
+        const overlapX = (A.w + B.w) / 2 - Math.abs(dx)
+        const overlapY = PILL_H - Math.abs(dy)
+        if (overlapX <= 0 || overlapY <= 0) continue
+        if (Math.abs(dx) > 0.5) {
+          const push = overlapX / 2 + 1
+          const sign = dx >= 0 ? 1 : -1
+          A.x -= push * sign
+          B.x += push * sign
+        } else {
+          const push = overlapY / 2 + 1
+          const sign = dy >= 0 ? 1 : -1
+          A.y -= push * sign
+          B.y += push * sign
+        }
+      }
+    }
+  }
+}
+
+const strands = computed<Strand[]>(() => {
+  // A node pair can carry more than one Interaction (e.g. A preys-on B AND B
+  // fears A) — same two endpoints, so the same chord. Spread those apart
+  // perpendicular to the chord so their curves and labels don't land on top
+  // of each other; a pair with only one edge gets offset 0 (unchanged).
+  const pairTotal: Record<string, number> = {}
+  for (const e of props.edges) {
+    const key = e.from < e.to ? `${e.from}|${e.to}` : `${e.to}|${e.from}`
+    pairTotal[key] = (pairTotal[key] ?? 0) + 1
+  }
+  const pairSeen: Record<string, number> = {}
+
+  const built = props.edges
     .map((e): Strand | null => {
       const a = nodeBySlug.value[e.from]
       const b = nodeBySlug.value[e.to]
       if (!a || !b) return null
+      const key = e.from < e.to ? `${e.from}|${e.to}` : `${e.to}|${e.from}`
+      const total = pairTotal[key] ?? 1
+      const idx = pairSeen[key] ?? 0
+      pairSeen[key] = idx + 1
+      const offset = (idx - (total - 1) / 2) * 28
+      // The pair's own canonical direction — the SAME two endpoints in the
+      // SAME order regardless of which edge in the pair is being processed.
+      // The perpendicular must be measured from a fixed direction, not each
+      // edge's own from→to, or reversing the edge flips the perpendicular's
+      // sign right along with `offset`'s sign and the two cancel out.
+      const [canonA, canonB] = e.from < e.to ? [a, b] : [b, a]
+
       const s = trim(a, b, R + 2)
       const t = trim(b, a, R + 8)
-      // Control point pulled toward centre — strands bow inward, like a real web.
+      // Control point pulled toward centre — strands bow inward, like a real
+      // web — then nudged perpendicular to the chord by `offset`.
       const mx = (a.x + b.x) / 2
       const my = (a.y + b.y) / 2
-      const qx = cx + (mx - cx) * 0.45
-      const qy = cy + (my - cy) * 0.45
-      return { e, d: `M${s.x.toFixed(1)},${s.y.toFixed(1)} Q${qx.toFixed(1)},${qy.toFixed(1)} ${t.x.toFixed(1)},${t.y.toFixed(1)}`, endStroke: sig(a.s) }
+      let qx = cx + (mx - cx) * 0.45
+      let qy = cy + (my - cy) * 0.45
+      // The strand's own label seat — the STRAIGHT chord's midpoint (s↔t), not
+      // the bowed curve's own t=0.5 belly. Every strand's belly is pulled toward
+      // the same centre (above), so bellies from unrelated strands crowd into
+      // one small patch; the chord midpoint instead stays out near the ring
+      // perimeter, close to the two nodes the label is actually about.
+      let labelX = (s.x + t.x) / 2
+      let labelY = (s.y + t.y) / 2
+      if (offset !== 0) {
+        const dx = canonB.x - canonA.x
+        const dy = canonB.y - canonA.y
+        const L = Math.hypot(dx, dy) || 1
+        const px = -dy / L
+        const py = dx / L
+        qx += px * offset
+        qy += py * offset
+        labelX += px * offset
+        labelY += py * offset
+      }
+      return {
+        e,
+        d: `M${s.x.toFixed(1)},${s.y.toFixed(1)} Q${qx.toFixed(1)},${qy.toFixed(1)} ${t.x.toFixed(1)},${t.y.toFixed(1)}`,
+        endStroke: specimenAccent(a.s),
+        labelX,
+        labelY,
+        label: relationLabel(e.kind, 'out'),
+      }
     })
-    .filter((x): x is Strand => x !== null),
-)
+    .filter((x): x is Strand => x !== null)
+
+  const labelBoxes = built.map((b) => ({ x: b.labelX, y: b.labelY, w: relationLabelPillWidth(b.label) }))
+  resolveLabelCollisions(labelBoxes)
+  built.forEach((b, i) => {
+    const box = labelBoxes[i]
+    if (!box) return
+    b.labelX = box.x
+    b.labelY = box.y
+  })
+  return built
+})
 
 // Neighbour set for the hover dimming.
 const neighbours = computed<Record<string, Set<string>>>(() => {
@@ -149,6 +238,19 @@ const usedKinds = computed(() => new Set(props.edges.map((e) => e.kind)))
         marker-end="url(#atlas-web-arrow)"
       />
 
+      <!-- each strand's meaning, seated at its own curve's belly — always on, so
+           the web reads without having to wander it first -->
+      <g v-for="(st, i) in strands" :key="`l${i}`" class="strand-label" :class="strandClass(st.e)">
+        <rect
+          :x="st.labelX - relationLabelPillWidth(st.label) / 2"
+          :y="st.labelY - 9"
+          :width="relationLabelPillWidth(st.label)"
+          height="18"
+          rx="3"
+        />
+        <text :x="st.labelX" :y="st.labelY + 4" text-anchor="middle">{{ st.label }}</text>
+      </g>
+
       <!-- nodes -->
       <NuxtLink
         v-for="n in nodes"
@@ -177,7 +279,7 @@ const usedKinds = computed(() => new Set(props.edges.map((e) => e.kind)))
             <g v-if="n.s.illustration" class="figure" :transform="figTransform(n)" v-html="n.s.illustration" />
             <text v-else class="mk" :x="n.x" :y="n.y + 3.5" text-anchor="middle">{{ rarityMeta(n.s.rarity).mark }}</text>
             <!-- the specimen's colour, carried as a short engraved rule under the name -->
-            <line class="sigrule" :x1="n.x - 13" :x2="n.x + 13" :y1="n.y + R + 22" :y2="n.y + R + 22" :style="{ stroke: sig(n.s) }" />
+            <line class="sigrule" :x1="n.x - 13" :x2="n.x + 13" :y1="n.y + R + 22" :y2="n.y + R + 22" :style="{ stroke: specimenAccent(n.s) }" />
             <text class="nm" :x="n.x" :y="n.y + R + 15" text-anchor="middle">{{ n.s.binomial }}</text>
           </g>
         </a>

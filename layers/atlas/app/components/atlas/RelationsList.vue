@@ -3,18 +3,29 @@
 // view — both what it does and what is done to it (the reverse label is derived,
 // so both directions show from one authored fact). Each links to the counterpart,
 // wearing that creature's color signature. Empty is a mystery, not a void.
+//
+// `highlight` (optional, one-way): the sibling `AtlasRelationsWeb` above this
+// list emits `update:highlight` when a spoke or its arrow is hovered/focused —
+// this list only reads it (no matching emit back), lighting every row for that
+// counterpart. Unused (undefined) elsewhere: no behavior change for any other
+// caller.
 import type { Relation, SpecimenView } from '../../utils/atlas'
 
 defineProps<{
   relations: Relation[]
   specimensBySlug: Record<string, SpecimenView>
   biome: string
+  highlight?: string | null
 }>()
 </script>
 
 <template>
   <ul v-if="relations.length" class="atlas-relations">
-    <li v-for="r in relations" :key="`${r.kind}-${r.dir}-${r.other}`">
+    <li
+      v-for="r in relations"
+      :key="`${r.kind}-${r.dir}-${r.other}`"
+      :class="{ hot: highlight === r.other, dim: !!highlight && highlight !== r.other }"
+    >
       <span class="kind">{{ r.label }}</span>
       <span class="rel-body">
         <NuxtLink
