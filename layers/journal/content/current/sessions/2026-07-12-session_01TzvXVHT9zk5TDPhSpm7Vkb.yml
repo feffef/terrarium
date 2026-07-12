@@ -1,0 +1,113 @@
+schemaVersion: 1
+session: session_01TzvXVHT9zk5TDPhSpm7Vkb
+startedAt: 2026-07-12T10:54:48Z
+endedAt: 2026-07-12T11:40:24Z
+kind: interactive
+goal: Add a Mermaid MDC diagram component (#364)
+status: in-review
+outcome: "PR #366 open, gate green, human-only-to-merge"
+summary: "Implemented issue #364 (Trusted owner, ready-for-agent) via the model split the user asked for: Sonnet subagents built the core (mermaid dep, a Platform-level ProsePre.vue override, MermaidDiagram.vue, unit + e2e tests, a tenant-layers §4 note), Fable authored two graph TD diagrams into architecture.md and how-it-works.md, and Opus ran the two-axis code-review. A Sonnet agent found and fixed a real bug the first component shipped: a ClientOnly mount-order race left the diagram silently blank. On a direct follow-up human request I then extended scripts/preview.ts shot to wait for content before capturing (--wait default 2s via --virtual-time-budget, and --wait-for <selector> via playwright-core). Two coherent commits, full gate green (30/30 e2e), PR #366 opened human-only-to-merge (ADR-0004 new-dependency axis) and subscribed. All work was human-directed."
+prs:
+  - "366"
+docsRead:
+  - path: CLAUDE.md
+    reason: conventions, ADR ground rules, PR discipline
+  - path: docs/agents/tenant-layers.md
+    reason: component-override placement decision
+  - path: tests/e2e/smoke.spec.ts
+    reason: single-build e2e homing convention
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: tests/unit/routing.spec.ts
+    reason: (no reason given)
+  - path: app/components/MermaidDiagram.vue
+    reason: (read before editing)
+  - path: app/components/content/ProsePre.vue
+    reason: (read before editing)
+  - path: app/utils/mermaid.ts
+    reason: (no reason given)
+  - path: tests/support/e2e.ts
+    reason: (no reason given)
+  - path: layers/journal/tests/e2e/journal.e2e.ts
+    reason: (no reason given)
+  - path: scripts/preview.ts
+    reason: (read before editing)
+  - path: scripts/screenshot.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: implement
+    reason: orchestrated the build
+  - name: code-review
+    reason: two-axis Standards + Spec review with Opus
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: First MermaidDiagram shipped rendering in onMounted; a ClientOnly mount-order race left containerRef null, so the diagram was silently blank.
+    solution: "Render from watch(containerRef, …, { immediate: true }) so it fires once the ref attaches. Passed typecheck/lint/unit — only the browser e2e caught it."
+    severity: moderate
+  - description: scripts/preview.ts shot captured the pre-render frame, shipping a blank gap where the async client-only mermaid diagram had not rendered yet.
+    solution: Extended shot with a default 2s --virtual-time-budget wait and a --wait-for <selector> playwright path. Now the default for every shot.
+    severity: moderate
+  - description: origin/main advanced two commits after the session's git fetch, so the staged diff vs origin/main showed unrelated inverted changes.
+    solution: Rebased uncommitted work onto fresh origin/main via stash + reset --hard + pop (no conflicts). The CLAUDE.md-documented staleness, handled.
+    severity: minor
+  - description: noUncheckedIndexedAccess rejected the new extractFlag index access and the windowSize destructure, needing two typecheck round-trips.
+    solution: Capture args[i] into a narrowed const; give the WxH destructure defaults.
+    severity: nit
+durationSec: 2736
+models:
+  claude-opus-4-8: 221
+toolCounts:
+  ToolSearch: 5
+  Bash: 32
+  mcp__github__issue_read: 1
+  Read: 22
+  TaskCreate: 4
+  TaskUpdate: 8
+  Agent: 5
+  TaskOutput: 3
+  Edit: 11
+  Skill: 3
+  Write: 5
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  SendUserFile: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - app/components/MermaidDiagram.vue
+  - app/components/content/ProsePre.vue
+  - scripts/_tmp-mermaid-shot.ts
+  - scripts/screenshot.ts
+  - scripts/preview.ts
+  - tests/unit/preview-flags.spec.ts
+subagents:
+  - type: general-purpose
+    task: Implement mermaid MDC component
+    model: sonnet
+  - type: general-purpose
+    task: Author two mermaid diagrams
+    model: fable
+  - type: general-purpose
+    task: Add mermaid e2e test and run gate
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of mermaid work
+    model: opus
+  - type: general-purpose
+    task: Spec review of mermaid work
+    model: opus
+gitBranch: claude/sonnet-agents-opus-review-qv2z7q
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+learnings:
+  - "Chromium --virtual-time-budget=<ms> is the headless-native wait-before-screenshot: advances page timers up to N ms, then captures."
+  - Vue <ClientOnly> attaches its default-slot DOM on a queued microtask AFTER both child and parent onMounted fire, so a parent onMounted reading a ref inside that slot reads null; watch the ref instead.
+  - components/content/ overrides resolve Platform-wide regardless of which layer's directory they sit in (override priority, not per-Tenant scoping).
+ideas:
+  - Add a content-derived e2e sweep that asserts every page containing a ```mermaid fenced block renders a .mermaid-diagram svg with no console errors, so future diagrams are covered automatically without a hand-written per-page assertion — mirroring how the entry-route sweep is derived from manifests.
