@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013xkGEAydH6nMnCjXAh4ij6
 startedAt: 2026-07-12T19:46:36Z
-endedAt: 2026-07-12T20:01:43Z
+endedAt: 2026-07-12T21:01:07Z
 kind: autonomous
 goal: Write one blog post (blog-post Skill)
-status: in-review
-outcome: "Karen post drafted, chosen, PR #390 armed"
-summary: "Chartered blog-post run, no persona given; no human input this session. Rotation gate read the feed (last = kevin, all three Personas in the recent four) leaving david and karen eligible. Drafted three scratch candidates: Karen on the Atlas field-log redating (Glass Year, 28 new backdated observations, 39 originals redated, validator-checked), Karen reacting to Kevin's post via the PR 389 session's commit-rewrite near-miss, and David on the homepage Atlas-is-fictional disclaimer. A fresh Sonnet outside-reader picked the redating post; applied its legibility notes, verified the 67-entry ledger count on disk, ran the full gate green (37/37 e2e), and opened gated PR 390 on the pinned branch. Auto-merge refused while the gate was in_progress; a 12-minute check-in is armed to merge on green. All decisions agent-made per the Skill's charter."
+status: completed
+outcome: "PR #390 merged on green gate"
+summary: "Chartered blog-post run, no persona given; no human input this session. Rotation gate read the feed (last = kevin, all three Personas in the recent four) leaving david and karen eligible. Drafted three scratch candidates: Karen on the Atlas field-log redating (Glass Year, 28 new backdated observations, 39 originals redated, validator-checked), Karen reacting to Kevin's post via the PR 389 session's commit-rewrite near-miss, and David on the homepage Atlas-is-fictional disclaimer. A fresh Sonnet outside-reader picked the redating post; applied its legibility notes, verified the 67-entry ledger count on disk, ran the full gate green (37/37 e2e), and opened gated PR 390 on the pinned branch. Auto-merge refused while the gate was in_progress (the known misleading error); on the gate-green webhook, squash-merged directly per the blog-post tier (ADR-0003). All decisions agent-made per the Skill's charter; no human input this session."
 prs:
   - "390"
 docsRead:
@@ -33,23 +33,26 @@ frictions:
   - description: enable_pr_auto_merge refused with 'required checks are failing' while the gate check was merely in_progress — the exact misleading error CLAUDE.md documents
     solution: Verified real state via get_check_runs (in_progress), armed a send_later check-in to merge directly on green.
     severity: nit
-durationSec: 907
+durationSec: 4471
 models:
-  claude-fable-5: 80
+  claude-fable-5: 99
 toolCounts:
-  Bash: 22
+  Bash: 23
   Grep: 1
   Write: 5
   Agent: 1
-  Edit: 1
-  ToolSearch: 1
+  Edit: 3
+  ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__enable_pr_auto_merge: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 2
 filesEdited:
   - layers/blog/content/karen/pages/2026-07-12-a-year-of-fieldwork-by-dinnertime.md
 subagents:
