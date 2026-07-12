@@ -1,0 +1,174 @@
+schemaVersion: 1
+session: session_01Rervdd6Jmtd7rtzpSqBxYq
+startedAt: 2026-07-12T17:33:16Z
+endedAt: 2026-07-12T18:09:49Z
+kind: interactive
+goal: Add a curated blog tag system with a cross-Persona browse page
+status: in-review
+outcome: "Grilled, built, tested green, PR #380 opened and subscribed"
+summary: "User asked for a blog tagging system: read all existing posts, derive tags, and let the blog's main page (above the Persona spaces) browse content across all three Personas by tag, with each post linking to its tags. Ran `/grill-with-docs` (grilling + domain-modeling) per the user's explicit request, asking 9 sequential questions with recommendations (curated vs freeform vocabulary, enum enforcement, route design, front-door default view, retroactive tagging scope, CONTEXT.md glossary entry, ADR necessity, outcome-quality tags, tag-chip placement in feeds) and got explicit sign-off on the full plan before implementing. Added a 15-tag curated z.enum vocabulary to the blog pages schema; read and tagged all 23 existing posts across david/karen/kevin; added a Tag glossary entry to layers/blog/CONTEXT.md; built /t/blog as a Tenant-root front door (ADR-0016 precedent) combining all three Personas' posts into one feed filterable by ?tag=. Mid-build the user redirected the front door's layout — my first draft used inline persona links and a flat top-of-page tag nav; the user explicitly asked for a sidebar reusing the existing BlogNetwork component's label/style instead, which I then implemented. Full local gate passed (lint, typecheck, validate:content, 308 unit tests, build, 37 e2e tests including two new checks). Verified visually via screenshot and a computed-style probe. Committed, pushed, opened PR #380, subscribed to its activity; CI was pending with no review comments at last check."
+prs:
+  - "380"
+docsRead:
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: the Tenant-root-page precedent /t/blog follows
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: confirm only pages is route-addressable
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: human-only surface + auto-merge tiers
+  - path: layers/blog/CONTEXT.md
+    reason: Blog Tenant vocabulary, where the Tag entry landed
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/tenant.config.ts
+    reason: (read before editing)
+  - path: layers/blog/app/pages/t/blog/[space]/index.vue
+    reason: (read before editing)
+  - path: layers/blog/app/pages/t/blog/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/blog/content/david/pages/2026-07-12-github-cant-tell-who-merged-this-one.md
+    reason: (read before editing)
+  - path: app/pages/index.vue
+    reason: (no reason given)
+  - path: layers/blog/tests/e2e/blog.e2e.ts
+    reason: (read before editing)
+  - path: layers/blog/tests/unit/blog-immutable-links.spec.ts
+    reason: (no reason given)
+  - path: app/composables/space.ts
+    reason: (no reason given)
+  - path: layers/blog/app/utils/personas.ts
+    reason: (no reason given)
+  - path: layers/blog/app/utils/format.ts
+    reason: (no reason given)
+  - path: content.config.ts
+    reason: (no reason given)
+  - path: shared/routing.ts
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-05-first-light.md
+    reason: (read before editing)
+  - path: layers/blog/content/david/pages/2026-07-06-field-notes-write-themselves.md
+    reason: (read before editing)
+  - path: layers/blog/content/david/pages/2026-07-06-the-generator-is-gone.md
+    reason: (read before editing)
+  - path: layers/blog/content/david/pages/2026-07-07-notes-from-inside-the-glass.md
+    reason: (read before editing)
+  - path: layers/blog/content/david/pages/2026-07-09-the-self-merge-tier-just-grew-by-one.md
+    reason: (read before editing)
+  - path: layers/blog/content/david/pages/2026-07-11-the-merge-button-runs-on-a-real-computer.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-07-05-after-themselves.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-07-05-here-we-go-again.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-07-06-the-guesses-didnt-stop.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-07-07-an-audience-of-zero.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-07-08-a-fix-for-a-bug-you-cant-find.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-07-09-zero-for-two.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-07-11-the-gate-that-broke-its-own-gate.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-07-12-interior-decorating.md
+    reason: (read before editing)
+  - path: layers/blog/content/kevin/pages/2026-07-05-should-i-be-worried.md
+    reason: (read before editing)
+  - path: layers/blog/content/kevin/pages/2026-07-05-they-went-back-and-cleaned-up.md
+    reason: (read before editing)
+  - path: layers/blog/content/kevin/pages/2026-07-06-it-used-itself-as-the-test-rig.md
+    reason: (read before editing)
+  - path: layers/blog/content/kevin/pages/2026-07-06-same-login-both-sides.md
+    reason: (read before editing)
+  - path: layers/blog/content/kevin/pages/2026-07-07-it-reviewed-its-own-shortcuts.md
+    reason: (read before editing)
+  - path: layers/blog/content/kevin/pages/2026-07-10-it-checked-its-own-homework.md
+    reason: (read before editing)
+  - path: layers/blog/content/kevin/pages/2026-07-11-it-hit-a-wall-and-built-a-tool.md
+    reason: (read before editing)
+  - path: layers/blog/content/kevin/pages/2026-07-12-it-read-its-own-bad-review.md
+    reason: (read before editing)
+  - path: layers/blog/app/assets/theme.css
+    reason: (read before editing)
+  - path: layers/atlas/app/pages/t/atlas/index.vue
+    reason: (no reason given)
+  - path: layers/blog/nuxt.config.ts
+    reason: (no reason given)
+  - path: layers/blog/app/components/blog/Network.vue
+    reason: (read before editing)
+  - path: layers/blog/app/pages/t/blog/index.vue
+    reason: (read before editing)
+skillsUsed:
+  - name: grilling
+    reason: walked the design tree one question at a time before building
+  - name: domain-modeling
+    reason: decided the Tag glossary entry and rule-of-two check
+  - name: grill-with-docs
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: mermaid was declared in package.json but missing from node_modules at session start (a partial/incomplete install in this environment), causing pnpm typecheck and pnpm build to fail with an unrelated Cannot find module 'mermaid' error unrelated to this session's diff.
+    solution: Ran `pnpm install` to complete the install, which resolved it immediately. Worth trying before assuming a mysterious pre-existing typecheck/build failure is caused by the session's own change.
+    severity: minor
+  - description: After adding the tags field to the blog manifest schema, pnpm typecheck failed claiming .select('tags') wasn't a valid field — a stale generated Nuxt Content collection type, not a real error.
+    solution: pnpm exec nuxt prepare regenerates collection types from the current manifest; easy to forget mid-session after a schema edit that isn't a fresh pnpm install.
+    severity: nit
+durationSec: 2193
+models:
+  claude-sonnet-5: 313
+toolCounts:
+  Bash: 56
+  Skill: 4
+  Read: 57
+  AskUserQuestion: 12
+  Edit: 40
+  Write: 3
+  Grep: 3
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 3
+filesEdited:
+  - layers/blog/tenant.config.ts
+  - layers/blog/CONTEXT.md
+  - layers/blog/content/david/pages/2026-07-05-first-light.md
+  - layers/blog/content/david/pages/2026-07-06-field-notes-write-themselves.md
+  - layers/blog/content/david/pages/2026-07-06-the-generator-is-gone.md
+  - layers/blog/content/david/pages/2026-07-07-notes-from-inside-the-glass.md
+  - layers/blog/content/david/pages/2026-07-09-the-self-merge-tier-just-grew-by-one.md
+  - layers/blog/content/david/pages/2026-07-11-the-merge-button-runs-on-a-real-computer.md
+  - layers/blog/content/david/pages/2026-07-12-github-cant-tell-who-merged-this-one.md
+  - layers/blog/content/karen/pages/2026-07-05-after-themselves.md
+  - layers/blog/content/karen/pages/2026-07-05-here-we-go-again.md
+  - layers/blog/content/karen/pages/2026-07-06-the-guesses-didnt-stop.md
+  - layers/blog/content/karen/pages/2026-07-07-an-audience-of-zero.md
+  - layers/blog/content/karen/pages/2026-07-08-a-fix-for-a-bug-you-cant-find.md
+  - layers/blog/content/karen/pages/2026-07-09-zero-for-two.md
+  - layers/blog/content/karen/pages/2026-07-11-the-gate-that-broke-its-own-gate.md
+  - layers/blog/content/karen/pages/2026-07-12-interior-decorating.md
+  - layers/blog/content/kevin/pages/2026-07-05-should-i-be-worried.md
+  - layers/blog/content/kevin/pages/2026-07-05-they-went-back-and-cleaned-up.md
+  - layers/blog/content/kevin/pages/2026-07-06-it-used-itself-as-the-test-rig.md
+  - layers/blog/content/kevin/pages/2026-07-06-same-login-both-sides.md
+  - layers/blog/content/kevin/pages/2026-07-07-it-reviewed-its-own-shortcuts.md
+  - layers/blog/content/kevin/pages/2026-07-10-it-checked-its-own-homework.md
+  - layers/blog/content/kevin/pages/2026-07-11-it-hit-a-wall-and-built-a-tool.md
+  - layers/blog/content/kevin/pages/2026-07-12-it-read-its-own-bad-review.md
+  - layers/blog/app/pages/t/blog/[space]/index.vue
+  - layers/blog/app/assets/theme.css
+  - layers/blog/app/pages/t/blog/[space]/[...slug].vue
+  - layers/blog/app/pages/t/blog/index.vue
+  - layers/blog/tests/e2e/blog.e2e.ts
+  - scratch-probe.ts
+  - layers/blog/app/components/blog/Network.vue
+gitBranch: claude/blog-tagging-system-jinubl
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+learnings:
+  - ADR-0016's Tenant-root-page precedent (built for the Atlas front door) transposes directly onto a second Tenant (the Blog) with no adaptation needed — same resolveSpaceRoute-per-Space read-only pattern, same reason it stays outside the ADR-0004 human-only routing core.
