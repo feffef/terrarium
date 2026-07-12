@@ -1,0 +1,134 @@
+schemaVersion: 1
+session: session_01KD1GSj3Ljh79fK5EX9PKW3
+startedAt: 2026-07-11T21:45:38Z
+endedAt: 2026-07-12T00:13:36Z
+kind: interactive
+goal: Rework Atlas Sprint 2 almanac per feedback
+status: in-review
+outcome: "Phase-driven dial shipped; PR #334 green, in review"
+summary: "Human-instructed throughout. The user (Trusted owner) gave feedback on Sprint 2's Wheel of the Year (#305): main UI element but subtle effect, sightings unfindable, the stacked composite wheel confusing. Via AskUserQuestion they chose the direction — dial as a season selector showing one paragraph at a time, a landing \"who's about this season\" roster, clickable sighting ticks. Three follow-up rounds refined it: layout order (intro, then wheel, then seasons); labelling the dial's two vocabularies (SEASON vs \"<binomial> PHASE\") after the user flagged a confusing season/phase compound; and carrying the wheel's ?day= through the landing's specimen links. Agent-initiated within that mandate: the implementation and the successive subagent conversions. The model then EVOLVED through the user's own insight: seasons are the shared terrarium calendar but phases are individual to each specimen, so the content should be tied to the creature's PHASES (its own arc) with seasons as informational rim context. That re-pointed the dial (phase-driven ::phase-note, seasons demoted to a labelled context line) and required re-converting all 15 essays a second time (season-buckets → each creature's own phases); the season-note/inline-season components were retired. Full gate + CI green throughout; Playwright probes verified per-creature phase switching, the clickable tick, the labelled caption, and the date-carrying landing roster. Awaiting human merge (not self-merged, ADR-0003)."
+prs:
+  - "334"
+docsRead:
+  - path: CLAUDE.md
+    reason: ground rules, human-only surfaces, PR/branch discipline, ADR-0017 footer
+  - path: layers/atlas/app/composables/almanac.ts
+    reason: the Almanac contract the dial + MDC components share
+  - path: layers/atlas/app/components/atlas/PhenologyWheel.vue
+    reason: the dial to rework into a season selector
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: naturalist voice + the authoring pattern to update
+  - path: layers/atlas/tests/e2e/atlas.e2e.ts
+    reason: what the gate actually hydrates for atlas
+  - path: layers/atlas/app/components/atlas/RhythmBand.vue
+    reason: (no reason given)
+  - path: /root/.claude/projects/-home-user-terrarium/56085f41-e1b2-57d6-ba35-e8701a7503a8/tool-results/bgvg6cy55.txt
+    reason: (no reason given)
+  - path: layers/atlas/app/utils/atlas.ts
+    reason: (read before editing)
+  - path: layers/atlas/app/assets/theme.css
+    reason: (read before editing)
+  - path: layers/atlas/tenant.config.ts
+    reason: (read before editing)
+  - path: layers/atlas/app/pages/t/atlas/[space]/index.vue
+    reason: (read before editing)
+  - path: layers/atlas/content/canopy/pages/lumina-fabulae.md
+    reason: (read before editing)
+  - path: layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/atlas/app/components/content/Season.vue
+    reason: (read before editing)
+  - path: layers/atlas/app/components/content/Sighting.vue
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: closure front door
+  - name: log-session
+    reason: this log
+frictions:
+  - description: The 15 essays were mass-authored under the season-bucket model, then re-authored under the phase model when the design evolved — two full content passes (~6 opus subagents). The better axis (phases, not seasons) only emerged mid-build.
+    solution: Reference-first-then-scale contained the cost (one specimen proved each model before the fleet ran); for open-ended UI/content design, settle the organizing axis on one reference and confirm before the mass authoring pass.
+    severity: moderate
+  - description: I briefed the subagents (and wrote the reference) that "::almanac" needs no closing fence; MDC block components need a closing "::", so the bare form broke the following season-note parse and every note rendered as plain prose.
+    solution: An empty MDC block still needs its "::" close (like "::sighting"); fixed in all 15 files + the skill. Assert component presence in a probe, not just clean hydration.
+    severity: major
+  - description: The gate's e2e only hydrates two atlas specimen routes and checks for console errors, so a broken MDC component that degrades to prose (no error) escaped it entirely.
+    solution: A structural content check (assert each specimen renders six season-note components, valid "of=" names, real sighting dates) would catch this class at ~1-2s.
+    severity: moderate
+  - description: Three parallel subagents used inconsistent fence colon counts (pool wrote four, floor and canopy three) despite one shared brief; had to normalize afterward.
+    solution: Pin the exact fence syntax with a canonical example in the brief; normalize in review.
+    severity: minor
+  - description: '"nuxt dev" content-DB-not-ready race rendered the first biome-landing dev screenshot empty.'
+    solution: Use the production preview server for trustworthy landing shots (already CLAUDE.md guidance).
+    severity: nit
+  - description: Harness did not auto-inject the Co-Authored-By/Claude-Session footer on -m commits; amended it in each time.
+    solution: "Verify and amend (the documented practice for the known #318 case)."
+    severity: nit
+durationSec: 8878
+models:
+  claude-opus-4-8: 617
+  <synthetic>: 1
+toolCounts:
+  Bash: 92
+  Grep: 3
+  Read: 47
+  ToolSearch: 5
+  mcp__github__list_pull_requests: 1
+  mcp__github__pull_request_read: 6
+  AskUserQuestion: 2
+  Edit: 83
+  Write: 12
+  Agent: 6
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 2
+  Skill: 2
+  mcp__github__update_pull_request: 2
+  SendUserFile: 3
+filesEdited:
+  - layers/atlas/app/composables/almanac.ts
+  - layers/atlas/app/components/atlas/PhenologyWheel.vue
+  - layers/atlas/app/components/content/SeasonNote.vue
+  - layers/atlas/app/components/content/Sighting.vue
+  - layers/atlas/app/pages/t/atlas/[space]/index.vue
+  - layers/atlas/app/utils/atlas.ts
+  - layers/atlas/app/assets/theme.css
+  - layers/atlas/content/canopy/pages/lumina-fabulae.md
+  - _probe.ts
+  - layers/atlas/app/components/content/Almanac.vue
+  - layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+  - layers/atlas/app/components/content/Season.vue
+  - layers/atlas/tenant.config.ts
+  - layers/atlas/tests/e2e/atlas.e2e.ts
+  - .agents/skills/atlas-specimen/SKILL.md
+  - layers/atlas/app/components/content/PhaseNote.vue
+subagents:
+  - type: general-purpose
+    task: Convert floor specimens to season model
+    model: opus
+  - type: general-purpose
+    task: Convert canopy specimens to season model
+    model: opus
+  - type: general-purpose
+    task: Convert pool specimens to season model
+    model: opus
+  - type: general-purpose
+    task: Convert floor specimens to phase notes
+    model: opus
+  - type: general-purpose
+    task: Convert canopy specimens to phase notes
+    model: opus
+  - type: general-purpose
+    task: Convert pool specimens to phase notes
+    model: opus
+gitBranch: claude/astlas-spring-2-feedback-t8hsgv
+entrypoint: remote
+cliVersion: 2.1.207
+learnings:
+  - "The decisive design move for this feature was matching the UI axis to the data's ownership: the SHARED thing (seasons) is context, the INDIVIDUAL thing (each specimen's phases) drives the per-specimen content. The user surfaced this; it resolved the whole 'what are phases / why are they here' confusion at once."
+  - When two overlapping vocabularies confuse a reader (here the six shared seasons vs a creature's own phenology phases), explicitly LABELLING each layer beat hiding one — the user preferred a labelled SEASON / PHASE caption over my first instinct to drop the phase names.
+  - Nuxt Content v3 renders specimen essay content client-side (DB loads post-hydration), so curling SSR HTML shows component classes absent even when they render fine in the browser — verify against the rendered DOM.
+  - A bare MDC block component "::name" (no closing "::") swallows/breaks the following sibling blocks; empty components still need the close, the component just ignores the empty slot.
+ideas:
+  - "Add an Atlas content-structure check (extend validate:content or a sibling script) that parses each specimen's MDC body and asserts invariants: exactly six ::season-note blocks with valid Glass-Year \"of=\" names, one ::almanac, and every ::sighting date resolving to a real in-biome observation. It catches the whole \"MDC degraded to prose / dangling reference\" class the error-only e2e hydration misses, in ~1-2s, and would have caught this session's ::almanac regression before CI."
