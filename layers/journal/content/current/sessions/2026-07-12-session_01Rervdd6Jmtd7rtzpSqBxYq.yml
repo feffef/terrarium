@@ -1,29 +1,31 @@
 schemaVersion: 1
 session: session_01Rervdd6Jmtd7rtzpSqBxYq
 startedAt: 2026-07-12T17:33:16Z
-endedAt: 2026-07-12T18:09:49Z
+endedAt: 2026-07-12T18:17:49Z
 kind: interactive
 goal: Add a curated blog tag system with a cross-Persona browse page
 status: in-review
-outcome: "Grilled, built, tested green, PR #380 opened and subscribed"
-summary: "User asked for a blog tagging system: read all existing posts, derive tags, and let the blog's main page (above the Persona spaces) browse content across all three Personas by tag, with each post linking to its tags. Ran `/grill-with-docs` (grilling + domain-modeling) per the user's explicit request, asking 9 sequential questions with recommendations (curated vs freeform vocabulary, enum enforcement, route design, front-door default view, retroactive tagging scope, CONTEXT.md glossary entry, ADR necessity, outcome-quality tags, tag-chip placement in feeds) and got explicit sign-off on the full plan before implementing. Added a 15-tag curated z.enum vocabulary to the blog pages schema; read and tagged all 23 existing posts across david/karen/kevin; added a Tag glossary entry to layers/blog/CONTEXT.md; built /t/blog as a Tenant-root front door (ADR-0016 precedent) combining all three Personas' posts into one feed filterable by ?tag=. Mid-build the user redirected the front door's layout — my first draft used inline persona links and a flat top-of-page tag nav; the user explicitly asked for a sidebar reusing the existing BlogNetwork component's label/style instead, which I then implemented. Full local gate passed (lint, typecheck, validate:content, 308 unit tests, build, 37 e2e tests including two new checks). Verified visually via screenshot and a computed-style probe. Committed, pushed, opened PR #380, subscribed to its activity; CI was pending with no review comments at last check."
+outcome: "Grilled, built, refined via UI feedback, tested green, PR #380 open"
+summary: "User asked for a blog tagging system with a cross-Persona browse page above the Persona spaces. Ran /grill-with-docs (grilling + domain-modeling) across 9 sequential questions with recommendations, reaching explicit sign-off before implementing. Added a 15-tag curated z.enum vocabulary to the blog pages schema; read and tagged all 23 existing posts across david/karen/kevin; added a Tag glossary entry to layers/blog/CONTEXT.md; built /t/blog as a Tenant-root front door (ADR-0016 precedent) combining all three Personas' posts into one feed filterable by ?tag=. After the initial implementation and PR #380, the user gave two rounds of direct UI feedback I acted on without re-grilling (both explicit user asks, not agent-initiated redesign): first to move the tag directory and intro into a sidebar reusing the existing BlogNetwork component's label/style instead of inline links; then, after screenshotting, the user flagged the result as still \"a box in a box\" nearly duplicating content (the intro paragraph vs the Network's own hint line) — I traced this to the Network panel being stacked inside a second, separately-boxed \"About\" wrapper, and fixed it by giving BlogNetwork an optional #extra slot so the tag directory folds into the SAME box, with the wrapper reduced to a plain layout container. My first fix attempt for that didn't visually take because the override CSS rule had lower cascade priority (same specificity, but earlier in source order) than the base box-styling rule it needed to beat; fixed by adding a third class to win on specificity rather than reordering. The user also asked me to verify feed ordering against real timestamps twice (publishedAt vs. each other, then publishedAt vs. git commit time) rather than trusting memory — the second check surfaced a genuine, pre-existing data inconsistency (one post's publishedAt postdates its own commit by over 3 hours), which the user asked me to guard against going forward with a short blog-post Skill addition (published date should be roughly commit time, never a future timestamp) rather than fixing the existing post's data. Full local gate passed after every round (lint, typecheck, validate:content, 308 unit tests, build, 37 e2e tests). Verified visually via screenshot and computed-style probes. Two commits pushed to the PR; CI green on the first, not yet re-checked on the second at last note."
 prs:
   - "380"
 docsRead:
   - path: docs/adr/0016-tenant-root-layer-routes.md
     reason: the Tenant-root-page precedent /t/blog follows
-  - path: docs/adr/0006-runtime-routing-path-prefix.md
-    reason: confirm only pages is route-addressable
-  - path: docs/adr/0004-objective-safety-gate.md
-    reason: human-only surface + auto-merge tiers
-  - path: layers/blog/CONTEXT.md
-    reason: Blog Tenant vocabulary, where the Tag entry landed
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: where the publishedAt-timing note landed
   - path: CONTEXT-MAP.md
     reason: (no reason given)
   - path: CONTEXT.md
     reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (read before editing)
   - path: layers/blog/tenant.config.ts
     reason: (read before editing)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
   - path: layers/blog/app/pages/t/blog/[space]/index.vue
     reason: (read before editing)
   - path: layers/blog/app/pages/t/blog/[space]/[...slug].vue
@@ -113,27 +115,34 @@ skillsUsed:
     reason: (no reason given)
 frictions:
   - description: mermaid was declared in package.json but missing from node_modules at session start (a partial/incomplete install in this environment), causing pnpm typecheck and pnpm build to fail with an unrelated Cannot find module 'mermaid' error unrelated to this session's diff.
-    solution: Ran `pnpm install` to complete the install, which resolved it immediately. Worth trying before assuming a mysterious pre-existing typecheck/build failure is caused by the session's own change.
+    solution: Ran pnpm install to complete the install, which resolved it immediately. Worth trying before assuming a mysterious pre-existing typecheck/build failure is caused by the session's own change.
     severity: minor
   - description: After adding the tags field to the blog manifest schema, pnpm typecheck failed claiming .select('tags') wasn't a valid field — a stale generated Nuxt Content collection type, not a real error.
-    solution: pnpm exec nuxt prepare regenerates collection types from the current manifest; easy to forget mid-session after a schema edit that isn't a fresh pnpm install.
+    solution: pnpm exec nuxt prepare regenerates collection types from the current manifest; easy to forget mid-session after a schema edit.
     severity: nit
-durationSec: 2193
+  - description: My first "put it in a sidebar" implementation nested the reused BlogNetwork component inside a second, separately-boxed "About" panel — visually a box-in-a-box that also nearly duplicated the Network's own hint text with a redundant intro paragraph. Cost a full extra screenshot-and-feedback round to catch.
+    solution: When reusing an existing self-contained "boxed panel" component inside a new layout, default to making it the ONE visible box (strip or skip the wrapper's own chrome) rather than wrapping it in another styled container — check for this specifically when a component being reused already renders its own border/background/shadow.
+    severity: minor
+  - description: My first CSS fix for the box-in-a-box (stripping the outer wrapper's background/border/shadow via a class override) didn't visually apply — the override rule had the same selector specificity as the base rule it needed to beat, but appeared earlier in the stylesheet, so the later base rule won the cascade.
+    solution: When a targeted CSS override doesn't take effect, check rule order before assuming the selector is wrong — equal-specificity rules resolve by source order, so bumping specificity (an extra class) is a more robust fix than relying on placement.
+    severity: nit
+durationSec: 2673
 models:
-  claude-sonnet-5: 313
+  claude-sonnet-5: 348
 toolCounts:
-  Bash: 56
-  Skill: 4
-  Read: 57
+  Bash: 67
+  Skill: 5
+  Read: 58
   AskUserQuestion: 12
-  Edit: 40
-  Write: 3
+  Edit: 41
+  Write: 4
   Grep: 3
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 1
 filesEdited:
   - layers/blog/tenant.config.ts
   - layers/blog/CONTEXT.md
@@ -167,8 +176,10 @@ filesEdited:
   - layers/blog/tests/e2e/blog.e2e.ts
   - scratch-probe.ts
   - layers/blog/app/components/blog/Network.vue
+  - .agents/skills/blog-post/SKILL.md
 gitBranch: claude/blog-tagging-system-jinubl
 entrypoint: remote_mobile
 cliVersion: 2.1.207
 learnings:
   - ADR-0016's Tenant-root-page precedent (built for the Atlas front door) transposes directly onto a second Tenant (the Blog) with no adaptation needed — same resolveSpaceRoute-per-Space read-only pattern, same reason it stays outside the ADR-0004 human-only routing core.
+  - publishedAt frontmatter and git commit time can silently diverge in this repo's blog content with no gate catching it (they're independent, self-reported vs. derived facts) — worth checking directly with git log rather than trusting the frontmatter value alone when timestamp ordering actually matters to a claim.
