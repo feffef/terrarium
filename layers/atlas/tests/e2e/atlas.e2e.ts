@@ -18,13 +18,33 @@
 // style the other Tenant-specific checks in this file use.
 import { describe, expect, it } from 'vitest'
 import { $fetch } from '@nuxt/test-utils/e2e'
-import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
+import { expectCleanHydration, renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
 
 /** Register the atlas Tenant's L2 assertions under the caller's active suite. */
 export function registerAtlasE2E(): void {
   describe('atlas Tenant', () => {
     it('hydrates a specimen entry with no unresolved components', async () => {
       await expectCleanHydration('/t/atlas/canopy/mycora-susurrans')
+    })
+
+    // issue #355: a body MDC block component with a dropped closing `::`
+    // degrades silently to plain prose — no hydration/console error, so the
+    // clean-hydration check above can't catch it. Assert the route's
+    // structured, content-driven output actually rendered, not just that
+    // nothing errored.
+    it('renders the mycora-susurrans field note and its relations structurally', async () => {
+      const { page, errors } = await renderAndCollectErrors('/t/atlas/canopy/mycora-susurrans')
+      try {
+        expect(errors).toEqual([])
+        const fieldnote = await page.locator('.atlas-fieldnote').textContent()
+        expect(fieldnote).toContain('a company of pale sage caps standing shoulder to shoulder')
+        const relations = await page.locator('.atlas-relations').textContent()
+        expect(relations).toContain('Umbra vacans')
+        expect(relations).toContain('Lumina fabulae')
+        expect(relations).toContain('Folium mendax')
+      } finally {
+        await page.close()
+      }
     })
 
     // 200 + stable front-door content: the cover title and all three wing names
