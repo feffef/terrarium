@@ -27,10 +27,9 @@ Note the local shape (a deliberate, ADR-0021-recorded divergence from the
 Platform context *and* carries the Tenants roster, and each per-Tenant `CONTEXT.md`
 carries a purpose narrative on top of its glossary (the Skill's template is
 glossary-only). Pointers between these files are navigation, not duplication — the
-single-home rule forbids copying substantive content, not references. All ADRs are
-Platform-wide today; there are no `layers/<tenant>/docs/adr/` directories, and a
-demo Tenant's reason-to-exist is product, not architecture, so it lives in that
-Tenant's `CONTEXT.md`, never an ADR.
+single-home rule forbids copying substantive content, not references. See
+`CONTEXT-MAP.md`'s **Decisions** section for where ADRs live today and why a
+demo Tenant's reason-to-exist is recorded in its `CONTEXT.md` rather than an ADR.
 
 If any of these files don't exist, **proceed silently**. Don't flag their absence; don't suggest creating them upfront. The `/domain-modeling` skill (reached via `/grill-with-docs` and `/improve-codebase-architecture`) creates them lazily when terms or decisions actually get resolved.
 

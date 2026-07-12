@@ -103,7 +103,7 @@ Done when you have confirmed the new Digest(s) will show — no index edit is ne
 
 ## 5. Clear the safety gate
 
-Run `pnpm gate` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
+Run `pnpm gate:scoped` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
 it runs). Done when it's green.
 
 ## 6. Commit, push, open one gated PR — auto-merge on green
@@ -117,11 +117,11 @@ content-only low-risk tier) — allowed **only** while the PR contains nothing
 beyond the digest scope (digest pages under `…/pages/digests/`, at most plus the
 index's editorial intro):
 
-- **Enable GitHub auto-merge on green.** Repo-level auto-merge is available
-  (`CLAUDE.md`), so **enable it** (`enable_pr_auto_merge`) right after opening the
-  PR and it lands automatically once the gate reports green — no watching
-  required. Pushing is not landing (`CLAUDE.md`), so subscribe to the PR's
-  activity to catch a red gate.
+- **Enable GitHub auto-merge on green.** Auto-merge is available, per the intro
+  above — enable it (`enable_pr_auto_merge`) right after opening the PR so it
+  lands automatically once the gate reports green; no watching required.
+  Pushing is not landing (`CLAUDE.md`), so subscribe to the PR's activity to
+  catch a red gate.
 - A **red gate is never merged** — auto-merge only lands on green. Diagnose and
   fix on the branch (the green re-run then auto-merges), or leave the PR open and
   escalate to a human if the failure isn't yours.

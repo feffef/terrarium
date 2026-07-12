@@ -11,7 +11,7 @@ world you plant tenants in and watch grow.
 
 - **One Platform** — a single Nuxt app / repo / container hosting everything.
 - **Tenants** — logically distinct products, each with its own components (a Nuxt
-  layer) and content model. Adding one ("spawning a microsite") is a source
+  layer) and content model. Adding one is a source
   change on a feature branch, never a runtime operation.
 - **Spaces** — per-Tenant isolated content partitions (e.g. `current`, `archived`),
   all baked into the one build and selected at request time.

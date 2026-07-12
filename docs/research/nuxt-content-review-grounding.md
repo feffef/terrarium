@@ -383,14 +383,16 @@ Source: `@nuxt/content/dist/module.mjs:2652` (`loadContentConfig`) and `c12`
 - **Consequence for this repo's claim** ("a manifest edit is picked up by
   `nuxt dev` with no regenerate step"): the *no-regenerate-step* half is true
   — nothing committed needs regenerating; the next `prepare`/`dev`/`build`
-  derives everything. But a **running** dev server does **not** pick up an
-  edit to `layers/<t>/tenant.config.ts` or `shared/expand.ts` automatically:
-  those are imports of `content.config.ts` / `modules/routing.ts`, which no
-  watcher covers, so a live dev session needs a manual restart to see a
-  manifest change. Only edits to `content.config.ts` or `modules/routing.ts`
-  themselves trigger the automatic restart. (Content *documents* are a
-  separate, hot path: the module chokidar-watches each source's cwd/prefix
-  dirs and re-parses changed files live, `module.mjs:1769-1800`.)
+  derives everything. As of `modules/routing.ts` explicitly pushing each
+  Tenant's `tenant.config.ts` and `shared/expand.ts` onto `nuxt.options.watch`
+  in dev (issue #325), a **running** dev server now picks up an edit to an
+  *existing* Tenant's `tenant.config.ts` or `shared/expand.ts` with an
+  automatic restart, same as `content.config.ts`/`modules/routing.ts` itself.
+  The one remaining gap: a brand-new `layers/<tenant>/` directory still needs
+  a manual restart, since layer auto-extension resolves before this module's
+  watcher registers. (Content *documents* are a separate, hot path: the
+  module chokidar-watches each source's cwd/prefix dirs and re-parses changed
+  files live, `module.mjs:1769-1800`.)
 
 ## Sources
 
