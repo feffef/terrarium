@@ -1,0 +1,58 @@
+schemaVersion: 1
+session: session_016y9zkdpR9iasvbAuq1cMNn
+startedAt: 2026-07-12T22:22:41Z
+endedAt: 2026-07-12T22:43:06Z
+kind: interactive
+goal: Preserve item position on journal digest/session click
+status: in-review
+outcome: Implemented, tested, PR open
+summary: "Directly human-instructed: the user asked to improve the scroll behavior when clicking to expand a daily digest or session card on the journal Space dashboard, so the clicked item's top stays at the same viewport position after expanding, instead of jumping to the top of the screen — except when near the top of the page makes that impossible. Implemented in layers/journal/app/pages/t/journal/[space]/index.vue: toggle() now captures the clicked item's getBoundingClientRect().top before the accordion state flips, then a new scrollPreservingTop() counter-scrolls after Vue's DOM update by exactly the delta any collapsing sibling caused, clamped to window.scrollY >= 0 so a near-top item settles as close to its original position as the page start allows. The deep-link/page-load path (scrollToOpen) is untouched — no prior on-screen position exists to preserve on a fresh load. Updated layers/journal/tests/e2e/journal.e2e.ts, replacing the old \"scrolls to top\" assertion with two e2e tests covering the no-sibling and sibling-collapses-above cases. Full `pnpm gate` passes. Opened PR #393, subscribed to its activity, and scheduled a ~1hr check-in."
+prs:
+  - "393"
+docsRead:
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: existing toggle/scroll logic to change
+  - path: layers/journal/app/components/journal/SessionCard.vue
+    reason: confirm anchor id lives on the article root, matching getElementById lookups
+  - path: layers/journal/app/components/journal/Disclosure.vue
+    reason: ruled out as the source of an unexplained pixel drift in an early test run
+  - path: layers/journal/tests/e2e/journal.e2e.ts
+    reason: test to rewrite for the new behavior
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "`mermaid` was declared in package.json but missing from node_modules, failing `nuxt typecheck` (TS2307) unrelated to my change."
+    solution: Ran `pnpm install`; confirmed pre-existing via `git stash` before fixing.
+    severity: minor
+  - description: New e2e test asserting pixel-exact scroll preservation failed twice with a consistent ~31-46px gap even though the app's own delta computed to exactly 0 (confirmed via a temporary console.log) — Playwright's `locator.click()` does an implicit scroll-into-view before dispatching the click, which happened between the test's "before" measurement and the app's own click handler, so the two disagreed on "before".
+    solution: Call `locator.scrollIntoViewIfNeeded()` explicitly before measuring "before" in the test, so Playwright's implicit scroll happens first and can't leak into the measurement window. Worth remembering for any future e2e test measuring exact pixel positions around a `.click()`.
+    severity: minor
+durationSec: 1225
+models:
+  claude-sonnet-5: 102
+toolCounts:
+  Grep: 2
+  Read: 7
+  Glob: 2
+  Edit: 9
+  Bash: 24
+  Write: 2
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+filesEdited:
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - layers/journal/tests/e2e/journal.e2e.ts
+  - tmp-probe.ts
+gitBranch: claude/journal-scroll-entry-click-qayyhj
+entrypoint: remote
+cliVersion: 2.1.207
+learnings:
+  - Playwright's locator.click() silently scrolls the element into view before dispatching the click — call scrollIntoViewIfNeeded() first when a test measures exact geometry around a click.
