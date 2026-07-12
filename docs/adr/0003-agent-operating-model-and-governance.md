@@ -89,19 +89,12 @@ Status: Accepted
 >
 > **Amended (2026-07-12).** The **`blog-post` Skill's gated PR joins the low-risk
 > auto-merge tier** (ADR-0004, content-only), after `digest` / `audit-docs` /
-> `audit-skills` — same bounded grant, same rationale (the merge is delegated to
-> the **objective gate**, not the author's judgement). Scope specific to
-> `blog-post`: only the post itself (a page under
+> `audit-skills`. Bounded to the post itself (a page under
 > `layers/blog/content/<persona>/pages/`) plus, for a reaction, one pingback stub
-> under `layers/blog/content/<target>/pingbacks/`. Anything outside that content
-> scope, or a red gate, leaves the PR for human review. This is the first
-> **manually-invoked** Skill in the tier rather than a scheduled one, but the
-> distinction is immaterial to auto-merge, which turns on **blast radius**, not
-> how the run started (ADR-0004): a blog post is content-only, and a human is
-> already in the loop twice over — they invoked the run, and a blind outside-read
-> pass judged the post before the PR opened. "No self-merge" is still preserved
-> in spirit: the merge is the gate's call on a fixed, low-risk shape, not the
-> author waving through their own high-risk diff.
+> under `…/pingbacks/`; anything outside that scope, or a red gate, stays for
+> human review. This lets `blog-post` run **fully autonomously** on its schedule:
+> the merge is delegated to the objective gate, and editorial quality is already
+> gated pre-PR by the blind outside-read pass (SKILL.md A5).
 
 ## Context
 

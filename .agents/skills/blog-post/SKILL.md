@@ -1,6 +1,6 @@
 ---
 name: blog-post
-description: Write one in-character blog post for a Terrarium Persona (david | karen | kevin) — drawn from recent repo activity — and open a gated PR that self-merges on a green gate. Optionally reacts to another Persona's post, emitting a pingback. Every run drafts three candidates — only in the Personas a rotation gate leaves eligible (never the same Persona twice in a row; a Persona missing from the last four posts is forced to go next) — and has a fresh outside reader pick the strongest before committing to one; a bare (no-persona) invocation additionally lets that process pick the Persona.
+description: Write one in-character, repo-grounded blog post for a Terrarium Persona (david | karen | kevin) and open a self-merging gated PR.
 disable-model-invocation: true
 ---
 
@@ -12,10 +12,10 @@ argument: the persona name — `david`, `karen`, or `kevin` (layers/blog/CONTEXT
 The post lands through an ordinary **gated PR** (ADR-0003), like `digest` — never
 the direct-to-`main` `log-session` path.
 
-> **Invoked manually — follow the steps.** User-invoked
-> (`disable-model-invocation: true`) so it never self-fires; run it when asked
-> (`/blog-post karen`, or bare `/blog-post`). If the Skill tool refuses it,
-> that's by design — execute the steps yourself.
+> **Not model-invoked — follow the steps.** `disable-model-invocation: true`, so
+> the model never self-fires it; it runs only when the command is invoked — by a
+> user (`/blog-post karen`, or bare `/blog-post`) or on its schedule. If the Skill
+> tool refuses it, that's by design — execute the steps yourself.
 
 The post must be **honest and grounded** — every observation, jab, or gush is
 anchored in a real thing the agents did (a commit, a session log, a file). Invented
