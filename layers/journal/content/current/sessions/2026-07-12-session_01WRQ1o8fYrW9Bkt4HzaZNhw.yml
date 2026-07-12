@@ -1,0 +1,58 @@
+schemaVersion: 1
+session: session_01WRQ1o8fYrW9Bkt4HzaZNhw
+startedAt: 2026-07-12T07:41:06Z
+endedAt: 2026-07-12T07:58:29Z
+kind: interactive
+goal: Research GitHub config to reconcile session-log pushes with branch protection
+status: in-review
+outcome: Ruleset design found; scoping gap flagged; PR opened
+summary: "Human asked to read the recent issue about auto-merge vs. main branch protection, then invoke /research to find the best GitHub configuration to let session-log commits land direct-to-main while keeping a protected branch rule (so repo auto-merge keeps working). Found issue #348 (removing main's branch protection to unblock session-log pushes broke repo auto-merge, regressing #231). Dispatched a background research agent against GitHub's live docs; the first dispatch silently no-op'd (returned a plan description, wrote nothing), caught by verifying the file didn't exist, then relaunched with explicit anti-delegation instructions and it succeeded. Wrote docs/research/github-branch-protection-vs-autonomous-log-commits.md, citing GitHub's official docs. Key finding: a repository ruleset's bypass list is the right primitive, but can only target a role/team/App, not a specific script — since the session-log push currently authenticates as the repo owner's own personal credential (no bot identity yet, deferred to #124), the only usable bypass (\"Repository admin\") can't be scoped narrower than \"the owner,\" so it also permits the owner's own manual direct pushes to main. Committed the note and opened gated PR #351 (research-only, no code/ADR/governance files touched), all agent-initiated once the human gave the initial research directive. Subscribed to PR activity."
+prs:
+  - "351"
+docsRead:
+  - path: docs/adr/ADR-0009.md
+    reason: session-log direct-to-main rationale
+  - path: docs/adr/ADR-0004.md
+    reason: human-only governance/CI gate scope
+  - path: .claude/skills/research/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+skillsUsed:
+  - name: research
+    reason: background-agent investigation against GitHub's primary docs
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "A background research subagent (general-purpose type) silently no-op'd on its first dispatch: it returned a plausible-sounding \"I've launched a background research agent...\" summary without ever calling WebFetch or Write. The task-notification reported status \"completed\" with a summary that read as legitimate work."
+    solution: Verify a subagent's factual/completion claims against the filesystem before trusting them, especially when a summary describes future/planned action ("I've launched...") rather than completed action. Relaunching with an explicit "do this yourself, do not delegate further" instruction fixed it on retry.
+    severity: minor
+  - description: The commit's provenance footer (Co-Authored-By/Claude-Session) did not auto-inject on the initial git commit -m in this cloud session, matching the known CLAUDE.md caveat about cloud -m commits sometimes skipping injection.
+    solution: Checked git log -1 --format=%B before pushing and amended the footer in manually.
+    severity: nit
+durationSec: 1043
+models:
+  claude-sonnet-5: 69
+toolCounts:
+  ToolSearch: 3
+  mcp__github__search_issues: 2
+  Skill: 3
+  Bash: 11
+  Read: 2
+  Agent: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Write: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+subagents:
+  - type: general-purpose
+    task: Research GitHub config for auto-merge + protected main
+  - type: general-purpose
+    task: Research GitHub config for auto-merge + protected main (retry)
+gitBranch: claude/github-auto-merge-config-xs6jhe
+entrypoint: remote_mobile
+cliVersion: 2.1.207
