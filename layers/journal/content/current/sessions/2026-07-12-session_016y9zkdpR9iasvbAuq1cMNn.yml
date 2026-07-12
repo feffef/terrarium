@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_016y9zkdpR9iasvbAuq1cMNn
 startedAt: 2026-07-12T22:22:41Z
-endedAt: 2026-07-12T22:51:25Z
+endedAt: 2026-07-12T23:07:27Z
 kind: interactive
 goal: Preserve item position on journal digest/session click
 status: completed
 outcome: Implemented, tested, PR merged
-summary: "Directly human-instructed: the user asked to improve the scroll behavior when clicking to expand a daily digest or session card on the journal Space dashboard, so the clicked item's top stays at the same viewport position after expanding, instead of jumping to the top of the screen — except when near the top of the page makes that impossible. Implemented in layers/journal/app/pages/t/journal/[space]/index.vue: toggle() now captures the clicked item's getBoundingClientRect().top before the accordion state flips, then a new scrollPreservingTop() counter-scrolls after Vue's DOM update by exactly the delta any collapsing sibling caused, clamped to window.scrollY >= 0 so a near-top item settles as close to its original position as the page start allows. The deep-link/page-load path (scrollToOpen) is untouched — no prior on-screen position exists to preserve on a fresh load. Updated layers/journal/tests/e2e/journal.e2e.ts, replacing the old \"scrolls to top\" assertion with two e2e tests covering the no-sibling and sibling-collapses-above cases. Full `pnpm gate` passes. Opened PR #393, subscribed to its activity, and it merged with the safety gate green and no review comments."
+summary: "Directly human-instructed: the user asked to improve the scroll behavior when clicking to expand a daily digest or session card on the journal Space dashboard, so the clicked item's top stays at the same viewport position after expanding, instead of jumping to the top of the screen — except when near the top of the page makes that impossible. Implemented in layers/journal/app/pages/t/journal/[space]/index.vue: toggle() now captures the clicked item's getBoundingClientRect().top before the accordion state flips, then a new scrollPreservingTop() counter-scrolls after Vue's DOM update by exactly the delta any collapsing sibling caused, clamped to window.scrollY >= 0 so a near-top item settles as close to its original position as the page start allows. The deep-link/page-load path (scrollToOpen) is untouched — no prior on-screen position exists to preserve on a fresh load. Updated layers/journal/tests/e2e/journal.e2e.ts, replacing the old \"scrolls to top\" assertion with two e2e tests covering the no-sibling and sibling-collapses-above cases. Full `pnpm gate` passes. Opened PR #393, subscribed to its activity, and it merged with the safety gate green and no review comments. After merge, the user reported the corrective scroll still animated (`behavior: 'smooth'`), which showed the very motion the fix was meant to hide since it's a click-caused reflow correction, not a navigation. Since #393 had already merged, restarted the branch from origin/main per CLAUDE.md's merged-PR convention, changed scrollPreservingTop to always scroll instantly (`behavior: 'auto'`), reran the full gate, and opened #394, which also merged clean."
 prs:
   - "393"
+  - "394"
 docsRead:
   - path: layers/journal/app/pages/t/journal/[space]/index.vue
     reason: existing toggle/scroll logic to change
@@ -30,25 +31,28 @@ frictions:
   - description: New e2e test asserting pixel-exact scroll preservation failed twice with a consistent ~31-46px gap even though the app's own delta computed to exactly 0 (confirmed via a temporary console.log) — Playwright's `locator.click()` does an implicit scroll-into-view before dispatching the click, which happened between the test's "before" measurement and the app's own click handler, so the two disagreed on "before".
     solution: Call `locator.scrollIntoViewIfNeeded()` explicitly before measuring "before" in the test, so Playwright's implicit scroll happens first and can't leak into the measurement window. Worth remembering for any future e2e test measuring exact pixel positions around a `.click()`.
     severity: minor
-durationSec: 1724
+  - description: "Shipped the position-preserving correction with `behavior: 'smooth'` in #393; the user caught in live use that the animated scroll itself was visible, defeating the point of a fix meant to make the item look like it never moved."
+    solution: "An in-place layout-shift correction should always be instant (`behavior: 'auto'`), never animated — smooth easing only makes sense for a genuine navigation to a new position, not for hiding a reflow the click itself caused. Should have reasoned through that distinction up front rather than defaulting to 'smooth' for everything scroll-related."
+    severity: minor
+durationSec: 2686
 models:
-  claude-sonnet-5: 117
+  claude-sonnet-5: 154
 toolCounts:
   Grep: 2
-  Read: 8
+  Read: 10
   Glob: 2
-  Edit: 11
-  Bash: 25
+  Edit: 14
+  Bash: 34
   Write: 2
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 5
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 3
+  mcp__github__pull_request_read: 7
+  mcp__Claude_Code_Remote__send_later: 2
   Skill: 2
   mcp__Claude_Code_Remote__list_triggers: 1
-  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__delete_trigger: 2
 filesEdited:
   - layers/journal/app/pages/t/journal/[space]/index.vue
   - layers/journal/tests/e2e/journal.e2e.ts
