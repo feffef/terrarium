@@ -31,6 +31,23 @@ bounds: anything touching the areas this project reserves for human review
 (the routing module, isolation logic, CI) always escalates to a person instead
 of merging automatically.
 
+The whole loop in one picture:
+
+```mermaid
+graph TD
+  Session[Claude Code session] --> PR[Gated PR]
+  PR --> Gate{Gate green?}
+  Gate -->|no| Session
+  Gate -->|yes| Human[Human review + merge]
+  Gate -->|yes, chartered job| Self[Self-merge]
+  Session --> Log[Session log]
+  Log --> Fixer[frictions-to-fixes agent]
+  Fixer -->|ships fixes as its own PRs| PR
+  Human --> Next[Less friction next session]
+  Self --> Next
+  Next --> Session
+```
+
 The result is a slow, compounding feedback loop: humans steer what gets built,
 agents build it and write down what was hard, and another agent spends its
 time closing that gap — so the next session hits less friction than the last.
