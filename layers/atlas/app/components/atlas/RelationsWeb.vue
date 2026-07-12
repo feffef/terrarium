@@ -1,13 +1,15 @@
 <script setup lang="ts">
-// A specimen's own reflection of the food web (#71): the same engraved-plate
-// medallions and annotated strands `AtlasFoodWeb` draws for a whole Biome, but
-// hub-and-spoke around just this one Specimen — the focus, centred, with each
-// Relation as a spoke. Every strand carries its own label (the side-aware
-// phrase from `relationsFor`), always on. No hover-driven dim/highlight lives
-// IN this diagram (unlike the wandering food web) — hovering a spoke or its
-// arrow instead lights the matching row in the `AtlasRelationsList` below,
-// via `update:highlight`, so the two views of the same handful of facts read
-// as one instrument, not two disconnected ones.
+// A specimen's own reflection of the food web (#71): the focus seated at the
+// left like the subject of a plate, its Relations fanned out to the right on a
+// shallow arc — the shape of a genealogical or taxonomic chart rather than a
+// clock face, so every strand runs mostly horizontal and its verb phrase can
+// be set ALONG the strand (an italic annotation riding the line, as on an
+// engraved map) instead of boxed over it. Strands bow gently outward like the
+// food web's; direction follows each Relation's `dir`. No hover-driven
+// dim/highlight lives IN this diagram (unlike the wandering food web) —
+// hovering a spoke or its strand instead lights the matching row in the
+// `AtlasRelationsList` below, via `update:highlight`, so the two views of the
+// same handful of facts read as one instrument, not two disconnected ones.
 import type { Relation, SpecimenView } from '../../utils/atlas'
 
 const props = defineProps<{
@@ -18,12 +20,14 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ 'update:highlight': [slug: string | null] }>()
 
-const W = 640
-const H = 560
-const cx = W / 2
-const cy = H / 2
+const uid = useId()
+
+const W = 680
 const R = 38 // spoke medallion radius
 const RF = 46 // the focus's own medallion — a touch larger; this is whose page it is
+const FX = 110 // the focus column
+const RX = 330 // fan reach (horizontal semi-axis)
+const RY = 200 // fan spread (vertical semi-axis)
 
 // Same authored-illustration convention as AtlasFoodWeb: a 0 0 400 300 viewBox
 // drawn about its centre (~200,150), scaled and re-centred onto the node.
@@ -32,31 +36,41 @@ const FIG_CY = 150
 const FIG_SCALE = 0.2
 
 interface Pt { x: number; y: number }
-// `ux`/`uy`: the unit vector from centre to this spoke — every bit of a
-// spoke's OWN furniture (its name, sigrule) is placed further along this
-// same outward direction rather than a fixed screen-down offset, so a spoke
-// sitting above the focus doesn't have its name land back on the focus.
-interface Spoke { r: Relation; other: SpecimenView; x: number; y: number; ux: number; uy: number }
+interface Spoke { r: Relation; other: SpecimenView; x: number; y: number }
 
-// Spokes evenly on a ring around the focus, first at top. The ring radius is
-// sized so even the two longest relation phrases ("pollinated by" /
-// "sheltered by") can seat side by side without touching at 3 spokes — see
-// LABEL_T below; it needs real room, not just clearance from the medallions.
-const RING_R = Math.min(cx, cy) - 90
-const LABEL_T = 0.56 // how far out along the spoke line a strand's label seats
+// Hand-tuned fan angles (degrees off horizontal) for the counts the data
+// actually holds (1–4 relations today); beyond that, spread evenly and let it
+// crowd gracefully. Kept moderate so no strand turns steep enough to make its
+// along-the-line label awkward to read.
+const FAN: Record<number, number[]> = {
+  1: [0],
+  2: [-26, 26],
+  3: [-45, 0, 45],
+  4: [-58, -21, 21, 58],
+}
+function fanAngles(n: number): number[] {
+  const preset = FAN[n]
+  if (preset) return preset
+  return Array.from({ length: n }, (_, i) => -64 + (i * 128) / (n - 1))
+}
 
-const spokes = computed<Spoke[]>(() => {
-  const n = props.relations.length
-  return props.relations
-    .map((r, i): Spoke | null => {
-      const other = props.specimensBySlug[r.other]
-      if (!other) return null
-      const ang = -Math.PI / 2 + (i * 2 * Math.PI) / n
-      const ux = Math.cos(ang)
-      const uy = Math.sin(ang)
-      return { r, other, x: cx + RING_R * ux, y: cy + RING_R * uy, ux, uy }
-    })
-    .filter((x): x is Spoke => x !== null)
+// The fan's vertical extent depends on how many spokes it holds, so the canvas
+// height (and the focus's own y) is derived, not fixed — a sparse web gets a
+// short plate instead of floating in empty paper.
+const view = computed(() => {
+  const paired = props.relations.flatMap((r) => {
+    const other = props.specimensBySlug[r.other]
+    return other ? [{ r, other }] : []
+  })
+  const angles = fanAngles(paired.length || 1)
+  const half = RY * Math.max(0, ...angles.map((a) => Math.abs(Math.sin((a * Math.PI) / 180))))
+  const fy = Math.max(76, half + R + 18)
+  const H = fy + Math.max(RF + 52, half + R + 20)
+  const spokes: Spoke[] = paired.map((p, i) => {
+    const a = ((angles[i] ?? 0) * Math.PI) / 180
+    return { ...p, x: FX + RX * Math.cos(a), y: fy + RY * Math.sin(a) }
+  })
+  return { spokes, fy, H }
 })
 
 function figTransform(x: number, y: number): string {
@@ -66,45 +80,67 @@ function figStyle(s: SpecimenView) {
   return { ...signatureVars(s.signature?.colors), color: 'var(--atlas-ink)' }
 }
 
-// Trim an endpoint back along the a→b line so a strand meets the medallion's
-// edge (and its arrowhead shows) rather than vanishing under the circle.
-function trim(a: Pt, b: Pt, r: number): Pt {
-  const dx = b.x - a.x
-  const dy = b.y - a.y
+/** `p` moved `r` along the p→q direction — trims a curve end back to a
+ *  medallion's edge (and leaves room for the arrowhead on the target side). */
+function toward(p: Pt, q: Pt, r: number): Pt {
+  const dx = q.x - p.x
+  const dy = q.y - p.y
   const L = Math.hypot(dx, dy) || 1
-  return { x: a.x + (dx / L) * r, y: a.y + (dy / L) * r }
+  return { x: p.x + (dx / L) * r, y: p.y + (dy / L) * r }
+}
+function pt(p: Pt): string {
+  return `${p.x.toFixed(1)},${p.y.toFixed(1)}`
 }
 
-interface Strand { r: Relation; other: SpecimenView; d: string; endStroke: string; labelX: number; labelY: number }
+interface Strand { r: Relation; other: SpecimenView; d: string; rail: string; endStroke: string }
 
-// One straight strand per spoke — direction follows the Relation's own `dir`
-// (#71: `out` = the focus is the edge's `from`, so the arrow leaves it; `in` =
-// the focus is the `to`, so the arrow arrives). No inward bow like the food
-// web's: with the focus fixed at centre there's no ambiguity a curve needs to
-// resolve, so the straight chord is the clearer read.
-const strands = computed<Strand[]>(() =>
-  spokes.value.map((sp): Strand => {
-    const center: Pt = { x: cx, y: cy }
-    const spokePt: Pt = { x: sp.x, y: sp.y }
+const strands = computed<Strand[]>(() => {
+  const F: Pt = { x: FX, y: view.value.fy }
+  return view.value.spokes.map((sp): Strand => {
+    const S: Pt = { x: sp.x, y: sp.y }
+    const dx = S.x - F.x
+    const dy = S.y - F.y
+    const L = Math.hypot(dx, dy) || 1
+    const ux = dx / L
+    const uy = dy / L
+    // Bow each strand gently outward, away from the fan's axis (a level strand
+    // bows up), echoing the food web's curved strands.
+    let bx = -uy
+    let by = ux
+    if (dy > 0.5 ? by < 0 : by > 0) {
+      bx = -bx
+      by = -by
+    }
+    const qOff = Math.min(36, L * 0.11)
+    const Q: Pt = { x: (F.x + S.x) / 2 + bx * qOff, y: (F.y + S.y) / 2 + by * qOff }
     const out = sp.r.dir === 'out'
-    const from = out ? center : spokePt
-    const to = out ? spokePt : center
-    const s = trim(from, to, (out ? RF : R) + 2)
-    const t = trim(to, from, (out ? R : RF) + 8)
+    const pF = toward(F, Q, out ? RF + 2 : RF + 9)
+    const pS = toward(S, Q, out ? R + 9 : R + 2)
+    // The visible path runs in the arrow's direction (#71: `out` = the focus is
+    // the edge's `from`, so the arrow leaves it; `in` = it arrives).
+    const d = out ? `M${pt(pF)} Q${pt(Q)} ${pt(pS)}` : `M${pt(pS)} Q${pt(Q)} ${pt(pF)}`
+    // The label rail is the same curve lifted a hair's breadth above, and ALWAYS
+    // oriented focus→spoke (left→right) regardless of arrow direction — textPath
+    // sets its glyphs along path direction, so an `in`-oriented rail would hang
+    // the phrase upside down.
+    let ax = -uy
+    let ay = ux
+    if (ay > 0) {
+      ax = -ax
+      ay = -ay
+    }
+    const LIFT = 8
+    const rail = `M${pt({ x: pF.x + ax * LIFT, y: pF.y + ay * LIFT })} Q${pt({ x: Q.x + ax * LIFT, y: Q.y + ay * LIFT })} ${pt({ x: pS.x + ax * LIFT, y: pS.y + ay * LIFT })}`
     return {
       r: sp.r,
       other: sp.other,
-      d: `M${s.x.toFixed(1)},${s.y.toFixed(1)} L${t.x.toFixed(1)},${t.y.toFixed(1)}`,
+      d,
+      rail,
       // Colored by the strand's actor, same convention as the food web.
       endStroke: out ? specimenAccent(props.specimen) : specimenAccent(sp.other),
-      // Seated a fixed fraction along the FULL centre→spoke line — independent
-      // of arrow direction (unlike trimming `s`→`t`, which for an `in`
-      // relation put the label hard against the larger focus medallion).
-      labelX: cx + sp.ux * RING_R * LABEL_T,
-      labelY: cy + sp.uy * RING_R * LABEL_T,
     }
-  }),
-)
+  })
+})
 
 function spokeEnter(slug: string) {
   emit('update:highlight', slug)
@@ -117,14 +153,14 @@ function spokeLeave() {
 <template>
   <div class="atlas-web atlas-relweb">
     <svg
-      v-if="spokes.length"
-      :viewBox="`0 0 ${W} ${H}`"
+      v-if="view.spokes.length"
+      :viewBox="`0 0 ${W} ${view.H}`"
       role="group"
       :aria-label="`${specimen.binomial}'s relations`"
     >
       <defs>
         <marker
-          id="atlas-relweb-arrow"
+          :id="`${uid}-arrow`"
           viewBox="0 0 10 10"
           refX="8"
           refY="5"
@@ -134,7 +170,7 @@ function spokeLeave() {
         >
           <path d="M0,1 L9,5 L0,9" fill="none" stroke="context-stroke" stroke-width="1.4" />
         </marker>
-        <radialGradient id="atlas-relweb-seat">
+        <radialGradient :id="`${uid}-seat`">
           <stop offset="52%" stop-color="var(--atlas-paper)" stop-opacity="1" />
           <stop offset="100%" stop-color="var(--atlas-paper)" stop-opacity="0" />
         </radialGradient>
@@ -154,41 +190,37 @@ function spokeLeave() {
           :class="st.r.kind"
           :d="st.d"
           :style="{ stroke: st.endStroke }"
-          marker-end="url(#atlas-relweb-arrow)"
+          :marker-end="`url(#${uid}-arrow)`"
         />
-        <g class="strand-label">
-          <rect
-            :x="st.labelX - relationLabelPillWidth(st.r.label) / 2"
-            :y="st.labelY - 9"
-            :width="relationLabelPillWidth(st.r.label)"
-            height="18"
-            rx="3"
-          />
-          <text :x="st.labelX" :y="st.labelY + 4" text-anchor="middle">{{ st.r.label }}</text>
-        </g>
+        <path :id="`${uid}-rail-${i}`" class="rail" :d="st.rail" />
+        <text class="rel-lbl" text-anchor="middle">
+          <textPath :href="`#${uid}-rail-${i}`" startOffset="50%">{{ st.r.label }}</textPath>
+        </text>
       </g>
 
-      <!-- the focus, centred — whose page this is -->
+      <!-- the focus, seated at the left — whose page this is -->
       <g class="node is-focus" :style="figStyle(specimen)">
-        <circle class="focus-ring" :cx="cx" :cy="cy" :r="RF + 5" />
-        <circle class="seat" :cx="cx" :cy="cy" :r="RF" fill="url(#atlas-relweb-seat)" />
+        <circle class="focus-ring" :cx="FX" :cy="view.fy" :r="RF + 5" />
+        <circle class="seat" :cx="FX" :cy="view.fy" :r="RF" :fill="`url(#${uid}-seat)`" />
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <g v-if="specimen.illustration" class="figure" :transform="figTransform(cx, cy)" v-html="specimen.illustration" />
-        <text v-else class="mk" :x="cx" :y="cy + 4" text-anchor="middle">{{ rarityMeta(specimen.rarity).mark }}</text>
+        <g v-if="specimen.illustration" class="figure" :transform="figTransform(FX, view.fy)" v-html="specimen.illustration" />
+        <text v-else class="mk" :x="FX" :y="view.fy + 4" text-anchor="middle">{{ rarityMeta(specimen.rarity).mark }}</text>
+        <text class="nm is-focus" :x="FX" :y="view.fy + RF + 21" text-anchor="middle">{{ specimen.binomial }}</text>
         <line
           class="sigrule"
-          :x1="cx - 14"
-          :x2="cx + 14"
-          :y1="cy + RF + 24"
-          :y2="cy + RF + 24"
+          :x1="FX - 12"
+          :x2="FX + 12"
+          :y1="view.fy + RF + 30"
+          :y2="view.fy + RF + 30"
           :style="{ stroke: specimenAccent(specimen) }"
         />
-        <text class="nm is-focus" :x="cx" :y="cy + RF + 17" text-anchor="middle">{{ specimen.binomial }}</text>
       </g>
 
-      <!-- the specimens it relates to, one medallion per spoke -->
+      <!-- the specimens it relates to, one medallion per spoke, each named to
+           its right like a chart key — strands arrive from the left, so the
+           name's column stays clear of every line -->
       <NuxtLink
-        v-for="sp in spokes"
+        v-for="sp in view.spokes"
         :key="`${sp.r.kind}-${sp.r.dir}-${sp.other.slug}`"
         v-slot="{ href, navigate }"
         :to="`/t/atlas/${biome}/${sp.other.slug}`"
@@ -205,22 +237,19 @@ function spokeLeave() {
           @blur="spokeLeave()"
         >
           <g class="node" :style="figStyle(sp.other)">
-            <circle class="seat" :cx="sp.x" :cy="sp.y" :r="R" fill="url(#atlas-relweb-seat)" />
+            <circle class="seat" :cx="sp.x" :cy="sp.y" :r="R" :fill="`url(#${uid}-seat)`" />
             <!-- eslint-disable-next-line vue/no-v-html -->
             <g v-if="sp.other.illustration" class="figure" :transform="figTransform(sp.x, sp.y)" v-html="sp.other.illustration" />
             <text v-else class="mk" :x="sp.x" :y="sp.y + 3.5" text-anchor="middle">{{ rarityMeta(sp.other.rarity).mark }}</text>
-            <!-- name/sigrule sit further OUT along the spoke's own centre→node
-                 direction, not a fixed screen-down offset — a spoke above the
-                 focus must not have its name land back on the focus itself -->
+            <text class="nm" :x="sp.x + R + 14" :y="sp.y + 3.5" text-anchor="start">{{ sp.other.binomial }}</text>
             <line
               class="sigrule"
-              :x1="sp.x + sp.ux * (R + 28) - sp.uy * 11"
-              :y1="sp.y + sp.uy * (R + 28) + sp.ux * 11"
-              :x2="sp.x + sp.ux * (R + 28) + sp.uy * 11"
-              :y2="sp.y + sp.uy * (R + 28) - sp.ux * 11"
+              :x1="sp.x + R + 14"
+              :x2="sp.x + R + 38"
+              :y1="sp.y + 13"
+              :y2="sp.y + 13"
               :style="{ stroke: specimenAccent(sp.other) }"
             />
-            <text class="nm" :x="sp.x + sp.ux * (R + 38)" :y="sp.y + sp.uy * (R + 38) + 3.5" text-anchor="middle">{{ sp.other.binomial }}</text>
           </g>
         </a>
       </NuxtLink>
