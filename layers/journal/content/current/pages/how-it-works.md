@@ -34,26 +34,23 @@ of merging automatically.
 The whole loop in one picture:
 
 ```mermaid
-graph LR
-  subgraph routine ["frictions-to-fixes · scheduled, no human prompt"]
-    direction TB
-    Schedule(["Schedule fires"]) --> Fixer["frictions-to-fixes agent"]
-    Fixer --> FPR["Gated PR → main"]
-  end
+graph TB
+  Prompt(["Human prompt"]) --> Session["Claude Code session"]
+  Session --> SPR["Gated PR → main"]
+  SPR --> Closure(["Session closure"])
+  Closure -->|writes| Logs[("Session-log<br/>storage")]
 
-  subgraph impl ["Prompt-triggered · a regular session"]
-    direction TB
-    Prompt(["Human prompt"]) --> Session["Claude Code session"]
-    Session --> SPR["Gated PR → main"]
-  end
-
-  Logs[("Session-log<br/>storage")]
-  Instr[("Skills · docs · code")]
-
-  Session -->|writes| Logs
+  Schedule(["Schedule fires"]) --> Fixer["frictions-to-fixes agent"]
   Logs -->|reads| Fixer
-  FPR -->|writes| Instr
-  Instr -->|guides| Session
+  Fixer --> FPR["Gated PR → main"]
+  FPR -->|writes to repo| Instr[("Skills · docs · code")]
+
+  Instr -->|governs| Session
+
+  classDef session stroke:#2c6e8f,stroke-width:2px;
+  classDef routine stroke:#b5652f,stroke-width:2px;
+  class Prompt,Session,SPR,Closure session;
+  class Schedule,Fixer,FPR routine;
 ```
 
 The result is a slow, compounding feedback loop: humans steer what gets built,
