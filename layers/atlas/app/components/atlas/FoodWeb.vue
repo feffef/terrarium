@@ -79,7 +79,7 @@ const strands = computed<Strand[]>(() =>
       const my = (a.y + b.y) / 2
       const qx = cx + (mx - cx) * 0.45
       const qy = cy + (my - cy) * 0.45
-      return { e, d: `M${s.x.toFixed(1)},${s.y.toFixed(1)} Q${qx.toFixed(1)},${qy.toFixed(1)} ${t.x.toFixed(1)},${t.y.toFixed(1)}`, endStroke: sig(props.specimens.find((sp) => sp.slug === e.from)) }
+      return { e, d: `M${s.x.toFixed(1)},${s.y.toFixed(1)} Q${qx.toFixed(1)},${qy.toFixed(1)} ${t.x.toFixed(1)},${t.y.toFixed(1)}`, endStroke: sig(a.s) }
     })
     .filter((x): x is Strand => x !== null),
 )
