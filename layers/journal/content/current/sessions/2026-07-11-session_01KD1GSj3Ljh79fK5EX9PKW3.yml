@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01KD1GSj3Ljh79fK5EX9PKW3
 startedAt: 2026-07-11T21:45:38Z
-endedAt: 2026-07-12T02:21:25Z
+endedAt: 2026-07-12T13:57:45Z
 kind: interactive
 goal: Rework Atlas Sprint 2 almanac per feedback
-status: in-review
-outcome: "Phase-driven almanac shipped; PR #334 green, in review"
-summary: "Human-instructed throughout. The user (Trusted owner) gave iterative feedback on Sprint 2's Wheel of the Year (#305), which evolved across several rounds — each their call via AskUserQuestion or direct feedback. (1) Make the dial a selector that fully swaps one paragraph at a time, add a landing \"who's about\" roster, clickable sighting ticks. (2) Fix layout order: intro, then wheel, then content. (3) Label the dial's two vocabularies + carry ?day= through landing links. (4) The decisive pivot: content is tied to each specimen's OWN phenology phases (::phase-note), not the six shared seasons, which become informational rim context. Agent-initiated within the mandate: all implementation (::almanac/::phase-note MDC components, focusDay + specimenLabel contract, phase-mode wheel, post-mount collapse), converting all 15 essays TWICE (season-notes then phase-notes, via biome subagents each pass), retiring ::phase then the season-note components. Full gate + CI green at each stage; Playwright probes verified the mechanics. Awaiting human merge (not self-merged, ADR-0003)."
+status: completed
+outcome: "Phase-driven almanac merged (PR #334) into Sprint 2"
+summary: "Human-instructed throughout. The user (Trusted owner) gave iterative feedback on Sprint 2's Wheel of the Year (#305), which evolved across several rounds — each their call via AskUserQuestion or direct feedback. (1) Make the dial a selector that fully swaps one paragraph at a time, add a landing \"who's about\" roster, clickable sighting ticks. (2) Fix layout order: intro, then wheel, then content. (3) Label the dial's two vocabularies + carry ?day= through landing links. (4) The decisive pivot: content is tied to each specimen's OWN phenology phases (::phase-note), not the six shared seasons, which become informational rim context. Agent-initiated within the mandate: all implementation (::almanac/::phase-note MDC components, focusDay + specimenLabel contract, phase-mode wheel, post-mount collapse), converting all 15 essays TWICE (season-notes then phase-notes, via biome subagents each pass), retiring ::phase then the season-note components. Full gate + CI green at each stage; Playwright probes verified the mechanics. The user merged PR #334 into the Sprint 2 branch (atlas/sprint-2-almanac) — human-merged, not self-merged (ADR-0003)."
 prs:
   - "334"
 docsRead:
@@ -67,19 +67,19 @@ frictions:
   - description: The claude-code-remote send_later re-arm of the PR check-in failed once with 'permission stream closed'.
     solution: Transient; retry on the next turn. The PR webhook subscription still delivers CI/review events meanwhile.
     severity: nit
-durationSec: 16547
+durationSec: 58327
 models:
-  claude-opus-4-8: 652
+  claude-opus-4-8: 664
   <synthetic>: 1
 toolCounts:
-  Bash: 98
+  Bash: 100
   Grep: 3
   Read: 48
   ToolSearch: 5
   mcp__github__list_pull_requests: 1
   mcp__github__pull_request_read: 6
   AskUserQuestion: 2
-  Edit: 91
+  Edit: 93
   Write: 13
   Agent: 6
   mcp__github__search_pull_requests: 1
