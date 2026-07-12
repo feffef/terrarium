@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_015WT68vuJGFSB2HGpysCUut
 startedAt: 2026-07-12T13:36:34Z
-endedAt: 2026-07-12T13:57:40Z
+endedAt: 2026-07-12T13:58:35Z
 kind: interactive
 goal: Accordion + deep-linkable expanded item in journal landing
-status: in-review
-outcome: PR 372 opened; full local gate green
+status: completed
+outcome: Merged via PR 372; gate green
 summary: "Human-instructed throughout: the user asked that the journal Space landing's recent-activity and daily-digest feeds each expand only one item at a time, with the open item deep-linkable via a URL fragment that opens it and scrolls it into view. Implemented as one page-wide single-open accordion (the only model faithful to a single URL fragment), lifting open state into the page, making SessionCard a controlled disclosure, adding pure sessionAnchor/ digestAnchor helpers, and mirroring the open anchor to the hash via replaceState. onMounted opens the linked item on the client (SSR-collapsed, no hydration mismatch). Added unit + e2e coverage (accordion across feeds, deep-link opens and scrolls into viewport, hash mirror/clear). No agent- initiated net-new scope beyond the ask."
 prs:
   - "372"
@@ -49,15 +49,15 @@ frictions:
   - description: e2e setup() rebuilds Nuxt fully (~115s) per run, so iterating on the new interaction tests meant two full rebuilds for a test-only edit.
     solution: Inherent to @nuxt/test-utils single-build model; no cheap fix, just a cost to note.
     severity: nit
-durationSec: 1266
+durationSec: 1321
 models:
-  claude-opus-4-8: 151
+  claude-opus-4-8: 158
 toolCounts:
-  Bash: 31
+  Bash: 32
   Glob: 3
   Read: 8
   TaskCreate: 1
-  Edit: 12
+  Edit: 13
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
@@ -66,6 +66,7 @@ toolCounts:
   mcp__github__pull_request_read: 1
   mcp__github__actions_list: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/app/utils/dashboard.ts
   - layers/journal/app/components/journal/SessionCard.vue
