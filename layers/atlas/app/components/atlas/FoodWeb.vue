@@ -79,7 +79,7 @@ const strands = computed<Strand[]>(() =>
       const my = (a.y + b.y) / 2
       const qx = cx + (mx - cx) * 0.45
       const qy = cy + (my - cy) * 0.45
-      return { e, d: `M${s.x.toFixed(1)},${s.y.toFixed(1)} Q${qx.toFixed(1)},${qy.toFixed(1)} ${t.x.toFixed(1)},${t.y.toFixed(1)}`, endStroke: sig(props.specimens.find((sp) => sp.slug === e.from)) }
+      return { e, d: `M${s.x.toFixed(1)},${s.y.toFixed(1)} Q${qx.toFixed(1)},${qy.toFixed(1)} ${t.x.toFixed(1)},${t.y.toFixed(1)}`, endStroke: sig(a.s) }
     })
     .filter((x): x is Strand => x !== null),
 )
@@ -106,13 +106,11 @@ function strandClass(e: Edge) {
   return [e.kind, { hot: on, dim: hot.value && !on }]
 }
 
-const LEGEND: { kind: Edge['kind']; label: string }[] = [
-  { kind: 'preys-on', label: 'preys on' },
-  { kind: 'pollinates', label: 'pollinates' },
-  { kind: 'shelters', label: 'shelters' },
-  { kind: 'mimics', label: 'mimics' },
-  { kind: 'fears', label: 'fears' },
-]
+// Labels come from relationLabel so the legend can't drift from the wording the
+// Relations sections use; only the display order is authored here.
+const LEGEND: { kind: Edge['kind']; label: string }[] = (
+  ['preys-on', 'pollinates', 'shelters', 'mimics', 'fears'] as const
+).map((kind) => ({ kind, label: relationLabel(kind, 'out') }))
 const usedKinds = computed(() => new Set(props.edges.map((e) => e.kind)))
 </script>
 

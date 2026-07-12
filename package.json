@@ -22,7 +22,7 @@
     "gate:scoped": "tsx scripts/gate.ts"
   },
   "dependencies": {
-    "@nuxt/content": "^3.7.1",
+    "@nuxt/content": "3.15.0",
     "mermaid": "^11.16.0",
     "nuxt": "^4.0.0",
     "zod": "^3.25.0"
@@ -39,7 +39,6 @@
     "typescript": "^5.6.0",
     "vitest": "^3.0.0",
     "vue-tsc": "^2.1.0",
-    "yaml": "^2.9.0",
-    "zod-to-json-schema": "^3.23.5"
+    "yaml": "^2.9.0"
   }
 }

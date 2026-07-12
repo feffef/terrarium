@@ -9,8 +9,9 @@
 // Isolation-respecting and presentation-only (ADR-0004): it resolves each
 // Persona through the SAME shared, unit-tested `resolveSpaceRoute` the rest of
 // the Blog uses, then reads only that Space's own keyed `pages` collection —
-// no cross-Space query, no new isolation surface. `PERSONA_SLUGS`/`personaMeta`/
-// `formatBlogDate` arrive via the layer's `utils/` auto-imports.
+// no cross-Space query, no new isolation surface. `PERSONA_SLUGS` arrives via
+// the layer's `utils/` auto-imports; each feed row is the shared
+// `BlogFeedItem` component (also used by the Persona landing).
 import { resolveSpaceRoute } from '#shared/routing'
 
 interface FrontPost {
@@ -111,22 +112,13 @@ useSeoMeta({
 
       <div class="landing-feed">
         <ul v-if="filteredPosts.length" class="feed">
-          <li v-for="post in filteredPosts" :key="`${post.persona}${post.path}`">
-            <NuxtLink class="post-link" :to="`/t/blog/${post.persona}${post.path}`">
-              <div class="when">
-                {{ formatBlogDate(post.publishedAt) }}
-                <span class="who" :style="{ color: personaMeta(post.persona).accent }">{{ personaMeta(post.persona).name }}</span>
-              </div>
-              <h2>{{ post.title }}</h2>
-              <p v-if="post.reactsTo" class="reply">↳ in reply to {{ post.reactsTo.persona }}</p>
-              <p v-if="post.description" class="excerpt">{{ post.description }}</p>
-            </NuxtLink>
-            <ul v-if="post.tags?.length" class="tag-chips">
-              <li v-for="t in post.tags" :key="t">
-                <NuxtLink :to="`/t/blog?tag=${t}`" class="tag-chip" @click.stop>{{ t }}</NuxtLink>
-              </li>
-            </ul>
-          </li>
+          <BlogFeedItem
+            v-for="post in filteredPosts"
+            :key="`${post.persona}${post.path}`"
+            :post="post"
+            :link-prefix="post.persona"
+            :persona="post.persona"
+          />
         </ul>
         <p v-else class="empty">No posts tagged “{{ selectedTag }}” yet.</p>
       </div>

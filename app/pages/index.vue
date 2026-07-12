@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { routingMap } from '#routing'
+import { entryRoutes } from '#routing'
 
 // Read-only: the primary CTA below is hardcoded to the maintainer-chosen
 // starting point. This list is only for the small "also on this site" line.
@@ -33,10 +33,8 @@ const ATLAS = {
   ],
 }
 
-const otherRoutes = Object.entries(routingMap).flatMap(([tenant, spaces]) =>
-  Object.keys(spaces)
-    .map((space) => `/t/${tenant}/${space}`)
-    .filter((path) => path !== PRIMARY_PATH && tenant !== 'blog' && tenant !== 'atlas'),
+const otherRoutes = entryRoutes.filter(
+  (path) => path !== PRIMARY_PATH && !path.startsWith('/t/blog/') && !path.startsWith('/t/atlas/'),
 )
 </script>
 

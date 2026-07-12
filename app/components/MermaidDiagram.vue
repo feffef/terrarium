@@ -84,7 +84,7 @@ watch(containerRef, async (container) => {
 }
 
 .mermaid-diagram-error {
-  color: var(--jd-accent, #a33);
+  color: var(--diagram-error, #a33);
   font-size: 0.85em;
 }
 </style>

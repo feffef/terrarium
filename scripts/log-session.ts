@@ -200,6 +200,45 @@ function commitEnv(cwd: string = root): NodeJS.ProcessEnv {
   return env
 }
 
+/** `journal(sessions): log <filename>`'s session id, recovered from the canonical
+ *  `<date>-<session>.yml` filename (`expectedFilename` above) rather than re-derived
+ *  from anywhere else — ADR-0017's footer needs the id from the same file already
+ *  being committed here. */
+function sessionIdFromRelPath(relPath: string): string {
+  return basename(relPath, '.yml').replace(/^\d{4}-\d{2}-\d{2}-/, '')
+}
+
+/** `claude-opus-4-8` → `Claude Opus 4.8` — the display wording the harness's own
+ *  commit template already uses on `main` (ADR-0017: "Commits already get this from
+ *  the harness template"). This direct-to-`main` path has no harness template to
+ *  rely on, so it reformats the raw model id from the stitched entry instead of
+ *  hardcoding a name. */
+function formatModelId(id: string): string {
+  const m = /^claude-([a-z]+)-(.+)$/.exec(id)
+  if (!m) return id
+  const family = m[1]!
+  const versionParts = m[2]!
+  return `Claude ${family[0]!.toUpperCase()}${family.slice(1)} ${versionParts.split('-').join('.')}`
+}
+
+/** The busiest model recorded on the stitched entry at `absPath` (session-trace.ts's
+ *  `models`: model id → assistant-turn count), or a generic fallback for an
+ *  authored-only entry from before the trace existed. ADR-0017 has no exemption for
+ *  "the trace didn't say" — the footer still needs a value. */
+function deriveModelName(absPath: string): string {
+  const FALLBACK = 'Claude'
+  let parsed: unknown
+  try {
+    parsed = parseYaml(readFileSync(absPath, 'utf8'))
+  } catch {
+    return FALLBACK
+  }
+  const models = (parsed as { models?: Record<string, number> } | null)?.models
+  if (!models || typeof models !== 'object' || Object.keys(models).length === 0) return FALLBACK
+  const [busiest] = Object.entries(models).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  return formatModelId(busiest![0])
+}
+
 /** Build a commit off `origin/main`'s tree containing EXACTLY the one log file, using a
  *  throwaway index so the working tree and current branch are never touched. Returns the
  *  new commit sha. Asserts the commit changes exactly `relPath` — the "only one file" guard. */
@@ -219,8 +258,15 @@ export function buildLogCommit(
     const blob = git(['hash-object', '-w', absPath], { cwd })
     git(['update-index', '--add', '--cacheinfo', `100644,${blob},${relPath}`], { env: idxEnv, cwd })
     const tree = git(['write-tree'], { env: idxEnv, cwd })
-    const msg = `journal(sessions): log ${basename(relPath, '.yml')}`
-    const commit = git(['commit-tree', tree, '-p', base, '-m', msg], { env, cwd })
+    const subject = `journal(sessions): log ${basename(relPath, '.yml')}`
+    // Separate `-m` paragraph, per ADR-0017 (no exemptions: every agent-authored
+    // commit carries this footer) — a trailer needs its own paragraph or git
+    // won't recognize it as one.
+    const trailer = [
+      `Co-Authored-By: ${deriveModelName(absPath)} <noreply@anthropic.com>`,
+      `Claude-Session: https://claude.ai/code/${sessionIdFromRelPath(relPath)}`,
+    ].join('\n')
+    const commit = git(['commit-tree', tree, '-p', base, '-m', subject, '-m', trailer], { env, cwd })
 
     const changed = git(['diff', '--name-only', base, commit], { cwd }).split('\n').filter(Boolean)
     if (changed.length !== 1 || changed[0] !== relPath) {

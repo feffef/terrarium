@@ -1,5 +1,6 @@
 # Objective safety gate (ADR-0004). Layered, cheapest-first; every PR must clear it.
-# The generator, routing, isolation logic, and this workflow are human-only.
+# The manifest-expansion set, routing, isolation logic, and this workflow are
+# human-only — see ADR-0004's current high-risk-set definition.
 
 name: safety-gate
 

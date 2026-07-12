@@ -80,11 +80,9 @@ export function frictionCount(sessions: SessionDoc[]): number {
 }
 
 export function kindCounts(sessions: SessionDoc[]): { interactive: number; delegated: number; autonomous: number } {
-  return {
-    interactive: sessions.filter((s) => s.kind === 'interactive').length,
-    delegated: sessions.filter((s) => s.kind === 'delegated').length,
-    autonomous: sessions.filter((s) => s.kind === 'autonomous').length,
-  }
+  const counts = { interactive: 0, delegated: 0, autonomous: 0 }
+  for (const s of sessions) counts[s.kind]++
+  return counts
 }
 
 // De-duplicated, numerically sorted PR references (strips a leading `#`).
@@ -140,16 +138,7 @@ export function skillsLabel(externalCount: number): string {
 }
 
 export function skillsSub(own: SkillDoc[]): string {
-  const by = (i: Importance) => own.filter((s) => s.importance === i).length
-  const parts = ([
-    ['essential', by('essential')],
-    ['specialist', by('specialist')],
-    ['supporting', by('supporting')],
-    ['peripheral', by('peripheral')],
-  ] as const)
-    .filter(([, n]) => n > 0)
-    .map(([label, n]) => `${n} ${label}`)
-  return parts.join(' · ') || 'none yet'
+  return skillGroups(own).map((g) => `${g.skills.length} ${g.importance}`).join(' · ') || 'none yet'
 }
 
 // Own Skills grouped by importance (essential → specialist → supporting →
