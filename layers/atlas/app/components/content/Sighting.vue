@@ -71,7 +71,7 @@ if (almanac && sightingDay.value !== null) {
 
 // Clickable dial ticks (feedback rework): when the reader taps this sighting's
 // tick, the dial calls `focusDay(day)` and bumps `focusPulse`. We answer by
-// scrolling this quote into view — after `nextTick`, so the season-note that
+// scrolling this quote into view — after `nextTick`, so the phase-note that
 // holds us has finished switching to visible. Only the sighting whose day is
 // the needle's target reacts; a drag that merely crosses the day does not.
 const rootEl = ref<HTMLElement | null>(null)

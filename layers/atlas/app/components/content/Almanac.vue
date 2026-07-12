@@ -1,10 +1,10 @@
 <script setup lang="ts">
 // `::almanac` (feedback rework) — seats the specimen's almanac dial IN the field
 // note, so the essay reads in the order the reader asked for: a general
-// introduction to the specimen, then the wheel, then the year season by season.
+// introduction to the specimen, then the wheel, then the year phase by phase.
 // It injects the Almanac the page provides and feeds the shared PhenologyWheel
 // from it (the specimen's phases + the biome's dated ledger), so the dial in the
-// prose and the ::season-note blocks below it turn on the very same needle.
+// prose and the ::phase-note blocks below it turn on the very same needle.
 //
 // Degrades to nothing when no Almanac is in scope (a non-specimen Document).
 // Resolution: `components/content/` + pascal-cased tag (`::almanac` → Almanac),

@@ -111,10 +111,10 @@ useSeoMeta({
         </div>
 
         <!-- The field-note essay carries the almanac itself: a general intro to
-             the specimen, then the `::almanac` dial, then the year season by
-             season (`::season-note`) — the reader's requested order. The dial
-             replaced the 24-hour rhythm band here (map #279, decision 3); the
-             daily fact lives on as `activity.label` in the record above. -->
+             the specimen, then the `::almanac` dial, then the creature's year
+             phase by phase (`::phase-note`) — the reader's requested order. The
+             dial replaced the 24-hour rhythm band here (map #279, decision 3);
+             the daily fact lives on as `activity.label` in the record above. -->
         <div class="atlas-fieldnote atlas-prose">
           <ContentRenderer :value="entry.doc" />
         </div>
