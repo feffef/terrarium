@@ -1,0 +1,57 @@
+schemaVersion: 1
+session: session_01VsChwvxkmV7feVgFELCgkN
+startedAt: 2026-07-12T10:43:11Z
+endedAt: 2026-07-12T10:51:09Z
+kind: interactive
+goal: Investigate a Mermaid MDC component for the Journal
+status: completed
+outcome: Filed issue
+summary: Human asked for a Mermaid-diagram MDC component for the journal's architecture/workflow pages with minimal dependency, then (after interrupting an overly broad filesystem search) redirected the session from "implement it" to "file an issue with a preliminary plan for an agent to implement." Delegated an initial codebase survey to an Explore subagent (MDC conventions, journal tenant layout, ADR-0004 dependency policy), then personally verified the actual override mechanism against installed package source (@nuxtjs/mdc's ProsePre.vue prop contract and both packages' components:dirs hook) rather than trusting docs memory, which surfaced a real nuance (Prose component overrides are Platform-wide regardless of source layer, defeating naive Tenant-scoping) worth flagging to the implementer. Filed feffef/terrarium#364 (ready-for-agent) with the investigation findings, a sketch implementation, dependency/ADR-0004 implications, and open questions. No code changed, nothing to gate.
+prs: []
+docsRead:
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: new-dependency-always-human-only-merge clause
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: precedent check for third-party-lib risk framing
+  - path: docs/agents/issue-tracker.md
+    reason: issue creation + redundancy-check conventions
+  - path: docs/agents/triage-labels.md
+    reason: ready-for-agent label semantics
+  - path: docs/adr
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Called TaskCreate with an array-shaped `tasks` param without first loading its schema via ToolSearch; the deferred-tool contract only accepts one task per call and the error message didn't make that obvious until reading the fallback schema it printed.
+    solution: Load a deferred tool's schema via ToolSearch before the first call when its shape is unknown, rather than guessing a batched-array convenience shape.
+    severity: nit
+  - description: Tried to locate @nuxt/content's installed source with a broad `find / -type d ...` before knowing the pnpm virtual-store path shape; user had to interrupt it.
+    solution: Go straight to `pnpm list <pkg>` + `ls node_modules/.pnpm | grep` to derive the exact `.pnpm/<pkg>@<version>_.../node_modules/<pkg>` path instead of an unscoped root find.
+    severity: minor
+durationSec: 478
+models:
+  claude-sonnet-5: 77
+toolCounts:
+  Agent: 1
+  Bash: 22
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  Read: 5
+  Glob: 3
+  TaskCreate: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
+  Skill: 2
+  Grep: 1
+  Write: 1
+subagents:
+  - type: Explore
+    task: Survey MDC/component conventions in repo
+gitBranch: claude/mermaid-mdc-component-08otvm
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+learnings:
+  - Nuxt Content v3's Prose component overrides (ProsePre, ProseA, etc.) resolve through one flat, merged component registry across all layers — placing an override in a Tenant layer's components/content/ dir doesn't scope it to that Tenant, it silently changes rendering for every Tenant. Only override *priority* is per-layer (via components:dirs unshift order), not override *scope*.
