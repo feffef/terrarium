@@ -3,5 +3,9 @@ category: general-engineering
 importance: supporting
 installedSha256: d45827c299c021f77b0f146fefa3ee679b13f99e9a2ffdf48e8de2347adeefe1
 role: >-
-  Implement a filed backlog item — the manual counterpart to the chartered
-  (planned) `triage` autonomous job.
+  Moves an issue or external PR through the triage state machine —
+  categorise, verify, grill if needed, write an agent-ready brief, and decide
+  readiness (ready-for-agent / ready-for-human / needs-info). The manual
+  counterpart to the chartered (planned) `triage` autonomous job. Used this
+  window to triage #292, #325, and #236 end to end
+  (session_01VhL2mH3yYgkDqrMv61qe11).
