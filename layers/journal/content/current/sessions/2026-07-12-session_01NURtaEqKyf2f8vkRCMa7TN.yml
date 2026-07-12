@@ -1,0 +1,136 @@
+schemaVersion: 1
+session: session_01NURtaEqKyf2f8vkRCMa7TN
+startedAt: 2026-07-12T17:23:33Z
+endedAt: 2026-07-12T17:42:56Z
+kind: interactive
+goal: Distribute Atlas sightings across the whole Glass Year
+status: in-review
+outcome: 28 new Observations added, PR opened
+summary: Human asked (direct request, this session's only prompt) to distribute the Atlas Tenant's field-log sightings for all 15 specimens across the whole Glass Year and keep them consistent with each specimen's phenology phases. Read CONTEXT-MAP.md, the Atlas CONTEXT.md, the atlas-specimen Skill, and all 15 specimen pages plus the 39 existing Observations, and found every existing sighting clustered in a single ~3-week window (2026-06-20 to 2026-07-12), leaving most non-quiet phases with zero ledger entries. Wrote a small Python helper mirroring almanac.ts's day-of-year/inSpan math to pick and verify dates, added 28 new Observation files spread across all three Biomes and the full year, and cited each new sighting from its matching phase-note via ::sighting so the almanac dial reads across the year too. Verified every new date against its phase's span programmatically, ran pnpm validate:content and the full pnpm gate:scoped (escalated automatically since content is non-inert), and screenshotted a specimen page to confirm the dial and field log render the spread. Opened the gated PR (#378) and subscribed to its activity per ADR-0003/CLAUDE.md, all agent-initiated per that standing convention, no separate human green-light needed since it's on an already-designated branch.
+prs:
+  - "378"
+docsRead:
+  - path: CONTEXT-MAP.md
+    reason: locate the Atlas context
+  - path: layers/atlas/CONTEXT.md
+    reason: Biome/Specimen/Interaction/Observation glossary
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: naturalist voice, Observation schema, phase-note/::sighting conventions
+  - path: layers/atlas/app/utils/almanac.ts
+    reason: day-of-year and inSpan math to place dates correctly, including wrapped spans
+  - path: layers/atlas/tenant.config.ts
+    reason: Observation/phenology Zod schema
+  - path: layers/atlas/app/components/content/Sighting.vue
+    reason: (no reason given)
+  - path: layers/atlas/app/components/content/PhaseNote.vue
+    reason: (no reason given)
+  - path: layers/atlas/app/components/content/Almanac.vue
+    reason: (no reason given)
+  - path: layers/atlas/content/canopy/pages/aranea-patiens.md
+    reason: (read before editing)
+  - path: layers/atlas/content/canopy/pages/folium-mendax.md
+    reason: (read before editing)
+  - path: layers/atlas/content/canopy/pages/lumina-fabulae.md
+    reason: (read before editing)
+  - path: layers/atlas/content/canopy/pages/mycora-susurrans.md
+    reason: (read before editing)
+  - path: layers/atlas/content/canopy/pages/umbra-vacans.md
+    reason: (read before editing)
+  - path: layers/atlas/content/floor/pages/clathrina-vigil.md
+    reason: (read before editing)
+  - path: layers/atlas/content/floor/pages/driftophaga-vigilans.md
+    reason: (read before editing)
+  - path: layers/atlas/content/floor/pages/formica-textrix.md
+    reason: (read before editing)
+  - path: layers/atlas/content/floor/pages/rubra-territa.md
+    reason: (read before editing)
+  - path: layers/atlas/content/floor/pages/textor-absens.md
+    reason: (read before editing)
+  - path: layers/atlas/content/pool/pages/echo-cantans.md
+    reason: (read before editing)
+  - path: layers/atlas/content/pool/pages/geminella-sequax.md
+    reason: (read before editing)
+  - path: layers/atlas/content/pool/pages/luciola-mersa.md
+    reason: (read before editing)
+  - path: layers/atlas/content/pool/pages/nocturna-brevis.md
+    reason: (read before editing)
+  - path: layers/atlas/content/pool/pages/vitrea-placida.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: gate:scoped's full gate failed on typecheck/build because node_modules was missing the `mermaid` devDependency, unrelated to this content-only change
+    solution: ran `pnpm install` to restore it; confirmed via git stash that the failure was pre-existing on a clean checkout, not caused by this change
+    severity: minor
+  - description: the harness's automatic commit-footer injection did not land the Co-Authored-By/Claude-Session trailer on the first `git commit -m`
+    solution: amended the trailer in by hand per CLAUDE.md's documented caveat for this
+    severity: nit
+durationSec: 1162
+models:
+  claude-sonnet-5: 236
+toolCounts:
+  Bash: 38
+  Read: 31
+  Write: 29
+  TaskCreate: 1
+  Edit: 25
+  Grep: 14
+  ToolSearch: 4
+  Monitor: 1
+  TaskOutput: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/atlas/content/canopy/observations/2026-03-27-first-wheel-of-the-year.yml
+  - layers/atlas/content/canopy/observations/2026-10-03-wheel-taken-in.yml
+  - layers/atlas/content/canopy/observations/2026-03-17-mid-moult.yml
+  - layers/atlas/content/canopy/observations/2026-09-18-matched-to-the-tiring-leaves.yml
+  - layers/atlas/content/canopy/observations/2026-03-24-first-lamp-of-the-year.yml
+  - layers/atlas/content/canopy/observations/2026-10-18-new-ground-spoken-for.yml
+  - layers/atlas/content/canopy/observations/2026-01-21-found-by-going-looking.yml
+  - layers/atlas/content/canopy/observations/2026-06-06-first-entry-that-would-not-balance.yml
+  - layers/atlas/content/floor/observations/2026-04-01-gate-shut-for-restringing.yml
+  - layers/atlas/content/floor/observations/2026-10-13-two-crossings-thinning-traffic.yml
+  - layers/atlas/content/floor/observations/2026-01-11-a-winter-crossing.yml
+  - layers/atlas/content/floor/observations/2026-09-28-a-hoard-recounted.yml
+  - layers/atlas/content/floor/observations/2026-04-06-western-workings-half-unpicked.yml
+  - layers/atlas/content/floor/observations/2026-09-18-the-long-gallery-one-way.yml
+  - layers/atlas/content/floor/observations/2026-12-07-mended-again-miscellaneous.yml
+  - layers/atlas/content/floor/observations/2026-03-07-up-and-gone-again.yml
+  - layers/atlas/content/floor/observations/2026-08-19-fed-at-twice-the-pace.yml
+  - layers/atlas/content/floor/observations/2026-10-28-sound-again-by-morning.yml
+  - layers/atlas/content/pool/observations/2026-06-12-a-call-answering-nothing.yml
+  - layers/atlas/content/pool/observations/2026-03-22-bare-at-dusk-paired-by-dawn.yml
+  - layers/atlas/content/pool/observations/2026-09-08-two-pairs-on-the-last-ribbon.yml
+  - layers/atlas/content/pool/observations/2026-04-26-the-water-clearing-its-throat.yml
+  - layers/atlas/content/pool/observations/2026-09-18-outlying-lights-gone.yml
+  - layers/atlas/content/pool/observations/2026-04-11-first-circuit-of-the-year.yml
+  - layers/atlas/content/pool/observations/2026-09-13-a-shade-faster.yml
+  - layers/atlas/content/pool/observations/2026-03-12-back-on-the-pane.yml
+  - layers/atlas/content/pool/observations/2026-10-08-polishing-what-is-left.yml
+  - layers/atlas/content/canopy/pages/aranea-patiens.md
+  - layers/atlas/content/canopy/pages/folium-mendax.md
+  - layers/atlas/content/canopy/pages/lumina-fabulae.md
+  - layers/atlas/content/canopy/pages/mycora-susurrans.md
+  - layers/atlas/content/canopy/observations/2026-07-25-fourth-entry-unbalanced.yml
+  - layers/atlas/content/canopy/pages/umbra-vacans.md
+  - layers/atlas/content/floor/pages/clathrina-vigil.md
+  - layers/atlas/content/floor/pages/driftophaga-vigilans.md
+  - layers/atlas/content/floor/pages/formica-textrix.md
+  - layers/atlas/content/floor/pages/rubra-territa.md
+  - layers/atlas/content/floor/pages/textor-absens.md
+  - layers/atlas/content/pool/pages/echo-cantans.md
+  - layers/atlas/content/pool/pages/geminella-sequax.md
+  - layers/atlas/content/pool/pages/luciola-mersa.md
+  - layers/atlas/content/pool/pages/nocturna-brevis.md
+  - layers/atlas/content/pool/pages/vitrea-placida.md
+gitBranch: claude/atlas-sightings-phase-consistency-x3vga4
+entrypoint: remote_mobile
+cliVersion: 2.1.207
