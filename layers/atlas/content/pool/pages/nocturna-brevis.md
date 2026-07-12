@@ -99,7 +99,7 @@ As the light comes clearer the circuit lengthens to match; the draught of the op
 :::phase-note{of="long-rounds"}
 These are the year's fullest evenings, and the circuit takes the whole of the dusk — there being, in this stretch, more to attend to than dusk to attend to it. The rounds are at their longest now, when the pool's evenings have the most in them worth a mark, and it is now the chronicler shuns the far corner where the call-mimic is reported and will not fly its circuit there; of everything in the pool, it alone seems to believe every account it hears. On the emptiest evening of one June, when rain had kept the pool dull and eventless from morning on, it came out all the same and flew its round in half the usual time, almost perfunctorily, as if there were simply less to attend to. We offer no explanation; the ledger gives that evening a single line, which we have not improved on:
 
-::sighting{date="2026-06-29"}
+::sighting{date="2026-06-15"}
 ::
 :::
 

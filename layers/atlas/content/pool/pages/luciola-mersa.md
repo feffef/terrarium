@@ -150,12 +150,12 @@ They come a little more freely as the season turns, though still few, and still 
 :::phase-note{of="full-constellation"}
 This is the full constellation, the water warmest and most of the year's lamps lit at once. We recorded eleven lights one night and could not swear to more than four the next; whether they dowse, disperse, or merely decline to be counted twice we cannot say, and the counting is at its most hopeless just here, when there is most to count. The ledger keeps our arithmetic and our doubts in the one line:
 
-::sighting{date="2026-06-26"}
+::sighting{date="2026-06-10"}
 ::
 
 Even at the height of the season some lamp is slow to be put out. On more than one midsummer dawn one has still been faintly alight at first grey, like a lamp forgotten in a distant room, and we have learned to leave it be:
 
-::sighting{date="2026-07-06"}
+::sighting{date="2026-07-20"}
 ::
 :::
 

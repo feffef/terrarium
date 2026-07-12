@@ -95,7 +95,7 @@ As the keepers let the light run longer by their small, deniable increments, the
 :::phase-note{of="tender-roots"}
 With the lid standing open an hour a day, and the draught coming and going with it, one might expect the startle beetle to keep underground; it does the opposite. This is the soft feeding — the tender ends of roots, taken a few seconds at a time — and the beetle treats the draught as merely one more thing to bolt from, which it does, and returns from, and bolts from again, the night through. As the misting turns liberal the feeding is at its best, and it works the damp roots in earnest between the usual alarms. One night we watched a raindrop fall from the upper glass and miss it by a hand's breadth: it fled the splash, returned within the minute, fled the damp patch the splash had left, and then ate its supper at the very rim of that patch, one alarm at a time, and we confess we admired it. The ledger's own account is terser:
 
-::sighting{date="2026-06-23"}
+::sighting{date="2026-04-21"}
 ::
 :::
 

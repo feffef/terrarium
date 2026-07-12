@@ -95,14 +95,14 @@ As the light lengthens the film re-forms in patches, and every patch is grazed b
 :::
 
 :::phase-note{of="film-plenty"}
-The morning film is at its widest now, and so is the census: the pairs widen their grazing to match, working the new film in their unhurried lanes. Where the dusk-chronicler's circuit crosses the surface they part and close again behind it, like water remembering itself, and whether that is fear or courtesy the guide does not presume to say. On the twenty-first of one June we counted forty pairs on the film and no singles, and the count has been repeated, by wagered biscuit, on mornings since, with the same result:
+The morning film is at its widest now, and so is the census: the pairs widen their grazing to match, working the new film in their unhurried lanes. Where the dusk-chronicler's circuit crosses the surface they part and close again behind it, like water remembering itself, and whether that is fear or courtesy the guide does not presume to say. On the sixth of one May we counted forty pairs on the film and no singles, and the count has been repeated, by wagered biscuit, on mornings since, with the same result:
 
-::sighting{date="2026-06-21"}
+::sighting{date="2026-05-06"}
 ::
 
 The pairs are part of the pool's small economy, and the pool is not sentimental about them: they drift to the drowned star's lamp with the rest of the dust and are taken as they travel, two at a time, the follower making no attempt to escape that we can detect. Yet one sees best in this stretch how they keep to a lane — we watched a pair graze the whole length of the glass snail's cleaned ribbon, holding to it as though it were a road, and arrive at the far end in the order they set out:
 
-::sighting{date="2026-07-07"}
+::sighting{date="2026-07-30"}
 ::
 :::
 

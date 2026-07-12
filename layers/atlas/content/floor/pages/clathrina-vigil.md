@@ -105,7 +105,7 @@ Only when the last new thread has satisfied her does the narrow place open again
 :::phase-note{of="long-keeping"}
 The fresh lattice is barely strung before the year's traffic begins to rise against it, and the draught of the open lid is its first real test. She walks the whole of the new web each night before taking her post — every thread plucked once, listened to, and let stand or eaten and re-spun on the spot — and only then settles, head-down at the centre, and the gate is open in her particular sense. This is the heaviest traffic of the year, and the standard is no lower for it. We have watched a weaver-ant pick her way over the threads and past the mistress of them without so much as a pause on either side, while behind her something lame was held at the third thread and did not go on. Once we parted a single thread of the lattice with a fine scissors; she mended it before all else — before feeding, before the several perfectly sound crossings that stood waiting at the edge of the gap, and who, we noted, waited. Nothing crossed until the mend was done and tested, and we have not brought the scissors out since. The ledger's account of a plainer night runs:
 
-::sighting{date="2026-07-03"}
+::sighting{date="2026-05-11"}
 ::
 :::
 

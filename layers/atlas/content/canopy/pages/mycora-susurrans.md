@@ -117,7 +117,7 @@ What it says, and how much of it, turns with the year's damp — and we have set
 :::phase-note{of="full-voice"}
 The lid comes to stand open an hour a day, and the mold — nearly alone among the inhabitants — welcomes the clean draught, holding to its damp corners out of the moving air and gathering itself until the sibilance thickens into full voice. This is the colony in full spate, and whatever it is saying, it says most of it now: the misting at its most liberal, the whisper swelling after every rain until the whole canopy sibilates, the caps standing fattest and most talkative on the wettest boughs. We have debated the mechanism at more length than the reader needs to hear about — the junior members hold that it is merely the spores going, a rain of dust too fine to see and loud only in aggregate, and the senior members hold the same thing but stand nearer the caps while saying it. The ledger, which has no patience for mechanism, keeps its own account:
 
-::sighting{date="2026-07-05"}
+::sighting{date="2026-06-10"}
 ::
 :::
 

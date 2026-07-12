@@ -91,9 +91,9 @@ It returns to the pane with the lengthening light and begins where it left off, 
 :::
 
 :::phase-note{of="green-harvest"}
-This is the green harvest, the film at its thickest and the ribbons of clean glass growing a finger wider by the day. The grazing quickens to meet it, and the draught of the open lid does not hurry the snail, which has never in our watching been hurried by anything; it works the widening green at the one pace it owns, and the clear ribbons multiply behind it. Its pace invites unkind comparison, so we made a fair trial of it: on the twentieth of one June a wager of biscuits was laid, marks were chalked, and the specimen crossed the full breadth of the pane between breakfast and the failing of the light — a day's honest work, we would remind the reader, performed without rest and entirely uphill in places. The biscuits were awarded to the snail's side, and eaten by the observers, the snail declining its share:
+This is the green harvest, the film at its thickest and the ribbons of clean glass growing a finger wider by the day. The grazing quickens to meet it, and the draught of the open lid does not hurry the snail, which has never in our watching been hurried by anything; it works the widening green at the one pace it owns, and the clear ribbons multiply behind it. Its pace invites unkind comparison, so we made a fair trial of it: on the eleventh of one May a wager of biscuits was laid, marks were chalked, and the specimen crossed the full breadth of the pane between breakfast and the failing of the light — a day's honest work, we would remind the reader, performed without rest and entirely uphill in places. The biscuits were awarded to the snail's side, and eaten by the observers, the snail declining its share:
 
-::sighting{date="2026-06-20"}
+::sighting{date="2026-05-11"}
 ::
 
 Late in the harvest the misting lapses with the keeper's holiday and the film stops thickening, though there is a good deal of it still to graze; the snail works on, unhurried by the shortage as it is unhurried by everything, and the ribbons it cuts run a little farther between meals.

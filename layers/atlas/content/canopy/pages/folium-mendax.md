@@ -100,12 +100,12 @@ As the light lengthens the old costume is shed — and, we were faintly shocked 
 :::phase-note{of="green-work"}
 With the honest foliage coming in thick the performance resumes in earnest, one more liar hidden among the plentiful truth, and these are the ledger's fullest weeks. The draught troubles it not at all; it has studied the true leaves and sways as they do, a half-beat behind, and holds so still that a specimen has been known to sit two hours for its portrait before some small error — the eye, usually — gives it away. We note that its shade is popular: the whisper mold crowds into the shadow the false-leaf casts and thrives there, whispering away, unaware or unconcerned that its roof is an ambush.
 
-::sighting{date="2026-06-23"}
+::sighting{date="2026-05-06"}
 ::
 
 It waits, and now and then it strikes; we have seen the strike twice in these weeks, and both times the victim's chief mistake was botanical over-confidence. It fears exactly one thing, the patient weaver, so that a false-leaf drifting within sight of a web abandons stillness altogether and walks — quickly, on all six twigs, with the affronted air of an actor whose theatre has caught fire.
 
-::sighting{date="2026-07-02"}
+::sighting{date="2026-05-31"}
 ::
 :::
 

@@ -90,7 +90,7 @@ We have set the year down as the drift-eater keeps it, by that supply and not by
 :::phase-note{of="slow-straying"}
 The lengthening light begins, by small increments, to set one copy of a thing a little ahead of its neighbour — a seedling that greens before its twin, a shadow that has shifted since it was last marked — and with the lid open and the draught working the growing months begin in earnest, and so does the straying. Every copy of everything goes a little out of step with its source, and the drift-eater is once more met with wherever one looks for it; it feeds at leisure now, no longer fasting, taking the small new disagreements one at a time. This is its easy stretch: the growing at its height, every likeness quietly parting from its like, and the animal at leisure among the results. One night we pressed a fern frond and laid the pressed copy beside the living one, in the interests of science; by morning the drift-eater had been and gone. The pressed frond was eaten precisely at the pinnae that had dried crooked, and nowhere else; the living frond was untouched. It had, in effect, corrected our specimen, and we have not entirely forgiven it. The ledger notes a plainer instance:
 
-::sighting{date="2026-06-27"}
+::sighting{date="2026-06-05"}
 ::
 :::
 

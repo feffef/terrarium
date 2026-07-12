@@ -106,7 +106,7 @@ Here, in the highest light of the year, the audit fails. Every entry that will n
 ::sighting{date="2026-06-06"}
 ::
 
-::sighting{date="2026-07-04"}
+::sighting{date="2026-06-15"}
 ::
 
 ::sighting{date="2026-07-25"}

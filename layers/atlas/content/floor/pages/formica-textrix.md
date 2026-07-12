@@ -99,12 +99,12 @@ With the lid soon standing open an hour a day the litter comes down faster than 
 :::
 
 :::phase-note{of="double-shift"}
-This is the season of the double shift, and the confusion is at its richest in it: the litter swells daily with what the canopy lets fall, and the dawn and dusk shifts run long enough to meet in the middle. We mapped the western workings twice in one week and produced, in good faith, two different maps. On the twenty-second of June we dusted one worker with a little chalk so as to follow her: she took a leaf-fragment three times her own length down the long gallery, surrendered it, returned, took another, and was still at it when the light failed and we, not she, gave up. The chalk was gone by morning; we suspect the column disapproved of it. The ledger keeps the plainer entries of the season:
+This is the season of the double shift, and the confusion is at its richest in it: the litter swells daily with what the canopy lets fall, and the dawn and dusk shifts run long enough to meet in the middle. We mapped the western workings twice in one week and produced, in good faith, two different maps. One dawn in this stretch we dusted one worker with a little chalk so as to follow her: she took a leaf-fragment three times her own length down the long gallery, surrendered it, returned, took another, and was still at it when the light failed and we, not she, gave up. The chalk was gone by morning; we suspect the column disapproved of it. The ledger keeps the plainer entries of the season:
 
-::sighting{date="2026-06-20"}
+::sighting{date="2026-05-31"}
 ::
 
-::sighting{date="2026-07-06"}
+::sighting{date="2026-07-20"}
 ::
 :::
 
@@ -118,7 +118,7 @@ We have counted the traffic; we have not been permitted to audit the stores. Aft
 :::
 
 :::phase-note{of="deep-galleries"}
-The surface work thins by degrees until only the mending is left — the worn places kept sound by a column already half below our reach. Only in these dry-warm months does the column grant us anything like an absence: the surface workings stand empty for weeks together, the weaving carried on somewhere below the reach of our lamps, and still the empty galleries are found mended at the worn places, an entry the ledger files under miscellaneous industry and the company has agreed to leave there.
+The surface work thins by degrees until only the mending is left — the worn places kept sound by a column already half below our reach. Only in these dry-warm months does the column grant us anything like an absence: the surface workings stand empty for weeks together, the weaving carried on somewhere below the reach of our lamps, and still the empty galleries are found mended at the worn places, an entry the ledger files under industry, plainly, and the company has agreed to leave it there.
 
 ::sighting{date="2026-12-07"}
 ::
