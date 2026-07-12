@@ -1,0 +1,85 @@
+schemaVersion: 1
+session: session_01T3m2HVMY3BqkxpTqrNfA6K
+startedAt: 2026-07-11T21:36:52Z
+endedAt: 2026-07-12T00:00:39Z
+kind: interactive
+goal: Write a David blog post on repo going public
+status: completed
+outcome: "Merged (PR #333) — the merge-as-RCE post"
+summary: "Human-instructed via /blog-post david with the topic \"about the repo now being public\". Ran the Skill's three-candidate workflow: gathered material (git log, the public-readiness review, ADR-0011/0020, session logs), verified via the GitHub API that the repo is genuinely public now (visibility public, MIT, 1 star, 7 open issues), then drafted three distinct David angles to scratch — pre-flip housekeeping, ADR-0020 trust tiers, and merge-as-remote-code-execution. A fresh Sonnet outside-reader (no repo context) picked the merge-as-RCE draft as the only one that stood alone without a glossary; I revised it to close the outsider gaps it flagged (identify \"the review\", expand \"ADR\", introduce \"the agents\", say what the site is, clarify the merge gate). Landed the standalone post, cleared the full gate locally (green), and opened gated PR #333. No reaction/pingback. No net-new code; all agent-initiated within the invoked Skill. Then, on owner feedback, corrected a \"platform vs website\" mischaracterization: fixed the new post's opening plus two other prose definitions (David's masthead and the journal architecture page); left Karen's reductive \"website\" as deliberate in-voice snark (confirmed via AskUserQuestion). Re-gated green."
+prs:
+  - "333"
+docsRead:
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-don't for the post
+  - path: docs/research/public-readiness-review.md
+    reason: the going-public findings, incl. merge=RCE
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: Trusted/Public trust line
+  - path: SECURITY.md
+    reason: confirm the added security policy
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-09-the-self-merge-tier-just-grew-by-one.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-07-notes-from-inside-the-glass.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/index.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (read before editing)
+  - path: layers/blog/content/david/pages/2026-07-05-first-light.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the invoked Skill — three-draft-and-review workflow
+  - name: close-session
+    reason: closure front door at PR open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: /blog-post gave both a persona (david) and a topic direction (repo going public); Section A's "pick three distinct topics" then means three distinct angles on one theme, which the Skill doesn't spell out.
+    solution: Treated the constrained arg as the theme and drafted three distinct sub-angles; a one-line note in the Skill's step 0 would remove the ambiguity.
+    severity: nit
+  - description: At PR-open the gate check hadn't reported (pending, total_count 0), so I assumed the repo's known Actions-billing-dark state and relied on local gate.
+    solution: Used local pnpm gate (exit 0) as the signal; the gate CI then actually ran and reported success ~6 min later — don't assume CI is dark, re-check it.
+    severity: nit
+  - description: The post's outsider-legibility fix ("say what the site is") landed on "a small website", which mischaracterizes the Platform and contradicted David's own First Light post; the owner caught it.
+    solution: Corrected to "experimental content platform" and swept two other prose definitions (David's masthead, journal architecture page). When defining what Terrarium is, check CONTEXT.md's "Platform" term.
+    severity: minor
+durationSec: 8626
+models:
+  claude-opus-4-8: 173
+toolCounts:
+  Read: 12
+  Bash: 28
+  ToolSearch: 1
+  mcp__github__search_repositories: 1
+  Write: 7
+  Agent: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  Edit: 8
+  Grep: 2
+  AskUserQuestion: 1
+  mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-07-11-the-merge-button-runs-on-a-real-computer.md
+  - layers/blog/content/david/pages/index.md
+  - layers/journal/content/current/pages/architecture.md
+subagents:
+  - type: general-purpose
+    task: Outside reader picks strongest post
+    model: sonnet
+gitBranch: claude/blog-public-repo-announcement-djhpr6
+entrypoint: remote
+cliVersion: 2.1.207
+learnings:
+  - "Going public appears to have restored the repo's GitHub Actions (the gate CI ran green on PR #333 after being billing-dark) — public repos get free Actions minutes, exactly as docs/research/public-readiness-review.md predicted."
