@@ -44,7 +44,7 @@ Classify every surface **before** editing. This decides everything.
   session logs, blog posts. **Never rewrite a decision.** A drifted ADR still gets
   the brave fix — the repo's sanctioned **amendment banner / Status-line pointer**
   (ADR-0018), never a rewrite of the decision — but ADRs are human-only (ADR-0004),
-  so that edit rides its own human-reviewed PR, not the self-merged one (step 7).
+  so that edit rides its own human-reviewed PR, not the self-merged one (step 8).
 - **Pack-generic** — external-pack Skills (`external: true`; e.g.
   `setup-matt-pocock-skills/*`, the `*-FORMAT.md` templates). Generic and
   re-installable, so a rewrite is clobbered on re-install (ADR-0005). **Never
@@ -75,7 +75,7 @@ lenses start from the **same git-history read** — `git log --since="48 hours a
   (Live, self-merge); (2) a new **ADR** that amends/supersedes another **without
   the sanctioned amendment banner / Status-line pointer** (ADR-0018) on the
   superseded ADR — a human-only surface (ADR-0004), so this one **escalates**
-  (step 7), never a `CLAUDE.md` ADR-list entry (CLAUDE.md says read the `adr/`
+  (step 8), never a `CLAUDE.md` ADR-list entry (CLAUDE.md says read the `adr/`
   dir, never hand-maintain a list). *Boundary:* an un-referenced addition **older**
   than the 48h window is out of this lens's scope.
 
@@ -90,7 +90,7 @@ lenses start from the **same git-history read** — `git log --since="48 hours a
   fix = move the prose to its correct home + leave a pointer. (2) A **misfiled
   file** — e.g. a research note under `docs/agents/` that belongs in
   `docs/research/`; fix = `git mv`. **Caveat:** moving a journal `pages/*.md`
-  file changes its route (ADR-0006) — that move escalates, see step 7.
+  file changes its route (ADR-0006) — that move escalates, see step 8.
 
 **Agent C — Concision** (careful cuts only — never gut load-bearing "why"):
 
@@ -148,7 +148,7 @@ link for a new orphaned doc, cut redundant filler, trim superseded-state narrati
 by making the prose match reality, pin the undefined threshold, retire a term
 whose premise is dead. Don't stop to ask how far to reach, and don't file an issue
 for a judgement call — **decide it and fix it.** Two fixes do *not* ride this
-brave, self-merged path — both escalate (step 7): a **Mis-location file move that
+brave, self-merged path — both escalate (step 8): a **Mis-location file move that
 changes a journal page's route**, and an **Orphan-addition missing-amendment
 finding on an ADR** (a human-only surface).
 
@@ -182,26 +182,37 @@ Fan out the **four paired-lens reviewer agents** (A Freshness, B Single-home,
 C Concision, D Coherence — see above) and pool their findings. Done when all four
 have reported.
 
-## 4. Fact-check the findings
+## 4. Dedupe the pool
+
+Before fact-checking, scan the pooled findings for **overlap** — two different
+lens-agents can independently converge on the same text without either one
+noticing. Look for overlapping `file:line` ranges or overlapping quoted
+evidence across findings, including across different lens pairs. Merge any
+overlapping findings into one coherent finding before fact-checking proceeds —
+fact-checking two overlapping findings separately produces two fixes fighting
+over one home instead of one single-home fix. Done when no two surviving
+findings describe the same span of text.
+
+## 5. Fact-check the findings
 
 Dispatch the independent checker over the pooled findings; drop every WRONG,
 apply every CONFIRMED-BUT correction. Done when each surviving finding is
 CONFIRMED(-BUT) with an accurate `file:line`.
 
-## 5. Fix bravely
+## 6. Fix bravely
 
 Fix every surviving finding in place, deciding scope yourself; file a
 `needs-triage` issue **only** for an unresolvable factual conflict (search first,
 never re-file). Done when every confirmed finding is fixed or — for a true factual
 conflict — filed, with none left undecided.
 
-## 6. Clear the safety gate
+## 7. Clear the safety gate
 
 Run `pnpm gate` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
 it runs). Most doc edits don't touch the build, but run it anyway — a Skill's
 frontmatter or a moved path can. Done when it's green.
 
-## 7. Commit, push, open one gated PR, self-merge on green
+## 8. Commit, push, open one gated PR, self-merge on green
 
 Commit the fixes (one run rides one commit/PR), push with retry, and open **one
 gated PR** listing what was fixed and any issue filed. **This PR self-merges on a

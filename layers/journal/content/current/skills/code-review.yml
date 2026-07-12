@@ -8,4 +8,12 @@ role: >-
   sessions this window (pkill-teardown fix, component-empty fix, About/How-Works
   split, test restructuring, triage extractor): adoption is inconsistent, not
   universal. Prescribes `gh` CLI, absent on remote sessions — use
-  `mcp__github__*` instead.
+  `mcp__github__*` instead. A spec-reviewer subagent has cited a fabricated
+  line number (#323) — when dispatching this Skill's review subagents,
+  explicitly restate CLAUDE.md's never-reconstruct-an-identifier-from-memory
+  rule in the subagent brief, and require a fresh Read before each cited
+  line/finding is trusted: re-verify every citation locally, don't take
+  subagent output as ground truth. This Skill also assumes a diff against a
+  fixed point; it has no built-in mode for a whole-surface/whole-tree review
+  — that needs manual adaptation (e.g. treating the full tree as the diff, or
+  running the Skill per-directory).
