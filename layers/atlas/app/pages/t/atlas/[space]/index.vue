@@ -99,22 +99,25 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
         <AtlasFoodWeb :specimens="specimens" :edges="edges" :biome="space" />
       </section>
 
-      <section v-if="withRhythm.length">
-        <div class="atlas-sechead"><span class="atlas-eyebrow">Daily choreography</span></div>
-        <ul class="choreo">
-          <li v-for="s in withRhythm" :key="s.slug" :style="sigStyle(s)">
-            <NuxtLink class="cname" :to="`/t/atlas/${space}/${s.slug}`">{{ s.binomial }}</NuxtLink>
-            <AtlasRhythmBand :bands="s.activity!.bands" :label="s.activity!.label" />
-          </li>
-        </ul>
-      </section>
-
       <section v-if="withPhenology.length" class="almanac-section">
         <div class="atlas-sechead"><span class="atlas-eyebrow">The wing's year</span></div>
-        <p class="almanac-lede">
-          Turn the almanac to any season and the wing tells you who you would find abroad in
-          it — and who is keeping to itself.
-        </p>
+        <div class="almanac-lede">
+          <p>
+            The dial keeps two clocks at once. Its rim is the Glass Year — the six
+            seasons the whole terrarium shares, the same in every wing: a calendar of
+            the misting and the pipes rather than the sun, and felt by everything
+            under the glass together. Turn the needle to any of them and the roster
+            below names who this wing would find abroad in it, and who is keeping to
+            itself.
+          </p>
+          <p>
+            The season is only the world's half of the year, though. Each creature
+            keeps its own <em>phases</em> against it — a private round of waking,
+            abroad, and going dark, its own answer to the shared weather — and those
+            you read on the creature's own page, where the dial's inner ring becomes
+            that one animal's year.
+          </p>
+        </div>
         <div class="wing-almanac">
           <AtlasPhenologyWheel class="wing-wheel" wing :observations="observations" />
           <div class="wing-roster">
@@ -149,6 +152,16 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
       <section>
         <div class="atlas-sechead"><span class="atlas-eyebrow">Field log</span></div>
         <AtlasFieldLog :observations="observations" :specimens-by-slug="specimensBySlug" :biome="space" :limit="8" />
+      </section>
+
+      <section v-if="withRhythm.length">
+        <div class="atlas-sechead"><span class="atlas-eyebrow">Daily choreography</span></div>
+        <ul class="choreo">
+          <li v-for="s in withRhythm" :key="s.slug" :style="sigStyle(s)">
+            <NuxtLink class="cname" :to="`/t/atlas/${space}/${s.slug}`">{{ s.binomial }}</NuxtLink>
+            <AtlasRhythmBand :bands="s.activity!.bands" :label="s.activity!.label" />
+          </li>
+        </ul>
       </section>
 
       <section>
@@ -189,7 +202,10 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
 @media (max-width: 34rem) {
   .choreo li { grid-template-columns: 1fr; gap: 0.5rem; }
 }
-.almanac-lede { max-width: 34rem; color: var(--atlas-muted); margin: 0 0 1.3rem; font-size: 0.95rem; }
+.almanac-lede { max-width: 38rem; color: var(--atlas-muted); margin: 0 0 1.5rem; font-size: 0.95rem; }
+.almanac-lede p { margin: 0 0 0.85rem; }
+.almanac-lede p:last-child { margin-bottom: 0; }
+.almanac-lede em { font-style: italic; color: var(--atlas-ink); }
 .wing-almanac {
   display: grid;
   grid-template-columns: minmax(0, 20rem) 1fr;

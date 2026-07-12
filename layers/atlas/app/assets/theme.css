@@ -365,6 +365,7 @@
 .atlas-log .obs .who { font-style: italic; text-decoration: none; color: inherit; border-bottom: 1px solid var(--atlas-line); }
 .atlas-log .obs .who:hover { color: var(--biome-accent); }
 .atlas-log .empty { color: var(--atlas-faint); font-style: italic; }
+.atlas-log-more { margin: 0; padding: 0.7rem 0 0; border-top: 1px solid var(--atlas-line); font-family: var(--atlas-data); font-size: 0.74rem; color: var(--atlas-faint); max-width: 34rem; line-height: 1.6; }
 
 /* ── Rhythm band (#73) ─────────────────────────────────────────────────────
    A beautiful clock, not a chart: ticks + filled hour-cells in the engraved ink. */
