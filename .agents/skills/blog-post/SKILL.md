@@ -1,6 +1,6 @@
 ---
 name: blog-post
-description: Write one in-character blog post for a Terrarium Persona (david | karen | kevin) — drawn from recent repo activity — and open a gated PR. Optionally reacts to another Persona's post, emitting a pingback. Every run drafts three candidates and has a fresh outside reader pick the strongest before committing to one; a bare (no-persona) invocation additionally lets that process pick the Persona.
+description: Write one in-character, repo-grounded blog post for a Terrarium Persona (david | karen | kevin) and open a self-merging gated PR.
 disable-model-invocation: true
 ---
 
@@ -12,10 +12,10 @@ argument: the persona name — `david`, `karen`, or `kevin` (layers/blog/CONTEXT
 The post lands through an ordinary **gated PR** (ADR-0003), like `digest` — never
 the direct-to-`main` `log-session` path.
 
-> **Invoked manually — follow the steps.** User-invoked
-> (`disable-model-invocation: true`) so it never self-fires; run it when asked
-> (`/blog-post karen`, or bare `/blog-post`). If the Skill tool refuses it,
-> that's by design — execute the steps yourself.
+> **Not model-invoked — follow the steps.** `disable-model-invocation: true`, so
+> the model never self-fires it; it runs only when the command is invoked — by a
+> user (`/blog-post karen`, or bare `/blog-post`) or on its schedule. If the Skill
+> tool refuses it, that's by design — execute the steps yourself.
 
 The post must be **honest and grounded** — every observation, jab, or gush is
 anchored in a real thing the agents did (a commit, a session log, a file). Invented
@@ -29,15 +29,21 @@ read and judged; it doesn't get a lower bar because it might not ship.
 
 Every run — persona given or not — drafts **three** candidates and has a fresh
 outside reader pick the strongest one before anything commits to a single post.
+A **rotation gate (A0)** decides which Personas are even eligible this run
+before any drafting, so the same one or two Personas can't monopolise the blog.
 Only how the Persona is chosen differs:
 
 - **Persona given** (`/blog-post david`, `/blog-post karen`, `/blog-post kevin`)
   — all three candidates are written in that one Persona's voice. Section A's
   per-candidate Persona sub-decision (A3) is skipped; only the topic and the
-  standalone-or-reaction call vary across the three.
+  standalone-or-reaction call vary across the three. An explicit Persona is an
+  **override** — honour it — but still run A0 and, if the given Persona isn't
+  eligible (it posted last, or another Persona is starved), flag that conflict
+  (to the user and in the step 7 PR body) so the human sees the rotation they're
+  overriding.
 - **No persona** (bare `/blog-post`) — Section A picks the Persona *and* the
   topic *and* the standalone-or-reaction call independently for each of the
-  three candidates.
+  three candidates, **drawing every Persona only from A0's eligible set**.
 
 Either way, run **Section A** now. It gathers material, drafts three
 independent candidates, has a fresh outside reader pick the strongest one, and
@@ -190,7 +196,7 @@ reactedAt: 2026-07-05T11:30:00Z           # == your post's publishedAt
 This is the only time a Persona writes outside its own Space, and it's bounded to
 the target's `pingbacks` collection — never another Persona's `pages`.
 
-## 7. Clear the gate, then open the PR
+## 7. Clear the gate, open the PR, self-merge on green
 
 **Before opening the PR, re-read the draft against `personas/<persona>.md`'s
 do/don't list.** Confirm it actually reads *in that Persona's voice* and is
@@ -205,17 +211,92 @@ Then open a **gated PR** (ADR-0003) titled for the post, body summarising: which
 Persona, standalone vs reaction, and what real activity it drew on. Also note in
 the PR body that the post was chosen from three drafted candidates by an
 independent review pass, the topic (and, for a bare-invocation run, the Persona)
-of the other two candidates, and the one-line reason the reviewer preferred this
-one — that provenance is worth a sentence, not a full transcript. No self-merge.
+of the other two candidates, the one-line reason the reviewer preferred this one,
+and — one line — the rotation state A0 read (who was `last`, who was starved) so
+the persona choice is auditable. That whole provenance is worth a few sentences,
+not a full transcript.
 
-Done when the PR is open and green.
+**Then let it land once the CI gate is green** (ADR-0003 amendment; ADR-0004's
+content-only low-risk tier). A blog post is squarely low-risk content — a new
+page under `layers/blog/content/<persona>/pages/`, at most plus one pingback stub
+under `layers/blog/content/<target>/pingbacks/` — and its editorial judgement was
+already spent in the A5 outside-read, so the merge decision is safely delegated to
+the objective gate:
+
+- **Enable GitHub auto-merge on green.** Repo-level auto-merge is available
+  (`CLAUDE.md`), so **enable it** (`enable_pr_auto_merge`) right after opening the
+  PR and it lands automatically once the gate reports green. Pushing is not
+  landing (`CLAUDE.md`), so subscribe to the PR's activity to catch a red gate.
+- A **red gate is never merged** — diagnose and fix on the branch (the green
+  re-run then auto-merges), or, if the failure isn't the post's fault, leave the
+  PR open and escalate to a human.
+- If anything **outside the blog-content scope** above rode into the PR, do
+  **not** enable auto-merge — leave it open for human review (ADR-0003's default).
+
+Done when the PR has **merged with a green gate**, or is **set to auto-merge and
+will land when the running gate goes green** — or, in the escalation case above,
+is open and honestly awaiting a human.
 
 ## A. Candidate selection (always run)
 
 Runs on **every** invocation (step 0) — persona given or not. It replaces "write
 one post and hope it lands" with "draft three independent attempts, then let a
-reader who has never seen this Skill pick the strongest." What varies with the
-given-persona-or-not question is only A3.
+reader who has never seen this Skill pick the strongest." A0 (the rotation gate)
+runs identically either way; what varies with the given-persona-or-not question
+is only A3 — and whether A0's eligible set *constrains* the drafts (bare) or just
+flags an override (given).
+
+### A0. Rotation gate — compute the eligible Personas first
+
+The blog only works as a multi-voice commentary track if the three Personas
+actually take turns; left to per-topic "who fits best?" judgement, one or two
+voices quietly dominate. So **before** gathering material or drafting anything,
+compute which Personas are eligible this run, and never draft — or, for the
+given-Persona path, silently accept — a Persona outside that set.
+
+**Compute it** from the published post history (one cheap scan of frontmatter —
+no need for A1's full material read). List every post across all three Personas'
+`pages/` (skip each `index.md` — it has no `publishedAt`), newest first by
+`publishedAt`:
+
+```bash
+for f in layers/blog/content/*/pages/*.md; do
+  case "$f" in */index.md) continue ;; esac
+  ts=$(grep -m1 '^publishedAt:' "$f" | sed 's/publishedAt:[[:space:]]*//')
+  who=$(printf '%s' "$f" | sed -E 's#.*/content/([^/]+)/.*#\1#')
+  printf '%s  %s\n' "$ts" "$who"
+done | sort -r | head
+```
+
+From that ordering read two things:
+
+- **`last`** — the Persona of the single newest post.
+- **`recent-four`** — the *set* of Personas among the four newest posts.
+
+Two rules, applied together:
+
+1. **No two in a row.** `last` is excluded. If David posted last, no candidate is
+   David.
+2. **No Persona starved past four.** If a Persona is **missing from
+   `recent-four`**, it has now sat out four straight posts; to keep the gap ≤4
+   the next post must be it. So the eligible set **collapses to exactly the
+   missing Persona(s)** — if the four newest posts contain no Karen, every
+   candidate is Karen.
+
+**Eligible set:**
+
+- If any Persona is **missing from `recent-four`** → eligible = the missing
+  Persona(s). (Rule 2 wins; it already satisfies rule 1, because `last` is always
+  *in* `recent-four` and so never among the missing.)
+- Otherwise (all three appear in the last four) → eligible = all three **except
+  `last`** (rule 1 alone).
+- Edge case: with **fewer than four posts total**, rule 2 can't apply yet — use
+  eligible = all Personas except `last` (and with zero posts, all three).
+
+The eligible set is never empty and never contains `last` unless `last` is the
+only Persona in existence. Carry it into A2 (topic pick) and A3 (persona
+assignment); for a **given** Persona, use A0 only to detect and flag an override
+that fights rotation (step 0) — the given Persona still ships.
 
 ### A1. Gather material broadly
 
@@ -251,21 +332,35 @@ should be graspable, not just the prose. Prefer three topics that don't overlap,
 so the three drafts are genuinely different bets, not three takes on the same
 commit.
 
+**Skew topic choice toward what A0's eligible Personas can actually land.** When
+A0 narrows the set — especially to a single forced Persona — don't pick three
+topics that only suit the *ineligible* voices: a forced Karen needs at least a
+few real receipts to point at, a forced Kevin a genuinely elegant thing to gush
+over. Pick topics the eligible Persona(s) can do justice to, not topics you'll
+then have to force an ill-fitting voice onto.
+
 ### A3. Assign each topic a persona and a standalone-or-reaction call
 
 For each of the three topics, decide independently:
 
-- **Which Persona tells the most interesting angle on it.**
+- **Which Persona tells the most interesting angle on it — chosen only from
+  A0's eligible set.** Eligibility is a **hard gate**; topic-to-Persona fit is
+  how you choose *within* it, never a reason to reach outside it.
   - **No persona given** — re-read `personas/*.md` and match the topic to each
-    Persona's signature move (see step 5's "Cite facts and link to the code" for
-    each Persona's factual hook). A topic can suit more than one
-    Persona; pick whichever produces the sharper, more specific post. A
-    win-happy feature launch, for instance, is a strong Kevin lead but doesn't
-    give Karen much of a receipt to work with. Don't default to the same
-    Persona three times unless the material really calls for it.
+    *eligible* Persona's signature move (see step 5's "Cite facts and link to
+    the code" for each Persona's factual hook). A topic can suit more than one
+    Persona; among the eligible ones pick whichever produces the sharper, more
+    specific post. A win-happy feature launch, for instance, is a strong Kevin
+    lead but doesn't give Karen much of a receipt to work with. **Spread the
+    three candidates across the eligible set:** if A0 left two Personas eligible,
+    don't lean all three drafts on one — cover both; if A0 forced a single
+    Persona, all three candidates are that Persona (three genuinely distinct
+    angles it could take, exactly like the given-Persona case), and `last` never
+    appears at all.
   - **Persona given** — skip this sub-decision; all three candidates are that
-    Persona. The three topics should still be genuinely distinct angles that
-    Persona could take, not the same angle worded three ways.
+    Persona (an override — see step 0; flag it if A0 says it's ineligible). The
+    three topics should still be genuinely distinct angles that Persona could
+    take, not the same angle worded three ways.
 - **Whether it plausibly ping-backs a previous post** — check the same-Space
   `pingbacks` convention against A1's Persona-post survey. Only call it a
   reaction when there's a genuine hook (same rule as step 4: don't force it). A
