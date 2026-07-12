@@ -1,14 +1,13 @@
 schemaVersion: 1
 session: session_018ynPogVttncfxS8XoJuHxR
 startedAt: 2026-07-11T23:52:34Z
-endedAt: 2026-07-12T03:15:37Z
+endedAt: 2026-07-12T07:36:44Z
 kind: interactive
 goal: Investigate a change-scoped selective safety gate
-status: in-review
-outcome: Design captured as research doc; PR open
-summary: "The user asked (human-instructed) to investigate a gate script that skips unit/e2e when only .md files outside layers/ change. I verified the premise against the tree: nothing in build, the unit suite, or e2e/L2 consumes a .md outside layers/, and the only two real-tree unit tests read config files, not docs. Designed an always-on cheap floor (verify:skills-lock catches the .agents/skills SKILL.md case) plus a fail-safe allowlist that skips test/build/test:e2e only when every changed path is inert, with local-vs-CI base-ref detection. Materialising this as a research doc and opening the gated PR was agent-initiated per repo policy; the gate change itself is deliberately NOT implemented — it is human-only to merge and net-new, needing an ADR-0003 green-light. pnpm gate ran green locally."
-prs:
-  - "339"
+status: completed
+outcome: "Investigation delivered as issue #350; PR closed"
+summary: "The user asked (human-instructed) to investigate a gate script that skips unit/e2e when only .md files outside layers/ change. I verified the premise against the tree: nothing in build, the unit suite, or e2e/L2 consumes a .md outside layers/, and the two real-tree unit tests read config files, not docs. Designed an always-on cheap floor (verify:skills-lock covers the .agents/skills SKILL.md case) plus a fail-safe allowlist that skips test/build/test:e2e only when every changed path is inert, with local-vs-CI base-ref detection. I first (agent-initiated) captured this as a docs/research/ note and opened gated PR #339; the owner correctly pushed back that drafts/concepts for unimplemented work go in issues here, not committed docs on main. I moved the substance to issue #350 and closed PR #339 — nothing landed on main but the session log. The gate change itself remains unimplemented, pending an ADR-0003 green-light."
+prs: []
 docsRead:
   - path: docs/adr/0004-objective-safety-gate.md
     reason: the gate's governing ADR and its human-only high-risk set
@@ -28,15 +27,18 @@ docsRead:
     reason: (no reason given)
 skillsUsed:
   - name: close-session
-    reason: closure front door at PR open
+    reason: closure front door
   - name: log-session
     reason: author this interpretive log
 frictions:
-  - description: AskUserQuestion failed twice with permission-stream-closed, so I could not ask the user to pick implementation scope and had to choose a default.
-    solution: Fall back gracefully; surface the choice in the PR body instead of blocking on the tool.
+  - description: I committed a design note for unimplemented work as a docs/research doc and opened a PR; the repo convention is to use GitHub issues for drafts/concepts, which the owner had to point out.
+    solution: Treat docs/research/ as verified references only; route designs-for-unimplemented-work to issues. Worth making this distinction explicit in a doc so the next session does not repeat it.
+    severity: moderate
+  - description: AskUserQuestion failed twice with permission-stream-closed, so I could not ask the user to pick implementation scope and had to choose a default (the doc/PR path, which turned out wrong).
+    solution: Fall back gracefully; but also prefer the lighter-weight artifact (an issue) when unsure, since it is easier to correct than a committed doc + PR.
     severity: minor
-  - description: send_later failed with the same permission-stream-closed error, so the ~1h PR check-in could not be armed.
-    solution: Retry once MCP reconnects; do not rely on it as the only path to detecting the terminal PR state.
+  - description: send_later failed four times with permission-stream-closed, so the ~1h PR check-in could never be armed (the known Claude_Code_Remote cloud limitation).
+    solution: Do not rely on send_later in cloud sessions; lean on the webhook subscription and treat the check-in as best-effort.
     severity: minor
   - description: The github and Claude_Code_Remote MCP servers flapped (connect/disconnect) repeatedly mid-session, forcing tool re-loads.
     solution: Re-load tools via ToolSearch on reconnect and retry; tolerate the flap rather than treat a disconnect as capability loss.
@@ -44,30 +46,35 @@ frictions:
   - description: The git commit -m did not auto-inject the ADR-0017 provenance footer (known cloud behaviour), needing a manual amend.
     solution: Verify the footer after every -m commit and amend if absent, as CLAUDE.md already warns.
     severity: nit
-durationSec: 12183
+durationSec: 27850
 models:
-  claude-opus-4-8: 102
+  claude-opus-4-8: 131
   <synthetic>: 2
 toolCounts:
   Read: 7
-  Bash: 23
+  Bash: 24
   AskUserQuestion: 1
-  Write: 2
-  ToolSearch: 4
+  Write: 3
+  ToolSearch: 5
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
-  mcp__Claude_Code_Remote__send_later: 2
+  mcp__Claude_Code_Remote__send_later: 3
   Skill: 2
   Edit: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/research/selective-gate-by-changed-scope.md
 gitBranch: claude/gate-script-selective-tests-ybtqw2
 entrypoint: remote
 cliVersion: 2.1.207
 learnings:
+  - "docs/research/ here is for verified references, not speculative designs for unbuilt features; the latter are tracked as GitHub issues. Confirmed by the owner on PR #339."
   - No unit/e2e test or the build reads a .md outside layers/; the two real-tree unit tests read nuxt.config.ts/tsconfig.node.json/session YAML only.
-  - The doorbell CI comment's SHA is the pull_request merge-commit (github.sha), not the branch head, so the two SHAs legitimately differ.
 ideas:
   - Ship an additive `pnpm gate:changed` first (zero governance risk, real gate untouched) as a low-stakes proving ground for the changed-scope classifier before touching the merge gate itself.
