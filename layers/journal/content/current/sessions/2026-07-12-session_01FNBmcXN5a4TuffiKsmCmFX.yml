@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01FNBmcXN5a4TuffiKsmCmFX
 startedAt: 2026-07-12T13:41:14Z
-endedAt: 2026-07-12T14:04:47Z
+endedAt: 2026-07-12T14:15:27Z
 kind: interactive
 goal: Rotate blog-post Personas and self-merge on green
-status: in-review
-outcome: "Both shipped in one gated PR #373"
-summary: 'Two human-instructed changes to the blog-post Skill, both requested this session (rotation first, self-merge as a mid-turn follow-up). Added a rotation gate (Section A0) that computes an eligible-Persona set from the global publishedAt ordering before drafting — never the same Persona twice in a row, and a Persona missing from the four newest posts is forced next — wired through step 0, A2, and A3. Made blog-post self-merge on a green gate (ADR-0004 content-only tier) via an ADR-0003 amendment, step 7, CLAUDE.md and the Skill Inventory. Full gate green locally and green in CI; opened PR #373 (itself human-merge-only, since it touches governance) and subscribed. The owner then reviewed: trimmed the over-detailed SKILL.md description to a one-liner and shortened the ADR amendment, dropping a wrong "human-invoked" assumption — blog-post is already scheduled, and self-merge is what makes it fully autonomous.'
+status: completed
+outcome: "Merged to main via PR #373"
+summary: 'Two human-instructed changes to the blog-post Skill, both requested this session (rotation first, self-merge as a mid-turn follow-up). Added a rotation gate (Section A0) that computes an eligible-Persona set from the global publishedAt ordering before drafting — never the same Persona twice in a row, and a Persona missing from the four newest posts is forced next — wired through step 0, A2, and A3. Made blog-post self-merge on a green gate (ADR-0004 content-only tier) via an ADR-0003 amendment, step 7, CLAUDE.md and the Skill Inventory. Full gate green locally and green in CI; opened PR #373 (itself human-merge-only, since it touches governance) and subscribed. The owner then reviewed: trimmed the over-detailed SKILL.md description to a one-liner and shortened the ADR amendment, dropping a wrong "human-invoked" assumption — blog-post is already scheduled, and self-merge is what makes it fully autonomous. The owner merged #373 (a human merge, correct since it touches governance), so the work landed this session.'
 prs:
   - "373"
 docsRead:
@@ -28,6 +28,14 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/content/current/skills/blog-post.yml
     reason: (read before editing)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: closure front door at PR open
@@ -43,15 +51,15 @@ frictions:
   - description: A prose-only edit to an inventory `.yml` under `layers/` pushed gate:scoped to the full heavy gate (build + e2e) though it can't affect rendering.
     solution: None needed — the inert classifier fails safe by design; logged as a data point.
     severity: nit
-durationSec: 1412
+durationSec: 2053
 models:
-  claude-opus-4-8: 190
+  claude-opus-4-8: 220
 toolCounts:
-  Bash: 30
+  Bash: 32
   Glob: 1
-  Read: 16
-  Grep: 1
-  Edit: 17
+  Read: 20
+  Grep: 4
+  Edit: 19
   Write: 3
   ToolSearch: 4
   mcp__github__list_pull_requests: 1
@@ -62,6 +70,7 @@ toolCounts:
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
   mcp__github__add_reply_to_pull_request_comment: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/blog-post/SKILL.md
   - docs/adr/0003-agent-operating-model-and-governance.md
