@@ -356,25 +356,42 @@ tests/support/ , tests/README.md    # shared e2e helpers + the test-homing conve
 
 ## Self-verification — the safety gate (ADR-0004)
 
-Run this before proposing any change. **`pnpm gate`** is the one command — the exact
-steps it runs are single-homed in `package.json`'s `gate` script, not restated here,
-so this doc can't drift from it — and CI (`.github/workflows/gate.yml`) runs the same
-steps. Both the keyed collections and the routing map (`#routing`) are derived from
-the manifests at build time (ADR-0013/0014) — no regenerate step needed.
+**Locally, run `pnpm gate:scoped` before proposing a change — not the full `pnpm gate`.**
+`gate:scoped` (`scripts/gate.ts`) runs the cheap floor (`verify:skills-lock`, `lint`,
+`typecheck`, `validate:content`) always, and adds the heavy layers (`test`, `build`,
+`test:e2e`) only when the change isn't provably inert — for a change touching only `.md`
+files outside `layers/` it skips them (rationale and the inert-set proof: #350), and for
+anything else it runs the full gate itself. It fails safe: any non-inert path, or an
+undeterminable diff base, runs everything, so it never runs less than a change needs.
+The steps are single-homed in `package.json` (`gate` = the full sequence; `gate:scoped`
+wraps it), not restated here so this doc can't drift.
+
+**The authoritative gate is CI**, which runs the full `pnpm gate` on every PR
+(`.github/workflows/gate.yml`) — the run that must go green to merge (ADR-0004), so you
+don't run the full gate locally yourself. Both the keyed collections and the routing map
+(`#routing`) derive from the manifests at build time (ADR-0013/0014) — no regenerate step
+needed.
 
 ```
-pnpm install     # installs deps, then runs `nuxt prepare` (derives #routing + collections)
-pnpm gate        # the layered gate, cheapest-first — L0/L1/L2/L3 are defined in ADR-0004
+pnpm install            # installs deps, then runs `nuxt prepare` (derives #routing + collections)
+pnpm gate:scoped        # local fast feedback — floor always; heavy layers only when the change isn't inert
+pnpm gate:scoped --dry  # print the decision + planned steps, run nothing
 ```
 
 **Iterating on content only?** `pnpm validate:content` (`scripts/validate-content.ts`) is the
 one command that actually runs each Document's data through its Collection's Zod schema
 (`.safeParse()`) — `pnpm build` only uses the schema to derive SQL column types, it never
 validates real content against it. `validate:content` checks every Tenant's content in ~1-2s,
-without paying for `nuxt build` or `pnpm test:e2e`. It is a **local, additive supplement for
-fast feedback during content-only edits — not a replacement for the full gate above**, which
-stays the mandatory, unchanged merge gate (ADR-0004; see Ground rules above — CI is
-human-only to merge, not to edit, and a PR touching it never auto-merges).
+without paying for `nuxt build` or `pnpm test:e2e`. It is the tightest inner loop — a subset
+of `gate:scoped`'s floor — for content-only edits, and **not a replacement for the CI gate**,
+which stays the mandatory merge gate (ADR-0004; see Ground rules above — CI is human-only to
+merge, not to edit, and a PR touching it never auto-merges).
+
+**When CI's full gate fails on a change where your local `pnpm gate:scoped` passed** —
+i.e. `gate:scoped` skipped a heavy layer (`test`/`build`/`test:e2e`) that CI then caught
+failing — log it as a **major** friction in your session log (`log-session`). That
+divergence means the inert classifier let something through: it is the signal that
+tightens the classifier, or retires the skip.
 
 **Need a screenshot of a running page** (e.g. to eyeball a render during a session)?
 Run `pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--dev]` — it
