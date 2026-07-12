@@ -154,6 +154,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   type/function/doc it's about, too: say a thing once, not once per site.
 - Inspect files with the **Read tool, not `cat`** — the Edit tool refuses to edit
   a file it hasn't seen via Read, so `cat`-then-Edit forces a wasteful re-read.
+- **Before the first call to any deferred tool this session, load its schema via
+  `ToolSearch`** rather than guessing its shape from a similarly-named tool. A
+  deferred tool appears by name only, with no parameter schema, until `ToolSearch`
+  loads it — a guessed shape (e.g. borrowing `Agent`'s `prompt`/`subagent_type` for
+  `TaskCreate`) errors on the first call.
 - **Never predict or reconstruct an identifier — a line number, a blob SHA, an
   issue/PR number — from memory.** Always resolve it via a fresh tool call
   (a Read, `git rev-parse`/`git log -1 --format=%H`, or the actual `issue_write`
@@ -201,6 +206,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   after the `&&` never runs. Check existence first (e.g. `git rev-parse
   --verify <branch>`) and handle the already-exists case explicitly instead of
   chaining blindly.
+- **Never pipe a backgrounded or long-running command through `tail`/`head`
+  when its exit status or full output matters.** A pipeline reports the *last*
+  command's exit status — `tail`'s, almost always 0 — not the piped command's,
+  so checking `$?` after `cmd | tail -N` can report success on a genuine
+  failure; and `tail -N`/`head -N` can truncate before the section you actually
+  need. Redirect to a file instead (`cmd > log 2>&1`), check `$?` directly, and
+  read the file in full — or truncate it only after confirming exit status.
 - **A session-closure Stop hook "Unverified" commit flag isn't automatically
   this session's to fix.** The hook can flag commits that are actually
   inherited history — landed on `main` before this branch existed, reachable
@@ -266,6 +278,14 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   additionally requires the reviewing session's own risk judgement, escalating a
   genuinely high-risk PR to a human even when green (ADR-0003). An ordinary work
   PR is still merged by a human, never self-merged (see "no self-merge" above).
+- **When the gate is already green, skip `enable_pr_auto_merge` and call
+  `merge_pull_request` directly.** `enable_pr_auto_merge` is for arming ahead
+  of a pending check, not a PR that's already mergeable — calling it on a
+  green PR can throw a misleading error (e.g. "protected branch rules not
+  configured"), and its "checks are failing" text can fire while a check is
+  merely `in_progress`, not actually failing. If it errors, confirm the real
+  check state via `pull_request_read` before concluding checks have genuinely
+  failed and abandoning the PR.
 - **Opening the PR is the first session log.** The moment you open the gated PR
   is a closure point: invoke `close-session` right then (it authors the log via
   `log-session`). It's not finished; more commits and a re-fired log can follow
