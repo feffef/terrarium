@@ -261,8 +261,8 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   Allow auto-merge`; #231 resolved). For an **auto-merge-eligible** change you
   may enable GitHub auto-merge so the PR lands automatically once the gate
   reports green, instead of merging manually — the `digest` / `audit-docs` /
-  `audit-skills` tiers merge on a green gate alone (ADR-0003/0004); the
-  `reviewer-agent` tier (`frictions-to-fixes`) is not purely mechanical — it
+  `audit-skills` / `blog-post` tiers merge on a green gate alone (ADR-0003/0004);
+  the `reviewer-agent` tier (`frictions-to-fixes`) is not purely mechanical — it
   additionally requires the reviewing session's own risk judgement, escalating a
   genuinely high-risk PR to a human even when green (ADR-0003). An ordinary work
   PR is still merged by a human, never self-merged (see "no self-merge" above).
