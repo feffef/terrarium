@@ -315,10 +315,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
     returned worktree for uncommitted work** before treating the subagent as
     done. (The platform "session limit" abort itself is external and this
     guard doesn't prevent it — it only limits the damage when it happens.)
-- **Before dispatching multiple subagents on a large content-authoring pass,
-  grill any load-bearing/structural design axis — the thing every subagent's
-  output depends on — to a locked answer first**, using the `grilling` Skill
-  by name. A design axis that shifts mid-build after subagents have already
+- **Before dispatching subagents whose outputs share a load-bearing/structural
+  design axis — the thing every one of their outputs depends on — grill it to
+  a locked answer first**, using the `grilling` Skill by name. The trigger is
+  the shared dependency, not headcount or pass size: even two subagents on a
+  small pass need this if the axis is genuinely load-bearing across their
+  outputs. A design axis that shifts mid-build after subagents have already
   authored against the old answer forces a full re-authoring pass.
 - **Every agent-authored interaction with GitHub, or any other external
   system, carries a two-line provenance footer, no exemptions** (ADR-0017 —
