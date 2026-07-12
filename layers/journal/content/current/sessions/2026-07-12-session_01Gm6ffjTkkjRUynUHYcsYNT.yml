@@ -1,0 +1,52 @@
+schemaVersion: 1
+session: session_01Gm6ffjTkkjRUynUHYcsYNT
+startedAt: 2026-07-12T07:13:50Z
+endedAt: 2026-07-12T07:30:37Z
+kind: interactive
+goal: Audit & track missing Claude session logs
+status: completed
+outcome: "Found 1 gap, confirmed fix, filed & refined issue #349"
+summary: "Human-instructed throughout. Asked to scan origin/main's last-4-days commit history for Claude session ids missing a journal session log; found one gap (session_016r52n8F8uE8KAA45grM5Qo). User reported finding that session still live and prompting it to commit directly; I verified the log landed on request. User then asked me to file an issue proposing this become a recurring chore or, if a better fit, slot into an existing scheduled Skill — I evaluated audit-docs/frictions-to-fixes/audit-skills and filed #349 proposing a new git-log-trailer-vs-sessions-directory reconciliation. User pushed back that audit-skills' existing \"watch dynamic Skill behavior over time\" charter fit better; I agreed and revised the issue via comment. User then pointed out detecting other sessions' non-invocation of close-session already fits audit-skills' existing tallyUsage/useCount mechanism (verified in scripts/audit-skills.ts) with zero new code — I confirmed and posted a further comment narrowing the real scope to just true orphan-session detection (sessions with zero log file at all)."
+prs: []
+docsRead:
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: grounding for the orphan-session-detection proposal and the close-session invocation-rate metric
+  - path: docs/agents/issue-tracker.md
+    reason: GitHub MCP tool conventions for filing/commenting on the issue
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: assessing fit for the proposed reconciliation chore
+  - path: scripts/audit-skills.ts
+    reason: confirmed tallyUsage/useCount already tallies close-session usage per-session from skillsUsed
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: ruled out as a fit before recommending audit-skills
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: ruled out as a fit before recommending audit-skills
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Drafted a GitHub issue body with a fabricated Claude-Session footer id (guessed, not resolved) before catching it against CLAUDE.md's explicit no-fabricated-identifiers rule and finding the real id in my own system-prompt commit-footer template
+    solution: Default to resolving the session id from the system-prompt commit-footer template (per this Skill's own step 1) as the very first move whenever a provenance footer is needed, rather than reaching for a plausible-looking placeholder and self-correcting after the fact
+    severity: moderate
+durationSec: 1008
+models:
+  claude-sonnet-5: 94
+toolCounts:
+  Bash: 29
+  Read: 6
+  ToolSearch: 2
+  mcp__github__search_issues: 2
+  Edit: 3
+  mcp__github__issue_write: 2
+  mcp__github__add_issue_comment: 2
+  Skill: 2
+  Write: 1
+gitBranch: claude/missing-session-logs-audit-0h2w0j
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+learnings:
+  - audit-skills' tallyUsage() already computes per-Skill useCount/usedIn (including close-session) from every windowed session's skillsUsed field — a low close-session usage rate is visible today with zero new code, for any session that has a log file at all; only a fully-unlogged session is invisible to it
