@@ -76,8 +76,8 @@ const isOpen = (anchor: string) => openAnchor.value === anchor
 
 // replaceState (not `location.hash =`) so toggling neither floods history nor
 // triggers the browser's native jump-to-anchor scroll — we scroll deliberately
-// instead: scrollPreservingTop() on a click-triggered open, scrollToOpen() on a
-// deep-link load (see each for why they differ).
+// instead: pinTopAcrossTransition() on a click-triggered open, scrollToOpen()
+// on a deep-link load (see each for why they differ).
 const syncHash = (anchor: string | null) => {
   history.replaceState(history.state, '', anchor ? `${route.path}#${anchor}` : route.path)
 }
@@ -96,23 +96,35 @@ const toggle = (anchor: string) => {
   openAnchor.value = next
   syncHash(next)
   // Closing needs no scroll — nothing above the (now-shorter) item moves.
-  if (opening) nextTick(() => scrollPreservingTop(el, beforeTop))
+  if (opening) nextTick(() => pinTopAcrossTransition(el, beforeTop))
 }
 
-// On open, hold the clicked item's own top at the exact screen position it was
-// at before the click — a collapsing sibling elsewhere can shift it, but the
-// item the user just acted on shouldn't visually jump. Always instant ('auto'):
-// this is a correction for a reflow the click itself caused, not a navigation
-// to a new spot, so the goal is that the item's top is never seen to move at
-// all — an animated scroll here would show the very motion this is meant to
-// hide. Clamped to 0: near the top of the page there may not be enough room
-// above to fully compensate, so it settles as close to the original position
-// as the page start allows.
-const scrollPreservingTop = (el: HTMLElement | null, beforeTop: number | null) => {
+// Holds the clicked item's own top at the exact screen position it was at
+// before the click — a collapsing sibling elsewhere can shift it, but the item
+// the user just acted on shouldn't visually jump. This item's own body and any
+// sibling's collapse both animate their height now (expandTransition.ts), so
+// the shift plays out over several frames rather than in one DOM patch —
+// correcting once, right after the patch, would miss most of it. Each frame:
+// counter-scroll instantly (never animated — an animated correction would show
+// the very motion this hides, clamped to 0 for the same near-top-of-page
+// reason as before) by whatever moved the item since the last frame, then
+// check whether the item's OWN position in the document — independent of our
+// own counter-scroll — is still changing; stop once it holds steady for a
+// frame. The frame cap is a backstop against a runaway loop, not an expected path.
+const pinTopAcrossTransition = (el: HTMLElement | null, beforeTop: number | null) => {
   if (!el || beforeTop == null) return
-  const delta = el.getBoundingClientRect().top - beforeTop
-  if (!delta) return
-  window.scrollTo({ top: Math.max(0, window.scrollY + delta), behavior: 'auto' })
+  let settledAt: number | null = null
+  let frame = 0
+  const step = () => {
+    const rectTop = el.getBoundingClientRect().top
+    const delta = rectTop - beforeTop
+    if (delta) window.scrollTo({ top: Math.max(0, window.scrollY + delta), behavior: 'auto' })
+    const documentTop = rectTop + window.scrollY // invariant to our own counter-scroll
+    if (documentTop === settledAt || ++frame > 90) return
+    settledAt = documentTop
+    requestAnimationFrame(step)
+  }
+  requestAnimationFrame(step)
 }
 
 const scrollToOpen = () => {
@@ -247,9 +259,13 @@ useSeoMeta({
             <span class="digest-summary">{{ d.summary }}</span>
             <span class="caret" aria-hidden="true">{{ isOpen(digestAnchor(d.date)) ? '▾' : '▸' }}</span>
           </JournalDisclosure>
-          <div v-if="isOpen(digestAnchor(d.date))" class="digest-body">
-            <ContentRenderer :value="d.doc" />
-          </div>
+          <Transition :css="false" @enter="expandOnEnter" @leave="expandOnLeave">
+            <div v-if="isOpen(digestAnchor(d.date))" class="digest-body-clip">
+              <div class="digest-body">
+                <ContentRenderer :value="d.doc" />
+              </div>
+            </div>
+          </Transition>
         </li>
       </ul>
     </section>
@@ -508,6 +524,10 @@ h1 {
 .digest.open .digest-summary { color: var(--jd-ink); font-weight: 600; }
 .digest.open .caret { color: var(--jd-accent); }
 
+/* The clip wrapper is what expandOnEnter/expandOnLeave (utils/expandTransition.ts)
+   animate `height` on — it carries none of `.digest-body`'s own padding, so
+   collapsing it to 0 needs no separate padding animation to reach a true zero size. */
+.digest-body-clip { overflow: hidden; }
 .digest-body { padding: 0 0.85rem 1rem; }
 .digest-body :deep(h1) { display: none; } /* the row already shows the date */
 .digest-body :deep(p) { margin: 0 0 0.7rem; color: var(--jd-muted); font-size: 0.95rem; line-height: 1.6; }
