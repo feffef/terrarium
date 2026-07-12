@@ -1,0 +1,131 @@
+schemaVersion: 1
+session: session_019FC2hVbpynqZsPzsZdm985
+startedAt: 2026-07-12T13:19:45Z
+endedAt: 2026-07-12T13:53:35Z
+kind: delegated
+goal: Audit docs for drift, duplication, contradictions
+status: completed
+outcome: 12 fixes merged; 1 issue filed
+summary: "Single delegated kickoff prompt invoking the /audit-docs skill on branch claude/audit-docs-1ay8bn (caller-pinned). No further human steering after kickoff — subsequent \"user\" turns were all machinery (task-notifications, github-webhook-activity, a self-scheduled check-in), not human prompts. Ran the full eight-lens sweep via four paired reviewer agents (Freshness, Single-home, Concision, Coherence), pooled 15 findings with no overlaps to dedupe, independently fact-checked every finding against primary sources (all CONFIRMED or CONFIRMED-BUT), then fixed bravely: 12 Live-tier fixes landed in the self-merged PR #371 (gate green, merged), one Historical-tier fix (ADR-0014's stale dev-watch caveat) escalated to its own human-only PR #370 (merged), and one genuinely unresolvable ambiguity (CLAUDE.md's undefined \"large content-authoring pass\" threshold) filed as needs-triage issue #369 per the skill's sole escalation criterion."
+prs:
+  - "371"
+  - "370"
+docsRead:
+  - path: CLAUDE.md
+    reason: ground rules, single-home convention, gate:scoped drift
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: amendment banner precedent for the escalated fix
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: L1 vs L3 gate-step separation, verified tests/README.md's contradiction
+  - path: CONTEXT.md
+    reason: glossary-only rule; fact-checked the Collection entry mis-location finding
+  - path: skills-lock.json
+    reason: pack-Skill tier classification (external:true set)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (read before editing)
+  - path: docs/agents/domain.md
+    reason: (read before editing)
+  - path: docs/agents/triage-labels.md
+    reason: (read before editing)
+  - path: tests/README.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (read before editing)
+  - path: README.md
+    reason: (read before editing)
+  - path: deploy/README.md
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: the whole run
+  - name: close-session
+    reason: session closure front door
+  - name: log-session
+    reason: this log
+frictions:
+  - description: 'enable_pr_auto_merge threw "Protected branch rules not configured for this branch" once the gate had already gone green on PR #371, instead of just merging.'
+    solution: When the gate is already green by the time auto-merge is enabled, skip enable_pr_auto_merge and call merge_pull_request directly instead.
+    severity: minor
+  - description: enable_pr_auto_merge's error message ("unstable status (required checks are failing)") fires while checks are merely in_progress, not actually failing — misleading wording.
+    solution: Treat that specific error as "checks still running, retry later" rather than a real gate failure; confirm via pull_request_read get_check_runs before concluding anything failed.
+    severity: nit
+  - description: "Local node_modules lacked the mermaid package (added by an earlier merged PR, #364) after rebasing onto a fresh origin/main, causing a spurious typecheck failure in pnpm gate:scoped."
+    solution: Run pnpm install after rebasing across a merge that touches package.json, before trusting a gate failure as real.
+    severity: minor
+  - description: Used `git checkout origin/main -- .` to sanity-check whether the mermaid typecheck failure was pre-existing, which briefly clobbered my own staged fixes in the index (recovered via `git checkout HEAD -- .`).
+    solution: Use read-only `git diff`/`git show` comparisons instead of `checkout -- .` when just inspecting another ref's content, to avoid mutating working-tree state.
+    severity: nit
+durationSec: 2030
+models:
+  claude-sonnet-5: 222
+toolCounts:
+  Bash: 28
+  Agent: 8
+  ToolSearch: 7
+  TaskCreate: 8
+  TaskUpdate: 12
+  Read: 19
+  Edit: 17
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 1
+  Glob: 3
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 3
+  mcp__github__pull_request_read: 8
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__Claude_Code_Remote__delete_trigger: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__enable_pr_auto_merge: 3
+  mcp__github__merge_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+  Grep: 1
+filesEdited:
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/agents/domain.md
+  - docs/agents/triage-labels.md
+  - CONTEXT.md
+  - tests/README.md
+  - layers/journal/content/current/pages/how-it-works.md
+  - README.md
+  - deploy/README.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: Drift + Orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: Duplication + Mis-location"
+  - type: general-purpose
+    task: "Concision lens: Verbose + Stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: Contradiction + Ambiguity"
+  - type: general-purpose
+    task: Fact-check Freshness findings
+  - type: general-purpose
+    task: Fact-check Single-home findings
+  - type: general-purpose
+    task: Fact-check Coherence findings
+  - type: general-purpose
+    task: Fact-check Concision findings
+gitBranch: claude/audit-docs-1ay8bn
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+learnings:
+  - "modules/routing.ts now pushes each Tenant's tenant.config.ts and shared/expand.ts onto nuxt.options.watch in dev (issue #325), closing the old dev-restart gap several docs still described as open — only a brand-new layers/<tenant>/ directory still needs a manual restart."
+  - This repo's ADR amendment-banner convention (a blockquote at the top, never touching Decision/Consequences prose) is the sanctioned way to flag a Historical ADR as stale without rewriting the decision — confirmed live via ADR-0014's existing ADR-0018/#211 banners.
+ideas:
+  - Add a preflight to scripts/gate.ts / gate:scoped that detects package.json or pnpm-lock.yaml changed more recently than node_modules/.pnpm's mtime and runs pnpm install automatically first — a rebase across a dependency-adding merge currently masquerades as a real typecheck failure (as it did this session with the mermaid package) until a human/agent thinks to suspect the environment instead of the code.
