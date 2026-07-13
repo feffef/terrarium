@@ -6,3 +6,4 @@ role: >-
   A router that suggests which Skill or flow fits a situation. Rarely the entry
   point here — agents are pointed straight at this Inventory and CLAUDE.md — so
   it sees little use in this repo.
+observations: []

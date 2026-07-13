@@ -6,3 +6,4 @@ role: >-
   Compacts a conversation into a handoff doc for another agent. Overlaps the
   repo's own session-closure machinery (close-session / log-session,
   claude-handoff), so it is seldom the tool of choice here.
+observations: []

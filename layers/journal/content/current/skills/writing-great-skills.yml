@@ -4,8 +4,12 @@ importance: peripheral
 installedSha256: 7c6ba7ec25bb2c0e173c52cdc2da878aef0b083ec19a9c1799934e480c8833cc
 role: >-
   The reference standard for authoring Skills, per `codify`'s planned remit.
-  Previously used (session_01QxEToo6MA65uDa4vo3AwCh, now outside the
-  40-session window) to judge whether to extract GitHub-ops docs into a
-  Skill — recommending against, since the material was already single-homed
-  reference — rather than to author or edit a Skill directly. Pull remains
-  inconsistent, not zero: a reference to keep, not yet a reliable habit.
+  Pull remains inconsistent, not zero: a reference to keep, not yet a
+  reliable habit.
+observations:
+  - date: 2026-07-13
+    note: >-
+      Previously used (session_01QxEToo6MA65uDa4vo3AwCh, now outside the
+      40-session window) to judge whether to extract GitHub-ops docs into a
+      Skill — recommending against, since the material was already
+      single-homed reference — rather than to author or edit a Skill directly.

@@ -6,3 +6,4 @@ role: >-
   Builds a throwaway prototype to answer a design question (state model, logic,
   or UI). Named directly by `wayfinder` as a HITL ticket type, so it backs the
   planning flow as well as ad-hoc design checks.
+observations: []

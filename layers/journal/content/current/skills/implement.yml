@@ -4,7 +4,11 @@ importance: supporting
 installedSha256: 5b55552c4a0d90fe15c9ee44abce4498faa03b73e332024e30ab69c2b7065770
 role: >-
   Drives end-to-end implementation of an already-triaged, green-lit issue via
-  `/implement`. Used in 6 of this window's 40 sessions (issue #369, #364's
-  Mermaid MDC component, the Atlas Sprint 2 orchestration, an "implement every
-  ready-for-agent issue" sweep) — but skipped in most other code-landing
-  sessions this window, so adoption is inconsistent, not reliable yet.
+  `/implement`. Adoption is inconsistent, not reliable yet — used in some of
+  this window's code-landing sessions but skipped in most others.
+observations:
+  - date: 2026-07-13
+    note: >-
+      Used in 6 of this window's 40 sessions (issue #369, #364's Mermaid MDC
+      component, the Atlas Sprint 2 orchestration, an "implement every
+      ready-for-agent issue" sweep).

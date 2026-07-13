@@ -71,11 +71,21 @@ export interface WindowSession {
 export interface OnDiskSkill {
   description: string
 }
+/** One `observations` entry (ADR-0015 amendment, 2026-07-13) — a prior run's
+ *  citable finding about this Skill, kept separate from `role` so PR/session
+ *  refs don't leak into the rendered "use these" prose. */
+export interface Observation {
+  date: string
+  note: string
+}
 /** A Skill's Inventory entry (the tunable record). */
 export interface InventoryEntry {
   category: string
   importance: string
   role: string
+  /** Prior runs' citable findings, oldest first — read-only context for this
+   *  run's own judgement (ADR-0015 amendment, 2026-07-13). */
+  observations: Observation[]
 }
 /** One session that invoked a Skill inside the window — the evidence rows the
  *  Skill judges "kind of work" from. */
@@ -93,6 +103,9 @@ export interface SkillRow {
   category: string | null
   importance: string | null
   role: string | null
+  /** Prior runs' citable findings for this Skill — [] if uninventoried or none
+   *  yet recorded (ADR-0015 amendment, 2026-07-13). */
+  observations: Observation[]
   description: string | null
   useCount: number
   usedIn: UsageHit[]
@@ -214,6 +227,7 @@ export function buildSkillRows(
       category: entry?.category ?? null,
       importance: entry?.importance ?? null,
       role: entry?.role ?? null,
+      observations: entry?.observations ?? [],
       description: onDisk.get(name)?.description ?? null,
       useCount: hits.length,
       usedIn: hits,
@@ -452,10 +466,15 @@ function readInventory(cwd = root): Map<string, InventoryEntry> {
   for (const f of readdirSync(dir).filter((f) => f.endsWith('.yml'))) {
     const raw = parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>
     if (!raw || typeof raw !== 'object' || !raw.name) continue
+    const observations = Array.isArray(raw.observations) ? raw.observations : []
     out.set(String(raw.name), {
       category: String(raw.category ?? ''),
       importance: String(raw.importance ?? ''),
       role: String(raw.role ?? '').replace(/\s+/g, ' ').trim(),
+      observations: observations.map((o: Record<string, unknown>) => ({
+        date: String(o.date ?? ''),
+        note: String(o.note ?? '').replace(/\s+/g, ' ').trim(),
+      })),
     })
   }
   return out

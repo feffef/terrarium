@@ -5,6 +5,10 @@ installedSha256: 0b561e84563f281e39b939e775d0a95d34c316bf212ba08989d547f1c14d2c5
 role: >-
   Drives hard-bug/perf-regression diagnosis via a red-then-green reproduction
   loop before any fix is proposed. Valuable once a bug resists a first-pass
-  theory — issue #236's permanent-empty-until-reload repro ran entirely on
-  its Phase 1/2 loop discipline, catching an earlier misdiagnosis (that
-  session has since aged out of the 40-session window).
+  theory.
+observations:
+  - date: 2026-07-13
+    note: >-
+      issue #236's permanent-empty-until-reload repro ran entirely on this
+      Skill's Phase 1/2 loop discipline, catching an earlier misdiagnosis
+      (that session has since aged out of the 40-session window).

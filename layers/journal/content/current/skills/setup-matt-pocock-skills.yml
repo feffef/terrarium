@@ -6,3 +6,4 @@ role: >-
   One-time scaffolding of the engineering-skills config (issue tracker, triage
   labels, domain docs). Already run for this repo, so it matters only if that
   setup is ever redone.
+observations: []

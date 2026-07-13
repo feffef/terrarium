@@ -24,6 +24,16 @@ const utcTimestamp = z
     'must be a UTC ISO-8601 timestamp ending in Z, e.g. 2026-07-05T08:57:53Z',
   )
 
+// A plain UTC calendar date — coarser than `utcTimestamp` on purpose. Used where
+// a fact is date-scoped (at most one entry per day) rather than ordered within a
+// day, so second-level precision would be unused precision, not extra safety.
+const utcDate = z
+  .string()
+  .refine(
+    (v) => /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v)),
+    'must be a UTC date, e.g. 2026-07-05',
+  )
+
 export default defineTenant({
   name: 'journal',
   // Two Spaces so the isolation invariant (ADR-0004 L3) is actually exercised:
@@ -68,6 +78,8 @@ export default defineTenant({
           // ≤ ~50 words — a tight paragraph on the Skill's role + importance to
           // this project, NOT a copy of its own description; deeper detail lives
           // in the Skill's own docs. ~80 is the outer limit; beyond that, trim.
+          // Reference-free: no concrete PR/issue/session ids — those belong in
+          // `observations` below (ADR-0015 amendment, 2026-07-13).
           role: z.string(),
           // Integrity pin for EXTERNAL pack Skills only (those keyed in
           // skills-lock.json): sha256 of the installed `SKILL.md`, verified by
@@ -75,6 +87,20 @@ export default defineTenant({
           // (ADR-0015). Machine-managed — do NOT hand-edit; regenerate with
           // `pnpm verify:skills-lock --write`. Absent on our own Skills.
           installedSha256: z.string().optional(),
+          // A purely internal, `audit-skills`-owned log — NOT rendered in the
+          // journal blog (ADR-0015 amendment, 2026-07-13). Each entry is one
+          // run's citable finding (a role/grade change, a regression note, a
+          // new/split/retire idea) — PR/issue/session ids belong here, not in
+          // `role`. Append-only: a run adds an entry, it never rewrites or
+          // drops an earlier one. Required, like `frictions` on sessions — no
+          // `.default()`, so every entry states it explicitly (`[]` when there's
+          // nothing notable yet) rather than relying on an implicit fallback.
+          observations: z.array(
+            z.object({
+              date: utcDate,
+              note: z.string(),
+            }),
+          ),
         })
         .strict(),
     },

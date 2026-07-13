@@ -5,3 +5,4 @@ installedSha256: 5363bb2775679fe9311fbb67947f95359169c6e7f1fac77c0f25e190bca6cf2
 role: >-
   Test-first discipline for the generator, isolation, and app logic that the
   safety gate protects. Reach for it when adding behaviour to those surfaces.
+observations: []

@@ -62,9 +62,10 @@ It prints JSON:
   `kind`/`goal`/`summary`/`skillsUsed`, and `frictions` — that session's
   friction **severities only**, e.g. `["minor","blocker"]`, not the full
   description/solution text) and, per Skill, `onDisk`, `inventoried`,
-  `external`, current `importance`/`role`, its SKILL.md `description`, and
-  `usedIn` (every windowed session that invoked it). Pass `--window N` to
-  widen/narrow.
+  `external`, current `importance`/`role`/`observations` (prior runs' own
+  citable findings — read them before judging; this step only ever appends to
+  them, never edits or drops one), its SKILL.md `description`, and `usedIn`
+  (every windowed session that invoked it). Pass `--window N` to widen/narrow.
 - **`regressionChecks`** — for each of our own (non-external) Skills' single
   most recent `SKILL.md` edit commit, the ids of the sessions immediately
   before and after that commit's date (independent of the primary window
@@ -107,8 +108,9 @@ that plausibly *should* have), then set the grade per those definitions.
 - **Create a missing entry** for any `onDisk && !inventoried` Skill you observed in
   use: `name` is the Skill's directory name; `category` is `general-engineering`
   when `external`, else `platform-operation`; write the `role` + grade from what the
-  sessions show. Leave *never-observed* un-inventoried Skills alone (that coverage is
-  other maintenance work).
+  sessions show, plus an `observations` entry citing that evidence (`observations`
+  is required on every entry — never omit it, even as `[]`). Leave *never-observed*
+  un-inventoried Skills alone (that coverage is other maintenance work).
 - **The mirror case — `inventoried && !onDisk`** (a phantom entry: the Inventory
   points at a Skill directory that no longer exists). If the entry maps to a
   built-in CLI Skill invisible to the on-disk scan, **leave it and flag it**
@@ -119,7 +121,14 @@ that plausibly *should* have), then set the grade per those definitions.
   Skill's importance-here is not *evolving the Skill*, so "used, not evolved here"
   holds. (Steps 4 and 5 differ for them — see there.)
 - Refresh `role` when usage contradicts it. **Keep `role` ≤ ~50 words** (schema
-  guideline): role + importance-to-project, not a copy of the Skill's own description.
+  guideline): role + importance-to-project, not a copy of the Skill's own
+  description. **`role` stays reference-free** — no PR/issue/session ids
+  (ADR-0015 amendment); a citation belongs in `observations` instead (below).
+- **Every grade change or `role` refresh gets an `observations` entry** —
+  `{ date: <today, UTC>, note: <the citation — session ids, PR/issue numbers,
+  usage counts> }`, appended (never overwriting an earlier entry). This is
+  where the evidence for the change actually lives; `role` states the
+  conclusion, `observations` carries the receipts.
 
 Edit the `.yml` files in place. Done when every entry's grade + role matches the
 evidence, and observed-but-un-inventoried Skills have entries.
@@ -153,11 +162,17 @@ one session's bad luck? Use judgement, but **always cite the specific evidence**
 "feels regressed" is not enough to act on, at any confidence level.
 
 - **Confirmed enough to act on** → this Skill is a step-5 candidate, on equal
-  footing with step 3's signal (see step 5).
+  footing with step 3's signal (see step 5). Also append an `observations`
+  entry to that Skill's `.yml` (`{ date: <today, UTC>, note: <the edit, the
+  sessions, the quoted evidence> }`) — this is a citable finding same as a
+  grade change, and it's what lets a *future* run's Phase A see this one
+  without re-reading the full history.
 - **Suggestive but not enough** → record it as this run's own `learnings` entry
   (CONTEXT.md → Session glossary) naming the edit, the sessions, and why you
   stopped short — a note for a future reader (or a future run's Phase A, which
-  may catch the same Skill again with more evidence by then).
+  may catch the same Skill again with more evidence by then). Append the same
+  note as an `observations` entry on that Skill's `.yml` too, so it's not only
+  in this run's own session log.
 - **Inconclusive** → write nothing; most will land here, and that's fine.
 
 Done when every Phase-A signal has gone through Phase B and landed in one of
@@ -213,7 +228,10 @@ GitHub issue, not a vague hunch"). Name the evidence, not just the hunch.
 This Skill never creates, splits, or retires a Skill itself — that is net-new /
 creative work and stays human-green-lit (ADR-0003's two-tier autonomy split).
 `ideas` are read by future self-improvement Skills — this is a distinct
-signal from step 5's issue, not a duplicate of it.
+signal from step 5's issue, not a duplicate of it. When the idea concerns an
+existing (`onDisk`) Skill, also append an `observations` entry on its `.yml`
+naming the same evidence, so a future run sees it without re-reading this
+run's session log.
 
 Done when every credible new/split/retire signal from this run is captured as
 an idea (most runs will have none — that's fine).

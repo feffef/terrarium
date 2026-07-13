@@ -8,3 +8,4 @@ role: >-
   Note: this external skill's text prescribes the `gh` CLI, which remote
   sessions don't have — use the `mcp__github__*` equivalents instead (see
   `docs/agents/issue-tracker.md`).
+observations: []

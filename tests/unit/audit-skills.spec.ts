@@ -99,8 +99,16 @@ describe('buildSkillRows()', () => {
     ['ghost', { description: 'never inventoried' }],
   ])
   const inventory = new Map<string, InventoryEntry>([
-    ['blog-post', { category: 'platform-operation', importance: 'specialist', role: 'blogs' }],
-    ['retired', { category: 'general-engineering', importance: 'peripheral', role: 'gone from disk' }],
+    [
+      'blog-post',
+      {
+        category: 'platform-operation',
+        importance: 'specialist',
+        role: 'blogs',
+        observations: [{ date: '2026-07-05', note: 'promoted from supporting per usedIn' }],
+      },
+    ],
+    ['retired', { category: 'general-engineering', importance: 'peripheral', role: 'gone from disk', observations: [] }],
   ])
   const usage = new Map<string, UsageHit[]>([
     ['blog-post', [{ session: 's1', kind: 'interactive', goal: 'blog' }]],
@@ -127,6 +135,13 @@ describe('buildSkillRows()', () => {
 
   it('flags an on-disk Skill with no Inventory entry (coverage gap)', () => {
     expect(row('ghost')).toMatchObject({ onDisk: true, inventoried: false, importance: null, useCount: 0 })
+  })
+
+  it('threads prior observations through, defaulting to [] when uninventoried', () => {
+    expect(row('blog-post').observations).toEqual([
+      { date: '2026-07-05', note: 'promoted from supporting per usedIn' },
+    ])
+    expect(row('ghost').observations).toEqual([])
   })
 
   it('flags an inventoried Skill gone from disk (stale entry)', () => {
