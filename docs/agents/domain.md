@@ -14,13 +14,9 @@ Tenant's code.
 
 ## Before exploring, read these
 
-- **`CONTEXT-MAP.md`** at the repo root — the map: what contexts exist, where each
-  lives, and how they relate. Start here.
-- **`CONTEXT.md`** at the repo root — the **Platform context**: the concepts every
-  agent needs regardless of task, plus a roster of the Tenants. Always read this.
-- **`layers/<tenant>/CONTEXT.md`** — a Tenant's own vocabulary *and* its
-  reason-to-exist. Read the one for the Tenant you're working on.
-- **`docs/adr/`** — read ADRs that touch the area you're about to work in.
+The reading order and each file's role (`CONTEXT-MAP.md`, then `CONTEXT.md`, then
+the Tenant's own `layers/<tenant>/CONTEXT.md`, then the relevant ADRs) are
+single-homed in CLAUDE.md's "Read these first" — start there rather than here.
 
 Note the local shape (a deliberate, ADR-0021-recorded divergence from the
 `domain-modeling` Skill's generic templates): the root `CONTEXT.md` doubles as the
