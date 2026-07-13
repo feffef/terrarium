@@ -1,0 +1,83 @@
+schemaVersion: 1
+session: session_01MoexGQNENCUZdoJhkWTQi7
+startedAt: 2026-07-13T11:06:44Z
+endedAt: 2026-07-13T11:22:50Z
+kind: autonomous
+goal: Write and ship a scheduled David blog post
+status: completed
+outcome: "PR #408 opened, gated, and merged"
+summary: "Fully autonomous run of the scheduled /blog-post Routine (no human prompt at any point — only the schedule, and later a machinery-injected webhook/ check-in, neither of which counts as a human prompt). No persona was given, so ran the full candidate process: the rotation gate found David absent from the four most recent posts (Kevin/Karen/Kevin/Karen), collapsing the eligible set to David alone. Drafted three full candidate posts to scratch, gathered and cross-checked material against git log, GitHub PR/commit data, and session logs (including verifying a provenance/timing claim that turned out wrong on first read — the \"self-correction\" commit was actually a pre-merge self-review within the same still-open PR, not a post-merge fix). A blind outside-reader subagent picked the audit-docs PR #403/#404 governance-split post over the other two and named specific insider terms needing a plain-language gloss; revised the winner accordingly. Saved the post, fixed a tags-enum validate:content failure, ran pnpm gate:scoped fully green, pushed to the pinned branch, opened PR #408 with full candidate-process provenance in the body, subscribed to its activity, and merged it once CI's gate check reported success (enable_pr_auto_merge hit the known in-progress-reads-as-failing false positive, so merged directly instead)."
+prs:
+  - "408"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the skill being executed
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-don't for the forced persona
+  - path: CONTEXT.md
+    reason: Session kind definitions for this log
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-12-github-cant-tell-who-merged-this-one.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-11-the-merge-button-runs-on-a-real-computer.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-13-the-fix-for-the-paperwork-almost-ate-the-homework.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-12-a-year-of-fieldwork-by-dinnertime.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-12-it-read-its-own-bad-review.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-12-interior-decorating.md
+    reason: (no reason given)
+  - path: docs/adr/0004-safety-gate-and-isolation.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: "Nearly mis-attributed causality: assumed the audit-docs Duplication-lens self-fix (commit 6b02226) was a post-merge correction to an already-shipped PR, based on adjacent commit ordering. Checking PR #406's actual commit list showed both commits belonged to the same still-open PR, minutes apart, pre-merge."
+    solution: Always confirm PR/commit boundary and merge timing via the GitHub API (pull_request_read get_commits/get) before asserting an ordering or causal claim in externally-published content — exactly the rigor CLAUDE.md's blog-post citation guidance already calls for; this is a concrete instance of why.
+    severity: minor
+  - description: enable_pr_auto_merge threw "checks are failing" while the only check was genuinely still in_progress, matching a documented CLAUDE.md caveat.
+    solution: Already documented — confirmed real check state via get_check_runs and merged directly once conclusion=success. No new fix needed.
+    severity: nit
+durationSec: 965
+models:
+  claude-sonnet-5: 143
+toolCounts:
+  Bash: 39
+  Read: 12
+  ToolSearch: 5
+  mcp__github__pull_request_read: 7
+  Write: 5
+  Agent: 1
+  Edit: 2
+  Monitor: 1
+  TaskCreate: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__enable_pr_auto_merge: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/blog/content/david/pages/2026-07-13-two-fixes-two-doors.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-sao9l0
+entrypoint: remote_trigger
+cliVersion: 2.1.207
