@@ -178,7 +178,10 @@ runs in its **own git worktree** (parallel PRs must not share a working tree):
 
 Every agent's brief is self-contained: read the issue(s), branch from `origin/main`,
 implement the **recommended** option only, clear the **safety gate**, push, and open
-a **gated PR**. The impl agent **never merges and never enables auto-merge**
+a **gated PR**. The brief must instruct the agent to run `pnpm typecheck` (or
+equivalent `tsc --noEmit`) on touched files before pushing — not just its targeted
+test file(s) — so a type error surfaces locally instead of on the next full CI gate
+round-trip. The impl agent **never merges and never enables auto-merge**
 (ADR-0003) — it hands the open PR back to you. You are the reviewer (§6). The
 impl agent also must **not call `subscribe_pr_activity`** on the PR it opens —
 the orchestrator (§6) owns that PR's lifecycle and subscribes if/when needed.

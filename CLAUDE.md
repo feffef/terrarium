@@ -232,6 +232,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   Co-Authored-By/Claude-Session footer injection only applies to
   interactive/`-m` commits, not `-F`** — when using `-F`, append both
   provenance lines to the message file yourself.
+- **Never use `git commit-tree` or other history-rewriting techniques to inject
+  a missing provenance footer** — it can silently re-parent the chain onto a
+  different base and drop intervening commits. The safe fix is `git commit
+  --amend -F <file>` on the tip commit only (or including the footer at commit
+  time); never rewrite non-tip history to add it.
 - **For any since-last-merge diff or review, run `git fetch origin main` first
   and anchor on the merge-base** (`git merge-base origin/main HEAD`) or the
   commit under review (`HEAD~1`) — the environment's pre-cloned `origin/main`
