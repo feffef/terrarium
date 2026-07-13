@@ -8,12 +8,17 @@ import {
   buildRegressionChecks,
   buildSkillRows,
   buildSkillSessionFiles,
+  findHumanPromptedClosures,
+  findManuallyRescuedClosures,
   findOrphanedSessions,
   groupSessionReferences,
+  hasHumanPromptedClosure,
+  HUMAN_PROMPTED_CLOSURE,
   parseSessionTrailers,
   parseSkillEditLog,
   pickWindow,
   REC,
+  RESCUED_GAP_HOURS,
   SEP,
   tallyUsage,
   type InventoryEntry,
@@ -34,6 +39,7 @@ function sess(over: Partial<WindowSession> = {}): WindowSession {
     endedAt: '2026-07-05T10:00:00Z',
     skillsUsed: [],
     frictions: [],
+    humanPromptedClosure: false,
     ...over,
   }
 }
@@ -395,5 +401,101 @@ describe('findOrphanedSessions()', () => {
       { sha: 'c1', date: '2026-07-10T00:00:00Z', session: 'session_older' },
     ]
     expect(findOrphanedSessions(refs, new Set()).map((o) => o.session)).toEqual(['session_older', 'session_newer'])
+  })
+})
+
+describe('hasHumanPromptedClosure()', () => {
+  it('flags a friction description carrying the exact keyword', () => {
+    expect(hasHumanPromptedClosure([`user nudged me — ${HUMAN_PROMPTED_CLOSURE}`])).toBe(true)
+  })
+
+  it('does not flag descriptions that never mention it', () => {
+    expect(hasHumanPromptedClosure(['a normal friction', 'another one'])).toBe(false)
+    expect(hasHumanPromptedClosure([])).toBe(false)
+  })
+})
+
+describe('findHumanPromptedClosures()', () => {
+  it('returns only sessions whose log flagged the keyword, oldest-first', () => {
+    const sessions = [
+      sess({ session: 'b', endedAt: '2026-07-12T00:00:00Z', humanPromptedClosure: true }),
+      sess({ session: 'a', endedAt: '2026-07-10T00:00:00Z', humanPromptedClosure: true }),
+      sess({ session: 'c', endedAt: '2026-07-13T00:00:00Z', humanPromptedClosure: false }),
+    ]
+    expect(findHumanPromptedClosures(sessions)).toEqual([
+      { session: 'a', endedAt: '2026-07-10T00:00:00Z' },
+      { session: 'b', endedAt: '2026-07-12T00:00:00Z' },
+    ])
+  })
+})
+
+describe('findManuallyRescuedClosures()', () => {
+  it('flags a session whose closure trailed its last work commit past the threshold', () => {
+    // Mirrors the motivating orphan: last work commit, then a long idle, then close.
+    const refs: SessionTrailerRef[] = [
+      { sha: 'c1', date: '2026-07-13T00:58:10Z', session: 'session_rescued' },
+      { sha: 'c0', date: '2026-07-12T19:04:14Z', session: 'session_rescued' },
+    ]
+    const sessions = [sess({ session: 'session_rescued', endedAt: '2026-07-13T17:19:05Z' })]
+    expect(findManuallyRescuedClosures(refs, sessions)).toEqual([
+      {
+        session: 'session_rescued',
+        endedAt: '2026-07-13T17:19:05Z',
+        lastWorkCommit: '2026-07-13T00:58:10Z',
+        gapHours: 16.3,
+      },
+    ])
+  })
+
+  it('does not flag a healthy session that closed soon after its last work commit', () => {
+    const refs: SessionTrailerRef[] = [{ sha: 'c1', date: '2026-07-13T14:31:40Z', session: 's' }]
+    const sessions = [sess({ session: 's', endedAt: '2026-07-13T15:06:10Z' })] // ~35 min gap
+    expect(findManuallyRescuedClosures(refs, sessions)).toEqual([])
+  })
+
+  it('ignores a session with no work commit in the trailer refs', () => {
+    const sessions = [sess({ session: 's', endedAt: '2026-07-13T17:19:05Z' })]
+    expect(findManuallyRescuedClosures([], sessions)).toEqual([])
+  })
+
+  it('measures the gap from the LATEST work commit, not the earliest', () => {
+    const refs: SessionTrailerRef[] = [
+      { sha: 'early', date: '2026-07-10T00:00:00Z', session: 's' },
+      { sha: 'late', date: '2026-07-13T16:00:00Z', session: 's' },
+    ]
+    const sessions = [sess({ session: 's', endedAt: '2026-07-13T17:00:00Z' })] // 1h from latest
+    expect(findManuallyRescuedClosures(refs, sessions)).toEqual([]) // not 3+ days from earliest
+  })
+
+  it('sorts multiple rescues by gap, largest first', () => {
+    const refs: SessionTrailerRef[] = [
+      { sha: 'a', date: '2026-07-13T00:00:00Z', session: 'small' },
+      { sha: 'b', date: '2026-07-12T00:00:00Z', session: 'big' },
+    ]
+    const sessions = [
+      sess({ session: 'small', endedAt: '2026-07-13T08:00:00Z' }), // 8h
+      sess({ session: 'big', endedAt: '2026-07-13T00:00:00Z' }), // 24h
+    ]
+    expect(findManuallyRescuedClosures(refs, sessions).map((r) => r.session)).toEqual(['big', 'small'])
+  })
+
+  it('picks the real-time-latest work commit across mixed timezone offsets', () => {
+    // `+02:00` 21:00 = 19:00Z, which is EARLIER than the 20:00Z commit despite
+    // sorting later as a raw string — the epoch comparison must prefer 20:00Z.
+    const refs: SessionTrailerRef[] = [
+      { sha: 'zulu', date: '2026-07-12T20:00:00Z', session: 's' },
+      { sha: 'plus2', date: '2026-07-12T21:00:00+02:00', session: 's' },
+    ]
+    const sessions = [sess({ session: 's', endedAt: '2026-07-13T20:00:00Z' })] // 24h from 20:00Z
+    expect(findManuallyRescuedClosures(refs, sessions)).toMatchObject([
+      { session: 's', lastWorkCommit: '2026-07-12T20:00:00Z', gapHours: 24 },
+    ])
+  })
+
+  it('respects a caller-supplied threshold', () => {
+    const refs: SessionTrailerRef[] = [{ sha: 'a', date: '2026-07-13T00:00:00Z', session: 's' }]
+    const sessions = [sess({ session: 's', endedAt: '2026-07-13T02:00:00Z' })] // 2h gap
+    expect(findManuallyRescuedClosures(refs, sessions, RESCUED_GAP_HOURS)).toEqual([]) // below default 6h
+    expect(findManuallyRescuedClosures(refs, sessions, 1)).toHaveLength(1) // above a 1h threshold
   })
 })
