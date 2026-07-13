@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_01LtT3pkWNyWbYhkX6EkirWH
+startedAt: 2026-07-13T18:44:39Z
+endedAt: 2026-07-13T19:04:23Z
+kind: interactive
+goal: Track manual-nudge closures in audit-skills
+status: in-review
+outcome: "PR #416 opened; full gate green"
+summary: "Human-instructed: the user asked me to implement an idea recorded in the latest session log (session_01Rqxw) — an audit-skills check counting the new HUMAN-PROMPTED-CLOSURE keyword plus a \"manually-rescued closure\" timing signal, the counterpart to orphanedSessions. Mid-task the user asked whether audit-skills already scanned commit logs for un-logged sessions; I answered (yes — that is orphanedSessions) and they green-lit the build. Grounded the \"manually-rescued\" definition in real git/log data before coding: landed on the gap between a session's last work commit and its closure (endedAt), which flags the motivating orphan session_019pNrz at ~22h and nothing else. Added two pure, unit-tested scorecard signals, wired SKILL.md steps 2/5, passed the full gate, opened PR #416, subscribed to it."
+prs:
+  - "416"
+docsRead:
+  - path: scripts/audit-skills.ts
+    reason: the helper being extended
+  - path: tests/unit/audit-skills.spec.ts
+    reason: pure-core test patterns to mirror
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: the workflow the signals plug into
+  - path: .agents/skills/close-session/SKILL.md
+    reason: single home of the HUMAN-PROMPTED-CLOSURE keyword rule
+  - path: layers/journal/content/current/sessions/2026-07-13-session_01RqxwHHqJFDNBDjeqYVsTSC.yml
+    reason: the source idea and the rescued-orphan grounding
+skillsUsed:
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: authoring this entry
+frictions:
+  - description: Reached for a candidate rescued-closure signal twice before grounding it — endedAt≈log-commit (2s apart) and durationSec being exactly wallclock both fail to discriminate an idle rescue.
+    solution: Ground a timing heuristic against primary git/log data before coding it; the discriminating anchor was last-work-commit→closure, not session span.
+    severity: minor
+  - description: My first draft picked the latest work commit by raw ISO string compare; git %aI carries mixed local offsets, so a +02:00 stamp can sort after a real-time-later Z stamp.
+    solution: Compare parsed epochs (Date.parse), not %aI strings; added a mixed-offset test. groupSessionReferences still string-compares (see ideas).
+    severity: minor
+  - description: Monitor tool call was rejected — I passed a `timeout` param guessing its shape instead of loading its schema via ToolSearch first (CLAUDE.md's deferred-tool rule).
+    solution: Load a deferred tool's schema via ToolSearch before its first call; fell back to a Bash poll loop.
+    severity: nit
+durationSec: 1184
+models:
+  claude-opus-4-8: 113
+toolCounts:
+  Bash: 22
+  Grep: 2
+  Read: 7
+  Edit: 15
+  Monitor: 1
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__get_file_contents: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - scripts/audit-skills.ts
+  - tests/unit/audit-skills.spec.ts
+  - .agents/skills/audit-skills/SKILL.md
+gitBranch: claude/audit-skills-closure-grep-yflqbb
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+learnings:
+  - Session-log commits (the Stop hook's) carry NO Claude-Session trailer, so they never pollute a session's own work-commit set — which is exactly what makes last-work-commit cleanly separable from the closure commit.
+  - durationSec in a session log equals wallclock (endedAt − startedAt), not active time, so it cannot by itself distinguish an idle-then-rescued session from a genuinely long one.
+ideas:
+  - groupSessionReferences (and any other %aI comparison in audit-skills) compares ISO stamps as raw strings while git emits mixed local offsets, so an orphan's 'earliest referencing commit' date can be picked wrong. Normalize all %aI comparisons to parsed epochs, or emit %aI as UTC — small, well-scoped correctness fix.
