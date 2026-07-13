@@ -1,0 +1,72 @@
+schemaVersion: 1
+session: session_019pNrzTQb3EV2SJBWXs1bXG
+startedAt: 2026-07-12T18:32:27Z
+endedAt: 2026-07-13T17:19:05Z
+kind: interactive
+goal: "Run frictions-to-fixes: survey, fix, review"
+status: partial
+outcome: "PR #388 merged; #383 dispatch silently lost"
+summary: "User invoked /frictions-to-fixes. A subagent surveyed the last 20 session logs and screened against the tracker, returning 4 never-fixed simple candidates plus 1 regression. All agent-initiated from there per the Skill's design: filed issues #383-#387, escalating #387 (session-id fabrication regression) to a human instead of dispatching a fix. Dispatched two Sonnet worktree-isolated impl agents: one batched the three doc fixes into PR #388, which I reviewed and merged. The other, for #383, never returned a notification and left an empty local branch — #383 was later fixed independently by an unrelated session. This session also never self-invoked close-session after the merge, going orphaned until a human manually re-ran /close-session (see #397)."
+prs:
+  - "388"
+docsRead:
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: the driving skill
+  - path: .claude/skills/close-session/SKILL.md
+    reason: closure trigger
+  - path: .claude/skills/log-session/SKILL.md
+    reason: log authoring format
+  - path: CONTEXT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: "full run: survey, file, dispatch, review, merge"
+  - name: close-session
+    reason: "invoked late, manually, after being flagged as orphaned in #397"
+  - name: log-session
+    reason: authoring this entry
+frictions:
+  - description: "Session never self-invoked close-session after PR #388 merged and went orphaned (flagged by audit-skills' orphanedSessions check, issue #397) until a human manually re-prompted /close-session ~20+ hours later."
+    solution: "Per #397's diagnostic: frictions-to-fixes' step 6 gates close-session behind \"PR merged or escalated,\" but with auto-merge armed the turn ends waiting on a merge webhook and never resumes to reach that step. Move the close-session trigger to PR-open/before-ending, matching CLAUDE.md's own \"opening the PR is the first session log\" rule and the digest skill's already-immune pattern."
+    severity: major
+  - description: "The dispatched worktree-isolated Sonnet agent for issue #383's fix never returned a completion notification; its local branch (claude/friction-sessionstart-hook-383) has zero commits beyond its base, meaning it died before making any edit, and its worktree was reaped with no trace. Issue #383 was independently fixed and merged hours later by an unrelated session (PR #392), so the fix wasn't lost overall, but this session had zero visibility into its own dispatched agent's fate."
+    solution: CLAUDE.md's existing worktree-isolation guard covers a subagent that ends with uncommitted work still visible in its worktree, but not one that vanishes without any notification at all. Before closing, a dispatching session should explicitly re-verify every dispatched agent either returned a notification or has a resumable status, not just treat silence as "still running."
+    severity: major
+  - description: 'The GitHub MCP server (mcp__github__*) disconnected and reconnected at least twice mid-session, breaking tool calls (including a subscribe_pr_activity call that failed with "Tool permission request failed: permission stream closed") until ToolSearch re-resolved them.'
+    solution: No repo-side fix available; retry via ToolSearch on a connection-shaped tool error instead of assuming the capability is gone.
+    severity: minor
+  - description: The survey subagent's merged-since.ts output broke a JSON parser when its git-fetch progress lines (stderr) landed ahead of the JSON (stdout) after the caller combined both streams.
+    solution: "Same root cause as issue #384's tail/head-piping bullet (now merged in PR #388) - the caller should redirect the two streams separately rather than combining them; scripts/merged-since.ts could also suppress its own git-fetch progress noise so callers don't have to remember to separate streams."
+    severity: minor
+durationSec: 81998
+models:
+  claude-sonnet-5: 114
+toolCounts:
+  Bash: 11
+  ToolSearch: 8
+  mcp__github__search_pull_requests: 4
+  Agent: 3
+  mcp__github__search_issues: 7
+  mcp__github__issue_write: 5
+  TaskCreate: 3
+  TaskUpdate: 5
+  mcp__github__pull_request_read: 4
+  Grep: 3
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__merge_pull_request: 1
+  mcp__github__issue_read: 4
+  Read: 2
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Implement batched doc fixes PR
+    model: sonnet
+  - type: general-purpose
+    task: Implement SessionStart hook fix PR
+    model: sonnet
+gitBranch: claude/frictions-to-fixes-unba7k
+entrypoint: remote_mobile
+cliVersion: 2.1.207
