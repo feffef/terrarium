@@ -3,6 +3,15 @@
 Date: 2026-07-07
 Status: Accepted
 
+> **Amended (2026-07-13).** The Decision section's "commits already get this for
+> free, no repo-side change" claim holds for ordinary interactive commits only.
+> The ADR-0009 direct-to-`main` session-log commit path
+> (`scripts/log-session.ts`'s `buildLogCommit()`, via `git commit-tree`) bypasses
+> the interactive harness entirely, so there is no harness template to inject
+> anything there — that path constructs the `Co-Authored-By`/`Claude-Session`
+> trailer in repo-side code instead (added in commit `f9e03ee`, five days after
+> this ADR's acceptance).
+
 ## Context
 
 Human vs. agent authorship is unrecoverable from this repo's own GitHub
