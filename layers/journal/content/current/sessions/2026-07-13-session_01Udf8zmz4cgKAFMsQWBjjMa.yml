@@ -1,0 +1,79 @@
+schemaVersion: 1
+session: session_01Udf8zmz4cgKAFMsQWBjjMa
+startedAt: 2026-07-13T07:10:06Z
+endedAt: 2026-07-13T07:42:40Z
+kind: autonomous
+goal: "Run /blog-post: write one Blog Persona post"
+status: completed
+outcome: "PR #407 (Kevin post) merged"
+summary: "No human prompt anywhere in this conversation — the /blog-post command was invoked by the harness's task framing, so this is autonomous per CONTEXT.md's Session definition. Followed the Skill's candidate process in full: computed the rotation gate (A0) from published-post frontmatter (last = karen, eligible = {david, kevin}), gathered material broadly from git log and recent session logs (A1), picked three distinct, outsider-legible topics spread across both eligible Personas (A2/A3) — an Atlas relabel session for David, a git commit-tree near-data-loss and its same-day CLAUDE.md fix for Kevin, and a three-PR scroll-position fix for Kevin — and drafted all three to scratch (A4). A fresh outside-reader subagent (A5), blind to the repo and judging only pasted text, picked the commit-tree post for its higher stakes and genuine argumentative turn, and flagged unexplained jargon (git commit-tree, \"re-parented the chain\", ADR-0017, the frictions-to-fixes Skill) that would lose a homepage-arrival reader. Revised the winning draft to gloss each in plain language (A6), branched claude/blog-post-xqc8kl (the caller-pinned designated branch) off origin/main, saved the post, ran pnpm gate:scoped clean (38/38 e2e), opened PR #407 with full A0-A5 provenance in the body, subscribed, and merged it once CI's gate check reported success."
+prs:
+  - "407"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the Skill being executed
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-don't for the David candidate
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice/do-don't for the winning candidate
+  - path: layers/blog/tenant.config.ts
+    reason: pages schema + curated blogTags enum for frontmatter
+  - path: layers/journal/content/current/sessions/2026-07-13-session_01Kxn58hSRpiooZPBX1cxcxF.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-13-session_0127zV1aizbfpAPFgaTh6eu2.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-13-session_019ojLYFm9SJSmNXw72B4MtU.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-12-session_01JGdaGGgRmMUAKyvCFfXNpx.yml
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-12-it-read-its-own-bad-review.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-12-github-cant-tell-who-merged-this-one.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-12-session_016y9zkdpR9iasvbAuq1cMNn.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: invoked as the slash command; the run itself
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: First frontmatter draft used tags (git, safety) that aren't in tenant.config.ts's curated blogTags enum — would have failed content validation.
+    solution: Caught before running the gate by reading the enum directly; swapped to valid tags (provenance, bugs, session-logs).
+    severity: minor
+  - description: mcp__github__enable_pr_auto_merge threw a misleading 'unstable status, required checks are failing' error while the gate check was merely in_progress, not actually failing — a gotcha CLAUDE.md already documents.
+    solution: Confirmed real state via pull_request_read (get_status/get_check_runs), then called merge_pull_request directly once the check reported success — no new fix needed, just budget the round-trip as CLAUDE.md already advises.
+    severity: nit
+  - description: "mcp__Claude_Code_Remote__send_later errored with 'Tool permission request failed: Error: Tool permission stream closed before response received' when scheduling a CI check-in."
+    solution: No repo-side fix attempted this session; fell back on the github-actions[bot] PR comment webhook event, which happened to arrive with the green gate result before any scheduled check-in was needed. Worth a retry-once policy if this recurs.
+    severity: minor
+durationSec: 1954
+models:
+  claude-sonnet-5: 161
+toolCounts:
+  Bash: 43
+  Read: 15
+  mcp__github__issue_read: 1
+  Write: 5
+  Edit: 4
+  Agent: 1
+  ToolSearch: 6
+  ScheduleWakeup: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__enable_pr_auto_merge: 2
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  Skill: 2
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-07-13-the-fix-for-the-paperwork-almost-ate-the-homework.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+gitBranch: claude/blog-post-xqc8kl
+entrypoint: remote
+cliVersion: 2.1.207
