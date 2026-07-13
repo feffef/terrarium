@@ -242,94 +242,16 @@ credential this repo doesn't use for this path.
 
 ---
 
-## Recommended configuration for `feffef/terrarium`
+## Recommended configuration and tradeoffs — tracked on the issue, not here
 
-1. **Replace classic branch protection on `main` with a repository ruleset**
-   (Settings → Rules → Rulesets → New branch ruleset, target `main` or
-   `~DEFAULT_BRANCH`). Rulesets are the only mechanism with a bypass model
-   granular enough to except one actor from the whole rule set at once (§1).
-2. **Rules to enable**, to restore the exact protections needed to keep the
-   green-gate auto-merge flow working (§4) — mirroring what `main` had before
-   2026-07-11 and what `.github/workflows/gate.yml`'s `gate` job already
-   produces:
-   - **Require a pull request before merging**, with whatever review count the
-     `reviewer-agent` tier (human-judged) needs; content-only/single-Tenant
-     PRs stay low-risk per ADR-0004's blast-radius policy regardless.
-   - **Require status checks to pass** — name the `gate` job (and its
-     sub-steps if reported as separate checks) from `gate.yml` as required.
-     This is what gives the digest/audit-docs/audit-skills auto-merge tiers
-     something to wait on again (§4).
-   - **Block force pushes**, **restrict deletions** — unchanged from before.
-3. **Add exactly one bypass-list entry, set to "Always"** (not "For pull
-   requests only" — ADR-0009's whole point is a direct, non-PR push): the
-   **Repository admin** role, since (per §2) that is the only actor type
-   available that covers the owner's credential the session-log push
-   currently borrows. **Document explicitly, in the ruleset's description or
-   an ADR note, that this bypass is role-scoped, not automation-scoped** — it
-   also lets the human owner push directly to `main` by hand, which was not
-   previously possible and is a real, if narrow, regression in protection
-   against accidental manual pushes.
-4. **Track closing that gap on issue #124** (already the deferred "bot
-   identity" work from ADR-0017): once a dedicated GitHub App or machine-user
-   PAT exists for `session-end.ts`'s push, swap the bypass-list entry from
-   "Repository admin" to that specific App — the only actor type the ruleset
-   bypass picker can target with true, human-excluding precision (§2).
-5. **Do not attempt path-scoped protection** — it isn't offered by either
-   mechanism (§3). Keep relying on `scripts/log-session.ts`'s existing
-   single-file guard as the actual boundary enforcement; the ruleset bypass is
-   a necessary complement to it, not a replacement.
-6. **Re-enable Settings → General → Allow auto-merge** (or confirm it's still
-   on) once the ruleset's required status check is in place — with an unmet
-   requirement to wait on restored, the auto-merge regression from #231
-   resolves itself (§4).
-
-## Tradeoffs vs. routing session logs through the gated-PR flow instead
-
-The sharpest alternative, worth naming plainly: **the entire bypass-scoping
-problem in §2 exists only because ADR-0009 chooses a raw `git push
-…:refs/heads/main`, not a PR merge.** A GitHub **merge** (via the UI or API)
-is the *intended*, fully-protected path — it satisfies required reviews and
-required status checks by construction and needs **no bypass-list entry at
-all**, for any actor. If session logs instead opened a (possibly
-auto-mergeable) PR:
-
-- **Pro — closes the crux entirely.** `main` stays uniformly, strictly
-  protected; no role/actor bypass is needed, so the "bypass also covers the
-  owner's manual pushes" problem in §2 disappears completely, and the
-  auto-merge regression in §4 never arises for this content type either
-  (session-log PRs would just be another auto-mergeable low-risk tier, ADR-0004).
-- **Con — reintroduces exactly the friction ADR-0009 was written to avoid.**
-  ADR-0009's Context section is explicit about why: a session log describes
-  work that may span zero, one, or several PRs (planning/research sessions
-  open none at all), and "routing each session log through its own PR is
-  heavy ceremony" that would, per that ADR, "suppress logging or flatten it
-  into dishonest summaries." A pure-research session (like this one) would
-  need to open a PR whose only content is one schema-validated YAML file,
-  wait on the same `gate.yml` (a full `nuxt build` + e2e run) that ADR-0009's
-  Consequences argue is wasted work for content "strict-schema-validated
-  `data` that generates nothing, routes nothing, touches no code."
-- **Con — kills "lands live, mid-session."** ADR-0009 (`Landing mechanism as
-  shipped`) is built around the log landing promptly on the live `Stop` hook,
-  before any teardown/freeze risk. Even an auto-merging PR queues behind CI
-  (minutes), and a genuinely unattended/frozen session might never see its PR
-  merge — reintroducing the "ephemeral container rarely hosts a live agent at
-  the later merge moment" problem ADR-0009 already had to reckon with once
-  (the `close-session` amendment's "closure means work-complete, not merged"
-  reframing).
-- **Middle ground, not fully explored here.** A session-log PR could target
-  the *lowest*-risk auto-merge tier and, if the "merge via API" step itself
-  can run under the *same* borrowed owner credential without needing a raw
-  push (merging doesn't require a bypass — only direct pushes do), it might
-  sidestep §2's scoping problem without reintroducing full PR ceremony's
-  latency. This trades one exception (a bypass list) for another
-  (autonomous-merge authority) and deserves its own follow-up spike rather
-  than a verdict here.
-
-**Bottom line:** a ruleset gets the described tension unstuck (§1, §4) and is
-a strict improvement over "no protection at all," but it cannot make the
-session-log bypass *automation-scoped* without first closing the ADR-0017/#124
-bot-identity gap (§2) — until then, whichever bypass entry lets
-`session-end.ts` through also lets the human owner push to `main` by hand.
-Routing logs through the gated-PR flow instead would remove the need for any
-bypass at all, at the direct cost of the ceremony and latency ADR-0009 was
-written specifically to avoid.
+The concrete ruleset recommendation (replace classic protection with a
+repository ruleset requiring the `gate` status check plus one Repository-admin
+bypass-list entry) and its tradeoffs against routing session logs through the
+gated-PR flow instead were posted in full as a comment on issue #348. The
+owner closed #348 on 2026-07-12 (`completed`) once the research landed —
+the research task was done, but the ruleset change itself is a governance/CI
+surface, human-only to land (ADR-0004), and was deliberately left open for a
+human to apply; it has not been applied as of this writing (`main` still
+carries no branch protection or ruleset). See #348's comment for the full
+write-up; this doc keeps only the verified facts above (§1-§5), per
+`docs/agents/issue-tracker.md`'s research-doc-vs-issue convention.

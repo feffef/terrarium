@@ -23,10 +23,10 @@ that at closure and it calls this. Reach for `log-session` **directly** only to
 **update** an already-authored log (a new friction, a changed outcome) after
 you've closed.
 
-Whichever way you arrive here, a log records the session at **closure** — its
-active work **complete and in a coherent, honest state**. Closure does **not**
-mean the PR is merged (it usually merges later, in another session): a log
-honestly records an in-review PR.
+Whichever way you arrive here, a log records the session at **Session closure**
+(CONTEXT.md's glossary term — self-judged, not the same as merged) — its
+active work **complete and in a coherent, honest state**. A log honestly
+records an in-review PR when that's the state closure was reached in.
 
 **Opening a gated PR is a closure point — log at that moment.** A session that
 committed substantive work opens its PR automatically when the work is coherent

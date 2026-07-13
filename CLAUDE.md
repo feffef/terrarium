@@ -74,11 +74,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   The manifest-expansion and routing modules (`content.config.ts`,
   `shared/expand.ts`, `modules/routing.ts`, `shared/routing.ts`), isolation
   logic, CI, and governance/ADRs are **human-only** — never auto-merge changes
-  touching them (ADR-0004's high-risk set). ADR-0004 also escalates two axes a
-  path classifier can't see, on top of that file list: a PR that
-  **introduces a new dependency**, or one that **changes untested/untestable
-  runtime behaviour**, is always human-only even when it otherwise touches
-  only low-risk surface. "Human-only" gates *merging*, not editing:
+  touching them (ADR-0004's high-risk set, which also escalates a PR that
+  introduces a new dependency or changes untested/untestable runtime
+  behaviour — see ADR-0004's 2026-07-06 amendment for the exact axes).
+  "Human-only" gates *merging*, not editing:
   `content.config.ts` is hand-editable (below), but a PR touching it still
   needs a human to merge.
 - **Skills** are generic, repo-committed, and first-class (ADR-0005). But the
@@ -292,7 +291,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   configured"), and its "checks are failing" text can fire while a check is
   merely `in_progress`, not actually failing. If it errors, confirm the real
   check state via `pull_request_read` before concluding checks have genuinely
-  failed and abandoning the PR.
+  failed and abandoning the PR. **`main` currently carries no branch
+  protection or ruleset at all** (removed 2026-07-11 — see
+  `docs/research/github-branch-protection-vs-autonomous-log-commits.md`,
+  issue #348), so this "already green"/no-wait-condition case is the norm
+  right now, not the exception: default to polling `get_check_runs` yourself
+  and calling `merge_pull_request` once green, rather than reaching for
+  `enable_pr_auto_merge` first.
 - **Opening the PR is the first session log.** The moment you open the gated PR
   is a closure point: invoke `close-session` right then (it authors the log via
   `log-session`). It's not finished; more commits and a re-fired log can follow
@@ -350,8 +355,8 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   outputs. A design axis that shifts mid-build after subagents have already
   authored against the old answer forces a full re-authoring pass.
 - **Every agent-authored interaction with GitHub, or any other external
-  system, carries a two-line provenance footer, no exemptions** (ADR-0017 —
-  read it for the full rationale and why this is convention, not
+  system, carries a two-line provenance footer** (ADR-0017 — read it for the
+  full rationale, the no-exemptions scope, and why this is convention, not
   gate-enforced):
   ```
   Co-Authored-By: <model name> <noreply@anthropic.com>
@@ -363,7 +368,6 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   git history — issues, PR descriptions, PR/issue comments (top-level *and*
   inline review comments), or a post to any future non-GitHub integration —
   doesn't: append the same two lines yourself as the last lines of the body.
-  There is no "top-level only" carve-out.
 
 ## Repo layout
 
@@ -504,12 +508,11 @@ see the `log-session` Skill for which hook lands it and why.
 
 **You self-judge closure — invoke the `close-session` Skill when the session is
 wrapping up.** `close-session` is the single **front door** for Session closure
-(glossary): it runs the closing sequence — coherent state → gated-PR discipline
-(if any) → the session log, which it authors by calling `log-session`. Its
-trigger is deliberately **loose and early** ("am I winding down?"), so reach for
-it while you can still act rather than after checking out. No "are we done?" ask,
-no waiting for merge: closure means the work is in an honest, coherent state (a
-log records an in-review PR truthfully).
+(CONTEXT.md's glossary term — see it there for the full definition): it runs
+the closing sequence — coherent state → gated-PR discipline (if any) → the
+session log, which it authors by calling `log-session`. Its trigger is
+deliberately **loose and early** ("am I winding down?"), so reach for it while
+you can still act rather than after checking out. No "are we done?" ask.
 
 Authoring the scratch *is* the "done" signal — the committed `Stop` hook lands it
 **only if** it exists, so a mid-work freeze logs nothing. Re-invoking is safe: it
