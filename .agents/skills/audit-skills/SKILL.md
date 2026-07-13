@@ -79,6 +79,17 @@ It prints JSON:
   Collection (current or archived). Each entry carries the referencing commit
   sha(s) and date — a session that never invoked `close-session`/`log-session`
   at all (ADR-0009).
+- **`humanPromptedClosures`** and **`manuallyRescuedClosures`** — the two
+  *manual-nudge-closure* signals, the counterpart to `orphanedSessions` for
+  sessions that DID log but only because a human nudged them (so the orphan
+  check, which keys on a missing log file, can't see them). The first lists
+  sessions whose own log flagged the `HUMAN-PROMPTED-CLOSURE` friction keyword
+  (`close-session` mandates it when a human, not self-judgement, triggered the
+  close). The second catches the same regression from *timing* alone — a
+  session whose closure (`endedAt`) landed more than `RESCUED_GAP_HOURS` after
+  its last work commit on `origin/main` (`gapHours` is that delay), the shape of
+  the motivating orphan (session_019pNrz, #397) that idled ~22h before a human
+  rescued its log. A session can appear in both, one, or neither.
 - **`skillSessionFiles`** — Skill name → every session log file path that
   named it, across **all** history (not windowed, not bracketed). Paths only.
   This is step 4's deep-read entry point, not something to read wholesale now.
@@ -182,21 +193,24 @@ the three buckets above.
 
 ## 5. File — or comment on — an issue
 
-Three signals may originate a `needs-triage` issue, all requiring citable
+Four signals may originate a `needs-triage` issue, all requiring citable
 evidence: **step 3's bright-line rule** (≥2 windowed sessions, absent from work
 clearly in its domain — mechanical, objective), **step 4's regression watch,
 after its Phase B deep-read** (judgement-based, but grounded in quoted evidence
-from the full logs, not the Phase A screen alone), and **step 2's
+from the full logs, not the Phase A screen alone), **step 2's
 `orphanedSessions`** (mechanical, objective — a referenced session id with no
-matching log file is itself the evidence; no further screen needed). Phase A's
-regression screen on its own never reaches this step — it must clear Phase B
-first; `orphanedSessions` has no such gate.
+matching log file is itself the evidence; no further screen needed), and **step
+2's closure-nudge signals `humanPromptedClosures` + `manuallyRescuedClosures`**
+(mechanical, objective — the flagged session id, its keyword or its `gapHours`,
+is itself the evidence). Phase A's regression screen on its own never reaches
+this step — it must clear Phase B first; the step-2 signals have no such gate.
 
 **Step 3 and step 4 are for our own (`external: false`) Skills only.** A pack
 Skill's SKILL.md is not ours to patch (ADR-0015) — for an under-used *external*
 Skill, the only lever we own is its Inventory `role` (step 3).
-`orphanedSessions` is not about any one Skill (own or external) — it's a
-journal-completeness gap, so this scoping doesn't apply to it.
+`orphanedSessions` and the closure-nudge signals are not about any one Skill
+(own or external) — they're closure/journal-completeness gaps, so this scoping
+doesn't apply to them.
 
 For each own Skill flagged by step 3 or 4, and for each `orphanedSessions` entry:
 - **Search first** (`search_issues`, `is:issue is:open audit-skills <name>` for
@@ -210,13 +224,22 @@ For each own Skill flagged by step 3 or 4, and for each `orphanedSessions` entry
   commit(s), and date. `triage` picks up any issue regardless of source; you're
   not filing into a void.
 
+**For the closure-nudge signals, track the trend on one thread, not one issue
+per session.** They measure a *recurring* regression (agents not self-closing),
+so a fresh session appearing is evidence to add to the standing thread, not a
+reason to open a new issue each run: search for the open manual-nudge-closure
+issue and comment this run's counts (which sessions carried the keyword, which
+were rescued and by what `gapHours`); open one `needs-triage` issue only if none
+is open. A run with empty `humanPromptedClosures` and `manuallyRescuedClosures`
+files nothing — that's the healthy state.
+
 Never patch `.agents/skills/` or any other doc yourself for a semantic
 concern — file per above (the narrow mechanical-fix exception is at the top
 of this doc, and doesn't apply here — a step-4 regression is never purely
 mechanical).
 
-Done when every step-3-, step-4-, or `orphanedSessions`-flagged item has an
-issue filed or commented on.
+Done when every step-3-, step-4-, `orphanedSessions`-, or closure-nudge-flagged
+item has an issue filed or commented on.
 
 ## 6. Suggest new Skills or Skill splits/cuts, as ideas
 

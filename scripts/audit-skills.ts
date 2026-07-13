@@ -14,9 +14,13 @@
 //   `regressionChecks` — each own Skill's most recent edit commit with the
 //   sessions immediately before/after it (session ids only; resolve against
 //   `regressionSessions`, deduped since the same session commonly brackets more
-//   than one Skill's edit) — `orphanedSessions` (issue #349) — and
-//   `skillSessionFiles`, a skill → file-path map (all-time, not windowed) for a
-//   targeted full-log deep-read once a regression is suspected for a specific Skill.
+//   than one Skill's edit) — `orphanedSessions` (issue #349), the two
+//   manual-nudge-closure signals `humanPromptedClosures` and
+//   `manuallyRescuedClosures` (the counterpart to `orphanedSessions`: a session
+//   that DID log, but only because a human nudged it — invisible to the orphan
+//   check because the log now exists) — and `skillSessionFiles`, a skill →
+//   file-path map (all-time, not windowed) for a targeted full-log deep-read
+//   once a regression is suspected for a specific Skill.
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -36,6 +40,17 @@ export const MAX_EDITS_PER_SKILL = 1
 /** Calendar, not session-count, window (issue #349) — the point is catching
  *  every zero-log session, not just the newest ones. */
 export const ORPHAN_WINDOW_DAYS = 4
+/** The exact keyword a session records — in a friction's `description` — when a
+ *  human, not the session's own judgement, prompted its closure (`close-session`
+ *  SKILL.md is the single home for the rule). Grepping for it turns the
+ *  otherwise-invisible manual nudge into a counted signal. */
+export const HUMAN_PROMPTED_CLOSURE = 'HUMAN-PROMPTED-CLOSURE'
+/** Gap (hours) between a session's last work commit and its own closure beyond
+ *  which the closure reads as manually rescued rather than self-judged. Grounded
+ *  in observed data: healthy sessions close within minutes-to-~½h of their last
+ *  work commit, while the motivating rescue (session_019pNrz, #397) idled ~16h.
+ *  Tunable — set well above the healthy tail, well below a genuine rescue. */
+export const RESCUED_GAP_HOURS = 6
 
 /** Paths this helper reads. */
 export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
@@ -66,6 +81,11 @@ export interface WindowSession {
    *  `skillSessionFiles`) once a regression is actually suspected, rather than
    *  paying for full friction text in every session up front. */
   frictions: string[]
+  /** True when a friction `description` carries the `HUMAN_PROMPTED_CLOSURE`
+   *  keyword — the session logged, but a human had to nudge it (`close-session`
+   *  SKILL.md). Scanned only over `description`, never `solution`/summary text,
+   *  so a session that merely *discusses* the keyword doesn't false-positive. */
+  humanPromptedClosure: boolean
 }
 /** A Skill's on-disk facts: it exists, and its SKILL.md frontmatter `description`. */
 export interface OnDiskSkill {
@@ -136,6 +156,22 @@ export interface OrphanedSession {
   commits: string[]
   date: string
 }
+/** A session that logged but flagged its own closure as human-prompted (the
+ *  `HUMAN_PROMPTED_CLOSURE` friction keyword). */
+export interface HumanPromptedClosure {
+  session: string
+  endedAt: string
+}
+/** A session whose closure landed a long time after its last work commit — the
+ *  timing counterpart to `HumanPromptedClosure`, catching a manual rescue even
+ *  when the session didn't log the keyword. `gapHours` is that delay. */
+export interface ManuallyRescuedClosure {
+  session: string
+  endedAt: string
+  /** ISO date of the session's most recent work commit on `origin/main`. */
+  lastWorkCommit: string
+  gapHours: number
+}
 export interface Scorecard {
   windowSize: number
   sessionsConsidered: number
@@ -144,6 +180,11 @@ export interface Scorecard {
   regressionChecks: RegressionCheck[]
   regressionSessions: WindowSession[]
   orphanedSessions: OrphanedSession[]
+  /** Sessions whose own log flagged a human-prompted closure (keyword grep). */
+  humanPromptedClosures: HumanPromptedClosure[]
+  /** Sessions whose closure landed >`RESCUED_GAP_HOURS` after their last work
+   *  commit — a manual rescue detectable from timing alone (see the interface). */
+  manuallyRescuedClosures: ManuallyRescuedClosure[]
   /** Skill name → every session log file (repo-relative path) that named it in
    *  `skillsUsed`, across ALL history — not windowed, not bracketed. Cheap
    *  (paths only). The deep-read entry point once a regression is suspected for
@@ -364,6 +405,58 @@ export function findOrphanedSessions(
   return out.sort((a, b) => a.date.localeCompare(b.date))
 }
 
+/** True when any friction `description` carries the exact keyword. Only
+ *  descriptions are passed in — `close-session` mandates the keyword there, and
+ *  scanning `solution`/summary text would flag a session that merely *discusses*
+ *  the regression (e.g. the PR that introduced the keyword). */
+export function hasHumanPromptedClosure(frictionDescriptions: string[]): boolean {
+  return frictionDescriptions.some((d) => d.includes(HUMAN_PROMPTED_CLOSURE))
+}
+
+/** The logged sessions that flagged a human-prompted closure, oldest-first. */
+export function findHumanPromptedClosures(sessions: WindowSession[]): HumanPromptedClosure[] {
+  return sessions
+    .filter((s) => s.humanPromptedClosure)
+    .map((s) => ({ session: s.session, endedAt: s.endedAt }))
+    .sort((a, b) => a.endedAt.localeCompare(b.endedAt) || a.session.localeCompare(b.session))
+}
+
+/** Sessions whose closure landed at least `minGapHours` after their last work
+ *  commit — a manual rescue the binary orphan check misses because the log now
+ *  exists. `refs` supplies each session's work commits (the log-landing commit
+ *  itself carries no `Claude-Session` trailer, so it never counts as work);
+ *  `sessions` supplies the closure moment (`endedAt`). A session with no work
+ *  commit in `refs`, or a non-positive gap, is not a rescue. Sorted by gap,
+ *  largest first (most conspicuous rescue first). */
+export function findManuallyRescuedClosures(
+  refs: SessionTrailerRef[],
+  sessions: WindowSession[],
+  minGapHours = RESCUED_GAP_HOURS,
+): ManuallyRescuedClosure[] {
+  // Compare by parsed epoch, not string: `git %aI` stamps carry the committer's
+  // local offset (both `Z` and `+02:00` appear in practice), and a `+02:00`
+  // string can sort after a real-time-later `Z` string.
+  const latestWork = new Map<string, string>()
+  for (const { session, date } of refs) {
+    const cur = latestWork.get(session)
+    if (!cur || Date.parse(date) > Date.parse(cur)) latestWork.set(session, date)
+  }
+  const out: ManuallyRescuedClosure[] = []
+  for (const s of sessions) {
+    const last = latestWork.get(s.session)
+    if (!last || !s.endedAt) continue
+    const gapHours = (Date.parse(s.endedAt) - Date.parse(last)) / 3_600_000
+    if (!Number.isFinite(gapHours) || gapHours < minGapHours) continue
+    out.push({
+      session: s.session,
+      endedAt: s.endedAt,
+      lastWorkCommit: last,
+      gapHours: Math.round(gapHours * 10) / 10,
+    })
+  }
+  return out.sort((a, b) => b.gapHours - a.gapHours || a.session.localeCompare(b.session))
+}
+
 // ── FS IO (thin shell) ────────────────────────────────────────────────────────
 
 /** Reads every session log with its source file path attached (`SessionFile`). */
@@ -390,6 +483,9 @@ function readSessionFiles(cwd = root): SessionFile[] {
         frictions: frictions
           .map((fr: Record<string, unknown>) => String(fr.severity ?? ''))
           .filter(Boolean),
+        humanPromptedClosure: hasHumanPromptedClosure(
+          frictions.map((fr: Record<string, unknown>) => String(fr.description ?? '')),
+        ),
       },
       file: `${SESSIONS_DIR}/${f}`,
     })
@@ -512,7 +608,8 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
   const external = readLock(cwd)
   const rows = buildSkillRows(readOnDiskSkills(cwd), readInventory(cwd), tallyUsage(window), external)
   const { checks, sessions } = buildRegressionChecks(all, readSkillEdits(cwd), external)
-  const orphanedSessions = findOrphanedSessions(readSessionTrailers(cwd), readKnownSessionIds(cwd))
+  const trailers = readSessionTrailers(cwd)
+  const orphanedSessions = findOrphanedSessions(trailers, readKnownSessionIds(cwd))
   return {
     windowSize,
     sessionsConsidered: all.length,
@@ -521,6 +618,8 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
     regressionChecks: checks,
     regressionSessions: sessions,
     orphanedSessions,
+    humanPromptedClosures: findHumanPromptedClosures(all),
+    manuallyRescuedClosures: findManuallyRescuedClosures(trailers, all),
     skillSessionFiles: buildSkillSessionFiles(files),
   }
 }
