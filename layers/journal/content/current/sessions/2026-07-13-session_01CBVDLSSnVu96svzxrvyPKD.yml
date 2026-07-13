@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CBVDLSSnVu96svzxrvyPKD
 startedAt: 2026-07-13T18:39:04Z
-endedAt: 2026-07-13T19:16:32Z
+endedAt: 2026-07-13T19:21:47Z
 kind: interactive
 goal: Run frictions-to-fixes over latest sessions
-status: in-review
-outcome: 3 issues filed, 1 PR merged, 1 PR open
-summary: "User invoked /frictions-to-fixes (the kickoff human prompt). Dispatched a survey subagent over the latest 20 session logs, screened candidates against the tracker and against main directly, and picked 3 never-fixed candidates to fix: merged-since.ts's single-timestamp limitation (issue #412, code), a shallow-clone/graft-boundary CLAUDE.md guard (#413, doc), and an undocumented vitest expect.poll default (#414, doc). Filed all three myself after independently re-verifying each claim against the actual repo state (one survey candidate, actions_list output limits, turned out already documented and was dropped rather than filed). Dispatched two Sonnet impl agents in separate worktrees: one batched PR for the two doc issues (#415, merged after review) and one for the code issue (#412). The code-fix agent stalled mid-gate and had to be resumed, then died silently without committing on the second attempt — no human intervened in that recovery, I diagnosed and finished the implementation myself (verified via tsc, unit tests, and manual CLI runs) before pushing and opening PR #417, which is still awaiting its gate/merge. The user asked two clarifying \"what's happening\" questions mid-run; no other steering."
+status: completed
+outcome: 3 issues filed, both PRs reviewed and merged
+summary: "User invoked /frictions-to-fixes (the kickoff human prompt). Dispatched a survey subagent over the latest 20 session logs, screened candidates against the tracker and against main directly, and picked 3 never-fixed candidates to fix: merged-since.ts's single-timestamp limitation (issue #412, code), a shallow-clone/graft-boundary CLAUDE.md guard (#413, doc), and an undocumented vitest expect.poll default (#414, doc). Filed all three myself after independently re-verifying each claim against the actual repo state (one survey candidate, actions_list output limits, turned out already documented and was dropped rather than filed). Dispatched two Sonnet impl agents in separate worktrees: one batched PR for the two doc issues (#415) and one for the code issue (#412). The code-fix agent stalled mid-gate and had to be resumed, then died silently without committing on the second attempt — no human intervened in that recovery, I diagnosed and finished the implementation myself (verified via tsc, unit tests, and manual CLI runs) before pushing and opening PR #417. Reviewed both PRs myself as the ADR-0003 reviewer-agent (posted a review comment on each, confirmed gate green) and merged both — #415 then #417. The user asked two clarifying \"what's happening\" questions mid-run; no other steering, and no work was escalated as high-risk."
 prs:
   - "415"
   - "417"
@@ -37,26 +37,27 @@ frictions:
   - description: A candidate friction (actions_list output size) the survey flagged as never-fixed turned out already resolved via a direct doc edit with no tracking GitHub issue/PR at all, so the tracker-only screening step missed it until I read the doc directly.
     solution: When screening a candidate whose fix type is 'doc', also grep the likely target doc file directly for existing coverage, not only search GitHub issues/PRs — some doc fixes land without ever getting their own tracked issue.
     severity: minor
-durationSec: 2248
+durationSec: 2563
 models:
-  claude-sonnet-5: 132
+  claude-sonnet-5: 142
 toolCounts:
-  Bash: 23
+  Bash: 24
   ToolSearch: 6
   mcp__github__search_pull_requests: 1
   Agent: 3
-  Read: 3
+  Read: 4
   Grep: 5
   mcp__github__search_issues: 3
   mcp__github__issue_write: 3
-  mcp__github__pull_request_read: 6
-  mcp__github__pull_request_review_write: 1
+  mcp__github__pull_request_read: 7
+  mcp__github__pull_request_review_write: 2
   ScheduleWakeup: 3
   SendMessage: 1
-  mcp__github__merge_pull_request: 1
+  mcp__github__merge_pull_request: 2
   mcp__github__create_pull_request: 1
   Skill: 2
   Write: 1
+  Edit: 1
 subagents:
   - type: general-purpose
     task: Survey and screen session frictions
