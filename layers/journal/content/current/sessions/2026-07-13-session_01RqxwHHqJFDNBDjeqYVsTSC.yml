@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01RqxwHHqJFDNBDjeqYVsTSC
 startedAt: 2026-07-13T15:10:45Z
-endedAt: 2026-07-13T18:31:27Z
+endedAt: 2026-07-13T18:36:35Z
 kind: interactive
 goal: Diagnose the session-closure regression and fix it
-status: in-review
-outcome: "Closure reworked across 5 skills; PR #411 in-review"
-summary: "Human-instructed throughout. User reported agents not self-closing over 07-12/07-13; asked me to find un-logged commits and use /audit-skills to find the causing doc change. Found one in-window orphan (session_019pNrz, already #397) plus three pre-close-session historicals. Diagnosed the cause: self-improvement skills gated close-session behind \"PR merged\", so closure was lost when merge landed out-of-turn; digest was immune (#176). Opened PR #411, corrected #397. Then, in a /grill-with-docs session, the user and I reshaped the fix: each of the five skills now invokes close-session at PR-open and log-session (final status + frictions) at the very end — two different verbs so the final log isn't skipped as \"already closed.\" close-session became the single home for when a session is actually logged (commit on origin/main with final status) and for the HUMAN-PROMPTED-CLOSURE major friction keyword."
+status: completed
+outcome: "PR #411 merged; closure fix landed across 5 skills"
+summary: "Human-instructed throughout. User reported agents not self-closing over 07-12/07-13; asked me to find un-logged commits and use /audit-skills to find the causing doc change. Found one in-window orphan (session_019pNrz, already #397) plus three pre-close-session historicals. Diagnosed the cause: self-improvement skills gated close-session behind \"PR merged\", so closure was lost when merge landed out-of-turn; digest was immune (#176). Opened PR #411, corrected #397. Then, in a /grill-with-docs session, the user and I reshaped the fix: each of the five skills now invokes close-session at PR-open and log-session (final status + frictions) at the very end — two different verbs so the final log isn't skipped as \"already closed.\" close-session became the single home for when a session is actually logged (commit on origin/main with final status) and for the HUMAN-PROMPTED-CLOSURE major friction keyword. A final pass normalized the closing wording to one identical form across all five skills (single-homing #176 in close-session). PR #411 merged green."
 prs:
   - "411"
 docsRead:
@@ -62,27 +62,28 @@ frictions:
   - description: A `node -e` orphan-scan one-liner broke on shell-mangled `\n` inside the inlined JS string.
     solution: Write non-trivial scripts to a file and run them, rather than inlining multi-line JS in `node -e` through bash.
     severity: nit
-durationSec: 12043
+durationSec: 12350
 models:
-  claude-opus-4-8: 359
+  claude-opus-4-8: 373
 toolCounts:
-  Bash: 57
+  Bash: 58
   Read: 21
   Skill: 5
-  ToolSearch: 7
+  ToolSearch: 8
   TaskCreate: 3
   Write: 7
   TaskUpdate: 3
   AskUserQuestion: 2
   mcp__github__search_issues: 2
   mcp__github__add_issue_comment: 2
-  Edit: 30
+  Edit: 32
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 6
   mcp__Claude_Code_Remote__send_later: 2
   mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/SKILL.md
   - .agents/skills/audit-docs/SKILL.md
