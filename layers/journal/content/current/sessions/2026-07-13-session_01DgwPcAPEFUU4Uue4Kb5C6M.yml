@@ -1,0 +1,109 @@
+schemaVersion: 1
+session: session_01DgwPcAPEFUU4Uue4Kb5C6M
+startedAt: 2026-07-13T12:43:07Z
+endedAt: 2026-07-13T13:37:09Z
+kind: autonomous
+goal: Run /audit-docs sweep of the repo's docs
+status: completed
+outcome: 7 findings fixed, PR "#409" merged green
+summary: "Ran the /audit-docs skill start to finish, unattended. Four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) reviewed the Live-tier docs and pooled 8 findings with no overlaps. Independent fact-checker agents verified each against primary sources (code, ADRs, entrypoint.sh, the research doc it referenced): 7 confirmed, fixed in place — single-homed the ADR-0020 and ADR-0004 rules that CLAUDE.md and two Skills/docs were restating in full instead of pointing at; moved docs/research/mdc-when-to-use.md to docs/agents/ (a durable convention, not a one-off note); cut a same-file restatement in CLAUDE.md's Domain-docs entry; dropped a stale point-in-time auto-merge status claim from CLAUDE.md that contradicted its own research doc; fixed deploy/README.md's stale \"repo is private\" premise (confirmed against entrypoint.sh that the PAT itself is still needed); and fixed the journal's how-it-works.md, which described frictions-to-fixes as one agent self-merging its own PRs — contradicting ADR-0003's amendment and the Skill's actual author/reviewer split. One finding (a blog-post SKILL.md recap) was left alone since its own fact-checker judged the repeat legitimate navigational wayfinding, not filler. No needs-triage issue filed — every finding resolved to a clear fix. pnpm gate:scoped ran green locally; PR #409 opened, CI gate green, merged directly (skipped enable_pr_auto_merge per its own documented false-negative on an in-progress check). Entirely agent-initiated per this skill's command-only, unattended charter — no human redirected or was asked anything during the run."
+prs:
+  - "409"
+docsRead:
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: confirm ADR-0020 is meant to be the sole home for the Trusted/Public rule, per its own Consequences section
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: verify the frictions-to-fixes author/merger split the journal page contradicted
+  - path: deploy/entrypoint.sh
+    reason: confirm GITHUB_PAT is still required unconditionally regardless of repo visibility, before trimming deploy/README.md
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: found the auto-merge "#231 resolved" claim in CLAUDE.md is itself stale relative to this doc
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: compare step 3's pointer against step 6's restated ADR-0004 list
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: docs/agents/triage-labels.md
+    reason: (read before editing)
+  - path: docs/agents/issue-tracker.md
+    reason: (read before editing)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (read before editing)
+  - path: deploy/README.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: the skill this whole session executed
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: enable_pr_auto_merge threw "required checks are failing" while the PR's one check was still queued/in_progress, not actually failing
+    solution: CLAUDE.md already documents this exact false-negative and the fix (confirm via pull_request_read get_check_runs, then call merge_pull_request directly once green) — cost a couple of extra tool calls to work through, but no real time lost
+    severity: nit
+  - description: send_later hit the documented "permission stream closed before response received" transient error on the first call
+    solution: already-documented workaround (retry once, else fall back) in docs/agents/issue-tracker.md; a webhook event (the gate-green PR comment) arrived before a retry was needed, so it resolved itself
+    severity: nit
+durationSec: 3241
+models:
+  claude-sonnet-5: 187
+toolCounts:
+  Bash: 22
+  ToolSearch: 4
+  mcp__github__list_pull_requests: 1
+  TaskCreate: 6
+  TaskUpdate: 11
+  Agent: 12
+  ScheduleWakeup: 1
+  TaskList: 1
+  Read: 14
+  Edit: 11
+  Grep: 4
+  Write: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__enable_pr_auto_merge: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - CLAUDE.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - docs/agents/triage-labels.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - deploy/README.md
+  - layers/journal/content/current/pages/how-it-works.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens review (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens review (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens review (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens review (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: "Fact-check finding B1: CLAUDE.md status narrative"
+  - type: general-purpose
+    task: "Fact-check finding B2: ADR-0020 rule duplication"
+  - type: general-purpose
+    task: "Fact-check finding B3: ADR-0004 list duplication"
+  - type: general-purpose
+    task: "Fact-check finding B4: mdc-when-to-use.md mis-location"
+  - type: general-purpose
+    task: "Fact-check finding C1: CLAUDE.md domain-docs restatement"
+  - type: general-purpose
+    task: "Fact-check finding C2: blog-post SKILL.md restatement"
+  - type: general-purpose
+    task: "Fact-check finding D1: deploy/README.md private vs public repo"
+  - type: general-purpose
+    task: "Fact-check finding D2: how-it-works.md self-merge contradiction"
+gitBranch: claude/audit-docs-10f83r
+entrypoint: remote_mobile
+cliVersion: 2.1.207
