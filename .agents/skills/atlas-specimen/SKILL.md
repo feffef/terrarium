@@ -221,7 +221,7 @@ unless you're founding a new wing.
 
 If a field note ever composes an MDC block component (`::foo ... ::`), it
 needs its closing `::` or it silently degrades to prose with no error — see
-`docs/research/mdc-when-to-use.md`.
+`docs/agents/mdc-when-to-use.md`.
 
 ## 4. Interactions (the food web, #70/#71)
 

@@ -25,11 +25,12 @@ Every session ends with an honest **session log** — a summary of what it did,
 plus every friction, idea, and learning it ran into along the way. That's not
 busywork: it's the raw signal a separate, autonomously-running agent mines. On
 a schedule (a Claude **routine**, not a human prompt), that agent reads recent
-frictions, decides which ones are fixable with a code or doc change, and ships
-those fixes as its own PRs. It's allowed to self-merge — but only within
-bounds: anything touching the areas this project reserves for human review
-(the routing module, isolation logic, CI) always escalates to a person instead
-of merging automatically.
+frictions, decides which ones are fixable with a code or doc change, and
+dispatches separate agents to author those fixes as PRs — then reviews and
+merges them itself, so the merging session is never the author of the diff it
+merges. Even that review is bounded: anything touching the areas this project
+reserves for human review (the routing module, isolation logic, CI) always
+escalates to a person instead of merging automatically.
 
 The whole loop in one picture:
 

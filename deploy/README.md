@@ -56,21 +56,21 @@ redeploys the image** — the container updates itself.
    `feffef/terrarium`**. Permissions: **Contents → Read-only** (Metadata
    auto-selects — that's required). Copy the `github_pat_…` value; it's shown once.
 
-2. **Clone + configure.** The repo is **private**, so this host clone needs auth
-   too — GitHub no longer accepts a password, so pass the PAT in the URL (or use
-   SSH if this user has a key registered on GitHub):
+2. **Clone + configure.** The repo is **public**, so this host clone needs no
+   auth:
    ```sh
    sudo mkdir -p /opt/terrarium && sudo chown <deploy-user>:<deploy-user> /opt/terrarium
    sudo -iu <deploy-user>; cd /opt/terrarium
-   git clone https://x-access-token:github_pat_xxxx@github.com/feffef/terrarium.git repo
-   git -C repo remote set-url origin https://github.com/feffef/terrarium.git  # drop the token from .git/config
+   git clone https://github.com/feffef/terrarium.git repo
    cp repo/deploy/.env.example .env
    chmod 600 .env                       # holds the PAT
    # edit .env: paste GITHUB_PAT (GIT_REPO_URL is already correct)
    ```
    (The container does its own clone, independent of this host checkout — see the
-   note above under **On-VPS layout**. It also keeps the PAT out of `.git/config`
-   via `GIT_ASKPASS` — see below.)
+   note above under **On-VPS layout**. That clone still needs the PAT from step 1
+   regardless of the repo's visibility: `entrypoint.sh` requires `GITHUB_PAT`
+   unconditionally and injects it via `GIT_ASKPASS` — see below — so it's kept
+   out of `.git/config` there too.)
 
 3. **Shared proxy network.** Terrarium is reached by the existing Caddy over a
    shared network called `web`. Create it once:

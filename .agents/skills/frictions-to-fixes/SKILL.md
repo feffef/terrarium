@@ -219,13 +219,9 @@ review-agent, not a bystander waiting for a human. For each PR:
      re-run the gate, then merge. If your amendment **fundamentally changes** what
      the PR does, update the PR title/description in the same push (the CLAUDE.md
      hard rule — a stale description is a defect).
-   - **Escalate to a human** only when the change is **genuinely high-risk**:
-     - introduces a **new dependency**,
-     - changes **untested or untestable runtime behaviour** (no gate coverage can
-       vouch for it),
-     - or touches an **ADR-0004 human-only surface** (the manifest-expansion
-       and routing modules, isolation logic, CI, or governance/ADRs) — these
-       are always human-only, even if one slipped into a hard issue.
+   - **Escalate to a human** only when the change is **genuinely high-risk** per
+     ADR-0004 (CLAUDE.md's Ground rules — same test as the safe-surface filter in
+     §3, just applied to the actual diff instead of the issue's stated scope).
      Leave the PR open, say precisely why it is high-risk, and **alert the user**.
      A **hard** selection (§3) usually lands here — that is expected.
 

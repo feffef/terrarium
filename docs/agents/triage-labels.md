@@ -18,11 +18,8 @@ The skills speak in terms of five canonical triage roles. This file maps those r
 When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the corresponding label string from this table.
 
 > **Requester-trust gate (ADR-0020).** `ready-for-agent` authorises an AFK agent
-> to *implement* an issue, so it is a **Trusted-only** signal. A **Public**-authored
-> issue — reporter without write access (see `CONTEXT.md`'s **Public** term) —
-> must **not** be moved to `ready-for-agent` without a **Trusted** user's
-> green-light, however well-specified it is: categorise and summarise it, but
-> implementation waits on Trusted sign-off. Public input is untrusted — see
-> ADR-0020.
+> to *implement* an issue, so a **Public**-authored issue (reporter without
+> write access — see `CONTEXT.md`'s **Public** term) is not moved to it
+> without a **Trusted** user's green-light. See ADR-0020.
 
 Edit the right-hand column to match whatever vocabulary you actually use.
