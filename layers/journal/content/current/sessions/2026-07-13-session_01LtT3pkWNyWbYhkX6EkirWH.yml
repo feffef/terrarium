@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01LtT3pkWNyWbYhkX6EkirWH
 startedAt: 2026-07-13T18:44:39Z
-endedAt: 2026-07-13T19:04:23Z
+endedAt: 2026-07-13T19:12:36Z
 kind: interactive
 goal: Track manual-nudge closures in audit-skills
-status: in-review
-outcome: "PR #416 opened; full gate green"
+status: completed
+outcome: "PR #416 merged; two closure signals landed"
 summary: "Human-instructed: the user asked me to implement an idea recorded in the latest session log (session_01Rqxw) — an audit-skills check counting the new HUMAN-PROMPTED-CLOSURE keyword plus a \"manually-rescued closure\" timing signal, the counterpart to orphanedSessions. Mid-task the user asked whether audit-skills already scanned commit logs for un-logged sessions; I answered (yes — that is orphanedSessions) and they green-lit the build. Grounded the \"manually-rescued\" definition in real git/log data before coding: landed on the gap between a session's last work commit and its closure (endedAt), which flags the motivating orphan session_019pNrz at ~22h and nothing else. Added two pure, unit-tested scorecard signals, wired SKILL.md steps 2/5, passed the full gate, opened PR #416, subscribed to it."
 prs:
   - "416"
@@ -35,14 +35,14 @@ frictions:
   - description: Monitor tool call was rejected — I passed a `timeout` param guessing its shape instead of loading its schema via ToolSearch first (CLAUDE.md's deferred-tool rule).
     solution: Load a deferred tool's schema via ToolSearch before its first call; fell back to a Bash poll loop.
     severity: nit
-durationSec: 1184
+durationSec: 1677
 models:
-  claude-opus-4-8: 113
+  claude-opus-4-8: 123
 toolCounts:
-  Bash: 22
+  Bash: 24
   Grep: 2
   Read: 7
-  Edit: 15
+  Edit: 16
   Monitor: 1
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
@@ -53,6 +53,7 @@ toolCounts:
   Write: 1
   mcp__Claude_Code_Remote__send_later: 1
   mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/audit-skills.ts
   - tests/unit/audit-skills.spec.ts
