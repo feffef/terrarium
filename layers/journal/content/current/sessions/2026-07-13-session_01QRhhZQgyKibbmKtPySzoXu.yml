@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01QRhhZQgyKibbmKtPySzoXu
 startedAt: 2026-07-13T00:45:35Z
-endedAt: 2026-07-13T01:00:28Z
+endedAt: 2026-07-13T01:02:59Z
 kind: autonomous
 goal: Run the audit-skills sweep against the 40-session window
-status: in-review
-outcome: "Roles refreshed, PR #398 opened, one orphan filed as #397"
-summary: "Scheduled /audit-skills run, no human prompts (a mid-session github-webhook-activity event on PR #398 was machinery, not a human). Ran scripts/audit-skills.ts (window 40, sessionsConsidered 172), re-graded every Skill's importance against CONTEXT.md's bright-line rule (no grade changes warranted) and refreshed role prose on 8 Skills whose examples cited session ids/PRs that fell out of the current window. Ran step 4's regression watch on all 7 regressionChecks: 4 traced to one shared mechanical `pnpm gate` -> `gate:scoped` one-line fix across Skill files (verified via `git show`, no behavior change), 2 had no post-edit invocation in-window to observe, and log-session's friction-severity uptick traced via Phase B read-through to unrelated causes, not its edit — no confirmed regressions, nothing filed for step 4. Filed #397 for a genuine orphaned session (session_019pNrzTQb3EV2SJBWXs1bXG) surfaced by orphanedSessions, after confirming no existing issue covered it. Cleared pnpm gate:scoped green, opened PR #398 (Inventory-YAML-only diff, confirmed via git diff --stat), subscribed to its activity, and attempted enable_pr_auto_merge — it errored on the documented in_progress-reads-as-unstable false positive (confirmed via pull_request_read: the gate check was merely in_progress), so scheduled a 60-minute send_later check-in to retry once CI settles."
+status: completed
+outcome: "Roles refreshed, PR #398 merged, one orphan filed as #397"
+summary: "Scheduled /audit-skills run, no human prompts (mid-session github-webhook-activity events on PR #398 were machinery, not a human). Ran scripts/audit-skills.ts (window 40, sessionsConsidered 172), re-graded every Skill's importance against CONTEXT.md's bright-line rule (no grade changes warranted) and refreshed role prose on 8 Skills whose examples cited session ids/PRs that fell out of the current window. Ran step 4's regression watch on all 7 regressionChecks: 4 traced to one shared mechanical `pnpm gate` -> `gate:scoped` one-line fix across Skill files (verified via `git show`, no behavior change), 2 had no post-edit invocation in-window to observe, and log-session's friction-severity uptick traced via Phase B read-through to unrelated causes, not its edit — no confirmed regressions, nothing filed for step 4. Filed #397 for a genuine orphaned session (session_019pNrzTQb3EV2SJBWXs1bXG) surfaced by orphanedSessions, after confirming no existing issue covered it. Cleared pnpm gate:scoped green, opened PR #398 (Inventory-YAML-only diff, confirmed via git diff --stat), subscribed to its activity, and attempted enable_pr_auto_merge — it errored on the documented in_progress-reads-as-unstable false positive (confirmed via pull_request_read: the gate check was merely in_progress), so scheduled a 60-minute send_later retry. CI's gate check then landed green within the same session (github-actions[bot] comment), so re-checked check_runs directly, merged via merge_pull_request per CLAUDE.md's already-green guidance, and unsubscribed/cancelled the now-unneeded check-in."
 prs:
   - "398"
 docsRead:
@@ -41,16 +41,16 @@ frictions:
   - description: "enable_pr_auto_merge errored 'unstable status (required checks are failing)' on PR #398 while the gate check was only in_progress, not actually failing."
     solution: Already documented in CLAUDE.md as a known false positive — confirmed via pull_request_read get_status/get_check_runs before concluding, per that guidance, and scheduled a later retry instead of treating it as a real failure. No new fix needed; this just confirms the existing doc.
     severity: nit
-durationSec: 893
+durationSec: 1044
 models:
-  claude-sonnet-5: 179
+  claude-sonnet-5: 194
 toolCounts:
-  Bash: 48
+  Bash: 49
   ToolSearch: 5
   TaskCreate: 6
   TaskUpdate: 10
   Read: 9
-  Edit: 10
+  Edit: 11
   mcp__github__search_issues: 3
   mcp__github__get_me: 1
   mcp__github__issue_write: 1
@@ -58,10 +58,13 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__enable_pr_auto_merge: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 6
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
   Write: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/audit-docs.yml
   - layers/journal/content/current/skills/code-review.yml
