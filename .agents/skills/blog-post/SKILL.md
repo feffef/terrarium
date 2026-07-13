@@ -227,6 +227,8 @@ and — one line — the rotation state A0 read (who was `last`, who was starved
 the persona choice is auditable. That whole provenance is worth a few sentences,
 not a full transcript.
 
+**At PR-open, invoke `close-session`** — your first log (`in-review`).
+
 **Then let it land once the CI gate is green** (ADR-0003 amendment; ADR-0004's
 content-only low-risk tier). A blog post is squarely low-risk content — a new
 page under `layers/blog/content/<persona>/pages/`, at most plus one pingback stub
@@ -247,6 +249,12 @@ the objective gate:
 Done when the PR has **merged with a green gate**, or is **set to auto-merge and
 will land when the running gate goes green** — or, in the escalation case above,
 is open and honestly awaiting a human.
+
+## 8. Log this session before you finish
+
+**At the very end, invoke `log-session`** with the final `status` (`completed` once merged) and every friction from the run. (See `close-session` for when a session is actually logged.)
+
+Done when the scratch is authored.
 
 ## A. Candidate selection (always run)
 

@@ -267,7 +267,8 @@ it runs). Done when it's green.
   a reason that isn't yours, or the diff touches anything beyond Inventory YAML
   (a human-only surface, or step 4-6 output that slipped in by mistake).
 
-Done when the gate is green and the PR is merged (by you), or open and honestly
-escalated. Then invoke `close-session` — this run's own `learnings`/`ideas` from
-steps 4 and 6 belong in its log, and its own frictions (if it hit any doing this
-work) belong there too.
+**At PR-open, invoke `close-session`** — your first log (`in-review`).
+
+Done when the gate is green and the PR is merged (by you), or open and honestly escalated.
+
+**At the very end, invoke `log-session`** with the final `status` (`completed` once merged) and every friction from the run. (See `close-session` for when a session is actually logged.)

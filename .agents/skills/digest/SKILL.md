@@ -132,16 +132,8 @@ Done when the PR has **merged with a green gate**, or is **set to auto-merge and
 will land when the running gate goes green** — or, in the escalation cases above,
 is open and honestly awaiting a human.
 
+**At PR-open, invoke `close-session`** — your first log (`in-review`).
+
 ## 7. Log this session before you finish
 
-Invoke `close-session` (CLAUDE.md's front door for closure) before ending, even
-though this run is likely **autonomous**: it authors the log via `log-session` —
-mark `kind: autonomous`, list this PR under `prs`, and note any friction from
-the run (e.g. a red gate you had to fix). This matters more here than in an
-interactive session — a scheduled digest run has no human present to notice a
-missing log and prompt you to add one (issue #176), so the scratch you author
-now is the only thing that makes any of the logging hooks commit a log at all.
-
-Done when the scratch is authored — a committed hook lands it on `main` from
-there, live and normally well before this run ends (see the `log-session`
-Skill for which hook and when).
+**At the very end, invoke `log-session`** with the final `status` (`completed` once merged) and every friction from the run. (See `close-session` for when a session is actually logged.)

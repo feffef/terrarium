@@ -16,6 +16,32 @@ You've reached **Session closure** — run the two closing actions:
 `/close-session` again — re-logging self-heals, overwriting the log with the
 fuller state.
 
+**When is your logging duty actually finished?** Not when you author the scratch —
+only when the log commit is on `origin/main` carrying the session's **final**
+status. Three conditions, all required:
+1. the scratch has the **final** `status` — `completed` once the PR has merged,
+   never left at `in-review` when the work has actually landed;
+2. the `Stop` hook has stitched and **committed** the log (it fires at end of turn,
+   so it lands *after* you author — not visible in the same turn); and
+3. you have **verified that commit on `origin/main`** — after `git fetch origin
+   main`, `git log origin/main --grep=<this session's id>` shows it.
+
+Authoring only arms (2). Since you stay alive to babysit any PR you opened
+(CLAUDE.md), use a later babysitting turn to confirm (3), and — once the PR merges —
+**finalize the log via `log-session`** (status `completed`, plus any friction from
+closure), then re-verify. Until all three hold, the session is **not** logged.
+(For a **scheduled autonomous** run there is no human to notice a missing log and
+prompt you — issue #176 — so authoring it yourself is the only thing that makes the
+hooks commit one at all.)
+
+**If a human had to prompt this closure, that is the regression itself — log it.**
+If you are running `close-session` because the user asked in conversation, rather
+than because you self-judged closure, *and* a PR had already been opened or merged,
+then you failed to log at PR-open as you should have. Record it as a **`major`**
+friction whose `description` contains the exact keyword **`HUMAN-PROMPTED-CLOSURE`**,
+so the self-improvement Skills can grep and count it. Self-judged closure at
+PR-open needs no such friction.
+
 **Dispatched worktree-isolated impl agents must NOT self-invoke this Skill.**
 Such agents share the parent session id with the orchestrator and with each
 other, and this Skill writes to a single shared per-session scratch file — a
