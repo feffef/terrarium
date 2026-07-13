@@ -37,8 +37,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 - **Which Skills to actually use** is curated in the `journal` Tenant's **Skill
   Inventory** — `layers/journal/content/current/skills/`, rendered at
   `/t/journal/current`. It records each installed Skill's *role and importance to
-  this project* (not a copy of the Skill's own description), because the Skills
-  come from an external pack. Treat it as the authoritative "use these" list:
+  this project* (not a copy of the Skill's own description) — for every
+  catalogued Skill, our own first-class Skills included, not only the ones from
+  the external pack (ADR-0015). Treat it as the authoritative "use these" list:
   take these Skills seriously and prefer them over ad-hoc approaches, guided by
   each entry's `importance` and `role`.
 

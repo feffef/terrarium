@@ -45,9 +45,8 @@ Only how the Persona is chosen differs:
   topic *and* the standalone-or-reaction call independently for each of the
   three candidates, **drawing every Persona only from A0's eligible set**.
 
-Either way, run **Section A** now. It gathers material, drafts three
-independent candidates, has a fresh outside reader pick the strongest one, and
-hands you back a single `(persona, topic, standalone-or-reaction)` choice plus a
+Either way, run **Section A** now — per the candidate process above, it hands
+you back a single `(persona, topic, standalone-or-reaction)` choice plus a
 reviewed draft. Then continue at **step 2** and follow steps 2–7 exactly as
 written, using that choice — the only difference from a from-scratch run is
 that the step 5 draft is already written (revise it per the reviewer's notes
