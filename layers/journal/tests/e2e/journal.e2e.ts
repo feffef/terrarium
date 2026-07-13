@@ -180,7 +180,11 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         await page.locator('.feed .card.open .detail').first().waitFor({ state: 'visible' })
         // Poll past the (async, possibly animated) settle: with no sibling
         // reflowing above it, the card's own top must be unchanged by opening.
-        await expect.poll(topOf).toBeGreaterThan(before - 15)
+        // Timeout raised past expect.poll's 1000ms default: pinTopAcrossTransition
+        // (index.vue) settles over up to 90 rAF frames by design — a backstop, not
+        // the common case, but one that can itself exceed 1s of wall time on a
+        // loaded CI runner, which flaked this poll under the default timeout.
+        await expect.poll(topOf, { timeout: 5000 }).toBeGreaterThan(before - 15)
         expect(await topOf()).toBeLessThan(before + 15)
         expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
       } finally {
@@ -213,7 +217,11 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         await card.locator('.head').click()
         await page.locator('.feed .card.open .detail').first().waitFor({ state: 'visible' })
         await expect.poll(() => page.locator('.digest-body').count()).toBe(0) // the digest collapsed, shrinking the page above the card
-        await expect.poll(topOf).toBeGreaterThan(before - 15)
+        // Same settle-timeout headroom as the previous test (see its comment) —
+        // this test's rAF loop has strictly more to chase (the sibling's own
+        // collapse on top of this card's own expand), so it's the more likely of
+        // the two to need it.
+        await expect.poll(topOf, { timeout: 5000 }).toBeGreaterThan(before - 15)
         expect(await topOf()).toBeLessThan(before + 15)
         expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
       } finally {
