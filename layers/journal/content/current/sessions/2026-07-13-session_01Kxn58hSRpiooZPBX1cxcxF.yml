@@ -1,0 +1,99 @@
+schemaVersion: 1
+session: session_01Kxn58hSRpiooZPBX1cxcxF
+startedAt: 2026-07-13T04:08:40Z
+endedAt: 2026-07-13T04:33:47Z
+kind: autonomous
+goal: Run /audit-docs — sweep repo docs for drift
+status: in-review
+outcome: 5 fixes merged (#403); 2 ADR fixes escalated (#404)
+summary: "Scheduled, unprompted /audit-docs run — no human message during the session, only system task-notifications and webhook events, so this was fully agent-initiated per ADR-0003/CONTEXT.md's autonomy definitions (the Skill itself is chartered to run and self-merge low-risk content per ADR-0003). Fanned out 4 paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence), pooled 12 findings, merged 1 overlapping pair, fact-checked all 9 survivors independently (7 CONFIRMED(-BUT), 2 WRONG/dropped). Fixed 5 Live-tier findings and self-merged them as #403 after a green gate. 2 confirmed findings needed an ADR amendment banner (human-only surface, ADR-0004), so those rode a separate PR (#404) instead, left open for human review per the Skill's escalation rule — no needs-triage issue was needed, since every confirmed finding had a clear resolution."
+prs:
+  - "403"
+  - "404"
+docsRead:
+  - path: CLAUDE.md
+    reason: audit-docs tier rules, single-home convention, escalation rules
+  - path: CONTEXT.md
+    reason: Trusted/Public glossary entries fixed here (finding C)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: duplication source for finding C
+  - path: docs/adr/0005-skill-model.md
+    reason: amendment banner added (finding B, escalated)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: amendment banner added (finding A, escalated)
+  - path: docs/agents/domain.md
+    reason: duplication fixed here (finding D)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: the run itself
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Wrote the commit-footer session id by copying it from git log (a prior session's session-log commit trailer) instead of resolving it from this session's own system-prompt template — exactly the mistake CLAUDE.md warns against. Caught before push via git log -1 and amended.
+    solution: Always grep the system-prompt/task instructions for the actual commit-footer template at the moment of writing, never reuse an id seen in git log output.
+    severity: moderate
+  - description: 'enable_pr_auto_merge threw "checks are failing" on PR #403 while the gate check was merely in_progress, matching a gotcha CLAUDE.md already documents — cost one extra pull_request_read round-trip to confirm and one more wakeup cycle before merging directly once green.'
+    solution: No new fix needed — CLAUDE.md's existing guidance (confirm via pull_request_read, then merge_pull_request directly once green) already covers this; just budget the extra round-trip.
+    severity: nit
+  - description: Accidentally dispatched a no-op background agent (a stray "check status" call with no real task) while waiting on the four lens agents.
+    solution: Prefer ScheduleWakeup alone for a pure wait; only dispatch an agent with real work.
+    severity: nit
+durationSec: 1507
+models:
+  claude-sonnet-5: 202
+toolCounts:
+  Bash: 26
+  ToolSearch: 5
+  TaskCreate: 8
+  TaskUpdate: 14
+  Agent: 8
+  ScheduleWakeup: 11
+  Read: 7
+  Edit: 7
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__enable_pr_auto_merge: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 5
+  mcp__github__add_issue_comment: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Skill: 2
+  Grep: 2
+  Write: 1
+  PushNotification: 1
+filesEdited:
+  - CONTEXT.md
+  - docs/agents/domain.md
+  - layers/journal/content/current/pages/architecture.md
+  - .agents/skills/blog-post/SKILL.md
+  - CLAUDE.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: drift + orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: duplication + mis-location"
+  - type: general-purpose
+    task: "Concision lens: verbose + stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: contradiction + ambiguity"
+  - task: Check status of remaining lens agents
+  - type: general-purpose
+    task: Fact-check findings group 1 (ADR drift/contradiction)
+  - type: general-purpose
+    task: Fact-check findings group 2 (duplication + verbose)
+  - type: general-purpose
+    task: Fact-check findings group 3 (CLAUDE.md internal coherence)
+gitBranch: claude/festive-mayer-o87s3x
+entrypoint: remote_trigger
+cliVersion: 2.1.207
+learnings:
+  - The harness's per-session "Develop on branch X" block (shown at session start, outside CLAUDE.md and outside the invoked Skill's own text) is the caller-pinned designated branch CLAUDE.md's branch-convention bullet describes — it overrode audit-docs's own default `journal/audit-docs-<date>` branch name for this run's primary PR.
