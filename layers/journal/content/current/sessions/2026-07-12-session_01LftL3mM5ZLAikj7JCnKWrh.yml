@@ -1,0 +1,99 @@
+schemaVersion: 1
+session: session_01LftL3mM5ZLAikj7JCnKWrh
+startedAt: 2026-07-12T21:39:15Z
+endedAt: 2026-07-13T00:05:40Z
+kind: interactive
+goal: Visualize Atlas specimen relations on graphs
+status: completed
+outcome: "Merged PR #395: relations graph + food web redesign"
+summary: User asked to move a specimen's Relations section above the field-note essay and add a food-web-like visualization of just that specimen's relations, plus extend the existing biome-wide food web with readable relation labels — all directly requested, refined via a grilling session before implementing. I built AtlasRelationsWeb (hub-and-spoke graph) and extended AtlasFoodWeb, finding and fixing two real geometry bugs along the way (agent-initiated). The user then twice directly asked for further redesign passes ("let a fable agent... it's really ugly", "apply a similar layout to the food web"); I dispatched two Fable subagents for those, then reviewed, verified, and landed each. Opened and babysat the gated PR to merge, per standing convention.
+prs:
+  - "395"
+docsRead:
+  - path: layers/atlas/CONTEXT.md
+    reason: Atlas domain vocabulary (Specimen, Interaction, Biome) before designing the visualization
+  - path: layers/atlas/app/utils/atlas.ts
+    reason: relation data model (Edge/Relation, relationLabel) shared by both graphs
+  - path: layers/atlas/app/assets/theme.css
+    reason: (read before editing)
+  - path: layers/atlas/app/composables/useAtlasWingData.ts
+    reason: (no reason given)
+  - path: layers/atlas/app/components/atlas/RelationsList.vue
+    reason: (read before editing)
+  - path: layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/atlas/app/components/atlas/FoodWeb.vue
+    reason: (read before editing)
+  - path: layers/atlas/app/pages/t/atlas/[space]/index.vue
+    reason: (no reason given)
+  - path: layers/atlas/app/components/atlas/SpecimenIndex.vue
+    reason: (no reason given)
+  - path: layers/atlas/app/components/atlas/RelationsWeb.vue
+    reason: (read before editing)
+  - path: layers/journal/app/components/journal/Disclosure.vue
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: grilling
+    reason: locked layout/content/highlight decisions before implementing, per the user's /grill-with-docs invocation
+  - name: domain-modeling
+    reason: checked the change against the Atlas glossary before locking design decisions
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
+  - name: log-session
+    reason: (invoked as a slash command)
+frictions:
+  - description: "Chased a false 'stale dev-server cache' theory for a real bug: a perpendicular offset meant to separate two parallel edges canceled out because it was measured from each edge's own from→to direction, which flips sign when the edge is reversed."
+    solution: When a standalone reproduction of the logic agrees with expectations but the live app doesn't, add a runtime debug marker (render the computed value directly into the DOM) immediately rather than iterating cache-busting/rebuilds first.
+    severity: moderate
+  - description: Background Fable subagents twice left a 'nuxt dev' preview server running (once also a stray temp probe script) despite explicit teardown instructions, blocking my own screenshot attempts with 'Another Nuxt dev is already running' until manually stopped.
+    solution: Make subagent cleanup non-optional — e.g. the Agent tool or a wrapper checks for stray dev-server locks/tmp scripts after a subagent reports done, rather than relying on the prompt alone.
+    severity: minor
+  - description: The container's node_modules was stale at session start (missing 'mermaid', drifted 'zod-to-json-schema'), breaking pnpm build/typecheck in a way that first looked like a bug in my own changes.
+    solution: No repo change needed; noting that a fresh container's node_modules isn't guaranteed current until 'pnpm install' runs once.
+    severity: minor
+durationSec: 8784
+models:
+  claude-sonnet-5: 568
+toolCounts:
+  Agent: 3
+  ScheduleWakeup: 1
+  Read: 58
+  Skill: 2
+  Bash: 146
+  ToolSearch: 7
+  mcp__github__list_pull_requests: 1
+  TaskCreate: 7
+  TaskUpdate: 11
+  Edit: 45
+  Write: 5
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  Grep: 2
+  SendUserFile: 3
+filesEdited:
+  - layers/atlas/app/components/atlas/FoodWeb.vue
+  - layers/atlas/app/assets/theme.css
+  - layers/atlas/app/utils/atlas.ts
+  - layers/atlas/app/components/atlas/RelationsWeb.vue
+  - layers/atlas/app/components/atlas/RelationsList.vue
+  - layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+  - scripts/ad-hoc-clip-shot.ts
+subagents:
+  - type: Explore
+    task: Explore atlas specimen and wings food web code
+  - type: general-purpose
+    task: Redesign relations graph layout and font
+    model: fable
+  - type: general-purpose
+    task: Redesign food web layout and font
+    model: fable
+gitBranch: claude/specimen-relations-viz-15idy5
+entrypoint: remote
+cliVersion: 2.1.207
+learnings:
+  - "Playwright's page.screenshot({ clip }) uses viewport-relative coordinates unless fullPage: true is also set — passing clip alone silently clips against the wrong origin on a scrolled/tall page."
+  - To separate two graph edges between the same node pair with a perpendicular offset, the perpendicular must be measured from a canonical (pair-order-independent) direction, not each edge's own from→to — otherwise reversing the edge flips the perpendicular's sign right along with the offset's sign and the two cancel.
