@@ -8,4 +8,4 @@ role: >-
   readiness (ready-for-agent / ready-for-human / needs-info). The manual
   counterpart to the chartered (planned) `triage` autonomous job. Used this
   window to triage #292, #325, and #236 end to end
-  (session_01VhL2mH3yYgkDqrMv61qe11).
+  (session_01VhL2mH3yYgkDqrMv61qe11), and again ahead of implementing #369.
