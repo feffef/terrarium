@@ -1,35 +1,33 @@
 schemaVersion: 1
 session: session_019ojLYFm9SJSmNXw72B4MtU
 startedAt: 2026-07-13T06:43:35Z
-endedAt: 2026-07-13T07:06:30Z
+endedAt: 2026-07-13T07:43:51Z
 kind: interactive
-goal: Split Skill Inventory's role field in two
-status: in-review
-outcome: "PR #406 opened, gate green, CI pending"
-summary: "Human-instructed throughout: user asked to split the Skill Inventory's role field into role (unchanged, reference-free) and a new audit-skills-owned observations field. Ran a full grilling interview (8 questions, user answered each) via /grill-with-docs, locking field shape (array of {date,note} entries), date granularity, required-vs-optional, ADR/glossary treatment, migration scope, and audit-skills/audit-docs wiring. On explicit go-ahead, migrated 8 role entries with embedded PR/session refs, updated the schema, scripts/audit-skills.ts, both Skills' SKILL.md, ADR-0015, CONTEXT.md, and tests. Mid-implementation the user corrected observations from optional/default to required, prompting rework across schema, type, ADR text, and 24 more yml files. Full gate ran green; opened PR #406, subscribed, and scheduled a 1hr check-in."
+goal: Split Skill Inventory role into role and observations
+status: completed
+outcome: "PR #406 merged"
+summary: "User-directed: asked to split the Skill Inventory's `role` field into `role` (reference-free prose) plus a new internal `observations` log for audit-skills' own PR/session citations. Ran a grill-with-docs/grilling interview (user-invoked via /grill-with-docs) locking the entry shape, required-vs-optional-with-default, migration scope, ADR-0015 amendment, and audit-docs wiring, with the user answering every question. Implemented the schema, migrated the 8 entries whose role had drifted into a running audit log, updated scripts/audit-skills.ts and its SKILL.md, wired audit-docs's Drift lens, and amended ADR-0015/CONTEXT.md. User caught that I'd made `observations` optional-with-default instead of required (like `frictions`); fixed across schema, type, and all 31 entries. User then asked me to self-review the diff against audit-docs' own eight lenses, which surfaced real Duplication (the same \"required, no default\" rationale restated in 4 places, and the observations entry shape restated 3x) — fixed and pushed. Gate green, PR #406 merged."
 prs:
   - "406"
 docsRead:
   - path: docs/adr/0015-audit-skills-and-conditional-importance.md
-    reason: the ADR the schema field being split already belongs to
-  - path: .claude/skills/grill-with-docs/SKILL.md
-    reason: user-invoked slash command, needed to know what it actually runs
-  - path: .claude/skills/grilling/SKILL.md
-    reason: the interview mechanics grill-with-docs delegates to
+    reason: the ADR being amended
   - path: .agents/skills/audit-skills/SKILL.md
-    reason: the Skill that reads/writes role today, to see what changes
+    reason: editing its role/grade and observations-append instructions
   - path: .agents/skills/audit-docs/SKILL.md
-    reason: candidate consumer of the new observations field
+    reason: wiring the Drift lens to observations, and self-reviewing against its eight lenses
   - path: scripts/audit-skills.ts
-    reason: (read before editing)
+    reason: threading observations through InventoryEntry/SkillRow
+  - path: layers/journal/tenant.config.ts
+    reason: the schema change itself
+  - path: layers/journal/app/types/journal.ts
+    reason: SkillDoc type fidelity
+  - path: .claude/skills/grill-with-docs/SKILL.md
+    reason: (no reason given)
   - path: layers/journal/app/components/journal/SkillInventory.vue
     reason: (no reason given)
   - path: scripts/verify-skills-lock.ts
     reason: (no reason given)
-  - path: layers/journal/app/types/journal.ts
-    reason: (read before editing)
-  - path: layers/journal/tenant.config.ts
-    reason: (read before editing)
   - path: layers/journal/content/current/skills/atlas-specimen.yml
     reason: (read before editing)
   - path: layers/journal/content/current/skills/audit-docs.yml
@@ -56,33 +54,33 @@ docsRead:
     reason: (read before editing)
 skillsUsed:
   - name: grill-with-docs
-    reason: user explicitly invoked it to lock the schema design before implementing
+    reason: user explicitly typed /grill-with-docs to lock the schema design before implementing
   - name: grilling
-    reason: what grill-with-docs delegates the actual interview to
+    reason: the actual one-question-at-a-time interview grill-with-docs wraps
   - name: close-session
-    reason: "closure point: PR #406 opened"
+    reason: session closure
   - name: log-session
-    reason: (no reason given)
+    reason: author this log
 frictions:
-  - description: Made the new observations field optional/default([]) instead of required, mirroring the wrong existing-field convention in this same schema file
-    solution: Ask required-vs-optional explicitly during grilling, same as the shape and date-format questions
+  - description: Re-invoked close-session only when the user pointed out it hadn't happened again after real work continued post-first-log (implementation, duplication fixes, PR merge).
+    solution: Treat any additional substantive commit after an earlier close-session call as its own trigger to re-invoke close-session, not just re-check at explicit user prompting.
     severity: moderate
-  - description: Missed archived/skills/scaffold-tenant.yml when migrating -- only grepped the current Space, not the whole Skill Inventory collection
-    solution: Grep the collection's full glob pattern repo-wide before migrating, not just the Space in focus
+  - description: "Initially made the new observations field optional-with-default instead of required, missing that this repo's own frictions field (same shape: a required log, no .default()) was the closer precedent to follow."
+    solution: Before choosing optional-vs-required for a new array/log field, grep for the closest existing analog in the same schema and match its convention rather than defaulting to what feels idiomatic.
     severity: minor
-  - description: First commit via git commit -m landed without the Co-Authored-By/Claude-Session footer, a documented cloud -m gap
-    solution: Always check git log -1 --format=%B right after an interactive-mode commit
-    severity: nit
-durationSec: 1375
+  - description: Restated the same 'required, no default' rationale in 4 places (schema comment, type comment, SKILL.md, ADR) and the observations entry shape in 3 places in one SKILL.md, only caught on a later explicit self-review request.
+    solution: Check an analogous existing field's single-home convention (here, frictions documents its required-ness only in journal.ts) before writing a new comment, rather than fully explaining at every touch point and trimming later.
+    severity: minor
+durationSec: 3617
 models:
-  claude-sonnet-5: 254
+  claude-sonnet-5: 351
 toolCounts:
   Grep: 7
-  Bash: 36
-  Read: 36
-  Skill: 4
+  Bash: 69
+  Read: 42
+  Skill: 6
   AskUserQuestion: 9
-  Edit: 32
+  Edit: 35
   Monitor: 1
   ScheduleWakeup: 1
   ToolSearch: 2
