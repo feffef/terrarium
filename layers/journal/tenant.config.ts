@@ -92,9 +92,7 @@ export default defineTenant({
           // run's citable finding (a role/grade change, a regression note, a
           // new/split/retire idea) — PR/issue/session ids belong here, not in
           // `role`. Append-only: a run adds an entry, it never rewrites or
-          // drops an earlier one. Required, like `frictions` on sessions — no
-          // `.default()`, so every entry states it explicitly (`[]` when there's
-          // nothing notable yet) rather than relying on an implicit fallback.
+          // drops an earlier one.
           observations: z.array(
             z.object({
               date: utcDate,

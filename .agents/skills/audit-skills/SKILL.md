@@ -105,12 +105,19 @@ that plausibly *should* have), then set the grade per those definitions.
   plainly matching `usedIn`. **This citation is also what makes a change
   self-merge-eligible (step 7)** — a change you can't point at ≥2 session ids
   for doesn't belong in this PR (see step 4 instead).
+- **Every grade change or `role` refresh gets an `observations` entry** —
+  `{ date: <today, UTC>, note: <the citation — session ids, PR/issue numbers,
+  usage counts> }`, appended (never overwriting an earlier entry, required on
+  every entry — `[]` when there's nothing to cite yet). This is where the
+  evidence for the change actually lives; `role` states the conclusion,
+  `observations` carries the receipts. The rest of this doc's "append an
+  observations entry" instructions (steps 4 and 6) reuse this same shape.
 - **Create a missing entry** for any `onDisk && !inventoried` Skill you observed in
   use: `name` is the Skill's directory name; `category` is `general-engineering`
   when `external`, else `platform-operation`; write the `role` + grade from what the
-  sessions show, plus an `observations` entry citing that evidence (`observations`
-  is required on every entry — never omit it, even as `[]`). Leave *never-observed*
-  un-inventoried Skills alone (that coverage is other maintenance work).
+  sessions show, plus an `observations` entry citing that evidence. Leave
+  *never-observed* un-inventoried Skills alone (that coverage is other
+  maintenance work).
 - **The mirror case — `inventoried && !onDisk`** (a phantom entry: the Inventory
   points at a Skill directory that no longer exists). If the entry maps to a
   built-in CLI Skill invisible to the on-disk scan, **leave it and flag it**
@@ -123,12 +130,7 @@ that plausibly *should* have), then set the grade per those definitions.
 - Refresh `role` when usage contradicts it. **Keep `role` ≤ ~50 words** (schema
   guideline): role + importance-to-project, not a copy of the Skill's own
   description. **`role` stays reference-free** — no PR/issue/session ids
-  (ADR-0015 amendment); a citation belongs in `observations` instead (below).
-- **Every grade change or `role` refresh gets an `observations` entry** —
-  `{ date: <today, UTC>, note: <the citation — session ids, PR/issue numbers,
-  usage counts> }`, appended (never overwriting an earlier entry). This is
-  where the evidence for the change actually lives; `role` states the
-  conclusion, `observations` carries the receipts.
+  (ADR-0015 amendment); a citation belongs in `observations` instead (above).
 
 Edit the `.yml` files in place. Done when every entry's grade + role matches the
 evidence, and observed-but-un-inventoried Skills have entries.
@@ -163,16 +165,16 @@ one session's bad luck? Use judgement, but **always cite the specific evidence**
 
 - **Confirmed enough to act on** → this Skill is a step-5 candidate, on equal
   footing with step 3's signal (see step 5). Also append an `observations`
-  entry to that Skill's `.yml` (`{ date: <today, UTC>, note: <the edit, the
-  sessions, the quoted evidence> }`) — this is a citable finding same as a
-  grade change, and it's what lets a *future* run's Phase A see this one
-  without re-reading the full history.
+  entry (step 3's shape) citing the edit, the sessions, and the quoted
+  evidence — this is a citable finding same as a grade change, and it's what
+  lets a *future* run's Phase A see this one without re-reading the full
+  history.
 - **Suggestive but not enough** → record it as this run's own `learnings` entry
   (CONTEXT.md → Session glossary) naming the edit, the sessions, and why you
   stopped short — a note for a future reader (or a future run's Phase A, which
   may catch the same Skill again with more evidence by then). Append the same
-  note as an `observations` entry on that Skill's `.yml` too, so it's not only
-  in this run's own session log.
+  note as an `observations` entry too, so it's not only in this run's own
+  session log.
 - **Inconclusive** → write nothing; most will land here, and that's fine.
 
 Done when every Phase-A signal has gone through Phase B and landed in one of
