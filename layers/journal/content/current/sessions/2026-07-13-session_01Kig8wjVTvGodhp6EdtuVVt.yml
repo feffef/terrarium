@@ -1,0 +1,91 @@
+schemaVersion: 1
+session: session_01Kig8wjVTvGodhp6EdtuVVt
+startedAt: 2026-07-13T19:51:47Z
+endedAt: 2026-07-13T20:24:52Z
+kind: delegated
+goal: Write and land a Blog post
+status: completed
+outcome: "Kevin post on the closure regression merged (PR #419)"
+summary: "Kicked off by the /blog-post slash command with no persona pinned (single human prompt at kickoff; no further human steering — two mid-run github-webhook-activity messages about the PR's own merge don't count as human prompts). Ran the full candidate process: computed the rotation gate (David excluded as last poster, eligible set {karen, kevin}), gathered material from ~100 commits and ~10 recent session logs, then drafted three full candidates — two Karen (dispatched worktree agents silently vanishing across two frictions-to-fixes runs; a flaky main-branch gate test traced to an undocumented vitest default) and one Kevin (the session-closure regression fixed in PR #411, where the closing trigger being gated behind \"PR merged\" left a session unlogged for ~22 hours). A fresh outside-reader subagent, blind to the repo, judged all three and picked the Kevin candidate for its self-referential turn (the fix for the bug nearly reintroduced the same bug) and flagged five cold-reader clarity gaps, all addressed in revision. Branched, saved the post, ran pnpm gate:scoped (green), committed, pushed, opened PR #419, subscribed to its activity, confirmed CI green and no review comments, and merged directly (main has no branch protection) since enable_pr_auto_merge correctly refused on a transiently \"unstable\" check that had, by the time of the direct check, already completed green."
+prs:
+  - "419"
+docsRead:
+  - path: layers/blog/tenant.config.ts
+    reason: caught an out-of-enum tag before it could fail validate:content
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice check for the two discarded Karen candidates
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice check for the winning candidate before opening the PR
+  - path: layers/journal/content/current/sessions/2026-07-13-session_01U5bJwuWcy2meaV9JLhMzKJ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-13-session_01CBVDLSSnVu96svzxrvyPKD.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-13-session_01LtT3pkWNyWbYhkX6EkirWH.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-13-session_01RqxwHHqJFDNBDjeqYVsTSC.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-13-session_01SMV9vm2dif1u7GUJkZkS8V.yml
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-13-two-fixes-two-doors.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-13-the-fix-for-the-paperwork-almost-ate-the-homework.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-12-a-year-of-fieldwork-by-dinnertime.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-12-it-read-its-own-bad-review.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-10-it-checked-its-own-homework.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-09-zero-for-two.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-12-session_019pNrzTQb3EV2SJBWXs1bXG.yml
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-13-the-thing-that-logs-everyone-forgot-to-log-itself.md
+    reason: (read before editing)
+skillsUsed:
+  - name: blog-post
+    reason: the whole run
+  - name: close-session
+    reason: closure after PR merge
+  - name: log-session
+    reason: authoring this entry
+frictions:
+  - description: Drafted a citation link using a fabricated 40-char SHA (padded a real-but-wrong short hash from an unrelated commit) instead of resolving the actual commit for that session log file via git log — caught by re-reading the draft against CLAUDE.md's own 'never predict or reconstruct an identifier' rule before it shipped.
+    solution: Resolve every blob-link SHA with its own dedicated `git log -1 --format=%H -- <path>` call at the moment of writing the link, never by pattern-matching or padding a hash seen elsewhere in the same session.
+    severity: moderate
+  - description: A revision draft asserted 'three other sessions... turned out to be older casualties of the same gap,' conflating a session-log summary's mention of three pre-close-session historical orphans (a different, older category) with the specific out-of-turn-merge regression this post was actually about.
+    solution: Before publishing a causal/count claim sourced from a session log's interpretive summary, re-read the specific wording closely enough to check it actually supports the claim being made, not just that it's in the neighborhood of the right topic; cut the claim here rather than re-verify a tangent.
+    severity: moderate
+  - description: First draft's frontmatter used tag 'reliability', which isn't in layers/blog/tenant.config.ts's fixed blogTags enum — would have failed pnpm validate:content (ADR-0004 L1) had it not been caught by reading the schema before saving.
+    solution: Read the Collection's actual zod schema (tenant.config.ts) for any enum-constrained field before writing frontmatter that uses it, rather than inferring plausible tag names from other posts' examples.
+    severity: minor
+  - description: mcp__Claude_Code_Remote__subscribe_pr_activity failed once with 'Tool permission stream closed before response received' — a known transient cloud-environment limitation (#288) — before succeeding on retry.
+    solution: No code fix; retried once and it succeeded, consistent with other sessions' notes on this same transient error.
+    severity: nit
+durationSec: 1986
+models:
+  claude-sonnet-5: 150
+toolCounts:
+  Bash: 31
+  Read: 24
+  Write: 5
+  Edit: 7
+  Agent: 1
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__enable_pr_auto_merge: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 5
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Skill: 2
+  Grep: 2
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-07-13-the-thing-that-logs-everyone-forgot-to-log-itself.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+gitBranch: claude/blog-post-5j09v5
+entrypoint: remote_mobile
+cliVersion: 2.1.207
