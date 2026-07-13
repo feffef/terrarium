@@ -1,0 +1,62 @@
+schemaVersion: 1
+session: session_0127zV1aizbfpAPFgaTh6eu2
+startedAt: 2026-07-13T02:43:56Z
+endedAt: 2026-07-13T06:49:52Z
+kind: autonomous
+goal: Run frictions-to-fixes - survey, file, fix, merge
+status: completed
+outcome: 3 issues filed, 1 PR merged, 3 closed
+summary: "Autonomous scheduled run of the frictions-to-fixes Skill (no human prompt this cycle). Delegated the 20-session survey and tracker-screening to a subagent, which returned 3 never-fixed candidates: a major-severity git commit-tree history-rewrite that silently reverted committed work while repairing a provenance footer, a minor-but-recurring (2/20) Playwright scroll/visibility gotcha corrupting e2e \"before\" measurements, and a minor gap where Sonnet impl agents skipped a full typecheck before pushing. Filed issues #400, #401, #402, batched all three (doc-only) into one grouped PR dispatched to a Sonnet impl agent in an isolated worktree, then reviewed the diff against each issue's recommended fix, confirmed the full CI gate went green, posted a review comment, and merged (PR #405, squash) — auto-closing all three issues. Several other surveyed frictions were screened out as already-fixed by prior PRs (#383/#392, #388, #359/#362) or as additional evidence for an already-tracked, already-escalated regression (#346) rather than re-filed."
+prs:
+  - "405"
+docsRead:
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: the Skill being executed
+  - path: skills-lock.json
+    reason: confirm frictions-to-fixes is repo-owned, not a pack Skill, before recommending it as an editable fix surface
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: scripts/merged-since.ts only accepts one friction-session timestamp per call, forcing several separate invocations plus manual git log calls to cross-check multiple candidate fixes against multiple session timestamps
+    solution: extend merged-since.ts to accept multiple timestamps or a --since-earliest mode
+    severity: moderate
+  - description: the impl agent's PR (#405) auto-triggered a subscribe_pr_activity landing in the orchestrating session, despite its brief explicitly saying not to call it
+    solution: investigate whether the impl agent itself called subscribe_pr_activity against instructions, or something else (e.g. PR creation) triggers it automatically
+    severity: nit
+  - description: a github-webhook-activity event echoed my own posted PR review comment back into the conversation as if from a new external author
+    solution: no repo-side fix apparent; harmless since content was recognizably self-authored, but could confuse a quick skim on a busier PR thread
+    severity: nit
+durationSec: 14755
+models:
+  claude-sonnet-5: 62
+toolCounts:
+  Agent: 2
+  Bash: 4
+  ToolSearch: 2
+  mcp__github__search_issues: 3
+  mcp__github__issue_write: 3
+  mcp__github__pull_request_read: 6
+  mcp__github__actions_list: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__actions_get: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__issue_read: 3
+  Skill: 2
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Implement grouped doc-fix PR for 3 frictions
+    model: sonnet
+gitBranch: claude/hopeful-brown-58oz7z
+entrypoint: remote_trigger
+cliVersion: 2.1.207
