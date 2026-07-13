@@ -134,6 +134,11 @@ const detailId = useId()
   transition: transform 0.15s ease, border-color 0.15s ease;
   /* Breathing room when a deep-linked card is scrolled to the viewport top. */
   scroll-margin-top: 1.5rem;
+  /* Inherited by every free-text field below (goal, outcome, summary, frictions,
+     …) — this is agent-authored content and can contain a long unbroken token
+     (a file path, identifier) that would otherwise overflow the card on a
+     narrow screen instead of wrapping. */
+  overflow-wrap: anywhere;
 }
 .card:hover { border-color: color-mix(in oklab, var(--jd-accent) 40%, var(--jd-line)); }
 .card:not(.open):hover { transform: translateY(-2px); }
