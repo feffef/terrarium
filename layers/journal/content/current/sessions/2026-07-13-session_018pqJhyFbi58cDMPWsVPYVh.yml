@@ -1,0 +1,50 @@
+schemaVersion: 1
+session: session_018pqJhyFbi58cDMPWsVPYVh
+startedAt: 2026-07-13T02:08:52Z
+endedAt: 2026-07-13T02:19:32Z
+kind: autonomous
+goal: Run /digest for the 2026-07-12 Journal Digest
+status: completed
+outcome: "Digest authored, gate green, PR #399 merged"
+summary: "Autonomous /digest run (scheduled Routine, no human prompt this session). scripts/digest.ts list found one pending closed day, 2026-07-12 — the busiest day on record (38 sessions, 33 merged PRs, 135 commits). Gathered its data and authored a narrative digest covering Atlas Sprint 2's Wheel of the Year Under Glass, the Journal dashboard's page-wide accordion, the blog's new tag system, the new Mermaid MDC component, and the day's frictions rollup (3 major, 17 moderate, 54 minor, 48 nit), including the MDC closing-fence footgun and the stale `mermaid` devDependency that hit roughly a dozen sessions. Ran `pnpm gate:scoped` (full gate, all green), committed, pushed to the caller-pinned branch claude/compassionate-lovelace-xeprjk, opened PR #399, subscribed to its activity, and merged it directly once CI's gate check genuinely completed green (confirmed via get_check_runs after `enable_pr_auto_merge` threw its known misleading \"required checks are failing\" error while the check was merely in_progress)."
+prs:
+  - "399"
+docsRead:
+  - path: /root/.claude/projects/-home-user-terrarium/0fdfb347-3477-5540-bf81-eaf04a16d271/tool-results/bccjsk8bp.txt
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-07-11.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: 'enable_pr_auto_merge threw "unstable status (required checks are failing)" on PR #399 while the gate check was genuinely in_progress, not failing — a recurring, already-documented misleading error.'
+    solution: Verified the real check state via pull_request_read get_check_runs (in_progress, then completed/success) per CLAUDE.md's documented workaround, and merged directly with merge_pull_request once it was actually green.
+    severity: nit
+durationSec: 640
+models:
+  claude-sonnet-5: 70
+toolCounts:
+  Bash: 13
+  Read: 2
+  Write: 2
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__enable_pr_auto_merge: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Skill: 2
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-07-12.md
+gitBranch: claude/compassionate-lovelace-xeprjk
+entrypoint: remote_trigger
+cliVersion: 2.1.207
