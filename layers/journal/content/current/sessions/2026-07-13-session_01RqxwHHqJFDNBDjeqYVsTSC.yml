@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01RqxwHHqJFDNBDjeqYVsTSC
 startedAt: 2026-07-13T15:10:45Z
-endedAt: 2026-07-13T17:30:02Z
+endedAt: 2026-07-13T17:57:04Z
 kind: interactive
 goal: Diagnose the session-closure regression and fix it
 status: in-review
 outcome: "Root cause found; fix opened as PR #411"
-summary: 'Human-instructed throughout. User reported agents not self-closing sessions over 07-12/07-13 and asked me to (a) find commits with no completed session log and (b) use /audit-skills to find the causing doc change; later added "check frictions logged as completed" and "look at the diffs of the affected skills". Found one in-window orphan (session_019pNrz) — already tracked as #397 — plus three pre-close-session historicals. Diagnosed the cause: four self-improvement skills gate close-session behind "PR merged", so closure is lost when merge lands out-of-turn; digest was immune (logs before ending, #176). User green-lit "open PR"; implemented the PR-open closure fix across frictions-to-fixes/audit-docs/audit-skills/blog-post, gate green, opened #411, corrected #397, subscribed.'
+summary: 'Human-instructed throughout. User reported agents not self-closing sessions over 07-12/07-13 and asked me to (a) find commits with no completed session log and (b) use /audit-skills to find the causing doc change; later added "check frictions logged as completed" and "look at the diffs of the affected skills". Found one in-window orphan (session_019pNrz) — already tracked as #397 — plus three pre-close-session historicals. Diagnosed the cause: four self-improvement skills gate close-session behind "PR merged", so closure is lost when merge lands out-of-turn; digest was immune (logs before ending, #176). User green-lit "open PR"; implemented the PR-open closure fix across frictions-to-fixes/audit-docs/audit-skills/blog-post, gate green, opened #411, corrected #397, subscribed. On review feedback, rewrote the four edits from verbose prose to terse two-line "You must invoke close-session now / again after merge" imperatives and amended the PR.'
 prs:
   - "411"
 docsRead:
@@ -36,6 +36,9 @@ skillsUsed:
   - name: log-session
     reason: authoring this entry
 frictions:
+  - description: My first-pass skill edits were verbose and repetitive, and read as if close-session fires only at PR-open — obscuring that it must fire again after merge. User asked for terse imperatives.
+    solution: Rewrote each to two one-line 'You must invoke close-session now / again once the PR merges' bullets. Default to imperative one-liners for a mandated action, not explanatory prose.
+    severity: minor
   - description: Shallow clone (108 commits, .git/shallow present) made every skill file's history appear to start at the graft boundary, which I first misread as a 07-12 history squash/re-root.
     solution: Check `git rev-parse --is-shallow-repository` / `.git/shallow` before concluding history was rewritten; `git fetch --deepen` to inspect real history. Corrected mid-session.
     severity: moderate
@@ -48,25 +51,25 @@ frictions:
   - description: A `node -e` orphan-scan one-liner broke on shell-mangled `\n` inside the inlined JS string.
     solution: Write non-trivial scripts to a file and run them, rather than inlining multi-line JS in `node -e` through bash.
     severity: nit
-durationSec: 8357
+durationSec: 9979
 models:
-  claude-opus-4-8: 212
+  claude-opus-4-8: 244
 toolCounts:
-  Bash: 44
+  Bash: 48
   Read: 9
   Skill: 3
   ToolSearch: 6
   TaskCreate: 3
-  Write: 3
+  Write: 5
   TaskUpdate: 3
   AskUserQuestion: 2
   mcp__github__search_issues: 2
   mcp__github__add_issue_comment: 2
-  Edit: 4
+  Edit: 9
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/SKILL.md
@@ -77,6 +80,7 @@ gitBranch: claude/session-closure-regression-rp9a3q
 entrypoint: remote
 cliVersion: 2.1.207
 learnings:
+  - Model-based skill invocation fires only off the frontmatter `description` (the body isn't visible pre-invocation); close-session's ambient 'am I wrapping up?' trigger reads as 'I'm waiting' mid-run, which is why an in-body 'You must invoke close-session now' in the running skill is the reliable path.
   - "`close-session` appearing in a log's `skillsUsed` does NOT mean the session self-judged closure — a manually-prompted session lists it too; the closure regression is invisible to usage-rate and to the friction stream unless sessions log the manual nudge."
   - A shallow clone makes `git log --follow` on any file bottom out at the graft-boundary commit, which reads deceptively like a squash/re-root of history.
 ideas:
