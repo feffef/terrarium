@@ -194,6 +194,8 @@ implement, push, and hand back the PR.
 Done when every issue is covered by a pushed gated PR (doc issues by the one grouped
 PR, each code/config issue by its own), gate green, awaiting your review.
 
+**At PR-open (the dispatched PRs are pushed), invoke `close-session`** — your first log (`in-review`), before you review and merge in §6.
+
 ## 6. Review and merge — autonomously, escalate only high-risk
 
 Once an impl agent hands back an open PR, **you review it** — you are the ADR-0003
@@ -230,6 +232,6 @@ above. A PR is finished only when **merged** (by you) or **escalated/abandoned**
 not at push time (`CLAUDE.md`: pushing is not landing).
 
 Done when every dispatched PR carries a posted review comment and is merged or
-escalated/abandoned. Then it is a genuine end-of-session — invoke `close-session`
-(CLAUDE.md's front door for closure; you judge when), logging this run's own
-frictions too.
+escalated/abandoned.
+
+**At the very end, invoke `log-session`** with the final `status` (`completed` once merged) and every friction from the run. (See `close-session` for when a session is actually logged.)

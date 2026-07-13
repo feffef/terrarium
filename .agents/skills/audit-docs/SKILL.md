@@ -238,7 +238,10 @@ banner on the old one** (adding that banner is an ADR edit, human-only) — neve
 rides in the self-merged routine PR above. File it as its own, separately human-reviewed PR
 (see the Historical-tier note above), subscribe, and babysit it to merge/close. Likewise, if the gate is
 red for a reason that isn't yours, leave the PR open for a human rather than
-merging red — fix on the branch or escalate honestly instead. Done when the PR
-is merged green, or open and honestly escalated. Then invoke `close-session` —
-its log records this run's PR (merged green, or open and escalated for a
-human-only-surface fix) and any `needs-triage` issue filed in step 6.
+merging red — fix on the branch or escalate honestly instead.
+
+**At PR-open, invoke `close-session`** — your first log (`in-review`).
+
+Done when the PR is merged green, or open and honestly escalated.
+
+**At the very end, invoke `log-session`** with the final `status` (`completed` once merged) and every friction from the run. (See `close-session` for when a session is actually logged.)
