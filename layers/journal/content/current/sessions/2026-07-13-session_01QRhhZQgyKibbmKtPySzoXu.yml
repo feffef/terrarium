@@ -1,0 +1,81 @@
+schemaVersion: 1
+session: session_01QRhhZQgyKibbmKtPySzoXu
+startedAt: 2026-07-13T00:45:35Z
+endedAt: 2026-07-13T01:00:28Z
+kind: autonomous
+goal: Run the audit-skills sweep against the 40-session window
+status: in-review
+outcome: "Roles refreshed, PR #398 opened, one orphan filed as #397"
+summary: "Scheduled /audit-skills run, no human prompts (a mid-session github-webhook-activity event on PR #398 was machinery, not a human). Ran scripts/audit-skills.ts (window 40, sessionsConsidered 172), re-graded every Skill's importance against CONTEXT.md's bright-line rule (no grade changes warranted) and refreshed role prose on 8 Skills whose examples cited session ids/PRs that fell out of the current window. Ran step 4's regression watch on all 7 regressionChecks: 4 traced to one shared mechanical `pnpm gate` -> `gate:scoped` one-line fix across Skill files (verified via `git show`, no behavior change), 2 had no post-edit invocation in-window to observe, and log-session's friction-severity uptick traced via Phase B read-through to unrelated causes, not its edit — no confirmed regressions, nothing filed for step 4. Filed #397 for a genuine orphaned session (session_019pNrzTQb3EV2SJBWXs1bXG) surfaced by orphanedSessions, after confirming no existing issue covered it. Cleared pnpm gate:scoped green, opened PR #398 (Inventory-YAML-only diff, confirmed via git diff --stat), subscribed to its activity, and attempted enable_pr_auto_merge — it errored on the documented in_progress-reads-as-unstable false positive (confirmed via pull_request_read: the gate check was merely in_progress), so scheduled a 60-minute send_later check-in to retry once CI settles."
+prs:
+  - "398"
+docsRead:
+  - path: CONTEXT.md
+    reason: importance grade definitions + Session kind classification
+  - path: layers/journal/content/current/skills/audit-docs.yml
+    reason: stale PR-list role text to refresh
+  - path: layers/journal/content/current/sessions/2026-07-10-session_01YV8CUydPdRtn6o1fTGZegg.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/code-review.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/implement.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/domain-modeling.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/triage.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/wayfinder.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/writing-great-skills.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/diagnosing-bugs.yml
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-skills
+    reason: this run
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "enable_pr_auto_merge errored 'unstable status (required checks are failing)' on PR #398 while the gate check was only in_progress, not actually failing."
+    solution: Already documented in CLAUDE.md as a known false positive — confirmed via pull_request_read get_status/get_check_runs before concluding, per that guidance, and scheduled a later retry instead of treating it as a real failure. No new fix needed; this just confirms the existing doc.
+    severity: nit
+durationSec: 893
+models:
+  claude-sonnet-5: 179
+toolCounts:
+  Bash: 48
+  ToolSearch: 5
+  TaskCreate: 6
+  TaskUpdate: 10
+  Read: 9
+  Edit: 10
+  mcp__github__search_issues: 3
+  mcp__github__get_me: 1
+  mcp__github__issue_write: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__enable_pr_auto_merge: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - layers/journal/content/current/skills/audit-docs.yml
+  - layers/journal/content/current/skills/code-review.yml
+  - layers/journal/content/current/skills/implement.yml
+  - layers/journal/content/current/skills/domain-modeling.yml
+  - layers/journal/content/current/skills/triage.yml
+  - layers/journal/content/current/skills/wayfinder.yml
+  - layers/journal/content/current/skills/writing-great-skills.yml
+  - layers/journal/content/current/skills/diagnosing-bugs.yml
+gitBranch: claude/upbeat-sagan-24zp08
+entrypoint: remote_trigger
+cliVersion: 2.1.207
+learnings:
+  - "Phase A's regressionChecks before/after brackets can be identical across several Skills edited in the same commit (e.g. a docs-reconcile sweep touching 4 SKILL.md files at once) — a coarse friction-severity uptick in that shared bracket is then a property of whichever unrelated sessions happened to fall in it (this run: the Atlas Sprint 2 rework's own major friction), not evidence about any one Skill's edit. Worth remembering before spending Phase B effort on every flagged skill separately when several share identical brackets."
+ideas:
+  - Extend scripts/audit-skills.ts's regressionChecks to detect when a flagged edit is a small, identical, mechanical diff shared across multiple Skills' SKILL.md (e.g. by diff line count or by grouping edits with the same commit sha) and surface it as one collapsed low-priority entry instead of N separate full regression checks — this run had 4 of 7 regressionChecks resolve to the exact same 1-line `pnpm gate` -> `pnpm gate:scoped` fix.
+  - "Filter built-in Claude Code CLI slash commands (/context, /model, and likely others) out of audit-skills.ts's skillsUsed extraction — they surface in the scorecard's skills array as onDisk:false, inventoried:false pseudo-Skills with real usedIn counts (this run: context x3, model x1), which reads as a missing-Skill signal but isn't one; they're not repo Skills at all."
