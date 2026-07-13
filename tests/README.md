@@ -38,6 +38,21 @@ To add e2e coverage for a new Tenant: write
 `layers/<tenant>/tests/e2e/<tenant>.e2e.ts` exporting a `register…(ctx)`
 function, then add one import + one call in `tests/e2e/smoke.spec.ts`.
 
+## Playwright scroll/visibility gotchas
+
+- `isVisible()`/the `visible` locator state is true for elements outside the
+  current viewport — it only reflects CSS visibility, not scroll position. To
+  assert an element is actually scrolled into view, compare
+  `getBoundingClientRect()` against `window.innerHeight`/`innerWidth`, not
+  `isVisible()`.
+- `locator.click()` (and similar action methods) perform an implicit
+  scroll-into-view before dispatching the event. If a test needs an exact
+  "before" scroll-position measurement ahead of a click, call
+  `scrollIntoViewIfNeeded()` (or otherwise settle scroll position) explicitly
+  *before* taking that measurement — don't measure right before `.click()`,
+  since its own auto-scroll can land between the measurement and the app's
+  handler.
+
 ## Running
 
 - `pnpm test` — unit (L0/L3), platform **and** tenant, fast. Filters by the
