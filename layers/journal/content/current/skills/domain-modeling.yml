@@ -4,8 +4,7 @@ importance: essential
 installedSha256: 152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa579
 role: >-
   Owns the CONTEXT.md glossary and the ADR conventions — CONTEXT.md's own
-  canonical `essential` example. Use before any structural change or ADR
-  amendment; reached for consistently this window (test restructuring,
-  close-session's design, the pkill-teardown fix, provenance-attribution
-  grilling) with one miss — #211's addTypeTemplate PR amended ADR-0014
-  without it.
+  canonical `essential` example. Use before any structural change or new
+  vocabulary; reached for in 4 of this window's 40 sessions (Atlas specimen
+  relations, blog sibling-citing, the curated blog-tag system, the multi-context
+  domain-docs restructure).

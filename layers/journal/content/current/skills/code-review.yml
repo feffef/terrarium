@@ -4,10 +4,11 @@ importance: supporting
 installedSha256: 6a65cc61114f96db07ec41e3920e67c9c5bf70dd6e0901eb9460ebcb2bdc209f
 role: >-
   Review the working diff (Standards+Spec) before the gated PR (ADR-0003/0004).
-  Used for #212, #211, #210, #209, #196 — but skipped in other code-landing
-  sessions this window (pkill-teardown fix, component-empty fix, About/How-Works
-  split, test restructuring, triage extractor): adoption is inconsistent, not
-  universal. Prescribes `gh` CLI, absent on remote sessions — use
+  Used in 6 of this window's 40 sessions (e.g. the Atlas Sprint 2 orchestration,
+  the Mermaid MDC component, the #369 implement) — but skipped in most other
+  code-landing sessions (digest/session-click fix, almanac polish, journal
+  scroll fix, self-merge-tier switch): adoption is inconsistent, not universal.
+  Prescribes `gh` CLI, absent on remote sessions — use
   `mcp__github__*` instead. A spec-reviewer subagent has cited a fabricated
   line number (#323) — when dispatching this Skill's review subagents,
   explicitly restate CLAUDE.md's never-reconstruct-an-identifier-from-memory
