@@ -1,0 +1,96 @@
+schemaVersion: 1
+session: session_01U5bJwuWcy2meaV9JLhMzKJ
+startedAt: 2026-07-13T19:19:31Z
+endedAt: 2026-07-13T19:51:12Z
+kind: autonomous
+goal: Run /audit-docs, fix confirmed drift
+status: completed
+outcome: "8/8 findings fixed, PR #418 merged"
+summary: "Ran the /audit-docs charter end-to-end: 4 paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) pooled 8 candidate findings across CLAUDE.md, three of our own SKILL.md files (audit-docs, audit-skills, log-session), and a research doc. An independent fact-checker confirmed all 8 (2 with corrections, including a live GitHub branch-protection/issue-state check) before any edit landed. Fixed every one; zero needs-triage escalations. Two findings were self-referential — the currently-running audit-docs Skill's own text had drift, a contradiction, and an ambiguity, all fixed in place. Opened PR #418; CI's gate check was already green by the time of the first babysitting check, so it was merged directly (main carries no branch protection, so enable_pr_auto_merge was skipped per this same PR's own fix). The whole run was agent-initiated under ADR-0003's pre-granted audit-docs autonomy tier — no human steered mid-session; the only human-originated input was the initial /audit-docs charter itself."
+prs:
+  - "418"
+docsRead:
+  - path: CLAUDE.md
+    reason: ground rules for tiers
+  - path: CONTEXT.md
+    reason: Session closure and Session kind glossary entries
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: the charter this run followed (and later fixed)
+  - path: docs/agents/issue-tracker.md
+    reason: docs/research/ vs. GitHub issue convention
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: verify CLAUDE.md's restatement against the amendment text
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: verify CLAUDE.md's restatement against the Decision text
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: root-cause for the auto-merge contradiction finding
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's own charter
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: Called TaskCreate with a guessed multi-task array schema before loading it via ToolSearch, against CLAUDE.md's own explicit rule to load a deferred tool's schema before first use.
+    solution: Load every deferred tool via ToolSearch on first reference, even ones that look self-evident from their name (TaskCreate reads like a plural "todos" API but isn't).
+    severity: minor
+  - description: Called ScheduleWakeup while waiting on background Agent-tool lens reviewers, even though docs/agents/issue-tracker.md documents it as scoped to /loop dynamic-mode pacing and unreliable outside it.
+    solution: Agent-tool completions already deliver an automatic notification — no wakeup tool is needed while waiting on them at all; reserve ScheduleWakeup strictly for /loop and send_later for genuine external-state polling (e.g. CI).
+    severity: minor
+  - description: Drafted the commit's Claude-Session footer with an id copied from a recent `git log` entry (another session's commit) before catching it against CLAUDE.md's explicit "never derive it from git log trailers" rule and correcting it to the real id from the system-prompt template.
+    solution: Resolve the session id from the system-prompt commit-footer template at the moment of writing, every time — never let a plausible-looking id seen elsewhere (git log, an old commit) substitute, even briefly in a draft.
+    severity: moderate
+durationSec: 1901
+models:
+  claude-sonnet-5: 158
+toolCounts:
+  Bash: 22
+  Agent: 5
+  TaskCreate: 1
+  ToolSearch: 6
+  ScheduleWakeup: 1
+  Read: 15
+  Grep: 2
+  mcp__github__issue_read: 2
+  mcp__github__search_issues: 1
+  Edit: 13
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+filesEdited:
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - CLAUDE.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: drift + orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: duplication + mis-location"
+  - type: general-purpose
+    task: "Concision lens: verbose + stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: contradiction + ambiguity"
+  - type: general-purpose
+    task: Fact-check pooled audit-docs findings
+gitBranch: claude/audit-docs-13ygvs
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+learnings:
+  - The audit-docs Skill's own SKILL.md is itself Live-tier and squarely in-scope for /audit-docs findings — this run's self-referential audit surfaced real drift, a contradiction, and an ambiguity in the currently-running skill's own text, confirming the tier design (no special exemption for the skill auditing itself) works as intended.
