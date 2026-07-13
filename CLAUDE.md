@@ -259,6 +259,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   actually restructured, read both sides **in full**, not just the (absent)
   conflict markers, before trusting the merge — especially after a rename or
   refactor on either side.
+- **Before concluding a file or Skill's history was rewritten, squashed, or
+  re-rooted, rule out a shallow clone first.** Check `git rev-parse
+  --is-shallow-repository` (or the presence of `.git/shallow`) — a shallow
+  clone's grafted, parent-less boundary commit makes every file it touches
+  look newly-added, which can misread as a real history rewrite when it's
+  actually just a clone-depth artifact. `git fetch --deepen <n>` (or
+  `--unshallow`) to inspect the real history before drawing that conclusion.
 - **Keep a PR's description in sync with its content — hard rule.** If you
   fundamentally change what a PR does (switch approach, swap the files it touches,
   answer review with a different solution), update the PR title/description in the
