@@ -16,3 +16,4 @@ role: >-
   precursor to the deferred `consolidate`/`codify` jobs (ADR-0009) — no longer
   purely manual, it also fires on a twice-daily Routine; reach for it on demand
   when frictions have piled up and you want them retired in a batch.
+observations: []

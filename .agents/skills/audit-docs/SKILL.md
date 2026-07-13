@@ -66,7 +66,12 @@ lenses start from the **same git-history read** — `git log --since="48 hours a
   matches. Sharpest source: a decision reversed at its *new* home but not swept
   back to its referrers — grep the removed noun (`generator`, a deleted job name,
   an old path) across all docs. The recent diff surfaces exactly which nouns to
-  grep.
+  grep. When auditing a Skill's own `SKILL.md`, its Skill Inventory entry's
+  `observations` (`layers/journal/content/current/skills/<name>.yml`, ADR-0015
+  amendment) is available corroborating evidence — a recorded regression or
+  usage note can confirm (or refute) a suspected Drift/Stale-narration finding
+  about that Skill's guidance. Optional context, not a required read for every
+  finding.
 - **Orphan-addition** — the inverse of Drift: something **added in the last 48h**
   that never got the incoming reference it deserves. Scope is deliberately two
   cases (new Skills are `audit-skills`' Inventory turf; new code is too fuzzy):

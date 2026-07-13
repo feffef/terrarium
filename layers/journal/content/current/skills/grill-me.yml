@@ -6,3 +6,4 @@ role: >-
   A productivity variant of the grilling interview. `grilling` is the one
   actually reached for in this repo (design and schema stress-tests), so this
   variant is largely redundant here.
+observations: []

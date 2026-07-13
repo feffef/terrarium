@@ -11,3 +11,4 @@ role: >-
   Normally invoked *by* `close-session` (the closure front door), which authors
   the log as one step of its closing sequence; callable directly only to amend an
   already-written log.
+observations: []

@@ -5,3 +5,4 @@ installedSha256: 610d091047bcfb9db0f75c057d15538481a721111579fc5ec7f83ad9131a216
 role: >-
   Stress-test a plan or design against the relevant documentation before
   building — useful ahead of a milestone or a structural ADR.
+observations: []

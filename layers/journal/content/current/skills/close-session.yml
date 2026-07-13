@@ -8,3 +8,4 @@ role: >-
   self-judged "invoke at closure" rule reliably fire; its invocation rate is the
   measurable signal behind ADR-0009's choice of a skill affordance over an
   automatic safety net.
+observations: []

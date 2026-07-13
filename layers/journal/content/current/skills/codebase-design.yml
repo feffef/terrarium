@@ -6,3 +6,4 @@ role: >-
   Shared vocabulary for designing deep modules — seams, interface depth,
   testability. Narrow but valuable when shaping a module's boundary (e.g.
   shared/expand.ts, routing); other Skills borrow its terms.
+observations: []

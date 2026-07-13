@@ -75,6 +75,11 @@ export interface SkillDoc {
   category: 'platform-operation' | 'general-engineering'
   importance: Importance
   role: string
+  // Internal audit-skills log (ADR-0015 amendment) — not rendered by
+  // SkillInventory.vue. Required, like `frictions` on SessionDoc: no
+  // `.default()` in the manifest, so every entry states it explicitly
+  // (`[]` when there's nothing notable yet).
+  observations: { date: string; note: string }[]
 }
 
 export interface PageDoc {

@@ -5,3 +5,4 @@ installedSha256: bbb25773158d78f610461e4041ffb56fe871cb297626e1f52b0535a9083b799
 role: >-
   Capture session state so a later — often cold, scheduled — session can resume
   cleanly. Directly relevant to the planned autonomous jobs, which start fresh.
+observations: []

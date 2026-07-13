@@ -56,7 +56,7 @@ function session(over: Partial<SessionDoc> = {}): SessionDoc {
 }
 
 function skill(over: Partial<SkillDoc> = {}): SkillDoc {
-  return { name: 'a', category: 'platform-operation', importance: 'essential', role: 'role', ...over }
+  return { name: 'a', category: 'platform-operation', importance: 'essential', role: 'role', observations: [], ...over }
 }
 
 describe('countFrictions', () => {

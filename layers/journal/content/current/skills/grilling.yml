@@ -7,3 +7,4 @@ role: >-
   before building — used standalone (the schema-refinement session) or as the
   engine inside `grill-with-docs` (the digest and audit-skills builds). Reach for
   it to pressure-test a design tree branch by branch.
+observations: []

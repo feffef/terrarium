@@ -8,6 +8,9 @@ role: >-
   fact-checks each finding, then fixes it bravely and self-merges its own
   gated PR on green (ADR-0003 amendment; ADR-0004's low-risk tier). It files
   a `needs-triage` issue only for the rare factual conflict it genuinely
-  can't resolve. Ran clean both times this window (PR #347: 5 findings fixed;
-  PRs #370/#371: 12 fixes merged, 1 issue filed) — reached for whenever docs
-  and code have drifted apart.
+  can't resolve. Reached for whenever docs and code have drifted apart.
+observations:
+  - date: 2026-07-13
+    note: >-
+      Ran clean both times this window (PR #347: 5 findings fixed; PRs
+      #370/#371: 12 fixes merged, 1 issue filed).

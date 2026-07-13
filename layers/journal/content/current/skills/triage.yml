@@ -6,6 +6,9 @@ role: >-
   Moves an issue or external PR through the triage state machine —
   categorise, verify, grill if needed, write an agent-ready brief, and decide
   readiness (ready-for-agent / ready-for-human / needs-info). The manual
-  counterpart to the chartered (planned) `triage` autonomous job. Used this
-  window to triage #292, #325, and #236 end to end
-  (session_01VhL2mH3yYgkDqrMv61qe11), and again ahead of implementing #369.
+  counterpart to the chartered (planned) `triage` autonomous job.
+observations:
+  - date: 2026-07-13
+    note: >-
+      Used this window to triage #292, #325, and #236 end to end
+      (session_01VhL2mH3yYgkDqrMv61qe11), and again ahead of implementing #369.

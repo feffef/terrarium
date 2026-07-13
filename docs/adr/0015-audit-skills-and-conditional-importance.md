@@ -40,6 +40,34 @@ Status: Accepted
 > after a legitimate pack install. Every pack Skill must be catalogued to pass the
 > gate, so this also closed the Inventory's coverage gap (8 pack Skills gained
 > entries).
+>
+> **Amended (2026-07-13).** `role`'s "not a copy of the Skill's own description"
+> discipline held, but a second kind of drift crept in instead: several entries
+> (`atlas-specimen`, `audit-docs`, `code-review`, `diagnosing-bugs`, `implement`,
+> `triage`, `wayfinder`, `writing-great-skills`) had `role` doubling as a running
+> audit log — folding in PR/issue/session ids as evidence for a grade or usage
+> claim. That's the same scope-creep this ADR already cut once (helpfulness/
+> friction-per-use, dropped in grill-with-docs, issue #136) wearing a new shape:
+> a signal useful for auditing crowding out the rendered "use these" prose.
+> `role` now stays reference-free by rule — no PR/issue/session ids — and the
+> Skill Inventory schema (`layers/journal/tenant.config.ts`) gains a sibling
+> field, **`observations`**: `z.array(z.object({ date, note }))` — required,
+> like `frictions` on sessions (no `.default()`; every entry states it
+> explicitly, `[]` when there's nothing notable yet, rather than an implicit
+> fallback). Append-only (a run adds an entry, never rewrites or drops an
+> earlier one), written only when a run has a citable finding for that Skill —
+> a `role`/grade change (the bright-line rule above), a regression finding
+> (confirmed or suggestive), or a new/split/retire idea. A silent run adds
+> nothing, so this doesn't turn into an entry-per-run-per-Skill log.
+> `scripts/audit-skills.ts`'s
+> scorecard now surfaces each Skill's existing `observations` back to the
+> auditing session, so a run can factor in what a prior run already noted.
+> `observations` is purely internal — not rendered by `SkillInventory.vue` — but
+> not audit-skills-exclusive either: `audit-docs/SKILL.md` may also consult a
+> Skill's `observations` as corroborating evidence for its Drift/Stale-narration
+> lenses when auditing that Skill's own `SKILL.md`. The 8 drifted entries above
+> were migrated in the same change: PR/issue/session ids moved out of `role`
+> into a dated `observations` entry (dated by that file's last commit).
 
 ## Context
 

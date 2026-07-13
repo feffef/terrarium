@@ -4,7 +4,10 @@ importance: specialist
 installedSha256: bef437de697fb6984a8a90b7fd82f128609148d6e02f635ce419d03555b351e1
 role: >-
   Charts a shared map of investigation tickets for work too big to fit in one
-  session — previously used to chart the Atlas Phase-2 wayfinder map
-  (session_01Vw3JNnMtTRiayD6g9CVhiX, now outside the 40-session window).
-  Reach for it when a destination is clear but the route to it isn't; not a
-  fit for ordinary single-session work.
+  session. Reach for it when a destination is clear but the route to it
+  isn't; not a fit for ordinary single-session work.
+observations:
+  - date: 2026-07-13
+    note: >-
+      Previously used to chart the Atlas Phase-2 wayfinder map
+      (session_01Vw3JNnMtTRiayD6g9CVhiX, now outside the 40-session window).

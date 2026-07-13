@@ -12,3 +12,4 @@ role: >-
   Routine, this Skill is the first live piece of the `sync` remit
   (ADR-0003/0015) — no longer a deferred job. Reach for it manually to catch
   the Journal up after a run of activity the schedule hasn't covered yet.
+observations: []
