@@ -279,13 +279,15 @@ it runs). Done when it's green.
   in this PR.
 - Commit (one run rides one commit/PR), push with retry, and open **one gated
   PR** citing the evidence per entry.
-- **Enable GitHub auto-merge** (`enable_pr_auto_merge`) right after opening the
-  PR — repo-level auto-merge is available (`CLAUDE.md`), so the PR self-merges
-  automatically once the gate is green, the same landing path `digest`/`audit-docs`
-  use (ADR-0004's low-risk content tier, ADR-0003/0015 — this Skill is the third
-  name on that exemption list). A red gate simply never merges (see the escalation
-  bullet below). Leave a one-line PR comment citing the evidence per change — the
-  merge must never be the only trace.
+- **Subscribe to the PR's activity right after opening it** (CLAUDE.md's
+  "Pushing is not landing" rule — every opened PR is babysat to merge/close,
+  this tier included) and follow CLAUDE.md's `enable_pr_auto_merge`-vs-
+  `merge_pull_request` guidance to land it once the gate is green — the same
+  landing path `digest`/`audit-docs` use (ADR-0004's low-risk content tier,
+  ADR-0003/0015 — this Skill is the third name on that exemption list). A red
+  gate simply never merges (see the escalation bullet below). Leave a
+  one-line PR comment citing the evidence per change — the merge must never
+  be the only trace.
 - **Escalate instead — leave the PR open for a human** — if the gate is red for
   a reason that isn't yours, or the diff touches anything beyond Inventory YAML
   (a human-only surface, or step 4-6 output that slipped in by mistake).

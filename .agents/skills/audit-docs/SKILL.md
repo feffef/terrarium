@@ -7,8 +7,8 @@ disable-model-invocation: true
 # Audit Docs
 
 Keep the repo's prose honest against the code. Agents act on documented state, so
-here a stale doc is a **behavioural** bug (`CLAUDE.md`). This is a
-`consolidate`-family maintenance sweep (ADR-0003): it fact-checks each finding and
+here a stale doc is a **behavioural** bug (`CLAUDE.md`). This is one of the
+repo's self-improvement Skills (ADR-0003): it fact-checks each finding and
 **fixes it bravely**, self-merging its own gated PR on green — filing an issue only
 for the rare case it genuinely can't tell which of two conflicting facts is
 correct. It runs start to finish **without interaction**.
@@ -29,8 +29,9 @@ correct. It runs start to finish **without interaction**.
 
 Classify every surface **before** editing. This decides everything.
 
-- **Live** — the editable guidance: `CLAUDE.md`, `CONTEXT.md`, `README.md`,
-  `docs/agents/*`, `docs/research/*`, `tests/README.md`, `deploy/README.md`, our
+- **Live** — the editable guidance: `CLAUDE.md`, `CONTEXT.md`, `CONTEXT-MAP.md`,
+  `README.md`, `SECURITY.md`, `docs/agents/*`, `docs/research/*`,
+  `tests/README.md`, `deploy/README.md`, each `layers/<tenant>/CONTEXT.md`, our
   own Skills' `SKILL.md` + sibling files (`external: false`), and the **current
   journal's facing pages** —
   `layers/journal/content/current/pages/{architecture,how-it-works,index}.md`, the
@@ -223,10 +224,11 @@ Commit the fixes (one run rides one commit/PR), push with retry, and open **one
 gated PR** listing what was fixed and any issue filed. **This PR self-merges on a
 green gate** (ADR-0003 amendment) — the reconciliations are fact-checked and
 touch no human-only surface, so this is ADR-0004's low-risk content tier (a
-second, bounded grant of the same kind as `digest`'s). Repo-level GitHub
-auto-merge is available (`CLAUDE.md`), so **enable it** (`enable_pr_auto_merge`)
-right after opening the PR and it lands automatically once the gate reports green
-— no watching required, and a red gate simply never merges (see below). Leave a
+second, bounded grant of the same kind as `digest`'s). **Subscribe to the PR's
+activity right after opening it** (CLAUDE.md's "Pushing is not landing" rule —
+every opened PR is babysat to merge/close, this tier included) and follow
+CLAUDE.md's `enable_pr_auto_merge`-vs-`merge_pull_request` guidance to land it
+once the gate reports green — a red gate simply never merges (see below). Leave a
 one-line PR comment as the audit trail.
 
 **Keep human-only-surface fixes out of this PR — those escalate instead.** A fix
