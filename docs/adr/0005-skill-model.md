@@ -3,6 +3,13 @@
 Date: 2026-07-04
 Status: Accepted
 
+> **Amended (2026-07-13).** The committed source of truth for Skills moved to
+> `.agents/skills/`, with `.claude/skills/` now a symlink layer surfacing them
+> (every entry under `.claude/skills/` resolves to `../../.agents/skills/<name>`).
+> This ADR's Decision section below still names `.claude/skills/` as the
+> repo-committed home — read that as `.agents/skills/` (see CLAUDE.md's Skills
+> bullet and ADR-0015, which already assumes the current split).
+
 ## Context
 
 "An ever-growing set of Skills that develop the Platform" is the project's core
