@@ -53,6 +53,14 @@ function, then add one import + one call in `tests/e2e/smoke.spec.ts`.
   since its own auto-scroll can land between the measurement and the app's
   handler.
 
+## vitest `expect.poll` defaults
+
+`expect.poll` defaults to a **1000ms timeout / 50ms interval** — not set in
+`vitest.config.ts`, so the numbers aren't visible from this repo's own config.
+A poll racing a longer app-side settle animation (e.g. a rAF-driven
+transition) needs its timeout raised per-call —
+`expect.poll(..., { timeout: 5000 })` — not just re-run as flaky.
+
 ## Running
 
 - `pnpm test` — unit (L0/L3), platform **and** tenant, fast. Filters by the
