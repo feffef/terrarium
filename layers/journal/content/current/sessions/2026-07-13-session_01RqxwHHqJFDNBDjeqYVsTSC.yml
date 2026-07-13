@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01RqxwHHqJFDNBDjeqYVsTSC
 startedAt: 2026-07-13T15:10:45Z
-endedAt: 2026-07-13T18:25:24Z
+endedAt: 2026-07-13T18:31:27Z
 kind: interactive
 goal: Diagnose the session-closure regression and fix it
 status: in-review
@@ -47,6 +47,9 @@ frictions:
   - description: My first fix used a repeated close-session call for both the PR-open and post-merge logs; a grill-with-docs pass surfaced that the second reads as 'already closed' and gets skipped, and that verbose prose obscured the two moments.
     solution: Split into two verbs — close-session at PR-open, log-session (final status + frictions) at the very end — and single-homed the 'when is a session actually logged' rule + HUMAN-PROMPTED-CLOSURE keyword in close-session. Grill a load-bearing design before authoring against it.
     severity: moderate
+  - description: "I wrote the same two-line closing instruction five different ways across the skills, and put the #176 rationale in only two of the five that all needed it; the user caught the drift."
+    solution: "When one instruction lands in N places, write it once and keep it byte-identical (vary only for a genuine structural difference, e.g. frictions-to-fixes' multiple PRs), and single-home shared rationale — moved #176 into close-session. Normalized in a follow-up amend."
+    severity: minor
   - description: Shallow clone (108 commits, .git/shallow present) made every skill file's history appear to start at the graft boundary, which I first misread as a 07-12 history squash/re-root.
     solution: Check `git rev-parse --is-shallow-repository` / `.git/shallow` before concluding history was rewritten; `git fetch --deepen` to inspect real history. Corrected mid-session.
     severity: moderate
@@ -59,11 +62,11 @@ frictions:
   - description: A `node -e` orphan-scan one-liner broke on shell-mangled `\n` inside the inlined JS string.
     solution: Write non-trivial scripts to a file and run them, rather than inlining multi-line JS in `node -e` through bash.
     severity: nit
-durationSec: 11679
+durationSec: 12043
 models:
-  claude-opus-4-8: 322
+  claude-opus-4-8: 359
 toolCounts:
-  Bash: 53
+  Bash: 57
   Read: 21
   Skill: 5
   ToolSearch: 7
@@ -73,12 +76,12 @@ toolCounts:
   AskUserQuestion: 2
   mcp__github__search_issues: 2
   mcp__github__add_issue_comment: 2
-  Edit: 18
+  Edit: 30
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 3
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 2
   mcp__github__update_pull_request: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/SKILL.md
