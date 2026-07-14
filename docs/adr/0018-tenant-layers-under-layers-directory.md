@@ -81,3 +81,43 @@ directory (`git mv tenants layers`; content moves with them to
   rewritten. Session logs and blog posts — append-only records of what happened
   when the path *was* `tenants/` — are likewise left as-is; rewriting them would
   falsify history.
+
+## Editing an ADR: factual correction vs. decision reversal
+
+> **Amended (2026-07-14, issue #455).** Extends the amendment mechanism this
+> ADR established (the "one-line amending note pointing here" convention just
+> above, and the amendment banners threaded through `docs/adr/`) with a rule
+> for *how* a drifted ADR — any ADR, not only this one — gets edited. Prompted
+> by `audit-docs` needing a crisp line between "just fix the typo" and "route
+> through an amendment." The Decision and Consequences above are unchanged;
+> this section adds a rule, it does not revise them.
+
+Not every ADR drift is the same kind of change, and the fix must match the
+kind:
+
+- **Pure factual correction** — a wrong path, a dead link, a stale
+  cross-reference, a typo in the prose *describing* the decision. Nothing
+  about the decision itself is wrong, only a detail describing it is. Fix
+  this with a **direct in-place edit** to the erroneous prose — no amendment
+  banner, no appended section, no Status-line pointer needed. The ADR's
+  Decision and Consequences continue to read as accurate today; only the
+  wrong detail changes.
+- **Decision reversal or change** — the decision itself is changing, being
+  narrowed, extended, or superseded. This still requires the **existing
+  amendment/supersession mechanism** above: an appended, clearly-marked
+  amendment note (like this section) when the amendment lives on the same
+  ADR, or a Status-line pointer / "Amended by [ADR-XXXX]" banner when a
+  *different* ADR becomes the new decision-holder. **Never** rewrite the
+  original Decision or Consequences text in place to reflect a changed
+  decision — that erases the historical record the amendment banners exist to
+  preserve (see "Prior ADRs and historical records keep their `tenants/`
+  paths" above for why history is left as-is even once a detail it names has
+  gone stale).
+
+This is a rule about **how** an ADR is edited, not about **who** may merge
+the edit. Every ADR PR — factual-correction or decision-reversal alike —
+still lands as an ordinary, human-reviewed PR and is never auto-merged; ADRs
+are a human-only-to-merge surface regardless of category (ADR-0004).
+Classifying a finding as a pure factual correction only changes whether the
+fix is an in-place edit or a new amendment section — it never changes the
+merge gate.

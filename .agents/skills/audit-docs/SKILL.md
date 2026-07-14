@@ -42,11 +42,19 @@ Classify every surface **before** editing. This decides everything.
 - **Historical** — the append-only record: `docs/adr/*`, journal digests
   (`layers/journal/content/*/pages/digests/*.md` — they're pages, but the
   `digest` job generates them, so Historical despite living under `pages/`) and
-  session logs, blog posts. **Never rewrite a decision.** A drifted ADR still gets
-  the brave fix — the repo's sanctioned **amendment banner / Status-line pointer**
-  (ADR-0018), never a rewrite of the decision — but ADRs are human-only (ADR-0004),
-  so that edit rides the shared, human-reviewed escalation PR, not the self-merged
-  one (step 8).
+  session logs, blog posts. **Never rewrite a decision.** ADR-0018's own
+  amendment mechanism draws the line for a drifted ADR: a **pure factual
+  correction** — a wrong path, a dead link, a typo describing the decision,
+  nothing about the decision itself — is a **direct in-place edit**, no
+  amendment banner needed; a **decision reversal** still gets the brave fix
+  via the repo's sanctioned **amendment banner / Status-line pointer**
+  (ADR-0018), never a rewrite of the decision text. **Either way the edit
+  touches a human-only surface (ADR-0004)** — ADRs are human-only to merge
+  regardless of category — so both kinds of ADR fix ride the shared,
+  human-reviewed escalation PR, never the self-merged one (step 8). Journal
+  digests, session logs, and blog posts stay append-only either way — they
+  record what happened, not a decision, so neither kind of edit applies to
+  them; leave them as-is (rewriting them falsifies history).
 - **Pack-generic** — external-pack Skills (`external: true`; e.g.
   `setup-matt-pocock-skills/*`, the `*-FORMAT.md` templates). Generic and
   re-installable, so a rewrite is clobbered on re-install (ADR-0005). **Never
@@ -233,17 +241,18 @@ once the gate reports green — a red gate simply never merges (see below). Leav
 one-line PR comment as the audit trail.
 
 **Keep human-only-surface fixes out of this PR — those escalate instead.** A fix
-that touches an ADR's amendment banner, CI, isolation logic, or the
-manifest-expansion/routing modules — **or a Mis-location file move that changes a
-journal `pages/*.md` file's route** (routing-adjacent, ADR-0006), **or an
-Orphan-addition finding that a new ADR supersedes another without the amendment
-banner on the old one** (adding that banner is an ADR edit, human-only) — never
-rides in the self-merged routine PR above. Bundle **all** human-only-surface
-findings from this one sweep into a **single shared, separately human-reviewed
-PR** — not one PR per finding (see the Historical-tier note above) — subscribe to
-it, and babysit it to merge/close. Likewise, if the gate is
-red for a reason that isn't yours, leave the PR open for a human rather than
-merging red — fix on the branch or escalate honestly instead.
+that touches an ADR **at all** — a pure factual correction or a decision-reversal
+amendment alike (ADR-0018; see the Historical-tier note above) — or CI,
+isolation logic, or the manifest-expansion/routing modules — **or a Mis-location
+file move that changes a journal `pages/*.md` file's route** (routing-adjacent,
+ADR-0006), **or an Orphan-addition finding that a new ADR supersedes another
+without the amendment banner on the old one** (adding that banner is an ADR
+edit, human-only) — never rides in the self-merged routine PR above. Bundle
+**all** human-only-surface findings from this one sweep into a **single shared,
+separately human-reviewed PR** — not one PR per finding (see the Historical-tier
+note above) — subscribe to it, and babysit it to merge/close. Likewise, if the
+gate is red for a reason that isn't yours, leave the PR open for a human rather
+than merging red — fix on the branch or escalate honestly instead.
 
 **At PR-open, invoke `close-session`** — your first log (`in-review`).
 
