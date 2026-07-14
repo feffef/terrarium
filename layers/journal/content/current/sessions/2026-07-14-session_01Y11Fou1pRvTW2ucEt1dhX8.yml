@@ -1,0 +1,169 @@
+schemaVersion: 1
+session: session_01Y11Fou1pRvTW2ucEt1dhX8
+startedAt: 2026-07-14T09:55:27Z
+endedAt: 2026-07-14T12:12:10Z
+kind: interactive
+goal: Implement all ready-for-agent issues in batches
+status: in-review
+outcome: "10 PRs merged, 1 declined, #450 still building"
+summary: "User-directed: implement all `ready-for-agent` issues in small batches, up to 3 parallel Sonnet worktree agents, human-reviewed gated PRs, quick wins first, avoiding conflict-prone parallel branches. Landed 10 gated PRs (all human-merged) across docs/ADR/skill/test/tooling surfaces; the owner steered merges, review comments (trim #464, de-dup #476, shorten the CLAUDE.md drop-zone rule on #467) and priorities throughout, and declined #442 (a docs-drift gate check). I triaged the non-implementable issues to `ready-for-human` (regressions, research/prototype, green-light-needed, declined-approach) to keep the agent queue honest. All net-new work was on the user's explicit green-light. #450 (journal copy-link) is still being built at this closure point; I will refresh this log to its final status once it lands."
+prs:
+  - "463"
+  - "464"
+  - "465"
+  - "467"
+  - "468"
+  - "470"
+  - "472"
+  - "473"
+  - "474"
+  - "476"
+  - "477"
+docsRead:
+  - path: CLAUDE.md
+    reason: repo conventions — worktree/PR discipline, single-home
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: "escalation + tier logic for #456/#455"
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: "amendment convention for #455"
+  - path: scripts/validate-content.ts
+    reason: "extended for #446 referential-integrity"
+  - path: scripts/recent-prs.ts
+    reason: (no reason given)
+  - path: .claude/worktrees/manual-464/docs/agents/issue-tracker.md
+    reason: (read before editing)
+  - path: .claude/worktrees/manual-458/docs/proposals/README.md
+    reason: (read before editing)
+  - path: .claude/worktrees/manual-467/docs/proposals/README.md
+    reason: (read before editing)
+  - path: .claude/worktrees/manual-476/.agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: session-closure front door
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: |-
+      HUMAN-PROMPTED-CLOSURE: did not invoke close-session at the first gated
+      PR-open (#463); only ran closure when the user said "begin wrapping up",
+      after 10 PRs had opened and merged. Stayed in a continuous multi-PR
+      dispatch/review flow and never logged at PR-open per CLAUDE.md.
+    solution: |-
+      Fire close-session on the first PR-open even inside a long multi-PR run and
+      re-fire as work continues (logging self-heals) instead of deferring to the end.
+    severity: major
+  - description: |-
+      Worktree-isolated impl agents stopped mid-gate WITHOUT committing again
+      (#427 regression). 2 of 6 agents (#446, #442) ended their turn with work
+      uncommitted+unpushed while awaiting a BACKGROUND gate; a 3rd (#469)
+      committed first but still ended waiting on the background gate. Explicit
+      commit-before-stop briefs, strengthened across dispatches, did not hold.
+    solution: |-
+      Enforce at the tool/process boundary (forbid backgrounding the gate in a
+      subagent, or a commit-before-stop checkpoint) — doc-only guidance doesn't
+      hold, matching #427. Orchestrator worktree-check + SendMessage-resume rescued every case, no work lost.
+    severity: major
+  - description: |-
+      Provenance footer (ADR-0017) not auto-injected on cloud commits again
+      (#346). My worktree `git -C ... commit -m`/`-F` commits landed without the
+      Co-Authored-By/Claude-Session footer; amended it in each time.
+    solution: "Enforcement (commit-msg hook) as #346 recommends; the doc-only workaround keeps costing amend cycles."
+    severity: moderate
+  - description: |-
+      Dispatched a net-new gate-check addition (#442 docs-drift check) the owner
+      didn't want; owner closed the PR without merging and declined the approach
+      for both #442 and its cousin #444.
+    solution: For net-new mechanism/gate additions (vs. clearly-scoped fixes), value-check with the owner before dispatch.
+    severity: minor
+  - description: |-
+      Journal accordion scroll e2e flake recurred (`journal.e2e.ts` ~line 224, an
+      expect.poll scroll-position timeout): failed #467 CI and surfaced in agent
+      gate runs; rerun_failed_jobs passed.
+    solution: "The #450 useAccordionDeepLink extraction is meant to harden this scroll contract; until then, re-kick the failed job."
+    severity: minor
+  - description: |-
+      Initial mcp__github__list_issues with full bodies overflowed the tool's
+      output-token ceiling (~65k chars for 26 issues); had to slice the saved file.
+    solution: "A minimal/no-body list mode would avoid it; relates to #451's issue_read/large-output doc-notes."
+    severity: minor
+durationSec: 8202
+models:
+  claude-opus-4-8: 417
+toolCounts:
+  ToolSearch: 7
+  Bash: 24
+  mcp__github__list_issues: 3
+  mcp__github__list_pull_requests: 1
+  Read: 9
+  Glob: 8
+  TaskCreate: 14
+  TaskUpdate: 27
+  Agent: 12
+  AskUserQuestion: 3
+  mcp__github__create_pull_request: 11
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 11
+  mcp__github__issue_write: 13
+  mcp__github__pull_request_read: 7
+  mcp__Claude_Code_Remote__send_later: 2
+  Write: 3
+  mcp__github__add_issue_comment: 11
+  Edit: 6
+  Grep: 1
+  mcp__github__get_job_logs: 1
+  mcp__github__actions_run_trigger: 1
+  SendMessage: 2
+  mcp__github__issue_read: 6
+  Skill: 2
+filesEdited:
+  - .claude/worktrees/manual-464/docs/agents/issue-tracker.md
+  - .claude/worktrees/manual-458/docs/proposals/README.md
+  - .claude/worktrees/manual-458/CLAUDE.md
+  - .claude/worktrees/manual-467/CLAUDE.md
+  - .claude/worktrees/manual-467/docs/proposals/README.md
+  - .claude/worktrees/manual-476/.agents/skills/audit-docs/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Implement #457 ADR-0003 ledger"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #459 wayfinder label doc"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #342 atlas e2e assertion"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #458 docs/proposals drop-zone"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #456 audit-docs escalation bundling"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #446 content checks"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #445 gate preflight"
+    model: sonnet
+  - type: general-purpose
+    task: "Author #443 authorAssociation label proposal"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #469 mermaid e2e sweep"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #455 ADR-editing rule"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #442 removed-mechanism-noun check"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #450 journal copy-link"
+    model: sonnet
+gitBranch: claude/zen-sagan-8lssg5
+entrypoint: remote
+cliVersion: 2.1.209
+learnings:
+  - A gate check wired into `pnpm validate:content`/`pnpm gate` via package.json is agent-mergeable and CI runs it automatically — no `.github/workflows/gate.yml` edit needed. Only a *dedicated* new CI job needs gate.yml (and thus the docs/proposals handoff).
+ideas:
+  - "A subagent-side guard that refuses to end a worktree-isolated agent's turn while a backgrounded gate process is still alive (or forces a commit+push checkpoint before backgrounding) — closes the recurring #427 mid-gate-stop work-loss at the mechanism level instead of relying on orchestrator rescue."
+  - A lightweight 'confirm value with the owner before dispatch' gate in the implement flow for net-new mechanism/gate additions, distinct from clearly-scoped fix tickets that can go straight to a gated PR.
