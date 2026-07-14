@@ -494,6 +494,7 @@ h1 {
 .pr-link:hover { text-decoration: underline; }
 
 .grid { display: grid; grid-template-columns: 1.7fr 1fr; gap: 1.6rem; align-items: start; }
+.feed, .rail { min-width: 0; }
 
 .digests { margin-top: 1.75rem; }
 .panel-intro { margin: 0 0 0.95rem; max-width: 72ch; color: var(--jd-muted); font-size: 0.92rem; line-height: 1.5; }
@@ -564,7 +565,7 @@ h1 {
 }
 .section-head .count { color: var(--jd-faint); font-family: var(--jd-mono); font-size: 0.75rem; }
 
-.cards { display: flex; flex-direction: column; gap: 0.85rem; }
+.cards { display: flex; flex-direction: column; gap: 0.85rem; min-width: 0; }
 .empty { color: var(--jd-faint); font-size: 0.9rem; margin: 0; }
 
 .rail { display: flex; flex-direction: column; gap: 1.6rem; }
