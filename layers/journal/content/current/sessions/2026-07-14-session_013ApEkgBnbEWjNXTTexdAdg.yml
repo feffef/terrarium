@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_013ApEkgBnbEWjNXTTexdAdg
+startedAt: 2026-07-14T15:43:37Z
+endedAt: 2026-07-14T16:01:04Z
+kind: autonomous
+goal: "Run /blog-post: write one grounded post"
+status: in-review
+outcome: "PR #486 open, gate green, awaiting human merge"
+summary: "No human prompt after kickoff (the /blog-post command itself, disable-model-invocation: true, so this only runs on invocation) — autonomous. Ran the full bare-invocation candidate process: computed the A0 rotation gate from published-post frontmatter (last=david, eligible={karen,kevin}), drafted three full candidates to scratch (karen on validate-content-refs.ts's own nested-unclosed-directive bug; kevin on a near-miss session-id mixup + an empty commit-signing key; kevin on PR #480's \"42/42 e2e green\" self-report vs. a real CI-caught regression), fact-checked every link/claim against git and the GitHub API before drafting, then had an independent sonnet subagent blind-judge the three. It picked the near-miss/signing-key post for higher stakes and flagged two outside-reader gaps, both closed in revision. Branched, saved the post, ran pnpm gate:scoped green, opened PR #486, subscribed to its activity, and closed the session at PR-open per CLAUDE.md."
+prs:
+  - "486"
+docsRead:
+  - path: CLAUDE.md
+    reason: gated-PR / provenance-footer / rotation discipline
+  - path: layers/blog/tenant.config.ts
+    reason: blogTags enum for frontmatter
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice check before drafting
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice check before drafting
+  - path: layers/journal/content/current/sessions/2026-07-14-session_01Y11Fou1pRvTW2ucEt1dhX8.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: top-level workflow, bare invocation (no persona pinned)
+  - name: close-session
+    reason: session closure sequence at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: "Nearly cited issue #479 as the live tracker for the PR #480 regression's redo work in candidate-3's draft; a fresh issue_read showed it had already been closed as a duplicate and folded back into #450 before I published."
+    solution: Caught by re-verifying every citation against a live GitHub read right before publishing rather than trusting the session-log narrative that first surfaced the reference — worth keeping as standard practice for any issue/PR number cited from a session log or commit message rather than fetched fresh.
+    severity: minor
+  - description: The winning blog-post commit's provenance footer was not auto-injected on the -m-style commit (the usual harness caveat CLAUDE.md documents); caught via git log -1 and amended in with git commit --amend -F.
+    solution: No new fix — matches CLAUDE.md's already-documented caveat; just execute the amend step.
+    severity: minor
+  - description: 'An independent outside-reader subagent (A5) meaningfully improved the winning draft: it flagged undefined jargon ("provenance footer", "Unverified") and an unhedged scope claim about the signing-key gap that a reader with no repo context would stumble on.'
+    solution: No fix needed — this is the candidate process working as designed; noting it as a positive data point for the process, not a friction to fix.
+    severity: nit
+durationSec: 1047
+models:
+  claude-sonnet-5: 166
+toolCounts:
+  Bash: 56
+  Read: 7
+  ToolSearch: 2
+  mcp__github__pull_request_read: 8
+  Write: 5
+  mcp__github__issue_read: 6
+  Edit: 2
+  Agent: 1
+  ScheduleWakeup: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-07-14-it-almost-signed-as-someone-else.md
+subagents:
+  - type: general-purpose
+    task: Blind review of three blog post candidates
+    model: sonnet
+gitBranch: claude/blog-post-5wmcfa
+entrypoint: remote_mobile
+cliVersion: 2.1.209
+learnings:
+  - A plain `pnpm gate:scoped` Bash call was auto-run in the background by the harness without passing run_in_background — worth expecting for any long-running (unit+build+e2e) command even when not explicitly backgrounded.
