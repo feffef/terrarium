@@ -1,0 +1,81 @@
+schemaVersion: 1
+session: session_01RZcfZf19N8ggGSZM5F3y4R
+startedAt: 2026-07-14T08:04:57Z
+endedAt: 2026-07-14T08:22:57Z
+kind: interactive
+goal: Fix auto-triage's stale ready-for-human blind spot
+status: in-review
+outcome: 3 issues actioned, skill fixed, PR open
+summary: "User ran /auto-triage; the sweep found nothing eligible under the skill's label-gated rule (no-label, needs-triage, or needs-info-with-activity only). User pointed out (human-instructed) that ready-for-human issues #452, #435, and #428 carried unactioned owner decisions in their latest comments, which the rule skips unconditionally. Per direct instruction, processed all three: posted exact noreply-email instructions on #435, flipped #428 to ready-for-agent per the owner's Option A pick, and turned #452's seven grilling answers into five new child tickets under map #439 (closing #452). User then flagged (human-instructed) that this follow-through ran as inline main-session tool calls rather than parallel subagent dispatch. Per direct instruction, edited .agents/skills/auto-triage/SKILL.md to replace the label-gated bucket check with a full open-issue scan keyed on whether the most recent comment is human-authored (detected via absence of the ADR-0017 provenance footer, since author_association can't distinguish agent writes from the owner's own). Gate passed; PR #460 opened and subscribed."
+prs:
+  - "460"
+docsRead:
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: brief format for the 5 new child issues
+  - path: docs/agents/issue-tracker.md
+    reason: author_association can't distinguish agent vs owner writes (ADR-0017)
+  - path: docs/research/making-repo-public.md
+    reason: "grounded #435's exact noreply-email instructions"
+  - path: .claude/skills/wayfinder/SKILL.md
+    reason: "map/ticket wiring mechanics for #439's 5 new children"
+  - path: .claude/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .claude/skills/triage/OUT-OF-SCOPE.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .claude/skills/auto-triage/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: auto-triage
+    reason: the invoked sweep; then edited its own eligibility rule
+  - name: triage
+    reason: "composed per-issue rules for #452/#435/#428 follow-through"
+  - name: wayfinder
+    reason: "map/ticket resolution mechanics for #452 -> #439"
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: auto-triage's eligibility rule unconditionally skipped ready-for-human, silently missing owner decisions already sitting as the latest comment on 3 issues through a live sweep.
+    solution: "Fixed in this session (PR #460) — eligibility now scans every open issue/PR and checks last-comment authorship instead of gating on label state."
+    severity: major
+  - description: "Processed the #452/#435/#428 follow-through via direct inline tool calls in the main session instead of dispatching parallel subagents for the independent pieces (e.g. the 5 issue creations); user flagged the context cost mid-task."
+    solution: For a coupled multi-issue thread, still dispatch the genuinely-independent leaf actions (e.g. N issue creations sharing only their target map) as parallel Agent calls, keeping only cross-issue synthesis in the main session.
+    severity: minor
+  - description: list_issues on the 25-issue open backlog returned 73,894 chars, exceeding the tool-result limit; had to persist to a file and slice it via python to extract number/title/labels.
+    solution: Already documented in issue-tracker.md (list_issues has no minimal_output); prefer a narrower search_issues query or a scripted gh listing once the open backlog grows past ~25.
+    severity: nit
+durationSec: 1080
+models:
+  claude-sonnet-5: 131
+toolCounts:
+  Skill: 3
+  Bash: 17
+  Read: 8
+  ToolSearch: 3
+  mcp__github__list_issues: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__issue_read: 5
+  mcp__github__get_label: 3
+  Grep: 1
+  TaskCreate: 5
+  TaskUpdate: 9
+  mcp__github__add_issue_comment: 3
+  mcp__github__issue_write: 8
+  mcp__github__sub_issue_write: 5
+  Edit: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  Write: 1
+filesEdited:
+  - .claude/skills/auto-triage/SKILL.md
+gitBranch: claude/auto-triage-sb3xev
+entrypoint: remote
+cliVersion: 2.1.209
+learnings:
+  - GitHub author_association can't distinguish an agent-authored comment from the human owner's own — both post as OWNER under the same account, since agent-driven writes go through the owner's connection (ADR-0017). The reliable discriminator is the ADR-0017 provenance footer's presence/absence.
