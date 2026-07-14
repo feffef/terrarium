@@ -3,6 +3,25 @@
 Date: 2026-07-04
 Status: Accepted
 
+## Auto-merge exemption ledger
+
+The chartered jobs below hold a bounded exemption from this ADR's "gated PR,
+human merge" default (ADR-0004's low-risk auto-merge tier, unless the *shape*
+column says otherwise). Single-homed here per CLAUDE.md's single-home rule —
+each dated amendment note below gists its exemption and points back to this
+table rather than restating the scope inline.
+
+| Skill | scope | date | PR |
+| --- | --- | --- | --- |
+| `digest` | digest pages under `tenants/journal/content/current/pages/digests/` (pre-rename path; see ADR-0018), plus optionally the Journal index's editorial intro | 2026-07-06 | — |
+| `frictions-to-fixes` | *reviewer, not author* — the Skill's main session reviews and merges PRs authored by its dispatched (Sonnet) impl agents; not purely mechanical, still escalates high-risk PRs to a human | 2026-07-06 | — |
+| `audit-docs` | fact-checked reconciliations to *live* docs and Skills only (its own Live/Historical/Pack-generic tiering); an ADR amendment, CI, isolation, or routing/manifest-expansion edit is out of scope | 2026-07-09 | #262 |
+| `audit-skills` | Inventory-only content citing an existing evidence rule (ADR-0015) | 2026-07-09 | — |
+| `blog-post` | the post itself under `layers/blog/content/<persona>/pages/`, plus for a reaction one pingback stub under `…/pingbacks/` | 2026-07-12 | — |
+
+Every row's bound is exact: content outside that scope, or a red gate, is
+never auto-merged and falls back to ADR-0003's default (gated PR, human merge).
+
 > **Amended by [ADR-0018](0018-tenant-layers-under-layers-directory.md) (2026-07-07).**
 > Tenant layers moved from `tenants/` to Nuxt's conventional `layers/` directory;
 > `tenants/…` paths below reflect the pre-rename layout.
@@ -31,14 +50,12 @@ Status: Accepted
 > remit*". See ADR-0015.
 >
 > **Amended (2026-07-06).** The **mid-term review-agent** described below is now
-> **live in a bounded form**: the `frictions-to-fixes` Skill's main session reviews
-> and merges the PRs authored by its dispatched (Sonnet) impl agents. "No
-> self-merge" is **preserved** — the merging session is never the author of the
-> diff it merges; it is a distinct reviewer gating on ADR-0004. It merges green,
-> low-risk PRs and escalates high-risk ones to a human (see ADR-0004's amended
-> high-risk list). This **activates**, and does not reverse, the "Now → Mid-term"
-> transition below. Scope today is that one Skill; a broader standing
-> agent-reviewer capability would warrant its own ADR.
+> **live in a bounded form** as `frictions-to-fixes` — see the ledger above for
+> its differing reviewer-not-author shape. "No self-merge" is **preserved**: the
+> merging session is never the author of the diff it merges; it is a distinct
+> reviewer gating on ADR-0004. This **activates**, and does not reverse, the
+> "Now → Mid-term" transition below. Scope today is that one Skill; a broader
+> standing agent-reviewer capability would warrant its own ADR.
 >
 > **Amended (2026-07-08).** The **two operating modes below classify *initiation*
 > and are unchanged**; the session log's `kind` field (ADR-0009) now records a
@@ -57,27 +74,22 @@ Status: Accepted
 > reports green). This activates ADR-0004's **low-risk auto-merge tier**
 > ("content only — auto-mergeable when green") for this one chartered job: the
 > merge decision is delegated to the **objective gate**, not made by the
-> author's judgement, and the PR's expected shape is fixed and known (digest
-> pages under `tenants/journal/content/current/pages/digests/`, at most plus
-> the Journal index's editorial intro). Bounded: if anything **outside that
-> scope** rides in the PR it is left for human review, and a **red gate is
-> never merged** — fix on the branch or escalate. Everything else keeps
-> ADR-0003's default: gated PR, human merge.
+> author's judgement — see the ledger above for the PR's fixed, known scope.
+> Bounded: anything outside that scope, or a red gate, is left for human
+> review — fix on the branch or escalate. Everything else keeps ADR-0003's
+> default: gated PR, human merge.
 >
 > **Amended (2026-07-09).** The **`audit-docs` Skill gets the same bounded
 > auto-merge grant as `digest`'s above**, not a generalization of it — same
 > ADR-0004 low-risk tier, same bounds (out-of-scope content or a red gate
-> leaves it for human review). Scope specific to `audit-docs`: only fact-checked
-> reconciliations to *live* docs and Skills (its own Live/Historical/Pack-generic
-> tiering) qualify; an ADR amendment, CI, isolation, or routing/manifest-expansion
-> edit is out of scope and rides its own human-reviewed PR. Recorded after the
-> fact — this was the intended design when `audit-docs` was authored, but the
-> amendment was missed; filed once the gap surfaced during its first run (PR
-> #262).
+> leaves it for human review) — see the ledger above for its exact scope.
+> Recorded after the fact — this was the intended design when `audit-docs`
+> was authored, but the amendment was missed; filed once the gap surfaced
+> during its first run (see ledger for the PR).
 >
 > **Amended (2026-07-09).** `audit-skills` joins the low-risk auto-merge tier
-> (ADR-0004) as a third exemption, after `digest`/`audit-docs`. Bounded to
-> Inventory-only content citing an existing evidence rule; see ADR-0015.
+> (ADR-0004) — see the ledger above for its scope; see ADR-0015 for the
+> Inventory evidence rule it cites.
 >
 > **Amended by [ADR-0020](0020-requester-trust-tiers.md) (2026-07-11).** The
 > "human green-light" for net-new work is specifically a **Trusted** green-light
@@ -88,13 +100,11 @@ Status: Accepted
 > instructions. See ADR-0020 for the tiers.
 >
 > **Amended (2026-07-12).** The **`blog-post` Skill's gated PR joins the low-risk
-> auto-merge tier** (ADR-0004, content-only), after `digest` / `audit-docs` /
-> `audit-skills`. Bounded to the post itself (a page under
-> `layers/blog/content/<persona>/pages/`) plus, for a reaction, one pingback stub
-> under `…/pingbacks/`; anything outside that scope, or a red gate, stays for
-> human review. This lets `blog-post` run **fully autonomously** on its schedule:
-> the merge is delegated to the objective gate, and editorial quality is already
-> gated pre-PR by the blind outside-read pass (SKILL.md A5).
+> auto-merge tier** (ADR-0004, content-only) — see the ledger above for its
+> scope; anything outside it, or a red gate, stays for human review. This lets
+> `blog-post` run **fully autonomously** on its schedule: the merge is delegated
+> to the objective gate, and editorial quality is already gated pre-PR by the
+> blind outside-read pass (SKILL.md A5).
 >
 > **Amended by [ADR-0022](0022-autonomous-triage-sweep.md) (2026-07-14).** Adds a
 > fifth chartered remit — **auto-triage**, an autonomous *classification* sweep
