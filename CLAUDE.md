@@ -138,20 +138,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   so in this repo a stale copy is a *behavioral* bug.
 - **Don't restate a Routine's schedule in a committed doc** — it lives outside
   git and can change without a commit. Say a Skill *is* scheduled; never say *when*.
-- **Hitting a needed `.github/workflows/*` edit? Route it through
-  `docs/proposals/`, don't push it or leave it as ad hoc PR prose.** Agent
-  sessions lack the `workflow` OAuth scope (ADR-0004) and cannot push
-  workflow files directly. Write the intended change to a new file under
-  `docs/proposals/` for a human to apply by hand — see
-  `docs/proposals/README.md` for the file format (this doc doesn't restate
-  it, per the single-home rule above). **Companion-change discipline:** when
-  a change needs both an agent-authored edit and a companion workflow edit,
-  the two are applied **together** — the human applies the workflow half and
-  merges the agent's PR in the same sitting, not the agent half first and the
-  workflow half later. ADR-0004 records what drifting apart costs: the L1
-  `validate:content` step landed in `package.json` via an agent PR while the
-  matching `gate.yml` step needed a separate human edit, so CI ran a stale
-  subset of `pnpm gate` in the interim.
+- **Hitting a needed `.github/workflows/*` edit? You can't push it** (agent
+  sessions lack the `workflow` OAuth scope, ADR-0004) — route it through the
+  `docs/proposals/` drop-zone instead of pushing it or leaving it as ad hoc PR
+  prose, and **read `docs/proposals/README.md`** for the file format and the
+  companion-change discipline.
 - **In TS/Vue code, an inline comment explains WHY, never WHAT — default to no
   comment at all, and when the why isn't obvious, point at the existing doc
   that owns it rather than restating the reasoning.** Well-named code already
