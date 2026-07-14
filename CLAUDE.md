@@ -465,38 +465,16 @@ download) — it's the lower-level capture that `preview.ts shot` uses under the
 
 ### Verifying UI changes
 
-- **Grepping SSR HTML is not proof a change renders.** The server-rendered
-  output includes a serialized `useAsyncData` payload — a string match there can
-  succeed even when the actual DOM never picks up the change (or errors trying
-  to). Verify presentational changes against the **rendered DOM**, not the raw
-  HTML text — take a screenshot with `scripts/screenshot.ts` (see above), or
-  drive the page with Playwright.
-- **When a standalone repro of the logic agrees with expectations but the live
-  app doesn't, render the computed value into the DOM (a debug marker)
-  immediately** — don't iterate cache-busting/rebuild theories first. A stale
-  build can look identical to a live logic bug from the outside; a debug
-  marker settles which one you're looking at in one step.
-- **To verify a click/interaction, not just a static render**, write a small
-  ad-hoc `playwright-core` script against the same pre-installed Chromium
-  `scripts/screenshot.ts` uses — import `resolveChromiumPath()` from
-  `scripts/chromium-path.ts` rather than re-deriving the `PLAYWRIGHT_BROWSERS_PATH`
-  lookup by hand, and launch it with `chromium.launch({ executablePath: resolveChromiumPath() })`.
-  Two gotchas: (1) `tsx` runs the ad-hoc script as CJS, so wrap top-level `await`
-  in an `async` IIFE; (2) write the script **inside the repo tree** so its imports
-  resolve against `node_modules` (any devDependency used in an ad-hoc script —
-  `playwright-core`, `yaml`, etc. — is scoped to this repo's `node_modules`, not
-  global).
-- **A screenshot can't be trusted to rule out a subtle/scoped CSS change** —
-  downscaled or compressed PNGs can mask a style that actually applied. Before
-  concluding a scoped style is missing, probe the element's *computed* style
-  with the same `playwright-core` pattern above, e.g.
-  `page.$eval(selector, el => getComputedStyle(el).propertyName)`. A
-  screenshot confirms a render happened; computed-style probing confirms a
-  *specific* style took effect.
-- **The journal Space landing is a custom dashboard, not a Markdown render** —
-  see `layers/journal/CONTEXT.md`'s "What lives where" for what it renders.
-  Editing `index.md` alone will not change what most of that page shows; check
-  the `.vue` file too.
+**What proves a presentational change — and the Playwright/Chromium/client-only
+sharp edges that make "it looked fine" or "the test passed" untrustworthy — is
+single-homed in `docs/agents/verifying-ui-changes.md`.** Read it before
+eyeballing a render, debugging a layout bug, or asserting a style took effect.
+The headline rules: SSR HTML isn't proof (verify the rendered DOM); a screenshot
+confirms a render happened, not that a *specific* style applied (probe computed
+style); reach for a debug marker before cache-busting theories; drive real
+interactions with an ad-hoc `playwright-core` script via `resolveChromiumPath()`.
+The *how-to-capture* tooling (`scripts/preview.ts`, `scripts/screenshot.ts`)
+stays above.
 
 To **add a Space or Collection**: edit the Tenant's `tenant.config.ts`. The keyed
 collections and the routing map update automatically (see Self-verification
@@ -574,6 +552,10 @@ Nuxt-layer gotchas for editing a Tenant (alias resolution, layer-local imports, 
 ### Content authoring
 
 Deciding whether MDC (Nuxt Content's Markdown Components) is the right tool for a given piece of content, vs. frontmatter or a data collection. See `docs/agents/mdc-when-to-use.md`.
+
+### Verifying UI changes
+
+What proves a presentational change, and the Playwright/Chromium/client-only sharp edges that make a passing test or clean screenshot untrustworthy (SSR HTML isn't proof, computed-style probing, ad-hoc `playwright-core` scripts, visibility ≠ in-viewport, `click()` auto-scroll, `clip` origin, viewport-meta, pre-render shutter, `<ClientOnly>` slot timing). See `docs/agents/verifying-ui-changes.md`.
 
 ### Other research notes
 
