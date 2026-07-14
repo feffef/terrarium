@@ -16,17 +16,40 @@ skill adds only what a **batch, unattended** pass needs, and never restates them
 
 ## What it acts on — the issues that need attention
 
-Reuse `/triage`'s own "show what needs attention" buckets. An issue is eligible
-when it is **open**, **not** already `ready-for-agent`, **and** one of:
+Scan every **open** issue and in-scope external PR (external-PR scoping is
+`/triage`'s own filter — a collaborator's in-flight PR is never triage work).
+Never scan a `wayfinder:map` — see "Coexisting with wayfinder" below; it's an
+index, not work, no matter who last commented on it.
 
-- no state label (never triaged),
-- `needs-triage`, or
-- `needs-info` with **new reporter activity** since the last triage note.
+For everything else, fetch the **most recent comment** — or, if there are no
+comments yet, the issue/PR **body** — and check who wrote it:
 
-Skip everything settled — `ready-for-human`, `wontfix`, and `needs-info` still
-awaiting the reporter. This is what makes a short-interval loop **idempotent**:
-each pass drives an issue to a settled state and then leaves it alone, so repeated
-passes converge and a pass with nothing new is a no-op.
+- **No state label, or `needs-triage`.** Always eligible — never triaged, or
+  evaluation is still in progress — regardless of who commented last.
+- **Any other state** (`needs-info`, `ready-for-human`, even `ready-for-agent`)
+  **is eligible when its most recent comment (or body) is human-authored.**
+  Every agent-authored comment in this repo carries the ADR-0017 provenance
+  footer (`Co-Authored-By: ... <noreply@anthropic.com>` / `Claude-Session:
+  ...`) — its **absence** is the signal, not the GitHub author/association
+  field. The latter can't be trusted here: agent-driven writes land under the
+  human owner's own connection (ADR-0017), so an AI-authored comment and the
+  owner's own comment both show `author_association: OWNER` under the same
+  login. A human comment on *any* state — a decision dropped onto a
+  `ready-for-human` ticket, a clarifying reply on `needs-info`, new
+  instructions added to an already-`ready-for-agent` ticket — is worth
+  another look, label notwithstanding.
+
+Skip a ticket the moment its most recent activity is already AI's own. That's
+what keeps a short-interval loop **idempotent**: once triage (or a directed
+follow-through) responds to the human's comment, the ticket goes quiet again
+until a human writes something new — it does not re-surface on the next pass
+just because its label still reads `ready-for-human`.
+
+This is a full scan — one comments/body fetch per open issue, not a
+label-filtered query — because the whole point is catching a state/comment
+combination no label can express. That's fine at this backlog's current size;
+if the open-issue count grows large enough for the per-issue fetch to matter,
+revisit it then rather than building speculative pagination or caching now.
 
 ## Be brave — bounded by determinability
 
@@ -82,10 +105,12 @@ fighting wayfinder's mechanics** (read `/wayfinder` for them):
 
 ## Run it
 
-1. **Resolve the set.** List open issues lacking `ready-for-agent`; keep the
-   "issues that need attention" set above; apply the wayfinder skips.
-2. **One subagent per issue** (parallel — the set is small by construction, since
-   settled states are excluded). Brief each with `/triage`'s per-issue rules plus
+1. **Resolve the set.** List every open issue and in-scope external PR; for each,
+   check its most recent comment (or body, if none) against the human-authorship
+   rule above; keep the eligible set; apply the wayfinder skips.
+2. **One subagent per issue** (parallel — the eligible set is usually small,
+   since a ticket only surfaces when a human has said something since the last
+   AI action on it). Brief each with `/triage`'s per-issue rules plus
    the brave/uncertainty line and the wayfinder overlay above. Each subagent
    verifies every claim against a primary source in the repo, then applies its own
    labels and posts its own single comment (disclaimer + ADR-0017 footer). A label
