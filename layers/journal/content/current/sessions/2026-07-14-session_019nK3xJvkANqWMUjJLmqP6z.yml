@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019nK3xJvkANqWMUjJLmqP6z
 startedAt: 2026-07-14T15:13:38Z
-endedAt: 2026-07-14T15:41:36Z
+endedAt: 2026-07-14T15:43:18Z
 kind: delegated
 goal: "Implement issue #451: environment/tooling reliability chunks"
-status: in-review
-outcome: "PR #485 open, gate green, awaiting human merge"
-summary: "Single human kickoff (/implement 451, no further human prompt after it — delegated). Issue #451's own triage comment had already scoped exactly three buildable chunks (the rest of the bundle was pre-mitigated or human-gated), so the work was building those three: (A) extracted the parentless-boundary-commit predicate (#292) from audit-skills.ts into a new shared scripts/git-helpers.ts module; (B) added a single-homed FETCH_TIMEOUT_MS/fetchOriginMain() helper and routed every read-only `git fetch origin main` call site (gate.ts, merged-since.ts, recent-prs.ts, session-end.ts) through it; (C) added three doc-notes to docs/agents/issue-tracker.md and docs/agents/tenant-layers.md. Ran /code-review (Standards + Spec sub-agents) before pushing; both surfaced real issues — duplicated rationale comments, a speculative-generality `remote` param, a whitespace-only-%P behavior divergence from the original inline guard, and gate.ts not actually routing through the shared helper — all fixed and re-verified (pnpm gate:scoped full run, 417 unit tests, e2e smoke) before the push. Opened PR #485, subscribed to its activity, scheduled a 1h check-in; safety-gate CI reported green shortly after. PR is open, not yet merged by a human — no self-merge."
+status: completed
+outcome: "PR #485 merged"
+summary: "Single human kickoff (/implement 451, no further human prompt after it — delegated). Issue #451's own triage comment had already scoped exactly three buildable chunks (the rest of the bundle was pre-mitigated or human-gated), so the work was building those three: (A) extracted the parentless-boundary-commit predicate (#292) from audit-skills.ts into a new shared scripts/git-helpers.ts module; (B) added a single-homed FETCH_TIMEOUT_MS/fetchOriginMain() helper and routed every read-only `git fetch origin main` call site (gate.ts, merged-since.ts, recent-prs.ts, session-end.ts) through it; (C) added three doc-notes to docs/agents/issue-tracker.md and docs/agents/tenant-layers.md. Ran /code-review (Standards + Spec sub-agents) before pushing; both surfaced real issues — duplicated rationale comments, a speculative-generality `remote` param, a whitespace-only-%P behavior divergence from the original inline guard, and gate.ts not actually routing through the shared helper — all fixed and re-verified (pnpm gate:scoped full run, 417 unit tests, e2e smoke) before the push. Opened PR #485, subscribed to its activity, scheduled a 1h check-in; safety-gate CI reported green shortly after, and a human merged the PR before the check-in fired — the check-in was cancelled and this log finalized to completed."
 prs:
   - "485"
 docsRead:
@@ -54,19 +54,19 @@ frictions:
   - description: "`git commit --amend --no-edit --reset-author` (the Stop hook's own suggested Unverified-commit remedy) did not actually produce a signed commit — /home/claude/.ssh/commit_signing_key.pub is empty (0 bytes) in this environment despite commit.gpgsign=true, so `git commit -S` silently produces \"No signature\" for every commit made via the local git CLI this session, regardless of author email correctness (which was already right)."
     solution: "Environment-level provisioning gap, not a repo-level fix — same class of issue as the already-documented hasTrustDialogAccepted caveat (CLAUDE.md, #288). Worth a follow-up issue analogous to #288 documenting that Stop-hook-suggested amend/reset-author remedy doesn't fix Unverified when the signing key itself is unprovisioned, so a future session doesn't re-chase it as if it were fixable from inside the repo."
     severity: minor
-durationSec: 1678
+durationSec: 1781
 models:
-  claude-sonnet-5: 301
+  claude-sonnet-5: 309
 toolCounts:
   ToolSearch: 4
   mcp__github__issue_read: 2
-  Bash: 63
+  Bash: 64
   Glob: 2
-  Read: 25
+  Read: 26
   TaskCreate: 7
   TaskUpdate: 12
   Write: 3
-  Edit: 33
+  Edit: 34
   Grep: 2
   Skill: 3
   Agent: 2
@@ -76,6 +76,7 @@ toolCounts:
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 3
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/git-helpers.ts
   - scripts/audit-skills.ts
