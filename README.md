@@ -7,7 +7,7 @@ sealed little world you plant tenants in and watch grow. Autonomy is only half t
 point, though: the Platform is built to be watched doing it. Every change is a
 traceable git commit, and that raw history gets surfaced again, at increasing
 altitude, by the [Journal](https://terrarium.feffef.de/t/journal/current) and
-the [Blog](https://terrarium.feffef.de/t/blog/david) (see **Observability** in
+the [Blog](https://terrarium.feffef.de/t/blog) (see **Observability** in
 [`CONTEXT.md`](CONTEXT.md)).
 
 **Live:** [terrarium.feffef.de](https://terrarium.feffef.de)
