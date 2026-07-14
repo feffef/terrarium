@@ -57,22 +57,32 @@ export interface ValidationReport {
   violations: SchemaViolation[]
 }
 
-/** Extract a Markdown file's leading YAML frontmatter (between the first two
- *  `---` fences). Returns `{}` when there is none — a page schema's fields
- *  are always optional additions on top of `@nuxt/content`'s built-ins
- *  (title/description/body/seo/…), which this script does not re-validate:
- *  those are synthesized by `@nuxt/content` itself, not authored frontmatter. */
+/** Split a Markdown file into its leading YAML frontmatter (between the first
+ *  two `---` fences) and the body that follows. Frontmatter is `{}` when there
+ *  is none. Exported so `validate-content-refs.ts` (issue #446) can read a
+ *  page's MDC body without re-deriving this parse — single-homed here since
+ *  `readFrontmatter` below is just this with the body discarded. */
+export function splitFrontmatter(text: string): { frontmatter: Record<string, unknown>; body: string } {
+  const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/)
+  if (!m) return { frontmatter: {}, body: text }
+  return { frontmatter: asRecord(parseYaml(m[1] as string)), body: text.slice(m[0].length) }
+}
+
+/** A page schema's fields are always optional additions on top of
+ *  `@nuxt/content`'s built-ins (title/description/body/seo/…), which this
+ *  script does not re-validate: those are synthesized by `@nuxt/content`
+ *  itself, not authored frontmatter. */
 function readFrontmatter(text: string): Record<string, unknown> {
-  const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/)
-  if (!m) return {}
-  return asRecord(parseYaml(m[1] as string))
+  return splitFrontmatter(text).frontmatter
 }
 
 /** Parse one content file into the plain object its Collection schema validates
  *  against. `.md` → frontmatter only (the body isn't part of the authored
  *  schema); `.yml`/`.yaml`/`.json` → the whole file, matching how a `data`
- *  Collection's Document is entirely its frontmatter. */
-function parseDocument(absPath: string): Record<string, unknown> {
+ *  Collection's Document is entirely its frontmatter. Exported for reuse by
+ *  `validate-content-refs.ts` (issue #446), which needs the same `.yml`
+ *  whole-file parse for `interactions`/`observations` Documents. */
+export function parseDocument(absPath: string): Record<string, unknown> {
   const raw = readFileSync(absPath, 'utf8')
   if (absPath.endsWith('.md')) return readFrontmatter(raw)
   if (absPath.endsWith('.yml') || absPath.endsWith('.yaml')) return asRecord(parseYaml(raw))

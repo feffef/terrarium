@@ -16,7 +16,7 @@
     "lint": "eslint .",
     "test": "nuxt prepare && vitest run tests/unit",
     "test:e2e": "vitest run tests/e2e",
-    "validate:content": "tsx scripts/validate-content.ts",
+    "validate:content": "tsx scripts/validate-content.ts && tsx scripts/validate-content-refs.ts",
     "verify:skills-lock": "tsx scripts/verify-skills-lock.ts",
     "gate": "pnpm verify:skills-lock && pnpm lint && pnpm typecheck && pnpm validate:content && pnpm test && pnpm build && pnpm test:e2e",
     "gate:scoped": "tsx scripts/gate.ts"
