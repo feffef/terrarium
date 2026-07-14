@@ -1,0 +1,16 @@
+name: auto-triage
+category: general-engineering
+importance: supporting
+role: >-
+  The batch, unattended sibling of `triage`: one brave sweep over the issues that
+  need attention, applying triage's per-issue rules autonomously and stamping
+  ready-for-agent under the ADR-0022 standing green-light. User-invoked; fired by
+  hand or on an interval to keep the Trusted-authored backlog moving. Escalates
+  genuine judgment calls and design uncertainty to a human.
+observations:
+  - date: 2026-07-14
+    note: >-
+      Authored via a grill-with-docs session (session_01NkLUMugs5s6QRRM8Wq7UUb)
+      after a manual brave-triage run moved 18 issues to ready-for-agent; the
+      standing-green-light governance was recorded as ADR-0022, and wayfinder
+      coexistence (respectful overlay) was chosen over separate-lanes/graduation.
