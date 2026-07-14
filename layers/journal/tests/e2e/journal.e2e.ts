@@ -93,12 +93,8 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       expect(html).not.toContain('No document at')
     })
 
-    // The `how-it-works` Document embeds a fenced ```mermaid block, rendered
-    // client-only via a dynamic `import('mermaid')` (issue #364). Its render
-    // coverage now lives in the platform-wide mermaid sweep
-    // (`tests/e2e/smoke.spec.ts`, issue #469), which discovers this page (and any
-    // other Tenant's) data-driven off the content itself rather than hard-coding
-    // this one route here.
+    // `how-it-works`'s ```mermaid render coverage now lives in the platform-wide
+    // sweep (`tests/e2e/smoke.spec.ts`, issue #469), not a hard-coded test here.
 
     // ── Tier 2: interaction — expand-on-click renders in the live DOM ──────────
     // The digest body ships only in the useAsyncData payload until a click mounts

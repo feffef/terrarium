@@ -19,10 +19,7 @@
 // Scope: this pass only fires on a (Tenant, Space) that actually has the
 // Atlas-shaped collections (a `pages` Document with `phenology`, alongside
 // `interactions`/`observations`) — it is a no-op for `journal`/`blog`, whose
-// `pages` Documents never declare `phenology`. The MDC-tag reference table
-// (`TAG_RESOLVERS`) is otherwise generic: a future reference-bearing tag (e.g.
-// `:season{of}`) is a small, local addition to that table, not a rewrite of
-// the scan.
+// `pages` Documents never declare `phenology`.
 //
 // Usage:  pnpm validate:content   (runs this after validate-content.ts;
 //         see package.json)       Exits 0 if every reference resolves and
@@ -92,6 +89,7 @@ function parseAttrs(raw: string | undefined): Record<string, string> {
 export function scanDirectives(body: string): { instances: DirectiveInstance[]; unclosed: UnclosedDirective[] } {
   const stack: { tag: string; colons: number; line: number }[] = []
   const instances: DirectiveInstance[] = []
+  const unclosed: UnclosedDirective[] = []
   let inCodeFence = false
 
   const lines = body.split(/\r?\n/)
@@ -116,35 +114,45 @@ export function scanDirectives(body: string): { instances: DirectiveInstance[]; 
       const colons = (close[1] as string).length
       for (let j = stack.length - 1; j >= 0; j--) {
         if (stack[j]!.colons === colons) {
-          stack.length = j // pop this entry and anything nested (unclosed) above it
+          // Report nested entries the truncation below is about to discard —
+          // still open above the match, so this close never reached them —
+          // the same way an unclosed entry left open at end-of-body is reported.
+          for (const dropped of stack.slice(j + 1)) unclosed.push({ ...dropped })
+          stack.length = j
           break
         }
       }
     }
   }
 
-  return { instances, unclosed: stack.map((s) => ({ tag: s.tag, colons: s.colons, line: s.line })) }
+  unclosed.push(...stack.map((s) => ({ tag: s.tag, colons: s.colons, line: s.line })))
+  unclosed.sort((a, b) => a.line - b.line)
+  return { instances, unclosed }
 }
 
 // ── Reference-resolution table ──────────────────────────────────────────────
 // A tag absent from this table is not checked — a future reference-bearing tag
 // (e.g. `:season{of}` against `GLASS_SEASONS`) is a small, local addition here.
+// `::season-note`/`:season` themselves (enumerated in issue #446) are
+// intentionally absent: those components were retired from atlas content (0
+// occurrences today), so there's nothing to resolve — the table stays
+// extensible if they return.
 
-export interface PageRefContext {
+interface PageRefContext {
   /** This page's own declared `phenology.phases[].name` set. */
   phaseNames: Set<string>
   /** Every `observations.date` in this (Tenant, Space) — the biome's ledger. */
   observationDates: Set<string>
 }
 
-export interface TagResolver {
+interface TagResolver {
   /** The attribute holding the reference value, e.g. `of` or `date`. */
   attr: string
   /** The failure message (sans context) when `value` does not resolve, or `null` when it does. */
   resolve: (value: string, ctx: PageRefContext) => string | null
 }
 
-export const TAG_RESOLVERS: Record<string, TagResolver> = {
+const TAG_RESOLVERS: Record<string, TagResolver> = {
   'phase-note': {
     attr: 'of',
     resolve: (value, ctx) =>

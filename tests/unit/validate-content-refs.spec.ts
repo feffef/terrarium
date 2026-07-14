@@ -53,6 +53,17 @@ describe('scanDirectives()', () => {
     expect(unclosed).toEqual([{ tag: 'almanac', colons: 2, line: 1 }])
   })
 
+  it('reports a directive left unclosed while nested inside a properly-closed parent container', () => {
+    // The outer `:::phase-note` DOES get its matching `:::` — but the
+    // `::sighting` nested inside it never gets its own `::` before that
+    // outer close resolves. It must not be silently dropped when the outer
+    // entry's close truncates the stack.
+    const body = [':::phase-note{of="x"}', 'prose', '::sighting{date="2026-01-01"}', 'more prose', ':::'].join('\n')
+    const { instances, unclosed } = scanDirectives(body)
+    expect(instances.map((i) => i.tag)).toEqual(['phase-note', 'sighting'])
+    expect(unclosed).toEqual([{ tag: 'sighting', colons: 2, line: 3 }])
+  })
+
   it('ignores colon-only lines inside a fenced code block', () => {
     const body = ['```', '::', '```', '::almanac', '::'].join('\n')
     const { instances, unclosed } = scanDirectives(body)

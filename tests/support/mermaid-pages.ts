@@ -3,7 +3,7 @@
 // (`tests/e2e/smoke.spec.ts`) so a new mermaid diagram on ANY page, in ANY
 // Tenant, gets render coverage for free. Data-driven off the SAME expanded
 // manifests `entryRoutesFrom` uses (shared/expand.ts) — never hard-coded.
-import { readdirSync, readFileSync, statSync } from 'node:fs'
+import { globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { root, type ExpandedCollection } from '../../shared/expand.ts'
 
@@ -27,23 +27,6 @@ export function mermaidPageRoute(tenant: string, space: string, relPath: string)
   return slug ? `/t/${tenant}/${space}/${slug}` : `/t/${tenant}/${space}`
 }
 
-/** Recursively list every `.md` file under `dir`, as posix paths relative to `dir`. */
-function markdownFilesUnder(dir: string): string[] {
-  let entries: string[]
-  try {
-    entries = readdirSync(dir)
-  } catch {
-    return [] // no content dir for this (tenant, space, collection) — nothing to scan
-  }
-  const out: string[] = []
-  for (const entry of entries) {
-    const full = join(dir, entry)
-    if (statSync(full).isDirectory()) out.push(...markdownFilesUnder(full).map((f) => `${entry}/${f}`))
-    else if (entry.endsWith('.md')) out.push(entry)
-  }
-  return out
-}
-
 /**
  * Discover every `page`-collection Document, across every Tenant, whose body
  * contains a fenced ```mermaid block, and return its route — sorted, deduped.
@@ -53,7 +36,7 @@ export function mermaidRoutes(cols: ExpandedCollection[]): string[] {
   for (const c of cols) {
     if (c.type !== 'page') continue
     const dir = join(root, c.cwdRel)
-    for (const relPath of markdownFilesUnder(dir)) {
+    for (const relPath of globSync(c.include, { cwd: dir })) {
       if (hasMermaidFence(readFileSync(join(dir, relPath), 'utf-8'))) {
         routes.add(mermaidPageRoute(c.tenant, c.space, relPath))
       }

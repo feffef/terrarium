@@ -51,18 +51,25 @@ export function registerAtlasE2E(): void {
     // `::almanac`/`::phase-note`/`::sighting` block still carries once MDC
     // degrades it to plain paragraphs — no console error either way. Assert
     // each MDC component's own rendered DOM marker instead, so a silent
-    // degrade-to-prose fails the count.
-    it('renders the mycora-susurrans almanac, phase notes, and sightings structurally', async () => {
-      const { page, errors } = await renderAndCollectErrors('/t/atlas/canopy/mycora-susurrans')
-      try {
-        expect(errors).toEqual([])
-        expect(await page.locator('.entry-almanac').count()).toBe(1)
-        expect(await page.locator('.atlas-phase-note').count()).toBe(4)
-        expect(await page.locator('.atlas-sighting').count()).toBe(3)
-      } finally {
-        await page.close()
-      }
-    })
+    // degrade-to-prose fails the count. Table-driven: mycora-susurrans and
+    // lumina-fabulae differ only by route and expected counts.
+    for (const { route, almanac, phaseNote, sighting } of [
+      { route: '/t/atlas/canopy/mycora-susurrans', almanac: 1, phaseNote: 4, sighting: 3 },
+      { route: '/t/atlas/canopy/lumina-fabulae', almanac: 1, phaseNote: 3, sighting: 2 },
+    ]) {
+      const slug = route.split('/').pop()
+      it(`renders the ${slug} almanac, phase notes, and sightings structurally`, async () => {
+        const { page, errors } = await renderAndCollectErrors(route)
+        try {
+          expect(errors).toEqual([])
+          expect(await page.locator('.entry-almanac').count()).toBe(almanac)
+          expect(await page.locator('.atlas-phase-note').count()).toBe(phaseNote)
+          expect(await page.locator('.atlas-sighting').count()).toBe(sighting)
+        } finally {
+          await page.close()
+        }
+      })
+    }
 
     it('hydrates the essay that carries the dial-driven MDC components', async () => {
       // lumina-fabulae weaves ::almanac / ::phase-note / ::sighting into its
@@ -70,22 +77,6 @@ export function registerAtlasE2E(): void {
       // phase-note collapse or the ::sighting registration protocol, surfaces
       // here as a console error/unknown tag.
       await expectCleanHydration('/t/atlas/canopy/lumina-fabulae')
-    })
-
-    // issue #342: mirrors the mycora-susurrans structural check above — a
-    // dropped closing `::` on this route's ::almanac/::phase-note/::sighting
-    // degrades silently to plain prose, which the clean-hydration check can't
-    // catch. Assert the dial-driven components actually rendered.
-    it('renders the lumina-fabulae almanac, phase notes, and sightings structurally', async () => {
-      const { page, errors } = await renderAndCollectErrors('/t/atlas/canopy/lumina-fabulae')
-      try {
-        expect(errors).toEqual([])
-        expect(await page.locator('.entry-almanac').count()).toBe(1)
-        expect(await page.locator('.atlas-phase-note').count()).toBe(3)
-        expect(await page.locator('.atlas-sighting').count()).toBe(2)
-      } finally {
-        await page.close()
-      }
     })
 
     // 200 + stable front-door content: the cover title and all three wing names
