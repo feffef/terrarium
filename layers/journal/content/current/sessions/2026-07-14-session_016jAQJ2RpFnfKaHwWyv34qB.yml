@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_016jAQJ2RpFnfKaHwWyv34qB
 startedAt: 2026-07-14T04:08:19Z
-endedAt: 2026-07-14T04:30:41Z
+endedAt: 2026-07-14T04:32:08Z
 kind: autonomous
 goal: Run /audit-docs end to end
-status: in-review
-outcome: "12 findings fixed in PR #436; 1 escalated to PR #437; issue #435 filed"
-summary: "Agent-initiated (scheduled routine invoking /audit-docs, no live human prompt this turn). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over every Live-tier doc and Skill, deduped 15 raw findings down to 12 by reading overlapping spans directly, then dispatched four independent fact-check agents against primary sources (code, git history, GitHub's own author_association schema docs). All 12 survived as CONFIRMED or CONFIRMED-BUT; none needed a needs-triage escalation for a genuinely unresolvable conflict. Fixed all 11 Live-tier findings directly (audit-skills/SKILL.md's stale \"entire history\" claims and stale manuallyRescuedClosures example; digest/blog-post's stale unconditional enable_pr_auto_merge instruction, now deferring to CLAUDE.md; several single-home duplications trimmed to pointers; audit-docs/SKILL.md's own verbose intro/step-8 restatement; an open owner-decision item moved out of a facts-only research doc into filed issue #435). The 12th finding (ADR-0020's authorAssociation enum missing FIRST_TIMER/MANNEQUIN) is a human-only governance-surface edit per ADR-0004, so it rides its own separate, non-self-merging PR (#437) with only the Live-tier issue-tracker.md mirror fixed in the main PR (#436). Both PRs pushed, gate green locally on both branches, both opened and subscribed for babysitting to merge/close."
+status: completed
+outcome: "PR #436 merged; #437 escalated open for human review; issue #435 filed"
+summary: "Agent-initiated (scheduled routine invoking /audit-docs, no live human prompt this turn). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over every Live-tier doc and Skill, deduped 15 raw findings down to 12 by reading overlapping spans directly, then dispatched four independent fact-check agents against primary sources (code, git history, GitHub's own author_association schema docs). All 12 survived as CONFIRMED or CONFIRMED-BUT; none needed a needs-triage escalation for a genuinely unresolvable conflict. Fixed all 11 Live-tier findings directly (audit-skills/SKILL.md's stale \"entire history\" claims and stale manuallyRescuedClosures example; digest/blog-post's stale unconditional enable_pr_auto_merge instruction, now deferring to CLAUDE.md; several single-home duplications trimmed to pointers; audit-docs/SKILL.md's own verbose intro/step-8 restatement; an open owner-decision item moved out of a facts-only research doc into filed issue #435). The 12th finding (ADR-0020's authorAssociation enum missing FIRST_TIMER/MANNEQUIN) is a human-only governance-surface edit per ADR-0004, so it rides its own separate, non-self-merging PR (#437) with only the Live-tier issue-tracker.md mirror fixed in the main PR (#436). Both PRs pushed, gate green locally on both branches, both opened and subscribed for babysitting. #436's CI gate went green and it was merged (squash); unsubscribed after the merge webhook confirmed it. #437 remains open, correctly awaiting human review as its designed terminal state (a human-only ADR governance edit never self-merges) — still subscribed."
 prs:
   - "436"
   - "437"
@@ -58,29 +58,32 @@ frictions:
   - description: The subscribe_pr_activity webhook echoed my own just-posted PR audit-trail comment back into the conversation as a <github-webhook-activity> event, momentarily reading as if a third party had commented.
     solution: No repo-side fix — recognizing the comment author matched my own action was enough to skip acting on it. Worth remembering that self-authored comments round-trip through the same webhook channel as external ones.
     severity: nit
-durationSec: 1342
+durationSec: 1428
 models:
-  claude-sonnet-5: 213
+  claude-sonnet-5: 238
 toolCounts:
-  Bash: 26
-  ToolSearch: 5
+  Bash: 28
+  ToolSearch: 6
   mcp__github__list_pull_requests: 1
   TaskCreate: 7
-  TaskUpdate: 15
+  TaskUpdate: 16
   Agent: 8
   ScheduleWakeup: 2
-  Read: 14
-  Edit: 13
+  Read: 15
+  Edit: 15
   mcp__github__search_issues: 1
   mcp__github__issue_write: 2
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
   mcp__github__add_issue_comment: 1
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 5
   Skill: 2
   Write: 1
   mcp__Claude_Code_Remote__send_later: 1
   PushNotification: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__update_trigger: 1
 filesEdited:
   - .agents/skills/audit-skills/SKILL.md
   - .agents/skills/digest/SKILL.md
