@@ -1,0 +1,114 @@
+schemaVersion: 1
+session: session_016jAQJ2RpFnfKaHwWyv34qB
+startedAt: 2026-07-14T04:08:19Z
+endedAt: 2026-07-14T04:30:41Z
+kind: autonomous
+goal: Run /audit-docs end to end
+status: in-review
+outcome: "12 findings fixed in PR #436; 1 escalated to PR #437; issue #435 filed"
+summary: "Agent-initiated (scheduled routine invoking /audit-docs, no live human prompt this turn). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over every Live-tier doc and Skill, deduped 15 raw findings down to 12 by reading overlapping spans directly, then dispatched four independent fact-check agents against primary sources (code, git history, GitHub's own author_association schema docs). All 12 survived as CONFIRMED or CONFIRMED-BUT; none needed a needs-triage escalation for a genuinely unresolvable conflict. Fixed all 11 Live-tier findings directly (audit-skills/SKILL.md's stale \"entire history\" claims and stale manuallyRescuedClosures example; digest/blog-post's stale unconditional enable_pr_auto_merge instruction, now deferring to CLAUDE.md; several single-home duplications trimmed to pointers; audit-docs/SKILL.md's own verbose intro/step-8 restatement; an open owner-decision item moved out of a facts-only research doc into filed issue #435). The 12th finding (ADR-0020's authorAssociation enum missing FIRST_TIMER/MANNEQUIN) is a human-only governance-surface edit per ADR-0004, so it rides its own separate, non-self-merging PR (#437) with only the Live-tier issue-tracker.md mirror fixed in the main PR (#436). Both PRs pushed, gate green locally on both branches, both opened and subscribed for babysitting to merge/close."
+prs:
+  - "436"
+  - "437"
+docsRead:
+  - path: CLAUDE.md
+    reason: single-home rule, ADR-0004 human-only surfaces, enable_pr_auto_merge-vs-merge_pull_request guidance
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: the driving skill
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: authorAssociation ambiguity finding + amendment target
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: verify:skills-lock single-home target
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: fact-check the enable_pr_auto_merge contradiction
+  - path: docs/agents/issue-tracker.md
+    reason: authorAssociation mirror list + docs/research vs GitHub-issue convention
+  - path: scripts/audit-skills.ts
+    reason: fact-check MAX_SKILL_SESSION_FILES cap and DISMISSED_MANUALLY_RESCUED_CLOSURES
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/sessions/2026-07-12-session_019pNrzTQb3EV2SJBWXs1bXG.yml
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+  - path: CONTEXT.md
+    reason: (read before editing)
+  - path: docs/agents/domain.md
+    reason: (read before editing)
+  - path: docs/research/public-readiness-review.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: "full run: inventory, review, dedupe, fact-check, fix, gate, PR"
+  - name: close-session
+    reason: invoked at PR-open per the skill's step 8
+  - name: log-session
+    reason: authoring this entry
+frictions:
+  - description: "Filed issue #435's provenance footer with a session id copied from a `git log` entry (a prior, unrelated session's log commit) instead of resolving this session's own id from the commit-footer template — exactly the mistake CLAUDE.md's 'never reconstruct an identifier' rule calls out by name."
+    solution: Caught it on review before moving on and corrected the issue body via issue_write update. The rule already exists and is explicit; the miss was not re-reading it at the moment of writing the footer rather than trusting a plausible-looking value already in context from an earlier git log call.
+    severity: moderate
+  - description: Called ScheduleWakeup with the /loop dynamic-mode sentinel while waiting on background reviewer agents, even though this run was a scheduled-routine /audit-docs invocation, not a /loop session — had to immediately call stop:true to undo it.
+    solution: ScheduleWakeup's tool description is explicit that harness-tracked background work (Agent tool calls) already triggers automatic re-invocation on completion, so no wakeup is needed at all outside actual /loop dynamic-pacing mode. Re-read that distinction before reaching for the tool next time background agents are in flight.
+    severity: nit
+  - description: The subscribe_pr_activity webhook echoed my own just-posted PR audit-trail comment back into the conversation as a <github-webhook-activity> event, momentarily reading as if a third party had commented.
+    solution: No repo-side fix — recognizing the comment author matched my own action was enough to skip acting on it. Worth remembering that self-authored comments round-trip through the same webhook channel as external ones.
+    severity: nit
+durationSec: 1342
+models:
+  claude-sonnet-5: 213
+toolCounts:
+  Bash: 26
+  ToolSearch: 5
+  mcp__github__list_pull_requests: 1
+  TaskCreate: 7
+  TaskUpdate: 15
+  Agent: 8
+  ScheduleWakeup: 2
+  Read: 14
+  Edit: 13
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 2
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__pull_request_read: 3
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  PushNotification: 1
+filesEdited:
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - CLAUDE.md
+  - CONTEXT.md
+  - docs/agents/domain.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/agents/issue-tracker.md
+  - docs/research/public-readiness-review.md
+  - docs/adr/0020-requester-trust-tiers.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens audit (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens audit (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens audit (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens audit (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check findings batch 1 (audit-skills drift)
+  - type: general-purpose
+    task: Fact-check findings batch 2 (auto-merge contradiction)
+  - type: general-purpose
+    task: Fact-check findings batch 3 (duplication/mislocation)
+  - type: general-purpose
+    task: Fact-check findings batch 4 (remaining misc)
+gitBranch: claude/festive-mayer-as6pmt
+entrypoint: remote_trigger
+cliVersion: 2.1.208
