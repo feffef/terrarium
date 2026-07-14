@@ -54,6 +54,10 @@ class to its MCP equivalent:
   the last-resort fallback below) — a session polling non-webhook-delivered
   state (like CI completion) should use `mcp__Claude_Code_Remote__send_later`
   to schedule its own check-in instead.
+- **This polling advice is scoped to non-webhook-delivered state like CI —
+  it does not apply to a dispatched Agent-tool subagent.** A background
+  `Agent` tool completion self-notifies automatically; waiting on one needs no
+  wait/poll tool at all (no `ScheduleWakeup`, no `send_later`).
 - **Any `mcp__Claude_Code_Remote__*` call — not just `send_later` — can fail
   with a transient "permission stream closed before response received"
   error.** Converged workaround (mirrors the poll-until-green pattern above,

@@ -131,6 +131,10 @@ Body in the Persona's voice. No leading `#` — the title comes from frontmatter
 the page renders it. Ground every claim in something real from step 3.
 ```
 
+**Tags**: before drafting `tags`, read `layers/blog/tenant.config.ts`'s curated
+`blogTags` enum — draw every tag from it, don't infer plausible-sounding names
+from other posts; an out-of-vocabulary tag fails `pnpm validate:content`.
+
 `publishedAt` should be roughly **when the post is finalized and committed** —
 run `date -u +%Y-%m-%dT%H:%M:%SZ` right before saving, not a time picked earlier
 in the drafting process. Never a future timestamp, and never noticeably earlier
