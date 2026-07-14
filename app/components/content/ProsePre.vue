@@ -7,7 +7,7 @@
 // Overrides @nuxtjs/mdc's bundled ProsePre.vue for ```mermaid fenced blocks
 // (issue #364); every other language falls through to the stock markup
 // unchanged. Lives at the Platform app root because the override is global,
-// not per-Tenant — see docs/agents/tenant-layers.md §4 for why. `isMermaidLanguage`
+// not per-Tenant — see docs/agents/tenant-layers.md §5 for why. `isMermaidLanguage`
 // and `MermaidDiagram` resolve via Nuxt auto-import — no import needed (§1).
 const { code, language } = withDefaults(
   defineProps<{
