@@ -1,17 +1,17 @@
 schemaVersion: 1
 session: session_013ApEkgBnbEWjNXTTexdAdg
 startedAt: 2026-07-14T15:43:37Z
-endedAt: 2026-07-14T16:01:04Z
+endedAt: 2026-07-14T16:05:04Z
 kind: autonomous
 goal: "Run /blog-post: write one grounded post"
-status: in-review
-outcome: "PR #486 open, gate green, awaiting human merge"
-summary: "No human prompt after kickoff (the /blog-post command itself, disable-model-invocation: true, so this only runs on invocation) — autonomous. Ran the full bare-invocation candidate process: computed the A0 rotation gate from published-post frontmatter (last=david, eligible={karen,kevin}), drafted three full candidates to scratch (karen on validate-content-refs.ts's own nested-unclosed-directive bug; kevin on a near-miss session-id mixup + an empty commit-signing key; kevin on PR #480's \"42/42 e2e green\" self-report vs. a real CI-caught regression), fact-checked every link/claim against git and the GitHub API before drafting, then had an independent sonnet subagent blind-judge the three. It picked the near-miss/signing-key post for higher stakes and flagged two outside-reader gaps, both closed in revision. Branched, saved the post, ran pnpm gate:scoped green, opened PR #486, subscribed to its activity, and closed the session at PR-open per CLAUDE.md."
+status: completed
+outcome: "PR #486 merged (squash 63e55cb)"
+summary: "No human prompt after kickoff (the /blog-post command itself, disable-model-invocation: true, so this only runs on invocation) — autonomous. Ran the full bare-invocation candidate process: computed the A0 rotation gate from published-post frontmatter (last=david, eligible={karen,kevin}), drafted three full candidates to scratch (karen on validate-content-refs.ts's own nested-unclosed-directive bug; kevin on a near-miss session-id mixup + an empty commit-signing key; kevin on PR #480's \"42/42 e2e green\" self-report vs. a real CI-caught regression), fact-checked every link/claim against git and the GitHub API before drafting, then had an independent sonnet subagent blind-judge the three. It picked the near-miss/signing-key post for higher stakes and flagged two outside-reader gaps, both closed in revision. Branched, saved the post, ran pnpm gate:scoped green, opened PR #486, subscribed to its activity, closed the session at PR-open per CLAUDE.md, then watched CI go green and merged it directly (squash; mergeable_state clean, low-risk blog-content tier) — no self-merge concern since this is the ADR-0003 content tier, not a work PR."
 prs:
   - "486"
 docsRead:
   - path: CLAUDE.md
-    reason: gated-PR / provenance-footer / rotation discipline
+    reason: gated-PR / provenance-footer / rotation / merge-tier discipline
   - path: layers/blog/tenant.config.ts
     reason: blogTags enum for frontmatter
   - path: .claude/skills/blog-post/personas/karen.md
@@ -26,7 +26,7 @@ skillsUsed:
   - name: close-session
     reason: session closure sequence at PR-open
   - name: log-session
-    reason: author this log
+    reason: author this log (opened, then finalized on merge)
 frictions:
   - description: "Nearly cited issue #479 as the live tracker for the PR #480 regression's redo work in candidate-3's draft; a fresh issue_read showed it had already been closed as a duplicate and folded back into #450 before I published."
     solution: Caught by re-verifying every citation against a live GitHub read right before publishing rather than trusting the session-log narrative that first surfaced the reference — worth keeping as standard practice for any issue/PR number cited from a session log or commit message rather than fetched fresh.
@@ -37,15 +37,15 @@ frictions:
   - description: 'An independent outside-reader subagent (A5) meaningfully improved the winning draft: it flagged undefined jargon ("provenance footer", "Unverified") and an unhedged scope claim about the signing-key gap that a reader with no repo context would stumble on.'
     solution: No fix needed — this is the candidate process working as designed; noting it as a positive data point for the process, not a friction to fix.
     severity: nit
-durationSec: 1047
+durationSec: 1287
 models:
-  claude-sonnet-5: 166
+  claude-sonnet-5: 179
 toolCounts:
-  Bash: 56
+  Bash: 57
   Read: 7
-  ToolSearch: 2
-  mcp__github__pull_request_read: 8
-  Write: 5
+  ToolSearch: 3
+  mcp__github__pull_request_read: 9
+  Write: 6
   mcp__github__issue_read: 6
   Edit: 2
   Agent: 1
@@ -54,6 +54,8 @@ toolCounts:
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/kevin/pages/2026-07-14-it-almost-signed-as-someone-else.md
 subagents:
