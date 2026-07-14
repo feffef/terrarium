@@ -200,7 +200,7 @@ into implementation without a Trusted green-light, and never auto-merged
 
 ## Tenants
 
-The Platform currently hosts three Tenants. Each has its own **context**
+The Platform currently hosts four Tenants. Each has its own **context**
 (vocabulary + reason-to-exist) co-located with its code; this roster is the
 pointer into them (see `CONTEXT-MAP.md`).
 
@@ -212,6 +212,9 @@ pointer into them (see `CONTEXT-MAP.md`).
   [`layers/blog/CONTEXT.md`](./layers/blog/CONTEXT.md)
 - **Atlas** — a fictional natural-history field guide; the design-heavy showpiece.
   A demo/content Tenant. → [`layers/atlas/CONTEXT.md`](./layers/atlas/CONTEXT.md)
+- **Commits** — a tiny technical proof-of-concept: read the repo's latest commit
+  at runtime via a backend git call. Not a demo/content Tenant. →
+  [`layers/commits/CONTEXT.md`](./layers/commits/CONTEXT.md)
 
 ## Retired terms
 

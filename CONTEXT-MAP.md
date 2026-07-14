@@ -16,6 +16,9 @@ context when you work on that Tenant.
   Specimen, Interaction, Observation; why the Atlas exists (a demo/content Tenant).
 - **Journal** — [`layers/journal/CONTEXT.md`](./layers/journal/CONTEXT.md) —
   Digest; why the Journal isn't optional (Platform infrastructure, ADR-0008).
+- **Commits** — [`layers/commits/CONTEXT.md`](./layers/commits/CONTEXT.md) —
+  Latest Commit, Runtime Read; a tiny technical PoC (runtime git read, a scoped
+  ADR-0001 exception).
 
 The root `CONTEXT.md` also carries a `## Tenants` roster that points at each of
 these — a pointer, not a second home. Substantive definitions live once, in the
