@@ -1,0 +1,76 @@
+schemaVersion: 1
+session: session_01N11zX4vmuSSs4aNmtohbB1
+startedAt: 2026-07-14T15:11:55Z
+endedAt: 2026-07-14T15:31:00Z
+kind: autonomous
+goal: Run /audit-docs autonomous doc audit sweep
+status: in-review
+outcome: "Opened PR #484 with 6 fact-checked doc fixes"
+summary: "Fully agent-initiated autonomous /audit-docs run, no human prompt after kickoff. Fanned out 4 paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the whole repo's docs, pooled 7 findings with no overlap, fact-checked each against primary sources via an independent checker agent (6 CONFIRMED/CONFIRMED-BUT, 1 WRONG and dropped), then fixed all 6 confirmed findings directly: CLAUDE.md's stale validate:content description (missing the validate-content-refs.ts script), a duplicated Playwright gotchas section in tests/README.md (now points at docs/agents/verifying-ui-changes.md), a redundant parenthetical in CONTEXT.md's Session entry, two inert stale-narration sentences (deploy/ README.md's \"#24\" aside, log-session/SKILL.md's old-friction aside), and an unqualified CLAUDE.md rule that contradicted close-session's worktree- isolated-agent carve-out. None of the fixes touch a human-only surface, so all ride the self-merged low-risk content tier. Ran pnpm gate:scoped green, committed, pushed, opened PR #484, and subscribed to its activity to babysit to merge."
+prs:
+  - "484"
+docsRead:
+  - path: CLAUDE.md
+    reason: tiers + fix-bravely + escalation rules
+  - path: CONTEXT.md
+    reason: Session/Session closure glossary + fix target
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: verify ADR-0009 pointer accuracy
+  - path: scripts/validate-content-refs.ts
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (read before editing)
+  - path: deploy/README.md
+    reason: (read before editing)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Commit's provenance footer was not auto-injected by the harness on the first -m-style commit, contra the usual free injection
+    solution: Verified via git log -1 and amended the footer in with git commit --amend -F, per CLAUDE.md's own documented caveat
+    severity: minor
+durationSec: 1144
+models:
+  claude-sonnet-5: 115
+toolCounts:
+  Bash: 13
+  Agent: 5
+  TaskCreate: 8
+  ToolSearch: 3
+  TaskUpdate: 12
+  Read: 7
+  Edit: 6
+  Grep: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - CLAUDE.md
+  - tests/README.md
+  - CONTEXT.md
+  - deploy/README.md
+  - .agents/skills/log-session/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Audit-docs Freshness lens
+  - type: general-purpose
+    task: Audit-docs Single-home lens
+  - type: general-purpose
+    task: Audit-docs Concision lens
+  - type: general-purpose
+    task: Audit-docs Coherence lens
+  - type: general-purpose
+    task: Fact-check pooled audit-docs findings
+gitBranch: claude/audit-docs-bfhm0z
+entrypoint: remote_mobile
+cliVersion: 2.1.209
