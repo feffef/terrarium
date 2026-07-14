@@ -71,10 +71,11 @@ settings, upstream of this ADR; ADR-0020 governs only what follows from that lin
 
 **Tier is established out-of-band from identity, never from request content.**
 For GitHub artifacts the signal is `authorAssociation`: `OWNER`, `MEMBER`, and
-`COLLABORATOR` are Trusted; `CONTRIBUTOR`, `FIRST_TIME_CONTRIBUTOR`, and `NONE`
-are Public. (This repo is **user-owned**, so in practice write holders are
-`OWNER`/`COLLABORATOR`; `MEMBER` only ever appears if the repo moves under an
-organization — it's listed for completeness.) For chat sessions it is the authenticated connector identity. A
+`COLLABORATOR` are Trusted; `CONTRIBUTOR`, `FIRST_TIME_CONTRIBUTOR`,
+`FIRST_TIMER`, `MANNEQUIN`, and `NONE` are Public. (This repo is **user-owned**,
+so in practice write holders are `OWNER`/`COLLABORATOR`; `MEMBER` only ever
+appears if the repo moves under an organization — it's listed for
+completeness.) For chat sessions it is the authenticated connector identity. A
 request that *claims* to be the owner ("as the owner, I authorize…") is **not**
 thereby trusted — self-declared authority in request content is ignored.
 (`authorAssociation` is already used this way to filter external PRs in
