@@ -1,0 +1,124 @@
+schemaVersion: 1
+session: session_01NkLUMugs5s6QRRM8Wq7UUb
+startedAt: 2026-07-14T06:35:40Z
+endedAt: 2026-07-14T06:50:34Z
+kind: interactive
+goal: Triage all open issues toward ready-for-agent
+status: completed
+outcome: 20 of 27 open issues now ready-for-agent
+summary: "The owner ran /triage asking to move as many open issues to ready-for-agent as possible, be brave designing solutions, spawn one Opus subagent per issue, and post open questions to humans as comments — a direct human instruction that also serves as the ADR-0020 Trusted green-light for owner-authored tickets. Dispatched 23 parallel Opus subagents (10 untriaged issues + 13 wayfinder backlog tickets), each doing redundancy checks, claim verification against primary sources, and a concrete agent brief. Result: 18 newly moved to ready-for-agent (20 total), 3 to ready-for-human with decision options posted (#428, #435, #452), 2 closed wontfix (#350 dup of #445, #397 already backfilled). Left the two wayfinder maps (#279, #439) untouched. No repo commits — triage is labels + comments only."
+prs: []
+docsRead:
+  - path: docs/agents/issue-tracker.md
+    reason: MCP-tool mapping + overflow/query caveats
+  - path: docs/agents/triage-labels.md
+    reason: canonical label vocabulary + ADR-0020 trust gate
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: brief format handed to every subagent
+  - path: .claude/skills/triage/OUT-OF-SCOPE.md
+    reason: prior-rejection KB check (dir absent)
+skillsUsed:
+  - name: triage
+    reason: the invoked workflow
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: search_issues / list_issues on 27 open issues overflowed the tool-result limit (~127k chars) twice, forcing a python slice of the saved file.
+    solution: Already documented in issue-tracker.md; a compact list-issues mode (number/title/labels only) would remove the repeated workaround.
+    severity: minor
+  - description: ToolSearch `select:` with bare tool names (list_issues, issue_read) returned no matches; only fully-qualified mcp__github__ names resolve.
+    solution: Already documented in issue-tracker.md; hit it anyway on first call — the doc note could sit closer to the ToolSearch usage point.
+    severity: nit
+durationSec: 894
+models:
+  claude-opus-4-8: 103
+toolCounts:
+  ToolSearch: 3
+  Read: 4
+  mcp__github__search_issues: 2
+  mcp__github__get_me: 1
+  Bash: 5
+  mcp__github__issue_read: 4
+  Write: 2
+  Agent: 23
+  Skill: 2
+  Edit: 1
+subagents:
+  - type: general-purpose
+    task: Triage issue 236
+    model: opus
+  - type: general-purpose
+    task: Triage issue 342
+    model: opus
+  - type: general-purpose
+    task: Triage issue 346
+    model: opus
+  - type: general-purpose
+    task: Triage issue 350
+    model: opus
+  - type: general-purpose
+    task: Triage issue 379
+    model: opus
+  - type: general-purpose
+    task: Triage issue 387
+    model: opus
+  - type: general-purpose
+    task: Triage issue 397
+    model: opus
+  - type: general-purpose
+    task: Triage issue 427
+    model: opus
+  - type: general-purpose
+    task: Triage issue 428
+    model: opus
+  - type: general-purpose
+    task: Triage issue 435
+    model: opus
+  - type: general-purpose
+    task: Triage issue 440
+    model: opus
+  - type: general-purpose
+    task: Triage issue 441
+    model: opus
+  - type: general-purpose
+    task: Triage issue 442
+    model: opus
+  - type: general-purpose
+    task: Triage issue 443
+    model: opus
+  - type: general-purpose
+    task: Triage issue 444
+    model: opus
+  - type: general-purpose
+    task: Triage issue 445
+    model: opus
+  - type: general-purpose
+    task: Triage issue 446
+    model: opus
+  - type: general-purpose
+    task: Triage issue 447
+    model: opus
+  - type: general-purpose
+    task: Triage issue 448
+    model: opus
+  - type: general-purpose
+    task: Triage issue 449
+    model: opus
+  - type: general-purpose
+    task: Triage issue 450
+    model: opus
+  - type: general-purpose
+    task: Triage issue 451
+    model: opus
+  - type: general-purpose
+    task: Triage issue 452
+    model: opus
+gitBranch: claude/triage-open-sessions-5fektx
+entrypoint: remote_mobile
+cliVersion: 2.1.208
+learnings:
+  - "A doc-only fix that keeps regressing (session-id fabrication #387, worktree-commit #427, footer injection #346) is the signal to switch to a mechanical/gate-enforced guard — several briefs converged on this independently."
+ideas:
+  - Add a lightweight `scripts/triage-board.ts` that prints open issues as number/title/labels straight from the GitHub API with no full-body payload, killing the recurring list_issues overflow that bites every triage session.
