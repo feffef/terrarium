@@ -33,7 +33,7 @@
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { $fetch, setup } from '@nuxt/test-utils/e2e'
-import { entryRoutes, expectCleanHydration, renderAndCollectErrors } from '../support/e2e.ts'
+import { entryRoutes, expectCleanHydration, mermaidPageRoutes, renderAndCollectErrors } from '../support/e2e.ts'
 import { findPreinstalledChromium, findSystemChrome } from '../../scripts/chromium-path.ts'
 import { registerJournalE2E } from '../../layers/journal/tests/e2e/journal.e2e.ts'
 import { registerBlogE2E } from '../../layers/blog/tests/e2e/blog.e2e.ts'
@@ -75,6 +75,31 @@ describe('L2 smoke render', async () => {
     for (const route of entryRoutes) {
       it(`hydrates ${route} in a browser with no console/page errors`, async () => {
         await expectCleanHydration(route)
+      })
+    }
+  })
+
+  // ── Platform: every content page with a fenced ```mermaid block (#469) ──────
+  // Discovered from the manifests + real content — mirrors `entryRoutesFrom`
+  // (shared/expand.ts) — so a new mermaid diagram on ANY page, in ANY Tenant,
+  // gets render coverage automatically instead of shipping untested. Only a real
+  // browser can prove the client-only `<MermaidDiagram>` (issue #364) actually
+  // replaced its fallback `<pre>` with an inline SVG.
+  describe('mermaid diagrams', () => {
+    it('discovers at least one mermaid page to sweep', () => {
+      expect(mermaidPageRoutes.length).toBeGreaterThan(0)
+    })
+
+    for (const route of mermaidPageRoutes) {
+      it(`renders a mermaid diagram as an inline SVG on ${route}`, async () => {
+        const { page, errors } = await renderAndCollectErrors(route)
+        try {
+          await page.locator('.mermaid-diagram svg').first().waitFor({ state: 'attached', timeout: 10_000 })
+          expect(await page.locator('.mermaid-diagram svg').count()).toBeGreaterThan(0)
+          expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
+        } finally {
+          await page.close()
+        }
       })
     }
   })

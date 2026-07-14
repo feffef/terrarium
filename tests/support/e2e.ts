@@ -8,11 +8,20 @@ import type { Page } from 'playwright-core'
 import { expect } from 'vitest'
 import { createPage, url } from '@nuxt/test-utils/e2e'
 import { entryRoutesFrom, expand, loadManifests } from '../../shared/expand.ts'
+import { mermaidRoutes } from './mermaid-pages.ts'
+
+// Both target lists are derived at test-time from the SAME expanded manifests
+// (ADR-0014), so new Spaces/pages are covered automatically with no hard-coding.
+const expandedCollections = expand(loadManifests())
 
 // The L2 target list, derived at test-time from the manifests (ADR-0014) so new
 // Spaces are covered automatically. Single-homed in `shared/expand.ts` so the
 // build-time routing module and this test-time list can't drift.
-export const entryRoutes = entryRoutesFrom(expand(loadManifests()))
+export const entryRoutes = entryRoutesFrom(expandedCollections)
+
+// Every content page, across every Tenant, whose body contains a fenced
+// ```mermaid block — the L2 sweep target list for issue #469.
+export const mermaidPageRoutes = mermaidRoutes(expandedCollections)
 
 /**
  * Navigate to `route` in a fresh page, capturing every console *error* and
