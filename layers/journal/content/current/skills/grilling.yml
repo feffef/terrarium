@@ -4,7 +4,15 @@ importance: supporting
 installedSha256: 4fc8087fb48b0174b4f02e03a5ab7e331830f921fd440c51393895902d22e445
 role: >-
   The one-question-at-a-time interrogation that stress-tests a plan or design
-  before building — used standalone (the schema-refinement session) or as the
-  engine inside `grill-with-docs` (the digest and audit-skills builds). Reach for
-  it to pressure-test a design tree branch by branch.
-observations: []
+  before building — used standalone or as the engine inside `grill-with-docs`.
+  Reach for it to pressure-test a design tree branch by branch.
+observations:
+  - date: 2026-07-14
+    note: >-
+      Used in 5 of this window's 40 sessions, every time via grill-with-docs:
+      session_01RqxwHH (close-session/log-session split design), session_019ojLY
+      (Skill Inventory role/observations split), session_01LftL3mM (Atlas
+      relations-graph redesign), session_01TesnDHD (blog sibling-citing design),
+      session_01Rervdd (curated blog-tag system design). Prior window's cited
+      examples (the schema-refinement session; the digest and audit-skills
+      builds) have since aged out.

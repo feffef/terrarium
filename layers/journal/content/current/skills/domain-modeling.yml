@@ -5,7 +5,12 @@ installedSha256: 152e2c97239affb12a60c5f4a7e74ab546a49ae169688c81f4e2ccc42dafa57
 role: >-
   Owns the CONTEXT.md glossary and the ADR conventions — CONTEXT.md's own
   canonical `essential` example. Use before any structural change or new
-  vocabulary; reached for in 4 of this window's 40 sessions (Atlas specimen
-  relations, blog sibling-citing, the curated blog-tag system, the multi-context
-  domain-docs restructure).
-observations: []
+  vocabulary.
+observations:
+  - date: 2026-07-14
+    note: >-
+      Used in 4 of this window's 40 sessions: session_01RqxwHH (the
+      close-session/log-session closure-model vocabulary), session_01LftL3mM
+      (Atlas specimen relations), session_01TesnDHD (blog sibling-citing),
+      session_01Rervdd (curated blog-tag system). Prior window's cited example
+      (the multi-context domain-docs restructure) has since aged out.

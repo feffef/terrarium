@@ -12,3 +12,9 @@ observations:
       Used in 6 of this window's 40 sessions (issue #369, #364's Mermaid MDC
       component, the Atlas Sprint 2 orchestration, an "implement every
       ready-for-agent issue" sweep).
+  - date: 2026-07-14
+    note: >-
+      Used in 4 of this window's 40 sessions: session_014dmQsk (#383 fix),
+      session_018UBvEX (#369 triage+implement), session_01YV8CUy (Atlas
+      Sprint 2 orchestration), session_01TzvXVH (#364 Mermaid MDC) — same
+      inconsistent-adoption pattern in role still holds.
