@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01ReRDprntYA6FuUavBhu3Y1
 startedAt: 2026-07-13T20:33:55Z
-endedAt: 2026-07-13T21:06:46Z
+endedAt: 2026-07-14T05:31:38Z
 kind: delegated
 goal: Fix Recent Activity cards overflowing on mobile
-status: in-review
-outcome: "Root-caused grid sizing bug, PR #420 open"
-summary: "A GitHub issue with a phone screenshot reported the journal Space's \"Recent activity\" cards overflowing horizontally on mobile — the single human kickoff prompt, with no further human steering. Root-caused via computed-layout probing (scrollWidth vs clientWidth at a 390px mobile viewport) rather than trusting screenshots alone: `.grid`'s columns (`.feed`, `.rail`) and `.cards` all defaulted to `min-width:auto`, flooring their automatic minimum size at content's min-content width instead of shrinking to the grid track. Also added `overflow-wrap:anywhere` to `.card` for long unbroken tokens in agent-authored session text. Verified with the same layout probe plus a full local gate run (all green), then opened, subscribed to, and will babysit PR #420 to merge."
+status: completed
+outcome: "Grid sizing bug fixed, PR #420 merged"
+summary: "A GitHub issue with a phone screenshot reported the journal Space's \"Recent activity\" cards overflowing horizontally on mobile — the single human kickoff prompt, with no further human steering. Root-caused via computed-layout probing (scrollWidth vs clientWidth at a 390px mobile viewport) rather than trusting screenshots alone: `.grid`'s columns (`.feed`, `.rail`) and `.cards` all defaulted to `min-width:auto`, flooring their automatic minimum size at content's min-content width instead of shrinking to the grid track. Also added `overflow-wrap:anywhere` to `.card` for long unbroken tokens in agent-authored session text. Verified with the same layout probe plus a full local gate run (all green), then opened and subscribed to PR #420, which passed CI green with no review comments and was merged by a human."
 prs:
   - "420"
 docsRead:
@@ -42,23 +42,25 @@ frictions:
   - description: Needed several bisection rounds (`.foot`, then `.card`, then `.cards`/`.feed`/`.rail`) to find which ancestor's `min-width:0` was actually load-bearing.
     solution: A flex/grid item's automatic minimum-size floor only applies to an element that is itself a direct flex/grid item of the container being sized — a nested flex row three levels down (`.foot`) doesn't get that treatment from its own non-flex/grid parent; fix at the actual grid/flex item ancestors first.
     severity: nit
-durationSec: 1971
+durationSec: 32263
 models:
-  claude-sonnet-5: 209
+  claude-sonnet-5: 236
 toolCounts:
-  Bash: 66
+  Bash: 69
   Grep: 10
-  Read: 12
+  Read: 13
   Write: 9
-  Edit: 10
+  Edit: 11
   ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__get_file_contents: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  Skill: 2
-  mcp__github__pull_request_read: 2
-  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 3
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 3
+  mcp__Claude_Code_Remote__delete_trigger: 2
+  mcp__Claude_Code_Remote__list_triggers: 1
 filesEdited:
   - scripts/tmp-overflow-probe.ts
   - scripts/tmp-overflow-probe2.ts
