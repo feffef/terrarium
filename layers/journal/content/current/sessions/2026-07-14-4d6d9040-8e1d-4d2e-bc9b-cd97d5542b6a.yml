@@ -1,25 +1,34 @@
 schemaVersion: 1
 session: 4d6d9040-8e1d-4d2e-bc9b-cd97d5542b6a
 startedAt: 2026-07-14T11:26:08Z
-endedAt: 2026-07-14T11:37:59Z
+endedAt: 2026-07-14T11:56:51Z
 kind: interactive
-goal: Apply authorAssociation PR-labeling workflow (#443)
-status: completed
-outcome: Workflow merged; trusted/public labels created
-summary: "User directed (explicit ask) applying the docs/proposals/443 workflow proposal. Created .github/workflows/pr-authorassociation-label.yml verbatim from the proposal, removed the applied proposal file, and created the trusted/public repo labels the job needs. Pushed on user's \"push\" instruction; updated PR #473's title/body from \"propose\" to \"apply\". CI gate went green; user merged (human-only merge for a CI-touching PR, ADR-0004). All work was human-instructed, not agent-initiated. Local push of a workflow file succeeded — this local CLI has the workflow scope, unlike cloud agent sessions."
+goal: Apply and then simplify authorAssociation PR labeling (#443)
+status: in-review
+outcome: "trusted-only redesign open in PR #478"
+summary: "User directed applying the docs/proposals/443 workflow proposal. First applied it verbatim (PR #473, merged): a workflow labeling each PR trusted/public by author_association, plus the two repo labels. While reviewing the fork-PR token trade-off, the user pressed on it and we found a real design flaw: the `public` label can never be applied safely, because a Public author has no write access and so can only open a fork PR, where the token is read-only and pull_request runs the fork's own workflow copy. On the user's suggestion we simplified to a single `trusted` label (absence = Public), guarded to same-repo PRs — a deny-by-default posture that dodges the token problem entirely. That redesign is PR #478 (open). Also updated issue #443 and docs/agents/issue-tracker.md. All work was human-instructed throughout."
 prs:
   - "473"
+  - "478"
 docsRead:
   - path: docs/proposals/443-authorassociation-pr-labels.md
     reason: the proposal being applied
   - path: docs/proposals/README.md
     reason: drop-zone apply/delete discipline
+  - path: docs/research/making-repo-public.md
+    reason: primary-source grounding for the fork-PR token/trigger facts
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: the Trusted/Public split this labels
   - path: MEMORY.md
     reason: (no reason given)
   - path: scripts/log-session.ts
     reason: (no reason given)
   - path: scripts/session-trace.ts
     reason: (no reason given)
+  - path: .github/workflows/pr-authorassociation-label.yml
+    reason: (read before editing)
+  - path: docs/agents/issue-tracker.md
+    reason: (read before editing)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -27,32 +36,35 @@ skillsUsed:
     reason: (no reason given)
 frictions:
   - description: "Published \"repo is still private\" in PR #473's body, copied from the proposal doc without running gh repo view; repo is actually public, which the user caught."
-    solution: Verify doc-derived factual claims against a primary source (gh repo view) before publishing externally, per CLAUDE.md. The fork-PR write-token Actions setting is now live, not hypothetical.
+    solution: Verify doc-derived factual claims against a primary source before publishing externally (CLAUDE.md already requires this). The stale claim came from the proposal, which cited public-readiness-review.md's framing.
+    severity: moderate
+  - description: "The merged two-label workflow (#473) shipped a design flaw: `public` can never be applied, since Public authors only appear on fork PRs where the token is read-only. The label carried zero information."
+    solution: "Redesigned to a single `trusted` label with absence = Public (PR #478). A spec review that traced author_association x same-repo-vs-fork before merging #473 would have caught it."
     severity: moderate
   - description: Local pnpm typecheck failed on pre-existing layers/atlas errors that did not reproduce in CI — a local node_modules artifact from the session-start mermaid/zod-to-json-schema dependency shuffle.
     solution: Confirmed via git that the branch never touches atlas; trusted CI's green gate over the stale local install.
     severity: minor
   - description: No canonical session_01 id was recoverable from any visible system-prompt footer; this local CLI session's id is a UUID (transcript sessionId).
-    solution: Derived the id from the transcript's own sessionId. The log-session id-recovery instructions assume the cloud footer format only.
+    solution: Derived the id from the transcript's own sessionId. The log-session id-recovery instructions assume the cloud footer format only; user confirmed CLI sessions use the UUID form.
     severity: minor
-  - description: The -F commit (645c771) got no auto-injected Claude-Session footer and no session URL was available to add one by hand, so that provenance line is missing.
-    solution: A local CLI session URL/footer source for -F commits would close this; Co-Authored-By was added manually.
-    severity: minor
-durationSec: 711
+durationSec: 1843
 models:
-  claude-opus-4-8: 95
+  claude-opus-4-8: 150
 toolCounts:
-  Read: 5
-  Bash: 27
-  Write: 4
+  Read: 8
+  Bash: 40
+  Write: 6
   Skill: 2
+  Edit: 1
 filesEdited:
   - .github/workflows/pr-authorassociation-label.yml
   - /Users/feffef/.claude/projects/-Users-feffef-Development-ai-playground-terrarium/memory/workflow-proposals-via-local-cli.md
   - /Users/feffef/.claude/projects/-Users-feffef-Development-ai-playground-terrarium/memory/MEMORY.md
+  - docs/agents/issue-tracker.md
 gitBranch: claude/propose-authorassociation-labels-443
 entrypoint: cli
 cliVersion: 2.1.207
 learnings:
-  - Local CLI sessions here identify by a UUID (transcript `sessionId` / CLAUDE_CODE_SESSION_ID), not the cloud `session_01...` format the log-session instructions assume.
-  - Pushing `.github/workflows/*` succeeds from an authenticated local CLI (it holds the workflow OAuth scope); ADR-0004's no-workflow-scope limit is specific to cloud web/mobile agent sessions.
+  - A Public author (no write access) can only ever open a *fork* PR; a same-repo-branch PR always has a Trusted author, because pushing a branch requires write access. So author_association is fully determined by fork-vs-same-repo for the trust question.
+  - Plain `pull_request` runs the workflow file from the PR head (the fork's copy) and clamps GITHUB_TOKEN to read-only for fork runs — unlike `pull_request_target`, which runs the base-branch file with a write token (grounded in docs/research/making-repo-public.md, GitHub primary sources).
+  - Local Claude Code CLI sessions identify by a UUID (transcript sessionId / CLAUDE_CODE_SESSION_ID), not the cloud session_01 format the log-session instructions assume; and they hold the workflow OAuth scope, so pushing .github/workflows/* succeeds (unlike cloud web/mobile agent sessions, ADR-0004).
