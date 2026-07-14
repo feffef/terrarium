@@ -95,6 +95,16 @@ Status: Accepted
 > human review. This lets `blog-post` run **fully autonomously** on its schedule:
 > the merge is delegated to the objective gate, and editorial quality is already
 > gated pre-PR by the blind outside-read pass (SKILL.md A5).
+>
+> **Amended by [ADR-0022](0022-autonomous-triage-sweep.md) (2026-07-14).** Adds a
+> fifth chartered remit — **auto-triage**, an autonomous *classification* sweep
+> that labels the backlog and may itself apply `ready-for-agent`. Because that
+> label **is** this ADR's implementation green-light, ADR-0022 records the one
+> narrow relaxation: a **Trusted** user *starting* the sweep is a **standing**
+> green-light for that stamp across the **Trusted-authored** backlog — merge stays
+> gated (ADR-0004), and genuine judgment calls or design uncertainty escalate to a
+> human instead. The green-light rule itself is unchanged; see ADR-0022 for the
+> boundary and why classification (not implementation) is what the sweep automates.
 
 ## Context
 
