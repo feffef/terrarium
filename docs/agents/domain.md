@@ -31,25 +31,13 @@ If any of these files don't exist, **proceed silently**. Don't flag their absenc
 
 ## File structure
 
-This repo's actual shape (multi-context, shared-kernel — ADR-0021):
-
-```
-/
-├── CONTEXT-MAP.md                     ← the map: contexts + relationships
-├── CONTEXT.md                         ← the Platform context + Tenants roster
-├── docs/adr/                          ← all decisions (Platform-wide)
-│   ├── 0001-single-container-baked-multitenancy.md
-│   └── …
-└── layers/
-    ├── blog/CONTEXT.md                ← Blog vocabulary + purpose
-    ├── atlas/CONTEXT.md               ← Atlas vocabulary + purpose
-    └── journal/CONTEXT.md             ← Journal vocabulary + purpose
-```
-
-The generic `domain-modeling` template puts contexts under `src/<context>/` with
-per-context `docs/adr/`; this repo co-locates them under `layers/<tenant>/`
-(where the Tenants already live) and keeps every ADR at the root, because all
-decisions so far are Platform-wide.
+This repo's actual shape (multi-context, shared-kernel — ADR-0021) diverges from
+the generic `domain-modeling` template: the template puts contexts under
+`src/<context>/` with per-context `docs/adr/`; this repo co-locates each
+Tenant's `CONTEXT.md` under `layers/<tenant>/` (where the Tenants already live)
+and keeps every ADR at the root `docs/adr/`, because all decisions so far are
+Platform-wide. See CLAUDE.md's "Repo layout" for the authoritative full path
+list.
 
 ## Use the glossary's vocabulary
 

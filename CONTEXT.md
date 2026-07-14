@@ -120,10 +120,10 @@ to **emerge** from clustering real frictions once enough have accumulated, rathe
 than be guessed before there is data.
 
 ### Skill
-A Claude Code skill (`.agents/skills/*`, surfaced through `.claude/skills/*`
-symlinks) that encodes a repeatable capability for
-developing or consolidating the Platform. The Skill set is a first-class,
-ever-growing part of the project — as much a deliverable as the Nuxt code.
+A Claude Code skill that encodes a repeatable capability for developing or
+consolidating the Platform (see `CLAUDE.md` for where Skills live on disk).
+The Skill set is a first-class, ever-growing part of the project — as much a
+deliverable as the Nuxt code.
 
 ### Skill Inventory
 A curated, derived current-state readout of which Skills to actually use and each

@@ -87,12 +87,20 @@ It prints JSON:
   (`close-session` mandates it when a human, not self-judgement, triggered the
   close). The second catches the same regression from *timing* alone — a
   session whose closure (`endedAt`) landed more than `RESCUED_GAP_HOURS` after
-  its last work commit on `origin/main` (`gapHours` is that delay), the shape of
-  the motivating orphan (session_019pNrz, #397) that idled ~22h before a human
-  rescued its log. A session can appear in both, one, or neither.
-- **`skillSessionFiles`** — Skill name → every session log file path that
-  named it, across **all** history (not windowed, not bracketed). Paths only.
-  This is step 4's deep-read entry point, not something to read wholesale now.
+  its last work commit on `origin/main` (`gapHours` is that delay) — the shape
+  of the motivating orphan (session_019pNrz, #397; see
+  `scripts/audit-skills.ts`'s `RESCUED_GAP_HOURS` comment for the timing this
+  was tuned against) that idled before a human rescued its log. That exact
+  session is now suppressed from this signal via
+  `DISMISSED_MANUALLY_RESCUED_CLOSURES` once its fix (#411) landed, so a
+  healthy future run won't show it — a genuinely new rescue will surface the
+  same way. A session can appear in both, one, or neither.
+- **`skillSessionFiles`** — Skill name → session log file paths that named it,
+  across **all** history (not windowed, not bracketed), capped per Skill at the
+  newest `MAX_SKILL_SESSION_FILES` (40) for a very-high-usage Skill (issue
+  #426) — cross-check `skillSessionFileTotals[name]` against this list's length
+  to tell a capped list from an exhaustive one. Paths only. This is step 4's
+  deep-read entry point, not something to read wholesale now.
 
 Done when you hold the scorecard.
 
@@ -159,10 +167,10 @@ something unrelated, because it only has severities, not content. Treat a
 signal here as **suspected, not confirmed**.
 
 **Phase B — deep-read, only for a suspected Skill.** Before judging anything,
-`Read` every file `skillSessionFiles[name]` lists — that Skill's **entire**
-usage history, not just the 5-session bracket — for the full, un-truncated
-record: full friction `description`/`solution` text, `outcome`, `status`,
-`summary`. This is what actually tells you whether the frictions are about
+`Read` every file `skillSessionFiles[name]` lists — as much of that Skill's
+usage history as the (possibly `MAX_SKILL_SESSION_FILES`-capped, see step 2)
+list holds, not just the 5-session bracket — for the fullest record available:
+full friction `description`/`solution` text, `outcome`, `status`, `summary`. This is what actually tells you whether the frictions are about
 this Skill, and whether the edit plausibly caused them. Never skip straight
 from Phase A's coarse signal to a judgement.
 

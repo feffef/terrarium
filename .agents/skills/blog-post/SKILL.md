@@ -240,10 +240,10 @@ under `layers/blog/content/<target>/pingbacks/` — and its editorial judgement 
 already spent in the A5 outside-read, so the merge decision is safely delegated to
 the objective gate:
 
-- **Enable GitHub auto-merge on green.** Repo-level auto-merge is available
-  (`CLAUDE.md`), so **enable it** (`enable_pr_auto_merge`) right after opening the
-  PR and it lands automatically once the gate reports green. Pushing is not
-  landing (`CLAUDE.md`), so subscribe to the PR's activity to catch a red gate.
+- **Subscribe to the PR's activity right after opening it** (CLAUDE.md's
+  "Pushing is not landing" rule) and follow CLAUDE.md's
+  `enable_pr_auto_merge`-vs-`merge_pull_request` guidance to land it once the
+  gate reports green.
 - A **red gate is never merged** — diagnose and fix on the branch (the green
   re-run then auto-merges), or, if the failure isn't the post's fault, leave the
   PR open and escalate to a human.

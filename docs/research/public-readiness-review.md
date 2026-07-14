@@ -28,16 +28,17 @@ Actions logs, and the agent workflow's attack surface.**
 - **`SECURITY.md`** — added; routes reporting through GitHub private
   vulnerability reporting (no personal email exposed).
 
-## Decisions for the owner (status noted inline; #2 still open)
+## Decisions for the owner (status noted inline)
 
 1. **LICENSE.** ~~There is none.~~ **Resolved** — MIT `LICENSE` added (© 2026
    Steffen Sauder), granting read/reuse rights.
 2. **Personal email in history.** `steffen.sauder@gmail.com` is baked into ~21
    commits' author/committer metadata and becomes permanently harvestable.
    History rewrite **cannot** fully undo this (forks + cached views persist —
-   see `making-repo-public.md` §4). Realistic options: accept it, or move
-   *future* commits to a GitHub `noreply` address and enable *"Block command
-   line pushes that expose my email."*
+   see `making-repo-public.md` §4).
+
+   → **Tracked** — issue #435 carries the accept-vs-`noreply` decision; this
+   doc keeps only the verified facts above.
 3. **Governance / prompt-injection (the sharpest workflow risk).** The ADR
    governance model assumes a **single trusted human** (ADR-0003, CONTEXT.md);
    issue #213 already documents this breaking and is explicitly *"do NOT
