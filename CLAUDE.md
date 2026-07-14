@@ -154,7 +154,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   `ToolSearch`** rather than guessing its shape from a similarly-named tool. A
   deferred tool appears by name only, with no parameter schema, until `ToolSearch`
   loads it — a guessed shape (e.g. borrowing `Agent`'s `prompt`/`subagent_type` for
-  `TaskCreate`) errors on the first call.
+  `TaskCreate`) errors on the first call. This rule has already been violated
+  twice by tools whose names read as self-evident enough that the rule didn't
+  feel like it applied: `TaskCreate` (looks like an obvious task-list tool) and
+  `Monitor` (looks like an obvious log-watcher) — a deceptively-obvious name is
+  not an exemption, load the schema anyway.
 - **Never predict or reconstruct an identifier — a line number, a blob SHA, an
   issue/PR number — from memory.** Always resolve it via a fresh tool call
   (a Read, `git rev-parse`/`git log -1 --format=%H`, or the actual `issue_write`
@@ -347,6 +351,14 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
     returned worktree for uncommitted work** before treating the subagent as
     done. (The platform "session limit" abort itself is external and this
     guard doesn't prevent it — it only limits the damage when it happens.)
+  - **The orchestrator's own habit of `cd`-ing into a subagent's worktree to
+    inspect it can leave that cwd sitting there across later Bash calls.** A
+    session-closure Stop hook's "uncommitted changes" flag seen after such an
+    inspection may belong to that still-in-progress subagent's tree, not the
+    orchestrator's own repo state. After inspecting a subagent's worktree via
+    `cd`, `cd` back to the repo root (or use absolute-path-prefixed one-off
+    commands instead of a standalone `cd`), and re-check `git status`/branch
+    at the root before trusting the warning as this session's own.
 - **Before dispatching subagents whose outputs share a load-bearing/structural
   design axis — the thing every one of their outputs depends on — grill it to
   a locked answer first**, using the `grilling` Skill by name. The trigger is
@@ -461,6 +473,11 @@ download) — it's the lower-level capture that `preview.ts shot` uses under the
   to). Verify presentational changes against the **rendered DOM**, not the raw
   HTML text — take a screenshot with `scripts/screenshot.ts` (see above), or
   drive the page with Playwright.
+- **When a standalone repro of the logic agrees with expectations but the live
+  app doesn't, render the computed value into the DOM (a debug marker)
+  immediately** — don't iterate cache-busting/rebuild theories first. A stale
+  build can look identical to a live logic bug from the outside; a debug
+  marker settles which one you're looking at in one step.
 - **To verify a click/interaction, not just a static render**, write a small
   ad-hoc `playwright-core` script against the same pre-installed Chromium
   `scripts/screenshot.ts` uses — import `resolveChromiumPath()` from
