@@ -1,0 +1,47 @@
+# ADR-0020 mechanical aid: labels each PR `trusted` or `public` from
+# GitHub's own `author_association`, making the write-access split visible
+# without reading it off collaborator settings by hand. See issue #443 /
+# #213 and ADR-0020's "possible future mechanical aid" note.
+#
+# Trigger is plain `pull_request`, never `pull_request_target` — ADR-0020
+# requires `pull_request` for fork-PR workflows specifically because
+# `pull_request_target` bypasses the "require approval to run fork PR
+# workflows" Actions setting (it always runs, unlike `pull_request`); see
+# docs/research/making-repo-public.md §3. This job never checks out PR
+# code, so it needs none of `pull_request_target`'s privileged base-branch
+# execution context — see docs/proposals/443-authorassociation-pr-labels.md
+# for the full trade-off this trigger choice implies for fork PRs.
+
+name: pr-authorassociation-label
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Label trusted/public by author_association'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ASSOCIATION: ${{ github.event.pull_request.author_association }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          # Trusted: OWNER, MEMBER, COLLABORATOR (write access — ADR-0020).
+          # Everything else (CONTRIBUTOR, FIRST_TIME_CONTRIBUTOR,
+          # FIRST_TIMER, MANNEQUIN, NONE, ...) defaults to public — see
+          # docs/agents/issue-tracker.md and ADR-0020's pending amendment.
+          case "$ASSOCIATION" in
+            OWNER|MEMBER|COLLABORATOR)
+              add=trusted; remove=public ;;
+            *)
+              add=public; remove=trusted ;;
+          esac
+          gh pr edit "$PR" -R "$REPO" --add-label "$add" --remove-label "$remove"
