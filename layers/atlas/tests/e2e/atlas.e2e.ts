@@ -47,12 +47,45 @@ export function registerAtlasE2E(): void {
       }
     })
 
+    // issue #342: the checks above assert prose text, which an unclosed
+    // `::almanac`/`::phase-note`/`::sighting` block still carries once MDC
+    // degrades it to plain paragraphs — no console error either way. Assert
+    // each MDC component's own rendered DOM marker instead, so a silent
+    // degrade-to-prose fails the count.
+    it('renders the mycora-susurrans almanac, phase notes, and sightings structurally', async () => {
+      const { page, errors } = await renderAndCollectErrors('/t/atlas/canopy/mycora-susurrans')
+      try {
+        expect(errors).toEqual([])
+        expect(await page.locator('.entry-almanac').count()).toBe(1)
+        expect(await page.locator('.atlas-phase-note').count()).toBe(4)
+        expect(await page.locator('.atlas-sighting').count()).toBe(3)
+      } finally {
+        await page.close()
+      }
+    })
+
     it('hydrates the essay that carries the dial-driven MDC components', async () => {
       // lumina-fabulae weaves ::almanac / ::phase-note / ::sighting into its
       // field note — an unresolved MDC tag, or a hydration mismatch in the
       // phase-note collapse or the ::sighting registration protocol, surfaces
       // here as a console error/unknown tag.
       await expectCleanHydration('/t/atlas/canopy/lumina-fabulae')
+    })
+
+    // issue #342: mirrors the mycora-susurrans structural check above — a
+    // dropped closing `::` on this route's ::almanac/::phase-note/::sighting
+    // degrades silently to plain prose, which the clean-hydration check can't
+    // catch. Assert the dial-driven components actually rendered.
+    it('renders the lumina-fabulae almanac, phase notes, and sightings structurally', async () => {
+      const { page, errors } = await renderAndCollectErrors('/t/atlas/canopy/lumina-fabulae')
+      try {
+        expect(errors).toEqual([])
+        expect(await page.locator('.entry-almanac').count()).toBe(1)
+        expect(await page.locator('.atlas-phase-note').count()).toBe(3)
+        expect(await page.locator('.atlas-sighting').count()).toBe(2)
+      } finally {
+        await page.close()
+      }
     })
 
     // 200 + stable front-door content: the cover title and all three wing names
