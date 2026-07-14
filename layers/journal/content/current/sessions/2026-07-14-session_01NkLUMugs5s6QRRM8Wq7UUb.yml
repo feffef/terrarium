@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01NkLUMugs5s6QRRM8Wq7UUb
 startedAt: 2026-07-14T06:35:40Z
-endedAt: 2026-07-14T06:50:34Z
+endedAt: 2026-07-14T07:57:40Z
 kind: interactive
-goal: Triage all open issues toward ready-for-agent
-status: completed
-outcome: 20 of 27 open issues now ready-for-agent
-summary: "The owner ran /triage asking to move as many open issues to ready-for-agent as possible, be brave designing solutions, spawn one Opus subagent per issue, and post open questions to humans as comments — a direct human instruction that also serves as the ADR-0020 Trusted green-light for owner-authored tickets. Dispatched 23 parallel Opus subagents (10 untriaged issues + 13 wayfinder backlog tickets), each doing redundancy checks, claim verification against primary sources, and a concrete agent brief. Result: 18 newly moved to ready-for-agent (20 total), 3 to ready-for-human with decision options posted (#428, #435, #452), 2 closed wontfix (#350 dup of #445, #397 already backfilled). Left the two wayfinder maps (#279, #439) untouched. No repo commits — triage is labels + comments only."
+goal: Brave-triage the backlog, then build auto-triage skill
+status: partial
+outcome: 20 issues ready-for-agent; auto-triage skill pushed, no PR yet
+summary: "Two human-instructed parts. (1) The owner ran /triage asking to move as many open issues to ready-for-agent as possible, be brave, spawn one Opus subagent per issue, and post open questions as comments. Dispatched 23 parallel Opus subagents; result: 18 newly moved to ready-for-agent (20 total), 3 to ready-for-human with decision options (#428, #435, #452), 2 closed wontfix (#350 dup of #445, #397 already backfilled); the two wayfinder maps left untouched. (2) The owner then ran grill-with-docs to turn the brave-triage pattern into a reusable skill. Grilled the design one decision at a time (the owner overruled my recommendations on escalation-under-uncertainty, name, and the wayfinder boundary), then built the user-invoked `auto-triage` skill + ADR-0022 (standing green-light) + an ADR-0003 amendment pointer + a Skill Inventory entry. Committed and pushed to the branch; gate floor green; PR deliberately not opened (task instruction: no PR unless explicitly asked)."
 prs: []
 docsRead:
   - path: docs/agents/issue-tracker.md
@@ -15,36 +15,56 @@ docsRead:
     reason: canonical label vocabulary + ADR-0020 trust gate
   - path: .claude/skills/triage/AGENT-BRIEF.md
     reason: brief format handed to every subagent
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: green-light rule that ADR-0022 amends
+  - path: .claude/skills/wayfinder/SKILL.md
+    reason: coexistence rules for the new skill
   - path: .claude/skills/triage/OUT-OF-SCOPE.md
-    reason: prior-rejection KB check (dir absent)
+    reason: (no reason given)
+  - path: .claude/skills/grill-with-docs/SKILL.md
+    reason: (no reason given)
+  - path: .claude/skills/grilling/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
 skillsUsed:
   - name: triage
-    reason: the invoked workflow
+    reason: the invoked workflow the sweep composes
+  - name: grill-with-docs
+    reason: designed the new skill as an interview + ADR
+  - name: writing-great-skills
+    reason: invocation model + leading words for auto-triage
   - name: close-session
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
 frictions:
-  - description: search_issues / list_issues on 27 open issues overflowed the tool-result limit (~127k chars) twice, forcing a python slice of the saved file.
-    solution: Already documented in issue-tracker.md; a compact list-issues mode (number/title/labels only) would remove the repeated workaround.
+  - description: Provenance footer was not auto-injected on this session's cloud -m commit; had to amend and force-push to add it.
+    solution: "Live recurrence of #346 — the mechanical footer-guard hook proposed in #346/#444 would have prevented the manual amend."
+    severity: moderate
+  - description: search_issues / list_issues on the open-issue set overflowed the tool-result limit (~127k chars) twice, forcing a python slice of the saved file.
+    solution: Documented in issue-tracker.md; a compact number/title/labels list mode would remove the recurring workaround.
     severity: minor
-  - description: ToolSearch `select:` with bare tool names (list_issues, issue_read) returned no matches; only fully-qualified mcp__github__ names resolve.
-    solution: Already documented in issue-tracker.md; hit it anyway on first call — the doc note could sit closer to the ToolSearch usage point.
-    severity: nit
-durationSec: 894
+durationSec: 4920
 models:
-  claude-opus-4-8: 103
+  claude-opus-4-8: 188
 toolCounts:
   ToolSearch: 3
-  Read: 4
+  Read: 9
   mcp__github__search_issues: 2
   mcp__github__get_me: 1
-  Bash: 5
+  Bash: 17
   mcp__github__issue_read: 4
-  Write: 2
+  Write: 6
   Agent: 23
   Skill: 2
-  Edit: 1
+  Edit: 2
+  AskUserQuestion: 10
+filesEdited:
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - layers/journal/content/current/skills/auto-triage.yml
 subagents:
   - type: general-purpose
     task: Triage issue 236
@@ -119,6 +139,6 @@ gitBranch: claude/triage-open-sessions-5fektx
 entrypoint: remote_mobile
 cliVersion: 2.1.208
 learnings:
-  - "A doc-only fix that keeps regressing (session-id fabrication #387, worktree-commit #427, footer injection #346) is the signal to switch to a mechanical/gate-enforced guard — several briefs converged on this independently."
+  - Wayfinder is a planning tool by default ('plan, don't do'); it and triage overlap ONLY because this repo runs execution-carrying maps (#279/#439) that turn wayfinder tickets into build backlog — which is triage's domain. The overlay coexistence is the accepted pragmatic cost of that mixing.
 ideas:
-  - Add a lightweight `scripts/triage-board.ts` that prints open issues as number/title/labels straight from the GitHub API with no full-body payload, killing the recurring list_issues overflow that bites every triage session.
+  - Add a compact issue-list helper (number/title/labels straight from the GitHub API, no bodies) so triage and auto-triage stop hitting the list_issues tool-result overflow every run.
