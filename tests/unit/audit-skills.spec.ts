@@ -7,6 +7,7 @@ import {
   bracketSessions,
   buildRegressionChecks,
   buildSkillRows,
+  buildSkillSessionFileTotals,
   buildSkillSessionFiles,
   findHumanPromptedClosures,
   findManuallyRescuedClosures,
@@ -279,6 +280,51 @@ describe('buildSkillSessionFiles()', () => {
     )
     expect(buildSkillSessionFiles(files)['audit-skills']).toHaveLength(5)
   })
+
+  it('caps a very-high-usage Skill at maxFiles, keeping the newest first (issue #426)', () => {
+    const files = Array.from({ length: 6 }, (_, i) =>
+      entry(`s${i}.yml`, {
+        session: `s${i}`,
+        endedAt: `2026-07-0${i + 1}T00:00:00Z`,
+        skillsUsed: [{ name: 'close-session', reason: 'r' }],
+      }),
+    )
+    expect(buildSkillSessionFiles(files, 3)['close-session']).toEqual(['s5.yml', 's4.yml', 's3.yml'])
+  })
+
+  it('does not cap a Skill below the threshold', () => {
+    const files = [
+      entry('a.yml', { session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: [{ name: 'tdd', reason: 'r' }] }),
+      entry('b.yml', { session: 'b', endedAt: '2026-07-02T00:00:00Z', skillsUsed: [{ name: 'tdd', reason: 'r' }] }),
+    ]
+    expect(buildSkillSessionFiles(files, 3)['tdd']).toEqual(['b.yml', 'a.yml'])
+  })
+})
+
+describe('buildSkillSessionFileTotals()', () => {
+  function entry(file: string, over: Partial<WindowSession> = {}): SessionFile {
+    return { session: sess(over), file }
+  }
+
+  it('counts every hit, uncapped, unlike buildSkillSessionFiles', () => {
+    const files = Array.from({ length: 6 }, (_, i) =>
+      entry(`s${i}.yml`, { session: `s${i}`, skillsUsed: [{ name: 'close-session', reason: 'r' }] }),
+    )
+    expect(buildSkillSessionFileTotals(files)).toEqual({ 'close-session': 6 })
+    expect(buildSkillSessionFiles(files, 3)['close-session']).toHaveLength(3)
+  })
+
+  it('de-dupes a Skill listed twice within the same session file', () => {
+    const files = [
+      entry('a.yml', {
+        skillsUsed: [
+          { name: 'tdd', reason: 'red' },
+          { name: 'tdd', reason: 'green' },
+        ],
+      }),
+    ]
+    expect(buildSkillSessionFileTotals(files)).toEqual({ tdd: 1 })
+  })
 })
 
 describe('parseSkillEditLog()', () => {
@@ -497,5 +543,21 @@ describe('findManuallyRescuedClosures()', () => {
     const sessions = [sess({ session: 's', endedAt: '2026-07-13T02:00:00Z' })] // 2h gap
     expect(findManuallyRescuedClosures(refs, sessions, RESCUED_GAP_HOURS)).toEqual([]) // below default 6h
     expect(findManuallyRescuedClosures(refs, sessions, 1)).toHaveLength(1) // above a 1h threshold
+  })
+
+  it('suppresses a dismissed session id — an already-tracked-and-fixed incident (issue #426)', () => {
+    const refs: SessionTrailerRef[] = [{ sha: 'a', date: '2026-07-13T00:00:00Z', session: 'session_fixed' }]
+    const sessions = [sess({ session: 'session_fixed', endedAt: '2026-07-14T00:00:00Z' })] // 24h gap — would flag
+    expect(
+      findManuallyRescuedClosures(refs, sessions, RESCUED_GAP_HOURS, new Set(['session_fixed'])),
+    ).toEqual([])
+  })
+
+  it('defaults to DISMISSED_MANUALLY_RESCUED_CLOSURES, not an empty set', () => {
+    const refs: SessionTrailerRef[] = [
+      { sha: 'a', date: '2026-07-12T18:32:27Z', session: 'session_019pNrzTQb3EV2SJBWXs1bXG' },
+    ]
+    const sessions = [sess({ session: 'session_019pNrzTQb3EV2SJBWXs1bXG', endedAt: '2026-07-13T17:19:05Z' })]
+    expect(findManuallyRescuedClosures(refs, sessions)).toEqual([])
   })
 })
