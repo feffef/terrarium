@@ -1,0 +1,54 @@
+schemaVersion: 1
+session: session_01Kq4GuZwPq6b7y4XuivRuDr
+startedAt: 2026-07-14T18:16:13Z
+endedAt: 2026-07-14T18:28:33Z
+kind: interactive
+goal: Link journal intro's session-log mention to feed
+status: in-review
+outcome: "PR #487 open, gate green, awaiting human merge"
+summary: 'User directly asked for the "full session log" phrase in the journal editorial intro (layers/journal/content/current/pages/index.md) to link to an anchor scrolling to the session-log feed. Added a #session-log id to the "Recent activity" section in the journal Space-landing Vue page, turned the phrase into a Markdown link to that anchor, and added matching scroll-margin-top for consistency with the existing digest/session deep-link pattern. Verified with pnpm gate:scoped (full gate, all green) and an ad-hoc playwright-core script confirming the click scrolls to and sets the hash for the feed section. Opened gated PR #487 per ADR-0003/CLAUDE.md and subscribed to its activity; it is an ordinary work PR so it awaits human merge, not self-merge.'
+prs:
+  - "487"
+docsRead:
+  - path: docs/agents/verifying-ui-changes.md
+    reason: how to verify a click/scroll interaction, not just a static render
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (read before editing)
+  - path: layers/journal/content/archived/pages/index.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "scripts/preview.ts shot with a #hash URL rendered a blank screenshot (client-only deep-link scroll timing vs. the shutter), even though the base page and the actual click interaction both worked fine."
+    solution: Followed docs/agents/verifying-ui-changes.md's guidance to write an ad-hoc playwright-core script that navigates, clicks the link, and screenshots after settling — confirmed the real behavior instead of trusting the hash-URL screenshot.
+    severity: nit
+durationSec: 741
+models:
+  claude-sonnet-5: 83
+toolCounts:
+  Grep: 6
+  Read: 6
+  Glob: 1
+  Bash: 17
+  Edit: 4
+  Write: 2
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__actions_list: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+filesEdited:
+  - layers/journal/content/current/pages/index.md
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - scripts/tmp-verify-session-log-anchor.ts
+gitBranch: claude/journal-session-log-anchor-u246vd
+entrypoint: remote_mobile
+cliVersion: 2.1.209
