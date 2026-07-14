@@ -138,6 +138,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   so in this repo a stale copy is a *behavioral* bug.
 - **Don't restate a Routine's schedule in a committed doc** — it lives outside
   git and can change without a commit. Say a Skill *is* scheduled; never say *when*.
+- **Hitting a needed `.github/workflows/*` edit? You can't push it** (agent
+  sessions lack the `workflow` OAuth scope, ADR-0004) — route it through the
+  `docs/proposals/` drop-zone instead of pushing it or leaving it as ad hoc PR
+  prose, and **read `docs/proposals/README.md`** for the file format and the
+  companion-change discipline.
 - **In TS/Vue code, an inline comment explains WHY, never WHAT — default to no
   comment at all, and when the why isn't obvious, point at the existing doc
   that owns it rather than restating the reasoning.** Well-named code already
@@ -385,6 +390,7 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 CONTEXT-MAP.md                      # multi-context index: contexts + relationships (ADR-0021)
 CONTEXT.md                          # the Platform context (glossary) + the Tenants roster
 docs/adr/                           # Architecture Decision Records (read all before planning)
+docs/proposals/                     # pending workflow-file changes for a human to apply (agents can't push CI, ADR-0004)
 layers/<tenant>/CONTEXT.md          # that Tenant's own vocabulary + purpose (ADR-0021)
 layers/<tenant>/tenant.config.ts    # the manifest an agent edits (declarative intent)
 layers/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Space
