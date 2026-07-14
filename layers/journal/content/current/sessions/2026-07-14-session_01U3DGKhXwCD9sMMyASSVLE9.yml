@@ -1,57 +1,61 @@
 schemaVersion: 1
 session: session_01U3DGKhXwCD9sMMyASSVLE9
 startedAt: 2026-07-14T01:05:02Z
-endedAt: 2026-07-14T01:31:40Z
+endedAt: 2026-07-14T01:48:01Z
 kind: autonomous
 goal: Run frictions-to-fixes over the latest 20 sessions
 status: completed
-outcome: Two PRs merged, two regressions escalated
-summary: "Scheduled autonomous run of frictions-to-fixes (no human prompt this turn). Dispatched a survey subagent to read the latest 20 session logs, group/rank frictions, and screen each against the GitHub tracker. Filed 5 issues: 3 never-fixed simple fixes (#424 blog-post blogTags enum, #425 issue-tracker.md Agent-tool-wait clarification, #426 audit-skills.ts scorecard robustness) and 2 regressions (#427 worktree-isolated agents stopping without committing, recurring after #317's fix; #428 subscribe_pr_activity auto-triggering despite impl-agent briefs saying not to call it, recurring after #361's fix). Per the skill's regression rule, the two regressions were NOT re-dispatched for another doc-only fix - instead escalated to human review with fresh first-hand evidence attached (this session directly experienced a live third recurrence of the worktree-uncommitted-work failure, and confirmed the subscribe_pr_activity event fires even when the impl agent explicitly does not call the tool). Also added 3 fresh in-window instances as evidence to the already-open identifier-fabrication regression #387, without duplicating it. Dispatched two Sonnet impl agents in isolated worktrees for the 3 simple fixes (one batched doc PR for #424+#425, one code+test PR for #426); reviewed both diffs myself, confirmed green gates, posted review comments, and merged both (PR #429, PR #430) acting as the ADR-0003 review-agent throughout. All work this run was agent-initiated per the skill's own standing charter, not a fresh human ask."
+outcome: Four PRs merged, three regressions escalated
+summary: "Scheduled autonomous run of frictions-to-fixes, fired twice by the same Routine in this one session (no human prompt either time). Cycle 1: dispatched a survey subagent over the latest 20 session logs, filed 5 issues - 3 never-fixed simple fixes (#424 blog-post blogTags enum, #425 issue-tracker.md Agent-tool-wait clarification, #426 audit-skills.ts scorecard robustness) and 2 regressions (#427 worktree-isolated agents stopping without committing, recurring after #317's fix; #428 subscribe_pr_activity auto-triggering despite impl-agent briefs saying not to call it, recurring after #361's fix). Per the skill's regression rule, both regressions were escalated to human review with fresh first-hand evidence attached rather than re-dispatched for another doc-only fix (this session directly experienced a live recurrence of the worktree-uncommitted-work failure, and confirmed the subscribe_pr_activity event fires even when the impl agent explicitly denies calling the tool). Also added 3 fresh in-window instances as evidence to the already-open identifier-fabrication regression #387. Dispatched two Sonnet impl agents in isolated worktrees for the 3 simple fixes (PR #429 for #424+#425, PR #430 for #426); reviewed both diffs, confirmed green gates, posted review comments, and merged both, acting as the ADR-0003 review-agent throughout. Cycle 2 (this same session, Routine fired again): a fresh survey subagent found 4 new candidates; one (enable_pr_auto_merge false-positive, 7/20 recurrence) turned out already covered by issue #385 (closed the day before) - dropped as already-fixed, matching cycle 1's identical conclusion for the same friction pattern in the prior day's window. Filed 3 new doc-only CLAUDE.md issues (#431 debug-marker-first debugging heuristic, #432 ToolSearch rule named examples, #433 orchestrator worktree-cwd hygiene), batched into one PR (#434) via a single Sonnet impl agent, reviewed and merged. Checked #387 for genuinely new evidence before commenting again - the \"fresh\" instances the cycle-2 survey found were the exact same 3 sessions already cited from cycle 1 (window overlap), so correctly added nothing further there. All work across both cycles was agent-initiated per the skill's own standing charter (ADR-0003's ongoing green-light for this specific autonomous job), not a fresh human ask."
 prs:
   - "429"
   - "430"
+  - "434"
 docsRead:
   - path: docs/agents/issue-tracker.md
     reason: (no reason given)
 skillsUsed:
   - name: frictions-to-fixes
-    reason: the skill this whole run executes
+    reason: the skill this whole run executes, twice
   - name: close-session
-    reason: session closure at natural end of run
+    reason: session closure, re-invoked after cycle 2's work
   - name: log-session
-    reason: authoring this log
+    reason: authoring/updating this log
 frictions:
-  - description: "A worktree-isolated impl agent (dispatched for #426) stopped mid-task after starting a background gate run, leaving scripts/audit-skills.ts and its test file uncommitted - a third live instance of the same failure mode #317 was meant to have fixed, now tracked as regression #427."
-    solution: "Caught by checking the worktree directly per CLAUDE.md's guard, then resumed the agent via SendMessage with explicit instructions to run the gate synchronously and commit. The existing doc-only guard works as a safety net (it got caught) but doesn't prevent the underlying stop - flagged on #427 for human review of a stronger, non-prose enforcement mechanism."
+  - description: "A worktree-isolated impl agent (dispatched for #426, cycle 1) stopped mid-task after starting a background gate run, leaving scripts/audit-skills.ts and its test file uncommitted - a live instance of the same failure mode #317 was meant to have fixed, now tracked as regression #427."
+    solution: "Caught by checking the worktree directly per CLAUDE.md's guard, then resumed the agent via SendMessage with explicit instructions to run the gate synchronously and commit. The existing doc-only guard works as a safety net (it got caught) but doesn't prevent the underlying stop - flagged on #427 for human review of a stronger, non-prose enforcement mechanism. Cycle 2's impl agent did NOT repeat this failure (finished cleanly, fully committed and pushed on its own)."
     severity: moderate
-  - description: "subscribe_pr_activity auto-triggered on both dispatched PRs (#429, #430) despite each impl agent's brief explicitly saying not to call it, and despite the #430 agent explicitly denying it called the tool - a live recurrence of regression #428."
-    solution: "Added this session's fresh evidence to #428, narrowing the hypothesis toward a platform-level auto-subscribe on PR creation rather than an agent violating instructions - flagged for human confirmation rather than another impl-agent-brief patch."
+  - description: "subscribe_pr_activity auto-triggered on dispatched PRs (#429, #430 in cycle 1; #434 in cycle 2 too) despite each impl agent's brief explicitly saying not to call it, and despite one agent explicitly denying it called the tool - a live, repeated recurrence of regression #428."
+    solution: "Added cycle 1's fresh evidence to #428, narrowing the hypothesis toward a platform-level auto-subscribe on PR creation rather than an agent violating instructions - flagged for human confirmation rather than another impl-agent-brief patch. Recurred again in cycle 2, consistent with the platform-level hypothesis; not re-commented since no new diagnostic information beyond what #428 already has."
     severity: nit
-  - description: scripts/session-frictions.ts's full 20-session JSON dump silently truncated at roughly 32KB via the Bash tool's captured-output auto-persist preview, with no error, cutting off the 20th session's frictions mid-entry.
-    solution: Redirect this script's output straight to a file rather than relying on the Bash tool's captured/persisted preview - worth carrying into the next frictions-to-fixes cycle's survey-subagent brief.
+  - description: "In cycle 2, the survey subagent classified the enable_pr_auto_merge false-positive candidate as \"never fixed\" when it was actually already closed by issue #385 (merged the day before, doc-only CLAUDE.md fix) - it searched broadly but didn't find/check #385 specifically before recommending building a new script for it."
+    solution: Caught by running a targeted search_issues query myself before filing, avoiding a duplicate issue/PR. The survey-subagent brief should be more insistent on searching for the exact tool/error-message name (e.g. "enable_pr_auto_merge") when a candidate looks like standard workaround-following behavior rather than a fresh bug, since that phrasing is a strong signal a doc fix already exists for it.
+    severity: minor
+  - description: scripts/session-frictions.ts's full 20-session JSON dump silently truncated at roughly 32KB via the Bash tool's captured-output auto-persist preview, with no error, cutting off the 20th session's frictions mid-entry (hit in cycle 1).
+    solution: Redirect this script's output straight to a file rather than relying on the Bash tool's captured/persisted preview - carried this fix into cycle 2's survey-subagent brief and it worked cleanly there (34.8KB, no truncation).
     severity: nit
   - description: scripts/merged-since.ts answers "what landed after timestamp X" but not "did doc passage Y exist before timestamp X", so confirming whether a specific CLAUDE.md/issue-tracker.md guard predated or postdated a friction required separate git log -S archaeology per candidate.
-    solution: Not a defect, just a gap between what the tool gives directly and what the already-fixed screening question needs - fine to keep doing by hand, noted for awareness.
+    solution: Not a defect, just a gap between what the tool gives directly and what the already-fixed screening question needs - fine to keep doing by hand, noted for awareness in both cycles.
     severity: nit
-durationSec: 1598
+durationSec: 2578
 models:
-  claude-sonnet-5: 131
+  claude-sonnet-5: 196
 toolCounts:
-  Bash: 9
-  Agent: 3
-  ScheduleWakeup: 10
+  Bash: 13
+  Agent: 5
+  ScheduleWakeup: 14
   ToolSearch: 4
-  mcp__github__search_issues: 3
-  mcp__github__issue_read: 3
-  Read: 1
-  mcp__github__issue_write: 5
-  mcp__github__add_issue_comment: 5
-  mcp__github__pull_request_read: 10
-  mcp__github__merge_pull_request: 2
+  mcp__github__search_issues: 7
+  mcp__github__issue_read: 4
+  Read: 2
+  mcp__github__issue_write: 8
+  mcp__github__add_issue_comment: 6
+  mcp__github__pull_request_read: 16
+  mcp__github__merge_pull_request: 3
   SendMessage: 1
-  Skill: 2
+  Skill: 3
   Grep: 2
-  Write: 1
+  Write: 2
   PushNotification: 2
 subagents:
   - type: general-purpose
@@ -61,6 +65,11 @@ subagents:
     model: sonnet
   - type: general-purpose
     task: "Code fix for #426 audit-skills.ts"
+    model: sonnet
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: "Doc-batch fix for #431, #432, #433"
     model: sonnet
 gitBranch: claude/hopeful-brown-i9l568
 entrypoint: remote_trigger
