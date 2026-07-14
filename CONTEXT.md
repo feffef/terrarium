@@ -65,8 +65,7 @@ One continuous Claude Code working session against the Platform, identified by a
 stable Claude session id. It is the unit of self-reporting: at **Session closure**
 a session authors a **session log** — a Journal record of, honestly, its
 goal, how far it got, what it read, which Skills it used, and every **Friction**
-it hit. (Closure is the trigger, and it is typically reached *before* the session
-literally ends — see Session closure.) It
+it hit (see Session closure). It
 may also carry, *only when the work sparked them*, two optional notes: **learnings**
 (useful knowledge the session inferred during the work — not read from the repo,
 which would be a doc read — a Friction's positive twin) and **ideas** (an ambitious, concrete proposal for the

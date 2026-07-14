@@ -142,8 +142,7 @@ BRANCH=deploy/self-updating-container   # any branch
 `docker compose up -d`, and the container serves (and keeps pulling) that branch.
 After the PR merges, set `BRANCH=main` (or delete the line — `main` is the
 default) and `docker compose up -d`; the volume checkout switches refs cleanly
-(`fetch` + `reset --hard`), no volume wipe needed. This is exactly how this
-deployment was first brought up and validated live before #24 merged.
+(`fetch` + `reset --hard`), no volume wipe needed.
 
 > For a quick look **without** wiring Caddy/DNS, temporarily add
 > `ports: ["3080:3000"]` to the `terrarium` service and `curl -I

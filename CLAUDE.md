@@ -310,6 +310,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   `log-session`). It's not finished; more commits and a re-fired log can follow
   — re-invoking is safe, see "Logging your session" below for why — and see the
   `log-session` Skill for the exact status semantics (`in-review` vs `completed`).
+  **Exception:** a dispatched worktree-isolated impl agent that opens a PR (e.g.
+  `frictions-to-fixes`' impl agents) must **not** self-invoke `close-session` —
+  it shares the parent session id with the orchestrator, and a second invocation
+  clobbers the orchestrator's own scratch (see `close-session`'s own rule).
 - **Three distinct worktree-isolation mechanisms exist in this environment — pick
   the one that matches the task, don't conflate them:**
   1. **`EnterWorktree`/`ExitWorktree`** (interactive, session-level) — switches
@@ -435,14 +439,18 @@ pnpm gate:scoped        # local fast feedback — floor always; heavy layers onl
 pnpm gate:scoped --dry  # print the decision + planned steps, run nothing
 ```
 
-**Iterating on content only?** `pnpm validate:content` (`scripts/validate-content.ts`) is the
-one command that actually runs each Document's data through its Collection's Zod schema
-(`.safeParse()`) — `pnpm build` only uses the schema to derive SQL column types, it never
-validates real content against it. `validate:content` checks every Tenant's content in ~1-2s,
-without paying for `nuxt build` or `pnpm test:e2e`. It is the tightest inner loop — a subset
-of `gate:scoped`'s floor — for content-only edits, and **not a replacement for the CI gate**,
-which stays the mandatory merge gate (ADR-0004; see Ground rules above — CI is human-only to
-merge, not to edit, and a PR touching it never auto-merges).
+**Iterating on content only?** `pnpm validate:content` is a two-script chain
+(`scripts/validate-content.ts && scripts/validate-content-refs.ts`) — the first actually
+runs each Document's data through its Collection's Zod schema (`.safeParse()`), since
+`pnpm build` only uses the schema to derive SQL column types and never validates real
+content against it; the second catches what a per-document schema can't see —
+cross-Document referential integrity (e.g. a food-web edge naming a slug that isn't a
+real Specimen) and Atlas MDC structural invariants (unclosed containers, phase-note/
+almanac cardinality — issue #446). `validate:content` checks every Tenant's content in
+~1-2s, without paying for `nuxt build` or `pnpm test:e2e`. It is the tightest inner loop
+— a subset of `gate:scoped`'s floor — for content-only edits, and **not a replacement
+for the CI gate**, which stays the mandatory merge gate (ADR-0004; see Ground rules
+above — CI is human-only to merge, not to edit, and a PR touching it never auto-merges).
 
 **When CI's full gate fails on a change where your local `pnpm gate:scoped` passed** —
 i.e. `gate:scoped` skipped a heavy layer (`test`/`build`/`test:e2e`) that CI then caught
