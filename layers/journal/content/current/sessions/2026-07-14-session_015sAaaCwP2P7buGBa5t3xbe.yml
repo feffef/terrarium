@@ -1,0 +1,72 @@
+schemaVersion: 1
+session: session_015sAaaCwP2P7buGBa5t3xbe
+startedAt: 2026-07-14T00:46:01Z
+endedAt: 2026-07-14T00:58:20Z
+kind: autonomous
+goal: Run /audit-skills — audit the Skill Inventory
+status: in-review
+outcome: "6 Inventory entries refreshed; PR #423 opened"
+summary: "Scheduled, unprompted /audit-skills run — no human message anywhere in the session, only the system task-notification, so this is fully agent-initiated per ADR-0003/CONTEXT.md's autonomy definitions (the Skill itself is chartered to run and self-merge low-risk Inventory content per ADR-0004/0015). Gathered the scorecard via scripts/audit-skills.ts (40-session window, 188 sessions considered). Re-graded all 33 Inventory entries against the bright-line evidence rule — no promote/demote crossed the ≥2-session threshold. Refreshed drifted usedIn citations for audit-docs, code-review, domain-modeling, implement, grilling, and grill-with-docs (moving grilling's and domain-modeling's inline session examples into observations, matching the repo's role/observations split). Screened all 8 regressionChecks (3 unique edit commits): the close-session/digest/frictions-to-fixes/blog-post closure-timing fix (PR #411) showed a coarse Phase-A friction increase, but a full Phase-B read of all 6 post-edit session logs found no friction implicating the edited behavior, corroborated by zero new orphanedSessions/manuallyRescuedClosures since — confirmed not a regression. The one manuallyRescuedClosures entry (session_019pNrz) is the same historical incident already fully tracked on #397/#411 — no new evidence, nothing filed. orphanedSessions and humanPromptedClosures were both empty (healthy). The review.yml phantom Inventory entry (onDisk false, a built-in CLI Skill) was confirmed and left alone per the Skill's own instructions. Ran pnpm gate:scoped clean (full gate, since the diff touches non-inert content), opened PR #423 scoped to Inventory YAML only, subscribed to its activity."
+prs:
+  - "423"
+docsRead:
+  - path: layers/journal/content/current/skills/audit-docs.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/code-review.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/domain-modeling.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/grilling.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/grill-with-docs.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/implement.yml
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-skills
+    reason: the run itself
+  - name: close-session
+    reason: session closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Two skillsUsed entries ("context", "model") in the scorecard have no matching on-disk Skill directory — had to manually confirm via ls that they are noise in session skillsUsed logging, not real Skills needing an Inventory entry.
+    solution: audit-skills.ts could cross-check skillsUsed names against the actual .agents/skills/ directory and flag/filter unmatched names automatically instead of leaving them for manual triage each run.
+    severity: minor
+  - description: "manuallyRescuedClosures scans ALL history (not windowed), so the same already-fixed, already-tracked incident (session_019pNrz, issue #397/PR #411) will resurface in every future run's scorecard output forever, reading as a live signal even though it is fully resolved."
+    solution: Add a resolved/dismissed marker (keyed by session id, or a cutoff tied to the fix's merge date) so a tracked-and-fixed incident stops showing up as fresh scorecard output once its issue is closed.
+    severity: minor
+  - description: "Phase B's literal \"read every file skillSessionFiles[name] lists\" doesn't scale for essential Skills (close-session: 105 files, log-session: 170 files) — read the post-edit bracket sessions instead and corroborated with the full-history mechanical orphan/rescue signals."
+    solution: The Skill's Phase B instructions could cap the deep-read for very-high-usage Skills, or explicitly bless corroborating with the mechanical orphanedSessions/manuallyRescuedClosures signals as a substitute for an essential Skill's full history.
+    severity: minor
+durationSec: 739
+models:
+  claude-sonnet-5: 122
+toolCounts:
+  Bash: 39
+  ToolSearch: 4
+  mcp__github__issue_read: 2
+  mcp__github__search_issues: 1
+  Read: 7
+  Edit: 6
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/skills/audit-docs.yml
+  - layers/journal/content/current/skills/code-review.yml
+  - layers/journal/content/current/skills/domain-modeling.yml
+  - layers/journal/content/current/skills/grilling.yml
+  - layers/journal/content/current/skills/grill-with-docs.yml
+  - layers/journal/content/current/skills/implement.yml
+gitBranch: claude/upbeat-sagan-4cilex
+entrypoint: remote_trigger
+cliVersion: 2.1.207
+learnings:
+  - The mechanical orphanedSessions/manuallyRescuedClosures signals (full-history scope) are strong corroborating evidence for judging whether a closure-behavior regression fix actually worked — cross-checking them against Phase B's friction read was more conclusive than friction severity/count alone.
+ideas:
+  - Add a lightweight "resolved as of <issue/PR>" annotation mechanism to manuallyRescuedClosures/orphanedSessions entries (or a cutoff timestamp keyed to the fix's merge date) so a permanently-flagged historical incident stops reading as fresh evidence in every future audit-skills run.
