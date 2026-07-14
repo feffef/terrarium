@@ -1,25 +1,29 @@
 schemaVersion: 1
 session: session_01B1PirL4vZnwR6VytVgfXut
 startedAt: 2026-07-14T07:56:56Z
-endedAt: 2026-07-14T08:12:49Z
+endedAt: 2026-07-14T08:35:21Z
 kind: interactive
 goal: Name Observability, not just Autonomy, in the Platform's self-description
-status: in-review
-outcome: "PR #454 opened; gate CI in progress"
-summary: "User-directed: adjust the Platform's self-description (root page, README, Journal pages) to add the missing point that the goal is not only autonomy but Observability — every change traceable via git/PR, surfaced again at increasing altitude by the Journal, the Blog, and the Personas' self-reflection angle. Ran a /grilling session (via /grill-with-docs) that resolved, one at a time with the user: no new ADR needed (glossary-only, not a reversible trade-off); the term is \"Observability\", placed in CONTEXT.md right after Agent Authorship; a user-raised distinction that \"Traceability\" (the git/PR fact) is narrower than Observability (the four-altitude goal) resolved by folding traceability in as a substrate clause rather than minting a second term; and the five-surface edit scope (CONTEXT.md, README.md, root page hero, Journal index.md + how-it-works.md, Blog CONTEXT.md), explicitly excluding architecture.md and the in-character persona pages. Invoked /domain-modeling for the glossary-entry format before writing. Made all edits, ran `pnpm gate:scoped` (full heavy layers, all green including the 38-test e2e suite), committed, pushed, opened PR #454, and subscribed to its activity."
+status: completed
+outcome: "PR #454 merged"
+summary: "User-directed: adjust the Platform's self-description (root page, README, Journal pages) to add the missing point that the goal is not only autonomy but Observability — every change traceable via git/PR, surfaced again at increasing altitude by the Journal, the Blog, and the Personas' self-reflection angle. Ran a /grilling session (via /grill-with-docs) that resolved, one at a time with the user: no new ADR needed (glossary-only, not a reversible trade-off); the term is \"Observability\", placed in CONTEXT.md right after Agent Authorship; a user-raised distinction that \"Traceability\" (the git/PR fact) is narrower than Observability (the four-altitude goal) resolved by folding traceability in as a substrate clause rather than minting a second term; and the five-surface edit scope (CONTEXT.md, README.md, root page hero, Journal index.md + how-it-works.md, Blog CONTEXT.md), explicitly excluding architecture.md and the in-character persona pages. Invoked /domain-modeling for the glossary-entry format before writing, made the edits, and opened PR #454. Reviewer feedback (the human owner) then drove three more rounds: (1) linking the README's Journal/Blog mentions and the Journal's own Blog pointer to the live site, (2) a \"too much detail? read the Blog\" escape hatch on the Journal's index.md, and (3) a real mistake I made and then fixed — I initially linked the Blog to `/t/blog/david` and, when asked why not `/t/blog`, incorrectly claimed that route didn't exist (I'd only grepped markdown/vue text and missed the Blog's own Tenant-root front-door page). The owner corrected me; I verified the front door does exist (same ADR-0016 precedent as the Atlas) and re-pointed both links at `/t/blog`, leaving the root page's intentional direct-to-Persona links untouched. Also corrected an earlier process gap the owner flagged: resolving review threads without a reply explaining what changed — from then on every fix was a threaded reply citing the commit, then resolved. `pnpm gate:scoped` passed green on every push (full heavy layers, including the 38-test e2e suite). PR #454 merged to main."
 prs:
   - "454"
 docsRead:
   - path: CONTEXT.md
     reason: existing glossary conventions + placement decision
   - path: CLAUDE.md
-    reason: single-home rule, PR/gate/provenance discipline
+    reason: single-home rule, PR/gate/provenance/no-self-merge discipline
   - path: README.md
     reason: existing bare observability hint to expand
   - path: layers/blog/CONTEXT.md
     reason: existing Persona framing to cross-reference
   - path: layers/journal/content/current/pages/how-it-works.md
     reason: existing Blog/Personas closing paragraph
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: verifying the Blog front-door route after getting it wrong the first time
+  - path: layers/blog/app/pages/t/blog/index.vue
+    reason: the Blog Tenant-root front door I'd missed on the first pass
   - path: .claude/skills/grill-with-docs/SKILL.md
     reason: (no reason given)
   - path: layers/journal/content/current/pages/index.md
@@ -38,29 +42,37 @@ skillsUsed:
   - name: domain-modeling
     reason: CONTEXT.md glossary-entry conventions
   - name: close-session
-    reason: (no reason given)
+    reason: closure sequence at PR-open and again at merge
   - name: log-session
     reason: (no reason given)
 frictions:
   - description: The harness's automatic Co-Authored-By/Claude-Session commit-template injection did not fire on the initial commit this session.
     solution: Detected it was missing and amended it in via git commit --amend -F, per CLAUDE.md's documented caveat that cloud -m commits have been seen skipping this.
     severity: minor
-durationSec: 953
+  - description: Resolved two review threads via resolve_review_thread without first posting a reply, so the fix and its commit left no trace on the thread itself — flagged by the human reviewer as a real problem for longer PRs.
+    solution: Adopted (and followed for the rest of the PR) a reply-with-commit-then-resolve pattern; worth stating as a default convention somewhere (CLAUDE.md or a Skill) rather than relying on each session to reinvent it.
+    severity: moderate
+  - description: Gave a confidently wrong factual answer on a review thread (claimed /t/blog wasn't a valid route) because I grepped only markdown/vue text for the literal path instead of checking the layer's actual pages/ directory for a Tenant-root page.
+    solution: Verified against docs/adr/0016-tenant-root-layer-routes.md and the actual layers/blog/app/pages/t/blog/index.vue file once challenged, and corrected the claim and the links in the same push. For a routing question specifically, checking the layer's pages/ tree should come before grepping text for a path string.
+    severity: moderate
+durationSec: 2306
 models:
-  claude-sonnet-5: 102
+  claude-sonnet-5: 194
 toolCounts:
-  Bash: 17
-  Read: 10
+  Bash: 31
+  Read: 16
   Skill: 5
-  Edit: 6
-  ToolSearch: 3
-  TaskOutput: 1
+  Edit: 10
+  ToolSearch: 6
+  TaskOutput: 4
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
-  Write: 1
+  mcp__github__pull_request_read: 7
+  Write: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__resolve_review_thread: 2
+  mcp__github__add_reply_to_pull_request_comment: 4
 filesEdited:
   - CONTEXT.md
   - README.md
