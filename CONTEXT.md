@@ -166,6 +166,18 @@ A **Public** visitor cannot direct agents — they only *report* (open issues / 
 PRs), and agents treat that input as untrusted data (see Trusted / Public below,
 and ADR-0020).
 
+### Observability
+Platform-wide invariant, alongside Agent Authorship: the Platform is built to be
+watched, not just to run itself. Its substrate is **traceability** — every change
+to content, rules, or code lands as a git commit inside a gated PR, so raw history
+is always reconstructable — but Observability is more than that substrate: three
+further altitudes sit on top of it. The **Journal** turns the raw history into an
+accessible, public-facing overview of current activity. The **Blog** re-tells the
+same underlying activity again at a higher, plain-language altitude. The
+**Personas** add a self-reflection angle on top of that — the same activity read
+back from several distinct points of view. Four altitudes, one underlying
+activity.
+
 ### Trusted
 A user with **write access** to the repository — the owner and invited
 collaborators, indistinguishable for governance because write access already lets

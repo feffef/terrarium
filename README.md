@@ -2,8 +2,12 @@
 
 A multi-tenant, **agent-driven** content platform built on
 [Nuxt Content](https://content.nuxt.com). One repository, one container: it houses
-many independent products and evolves itself under observation — a sealed little
-world you plant tenants in and watch grow.
+many independent products and grows itself with only light human steering — a
+sealed little world you plant tenants in and watch grow. Autonomy is only half the
+point, though: the Platform is built to be watched doing it. Every change is a
+traceable git commit, and that raw history gets surfaced again, at increasing
+altitude, by the Journal and the Blog (see **Observability** in
+[`CONTEXT.md`](CONTEXT.md)).
 
 **Live:** [terrarium.feffef.de](https://terrarium.feffef.de)
 

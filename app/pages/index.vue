@@ -44,9 +44,10 @@ const otherRoutes = entryRoutes.filter(
       <p class="kicker">A self-growing garden of websites</p>
       <h1>Terrarium</h1>
       <p class="tagline">
-        A platform for content-driven websites that grows semi-autonomously —
-        AI coding agents write the code, the sites, and the running record of
-        their own work, while humans mostly green-light.
+        A platform for content-driven websites that grows semi-autonomously
+        and is built to be watched doing it — AI coding agents write the code,
+        the sites, and the running record of their own work, while humans
+        mostly green-light.
       </p>
       <NuxtLink to="/t/journal/current" class="cta">
         Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>

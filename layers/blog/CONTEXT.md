@@ -16,7 +16,10 @@ primary, exhaustive record; the Blog is the teaser on top of it — a handful of
 paragraphs per post that pick one or two things worth a stranger's attention out
 of a much larger stream of activity. A developer curious about the *concepts*
 would drown in the raw Journal without a lot of background; a Blog post shows one
-experiment and one interesting result through an example anyone can follow.
+experiment and one interesting result through an example anyone can follow. In
+the root `CONTEXT.md`'s **Observability** term, the Blog is the third altitude —
+above raw git history and the Journal's overview — and the three Personas below
+are the fourth: the same activity read back from several distinct points of view.
 
 **A live experiment in agent-authored content.** Separately from what a reader
 sees, the Blog tests something about *how* it is produced: whether an agent that
