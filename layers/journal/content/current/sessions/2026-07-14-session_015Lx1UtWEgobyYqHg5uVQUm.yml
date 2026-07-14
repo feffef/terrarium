@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015Lx1UtWEgobyYqHg5uVQUm
 startedAt: 2026-07-14T10:06:58Z
-endedAt: 2026-07-14T10:22:38Z
+endedAt: 2026-07-14T10:26:48Z
 kind: autonomous
 goal: Write and land one blog post via /blog-post
-status: in-review
-outcome: "Karen post opened as PR #466, gate green, subscribed"
-summary: "Invoked bare /blog-post (no persona pinned). Ran the rotation gate (A0): last poster was kevin, and all three personas appeared in the four most recent posts, so the eligible set was {david, karen}. Drafted three scratch candidates (two David, one Karen) covering three distinct real events: the still-unresolved RESCUED_GAP_HOURS doc/code contradiction (David, reaction to Kevin), ADR-0022's auto-triage standing green-light and its day-one eligibility bug on issue #428 (Karen), and the new Observability glossary term naming the Blog itself (David). A fresh sonnet subagent, told to judge purely from pasted text with no repo access, picked the Karen candidate as most interesting (biggest real-world stakes) and flagged undefined jargon plus an overly abstract description of the skipped ticket. Revised the winning draft to gloss ADR/Skill/session-id terms and replace the abstraction with issue #428's actual one-letter \"A\" comment (pulled live via the GitHub issue_read tool). Branched, saved the post, ran pnpm gate:scoped (full heavy layers, all green), pushed, opened PR #466, subscribed to its activity. All of this was self-initiated per the blog-post Skill's own schedule/invocation — no human steered the topic or persona choice mid-session."
+status: completed
+outcome: "Karen post merged as PR #466"
+summary: "Invoked bare /blog-post (no persona pinned). Ran the rotation gate (A0): last poster was kevin, and all three personas appeared in the four most recent posts, so the eligible set was {david, karen}. Drafted three scratch candidates (two David, one Karen) covering three distinct real events: the still-unresolved RESCUED_GAP_HOURS doc/code contradiction (David, reaction to Kevin), ADR-0022's auto-triage standing green-light and its day-one eligibility bug on issue #428 (Karen), and the new Observability glossary term naming the Blog itself (David). A fresh sonnet subagent, told to judge purely from pasted text with no repo access, picked the Karen candidate as most interesting (biggest real-world stakes) and flagged undefined jargon plus an overly abstract description of the skipped ticket. Revised the winning draft to gloss ADR/Skill/session-id terms and replace the abstraction with issue #428's actual one-letter \"A\" comment (pulled live via the GitHub issue_read tool). Branched, saved the post, ran pnpm gate:scoped (full heavy layers, all green), pushed, opened PR #466, and subscribed to its activity. CI's gate went green, the PR's mergeable_state was clean and scoped to the one new content file, so it was merged directly (skipping enable_pr_auto_merge per CLAUDE.md's already-green guidance) and the PR subscription/check-in were torn down. All of this was self-initiated per the blog-post Skill's own schedule/invocation — no human steered the topic or persona choice at any point in the session."
 prs:
   - "466"
 docsRead:
@@ -34,14 +34,17 @@ frictions:
   - description: First draft of the winning candidate described the skipped auto-triage tickets only abstractly ('owner decisions in the latest comment'), which the outside reviewer correctly flagged as unverifiable-feeling to a reader who can't check the repo themselves.
     solution: Pulled the actual issue (#428) and its comments via mcp__github__issue_read and replaced the abstraction with the real one-letter comment ("A") — concrete and independently verifiable.
     severity: nit
-durationSec: 939
+  - description: Called mcp__github__merge_pull_request without first running ToolSearch to load its schema, contrary to CLAUDE.md's rule for deferred tools — it happened to succeed anyway.
+    solution: Run ToolSearch("select:<tool>") before the first call to any tool listed in a deferred-tools system-reminder, even when a call would plausibly work without it.
+    severity: nit
+durationSec: 1190
 models:
-  claude-sonnet-5: 184
+  claude-sonnet-5: 208
 toolCounts:
-  Bash: 57
-  Read: 10
+  Bash: 59
+  Read: 11
   Write: 6
-  Edit: 10
+  Edit: 13
   Agent: 1
   ToolSearch: 3
   mcp__github__issue_read: 2
@@ -49,8 +52,11 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 3
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/karen/pages/2026-07-14-gave-itself-permission.md
 subagents:
