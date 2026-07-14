@@ -158,8 +158,9 @@ A PRD is an ordinary GitHub issue — no dedicated label. The precedent is #64
 When set to `yes`, PRs run through the same labels and states as issues, using the `gh pr` equivalents:
 
 - **Read a PR**: `gh pr view <number> --comments` and `gh pr diff <number>` for the diff.
-- **List external PRs for triage**: `gh pr list --state open --json number,title,body,labels,author,authorAssociation,comments` then keep only `authorAssociation` of `CONTRIBUTOR`, `FIRST_TIME_CONTRIBUTOR`, `FIRST_TIMER`, `MANNEQUIN`, or `NONE` (drop `OWNER`/`MEMBER`/`COLLABORATOR`) — this split **is** the ADR-0020 Trusted/Public line (pending an ADR-0020 amendment to add `FIRST_TIMER`/`MANNEQUIN` there too). See ADR-0020 for what follows from it.
+- **List external PRs for triage**: `gh pr list --state open --json number,title,body,labels,author,authorAssociation,comments` then keep only `authorAssociation` of `CONTRIBUTOR`, `FIRST_TIME_CONTRIBUTOR`, `FIRST_TIMER`, `MANNEQUIN`, or `NONE` (drop `OWNER`/`MEMBER`/`COLLABORATOR`) — this split **is** the ADR-0020 Trusted/Public line (ADR-0020 lists `FIRST_TIMER`/`MANNEQUIN` as Public too, amended in #437). See ADR-0020 for what follows from it.
 - **Comment / label / close**: `gh pr comment`, `gh pr edit --add-label`/`--remove-label`, `gh pr close`.
+- **The `trusted` label is auto-applied** to same-repo PRs by `.github/workflows/pr-authorassociation-label.yml` (the ADR-0020 mechanical aid, issue #443). It is one-sided by design: there is **no `public` label — absence of `trusted` means Public** (a fork PR, the only way a Public author opens one, is intentionally left unlabeled; see the workflow header for why).
 
 GitHub shares one number space across issues and PRs, so a bare `#42` may be either — resolve with `gh pr view 42` and fall back to `gh issue view 42`.
 
