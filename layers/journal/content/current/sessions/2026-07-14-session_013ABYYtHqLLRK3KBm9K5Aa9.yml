@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013ABYYtHqLLRK3KBm9K5Aa9
 startedAt: 2026-07-14T09:56:42Z
-endedAt: 2026-07-14T10:00:54Z
+endedAt: 2026-07-14T10:05:43Z
 kind: interactive
 goal: Tune blog-post topic selection toward impactful events
-status: in-review
-outcome: "SKILL.md revised, gate green, PR #462 opened"
-summary: "The user (human-instructed) reported that a recent blog-post run produced two posts about a single number inconsistency while more interesting repo activity was happening in the same window. Read the blog-post Skill (.agents/skills/blog-post/SKILL.md) and identified A2 (topic selection) and A5 (outside-reader review) as the two decision points that let a minor nit crowd out bigger stories. Edited A2 to rank A1's gathered material by real weight before picking the three candidates, cap a run to at most one minor/cosmetic-fix slot, and forbid repeating the same minor fix across candidates or recently published posts; edited A5 so the outside reader weighs the underlying event's significance, not just prose quality. Ran `pnpm gate:scoped` (docs-only outside layers/, floor only) green, committed, pushed to the designated branch, and opened gated PR #462 per ADR-0003, subscribing to its activity per CLAUDE.md."
+status: completed
+outcome: "SKILL.md revised, gate green, PR #462 merged"
+summary: "The user (human-instructed) reported that a recent blog-post run produced two posts about a single number inconsistency while more interesting repo activity was happening in the same window. Read the blog-post Skill (.agents/skills/blog-post/SKILL.md) and identified A2 (topic selection) and A5 (outside-reader review) as the two decision points that let a minor nit crowd out bigger stories. Edited A2 to rank A1's gathered material by real weight before picking the three candidates, cap a run to at most one minor/cosmetic-fix slot, and forbid repeating the same minor fix across candidates or recently published posts; edited A5 so the outside reader weighs the underlying event's significance, not just prose quality. Ran `pnpm gate:scoped` (docs-only outside layers/, floor only) green, committed, pushed to the designated branch, opened gated PR #462 per ADR-0003, subscribed to its activity per CLAUDE.md, and merged it once CI reported the safety-gate green."
 prs:
   - "462"
 docsRead:
@@ -18,22 +18,24 @@ skillsUsed:
   - name: log-session
     reason: (no reason given)
 frictions: []
-durationSec: 252
+durationSec: 541
 models:
-  claude-sonnet-5: 44
+  claude-sonnet-5: 58
 toolCounts:
   Grep: 1
   Read: 1
-  Bash: 7
-  Edit: 4
+  Bash: 9
+  Edit: 5
   ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/blog-post/SKILL.md
 gitBranch: claude/blog-subject-selection-tuning-c7ilf4
