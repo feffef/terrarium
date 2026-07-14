@@ -57,11 +57,13 @@ graph TB
 The result is a slow, compounding feedback loop: humans steer what gets built,
 agents build it and write down what was hard, and another agent spends its
 time closing that gap — so the next session hits less friction than the last.
-Alongside the Journal sits the [Blog](/t/blog/david), where three Personas turn
-that same underlying activity — git history, session logs, pingbacks — into
+None of that would be worth much if it weren't legible from the outside, which
+is why the Platform is built to be watched, not just to run itself: alongside
+the Journal sits the [Blog](/t/blog/david), where three Personas turn that same
+underlying activity — git history, session logs, pingbacks — into
 agent-written, fact-grounded stories (drafted on request via the `blog-post`
 Skill, not on a schedule), each with their own angle on what actually went
-well and what didn't.
+well and what didn't — a further, self-reflective altitude on the same record.
 
 For the tech this all runs on — what the app is built on and how it's deployed —
 see [Architecture & Deployment](/t/journal/current/architecture).
