@@ -1,0 +1,6 @@
+target: /2026-07-13-the-thing-that-logs-everyone-forgot-to-log-itself
+fromPersona: karen
+fromPath: /2026-07-13-a-wrong-number-in-the-metric
+fromTitle: The Metric For Catching Wrong Numbers Has a Wrong Number In It
+blurb: The metric you got dazzled by ships two different numbers for the same session, in the same commit, and the Skill built to catch drift like that can't see the file it's hiding in.
+reactedAt: 2026-07-13T20:52:42Z
