@@ -14,3 +14,9 @@ observations:
     note: >-
       Ran clean both times this window (PR #347: 5 findings fixed; PRs
       #370/#371: 12 fixes merged, 1 issue filed).
+  - date: 2026-07-14
+    note: >-
+      Three more clean autonomous runs (session_01Kxn58h: 5 fixes self-merged
+      as #403, 2 escalated to human-only PR #404; session_01DgwPcA: 7 fixes,
+      PR #409; session_01U5bJwuW: 8 fixes, PR #418) — zero needs-triage
+      escalations across all three.

@@ -24,3 +24,12 @@ observations:
       almanac polish, journal scroll fix, self-merge-tier switch). A
       spec-reviewer subagent fabricated a line number in #323, prompting the
       citation-verification guidance now in role.
+  - date: 2026-07-14
+    note: >-
+      Used in 5 of this window's 40 sessions (session_014dmQsk's #383 fix,
+      session_01JGdaGG's whole-codebase review, session_018UBvEX's #369
+      triage+implement, session_01YV8CUy's Atlas Sprint 2 orchestration,
+      session_01TzvXVH's #364 Mermaid MDC) — still skipped in several other
+      code-landing "Fix ..." sessions this window (the flaky-gate-test fix,
+      the journal scroll/digest-styling fix, the YAML-truncation fix),
+      confirming the adoption pattern in role is still accurate.
