@@ -38,6 +38,7 @@ const detailId = useId()
         <JournalFrictionStrata variant="inline" :counts="card.frictionCounts" :total="card.frictionTotal" />
         <span v-if="card.skills.length" class="skills">{{ card.skills.join(' · ') }}</span>
         <span class="sid">{{ card.sid }}</span>
+        <JournalCopyLinkButton :anchor="anchor" label="Copy link to this session log" />
         <span class="caret" aria-hidden="true">{{ expanded ? '▾' : '▸' }}</span>
       </div>
     </JournalDisclosure>

@@ -40,6 +40,17 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       expect(html).toMatch(/role="button"/)
     })
 
+    // Each session/digest head carries a copy-link control (`JournalCopyLinkButton`)
+    // that writes the item's deep-link URL to the clipboard on click — a real
+    // `<button>` with a descriptive `aria-label`, not a bare icon. A headless
+    // clipboard round-trip is flaky (permissions), so this only proves the
+    // control renders and is correctly wired, per docs/agents/verifying-ui-changes.md.
+    it('renders a copy-link control on session and digest heads', async () => {
+      const html = await $fetch('/t/journal/current')
+      expect(html).toMatch(/<button[^>]*aria-label="Copy link to this session log"/)
+      expect(html).toMatch(/<button[^>]*aria-label="Copy link to this digest"/)
+    })
+
     // Digests expand inline on the landing (like the session cards): the body is
     // preloaded for zero-request expansion, and the standalone page route still works.
     it('shows daily digests inline and keeps the digest route', async () => {

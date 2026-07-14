@@ -257,6 +257,7 @@ useSeoMeta({
           >
             <span class="digest-date">{{ d.date }}</span>
             <span class="digest-summary">{{ d.summary }}</span>
+            <JournalCopyLinkButton :anchor="digestAnchor(d.date)" label="Copy link to this digest" />
             <span class="caret" aria-hidden="true">{{ isOpen(digestAnchor(d.date)) ? '▾' : '▸' }}</span>
           </JournalDisclosure>
           <Transition :css="false" @enter="expandOnEnter" @leave="expandOnLeave">
@@ -504,9 +505,9 @@ h1 {
 .digest:first-child { border-top: 0; }
 .drow {
   display: grid;
-  grid-template-columns: max-content 1fr max-content;
+  grid-template-columns: max-content 1fr max-content max-content;
   gap: 0.1rem 0.9rem;
-  align-items: baseline;
+  align-items: center;
   padding: 0.7rem 0;
   cursor: pointer;
   border-radius: 6px;
