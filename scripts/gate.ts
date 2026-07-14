@@ -3,6 +3,8 @@
 // gate. Design, safety argument, and the inert-set proof: issue #350.
 //   pnpm gate:scoped [--dry]
 import { execFileSync, spawnSync } from 'node:child_process'
+import { statSync } from 'node:fs'
+import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { root } from '../shared/expand.ts'
 
@@ -73,6 +75,42 @@ export function changedPaths(): string[] | null {
   }
 }
 
+// ── Stale-deps preflight (#445) ─────────────────────────────────────────────
+// An edit to `package.json`/`pnpm-lock.yaml` without a follow-up `pnpm install`
+// makes `typecheck`/`build` fail on missing or mismatched packages — a failure
+// that reads exactly like a real break. `node_modules/.pnpm` (pnpm's virtual
+// store) is what `pnpm install` last touched, so its mtime is the freshness
+// marker to compare the two source files against.
+export function isStale(pkgMtimeMs: number, lockMtimeMs: number, pnpmDirMtimeMs: number | null): boolean {
+  if (pnpmDirMtimeMs === null) return true
+  return pkgMtimeMs > pnpmDirMtimeMs || lockMtimeMs > pnpmDirMtimeMs
+}
+
+function mtimeMs(path: string): number | null {
+  try {
+    return statSync(path).mtimeMs
+  } catch {
+    return null
+  }
+}
+
+// Runs at most once, before any gate step (see `main`) — never re-checked
+// mid-run, so a step's own writes under `node_modules` can't retrigger it.
+export function ensureFreshDeps(projectRoot = root): void {
+  const pkgMtime = mtimeMs(join(projectRoot, 'package.json'))
+  const lockMtime = mtimeMs(join(projectRoot, 'pnpm-lock.yaml'))
+  if (pkgMtime === null || lockMtime === null) return // nothing to compare against — leave it to the steps themselves
+  const pnpmDirMtime = mtimeMs(join(projectRoot, 'node_modules/.pnpm'))
+  if (!isStale(pkgMtime, lockMtime, pnpmDirMtime)) return
+  console.log('gate:scoped: deps look stale (package.json/pnpm-lock.yaml newer than node_modules/.pnpm) — running pnpm install')
+  const r = spawnSync('pnpm', ['install'], { cwd: projectRoot, stdio: 'inherit' })
+  if (r.error) {
+    console.error(`gate:scoped: failed to launch \`pnpm install\`: ${r.error.message}`)
+    process.exit(1)
+  }
+  if (typeof r.status === 'number' && r.status !== 0) process.exit(r.status)
+}
+
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
 function run(step: string): void {
@@ -86,6 +124,7 @@ function run(step: string): void {
 
 function main(): void {
   const dry = process.argv.slice(2).includes('--dry')
+  if (!dry) ensureFreshDeps()
   const scope = decideScope(changedPaths())
   const steps = planSteps(scope)
   console.log(`gate:scoped: ${scope.reason}`)
