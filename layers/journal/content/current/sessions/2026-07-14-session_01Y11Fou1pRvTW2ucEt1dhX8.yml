@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Y11Fou1pRvTW2ucEt1dhX8
 startedAt: 2026-07-14T09:55:27Z
-endedAt: 2026-07-14T12:12:10Z
+endedAt: 2026-07-14T12:40:55Z
 kind: interactive
 goal: Implement all ready-for-agent issues in batches
-status: in-review
-outcome: "10 PRs merged, 1 declined, #450 still building"
-summary: "User-directed: implement all `ready-for-agent` issues in small batches, up to 3 parallel Sonnet worktree agents, human-reviewed gated PRs, quick wins first, avoiding conflict-prone parallel branches. Landed 10 gated PRs (all human-merged) across docs/ADR/skill/test/tooling surfaces; the owner steered merges, review comments (trim #464, de-dup #476, shorten the CLAUDE.md drop-zone rule on #467) and priorities throughout, and declined #442 (a docs-drift gate check). I triaged the non-implementable issues to `ready-for-human` (regressions, research/prototype, green-light-needed, declined-approach) to keep the agent queue honest. All net-new work was on the user's explicit green-light. #450 (journal copy-link) is still being built at this closure point; I will refresh this log to its final status once it lands."
+status: partial
+outcome: 10 PRs merged; 1 declined, 1 regressed+closed; backlog remains
+summary: "User-directed: implement all `ready-for-agent` issues in small batches, up to 3 parallel Sonnet worktree agents, human-reviewed gated PRs, quick wins first, avoiding conflict-prone parallel branches. Landed 10 gated PRs (all human-merged) across docs/ADR/skill/test/tooling surfaces; the owner steered merges, review comments (trim #464, de-dup #476, shorten the CLAUDE.md drop-zone rule on #467, questioned+kept #480's value) and priorities throughout. #442 (docs-drift gate check) declined — PR closed unmerged. #480 (journal copy-link, the owner-prioritized #450 sub-item) shipped green locally but CI caught a real accordion regression; closed unmerged at the owner's call, redo tracked on #479. I triaged the non-implementable issues to `ready-for-human` to keep the queue honest. All net-new work was on the user's explicit green-light. Session ended in a coherent state with backlog (#447/#448/#449/#451 + #445 CI-half + #479) remaining."
 prs:
   - "463"
   - "464"
@@ -19,6 +19,7 @@ prs:
   - "474"
   - "476"
   - "477"
+  - "480"
 docsRead:
   - path: CLAUDE.md
     reason: repo conventions — worktree/PR discipline, single-home
@@ -28,6 +29,8 @@ docsRead:
     reason: "amendment convention for #455"
   - path: scripts/validate-content.ts
     reason: "extended for #446 referential-integrity"
+  - path: layers/journal/app/components/journal/SessionCard.vue
+    reason: "diagnose the #480 accordion regression"
   - path: scripts/recent-prs.ts
     reason: (no reason given)
   - path: .claude/worktrees/manual-464/docs/agents/issue-tracker.md
@@ -55,7 +58,7 @@ frictions:
     severity: major
   - description: |-
       Worktree-isolated impl agents stopped mid-gate WITHOUT committing again
-      (#427 regression). 2 of 6 agents (#446, #442) ended their turn with work
+      (#427 regression). 2 of 7 agents (#446, #442) ended their turn with work
       uncommitted+unpushed while awaiting a BACKGROUND gate; a 3rd (#469)
       committed first but still ended waiting on the background gate. Explicit
       commit-before-stop briefs, strengthened across dispatches, did not hold.
@@ -63,6 +66,18 @@ frictions:
       Enforce at the tool/process boundary (forbid backgrounding the gate in a
       subagent, or a commit-before-stop checkpoint) — doc-only guidance doesn't
       hold, matching #427. Orchestrator worktree-check + SendMessage-resume rescued every case, no work lost.
+    severity: major
+  - description: |-
+      An impl agent's self-reported "42/42 e2e green locally" (#480, journal
+      copy-link) missed a real regression CI caught deterministically across two
+      runs: an @click.stop copy-button placed inside the accordion's clickable
+      head swallowed the card's toggle click (journal.e2e.ts 148/181/219 timed
+      out on .card.open .detail). PR closed unmerged.
+    solution: |-
+      This is CLAUDE.md's "CI fails where local gate:scoped passed → log major"
+      case; also, don't place an interactive @click.stop control inside a
+      click-to-toggle head, and verify a UI change against the exact e2e it can
+      break, not just a screenshot. Redo tracked on #450 (button outside the click path).
     severity: major
   - description: |-
       Provenance footer (ADR-0017) not auto-injected on cloud commits again
@@ -77,44 +92,47 @@ frictions:
     solution: For net-new mechanism/gate additions (vs. clearly-scoped fixes), value-check with the owner before dispatch.
     severity: minor
   - description: |-
-      Journal accordion scroll e2e flake recurred (`journal.e2e.ts` ~line 224, an
-      expect.poll scroll-position timeout): failed #467 CI and surfaced in agent
-      gate runs; rerun_failed_jobs passed.
-    solution: "The #450 useAccordionDeepLink extraction is meant to harden this scroll contract; until then, re-kick the failed job."
+      Journal accordion e2e is a fragile, load-bearing area: a pre-existing
+      scroll-position flake (~line 224) plus the new click-to-open failures made
+      #480's CI signal harder to read (flake vs. real took two runs to confirm).
+    solution: "The #450 useAccordionDeepLink extraction is meant to harden this scroll/toggle contract into a unit-testable composable."
     severity: minor
   - description: |-
       Initial mcp__github__list_issues with full bodies overflowed the tool's
       output-token ceiling (~65k chars for 26 issues); had to slice the saved file.
     solution: "A minimal/no-body list mode would avoid it; relates to #451's issue_read/large-output doc-notes."
     severity: minor
-durationSec: 8202
+durationSec: 9928
 models:
-  claude-opus-4-8: 417
+  claude-opus-4-8: 491
 toolCounts:
-  ToolSearch: 7
-  Bash: 24
+  ToolSearch: 8
+  Bash: 29
   mcp__github__list_issues: 3
   mcp__github__list_pull_requests: 1
   Read: 9
   Glob: 8
   TaskCreate: 14
-  TaskUpdate: 27
+  TaskUpdate: 28
   Agent: 12
-  AskUserQuestion: 3
-  mcp__github__create_pull_request: 11
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 11
-  mcp__github__issue_write: 13
+  AskUserQuestion: 5
+  mcp__github__create_pull_request: 12
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 12
+  mcp__github__issue_write: 16
   mcp__github__pull_request_read: 7
   mcp__Claude_Code_Remote__send_later: 2
-  Write: 3
-  mcp__github__add_issue_comment: 11
-  Edit: 6
+  Write: 4
+  mcp__github__add_issue_comment: 18
+  Edit: 8
   Grep: 1
-  mcp__github__get_job_logs: 1
-  mcp__github__actions_run_trigger: 1
+  mcp__github__get_job_logs: 3
+  mcp__github__actions_run_trigger: 2
   SendMessage: 2
-  mcp__github__issue_read: 6
+  mcp__github__issue_read: 7
   Skill: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .claude/worktrees/manual-464/docs/agents/issue-tracker.md
   - .claude/worktrees/manual-458/docs/proposals/README.md
@@ -164,6 +182,7 @@ entrypoint: remote
 cliVersion: 2.1.209
 learnings:
   - A gate check wired into `pnpm validate:content`/`pnpm gate` via package.json is agent-mergeable and CI runs it automatically — no `.github/workflows/gate.yml` edit needed. Only a *dedicated* new CI job needs gate.yml (and thus the docs/proposals handoff).
+  - In `SessionCard.vue`, `<JournalDisclosure class="head">` wraps the ENTIRE head including the `.foot` row — so any interactive control placed in the foot lives inside the accordion's click-to-toggle target and can swallow the toggle click.
 ideas:
   - "A subagent-side guard that refuses to end a worktree-isolated agent's turn while a backgrounded gate process is still alive (or forces a commit+push checkpoint before backgrounding) — closes the recurring #427 mid-gate-stop work-loss at the mechanism level instead of relying on orchestrator rescue."
   - A lightweight 'confirm value with the owner before dispatch' gate in the implement flow for net-new mechanism/gate additions, distinct from clearly-scoped fix tickets that can go straight to a gated PR.
