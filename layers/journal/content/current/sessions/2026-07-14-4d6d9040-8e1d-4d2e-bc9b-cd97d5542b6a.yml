@@ -1,0 +1,58 @@
+schemaVersion: 1
+session: 4d6d9040-8e1d-4d2e-bc9b-cd97d5542b6a
+startedAt: 2026-07-14T11:26:08Z
+endedAt: 2026-07-14T11:37:59Z
+kind: interactive
+goal: Apply authorAssociation PR-labeling workflow (#443)
+status: completed
+outcome: Workflow merged; trusted/public labels created
+summary: "User directed (explicit ask) applying the docs/proposals/443 workflow proposal. Created .github/workflows/pr-authorassociation-label.yml verbatim from the proposal, removed the applied proposal file, and created the trusted/public repo labels the job needs. Pushed on user's \"push\" instruction; updated PR #473's title/body from \"propose\" to \"apply\". CI gate went green; user merged (human-only merge for a CI-touching PR, ADR-0004). All work was human-instructed, not agent-initiated. Local push of a workflow file succeeded — this local CLI has the workflow scope, unlike cloud agent sessions."
+prs:
+  - "473"
+docsRead:
+  - path: docs/proposals/443-authorassociation-pr-labels.md
+    reason: the proposal being applied
+  - path: docs/proposals/README.md
+    reason: drop-zone apply/delete discipline
+  - path: MEMORY.md
+    reason: (no reason given)
+  - path: scripts/log-session.ts
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Published \"repo is still private\" in PR #473's body, copied from the proposal doc without running gh repo view; repo is actually public, which the user caught."
+    solution: Verify doc-derived factual claims against a primary source (gh repo view) before publishing externally, per CLAUDE.md. The fork-PR write-token Actions setting is now live, not hypothetical.
+    severity: moderate
+  - description: Local pnpm typecheck failed on pre-existing layers/atlas errors that did not reproduce in CI — a local node_modules artifact from the session-start mermaid/zod-to-json-schema dependency shuffle.
+    solution: Confirmed via git that the branch never touches atlas; trusted CI's green gate over the stale local install.
+    severity: minor
+  - description: No canonical session_01 id was recoverable from any visible system-prompt footer; this local CLI session's id is a UUID (transcript sessionId).
+    solution: Derived the id from the transcript's own sessionId. The log-session id-recovery instructions assume the cloud footer format only.
+    severity: minor
+  - description: The -F commit (645c771) got no auto-injected Claude-Session footer and no session URL was available to add one by hand, so that provenance line is missing.
+    solution: A local CLI session URL/footer source for -F commits would close this; Co-Authored-By was added manually.
+    severity: minor
+durationSec: 711
+models:
+  claude-opus-4-8: 95
+toolCounts:
+  Read: 5
+  Bash: 27
+  Write: 4
+  Skill: 2
+filesEdited:
+  - .github/workflows/pr-authorassociation-label.yml
+  - /Users/feffef/.claude/projects/-Users-feffef-Development-ai-playground-terrarium/memory/workflow-proposals-via-local-cli.md
+  - /Users/feffef/.claude/projects/-Users-feffef-Development-ai-playground-terrarium/memory/MEMORY.md
+gitBranch: claude/propose-authorassociation-labels-443
+entrypoint: cli
+cliVersion: 2.1.207
+learnings:
+  - Local CLI sessions here identify by a UUID (transcript `sessionId` / CLAUDE_CODE_SESSION_ID), not the cloud `session_01...` format the log-session instructions assume.
+  - Pushing `.github/workflows/*` succeeds from an authenticated local CLI (it holds the workflow OAuth scope); ADR-0004's no-workflow-scope limit is specific to cloud web/mobile agent sessions.
