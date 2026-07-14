@@ -14,7 +14,7 @@ for the rare case it genuinely can't tell which of two conflicting facts is
 correct. It runs start to finish **without interaction**.
 
 > **Autonomous, bounded.** Runs unattended and **self-merges** its gated PR on a
-> green gate (ADR-0003 amendment) — the PR carries only fact-checked
+> green gate (ADR-0003 amendment, step 8) — the PR carries only fact-checked
 > reconciliations that touch no human-only surface (ADR-0004's low-risk content
 > tier). It edits only *live* docs, **never** rewrites a historical record's
 > decision or a pack template, and is **brave by default**: it decides scope

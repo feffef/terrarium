@@ -88,11 +88,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   (`role`/`importance`) or a doc that references them, never by editing the pack
   file; a genuine improvement to a pack Skill belongs upstream. Only our own
   Skills (those *not* in `skills-lock.json`) are agent-editable. This is
-  **gate-enforced**: `pnpm verify:skills-lock` (part of `pnpm gate`) pins each
-  pack Skill's installed `SKILL.md` hash in its **Skill Inventory** entry
-  (`installedSha256`) and fails on any drift — `skills-lock.json` is the
-  installer's file and is left untouched (read-only, only for the pack's key set).
-  After a *legitimate* pack install, re-pin with `pnpm verify:skills-lock --write`.
+  **gate-enforced** via `pnpm verify:skills-lock` (part of `pnpm gate`) — see
+  ADR-0015's amendment for the mechanism (what it pins, and the `--write` re-pin
+  step after a legitimate pack install).
 - Runtime routing is by path prefix `/t/<tenant>/<space>/<slug>` (ADR-0006). The
   routing map is derived at build time from the manifests via `modules/routing.ts`
   and exposed as the `#routing` virtual module (ADR-0014) — no committed `GENERATED`
@@ -495,13 +493,10 @@ download) — it's the lower-level capture that `preview.ts shot` uses under the
   `page.$eval(selector, el => getComputedStyle(el).propertyName)`. A
   screenshot confirms a render happened; computed-style probing confirms a
   *specific* style took effect.
-- **The journal Space landing is a custom dashboard, not a Markdown render.**
-  `layers/journal/app/pages/t/journal/[space]/index.vue` wins over the generic
-  catch-all for the Space *root* and builds its own layout (stat tiles, digests,
-  session feed, Skill Inventory, …) from the Space's `pages`/`skills`/`sessions`
-  Collections. It renders `index.md`'s body only as the small "editorial intro"
-  section — most of the page is not `index.md`. Editing `index.md` alone will
-  not change what most of that page shows; check the `.vue` file too.
+- **The journal Space landing is a custom dashboard, not a Markdown render** —
+  see `layers/journal/CONTEXT.md`'s "What lives where" for what it renders.
+  Editing `index.md` alone will not change what most of that page shows; check
+  the `.vue` file too.
 
 To **add a Space or Collection**: edit the Tenant's `tenant.config.ts`. The keyed
 collections and the routing map update automatically (see Self-verification

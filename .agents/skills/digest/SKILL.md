@@ -117,11 +117,10 @@ content-only low-risk tier) — allowed **only** while the PR contains nothing
 beyond the digest scope (digest pages under `…/pages/digests/`, at most plus the
 index's editorial intro):
 
-- **Enable GitHub auto-merge on green.** Auto-merge is available, per the intro
-  above — enable it (`enable_pr_auto_merge`) right after opening the PR so it
-  lands automatically once the gate reports green; no watching required.
-  Pushing is not landing (`CLAUDE.md`), so subscribe to the PR's activity to
-  catch a red gate.
+- **Subscribe to the PR's activity right after opening it** (CLAUDE.md's
+  "Pushing is not landing" rule — every opened PR is babysat to merge/close)
+  and follow CLAUDE.md's `enable_pr_auto_merge`-vs-`merge_pull_request`
+  guidance to land it once the gate reports green.
 - A **red gate is never merged** — auto-merge only lands on green. Diagnose and
   fix on the branch (the green re-run then auto-merges), or leave the PR open and
   escalate to a human if the failure isn't yours.
