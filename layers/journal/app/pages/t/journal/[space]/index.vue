@@ -305,7 +305,7 @@ useSeoMeta({
 
     <div class="grid">
       <!-- Recent activity -->
-      <section class="feed">
+      <section id="session-log" class="feed">
         <div class="section-head">
           <h2>Recent activity</h2>
           <span class="count">session logs, newest first</span>
@@ -495,6 +495,8 @@ h1 {
 
 .grid { display: grid; grid-template-columns: 1.7fr 1fr; gap: 1.6rem; align-items: start; }
 .feed, .rail { min-width: 0; }
+/* scroll-margin-top: breathing room when the intro's "full session-log feed" link scrolls here. */
+.feed { scroll-margin-top: 1.5rem; }
 
 .digests { margin-top: 1.75rem; }
 .panel-intro { margin: 0 0 0.95rem; max-width: 72ch; color: var(--jd-muted); font-size: 0.92rem; line-height: 1.5; }
