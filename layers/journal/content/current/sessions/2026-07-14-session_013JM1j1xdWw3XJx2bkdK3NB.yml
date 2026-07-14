@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013JM1j1xdWw3XJx2bkdK3NB
 startedAt: 2026-07-14T05:31:22Z
-endedAt: 2026-07-14T05:48:45Z
+endedAt: 2026-07-14T06:11:29Z
 kind: interactive
 goal: Survey 60 session logs for doc-worthy learnings
-status: in-review
-outcome: "Extracted UI-verification doc; PR #438 open, gate green"
-summary: "Human asked whether the last 60 sessions' logs held learnings worth adding permanently to docs. Surveyed the `learnings` field across the window (36 of 60 sessions carried learnings) and cross-checked each reusable candidate against current docs: the strong ones were already single-homed (tenant-layers.md §4 for Platform-wide component overrides, mdc-when-to-use.md for the empty-`::` degradation, issue-tracker.md for docs/research-vs-issues), confirming the harvesting machinery keeps pace. Reported that honest near-empty result, flagging one genuine gap: a scattered cluster of browser-probing gotchas with no consolidated home. On the human's go-ahead (\"A\") I wrote the note; on their follow-up (extract the whole \"Verifying UI changes\" section) I moved that section out of CLAUDE.md into docs/agents/verifying-ui-changes.md and left CLAUDE.md pointing at it, folding the gotchas in. All authoring was human-directed at each step (question, then two explicit directives), not agent-initiated net-new work. Gate green, PR #438 opened and subscribed."
+status: completed
+outcome: "Extracted UI-verification doc; PR #438 merged"
+summary: "Human asked whether the last 60 sessions' logs held learnings worth adding permanently to docs. Surveyed the `learnings` field across the window (36 of 60 sessions carried learnings) and cross-checked each reusable candidate against current docs: the strong ones were already single-homed (tenant-layers.md §4 for Platform-wide component overrides, mdc-when-to-use.md for the empty-`::` degradation, issue-tracker.md for docs/research-vs-issues), confirming the harvesting machinery keeps pace. Reported that honest near-empty result, flagging one genuine gap: a scattered cluster of browser-probing gotchas with no consolidated home. On the human's go-ahead (\"A\") I wrote the note; on their follow-up (extract the whole \"Verifying UI changes\" section) I moved that section out of CLAUDE.md into docs/agents/verifying-ui-changes.md and left CLAUDE.md pointing at it, folding the gotchas in. All authoring was human-directed at each step (question, then two explicit directives), not agent-initiated net-new work. Gate green, PR #438 opened, subscribed, and merged. Two follow-up commits after the first log (extract the whole section per the human's steer; add a built-in-`verify`-skill pointer) rode the same PR."
 prs:
   - "438"
 docsRead:
@@ -20,11 +20,15 @@ docsRead:
     reason: (no reason given)
   - path: CLAUDE.md
     reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: session closure at PR-open
   - name: log-session
     reason: authoring this log
+  - name: writing-great-skills
+    reason: (invoked as a slash command)
 frictions:
   - description: The request said "learnings" and I first reached for scripts/session-frictions.ts and analyzed the frictions field; the human interrupted to say they meant learnings only, not frictions.
     solution: Session logs have a distinct `learnings` field separate from `frictions`; when a request says "learnings," extract that field first rather than assuming the friction stream. The colloquial word and the schema field collide.
@@ -32,14 +36,14 @@ frictions:
   - description: My first pass created a new browser-probing.md while ALSO leaving the full detail in CLAUDE.md plus a pointer to it — duplicating the topic instead of single-homing it. The human caught it ("shouldn't the whole section be extracted").
     solution: "When adding a doc that overlaps an existing CLAUDE.md section, apply the single-home rule in the same pass: extract the section's detail into the new doc and leave only a pointer, rather than pointing at a sibling while keeping the copy."
     severity: minor
-durationSec: 1043
+durationSec: 2407
 models:
-  claude-opus-4-8: 103
+  claude-opus-4-8: 140
 toolCounts:
-  Bash: 23
-  Read: 9
-  Write: 4
-  Edit: 4
+  Bash: 29
+  Read: 10
+  Write: 5
+  Edit: 7
   Grep: 2
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
@@ -48,6 +52,8 @@ toolCounts:
   Skill: 2
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 1
+  AskUserQuestion: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/agents/browser-probing.md
   - CLAUDE.md
