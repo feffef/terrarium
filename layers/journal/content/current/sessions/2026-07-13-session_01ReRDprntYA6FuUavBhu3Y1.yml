@@ -1,0 +1,75 @@
+schemaVersion: 1
+session: session_01ReRDprntYA6FuUavBhu3Y1
+startedAt: 2026-07-13T20:33:55Z
+endedAt: 2026-07-13T21:06:46Z
+kind: delegated
+goal: Fix Recent Activity cards overflowing on mobile
+status: in-review
+outcome: "Root-caused grid sizing bug, PR #420 open"
+summary: "A GitHub issue with a phone screenshot reported the journal Space's \"Recent activity\" cards overflowing horizontally on mobile — the single human kickoff prompt, with no further human steering. Root-caused via computed-layout probing (scrollWidth vs clientWidth at a 390px mobile viewport) rather than trusting screenshots alone: `.grid`'s columns (`.feed`, `.rail`) and `.cards` all defaulted to `min-width:auto`, flooring their automatic minimum size at content's min-content width instead of shrinking to the grid track. Also added `overflow-wrap:anywhere` to `.card` for long unbroken tokens in agent-authored session text. Verified with the same layout probe plus a full local gate run (all green), then opened, subscribed to, and will babysit PR #420 to merge."
+prs:
+  - "420"
+docsRead:
+  - path: CONTEXT.md
+    reason: Session kind definitions, to classify this session honestly
+  - path: layers/journal/app/components/journal/SessionCard.vue
+    reason: (read before editing)
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (read before editing)
+  - path: layers/journal/app/assets/theme.css
+    reason: (no reason given)
+  - path: scripts/screenshot.ts
+    reason: (no reason given)
+  - path: layers/journal/app/components/journal/StatTile.vue
+    reason: (no reason given)
+  - path: scripts/tmp-check-css.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: session closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: A `preview.ts shot ... --dev` screenshot with the default 2s virtual-time-budget produced a false-positive overflow (clipped title text) because the Nuxt dev server's cold on-demand compile hadn't finished when the shutter fired.
+    solution: Prefer `preview` (built) mode, or a selector-wait capture, before trusting a `--dev` screenshot for diagnosis, per CLAUDE.md's own guidance — screenshots aren't proof, computed layout is.
+    severity: moderate
+  - description: "`page.evaluate` threw `ReferenceError: __name is not defined` when the callback declared a named const/function internally — tsx/esbuild's keep-names transform injects a `__name(...)` helper call that doesn't exist once the function body is serialized into the browser context."
+    solution: Only use plain inline arrow/anonymous functions inside an evaluate callback; never a named const/function declared within it.
+    severity: minor
+  - description: Editing `.card`'s scoped CSS in a running `--dev` server and re-probing showed no effect (computed style still `auto`) — HMR hadn't picked up the change, even though an earlier edit to `.foot` in the same file had. Only a full server restart made it visible, costing a confused bisection round.
+    solution: Restart the dev server (not just re-navigate) when a scoped-style edit doesn't show up in computed style, rather than assuming the CSS itself is wrong.
+    severity: moderate
+  - description: Needed several bisection rounds (`.foot`, then `.card`, then `.cards`/`.feed`/`.rail`) to find which ancestor's `min-width:0` was actually load-bearing.
+    solution: A flex/grid item's automatic minimum-size floor only applies to an element that is itself a direct flex/grid item of the container being sized — a nested flex row three levels down (`.foot`) doesn't get that treatment from its own non-flex/grid parent; fix at the actual grid/flex item ancestors first.
+    severity: nit
+durationSec: 1971
+models:
+  claude-sonnet-5: 209
+toolCounts:
+  Bash: 66
+  Grep: 10
+  Read: 12
+  Write: 9
+  Edit: 10
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__get_file_contents: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - scripts/tmp-overflow-probe.ts
+  - scripts/tmp-overflow-probe2.ts
+  - layers/journal/app/components/journal/SessionCard.vue
+  - scripts/tmp-check-css.ts
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - scripts/tmp-final-shot.ts
+  - scripts/tmp-verify.ts
+gitBranch: claude/activity-boxes-mobile-overflow-bn20rr
+entrypoint: remote_mobile
+cliVersion: 2.1.207
+learnings:
+  - Chromium's `--window-size`/Playwright's `viewport` size the CSS layout viewport directly, ignoring the page's own `<meta name="viewport">` — a "missing viewport meta" theory for a mobile overflow bug is usually a dead end once you confirm the meta tag is present.
+  - A flex/grid item's automatic minimum size (`min-width:auto` flooring at its content's min-content) only propagates from an element that is itself a direct flex/grid item of the container being track-sized, not from any nested flex/grid descendant regardless of depth.
