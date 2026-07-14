@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_01GanJ61naQovcbPfZNX1LeT
 startedAt: 2026-07-14T18:21:55Z
-endedAt: 2026-07-14T18:38:10Z
+endedAt: 2026-07-14T18:51:11Z
 kind: interactive
 goal: Add a runtime-git-read PoC Tenant
 status: in-review
-outcome: Built, gate-green, pushed; PR held
-summary: "Human-instructed: the user directly asked to add a Tenant called \"commits\" that shows the repo's latest commit message at runtime via a backend git-CLI call, with one Vue file plus TypeScript. Built it as a minimal Tenant — a manifest (one Space, one pages collection), a Nitro endpoint that shells out to `git log -1` and degrades to a fallback, one MDC component that fetches it during SSR and renders the subject in large font, and a landing index.md embedding it. Added the Tenant CONTEXT.md and roster/context-map entries. Verified the runtime read end-to-end with a preview screenshot and the full local gate (419 unit + 43 e2e, lint, typecheck, validate:content, build). Committed and pushed to the designated branch; PR intentionally not opened (see friction) pending the user's go-ahead."
-prs: []
+outcome: Built, gate-green; PR 488 open
+summary: "Human-instructed: the user directly asked to add a Tenant called \"commits\" that shows the repo's latest commit message at runtime via a backend git-CLI call, with one Vue file plus TypeScript. Built it as a minimal Tenant — a manifest (one Space, one pages collection), a Nitro endpoint that shells out to `git log -1` and degrades to a fallback, one MDC component that fetches it during SSR and renders the subject in large font, and a landing index.md embedding it. Added the Tenant CONTEXT.md and roster/context-map entries. Verified the runtime read end-to-end with a preview screenshot and the full local gate (419 unit + 43 e2e, lint, typecheck, validate:content, build). Committed and pushed to the designated branch. Initially held the PR (see friction) then opened PR 488 on the user's confirmation; babysitting it to merge."
+prs:
+  - "488"
 docsRead:
   - path: shared/manifest.ts
     reason: manifest shape + validation rules
@@ -44,15 +45,21 @@ frictions:
   - description: The cloud `-m` commit skipped the ADR-0017 provenance footer injection, as CLAUDE.md warns can happen.
     solution: Amended it in via `git commit --amend -F` with the two footer lines appended manually; already documented, no new fix needed.
     severity: nit
-durationSec: 976
+durationSec: 1756
 models:
-  claude-opus-4-8: 92
+  claude-opus-4-8: 120
 toolCounts:
-  Bash: 26
-  Read: 9
+  Bash: 28
+  Read: 10
   Write: 7
-  Edit: 4
+  Edit: 7
   Skill: 2
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
 filesEdited:
   - layers/commits/tenant.config.ts
   - layers/commits/content/poc/pages/index.md
