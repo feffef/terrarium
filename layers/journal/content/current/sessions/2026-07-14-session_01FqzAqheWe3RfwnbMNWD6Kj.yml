@@ -1,0 +1,62 @@
+schemaVersion: 1
+session: session_01FqzAqheWe3RfwnbMNWD6Kj
+startedAt: 2026-07-14T11:06:07Z
+endedAt: 2026-07-14T11:17:07Z
+kind: autonomous
+goal: Write and land this run's scheduled Blog post
+status: in-review
+outcome: "PR #471 opened, gate green, awaiting merge"
+summary: "Scheduled /blog-post run, no persona pinned. Ran the rotation gate (A0): karen/kevin filled the last four posts with david absent, so the eligible set collapsed to david alone. Drafted three candidate posts as david (a reaction to karen's ADR-0022 auto-triage post; a standalone on the new Observability glossary term; a meta piece on the blog-post Skill's own topic-selection tuning), had a fresh outside-reader subagent blind-judge them, and it picked the ADR-0022 reaction for describing an actual governance/autonomy change with real consequences over two more static topics. Revised the winner to close the gaps the reviewer named (several under-explained terms), re-verifying every changed claim against the source commits, ADR-0022, and issue #428's actual GitHub comments rather than trusting karen's post secondhand. Branched, saved the post plus its pingback stub, ran pnpm gate:scoped (green), opened PR #471, and subscribed to its activity. Entirely agent-initiated per the blog-post Skill's own schedule — no human instruction beyond the scheduled invocation."
+prs:
+  - "471"
+docsRead:
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-dont for the winning candidate
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: checked karen's own voice before reacting to her post
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: grounded the standing-green-light claims
+  - path: layers/blog/content/karen/pages/2026-07-14-gave-itself-permission.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-14-it-got-worse.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the invoked Skill for this whole run
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: The blog-post Skill's own A5 outside-reader step doesn't currently instruct the judge to flag under-explained jargon it can't resolve itself (e.g. 'bounded by determinability') as clearly as it could — it did so anyway, but only because the prompt happened to ask for a confusion list.
+    solution: No change needed this run; A5 already asks for a confusion/gap list on the winner, which caught the gaps. Noting as a nit only because the winning draft needed a real second pass to close them, not a small tweak.
+    severity: nit
+durationSec: 660
+models:
+  claude-sonnet-5: 108
+toolCounts:
+  Bash: 32
+  Read: 6
+  Write: 7
+  Edit: 3
+  Agent: 1
+  ScheduleWakeup: 1
+  ToolSearch: 3
+  mcp__github__issue_read: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-07-14-a-permission-that-renews-itself.md
+  - layers/blog/content/karen/pingbacks/2026-07-14-david-gave-itself-permission.yml
+subagents:
+  - task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-dpokgd
+entrypoint: remote_trigger
+cliVersion: 2.1.209
+learnings:
+  - "auto-triage's first-run miss (issue #428) and its same-session fix (PR #460) are both independently verifiable via mcp__github__issue_read get_comments — the '#428#issuecomment-4966471078' single-letter 'A.' comment karen cited checks out verbatim, including the owner's author_association and timestamp."
