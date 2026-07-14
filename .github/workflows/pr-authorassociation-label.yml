@@ -1,16 +1,21 @@
-# ADR-0020 mechanical aid: labels each PR `trusted` or `public` from
-# GitHub's own `author_association`, making the write-access split visible
-# without reading it off collaborator settings by hand. See issue #443 /
-# #213 and ADR-0020's "possible future mechanical aid" note.
+# ADR-0020 mechanical aid (issue #443): labels a PR `trusted` when its author
+# has write access, making the Trusted/Public split (ADR-0020) visible on the
+# PR itself. Deliberately one-sided — there is NO `public` label; absence of
+# `trusted` means Public (deny-by-default).
 #
-# Trigger is plain `pull_request`, never `pull_request_target` — ADR-0020
-# requires `pull_request` for fork-PR workflows specifically because
-# `pull_request_target` bypasses the "require approval to run fork PR
-# workflows" Actions setting (it always runs, unlike `pull_request`); see
-# docs/research/making-repo-public.md §3. This job never checks out PR
-# code, so it needs none of `pull_request_target`'s privileged base-branch
-# execution context — see docs/proposals/443-authorassociation-pr-labels.md
-# for the full trade-off this trigger choice implies for fork PRs.
+# Why one label, not `trusted`/`public`: a Public author has no write access,
+# so they can only open a PR from a *fork* — and GitHub clamps GITHUB_TOKEN to
+# read-only on fork-triggered `pull_request` runs, so a `public` label could
+# not be written without granting write tokens to fork-controlled workflow
+# code (plain `pull_request` runs the workflow file from the PR head). A
+# same-repo-branch PR, by contrast, requires write access to push the branch,
+# so its author is always Trusted and the token is write-capable. Guarding to
+# same-repo PRs lets us apply `trusted` safely and never needs a token on a
+# fork; the untrusted case is simply the unlabeled default.
+#
+# Trigger is plain `pull_request`, never `pull_request_target`/`workflow_run`:
+# ADR-0020 requires it because those bypass the "require approval to run fork
+# PR workflows" Actions setting. See docs/research/making-repo-public.md §3.
 
 name: pr-authorassociation-label
 
@@ -25,23 +30,23 @@ permissions:
 
 jobs:
   label:
+    # Only a same-repo-branch PR can carry a Trusted author (pushing a branch
+    # needs write access); a fork PR gets a read-only token, so skip it and let
+    # absence-of-`trusted` mean Public.
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
-      - name: 'Label trusted/public by author_association'
+      - name: 'Label trusted by author_association'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ASSOCIATION: ${{ github.event.pull_request.author_association }}
           PR: ${{ github.event.pull_request.number }}
           REPO: ${{ github.repository }}
         run: |
-          # Trusted: OWNER, MEMBER, COLLABORATOR (write access — ADR-0020).
-          # Everything else (CONTRIBUTOR, FIRST_TIME_CONTRIBUTOR,
-          # FIRST_TIMER, MANNEQUIN, NONE, ...) defaults to public — see
-          # docs/agents/issue-tracker.md and ADR-0020's pending amendment.
+          # OWNER/MEMBER/COLLABORATOR = write access = Trusted (ADR-0020).
           case "$ASSOCIATION" in
             OWNER|MEMBER|COLLABORATOR)
-              add=trusted; remove=public ;;
+              gh pr edit "$PR" -R "$REPO" --add-label trusted ;;
             *)
-              add=public; remove=trusted ;;
+              echo "author_association=$ASSOCIATION is not Trusted; leaving unlabeled (absence = Public)." ;;
           esac
-          gh pr edit "$PR" -R "$REPO" --add-label "$add" --remove-label "$remove"
