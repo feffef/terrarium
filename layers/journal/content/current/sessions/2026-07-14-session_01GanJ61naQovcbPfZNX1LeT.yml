@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01GanJ61naQovcbPfZNX1LeT
 startedAt: 2026-07-14T18:21:55Z
-endedAt: 2026-07-14T18:51:11Z
+endedAt: 2026-07-14T19:15:20Z
 kind: interactive
 goal: Add a runtime-git-read PoC Tenant
-status: in-review
-outcome: Built, gate-green; PR 488 open
-summary: "Human-instructed: the user directly asked to add a Tenant called \"commits\" that shows the repo's latest commit message at runtime via a backend git-CLI call, with one Vue file plus TypeScript. Built it as a minimal Tenant — a manifest (one Space, one pages collection), a Nitro endpoint that shells out to `git log -1` and degrades to a fallback, one MDC component that fetches it during SSR and renders the subject in large font, and a landing index.md embedding it. Added the Tenant CONTEXT.md and roster/context-map entries. Verified the runtime read end-to-end with a preview screenshot and the full local gate (419 unit + 43 e2e, lint, typecheck, validate:content, build). Committed and pushed to the designated branch. Initially held the PR (see friction) then opened PR 488 on the user's confirmation; babysitting it to merge."
+status: completed
+outcome: Merged PR 488; runtime git read proven on CI
+summary: "Human-instructed: the user directly asked to add a Tenant called \"commits\" that shows the repo's latest commit message at runtime via a backend git-CLI call, with one Vue file plus TypeScript. Built it as a minimal Tenant — a manifest (one Space, one pages collection), a Nitro endpoint that shells out to `git log -1` and degrades to a fallback, one MDC component that fetches it during SSR and renders the subject in large font, and a landing index.md embedding it. Added the Tenant CONTEXT.md and roster/context-map entries. Verified the runtime read end-to-end with a preview screenshot and the full local gate (419 unit + 43 e2e, lint, typecheck, validate:content, build). Committed and pushed to the designated branch. Initially held the PR (see friction) then opened PR 488 on the user's confirmation. The user then asked a sharp question — does a green build prove the runner can run git, or would the test pass on an error too? It would pass on the error path (the endpoint degrades silently), so added a Tenant e2e assertion that fails on the fallback; the fresh green gate then genuinely proved the runtime git read on CI. PR 488 merged."
 prs:
   - "488"
 docsRead:
@@ -30,6 +30,8 @@ docsRead:
     reason: (no reason given)
   - path: app/composables/space.ts
     reason: (no reason given)
+  - path: layers/blog/tests/e2e/blog.e2e.ts
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: session closure front door
@@ -45,21 +47,24 @@ frictions:
   - description: The cloud `-m` commit skipped the ADR-0017 provenance footer injection, as CLAUDE.md warns can happen.
     solution: Amended it in via `git commit --amend -F` with the two footer lines appended manually; already documented, no new fix needed.
     severity: nit
-durationSec: 1756
+durationSec: 3205
 models:
-  claude-opus-4-8: 120
+  claude-opus-4-8: 174
 toolCounts:
-  Bash: 28
-  Read: 10
-  Write: 7
-  Edit: 7
+  Bash: 38
+  Read: 11
+  Write: 8
+  Edit: 12
   Skill: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 3
   mcp__Claude_Code_Remote__send_later: 1
+  AskUserQuestion: 1
+  mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/commits/tenant.config.ts
   - layers/commits/content/poc/pages/index.md
@@ -69,9 +74,12 @@ filesEdited:
   - CONTEXT.md
   - CONTEXT-MAP.md
   - layers/commits/nuxt.config.ts
+  - layers/commits/tests/e2e/commits.e2e.ts
+  - tests/e2e/smoke.spec.ts
 gitBranch: claude/commits-tenant-poc-qxnjh5
 entrypoint: remote_mobile
 cliVersion: 2.1.209
 learnings:
   - Nuxt Content resolves MDC block components (`::latest-commit`) from a layer's `app/components/content/` dir automatically — no explicit global registration needed.
   - A `data` collection isn't required for a Tenant; a single `page` collection with one index.md satisfies the manifest and gives the L2 smoke sweep its `<h1>`.
+  - A gracefully-degrading endpoint makes the L2 smoke sweep pass on its error path too (the `<h1>` comes from markdown, the fallback logs no error) — so proving a runtime capability needs a targeted assertion that specifically fails on the fallback, not just clean hydration.
