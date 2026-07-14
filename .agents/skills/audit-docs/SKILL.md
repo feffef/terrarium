@@ -45,7 +45,8 @@ Classify every surface **before** editing. This decides everything.
   session logs, blog posts. **Never rewrite a decision.** A drifted ADR still gets
   the brave fix — the repo's sanctioned **amendment banner / Status-line pointer**
   (ADR-0018), never a rewrite of the decision — but ADRs are human-only (ADR-0004),
-  so that edit rides its own human-reviewed PR, not the self-merged one (step 8).
+  so that edit rides the shared, human-reviewed escalation PR, not the self-merged
+  one (step 8).
 - **Pack-generic** — external-pack Skills (`external: true`; e.g.
   `setup-matt-pocock-skills/*`, the `*-FORMAT.md` templates). Generic and
   re-installable, so a rewrite is clobbered on re-install (ADR-0005). **Never
@@ -154,9 +155,9 @@ link for a new orphaned doc, cut redundant filler, trim superseded-state narrati
 by making the prose match reality, pin the undefined threshold, retire a term
 whose premise is dead. Don't stop to ask how far to reach, and don't file an issue
 for a judgement call — **decide it and fix it.** Two fixes do *not* ride this
-brave, self-merged path — both escalate (step 8): a **Mis-location file move that
-changes a journal page's route**, and an **Orphan-addition missing-amendment
-finding on an ADR** (a human-only surface).
+brave, self-merged path — both escalate together into the one shared escalation PR
+(step 8): a **Mis-location file move that changes a journal page's route**, and an
+**Orphan-addition missing-amendment finding on an ADR** (a human-only surface).
 
 **File a `needs-triage` issue for one thing only: a factual conflict you genuinely
 cannot resolve.** Two sources state contradictory facts and the primary sources
@@ -237,8 +238,10 @@ manifest-expansion/routing modules — **or a Mis-location file move that change
 journal `pages/*.md` file's route** (routing-adjacent, ADR-0006), **or an
 Orphan-addition finding that a new ADR supersedes another without the amendment
 banner on the old one** (adding that banner is an ADR edit, human-only) — never
-rides in the self-merged routine PR above. File it as its own, separately human-reviewed PR
-(see the Historical-tier note above), subscribe, and babysit it to merge/close. Likewise, if the gate is
+rides in the self-merged routine PR above. Bundle **all** human-only-surface
+findings from this one sweep into a **single shared, separately human-reviewed
+PR** — not one PR per finding (see the Historical-tier note above) — subscribe to
+it, and babysit it to merge/close. Likewise, if the gate is
 red for a reason that isn't yours, leave the PR open for a human rather than
 merging red — fix on the branch or escalate honestly instead.
 
