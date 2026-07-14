@@ -1,0 +1,64 @@
+schemaVersion: 1
+session: session_015Lx1UtWEgobyYqHg5uVQUm
+startedAt: 2026-07-14T10:06:58Z
+endedAt: 2026-07-14T10:22:38Z
+kind: autonomous
+goal: Write and land one blog post via /blog-post
+status: in-review
+outcome: "Karen post opened as PR #466, gate green, subscribed"
+summary: "Invoked bare /blog-post (no persona pinned). Ran the rotation gate (A0): last poster was kevin, and all three personas appeared in the four most recent posts, so the eligible set was {david, karen}. Drafted three scratch candidates (two David, one Karen) covering three distinct real events: the still-unresolved RESCUED_GAP_HOURS doc/code contradiction (David, reaction to Kevin), ADR-0022's auto-triage standing green-light and its day-one eligibility bug on issue #428 (Karen), and the new Observability glossary term naming the Blog itself (David). A fresh sonnet subagent, told to judge purely from pasted text with no repo access, picked the Karen candidate as most interesting (biggest real-world stakes) and flagged undefined jargon plus an overly abstract description of the skipped ticket. Revised the winning draft to gloss ADR/Skill/session-id terms and replace the abstraction with issue #428's actual one-letter \"A\" comment (pulled live via the GitHub issue_read tool). Branched, saved the post, ran pnpm gate:scoped (full heavy layers, all green), pushed, opened PR #466, subscribed to its activity. All of this was self-initiated per the blog-post Skill's own schedule/invocation — no human steered the topic or persona choice mid-session."
+prs:
+  - "466"
+docsRead:
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-don't for David candidates
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice/do-don't for the winning Karen candidate
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: primary source for the winning topic
+  - path: layers/blog/tenant.config.ts
+    reason: blogTags enum for frontmatter tags
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the invoked Skill end to end
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: One draft claim (a comment's citation-rule file 'predating this commit by weeks') was initially unverifiable — local repo is a shallow clone (101 commits), and the blog itself only started 2026-07-05, so 'weeks' was implausible on its face.
+    solution: Caught by re-verifying every citable claim against git before finalizing (per the Skill's own citation rigor); reworded to an unverifiable-timespan-free claim instead of guessing at a duration.
+    severity: nit
+  - description: First draft of the winning candidate described the skipped auto-triage tickets only abstractly ('owner decisions in the latest comment'), which the outside reviewer correctly flagged as unverifiable-feeling to a reader who can't check the repo themselves.
+    solution: Pulled the actual issue (#428) and its comments via mcp__github__issue_read and replaced the abstraction with the real one-letter comment ("A") — concrete and independently verifiable.
+    severity: nit
+durationSec: 939
+models:
+  claude-sonnet-5: 184
+toolCounts:
+  Bash: 57
+  Read: 10
+  Write: 6
+  Edit: 10
+  Agent: 1
+  ToolSearch: 3
+  mcp__github__issue_read: 2
+  ScheduleWakeup: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-07-14-gave-itself-permission.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/blog-post-myf4sz
+entrypoint: remote_mobile
+cliVersion: 2.1.209
+learnings:
+  - "ADR-0022's own text ('Drift/Contradiction verify against the code') explains *why* the audit-docs fix to RESCUED_GAP_HOURS picked the wrong number: its heuristic trusts code over docs on contradiction, which breaks when the code side is itself just an unverified assertion, not a derivation."
