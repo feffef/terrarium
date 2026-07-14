@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Y11Fou1pRvTW2ucEt1dhX8
 startedAt: 2026-07-14T09:55:27Z
-endedAt: 2026-07-14T12:40:55Z
+endedAt: 2026-07-14T13:21:51Z
 kind: interactive
 goal: Implement all ready-for-agent issues in batches
 status: partial
-outcome: 10 PRs merged; 1 declined, 1 regressed+closed; backlog remains
-summary: "User-directed: implement all `ready-for-agent` issues in small batches, up to 3 parallel Sonnet worktree agents, human-reviewed gated PRs, quick wins first, avoiding conflict-prone parallel branches. Landed 10 gated PRs (all human-merged) across docs/ADR/skill/test/tooling surfaces; the owner steered merges, review comments (trim #464, de-dup #476, shorten the CLAUDE.md drop-zone rule on #467, questioned+kept #480's value) and priorities throughout. #442 (docs-drift gate check) declined — PR closed unmerged. #480 (journal copy-link, the owner-prioritized #450 sub-item) shipped green locally but CI caught a real accordion regression; closed unmerged at the owner's call, redo tracked on #479. I triaged the non-implementable issues to `ready-for-human` to keep the queue honest. All net-new work was on the user's explicit green-light. Session ended in a coherent state with backlog (#447/#448/#449/#451 + #445 CI-half + #479) remaining."
+outcome: "11 PRs merged (incl. #481 review fixes); 1 declined + 1 regressed-closed; backlog remains"
+summary: "User-directed: implement all `ready-for-agent` issues in small batches, up to 3 parallel Sonnet worktree agents, human-reviewed gated PRs, quick wins first, avoiding conflict-prone parallel branches. Landed 10 gated PRs (all human-merged) across docs/ADR/skill/test/tooling surfaces; the owner steered merges, review comments (trim #464, de-dup #476, shorten the CLAUDE.md drop-zone rule on #467, questioned+kept #480's value) and priorities throughout. #442 (docs-drift gate check) declined — PR closed unmerged. #480 (journal copy-link, the owner-prioritized #450 sub-item) shipped green locally but CI caught a real accordion regression; closed unmerged at the owner's call, redo tracked on #479. I triaged the non-implementable issues to `ready-for-human` to keep the queue honest. All net-new work was on the user's explicit green-light. Finally, at the user's request, a two-axis (Standards + Spec) OPUS code review of the run's .ts changes found 0 majors; its minor/nit fixes (incl. a nested-unclosed-MDC detection gap our own #446 impl missed) landed in PR #481. Took ready-for-agent from 26 to 6 open; 12 issues reclassified to ready-for-human (awaiting the owner). Session ended coherent with backlog (#447/#448/#449/#450/#451 + #445 CI-half) remaining."
 prs:
   - "463"
   - "464"
@@ -20,6 +20,7 @@ prs:
   - "476"
   - "477"
   - "480"
+  - "481"
 docsRead:
   - path: CLAUDE.md
     reason: repo conventions — worktree/PR discipline, single-home
@@ -46,6 +47,8 @@ skillsUsed:
     reason: session-closure front door
   - name: log-session
     reason: author this log
+  - name: code-review
+    reason: (no reason given)
 frictions:
   - description: |-
       HUMAN-PROMPTED-CLOSURE: did not invoke close-session at the first gated
@@ -102,34 +105,34 @@ frictions:
       output-token ceiling (~65k chars for 26 issues); had to slice the saved file.
     solution: "A minimal/no-body list mode would avoid it; relates to #451's issue_read/large-output doc-notes."
     severity: minor
-durationSec: 9928
+durationSec: 12384
 models:
-  claude-opus-4-8: 491
+  claude-opus-4-8: 544
 toolCounts:
   ToolSearch: 8
-  Bash: 29
-  mcp__github__list_issues: 3
+  Bash: 33
+  mcp__github__list_issues: 5
   mcp__github__list_pull_requests: 1
   Read: 9
   Glob: 8
-  TaskCreate: 14
-  TaskUpdate: 28
-  Agent: 12
+  TaskCreate: 15
+  TaskUpdate: 30
+  Agent: 15
   AskUserQuestion: 5
-  mcp__github__create_pull_request: 12
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 12
+  mcp__github__create_pull_request: 13
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 13
   mcp__github__issue_write: 16
   mcp__github__pull_request_read: 7
   mcp__Claude_Code_Remote__send_later: 2
   Write: 4
   mcp__github__add_issue_comment: 18
-  Edit: 8
+  Edit: 11
   Grep: 1
   mcp__github__get_job_logs: 3
   mcp__github__actions_run_trigger: 2
   SendMessage: 2
   mcp__github__issue_read: 7
-  Skill: 2
+  Skill: 3
   mcp__Claude_Code_Remote__delete_trigger: 1
   mcp__github__update_pull_request: 1
   mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
@@ -176,6 +179,15 @@ subagents:
     model: sonnet
   - type: general-purpose
     task: "Implement #450 journal copy-link"
+    model: sonnet
+  - type: general-purpose
+    task: Standards code review (Opus)
+    model: opus
+  - type: general-purpose
+    task: Spec code review (Opus)
+    model: opus
+  - type: general-purpose
+    task: Code-review fixes PR
     model: sonnet
 gitBranch: claude/zen-sagan-8lssg5
 entrypoint: remote
