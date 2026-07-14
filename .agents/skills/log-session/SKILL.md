@@ -101,8 +101,7 @@ ideas:                             # OPTIONAL — omit unless something sparked
     GitHub issue without having to re-derive your reasoning.
 
 - **Do NOT write** `startedAt`/`endedAt`, `durationSec`, `models`, `toolCounts`,
-  `filesEdited`, `subagents`, `gitBranch`, … — all derived. This kills the old
-  hand-estimated `startedAt` friction: the timestamps are now exact.
+  `filesEdited`, `subagents`, `gitBranch`, … — all derived (ADR-0009's amendment).
 - `docsRead`/`skillsUsed` are your **curated** picks (the ones worth a `reason`).
   You don't have to list everything you touched — the extractor folds observed
   reads in. A read you *do* cite keeps your `reason`; the rest get a derived
