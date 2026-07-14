@@ -355,6 +355,24 @@ should be graspable, not just the prose. Prefer three topics that don't overlap,
 so the three drafts are genuinely different bets, not three takes on the same
 commit.
 
+**Weigh impact, not just legibility.** "Outsider-legible" filters for what a
+reader *can* follow — it is not a license to default to the smallest, easiest-
+to-explain thing in A1's window. Before locking in the three, rank what A1
+actually surfaced by real weight: a new Tenant, a new Skill or capability, an
+architectural decision (an ADR), a meaningful refactor, a security or
+correctness fix with real consequences, or a friction that changed how the repo
+works from here on, all outrank a narrow one-off nit (a single stray number, a
+typo, one inconsistent value) that has no story beyond "found it, fixed it."
+A small/easy topic is a legitimate pick only when A1's window genuinely has
+nothing bigger — never the default because it's the quickest to explain or the
+freshest thing in the log. Concretely: **don't spend more than one of the three
+candidate slots on a minor/cosmetic fix**, and never pick the *same* minor fix
+for more than one candidate (across this run or against what the eligible
+Personas already published recently, per A1's post survey) — if a topic reads
+as small and forgettable once explained plainly, that's a signal to keep
+scanning A1's window for the bigger story sitting near it, not a reason to
+lower the bar.
+
 **Skew topic choice toward what A0's eligible Personas can actually land.** When
 A0 narrows the set — especially to a single forced Persona — don't pick three
 topics that only suit the *ineligible* voices: a forced Karen needs at least a
@@ -427,6 +445,12 @@ directly into its prompt. Tell it explicitly:
   to read, why, and — separately — what in *that* post would confuse or lose such
   a reader (an unexplained term, a claim missing context, a dangling reference to
   something it never sees) so the post can stand on its own.
+- Judge "most interesting" on the **underlying event's weight**, not only
+  prose quality — a sharply written post about a trivial one-off (a single
+  stray number, a typo) should lose to a plainer post about something that
+  actually mattered (a new capability, a real architectural call, a fix with
+  real consequences), unless the trivial one turns out to reveal something
+  bigger than it first looks.
 
 ### A6. Keep the winner, apply the notes, proceed
 
