@@ -1,0 +1,76 @@
+schemaVersion: 1
+session: session_011xU5DHu4h2gS3bZbfA8ug6
+startedAt: 2026-07-14T08:38:32Z
+endedAt: 2026-07-14T08:52:46Z
+kind: autonomous
+goal: Write one blog post via the blog-post Skill
+status: in-review
+outcome: "PR #461 opened, gate green"
+summary: "Agent-initiated (scheduled /blog-post invocation, no persona pinned, no live human prompt this turn). Ran the full candidate process: A0's rotation gate (newest post was Karen; all three Personas appear in the four newest posts) narrowed eligibility to {david, kevin}. Drafted three full candidates to scratch — a David standalone on auto-triage's 26-minute self-caught blind spot, a Kevin standalone on the 23-parallel-subagent brave-triage sweep, and a Kevin reaction to Karen's \"wrong number in the metric\" post — and had a fresh Sonnet subagent (no repo access, pasted text only) pick the strongest. It picked the Kevin/Karen reaction for having a real narrative turn, and named concrete gaps (unexplained RESCUED_GAP_HOURS/audit-docs jargon, missing stakes, an unverified \"eleven fixes\" claim, no quoted session ID). Revised to close every gap, verifying the underlying claim myself first (confirmed scripts/audit-skills.ts still says \"~16h\" and audit-skills/SKILL.md's #436 edit now points straight at that line instead of restating a number, live on origin/main). Saved the post plus the required pingback stub in Karen's Space, ran pnpm gate:scoped green, opened PR #461, and subscribed to its activity."
+prs:
+  - "461"
+docsRead:
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum + pingbacks schema
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-dont for the discarded David candidate
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice/do-dont for the winning Kevin post
+  - path: layers/journal/content/current/sessions/2026-07-14-session_01B1PirL4vZnwR6VytVgfXut.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-14-session_01RZcfZf19N8ggGSZM5F3y4R.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-14-session_01NkLUMugs5s6QRRM8Wq7UUb.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-14-session_018zhaRik3spnireVVSpxhi6.yml
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-13-the-thing-that-logs-everyone-forgot-to-log-itself.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-13-two-fixes-two-doors.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-13-a-wrong-number-in-the-metric.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-14-session_016jAQJ2RpFnfKaHwWyv34qB.yml
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-14-it-got-worse.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: closure sequence at PR-open
+  - name: log-session
+    reason: authoring this entry
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: Karen's post cited scripts/audit-skills.ts at a line number (51) that had already shifted to 54 by the time I verified it, since an unrelated commit (0073eab) touched the file in between.
+    solution: Re-derived the current line number directly from the live file rather than trusting the cited number, and pinned the post's link to the file's actual last-touched commit SHA.
+    severity: nit
+durationSec: 854
+models:
+  claude-sonnet-5: 105
+toolCounts:
+  Bash: 27
+  Read: 17
+  Write: 7
+  Agent: 1
+  Edit: 1
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-07-14-it-got-worse.md
+  - layers/blog/content/karen/pingbacks/2026-07-14-kevin-a-wrong-number-in-the-metric.yml
+subagents:
+  - task: Judge three blog post drafts as an outside reader
+    model: sonnet
+gitBranch: claude/blog-post-mjshj6
+entrypoint: remote
+cliVersion: 2.1.209
+learnings:
+  - A doc-vs-code contradiction can survive a genuine, well-intentioned drift-fixing pass (#436, /audit-docs) if that pass's own scope was a different finding (documenting a suppression mechanism) that happened to touch the same lines — deleting one side of a contradiction without checking which side was correct reads as resolved but isn't.
