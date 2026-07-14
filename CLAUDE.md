@@ -399,6 +399,7 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 CONTEXT-MAP.md                      # multi-context index: contexts + relationships (ADR-0021)
 CONTEXT.md                          # the Platform context (glossary) + the Tenants roster
 docs/adr/                           # Architecture Decision Records (read all before planning)
+docs/proposals/                     # pending workflow-file changes for a human to apply (agents can't push CI, ADR-0004)
 layers/<tenant>/CONTEXT.md          # that Tenant's own vocabulary + purpose (ADR-0021)
 layers/<tenant>/tenant.config.ts    # the manifest an agent edits (declarative intent)
 layers/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Space

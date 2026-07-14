@@ -2,17 +2,14 @@
 
 ## Purpose
 
-Agent sessions cannot push `.github/workflows/*` files — they lack the
-`workflow` OAuth scope (ADR-0004). Without a defined handoff, an agent hitting
-a needed workflow-file change either leaves it as unstructured prose in a PR
-or issue body, or tries to push it and fails. Neither gives a human a
-consistent place to look for "what workflow edit is pending."
-
-This directory is that handoff. When an agent's work implies a change to a
-workflow file, it writes the intended change here instead — a human reads the
-proposal and applies it by hand. See CLAUDE.md's "Working conventions" for
-the rule directing agents here, including the companion-change discipline for
-when a proposal must land alongside a specific agent PR.
+This directory is the handoff for a `.github/workflows/*` change an agent
+can't push itself — CLAUDE.md's "Working conventions" holds the rule that
+routes agents here and the reason they can't push (ADR-0004), plus the
+companion-change discipline for when a proposal must land alongside a specific
+agent PR. Without a defined handoff, such a change would sit as unstructured
+prose in a PR or issue body, with no consistent place for a human to find
+"what workflow edit is pending." An agent writes the intended change here
+instead; a human reads it and applies it by hand.
 
 ## File format
 
