@@ -18,9 +18,12 @@
 //   manual-nudge-closure signals `humanPromptedClosures` and
 //   `manuallyRescuedClosures` (the counterpart to `orphanedSessions`: a session
 //   that DID log, but only because a human nudged it — invisible to the orphan
-//   check because the log now exists) — and `skillSessionFiles`, a skill →
-//   file-path map (all-time, not windowed) for a targeted full-log deep-read
-//   once a regression is suspected for a specific Skill.
+//   check because the log now exists; a session id can be permanently
+//   dismissed from this signal once it's tracked and fixed, issue #426) — and
+//   `skillSessionFiles`, a skill → file-path map (all-time, not windowed, but
+//   capped per Skill at `MAX_SKILL_SESSION_FILES`, issue #426) for a targeted
+//   full-log deep-read once a regression is suspected for a specific Skill;
+//   `skillSessionFileTotals` carries the true, uncapped count alongside it.
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -51,6 +54,21 @@ export const HUMAN_PROMPTED_CLOSURE = 'HUMAN-PROMPTED-CLOSURE'
  *  work commit, while the motivating rescue (session_019pNrz, #397) idled ~16h.
  *  Tunable — set well above the healthy tail, well below a genuine rescue. */
 export const RESCUED_GAP_HOURS = 6
+/** Session ids already fully tracked and resolved on a `manuallyRescuedClosures`
+ *  incident — suppressed so a fixed incident stops resurfacing in every future
+ *  scorecard (issue #426; `findManuallyRescuedClosures` has no recency window
+ *  of its own, unlike `orphanedSessions`' calendar window). Append a session id
+ *  here once its tracking issue/PR has landed; this dismisses the scorecard
+ *  *signal* only — the session log itself is untouched. */
+export const DISMISSED_MANUALLY_RESCUED_CLOSURES: ReadonlySet<string> = new Set([
+  'session_019pNrzTQb3EV2SJBWXs1bXG', // #397, fixed by #411
+])
+/** Above this many session-file hits, `skillSessionFiles` caps that Skill's
+ *  list to the newest `MAX_SKILL_SESSION_FILES` rather than handing Phase B
+ *  (`audit-skills` SKILL.md step 4) an ever-growing full-file read — a
+ *  very-high-usage essential Skill (e.g. close-session, log-session) can rack
+ *  up 100+ files, and a literal read-every-file doesn't scale (issue #426). */
+export const MAX_SKILL_SESSION_FILES = 40
 
 /** Paths this helper reads. */
 export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
@@ -190,8 +208,19 @@ export interface Scorecard {
    *  (paths only). The deep-read entry point once a regression is suspected for
    *  a specific Skill: `Read` each file directly for its full, un-truncated
    *  record (full friction text, outcome, status, …) rather than trusting the
-   *  compact extract used everywhere else in this scorecard. */
+   *  compact extract used everywhere else in this scorecard. Newest first,
+   *  capped per Skill at `MAX_SKILL_SESSION_FILES` — a very-high-usage
+   *  essential Skill would otherwise hand this deep-read an ever-growing
+   *  full-file read (issue #426). See `skillSessionFileTotals` for whether a
+   *  given Skill's list was actually capped. */
   skillSessionFiles: Record<string, string[]>
+  /** Skill name → the true, uncapped hit count `skillSessionFiles` counts
+   *  against `MAX_SKILL_SESSION_FILES` (issue #426). A Skill's list above was
+   *  capped iff this total exceeds `skillSessionFiles[name].length` — the
+   *  signal that a regression watch should corroborate with
+   *  `orphanedSessions`/`manuallyRescuedClosures` rather than trust the file
+   *  list as this Skill's exhaustive history. */
+  skillSessionFileTotals: Record<string, number>
 }
 
 /** A session paired with the repo-relative path it was read from. */
@@ -204,18 +233,41 @@ export interface SessionFile {
 
 /** Skill name → every session log file that named it in `skillsUsed`, across
  *  ALL sessions passed in (the caller decides windowed vs. all-time — this
- *  helper only groups). Paths only, no content, so it stays cheap regardless
- *  of session count. */
-export function buildSkillSessionFiles(entries: SessionFile[]): Record<string, string[]> {
+ *  helper only groups), newest-first and capped at `maxFiles` per Skill
+ *  (`MAX_SKILL_SESSION_FILES`) — a very-high-usage Skill would otherwise grow
+ *  this list without bound (issue #426). Paths only, no content, so it stays
+ *  cheap regardless of session count. Pair with `buildSkillSessionFileTotals`
+ *  for the true (uncapped) count. */
+export function buildSkillSessionFiles(
+  entries: SessionFile[],
+  maxFiles = MAX_SKILL_SESSION_FILES,
+): Record<string, string[]> {
   const out: Record<string, string[]> = {}
-  for (const { session, file } of entries) {
+  const newestFirst = [...entries].sort((a, b) => b.session.endedAt.localeCompare(a.session.endedAt))
+  for (const { session, file } of newestFirst) {
     const seen = new Set<string>()
     for (const u of session.skillsUsed) {
       if (!u.name || seen.has(u.name)) continue
       seen.add(u.name)
       const files = out[u.name] ?? []
-      files.push(file)
+      if (files.length < maxFiles) files.push(file)
       out[u.name] = files
+    }
+  }
+  return out
+}
+
+/** The true, uncapped per-Skill hit count `buildSkillSessionFiles` counts
+ *  against `maxFiles` — lets a reader tell a capped list (issue #426) from a
+ *  complete one: capped iff this total exceeds `skillSessionFiles[name].length`. */
+export function buildSkillSessionFileTotals(entries: SessionFile[]): Record<string, number> {
+  const out: Record<string, number> = {}
+  for (const { session } of entries) {
+    const seen = new Set<string>()
+    for (const u of session.skillsUsed) {
+      if (!u.name || seen.has(u.name)) continue
+      seen.add(u.name)
+      out[u.name] = (out[u.name] ?? 0) + 1
     }
   }
   return out
@@ -426,12 +478,17 @@ export function findHumanPromptedClosures(sessions: WindowSession[]): HumanPromp
  *  exists. `refs` supplies each session's work commits (the log-landing commit
  *  itself carries no `Claude-Session` trailer, so it never counts as work);
  *  `sessions` supplies the closure moment (`endedAt`). A session with no work
- *  commit in `refs`, or a non-positive gap, is not a rescue. Sorted by gap,
+ *  commit in `refs`, or a non-positive gap, is not a rescue. A session id in
+ *  `dismissed` (default `DISMISSED_MANUALLY_RESCUED_CLOSURES`) is skipped
+ *  outright — an already-tracked-and-fixed incident that would otherwise
+ *  resurface in every future run (issue #426), since unlike `orphanedSessions`
+ *  this check has no calendar recency window of its own. Sorted by gap,
  *  largest first (most conspicuous rescue first). */
 export function findManuallyRescuedClosures(
   refs: SessionTrailerRef[],
   sessions: WindowSession[],
   minGapHours = RESCUED_GAP_HOURS,
+  dismissed: ReadonlySet<string> = DISMISSED_MANUALLY_RESCUED_CLOSURES,
 ): ManuallyRescuedClosure[] {
   // Compare by parsed epoch, not string: `git %aI` stamps carry the committer's
   // local offset (both `Z` and `+02:00` appear in practice), and a `+02:00`
@@ -443,6 +500,7 @@ export function findManuallyRescuedClosures(
   }
   const out: ManuallyRescuedClosure[] = []
   for (const s of sessions) {
+    if (dismissed.has(s.session)) continue
     const last = latestWork.get(s.session)
     if (!last || !s.endedAt) continue
     const gapHours = (Date.parse(s.endedAt) - Date.parse(last)) / 3_600_000
@@ -621,6 +679,7 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
     humanPromptedClosures: findHumanPromptedClosures(all),
     manuallyRescuedClosures: findManuallyRescuedClosures(trailers, all),
     skillSessionFiles: buildSkillSessionFiles(files),
+    skillSessionFileTotals: buildSkillSessionFileTotals(files),
   }
 }
 
