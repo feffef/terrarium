@@ -1,7 +1,11 @@
 // Pure-core tests for gate:scoped (#350) — the inert predicate and scope
 // decision, where a misclassification would skip a heavy layer it shouldn't.
-import { describe, expect, it } from 'vitest'
-import { decideScope, isInert, planSteps, FLOOR, HEAVY } from '../../scripts/gate.ts'
+import { execFileSync } from 'node:child_process'
+import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { afterEach, describe, expect, it } from 'vitest'
+import { changedPaths, decideScope, isInert, planSteps, FLOOR, HEAVY } from '../../scripts/gate.ts'
 
 describe('isInert()', () => {
   it('treats a Markdown file outside layers/ as inert', () => {
@@ -53,5 +57,41 @@ describe('decideScope()', () => {
     const scope = decideScope([])
     expect(scope.skipHeavy).toBe(false)
     expect(planSteps(scope)).toEqual([...FLOOR, ...HEAVY])
+  })
+})
+
+describe('changedPaths() — fetch-degrade path (#451)', () => {
+  let dir: string | undefined
+  let originalPath: string | undefined
+
+  afterEach(() => {
+    if (originalPath !== undefined) process.env.PATH = originalPath
+    if (dir) rmSync(dir, { recursive: true, force: true })
+    dir = undefined
+    originalPath = undefined
+  })
+
+  // A stub `git` that fails fast on `fetch` only (real git handles every
+  // other subcommand, so `merge-base`/`diff`/`ls-files` still see the real
+  // repo). `changedPaths()`'s fetch is wrapped in a bare `catch {}` — any
+  // thrown error, including the "timed out" one `fetchOriginMain` raises on
+  // a real timeout (unit-tested directly in git-helpers.spec.ts), takes the
+  // same degrade path, so a fast failure exercises the same catch branch a
+  // slow 10s timeout would, without paying for the wait.
+  it('degrades to a usable result instead of throwing when the fetch fails', () => {
+    const realGit = execFileSync('which', ['git'], { encoding: 'utf8' }).trim()
+    dir = mkdtempSync(join(tmpdir(), 'gate-scope-test-'))
+    const gitStub = join(dir, 'git')
+    writeFileSync(
+      gitStub,
+      `#!/bin/sh\nif [ "$1" = "fetch" ]; then\n  exit 1\nelse\n  exec ${realGit} "$@"\nfi\n`,
+    )
+    chmodSync(gitStub, 0o755)
+    originalPath = process.env.PATH
+    process.env.PATH = `${dir}${originalPath ? `:${originalPath}` : ''}`
+
+    expect(() => changedPaths()).not.toThrow()
+    const result = changedPaths()
+    expect(result === null || Array.isArray(result)).toBe(true)
   })
 })

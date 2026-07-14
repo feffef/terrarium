@@ -20,6 +20,7 @@
 import { execFileSync } from 'node:child_process'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { fetchOriginMain } from './git-helpers.ts'
 import { toUtcIso } from './merged-since.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -100,16 +101,9 @@ export function recentPrs(commits: RawMergeCommit[], limit = DEFAULT_LIMIT): Rec
 const FIELD_SEP = '\x1f'
 const RECORD_SEP = '\x1e'
 
-/** Bring the local `origin/main` ref up to date before it's read. Without
- *  this, a stale local ref silently returns a wrong (or truncated) result
- *  that reads identically to "genuinely nothing new merged" — the same
- *  failure mode `merged-since.ts` guards against (issue #246). Errors (e.g.
- *  offline) are intentionally fatal rather than silently swallowed. */
-function fetchOriginMain(cwd = root): void {
-  execFileSync('git', ['fetch', 'origin', 'main'], { cwd, stdio: ['ignore', 'ignore', 'inherit'] })
-}
-
 function readMergeCommits(cwd = root): RawMergeCommit[] {
+  // See `fetchOriginMain`'s doc comment (./git-helpers.ts) for why this is
+  // called before every read, and why a failure here is left fatal.
   fetchOriginMain(cwd)
   const raw = execFileSync(
     'git',
