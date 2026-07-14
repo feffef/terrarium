@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01Kq4GuZwPq6b7y4XuivRuDr
 startedAt: 2026-07-14T18:16:13Z
-endedAt: 2026-07-14T18:35:51Z
+endedAt: 2026-07-14T18:42:58Z
 kind: interactive
 goal: Link journal intro's session-log and Skills mentions
-status: in-review
-outcome: "PR #487 open, gate green, awaiting human merge"
+status: completed
+outcome: "PR #487 merged"
 summary: "User directly asked for the \"full session log\" phrase in the journal editorial intro (layers/journal/content/current/pages/index.md) to link to an anchor scrolling to the session-log feed; added a #session-log id to the \"Recent activity\" section, opened gated PR #487, and closed. The same user then directly asked, as a follow-up in the same conversation, for the \"Skills panel\" mention to get the same treatment — added a #skills id to the \"Platform Skills\" panel and linked the intro's phrasing to it. Both targets got matching scroll-margin-top for consistency with the existing digest/session deep-link pattern. Verified each change with pnpm gate:scoped (full gate, all green) and a dedicated ad-hoc playwright-core script confirming the click scrolls to and sets the hash for the right section. Kept PR #487's description in sync with the expanded scope. Ordinary work PR, so it awaits human merge, not self-merge."
 prs:
   - "487"
@@ -27,15 +27,15 @@ frictions:
   - description: "scripts/preview.ts shot with a #hash URL rendered a blank screenshot (client-only deep-link scroll timing vs. the shutter), even though the base page and the actual click interaction both worked fine."
     solution: Followed docs/agents/verifying-ui-changes.md's guidance to write an ad-hoc playwright-core script that navigates, clicks the link, and screenshots after settling — confirmed the real behavior instead of trusting the hash-URL screenshot.
     severity: nit
-durationSec: 1178
+durationSec: 1605
 models:
-  claude-sonnet-5: 118
+  claude-sonnet-5: 126
 toolCounts:
   Grep: 7
   Read: 9
   Glob: 1
-  Bash: 26
-  Edit: 8
+  Bash: 27
+  Edit: 9
   Write: 3
   ToolSearch: 3
   mcp__github__search_pull_requests: 1
@@ -46,6 +46,7 @@ toolCounts:
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 3
   mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/index.md
   - layers/journal/app/pages/t/journal/[space]/index.vue
