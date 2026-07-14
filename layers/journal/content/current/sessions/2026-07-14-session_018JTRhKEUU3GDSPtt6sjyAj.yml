@@ -1,0 +1,61 @@
+schemaVersion: 1
+session: session_018JTRhKEUU3GDSPtt6sjyAj
+startedAt: 2026-07-14T14:05:50Z
+endedAt: 2026-07-14T15:00:10Z
+kind: autonomous
+goal: Run /audit-skills — audit the Skill Inventory
+status: completed
+outcome: 1 Inventory fix merged (#482); closure-nudge issue filed (#483)
+summary: "Ran the scheduled /audit-skills sweep against the fresh 40-newest-session window. Re-graded all 34 Inventory entries' importance/role against usedIn — none crossed the bright-line (>=2 session) threshold for a grade change; all existing roles still plainly matched usage. Checked all 9 own-Skill SKILL.md edits' before/after regression brackets (Phase A screen, Phase B deep-read where a signal looked suspicious) — none showed a confirmed regression, since firing brackets' frictions were unrelated to the edited Skill or were the pre-edit motivating bug already fixed in the same session as the edit. Found and fixed one data-integrity bug: auto-triage.yml was miscategorized general-engineering instead of platform-operation (it's our own Skill, not external-pack). orphanedSessions was empty; humanPromptedClosures flagged 2 fresh sessions with no standing tracking issue yet, so filed #483 citing both. No step 4/6 signal reached the bar for a learning or idea entry. Gate green, PR #482 opened, subscribed, and self-merged per this Skill's low-risk content tier (ADR-0004/0015) since the diff touched only Inventory YAML with no grade/role changes riding along. This entire run was autonomous/scheduled — no human message during the session."
+prs:
+  - "482"
+docsRead:
+  - path: layers/journal/content/current/skills/auto-triage.yml
+    reason: the miscategorized entry
+  - path: layers/journal/content/current/sessions/2026-07-14-session_01Y11Fou1pRvTW2ucEt1dhX8.yml
+    reason: regression Phase B deep-read + closure-nudge citation
+  - path: layers/journal/content/current/sessions/2026-07-14-session_015gQvuX4uBkjpzW9yovabVz.yml
+    reason: closure-nudge citation
+  - path: layers/journal/content/current/sessions/2026-07-14-4d6d9040-8e1d-4d2e-bc9b-cd97d5542b6a.yml
+    reason: checked for fresh grade-change evidence
+  - path: layers/journal/content/current/sessions/2026-07-13-session_01RZcfZf19N8ggGSZM5F3y4R.yml
+    reason: auto-triage regression Phase B — confirmed pre-edit motivating bug, not a regression
+  - path: layers/journal/content/current/sessions/2026-07-12-session_019pNrzTQb3EV2SJBWXs1bXG.yml
+    reason: frictions-to-fixes regression Phase B
+  - path: layers/journal/content/current/skills/audit-docs.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the run itself
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: scripts/audit-skills.ts's skillsUsed extraction still surfaces built-in CLI slash commands (/context, /model) as false onDisk:false Skill entries in the scorecard, requiring a manual check against each session's raw skillsUsed field to rule them out.
+    solution: "Already tracked in #447 (\"Filter built-in CLI slash commands out of skillsUsed extraction\") — no new issue needed, just confirming it's still live."
+    severity: nit
+durationSec: 3261
+models:
+  claude-sonnet-5: 112
+toolCounts:
+  Bash: 34
+  Read: 6
+  ToolSearch: 4
+  mcp__github__search_issues: 3
+  Edit: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__issue_write: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - layers/journal/content/current/skills/auto-triage.yml
+gitBranch: claude/audit-skills-n5uech
+entrypoint: remote_mobile
+cliVersion: 2.1.209
