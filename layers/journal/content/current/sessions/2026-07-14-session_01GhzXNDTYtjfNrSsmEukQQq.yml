@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01GhzXNDTYtjfNrSsmEukQQq
 startedAt: 2026-07-14T00:16:21Z
-endedAt: 2026-07-14T00:22:31Z
+endedAt: 2026-07-14T00:25:57Z
 kind: autonomous
 goal: "Run /digest: author the 2026-07-13 Journal Digest"
-status: in-review
-outcome: "Digest authored, gate green, PR #422 opened"
-summary: "Scheduled Routine fired /digest (no human prompt this run). Branched off origin/main, ran scripts/digest.ts list (one closed day pending: 2026-07-13), gathered the day's data via scripts/digest.ts gather, and authored the 2026-07-13.md Digest narrating the closure-regression fix (#411), three /audit-docs sweeps, and the day's other shipped work, with a frictions rollup footer. index.md needed no edit (the dashboard surfaces new digests live). pnpm gate:scoped ran green. Committed, pushed, and opened PR #422 with a provenance footer; auto-merge was attempted but the PR's single gate check was still in_progress, so it will be merged directly once green rather than left to auto-merge."
+status: completed
+outcome: "Digest authored, gate green, PR #422 merged"
+summary: "Scheduled Routine fired /digest (no human prompt this run). Branched off origin/main, ran scripts/digest.ts list (one closed day pending: 2026-07-13), gathered the day's data via scripts/digest.ts gather, and authored the 2026-07-13.md Digest narrating the closure-regression fix (#411), three /audit-docs sweeps, and the day's other shipped work, with a frictions rollup footer. index.md needed no edit (the dashboard surfaces new digests live). pnpm gate:scoped ran green. Committed, pushed, opened PR #422 with a provenance footer, and subscribed to its activity. Auto-merge was attempted but the PR's single gate check was still in_progress at the time; the github-actions bot then posted a green safety-gate comment, so the check runs were re-verified as completed/success and the PR was merged directly (squash) rather than left to auto-merge."
 prs:
   - "422"
 docsRead: []
@@ -21,21 +21,25 @@ frictions:
   - description: enable_pr_auto_merge threw "already in clean status" while the gate check was still in_progress, not actually passed — a variant of the documented misleading-auto-merge-error gotcha.
     solution: Already documented in CLAUDE.md as a known caveat; poll get_check_runs and merge_pull_request directly once genuinely green instead of retrying auto-merge.
     severity: nit
-durationSec: 370
+durationSec: 575
 models:
-  claude-sonnet-5: 47
+  claude-sonnet-5: 63
 toolCounts:
-  Bash: 11
+  Bash: 12
   Write: 2
   ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__enable_pr_auto_merge: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
-  Skill: 2
+  mcp__github__pull_request_read: 2
+  Skill: 3
   mcp__Claude_Code_Remote__send_later: 1
-  ScheduleWakeup: 1
+  ScheduleWakeup: 2
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Edit: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-13.md
 gitBranch: claude/compassionate-lovelace-ijprlh
