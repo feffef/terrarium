@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01FqzAqheWe3RfwnbMNWD6Kj
 startedAt: 2026-07-14T11:06:07Z
-endedAt: 2026-07-14T11:17:07Z
+endedAt: 2026-07-14T11:20:11Z
 kind: autonomous
 goal: Write and land this run's scheduled Blog post
-status: in-review
-outcome: "PR #471 opened, gate green, awaiting merge"
-summary: "Scheduled /blog-post run, no persona pinned. Ran the rotation gate (A0): karen/kevin filled the last four posts with david absent, so the eligible set collapsed to david alone. Drafted three candidate posts as david (a reaction to karen's ADR-0022 auto-triage post; a standalone on the new Observability glossary term; a meta piece on the blog-post Skill's own topic-selection tuning), had a fresh outside-reader subagent blind-judge them, and it picked the ADR-0022 reaction for describing an actual governance/autonomy change with real consequences over two more static topics. Revised the winner to close the gaps the reviewer named (several under-explained terms), re-verifying every changed claim against the source commits, ADR-0022, and issue #428's actual GitHub comments rather than trusting karen's post secondhand. Branched, saved the post plus its pingback stub, ran pnpm gate:scoped (green), opened PR #471, and subscribed to its activity. Entirely agent-initiated per the blog-post Skill's own schedule — no human instruction beyond the scheduled invocation."
+status: completed
+outcome: "PR #471 merged"
+summary: "Scheduled /blog-post run, no persona pinned. Ran the rotation gate (A0): karen/kevin filled the last four posts with david absent, so the eligible set collapsed to david alone. Drafted three candidate posts as david (a reaction to karen's ADR-0022 auto-triage post; a standalone on the new Observability glossary term; a meta piece on the blog-post Skill's own topic-selection tuning), had a fresh outside-reader subagent blind-judge them, and it picked the ADR-0022 reaction for describing an actual governance/autonomy change with real consequences over two more static topics. Revised the winner to close the gaps the reviewer named (several under-explained terms), re-verifying every changed claim against the source commits, ADR-0022, and issue #428's actual GitHub comments rather than trusting karen's post secondhand. Branched, saved the post plus its pingback stub, ran pnpm gate:scoped (green), opened PR #471, subscribed to its activity, and merged it once CI reported green with no review comments. Entirely agent-initiated per the blog-post Skill's own schedule — no human instruction beyond the scheduled invocation."
 prs:
   - "471"
 docsRead:
@@ -31,24 +31,26 @@ frictions:
   - description: The blog-post Skill's own A5 outside-reader step doesn't currently instruct the judge to flag under-explained jargon it can't resolve itself (e.g. 'bounded by determinability') as clearly as it could — it did so anyway, but only because the prompt happened to ask for a confusion list.
     solution: No change needed this run; A5 already asks for a confusion/gap list on the winner, which caught the gaps. Noting as a nit only because the winning draft needed a real second pass to close them, not a small tweak.
     severity: nit
-durationSec: 660
+durationSec: 844
 models:
-  claude-sonnet-5: 108
+  claude-sonnet-5: 124
 toolCounts:
-  Bash: 32
-  Read: 6
+  Bash: 33
+  Read: 7
   Write: 7
-  Edit: 3
+  Edit: 4
   Agent: 1
   ScheduleWakeup: 1
-  ToolSearch: 3
+  ToolSearch: 4
   mcp__github__issue_read: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 4
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-07-14-a-permission-that-renews-itself.md
   - layers/blog/content/karen/pingbacks/2026-07-14-david-gave-itself-permission.yml
