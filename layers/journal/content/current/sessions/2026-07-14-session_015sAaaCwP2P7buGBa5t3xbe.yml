@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015sAaaCwP2P7buGBa5t3xbe
 startedAt: 2026-07-14T00:46:01Z
-endedAt: 2026-07-14T00:58:20Z
+endedAt: 2026-07-14T01:01:01Z
 kind: autonomous
 goal: Run /audit-skills — audit the Skill Inventory
-status: in-review
-outcome: "6 Inventory entries refreshed; PR #423 opened"
-summary: "Scheduled, unprompted /audit-skills run — no human message anywhere in the session, only the system task-notification, so this is fully agent-initiated per ADR-0003/CONTEXT.md's autonomy definitions (the Skill itself is chartered to run and self-merge low-risk Inventory content per ADR-0004/0015). Gathered the scorecard via scripts/audit-skills.ts (40-session window, 188 sessions considered). Re-graded all 33 Inventory entries against the bright-line evidence rule — no promote/demote crossed the ≥2-session threshold. Refreshed drifted usedIn citations for audit-docs, code-review, domain-modeling, implement, grilling, and grill-with-docs (moving grilling's and domain-modeling's inline session examples into observations, matching the repo's role/observations split). Screened all 8 regressionChecks (3 unique edit commits): the close-session/digest/frictions-to-fixes/blog-post closure-timing fix (PR #411) showed a coarse Phase-A friction increase, but a full Phase-B read of all 6 post-edit session logs found no friction implicating the edited behavior, corroborated by zero new orphanedSessions/manuallyRescuedClosures since — confirmed not a regression. The one manuallyRescuedClosures entry (session_019pNrz) is the same historical incident already fully tracked on #397/#411 — no new evidence, nothing filed. orphanedSessions and humanPromptedClosures were both empty (healthy). The review.yml phantom Inventory entry (onDisk false, a built-in CLI Skill) was confirmed and left alone per the Skill's own instructions. Ran pnpm gate:scoped clean (full gate, since the diff touches non-inert content), opened PR #423 scoped to Inventory YAML only, subscribed to its activity."
+status: completed
+outcome: "6 Inventory entries refreshed; PR #423 merged"
+summary: "Scheduled, unprompted /audit-skills run — no human message anywhere in the session, only the system task-notification, so this is fully agent-initiated per ADR-0003/CONTEXT.md's autonomy definitions (the Skill itself is chartered to run and self-merge low-risk Inventory content per ADR-0004/0015). Gathered the scorecard via scripts/audit-skills.ts (40-session window, 188 sessions considered). Re-graded all 33 Inventory entries against the bright-line evidence rule — no promote/demote crossed the ≥2-session threshold. Refreshed drifted usedIn citations for audit-docs, code-review, domain-modeling, implement, grilling, and grill-with-docs (moving grilling's and domain-modeling's inline session examples into observations, matching the repo's role/observations split). Screened all 8 regressionChecks (3 unique edit commits): the close-session/digest/frictions-to-fixes/blog-post closure-timing fix (PR #411) showed a coarse Phase-A friction increase, but a full Phase-B read of all 6 post-edit session logs found no friction implicating the edited behavior, corroborated by zero new orphanedSessions/manuallyRescuedClosures since — confirmed not a regression. The one manuallyRescuedClosures entry (session_019pNrz) is the same historical incident already fully tracked on #397/#411 — no new evidence, nothing filed. orphanedSessions and humanPromptedClosures were both empty (healthy). The review.yml phantom Inventory entry (onDisk false, a built-in CLI Skill) was confirmed and left alone per the Skill's own instructions. Ran pnpm gate:scoped clean (full gate, since the diff touches non-inert content), opened PR #423 scoped to Inventory YAML only, subscribed to its activity. The safety gate came back green with no review comments; merged directly (main carries no branch protection) and unsubscribed."
 prs:
   - "423"
 docsRead:
@@ -39,23 +39,26 @@ frictions:
   - description: "Phase B's literal \"read every file skillSessionFiles[name] lists\" doesn't scale for essential Skills (close-session: 105 files, log-session: 170 files) — read the post-edit bracket sessions instead and corroborated with the full-history mechanical orphan/rescue signals."
     solution: The Skill's Phase B instructions could cap the deep-read for very-high-usage Skills, or explicitly bless corroborating with the mechanical orphanedSessions/manuallyRescuedClosures signals as a substitute for an essential Skill's full history.
     severity: minor
-durationSec: 739
+durationSec: 900
 models:
-  claude-sonnet-5: 122
+  claude-sonnet-5: 136
 toolCounts:
-  Bash: 39
-  ToolSearch: 4
+  Bash: 40
+  ToolSearch: 5
   mcp__github__issue_read: 2
   mcp__github__search_issues: 1
   Read: 7
-  Edit: 6
+  Edit: 8
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 4
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/skills/audit-docs.yml
   - layers/journal/content/current/skills/code-review.yml
