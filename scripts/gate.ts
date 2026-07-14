@@ -7,6 +7,7 @@ import { statSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { root } from '../shared/expand.ts'
+import { fetchOriginMain } from './git-helpers.ts'
 
 export const FLOOR = ['verify:skills-lock', 'lint', 'typecheck', 'validate:content'] as const
 export const HEAVY = ['test', 'build', 'test:e2e'] as const
@@ -55,9 +56,10 @@ function lines(out: string): string[] {
 export function changedPaths(): string[] | null {
   try {
     try {
-      execFileSync('git', ['fetch', 'origin', 'main'], { cwd: root, stdio: 'ignore' })
+      fetchOriginMain(root)
     } catch {
       // best-effort: a stale origin/main still yields a usable merge-base
+      // (including on timeout — a `--dry` run must never hang, #451)
     }
     let base: string
     try {

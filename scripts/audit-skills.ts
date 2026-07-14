@@ -29,6 +29,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
+import { isParentlessBoundaryCommit } from './git-helpers.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -375,9 +376,9 @@ export function buildRegressionChecks(
   return { checks, sessions }
 }
 
-/** Skips a parentless commit (empty `%P`) — issue #292: git diffs it against
- *  the empty tree, so it would misattribute as a real edit to every Skill it
- *  lists. Expects `readSkillEdits`'s `git log` format. */
+/** Skips a parentless commit via the shared `isParentlessBoundaryCommit` guard
+ *  (#292, single-homed in `./git-helpers.ts`). Expects `readSkillEdits`'s
+ *  `git log` format. */
 export function parseSkillEditLog(raw: string, skillsDir = SKILLS_DIR): Map<string, SkillEdit[]> {
   const out = new Map<string, SkillEdit[]>()
   const prefix = `${skillsDir}/`
@@ -385,7 +386,8 @@ export function parseSkillEditLog(raw: string, skillsDir = SKILLS_DIR): Map<stri
     const lines = block.split('\n')
     const header = lines[0] ?? ''
     const [sha, parents, date, subject] = header.split(SEP)
-    if (!sha || !date || !parents) continue
+    if (!sha || !date) continue
+    if (isParentlessBoundaryCommit(parents ?? '')) continue
     const names = new Set<string>()
     for (const path of lines.slice(1)) {
       if (!path.startsWith(prefix)) continue

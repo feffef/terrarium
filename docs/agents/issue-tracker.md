@@ -43,6 +43,10 @@ class to its MCP equivalent:
   from `git log origin/main` (number/title/merge-time only; `author`/`merged_by`
   are out of scope, since those need the API) with no overflow risk (issue #319).
 - **Read a PR or its diff** → `pull_request_read`
+- **`issue_read`/`pull_request_read` bodies come back HTML-entity-encoded.**
+  `&`, `"`, `'`, `<`, `>` arrive as `&amp;`, `&#34;`, `&#39;`, `&lt;`, `&gt;` —
+  decode before quoting the text elsewhere (a comment, a commit message) or
+  parsing it (e.g. extracting a `Closes #N` line).
 - **Check a PR's gate status** → `pull_request_read` with method `get_check_runs`,
   *not* `get_status`: the combined-status API reports `total_count: 0` /
   pending for Actions-based gates and misleads you into thinking the gate
@@ -167,6 +171,8 @@ GitHub shares one number space across issues and PRs, so a bare `#42` may be eit
 A reviewing agent must post its verdict as a PR review or comment **before merging** — every time, even on a clean "merging as-is" verdict — so the audit trail lives on the PR; otherwise `get_reviews`/`get_comments` return empty and a real review reads as none having happened.
 
 **Never use a GitHub closing keyword (`Resolves`/`Closes`/`Fixes #N`) for an issue a PR only *references*** — e.g. a governance/tracking issue the PR touches on but doesn't complete. Merging a PR auto-closes anything named with a closing keyword, so using one on an issue the PR doesn't actually finish silently closes it out from under the tracker (it then has to be reopened with an explaining comment — this has already happened once, PR #326 → issue #213). Reserve closing keywords for the issue(s) the PR genuinely completes; use a plain-text reference ("relates to #N", "see #N") for every other issue the PR body mentions.
+
+**GitHub's comma-separated `Closes #A, #B, #C` only auto-closes the first (`#A`).** `#B` and `#C` stay open even though the line reads as closing all three. When a PR genuinely completes more than one issue, give each its own `Closes #N` line rather than comma-joining them.
 
 **Never submit an APPROVE-event review — use `add_issue_comment` or a COMMENT-event review instead.** The agent's GitHub identity under the shared connection is always the repo owner, and GitHub blocks a PR author from approving their own pull request.
 

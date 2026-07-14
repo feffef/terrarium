@@ -16,9 +16,10 @@
 //   instant, each additionally carrying `afterAll` — the subset of the given
 //   instants that commit postdates. One `git log`, bounded by the earliest
 //   instant, regardless of how many instants are given.
-import { execFileSync } from 'node:child_process'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { execFileSync } from 'node:child_process'
+import { fetchOriginMain } from './git-helpers.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -91,22 +92,14 @@ export function mergedSince(commits: RawCommit[], sinceUtcIso: string[]): Annota
 
 const FIELD_SEP = '\x1f'
 
-/** Bring the local `origin/main` ref up to date before it's read. Without
- *  this, a stale local ref silently returns an empty (or truncated) result
- *  that reads identically to "genuinely nothing landed" — the exact failure
- *  mode this helper exists to avoid (see issue #246). Errors (e.g. offline)
- *  are intentionally fatal rather than silently swallowed: a result computed
- *  against a ref we couldn't confirm is fresh is worse than no result. */
-function fetchOriginMain(cwd = root): void {
-  execFileSync('git', ['fetch', 'origin', 'main'], { cwd, stdio: ['ignore', 'ignore', 'inherit'] })
-}
-
 /** `sinceBoundUtcIso`, when given, is passed straight to `git log --since` —
  *  a loose lower bound (the earliest of possibly several instants the caller
  *  will filter against downstream), not the final "strictly after" cutoff, so
  *  it only needs to not exclude anything the caller still wants (issue #412:
  *  one bounded `git log`, not one unbounded call per instant). */
 function readCommits(cwd = root, sinceBoundUtcIso?: string): RawCommit[] {
+  // See `fetchOriginMain`'s doc comment (./git-helpers.ts) for why this is
+  // called before every read, and why a failure here is left fatal.
   fetchOriginMain(cwd)
   const args = ['log', 'origin/main', '--date=iso-strict', `--format=%H${FIELD_SEP}%cd${FIELD_SEP}%s`]
   if (sinceBoundUtcIso) args.push(`--since=${sinceBoundUtcIso}`)

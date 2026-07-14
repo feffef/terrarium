@@ -32,6 +32,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { stringify as stringifyYaml } from 'yaml'
+import { fetchOriginMain } from './git-helpers.ts'
 import {
   extractTrace,
   parseTranscript,
@@ -57,9 +58,9 @@ function readStdin(): string {
  *  Used by the diff-guard so an unchanged re-derive never commits. */
 function mainVersion(relPath: string, remote: string): string | null {
   try {
-    execFileSync('git', ['fetch', remote, 'main'], { cwd: root, stdio: 'ignore', timeout: 10_000 })
+    fetchOriginMain(root, remote)
   } catch {
-    /* offline / no remote — fall through; the push loop will surface it */
+    /* offline / no remote / timed out — fall through; the push loop will surface it */
   }
   try {
     return execFileSync('git', ['show', `${remote}/main:${relPath}`], {
