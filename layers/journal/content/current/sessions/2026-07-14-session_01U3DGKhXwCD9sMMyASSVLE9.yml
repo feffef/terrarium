@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01U3DGKhXwCD9sMMyASSVLE9
 startedAt: 2026-07-14T01:05:02Z
-endedAt: 2026-07-14T01:48:01Z
+endedAt: 2026-07-14T01:54:02Z
 kind: autonomous
 goal: Run frictions-to-fixes over the latest 20 sessions
 status: completed
-outcome: Four PRs merged, three regressions escalated
-summary: "Scheduled autonomous run of frictions-to-fixes, fired twice by the same Routine in this one session (no human prompt either time). Cycle 1: dispatched a survey subagent over the latest 20 session logs, filed 5 issues - 3 never-fixed simple fixes (#424 blog-post blogTags enum, #425 issue-tracker.md Agent-tool-wait clarification, #426 audit-skills.ts scorecard robustness) and 2 regressions (#427 worktree-isolated agents stopping without committing, recurring after #317's fix; #428 subscribe_pr_activity auto-triggering despite impl-agent briefs saying not to call it, recurring after #361's fix). Per the skill's regression rule, both regressions were escalated to human review with fresh first-hand evidence attached rather than re-dispatched for another doc-only fix (this session directly experienced a live recurrence of the worktree-uncommitted-work failure, and confirmed the subscribe_pr_activity event fires even when the impl agent explicitly denies calling the tool). Also added 3 fresh in-window instances as evidence to the already-open identifier-fabrication regression #387. Dispatched two Sonnet impl agents in isolated worktrees for the 3 simple fixes (PR #429 for #424+#425, PR #430 for #426); reviewed both diffs, confirmed green gates, posted review comments, and merged both, acting as the ADR-0003 review-agent throughout. Cycle 2 (this same session, Routine fired again): a fresh survey subagent found 4 new candidates; one (enable_pr_auto_merge false-positive, 7/20 recurrence) turned out already covered by issue #385 (closed the day before) - dropped as already-fixed, matching cycle 1's identical conclusion for the same friction pattern in the prior day's window. Filed 3 new doc-only CLAUDE.md issues (#431 debug-marker-first debugging heuristic, #432 ToolSearch rule named examples, #433 orchestrator worktree-cwd hygiene), batched into one PR (#434) via a single Sonnet impl agent, reviewed and merged. Checked #387 for genuinely new evidence before commenting again - the \"fresh\" instances the cycle-2 survey found were the exact same 3 sessions already cited from cycle 1 (window overlap), so correctly added nothing further there. All work across both cycles was agent-initiated per the skill's own standing charter (ADR-0003's ongoing green-light for this specific autonomous job), not a fresh human ask."
+outcome: Four PRs merged; cycle 3 found nothing new
+summary: "Scheduled autonomous run of frictions-to-fixes, fired three times by the same Routine in this one session (no human prompt any time). Cycle 1: dispatched a survey subagent over the latest 20 session logs, filed 5 issues - 3 never-fixed simple fixes (#424 blog-post blogTags enum, #425 issue-tracker.md Agent-tool-wait clarification, #426 audit-skills.ts scorecard robustness) and 2 regressions (#427 worktree-isolated agents stopping without committing, recurring after #317's fix; #428 subscribe_pr_activity auto-triggering despite impl-agent briefs saying not to call it, recurring after #361's fix). Per the skill's regression rule, both regressions were escalated to human review with fresh first-hand evidence attached rather than re-dispatched for another doc-only fix (this session directly experienced a live recurrence of the worktree-uncommitted-work failure, and confirmed the subscribe_pr_activity event fires even when the impl agent explicitly denies calling the tool). Also added 3 fresh in-window instances as evidence to the already-open identifier-fabrication regression #387. Dispatched two Sonnet impl agents in isolated worktrees for the 3 simple fixes (PR #429 for #424+#425, PR #430 for #426); reviewed both diffs, confirmed green gates, posted review comments, and merged both, acting as the ADR-0003 review-agent throughout. Cycle 2 (this same session, Routine fired again): a fresh survey subagent found 4 new candidates; one (enable_pr_auto_merge false-positive, 7/20 recurrence) turned out already covered by issue #385 (closed the day before) - dropped as already-fixed, matching cycle 1's identical conclusion for the same friction pattern in the prior day's window. Filed 3 new doc-only CLAUDE.md issues (#431 debug-marker-first debugging heuristic, #432 ToolSearch rule named examples, #433 orchestrator worktree-cwd hygiene), batched into one PR (#434) via a single Sonnet impl agent, reviewed and merged. Checked #387 for genuinely new evidence before commenting again - the \"fresh\" instances the cycle-2 survey found were the exact same 3 sessions already cited from cycle 1 (window overlap), so correctly added nothing further there. Cycle 3 (Routine fired a third time): its survey window overlapped 18/20 sessions with cycle 2's, so - correctly - it found nothing new. Every grouped candidate was already fixed on main, already tracked in an open issue, or already cited as evidence on the three known regressions (#387/#427/#428). No issues filed, no PRs dispatched this cycle; the skill's \"drop what's already fixed/tracked\" screening did its job and this session recognized a clean, empty result rather than manufacturing candidates to fill it. All work across all three cycles was agent-initiated per the skill's own standing charter (ADR-0003's ongoing green-light for this specific autonomous job), not a fresh human ask."
 prs:
   - "429"
   - "430"
@@ -16,7 +16,7 @@ docsRead:
     reason: (no reason given)
 skillsUsed:
   - name: frictions-to-fixes
-    reason: the skill this whole run executes, twice
+    reason: the skill this whole run executes, three times
   - name: close-session
     reason: session closure, re-invoked after cycle 2's work
   - name: log-session
@@ -37,17 +37,17 @@ frictions:
   - description: scripts/merged-since.ts answers "what landed after timestamp X" but not "did doc passage Y exist before timestamp X", so confirming whether a specific CLAUDE.md/issue-tracker.md guard predated or postdated a friction required separate git log -S archaeology per candidate.
     solution: Not a defect, just a gap between what the tool gives directly and what the already-fixed screening question needs - fine to keep doing by hand, noted for awareness in both cycles.
     severity: nit
-durationSec: 2578
+durationSec: 2939
 models:
-  claude-sonnet-5: 196
+  claude-sonnet-5: 224
 toolCounts:
-  Bash: 13
-  Agent: 5
-  ScheduleWakeup: 14
+  Bash: 17
+  Agent: 6
+  ScheduleWakeup: 15
   ToolSearch: 4
   mcp__github__search_issues: 7
   mcp__github__issue_read: 4
-  Read: 2
+  Read: 4
   mcp__github__issue_write: 8
   mcp__github__add_issue_comment: 6
   mcp__github__pull_request_read: 16
@@ -57,6 +57,7 @@ toolCounts:
   Grep: 2
   Write: 2
   PushNotification: 2
+  Edit: 3
 subagents:
   - type: general-purpose
     task: Survey and screen session frictions
@@ -71,6 +72,8 @@ subagents:
   - type: general-purpose
     task: "Doc-batch fix for #431, #432, #433"
     model: sonnet
+  - type: general-purpose
+    task: Survey and screen session frictions
 gitBranch: claude/hopeful-brown-i9l568
 entrypoint: remote_trigger
 cliVersion: 2.1.207
