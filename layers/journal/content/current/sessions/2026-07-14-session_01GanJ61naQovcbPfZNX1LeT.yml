@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: session_01GanJ61naQovcbPfZNX1LeT
+startedAt: 2026-07-14T18:21:55Z
+endedAt: 2026-07-14T18:38:10Z
+kind: interactive
+goal: Add a runtime-git-read PoC Tenant
+status: in-review
+outcome: Built, gate-green, pushed; PR held
+summary: "Human-instructed: the user directly asked to add a Tenant called \"commits\" that shows the repo's latest commit message at runtime via a backend git-CLI call, with one Vue file plus TypeScript. Built it as a minimal Tenant — a manifest (one Space, one pages collection), a Nitro endpoint that shells out to `git log -1` and degrades to a fallback, one MDC component that fetches it during SSR and renders the subject in large font, and a landing index.md embedding it. Added the Tenant CONTEXT.md and roster/context-map entries. Verified the runtime read end-to-end with a preview screenshot and the full local gate (419 unit + 43 e2e, lint, typecheck, validate:content, build). Committed and pushed to the designated branch; PR intentionally not opened (see friction) pending the user's go-ahead."
+prs: []
+docsRead:
+  - path: shared/manifest.ts
+    reason: manifest shape + validation rules
+  - path: shared/expand.ts
+    reason: how manifests expand to keyed collections + entry routes
+  - path: app/pages/t/[tenant]/[space]/[...slug].vue
+    reason: catch-all renderer + ContentRenderer/MDC
+  - path: tests/e2e/smoke.spec.ts
+    reason: what the L2 entry-route sweep asserts
+  - path: layers/atlas/CONTEXT.md
+    reason: per-Tenant CONTEXT.md template
+  - path: CONTEXT-MAP.md
+    reason: (read before editing)
+  - path: layers/blog/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/blog/app/pages/t/blog/index.vue
+    reason: (no reason given)
+  - path: layers/atlas/app/pages/t/atlas/index.vue
+    reason: (no reason given)
+  - path: app/composables/space.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: session closure front door
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: CLAUDE.md/ADR-0003 says a substantive session auto-opens its gated PR, but the harness instructions say never open a PR unless explicitly asked — a direct conflict.
+    solution: Deferred to the explicit harness prohibition (didn't open a PR) and surfaced the choice to the user; the two instruction sources need reconciling for agent runs in this environment.
+    severity: moderate
+  - description: A new layers/<tenant>/ without a nuxt.config.ts triggers a "Cannot extend config from layers/commits/" warning on nuxt prepare.
+    solution: Every Tenant layer needs a nuxt.config.ts (even an empty defineNuxtConfig) to be a valid extendable layer; worth a one-line note in the "add a Tenant" section of CLAUDE.md.
+    severity: minor
+  - description: The cloud `-m` commit skipped the ADR-0017 provenance footer injection, as CLAUDE.md warns can happen.
+    solution: Amended it in via `git commit --amend -F` with the two footer lines appended manually; already documented, no new fix needed.
+    severity: nit
+durationSec: 976
+models:
+  claude-opus-4-8: 92
+toolCounts:
+  Bash: 26
+  Read: 9
+  Write: 7
+  Edit: 4
+  Skill: 2
+filesEdited:
+  - layers/commits/tenant.config.ts
+  - layers/commits/content/poc/pages/index.md
+  - layers/commits/server/api/latest-commit.get.ts
+  - layers/commits/app/components/content/LatestCommit.vue
+  - layers/commits/CONTEXT.md
+  - CONTEXT.md
+  - CONTEXT-MAP.md
+  - layers/commits/nuxt.config.ts
+gitBranch: claude/commits-tenant-poc-qxnjh5
+entrypoint: remote_mobile
+cliVersion: 2.1.209
+learnings:
+  - Nuxt Content resolves MDC block components (`::latest-commit`) from a layer's `app/components/content/` dir automatically — no explicit global registration needed.
+  - A `data` collection isn't required for a Tenant; a single `page` collection with one index.md satisfies the manifest and gives the L2 smoke sweep its `<h1>`.
