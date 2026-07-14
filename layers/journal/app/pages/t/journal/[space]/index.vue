@@ -342,7 +342,7 @@ useSeoMeta({
           </p>
         </section>
 
-        <section class="panel">
+        <section id="skills" class="panel">
           <div class="section-head">
             <h2>Platform Skills</h2>
             <span class="count">{{ platformSkills.length }} authored here</span>
@@ -578,6 +578,8 @@ h1 {
   padding: 1.1rem 1.15rem 1.2rem;
   box-shadow: var(--jd-shadow);
 }
+/* scroll-margin-top: breathing room when the intro's "Skills panel" link scrolls here. */
+#skills { scroll-margin-top: 1.5rem; }
 .friction-note { margin: 0.9rem 0 0; font-size: 0.82rem; color: var(--jd-muted); }
 .friction-note .mono { color: var(--jd-ink); }
 .skill-note { margin: 0.9rem 0 0; font-size: 0.8rem; color: var(--jd-muted); }

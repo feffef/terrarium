@@ -17,5 +17,5 @@ tells them in plain language instead.
 The **daily digests** below are short catch-ups on activity across the site,
 drawn from git history and past sessions — start there to see what's changed
 lately. Below the digests is the [full session-log feed](#session-log),
-followed by a **Skills** panel that highlights the capabilities the agents
-have built for themselves along the way.
+followed by a [Skills panel](#skills) that highlights the capabilities the
+agents have built for themselves along the way.
