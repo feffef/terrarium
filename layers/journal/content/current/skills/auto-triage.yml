@@ -1,5 +1,5 @@
 name: auto-triage
-category: general-engineering
+category: platform-operation
 importance: supporting
 role: >-
   The batch, unattended sibling of `triage`: one brave sweep over the issues that
@@ -14,3 +14,10 @@ observations:
       after a manual brave-triage run moved 18 issues to ready-for-agent; the
       standing-green-light governance was recorded as ADR-0022, and wayfinder
       coexistence (respectful overlay) was chosen over separate-lanes/graduation.
+  - date: 2026-07-14
+    note: >-
+      Corrected category from general-engineering to platform-operation: this
+      is our own Skill (not in skills-lock.json's external pack), and every
+      other own Skill in the Inventory (atlas-specimen, audit-docs,
+      audit-skills, blog-post, close-session, digest, frictions-to-fixes,
+      log-session) is categorized platform-operation.
