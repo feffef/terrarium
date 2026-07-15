@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_016rKpNdAWs7e5Vcz77FYm27
 startedAt: 2026-07-15T17:59:45Z
-endedAt: 2026-07-15T18:16:46Z
+endedAt: 2026-07-15T21:18:03Z
 kind: interactive
 goal: Remove auto route listing from root index
-status: in-review
-outcome: Footer route dump removed, PR open, gate running
+status: completed
+outcome: "Footer route dump removed, PR #502 merged"
 summary: 'Human-directed task: remove the automatic "Also on this site:" listing from the root index page. The footer swept the build-time `entryRoutes` list and linked every non-featured Tenant/Space. Removed the `#routing` import, the `PRIMARY_PATH` constant, the `otherRoutes` filter, the footer markup, the orphaned `.more` styles, and a stale comment. Left the routing/expansion modules untouched (`entryRoutes` export stays, still used by e2e). `pnpm gate:scoped` passed locally; opened PR #502 and subscribed to its activity.'
 prs:
   - "502"
@@ -21,14 +21,14 @@ frictions:
   - description: The harness commit-template provenance footer did not inject on the cloud `-m` commit; had to amend it in manually via `git commit -F`.
     solution: Known issue per CLAUDE.md (cloud `-m` commits skip injection); verified with `git log` and amended. No further fix — already single-homed.
     severity: nit
-durationSec: 1021
+durationSec: 11898
 models:
-  claude-opus-4-8: 57
+  claude-opus-4-8: 68
 toolCounts:
   Glob: 1
   Read: 2
-  Bash: 9
-  Edit: 5
+  Bash: 11
+  Edit: 7
   Grep: 2
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
@@ -37,7 +37,7 @@ toolCounts:
   Skill: 2
   mcp__github__pull_request_read: 1
   Write: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 2
 filesEdited:
   - app/pages/index.vue
 gitBranch: claude/remove-root-index-listing-7vejkl
