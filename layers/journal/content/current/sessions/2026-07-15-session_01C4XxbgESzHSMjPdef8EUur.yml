@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01C4XxbgESzHSMjPdef8EUur
 startedAt: 2026-07-15T00:15:44Z
-endedAt: 2026-07-15T00:20:44Z
+endedAt: 2026-07-15T00:28:37Z
 kind: autonomous
 goal: "Run /digest: author the 2026-07-14 Journal Digest"
-status: in-review
-outcome: "Digest authored, gate green, PR #489 opened"
-summary: "Scheduled /digest run (no human prompt this session). Branched journal/digest-refresh-2026-07-15 off origin/main, found one closed UTC day (2026-07-14) needing a digest via scripts/digest.ts list/gather, and authored a narrative Digest covering that day's 41 merged PRs, 120 commits, and 24 sessions — the busiest day yet, headlined by a large batch-implementation session, a new auto-triage skill patched within hours, and an authorAssociation PR-labeling workflow shipped then simplified same-day. Ran pnpm gate:scoped (green), committed, pushed, and opened PR #489, then subscribed to its activity per CLAUDE.md's babysit-to- merge discipline."
+status: completed
+outcome: "Digest authored, gate green after one rerun, PR #489 merged"
+summary: "Scheduled /digest run (no human prompt this session). Branched journal/digest-refresh-2026-07-15 off origin/main, found one closed UTC day (2026-07-14) needing a digest via scripts/digest.ts list/gather, and authored a narrative Digest covering that day's 41 merged PRs, 120 commits, and 24 sessions — the busiest day yet, headlined by a large batch-implementation session, a new auto-triage skill patched within hours, and an authorAssociation PR-labeling workflow shipped then simplified same-day. Ran pnpm gate:scoped (green), committed, pushed, and opened PR #489, then subscribed to its activity per CLAUDE.md's babysit-to- merge discipline. CI's gate check failed once on a known-fragile journal accordion e2e test (already documented as fragile in this very digest's prose); the same commit had passed the identical test locally, so re-ran the failed job rather than treating it as a real regression — it passed on rerun. Merged PR #489 (squash) once both checks were green, then unsubscribed and cleaned up the scheduled check-in."
 prs:
   - "489"
 docsRead:
@@ -21,22 +21,31 @@ skillsUsed:
     reason: (no reason given)
   - name: digest
     reason: (invoked as a slash command)
-frictions: []
-durationSec: 300
+frictions:
+  - description: CI's gate check failed on tests/e2e/smoke.spec.ts's journal accordion scroll-compensation test (journal.e2e.ts:210, "holds the clicked item at its pre-click position when a sibling above it collapses") even though the identical commit had passed that same test locally under pnpm gate:scoped moments before pushing.
+    solution: "Treated it as the known pre-existing journal-accordion e2e flake (already called out in this digest's own frictions rollup and in issue #427/#480 history) rather than a real regression from a content-only digest-page addition; re-ran the failed job via rerun_failed_jobs and it went green on the same commit, confirming flake rather than functional break."
+    severity: nit
+durationSec: 773
 models:
-  claude-sonnet-5: 50
+  claude-sonnet-5: 81
 toolCounts:
-  Bash: 11
+  Bash: 14
   Read: 2
-  Write: 2
-  ToolSearch: 1
+  Write: 3
+  ToolSearch: 4
   mcp__github__search_pull_requests: 1
   mcp__github__get_file_contents: 1
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 5
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__get_check_run: 1
+  mcp__github__get_job_logs: 1
+  mcp__github__actions_run_trigger: 1
+  mcp__github__merge_pull_request: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-14.md
 gitBranch: claude/compassionate-lovelace-p5cf8j
