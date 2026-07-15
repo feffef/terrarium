@@ -1,0 +1,64 @@
+schemaVersion: 1
+session: session_01G4rmUvezd1kADVdf5vcEyu
+startedAt: 2026-07-15T21:43:52Z
+endedAt: 2026-07-15T22:20:57Z
+kind: interactive
+goal: "Fix #236 client content-load empties on a new branch"
+status: in-review
+outcome: Two-layer fix pushed; PR deferred to owner
+summary: "The owner directed (direct ask) a fresh feature branch with a real fix for #236, stating the shipped ADR-0019 patch does not fix the browser symptom. I diagnosed why: the dependency patch only recovers loads that REJECT; two funnels survive it — (A) swallowed per-command db.exec errors mark a collection \"loaded\" over an empty table, and (B) a dump cached to localStorage before validation pins a corrupt 200 body under the valid checksum, poisoning reloads too. Ruled out the brief's useAsyncData-cache hypothesis against Nuxt 4.4.8 source. Fix (both owner-scoped by the ask): app-level ContentLoadError (visible retry) in the three Space pages, plus a hardened @nuxt/content patch (validate-before-cache, purge-on-failure, throw). Red-capable e2e added; full gate green locally. Pushed to the branch; no PR opened per this session's PR restriction."
+prs: []
+docsRead:
+  - path: node_modules/@nuxt/content/dist/runtime/internal/database.client.js
+    reason: found funnels (A) and (B)
+  - path: node_modules/nuxt/dist/app/composables/asyncData.js
+    reason: ruled out useAsyncData-cache hypothesis
+  - path: patches/@nuxt__content@3.15.0.patch
+    reason: what ADR-0019 already patched
+  - path: layers/blog/tests/e2e/blog.e2e.ts
+    reason: regression-test home
+  - path: app/composables/space.ts
+    reason: (no reason given)
+  - path: app/pages/t/[tenant]/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/blog/app/pages/t/blog/[space]/index.vue
+    reason: (read before editing)
+  - path: layers/blog/app/pages/t/blog/[space]/[...slug].vue
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: New e2e test used Playwright's toBeVisible matcher, unavailable under this repo's vitest expect; only surfaced after a full ~100s e2e rebuild.
+    solution: blog.e2e uses vitest expect + expect.poll(...).toBe(...), never Playwright matchers — worth a one-line note in tests/README.md.
+    severity: minor
+  - description: The triage brief's leading hypothesis (useAsyncData caches a null across navigation) was wrong for Nuxt 4's defaults; verifying cost dist-source reading.
+    solution: Nuxt 4.4.8 defaults purgeCachedData/granularCachedData=true and default getCachedData returns empty static.data in runtime-SSR — re-nav re-runs.
+    severity: nit
+durationSec: 2225
+models:
+  claude-opus-4-8: 167
+toolCounts:
+  ToolSearch: 1
+  Bash: 47
+  mcp__github__issue_read: 2
+  Read: 19
+  Glob: 2
+  Write: 3
+  Edit: 12
+  Skill: 2
+filesEdited:
+  - app/components/ContentLoadError.vue
+  - layers/blog/app/pages/t/blog/[space]/index.vue
+  - layers/blog/app/pages/t/blog/[space]/[...slug].vue
+  - app/pages/t/[tenant]/[space]/[...slug].vue
+  - layers/blog/tests/e2e/blog.e2e.ts
+gitBranch: claude/issue-236-investigation-cmpa0i
+entrypoint: remote_mobile
+cliVersion: 2.1.210
+learnings:
+  - "Nuxt 4.4.8: purgeCachedData & granularCachedData default true; default getCachedData returns static.data[key] (empty for runtime-SSR), so re-navigation re-runs the useAsyncData handler and does not serve a cached null."
+  - "@nuxt/content writes a fetched sql_dump to localStorage BEFORE decompress/apply, so a corrupt 200 body is pinned under the valid checksum and poisons reloads too — not just in-memory state."
+  - "@nuxt/content swallows per-command db.exec errors during dump apply, then marks the collection loaded — a resolved-but-empty load the finally-evict cannot recover."
