@@ -26,10 +26,12 @@ context listed above; pointers to them may live wherever they help a reader.
 
 ## Relationships
 
-- **The three Tenants relate to reality differently.** The **Journal** documents
-  the Platform honestly (primary/derived self-documentation). The **Blog**
-  comments on real repo activity in-character (subjective, non-authoritative).
-  The **Atlas** is fiction — it claims nothing about the Terrarium at all.
+- **The three content Tenants relate to reality differently** (Commits sits
+  outside this axis — it's a technical PoC, not a content Tenant). The
+  **Journal** documents the Platform honestly (primary/derived
+  self-documentation). The **Blog** comments on real repo activity in-character
+  (subjective, non-authoritative). The **Atlas** is fiction — it claims nothing
+  about the Terrarium at all.
 - **Same-Space derivation vs. cross-Space denormalization.** The Atlas's
   **Interaction** is a same-Space edge whose reverse is *derived*; the Blog's
   **Pingback** denormalizes a *cross-Space* reaction, copying the reference into
