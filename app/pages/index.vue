@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import { entryRoutes } from '#routing'
-
-// Read-only: the primary CTA below is hardcoded to the maintainer-chosen
-// starting point. This list is only for the small "also on this site" line.
-const PRIMARY_PATH = '/t/journal/current'
-
 // The Blog Personas get a curated block of their own — an alternative starting
 // point (each a persona narrating the experiment from a different angle). The
 // name/path/blurb here are editorial (this page's own curated framing, not
 // derivable from the routing map), but the accent is NOT re-authored — it's
 // pulled from `personaMeta()` (layers/blog/app/utils/personas.ts), the one home
 // for a Persona's colour, so this page can never drift out of sync with it.
-// Their routes are excluded from the raw "also on this site" line below.
 const BLOGS = [
   { name: 'David', path: '/t/blog/david', blurb: 'the curious observer', accent: personaMeta('david').accent },
   { name: 'Karen', path: '/t/blog/karen', blurb: 'the relentless sceptic', accent: personaMeta('karen').accent },
@@ -32,10 +25,6 @@ const ATLAS = {
     { name: 'Pool', accent: biomeMeta('pool').accent },
   ],
 }
-
-const otherRoutes = entryRoutes.filter(
-  (path) => path !== PRIMARY_PATH && !path.startsWith('/t/blog/') && !path.startsWith('/t/atlas/'),
-)
 </script>
 
 <template>
@@ -81,13 +70,6 @@ const otherRoutes = entryRoutes.filter(
         <span class="atlas-blurb">Engraved plates, a wanderable food web, and a resident naturalist — grown one specimen at a time.</span>
       </NuxtLink>
     </section>
-
-    <footer v-if="otherRoutes.length" class="more">
-      <span class="more-label">Also on this site:</span>
-      <NuxtLink v-for="path in otherRoutes" :key="path" :to="path" class="more-link">
-        {{ path }}
-      </NuxtLink>
-    </footer>
   </main>
 </template>
 
@@ -266,28 +248,4 @@ const otherRoutes = entryRoutes.filter(
 .atlas-swatches .sw { width: 16px; height: 16px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); }
 .atlas-name { font-weight: 650; font-size: 1.15rem; color: var(--root-ink); letter-spacing: -0.01em; }
 .atlas-blurb { font-size: 0.9rem; color: var(--root-muted); line-height: 1.5; }
-
-.more {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem 0.75rem;
-  font-size: 0.85rem;
-  color: var(--root-muted);
-}
-
-.more-label {
-  color: var(--root-muted);
-}
-
-.more-link {
-  color: var(--root-muted);
-  text-decoration: underline;
-  text-decoration-color: var(--root-line);
-  text-underline-offset: 3px;
-  transition: color 0.15s ease;
-}
-.more-link:hover {
-  color: var(--root-accent);
-}
 </style>
