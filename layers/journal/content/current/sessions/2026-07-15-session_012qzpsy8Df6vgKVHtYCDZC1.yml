@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_012qzpsy8Df6vgKVHtYCDZC1
 startedAt: 2026-07-15T00:45:59Z
-endedAt: 2026-07-15T00:56:40Z
+endedAt: 2026-07-15T00:59:48Z
 kind: autonomous
 goal: Run /audit-skills — audit the Skill Inventory
-status: in-review
-outcome: "Opened PR #490 with fresh Inventory citations, no grade changes"
-summary: "Autonomous scheduled /audit-skills run (no human instruction this session). Gathered the scorecard (scripts/audit-skills.ts) over the newest 40-session window, re-graded every Skill's importance against usedIn evidence, and found no bright-line (>=2 session) promote/demote signal — all current grades still match the evidence. Refreshed three entries (wayfinder, triage, code-review) whose prior observations had fully aged out of the window, citing fresh matching usedIn evidence per the plain-match rule. Ran the step-4 regression watch over this window's 4 most-recent SKILL.md edits (audit-docs, auto-triage, blog-post, log-session); none had a bracketed post-edit session that both actually invoked the edited Skill and showed worse friction, so all landed inconclusive/healthy per the Skill's own guidance. orphanedSessions and manuallyRescuedClosures were both empty. The 2 humanPromptedClosures sessions were the identical pair already tracked on standing issue #483, so no new comment was posted. Confirmed the PR diff touches only Inventory YAML, ran pnpm gate:scoped (green), opened PR #490, subscribed to its activity, and scheduled a 1-hour check-in."
+status: completed
+outcome: "PR #490 merged — three Inventory citation refreshes, no grade changes"
+summary: "Autonomous scheduled /audit-skills run (no human instruction this session). Gathered the scorecard (scripts/audit-skills.ts) over the newest 40-session window, re-graded every Skill's importance against usedIn evidence, and found no bright-line (>=2 session) promote/demote signal — all current grades still match the evidence. Refreshed three entries (wayfinder, triage, code-review) whose prior observations had fully aged out of the window, citing fresh matching usedIn evidence per the plain-match rule. Ran the step-4 regression watch over this window's 4 most-recent SKILL.md edits (audit-docs, auto-triage, blog-post, log-session); none had a bracketed post-edit session that both actually invoked the edited Skill and showed worse friction, so all landed inconclusive/healthy per the Skill's own guidance. orphanedSessions and manuallyRescuedClosures were both empty. The 2 humanPromptedClosures sessions were the identical pair already tracked on standing issue #483, so no new comment was posted. Confirmed the PR diff touched only Inventory YAML, ran pnpm gate:scoped (green), opened PR #490, subscribed to its activity, and self-merged once CI reported green per ADR-0004's low-risk Inventory-content tier — left a one-line PR comment citing the evidence before merging so the merge isn't the only trace. PR #490 merged; unsubscribed and canceled the now-unneeded check-in trigger."
 prs:
   - "490"
 docsRead:
@@ -29,11 +29,11 @@ frictions:
   - description: Drafted the PR commit's Claude-Session footer by copying a session id out of the audit scorecard data instead of resolving my own session id, violating CLAUDE.md's never-reconstruct-an-identifier-from-memory rule.
     solution: Caught before pushing further; amended the tip commit (git commit --amend -F) with the correct id read from the system-prompt commit-footer template. Worth being more deliberate about which id source to read before drafting provenance footers.
     severity: minor
-durationSec: 641
+durationSec: 829
 models:
-  claude-sonnet-5: 107
+  claude-sonnet-5: 126
 toolCounts:
-  Bash: 26
+  Bash: 28
   ToolSearch: 6
   TaskCreate: 5
   TaskUpdate: 7
@@ -45,10 +45,14 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 3
   mcp__Claude_Code_Remote__send_later: 1
-  Skill: 2
-  Write: 1
+  Skill: 3
+  Write: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/skills/wayfinder.yml
   - layers/journal/content/current/skills/triage.yml
