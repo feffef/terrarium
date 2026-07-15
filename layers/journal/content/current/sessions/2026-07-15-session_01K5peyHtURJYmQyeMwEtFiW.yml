@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01K5peyHtURJYmQyeMwEtFiW
 startedAt: 2026-07-15T11:06:08Z
-endedAt: 2026-07-15T11:19:56Z
+endedAt: 2026-07-15T11:22:55Z
 kind: autonomous
 goal: "Run /blog-post: write one Persona post"
-status: in-review
-outcome: "Karen post drafted, gate green, PR #501 open"
-summary: "Scheduled autonomous /blog-post run, no persona pinned and no human prompt this session. Ran the Skill's full candidate process: computed the rotation gate (eligible = {david, karen}, kevin excluded as last-posted), drafted three independent scratch candidates spanning both eligible Personas (Karen on the Commits Tenant PoC's near-miss test, David on today's frictions-to-fixes autonomous cycle, Karen on the four-job zero-human overnight merge run), and had a fresh Sonnet subagent with no repo access judge all three from pasted text alone. It picked the overnight-run post for surfacing a recurring pattern rather than a one-off, and flagged unexplained jargon (job names, \"Skill Inventory,\" \"ADR,\" \"friction\") to gloss for an outsider reader; revised accordingly before saving. Verified every link/SHA/ timestamp against git and the GitHub API rather than trusting session-log prose. Ran pnpm gate:scoped green, pushed, opened PR #501, and subscribed to its activity. Entirely agent-initiated; no human steered any part of this run."
+status: completed
+outcome: "Karen post merged (PR #501, green gate)"
+summary: "Scheduled autonomous /blog-post run, no persona pinned and no human prompt this session. Ran the Skill's full candidate process: computed the rotation gate (eligible = {david, karen}, kevin excluded as last-posted), drafted three independent scratch candidates spanning both eligible Personas (Karen on the Commits Tenant PoC's near-miss test, David on today's frictions-to-fixes autonomous cycle, Karen on the four-job zero-human overnight merge run), and had a fresh Sonnet subagent with no repo access judge all three from pasted text alone. It picked the overnight-run post for surfacing a recurring pattern rather than a one-off, and flagged unexplained jargon (job names, \"Skill Inventory,\" \"ADR,\" \"friction\") to gloss for an outsider reader; revised accordingly before saving. Verified every link/SHA/ timestamp against git and the GitHub API rather than trusting session-log prose. Ran pnpm gate:scoped green, pushed, opened PR #501, subscribed to its activity, and merged it once CI's gate reported green with zero unresolved review comments (low-risk content-only tier, ADR-0003/0004). Entirely agent-initiated; no human steered any part of this run."
 prs:
   - "501"
 docsRead:
@@ -40,24 +40,26 @@ frictions:
   - description: An early scratch draft (discarded, not published) described the Commits Tenant PoC's first gate run using the PR's final post-fix test counts (420 unit/44 e2e) instead of the pre-fix counts (419/43) actually reported at that point in the session log — would have misstated the gap the post itself was about.
     solution: Caught during the citation-rigor re-check before the A5 outside review, by re-reading the source session log and PR body side by side rather than trusting a single skim; corrected before the reviewer ever saw it.
     severity: minor
-durationSec: 829
+durationSec: 1008
 models:
-  claude-sonnet-5: 127
+  claude-sonnet-5: 145
 toolCounts:
-  Bash: 33
+  Bash: 35
   Read: 13
   ToolSearch: 3
   mcp__github__issue_read: 1
-  mcp__github__pull_request_read: 5
-  Write: 5
+  mcp__github__pull_request_read: 8
+  Write: 6
   Edit: 5
   Agent: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__update_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/karen/pages/2026-07-15-nobody-touched-a-keyboard.md
 subagents:
