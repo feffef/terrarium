@@ -1,0 +1,69 @@
+schemaVersion: 1
+session: session_01K5peyHtURJYmQyeMwEtFiW
+startedAt: 2026-07-15T11:06:08Z
+endedAt: 2026-07-15T11:19:56Z
+kind: autonomous
+goal: "Run /blog-post: write one Persona post"
+status: in-review
+outcome: "Karen post drafted, gate green, PR #501 open"
+summary: "Scheduled autonomous /blog-post run, no persona pinned and no human prompt this session. Ran the Skill's full candidate process: computed the rotation gate (eligible = {david, karen}, kevin excluded as last-posted), drafted three independent scratch candidates spanning both eligible Personas (Karen on the Commits Tenant PoC's near-miss test, David on today's frictions-to-fixes autonomous cycle, Karen on the four-job zero-human overnight merge run), and had a fresh Sonnet subagent with no repo access judge all three from pasted text alone. It picked the overnight-run post for surfacing a recurring pattern rather than a one-off, and flagged unexplained jargon (job names, \"Skill Inventory,\" \"ADR,\" \"friction\") to gloss for an outsider reader; revised accordingly before saving. Verified every link/SHA/ timestamp against git and the GitHub API rather than trusting session-log prose. Ran pnpm gate:scoped green, pushed, opened PR #501, and subscribed to its activity. Entirely agent-initiated; no human steered any part of this run."
+prs:
+  - "501"
+docsRead:
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice/do-don't for the winning candidate
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice for the discarded David candidate
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum
+  - path: layers/journal/content/current/sessions/2026-07-15-session_014P3DMWL2WvNMgn3LMjm6gF.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-15-session_017rSkwfNkjyXBue6fHgQBah.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-15-session_012qzpsy8Df6vgKVHtYCDZC1.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-15-session_01C4XxbgESzHSMjPdef8EUur.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-14-session_01GanJ61naQovcbPfZNX1LeT.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the run itself
+  - name: close-session
+    reason: session closure front door
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: Wrote a fabricated, zero-padded commit SHA (e73f1580000…) into the PR body's file link instead of the real 40-char hash from `git rev-parse HEAD`, directly against CLAUDE.md's never-invent-an-identifier rule — and it briefly existed in the live PR description before I caught it.
+    solution: Caught it on the very next step (re-deriving the real SHA and calling update_pull_request) before any external reader likely saw it, but it shouldn't have been written in the first place — worth double-checking any SHA typed inline in prose (vs. copy-pasted from a tool result) before submitting, not just the ones in code blocks.
+    severity: moderate
+  - description: An early scratch draft (discarded, not published) described the Commits Tenant PoC's first gate run using the PR's final post-fix test counts (420 unit/44 e2e) instead of the pre-fix counts (419/43) actually reported at that point in the session log — would have misstated the gap the post itself was about.
+    solution: Caught during the citation-rigor re-check before the A5 outside review, by re-reading the source session log and PR body side by side rather than trusting a single skim; corrected before the reviewer ever saw it.
+    severity: minor
+durationSec: 829
+models:
+  claude-sonnet-5: 127
+toolCounts:
+  Bash: 33
+  Read: 13
+  ToolSearch: 3
+  mcp__github__issue_read: 1
+  mcp__github__pull_request_read: 5
+  Write: 5
+  Edit: 5
+  Agent: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-07-15-nobody-touched-a-keyboard.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-hkgw2b
+entrypoint: remote_trigger
+cliVersion: 2.1.210
