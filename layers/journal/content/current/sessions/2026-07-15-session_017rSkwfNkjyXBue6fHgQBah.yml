@@ -1,0 +1,64 @@
+schemaVersion: 1
+session: session_017rSkwfNkjyXBue6fHgQBah
+startedAt: 2026-07-15T01:05:23Z
+endedAt: 2026-07-15T01:26:31Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: in-review
+outcome: 7 issues filed, 2 PRs opened
+summary: "Ran the frictions-to-fixes Skill end to end, autonomously (scheduled Routine firing /frictions-to-fixes, no in-conversation human ask this turn). Delegated the 20-session survey/screen to a subagent, which ranked 7 never-fixed candidates and flagged 2 already-open regressions (#387, #427) with new recurrence evidence, added as comments rather than new issues per the Skill's regression rule. Filed issues #491-#497 for the 7 candidates (6 doc, 1 code), dispatched two Sonnet worktree-isolated impl agents: one grouped doc-fix PR (#498, closing 6 issues) and one code-fix PR (#499, scripts/list-open-issues.ts closing #494). Reviewed and merged #498 after a CI rerun cleared an unrelated known-flaky e2e test (journal accordion, tracked in #450); #499 still going through CI as of this log. All selections were simple/doc-or-code, none hard, none touching a human-only surface, per the Skill's own screening rules."
+prs:
+  - "498"
+  - "499"
+docsRead:
+  - path: docs/agents/issue-tracker.md
+    reason: GitHub MCP tool selection + overflow guidance
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: "PR #498's first CI run failed on the known-flaky journal-accordion e2e test (issue #450) — unrelated to the doc-only diff. Cost one rerun cycle before merging."
+    solution: "Already tracked at #450; no new fix needed here, just confirms the flake is still live and worth prioritizing a real fix for."
+    severity: nit
+  - description: The survey subagent hit GitHub API rate limits twice on back-to-back parallel search_issues calls, and search_issues fuzzy-matched loosely relevant issues for several targeted queries, requiring manual eyeballing.
+    solution: No repo-side fix identified; consistent with the existing docs/agents/issue-tracker.md caveat that scoping doesn't buy precision.
+    severity: nit
+durationSec: 1268
+models:
+  claude-sonnet-5: 110
+toolCounts:
+  Agent: 3
+  ToolSearch: 5
+  mcp__github__issue_read: 3
+  mcp__github__add_issue_comment: 3
+  mcp__github__search_issues: 7
+  TaskCreate: 7
+  TaskUpdate: 10
+  mcp__github__issue_write: 7
+  mcp__github__pull_request_read: 10
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__get_check_run: 1
+  mcp__github__get_job_logs: 1
+  mcp__github__actions_get: 1
+  mcp__github__actions_run_trigger: 1
+  mcp__github__merge_pull_request: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  Bash: 1
+subagents:
+  - type: general-purpose
+    task: Survey session frictions and screen candidates
+  - type: general-purpose
+    task: Grouped doc-fix PR for 6 friction issues
+    model: sonnet
+  - type: general-purpose
+    task: Compact issue-listing script PR
+    model: sonnet
+gitBranch: claude/hopeful-brown-16nthi
+entrypoint: remote_trigger
+cliVersion: 2.1.210
