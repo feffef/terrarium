@@ -1,0 +1,64 @@
+schemaVersion: 1
+session: session_01A6ctgqoDdcMfxXnnk1VMTh
+startedAt: 2026-07-15T21:18:42Z
+endedAt: 2026-07-15T21:27:16Z
+kind: delegated
+goal: Run auto-triage sweep over open issues
+status: completed
+outcome: One issue triaged, rest idempotently skipped
+summary: "Human-invoked via \"/auto-triage\" (single kickoff, no further prompting). Scanned all 22 open issues and 0 external PRs. Resolved eligibility via a subagent that checked each issue's most-recent-activity authorship by the ADR-0017 provenance-footer rule: all 20 non-map issues had AI-authored last activity. Skipped the 2 \"wayfinder:map\" indexes and the 19 state-labelled issues (idempotent — no new human input since last AI action). Only #483 (\"needs-triage\", always-eligible) was triaged: a triage subagent verified claims against primary sources (audit-skills SKILL.md, #416, ADR-0009, CLAUDE.md) and applied \"enhancement\"/\"ready-for-human\" with a grounded brief, since its next action is an ADR-0009 governance judgment call, not AFK work. All label/comment writes were autonomous under ADR-0022's standing green-light. Verified the write landed. No repo files changed."
+prs: []
+docsRead:
+  - path: .claude/skills/triage/SKILL.md
+    reason: per-issue triage state machine
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: brief structure for ready-for-human
+  - path: docs/agents/issue-tracker.md
+    reason: MCP-tool mapping, external-PR scoping
+  - path: docs/agents/triage-labels.md
+    reason: label vocabulary + ADR-0020 gate
+  - path: CONTEXT.md
+    reason: Session kind classification
+  - path: .claude/skills/triage/OUT-OF-SCOPE.md
+    reason: (no reason given)
+skillsUsed:
+  - name: auto-triage
+    reason: the sweep itself; composes triage
+  - name: close-session
+    reason: self-judged closure at sweep end
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Repo helper scripts/list-open-issues.ts failed with "spawnSync gh ENOENT" — it shells out to gh, absent in this remote session.
+    solution: The script is documented as the overflow-safe open-issue lister but is unusable without gh; make it fall back to the GitHub MCP path, or note the gh dependency in its header so agents reach for list_issues directly.
+    severity: minor
+  - description: mcp__github__list_issues (no minimal_output) returned 70k chars and overflowed the tool-result limit; had to parse the saved file by hand.
+    solution: Known/documented in issue-tracker.md; a numbers+labels-only projection tool (or the gh-free list script above) would avoid the overflow entirely.
+    severity: minor
+  - description: "Issue #325's newest AI comment claims it moved to ready-for-agent, but its live labels read ready-for-human — a triage state/comment drift."
+    solution: Not eligible this sweep (AI-authored last activity), so surfaced to the owner rather than acted on; a label/comment-consistency check could catch such drift automatically.
+    severity: moderate
+durationSec: 514
+models:
+  claude-opus-4-8: 61
+toolCounts:
+  Bash: 9
+  Read: 5
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__get_me: 1
+  mcp__github__list_issues: 2
+  Agent: 2
+  mcp__github__issue_read: 3
+  Skill: 2
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Resolve triage eligibility set
+  - type: general-purpose
+    task: "Triage issue #483"
+gitBranch: claude/auto-triage-gjuqgm
+entrypoint: remote_mobile
+cliVersion: 2.1.210
+learnings:
+  - In this repo every write shows author feffef (OWNER), so the ADR-0017 provenance footer, not the GitHub author field, is the only reliable AI-vs-human signal for triage eligibility.
