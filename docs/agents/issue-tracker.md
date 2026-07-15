@@ -42,6 +42,13 @@ class to its MCP equivalent:
   `search_issues` at all** — `tsx scripts/recent-prs.ts [N]` answers it straight
   from `git log origin/main` (number/title/merge-time only; `author`/`merged_by`
   are out of scope, since those need the API) with no overflow risk (issue #319).
+- **"What open issues exist right now" doesn't need `list_issues`/`search_issues`
+  either** — `tsx scripts/list-open-issues.ts [N]` answers it via `gh api` against
+  the REST `issues` endpoint (number/title/labels/updated-time only; body/comments/
+  author are out of scope, same reasoning as `recent-prs.ts`) with no overflow risk
+  (issue #494). It shells out to REST rather than `gh issue list` because the
+  latter goes through GraphQL, which this environment's proxy can reject outside a
+  pinned PR-review operation set.
 - **Read a PR or its diff** → `pull_request_read`
 - **`issue_read`/`pull_request_read` bodies come back HTML-entity-encoded.**
   `&`, `"`, `'`, `<`, `>` arrive as `&amp;`, `&#34;`, `&#39;`, `&lt;`, `&gt;` —
