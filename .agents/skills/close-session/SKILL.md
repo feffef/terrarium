@@ -13,8 +13,7 @@ You've reached **Session closure** — run the two closing actions:
   activity, and babysit it to merge/close.
 
 **Closing isn't one-shot.** If you do more work after closing, invoke
-`/close-session` again — re-logging self-heals, overwriting the log with the
-fuller state.
+`/close-session` again — re-logging self-heals (`log-session` explains why).
 
 **When is your logging duty actually finished?** Not when you author the scratch —
 only when the log commit is on `origin/main` carrying the session's **final**

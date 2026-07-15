@@ -34,14 +34,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   files. This repo's **rule of two** for new vocabulary (coin a glossary/ADR term
   only on a concept's *second* instance) is defined in `docs/agents/domain.md`,
   complementing that skill's 3-part test.
-- **Which Skills to actually use** is curated in the `journal` Tenant's **Skill
-  Inventory** — `layers/journal/content/current/skills/`, rendered at
-  `/t/journal/current`. It records each installed Skill's *role and importance to
-  this project* (not a copy of the Skill's own description) — for every
-  catalogued Skill, our own first-class Skills included, not only the ones from
-  the external pack (ADR-0015). Treat it as the authoritative "use these" list:
-  take these Skills seriously and prefer them over ad-hoc approaches, guided by
-  each entry's `importance` and `role`.
+- **Which Skills to actually use** is curated in the journal Tenant's **Skill
+  Inventory** (`CONTEXT.md`'s glossary term — see it there for where it lives and
+  what it records) — for every catalogued Skill, our own first-class Skills
+  included, not only the ones from the external pack (ADR-0015). Treat it as the
+  authoritative "use these" list: take these Skills seriously and prefer them
+  over ad-hoc approaches, guided by each entry's `importance` and `role`.
 
 ## Ground rules (from the ADRs)
 
@@ -52,8 +50,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 - Agents edit a Tenant's **manifest** (declarative intent); `content.config.ts`
   builds the keyed collections dynamically from the manifests at
   config-evaluation time (ADR-0002/0013). Don't hand-write the keyed cross-product.
-- Every change lands as a **gated PR** on a feature branch — no self-merge.
-  Autonomy may *propose* freely but *implements* net-new only on human
+- Every change lands as a **gated PR** on a feature branch — no self-merge,
+  except the bounded chartered-Skill auto-merge tiers (see "Pushing is not
+  landing" below). Autonomy may *propose* freely but *implements* net-new only on human
   green-light (ADR-0003). **Opening that PR is automatic — don't ask.** A session
   that committed substantive work opens the gated PR itself once the work is
   coherent; it doesn't stop to ask "shall I open a PR?" (more commits can always
@@ -446,9 +445,8 @@ wraps it), not restated here so this doc can't drift.
 
 **The authoritative gate is CI**, which runs the full `pnpm gate` on every PR
 (`.github/workflows/gate.yml`) — the run that must go green to merge (ADR-0004), so you
-don't run the full gate locally yourself. Both the keyed collections and the routing map
-(`#routing`) derive from the manifests at build time (ADR-0013/0014) — no regenerate step
-needed.
+don't run the full gate locally yourself. Both the keyed collections (Ground rules above)
+and the routing map derive from the manifests at build time — no regenerate step needed.
 
 ```
 pnpm install            # installs deps, then runs `nuxt prepare` (derives #routing + collections)
@@ -538,10 +536,9 @@ deliberately **loose and early** ("am I winding down?"), so reach for it while
 you can still act rather than after checking out. No "are we done?" ask.
 
 Authoring the scratch *is* the "done" signal — the committed `Stop` hook lands it
-**only if** it exists, so a mid-work freeze logs nothing. Re-invoking is safe: it
-refreshes the scratch, and the hook overwrites the single per-session log with a
-superset (diff-guarded — an unchanged re-derive never touches `main`). So if you
-call closure and then do more, just invoke `close-session` again.
+**only if** it exists, so a mid-work freeze logs nothing. Re-invoking is safe
+(see `log-session`'s own Skill for why) — so if you call closure and then do
+more, just invoke `close-session` again.
 
 Because authoring no longer commits and re-firing self-heals, both Skills are
 **model-invocable** — invoke `close-session` yourself at closure rather than on a
