@@ -12,3 +12,9 @@ observations:
     note: >-
       Used this window to triage #292, #325, and #236 end to end
       (session_01VhL2mH3yYgkDqrMv61qe11), and again ahead of implementing #369.
+  - date: 2026-07-15
+    note: >-
+      Prior citation aged out; used in 2 of this window's 40 sessions:
+      session_01NkLUMugs5s6QRRM8Wq7UUb (the invoked workflow auto-triage's
+      sweep composes) and session_01RZcfZf19N8ggGSZM5F3y4R (composed
+      per-issue rules for #452/#435/#428 follow-through) — matches role.

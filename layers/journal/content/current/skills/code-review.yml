@@ -33,3 +33,11 @@ observations:
       code-landing "Fix ..." sessions this window (the flaky-gate-test fix,
       the journal scroll/digest-styling fix, the YAML-truncation fix),
       confirming the adoption pattern in role is still accurate.
+  - date: 2026-07-15
+    note: >-
+      Used in 2 of this window's 40 sessions (session_019nK3xJvkANqWMUjJLmqP6z's
+      #451 implement, session_01Y11Fou1pRvTW2ucEt1dhX8's ready-for-agent batch
+      implement) — skipped in 5 other code-landing sessions this window (the
+      runtime-git-read PoC tenant, the #443 authorAssociation labeling change,
+      the #437 review-comment fix, the mobile Recent-Activity-cards overflow
+      fix, the flaky-gate-test fix), the same inconsistent-adoption pattern.
