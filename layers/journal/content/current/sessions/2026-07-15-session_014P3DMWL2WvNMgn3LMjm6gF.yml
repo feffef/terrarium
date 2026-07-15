@@ -1,0 +1,73 @@
+schemaVersion: 1
+session: session_014P3DMWL2WvNMgn3LMjm6gF
+startedAt: 2026-07-15T04:08:57Z
+endedAt: 2026-07-15T04:33:34Z
+kind: autonomous
+goal: "Run /audit-docs: fix Live-tier doc drift"
+status: in-review
+outcome: "6 findings fixed, PR #500 opened"
+summary: "Scheduled autonomous /audit-docs run. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the repo's Live-tier docs, pooled and deduped their findings (no overlaps found), then dispatched an independent fact-checker against primary sources before touching anything. Six findings survived: the Commits Tenant (added by a prior session) left CONTEXT.md and CONTEXT-MAP.md still saying \"three Tenants\"; the Skill Inventory's location/route was fully restated in both CLAUDE.md and CONTEXT.md instead of single-homed; the close-session/log-session re-invoke-is-safe mechanic was stated three times; CLAUDE.md restated the routing-map build-time-derivation fact twice; and the \"no self-merge\" rule lacked its auto-merge-tier exception at the point of assertion. Fixed all six (all Live-tier prose, no human-only surface touched), ran pnpm gate:scoped green, opened PR #500, subscribed to its activity. No needs-triage issue filed — every finding resolved cleanly against a primary source. Entirely agent-initiated per the chartered /audit-docs Skill; no human steered or redirected any part of this run."
+prs:
+  - "500"
+docsRead:
+  - path: CLAUDE.md
+    reason: repo conventions, tier definitions, ADR-0003/0004 self-merge scope
+  - path: CONTEXT-MAP.md
+    reason: multi-context Tenant roster, subject of a fix
+  - path: CONTEXT.md
+    reason: Platform glossary, subject of two fixes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: the Skill being executed
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: A subagent's report quoting CLAUDE.md's own permissions.allow caveat verbatim tripped the harness's prompt-injection heuristic (a 'permissions-allow-deny' pattern match), adding a neutralized-tag noise wrapper around an entirely benign finding.
+    solution: No repo-side fix needed — the content was legitimate; flagged here only as a minor harness false-positive for visibility, not something this Skill can act on.
+    severity: nit
+durationSec: 1477
+models:
+  claude-sonnet-5: 143
+toolCounts:
+  Bash: 26
+  ToolSearch: 4
+  mcp__github__list_pull_requests: 1
+  Glob: 1
+  TaskCreate: 7
+  TaskUpdate: 12
+  Agent: 5
+  ScheduleWakeup: 2
+  Read: 9
+  Edit: 7
+  Write: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - CONTEXT.md
+  - CONTEXT-MAP.md
+  - CLAUDE.md
+  - .agents/skills/close-session/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: drift + orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: duplication + mis-location"
+  - type: general-purpose
+    task: "Concision lens: verbose + stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: contradiction + ambiguity"
+  - type: general-purpose
+    task: Fact-check pooled audit findings
+gitBranch: claude/festive-mayer-sbq1ey
+entrypoint: remote_trigger
+cliVersion: 2.1.210
