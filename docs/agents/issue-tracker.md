@@ -170,6 +170,8 @@ GitHub shares one number space across issues and PRs, so a bare `#42` may be eit
 
 A reviewing agent must post its verdict as a PR review or comment **before merging** — every time, even on a clean "merging as-is" verdict — so the audit trail lives on the PR; otherwise `get_reviews`/`get_comments` return empty and a real review reads as none having happened.
 
+**Reply before resolving a review thread.** Post a reply describing what changed (or why no change was made) before calling `resolve_review_thread` — a resolved thread with no reply leaves no record of what happened, especially on longer PRs.
+
 **Never use a GitHub closing keyword (`Resolves`/`Closes`/`Fixes #N`) for an issue a PR only *references*** — e.g. a governance/tracking issue the PR touches on but doesn't complete. Merging a PR auto-closes anything named with a closing keyword, so using one on an issue the PR doesn't actually finish silently closes it out from under the tracker (it then has to be reopened with an explaining comment — this has already happened once, PR #326 → issue #213). Reserve closing keywords for the issue(s) the PR genuinely completes; use a plain-text reference ("relates to #N", "see #N") for every other issue the PR body mentions.
 
 **GitHub's comma-separated `Closes #A, #B, #C` only auto-closes the first (`#A`).** `#B` and `#C` stay open even though the line reads as closing all three. When a PR genuinely completes more than one issue, give each its own `Closes #N` line rather than comma-joining them.

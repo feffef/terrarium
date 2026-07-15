@@ -70,6 +70,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   intent to open a PR, check whether one already exists on the current branch** (e.g.
   `mcp__github__search_pull_requests` or `list_pull_requests` scoped to the
   branch) — don't tell the user you're about to open one without checking first.
+  **A harness-level/system-prompt instruction that explicitly restricts PR
+  creation for this session** (e.g. "never open a PR unless asked") **takes
+  precedence over this auto-open default** — it's an explicit, task-scoped
+  restriction overriding ADR-0003's general default for that session. Don't
+  silently pick one: surface the conflict (e.g. in the session log) instead.
 - All work must clear the **safety gate** (build/validate/isolation, ADR-0004).
   The manifest-expansion and routing modules (`content.config.ts`,
   `shared/expand.ts`, `modules/routing.ts`, `shared/routing.ts`), isolation
@@ -185,6 +190,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   re-diagnose it or re-add them (full diagnosis: #288). This caveat is
   `Claude_Code_Remote`-specific: in a **trusted local CLI**, `permissions.allow` entries
   for MCP servers that are actually present *do* work.
+- **`commit_signing_key.pub` (`~/.ssh/commit_signing_key.pub`) can be
+  unprovisioned (0 bytes) in this environment.** When it is, `git commit -S` —
+  and the Stop hook's suggested `--reset-author` remedy for an "Unverified"
+  commit — can silently fail to produce a signature regardless of
+  author-email correctness. Platform/environment limitation, not a repo bug:
+  don't re-diagnose it as one each session.
 - **Don't tear down a preview/dev server with `pkill` — use `scripts/preview.ts`.**
   (`shot` for a one-shot screenshot; `start`/`stop` to keep one running — see the
   screenshot section below.) Hand-rolled `pkill -f <pattern>` teardown silently
@@ -256,6 +267,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   `origin/main` periodically during a long-running session too, not just
   right before a final push, especially before landing/merging a PR that
   touches a shared doc or list other concurrent sessions likely edit.
+  **The same applies before *starting* work, not just before pushing it:**
+  when a Trusted user verbally directs an edit on a PR, fetch (`git fetch
+  origin <branch>` + inspect the latest commits) before beginning it — a
+  concurrent session may have already pushed that exact change, and catching
+  it before you redundantly re-author it is cheaper than catching it at push
+  time.
   **A clean, no-conflict auto-merge/rebase is not proof of correctness on a
   file both branches restructured.** Git only flags a conflict where the two
   sides touched overlapping lines — a rename or refactor on one side can leave
@@ -495,7 +512,9 @@ collections and the routing map update automatically (see Self-verification
 above — no regenerate step needed). To **add a Tenant**: drop a `layers/<name>/` folder with a manifest and
 content, then run `pnpm install` (or `nuxt prepare`) to pick it up — Nuxt
 auto-extends every `layers/*`, so no `nuxt.config.ts` `extends` edit is needed
-(ADR-0018).
+(ADR-0018). Every Tenant layer needs its own `nuxt.config.ts` (even an empty
+`defineNuxtConfig({})`) to be a valid extendable layer — without one, `nuxt
+prepare` emits a "Cannot extend config from layers/<tenant>/" warning.
 
 ## Logging your session
 

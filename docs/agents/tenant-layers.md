@@ -154,3 +154,11 @@ Tenant only). The root Platform's `app/components/content/ProsePre.vue`
 lives at the app root rather than in a Tenant's `layers/` directory precisely
 because the override is global: placing it in a Tenant layer would suggest a
 scoping that doesn't exist.
+
+## 6. Verify a routing claim against the layer's actual `pages/` tree, not prose search
+
+Before asserting whether a route exists (in a review, a comment, or anywhere
+else), check the layer's actual `layers/<tenant>/…/pages/` directory directly
+(ADR-0016 tenant-root routes) — don't grep Markdown/Vue prose for the path
+string instead. Text search can miss or misreport an actual route; the pages
+tree is the real source of truth for what routes exist.
