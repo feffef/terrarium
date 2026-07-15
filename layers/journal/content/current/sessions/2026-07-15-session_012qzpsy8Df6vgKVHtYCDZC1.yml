@@ -1,0 +1,58 @@
+schemaVersion: 1
+session: session_012qzpsy8Df6vgKVHtYCDZC1
+startedAt: 2026-07-15T00:45:59Z
+endedAt: 2026-07-15T00:56:40Z
+kind: autonomous
+goal: Run /audit-skills — audit the Skill Inventory
+status: in-review
+outcome: "Opened PR #490 with fresh Inventory citations, no grade changes"
+summary: "Autonomous scheduled /audit-skills run (no human instruction this session). Gathered the scorecard (scripts/audit-skills.ts) over the newest 40-session window, re-graded every Skill's importance against usedIn evidence, and found no bright-line (>=2 session) promote/demote signal — all current grades still match the evidence. Refreshed three entries (wayfinder, triage, code-review) whose prior observations had fully aged out of the window, citing fresh matching usedIn evidence per the plain-match rule. Ran the step-4 regression watch over this window's 4 most-recent SKILL.md edits (audit-docs, auto-triage, blog-post, log-session); none had a bracketed post-edit session that both actually invoked the edited Skill and showed worse friction, so all landed inconclusive/healthy per the Skill's own guidance. orphanedSessions and manuallyRescuedClosures were both empty. The 2 humanPromptedClosures sessions were the identical pair already tracked on standing issue #483, so no new comment was posted. Confirmed the PR diff touches only Inventory YAML, ran pnpm gate:scoped (green), opened PR #490, subscribed to its activity, and scheduled a 1-hour check-in."
+prs:
+  - "490"
+docsRead:
+  - path: CONTEXT.md
+    reason: importance-grade definitions (essential/specialist/supporting/peripheral)
+  - path: layers/journal/content/current/skills/wayfinder.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/triage.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/code-review.yml
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-skills
+    reason: the run itself
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Drafted the PR commit's Claude-Session footer by copying a session id out of the audit scorecard data instead of resolving my own session id, violating CLAUDE.md's never-reconstruct-an-identifier-from-memory rule.
+    solution: Caught before pushing further; amended the tip commit (git commit --amend -F) with the correct id read from the system-prompt commit-footer template. Worth being more deliberate about which id source to read before drafting provenance footers.
+    severity: minor
+durationSec: 641
+models:
+  claude-sonnet-5: 107
+toolCounts:
+  Bash: 26
+  ToolSearch: 6
+  TaskCreate: 5
+  TaskUpdate: 7
+  mcp__github__search_issues: 1
+  Read: 3
+  Edit: 3
+  TaskOutput: 1
+  TaskStop: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - layers/journal/content/current/skills/wayfinder.yml
+  - layers/journal/content/current/skills/triage.yml
+  - layers/journal/content/current/skills/code-review.yml
+gitBranch: claude/upbeat-sagan-g9h9uh
+entrypoint: remote_trigger
+cliVersion: 2.1.210
