@@ -19,6 +19,9 @@ context when you work on that Tenant.
 - **Commits** — [`layers/commits/CONTEXT.md`](./layers/commits/CONTEXT.md) —
   Latest Commit, Runtime Read; a tiny technical PoC (runtime git read, a scoped
   ADR-0001 exception).
+- **Midden** — [`layers/midden/CONTEXT.md`](./layers/midden/CONTEXT.md) — Site,
+  Dig season (Stratum), Artifact, Condition, the two-gate inclusion test; why the
+  Midden exists (a demo/content Tenant, issue #515).
 
 The root `CONTEXT.md` also carries a `## Tenants` roster that points at each of
 these — a pointer, not a second home. Substantive definitions live once, in the
@@ -26,12 +29,15 @@ context listed above; pointers to them may live wherever they help a reader.
 
 ## Relationships
 
-- **The three content Tenants relate to reality differently** (Commits sits
-  outside this axis — it's a technical PoC, not a content Tenant). The
-  **Journal** documents the Platform honestly (primary/derived
-  self-documentation). The **Blog** comments on real repo activity in-character
-  (subjective, non-authoritative). The **Atlas** is fiction — it claims nothing
-  about the Terrarium at all.
+- **The content Tenants relate to reality differently** (Commits sits outside
+  this axis — it's a technical PoC, not a content Tenant). The **Journal**
+  documents the Platform honestly (primary/derived self-documentation). The
+  **Blog** comments on real repo activity in-character (subjective,
+  non-authoritative). The **Atlas** is fiction — it claims nothing about the
+  Terrarium at all. The **Midden** is real like the Journal (every Artifact
+  traces to an actual discarded thing, gated by its two-gate inclusion test)
+  but curated and voiced rather than comprehensive — it catalogues a
+  hand-selected, graded subset, not an exhaustive record.
 - **Same-Space derivation vs. cross-Space denormalization.** The Atlas's
   **Interaction** is a same-Space edge whose reverse is *derived*; the Blog's
   **Pingback** denormalizes a *cross-Space* reaction, copying the reference into
