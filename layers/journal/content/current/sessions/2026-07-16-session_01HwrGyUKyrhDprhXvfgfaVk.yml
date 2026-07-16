@@ -1,0 +1,71 @@
+schemaVersion: 1
+session: session_01HwrGyUKyrhDprhXvfgfaVk
+startedAt: 2026-07-16T04:08:38Z
+endedAt: 2026-07-16T04:26:33Z
+kind: autonomous
+goal: Audit repo docs against code, fix drift
+status: in-review
+outcome: 5 findings confirmed and fixed, PR open
+summary: 'Autonomous /audit-docs run, self-triggered (no human prompt this session). Branched claude/festive-mayer-ze8z54 off origin/main, inventoried and tiered every *.md surface (Live/Historical/Pack-generic), then ran four paired-lens reviewer agents in parallel (Freshness: Drift+Orphan-addition; Single-home: Duplication+Mis-location; Concision: Verbose+Stale-narration; Coherence: Contradiction+Ambiguity). Freshness and Concision found nothing; Single-home found 3 duplication findings; Coherence found 2 contradictions plus one ambiguity candidate it explicitly declined to confirm (undefined "AFK agent" term) and left unactioned. An independent fact-checker re-derived all 5 pooled findings against primary sources: all CONFIRMED (one CONFIRMED-BUT, a citation-only nuance). Fixed all 5 in place in CLAUDE.md, docs/agents/domain.md, and how-it-works.md — none touched a human-only surface, so no escalation issue was needed and all 5 ride one self-merge-eligible PR. pnpm gate:scoped passed fully green (lint, typecheck, validate:content, unit tests, build, e2e smoke 44/44). Opened and subscribed to PR #510; will babysit to merge and flip this log to completed.'
+prs:
+  - "510"
+docsRead:
+  - path: CLAUDE.md
+    reason: audit-docs Skill's own governing conventions
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: ADR-0018 factual-correction-vs-decision-reversal rule for Historical tier
+  - path: docs/agents/domain.md
+    reason: (read before editing)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (read before editing)
+  - path: layers/commits/CONTEXT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the Skill this whole session ran
+  - name: close-session
+    reason: closure front door at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 1076
+models:
+  claude-sonnet-5: 129
+toolCounts:
+  Bash: 18
+  ToolSearch: 4
+  TaskCreate: 8
+  TaskUpdate: 13
+  Agent: 5
+  ScheduleWakeup: 2
+  Read: 9
+  Edit: 5
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - docs/agents/domain.md
+  - CLAUDE.md
+  - layers/journal/content/current/pages/how-it-works.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: drift + orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: duplication + mis-location"
+  - type: general-purpose
+    task: "Concision lens: verbose + stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: contradiction + ambiguity"
+  - type: general-purpose
+    task: Fact-check 5 pooled audit findings
+gitBranch: claude/festive-mayer-ze8z54
+entrypoint: remote_trigger
+cliVersion: 2.1.211
