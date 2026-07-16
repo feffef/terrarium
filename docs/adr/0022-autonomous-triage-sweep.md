@@ -96,3 +96,23 @@ wayfinder backlog.
   triage-owned issues — which would supersede the coexistence rules above.
 - Merge of any PR touching this ADR, `/triage`'s human-only refinement surface, or
   CI remains human-only (ADR-0004); this ADR does not change what auto-merges.
+
+## Amendment: `wayfinder:task` is HITL-or-AFK per ticket, not blanket-AFK
+
+> **Amended (2026-07-16, `/audit-docs`).** Narrows the wayfinder-coexistence
+> paragraph in the Decision above. wayfinder's own definition
+> (`.agents/skills/wayfinder/SKILL.md`) makes `task` HITL-or-AFK **per
+> ticket** — the agent drives it alone where it can, otherwise it hands the
+> human a checklist — not blanket-AFK the way `research` is, and no separate
+> label distinguishes the two `task` subtypes. The Decision text above is
+> left as-is per this ADR's own historical record; this amendment states the
+> corrected, current rule. Per ADR-0018's factual-correction-vs-decision-reversal
+> rule, this changes what the standing green-light actually authorises, so it's
+> a decision reversal — an appended amendment, not an in-place rewrite.
+
+Only `wayfinder:research` is unconditionally AFK-eligible under the standing
+green-light. A `wayfinder:task` ticket is eligible for `ready-for-agent` only
+when the ticket body itself is AFK-drivable per wayfinder's own test;
+otherwise it escalates to `ready-for-human` under this ADR's existing
+judgment-call criteria (e.g. external access the agent lacks).
+`auto-triage/SKILL.md` implements this narrower rule.
