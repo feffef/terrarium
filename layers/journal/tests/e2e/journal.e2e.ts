@@ -11,12 +11,34 @@
 // (ADR-0004 amendment; tests/README.md).
 import { describe, expect, it } from 'vitest'
 import { $fetch } from '@nuxt/test-utils/e2e'
+import type { Page } from 'playwright-core'
 import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 import type { renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
+import { PIN_SETTLED_EVENT } from '../../app/utils/expandTransition.ts'
 
 export interface JournalE2EContext {
   entryRoutes: string[]
   renderAndCollectErrors: typeof renderAndCollectErrors
+}
+
+// The "held in place" tests below wait for the page's own scroll-pin to finish
+// rather than polling the item's position against a timeout (issue #450): a slow
+// CI frame could push pinTopAcrossTransition's rAF settle past any fixed window,
+// so the old `expect.poll({ timeout })` only masked the race by waiting longer.
+// `armPinSettled` registers a one-shot listener for PIN_SETTLED_EVENT and stashes
+// the pending promise on `window` — it MUST run before the click that fires the
+// event, or the one-shot could fire before we're listening. `awaitPinSettled`
+// then blocks on that promise, resolving the instant the settle loop dispatches.
+async function armPinSettled(page: Page): Promise<void> {
+  await page.evaluate((event) => {
+    const w = window as unknown as { __pinSettled?: Promise<void> }
+    w.__pinSettled = new Promise((resolve) => {
+      window.addEventListener(event, () => resolve(), { once: true })
+    })
+  }, PIN_SETTLED_EVENT)
+}
+async function awaitPinSettled(page: Page): Promise<void> {
+  await page.evaluate(() => (window as unknown as { __pinSettled?: Promise<void> }).__pinSettled)
 }
 
 /** Register the journal Tenant's L2 assertions under the caller's active suite. */
@@ -162,16 +184,16 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         await card.locator('.head').scrollIntoViewIfNeeded()
         const before = await topOf()
         expect(before).toBeGreaterThan(250) // precondition: parked well below the top
+        await armPinSettled(page)
         await card.locator('.head').click()
         await page.locator('.feed .card.open .detail').first().waitFor({ state: 'visible' })
-        // Poll past the (async, possibly animated) settle: with no sibling
-        // reflowing above it, the card's own top must be unchanged by opening.
-        // Timeout raised past expect.poll's 1000ms default: pinTopAcrossTransition
-        // (index.vue) settles over up to 90 rAF frames by design — a backstop, not
-        // the common case, but one that can itself exceed 1s of wall time on a
-        // loaded CI runner, which flaked this poll under the default timeout.
-        await expect.poll(topOf, { timeout: 5000 }).toBeGreaterThan(before - 15)
-        expect(await topOf()).toBeLessThan(before + 15)
+        // Wait for the scroll-pin to actually finish, then assert its resting
+        // position once — an event, not a longer timeout (issue #450). With no
+        // sibling reflowing above it, opening must leave the card's own top put.
+        await awaitPinSettled(page)
+        const after = await topOf()
+        expect(after).toBeGreaterThan(before - 15)
+        expect(after).toBeLessThan(before + 15)
         expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
       } finally {
         await page.close()
@@ -200,15 +222,18 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         }, id)
         await card.locator('.head').scrollIntoViewIfNeeded()
         const before = await topOf()
+        await armPinSettled(page)
         await card.locator('.head').click()
         await page.locator('.feed .card.open .detail').first().waitFor({ state: 'visible' })
-        await expect.poll(() => page.locator('.digest-body').count()).toBe(0) // the digest collapsed, shrinking the page above the card
-        // Same settle-timeout headroom as the previous test (see its comment) —
-        // this test's rAF loop has strictly more to chase (the sibling's own
-        // collapse on top of this card's own expand), so it's the more likely of
-        // the two to need it.
-        await expect.poll(topOf, { timeout: 5000 }).toBeGreaterThan(before - 15)
-        expect(await topOf()).toBeLessThan(before + 15)
+        // The scroll-pin settles only once BOTH this card's expand and the sibling
+        // digest's collapse above it have finished, so its event is the exact
+        // "everything reflowed" signal — wait for it, don't poll a timeout (#450).
+        await awaitPinSettled(page)
+        await page.locator('.digest-body').first().waitFor({ state: 'detached' })
+        expect(await page.locator('.digest-body').count()).toBe(0) // the digest collapsed, shrinking the page above the card
+        const after = await topOf()
+        expect(after).toBeGreaterThan(before - 15)
+        expect(after).toBeLessThan(before + 15)
         expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
       } finally {
         await page.close()
