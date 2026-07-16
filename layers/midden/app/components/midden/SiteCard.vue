@@ -38,7 +38,7 @@ const touchedLabels = computed(() => DIG_SEASONS.filter((season) => touchedSet.v
 .midden-site-card {
   display: block;
   padding: 0.9rem 1rem;
-  border: 1px solid var(--midden-line, #cabfa9);
+  border: 1px solid var(--midden-line, #d8cbb2);
   text-decoration: none;
   color: inherit;
 }
@@ -46,7 +46,7 @@ const touchedLabels = computed(() => DIG_SEASONS.filter((season) => touchedSet.v
 .midden-site-card__title {
   margin: 0 0 0.5rem;
   font-size: 1rem;
-  color: var(--midden-ink, #2a251d);
+  color: var(--midden-ink, #33291d);
 }
 
 .midden-site-card__strata {
@@ -57,10 +57,10 @@ const touchedLabels = computed(() => DIG_SEASONS.filter((season) => touchedSet.v
 .midden-site-card__tick {
   flex: 1 1 0;
   height: 0.5rem;
-  background: var(--midden-line, #cabfa9);
+  background: var(--midden-line, #d8cbb2);
 }
 
 .midden-site-card__tick--touched {
-  background: var(--midden-accent, #b5623a);
+  background: var(--midden-accent, #b4552d);
 }
 </style>

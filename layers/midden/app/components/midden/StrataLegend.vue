@@ -57,16 +57,16 @@ function formatRange(start: string, end: string | null): string {
   width: 1.25rem;
   height: 0.85rem;
   flex-shrink: 0;
-  background: var(--midden-slate, #5a5f66);
+  background: var(--midden-slate, #4a5560);
 }
 
 .midden-strata-legend__label {
   font-weight: 600;
-  color: var(--midden-ink, #2a251d);
+  color: var(--midden-ink, #33291d);
 }
 
 .midden-strata-legend__range {
-  color: var(--midden-muted, #736a58);
+  color: var(--midden-muted, #7a6c56);
   font-size: 0.85rem;
 }
 </style>

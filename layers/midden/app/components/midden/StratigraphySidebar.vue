@@ -11,9 +11,10 @@
 // `[data-stratum]`/`id="artifact-<slug>"` elements the scroll-sync observes
 // are rendered elsewhere on the page, by a component this sidebar doesn't own.
 import type { DigSeason } from '../../utils/strata'
+import type { Grade } from '../../utils/condition'
 
 const props = defineProps<{
-  artifacts: Array<{ slug: string; stratum: string }>
+  artifacts: Array<{ slug: string; stratum: string; condition: Grade }>
 }>()
 
 interface StratumBand {
@@ -21,6 +22,15 @@ interface StratumBand {
   firstArtifactSlug: string
   count: number
 }
+
+// This site's own per-grade counts (#527's adopted enhancement): every grade
+// is a key, defaulting to 0, so MiddenGradeLegend's tally column always shows
+// all six rows rather than only the grades this site happens to have.
+const siteTally = computed<Record<Grade, number>>(() => {
+  const tally = Object.fromEntries(CONDITION_ORDER.map((grade) => [grade, 0])) as Record<Grade, number>
+  for (const artifact of props.artifacts) tally[artifact.condition] += 1
+  return tally
+})
 
 // One band per dig season actually represented in `artifacts`, oldest-first
 // (DIG_SEASONS' own order) — a season with nothing deposited on this page
@@ -86,7 +96,7 @@ function onBandClick(firstArtifactSlug: string, event: MouseEvent) {
 <template>
   <nav v-if="bandsOldestFirst.length" class="midden-stratigraphy-sidebar" aria-label="Dig seasons">
     <header class="midden-stratigraphy-sidebar__header">
-      <MiddenGradeLegend />
+      <MiddenGradeLegend :tally="siteTally" />
     </header>
     <ol class="midden-stratigraphy-sidebar__bands">
       <li
@@ -117,7 +127,7 @@ function onBandClick(firstArtifactSlug: string, event: MouseEvent) {
 
 .midden-stratigraphy-sidebar__header {
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--midden-line, #cabfa9);
+  border-bottom: 1px solid var(--midden-line, #d8cbb2);
 }
 
 .midden-stratigraphy-sidebar__bands {
@@ -134,7 +144,7 @@ function onBandClick(firstArtifactSlug: string, event: MouseEvent) {
   flex-basis: 0;
   flex-shrink: 1;
   min-height: 2.5rem;
-  background: var(--midden-slate, #5a5f66);
+  background: var(--midden-slate, #4a5560);
   transition: background-color 0.2s ease;
 }
 
@@ -150,7 +160,7 @@ function onBandClick(firstArtifactSlug: string, event: MouseEvent) {
 }
 
 .midden-stratigraphy-sidebar__band--active {
-  background: var(--midden-accent, #b5623a);
+  background: var(--midden-accent, #b4552d);
 }
 
 .midden-stratigraphy-sidebar__band--active a {
