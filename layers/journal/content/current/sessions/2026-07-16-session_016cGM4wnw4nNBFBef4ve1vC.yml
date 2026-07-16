@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_016cGM4wnw4nNBFBef4ve1vC
 startedAt: 2026-07-16T21:27:29Z
-endedAt: 2026-07-16T22:11:07Z
+endedAt: 2026-07-16T22:29:46Z
 kind: interactive
 goal: Write guest-driven demo pipeline skills
-status: in-review
-outcome: "ADR-0023 + two skills shipped as gated PR #535"
-summary: "Owner invoked /writing-great-skills for two looping guest-demo skills: a GitHub-comment requirements-refinement loop and a ready-for-agent builder. All work is human-instructed (the request is the green-light). Research showed the design pushes against ADR-0020 rule 2 and ADR-0022 (Public issues must not self-green-light); I surfaced it. AskUserQuestion failed transiently, so I proceeded on the recommended path: recorded the relaxation as demo-scoped ADR-0023 (owner-merge backstop plus untrusted-data rule stay fully in force), and wrote guest-intake plus guest-build, composing existing skills rather than restating them. Owner chose the guest-prefixed names mid-turn. Committed and pushed to claude/session-ji9pjf; gated PR held pending owner per the harness do-not-open-a-PR restriction, then opened it (PR #535) on the owner's explicit go-ahead."
+status: completed
+outcome: "ADR-0023 + two skills merged via PR #535"
+summary: "Owner invoked /writing-great-skills for two looping guest-demo skills: a GitHub-comment requirements-refinement loop and a ready-for-agent builder. All work is human-instructed (the request is the green-light). Research showed the design pushes against ADR-0020 rule 2 and ADR-0022 (Public issues must not self-green-light); I surfaced it. AskUserQuestion failed transiently, so I proceeded on the recommended path: recorded the relaxation as demo-scoped ADR-0023 (owner-merge backstop plus untrusted-data rule stay fully in force), and wrote guest-intake plus guest-build, composing existing skills rather than restating them. Owner chose the guest-prefixed names mid-turn. Committed and pushed to claude/session-ji9pjf; gated PR held pending owner per the harness do-not-open-a-PR restriction, then opened it (PR #535) on the owner's explicit go-ahead. The owner iterated on it live (apply needs-info on first engagement; scope the pipeline to owner-run/time-boxed activation; drop the AI-triage disclaimer) and merged it. A post-merge follow-up — dropping the /triage composition and citing the label/footer homes directly — is pushed as a fresh change on the same branch off merged main, awaiting a decision on a new PR."
 prs:
   - "535"
 docsRead:
@@ -44,6 +44,8 @@ docsRead:
     reason: (no reason given)
   - path: docs/adr/0023-guest-driven-demo-pipeline.md
     reason: (read before editing)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (read before editing)
 skillsUsed:
   - name: writing-great-skills
     reason: framed the skill-authoring approach (compose, leading words, single-home)
@@ -58,24 +60,27 @@ frictions:
   - description: gate:scoped classified the .claude/skills/* symlinks as non-inert (not a .md extension) and wanted the full heavy gate for a docs+symlink-only change.
     solution: Teach the inert classifier that a symlink pointing at an inert path (a .claude/skills/* link to a .agents/skills/*.md file) is itself inert; ran the relevant floor checks directly meanwhile.
     severity: minor
-  - description: Provenance footer was not auto-injected into the cloud -m commit; had to amend it in manually.
-    solution: Already documented in CLAUDE.md (verify + amend). Recurring papercut on cloud sessions.
+  - description: Provenance footer was not auto-injected into the cloud -m commit; had to amend it in manually — recurred on every one of the ~5 commits this session.
+    solution: Already documented in CLAUDE.md (verify + amend). Recurring papercut on cloud sessions; the per-commit recurrence suggests a commit hook could append it deterministically.
     severity: nit
-durationSec: 2617
+  - description: Each CI synthetic-merge-commit recompute posted a fresh 'safety-gate green' PR comment that woke the subscribed session, even on an unchanged head with no new review activity.
+    solution: Treat a repeat gate-green on an unchanged head as a no-op wake; act only on red, a new head SHA, or human review/comment activity.
+    severity: nit
+durationSec: 3736
 models:
-  claude-opus-4-8: 160
+  claude-opus-4-8: 215
 toolCounts:
-  Read: 15
-  Bash: 23
+  Read: 16
+  Bash: 29
   AskUserQuestion: 1
   Write: 6
-  Edit: 15
+  Edit: 26
   Skill: 2
   ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 3
   mcp__Claude_Code_Remote__send_later: 1
   mcp__github__update_pull_request: 1
 filesEdited:
