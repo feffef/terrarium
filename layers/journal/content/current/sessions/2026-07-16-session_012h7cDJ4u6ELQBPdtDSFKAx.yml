@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_012h7cDJ4u6ELQBPdtDSFKAx
 startedAt: 2026-07-16T01:05:20Z
-endedAt: 2026-07-16T01:33:05Z
+endedAt: 2026-07-16T16:18:46Z
 kind: autonomous
 goal: "Run frictions-to-fixes: survey, file, dispatch fixes"
-status: in-review
-outcome: 1 PR merged, 1 escalated, 1 regression flagged
-summary: "Autonomous scheduled-routine run of frictions-to-fixes (no human prompt this session). A survey subagent read the latest 20 session logs, ranked candidates, and screened them against the tracker. Filed 3 issues: #505 (a regression — scripts/list-open-issues.ts's gh-ENOENT fragility defeats the #494/#499 overflow fix; flagged for human attention per the Skill's regression rule, not dispatched), #506 (simple doc fix, tests/README.md Playwright-matcher note), #507 (hard — new triage-state drift detector script). Dispatched two Sonnet worktree-isolated impl agents for #506/#507; reviewed both PRs myself as the ADR-0003 reviewer-agent. Merged #508 (#506's fix) after a clean review. Escalated #509 (#507's fix) to the human per the hard-selection rule despite a green gate and a favorable design review. Alerted the user via push notification on all three outcomes."
+status: completed
+outcome: Both dispatched PRs landed; 1 regression flagged
+summary: "Autonomous scheduled-routine run of frictions-to-fixes (no human prompt this session). A survey subagent read the latest 20 session logs, ranked candidates, and screened them against the tracker. Filed 3 issues: #505 (a regression — scripts/list-open-issues.ts's gh-ENOENT fragility defeats the #494/#499 overflow fix; flagged for human attention per the Skill's regression rule, not dispatched — still open, outside this session's scope to fix), #506 (simple doc fix, tests/README.md Playwright-matcher note), #507 (hard — new triage-state drift detector script). Dispatched two Sonnet worktree-isolated impl agents for #506/#507; reviewed both PRs myself as the ADR-0003 reviewer-agent. Merged #508 (#506's fix) after a clean review. Escalated #509 (#507's fix) to the human per the hard-selection rule despite a green gate and a favorable design review; the human then answered a follow-up scope question and merged #509 themselves. Alerted the user via push notification on all three outcomes."
 prs:
   - "508"
   - "509"
@@ -37,29 +37,29 @@ frictions:
   - description: "The survey subagent found that prior sessions' in-log \"already tracked at #X\" self-citations were sometimes wrong (cited #427/#480 for a flake actually tracked at #450) — a self-citation isn't reliably accurate."
     solution: "Treat a session log's own \"already tracked at #X\" self-citation as a lead to verify via a fresh tracker search, not a fact to trust outright — the same discipline CLAUDE.md already asks for subagent/doc-derived claims, just noting it applies to session-log self-citations specifically too."
     severity: minor
-durationSec: 1664
+durationSec: 54806
 models:
-  claude-sonnet-5: 117
+  claude-sonnet-5: 133
 toolCounts:
   Agent: 4
   ScheduleWakeup: 3
   ToolSearch: 5
   mcp__github__get_me: 1
   mcp__github__search_issues: 4
-  Bash: 12
+  Bash: 14
   mcp__github__issue_write: 3
-  mcp__github__pull_request_read: 7
-  mcp__github__add_issue_comment: 2
+  mcp__github__pull_request_read: 8
+  mcp__github__add_issue_comment: 3
   mcp__github__merge_pull_request: 1
   mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
   TaskStop: 1
-  Read: 1
+  Read: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   PushNotification: 1
   Skill: 2
   Write: 1
-  Edit: 1
+  Edit: 2
 subagents:
   - type: general-purpose
     task: Survey and screen session frictions
