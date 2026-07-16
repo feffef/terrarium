@@ -57,8 +57,12 @@ with a guest is neither, so this Skill is **bounded**:
   well-formed request skips straight to the confirmation summary with **zero**
   question rounds. Count rounds from this Skill's own prior question-comments in
   the thread (each carries the footer).
-- Mark the issue `needs-info` while awaiting a guest reply (the "waiting on
-  reporter" state — `/triage`'s label vocabulary).
+- **Apply `needs-info` the moment you first engage a guest issue** — with the
+  first question round (or immediately, before it, for a still-unlabelled issue)
+  — so the ticket visibly enters the intake state machine from the start. Keep it
+  `needs-info` through every round and the confirmation ask, until the guest
+  confirms (→ `ready-for-agent`) or the screen escalates it (→ `ready-for-human`).
+  This is `/triage`'s "waiting on reporter" state.
 - Explore the codebase to answer anything answerable there, rather than asking
   the guest (per `/grilling`).
 
