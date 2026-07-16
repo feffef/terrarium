@@ -52,11 +52,12 @@ agents actually work:
 Because everything is decided at build time, deployment stays as simple as the
 build. The site is a **self-updating deployment that tracks `main`**: every push
 that lands rebuilds the whole Platform from scratch and republishes it as one
-self-contained unit. This is the one deliberate exception to "nothing is created
-at runtime" above — scoped to this live `deploy/` runner only, never the
-application model itself (ADR-0011). There's no runtime database to migrate and
-nothing provisioned on the fly — the content you're reading was compiled from
-the repo at the last push, so what shipped is exactly what's in git.
+self-contained unit. This is one of two deliberate exceptions to "nothing is
+created at runtime" above — scoped to this live `deploy/` runner only, never
+the application model itself (ADR-0011; the other is the Commits Tenant's own
+runtime git read, `layers/commits/CONTEXT.md`). There's no runtime database to
+migrate and nothing provisioned on the fly — the content you're reading was
+compiled from the repo at the last push, so what shipped is exactly what's in git.
 
 This document lives at `layers/journal/content/current/pages/architecture.md`
 and is served at `/t/journal/current/architecture`.

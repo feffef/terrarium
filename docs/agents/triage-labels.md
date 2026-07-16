@@ -17,9 +17,8 @@ The skills speak in terms of five canonical triage roles. This file maps those r
 
 When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the corresponding label string from this table.
 
-> **Requester-trust gate (ADR-0020).** `ready-for-agent` authorises an AFK agent
-> to *implement* an issue, so a **Public**-authored issue (reporter without
-> write access — see `CONTEXT.md`'s **Public** term) is not moved to it
-> without a **Trusted** user's green-light. See ADR-0020.
+> **Requester-trust gate (ADR-0020).** `ready-for-agent` is gated by requester
+> trust — see ADR-0020, and, for the autonomous sweep specifically, the
+> `auto-triage` Skill's "standing green-light" section.
 
 Edit the right-hand column to match whatever vocabulary you actually use.
