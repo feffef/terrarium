@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_016cGM4wnw4nNBFBef4ve1vC
 startedAt: 2026-07-16T21:27:29Z
-endedAt: 2026-07-16T22:37:51Z
+endedAt: 2026-07-16T23:26:39Z
 kind: interactive
 goal: Write guest-driven demo pipeline skills
-status: in-review
-outcome: "Core merged (#535); /triage-sourcing cleanup in PR #536"
-summary: "Owner invoked /writing-great-skills for two looping guest-demo skills: a GitHub-comment requirements-refinement loop and a ready-for-agent builder. All work is human-instructed (the request is the green-light). Research showed the design pushes against ADR-0020 rule 2 and ADR-0022 (Public issues must not self-green-light); I surfaced it. AskUserQuestion failed transiently, so I proceeded on the recommended path: recorded the relaxation as demo-scoped ADR-0023 (owner-merge backstop plus untrusted-data rule stay fully in force), and wrote guest-intake plus guest-build, composing existing skills rather than restating them. Owner chose the guest-prefixed names mid-turn. Committed and pushed to claude/session-ji9pjf; gated PR held pending owner per the harness do-not-open-a-PR restriction, then opened it (PR #535) on the owner's explicit go-ahead. The owner iterated on it live (apply needs-info on first engagement; scope the pipeline to owner-run/time-boxed activation; drop the AI-triage disclaimer) and merged it. A post-merge follow-up — dropping the /triage composition and citing the label/footer homes directly — is pushed as a fresh change on the same branch off merged main, now open as PR #536 for review."
+status: completed
+outcome: "Core merged (#535); cleanup PR #536 closed unmerged by owner"
+summary: "Owner invoked /writing-great-skills for two looping guest-demo skills: a GitHub-comment requirements-refinement loop and a ready-for-agent builder. All work is human-instructed (the request is the green-light). Research showed the design pushes against ADR-0020 rule 2 and ADR-0022 (Public issues must not self-green-light); I surfaced it. AskUserQuestion failed transiently, so I proceeded on the recommended path: recorded the relaxation as demo-scoped ADR-0023 (owner-merge backstop plus untrusted-data rule stay fully in force), and wrote guest-intake plus guest-build, composing existing skills rather than restating them. Owner chose the guest-prefixed names mid-turn. Committed and pushed to claude/session-ji9pjf; gated PR held pending owner per the harness do-not-open-a-PR restriction, then opened it (PR #535) on the owner's explicit go-ahead. The owner iterated on it live (apply needs-info on first engagement; scope the pipeline to owner-run/time-boxed activation; drop the AI-triage disclaimer) and merged it. A post-merge follow-up — dropping the /triage composition and citing the label/footer homes directly — is pushed as a fresh change on the same branch off merged main and opened as PR #536; the owner closed #536 unmerged (declining the /triage-sourcing cleanup), so merged main keeps the `/triage` composition wording. The commit is preserved locally only."
 prs:
   - "535"
   - "536"
@@ -67,23 +67,27 @@ frictions:
   - description: Each CI synthetic-merge-commit recompute posted a fresh 'safety-gate green' PR comment that woke the subscribed session, even on an unchanged head with no new review activity.
     solution: Treat a repeat gate-green on an unchanged head as a no-op wake; act only on red, a new head SHA, or human review/comment activity.
     severity: nit
-durationSec: 4222
+  - description: "A prolonged GitHub REST API outage 503'd every /pulls read (get_check_runs, get, comments) for 30+ min, blocking PR #536 babysitting; subscribe_pr_activity and send_later also failed transiently in the same window."
+    solution: Route around a /pulls 503 via git and the /issues endpoint (see the learning); retry send_later once then fall back per issue-tracker.md. The outage was GitHub-side, not the repo.
+    severity: minor
+durationSec: 7150
 models:
-  claude-opus-4-8: 239
+  claude-opus-4-8: 292
 toolCounts:
   Read: 16
-  Bash: 33
+  Bash: 37
   AskUserQuestion: 1
   Write: 6
-  Edit: 28
+  Edit: 32
   Skill: 2
-  ToolSearch: 3
+  ToolSearch: 4
   mcp__github__search_pull_requests: 3
   mcp__github__create_pull_request: 2
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
-  mcp__github__pull_request_read: 3
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 3
+  mcp__github__pull_request_read: 8
+  mcp__Claude_Code_Remote__send_later: 3
   mcp__github__update_pull_request: 1
+  mcp__github__issue_read: 2
 filesEdited:
   - docs/adr/0023-guest-driven-demo-pipeline.md
   - .agents/skills/concierge/SKILL.md
@@ -95,5 +99,6 @@ entrypoint: remote
 cliVersion: 2.1.211
 learnings:
   - A guest is reliably detectable by a Public authorAssociation (a guest cannot post as OWNER), but owner-vs-agent among OWNER comments needs the ADR-0017 footer's absence, not authorAssociation.
+  - "During a GitHub /pulls REST outage a PR's state is still recoverable without that API: `git ls-remote origin refs/pull/<N>/head` confirms the PR exists and its head SHA, `merge-base --is-ancestor <head> origin/main` tells you if it merged, and issue_read on /issues/<N> returns state/closed_by (PRs share the issue endpoint) even while /pulls/<N> 503s."
 ideas:
   - "Add a CI workflow that auto-labels each issue guest vs owner by authorAssociation (mirroring the existing trusted-PR label workflow, issue #443), so guest-intake/guest-build filter on a label instead of a per-fetch authorAssociation check on every open issue each loop."
