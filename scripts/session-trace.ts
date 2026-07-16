@@ -163,6 +163,44 @@ function toUtcSeconds(ms: number): string {
   return new Date(ms).toISOString().replace(/\.\d{3}Z$/, 'Z')
 }
 
+/** Just the one env var this module needs, as an explicitly optional field with
+ *  an index signature — `Pick<NodeJS.ProcessEnv, ...>` makes the key itself
+ *  required and rejects a plain `{}` override in tests even though `undefined`
+ *  is a valid value; the index signature is what lets a real `process.env`
+ *  satisfy this structurally too. */
+export interface SessionIdEnv {
+  CLAUDE_CODE_REMOTE_SESSION_ID?: string
+  [key: string]: string | undefined
+}
+
+/** Maps a `CLAUDE_CODE_REMOTE_SESSION_ID` env value (`cse_01…`) onto the
+ *  `session_01…` id used everywhere else this session is identified — commit
+ *  footers, session-log filenames, the `claude.ai/code/` URL (issue #387).
+ *  Returns undefined for an absent/differently-shaped value rather than
+ *  guessing at a transform that doesn't hold. */
+export function normalizeRemoteSessionId(raw: string | undefined): string | undefined {
+  const m = raw ? /^cse_(.+)$/.exec(raw) : null
+  return m ? `session_${m[1]}` : undefined
+}
+
+/** The ground-truth session id for the CURRENT process, resolved without any
+ *  self-reported input (issue #387/#449 Gap 3 postmortem: a hand-typed
+ *  `AuthoredScratch.session` landed a log under the wrong id because the
+ *  transcript's own internal id and the canonical `session_01…` id can
+ *  diverge). Prefers `CLAUDE_CODE_REMOTE_SESSION_ID` (normalized) — the id
+ *  that actually appears in claude.ai URLs and GitHub PR footers for a
+ *  CCR/cloud session; falls back to the transcript's own `sessionId` for a
+ *  plain local CLI session, where that raw id genuinely IS canonical (no CCR
+ *  wrapper exists to disagree with it — confirmed against real usage, issue
+ *  #449 comment thread). Returns undefined only if neither source is
+ *  available, which callers should treat as "cannot resolve", not a mismatch. */
+export function resolveGroundTruthSessionId(
+  transcriptSessionId: string | undefined,
+  env: SessionIdEnv = process.env,
+): string | undefined {
+  return normalizeRemoteSessionId(env.CLAUDE_CODE_REMOTE_SESSION_ID) ?? transcriptSessionId
+}
+
 /** Parse a transcript jsonl into records, skipping unparseable lines. */
 export function parseTranscript(jsonl: string): Record<string, unknown>[] {
   const out: Record<string, unknown>[] = []
@@ -177,8 +215,14 @@ export function parseTranscript(jsonl: string): Record<string, unknown>[] {
   return out
 }
 
-/** Derive the mechanical trace from parsed transcript records. Pure — the testable core. */
-export function extractTrace(records: Record<string, unknown>[]): MechanicalTrace {
+/** Derive the mechanical trace from parsed transcript records. Pure — the
+ *  testable core. `env` is injectable (defaults to `process.env`) so the
+ *  ground-truth session id resolution (issue #387) stays testable without a
+ *  real environment. */
+export function extractTrace(
+  records: Record<string, unknown>[],
+  env: SessionIdEnv = process.env,
+): MechanicalTrace {
   const stamps: number[] = []
   const models: Record<string, number> = {}
   const toolCounts: Record<string, number> = {}
@@ -244,7 +288,7 @@ export function extractTrace(records: Record<string, unknown>[]): MechanicalTrac
   const rel = (p: string): string => (cwd && p.startsWith(cwd + '/') ? p.slice(cwd.length + 1) : p)
 
   return {
-    session: meta.sessionId as string | undefined,
+    session: resolveGroundTruthSessionId(meta.sessionId as string | undefined, env),
     gitBranch: meta.gitBranch as string | undefined,
     entrypoint: meta.entrypoint as string | undefined,
     cliVersion: meta.version as string | undefined,
@@ -325,7 +369,13 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   const editedSet = new Set(trace.filesEdited)
   const entry: Record<string, unknown> = {
     schemaVersion: 1,
-    session: authored.session,
+    // Ground-truth first (issue #387/#449): a hand-typed authored.session is
+    // the exact self-reported field ADR-0009 built this whole mechanism to
+    // avoid trusting — trace.session is already resolved via
+    // resolveGroundTruthSessionId, so it wins whenever it's available. The
+    // authored value survives only as a last-resort fallback (an
+    // unparseable/absent transcript), never as a silent override.
+    session: trace.session ?? authored.session,
     startedAt: trace.startedAt,
     endedAt: trace.endedAt,
     kind: authored.kind ?? 'interactive',

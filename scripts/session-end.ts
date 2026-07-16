@@ -42,6 +42,7 @@ import {
   LAST_LANDED_FILE,
   type AuthoredScratch,
   type MechanicalTrace,
+  type SessionIdEnv,
 } from './session-trace.ts'
 import { validateEntry, expectedFilename, SESSIONS_DIR, land } from './log-session.ts'
 
@@ -187,9 +188,10 @@ export function recoverDroppedScratch(
     remote: string
     landFn?: typeof land
     mainVersionFn?: (relPath: string, remote: string) => string | null
+    env?: SessionIdEnv
   },
 ): HandlerResult {
-  const trace = extractTrace(parseTranscript(transcriptJsonl))
+  const trace = extractTrace(parseTranscript(transcriptJsonl), opts.env)
   if (!trace.session || !declaredClosure(trace)) {
     return { action: 'skipped-no-scratch' }
   }
@@ -221,9 +223,10 @@ export function handle(
     remote: string
     landFn?: typeof land
     mainVersionFn?: (relPath: string, remote: string) => string | null
+    env?: SessionIdEnv
   },
 ): HandlerResult {
-  const trace = extractTrace(parseTranscript(transcriptJsonl))
+  const trace = extractTrace(parseTranscript(transcriptJsonl), opts.env)
   const entry = stitch(scratch, trace)
 
   const valid = validateEntry(entry)
