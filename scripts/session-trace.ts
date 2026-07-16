@@ -163,37 +163,21 @@ function toUtcSeconds(ms: number): string {
   return new Date(ms).toISOString().replace(/\.\d{3}Z$/, 'Z')
 }
 
-/** Just the one env var this module needs, as an explicitly optional field with
- *  an index signature — `Pick<NodeJS.ProcessEnv, ...>` makes the key itself
- *  required and rejects a plain `{}` override in tests even though `undefined`
- *  is a valid value; the index signature is what lets a real `process.env`
- *  satisfy this structurally too. */
+/** Index signature so a real `process.env` satisfies this structurally. */
 export interface SessionIdEnv {
   CLAUDE_CODE_REMOTE_SESSION_ID?: string
   [key: string]: string | undefined
 }
 
-/** Maps a `CLAUDE_CODE_REMOTE_SESSION_ID` env value (`cse_01…`) onto the
- *  `session_01…` id used everywhere else this session is identified — commit
- *  footers, session-log filenames, the `claude.ai/code/` URL (issue #387).
- *  Returns undefined for an absent/differently-shaped value rather than
- *  guessing at a transform that doesn't hold. */
+/** `cse_01…` → `session_01…` (issue #387). */
 export function normalizeRemoteSessionId(raw: string | undefined): string | undefined {
   const m = raw ? /^cse_(.+)$/.exec(raw) : null
   return m ? `session_${m[1]}` : undefined
 }
 
-/** The ground-truth session id for the CURRENT process, resolved without any
- *  self-reported input (issue #387/#449 Gap 3 postmortem: a hand-typed
- *  `AuthoredScratch.session` landed a log under the wrong id because the
- *  transcript's own internal id and the canonical `session_01…` id can
- *  diverge). Prefers `CLAUDE_CODE_REMOTE_SESSION_ID` (normalized) — the id
- *  that actually appears in claude.ai URLs and GitHub PR footers for a
- *  CCR/cloud session; falls back to the transcript's own `sessionId` for a
- *  plain local CLI session, where that raw id genuinely IS canonical (no CCR
- *  wrapper exists to disagree with it — confirmed against real usage, issue
- *  #449 comment thread). Returns undefined only if neither source is
- *  available, which callers should treat as "cannot resolve", not a mismatch. */
+/** Ground-truth session id: prefer `CLAUDE_CODE_REMOTE_SESSION_ID` (normalized),
+ *  else the transcript's own `sessionId` (canonical on a plain local CLI
+ *  session). Never the hand-typed authored value — issue #387/#449. */
 export function resolveGroundTruthSessionId(
   transcriptSessionId: string | undefined,
   env: SessionIdEnv = process.env,
@@ -216,9 +200,7 @@ export function parseTranscript(jsonl: string): Record<string, unknown>[] {
 }
 
 /** Derive the mechanical trace from parsed transcript records. Pure — the
- *  testable core. `env` is injectable (defaults to `process.env`) so the
- *  ground-truth session id resolution (issue #387) stays testable without a
- *  real environment. */
+ *  testable core. `env` is injectable (defaults to `process.env`). */
 export function extractTrace(
   records: Record<string, unknown>[],
   env: SessionIdEnv = process.env,
@@ -369,10 +351,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   const editedSet = new Set(trace.filesEdited)
   const entry: Record<string, unknown> = {
     schemaVersion: 1,
-    // trace.session is already ground-truth-resolved (resolveGroundTruthSessionId,
-    // issue #387/#449) — it wins over the authored value whenever available.
-    // `||`, not `??`, so an empty string also falls through, matching
-    // declaredClosure's own `!trace.session` falsy check in session-end.ts.
+    // trace.session is already ground-truth-resolved; wins over authored.
     session: trace.session || authored.session,
     startedAt: trace.startedAt,
     endedAt: trace.endedAt,

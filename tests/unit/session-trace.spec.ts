@@ -42,11 +42,7 @@ const transcript = [
   ] } },
 ].map((r) => JSON.stringify(r)).join('\n')
 
-// Isolate every extractTrace() call from the real sandbox's own
-// CLAUDE_CODE_REMOTE_SESSION_ID (issue #387/#449) — otherwise a test run
-// FROM WITHIN a live Claude Code Remote session picks up that session's own
-// id instead of the synthetic transcript's, exactly the failure mode this
-// feature closes.
+// Isolates tests from a real ambient CLAUDE_CODE_REMOTE_SESSION_ID (issue #387).
 const NO_ENV = {}
 
 describe('extractTrace()', () => {
@@ -84,8 +80,6 @@ describe('extractTrace()', () => {
   })
 
   it('prefers a real CLAUDE_CODE_REMOTE_SESSION_ID env var over the transcript\'s own sessionId (issue #387)', () => {
-    // End-to-end through extractTrace() itself, not just resolveGroundTruthSessionId()
-    // in isolation — proves the actual wiring, not just the helper it calls.
     const withCcr = extractTrace(parseTranscript(transcript), { CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_REALSESSION123' })
     expect(withCcr.session).toBe('session_REALSESSION123') // NOT the transcript's 'session_01ABC'
   })
@@ -190,8 +184,6 @@ describe('stitch()', () => {
   })
 
   it('takes session from the resolved ground truth, not the hand-typed authored value (issue #387/#449 postmortem)', () => {
-    // The exact failure mode this closes: an authored scratch typed with the
-    // wrong id must not win over what the trace/environment actually resolved.
     const wronglyAuthored: AuthoredScratch = { ...scratch, session: 'session_TOTALLY_WRONG' }
     const mismatched = stitch(wronglyAuthored, trace)
     expect(mismatched.session).toBe('session_01ABC') // trace's resolved ground truth, not the authored typo
