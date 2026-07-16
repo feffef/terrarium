@@ -15,7 +15,10 @@
 const route = useRoute()
 const { space, path, pagesKey, collections } = useSpace('blog')
 
-const { data } = await useAsyncData(route.path, async () => {
+// `status`/`error` surface a failed client-side load through the
+// ContentLoadErrorDialog rather than a silent "Not found" (issue #236) — an
+// error is distinct from a genuinely missing post.
+const { data, status, error } = await useAsyncData(route.path, async () => {
   const post = await queryCollection(pagesKey).path(path).first()
   // Inbound reactions to THIS post, newest first — filtered and ordered in SQL.
   const pingbacks = await queryCollection(collections.pingbacks)
@@ -89,6 +92,10 @@ useSeoMeta({ description: () => post.value?.description })
       <h1>Not found</h1>
       <p>No document at <code>{{ path }}</code> in blog/{{ space }}.</p>
     </div>
+
+    <!-- A failed client-side content load raises a modal (message / technical
+         details / reload) instead of a silent "Not found" (issue #236). -->
+    <ContentLoadErrorDialog :status="status" :error="error" :accent="meta.accent" :context="route.path" />
 
     <BlogNetwork :current="space" />
   </main>

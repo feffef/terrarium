@@ -4,18 +4,13 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  '@nuxt/content@3.15.0':
-    hash: d980aecc1f74cd0b27be3c59371514d8132ffa7dbe124e4501b6cfa7d3fe4b81
-    path: patches/@nuxt__content@3.15.0.patch
-
 importers:
 
   .:
     dependencies:
       '@nuxt/content':
         specifier: 3.15.0
-        version: 3.15.0(patch_hash=d980aecc1f74cd0b27be3c59371514d8132ffa7dbe124e4501b6cfa7d3fe4b81)(@valibot/to-json-schema@1.7.1(valibot@1.4.2(typescript@5.9.3)))(esbuild@0.28.1)(magicast@0.5.3)(rollup@4.62.2)(valibot@1.4.2(typescript@5.9.3))(vite@7.3.6(@types/node@22.20.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
+        version: 3.15.0(@valibot/to-json-schema@1.7.1(valibot@1.4.2(typescript@5.9.3)))(esbuild@0.28.1)(magicast@0.5.3)(rollup@4.62.2)(valibot@1.4.2(typescript@5.9.3))(vite@7.3.6(@types/node@22.20.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
       mermaid:
         specifier: ^11.16.0
         version: 11.16.0
@@ -6290,7 +6285,7 @@ snapshots:
       - magicast
       - supports-color
 
-  '@nuxt/content@3.15.0(patch_hash=d980aecc1f74cd0b27be3c59371514d8132ffa7dbe124e4501b6cfa7d3fe4b81)(@valibot/to-json-schema@1.7.1(valibot@1.4.2(typescript@5.9.3)))(esbuild@0.28.1)(magicast@0.5.3)(rollup@4.62.2)(valibot@1.4.2(typescript@5.9.3))(vite@7.3.6(@types/node@22.20.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))':
+  '@nuxt/content@3.15.0(@valibot/to-json-schema@1.7.1(valibot@1.4.2(typescript@5.9.3)))(esbuild@0.28.1)(magicast@0.5.3)(rollup@4.62.2)(valibot@1.4.2(typescript@5.9.3))(vite@7.3.6(@types/node@22.20.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))':
     dependencies:
       '@nuxt/kit': 4.4.8(magicast@0.5.3)
       '@nuxtjs/mdc': 0.22.1(magicast@0.5.3)

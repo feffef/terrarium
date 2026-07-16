@@ -16,7 +16,10 @@ const { space, pagesKey } = useSpace('blog')
 // The index.md landing sits at the Space root (full body — it renders); the
 // feed is every page with a publish instant, newest first, trimmed in SQL to
 // the fields the list actually shows.
-const { data } = await useAsyncData(route.path, async () => {
+// `status`/`error` are read alongside `data` so a failed client-side load
+// (issue #236) raises the ContentLoadErrorDialog instead of a silent blank —
+// a genuine load error is distinct from a legitimately absent landing doc.
+const { data, status, error } = await useAsyncData(route.path, async () => {
   const landing = await queryCollection(pagesKey).path('/').first()
   const posts = await queryCollection(pagesKey)
     .where('publishedAt', 'IS NOT NULL')
@@ -75,6 +78,10 @@ useSeoMeta({ description: () => tagline.value })
         <p v-else class="empty">No posts here yet.</p>
       </div>
     </div>
+
+    <!-- A failed client-side content load must never present as a silent blank
+         (issue #236) — raise a modal with a message, technical details, reload. -->
+    <ContentLoadErrorDialog :status="status" :error="error" :accent="meta.accent" :context="route.path" />
 
     <BlogNetwork :current="space" />
   </main>
