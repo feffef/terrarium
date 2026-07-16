@@ -1,0 +1,19 @@
+title: "Spike: does a bot comment wake a subscribed session?"
+stratum: spike-ashfall
+condition: never-activated
+provenance:
+  kind: pr
+  number: 277
+  merged: false
+  url: https://github.com/feffef/terrarium/pull/277
+  continuityCheck: "draft PR, explicitly do-not-merge; the throwaway
+    doorbell-spike.yml workflow was never merged, the finding was captured in
+    #278 instead"
+site: built-never-fired
+catalogNote: A throwaway workflow built only to answer one question — yes, a bot
+  comment does wake a subscribed session — and closed the moment it had, its
+  answer carried off to another issue.
+assessedAt: 2026-07-16
+inscription:
+  text: This spike (doorbell-spike.yml) is throwaway and is not merged.
+  source: "PR #277 description"

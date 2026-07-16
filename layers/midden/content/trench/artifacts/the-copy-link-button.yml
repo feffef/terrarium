@@ -1,0 +1,19 @@
+title: copy-link affordance on session/digest heads
+stratum: current-midden
+condition: fresh
+provenance:
+  kind: pr
+  number: 480
+  merged: false
+  url: https://github.com/feffef/terrarium/pull/480
+  continuityCheck: "closed unmerged with CI unstable; no JournalCopyLinkButton
+    component or copy-link control exists on main — #450’s sub-item one landed
+    nowhere"
+site: the-current-cut
+catalogNote: A little icon-button that copied a session or digest’s deep-link to
+  the clipboard, screenshot-verified and complete, closed unmerged when its gate
+  went unstable — the freshest feature the trench holds.
+assessedAt: 2026-07-16
+inscription:
+  text: "feat(journal): copy-link affordance on session/digest heads (part of #450)"
+  source: "PR #480 title"

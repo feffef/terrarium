@@ -1,0 +1,19 @@
+title: "David: “It’s Four Small Files, Not a Trial”"
+stratum: routing-excavation
+condition: fragmentary
+provenance:
+  kind: pr
+  number: 91
+  merged: false
+  url: https://github.com/feffef/terrarium/pull/91
+  continuityCheck: closed unmerged; the branch churned from a draft titled "Take a
+    Breath, Both of You" to this rewrite, and no David post on main covers that
+    seven-PR evening under either title
+site: unpublished-dispatches
+catalogNote: A David post on the seven-PR evening that never settled on a title
+  before it closed — drafted, renamed, rewritten, and finally left unpublished,
+  surviving only as scattered branch drafts.
+assessedAt: 2026-07-16
+inscription:
+  text: "content(blog): David — it’s four small files, not a trial"
+  source: "PR #91 title"

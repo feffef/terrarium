@@ -1,0 +1,17 @@
+title: zod-to-json-schema
+stratum: almanac-recut
+condition: never-activated
+provenance:
+  kind: dependency
+  name: zod-to-json-schema
+  url: https://github.com/feffef/terrarium/commit/5fd7ba4
+  continuityCheck: added at Milestone 1 (04466d6), removed unused eight days later
+    (5fd7ba4); no import ever referenced it, nothing replaced it
+site: built-never-fired
+catalogNote: A dependency installed with the very first milestone and never once
+  imported, carried in the manifest for eight days before anyone noticed it had
+  never been used.
+assessedAt: 2026-07-16
+inscription:
+  text: "deps: drop unused zod-to-json-schema devDependency"
+  source: commit 5fd7ba4, subject
