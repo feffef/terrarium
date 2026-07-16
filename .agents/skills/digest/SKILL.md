@@ -22,8 +22,9 @@ Digests land through the **ordinary gated PR** (ADR-0003) — *not* the `log-ses
 direct-to-main path (that exception is bounded to inert `data`; a Digest is a
 rendered page). The PR is **eligible to merge as soon as the gate is green**
 (ADR-0003 amendment, activating ADR-0004's content-only low-risk tier); repo-level
-GitHub auto-merge is available (`CLAUDE.md`), so you enable it and the PR lands
-automatically on green — see step 6 for the boundary and the merge mechanics.
+GitHub auto-merge is available (`docs/agents/pr-workflow.md`), so you enable it and
+the PR lands automatically on green — see step 6 for the boundary and the merge
+mechanics.
 
 ## 1. Branch off `origin/main`
 
@@ -119,8 +120,8 @@ index's editorial intro):
 
 - **Subscribe to the PR's activity right after opening it** (CLAUDE.md's
   "Pushing is not landing" rule — every opened PR is babysat to merge/close)
-  and follow CLAUDE.md's `enable_pr_auto_merge`-vs-`merge_pull_request`
-  guidance to land it once the gate reports green.
+  and follow `docs/agents/pr-workflow.md`'s `enable_pr_auto_merge`-vs-
+  `merge_pull_request` guidance to land it once the gate reports green.
 - A **red gate is never merged** — auto-merge only lands on green. Diagnose and
   fix on the branch (the green re-run then auto-merges), or leave the PR open and
   escalate to a human if the failure isn't yours.

@@ -230,9 +230,9 @@ touch no human-only surface, so this is ADR-0004's low-risk content tier (a
 second, bounded grant of the same kind as `digest`'s). **Subscribe to the PR's
 activity right after opening it** (CLAUDE.md's "Pushing is not landing" rule —
 every opened PR is babysat to merge/close, this tier included) and follow
-CLAUDE.md's `enable_pr_auto_merge`-vs-`merge_pull_request` guidance to land it
-once the gate reports green — a red gate simply never merges (see below). Leave a
-one-line PR comment as the audit trail.
+`docs/agents/pr-workflow.md`'s `enable_pr_auto_merge`-vs-`merge_pull_request`
+guidance to land it once the gate reports green — a red gate simply never merges
+(see below). Leave a one-line PR comment as the audit trail.
 
 **Keep human-only-surface fixes out of this PR — those escalate instead.** A fix
 that touches an ADR **at all** (either edit category, ADR-0018 — see the

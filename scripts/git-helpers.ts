@@ -3,6 +3,21 @@
 // that would otherwise be re-derived, and re-broken, per script (#292, #451).
 import { execFileSync } from 'node:child_process'
 
+const FIELD_SEP = '\x1f'
+const RECORD_SEP = '\x1e'
+
+/** One raw merge-candidate commit as read off `git log --merges` — subject
+ *  and body untouched, timestamp still in whatever offset the committer's
+ *  git client used. Not every commit a merge-log reader turns up is a PR
+ *  merge (a manually-crafted merge commit can still slip through) — that
+ *  filtering is each caller's own job (see `recent-prs.ts`'s `toRecentPr`). */
+export interface RawMergeCommit {
+  hash: string
+  isoCommitTime: string
+  subject: string
+  body: string
+}
+
 /** A parentless commit's empty `%P` — a shallow-clone graft or the true repo
  *  root — diffs against the empty tree, so a `git log --name-only`/parent-diff
  *  reader would misattribute it as touching every path it lists (#292). Only
@@ -65,4 +80,33 @@ export function fetchOriginMain(
     }
     throw err
   }
+}
+
+/** The merge commits on `<remote>/main` — single-homed here rather than
+ *  duplicated per script (issue #448 code review: `recent-prs.ts` and
+ *  `pr-timeline.ts` both need the identical `git log --merges` scan). Calls
+ *  `fetchOriginMain` first (see its own doc comment for why), then parses
+ *  each merge's hash/timestamp/subject/body out of the `\x1f`/`\x1e`-delimited
+ *  format string. Leaves PR-merge-vs-other-merge filtering to the caller. */
+export function readMergeCommits(cwd: string, remote = 'origin'): RawMergeCommit[] {
+  fetchOriginMain(cwd, remote)
+  const raw = execFileSync(
+    'git',
+    [
+      'log',
+      `${remote}/main`,
+      '--merges',
+      '--date=iso-strict',
+      `--format=%H${FIELD_SEP}%cd${FIELD_SEP}%s${FIELD_SEP}%b${RECORD_SEP}`,
+    ],
+    { cwd, encoding: 'utf8' },
+  )
+  return raw
+    .split(RECORD_SEP)
+    .map((record) => record.replace(/^\n/, ''))
+    .filter((record) => record.length > 0)
+    .map((record) => {
+      const [hash = '', isoCommitTime = '', subject = '', body = ''] = record.split(FIELD_SEP)
+      return { hash, isoCommitTime, subject, body }
+    })
 }

@@ -92,9 +92,14 @@ has it). `pnpm exec tsx scripts/merged-since.ts <friction session's startedAt>` 
 `origin/main` commit landed after that instant (UTC-normalized, newest-first,
 `isMerge`-flagged) — scan it for the fixing commit/PR to turn the
 already-fixed/regression join into a direct comparison instead of manual
-git-timestamp archaeology. Classify each into one branch:
+git-timestamp archaeology. **Before landing on "Never fixed," search the tracker
+for the friction's exact tool name and exact error-message string** (not a
+paraphrase or a topic-level guess) — a loosely-worded search can miss an issue or
+PR that already covers it, and re-recommending a fix for something already closed
+wastes a dispatch. Classify each into one branch:
 
-- **Never fixed** — no issue/PR addresses it. Carries on to step 3.
+- **Never fixed** — no issue/PR addresses it, confirmed by the exact-string
+  search above. Carries on to step 3.
 - **Fixed, and not logged since the fix merged** — drop it (cite the issue/PR).
   Done is done; spending a PR here is duplicate work.
 - **Open already** — an **open** issue or **open** PR already tracks it (cite the
@@ -216,7 +221,10 @@ review-agent, not a bystander waiting for a human. For each PR:
    a genuinely-reviewed one must be distinguishable on the PR, so leave a written
    record of what you checked and what you concluded even when you change nothing.
 3. **Decide, and act:**
-   - **Merge right away** when the review is clean and the change is low-risk.
+   - **Merge right away** when the review is clean and the change is low-risk —
+     follow `docs/agents/pr-workflow.md`'s recipe (poll for green, then
+     `merge_pull_request` directly; this tier merges only by your own
+     judgement call, never via `enable_pr_auto_merge`).
    - **Amend then merge** when the only gaps are small — push the fixup yourself,
      re-run the gate, then merge. If your amendment **fundamentally changes** what
      the PR does, update the PR title/description in the same push (the CLAUDE.md

@@ -241,7 +241,7 @@ already spent in the A5 outside-read, so the merge decision is safely delegated 
 the objective gate:
 
 - **Subscribe to the PR's activity right after opening it** (CLAUDE.md's
-  "Pushing is not landing" rule) and follow CLAUDE.md's
+  "Pushing is not landing" rule) and follow `docs/agents/pr-workflow.md`'s
   `enable_pr_auto_merge`-vs-`merge_pull_request` guidance to land it once the
   gate reports green.
 - A **red gate is never merged** — diagnose and fix on the branch (the green
@@ -277,19 +277,16 @@ voices quietly dominate. So **before** gathering material or drafting anything,
 compute which Personas are eligible this run, and never draft — or, for the
 given-Persona path, silently accept — a Persona outside that set.
 
-**Compute it** from the published post history (one cheap scan of frontmatter —
-no need for A1's full material read). List every post across all three Personas'
-`pages/` (skip each `index.md` — it has no `publishedAt`), newest first by
-`publishedAt`:
+**Compute it** by running:
 
 ```bash
-for f in layers/blog/content/*/pages/*.md; do
-  case "$f" in */index.md) continue ;; esac
-  ts=$(grep -m1 '^publishedAt:' "$f" | sed 's/publishedAt:[[:space:]]*//')
-  who=$(printf '%s' "$f" | sed -E 's#.*/content/([^/]+)/.*#\1#')
-  printf '%s  %s\n' "$ts" "$who"
-done | sort -r | head
+pnpm exec tsx scripts/blog-rotation.ts
 ```
+
+`scripts/blog-rotation.ts` implements the rules below verbatim — it scans every
+post across all three Personas' `pages/` (skipping each `index.md`, which has
+no `publishedAt`), and prints `{ last, starved, eligible }` directly, no manual
+frontmatter scan needed.
 
 From that ordering read two things:
 
