@@ -277,19 +277,16 @@ voices quietly dominate. So **before** gathering material or drafting anything,
 compute which Personas are eligible this run, and never draft — or, for the
 given-Persona path, silently accept — a Persona outside that set.
 
-**Compute it** from the published post history (one cheap scan of frontmatter —
-no need for A1's full material read). List every post across all three Personas'
-`pages/` (skip each `index.md` — it has no `publishedAt`), newest first by
-`publishedAt`:
+**Compute it** by running:
 
 ```bash
-for f in layers/blog/content/*/pages/*.md; do
-  case "$f" in */index.md) continue ;; esac
-  ts=$(grep -m1 '^publishedAt:' "$f" | sed 's/publishedAt:[[:space:]]*//')
-  who=$(printf '%s' "$f" | sed -E 's#.*/content/([^/]+)/.*#\1#')
-  printf '%s  %s\n' "$ts" "$who"
-done | sort -r | head
+pnpm exec tsx scripts/blog-rotation.ts
 ```
+
+`scripts/blog-rotation.ts` implements the rules below verbatim — it scans every
+post across all three Personas' `pages/` (skipping each `index.md`, which has
+no `publishedAt`), and prints `{ last, starved, eligible }` directly, no manual
+frontmatter scan needed.
 
 From that ordering read two things:
 
