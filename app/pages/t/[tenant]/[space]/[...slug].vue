@@ -8,7 +8,9 @@ const route = useRoute()
 const tenant = String(route.params.tenant)
 const { space, path, atRoot, pagesKey, collections } = useSpace(tenant)
 
-const { data } = await useAsyncData(route.path, async () => {
+// `status`/`error` let a failed client-side content load raise the
+// ContentLoadErrorDialog rather than a silent "Not found" (issue #236).
+const { data, status, error } = await useAsyncData(route.path, async () => {
   const page = await queryCollection(pagesKey).path(path).first()
   const sections = atRoot
     ? await Promise.all(
@@ -46,6 +48,10 @@ function fields(item: object): [string, unknown][] {
       <h1>Not found</h1>
       <p>No document at <code>{{ path }}</code> in {{ tenant }}/{{ space }}.</p>
     </div>
+
+    <!-- A failed client-side content load raises a modal (message / technical
+         details / reload) instead of a silent "Not found" (issue #236). -->
+    <ContentLoadErrorDialog :status="status" :error="error" :context="route.path" />
 
     <section v-for="c in data?.collections" :key="c.name" style="margin-top: 2rem;">
       <h2 style="text-transform: capitalize;">{{ c.name }}</h2>

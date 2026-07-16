@@ -3,15 +3,15 @@
 // standalone `*.spec.ts` (a second spec re-runs `setup()` → another full build;
 // ADR-0004 amendment, tests/README.md).
 //
-// The one assertion here is a regression guard for the "component renders empty
-// on link navigation, permanently, until a reload" bug. @nuxt/content answers
-// client-side queries from a WASM SQLite DB whose per-collection dump is fetched
-// lazily on first query; a transient failure of that dump fetch used to reject
-// and POISON the collection's cached load promise, so the About section stayed
-// blank for the life of the page. The fix (a committed pnpm patch of
-// @nuxt/content) retries the dump fetch to ride out a blip and evicts the
-// promise on failure so a later query can recover. This test injects exactly
-// that blip and asserts the content still arrives without a reload.
+// The failure-mode assertions here guard the "component renders empty on link
+// navigation, permanently, until a reload" bug (issue #236). @nuxt/content
+// answers client-side queries from a WASM SQLite DB whose per-collection dump is
+// fetched lazily on first query; a failed load poisons that collection for the
+// life of the page. We do NOT patch the dependency (ADR-0019 amendment,
+// 2026-07-16) — instead the Space pages surface the failure as a modal
+// (ContentLoadErrorDialog) that a reload recovers from, since the reloaded page
+// renders from the server DB. These tests inject a failed dump load on a client
+// navigation and assert the dialog shows and a reload restores the content.
 import { describe, expect, it } from 'vitest'
 import { createPage, url } from '@nuxt/test-utils/e2e'
 import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
@@ -39,34 +39,69 @@ export function registerBlogE2E(): void {
       await expectCleanHydration('/t/blog?tag=governance')
     })
 
-    it('recovers content after a transient dump-fetch blip on client navigation', async () => {
+    // A failed client-side content-DB load must never present as a silent,
+    // permanent blank (issue #236). With no dependency patch, @nuxt/content's
+    // stock client DB poisons its own module state on a failed load — so the
+    // guarantee is: the failure raises the ContentLoadErrorDialog (never a
+    // silent empty), and a full reload recovers the content (the reloaded page
+    // renders the About from the SERVER DB during SSR, never touching the
+    // poisoned client WASM DB). Two funnels, same surface + same recovery.
+
+    it('shows the error dialog and recovers on reload after a dump-fetch blip', async () => {
       const page = await createPage()
       try {
-        // Fail the first two requests for David's pages dump — enough to beat
-        // $fetch's single built-in retry, which is precisely what used to poison
-        // the client DB permanently. Allow everything after.
-        let seen = 0
-        await page.route('**/blog_david_pages/sql_dump.txt*', async (route) => {
-          seen += 1
-          if (seen <= 2) return route.abort('failed')
-          return route.continue()
-        })
+        // Fail every request for David's pages dump — a client navigation whose
+        // lazy dump fetch never lands. Stock @nuxt/content caches the rejected
+        // load and the collection can't load again for the life of the page.
+        await page.route('**/blog_david_pages/sql_dump.txt*', (route) => route.abort('failed'))
 
         // Land on a sibling Persona (SSR), then follow the in-page link to David
-        // — a client-side navigation, which is the only path that hits the client
-        // WASM query (a reload would render via the server DB and mask the bug).
+        // — a client-side navigation, the only path that hits the client WASM
+        // query (an initial load / reload renders via the server DB).
         await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
         await page.locator('.net-links a', { hasText: 'David' }).click()
         await page.waitForFunction(() => location.pathname.endsWith('/t/blog/david'))
 
-        // The About must arrive on its own — no reload. Pre-fix it stayed empty
-        // forever; the patched retry re-fetches the dump and fills it within ~1s.
+        // The failure is surfaced as a modal — never a silent blank.
+        const dialog = page.locator('dialog.cle-dialog[open]')
+        await expect.poll(async () => dialog.isVisible().catch(() => false), { timeout: 8000 }).toBe(true)
+        expect(await dialog.locator('.cle-title').textContent()).toContain('Something went wrong')
+
+        // Reloading renders the About from the server DB — the reliable recovery.
+        await dialog.getByText('Reload page').click()
         const about = page.locator('.about-prose')
         await expect
           .poll(async () => (await about.textContent().catch(() => '') ?? '').trim().slice(0, 9), {
-            timeout: 8000,
+            timeout: 12000,
           })
           .toBe("I'm David")
+      } finally {
+        await page.close()
+      }
+    })
+
+    it('shows technical details in the dialog after a corrupt dump', async () => {
+      const page = await createPage()
+      try {
+        // A 200 whose body is not a valid gzip dump (a proxy/portal serving
+        // non-gzip content, a truncated CDN body) — $fetch does not retry a 200,
+        // decompression throws. The dialog must still surface the real cause.
+        await page.route('**/blog_david_pages/sql_dump.txt*', (route) =>
+          route.fulfill({ status: 200, contentType: 'text/plain', body: 'not-a-valid-gzip-dump' }),
+        )
+
+        await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
+        await page.locator('.net-links a', { hasText: 'David' }).click()
+        await page.waitForFunction(() => location.pathname.endsWith('/t/blog/david'))
+
+        const dialog = page.locator('dialog.cle-dialog[open]')
+        await expect.poll(async () => dialog.isVisible().catch(() => false), { timeout: 8000 }).toBe(true)
+
+        // The technical-detail disclosure carries a non-empty diagnostic — the
+        // decompress failure funnel writes no __content_db_errors entry, so this
+        // proves the dialog reads the useAsyncData error object directly.
+        await dialog.locator('.cle-details summary').click()
+        expect((await dialog.locator('.cle-pre').textContent())?.trim().length).toBeGreaterThan(0)
       } finally {
         await page.close()
       }
