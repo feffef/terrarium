@@ -2,9 +2,13 @@
 
 Date: 2026-07-08 (decision made); documented retroactively 2026-07-11
 
-Status: Accepted — retroactive record. The patch has been live on `main` since
-commit `12a9564` (2026-07-08); this ADR was written after the fact once a
-review found the decision met the 3-part test but had no ADR.
+Status: **Superseded (2026-07-16, issue #236)** — the patch was removed in favour
+of an app-level surface (see the Amendment at the end). Originally Accepted as a
+retroactive record: the patch had been live on `main` since commit `12a9564`
+(2026-07-08); this ADR was written after the fact once a review found the
+decision met the 3-part test but had no ADR. The Context/Decision/Consequences
+below describe the patch as it stood while live; the Amendment records why it was
+dropped.
 
 ## Context
 
@@ -105,3 +109,42 @@ fills; it fails on an unpatched build and passes patched.
   dependency's runtime behavior this way is exactly the kind of change that
   stays human-only to merge even though the touched paths (`patches/`,
   `pnpm-workspace.yaml`) aren't on ADR-0004's named high-risk file list.
+
+## Amendment (2026-07-16, issue #236): the patch was removed
+
+The owner reported (2026-07-14) that user-visible empties **still recurred** with
+the patch live, and asked to drop the dependency patch rather than carry it. On
+re-diagnosis the patch was found to close only the funnels where the client load
+promise *rejects*; funnels where the load **resolves broken** (per-command
+`db.exec` errors swallowed → collection marked "loaded" over an empty table) or
+where a corrupt dump is cached to `localStorage` before validation survive it.
+More to the point, the patch is the fragile, version-pinned `dist` fork this
+ADR's own Consequences flag as a standing cost.
+
+**Decision reversed.** The `pnpm patch` (`patches/@nuxt__content@3.15.0.patch`)
+and its `pnpm-workspace.yaml` `patchedDependencies` wiring were deleted; stock
+`@nuxt/content@3.15.0` is restored. The upstream poison (a rejected/failed
+client load stays un-recoverable for the life of the page) is therefore **back**
+— but it can no longer present as a *silent* permanent blank. It is mitigated at
+the application layer instead:
+
+- The three Space pages read `useAsyncData`'s `status`/`error` and, on failure,
+  raise **`ContentLoadErrorDialog`** (`app/components/`) — a modal stating the
+  content couldn't load, a disclosure with the technical detail, and a **Reload
+  page** action.
+- Reload is the deliberate (and only reliable) recovery: `@nuxt/content` poisons
+  its own module-level client-DB state on a failed load and app code cannot
+  reach in to clear it, so a fresh page — which renders from the **server** DB
+  during SSR, not the client WASM DB — is what recovers the content. A full
+  reload universally recovers every funnel; an in-page retry cannot.
+
+**Trade-off accepted.** A brief transient dump-fetch blip that the patch used to
+self-heal invisibly (`retry: 4` + `finally`-evict) now surfaces the modal and
+needs a manual reload. This was accepted to shed the version-fragile dependency
+fork; the app-level surface is durable across `@nuxt/content` upgrades and makes
+every failure visible and recoverable regardless of trigger. The `__content_db_errors`
+telemetry the patch added is gone too — the modal's technical-details disclosure
+surfaces the underlying error directly instead. If an invisible self-heal is
+wanted back later, it belongs upstream (or in a fresh, re-validated patch), not
+in this reverted one. This amendment is governance/dependency-runtime behaviour,
+so it stays human-only to merge (ADR-0004).

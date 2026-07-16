@@ -1,6 +1,13 @@
 // Repro harness for issue #236: "components occasionally render empty until
 // reload (client content-DB load)".
 //
+// NOTE (2026-07-16): the @nuxt/content patch this harness A/B-tested was removed
+// (ADR-0019 amendment) — `patches/@nuxt__content@3.15.0.patch` no longer exists,
+// so the reverse-apply build steps below are historical. A plain `pnpm build` is
+// now the STOCK build, against which this harness still reproduces the underlying
+// poison (RED). The app-level mitigation (ContentLoadErrorDialog + reload) is not
+// what this server-restart harness exercises; the e2e in blog.e2e.ts covers it.
+//
 // Reproduces the bug with a GENUINE trigger — no request mocking, no injected
 // aborts: a real production server is stopped and restarted (exactly what a
 // rolling deploy / container replace does) while a real browser tab performs a
