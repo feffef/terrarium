@@ -161,6 +161,11 @@ export default defineTenant({
           gitBranch: z.string().optional(),
           entrypoint: z.string().optional(),
           cliVersion: z.string().optional(),
+          // A human-legible identifier for what fired a Routine-triggered session —
+          // the slash command it expanded, or its first turn's first line. Derived
+          // by session-trace.ts's extractTrace ONLY when entrypoint is
+          // 'remote_trigger' (issue #449 Gap 1); absent for every other session.
+          trigger: z.string().optional(),
           // List EVERY friction — not just one or two — including anything that
           // felt unnecessarily complex or token-heavy. No `tag` yet: the
           // taxonomy is meant to emerge from clustering, once there is data.
@@ -179,6 +184,12 @@ export default defineTenant({
           // policy — no version bump.
           learnings: z.array(z.string()).optional(),
           ideas: z.array(z.string()).optional(),
+          // Field names this log's own back-catalog sweep (issue #449 Gap 5)
+          // suspects were silently truncated by the pre-#367 unquoted-`#` bug, but
+          // couldn't repair with confidence (the intended text is genuinely
+          // ambiguous — e.g. which of several `prs` a bare word referred to).
+          // Absent on every log the sweep didn't flag, including every repaired one.
+          historicallyTruncated: z.array(z.string()).optional(),
         })
         .strict(),
     },

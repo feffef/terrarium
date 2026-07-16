@@ -4,7 +4,7 @@ endedAt: 2026-07-05T06:50:00Z
 kind: interactive
 goal: Implement open issue #7
 status: completed
-outcome: Fix landed via PR #8, merged
+outcome: "Fix landed via PR #8, merged"
 summary: >-
   Implemented the sole open issue, #7: the log-session helper committed session
   logs directly to main via a throwaway index (ADR-0009) but left the authored

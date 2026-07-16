@@ -4,7 +4,7 @@ endedAt: 2026-07-05T14:10:00Z
 kind: interactive
 goal: Style standalone journal Document pages
 status: completed
-outcome: PR #26 merged; pages themed
+outcome: "PR #26 merged; pages themed"
 summary: >-
   Implemented issue #25. Added a journal-layer override at
   `[space]/[...slug].vue` that out-ranks the Platform catch-all for journal

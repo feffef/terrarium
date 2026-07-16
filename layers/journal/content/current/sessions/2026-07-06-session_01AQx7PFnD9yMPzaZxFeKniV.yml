@@ -5,7 +5,7 @@ endedAt:   2026-07-06T18:26:29Z   # exact — read from `date -u`
 kind: interactive
 goal: Refine and build the audit-skills auditor
 status: completed
-outcome: PR #140 merged; audit-skills live
+outcome: "PR #140 merged; audit-skills live"
 summary: >-
   Ran a grill-with-docs session to refine issue #136 (`skill-vitals`) into
   `audit-skills` — a `sync`-family Skill that tunes the Skill Inventory from the

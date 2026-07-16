@@ -105,6 +105,10 @@ export interface WindowSession {
    *  SKILL.md). Scanned only over `description`, never `solution`/summary text,
    *  so a session that merely *discusses* the keyword doesn't false-positive. */
   humanPromptedClosure: boolean
+  /** The mechanical `entrypoint` trace field (e.g. `remote_trigger`), '' when
+   *  absent — the strong derived signal `findMisclassifiedKind` cross-checks
+   *  the authored `kind` against (issue #449 Gap 2). */
+  entrypoint: string
 }
 /** A Skill's on-disk facts: it exists, and its SKILL.md frontmatter `description`. */
 export interface OnDiskSkill {
@@ -191,6 +195,16 @@ export interface ManuallyRescuedClosure {
   lastWorkCommit: string
   gapHours: number
 }
+/** A session whose authored `kind` contradicts a strong derived signal — today
+ *  just `entrypoint: 'remote_trigger'` implying `kind: autonomous` (issue #449
+ *  Gap 2). A reporting/flagging finding, not an auto-correction. */
+export interface MisclassifiedKind {
+  session: string
+  kind: string
+  entrypoint: string
+  endedAt: string
+}
+
 export interface Scorecard {
   windowSize: number
   sessionsConsidered: number
@@ -201,6 +215,9 @@ export interface Scorecard {
   orphanedSessions: OrphanedSession[]
   /** Sessions whose own log flagged a human-prompted closure (keyword grep). */
   humanPromptedClosures: HumanPromptedClosure[]
+  /** Sessions whose authored `kind` contradicts the `remote_trigger` derived
+   *  signal (issue #449 Gap 2). */
+  misclassifiedKind: MisclassifiedKind[]
   /** Sessions whose closure landed >`RESCUED_GAP_HOURS` after their last work
    *  commit — a manual rescue detectable from timing alone (see the interface). */
   manuallyRescuedClosures: ManuallyRescuedClosure[]
@@ -517,6 +534,19 @@ export function findManuallyRescuedClosures(
   return out.sort((a, b) => b.gapHours - a.gapHours || a.session.localeCompare(b.session))
 }
 
+/** Sessions whose authored `kind` contradicts the `entrypoint: 'remote_trigger'`
+ *  derived signal — a Routine-fired run implies `autonomous` per CONTEXT.md's
+ *  Session definitions (issue #449 Gap 2). Anchored only on sessions that
+ *  actually carry `remote_trigger`, so a legitimately interactive session that
+ *  merely lacks the field never false-positives. Sorted oldest-first, matching
+ *  `findOrphanedSessions`'s triage order. */
+export function findMisclassifiedKind(sessions: WindowSession[]): MisclassifiedKind[] {
+  return sessions
+    .filter((s) => s.entrypoint === 'remote_trigger' && s.kind !== 'autonomous')
+    .map((s) => ({ session: s.session, kind: s.kind, entrypoint: s.entrypoint, endedAt: s.endedAt }))
+    .sort((a, b) => a.endedAt.localeCompare(b.endedAt) || a.session.localeCompare(b.session))
+}
+
 // ── FS IO (thin shell) ────────────────────────────────────────────────────────
 
 /** Reads every session log with its source file path attached (`SessionFile`). */
@@ -546,6 +576,7 @@ function readSessionFiles(cwd = root): SessionFile[] {
         humanPromptedClosure: hasHumanPromptedClosure(
           frictions.map((fr: Record<string, unknown>) => String(fr.description ?? '')),
         ),
+        entrypoint: String(raw.entrypoint ?? ''),
       },
       file: `${SESSIONS_DIR}/${f}`,
     })
@@ -680,6 +711,7 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
     orphanedSessions,
     humanPromptedClosures: findHumanPromptedClosures(all),
     manuallyRescuedClosures: findManuallyRescuedClosures(trailers, all),
+    misclassifiedKind: findMisclassifiedKind(all),
     skillSessionFiles: buildSkillSessionFiles(files),
     skillSessionFileTotals: buildSkillSessionFileTotals(files),
   }

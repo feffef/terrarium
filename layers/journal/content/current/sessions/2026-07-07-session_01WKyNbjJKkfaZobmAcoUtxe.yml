@@ -5,7 +5,7 @@ endedAt: 2026-07-07T17:40:25Z
 kind: interactive
 goal: Add reusable session-frictions triage extractor
 status: completed
-outcome: PR
+outcome: "PR #203 merged"
 summary: "The frictions-to-fixes Skill's survey step relied on a subagent re-improvising an on-the-fly tsx parser each run to pull triage-essential fields out of session logs. Built scripts/session-frictions.ts (following the digest.ts/audit-skills.ts pure-core-plus-thin-IO-shell pattern), unit-tested it, and pointed the Skill at it instead of describing an ad-hoc parser. Every record carries the session id and source file path so a candidate can be traced back to the full log later. After review feedback, trimmed the SKILL.md bullet down to just \"what to run\" (removed the restated sort/parse mechanics now owned by the script's own comments), and dropped the kind/status fields from the extractor's output since neither is referenced by the triage logic (grouping/ranking is by severity+recurrence, screening is by PR/issue citation). Gate stayed green throughout; PR #203 merged."
 prs:
   - "203"

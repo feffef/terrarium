@@ -4,7 +4,7 @@ endedAt: 2026-07-05T09:38:21Z     # exact — read from `date -u`
 kind: interactive
 goal: Improve code and process quality
 status: completed
-outcome: Test/doc quality PR #22 merged
+outcome: "Test/doc quality PR #22 merged"
 summary: >-
   Reviewed the full history and HEAD (all merged, no open issues/PRs) and found the
   quality imbalance: docs, process, and the generator were well-covered while the two

@@ -173,6 +173,32 @@ export function writeScratch(authored: AuthoredScratch, scratchAbs: string): voi
   writeFileSync(scratchAbs, JSON.stringify(authored, null, 2))
 }
 
+/** True when `cwd` sits inside a LINKED git worktree — a checkout created by
+ *  `git worktree add`, distinct from the repo's main/primary working tree — used
+ *  to mechanically reinforce the "orchestrator is the sole log author" rule
+ *  (issue #449 Gap 4): a dispatched worktree-isolated subagent shares the
+ *  orchestrator's session id and this script's shared scratch path, so its own
+ *  `--author` invocation would silently clobber the orchestrator's log (the
+ *  incident that motivated this: two parallel impl agents in session
+ *  session_01DN8mXooaRUA3NGWkyHKWwT, 2026-07-08). `git rev-parse --git-dir`
+ *  resolves to `<main-repo>/.git/worktrees/<name>` inside a linked worktree,
+ *  while `--git-common-dir` still resolves to the one shared `<main-repo>/.git`
+ *  — the two diverge only there, giving a purely mechanical signal that needs
+ *  no cooperation from the calling agent. Fails open (false) on any git error
+ *  (not a repo, git unavailable) — never blocks authoring over an unrelated
+ *  problem. This can't tell a dispatched subagent's worktree apart from the
+ *  orchestrator's own EnterWorktree-based single-session worktree (mechanism 1,
+ *  CLAUDE.md) — that legitimate, non-concurrent case must pass `--allow-worktree`. */
+export function isLinkedWorktree(cwd: string): boolean {
+  try {
+    const gitDir = execFileSync('git', ['rev-parse', '--git-dir'], { cwd, encoding: 'utf8' }).trim()
+    const commonDir = execFileSync('git', ['rev-parse', '--git-common-dir'], { cwd, encoding: 'utf8' }).trim()
+    return resolve(cwd, gitDir) !== resolve(cwd, commonDir)
+  } catch {
+    return false
+  }
+}
+
 /** Run git. `cwd` defaults to the project root; it is injectable so the push loop can
  *  be exercised end-to-end against a throwaway repo + bare remote in tests. */
 function git(args: string[], opts?: { env?: NodeJS.ProcessEnv; cwd?: string }): string {
@@ -366,10 +392,23 @@ function fail(msg: string): never {
  *  next `Stop` (with `SessionEnd`/resume only as fallbacks for whatever `Stop`
  *  misses, PR #148). */
 function authorMain(argv: string[]): void {
+  const allowWorktree = argv.includes('--allow-worktree')
   const positional = argv.filter((a) => !a.startsWith('--'))
   const [inputPath] = positional
   if (positional.length !== 1 || inputPath === undefined) {
     fail('--author expects exactly one argument: the path to the authored .yml')
+  }
+  // Guarded refusal, not a silent overwrite (issue #449 Gap 4) — see
+  // `isLinkedWorktree`'s doc comment for the mechanism and its one known blind spot.
+  if (!allowWorktree && isLinkedWorktree(process.cwd())) {
+    fail(
+      'refusing to author the session-log scratch from a linked git worktree: a dispatched worktree-isolated ' +
+        "subagent must not self-invoke close-session/log-session — it shares the orchestrator's session id and " +
+        "scratch path, and this invocation would silently clobber the orchestrator's own log (issue #449 Gap 4). " +
+        'The orchestrator is the sole log author; a dispatched impl agent just implements, pushes, and hands ' +
+        'back the PR. If this is instead a deliberate EnterWorktree-based single-session run, re-run with ' +
+        '--allow-worktree.',
+    )
   }
   const text = readFileSync(resolve(inputPath), 'utf8')
   const truncated = findTruncatedScalars(text)

@@ -64,6 +64,13 @@ export interface MechanicalTrace {
   gitBranch?: string
   entrypoint?: string
   cliVersion?: string
+  /** A human-legible identifier for what fired a Routine-triggered session — the
+   *  slash-command name if the first user turn expanded one, else that turn's
+   *  first line (issue #449 Gap 1). Populated ONLY for `entrypoint:
+   *  'remote_trigger'`; every other session omits it, including one that merely
+   *  lacks `remote_trigger`. See `deriveTrigger` for why this is prompt-derived
+   *  rather than a dedicated trigger-name/id field. */
+  trigger?: string
   startedAt?: string
   endedAt?: string
   durationSec?: number
@@ -121,6 +128,34 @@ export function commandSkillNames(content: unknown): string[] {
     }
   }
   return names
+}
+
+/** A human-legible identifier for what fired a Routine-triggered session (issue
+ *  #449 Gap 1). Data-availability check performed against a live transcript: the
+ *  `user` record's own metadata carries only `sessionId`/`cwd`/`gitBranch`/
+ *  `entrypoint`/`version`/`timestamp` — no separate trigger name/id field exists
+ *  anywhere in the transcript. "The Routine's own prompt lands as the session's
+ *  first user turn" (the same source `commandSkillNames` reads) is the only
+ *  available signal, so this derives the slash-command name when the first turn
+ *  expanded one (the common shape for every chartered Routine), else that turn's
+ *  own first line, capped so a long freeform prompt doesn't balloon the log.
+ *  Populated ONLY for `entrypoint: 'remote_trigger'` — every other session omits
+ *  the field, degrading cleanly rather than surfacing unrelated first-turn text. */
+export function deriveTrigger(
+  records: Record<string, unknown>[],
+  entrypoint: string | undefined,
+): string | undefined {
+  if (entrypoint !== 'remote_trigger') return undefined
+  const first = records.find((r) => r.type === 'user')
+  if (!first) return undefined
+  const msg = first.message as { content?: unknown } | undefined
+  const text = userText(msg?.content).join('\n').trim()
+  if (!text) return undefined
+  const [commandMatch] = [...text.matchAll(COMMAND_NAME_RE)]
+  const name = (commandMatch?.[1] ?? '').trim().replace(/^\//, '')
+  if (name) return name
+  const firstLine = (text.split('\n')[0] ?? '').trim()
+  return firstLine ? firstLine.slice(0, 200) : undefined
 }
 
 /** Second-precision UTC (`…:SSZ`) — the canonical form the `sessions` schema's
@@ -214,6 +249,7 @@ export function extractTrace(records: Record<string, unknown>[]): MechanicalTrac
     gitBranch: meta.gitBranch as string | undefined,
     entrypoint: meta.entrypoint as string | undefined,
     cliVersion: meta.version as string | undefined,
+    trigger: deriveTrigger(records, meta.entrypoint as string | undefined),
     startedAt: started !== undefined ? toUtcSeconds(started) : undefined,
     endedAt: ended !== undefined ? toUtcSeconds(ended) : undefined,
     durationSec: started !== undefined && ended !== undefined ? Math.round((ended - started) / 1000) : undefined,
@@ -316,6 +352,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   if (trace.gitBranch) entry.gitBranch = trace.gitBranch
   if (trace.entrypoint) entry.entrypoint = trace.entrypoint
   if (trace.cliVersion) entry.cliVersion = trace.cliVersion
+  if (trace.trigger) entry.trigger = trace.trigger
   // Optional authored fields — carried only when the session actually noted one,
   // never emitted empty (matching their `.optional()` schema, so a bare log has
   // no dangling `learnings: []`).

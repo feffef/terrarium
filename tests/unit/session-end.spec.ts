@@ -7,9 +7,17 @@ import { existsSync, readFileSync, rmSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { handle, isAlreadyLanded, scratchHashOf } from '../../scripts/session-end.ts'
-import { SESSIONS_DIR } from '../../scripts/log-session.ts'
-import { STAGING_DIR, type AuthoredScratch } from '../../scripts/session-trace.ts'
+import {
+  buildDroppedScratchScratch,
+  declaredClosure,
+  DROPPED_SCRATCH_FRICTION,
+  handle,
+  isAlreadyLanded,
+  recoverDroppedScratch,
+  scratchHashOf,
+} from '../../scripts/session-end.ts'
+import { SESSIONS_DIR, validateEntry } from '../../scripts/log-session.ts'
+import { extractTrace, parseTranscript, stitch, STAGING_DIR, type AuthoredScratch } from '../../scripts/session-trace.ts'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 
@@ -97,6 +105,82 @@ describe('handle() — lands from gitignored staging, never the tree (#148)', ()
     expect(res.action).toBe('skipped-unchanged')
     expect(landFn).not.toHaveBeenCalled()
     expect(existsSync(stagingAbs)).toBe(false)
+  })
+})
+
+describe('declaredClosure() / recoverDroppedScratch() — issue #449 Gap 3', () => {
+  const droppedSession = 'session_DROPPEDSCRATCH00000000'
+  const droppedStagingAbs = join(repoRoot, STAGING_DIR, `2026-07-06-${droppedSession}.yml`)
+  afterEach(() => rmSync(droppedStagingAbs, { force: true }))
+
+  // A transcript proving the session invoked log-session (closure declared),
+  // spanning two timestamps so the trace stitches to a schema-valid entry.
+  const closedTranscript = [
+    { type: 'user', sessionId: droppedSession, cwd: '/home/user/terrarium', gitBranch: 'main', entrypoint: 'remote_trigger', version: '2.1.0', timestamp: '2026-07-06T10:00:00Z', message: { content: 'go' } },
+    { type: 'assistant', timestamp: '2026-07-06T10:00:05Z', message: { model: 'claude-opus-4-8', content: [] } },
+    { type: 'assistant', timestamp: '2026-07-06T10:30:00Z', message: { model: 'claude-opus-4-8', content: [
+      { type: 'tool_use', name: 'Skill', input: { skill: 'log-session' } },
+    ] } },
+  ].map((r) => JSON.stringify(r)).join('\n')
+
+  // Same shape, but the session never reached its own closure declaration —
+  // the true #397 case, which must stay untouched by this recovery path.
+  const neverClosedTranscript = [
+    { type: 'user', sessionId: 'session_NEVERCLOSED0000000000', cwd: '/home/user/terrarium', timestamp: '2026-07-06T10:00:00Z', message: { content: 'go' } },
+    { type: 'assistant', timestamp: '2026-07-06T10:05:00Z', message: { model: 'claude-opus-4-8', content: [] } },
+  ].map((r) => JSON.stringify(r)).join('\n')
+
+  it('declaredClosure() is true only when the trace shows a log-session invocation', () => {
+    expect(declaredClosure(extractTrace(parseTranscript(closedTranscript)))).toBe(true)
+    expect(declaredClosure(extractTrace(parseTranscript(neverClosedTranscript)))).toBe(false)
+  })
+
+  it('buildDroppedScratchScratch() produces a clearly-flagged, schema-valid placeholder', () => {
+    const trace = extractTrace(parseTranscript(closedTranscript))
+    const scratch = buildDroppedScratchScratch(trace)
+    expect(scratch.status).toBe('abandoned')
+    expect(scratch.kind).toBe('autonomous') // remote_trigger ⇒ best-effort autonomous guess
+    expect(scratch.frictions).toEqual([
+      expect.objectContaining({ description: DROPPED_SCRATCH_FRICTION, severity: 'major' }),
+    ])
+    expect(validateEntry(stitch(scratch, trace)).ok).toBe(true)
+  })
+
+  it('lands a placeholder log when closure was declared but nothing exists at its path yet', () => {
+    const landFn = vi.fn().mockReturnValue('deadbeef0000')
+    const res = recoverDroppedScratch(closedTranscript, {
+      dryRun: false,
+      remote: 'origin',
+      landFn: landFn as unknown as typeof import('../../scripts/log-session.ts').land,
+      mainVersionFn: () => null,
+    })
+    expect(res.action).toBe('landed')
+    expect(res.relPath).toBe(`${SESSIONS_DIR}/2026-07-06-${droppedSession}.yml`)
+    expect(landFn).toHaveBeenCalledOnce()
+  })
+
+  it('does nothing for a session that never declared closure — the #397 case stays untouched', () => {
+    const landFn = vi.fn()
+    const res = recoverDroppedScratch(neverClosedTranscript, {
+      dryRun: false,
+      remote: 'origin',
+      landFn: landFn as unknown as typeof import('../../scripts/log-session.ts').land,
+      mainVersionFn: () => null,
+    })
+    expect(res.action).toBe('skipped-no-scratch')
+    expect(landFn).not.toHaveBeenCalled()
+  })
+
+  it('never overwrites a log (real or a prior placeholder) already at the expected path', () => {
+    const landFn = vi.fn()
+    const res = recoverDroppedScratch(closedTranscript, {
+      dryRun: false,
+      remote: 'origin',
+      landFn: landFn as unknown as typeof import('../../scripts/log-session.ts').land,
+      mainVersionFn: () => 'schemaVersion: 1\nsession: whatever\n', // something already lives there
+    })
+    expect(res.action).toBe('skipped-unchanged')
+    expect(landFn).not.toHaveBeenCalled()
   })
 })
 

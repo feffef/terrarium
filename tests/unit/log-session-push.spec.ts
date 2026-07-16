@@ -11,7 +11,7 @@ import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { buildLogCommit, pushWithRetry, SESSIONS_DIR } from '../../scripts/log-session.ts'
+import { buildLogCommit, isLinkedWorktree, pushWithRetry, SESSIONS_DIR } from '../../scripts/log-session.ts'
 
 /** git in a given repo, with a deterministic identity so commits are reproducible. */
 function git(cwd: string, args: string[]): string {
@@ -128,5 +128,28 @@ describe('pushWithRetry() / buildLogCommit() — against a throwaway bare remote
     git(work, ['fetch', 'origin', 'main'])
 
     expect(() => buildLogCommit(rel, abs, 'origin', work)).toThrow(/refusing to push/)
+  })
+
+  describe('isLinkedWorktree() — the worktree-subagent guard (issue #449 Gap 4)', () => {
+    it('is false for the main/primary checkout', () => {
+      expect(isLinkedWorktree(work)).toBe(false)
+    })
+
+    it('is true for a linked worktree created via `git worktree add`', () => {
+      const worktreePath = join(scratch, 'linked-worktree')
+      git(work, ['worktree', 'add', '-b', 'wt-branch', worktreePath])
+      expect(isLinkedWorktree(worktreePath)).toBe(true)
+      // ...and the main checkout is unaffected by the linked worktree existing.
+      expect(isLinkedWorktree(work)).toBe(false)
+    })
+
+    it('fails open (false) when cwd is not inside any git repo', () => {
+      const outside = mkdtempSync(join(tmpdir(), 'not-a-repo-'))
+      try {
+        expect(isLinkedWorktree(outside)).toBe(false)
+      } finally {
+        rmSync(outside, { recursive: true, force: true })
+      }
+    })
   })
 })
