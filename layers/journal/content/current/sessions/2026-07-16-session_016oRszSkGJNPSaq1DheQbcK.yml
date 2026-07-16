@@ -1,0 +1,59 @@
+schemaVersion: 1
+session: session_016oRszSkGJNPSaq1DheQbcK
+startedAt: 2026-07-16T11:06:33Z
+endedAt: 2026-07-16T11:22:39Z
+kind: autonomous
+goal: "Run /blog-post: write one Persona post"
+status: in-review
+outcome: "Kevin post opened (PR #513)"
+summary: "Scheduled autonomous /blog-post run, no persona pinned and no human prompt this session. Ran the full candidate process: computed the rotation gate (eligible = {david, kevin}; karen posted last and the prior four posts already covered all three Personas), drafted three independent scratch candidates spanning both eligible Personas (David on the morning's three-PR audit-docs self-correction chain ending in a human-only ADR-0022 amendment; Kevin on the new triage-drift detector, PR #509; Kevin on a near-miss wrong-agent-resume friction from the same frictions-to-fixes session), and had a fresh Sonnet subagent with no repo access judge all three from pasted text alone. It picked the drift-detector post for its bigger, more unsettling reveal (AI writing is indistinguishable from human writing except by whether the AI remembered to confess) over a resolved-by-luck near-miss or a process-worked-as-designed story, and flagged unglossed jargon to close before saving. Verified every link/SHA against git and the GitHub API. Ran pnpm gate:scoped green, pushed, opened PR #513, subscribed to its activity. Entirely agent-initiated; a mid-run github-webhook-activity message about the PR's own subscription is not a human prompt."
+prs:
+  - "513"
+docsRead:
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-don't for the David candidate
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice/do-don't for the two Kevin candidates and the winner
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum
+skillsUsed:
+  - name: blog-post
+    reason: the run itself
+  - name: close-session
+    reason: session closure front door
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: Ran `git checkout main -- .` right after fetching origin/main, without checking git status first, against a stale local `main` ref (diverged from origin/main) — staged a huge unwanted diff across most of the repo instead of leaving the current branch's actual state alone.
+    solution: Caught immediately via git status/diff before committing anything; reverted cleanly with `git restore --staged --worktree -- .` back to HEAD, which matched origin/main exactly (no prior uncommitted work existed to lose). Should have run `git status` before any checkout touching `.`, per CLAUDE.md's own git-safety-protocol rule — a rule I know and still skipped in the moment.
+    severity: major
+  - description: Wrote the ADR-0022 audit-docs session's id (session_01HwrGyUKyrhDprhXvfgfaVk, read earlier as research material for the blog post's own topic) into this session's own commit provenance footer, instead of this session's actual id — directly against CLAUDE.md's never-reconstruct-an-identifier rule, which specifically calls out session ids.
+    solution: Caught before push (still a local, unpushed commit) by cross-checking against the CLAUDE_CODE_REMOTE_SESSION_ID env var; amended the tip commit with the correct id before pushing or opening the PR. The mistake was easy to make here because the wrong id was sitting right there in context as the subject of the post being written — worth double-checking a session-id footer specifically whenever the session's own research touched a *different* session's id in the same turn.
+    severity: moderate
+durationSec: 967
+models:
+  claude-sonnet-5: 137
+toolCounts:
+  Bash: 34
+  ToolSearch: 4
+  mcp__github__pull_request_read: 7
+  mcp__github__issue_read: 2
+  Write: 5
+  Edit: 5
+  Read: 7
+  Agent: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__enable_pr_auto_merge: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-07-16-it-built-a-tool-to-catch-itself-lying.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-034nlt
+entrypoint: remote_trigger
+cliVersion: 2.1.211
