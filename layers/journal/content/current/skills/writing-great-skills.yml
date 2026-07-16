@@ -13,3 +13,11 @@ observations:
       40-session window) to judge whether to extract GitHub-ops docs into a
       Skill — recommending against, since the material was already
       single-homed reference — rather than to author or edit a Skill directly.
+  - date: 2026-07-16
+    note: >-
+      Prior citation aged out; used in 2 of this window's 40 sessions:
+      session_01NkLUMugs5s6QRRM8Wq7UUb (auto-triage's invocation-model/
+      leading-words design) and session_013JM1j1xdWw3XJx2bkdK3NB (invoked as a
+      slash command surveying session logs for doc-worthy learnings) — neither
+      authored/edited a Skill directly, still matching the "not yet a reliable
+      habit" role.

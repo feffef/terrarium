@@ -16,3 +16,9 @@ observations:
       session_01Rervdd (curated blog-tag system design). Prior window's cited
       examples (the schema-refinement session; the digest and audit-skills
       builds) have since aged out.
+  - date: 2026-07-16
+    note: >-
+      Prior citations aged out; used in 2 of this window's 40 sessions, both
+      via grill-with-docs: session_01B1PirL4vZnwR6VytVgfXut (Observability
+      naming design) and session_01RqxwHHqJFDNBDjeqYVsTSC (close-session/
+      log-session closure-model stress-test) — matches role.
