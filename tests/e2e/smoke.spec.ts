@@ -39,6 +39,7 @@ import { registerJournalE2E } from '../../layers/journal/tests/e2e/journal.e2e.t
 import { registerBlogE2E } from '../../layers/blog/tests/e2e/blog.e2e.ts'
 import { registerAtlasE2E } from '../../layers/atlas/tests/e2e/atlas.e2e.ts'
 import { registerCommitsE2E } from '../../layers/commits/tests/e2e/commits.e2e.ts'
+import { registerMiddenE2E } from '../../layers/midden/tests/e2e/midden.e2e.ts'
 
 const chromiumPath = findPreinstalledChromium() ?? findSystemChrome()
 
@@ -110,4 +111,5 @@ describe('L2 smoke render', async () => {
   registerBlogE2E()
   registerAtlasE2E()
   registerCommitsE2E()
+  registerMiddenE2E()
 })
