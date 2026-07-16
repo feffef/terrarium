@@ -8,9 +8,8 @@ stays generic and reinstallable (ADR-0005).*
 
 How the engineering skills should consume this repo's domain documentation when exploring the codebase.
 
-This repo is **multi-context** (ADR-0021), in a **shared-kernel** shape: a
-Platform context at the root plus one context per Tenant, co-located with that
-Tenant's code.
+This repo is multi-context, shared-kernel-shaped — see `CONTEXT-MAP.md` for the
+shape (ADR-0021).
 
 ## Before exploring, read these
 

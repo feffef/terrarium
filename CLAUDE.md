@@ -44,9 +44,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 ## Ground rules (from the ADRs)
 
 - One repo, one container, build-time-baked; nothing is created at runtime
-  (ADR-0001) — except the scoped PoC deploy container, which deliberately
-  relaxes that for the live `deploy/` runner only, never the application
-  model itself (ADR-0011).
+  (ADR-0001) — except two scoped relaxations, neither touching the application
+  model itself: the PoC deploy container, for the live `deploy/` runner only
+  (ADR-0011), and the Commits Tenant's own `server/api/latest-commit` endpoint,
+  a runtime git read scoped to that one PoC endpoint (`layers/commits/CONTEXT.md`).
 - Agents edit a Tenant's **manifest** (declarative intent); `content.config.ts`
   builds the keyed collections dynamically from the manifests at
   config-evaluation time (ADR-0002/0013). Don't hand-write the keyed cross-product.
@@ -105,13 +106,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   `skills`, digests, …) is surfaced by layer components, not its own slug
   route (ADR-0006). A new page-like addressable Collection is therefore not
   free — it means changing the human-only resolver/routing (ADR-0004/0006).
-- **Requester trust is drawn at write access (ADR-0020).** A **Trusted** user
-  (owner or write-access collaborator, indistinguishable) may direct work, give
-  the ADR-0003 green-light, and merge; a **Public** requester (read-only
-  visitor, e.g. a fork PR or an issue opener once the repo is public) cannot.
-  ADR-0020 is the single home for what follows from that split (the
-  implementation gate, the auto-merge bar, the autofix-loop escalation);
-  `docs/agents/issue-tracker.md` carries the `authorAssociation` mechanics.
+- **Requester trust is drawn at write access (ADR-0020).** See `CONTEXT.md`'s
+  **Trusted**/**Public** terms for what each may and may not do. ADR-0020 is the
+  single home for what follows from that split (the implementation gate, the
+  auto-merge bar, the autofix-loop escalation); `docs/agents/issue-tracker.md`
+  carries the `authorAssociation` mechanics.
 
 ## Working conventions
 
@@ -314,11 +313,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   configured"), and its "checks are failing" text can fire while a check is
   merely `in_progress`, not actually failing. If it errors, confirm the real
   check state via `pull_request_read` before concluding checks have genuinely
-  failed and abandoning the PR. **`main` currently carries no branch
-  protection or ruleset at all** (removed 2026-07-11 — see
-  `docs/research/github-branch-protection-vs-autonomous-log-commits.md`,
-  issue #348), so this "already green"/no-wait-condition case is the norm
-  right now, not the exception: default to polling `get_check_runs` yourself
+  failed and abandoning the PR. `main`'s current branch-protection state is
+  tracked in `docs/research/github-branch-protection-vs-autonomous-log-commits.md`
+  (issue #348) — check there before assuming the already-green,
+  no-wait-condition case is still the norm: default to polling `get_check_runs` yourself
   and calling `merge_pull_request` once green, rather than reaching for
   `enable_pr_auto_merge` first.
 - **Opening the PR is the first session log.** The moment you open the gated PR
