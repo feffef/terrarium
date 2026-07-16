@@ -1,0 +1,93 @@
+schemaVersion: 1
+session: session_017dzPLRmeEMHeMswznBR9N4
+startedAt: 2026-07-16T17:11:40Z
+endedAt: 2026-07-16T18:48:31Z
+kind: interactive
+goal: Implement the simplest ready-for-agent issue
+status: completed
+outcome: "Issue #448 fully implemented, merged as PR #529"
+summary: "Human asked which ready-for-agent issue was simplest; I surveyed the six open clusters and recommended #448. The human then directed implementing all of it, green-lit after a grilling pass, and steered one design change (declutter CLAUDE.md by moving the PR-landing recipe into the new doc). All net-new work was human-instructed. Delivered all four #448 parts: docs/agents/pr-workflow.md plus the CLAUDE.md move and 5 skill pointer re-homes; scripts/pr-timeline.ts and scripts/blog-rotation.ts with unit tests (TDD); the frictions-to-fixes exact-name screen. Implemented by a sonnet subagent, reviewed by two opus code-review subagents, three review fixes applied. CI green on both pushes; human-merged."
+prs:
+  - "529"
+docsRead:
+  - path: CLAUDE.md
+    reason: conventions + the PR-landing text moved out of it
+  - path: scripts/recent-prs.ts
+    reason: pure-core/thin-shell house style reused by pr-timeline
+  - path: scripts/merged-since.ts
+    reason: toUtcIso reuse + script conventions
+  - path: scripts/git-helpers.ts
+    reason: single-home for the shared merge-log reader
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: A0 rotation algorithm to implement verbatim
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: the §2 tracker screen to amend
+  - path: .agents/skills/digest/SKILL.md
+    reason: confirmed it has no equivalent friction screen
+skillsUsed:
+  - name: grilling
+    reason: stress-tested the plan; caught two brief mis-scopes before coding
+  - name: domain-modeling
+    reason: vocabulary grounding during grill-with-docs
+  - name: code-review
+    reason: two-axis opus review of the diff
+  - name: close-session
+    reason: closure front door
+  - name: log-session
+    reason: this log
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
+  - name: implement
+    reason: (invoked as a slash command)
+frictions:
+  - description: "Did not invoke close-session at PR-open for #529 (CLAUDE.md 'Opening the PR is the first session log'); went to code-review and only logged at merge."
+    solution: At the moment a gated PR is opened, invoke close-session before any follow-on review/fix work.
+    severity: major
+  - description: "AskUserQuestion + send_later hit 'permission stream closed before response received' 3x this session (one grilling question, two babysit check-ins) — the #451 intermittency."
+    solution: "Land the retry/backoff on the Claude-Code-Remote MCP permission surface tracked in #451; recover in-turn by re-asking in prose."
+    severity: major
+  - description: Dispatched sonnet fix-subagent stopped its turn mid-gate with all three fixes uncommitted, waiting on a background gate:scoped run — the known subagent-uncommitted hazard.
+    solution: "Subagent briefs must say: commit + push before stopping, even mid-gate; run the gate with run_in_background, not a shell background job you then wait on across turns."
+    severity: major
+  - description: Same fix-subagent ran a prohibited 'pkill -f gate.ts' once (on its own background process) despite CLAUDE.md's ban; self-reported and switched to PID waits.
+    solution: Restate the no-pkill / use-preview.ts-or-run_in_background rule inside dispatched-subagent briefs, not only in CLAUDE.md — subagents don't reliably internalize it.
+    severity: minor
+  - description: Grilling before building caught two wrong assumptions in the triage brief (merged_by undeliverable/unneeded; digest has no equivalent screen) before any code — a process win, not a problem.
+    solution: Keep grilling load-bearing multi-deliverable briefs before dispatch; it paid for itself here.
+    severity: nit
+durationSec: 5811
+models:
+  claude-opus-4-8: 162
+toolCounts:
+  ToolSearch: 5
+  mcp__github__list_issues: 1
+  mcp__github__issue_read: 2
+  Bash: 18
+  Skill: 4
+  Read: 7
+  AskUserQuestion: 3
+  Grep: 1
+  Agent: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  SendMessage: 2
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 2
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: "Implement issue #448"
+    model: sonnet
+  - type: general-purpose
+    task: "Standards review PR #529"
+    model: opus
+  - type: general-purpose
+    task: "Spec review PR #529"
+    model: opus
+gitBranch: claude/simplest-ready-for-agent-mlihg0
+entrypoint: remote_mobile
+cliVersion: 2.1.211
+learnings:
+  - GitHub Actions pull_request runs report the safety-gate green on the ephemeral refs/pull/N/merge SHA, not the branch tip — verify against the real head via get_check_runs before trusting a green-doorbell webhook.
+  - A standalone tsx script cannot reach GitHub MCP tools (they're the agent's, not a child process's); merged_by-style API fields are only obtainable via gh CLI, which this environment lacks.
