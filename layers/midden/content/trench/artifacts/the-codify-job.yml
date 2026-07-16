@@ -1,0 +1,20 @@
+title: the `codify` chartered job
+stratum: spike-ashfall
+condition: dissolved
+provenance:
+  kind: commit
+  hash: a1dc590
+  path: CONTEXT.md
+  url: https://github.com/feffef/terrarium/commit/a1dc590
+  continuityCheck: third of the speculative job-taxonomy, retired as a job-name;
+    unlike its twins it kept a faint outline — "codify" stays a good plain word
+    for turning a concept into code
+site: the-buried
+catalogNote: Last of the three speculative job-names, retired with the rest; it
+  wore away less completely than the others, kept as a plain word for turning a
+  concept into code but never again as a job.
+assessedAt: 2026-07-16
+inscription:
+  text: codify — same speculative taxonomy (a job that mints a new Skill). Avoid
+    it as a job-name.
+  source: CONTEXT.md, Retired terms

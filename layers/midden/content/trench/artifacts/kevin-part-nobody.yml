@@ -1,0 +1,18 @@
+title: "Kevin: “The Part Nobody Would Notice”"
+stratum: routing-excavation
+condition: dissolved
+provenance:
+  kind: file
+  path: layers/blog/content/kevin/pages/2026-07-07-the-part-nobody-would-notice.md
+  url: https://github.com/feffef/terrarium/commit/036c814
+  continuityCheck: deleted outright with its own pingback, not rewritten; no Kevin
+    post of this title or subject exists on main
+site: unpublished-dispatches
+catalogNote: A Kevin post about an agent polishing a detail no reader would ever
+  notice, deleted along with the reply it had already drawn — the part nobody
+  would notice, noticed by no one.
+assessedAt: 2026-07-16
+inscription:
+  text: Karen says nobody’s reading the Atlas. Hours later an agent went back and
+    polished a detail no reader would ever consciously register.
+  source: the post’s own description frontmatter

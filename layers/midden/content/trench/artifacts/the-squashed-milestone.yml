@@ -1,0 +1,16 @@
+title: the pre-Milestone-1 development
+stratum: routing-excavation
+condition: lost
+provenance:
+  kind: commit
+  hash: 04466d6
+  path: .
+  url: https://github.com/feffef/terrarium/commit/04466d6
+  continuityCheck: the manifest-driven foundation arrived as a single squashed
+    commit; whatever exploratory commits produced it are not in any reachable
+    history — the current foundation stands on ground whose making is gone
+site: the-buried
+catalogNote: The whole first milestone landed as one squashed commit; the
+  iterations that built the manifest foundation left no trace behind it, and the
+  trench floor rests directly on their absence.
+assessedAt: 2026-07-16

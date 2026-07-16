@@ -1,0 +1,21 @@
+title: scripts/check-docs-drift.ts
+stratum: current-midden
+condition: never-activated
+provenance:
+  kind: file
+  path: scripts/check-docs-drift.ts
+  url: https://github.com/feffef/terrarium/pull/477
+  continuityCheck: "introduced by PR #477 (closed unmerged); the file, its nine
+    passing unit tests and its `check:docs-drift` wiring are all absent from
+    main — #442 remains unimplemented"
+site: built-never-fired
+catalogNote: "A finished, tested docs-drift gate with a break-then-fix proof
+  against it, complete in every respect except the one that mattered: it was
+  never merged, and the check it performed has never run on the tree it was
+  built to guard."
+assessedAt: 2026-07-16
+inscription:
+  text: "Cheap docs-drift check (issue #442, split off #439’s audit-docs sweep): a
+    removed/renamed mechanism noun ... tends to keep being *mentioned* in prose
+    long after the mechanism it names has moved on"
+  source: "scripts/check-docs-drift.ts, header (PR #477)"

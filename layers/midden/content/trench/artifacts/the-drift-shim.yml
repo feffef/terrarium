@@ -1,0 +1,21 @@
+title: the gate:drift compat no-op
+stratum: routing-excavation
+condition: never-activated
+provenance:
+  kind: commit
+  hash: 9ecd4b5
+  path: package.json
+  url: https://github.com/feffef/terrarium/commit/9ecd4b5
+  continuityCheck: added purely as a placeholder to keep CI green without a
+    lockstep gate.yml edit (#90), removed once the L0 step went (#97); never did
+    anything either way
+site: built-never-fired
+catalogNote: A script built to do nothing — a no-op left in package.json so the
+  old CI step would not fail, holding the door until the step could be removed,
+  then removed itself.
+assessedAt: 2026-07-16
+inscription:
+  text: "ADR-0014: the routing map is generated at build time from the manifests;
+    there is no committed artifact to drift. Compat no-op until the L0 drift
+    step is removed from gate.yml (issue #97)."
+  source: package.json, gate:drift no-op

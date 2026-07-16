@@ -1,0 +1,17 @@
+title: the status-Tenant dashboard
+stratum: routing-excavation
+condition: lost
+provenance:
+  kind: commit
+  hash: 9d3e3bc
+  path: tenants/status/content/current/pages/index.md
+  url: https://github.com/feffef/terrarium/commit/9d3e3bc
+  continuityCheck: the Tenant was renamed status→journal and reconceived as a
+    narrative journal (ADR-0008); the name is Palimpsest, but the original
+    status-dashboard design it replaced was discarded, not carried forward — a
+    curator judgment call
+site: the-buried
+catalogNote: The self-documentation Tenant’s first form, a status dashboard,
+  thrown out on the same day it was made when the platform decided its record
+  should read as a journal instead.
+assessedAt: 2026-07-16

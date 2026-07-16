@@ -1,0 +1,20 @@
+title: the generated content.config.ts
+stratum: routing-excavation
+condition: dissolved
+provenance:
+  kind: commit
+  hash: 73bf3dc
+  path: content.config.ts
+  url: https://github.com/feffef/terrarium/commit/73bf3dc
+  continuityCheck: the filename lives on, but as a hand-editable dynamic module
+    (ADR-0013) — the generated artifact of the same name is gone; identity not
+    carried forward
+site: the-generated-map
+catalogNote: The config file that was once emitted and committed whole; the
+  filename outlived its generated body, which was rewritten by hand and is now
+  an ordinary module.
+assessedAt: 2026-07-16
+inscription:
+  text: ⚠️  GENERATED FILE — DO NOT EDIT. // Produced by scripts/generate.ts from
+    tenants/*/tenant.config.ts (ADR-0002).
+  source: content.config.ts, former header

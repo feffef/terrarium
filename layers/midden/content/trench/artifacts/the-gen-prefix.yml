@@ -1,0 +1,18 @@
+title: the `pnpm gen` build prefix
+stratum: routing-excavation
+condition: dissolved
+provenance:
+  kind: commit
+  hash: e75bda0
+  path: package.json
+  url: https://github.com/feffef/terrarium/commit/e75bda0
+  continuityCheck: every build/dev/typecheck script once began `pnpm gen &&`; that
+    prefix is gone from package.json and no `gen` script remains to call
+site: the-generated-map
+catalogNote: The little `pnpm gen &&` that opened every build, dev and typecheck
+  script, threaded through package.json until the step it invoked no longer
+  existed.
+assessedAt: 2026-07-16
+inscription:
+  text: '"build": "pnpm gen && nuxt build"'
+  source: package.json, former scripts block

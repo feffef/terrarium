@@ -1,0 +1,18 @@
+title: shared/routing.generated.ts
+stratum: routing-excavation
+condition: intact
+provenance:
+  kind: file
+  path: shared/routing.generated.ts
+  url: https://github.com/feffef/terrarium/commit/e75bda0
+  continuityCheck: "git log --follow: no committed successor — the routing map is
+    now derived in-memory as the #routing virtual module (ADR-0014), nothing is
+    regenerated to disk"
+site: the-generated-map
+catalogNote: The runtime routing map, committed to the tree and drift-checked on
+  every build, until the build learned to hold it in memory and the file on disk
+  had no more reason to exist.
+assessedAt: 2026-07-16
+inscription:
+  text: ⚠️  GENERATED FILE — DO NOT EDIT.
+  source: shared/routing.generated.ts, header line 1

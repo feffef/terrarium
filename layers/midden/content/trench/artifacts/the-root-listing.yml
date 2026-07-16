@@ -1,0 +1,19 @@
+title: the auto-generated tenant/space listing
+stratum: current-midden
+condition: fresh
+provenance:
+  kind: commit
+  hash: 5ebba8e
+  path: app/pages/index.vue
+  url: https://github.com/feffef/terrarium/commit/5ebba8e
+  continuityCheck: forty-two lines removed from the root index; the
+    machine-generated Tenant/Space directory was cut and nothing routed replaced
+    it
+site: toward-the-defaults
+catalogNote: A directory of every Tenant and Space the root page assembled for
+  itself, forty-two lines lifted out clean once the landing found a better thing
+  to be.
+assessedAt: 2026-07-16
+inscription:
+  text: Remove auto-generated tenant/space listing from root index
+  source: commit 5ebba8e, subject
