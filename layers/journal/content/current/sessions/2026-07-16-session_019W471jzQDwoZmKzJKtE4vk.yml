@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_019W471jzQDwoZmKzJKtE4vk
 startedAt: 2026-07-16T19:56:10Z
-endedAt: 2026-07-16T20:53:25Z
+endedAt: 2026-07-16T20:55:38Z
 kind: delegated
 goal: "Close 5 session-log mechanics gaps (issue #449)"
 status: completed
-outcome: "PR #531 merged"
-summary: "Kicked off with a single /implement #449 prompt (no further human steering during the work — one webhook comment and a CI-status check-in mid-session were machinery, not human prompts). Implemented all five gaps from the issue's Agent Brief: a transcript-derived `trigger` field for remote_trigger sessions (Gap 1); a `misclassifiedKind` audit check, verified against the real corpus where it caught two genuine pre-existing misclassifications (Gap 2); a `recoverDroppedScratch` recovery path landing a structurally-flagged placeholder log when a scratch is authored then lost (Gap 3); an `isLinkedWorktree` guard refusing to author from a linked git worktree unless `--allow-worktree` is passed (Gap 4); and a one-time back-catalog sweep repairing 15 exact + 3 corroborated-reconstruction truncated `outcome` fields and flagging 1 ambiguous case via a new `historicallyTruncated` field (Gap 5). Ran a self-driven two-axis code-review (Standards + Spec sub-agents) before opening the PR; it caught a real ADR-0009 violation (Gap 5 rewrites already-landed logs, which the ADR says is forbidden) fixed via a bounded ADR-0009 amendment, two duplicated-logic smells (fixed), a missing Gap 4 end-to-end test (added, including a genuine parallel-write simulation), and an under-scoped Gap 3 distinguishability concern (fixed with a new `droppedScratchRecovery` schema flag). All five gaps' schema additions are additive/optional per ADR-0009's evolution policy. Opened PR #531, subscribed to its activity; gate is green, awaiting human review/merge (an ordinary work PR, never self-merged per docs/agents/pr-workflow.md)."
+outcome: "PR #531 merged; #532 cleans up a mislabeled log"
+summary: "Kicked off with a single /implement #449 prompt (no further human steering during the work — one webhook comment, a CI-status check-in, and the merge-notification webhook were all machinery, not human prompts). Implemented all five gaps from the issue's Agent Brief: a transcript-derived `trigger` field for remote_trigger sessions (Gap 1); a `misclassifiedKind` audit check, verified against the real corpus where it caught two genuine pre-existing misclassifications (Gap 2); a `recoverDroppedScratch` recovery path landing a structurally-flagged placeholder log when a scratch is authored then lost (Gap 3); an `isLinkedWorktree` guard refusing to author from a linked git worktree unless `--allow-worktree` is passed (Gap 4); and a one-time back-catalog sweep repairing 15 exact + 3 corroborated-reconstruction truncated `outcome` fields and flagging 1 ambiguous case via a new `historicallyTruncated` field (Gap 5). Ran a self-driven two-axis code-review (Standards + Spec sub-agents) before opening the PR; it caught a real ADR-0009 violation (Gap 5 rewrites already-landed logs, which the ADR says is forbidden) fixed via a bounded ADR-0009 amendment, two duplicated-logic smells (fixed), a missing Gap 4 end-to-end test (added, including a genuine parallel-write simulation), and an under-scoped Gap 3 distinguishability concern (fixed with a new `droppedScratchRecovery` schema flag). All five gaps' schema additions are additive/optional per ADR-0009's evolution policy. Opened PR #531 and it merged. At closure, used the wrong id for this session's own log/commit footers (the transcript's internal raw-UUID `sessionId` instead of the canonical `session_01...` id — see frictions); this landed one session log under the wrong filename, corrected by re-landing under the right one and opening #532 to remove the stray duplicate."
 prs:
   - "531"
+  - "532"
 docsRead:
   - path: docs/adr/0009-session-logs-commit-directly-to-main.md
     reason: the append-only policy Gap 5 collided with
@@ -61,33 +62,33 @@ frictions:
   - description: Designed and implemented Gap 5's back-catalog rewrite (repairing 19 already-landed session logs) without first re-reading ADR-0009 in full, and only discovered the collision with its explicit "entries are never rewritten... rewriting history is forbidden by this ADR" clause when an independent Standards-axis review caught it after the fact.
     solution: CLAUDE.md already says "read docs/adr/ ... before any planning or structural work" — for a task whose issue text explicitly proposes rewriting historical content, that ADR read should happen BEFORE design, not be caught downstream by review. A sharper prompt would be treating "the issue's own acceptance criteria implies mutating committed content" as an explicit trigger to re-check the relevant ADR first.
     severity: major
-  - description: Briefly second-guessed the correct session id to use for the commit/log footer — a raw UUID from the live transcript's own sessionId field versus a session_01…-formatted string recalled from tool-description boilerplate — before confirming via a fresh check that only the raw-UUID transcript file actually exists on disk.
-    solution: The tool-description text's example session URL is apparently static/illustrative, not dynamically per-session — worth remembering that the transcript file itself (and its filename) is the authoritative source when the two disagree, per CLAUDE.md's own "resolve via a fresh tool call" rule.
-    severity: minor
+  - description: "At closure, resolved this session's own canonical id WRONG — used the live transcript's own `sessionId` metadata field (a raw UUID) for the git commit Claude-Session footers and the authored session log, when the actual canonical id (confirmed only afterward, via the GitHub App's own auto-appended PR-body footer) was the session_01…-format id from the system-prompt commit-message instructions. This landed one session log under the wrong filename/session field on main, and left two already-merged commits (PR #531) with an unfixable wrong Claude-Session URL in their footer — rewriting merged main history to fix it was correctly ruled out as worse than leaving it."
+    solution: "The log-session Skill already says to resolve the id from \"the commit-footer template\" specifically, not the transcript — but nothing actively warns that the transcript's own sessionId field can look equally plausible and disagree. Add an explicit cross-check step to log-session/close-session: when a live transcript is being read for other reasons anyway (as this session did), compare its sessionId against the id already used in this session's own prior commit footers *before* trusting either, and prefer whichever one a GitHub-side artifact (an auto-generated PR footer, a webhook payload) can independently confirm."
+    severity: major
   - description: The provenance footer did not auto-inject on the first `git commit -m` in this cloud session (a documented, known-possible gap per CLAUDE.md), requiring a manual amend to add it.
     solution: Already covered by CLAUDE.md's existing guidance to verify and amend when absent — no new fix needed, just another confirmed instance.
     severity: nit
-durationSec: 3435
+durationSec: 3568
 models:
-  claude-sonnet-5: 406
+  claude-sonnet-5: 429
 toolCounts:
   ToolSearch: 5
   mcp__github__issue_read: 2
-  Bash: 84
+  Bash: 91
   mcp__github__list_pull_requests: 1
-  Read: 34
+  Read: 35
   Grep: 9
   Glob: 2
   TaskCreate: 6
   TaskUpdate: 11
   Edit: 51
-  Write: 4
+  Write: 5
   Skill: 3
   Agent: 2
-  ScheduleWakeup: 2
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 3
+  ScheduleWakeup: 3
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 4
   mcp__Claude_Code_Remote__send_later: 1
 filesEdited:
   - scripts/session-trace.ts
@@ -111,5 +112,7 @@ subagents:
 gitBranch: claude/issue-449-59p6l2
 entrypoint: remote
 cliVersion: 2.1.211
+learnings:
+  - The GitHub App's own auto-appended PR-body footer ("_Generated by [Claude Code](https://claude.ai/code/session_01…)_") is a platform-verified, independent source for a session's canonical id — more trustworthy than either the transcript's own internal sessionId field or a recalled tool-description example, since the App backend stamps it server-side from the real session identity.
 ideas:
   - A harness-level marker (env var or similar) exposed to a dispatched Agent-tool subagent's own Bash calls, distinguishing "this invocation is a dispatched subagent, not the orchestrator", would close the one honest blind spot left in the new isLinkedWorktree guard in scripts/log-session.ts — it only catches a subagent that correctly cd's into its own worktree before authoring a session log, not one that forgets and runs from the shared root.
