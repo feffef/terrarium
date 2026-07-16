@@ -18,6 +18,14 @@
 // provenance link stops propagation so following it doesn't also toggle the
 // popover.
 //
+// The click/keyboard target is a dedicated `__toggle` button, layered BEHIND
+// the card's real content (not wrapping it) — nesting the provenance `<a>`
+// and the tooltip's own `<button>` inside an outer `role="button"` element is
+// invalid ARIA (code review, #515). The toggle button covers the whole card
+// (so it still catches any click that doesn't land on a genuinely interactive
+// descendant), while the provenance link and the condition tooltip sit above
+// it in z-order and stay independently clickable/tabbable.
+//
 // The `lost` gravestone variant (#523, unanimous): same card footprint as
 // every other grade (no list reflow) with a distinct headstone frame, and the
 // inscription slot structurally omitted regardless of the artifact's own
@@ -87,13 +95,15 @@ function onProvenanceClick(event: MouseEvent) {
     class="midden-artifact-card"
     :class="{ 'midden-artifact-card--lost': isLost }"
     :data-stratum="artifact.stratum"
-    role="button"
-    tabindex="0"
-    :aria-expanded="open"
-    @click="toggle"
-    @keydown.enter="toggle"
-    @keydown.space.prevent="toggle"
   >
+    <button
+      type="button"
+      class="midden-artifact-card__toggle"
+      :aria-expanded="open"
+      :aria-label="`${open ? 'Hide' : 'Show'} curator's rationale for ${artifact.title}`"
+      @click="toggle"
+    />
+
     <MiddenConditionPopover
       v-model:open="open"
       :catalog-note="artifact.catalogNote"
@@ -135,7 +145,30 @@ function onProvenanceClick(event: MouseEvent) {
   font: inherit;
   color: inherit;
 }
-.midden-artifact-card:focus-visible {
+
+/* The full-card click/keyboard target, layered BEHIND the real content (see
+   the script-block comment on nesting) — `inset: 0` on the `position:
+   relative` article above makes it cover exactly the card's own box.
+   `z-index: 1` (not 0/auto) is load-bearing: MiddenConditionPopover's own
+   root (`.midden-popover`, theme.css) is ALSO `position: relative`, which
+   would otherwise out-stack this button's plain content (title, condition
+   line) since it comes later in the DOM — z-index 1 puts the toggle above
+   that whole layer, and the two genuinely-interactive descendants (the
+   provenance link, the tooltip trigger) go one level above that in turn. */
+.midden-artifact-card__toggle {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  appearance: none;
+  cursor: pointer;
+}
+.midden-artifact-card__toggle:focus-visible {
   outline: 2px solid var(--midden-accent, #b4552d);
   outline-offset: 2px;
 }
@@ -154,6 +187,12 @@ function onProvenanceClick(event: MouseEvent) {
   margin: 0 0 0.4rem;
   flex-wrap: wrap;
 }
+/* MiddenConditionTooltip's own trigger button must stay clickable/tabbable
+   above the card's `__toggle` (see the script-block comment on nesting). */
+.midden-artifact-card :deep(.midden-tip) {
+  position: relative;
+  z-index: 2;
+}
 .midden-artifact-card__assessed {
   font-family: var(--midden-data);
   font-size: 0.74rem;
@@ -167,6 +206,8 @@ function onProvenanceClick(event: MouseEvent) {
   color: var(--midden-muted);
 }
 .midden-artifact-card__provenance a {
+  position: relative;
+  z-index: 2;
   color: var(--midden-muted);
   text-decoration: none;
   border-bottom: 1px solid var(--midden-rule);
