@@ -3,12 +3,9 @@
 // NOT a standalone `*.spec.ts` (a second spec re-runs `setup()` → another full
 // build; ADR-0004 amendment, tests/README.md).
 //
-// Content is sparse right now (issue #515's foundation story): only the
-// placeholder `trench/pages/index.md` exists — no real Sites/Artifacts yet
-// (a later story adds those), and the Tenant-root `/t/midden` foreword page
-// and the `trench` Space's own components are still being built by sibling
-// stories. Assertions here target ROUTES, not files on disk, so they start
-// passing on their own once those sibling stories land — mirroring
+// Content covers the real `trench` Space (7 catalogued Sites, 31 Artifacts)
+// plus the Tenant-root `/t/midden` foreword page (issue #515). Assertions
+// here target ROUTES, not files on disk — mirroring
 // `layers/atlas/tests/e2e/atlas.e2e.ts`'s no-context shape (a plain
 // `register…(): void`, not `journal.e2e.ts`'s `ctx`-taking variant): every
 // assertion below is self-contained via `$fetch`/`renderAndCollectErrors`, so

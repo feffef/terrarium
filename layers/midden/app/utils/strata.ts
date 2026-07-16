@@ -10,9 +10,6 @@
 // of the artifacts catalogued in `content/trench/` (#519). The Platform's own
 // history is only twelve days deep so far (first commit 2026-07-04), so these
 // strata are correspondingly thin — an honest young midden, not a deep one.
-// Only the exported shape (`DigSeason`, `DIG_SEASONS`, `digSeasonOf`,
-// `DIG_SEASON_SLUGS`) is the contract; the content-authoring pass replaced this
-// array's contents in place, preserving the shape exactly.
 export interface DigSeason {
   /** URL-safe identifier — the value an `artifacts` Document's `stratum` field references. */
   slug: string
@@ -68,8 +65,8 @@ export const DIG_SEASONS: DigSeason[] = [
 ]
 
 /** Dig-season slugs in the same oldest-first order as `DIG_SEASONS` — the
- * ordering helper the sidebar (bottom-to-top render) and the legend
- * (top-to-bottom render) both derive their own direction from. */
+ * canonical membership set `scripts/validate-content-refs.ts`'s `stratum`
+ * reference check validates each Artifact's `stratum` value against. */
 export const DIG_SEASON_SLUGS: string[] = DIG_SEASONS.map((s) => s.slug)
 
 const BY_SLUG: Record<string, DigSeason> = Object.fromEntries(DIG_SEASONS.map((s) => [s.slug, s]))
