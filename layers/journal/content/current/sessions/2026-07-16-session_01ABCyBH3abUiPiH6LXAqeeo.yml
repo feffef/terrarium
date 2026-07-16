@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01ABCyBH3abUiPiH6LXAqeeo
 startedAt: 2026-07-16T00:16:08Z
-endedAt: 2026-07-16T00:22:10Z
+endedAt: 2026-07-16T00:25:23Z
 kind: autonomous
 goal: "Run /digest: author the 2026-07-15 Journal Digest"
-status: in-review
-outcome: "Digest authored, gate green, PR #503 opened"
-summary: "Agent-initiated: fired by the digest Routine, no direct human ask this run. Ran the /digest Skill end to end. scripts/digest.ts list showed one backfill day pending, 2026-07-15. Gathered its data (7 merged PRs, 8 sessions, 12 frictions across the day) and authored a human-readable Digest at layers/journal/content/current/pages/digests/2026-07-15.md, leading with narrative and closing with a shipped/sessions/frictions skim footer per the Skill's convention. No index.md edit was needed — the Journal's dashboard surfaces new Digests live. pnpm gate:scoped ran green (lint, typecheck, validate:content, test, build, test:e2e all passed). Committed, pushed claude/compassionate-lovelace-p99m5y, opened PR #503 against main, subscribed to its activity, and logged this session at PR-open per the ADR-0009 closure discipline."
+status: completed
+outcome: "Digest authored, PR #503 merged"
+summary: "Agent-initiated: fired by the digest Routine, no direct human ask this run. Ran the /digest Skill end to end. scripts/digest.ts list showed one backfill day pending, 2026-07-15. Gathered its data (7 merged PRs, 8 sessions, 12 frictions across the day) and authored a human-readable Digest at layers/journal/content/current/pages/digests/2026-07-15.md, leading with narrative and closing with a shipped/sessions/frictions skim footer per the Skill's convention. No index.md edit was needed — the Journal's dashboard surfaces new Digests live. pnpm gate:scoped ran green locally (lint, typecheck, validate:content, test, build, test:e2e all passed); CI's gate also reported green. Committed, pushed claude/compassionate-lovelace-p99m5y, opened PR #503 against main, subscribed to its activity, logged at PR-open per the ADR-0009 closure discipline, then merged #503 once CI's gate went green and unsubscribed."
 prs:
   - "503"
 docsRead:
@@ -23,22 +23,25 @@ frictions:
   - description: The harness's automatic Co-Authored-By/Claude-Session commit-footer injection did not fire on the digest commit even though it was made with a plain heredoc-style message (no backticks or $()); the footer was missing after `git commit`.
     solution: Amended the tip commit with `git commit --amend -F -`, appending the two provenance lines using the session id/URL given verbatim in this session's own commit-footer template, cross-checked against the CLAUDE_CODE_REMOTE_SESSION_ID env var rather than guessed or copied from another commit's trailer.
     severity: minor
-durationSec: 361
+durationSec: 555
 models:
-  claude-sonnet-5: 72
+  claude-sonnet-5: 88
 toolCounts:
-  Bash: 19
+  Bash: 21
   Read: 1
   Write: 2
-  ToolSearch: 5
+  ToolSearch: 6
   TaskOutput: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 3
   mcp__github__enable_pr_auto_merge: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Edit: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-15.md
 gitBranch: claude/compassionate-lovelace-p99m5y
