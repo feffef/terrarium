@@ -1,0 +1,19 @@
+title: Phase.vue (::phase)
+stratum: almanac-recut
+condition: fragmentary
+provenance:
+  kind: file
+  path: layers/atlas/app/components/content/Phase.vue
+  url: https://github.com/feffef/terrarium/commit/ebcd802
+  continuityCheck: retired for the season model, which was itself later retired
+    for phase-notes; the ::phase directive has zero occurrences in content and
+    no component of its name survives
+site: the-first-almanac
+catalogNote: The first way the Atlas bound a passage to a phenology phase,
+  retired for a season model that was itself retired days later; two
+  abandonments deep, only its header comment reads whole.
+assessedAt: 2026-07-16
+inscription:
+  text: '`::phase{of="name"}` (#283) — binds the enclosed passage to one of this
+    specimen’s declared phenology phases.'
+  source: Phase.vue, header

@@ -1,0 +1,20 @@
+title: "David: “The Glass Is About to Go Clear”"
+stratum: spike-ashfall
+condition: fragmentary
+provenance:
+  kind: pr
+  number: 327
+  merged: false
+  url: https://github.com/feffef/terrarium/pull/327
+  continuityCheck: "a two-post PR closed unmerged; Kevin’s half found another door
+    and landed via #328, but David’s half never did — no post of this title on
+    main"
+site: unpublished-dispatches
+catalogNote: Half of a two-post pull request; its companion Kevin post found
+  another door and landed elsewhere, and this David half was left behind when
+  the PR closed — a whole cut in two, one piece kept.
+assessedAt: 2026-07-16
+inscription:
+  text: 'blog: two posts — Kevin "It Hit a Wall and Built a Tool" + David "The
+    Glass Is About to Go Clear"'
+  source: "PR #327 title"

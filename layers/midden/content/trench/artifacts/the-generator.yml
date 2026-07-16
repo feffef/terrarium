@@ -1,0 +1,18 @@
+title: scripts/generate.ts
+stratum: routing-excavation
+condition: intact
+provenance:
+  kind: file
+  path: scripts/generate.ts
+  url: https://github.com/feffef/terrarium/commit/e75bda0
+  continuityCheck: no successor script — code generation was replaced wholesale by
+    build-time derivation (ADR-0013/0014); no `pnpm gen` remains
+site: the-generated-map
+catalogNote: The generator that read every manifest and wrote the one remaining
+  generated file; when the file went, so did it, and the platform posted its own
+  obituary the next morning.
+assessedAt: 2026-07-16
+inscription:
+  text: "The generator (ADR-0002/0013): reads every Tenant manifest and emits the
+    one remaining GENERATED artifact"
+  source: scripts/generate.ts, header
