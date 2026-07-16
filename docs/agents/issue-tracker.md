@@ -49,6 +49,16 @@ class to its MCP equivalent:
   (issue #494). It shells out to REST rather than `gh issue list` because the
   latter goes through GraphQL, which this environment's proxy can reject outside a
   pinned PR-review operation set.
+- **An issue's newest AI comment can claim a triage-label transition its live
+  labels never actually picked up** (e.g. issue #325's comment claimed `moved
+  to ready-for-agent` while the issue stayed `ready-for-human`) — nothing
+  catches that mismatch automatically. `tsx scripts/check-triage-drift.ts [N]`
+  cross-checks each open issue's most recent AI-authored comment (detected via
+  the ADR-0017 provenance footer, not `author_association` — see the script's
+  header comment for why that field can't be trusted here) against a small
+  phrase list for the five canonical labels, and prints the mismatches as JSON
+  (issue #507). It is a standalone check today, not yet wired into any
+  periodic sweep.
 - **Read a PR or its diff** → `pull_request_read`
 - **`issue_read`/`pull_request_read` bodies come back HTML-entity-encoded.**
   `&`, `"`, `'`, `<`, `>` arrive as `&amp;`, `&#34;`, `&#39;`, `&lt;`, `&gt;` —
