@@ -436,6 +436,32 @@ sweep is a distinct follow-up, not silently folded in here).
   a durable, machine-readable record that its `outcome` is known-incomplete
   and the true original text may be unrecoverable.
 
+## `session` reclassified as derived, not authored (2026-07-16)
+
+> **Amended.** The "Automatic logging via a `SessionEnd` hook" section above
+> already draws the line: *"Mechanical (derived, never self-reported)... Authored
+> (irreducible): `goal`, `outcome`, `summary`, `frictions`."* `session` was never
+> explicitly named on either side of that split — an oversight this closes, not a
+> new principle.
+
+**The gap.** `stitch()` took `session` straight from the agent-typed
+`AuthoredScratch`, even though the mechanical trace already computes the same
+identity from the transcript. This is exactly the self-reported-field failure
+mode the `SessionEnd` hook section's whole split exists to avoid — and it landed
+a real incident: a session whose transcript carried a raw-UUID internal id (a
+plain local CLI session's own id, not the `session_01…` form a CCR/cloud session
+publishes in its claude.ai URL and GitHub PR footers) had its own log filed under
+the wrong identity, since nothing checked the typed value against ground truth.
+
+**The fix.** `session` now resolves from ground truth: `CLAUDE_CODE_REMOTE_SESSION_ID`
+(env, normalized `cse_…` → `session_…`) when present — the id that actually
+appears in claude.ai URLs and PR footers for a CCR session — else the
+transcript's own `sessionId`, which genuinely is canonical for a plain local CLI
+session (no CCR wrapper exists there to disagree with it). The authored value is
+now a last-resort fallback only, used solely when neither source resolves at all.
+Schema-wise this changes nothing (`session: z.string()` is unchanged); it is a
+same-field trust-model correction, not a new field or a breaking change.
+
 ## Folded-in `docsRead` reason split in two (2026-07-07)
 
 > **Amended.** The Decision and Consequences above describe a single

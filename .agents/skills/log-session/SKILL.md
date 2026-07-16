@@ -132,7 +132,21 @@ system-prompt instructions** — the commit-footer template (`… Claude-Session
 https://claude.ai/code/session_01…`) has it filled in; the `session_01…` after the
 final `/` is the id verbatim. **Never** derive it from `git log` trailers (parallel
 sessions commit constantly — the latest trailer is routinely another session's id;
-issue #99), and **do not** use `CLAUDE_CODE_SESSION_ID` (a different UUID).
+issue #99), and **do not** use `CLAUDE_CODE_SESSION_ID` in a CCR/cloud session — it's
+a different, non-canonical UUID there (the local CLI transcript's own internal id,
+distinct from the CCR-level id this Skill's footer needs). The one exception: a
+plain local CLI session with no CCR wrapper has no *other* id to disagree with it,
+so there `CLAUDE_CODE_SESSION_ID` genuinely is canonical — see the note below.
+
+**This field is now a fallback, not the source of truth (issue #387/#449).**
+`scripts/session-end.ts`'s stitch resolves the ground-truth id itself —
+`CLAUDE_CODE_REMOTE_SESSION_ID` (env, `cse_…` → `session_…`) when present, else
+the transcript's own `sessionId` (which genuinely *is* canonical on a plain
+local CLI session with no CCR wrapper) — and that resolved value always wins
+over whatever `session:` you typed here. A wrong typed value can no longer
+land a mis-filed log; it just gets silently corrected. Still type it correctly
+when you can — the two normally agree, and this field is the only thing used
+if ground-truth resolution somehow finds nothing at all.
 
 ## 2. Write the scratch
 

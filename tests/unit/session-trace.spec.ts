@@ -10,7 +10,9 @@ import {
   DERIVED_REASON_EDITED,
   deriveTrigger,
   extractTrace,
+  normalizeRemoteSessionId,
   parseTranscript,
+  resolveGroundTruthSessionId,
   stitch,
   type AuthoredScratch,
 } from '../../scripts/session-trace.ts'
@@ -40,8 +42,11 @@ const transcript = [
   ] } },
 ].map((r) => JSON.stringify(r)).join('\n')
 
+// Isolates tests from a real ambient CLAUDE_CODE_REMOTE_SESSION_ID (issue #387).
+const NO_ENV = {}
+
 describe('extractTrace()', () => {
-  const trace = extractTrace(parseTranscript(transcript))
+  const trace = extractTrace(parseTranscript(transcript), NO_ENV)
 
   it('derives identity + timings from the transcript, not self-report', () => {
     expect(trace.session).toBe('session_01ABC')
@@ -73,6 +78,11 @@ describe('extractTrace()', () => {
     expect(trace.entrypoint).toBe('remote')
     expect(trace.trigger).toBeUndefined()
   })
+
+  it('prefers a real CLAUDE_CODE_REMOTE_SESSION_ID env var over the transcript\'s own sessionId (issue #387)', () => {
+    const withCcr = extractTrace(parseTranscript(transcript), { CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_REALSESSION123' })
+    expect(withCcr.session).toBe('session_REALSESSION123') // NOT the transcript's 'session_01ABC'
+  })
 })
 
 describe('deriveTrigger() — issue #449 Gap 1', () => {
@@ -91,12 +101,16 @@ describe('deriveTrigger() — issue #449 Gap 1', () => {
   it('derives the slash-command name from a Routine-fired first turn', () => {
     const trace = extractTrace(
       records('<command-message>audit-docs is running…</command-message>\n<command-name>/audit-docs</command-name>'),
+      NO_ENV,
     )
     expect(trace.trigger).toBe('audit-docs')
   })
 
   it('falls back to the first line of a freeform Routine prompt with no slash command', () => {
-    const trace = extractTrace(records('Check whether the deploy PR is still green and merge it if so.\nMore detail below.'))
+    const trace = extractTrace(
+      records('Check whether the deploy PR is still green and merge it if so.\nMore detail below.'),
+      NO_ENV,
+    )
     expect(trace.trigger).toBe('Check whether the deploy PR is still green and merge it if so.')
   })
 
@@ -113,13 +127,42 @@ describe('deriveTrigger() — issue #449 Gap 1', () => {
   })
 
   it('is absent when the first user turn has no text at all', () => {
-    const trace = extractTrace(records([{ type: 'tool_result', content: 'no text blocks here' }]))
+    const trace = extractTrace(records([{ type: 'tool_result', content: 'no text blocks here' }]), NO_ENV)
     expect(trace.trigger).toBeUndefined()
   })
 })
 
+describe('normalizeRemoteSessionId() / resolveGroundTruthSessionId() — issue #387', () => {
+  it('maps a CLAUDE_CODE_REMOTE_SESSION_ID cse_ id onto the session_ form', () => {
+    expect(normalizeRemoteSessionId('cse_019W471jzQDwoZmKzJKtE4vk')).toBe('session_019W471jzQDwoZmKzJKtE4vk')
+  })
+
+  it('returns undefined for an absent or differently-shaped value', () => {
+    expect(normalizeRemoteSessionId(undefined)).toBeUndefined()
+    expect(normalizeRemoteSessionId('not-a-cse-id')).toBeUndefined()
+  })
+
+  it('prefers the normalized env id over the transcript session id when both are present', () => {
+    expect(
+      resolveGroundTruthSessionId('b84dc292-4954-52dc-b693-5681f040259e', {
+        CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_019W471jzQDwoZmKzJKtE4vk',
+      }),
+    ).toBe('session_019W471jzQDwoZmKzJKtE4vk')
+  })
+
+  it('falls back to the transcript session id for a plain local CLI session (no CCR env var)', () => {
+    expect(resolveGroundTruthSessionId('b84dc292-4954-52dc-b693-5681f040259e', {})).toBe(
+      'b84dc292-4954-52dc-b693-5681f040259e',
+    )
+  })
+
+  it('returns undefined when neither source is available', () => {
+    expect(resolveGroundTruthSessionId(undefined, {})).toBeUndefined()
+  })
+})
+
 describe('stitch()', () => {
-  const trace = extractTrace(parseTranscript(transcript))
+  const trace = extractTrace(parseTranscript(transcript), NO_ENV)
   const scratch: AuthoredScratch = {
     session: 'session_01ABC',
     goal: 'Prove the stitch',
@@ -138,6 +181,18 @@ describe('stitch()', () => {
     expect(entry.durationSec).toBe(300)
     expect(entry.models).toEqual({ 'claude-opus-4-8': 2 })
     expect(entry.gitBranch).toBe('feat/x')
+  })
+
+  it('takes session from the resolved ground truth, not the hand-typed authored value (issue #387/#449 postmortem)', () => {
+    const wronglyAuthored: AuthoredScratch = { ...scratch, session: 'session_TOTALLY_WRONG' }
+    const mismatched = stitch(wronglyAuthored, trace)
+    expect(mismatched.session).toBe('session_01ABC') // trace's resolved ground truth, not the authored typo
+  })
+
+  it('falls back to the authored session only when the trace has none at all', () => {
+    const noSessionTrace = { ...trace, session: undefined }
+    const fallback = stitch(scratch, noSessionTrace)
+    expect(fallback.session).toBe('session_01ABC') // scratch.session, the last resort
   })
 
   it('keeps the agent-curated reason and does not duplicate an already-cited read', () => {

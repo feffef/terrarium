@@ -62,6 +62,7 @@ describe('handle() — lands from gitignored staging, never the tree (#148)', ()
     const res = handle(scratch, transcript, {
       dryRun: false,
       remote: 'origin',
+      env: {},
       landFn,
       mainVersionFn: () => null, // not yet on main
     })
@@ -84,6 +85,7 @@ describe('handle() — lands from gitignored staging, never the tree (#148)', ()
     handle(scratch, transcript, {
       dryRun: false,
       remote: 'origin',
+      env: {},
       mainVersionFn: () => null,
       landFn: ((_rel: string, abs: string) => {
         yaml = readFileSync(abs, 'utf8')
@@ -99,6 +101,7 @@ describe('handle() — lands from gitignored staging, never the tree (#148)', ()
     const res = handle(scratch, transcript, {
       dryRun: false,
       remote: 'origin',
+      env: {},
       landFn,
       mainVersionFn: () => yaml,
     })
@@ -131,12 +134,12 @@ describe('declaredClosure() / recoverDroppedScratch() — issue #449 Gap 3', () 
   ].map((r) => JSON.stringify(r)).join('\n')
 
   it('declaredClosure() is true only when the trace shows a log-session invocation', () => {
-    expect(declaredClosure(extractTrace(parseTranscript(closedTranscript)))).toBe(true)
-    expect(declaredClosure(extractTrace(parseTranscript(neverClosedTranscript)))).toBe(false)
+    expect(declaredClosure(extractTrace(parseTranscript(closedTranscript), {}))).toBe(true)
+    expect(declaredClosure(extractTrace(parseTranscript(neverClosedTranscript), {}))).toBe(false)
   })
 
   it('buildDroppedScratchScratch() produces a clearly-flagged, schema-valid placeholder', () => {
-    const trace = extractTrace(parseTranscript(closedTranscript))
+    const trace = extractTrace(parseTranscript(closedTranscript), {})
     const scratch = buildDroppedScratchScratch(trace)
     expect(scratch.status).toBe('abandoned')
     expect(scratch.kind).toBe('autonomous') // remote_trigger ⇒ best-effort autonomous guess
@@ -155,6 +158,7 @@ describe('declaredClosure() / recoverDroppedScratch() — issue #449 Gap 3', () 
     const res = recoverDroppedScratch(closedTranscript, {
       dryRun: false,
       remote: 'origin',
+      env: {},
       landFn: landFn as unknown as typeof import('../../scripts/log-session.ts').land,
       mainVersionFn: () => null,
     })
@@ -171,6 +175,7 @@ describe('declaredClosure() / recoverDroppedScratch() — issue #449 Gap 3', () 
     const res = recoverDroppedScratch(neverClosedTranscript, {
       dryRun: false,
       remote: 'origin',
+      env: {},
       landFn: landFn as unknown as typeof import('../../scripts/log-session.ts').land,
       mainVersionFn: () => null,
     })
@@ -183,6 +188,7 @@ describe('declaredClosure() / recoverDroppedScratch() — issue #449 Gap 3', () 
     const res = recoverDroppedScratch(closedTranscript, {
       dryRun: false,
       remote: 'origin',
+      env: {},
       landFn: landFn as unknown as typeof import('../../scripts/log-session.ts').land,
       mainVersionFn: () => 'schemaVersion: 1\nsession: whatever\n', // something already lives there
     })

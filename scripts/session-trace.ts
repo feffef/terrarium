@@ -163,6 +163,28 @@ function toUtcSeconds(ms: number): string {
   return new Date(ms).toISOString().replace(/\.\d{3}Z$/, 'Z')
 }
 
+/** Index signature so a real `process.env` satisfies this structurally. */
+export interface SessionIdEnv {
+  CLAUDE_CODE_REMOTE_SESSION_ID?: string
+  [key: string]: string | undefined
+}
+
+/** `cse_01…` → `session_01…` (issue #387). */
+export function normalizeRemoteSessionId(raw: string | undefined): string | undefined {
+  const m = raw ? /^cse_(.+)$/.exec(raw) : null
+  return m ? `session_${m[1]}` : undefined
+}
+
+/** Ground-truth session id: prefer `CLAUDE_CODE_REMOTE_SESSION_ID` (normalized),
+ *  else the transcript's own `sessionId` (canonical on a plain local CLI
+ *  session). Never the hand-typed authored value — issue #387/#449. */
+export function resolveGroundTruthSessionId(
+  transcriptSessionId: string | undefined,
+  env: SessionIdEnv = process.env,
+): string | undefined {
+  return normalizeRemoteSessionId(env.CLAUDE_CODE_REMOTE_SESSION_ID) ?? transcriptSessionId
+}
+
 /** Parse a transcript jsonl into records, skipping unparseable lines. */
 export function parseTranscript(jsonl: string): Record<string, unknown>[] {
   const out: Record<string, unknown>[] = []
@@ -177,8 +199,12 @@ export function parseTranscript(jsonl: string): Record<string, unknown>[] {
   return out
 }
 
-/** Derive the mechanical trace from parsed transcript records. Pure — the testable core. */
-export function extractTrace(records: Record<string, unknown>[]): MechanicalTrace {
+/** Derive the mechanical trace from parsed transcript records. Pure — the
+ *  testable core. `env` is injectable (defaults to `process.env`). */
+export function extractTrace(
+  records: Record<string, unknown>[],
+  env: SessionIdEnv = process.env,
+): MechanicalTrace {
   const stamps: number[] = []
   const models: Record<string, number> = {}
   const toolCounts: Record<string, number> = {}
@@ -244,7 +270,7 @@ export function extractTrace(records: Record<string, unknown>[]): MechanicalTrac
   const rel = (p: string): string => (cwd && p.startsWith(cwd + '/') ? p.slice(cwd.length + 1) : p)
 
   return {
-    session: meta.sessionId as string | undefined,
+    session: resolveGroundTruthSessionId(meta.sessionId as string | undefined, env),
     gitBranch: meta.gitBranch as string | undefined,
     entrypoint: meta.entrypoint as string | undefined,
     cliVersion: meta.version as string | undefined,
@@ -325,7 +351,8 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   const editedSet = new Set(trace.filesEdited)
   const entry: Record<string, unknown> = {
     schemaVersion: 1,
-    session: authored.session,
+    // trace.session is already ground-truth-resolved; wins over authored.
+    session: trace.session || authored.session,
     startedAt: trace.startedAt,
     endedAt: trace.endedAt,
     kind: authored.kind ?? 'interactive',
