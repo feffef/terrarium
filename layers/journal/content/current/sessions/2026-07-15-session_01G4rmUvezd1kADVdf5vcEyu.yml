@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01G4rmUvezd1kADVdf5vcEyu
 startedAt: 2026-07-15T21:43:52Z
-endedAt: 2026-07-16T14:43:32Z
+endedAt: 2026-07-16T17:11:19Z
 kind: interactive
 goal: "Fix #236 client content-load empties on a new branch"
-status: in-review
-outcome: "Patch removed; reload modal shipped; PR #514 open"
+status: completed
+outcome: "Patch removed; reload modal shipped; PR #514 merged"
 summary: "Owner-directed throughout. Diagnosed why ADR-0019's @nuxt/content patch doesn't fix #236's browser symptom: it only recovers loads that REJECT; funnels that RESOLVE broken (swallowed db.exec → marked \"loaded\") or cache a corrupt dump to localStorage before validation survive it. Ruled out the brief's useAsyncData- cache hypothesis against Nuxt 4.4.8 source. First built a hardened patch + a <dialog> error modal with a retry button; the owner then clarified they wanted the patch GONE, not hardened. Reversed: removed the patch entirely (deleted patches/ + pnpm-workspace.yaml, restored stock @nuxt/content), dropped the now-unreliable retry button (app code can't clear @nuxt/content's poisoned state — reload is the only recovery, via SSR/server DB), amended ADR-0019 to Superseded. Modal = message + technical-details + Reload. Opened PR #514 (owner asked), subscribed, full gate green with stock deps (build + 45 e2e)."
 prs:
   - "514"
@@ -48,24 +48,24 @@ frictions:
   - description: Ad-hoc playwright-core screenshot probe in the scratchpad failed twice — top-level await under tsx's CJS treatment, then playwright-core unresolvable outside the repo node_modules.
     solution: Run ad-hoc probes from the repo root (module resolution) and wrap the body in an async main() — worth a line in docs/agents/verifying-ui-changes.md.
     severity: nit
-durationSec: 61180
+durationSec: 70047
 models:
-  claude-opus-4-8: 387
+  claude-opus-4-8: 412
 toolCounts:
   ToolSearch: 3
-  Bash: 96
+  Bash: 98
   mcp__github__issue_read: 2
   Read: 28
   Glob: 2
   Write: 9
-  Edit: 42
+  Edit: 43
   Skill: 2
   SendUserFile: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 2
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 6
+  mcp__Claude_Code_Remote__send_later: 4
   mcp__github__update_pull_request: 1
 filesEdited:
   - app/components/ContentLoadError.vue
