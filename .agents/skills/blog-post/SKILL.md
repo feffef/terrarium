@@ -241,7 +241,7 @@ already spent in the A5 outside-read, so the merge decision is safely delegated 
 the objective gate:
 
 - **Subscribe to the PR's activity right after opening it** (CLAUDE.md's
-  "Pushing is not landing" rule) and follow CLAUDE.md's
+  "Pushing is not landing" rule) and follow `docs/agents/pr-workflow.md`'s
   `enable_pr_auto_merge`-vs-`merge_pull_request` guidance to land it once the
   gate reports green.
 - A **red gate is never merged** — diagnose and fix on the branch (the green

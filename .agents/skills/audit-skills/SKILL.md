@@ -289,8 +289,9 @@ it runs). Done when it's green.
   PR** citing the evidence per entry.
 - **Subscribe to the PR's activity right after opening it** (CLAUDE.md's
   "Pushing is not landing" rule — every opened PR is babysat to merge/close,
-  this tier included) and follow CLAUDE.md's `enable_pr_auto_merge`-vs-
-  `merge_pull_request` guidance to land it once the gate is green — the same
+  this tier included) and follow `docs/agents/pr-workflow.md`'s
+  `enable_pr_auto_merge`-vs-`merge_pull_request` guidance to land it once the
+  gate is green — the same
   landing path `digest`/`audit-docs` use (ADR-0004's low-risk content tier,
   ADR-0003/0015 — this Skill is the third name on that exemption list). A red
   gate simply never merges (see the escalation bullet below). Leave a

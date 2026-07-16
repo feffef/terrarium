@@ -216,7 +216,10 @@ review-agent, not a bystander waiting for a human. For each PR:
    a genuinely-reviewed one must be distinguishable on the PR, so leave a written
    record of what you checked and what you concluded even when you change nothing.
 3. **Decide, and act:**
-   - **Merge right away** when the review is clean and the change is low-risk.
+   - **Merge right away** when the review is clean and the change is low-risk —
+     follow `docs/agents/pr-workflow.md`'s recipe (poll for green, then
+     `merge_pull_request` directly; this tier merges only by your own
+     judgement call, never via `enable_pr_auto_merge`).
    - **Amend then merge** when the only gaps are small — push the fixup yourself,
      re-run the gate, then merge. If your amendment **fundamentally changes** what
      the PR does, update the PR title/description in the same push (the CLAUDE.md
