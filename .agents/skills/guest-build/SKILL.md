@@ -16,6 +16,11 @@ newly-labelled story and start building it right away.
 The guest request bounds, the deface / security / new-dependency screen, and the
 owner-merge backstop live there. Read it first.
 
+**This is a time-boxed demo capability, not standing operation.** It is
+user-invoked and never self-fires — the guest pipeline is live only while the
+owner is actually running it (and `guest-intake`), for the bounded window they
+choose (ADR-0023). Stop running it and no new `ready-for-agent` story gets built.
+
 **It composes existing Skills — never restate them.** The dispatch-and-review
 machinery is `frictions-to-fixes` §5–§6: a **Sonnet** impl agent in its **own git
 worktree** that branches from `origin/main`, implements, clears the **safety

@@ -6,9 +6,10 @@ Status: Accepted
 
 > **A demo-scoped, additive exception to [ADR-0020](0020-requester-trust-tiers.md)
 > rule 2 and [ADR-0022](0022-autonomous-triage-sweep.md)'s standing green-light.**
-> It does **not** repeal them — outside the demo both stand unchanged. Governance
-> is human-only to merge (ADR-0004); this ADR and its two Skills land as a gated
-> PR the owner merges.
+> It does **not** repeal them — outside the demo both stand unchanged, and the
+> exception is live **only while the owner is running the two loops**, for a
+> bounded window. Governance is human-only to merge (ADR-0004); this ADR and its
+> two Skills land as a gated PR the owner merges.
 
 ## Context
 
@@ -44,6 +45,17 @@ that the owner still reviews and merges by hand?"
 `ready-for-agent`.** The `guest-intake` Skill may stamp that label without a
 per-issue Trusted green-light. This is the single relaxation, and it is licensed
 **only** by everything below staying fully in force.
+
+**Active only while the owner runs the loops, for a bounded window — the
+owner-run loop _is_ the standing green-light.** The two Skills are user-invoked
+and never self-fire (`disable-model-invocation`). The guest pipeline exists only
+while a **Trusted** user — the owner — is actually running `guest-intake` and
+`guest-build` (by hand, `/loop`, or a Routine), and only for the bounded demo
+window they choose. This mirrors ADR-0022 exactly: a Trusted user *starting* the
+loop is the green-light — run-scoped and Trusted-scoped. When the owner stops the
+loops (or the window ends), guests may still open issues but **nothing acts on
+them**, and ADR-0020 rule 2 applies in full again. Ending the demo takes no code
+change — just stop running the loops.
 
 **What does not change (the relaxation rests on these):**
 
@@ -91,10 +103,11 @@ Skills enforce; each points back here rather than restating it.
 - **Additive and demo-scoped, not a repeal.** Outside the demo, ADR-0020 and
   ADR-0022 are unchanged: a Public issue is still not self-green-lit. This ADR
   carves one bounded exception and names the two Skills that realise it.
-- **Reversible by deletion.** The pipeline is additive policy plus two
-  user-invoked Skills. Delete `guest-intake` and `guest-build` and the demo
-  stops; this ADR's exception has no other surface. No change to the isolation / routing /
-  gate core.
+- **Reversible by stopping — or deleting.** The pipeline is additive policy plus
+  two user-invoked Skills that never self-fire. Stop running the loops and the
+  demo goes inert immediately (the everyday off-switch); delete `guest-intake` and
+  `guest-build` and the exception has no surface left at all. No change to the
+  isolation / routing / gate core either way.
 - **Residual risk, and where it lands.**
   - *Prompt-injection into the build.* Mitigated by the untrusted-data rule and,
     decisively, by the owner's security review at merge — the gate is blind to
