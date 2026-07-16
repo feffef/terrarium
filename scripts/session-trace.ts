@@ -149,11 +149,10 @@ export function deriveTrigger(
   const first = records.find((r) => r.type === 'user')
   if (!first) return undefined
   const msg = first.message as { content?: unknown } | undefined
+  const [name] = commandSkillNames(msg?.content) // reuse the one slash-command extractor
+  if (name) return name
   const text = userText(msg?.content).join('\n').trim()
   if (!text) return undefined
-  const [commandMatch] = [...text.matchAll(COMMAND_NAME_RE)]
-  const name = (commandMatch?.[1] ?? '').trim().replace(/^\//, '')
-  if (name) return name
   const firstLine = (text.split('\n')[0] ?? '').trim()
   return firstLine ? firstLine.slice(0, 200) : undefined
 }

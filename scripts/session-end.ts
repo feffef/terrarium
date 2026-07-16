@@ -149,6 +149,26 @@ export function buildDroppedScratchScratch(trace: MechanicalTrace): AuthoredScra
   }
 }
 
+/** The common tail `handle()` and `recoverDroppedScratch()` share once their
+ *  own distinct landing gate (content-diff vs existence-check) has already
+ *  decided to proceed: stage the byte source, then hand it to `land()`. The
+ *  log lands from a gitignored staging copy, never the working tree — `land`
+ *  only needs `absPath` as a byte source for `git hash-object`, and `relPath`
+ *  is the commit's tree location, so the tree never holds an untracked log
+ *  (#148). */
+function stageAndLand(
+  relPath: string,
+  yaml: string,
+  opts: { dryRun: boolean; remote: string; landFn?: typeof land },
+): HandlerResult {
+  const stagingPath = join(root, STAGING_DIR, basename(relPath))
+  mkdirSync(dirname(stagingPath), { recursive: true })
+  writeFileSync(stagingPath, yaml)
+  const landFn = opts.landFn ?? land
+  landFn(relPath, stagingPath, opts.remote, { dryRun: opts.dryRun })
+  return { action: opts.dryRun ? 'dry-run' : 'landed', relPath }
+}
+
 /** Recovery path for the "authored-then-dropped" case (issue #449 Gap 3),
  *  distinct from a session that never declared closure at all (#397,
  *  unrescuable by any hook). The scratch itself can be lost to a container
@@ -156,7 +176,10 @@ export function buildDroppedScratchScratch(trace: MechanicalTrace): AuthoredScra
  *  transcript. Lands a minimal placeholder log ONLY when nothing exists yet at
  *  the session's expected path — existence-checked, not content-diffed like
  *  `handle`'s normal gate, so this never overwrites a real, richer log (or an
- *  earlier placeholder) that already landed there. */
+ *  earlier placeholder) that already landed there. Every field the placeholder
+ *  carries is explicit placeholder prose (see `buildDroppedScratchScratch`),
+ *  and `droppedScratchRecovery: true` additionally marks it structurally, so a
+ *  consumer never has to grep friction text to tell it apart from a real log. */
 export function recoverDroppedScratch(
   transcriptJsonl: string,
   opts: {
@@ -172,6 +195,7 @@ export function recoverDroppedScratch(
   }
 
   const entry = stitch(buildDroppedScratchScratch(trace), trace)
+  entry.droppedScratchRecovery = true
   const valid = validateEntry(entry)
   if (!valid.ok) return { action: 'invalid', detail: valid.errors }
 
@@ -183,13 +207,8 @@ export function recoverDroppedScratch(
     return { action: 'skipped-unchanged', relPath }
   }
 
-  const stagingPath = join(root, STAGING_DIR, basename(relPath))
   const yaml = stringifyYaml(entry, { lineWidth: 0 })
-  mkdirSync(dirname(stagingPath), { recursive: true })
-  writeFileSync(stagingPath, yaml)
-  const landFn = opts.landFn ?? land
-  landFn(relPath, stagingPath, opts.remote, { dryRun: opts.dryRun })
-  return { action: opts.dryRun ? 'dry-run' : 'landed', relPath }
+  return stageAndLand(relPath, yaml, opts)
 }
 
 /** The testable core: given a scratch and a transcript, produce + (maybe) land
@@ -211,10 +230,6 @@ export function handle(
   if (!valid.ok) return { action: 'invalid', detail: valid.errors }
 
   const relPath = join(SESSIONS_DIR, expectedFilename(valid.data))
-  // The log lands from a gitignored staging copy, never the working tree: `land`
-  // only needs `absPath` as a byte source for `git hash-object`, and `relPath` is
-  // the commit's tree location, so the tree never holds an untracked log (#148).
-  const stagingPath = join(root, STAGING_DIR, basename(relPath))
   // YAML stringify with generous width so long summaries/paths don't hard-wrap
   // into shapes the parser round-trips differently.
   const yaml = stringifyYaml(entry, { lineWidth: 0 })
@@ -225,11 +240,7 @@ export function handle(
     return { action: 'skipped-unchanged', relPath }
   }
 
-  mkdirSync(dirname(stagingPath), { recursive: true })
-  writeFileSync(stagingPath, yaml)
-  const landFn = opts.landFn ?? land
-  landFn(relPath, stagingPath, opts.remote, { dryRun: opts.dryRun })
-  return { action: opts.dryRun ? 'dry-run' : 'landed', relPath }
+  return stageAndLand(relPath, yaml, opts)
 }
 
 function main(): void {

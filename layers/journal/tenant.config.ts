@@ -166,6 +166,14 @@ export default defineTenant({
           // by session-trace.ts's extractTrace ONLY when entrypoint is
           // 'remote_trigger' (issue #449 Gap 1); absent for every other session.
           trigger: z.string().optional(),
+          // True ONLY on the synthetic placeholder session-end.ts's
+          // recoverDroppedScratch lands when a scratch was authored then lost
+          // before it could land (issue #449 Gap 3). Every other field on such
+          // an entry is explicit placeholder prose, not the agent's own words —
+          // this flag gives consumers (digest, audit-skills, any future UI) a
+          // structured way to exclude/label it rather than grep friction text.
+          // Absent on every genuinely agent-authored log.
+          droppedScratchRecovery: z.literal(true).optional(),
           // List EVERY friction — not just one or two — including anything that
           // felt unnecessarily complex or token-heavy. No `tag` yet: the
           // taxonomy is meant to emerge from clustering, once there is data.

@@ -147,7 +147,11 @@ describe('declaredClosure() / recoverDroppedScratch() — issue #449 Gap 3', () 
   })
 
   it('lands a placeholder log when closure was declared but nothing exists at its path yet', () => {
-    const landFn = vi.fn().mockReturnValue('deadbeef0000')
+    let seenAbs = ''
+    const landFn = vi.fn((_rel: string, abs: string) => {
+      seenAbs = abs
+      return 'deadbeef0000'
+    })
     const res = recoverDroppedScratch(closedTranscript, {
       dryRun: false,
       remote: 'origin',
@@ -157,6 +161,9 @@ describe('declaredClosure() / recoverDroppedScratch() — issue #449 Gap 3', () 
     expect(res.action).toBe('landed')
     expect(res.relPath).toBe(`${SESSIONS_DIR}/2026-07-06-${droppedSession}.yml`)
     expect(landFn).toHaveBeenCalledOnce()
+    // Structurally flagged, not just via friction text (Standards review, #449) —
+    // a consumer can filter/label it without grepping prose.
+    expect(readFileSync(seenAbs, 'utf8')).toContain('droppedScratchRecovery: true')
   })
 
   it('does nothing for a session that never declared closure — the #397 case stays untouched', () => {

@@ -186,9 +186,24 @@ export function writeScratch(authored: AuthoredScratch, scratchAbs: string): voi
  *  — the two diverge only there, giving a purely mechanical signal that needs
  *  no cooperation from the calling agent. Fails open (false) on any git error
  *  (not a repo, git unavailable) — never blocks authoring over an unrelated
- *  problem. This can't tell a dispatched subagent's worktree apart from the
- *  orchestrator's own EnterWorktree-based single-session worktree (mechanism 1,
- *  CLAUDE.md) — that legitimate, non-concurrent case must pass `--allow-worktree`. */
+ *  problem.
+ *
+ *  Two known limits, both acknowledged rather than hidden (CLAUDE.md: "pick
+ *  whichever is mechanically sound given how a dispatched subagent can (or
+ *  cannot) reliably detect it is not the orchestrator" — this is a partial,
+ *  not complete, reinforcement):
+ *  - Can't tell a dispatched subagent's worktree apart from the orchestrator's
+ *    own EnterWorktree-based single-session worktree (mechanism 1, CLAUDE.md)
+ *    — that legitimate, non-concurrent case must pass `--allow-worktree`.
+ *  - Only catches a subagent that actually invokes this script FROM WITHIN its
+ *    own worktree directory. A dispatched subagent's Bash tool does not
+ *    preserve cwd across separate tool calls (CLAUDE.md), so one that forgets
+ *    the `cd <worktree-root> &&` prefix on its own `log-session --author` call
+ *    runs from the orchestrator's shared root instead — `cwd` there is
+ *    genuinely not a linked worktree, so this check can't distinguish that
+ *    invocation from the orchestrator's own. Mitigating that residual case
+ *    needs a signal this script has no visibility into (e.g. a harness-level
+ *    subagent marker), not a git-worktree check. */
 export function isLinkedWorktree(cwd: string): boolean {
   try {
     const gitDir = execFileSync('git', ['rev-parse', '--git-dir'], { cwd, encoding: 'utf8' }).trim()
@@ -390,8 +405,15 @@ function fail(msg: string): never {
  *  scratch. This is what the model-invocable `log-session` Skill calls at
  *  closure; it does NOT commit — the session-end handler does, live on the
  *  next `Stop` (with `SessionEnd`/resume only as fallbacks for whatever `Stop`
- *  misses, PR #148). */
-function authorMain(argv: string[]): void {
+ *  misses, PR #148). Exported so tests can drive the actual CLI wiring (the
+ *  `isLinkedWorktree` refusal + `--allow-worktree` escape hatch), not just the
+ *  underlying primitive. */
+export function authorMain(
+  argv: string[],
+  opts: { cwd?: string; scratchAbs?: string } = {},
+): void {
+  const cwd = opts.cwd ?? process.cwd()
+  const scratchAbs = opts.scratchAbs ?? join(root, SCRATCH_FILE)
   const allowWorktree = argv.includes('--allow-worktree')
   const positional = argv.filter((a) => !a.startsWith('--'))
   const [inputPath] = positional
@@ -400,7 +422,7 @@ function authorMain(argv: string[]): void {
   }
   // Guarded refusal, not a silent overwrite (issue #449 Gap 4) — see
   // `isLinkedWorktree`'s doc comment for the mechanism and its one known blind spot.
-  if (!allowWorktree && isLinkedWorktree(process.cwd())) {
+  if (!allowWorktree && isLinkedWorktree(cwd)) {
     fail(
       'refusing to author the session-log scratch from a linked git worktree: a dispatched worktree-isolated ' +
         "subagent must not self-invoke close-session/log-session — it shares the orchestrator's session id and " +
@@ -421,7 +443,7 @@ function authorMain(argv: string[]): void {
   }
   const result = validateAuthored(parsed)
   if (!result.ok) fail(`authored scratch is invalid:\n${result.errors}`)
-  writeScratch(result.data, join(root, SCRATCH_FILE))
+  writeScratch(result.data, scratchAbs)
   console.log(`✓ authored scratch written → ${SCRATCH_FILE}`)
   console.log('  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.')
 }
