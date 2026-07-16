@@ -270,4 +270,4 @@ Run `pnpm gate:scoped` before opening the PR (CLAUDE.md's **Self-verification** 
 owns what it runs). Then eyeball the render — a specimen is a visual artifact,
 so screenshot the entry and the biome landing
 (`pnpm exec tsx scripts/screenshot.ts <url> <out.png>`), don't trust the HTML text
-(CLAUDE.md: grepping SSR HTML is not proof a plate rendered).
+(`docs/agents/verifying-ui-changes.md`: grepping SSR HTML is not proof a plate rendered).

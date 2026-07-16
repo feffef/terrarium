@@ -99,9 +99,13 @@ fighting wayfinder's mechanics** (read `/wayfinder` for them):
   ticket is not takeable and must not be stamped `ready-for-agent`.
 - **Preserve** every `wayfinder:*` label — this is an overlay, never a replacement.
 - Honour the ticket type: `wayfinder:grilling` and `wayfinder:prototype` are
-  **HITL** (human-in-the-loop) → `ready-for-human`; `wayfinder:research` and
-  `wayfinder:task` are **AFK** and, when unblocked and unclaimed, are eligible for
-  `ready-for-agent`.
+  **HITL** (human-in-the-loop) → `ready-for-human`; `wayfinder:research` is
+  **AFK** and, when unblocked and unclaimed, is eligible for `ready-for-agent`.
+  `wayfinder:task` is HITL-or-AFK **per ticket** (wayfinder's own definition —
+  the agent drives it alone where it can, otherwise it hands the human a
+  checklist): read the ticket body against that same test, and fall back to the
+  judgment-call escalation above (e.g. external access the agent lacks) before
+  granting `ready-for-agent` — there is no separate label splitting the two.
 
 ## Run it
 
