@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_019W471jzQDwoZmKzJKtE4vk
 startedAt: 2026-07-16T19:56:10Z
-endedAt: 2026-07-16T21:32:06Z
+endedAt: 2026-07-16T22:06:54Z
 kind: interactive
 goal: "Close 5 session-log mechanics gaps (issue #449) + fix session-id ground truth"
 status: in-review
@@ -74,20 +74,23 @@ frictions:
   - description: The provenance footer did not auto-inject on the first `git commit -m` in this cloud session (a documented, known-possible gap per CLAUDE.md), requiring a manual amend to add it.
     solution: Already covered by CLAUDE.md's existing guidance to verify and amend when absent — no new fix needed, just another confirmed instance.
     severity: nit
-durationSec: 5757
+  - description: "Reviewer feedback on PR #533 flagged .ts comments as \"too long... once again\" — CLAUDE.md's own comment-style rule (WHY not WHAT, cite the source rather than re-derive it) was violated repeatedly across this session's own additions (multi-line JSDoc blocks re-explaining a postmortem/rationale already stated elsewhere), and the \"once again\" implies this recurs across sessions, not just this one."
+    solution: Trimmed every flagged comment to one line, deleting restated context rather than compressing it. Treat "does this comment restate something explained elsewhere (an ADR, a PR description, another comment on the same function)" as a concrete pre-commit check, not just a style preference — this session had already read and agreed with the single-home rule earlier and still produced the violation.
+    severity: moderate
+durationSec: 7844
 models:
-  claude-sonnet-5: 628
+  claude-sonnet-5: 666
 toolCounts:
   ToolSearch: 5
   mcp__github__issue_read: 4
-  Bash: 135
+  Bash: 146
   mcp__github__list_pull_requests: 1
-  Read: 54
+  Read: 57
   Grep: 10
   Glob: 2
   TaskCreate: 7
   TaskUpdate: 13
-  Edit: 75
+  Edit: 82
   Write: 6
   Skill: 3
   Agent: 4
