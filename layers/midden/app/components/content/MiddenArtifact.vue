@@ -14,9 +14,9 @@
 // A broken `slug` reference is loud, not invisible (content-embedded, so a
 // silent blank would be worse than a visible gap) — `scripts/
 // validate-content-refs.ts`'s `site`/`stratum`/`provenance` checks plus the
-// schema itself should mean this rarely actually fires once real content
-// exists (Wave 3).
-import type { MiddenArtifactView } from '../../composables/useMiddenTrenchData'
+// schema itself catch a bad reference at build/CI time, so this fallback
+// exists for the rare case that slips through.
+import { toMiddenArtifactView } from '../../composables/useMiddenTrenchData'
 
 const props = defineProps<{ slug: string }>()
 
@@ -24,19 +24,7 @@ const { collections } = useSpace('midden')
 
 const { data: artifact } = await useAsyncData(`midden-artifact-${props.slug}`, async () => {
   const doc = await queryCollection(collections.artifacts).where('stem', '=', props.slug).first()
-  if (!doc) return null
-  const view: MiddenArtifactView = {
-    slug: doc.stem,
-    title: doc.title,
-    stratum: doc.stratum,
-    condition: doc.condition,
-    provenance: doc.provenance,
-    site: doc.site,
-    catalogNote: doc.catalogNote,
-    assessedAt: doc.assessedAt,
-    inscription: doc.inscription,
-  }
-  return view
+  return doc ? toMiddenArtifactView(doc) : null
 })
 </script>
 

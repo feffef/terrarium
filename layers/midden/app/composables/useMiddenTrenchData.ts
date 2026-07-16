@@ -59,6 +59,39 @@ export interface MiddenArtifactView {
   inscription?: MiddenInscription
 }
 
+/** A raw `artifacts` collection Document, as returned by `queryCollection` —
+ *  narrowed to the fields `toMiddenArtifactView` reads. */
+interface MiddenArtifactDoc {
+  stem: string
+  title: string
+  stratum: string
+  condition: Grade
+  provenance: MiddenProvenance
+  site: string
+  catalogNote: string
+  assessedAt: string
+  inscription?: MiddenInscription
+}
+
+/** Map one raw `artifacts` Document onto its `MiddenArtifactView` — the single
+ *  home for this Document→view shape, shared by this composable's own
+ *  `artifacts` list and the `::midden-artifact{slug="..."}` embed
+ *  (`MiddenArtifact.vue`), which loads a single Document by slug rather than
+ *  the whole collection. */
+export function toMiddenArtifactView(doc: MiddenArtifactDoc): MiddenArtifactView {
+  return {
+    slug: doc.stem,
+    title: doc.title,
+    stratum: doc.stratum,
+    condition: doc.condition,
+    provenance: doc.provenance,
+    site: doc.site,
+    catalogNote: doc.catalogNote,
+    assessedAt: doc.assessedAt,
+    inscription: doc.inscription,
+  }
+}
+
 /** Load one trench Space's `pages` (sites) and `artifacts`, and derive the
  *  `artifactsBySite` grouping both the trench index (per-site touched-strata
  *  ticks) and a site page (its own stratigraphy sidebar) need. `key` is the
@@ -76,19 +109,7 @@ export async function useMiddenTrenchData(
 
   const sites = computed(() => data.value?.sites ?? [])
 
-  const artifacts = computed<MiddenArtifactView[]>(() =>
-    (data.value?.artifactDocs ?? []).map((doc) => ({
-      slug: doc.stem,
-      title: doc.title,
-      stratum: doc.stratum,
-      condition: doc.condition,
-      provenance: doc.provenance,
-      site: doc.site,
-      catalogNote: doc.catalogNote,
-      assessedAt: doc.assessedAt,
-      inscription: doc.inscription,
-    })),
-  )
+  const artifacts = computed<MiddenArtifactView[]>(() => (data.value?.artifactDocs ?? []).map(toMiddenArtifactView))
 
   // Every Artifact keyed by the `site` slug it's narrated from — content-
   // identical regardless of source ordering, so the trench index's per-site

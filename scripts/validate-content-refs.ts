@@ -36,6 +36,7 @@ import { globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { expand, loadManifests, root, type ExpandedCollection } from '../shared/expand.ts'
+import { DIG_SEASON_SLUGS } from '../layers/midden/app/utils/strata.ts'
 import { parseDocument, splitFrontmatter } from './validate-content.ts'
 
 export interface RefViolation {
@@ -279,21 +280,17 @@ function checkObservations(
 
 /**
  * `stratum` cross-checks against the canonical dig-season list
- * (`layers/midden/app/utils/strata.ts`'s `DIG_SEASONS`, per
- * `layers/midden/CONTEXT.md`'s "Dig season" term) are deliberately NOT wired
- * up here. Two reasons, both load-bearing: (1) that file is being authored by
- * a sibling story and may not exist in a given worktree yet — a static
- * top-level import would hard-fail EVERY Tenant's validation (not just
- * Midden's) for as long as it's absent; (2) this whole call chain is
- * synchronous end-to-end (`validateReferences()` is called synchronously by
- * both this script's own `main()` and `tests/unit/validate-content-refs.spec.ts`),
- * so a dynamic `import()` would force it async for one Tenant's sake. Once
- * `strata.ts` lands, wire a real cross-check here (issue #519); for now this
- * only catches what a bare `z.string()` schema field lets through — an empty
- * or blank value.
+ * (`layers/midden/app/utils/strata.ts`'s `DIG_SEASON_SLUGS`, per
+ * `layers/midden/CONTEXT.md`'s "Dig season" term) — a value that isn't a
+ * real dig-season slug is caught here the same way `checkInteractions`/
+ * `checkObservations` catch a slug naming no real Specimen (issue #519).
  */
 function checkStratum(stratum: string): string[] {
-  return stratum.trim() === '' ? ['stratum: must not be empty'] : []
+  if (stratum.trim() === '') return ['stratum: must not be empty']
+  if (!DIG_SEASON_SLUGS.includes(stratum)) {
+    return [`stratum: "${stratum}" is not a known dig season (expected one of: ${DIG_SEASON_SLUGS.join(', ')})`]
+  }
+  return []
 }
 
 /**
