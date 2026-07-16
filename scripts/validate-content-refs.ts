@@ -15,16 +15,23 @@
 //     than one `::almanac`, or an MDC container left unclosed (the regression
 //     that motivated this: an unclosed `::almanac` silently degrades to plain
 //     prose — no schema violation, no render error, ADR-0004 gap).
+//   - A Midden `artifacts` Document's `site` naming no real `pages` slug in
+//     the same (Tenant, Space), its `stratum` being blank, or its `provenance`
+//     reference being obviously malformed (issue #520 — see the
+//     "Provenance existence check" block comment below for the deliberately
+//     soft scope).
 //
-// Scope: this pass only fires on a (Tenant, Space) that actually has the
-// Atlas-shaped collections (a `pages` Document with `phenology`, alongside
-// `interactions`/`observations`) — it is a no-op for `journal`/`blog`, whose
-// `pages` Documents never declare `phenology`.
+// Scope: this pass only fires on a (Tenant, Space) that actually has an
+// Atlas-shaped collection (a `pages` Document with `phenology`, alongside
+// `interactions`/`observations`) or a Midden-shaped `artifacts` collection —
+// it is a no-op for `journal`/`blog`, whose `pages` Documents never declare
+// `phenology` and never have an `artifacts` sibling.
 //
 // Usage:  pnpm validate:content   (runs this after validate-content.ts;
 //         see package.json)       Exits 0 if every reference resolves and
 //                                 every Specimen body is structurally sound,
 //                                 1 otherwise.
+import { execFileSync } from 'node:child_process'
 import { globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -263,6 +270,131 @@ function checkObservations(
   return { checked, dates }
 }
 
+// ── Collection-level check (artifacts / Midden, issues #518/#519/#520) ─────
+//
+// A Midden `artifacts` Document's `site` is a cross-reference this pass
+// validates the same way `checkInteractions`/`checkObservations` validate
+// Atlas's `from`/`to`/`specimen` — a string field the per-document Zod schema
+// cannot check against a sibling Document's real slug set.
+
+/**
+ * `stratum` cross-checks against the canonical dig-season list
+ * (`layers/midden/app/utils/strata.ts`'s `DIG_SEASONS`, per
+ * `layers/midden/CONTEXT.md`'s "Dig season" term) are deliberately NOT wired
+ * up here. Two reasons, both load-bearing: (1) that file is being authored by
+ * a sibling story and may not exist in a given worktree yet — a static
+ * top-level import would hard-fail EVERY Tenant's validation (not just
+ * Midden's) for as long as it's absent; (2) this whole call chain is
+ * synchronous end-to-end (`validateReferences()` is called synchronously by
+ * both this script's own `main()` and `tests/unit/validate-content-refs.spec.ts`),
+ * so a dynamic `import()` would force it async for one Tenant's sake. Once
+ * `strata.ts` lands, wire a real cross-check here (issue #519); for now this
+ * only catches what a bare `z.string()` schema field lets through — an empty
+ * or blank value.
+ */
+function checkStratum(stratum: string): string[] {
+  return stratum.trim() === '' ? ['stratum: must not be empty'] : []
+}
+
+/**
+ * Provenance existence check (issue #520). The goal is catching a TYPO'd
+ * provenance reference, not proving the referent is still live — a
+ * `dissolved`/`lost` Artifact's referent is EXPECTED to be gone (that's the
+ * whole point of cataloguing it). And CI checks out with `actions/checkout@v7`
+ * and no `fetch-depth` override (`.github/workflows/gate.yml`), so CI's own
+ * clone is SHALLOW — it can prove a hash is malformed, but it can never prove
+ * a well-formed hash's commit doesn't exist (only that it isn't reachable from
+ * the shallow tip). So this check is deliberately soft:
+ *   - `commit`: format-validate `hash` (hex, 7-40 chars) — a malformed hash is
+ *     always a violation. A well-formed hash gets a best-effort
+ *     `git cat-file -e` confirmation attempt, but a failed lookup is NEVER
+ *     itself a violation (it fails constantly on a shallow clone, or on a
+ *     hash from history genuinely not fetched) — only a genuinely malformed
+ *     hash is.
+ *   - `file`: no strong check is possible without full history either —
+ *     validate `path` is a plausible repo-relative path (non-empty, no
+ *     leading "/", reasonable characters) and stop there.
+ *   - `branch`: validate `name` is non-empty and slug-like.
+ *   - `dependency`/`skill`: validate `name` is non-empty.
+ *   - `pr`: nothing to add — `number` is already `z.number().int().positive()`
+ *     in the Zod schema.
+ * Don't "fix" this into a deep-history dependency — the shallow-clone
+ * constraint above is the point, not a gap.
+ */
+function checkProvenance(provenance: unknown, projectRoot: string): string[] {
+  const p = provenance && typeof provenance === 'object' ? (provenance as Record<string, unknown>) : {}
+  const kind = typeof p.kind === 'string' ? p.kind : undefined
+
+  switch (kind) {
+    case 'commit': {
+      const hash = typeof p.hash === 'string' ? p.hash : ''
+      if (!/^[0-9a-fA-F]{7,40}$/.test(hash)) {
+        return [`provenance.hash: "${hash}" does not look like a plausible git hash (7-40 hex chars)`]
+      }
+      // Best-effort confirmation only — see the block comment above for why a
+      // failed lookup here never becomes a violation.
+      try {
+        execFileSync('git', ['cat-file', '-e', `${hash}^{commit}`], { cwd: projectRoot, stdio: 'ignore' })
+      } catch {
+        // Not found on this (possibly shallow) clone — not evidence of a typo.
+      }
+      return []
+    }
+    case 'file': {
+      const path = typeof p.path === 'string' ? p.path : ''
+      if (path.trim() === '' || path.startsWith('/') || !/^[\w./-]+$/.test(path)) {
+        return [`provenance.path: "${path}" is not a plausible repo-relative path`]
+      }
+      return []
+    }
+    case 'branch': {
+      const name = typeof p.name === 'string' ? p.name : ''
+      if (name.trim() === '' || !/^[\w][\w./-]*$/.test(name)) {
+        return [`provenance.name: "${name}" is not a plausible branch name`]
+      }
+      return []
+    }
+    case 'dependency':
+    case 'skill': {
+      const name = typeof p.name === 'string' ? p.name : ''
+      if (name.trim() === '') return [`provenance.name: must not be empty`]
+      return []
+    }
+    case 'pr':
+      return [] // `number`'s shape is already schema-enforced.
+    default:
+      return [] // an unrecognized/missing "kind" is a schema violation, not this pass's job.
+  }
+}
+
+function checkArtifacts(
+  col: ExpandedCollection,
+  projectRoot: string,
+  siteSlugs: Set<string>,
+  violations: RefViolation[],
+): number {
+  const cwd = join(projectRoot, col.cwdRel)
+  let checked = 0
+  for (const rel of globSync(col.include, { cwd })) {
+    checked++
+    const data = parseDocument(join(cwd, rel))
+    const file = join(col.cwdRel, rel)
+    const msgs: string[] = []
+
+    const site = typeof data.site === 'string' ? data.site : undefined
+    if (site !== undefined && !siteSlugs.has(site)) {
+      msgs.push(`site: "${site}" is not a "pages" Document in this Space`)
+    }
+
+    if (typeof data.stratum === 'string') msgs.push(...checkStratum(data.stratum))
+
+    msgs.push(...checkProvenance(data.provenance, projectRoot))
+
+    if (msgs.length) violations.push({ key: col.key, file, messages: msgs })
+  }
+  return checked
+}
+
 // ── Main pass ────────────────────────────────────────────────────────────────
 
 interface PhenologyFrontmatter {
@@ -314,8 +446,14 @@ export function validateReferences(cols: ExpandedCollection[], projectRoot = roo
 
     const interactionsCol = groupCols.find((c) => c.collection === 'interactions')
     const observationsCol = groupCols.find((c) => c.collection === 'observations')
-    if (!interactionsCol && !observationsCol && ![...pageBodies.values()].some((p) => phaseNamesOf(p.frontmatter).size > 0)) {
-      continue // an ordinary (non-Atlas-shaped) pages-only Space — nothing this pass can check
+    const artifactsCol = groupCols.find((c) => c.collection === 'artifacts')
+    if (
+      !interactionsCol &&
+      !observationsCol &&
+      !artifactsCol &&
+      ![...pageBodies.values()].some((p) => phaseNamesOf(p.frontmatter).size > 0)
+    ) {
+      continue // an ordinary (non-Atlas/Midden-shaped) pages-only Space — nothing this pass can check
     }
     groupsChecked++
 
@@ -327,6 +465,8 @@ export function validateReferences(cols: ExpandedCollection[], projectRoot = roo
       filesChecked += result.checked
       observationDates = result.dates
     }
+
+    if (artifactsCol) filesChecked += checkArtifacts(artifactsCol, projectRoot, specimenSlugs, violations)
 
     for (const { file, frontmatter, body } of pageBodies.values()) {
       const phaseNames = phaseNamesOf(frontmatter)
