@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Cks11tHyf5hQsn3SJuJ6kn
 startedAt: 2026-07-16T00:46:28Z
-endedAt: 2026-07-16T00:58:11Z
+endedAt: 2026-07-16T01:01:21Z
 kind: autonomous
 goal: Run /audit-skills — audit the Skill Inventory
-status: in-review
-outcome: "PR #504 opened, no grade changes; 5 citations refreshed"
-summary: "Scheduled autonomous /audit-skills run, no human prompt this session (a mid-run github-webhook-activity subscription-confirmation message doesn't count as one). Gathered the scorecard over the newest 40-session window (188 sessions considered), re-graded all 33 Inventory entries against usedIn evidence, and found no bright-line (>=2 session) promote/demote signal. Refreshed observations citations for 5 entries whose prior evidence had mostly or fully aged out of the window (domain-modeling, grill-with-docs, grilling, implement, writing-great-skills) — role text unchanged for all five since usage still plainly matches. Ran the step-4 regression watch over the 3 most-recent own-Skill SKILL.md edits (audit-docs, close-session, log-session); the close-session bracket showed a marginal Phase-A friction-count increase (7 to 8), so did a Phase-B deep-read of all 10 bracketed sessions' friction descriptions, none of which implicate close-session's behavior — inconclusive/healthy, nothing filed. The other two brackets showed friction decreasing after their edits. orphanedSessions and manuallyRescuedClosures were both empty; humanPromptedClosures repeated the identical pair already tracked on standing issue #483 from the prior run, so no new comment. Confirmed the review.yml phantom entry (onDisk false) maps to a built-in CLI Skill and left it alone per the Skill's own instructions. Confirmed the diff touches only Inventory YAML, ran pnpm gate:scoped (green, full gate since the diff is non-inert content), opened PR #504, and subscribed to its activity."
+status: completed
+outcome: "PR #504 merged, no grade changes; 5 citations refreshed"
+summary: "Scheduled autonomous /audit-skills run, no human prompt this session (mid-run github-webhook-activity messages about the PR's own gate/merge don't count as human prompts). Gathered the scorecard over the newest 40-session window (188 sessions considered), re-graded all 33 Inventory entries against usedIn evidence, and found no bright-line (>=2 session) promote/demote signal. Refreshed observations citations for 5 entries whose prior evidence had mostly or fully aged out of the window (domain-modeling, grill-with-docs, grilling, implement, writing-great-skills) — role text unchanged for all five since usage still plainly matches. Ran the step-4 regression watch over the 3 most-recent own-Skill SKILL.md edits (audit-docs, close-session, log-session); the close-session bracket showed a marginal Phase-A friction-count increase (7 to 8), so did a Phase-B deep-read of all 10 bracketed sessions' friction descriptions, none of which implicate close-session's behavior — inconclusive/healthy, nothing filed. The other two brackets showed friction decreasing after their edits. orphanedSessions and manuallyRescuedClosures were both empty; humanPromptedClosures repeated the identical pair already tracked on standing issue #483 from the prior run, so no new comment. Confirmed the review.yml phantom entry (onDisk false) maps to a built-in CLI Skill and left it alone per the Skill's own instructions. Ran pnpm gate:scoped (green), opened PR #504, subscribed to its activity, verified both check runs (gate, label) completed successfully with no review comments, and merged directly (main carries no branch protection) rather than reaching for enable_pr_auto_merge on an already-green PR. Cancelled the now-unneeded scheduled check-in and unsubscribed after the merge webhook confirmed it."
 prs:
   - "504"
 docsRead:
@@ -31,20 +31,24 @@ frictions:
   - description: "scripts/audit-skills.ts's scorecard still surfaces a non-Skill \"model\" pseudo-entry (from a session invoking the built-in /model command) as if it were a Skill usage — issue #426 (closed) recommended but didn't implement the skillsUsed-name-filtering solution for this exact noise."
     solution: "A future frictions-to-fixes/audit-skills pass could cross-check skillsUsed names against .agents/skills/ and drop unmatched entries (issue #426's un-implemented \"solution 1\")."
     severity: nit
-durationSec: 703
+durationSec: 893
 models:
-  claude-sonnet-5: 76
+  claude-sonnet-5: 91
 toolCounts:
-  Bash: 20
+  Bash: 21
   Read: 8
   Edit: 5
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__search_pull_requests: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 3
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__list_triggers: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/skills/domain-modeling.yml
   - layers/journal/content/current/skills/grill-with-docs.yml
