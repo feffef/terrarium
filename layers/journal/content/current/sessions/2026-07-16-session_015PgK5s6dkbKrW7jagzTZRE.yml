@@ -1,0 +1,152 @@
+schemaVersion: 1
+session: session_015PgK5s6dkbKrW7jagzTZRE
+startedAt: 2026-07-16T18:49:16Z
+endedAt: 2026-07-16T21:43:44Z
+kind: interactive
+goal: "Build the Midden Tenant MVP (issue #515)"
+status: in-review
+outcome: "PR #534 opened, CI green, awaiting human merge"
+summary: "Human-instructed: the user directed a specific orchestration shape — one background agent per story (model chosen by task), parallelize where possible, converge on a single integration branch, run a critical /code-review with Opus and fix findings with Sonnet, open one final PR without asking back, and spawn a 3-agent (2 Sonnet + 1 Opus) panel for any genuinely open decision. Agent-initiated: since issue #515's own sub-issues (#516-528) were already fully resolved before this session, no new decision panel was ever needed — the entire decomposition into a foundation-then-3- wave dependency structure (schema/design-system/stratigraphy/validation, then component assembly, then real content research), the exact story boundaries, per-story model assignment, and every integration/rebase/ re-verification step were agent-initiated within that mandate. Built layers/midden/ (trench-only v1): manifest+schema, a condition-grade glyph/ tooltip/popover/legend system, a scroll-synced stratigraphy sidebar, MDC artifact embeds, route pages, a validate-content-refs.ts extension, and 31 real seed artifacts across 7 sites and 4 dig seasons researched from actual repo history under the #525 two-gate inclusion test. Independently re-verified every integration point (fast-forward merges, full pnpm gate, full e2e smoke suite) rather than trusting agent self-reports. A critical two-axis Opus code review found one real spec gap (a stratum-existence check that never actually cross-referenced real data) plus several Standards findings; two parallel Sonnet agents fixed them, re-verified with the full gate, and the branch was rebased onto origin/main (which moved twice during the session) before opening PR #534."
+prs:
+  - "534"
+docsRead:
+  - path: CONTEXT.md
+    reason: Tenants roster + glossary conventions to extend
+  - path: CONTEXT-MAP.md
+    reason: multi-context index to add Midden to
+  - path: shared/manifest.ts
+    reason: exact TenantManifest/defineTenant contract
+  - path: layers/atlas/tenant.config.ts
+    reason: precedent manifest shape to mirror
+  - path: layers/atlas/CONTEXT.md
+    reason: precedent per-Tenant CONTEXT.md shape
+  - path: layers/atlas/app/utils/almanac.ts
+    reason: precedent for the strata.ts ordered-list pattern
+  - path: layers/atlas/app/assets/theme.css
+    reason: precedent CSS token structure
+  - path: scripts/validate-content-refs.ts
+    reason: existing check-function pattern to extend
+  - path: docs/agents/pr-workflow.md
+    reason: confirm an ordinary work PR is human-merge-only
+  - path: tests/README.md
+    reason: e2e single-spec / test-homing rule
+  - path: layers/atlas/nuxt.config.ts
+    reason: (no reason given)
+  - path: layers/atlas/app/pages/t/atlas/index.vue
+    reason: (no reason given)
+  - path: layers/atlas/app/pages/t/atlas/[space]/index.vue
+    reason: (no reason given)
+  - path: layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+    reason: (no reason given)
+  - path: layers/atlas/app/utils/biomes.ts
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/ConditionGlyph.vue
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/ConditionTooltip.vue
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/ConditionPopover.vue
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/GradeLegend.vue
+    reason: (no reason given)
+  - path: layers/midden/app/utils/condition.ts
+    reason: (no reason given)
+  - path: layers/midden/app/utils/strata.ts
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/StratigraphySidebar.vue
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/StrataLegend.vue
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/SiteCard.vue
+    reason: (no reason given)
+  - path: layers/midden/app/assets/theme.css
+    reason: (no reason given)
+  - path: layers/midden/tests/e2e/midden.e2e.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: implement
+    reason: top-level workflow this session ran under
+  - name: code-review
+    reason: critical two-axis Standards/Spec review before the final PR
+  - name: close-session
+    reason: session closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Two Wave-1 background agents were killed mid-work by a transient 529 Overloaded API error, leaving finished-looking work uncommitted in their worktrees.
+    solution: Resumed both via SendMessage with an explicit re-verify-then-commit-then-push instruction; both recovered cleanly. Worth a standing reminder that a 529 mid-agent isn't a real failure and is always worth resuming rather than re-dispatching from scratch.
+    severity: moderate
+  - description: A code-review fix agent (fix1) ended its turn with a vague, non-committal final message ('I'll stop polling now and wait for the background notification...') despite its brief explicitly requiring commit+push before stopping; its worktree held fully correct, working changes that were never committed or pushed.
+    solution: Caught by explicitly checking the worktree's git status before trusting the completion notification (per CLAUDE.md's existing worktree-guard rule) rather than assuming a 'completed' status meant the work landed; finished verification and committed/pushed it myself. The rule already exists in CLAUDE.md — this is a real instance of exactly the failure mode it warns about, not a gap in the doc.
+    severity: major
+  - description: mcp__github__pull_request_read's get_status method reported state 'pending'/0 statuses for the PR's head commit even though get_check_runs showed both checks (gate, label) completed successfully on that same commit.
+    solution: Prefer get_check_runs over get_status for this repo's GitHub Actions-based CI — get_status reflects the legacy commit-status API, which this repo doesn't populate.
+    severity: minor
+  - description: "The first subscribe_pr_activity call failed with 'AbortError: Tool permission stream closed before response received'; an identical immediate retry succeeded."
+    solution: No action needed beyond retrying once — transient.
+    severity: nit
+durationSec: 10468
+models:
+  claude-sonnet-5: 357
+  <synthetic>: 4
+toolCounts:
+  ToolSearch: 5
+  mcp__github__issue_read: 2
+  Agent: 10
+  Bash: 93
+  TaskCreate: 6
+  TaskUpdate: 17
+  Read: 32
+  Write: 6
+  Edit: 4
+  ScheduleWakeup: 7
+  SendMessage: 2
+  Skill: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  SendUserFile: 1
+filesEdited:
+  - layers/midden/nuxt.config.ts
+  - layers/midden/tenant.config.ts
+  - layers/midden/content/trench/pages/index.md
+  - layers/midden/CONTEXT.md
+  - CONTEXT.md
+  - CONTEXT-MAP.md
+subagents:
+  - type: general-purpose
+    task: Research Midden MVP spec sub-issues
+  - type: general-purpose
+    task: Midden design tokens + condition-grade system
+    model: opus
+  - type: general-purpose
+    task: Midden strata + stratigraphy sidebar
+    model: sonnet
+  - type: general-purpose
+    task: Midden validation script + e2e scaffold
+    model: sonnet
+  - type: general-purpose
+    task: Midden artifact card + route pages assembly
+    model: sonnet
+  - type: general-purpose
+    task: Midden content research + seed authoring
+    model: opus
+  - type: general-purpose
+    task: "Code review: Standards axis"
+    model: opus
+  - type: general-purpose
+    task: "Code review: Spec axis"
+    model: opus
+  - type: general-purpose
+    task: "Fix: stratum validation + stale comments"
+    model: sonnet
+  - type: general-purpose
+    task: "Fix: CSS tokens + tally wiring + a11y"
+    model: sonnet
+gitBranch: claude/story-background-agents-parallel-by20gp
+entrypoint: remote
+cliVersion: 2.1.211
+learnings:
+  - Nuxt auto-imports every layer's app/utils and app/composables exports into one GLOBAL namespace across ALL layers (unimport), not scoped per-Tenant — a same-named export in a new Tenant's utils file can silently overwrite an existing Tenant's generated type declaration and break ITS typecheck with no error pointing at the actual cause. A Wave-1 agent caught this itself (seasonOf vs. Atlas's own seasonOf) before it landed; worth a standing cross-layer name-collision grep step whenever a new layer/**/app/{utils,composables} export is added.
+  - scripts/log-session.ts already establishes precedent for a generic Platform script directly importing a specific Tenant's file by relative path (layers/journal/tenant.config.ts) — useful prior art when a validation script needs to reference one Tenant's data (used here to justify scripts/validate-content-refs.ts importing layers/midden/app/utils/strata.ts's DIG_SEASON_SLUGS).
