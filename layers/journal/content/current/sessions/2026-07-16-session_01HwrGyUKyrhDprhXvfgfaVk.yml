@@ -1,19 +1,17 @@
 schemaVersion: 1
 session: session_01HwrGyUKyrhDprhXvfgfaVk
 startedAt: 2026-07-16T04:08:38Z
-endedAt: 2026-07-16T04:51:38Z
+endedAt: 2026-07-16T04:57:27Z
 kind: autonomous
-goal: Re-sweep docs after round 1 merged
+goal: Escalate ADR-0022 wayfinder:task fix
 status: in-review
-outcome: 4 findings confirmed and fixed, PR open
-summary: "Second autonomous /audit-docs run, self-triggered right after round 1 (PR #510) merged — no direct human ask this session. Restarted the caller-pinned designated branch claude/festive-mayer-ze8z54 off the fresh origin/main (per CLAUDE.md's merged-branch-restart rule), re-ran the 4 paired-lens reviewer agents fresh, briefing each on round 1's fixes so they wouldn't re-report them. Freshness and Concision again found nothing; Single-home found 2 new findings (triage-labels.md restating auto-triage/SKILL.md's Public-issue-gate rule; atlas-specimen/SKILL.md mis-citing CLAUDE.md instead of docs/agents/verifying-ui-changes.md); Coherence found 2 new contradictions (architecture.md still undercounting ADR-0001's exceptions after CLAUDE.md was fixed; auto-triage/SKILL.md and ADR-0022 both blanket-classifying wayfinder:task as AFK-eligible against wayfinder/SKILL.md's own per-ticket definition) and independently re-declined the \"AFK agent\" ambiguity candidate from round 1. All 4 pooled findings fact-checked CONFIRMED (one CONFIRMED-BUT). Fixed the 4 non-ADR findings; the ADR-0022 restatement is a decision reversal per ADR-0018's classification rule, so it's held for a separate, human-reviewed follow-up PR (reusing this branch name after this PR merges) rather than force-fit into the self-merge PR. Gate green (44/44 e2e). Opened PR #511, subscribed, will babysit to merge then restart the branch again for the ADR-0022 amendment."
+outcome: Amendment PR opened for human review
+summary: "Follow-up to round 2 (PR #511, merged) — escalating the one finding round 2 confirmed but couldn't self-merge. No direct human ask; fully agent-initiated per audit-docs' standing charter. ADR-0022's Decision text blanket-classifies wayfinder:task as AFK-eligible, contradicting wayfinder/SKILL.md's own per-ticket HITL-or-AFK definition (auto-triage/SKILL.md itself was already fixed in PR #511). Restarted the designated branch off the fresh origin/main, read ADR-0018's factual-correction-vs-decision-reversal rule to classify the fix — it's a decision reversal (narrows what the standing green-light authorizes), so it needs an appended amendment, never an in-place rewrite of the original Decision/Consequences. Drafted and appended a new \"## Amendment\" section to ADR-0022 matching ADR-0018's own precedent style. gate:scoped went green via the fast docs-only path (lint/typecheck/validate:content only). Opened PR #512 explicitly as a normal, human-reviewed PR — not self-merged, since it touches an ADR, human-only to merge per ADR-0004 — and subscribed to its activity. The ADR edit still needs actual human review/merge before it lands; that's the whole point of routing it here rather than self-merging."
 prs:
-  - "511"
+  - "512"
 docsRead:
   - path: docs/adr/0018-tenant-layers-under-layers-directory.md
-    reason: factual-correction-vs-decision-reversal classification rule for the ADR-0022 finding
-  - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: read in full to draft the eventual amendment
+    reason: re-confirmed the amendment-vs-in-place-edit classification before drafting
   - path: docs/agents/domain.md
     reason: (read before editing)
   - path: CONTEXT-MAP.md
@@ -34,38 +32,37 @@ docsRead:
     reason: (read before editing)
   - path: .agents/skills/auto-triage/SKILL.md
     reason: (read before editing)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (read before editing)
 skillsUsed:
   - name: audit-docs
-    reason: the Skill this whole session ran
+    reason: the Skill this whole chain ran under
   - name: close-session
     reason: closure front door at PR-open
   - name: log-session
     reason: (no reason given)
-frictions:
-  - description: audit-docs' escalation-PR design assumes a second branch/PR can open alongside the self-merge PR, but this session's designated branch is caller-pinned to one name — can't have two open PRs from one branch.
-    solution: "Sequenced instead: merge the self-merge-eligible PR first, then reuse the same branch name (CLAUDE.md's merged-branch-restart convention) for the ADR-0022 escalation PR. Worth noting explicitly in the audit-docs SKILL.md or CLAUDE.md as the expected pattern when a session's branch is single-pinned, so a future run doesn't have to re-derive this."
-    severity: minor
-durationSec: 2580
+frictions: []
+durationSec: 2929
 models:
-  claude-sonnet-5: 265
+  claude-sonnet-5: 317
 toolCounts:
-  Bash: 34
+  Bash: 42
   ToolSearch: 5
-  TaskCreate: 18
-  TaskUpdate: 36
+  TaskCreate: 19
+  TaskUpdate: 39
   Agent: 10
-  ScheduleWakeup: 3
-  Read: 16
-  Edit: 11
+  ScheduleWakeup: 4
+  Read: 18
+  Edit: 14
   mcp__github__search_pull_requests: 2
-  mcp__github__create_pull_request: 2
-  mcp__github__subscribe_pr_activity: 2
-  Skill: 4
-  Write: 2
-  mcp__github__pull_request_read: 3
-  mcp__github__add_issue_comment: 2
-  mcp__github__merge_pull_request: 1
-  mcp__github__unsubscribe_pr_activity: 1
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 3
+  Skill: 6
+  Write: 3
+  mcp__github__pull_request_read: 6
+  mcp__github__add_issue_comment: 3
+  mcp__github__merge_pull_request: 2
+  mcp__github__unsubscribe_pr_activity: 2
 filesEdited:
   - docs/agents/domain.md
   - CLAUDE.md
@@ -74,6 +71,7 @@ filesEdited:
   - .agents/skills/atlas-specimen/SKILL.md
   - layers/journal/content/current/pages/architecture.md
   - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
 subagents:
   - type: general-purpose
     task: "Freshness lens: drift + orphan-addition"
