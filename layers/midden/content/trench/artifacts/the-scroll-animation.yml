@@ -1,0 +1,20 @@
+title: the position-preserving scroll animation
+stratum: almanac-recut
+condition: dissolved
+provenance:
+  kind: commit
+  hash: f4e8aba
+  path: layers/journal/app/pages/t/journal/[space]/index.vue
+  url: https://github.com/feffef/terrarium/commit/f4e8aba
+  continuityCheck: the smooth-scroll behaviour was dropped from the dashboard; the
+    position-preserving scroll it decorated remains, but the animation itself is
+    gone
+site: toward-the-defaults
+catalogNote: A smooth easing on the dashboard’s position-preserving scroll,
+  dropped when the motion turned out to cost more than it gave; the scroll it
+  dressed still works, plainly.
+assessedAt: 2026-07-16
+inscription:
+  text: "journal(dashboard): drop the smooth animation from the
+    position-preserving scroll"
+  source: commit f4e8aba, subject

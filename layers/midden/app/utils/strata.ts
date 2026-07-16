@@ -5,11 +5,14 @@
 // legend (#528), and `scripts/validate-content-refs.ts`'s `stratum` reference
 // check all read the same list.
 //
-// PLACEHOLDER CONTENT: the four seasons below are fictional stand-ins for a
-// later content-authoring pass that will research real dig seasons from repo
-// history (#519). Only the exported shape (`DigSeason`, `DIG_SEASONS`,
-// `seasonOf`, `DIG_SEASON_SLUGS`) is the actual contract — that pass will
-// replace this array's contents in place, preserving the shape exactly.
+// The seasons below are the REAL dig seasons, named for what the Platform was
+// mostly discarding in each window and dated from the actual termination dates
+// of the artifacts catalogued in `content/trench/` (#519). The Platform's own
+// history is only twelve days deep so far (first commit 2026-07-04), so these
+// strata are correspondingly thin — an honest young midden, not a deep one.
+// Only the exported shape (`DigSeason`, `DIG_SEASONS`, `digSeasonOf`,
+// `DIG_SEASON_SLUGS`) is the contract; the content-authoring pass replaced this
+// array's contents in place, preserving the shape exactly.
 export interface DigSeason {
   /** URL-safe identifier — the value an `artifacts` Document's `stratum` field references. */
   slug: string
@@ -26,27 +29,40 @@ export interface DigSeason {
  * and it is always the last entry (pinned by strata.spec.ts). */
 export const DIG_SEASONS: DigSeason[] = [
   {
-    slug: 'placeholder-season-one',
+    // The trench floor: the generated-config-and-drift machinery (ADR-0007) dug
+    // out when the routing map went build-time-virtual (ADR-0013/0014), plus the
+    // earliest scaffolding — a bespoke app.vue, the squashed first milestone, the
+    // discarded status-dashboard design.
+    slug: 'routing-excavation',
     label: 'the Routing Excavation',
-    start: '2026-01-01',
-    end: '2026-02-14',
+    start: '2026-07-04',
+    end: '2026-07-09',
   },
   {
-    slug: 'placeholder-season-two',
-    label: 'the Great Dependency Purge',
-    start: '2026-02-15',
-    end: '2026-03-31',
+    // A thin ash layer of deliberate throwaways: do-not-merge spikes, closed
+    // exploratory pull requests, and the speculative job-taxonomy that was named
+    // before any of the work grew into it.
+    slug: 'spike-ashfall',
+    label: 'the Spike Ashfall',
+    start: '2026-07-10',
+    end: '2026-07-11',
   },
   {
-    slug: 'placeholder-season-three',
-    label: 'the Skill Attrition',
-    start: '2026-04-01',
-    end: '2026-05-15',
+    // The Atlas's phenology content-model recut for the second time — the
+    // ::phase and season-note components retired for phase-notes — alongside a
+    // sweep of unused dependencies, a dropped diagram, and a dropped animation.
+    slug: 'almanac-recut',
+    label: 'the Almanac Recut',
+    start: '2026-07-12',
+    end: '2026-07-13',
   },
   {
-    slug: 'placeholder-season-current',
+    // The freshest spoil, still settling: closed-but-complete feature PRs, a
+    // retired root-index listing, and the @nuxt/content client-DB patch dropped
+    // once upstream no longer needed it (ADR-0019).
+    slug: 'current-midden',
     label: 'the Current Midden',
-    start: '2026-05-16',
+    start: '2026-07-14',
     end: null,
   },
 ]

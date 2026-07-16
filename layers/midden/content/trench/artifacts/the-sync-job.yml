@@ -1,0 +1,16 @@
+title: the `sync` chartered job
+stratum: spike-ashfall
+condition: lost
+provenance:
+  kind: commit
+  hash: a1dc590
+  path: CONTEXT.md
+  url: https://github.com/feffef/terrarium/commit/a1dc590
+  continuityCheck: a speculative name for a self-improvement job coined before the
+    work existed; the work grew real names instead (digest, audit-docs,
+    audit-skills, frictions-to-fixes) and nothing was ever built as `sync`
+site: the-buried
+catalogNote: A name given to a self-improvement job before the job existed; the
+  work, when it came, took other names entirely, and nothing was ever built to
+  answer to this one.
+assessedAt: 2026-07-16

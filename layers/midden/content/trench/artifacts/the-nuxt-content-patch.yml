@@ -1,0 +1,19 @@
+title: "the @nuxt/content #236 client-DB patch"
+stratum: current-midden
+condition: fresh
+provenance:
+  kind: commit
+  hash: b23e8d3
+  path: patches/@nuxt__content@3.15.0.patch
+  url: https://github.com/feffef/terrarium/commit/b23e8d3
+  continuityCheck: the patched behaviour was resolved upstream at the pinned
+    version; the patch was dropped (ADR-0019) with nothing needed in its place —
+    removed today
+site: the-current-cut
+catalogNote: A local patch to @nuxt/content’s client-side database loading,
+  carried against a pinned version until upstream made it unnecessary, and
+  lifted out this very morning.
+assessedAt: 2026-07-16
+inscription:
+  text: "chore(deps): drop the @nuxt/content #236 client-DB patch (ADR-0019)"
+  source: commit b23e8d3, subject

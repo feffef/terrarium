@@ -1,0 +1,20 @@
+title: flag removed-mechanism nouns outside their home
+stratum: current-midden
+condition: fresh
+provenance:
+  kind: pr
+  number: 477
+  merged: false
+  url: https://github.com/feffef/terrarium/pull/477
+  continuityCheck: "closed unmerged; the merged-nowhere commit dcdebef is not an
+    ancestor of main, and #442’s removed-mechanism-noun check exists nowhere in
+    the live tree"
+site: the-current-cut
+catalogNote: A gate to catch a retired mechanism’s name lingering in live docs,
+  proven out with a break-then-fix and closed unmerged two days ago — edges
+  still sharp, the check it proposed still never run.
+assessedAt: 2026-07-16
+inscription:
+  text: "feat(gate): flag removed-mechanism nouns referenced outside their
+    sanctioned home (part of #442)"
+  source: "PR #477 title"

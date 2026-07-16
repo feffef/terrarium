@@ -1,0 +1,16 @@
+title: the L0 · drift gate step
+stratum: routing-excavation
+condition: lost
+provenance:
+  kind: commit
+  hash: 9ecd4b5
+  path: .github/workflows/gate.yml
+  url: https://github.com/feffef/terrarium/commit/9ecd4b5
+  continuityCheck: gate.yml is human-only CI, its history not carried in this
+    clone; the step is gone and nothing checks generated-file drift because
+    nothing is generated to drift (ADR-0014)
+site: the-generated-map
+catalogNote: A whole CI step that once failed the build when the generated files
+  fell out of date; removed with the thing it guarded, it survives only as a
+  name in a commit subject.
+assessedAt: 2026-07-16
