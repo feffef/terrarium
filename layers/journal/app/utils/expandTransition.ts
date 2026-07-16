@@ -12,6 +12,12 @@
 // play — so every moving part of the open animation stays single-homed here.
 const DURATION_MS = 160
 
+// Extra wall-clock margin the pin loop runs past the transition end, so its final
+// counter-scroll lands after the animation's last frame even on a loaded runner
+// (a few frames of slack) — see pinTopAcrossTransition for why the loop is
+// time-bounded rather than exiting when the item stops moving.
+const SETTLE_GRACE_MS = 48
+
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export function expandOnEnter(el: Element, done: () => void): void {
@@ -66,14 +72,22 @@ export const PIN_SETTLED_EVENT = 'journal:pin-settled'
 // just acted on shouldn't visually jump. This item's own body and any sibling's
 // collapse both animate their height (the transitions above), so the shift plays
 // out over several frames rather than in one DOM patch — correcting once, right
-// after the patch, would miss most of it. Each frame: counter-scroll instantly
-// (never animated — an animated correction would show the very motion this hides,
-// clamped to 0 so we never scroll above the top of the page) by whatever moved
-// the item since the last frame, then check whether the item's OWN position in
-// the document — independent of our counter-scroll — is still changing; stop once
-// it holds steady for a frame. The frame cap is a backstop against a runaway
-// loop, not an expected path. Fires PIN_SETTLED_EVENT on every exit path so the
-// settle is observable to the e2e rather than raced against a timeout (#450).
+// after the patch, would miss most of it. So every frame, counter-scroll by
+// whatever moved the item since we last looked (never animated — an animated
+// correction would show the very motion this hides — and clamped to 0 so we never
+// scroll above the top of the page).
+//
+// The loop runs for the KNOWN transition duration, NOT until the item's document
+// position "stops changing". That earlier stop-when-steady exit was the flake in
+// issue #450: on some frame schedules the item's position is briefly unchanged
+// for a frame BEFORE the collapse/expand has begun moving it, so the loop settled
+// there and left the rest of the reflow uncompensated — the item jumped (~270px
+// on CI; the old timeout-poll only lengthened the odds against it). Both the CSS
+// transition and this bound run on wall-clock time, so the loop always outlasts
+// the animation even on a loaded runner, and the bound doubles as the runaway cap
+// (no frame counter). The final frame counter-scrolls to the settled position
+// before firing PIN_SETTLED_EVENT — dispatched on every exit path — so the e2e
+// observes the true resting top rather than racing a timeout.
 export function pinTopAcrossTransition(el: HTMLElement | null, beforeTop: number | null): void {
   const settled = () => {
     window.dispatchEvent(new CustomEvent(PIN_SETTLED_EVENT))
@@ -82,18 +96,15 @@ export function pinTopAcrossTransition(el: HTMLElement | null, beforeTop: number
     settled()
     return
   }
-  let settledAt: number | null = null
-  let frame = 0
-  const step = () => {
-    const rectTop = el.getBoundingClientRect().top
-    const delta = rectTop - beforeTop
+  let start: number | null = null
+  const step = (now: number) => {
+    if (start === null) start = now
+    const delta = el.getBoundingClientRect().top - beforeTop
     if (delta) window.scrollTo({ top: Math.max(0, window.scrollY + delta), behavior: 'auto' })
-    const documentTop = rectTop + window.scrollY // invariant to our own counter-scroll
-    if (documentTop === settledAt || ++frame > 90) {
+    if (now - start >= DURATION_MS + SETTLE_GRACE_MS) {
       settled()
       return
     }
-    settledAt = documentTop
     requestAnimationFrame(step)
   }
   requestAnimationFrame(step)
