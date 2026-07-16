@@ -46,6 +46,10 @@ into view first") — read that doc, not a copy here.
 
 ## vitest `expect.poll` defaults
 
+e2e assertions use vitest's `expect` (with `expect.poll(...).toBe(...)` for
+async/polling conditions), not Playwright's own matcher set (`toBeVisible`,
+`toHaveText`, etc.) — those won't type or run here.
+
 `expect.poll` defaults to a **1000ms timeout / 50ms interval** — not set in
 `vitest.config.ts`, so the numbers aren't visible from this repo's own config.
 A poll racing a longer app-side settle animation (e.g. a rAF-driven
