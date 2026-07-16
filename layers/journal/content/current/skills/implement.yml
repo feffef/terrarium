@@ -18,3 +18,10 @@ observations:
       session_018UBvEX (#369 triage+implement), session_01YV8CUy (Atlas
       Sprint 2 orchestration), session_01TzvXVH (#364 Mermaid MDC) — same
       inconsistent-adoption pattern in role still holds.
+  - date: 2026-07-16
+    note: >-
+      Prior citations fully aged out; used in only 1 of this window's 40
+      sessions (session_019nK3xJvkANqWMUjJLmqP6z, issue #451) — most other
+      code-landing sessions this window (the runtime-git-read PoC tenant, the
+      #443 authorAssociation labeling change, the mobile Recent-Activity-cards
+      fix) did not invoke it, still matching the inconsistent-adoption role.

@@ -11,3 +11,10 @@ observations:
       Used in 5 of this window's 40 sessions, always ahead of a design/schema
       change before building: session_01RqxwHH, session_019ojLY,
       session_01LftL3mM, session_01TesnDHD, session_01Rervdd — matches role.
+  - date: 2026-07-16
+    note: >-
+      Prior citations mostly aged out; used in 3 of this window's 40 sessions,
+      again always ahead of a design/schema change: session_01B1PirL4vZnwR6VytVgfXut
+      (Observability naming interview), session_01NkLUMugs5s6QRRM8Wq7UUb
+      (designed the auto-triage skill + ADR-0022), session_01RqxwHHqJFDNBDjeqYVsTSC
+      (close-session/log-session closure-model design) — matches role.
