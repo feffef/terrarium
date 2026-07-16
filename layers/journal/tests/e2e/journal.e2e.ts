@@ -29,16 +29,17 @@ export interface JournalE2EContext {
 // the pending promise on `window` — it MUST run before the click that fires the
 // event, or the one-shot could fire before we're listening. `awaitPinSettled`
 // then blocks on that promise, resolving the instant the settle loop dispatches.
+type PinSettledWindow = Window & { __pinSettled?: Promise<void> }
 async function armPinSettled(page: Page): Promise<void> {
   await page.evaluate((event) => {
-    const w = window as unknown as { __pinSettled?: Promise<void> }
+    const w = window as PinSettledWindow
     w.__pinSettled = new Promise((resolve) => {
       window.addEventListener(event, () => resolve(), { once: true })
     })
   }, PIN_SETTLED_EVENT)
 }
 async function awaitPinSettled(page: Page): Promise<void> {
-  await page.evaluate(() => (window as unknown as { __pinSettled?: Promise<void> }).__pinSettled)
+  await page.evaluate(() => (window as PinSettledWindow).__pinSettled)
 }
 
 /** Register the journal Tenant's L2 assertions under the caller's active suite. */
