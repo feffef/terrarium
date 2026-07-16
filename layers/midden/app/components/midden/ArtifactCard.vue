@@ -1,242 +1,254 @@
 <script setup lang="ts">
-// The artifact card (#521's card anatomy, #523's gravestone `lost` variant):
-// one catalogued Artifact's visual presentation. Presentational only — no
-// data fetching; the `::midden-artifact` MDC embed (components/content/
-// MiddenArtifact.vue) hands this an already-loaded MiddenArtifactView.
+// The artifact entry (redesign handoff, direction 1a "Section column"): one
+// catalogued Artifact as a quiet RULED entry — a border-top, a corner condition
+// STAMP, the glyph, the title as a toggle, a mono provenance/assessed line, and
+// an inline accordion (catalogNote + inscription) below. No card box.
 //
 // Root element carries `id="artifact-<slug>"` + `data-stratum="<stratum>"` —
 // load-bearing: StratigraphySidebar.vue's IntersectionObserver targets every
-// `[data-stratum]` element on the page and its band anchors are literally
+// `[data-stratum]` element on the page and its gauge anchors are literally
 // `#artifact-<slug>`, so both attributes stay on THIS component's outermost
 // rendered element, never an inner wrapper.
 //
-// Two-tier interaction (#523): MiddenConditionTooltip already supplies Tier-1
-// (always-visible glyph+label, fixed definition on hover/focus) — this card
-// doesn't duplicate that. Tier-2 (the artifact-SPECIFIC rationale) is
-// MiddenConditionPopover, driven by this card's own `open` state so the WHOLE
-// card is the click target ("not nested inside the glyph specifically"); the
-// provenance link stops propagation so following it doesn't also toggle the
-// popover.
+// Two-tier interaction (#523), both preserved through the redesign:
+//   Tier-1 — MiddenConditionTooltip wraps the glyph: hover/focus reveals the
+//            FIXED grade-level definition. Unchanged by the mockup's simplified
+//            prototype, which only draws Tier-2.
+//   Tier-2 — the title `<button>` toggles this entry's own inline accordion (the
+//            artifact-SPECIFIC catalogNote + inscription). The glyph's tooltip
+//            trigger and the title toggle are SIBLINGS, and the provenance link
+//            sits in a separate meta line — so there is no nested-interactive
+//            (invalid ARIA) problem the pre-redesign card had to work around.
 //
-// The click/keyboard target is a dedicated `__toggle` button, layered BEHIND
-// the card's real content (not wrapping it) — nesting the provenance `<a>`
-// and the tooltip's own `<button>` inside an outer `role="button"` element is
-// invalid ARIA (code review, #515). The toggle button covers the whole card
-// (so it still catches any click that doesn't land on a genuinely interactive
-// descendant), while the provenance link and the condition tooltip sit above
-// it in z-order and stay independently clickable/tabbable.
-//
-// The `lost` gravestone variant (#523, unanimous): same card footprint as
-// every other grade (no list reflow) with a distinct headstone frame, and the
-// inscription slot structurally omitted regardless of the artifact's own
-// data — `:inscription="undefined"` goes to the popover even when the
-// document carries one, because the gravestone's silence is deliberate, not a
-// rendering-empty accident.
+// The `lost` grade (#523): its `inscription` is omitted STRUCTURALLY regardless
+// of authored data — `inscriptionForDisplay` returns undefined for `lost` even
+// when the document carries one, because the gravestone's silence is deliberate,
+// not a rendering-empty accident.
+import { conditionMeta } from '../../utils/condition'
 import type { MiddenArtifactView } from '../../composables/useMiddenTrenchData'
 
 const props = defineProps<{ artifact: MiddenArtifactView }>()
 
 const open = ref(false)
-
 function toggle() {
   open.value = !open.value
 }
 
 const isLost = computed(() => props.artifact.condition === 'lost')
+const label = computed(() => conditionMeta(props.artifact.condition).label)
 
-// Structural omission, not a rendering-empty accident (#523) — the gravestone
-// never passes its own `inscription` on to the popover, whatever the document says.
-const inscriptionForPopover = computed(() => (isLost.value ? undefined : props.artifact.inscription))
+// Structural omission, not a rendering-empty accident (#523).
+const inscriptionForDisplay = computed(() => (isLost.value ? undefined : props.artifact.inscription))
 
-// Deterministic, locale-independent date prose (no `toLocaleDateString` — SSR/
-// client locale mismatch causes hydration errors). Pattern-matches
-// StrataLegend.vue's local `formatDate`/`MONTH_ABBR` helper without importing
-// it cross-component (that helper is presentational and small; #526 asks only
-// that `assessedAt` render as prose beside the grade, never re-derive condition
-// from it).
-const MONTH_ABBR = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-]
+// A stamp reads as physically pressed when each one sits at a slightly different
+// angle/offset. Derived deterministically from the slug (SSR-stable, no hydration
+// drift) from the same small tables the mockup's buildArts() used.
+const STAMP_ANGLES = [-7, 5, -4, 6, -3]
+const STAMP_TOPS = [16, 12, 18, 13, 15]
+const STAMP_RIGHTS = [18, 26, 15, 24, 20]
+const stampStyle = computed(() => {
+  let h = 0
+  for (const ch of props.artifact.slug) h = (h * 31 + ch.charCodeAt(0)) >>> 0
+  const i = h % 5
+  return `top:${STAMP_TOPS[i]}px;right:${STAMP_RIGHTS[i]}px;transform:rotate(${STAMP_ANGLES[i]}deg);`
+})
+
+// Deterministic, locale-independent date prose (no `toLocaleDateString`, whose
+// SSR/client locale mismatch causes hydration errors). #526 asks only that
+// `assessedAt` render as prose beside the grade, never re-derive condition.
+const MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 function formatAssessedAt(iso: string): string {
   const [year, month, day] = iso.split('-')
   return `${Number(day)} ${MONTH_ABBR[Number(month) - 1]} ${year}`
 }
 
-// Turns the provenance discriminated union into a human label per `kind`.
-function provenanceLabel(p: MiddenArtifactView['provenance']): string {
+// The compact provenance line for the mono meta row — a kind-appropriate label
+// derived from the REAL discriminated union (never a mockup display string).
+function provenanceLine(p: MiddenArtifactView['provenance']): string {
   switch (p.kind) {
     case 'pr':
-      return `PR #${p.number} (${p.merged ? 'merged' : 'closed, unmerged'})`
+      return `PR #${p.number} · ${p.merged ? 'merged' : 'closed'}`
     case 'branch':
-      return `branch ${p.name}`
+      return `branch · ${p.name}`
     case 'commit':
-      return `commit ${p.hash.slice(0, 7)}${p.path ? ` ${p.path}` : ''}`
+      return `commit ${p.hash.slice(0, 7)}${p.path ? ` · ${p.path}` : ''}`
     case 'file':
-      return p.path
+      return `file · ${p.path}`
     case 'dependency':
-      return `dependency ${p.name}`
+      return `dependency · ${p.name}`
     case 'skill':
-      return `Skill "${p.name}"`
+      return `Skill · ${p.name}`
     default:
-      return p // exhaustive: `p` is `never` here if a provenance kind is ever added unhandled
+      return p // exhaustive: `p` is `never` if a provenance kind is added unhandled
   }
-}
-
-// Following the provenance link must not also toggle the card's popover.
-function onProvenanceClick(event: MouseEvent) {
-  event.stopPropagation()
 }
 </script>
 
 <template>
-  <article
+  <div
     :id="`artifact-${artifact.slug}`"
-    class="midden-artifact-card"
-    :class="{ 'midden-artifact-card--lost': isLost }"
+    class="midden-find"
+    :class="{ 'midden-find--lost': isLost }"
     :data-stratum="artifact.stratum"
   >
-    <button
-      type="button"
-      class="midden-artifact-card__toggle"
-      :aria-expanded="open"
-      :aria-label="`${open ? 'Hide' : 'Show'} curator's rationale for ${artifact.title}`"
-      @click="toggle"
-    />
+    <span class="stamp midden-find__stamp" :style="stampStyle">{{ label }}</span>
 
-    <MiddenConditionPopover
-      v-model:open="open"
-      :catalog-note="artifact.catalogNote"
-      :inscription="inscriptionForPopover"
-    >
-      <h3 class="midden-artifact-card__title">{{ artifact.title }}</h3>
+    <div class="midden-find__row">
+      <MiddenConditionTooltip class="midden-find__glyph" :grade="artifact.condition" :size="22" />
 
-      <p class="midden-artifact-card__condition">
-        <MiddenConditionTooltip :grade="artifact.condition" />
-        <span class="midden-artifact-card__assessed">— as of {{ formatAssessedAt(artifact.assessedAt) }}</span>
-      </p>
+      <div class="midden-find__main">
+        <button
+          type="button"
+          class="midden-find__toggle"
+          :aria-expanded="open"
+          :aria-label="`${open ? 'Hide' : 'Show'} the curator's note for ${artifact.title}`"
+          @click="toggle"
+        >
+          <span class="midden-find__title">{{ artifact.title }}</span>
+        </button>
 
-      <p class="midden-artifact-card__provenance">
-        <a
-          v-if="artifact.provenance.url"
-          :href="artifact.provenance.url"
-          target="_blank"
-          rel="noopener noreferrer"
-          @click="onProvenanceClick"
-        >{{ provenanceLabel(artifact.provenance) }}</a>
-        <template v-else>{{ provenanceLabel(artifact.provenance) }}</template>
-      </p>
-    </MiddenConditionPopover>
-  </article>
+        <div class="tech midden-find__meta">
+          <a
+            v-if="artifact.provenance.url"
+            :href="artifact.provenance.url"
+            target="_blank"
+            rel="noopener noreferrer"
+          >{{ provenanceLine(artifact.provenance) }}</a>
+          <span v-else>{{ provenanceLine(artifact.provenance) }}</span>
+          <span class="midden-find__assessed">assessed {{ formatAssessedAt(artifact.assessedAt) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="open" class="midden-find__expand">
+      <p class="hand midden-find__note">{{ artifact.catalogNote }}</p>
+      <blockquote v-if="inscriptionForDisplay" class="midden-find__inscription">
+        &ldquo;{{ inscriptionForDisplay.text }}&rdquo;
+        <span class="mono midden-find__source">{{ inscriptionForDisplay.source }}</span>
+      </blockquote>
+      <p v-else-if="isLost" class="hand midden-find__lost">no inscription survives — nothing is left to quote.</p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.midden-artifact-card {
+.midden-find {
   position: relative;
+  border-top: 1px solid var(--midden-rule);
+  padding: 15px 2px;
+}
+
+.midden-find__stamp {
+  /* top/right/rotate come from the inline :style (per-find, deterministic). */
+  font-size: 0.82rem;
+}
+
+.midden-find__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  /* Clear the corner stamp so the title never runs under it. */
+  padding-right: 128px;
+}
+
+.midden-find__glyph {
+  flex: none;
+  margin-top: 2px;
+}
+
+.midden-find__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.midden-find__toggle {
   display: block;
   width: 100%;
   text-align: left;
-  padding: 1rem 1.1rem;
-  margin: 0.9rem 0;
-  background: var(--midden-paper-2, #f6f0e2);
-  border: 1px solid var(--midden-line, #d8cbb2);
-  border-left: 3px solid var(--midden-accent, #b4552d);
-  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
   font: inherit;
   color: inherit;
-}
-
-/* The full-card click/keyboard target, layered BEHIND the real content (see
-   the script-block comment on nesting) — `inset: 0` on the `position:
-   relative` article above makes it cover exactly the card's own box.
-   `z-index: 1` (not 0/auto) is load-bearing: MiddenConditionPopover's own
-   root (`.midden-popover`, theme.css) is ALSO `position: relative`, which
-   would otherwise out-stack this button's plain content (title, condition
-   line) since it comes later in the DOM — z-index 1 puts the toggle above
-   that whole layer, and the two genuinely-interactive descendants (the
-   provenance link, the tooltip trigger) go one level above that in turn. */
-.midden-artifact-card__toggle {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  appearance: none;
   cursor: pointer;
 }
-.midden-artifact-card__toggle:focus-visible {
-  outline: 2px solid var(--midden-accent, #b4552d);
-  outline-offset: 2px;
+.midden-find__toggle:focus-visible {
+  outline: 2px solid var(--midden-accent);
+  outline-offset: 3px;
+  border-radius: 3px;
 }
-
-.midden-artifact-card__title {
-  margin: 0 0 0.5rem;
-  font-family: var(--midden-display);
-  font-size: 1.15rem;
+.midden-find__title {
+  display: block;
+  font-family: var(--midden-mono);
+  font-size: 1.02rem;
+  font-weight: 500;
+  line-height: 1.25;
   color: var(--midden-ink);
 }
+.midden-find__toggle:hover .midden-find__title {
+  color: var(--midden-accent-2);
+}
 
-.midden-artifact-card__condition {
+.midden-find__meta {
   display: flex;
-  align-items: baseline;
-  gap: 0.4ch;
-  margin: 0 0 0.4rem;
   flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 5px;
+  color: var(--midden-faint);
 }
-/* MiddenConditionTooltip's own trigger button must stay clickable/tabbable
-   above the card's `__toggle` (see the script-block comment on nesting). */
-.midden-artifact-card :deep(.midden-tip) {
-  position: relative;
-  z-index: 2;
-}
-.midden-artifact-card__assessed {
-  font-family: var(--midden-data);
-  font-size: 0.74rem;
-  color: var(--midden-faint, #a8977c);
-}
-
-.midden-artifact-card__provenance {
-  margin: 0;
-  font-family: var(--midden-data);
-  font-size: 0.78rem;
+.midden-find__meta a {
   color: var(--midden-muted);
-}
-.midden-artifact-card__provenance a {
-  position: relative;
-  z-index: 2;
-  color: var(--midden-muted);
-  text-decoration: none;
   border-bottom: 1px solid var(--midden-rule);
 }
-.midden-artifact-card__provenance a:hover {
+.midden-find__meta a:hover {
   color: var(--midden-accent);
   border-bottom-color: currentColor;
 }
 
-/* ── The `lost` gravestone (#523) ─────────────────────────────────────────
-   Same card footprint (no list reflow) with a distinct headstone frame — a
-   generous rounded arch top against a nearly-square bottom — so it reads
-   unmistakably apart from every other grade's plain rectangle. */
-.midden-artifact-card--lost {
-  border-left-color: var(--midden-slate, #4a5560);
-  border-radius: 3.5rem 3.5rem 4px 4px / 2.2rem 2.2rem 4px 4px;
-  padding-top: 1.6rem;
-  background: var(--midden-paper);
-  text-align: center;
+.midden-find__expand {
+  margin: 14px 0 2px 36px;
+  border-left: 3px solid var(--midden-accent);
+  padding: 2px 0 2px 16px;
 }
-.midden-artifact-card--lost .midden-artifact-card__condition {
-  justify-content: center;
+.midden-find__note {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--midden-muted);
 }
-.midden-artifact-card--lost .midden-artifact-card__provenance {
-  justify-content: center;
-}
-/* The epitaph gets slightly more generous prose treatment inside the popover
-   (still the SAME `catalogNote` field — no separate epitaph field exists). */
-.midden-artifact-card--lost :deep(.pop-note) {
+.midden-find__inscription {
+  margin: 12px 0 0;
+  padding: 2px 0 2px 14px;
+  border-left: 2px solid var(--midden-line);
+  font-family: var(--midden-mono);
   font-style: italic;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--midden-ink);
+}
+.midden-find__source {
+  display: block;
+  margin-top: 6px;
+  font-style: normal;
+  font-size: 0.72rem;
+  color: var(--midden-faint);
+}
+.midden-find__lost {
+  margin: 12px 0 0;
+  font-size: 0.92rem;
+  color: var(--midden-faint);
+}
+
+@media (max-width: 34rem) {
+  /* On a narrow column the corner stamp would overlap the title — let it fall
+     to its own line by dropping the reserved right gutter and un-absoluting. */
+  .midden-find__row { padding-right: 0; }
+  .midden-find__stamp {
+    position: static;
+    display: inline-block;
+    transform: none !important;
+    margin-bottom: 10px;
+  }
 }
 </style>

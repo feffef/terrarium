@@ -62,7 +62,9 @@ export interface GlyphSpec {
   filled: boolean
   /** Body opacity 0–1 — dissolved reads as an all-but-gone boundary. */
   opacity: number
-  /** Soft edge: intact/dissolved get a gentle feathering; crisp grades don't. */
+  /** Marks intact/dissolved as the "softened" erosion grades. Metadata only
+   *  since the redesign (handoff direction 1a): the glyph now encodes decay
+   *  through fill + opacity + stroke-width alone — no blur filter. */
   soft: boolean
 }
 
@@ -81,8 +83,8 @@ const GRAVESTONE = 'M6 21V10a6 6 0 0 1 12 0v11Z'
 export const GLYPHS: Record<GlyphName, GlyphSpec> = {
   fresh: { d: DISC, filled: true, opacity: 1, soft: false },
   intact: { d: DISC, filled: true, opacity: 0.9, soft: true },
-  fragmentary: { d: SHERD_BROKEN, filled: true, opacity: 0.95, soft: false },
-  dissolved: { d: DISC, filled: true, opacity: 0.32, soft: true },
+  fragmentary: { d: SHERD_BROKEN, filled: true, opacity: 0.96, soft: false },
+  dissolved: { d: DISC, filled: true, opacity: 0.34, soft: true },
   'never-activated': { d: DISC, filled: false, opacity: 1, soft: false },
   lost: { d: GRAVESTONE, filled: false, opacity: 1, soft: false },
 }
