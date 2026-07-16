@@ -1,0 +1,137 @@
+schemaVersion: 1
+session: session_01MkhmByJjwTJKXXnFKUEjJT
+startedAt: 2026-07-16T17:21:34Z
+endedAt: 2026-07-16T18:48:41Z
+kind: interactive
+goal: Brainstorm new Tenants; wayfinder-chart the Midden's MVP spec
+status: completed
+outcome: Midden map fully resolved; Palimpsest idea filed
+summary: "User-directed throughout: asked for a 3-model (later 4-model) Tenant-idea brainstorm, picked the Midden and Palimpsest to refine, chose the Midden for /wayfinder, and explicitly directed that every wayfinder ticket be resolved via a 3-agent panel (2x Sonnet, 1x Opus) vote instead of live grilling. I charted map #515, ran six panel-resolution rounds synthesizing/tie-breaking each result, closed all 13 spawned tickets, then verified the final state directly against GitHub at the user's request (not from memory). Filed the untracked Palimpsest concept as issue #530 on request. No repo code was touched; no PR was needed."
+prs: []
+docsRead:
+  - path: CONTEXT.md
+    reason: Observability glossary term grounding the brainstorm theme
+  - path: CONTEXT-MAP.md
+    reason: multi-context Tenant layout
+  - path: docs/agents/issue-tracker.md
+    reason: wayfinder operations mechanics (map/ticket/blocking conventions)
+  - path: layers/atlas/tenant.config.ts
+    reason: manifest shape precedent for pages-per-Space reuse
+skillsUsed:
+  - name: wayfinder
+    reason: charted and fully resolved the Midden's MVP-spec map
+  - name: close-session
+    reason: session closure front door
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Carried a structural bug across several turns describing Midden's sites/exhibits as separately-named routable collections, violating ADR-0006 (only pages routes); a brainstorming agent (Fable) caught it independently, not me.
+    solution: Check any new Tenant/Collection proposal against ADR-0006's pages-only routing constraint at the moment it's proposed, not on a later fan-out pass.
+    severity: moderate
+  - description: Wayfinder's grilling/prototype ticket types are explicitly HITL, but I resolved them via a 3-agent panel per explicit user delegation; the skill has no named ticket type for this substitution pattern.
+    solution: A future skill revision could add a named type (e.g. panel) for explicit human-delegates-to-agent-panel resolution, rather than relabeling HITL types with a disclosure note each time.
+    severity: minor
+  - description: A search_issues query and an issue_read get_sub_issues call both overflowed the tool-result token limit and needed redirecting to a saved file plus a Python slice to extract just number/state/title.
+    solution: Already documented in docs/agents/issue-tracker.md; just budget for it up front on any GitHub verification call over a handful of issues.
+    severity: minor
+  - description: Momentarily read the system prompt's 'never include the model identifier in repo artifacts' rule as contradicting ADR-0017's footer requirement, before noticing they refer to two different strings (raw model ID vs. display name).
+    solution: None needed beyond careful re-reading; noting it in case the two instructions read as contradictory to a future session too.
+    severity: nit
+durationSec: 5227
+models:
+  claude-sonnet-5: 202
+toolCounts:
+  Bash: 6
+  Agent: 25
+  AskUserQuestion: 2
+  ToolSearch: 4
+  mcp__github__search_issues: 3
+  mcp__github__issue_write: 38
+  mcp__github__sub_issue_write: 13
+  mcp__github__add_issue_comment: 16
+  TaskCreate: 8
+  TaskUpdate: 15
+  mcp__github__issue_read: 1
+  Skill: 2
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Propose tenant ideas (Sonnet)
+    model: sonnet
+  - type: general-purpose
+    task: Propose tenant ideas (Opus)
+    model: opus
+  - type: general-purpose
+    task: Propose tenant ideas (Fable)
+    model: fable
+  - type: general-purpose
+    task: Midden MVP ideas (Haiku)
+    model: haiku
+  - type: general-purpose
+    task: Midden MVP ideas (Sonnet)
+    model: sonnet
+  - type: general-purpose
+    task: Midden MVP ideas (Opus)
+    model: opus
+  - type: general-purpose
+    task: Midden MVP ideas (Fable)
+    model: fable
+  - type: general-purpose
+    task: "Panel vote: glyph system (Sonnet A)"
+    model: sonnet
+  - type: general-purpose
+    task: "Panel vote: glyph system (Sonnet B)"
+    model: sonnet
+  - type: general-purpose
+    task: "Panel vote: glyph system (Opus)"
+    model: opus
+  - type: general-purpose
+    task: "Panel vote: stratigraphy sidebar (Sonnet A)"
+    model: sonnet
+  - type: general-purpose
+    task: "Panel vote: stratigraphy sidebar (Sonnet B)"
+    model: sonnet
+  - type: general-purpose
+    task: "Panel vote: stratigraphy sidebar (Opus)"
+    model: opus
+  - type: general-purpose
+    task: "Panel vote: inclusion bar (Sonnet A)"
+    model: sonnet
+  - type: general-purpose
+    task: "Panel vote: inclusion bar (Sonnet B)"
+    model: sonnet
+  - type: general-purpose
+    task: "Panel vote: inclusion bar (Opus)"
+    model: opus
+  - type: general-purpose
+    task: "Panel vote: fresh staleness (Sonnet A)"
+    model: sonnet
+  - type: general-purpose
+    task: "Panel vote: fresh staleness (Sonnet B)"
+    model: sonnet
+  - type: general-purpose
+    task: "Panel vote: fresh staleness (Opus)"
+    model: opus
+  - type: general-purpose
+    task: "Panel vote: grade legend (Sonnet A)"
+    model: sonnet
+  - type: general-purpose
+    task: "Panel vote: grade legend (Sonnet B)"
+    model: sonnet
+  - type: general-purpose
+    task: "Panel vote: grade legend (Opus)"
+    model: opus
+  - type: general-purpose
+    task: "Panel vote: trench index legend (Sonnet A)"
+    model: sonnet
+  - type: general-purpose
+    task: "Panel vote: trench index legend (Sonnet B)"
+    model: sonnet
+  - type: general-purpose
+    task: "Panel vote: trench index legend (Opus)"
+    model: opus
+gitBranch: claude/terrarium-tenant-ideas-9m1lov
+entrypoint: remote_mobile
+cliVersion: 2.1.211
+learnings:
+  - An odd-numbered panel of differently-tiered models (2x Sonnet + 1x Opus), each working fully independently then synthesized centrally, converged strongly or unanimously in 5 of 6 wayfinder rounds — a workable technique for fast-pacing a map when a human explicitly opts to delegate HITL judgment.
