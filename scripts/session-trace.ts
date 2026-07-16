@@ -369,13 +369,11 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   const editedSet = new Set(trace.filesEdited)
   const entry: Record<string, unknown> = {
     schemaVersion: 1,
-    // Ground-truth first (issue #387/#449): a hand-typed authored.session is
-    // the exact self-reported field ADR-0009 built this whole mechanism to
-    // avoid trusting — trace.session is already resolved via
-    // resolveGroundTruthSessionId, so it wins whenever it's available. The
-    // authored value survives only as a last-resort fallback (an
-    // unparseable/absent transcript), never as a silent override.
-    session: trace.session ?? authored.session,
+    // trace.session is already ground-truth-resolved (resolveGroundTruthSessionId,
+    // issue #387/#449) — it wins over the authored value whenever available.
+    // `||`, not `??`, so an empty string also falls through, matching
+    // declaredClosure's own `!trace.session` falsy check in session-end.ts.
+    session: trace.session || authored.session,
     startedAt: trace.startedAt,
     endedAt: trace.endedAt,
     kind: authored.kind ?? 'interactive',

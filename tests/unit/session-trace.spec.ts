@@ -82,6 +82,13 @@ describe('extractTrace()', () => {
     expect(trace.entrypoint).toBe('remote')
     expect(trace.trigger).toBeUndefined()
   })
+
+  it('prefers a real CLAUDE_CODE_REMOTE_SESSION_ID env var over the transcript\'s own sessionId (issue #387)', () => {
+    // End-to-end through extractTrace() itself, not just resolveGroundTruthSessionId()
+    // in isolation — proves the actual wiring, not just the helper it calls.
+    const withCcr = extractTrace(parseTranscript(transcript), { CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_REALSESSION123' })
+    expect(withCcr.session).toBe('session_REALSESSION123') // NOT the transcript's 'session_01ABC'
+  })
 })
 
 describe('deriveTrigger() — issue #449 Gap 1', () => {
