@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01HwrGyUKyrhDprhXvfgfaVk
 startedAt: 2026-07-16T04:08:38Z
-endedAt: 2026-07-16T04:57:27Z
+endedAt: 2026-07-16T16:20:05Z
 kind: autonomous
 goal: Escalate ADR-0022 wayfinder:task fix
-status: in-review
-outcome: Amendment PR opened for human review
-summary: "Follow-up to round 2 (PR #511, merged) — escalating the one finding round 2 confirmed but couldn't self-merge. No direct human ask; fully agent-initiated per audit-docs' standing charter. ADR-0022's Decision text blanket-classifies wayfinder:task as AFK-eligible, contradicting wayfinder/SKILL.md's own per-ticket HITL-or-AFK definition (auto-triage/SKILL.md itself was already fixed in PR #511). Restarted the designated branch off the fresh origin/main, read ADR-0018's factual-correction-vs-decision-reversal rule to classify the fix — it's a decision reversal (narrows what the standing green-light authorizes), so it needs an appended amendment, never an in-place rewrite of the original Decision/Consequences. Drafted and appended a new \"## Amendment\" section to ADR-0022 matching ADR-0018's own precedent style. gate:scoped went green via the fast docs-only path (lint/typecheck/validate:content only). Opened PR #512 explicitly as a normal, human-reviewed PR — not self-merged, since it touches an ADR, human-only to merge per ADR-0004 — and subscribed to its activity. The ADR edit still needs actual human review/merge before it lands; that's the whole point of routing it here rather than self-merging."
+status: completed
+outcome: Amendment PR merged by human reviewer
+summary: "Follow-up to round 2 (PR #511, merged) — escalating the one finding round 2 confirmed but couldn't self-merge. No direct human ask; fully agent-initiated per audit-docs' standing charter. ADR-0022's Decision text blanket-classifies wayfinder:task as AFK-eligible, contradicting wayfinder/SKILL.md's own per-ticket HITL-or-AFK definition (auto-triage/SKILL.md itself was already fixed in PR #511). Restarted the designated branch off the fresh origin/main, read ADR-0018's factual-correction-vs-decision-reversal rule to classify the fix — it's a decision reversal (narrows what the standing green-light authorizes), so it needs an appended amendment, never an in-place rewrite of the original Decision/Consequences. Drafted and appended a new \"## Amendment\" section to ADR-0022 matching ADR-0018's own precedent style. gate:scoped went green via the fast docs-only path (lint/typecheck/validate:content only). Opened PR #512 explicitly as a normal, human-reviewed PR — not self-merged, since it touches an ADR, human-only to merge per ADR-0004 — and subscribed to its activity. A human reviewer merged it; unsubscribed on the merged-PR notification. This closes out the full two-round audit-docs chain (PRs #510, #511, #512) for this session."
 prs:
   - "512"
 docsRead:
@@ -42,18 +42,18 @@ skillsUsed:
   - name: log-session
     reason: (no reason given)
 frictions: []
-durationSec: 2929
+durationSec: 43887
 models:
-  claude-sonnet-5: 317
+  claude-sonnet-5: 327
 toolCounts:
-  Bash: 42
+  Bash: 44
   ToolSearch: 5
   TaskCreate: 19
-  TaskUpdate: 39
+  TaskUpdate: 40
   Agent: 10
   ScheduleWakeup: 4
   Read: 18
-  Edit: 14
+  Edit: 16
   mcp__github__search_pull_requests: 2
   mcp__github__create_pull_request: 3
   mcp__github__subscribe_pr_activity: 3
