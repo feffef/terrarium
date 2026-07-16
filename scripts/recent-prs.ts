@@ -17,29 +17,21 @@
 // Usage:  tsx scripts/recent-prs.ts [N]
 //   Prints the last N merged PRs (default 20) on `origin/main` as JSON:
 //   { number, title, mergedAtUtc }. Newest-first.
-import { execFileSync } from 'node:child_process'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { fetchOriginMain } from './git-helpers.ts'
+import { readMergeCommits, type RawMergeCommit } from './git-helpers.ts'
 import { toUtcIso } from './merged-since.ts'
+
+// Re-exported so an existing importer of `RawMergeCommit` from this module
+// (its original home) keeps working now that `git-helpers.ts` owns it
+// (issue #448 code review — single-homing the shared merge-log reader).
+export type { RawMergeCommit } from './git-helpers.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 const DEFAULT_LIMIT = 20
 
 // ── Types ───────────────────────────────────────────────────────────────────
-
-/** One raw merge-candidate commit as read off `git log` — subject and body
- *  untouched, timestamp still in whatever offset the committer's git client
- *  used. Not every commit on `main` is a PR merge (this repo also carries
- *  squash and direct-to-`main` commits, ADR-0009) — that filtering happens
- *  in `toRecentPr`. */
-export interface RawMergeCommit {
-  hash: string
-  isoCommitTime: string
-  subject: string
-  body: string
-}
 
 /** One PR-merge record past the screen — the compact allowlist this helper
  *  exists to provide (author/merged_by deliberately excluded, see header). */
@@ -94,36 +86,6 @@ export function recentPrs(commits: RawMergeCommit[], limit = DEFAULT_LIMIT): Rec
     .sort((a, b) => Date.parse(b.pr.mergedAtUtc) - Date.parse(a.pr.mergedAtUtc))
     .slice(0, limit)
     .map((x) => x.pr)
-}
-
-// ── Git shell (thin) ──────────────────────────────────────────────────────────
-
-const FIELD_SEP = '\x1f'
-const RECORD_SEP = '\x1e'
-
-function readMergeCommits(cwd = root): RawMergeCommit[] {
-  // See `fetchOriginMain`'s doc comment (./git-helpers.ts) for why this is
-  // called before every read, and why a failure here is left fatal.
-  fetchOriginMain(cwd)
-  const raw = execFileSync(
-    'git',
-    [
-      'log',
-      'origin/main',
-      '--merges',
-      '--date=iso-strict',
-      `--format=%H${FIELD_SEP}%cd${FIELD_SEP}%s${FIELD_SEP}%b${RECORD_SEP}`,
-    ],
-    { cwd, encoding: 'utf8' },
-  )
-  return raw
-    .split(RECORD_SEP)
-    .map((record) => record.replace(/^\n/, ''))
-    .filter((record) => record.length > 0)
-    .map((record) => {
-      const [hash = '', isoCommitTime = '', subject = '', body = ''] = record.split(FIELD_SEP)
-      return { hash, isoCommitTime, subject, body }
-    })
 }
 
 // ── Command ─────────────────────────────────────────────────────────────────

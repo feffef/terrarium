@@ -6,8 +6,10 @@
 // instant" (issue #448).
 //
 // Reuses `recent-prs.ts`'s subject/title parsing (`parsePrNumber`,
-// `extractTitle`, `RawMergeCommit`) and `merged-since.ts`'s UTC normalizer
-// (`toUtcIso`) rather than re-deriving them.
+// `extractTitle`), `git-helpers.ts`'s shared merge-log reader
+// (`readMergeCommits`, `RawMergeCommit` — single-homed there rather than
+// duplicated per script, issue #448 code review), and `merged-since.ts`'s
+// UTC normalizer (`toUtcIso`) rather than re-deriving any of them.
 //
 // Deliberate scope limit: `merged_by` is out of scope here — git can't
 // produce it, this environment has no `gh` CLI, and no caller needs it
@@ -26,9 +28,9 @@
 import { execFileSync } from 'node:child_process'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { extractTitle, parsePrNumber, type RawMergeCommit } from './recent-prs.ts'
+import { extractTitle, parsePrNumber } from './recent-prs.ts'
 import { toUtcIso } from './merged-since.ts'
-import { fetchOriginMain } from './git-helpers.ts'
+import { readMergeCommits, type RawMergeCommit } from './git-helpers.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -79,34 +81,6 @@ export function prTimeline(rows: PrTimelineRow[], fromRangeUtc: string, toRangeU
 
 // ── Git shell (thin) ──────────────────────────────────────────────────────────
 
-const FIELD_SEP = '\x1f'
-const RECORD_SEP = '\x1e'
-
-function readMergeCommits(cwd = root): RawMergeCommit[] {
-  // See `fetchOriginMain`'s doc comment (./git-helpers.ts) for why this is
-  // called before every read, and why a failure here is left fatal.
-  fetchOriginMain(cwd)
-  const raw = execFileSync(
-    'git',
-    [
-      'log',
-      'origin/main',
-      '--merges',
-      '--date=iso-strict',
-      `--format=%H${FIELD_SEP}%cd${FIELD_SEP}%s${FIELD_SEP}%b${RECORD_SEP}`,
-    ],
-    { cwd, encoding: 'utf8' },
-  )
-  return raw
-    .split(RECORD_SEP)
-    .map((record) => record.replace(/^\n/, ''))
-    .filter((record) => record.length > 0)
-    .map((record) => {
-      const [hash = '', isoCommitTime = '', subject = '', body = ''] = record.split(FIELD_SEP)
-      return { hash, isoCommitTime, subject, body }
-    })
-}
-
 /** The number of commits a merge commit `sha` brought in from its
  *  non-mainline side — `git rev-list --count <sha>^1..<sha>`, i.e. everything
  *  reachable from the merge but not from its first parent. */
@@ -118,7 +92,8 @@ function commitCountFor(sha: string, cwd: string): number {
 // ── Command ─────────────────────────────────────────────────────────────────
 
 export function prTimelineOnMain(fromRangeUtc: string, toRangeUtc: string, cwd = root): PrTimelineRow[] {
-  const rows: PrTimelineRow[] = readMergeCommits(cwd).flatMap((commit) => {
+  const commits: RawMergeCommit[] = readMergeCommits(cwd)
+  const rows: PrTimelineRow[] = commits.flatMap((commit) => {
     const number = parsePrNumber(commit.subject)
     if (number === null) return []
     return [

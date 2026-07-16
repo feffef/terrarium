@@ -31,9 +31,8 @@ hasn't drifted.
    check — the PR then merges itself once the gate reports green, without you
    polling it to completion.
 5. Escalate a genuinely high-risk or out-of-scope PR to a human instead of
-   merging it — see ADR-0004's high-risk set (the manifest-expansion/routing
-   modules, isolation logic, CI, governance/ADRs, a new dependency, or
-   untested/untestable runtime behaviour) for what counts.
+   merging it — see ADR-0004's high-risk set (also indexed in CLAUDE.md's
+   Ground rules) for what counts.
 
 ## Per-tier merge authority
 

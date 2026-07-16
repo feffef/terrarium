@@ -93,9 +93,9 @@ function readPublishedAt(path: string): string | null {
   return m ? m[1]!.trim() : null
 }
 
-function readPosts(cwd = root): RotationPost[] {
+function readPosts(personas: string[], cwd = root): RotationPost[] {
   const posts: RotationPost[] = []
-  for (const persona of personaUniverse(cwd)) {
+  for (const persona of personas) {
     const pagesDir = resolve(cwd, BLOG_CONTENT_DIR, persona, 'pages')
     for (const entry of readdirSync(pagesDir, { withFileTypes: true })) {
       if (!entry.isFile() || !entry.name.endsWith('.md') || entry.name === 'index.md') continue
@@ -109,7 +109,8 @@ function readPosts(cwd = root): RotationPost[] {
 // ── Command ─────────────────────────────────────────────────────────────────
 
 export function currentRotation(cwd = root): RotationState {
-  return eligiblePersonas(readPosts(cwd), personaUniverse(cwd))
+  const personas = personaUniverse(cwd)
+  return eligiblePersonas(readPosts(personas, cwd), personas)
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
