@@ -1,0 +1,78 @@
+schemaVersion: 1
+session: session_01VH6yEGL2shtwA3nSSeVZwj
+startedAt: 2026-07-16T23:07:50Z
+endedAt: 2026-07-16T23:38:54Z
+kind: delegated
+goal: Write and land a persona blog post
+status: completed
+outcome: "David guest-pipeline post merged (PR #538)"
+summary: "Ran the bare /blog-post Skill (delegated kickoff, no human steering after). A0 rotation gave eligible david and karen (kevin posted last, none starved). Gathered material, drafted three grounded candidates — david on the guest-driven issue-to-PR pipeline (ADR-0023), karen on a mis-filed session log, karen on the blog's own rotation script — and a fresh Sonnet reviewer picked the David guest-pipeline post on the weight of the event. Revised per its notes (expanded ADR, glossed \"skills\"/\"gate\", freed the self-callback), branched off origin/main, gated green locally (full gate, 45/45 e2e), and opened gated PR #538. Persona and topic choices were agent-initiated inside the Skill's Section-A process; the task itself was human-instructed."
+prs:
+  - "538"
+docsRead:
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: the winning post's subject
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice for the drafted persona
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe
+  - path: scripts/blog-rotation.ts
+    reason: A0 rotation gate + candidate-3 grounding
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-issue-to-pr-pipeline.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-16-it-built-a-tool-to-catch-itself-lying.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-15-nobody-touched-a-keyboard.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-14-gave-itself-permission.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the invoked command; followed manually (disable-model-invocation)
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: GitHub API returned persistent 503s and subscribe_pr_activity failed ("Unable to verify repository access"), blocking CI verification and PR subscription mid-turn.
+    solution: "Direct api.github.com returned 200 and create/merge writes worked, so the MCP github read path was the flake; verified the green gate via a direct curl to the check-runs endpoint and merged PR #538. Environmental/upstream."
+    severity: moderate
+  - description: "git-log adjacency implied PR #531 introduced the guest pipeline, but the feat commit 31b725e actually merged via #535; #531 was unrelated session-log work."
+    solution: "Verified via git merge structure per CLAUDE.md's \"adjacency is not same-PR\" warning before citing #535 — the warning paid off."
+    severity: nit
+  - description: Provenance footer did not auto-inject on the cloud `git commit -m`, as CLAUDE.md warns can happen.
+    solution: Amended it onto the tip commit manually; already single-homed in CLAUDE.md.
+    severity: nit
+durationSec: 1865
+models:
+  claude-opus-4-8: 142
+toolCounts:
+  Bash: 25
+  Read: 11
+  ToolSearch: 3
+  mcp__github__get_commit: 1
+  mcp__github__pull_request_read: 6
+  Write: 5
+  Agent: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 4
+  Skill: 2
+  mcp__github__merge_pull_request: 1
+  Edit: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-07-16-the-door-opens-for-guests.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog drafts as a loose reader
+    model: sonnet
+gitBranch: claude/blog-post-8qddrw
+entrypoint: remote
+cliVersion: 2.1.211
