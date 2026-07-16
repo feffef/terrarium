@@ -1,0 +1,288 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   The Midden — theme (issue #515)
+
+   An excavation catalogue of the Platform's own discarded work. Self-contained
+   tokens (no sharing with other Tenants; ADR isolation stance, CONTEXT.md).
+   Registered globally by the layer's nuxt.config, so every layer view and every
+   nested component inherits the tokens (docs/agents/tenant-layers.md §2).
+
+   The palette is deliberately spare — a dig report, not a gallery:
+     · a cream / parchment ground (the find-tray paper)
+     · ONE terracotta accent (the sherd's own fired clay — used sparingly, for
+       the live thing on the page: a link, a glyph, the current stratum)
+     · a muted slate reserved for the stratigraphy sidebar (the section drawn in
+       section, cool against the warm paper)
+   One serif typeface in two registers (#523/#527): a small-caps CURATOR'S voice
+   for `catalogNote`, UI chrome, and the `lost` epitaph; a regular-weight
+   INSCRIPTION voice for quoted `inscription.text`. A mono carries catalogue
+   coordinates (accession dates, provenance ids) only.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Type — ONE old-style serif, worn in two registers. `--midden-display` and
+     `--midden-text` are the same family (display just sets it larger); the
+     small-caps curator register is that same serif with `font-variant` applied
+     at the class, not a second family. `--midden-data` is the only non-serif:
+     a mono for accession dates and provenance ids. */
+  --midden-display: "Hoefler Text", "Baskerville Old Face", Baskerville, "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
+  --midden-text: "Hoefler Text", "Baskerville Old Face", Baskerville, "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
+  --midden-label: "Hoefler Text", "Baskerville Old Face", Baskerville, "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
+  --midden-data: ui-monospace, "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+
+  /* Ground — warm cream find-tray paper; sepia-brown catalogue ink. Warmer and
+     lighter than the Atlas's cooler laid paper, so the two never read alike. */
+  --midden-paper: #efe7d6;
+  --midden-paper-2: #f6f0e2;
+  --midden-ink: #33291d;
+  --midden-muted: #7a6c56;
+  --midden-faint: #a8977c;
+  --midden-line: #d8cbb2;
+  --midden-rule: #c3b291;
+
+  /* The one accent: fired terracotta. The single warm signal on the page. */
+  --midden-accent: #b4552d;
+  --midden-accent-soft: rgba(180, 85, 45, 0.12);
+
+  /* Muted slate — reserved for the stratigraphy sidebar (#524): cool section
+     drawing against the warm find tray. A cooler ink + its own faint wash. */
+  --midden-slate: #4a5560;
+  --midden-slate-muted: #6d7681;
+  --midden-slate-line: #bcc2c8;
+  --midden-slate-wash: rgba(74, 85, 96, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* The store-room after hours: a dark earth section, warm bone-white ink. */
+    --midden-paper: #1a160f;
+    --midden-paper-2: #221d14;
+    --midden-ink: #e7ddc9;
+    --midden-muted: #a4967d;
+    --midden-faint: #6f6450;
+    --midden-line: #332c20;
+    --midden-rule: #423928;
+
+    --midden-accent: #d4753f;
+    --midden-accent-soft: rgba(212, 117, 63, 0.16);
+
+    --midden-slate: #9aa6b2;
+    --midden-slate-muted: #7d8894;
+    --midden-slate-line: #3a4149;
+    --midden-slate-wash: rgba(154, 166, 178, 0.06);
+  }
+}
+
+/* ── Shell ──────────────────────────────────────────────────────────────── */
+.midden {
+  color: var(--midden-ink);
+  background-color: var(--midden-paper);
+  /* A faint sediment grain over the paper — horizontal strata, very quiet. */
+  background-image:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.014) 0 1px, transparent 1px 5px);
+  font-family: var(--midden-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.midden *::selection {
+  background: var(--midden-accent);
+  color: var(--midden-paper-2);
+}
+
+/* The catalogue leaf — one dig report, centred. */
+.midden-page {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 2.4rem 1.35rem 5rem;
+}
+
+/* Crumb — an accession coordinate line (mono, faint). */
+.midden-crumb {
+  font-family: var(--midden-data);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--midden-faint);
+  margin: 0 0 2.2rem;
+  text-transform: none;
+}
+.midden-crumb a { color: var(--midden-faint); text-decoration: none; border-bottom: 1px solid transparent; }
+.midden-crumb a:hover { color: var(--midden-accent); border-bottom-color: currentColor; }
+.midden-crumb .sep { margin: 0 0.5ch; opacity: 0.55; }
+.midden-crumb .here { color: var(--midden-muted); }
+
+/* The curator's small-caps eyebrow — the one serif in its LABEL register. */
+.midden-eyebrow {
+  font-family: var(--midden-label);
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: 0.86rem;
+  letter-spacing: 0.14em;
+  color: var(--midden-accent);
+}
+
+/* A ruled section head: eyebrow + a hairline that runs to the margin. */
+.midden-sechead {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin: 3rem 0 1.2rem;
+}
+.midden-sechead::after {
+  content: "";
+  flex: 1;
+  height: 0;
+  border-top: 1px solid var(--midden-rule);
+  transform: translateY(-0.15em);
+}
+
+/* ── Condition glyph (#523) ────────────────────────────────────────────────
+   One grade's mark + its always-visible label. The glyph is the scanning
+   accelerator; the label is the truth (accessibility: never glyph-only). */
+.midden-condition {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5ch;
+  font-family: var(--midden-label);
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+  color: var(--midden-muted);
+}
+.midden-condition .glyph { flex: none; display: block; color: var(--midden-accent); overflow: visible; }
+.midden-condition .glyph .body { fill: currentColor; stroke: currentColor; }
+/* Outline-only grades (never-activated, lost): unfilled, crisp stroke. */
+.midden-condition .glyph.is-outline .body { fill: none; stroke-width: 2; }
+/* Softened edge for intact / dissolved — a gentle feathering, not a hard rim. */
+.midden-condition .glyph.is-soft .body { filter: blur(0.15px); }
+.midden-condition .label { color: var(--midden-ink); }
+
+/* ── Condition tooltip (#523 Tier-1) ───────────────────────────────────────
+   The fixed definition, on hover / keyboard focus of the glyph. A real popup
+   (not a native title): styleable, testable, keyboard-reachable. */
+.midden-tip { position: relative; display: inline-flex; }
+.midden-tip .tip-trigger {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: help;
+  display: inline-flex;
+}
+.midden-tip .tip-trigger:focus-visible { outline: 2px solid var(--midden-accent); outline-offset: 3px; border-radius: 3px; }
+.midden-tip .tip-bubble {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  width: max-content;
+  max-width: 18rem;
+  padding: 0.5rem 0.7rem;
+  background: var(--midden-paper-2);
+  color: var(--midden-ink);
+  border: 1px solid var(--midden-rule);
+  box-shadow: 0 6px 18px -12px rgba(0, 0, 0, 0.6);
+  border-radius: 3px;
+  font-family: var(--midden-label);
+  font-variant: small-caps;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  text-align: left;
+}
+.midden-tip .tip-bubble .tip-grade {
+  display: block;
+  font-weight: 600;
+  color: var(--midden-accent);
+  margin-bottom: 0.1rem;
+}
+.midden-tip .tip-bubble::after {
+  /* a small pointer down to the glyph */
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--midden-rule);
+}
+
+/* ── Condition popover (#523 Tier-2) ────────────────────────────────────────
+   The artifact-SPECIFIC rationale, on click. Anchored inline expansion, NOT a
+   full-screen modal (adopted Opus dissent, #523): the dig-report reading flow
+   is preserved. Anchors to its mount point. */
+.midden-popover { position: relative; display: block; }
+.midden-popover .pop-panel {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  right: 0;
+  z-index: 15;
+  padding: 0.9rem 1rem;
+  background: var(--midden-paper-2);
+  border: 1px solid var(--midden-rule);
+  border-left: 3px solid var(--midden-accent);
+  box-shadow: 0 14px 34px -24px rgba(0, 0, 0, 0.55);
+  border-radius: 3px;
+}
+.midden-popover .pop-note {
+  margin: 0;
+  font-family: var(--midden-label);
+  font-variant: small-caps;
+  letter-spacing: 0.02em;
+  color: var(--midden-muted);
+  line-height: 1.5;
+}
+.midden-popover .pop-inscription {
+  margin: 0.8rem 0 0;
+  padding: 0.1rem 0 0.1rem 0.9rem;
+  border-left: 2px solid var(--midden-line);
+  /* The INSCRIPTION register: the same serif, regular weight, quoted verbatim
+     — deliberately NOT small-caps, so the artifact's own words read distinct
+     from the curator's voice around them. */
+  font-family: var(--midden-text);
+  font-style: italic;
+  color: var(--midden-ink);
+}
+.midden-popover .pop-inscription .pop-source {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--midden-data);
+  font-style: normal;
+  font-size: 0.72rem;
+  color: var(--midden-faint);
+}
+.midden-popover .pop-empty { color: var(--midden-faint); font-style: italic; }
+
+/* ── Grade legend (#527) ────────────────────────────────────────────────────
+   The six grades in decay-then-orthogonal order, each row: glyph + label +
+   the SAME terse definition (from condition.ts). A self-contained <ul>; reused
+   in the stratigraphy sidebar header and as a static reference. An optional
+   tally column renders per-site counts when the caller supplies them. */
+.midden-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.midden-legend li {
+  display: grid;
+  grid-template-columns: minmax(9rem, max-content) 1fr;
+  gap: 0.4rem 1rem;
+  align-items: baseline;
+  font-size: 0.9rem;
+}
+.midden-legend.has-tally li { grid-template-columns: minmax(9rem, max-content) 1fr auto; }
+.midden-legend .l-mark { align-self: center; }
+.midden-legend .l-def { color: var(--midden-muted); font-style: italic; }
+.midden-legend .l-tally {
+  font-family: var(--midden-data);
+  font-size: 0.78rem;
+  color: var(--midden-accent);
+  justify-self: end;
+  align-self: center;
+}
+.midden-legend .l-tally.is-zero { color: var(--midden-faint); opacity: 0.6; }
+
+/* ── Reduced motion ───────────────────────────────────────────────────────*/
+@media (prefers-reduced-motion: reduce) {
+  .midden * { transition: none !important; animation: none !important; }
+}
