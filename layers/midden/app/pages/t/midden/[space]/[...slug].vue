@@ -15,10 +15,11 @@ const { sites, artifactsBySite } = await useMiddenTrenchData(route.path, { pages
 const site = computed(() => sites.value.find((p) => p.path === path) ?? null)
 const siteSlug = computed(() => path.replace(/^\//, ''))
 const siteArtifacts = computed(() => artifactsBySite.value.get(siteSlug.value) ?? [])
-// The sidebar only needs the {slug, stratum} pairs — it renders elsewhere on
-// this same page (ArtifactCard, via `::midden-artifact` embeds) the
-// `[data-stratum]`/`id="artifact-<slug>"` elements it scroll-syncs against.
-const sidebarArtifacts = computed(() => siteArtifacts.value.map((a) => ({ slug: a.slug, stratum: a.stratum })))
+// The sidebar needs {slug, stratum} for the scroll-synced bands (it renders
+// elsewhere on this same page — ArtifactCard, via `::midden-artifact` embeds —
+// the `[data-stratum]`/`id="artifact-<slug>"` elements it scroll-syncs
+// against) plus `condition` to compute its grade legend's per-site tally (#527).
+const sidebarArtifacts = computed(() => siteArtifacts.value.map((a) => ({ slug: a.slug, stratum: a.stratum, condition: a.condition })))
 
 useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
 </script>

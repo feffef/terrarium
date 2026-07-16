@@ -49,6 +49,12 @@
   --midden-slate-muted: #6d7681;
   --midden-slate-line: #bcc2c8;
   --midden-slate-wash: rgba(74, 85, 96, 0.05);
+
+  /* Foreground ink for text drawn ON the slate/accent bands themselves
+     (the stratigraphy sidebar's inactive/active bands, #524) — distinct from
+     `--midden-ink`, which is sized for the cream paper, not these bands. */
+  --midden-slate-ink: #eceef0;
+  --midden-accent-ink: #fff8f0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -69,6 +75,9 @@
     --midden-slate-muted: #7d8894;
     --midden-slate-line: #3a4149;
     --midden-slate-wash: rgba(154, 166, 178, 0.06);
+
+    --midden-slate-ink: #1b2126;
+    --midden-accent-ink: #2a1608;
   }
 }
 
