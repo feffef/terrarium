@@ -4,7 +4,7 @@ startedAt: 2026-07-06T15:15:00Z
 endedAt: 2026-07-06T17:01:38Z
 kind: interactive
 goal: Write and correct Kevin's blog-post reaction to David
-outcome: PR #137 open, post corrected and trimmed
+outcome: "PR #137 open, post corrected and trimmed"
 status: completed
 summary: >-
   Ran /blog-post kevin: gathered real signal (git log, session logs, GitHub

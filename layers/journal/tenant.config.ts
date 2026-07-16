@@ -161,6 +161,19 @@ export default defineTenant({
           gitBranch: z.string().optional(),
           entrypoint: z.string().optional(),
           cliVersion: z.string().optional(),
+          // A human-legible identifier for what fired a Routine-triggered session —
+          // the slash command it expanded, or its first turn's first line. Derived
+          // by session-trace.ts's extractTrace ONLY when entrypoint is
+          // 'remote_trigger' (issue #449 Gap 1); absent for every other session.
+          trigger: z.string().optional(),
+          // True ONLY on the synthetic placeholder session-end.ts's
+          // recoverDroppedScratch lands when a scratch was authored then lost
+          // before it could land (issue #449 Gap 3). Every other field on such
+          // an entry is explicit placeholder prose, not the agent's own words —
+          // this flag gives consumers (digest, audit-skills, any future UI) a
+          // structured way to exclude/label it rather than grep friction text.
+          // Absent on every genuinely agent-authored log.
+          droppedScratchRecovery: z.literal(true).optional(),
           // List EVERY friction — not just one or two — including anything that
           // felt unnecessarily complex or token-heavy. No `tag` yet: the
           // taxonomy is meant to emerge from clustering, once there is data.
@@ -179,6 +192,12 @@ export default defineTenant({
           // policy — no version bump.
           learnings: z.array(z.string()).optional(),
           ideas: z.array(z.string()).optional(),
+          // Field names this log's own back-catalog sweep (issue #449 Gap 5)
+          // suspects were silently truncated by the pre-#367 unquoted-`#` bug, but
+          // couldn't repair with confidence (the intended text is genuinely
+          // ambiguous — e.g. which of several `prs` a bare word referred to).
+          // Absent on every log the sweep didn't flag, including every repaired one.
+          historicallyTruncated: z.array(z.string()).optional(),
         })
         .strict(),
     },

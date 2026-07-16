@@ -5,7 +5,7 @@ endedAt: 2026-07-06T06:05:35Z
 kind: interactive
 goal: Write David's blog post
 status: completed
-outcome: Post merged via PR #98
+outcome: "Post merged via PR #98"
 summary: >-
   Ran the blog-post Skill for the david Persona. Gathered the weekend's real
   signal — PR #90 deleting the generator for the #routing virtual module

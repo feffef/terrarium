@@ -5,7 +5,7 @@ endedAt: 2026-07-06T00:11:51Z
 kind: interactive
 goal: Write 2026-07-05 daily digest
 status: completed
-outcome: Digest merged via PR #92
+outcome: "Digest merged via PR #92"
 summary: >-
   Ran the digest Skill. `scripts/digest.ts list` returned one closed day
   (2026-07-05); gathered it and authored a narrative catch-up for the

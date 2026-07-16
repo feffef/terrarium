@@ -7,11 +7,11 @@
 // be tested end-to-end without pushing to main". The helper's `cwd` is injectable
 // precisely so this can point it at a scratch repo.
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { buildLogCommit, pushWithRetry, SESSIONS_DIR } from '../../scripts/log-session.ts'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { authorMain, buildLogCommit, isLinkedWorktree, pushWithRetry, SESSIONS_DIR } from '../../scripts/log-session.ts'
 
 /** git in a given repo, with a deterministic identity so commits are reproducible. */
 function git(cwd: string, args: string[]): string {
@@ -128,5 +128,110 @@ describe('pushWithRetry() / buildLogCommit() — against a throwaway bare remote
     git(work, ['fetch', 'origin', 'main'])
 
     expect(() => buildLogCommit(rel, abs, 'origin', work)).toThrow(/refusing to push/)
+  })
+
+  describe('isLinkedWorktree() — the worktree-subagent guard (issue #449 Gap 4)', () => {
+    it('is false for the main/primary checkout', () => {
+      expect(isLinkedWorktree(work)).toBe(false)
+    })
+
+    it('is true for a linked worktree created via `git worktree add`', () => {
+      const worktreePath = join(scratch, 'linked-worktree')
+      git(work, ['worktree', 'add', '-b', 'wt-branch', worktreePath])
+      expect(isLinkedWorktree(worktreePath)).toBe(true)
+      // ...and the main checkout is unaffected by the linked worktree existing.
+      expect(isLinkedWorktree(work)).toBe(false)
+    })
+
+    it('fails open (false) when cwd is not inside any git repo', () => {
+      const outside = mkdtempSync(join(tmpdir(), 'not-a-repo-'))
+      try {
+        expect(isLinkedWorktree(outside)).toBe(false)
+      } finally {
+        rmSync(outside, { recursive: true, force: true })
+      }
+    })
+  })
+
+  describe('authorMain() — the actual CLI wiring, and a genuine parallel-write simulation', () => {
+    let worktreePath: string
+    let orchestratorScratch: string
+    let subagentAuthoredPath: string
+    let orchestratorAuthoredPath: string
+
+    function authoredYaml(session: string, goal: string): string {
+      return `session: ${session}\ngoal: ${goal}\nstatus: completed\noutcome: ok\nsummary: s\nfrictions: []\n`
+    }
+
+    beforeEach(() => {
+      worktreePath = join(scratch, 'author-worktree')
+      git(work, ['worktree', 'add', '-b', 'author-wt-branch', worktreePath])
+      orchestratorScratch = join(scratch, 'orchestrator-scratch.json')
+      subagentAuthoredPath = join(scratch, 'authored-subagent.yml')
+      orchestratorAuthoredPath = join(scratch, 'authored-orchestrator.yml')
+      // authorMain calls fail() -> console.error + process.exit(1) on refusal;
+      // mock both so a refusal surfaces as a catchable throw instead of killing
+      // the test process, and console noise stays out of the test report.
+      vi.spyOn(process, 'exit').mockImplementation(() => {
+        throw new Error('EXIT')
+      })
+      vi.spyOn(console, 'error').mockImplementation(() => {})
+      vi.spyOn(console, 'log').mockImplementation(() => {})
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+      rmSync(orchestratorScratch, { force: true })
+    })
+
+    it('refuses to author from a linked worktree without --allow-worktree, and never writes any scratch', () => {
+      writeFileSync(subagentAuthoredPath, authoredYaml('session_shared', 'subagent attempt'))
+
+      expect(() =>
+        authorMain([subagentAuthoredPath], { cwd: worktreePath, scratchAbs: orchestratorScratch }),
+      ).toThrow('EXIT')
+      expect(process.exit).toHaveBeenCalledWith(1)
+      expect(
+        (console.error as ReturnType<typeof vi.fn>).mock.calls.some((call) => String(call[0]).includes('linked git worktree')),
+      ).toBe(true)
+      expect(existsSync(orchestratorScratch)).toBe(false)
+    })
+
+    it('succeeds from a linked worktree when --allow-worktree is passed', () => {
+      writeFileSync(subagentAuthoredPath, authoredYaml('session_shared', 'deliberate single-session worktree'))
+
+      expect(() =>
+        authorMain([subagentAuthoredPath, '--allow-worktree'], { cwd: worktreePath, scratchAbs: orchestratorScratch }),
+      ).not.toThrow()
+      expect(existsSync(orchestratorScratch)).toBe(true)
+    })
+
+    it('the parallel-write scenario: a worktree-isolated subagent cannot clobber the orchestrator\'s own scratch', () => {
+      // The orchestrator authors first, from the main checkout.
+      writeFileSync(orchestratorAuthoredPath, authoredYaml('session_shared', 'orchestrator survey + review + merge'))
+      authorMain([orchestratorAuthoredPath], { cwd: work, scratchAbs: orchestratorScratch })
+      expect(existsSync(orchestratorScratch)).toBe(true)
+      const afterOrchestrator = readFileSync(orchestratorScratch, 'utf8')
+      expect(JSON.parse(afterOrchestrator).goal).toBe('orchestrator survey + review + merge')
+
+      // A dispatched subagent, sharing the same parent session id, mistakenly
+      // tries to self-invoke from its own worktree — refused, not silently
+      // overwriting the orchestrator's own scratch content.
+      writeFileSync(subagentAuthoredPath, authoredYaml('session_shared', 'subagent implements one PR'))
+      expect(() =>
+        authorMain([subagentAuthoredPath], { cwd: worktreePath, scratchAbs: orchestratorScratch }),
+      ).toThrow('EXIT')
+
+      // The orchestrator's own scratch survives byte-for-byte.
+      expect(readFileSync(orchestratorScratch, 'utf8')).toBe(afterOrchestrator)
+    })
+
+    it('authors normally from the main/primary checkout, with no flag needed', () => {
+      writeFileSync(orchestratorAuthoredPath, authoredYaml('session_main', 'ordinary orchestrator run'))
+      expect(() =>
+        authorMain([orchestratorAuthoredPath], { cwd: work, scratchAbs: orchestratorScratch }),
+      ).not.toThrow()
+      expect(existsSync(orchestratorScratch)).toBe(true)
+    })
   })
 })

@@ -4,7 +4,7 @@ endedAt: 2026-07-05T00:25:00Z     # estimate — hand-authored
 kind: interactive
 goal: Build log-session Skill and helper (PR2)
 status: completed
-outcome: PR2 shipped as PR #5; gate green
+outcome: "PR2 shipped as PR #5; gate green"
 summary: >-
   Continued issue #2 by building PR2 — the log-session platform-operation Skill
   and its direct-to-main helper (scripts/log-session.ts) — with unit tests, a

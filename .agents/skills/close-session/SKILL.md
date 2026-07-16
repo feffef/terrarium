@@ -47,3 +47,7 @@ other, and this Skill writes to a single shared per-session scratch file — a
 second invocation silently clobbers the first, erasing the orchestrating
 session's own log content. The orchestrating session is the sole log author for
 the run; a dispatched impl agent just implements, pushes, and hands back the PR.
+This is now mechanically reinforced, not prose-only (issue #449 Gap 4):
+`log-session.ts --author` refuses to run from inside a linked git worktree
+(`isLinkedWorktree()`) unless `--allow-worktree` is passed explicitly — so a
+dispatched agent's own attempt fails loudly instead of silently overwriting.

@@ -4,7 +4,7 @@ endedAt: 2026-07-05T13:46:25Z
 kind: interactive
 goal: Deploy Terrarium as a public self-updating container
 status: completed
-outcome: Live at terrarium.feffef.de; PR #24 merged
+outcome: "Live at terrarium.feffef.de; PR #24 merged"
 summary: >-
   Planned and shipped a PoC deployment on the operator's Hetzner Docker host: a
   thin runner+builder container that clones main via a read-only PAT, builds it,

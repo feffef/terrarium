@@ -4,7 +4,7 @@ endedAt:   2026-07-05T13:58:44Z   # exact — read from `date -u`
 kind: interactive
 goal: Build the digest Skill and journal landing
 status: completed
-outcome: PR #23 merged; digests live
+outcome: "PR #23 merged; digests live"
 summary: >-
   Ran a grill-with-docs session to scope, then built the `digest` platform-operation
   Skill: a thin, unit-tested helper (list/gather) plus a user-invoked Skill that writes

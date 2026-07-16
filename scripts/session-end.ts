@@ -41,6 +41,7 @@ import {
   STAGING_DIR,
   LAST_LANDED_FILE,
   type AuthoredScratch,
+  type MechanicalTrace,
 } from './session-trace.ts'
 import { validateEntry, expectedFilename, SESSIONS_DIR, land } from './log-session.ts'
 
@@ -102,6 +103,114 @@ export function isAlreadyLanded(scratchRaw: string, sentinelRaw: string | null):
   }
 }
 
+/** True when the transcript shows the session invoked `log-session` — i.e.
+ *  declared its own closure — regardless of whether the authored scratch
+ *  survived long enough to be read (issue #449 Gap 3). This is the durable
+ *  evidence a dropped scratch leaves behind: the interpretive scratch lives in
+ *  gitignored, container-local `.session-logs/` and a container reclaim on
+ *  resume can erase it before any hook lands the log, but the transcript
+ *  recording the Skill invocation is the more resilient artifact — it is what
+ *  let session_01HCnkeyqxf46SjouSPxrazN (2026-07-06) recover its own dropped
+ *  log by hand, run against the still-present transcript. */
+export function declaredClosure(trace: MechanicalTrace): boolean {
+  return trace.skillsUsed.includes('log-session')
+}
+
+/** The marker every dropped-scratch placeholder log's sole friction carries —
+ *  greppable, and distinguishes this synthetic entry from a real one. */
+export const DROPPED_SCRATCH_FRICTION = 'issue #449 Gap 3: authored scratch dropped before landing'
+
+/** A minimal, clearly-flagged stand-in for the scratch that was lost. `kind` is
+ *  a best-effort guess from `entrypoint` (never authoritative — the real intent
+ *  went with the scratch); every interpretive field says plainly that it is a
+ *  placeholder, not the agent's own words. */
+export function buildDroppedScratchScratch(trace: MechanicalTrace): AuthoredScratch {
+  return {
+    session: trace.session ?? '',
+    kind: trace.entrypoint === 'remote_trigger' ? 'autonomous' : 'interactive',
+    goal: '(unknown — authored scratch lost before landing)',
+    status: 'abandoned',
+    outcome: 'authored scratch lost before landing',
+    summary:
+      'This session invoked log-session (closure was declared) but its authored interpretive scratch — ' +
+      'goal, outcome, summary, frictions — was lost before the SessionEnd handler could land it, most likely ' +
+      `a container reclaim on resume erasing the gitignored .session-logs/ scratch before teardown committed ` +
+      `(${DROPPED_SCRATCH_FRICTION}). Only the mechanical trace could be recovered; nothing in this entry ` +
+      "reflects the agent's own words.",
+    frictions: [
+      {
+        description: DROPPED_SCRATCH_FRICTION,
+        solution:
+          'If the raw transcript is still available, a human or a follow-up session can re-author a faithful ' +
+          'scratch from it and re-land a corrected log over this placeholder.',
+        severity: 'major',
+      },
+    ],
+  }
+}
+
+/** The common tail `handle()` and `recoverDroppedScratch()` share once their
+ *  own distinct landing gate (content-diff vs existence-check) has already
+ *  decided to proceed: stage the byte source, then hand it to `land()`. The
+ *  log lands from a gitignored staging copy, never the working tree — `land`
+ *  only needs `absPath` as a byte source for `git hash-object`, and `relPath`
+ *  is the commit's tree location, so the tree never holds an untracked log
+ *  (#148). */
+function stageAndLand(
+  relPath: string,
+  yaml: string,
+  opts: { dryRun: boolean; remote: string; landFn?: typeof land },
+): HandlerResult {
+  const stagingPath = join(root, STAGING_DIR, basename(relPath))
+  mkdirSync(dirname(stagingPath), { recursive: true })
+  writeFileSync(stagingPath, yaml)
+  const landFn = opts.landFn ?? land
+  landFn(relPath, stagingPath, opts.remote, { dryRun: opts.dryRun })
+  return { action: opts.dryRun ? 'dry-run' : 'landed', relPath }
+}
+
+/** Recovery path for the "authored-then-dropped" case (issue #449 Gap 3),
+ *  distinct from a session that never declared closure at all (#397,
+ *  unrescuable by any hook). The scratch itself can be lost to a container
+ *  reclaim, but `declaredClosure` reads durable evidence straight out of the
+ *  transcript. Lands a minimal placeholder log ONLY when nothing exists yet at
+ *  the session's expected path — existence-checked, not content-diffed like
+ *  `handle`'s normal gate, so this never overwrites a real, richer log (or an
+ *  earlier placeholder) that already landed there. Every field the placeholder
+ *  carries is explicit placeholder prose (see `buildDroppedScratchScratch`),
+ *  and `droppedScratchRecovery: true` additionally marks it structurally, so a
+ *  consumer never has to grep friction text to tell it apart from a real log. */
+export function recoverDroppedScratch(
+  transcriptJsonl: string,
+  opts: {
+    dryRun: boolean
+    remote: string
+    landFn?: typeof land
+    mainVersionFn?: (relPath: string, remote: string) => string | null
+  },
+): HandlerResult {
+  const trace = extractTrace(parseTranscript(transcriptJsonl))
+  if (!trace.session || !declaredClosure(trace)) {
+    return { action: 'skipped-no-scratch' }
+  }
+
+  const entry = stitch(buildDroppedScratchScratch(trace), trace)
+  entry.droppedScratchRecovery = true
+  const valid = validateEntry(entry)
+  if (!valid.ok) return { action: 'invalid', detail: valid.errors }
+
+  const relPath = join(SESSIONS_DIR, expectedFilename(valid.data))
+  const getMain = opts.mainVersionFn ?? mainVersion
+  if (getMain(relPath, opts.remote) !== null) {
+    // Something already lives at this path — the real log landed (or a prior
+    // placeholder already recorded the drop). Never overwrite either.
+    return { action: 'skipped-unchanged', relPath }
+  }
+
+  const yaml = stringifyYaml(entry, { lineWidth: 0 })
+  return stageAndLand(relPath, yaml, opts)
+}
+
 /** The testable core: given a scratch and a transcript, produce + (maybe) land
  *  the log. `push`/`build` flow through `land`, injectable for tests via opts. */
 export function handle(
@@ -121,10 +230,6 @@ export function handle(
   if (!valid.ok) return { action: 'invalid', detail: valid.errors }
 
   const relPath = join(SESSIONS_DIR, expectedFilename(valid.data))
-  // The log lands from a gitignored staging copy, never the working tree: `land`
-  // only needs `absPath` as a byte source for `git hash-object`, and `relPath` is
-  // the commit's tree location, so the tree never holds an untracked log (#148).
-  const stagingPath = join(root, STAGING_DIR, basename(relPath))
   // YAML stringify with generous width so long summaries/paths don't hard-wrap
   // into shapes the parser round-trips differently.
   const yaml = stringifyYaml(entry, { lineWidth: 0 })
@@ -135,11 +240,7 @@ export function handle(
     return { action: 'skipped-unchanged', relPath }
   }
 
-  mkdirSync(dirname(stagingPath), { recursive: true })
-  writeFileSync(stagingPath, yaml)
-  const landFn = opts.landFn ?? land
-  landFn(relPath, stagingPath, opts.remote, { dryRun: opts.dryRun })
-  return { action: opts.dryRun ? 'dry-run' : 'landed', relPath }
+  return stageAndLand(relPath, yaml, opts)
 }
 
 function main(): void {
@@ -163,8 +264,23 @@ function main(): void {
   const transcriptPath = arg('--transcript') ?? payload.transcript_path
   const scratchPath = arg('--scratch') ?? join(root, SCRATCH_FILE)
 
-  // The wrap-up signal: no scratch ⇒ the session never declared closure. Do nothing.
+  // The wrap-up signal: no scratch ⇒ either the session never declared closure
+  // (#397, unrescuable — do nothing), or its scratch was authored and then lost
+  // (issue #449 Gap 3) — the transcript itself carries the durable evidence to
+  // tell the two apart, so check it before giving up silently.
   if (!existsSync(scratchPath)) {
+    if (transcriptPath && existsSync(transcriptPath)) {
+      const result = recoverDroppedScratch(readFileSync(transcriptPath, 'utf8'), { dryRun, remote: 'origin' })
+      if (result.action === 'landed' || result.action === 'dry-run') {
+        console.error(
+          `session-end: authored scratch was lost before landing — recorded a placeholder log at ${result.relPath} (${DROPPED_SCRATCH_FRICTION})`,
+        )
+        return
+      }
+      if (result.action === 'invalid') {
+        console.error(`session-end: dropped-scratch recovery produced an invalid entry, skipping:\n${result.detail}`)
+      }
+    }
     console.error('session-end: no authored scratch — session did not declare closure; skipping')
     return
   }

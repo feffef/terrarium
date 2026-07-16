@@ -11,6 +11,7 @@ import {
   buildSkillSessionFiles,
   findHumanPromptedClosures,
   findManuallyRescuedClosures,
+  findMisclassifiedKind,
   findOrphanedSessions,
   groupSessionReferences,
   hasHumanPromptedClosure,
@@ -41,6 +42,7 @@ function sess(over: Partial<WindowSession> = {}): WindowSession {
     skillsUsed: [],
     frictions: [],
     humanPromptedClosure: false,
+    entrypoint: '',
     ...over,
   }
 }
@@ -559,5 +561,37 @@ describe('findManuallyRescuedClosures()', () => {
     ]
     const sessions = [sess({ session: 'session_019pNrzTQb3EV2SJBWXs1bXG', endedAt: '2026-07-13T17:19:05Z' })]
     expect(findManuallyRescuedClosures(refs, sessions)).toEqual([])
+  })
+})
+
+describe('findMisclassifiedKind() — issue #449 Gap 2', () => {
+  it('flags a remote_trigger session authored as anything other than autonomous', () => {
+    const sessions = [
+      sess({ session: 'a', kind: 'interactive', entrypoint: 'remote_trigger', endedAt: '2026-07-13T00:00:00Z' }),
+    ]
+    expect(findMisclassifiedKind(sessions)).toEqual([
+      { session: 'a', kind: 'interactive', entrypoint: 'remote_trigger', endedAt: '2026-07-13T00:00:00Z' },
+    ])
+  })
+
+  it('does not flag a remote_trigger session correctly authored as autonomous', () => {
+    const sessions = [sess({ session: 'a', kind: 'autonomous', entrypoint: 'remote_trigger' })]
+    expect(findMisclassifiedKind(sessions)).toEqual([])
+  })
+
+  it('does not flag a legitimately interactive session that merely lacks remote_trigger', () => {
+    const sessions = [
+      sess({ session: 'a', kind: 'interactive', entrypoint: 'remote' }),
+      sess({ session: 'b', kind: 'interactive', entrypoint: '' }),
+    ]
+    expect(findMisclassifiedKind(sessions)).toEqual([])
+  })
+
+  it('sorts multiple misclassifications oldest-first', () => {
+    const sessions = [
+      sess({ session: 'newer', kind: 'delegated', entrypoint: 'remote_trigger', endedAt: '2026-07-14T00:00:00Z' }),
+      sess({ session: 'older', kind: 'interactive', entrypoint: 'remote_trigger', endedAt: '2026-07-10T00:00:00Z' }),
+    ]
+    expect(findMisclassifiedKind(sessions).map((m) => m.session)).toEqual(['older', 'newer'])
   })
 })

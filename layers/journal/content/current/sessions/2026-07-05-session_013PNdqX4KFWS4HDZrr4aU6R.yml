@@ -4,7 +4,7 @@ endedAt: 2026-07-05T09:16:00Z     # estimate — hand-authored
 kind: interactive
 goal: Build journal UI layer overview dashboard
 status: completed
-outcome: Dashboard layer shipped via PR #19, merged
+outcome: "Dashboard layer shipped via PR #19, merged"
 summary: >-
   Planned and built the journal Tenant's first Nuxt-layer fit-out: a Space-landing
   overview dashboard (state tiles, a recent-activity session feed, friction "soil

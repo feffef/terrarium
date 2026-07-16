@@ -379,6 +379,63 @@ two different things here:
   diff-guard, and three-event landing are all unchanged. This amendment is purely
   about *what triggers the authoring*.
 
+## Bounded exception: the pre-#367 truncation sweep (2026-07-16, issue #449 Gap 5)
+
+> **Amended.** The Schema evolution policy above states plainly: *"Their
+> history is **append-only ground truth**: entries are never rewritten and
+> never migrated"* and *"rewriting history is forbidden by this ADR."* This
+> amendment carves out one narrow, bounded, one-time exception — it does not
+> reopen a general "logs are mutable" door.
+
+**The problem.** PR #367 (2026-07-12) found that an authored `outcome`
+containing an unquoted ` #` (e.g. `outcome: PR #354 merged`) silently
+truncates at YAML-parse time — everything from the `#` onward is read as a
+comment and dropped. The guard added there stops it at author time going
+forward, but the back-catalog was never swept: issue #449 Gap 5 asked for
+exactly that sweep, with an explicit acceptance criterion that a repaired log
+validate against the frozen schema.
+
+**Decision.** `scripts/sweep-truncated-sessions.ts` may correct the `outcome`
+field of an already-landed log — and *only* that field, for *only* this one
+bug signature — via two mechanisms, both bounded and auditable:
+
+- **Exact recovery.** When the full originally-intended text is still
+  physically present in the committed file (the parser's `.comment` on the
+  still-unquoted node recovers it byte-for-byte, the same mechanism
+  `findTruncatedScalars` already uses at author time) — this only re-quotes
+  text already sitting in the file, changing no fact.
+- **Corroborated reconstruction.** When the landed value is already a bare
+  fragment with nothing left to recover (the truncation happened upstream, at
+  author time, before the file was ever committed) — reconstructed only when
+  unambiguous (a lone `PR` against exactly one `prs` entry). Anything more
+  ambiguous is flagged via the new optional `historicallyTruncated` field
+  (Schema evolution policy above: an additive optional field, no
+  `schemaVersion` bump), never guessed.
+
+Every write re-validates the full entry against the frozen `sessions` schema
+before landing; a repair that would produce an invalid entry aborts loudly
+instead of silently corrupting the file. Nothing else in an entry — `goal`,
+`summary`, `frictions`, timestamps, or any other field — is ever touched by
+this sweep, and no other field's truncation is repaired by it, even where the
+same bug signature was incidentally spotted elsewhere (Gap 5 scoped this to
+`outcome`, the one field PR #367 already established as affected; a broader
+sweep is a distinct follow-up, not silently folded in here).
+
+**Consequences.**
+
+- This is a **one-time, scoped correction of a mechanical bug's fallout**, not
+  a precedent for editing session-log content generally — a future agent
+  reaching for `sweep-truncated-sessions.ts`'s pattern to "fix" an entry's
+  prose for any other reason is exactly the door this amendment does *not*
+  open.
+- The corrected text supersedes the bug-mangled value as the log's current
+  ground truth; the mangled value remains visible in the file's prior git
+  history (`git log -p`) for anyone who needs the literal bytes that were
+  actually on `main` before this sweep.
+- `historicallyTruncated` marks a log the sweep could only flag, not repair —
+  a durable, machine-readable record that its `outcome` is known-incomplete
+  and the true original text may be unrecoverable.
+
 ## Folded-in `docsRead` reason split in two (2026-07-07)
 
 > **Amended.** The Decision and Consequences above describe a single

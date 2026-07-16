@@ -4,7 +4,7 @@ endedAt:   2026-07-05T21:13:12Z   # exact — read from `date -u`
 kind: interactive
 goal: Write Kevin blog post on autonomous fixes
 status: partial
-outcome: PR #85 open and green, awaiting review
+outcome: "PR #85 open and green, awaiting review"
 summary: >-
   Ran the blog-post Skill for the kevin Persona. Gathered material read-only from
   git history and session logs, and landed on the evening's four autonomous

@@ -8,6 +8,7 @@ import {
   DERIVED_REASON,
   DERIVED_REASON_COMMAND,
   DERIVED_REASON_EDITED,
+  deriveTrigger,
   extractTrace,
   parseTranscript,
   stitch,
@@ -67,6 +68,54 @@ describe('extractTrace()', () => {
     expect(trace.commandSkills).toEqual(['digest', 'frictions-to-fixes'])
     expect(trace.toolCounts.Skill).toBe(1) // the expansion is not a tool call
   })
+
+  it('omits trigger for a non-remote_trigger session (this fixture is entrypoint: remote)', () => {
+    expect(trace.entrypoint).toBe('remote')
+    expect(trace.trigger).toBeUndefined()
+  })
+})
+
+describe('deriveTrigger() — issue #449 Gap 1', () => {
+  const records = (userContent: unknown) =>
+    parseTranscript(
+      [
+        JSON.stringify({
+          type: 'user',
+          timestamp: '2026-07-13T04:08:40Z',
+          entrypoint: 'remote_trigger',
+          message: { content: userContent },
+        }),
+      ].join('\n'),
+    )
+
+  it('derives the slash-command name from a Routine-fired first turn', () => {
+    const trace = extractTrace(
+      records('<command-message>audit-docs is running…</command-message>\n<command-name>/audit-docs</command-name>'),
+    )
+    expect(trace.trigger).toBe('audit-docs')
+  })
+
+  it('falls back to the first line of a freeform Routine prompt with no slash command', () => {
+    const trace = extractTrace(records('Check whether the deploy PR is still green and merge it if so.\nMore detail below.'))
+    expect(trace.trigger).toBe('Check whether the deploy PR is still green and merge it if so.')
+  })
+
+  it('is absent for a non-remote_trigger session even with a slash command in the first turn', () => {
+    const jsonl = [
+      JSON.stringify({
+        type: 'user',
+        timestamp: '2026-07-13T04:08:40Z',
+        entrypoint: 'remote',
+        message: { content: '<command-name>/digest</command-name>' },
+      }),
+    ].join('\n')
+    expect(deriveTrigger(parseTranscript(jsonl), 'remote')).toBeUndefined()
+  })
+
+  it('is absent when the first user turn has no text at all', () => {
+    const trace = extractTrace(records([{ type: 'tool_result', content: 'no text blocks here' }]))
+    expect(trace.trigger).toBeUndefined()
+  })
 })
 
 describe('stitch()', () => {
@@ -116,6 +165,13 @@ describe('stitch()', () => {
   it('drops empty mechanical collections but a stitched entry stays schema-valid', () => {
     const res = validateEntry(entry)
     expect(res.ok).toBe(true)
+  })
+
+  it('omits trigger when the trace has none, carries it through and stays schema-valid when it does', () => {
+    expect('trigger' in entry).toBe(false)
+    const withTrigger = stitch(scratch, { ...trace, trigger: 'audit-docs' })
+    expect(withTrigger.trigger).toBe('audit-docs')
+    expect(validateEntry(withTrigger).ok).toBe(true)
   })
 
   it('omits learnings/ideas entirely when the scratch has none', () => {

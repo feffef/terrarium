@@ -6,6 +6,8 @@ kind: interactive
 goal: Auto-open + auto-watch PRs; add in-review status
 status: completed
 outcome: Both
+historicallyTruncated:
+  - outcome
 summary: "The user was annoyed at being asked, per PR-lifecycle step, \"shall I open a PR?\", \"shall I watch it?\", and a permission dialog per tool. Changed all three defaults: a session with committed work now auto-opens its gated PR at closure, auto-subscribes to watch it to merge/close, and the open/watch/babysit tools are allowlisted in .claude/settings.json (ADR-0003 amendment + CLAUDE.md conventions), bounded so it gates opening/watching only, not deciding to do the work. Opening the PR is now the first log-session trigger, logged with a new in-review status (open-but-unmerged, distinct from completed) — added to all five status homes plus a blue StatusPill with light/dark tokens. Verified the full gate and probed the pill's computed colour, dogfooded it all on #192, resolved a CLAUDE.md merge conflict, and saw #192 merged."
 prs:
   - "192"

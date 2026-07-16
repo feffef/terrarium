@@ -5,7 +5,7 @@ endedAt: 2026-07-07T12:44:36Z
 kind: interactive
 goal: Fix stale "SessionEnd lands at teardown" claim
 status: completed
-outcome: PR
+outcome: "PR #187 merged"
 summary: "User flagged that most sessions still claim the scratch lands on main \"at teardown via the SessionEnd hook,\" even though SessionEnd is known unreliable. Investigated the git history: PR #148 rewired landing onto a live `Stop` hook as primary, demoting `SessionEnd`/resume to fallbacks, because SessionEnd fails silently on a network-freezing suspend — but that fix never got folded back into the docs describing the mechanism. Fixed five stale spots plus an ADR-0009 amendment (round 1); replaced the unclear \"backstop\" jargon with \"fallback\" everywhere, including the original scripts/session-end.ts comment (round 2); then, prompted by the user questioning whether independent restatements in 7 places matched the repo's own single-home rule, collapsed to ADR-0009 as the full home plus one full explanation in log-session/SKILL.md (read at actual invocation time), with CLAUDE.md/Skill Inventory/digest/SKILL.md trimmed to the one essential fact and a pointer (round 3). PR #187 merged."
 prs:
   - "187"
