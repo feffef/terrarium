@@ -1,0 +1,88 @@
+schemaVersion: 1
+session: session_01AFWrwoAwYtfmgqZ75HY1gY
+startedAt: 2026-07-17T04:08:30Z
+endedAt: 2026-07-17T04:27:37Z
+kind: autonomous
+goal: Audit repo docs against code via /audit-docs
+status: in-review
+outcome: 5 findings fact-checked, fixed, PR open
+summary: "Scheduled /audit-docs run (autonomous — fired by a background-task event, no human chat this session). Four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) swept every *.md surface, pooled 10 findings, deduped (no overlaps found), and an independent fact-checker verified each against primary sources. 5 survived CONFIRMED/CONFIRMED-BUT: CLAUDE.md restated ADR-0017's provenance-footer decision scope instead of linking to it; CONTEXT.md's Public glossary entry stated an unconditional ADR-0020 rule that ADR-0023's live, demo-scoped guest exception contradicts; docs/agents/issue-tracker.md falsely claimed ADR-0020 was \"amended in #437\" (those values were in the original Decision text, no #437 reference exists in the ADR at all); two own-Skill SKILL.md files (atlas-specimen, guest-build) each restated one fact twice with no new information. 5 other candidates were WRONG and dropped, including four \"duplication\" findings that turned out to be a repo-wide Skill frontmatter-description/body-opening echo convention, not a defect, and one CLAUDE.md \"duplication\" whose two passages already pointed outward to their real single home. Fixed all 5 confirmed findings, `pnpm gate:scoped` green, opened PR #548, subscribed to its activity. No human-only surface touched; no needs-triage issue needed (the ADR-0020/#437 claim resolved cleanly to a factual correction, not an unresolvable conflict)."
+prs:
+  - "548"
+docsRead:
+  - path: CLAUDE.md
+    reason: tier rules, single-home rule, PR/session conventions
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: verify Duplication finding F1
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: verify Ambiguity finding F10 (false amendment claim)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: verify Contradiction finding F9
+  - path: CONTEXT.md
+    reason: Public glossary entry, fix target for F9
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/issue-tracker.md
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the run itself
+  - name: close-session
+    reason: session closure at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: First Concision-lens subagent delegated to five of its own child agents instead of reviewing directly, then repeatedly reported 'still waiting on children' status instead of findings across two resume attempts.
+    solution: Redispatched a fresh subagent with an explicit 'do not use the Agent tool, review directly yourself' instruction, which worked cleanly on the first pass. Worth stating 'do not delegate further' up front in prompts for bounded read-only review tasks handed to a general-purpose subagent.
+    severity: moderate
+  - description: Two subagent outputs were auto-flagged by the harness as matching an 'instruction-shaped pattern (permissions-allow-deny)' purely because they quoted CLAUDE.md's own prose about the permissions.allow caveat verbatim.
+    solution: Read the flagged text directly to confirm it was benign quoted repo content, not an injected instruction, and proceeded normally. No repo-side fix needed — flagging this only as a heads-up that quoting certain CLAUDE.md passages in a subagent's return value can trip that scanner.
+    severity: nit
+durationSec: 1146
+models:
+  claude-sonnet-5: 169
+toolCounts:
+  Bash: 16
+  Agent: 6
+  TaskCreate: 8
+  ToolSearch: 5
+  TaskUpdate: 12
+  ScheduleWakeup: 12
+  SendMessage: 1
+  Read: 7
+  Edit: 5
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__enable_pr_auto_merge: 1
+filesEdited:
+  - CLAUDE.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - CONTEXT.md
+  - docs/agents/issue-tracker.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: Drift + Orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: Duplication + Mis-location"
+  - type: general-purpose
+    task: "Concision lens: Verbose + Stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: Contradiction + Ambiguity"
+  - type: general-purpose
+    task: "Concision lens redo: Verbose + Stale-narration (direct, no delegation)"
+  - type: general-purpose
+    task: Fact-check pooled audit findings
+gitBranch: claude/festive-mayer-azga4r
+entrypoint: remote_trigger
+cliVersion: 2.1.212
+trigger: audit-docs
+learnings:
+  - "A general-purpose subagent that itself spawns child agents via the Agent tool: those children's task-notifications deliver to 'main' (the top-level session), not back to the spawning subagent — orphaned-but-still-usable data, not a dead end, if the orchestrator watches for and collects them."
