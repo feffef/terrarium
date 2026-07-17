@@ -77,6 +77,49 @@ with a guest is neither, so this Skill is **bounded**:
 - Explore the codebase to answer anything answerable there, rather than asking
   the guest (per `/grilling`).
 
+## Not a build-time fit? Reframe, don't just reject
+
+Some ideas are a good story but a bad fit for a platform that is
+build-time-baked with nothing created at runtime, save the two narrow,
+already-wired exceptions (ADR-0001). The tell: the idea needs something to
+persist past the visitor's own visit for *other* visitors to see (an account,
+a login, a comment or review, a shopping cart, a live chat), needs a fresh
+runtime fetch of outside data (a live feed, an API call nothing here already
+integrates), or needs a file upload. None of those have a server-side write
+path on this platform, and giving them one would mean a new dependency —
+which the confirm-time screen below escalates anyway.
+
+When a guest's raw idea lands there, don't quietly build a watered-down version
+of it and don't just reject it either. In the same comment:
+
+1. **Explain the limitation in plain, guest-facing language** — what the site
+   *is* (rebuilt from files each time it's published; no visitor-facing memory,
+   no fetching things live) — never cite an ADR number or an internal term.
+2. **Offer exactly three proposals** that keep the spirit of their idea and are
+   each buildable in a single session with **no new dependency**. Reach for
+   these reframes, picking whichever actually fits their idea rather than
+   forcing all three into the same shape:
+   - **Bake it as content** — turn the idea into pre-authored Documents/pages
+     built from their input, instead of something visitors add to live (e.g. a
+     "leave a comment" idea becomes a curated guestbook page of entries the
+     agent adds as content).
+   - **Move the interactivity into the visitor's own browser** — filtering,
+     sorting, a calculator/quiz/converter, or a client-side-only "save for
+     later" (e.g. `localStorage`) running against data already shipped at
+     build time — no server round-trip, no account, no new dependency.
+   - **Scope it as a new page, Space, or Tenant fit-out** — if the idea is
+     really "a new part of the site" rather than a live feature, propose
+     building that static area instead.
+3. **Ask them to pick one (or none)** — that pick *is* the confirmation ask for
+   this issue; still needs their explicit choice before anything is
+   green-lit. Keep `needs-info` until they answer.
+
+This is a capability limit, not the ADR-0023 safety screen below — check it
+whenever the raw idea hits the wall, even before round 3 (a well-formed but
+infeasible idea doesn't need three rounds to be recognized as infeasible). Once
+they pick a proposal, that proposal is what gets confirmed and screened below —
+not their original ask.
+
 ## Confirm — domain language, no internals
 
 When the idea is clear (or after round 3), post a summary of the requested
@@ -84,7 +127,8 @@ When the idea is clear (or after round 3), post a summary of the requested
 `CONTEXT.md`) — what the site will do for a visitor — and ask the guest to
 confirm. **No technical or internal detail**: describe the behaviour, never the
 Collection keys, the manifest, or the routing. Keep the issue `needs-info` until
-they answer.
+they answer. If the idea hit the build-time wall above, this summary is of
+whichever reframed proposal they picked, not the original ask.
 
 ## On confirm — green-light, or screen
 
@@ -109,8 +153,9 @@ comment.
    drop the agent's-own and (unless steering) the owner's.
 2. **One bounded step per issue** (parallel — the eligible set is small, since an
    issue only surfaces when a guest has written since the last intake action).
-   Each issue is at exactly one stage: ask the next round, post the confirmation
-   summary, green-light, or escalate. Post **one** comment (ADR-0017 footer only)
+   Each issue is at exactly one stage: ask the next round, post the reframe
+   proposals, post the confirmation summary, green-light, or escalate. Post
+   **one** comment (ADR-0017 footer only)
    and apply the resulting label (a label update *replaces* the set).
 3. **Report** a one-line-per-issue roll-up (`#N | stage | action`).
 
