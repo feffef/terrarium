@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01AFWrwoAwYtfmgqZ75HY1gY
 startedAt: 2026-07-17T04:08:30Z
-endedAt: 2026-07-17T04:27:37Z
+endedAt: 2026-07-17T04:36:00Z
 kind: autonomous
 goal: Audit repo docs against code via /audit-docs
-status: in-review
-outcome: 5 findings fact-checked, fixed, PR open
-summary: "Scheduled /audit-docs run (autonomous — fired by a background-task event, no human chat this session). Four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) swept every *.md surface, pooled 10 findings, deduped (no overlaps found), and an independent fact-checker verified each against primary sources. 5 survived CONFIRMED/CONFIRMED-BUT: CLAUDE.md restated ADR-0017's provenance-footer decision scope instead of linking to it; CONTEXT.md's Public glossary entry stated an unconditional ADR-0020 rule that ADR-0023's live, demo-scoped guest exception contradicts; docs/agents/issue-tracker.md falsely claimed ADR-0020 was \"amended in #437\" (those values were in the original Decision text, no #437 reference exists in the ADR at all); two own-Skill SKILL.md files (atlas-specimen, guest-build) each restated one fact twice with no new information. 5 other candidates were WRONG and dropped, including four \"duplication\" findings that turned out to be a repo-wide Skill frontmatter-description/body-opening echo convention, not a defect, and one CLAUDE.md \"duplication\" whose two passages already pointed outward to their real single home. Fixed all 5 confirmed findings, `pnpm gate:scoped` green, opened PR #548, subscribed to its activity. No human-only surface touched; no needs-triage issue needed (the ADR-0020/#437 claim resolved cleanly to a factual correction, not an unresolvable conflict)."
+status: completed
+outcome: 5 findings fact-checked, fixed, PR merged
+summary: "Scheduled /audit-docs run (autonomous — fired by a background-task event, no human chat this session). Four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) swept every *.md surface, pooled 10 findings, deduped (no overlaps found), and an independent fact-checker verified each against primary sources. 5 survived CONFIRMED/CONFIRMED-BUT: CLAUDE.md restated ADR-0017's provenance-footer decision scope instead of linking to it; CONTEXT.md's Public glossary entry stated an unconditional ADR-0020 rule that ADR-0023's live, demo-scoped guest exception contradicts; docs/agents/issue-tracker.md falsely claimed ADR-0020 was \"amended in #437\" (those values were in the original Decision text, no #437 reference exists in the ADR at all); two own-Skill SKILL.md files (atlas-specimen, guest-build) each restated one fact twice with no new information. 5 other candidates were WRONG and dropped, including four \"duplication\" findings that turned out to be a repo-wide Skill frontmatter-description/body-opening echo convention, not a defect, and one CLAUDE.md \"duplication\" whose two passages already pointed outward to their real single home. Fixed all 5 confirmed findings, `pnpm gate:scoped` green, opened PR #548, subscribed to its activity. No human-only surface touched; no needs-triage issue needed (the ADR-0020/#437 claim resolved cleanly to a factual correction, not an unresolvable conflict). CI's full gate then failed on a pre-existing, already-tracked flaky e2e test (issue #479) unrelated to this doc-only diff; re-ran the failed job, it passed, and the PR merged on green."
 prs:
   - "548"
 docsRead:
@@ -28,6 +28,8 @@ docsRead:
     reason: (read before editing)
   - path: docs/agents/pr-workflow.md
     reason: (no reason given)
+  - path: .github/workflows/gate.yml
+    reason: (no reason given)
 skillsUsed:
   - name: audit-docs
     reason: the run itself
@@ -36,31 +38,39 @@ skillsUsed:
   - name: log-session
     reason: author this log
 frictions:
+  - description: CI's full `pnpm gate` failed (test:e2e) on a change where local `pnpm gate:scoped` had passed green, because gate:scoped classified this 5-file, all-outside-layers/ doc diff as inert and skipped test/build/test:e2e. Per CLAUDE.md's own divergence rule, logging this as major regardless of root cause.
+    solution: "Root cause was NOT a gap in the inert classifier: the failure was `journal.e2e.ts`'s `holds the clicked item at its pre-click position when a sibling above it collapses` test, already documented as known-flaky-under-CI-load in issue #479 (linked from a comment in the test file itself), and this PR's diff was pure markdown with zero runtime surface. Re-running the failed job made it pass. No classifier change needed here, but flagging per the standing rule so the pattern stays visible; a repeat on an unrelated docs-only PR would be worth deduping against #479 rather than re-logging as a fresh divergence."
+    severity: major
   - description: First Concision-lens subagent delegated to five of its own child agents instead of reviewing directly, then repeatedly reported 'still waiting on children' status instead of findings across two resume attempts.
     solution: Redispatched a fresh subagent with an explicit 'do not use the Agent tool, review directly yourself' instruction, which worked cleanly on the first pass. Worth stating 'do not delegate further' up front in prompts for bounded read-only review tasks handed to a general-purpose subagent.
     severity: moderate
   - description: Two subagent outputs were auto-flagged by the harness as matching an 'instruction-shaped pattern (permissions-allow-deny)' purely because they quoted CLAUDE.md's own prose about the permissions.allow caveat verbatim.
     solution: Read the flagged text directly to confirm it was benign quoted repo content, not an injected instruction, and proceeded normally. No repo-side fix needed — flagging this only as a heads-up that quoting certain CLAUDE.md passages in a subagent's return value can trip that scanner.
     severity: nit
-durationSec: 1146
+durationSec: 1650
 models:
-  claude-sonnet-5: 169
+  claude-sonnet-5: 219
 toolCounts:
-  Bash: 16
+  Bash: 18
   Agent: 6
   TaskCreate: 8
-  ToolSearch: 5
-  TaskUpdate: 12
-  ScheduleWakeup: 12
+  ToolSearch: 9
+  TaskUpdate: 13
+  ScheduleWakeup: 14
   SendMessage: 1
-  Read: 7
-  Edit: 5
+  Read: 10
+  Edit: 9
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 5
   mcp__github__enable_pr_auto_merge: 1
+  mcp__github__get_job_logs: 1
+  mcp__github__search_issues: 1
+  mcp__github__actions_run_trigger: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - CLAUDE.md
   - .agents/skills/atlas-specimen/SKILL.md
