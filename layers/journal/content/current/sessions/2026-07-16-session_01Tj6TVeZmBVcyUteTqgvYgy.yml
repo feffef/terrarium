@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Tj6TVeZmBVcyUteTqgvYgy
 startedAt: 2026-07-16T22:43:48Z
-endedAt: 2026-07-16T23:51:03Z
+endedAt: 2026-07-17T02:17:39Z
 kind: interactive
 goal: Properly fix flaky journal accordion e2e test
 status: in-review
-outcome: "Root cause (premature scroll-pin settle) fixed; PR #537 in review"
-summary: "The user asked me to properly address a known flaky test (tracked loosely under issue #450) — firing an event to wait for rather than extending the wait time. Session logs showed a prior session (PR #410) had only raised the two journal-dashboard \"held in place\" e2e assertions' `expect.poll` timeout from 1000ms to 5000ms — the exact band-aid the user rejected. Root cause: `pinTopAcrossTransition`'s rAF counter-scroll settles over up to 90 frames, so a loaded CI runner can outrun any fixed budget. Per the user's direction I made the production code dispatch a `PIN_SETTLED_EVENT` on `window` when its settle loop finishes (every exit path), extracted the pure function + event name into `utils/expandTransition.ts` to single-home the open animation, and rewrote the two tests to arm a one-shot listener before the click and block on it — waiting exactly as long as the animation takes. Full local gate green (lint, typecheck, unit, content, e2e 45/45 incl. both formerly-flaky tests). Committed and pushed to the designated branch. Then, at the user's request, ran /code-review (two parallel axes): Spec found no defects (faithful, correct, in-scope); Standards flagged one Duplicated-Code cast, which I deduped via a shared PinSettledWindow type alias in a follow-up commit. The user then explicitly asked me to open the PR, so I opened gated PR #537. CI then FAILED on the very test — `expected -17.25 to be greater than 253.75` — exposing that the event wait was necessary but not sufficient: the deeper bug was in `pinTopAcrossTransition` itself. The arithmetic (before − 286 = after, where 286px is the collapsing digest's height) showed the pin settled with ZERO counter-scroll — a premature settle: its loop exited when the item's document position held steady for one frame, which on some frame schedules happens BEFORE the collapse starts moving it. Fixed by bounding the loop to the known transition duration (counter-scroll every frame until DURATION_MS + grace) rather than \"stopped moving\". Updated PR #537 title/body to match. All agent-initiated work stayed within the user's explicit asks."
+outcome: "Real cause (Playwright click auto-scroll vs scroll anchoring) fixed; PR #537"
+summary: "The user asked me to properly address a known flaky test (tracked loosely under issue #450) — firing an event to wait for rather than extending the wait time. Session logs showed a prior session (PR #410) had only raised the two journal-dashboard \"held in place\" e2e assertions' `expect.poll` timeout from 1000ms to 5000ms — the exact band-aid the user rejected. Root cause: `pinTopAcrossTransition`'s rAF counter-scroll settles over up to 90 frames, so a loaded CI runner can outrun any fixed budget. Per the user's direction I made the production code dispatch a `PIN_SETTLED_EVENT` on `window` when its settle loop finishes (every exit path), extracted the pure function + event name into `utils/expandTransition.ts` to single-home the open animation, and rewrote the two tests to arm a one-shot listener before the click and block on it — waiting exactly as long as the animation takes. Full local gate green (lint, typecheck, unit, content, e2e 45/45 incl. both formerly-flaky tests). Committed and pushed to the designated branch. Then, at the user's request, ran /code-review (two parallel axes): Spec found no defects (faithful, correct, in-scope); Standards flagged one Duplicated-Code cast, which I deduped via a shared PinSettledWindow type alias in a follow-up commit. The user then explicitly asked me to open the PR, so I opened gated PR #537. CI then FAILED on the very test — `expected -17.25 to be greater than 253.75` — exposing that the event wait was necessary but not sufficient: the deeper bug was in `pinTopAcrossTransition` itself. The arithmetic (before − 286 = after, where 286px is the collapsing digest's height) showed the pin settled with ZERO counter-scroll — a premature settle: its loop exited when the item's document position held steady for one frame, which on some frame schedules happens BEFORE the collapse starts moving it. Bounded the loop to the known transition duration (counter-scroll every frame until DURATION_MS + grace). But CI FAILED AGAIN, identically — so that was necessary, not the whole story. Reproduced locally at last by disabling browser scroll anchoring (overflow-anchor:none), recreating CI's exact before=268.75/after=-17.25. Frame-by-frame tracing showed the REAL primary cause: Playwright's locator.click() auto-scrolls the target into view (~284px) before the app reads its pin baseline, so the app pins the card at the displaced position while the test compares a pre-scroll `before`; scroll anchoring hid this locally. Fixed the test to open via dispatchEvent (no scroll, like a real click). Confirmed with an anchoring-off repro: 4/4 fail with locator.click(), 8/8 pass with dispatchEvent; e2e 45/45. BOTH the duration pin AND the scroll-free click are required. Rewrote PR #537's body to the full story. All work stayed within the user's explicit asks."
 prs:
   - "537"
 docsRead:
@@ -32,11 +32,11 @@ skillsUsed:
   - name: code-review
     reason: (invoked as a slash command)
 frictions:
-  - description: Local e2e passed 45/45 (both formerly-flaky tests) yet CI failed on one of them. My first fix (event-based wait) made the wait deterministic but did NOT fix the real premature-settle bug; a green local run gave false confidence and the defect only surfaced in CI's frame timing.
-    solution: Diagnose flaky-anchoring failures from the failure arithmetic (before−286= after ⇒ zero compensation ⇒ premature settle), not from a local pass. Fixed the production loop, not the test. A pre-push CI-parity signal for timing-sensitive e2e would have caught it before the PR round-trip.
+  - description: "Local e2e passed 45/45 while CI failed deterministically on the same test, and I MISDIAGNOSED it twice (event-wait, then premature-settle) before the real cause. Root difference was environmental: local browser scroll anchoring (overflow-anchor) absorbed the reflow and hid a test bug — Playwright's locator.click() auto-scroll — that CI (anchoring suppressed) exposed. Two PR→CI round-trips burned before I reproduced it locally."
+    solution: For any e2e that measures scroll/layout position, reproduce the CI environment by disabling scroll anchoring (overflow-anchor:none) locally BEFORE trusting a green run; and open a card via dispatchEvent, never locator.click(), when the test asserts on scroll position. Worth a line in docs/agents/verifying-ui-changes.md (scroll anchoring can mask position bugs).
     severity: major
-  - description: Could not reproduce the CI failure locally even under 6x CPU throttling — both old (buggy) and new code held at Δ=0.0, so the throttled repro did not discriminate. Local verification of an environment-specific frame-timing flake is limited.
-    solution: Relied on the failure arithmetic + a deterministic hand-driven-rAF check of the settle logic instead; treated CI as the final arbiter. Noted the caveat honestly in the PR body rather than overclaiming local proof.
+  - description: Could not reproduce the CI failure under 6x CPU throttling (both old and new code held at Δ=0.0) — I chased a frame-timing/premature-settle theory that was real but secondary, delaying the actual cause (click auto-scroll).
+    solution: The discriminating knob was overflow-anchor, not CPU throttle. When a position-assert e2e passes locally but fails on CI, vary rendering-env flags (scroll anchoring, reduced motion, viewport) — not just timing. Noted the caveat honestly in the PR body rather than overclaiming local proof.
     severity: minor
   - description: ADR-0003's auto-open-PR default conflicted with this session's system prompt ("Do NOT create a pull request unless the user explicitly asks").
     solution: "Followed CLAUDE.md: the task-scoped harness restriction wins over the auto-open default; committed + pushed only, surfaced the conflict here rather than silently opening or skipping."
@@ -47,27 +47,28 @@ frictions:
   - description: "The provenance footer was not auto-injected on the code-review cleanup `git commit -m`, recurrence of issue #346 (cloud -m commits skip injection)."
     solution: Verified with `git log -1 --format=%B`, amended the tip via `-F` with the footer appended, and force-with-lease pushed (tip-only, my own commit).
     severity: minor
-durationSec: 4035
+durationSec: 12831
 models:
-  claude-opus-4-8: 241
+  claude-opus-4-8: 348
 toolCounts:
-  Bash: 46
-  ToolSearch: 4
+  Bash: 61
+  ToolSearch: 5
   mcp__github__search_issues: 3
   Grep: 1
   mcp__github__issue_read: 2
-  Read: 10
-  Edit: 18
+  Read: 18
+  Edit: 36
   mcp__github__list_issues: 1
-  Write: 6
+  Write: 8
   Skill: 2
   Agent: 2
   mcp__github__list_pull_requests: 2
   mcp__github__create_pull_request: 1
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 4
-  mcp__Claude_Code_Remote__send_later: 1
-  mcp__github__get_job_logs: 1
-  mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 5
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__get_job_logs: 2
+  mcp__github__update_pull_request: 2
+  mcp__github__pull_request_read: 2
 filesEdited:
   - layers/journal/app/utils/expandTransition.ts
   - layers/journal/app/pages/t/journal/[space]/index.vue
@@ -86,3 +87,5 @@ learnings:
   - Dispatching a DOM CustomEvent when an rAF settle loop completes lets an e2e await the exact end of an animation deterministically — the proper fix for a settle-race flake, versus a longer expect.poll timeout that only widens the race window.
   - An rAF loop that exits when its tracked position stops changing is unsafe if that motion starts a frame or two late — it can settle before the motion begins; bound such a loop by the known transition duration (wall-clock, matching the CSS transition) instead, so it cannot exit early and self-caps.
   - A flaky-anchoring failure value is itself diagnostic — after minus before equalling the exact height of the collapsed element (zero compensation) pinpoints a no-op pin, distinguishing a premature settle from a scroll-clamp or a measurement issue.
+  - Browser scroll anchoring (overflow-anchor, on by default) silently keeps content visually stable when height above the viewport changes — so a UI test whose app-level scroll compensation is broken can still pass locally, then fail on CI where anchoring is suppressed (it is disabled for a short window after any programmatic scroll, e.g. Playwright's click auto-scroll). Reproduce by setting overflow-anchor:none.
+  - Playwright's locator.click() scrolls the target into view before clicking; for a test asserting scroll/viewport position that synthetic scroll is a confound a real user click never causes — dispatchEvent('click') opens without it.
