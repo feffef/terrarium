@@ -1,0 +1,80 @@
+schemaVersion: 1
+session: session_01Nh4gjwHBu6Fgs8vXYuWt3u
+startedAt: 2026-07-17T19:17:39Z
+endedAt: 2026-07-17T20:39:08Z
+kind: autonomous
+goal: Write and land a Karen blog post
+status: completed
+outcome: "PR #562 merged"
+summary: "Ran the blog-post Skill bare (no persona argument), entirely agent-initiated by the Skill's own command/schedule — no human chat prompted this run, and none intervened until a mid-turn tool-rejection required one \"Continue\" to resume the already-in-flight PR-babysitting step. The A0 rotation gate forced Karen (starved four posts running, no persona choice to make). Drafted three grounded Karen candidates — the still-unfixed RESCUED_GAP_HOURS number, the guest pipeline's real first guest getting an unanswered \"what's the URL?\" follow-up, and the Midden Tenant's same-night three-round rebuild of its own presentation layer — verifying every fact against primary sources (git log, GitHub issues/PRs/comments) rather than laundering David's or Kevin's prior posts. An independent Sonnet outside-reader picked the guest-URL post for its real external stakes over the other two's internal navel-gazing; revised per its jargon-gap notes, gated green (55/55 e2e), opened PR #562, and merged it once CI confirmed green."
+prs:
+  - "562"
+docsRead:
+  - path: layers/blog/content/david/pages/2026-07-17-two-posts-zero-fixes.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-15-nobody-touched-a-keyboard.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-17-someone-fixed-the-flake.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-13-a-wrong-number-in-the-metric.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-16-the-door-opens-for-guests.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pingbacks/2026-07-09-karen-the-self-merge-tier-just-grew-by-one.yml
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-17-then-a-guy-asked-for-the-url.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: Guessed mcp__github__issue_read's param name as issueNumber (matching pull_request_read's pullNumber) and the first call errored; the real name is issue_number.
+    solution: ToolSearch reloaded the real schema and the retry succeeded — this is exactly the CLAUDE.md "load the schema before the first call" rule, which I'd already partly done for pull_request_read but not re-checked per-tool.
+    severity: nit
+  - description: "A commit trailer's \"(#515, #521, …)\" issue-number references made it look like PR #515 built the Midden Tenant; pull_request_read(515) 404'd — the actual merged PR was #534."
+    solution: "search_pull_requests by keyword found the real PR immediately. Worth remembering generally: an issue number cited in a commit trailer is not the PR number that eventually merged it."
+    severity: nit
+  - description: A discarded (never-published, never-committed) candidate draft had a manual arithmetic error on commit-timestamp deltas, caught only by a second manual pass before pasting it to the outside-reader agent, not by any gate.
+    solution: Re-derive every embedded duration claim from raw timestamps right before it goes anywhere external, on every candidate, not just the one that ends up shipping — per the Skill's own citation-rigor rule.
+    severity: minor
+  - description: Two consecutive tool calls (PR-activity subscribe, ToolSearch) were rejected mid-turn — apparently a harness/UI hiccup unrelated to their content — interrupting the PR-babysitting sequence until the user sent a bare "Continue".
+    solution: Retried the identical calls on the next turn and both succeeded with no changes needed. No code fix; noting the lost turn for visibility.
+    severity: nit
+durationSec: 4889
+models:
+  claude-sonnet-5: 147
+  <synthetic>: 1
+toolCounts:
+  Bash: 28
+  Read: 17
+  ToolSearch: 7
+  mcp__github__pull_request_read: 4
+  mcp__github__search_pull_requests: 2
+  mcp__github__issue_read: 3
+  Write: 6
+  Edit: 3
+  Agent: 1
+  ScheduleWakeup: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__enable_pr_auto_merge: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/blog/content/karen/pages/2026-07-17-then-a-guy-asked-for-the-url.md
+  - layers/blog/content/david/pingbacks/2026-07-17-karen-then-a-guy-asked-for-the-url.yml
+subagents:
+  - type: general-purpose
+    task: Judge three blog draft candidates
+gitBranch: claude/blog-post-jj4e6b
+entrypoint: remote_mobile
+cliVersion: 2.1.212
