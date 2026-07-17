@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015PgK5s6dkbKrW7jagzTZRE
 startedAt: 2026-07-16T18:49:16Z
-endedAt: 2026-07-16T23:32:42Z
+endedAt: 2026-07-17T06:47:17Z
 kind: interactive
-goal: "Build the Midden Tenant MVP, then redesign it (issue #515)"
-status: in-review
-outcome: "PR #534 updated with a full redesign, awaiting human merge"
-summary: "Continuation of the same session after PR #534 first opened. Human-instructed: after seeing screenshots of the initial implementation, the user judged the UX/visual design \"doesn't work at all\" (though approved the concept and content) and asked for a full written handoff summary (concept, domain model, component inventory, real sample content) to hand to a separate Claude Design session. The user later returned with that design session's exported handoff bundle (a Claude Design zip: three alternative dig-report layouts, one resolved trench-index design, one resolved front-door design) and asked to implement it. Agent-initiated: writing the design-handoff document itself (structured to explicitly separate \"locked\" concept/schema/content from \"open\" visual/interaction choices, per the earlier design-doesn't-work verdict); reading the whole Claude Design bundle and identifying that three of its five sections were genuine alternative directions needing a human choice (asked via AskUserQuestion) rather than one resolved design; and, once the \"1a Section column\" direction was chosen, dispatching one Opus agent to implement the entire presentation-layer rewrite (theme, glyph, artifact card, stratigraphy sidebar re-skinned as a depth gauge, trench index, front door) while explicitly preserving the real scroll-sync/SSR-nav/accessibility behavioral contract the static design mockup didn't (and couldn't) model. Independently re-verified the merge (fast-forward, full gate, 50/50 e2e, real screenshots) exactly as in the original implementation phase, then updated the PR's title/description to reflect the new scope per CLAUDE.md's PR-description-sync rule, and sent fresh screenshots to the user. The font-loading decision (system-safe substitutes over the mockup's Google Fonts) was made unilaterally to match every existing Tenant's zero-external-font pattern, flagged to the user for override rather than blocking on it."
+goal: "Build the Midden Tenant, then redesign it (issue #515)"
+status: completed
+outcome: "PR #534 merged by the repo owner"
+summary: "Human-instructed throughout at the top level: the user asked for the Midden Tenant MVP built via parallel background agents (multiple waves), a critical Opus code review with Sonnet fixes, and a single final PR, explicitly told not to be asked back for input. After PR #534 opened and the user saw screenshots, they judged the UX/visual design \"doesn't work at all\" (while approving concept and content) and asked for a written handoff summary for a separate Claude Design session; later they returned with that session's exported handoff bundle and asked to implement it. Agent-initiated within that mandate: every decomposition/sequencing/model-assignment choice across three implementation waves plus a foundation phase; writing the design handoff doc itself, structured to separate locked concept/schema/content from open visual choices; noticing the Claude Design bundle contained three genuinely alternative dig-report layouts (not one resolved design) and surfacing that fork via AskUserQuestion rather than guessing; dispatching one Opus agent to implement the chosen \"1a Section column\" direction while explicitly preserving the real scroll-sync/SSR-nav/accessibility contract a static mockup couldn't model; independently re-verifying every merge (gate, 50/50 e2e, real screenshots) rather than trusting agent self-reports; and keeping the PR description in sync with scope changes per CLAUDE.md. The repo owner merged PR #534 themselves, noting in the merge comment that the UI/content still needs further fine-tuning — a real, disclosed limitation, not a claim that the redesign was perfect."
 prs:
   - "534"
 docsRead:
@@ -16,6 +16,8 @@ docsRead:
     reason: the actual design source — five sections, real copy, real token values
   - path: midden-design-handoff/project/ConditionGlyph.dc.html
     reason: redesigned glyph rendering approach
+  - path: docs/agents/pr-workflow.md
+    reason: confirm an ordinary work PR is human-merge-only, never self-merged
   - path: layers/atlas/tenant.config.ts
     reason: (no reason given)
   - path: layers/atlas/nuxt.config.ts
@@ -66,46 +68,47 @@ docsRead:
     reason: (no reason given)
   - path: layers/midden/tests/e2e/midden.e2e.ts
     reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
-    reason: (no reason given)
 skillsUsed:
-  - name: log-session
-    reason: amend the log after substantial follow-on work
   - name: code-review
-    reason: (no reason given)
+    reason: critical two-axis Standards/Spec review before the redesign phase
   - name: close-session
-    reason: (no reason given)
+    reason: session closure at PR-open
+  - name: log-session
+    reason: amended twice as follow-on work landed, finalized to completed on merge
   - name: implement
     reason: (invoked as a slash command)
 frictions:
-  - description: Two separate mid-session GitHub API 503 outages hit the scheduled PR check-in (get, get_check_runs, get_comments all failed twice in a row; only get_review_comments succeeded).
-    solution: Treated the outage itself as non-actionable and re-armed the check-in rather than escalating or retrying in a tight loop — correct call, but worth noting GitHub API 503 bursts do happen and a check-in script should tolerate a full round of them without alarming.
+  - description: Multiple mid-session GitHub API 503 outages hit scheduled PR check-ins (get/get_check_runs/get_comments failing in bursts, sometimes only get_review_comments succeeding).
+    solution: Treated the outage as non-actionable each time and re-armed rather than escalating or tight-looping retries — correct, but a check-in routine should expect and tolerate a full round of 503s as routine, not exceptional.
     severity: minor
-  - description: "mcp__Claude_Code_Remote__send_later failed twice with 'AbortError: Tool permission stream closed before response received' across the session (once for subscribe_pr_activity too) — both times an identical immediate retry succeeded."
-    solution: No action beyond retrying once; this looks like a recurring transient harness-level hiccup on tool-permission streaming specifically, not this session's doing.
-    severity: nit
-durationSec: 17006
+  - description: "mcp__Claude_Code_Remote__send_later intermittently failed with 'AbortError: Tool permission stream closed before response received' (and once for subscribe_pr_activity) — an immediate retry usually succeeded, but two later attempts were outright rejected by the permission layer rather than erroring, leaving the hour-out check-in NOT re-armed at that point (superseded shortly after by the PR merge itself, so no real gap in coverage resulted)."
+    solution: "No action beyond retrying once per attempt; this reads as a recurring transient harness-level hiccup on tool-permission streaming specifically. Worth noting for a future session: a rejected/failed send_later re-arm should probably get one deliberate retry before moving on, since a silently-unarmed check-in has no other safety net."
+    severity: minor
+  - description: A GitHub Actions gate run failed on the exact commit just pushed, but the failure (layers/journal/tests/e2e/journal.e2e.ts, a scroll-position expect.poll timing assertion) was in code this branch never touched and had passed locally every time — genuine pre-existing CI flakiness, not a real regression.
+    solution: Confirmed via `git diff --stat` that the branch touched zero files in the failing test's area before re-kicking just the failed job (rerun_failed_jobs), which then passed — the right sequence (verify unrelated-ness first, then re-kick, don't edit code that isn't actually broken).
+    severity: minor
+durationSec: 43081
 models:
-  claude-sonnet-5: 465
-  <synthetic>: 4
+  claude-sonnet-5: 501
+  <synthetic>: 6
 toolCounts:
   ToolSearch: 8
   mcp__github__issue_read: 2
   Agent: 11
-  Bash: 114
+  Bash: 115
   TaskCreate: 8
   TaskUpdate: 20
-  Read: 39
-  Write: 8
+  Read: 40
+  Write: 9
   Edit: 4
   ScheduleWakeup: 8
   SendMessage: 2
-  Skill: 4
+  Skill: 5
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
-  mcp__github__pull_request_read: 12
-  mcp__Claude_Code_Remote__send_later: 4
+  mcp__github__pull_request_read: 23
+  mcp__Claude_Code_Remote__send_later: 7
   SendUserFile: 3
   AskUserQuestion: 1
   mcp__github__update_pull_request: 1
@@ -155,5 +158,6 @@ gitBranch: claude/story-background-agents-parallel-by20gp
 entrypoint: remote
 cliVersion: 2.1.211
 learnings:
-  - A Claude Design handoff bundle (.dc.html files) can contain multiple genuinely alternative directions for the SAME screen (not just one resolved design) inside one export — worth explicitly scanning for '(resolved direction)' vs. unlabeled alternatives before assuming the whole bundle is ready to implement as-is, and surfacing a real AskUserQuestion for any unresolved fork rather than guessing which one the user meant.
-  - "A static HTML/CSS/JS design mockup cannot model real behavioral requirements (scroll-sync state, retain-last-active-on-gap, SSR-vs-client-only rendering) — its 'active state' will be hardcoded/simplified. When implementing a design handoff against an app with existing, already-resolved behavioral specs (here, issue #524's IntersectionObserver contract), the right frame is 'reskin against the real behavior', not 'port the mockup's simplified state logic' — worth calling out explicitly in any future design-handoff implementation brief."
+  - A Claude Design handoff bundle (.dc.html files) can contain multiple genuinely alternative directions for the SAME screen inside one export, not just one resolved design — scan explicitly for '(resolved direction)' labeling vs. unlabeled alternatives before assuming a bundle is implement-as-is, and surface any real fork via AskUserQuestion rather than guessing which the user meant.
+  - A static HTML/CSS/JS design mockup cannot model real behavioral requirements (scroll-sync state, retain-last-active-on-gap, SSR-vs-client-only rendering) — its 'active state' will be hardcoded/simplified. Implementing a design handoff against an app with an already-resolved behavioral spec is 'reskin against the real behavior', not 'port the mockup's simplified state logic' — worth stating explicitly in any future design-handoff implementation brief.
+  - A GitHub bot comment reporting a check result (e.g. '✅ safety-gate green on <sha>') can cite a different SHA than the PR's head commit — plausibly an ephemeral PR-merge-commit SHA GitHub computed the check against, not the branch tip — so don't treat a SHA mismatch alone as evidence the comment is stale or wrong; cross-check via get_check_runs against the actual head when in doubt, but don't discard the bot's own report either.
