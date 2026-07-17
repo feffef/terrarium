@@ -1,0 +1,79 @@
+schemaVersion: 1
+session: session_01C5NUMWhzxGpUdoGwjaNxeP
+startedAt: 2026-07-17T13:18:54Z
+endedAt: 2026-07-17T14:05:42Z
+kind: interactive
+goal: Repaint the 5 Marquee posters with impressive art
+status: completed
+outcome: All 5 posters repainted, PR merged
+summary: "Human asked to make the Marquee Tenant's 5 MCU chapter posters (currently intentionally simple placeholder SVGs) genuinely impressive, using one fable-model agent per poster to iterate visually before finalizing. Human green-lit the whole approach up front in the kickoff prompt; no further redirection on scope, only follow-up questions afterward (asking for screenshots, then asking whether the PR was being watched, then noting it had merged). Dispatched 5 parallel fable agents, each independently rewriting one Chapter's \"illustration:\" frontmatter SVG via a write-screenshot-critique-refine loop (3-5 rounds each), keeping the evoke-not-reproduce house rule (marquee CONTEXT.md's Poster term) — no trademarked costume/logo/likeness in any of the five. Validated every SVG as well-formed XML, ran the full pnpm gate:scoped (all green, incl. e2e), screenshotted all 5 real rendered pages to confirm visual quality, then committed, rebased onto origin/main, pushed, and opened PR #561, which the repo owner merged directly."
+prs:
+  - "561"
+docsRead:
+  - path: layers/marquee/CONTEXT.md
+    reason: Poster glossary term — evoke-not-reproduce constraint for the redesign
+  - path: layers/marquee/app/components/marquee/Poster.vue
+    reason: poster frame/viewBox contract each SVG must render inside
+  - path: docs/agents/verifying-ui-changes.md
+    reason: how to actually verify a presentational change (screenshot methodology)
+  - path: scripts/screenshot.ts
+    reason: briefed subagents on the exact screenshot invocation for their iterate loop
+  - path: layers/marquee/content/reel/pages/iron-man.md
+    reason: (no reason given)
+  - path: layers/marquee/content/reel/pages/captain-america-the-first-avenger.md
+    reason: (no reason given)
+  - path: layers/marquee/content/reel/pages/captain-marvel.md
+    reason: (no reason given)
+  - path: layers/marquee/content/reel/pages/the-incredible-hulk.md
+    reason: (no reason given)
+  - path: layers/marquee/content/reel/pages/iron-man-2.md
+    reason: (no reason given)
+  - path: layers/marquee/content/reel/pages/index.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: session closure sequence
+  - name: log-session
+    reason: this log
+frictions:
+  - description: 'Called TaskCreate with a guessed nested `{tasks: [...]}` shape before loading its schema via ToolSearch, despite CLAUDE.md explicitly calling out this exact tool by name as a prior violation of the "load deferred tool schema first" rule.'
+    solution: Actually follow the CLAUDE.md rule proactively for every deferred tool on first use, not just the ones already burned once — the rule already names TaskCreate specifically.
+    severity: minor
+  - description: "Opened PR #561 but did not immediately invoke close-session/log-session at that moment as CLAUDE.md's \"opening the PR is the first session log\" rule requires; only authored this log several turns later, after the user's follow-up messages revealed the PR had already been merged."
+    solution: Treat create_pull_request's return as the trigger to invoke close-session in the very same turn, before ending it — don't let subsequent conversation (even benign follow-up) push it out.
+    severity: major
+  - description: One redesign subagent (The Incredible Hulk poster) discovered that scripts/screenshot.ts's `--window-size=WxH` yields a captured viewport roughly 87px shorter than the requested height, leaving a fixed black band at the bottom of every screenshot unless the caller pads the height argument to compensate.
+    solution: Fix scripts/screenshot.ts to account for Chromium chrome/viewport offset (or document the padding requirement inline) so callers don't have to rediscover the ~87px fudge factor themselves.
+    severity: minor
+durationSec: 2809
+models:
+  claude-sonnet-5: 142
+  <synthetic>: 1
+toolCounts:
+  Bash: 28
+  Read: 16
+  TaskCreate: 7
+  ToolSearch: 2
+  TaskUpdate: 12
+  Agent: 5
+  mcp__github__search_pull_requests: 1
+  mcp__github__get_file_contents: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  SendUserFile: 1
+  mcp__github__pull_request_read: 1
+  Skill: 2
+subagents:
+  - task: Redesign Captain America poster SVG
+    model: fable
+  - task: Redesign Captain Marvel poster SVG
+    model: fable
+  - task: Redesign Iron Man poster SVG
+    model: fable
+  - task: Redesign Iron Man 2 poster SVG
+    model: fable
+  - task: Redesign The Incredible Hulk poster SVG
+    model: fable
+gitBranch: claude/blog-posters-fable-agents-6an8w7
+entrypoint: remote
+cliVersion: 2.1.212
