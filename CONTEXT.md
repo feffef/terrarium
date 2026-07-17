@@ -203,7 +203,7 @@ opposite is **Trusted**.
 
 ## Tenants
 
-The Platform currently hosts five Tenants. Each has its own **context**
+The Platform currently hosts six Tenants. Each has its own **context**
 (vocabulary + reason-to-exist) co-located with its code; this roster is the
 pointer into them (see `CONTEXT-MAP.md`).
 
@@ -222,6 +222,10 @@ pointer into them (see `CONTEXT-MAP.md`).
   work (dead branches, closed-unmerged PRs, deprecated Skills, removed
   files/dependencies, unapplied proposals). A demo/content Tenant. →
   [`layers/midden/CONTEXT.md`](./layers/midden/CONTEXT.md)
+- **Marquee** — a movie-blog microsite covering the Marvel Cinematic Universe
+  in in-universe story order, one chapter per film. A guest-requested
+  demo/content Tenant (ADR-0023, issue #551). →
+  [`layers/marquee/CONTEXT.md`](./layers/marquee/CONTEXT.md)
 
 ## Retired terms
 

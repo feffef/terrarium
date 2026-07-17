@@ -22,6 +22,9 @@ context when you work on that Tenant.
 - **Midden** — [`layers/midden/CONTEXT.md`](./layers/midden/CONTEXT.md) — Site,
   Dig season (Stratum), Artifact, Condition, the two-gate inclusion test; why the
   Midden exists (a demo/content Tenant, issue #515).
+- **Marquee** — [`layers/marquee/CONTEXT.md`](./layers/marquee/CONTEXT.md) —
+  Screening, Chapter, Poster; why the Marquee exists (a guest-requested
+  demo/content Tenant, ADR-0023, issue #551).
 
 The root `CONTEXT.md` also carries a `## Tenants` roster that points at each of
 these — a pointer, not a second home. Substantive definitions live once, in the
@@ -37,7 +40,11 @@ context listed above; pointers to them may live wherever they help a reader.
   Terrarium at all. The **Midden** is real like the Journal (every Artifact
   traces to an actual discarded thing, gated by its two-gate inclusion test)
   but curated and voiced rather than comprehensive — it catalogues a
-  hand-selected, graded subset, not an exhaustive record.
+  hand-selected, graded subset, not an exhaustive record. The **Marquee** is
+  real like the Journal and the Midden (the films and their in-universe
+  order are genuine facts, not invented), but — like the Atlas — it claims
+  nothing about the Terrarium itself; it is plain content about something
+  else entirely.
 - **Same-Space derivation vs. cross-Space denormalization.** The Atlas's
   **Interaction** is a same-Space edge whose reverse is *derived*; the Blog's
   **Pingback** denormalizes a *cross-Space* reaction, copying the reference into
@@ -45,8 +52,8 @@ context listed above; pointers to them may live wherever they help a reader.
   opposite mechanism — dictated by whether the fact crosses a Space boundary.
 - **Tenant words for a Space.** "Persona" (Blog) and "Biome" (Atlas) are each a
   Tenant's word for the Platform's **Space**; the Journal uses plain `current` /
-  `archived`. Say the Tenant's word in product sentences, "Space" for the
-  mechanism.
+  `archived`; the Marquee's single Space is a "Screening." Say the Tenant's
+  word in product sentences, "Space" for the mechanism.
 
 ## Decisions
 

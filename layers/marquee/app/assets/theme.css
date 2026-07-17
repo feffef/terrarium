@@ -1,0 +1,171 @@
+/* Marquee Tenant theme — a small movie-blog canvas, deliberately soft and
+   painterly (Ghibli-inspired mood, layers/marquee/CONTEXT.md: Poster).
+   Self-contained tokens (no sharing with any other Tenant; CONTEXT.md
+   isolation stance). Registered globally by the layer's nuxt.config.
+   Light/dark aware. */
+:root {
+  --mq-bg: #f6f1e4;
+  --mq-surface: #fffdf7;
+  --mq-ink: #2c2a24;
+  --mq-muted: #6d6a5c;
+  --mq-faint: #9d9885;
+  --mq-line: #e4dcc6;
+  --mq-accent: #5c8a72; /* soft sage green */
+  --mq-warm: #d98f4c; /* warm amber, the marquee-bulb glow */
+  --mq-glass-edge: rgba(255, 255, 255, 0.7);
+  --mq-shadow: 0 1px 2px rgba(44, 42, 36, 0.06), 0 16px 38px -28px rgba(44, 42, 36, 0.45);
+  --mq-serif: ui-serif, "Iowan Old Style", Georgia, Cambria, "Times New Roman", serif;
+  --mq-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mq-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mq-bg: #191a1d;
+    --mq-surface: #212226;
+    --mq-ink: #e9e6dc;
+    --mq-muted: #a8a493;
+    --mq-faint: #726e60;
+    --mq-line: #302f2a;
+    --mq-accent: #7fb89a;
+    --mq-warm: #e2a05f;
+    --mq-glass-edge: rgba(255, 255, 255, 0.06);
+    --mq-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 16px 38px -28px rgba(0, 0, 0, 0.9);
+  }
+}
+
+/* The page canvas. Only Marquee pages tag <body> with .mq-page (via useHead),
+   so nothing here leaks onto other Tenants. The wash reads as evening light
+   through a marquee's glass, not a spotlight. */
+body.mq-page {
+  margin: 0;
+  background:
+    radial-gradient(66rem 30rem at 50% -6rem, color-mix(in srgb, var(--mq-accent) 10%, transparent), transparent 70%),
+    var(--mq-bg);
+}
+
+.mq {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 4rem;
+  font-family: var(--mq-sans);
+  color: var(--mq-ink);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+.mq ::selection { background: color-mix(in srgb, var(--mq-accent) 24%, transparent); }
+.mq a:focus-visible { outline: 2px solid var(--mq-accent); outline-offset: 2px; border-radius: 3px; }
+
+.mq .crumb {
+  font-family: var(--mq-mono);
+  font-size: 0.78rem;
+  color: var(--mq-faint);
+  margin: 0 0 2.5rem;
+}
+.mq .crumb a { color: var(--mq-faint); text-decoration: none; }
+.mq .crumb a:hover { color: var(--mq-accent); }
+.mq .crumb .sep { margin: 0 0.4rem; opacity: 0.6; }
+.mq .crumb .here { color: var(--mq-muted); }
+
+/* Masthead — the landing's title + tagline from index.md. */
+.mq .masthead { border-bottom: 4px double var(--mq-accent); padding-bottom: 1.5rem; margin-bottom: 1.5rem; }
+.mq .masthead .eyebrow {
+  font-family: var(--mq-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--mq-warm);
+  margin: 0 0 0.5rem;
+}
+.mq .masthead h1 {
+  font-family: var(--mq-serif);
+  font-size: clamp(2.1rem, 5vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.6rem;
+  text-wrap: balance;
+}
+.mq .masthead .tagline {
+  margin: 0;
+  color: var(--mq-muted);
+  font-family: var(--mq-serif);
+  font-style: italic;
+  font-size: 1.12rem;
+  line-height: 1.5;
+  max-width: 46ch;
+}
+
+/* Prose (index.md intro + post body). Plain descendant selectors — this is a
+   global stylesheet, and ContentRenderer output is ordinary DOM. */
+.mq .prose { font-size: 1.05rem; margin-top: 1.4rem; }
+.mq .prose p { margin: 0 0 1.15rem; }
+.mq .prose h2 { font-family: var(--mq-serif); font-size: 1.4rem; line-height: 1.25; margin: 2rem 0 0.7rem; }
+.mq .prose a {
+  color: var(--mq-accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--mq-accent) 45%, transparent);
+  text-underline-offset: 3px;
+}
+.mq .prose a:hover { text-decoration-color: var(--mq-accent); }
+.mq .prose strong { color: var(--mq-ink); font-weight: 650; }
+.mq .prose ul, .mq .prose ol { margin: 0 0 1.15rem; padding-left: 1.3rem; }
+.mq .prose li { margin: 0.25rem 0; }
+.mq .prose li::marker { color: var(--mq-accent); }
+
+/* The Screening's ordered run of Chapters. */
+.mq .reel { list-style: none; margin: 1.6rem 0 0; padding: 0; }
+.mq .reel li { border-top: 1px solid var(--mq-line); }
+.mq .reel li:first-child { border-top: 0; }
+.mq .reel .chapter-link {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+  text-decoration: none;
+  color: inherit;
+  padding: 1.1rem 1rem;
+  margin: 0 -1rem;
+  border-radius: 10px;
+  transition: background 0.18s ease, box-shadow 0.18s ease;
+}
+.mq .reel .chapter-link:hover {
+  background: var(--mq-surface);
+  box-shadow: var(--mq-shadow), inset 0 1px 0 var(--mq-glass-edge);
+}
+.mq .reel .order {
+  font-family: var(--mq-mono);
+  font-size: 0.85rem;
+  color: var(--mq-warm);
+  flex: none;
+  min-width: 2ch;
+}
+.mq .reel h2 {
+  font-family: var(--mq-serif);
+  font-size: 1.3rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.3rem;
+  color: var(--mq-ink);
+  transition: color 0.15s ease;
+}
+.mq .reel .chapter-link:hover h2 { color: var(--mq-accent); }
+.mq .reel .excerpt { margin: 0; color: var(--mq-muted); font-size: 0.94rem; }
+.mq .empty { color: var(--mq-faint); font-style: italic; font-family: var(--mq-serif); }
+
+/* Single Chapter post header. */
+.mq .post-head { border-bottom: 1px solid var(--mq-line); padding-bottom: 1.2rem; margin-bottom: 1rem; }
+.mq .post-head .chapter-no {
+  font-family: var(--mq-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--mq-warm);
+}
+.mq .post-head h1 {
+  font-family: var(--mq-serif);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0.4rem 0 0;
+  text-wrap: balance;
+}
+.mq .post-head .when { font-family: var(--mq-mono); font-size: 0.74rem; color: var(--mq-faint); margin-top: 0.5rem; }
