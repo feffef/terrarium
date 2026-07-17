@@ -1,0 +1,86 @@
+schemaVersion: 1
+session: session_012KajpP5iqjGPQeVzx8wQVr
+startedAt: 2026-07-17T07:09:42Z
+endedAt: 2026-07-17T08:57:20Z
+kind: interactive
+goal: Run guest-intake demo loop; add cost-saving scan script
+status: partial
+outcome: Script shipped, guest request built; PR left unopened
+summary: "Human-directed throughout via repeated /loop and \"execute the guest-intake instructions\" prompts. `guest-intake`'s `disable-model-invocation` blocks the Skill tool, so each firing followed its SKILL.md procedure by hand instead. Early passes used an expensive per-issue MCP subagent sweep (~190k tokens for a quiet 25-issue queue); after the human explicitly asked to cut cost, built and shipped `scripts/guest-intake-scan.ts` (REST/gh fetch, ~12s, a few dozen bytes on a quiet pass) with unit tests, verified live, full gate green, committed and pushed — but did not open the PR ADR-0003 would normally auto-open, since this session's own harness instructions explicitly restrict PR creation; flagged that conflict to the human rather than silently deciding. Separately, a real guest (issue #551, Public) walked the full intake cycle end-to-end — bounded interview, confirmation, ADR-0023 safety screen, green-light — and `guest-build` shipped and merged it."
+prs: []
+docsRead:
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: the procedure this session followed by hand every firing
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: "the ADR-0023 safety screen applied to issue #551"
+  - path: docs/agents/issue-tracker.md
+    reason: authorAssociation/MCP-tool mechanics
+  - path: layers/blog/CONTEXT.md
+    reason: "checked whether #551's ask fit the existing Blog Tenant before scoping it as a new microsite"
+  - path: scripts/check-triage-drift.ts
+    reason: gh/REST fetch-strategy pattern reused for the new scan script
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: scripts/list-open-issues.ts
+    reason: (no reason given)
+  - path: tests/unit/check-triage-drift.spec.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: guest-intake
+    reason: disable-model-invocation blocks the Skill tool, so its SKILL.md procedure was followed directly instead
+  - name: loop
+    reason: (invoked as a slash command)
+  - name: log-session
+    reason: (invoked as a slash command)
+frictions:
+  - description: guest-intake's disable-model-invocation rejects the Skill tool even when the human explicitly typed /guest-intake or /loop'd it, forcing manual re-execution of SKILL.md's procedure every single firing
+    solution: Document in CLAUDE.md/the /loop skill that a disable-model-invocation Skill must be followed by hand when fired via /loop, not routed through the Skill tool — or reconsider the flag for Skills specifically designed to be loop-fired
+    severity: moderate
+  - description: The subagent-delegated full sweep (issue_read get + get_comments per open issue) cost ~190k tokens / 50+ tool calls per pass on a 25-issue queue with zero guest activity, twice in a row — expensive for a tight-interval loop
+    solution: Built scripts/guest-intake-scan.ts to fetch+classify every open issue's newest activity in one script call; verified it matches both prior subagent sweeps exactly, in ~12s
+    severity: major
+  - description: Node's global fetch() silently bypasses this environment's HTTPS_PROXY and gets an unauthenticated 401 straight from api.github.com even with a valid GH_TOKEN; NODE_USE_ENV_PROXY=1 fixes it but only if set before the process starts, not via process.env at runtime
+    solution: Shelled out to curl (already proven to honor HTTPS_PROXY automatically in this environment) for the REST fallback instead of fetch, avoiding both the proxy gap and a new undici dependency
+    severity: moderate
+  - description: AskUserQuestion's options array requires every entry to be an object; passed one as a raw JSON string by mistake and the call errored
+    solution: Fixed on retry — re-check each options[] entry is a real object, not an accidentally-stringified one, before calling
+    severity: nit
+  - description: The system prompt points at /root/.ccr/README.md for proxy-related tool failures, but reading it (cat) was denied by the auto-mode classifier — the documented remedy path was itself unreachable
+    solution: Worked around by experimenting directly (curl vs fetch, NODE_USE_ENV_PROXY) rather than reading the README; flagging since the pointer is dead for a session running under this classifier
+    severity: minor
+durationSec: 6458
+models:
+  <synthetic>: 2
+  claude-sonnet-5: 223
+toolCounts:
+  Bash: 69
+  Read: 8
+  ToolSearch: 3
+  CronList: 2
+  mcp__Claude_Code_Remote__list_triggers: 1
+  CronCreate: 2
+  Skill: 1
+  mcp__github__list_issues: 1
+  Agent: 3
+  AskUserQuestion: 2
+  CronDelete: 1
+  Write: 3
+  Edit: 5
+  mcp__github__issue_read: 2
+  mcp__github__add_issue_comment: 4
+  mcp__github__issue_write: 2
+filesEdited:
+  - scripts/guest-intake-scan.ts
+  - tests/unit/guest-intake-scan.spec.ts
+subagents:
+  - type: general-purpose
+    task: Run guest-intake sweep over open issues
+  - type: general-purpose
+    task: Run guest-intake sweep over open issues
+  - type: general-purpose
+    task: Run guest-intake sweep over open issues
+gitBranch: claude/guest-intake-loop-ew05l3
+entrypoint: remote
+cliVersion: 2.1.212
+learnings:
+  - gh CLI is confirmed absent in this remote/cloud session (ENOENT) — any script's gh-first fetch strategy always falls through to the REST/curl branch here, so that branch is the one that actually matters in practice, not just a rare fallback
