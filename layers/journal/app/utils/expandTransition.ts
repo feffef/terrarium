@@ -7,15 +7,12 @@
 // inner content div it clips) — animating only `height` on a plain box avoids
 // the extra work of also animating padding to reach a true zero size.
 //
-// This module also owns `pinTopAcrossTransition` (below) — the counter-scroll
-// that keeps a just-opened item visually put while these height transitions
-// play — so every moving part of the open animation stays single-homed here.
+// Also owns `pinTopAcrossTransition` (below), so the whole open animation is
+// single-homed here.
 const DURATION_MS = 160
 
-// Extra wall-clock margin the pin loop runs past the transition end, so its final
-// counter-scroll lands after the animation's last frame even on a loaded runner
-// (a few frames of slack) — see pinTopAcrossTransition for why the loop is
-// time-bounded rather than exiting when the item stops moving.
+// Wall-clock slack so the pin's final counter-scroll lands after the transition's
+// last frame even on a loaded runner.
 const SETTLE_GRACE_MS = 48
 
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -59,35 +56,16 @@ export function expandOnLeave(el: Element, done: () => void): void {
   element.addEventListener('transitionend', finish)
 }
 
-// Dispatched on `window` the moment pinTopAcrossTransition's counter-scroll loop
-// settles. The journal e2e waits for this exact event instead of polling the
-// opened item's position against a timeout — the deterministic "scroll-pin done"
-// signal that fixes the flake in issue #450, where a slow CI frame could push the
-// settle past the poll's window and the test only ever masked it by waiting
-// longer. Namespaced so it can't collide with a standard event.
+// Dispatched on `window` when pinTopAcrossTransition settles, so the e2e can await
+// the exact end of the pin instead of polling a timeout (issue #450).
 export const PIN_SETTLED_EVENT = 'journal:pin-settled'
 
-// Holds the clicked item's own top at the exact screen position it was at before
-// the click — a collapsing sibling elsewhere can shift it, but the item the user
-// just acted on shouldn't visually jump. This item's own body and any sibling's
-// collapse both animate their height (the transitions above), so the shift plays
-// out over several frames rather than in one DOM patch — correcting once, right
-// after the patch, would miss most of it. So every frame, counter-scroll by
-// whatever moved the item since we last looked (never animated — an animated
-// correction would show the very motion this hides — and clamped to 0 so we never
-// scroll above the top of the page).
-//
-// The loop runs for the KNOWN transition duration, NOT until the item's document
-// position "stops changing". That earlier stop-when-steady exit was the flake in
-// issue #450: on some frame schedules the item's position is briefly unchanged
-// for a frame BEFORE the collapse/expand has begun moving it, so the loop settled
-// there and left the rest of the reflow uncompensated — the item jumped (~270px
-// on CI; the old timeout-poll only lengthened the odds against it). Both the CSS
-// transition and this bound run on wall-clock time, so the loop always outlasts
-// the animation even on a loaded runner, and the bound doubles as the runaway cap
-// (no frame counter). The final frame counter-scrolls to the settled position
-// before firing PIN_SETTLED_EVENT — dispatched on every exit path — so the e2e
-// observes the true resting top rather than racing a timeout.
+// Counter-scroll a just-opened item back to `beforeTop` every frame for the whole
+// disclosure transition, so a sibling collapsing above it can't make it visually
+// jump. Runs for the known duration rather than exiting when the item "stops
+// moving": the reflow can start a frame late, and an early exit would leave it
+// uncompensated (issue #450). Never animated; clamped to 0 so we never scroll past
+// the page top. Fires PIN_SETTLED_EVENT on every exit path.
 export function pinTopAcrossTransition(el: HTMLElement | null, beforeTop: number | null): void {
   const settled = () => {
     window.dispatchEvent(new CustomEvent(PIN_SETTLED_EVENT))

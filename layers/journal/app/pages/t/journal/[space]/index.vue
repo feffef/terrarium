@@ -96,8 +96,8 @@ const toggle = (anchor: string) => {
   openAnchor.value = next
   syncHash(next)
   // Closing needs no scroll — nothing above the (now-shorter) item moves.
-  // pinTopAcrossTransition (auto-imported from utils/expandTransition.ts, where
-  // the whole open animation is single-homed) counter-scrolls to hold `el` put.
+  // pinTopAcrossTransition (auto-imported from utils/expandTransition.ts) holds
+  // `el` put across the open.
   if (opening) nextTick(() => pinTopAcrossTransition(el, beforeTop))
 }
 
