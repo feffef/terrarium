@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01RXD24NfFEHFkTEXFECWya9
 startedAt: 2026-07-17T00:15:54Z
-endedAt: 2026-07-17T00:21:47Z
+endedAt: 2026-07-17T00:30:13Z
 kind: autonomous
 goal: "Run /digest: author the 2026-07-16 Journal Digest"
-status: in-review
-outcome: "Digest authored, PR #539 opened and subscribed, awaiting green gate"
-summary: "Scheduled Routine fired /digest with no human in the loop this run. Gathered 2026-07-16 activity via scripts/digest.ts (22 merged PRs, 71 commits, 13 sessions), authored a Digest page narrating the day's through-line (the ADR-0023 guest-driven demo pipeline shipping, five session-log mechanics gaps closing under issue #449, and a near-miss where a back-catalog rewrite almost violated ADR-0009's no-rewrite clause), ran pnpm gate:scoped locally (green), committed, pushed to the caller-pinned branch claude/compassionate-lovelace-ixnbme (which was already fresh off origin/main, so no new journal/digest-refresh-* branch was needed), and opened PR #539. Subscribed to PR activity; enable_pr_auto_merge was deferred because the CI gate check was still in_progress at PR-open (its \"checks are failing\" error text is a known false-positive on a pending check, per docs/agents/pr-workflow.md) — a scheduled check-in will merge directly once the gate reports green."
+status: completed
+outcome: "Digest authored, PR #539 merged with a green gate"
+summary: "Scheduled Routine fired /digest with no human in the loop this run. Gathered 2026-07-16 activity via scripts/digest.ts (22 merged PRs, 71 commits, 13 sessions), authored a Digest page narrating the day's through-line (the ADR-0023 guest-driven demo pipeline shipping, five session-log mechanics gaps closing under issue #449, and a near-miss where a back-catalog rewrite almost violated ADR-0009's no-rewrite clause), ran pnpm gate:scoped locally (green), committed, pushed to the caller-pinned branch claude/compassionate-lovelace-ixnbme (already fresh off origin/main, so no separate journal/digest-refresh-* branch was created), and opened PR #539. CI's first gate run failed on layers/journal/tests/e2e/journal.e2e.ts's \"holds the clicked item at its pre-click position when a sibling above it collapses\" — the exact pre-existing flaky viewport-timing assertion already documented as CI-only flakiness (unrelated to the diff) in a prior session's log for PR #533. Confirmed via merge-base diff that this PR touches only the one digest markdown file, re-ran the failed job, and it passed clean; merged on the resulting green gate. Entirely agent-initiated per the digest tier's standing merge-on-green authority (ADR-0003/0004) — no human input this run."
 prs:
   - "539"
 docsRead:
@@ -19,22 +19,31 @@ skillsUsed:
     reason: (no reason given)
   - name: digest
     reason: (invoked as a slash command)
-frictions: []
-durationSec: 354
+frictions:
+  - description: "The journal.e2e.ts accordion viewport-timing test (\"holds the clicked item at its pre-click position when a sibling above it collapses\") failed CI's gate a second time, on a PR that touches only a content markdown file — same test flagged as flaky in a prior session's log for PR #533 (2026-07-16)."
+    solution: Confirmed unrelated via merge-base diff, re-ran the failed job, passed clean on retry. This is now a two-time recurrence of the same specific assertion; if it recurs a third time it likely warrants a dedicated flaky-test issue and a look at the timing margin in that test rather than another rerun.
+    severity: minor
+durationSec: 859
 models:
-  claude-sonnet-5: 59
+  claude-sonnet-5: 101
 toolCounts:
-  Bash: 13
-  Write: 2
+  Bash: 18
+  Write: 3
   Edit: 1
-  ToolSearch: 2
+  ToolSearch: 4
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__enable_pr_auto_merge: 2
-  mcp__github__pull_request_read: 3
-  mcp__Claude_Code_Remote__send_later: 1
-  Skill: 2
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 2
+  Skill: 3
+  mcp__github__get_check_run: 1
+  mcp__github__get_job_logs: 1
+  mcp__github__actions_run_trigger: 1
+  mcp__Claude_Code_Remote__delete_trigger: 2
+  mcp__github__merge_pull_request: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-16.md
 gitBranch: claude/compassionate-lovelace-ixnbme
