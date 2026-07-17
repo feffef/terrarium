@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Tj6TVeZmBVcyUteTqgvYgy
 startedAt: 2026-07-16T22:43:48Z
-endedAt: 2026-07-17T02:17:39Z
+endedAt: 2026-07-17T02:25:08Z
 kind: interactive
 goal: Properly fix flaky journal accordion e2e test
 status: in-review
 outcome: "Real cause (Playwright click auto-scroll vs scroll anchoring) fixed; PR #537"
-summary: "The user asked me to properly address a known flaky test (tracked loosely under issue #450) — firing an event to wait for rather than extending the wait time. Session logs showed a prior session (PR #410) had only raised the two journal-dashboard \"held in place\" e2e assertions' `expect.poll` timeout from 1000ms to 5000ms — the exact band-aid the user rejected. Root cause: `pinTopAcrossTransition`'s rAF counter-scroll settles over up to 90 frames, so a loaded CI runner can outrun any fixed budget. Per the user's direction I made the production code dispatch a `PIN_SETTLED_EVENT` on `window` when its settle loop finishes (every exit path), extracted the pure function + event name into `utils/expandTransition.ts` to single-home the open animation, and rewrote the two tests to arm a one-shot listener before the click and block on it — waiting exactly as long as the animation takes. Full local gate green (lint, typecheck, unit, content, e2e 45/45 incl. both formerly-flaky tests). Committed and pushed to the designated branch. Then, at the user's request, ran /code-review (two parallel axes): Spec found no defects (faithful, correct, in-scope); Standards flagged one Duplicated-Code cast, which I deduped via a shared PinSettledWindow type alias in a follow-up commit. The user then explicitly asked me to open the PR, so I opened gated PR #537. CI then FAILED on the very test — `expected -17.25 to be greater than 253.75` — exposing that the event wait was necessary but not sufficient: the deeper bug was in `pinTopAcrossTransition` itself. The arithmetic (before − 286 = after, where 286px is the collapsing digest's height) showed the pin settled with ZERO counter-scroll — a premature settle: its loop exited when the item's document position held steady for one frame, which on some frame schedules happens BEFORE the collapse starts moving it. Bounded the loop to the known transition duration (counter-scroll every frame until DURATION_MS + grace). But CI FAILED AGAIN, identically — so that was necessary, not the whole story. Reproduced locally at last by disabling browser scroll anchoring (overflow-anchor:none), recreating CI's exact before=268.75/after=-17.25. Frame-by-frame tracing showed the REAL primary cause: Playwright's locator.click() auto-scrolls the target into view (~284px) before the app reads its pin baseline, so the app pins the card at the displaced position while the test compares a pre-scroll `before`; scroll anchoring hid this locally. Fixed the test to open via dispatchEvent (no scroll, like a real click). Confirmed with an anchoring-off repro: 4/4 fail with locator.click(), 8/8 pass with dispatchEvent; e2e 45/45. BOTH the duration pin AND the scroll-free click are required. Rewrote PR #537's body to the full story. All work stayed within the user's explicit asks."
+summary: "The user asked me to properly address a known flaky test (tracked loosely under issue #450) — firing an event to wait for rather than extending the wait time. Session logs showed a prior session (PR #410) had only raised the two journal-dashboard \"held in place\" e2e assertions' `expect.poll` timeout from 1000ms to 5000ms — the exact band-aid the user rejected. Root cause: `pinTopAcrossTransition`'s rAF counter-scroll settles over up to 90 frames, so a loaded CI runner can outrun any fixed budget. Per the user's direction I made the production code dispatch a `PIN_SETTLED_EVENT` on `window` when its settle loop finishes (every exit path), extracted the pure function + event name into `utils/expandTransition.ts` to single-home the open animation, and rewrote the two tests to arm a one-shot listener before the click and block on it — waiting exactly as long as the animation takes. Full local gate green (lint, typecheck, unit, content, e2e 45/45 incl. both formerly-flaky tests). Committed and pushed to the designated branch. Then, at the user's request, ran /code-review (two parallel axes): Spec found no defects (faithful, correct, in-scope); Standards flagged one Duplicated-Code cast, which I deduped via a shared PinSettledWindow type alias in a follow-up commit. The user then explicitly asked me to open the PR, so I opened gated PR #537. CI then FAILED on the very test — `expected -17.25 to be greater than 253.75` — exposing that the event wait was necessary but not sufficient: the deeper bug was in `pinTopAcrossTransition` itself. The arithmetic (before − 286 = after, where 286px is the collapsing digest's height) showed the pin settled with ZERO counter-scroll — a premature settle: its loop exited when the item's document position held steady for one frame, which on some frame schedules happens BEFORE the collapse starts moving it. Bounded the loop to the known transition duration (counter-scroll every frame until DURATION_MS + grace). But CI FAILED AGAIN, identically — so that was necessary, not the whole story. Reproduced locally at last by disabling browser scroll anchoring (overflow-anchor:none), recreating CI's exact before=268.75/after=-17.25. Frame-by-frame tracing showed the REAL primary cause: Playwright's locator.click() auto-scrolls the target into view (~284px) before the app reads its pin baseline, so the app pins the card at the displaced position while the test compares a pre-scroll `before`; scroll anchoring hid this locally. Fixed the test to open via dispatchEvent (no scroll, like a real click). Confirmed with an anchoring-off repro: 4/4 fail with locator.click(), 8/8 pass with dispatchEvent; e2e 45/45. BOTH the duration pin AND the scroll-free click are required. Rewrote PR #537's body to the full story. The CI gate then went GREEN on the fix commit (61c7cd1); PR #537 is mergeable_state=clean, awaiting the user's merge (no self-merge, ADR-0003). All work stayed within the user's explicit asks."
 prs:
   - "537"
 docsRead:
@@ -47,28 +47,29 @@ frictions:
   - description: "The provenance footer was not auto-injected on the code-review cleanup `git commit -m`, recurrence of issue #346 (cloud -m commits skip injection)."
     solution: Verified with `git log -1 --format=%B`, amended the tip via `-F` with the footer appended, and force-with-lease pushed (tip-only, my own commit).
     severity: minor
-durationSec: 12831
+durationSec: 13280
 models:
-  claude-opus-4-8: 348
+  claude-opus-4-8: 364
+  <synthetic>: 1
 toolCounts:
-  Bash: 61
+  Bash: 62
   ToolSearch: 5
   mcp__github__search_issues: 3
   Grep: 1
   mcp__github__issue_read: 2
   Read: 18
-  Edit: 36
+  Edit: 37
   mcp__github__list_issues: 1
   Write: 8
   Skill: 2
   Agent: 2
   mcp__github__list_pull_requests: 2
   mcp__github__create_pull_request: 1
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 5
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 6
   mcp__Claude_Code_Remote__send_later: 2
   mcp__github__get_job_logs: 2
   mcp__github__update_pull_request: 2
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 5
 filesEdited:
   - layers/journal/app/utils/expandTransition.ts
   - layers/journal/app/pages/t/journal/[space]/index.vue
