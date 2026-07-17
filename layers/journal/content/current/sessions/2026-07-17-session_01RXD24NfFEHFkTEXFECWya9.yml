@@ -1,0 +1,43 @@
+schemaVersion: 1
+session: session_01RXD24NfFEHFkTEXFECWya9
+startedAt: 2026-07-17T00:15:54Z
+endedAt: 2026-07-17T00:21:47Z
+kind: autonomous
+goal: "Run /digest: author the 2026-07-16 Journal Digest"
+status: in-review
+outcome: "Digest authored, PR #539 opened and subscribed, awaiting green gate"
+summary: "Scheduled Routine fired /digest with no human in the loop this run. Gathered 2026-07-16 activity via scripts/digest.ts (22 merged PRs, 71 commits, 13 sessions), authored a Digest page narrating the day's through-line (the ADR-0023 guest-driven demo pipeline shipping, five session-log mechanics gaps closing under issue #449, and a near-miss where a back-catalog rewrite almost violated ADR-0009's no-rewrite clause), ran pnpm gate:scoped locally (green), committed, pushed to the caller-pinned branch claude/compassionate-lovelace-ixnbme (which was already fresh off origin/main, so no new journal/digest-refresh-* branch was needed), and opened PR #539. Subscribed to PR activity; enable_pr_auto_merge was deferred because the CI gate check was still in_progress at PR-open (its \"checks are failing\" error text is a known false-positive on a pending check, per docs/agents/pr-workflow.md) — a scheduled check-in will merge directly once the gate reports green."
+prs:
+  - "539"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: confirmed enable_pr_auto_merge's spurious failing-checks error on an in_progress check, and that digest-tier PRs merge on green gate alone
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 354
+models:
+  claude-sonnet-5: 59
+toolCounts:
+  Bash: 13
+  Write: 2
+  Edit: 1
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__enable_pr_auto_merge: 2
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-07-16.md
+gitBranch: claude/compassionate-lovelace-ixnbme
+entrypoint: remote_trigger
+cliVersion: 2.1.211
+trigger: digest
