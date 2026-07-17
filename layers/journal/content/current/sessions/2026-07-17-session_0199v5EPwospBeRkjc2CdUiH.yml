@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_0199v5EPwospBeRkjc2CdUiH
 startedAt: 2026-07-17T00:45:54Z
-endedAt: 2026-07-17T01:02:04Z
+endedAt: 2026-07-17T01:05:27Z
 kind: autonomous
 goal: Run /audit-skills — audit the Skill Inventory
-status: in-review
-outcome: Inventory PR opened, 2 issues filed, 1 comment corrected
-summary: "Scheduled Routine fired /audit-skills with no human in the loop this run. Gathered the 40-session scorecard via scripts/audit-skills.ts, then focused on the delta since the prior audit-skills run (session_01Cks11tHyf5hQsn3SJuJ6kn, ~1 day earlier): 12 new sessions. Demoted diagnosing-bugs specialist to supporting (bright-line evidence: two windowed sessions squarely in its domain — a first-pass theory that resisted and needed root-causing — proceeded without it), refreshed implement's and writing-great-skills' role/observations from usedIn without a grade change, and confirmed the \"review\" phantom entry maps to a built-in CLI Skill (left as-is, flagged only). Regression-watch Phase A found no comparable before/after brackets warranting a Phase B deep-read. Commented on open issue #387 with a fresh session-id-fabrication recurrence caught by the orphanedSessions check (session_019W471j landed 3 bad commit trailers on main, the first time this recurring regression actually landed rather than being caught pre-push). Filed #540 for a genuine script gap (humanPromptedClosures has no dismissal set, unlike its manuallyRescuedClosures sibling) and #541 for the diagnosing-bugs demotion record. Ran pnpm gate:scoped locally (green — Inventory-YAML-only diff), committed, pushed to the caller-pinned branch claude/upbeat-sagan-jzl4di, and opened PR #542. Entirely agent-initiated per the audit-skills tier's standing charter (ADR-0003/0004/0015) — no human input this run."
+status: completed
+outcome: "Inventory PR #542 merged, 2 issues filed, 1 comment corrected"
+summary: "Scheduled Routine fired /audit-skills with no human in the loop this run. Gathered the 40-session scorecard via scripts/audit-skills.ts, then focused on the delta since the prior audit-skills run (session_01Cks11tHyf5hQsn3SJuJ6kn, ~1 day earlier): 12 new sessions. Demoted diagnosing-bugs specialist to supporting (bright-line evidence: two windowed sessions squarely in its domain — a first-pass theory that resisted and needed root-causing — proceeded without it), refreshed implement's and writing-great-skills' role/observations from usedIn without a grade change, and confirmed the \"review\" phantom entry maps to a built-in CLI Skill (left as-is, flagged only). Regression-watch Phase A found no comparable before/after brackets warranting a Phase B deep-read. Commented on open issue #387 with a fresh session-id-fabrication recurrence caught by the orphanedSessions check (session_019W471j landed 3 bad commit trailers on main, the first time this recurring regression actually landed rather than being caught pre-push). Filed #540 for a genuine script gap (humanPromptedClosures has no dismissal set, unlike its manuallyRescuedClosures sibling) and #541 for the diagnosing-bugs demotion record. Ran pnpm gate:scoped locally (green — Inventory-YAML-only diff), committed, pushed to the caller-pinned branch claude/upbeat-sagan-jzl4di, and opened PR #542. CI (gate + label checks) went green; confirmed the diff was still Inventory-YAML-only via get_files, then merged per docs/agents/pr-workflow.md's per-tier merge authority for audit-skills (merge on green gate alone, ADR-0003/0004). Entirely agent-initiated per the audit-skills tier's standing charter (ADR-0003/0004/0015) — no human input this run."
 prs:
   - "542"
 docsRead:
@@ -20,6 +20,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/content/current/skills/implement.yml
     reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: audit-skills
     reason: invoked as a slash command
@@ -34,19 +36,19 @@ frictions:
   - description: "scripts/audit-skills.ts's findHumanPromptedClosures() has no dismissal-set mechanism (unlike its findManuallyRescuedClosures() sibling, fixed via #426), so the standing thread #483's original 2 sessions resurface identically in every run with no way to tell \"still the same old 2\" from a genuine new recurrence."
     solution: "Filed #540 recommending the same dismissed-set pattern #426 already added to the sibling check."
     severity: minor
-durationSec: 970
+durationSec: 1173
 models:
-  claude-sonnet-5: 144
+  claude-sonnet-5: 164
 toolCounts:
-  Bash: 26
-  Read: 11
-  ToolSearch: 7
+  Bash: 27
+  Read: 13
+  ToolSearch: 8
   TaskCreate: 5
   TaskUpdate: 8
-  Edit: 3
+  Edit: 5
   mcp__github__search_issues: 5
   mcp__github__issue_read: 2
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 4
   mcp__github__add_issue_comment: 2
   Grep: 2
   mcp__github__issue_write: 2
@@ -55,6 +57,9 @@ toolCounts:
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
   Write: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/skills/writing-great-skills.yml
   - layers/journal/content/current/skills/diagnosing-bugs.yml
