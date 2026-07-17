@@ -1,14 +1,29 @@
 name: diagnosing-bugs
 category: general-engineering
-importance: specialist
+importance: supporting
 installedSha256: 0b561e84563f281e39b939e775d0a95d34c316bf212ba08989d547f1c14d2c58
 role: >-
   Drives hard-bug/perf-regression diagnosis via a red-then-green reproduction
-  loop before any fix is proposed. Valuable once a bug resists a first-pass
-  theory.
+  loop before any fix is proposed. The formal loop is valuable once a bug
+  resists a first-pass theory, but real hard-bug sessions in this repo
+  routinely resolve without invoking it — treat as a reference to reach for,
+  not a step every hard bug actually takes here.
 observations:
   - date: 2026-07-13
     note: >-
       issue #236's permanent-empty-until-reload repro ran entirely on this
       Skill's Phase 1/2 loop discipline, catching an earlier misdiagnosis
       (that session has since aged out of the 40-session window).
+  - date: 2026-07-17
+    note: >-
+      Demoted specialist → supporting: bright-line demotion evidence, ≥2
+      windowed sessions squarely in this Skill's domain (a first-pass theory
+      that resisted and needed root-causing) where it was absent.
+      session_01Tj6TVeZmBVcyUteTqgvYgy diagnosed a flaky e2e test past a
+      false fix (an event-wait that wasn't sufficient) to the real underlying
+      premature-settle bug via root-cause arithmetic, with no
+      diagnosing-bugs invocation. session_01G4rmUvezd1kADVdf5vcEyu diagnosed
+      why ADR-0019's @nuxt/content patch didn't fix #236's browser symptom,
+      ruling out a cache hypothesis against Nuxt source, again without
+      invoking this Skill. Both are exactly the "resisted a first-pass
+      theory" case the role describes, and both proceeded fine ad hoc.

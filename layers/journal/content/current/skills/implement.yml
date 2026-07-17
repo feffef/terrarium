@@ -25,3 +25,19 @@ observations:
       code-landing sessions this window (the runtime-git-read PoC tenant, the
       #443 authorAssociation labeling change, the mobile Recent-Activity-cards
       fix) did not invoke it, still matching the inconsistent-adoption role.
+  - date: 2026-07-17
+    note: >-
+      Used in 4 of this window's 40 sessions: session_015PgK5s6dkbKrW7jagzTZRE
+      (issue #515, the Midden Tenant build), session_019W471jzQDwoZmKzJKtE4vk
+      (issue #449), session_017dzPLRmeEMHeMswznBR9N4 ("the simplest
+      ready-for-agent issue"), and session_019nK3xJvkANqWMUjJLmqP6z (issue
+      #451, aged in from the prior note) — every single-issue implementation
+      this window used it. But session_01Y11Fou1pRvTW2ucEt1dhX8, whose own
+      goal is "Implement all ready-for-agent issues in batches," did NOT
+      invoke it (used code-review instead, dispatching batch work directly) —
+      not yet the clear ≥2-session promotion signal the grading rule asks
+      for, since that's a counter-example squarely in the same domain, not a
+      different kind of session. Adoption looks strong for single-issue
+      /implement calls specifically but still not unconditional across the
+      Skill's full stated domain; role and grade held as-is pending a
+      cleaner signal.

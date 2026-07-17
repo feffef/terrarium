@@ -4,8 +4,9 @@ importance: peripheral
 installedSha256: 7c6ba7ec25bb2c0e173c52cdc2da878aef0b083ec19a9c1799934e480c8833cc
 role: >-
   The reference standard for authoring Skills, per `codify`'s planned remit.
-  Pull remains inconsistent, not zero: a reference to keep, not yet a
-  reliable habit.
+  Pull remains inconsistent but has moved past judgement-only use: it has now
+  framed an actual pair of new Skills being authored, not just informed a
+  decision about one.
 observations:
   - date: 2026-07-13
     note: >-
@@ -21,3 +22,13 @@ observations:
       slash command surveying session logs for doc-worthy learnings) — neither
       authored/edited a Skill directly, still matching the "not yet a reliable
       habit" role.
+  - date: 2026-07-17
+    note: >-
+      Prior citations partly aged out; used in 3 of this window's 40 sessions,
+      including for the first time this window to actually author new Skills:
+      session_016cGM4wnw4nNBFBef4ve1vC ("framed the skill-authoring approach
+      (compose, leading words, single-home)" while writing guest-intake and
+      guest-build), session_01NkLUMugs5s6QRRM8Wq7UUb, and
+      session_013JM1j1xdWw3XJx2bkdK3NB. One authoring use is not yet the ≥2
+      needed to promote the grade, but it's a step past the prior
+      judgement-only pattern — role updated to reflect it.
