@@ -1,0 +1,109 @@
+schemaVersion: 1
+session: session_01CGdWVh7DctbuH1sro8Xs4x
+startedAt: 2026-07-17T07:10:21Z
+endedAt: 2026-07-17T08:57:57Z
+kind: interactive
+goal: Make the /guest-build loop token-cheap and prove it end-to-end
+status: partial
+outcome: Poller shipped (pushed, no PR yet); one guest PR built, reviewed, merged
+summary: "Human kicked off `/loop 1min /guest-build` to run the guest-demo build pipeline (ADR-0023) on a tight interval. First pass surfaced 5 ready-for-agent issues, all owner-authored — the human then explicitly redirected: \"ignore everything that is not guest-authored.\" Second human ask: \"add a script that does the polling for new tickets to save tokens,\" since firing the full model-driven guest-build scan every tick was wasteful. Built scripts/poll-guest-tickets.ts (+ unit tests) as a plain gh api/curl pre-filter — Public authorAssociation (ADR-0020) plus a not-yet-linked-PR check via issue timeline events — gated:scoped clean, committed and pushed to claude/guest-build-loop-bvlj0n (no PR opened — not asked for one). Running it live found a genuine guest issue, #551 (a guest-intake-confirmed MCU movie-blog request), agent-initiated from there per the loop's own standing green-light (ADR-0023): dispatched a worktree-isolated Sonnet impl agent, which scaffolded a new `marquee` Tenant with 5 posts and original hand-drawn SVG illustrations, opened PR #552. Ran an Opus cross-model review (required since the orchestrator is itself Sonnet), posted the verdict, handed off to the owner — who merged it. The `/loop` cron keeps polling for further guest activity."
+prs:
+  - "552"
+docsRead:
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: guest-build's whole policy home
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: disable-model-invocation blocked the Skill tool; followed its steps by hand
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: Public/Trusted authorAssociation split the poller enforces
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: dispatch-and-review mechanics guest-build composes (§5-6)
+  - path: layers/blog/CONTEXT.md
+    reason: ruled out reusing the existing blog Tenant for movie content
+  - path: layers/atlas/app/components/atlas/SpecimenPlate.vue
+    reason: precedent for original inline-SVG illustration with no new dependency
+  - path: /root/.ccr/README.md
+    reason: diagnosed the proxy/fetch 401
+  - path: scripts/list-open-issues.ts
+    reason: (no reason given)
+  - path: scripts/check-triage-drift.ts
+    reason: (no reason given)
+  - path: tests/unit/check-triage-drift.spec.ts
+    reason: (no reason given)
+  - path: tests/unit/list-open-issues.spec.ts
+    reason: (no reason given)
+  - path: scripts/poll-guest-tickets.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: loop
+    reason: drove the whole session's cadence
+  - name: guest-build
+    reason: Skill tool refused it (disable-model-invocation); followed SKILL.md's steps manually instead
+  - name: context
+    reason: (invoked as a slash command)
+  - name: log-session
+    reason: (invoked as a slash command)
+frictions:
+  - description: guest-build's SKILL.md and ADR-0023 explicitly say it's meant to be fired via a Routine or /loop, but the Skill tool itself hard-refuses it (disable-model-invocation) with no carve-out for that exact case — had to re-implement its documented procedure by hand instead of invoking the Skill.
+    solution: Either drop disable-model-invocation for guest-build now that /loop is a documented legitimate firing path, or add an explicit note (in SKILL.md or the tool's own refusal message) on how a /loop-driven session should proceed when the Skill tool itself refuses.
+    severity: moderate
+  - description: Node's built-in fetch (undici) silently 401s through this environment's proxy unless NODE_USE_ENV_PROXY=1 is set before the process starts — too late to set from inside the running script. check-triage-drift.ts's existing gh-less REST fallback uses the same fetch pattern and inherits this same latent bug, not just the new script.
+    solution: Switch check-triage-drift.ts's REST fallback to curl too (the fix applied in poll-guest-tickets.ts), or file an issue so it doesn't stay a silent landmine for the next gh-less environment.
+    severity: major
+  - description: CronCreate/CronList state (session-only, in-memory) was empty on at least two separate turns after what the environment surfaced as a session-resume event, silently dropping the recurring /guest-build job mid-loop.
+    solution: No fix available from inside a session — worth a documented expectation (CLAUDE.md or a docs/agents note) that a /loop cron job in this environment can vanish across a resume and should be defensively re-checked, not just assumed to persist for its stated 7-day lifetime.
+    severity: moderate
+  - description: Asked the user via AskUserQuestion how to handle non-guest-authored ready-for-agent issues (epics, one touching CI) — over-scoped the question; the actual answer was a much simpler blanket rule ("ignore everything that is not guest-authored").
+    solution: Lead with the simplest framing (authorship alone) before layering in per-issue nuance.
+    severity: nit
+  - description: Tried subagent_type 'code-reviewer' for the cross-model review dispatch (matching the /code-review skill's name) — not a registered agent type in this session; fell back to general-purpose with an explicit model override.
+    solution: general-purpose + an explicit model param works fine for this; not worth chasing further.
+    severity: nit
+durationSec: 6456
+models:
+  claude-sonnet-5: 208
+  <synthetic>: 2
+toolCounts:
+  Bash: 42
+  Read: 12
+  ToolSearch: 7
+  CronCreate: 3
+  Skill: 1
+  mcp__github__list_issues: 1
+  AskUserQuestion: 1
+  mcp__github__issue_read: 3
+  Grep: 5
+  Write: 3
+  CronDelete: 2
+  CronList: 2
+  Edit: 5
+  Agent: 3
+  TaskCreate: 1
+  mcp__github__pull_request_read: 3
+  TaskUpdate: 2
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  TaskList: 4
+  mcp__Claude_Code_Remote__delete_trigger: 1
+filesEdited:
+  - scripts/poll-guest-tickets.ts
+  - tests/unit/poll-guest-tickets.spec.ts
+subagents:
+  - type: general-purpose
+    task: "Build guest issue #551 MCU blog"
+    model: sonnet
+  - type: code-reviewer
+    task: "Cross-model review of PR #552"
+    model: opus
+  - type: general-purpose
+    task: "Cross-model review of PR #552"
+    model: opus
+gitBranch: claude/guest-build-loop-bvlj0n
+entrypoint: remote
+cliVersion: 2.1.212
+learnings:
+  - curl already respects this environment's HTTPS_PROXY/CA bundle with no special flags; Node's built-in fetch needs NODE_USE_ENV_PROXY=1 set before process start, which a running script can't do to itself.
+  - GitHub's REST issues-list endpoint returns author_association directly per issue — ADR-0020's Public/Trusted split is a plain REST field, no GraphQL needed.
+ideas:
+  - Have a merged guest-build PR trigger a short blog post from one of the existing blog Tenant Personas narrating the guest's request and what got built — turns each successful guest-demo cycle into content for the meta-blog that already exists to narrate the Platform's own build, closing the loop between the demo and its own documentation.
