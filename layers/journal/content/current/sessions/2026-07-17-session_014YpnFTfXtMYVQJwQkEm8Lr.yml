@@ -1,0 +1,65 @@
+schemaVersion: 1
+session: session_014YpnFTfXtMYVQJwQkEm8Lr
+startedAt: 2026-07-17T11:06:54Z
+endedAt: 2026-07-17T11:23:22Z
+kind: autonomous
+goal: "Run /blog-post: write one grounded post"
+status: in-review
+outcome: "PR #559 open, gate green, awaiting CI/merge"
+summary: "Scheduled /blog-post routine, no persona pinned and no human input this turn. Ran the full candidate process (skill step A): computed the rotation gate (scripts/blog-rotation.ts: last=kevin, eligible=[david, karen]), surveyed recent git history/session logs/existing posts, drafted three full candidates in the scratchpad (david on the new Midden Tenant's unpublished-drafts site; karen reacting to the first real guest-intake build; david checking whether Karen/Kevin's \"wrong number in the metric\" saga from 07-13/07-14 was ever actually fixed), and had a fresh Sonnet outside-reader with no repo access pick the strongest. It chose the wrong-number-still-unfixed piece; revised it per the reviewer's gap notes, then verified every fact against primary sources (GitHub API, not just the two source posts) before publishing. Saved, gated (pnpm gate:scoped green, 55/55 e2e), committed, pushed to the caller-pinned branch claude/zen-heisenberg-r0qjni, opened PR #559, and subscribed to its activity."
+prs:
+  - "559"
+docsRead:
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-16-the-door-opens-for-guests.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-12-session_019pNrzTQb3EV2SJBWXs1bXG.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: driving skill for the whole run
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: authoring this entry
+frictions:
+  - description: Initially wrote the commit/PR provenance footer using a session id copied from an unrelated prior session's commit (seen in tool output while researching material), instead of resolving this session's own canonical id from the system-prompt commit-footer template — a direct instance of the rule CLAUDE.md itself warns against.
+    solution: Caught it before merge by cross-checking CLAUDE_CODE_REMOTE_SESSION_ID (cse_… → session_…) against the commit-footer template in the system prompt; amended the tip commit and force-pushed the solo branch, and updated the PR body to match. A sharper guard would be to resolve and write down the session id as a first step, before any commit is drafted, rather than only checking it at commit time.
+    severity: minor
+  - description: A Midden-Tenant artifact's curatorial `continuityCheck` field quoted a draft blog post's alleged original title ("Take a Breath, Both of You") that didn't match that PR's git commit message title — required an extra GitHub API round-trip (fetching the actual file diff at that commit) to confirm the artifact's claim was in fact accurate (it was the post's frontmatter title, just not the commit message's).
+    solution: No repo fix needed here — the artifact was correct — but it's a good illustration of why CLAUDE.md's "verify a subagent/doc-derived claim against a primary source" rule matters even for content that looks authoritative (a whole curated Tenant), and worth remembering that a commit message and a file's own frontmatter title can legitimately differ.
+    severity: nit
+  - description: The local shallow git clone misdated a file (session_019pNrz's log commit) as added on 07-15 by an unrelated commit, when the file's own content and the GitHub API both show it actually landed 07-13 — the exact shallow-clone-boundary trap CLAUDE.md's own working-conventions section warns about.
+    solution: Recognized the symptom from CLAUDE.md's existing guidance and switched to the GitHub API (list_commits scoped to the file path) instead of trusting local git log for that file's true history — no repo fix needed, the guidance already exists and worked.
+    severity: nit
+durationSec: 988
+models:
+  claude-sonnet-5: 173
+toolCounts:
+  Bash: 51
+  ToolSearch: 5
+  mcp__github__issue_read: 2
+  mcp__github__pull_request_read: 9
+  Read: 5
+  Write: 5
+  Edit: 3
+  mcp__github__get_commit: 1
+  Agent: 1
+  mcp__github__list_commits: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-07-17-two-posts-zero-fixes.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-r0qjni
+entrypoint: remote_trigger
+cliVersion: 2.1.212
+trigger: blog-post
