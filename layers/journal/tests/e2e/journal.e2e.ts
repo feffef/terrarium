@@ -11,7 +11,7 @@
 // (ADR-0004 amendment; tests/README.md).
 import { describe, expect, it } from 'vitest'
 import { $fetch } from '@nuxt/test-utils/e2e'
-import type { Page } from 'playwright-core'
+import type { Locator, Page } from 'playwright-core'
 import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 import type { renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
 import { PIN_SETTLED_EVENT } from '../../app/utils/expandTransition.ts'
@@ -40,6 +40,18 @@ async function armPinSettled(page: Page): Promise<void> {
 }
 async function awaitPinSettled(page: Page): Promise<void> {
   await page.evaluate(() => (window as PinSettledWindow).__pinSettled)
+}
+
+// Open a card by dispatching a click, NOT via `locator.click()`. Playwright's
+// click() first scrolls the target into view for actionability; without browser
+// scroll anchoring (the state CI renders in) that scroll moves the card ~280px
+// BEFORE the app reads its scroll-pin baseline, so the "held in place" tests would
+// compare `after` against a stale `before` and fail (the deterministic CI failure
+// behind issue #450 — locally, scroll anchoring hid it). A real user's click never
+// scrolls the page; dispatchEvent matches that, leaving the app's pin as the only
+// movement under test. See docs/agents/verifying-ui-changes.md (click auto-scroll).
+function clickHeadNoScroll(card: Locator): Promise<void> {
+  return card.locator('.head').dispatchEvent('click')
 }
 
 /** Register the journal Tenant's L2 assertions under the caller's active suite. */
@@ -174,10 +186,9 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         const id = await card.getAttribute('id')
         const topOf = () =>
           page.evaluate((cardId) => document.getElementById(cardId!)!.getBoundingClientRect().top, id)
-        // Park the card mid-viewport, then let Playwright settle its OWN
-        // pre-click scroll-into-view first — `before` must be measured after
-        // that settles, or the click's implicit scroll (not the app) would
-        // account for part of the observed movement.
+        // Park the card mid-viewport and settle its scroll-into-view before
+        // measuring `before`. The open is dispatched without a scroll
+        // (clickHeadNoScroll), so `before` and the app's pin baseline agree.
         await page.evaluate((cardId) => {
           const el = document.getElementById(cardId!)!
           window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top - (window.innerHeight - 120))
@@ -186,7 +197,7 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         const before = await topOf()
         expect(before).toBeGreaterThan(250) // precondition: parked well below the top
         await armPinSettled(page)
-        await card.locator('.head').click()
+        await clickHeadNoScroll(card)
         await page.locator('.feed .card.open .detail').first().waitFor({ state: 'visible' })
         // Wait for the scroll-pin to actually finish, then assert its resting
         // position once — an event, not a longer timeout (issue #450). With no
@@ -215,8 +226,8 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         const id = await card.getAttribute('id')
         const topOf = () =>
           page.evaluate((cardId) => document.getElementById(cardId!)!.getBoundingClientRect().top, id)
-        // Park mid-viewport, then let Playwright settle its OWN pre-click
-        // scroll-into-view before measuring `before` — see the previous test.
+        // Park mid-viewport and settle its scroll-into-view before measuring
+        // `before`; the open is dispatched without a scroll — see the previous test.
         await page.evaluate((cardId) => {
           const el = document.getElementById(cardId!)!
           window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top - (window.innerHeight - 120))
@@ -224,7 +235,7 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         await card.locator('.head').scrollIntoViewIfNeeded()
         const before = await topOf()
         await armPinSettled(page)
-        await card.locator('.head').click()
+        await clickHeadNoScroll(card)
         await page.locator('.feed .card.open .detail').first().waitFor({ state: 'visible' })
         // The scroll-pin settles only once BOTH this card's expand and the sibling
         // digest's collapse above it have finished, so its event is the exact
