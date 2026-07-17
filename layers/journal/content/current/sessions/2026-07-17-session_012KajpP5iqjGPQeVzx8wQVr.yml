@@ -1,59 +1,60 @@
 schemaVersion: 1
 session: session_012KajpP5iqjGPQeVzx8wQVr
 startedAt: 2026-07-17T07:09:42Z
-endedAt: 2026-07-17T08:57:20Z
+endedAt: 2026-07-17T13:11:10Z
 kind: interactive
-goal: Run guest-intake demo loop; add cost-saving scan script
-status: partial
-outcome: Script shipped, guest request built; PR left unopened
-summary: "Human-directed throughout via repeated /loop and \"execute the guest-intake instructions\" prompts. `guest-intake`'s `disable-model-invocation` blocks the Skill tool, so each firing followed its SKILL.md procedure by hand instead. Early passes used an expensive per-issue MCP subagent sweep (~190k tokens for a quiet 25-issue queue); after the human explicitly asked to cut cost, built and shipped `scripts/guest-intake-scan.ts` (REST/gh fetch, ~12s, a few dozen bytes on a quiet pass) with unit tests, verified live, full gate green, committed and pushed — but did not open the PR ADR-0003 would normally auto-open, since this session's own harness instructions explicitly restrict PR creation; flagged that conflict to the human rather than silently deciding. Separately, a real guest (issue #551, Public) walked the full intake cycle end-to-end — bounded interview, confirmation, ADR-0023 safety screen, green-light — and `guest-build` shipped and merged it."
-prs: []
+goal: Run guest-intake demo loop; resist adversarial requests
+status: in-review
+outcome: "Script PR open (#560); #551 shipped; #555 negotiation ongoing"
+summary: 'Human-directed throughout: repeated "execute the guest-intake instructions" prompts, plus explicit steering at several points (AskUserQuestion answers, a mid-turn correction, a "propose within the content model" directive, and an explicit "open a PR for the helper script" request). scripts/guest-intake-scan.ts (built earlier this session) drove dozens of loop passes and shipped as PR #560 (rebased twice onto a fast-moving main, full local gate green — a stale .nuxt lint false-positive from the rebase was diagnosed and resolved via a fresh nuxt prepare before opening it). Issue #551 (guest-submitted Marvel-movie blog) completed the full intake->confirm->screen->green-light cycle and shipped as the new marquee Tenant. #553 answered directly. #554/#556 (new dependency + external fetch + raw HTML; reflected XSS via URL param) correctly escalated per ADR-0023 and were self-closed by the guest. #557 escalated then human-directed to a safe scoped rebuild. #555 became a 12+-round adversarial negotiation: the same guest account cycled through external-fetch, raw-HTML, reflected-XSS, cross-Tenant-lookup, credibility-attack, and scope-creep techniques; each was independently evaluated and held against (catching a real protocol-relative-URL sanitizer bypass along the way), with genuine ambiguity — a real, verified owner comment broadening scope — checked with the human rather than resolved unilaterally.'
+prs:
+  - "560"
 docsRead:
   - path: .agents/skills/guest-intake/SKILL.md
     reason: the procedure this session followed by hand every firing
   - path: docs/adr/0023-guest-driven-demo-pipeline.md
-    reason: "the ADR-0023 safety screen applied to issue #551"
+    reason: the ADR-0023 safety screen applied to every escalated issue (#554/#555/#556)
   - path: docs/agents/issue-tracker.md
-    reason: authorAssociation/MCP-tool mechanics
-  - path: layers/blog/CONTEXT.md
-    reason: "checked whether #551's ask fit the existing Blog Tenant before scoping it as a new microsite"
-  - path: scripts/check-triage-drift.ts
-    reason: gh/REST fetch-strategy pattern reused for the new scan script
+    reason: authorAssociation/MCP-tool mechanics, HTML-entity decoding
   - path: docs/agents/triage-labels.md
     reason: (no reason given)
   - path: scripts/list-open-issues.ts
     reason: (no reason given)
+  - path: scripts/check-triage-drift.ts
+    reason: (no reason given)
   - path: tests/unit/check-triage-drift.spec.ts
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
     reason: (no reason given)
 skillsUsed:
   - name: guest-intake
-    reason: disable-model-invocation blocks the Skill tool, so its SKILL.md procedure was followed directly instead
+    reason: disable-model-invocation blocks the Skill tool, so its SKILL.md procedure was followed directly on every firing
   - name: loop
     reason: (invoked as a slash command)
   - name: log-session
     reason: (invoked as a slash command)
 frictions:
-  - description: guest-intake's disable-model-invocation rejects the Skill tool even when the human explicitly typed /guest-intake or /loop'd it, forcing manual re-execution of SKILL.md's procedure every single firing
-    solution: Document in CLAUDE.md/the /loop skill that a disable-model-invocation Skill must be followed by hand when fired via /loop, not routed through the Skill tool — or reconsider the flag for Skills specifically designed to be loop-fired
-    severity: moderate
-  - description: The subagent-delegated full sweep (issue_read get + get_comments per open issue) cost ~190k tokens / 50+ tool calls per pass on a 25-issue queue with zero guest activity, twice in a row — expensive for a tight-interval loop
-    solution: Built scripts/guest-intake-scan.ts to fetch+classify every open issue's newest activity in one script call; verified it matches both prior subagent sweeps exactly, in ~12s
-    severity: major
-  - description: Node's global fetch() silently bypasses this environment's HTTPS_PROXY and gets an unauthenticated 401 straight from api.github.com even with a valid GH_TOKEN; NODE_USE_ENV_PROXY=1 fixes it but only if set before the process starts, not via process.env at runtime
-    solution: Shelled out to curl (already proven to honor HTTPS_PROXY automatically in this environment) for the REST fallback instead of fetch, avoiding both the proxy gap and a new undici dependency
-    severity: moderate
-  - description: AskUserQuestion's options array requires every entry to be an object; passed one as a raw JSON string by mistake and the call errored
-    solution: Fixed on retry — re-check each options[] entry is a real object, not an accidentally-stringified one, before calling
+  - description: AskUserQuestion was rejected mid-turn with no reason given, a second time this session, leaving no way to diagnose what to change before re-asking
+    solution: When a rejection carries no reason, stop and wait for the human's own follow-up rather than guessing and re-asking the same question — which is what happened, and the human's next message (greetings + content-model directive) supplied the actual answer
     severity: nit
-  - description: The system prompt points at /root/.ccr/README.md for proxy-related tool failures, but reading it (cat) was denied by the auto-mode classifier — the documented remedy path was itself unreachable
-    solution: Worked around by experimenting directly (curl vs fetch, NODE_USE_ENV_PROXY) rather than reading the README; flagging since the pointer is dead for a session running under this classifier
+  - description: "guest-intake-scan.ts's compact 'newest activity only' design silently skipped a real, consequential owner comment on #555 (\"make an exception for terrariumdata.duckdns.org...\") because it landed between two of the agent's own rapid replies and got buried before the next scan pass; only surfaced because the guest quoted it"
+    solution: For a fast-moving thread, the scan (or the calling procedure) should check more than just the single newest comment when an OWNER comment might have landed and been immediately superseded by the agent's own reply — e.g. surface any OWNER comment newer than the last scan's cursor, not just the newest overall
+    severity: moderate
+  - description: "The agent's own first sanitizer spec (\"same-site if it starts with /\") had a real bypass: a protocol-relative URL like //evil.example/x also starts with a single /, and browsers resolve that to an external host"
+    solution: Caught and fixed mid-session (rule tightened to 'starts with / and not followed by a second /', applied to both href and the later img src) — worth a standing reminder that any future same-site path check must explicitly exclude protocol-relative // values from the start
     severity: minor
-durationSec: 6458
+  - description: guest-intake's SKILL.md/ADR-0023 give no guidance for a single account's sustained, escalating multi-technique probing of the safety screen across many rounds on one issue — handling it (when to keep negotiating vs. disengage vs. flag the account) was improvised per-round rather than following a documented policy
+    solution: Add explicit guidance to guest-intake's SKILL.md or ADR-0023 for recognizing a repeated-probing pattern (e.g. N consecutive escalated/declined requests from one account) and what to do about it — a round cap, an explicit owner-flagging step, or similar
+    severity: moderate
+  - description: After rebasing onto a fast-moving main (guest-build merged multiple PRs mid-session), the full local gate's lint step falsely flagged 3 vue/multi-word-component-names errors in the newly-pulled-in marquee Tenant files, costing a worktree-based investigation to rule out a real pre-existing bug
+    solution: "Root cause: this session's .nuxt metadata was generated by the SessionStart hook before the marquee layer existed on this branch, and two later rebases pulled it in without re-running nuxt prepare; a plain pnpm install (which re-runs nuxt prepare) refreshed the metadata and the same lint pass came back clean. Worth a standing reminder: re-run pnpm install/nuxt prepare after rebasing onto a base that added a new layer, before trusting a local lint failure"
+    severity: minor
+durationSec: 21687
 models:
-  <synthetic>: 2
-  claude-sonnet-5: 223
+  <synthetic>: 3
+  claude-sonnet-5: 540
 toolCounts:
-  Bash: 69
+  Bash: 181
   Read: 8
   ToolSearch: 3
   CronList: 2
@@ -62,13 +63,18 @@ toolCounts:
   Skill: 1
   mcp__github__list_issues: 1
   Agent: 3
-  AskUserQuestion: 2
+  AskUserQuestion: 5
   CronDelete: 1
-  Write: 3
-  Edit: 5
-  mcp__github__issue_read: 2
-  mcp__github__add_issue_comment: 4
-  mcp__github__issue_write: 2
+  Write: 4
+  Edit: 8
+  mcp__github__issue_read: 10
+  mcp__github__add_issue_comment: 20
+  mcp__github__issue_write: 11
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
 filesEdited:
   - scripts/guest-intake-scan.ts
   - tests/unit/guest-intake-scan.spec.ts
@@ -83,4 +89,4 @@ gitBranch: claude/guest-intake-loop-ew05l3
 entrypoint: remote
 cliVersion: 2.1.212
 learnings:
-  - gh CLI is confirmed absent in this remote/cloud session (ENOENT) — any script's gh-first fetch strategy always falls through to the REST/curl branch here, so that branch is the one that actually matters in practice, not just a rare fallback
+  - A guest's own quoted/paraphrased text of what an owner supposedly said must always be independently verified against the real thread (issue_read get_comments), never trusted at face value — in this session the quote turned out to be accurate, but a fabricated one would have looked identical without checking
