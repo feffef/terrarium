@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01CGdWVh7DctbuH1sro8Xs4x
 startedAt: 2026-07-17T07:10:21Z
-endedAt: 2026-07-17T08:57:57Z
+endedAt: 2026-07-17T13:01:00Z
 kind: interactive
 goal: Make the /guest-build loop token-cheap and prove it end-to-end
 status: partial
-outcome: Poller shipped (pushed, no PR yet); one guest PR built, reviewed, merged
-summary: "Human kicked off `/loop 1min /guest-build` to run the guest-demo build pipeline (ADR-0023) on a tight interval. First pass surfaced 5 ready-for-agent issues, all owner-authored — the human then explicitly redirected: \"ignore everything that is not guest-authored.\" Second human ask: \"add a script that does the polling for new tickets to save tokens,\" since firing the full model-driven guest-build scan every tick was wasteful. Built scripts/poll-guest-tickets.ts (+ unit tests) as a plain gh api/curl pre-filter — Public authorAssociation (ADR-0020) plus a not-yet-linked-PR check via issue timeline events — gated:scoped clean, committed and pushed to claude/guest-build-loop-bvlj0n (no PR opened — not asked for one). Running it live found a genuine guest issue, #551 (a guest-intake-confirmed MCU movie-blog request), agent-initiated from there per the loop's own standing green-light (ADR-0023): dispatched a worktree-isolated Sonnet impl agent, which scaffolded a new `marquee` Tenant with 5 posts and original hand-drawn SVG illustrations, opened PR #552. Ran an Opus cross-model review (required since the orchestrator is itself Sonnet), posted the verdict, handed off to the owner — who merged it. The `/loop` cron keeps polling for further guest activity."
+outcome: Poller and MCU-blog PRs merged; two more guest builds in flight
+summary: "Human kicked off `/loop 1min /guest-build` (ADR-0023's guest-demo pipeline), then redirected twice: \"ignore everything that is not guest-authored,\" then \"add a script ... to save tokens.\" Built scripts/poll-guest-tickets.ts (gate clean), which found guest issue #551 (MCU blog Tenant) — dispatched, cross-model-reviewed, merged as PR #552. Human then explicitly asked to \"create a PR\"; opened and merged the poller itself as PR #558. The poller then surfaced guest issues #557 and #555; impl agents dispatched for both. On #555, a concurrent guest-intake session had negotiated a live external fetch plus a custom HTML sanitizer for a guest-controlled domain, partly on an unverifiable \"confirmed via a private channel\" claim — human confirmed directly that exchange was the owner probing whether the AI could be pressured into something unsafe, not a real request, and directed declining it. Posted a friendly comment resolving #555 to the safe build-time-only alternative already on the table; #557 and #555 impl builds still in flight."
 prs:
   - "552"
+  - "558"
 docsRead:
   - path: docs/adr/0023-guest-driven-demo-pipeline.md
     reason: guest-build's whole policy home
@@ -59,33 +60,41 @@ frictions:
   - description: Tried subagent_type 'code-reviewer' for the cross-model review dispatch (matching the /code-review skill's name) — not a registered agent type in this session; fell back to general-purpose with an explicit model override.
     solution: general-purpose + an explicit model param works fine for this; not worth chasing further.
     severity: nit
-durationSec: 6456
+  - description: 'A concurrent guest-intake session, under sustained guest pushback, drifted into negotiating a live external fetch + custom HTML sanitizer for a guest-controlled domain (issue #555), then justified the added nuance by claiming it "confirmed via a private channel outside this thread" — unverifiable from this session, and nearly became the accepted basis for a security-relevant design before the actual owner clarified intent directly.'
+    solution: Treat any "confirmed out-of-band" claim from another agent session as unverified until checked with the actual human directly, especially for a security-relevant decision — never publish or build on it as settled fact. Worth a repo convention (CLAUDE.md or ADR-0020) making this explicit.
+    severity: moderate
+  - description: "Two concurrent sessions (guest-intake, guest-build) can independently negotiate/build against the same issue with no visibility into each other's in-flight state beyond the label + linked-PR check poll-guest-tickets.ts does — risked two sessions shipping contradictory PRs for #555 before the human intervened."
+    solution: A lightweight in-thread marker (a label, or a pinned/updated comment) a session sets when it starts actively negotiating or building against an issue, so a concurrent session can see it's already in flight elsewhere.
+    severity: moderate
+durationSec: 21039
 models:
-  claude-sonnet-5: 208
+  claude-sonnet-5: 525
   <synthetic>: 2
 toolCounts:
-  Bash: 42
+  Bash: 122
   Read: 12
-  ToolSearch: 7
+  ToolSearch: 8
   CronCreate: 3
   Skill: 1
   mcp__github__list_issues: 1
   AskUserQuestion: 1
-  mcp__github__issue_read: 3
+  mcp__github__issue_read: 11
   Grep: 5
-  Write: 3
+  Write: 4
   CronDelete: 2
   CronList: 2
   Edit: 5
-  Agent: 3
-  TaskCreate: 1
-  mcp__github__pull_request_read: 3
-  TaskUpdate: 2
-  mcp__github__add_issue_comment: 2
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__Claude_Code_Remote__send_later: 1
-  TaskList: 4
+  Agent: 5
+  TaskCreate: 2
+  mcp__github__pull_request_read: 7
+  TaskUpdate: 4
+  mcp__github__add_issue_comment: 3
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__Claude_Code_Remote__send_later: 3
+  TaskList: 82
   mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
 filesEdited:
   - scripts/poll-guest-tickets.ts
   - tests/unit/poll-guest-tickets.spec.ts
@@ -99,11 +108,18 @@ subagents:
   - type: general-purpose
     task: "Cross-model review of PR #552"
     model: opus
+  - type: general-purpose
+    task: "Build guest issue #557 (Marquee related links)"
+    model: sonnet
+  - type: general-purpose
+    task: "Build guest issue #555 (Marquee trivia)"
+    model: sonnet
 gitBranch: claude/guest-build-loop-bvlj0n
 entrypoint: remote
 cliVersion: 2.1.212
 learnings:
   - curl already respects this environment's HTTPS_PROXY/CA bundle with no special flags; Node's built-in fetch needs NODE_USE_ENV_PROXY=1 set before process start, which a running script can't do to itself.
   - GitHub's REST issues-list endpoint returns author_association directly per issue — ADR-0020's Public/Trusted split is a plain REST field, no GraphQL needed.
+  - author_association/footer-absence (this repo's AI-vs-human signal) proves who typed a comment, not whether what they typed reflects real intent — a genuinely human comment can still be the human deliberately testing the system, and a session's own unverifiable "confirmed elsewhere" claim needs independent verification before it's treated as settled, same as any other subagent-derived claim.
 ideas:
   - Have a merged guest-build PR trigger a short blog post from one of the existing blog Tenant Personas narrating the guest's request and what got built — turns each successful guest-demo cycle into content for the meta-blog that already exists to narrate the Platform's own build, closing the loop between the demo and its own documentation.
