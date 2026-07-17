@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_01Tj6TVeZmBVcyUteTqgvYgy
 startedAt: 2026-07-16T22:43:48Z
-endedAt: 2026-07-16T23:08:02Z
+endedAt: 2026-07-16T23:51:03Z
 kind: interactive
 goal: Properly fix flaky journal accordion e2e test
 status: in-review
-outcome: Event-based settle wait replaces timeout; pushed, PR withheld
-summary: "The user asked me to properly address a known flaky test (tracked loosely under issue #450) — firing an event to wait for rather than extending the wait time. Session logs showed a prior session (PR #410) had only raised the two journal-dashboard \"held in place\" e2e assertions' `expect.poll` timeout from 1000ms to 5000ms — the exact band-aid the user rejected. Root cause: `pinTopAcrossTransition`'s rAF counter-scroll settles over up to 90 frames, so a loaded CI runner can outrun any fixed budget. Per the user's direction I made the production code dispatch a `PIN_SETTLED_EVENT` on `window` when its settle loop finishes (every exit path), extracted the pure function + event name into `utils/expandTransition.ts` to single-home the open animation, and rewrote the two tests to arm a one-shot listener before the click and block on it — waiting exactly as long as the animation takes. Full local gate green (lint, typecheck, unit, content, e2e 45/45 incl. both formerly-flaky tests). Committed and pushed to the designated branch; PR NOT opened (see friction). Then, at the user's request, ran /code-review (two parallel axes): Spec found no defects (faithful, correct, in-scope); Standards flagged one Duplicated-Code cast, which I deduped via a shared PinSettledWindow type alias in a follow-up commit. All agent-initiated work stayed within the user's explicit ask."
-prs: []
+outcome: "Root cause (premature scroll-pin settle) fixed; PR #537 in review"
+summary: "The user asked me to properly address a known flaky test (tracked loosely under issue #450) — firing an event to wait for rather than extending the wait time. Session logs showed a prior session (PR #410) had only raised the two journal-dashboard \"held in place\" e2e assertions' `expect.poll` timeout from 1000ms to 5000ms — the exact band-aid the user rejected. Root cause: `pinTopAcrossTransition`'s rAF counter-scroll settles over up to 90 frames, so a loaded CI runner can outrun any fixed budget. Per the user's direction I made the production code dispatch a `PIN_SETTLED_EVENT` on `window` when its settle loop finishes (every exit path), extracted the pure function + event name into `utils/expandTransition.ts` to single-home the open animation, and rewrote the two tests to arm a one-shot listener before the click and block on it — waiting exactly as long as the animation takes. Full local gate green (lint, typecheck, unit, content, e2e 45/45 incl. both formerly-flaky tests). Committed and pushed to the designated branch. Then, at the user's request, ran /code-review (two parallel axes): Spec found no defects (faithful, correct, in-scope); Standards flagged one Duplicated-Code cast, which I deduped via a shared PinSettledWindow type alias in a follow-up commit. The user then explicitly asked me to open the PR, so I opened gated PR #537. CI then FAILED on the very test — `expected -17.25 to be greater than 253.75` — exposing that the event wait was necessary but not sufficient: the deeper bug was in `pinTopAcrossTransition` itself. The arithmetic (before − 286 = after, where 286px is the collapsing digest's height) showed the pin settled with ZERO counter-scroll — a premature settle: its loop exited when the item's document position held steady for one frame, which on some frame schedules happens BEFORE the collapse starts moving it. Fixed by bounding the loop to the known transition duration (counter-scroll every frame until DURATION_MS + grace) rather than \"stopped moving\". Updated PR #537 title/body to match. All agent-initiated work stayed within the user's explicit asks."
+prs:
+  - "537"
 docsRead:
   - path: layers/journal/app/pages/t/journal/[space]/index.vue
     reason: found pinTopAcrossTransition's rAF settle loop as the flake root
@@ -19,6 +20,10 @@ docsRead:
     reason: renderAndCollectErrors page lifecycle for the event-wait helpers
   - path: layers/journal/content/current/sessions/2026-07-13-session_01SMV9vm2dif1u7GUJkZkS8V.yml
     reason: "found the prior timeout-bump fix (PR #410) the user was rejecting"
+  - path: layers/journal/tests/unit/journal-dashboard.spec.ts
+    reason: (no reason given)
+  - path: scripts/repro-236.ts
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -27,6 +32,12 @@ skillsUsed:
   - name: code-review
     reason: (invoked as a slash command)
 frictions:
+  - description: Local e2e passed 45/45 (both formerly-flaky tests) yet CI failed on one of them. My first fix (event-based wait) made the wait deterministic but did NOT fix the real premature-settle bug; a green local run gave false confidence and the defect only surfaced in CI's frame timing.
+    solution: Diagnose flaky-anchoring failures from the failure arithmetic (before−286= after ⇒ zero compensation ⇒ premature settle), not from a local pass. Fixed the production loop, not the test. A pre-push CI-parity signal for timing-sensitive e2e would have caught it before the PR round-trip.
+    severity: major
+  - description: Could not reproduce the CI failure locally even under 6x CPU throttling — both old (buggy) and new code held at Δ=0.0, so the throttled repro did not discriminate. Local verification of an environment-specific frame-timing flake is limited.
+    solution: Relied on the failure arithmetic + a deterministic hand-driven-rAF check of the settle logic instead; treated CI as the final arbiter. Noted the caveat honestly in the PR body rather than overclaiming local proof.
+    severity: minor
   - description: ADR-0003's auto-open-PR default conflicted with this session's system prompt ("Do NOT create a pull request unless the user explicitly asks").
     solution: "Followed CLAUDE.md: the task-scoped harness restriction wins over the auto-open default; committed + pushed only, surfaced the conflict here rather than silently opening or skipping."
     severity: minor
@@ -36,25 +47,33 @@ frictions:
   - description: "The provenance footer was not auto-injected on the code-review cleanup `git commit -m`, recurrence of issue #346 (cloud -m commits skip injection)."
     solution: Verified with `git log -1 --format=%B`, amended the tip via `-F` with the footer appended, and force-with-lease pushed (tip-only, my own commit).
     severity: minor
-durationSec: 1455
+durationSec: 4035
 models:
-  claude-opus-4-8: 117
+  claude-opus-4-8: 241
 toolCounts:
-  Bash: 21
-  ToolSearch: 1
+  Bash: 46
+  ToolSearch: 4
   mcp__github__search_issues: 3
   Grep: 1
   mcp__github__issue_read: 2
-  Read: 6
-  Edit: 10
+  Read: 10
+  Edit: 18
   mcp__github__list_issues: 1
-  Write: 3
+  Write: 6
   Skill: 2
   Agent: 2
+  mcp__github__list_pull_requests: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 4
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__get_job_logs: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - layers/journal/app/utils/expandTransition.ts
   - layers/journal/app/pages/t/journal/[space]/index.vue
   - layers/journal/tests/e2e/journal.e2e.ts
+  - layers/journal/tests/unit/pin-top-across-transition.spec.ts
+  - scripts/_repro-pin.ts
 subagents:
   - type: general-purpose
     task: Standards-axis code review
@@ -65,3 +84,5 @@ entrypoint: remote
 cliVersion: 2.1.211
 learnings:
   - Dispatching a DOM CustomEvent when an rAF settle loop completes lets an e2e await the exact end of an animation deterministically — the proper fix for a settle-race flake, versus a longer expect.poll timeout that only widens the race window.
+  - An rAF loop that exits when its tracked position stops changing is unsafe if that motion starts a frame or two late — it can settle before the motion begins; bound such a loop by the known transition duration (wall-clock, matching the CSS transition) instead, so it cannot exit early and self-caps.
+  - A flaky-anchoring failure value is itself diagnostic — after minus before equalling the exact height of the collapsed element (zero compensation) pinpoints a no-op pin, distinguishing a premature settle from a scroll-clamp or a measurement issue.
