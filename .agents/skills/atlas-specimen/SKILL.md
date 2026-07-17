@@ -136,7 +136,7 @@ size: 3 cm at rest
 diet: starlight, mostly
 activity:
   label: a dusk-flier             # short phrase in-voice; the museum-label caption
-  bands: [[18, 23]]               # active hour-ranges on a 0–24 clock; may wrap ([20,4]) — a supporting fact now, not the page's main instrument
+  bands: [[18, 23]]               # active hour-ranges on a 0–24 clock; may wrap ([20,4])
 phenology:
   phases:                         # the almanac dial's own data; see below
     - name: first-glow

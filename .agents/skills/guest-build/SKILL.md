@@ -57,11 +57,10 @@ double-builds a story already in flight.
    makes it human-only to merge regardless, so it never belongs on an
    auto-dispatched build.
 2. **Dispatch one Sonnet impl agent** (`model: sonnet`, `isolation: 'worktree'`)
-   with a self-contained brief per `frictions-to-fixes` §5: read the issue, branch
-   from `origin/main`, implement, clear the gate, push, open a **gated PR** that
-   `Closes #N`, no merge / no auto-merge / no `close-session` / no `log-session`,
-   commit + push before stopping even mid-gate, and — guest-driven — stop and hand
-   back rather than touch any human-only surface.
+   with a self-contained brief per `frictions-to-fixes` §5 and the prohibitions
+   above: read the issue, branch from `origin/main`, implement, clear the gate,
+   push, and open a **gated PR** that `Closes #N` — then stop and hand back
+   rather than touch any human-only surface.
 3. **Review on a different model.** The impl is Sonnet; run `/code-review` on the
    orchestrator's own model (a distinct model, as the demo requires). **Post the
    verdict as a PR comment — every time, even when clean** — so the audit trail
