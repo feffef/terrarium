@@ -362,6 +362,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
     `cd`, `cd` back to the repo root (or use absolute-path-prefixed one-off
     commands instead of a standalone `cd`), and re-check `git status`/branch
     at the root before trusting the warning as this session's own.
+  - **To resume a stopped/paused mechanism-2 subagent, use `SendMessage` to its
+    existing agent id — never a fresh `Agent` call.** A new `Agent` call
+    provisions a brand-new checkout with no memory of the prior work, risking
+    a duplicate branch/push or losing the first attempt's already-committed
+    local work; `SendMessage` continues the same agent, worktree, and history.
 - **Before dispatching subagents whose outputs share a load-bearing/structural
   design axis — the thing every one of their outputs depends on — grill it to
   a locked answer first**, using the `grilling` Skill by name. The trigger is
