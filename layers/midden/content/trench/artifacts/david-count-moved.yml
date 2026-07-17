@@ -1,0 +1,19 @@
+title: "David: “The Count Moved”"
+stratum: spike-ashfall
+condition: intact
+provenance:
+  kind: pr
+  number: 274
+  merged: false
+  url: https://github.com/feffef/terrarium/pull/274
+  continuityCheck: closed unmerged; no post of this title landed, and the run it
+    reported was covered by other posts — this exact dispatch never ran
+site: unpublished-dispatches
+catalogNote: A finished, fact-checked David post on the audit-docs Skill’s first
+  real self-merge, whole and green on the gate, closed three minutes after it
+  opened and never published.
+assessedAt: 2026-07-16
+inscription:
+  text: the Skill’s first actual self-merge, verified via its own timestamped
+    PR-thread comment, not inferred from a commit-author field
+  source: "PR #274 description"

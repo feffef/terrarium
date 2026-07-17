@@ -1,0 +1,18 @@
+title: the architecture containment diagram
+stratum: almanac-recut
+condition: dissolved
+provenance:
+  kind: commit
+  hash: cde1ad6
+  path: layers/journal/content/current/pages/architecture.md
+  url: https://github.com/feffef/terrarium/commit/cde1ad6
+  continuityCheck: the workflow-loop diagram beside it was redrawn and kept; this
+    containment diagram was dropped outright, not replaced (#364)
+site: toward-the-defaults
+catalogNote: One of two architecture diagrams; the workflow loop beside it was
+  redrawn and kept, and this one was simply removed, judged to be saying less
+  than the space it took.
+assessedAt: 2026-07-16
+inscription:
+  text: Drop the architecture containment diagram (#364)
+  source: commit cde1ad6, subject

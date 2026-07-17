@@ -1,0 +1,19 @@
+title: Spawn (a Tenant / Space)
+stratum: spike-ashfall
+condition: fragmentary
+provenance:
+  kind: commit
+  hash: 2cb2aa5
+  path: CONTEXT.md
+  url: https://github.com/feffef/terrarium/commit/2cb2aa5
+  continuityCheck: coined in the initial glossary, never really used, and
+    overloaded with "spawn a sub-agent"; retired to the Retired-terms section —
+    survives only as a gravestone entry telling readers to avoid it
+site: the-buried
+catalogNote: A glossary verb for adding a Tenant or Space, coined at the very
+  first design and then never really used, kept now only as a note in the
+  retired-terms list telling writers to say something else.
+assessedAt: 2026-07-16
+inscription:
+  text: "### Spawn (a Tenant / Space) — It is never a runtime operation."
+  source: CONTEXT.md, original glossary (2cb2aa5)

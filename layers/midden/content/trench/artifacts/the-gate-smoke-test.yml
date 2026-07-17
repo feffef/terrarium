@@ -1,0 +1,19 @@
+title: CI gate smoke test (close without merging)
+stratum: spike-ashfall
+condition: never-activated
+provenance:
+  kind: pr
+  number: 330
+  merged: false
+  url: https://github.com/feffef/terrarium/pull/330
+  continuityCheck: explicitly close-without-merging; added one temporary markdown
+    file consumed by nothing, purely to trigger CI once the repo went public
+site: built-never-fired
+catalogNote: A pull request opened for the sole purpose of making the gate run
+  once, carrying a single file the build never touched, and asked in its own
+  body to be closed unmerged.
+assessedAt: 2026-07-16
+inscription:
+  text: Please close without merging and I'll delete the branch — this is only
+    here to trigger CI.
+  source: "PR #330 description"

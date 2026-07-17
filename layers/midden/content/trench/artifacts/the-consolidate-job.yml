@@ -1,0 +1,16 @@
+title: the `consolidate` chartered job
+stratum: spike-ashfall
+condition: lost
+provenance:
+  kind: commit
+  hash: a1dc590
+  path: CONTEXT.md
+  url: https://github.com/feffef/terrarium/commit/a1dc590
+  continuityCheck: the twin of `sync` in the same speculative job-taxonomy;
+    retired with it, never built — only the ordinary verb "consolidate"
+    survives, which was never the artifact
+site: the-buried
+catalogNote: The twin of `sync`, coined in the same speculative taxonomy of
+  jobs-that-mint-jobs; retired unbuilt, leaving only the plain English word it
+  had borrowed.
+assessedAt: 2026-07-16
