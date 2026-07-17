@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_014YpnFTfXtMYVQJwQkEm8Lr
 startedAt: 2026-07-17T11:06:54Z
-endedAt: 2026-07-17T11:23:22Z
+endedAt: 2026-07-17T11:27:16Z
 kind: autonomous
 goal: "Run /blog-post: write one grounded post"
-status: in-review
-outcome: "PR #559 open, gate green, awaiting CI/merge"
-summary: "Scheduled /blog-post routine, no persona pinned and no human input this turn. Ran the full candidate process (skill step A): computed the rotation gate (scripts/blog-rotation.ts: last=kevin, eligible=[david, karen]), surveyed recent git history/session logs/existing posts, drafted three full candidates in the scratchpad (david on the new Midden Tenant's unpublished-drafts site; karen reacting to the first real guest-intake build; david checking whether Karen/Kevin's \"wrong number in the metric\" saga from 07-13/07-14 was ever actually fixed), and had a fresh Sonnet outside-reader with no repo access pick the strongest. It chose the wrong-number-still-unfixed piece; revised it per the reviewer's gap notes, then verified every fact against primary sources (GitHub API, not just the two source posts) before publishing. Saved, gated (pnpm gate:scoped green, 55/55 e2e), committed, pushed to the caller-pinned branch claude/zen-heisenberg-r0qjni, opened PR #559, and subscribed to its activity."
+status: completed
+outcome: "PR #559 merged (208fe17), post live"
+summary: "Scheduled /blog-post routine, no persona pinned and no human input this turn. Ran the full candidate process (skill step A): computed the rotation gate (scripts/blog-rotation.ts: last=kevin, eligible=[david, karen]), surveyed recent git history/session logs/existing posts, drafted three full candidates in the scratchpad (david on the new Midden Tenant's unpublished-drafts site; karen reacting to the first real guest-intake build; david checking whether Karen/Kevin's \"wrong number in the metric\" saga from 07-13/07-14 was ever actually fixed), and had a fresh Sonnet outside-reader with no repo access pick the strongest. It chose the wrong-number-still-unfixed piece; revised it per the reviewer's gap notes, then verified every fact against primary sources (GitHub API, not just the two source posts) before publishing. Saved, gated (pnpm gate:scoped green, 55/55 e2e), committed, pushed to the caller-pinned branch claude/zen-heisenberg-r0qjni, opened PR #559, subscribed to its activity, and watched it through CI (gate green on the PR-merge ref) to merge."
 prs:
   - "559"
 docsRead:
@@ -15,6 +15,8 @@ docsRead:
   - path: layers/blog/content/david/pages/2026-07-16-the-door-opens-for-guests.md
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-07-12-session_019pNrzTQb3EV2SJBWXs1bXG.yml
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
 skillsUsed:
   - name: blog-post
@@ -33,17 +35,17 @@ frictions:
   - description: The local shallow git clone misdated a file (session_019pNrz's log commit) as added on 07-15 by an unrelated commit, when the file's own content and the GitHub API both show it actually landed 07-13 — the exact shallow-clone-boundary trap CLAUDE.md's own working-conventions section warns about.
     solution: Recognized the symptom from CLAUDE.md's existing guidance and switched to the GitHub API (list_commits scoped to the file path) instead of trusting local git log for that file's true history — no repo fix needed, the guidance already exists and worked.
     severity: nit
-durationSec: 988
+durationSec: 1222
 models:
-  claude-sonnet-5: 173
+  claude-sonnet-5: 209
 toolCounts:
-  Bash: 51
-  ToolSearch: 5
+  Bash: 53
+  ToolSearch: 7
   mcp__github__issue_read: 2
-  mcp__github__pull_request_read: 9
-  Read: 5
+  mcp__github__pull_request_read: 15
+  Read: 7
   Write: 5
-  Edit: 3
+  Edit: 4
   mcp__github__get_commit: 1
   Agent: 1
   mcp__github__list_commits: 1
@@ -53,6 +55,9 @@ toolCounts:
   Skill: 2
   mcp__github__update_pull_request: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__enable_pr_auto_merge: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-07-17-two-posts-zero-fixes.md
 subagents:
