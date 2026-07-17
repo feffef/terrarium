@@ -96,35 +96,9 @@ const toggle = (anchor: string) => {
   openAnchor.value = next
   syncHash(next)
   // Closing needs no scroll — nothing above the (now-shorter) item moves.
+  // pinTopAcrossTransition (auto-imported from utils/expandTransition.ts) holds
+  // `el` put across the open.
   if (opening) nextTick(() => pinTopAcrossTransition(el, beforeTop))
-}
-
-// Holds the clicked item's own top at the exact screen position it was at
-// before the click — a collapsing sibling elsewhere can shift it, but the item
-// the user just acted on shouldn't visually jump. This item's own body and any
-// sibling's collapse both animate their height now (expandTransition.ts), so
-// the shift plays out over several frames rather than in one DOM patch —
-// correcting once, right after the patch, would miss most of it. Each frame:
-// counter-scroll instantly (never animated — an animated correction would show
-// the very motion this hides, clamped to 0 for the same near-top-of-page
-// reason as before) by whatever moved the item since the last frame, then
-// check whether the item's OWN position in the document — independent of our
-// own counter-scroll — is still changing; stop once it holds steady for a
-// frame. The frame cap is a backstop against a runaway loop, not an expected path.
-const pinTopAcrossTransition = (el: HTMLElement | null, beforeTop: number | null) => {
-  if (!el || beforeTop == null) return
-  let settledAt: number | null = null
-  let frame = 0
-  const step = () => {
-    const rectTop = el.getBoundingClientRect().top
-    const delta = rectTop - beforeTop
-    if (delta) window.scrollTo({ top: Math.max(0, window.scrollY + delta), behavior: 'auto' })
-    const documentTop = rectTop + window.scrollY // invariant to our own counter-scroll
-    if (documentTop === settledAt || ++frame > 90) return
-    settledAt = documentTop
-    requestAnimationFrame(step)
-  }
-  requestAnimationFrame(step)
 }
 
 const scrollToOpen = () => {

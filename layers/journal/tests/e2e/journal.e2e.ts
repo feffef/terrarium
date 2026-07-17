@@ -11,12 +11,38 @@
 // (ADR-0004 amendment; tests/README.md).
 import { describe, expect, it } from 'vitest'
 import { $fetch } from '@nuxt/test-utils/e2e'
+import type { Locator, Page } from 'playwright-core'
 import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 import type { renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
+import { PIN_SETTLED_EVENT } from '../../app/utils/expandTransition.ts'
 
 export interface JournalE2EContext {
   entryRoutes: string[]
   renderAndCollectErrors: typeof renderAndCollectErrors
+}
+
+// Await the app's scroll-pin via its PIN_SETTLED_EVENT instead of polling a
+// timeout (issue #450). `armPinSettled` must run before the click that fires the
+// event so the one-shot listener can't miss it; `awaitPinSettled` then blocks on it.
+type PinSettledWindow = Window & { __pinSettled?: Promise<void> }
+async function armPinSettled(page: Page): Promise<void> {
+  await page.evaluate((event) => {
+    const w = window as PinSettledWindow
+    w.__pinSettled = new Promise((resolve) => {
+      window.addEventListener(event, () => resolve(), { once: true })
+    })
+  }, PIN_SETTLED_EVENT)
+}
+async function awaitPinSettled(page: Page): Promise<void> {
+  await page.evaluate(() => (window as PinSettledWindow).__pinSettled)
+}
+
+// Open via dispatchEvent, not `locator.click()`: click() auto-scrolls the target
+// into view, which shifts the card before the app reads its pin baseline and breaks
+// these position assertions where there's no scroll anchoring to absorb it (issue
+// #450; docs/agents/verifying-ui-changes.md — click auto-scroll).
+function clickHeadNoScroll(card: Locator): Promise<void> {
+  return card.locator('.head').dispatchEvent('click')
 }
 
 /** Register the journal Tenant's L2 assertions under the caller's active suite. */
@@ -151,10 +177,8 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         const id = await card.getAttribute('id')
         const topOf = () =>
           page.evaluate((cardId) => document.getElementById(cardId!)!.getBoundingClientRect().top, id)
-        // Park the card mid-viewport, then let Playwright settle its OWN
-        // pre-click scroll-into-view first — `before` must be measured after
-        // that settles, or the click's implicit scroll (not the app) would
-        // account for part of the observed movement.
+        // Park the card mid-viewport, then measure `before` (opened without a
+        // scroll via clickHeadNoScroll, so it matches the app's pin baseline).
         await page.evaluate((cardId) => {
           const el = document.getElementById(cardId!)!
           window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top - (window.innerHeight - 120))
@@ -162,16 +186,14 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         await card.locator('.head').scrollIntoViewIfNeeded()
         const before = await topOf()
         expect(before).toBeGreaterThan(250) // precondition: parked well below the top
-        await card.locator('.head').click()
+        await armPinSettled(page)
+        await clickHeadNoScroll(card)
         await page.locator('.feed .card.open .detail').first().waitFor({ state: 'visible' })
-        // Poll past the (async, possibly animated) settle: with no sibling
-        // reflowing above it, the card's own top must be unchanged by opening.
-        // Timeout raised past expect.poll's 1000ms default: pinTopAcrossTransition
-        // (index.vue) settles over up to 90 rAF frames by design — a backstop, not
-        // the common case, but one that can itself exceed 1s of wall time on a
-        // loaded CI runner, which flaked this poll under the default timeout.
-        await expect.poll(topOf, { timeout: 5000 }).toBeGreaterThan(before - 15)
-        expect(await topOf()).toBeLessThan(before + 15)
+        // With no sibling reflowing above it, opening must leave the card's top put.
+        await awaitPinSettled(page)
+        const after = await topOf()
+        expect(after).toBeGreaterThan(before - 15)
+        expect(after).toBeLessThan(before + 15)
         expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
       } finally {
         await page.close()
@@ -192,23 +214,25 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         const id = await card.getAttribute('id')
         const topOf = () =>
           page.evaluate((cardId) => document.getElementById(cardId!)!.getBoundingClientRect().top, id)
-        // Park mid-viewport, then let Playwright settle its OWN pre-click
-        // scroll-into-view before measuring `before` — see the previous test.
+        // Park mid-viewport, measure `before` — opened without a scroll, see
+        // the previous test.
         await page.evaluate((cardId) => {
           const el = document.getElementById(cardId!)!
           window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top - (window.innerHeight - 120))
         }, id)
         await card.locator('.head').scrollIntoViewIfNeeded()
         const before = await topOf()
-        await card.locator('.head').click()
+        await armPinSettled(page)
+        await clickHeadNoScroll(card)
         await page.locator('.feed .card.open .detail').first().waitFor({ state: 'visible' })
-        await expect.poll(() => page.locator('.digest-body').count()).toBe(0) // the digest collapsed, shrinking the page above the card
-        // Same settle-timeout headroom as the previous test (see its comment) —
-        // this test's rAF loop has strictly more to chase (the sibling's own
-        // collapse on top of this card's own expand), so it's the more likely of
-        // the two to need it.
-        await expect.poll(topOf, { timeout: 5000 }).toBeGreaterThan(before - 15)
-        expect(await topOf()).toBeLessThan(before + 15)
+        // The pin settles only after both this card's expand and the sibling's
+        // collapse above it finish — so waiting on it also waits out the reflow.
+        await awaitPinSettled(page)
+        await page.locator('.digest-body').first().waitFor({ state: 'detached' })
+        expect(await page.locator('.digest-body').count()).toBe(0) // sibling digest collapsed
+        const after = await topOf()
+        expect(after).toBeGreaterThan(before - 15)
+        expect(after).toBeLessThan(before + 15)
         expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
       } finally {
         await page.close()
