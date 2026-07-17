@@ -249,6 +249,18 @@ export interface SessionFile {
 
 // ── Pure core (unit-tested) ───────────────────────────────────────────────────
 
+/** Drops a `skillsUsed` entry whose name doesn't match a real Skill directory
+ *  under `.agents/skills/` — a session log occasionally names something that
+ *  isn't an actual Skill (e.g. "model"), and that pseudo-entry would otherwise
+ *  surface as noise throughout the scorecard (issue #545, #426's "solution 1",
+ *  left unimplemented when #426 closed). */
+export function filterSkillsUsed(
+  used: { name: string; reason: string }[],
+  validNames: ReadonlySet<string>,
+): { name: string; reason: string }[] {
+  return used.filter((u) => validNames.has(u.name))
+}
+
 /** Skill name → every session log file that named it in `skillsUsed`, across
  *  ALL sessions passed in (the caller decides windowed vs. all-time — this
  *  helper only groups), newest-first and capped at `maxFiles` per Skill
@@ -549,8 +561,12 @@ export function findMisclassifiedKind(sessions: WindowSession[]): MisclassifiedK
 
 // ── FS IO (thin shell) ────────────────────────────────────────────────────────
 
-/** Reads every session log with its source file path attached (`SessionFile`). */
-function readSessionFiles(cwd = root): SessionFile[] {
+/** Reads every session log with its source file path attached (`SessionFile`).
+ *  `skillNames` cross-checks each `skillsUsed` entry against the real Skills
+ *  on disk (`filterSkillsUsed`, issue #545) — defaults to a fresh
+ *  `readSkillNames(cwd)` read, but `scorecard()` passes one in so the
+ *  directory is only read once per run. */
+function readSessionFiles(cwd = root, skillNames: ReadonlySet<string> = readSkillNames(cwd)): SessionFile[] {
   const dir = join(cwd, SESSIONS_DIR)
   if (!existsSync(dir)) return []
   const out: SessionFile[] = []
@@ -566,10 +582,13 @@ function readSessionFiles(cwd = root): SessionFile[] {
         goal: String(raw.goal ?? ''),
         summary: String(raw.summary ?? '').replace(/\s+/g, ' ').trim(),
         endedAt: String(raw.endedAt ?? ''),
-        skillsUsed: used.map((u: Record<string, unknown>) => ({
-          name: String(u.name ?? ''),
-          reason: String(u.reason ?? '').replace(/\s+/g, ' ').trim(),
-        })),
+        skillsUsed: filterSkillsUsed(
+          used.map((u: Record<string, unknown>) => ({
+            name: String(u.name ?? ''),
+            reason: String(u.reason ?? '').replace(/\s+/g, ' ').trim(),
+          })),
+          skillNames,
+        ),
         frictions: frictions
           .map((fr: Record<string, unknown>) => String(fr.severity ?? ''))
           .filter(Boolean),
@@ -633,14 +652,25 @@ function readFrontmatter(text: string, label: string): Record<string, unknown> {
   }
 }
 
-function readOnDiskSkills(cwd = root): Map<string, OnDiskSkill> {
+/** Real Skill directory names under `.agents/skills/` — those containing a
+ *  SKILL.md. The single read `filterSkillsUsed` cross-checks `skillsUsed`
+ *  entries against (issue #545); also backs `readOnDiskSkills` below so the
+ *  directory listing logic isn't duplicated. */
+function readSkillNames(cwd = root): Set<string> {
   const dir = join(cwd, SKILLS_DIR)
-  const out = new Map<string, OnDiskSkill>()
+  const out = new Set<string>()
   if (!existsSync(dir)) return out
   for (const name of readdirSync(dir)) {
-    const md = join(dir, name, 'SKILL.md')
-    if (!existsSync(md)) continue
-    const fm = readFrontmatter(readFileSync(md, 'utf8'), name)
+    if (existsSync(join(dir, name, 'SKILL.md'))) out.add(name)
+  }
+  return out
+}
+
+function readOnDiskSkills(cwd = root, skillNames: ReadonlySet<string> = readSkillNames(cwd)): Map<string, OnDiskSkill> {
+  const dir = join(cwd, SKILLS_DIR)
+  const out = new Map<string, OnDiskSkill>()
+  for (const name of skillNames) {
+    const fm = readFrontmatter(readFileSync(join(dir, name, 'SKILL.md'), 'utf8'), name)
     out.set(name, { description: String(fm.description ?? '').replace(/\s+/g, ' ').trim() })
   }
   return out
@@ -693,11 +723,12 @@ function readSkillEdits(cwd = root): Map<string, SkillEdit[]> {
 // ── Command ─────────────────────────────────────────────────────────────────
 
 export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
-  const files = readSessionFiles(cwd)
+  const skillNames = readSkillNames(cwd)
+  const files = readSessionFiles(cwd, skillNames)
   const all = files.map((e) => e.session)
   const window = pickWindow(all, windowSize)
   const external = readLock(cwd)
-  const rows = buildSkillRows(readOnDiskSkills(cwd), readInventory(cwd), tallyUsage(window), external)
+  const rows = buildSkillRows(readOnDiskSkills(cwd, skillNames), readInventory(cwd), tallyUsage(window), external)
   const { checks, sessions } = buildRegressionChecks(all, readSkillEdits(cwd), external)
   const trailers = readSessionTrailers(cwd)
   const orphanedSessions = findOrphanedSessions(trailers, readKnownSessionIds(cwd))
