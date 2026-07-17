@@ -9,6 +9,7 @@ import {
   buildSkillRows,
   buildSkillSessionFileTotals,
   buildSkillSessionFiles,
+  filterSkillsUsed,
   findHumanPromptedClosures,
   findManuallyRescuedClosures,
   findMisclassifiedKind,
@@ -71,6 +72,36 @@ describe('pickWindow()', () => {
     const before = sessions.map((s) => s.session)
     pickWindow(sessions, 1)
     expect(sessions.map((s) => s.session)).toEqual(before)
+  })
+})
+
+describe('filterSkillsUsed() — issue #545', () => {
+  const validNames = new Set(['tdd', 'close-session'])
+
+  it('drops a skillsUsed entry naming something that is not a real Skill (e.g. "model")', () => {
+    const used = [{ name: 'model', reason: 'used the model' }]
+    expect(filterSkillsUsed(used, validNames)).toEqual([])
+  })
+
+  it('keeps a skillsUsed entry naming a real Skill', () => {
+    const used = [{ name: 'tdd', reason: 'red-green-refactor' }]
+    expect(filterSkillsUsed(used, validNames)).toEqual([{ name: 'tdd', reason: 'red-green-refactor' }])
+  })
+
+  it('filters a mixed list down to only the real Skills, preserving order', () => {
+    const used = [
+      { name: 'tdd', reason: 'r1' },
+      { name: 'model', reason: 'r2' },
+      { name: 'close-session', reason: 'r3' },
+    ]
+    expect(filterSkillsUsed(used, validNames)).toEqual([
+      { name: 'tdd', reason: 'r1' },
+      { name: 'close-session', reason: 'r3' },
+    ])
+  })
+
+  it('drops everything against an empty valid-names set', () => {
+    expect(filterSkillsUsed([{ name: 'tdd', reason: 'r' }], new Set())).toEqual([])
   })
 })
 
