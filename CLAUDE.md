@@ -384,10 +384,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   ```
   The harness *usually* injects this footer into commits for free from its own
   commit template — but verify it actually landed (cloud `-m` commits have been
-  seen skipping the injection) and amend it in if absent. Everything else an agent creates outside this repo's own
-  git history — issues, PR descriptions, PR/issue comments (top-level *and*
-  inline review comments), or a post to any future non-GitHub integration —
-  doesn't: append the same two lines yourself as the last lines of the body.
+  seen skipping the injection) and amend it in if absent. For everything else
+  the footer covers, ADR-0017's Decision section is the full enumerated
+  scope — append the same two lines yourself as the last lines of the body.
 
 ## Repo layout
 
