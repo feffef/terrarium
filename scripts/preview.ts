@@ -325,7 +325,7 @@ async function doShot(args: string[], dev: boolean, wait: ShotWait): Promise<num
       await captureScreenshotWaitingFor(url, out, wait.waitForSelector, windowSize)
     }
     else {
-      captureScreenshot(url, out, windowSize, waitMs)
+      await captureScreenshot(url, out, windowSize, waitMs)
     }
     console.log(`Wrote ${out} (${url})`)
     return 0
