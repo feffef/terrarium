@@ -1,0 +1,89 @@
+schemaVersion: 1
+session: session_01CWmywSYZ2iY919UuP4M2V9
+startedAt: 2026-07-18T17:37:41Z
+endedAt: 2026-07-18T18:51:42Z
+kind: interactive
+goal: Implement 6 backlog issues via parallel agents
+status: in-review
+outcome: 3 PRs open, 2 merged, 1 closed
+summary: 'Human-instructed throughout. User invoked `/implement` for issues 387/427/428/440, then `/implement 325`, then asked about #592 and said "ship it" — all six already carried prior owner green-lights. Orchestrated five Sonnet worktree-isolated impl agents (one per issue), reviewed each returned branch against its Agent Brief in this Opus session (merge-base diffs, not stale-base), and opened individual gated PRs myself rather than letting agents open them. #325 turned out already implemented+merged (PR #352) — closed it as tracker drift with a pointer comment. #428→#590 and #440→#595 merged during the session; #387→#594, #427→#593, and the #592 doc-only governance change (#596, authored directly) remain in-review.'
+prs:
+  - "590"
+  - "593"
+  - "594"
+  - "595"
+  - "596"
+docsRead:
+  - path: CLAUDE.md
+    reason: worktree mechanism-2 discipline + ADR-0003 PR-governance precedence
+skillsUsed:
+  - name: implement
+    reason: invoked as the slash command driving the batch
+  - name: close-session
+    reason: self-judged closure at a coherent waypoint
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "\"#440's worktree-isolated impl agent parked on a background gate without reporting its result — the exact #427/#317 regression, live, during a session partly about fixing it.\""
+    solution: "\"No work lost (branch was committed+pushed clean before parking), so the orchestrator worktree-check caught it; #593's new `pnpm check:worktrees` is the mechanical detector.\""
+    severity: major
+  - description: '"Container restarted mid-session; in-flight `subscribe_pr_activity` calls died with stream-closed errors and had to be retried once the MCP server came back."'
+    solution: Retry subscriptions after a restart; branches were already pushed so nothing was lost.
+    severity: minor
+  - description: '"The harness did not auto-inject the provenance footer on the cloud `-m` commit for #592; had to resolve the id from the env var and amend it in via `-F`."'
+    solution: Known CLAUDE.md caveat — verify the footer landed and amend when absent; done here.
+    severity: minor
+  - description: '"A naive diff of each returned branch against current `origin/main` showed phantom deleted session-log files, because `main` advanced (direct-to-main logs) after each branch cut."'
+    solution: Anchored every review on `git merge-base origin/main <branch>` per CLAUDE.md; phantom vanished.
+    severity: nit
+  - description: '"#325 was already implemented+merged (PR #352, `Closes #292, #349, #325`) but left open — the closing keyword silently closed #292/#349 and not #325."'
+    solution: '"Closed manually with a pointer comment; a drift class `scripts/check-triage-drift.ts` (#507) does not currently catch — worth a detector (see ideas)."'
+    severity: minor
+durationSec: 4442
+models:
+  claude-opus-4-8: 191
+toolCounts:
+  ToolSearch: 4
+  mcp__github__issue_read: 12
+  Bash: 24
+  Agent: 5
+  Glob: 1
+  mcp__github__search_pull_requests: 5
+  mcp__github__create_pull_request: 5
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 9
+  AskUserQuestion: 1
+  mcp__github__pull_request_read: 5
+  mcp__github__add_issue_comment: 1
+  mcp__github__issue_write: 2
+  mcp__Claude_Code_Remote__send_later: 2
+  Read: 2
+  Edit: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - CLAUDE.md
+subagents:
+  - type: general-purpose
+    task: "Implement #387 session-id guard"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #427 worktree-sweep script"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #428 doc clarification"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #440 Sparks prototype"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement #325 dev manifest watch"
+    model: sonnet
+gitBranch: claude/sonnet-agents-work-tree-scef8c
+entrypoint: remote_mobile
+cliVersion: 2.1.211
+learnings:
+  - "The ground-truth session id is reachable from repo code two ways — `CLAUDE_CODE_REMOTE_SESSION_ID` (cse_→session_) and the transcript's own sessionId — via `resolveGroundTruthSessionId` (PR #533), which #387's guard reuses rather than re-deriving."
+  - "A merged PR's `Closes #N` keyword can silently close some referenced issues and not others (closed #292/#349, missed #325) — leaving a done issue stranded open."
+ideas:
+  - "Add a triage-drift check (extend `scripts/check-triage-drift.ts` or `audit-skills`) that cross-references merged-PR closing keywords against open-issue state and flags any `Closes #N` whose issue is still open — the exact drift that stranded #325 as open despite PR #352 having shipped it."
