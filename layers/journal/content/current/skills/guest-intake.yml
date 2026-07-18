@@ -1,0 +1,16 @@
+name: guest-intake
+category: platform-operation
+importance: specialist
+role: >-
+  The intake half of the guest-demo pipeline (ADR-0023): runs a bounded,
+  GitHub-comment requirements-refinement session with each guest, borrowing
+  `grilling` and `domain-modeling`'s voice, then hands off to `guest-build` via
+  `ready-for-agent`. Essential whenever the guest pipeline is actually
+  running — a bounded, owner-chosen demo window, not standing operation — so
+  its rarity reflects the window's rarity, not the Skill's value within it.
+observations:
+  - date: 2026-07-18
+    note: >-
+      Newly observed on disk but uninventoried; created this entry from its
+      only windowed use, session_012KajpP5iqjGPQeVzx8wQVr ("Run guest-intake
+      demo loop; resist adversarial requests").

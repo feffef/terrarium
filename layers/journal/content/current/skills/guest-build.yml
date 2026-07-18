@@ -1,0 +1,16 @@
+name: guest-build
+category: platform-operation
+importance: specialist
+role: >-
+  The build half of the guest-demo pipeline (ADR-0023): watches for
+  `ready-for-agent` and ships each guest story as a gated, owner-merged PR,
+  composing `frictions-to-fixes`'s dispatch-and-review machinery. Essential
+  whenever the guest pipeline is actually running — a bounded, owner-chosen
+  demo window, not standing operation — so its rarity reflects the window's
+  rarity, not the Skill's value within it.
+observations:
+  - date: 2026-07-18
+    note: >-
+      Newly observed on disk but uninventoried; created this entry from its
+      only windowed use, session_01CGdWVh7DctbuH1sro8Xs4x ("Make the
+      /guest-build loop token-cheap and prove it end-to-end").
