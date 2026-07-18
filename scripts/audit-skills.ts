@@ -66,6 +66,17 @@ export const RESCUED_GAP_HOURS = 6
 export const DISMISSED_MANUALLY_RESCUED_CLOSURES: ReadonlySet<string> = new Set([
   'session_019pNrzTQb3EV2SJBWXs1bXG', // #397, fixed by #411
 ])
+/** Session ids already tracked on a `humanPromptedClosures` standing thread —
+ *  suppressed so an already-acknowledged entry stops resurfacing in every future
+ *  scorecard (issue #540; `findHumanPromptedClosures` has no recency window of
+ *  its own, so without this the standing thread can't distinguish a genuinely
+ *  new recurrence from the same old already-recorded entries). Append a session
+ *  id here once its presence on the thread has been recorded; this dismisses the
+ *  scorecard *signal* only — the session log itself is untouched. */
+export const DISMISSED_HUMAN_PROMPTED_CLOSURES: ReadonlySet<string> = new Set([
+  'session_015gQvuX4uBkjpzW9yovabVz', // #483
+  'session_01Y11Fou1pRvTW2ucEt1dhX8', // #483
+])
 /** Above this many session-file hits, `skillSessionFiles` caps that Skill's
  *  list to the newest `MAX_SKILL_SESSION_FILES` rather than handing Phase B
  *  (`audit-skills` SKILL.md step 4) an ever-growing full-file read — a
@@ -561,10 +572,17 @@ export function hasHumanPromptedClosure(frictionDescriptions: string[]): boolean
   return frictionDescriptions.some((d) => d.includes(HUMAN_PROMPTED_CLOSURE))
 }
 
-/** The logged sessions that flagged a human-prompted closure, oldest-first. */
-export function findHumanPromptedClosures(sessions: WindowSession[]): HumanPromptedClosure[] {
+/** The logged sessions that flagged a human-prompted closure, oldest-first. A
+ *  session id in `dismissed` (default `DISMISSED_HUMAN_PROMPTED_CLOSURES`) is
+ *  skipped outright — an already-tracked standing-thread entry that would
+ *  otherwise resurface in every future run (issue #540), mirroring the sibling
+ *  `findManuallyRescuedClosures`' dismissal of already-fixed incidents. */
+export function findHumanPromptedClosures(
+  sessions: WindowSession[],
+  dismissed: ReadonlySet<string> = DISMISSED_HUMAN_PROMPTED_CLOSURES,
+): HumanPromptedClosure[] {
   return sessions
-    .filter((s) => s.humanPromptedClosure)
+    .filter((s) => s.humanPromptedClosure && !dismissed.has(s.session))
     .map((s) => ({ session: s.session, endedAt: s.endedAt }))
     .sort((a, b) => a.endedAt.localeCompare(b.endedAt) || a.session.localeCompare(b.session))
 }

@@ -598,6 +598,24 @@ describe('findHumanPromptedClosures()', () => {
       { session: 'b', endedAt: '2026-07-12T00:00:00Z' },
     ])
   })
+
+  it('suppresses a dismissed session id but still surfaces a non-dismissed keyword session (issue #540)', () => {
+    const sessions = [
+      sess({ session: 'tracked', endedAt: '2026-07-10T00:00:00Z', humanPromptedClosure: true }),
+      sess({ session: 'fresh', endedAt: '2026-07-12T00:00:00Z', humanPromptedClosure: true }),
+    ]
+    expect(findHumanPromptedClosures(sessions, new Set(['tracked']))).toEqual([
+      { session: 'fresh', endedAt: '2026-07-12T00:00:00Z' },
+    ])
+  })
+
+  it('defaults to DISMISSED_HUMAN_PROMPTED_CLOSURES, not an empty set', () => {
+    const sessions = [
+      sess({ session: 'session_015gQvuX4uBkjpzW9yovabVz', endedAt: '2026-07-14T11:17:23Z', humanPromptedClosure: true }),
+      sess({ session: 'session_01Y11Fou1pRvTW2ucEt1dhX8', endedAt: '2026-07-14T13:21:51Z', humanPromptedClosure: true }),
+    ]
+    expect(findHumanPromptedClosures(sessions)).toEqual([])
+  })
 })
 
 describe('findManuallyRescuedClosures()', () => {
