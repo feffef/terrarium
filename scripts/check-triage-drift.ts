@@ -302,15 +302,9 @@ export function parseNextLink(linkHeader: string | null): string | null {
   return null
 }
 
-// `curl`, not Node's built-in `fetch`: this environment's outbound HTTPS goes
-// through an agent proxy that Node's `fetch` (undici) only honors with
-// `NODE_USE_ENV_PROXY=1` set *before the process starts* (too late to set
-// from inside the running script) — the same bug PR #558 fixed in
-// `poll-guest-tickets.ts`'s `curlGetPage`, mirrored here. `curl` already
-// respects `HTTPS_PROXY`/the pre-installed CA bundle with no special flags
-// (see /root/.ccr/README.md). `-D`/`-w '%{http_code}'` split the response
-// into a header file (for `Link` pagination) and a status code on stdout; the
-// body goes to its own temp file.
+// See `poll-guest-tickets.ts`'s `curlGetPage` for why `curl` over `fetch`
+// here (issue #567) — mirrored verbatim, down to the header/body temp-file
+// split for `Link`-header pagination.
 function curlGetPage(url: string, token: string, cwd: string): { status: string; body: string; linkHeader: string | null } {
   const dir = mkdtempSync(join(tmpdir(), 'check-triage-drift-'))
   const headerFile = join(dir, 'headers')
