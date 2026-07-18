@@ -95,6 +95,13 @@ It prints JSON:
   `DISMISSED_MANUALLY_RESCUED_CLOSURES` once its fix (#411) landed, so a
   healthy future run won't show it — a genuinely new rescue will surface the
   same way. A session can appear in both, one, or neither.
+- **`misclassifiedKind`** — sessions whose authored `kind` contradicts the
+  `entrypoint: 'remote_trigger'` derived signal (a Routine/`/loop`-fired
+  session implies `kind: autonomous` per CONTEXT.md's Session definitions —
+  issue #449 Gap 2). Per #449's own spec this is a reporting/flagging finding,
+  **not an auto-correction** — informational only, unlike the four signals in
+  step 5 below. Note any flagged session in this run's own summary for
+  awareness; no issue-filing is expected for it.
 - **`skillSessionFiles`** — Skill name → session log file paths that named it,
   across **all** history (not windowed, not bracketed), capped per Skill at the
   newest `MAX_SKILL_SESSION_FILES` (40) for a very-high-usage Skill (issue
@@ -212,6 +219,9 @@ matching log file is itself the evidence; no further screen needed), and **step
 (mechanical, objective — the flagged session id, its keyword or its `gapHours`,
 is itself the evidence). Phase A's regression screen on its own never reaches
 this step — it must clear Phase B first; the step-2 signals have no such gate.
+**`misclassifiedKind` (step 2) is not a fifth signal here** — per #449's own
+spec it's informational only; a flagged session belongs in this run's summary
+for awareness, not a filed issue.
 
 **Step 3 and step 4 are for our own (`external: false`) Skills only.** A pack
 Skill's SKILL.md is not ours to patch (ADR-0015) — for an under-used *external*

@@ -24,6 +24,12 @@ choose. The owner running the loop *is* the standing green-light (ADR-0023,
 mirroring ADR-0022); stop running it and guests may still file issues but nothing
 acts on them.
 
+**`disable-model-invocation` above is deliberate — the ADR-0023 security
+boundary, not a bug.** A session fired by a Routine or `/loop` cannot invoke
+this Skill via the Skill tool; that hard refusal is expected, not something to
+route around. Follow this doc's steps directly as instructions instead (issue
+#568).
+
 **It composes existing Skills — never restate them.** The interview borrows
 `/grilling` (walk the design tree; explore the codebase instead of asking
 whatever the codebase can answer), and the confirmation summary speaks the

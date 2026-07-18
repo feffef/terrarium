@@ -202,6 +202,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   commit — can silently fail to produce a signature regardless of
   author-email correctness. Platform/environment limitation, not a repo bug:
   don't re-diagnose it as one each session.
+- **`CronCreate`/`CronList` state (session-only, in-memory) can silently empty
+  across a session-resume event**, silently dropping a recurring `/loop` job
+  with no error and no notification (observed dropping a `/guest-build` loop
+  mid-run). A session relying on a `/loop`/`CronCreate` job should periodically
+  re-verify it's still registered via `CronList` rather than assuming it
+  persists for its full stated lifetime. Platform/environment limitation, not
+  a repo bug: don't re-diagnose it as one each session (issue #571).
 - **Don't tear down a preview/dev server with `pkill` — use `scripts/preview.ts`.**
   (`shot` for a one-shot screenshot; `start`/`stop` to keep one running — see the
   screenshot section below.) Hand-rolled `pkill -f <pattern>` teardown silently
