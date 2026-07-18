@@ -4,40 +4,37 @@
 // Usage:
 //   pnpm exec tsx scripts/screenshot.ts <url> <out.png> [WxH]
 //
-// The optional third argument sets the capture window size (e.g. `1280x1600`
-// to reach below-the-fold content); it defaults to `1280x800`.
-// Why this shape: `playwright-core` IS a resolvable devDependency today (added
-// for the L2 browser-tier e2e gate, see `package.json` / commit d7bf21f), but
-// the plain capture path still deliberately spawns the pre-installed Chromium
-// binary directly with its built-in headless screenshot flags rather than
-// driving it through a full Playwright browser instance — there's no need to
-// spin up a Playwright driver just for a fixed-wait capture. The selector-wait
-// path (`captureScreenshotWaitingFor`) is the one exception that DOES need the
-// driver, because the bare `--screenshot` flag can't wait for a DOM condition.
-// The binary is resolved via `PLAYWRIGHT_BROWSERS_PATH` (falling back to the
-// conventional `/opt/pw-browsers` default some environments set) — never a
-// hardcoded absolute path baked into the script.
-import { spawnSync } from 'node:child_process'
+// The optional third argument sets the capture size (e.g. `1280x1600` to
+// reach below-the-fold content); it defaults to `1280x800`.
+// Both capture paths drive the pre-installed Chromium through playwright-core
+// (a resolvable devDependency, added for the L2 browser-tier e2e gate — see
+// `package.json` / commit d7bf21f) and set the page's viewport directly via
+// `newPage({ viewport })`, rather than relying on a `--window-size` launch
+// arg: sizing the viewport through the driver is what the requested `WxH`
+// actually lands on pixel-for-pixel — a `--window-size` launch arg alone left
+// a Chromium chrome/viewport offset uncompensated, shipping a captured image
+// shorter than requested (issue #575). The binary is resolved via
+// `PLAYWRIGHT_BROWSERS_PATH` (falling back to the conventional
+// `/opt/pw-browsers` default some environments set) — never a hardcoded
+// absolute path baked into the script.
 import { realpathSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { chromium } from 'playwright-core'
+import { chromium, type Page } from 'playwright-core'
 import { resolveChromiumPath } from './chromium-path'
 
 // A fixed pre-capture wait so client-only/async content (a dynamically-imported
 // mermaid diagram, a chart) has rendered before the shutter fires — a bare
-// `--screenshot` grabbed the pre-render frame and shipped a blank gap (issue
+// screenshot grabbed the pre-render frame and shipped a blank gap (issue
 // #364). Callers that can name the element they're waiting for should prefer
 // `captureScreenshotWaitingFor` over guessing a duration.
 const DEFAULT_WAIT_MS = 2000
 
 const USAGE =
   'Usage: pnpm exec tsx scripts/screenshot.ts <url> <out.png> [WxH]\n' +
-  '  [WxH]  optional window size, two positive integers (e.g. 1280x1600); ' +
-  'defaults to 1280x800.\n' +
-  'Note: headless Chromium prints harmless dbus "Failed to connect to the bus" ' +
-  'ERRORs in containers — expected noise, not a failure.'
+  '  [WxH]  optional capture size, two positive integers (e.g. 1280x1600); ' +
+  'defaults to 1280x800.'
 
-/** Parse an optional `WxH` size argument into `W,H` for `--window-size`. */
+/** Parse an optional `WxH` size argument into `W,H`. */
 function parseSize(size: string): string | undefined {
   const match = /^(\d+)x(\d+)$/.exec(size)
   if (!match) return undefined
@@ -46,72 +43,58 @@ function parseSize(size: string): string | undefined {
   return `${width},${height}`
 }
 
-// Headless Chromium in a container reliably prints harmless dbus ERROR lines
-// to stderr — see the USAGE note above (issue #101). Observed variants include
-// "Failed to connect to the bus" (dbus/bus.cc) and "Failed to call method: ...
-// org.freedesktop.DBus..." (dbus/object_proxy.cc); both come from Chromium's
-// `dbus/` source directory, hence the `ERROR:dbus/` half of the pattern. It's
-// noise, not a failure signal, but it must not swallow a *genuine* Chromium
-// error, so we filter by line rather than dropping stderr wholesale.
-const DBUS_NOISE_PATTERN = /Failed to connect to the bus|ERROR:dbus\//
+/** Split an already-parsed `W,H` string (e.g. `1280,800`) into numbers. */
+function parseWindowSize(windowSize: string): [width: number, height: number] {
+  const [width = 1280, height = 800] = windowSize.split(',').map(Number)
+  return [width, height]
+}
 
-/** Re-emit captured stderr lines, dropping known-harmless dbus noise. */
-function emitFilteredStderr(stderr: string): void {
-  const lines = stderr.split('\n').filter((line) => line.length > 0)
-  const real = lines.filter((line) => !DBUS_NOISE_PATTERN.test(line))
-  for (const line of real) {
-    process.stderr.write(`${line}\n`)
+/**
+ * Launch the pre-installed Chromium via playwright-core, open a page sized to
+ * `width`x`height` (the direct-viewport fix for issue #575), run `fn` against
+ * it, then always close the browser — shared by both capture paths below so
+ * the launch args and viewport handling stay single-homed.
+ */
+async function withPage<T>(width: number, height: number, fn: (page: Page) => Promise<T>): Promise<T> {
+  const browser = await chromium.launch({
+    executablePath: resolveChromiumPath(),
+    // --hide-scrollbars: the raw-binary invocation this replaced always
+    // passed it (issue #575); keep captures scrollbar-free by default.
+    args: ['--no-sandbox', '--disable-gpu', '--hide-scrollbars'],
+  })
+  try {
+    const page = await browser.newPage({ viewport: { width, height } })
+    return await fn(page)
+  }
+  finally {
+    await browser.close()
   }
 }
 
 /**
- * Capture a screenshot of `url` to `out` at `windowSize` (a already-parsed
- * `W,H` string, e.g. `1280,800`), driving the pre-installed Chromium directly.
- * Waits `waitMs` (default {@link DEFAULT_WAIT_MS}) for the page to render before
- * capturing, via Chromium's `--virtual-time-budget` — the headless-native way
- * to "advance the page's timers up to N ms, then fire the shutter." Pass `0` to
- * capture immediately. Throws on failure (Chromium missing, launch error, or
- * non-zero exit) — the caller decides how to report it. Exported so
- * `scripts/preview.ts` can reuse the exact same Chromium invocation instead of
- * re-deriving these flags (issue #240): the screenshot flags and dbus-noise
- * filtering stay single-homed here.
+ * Capture a screenshot of `url` to `out` at `windowSize` (an already-parsed
+ * `W,H` string, e.g. `1280,800`). Waits `waitMs` (default
+ * {@link DEFAULT_WAIT_MS}) after navigation for the page to render before
+ * capturing — pass `0` to capture immediately. Throws on failure (Chromium
+ * missing, launch error, navigation error). Exported so `scripts/preview.ts`
+ * can reuse the exact same capture path instead of re-deriving it (issue
+ * #240).
  */
-export function captureScreenshot(url: string, out: string, windowSize = '1280,800', waitMs = DEFAULT_WAIT_MS): void {
-  const chromium = resolveChromiumPath()
-
-  const result = spawnSync(
-    chromium,
-    [
-      '--headless=new',
-      '--disable-gpu',
-      '--no-sandbox',
-      '--hide-scrollbars',
-      `--window-size=${windowSize}`,
-      `--virtual-time-budget=${waitMs}`,
-      `--screenshot=${out}`,
-      url,
-    ],
-    { stdio: ['inherit', 'inherit', 'pipe'], encoding: 'utf8' },
-  )
-
-  if (result.stderr) emitFilteredStderr(result.stderr)
-
-  if (result.error) {
-    throw new Error(`Failed to launch Chromium at "${chromium}": ${result.error.message}`)
-  }
-  if (result.status !== 0) {
-    throw new Error(`Chromium exited with status ${result.status}`)
-  }
+export async function captureScreenshot(url: string, out: string, windowSize = '1280,800', waitMs = DEFAULT_WAIT_MS): Promise<void> {
+  const [width, height] = parseWindowSize(windowSize)
+  await withPage(width, height, async (page) => {
+    await page.goto(url)
+    if (waitMs > 0) await page.waitForTimeout(waitMs)
+    await page.screenshot({ path: out })
+  })
 }
 
 /**
  * Like {@link captureScreenshot}, but waits until `selector` attaches to the DOM
- * before capturing, rather than a fixed duration. The bare `--screenshot` flag
- * can't wait for a DOM condition, so this path drives the same pre-installed
- * Chromium through playwright-core (a resolvable devDependency) — the one place
- * the driver earns its keep (issue #364). Use it when a fixed wait is too
- * fragile and you can name the element you're waiting for (e.g. an async-rendered
- * `.mermaid-diagram svg`). Throws if the selector never appears within `timeoutMs`.
+ * before capturing, rather than a fixed duration. Use it when a fixed wait is
+ * too fragile and you can name the element you're waiting for (e.g. an
+ * async-rendered `.mermaid-diagram svg`, issue #364). Throws if the selector
+ * never appears within `timeoutMs`.
  */
 export async function captureScreenshotWaitingFor(
   url: string,
@@ -120,23 +103,15 @@ export async function captureScreenshotWaitingFor(
   windowSize = '1280,800',
   timeoutMs = 15_000,
 ): Promise<void> {
-  const [width = 1280, height = 800] = windowSize.split(',').map(Number)
-  const browser = await chromium.launch({
-    executablePath: resolveChromiumPath(),
-    args: ['--no-sandbox', '--disable-gpu'],
-  })
-  try {
-    const page = await browser.newPage({ viewport: { width, height } })
+  const [width, height] = parseWindowSize(windowSize)
+  await withPage(width, height, async (page) => {
     await page.goto(url, { waitUntil: 'networkidle' })
     await page.locator(selector).first().waitFor({ state: 'attached', timeout: timeoutMs })
     await page.screenshot({ path: out })
-  }
-  finally {
-    await browser.close()
-  }
+  })
 }
 
-function main(): void {
+async function main(): Promise<void> {
   const [url, out, size] = process.argv.slice(2)
   if (!url || !out) {
     console.error(USAGE)
@@ -151,7 +126,7 @@ function main(): void {
   }
 
   try {
-    captureScreenshot(url, out, windowSize)
+    await captureScreenshot(url, out, windowSize)
   } catch (err) {
     console.error(err instanceof Error ? err.message : String(err))
     process.exit(1)
@@ -171,4 +146,9 @@ function invokedDirectly(): boolean {
   }
 }
 
-if (invokedDirectly()) main()
+if (invokedDirectly()) {
+  main().catch((err) => {
+    console.error(err instanceof Error ? err.stack ?? err.message : String(err))
+    process.exit(1)
+  })
+}
