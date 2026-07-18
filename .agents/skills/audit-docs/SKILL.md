@@ -31,7 +31,8 @@ Classify every surface **before** editing. This decides everything.
 
 - **Live** — the editable guidance: `CLAUDE.md`, `CONTEXT.md`, `CONTEXT-MAP.md`,
   `README.md`, `SECURITY.md`, `docs/agents/*`, `docs/research/*`,
-  `tests/README.md`, `deploy/README.md`, each `layers/<tenant>/CONTEXT.md`, our
+  `docs/proposals/README.md`, `tests/README.md`, `deploy/README.md`, each
+  `layers/<tenant>/CONTEXT.md`, our
   own Skills' `SKILL.md` + sibling files (`external: false`), and the **current
   journal's facing pages** —
   `layers/journal/content/current/pages/{architecture,how-it-works,index}.md`, the

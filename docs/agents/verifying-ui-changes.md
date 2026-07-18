@@ -78,12 +78,16 @@ scrolled or tall page, `clip` alone silently captures the wrong region. Pass
 
 ### Desktop Chromium ignores the page's `<meta name="viewport">`
 
-`--window-size` (Chromium) and Playwright's `viewport` option size the CSS
-layout viewport **directly**; the page's own `<meta name="viewport">` is a
+Playwright's `viewport` option (`newPage({ viewport })`) sizes the CSS layout
+viewport **directly**; the page's own `<meta name="viewport">` is a
 mobile-emulation input and is ignored in an ordinary desktop launch. So a
 "missing viewport meta" theory for a mobile-overflow bug is usually a dead end
 once you've confirmed the tag is present — reproduce the narrow width by setting
-the viewport/window size instead. (Session `…Bhu3Y1`.)
+the viewport via the driver instead. (Session `…Bhu3Y1`.) **Don't reach for a
+`--window-size` launch arg as an equivalent** — it leaves a Chromium
+chrome/viewport offset uncompensated and ships a frame shorter than requested;
+`scripts/screenshot.ts` hit exactly this and switched to `newPage({ viewport })`
+(issue #575).
 
 ### A screenshot needs a wait; the shutter can fire pre-render
 
