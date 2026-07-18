@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01LMmeZwRTneoFhdrJuR8bjm
 startedAt: 2026-07-18T00:45:49Z
-endedAt: 2026-07-18T00:59:23Z
+endedAt: 2026-07-18T01:03:28Z
 kind: autonomous
 goal: Run /audit-skills — audit the Skill Inventory
-status: in-review
-outcome: 2 missing entries added; 2 orphans + closure trend filed
+status: completed
+outcome: "PR #566 merged; 2 orphans + closure trend filed"
 summary: "Scheduled autonomous run of scripts/audit-skills.ts over a 40-session window. Created missing Inventory entries for guest-build and guest-intake (onDisk, used once each this window, no prior entry), graded specialist with observations citing their evidence session. Left the review phantom entry untouched (maps to a built-in CLI Skill invisible to the on-disk scan). Ran all 10 regressionChecks' before/after brackets through Phase A/B: for skills sharing the #448 doc-repoint commit (audit-docs, audit-skills, blog-post, digest, frictions-to-fixes), cross-checking each bracket session against the Skill's actual usedIn list showed none of the bracketed sessions genuinely invoked the edited Skill afterward, so the raw friction-count rise was unrelated noise, not a regression — wrote nothing. close-session/log-session's own edit brackets showed flat-to- improved friction (majors 4→2) despite near-universal usage — no regression. guest-build/guest-intake had no pre-edit baseline (first-ever use landed right after their most recent edit), so no regression comparison was possible; their real first-use friction is noted below as a learning instead, since it isn't attributable to the edit itself and filing it is frictions-to-fixes' remit, not this Skill's. Investigated all 3 orphanedSessions: one (a stray CLI-transcript-id duplicate from 2026-07-16) turned out already resolved same-day by a follow-up commit, so no issue; the other two did real, substantive work (two merged PRs closing #543/#545; a guest-intake SKILL.md edit) with no session log ever committed — filed #564 and #565. Commented on the standing manual-nudge-closure thread (#483) with this run's third humanPromptedClosures instance. Entirely self-directed per the Skill's own script/steps — no human input this session."
 prs:
   - "566"
@@ -34,23 +34,27 @@ frictions:
   - description: The orphanedSessions check flagged a session id that was actually a resolved same-day duplicate (a CLI-transcript-id mis-file, cleaned up by a follow-up commit the same run) — cost a git-log detour to confirm it wasn't a genuine gap before deciding not to file an issue.
     solution: "audit-skills.ts could special-case this: if a later commit's diff removes the exact file path an orphan-flagged commit added, treat it as resolved rather than surfacing it as a fresh orphan."
     severity: minor
-durationSec: 814
+durationSec: 1059
 models:
-  claude-sonnet-5: 136
+  claude-sonnet-5: 168
 toolCounts:
-  Bash: 43
-  Read: 4
-  ToolSearch: 3
+  Bash: 46
+  Read: 5
+  ToolSearch: 4
   mcp__github__search_issues: 6
   mcp__github__get_me: 1
   mcp__github__issue_write: 2
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   Write: 3
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 7
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Edit: 3
 filesEdited:
   - layers/journal/content/current/skills/guest-build.yml
   - layers/journal/content/current/skills/guest-intake.yml
