@@ -1,0 +1,77 @@
+schemaVersion: 1
+session: session_01GL5jaMXhfPa9X67WuQwPLi
+startedAt: 2026-07-18T17:19:47Z
+endedAt: 2026-07-18T17:42:47Z
+kind: interactive
+goal: "Fix #505: gh-less REST fallback for list-open-issues"
+status: in-review
+outcome: Implemented, reviewed, committed, pushed; PR deferred
+summary: "Human-instructed via `/implement 505`. Gave `scripts/list-open-issues.ts` a `gh`-absent REST fallback (via `curl`, mirroring the #567 precedent) so it produces its compact listing in `gh`-less remote sessions instead of crashing with `spawnSync gh ENOENT` and forcing the overflow-prone MCP path (regression of #494/#499). Single-homed the shared `gh`/`rest` strategy helpers (`pickFetchStrategy`, `parseNextLink`, `FetchStrategy`, `hasGhBinary`, `envToken`) into that base module — breaking the import cycle that kept them in `check-triage-drift.ts` — and repointed the three sibling scripts. Ran `/code-review`; acted on all three findings (hoist the two remaining shared helpers, wrap every REST failure with the MCP caveat, fix a stale comment). Gate floor green (lint/typecheck/616 tests/validate:content). Branch pushed; PR not opened — see friction below."
+prs: []
+docsRead:
+  - path: scripts/check-triage-drift.ts
+    reason: existing gh/rest strategy-switch precedent (#507)
+  - path: scripts/poll-guest-tickets.ts
+    reason: "the #567 curl-over-fetch proxy-auth precedent"
+  - path: /root/.ccr/README.md
+    reason: why Node fetch ignores the agent proxy but curl honors it
+  - path: CLAUDE.md
+    reason: single-home rule + PR-governance conflict resolution
+  - path: scripts/list-open-issues.ts
+    reason: (read before editing)
+  - path: tests/unit/list-open-issues.spec.ts
+    reason: (read before editing)
+  - path: tests/unit/check-triage-drift.spec.ts
+    reason: (read before editing)
+  - path: scripts/guest-intake-scan.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: two-axis review surfaced the hoist/stale-comment/error-wrap fixes
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: implement
+    reason: (invoked as a slash command)
+frictions:
+  - description: ADR-0003 auto-opens a gated PR, but the session system prompt forbids opening a PR unless explicitly asked — conflicting instructions.
+    solution: "CLAUDE.md already resolves this (explicit system-prompt restriction wins; surface the conflict). Followed it: pushed the branch, deferred the PR to the user. Smooth because the reconciliation is documented."
+    severity: nit
+  - description: 'Deciding how far to consolidate (pure helpers vs I/O helpers) pitted the single-home rule against the #567 "mirror verbatim" per-script precedent.'
+    solution: "A short note (in these scripts or docs/agents) on when the #567 duplication precedent applies vs when a helper belongs in the base module would save the next author the same deliberation. The seam I landed on — identical cycle-free helpers hoist; Accept/UA-varying curlGetPage stays local — could be that note."
+    severity: minor
+  - description: Node built-in fetch returns 401 "Bad credentials" with the env's 14-char placeholder token; curl through the proxy works. Cost a probe to rediscover.
+    solution: Already documented in poll-guest-tickets.ts's curlGetPage comment (#567); reaching for that precedent first, before probing fetch, would have been faster.
+    severity: nit
+durationSec: 1380
+models:
+  claude-opus-4-8: 155
+toolCounts:
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  Read: 11
+  Bash: 33
+  Glob: 1
+  Grep: 1
+  Edit: 24
+  Skill: 3
+  Agent: 2
+  Write: 1
+filesEdited:
+  - scripts/list-open-issues.ts
+  - scripts/check-triage-drift.ts
+  - scripts/poll-guest-tickets.ts
+  - scripts/guest-intake-scan.ts
+  - tests/unit/check-triage-drift.spec.ts
+  - tests/unit/list-open-issues.spec.ts
+subagents:
+  - type: general-purpose
+    task: "Standards review of #505 fix"
+  - type: general-purpose
+    task: "Spec review of #505 fix"
+gitBranch: claude/implement-505-ss3vlf
+entrypoint: remote_mobile
+cliVersion: 2.1.211
+learnings:
+  - The 14-char GH_TOKEN/GITHUB_TOKEN here are proxy-side references, not real GitHub tokens; the egress proxy swaps in real creds for curl's proxied request, so curl authenticates where a direct Node fetch cannot.
