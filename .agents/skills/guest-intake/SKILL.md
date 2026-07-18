@@ -176,9 +176,9 @@ in-flight marker label, `guest-in-flight`:
   `actionable` output (issue #570) — a candidate that disappears from the
   scan is presumptively claimed by a concurrent session, not evidence of a
   bug in the scan itself.
-- **Staleness.** `scripts/guest-marker.ts` is the single home for the label
-  name and the staleness window (currently 45 minutes — see that file's
-  header comment for why); the scan script already re-surfaces an issue whose
+- **Staleness.** `scripts/guest-marker.ts` (`MARKER_STALE_MINUTES`) is the
+  single home for the label name and the staleness window — see that file's
+  header comment for why; the scan script already re-surfaces an issue whose
   marker has aged past that window, since a marker that old means the session
   that claimed it likely died mid-flight rather than that it's still working.
   Don't hand-check label ages yourself — trust the scan's output.

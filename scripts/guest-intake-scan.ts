@@ -497,6 +497,30 @@ function readIssueEvents(
   return readIssueEventsViaRest(owner, repo, issueNumber, token)
 }
 
+/** `isMarkerFresh`, but tolerant of the events fetch itself failing (a
+ *  transient network/`gh` error) — same fail-closed reasoning as
+ *  `isMarkerFresh`'s own missing-timestamp case (see `guest-marker.ts`): a
+ *  fetch failure on one issue must not crash the whole scan and must not
+ *  risk a double-build by treating an unreadable marker as safe to
+ *  reclaim, so it's logged to stderr and treated as still-fresh (skip). */
+function issueMarkerLooksFresh(
+  strategy: FetchStrategy,
+  owner: string,
+  repo: string,
+  issueNumber: number,
+  cwd: string,
+): boolean {
+  try {
+    return isMarkerFresh(readIssueEvents(strategy, owner, repo, issueNumber, cwd))
+  } catch (err) {
+    console.error(
+      `guest-intake-scan: couldn't fetch events for #${issueNumber} to check its guest-in-flight marker` +
+        ` — skipping it this pass rather than risking a double-claim: ${err instanceof Error ? err.message : String(err)}`,
+    )
+    return true
+  }
+}
+
 // ── Command ──────────────────────────────────────────────────────────────────
 
 export function guestIntakeScan(limit = DEFAULT_LIMIT, cwd = root): ScanReport {
@@ -523,10 +547,7 @@ export function guestIntakeScan(limit = DEFAULT_LIMIT, cwd = root): ScanReport {
   const scanned: ScannedIssue[] = []
   for (const raw of rawIssues) {
     const labels = raw.labels.map((label) => (typeof label === 'string' ? label : label.name))
-    if (hasMarker(labels)) {
-      const events = readIssueEvents(strategy, owner, repo, raw.number, cwd)
-      if (isMarkerFresh(events)) continue
-    }
+    if (hasMarker(labels) && issueMarkerLooksFresh(strategy, owner, repo, raw.number, cwd)) continue
     const comments = readIssueComments(strategy, owner, repo, raw.number, cwd)
     const cursor = cursorState[String(raw.number)] ?? null
     const result = scanIssue(raw, comments, cursor)

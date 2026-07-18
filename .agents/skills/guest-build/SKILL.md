@@ -74,10 +74,9 @@ building against the same issue (#555) — before a human intervened.
   `guest-in-flight` in the same `issue_write` call that applies the step's
   resulting label. A marker left behind after the Skill's own turn ends blocks
   every future pass, guest-intake's included, until it ages out.
-- **Staleness.** `scripts/guest-marker.ts` is the single home for the label
-  name and the staleness window (currently 45 minutes, chosen to comfortably
-  outlast a full dispatch-implement-gate-review cycle — see that file's
-  header comment for the reasoning). `poll-guest-tickets.ts` already
+- **Staleness.** `scripts/guest-marker.ts` (`MARKER_STALE_MINUTES`) is the
+  single home for the label name and the staleness window — see that file's
+  header comment for the reasoning. `poll-guest-tickets.ts` already
   re-surfaces an issue whose marker is older than that window — a marker that
   old means the session that claimed it likely died mid-flight, not that
   it's still working. Don't hand-check label ages yourself — trust the
