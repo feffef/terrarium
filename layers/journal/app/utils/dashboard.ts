@@ -21,7 +21,7 @@
 // export below, and truly generic helpers stay module-private. This module,
 // for its part, never relies on auto-import itself: it stays dependency-free
 // and explicit.
-import type { Friction, Importance, SessionCardView, SessionDoc, Severity, SkillDoc, SparkCluster, SparkItem } from '../types/journal'
+import type { Friction, Importance, SessionCardView, SessionDoc, Severity, SkillDoc, SparkItem } from '../types/journal'
 
 // ── Formatting helpers ───────────────────────────────────
 // Module-private: too generically named to put in the global auto-import
@@ -224,128 +224,31 @@ export function digestAnchor(date: string): string {
 }
 
 // ── Sparks feed (issue #440) ──────────────────────────────
-// Every session's authored `ideas` + `learnings` folded into one cross-session
-// feed, grouped by a NAIVE MECHANICAL keyword-overlap signal — no model or
-// semantic pass (the owner's green-light on #440 scoped this prototype to the
-// mechanical path only; a new runtime dependency would also escalate the
-// merge bar, ADR-0004). A parallel, independent implementation of the same
-// idea lives in `scripts/sparks.ts` — the FS/CLI data layer for a future
-// ideas-to-issue promotion step — rather than a shared import: that script
-// reads session logs straight off disk via Node's `fs`, which this
-// dependency-free, client-bundled module cannot import (this file's header
-// above), so the two stay deliberately separate, small implementations.
+// Every session's authored `ideas` — rough future-work sparks — flattened into
+// one cross-session feed, each carrying the provenance to jump back to its
+// session's card. Ideas-only and capped by owner request: the earlier feed
+// folded in `learnings` too and keyword-clustered the whole corpus, which grew
+// long enough to dominate the entire Space landing. The dashboard now shows
+// just the latest `SPARK_FEED_LIMIT` ideas, densely. (`scripts/sparks.ts`
+// keeps the full keyword-clustering path — the FS/CLI data layer for a future
+// ideas-to-issue promotion step — so that pipeline is unaffected by this
+// display-only trim.)
 //
-// The empirical finding (from running scripts/sparks.ts's CLI against the
-// real corpus — see the PR description): most authored sparks are one-off
-// prose with no real keyword overlap with anything else, so `sparksFeed`
-// returns every item folded into SOME cluster (including size-1 ones); the
-// SFC is expected to render size>1 clusters as the "recurring" feed and fold
-// singletons into a separate, deprioritized list — see the SFC template.
-const SPARK_STOP_WORDS = new Set([
-  'about', 'across', 'after', 'agent', 'agents', 'also', 'and', 'before', 'being',
-  'between', 'both', 'call', 'could', 'doing', 'done', 'down', 'each', 'every',
-  'from', 'have', 'here', 'into', 'issue', 'issues', 'just', 'like', 'make',
-  'made', 'more', 'most', 'much', 'must', 'never', 'onto', 'only', 'other',
-  'over', 'same', 'session', 'sessions', 'should', 'some', 'such', 'take',
-  'taken', 'than', 'that', 'their', 'them', 'then', 'there', 'these', 'this',
-  'those', 'they', 'through', 'under', 'until', 'upon', 'used', 'using', 'very',
-  'wants', 'were', 'what', 'when', 'where', 'which', 'while', 'will', 'with',
-  'within', 'without', 'would', 'your',
-])
+// Sourced only from the `sessions` already resolved for THIS Space (no
+// isolation logic here) — the caller passes the same `sessions.value` the
+// recent-activity feed uses, already newest-first (the SFC queries
+// `.order('endedAt', 'DESC')`), so flattening in encounter order and taking
+// the first `limit` yields the latest ideas with no re-sort of its own.
+export const SPARK_FEED_LIMIT = 15
 
-function sparkKeywords(text: string): string[] {
-  const words = text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, ' ')
-    .split(/\s+/)
-    .filter((w) => w.length > 3 && !SPARK_STOP_WORDS.has(w))
-  return [...new Set(words)].sort()
-}
-
-function sparkKeywordOverlap(a: string[], b: string[]): number {
-  if (!a.length || !b.length) return 0
-  const setB = new Set(b)
-  const intersection = a.filter((w) => setB.has(w)).length
-  const union = new Set([...a, ...b]).size
-  return union === 0 ? 0 : intersection / union
-}
-
-// Same value as `scripts/sparks.ts`'s `CLUSTER_THRESHOLD` — tuned empirically
-// against the real corpus (see that file's comment for the numbers).
-export const SPARK_CLUSTER_THRESHOLD = 0.15
-
-function sparkClusterLabel(items: { keywords: string[] }[]): string {
-  const freq = new Map<string, number>()
-  for (const item of items) for (const k of item.keywords) freq.set(k, (freq.get(k) ?? 0) + 1)
-  const top = [...freq.entries()]
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-    .slice(0, 2)
-    .map(([k]) => k)
-  return top.length ? top.join(' · ') : 'general'
-}
-
-// Every session's ideas/learnings, clustered. Returned in RAW encounter order
-// (not re-sorted here) — `sessions` arrives newest-first (the SFC queries
-// `.order('endedAt', 'DESC')`, same as the recent-activity feed), so a
-// cluster's position reflects when its first member was authored; a
-// singleton's position is therefore already newest-first, which
-// `soloSparkItems` relies on instead of re-deriving date order from the
-// formatted `when` string. `recurringSparkClusters` applies its own
-// prominence (biggest-first) ordering on top, for the themes that actually
-// recurred. Sourced only from the `sessions` already resolved for THIS Space
-// (no isolation logic here) — the caller passes the same `sessions.value` the
-// recent-activity feed uses.
-export function sparksFeed(sessions: SessionDoc[]): SparkCluster[] {
-  const withKeywords: (SparkItem & { keywords: string[] })[] = []
+export function latestIdeas(sessions: SessionDoc[], limit = SPARK_FEED_LIMIT): SparkItem[] {
+  const out: SparkItem[] = []
   for (const s of sessions) {
     const when = sessionWhen(s.endedAt)
     const anchor = sessionAnchor(s.session)
     for (const idea of s.ideas ?? []) {
-      withKeywords.push({ spark: idea, kind: 'idea', session: s.session, when, anchor, keywords: sparkKeywords(idea) })
-    }
-    for (const learning of s.learnings ?? []) {
-      withKeywords.push({ spark: learning, kind: 'learning', session: s.session, when, anchor, keywords: sparkKeywords(learning) })
+      out.push({ spark: idea, kind: 'idea', session: s.session, when, anchor })
     }
   }
-
-  // Greedy single-link clustering on keyword overlap — mirrors
-  // scripts/sparks.ts's clusterByKeywords (kept as a separate, small
-  // implementation rather than a shared import; see the header above).
-  const clusters: (SparkItem & { keywords: string[] })[][] = []
-  const clusterKeywords: string[][] = []
-  for (const item of withKeywords) {
-    const i = clusterKeywords.findIndex((k) => sparkKeywordOverlap(item.keywords, k) >= SPARK_CLUSTER_THRESHOLD)
-    if (i >= 0) {
-      clusters[i]!.push(item)
-      clusterKeywords[i] = [...new Set([...clusterKeywords[i]!, ...item.keywords])]
-    } else {
-      clusters.push([item])
-      clusterKeywords.push(item.keywords)
-    }
-  }
-
-  return clusters.map((cluster) => ({
-    label: sparkClusterLabel(cluster),
-    items: cluster.map(({ keywords: _keywords, ...item }) => item),
-  }))
-}
-
-// The "readable clusters, not a flat dump" split (#440): a cluster of 2+ is a
-// real recurring theme worth a heading, ordered biggest-first; a singleton is
-// really just one item that happened to get a keyword label, which reads as
-// noise dressed up as a group — so singletons fold into `soloSparkItems`
-// instead (see `sparksFeed`'s header for why that stays newest-first with no
-// extra sort here).
-export function recurringSparkClusters(clusters: SparkCluster[]): SparkCluster[] {
-  return clusters
-    .filter((c) => c.items.length > 1)
-    .sort((a, b) => b.items.length - a.items.length || a.label.localeCompare(b.label))
-}
-
-export function soloSparkItems(clusters: SparkCluster[]): SparkItem[] {
-  return clusters.filter((c) => c.items.length === 1).flatMap((c) => c.items)
-}
-
-export function sparkTotal(clusters: SparkCluster[]): number {
-  return clusters.reduce((n, c) => n + c.items.length, 0)
+  return out.slice(0, limit)
 }

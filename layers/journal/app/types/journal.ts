@@ -132,20 +132,14 @@ export interface SessionCardView {
 }
 
 // ── Sparks feed (issue #440) ──────────────────────────────
-// One authored idea/learning, flattened out of its SessionDoc with the
-// provenance the dashboard needs to link back to that session's card.
+// One authored idea, flattened out of its SessionDoc with the provenance the
+// dashboard needs to link back to that session's card. `kind` stays a union
+// for provenance even though the dashboard feed now surfaces only `idea`s (see
+// dashboard.ts's `latestIdeas`).
 export interface SparkItem {
   spark: string
   kind: 'idea' | 'learning'
   session: string
   when: string
   anchor: string
-}
-
-// A mechanically-clustered group of SparkItems sharing a naive keyword-overlap
-// signal (see dashboard.ts's `sparksFeed` header for why this is mechanical
-// only, not semantic).
-export interface SparkCluster {
-  label: string
-  items: SparkItem[]
 }
