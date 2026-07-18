@@ -15,6 +15,8 @@ import {
   isAlreadyLanded,
   recoverDroppedScratch,
   scratchHashOf,
+  SESSION_ID_MISMATCH_FRICTION,
+  withSessionIdMismatchFriction,
 } from '../../scripts/session-end.ts'
 import { SESSIONS_DIR, validateEntry } from '../../scripts/log-session.ts'
 import { extractTrace, parseTranscript, stitch, STAGING_DIR, type AuthoredScratch } from '../../scripts/session-trace.ts'
@@ -217,5 +219,25 @@ describe('isAlreadyLanded() / scratchHashOf() — the landing gate (#148)', () =
 
   it('treats an unreadable sentinel as not-landed (fail open, so the log lands)', () => {
     expect(isAlreadyLanded(raw, 'not json{')).toBe(false)
+  })
+})
+
+describe('withSessionIdMismatchFriction() — the recorded-signal half of the issue #387 guard', () => {
+  it('is a no-op when there are no mismatches to report', () => {
+    expect(withSessionIdMismatchFriction(scratch, [])).toBe(scratch)
+  })
+
+  it('appends a blocker friction carrying the greppable marker and the offending detail, without dropping existing frictions', () => {
+    const withMismatch = withSessionIdMismatchFriction(scratch, [
+      { sha: 'deadbeef0000', found: 'session_WRONG', expected: 'session_REAL' },
+    ])
+    expect(withMismatch.frictions).toHaveLength(scratch.frictions.length + 1)
+    const added = withMismatch.frictions.at(-1)!
+    expect(added.severity).toBe('blocker')
+    expect(added.description).toContain(SESSION_ID_MISMATCH_FRICTION)
+    expect(added.description).toContain('session_WRONG')
+    expect(added.description).toContain('session_REAL')
+    // original frictions untouched, not mutated in place
+    expect(withMismatch.frictions.slice(0, -1)).toEqual(scratch.frictions)
   })
 })
