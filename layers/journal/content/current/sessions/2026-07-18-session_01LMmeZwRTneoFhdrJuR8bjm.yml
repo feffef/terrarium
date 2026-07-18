@@ -1,0 +1,63 @@
+schemaVersion: 1
+session: session_01LMmeZwRTneoFhdrJuR8bjm
+startedAt: 2026-07-18T00:45:49Z
+endedAt: 2026-07-18T00:59:23Z
+kind: autonomous
+goal: Run /audit-skills — audit the Skill Inventory
+status: in-review
+outcome: 2 missing entries added; 2 orphans + closure trend filed
+summary: "Scheduled autonomous run of scripts/audit-skills.ts over a 40-session window. Created missing Inventory entries for guest-build and guest-intake (onDisk, used once each this window, no prior entry), graded specialist with observations citing their evidence session. Left the review phantom entry untouched (maps to a built-in CLI Skill invisible to the on-disk scan). Ran all 10 regressionChecks' before/after brackets through Phase A/B: for skills sharing the #448 doc-repoint commit (audit-docs, audit-skills, blog-post, digest, frictions-to-fixes), cross-checking each bracket session against the Skill's actual usedIn list showed none of the bracketed sessions genuinely invoked the edited Skill afterward, so the raw friction-count rise was unrelated noise, not a regression — wrote nothing. close-session/log-session's own edit brackets showed flat-to- improved friction (majors 4→2) despite near-universal usage — no regression. guest-build/guest-intake had no pre-edit baseline (first-ever use landed right after their most recent edit), so no regression comparison was possible; their real first-use friction is noted below as a learning instead, since it isn't attributable to the edit itself and filing it is frictions-to-fixes' remit, not this Skill's. Investigated all 3 orphanedSessions: one (a stray CLI-transcript-id duplicate from 2026-07-16) turned out already resolved same-day by a follow-up commit, so no issue; the other two did real, substantive work (two merged PRs closing #543/#545; a guest-intake SKILL.md edit) with no session log ever committed — filed #564 and #565. Commented on the standing manual-nudge-closure thread (#483) with this run's third humanPromptedClosures instance. Entirely self-directed per the Skill's own script/steps — no human input this session."
+prs:
+  - "566"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: land recipe for the self-merge tier
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-17-session_01CGdWVh7DctbuH1sro8Xs4x.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-17-session_012KajpP5iqjGPQeVzx8wQVr.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/frictions-to-fixes.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this run's own Skill
+  - name: close-session
+    reason: PR-open closure point
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: "scripts/audit-skills.ts's scorecard now emits a misclassifiedKind field (issue #449 Gap 2 — flags a session whose authored kind contradicts entrypoint:remote_trigger) that SKILL.md's step 2 doesn't document at all — no guidance on what, if anything, to do with it."
+    solution: Either document misclassifiedKind as a fifth signal in SKILL.md step 2/5 (with its own action, e.g. a comment on the closure-nudge thread or a dedicated one), or explicitly note it's informational-only if that's the intent — right now a run has to guess.
+    severity: minor
+  - description: The orphanedSessions check flagged a session id that was actually a resolved same-day duplicate (a CLI-transcript-id mis-file, cleaned up by a follow-up commit the same run) — cost a git-log detour to confirm it wasn't a genuine gap before deciding not to file an issue.
+    solution: "audit-skills.ts could special-case this: if a later commit's diff removes the exact file path an orphan-flagged commit added, treat it as resolved rather than surfacing it as a fresh orphan."
+    severity: minor
+durationSec: 814
+models:
+  claude-sonnet-5: 136
+toolCounts:
+  Bash: 43
+  Read: 4
+  ToolSearch: 3
+  mcp__github__search_issues: 6
+  mcp__github__get_me: 1
+  mcp__github__issue_write: 2
+  mcp__github__add_issue_comment: 1
+  Write: 3
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/skills/guest-build.yml
+  - layers/journal/content/current/skills/guest-intake.yml
+gitBranch: claude/upbeat-sagan-o8dr0a
+entrypoint: remote_trigger
+cliVersion: 2.1.212
+trigger: audit-skills
+learnings:
+  - Two windowed sessions (session_015PgK5s6dkbKrW7jagzTZRE — edited layers/midden/CONTEXT.md, root CONTEXT.md, and CONTEXT-MAP.md while building the Midden Tenant; session_016cGM4wnw4nNBFBef4ve1vC — authored ADR-0023 from scratch) did squarely domain-modeling-shaped work without invoking the domain-modeling Skill, but neither session logged a friction about it and both outcomes were merged without reported quality issues — ambiguous whether this is a genuine "opportunity missed" (a demotion candidate) or just two sessions handling a small amount of glossary/ADR work inline without needing the dedicated process. Didn't demote given domain-modeling is CONTEXT.md's own canonical "essential" example and the evidence bar for reversing that should be unambiguous — left as a citable data point for a future run to weigh if the pattern recurs.
+  - "guest-build's and guest-intake's only windowed usage sessions (session_01CGdWVh7DctbuH1sro8Xs4x, session_012KajpP5iqjGPQeVzx8wQVr) each carried real, well-evidenced friction about the Skills themselves — guest-build's disable-model-invocation hard-blocks the Skill tool even via its own documented /loop firing path (moderate); guest-intake's SKILL.md gives no guidance for a single account's sustained multi-technique probing across many rounds (moderate); and there's no in-flight marker so two concurrent guest sessions can't see they're negotiating/building the same issue (moderate, nearly caused contradictory PRs for #555). None of this is attributable to either Skill's own most recent edit (both edits landed right before these sessions' first-ever use, so there's no pre-edit baseline to compare against) — it's real product friction, but frictions-to-fixes' remit to survey and dispatch, not a regression this Skill's step 4 can act on."
