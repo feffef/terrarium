@@ -15,7 +15,7 @@
 // distinct from the exports, or the bindings merge and vue-tsc rejects the
 // ambiguity (see dashboard.ts's header comment).
 import { routingMap } from '#routing'
-import type { SessionDoc, SkillDoc } from '../../../../types/journal'
+import type { SessionDoc, SkillDoc, SparkItem } from '../../../../types/journal'
 
 const route = useRoute()
 const tenant = 'journal'
@@ -121,7 +121,10 @@ onMounted(() => {
   // never fires hashchange, so this can't loop back on syncHash().
   window.addEventListener('hashchange', openFromHash)
 })
-onBeforeUnmount(() => window.removeEventListener('hashchange', openFromHash))
+onBeforeUnmount(() => {
+  window.removeEventListener('hashchange', openFromHash)
+  if (copiedResetTimer) clearTimeout(copiedResetTimer)
+})
 // No cast: `collections.skills`/`collections.sessions` are this Tenant's own
 // literal collection keys, so `data.value.{skills,sessions}` already carry the
 // real, generated item types — the SAME types `SkillDoc`/`SessionDoc` alias.
@@ -140,13 +143,29 @@ const sessionKindCounts = computed(() => kindCounts(sessions.value))
 const referencedPrs = computed(() => prRefs(sessions.value))
 const referencedPrParts = computed(() => prRefsParts(referencedPrs.value))
 
-// Cross-session Sparks feed (issue #440) — see dashboard.ts's sparksFeed
-// header for the mechanical-clustering rationale and why recurring themes
-// and true one-offs get split into two computed()s instead of one flat list.
-const sparkClusters = computed(() => sparksFeed(sessions.value))
-const recurringSparks = computed(() => recurringSparkClusters(sparkClusters.value))
-const soloSparks = computed(() => soloSparkItems(sparkClusters.value))
-const totalSparks = computed(() => sparkTotal(sparkClusters.value))
+// Cross-session Sparks feed (issue #440) — the latest authored ideas across
+// every session, flattened newest-first and capped; see dashboard.ts's
+// latestIdeas header for why it's ideas-only and bounded.
+const ideaSparks = computed(() => latestIdeas(sessions.value))
+
+// Each idea carries a copy button that puts a ready-made `/grill-with-docs`
+// prompt (ideaGrillPrompt, auto-imported) on the clipboard, so a reader can
+// paste it straight into Claude to sharpen the idea. Keyed by index for the
+// "copied" flash — several ideas can share one session, so the row index, not
+// the session anchor, identifies which button was pressed.
+const copiedIdeaIndex = ref<number | null>(null)
+let copiedResetTimer: ReturnType<typeof setTimeout> | null = null
+const copyIdeaPrompt = async (item: SparkItem, i: number) => {
+  try {
+    await navigator.clipboard.writeText(ideaGrillPrompt(item))
+    copiedIdeaIndex.value = i
+    if (copiedResetTimer) clearTimeout(copiedResetTimer)
+    copiedResetTimer = setTimeout(() => (copiedIdeaIndex.value = null), 1600)
+  } catch {
+    // Clipboard unavailable (insecure origin, denied permission) — the button
+    // just doesn't confirm rather than surfacing an error.
+  }
+}
 
 const platformSkills = computed(() => ownSkills(skills.value))
 const externalSkillTotal = computed(() => externalSkillCount(skills.value))
@@ -252,58 +271,6 @@ useSeoMeta({
       </ul>
     </section>
 
-    <!-- Sparks — every session's authored ideas + learnings, folded into one
-         cross-session feed (issue #440). Grouped by a NAIVE MECHANICAL
-         keyword-overlap signal only (no model/semantic pass) — recurring
-         themes (2+ sparks) get a labeled cluster; genuine one-offs fold into
-         a plain "Other sparks" list rather than each getting its own
-         meaningless 1-item "cluster" (see dashboard.ts's sparksFeed header). -->
-    <section class="panel sparks">
-      <div class="section-head">
-        <h2>Sparks</h2>
-        <span class="count">{{ totalSparks }} across every session</span>
-      </div>
-      <p class="panel-intro">
-        Ideas and learnings agents authored across every session log, folded into
-        one feed. Recurring themes are grouped by a mechanical keyword-overlap
-        signal, not a themed summary — click a spark's session chip to jump to
-        its full log below.
-      </p>
-      <template v-if="totalSparks">
-        <ul v-if="recurringSparks.length" class="spark-clusters">
-          <!-- key by index, not cluster.label: two DIFFERENT mechanical clusters can land
-               on the same top-2-keyword label (e.g. two distinct groups both surfacing
-               "allow · claude") without actually merging — a real duplicate-label case
-               observed against the live corpus, not a hypothetical. -->
-          <li v-for="(cluster, ci) in recurringSparks" :key="ci" class="spark-cluster">
-            <h3 class="spark-cluster-label">{{ cluster.label }}</h3>
-            <ul class="spark-items">
-              <li v-for="(item, i) in cluster.items" :key="i" class="spark-item">
-                <span class="spark-kind" :data-kind="item.kind">{{ item.kind }}</span>
-                <span class="spark-text">{{ item.spark }}</span>
-                <button type="button" class="spark-src" @click="toggle(item.anchor)">
-                  {{ item.when }} <span aria-hidden="true">→</span>
-                </button>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <div v-if="soloSparks.length" class="spark-solo-block">
-          <h3 class="spark-cluster-label">Other sparks</h3>
-          <ul class="spark-items">
-            <li v-for="(item, i) in soloSparks" :key="i" class="spark-item">
-              <span class="spark-kind" :data-kind="item.kind">{{ item.kind }}</span>
-              <span class="spark-text">{{ item.spark }}</span>
-              <button type="button" class="spark-src" @click="toggle(item.anchor)">
-                {{ item.when }} <span aria-hidden="true">→</span>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </template>
-      <p v-else class="empty">No sparks logged in this Space yet.</p>
-    </section>
-
     <!-- State of this Space -->
     <section class="tiles" aria-label="State of this Space">
       <JournalStatTile
@@ -359,6 +326,58 @@ useSeoMeta({
 
       <!-- Rail -->
       <aside class="rail">
+        <!-- Sparks — the latest authored ideas across every session, flattened into
+             one dense, newest-first feed and capped (issue #440; ideas-only + bounded
+             per owner request — see dashboard.ts's latestIdeas header). Homed in the
+             rail so it reads as a right-side side card on desktop without sharing a
+             vertical band with the Daily digests accordion — a side-by-side there
+             coupled the two panels' heights and broke the digest scroll-pin at wide
+             viewports (PR #597 CI). -->
+        <section class="panel sparks">
+          <div class="section-head">
+            <h2>Sparks</h2>
+            <span class="count">latest {{ ideaSparks.length }} idea{{ ideaSparks.length === 1 ? '' : 's' }}</span>
+          </div>
+          <ol v-if="ideaSparks.length" class="spark-items">
+            <li v-for="(item, i) in ideaSparks" :key="i" class="spark-item">
+              <button
+                type="button"
+                class="spark-copy"
+                :class="{ copied: copiedIdeaIndex === i }"
+                :aria-label="`Copy a grill-with-docs prompt to refine this idea (from session ${item.session})`"
+                :title="copiedIdeaIndex === i ? 'Copied grill prompt' : 'Copy grill prompt for this idea'"
+                @click="copyIdeaPrompt(item, i)"
+              >
+                <!-- A lightbulb doubled like the copy icon's two-sheet motif: a
+                     back bulb offset up-right, and a front bulb (surface-filled to
+                     notch the overlap) down-left. "Copy this idea." -->
+                <svg
+                  class="spark-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                >
+                  <g transform="translate(5 0.5) scale(0.7)">
+                    <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+                    <path d="M9 18h6" />
+                  </g>
+                  <g transform="translate(-0.5 5) scale(0.7)">
+                    <path
+                      d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"
+                      style="fill: var(--jd-surface)"
+                    />
+                    <path d="M9 18h6" />
+                    <path d="M10 21h4" />
+                  </g>
+                </svg>
+              </button>
+              <span class="spark-text">{{ item.spark }}</span>
+              <button type="button" class="spark-src" @click="toggle(item.anchor)">
+                {{ item.when }} <span aria-hidden="true">→</span>
+              </button>
+            </li>
+          </ol>
+          <p v-else class="empty">No ideas logged in this Space yet.</p>
+        </section>
+
         <section class="panel">
           <div class="section-head">
             <h2>Friction signal</h2>
@@ -581,45 +600,26 @@ h1 {
 }
 .digest-body :deep(ul) { margin: 0 0 0.7rem; padding-left: 1.1rem; color: var(--jd-muted); }
 
-.sparks { margin-top: 1.75rem; }
-.spark-clusters, .spark-items { list-style: none; margin: 0; padding: 0; }
-.spark-clusters { display: flex; flex-direction: column; gap: 1.1rem; }
-.spark-solo-block { margin-top: 1.1rem; }
-.spark-cluster-label {
-  margin: 0 0 0.5rem;
-  font-family: var(--jd-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--jd-accent);
-}
-.spark-items { display: flex; flex-direction: column; gap: 0.55rem; }
+/* Dense feed: tight rows separated by hairlines rather than gaps, so the
+   latest ideas stay compact instead of dominating the Space landing. Each row
+   is [copy-idea icon] · [idea text] · [session deep-link]. */
+.spark-items { list-style: none; margin: 0; padding: 0; }
 .spark-item {
   display: grid;
   grid-template-columns: max-content 1fr max-content;
-  gap: 0.6rem;
+  gap: 0.1rem 0.7rem;
   align-items: baseline;
-  font-size: 0.9rem;
+  padding: 0.32rem 0;
+  border-top: 1px solid var(--jd-line);
+  font-size: 0.84rem;
   color: var(--jd-muted);
-  line-height: 1.5;
+  line-height: 1.4;
 }
-.spark-kind {
-  font-family: var(--jd-mono);
-  font-size: 0.64rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--jd-faint);
-  border: 1px solid var(--jd-line);
-  border-radius: 999px;
-  padding: 0.05rem 0.45rem;
-  white-space: nowrap;
-}
-.spark-kind[data-kind='idea'] { color: var(--jd-accent); border-color: color-mix(in oklab, var(--jd-accent) 40%, var(--jd-line)); }
+.spark-item:first-child { border-top: 0; }
 .spark-text { overflow-wrap: anywhere; }
 .spark-src {
   font-family: var(--jd-mono);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--jd-faint);
   background: none;
   border: none;
@@ -628,9 +628,24 @@ h1 {
   white-space: nowrap;
 }
 .spark-src:hover { color: var(--jd-accent); text-decoration: underline; }
-@media (max-width: 700px) {
-  .spark-item { grid-template-columns: 1fr; }
+
+/* Copy-the-idea control: the combined lightbulb+copy glyph, no text label.
+   Nudged up a hair so the baseline-aligned grid sits it level with the text. */
+.spark-copy {
+  align-self: start;
+  display: inline-flex;
+  padding: 0;
+  margin-top: 0.05rem;
+  background: none;
+  border: none;
+  color: var(--jd-faint);
+  cursor: pointer;
+  transition: color 0.15s ease, transform 0.15s ease;
 }
+.spark-copy .spark-bulb { width: 1.05rem; height: 1.05rem; display: block; }
+.spark-copy:hover { color: var(--jd-accent); }
+.spark-copy.copied { color: var(--jd-accent); transform: scale(1.12); cursor: default; }
+.spark-copy:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px; border-radius: 4px; }
 
 .section-head {
   display: flex;

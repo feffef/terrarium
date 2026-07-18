@@ -13,15 +13,14 @@ import {
   countFrictions,
   digestAnchor,
   digestList,
-  recurringSparkClusters,
+  ideaGrillPrompt,
+  latestIdeas,
   sessionAnchor,
   sessionDurationMin,
   externalSkillCount,
   sessionWhen,
   sessionModelsLabel,
-  soloSparkItems,
-  sparksFeed,
-  sparkTotal,
+  SPARK_FEED_LIMIT,
   frictionCount,
   frictionTotals,
   kindCounts,
@@ -309,78 +308,58 @@ describe('deep-link anchors', () => {
   })
 })
 
-describe('sparksFeed', () => {
+describe('latestIdeas', () => {
   // Deliberately passed newest-first, matching the SFC's real
-  // `.order('endedAt', 'DESC')` query — sparksFeed relies on that order to
-  // keep a singleton's position newest-first with no re-sort of its own.
+  // `.order('endedAt', 'DESC')` query — latestIdeas relies on that order to
+  // return the latest ideas with no re-sort of its own.
   const sessions = [
-    session({
-      session: 's3', endedAt: '2026-07-07T11:00:00Z',
-      ideas: [], learnings: ['Completely unrelated digest boundary bug'],
-    }),
-    session({
-      session: 's2', endedAt: '2026-07-06T11:00:00Z',
-      ideas: ['Worktree stale branch drift issue'], learnings: [],
-    }),
-    session({
-      session: 's1', endedAt: '2026-07-05T11:00:00Z',
-      ideas: ['Investigate worktree stale head drift'], learnings: [],
-    }),
+    session({ session: 's3', endedAt: '2026-07-07T11:00:00Z', ideas: ['idea three'], learnings: ['a learning'] }),
+    session({ session: 's2', endedAt: '2026-07-06T11:00:00Z', ideas: ['idea two-a', 'idea two-b'], learnings: [] }),
+    session({ session: 's1', endedAt: '2026-07-05T11:00:00Z', ideas: ['idea one'], learnings: ['another learning'] }),
   ]
 
-  it('clusters sparks that share enough keyword overlap, keeping unrelated ones apart', () => {
-    const clusters = sparksFeed(sessions)
-    expect(clusters).toHaveLength(2)
-    const sizes = clusters.map((c) => c.items.length).sort((a, b) => a - b)
-    expect(sizes).toEqual([1, 2])
+  it('flattens ideas only (never learnings), preserving newest-first order', () => {
+    const ideas = latestIdeas(sessions)
+    expect(ideas.map((i) => i.spark)).toEqual(['idea three', 'idea two-a', 'idea two-b', 'idea one'])
+    expect(ideas.every((i) => i.kind === 'idea')).toBe(true)
   })
 
-  it('carries each item\'s kind, session, and deep-link anchor', () => {
-    const [worktreeCluster] = sparksFeed(sessions).sort((a, b) => b.items.length - a.items.length)
-    const bItem = worktreeCluster!.items.find((i) => i.session === 's2')
-    expect(bItem).toMatchObject({
-      spark: 'Worktree stale branch drift issue',
+  it('carries each idea\'s session, formatted when, and deep-link anchor', () => {
+    const [first] = latestIdeas(sessions)
+    expect(first).toEqual({
+      spark: 'idea three',
       kind: 'idea',
-      session: 's2',
-      when: sessionWhen('2026-07-06T11:00:00Z'),
-      anchor: sessionAnchor('s2'),
+      session: 's3',
+      when: sessionWhen('2026-07-07T11:00:00Z'),
+      anchor: sessionAnchor('s3'),
     })
   })
 
-  it('is empty when no session in the feed authored a spark', () => {
-    expect(sparksFeed([session({ ideas: undefined, learnings: undefined })])).toEqual([])
-    expect(sparksFeed([])).toEqual([])
+  it('caps the feed at the given limit, keeping the latest and dropping the oldest', () => {
+    expect(latestIdeas(sessions, 2).map((i) => i.spark)).toEqual(['idea three', 'idea two-a'])
+  })
+
+  it('defaults to SPARK_FEED_LIMIT (15) ideas', () => {
+    expect(SPARK_FEED_LIMIT).toBe(15)
+    const many = Array.from({ length: 18 }, (_, n) => session({ session: `s${n}`, ideas: [`idea ${n}`] }))
+    expect(latestIdeas(many)).toHaveLength(15)
+    // the first 15 in feed order — i.e. the latest, dropping the tail
+    expect(latestIdeas(many).at(-1)!.spark).toBe('idea 14')
+  })
+
+  it('is empty when no session in the feed authored an idea', () => {
+    expect(latestIdeas([session({ ideas: undefined, learnings: ['x'] })])).toEqual([])
+    expect(latestIdeas([session({ ideas: [], learnings: ['x'] })])).toEqual([])
+    expect(latestIdeas([])).toEqual([])
   })
 })
 
-describe('recurringSparkClusters / soloSparkItems / sparkTotal', () => {
-  const sessions = [
-    session({ session: 's3', endedAt: '2026-07-07T11:00:00Z', ideas: [], learnings: ['Completely unrelated digest boundary bug'] }),
-    session({ session: 's2', endedAt: '2026-07-06T11:00:00Z', ideas: ['Worktree stale branch drift issue'], learnings: [] }),
-    session({ session: 's1', endedAt: '2026-07-05T11:00:00Z', ideas: ['Investigate worktree stale head drift'], learnings: [] }),
-  ]
-  const clusters = sparksFeed(sessions)
-
-  it('recurringSparkClusters keeps only clusters with 2+ sparks, biggest first', () => {
-    const recurring = recurringSparkClusters(clusters)
-    expect(recurring).toHaveLength(1)
-    expect(recurring[0]!.items.map((i) => i.session)).toEqual(['s2', 's1'])
-  })
-
-  it('soloSparkItems keeps only true one-off sparks, newest first (no larger cluster to join)', () => {
-    const solo = soloSparkItems(clusters)
-    expect(solo).toHaveLength(1)
-    expect(solo[0]!.session).toBe('s3')
-  })
-
-  it('sparkTotal counts every spark across every cluster', () => {
-    expect(sparkTotal(clusters)).toBe(3)
-  })
-
-  it('all three helpers agree on an all-empty feed', () => {
-    expect(recurringSparkClusters([])).toEqual([])
-    expect(soloSparkItems([])).toEqual([])
-    expect(sparkTotal([])).toBe(0)
+describe('ideaGrillPrompt', () => {
+  it('builds a ready-made /grill-with-docs prompt tagged with the session id, then the idea text', () => {
+    const [idea] = latestIdeas([session({ session: 'session_01ABC', ideas: ['Auto-cluster ideas into issues'] })])
+    expect(ideaGrillPrompt(idea!)).toBe(
+      '/grill-with-docs to refine this idea from session session_01ABC:\n\nAuto-cluster ideas into issues',
+    )
   })
 })
 
