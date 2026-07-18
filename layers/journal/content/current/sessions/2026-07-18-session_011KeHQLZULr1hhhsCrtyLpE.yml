@@ -1,0 +1,55 @@
+schemaVersion: 1
+session: session_011KeHQLZULr1hhhsCrtyLpE
+startedAt: 2026-07-18T17:18:47Z
+endedAt: 2026-07-18T17:23:51Z
+kind: interactive
+goal: Add dismissal set to human-prompted-closure audit check
+status: in-review
+outcome: "Implemented, tested, PR #589 opened"
+summary: "Human-directed implementation of issue #540. Added an optional `dismissed` ReadonlySet parameter to `findHumanPromptedClosures()` in scripts/audit-skills.ts, defaulting to a new `DISMISSED_HUMAN_PROMPTED_CLOSURES` constant seeded with the two #483 standing-thread session ids — mirroring #426's fix for the sibling `findManuallyRescuedClosures()`, so an already-acknowledged entry stops resurfacing in every scorecard run. Added unit coverage for the dismissed-filtered and non-dismissed-surfaced paths plus a default-set assertion. lint, typecheck, and full test suite (618) pass. Ran two-axis code-review (Standards + Spec) via parallel subagents — both clean. Opened gated PR #589 and subscribed to its activity."
+prs:
+  - "589"
+docsRead:
+  - path: scripts/audit-skills.ts
+    reason: (read before editing)
+  - path: tests/unit/audit-skills.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: two-axis Standards+Spec review before landing
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: implement
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 304
+models:
+  claude-opus-4-8: 80
+toolCounts:
+  ToolSearch: 5
+  Bash: 11
+  mcp__github__issue_read: 2
+  Read: 4
+  Grep: 3
+  Edit: 3
+  Skill: 3
+  Agent: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Write: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - scripts/audit-skills.ts
+  - tests/unit/audit-skills.spec.ts
+subagents:
+  - type: general-purpose
+    task: Standards review
+  - type: general-purpose
+    task: Spec review
+gitBranch: claude/implement-540-yd0akm
+entrypoint: remote_mobile
+cliVersion: 2.1.211
