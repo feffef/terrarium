@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01FxNovsJKNpdYKa8X3XRwqd
 startedAt: 2026-07-18T01:05:06Z
-endedAt: 2026-07-18T01:43:33Z
+endedAt: 2026-07-18T02:03:39Z
 kind: autonomous
 goal: "Frictions-to-fixes: turn logged session frictions into merged fixes"
-status: in-review
-outcome: 10 issues filed, 7 PRs dispatched, review in progress
-summary: "Fired by a scheduled Routine, no human in the loop. Delegated the friction survey (20-session window) and tracker screening to a subagent (scripts/session-frictions.ts), which returned 11 never-fixed candidates. Verified subagent claims locally before publishing — caught and corrected one significant misread: the subagent recommended dropping guest-build's disable-model-invocation flag, but ADR-0023 documents that flag as the deliberate \"never self-fire\" security boundary; fixed the recommended solution to a doc clarification instead before filing. Filed 10 dispatchable issues (#567-576) plus one human-only tracking issue (#577, needs an ADR-0023 amendment, out of scope for autonomous dispatch). Commented on 3 already-open recurring-friction threads (#483, #346, #387) with verified citations rather than re-filing duplicates. Dispatched 7 Sonnet impl agents in isolated worktrees (1 batched doc PR + 6 separate code/hard PRs). Reviewing and merging each PR myself as the ADR-0003 review-agent (running /code-review on non-doc changes, amending one PR myself after a code-review finding). All steps agent-initiated per this Skill's own charter; no human direction this run."
+status: completed
+outcome: 10 issues filed, 7 PRs reviewed and merged, all merged into main
+summary: "Fired by a scheduled Routine, no human in the loop throughout. Delegated the friction survey (20-session window) and tracker screening to a subagent (scripts/session-frictions.ts), which returned 11 never-fixed candidates. Verified subagent claims locally before publishing — caught and corrected one significant misread: the subagent recommended dropping guest-build's disable-model-invocation flag, but ADR-0023 documents that flag as the deliberate \"never self-fire\" security boundary; fixed the recommended solution to a doc clarification instead before filing. Filed 10 dispatchable issues (#567-576) plus one human-only tracking issue (#577, needs an ADR-0023 amendment, out of scope for autonomous dispatch). Commented on 3 already-open recurring-friction threads (#483, #346, #387) with verified citations rather than re-filing duplicates. Dispatched 7 Sonnet impl agents in isolated worktrees (1 batched doc PR + 6 separate code/hard PRs). Reviewed every PR myself as the ADR-0003 review-agent, running /code-review (Standards+Spec, parallel sub-agents) on every non-doc change. Code review surfaced genuine functional bugs in 2 of 6 non-doc PRs beyond style — amended both myself (with new regression tests) rather than bouncing back to the impl agent, then re-gated and merged. One PR (#583) had been forked before another dispatched PR (#582) merged and touched the same file's adjacent region; rebased and reconciled both features by hand before merging. All 7 PRs merged into main. Entirely agent-initiated per this Skill's own charter; no human direction this run."
 prs:
   - "578"
   - "579"
@@ -26,11 +26,27 @@ docsRead:
     reason: (no reason given)
   - path: .claude/worktrees/agent-ad4524b80ebb8eac4/scripts/check-triage-drift.ts
     reason: (read before editing)
+  - path: .claude/worktrees/agent-a94827dabaafd520b/scripts/guest-intake-scan.ts
+    reason: (read before editing)
+  - path: .claude/worktrees/agent-a94827dabaafd520b/tests/unit/guest-intake-scan.spec.ts
+    reason: (read before editing)
+  - path: .claude/worktrees/agent-a1bbe920e13ffdadb/scripts/guest-marker.ts
+    reason: (no reason given)
+  - path: .claude/worktrees/agent-a1bbe920e13ffdadb/.agents/skills/guest-build/SKILL.md
+    reason: (read before editing)
+  - path: .claude/worktrees/agent-a1bbe920e13ffdadb/.agents/skills/guest-intake/SKILL.md
+    reason: (read before editing)
+  - path: .claude/worktrees/agent-a1bbe920e13ffdadb/scripts/guest-intake-scan.ts
+    reason: (read before editing)
+  - path: .claude/worktrees/agent-a1bbe920e13ffdadb/scripts/poll-guest-tickets.ts
+    reason: (no reason given)
+  - path: .claude/worktrees/agent-a8fcaa3b4335c21e0/scripts/screenshot.ts
+    reason: (read before editing)
 skillsUsed:
   - name: frictions-to-fixes
     reason: the run itself
   - name: code-review
-    reason: Standards+Spec review on non-doc dispatched PRs
+    reason: Standards+Spec review on every non-doc dispatched PR
   - name: close-session
     reason: (no reason given)
   - name: log-session
@@ -39,37 +55,51 @@ frictions:
   - description: "A dispatched worktree-isolated impl agent (screenshot.ts fix, #575) stalled twice mid-task waiting on a background pnpm gate:scoped run without polling it to completion — had to resume it twice via SendMessage, pasting the gate log's actual tail in, before it proceeded to commit/push/open the PR."
     solution: A dispatch brief that tells an agent to "wait for a background job" should also say how to poll/confirm completion (e.g. check the log file for a completion marker, or use Monitor) rather than checking once and stopping.
     severity: major
-  - description: The Stop hook's git-check fired twice this session flagging "uncommitted changes" that were actually residual cd state into a dispatched subagent's worktree (which had genuine in-progress work), not this session's own repo state.
-    solution: Matches the already-documented CLAUDE.md cd-pollution caveat; re-confirming at repo root resolved both false alarms, but the hook itself can't distinguish the two cases and fires regardless.
+  - description: "Two dispatched impl agents (#582 guest-intake-scan.ts cursor fix, #583 guest-in-flight marker) were forked from origin/main in parallel before either had merged, and both touched the same file (scripts/guest-intake-scan.ts) in adjacent-but-non-overlapping regions. #583's branch went stale the moment #582 merged; merging #583 as-is would have needed a manual rebase-and-reconcile pass regardless of whether git flagged a textual conflict."
+    solution: When dispatching several parallel impl agents whose issues plausibly touch the same file, either serialize the dispatch for that file's issues or budget explicit rebase-and-reconcile time in the review phase before assuming a green gate on each individual branch means it's safe to merge in any order.
+    severity: major
+  - description: "Code review (Standards+Spec sub-agents) surfaced genuine functional bugs beyond style in 2 of 6 non-doc dispatched PRs: #582's cursor logic would perpetually re-flag an already-answered OWNER comment as actionable whenever the cursor state file didn't persist between scans (a realistic case, e.g. a fresh checkout per invocation); #583's events-fetch for the marker-staleness check had no error handling and would crash the whole scan on one issue's transient fetch failure. Neither was caught by the impl agents' own testing, gate runs, or PR descriptions."
+    solution: Validates running full /code-review on every non-doc dispatched PR rather than skimming diffs directly, even for "simple"-tier tickets — worth keeping as the default, not trimming for throughput.
+    severity: moderate
+  - description: The Stop hook's git-check fired multiple times this session flagging "uncommitted changes" or "Unverified commits" that were either residual cd state into a dispatched subagent's worktree (genuine in-progress work, not this session's own repo state) or inherited history / unprovisioned-signing-key cases already documented in CLAUDE.md as known platform limitations.
+    solution: All were correctly resolved by the existing CLAUDE.md guidance (re-confirm at repo root; check origin/main..HEAD before touching flagged commits; don't re-diagnose the missing signing key each session) — no new gap, just confirming the existing guidance holds up under a session that juggles many concurrent worktrees at once.
     severity: minor
   - description: GitHub webhook activity events echoed my own posted PR review comments back into the conversation (author "feffef", since agent writes land under the owner's connection per ADR-0017) — easily recognized as a no-op but could be mistaken for new human input by a less careful pass.
     solution: Worth noting as an expected pattern for future frictions-to-fixes / PR-babysitting runs.
     severity: nit
-durationSec: 2307
+durationSec: 3513
 models:
-  claude-sonnet-5: 276
+  claude-sonnet-5: 479
 toolCounts:
   Agent: 17
   ScheduleWakeup: 2
-  Bash: 31
+  Bash: 82
   ToolSearch: 5
   TaskCreate: 8
   Grep: 2
-  Read: 5
-  TaskUpdate: 11
+  Read: 20
+  TaskUpdate: 14
   mcp__github__issue_write: 11
-  mcp__github__add_issue_comment: 7
-  mcp__github__pull_request_read: 23
+  mcp__github__add_issue_comment: 10
+  mcp__github__pull_request_read: 30
   mcp__Claude_Code_Remote__send_later: 6
-  mcp__github__merge_pull_request: 4
-  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 4
-  mcp__Claude_Code_Remote__delete_trigger: 4
+  mcp__github__merge_pull_request: 7
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 7
+  mcp__Claude_Code_Remote__delete_trigger: 6
   Skill: 3
   SendMessage: 2
-  Edit: 1
-  Write: 1
+  Edit: 11
+  Write: 2
+  mcp__Claude_Code_Remote__list_triggers: 1
+  PushNotification: 1
 filesEdited:
   - .claude/worktrees/agent-ad4524b80ebb8eac4/scripts/check-triage-drift.ts
+  - .claude/worktrees/agent-a94827dabaafd520b/scripts/guest-intake-scan.ts
+  - .claude/worktrees/agent-a94827dabaafd520b/tests/unit/guest-intake-scan.spec.ts
+  - .claude/worktrees/agent-a1bbe920e13ffdadb/.agents/skills/guest-build/SKILL.md
+  - .claude/worktrees/agent-a1bbe920e13ffdadb/.agents/skills/guest-intake/SKILL.md
+  - .claude/worktrees/agent-a1bbe920e13ffdadb/scripts/guest-intake-scan.ts
+  - .claude/worktrees/agent-a8fcaa3b4335c21e0/scripts/screenshot.ts
 subagents:
   - type: general-purpose
     task: Survey and screen session frictions
@@ -116,3 +146,5 @@ gitBranch: claude/hopeful-brown-n04d23
 entrypoint: remote_trigger
 cliVersion: 2.1.212
 trigger: frictions-to-fixes
+learnings:
+  - Auto-subscription to a PR's activity appears to happen automatically at the platform level when a dispatched worktree-isolated subagent opens a PR under the parent session's identity, even though the subagent itself never calls subscribe_pr_activity (per its own brief) — the orchestrating session starts receiving webhook events for it without an explicit subscribe call of its own.
