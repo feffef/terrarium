@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01TvAbufrZMdqHvhGw942CMP
 startedAt: 2026-07-18T04:08:05Z
-endedAt: 2026-07-18T04:29:11Z
+endedAt: 2026-07-18T06:59:07Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: One PR merged, one escalation PR awaiting human review
-summary: "Fully autonomous run (fired by the /audit-docs Routine, no human prompt). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the Live-tier docs, pooled 6 findings with no overlap, and independently fact-checked every one before touching a file (5 CONFIRMED, 1 CONFIRMED-BUT with a corrected characterization). Fixed 4 self-mergeable findings in PR #585 (stale --window-size viewport claim, guest-in-flight-marker + no-AI-disclaimer duplication between guest-build/guest-intake SKILL.md, a CLAUDE.md pointer-then-restate, and a missing docs/proposals/README.md entry in audit-docs' own tier list) — gate green, CI green, merged. One finding (ADR-0023 missing a cross-reference from ADR-0020/ADR-0022) touches human-only ADR files, so it rides its own escalation PR #586 — opened, subscribed, gate green locally, awaiting a human merge; a 60-minute check-in is scheduled."
+status: completed
+outcome: Both PRs merged — self-merge tier and human-reviewed escalation
+summary: "Fully autonomous run (fired by the /audit-docs Routine, no human prompt at kickoff or during the run itself — all PR follow-up was scheduled self check-ins). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the Live-tier docs, pooled 6 findings with no overlap, and independently fact-checked every one before touching a file (5 CONFIRMED, 1 CONFIRMED-BUT with a corrected characterization). Fixed 4 self-mergeable findings in PR #585 (stale --window-size viewport claim, guest-in-flight-marker + no-AI-disclaimer duplication between guest-build/guest-intake SKILL.md, a CLAUDE.md pointer-then-restate, and a missing docs/proposals/README.md entry in audit-docs' own tier list) — gate green, CI green, self-merged. One finding (ADR-0023 missing a cross-reference from ADR-0020/ADR-0022) touched human-only ADR files, so it rode its own escalation PR #586 — opened, subscribed, gate green locally, and merged by the human owner after two silent re-arm check-ins."
 prs:
   - "585"
   - "586"
@@ -51,30 +51,31 @@ frictions:
   - description: "The escalation PR's fresh git worktree had no node_modules, so pnpm gate:scoped failed with \"tsx: not found\" until installed."
     solution: Ran pnpm install in the worktree first (~10s); not a doc gap.
     severity: minor
-durationSec: 1267
+durationSec: 10262
 models:
-  claude-sonnet-5: 201
+  claude-sonnet-5: 228
 toolCounts:
-  Bash: 38
+  Bash: 39
   mcp__github__search_pull_requests: 1
   Agent: 5
   TaskCreate: 7
   ToolSearch: 6
   TaskUpdate: 9
-  Read: 12
-  Edit: 8
+  Read: 13
+  Edit: 9
   Grep: 4
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 11
   mcp__github__enable_pr_auto_merge: 2
   mcp__github__add_issue_comment: 1
   mcp__github__merge_pull_request: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 4
   Skill: 2
   Write: 1
   TaskList: 1
   PushNotification: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/agents/verifying-ui-changes.md
   - .agents/skills/audit-docs/SKILL.md
