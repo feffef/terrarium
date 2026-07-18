@@ -29,6 +29,14 @@
 //   Prints the guest-authored, not-yet-linked `ready-for-agent` issues as
 //   compact JSON: [{ number, title, authorAssociation, htmlUrl }, ...].
 //   Empty array when there's nothing for guest-build to do.
+//
+// Also skips an issue already carrying the `guest-in-flight` marker
+// (issue #570) — another session may be actively negotiating/building it.
+// See `scripts/guest-marker.ts` for the label name, staleness window, and
+// staleness check (single home, shared with `guest-intake-scan.ts`); the
+// timeline fetch below already covers this for free — the Timeline API's
+// `labeled` events carry the same `created_at`/`label` shape the marker
+// check needs, so no second API call is added for it.
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -36,6 +44,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { decodeHtmlEntities, parseOwnerRepo, type RawIssueApiRecord } from './list-open-issues.ts'
 import { parseNextLink, pickFetchStrategy, type FetchStrategy } from './check-triage-drift.ts'
+import { hasMarker, isMarkerFresh } from './guest-marker.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -72,9 +81,13 @@ export interface GuestReadyIssue {
 }
 
 /** One raw timeline-event record, trimmed to the `cross-referenced` shape
- *  this check needs. */
+ *  the linked-PR check needs, plus the `created_at`/`label` fields the
+ *  `guest-in-flight` marker-staleness check (`scripts/guest-marker.ts`)
+ *  needs from the same fetch. */
 export interface RawTimelineEventRecord {
   event: string
+  created_at?: string
+  label?: { name: string }
   source?: {
     issue?: {
       pull_request?: { merged_at: string | null }
@@ -307,11 +320,17 @@ export async function pollGuestTickets(cwd = root): Promise<GuestReadyIssue[]> {
   const { owner, repo } = ownerRepo
   const rawIssues = await readReadyIssues(strategy, owner, repo, cwd)
   const guestIssues = rawIssues.map(toGuestReadyIssue).filter((x): x is GuestReadyIssue => x !== null)
+  const rawLabelsByNumber = new Map(
+    rawIssues.map((raw) => [raw.number, raw.labels.map((label) => (typeof label === 'string' ? label : label.name))]),
+  )
 
   const candidates: GuestReadyIssue[] = []
   for (const issue of guestIssues) {
     const events = await readTimeline(strategy, owner, repo, issue.number, cwd)
-    if (!hasOpenOrMergedLinkedPr(events)) candidates.push(issue)
+    if (hasOpenOrMergedLinkedPr(events)) continue
+    const labels = rawLabelsByNumber.get(issue.number) ?? []
+    if (hasMarker(labels) && isMarkerFresh(events)) continue
+    candidates.push(issue)
   }
   return candidates
 }

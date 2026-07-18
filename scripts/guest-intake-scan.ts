@@ -37,6 +37,15 @@
 //   Scans up to N open issues (default 100) and prints a `ScanReport` JSON:
 //   { scannedCount, counts: {guest-activity, owner-steering,
 //   agent-footer-skip, unrecognized-association}, actionable: ScannedIssue[] }
+//
+// Also skips an issue already carrying the `guest-in-flight` marker
+// (issue #570) whose age can't be shown stale — another session may be
+// actively negotiating/building it. See `scripts/guest-marker.ts` for the
+// label name, staleness window, and staleness check (single home, shared
+// with `poll-guest-tickets.ts`). Unlike that script, this one has no reason
+// to fetch an issue's Timeline otherwise, so the marker check here costs one
+// extra `issues/{n}/events` call, and only for the rare issue that actually
+// carries the marker.
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -44,6 +53,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { isAiAuthored, parseNextLink, pickFetchStrategy, type FetchStrategy } from './check-triage-drift.ts'
 import { decodeHtmlEntities, parseOwnerRepo } from './list-open-issues.ts'
+import { hasMarker, isMarkerFresh, type RawLabelEventRecord } from './guest-marker.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -315,6 +325,33 @@ function readIssueCommentsViaGh(owner: string, repo: string, issueNumber: number
     .map((line) => JSON.parse(line) as RawCommentRecord)
 }
 
+/** The stable issue Events API (`.../issues/{n}/events`, no preview header
+ *  needed) — used only for the marker-staleness check, and only for an
+ *  issue `hasMarker` has already flagged as currently carrying it (see the
+ *  header comment for why this is a second call here rather than folded
+ *  into the Timeline fetch `poll-guest-tickets.ts` reuses). */
+function readIssueEventsViaGh(owner: string, repo: string, issueNumber: number, cwd: string): RawLabelEventRecord[] {
+  const raw = execFileSync(
+    'gh',
+    [
+      'api',
+      '--method',
+      'GET',
+      `repos/${owner}/${repo}/issues/${issueNumber}/events`,
+      '-f',
+      'per_page=100',
+      '--paginate',
+      '--jq',
+      '.[]',
+    ],
+    { cwd, encoding: 'utf8' },
+  )
+  return raw
+    .split('\n')
+    .filter((line) => line.length > 0)
+    .map((line) => JSON.parse(line) as RawLabelEventRecord)
+}
+
 /** One `curl` GET through this environment's proxy, returning the response
  *  body text plus the *last* header block's status line and `Link` header.
  *
@@ -394,6 +431,13 @@ function readIssueCommentsViaRest(owner: string, repo: string, issueNumber: numb
   )
 }
 
+function readIssueEventsViaRest(owner: string, repo: string, issueNumber: number, token: string): RawLabelEventRecord[] {
+  return fetchAllPagesViaRest<RawLabelEventRecord>(
+    `https://api.github.com/repos/${owner}/${repo}/issues/${issueNumber}/events?per_page=100`,
+    token,
+  )
+}
+
 function readOpenIssues(strategy: FetchStrategy, owner: string, repo: string, cwd: string): RawIssueRecord[] {
   if (strategy === 'gh') return readOpenIssuesViaGh(owner, repo, cwd)
   const token = envToken()
@@ -440,6 +484,43 @@ export function writeCursorState(state: ScanCursorState, path: string): void {
   writeFileSync(path, JSON.stringify(state, null, 2) + '\n')
 }
 
+function readIssueEvents(
+  strategy: FetchStrategy,
+  owner: string,
+  repo: string,
+  issueNumber: number,
+  cwd: string,
+): RawLabelEventRecord[] {
+  if (strategy === 'gh') return readIssueEventsViaGh(owner, repo, issueNumber, cwd)
+  const token = envToken()
+  if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
+  return readIssueEventsViaRest(owner, repo, issueNumber, token)
+}
+
+/** `isMarkerFresh`, but tolerant of the events fetch itself failing (a
+ *  transient network/`gh` error) — same fail-closed reasoning as
+ *  `isMarkerFresh`'s own missing-timestamp case (see `guest-marker.ts`): a
+ *  fetch failure on one issue must not crash the whole scan and must not
+ *  risk a double-build by treating an unreadable marker as safe to
+ *  reclaim, so it's logged to stderr and treated as still-fresh (skip). */
+function issueMarkerLooksFresh(
+  strategy: FetchStrategy,
+  owner: string,
+  repo: string,
+  issueNumber: number,
+  cwd: string,
+): boolean {
+  try {
+    return isMarkerFresh(readIssueEvents(strategy, owner, repo, issueNumber, cwd))
+  } catch (err) {
+    console.error(
+      `guest-intake-scan: couldn't fetch events for #${issueNumber} to check its guest-in-flight marker` +
+        ` — skipping it this pass rather than risking a double-claim: ${err instanceof Error ? err.message : String(err)}`,
+    )
+    return true
+  }
+}
+
 // ── Command ──────────────────────────────────────────────────────────────────
 
 export function guestIntakeScan(limit = DEFAULT_LIMIT, cwd = root): ScanReport {
@@ -465,6 +546,8 @@ export function guestIntakeScan(limit = DEFAULT_LIMIT, cwd = root): ScanReport {
 
   const scanned: ScannedIssue[] = []
   for (const raw of rawIssues) {
+    const labels = raw.labels.map((label) => (typeof label === 'string' ? label : label.name))
+    if (hasMarker(labels) && issueMarkerLooksFresh(strategy, owner, repo, raw.number, cwd)) continue
     const comments = readIssueComments(strategy, owner, repo, raw.number, cwd)
     const cursor = cursorState[String(raw.number)] ?? null
     const result = scanIssue(raw, comments, cursor)
