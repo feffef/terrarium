@@ -144,8 +144,9 @@ const referencedPrs = computed(() => prRefs(sessions.value))
 const referencedPrParts = computed(() => prRefsParts(referencedPrs.value))
 
 // Cross-session Sparks feed (issue #440) — the latest authored ideas across
-// every session, flattened newest-first and capped; see dashboard.ts's
-// latestIdeas header for why it's ideas-only and bounded.
+// every session, flattened newest-first and capped, and limited to the last
+// few days; see dashboard.ts's latestIdeas header for why it's ideas-only,
+// bounded, and recency-windowed.
 const ideaSparks = computed(() => latestIdeas(sessions.value))
 
 // Each idea carries a copy button that puts a ready-made `/grill-with-docs`
@@ -327,7 +328,7 @@ useSeoMeta({
             </button>
             <span class="spark-text">{{ item.spark }}</span>
             <button type="button" class="spark-src" @click="toggle(item.anchor)">
-              {{ item.when }} <span aria-hidden="true">→</span>
+              source <span aria-hidden="true">→</span>
             </button>
           </li>
         </ol>
