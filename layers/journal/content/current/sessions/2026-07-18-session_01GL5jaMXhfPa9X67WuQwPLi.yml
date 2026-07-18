@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_01GL5jaMXhfPa9X67WuQwPLi
 startedAt: 2026-07-18T17:19:47Z
-endedAt: 2026-07-18T17:42:47Z
+endedAt: 2026-07-18T18:22:12Z
 kind: interactive
 goal: "Fix #505: gh-less REST fallback for list-open-issues"
-status: in-review
-outcome: Implemented, reviewed, committed, pushed; PR deferred
-summary: "Human-instructed via `/implement 505`. Gave `scripts/list-open-issues.ts` a `gh`-absent REST fallback (via `curl`, mirroring the #567 precedent) so it produces its compact listing in `gh`-less remote sessions instead of crashing with `spawnSync gh ENOENT` and forcing the overflow-prone MCP path (regression of #494/#499). Single-homed the shared `gh`/`rest` strategy helpers (`pickFetchStrategy`, `parseNextLink`, `FetchStrategy`, `hasGhBinary`, `envToken`) into that base module — breaking the import cycle that kept them in `check-triage-drift.ts` — and repointed the three sibling scripts. Ran `/code-review`; acted on all three findings (hoist the two remaining shared helpers, wrap every REST failure with the MCP caveat, fix a stale comment). Gate floor green (lint/typecheck/616 tests/validate:content). Branch pushed; PR not opened — see friction below."
-prs: []
+status: completed
+outcome: "Merged in #591; #505 fixed"
+summary: "Human-instructed via `/implement 505`. Gave `scripts/list-open-issues.ts` a `gh`-absent REST fallback (via `curl`, mirroring the #567 precedent) so it produces its compact listing in `gh`-less remote sessions instead of crashing with `spawnSync gh ENOENT` and forcing the overflow-prone MCP path (regression of #494/#499). Single-homed the shared `gh`/`rest` strategy helpers (`pickFetchStrategy`, `parseNextLink`, `FetchStrategy`, `hasGhBinary`, `envToken`) into that base module — breaking the import cycle that kept them in `check-triage-drift.ts` — and repointed the three sibling scripts. Ran `/code-review`; acted on all three findings. Then, at the owner's explicit request, opened the gated PR (already auto-created as #591 on push) and it merged; CI gate was green. Also at the owner's explicit request, filed #592 proposing to reverse #491 so pushed+green work always opens a PR regardless of a system-prompt restriction."
+prs:
+  - "591"
 docsRead:
   - path: scripts/check-triage-drift.ts
     reason: existing gh/rest strategy-switch precedent (#507)
@@ -16,7 +17,7 @@ docsRead:
   - path: /root/.ccr/README.md
     reason: why Node fetch ignores the agent proxy but curl honors it
   - path: CLAUDE.md
-    reason: single-home rule + PR-governance conflict resolution
+    reason: single-home rule + PR-governance conflict resolution (#491)
   - path: scripts/list-open-issues.ts
     reason: (read before editing)
   - path: tests/unit/list-open-issues.spec.ts
@@ -29,35 +30,41 @@ skillsUsed:
   - name: code-review
     reason: two-axis review surfaced the hoist/stale-comment/error-wrap fixes
   - name: close-session
-    reason: (no reason given)
+    reason: self-judged closure at PR-open
   - name: log-session
     reason: (no reason given)
   - name: implement
     reason: (invoked as a slash command)
 frictions:
-  - description: ADR-0003 auto-opens a gated PR, but the session system prompt forbids opening a PR unless explicitly asked — conflicting instructions.
-    solution: "CLAUDE.md already resolves this (explicit system-prompt restriction wins; surface the conflict). Followed it: pushed the branch, deferred the PR to the user. Smooth because the reconciliation is documented."
-    severity: nit
+  - description: "CLAUDE.md:73-77 (from #491) says a system-prompt PR restriction wins over ADR-0003 auto-open, so I held off opening the PR — but the platform had already auto-created PR #591 on push, making the hold-off partly moot."
+    solution: "Filed #592 to reverse #491 (owner's directive: pushed+green always opens a PR). The observed platform auto-open-on-push behavior is worth folding into #592's decision — it may already moot the \"should the agent open a PR\" debate."
+    severity: minor
   - description: 'Deciding how far to consolidate (pure helpers vs I/O helpers) pitted the single-home rule against the #567 "mirror verbatim" per-script precedent.'
     solution: "A short note (in these scripts or docs/agents) on when the #567 duplication precedent applies vs when a helper belongs in the base module would save the next author the same deliberation. The seam I landed on — identical cycle-free helpers hoist; Accept/UA-varying curlGetPage stays local — could be that note."
     severity: minor
   - description: Node built-in fetch returns 401 "Bad credentials" with the env's 14-char placeholder token; curl through the proxy works. Cost a probe to rediscover.
     solution: Already documented in poll-guest-tickets.ts's curlGetPage comment (#567); reaching for that precedent first, before probing fetch, would have been faster.
     severity: nit
-durationSec: 1380
+durationSec: 3745
 models:
-  claude-opus-4-8: 155
+  claude-opus-4-8: 201
 toolCounts:
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__issue_read: 2
   Read: 11
-  Bash: 33
+  Bash: 35
   Glob: 1
-  Grep: 1
+  Grep: 2
   Edit: 24
   Skill: 3
   Agent: 2
-  Write: 1
+  Write: 2
+  mcp__github__search_issues: 3
+  mcp__github__issue_write: 1
+  mcp__github__pull_request_read: 6
+  mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
 filesEdited:
   - scripts/list-open-issues.ts
   - scripts/check-triage-drift.ts
@@ -75,3 +82,4 @@ entrypoint: remote_mobile
 cliVersion: 2.1.211
 learnings:
   - The 14-char GH_TOKEN/GITHUB_TOKEN here are proxy-side references, not real GitHub tokens; the egress proxy swaps in real creds for curl's proxied request, so curl authenticates where a direct Node fetch cannot.
+  - Pushing a feature branch auto-created the gated PR (#591) via the Claude GitHub app without any create_pull_request call — so a system-prompt "no PR" restriction can prevent the agent from authoring a PR but not the PR from existing.
