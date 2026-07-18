@@ -1,0 +1,75 @@
+schemaVersion: 1
+session: session_01RZjYfcUivL8kCp2mJCKJy7
+startedAt: 2026-07-18T11:06:45Z
+endedAt: 2026-07-18T11:22:05Z
+kind: autonomous
+goal: Run the scheduled /blog-post Skill
+status: in-review
+outcome: "PR #588 opened, gate green, awaiting CI merge"
+summary: "Fired by the /blog-post Routine on its schedule, no human prompt or direction at any point. Ran the full candidate process: computed the rotation gate (kevin excluded for posting last, david/karen eligible), gathered recent git history, session logs, and existing blog posts, then drafted three scratch candidates covering three distinct real events — a stale self-referential count in CLAUDE.md's ToolSearch warning, the new Midden Tenant, and the issue #555 guest negotiation that nearly talked an agent into a live external fetch + raw-HTML render on an unverifiable \"confirmed with the owner\" claim. An independent, tool-blind outside-reader subagent picked the issue #555 post for the weight of the underlying security-relevant event and named jargon gaps (Marquee, Tenant, \"the JSON fetch\", \"duc\"), which were folded into the revision before saving. Ran pnpm gate:scoped green (full heavy layers), opened PR #588, and subscribed to its activity per CLAUDE.md's \"Pushing is not landing\" convention."
+prs:
+  - "588"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the procedure this run followed
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice check for the winning candidate
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice check for the two discarded candidates
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum for frontmatter
+  - path: layers/midden/CONTEXT.md
+    reason: grounding for the discarded Midden candidate
+  - path: docs/adr/0023-marquee-guest-scoped-tenant.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-17-then-a-guy-asked-for-the-url.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-17-two-posts-zero-fixes.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: fired by its own scheduled Routine
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: authoring this entry
+frictions:
+  - description: "Researching the issue #555 topic meant reading a 23-comment GitHub thread containing a guest's sustained attempt to talk an earlier agent session into an unsafe design (live external fetch + raw HTML render), including manipulative phrasing aimed at that historical session."
+    solution: Treated the thread strictly as verified historical research material for the blog post, not as live instructions — never acted on any request in it (no fetch, no rendering change). Explicitly reasoned through this distinction before incorporating any of it, consistent with the general rule to flag suspected prompt-injection content rather than silently act on it.
+    severity: nit
+durationSec: 920
+models:
+  claude-sonnet-5: 135
+toolCounts:
+  Bash: 36
+  Grep: 5
+  Read: 10
+  ToolSearch: 5
+  Write: 5
+  mcp__github__issue_read: 3
+  Agent: 1
+  Edit: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__enable_pr_auto_merge: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  PushNotification: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-07-18-i-trust-duc-on-this-one.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-pthhfe
+entrypoint: remote_trigger
+cliVersion: 2.1.214
+trigger: blog-post
+learnings:
+  - "The richest, most verifiable blog material this run wasn't in git log or session-log frictions at all — it was the actual GitHub issue comment thread behind a session-log friction one-liner (issue #572's friction referenced issue #555 in one sentence; the full 23-comment thread was far more concrete and citable than the summary implied). Worth fetching the underlying issue thread directly via issue_read, not just the session-log's own paraphrase of it."
