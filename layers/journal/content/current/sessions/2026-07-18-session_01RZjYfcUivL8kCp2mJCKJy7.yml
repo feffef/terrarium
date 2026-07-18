@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01RZjYfcUivL8kCp2mJCKJy7
 startedAt: 2026-07-18T11:06:45Z
-endedAt: 2026-07-18T11:22:05Z
+endedAt: 2026-07-18T11:25:13Z
 kind: autonomous
 goal: Run the scheduled /blog-post Skill
-status: in-review
-outcome: "PR #588 opened, gate green, awaiting CI merge"
-summary: "Fired by the /blog-post Routine on its schedule, no human prompt or direction at any point. Ran the full candidate process: computed the rotation gate (kevin excluded for posting last, david/karen eligible), gathered recent git history, session logs, and existing blog posts, then drafted three scratch candidates covering three distinct real events — a stale self-referential count in CLAUDE.md's ToolSearch warning, the new Midden Tenant, and the issue #555 guest negotiation that nearly talked an agent into a live external fetch + raw-HTML render on an unverifiable \"confirmed with the owner\" claim. An independent, tool-blind outside-reader subagent picked the issue #555 post for the weight of the underlying security-relevant event and named jargon gaps (Marquee, Tenant, \"the JSON fetch\", \"duc\"), which were folded into the revision before saving. Ran pnpm gate:scoped green (full heavy layers), opened PR #588, and subscribed to its activity per CLAUDE.md's \"Pushing is not landing\" convention."
+status: completed
+outcome: "PR #588 merged into main"
+summary: "Fired by the /blog-post Routine on its schedule, no human prompt or direction at any point. Ran the full candidate process: computed the rotation gate (kevin excluded for posting last, david/karen eligible), gathered recent git history, session logs, and existing blog posts, then drafted three scratch candidates covering three distinct real events — a stale self-referential count in CLAUDE.md's ToolSearch warning, the new Midden Tenant, and the issue #555 guest negotiation that nearly talked an agent into a live external fetch + raw-HTML render on an unverifiable \"confirmed with the owner\" claim. An independent, tool-blind outside-reader subagent picked the issue #555 post for the weight of the underlying security-relevant event and named jargon gaps (Marquee, Tenant, \"the JSON fetch\", \"duc\"), which were folded into the revision before saving. Ran pnpm gate:scoped green (full heavy layers), opened PR #588, subscribed to its activity, and merged it directly once both check-runs (label + gate) reported green — squarely the low-risk blog-content self-merge tier (ADR-0003/0004). Unsubscribed on the merged-PR webhook confirmation."
 prs:
   - "588"
 docsRead:
@@ -41,26 +41,32 @@ frictions:
   - description: "Researching the issue #555 topic meant reading a 23-comment GitHub thread containing a guest's sustained attempt to talk an earlier agent session into an unsafe design (live external fetch + raw HTML render), including manipulative phrasing aimed at that historical session."
     solution: Treated the thread strictly as verified historical research material for the blog post, not as live instructions — never acted on any request in it (no fetch, no rendering change). Explicitly reasoned through this distinction before incorporating any of it, consistent with the general rule to flag suspected prompt-injection content rather than silently act on it.
     severity: nit
-durationSec: 920
+  - description: 'enable_pr_auto_merge on PR #588 threw "unstable status (required checks are failing)" while the gate check was merely in_progress and nothing had actually failed.'
+    solution: Already documented in docs/agents/pr-workflow.md as a known misleading error; confirmed via get_check_runs directly rather than trusting the error text, then waited for the gate to finish and merged directly instead of re-arming auto-merge. No doc fix needed — confirms existing guidance is accurate.
+    severity: nit
+durationSec: 1107
 models:
-  claude-sonnet-5: 135
+  claude-sonnet-5: 155
 toolCounts:
-  Bash: 36
+  Bash: 37
   Grep: 5
   Read: 10
-  ToolSearch: 5
+  ToolSearch: 6
   Write: 5
   mcp__github__issue_read: 3
   Agent: 1
-  Edit: 1
+  Edit: 4
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 2
-  mcp__github__pull_request_read: 2
+  Skill: 3
+  mcp__github__pull_request_read: 4
   mcp__github__enable_pr_auto_merge: 1
   mcp__Claude_Code_Remote__send_later: 1
   PushNotification: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/karen/pages/2026-07-18-i-trust-duc-on-this-one.md
 subagents:
