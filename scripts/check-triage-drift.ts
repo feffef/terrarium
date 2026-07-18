@@ -45,7 +45,14 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { decodeHtmlEntities, parseOwnerRepo, type RawIssueApiRecord } from './list-open-issues.ts'
+import {
+  decodeHtmlEntities,
+  parseNextLink,
+  parseOwnerRepo,
+  pickFetchStrategy,
+  type FetchStrategy,
+  type RawIssueApiRecord,
+} from './list-open-issues.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -211,19 +218,9 @@ export function toDriftCheckIssue(raw: RawIssueApiRecord): DriftCheckIssue | nul
   }
 }
 
-/** Which GitHub-access path to use: prefer `gh` when the binary is present
- *  (the well-exercised path `list-open-issues.ts` already uses); fall back to
- *  a direct authenticated REST `fetch` when `gh` is absent but a token is
- *  available in the environment (issue #505's fragility, without inheriting
- *  its ENOENT crash). `null` means neither is usable — the caller fails with
- *  an actionable message rather than a raw ENOENT/fetch error. */
-export type FetchStrategy = 'gh' | 'rest'
-
-export function pickFetchStrategy(hasGh: boolean, hasToken: boolean): FetchStrategy | null {
-  if (hasGh) return 'gh'
-  if (hasToken) return 'rest'
-  return null
-}
+// The `gh`/`rest` strategy switch (`pickFetchStrategy`, `parseNextLink`,
+// `FetchStrategy`) is single-homed in `list-open-issues.ts` (issue #505) and
+// imported above.
 
 // ── GitHub shell (thin) ──────────────────────────────────────────────────────
 
@@ -288,18 +285,6 @@ function readIssueCommentsViaGh(owner: string, repo: string, issueNumber: number
     .split('\n')
     .filter((line) => line.length > 0)
     .map((line) => JSON.parse(line) as RawCommentApiRecord)
-}
-
-/** GitHub's `Link` response header, parsed for a `rel="next"` URL — the plain
- *  REST pagination mechanism `gh api --paginate` handles for us on the `gh`
- *  path; the REST fallback has to walk it by hand. */
-export function parseNextLink(linkHeader: string | null): string | null {
-  if (!linkHeader) return null
-  for (const part of linkHeader.split(',')) {
-    const m = part.match(/<([^>]+)>;\s*rel="next"/)
-    if (m) return m[1]!
-  }
-  return null
 }
 
 // See `poll-guest-tickets.ts`'s `curlGetPage` for why `curl` over `fetch`

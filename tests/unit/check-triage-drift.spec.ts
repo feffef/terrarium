@@ -1,8 +1,10 @@
 // Unit tests for the triage-drift detector's pure core (issue #507):
 // AI-authorship detection (the ADR-0017 footer signal), the claimed-label
-// phrase matcher, the most-recent-AI-comment pick, the per-issue drift check,
-// and the gh/REST fetch-strategy decision. The `gh api` / REST shell is a
-// thin wrapper over these, exercised by running the script directly.
+// phrase matcher, the most-recent-AI-comment pick, and the per-issue drift
+// check. The `gh api` / REST shell is a thin wrapper over these, exercised by
+// running the script directly. The shared `gh`/`rest` strategy decision
+// (`pickFetchStrategy`, `parseNextLink`) is single-homed in `list-open-issues.ts`
+// (issue #505) and tested there.
 import { describe, expect, it } from 'vitest'
 import {
   CANONICAL_LABELS,
@@ -11,8 +13,6 @@ import {
   isAiAuthored,
   latestClaimedLabel,
   mostRecentAiComment,
-  parseNextLink,
-  pickFetchStrategy,
   toDriftCheckIssue,
   type RawCommentApiRecord,
 } from '../../scripts/check-triage-drift.ts'
@@ -190,33 +190,5 @@ describe('toDriftCheckIssue()', () => {
       pull_request: { url: 'https://api.github.com/repos/feffef/terrarium/pulls/507' },
     }
     expect(toDriftCheckIssue(record)).toBeNull()
-  })
-})
-
-describe('pickFetchStrategy()', () => {
-  it('prefers gh when the binary is present, regardless of token', () => {
-    expect(pickFetchStrategy(true, true)).toBe('gh')
-    expect(pickFetchStrategy(true, false)).toBe('gh')
-  })
-  it('falls back to rest when gh is absent but a token is available (issue #505)', () => {
-    expect(pickFetchStrategy(false, true)).toBe('rest')
-  })
-  it('returns null when neither is available', () => {
-    expect(pickFetchStrategy(false, false)).toBeNull()
-  })
-})
-
-describe('parseNextLink()', () => {
-  it('extracts the rel="next" URL from a GitHub Link header', () => {
-    const header =
-      '<https://api.github.com/repos/x/y/issues?page=2>; rel="next", <https://api.github.com/repos/x/y/issues?page=5>; rel="last"'
-    expect(parseNextLink(header)).toBe('https://api.github.com/repos/x/y/issues?page=2')
-  })
-  it('returns null when there is no next link (last page)', () => {
-    const header = '<https://api.github.com/repos/x/y/issues?page=1>; rel="prev"'
-    expect(parseNextLink(header)).toBeNull()
-  })
-  it('returns null for a null header', () => {
-    expect(parseNextLink(null)).toBeNull()
   })
 })

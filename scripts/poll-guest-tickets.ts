@@ -42,8 +42,14 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { decodeHtmlEntities, parseOwnerRepo, type RawIssueApiRecord } from './list-open-issues.ts'
-import { parseNextLink, pickFetchStrategy, type FetchStrategy } from './check-triage-drift.ts'
+import {
+  decodeHtmlEntities,
+  parseNextLink,
+  parseOwnerRepo,
+  pickFetchStrategy,
+  type FetchStrategy,
+  type RawIssueApiRecord,
+} from './list-open-issues.ts'
 import { hasMarker, isMarkerFresh } from './guest-marker.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
