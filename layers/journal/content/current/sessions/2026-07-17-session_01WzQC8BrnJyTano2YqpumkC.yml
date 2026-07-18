@@ -1,0 +1,51 @@
+schemaVersion: 1
+session: session_01WzQC8BrnJyTano2YqpumkC
+startedAt: 2026-07-17T06:38:40Z
+endedAt: 2026-07-18T17:31:24Z
+kind: interactive
+goal: Add build-time-fit reframe to guest-intake
+status: completed
+outcome: "Reframe step added; PR #550 merged"
+summary: "Human asked to improve the guest-intake Skill so that when a guest requests something that isn't a good fit for the build-time-only Nuxt Content platform, it explains the limitation and offers three concrete, single-session, no-new-dependency proposals that keep the spirit of the idea, instead of silently under-building or flatly rejecting it. Entire task was human-instructed from the initial prompt; no further green-light was needed since it only edited an own (non-pack) Skill doc. Added a new \"Not a build-time fit? Reframe, don't just reject\" section to .agents/skills/guest-intake/SKILL.md, grounded in ADR-0001's build-time-baked constraint, with three reframe patterns (bake as content, move interactivity client-side, scope as a new page/Space/Tenant) and wired it into the existing confirm/screen flow (ADR-0023) and the \"Run it\" roll-up. Ran `pnpm gate:scoped` (docs-only, all steps green), committed, pushed to the pinned branch, opened gated PR #550, subscribed to its activity, and it merged during this session."
+prs:
+  - "550"
+docsRead:
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: policy home for guest-intake's screen and green-light rules
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: grounds the build-time-only constraint the reframe explains
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: sibling Skill — kept language/flow consistent
+  - path: CONTEXT.md
+    reason: Tenants roster, to ground concrete reframe examples
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: "self-judged closure right after PR #550 opened"
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: subscribe_pr_activity and close-session both hit a stuck open permission dialog immediately after opening the PR, requiring the user to interrupt and flag it before either call could be retried.
+    solution: user resolved the stuck dialog out of band; retrying the identical tool calls afterward succeeded with no code or approach change needed.
+    severity: nit
+durationSec: 125564
+models:
+  claude-sonnet-5: 62
+  <synthetic>: 1
+toolCounts:
+  Bash: 18
+  Read: 3
+  Edit: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  Skill: 3
+  mcp__github__pull_request_read: 1
+  Write: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/guest-intake/SKILL.md
+gitBranch: claude/guest-intake-skill-h9fyj5
+entrypoint: remote_mobile
+cliVersion: 2.1.212
