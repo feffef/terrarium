@@ -50,7 +50,10 @@ interval (a Routine or `/loop`).
 **The standing green-light.** A **Trusted** user (ADR-0020) *starting* the sweep
 is a **standing** ADR-0003 green-light: within that run, `auto-triage` may apply
 `ready-for-agent` to **Trusted-authored** issues autonomously. This is the one
-narrow relaxation; everything else about the green-light rule is unchanged:
+narrow relaxation; everything else about the green-light rule is unchanged
+(**see also [ADR-0023](0023-guest-driven-demo-pipeline.md)**, which mirrors this
+standing-green-light shape for its own bounded, demo-scoped guest pipeline — a
+separate, additive exception, not an amendment to this one):
 
 - **Merge stays gated (ADR-0004).** The sweep authorises *implementation*, not
   *landing*. No self-merge; a human still merges every resulting PR.
