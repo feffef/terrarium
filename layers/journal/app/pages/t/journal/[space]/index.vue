@@ -233,43 +233,107 @@ useSeoMeta({
       </div>
     </section>
 
-    <!-- Daily digests — a plain-language, day-by-day recap of project activity -->
-    <section v-if="digests.length" class="panel digests">
-      <div class="section-head">
-        <h2>Daily digests</h2>
-        <span class="count">newest first</span>
-      </div>
-      <p class="panel-intro">
-        A plain recap of what changed across the project each day — click any day
-        to read the full story.
-      </p>
-      <ul class="digest-list">
-        <li
-          v-for="d in digests"
-          :id="digestAnchor(d.date)"
-          :key="d.doc.path"
-          class="digest"
-          :class="{ open: isOpen(digestAnchor(d.date)) }"
-        >
-          <JournalDisclosure
-            class="drow"
-            :expanded="isOpen(digestAnchor(d.date))"
-            @toggle="toggle(digestAnchor(d.date))"
+    <!-- Digests + Sparks band. On desktop a two-column grid puts Sparks to the
+         RIGHT of the Daily digests; on mobile it collapses to one column
+         (digests first, then Sparks) via the media query below.
+
+         Why a grid and not a float: the pinned column here is the Daily digests
+         accordion. The grid row height tracks the digests (always the taller
+         column — ~14 day rows vs. 15 dense idea rows), so opening/collapsing a
+         digest moves the content below exactly as it did when digests were
+         full-width, and the scroll-pin behaves unchanged. An earlier float put
+         Sparks in the SAME band with a BFC digests, which coupled the two
+         heights and broke the pin e2e at wide viewports (PR #597). Keeping
+         digests the sole height-driver of the row is what makes side-by-side
+         safe here. -->
+    <div v-if="digests.length" class="digests-sparks">
+      <!-- Daily digests — a plain-language, day-by-day recap of project activity -->
+      <section class="panel digests">
+        <div class="section-head">
+          <h2>Daily digests</h2>
+          <span class="count">newest first</span>
+        </div>
+        <p class="panel-intro">
+          A plain recap of what changed across the project each day — click any day
+          to read the full story.
+        </p>
+        <ul class="digest-list">
+          <li
+            v-for="d in digests"
+            :id="digestAnchor(d.date)"
+            :key="d.doc.path"
+            class="digest"
+            :class="{ open: isOpen(digestAnchor(d.date)) }"
           >
-            <span class="digest-date">{{ d.date }}</span>
-            <span class="digest-summary">{{ d.summary }}</span>
-            <span class="caret" aria-hidden="true">{{ isOpen(digestAnchor(d.date)) ? '▾' : '▸' }}</span>
-          </JournalDisclosure>
-          <Transition :css="false" @enter="expandOnEnter" @leave="expandOnLeave">
-            <div v-if="isOpen(digestAnchor(d.date))" class="digest-body-clip">
-              <div class="digest-body">
-                <ContentRenderer :value="d.doc" />
+            <JournalDisclosure
+              class="drow"
+              :expanded="isOpen(digestAnchor(d.date))"
+              @toggle="toggle(digestAnchor(d.date))"
+            >
+              <span class="digest-date">{{ d.date }}</span>
+              <span class="digest-summary">{{ d.summary }}</span>
+              <span class="caret" aria-hidden="true">{{ isOpen(digestAnchor(d.date)) ? '▾' : '▸' }}</span>
+            </JournalDisclosure>
+            <Transition :css="false" @enter="expandOnEnter" @leave="expandOnLeave">
+              <div v-if="isOpen(digestAnchor(d.date))" class="digest-body-clip">
+                <div class="digest-body">
+                  <ContentRenderer :value="d.doc" />
+                </div>
               </div>
-            </div>
-          </Transition>
-        </li>
-      </ul>
-    </section>
+            </Transition>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Sparks — the latest authored ideas across every session, flattened into
+           one dense, newest-first feed and capped (issue #440; ideas-only + bounded
+           per owner request — see dashboard.ts's latestIdeas header). Sits in the
+           right grid column, sticky so it stays in view alongside a long digest list. -->
+      <section class="panel sparks">
+        <div class="section-head">
+          <h2>Sparks</h2>
+          <span class="count">latest {{ ideaSparks.length }} idea{{ ideaSparks.length === 1 ? '' : 's' }}</span>
+        </div>
+        <ol v-if="ideaSparks.length" class="spark-items">
+          <li v-for="(item, i) in ideaSparks" :key="i" class="spark-item">
+            <button
+              type="button"
+              class="spark-copy"
+              :class="{ copied: copiedIdeaIndex === i }"
+              :aria-label="`Copy a grill-with-docs prompt to refine this idea (from session ${item.session})`"
+              :title="copiedIdeaIndex === i ? 'Copied grill prompt' : 'Copy grill prompt for this idea'"
+              @click="copyIdeaPrompt(item, i)"
+            >
+              <!-- A lightbulb doubled like the copy icon's two-sheet motif: a
+                   back bulb offset up-right, and a front bulb (surface-filled to
+                   notch the overlap) down-left. "Copy this idea." -->
+              <svg
+                class="spark-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+              >
+                <g transform="translate(5 0.5) scale(0.7)">
+                  <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+                  <path d="M9 18h6" />
+                </g>
+                <g transform="translate(-0.5 5) scale(0.7)">
+                  <path
+                    d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"
+                    style="fill: var(--jd-surface)"
+                  />
+                  <path d="M9 18h6" />
+                  <path d="M10 21h4" />
+                </g>
+              </svg>
+            </button>
+            <span class="spark-text">{{ item.spark }}</span>
+            <button type="button" class="spark-src" @click="toggle(item.anchor)">
+              {{ item.when }} <span aria-hidden="true">→</span>
+            </button>
+          </li>
+        </ol>
+        <p v-else class="empty">No ideas logged in this Space yet.</p>
+      </section>
+    </div>
 
     <!-- State of this Space -->
     <section class="tiles" aria-label="State of this Space">
@@ -326,58 +390,6 @@ useSeoMeta({
 
       <!-- Rail -->
       <aside class="rail">
-        <!-- Sparks — the latest authored ideas across every session, flattened into
-             one dense, newest-first feed and capped (issue #440; ideas-only + bounded
-             per owner request — see dashboard.ts's latestIdeas header). Homed in the
-             rail so it reads as a right-side side card on desktop without sharing a
-             vertical band with the Daily digests accordion — a side-by-side there
-             coupled the two panels' heights and broke the digest scroll-pin at wide
-             viewports (PR #597 CI). -->
-        <section class="panel sparks">
-          <div class="section-head">
-            <h2>Sparks</h2>
-            <span class="count">latest {{ ideaSparks.length }} idea{{ ideaSparks.length === 1 ? '' : 's' }}</span>
-          </div>
-          <ol v-if="ideaSparks.length" class="spark-items">
-            <li v-for="(item, i) in ideaSparks" :key="i" class="spark-item">
-              <button
-                type="button"
-                class="spark-copy"
-                :class="{ copied: copiedIdeaIndex === i }"
-                :aria-label="`Copy a grill-with-docs prompt to refine this idea (from session ${item.session})`"
-                :title="copiedIdeaIndex === i ? 'Copied grill prompt' : 'Copy grill prompt for this idea'"
-                @click="copyIdeaPrompt(item, i)"
-              >
-                <!-- A lightbulb doubled like the copy icon's two-sheet motif: a
-                     back bulb offset up-right, and a front bulb (surface-filled to
-                     notch the overlap) down-left. "Copy this idea." -->
-                <svg
-                  class="spark-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-                >
-                  <g transform="translate(5 0.5) scale(0.7)">
-                    <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
-                    <path d="M9 18h6" />
-                  </g>
-                  <g transform="translate(-0.5 5) scale(0.7)">
-                    <path
-                      d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"
-                      style="fill: var(--jd-surface)"
-                    />
-                    <path d="M9 18h6" />
-                    <path d="M10 21h4" />
-                  </g>
-                </svg>
-              </button>
-              <span class="spark-text">{{ item.spark }}</span>
-              <button type="button" class="spark-src" @click="toggle(item.anchor)">
-                {{ item.when }} <span aria-hidden="true">→</span>
-              </button>
-            </li>
-          </ol>
-          <p v-else class="empty">No ideas logged in this Space yet.</p>
-        </section>
-
         <section class="panel">
           <div class="section-head">
             <h2>Friction signal</h2>
@@ -551,7 +563,17 @@ h1 {
 /* scroll-margin-top: breathing room when the intro's "full session-log feed" link scrolls here. */
 .feed { scroll-margin-top: 1.5rem; }
 
-.digests { margin-top: 1.75rem; }
+/* Digests + Sparks band. Mobile default: one column (digests, then Sparks) with
+   a gap. Desktop (≥901px, media query below): two columns with Sparks on the
+   RIGHT. `align-items: start` keeps each column its natural height so the row
+   height tracks the (always-taller) digests — see the template comment for why
+   that's what keeps the accordion scroll-pin unaffected. */
+.digests-sparks {
+  margin-top: 1.75rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
+}
 .panel-intro { margin: 0 0 0.95rem; max-width: 72ch; color: var(--jd-muted); font-size: 0.92rem; line-height: 1.5; }
 .digest-list { list-style: none; margin: 0; padding: 0; }
 /* scroll-margin-top: breathing room when a deep-linked digest is scrolled to the viewport top. */
@@ -684,6 +706,18 @@ h1 {
 .friction-note .mono { color: var(--jd-ink); }
 .skill-note { margin: 0.9rem 0 0; font-size: 0.8rem; color: var(--jd-muted); }
 .skill-note .mono { color: var(--jd-ink); }
+
+/* Desktop: Sparks to the RIGHT of the Daily digests. Digests (col 1) drives the
+   row height; Sparks (col 2) is shorter, pinned to the top and made sticky so it
+   trails alongside the long digest list rather than leaving a tall gap. */
+@media (min-width: 901px) {
+  .digests-sparks {
+    grid-template-columns: 1fr clamp(300px, 32%, 360px);
+    gap: 1.6rem;
+    align-items: start;
+  }
+  .digests-sparks .sparks { position: sticky; top: 1rem; }
+}
 
 @media (max-width: 900px) {
   .tiles { grid-template-columns: repeat(2, 1fr); }
