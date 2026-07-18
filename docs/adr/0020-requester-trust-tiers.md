@@ -102,6 +102,11 @@ harness already frames webhook/external content:
    authorises an AFK agent to build it — without a Trusted green-light (see
    `docs/agents/triage-labels.md`). Note the name clash: the `triage` *Skill*
    only categorises (always fine); ADR-0003's `triage` *charter* implements (gated).
+   **See also [ADR-0023](0023-guest-driven-demo-pipeline.md)**, which carves a
+   bounded, demo-scoped additive exception into this rule (a guest's own
+   confirmation stands in for the Trusted green-light, only while the owner is
+   running the guest pipeline) — it does not amend or repeal rule 2, which
+   stands unchanged outside that window.
 3. **Public-originated PRs are human-merged, never auto-merged** — regardless of
    blast-radius classification (this removes the ADR-0004 low-risk auto-merge
    tier for Public authors). Executable code in a fork PR (Vue components, scripts,
