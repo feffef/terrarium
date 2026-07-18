@@ -58,7 +58,9 @@ function parseWindowSize(windowSize: string): [width: number, height: number] {
 async function withPage<T>(width: number, height: number, fn: (page: Page) => Promise<T>): Promise<T> {
   const browser = await chromium.launch({
     executablePath: resolveChromiumPath(),
-    args: ['--no-sandbox', '--disable-gpu'],
+    // --hide-scrollbars: the raw-binary invocation this replaced always
+    // passed it (issue #575); keep captures scrollbar-free by default.
+    args: ['--no-sandbox', '--disable-gpu', '--hide-scrollbars'],
   })
   try {
     const page = await browser.newPage({ viewport: { width, height } })
