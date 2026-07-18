@@ -1,0 +1,118 @@
+schemaVersion: 1
+session: session_01FxNovsJKNpdYKa8X3XRwqd
+startedAt: 2026-07-18T01:05:06Z
+endedAt: 2026-07-18T01:43:33Z
+kind: autonomous
+goal: "Frictions-to-fixes: turn logged session frictions into merged fixes"
+status: in-review
+outcome: 10 issues filed, 7 PRs dispatched, review in progress
+summary: "Fired by a scheduled Routine, no human in the loop. Delegated the friction survey (20-session window) and tracker screening to a subagent (scripts/session-frictions.ts), which returned 11 never-fixed candidates. Verified subagent claims locally before publishing — caught and corrected one significant misread: the subagent recommended dropping guest-build's disable-model-invocation flag, but ADR-0023 documents that flag as the deliberate \"never self-fire\" security boundary; fixed the recommended solution to a doc clarification instead before filing. Filed 10 dispatchable issues (#567-576) plus one human-only tracking issue (#577, needs an ADR-0023 amendment, out of scope for autonomous dispatch). Commented on 3 already-open recurring-friction threads (#483, #346, #387) with verified citations rather than re-filing duplicates. Dispatched 7 Sonnet impl agents in isolated worktrees (1 batched doc PR + 6 separate code/hard PRs). Reviewing and merging each PR myself as the ADR-0003 review-agent (running /code-review on non-doc changes, amending one PR myself after a code-review finding). All steps agent-initiated per this Skill's own charter; no human direction this run."
+prs:
+  - "578"
+  - "579"
+  - "580"
+  - "581"
+  - "582"
+  - "583"
+  - "584"
+docsRead:
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: caught a subagent misread before it became a bad issue recommendation
+  - path: docs/agents/triage-labels.md
+    reason: correct label vocabulary for filed issues
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe and per-tier authority
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .claude/worktrees/agent-ad4524b80ebb8eac4/scripts/check-triage-drift.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run itself
+  - name: code-review
+    reason: Standards+Spec review on non-doc dispatched PRs
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "A dispatched worktree-isolated impl agent (screenshot.ts fix, #575) stalled twice mid-task waiting on a background pnpm gate:scoped run without polling it to completion — had to resume it twice via SendMessage, pasting the gate log's actual tail in, before it proceeded to commit/push/open the PR."
+    solution: A dispatch brief that tells an agent to "wait for a background job" should also say how to poll/confirm completion (e.g. check the log file for a completion marker, or use Monitor) rather than checking once and stopping.
+    severity: major
+  - description: The Stop hook's git-check fired twice this session flagging "uncommitted changes" that were actually residual cd state into a dispatched subagent's worktree (which had genuine in-progress work), not this session's own repo state.
+    solution: Matches the already-documented CLAUDE.md cd-pollution caveat; re-confirming at repo root resolved both false alarms, but the hook itself can't distinguish the two cases and fires regardless.
+    severity: minor
+  - description: GitHub webhook activity events echoed my own posted PR review comments back into the conversation (author "feffef", since agent writes land under the owner's connection per ADR-0017) — easily recognized as a no-op but could be mistaken for new human input by a less careful pass.
+    solution: Worth noting as an expected pattern for future frictions-to-fixes / PR-babysitting runs.
+    severity: nit
+durationSec: 2307
+models:
+  claude-sonnet-5: 276
+toolCounts:
+  Agent: 17
+  ScheduleWakeup: 2
+  Bash: 31
+  ToolSearch: 5
+  TaskCreate: 8
+  Grep: 2
+  Read: 5
+  TaskUpdate: 11
+  mcp__github__issue_write: 11
+  mcp__github__add_issue_comment: 7
+  mcp__github__pull_request_read: 23
+  mcp__Claude_Code_Remote__send_later: 6
+  mcp__github__merge_pull_request: 4
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 4
+  mcp__Claude_Code_Remote__delete_trigger: 4
+  Skill: 3
+  SendMessage: 2
+  Edit: 1
+  Write: 1
+filesEdited:
+  - .claude/worktrees/agent-ad4524b80ebb8eac4/scripts/check-triage-drift.ts
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fetch tracker context for issue filing
+  - type: general-purpose
+    task: Batched doc-only PR for 4 issues
+    model: sonnet
+  - type: general-purpose
+    task: Fix check-triage-drift.ts fetch bug (#567)
+    model: sonnet
+  - type: general-purpose
+    task: Fix guest-intake-scan.ts skip risk (#569)
+    model: sonnet
+  - type: general-purpose
+    task: Fix concurrent guest-session marker (#570, hard)
+    model: sonnet
+  - type: general-purpose
+    task: Add out-of-band-claims doc rule (#572, hard)
+    model: sonnet
+  - type: general-purpose
+    task: Fix audit-skills.ts orphanedSessions false positive (#574)
+    model: sonnet
+  - type: general-purpose
+    task: Fix screenshot.ts viewport height offset (#575)
+    model: sonnet
+  - type: general-purpose
+    task: "Standards review of PR #580 diff"
+  - type: general-purpose
+    task: "Spec review of PR #580 diff against issue #567"
+  - type: general-purpose
+    task: "Standards review of PR #582 diff"
+  - type: general-purpose
+    task: "Spec review of PR #582 diff against issue #569"
+  - type: general-purpose
+    task: "Standards review of PR #583 diff"
+  - type: general-purpose
+    task: "Spec review of PR #583 diff against issue #570"
+  - type: general-purpose
+    task: "Standards review of PR #584 diff"
+  - type: general-purpose
+    task: "Spec review of PR #584 diff against issue #575"
+gitBranch: claude/hopeful-brown-n04d23
+entrypoint: remote_trigger
+cliVersion: 2.1.212
+trigger: frictions-to-fixes
