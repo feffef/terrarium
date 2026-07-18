@@ -15,7 +15,7 @@
 // distinct from the exports, or the bindings merge and vue-tsc rejects the
 // ambiguity (see dashboard.ts's header comment).
 import { routingMap } from '#routing'
-import type { SessionDoc, SkillDoc } from '../../../../types/journal'
+import type { SessionDoc, SkillDoc, SparkItem } from '../../../../types/journal'
 
 const route = useRoute()
 const tenant = 'journal'
@@ -121,7 +121,10 @@ onMounted(() => {
   // never fires hashchange, so this can't loop back on syncHash().
   window.addEventListener('hashchange', openFromHash)
 })
-onBeforeUnmount(() => window.removeEventListener('hashchange', openFromHash))
+onBeforeUnmount(() => {
+  window.removeEventListener('hashchange', openFromHash)
+  if (copiedResetTimer) clearTimeout(copiedResetTimer)
+})
 // No cast: `collections.skills`/`collections.sessions` are this Tenant's own
 // literal collection keys, so `data.value.{skills,sessions}` already carry the
 // real, generated item types — the SAME types `SkillDoc`/`SessionDoc` alias.
@@ -144,6 +147,25 @@ const referencedPrParts = computed(() => prRefsParts(referencedPrs.value))
 // every session, flattened newest-first and capped; see dashboard.ts's
 // latestIdeas header for why it's ideas-only and bounded.
 const ideaSparks = computed(() => latestIdeas(sessions.value))
+
+// Each idea carries a copy button that puts a ready-made `/grill-with-docs`
+// prompt (ideaGrillPrompt, auto-imported) on the clipboard, so a reader can
+// paste it straight into Claude to sharpen the idea. Keyed by index for the
+// "copied" flash — several ideas can share one session, so the row index, not
+// the session anchor, identifies which button was pressed.
+const copiedIdeaIndex = ref<number | null>(null)
+let copiedResetTimer: ReturnType<typeof setTimeout> | null = null
+const copyIdeaPrompt = async (item: SparkItem, i: number) => {
+  try {
+    await navigator.clipboard.writeText(ideaGrillPrompt(item))
+    copiedIdeaIndex.value = i
+    if (copiedResetTimer) clearTimeout(copiedResetTimer)
+    copiedResetTimer = setTimeout(() => (copiedIdeaIndex.value = null), 1600)
+  } catch {
+    // Clipboard unavailable (insecure origin, denied permission) — the button
+    // just doesn't confirm rather than surfacing an error.
+  }
+}
 
 const platformSkills = computed(() => ownSkills(skills.value))
 const externalSkillTotal = computed(() => externalSkillCount(skills.value))
@@ -260,9 +282,18 @@ useSeoMeta({
       <ol v-if="ideaSparks.length" class="spark-items">
         <li v-for="(item, i) in ideaSparks" :key="i" class="spark-item">
           <span class="spark-text">{{ item.spark }}</span>
-          <button type="button" class="spark-src" @click="toggle(item.anchor)">
-            {{ item.when }} <span aria-hidden="true">→</span>
-          </button>
+          <span class="spark-actions">
+            <button
+              type="button"
+              class="spark-copy"
+              :class="{ copied: copiedIdeaIndex === i }"
+              :aria-label="`Copy a grill-with-docs prompt to refine this idea (from session ${item.session})`"
+              @click="copyIdeaPrompt(item, i)"
+            >{{ copiedIdeaIndex === i ? 'copied ✓' : 'copy ⧉' }}</button>
+            <button type="button" class="spark-src" @click="toggle(item.anchor)">
+              {{ item.when }} <span aria-hidden="true">→</span>
+            </button>
+          </span>
         </li>
       </ol>
       <p v-else class="empty">No ideas logged in this Space yet.</p>
@@ -562,7 +593,8 @@ h1 {
 }
 .spark-item:first-child { border-top: 0; }
 .spark-text { overflow-wrap: anywhere; }
-.spark-src {
+.spark-actions { display: inline-flex; align-items: baseline; gap: 0.7rem; white-space: nowrap; }
+.spark-src, .spark-copy {
   font-family: var(--jd-mono);
   font-size: 0.7rem;
   color: var(--jd-faint);
@@ -572,9 +604,11 @@ h1 {
   cursor: pointer;
   white-space: nowrap;
 }
-.spark-src:hover { color: var(--jd-accent); text-decoration: underline; }
+.spark-src:hover, .spark-copy:hover { color: var(--jd-accent); text-decoration: underline; }
+.spark-copy.copied { color: var(--jd-accent); text-decoration: none; cursor: default; }
 @media (max-width: 700px) {
   .spark-item { grid-template-columns: 1fr; gap: 0.15rem; }
+  .spark-actions { justify-content: flex-start; }
 }
 
 .section-head {

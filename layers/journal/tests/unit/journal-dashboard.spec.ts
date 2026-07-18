@@ -13,6 +13,7 @@ import {
   countFrictions,
   digestAnchor,
   digestList,
+  ideaGrillPrompt,
   latestIdeas,
   sessionAnchor,
   sessionDurationMin,
@@ -350,6 +351,15 @@ describe('latestIdeas', () => {
     expect(latestIdeas([session({ ideas: undefined, learnings: ['x'] })])).toEqual([])
     expect(latestIdeas([session({ ideas: [], learnings: ['x'] })])).toEqual([])
     expect(latestIdeas([])).toEqual([])
+  })
+})
+
+describe('ideaGrillPrompt', () => {
+  it('builds a ready-made /grill-with-docs prompt tagged with the session id, then the idea text', () => {
+    const [idea] = latestIdeas([session({ session: 'session_01ABC', ideas: ['Auto-cluster ideas into issues'] })])
+    expect(ideaGrillPrompt(idea!)).toBe(
+      '/grill-with-docs to refine this idea from session session_01ABC:\n\nAuto-cluster ideas into issues',
+    )
   })
 })
 

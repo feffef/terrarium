@@ -252,3 +252,11 @@ export function latestIdeas(sessions: SessionDoc[], limit = SPARK_FEED_LIMIT): S
   }
   return out.slice(0, limit)
 }
+
+// A ready-to-paste Claude prompt that hands one idea to the `/grill-with-docs`
+// Skill to sharpen it, tagged with the session it came from so the grilling can
+// pull that session's log for context. The dashboard's per-idea copy button
+// writes exactly this to the clipboard.
+export function ideaGrillPrompt(item: SparkItem): string {
+  return `/grill-with-docs to refine this idea from session ${item.session}:\n\n${item.spark}`
+}
