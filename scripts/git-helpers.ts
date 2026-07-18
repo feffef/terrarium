@@ -82,6 +82,14 @@ export function fetchOriginMain(
   }
 }
 
+/** The `Claude-Session:` commit-trailer pattern (ADR-0017). Captures whatever
+ *  follows the trailer URL's final slash — not just the current `session_<id>`
+ *  shape, since at least one early session log used a bare UUID instead
+ *  (2026-07-05-576a49a2-*.yml). Single-homed here (issue #387) so a second
+ *  reader (`session-id-guard.ts`) reuses this exact pattern rather than
+ *  coining a divergent one alongside `audit-skills.ts`'s original. */
+export const SESSION_TRAILER = /Claude-Session:\s*\S*\/(\S+)/
+
 /** The merge commits on `<remote>/main` — single-homed here rather than
  *  duplicated per script (issue #448 code review: `recent-prs.ts` and
  *  `pr-timeline.ts` both need the identical `git log --merges` scan). Calls

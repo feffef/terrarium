@@ -31,7 +31,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
-import { isParentlessBoundaryCommit } from './git-helpers.ts'
+import { isParentlessBoundaryCommit, SESSION_TRAILER } from './git-helpers.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -461,11 +461,6 @@ export interface CommitFileChange {
   added: string[]
   removed: string[]
 }
-
-// Not just the current `session_<id>` shape — captures whatever follows the
-// trailer URL's final slash, since at least one early session log used a
-// bare UUID instead (2026-07-05-576a49a2-*.yml).
-const SESSION_TRAILER = /Claude-Session:\s*\S*\/(\S+)/
 
 /** Expects `readSessionTrailers`'s `git log` format. */
 export function parseSessionTrailers(raw: string): SessionTrailerRef[] {

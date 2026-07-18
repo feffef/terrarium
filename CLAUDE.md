@@ -171,7 +171,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   response) at the moment you write it down. For a session id specifically,
   resolve it from the system-prompt commit-footer template / session context
   at the moment of writing — never construct one from a plausible-looking
-  pattern.
+  pattern. This rule alone has repeatedly failed to hold (issue #387), so it
+  now has a mechanical backstop too: `scripts/session-id-guard.ts`, wired into
+  the `Stop`-hook path (`scripts/session-end.ts`), compares every
+  `Claude-Session:` trailer on this session's own commits against the
+  resolved ground truth and records a mismatch — it catches a fabricated
+  trailer after the fact, it doesn't replace writing the real id in the first
+  place.
 - **Verify any subagent- or doc-derived factual or behavioral claim against a
   locally observable primary source before publishing it externally** (an
   issue/PR comment, an external post, etc.) — a subagent's inference or a
