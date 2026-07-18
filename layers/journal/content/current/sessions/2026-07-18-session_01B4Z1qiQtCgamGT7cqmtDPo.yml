@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01B4Z1qiQtCgamGT7cqmtDPo
 startedAt: 2026-07-18T00:15:41Z
-endedAt: 2026-07-18T00:22:42Z
+endedAt: 2026-07-18T00:25:48Z
 kind: autonomous
 goal: "Run /digest: author the 2026-07-17 Journal Digest"
-status: in-review
-outcome: "Digest authored, PR #563 opened, gate pending"
-summary: "Scheduled Routine fired /digest with no human turn in this session. Branched off origin/main (already-current designated branch claude/compassionate-lovelace-b0hnfo), ran scripts/digest.ts list/gather for the one backfill day (2026-07-17: 15 merged PRs, 49 commits, 11 sessions), authored the Digest page narrating the Midden and marquee Tenant ships, guest-intake/guest-build hardening, and the accordion e2e real fix. Ran pnpm gate:scoped green, committed, pushed, opened PR #563, subscribed to its activity, and armed enable_pr_auto_merge to land once CI's gate goes green (it was still in_progress at PR-open)."
+status: completed
+outcome: "Digest authored, PR #563 merged with a green gate"
+summary: "Scheduled Routine fired /digest with no human turn in this session. Branched off origin/main (already-current designated branch claude/compassionate-lovelace-b0hnfo), ran scripts/digest.ts list/gather for the one backfill day (2026-07-17: 15 merged PRs, 49 commits, 11 sessions), authored the Digest page narrating the Midden and marquee Tenant ships, guest-intake/guest-build hardening, and the accordion e2e real fix. Ran pnpm gate:scoped green, committed, pushed, opened PR #563, subscribed to its activity, waited out CI's gate, confirmed green on both checks, and merged directly (digest tier merges on green gate alone, ADR-0003/0004). Unsubscribed from the PR after the merge-confirmation webhook."
 prs:
   - "563"
 docsRead:
@@ -23,22 +23,26 @@ frictions:
   - description: enable_pr_auto_merge threw 'required checks are failing' while the gate check was merely in_progress, the exact false-negative pr-workflow.md warns about.
     solution: "Confirmed via pull_request_read get_status (state: pending, not failure) before concluding checks had genuinely failed; re-arming after a short wait per the doc's guidance."
     severity: nit
-durationSec: 421
+durationSec: 607
 models:
-  claude-sonnet-5: 54
+  claude-sonnet-5: 72
 toolCounts:
-  Bash: 11
-  ToolSearch: 3
+  Bash: 12
+  ToolSearch: 4
   mcp__github__list_pull_requests: 1
   Write: 2
   Glob: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Read: 1
-  mcp__github__pull_request_read: 2
+  Read: 2
+  mcp__github__pull_request_read: 5
   mcp__github__enable_pr_auto_merge: 1
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Edit: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-17.md
 gitBranch: claude/compassionate-lovelace-b0hnfo
