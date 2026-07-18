@@ -21,6 +21,12 @@ user-invoked and never self-fires — the guest pipeline is live only while the
 owner is actually running it (and `guest-intake`), for the bounded window they
 choose (ADR-0023). Stop running it and no new `ready-for-agent` story gets built.
 
+**`disable-model-invocation` above is deliberate — the ADR-0023 security
+boundary, not a bug.** A session fired by a Routine or `/loop` cannot invoke
+this Skill via the Skill tool; that hard refusal is expected, not something to
+route around. Follow this doc's steps directly as instructions instead (issue
+#568).
+
 **It composes existing Skills — never restate them.** The dispatch-and-review
 machinery is `frictions-to-fixes` §5–§6: a **Sonnet** impl agent in its **own git
 worktree** that branches from `origin/main`, implements, clears the **safety
