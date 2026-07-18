@@ -3,12 +3,19 @@
 // the per-issue → report reduction. The `gh api` / REST shell is a thin
 // wrapper over these, exercised by running the script directly (same split as
 // `check-triage-drift.spec.ts`).
+import { mkdtempSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import {
   buildReport,
   classifyActivity,
+  commentsSinceCursor,
   newestActivity,
+  newestOwnerCommentSince,
+  readCursorState,
   scanIssue,
+  writeCursorState,
   type RawCommentRecord,
   type RawIssueRecord,
   type ScannedIssue,
@@ -95,9 +102,109 @@ describe('classifyActivity()', () => {
   })
 })
 
+describe('commentsSinceCursor()', () => {
+  it('returns no comments when there is no cursor yet (no "since" boundary to check against)', () => {
+    const a = comment({ created_at: '2026-07-16T01:00:00Z' })
+    const b = comment({ created_at: '2026-07-16T02:00:00Z' })
+    expect(commentsSinceCursor([a, b], null)).toEqual([])
+  })
+
+  it('keeps only comments strictly newer than the cursor', () => {
+    const before = comment({ body: 'before', created_at: '2026-07-16T01:00:00Z' })
+    const atCursor = comment({ body: 'at cursor', created_at: '2026-07-16T02:00:00Z' })
+    const after = comment({ body: 'after', created_at: '2026-07-16T03:00:00Z' })
+    expect(commentsSinceCursor([before, atCursor, after], '2026-07-16T02:00:00Z')).toEqual([after])
+  })
+})
+
+describe('newestOwnerCommentSince() — issue #569', () => {
+  it('finds a real OWNER comment sandwiched between two of the agent\'s own footer replies', () => {
+    // See scripts/guest-intake-scan.ts's header comment for the reported
+    // bug shape this reproduces (issue #569).
+    const replyA = comment({ body: FOOTER_COMMENT, author_association: 'OWNER', created_at: '2026-07-17T01:00:00Z' })
+    const ownerSteering = comment({
+      body: 'make an exception for terrariumdata.duckdns.org',
+      author_association: 'OWNER',
+      created_at: '2026-07-17T02:00:00Z',
+    })
+    const replyB = comment({ body: FOOTER_COMMENT, author_association: 'OWNER', created_at: '2026-07-17T03:00:00Z' })
+    // Cursor from the prior scan pass: as of then, replyA was the newest seen.
+    const found = newestOwnerCommentSince([replyA, ownerSteering, replyB], replyA.created_at)
+    expect(found?.body).toBe('make an exception for terrariumdata.duckdns.org')
+  })
+
+  it('ignores footer-carrying comments and Public comments', () => {
+    const footer = comment({ body: FOOTER_COMMENT, author_association: 'OWNER', created_at: '2026-07-17T01:00:00Z' })
+    const guest = comment({ body: 'my idea', author_association: 'NONE', created_at: '2026-07-17T02:00:00Z' })
+    expect(newestOwnerCommentSince([footer, guest], null)).toBeNull()
+  })
+
+  it('returns null when nothing qualifies since the cursor', () => {
+    const owner = comment({ body: 'just build this', author_association: 'OWNER', created_at: '2026-07-17T01:00:00Z' })
+    expect(newestOwnerCommentSince([owner], '2026-07-17T02:00:00Z')).toBeNull()
+  })
+})
+
+describe('readCursorState() / writeCursorState()', () => {
+  it('reads an empty object when the file does not exist yet', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'guest-intake-scan-state-'))
+    try {
+      expect(readCursorState(join(dir, '.guest-intake-scan-state.json'))).toEqual({})
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('round-trips a written state', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'guest-intake-scan-state-'))
+    try {
+      const path = join(dir, '.guest-intake-scan-state.json')
+      writeCursorState({ '555': '2026-07-17T02:00:00Z' }, path)
+      expect(readCursorState(path)).toEqual({ '555': '2026-07-17T02:00:00Z' })
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+})
+
 describe('scanIssue()', () => {
   it('returns null for a record that is actually a pull request', () => {
     expect(scanIssue(issue({ pull_request: { url: 'x' } }), [])).toBeNull()
+  })
+
+  it('surfaces a real OWNER comment buried under the agent\'s own later footer reply (issue #569)', () => {
+    const replyA = comment({ body: FOOTER_COMMENT, author_association: 'OWNER', created_at: '2026-07-17T01:00:00Z' })
+    const ownerSteering = comment({
+      body: 'make an exception for terrariumdata.duckdns.org',
+      author_association: 'OWNER',
+      created_at: '2026-07-17T02:00:00Z',
+    })
+    const replyB = comment({ body: FOOTER_COMMENT, author_association: 'OWNER', created_at: '2026-07-17T03:00:00Z' })
+    const result = scanIssue(issue(), [replyA, ownerSteering, replyB], replyA.created_at)
+    expect(result?.stage).toBe('owner-steering')
+    expect(result?.newestActivity.body).toBe('make an exception for terrariumdata.duckdns.org')
+  })
+
+  it('behaves exactly as before when there is no missed owner comment (no cursor regression)', () => {
+    const result = scanIssue(issue(), [comment({ body: FOOTER_COMMENT, author_association: 'OWNER' })], null)
+    expect(result?.stage).toBe('agent-footer-skip')
+  })
+
+  it('does not perpetually re-flag an old, already-answered OWNER comment when there is no persisted cursor', () => {
+    // A fresh checkout/worktree (no `.guest-intake-scan-state.json` yet) sees
+    // cursor === null on every scan. Before this fix, a null cursor scanned
+    // an issue's ENTIRE history for the newest qualifying OWNER comment,
+    // regardless of how long ago it was already answered — this reproduces
+    // that scenario and confirms it now falls back to plain newestActivity()
+    // instead.
+    const oldOwnerComment = comment({
+      body: 'do this thing',
+      author_association: 'OWNER',
+      created_at: '2026-01-01T00:00:00Z',
+    })
+    const laterFooterReply = comment({ body: FOOTER_COMMENT, author_association: 'OWNER', created_at: '2026-06-01T00:00:00Z' })
+    const result = scanIssue(issue(), [oldOwnerComment, laterFooterReply], null)
+    expect(result?.stage).toBe('agent-footer-skip')
   })
 
   it('decodes HTML entities in the title, body, and comment text', () => {

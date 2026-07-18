@@ -20,6 +20,16 @@
 // a quiet pass — the common case — returns a handful of bytes instead of
 // every issue's full comment history.
 //
+// Scan cursor (issue #569): a "newest activity only" check can silently skip
+// a real OWNER comment that lands between two of the agent's own rapid
+// replies — the *overall* newest comment ends up being the agent's own later
+// footer reply, which the idempotency guard then treats as "already
+// answered," burying the owner comment in between. To catch that, each scan
+// persists a per-issue cursor (the newest comment `created_at` this scan
+// pass has accounted for, in a local gitignored state file — see "Cursor
+// state" below) and surfaces any OWNER-authored, non-footer comment newer
+// than that cursor, not just the single newest comment overall.
+//
 // Fetch strategy: same `gh`-then-REST-fallback split as `check-triage-drift.ts`
 // (issue #505's `gh`-less remote-session fragility).
 //
@@ -28,7 +38,7 @@
 //   { scannedCount, counts: {guest-activity, owner-steering,
 //   agent-footer-skip, unrecognized-association}, actionable: ScannedIssue[] }
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -150,10 +160,51 @@ export function classifyActivity(activity: Activity): Stage {
   return 'unrecognized-association'
 }
 
+/** Every comment strictly newer than `cursor` — or none at all, when there is
+ *  no cursor yet (an issue's first-ever scan pass, or a session where the
+ *  cursor state file didn't persist — see the header comment). Without a
+ *  prior cursor there is no "since" boundary to check against, so the safe
+ *  choice is to defer to plain `newestActivity()` rather than scan an
+ *  issue's entire history: the alternative — treating "no cursor" as "every
+ *  comment ever" — would re-surface an owner comment from long ago as
+ *  perpetually actionable on every cursor-less scan, even one a later
+ *  (non-footer-carrying, so invisible to this filter) human action already
+ *  resolved. */
+export function commentsSinceCursor(comments: RawCommentRecord[], cursor: string | null): RawCommentRecord[] {
+  if (cursor === null) return []
+  return comments.filter((c) => Date.parse(c.created_at) > Date.parse(cursor))
+}
+
+/** The newest real OWNER comment (Trusted `author_association`, no ADR-0017
+ *  footer — see `classifyActivity`) among the comments newer than `cursor`,
+ *  or `null` when none qualify (including whenever `cursor` is `null` itself
+ *  — see `commentsSinceCursor`). See the header comment for issue #569's fix
+ *  this implements.
+ *
+ *  Known limitation: this returns only the single *newest* qualifying
+ *  comment, not every one since the cursor. If two distinct real OWNER
+ *  comments land within the same inter-scan gap, only the later one
+ *  surfaces — the earlier is not re-offered on a later pass, since the
+ *  cursor always advances to the true newest activity regardless of which
+ *  comment actually got surfaced (see `guestIntakeScan`). Narrower than the
+ *  originally-reported bug (a single sandwiched comment, which this does
+ *  fix) and not addressed here — a fuller fix would need `scanIssue` to
+ *  return every missed comment, not one. */
+export function newestOwnerCommentSince(comments: RawCommentRecord[], cursor: string | null): RawCommentRecord | null {
+  const candidates = commentsSinceCursor(comments, cursor).filter(
+    (c) => TRUSTED_ASSOCIATIONS.has(c.author_association) && !isAiAuthored(c.body),
+  )
+  if (candidates.length === 0) return null
+  return candidates.reduce((a, b) => (Date.parse(b.created_at) > Date.parse(a.created_at) ? b : a))
+}
+
 /** Turn one raw issue + its comments into a `ScannedIssue`, or `null` if the
  *  record is actually a pull request (the REST `issues` endpoint mixes both
- *  in — same quirk `list-open-issues.ts` screens for). */
-export function scanIssue(rawIssue: RawIssueRecord, rawComments: RawCommentRecord[]): ScannedIssue | null {
+ *  in — same quirk `list-open-issues.ts` screens for). `cursor` is this
+ *  issue's persisted scan cursor (`null` on its first scan) — when a real
+ *  OWNER comment landed after it, that comment wins over the plain
+ *  newest-overall activity (issue #569). */
+export function scanIssue(rawIssue: RawIssueRecord, rawComments: RawCommentRecord[], cursor: string | null = null): ScannedIssue | null {
   if (rawIssue.pull_request !== undefined) return null
   const comments = rawComments.map((c) => ({ ...c, body: decodeHtmlEntities(c.body) }))
   const issue: RawIssueRecord = {
@@ -161,7 +212,16 @@ export function scanIssue(rawIssue: RawIssueRecord, rawComments: RawCommentRecor
     title: decodeHtmlEntities(rawIssue.title),
     body: rawIssue.body === null ? null : decodeHtmlEntities(rawIssue.body),
   }
-  const activity = newestActivity(issue, comments)
+  const missedOwnerComment = newestOwnerCommentSince(comments, cursor)
+  const activity: Activity = missedOwnerComment
+    ? {
+        author: missedOwnerComment.user?.login ?? 'unknown',
+        authorAssociation: missedOwnerComment.author_association,
+        body: missedOwnerComment.body,
+        createdAt: missedOwnerComment.created_at,
+        isComment: true,
+      }
+    : newestActivity(issue, comments)
   return {
     number: rawIssue.number,
     title: issue.title,
@@ -354,6 +414,32 @@ function readIssueComments(
   return readIssueCommentsViaRest(owner, repo, issueNumber, token)
 }
 
+// ── Cursor state (persisted between scan passes) ────────────────────────────
+
+/** Per-issue scan cursors: for each open issue (keyed by its number as a
+ *  string, since JSON object keys are always strings), the newest comment
+ *  `created_at` the last scan pass accounted for. Local and gitignored — see
+ *  the header comment for why this fixes issue #569. */
+export type ScanCursorState = Record<string, string>
+
+const CURSOR_STATE_FILENAME = '.guest-intake-scan-state.json'
+
+/** The persisted cursor state at `path`, or `{}` when the file doesn't exist
+ *  yet (an issue's first-ever scan) or is unreadable/corrupt — a missing
+ *  cursor degrades to "check everything," never to a crash. */
+export function readCursorState(path: string): ScanCursorState {
+  try {
+    return JSON.parse(readFileSync(path, 'utf8')) as ScanCursorState
+  } catch {
+    return {}
+  }
+}
+
+/** Persist `state` to `path` as the cursor for the next scan pass. */
+export function writeCursorState(state: ScanCursorState, path: string): void {
+  writeFileSync(path, JSON.stringify(state, null, 2) + '\n')
+}
+
 // ── Command ──────────────────────────────────────────────────────────────────
 
 export function guestIntakeScan(limit = DEFAULT_LIMIT, cwd = root): ScanReport {
@@ -373,12 +459,19 @@ export function guestIntakeScan(limit = DEFAULT_LIMIT, cwd = root): ScanReport {
     .filter((issue) => issue.pull_request === undefined)
     .slice(0, limit)
 
+  const cursorStatePath = join(cwd, CURSOR_STATE_FILENAME)
+  const cursorState = readCursorState(cursorStatePath)
+  const nextCursorState: ScanCursorState = { ...cursorState }
+
   const scanned: ScannedIssue[] = []
   for (const raw of rawIssues) {
     const comments = readIssueComments(strategy, owner, repo, raw.number, cwd)
-    const result = scanIssue(raw, comments)
+    const cursor = cursorState[String(raw.number)] ?? null
+    const result = scanIssue(raw, comments, cursor)
     if (result) scanned.push(result)
+    nextCursorState[String(raw.number)] = newestActivity(raw, comments).createdAt
   }
+  writeCursorState(nextCursorState, cursorStatePath)
   return buildReport(scanned)
 }
 
