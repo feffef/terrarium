@@ -27,8 +27,10 @@
 //
 // Fetch strategy: prefers `gh api` (the same well-exercised path
 // `scripts/list-open-issues.ts` uses) when the `gh` binary is present, and
-// falls back to a direct authenticated REST `fetch` (using a `GH_TOKEN` /
-// `GITHUB_TOKEN` env var) when it is not. That fallback exists because issue
+// falls back to a direct authenticated REST call via `curl` (using a
+// `GH_TOKEN` / `GITHUB_TOKEN` env var) when it is not — `curl`, not Node's
+// built-in `fetch`, for the same proxy-auth reason `poll-guest-tickets.ts`'s
+// `curlGetPage` documents (issue #567). That fallback exists because issue
 // #505 found `list-open-issues.ts`'s `gh`-only path fragile in `gh`-less
 // remote sessions — this script avoids inheriting that same fragile
 // assumption where it's cheap to (a self-contained strategy switch, no fix to
@@ -39,7 +41,9 @@
 //   the flagged subset as JSON: { number, title, claimedLabel, liveLabels,
 //   commentUrl, commentCreatedAt }.
 import { execFileSync } from 'node:child_process'
-import { dirname, resolve } from 'node:path'
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { decodeHtmlEntities, parseOwnerRepo, type RawIssueApiRecord } from './list-open-issues.ts'
 
@@ -298,31 +302,73 @@ export function parseNextLink(linkHeader: string | null): string | null {
   return null
 }
 
-async function fetchAllPagesViaRest<T>(initialUrl: string, token: string): Promise<T[]> {
+// `curl`, not Node's built-in `fetch`: this environment's outbound HTTPS goes
+// through an agent proxy that Node's `fetch` (undici) only honors with
+// `NODE_USE_ENV_PROXY=1` set *before the process starts* (too late to set
+// from inside the running script) — the same bug PR #558 fixed in
+// `poll-guest-tickets.ts`'s `curlGetPage`, mirrored here. `curl` already
+// respects `HTTPS_PROXY`/the pre-installed CA bundle with no special flags
+// (see /root/.ccr/README.md). `-D`/`-w '%{http_code}'` split the response
+// into a header file (for `Link` pagination) and a status code on stdout; the
+// body goes to its own temp file.
+function curlGetPage(url: string, token: string, cwd: string): { status: string; body: string; linkHeader: string | null } {
+  const dir = mkdtempSync(join(tmpdir(), 'check-triage-drift-'))
+  const headerFile = join(dir, 'headers')
+  const bodyFile = join(dir, 'body')
+  try {
+    const status = execFileSync(
+      'curl',
+      [
+        '-sS',
+        '-o',
+        bodyFile,
+        '-D',
+        headerFile,
+        '-w',
+        '%{http_code}',
+        '-H',
+        `Authorization: Bearer ${token}`,
+        '-H',
+        'Accept: application/vnd.github+json',
+        '-H',
+        'User-Agent: terrarium-check-triage-drift',
+        url,
+      ],
+      { cwd, encoding: 'utf8' },
+    ).trim()
+    const body = readFileSync(bodyFile, 'utf8')
+    const headers = readFileSync(headerFile, 'utf8')
+    const linkLine = headers.split(/\r?\n/).find((l) => /^link:/i.test(l))
+    return { status, body, linkHeader: linkLine ? linkLine.slice(linkLine.indexOf(':') + 1).trim() : null }
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+}
+
+async function fetchAllPagesViaRest<T>(initialUrl: string, token: string, cwd: string): Promise<T[]> {
   const out: T[] = []
   let url: string | null = initialUrl
   while (url) {
-    const res: Response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/vnd.github+json',
-        'User-Agent': 'terrarium-check-triage-drift',
-      },
-    })
-    if (!res.ok) {
-      throw new Error(`GitHub REST API request to ${url} failed: ${res.status} ${res.statusText}`)
+    const { status, body, linkHeader } = curlGetPage(url, token, cwd)
+    if (status[0] !== '2') {
+      throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
     }
-    const page = (await res.json()) as T[]
-    out.push(...page)
-    url = parseNextLink(res.headers.get('link'))
+    out.push(...(JSON.parse(body) as T[]))
+    url = parseNextLink(linkHeader)
   }
   return out
 }
 
-async function readOpenIssuesViaRest(owner: string, repo: string, token: string): Promise<RawIssueApiRecord[]> {
+async function readOpenIssuesViaRest(
+  owner: string,
+  repo: string,
+  token: string,
+  cwd: string,
+): Promise<RawIssueApiRecord[]> {
   return fetchAllPagesViaRest<RawIssueApiRecord>(
     `https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=100`,
     token,
+    cwd,
   )
 }
 
@@ -331,10 +377,12 @@ async function readIssueCommentsViaRest(
   repo: string,
   issueNumber: number,
   token: string,
+  cwd: string,
 ): Promise<RawCommentApiRecord[]> {
   return fetchAllPagesViaRest<RawCommentApiRecord>(
     `https://api.github.com/repos/${owner}/${repo}/issues/${issueNumber}/comments?per_page=100`,
     token,
+    cwd,
   )
 }
 
@@ -347,7 +395,7 @@ async function readOpenIssues(
   if (strategy === 'gh') return readOpenIssuesViaGh(owner, repo, cwd)
   const token = envToken()
   if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
-  return readOpenIssuesViaRest(owner, repo, token)
+  return readOpenIssuesViaRest(owner, repo, token, cwd)
 }
 
 async function readIssueComments(
@@ -360,7 +408,7 @@ async function readIssueComments(
   if (strategy === 'gh') return readIssueCommentsViaGh(owner, repo, issueNumber, cwd)
   const token = envToken()
   if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
-  return readIssueCommentsViaRest(owner, repo, issueNumber, token)
+  return readIssueCommentsViaRest(owner, repo, issueNumber, token, cwd)
 }
 
 // ── Command ──────────────────────────────────────────────────────────────────
