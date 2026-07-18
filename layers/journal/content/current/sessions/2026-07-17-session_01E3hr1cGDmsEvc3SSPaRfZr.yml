@@ -1,0 +1,82 @@
+schemaVersion: 1
+session: session_01E3hr1cGDmsEvc3SSPaRfZr
+startedAt: 2026-07-17T22:15:39Z
+endedAt: 2026-07-18T07:00:50Z
+kind: interactive
+goal: "/blog-post reply to Karen citing #553, explain guest-intake day"
+status: completed
+outcome: "PR #587 merged (94095344bcbcc72e745360decb1d826e6a05c0ac)"
+summary: "Human-directed via an explicit /blog-post invocation (\"a reply to karen, specifically pointing out that the question was answered in another issue #553, explain a bit more of what happened in the guest experiment\"), plus a mid-turn \"read all issues opened today\" ask and later interrupt/hold/continue steering. Ran the Skill's full candidate process: gathered issue #553, the guest-intake session log, and the Karen/David posts it reacts to; drafted 3 scratch candidates (David correction+recap, Kevin full #555 escalation arc, Kevin narrow hallucination-exchange angle); an independent outside-reader subagent picked the Kevin #555 draft and named context gaps, which were folded into a revision. Saved the post + pingback, ran pnpm gate:scoped green, opened PR #587, subscribed to its activity, and merged it directly once CI's gate + label checks both reported green (enable_pr_auto_merge was tried first but errored while gate was still in_progress; see frictions), then unsubscribed on the merged-PR webhook confirmation."
+prs:
+  - "587"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the procedure this run followed
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice check for the post being reacted to
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice for the winning candidate
+  - path: docs/agents/pr-workflow.md
+    reason: auto-merge vs merge_pull_request mechanics
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum for frontmatter
+  - path: layers/blog/content/karen/pages/2026-07-17-then-a-guy-asked-for-the-url.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-16-the-door-opens-for-guests.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-17-session_012KajpP5iqjGPQeVzx8wQVr.yml
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pingbacks/2026-07-17-kevin-nobody-touched-a-keyboard.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: invoked directly by the user via /blog-post
+  - name: close-session
+    reason: invoked at PR-open per its own trigger
+  - name: log-session
+    reason: authoring this entry
+frictions:
+  - description: Wrote a hand-guessed session id into a commit's Claude-Session footer by pattern-matching an unrelated git-log line (another session's log commit) instead of resolving the real id from the commit-footer template already given in this session's own instructions — exactly the mistake CLAUDE.md explicitly warns against
+    solution: "Self-caught before pushing (the amend happened pre-push, so nothing wrong landed on origin) by re-reading the actual footer template and env; still cost a wasted commit + amend cycle. Worth restating: resolve the session id from the system-prompt commit-footer template at the moment of writing, never from any git log output, even one that superficially looks like 'the current session'"
+    severity: moderate
+  - description: enable_pr_auto_merge errored with a misleading 'required checks are failing' message while the PR's only checks were one passed (label) and one still in_progress (gate) — no check had actually failed
+    solution: docs/agents/pr-workflow.md already documents this false-positive for an already-green PR; this run hit the same misleading text while arming ahead of a still-pending check instead, which the doc doesn't explicitly cover. Confirmed via a direct get_check_runs call before treating it as real, per the doc's own advice — worth a small doc addition noting the error text is unreliable in the pending case too, not just the already-green case
+    severity: minor
+durationSec: 31511
+models:
+  claude-sonnet-5: 129
+  <synthetic>: 1
+toolCounts:
+  Bash: 20
+  Glob: 2
+  ToolSearch: 5
+  Read: 10
+  mcp__github__issue_read: 3
+  mcp__github__search_issues: 2
+  Write: 7
+  Agent: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 5
+  mcp__github__enable_pr_auto_merge: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Edit: 2
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-07-17-twelve-rounds-and-the-line-held.md
+  - layers/blog/content/karen/pingbacks/2026-07-17-kevin-then-a-guy-asked-for-the-url.yml
+subagents:
+  - type: general-purpose
+    task: Outside reader judges three blog drafts
+    model: sonnet
+gitBranch: claude/blog-post-karen-reply-rym90u
+entrypoint: remote
+cliVersion: 2.1.212
+learnings:
+  - "Karen's factual miss and the guest-intake scanner's own logged friction (missing an OWNER comment mid-thread) are the same shape of bug: true information sitting in a thread nobody happened to be watching at the right moment — a good throughline for grounding a reaction post in something structural rather than just 'gotcha, you were wrong'"
