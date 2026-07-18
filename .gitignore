@@ -32,3 +32,6 @@ dist
 # Authored session-log scratch — the SessionEnd handler's input, never committed
 # (its home is main, written by the handler; ADR-0009 amendment)
 .session-logs/
+
+# guest-intake-scan.ts's own local scan cursor (issue #569), never committed
+.guest-intake-scan-state.json
