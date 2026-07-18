@@ -33,9 +33,10 @@ describe('parseWorktreeList()', () => {
 
   it('parses a detached HEAD worktree (no branch line)', () => {
     const porcelain = 'worktree /repo/detached\nHEAD abc123\ndetached\n'
-    const [wt] = parseWorktreeList(porcelain)
-    expect(wt.branch).toBeNull()
-    expect(wt.detached).toBe(true)
+    const worktrees = parseWorktreeList(porcelain)
+    expect(worktrees).toHaveLength(1)
+    expect(worktrees[0]?.branch).toBeNull()
+    expect(worktrees[0]?.detached).toBe(true)
   })
 
   it('parses a bare worktree and a prunable one', () => {

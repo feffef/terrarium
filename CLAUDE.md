@@ -363,12 +363,17 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
     explicitly if it doesn't.
   - **A worktree-isolated subagent can also end its turn with finished work
     still uncommitted** — mid-gate, or on an external "session limit" abort —
-    leaving it invisible to the orchestrator. Guard both ends: every
-    worktree-isolated subagent's brief must instruct it to **commit + push
-    before it stops, even mid-gate**, and the orchestrator must **check each
-    returned worktree for uncommitted work** before treating the subagent as
-    done. (The platform "session limit" abort itself is external and this
-    guard doesn't prevent it — it only limits the damage when it happens.)
+    leaving it invisible to the orchestrator, and a silently-aborted subagent
+    may never even surface as a "returned" worktree to inspect. Guard both
+    ends: every worktree-isolated subagent's brief must instruct it to
+    **commit + push before it stops, even mid-gate**, and the orchestrator
+    must run **`pnpm check:worktrees`** (`scripts/check-worktrees.ts`, issue
+    #427) as its post-dispatch check — it enumerates every worktree from git
+    state itself, not from subagent return values, so it catches an orphaned
+    worktree too, and exits non-zero naming any linked worktree left
+    uncommitted or unpushed. (The platform "session limit" abort itself is
+    external and this doesn't prevent it — it only ensures the damage is
+    caught.)
   - **The orchestrator's own habit of `cd`-ing into a subagent's worktree to
     inspect it can leave that cwd sitting there across later Bash calls.** A
     session-closure Stop hook's "uncommitted changes" flag seen after such an
