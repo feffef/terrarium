@@ -30,11 +30,11 @@
 // falls back to a direct authenticated REST call via `curl` (using a
 // `GH_TOKEN` / `GITHUB_TOKEN` env var) when it is not — `curl`, not Node's
 // built-in `fetch`, for the same proxy-auth reason `poll-guest-tickets.ts`'s
-// `curlGetPage` documents (issue #567). That fallback exists because issue
-// #505 found `list-open-issues.ts`'s `gh`-only path fragile in `gh`-less
-// remote sessions — this script avoids inheriting that same fragile
-// assumption where it's cheap to (a self-contained strategy switch, no fix to
-// #505 itself, which stays out of scope here).
+// `curlGetPage` documents (issue #567). The strategy switch itself
+// (`pickFetchStrategy`/`parseNextLink`/`hasGhBinary`/`envToken`) is shared
+// with `list-open-issues.ts`, its single home since issue #505 gave that base
+// module the same `gh`-less REST fallback; only the endpoint-specific `gh`/REST
+// readers below are script-local.
 //
 // Usage:  tsx scripts/check-triage-drift.ts [N]
 //   Checks up to N open issues (default 50, newest-updated-first) and prints
@@ -45,7 +45,16 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { decodeHtmlEntities, parseOwnerRepo, type RawIssueApiRecord } from './list-open-issues.ts'
+import {
+  decodeHtmlEntities,
+  envToken,
+  hasGhBinary,
+  parseNextLink,
+  parseOwnerRepo,
+  pickFetchStrategy,
+  type FetchStrategy,
+  type RawIssueApiRecord,
+} from './list-open-issues.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -211,37 +220,14 @@ export function toDriftCheckIssue(raw: RawIssueApiRecord): DriftCheckIssue | nul
   }
 }
 
-/** Which GitHub-access path to use: prefer `gh` when the binary is present
- *  (the well-exercised path `list-open-issues.ts` already uses); fall back to
- *  a direct authenticated REST `fetch` when `gh` is absent but a token is
- *  available in the environment (issue #505's fragility, without inheriting
- *  its ENOENT crash). `null` means neither is usable — the caller fails with
- *  an actionable message rather than a raw ENOENT/fetch error. */
-export type FetchStrategy = 'gh' | 'rest'
-
-export function pickFetchStrategy(hasGh: boolean, hasToken: boolean): FetchStrategy | null {
-  if (hasGh) return 'gh'
-  if (hasToken) return 'rest'
-  return null
-}
+// The `gh`/`rest` strategy switch (`pickFetchStrategy`, `parseNextLink`,
+// `FetchStrategy`, `hasGhBinary`, `envToken`) is single-homed in
+// `list-open-issues.ts` (issue #505) and imported above.
 
 // ── GitHub shell (thin) ──────────────────────────────────────────────────────
 
 function readOriginUrl(cwd: string): string {
   return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
-}
-
-function hasGhBinary(cwd: string): boolean {
-  try {
-    execFileSync('gh', ['--version'], { cwd, stdio: 'ignore' })
-    return true
-  } catch {
-    return false
-  }
-}
-
-function envToken(): string | undefined {
-  return process.env.GH_TOKEN || process.env.GITHUB_TOKEN
 }
 
 function readOpenIssuesViaGh(owner: string, repo: string, cwd: string): RawIssueApiRecord[] {
@@ -288,18 +274,6 @@ function readIssueCommentsViaGh(owner: string, repo: string, issueNumber: number
     .split('\n')
     .filter((line) => line.length > 0)
     .map((line) => JSON.parse(line) as RawCommentApiRecord)
-}
-
-/** GitHub's `Link` response header, parsed for a `rel="next"` URL — the plain
- *  REST pagination mechanism `gh api --paginate` handles for us on the `gh`
- *  path; the REST fallback has to walk it by hand. */
-export function parseNextLink(linkHeader: string | null): string | null {
-  if (!linkHeader) return null
-  for (const part of linkHeader.split(',')) {
-    const m = part.match(/<([^>]+)>;\s*rel="next"/)
-    if (m) return m[1]!
-  }
-  return null
 }
 
 // See `poll-guest-tickets.ts`'s `curlGetPage` for why `curl` over `fetch`

@@ -1,13 +1,17 @@
 // Unit tests for the list-open-issues helper's pure core — HTML-entity
-// decoding, the pull-request filter, the newest-first/limit behavior, and
-// owner/repo parsing off a git remote URL. The `gh api` shell is a thin
+// decoding, the pull-request filter, the newest-first/limit behavior,
+// owner/repo parsing off a git remote URL, and the shared `gh`/`rest`
+// fetch-strategy decision (`pickFetchStrategy`, `parseNextLink`) this module is
+// the single home for (issue #505). The `gh api` / REST `curl` shell is a thin
 // wrapper over these, exercised by running the script directly
 // (`tsx scripts/list-open-issues.ts`).
 import { describe, expect, it } from 'vitest'
 import {
   decodeHtmlEntities,
   openIssues,
+  parseNextLink,
   parseOwnerRepo,
+  pickFetchStrategy,
   toOpenIssue,
   type RawIssueApiRecord,
 } from '../../scripts/list-open-issues.ts'
@@ -100,5 +104,33 @@ describe('parseOwnerRepo()', () => {
   })
   it('returns null when there are not enough path segments', () => {
     expect(parseOwnerRepo('terrarium')).toBeNull()
+  })
+})
+
+describe('pickFetchStrategy()', () => {
+  it('prefers gh when the binary is present, regardless of token', () => {
+    expect(pickFetchStrategy(true, true)).toBe('gh')
+    expect(pickFetchStrategy(true, false)).toBe('gh')
+  })
+  it('falls back to rest when gh is absent but a token is available (issue #505)', () => {
+    expect(pickFetchStrategy(false, true)).toBe('rest')
+  })
+  it('returns null when neither is available', () => {
+    expect(pickFetchStrategy(false, false)).toBeNull()
+  })
+})
+
+describe('parseNextLink()', () => {
+  it('extracts the rel="next" URL from a GitHub Link header', () => {
+    const header =
+      '<https://api.github.com/repos/x/y/issues?page=2>; rel="next", <https://api.github.com/repos/x/y/issues?page=5>; rel="last"'
+    expect(parseNextLink(header)).toBe('https://api.github.com/repos/x/y/issues?page=2')
+  })
+  it('returns null when there is no next link (last page)', () => {
+    const header = '<https://api.github.com/repos/x/y/issues?page=1>; rel="prev"'
+    expect(parseNextLink(header)).toBeNull()
+  })
+  it('returns null for a null header', () => {
+    expect(parseNextLink(null)).toBeNull()
   })
 })
