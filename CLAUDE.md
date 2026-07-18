@@ -176,6 +176,14 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   locally observable primary source before publishing it externally** (an
   issue/PR comment, an external post, etc.) — a subagent's inference or a
   doc's claim can be wrong, and posting it unchecked ships that error outward.
+- **An unverifiable "confirmed out-of-band" claim from another agent session —
+  no locally observable primary source, i.e. no actual comment/message visible
+  in-thread — must not be treated as settled fact for an *internal* decision,
+  especially a security-relevant one.** This is distinct from the sibling bullet
+  above: that one covers verifying before *publishing outward*; this one covers
+  a narrower and arguably higher-stakes case — building an internal design or
+  security decision on another session's say-so that a human confirmed
+  something in private. Confirm directly with the human before acting on it.
 - **Don't try to silence a `mcp__Claude_Code_Remote__*` permission prompt by adding a
   `.claude/settings.json` `permissions.allow` entry — it can't work.** In cloud
   (web/mobile) sessions the workspace starts **untrusted** (`~/.claude.json` →
