@@ -140,6 +140,14 @@ const sessionKindCounts = computed(() => kindCounts(sessions.value))
 const referencedPrs = computed(() => prRefs(sessions.value))
 const referencedPrParts = computed(() => prRefsParts(referencedPrs.value))
 
+// Cross-session Sparks feed (issue #440) — see dashboard.ts's sparksFeed
+// header for the mechanical-clustering rationale and why recurring themes
+// and true one-offs get split into two computed()s instead of one flat list.
+const sparkClusters = computed(() => sparksFeed(sessions.value))
+const recurringSparks = computed(() => recurringSparkClusters(sparkClusters.value))
+const soloSparks = computed(() => soloSparkItems(sparkClusters.value))
+const totalSparks = computed(() => sparkTotal(sparkClusters.value))
+
 const platformSkills = computed(() => ownSkills(skills.value))
 const externalSkillTotal = computed(() => externalSkillCount(skills.value))
 const skillsHeading = computed(() => skillsLabel(externalSkillTotal.value))
@@ -242,6 +250,58 @@ useSeoMeta({
           </Transition>
         </li>
       </ul>
+    </section>
+
+    <!-- Sparks — every session's authored ideas + learnings, folded into one
+         cross-session feed (issue #440). Grouped by a NAIVE MECHANICAL
+         keyword-overlap signal only (no model/semantic pass) — recurring
+         themes (2+ sparks) get a labeled cluster; genuine one-offs fold into
+         a plain "Other sparks" list rather than each getting its own
+         meaningless 1-item "cluster" (see dashboard.ts's sparksFeed header). -->
+    <section class="panel sparks">
+      <div class="section-head">
+        <h2>Sparks</h2>
+        <span class="count">{{ totalSparks }} across every session</span>
+      </div>
+      <p class="panel-intro">
+        Ideas and learnings agents authored across every session log, folded into
+        one feed. Recurring themes are grouped by a mechanical keyword-overlap
+        signal, not a themed summary — click a spark's session chip to jump to
+        its full log below.
+      </p>
+      <template v-if="totalSparks">
+        <ul v-if="recurringSparks.length" class="spark-clusters">
+          <!-- key by index, not cluster.label: two DIFFERENT mechanical clusters can land
+               on the same top-2-keyword label (e.g. two distinct groups both surfacing
+               "allow · claude") without actually merging — a real duplicate-label case
+               observed against the live corpus, not a hypothetical. -->
+          <li v-for="(cluster, ci) in recurringSparks" :key="ci" class="spark-cluster">
+            <h3 class="spark-cluster-label">{{ cluster.label }}</h3>
+            <ul class="spark-items">
+              <li v-for="(item, i) in cluster.items" :key="i" class="spark-item">
+                <span class="spark-kind" :data-kind="item.kind">{{ item.kind }}</span>
+                <span class="spark-text">{{ item.spark }}</span>
+                <button type="button" class="spark-src" @click="toggle(item.anchor)">
+                  {{ item.when }} <span aria-hidden="true">→</span>
+                </button>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <div v-if="soloSparks.length" class="spark-solo-block">
+          <h3 class="spark-cluster-label">Other sparks</h3>
+          <ul class="spark-items">
+            <li v-for="(item, i) in soloSparks" :key="i" class="spark-item">
+              <span class="spark-kind" :data-kind="item.kind">{{ item.kind }}</span>
+              <span class="spark-text">{{ item.spark }}</span>
+              <button type="button" class="spark-src" @click="toggle(item.anchor)">
+                {{ item.when }} <span aria-hidden="true">→</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </template>
+      <p v-else class="empty">No sparks logged in this Space yet.</p>
     </section>
 
     <!-- State of this Space -->
@@ -520,6 +580,57 @@ h1 {
   border-radius: 4px;
 }
 .digest-body :deep(ul) { margin: 0 0 0.7rem; padding-left: 1.1rem; color: var(--jd-muted); }
+
+.sparks { margin-top: 1.75rem; }
+.spark-clusters, .spark-items { list-style: none; margin: 0; padding: 0; }
+.spark-clusters { display: flex; flex-direction: column; gap: 1.1rem; }
+.spark-solo-block { margin-top: 1.1rem; }
+.spark-cluster-label {
+  margin: 0 0 0.5rem;
+  font-family: var(--jd-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--jd-accent);
+}
+.spark-items { display: flex; flex-direction: column; gap: 0.55rem; }
+.spark-item {
+  display: grid;
+  grid-template-columns: max-content 1fr max-content;
+  gap: 0.6rem;
+  align-items: baseline;
+  font-size: 0.9rem;
+  color: var(--jd-muted);
+  line-height: 1.5;
+}
+.spark-kind {
+  font-family: var(--jd-mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--jd-faint);
+  border: 1px solid var(--jd-line);
+  border-radius: 999px;
+  padding: 0.05rem 0.45rem;
+  white-space: nowrap;
+}
+.spark-kind[data-kind='idea'] { color: var(--jd-accent); border-color: color-mix(in oklab, var(--jd-accent) 40%, var(--jd-line)); }
+.spark-text { overflow-wrap: anywhere; }
+.spark-src {
+  font-family: var(--jd-mono);
+  font-size: 0.72rem;
+  color: var(--jd-faint);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.spark-src:hover { color: var(--jd-accent); text-decoration: underline; }
+@media (max-width: 700px) {
+  .spark-item { grid-template-columns: 1fr; }
+}
 
 .section-head {
   display: flex;

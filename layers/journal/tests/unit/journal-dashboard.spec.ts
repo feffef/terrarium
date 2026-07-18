@@ -13,11 +13,15 @@ import {
   countFrictions,
   digestAnchor,
   digestList,
+  recurringSparkClusters,
   sessionAnchor,
   sessionDurationMin,
   externalSkillCount,
   sessionWhen,
   sessionModelsLabel,
+  soloSparkItems,
+  sparksFeed,
+  sparkTotal,
   frictionCount,
   frictionTotals,
   kindCounts,
@@ -302,6 +306,81 @@ describe('deep-link anchors', () => {
     // Distinct prefixes ⇒ a session id and a digest date can never map to the
     // same anchor, which the page-wide single-open accordion relies on.
     expect(sessionAnchor('x')).not.toBe(digestAnchor('x'))
+  })
+})
+
+describe('sparksFeed', () => {
+  // Deliberately passed newest-first, matching the SFC's real
+  // `.order('endedAt', 'DESC')` query — sparksFeed relies on that order to
+  // keep a singleton's position newest-first with no re-sort of its own.
+  const sessions = [
+    session({
+      session: 's3', endedAt: '2026-07-07T11:00:00Z',
+      ideas: [], learnings: ['Completely unrelated digest boundary bug'],
+    }),
+    session({
+      session: 's2', endedAt: '2026-07-06T11:00:00Z',
+      ideas: ['Worktree stale branch drift issue'], learnings: [],
+    }),
+    session({
+      session: 's1', endedAt: '2026-07-05T11:00:00Z',
+      ideas: ['Investigate worktree stale head drift'], learnings: [],
+    }),
+  ]
+
+  it('clusters sparks that share enough keyword overlap, keeping unrelated ones apart', () => {
+    const clusters = sparksFeed(sessions)
+    expect(clusters).toHaveLength(2)
+    const sizes = clusters.map((c) => c.items.length).sort((a, b) => a - b)
+    expect(sizes).toEqual([1, 2])
+  })
+
+  it('carries each item\'s kind, session, and deep-link anchor', () => {
+    const [worktreeCluster] = sparksFeed(sessions).sort((a, b) => b.items.length - a.items.length)
+    const bItem = worktreeCluster!.items.find((i) => i.session === 's2')
+    expect(bItem).toMatchObject({
+      spark: 'Worktree stale branch drift issue',
+      kind: 'idea',
+      session: 's2',
+      when: sessionWhen('2026-07-06T11:00:00Z'),
+      anchor: sessionAnchor('s2'),
+    })
+  })
+
+  it('is empty when no session in the feed authored a spark', () => {
+    expect(sparksFeed([session({ ideas: undefined, learnings: undefined })])).toEqual([])
+    expect(sparksFeed([])).toEqual([])
+  })
+})
+
+describe('recurringSparkClusters / soloSparkItems / sparkTotal', () => {
+  const sessions = [
+    session({ session: 's3', endedAt: '2026-07-07T11:00:00Z', ideas: [], learnings: ['Completely unrelated digest boundary bug'] }),
+    session({ session: 's2', endedAt: '2026-07-06T11:00:00Z', ideas: ['Worktree stale branch drift issue'], learnings: [] }),
+    session({ session: 's1', endedAt: '2026-07-05T11:00:00Z', ideas: ['Investigate worktree stale head drift'], learnings: [] }),
+  ]
+  const clusters = sparksFeed(sessions)
+
+  it('recurringSparkClusters keeps only clusters with 2+ sparks, biggest first', () => {
+    const recurring = recurringSparkClusters(clusters)
+    expect(recurring).toHaveLength(1)
+    expect(recurring[0]!.items.map((i) => i.session)).toEqual(['s2', 's1'])
+  })
+
+  it('soloSparkItems keeps only true one-off sparks, newest first (no larger cluster to join)', () => {
+    const solo = soloSparkItems(clusters)
+    expect(solo).toHaveLength(1)
+    expect(solo[0]!.session).toBe('s3')
+  })
+
+  it('sparkTotal counts every spark across every cluster', () => {
+    expect(sparkTotal(clusters)).toBe(3)
+  })
+
+  it('all three helpers agree on an all-empty feed', () => {
+    expect(recurringSparkClusters([])).toEqual([])
+    expect(soloSparkItems([])).toEqual([])
+    expect(sparkTotal([])).toBe(0)
   })
 })
 
