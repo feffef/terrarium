@@ -190,6 +190,12 @@ round-trip. The impl agent **never merges and never enables auto-merge**
 (ADR-0003) — it hands the open PR back to you. You are the reviewer (§6). The
 impl agent also must **not call `subscribe_pr_activity`** on the PR it opens —
 the orchestrator (§6) owns that PR's lifecycle and subscribes if/when needed.
+A `subscribe_pr_activity` webhook landing in the orchestrating session when that
+PR opens is **expected, not a brief violation** — the orchestrator is the one
+who owns and needs that subscription for §6's review/babysitting (CLAUDE.md's
+"Pushing is not landing"). Don't read the webhook's arrival as evidence the
+impl agent disobeyed the sentence above, and don't log it as a fresh friction
+(#428).
 **Dispatched worktree-isolated impl agents must NOT self-invoke `close-session`
 or `log-session`** — see `close-session/SKILL.md` for why (they share the parent
 session id, so a second invocation clobbers the orchestrator's own log). The
