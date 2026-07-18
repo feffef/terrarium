@@ -160,19 +160,36 @@ export function classifyActivity(activity: Activity): Stage {
   return 'unrecognized-association'
 }
 
-/** Every comment strictly newer than `cursor` — or every comment, when there
- *  is no cursor yet (an issue's first-ever scan pass). */
+/** Every comment strictly newer than `cursor` — or none at all, when there is
+ *  no cursor yet (an issue's first-ever scan pass, or a session where the
+ *  cursor state file didn't persist — see the header comment). Without a
+ *  prior cursor there is no "since" boundary to check against, so the safe
+ *  choice is to defer to plain `newestActivity()` rather than scan an
+ *  issue's entire history: the alternative — treating "no cursor" as "every
+ *  comment ever" — would re-surface an owner comment from long ago as
+ *  perpetually actionable on every cursor-less scan, even one a later
+ *  (non-footer-carrying, so invisible to this filter) human action already
+ *  resolved. */
 export function commentsSinceCursor(comments: RawCommentRecord[], cursor: string | null): RawCommentRecord[] {
-  if (cursor === null) return comments
+  if (cursor === null) return []
   return comments.filter((c) => Date.parse(c.created_at) > Date.parse(cursor))
 }
 
 /** The newest real OWNER comment (Trusted `author_association`, no ADR-0017
  *  footer — see `classifyActivity`) among the comments newer than `cursor`,
- *  or `null` when none qualify. This is issue #569's fix: it finds an owner
- *  comment even when a still-later comment (e.g. the agent's own next footer
- *  reply) would otherwise make it look like stale, already-handled activity
- *  under a newest-overall-only check. */
+ *  or `null` when none qualify (including whenever `cursor` is `null` itself
+ *  — see `commentsSinceCursor`). See the header comment for issue #569's fix
+ *  this implements.
+ *
+ *  Known limitation: this returns only the single *newest* qualifying
+ *  comment, not every one since the cursor. If two distinct real OWNER
+ *  comments land within the same inter-scan gap, only the later one
+ *  surfaces — the earlier is not re-offered on a later pass, since the
+ *  cursor always advances to the true newest activity regardless of which
+ *  comment actually got surfaced (see `guestIntakeScan`). Narrower than the
+ *  originally-reported bug (a single sandwiched comment, which this does
+ *  fix) and not addressed here — a fuller fix would need `scanIssue` to
+ *  return every missed comment, not one. */
 export function newestOwnerCommentSince(comments: RawCommentRecord[], cursor: string | null): RawCommentRecord | null {
   const candidates = commentsSinceCursor(comments, cursor).filter(
     (c) => TRUSTED_ASSOCIATIONS.has(c.author_association) && !isAiAuthored(c.body),

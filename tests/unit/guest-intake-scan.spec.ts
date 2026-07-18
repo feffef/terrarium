@@ -103,10 +103,10 @@ describe('classifyActivity()', () => {
 })
 
 describe('commentsSinceCursor()', () => {
-  it('returns every comment when there is no cursor yet', () => {
+  it('returns no comments when there is no cursor yet (no "since" boundary to check against)', () => {
     const a = comment({ created_at: '2026-07-16T01:00:00Z' })
     const b = comment({ created_at: '2026-07-16T02:00:00Z' })
-    expect(commentsSinceCursor([a, b], null)).toEqual([a, b])
+    expect(commentsSinceCursor([a, b], null)).toEqual([])
   })
 
   it('keeps only comments strictly newer than the cursor', () => {
@@ -119,10 +119,8 @@ describe('commentsSinceCursor()', () => {
 
 describe('newestOwnerCommentSince() — issue #569', () => {
   it('finds a real OWNER comment sandwiched between two of the agent\'s own footer replies', () => {
-    // The reported bug's exact shape: agent reply A (footer), a real OWNER
-    // steering comment, then agent reply B (footer) — B is the overall
-    // newest, so a "newest activity only" check would classify this as
-    // agent-footer-skip and bury the owner comment in between.
+    // See scripts/guest-intake-scan.ts's header comment for the reported
+    // bug shape this reproduces (issue #569).
     const replyA = comment({ body: FOOTER_COMMENT, author_association: 'OWNER', created_at: '2026-07-17T01:00:00Z' })
     const ownerSteering = comment({
       body: 'make an exception for terrariumdata.duckdns.org',
@@ -189,6 +187,23 @@ describe('scanIssue()', () => {
 
   it('behaves exactly as before when there is no missed owner comment (no cursor regression)', () => {
     const result = scanIssue(issue(), [comment({ body: FOOTER_COMMENT, author_association: 'OWNER' })], null)
+    expect(result?.stage).toBe('agent-footer-skip')
+  })
+
+  it('does not perpetually re-flag an old, already-answered OWNER comment when there is no persisted cursor', () => {
+    // A fresh checkout/worktree (no `.guest-intake-scan-state.json` yet) sees
+    // cursor === null on every scan. Before this fix, a null cursor scanned
+    // an issue's ENTIRE history for the newest qualifying OWNER comment,
+    // regardless of how long ago it was already answered — this reproduces
+    // that scenario and confirms it now falls back to plain newestActivity()
+    // instead.
+    const oldOwnerComment = comment({
+      body: 'do this thing',
+      author_association: 'OWNER',
+      created_at: '2026-01-01T00:00:00Z',
+    })
+    const laterFooterReply = comment({ body: FOOTER_COMMENT, author_association: 'OWNER', created_at: '2026-06-01T00:00:00Z' })
+    const result = scanIssue(issue(), [oldOwnerComment, laterFooterReply], null)
     expect(result?.stage).toBe('agent-footer-skip')
   })
 
