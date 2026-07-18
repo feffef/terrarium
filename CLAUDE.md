@@ -464,7 +464,7 @@ almanac cardinality — issue #446). `validate:content` checks every Tenant's co
 ~1-2s, without paying for `nuxt build` or `pnpm test:e2e`. It is the tightest inner loop
 — a subset of `gate:scoped`'s floor — for content-only edits, and **not a replacement
 for the CI gate**, which stays the mandatory merge gate (ADR-0004; see Ground rules
-above — CI is human-only to merge, not to edit, and a PR touching it never auto-merges).
+above).
 
 **When CI's full gate fails on a change where your local `pnpm gate:scoped` passed** —
 i.e. `gate:scoped` skipped a heavy layer (`test`/`build`/`test:e2e`) that CI then caught

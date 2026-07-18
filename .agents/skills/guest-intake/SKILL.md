@@ -38,9 +38,9 @@ This Skill adds only the guest loop.
 
 The three labels it moves between — `needs-info`, `ready-for-agent`, and
 `ready-for-human` — are defined in `docs/agents/triage-labels.md`, and every
-transition it needs is spelled out below. Comments carry the ADR-0017 provenance
-footer (a no-exemptions convention that already discloses AI authorship) and
-nothing else — no AI-triage disclaimer.
+transition it needs is spelled out below. Comments carry only the ADR-0017
+provenance footer — no AI-triage disclaimer, same as `guest-build` (see its
+"Run it" section for why).
 
 ## What it acts on — guest activity
 
@@ -154,11 +154,12 @@ comment.
 
 ## Concurrency — the `guest-in-flight` marker
 
-`guest-intake` and `guest-build` can each be fired on a tight, independent
-interval — nothing stops both from picking up the same issue at once. Issue
-#570: this already produced a near-miss (contradictory PRs building against
-the same issue for #555) before a human intervened. The fix is a shared
-in-flight marker label, `guest-in-flight`:
+Same marker, same rationale as `guest-build`'s own "Concurrency" section
+(issue #570, the near-miss it fixes) — read that section for the story and
+the staleness handling; `scripts/guest-marker.ts` stays the single home for
+the label name and window either way. `guest-intake`'s claim/release timing
+is narrower than `guest-build`'s, since intake's actions are per bounded step,
+not per whole issue:
 
 - **Claim it before acting.** The moment you're about to take the one bounded
   step for an issue (post the next question round, the reframe proposals, the
@@ -176,12 +177,6 @@ in-flight marker label, `guest-in-flight`:
   `actionable` output (issue #570) — a candidate that disappears from the
   scan is presumptively claimed by a concurrent session, not evidence of a
   bug in the scan itself.
-- **Staleness.** `scripts/guest-marker.ts` (`MARKER_STALE_MINUTES`) is the
-  single home for the label name and the staleness window — see that file's
-  header comment for why; the scan script already re-surfaces an issue whose
-  marker has aged past that window, since a marker that old means the session
-  that claimed it likely died mid-flight rather than that it's still working.
-  Don't hand-check label ages yourself — trust the scan's output.
 
 ## Run it
 
