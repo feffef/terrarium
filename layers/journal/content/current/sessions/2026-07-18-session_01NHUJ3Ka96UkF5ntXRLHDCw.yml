@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01NHUJ3Ka96UkF5ntXRLHDCw
 startedAt: 2026-07-18T07:01:20Z
-endedAt: 2026-07-18T07:14:52Z
-kind: delegated
-goal: Auto-triage sweep over open issues
+endedAt: 2026-07-18T17:45:55Z
+kind: interactive
+goal: Auto-triage sweep, then grill issues agent-ready
 status: completed
-outcome: 6 eligible issues triaged, 22 skipped
-summary: "Human kickoff via /auto-triage (delegated, no further prompts). Full scan of 28 open issues + 0 open PRs. 22 were idempotent skips (most-recent activity already AI's own, verified via provenance-footer absence) including the two wayfinder:map indexes. 6 eligible (no-label / needs-triage). Dispatched one verify-then-act subagent per issue. Outcomes, each verified against a primary source: #540 and #505 autonomously green-lit to ready-for-agent (determinate designs, non-human-only files, Trusted author — ADR-0022 standing green-light); #541 closed as already-implemented (demotion landed in PR #542); #530, #565, #564 escalated to ready-for-human (an owner product decision, and an ADR-0009 governance call x2). Every write (labels + one comment each) landed on GitHub; no repo files changed."
+outcome: 6 issues triaged; 5 promoted, 1 parked
+summary: "Round 1 (delegated kickoff via /auto-triage): full scan of 28 open issues + 0 PRs; 22 idempotent skips (most-recent activity already AI's own); 6 eligible triaged via one verify-then-act subagent each — #540/#505 autonomously green-lit to ready-for-agent (ADR-0022, determinate designs, non-human-only files), #541 closed already-implemented (PR #542), #530/#565/#564 escalated to ready-for-human (owner/ADR-0009 judgment calls). Round 2 (interactive — the owner asked which ready-for-human issues need only their input, then answered two grilling rounds): a subagent classified all 18 ready-for-human into input-only / drift / human-work. On the owner's explicit green-lights (ADR-0003), promoted #387, #427, #440, #428, #325 to ready-for-agent (each verified against source; #440 kept wayfinder:prototype; #325 honestly reframed after source showed the dev watch hook already on main); parked #236 as needs-info per the owner (not seen since patch removal + client error handling). All promotions were human-instructed, none agent-initiated. No repo files changed — all output is GitHub labels + comments."
 prs: []
 docsRead:
   - path: .claude/skills/auto-triage/SKILL.md
@@ -25,35 +25,44 @@ docsRead:
     reason: (no reason given)
 skillsUsed:
   - name: auto-triage
-    reason: the sweep entrypoint
+    reason: the round-1 sweep entrypoint
   - name: triage
     reason: per-issue state machine + brief format
+  - name: grilling
+    reason: round-2 owner decisions, one question at a time
   - name: close-session
     reason: self-judged closure
   - name: log-session
     reason: this log
 frictions:
   - description: scripts/list-open-issues.ts died with 'spawnSync gh ENOENT' (no gh binary), and the mcp__github__list_issues fallback overflowed the tool-result limit (~90k chars).
-    solution: "Forced a manual python slice of the saved file. This is exactly issue #505, which this sweep triaged to ready-for-agent (REST/fetch fallback, no new dep)."
+    solution: "Forced a manual python slice of the saved file. This is issue #505, which this session triaged and then promoted to ready-for-agent (REST/fetch fallback, no new dep)."
     severity: moderate
+  - description: "Label-transition drift: comments on #325 and #428 claimed a move to ready-for-agent, but the live labels still read ready-for-human — only a full re-scan surfaced the mismatch."
+    solution: "Already tracked by #507 / scripts/check-triage-drift.ts; that check is standalone and not wired into the auto-triage sweep, so drift like this isn't caught automatically yet."
+    severity: minor
   - description: Determining eligibility for the 18 comment-bearing issues needed a subagent to fetch each issue's most-recent comment — inherent to the skill's full-scan (not label-filtered) design.
-    solution: Isolated the fetches in a subagent to keep last-comment bodies out of main context; acceptable at this backlog size.
+    solution: Isolated the fetches in a subagent to keep comment bodies out of main context; fine at this backlog size.
     severity: nit
-durationSec: 811
+durationSec: 38675
 models:
-  claude-opus-4-8: 86
+  claude-opus-4-8: 126
 toolCounts:
-  Bash: 15
-  ToolSearch: 3
+  Bash: 17
+  ToolSearch: 4
   Read: 5
   mcp__github__get_me: 1
   mcp__github__list_issues: 1
-  Agent: 7
+  Agent: 13
   mcp__github__list_pull_requests: 1
   TaskCreate: 6
   TaskUpdate: 6
-  Skill: 2
-  Write: 1
+  Skill: 4
+  Write: 2
+  AskUserQuestion: 2
+  mcp__github__issue_write: 1
+  mcp__github__add_issue_comment: 1
+  Edit: 1
 subagents:
   - type: general-purpose
     task: Determine triage eligibility signals
@@ -69,8 +78,21 @@ subagents:
     task: "Triage issue #565"
   - type: general-purpose
     task: "Triage issue #564"
+  - type: general-purpose
+    task: Classify ready-for-human issues
+  - type: general-purpose
+    task: "Promote #387 to ready-for-agent"
+  - type: general-purpose
+    task: "Promote #427 to ready-for-agent"
+  - type: general-purpose
+    task: "Promote #440 to ready-for-agent"
+  - type: general-purpose
+    task: "Promote #428 to ready-for-agent"
+  - type: general-purpose
+    task: "Promote #325 to ready-for-agent"
 gitBranch: claude/auto-triage-jz1bhs
 entrypoint: remote_mobile
 cliVersion: 2.1.214
 learnings:
-  - Every issue body/comment in this repo is authored under owner login feffef, so author identity alone can't distinguish AI from human writes — only the ADR-0017 provenance-footer presence can.
+  - Every issue body/comment in this repo is authored under owner login feffef, so author identity alone can't distinguish AI from human writes — only ADR-0017 provenance-footer presence can.
+  - "A promotion brief's stated premise can be stale — #325's brief assumed the dev-server manifest watch hook was missing, but freshly-fetched origin/main showed it already landed; verify the issue's premise against source (not just the fix surface) before promoting, or you post a stale claim on a public issue."
