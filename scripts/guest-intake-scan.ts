@@ -54,6 +54,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { isAiAuthored } from './check-triage-drift.ts'
 import {
   decodeHtmlEntities,
+  envToken,
+  hasGhBinary,
   parseNextLink,
   parseOwnerRepo,
   pickFetchStrategy,
@@ -270,19 +272,6 @@ export function buildReport(scanned: ScannedIssue[]): ScanReport {
 
 function readOriginUrl(cwd: string): string {
   return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
-}
-
-function hasGhBinary(cwd: string): boolean {
-  try {
-    execFileSync('gh', ['--version'], { cwd, stdio: 'ignore' })
-    return true
-  } catch {
-    return false
-  }
-}
-
-function envToken(): string | undefined {
-  return process.env.GH_TOKEN || process.env.GITHUB_TOKEN
 }
 
 function readOpenIssuesViaGh(owner: string, repo: string, cwd: string): RawIssueRecord[] {

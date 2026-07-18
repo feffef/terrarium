@@ -175,7 +175,9 @@ function readOriginUrl(cwd: string): string {
   return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
 }
 
-function hasGhBinary(cwd: string): boolean {
+/** True when the `gh` binary is on PATH. Some remote sessions lack it (issue
+ *  #505) — the strategy switch falls back to REST there. */
+export function hasGhBinary(cwd: string): boolean {
   try {
     execFileSync('gh', ['--version'], { cwd, stdio: 'ignore' })
     return true
@@ -184,7 +186,9 @@ function hasGhBinary(cwd: string): boolean {
   }
 }
 
-function envToken(): string | undefined {
+/** The GitHub token the REST fallback authenticates with, or `undefined` when
+ *  none is set. */
+export function envToken(): string | undefined {
   return process.env.GH_TOKEN || process.env.GITHUB_TOKEN
 }
 
@@ -269,7 +273,7 @@ function readOpenIssueRecordsViaRest(owner: string, repo: string, token: string,
   while (url) {
     const { status, body, linkHeader } = curlGetPage(url, token, cwd)
     if (status[0] !== '2') {
-      throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}. ${MCP_FALLBACK_CAVEAT}`)
+      throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
     }
     out.push(...(JSON.parse(body) as RawIssueApiRecord[]))
     url = parseNextLink(linkHeader)
@@ -281,7 +285,18 @@ function readOpenIssueRecords(owner: string, repo: string, cwd: string): RawIssu
   const strategy = pickFetchStrategy(hasGhBinary(cwd), Boolean(envToken()))
   if (strategy === null) throw new Error(NO_ACCESS_PATH_MESSAGE)
   if (strategy === 'gh') return readOpenIssueRecordsViaGh(owner, repo, cwd)
-  return readOpenIssueRecordsViaRest(owner, repo, envToken()!, cwd)
+  // Any REST-path failure (non-2xx, `curl` absent, connection refused, malformed
+  // JSON) ends with the fallback caveat too — so *every* `gh`-absent failure
+  // mode, not just the no-credential one, steers back to the safe MCP path
+  // (issue #505).
+  try {
+    return readOpenIssueRecordsViaRest(owner, repo, envToken()!, cwd)
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    throw new Error(msg.includes(MCP_FALLBACK_CAVEAT) ? msg : `${msg}. ${MCP_FALLBACK_CAVEAT}`, {
+      cause: err,
+    })
+  }
 }
 
 // ── Command ──────────────────────────────────────────────────────────────────

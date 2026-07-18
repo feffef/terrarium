@@ -30,11 +30,11 @@
 // falls back to a direct authenticated REST call via `curl` (using a
 // `GH_TOKEN` / `GITHUB_TOKEN` env var) when it is not — `curl`, not Node's
 // built-in `fetch`, for the same proxy-auth reason `poll-guest-tickets.ts`'s
-// `curlGetPage` documents (issue #567). That fallback exists because issue
-// #505 found `list-open-issues.ts`'s `gh`-only path fragile in `gh`-less
-// remote sessions — this script avoids inheriting that same fragile
-// assumption where it's cheap to (a self-contained strategy switch, no fix to
-// #505 itself, which stays out of scope here).
+// `curlGetPage` documents (issue #567). The strategy switch itself
+// (`pickFetchStrategy`/`parseNextLink`/`hasGhBinary`/`envToken`) is shared
+// with `list-open-issues.ts`, its single home since issue #505 gave that base
+// module the same `gh`-less REST fallback; only the endpoint-specific `gh`/REST
+// readers below are script-local.
 //
 // Usage:  tsx scripts/check-triage-drift.ts [N]
 //   Checks up to N open issues (default 50, newest-updated-first) and prints
@@ -47,6 +47,8 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import {
   decodeHtmlEntities,
+  envToken,
+  hasGhBinary,
   parseNextLink,
   parseOwnerRepo,
   pickFetchStrategy,
@@ -219,26 +221,13 @@ export function toDriftCheckIssue(raw: RawIssueApiRecord): DriftCheckIssue | nul
 }
 
 // The `gh`/`rest` strategy switch (`pickFetchStrategy`, `parseNextLink`,
-// `FetchStrategy`) is single-homed in `list-open-issues.ts` (issue #505) and
-// imported above.
+// `FetchStrategy`, `hasGhBinary`, `envToken`) is single-homed in
+// `list-open-issues.ts` (issue #505) and imported above.
 
 // ── GitHub shell (thin) ──────────────────────────────────────────────────────
 
 function readOriginUrl(cwd: string): string {
   return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
-}
-
-function hasGhBinary(cwd: string): boolean {
-  try {
-    execFileSync('gh', ['--version'], { cwd, stdio: 'ignore' })
-    return true
-  } catch {
-    return false
-  }
-}
-
-function envToken(): string | undefined {
-  return process.env.GH_TOKEN || process.env.GITHUB_TOKEN
 }
 
 function readOpenIssuesViaGh(owner: string, repo: string, cwd: string): RawIssueApiRecord[] {
