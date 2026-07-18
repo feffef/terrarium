@@ -17,6 +17,8 @@ import {
   groupSessionReferences,
   hasHumanPromptedClosure,
   HUMAN_PROMPTED_CLOSURE,
+  isResolvedMisfile,
+  parseCommitFileChanges,
   parseSessionTrailers,
   parseSkillEditLog,
   pickWindow,
@@ -24,6 +26,7 @@ import {
   RESCUED_GAP_HOURS,
   SEP,
   tallyUsage,
+  type CommitFileChange,
   type InventoryEntry,
   type OnDiskSkill,
   type SessionFile,
@@ -480,6 +483,95 @@ describe('findOrphanedSessions()', () => {
       { sha: 'c1', date: '2026-07-10T00:00:00Z', session: 'session_older' },
     ]
     expect(findOrphanedSessions(refs, new Set()).map((o) => o.session)).toEqual(['session_older', 'session_newer'])
+  })
+
+  it('drops a resolved same-run mis-file: the flagged commit\'s added file was later removed (issue #574)', () => {
+    const refs: SessionTrailerRef[] = [
+      { sha: 'c1', date: '2026-07-12T00:00:00Z', session: 'session_misfiled' },
+    ]
+    const changes: CommitFileChange[] = [
+      { sha: 'c1', date: '2026-07-12T00:00:00Z', added: ['layers/journal/content/current/sessions/wrong-id.yml'], removed: [] },
+      { sha: 'c2', date: '2026-07-12T00:05:00Z', added: [], removed: ['layers/journal/content/current/sessions/wrong-id.yml'] },
+    ]
+    expect(findOrphanedSessions(refs, new Set(), changes)).toEqual([])
+  })
+
+  it('still flags a genuine orphan whose added file was never removed', () => {
+    const refs: SessionTrailerRef[] = [{ sha: 'c1', date: '2026-07-12T00:00:00Z', session: 'session_orphan' }]
+    const changes: CommitFileChange[] = [
+      { sha: 'c1', date: '2026-07-12T00:00:00Z', added: ['layers/journal/content/current/sessions/real.yml'], removed: [] },
+    ]
+    expect(findOrphanedSessions(refs, new Set(), changes)).toEqual([
+      { session: 'session_orphan', commits: ['c1'], date: '2026-07-12T00:00:00Z' },
+    ])
+  })
+
+  it('does not resolve on a removal that predates the add (order matters)', () => {
+    const refs: SessionTrailerRef[] = [{ sha: 'c2', date: '2026-07-12T00:05:00Z', session: 'session_orphan' }]
+    const changes: CommitFileChange[] = [
+      { sha: 'c1', date: '2026-07-12T00:00:00Z', added: [], removed: ['layers/journal/content/current/sessions/wrong-id.yml'] },
+      { sha: 'c2', date: '2026-07-12T00:05:00Z', added: ['layers/journal/content/current/sessions/wrong-id.yml'], removed: [] },
+    ]
+    expect(findOrphanedSessions(refs, new Set(), changes)).toEqual([
+      { session: 'session_orphan', commits: ['c2'], date: '2026-07-12T00:05:00Z' },
+    ])
+  })
+
+  it('does not resolve on a path mismatch', () => {
+    const refs: SessionTrailerRef[] = [{ sha: 'c1', date: '2026-07-12T00:00:00Z', session: 'session_orphan' }]
+    const changes: CommitFileChange[] = [
+      { sha: 'c1', date: '2026-07-12T00:00:00Z', added: ['a.yml'], removed: [] },
+      { sha: 'c2', date: '2026-07-12T00:05:00Z', added: [], removed: ['b.yml'] },
+    ]
+    expect(findOrphanedSessions(refs, new Set(), changes)).toEqual([
+      { session: 'session_orphan', commits: ['c1'], date: '2026-07-12T00:00:00Z' },
+    ])
+  })
+})
+
+describe('isResolvedMisfile()', () => {
+  it('returns false when the commit has no file-change data at all', () => {
+    expect(isResolvedMisfile(['c1'], [])).toBe(false)
+  })
+
+  it('ignores a different commit\'s add/remove of the same-named path when the flagged commit itself added nothing', () => {
+    const changes: CommitFileChange[] = [
+      { sha: 'c1', date: '2026-07-12T00:00:00Z', added: [], removed: [] },
+      { sha: 'c2', date: '2026-07-12T00:05:00Z', added: ['x.yml'], removed: [] },
+      { sha: 'c3', date: '2026-07-12T00:10:00Z', added: [], removed: ['x.yml'] },
+    ]
+    expect(isResolvedMisfile(['c1'], changes)).toBe(false)
+  })
+})
+
+describe('parseCommitFileChanges()', () => {
+  // Mirrors `git log --name-status --pretty=format:REC%H SEP %aI`.
+  function block(sha: string, date: string, statusLines: string[]): string {
+    return `${REC}${sha}${SEP}${date}\n${statusLines.join('\n')}`
+  }
+
+  it('splits added and removed paths by status letter', () => {
+    const raw = block('c1', '2026-07-12T00:00:00Z', ['A\ta.yml', 'D\tb.yml', 'M\tc.yml'])
+    expect(parseCommitFileChanges(raw)).toEqual([
+      { sha: 'c1', date: '2026-07-12T00:00:00Z', added: ['a.yml'], removed: ['b.yml'] },
+    ])
+  })
+
+  it('treats a rename as removing the old path and adding the new one', () => {
+    const raw = block('c1', '2026-07-12T00:00:00Z', ['R100\told.yml\tnew.yml'])
+    expect(parseCommitFileChanges(raw)).toEqual([
+      { sha: 'c1', date: '2026-07-12T00:00:00Z', added: ['new.yml'], removed: ['old.yml'] },
+    ])
+  })
+
+  it('handles a commit that touched no files', () => {
+    const raw = block('c1', '2026-07-12T00:00:00Z', [])
+    expect(parseCommitFileChanges(raw)).toEqual([{ sha: 'c1', date: '2026-07-12T00:00:00Z', added: [], removed: [] }])
+  })
+
+  it('reads every commit block in the log', () => {
+    const raw = [block('c1', '2026-07-11T00:00:00Z', ['A\ta.yml']), block('c2', '2026-07-12T00:00:00Z', ['D\ta.yml'])].join('\n')
+    expect(parseCommitFileChanges(raw).map((c) => c.sha)).toEqual(['c1', 'c2'])
   })
 })
 

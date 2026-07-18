@@ -14,7 +14,9 @@
 //   `regressionChecks` — each own Skill's most recent edit commit with the
 //   sessions immediately before/after it (session ids only; resolve against
 //   `regressionSessions`, deduped since the same session commonly brackets more
-//   than one Skill's edit) — `orphanedSessions` (issue #349), the two
+//   than one Skill's edit) — `orphanedSessions` (issue #349; a resolved
+//   same-run mis-file — a flagged commit's added file later removed by
+//   another commit — is excluded rather than surfaced, issue #574), the two
 //   manual-nudge-closure signals `humanPromptedClosures` and
 //   `manuallyRescuedClosures` (the counterpart to `orphanedSessions`: a session
 //   that DID log, but only because a human nudged it — invisible to the orphan
@@ -438,6 +440,17 @@ export interface SessionTrailerRef {
   session: string
 }
 
+/** One commit's added/removed file paths (`git log --name-status`), scoped to
+ *  the same `origin/main` + `ORPHAN_WINDOW_DAYS` window as `SessionTrailerRef` —
+ *  the raw material `isResolvedMisfile` diffs against to catch a same-run
+ *  mis-file cleanup (issue #574). */
+export interface CommitFileChange {
+  sha: string
+  date: string // commit author date, UTC ISO-8601 (git %aI)
+  added: string[]
+  removed: string[]
+}
+
 // Not just the current `session_<id>` shape — captures whatever follows the
 // trailer URL's final slash, since at least one early session log used a
 // bare UUID instead (2026-07-05-576a49a2-*.yml).
@@ -459,6 +472,35 @@ export function parseSessionTrailers(raw: string): SessionTrailerRef[] {
   return out
 }
 
+/** Expects `readCommitFileChanges`'s `git log --name-status` format: a header
+ *  line (`sha` SEP `date`) followed by `STATUS\tpath` lines. A rename
+ *  (`R100\told\tnew`, only emitted when git's rename detection fires) counts
+ *  as removing `old` and adding `new`. */
+export function parseCommitFileChanges(raw: string): CommitFileChange[] {
+  const out: CommitFileChange[] = []
+  for (const block of raw.split(REC).map((b) => b.trim()).filter(Boolean)) {
+    const lines = block.split('\n')
+    const header = lines[0] ?? ''
+    const [sha, date] = header.split(SEP)
+    if (!sha || !date) continue
+    const added: string[] = []
+    const removed: string[] = []
+    for (const line of lines.slice(1)) {
+      const m = line.match(/^([AMDRC])\d*\t([^\t]+)(?:\t(.+))?$/)
+      if (!m) continue
+      const [, status, path, renamedTo] = m
+      if (status === 'A') added.push(path as string)
+      else if (status === 'D') removed.push(path as string)
+      else if (status === 'R') {
+        removed.push(path as string)
+        if (renamedTo) added.push(renamedTo)
+      }
+    }
+    out.push({ sha, date, added, removed })
+  }
+  return out
+}
+
 /** `date` is the earliest, not latest, commit referencing the session —
  *  matches an orphan's own actual age. */
 export function groupSessionReferences(
@@ -474,15 +516,38 @@ export function groupSessionReferences(
   return out
 }
 
-/** Sorted oldest-first — the most actionable triage order (issue #349). */
+/** True when a commit that references the orphan-candidate session added a
+ *  file that some other commit in `changes` later removed — a same-run
+ *  mis-file (e.g. a CLI-transcript-id session log filed under the wrong id)
+ *  cleaned up before it became a genuine orphan, not a real gap (issue #574).
+ *  Matches on the exact path only; a rename that changes the path doesn't
+ *  count as a removal of the original. */
+export function isResolvedMisfile(commits: string[], changes: CommitFileChange[]): boolean {
+  const bySha = new Map(changes.map((c) => [c.sha, c]))
+  for (const sha of commits) {
+    const change = bySha.get(sha)
+    if (!change) continue
+    for (const path of change.added) {
+      if (changes.some((c) => c.sha !== sha && c.date > change.date && c.removed.includes(path))) return true
+    }
+  }
+  return false
+}
+
+/** Sorted oldest-first — the most actionable triage order (issue #349).
+ *  `fileChanges` (default `[]`, backward compatible) feeds `isResolvedMisfile`
+ *  to drop a resolved same-run mis-file rather than surface it as a fresh
+ *  orphan (issue #574). */
 export function findOrphanedSessions(
   refs: SessionTrailerRef[],
   knownSessionIds: Set<string>,
+  fileChanges: CommitFileChange[] = [],
 ): OrphanedSession[] {
   const grouped = groupSessionReferences(refs)
   const out: OrphanedSession[] = []
   for (const [session, { commits, date }] of grouped) {
     if (knownSessionIds.has(session)) continue
+    if (isResolvedMisfile(commits, fileChanges)) continue
     out.push({ session, commits, date })
   }
   return out.sort((a, b) => a.date.localeCompare(b.date))
@@ -633,6 +698,23 @@ function readSessionTrailers(cwd = root, days = ORPHAN_WINDOW_DAYS): SessionTrai
   return parseSessionTrailers(raw)
 }
 
+/** Same window as `readSessionTrailers` — the mis-file and its same-run
+ *  cleanup both land within it (issue #574). Scoped to `origin/main`, not
+ *  `--all`, per CLAUDE.md's git-log guidance. */
+function readCommitFileChanges(cwd = root, days = ORPHAN_WINDOW_DAYS): CommitFileChange[] {
+  let raw: string
+  try {
+    raw = execFileSync(
+      'git',
+      ['log', 'origin/main', `--since=${days} days ago`, '--name-status', `--pretty=format:${REC}%H${SEP}%aI`],
+      { cwd, encoding: 'utf8' },
+    )
+  } catch {
+    return []
+  }
+  return parseCommitFileChanges(raw)
+}
+
 /** Parse a SKILL.md's YAML frontmatter (between the first two `---` fences). A
  *  single malformed frontmatter (e.g. an unquoted `key: value` colon inside a
  *  plain-scalar `description`) warns to stderr and degrades to `{}` rather than
@@ -731,7 +813,7 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
   const rows = buildSkillRows(readOnDiskSkills(cwd, skillNames), readInventory(cwd), tallyUsage(window), external)
   const { checks, sessions } = buildRegressionChecks(all, readSkillEdits(cwd), external)
   const trailers = readSessionTrailers(cwd)
-  const orphanedSessions = findOrphanedSessions(trailers, readKnownSessionIds(cwd))
+  const orphanedSessions = findOrphanedSessions(trailers, readKnownSessionIds(cwd), readCommitFileChanges(cwd))
   return {
     windowSize,
     sessionsConsidered: all.length,
