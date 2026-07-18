@@ -271,7 +271,11 @@ useSeoMeta({
       </p>
       <template v-if="totalSparks">
         <ul v-if="recurringSparks.length" class="spark-clusters">
-          <li v-for="cluster in recurringSparks" :key="cluster.label" class="spark-cluster">
+          <!-- key by index, not cluster.label: two DIFFERENT mechanical clusters can land
+               on the same top-2-keyword label (e.g. two distinct groups both surfacing
+               "allow · claude") without actually merging — a real duplicate-label case
+               observed against the live corpus, not a hypothetical. -->
+          <li v-for="(cluster, ci) in recurringSparks" :key="ci" class="spark-cluster">
             <h3 class="spark-cluster-label">{{ cluster.label }}</h3>
             <ul class="spark-items">
               <li v-for="(item, i) in cluster.items" :key="i" class="spark-item">
