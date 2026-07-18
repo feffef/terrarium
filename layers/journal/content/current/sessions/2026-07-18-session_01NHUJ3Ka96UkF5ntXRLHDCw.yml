@@ -1,0 +1,76 @@
+schemaVersion: 1
+session: session_01NHUJ3Ka96UkF5ntXRLHDCw
+startedAt: 2026-07-18T07:01:20Z
+endedAt: 2026-07-18T07:14:52Z
+kind: delegated
+goal: Auto-triage sweep over open issues
+status: completed
+outcome: 6 eligible issues triaged, 22 skipped
+summary: "Human kickoff via /auto-triage (delegated, no further prompts). Full scan of 28 open issues + 0 open PRs. 22 were idempotent skips (most-recent activity already AI's own, verified via provenance-footer absence) including the two wayfinder:map indexes. 6 eligible (no-label / needs-triage). Dispatched one verify-then-act subagent per issue. Outcomes, each verified against a primary source: #540 and #505 autonomously green-lit to ready-for-agent (determinate designs, non-human-only files, Trusted author — ADR-0022 standing green-light); #541 closed as already-implemented (demotion landed in PR #542); #530, #565, #564 escalated to ready-for-human (an owner product decision, and an ADR-0009 governance call x2). Every write (labels + one comment each) landed on GitHub; no repo files changed."
+prs: []
+docsRead:
+  - path: .claude/skills/auto-triage/SKILL.md
+    reason: the sweep's own rules
+  - path: .claude/skills/triage/SKILL.md
+    reason: composed per-issue triage rules
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: brief format for ready-for-agent
+  - path: docs/agents/issue-tracker.md
+    reason: no-gh MCP mapping + overflow caveats
+  - path: docs/agents/triage-labels.md
+    reason: label vocabulary
+  - path: CONTEXT.md
+    reason: Session kind classification
+  - path: .claude/skills/triage/OUT-OF-SCOPE.md
+    reason: (no reason given)
+skillsUsed:
+  - name: auto-triage
+    reason: the sweep entrypoint
+  - name: triage
+    reason: per-issue state machine + brief format
+  - name: close-session
+    reason: self-judged closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: scripts/list-open-issues.ts died with 'spawnSync gh ENOENT' (no gh binary), and the mcp__github__list_issues fallback overflowed the tool-result limit (~90k chars).
+    solution: "Forced a manual python slice of the saved file. This is exactly issue #505, which this sweep triaged to ready-for-agent (REST/fetch fallback, no new dep)."
+    severity: moderate
+  - description: Determining eligibility for the 18 comment-bearing issues needed a subagent to fetch each issue's most-recent comment — inherent to the skill's full-scan (not label-filtered) design.
+    solution: Isolated the fetches in a subagent to keep last-comment bodies out of main context; acceptable at this backlog size.
+    severity: nit
+durationSec: 811
+models:
+  claude-opus-4-8: 86
+toolCounts:
+  Bash: 15
+  ToolSearch: 3
+  Read: 5
+  mcp__github__get_me: 1
+  mcp__github__list_issues: 1
+  Agent: 7
+  mcp__github__list_pull_requests: 1
+  TaskCreate: 6
+  TaskUpdate: 6
+  Skill: 2
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Determine triage eligibility signals
+  - type: general-purpose
+    task: "Triage issue #540"
+  - type: general-purpose
+    task: "Triage issue #505"
+  - type: general-purpose
+    task: "Triage issue #541"
+  - type: general-purpose
+    task: "Triage issue #530"
+  - type: general-purpose
+    task: "Triage issue #565"
+  - type: general-purpose
+    task: "Triage issue #564"
+gitBranch: claude/auto-triage-jz1bhs
+entrypoint: remote_mobile
+cliVersion: 2.1.214
+learnings:
+  - Every issue body/comment in this repo is authored under owner login feffef, so author identity alone can't distinguish AI from human writes — only the ADR-0017 provenance-footer presence can.
