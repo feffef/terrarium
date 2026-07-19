@@ -59,8 +59,8 @@ If your output contradicts an existing ADR, surface it explicitly rather than si
 ## Check a new Tenant/Collection proposal against ADR-0006 immediately
 
 The moment a new Tenant or Collection is proposed, check it against ADR-0006's
-pages-only-routing constraint (only the `pages` Collection is
-route-addressable) — don't defer the check to a later fan-out or review pass.
+pages-only-routing constraint (see `CLAUDE.md`'s Ground rules for what that
+constraint is) — don't defer the check to a later fan-out or review pass.
 A separately-named, addressable-sounding Collection (e.g. a Tenant's "sites"
 or "exhibits") reads as natural design but violates ADR-0006; catching it at
 proposal time avoids carrying the mistake across several turns before another

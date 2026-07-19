@@ -47,23 +47,18 @@ just because its label still reads `ready-for-human`.
 
 This is a full scan — one comments/body fetch per open issue, not a
 label-filtered query — because the whole point is catching a state/comment
-combination no label can express. That's fine at this backlog's current size;
-if the open-issue count grows large enough for the per-issue fetch to matter,
-revisit it then rather than building speculative pagination or caching now.
+combination no label can express. There's no fixed issue-count threshold for
+when to reconsider that — revisit only once a full sweep visibly costs
+noticeable wall-clock time or API budget in practice, not by pre-building
+speculative pagination or caching against a guessed number.
 
 ## Be brave — bounded by determinability
 
 Default to deciding. Stamp `ready-for-agent` and post a full Agent Brief whenever
 the repo **determines** a concrete, well-understood design. Escalate to
-`ready-for-human` only on a genuine **judgment call** or genuine design
-**uncertainty**:
-
-- **judgment call** — an irreversible / destructive operation · a governance/ADR
-  decision · external access the agent lacks · subjective product/design the owner
-  should own.
-- **uncertainty** — the *design itself* is undetermined: unclear desired
-  behaviour, competing valid approaches, or a claim you cannot verify against a
-  primary source.
+`ready-for-human` only on a genuine judgment call or genuine design uncertainty
+— see ADR-0022's Decision section for that taxonomy (the judgment-call bullets
+and the uncertainty bullets), rather than restating it here.
 
 **Ordinary implementation latitude is not uncertainty.** The impl choices every
 Agent Brief deliberately leaves open — naming, which helper, exact wording — stay
