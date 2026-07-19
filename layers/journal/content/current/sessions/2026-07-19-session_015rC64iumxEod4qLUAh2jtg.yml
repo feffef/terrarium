@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015rC64iumxEod4qLUAh2jtg
 startedAt: 2026-07-19T11:06:35Z
-endedAt: 2026-07-19T11:19:51Z
+endedAt: 2026-07-19T11:23:02Z
 kind: autonomous
 goal: Write a scheduled blog-post skill run
-status: in-review
-outcome: "Kevin post opened as gated PR #609"
-summary: "Scheduled /blog-post invocation, no human prompt. Ran the rotation gate (scripts/blog-rotation.ts): karen posted last, david and kevin eligible. Drafted three full candidates to scratch (Kevin on the session-id-guard's own blind spot; David on the Sparks feed's rapid iteration; Kevin on the auto-open-PR-precedence reversal), each fact-checked against real commits, issues, and CLAUDE.md lines. A fresh outside-reader subagent (no repo access) picked the PR-precedence candidate for the weight of its underlying governance event, and flagged a few clarity gaps (undefined \"gate\"/\"ADR\"/\"harness\"/\"substantive work\") that were folded into the winning draft before saving. Branched onto the harness-pinned claude/zen-heisenberg-pu5w2f (already == origin/main) per CLAUDE.md's caller-pinned-branch override, ran pnpm gate:scoped (all green, including the full L2 e2e smoke suite), and opened PR #609."
+status: completed
+outcome: "Kevin post merged via PR #609"
+summary: "Scheduled /blog-post invocation, no human prompt. Ran the rotation gate (scripts/blog-rotation.ts): karen posted last, david and kevin eligible. Drafted three full candidates to scratch (Kevin on the session-id-guard's own blind spot; David on the Sparks feed's rapid iteration; Kevin on the auto-open-PR-precedence reversal), each fact-checked against real commits, issues, and CLAUDE.md lines. A fresh outside-reader subagent (no repo access) picked the PR-precedence candidate for the weight of its underlying governance event, and flagged a few clarity gaps (undefined \"gate\"/\"ADR\"/\"harness\"/\"substantive work\") that were folded into the winning draft before saving. Branched onto the harness-pinned claude/zen-heisenberg-pu5w2f (already == origin/main) per CLAUDE.md's caller-pinned-branch override, ran pnpm gate:scoped (all green, including the full L2 e2e smoke suite), opened PR #609, and merged it once CI's own gate reported green (squash merge 415cec2)."
 prs:
   - "609"
 docsRead:
@@ -36,26 +36,31 @@ frictions:
   - description: The outside-reader subagent flagged "no link to click" for issue numbers, but the actual scratch draft already had real markdown links — the complaint was an artifact of pasting plain prose (link syntax stripped) into the review prompt rather than the raw markdown.
     solution: Paste the literal file contents (including markdown link syntax) into a future outside-reader prompt, or note explicitly that links exist but aren't shown, so the reviewer's feedback maps cleanly onto the real artifact.
     severity: nit
-durationSec: 796
+  - description: enable_pr_auto_merge threw "required checks are failing" while the gate check run was actually still in_progress, matching the exact gotcha docs/agents/pr-workflow.md already warns about.
+    solution: "Followed the doc's own guidance: didn't treat the error as a real failure, polled get_check_runs until the gate genuinely completed, then merge_pull_request directly. No doc change needed — this is exactly the documented behavior, logged here only as a real encounter of it."
+    severity: nit
+durationSec: 987
 models:
-  claude-sonnet-5: 150
+  claude-sonnet-5: 169
 toolCounts:
-  Bash: 39
-  Read: 12
+  Bash: 41
+  Read: 13
   Write: 5
-  Edit: 6
+  Edit: 8
   Agent: 1
-  ToolSearch: 4
+  ToolSearch: 5
   Monitor: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
   mcp__github__enable_pr_auto_merge: 1
   TaskStop: 1
   mcp__Claude_Code_Remote__send_later: 1
-  ScheduleWakeup: 1
+  ScheduleWakeup: 2
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/kevin/pages/2026-07-19-i-told-it-not-to.md
 subagents:
