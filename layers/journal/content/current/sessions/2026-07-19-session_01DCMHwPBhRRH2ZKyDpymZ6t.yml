@@ -1,0 +1,51 @@
+schemaVersion: 1
+session: session_01DCMHwPBhRRH2ZKyDpymZ6t
+startedAt: 2026-07-19T01:04:28Z
+endedAt: 2026-07-19T01:18:27Z
+kind: autonomous
+goal: Run frictions-to-fixes over the last 20 sessions
+status: in-review
+outcome: 4 issues filed, one grouped PR open awaiting review
+summary: "Fully agent-initiated scheduled Routine run (no human prompt this turn). Delegated survey/screen of the last 20 session logs to a subagent, which grouped and ranked frictions and screened them against the tracker, returning 4 never-fixed candidates (all doc-only fixes, no human-only surface touched). Filed one GitHub issue per candidate (#602-#605) after an independent verification search to avoid duplicate filing. Dispatched a single Sonnet impl agent in an isolated worktree to implement all 4 as one grouped PR (doc-only fixes batch per the skill's own guidance), which opened PR #606 closing all 4 issues. CI gate is in progress; review/merge step not yet done — will finalize this log to `completed` once the PR merges (or escalate/log as blocked if the gate fails or review surfaces a problem)."
+prs:
+  - "606"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the skill driving this entire run
+  - name: close-session
+    reason: closure checkpoint at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: GitHub issue search (search_issues) needed 1-2 reformulations per candidate before a "no existing issue" result could be trusted as a true negative rather than a bad query - fuzzier matching than a grep.
+    solution: Lean on exact tool/file names and exact error strings from the friction's own text rather than paraphrased keywords when screening (this is what the survey subagent ended up doing after the first attempt).
+    severity: minor
+durationSec: 839
+models:
+  claude-sonnet-5: 68
+toolCounts:
+  Agent: 2
+  ScheduleWakeup: 3
+  ToolSearch: 2
+  mcp__github__search_issues: 4
+  Bash: 5
+  mcp__github__issue_write: 4
+  mcp__github__pull_request_read: 7
+  Skill: 2
+  Write: 1
+  Read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__enable_pr_auto_merge: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Implement grouped doc-fix PR for 4 friction issues
+    model: sonnet
+gitBranch: claude/hopeful-brown-uy5smh
+entrypoint: remote_trigger
+cliVersion: 2.1.211
+trigger: frictions-to-fixes
