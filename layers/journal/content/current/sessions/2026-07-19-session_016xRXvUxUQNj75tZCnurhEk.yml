@@ -1,0 +1,85 @@
+schemaVersion: 1
+session: session_016xRXvUxUQNj75tZCnurhEk
+startedAt: 2026-07-19T04:08:20Z
+endedAt: 2026-07-19T04:30:57Z
+kind: autonomous
+goal: Run /audit-docs — fact-check repo prose against code
+status: in-review
+outcome: "PR #607 opened green; escalation PR pending"
+summary: "Scheduled, unprompted /audit-docs run: no human prompt this session, kicked off by a routine. Fanned out 4 paired-lens agents (Freshness, Single-home, Concision, Coherence) over the repo's Live/Historical/Pack-generic doc tiers, pooled 10 candidate findings, fact-checked all 10 independently (7 CONFIRMED, 3 CONFIRMED-BUT with corrections, 2 WRONG and dropped), then fixed the 8 surviving findings. 7 were self-merge-eligible Live-tier fixes, shipped in gated PR #607 (docs/agents/issue-tracker.md, domain.md, auto-triage/SKILL.md, CLAUDE.md, CONTEXT.md) after a green `pnpm gate:scoped`. The 8th (ADR-0004 missing an amendment banner reflecting its narrowed auto-merge grant) is a human-only ADR edit and is being pushed as a separate escalation PR right after this log. No unresolvable factual conflict surfaced, so no needs-triage issue was filed. All work this session is agent-initiated per the audit-docs Skill's own autonomous, bounded charter — no human steered or redirected any of it."
+prs:
+  - "607"
+docsRead:
+  - path: CLAUDE.md
+    reason: entry point + Ground rules read by every lens agent
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: F8 verification — auto-merge eligibility text
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: F8 verification — auto-merge exemption ledger
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: amendment-banner-vs-in-place-edit rule for the ADR-0004 fix
+  - path: docs/agents/pr-workflow.md
+    reason: F7/F8 verification — merge authority + branch-protection hedge
+  - path: docs/agents/issue-tracker.md
+    reason: (read before editing)
+  - path: docs/agents/domain.md
+    reason: (read before editing)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (read before editing)
+  - path: CONTEXT.md
+    reason: (read before editing)
+  - path: scripts/list-open-issues.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the run itself
+  - name: close-session
+    reason: closure trigger at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Fact-checker's first pass on the ADR-0004 amendment-banner finding (F8) slightly overstated the list of Skills with merge authority (included auto-triage, which has no self-merge grant per docs/agents/pr-workflow.md's "Per-tier merge authority" section).
+    solution: Re-verified against pr-workflow.md and ADR-0003's ledger directly before writing the ADR-0004 banner; corrected list is digest, audit-docs, audit-skills, blog-post (self-merge) plus frictions-to-fixes (reviewer-gated). No doc fix needed — caught before anything was written to the ADR.
+    severity: minor
+durationSec: 1356
+models:
+  claude-sonnet-5: 179
+toolCounts:
+  Bash: 32
+  ToolSearch: 3
+  TaskCreate: 6
+  TaskUpdate: 11
+  Agent: 5
+  ScheduleWakeup: 5
+  Read: 13
+  Edit: 10
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 2
+  PushNotification: 1
+  TaskList: 1
+filesEdited:
+  - docs/agents/issue-tracker.md
+  - docs/agents/domain.md
+  - .agents/skills/auto-triage/SKILL.md
+  - CLAUDE.md
+  - CONTEXT.md
+  - docs/adr/0004-objective-safety-gate.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check pooled audit-docs findings
+gitBranch: claude/festive-mayer-bdcvwb
+entrypoint: remote_trigger
+cliVersion: 2.1.211
+trigger: audit-docs
