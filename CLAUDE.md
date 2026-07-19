@@ -181,7 +181,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   `Claude-Session:` trailer on this session's own commits against the
   resolved ground truth and records a mismatch — it catches a fabricated
   trailer after the fact, it doesn't replace writing the real id in the first
-  place.
+  place. **That guard only sees git commit trailers — it cannot see a GitHub
+  comment, issue, or PR-body footer**, so a fabricated session id in one of
+  those remains governed by this prose rule alone (issue #605); resolve it
+  the same way before posting. Since no edit-comment tool exists, the standing
+  remedy for a bad footer caught after posting is to post a visible follow-up
+  correction comment, not to try to rewrite the original.
 - **Verify any subagent- or doc-derived factual or behavioral claim against a
   locally observable primary source before publishing it externally** (an
   issue/PR comment, an external post, etc.) — a subagent's inference or a
@@ -397,6 +402,21 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
     provisions a brand-new checkout with no memory of the prior work, risking
     a duplicate branch/push or losing the first attempt's already-committed
     local work; `SendMessage` continues the same agent, worktree, and history.
+  - **A dispatch brief that tells a worktree-isolated subagent to wait on a
+    backgrounded command (e.g. `pnpm gate:scoped`) must also name the concrete
+    way to confirm it finished** — a log-file completion marker to check, or
+    the `Monitor` tool — not just "run it and wait." A subagent that only
+    checks once and stops can stall waiting on a still-running job, needing to
+    be resumed via `SendMessage` with the log's actual tail pasted in (issue
+    #602).
+  - **Before dispatching several parallel impl agents (mechanism 2), check
+    whether their issues plausibly touch the same file.** If they might,
+    either serialize dispatch for that file or explicitly budget
+    rebase-and-reconcile review time — a green gate on each branch
+    independently does **not** mean the branches are safe to merge in any
+    order; the second branch can go stale the moment the first merges,
+    especially when both touch the same file in adjacent (not overlapping)
+    regions that git wouldn't flag as a conflict (issue #603).
 - **Before dispatching subagents whose outputs share a load-bearing/structural
   design axis — the thing every one of their outputs depends on — grill it to
   a locked answer first**, using the `grilling` Skill by name. The trigger is
