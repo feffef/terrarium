@@ -61,8 +61,7 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   beyond the session-log-only commit** (the ADR-0009 direct-to-`main` exception
   below) — a real code/content/doc change, not just exploration or reading. A
   session that commits nothing, or only a session log, isn't substantive and has
-  nothing to gate; a session that lands even one working commit is and opens the
-  PR itself. This gates *opening*, not *deciding to do the work* — net-new
+  nothing to gate. This gates *opening*, not *deciding to do the work* — net-new
   autonomous work still needs a green-light first (ADR-0003 amendment). The
   session-log direct-to-`main` exception (ADR-0009) is untouched. Watching the
   PR through to merge/close is automatic too, on the same no-ask default — see
@@ -478,8 +477,12 @@ The steps are single-homed in `package.json` (`gate` = the full sequence; `gate:
 wraps it), not restated here so this doc can't drift.
 
 **The authoritative gate is CI**, which runs the full `pnpm gate` on every PR
-(`.github/workflows/gate.yml`) — the run that must go green to merge (ADR-0004), so you
-don't run the full gate locally yourself. Both the keyed collections (Ground rules above)
+(`.github/workflows/gate.yml`) — the run that must go green to merge (ADR-0004
+convention; whether GitHub itself mechanically enforces that is a separate,
+currently-unresolved question — see
+`docs/research/github-branch-protection-vs-autonomous-log-commits.md` for
+`main`'s actual branch-protection state), so you don't run the full gate
+locally yourself. Both the keyed collections (Ground rules above)
 and the routing map derive from the manifests at build time — no regenerate step needed.
 
 ```
