@@ -1,0 +1,50 @@
+schemaVersion: 1
+session: session_01FrR9qaaSckm5eGkyoSRq3M
+startedAt: 2026-07-18T22:00:15Z
+endedAt: 2026-07-19T00:00:46Z
+kind: interactive
+goal: Trim dates and age the Sparks feed
+status: completed
+outcome: "Merged: dates removed, feed windowed to 3 days"
+summary: 'Human-instructed: the user asked to stop showing dates/times on the journal Sparks feed and to show only ideas from the last three days. Implemented both in latestIdeas() (dashboard.ts) — a SPARK_FEED_DAYS=3 recency filter with an injectable `now` for deterministic tests, keeping the existing 15-item cap as a ceiling — dropped the now-unused `when` field from SparkItem, and changed the per-idea source link from a formatted date to "source →". Updated the journal-dashboard unit tests (fixed `now`, new out-of-window drop case) and the SFC/dashboard comments. Full pnpm gate:scoped passed; opened PR #599, which has since merged.'
+prs:
+  - "599"
+docsRead:
+  - path: layers/journal/app/utils/dashboard.ts
+    reason: home of latestIdeas / SparkItem feed logic
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: Sparks template renders item.when
+  - path: layers/journal/tests/unit/journal-dashboard.spec.ts
+    reason: locks latestIdeas behavior
+  - path: layers/journal/app/types/journal.ts
+    reason: (read before editing)
+  - path: tests/unit/sparks.spec.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: author this log
+frictions: []
+durationSec: 7231
+models:
+  claude-opus-4-8: 94
+toolCounts:
+  Grep: 6
+  Read: 9
+  Bash: 12
+  Edit: 10
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  Skill: 2
+  Write: 1
+filesEdited:
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/app/types/journal.ts
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+gitBranch: claude/sparks-date-time-filter-pcv2tx
+entrypoint: remote_mobile
+cliVersion: 2.1.211
