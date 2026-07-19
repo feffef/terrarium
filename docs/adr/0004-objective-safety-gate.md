@@ -76,6 +76,23 @@ Status: Accepted
 > workflow approval; human-only merge for Public PRs), so untrusted code never
 > runs in CI or lands without a **Trusted** user's action. See ADR-0020.
 
+> **Amended (2026-07-19).** The **Auto-merge eligibility** line below reads as a
+> general policy — any low-risk PR is auto-mergeable when green. In practice it
+> was never realized that broadly: auto-merge authority exists only as a set of
+> separate, individually-dated amendments to
+> [ADR-0003](0003-agent-operating-model-and-governance.md)'s auto-merge
+> exemption ledger, each naming one specific chartered Skill and a bounded
+> scope — `digest`, `audit-docs`, `audit-skills`, and `blog-post` merge on a
+> green gate alone; `frictions-to-fixes` merges only as a reviewer applying its
+> own risk judgement, not purely mechanically (see the ledger for dates and
+> exact scopes). An **ordinary work PR — even one that is content-only or
+> touches a single Tenant's layer/manifest — is always human-merged**; see
+> `docs/agents/pr-workflow.md`'s "Per-tier merge authority" for the current,
+> complete list. The Decision's blast-radius *classification* below (what
+> counts as low- vs high-risk) is unchanged and still governs; only which
+> Skills are actually granted auto-merge authority against that classification
+> is narrower than the general phrasing below implies.
+
 ## Context
 
 Both the human reviewer (now) and the scheduled review-agent (mid-term, ADR-0003)
