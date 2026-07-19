@@ -41,3 +41,15 @@ observations:
       runtime-git-read PoC tenant, the #443 authorAssociation labeling change,
       the #437 review-comment fix, the mobile Recent-Activity-cards overflow
       fix, the flaky-gate-test fix), the same inconsistent-adoption pattern.
+  - date: 2026-07-19
+    note: >-
+      Used in 7 of this window's 40 sessions (session_01GL5jaMXhfPa9X67WuQwPLi's
+      #505 fix, session_011KeHQLZULr1hhhsCrtyLpE's audit-check dismissal set,
+      session_01FxNovsJKNpdYKa8X3XRwqd's frictions-to-fixes dispatch review,
+      session_015PgK5s6dkbKrW7jagzTZRE's Midden Tenant redesign,
+      session_01Tj6TVeZmBVcyUteTqgvYgy's flaky e2e fix, session_019W471jzQDwoZmKzJKtE4vk's
+      #449 gaps, session_017dzPLRmeEMHeMswznBR9N4's ready-for-agent implement) —
+      still skipped in 3 other code-landing sessions this window
+      (session_01CWmywSYZ2iY919UuP4M2V9's 6-issue parallel-agent batch,
+      session_01G4rmUvezd1kADVdf5vcEyu's #236 fix, session_016rKpNdAWs7e5Vcz77FYm27's
+      route-listing removal), confirming the adoption pattern in role is still accurate.

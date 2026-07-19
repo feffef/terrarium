@@ -7,4 +7,10 @@ role: >-
   bright-line-evidenced Inventory changes (ADR-0004's low-risk tier); a
   citable frontmatter concern gets a filed/commented issue, anything softer
   becomes a learning/idea instead — never a direct edit (ADR-0015).
-observations: []
+observations:
+  - date: 2026-07-19
+    note: >-
+      Used in 3 of this window's 40 sessions, all its own scheduled runs:
+      session_01LMmeZwRTneoFhdrJuR8bjm, session_0199v5EPwospBeRkjc2CdUiH, and
+      session_01Cks11tHyf5hQsn3SJuJ6kn — matches role (grade/role unchanged;
+      first observations entry for this Skill).

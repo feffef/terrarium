@@ -41,3 +41,19 @@ observations:
       /implement calls specifically but still not unconditional across the
       Skill's full stated domain; role and grade held as-is pending a
       cleaner signal.
+  - date: 2026-07-19
+    note: >-
+      Used in 6 of this window's 40 sessions: session_01CWmywSYZ2iY919UuP4M2V9
+      ("Implement 6 backlog issues via parallel agents" — a batch session that
+      DID invoke it, unlike the 07-17-noted batch counter-example),
+      session_01GL5jaMXhfPa9X67WuQwPLi (#505), session_011KeHQLZULr1hhhsCrtyLpE
+      (audit-check dismissal set), session_015PgK5s6dkbKrW7jagzTZRE (#515
+      Midden Tenant), session_019W471jzQDwoZmKzJKtE4vk (#449), and
+      session_017dzPLRmeEMHeMswznBR9N4 (ready-for-agent implement) — but still
+      skipped in session_01G4rmUvezd1kADVdf5vcEyu (#236 fix),
+      session_016rKpNdAWs7e5Vcz77FYm27 (route-listing removal), and
+      session_01Tj6TVeZmBVcyUteTqgvYgy (flaky e2e fix, used code-review
+      instead). The prior note's batch/single-issue split doesn't hold up
+      cleanly anymore (a batch session used it this time) — adoption remains
+      genuinely inconsistent rather than following any one pattern; role and
+      grade held as-is.
