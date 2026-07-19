@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01DCMHwPBhRRH2ZKyDpymZ6t
 startedAt: 2026-07-19T01:04:28Z
-endedAt: 2026-07-19T01:18:27Z
+endedAt: 2026-07-19T01:22:08Z
 kind: autonomous
 goal: Run frictions-to-fixes over the last 20 sessions
-status: in-review
-outcome: 4 issues filed, one grouped PR open awaiting review
-summary: "Fully agent-initiated scheduled Routine run (no human prompt this turn). Delegated survey/screen of the last 20 session logs to a subagent, which grouped and ranked frictions and screened them against the tracker, returning 4 never-fixed candidates (all doc-only fixes, no human-only surface touched). Filed one GitHub issue per candidate (#602-#605) after an independent verification search to avoid duplicate filing. Dispatched a single Sonnet impl agent in an isolated worktree to implement all 4 as one grouped PR (doc-only fixes batch per the skill's own guidance), which opened PR #606 closing all 4 issues. CI gate is in progress; review/merge step not yet done — will finalize this log to `completed` once the PR merges (or escalate/log as blocked if the gate fails or review surfaces a problem)."
+status: completed
+outcome: 4 issues filed and fixed in one merged PR
+summary: "Fully agent-initiated scheduled Routine run (no human prompt at any point). Delegated survey/screen of the last 20 session logs to a subagent, which grouped and ranked frictions and screened them against the tracker, returning 4 never-fixed candidates (all doc-only fixes, no human-only surface touched) plus a long dropped list already covered by prior fixes. Independently re-verified via targeted GitHub issue searches that none of the 4 candidates were already tracked before filing issues #602-#605. Dispatched a single Sonnet impl agent in an isolated worktree to implement all 4 as one grouped doc-only PR (#606), per the skill's own batch-doc-fixes guidance. Reviewed the diff myself against each issue's recommended solution and the repo's doc-fix house rules, posted a review comment on the PR, confirmed CI's safety gate went green, and merged it (squash), closing all 4 issues. No escalation was needed - all 4 fixes were simple, safe-surface doc changes per ADR-0003/0004."
 prs:
   - "606"
 docsRead:
@@ -16,29 +16,34 @@ skillsUsed:
   - name: frictions-to-fixes
     reason: the skill driving this entire run
   - name: close-session
-    reason: closure checkpoint at PR-open
+    reason: closure checkpoint, invoked at PR-open and again now at merge
   - name: log-session
     reason: (no reason given)
 frictions:
-  - description: GitHub issue search (search_issues) needed 1-2 reformulations per candidate before a "no existing issue" result could be trusted as a true negative rather than a bad query - fuzzier matching than a grep.
-    solution: Lean on exact tool/file names and exact error strings from the friction's own text rather than paraphrased keywords when screening (this is what the survey subagent ended up doing after the first attempt).
+  - description: GitHub issue search (search_issues) needed 1-2 reformulations per candidate before a "no existing issue" result could be trusted as a true negative - fuzzier matching than a grep. Recurring pattern noted by the survey subagent too.
+    solution: Lean on exact tool/file names and exact error strings from the friction's own text rather than paraphrased keywords when screening against the tracker.
     severity: minor
-durationSec: 839
+  - description: 'enable_pr_auto_merge threw "required checks are failing" on PR #606 while the gate check was genuinely still in_progress, matching the known false-negative documented in docs/agents/pr-workflow.md.'
+    solution: Already documented and the doc's guidance held exactly as written - confirmed real check state via pull_request_read rather than trusting the error, then merged directly once actually green. No new fix needed; this confirms the existing doc is correct, not a fresh friction to fix.
+    severity: nit
+durationSec: 1060
 models:
-  claude-sonnet-5: 68
+  claude-sonnet-5: 87
 toolCounts:
   Agent: 2
-  ScheduleWakeup: 3
+  ScheduleWakeup: 4
   ToolSearch: 2
   mcp__github__search_issues: 4
-  Bash: 5
+  Bash: 7
   mcp__github__issue_write: 4
-  mcp__github__pull_request_read: 7
+  mcp__github__pull_request_read: 9
   Skill: 2
-  Write: 1
+  Write: 2
   Read: 1
   mcp__github__add_issue_comment: 1
   mcp__github__enable_pr_auto_merge: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 subagents:
   - type: general-purpose
     task: Survey and screen session frictions
