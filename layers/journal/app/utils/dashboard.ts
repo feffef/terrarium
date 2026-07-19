@@ -229,7 +229,8 @@ export function digestAnchor(date: string): string {
 // session's card. Ideas-only and capped by owner request: the earlier feed
 // folded in `learnings` too and keyword-clustered the whole corpus, which grew
 // long enough to dominate the entire Space landing. The dashboard now shows
-// just the latest `SPARK_FEED_LIMIT` ideas, densely. (`scripts/sparks.ts`
+// just the latest `SPARK_FEED_LIMIT` ideas from the last `SPARK_FEED_DAYS`
+// days, densely, and without per-idea dates (owner request). (`scripts/sparks.ts`
 // keeps the full keyword-clustering path — the FS/CLI data layer for a future
 // ideas-to-issue promotion step — so that pipeline is unaffected by this
 // display-only trim.)
@@ -241,13 +242,20 @@ export function digestAnchor(date: string): string {
 // the first `limit` yields the latest ideas with no re-sort of its own.
 export const SPARK_FEED_LIMIT = 15
 
-export function latestIdeas(sessions: SessionDoc[], limit = SPARK_FEED_LIMIT): SparkItem[] {
+// The feed is a "what are we sparking on right now" view, not an archive: only
+// ideas from sessions in the last SPARK_FEED_DAYS days surface (owner request).
+// `now` is injected (defaulting to the wall clock) so the window is testable.
+export const SPARK_FEED_DAYS = 3
+const DAY_MS = 24 * 60 * 60 * 1000
+
+export function latestIdeas(sessions: SessionDoc[], limit = SPARK_FEED_LIMIT, now: number = Date.now()): SparkItem[] {
+  const cutoff = now - SPARK_FEED_DAYS * DAY_MS
   const out: SparkItem[] = []
   for (const s of sessions) {
-    const when = sessionWhen(s.endedAt)
+    if (new Date(s.endedAt).getTime() < cutoff) continue
     const anchor = sessionAnchor(s.session)
     for (const idea of s.ideas ?? []) {
-      out.push({ spark: idea, kind: 'idea', session: s.session, when, anchor })
+      out.push({ spark: idea, kind: 'idea', session: s.session, anchor })
     }
   }
   return out.slice(0, limit)

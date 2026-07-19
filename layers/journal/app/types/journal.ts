@@ -140,6 +140,5 @@ export interface SparkItem {
   spark: string
   kind: 'idea' | 'learning'
   session: string
-  when: string
   anchor: string
 }
