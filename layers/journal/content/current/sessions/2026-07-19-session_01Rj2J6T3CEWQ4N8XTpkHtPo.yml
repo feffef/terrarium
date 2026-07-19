@@ -1,0 +1,46 @@
+schemaVersion: 1
+session: session_01Rj2J6T3CEWQ4N8XTpkHtPo
+startedAt: 2026-07-19T21:16:20Z
+endedAt: 2026-07-19T21:20:37Z
+kind: interactive
+goal: Record a captured production error page
+status: completed
+outcome: "Capture logged on tracking issue #236"
+summary: "The owner shared a screenshot of the ContentLoadErrorDialog firing in production on /t/blog/david and noted it was not deployment-related and that a reload fixed it. Investigating the dialog wiring and ADR-0019 showed this is the first real production capture that issue #236's open checklist had been waiting for. At the owner's direction (they supplied the diagnostic data), I recorded the capture as a comment on #236: trigger was a 500 on a lazily dynamically-imported _nuxt/*.js chunk (not a sql_dump.txt fetch, not a stale-deploy 404), which corrects the checklist. No code change. When asked, the owner chose to just log it rather than pursue the Nuxt auto-reload follow-up."
+prs: []
+docsRead:
+  - path: app/components/ContentLoadErrorDialog.vue
+    reason: the dialog in the screenshot
+  - path: app/pages/t/[tenant]/[space]/[...slug].vue
+    reason: how the dialog's error flows from useAsyncData
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: context for the dialog and the removed ring-buffer telemetry
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Issue #236's first checklist item still names the removed __content_db_errors ring buffer as the capture mechanism, but ADR-0019's amendment deleted it."
+    solution: "Re-word #236's checklist item to point at the modal's technical-details disclosure as the current capture mechanism (noted in the posted comment)."
+    severity: nit
+durationSec: 257
+models:
+  claude-opus-4-8: 36
+toolCounts:
+  Bash: 4
+  Grep: 2
+  Read: 3
+  ToolSearch: 2
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 1
+  AskUserQuestion: 1
+  Skill: 2
+  Write: 1
+  Edit: 1
+gitBranch: claude/error-page-capture-tjnrtv
+entrypoint: remote_mobile
+cliVersion: 2.1.211
+learnings:
+  - A 500 (not 404) on an existing content-hashed _nuxt chunk with no deploy points at a transient origin serving hiccup, not a stale-asset problem.
+  - "@nuxt/content lazily import()s its client adapter/loader chunks on first queryCollection, so their fetch failures surface through the page's useAsyncData error as 'Failed to fetch dynamically imported module'."
