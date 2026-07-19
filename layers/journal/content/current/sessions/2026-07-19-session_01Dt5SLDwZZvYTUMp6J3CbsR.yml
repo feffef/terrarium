@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Dt5SLDwZZvYTUMp6J3CbsR
 startedAt: 2026-07-19T00:15:54Z
-endedAt: 2026-07-19T00:23:02Z
+endedAt: 2026-07-19T00:26:27Z
 kind: autonomous
 goal: "Run /digest: author the 2026-07-18 Journal Digest"
-status: in-review
-outcome: "Digest authored, PR #600 open, gate pending"
-summary: "Scheduled Routine fired /digest with no human in the loop. Ran scripts/digest.ts list/gather for the one backlogged closed UTC day (2026-07-18: 26 merged PRs, 68 commits, 12 sessions), authored layers/journal/content/current/pages/digests/2026-07-18.md summarizing the journal Sparks feed rework, the frictions-to-fixes batch (#578-#584), a six-item backlog-clearing session (#590-#596), and other fixes, per the Skill's narrative-first + frictions-rollup format. pnpm gate:scoped passed locally. Opened PR #600 off a fresh journal/digest-refresh-2026-07-19 branch, subscribed to its activity, and attempted enable_pr_auto_merge — it currently errors with the known \"unstable status\" false-negative while CI's gate check is still in_progress (docs/agents/pr-workflow.md). A 15-minute check-in is scheduled via send_later to retry once the gate completes."
+status: completed
+outcome: "Digest authored, PR #600 merged with a green gate"
+summary: "Scheduled Routine fired /digest with no human in the loop. Ran scripts/digest.ts list/gather for the one backlogged closed UTC day (2026-07-18: 26 merged PRs, 68 commits, 12 sessions), authored layers/journal/content/current/pages/digests/2026-07-18.md summarizing the journal Sparks feed rework, the frictions-to-fixes batch (#578-#584), a six-item backlog-clearing session (#590-#596), and other fixes, per the Skill's narrative-first + frictions-rollup format. pnpm gate:scoped passed locally. Opened PR #600 off a fresh journal/digest-refresh-2026-07-19 branch and subscribed to its activity. enable_pr_auto_merge errored twice with the known \"unstable status\" false-negative while CI's gate check was still in_progress; once the gate reported green via webhook, auto-merge reported the PR already clean/mergeable, so it was merged directly (squash) and the subscription closed out."
 prs:
   - "600"
 docsRead:
@@ -23,23 +23,26 @@ frictions:
   - description: 'enable_pr_auto_merge threw "unstable status (required checks are failing)" twice immediately after PR #600 opened, while the gate check was merely in_progress and nothing had actually failed — the same false-negative already documented in docs/agents/pr-workflow.md and seen in multiple prior digest/PR sessions.'
     solution: Confirmed via pull_request_read get_check_runs that only the gate check was in_progress (label check had already passed); scheduled a send_later check-in to retry enable_pr_auto_merge once CI's gate reports completed, per the documented workaround.
     severity: nit
-durationSec: 428
+durationSec: 633
 models:
-  claude-sonnet-5: 60
+  claude-sonnet-5: 78
 toolCounts:
-  Bash: 16
+  Bash: 17
   Read: 1
   Write: 2
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__get_file_contents: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__enable_pr_auto_merge: 2
-  mcp__github__pull_request_read: 1
+  mcp__github__enable_pr_auto_merge: 3
+  mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
-  Edit: 1
+  Edit: 2
+  mcp__github__merge_pull_request: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-18.md
 gitBranch: claude/compassionate-lovelace-7kk7rc
