@@ -21,3 +21,20 @@ observations:
       glossary-entry conventions for the Observability term) and
       session_01RqxwHHqJFDNBDjeqYVsTSC (vocabulary lens for the
       close-session/log-session closure-model split) — both match role.
+  - date: 2026-07-19
+    note: >-
+      Used in only 1 of this window's 40 sessions (session_017dzPLRmeEMHeMswznBR9N4,
+      vocabulary grounding during grill-with-docs). Two other windowed
+      sessions did structural/vocabulary work squarely in this Skill's stated
+      domain without invoking it: session_015PgK5s6dkbKrW7jagzTZRE (the Midden
+      Tenant build — edited its own new `layers/midden/CONTEXT.md` plus the
+      root `CONTEXT.md`/`CONTEXT-MAP.md`, per its own filesEdited list, with no
+      domain-modeling in skillsUsed) and session_019W471jzQDwoZmKzJKtE4vk
+      (amended `docs/adr/0009-session-logs-commit-directly-to-main.md`,
+      likewise without it). Not treated as a demotion signal this run: the
+      second example is an ADR-prose amendment rather than new vocabulary, a
+      weaker domain fit, and this Skill's role text itself names it as
+      CONTEXT.md's own canonical `essential` example — a deliberate framing
+      that warrants a cleaner pattern before acting on it. Recording both
+      citations here so a future run isn't starting from zero if the pattern
+      recurs.

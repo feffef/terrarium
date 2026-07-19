@@ -22,3 +22,11 @@ observations:
       via grill-with-docs: session_01B1PirL4vZnwR6VytVgfXut (Observability
       naming design) and session_01RqxwHHqJFDNBDjeqYVsTSC (close-session/
       log-session closure-model stress-test) — matches role.
+  - date: 2026-07-19
+    note: >-
+      Prior citations aged out; used in 2 of this window's 40 sessions:
+      session_01NHUJ3Ka96UkF5ntXRLHDCw (auto-triage round-2 owner decisions,
+      invoked standalone rather than via grill-with-docs — the first windowed
+      example of that path in recent runs) and session_017dzPLRmeEMHeMswznBR9N4
+      (stress-tested a ready-for-agent implementation plan via grill-with-docs,
+      catching two brief mis-scopes before coding) — both still match role.
