@@ -1,7 +1,8 @@
 // The ADR-0017 provenance-footer backstop (issue #346). ADR-0017's Decision said
 // "Commits already get this from the harness template — no repo-side change," but
-// on cloud `git commit -m` that auto-injection intermittently does not fire (6/20
-// sessions in a recent window each paid a manual amend cycle). This is the code
+// on cloud `git commit -m` that auto-injection intermittently does not fire (the
+// recurrence rate and rationale are ADR-0017's 2026-07-20 amendment / issue #346).
+// This is the code
 // home for the footer's exact two-line format plus a commit-msg git-hook entry
 // point that appends it when absent, reconstructing the model name and session
 // URL repo-side — the same two values `buildLogCommit()` derives (both now share
@@ -42,8 +43,8 @@ import {
 } from './session-trace.ts'
 
 /** The model-name fallback when no transcript is available to derive the busiest
- *  model — mirrors `log-session.ts`'s `deriveModelName` fallback. ADR-0017 has no
- *  "the trace didn't say" exemption; the footer still needs a value. */
+ *  model — the single home, also consumed by `log-session.ts`'s `deriveModelName`.
+ *  ADR-0017 has no "the trace didn't say" exemption; the footer still needs a value. */
 export const FALLBACK_MODEL = 'Claude'
 
 /** The `Co-Authored-By:` half of the ADR-0017 footer — matched loosely (any
@@ -59,14 +60,21 @@ export function hasProvenanceFooter(message: string): boolean {
   return COAUTHOR_LINE.test(message) && SESSION_TRAILER.test(message)
 }
 
+// Each footer line built once (single home for the exact text) so the full-footer
+// path and the "append only the missing line" path in computeFooterAction can't
+// diverge.
+function coAuthorLine(modelName: string): string {
+  return `Co-Authored-By: ${modelName} <noreply@anthropic.com>`
+}
+function sessionLine(sessionUrl: string): string {
+  return `Claude-Session: ${sessionUrl}`
+}
+
 /** The ADR-0017 two-line footer. The single code home for the format — reused by
  *  `buildLogCommit()` (the direct-to-`main` log commit) and by this guard, so the
  *  two can never drift (issue #346's "reuse, don't fork the footer" invariant). */
 export function provenanceFooter(modelName: string, sessionUrl: string): string {
-  return [
-    `Co-Authored-By: ${modelName} <noreply@anthropic.com>`,
-    `Claude-Session: ${sessionUrl}`,
-  ].join('\n')
+  return [coAuthorLine(modelName), sessionLine(sessionUrl)].join('\n')
 }
 
 /** Append `footer` as its own trailing paragraph (a trailer needs a blank line
@@ -88,10 +96,15 @@ export function computeFooterAction(
 ): FooterAction {
   if (hasProvenanceFooter(message)) return { action: 'noop' }
   if (!sessionUrl) return { action: 'noop' }
-  return { action: 'append', footer: provenanceFooter(modelName, sessionUrl) }
+  // The harness template can inject the Co-Authored-By half without the
+  // Claude-Session half; append only the missing line so a half-present footer
+  // never yields a duplicate co-author line (issue #346 review).
+  const footer = COAUTHOR_LINE.test(message)
+    ? sessionLine(sessionUrl)
+    : provenanceFooter(modelName, sessionUrl)
+  return { action: 'append', footer }
 }
 
-/** `<id>` → `https://claude.ai/code/<id>`, or null for a null/empty id. */
 export function sessionUrlFor(sessionId: string | null | undefined): string | null {
   return sessionId ? `https://claude.ai/code/${sessionId}` : null
 }

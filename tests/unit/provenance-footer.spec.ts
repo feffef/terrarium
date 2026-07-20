@@ -94,6 +94,17 @@ describe('computeFooterAction() — the decision matrix', () => {
   it('no-ops when no session URL is resolvable — never appends half a footer (the load-bearing line)', () => {
     expect(computeFooterAction('bare subject', null, 'Claude Opus 4.8')).toEqual({ action: 'noop' })
   })
+
+  it('appends only the Claude-Session line when a Co-Authored-By line is already present (no duplicate co-author)', () => {
+    const halfPresent = 'subject\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>'
+    const action = computeFooterAction(halfPresent, 'https://claude.ai/code/session_X', 'Claude Opus 4.8')
+    expect(action).toEqual({ action: 'append', footer: 'Claude-Session: https://claude.ai/code/session_X' })
+    if (action.action === 'append') {
+      const out = applyFooter(halfPresent, action.footer)
+      expect((out.match(/Co-Authored-By:/g) ?? []).length).toBe(1)
+      expect(hasProvenanceFooter(out)).toBe(true)
+    }
+  })
 })
 
 describe('sessionUrlFromEnv() — env-only reconstruction (issue #387/#346)', () => {

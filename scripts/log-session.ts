@@ -24,7 +24,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { isPair, isScalar, parse as parseYaml, parseDocument, visit } from 'yaml'
 import { z } from 'zod'
 import journal from '../layers/journal/tenant.config.ts'
-import { provenanceFooter } from './provenance-footer.ts'
+import { FALLBACK_MODEL, provenanceFooter } from './provenance-footer.ts'
 import { busiestModelId, formatModelId, SCRATCH_FILE, type AuthoredScratch } from './session-trace.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -257,17 +257,16 @@ function sessionIdFromRelPath(relPath: string): string {
  *  and the id→display formatting are single-homed in session-trace.ts (issue #346),
  *  reused here and by the commit-msg footer guard. */
 function deriveModelName(absPath: string): string {
-  const FALLBACK = 'Claude'
   let parsed: unknown
   try {
     parsed = parseYaml(readFileSync(absPath, 'utf8'))
   } catch {
-    return FALLBACK
+    return FALLBACK_MODEL
   }
   const models = (parsed as { models?: Record<string, number> } | null)?.models
-  if (!models || typeof models !== 'object') return FALLBACK
+  if (!models || typeof models !== 'object') return FALLBACK_MODEL
   const busiest = busiestModelId(models)
-  return busiest ? formatModelId(busiest) : FALLBACK
+  return busiest ? formatModelId(busiest) : FALLBACK_MODEL
 }
 
 /** Build a commit off `origin/main`'s tree containing EXACTLY the one log file, using a
