@@ -43,11 +43,18 @@ export const DIAGRAM_TOKEN_FALLBACKS: Record<string, string> = {
 }
 
 // Font geometry is baked into the committed SVG (see DIAGRAM_TOKENS note). These
-// are the fixed values the author-time renderer measures against; they match the
-// journal Tenant's `--diagram-font*` (layers/journal/app/assets/theme.css) so
-// the one migrated diagram keeps its current look.
+// are the fixed values the author-time renderer measures against. The family is a
+// PINNED, repo-bundled webfont (Gelasio — a Georgia-metric-compatible open serif,
+// `app/assets/fonts/`), injected into Chromium at render time AND shipped to the
+// browser via `@font-face` in MermaidDiagram.vue. Measuring and displaying against
+// the *same* font is what keeps baked geometry correct across machines: a bare
+// `serif` stack resolves to whatever each environment installs (the build
+// container has no Palatino/Iowan/Georgia — it fell back to a narrower serif and
+// labels clipped on wider-serif readers, issue #379). `Georgia, serif` stays as a
+// graceful fallback for the rare case the woff2 fails to load. Changing this
+// family/size requires re-running `pnpm render:mermaid` (baked, not a live var).
 export const MERMAID_RENDER_FONT = {
-  fontFamily: "'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif",
+  fontFamily: 'Gelasio, Georgia, serif',
   fontSize: '20px',
 } as const
 

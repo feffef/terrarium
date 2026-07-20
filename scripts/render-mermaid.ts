@@ -54,6 +54,31 @@ export function themeSvg(svg: string): string {
   return out
 }
 
+// A node label's `<foreignObject>` (fixed to the build-font text width) followed
+// by its `display: table-cell` wrapper div — guarded by the trailing
+// `<span class="nodeLabel ` so it never matches an edge label (those carry a
+// `class="labelBkg"` div and a `nodeLabel`-free span).
+const NODE_LABEL_FO =
+  /<foreignObject width="([\d.]+)" height="([\d.]+)">(<div xmlns="http:\/\/www\.w3\.org\/1999\/xhtml" style=")display: table-cell(;[^"]*"><span class="nodeLabel )/g
+
+/**
+ * Make node labels tolerant of display-font width variance (issue #379 follow-up).
+ * Mermaid sizes each label's `<foreignObject>` to the EXACT width the build font
+ * measured, and the browser clips content at that boundary — so when a reader's
+ * serif resolves wider than the build container's (the baked geometry is for a
+ * specific font, ADR-0024), the label truncates ("Human prompt" → "Human pron")
+ * even though the node shape has 13-30px of padding around it. We let the label
+ * use that padding: `overflow: visible` on the foreignObject stops the clip, and
+ * a centered flex wrapper (replacing mermaid's left-anchored `table-cell`) makes
+ * any overflow spill SYMMETRICALLY, keeping the text centred on the node.
+ */
+export function relaxNodeLabelOverflow(svg: string): string {
+  return svg.replace(
+    NODE_LABEL_FO,
+    '<foreignObject width="$1" height="$2" style="overflow: visible;">$3display: flex; align-items: center; justify-content: center$4',
+  )
+}
+
 /** Any of this run's actual theme sentinels (SENTINELS) still present in the
  *  rendered SVG — a signal a token leaked into a derived shade the rewrite missed.
  *  Derived from SENTINELS itself, not a fixed `#f0aX01` pattern, so it can't
@@ -79,13 +104,24 @@ async function renderOne(page: import('playwright-core').Page, diagram: Diagram)
       // `mermaid` is set on the global by the UMD bundle addScriptTag injected
       // below; this callback runs in-browser, where globalThis === window.
       const mermaid = (globalThis as unknown as { mermaid: typeof import('mermaid').default }).mermaid
-      mermaid.initialize({ startOnLoad: false, theme: 'base', themeVariables, securityLevel: 'loose' })
+      // `handDrawnSeed` pins rough.js's shape jitter to a fixed value: without it
+      // mermaid re-randomises every node's outline path per render, so two renders
+      // of the same source diverge and the `verify`/`--check` drift gate can never
+      // settle (issue #379). `look: 'classic'` keeps the straight-edged style.
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        themeVariables,
+        securityLevel: 'loose',
+        look: 'classic',
+        handDrawnSeed: 1,
+      })
       const { svg } = await mermaid.render(id, code)
       return svg
     },
     { code: diagram.source, id: `d-${diagram.key}`, themeVariables },
   )
-  return `${themeSvg(raw).trim()}\n`
+  return `${relaxNodeLabelOverflow(themeSvg(raw)).trim()}\n`
 }
 
 async function main(): Promise<void> {
@@ -104,6 +140,19 @@ async function main(): Promise<void> {
     throw new Error(`render-mermaid: mermaid dist not found at ${mermaidUmd} (run \`pnpm install\`)`)
   }
 
+  // Measure against the SAME pinned webfont the browser will display
+  // (`MERMAID_RENDER_FONT`, shipped via MermaidDiagram.vue's @font-face) — the
+  // build container has no matching serif installed, so without this mermaid's
+  // getBBox measures a fallback and the baked geometry is wrong for real readers
+  // (issue #379). Inline as a data: URI so the render never touches the network.
+  const fontWoff2 = join(root, 'app/assets/fonts/gelasio-latin-400-normal.woff2')
+  if (!existsSync(fontWoff2)) {
+    throw new Error(`render-mermaid: pinned diagram font not found at ${fontWoff2}`)
+  }
+  const fontCss =
+    `@font-face{font-family:'Gelasio';font-style:normal;font-weight:400;` +
+    `src:url(data:font/woff2;base64,${readFileSync(fontWoff2).toString('base64')}) format('woff2');}`
+
   const browser = await chromium.launch({
     executablePath: resolveChromiumPath(),
     args: ['--no-sandbox', '--disable-gpu'],
@@ -112,6 +161,20 @@ async function main(): Promise<void> {
   try {
     const page = await browser.newPage()
     await page.setContent('<!doctype html><html><body></body></html>')
+    await page.addStyleTag({ content: fontCss })
+    // Block until the face is actually parsed and loadable, or mermaid's first
+    // getBBox races the font swap and measures the fallback anyway. `document`
+    // is reached via globalThis (this callback runs in-browser, but is typed in
+    // the Node context, which has no DOM lib — same cast the render callback uses).
+    await page.evaluate(async () => {
+      const fonts = (
+        globalThis as unknown as {
+          document: { fonts: { load(f: string): Promise<unknown>; ready: Promise<unknown> } }
+        }
+      ).document.fonts
+      await fonts.load("20px 'Gelasio'")
+      await fonts.ready
+    })
     await page.addScriptTag({ content: readFileSync(mermaidUmd, 'utf-8') })
 
     mkdirSync(join(root, SVG_DIR), { recursive: true })
