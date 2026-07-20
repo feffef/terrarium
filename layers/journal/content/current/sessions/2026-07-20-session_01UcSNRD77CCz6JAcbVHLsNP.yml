@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01UcSNRD77CCz6JAcbVHLsNP
 startedAt: 2026-07-20T00:15:51Z
-endedAt: 2026-07-20T00:22:43Z
+endedAt: 2026-07-20T00:26:48Z
 kind: autonomous
 goal: Run /digest for 2026-07-19
-status: in-review
-outcome: "Digest authored, PR #610 opened"
-summary: "Scheduled /digest routine run (no human prompt this session). Found one closed UTC day without a digest (2026-07-19) via scripts/digest.ts list, gathered its data, and authored the catch-up prose to layers/journal/content/current/pages/digests/2026-07-19.md covering the Sparks feed trim (#599), a frictions-to-fixes batch (#606), the /audit-docs sweep (#607/#608), the audit-skills Inventory refresh (#601), and the day's sharpest recurring friction (a wrong session id pasted into a GitHub comment footer). Also caught and corrected a branch-naming mistake: initially created the Skill's default journal/digest-refresh-... branch before noticing the task's caller-pinned designated branch (claude/compassionate-lovelace-9m0cg0) should have been used instead per CLAUDE.md's override rule, and switched to it before committing anything. pnpm gate:scoped passed (full heavy layers, since the change touches layers/journal/content). Committed, pushed, opened PR #610, subscribed to its activity, and is babysitting it to merge (auto-merge blocked so far by the documented in-progress-vs-failing false negative on enable_pr_auto_merge)."
+status: completed
+outcome: "Digest authored, PR #610 merged"
+summary: "Scheduled /digest routine run (no human prompt this session). Found one closed UTC day without a digest (2026-07-19) via scripts/digest.ts list, gathered its data, and authored the catch-up prose to layers/journal/content/current/pages/digests/2026-07-19.md covering the Sparks feed trim (#599), a frictions-to-fixes batch (#606), the /audit-docs sweep (#607/#608), the audit-skills Inventory refresh (#601), and the day's sharpest recurring friction (a wrong session id pasted into a GitHub comment footer). Also caught and corrected a branch-naming mistake: initially created the Skill's default journal/digest-refresh-... branch before noticing the task's caller-pinned designated branch (claude/compassionate-lovelace-9m0cg0) should have been used instead per CLAUDE.md's override rule, and switched to it before committing anything. pnpm gate:scoped passed (full heavy layers, since the change touches layers/journal/content). Committed, pushed, opened PR #610, subscribed to its activity, and per docs/agents/pr-workflow.md's recipe merged it directly on green (enable_pr_auto_merge is for arming ahead of a pending check, not landing an already-green PR — reaching for it anyway threw the documented \"protected branch rules not configured\" misleading error)."
 prs:
   - "610"
 docsRead:
@@ -31,22 +31,32 @@ frictions:
   - description: mcp__github__create_pull_request returned a transient 503 ("no server currently available") twice before succeeding on the third attempt.
     solution: Retried with a short pause; third attempt succeeded.
     severity: nit
-durationSec: 412
+  - description: After the gate went green, reached for enable_pr_auto_merge again out of habit (it had been the right call while the check was still in_progress) and got the "protected branch rules not configured" misleading error docs/agents/pr-workflow.md already warns about for calling it on an already-green PR.
+    solution: Read docs/agents/pr-workflow.md's recipe, confirmed check state and mergeable_state via pull_request_read, and called merge_pull_request directly instead.
+    severity: nit
+  - description: mcp__github__merge_pull_request also returned a transient 503 on the first attempt before succeeding on retry.
+    solution: Retried immediately; second attempt succeeded.
+    severity: nit
+durationSec: 657
 models:
-  claude-sonnet-5: 73
+  claude-sonnet-5: 101
 toolCounts:
-  Bash: 19
+  Bash: 20
   Write: 2
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   Glob: 1
   mcp__github__create_pull_request: 3
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 2
-  mcp__github__enable_pr_auto_merge: 2
+  mcp__github__pull_request_read: 5
+  mcp__github__enable_pr_auto_merge: 3
   Skill: 2
-  Edit: 1
+  Edit: 3
   mcp__Claude_Code_Remote__send_later: 1
+  Read: 1
+  mcp__github__merge_pull_request: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-19.md
 gitBranch: claude/compassionate-lovelace-9m0cg0
