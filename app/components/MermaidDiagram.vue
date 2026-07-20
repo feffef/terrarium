@@ -49,3 +49,18 @@ const svg = computed(() => svgByKey[mermaidKey(props.code)])
   white-space: pre-wrap;
 }
 </style>
+
+<!-- The baked SVG's geometry is measured at author time against Gelasio (a pinned,
+     repo-bundled serif — see app/utils/mermaid.ts / ADR-0024). Ship that exact font
+     so the browser lays the labels out identically instead of clipping under a
+     wider fallback serif (issue #379). Unscoped so the @font-face is global; it only
+     applies where `font-family: Gelasio` is used (the diagram's baked <style>). -->
+<style>
+@font-face {
+  font-family: 'Gelasio';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/gelasio-latin-400-normal.woff2') format('woff2');
+}
+</style>

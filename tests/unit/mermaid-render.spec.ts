@@ -2,7 +2,12 @@
 // (issue #379, ADR-0024): the content-hash key, the fence extractor, the
 // sentinel→CSS-var rewrite, and the drift reconciliation. No fs, no browser.
 import { describe, expect, it } from 'vitest'
-import { extractMermaidBlocks, mermaidKey, normalizeMermaidSource } from '../../app/utils/mermaid.ts'
+import {
+  extractMermaidBlocks,
+  MERMAID_RENDER_FONT,
+  mermaidKey,
+  normalizeMermaidSource,
+} from '../../app/utils/mermaid.ts'
 import {
   leftoverSentinels,
   relaxNodeLabelOverflow,
@@ -80,6 +85,16 @@ describe('themeSvg()', () => {
     // handful of tokens exist) — detection now keys off SENTINELS, so it's ignored.
     expect(Object.values(SENTINELS)).not.toContain('#f0a901')
     expect(leftoverSentinels('fill:#f0a901')).toEqual([])
+  })
+})
+
+describe('MERMAID_RENDER_FONT', () => {
+  // The render font must lead with the bundled webfont family (Gelasio) that
+  // MermaidDiagram.vue ships via @font-face and render-mermaid.ts injects at
+  // measure time — if these drift apart, geometry is baked against one font and
+  // displayed in another, which is exactly the clip bug this pinning fixes (#379).
+  it('pins the bundled Gelasio family so measure-font == display-font', () => {
+    expect(MERMAID_RENDER_FONT.fontFamily).toMatch(/^Gelasio\b/)
   })
 })
 

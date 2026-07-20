@@ -52,8 +52,23 @@ step drives a browser; CI and prod read committed files only.
 - **Only colour tokens become CSS vars.** Font family/size feed mermaid's
   `getBBox` text measurement, so node positions are **baked** into the SVG for a
   specific font. Those two tokens are rendered at fixed values
-  (`MERMAID_RENDER_FONT`, matching the journal Tenant's `--diagram-font*`) and are
-  **not** live-themeable; a font-token change requires a re-render.
+  (`MERMAID_RENDER_FONT`) and are **not** live-themeable; a font-token change
+  requires a re-render.
+- **The render font is a pinned, repo-bundled webfont** (`app/assets/fonts/`,
+  Gelasio — a Georgia-metric-compatible open serif under the SIL OFL). The
+  renderer injects it into Chromium as a data: URI and the app ships it via
+  `@font-face` (`MermaidDiagram.vue`), so the font measured at author time is the
+  exact font the browser displays. Without this the build container (which
+  installs no Palatino/Iowan/Georgia) measured a fallback serif and labels
+  clipped for readers whose browser resolved the stack wider (issue #379). See
+  `app/assets/fonts/README.md` for provenance.
+- **Renders are deterministic.** `handDrawnSeed` is pinned so rough.js's per-node
+  outline jitter no longer re-randomises each render; with the font also pinned,
+  two renders of the same source are byte-identical, so `verify:mermaid` /
+  `render:mermaid --check` is a meaningful drift gate rather than always-red.
+- **Node labels degrade gracefully** under any residual font-width variance:
+  `relaxNodeLabelOverflow` un-clips each label's `<foreignObject>` and centres
+  the overflow (belt-and-suspenders behind the pinned font).
 - **`app/utils/mermaid.ts` is the single home** of the token contract
   (`DIAGRAM_TOKENS`, fallbacks, render font), the content-hash key, and the fence
   extractor — imported by the renderer, the drift gate, and the component so none
@@ -88,17 +103,18 @@ committed, reviewable artifact.
   re-colors under a Tenant palette and dark mode with no JS. Font size/family are
   baked at render time; changing `--diagram-font*` no longer re-flows the diagram
   without a re-render. Accepted: layout geometry cannot be a runtime CSS var.
-  - **Baked geometry is font-width tolerant, not font-exact.** The render font
-    (`MERMAID_RENDER_FONT`) rarely resolves to the exact font a reader sees — the
-    build container ships no Palatino/Iowan/Georgia, so it measures against a
-    fallback serif, while a reader's browser may resolve the stack wider.
-    Mermaid sizes each label's `<foreignObject>` to the measured text width and
-    the browser clips there, so a wider display font truncated labels (`Human
-    prompt` → `Human pron`). `relaxNodeLabelOverflow` (a post-render pass in
-    `render-mermaid.ts`) sets `overflow: visible` and a centred flex wrapper on
-    every node label, so the text spills symmetrically into the shape's existing
-    13-30px of padding instead of clipping. Node positions/geometry are
-    untouched; only labels degrade gracefully under font variance (issue #379).
+  - **Baked geometry is now font-exact, with a tolerance net.** The original
+    render measured against whatever serif the build container happened to
+    install (no Palatino/Iowan/Georgia — a narrower fallback), while a reader's
+    browser resolved the stack wider; mermaid sizes each label's
+    `<foreignObject>` to the measured width and the browser clips there, so
+    labels truncated (`Human prompt` → `Human pron`). Fixed at the root by
+    pinning one bundled webfont used at *both* measure and display time (see the
+    Decision's render-font bullet), so the measured width is the displayed width.
+    `relaxNodeLabelOverflow` stays as a cheap safety net — it un-clips each label
+    and centres any residual overflow into the shape's 13-30px of padding —
+    covering the rare case the woff2 fails to load or a Chromium version measures
+    a sub-pixel differently. Node positions/geometry are untouched (issue #379).
 - **A manual author step, guarded by the gate.** Editing a diagram means running
   `pnpm render:mermaid` and committing the new SVG. Forgetting is not silent —
   `verify:mermaid` fails the gate with the exact stale/missing file. The SVGs are
