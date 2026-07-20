@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01FpgPAnUEBX5KB6yoWjxh89
 startedAt: 2026-07-20T04:08:22Z
-endedAt: 2026-07-20T04:40:14Z
+endedAt: 2026-07-20T06:04:43Z
 kind: autonomous
 goal: Run /audit-docs sweep and reconcile drifted docs
 status: completed
-outcome: "10 fixes merged; 2 more riding the open escalation PR #608"
-summary: "Scheduled /audit-docs run, no human prompt throughout. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over every Live/Historical/Pack-generic doc surface, pooled 19 candidate findings, and ran an independent fact-checker against primary sources before touching anything. 10 findings confirmed (2 with corrected scope/location) and fixed across 8 Live-tier files (Skill docs, Tenant CONTEXT.md files, docs/agents/*, docs/research/*, deploy/README.md); 7 were found WRONG and dropped. Opened self-merge PR #614 on a green pnpm gate:scoped, merged it after CI went green. Two new findings touched ADR-0004/ADR-0023 (human-only to merge) — rather than opening a third PR on a file already touched by the still-open escalation PR #608 from yesterday's sweep, pushed those as commits extending #608's branch instead and updated its description; #608 remains open pending human review, which is the expected terminal state for an escalation."
+outcome: "All 12 fixes landed: PR #614 self-merged, PR #608 human-merged"
+summary: "Scheduled /audit-docs run, no human prompt throughout. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over every Live/Historical/Pack-generic doc surface, pooled 19 candidate findings, and ran an independent fact-checker against primary sources before touching anything. 10 findings confirmed (2 with corrected scope/location) and fixed across 8 Live-tier files (Skill docs, Tenant CONTEXT.md files, docs/agents/*, docs/research/*, deploy/README.md); 7 were found WRONG and dropped. Opened self-merge PR #614 on a green pnpm gate:scoped, merged it after CI went green. Two new findings touched ADR-0004/ADR-0023 (human-only to merge) — rather than opening a third PR on a file already touched by the still-open escalation PR #608 from yesterday's sweep, pushed those as commits extending #608's branch instead and updated its description. A human subsequently reviewed and merged #608 too, so every finding from this sweep is now landed."
 prs:
   - "614"
   - "608"
@@ -59,20 +59,20 @@ frictions:
   - description: One Concision-lens subagent's report was auto-neutralized by the harness (flagged as instruction-shaped) purely because it quoted CLAUDE.md's permissions.allow caveat verbatim while explaining why it was NOT flagging that passage as stale-narration.
     solution: No repo-side fix needed — this is a harness heuristic false-positive on quoted security-flavored prose, not a real injection attempt or a repo bug.
     severity: nit
-durationSec: 1912
+durationSec: 6981
 models:
-  claude-sonnet-5: 178
+  claude-sonnet-5: 188
 toolCounts:
-  Bash: 27
+  Bash: 28
   ToolSearch: 5
   mcp__github__list_pull_requests: 2
   Agent: 5
-  ScheduleWakeup: 6
+  ScheduleWakeup: 7
   mcp__github__search_pull_requests: 1
   mcp__github__search_issues: 2
   mcp__github__pull_request_read: 3
-  Read: 17
-  Edit: 13
+  Read: 18
+  Edit: 14
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
   mcp__github__add_issue_comment: 2
