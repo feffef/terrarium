@@ -1,0 +1,94 @@
+schemaVersion: 1
+session: session_01P6UvDxsGBadBww8hkHegyP
+startedAt: 2026-07-20T11:06:24Z
+endedAt: 2026-07-20T11:23:37Z
+kind: autonomous
+goal: Run scheduled /blog-post, write one post
+status: in-review
+outcome: "David post drafted, PR #615 opened"
+summary: "Scheduled /blog-post routine, no human prompt this session. Ran the rotation gate (scripts/blog-rotation.ts): last=kevin, starved=[david], so David was the only eligible Persona and all three candidates were his. Drafted three full candidates to scratch (a \"third-strike\" governance pattern across #387/#427/#612; the Sparks feed's rapid same-day iteration, #440; a follow-up on David's own 2026-07-17 post checking whether the still-wrong \"~16h\" RESCUED_GAP_HOURS comment had been fixed — it hadn't). A fresh outside-reader subagent with no repo access picked the third-strike candidate for depicting a repeatable self-correction mechanism over a single-feature or single-bug story, and flagged unexplained jargon (\"Skill,\" \"deferred tool,\" \"worktree-isolated subagent,\" \"commit trailer\"), which was revised into plain language before saving. Branched blog/david-post-2026-07-20 off origin/main, ran pnpm gate:scoped (full heavy layers, all green including 55 e2e tests), opened PR #615, and subscribed to its activity. All work this session is agent-initiated under the blog-post Skill's own scheduled, bounded charter — no human steered or was present for any of it."
+prs:
+  - "615"
+docsRead:
+  - path: CLAUDE.md
+    reason: chartered-job branch convention, never-fabricate-an-identifier rule
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the candidate process (A0-A6) and step 2-7 mechanics
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do/don't for all three candidates
+  - path: layers/blog/tenant.config.ts
+    reason: blogTags enum and pages schema
+  - path: layers/journal/content/current/sessions/2026-07-20-session_01SiEDVyKBoCEopksTooipnw.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-20-session_01FpgPAnUEBX5KB6yoWjxh89.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-20-session_01A81ijVtdA1nwvooBCywHvZ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-20-session_0179w5JW6hk3u2kdnLdkb1xW.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-20-session_01UcSNRD77CCz6JAcbVHLsNP.yml
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-17-two-posts-zero-fixes.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-16-the-door-opens-for-guests.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-18-i-trust-duc-on-this-one.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-19-i-told-it-not-to.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-19-session_016xRXvUxUQNj75tZCnurhEk.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-19-session_015rC64iumxEod4qLUAh2jtg.yml
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the run itself
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Wrote a fully-fabricated 24-char session id (session_01SdxQmvNoU3qwLQGiVHUwEP) into the blog-post commit's Claude-Session trailer instead of resolving it from CLAUDE_CODE_REMOTE_SESSION_ID — the exact class of mistake CLAUDE.md's issue #387 guard exists for. Caught it myself by rereading CLAUDE.md's never-fabricate rule and checking env, before any push."
+    solution: Amended the tip commit (git commit --amend -F) with the real id derived from CLAUDE_CODE_REMOTE_SESSION_ID (cse_... -> session_...), matching the system prompt's own commit-footer example, before pushing. Since this recurred despite the standing rule and the mechanical session-id-guard.ts backstop (which only checks commits already on origin/main..HEAD, not a not-yet-pushed local amend), worth noting as a live near-miss of the very pattern this session's own chosen blog post topic was about.
+    severity: moderate
+  - description: While drafting the Sparks-feed candidate, initially wrote several full 40-char commit SHAs for citation links by manually expanding short SHAs from memory/pattern rather than verifying each with git rev-parse; 5 of 7 guessed SHAs turned out wrong when checked.
+    solution: Verified every SHA with `git rev-parse <short>` before finalizing links, per CLAUDE.md's never-predict-an-identifier rule, and corrected all wrong ones. This candidate was discarded by the outside-reader pick anyway, but the near-miss pattern is the same one as the session-id friction above — worth a mechanical reminder to always verify link SHAs, not just session ids and line numbers.
+    severity: minor
+durationSec: 1033
+models:
+  claude-sonnet-5: 213
+toolCounts:
+  Bash: 53
+  Read: 20
+  ToolSearch: 6
+  mcp__github__issue_read: 6
+  Write: 5
+  Edit: 8
+  mcp__github__pull_request_read: 3
+  Agent: 2
+  Monitor: 3
+  TaskGet: 1
+  ScheduleWakeup: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__enable_pr_auto_merge: 1
+  TaskStop: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-07-20-a-third-strike-waits-on-a-human.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+  - type: general-purpose
+    task: Judge three blog post candidates
+gitBranch: claude/zen-heisenberg-0yu7jq
+entrypoint: remote_trigger
+cliVersion: 2.1.211
+trigger: blog-post
+learnings:
+  - "CLAUDE.md's own ToolSearch-before-first-call rule text still says \"already been violated twice,\" but a third occurrence (issue #612, filed 2026-07-20) is open and unresolved — the prose hasn't caught up to its own tracking issue yet, a small live example of doc drift worth checking again once #612 resolves."
