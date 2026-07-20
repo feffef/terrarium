@@ -1,0 +1,108 @@
+schemaVersion: 1
+session: session_01FpgPAnUEBX5KB6yoWjxh89
+startedAt: 2026-07-20T04:08:22Z
+endedAt: 2026-07-20T04:40:14Z
+kind: autonomous
+goal: Run /audit-docs sweep and reconcile drifted docs
+status: completed
+outcome: "10 fixes merged; 2 more riding the open escalation PR #608"
+summary: "Scheduled /audit-docs run, no human prompt throughout. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over every Live/Historical/Pack-generic doc surface, pooled 19 candidate findings, and ran an independent fact-checker against primary sources before touching anything. 10 findings confirmed (2 with corrected scope/location) and fixed across 8 Live-tier files (Skill docs, Tenant CONTEXT.md files, docs/agents/*, docs/research/*, deploy/README.md); 7 were found WRONG and dropped. Opened self-merge PR #614 on a green pnpm gate:scoped, merged it after CI went green. Two new findings touched ADR-0004/ADR-0023 (human-only to merge) — rather than opening a third PR on a file already touched by the still-open escalation PR #608 from yesterday's sweep, pushed those as commits extending #608's branch instead and updated its description; #608 remains open pending human review, which is the expected terminal state for an escalation."
+prs:
+  - "614"
+  - "608"
+docsRead:
+  - path: CLAUDE.md
+    reason: chartered-job branch convention, single-home rule, PR-open/escalation discipline
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: the skill being run
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: auto-merge exemption ledger, cross-checked against ADR-0004
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: verifying the F3/F17 ADR contradictions
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: factual-correction-vs-decision-reversal rule for ADR edits
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe, per-tier merge authority
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+  - path: layers/journal/CONTEXT.md
+    reason: (read before editing)
+  - path: layers/blog/CONTEXT.md
+    reason: (read before editing)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (read before editing)
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: docs/research/public-readiness-review.md
+    reason: (read before editing)
+  - path: docs/agents/issue-tracker.md
+    reason: (read before editing)
+  - path: deploy/README.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the invoked skill itself
+  - name: close-session
+    reason: session closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: A prior day's audit-docs sweep (#608) is still open, unmerged, and touches the same ADR-0004 file this sweep also found a (different) confirmed issue in — CLAUDE.md warns against two concurrent PRs touching the same file, but the escalation-PR convention doesn't say whether a same-day sweep should extend a still-open prior escalation PR or always open its own.
+    solution: "Extended the existing #608 branch with the new ADR-0004/ADR-0023 findings rather than opening a competing PR. Worth stating this explicitly in the audit-docs Skill or pr-workflow.md so a future sweep doesn't have to re-derive the same judgment call."
+    severity: minor
+  - description: One Concision-lens subagent's report was auto-neutralized by the harness (flagged as instruction-shaped) purely because it quoted CLAUDE.md's permissions.allow caveat verbatim while explaining why it was NOT flagging that passage as stale-narration.
+    solution: No repo-side fix needed — this is a harness heuristic false-positive on quoted security-flavored prose, not a real injection attempt or a repo bug.
+    severity: nit
+durationSec: 1912
+models:
+  claude-sonnet-5: 178
+toolCounts:
+  Bash: 27
+  ToolSearch: 5
+  mcp__github__list_pull_requests: 2
+  Agent: 5
+  ScheduleWakeup: 6
+  mcp__github__search_pull_requests: 1
+  mcp__github__search_issues: 2
+  mcp__github__pull_request_read: 3
+  Read: 17
+  Edit: 13
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 2
+  Skill: 2
+  Write: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  PushNotification: 1
+filesEdited:
+  - .agents/skills/audit-skills/SKILL.md
+  - layers/journal/CONTEXT.md
+  - layers/blog/CONTEXT.md
+  - .agents/skills/guest-intake/SKILL.md
+  - docs/research/public-readiness-review.md
+  - docs/agents/issue-tracker.md
+  - deploy/README.md
+  - .agents/skills/digest/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: Drift + Orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: Duplication + Mis-location"
+  - type: general-purpose
+    task: "Concision lens: Verbose + Stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: Contradiction + Ambiguity"
+  - type: general-purpose
+    task: Fact-check pooled audit-docs findings
+gitBranch: claude/festive-mayer-fxqm5d
+entrypoint: remote_trigger
+cliVersion: 2.1.211
+trigger: audit-docs
