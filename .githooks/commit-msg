@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+# ADR-0017 provenance-footer backstop (issue #346). The harness's commit-message
+# template does not reliably inject the two-line footer on cloud `git commit -m`;
+# this hook appends it when absent, reconstructing the values repo-side (see
+# scripts/provenance-footer.ts). Installed via `core.hooksPath .githooks`, set in
+# package.json's `postinstall` (which runs on every `pnpm install`).
+#
+# FAILS OPEN: any error — no pnpm/tsx on PATH, a script bug, a missing transcript
+# — leaves the message untouched and the commit proceeds (`|| exit 0`). A guard
+# bug must never wedge a commit; the worst case degrades to the prior status quo.
+#
+# SCOPE: only a local `git commit` runs this. MCP-API commits
+# (create_or_update_file / push_files) bypass local git and are NOT covered.
+root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+pnpm exec tsx "$root/scripts/provenance-footer.ts" "$1" >/dev/null 2>&1 || exit 0
+exit 0

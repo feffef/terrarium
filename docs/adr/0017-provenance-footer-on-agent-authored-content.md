@@ -11,6 +11,30 @@ Status: Accepted
 > anything there — that path constructs the `Co-Authored-By`/`Claude-Session`
 > trailer in repo-side code instead (added in commit `f9e03ee`, five days after
 > this ADR's acceptance).
+>
+> **Amended (2026-07-20, issue #346).** The "commits already get this from the
+> harness template — no repo-side change / convention only, not gate-enforced"
+> stance proved unreliable for the ordinary `-m` commit too: on cloud
+> `git commit -m` the template's auto-injection intermittently does not fire, and
+> 6 of 20 sessions in a recent window each paid a manual amend cycle. A doc-only
+> softening (#318/#320: "verify it landed and amend if absent") did not hold. A
+> repo-side **commit-msg git hook** now backstops it: `.githooks/commit-msg`
+> invokes `scripts/provenance-footer.ts`, which appends the footer when a commit's
+> message lacks it, reconstructing the model name and session URL repo-side (from
+> the transcript, else `CLAUDE_CODE_REMOTE_SESSION_ID`) — the *same* values
+> `buildLogCommit()` derives, now single-homed in `provenanceFooter()` /
+> `formatModelId` / `busiestModelId`. The hook is installed via `core.hooksPath`,
+> set in `package.json`'s `postinstall`. This narrows "convention only" for the
+> commit case to **"convention, with a fail-open repo-side backstop"** — it is
+> *not* a blocking gate check (a hook failure degrades cleanly to the prior
+> manual-amend status quo; the guard is also inert on a plain human commit, which
+> resolves no agent session URL, so no Claude footer is ever stamped on one).
+> **Scope:** a git hook covers only a local `git commit`. MCP-API commits
+> (`create_or_update_file` / `push_files`) bypass local git entirely and are *not*
+> covered — those artifacts still rely on the agent appending the footer in-band.
+> This reverses only the commit half of "no repo-side change"; everything else in
+> the Decision (the no-exemptions scope for issues/PRs/comments, deferred bot
+> identity) is unchanged.
 
 ## Context
 
