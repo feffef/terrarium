@@ -68,9 +68,9 @@ draft wholly *as that Persona*. The three:
 
 ## 2. Branch off `origin/main`
 
-Branch `blog/<persona>-post-<today-UTC>` off `origin/main` (CLAUDE.md's
-chartered-job branch convention — a caller-pinned designated branch overrides
-this default name), so the post PR is independent of any work branch. This is
+Branch off `origin/main` (CLAUDE.md's chartered-job branch convention — the
+name doesn't matter, a caller-pinned designated branch takes precedence), so
+the post PR is independent of any work branch. This is
 the first repo-touching step of the whole run — Section A (A1–A6) works
 entirely in the scratchpad, so there's nothing to branch for until the winning
 candidate is known.
