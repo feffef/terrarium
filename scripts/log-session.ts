@@ -24,7 +24,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { isPair, isScalar, parse as parseYaml, parseDocument, visit } from 'yaml'
 import { z } from 'zod'
 import journal from '../layers/journal/tenant.config.ts'
-import { SCRATCH_FILE, type AuthoredScratch } from './session-trace.ts'
+import { FALLBACK_MODEL, provenanceFooter } from './provenance-footer.ts'
+import { busiestModelId, formatModelId, SCRATCH_FILE, type AuthoredScratch } from './session-trace.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -249,35 +250,23 @@ function sessionIdFromRelPath(relPath: string): string {
   return basename(relPath, '.yml').replace(/^\d{4}-\d{2}-\d{2}-/, '')
 }
 
-/** `claude-opus-4-8` → `Claude Opus 4.8` — the display wording the harness's own
- *  commit template already uses on `main` (ADR-0017: "Commits already get this from
- *  the harness template"). This direct-to-`main` path has no harness template to
- *  rely on, so it reformats the raw model id from the stitched entry instead of
- *  hardcoding a name. */
-function formatModelId(id: string): string {
-  const m = /^claude-([a-z]+)-(.+)$/.exec(id)
-  if (!m) return id
-  const family = m[1]!
-  const versionParts = m[2]!
-  return `Claude ${family[0]!.toUpperCase()}${family.slice(1)} ${versionParts.split('-').join('.')}`
-}
-
 /** The busiest model recorded on the stitched entry at `absPath` (session-trace.ts's
  *  `models`: model id → assistant-turn count), or a generic fallback for an
  *  authored-only entry from before the trace existed. ADR-0017 has no exemption for
- *  "the trace didn't say" — the footer still needs a value. */
+ *  "the trace didn't say" — the footer still needs a value. The busiest-model pick
+ *  and the id→display formatting are single-homed in session-trace.ts (issue #346),
+ *  reused here and by the commit-msg footer guard. */
 function deriveModelName(absPath: string): string {
-  const FALLBACK = 'Claude'
   let parsed: unknown
   try {
     parsed = parseYaml(readFileSync(absPath, 'utf8'))
   } catch {
-    return FALLBACK
+    return FALLBACK_MODEL
   }
   const models = (parsed as { models?: Record<string, number> } | null)?.models
-  if (!models || typeof models !== 'object' || Object.keys(models).length === 0) return FALLBACK
-  const [busiest] = Object.entries(models).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-  return formatModelId(busiest![0])
+  if (!models || typeof models !== 'object') return FALLBACK_MODEL
+  const busiest = busiestModelId(models)
+  return busiest ? formatModelId(busiest) : FALLBACK_MODEL
 }
 
 /** Build a commit off `origin/main`'s tree containing EXACTLY the one log file, using a
@@ -302,11 +291,12 @@ export function buildLogCommit(
     const subject = `journal(sessions): log ${basename(relPath, '.yml')}`
     // Separate `-m` paragraph, per ADR-0017 (no exemptions: every agent-authored
     // commit carries this footer) — a trailer needs its own paragraph or git
-    // won't recognize it as one.
-    const trailer = [
-      `Co-Authored-By: ${deriveModelName(absPath)} <noreply@anthropic.com>`,
-      `Claude-Session: https://claude.ai/code/${sessionIdFromRelPath(relPath)}`,
-    ].join('\n')
+    // won't recognize it as one. The footer format is single-homed in
+    // `provenance-footer.ts` (issue #346), shared with the commit-msg guard.
+    const trailer = provenanceFooter(
+      deriveModelName(absPath),
+      `https://claude.ai/code/${sessionIdFromRelPath(relPath)}`,
+    )
     const commit = git(['commit-tree', tree, '-p', base, '-m', subject, '-m', trailer], { env, cwd })
 
     const changed = git(['diff', '--name-only', base, commit], { cwd }).split('\n').filter(Boolean)

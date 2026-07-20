@@ -7,7 +7,7 @@
     "node": ">=22.5.0"
   },
   "scripts": {
-    "postinstall": "nuxt prepare",
+    "postinstall": "git config core.hooksPath .githooks 2>/dev/null || true && nuxt prepare",
     "dev": "nuxt dev",
     "build": "nuxt build",
     "generate": "nuxt generate",

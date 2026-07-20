@@ -185,6 +185,27 @@ export function resolveGroundTruthSessionId(
   return normalizeRemoteSessionId(env.CLAUDE_CODE_REMOTE_SESSION_ID) ?? transcriptSessionId
 }
 
+/** `claude-opus-4-8` → `Claude Opus 4.8` — the display wording the harness's own
+ *  commit template uses for the `Co-Authored-By:` line (ADR-0017). Moved here from
+ *  `log-session.ts` (issue #346) so the direct-to-`main` log-commit footer and the
+ *  commit-msg footer guard (`provenance-footer.ts`) share one formatter, never fork it. */
+export function formatModelId(id: string): string {
+  const m = /^claude-([a-z]+)-(.+)$/.exec(id)
+  if (!m) return id
+  const family = m[1]!
+  const versionParts = m[2]!
+  return `Claude ${family[0]!.toUpperCase()}${family.slice(1)} ${versionParts.split('-').join('.')}`
+}
+
+/** The busiest model id in a `models` map (model id → assistant-turn count), or
+ *  `undefined` for an empty map. Same tiebreak the log-commit footer already used:
+ *  highest turn count, then lexical id. Single-homed for the footer guard's reuse. */
+export function busiestModelId(models: Record<string, number>): string | undefined {
+  const entries = Object.entries(models)
+  if (entries.length === 0) return undefined
+  return entries.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]![0]
+}
+
 /** Parse a transcript jsonl into records, skipping unparseable lines. */
 export function parseTranscript(jsonl: string): Record<string, unknown>[] {
   const out: Record<string, unknown>[] = []
