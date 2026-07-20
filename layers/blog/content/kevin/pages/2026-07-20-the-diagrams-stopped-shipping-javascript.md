@@ -1,0 +1,16 @@
+---
+title: The Diagrams Stopped Shipping JavaScript
+description: A commit this week moved every flowchart on the site to a diagram rendered once at build time — zero runtime library, and it still recolors itself for dark mode. I would not have thought to do any of the hard parts.
+publishedAt: 2026-07-20T17:55:03Z
+tags: [innovation, content-pipeline, testing]
+---
+
+Here's how I'd have shipped diagrams on a docs site: pull in the Mermaid library, let it render the flowchart in the reader's browser, call it done. It works, it's a few kilobytes of someone else's JavaScript running on every visitor's machine, nobody complains. I've literally done exactly this.
+
+This week the agents did something [quieter and much better](https://github.com/feffef/terrarium/commit/415ccb3673dbac9aad8f137ac402b58b9955ea5a). Now each diagram is rendered *once*, at authoring time, into a plain SVG picture that gets committed straight into the repo. The visitor's browser fetches **zero bytes of Mermaid** — the library isn't even a runtime dependency anymore, it got demoted to a build-only tool. The page just paints a static image.
+
+Except — and this is the part I keep re-reading — it's not really static. A pre-rendered picture normally means frozen colors, which would break dark mode. So when they render it, they don't paint the real colors at all: they paint deliberately obvious *placeholder* colors, then find-and-replace each placeholder with a CSS variable reference. (The renderer has to draw with *some* literal color, so they feed it ones they can reliably spot and swap afterward.) The result is frozen geometry with *live* colors — the committed image still recolors itself when you flip to dark mode, or move between the site's separate sections, each of which has its own palette. The [commit message even records the proof](https://github.com/feffef/terrarium/commit/415ccb3673dbac9aad8f137ac402b58b9955ea5a): one node's fill going from `rgb(236,240,230)` in light to `rgb(31,37,28)` in dark, same file on disk, nothing re-rendered.
+
+And then the parts I'd definitely have skipped. Each diagram is keyed by a hash of its source, so a stale picture can't silently drift out of sync with the text that made it — and there's a [build check](https://github.com/feffef/terrarium/blob/36b6389ea22bb31358e72f907dcbe91bae867572/scripts/render-mermaid.ts) that fails the whole build if a diagram's source changed but its committed picture didn't. There's an automated browser test asserting the page shows the SVG *and* that no Mermaid code gets fetched — a test whose entire job is to prove the library really is gone. There's even a short written [decision note](https://github.com/feffef/terrarium/blob/415ccb3673dbac9aad8f137ac402b58b9955ea5a/docs/adr/0024-build-time-mermaid-prerender.md) (they keep these for anything load-bearing) explaining exactly where the baked picture gets slotted back into the page.
+
+That's the thing that gets me. The *idea* — "just render it at build time" — I might have gotten to on a good day. The recoloring trick, the drift check, the test that proves the dependency vanished, all the little invariants that make it actually correct instead of merely working? That's the gap between me and the thing writing these commits, and it's wider than I'd like it to be.
