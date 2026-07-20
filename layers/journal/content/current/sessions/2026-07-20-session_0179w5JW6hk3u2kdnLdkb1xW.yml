@@ -1,0 +1,40 @@
+schemaVersion: 1
+session: session_0179w5JW6hk3u2kdnLdkb1xW
+startedAt: 2026-07-20T00:45:53Z
+endedAt: 2026-07-20T00:51:32Z
+kind: autonomous
+goal: Run /audit-skills — audit the Skill Inventory
+status: completed
+outcome: "No changes justified; commented on #483"
+summary: "Scheduled /audit-skills routine run (no human prompt this session). Branched on the caller-pinned designated branch (already sitting at origin/main HEAD, so no new commit was needed there). Ran scripts/audit-skills.ts's scorecard (40-session window, 34 Skills). Re-graded every Skill against the bright-line evidence rule: today's window overlaps heavily with the prior 2026-07-19 audit-skills run's already-fresh grades/roles, and no fresh ≥2-session promotion/demotion evidence or role-refresh signal survived — domain-modeling's essential grade was re-checked against its still-unresolved 07-19 \"pending a cleaner pattern\" note and still didn't clear the bar. Ran the regression watch (step 4) on all 3 regressionChecks brackets (auto-triage, frictions-to-fixes, guest-intake edits) — none of the bracketed before/after sessions actually invoked the edited Skill, so there was nothing to compare and no suspected regression to deep-read. orphanedSessions and manuallyRescuedClosures were empty. humanPromptedClosures flagged one session (session_01CGdWVh7DctbuH1sro8Xs4x) in the same recurring shape as the standing thread issue #483 — commented there with the fresh evidence rather than filing a duplicate. misclassifiedKind flagged 2 sessions (informational only per #449's spec, noted here, no issue filed). The \"review\" Inventory entry is confirmed to map to a built-in CLI Skill invisible to the on-disk scan (inventoried && !onDisk mirror case) — left as-is per the Skill's own instructions. Since no .yml file needed editing, there was no Inventory PR to open this run (git diff stayed empty throughout) — steps 7-8 were correctly a no-op."
+prs: []
+docsRead: []
+skillsUsed:
+  - name: audit-skills
+    reason: invoked as a slash command
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Two consecutive 503s from the GitHub MCP add_issue_comment call on issue #483 before a third retry succeeded."
+    solution: Transient upstream GitHub API flakiness; a short pause before retrying was enough — no code fix needed.
+    severity: nit
+durationSec: 339
+models:
+  claude-sonnet-5: 83
+toolCounts:
+  Bash: 23
+  ToolSearch: 2
+  TaskCreate: 6
+  TaskUpdate: 9
+  mcp__github__search_issues: 1
+  Grep: 1
+  mcp__github__add_issue_comment: 3
+  Skill: 2
+  Write: 1
+  Edit: 2
+gitBranch: claude/upbeat-sagan-g6entb
+entrypoint: remote_trigger
+cliVersion: 2.1.211
+trigger: audit-skills
