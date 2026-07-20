@@ -1,0 +1,55 @@
+schemaVersion: 1
+session: session_01UcSNRD77CCz6JAcbVHLsNP
+startedAt: 2026-07-20T00:15:51Z
+endedAt: 2026-07-20T00:22:43Z
+kind: autonomous
+goal: Run /digest for 2026-07-19
+status: in-review
+outcome: "Digest authored, PR #610 opened"
+summary: "Scheduled /digest routine run (no human prompt this session). Found one closed UTC day without a digest (2026-07-19) via scripts/digest.ts list, gathered its data, and authored the catch-up prose to layers/journal/content/current/pages/digests/2026-07-19.md covering the Sparks feed trim (#599), a frictions-to-fixes batch (#606), the /audit-docs sweep (#607/#608), the audit-skills Inventory refresh (#601), and the day's sharpest recurring friction (a wrong session id pasted into a GitHub comment footer). Also caught and corrected a branch-naming mistake: initially created the Skill's default journal/digest-refresh-... branch before noticing the task's caller-pinned designated branch (claude/compassionate-lovelace-9m0cg0) should have been used instead per CLAUDE.md's override rule, and switched to it before committing anything. pnpm gate:scoped passed (full heavy layers, since the change touches layers/journal/content). Committed, pushed, opened PR #610, subscribed to its activity, and is babysitting it to merge (auto-merge blocked so far by the documented in-progress-vs-failing false negative on enable_pr_auto_merge)."
+prs:
+  - "610"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-07-18.md
+    reason: style/format reference for the new digest
+  - path: docs/agents/pr-workflow.md
+    reason: auto-merge mechanics and the enable_pr_auto_merge false-negative pattern
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Initially branched using the digest Skill's default journal/digest-refresh-<date> name before checking the task's own system-prompt instructions for a caller-pinned designated branch, which CLAUDE.md says overrides the Skill default. Caught before any commit landed.
+    solution: Re-read CLAUDE.md's branch-pin bullet, confirmed the pinned branch (claude/compassionate-lovelace-9m0cg0) had no divergent commits from origin/main, and reset onto it before committing.
+    severity: nit
+  - description: 'enable_pr_auto_merge threw "required checks are failing" on PR #610 immediately after opening, while get_check_runs showed the gate check was merely in_progress — the same documented false negative seen repeatedly in prior digest/PR sessions (docs/agents/pr-workflow.md).'
+    solution: Recognized the known pattern, did not treat it as a real failure, and is retrying enable_pr_auto_merge / babysitting the PR until the gate check actually completes.
+    severity: nit
+  - description: mcp__github__create_pull_request returned a transient 503 ("no server currently available") twice before succeeding on the third attempt.
+    solution: Retried with a short pause; third attempt succeeded.
+    severity: nit
+durationSec: 412
+models:
+  claude-sonnet-5: 73
+toolCounts:
+  Bash: 19
+  Write: 2
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  Glob: 1
+  mcp__github__create_pull_request: 3
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__enable_pr_auto_merge: 2
+  Skill: 2
+  Edit: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-07-19.md
+gitBranch: claude/compassionate-lovelace-9m0cg0
+entrypoint: remote_trigger
+cliVersion: 2.1.211
+trigger: digest
