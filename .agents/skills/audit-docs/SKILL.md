@@ -172,11 +172,10 @@ re-file an open one, and append the provenance footer (ADR-0017). This is the
 
 ## 1. Branch off `origin/main`
 
-Branch `journal/audit-docs-<today-UTC>` off `origin/main` (CLAUDE.md's
-chartered-job branch convention — a caller-pinned designated branch overrides
-this default name, and that same bullet says where to look for the pin). Done
-when you are on a fresh branch off the latest
-`origin/main`.
+Branch off `origin/main` (CLAUDE.md's chartered-job branch convention — the
+name doesn't matter, a caller-pinned designated branch takes precedence, and
+that same bullet says where to look for the pin). Done when you are on a fresh
+branch off the latest `origin/main`.
 
 ## 2. Inventory & classify
 

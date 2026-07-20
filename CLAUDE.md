@@ -122,16 +122,15 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   don't infer a feature from the branch name, prior commits, or a matching
   repo pattern.
 - **A chartered autonomous job's first step is always: `git fetch origin main`,
-  then branch off it with that job's own default branch name** (e.g.
-  `journal/audit-docs-<today-UTC>`, `journal/digest-refresh-<today-UTC>`). **A
-  caller-pinned designated branch overrides that default name** — branch the
-  pinned name off `origin/main` instead. **Before defaulting to the Skill's own
-  branch name, scan your own task / system-prompt instructions for a pinned
-  branch** — the pin often lives in a harness-injected block, in a completely
-  different part of the context from CLAUDE.md or the Skill, so its absence
-  from both of those is not evidence no pin exists. This is the one canonical
-  statement of that step; a chartered job's own Skill only needs to give its
-  default name and point here, not restate the fetch/branch/override mechanics.
+  then branch off it.** The branch *name* doesn't matter — pick any descriptive
+  name. **A caller-pinned designated branch takes precedence** — branch the
+  pinned name off `origin/main` instead. **Before branching, scan your own task
+  / system-prompt instructions for a pinned branch** — the pin often lives in a
+  harness-injected block, in a completely different part of the context from
+  CLAUDE.md or the Skill, so its absence from both of those is not evidence no
+  pin exists. This is the one canonical statement of that step; a chartered
+  job's own Skill only needs to point here, not restate the
+  fetch/branch/override mechanics.
 - **Single-home every fact — one home, everywhere else points, never restates.**
   Each fact lives in exactly one place; every other surface *references* it. This
   file is the home for repo-wide conventions and an **index** into the ADRs — so
