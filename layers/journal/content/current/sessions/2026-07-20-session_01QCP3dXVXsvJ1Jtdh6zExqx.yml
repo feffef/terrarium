@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_01QCP3dXVXsvJ1Jtdh6zExqx
+startedAt: 2026-07-20T19:39:54Z
+endedAt: 2026-07-20T19:57:27Z
+kind: interactive
+goal: Fix truncated mermaid diagram labels
+status: in-review
+outcome: Node labels made font-width tolerant
+summary: "The user reported the newly pre-rendered mermaid diagram on the journal how-it-works page truncating labels (\"Human prompt\" showing as \"Human pron\"). Diagnosed it: ADR-0024 bakes each node label into a foreignObject sized to the build container's font metrics (a fallback serif, since Palatino/Iowan/Georgia aren't installed), and browsers clip at that boundary when the reader's serif resolves wider. Fix (agent-authored, off the user's bug report): a relaxNodeLabelOverflow post-render pass sets overflow:visible and a centred flex wrapper on node labels so they spill into the shape's existing padding instead of clipping. Verified in headless Chromium at a 30%-wider font; gate:scoped green. Opened PR #622."
+prs:
+  - "622"
+docsRead:
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: the pre-render architecture this bug lives in
+  - path: scripts/render-mermaid.ts
+    reason: where the fix belongs
+  - path: app/utils/mermaid.ts
+    reason: MERMAID_RENDER_FONT / token contract
+  - path: app/components/MermaidDiagram.vue
+    reason: how the baked SVG is injected
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: app/assets/mermaid/8637148c7091071a.svg
+    reason: (no reason given)
+  - path: scripts/mermaid-lib.ts
+    reason: (no reason given)
+  - path: tests/unit/mermaid-render.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "The baked-geometry bug is invisible in-repo: the build container's DejaVu Serif matches the render font, so a local screenshot never reproduces the user's clip — only a wider display font does."
+    solution: Simulate the wider font (bump node-label font-size in a headless probe) to reproduce and verify. A committed visual-regression probe at an inflated font could guard this class of clip going forward.
+    severity: minor
+  - description: render:mermaid --check already reports drift on this branch — the committed SVG doesn't match what this container re-renders, revealing the author-time render env is non-deterministic across machines/fonts.
+    solution: Pin the render font deterministically (bundle a webfont used at both measure and display time) or document the canonical render env; out of scope here.
+    severity: moderate
+durationSec: 1053
+models:
+  claude-opus-4-8: 118
+toolCounts:
+  Bash: 25
+  Grep: 3
+  Read: 12
+  Write: 2
+  Edit: 7
+  Monitor: 2
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - scripts/render-mermaid.ts
+  - tests/unit/mermaid-render.spec.ts
+  - docs/adr/0024-build-time-mermaid-prerender.md
+gitBranch: claude/mermaid-diagram-text-cutoff-bvnhl3
+entrypoint: remote_mobile
+cliVersion: 2.1.211
+learnings:
+  - Mermaid flowchart node labels are foreignObjects fixed to the measured text width; the browser clips there, so a wider display font truncates even when the node shape has spare padding.
+  - This container's `serif` resolves to DejaVu Serif — none of the journal Tenant's Palatino/Iowan/Georgia stack is installed, so build-time text measurement never matches a Mac reader's.
