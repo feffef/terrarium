@@ -1,0 +1,132 @@
+schemaVersion: 1
+session: session_01CPwUoxTZ3wJ5LQW8Nd98Mm
+startedAt: 2026-07-20T09:00:10Z
+endedAt: 2026-07-20T17:33:08Z
+kind: interactive
+goal: Triage feffef/terrarium, then land green-lit issues
+status: completed
+outcome: Three green-lit issues implemented and merged
+summary: "/triage (owner-invoked) surfaced only #236 as actionable: I analyzed its first production capture (a 500 on a dynamically-imported _nuxt chunk) and posted an agent brief. The owner then explicitly green-lit #379, #612 and #346; I dispatched three worktree-isolated impl agents, each opening a gated human-only-merge PR (#617, #618, #616). I ran /code-review (parallel Standards+Spec subagents) on all three and, on the owner's \"commit fixes\" direction, applied minor nits. I took over #612 myself after the owner stopped its agent mid-build, finishing the PreToolUse guard, settings wiring and viability doc. I managed merge-order, rebasing #616 twice as #617 then #618 landed and verifying both sides' edits survived. The owner questioned #616's session-id correctness; an empirical env-var check resolved it and the owner merged all three."
+prs:
+  - "617"
+  - "618"
+  - "616"
+docsRead:
+  - path: docs/agents/triage-labels.md
+    reason: canonical triage role mapping
+  - path: docs/agents/issue-tracker.md
+    reason: MCP tooling and PR-as-request-surface rules
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: "#236 diagnosis history"
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: durable agent-brief conventions
+  - path: app/components/ContentLoadErrorDialog.vue
+    reason: (no reason given)
+  - path: app/pages/t/[tenant]/[space]/[...slug].vue
+    reason: (no reason given)
+  - path: .claude/worktrees/agent-a85d158d66cb5fab6/scripts/render-mermaid.ts
+    reason: (read before editing)
+  - path: .claude/worktrees/agent-a88c369b825c81364/scripts/provenance-footer.ts
+    reason: (read before editing)
+  - path: .claude/worktrees/agent-a88c369b825c81364/scripts/log-session.ts
+    reason: (read before editing)
+  - path: .claude/worktrees/agent-a88c369b825c81364/tests/unit/provenance-footer.spec.ts
+    reason: (read before editing)
+  - path: .claude/worktrees/agent-a85d158d66cb5fab6/tests/unit/mermaid-render.spec.ts
+    reason: (read before editing)
+  - path: /home/user/wt-612/scripts/deferred-tool-guard.ts
+    reason: (read before editing)
+  - path: /home/user/wt-612/tests/unit/deferred-tool-guard.spec.ts
+    reason: (no reason given)
+  - path: /home/user/wt-612/.claude/settings.json
+    reason: (read before editing)
+  - path: /home/user/wt-612/CLAUDE.md
+    reason: (read before editing)
+  - path: .claude/worktrees/agent-a88c369b825c81364/scripts/session-trace.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: triage
+    reason: the session's entry point
+  - name: code-review
+    reason: two-axis review of all three PRs
+  - name: close-session
+    reason: closure front door
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Asserted the #612 impl subagent was 'still running' across several turns from memory; only verified git/worktree state when the owner asked."
+    solution: Verify subagent liveness (branch pushed? PR open? worktree present?) before reporting its state as fact.
+    severity: moderate
+  - description: "Raised a resumed-session session-id concern in the #616 review before checking it; an env-var check disproved it, forcing a walk-back."
+    solution: Extend 'verify a behavioral claim against a primary source before publishing' to review and chat claims, not just external posts.
+    severity: moderate
+  - description: "A `git worktree list` snapshot did not show the #612 agent's live worktree at one check, wrongly suggesting it had aborted."
+    solution: Worktree listing can lag a running mechanism-2 agent; corroborate with the agent itself before concluding it aborted.
+    severity: minor
+  - description: The 'permission stream closed' transient error hit AskUserQuestion (x2), send_later (x2) and subscribe_pr_activity (x1) in one session.
+    solution: "Handled via documented fallbacks (issue #229/#359): plain-text questions, ScheduleWakeup, retry-once. Notable only for its frequency."
+    severity: minor
+  - description: "Relayed from the #612 impl agent: a `git reset --hard HEAD~1` discarded uncommitted edits to 5 tracked files mid-run (recovered)."
+    solution: CLAUDE.md's pkill/reset guidance does not warn about `reset --hard` with uncommitted work — a candidate doc addition.
+    severity: minor
+durationSec: 30778
+models:
+  claude-opus-4-8: 380
+toolCounts:
+  Read: 18
+  Bash: 47
+  ToolSearch: 7
+  mcp__github__list_pull_requests: 3
+  mcp__github__issue_read: 9
+  AskUserQuestion: 2
+  Grep: 2
+  mcp__github__add_issue_comment: 5
+  mcp__github__issue_write: 5
+  Agent: 9
+  mcp__github__pull_request_read: 6
+  mcp__Claude_Code_Remote__send_later: 2
+  ScheduleWakeup: 1
+  Skill: 3
+  Edit: 17
+  Write: 6
+  SendMessage: 1
+  WebFetch: 2
+  Glob: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+filesEdited:
+  - .claude/worktrees/agent-a88c369b825c81364/scripts/log-session.ts
+  - .claude/worktrees/agent-a88c369b825c81364/scripts/provenance-footer.ts
+  - .claude/worktrees/agent-a88c369b825c81364/tests/unit/provenance-footer.spec.ts
+  - .claude/worktrees/agent-a85d158d66cb5fab6/scripts/render-mermaid.ts
+  - .claude/worktrees/agent-a85d158d66cb5fab6/tests/unit/mermaid-render.spec.ts
+  - /home/user/wt-612/.claude/settings.json
+  - /home/user/wt-612/docs/agents/deferred-tool-guard.md
+  - /home/user/wt-612/CLAUDE.md
+  - /home/user/wt-612/scripts/deferred-tool-guard.ts
+subagents:
+  - type: general-purpose
+    task: "Implement #346 provenance-footer enforcement"
+  - type: general-purpose
+    task: "Implement #379 Mermaid pre-render"
+  - type: general-purpose
+    task: "Implement #612 deferred-tool guard"
+  - type: general-purpose
+    task: "Standards review PR #616"
+  - type: general-purpose
+    task: "Spec review PR #616"
+  - type: general-purpose
+    task: "Standards review PR #617"
+  - type: general-purpose
+    task: "Spec review PR #617"
+  - type: general-purpose
+    task: "Standards review PR #618"
+  - type: general-purpose
+    task: "Spec review PR #618"
+gitBranch: claude/triage-6j8eyw
+entrypoint: remote_mobile
+cliVersion: 2.1.211
+learnings:
+  - CLAUDE_CODE_REMOTE_SESSION_ID (the cse_->session_ footer id) is stable across session resume and inherited into worktree subagents; resume does not mint a new footer id.
+ideas:
+  - "Harden the #346 provenance-footer hook to cross-check CLAUDE_CODE_REMOTE_SESSION_ID against the transcript's meta.sessionId and noop on disagreement, closing any unobserved stale-env gap; the owner merged without it after evidence showed resume and subagents preserve the id, so it is optional belt-and-suspenders."
