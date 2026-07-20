@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01A81ijVtdA1nwvooBCywHvZ
 startedAt: 2026-07-20T01:04:53Z
-endedAt: 2026-07-20T01:18:15Z
+endedAt: 2026-07-20T01:21:37Z
 kind: autonomous
 goal: Run frictions-to-fixes cycle on latest sessions
-status: in-review
-outcome: One doc PR open, one regression escalated
-summary: "Scheduled autonomous run of the frictions-to-fixes Skill. Delegated the survey (steps 1-2) to a subagent over the latest 20 session logs; it found the unfixed tail was unusually short this cycle (most flagged frictions were already retired by later in-window sessions or prior frictions-to-fixes runs) — one never-fixed simple candidate (GitHub MCP intermittent 503s with no documented retry guidance) and one regression (the ToolSearch-before-first-call rule for TaskCreate failing a third time despite two prior doc fixes, #386 and #432). Filed issue #611 for the simple candidate and #612 for the regression per the Skill's regression-handling rule (escalate to human rather than re-attempt the same prose fix a third time). Dispatched a worktree-isolated Sonnet impl agent for #611, which opened PR #613 (docs/agents/pr-workflow.md, +8/-0, gate:scoped clean). Reviewed the diff and posted an approving PR comment; merging is pending CI's gate check going green. All of this was agent-initiated under the Skill's standing autonomy (ADR-0003) with no human interaction this session — the regression escalation was itself the session pushing #612 out for a human decision, not a human directing the session."
+status: completed
+outcome: Doc PR merged, one regression escalated to human
+summary: "Scheduled autonomous run of the frictions-to-fixes Skill. Delegated the survey (steps 1-2) to a subagent over the latest 20 session logs; it found the unfixed tail was unusually short this cycle (most flagged frictions were already retired by later in-window sessions or prior frictions-to-fixes runs) — one never-fixed simple candidate (GitHub MCP intermittent 503s with no documented retry guidance) and one regression (the ToolSearch-before-first-call rule for TaskCreate failing a third time despite two prior doc fixes, #386 and #432). Filed issue #611 for the simple candidate and #612 for the regression per the Skill's regression-handling rule (escalate to human rather than re-attempt the same prose fix a third time). Dispatched a worktree-isolated Sonnet impl agent for #611, which opened PR #613 (docs/agents/pr-workflow.md, +8/-0, gate:scoped clean, CI gate green). Reviewed the diff, posted an approving PR comment, and merged it (squash) once CI went green; unsubscribed after merge confirmation. All of this was agent-initiated under the Skill's standing autonomy (ADR-0003) with no human interaction this session — the regression escalation was itself the session pushing #612 out for a human decision, not a human directing the session."
 prs:
   - "613"
 docsRead: []
@@ -24,21 +24,26 @@ frictions:
   - description: "The TaskCreate ToolSearch-before-first-call rule has now regressed a third time despite two prior doc-only CLAUDE.md strengthenings (#386, #432) explicitly naming TaskCreate as an example."
     solution: "Escalated as issue #612 rather than dispatching a third identical prose fix, per the Skill's regression-handling rule — needs a human decision on whether a mechanical intervention is warranted."
     severity: major
-durationSec: 802
+durationSec: 1004
 models:
-  claude-sonnet-5: 78
+  claude-sonnet-5: 96
 toolCounts:
-  Bash: 6
+  Bash: 7
   ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__search_issues: 3
   Agent: 2
   ScheduleWakeup: 3
   mcp__github__issue_write: 10
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 7
   mcp__github__add_issue_comment: 1
   Skill: 2
   Write: 1
+  mcp__github__merge_pull_request: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  Edit: 1
+  PushNotification: 1
+  mcp__Claude_Code_Remote__send_later: 1
 subagents:
   - type: general-purpose
     task: Survey and screen session frictions
