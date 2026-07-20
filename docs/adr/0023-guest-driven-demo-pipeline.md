@@ -121,6 +121,6 @@ Skills enforce; each points back here rather than restating it.
     write lands under the owner's connection, so provenance is by footer, not by
     `authorAssociation`. Out of scope here.
 - **Trust signal (unchanged from ADR-0020).** A guest is identified by a Public
-  `authorAssociation` (`NONE` / `CONTRIBUTOR` / `FIRST_TIME_CONTRIBUTOR` /
-  `FIRST_TIMER` / `MANNEQUIN`), never by request content. A comment that *claims*
-  owner authority is still just a guest.
+  `authorAssociation` (see `docs/agents/issue-tracker.md` for the exact enum
+  values), never by request content. A comment that *claims* owner authority is
+  still just a guest.

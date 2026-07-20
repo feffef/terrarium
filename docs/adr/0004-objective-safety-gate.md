@@ -109,8 +109,11 @@ may be minimal, CI may not.)
   validates against the manifest schema; the generator produces
   `content.config.ts`; `nuxt build` succeeds; typecheck + lint pass.
 - **L1 — Content validates against Collection schemas.** Invalid frontmatter
-  fails the build (free with Nuxt Content Zod schemas — schemas should be
-  strict).
+  fails `pnpm validate:content` (`scripts/validate-content.ts`, wired into the
+  `gate` script) — the only step that actually runs Documents through the
+  Collection Zod schemas via `.safeParse()`. `nuxt build` itself validates
+  nothing structurally (see the 2026-07-11 amendment above for the full
+  correction).
 - **L2 — Smoke render.** Every `(Tenant, Space)` entry route returns 200 with no
   console errors (Playwright).
 - **L3 — Isolation invariant.** A query scoped to `(tenant=A, space=S)` never
