@@ -8,6 +8,17 @@
     ]
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "TaskCreate|Monitor",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pnpm exec tsx scripts/deferred-tool-guard.ts || true"
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "matcher": "startup|resume",

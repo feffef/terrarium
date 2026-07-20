@@ -164,10 +164,14 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   deferred tool appears by name only, with no parameter schema, until `ToolSearch`
   loads it — a guessed shape (e.g. borrowing `Agent`'s `prompt`/`subagent_type` for
   `TaskCreate`) errors on the first call. This rule has already been violated
-  twice by tools whose names read as self-evident enough that the rule didn't
+  repeatedly by tools whose names read as self-evident enough that the rule didn't
   feel like it applied: `TaskCreate` (looks like an obvious task-list tool) and
   `Monitor` (looks like an obvious log-watcher) — a deceptively-obvious name is
-  not an exemption, load the schema anyway.
+  not an exemption, load the schema anyway. A mechanical `PreToolUse` backstop now
+  catches this specific failure — a deferred tool called with another tool's
+  argument shape — and blocks it with a corrective message rather than a terse
+  `InputValidationError` (`scripts/deferred-tool-guard.ts`; see
+  `docs/agents/deferred-tool-guard.md`, issue #612).
 - **Never predict or reconstruct an identifier — a line number, a blob SHA, an
   issue/PR number — from memory.** Always resolve it via a fresh tool call
   (a Read, `git rev-parse`/`git log -1 --format=%H`, or the actual `issue_write`
