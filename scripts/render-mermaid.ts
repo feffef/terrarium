@@ -30,7 +30,7 @@ import { type Diagram, discoverDiagrams, root, svgPathFor, SVG_DIR } from './mer
 // A unique, deliberately-unusual sentinel hex per colour token — far from any
 // palette or author `classDef` colour so the rewrite can't hit a real value.
 const TOKEN_NAMES = Object.keys(DIAGRAM_TOKENS)
-const SENTINELS: Record<string, string> = Object.fromEntries(
+export const SENTINELS: Record<string, string> = Object.fromEntries(
   TOKEN_NAMES.map((name, i) => [name, `#f0${(0xa0 + i).toString(16).padStart(2, '0')}01`]),
 )
 
@@ -54,11 +54,18 @@ export function themeSvg(svg: string): string {
   return out
 }
 
-/** Any remaining sentinel-family hex (`#f0aX01`) the rewrite missed — a signal a
- *  token leaked into a derived shade. Excludes normal author colours. */
+/** Any of this run's actual theme sentinels (SENTINELS) still present in the
+ *  rendered SVG — a signal a token leaked into a derived shade the rewrite missed.
+ *  Derived from SENTINELS itself, not a fixed `#f0aX01` pattern, so it can't
+ *  silently stop matching once a 17th token pushes a sentinel past `#f0af01`, and
+ *  it never false-flags a non-sentinel hex in that family (issue #346 review). */
 export function leftoverSentinels(svg: string): string[] {
+  const haystack = svg.toLowerCase()
   const found = new Set<string>()
-  for (const m of svg.matchAll(/#f0a[0-9a-f]01/gi)) found.add(m[0].toLowerCase())
+  for (const sentinel of Object.values(SENTINELS)) {
+    const lower = sentinel.toLowerCase()
+    if (haystack.includes(lower)) found.add(lower)
+  }
   return [...found]
 }
 

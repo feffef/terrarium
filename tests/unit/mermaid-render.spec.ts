@@ -3,7 +3,7 @@
 // sentinel→CSS-var rewrite, and the drift reconciliation. No fs, no browser.
 import { describe, expect, it } from 'vitest'
 import { extractMermaidBlocks, mermaidKey, normalizeMermaidSource } from '../../app/utils/mermaid.ts'
-import { leftoverSentinels, themeSvg } from '../../scripts/render-mermaid.ts'
+import { leftoverSentinels, SENTINELS, themeSvg } from '../../scripts/render-mermaid.ts'
 import { diffMermaid } from '../../scripts/verify-mermaid.ts'
 
 describe('mermaidKey()', () => {
@@ -64,8 +64,17 @@ describe('themeSvg()', () => {
     expect(themeSvg(svg)).toBe(svg)
   })
 
-  it('flags an unrewritten sentinel-family hex via leftoverSentinels', () => {
-    expect(leftoverSentinels('fill:#f0a901')).toEqual(['#f0a901'])
+  it('flags an unrewritten theme sentinel via leftoverSentinels', () => {
+    // `#f0a001` is the first token's real sentinel (0xa0 base); an unrewritten one is a leak.
+    expect(Object.values(SENTINELS)).toContain('#f0a001')
+    expect(leftoverSentinels('fill:#f0a001')).toEqual(['#f0a001'])
+  })
+
+  it('does not false-flag a non-sentinel hex in the #f0aX01 family', () => {
+    // #f0a901 matched the old hand-written regex but is not a live sentinel (only a
+    // handful of tokens exist) — detection now keys off SENTINELS, so it's ignored.
+    expect(Object.values(SENTINELS)).not.toContain('#f0a901')
+    expect(leftoverSentinels('fill:#f0a901')).toEqual([])
   })
 })
 
