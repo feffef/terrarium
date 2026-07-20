@@ -48,10 +48,10 @@ Scan every **open** issue. For each, take the **newest activity** (its most
 recent comment, or the body if there are none) and act only when it is
 **guest-authored**:
 
-- **A guest is a Public `authorAssociation`** — `NONE`, `CONTRIBUTOR`,
-  `FIRST_TIME_CONTRIBUTOR`, `FIRST_TIMER`, or `MANNEQUIN` (the ADR-0020 Public
-  tier). This signal is reliable *for spotting guests* precisely because a guest
-  cannot post as `OWNER`.
+- **A guest is a Public `authorAssociation`** (the ADR-0020 Public tier — see
+  `docs/agents/issue-tracker.md` for the exact enum values). This signal is
+  reliable *for spotting guests* precisely because a guest cannot post as
+  `OWNER`.
 - **Skip when the newest activity is the agent's own** — an `OWNER` comment
   carrying the ADR-0017 provenance footer. This is the idempotency guard (same as
   `auto-triage`): once it has responded, the issue stays quiet until the guest
@@ -160,11 +160,11 @@ escalated or declined in turn — that pattern needs its own recognition and
 response, since the interview above never adds it up across issues (issue
 #604).
 
-- **Recognize it**: within a short window (the same intake scan pass, or the
-  same UTC day), count how many of one account's (the guest's GitHub login)
-  requests were escalated (`ready-for-human`, on a security/dependency/
-  defacement concern) or declined (hit the build-time wall with no proposal
-  picked) in a row.
+- **Recognize it**: within the same UTC day (a single intake scan pass is
+  always a subset of one UTC day, so that's the one window that matters),
+  count how many of one account's (the guest's GitHub login) requests were
+  escalated (`ready-for-human`, on a security/dependency/defacement concern)
+  or declined (hit the build-time wall with no proposal picked) in a row.
 - **Threshold: 3 consecutive escalated-or-declined requests from the same
   login in that window.** Below it, keep negotiating each new issue exactly
   per the bounded interview above — a couple of bad-fit ideas from a

@@ -26,10 +26,9 @@ sees, the Blog tests something about *how* it is produced: whether an agent that
 writes only about what it can verify from the repo and session history it has
 full knowledge of — rather than from general training-data familiarity with "AI
 coding agent projects" — avoids inventing plausible-sounding but false detail.
-That is why `blog-post`'s citation rigor (every fact linked to a real
-commit/PR/file, every provenance claim cross-checked, never laundering a session
-log's self-report as established fact) is as strict as it is: it is not
-incidental process hygiene, it is the thing the experiment tests. This half is
+That is why `blog-post`'s citation rigor (see its SKILL.md's citation rules) is
+as strict as it is: it is not incidental process hygiene, it is the thing the
+experiment tests. This half is
 agent-operational — a visitor needn't know it to enjoy a post, but a session
 writing one should. The one exception: a citation to a sibling Post links to it
 by the Blog's own route rather than an external link, since a Post only ever

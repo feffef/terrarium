@@ -117,9 +117,9 @@ a fully-qualified typo — gives the same generic `Error: No such tool available
 That's the moment a plausible bare name gets wrongly abandoned as unsupported
 instead of retried as a keyword query.
 
-**Practical rule:** always use a tool's fully-qualified name (bare or with
-`select:`), never a bare short name. If a `select:` lookup comes back empty,
-retry the same string as a plain keyword query, or broaden it into a phrase.
+**Recovery tip:** if a `select:` lookup comes back empty, retry the same
+string as a plain keyword query, or broaden it into a phrase (see the
+fully-qualified-name rule above).
 
 `actions_list` has no `minimal_output` and returns full run objects (~300KB),
 which overflow the tool-result limit — for an "is main green" check, slice the

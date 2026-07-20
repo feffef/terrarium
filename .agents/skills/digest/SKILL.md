@@ -15,8 +15,8 @@ overview of the Platform's current state and capabilities. A thin, tested helper
 > **Invoked, never self-fired — follow the steps.** This Skill is user-invoked
 > (`disable-model-invocation: true`): a scheduled Routine fires `/digest`, and
 > a human can run it on demand, but a session never reaches for it
-> unprompted. Scheduled, it was the first live self-improvement Skill keeping the
-> Journal's derived content current (ADR-0003/0015).
+> unprompted. Scheduled, it keeps the Journal's derived content current
+> (ADR-0003/0015).
 
 Digests land through the **ordinary gated PR** (ADR-0003) — *not* the `log-session`
 direct-to-main path (that exception is bounded to inert `data`; a Digest is a
