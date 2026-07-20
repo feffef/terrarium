@@ -43,7 +43,7 @@ const { data } = await useAsyncData('blog-front', async () => {
 
 const posts = computed(() => data.value ?? [])
 
-// The tag directory: every tag actually in use across all three Personas,
+// The tag directory: every tag actually in use across all Personas,
 // most-used first — not the full curated vocabulary, so an unused tag doesn't
 // clutter the list.
 const tagCounts = computed(() => {
@@ -68,7 +68,7 @@ useHead({
   bodyAttrs: { class: 'bl-page' },
 })
 useSeoMeta({
-  description: 'Three Personas narrating the same experiment from different angles, browsable by tag.',
+  description: 'Personas narrating the same experiment from different angles, browsable by tag.',
 })
 </script>
 

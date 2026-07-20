@@ -6,9 +6,10 @@
 // (ADR-0013/0014) — there is no separate generator step.
 //
 // Each Space IS a Persona (its slug is the persona's name): `david` (neutral
-// observer), `karen` (snarky sceptic), `kevin` (dazzled dev). Two collections per
-// Space: `pages` (the routed blog — an index.md landing + posts) and `pingbacks`
-// (inbound reactions authored here by *other* Personas; ADR-0012).
+// observer), `karen` (snarky sceptic), `kevin` (dazzled dev), `eyra` (the artist).
+// Two collections per Space: `pages` (the routed blog — an index.md landing +
+// posts) and `pingbacks` (inbound reactions authored here by *other* Personas;
+// ADR-0012).
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
 // Platform-shared refinement (like `defineTenant` itself — not Tenant-to-Tenant
@@ -19,7 +20,7 @@ import { utcTimestamp } from '../../shared/schemas/timestamp'
 // enum below and `spaces:` can't drift apart (manifest is self-contained — no
 // import from the layer's `app/` presentation code, which has its own,
 // deliberately separate copy; see `app/utils/personas.ts`).
-const personaSlugs = ['david', 'karen', 'kevin'] as const
+const personaSlugs = ['david', 'karen', 'kevin', 'eyra'] as const
 
 // Used to type the ends of a Pingback so a reaction can only name a Persona
 // that exists.

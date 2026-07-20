@@ -6,14 +6,15 @@
 import { describe, expect, it } from 'vitest'
 import { eligiblePersonas } from '../../scripts/blog-rotation.ts'
 
-const UNIVERSE = ['david', 'karen', 'kevin']
+// Fixture mirrors production Blog Spaces (incl. eyra). Core rules are universe-size agnostic.
+const UNIVERSE = ['david', 'karen', 'kevin', 'eyra']
 
 describe('eligiblePersonas()', () => {
   it('with zero posts: last is null, eligible is every Persona', () => {
     expect(eligiblePersonas([], UNIVERSE)).toEqual({
       last: null,
       starved: [],
-      eligible: ['david', 'karen', 'kevin'],
+      eligible: ['david', 'karen', 'kevin', 'eyra'],
     })
   })
 
@@ -25,7 +26,7 @@ describe('eligiblePersonas()', () => {
     expect(eligiblePersonas(posts, UNIVERSE)).toEqual({
       last: 'karen',
       starved: [],
-      eligible: ['david', 'kevin'],
+      eligible: ['david', 'kevin', 'eyra'],
     })
   })
 
@@ -34,12 +35,12 @@ describe('eligiblePersonas()', () => {
       { publishedAt: '2026-07-05T00:00:00Z', persona: 'david' },
       { publishedAt: '2026-07-06T00:00:00Z', persona: 'karen' },
       { publishedAt: '2026-07-07T00:00:00Z', persona: 'kevin' },
-      { publishedAt: '2026-07-08T00:00:00Z', persona: 'david' },
+      { publishedAt: '2026-07-08T00:00:00Z', persona: 'eyra' },
     ]
     expect(eligiblePersonas(posts, UNIVERSE)).toEqual({
-      last: 'david',
+      last: 'eyra',
       starved: [],
-      eligible: ['karen', 'kevin'],
+      eligible: ['david', 'karen', 'kevin'],
     })
   })
 
@@ -47,13 +48,13 @@ describe('eligiblePersonas()', () => {
     const posts = [
       { publishedAt: '2026-07-05T00:00:00Z', persona: 'david' },
       { publishedAt: '2026-07-06T00:00:00Z', persona: 'karen' },
-      { publishedAt: '2026-07-07T00:00:00Z', persona: 'david' },
-      { publishedAt: '2026-07-08T00:00:00Z', persona: 'karen' },
+      { publishedAt: '2026-07-07T00:00:00Z', persona: 'kevin' },
+      { publishedAt: '2026-07-08T00:00:00Z', persona: 'david' },
     ]
     expect(eligiblePersonas(posts, UNIVERSE)).toEqual({
-      last: 'karen',
-      starved: ['kevin'],
-      eligible: ['kevin'],
+      last: 'david',
+      starved: ['eyra'],
+      eligible: ['eyra'],
     })
   })
 

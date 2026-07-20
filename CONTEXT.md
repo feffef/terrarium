@@ -259,7 +259,8 @@ pointer into them (see `CONTEXT-MAP.md`).
   digests, rendered at `/t/journal/current`. Platform infrastructure, not a demo
   Tenant (ADR-0008). → [`layers/journal/CONTEXT.md`](./layers/journal/CONTEXT.md)
 - **Blog** — in-character, deliberately non-authoritative commentary on the
-  experiment, from three Personas. A demo/content Tenant. →
+  experiment, from several Personas (David, Karen, Kevin, Eyra). A demo/content
+  Tenant. →
   [`layers/blog/CONTEXT.md`](./layers/blog/CONTEXT.md)
 - **Atlas** — a fictional natural-history field guide; the design-heavy showpiece.
   A demo/content Tenant. → [`layers/atlas/CONTEXT.md`](./layers/atlas/CONTEXT.md)
