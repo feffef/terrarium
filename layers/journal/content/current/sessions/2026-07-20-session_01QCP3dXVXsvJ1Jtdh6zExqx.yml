@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01QCP3dXVXsvJ1Jtdh6zExqx
 startedAt: 2026-07-20T19:39:54Z
-endedAt: 2026-07-20T20:13:29Z
+endedAt: 2026-07-20T20:21:58Z
 kind: interactive
 goal: Fix truncated mermaid diagram labels
-status: in-review
-outcome: Pinned bundled font; geometry now font-exact
+status: completed
+outcome: "Merged: pinned bundled font, geometry font-exact"
 summary: "The user reported the newly pre-rendered mermaid diagram (ADR-0024) truncating labels (\"Human prompt\" -> \"Human pron\"). Diagnosed: mermaid bakes node geometry by measuring text at author time, but the build container installs none of the Tenant's serif stack, so it measured a fallback while readers' browsers resolved wider and clipped. First commit (agent-authored off the bug report) added relaxNodeLabelOverflow, a post-render pass that un-clips node labels. The user then explicitly directed the root-cause fix (\"bundle a pinned web font\"): commit Gelasio (Georgia-compatible, SIL OFL) as a repo asset, inject it into Chromium at render time and ship it via @font-face so measure-font == display-font, plus pin handDrawnSeed for byte-deterministic renders. relaxNodeLabelOverflow stays as a safety net. Gate green (build + e2e); PR #622 updated."
 prs:
   - "622"
@@ -46,15 +46,15 @@ frictions:
   - description: A true Palatino clone (TeX Gyre Pagella) matching the Tenant's PRIMARY serif isn't on npm, and general web fetch is blocked in this environment.
     solution: Settled on Gelasio (Georgia-metric-compatible, on @fontsource) — Georgia is already the stack's last named face, so it harmonises and is obtainable.
     severity: nit
-durationSec: 2015
+durationSec: 2525
 models:
-  claude-opus-4-8: 264
+  claude-opus-4-8: 271
 toolCounts:
-  Bash: 61
+  Bash: 62
   Grep: 3
   Read: 20
   Write: 4
-  Edit: 17
+  Edit: 18
   Monitor: 4
   ToolSearch: 4
   mcp__github__list_pull_requests: 1
@@ -65,6 +65,7 @@ toolCounts:
   mcp__Claude_Code_Remote__send_later: 1
   SendUserFile: 3
   mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/render-mermaid.ts
   - tests/unit/mermaid-render.spec.ts
