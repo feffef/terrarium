@@ -1,0 +1,54 @@
+schemaVersion: 1
+session: session_01KYmcHFxP3zKfsivW4HRqi3
+startedAt: 2026-07-20T18:05:58Z
+endedAt: 2026-07-20T18:18:17Z
+kind: interactive
+goal: Remove proposed branch names from instructions
+status: in-review
+outcome: Name proposals stripped from CLAUDE.md and four Skills
+summary: "The user directly asked to find and remove every instruction that proposes a specific branch name, since branch names don't matter to anyone. I searched instruction files (excluding historical session logs and a research note that cite real past branches) and found five: CLAUDE.md's canonical chartered-job bullet and the \"Branch off origin/main\" step in the audit-docs, digest, audit-skills, and blog-post Skills. Each dropped its proposed name pattern (e.g. journal/audit-docs-<today-UTC>, blog/<persona>-post-<today-UTC>) while keeping the mechanics that matter — fetch origin/main, branch off it, caller-pinned branch takes precedence. Gate:scoped green (docs-only); opened gated PR #621 and subscribed. All changes human-instructed."
+prs:
+  - "621"
+docsRead:
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 740
+models:
+  claude-opus-4-8: 69
+toolCounts:
+  Bash: 12
+  Grep: 4
+  Read: 8
+  Edit: 5
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - CLAUDE.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+gitBranch: claude/remove-branch-naming-instructions-p8fmkm
+entrypoint: remote_mobile
+cliVersion: 2.1.211
