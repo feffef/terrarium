@@ -1,0 +1,59 @@
+schemaVersion: 1
+session: session_01SiEDVyKBoCEopksTooipnw
+startedAt: 2026-07-20T08:55:31Z
+endedAt: 2026-07-20T08:59:38Z
+kind: interactive
+goal: Run auto-triage sweep over open issues
+status: completed
+outcome: Swept 21 issues; none eligible to action
+summary: "Human-instructed: the user invoked /auto-triage and confirmed it. Ran the autonomous brave-triage sweep per the auto-triage Skill (composing /triage's per-issue rules). Scanned all 21 open issues and 0 open PRs. Two wayfinder:map issues were skipped by rule; the other 19 all had an AI-authored most-recent comment or body (ADR-0017 footer present), so every one was skipped as already-triaged. No unlabeled/needs-triage and no human-last-word tickets existed. Nothing was labelled, commented, or closed — the sweep is idempotent and reached its steady state. No net-new/agent-initiated work; classification only."
+prs: []
+docsRead:
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: the sweep's rules
+  - path: .agents/skills/triage/SKILL.md
+    reason: per-issue rules it composes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: standing green-light bounds
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: Trusted/Public gate on ready-for-agent
+  - path: docs/agents/issue-tracker.md
+    reason: gh-less REST listing + label mechanics
+  - path: layers/journal/content/current/skills/auto-triage.yml
+    reason: (no reason given)
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/OUT-OF-SCOPE.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+skillsUsed:
+  - name: auto-triage
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Invoking /auto-triage via the Skill tool was refused (disable-model-invocation), despite the user typing the slash command, forcing a manual SKILL.md read.
+    solution: Expected for user-invocation-only Skills; a slash-command invocation could be routed as a user invocation rather than a model one. Low-yield, noting only.
+    severity: nit
+  - description: Fetching each issue's latest-comment authorship via the GitHub MCP tools returns full comment bodies, which is token-heavy for a full-scan sweep.
+    solution: Worked around it with a small GH_TOKEN REST script returning only author/footer per issue; a scripts/ helper (like list-open-issues.ts) that reports last-comment authorship compactly would make the sweep cheaper.
+    severity: minor
+durationSec: 247
+models:
+  claude-opus-4-8: 61
+toolCounts:
+  Glob: 5
+  Read: 9
+  Bash: 10
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__get_me: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__issue_read: 3
+  Write: 1
+gitBranch: claude/auto-triage-9ex8px
+entrypoint: remote_mobile
+cliVersion: 2.1.211
