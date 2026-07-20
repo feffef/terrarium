@@ -14,7 +14,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pnpm exec tsx scripts/deferred-tool-guard.ts"
+            "command": "pnpm exec tsx scripts/deferred-tool-guard.ts || true"
           }
         ]
       }

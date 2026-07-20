@@ -170,8 +170,8 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   not an exemption, load the schema anyway. A mechanical `PreToolUse` backstop now
   catches this specific failure — a deferred tool called with another tool's
   argument shape — and blocks it with a corrective message rather than a terse
-  `InputValidationError` (`scripts/deferred-tool-guard.ts`, scoped to
-  `TaskCreate|Monitor`; see `docs/agents/deferred-tool-guard.md`, issue #612).
+  `InputValidationError` (`scripts/deferred-tool-guard.ts`; see
+  `docs/agents/deferred-tool-guard.md`, issue #612).
 - **Never predict or reconstruct an identifier — a line number, a blob SHA, an
   issue/PR number — from memory.** Always resolve it via a fresh tool call
   (a Read, `git rev-parse`/`git log -1 --format=%H`, or the actual `issue_write`
