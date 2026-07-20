@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01P6UvDxsGBadBww8hkHegyP
 startedAt: 2026-07-20T11:06:24Z
-endedAt: 2026-07-20T11:23:37Z
+endedAt: 2026-07-20T11:26:45Z
 kind: autonomous
 goal: Run scheduled /blog-post, write one post
-status: in-review
-outcome: "David post drafted, PR #615 opened"
-summary: "Scheduled /blog-post routine, no human prompt this session. Ran the rotation gate (scripts/blog-rotation.ts): last=kevin, starved=[david], so David was the only eligible Persona and all three candidates were his. Drafted three full candidates to scratch (a \"third-strike\" governance pattern across #387/#427/#612; the Sparks feed's rapid same-day iteration, #440; a follow-up on David's own 2026-07-17 post checking whether the still-wrong \"~16h\" RESCUED_GAP_HOURS comment had been fixed — it hadn't). A fresh outside-reader subagent with no repo access picked the third-strike candidate for depicting a repeatable self-correction mechanism over a single-feature or single-bug story, and flagged unexplained jargon (\"Skill,\" \"deferred tool,\" \"worktree-isolated subagent,\" \"commit trailer\"), which was revised into plain language before saving. Branched blog/david-post-2026-07-20 off origin/main, ran pnpm gate:scoped (full heavy layers, all green including 55 e2e tests), opened PR #615, and subscribed to its activity. All work this session is agent-initiated under the blog-post Skill's own scheduled, bounded charter — no human steered or was present for any of it."
+status: completed
+outcome: "David post merged via PR #615"
+summary: "Scheduled /blog-post routine, no human prompt this session. Ran the rotation gate (scripts/blog-rotation.ts): last=kevin, starved=[david], so David was the only eligible Persona and all three candidates were his. Drafted three full candidates to scratch (a \"third-strike\" governance pattern across #387/#427/#612; the Sparks feed's rapid same-day iteration, #440; a follow-up on David's own 2026-07-17 post checking whether the still-wrong \"~16h\" RESCUED_GAP_HOURS comment had been fixed — it hadn't). A fresh outside-reader subagent with no repo access picked the third-strike candidate for depicting a repeatable self-correction mechanism over a single-feature or single-bug story, and flagged unexplained jargon (\"Skill,\" \"deferred tool,\" \"worktree-isolated subagent,\" \"commit trailer\"), which was revised into plain language before saving. Branched blog/david-post-2026-07-20 off origin/main, ran pnpm gate:scoped (full heavy layers, all green including 55 e2e tests), opened PR #615, subscribed to its activity, and merged it (squash) once CI's own gate reported green (enable_pr_auto_merge hit the documented in_progress false-negative first; polled get_check_runs until genuinely completed, then merged directly). Unsubscribed after merge confirmation. All work this session is agent-initiated under the blog-post Skill's own scheduled, bounded charter — no human steered or was present for any of it."
 prs:
   - "615"
 docsRead:
@@ -58,17 +58,17 @@ frictions:
   - description: While drafting the Sparks-feed candidate, initially wrote several full 40-char commit SHAs for citation links by manually expanding short SHAs from memory/pattern rather than verifying each with git rev-parse; 5 of 7 guessed SHAs turned out wrong when checked.
     solution: Verified every SHA with `git rev-parse <short>` before finalizing links, per CLAUDE.md's never-predict-an-identifier rule, and corrected all wrong ones. This candidate was discarded by the outside-reader pick anyway, but the near-miss pattern is the same one as the session-id friction above — worth a mechanical reminder to always verify link SHAs, not just session ids and line numbers.
     severity: minor
-durationSec: 1033
+durationSec: 1221
 models:
-  claude-sonnet-5: 213
+  claude-sonnet-5: 232
 toolCounts:
-  Bash: 53
-  Read: 20
-  ToolSearch: 6
+  Bash: 54
+  Read: 21
+  ToolSearch: 7
   mcp__github__issue_read: 6
   Write: 5
-  Edit: 8
-  mcp__github__pull_request_read: 3
+  Edit: 9
+  mcp__github__pull_request_read: 5
   Agent: 2
   Monitor: 3
   TaskGet: 1
@@ -79,6 +79,8 @@ toolCounts:
   mcp__github__enable_pr_auto_merge: 1
   TaskStop: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-07-20-a-third-strike-waits-on-a-human.md
 subagents:
