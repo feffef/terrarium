@@ -88,6 +88,17 @@ committed, reviewable artifact.
   re-colors under a Tenant palette and dark mode with no JS. Font size/family are
   baked at render time; changing `--diagram-font*` no longer re-flows the diagram
   without a re-render. Accepted: layout geometry cannot be a runtime CSS var.
+  - **Baked geometry is font-width tolerant, not font-exact.** The render font
+    (`MERMAID_RENDER_FONT`) rarely resolves to the exact font a reader sees — the
+    build container ships no Palatino/Iowan/Georgia, so it measures against a
+    fallback serif, while a reader's browser may resolve the stack wider.
+    Mermaid sizes each label's `<foreignObject>` to the measured text width and
+    the browser clips there, so a wider display font truncated labels (`Human
+    prompt` → `Human pron`). `relaxNodeLabelOverflow` (a post-render pass in
+    `render-mermaid.ts`) sets `overflow: visible` and a centred flex wrapper on
+    every node label, so the text spills symmetrically into the shape's existing
+    13-30px of padding instead of clipping. Node positions/geometry are
+    untouched; only labels degrade gracefully under font variance (issue #379).
 - **A manual author step, guarded by the gate.** Editing a diagram means running
   `pnpm render:mermaid` and committing the new SVG. Forgetting is not silent —
   `verify:mermaid` fails the gate with the exact stale/missing file. The SVGs are

@@ -54,6 +54,31 @@ export function themeSvg(svg: string): string {
   return out
 }
 
+// A node label's `<foreignObject>` (fixed to the build-font text width) followed
+// by its `display: table-cell` wrapper div — guarded by the trailing
+// `<span class="nodeLabel ` so it never matches an edge label (those carry a
+// `class="labelBkg"` div and a `nodeLabel`-free span).
+const NODE_LABEL_FO =
+  /<foreignObject width="([\d.]+)" height="([\d.]+)">(<div xmlns="http:\/\/www\.w3\.org\/1999\/xhtml" style=")display: table-cell(;[^"]*"><span class="nodeLabel )/g
+
+/**
+ * Make node labels tolerant of display-font width variance (issue #379 follow-up).
+ * Mermaid sizes each label's `<foreignObject>` to the EXACT width the build font
+ * measured, and the browser clips content at that boundary — so when a reader's
+ * serif resolves wider than the build container's (the baked geometry is for a
+ * specific font, ADR-0024), the label truncates ("Human prompt" → "Human pron")
+ * even though the node shape has 13-30px of padding around it. We let the label
+ * use that padding: `overflow: visible` on the foreignObject stops the clip, and
+ * a centered flex wrapper (replacing mermaid's left-anchored `table-cell`) makes
+ * any overflow spill SYMMETRICALLY, keeping the text centred on the node.
+ */
+export function relaxNodeLabelOverflow(svg: string): string {
+  return svg.replace(
+    NODE_LABEL_FO,
+    '<foreignObject width="$1" height="$2" style="overflow: visible;">$3display: flex; align-items: center; justify-content: center$4',
+  )
+}
+
 /** Any of this run's actual theme sentinels (SENTINELS) still present in the
  *  rendered SVG — a signal a token leaked into a derived shade the rewrite missed.
  *  Derived from SENTINELS itself, not a fixed `#f0aX01` pattern, so it can't
@@ -85,7 +110,7 @@ async function renderOne(page: import('playwright-core').Page, diagram: Diagram)
     },
     { code: diagram.source, id: `d-${diagram.key}`, themeVariables },
   )
-  return `${themeSvg(raw).trim()}\n`
+  return `${relaxNodeLabelOverflow(themeSvg(raw)).trim()}\n`
 }
 
 async function main(): Promise<void> {
