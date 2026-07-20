@@ -9,7 +9,7 @@ import { pathToFileURL } from 'node:url'
 import { root } from '../shared/expand.ts'
 import { fetchOriginMain } from './git-helpers.ts'
 
-export const FLOOR = ['verify:skills-lock', 'lint', 'typecheck', 'validate:content'] as const
+export const FLOOR = ['verify:skills-lock', 'verify:mermaid', 'lint', 'typecheck', 'validate:content'] as const
 export const HEAVY = ['test', 'build', 'test:e2e'] as const
 
 // A `.md` under `layers/` is rendered content; `verify:skills-lock` (in FLOOR)

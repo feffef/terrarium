@@ -93,8 +93,8 @@ chrome/viewport offset uncompensated and ships a frame shorter than requested;
 
 A screenshot captures whatever frame exists *now*. Two ways the frame is empty:
 
-- **Async client-only content** (e.g. a Mermaid diagram, or any Nuxt Content
-  body that loads post-hydration) may not have rendered yet. `scripts/preview.ts
+- **Async client-only content** (e.g. any Nuxt Content body that loads
+  post-hydration) may not have rendered yet. `scripts/preview.ts
   shot` defaults to a 2s `--virtual-time-budget` wait and supports
   `--wait-for <selector>`; use the selector wait when you know the element you're
   waiting on. Chromium's `--virtual-time-budget=<ms>` is the headless-native
