@@ -66,5 +66,5 @@ platform-wide.
   log, Skill Inventory, Session, Session closure, Friction, Agent Authorship, …)
   and the Tenants roster that points here.
 - **`layers/journal/app/pages/t/journal/[space]/index.vue`** — the actual
-  dashboard a visitor sees (stat tiles, digests, session feed, Skill Inventory),
-  which is not a Markdown render of any single file.
+  dashboard a visitor sees (stat tiles, digests, session feed, Skill Inventory,
+  Sparks), which is not a Markdown render of any single file.

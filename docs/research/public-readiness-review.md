@@ -78,9 +78,8 @@ Repo-specific priorities:
 
 ## Verified clean / low-risk (no action)
 
-- No secrets in tree or history; `.env` never committed; no key/cert files ever;
-  `.gitignore` covers `.env` / `.data` / `.claude/settings.local.json` /
-  `.session-logs/`.
+- No secrets in tree or history (see Headline above); `.gitignore` covers
+  `.env` / `.data` / `.claude/settings.local.json` / `.session-logs/`.
 - `.claude/settings.json` and `nuxt.config.ts` hold no secrets.
 - `.github/workflows/gate.yml` uses `pull_request` (not `pull_request_target`),
   has no script-injection vector (only `github.sha` / `.number` / `.repository`

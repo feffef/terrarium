@@ -73,19 +73,22 @@ It prints JSON:
   against **`regressionSessions`** — a deduped pool, since the same session
   commonly brackets more than one Skill's edit.
 - **`orphanedSessions`** — every session id referenced by a `Claude-Session:`
-  commit trailer on `origin/main` in the last few days (a calendar window,
-  independent of the primary window above — the point is catching **zero**-log
-  sessions, not recent ones) with **no** matching file anywhere in the sessions
-  Collection (current or archived). Each entry carries the referencing commit
-  sha(s) and date — a session that never invoked `close-session`/`log-session`
-  at all (ADR-0009).
+  commit trailer on `origin/main` in the last `ORPHAN_WINDOW_DAYS` days (4,
+  `scripts/audit-skills.ts`) (a calendar window, independent of the primary
+  window above — the point is catching **zero**-log sessions, not recent ones)
+  with **no** matching file anywhere in the sessions Collection (current or
+  archived). Each entry carries the referencing commit sha(s) and date — a
+  session that never invoked `close-session`/`log-session` at all (ADR-0009).
 - **`humanPromptedClosures`** and **`manuallyRescuedClosures`** — the two
   *manual-nudge-closure* signals, the counterpart to `orphanedSessions` for
   sessions that DID log but only because a human nudged them (so the orphan
   check, which keys on a missing log file, can't see them). The first lists
   sessions whose own log flagged the `HUMAN-PROMPTED-CLOSURE` friction keyword
   (`close-session` mandates it when a human, not self-judgement, triggered the
-  close). The second catches the same regression from *timing* alone — a
+  close). Two entries already recorded on that standing thread (#483) are
+  suppressed via `DISMISSED_HUMAN_PROMPTED_CLOSURES` (issue #540), so a healthy
+  future run won't re-show them — a genuinely new human-prompted closure still
+  surfaces. The second catches the same regression from *timing* alone — a
   session whose closure (`endedAt`) landed more than `RESCUED_GAP_HOURS` after
   its last work commit on `origin/main` (`gapHours` is that delay) — the shape
   of the motivating orphan (session_019pNrz, #397; see
