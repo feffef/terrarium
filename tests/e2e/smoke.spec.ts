@@ -85,20 +85,25 @@ describe('L2 smoke render', async () => {
   // ── Platform: every content page with a fenced ```mermaid block (#469) ──────
   // Discovered from the manifests + real content — mirrors `entryRoutesFrom`
   // (shared/expand.ts) — so a new mermaid diagram on ANY page, in ANY Tenant,
-  // gets render coverage automatically instead of shipping untested. Only a real
-  // browser can prove the client-only `<MermaidDiagram>` (issue #364) actually
-  // replaced its fallback `<pre>` with an inline SVG.
+  // gets render coverage automatically instead of shipping untested. Diagrams
+  // are now pre-rendered to committed, theme-adaptive SVGs (issue #379,
+  // ADR-0024): the page must show the inline SVG AND ship NO mermaid JS — a real
+  // browser is what proves the network trace stays mermaid-free.
   describe('mermaid diagrams', () => {
     it('discovers at least one mermaid page to sweep', () => {
       expect(mermaidPageRoutes.length).toBeGreaterThan(0)
     })
 
     for (const route of mermaidPageRoutes) {
-      it(`renders a mermaid diagram as an inline SVG on ${route}`, async () => {
-        const { page, errors } = await renderAndCollectErrors(route)
+      it(`renders a pre-rendered mermaid SVG and ships no mermaid JS on ${route}`, async () => {
+        const { page, errors, requests } = await renderAndCollectErrors(route)
         try {
           await page.locator('.mermaid-diagram svg').first().waitFor({ state: 'attached', timeout: 10_000 })
           expect(await page.locator('.mermaid-diagram svg').count()).toBeGreaterThan(0)
+          // The whole point of #379: the ~600 KB mermaid renderer must never be
+          // fetched. No requested URL may name mermaid.
+          const mermaidRequests = requests.filter((u) => /mermaid/i.test(u))
+          expect(mermaidRequests, `mermaid JS was fetched on ${route}:\n${mermaidRequests.join('\n')}`).toEqual([])
           expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
         } finally {
           await page.close()

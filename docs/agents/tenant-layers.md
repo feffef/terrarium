@@ -119,12 +119,15 @@ implications:
   wrapper (e.g. via `<Teleport>` to `<body>`) won't see the tokens.
 - **A Platform-generic component can theme itself from a Tenant this way too,
   without coupling to that Tenant's token names — via an opt-in contract.**
-  `app/components/MermaidDiagram.vue` reads a small set of `--diagram-*` custom
-  properties off its mounted element and feeds them to mermaid; each Tenant
-  opts in by *mapping* its own tokens to that contract on its wrapper (journal
-  maps `--jd-*` → `--diagram-*` in `theme.css`). A Tenant that maps none keeps
-  the component's default look. Map via `var(--jd-…)` rather than literal
-  values so a dark-mode `--jd-*` override flows through the contract for free.
+  Mermaid diagrams (`app/components/MermaidDiagram.vue`) carry a small set of
+  `--diagram-*` custom-property references baked into their pre-rendered SVG
+  (ADR-0024): each Tenant opts in by *mapping* its own tokens to that contract on
+  its wrapper (journal maps `--jd-*` → `--diagram-*` in `theme.css`). A Tenant
+  that maps none falls back to the contract's built-in defaults. Map via
+  `var(--jd-…)` rather than literal values so a dark-mode `--jd-*` override flows
+  through the contract for free — the SVG re-resolves the `var(--diagram-*)` refs
+  with zero JS (only the *colour* tokens are live vars; font size/family are baked
+  at render time — ADR-0024).
 
 ## 3. A new Tenant/layer needs `nuxt prepare` before `pnpm lint`
 

@@ -18,13 +18,14 @@
     "test:e2e": "vitest run tests/e2e",
     "validate:content": "tsx scripts/validate-content.ts && tsx scripts/validate-content-refs.ts",
     "verify:skills-lock": "tsx scripts/verify-skills-lock.ts",
+    "verify:mermaid": "tsx scripts/verify-mermaid.ts",
+    "render:mermaid": "tsx scripts/render-mermaid.ts",
     "check:worktrees": "tsx scripts/check-worktrees.ts",
-    "gate": "pnpm verify:skills-lock && pnpm lint && pnpm typecheck && pnpm validate:content && pnpm test && pnpm build && pnpm test:e2e",
+    "gate": "pnpm verify:skills-lock && pnpm verify:mermaid && pnpm lint && pnpm typecheck && pnpm validate:content && pnpm test && pnpm build && pnpm test:e2e",
     "gate:scoped": "tsx scripts/gate.ts"
   },
   "dependencies": {
     "@nuxt/content": "3.15.0",
-    "mermaid": "^11.16.0",
     "nuxt": "^4.0.0",
     "zod": "^3.25.0"
   },
@@ -35,6 +36,7 @@
     "@types/node": "^22.10.0",
     "eslint": "^9.0.0",
     "jiti": "^2.7.0",
+    "mermaid": "^11.16.0",
     "playwright-core": "^1.55.0",
     "tsx": "^4.19.0",
     "typescript": "^5.6.0",

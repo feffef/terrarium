@@ -24,12 +24,17 @@ export const entryRoutes = entryRoutesFrom(expandedCollections)
 export const mermaidPageRoutes = mermaidRoutes(expandedCollections)
 
 /**
- * Navigate to `route` in a fresh page, capturing every console *error* and
- * uncaught page error from before navigation until the network settles. Returns
- * the page (for DOM assertions) and the collected error strings.
+ * Navigate to `route` in a fresh page, capturing every console *error*, uncaught
+ * page error, and requested URL from before navigation until the network
+ * settles. Returns the page (for DOM assertions), the collected error strings,
+ * and every request URL (so a test can assert what did — or, for #379's
+ * zero-mermaid-JS guarantee, did NOT — get fetched).
  */
-export async function renderAndCollectErrors(route: string): Promise<{ page: Page; errors: string[] }> {
+export async function renderAndCollectErrors(
+  route: string,
+): Promise<{ page: Page; errors: string[]; requests: string[] }> {
   const errors: string[] = []
+  const requests: string[] = []
   // Un-navigated page (createPage() with no path skips its own goto), so the
   // listeners are attached BEFORE the client bundle runs and can see hydration
   // errors that fire on first paint.
@@ -40,11 +45,14 @@ export async function renderAndCollectErrors(route: string): Promise<{ page: Pag
   page.on('pageerror', (err) => {
     errors.push(`pageerror: ${err.message}`)
   })
+  page.on('request', (req) => {
+    requests.push(req.url())
+  })
   // waitUntil: 'hydration' blocks until Nuxt reports isHydrating === false, so a
   // throw during hydration surfaces as a pageerror we then assert on.
   await page.goto(url(route), { waitUntil: 'hydration' })
   await page.waitForLoadState('networkidle')
-  return { page, errors }
+  return { page, errors, requests }
 }
 
 /**
