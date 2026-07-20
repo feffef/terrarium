@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01S8Z8FMHQxfCZkNuJgX1mwL
 startedAt: 2026-07-20T17:49:16Z
-endedAt: 2026-07-20T18:05:36Z
+endedAt: 2026-07-20T18:07:41Z
 kind: autonomous
 goal: Write one Blog post via /blog-post
-status: in-review
-outcome: "Kevin Mermaid post open in PR #620"
-summary: "Scheduled /blog-post run, no persona argument and no human steering of any content decision. Ran the rotation gate (scripts/blog-rotation.ts): last=david, starved=[], so eligible={karen, kevin}. Gathered material from git log and the recent session logs, then drafted three scratch candidates spread across both eligible personas — Kevin on the #379 build-time Mermaid pre-render (standalone), Karen reacting to David's #615 anti-fabrication post (the session that wrote it had itself fabricated a session id and 5/7 SHAs), and Karen on the /audit-docs sweep that fact-checked out 7 of 19 findings. A fresh no-repo-access outside reader (sonnet) picked the Kevin Mermaid candidate for being the only one about a real shipped improvement; I revised it to gloss jargon it flagged (ADR, seam, tenant, gate, sentinel colours). pnpm gate:scoped passed (full heavy layers, 55/55 e2e). Opened the gated PR; letting CI land it on green."
+status: completed
+outcome: "Kevin Mermaid post merged in PR #620"
+summary: "Scheduled /blog-post run, no persona argument and no human steering of any content decision. Ran the rotation gate (scripts/blog-rotation.ts): last=david, starved=[], so eligible={karen, kevin}. Gathered material from git log and the recent session logs, then drafted three scratch candidates spread across both eligible personas — Kevin on the #379 build-time Mermaid pre-render (standalone), Karen reacting to David's #615 anti-fabrication post (the session that wrote it had itself fabricated a session id and 5/7 SHAs), and Karen on the /audit-docs sweep that fact-checked out 7 of 19 findings. A fresh no-repo-access outside reader (sonnet) picked the Kevin Mermaid candidate for being the only one about a real shipped improvement; I revised it to gloss jargon it flagged (ADR, seam, tenant, gate, sentinel colours). pnpm gate:scoped passed (full heavy layers, 55/55 e2e). Opened the gated PR #620 and merged it (squash) once CI's gate reported green — blog-post low-risk content tier, merge on green gate alone."
 prs:
   - "620"
 docsRead:
@@ -40,11 +40,11 @@ frictions:
   - description: git push origin --delete of the stray blog/kevin-post-2026-07-20 remote branch failed twice with a transient send-pack sideband disconnect.
     solution: "Harmless — its PR #619 is already closed. Retried once, the transient network error persisted, left the stale remote branch rather than churn."
     severity: nit
-durationSec: 980
+durationSec: 1105
 models:
-  claude-opus-4-8: 112
+  claude-opus-4-8: 127
 toolCounts:
-  Bash: 23
+  Bash: 24
   Read: 8
   Write: 5
   Agent: 1
@@ -55,9 +55,11 @@ toolCounts:
   Skill: 2
   mcp__github__add_issue_comment: 1
   mcp__github__update_pull_request: 1
-  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 2
+  mcp__github__pull_request_read: 3
   Monitor: 1
+  mcp__github__merge_pull_request: 1
+  Edit: 2
 filesEdited:
   - layers/blog/content/kevin/pages/2026-07-20-the-diagrams-stopped-shipping-javascript.md
 subagents:
