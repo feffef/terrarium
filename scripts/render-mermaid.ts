@@ -79,7 +79,20 @@ async function renderOne(page: import('playwright-core').Page, diagram: Diagram)
       // `mermaid` is set on the global by the UMD bundle addScriptTag injected
       // below; this callback runs in-browser, where globalThis === window.
       const mermaid = (globalThis as unknown as { mermaid: typeof import('mermaid').default }).mermaid
-      mermaid.initialize({ startOnLoad: false, theme: 'base', themeVariables, securityLevel: 'loose' })
+      // htmlLabels:false renders labels as SVG <text>, not a fixed-width HTML
+      // foreignObject. ADR-0024 bakes font geometry into the committed SVG, but a
+      // foreignObject re-flows its text live against the viewer's font while its
+      // width stays frozen at render-time metrics — so a viewer whose font is
+      // wider than the render-time fallback clips the label (issue: "Human pron").
+      // SVG <text> keeps the baked geometry the ADR assumes and cannot clip.
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        themeVariables,
+        securityLevel: 'loose',
+        htmlLabels: false,
+        flowchart: { htmlLabels: false },
+      })
       const { svg } = await mermaid.render(id, code)
       return svg
     },
