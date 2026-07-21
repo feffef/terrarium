@@ -1,0 +1,65 @@
+schemaVersion: 1
+session: session_012hVMkDcnFKEByW3Lc8w1Ya
+startedAt: 2026-07-21T11:07:15Z
+endedAt: 2026-07-21T11:22:57Z
+kind: autonomous
+goal: Write and land this week's blog-post via /blog-post
+status: in-review
+outcome: PR opened, gate green, subscribed for merge
+summary: "Scheduled /blog-post run, no persona pinned. Ran the A0 rotation gate (scripts/blog-rotation.ts): last=kevin, eligible=[david, karen]. Drafted three candidates to scratch per the Skill's A1-A4 process (David reacting to his own prior post on issue #612's mechanized fix; Karen on the Mermaid font-clipping bug; David on the audit-docs sweep's CI-gap finding), had a fresh sonnet subagent pick the strongest on event-weight and flag unglossed jargon, revised the winner (David, standalone, the audit-docs/CI-gap post) to close those gaps, verified every factual claim and timestamp against git/GitHub before publishing, ran pnpm gate:scoped green, and opened PR #632. All decisions in this run were agent-initiated per the Skill's own instructions — no live human input was received during the session."
+prs:
+  - "632"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the run's own instructions
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice check before publishing
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: drafted a discarded Karen candidate
+  - path: docs/proposals/README.md
+    reason: grounding the CI-gap post's proposals-drop-zone claim
+  - path: layers/blog/content/david/pages/2026-07-20-a-third-strike-waits-on-a-human.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-17-two-posts-zero-fixes.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: First draft of the Karen candidate (mermaid font bug) misread commit timestamps and asserted a first fix shipped, broke in production, and needed a second incident PR later - actually both commits were part of one PR from one authoring session, 18 minutes apart, never separately merged. Caught only by re-checking PR commit lists via the GitHub API before drafting was final.
+    solution: Always pull a PR's actual commit list (pull_request_read get_commits) before asserting a "shipped, broke, fixed again" narrative from git log alone - adjacent commits in git log are not proof of separate merge events (CLAUDE.md already warns about this for PR-boundary claims; this was the same trap in a slightly different shape).
+    severity: minor
+  - description: Drafted a "months ago" timing claim for a prior CI-gap occurrence without checking - the repo's entire history only spans about two weeks, so it was fabricated-sounding filler. Caught by checking when docs/proposals/README.md was actually added.
+    solution: Verify every relative-time phrase ("months ago", "days ago") against an actual timestamp before publishing, same rigor as a specific date or count.
+    severity: minor
+durationSec: 942
+models:
+  claude-sonnet-5: 131
+toolCounts:
+  Bash: 31
+  Read: 9
+  ToolSearch: 3
+  mcp__github__pull_request_read: 8
+  mcp__github__issue_read: 1
+  Write: 6
+  Edit: 4
+  Agent: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__enable_pr_auto_merge: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-07-21-the-docs-fixed-themselves-in-four-minutes.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-0rglt8
+entrypoint: remote_trigger
+cliVersion: 2.1.216
+trigger: blog-post
