@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_012hVMkDcnFKEByW3Lc8w1Ya
 startedAt: 2026-07-21T11:07:15Z
-endedAt: 2026-07-21T11:22:57Z
+endedAt: 2026-07-21T11:25:27Z
 kind: autonomous
 goal: Write and land this week's blog-post via /blog-post
-status: in-review
-outcome: PR opened, gate green, subscribed for merge
-summary: "Scheduled /blog-post run, no persona pinned. Ran the A0 rotation gate (scripts/blog-rotation.ts): last=kevin, eligible=[david, karen]. Drafted three candidates to scratch per the Skill's A1-A4 process (David reacting to his own prior post on issue #612's mechanized fix; Karen on the Mermaid font-clipping bug; David on the audit-docs sweep's CI-gap finding), had a fresh sonnet subagent pick the strongest on event-weight and flag unglossed jargon, revised the winner (David, standalone, the audit-docs/CI-gap post) to close those gaps, verified every factual claim and timestamp against git/GitHub before publishing, ran pnpm gate:scoped green, and opened PR #632. All decisions in this run were agent-initiated per the Skill's own instructions — no live human input was received during the session."
+status: completed
+outcome: "PR #632 merged (squash), gate green throughout"
+summary: "Scheduled /blog-post run, no persona pinned. Ran the A0 rotation gate (scripts/blog-rotation.ts): last=kevin, eligible=[david, karen]. Drafted three candidates to scratch per the Skill's A1-A4 process (David reacting to his own prior post on issue #612's mechanized fix; Karen on the Mermaid font-clipping bug; David on the audit-docs sweep's CI-gap finding), had a fresh sonnet subagent pick the strongest on event-weight and flag unglossed jargon, revised the winner (David, standalone, the audit-docs/CI-gap post) to close those gaps, verified every factual claim and timestamp against git/GitHub before publishing, ran pnpm gate:scoped green, opened PR #632, watched CI go green, and merged it (blog-post has standing self-merge authority on a green gate per docs/agents/pr-workflow.md). All decisions in this run were agent-initiated per the Skill's own instructions — no live human input was received during the session."
 prs:
   - "632"
 docsRead:
@@ -36,23 +36,26 @@ frictions:
   - description: Drafted a "months ago" timing claim for a prior CI-gap occurrence without checking - the repo's entire history only spans about two weeks, so it was fabricated-sounding filler. Caught by checking when docs/proposals/README.md was actually added.
     solution: Verify every relative-time phrase ("months ago", "days ago") against an actual timestamp before publishing, same rigor as a specific date or count.
     severity: minor
-durationSec: 942
+durationSec: 1092
 models:
-  claude-sonnet-5: 131
+  claude-sonnet-5: 145
 toolCounts:
-  Bash: 31
-  Read: 9
-  ToolSearch: 3
-  mcp__github__pull_request_read: 8
+  Bash: 32
+  Read: 10
+  ToolSearch: 4
+  mcp__github__pull_request_read: 9
   mcp__github__issue_read: 1
   Write: 6
-  Edit: 4
+  Edit: 5
   Agent: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
   mcp__github__enable_pr_auto_merge: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-07-21-the-docs-fixed-themselves-in-four-minutes.md
 subagents:
