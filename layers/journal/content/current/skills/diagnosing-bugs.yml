@@ -1,13 +1,14 @@
 name: diagnosing-bugs
 category: general-engineering
-importance: supporting
+importance: peripheral
 installedSha256: 0b561e84563f281e39b939e775d0a95d34c316bf212ba08989d547f1c14d2c58
 role: >-
   Drives hard-bug/perf-regression diagnosis via a red-then-green reproduction
   loop before any fix is proposed. The formal loop is valuable once a bug
   resists a first-pass theory, but real hard-bug sessions in this repo
-  routinely resolve without invoking it — treat as a reference to reach for,
-  not a step every hard bug actually takes here.
+  consistently resolve without invoking it, root-causing ad hoc instead —
+  little observed pull even in sessions squarely in its domain. Treat as a
+  reference to reach for, not a step real hard bugs actually take here.
 observations:
   - date: 2026-07-13
     note: >-
@@ -27,3 +28,18 @@ observations:
       ruling out a cache hypothesis against Nuxt source, again without
       invoking this Skill. Both are exactly the "resisted a first-pass
       theory" case the role describes, and both proceeded fine ad hoc.
+  - date: 2026-07-21
+    note: >-
+      Demoted supporting → peripheral: a third bright-line instance, still
+      within this run's 40-session window alongside the still-in-window
+      session_01Tj6TVeZmBVcyUteTqgvYgy (the other 2026-07-17 citation above
+      has since aged out). session_01QCP3dXVXsvJ1Jtdh6zExqx (2026-07-20,
+      "Fix truncated mermaid diagram labels") root-caused a font-metric
+      mismatch behind a mermaid label-clipping bug — a first-pass fix
+      (relaxNodeLabelOverflow) proved insufficient and the real fix (a
+      pinned bundled font) needed further diagnosis — entirely ad hoc, no
+      diagnosing-bugs invocation, 4 frictions incl. one major. Four
+      consecutive hard-bug sessions observed since this Inventory started
+      tracking it (2026-07-13 through 2026-07-20), only the first ever used
+      this Skill: "little observed pull even when it could have applied" is
+      now the better fit than "genuinely useful but not essential."
