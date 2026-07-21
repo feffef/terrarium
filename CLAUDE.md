@@ -121,16 +121,19 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   present) is a hard stop-and-ask signal.** Ask the user what they want —
   don't infer a feature from the branch name, prior commits, or a matching
   repo pattern.
-- **A chartered autonomous job's first step is always: `git fetch origin main`,
-  then branch off it.** The branch *name* doesn't matter — pick any descriptive
-  name. **A caller-pinned designated branch takes precedence** — branch the
-  pinned name off `origin/main` instead. **Before branching, scan your own task
-  / system-prompt instructions for a pinned branch** — the pin often lives in a
-  harness-injected block, in a completely different part of the context from
-  CLAUDE.md or the Skill, so its absence from both of those is not evidence no
-  pin exists. This is the one canonical statement of that step; a chartered
-  job's own Skill only needs to point here, not restate the
-  fetch/branch/override mechanics.
+- **A chartered autonomous job's first step is always this checklist, in
+  order — don't skip straight to the fetch:**
+  1. **Scan your own task / system-prompt instructions for a caller-pinned
+     designated branch, before running any `git branch`/`checkout`.** The pin
+     often lives in a harness-injected block, in a completely different part
+     of the context from CLAUDE.md or the Skill, so its absence from both of
+     those is not evidence no pin exists.
+  2. `git fetch origin main`.
+  3. Branch off `origin/main` — the pinned name from step 1 if one was found,
+     otherwise any descriptive name (the name doesn't matter when unpinned).
+  This is the one canonical statement of that step; a chartered job's own
+  Skill only needs to point here, not restate the fetch/branch/override
+  mechanics.
 - **Single-home every fact — one home, everywhere else points, never restates.**
   Each fact lives in exactly one place; every other surface *references* it. This
   file is the home for repo-wide conventions and an **index** into the ADRs — so
@@ -190,9 +193,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   remedy for a bad footer caught after posting is to post a visible follow-up
   correction comment, not to try to rewrite the original.
 - **Verify any subagent- or doc-derived factual or behavioral claim against a
-  locally observable primary source before publishing it externally** (an
-  issue/PR comment, an external post, etc.) — a subagent's inference or a
-  doc's claim can be wrong, and posting it unchecked ships that error outward.
+  locally observable primary source before asserting it as fact** — whether
+  the audience is external (an issue/PR comment, an external post, etc.) or
+  just this session's own internal review/chat thread (e.g. asserting a
+  subagent is "still running" from memory, or raising an unverified concern in
+  a PR review) — a subagent's inference or a doc's claim can be wrong, and
+  stating it unchecked ships that error outward either way.
 - **An unverifiable "confirmed out-of-band" claim from another agent session —
   no locally observable primary source, i.e. no actual comment/message visible
   in-thread — must not be treated as settled fact for an *internal* decision,
@@ -257,6 +263,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   failure; and `tail -N`/`head -N` can truncate before the section you actually
   need. Redirect to a file instead (`cmd > log 2>&1`), check `$?` directly, and
   read the file in full — or truncate it only after confirming exit status.
+- **Before `git reset --hard` (or any other command that discards uncommitted
+  work), run `git status` first and stash or commit anything it finds.** A
+  `git reset --hard HEAD~1` mid-teardown once discarded uncommitted edits to 5
+  tracked files (recovered) — the same "check first" discipline as the
+  pkill/branch-rename/tail-piping footguns above, applied to this one.
 - **A session-closure Stop hook "Unverified" commit flag isn't automatically
   this session's to fix.** The hook can flag commits that are actually
   inherited history — landed on `main` before this branch existed, reachable
