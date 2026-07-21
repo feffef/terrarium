@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01DLcHkCsmFuiWWcDmQo3L5B
 startedAt: 2026-07-21T04:08:37Z
-endedAt: 2026-07-21T04:29:40Z
+endedAt: 2026-07-21T04:32:54Z
 kind: autonomous
 goal: Fact-check live docs against code, fix drift
-status: in-review
-outcome: "PR #630 open, fixes green, awaiting merge"
-summary: "Fully agent-initiated scheduled /audit-docs sweep, no human prompt. Fanned out 4 paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over every Live+Historical doc and our own Skills; pooled 8 findings, merged one duplicate, fact-checked all 8 independently (6 CONFIRMED, 1 CONFIRMED-with-correction, 1 WRONG and dropped). Fixed all 6 confirmed findings across CLAUDE.md, CONTEXT.md, docs/agents/verifying-ui-changes.md, and 5 Skill files — stopped a self-contradicting restated gate-floor list in CLAUDE.md from drifting again, linked an orphaned research doc, moved implementation detail out of CONTEXT.md's glossary, killed a dead Skill forward-reference, and de-duplicated two restated procedures down to pointers. One finding also surfaced a genuine gap beyond doc scope — CI's gate.yml is missing a verify:mermaid step that package.json's gate script has — so filed a docs/proposals/ entry for a human to apply, per that directory's own documented companion-change discipline. pnpm gate:scoped green; opened PR #630 and subscribed to its activity to babysit it through to self-merge."
+status: completed
+outcome: "PR #630 merged, all 7 fixes landed"
+summary: "Fully agent-initiated scheduled /audit-docs sweep, no human prompt at any point. Fanned out 4 paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over every Live+Historical doc and our own Skills; pooled 8 findings, merged one duplicate, fact-checked all 8 independently (6 CONFIRMED, 1 CONFIRMED-with-correction, 1 WRONG and dropped). Fixed all 6 confirmed findings across CLAUDE.md, CONTEXT.md, docs/agents/verifying-ui-changes.md, and 5 Skill files — stopped a self-contradicting restated gate-floor list in CLAUDE.md from drifting again, linked an orphaned research doc, moved implementation detail out of CONTEXT.md's glossary, killed a dead Skill forward-reference, and de-duplicated two restated procedures down to pointers. One finding also surfaced a genuine gap beyond doc scope — CI's gate.yml is missing a verify:mermaid step that package.json's gate script has — so filed a docs/proposals/ entry for a human to apply, per that directory's own documented companion-change discipline. pnpm gate:scoped green throughout. Opened PR #630, subscribed to its activity, watched CI (the \"gate\" check ran twice on different ephemeral merge-ref SHAs — main likely advanced concurrently — both green), confirmed check-run completed/success and mergeable_state clean, then squash-merged via the audit-docs Skill's self-merge tier (ADR-0003/0004, no ADR/CI/isolation/routing-module edits). Unsubscribed and cancelled the follow-up check-in immediately after merge."
 prs:
   - "630"
 docsRead:
@@ -22,6 +22,8 @@ docsRead:
     reason: primary source for the FLOOR array CLAUDE.md had drifted from
   - path: .github/workflows/gate.yml
     reason: confirmed the missing verify:mermaid step
+  - path: docs/agents/pr-workflow.md
+    reason: "self-merge recipe + per-tier authority for landing PR #630"
   - path: docs/agents/verifying-ui-changes.md
     reason: (read before editing)
   - path: .agents/skills/frictions-to-fixes/SKILL.md
@@ -44,26 +46,30 @@ skillsUsed:
   - name: close-session
     reason: session closure at PR-open
   - name: log-session
-    reason: this log
+    reason: in-review log at PR-open, completed log at merge
 frictions: []
-durationSec: 1263
+durationSec: 1457
 models:
-  claude-sonnet-5: 169
+  claude-sonnet-5: 199
 toolCounts:
-  Bash: 26
-  ToolSearch: 4
+  Bash: 28
+  ToolSearch: 5
   mcp__github__search_pull_requests: 1
   TaskCreate: 7
-  TaskUpdate: 13
+  TaskUpdate: 14
   Agent: 5
-  Read: 19
+  Read: 20
   Edit: 11
   mcp__github__create_pull_request: 1
-  Write: 2
+  Write: 3
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 2
-  mcp__github__pull_request_read: 2
+  Skill: 3
+  mcp__github__pull_request_read: 8
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  PushNotification: 1
 filesEdited:
   - CLAUDE.md
   - CONTEXT.md
