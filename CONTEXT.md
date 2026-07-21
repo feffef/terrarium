@@ -128,8 +128,7 @@ deliverable as the Nuxt code.
 
 ### Skill Inventory
 A curated, derived current-state readout of which Skills to actually use and each
-one's **role** and **importance** to this Platform
-(`layers/journal/content/current/skills/`, rendered at `/t/journal/current`). It
+one's **role** and **importance** to this Platform. It
 is the authoritative "use these Skills" list (CLAUDE.md), kept current by the
 `audit-skills` Skill. It is one **Inventory** — the general category of derived,
 current-state readouts that are refreshed in place rather than appended to

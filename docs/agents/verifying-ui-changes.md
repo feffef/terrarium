@@ -119,11 +119,10 @@ because its container ref was null in `onMounted`.)
 
 ## See also
 
-- The built-in **`verify`** skill — the general "drive the affected flow and
-  observe behavior before committing" affordance; this doc is its browser/UI
-  reference. If UI verification ever needs codified *steps* rather than this
-  reference alone, `verify` bootstraps a repo-owned project verify skill that
-  would disclose to this file.
+- **How to verify a UI change actually works**: drive the affected flow
+  yourself and observe behavior before committing — this doc is the
+  browser/UI-specific reference for that (no repo-wide `verify` Skill
+  currently exists).
 - CLAUDE.md's self-verification section — how to *capture* a render
   (`scripts/preview.ts`, `scripts/screenshot.ts`) and the DevTools-overlay
   caveat for `--dev` shots.

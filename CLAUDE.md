@@ -35,8 +35,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   only on a concept's *second* instance) is defined in `docs/agents/domain.md`,
   complementing that skill's 3-part test.
 - **Which Skills to actually use** is curated in the journal Tenant's **Skill
-  Inventory** (`CONTEXT.md`'s glossary term — see it there for where it lives and
-  what it records) — for every catalogued Skill, our own first-class Skills
+  Inventory** (`layers/journal/content/current/skills/`, rendered at
+  `/t/journal/current`; see `CONTEXT.md`'s glossary term for what it records) —
+  for every catalogued Skill, our own first-class Skills
   included, not only the ones from the external pack (ADR-0015). Treat it as the
   authoritative "use these" list: take these Skills seriously and prefer them
   over ad-hoc approaches, guided by each entry's `importance` and `role`.
@@ -488,23 +489,29 @@ tests/support/ , tests/README.md    # shared e2e helpers + the test-homing conve
 ## Self-verification — the safety gate (ADR-0004)
 
 **Locally, run `pnpm gate:scoped` before proposing a change — not the full `pnpm gate`.**
-`gate:scoped` (`scripts/gate.ts`) runs the cheap floor (`verify:skills-lock`, `lint`,
-`typecheck`, `validate:content`) always, and adds the heavy layers (`test`, `build`,
-`test:e2e`) only when the change isn't provably inert — for a change touching only `.md`
+`gate:scoped` (`scripts/gate.ts`) runs the cheap floor always, and adds the heavy
+layers (`test`, `build`, `test:e2e`) only when the change isn't provably inert — for a change touching only `.md`
 files outside `layers/` it skips them (rationale and the inert-set proof: #350), and for
 anything else it runs the full gate itself. It fails safe: any non-inert path, or an
 undeterminable diff base, runs everything, so it never runs less than a change needs.
-The steps are single-homed in `package.json` (`gate` = the full sequence; `gate:scoped`
-wraps it), not restated here so this doc can't drift.
+The steps (currently `verify:skills-lock`, `verify:mermaid`, `lint`, `typecheck`,
+`validate:content` in the floor; `test`, `build`, `test:e2e` in the heavy layers)
+are single-homed in `package.json` (`gate` = the full sequence; `scripts/gate.ts`'s
+`FLOOR`/`HEAVY` = `gate:scoped`'s split of it), not restated here so this doc can't drift.
 
-**The authoritative gate is CI**, which runs the full `pnpm gate` on every PR
-(`.github/workflows/gate.yml`) — the run that must go green to merge (ADR-0004
-convention; whether GitHub itself mechanically enforces that is a separate,
-currently-unresolved question — see
+**The authoritative gate is CI, which is *meant* to run the full `pnpm gate` on
+every PR** (`.github/workflows/gate.yml`) — the run that must go green to merge
+(ADR-0004 convention; whether GitHub itself mechanically enforces that is a
+separate, currently-unresolved question — see
 `docs/research/github-branch-protection-vs-autonomous-log-commits.md` for
 `main`'s actual branch-protection state), so you don't run the full gate
-locally yourself. Both the keyed collections (Ground rules above)
-and the routing map derive from the manifests at build time — no regenerate step needed.
+locally yourself. **Known gap:** `gate.yml` is currently missing a `verify:mermaid`
+step that `package.json`'s `gate` script has (ADR-0024 added it to the floor but
+the human-only workflow file was never updated to match — the same
+companion-change gap `docs/proposals/README.md` documents for `validate:content`);
+tracked in `docs/proposals/` for a human to apply. Both the keyed collections
+(Ground rules above) and the routing map derive from the manifests at build
+time — no regenerate step needed.
 
 ```
 pnpm install            # installs deps, then runs `nuxt prepare` (derives #routing + collections)
@@ -658,9 +665,11 @@ flipping repo visibility to public
 (`docs/research/making-repo-public.md` and
 `docs/research/public-readiness-review.md`), GitHub Actions billing/limits
 on public vs. private repos (`docs/research/github-actions-public-vs-private-limits.md`),
-and whether a GitHub repository ruleset can let session-log direct-to-`main`
+whether a GitHub repository ruleset can let session-log direct-to-`main`
 pushes (ADR-0009) bypass branch protection without breaking repo auto-merge —
 the tension in issue #348
-(`docs/research/github-branch-protection-vs-autonomous-log-commits.md`). For
-the line between this directory and a GitHub issue — verified reference vs.
+(`docs/research/github-branch-protection-vs-autonomous-log-commits.md`) — and
+what's actually possible for server-/build-side Mermaid rendering, grounding
+ADR-0024's pre-render decision (`docs/research/mermaid-server-side-rendering.md`).
+For the line between this directory and a GitHub issue — verified reference vs.
 an unimplemented idea or proposal — see `docs/agents/issue-tracker.md`.
