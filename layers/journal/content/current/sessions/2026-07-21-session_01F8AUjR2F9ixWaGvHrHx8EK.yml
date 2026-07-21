@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_01F8AUjR2F9ixWaGvHrHx8EK
+startedAt: 2026-07-21T01:06:08Z
+endedAt: 2026-07-21T01:23:45Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle end to end
+status: completed
+outcome: 1 PR merged, 1 regression escalated
+summary: "Fully autonomous scheduled Routine run (no live human input this session — the GitHub webhook events received were automated CI/merge notifications, not a human speaking). Delegated the survey-and-screen step to a general-purpose subagent per the Skill: it read the latest 20 session logs' frictions via scripts/session-frictions.ts, grouped/ranked them, and screened each against the tracker via merged-since.ts and GitHub search. From its report I filed 4 tracker issues: #625/#626/#627 (simple CLAUDE.md doc fixes — caller-pinned branch checklist, verify-before-publishing scope, git reset --hard teardown guidance) and #628, a flagged regression (a fabricated Claude-Session GitHub comment footer on issue #483 recurring after its earlier #605/#606 fix had already merged). Dispatched one Sonnet worktree-isolated impl agent to fix #625-#627 as a single grouped PR; it opened #629, I reviewed the diff and posted a review comment, confirmed the CI gate went green, and merged it myself (ADR-0003 review-agent tier, no human involved). Per the Skill's regression rule, #628 was NOT auto-dispatched — it was filed as a distinct issue and escalated to the user via a push notification instead, since a prose-only fix already failed to hold once on this exact surface."
+prs:
+  - "629"
+docsRead:
+  - path: CLAUDE.md
+    reason: Ground rules for frictions-to-fixes gates and provenance footer
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe (poll green, merge_pull_request directly)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run's own driving Skill
+  - name: close-session
+    reason: closure trigger at run end
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "While drafting issue #627's recommended fix, I (the orchestrator) cited an \"Executing actions with care\" section as already existing near the top of this repo's CLAUDE.md and stating the git-status-first rule — but that section is harness-level system-prompt content shown to me in-session, not part of the committed file. I asserted this from memory without checking the actual file first."
+    solution: "Caught only because the dispatched impl agent independently verified the claim (grep + git log -S across origin/main history) before implementing, per issue #626's own rule, and deviated to add the substantive rule directly instead of a dangling pointer. Ironic given #626 (verify before asserting) was filed in the same batch. Solution: when an issue body says content \"already exists\" elsewhere in a repo file, grep that file directly before writing the recommendation, not only when implementing it."
+    severity: major
+  - description: mcp__github__search_issues's tool description recommends natural-language paraphrased queries, which conflicts with this Skill's exact-tool-name/ exact-error-string screening guidance — the survey subagent had to reconcile by using keyword-dense queries plus direct issue_read lookups on issue numbers already cited inline in session logs.
+    solution: Note the tension explicitly in the Skill's GitHub-MCP-hygiene bullet, or lean on issue_read as primary once candidate numbers are known from log text, with search_issues only for open-ended discovery.
+    severity: minor
+  - description: A single search_issues call from the survey subagent (a moderately-worded multi-term query) overflowed the tool-result token limit (~104K chars) and had to be redirected to a file and grepped for just title fields.
+    solution: Extend the Skill's existing "GitHub-MCP hygiene" warning — currently scoped to list_issues/list_pull_requests bloat only — to note that search_issues itself can also blow the budget on an unremarkable query.
+    severity: minor
+  - description: The dispatched impl agent's fresh worktree needed `pnpm install` before `pnpm gate:scoped` would run (node_modules wasn't present) — expected and handled without issue, but the dispatch brief didn't call it out.
+    solution: Add a one-line reminder to worktree-isolation dispatch briefs that a fresh worktree may need `pnpm install` before the gate script works.
+    severity: nit
+durationSec: 1057
+models:
+  claude-sonnet-5: 72
+toolCounts:
+  Bash: 4
+  ToolSearch: 4
+  mcp__github__search_pull_requests: 1
+  Agent: 2
+  ScheduleWakeup: 4
+  mcp__github__issue_write: 4
+  mcp__github__pull_request_read: 8
+  Grep: 1
+  Read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__merge_pull_request: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  PushNotification: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix 3 CLAUDE.md doc issues in one PR
+    model: sonnet
+gitBranch: claude/hopeful-brown-yc1gjf
+entrypoint: remote_trigger
+cliVersion: 2.1.216
+trigger: frictions-to-fixes
+learnings:
+  - "The session-id-fabrication failure mode has now survived three separate doc-only prose passes at retiring it (#362, then #387/the commit-trailer guard, then #605/#606 for the GitHub-comment-footer surface specifically) — the comment-footer surface reproduced the exact failure #605/#606 described within two days of that fix merging. Worth treating prose-only fixes for this failure class as provisional until a mechanical backstop exists for the comment/PR-body surface too, the way the commit-trailer surface eventually got scripts/session-id-guard.ts."
