@@ -54,12 +54,9 @@ Its brief:
 - **Screen against the tracker** — apply the §2 rules to every candidate.
 - **GitHub-MCP hygiene** (these are themselves recurring frictions — heed them):
   call the tools by their **fully-qualified `mcp__github__*` names** (bare names
-  don't resolve via ToolSearch). `list_issues` / `list_pull_requests` have **no
-  `minimal_output` param** — they always return full bodies, so prefer
-  `search_issues` / `search_pull_requests` with a targeted query for a narrow
-  lookup; when a full list is unavoidable, use a small `perPage` (5–10) and
-  page, expecting to slice the persisted file for large sets. Page both open
-  and closed/merged.
+  don't resolve via ToolSearch). See `docs/agents/issue-tracker.md` for the
+  `list_issues`/`search_issues` pagination and overflow guidance — it applies
+  here too.
 
 **The subagent also reports its own frictions.** Whatever it hits while running the
 survey — an MCP disconnect, a tool that only resolved under its full id, an

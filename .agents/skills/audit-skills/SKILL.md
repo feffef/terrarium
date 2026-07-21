@@ -45,9 +45,8 @@ step 5 instead.
 
 ## 1. Branch off `origin/main`
 
-Branch off `origin/main` (CLAUDE.md's chartered-job branch convention — the
-name doesn't matter, a caller-pinned designated branch takes precedence), so
-the PR is independent of any work branch.
+Follow CLAUDE.md's chartered-job branch-off checklist, so the PR is
+independent of any work branch.
 
 Done when you are on a fresh branch off the latest `origin/main`.
 
