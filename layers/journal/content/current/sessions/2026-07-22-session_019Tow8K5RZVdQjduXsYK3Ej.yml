@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019Tow8K5RZVdQjduXsYK3Ej
 startedAt: 2026-07-22T00:16:16Z
-endedAt: 2026-07-22T00:21:29Z
+endedAt: 2026-07-22T00:24:52Z
 kind: autonomous
 goal: Run /digest for 2026-07-21
-status: in-review
-outcome: "Digest authored, PR #633 opened with gate green"
-summary: "Scheduled digest Routine. Ran scripts/digest.ts list/gather to find 2026-07-21 as the one closed UTC day without a Digest, authored the Digest page narrating the day's five merged PRs (audit-docs sweep, audit-skills demotion, a frictions-to-fixes CLAUDE.md sharpening cycle, this week's Blog post, and the prior day's Digest landing), and called out the day's sharpest thread: two sessions each tripped a verification rule the repo already documents. Ran pnpm gate:scoped (green, all layers including test:e2e), committed, pushed, and opened PR #633, then subscribed to its activity for babysitting to merge. Entirely agent-initiated per the digest Routine's schedule — no human prompt this run."
+status: completed
+outcome: "Digest authored, PR #633 merged with a green gate"
+summary: "Scheduled digest Routine. Ran scripts/digest.ts list/gather to find 2026-07-21 as the one closed UTC day without a Digest, authored the Digest page narrating the day's five merged PRs (audit-docs sweep, audit-skills demotion, a frictions-to-fixes CLAUDE.md sharpening cycle, this week's Blog post, and the prior day's Digest landing), and called out the day's sharpest thread: two sessions each tripped a verification rule the repo already documents. Ran pnpm gate:scoped (green, all layers including test:e2e), committed, pushed, and opened PR #633, subscribed to its activity, waited out the documented enable_pr_auto_merge false-negative on an in-progress check, then merged directly once get_check_runs reported green. Entirely agent-initiated per the digest Routine's schedule — no human prompt this run."
 prs:
   - "633"
 docsRead: []
@@ -18,12 +18,12 @@ skillsUsed:
   - name: digest
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 313
+durationSec: 516
 models:
-  claude-sonnet-5: 71
+  claude-sonnet-5: 85
 toolCounts:
-  Bash: 17
-  ToolSearch: 5
+  Bash: 19
+  ToolSearch: 6
   mcp__github__list_pull_requests: 1
   Write: 2
   ScheduleWakeup: 2
@@ -31,9 +31,11 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  Edit: 1
-  mcp__github__pull_request_read: 2
+  Edit: 2
+  mcp__github__pull_request_read: 3
   mcp__github__enable_pr_auto_merge: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-21.md
 gitBranch: claude/compassionate-lovelace-c12t9m
