@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_014kKFh1mgSURqypUxKGNZRz
 startedAt: 2026-07-21T09:11:24Z
-endedAt: 2026-07-22T10:20:31Z
+endedAt: 2026-07-22T16:27:22Z
 kind: interactive
 goal: "Review Eyra fork PR #631; add external-session support"
 status: completed
 outcome: "#644 merged (external-session support + docs); #631 awaits owner"
-summary: "All work human-directed by the owner (Trusted), no net-new autonomous work. Reviewed an external fork-built PR (#631) adding a fourth Blog persona \"Eyra\" + a static /dollhouse/ viz: diagnosed the \"can't open a fork PR\" report as a repo setting (pull_request_creation_policy), analysed the dollhouse from primary sources (fabricated \"green\" seed data, no generator, no tests, bypasses the manifest/routing model), summarised 10 ADR violations, and posted review + session-log-requirement comments. The external agent revised #631 (dropped the dollhouse, kept the persona, added an in-PR session log, reconciled the three→four persona model) — re-reviewed and verified. Opened design issue #642 (cross-tenant read model), which the owner implemented and merged as #643/ADR-0025 (live Commons Timeline). On the owner's direction, dispatched an Opus subagent to implement external-session marking; verified its diff and CI, then added the guest-contributions doc + ADR-0009 in-PR-delivery reconciliation. PR #644 merged."
+summary: "All work human-directed by the owner (Trusted), no net-new autonomous work. Reviewed an external fork-built PR (#631) adding a fourth Blog persona \"Eyra\" + a static /dollhouse/ viz: diagnosed the \"can't open a fork PR\" report as a repo setting (pull_request_creation_policy), analysed the dollhouse from primary sources (fabricated \"green\" seed data, no generator, no tests, bypasses the manifest/routing model), summarised 10 ADR violations, and posted review + session-log-requirement comments. The external agent revised #631 (dropped the dollhouse, kept the persona, added an in-PR session log, reconciled the three→four persona model) — re-reviewed and verified. Opened design issue #642 (cross-tenant read model), which the owner implemented and merged as #643/ADR-0025 (live Commons Timeline). On the owner's direction, dispatched an Opus subagent to implement external-session marking; verified its diff and CI, then added the guest-contributions doc + ADR-0009 in-PR-delivery reconciliation. PR #644 merged. Finally, on a /blog-post invocation, ran the full 3-candidate rotation + outside-read process and opened PR #646 — a Kevin post on the cross-Tenant read model."
 prs:
   - "644"
   - "631"
+  - "646"
 docsRead:
   - path: shared/schemas/session.ts
     reason: session-log schema — where the external flag + isExternalSession go
@@ -44,7 +45,11 @@ docsRead:
 skillsUsed:
   - name: log-session
     reason: author + refresh this session log
+  - name: blog-post
+    reason: "authored a Kevin post on the cross-Tenant read model (PR #646)"
   - name: context
+    reason: (invoked as a slash command)
+  - name: loop
     reason: (invoked as a slash command)
 frictions:
   - description: WebFetch of the cross-fork GitHub compare view timed out on a large-divergence fork; had to fall back to the commit page + raw files.
@@ -71,36 +76,47 @@ frictions:
   - description: Dispatched subagent hit a stale .nuxt eslint config failing lint on untouched layers/commons Vue files on its first gate run.
     solution: nuxt prepare regenerated the config and lint passed; CI runs prepare on install so it won't recur there.
     severity: minor
-durationSec: 90547
+  - description: "blog-post: gate:scoped runs the full heavy gate for a content-only .md under layers/, so local feedback is slow (>120s)."
+    solution: Used the fast validate:content for the L1 content check locally and relied on CI's full gate as authoritative for the blog PR.
+    severity: nit
+durationSec: 112558
 models:
-  claude-opus-4-8: 335
+  claude-opus-4-8: 408
 toolCounts:
-  ToolSearch: 5
-  Bash: 31
+  ToolSearch: 7
+  Bash: 40
   mcp__github__search_repositories: 2
   mcp__github__list_branches: 1
   WebFetch: 13
   AskUserQuestion: 2
   Read: 17
-  mcp__github__pull_request_read: 20
+  mcp__github__pull_request_read: 23
   mcp__github__subscribe_pr_activity: 1
-  mcp__Claude_Code_Remote__send_later: 1
-  mcp__github__add_issue_comment: 7
-  Write: 5
-  Edit: 6
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__add_issue_comment: 8
+  Write: 9
+  Edit: 10
   SendUserFile: 2
   mcp__github__search_issues: 2
   mcp__github__issue_write: 1
-  Agent: 1
+  Agent: 2
   Grep: 1
+  CronCreate: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__enable_pr_auto_merge: 1
 filesEdited:
   - docs/agents/guest-contributions.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
   - CLAUDE.md
+  - layers/blog/content/kevin/pages/2026-07-22-the-walls-learned-to-talk.md
 subagents:
   - type: general-purpose
     task: Implement external-session marking
     model: opus
+  - type: general-purpose
+    task: Outside-read the three blog drafts
+    model: sonnet
 gitBranch: claude/pr-fork-contribution-review-ghmnx1
 entrypoint: remote_mobile
 cliVersion: 2.1.216
