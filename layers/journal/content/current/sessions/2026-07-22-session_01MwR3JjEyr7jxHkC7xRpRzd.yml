@@ -1,0 +1,155 @@
+schemaVersion: 1
+session: session_01MwR3JjEyr7jxHkC7xRpRzd
+startedAt: 2026-07-22T05:30:58Z
+endedAt: 2026-07-22T06:30:08Z
+kind: interactive
+goal: Cross-Tenant read model + Commons aggregator
+status: in-review
+outcome: "Built, tested, PR #643 in review"
+summary: 'Human-instructed: review issue #642, iterate/improve the cross-Tenant read-model design, and add an aggregator to validate it beyond the dollhouse. Built collection kinds (a registry, an improvement over the proposal), a derived #catalog on the ADR-0014 pattern, and queryAcrossTenants. Shipped a Search Tenant, opened PR #643 (gate green). The user then directed a restructure — chose the name "commons" and asked for a Timeline Space — so I folded Search into a Commons aggregator with Search + Timeline Spaces (queryTimeline over the page kind). Agent judgment: deferred session-logs-in-timeline (a data kind currently replaces a schema, and log-session.ts reads the journal sessions schema directly). Recorded as ADR-0025.'
+prs:
+  - "643"
+docsRead:
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: "the #routing pattern #catalog mirrors"
+  - path: shared/expand.ts
+    reason: where kind + catalogFrom hook in
+  - path: shared/manifest.ts
+    reason: CollectionDef + validation to extend
+  - path: app/pages/t/[tenant]/[space]/[...slug].vue
+    reason: how a Space renders its collections
+  - path: layers/marquee/tenant.config.ts
+    reason: simplest full-Tenant template for the aggregator
+  - path: modules/routing.ts
+    reason: (no reason given)
+  - path: shared/routing.ts
+    reason: (read before editing)
+  - path: content.config.ts
+    reason: (no reason given)
+  - path: layers/journal/tenant.config.ts
+    reason: (read before editing)
+  - path: layers/blog/tenant.config.ts
+    reason: (read before editing)
+  - path: app/composables/space.ts
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (read before editing)
+  - path: CONTEXT.md
+    reason: (read before editing)
+  - path: tests/e2e/smoke.spec.ts
+    reason: (read before editing)
+  - path: layers/atlas/tests/e2e/atlas.e2e.ts
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: layers/atlas/nuxt.config.ts
+    reason: (no reason given)
+  - path: vitest.config.ts
+    reason: (read before editing)
+  - path: tsconfig.node.json
+    reason: (read before editing)
+  - path: tests/unit/expand.spec.ts
+    reason: (read before editing)
+  - path: layers/marquee/app/pages/t/marquee/[space]/index.vue
+    reason: (no reason given)
+  - path: layers/marquee/tests/e2e/marquee.e2e.ts
+    reason: (no reason given)
+  - path: layers/marquee/content/reel/pages/index.md
+    reason: (no reason given)
+  - path: app/pages/index.vue
+    reason: (no reason given)
+  - path: layers/commits/CONTEXT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: self-judged closure at PR-open and at the restructure milestone
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: "queryCollection's generic can't narrow a runtime catalog key, so the cross-collection read needed a documented cast boundary (the typing question #642 flagged)."
+    solution: Cast to keyof PageCollections once, documented — like resolveSpaceRoute's single cast.
+    severity: minor
+  - description: Strict tsc caught test-only type errors (noUncheckedIndexedAccess on the catalog record, satisfies-narrowed KINDS.page.schema) only in the full gate, not the earlier typecheck run.
+    solution: Run pnpm typecheck after adding test files, not only after the impl.
+    severity: minor
+  - description: An e2e filter assertion was too strict — it required every filtered row's provenance to be marquee, but the search filter also matches title/description, so a valid hit failed it.
+    solution: Assert the needle appears somewhere in each row's visible text, matching filter semantics.
+    severity: minor
+  - description: The Timeline redirect meant renaming a just-built and just-PR'd Search Tenant into a Commons Tenant — real rework, though normal design iteration, not a process defect.
+    solution: Grill the aggregator's shape (one Tenant vs many, naming) before building it out.
+    severity: minor
+  - description: scripts/log-session.ts reads journal.collections.sessions.schema directly, which blocks cleanly migrating sessions to a kind — the Timeline surfaced this coupling and constrained the design.
+    solution: A minimum-contract kind variant so a data collection keeps its own schema; deferred in ADR-0025.
+    severity: moderate
+  - description: A backgrounded gate wrapped its pnpm call then echoed an exit line, and the harness notification reported the wrapper's exit (0), masking the real pnpm failure (1) momentarily.
+    solution: Check the piped/redirected command's own exit code directly, per CLAUDE.md's tail-piping rule.
+    severity: nit
+durationSec: 3550
+models:
+  claude-opus-4-8: 362
+toolCounts:
+  ToolSearch: 7
+  mcp__github__issue_read: 2
+  Read: 28
+  Bash: 51
+  TaskCreate: 9
+  TaskUpdate: 15
+  Write: 25
+  Edit: 50
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  AskUserQuestion: 1
+  mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+filesEdited:
+  - shared/kinds.ts
+  - shared/manifest.ts
+  - shared/expand.ts
+  - shared/routing.ts
+  - modules/catalog.ts
+  - app/composables/catalog.ts
+  - vitest.config.ts
+  - tsconfig.node.json
+  - layers/search/tenant.config.ts
+  - layers/search/nuxt.config.ts
+  - layers/search/content/all/pages/index.md
+  - layers/search/app/assets/theme.css
+  - layers/search/app/pages/t/search/[space]/index.vue
+  - layers/blog/tenant.config.ts
+  - layers/atlas/tenant.config.ts
+  - layers/journal/tenant.config.ts
+  - layers/marquee/tenant.config.ts
+  - layers/midden/tenant.config.ts
+  - layers/commits/tenant.config.ts
+  - tests/unit/kinds.spec.ts
+  - tests/unit/expand.spec.ts
+  - layers/search/tests/e2e/search.e2e.ts
+  - tests/e2e/smoke.spec.ts
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - CONTEXT.md
+  - CONTEXT-MAP.md
+  - layers/search/CONTEXT.md
+  - CLAUDE.md
+  - layers/commons/tenant.config.ts
+  - layers/commons/nuxt.config.ts
+  - layers/commons/app/assets/theme.css
+  - layers/commons/content/search/pages/index.md
+  - layers/commons/content/timeline/pages/index.md
+  - layers/commons/app/components/commons/Search.vue
+  - layers/commons/app/components/commons/Timeline.vue
+  - layers/commons/app/pages/t/commons/[space]/index.vue
+  - layers/commons/CONTEXT.md
+  - layers/commons/tests/e2e/commons.e2e.ts
+gitBranch: claude/design-review-tenant-search-0jyyvg
+entrypoint: remote_mobile
+cliVersion: 2.1.217
+learnings:
+  - "@nuxt/content exports PageCollections/PageCollectionItemBase — the clean way to type a cross-collection page query is casting the key to keyof PageCollections."
+  - The page type already guarantees title/description/path across Tenants, so a page kind needs no schema — the marker-vs-schema asymmetry falls out of CollectionDef's existing page/data split.
+  - A satisfies Record<...> narrows a marker literal so .schema isn't a readable property — a test must assert via the whole literal, not property access.
+ideas:
+  - "Resolve deferred session-logs-in-timeline: add a minimum-contract kind (a collection keeps its rich schema and asserts it covers the kind's required fields) plus a per-kind public-URL resolver, so data collections like sessions join the catalog/timeline without relocating their schema."
+  - A 'recent everywhere' rail on the platform home that reuses queryTimeline() to surface the newest N cross-Tenant entries — the aggregator's first appearance outside its own Tenant.
