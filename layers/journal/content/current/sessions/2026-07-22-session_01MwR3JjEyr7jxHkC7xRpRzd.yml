@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01MwR3JjEyr7jxHkC7xRpRzd
 startedAt: 2026-07-22T05:30:58Z
-endedAt: 2026-07-22T07:24:58Z
+endedAt: 2026-07-22T08:23:18Z
 kind: interactive
 goal: Cross-Tenant read model + Commons aggregator
 status: in-review
 outcome: "Built across 3 rounds, PR #643 in review"
-summary: 'Human-instructed: review issue #642, iterate/improve the cross-Tenant read-model design, add an aggregator to validate it beyond the dollhouse. Built collection kinds (a registry — an improvement over the proposal), a derived #catalog on the ADR-0014 pattern, queryAcrossTenants, and a Search Tenant; opened PR #643. The user then directed a restructure (chose the name "commons", asked for a Timeline Space): folded Search into a Commons aggregator with Search + Timeline Spaces. The user then asked to include session logs (via their deeplink) and daily digests in the timeline — so I promoted the session-log shape to a shared `session` data kind (schema relocated to shared/schemas/session.ts, log-session.ts re-sourced, behaviour-neutral) and made queryTimeline normalize three sources. All human- directed; the kind-registry and schema-relocation mechanics were agent judgment. Recorded as ADR-0025.'
+summary: "Human-instructed: review issue #642, iterate/improve the cross-Tenant read-model design, add an aggregator to validate it beyond the dollhouse. Built collection kinds (a registry — an improvement over the proposal), a derived #catalog on the ADR-0014 pattern, queryAcrossTenants, and a Search Tenant; opened PR #643. The user then directed a restructure (chose the name \"commons\", asked for a Timeline Space): folded Search into a Commons aggregator with Search + Timeline Spaces. Then, human-directed: added session logs + digests to the timeline (promoting the session-log shape to a shared `session` data kind); ran two fable-model subagents (adversarial review, then finalize) that adopted minimum-contract kinds and moved the Timeline adapters into the Commons layer; and made queryAcrossTenants a pragmatic generic (projector, no type-inference). Every direction was the user's; the mechanics were agent judgment. Recorded as ADR-0025."
 prs:
   - "643"
 docsRead:
@@ -62,6 +62,16 @@ docsRead:
     reason: (no reason given)
   - path: scripts/log-session.ts
     reason: (read before editing)
+  - path: app/composables/catalog.ts
+    reason: (read before editing)
+  - path: layers/commons/app/composables/timeline.ts
+    reason: (read before editing)
+  - path: layers/commons/app/components/commons/Search.vue
+    reason: (read before editing)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
 skillsUsed:
   - name: close-session
     reason: self-judged closure at PR-open and at the restructure milestone
@@ -92,27 +102,28 @@ frictions:
   - description: Including sessions forced relocating the ADR-0009 session schema and touching log-session.ts — the exact coupling I had flagged and deferred one turn earlier; the user overrode the deferral.
     solution: The schema-relocation was behaviour-neutral and gated; the deferral was over-cautious given the ask.
     severity: minor
-durationSec: 6840
+durationSec: 10340
 models:
-  claude-opus-4-8: 483
+  claude-opus-4-8: 607
 toolCounts:
   ToolSearch: 7
   mcp__github__issue_read: 2
-  Read: 32
-  Bash: 72
-  TaskCreate: 10
-  TaskUpdate: 17
-  Write: 27
-  Edit: 75
+  Read: 41
+  Bash: 86
+  TaskCreate: 14
+  TaskUpdate: 21
+  Write: 29
+  Edit: 87
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
-  AskUserQuestion: 1
-  mcp__github__update_pull_request: 2
+  mcp__github__pull_request_read: 3
+  AskUserQuestion: 2
+  mcp__github__update_pull_request: 3
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
-  SendUserFile: 1
+  SendUserFile: 2
+  Agent: 2
 filesEdited:
   - shared/kinds.ts
   - shared/manifest.ts
@@ -155,6 +166,14 @@ filesEdited:
   - shared/schemas/session.ts
   - scripts/log-session.ts
   - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - layers/commons/app/composables/timeline.ts
+subagents:
+  - type: general-purpose
+    task: Critique cross-tenant architecture
+    model: fable
+  - type: general-purpose
+    task: Finalize + document cross-tenant design
+    model: fable
 gitBranch: claude/design-review-tenant-search-0jyyvg
 entrypoint: remote_mobile
 cliVersion: 2.1.217
@@ -163,6 +182,8 @@ learnings:
   - The page type already guarantees title/description/path across Tenants, so a page kind needs no schema — the marker-vs-schema asymmetry falls out of CollectionDef's existing page/data split.
   - A satisfies Record<...> narrows a marker literal so .schema isn't a readable property — a test must assert via the whole literal, not property access.
   - Relocating the ADR-0009 session schema to a shared `session` kind was behaviour-neutral because every consumer (log-session.ts, session-end.ts, the dashboard) routes through validateEntry/generated types, not the manifest object — so sourcing the identical schema from a new home changed nothing observable.
+  - A caller-supplied projector makes queryAcrossTenants generic over any kind without a KindItem<K> type-inference that fights Nuxt Content's per-collection generics — and projecting inside the fan-out drops page body ASTs from the aggregated corpus for free.
+  - Zod .merge() across two jiti module instances silently breaks strip-unknown-keys (its catchall instanceof ZodNever check fails cross-instance, turning strip into reject-as-never) — a subagent hit this merging a kind contract into a manifest schema; local.extend(missing-contract-fields) is the one-class fix.
 ideas:
   - "Resolve deferred session-logs-in-timeline: add a minimum-contract kind (a collection keeps its rich schema and asserts it covers the kind's required fields) plus a per-kind public-URL resolver, so data collections like sessions join the catalog/timeline without relocating their schema."
   - A 'recent everywhere' rail on the platform home that reuses queryTimeline() to surface the newest N cross-Tenant entries — the aggregator's first appearance outside its own Tenant.
