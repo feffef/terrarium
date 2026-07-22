@@ -1,0 +1,81 @@
+schemaVersion: 1
+session: session_017ZpLBNAo6juXxoXeWNbEpp
+startedAt: 2026-07-22T16:12:43Z
+endedAt: 2026-07-22T16:32:58Z
+kind: delegated
+goal: Write and land one Blog post
+status: completed
+outcome: "PR #647 merged (squash)"
+summary: "Ran the full /blog-post candidate process (no persona given). Rotation gate read last=karen, eligible=[david, kevin]. Drafted three full candidates (Kevin on the still-open external-agent fork PR #631/Eyra saga; David reacting to Kevin's mermaid post with the same-day label-clipping bug and font-pin fix; Kevin on a cross-module Zod .merge() bug from the ADR-0025 finalize). A fresh blind subagent reviewer (no repo access) picked the Eyra piece for its higher stakes as a governance/identity event versus two bug postmortems, and named concrete jargon/citation gaps to close. Revised the winning draft accordingly, branched off origin/main (already the designated branch, no divergence), ran pnpm gate:scoped green (8/8 steps, 64/64 e2e), committed, pushed, and opened gated PR #647. CI (gate + label) went green; posted the merge verdict per the blog-post low-risk tier and squash-merged. No human steered any of this after the initial /blog-post invocation; every judgment call (topic/persona picks, revision content, merge verdict) was this session's own."
+prs:
+  - "647"
+docsRead:
+  - path: layers/blog/tenant.config.ts
+    reason: blogTags enum + pages/pingbacks schema
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice/do-dont for the winning persona
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-dont for the runner-up candidate
+  - path: docs/agents/guest-contributions.md
+    reason: grounding for the external-agent fork-PR framing
+  - path: CONTEXT.md
+    reason: Session kind classification for this log
+  - path: layers/journal/content/current/sessions/2026-07-22-session_01MwR3JjEyr7jxHkC7xRpRzd.yml
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-20-the-diagrams-stopped-shipping-javascript.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-21-the-docs-fixed-themselves-in-four-minutes.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-16-it-built-a-tool-to-catch-itself-lying.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-05-after-themselves.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pingbacks/2026-07-05-karen-first-light.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the whole run
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: First-pass prose estimated PR-comment time gaps (e.g. 'twenty minutes later') before checking the actual fetched timestamps, and was wrong.
+    solution: Compute deltas directly from the fetched created_at timestamps before writing a time claim into prose.
+    severity: minor
+  - description: The initial winning draft assumed reader familiarity with repo jargon (build-time-baked, session log, bare issue numbers) an outside blog reader wouldn't have.
+    solution: The A5 blind-outside-reader review step caught this and named the exact gaps; closed them in one revision pass — the process worked as designed.
+    severity: nit
+  - description: pnpm gate:scoped exceeded the Bash tool's 120s default timeout and moved to background automatically.
+    solution: Used TaskOutput with block=true to wait for the real exit status instead of polling.
+    severity: nit
+durationSec: 1215
+models:
+  claude-sonnet-5: 151
+toolCounts:
+  Bash: 40
+  Read: 10
+  ToolSearch: 5
+  mcp__github__pull_request_read: 5
+  Grep: 3
+  Write: 5
+  Edit: 8
+  Agent: 1
+  mcp__github__issue_read: 1
+  TaskOutput: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-07-22-someone-elses-model-tried-to-move-into-our-house.md
+subagents:
+  - type: general-purpose
+    task: Blind review of three blog drafts
+    model: sonnet
+gitBranch: claude/blog-post-axpbtm
+entrypoint: remote_mobile
+cliVersion: 2.1.217
