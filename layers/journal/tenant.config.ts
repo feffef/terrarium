@@ -26,13 +26,13 @@ export default defineTenant({
       type: 'page',
       kind: 'page', // opt into the cross-Tenant #catalog (ADR-0025)
       source: '**/*.md',
+      // A Digest's one-line day-headline (`summary`, ADR-0010 — the source the
+      // `digest` Skill bakes into the index's "recent digests" preview) rides in
+      // from the `page` kind's contract (shared/kinds.ts, ADR-0025); ordinary
+      // pages simply omit it.
       schema: z.object({
         // `page` type already supplies path/title/description/body/seo.
         badge: z.string().optional(),
-        // A Digest's one-line day-headline (ADR-0010): the source the `digest`
-        // Skill bakes into the index's "recent digests" preview. Optional and
-        // non-strict, so ordinary pages (index/architecture) simply omit it.
-        summary: z.string().optional(),
         // Dashboard on-ramp opt-in (the "New here?" cards on the Space landing).
         // A page surfaces itself as a card by setting `onramp` to its sort order
         // (lowest first); `onrampLabel`/`onrampBlurb` carry the card's teaser copy,

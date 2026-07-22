@@ -16,15 +16,15 @@ export type CollectionType = 'page' | 'data'
 // existing invariant checkable at the manifest-authoring surface itself,
 // instead of only failing later inside `content.config.ts`.
 // The `kind` field opts a collection into the cross-Tenant `#catalog` under a
-// shared contract (ADR-0025). It is orthogonal to `type`: `type` is the local
-// build/route mechanism (page vs data), `kind` is the cross-Tenant read contract
-// and the catalog opt-in. A collection with no `kind` stays invisible to any
-// aggregator — isolation is the default. The three-way union below keeps the
-// "how does a data collection get its schema" invariant checkable at the
-// authoring surface (ADR-0002): a `data` collection carries EITHER an inline
-// `schema` XOR a `kind` (which supplies the shared one), never both and never
-// neither. A `page` collection may carry both its own extra-frontmatter `schema`
-// AND a `kind: 'page'` marker (the page kind adds no schema — see shared/kinds.ts).
+// shared *minimum contract* (ADR-0025). It is orthogonal to `type`: `type` is
+// the local build/route mechanism (page vs data), `kind` is the cross-Tenant
+// read contract and the catalog opt-in. A collection with no `kind` stays
+// invisible to any aggregator — isolation is the default. A collection may carry
+// BOTH a `kind` and its own local `schema`: the effective schema is the kind's
+// contract merged with the local fields (shared/expand.ts), so opting in never
+// costs a Tenant its private fields. The `data` variant keeps the "a data
+// collection needs at least one schema source (`schema`, `kind`, or both)"
+// invariant checkable at the authoring surface (ADR-0002) via the nested union.
 export type CollectionDef =
   | {
       /** 1:1 file→route content, rendered by the generic catch-all or a Tenant layer. */
@@ -33,26 +33,26 @@ export type CollectionDef =
       source?: string
       /** Zod schema validating each Document. Strict schemas give free L1 validation (ADR-0004). */
       schema?: ZodObject<ZodRawShape>
-      /** Opt this routed collection into `#catalog` (ADR-0025). Only `'page'` applies. */
+      /** Opt this routed collection into `#catalog` under a page kind's contract (ADR-0025). */
       kind?: KindName
     }
-  | {
+  | ({
       /** Structured, non-routed content (e.g. Skills, session logs, Pingbacks). */
       type: 'data'
       /** Glob relative to the Space's collection dir. Defaults to '**'. */
       source?: string
-      /** Required — @nuxt/content's `DataCollection` has no untyped-blob mode. Bespoke, Tenant-private. */
-      schema: ZodObject<ZodRawShape>
-      kind?: never
-    }
-  | {
-      /** Structured, non-routed content whose shared shape comes from a `kind`. */
-      type: 'data'
-      source?: string
-      /** The shared contract supplying this collection's schema (shared/kinds.ts) — no inline schema. */
-      kind: KindName
-      schema?: never
-    }
+    } & (
+      | {
+          /** Bespoke, Tenant-private shape — @nuxt/content's `DataCollection` has no untyped-blob mode. */
+          schema: ZodObject<ZodRawShape>
+          kind?: KindName
+        }
+      | {
+          /** The shared contract this collection conforms to (shared/kinds.ts); local `schema` optional on top. */
+          kind: KindName
+          schema?: ZodObject<ZodRawShape>
+        }
+    ))
 
 export interface TenantManifest {
   /** Tenant name; MUST equal its folder name under `layers/`. Lowercase slug. */
@@ -80,13 +80,13 @@ const zodSchemaField = z.custom<ZodObject<ZodRawShape>>(
 )
 
 // `schema` stays optional on the base object (a `page` never requires one) and a
-// `.superRefine` enforces the `type === 'data' ⇒ schema present` half — mirroring
-// the `CollectionDef` TS union above, where only the `data` branch requires
-// `schema`. A plain optional `schema` with no refinement would let a schema-less
-// `data` collection pass runtime validation even though the TS type forbids it at
-// compile time — it would fail only later, inside `content.config.ts`, instead
-// of at this manifest-authoring surface (ADR-0002's
-// "an agent's output can be checked before build" promise). (A `z.discriminatedUnion`
+// `.superRefine` enforces the `type === 'data' ⇒ some schema source present`
+// half — mirroring the `CollectionDef` TS union above, where only the `data`
+// branch requires `schema` or `kind`. A plain optional `schema` with no
+// refinement would let a source-less `data` collection pass runtime validation
+// even though the TS type forbids it at compile time — it would fail only later,
+// inside `content.config.ts`, instead of at this manifest-authoring surface
+// (ADR-0002's "an agent's output can be checked before build" promise). (A `z.discriminatedUnion`
 // was the other option here, but its built-in "invalid discriminator" issue isn't
 // straightforwardly restyled into this file's labelled-message convention, so a
 // refinement on the existing object schema is the more surgical fix.)
@@ -118,24 +118,15 @@ const collectionDefSchema = z
         })
       }
     }
-    // A `data` collection needs exactly one schema source: an inline `schema` XOR
-    // a `kind` that supplies the shared one (the CollectionDef union above).
-    if (val.type === 'data') {
-      const hasSchema = val.schema !== undefined
-      const hasKind = val.kind !== undefined
-      if (!hasSchema && !hasKind) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['schema'],
-          message: 'data collection requires a schema (or a `kind` that supplies one)',
-        })
-      } else if (hasSchema && hasKind) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['schema'],
-          message: 'data collection has both an inline `schema` and a `kind` — use exactly one',
-        })
-      }
+    // A `data` collection needs at least one schema source — an inline `schema`,
+    // a `kind` whose contract supplies one, or both (the effective schema is the
+    // merge — shared/expand.ts, ADR-0025).
+    if (val.type === 'data' && val.schema === undefined && val.kind === undefined) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['schema'],
+        message: 'data collection requires a schema (or a `kind` whose contract supplies one)',
+      })
     }
   })
 

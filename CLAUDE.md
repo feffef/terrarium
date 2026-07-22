@@ -482,7 +482,8 @@ layers/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Spa
                                     #   (Tenant layers live under Nuxt's `layers/`, auto-extended — ADR-0018)
 layers/<tenant>/tests/              # this Tenant's OWN tests (unit + e2e module) — see tests/README.md
 shared/manifest.ts                  # manifest types + defineTenant() + validation
-shared/kinds.ts                     # collection-kind registry: shared cross-Tenant read contracts (human-only, ADR-0025)
+shared/kinds.ts                     # collection-kind registry: shared cross-Tenant minimum contracts (human-only, ADR-0025)
+shared/schemas/                     # shared cross-consumer Zod schemas (session kind contract, utcTimestamp)
 shared/schemas/                     # a shared kind's schema when it has one (e.g. session.ts — the session-log shape, ADR-0009/0025)
 shared/expand.ts                    # pure manifest→keyed-collection expansion + catalogFrom() (expand(), L3-tested)
 shared/routing.ts                   # runtime route resolution: request → keyed collections (human-only, ADR-0006)
@@ -490,7 +491,8 @@ modules/routing.ts                  # build-time Nuxt module: manifests → #rou
 modules/catalog.ts                  # build-time Nuxt module: manifests → #catalog cross-Tenant projection (human-only, ADR-0025)
 content.config.ts                   # ordinary module — builds keyed collections dynamically (ADR-0013)
 app/composables/space.ts            # useSpace(): route → keyed collections or 404 (auto-imported wrapper)
-app/composables/catalog.ts          # queryAcrossTenants(kind)/queryTimeline(): the sanctioned cross-Tenant reads (human-only, ADR-0025)
+app/composables/catalog.ts          # queryAcrossTenants(kind): the sanctioned cross-Tenant read primitive (human-only, ADR-0025);
+                                    #   aggregator views normalize on top in their own layer (e.g. layers/commons/.../timeline.ts)
 app/pages/t/[tenant]/[space]/[...slug].vue   # runtime routing + ContentRenderer
 tests/unit/                         # PLATFORM unit tests (L3 isolation, shared/, scripts/)
 tests/e2e/smoke.spec.ts             # the ONE L2 smoke build; imports each Tenant's e2e module

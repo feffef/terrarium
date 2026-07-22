@@ -2,8 +2,9 @@
 // The Timeline view (`/t/commons/timeline`) — a reverse-chronological feed of
 // every timestamped piece of content across the Platform (dated posts, daily
 // Journal digests, and session logs), one line each, linking to where it really
-// lives. Reads only through the sanctioned, read-only `queryTimeline` (ADR-0025);
-// the feed is build-time/committed content (ADR-0001), never a live feed.
+// lives. Reads only through this layer's own `queryTimeline` normalization
+// (composables/timeline.ts) over the sanctioned read primitive (ADR-0025); the
+// feed is build-time/committed content (ADR-0001), never a live feed.
 const { data, status, error } = await useAsyncData('commons-timeline', () => queryTimeline())
 const entries = computed(() => data.value ?? [])
 const tenantCount = computed(() => new Set(entries.value.map((e) => e.tenant)).size)

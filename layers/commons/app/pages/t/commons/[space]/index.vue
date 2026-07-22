@@ -6,9 +6,9 @@
 // Isolation-respecting and presentation-only (ADR-0004): it resolves its OWN Space
 // through the same shared `resolveSpaceRoute` (via useSpace) to read the landing
 // copy, then hands off to the per-Space view component, each of which reaches
-// other Tenants ONLY through the sanctioned, read-only catalog composables
-// (`queryAcrossTenants`/`queryTimeline`, ADR-0025) — never a manifest import or a
-// hardcoded Tenant list.
+// other Tenants ONLY through the sanctioned, read-only `queryAcrossTenants`
+// primitive (ADR-0025) — directly for Search, via this layer's `queryTimeline`
+// normalization for Timeline — never a manifest import or a hardcoded Tenant list.
 const route = useRoute()
 const { space, pagesKey } = useSpace('commons')
 

@@ -65,7 +65,12 @@ A named, shared **read contract** a Collection may assert conformance to, so an
 **Aggregator** can read that Collection across every Tenant that opts in — without
 re-declaring each schema (drift) or importing another Tenant's manifest internals
 (coupling). Declared once in `shared/kinds.ts`; a Collection references one via
-`kind:` in its manifest. It is **orthogonal to a Collection's `type`**
+`kind:` in its manifest. Every kind carries a **minimum contract** — the shared
+floor of fields an Aggregator may rely on — merged into the Collection's own
+schema, so opting in never costs a Tenant its private fields; how much of the
+shape the contract covers is a matter of degree (a few optional cross-cutting
+fields for `page`, a Collection's entire shape for `session`), not two different
+mechanisms. It is **orthogonal to a Collection's `type`**
 (page/data — the local build/route mechanism): the kind is the *cross-Tenant*
 contract and the **opt-in** to the **Catalog**. A Collection with no kind is
 invisible to every Aggregator — isolation is the default; cross-Tenant exposure is

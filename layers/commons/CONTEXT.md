@@ -35,9 +35,10 @@ microsite, a hardcoded roster, faked data. The Commons is the sanctioned version
 and it exists to **validate the architecture** on more than one shape of view:
 
 - It reads the **Catalog** (`#catalog`) through the sanctioned
-  `queryAcrossTenants`/`queryTimeline` composables — never a manifest import,
-  never a hardcoded Tenant list. A Tenant added or a page published tomorrow
-  appears with no edit here.
+  `queryAcrossTenants` primitive — never a manifest import, never a hardcoded
+  Tenant list. A Tenant added or a page published tomorrow appears with no edit
+  here. The Timeline's *normalization* on top of that primitive
+  (`queryTimeline` and its per-source adapters) is this layer's own.
 - Every entry links to its **real** route (`/t/<tenant>/<space>/…`, ADR-0006) —
   the Catalog composing with the routing map, not inventing URLs.
 - The corpus and the feed are build-time, committed content (ADR-0001); nothing
@@ -57,6 +58,10 @@ entry ever links back into `/t/commons/*`.
 - **Root `CONTEXT.md`** — Aggregator, Catalog, Collection kind, and the Tenants
   roster that points here.
 - **`docs/adr/0025-*.md`** — the read-model decision the Commons consumes.
-- **`app/composables/catalog.ts`** — `queryAcrossTenants` / `queryTimeline`, the
-  sanctioned reads (Platform-level, not owned by this layer).
+- **`app/composables/catalog.ts`** — `queryAcrossTenants`, the sanctioned read
+  primitive (Platform-level, not owned by this layer).
+- **`layers/commons/app/composables/timeline.ts`** — `queryTimeline` and the
+  Timeline's per-source adapters: the normalization policy this Aggregator owns
+  (ADR-0025), including the fenced Journal digest adapter and the deep-link
+  fragments (format defined by `layers/journal/app/utils/dashboard.ts`).
 - **`layers/commons/app/components/commons/{Search,Timeline}.vue`** — the views.

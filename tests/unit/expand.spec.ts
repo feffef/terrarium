@@ -8,6 +8,7 @@
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
 import { catalogFrom, expand, type LoadedManifest } from '../../shared/expand.ts'
+import { KINDS } from '../../shared/kinds.ts'
 import { collectionKey, validateManifest, type TenantManifest } from '../../shared/manifest.ts'
 
 const KEY = /^[a-z][a-z0-9]*_[a-z][a-z0-9]*_[a-z][a-z0-9]*$/
@@ -144,15 +145,65 @@ describe('validateManifest() — collection kinds', () => {
     expect(validateManifest(bad as unknown as TenantManifest).join()).toMatch(/is a page kind but the collection is type "data"/)
   })
 
-  it('rejects a data collection with both an inline schema and a kind', () => {
-    const bad = { collections: { notes: { type: 'data', kind: 'page', schema: z.object({}) } }, name: 'docs', spaces: ['current'] }
-    // Both the type-mismatch and the "use exactly one" issues surface; assert the latter.
-    expect(validateManifest(bad as unknown as TenantManifest).join()).toMatch(/both an inline `schema` and a `kind`/)
+  it('accepts a data collection carrying BOTH a kind and a local schema (minimum contract)', () => {
+    const both: TenantManifest = {
+      name: 'docs',
+      spaces: ['current'],
+      collections: { notes: { type: 'data', kind: 'session', schema: z.object({ mood: z.string() }) } },
+    }
+    expect(validateManifest(both)).toEqual([])
   })
 
   it('still rejects a data collection with neither schema nor kind', () => {
     const bad = { collections: { notes: { type: 'data' } }, name: 'docs', spaces: ['current'] }
     expect(validateManifest(bad as unknown as TenantManifest).join()).toMatch(/requires a schema \(or a `kind`/)
+  })
+})
+
+// ── Minimum-contract merge: effective schema = kind contract + local (ADR-0025) ──
+describe('expand() — effective schema merges the kind contract', () => {
+  const loaded = (collections: TenantManifest['collections']): LoadedManifest[] => [
+    { dir: 'docs', manifest: { name: 'docs', spaces: ['current'], collections } },
+  ]
+
+  it('a kinded page collection gets the page contract merged into its local schema', () => {
+    const [col] = expand(loaded({
+      pages: { type: 'page', kind: 'page', schema: z.object({ badge: z.string() }) },
+    }))
+    const schema = col!.schema!
+    // Local field + contract fields coexist; the contract's fields stay optional.
+    expect(schema.safeParse({ badge: 'b' }).success).toBe(true)
+    expect(
+      schema.safeParse({ badge: 'b', publishedAt: '2026-07-22T10:00:00Z', summary: 's' }).success,
+    ).toBe(true)
+    // The contract's refinement travels with the merge.
+    expect(schema.safeParse({ badge: 'b', publishedAt: 'not-a-timestamp' }).success).toBe(false)
+  })
+
+  it('a kinded page collection with no local schema gets the contract alone', () => {
+    const [col] = expand(loaded({ pages: { type: 'page', kind: 'page' } }))
+    expect(col!.schema).toBeDefined()
+    expect(Object.keys(col!.schema!.shape).sort()).toEqual(['publishedAt', 'summary'])
+  })
+
+  it('an un-kinded page collection keeps its local schema untouched (isolation default)', () => {
+    const local = z.object({ token: z.string() })
+    const [col] = expand(loaded({ pages: { type: 'page', schema: local } }))
+    expect(col!.schema).toBe(local)
+  })
+
+  it('a data collection with only a kind uses the contract as its whole schema', () => {
+    const [col] = expand(loaded({ sessions: { type: 'data', kind: 'session' } }))
+    expect(col!.schema).toBe(KINDS.session.contract)
+  })
+
+  it('a data collection may extend its kind contract with local fields', () => {
+    const [col] = expand(loaded({
+      sessions: { type: 'data', kind: 'session', schema: z.object({ mood: z.string() }) },
+    }))
+    const keys = Object.keys(col!.schema!.shape)
+    expect(keys).toContain('goal') // from the session contract
+    expect(keys).toContain('mood') // local extension
   })
 })
 

@@ -96,16 +96,29 @@ function createLoader(): (id: string) => TenantManifest & { default?: TenantMani
   return (id: string) => jiti(id) as TenantManifest & { default?: TenantManifest }
 }
 
-/** Resolve a `data` kind to its shared schema, or throw. Separated so the throw
- *  path (a kind carrying no schema — e.g. a `page` kind mis-referenced by a data
- *  collection) is explicit; validateManifest already rejects that type mismatch,
- *  so this is a defensive last line, not the primary check. */
-function resolveKindSchema(kind: KindName): ZodObject<ZodRawShape> {
-  const schema = resolveKind(kind).schema
-  if (!schema) {
-    throw new Error(`kind "${kind}" supplies no schema but is referenced by a data collection`)
-  }
-  return schema
+/** A collection's *effective* schema: the kind's minimum contract merged with
+ *  the collection's own local `schema` — local fields win on a shared name
+ *  (ADR-0025). No `kind` ⇒ the local schema alone (possibly undefined, for a
+ *  bare page collection); no local schema ⇒ the contract alone.
+ *
+ *  Built via `local.extend(<contract fields local doesn't declare>)`, NOT
+ *  `contract.merge(local)`: the manifests are loaded by `loadManifests()`'s own
+ *  jiti instance, so a local schema's zod and the contract's zod can be two
+ *  module instances — `.merge()` adopts the *other* instance's catchall, whose
+ *  `instanceof ZodNever` strip-check then fails and silently turns
+ *  strip-unknown-keys into reject-as-never. Extending keeps the local schema's
+ *  own class and unknown-keys policy. */
+function effectiveSchema(
+  kind: KindName | undefined,
+  local: ZodObject<ZodRawShape> | undefined,
+): ZodObject<ZodRawShape> | undefined {
+  if (!kind) return local
+  const contract = resolveKind(kind).contract
+  if (!local) return contract
+  const additions = Object.fromEntries(
+    Object.entries(contract.shape).filter(([field]) => !(field in local.shape)),
+  )
+  return local.extend(additions)
 }
 
 /** Pure Tenant × Space × Collection expansion. Enforces the L3 key-uniqueness invariant. */
@@ -128,15 +141,15 @@ export function expand(manifests: LoadedManifest[]): ExpandedCollection[] {
           kind: def.kind,
         }
         // Branch on `def.type` (rather than spreading `def` in) so TS narrows
-        // `def.schema` per-variant and the pushed object matches the matching
-        // half of the `ExpandedCollection` discriminated union.
+        // per-variant and the pushed object matches the matching half of the
+        // `ExpandedCollection` discriminated union.
+        const schema = effectiveSchema(def.kind, def.schema)
         if (def.type === 'page') {
-          out.push({ ...base, type: 'page', schema: def.schema })
+          out.push({ ...base, type: 'page', schema })
         } else {
-          // A `data` collection's schema is either inline or supplied by its
-          // `kind` (validateManifest guarantees exactly one). The kind's schema
-          // is the single home for that shared shape (ADR-0025).
-          const schema = def.schema ?? resolveKindSchema(def.kind)
+          // validateManifest guarantees at least one schema source for `data`;
+          // the throw narrows the type and backstops a manifest that never saw it.
+          if (!schema) throw new Error(`data collection "${base.key}" has no schema source`)
           out.push({ ...base, type: 'data', schema })
         }
       }
