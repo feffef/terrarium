@@ -25,11 +25,11 @@ context when you work on that Tenant.
 - **Marquee** — [`layers/marquee/CONTEXT.md`](./layers/marquee/CONTEXT.md) —
   Screening, Chapter, Poster; why the Marquee exists (a guest-requested
   demo/content Tenant, ADR-0023, issue #551).
-- **Search** — [`layers/search/CONTEXT.md`](./layers/search/CONTEXT.md) — why the
-  Search exists: the first **Aggregator** (a platform view reading across Tenants
-  via the **Catalog**), validating the cross-Tenant read model (ADR-0025, issue
-  #642). The Platform-context terms it turns on — Collection kind, Catalog,
-  Aggregator — live in the root `CONTEXT.md`.
+- **Commons** — [`layers/commons/CONTEXT.md`](./layers/commons/CONTEXT.md) — why the
+  Commons exists: the first **Aggregator** (a platform view reading across Tenants
+  via the **Catalog**), with **Search** and **Timeline** Spaces, validating the
+  cross-Tenant read model (ADR-0025, issue #642). The Platform-context terms it
+  turns on — Collection kind, Catalog, Aggregator — live in the root `CONTEXT.md`.
 
 The root `CONTEXT.md` also carries a `## Tenants` roster that points at each of
 these — a pointer, not a second home. Substantive definitions live once, in the

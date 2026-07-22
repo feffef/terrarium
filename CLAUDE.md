@@ -489,7 +489,7 @@ modules/routing.ts                  # build-time Nuxt module: manifests → #rou
 modules/catalog.ts                  # build-time Nuxt module: manifests → #catalog cross-Tenant projection (human-only, ADR-0025)
 content.config.ts                   # ordinary module — builds keyed collections dynamically (ADR-0013)
 app/composables/space.ts            # useSpace(): route → keyed collections or 404 (auto-imported wrapper)
-app/composables/catalog.ts          # queryAcrossTenants(kind): the one sanctioned cross-Tenant read (human-only, ADR-0025)
+app/composables/catalog.ts          # queryAcrossTenants(kind)/queryTimeline(): the sanctioned cross-Tenant reads (human-only, ADR-0025)
 app/pages/t/[tenant]/[space]/[...slug].vue   # runtime routing + ContentRenderer
 tests/unit/                         # PLATFORM unit tests (L3 isolation, shared/, scripts/)
 tests/e2e/smoke.spec.ts             # the ONE L2 smoke build; imports each Tenant's e2e module

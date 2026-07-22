@@ -6,7 +6,7 @@
 // It derives the cross-Tenant catalog — every collection that opted into a `kind`,
 // grouped by kind — and exposes it as the `#catalog` virtual module, importable as
 // a plain static import (no Nuxt composable needed). This is the derived,
-// build-time read primitive the honest aggregator (the Search Tenant) reads,
+// build-time read primitive the honest aggregator (the Commons Tenant) reads,
 // instead of the dollhouse's hardcoded `TENANTS`/`ROOM_*` arrays: a new Tenant
 // with a `kind`-tagged collection appears automatically; a removed one drops.
 //

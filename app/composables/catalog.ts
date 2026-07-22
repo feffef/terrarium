@@ -1,6 +1,6 @@
 // The one sanctioned cross-Tenant read (ADR-0025, issue #642). `queryAcrossTenants`
 // is to `#catalog` what `useSpace` is to `#routing`: a thin, read-only wrapper an
-// aggregator (a platform view like the Search Tenant) uses instead of importing
+// aggregator (a platform view like the Commons Tenant) uses instead of importing
 // another Tenant's manifest or hardcoding a Tenant roster.
 //
 // It fans out over the build-time catalog — never a manifest import — queries each
@@ -26,6 +26,10 @@ export interface CatalogPageRow {
   url: string
   title?: string
   description?: string
+  /** A conventional publish instant (`publishedAt`), when the page carries one —
+   *  the timestamp the Timeline orders by. Absent on undated pages (index
+   *  landings, docs). */
+  publishedAt?: string
 }
 
 /**
@@ -54,8 +58,54 @@ export async function queryAcrossTenants(kind: 'page'): Promise<CatalogPageRow[]
         url: documentUrl(entry.tenant, entry.space, item.path),
         title: item.title,
         description: item.description,
+        // `publishedAt` is a per-collection schema field (blog/marquee posts), not
+        // on every page item's base type — read it as a conventional optional
+        // timestamp. The catalog stays the single home for cross-Tenant reads.
+        publishedAt: (item as { publishedAt?: string }).publishedAt,
       }))
     }),
   )
   return perCollection.flat()
+}
+
+/** One entry in the cross-Tenant **Timeline**: a timestamped piece of content,
+ *  reduced to a one-line summary and a link to its real public route (ADR-0025). */
+export interface TimelineEntry {
+  /** The instant this entry is placed at — UTC ISO-8601, so it sorts lexically. */
+  when: string
+  /** The one-line summary shown in the feed. */
+  summary: string
+  /** Canonical ADR-0006 route the entry links to. */
+  url: string
+  tenant: string
+  space: string
+  /** The kind this entry was normalized from (for provenance / future grouping). */
+  kind: string
+}
+
+/**
+ * The cross-Tenant Timeline: every timestamped piece of content, newest first.
+ *
+ * Each timeline-eligible **kind** normalizes to `{ when, summary, url }` *here* —
+ * the aggregator understands the kinds it consumes, so this per-kind adapter is
+ * the seam, not a per-Tenant one. Today it draws from the `page` kind (posts that
+ * carry a `publishedAt`); a future kind (e.g. session logs) slots in as one more
+ * branch, with no change to any Tenant. Reads are build-time/committed only
+ * (ADR-0001).
+ */
+export async function queryTimeline(): Promise<TimelineEntry[]> {
+  const pages = await queryAcrossTenants('page')
+  const entries: TimelineEntry[] = pages
+    .filter((r): r is CatalogPageRow & { publishedAt: string } => Boolean(r.publishedAt))
+    .map((r) => ({
+      when: r.publishedAt,
+      summary: r.title ?? r.url,
+      url: r.url,
+      tenant: r.tenant,
+      space: r.space,
+      kind: 'page',
+    }))
+  // Reverse-chronological; UTC ISO-8601 sorts lexically, so string compare is
+  // correct and needs no Date parsing.
+  return entries.sort((a, b) => b.when.localeCompare(a.when))
 }

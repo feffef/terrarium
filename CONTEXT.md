@@ -206,8 +206,9 @@ Its distinguishing feature is that it reads the **Catalog** (the sanctioned
 cross-Tenant read), where a normal **Tenant** reads only its own Spaces. It is
 still implemented as an ordinary Tenant layer and writes nothing across Tenants —
 strictly a consumer, owning none of the content it surfaces. Normal Tenants never
-read across; only a small, governed set of Aggregators may. The Search Tenant is
-the first.
+read across; only a small, governed set of Aggregators may. One Aggregator Tenant
+may host several cross-Tenant views, one per Space. The Commons Tenant is the
+first — its **Search** and **Timeline** Spaces.
 
 ### Trusted
 A user with **write access** to the repository — the owner and invited
@@ -258,11 +259,12 @@ pointer into them (see `CONTEXT-MAP.md`).
   in in-universe story order, one chapter per film. A guest-requested
   demo/content Tenant (ADR-0023, issue #551). →
   [`layers/marquee/CONTEXT.md`](./layers/marquee/CONTEXT.md)
-- **Search** — one search box over every Tenant that opts a Collection into the
-  **Catalog**. Not a demo/content Tenant: the first **Aggregator** (a platform
-  view that reads across Tenants), and the first consumer validating the
+- **Commons** — the Platform's shared, cross-Tenant space: the home for
+  **Aggregator** views that read across every Tenant. Two Spaces today — **Search**
+  (one box over every opted-in page) and **Timeline** (every timestamped page,
+  newest first). Not a demo/content Tenant: the first Aggregator, validating the
   cross-Tenant read model (ADR-0025, issue #642). →
-  [`layers/search/CONTEXT.md`](./layers/search/CONTEXT.md)
+  [`layers/commons/CONTEXT.md`](./layers/commons/CONTEXT.md)
 
 ## Retired terms
 

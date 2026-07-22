@@ -1,6 +1,6 @@
 // Collection *kinds* — the cross-Tenant read contracts (ADR-0025, issue #642).
 // A kind is a NAMED, shared shape that a manifest collection may assert
-// conformance to, so an aggregator (a platform view like the Search Tenant) can
+// conformance to, so an aggregator (a platform view like the Commons Tenant) can
 // read that collection across every Tenant that opts in — WITHOUT re-declaring
 // each schema (drift) or importing another Tenant's manifest internals
 // (coupling). `#routing` was the first cross-Tenant derivation; the `#catalog`

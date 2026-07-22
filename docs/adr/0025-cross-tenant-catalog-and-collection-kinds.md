@@ -96,19 +96,32 @@ table references the same kind contract, the union is uniformly typed — the
 at **one** documented assertion boundary (issue #642's flagged typing question),
 mirroring `resolveSpaceRoute`'s single cast.
 
-The *consumer* — a search, an activity feed, an honest dollhouse — is a new role:
-an **aggregator** (platform view). It is still implemented as an ordinary Tenant
-layer; its distinguishing feature is that it reads `#catalog` (the sanctioned
-cross-Tenant read), not that it is a different runtime mechanism (ADR-0001 intact).
-Normal Tenants never read across; a small, governed set of aggregators may.
+The *consumer* — a search, a timeline, an activity feed, an honest dollhouse — is
+a new role: an **aggregator** (platform view). It is still implemented as an
+ordinary Tenant layer; its distinguishing feature is that it reads `#catalog`
+(the sanctioned cross-Tenant read), not that it is a different runtime mechanism
+(ADR-0001 intact). Normal Tenants never read across; a small, governed set of
+aggregators may. One aggregator Tenant may host **several** cross-Tenant views,
+one per Space.
 
-### First consumer
+### First consumer — the Commons Tenant (two views validate two shapes)
 
-The **Search Tenant** (`layers/search/`, `/t/search/all`) validates the
-architecture end to end: one box over every opted-in `pages` collection, filtered
-client-side over baked content, each result linking back to its real route. Its
-*own* `pages` collection is deliberately **un-kinded**, so it does not index
-itself — the isolation default, made concrete and tested.
+The **Commons Tenant** (`layers/commons/`) is the first aggregator, with two
+Spaces that deliberately exercise *different* shapes of cross-Tenant read:
+
+- **Search** (`/t/commons/search`) — one box over every opted-in `pages`
+  collection (`queryAcrossTenants('page')`), filtered client-side over baked
+  content, each result linking back to its real route.
+- **Timeline** (`/t/commons/timeline`) — a reverse-chronological feed of every
+  timestamped page across the Platform (`queryTimeline()`), one line each. This is
+  the "beyond the dollhouse" case: a cross-Tenant view that *normalizes* — each
+  timeline-eligible kind reduces to `{ when, summary, url }` in a per-kind adapter
+  in the composable (the aggregator understands the kinds it consumes, so adding a
+  kind is localized, never per-Tenant).
+
+The Commons's *own* `pages` collections are deliberately **un-kinded**, so neither
+view surfaces the Commons itself — the isolation default, made concrete and tested.
+A future cross-Tenant view is another Space here, not another Tenant.
 
 ## Consequences
 
@@ -133,3 +146,14 @@ itself — the isolation default, made concrete and tested.
   schema. No existing content or schema changed. A future shared `data` kind (e.g.
   a `session` shape adopted by more than one Tenant) is one `KINDS` entry away,
   with no change to `expand()` or the catalog module.
+- **Deferred — session logs in the Timeline, and the projection-vs-schema
+  question.** The Timeline draws today from the `page` kind only. Session logs are
+  the obvious next source, but including them surfaced two decisions worth their
+  own treatment rather than a rushed bundle: (1) a `data` kind currently *replaces*
+  a collection's schema, so a rich, Tenant-owned collection (the Journal's
+  `sessions`, ADR-0009 — also read directly by `scripts/log-session.ts`) can't yet
+  expose a *narrow* shared projection without relocating its whole schema; and
+  (2) session logs have no individual public route (they render on the Journal
+  dashboard), so a non-page kind needs a public-URL story. A likely answer is a
+  kind that is a *minimum contract* a collection's own schema satisfies (plus a
+  per-kind timeline adapter, already stubbed), but that is left for a follow-up.

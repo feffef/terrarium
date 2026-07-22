@@ -1,0 +1,28 @@
+/* Commons Tenant theme — a plain, utilitarian "shared desk" look for the
+ * cross-Tenant views (Search, Timeline), scoped to Commons routes via the
+ * `.commons-page` body class the layer's pages set. Kept deliberately restrained:
+ * an aggregator's job is to get out of the way of the content it points at. */
+.commons-page {
+  --co-bg: #fbfbfa;
+  --co-ink: #1c1e1c;
+  --co-muted: #5b615b;
+  --co-line: #dfe2dc;
+  --co-accent: #356a4c;
+  --co-card: #ffffff;
+
+  margin: 0;
+  background: var(--co-bg);
+  color: var(--co-ink);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  .commons-page {
+    --co-bg: #14160f;
+    --co-ink: #e9ebe4;
+    --co-muted: #a1a89b;
+    --co-line: #2c3226;
+    --co-accent: #6fbf89;
+    --co-card: #1b1e16;
+  }
+}
