@@ -19,6 +19,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
+import { isExternalSession } from '../shared/schemas/session.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -88,6 +89,10 @@ function readSessions(cwd = root): TriageSession[] {
   for (const f of readdirSync(dir).filter((f) => f.endsWith('.yml'))) {
     const raw = parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>
     if (!raw || typeof raw !== 'object') continue
+    // An EXTERNAL log (ADR-0009 amendment) is excluded from the frictions-to-fixes
+    // corpus entirely: its frictions reflect a different harness/toolchain that our
+    // fixes don't touch, so mining them would chase non-generalizing signal.
+    if (isExternalSession(raw)) continue
     out.push(toTriageSession(raw, `${SESSIONS_DIR}/${f}`))
   }
   return out

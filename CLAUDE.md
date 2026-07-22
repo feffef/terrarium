@@ -670,6 +670,10 @@ Deciding whether MDC (Nuxt Content's Markdown Components) is the right tool for 
 
 The land-a-gated-PR recipe (gate → green check → merge) and the per-tier merge-authority list. See `docs/agents/pr-workflow.md`.
 
+### Guest & external contributions
+
+How contributions from outside our own Claude Code toolchain are handled — the guest-driven demo pipeline (our agents build for invited Public issue-filers) versus external-agent fork PRs (a different harness submits its own PR + session log). The trust boundary, the `external` session-log marking, in-PR session-log delivery, and merge rules. See `docs/agents/guest-contributions.md`.
+
 ### Verifying UI changes
 
 What proves a presentational change, and the Playwright/Chromium/client-only sharp edges that make a passing test or clean screenshot untrustworthy — see the "Verifying UI changes" subsection under Self-verification above for the headline rules, and `docs/agents/verifying-ui-changes.md` for the full methodology.

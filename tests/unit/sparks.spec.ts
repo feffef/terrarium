@@ -8,6 +8,7 @@ import {
   clusterLabel,
   gatherSparkRecords,
   keywordOverlap,
+  readSparkMaterial,
   sparkKeywords,
   type SessionSparkMaterial,
   type SparkRecord,
@@ -108,6 +109,53 @@ describe('gatherSparkRecords()', () => {
 
   it('is empty for a session with neither field', () => {
     expect(gatherSparkRecords([{ session: 's1', endedAt: '2026-07-07T00:00:00Z', ideas: [], learnings: [] }])).toEqual([])
+  })
+})
+
+describe('readSparkMaterial()', () => {
+  it('keeps both ideas and learnings for an internal session (external absent)', () => {
+    const raw = {
+      session: 's1',
+      endedAt: '2026-07-20T00:00:00Z',
+      ideas: ['idea a'],
+      learnings: ['learning a'],
+    }
+    expect(readSparkMaterial(raw)).toEqual({
+      session: 's1',
+      endedAt: '2026-07-20T00:00:00.000Z',
+      ideas: ['idea a'],
+      learnings: ['learning a'],
+    })
+  })
+
+  it('keeps ideas but DROPS learnings for an external session (ADR-0009 amendment)', () => {
+    const raw = {
+      session: 's-ext',
+      endedAt: '2026-07-20T00:00:00Z',
+      external: true,
+      ideas: ['toolchain-agnostic idea'],
+      learnings: ['a Grok/Hermes-specific learning'],
+    }
+    expect(readSparkMaterial(raw)).toEqual({
+      session: 's-ext',
+      endedAt: '2026-07-20T00:00:00.000Z',
+      ideas: ['toolchain-agnostic idea'],
+      learnings: [],
+    })
+  })
+
+  it('drops an external session that has ONLY learnings (nothing left to gather)', () => {
+    const raw = { session: 's-ext', endedAt: '2026-07-20T00:00:00Z', external: true, learnings: ['x'] }
+    expect(readSparkMaterial(raw)).toBeNull()
+  })
+
+  it('treats external:false the same as internal (both fields kept)', () => {
+    const raw = { session: 's', endedAt: '2026-07-20T00:00:00Z', external: false, ideas: ['i'], learnings: ['l'] }
+    expect(readSparkMaterial(raw)).toMatchObject({ ideas: ['i'], learnings: ['l'] })
+  })
+
+  it('returns null when a session has neither spark field', () => {
+    expect(readSparkMaterial({ session: 's', endedAt: '2026-07-20T00:00:00Z' })).toBeNull()
   })
 })
 

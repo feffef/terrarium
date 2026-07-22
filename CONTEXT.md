@@ -91,6 +91,16 @@ span several branches or PRs, or none; its log is authored regardless
 of where the work went, or whether any code was committed at all. Session logs
 are ground truth, not a projection of repo state (see the Journal Tenant).
 
+A session log may be **external** — authored by a different agent / harness /
+environment than our Claude Code toolchain (the first, on fork PR #631, ran on
+Grok via a "Hermes" harness). An external log is still a real, honest record and
+stays visible in the Timeline and dashboard; the schema marks it with an optional
+`external` flag (absent ⇒ internal — our own sessions leave it off). Because its
+**Frictions** and **skills** reflect a toolchain our fixes can't touch, the
+self-improvement Skills (`frictions-to-fixes`, `audit-skills`) **exclude external
+sessions entirely**, and the Sparks feed keeps an external session's **ideas** but
+drops its **learnings** (ADR-0009 amendment, 2026-07-22).
+
 Every session log records the Session's **kind** — where it sat on the autonomy
 spectrum, judged by **who prompted**: **interactive** (a human prompted again
 after kickoff — steered, answered, redirected), **delegated** (exactly one human

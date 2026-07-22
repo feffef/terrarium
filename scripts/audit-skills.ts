@@ -31,6 +31,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
+import { isExternalSession } from '../shared/schemas/session.ts'
 import { isParentlessBoundaryCommit, SESSION_TRAILER } from './git-helpers.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -637,13 +638,55 @@ export function findMisclassifiedKind(sessions: WindowSession[]): MisclassifiedK
     .sort((a, b) => a.endedAt.localeCompare(b.endedAt) || a.session.localeCompare(b.session))
 }
 
+/** Reduce one parsed session log to its `SessionFile`, or `null` when the log is
+ *  EXTERNAL (ADR-0009 amendment): a log authored by a different harness/toolchain
+ *  is excluded from the self-improvement corpus entirely — its frictions,
+ *  skill-usage, and regression signal reflect a toolchain our fixes don't touch.
+ *  Dropping it here removes it from every downstream signal at once (window,
+ *  usage tally, regression brackets, `skillSessionFiles`, human-prompted /
+ *  misclassified / rescued closures). `skillNames` cross-checks each `skillsUsed`
+ *  entry against the real Skills on disk (`filterSkillsUsed`, issue #545). */
+export function toSessionFile(
+  raw: Record<string, unknown>,
+  file: string,
+  skillNames: ReadonlySet<string>,
+): SessionFile | null {
+  if (isExternalSession(raw)) return null
+  const used = Array.isArray(raw.skillsUsed) ? raw.skillsUsed : []
+  const frictions = Array.isArray(raw.frictions) ? raw.frictions : []
+  return {
+    session: {
+      session: String(raw.session ?? ''),
+      kind: String(raw.kind ?? ''),
+      goal: String(raw.goal ?? ''),
+      summary: String(raw.summary ?? '').replace(/\s+/g, ' ').trim(),
+      endedAt: String(raw.endedAt ?? ''),
+      skillsUsed: filterSkillsUsed(
+        used.map((u: Record<string, unknown>) => ({
+          name: String(u.name ?? ''),
+          reason: String(u.reason ?? '').replace(/\s+/g, ' ').trim(),
+        })),
+        skillNames,
+      ),
+      frictions: frictions
+        .map((fr: Record<string, unknown>) => String(fr.severity ?? ''))
+        .filter(Boolean),
+      humanPromptedClosure: hasHumanPromptedClosure(
+        frictions.map((fr: Record<string, unknown>) => String(fr.description ?? '')),
+      ),
+      entrypoint: String(raw.entrypoint ?? ''),
+    },
+    file,
+  }
+}
+
 // ── FS IO (thin shell) ────────────────────────────────────────────────────────
 
-/** Reads every session log with its source file path attached (`SessionFile`).
- *  `skillNames` cross-checks each `skillsUsed` entry against the real Skills
- *  on disk (`filterSkillsUsed`, issue #545) — defaults to a fresh
- *  `readSkillNames(cwd)` read, but `scorecard()` passes one in so the
- *  directory is only read once per run. */
+/** Reads every session log with its source file path attached (`SessionFile`),
+ *  dropping EXTERNAL logs via `toSessionFile` (ADR-0009 amendment). `skillNames`
+ *  cross-checks each `skillsUsed` entry against the real Skills on disk
+ *  (`filterSkillsUsed`, issue #545) — defaults to a fresh `readSkillNames(cwd)`
+ *  read, but `scorecard()` passes one in so the directory is only read once per run. */
 function readSessionFiles(cwd = root, skillNames: ReadonlySet<string> = readSkillNames(cwd)): SessionFile[] {
   const dir = join(cwd, SESSIONS_DIR)
   if (!existsSync(dir)) return []
@@ -651,32 +694,8 @@ function readSessionFiles(cwd = root, skillNames: ReadonlySet<string> = readSkil
   for (const f of readdirSync(dir).filter((f) => f.endsWith('.yml'))) {
     const raw = parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>
     if (!raw || typeof raw !== 'object') continue
-    const used = Array.isArray(raw.skillsUsed) ? raw.skillsUsed : []
-    const frictions = Array.isArray(raw.frictions) ? raw.frictions : []
-    out.push({
-      session: {
-        session: String(raw.session ?? ''),
-        kind: String(raw.kind ?? ''),
-        goal: String(raw.goal ?? ''),
-        summary: String(raw.summary ?? '').replace(/\s+/g, ' ').trim(),
-        endedAt: String(raw.endedAt ?? ''),
-        skillsUsed: filterSkillsUsed(
-          used.map((u: Record<string, unknown>) => ({
-            name: String(u.name ?? ''),
-            reason: String(u.reason ?? '').replace(/\s+/g, ' ').trim(),
-          })),
-          skillNames,
-        ),
-        frictions: frictions
-          .map((fr: Record<string, unknown>) => String(fr.severity ?? ''))
-          .filter(Boolean),
-        humanPromptedClosure: hasHumanPromptedClosure(
-          frictions.map((fr: Record<string, unknown>) => String(fr.description ?? '')),
-        ),
-        entrypoint: String(raw.entrypoint ?? ''),
-      },
-      file: `${SESSIONS_DIR}/${f}`,
-    })
+    const entry = toSessionFile(raw, `${SESSIONS_DIR}/${f}`, skillNames)
+    if (entry) out.push(entry)
   }
   return out
 }

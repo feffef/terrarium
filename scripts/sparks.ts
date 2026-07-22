@@ -15,6 +15,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
+import { isExternalSession } from '../shared/schemas/session.ts'
 import { SESSIONS_DIR } from './digest.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -149,6 +150,27 @@ export function buildSparkClusters(records: SparkRecord[], threshold = CLUSTER_T
     .sort((a, b) => b.sparks.length - a.sparks.length || a.label.localeCompare(b.label))
 }
 
+/** Reduce one parsed session log to its spark material, or `null` when it has
+ *  nothing to gather. An EXTERNAL session (ADR-0009 amendment) keeps its `ideas`
+ *  — a good idea is toolchain-agnostic — but drops its `learnings`, which reflect
+ *  a different harness's development and don't generalize to ours. Internal
+ *  sessions are unchanged (both fields kept). */
+export function readSparkMaterial(raw: Record<string, unknown>): SessionSparkMaterial | null {
+  const ideas = Array.isArray(raw.ideas) ? raw.ideas.map(String) : []
+  const learnings = isExternalSession(raw)
+    ? []
+    : Array.isArray(raw.learnings)
+      ? raw.learnings.map(String)
+      : []
+  if (!ideas.length && !learnings.length) return null // nothing to gather from this log
+  return {
+    session: String(raw.session ?? ''),
+    endedAt: new Date(raw.endedAt as string | Date).toISOString(),
+    ideas,
+    learnings,
+  }
+}
+
 // ── Git / FS IO (thin shell) ──────────────────────────────────────────────────
 
 function readSessionSparkMaterials(cwd = root): SessionSparkMaterial[] {
@@ -158,15 +180,8 @@ function readSessionSparkMaterials(cwd = root): SessionSparkMaterial[] {
   for (const f of readdirSync(dir).filter((f) => f.endsWith('.yml'))) {
     const raw = parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>
     if (!raw || typeof raw !== 'object') continue
-    const ideas = Array.isArray(raw.ideas) ? raw.ideas.map(String) : []
-    const learnings = Array.isArray(raw.learnings) ? raw.learnings.map(String) : []
-    if (!ideas.length && !learnings.length) continue // nothing to gather from this log
-    out.push({
-      session: String(raw.session ?? ''),
-      endedAt: new Date(raw.endedAt as string | Date).toISOString(),
-      ideas,
-      learnings,
-    })
+    const material = readSparkMaterial(raw)
+    if (material) out.push(material)
   }
   // Deterministic regardless of readdirSync's FS-dependent iteration order.
   return out.sort((a, b) => a.endedAt.localeCompare(b.endedAt) || a.session.localeCompare(b.session))

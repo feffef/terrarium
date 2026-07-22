@@ -40,7 +40,11 @@ Its brief:
   sample** — read every session in it, don't chase frictions from older,
   likely-gone sessions. Each record's `id`/`file` point back to the full log —
   re-read it directly when a candidate needs more context than the triage
-  extract carries.
+  extract carries. **External sessions are already excluded** — the survey script
+  drops any log flagged `external: true` (an external harness/toolchain, e.g. fork
+  PR #631's Hermes/Grok run) because its frictions don't generalize to our
+  Claude-Code development (ADR-0009 amendment); you never see them here, so don't
+  go hunting the raw corpus for them.
 - **Group and rank.** Fold related/recurring frictions (shared root cause or single
   fix) into one candidate; rank by **recurrence and severity together** (severity
   is an ordered rank, not a number — weigh it qualitatively, never multiply it).

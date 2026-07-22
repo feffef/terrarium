@@ -102,6 +102,13 @@ ideas:                             # OPTIONAL — omit unless something sparked
 
 - **Do NOT write** `startedAt`/`endedAt`, `durationSec`, `models`, `toolCounts`,
   `filesEdited`, `subagents`, `gitBranch`, … — all derived (ADR-0009's amendment).
+- **`external` is not for our logs.** The schema carries an optional `external`
+  boolean marking a log authored by a *different* harness/toolchain (an external
+  contributor's own agent — ADR-0009 amendment, 2026-07-22). Our Claude Code
+  sessions **leave it absent** (absent ⇒ internal); this authoring path doesn't
+  set it. It exists so an external log can flag itself, which excludes it from
+  the self-improvement mining (`frictions-to-fixes`/`audit-skills`) while its
+  `ideas` still surface in Sparks.
 - `docsRead`/`skillsUsed` are your **curated** picks (the ones worth a `reason`).
   You don't have to list everything you touched — the extractor folds observed
   reads in. A read you *do* cite keeps your `reason`; the rest get a derived
