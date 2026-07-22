@@ -512,6 +512,17 @@ describe('groupSessionReferences()', () => {
     const grouped = groupSessionReferences(refs)
     expect(grouped.get('session_A')).toEqual({ commits: ['c2', 'c1'], date: '2026-07-11T00:00:00Z' })
   })
+
+  it('picks the real-time-earliest date across mixed timezone offsets, not the lexically-earliest', () => {
+    // `+02:00` 01:00 = 2026-07-11T23:00Z, which is EARLIER than the 2026-07-12T00:00Z
+    // commit despite sorting later as a raw string — the epoch comparison must prefer it.
+    const refs: SessionTrailerRef[] = [
+      { sha: 'zulu', date: '2026-07-12T00:00:00Z', session: 'session_A' },
+      { sha: 'plus2', date: '2026-07-12T01:00:00+02:00', session: 'session_A' },
+    ]
+    const grouped = groupSessionReferences(refs)
+    expect(grouped.get('session_A')).toEqual({ commits: ['zulu', 'plus2'], date: '2026-07-12T01:00:00+02:00' })
+  })
 })
 
 describe('findOrphanedSessions()', () => {
@@ -533,6 +544,27 @@ describe('findOrphanedSessions()', () => {
       { sha: 'c1', date: '2026-07-10T00:00:00Z', session: 'session_older' },
     ]
     expect(findOrphanedSessions(refs, new Set()).map((o) => o.session)).toEqual(['session_older', 'session_newer'])
+  })
+
+  it('still resolves the correct earliest date for a session with mixed-offset refs (item 3)', () => {
+    const refs: SessionTrailerRef[] = [
+      { sha: 'zulu', date: '2026-07-12T00:00:00Z', session: 'session_mixed' },
+      { sha: 'plus2', date: '2026-07-12T01:00:00+02:00', session: 'session_mixed' },
+    ]
+    expect(findOrphanedSessions(refs, new Set())).toEqual([
+      { session: 'session_mixed', commits: ['zulu', 'plus2'], date: '2026-07-12T01:00:00+02:00' },
+    ])
+  })
+
+  it('sorts two different sessions correctly across mixed timezone offsets (item 3)', () => {
+    // `session_b`'s +02:00 stamp is real-time-earlier than `session_a`'s Z stamp
+    // despite sorting later as a raw string — the final cross-session sort must
+    // compare by epoch, not lexicographically, to put session_b first.
+    const refs: SessionTrailerRef[] = [
+      { sha: 'a1', date: '2026-07-12T00:00:00Z', session: 'session_a' },
+      { sha: 'b1', date: '2026-07-12T01:00:00+02:00', session: 'session_b' },
+    ]
+    expect(findOrphanedSessions(refs, new Set()).map((o) => o.session)).toEqual(['session_b', 'session_a'])
   })
 
   it('drops a resolved same-run mis-file: the flagged commit\'s added file was later removed (issue #574)', () => {
@@ -575,6 +607,18 @@ describe('findOrphanedSessions()', () => {
     ]
     expect(findOrphanedSessions(refs, new Set(), changes)).toEqual([
       { session: 'session_orphan', commits: ['c1'], date: '2026-07-12T00:00:00Z' },
+    ])
+  })
+
+  it('annotates a resolved entry with resolvedBy instead of dropping it (issue #447 item 4)', () => {
+    const refs: SessionTrailerRef[] = [
+      { sha: 'c1', date: '2026-07-10T00:00:00Z', session: 'session_triaged' },
+      { sha: 'c2', date: '2026-07-12T00:00:00Z', session: 'session_fresh' },
+    ]
+    const resolved = new Map([['session_triaged', '#650']])
+    expect(findOrphanedSessions(refs, new Set(), [], resolved)).toEqual([
+      { session: 'session_triaged', commits: ['c1'], date: '2026-07-10T00:00:00Z', resolvedBy: '#650' },
+      { session: 'session_fresh', commits: ['c2'], date: '2026-07-12T00:00:00Z' },
     ])
   })
 })
@@ -752,6 +796,23 @@ describe('findManuallyRescuedClosures()', () => {
     ]
     const sessions = [sess({ session: 'session_019pNrzTQb3EV2SJBWXs1bXG', endedAt: '2026-07-13T17:19:05Z' })]
     expect(findManuallyRescuedClosures(refs, sessions)).toEqual([])
+  })
+
+  it('annotates a resolved entry with resolvedBy, keeping it visible unlike dismissed (issue #447 item 4)', () => {
+    const refs: SessionTrailerRef[] = [{ sha: 'a', date: '2026-07-13T00:00:00Z', session: 'session_triaged' }]
+    const sessions = [sess({ session: 'session_triaged', endedAt: '2026-07-14T00:00:00Z' })] // 24h gap
+    const resolved = new Map([['session_triaged', '#650']])
+    expect(
+      findManuallyRescuedClosures(refs, sessions, RESCUED_GAP_HOURS, new Set(), resolved),
+    ).toEqual([
+      {
+        session: 'session_triaged',
+        endedAt: '2026-07-14T00:00:00Z',
+        lastWorkCommit: '2026-07-13T00:00:00Z',
+        gapHours: 24,
+        resolvedBy: '#650',
+      },
+    ])
   })
 })
 

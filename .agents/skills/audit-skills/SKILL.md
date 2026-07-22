@@ -41,7 +41,11 @@ stale link, a zero-ambiguity typo) **may be proposed as a small,
 clearly-labeled inline patch suggestion for direct human approval**, instead
 of the full issue → later-session → branch → gate → PR round trip. Anything
 carrying the slightest semantic ambiguity is not mechanical — file it per
-step 5 instead.
+step 5 instead. **When the same mechanical fix recurs across ≥2 Skills**
+(e.g. the same `pnpm gate` → `pnpm gate:scoped` one-liner in every Skill's
+gate step), **propose one collapsed suggestion naming every affected Skill**,
+not one near-duplicate entry per Skill — this is the same narrow-exception
+patch above, just batched by fix rather than by Skill.
 
 ## 1. Branch off `origin/main`
 
@@ -78,6 +82,9 @@ It prints JSON:
   with **no** matching file anywhere in the sessions Collection (current or
   archived). Each entry carries the referencing commit sha(s) and date — a
   session that never invoked `close-session`/`log-session` at all (ADR-0009).
+  A session id in `RESOLVED_ORPHANED_SESSIONS` still appears, but carries a
+  `resolvedBy` cutoff naming the issue/PR that already tracked it (issue #447
+  item 4) — see step 5 for how to treat that entry.
 - **`humanPromptedClosures`** and **`manuallyRescuedClosures`** — the two
   *manual-nudge-closure* signals, the counterpart to `orphanedSessions` for
   sessions that DID log but only because a human nudged them (so the orphan
@@ -96,7 +103,10 @@ It prints JSON:
   session is now suppressed from this signal via
   `DISMISSED_MANUALLY_RESCUED_CLOSURES` once its fix (#411) landed, so a
   healthy future run won't show it — a genuinely new rescue will surface the
-  same way. A session can appear in both, one, or neither.
+  same way. A session can appear in both, one, or neither. A less drastic
+  alternative to full suppression: a session id in
+  `RESOLVED_MANUALLY_RESCUED_CLOSURES` stays visible but carries a
+  `resolvedBy` cutoff, same as `orphanedSessions` above (issue #447 item 4).
 - **`misclassifiedKind`** — sessions whose authored `kind` contradicts the
   `entrypoint: 'remote_trigger'` derived signal (a Routine/`/loop`-fired
   session implies `kind: autonomous` per CONTEXT.md's Session definitions —
@@ -231,6 +241,13 @@ Skill, the only lever we own is its Inventory `role` (step 3).
 `orphanedSessions` and the closure-nudge signals are not about any one Skill
 (own or external) — they're closure/journal-completeness gaps, so this scoping
 doesn't apply to them.
+
+**An entry carrying a `resolvedBy` cutoff (`orphanedSessions` or
+`manuallyRescuedClosures`, via `RESOLVED_ORPHANED_SESSIONS` /
+`RESOLVED_MANUALLY_RESCUED_CLOSURES`) is not re-filed or re-commented on** —
+it stayed visible in the scorecard on purpose (so the incident isn't lost),
+but its cutoff means it's already tracked at the reference it names; treat it
+as read-only history, same as a fully `DISMISSED_*` entry.
 
 For each own Skill flagged by step 3 or 4, and for each `orphanedSessions` entry:
 - **Search first** (`search_issues`, `is:issue is:open audit-skills <name>` for

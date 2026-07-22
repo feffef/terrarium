@@ -149,6 +149,18 @@ landing `index.md` (no `publishedAt`) stays the Persona's masthead.
 
 ### Cite facts and link to the code
 
+**First-use glossary** — the terms this step leans on, in one place so this
+step reads standalone:
+
+| Term | What it means |
+| --- | --- |
+| SHA-pinned permalink | A file/line GitHub link anchored to a full 40-char commit SHA, not `main` — see the bullet below for why and how to get one. |
+| Persona | A blog voice (`david`/`karen`/`kevin`) — full definition in `layers/blog/CONTEXT.md`. |
+| Persona factual hook | What each Persona anchors its citations in — spelled out per-Persona a few lines below. |
+| standalone / reaction | Whether this post replies to another Persona's post — see step 4 above. |
+| `reactsTo` | The frontmatter field naming a reaction's target post — see step 5's frontmatter example above. |
+| pingback | The stub this post's target Persona receives when this post reacts to them — see step 6 below. |
+
 Every post is a **tour into the repo**, not a substitute for reading it. Anchor the
 post in **real, verifiable facts** and **link them** so readers can go look:
 
@@ -341,6 +353,11 @@ already in mind:
 
 ### A2. Pick three outsider-legible topics
 
+Also check the `blog-topic-backlog.md` scratch file (A6 writes it) for a
+strong-but-losing topic from a previous run that's still fresh — it's a lead
+worth considering alongside what A1 just surfaced, not a queue to draw from
+automatically.
+
 From A1, pick **three distinct** real events or developments — each one a reader
 who follows the project only loosely (arrived from the homepage, not from reading
 every session) could follow once it's explained (a shipped feature, a bug and its
@@ -406,6 +423,17 @@ For each of the three topics, decide independently:
 
 ### A4. Draft all three, as scratch files only
 
+**Decision (issue #447 item 6): no cheap pre-screen precedes this** — every one
+of the three candidates gets full citation rigor, even the two that A6 will
+discard. A lighter first pass (topic + hook + a rough outline, without full
+grounding) would cut wasted full-rigor drafting, but at real cost: it risks
+eliminating a topic that would only have shone once fully drafted, and it
+complicates this Skill's "every draft meets the bar" honesty invariant (top of
+this doc) for whatever *does* get drafted. Three fully-rigorous drafts is the
+source of the blog's editorial strength — a reviewer judging genuinely finished
+posts, not outlines — so the waste is deliberate. Revisit this only if a future
+pre-screen rubric can be made objective enough not to silently lower quality.
+
 Write all three full drafts — each following step 5 (frontmatter, voice, length)
 and its "Cite facts and link to the code" rigor, and step 6's pingback stub where
 applicable — but to the **scratchpad directory**, not `layers/blog/...`. Nothing
@@ -451,10 +479,15 @@ directly into its prompt. Tell it explicitly:
 ### A6. Keep the winner, apply the notes, proceed
 
 Take the reviewer's pick as the run's `(persona, topic, standalone-or-reaction)`.
-Discard the other two scratch drafts (and any of their scratch pingback stubs) —
-they never touched the repo, so there's nothing to clean up there. Revise the
-winning draft to close the gaps the reviewer named, re-checking it against step
-5's citation rigor if a revision adds or changes a claim. Then continue at
-**step 2** using this Persona, and steps 3–7 as normal — step 5 becomes "save the
-already-drafted, now-revised text" rather than drafting fresh, and step 6 (if
-this candidate is a reaction) still applies as written.
+The other two scratch drafts never touch the repo, so there's no repo cleanup —
+but before discarding them, append **one line per discarded candidate** (topic +
+persona + hook) to a `blog-topic-backlog.md` scratch file (create it in the
+scratchpad if it doesn't already exist there). This is a lightweight capture,
+scratch-only — never a committed repo file, and it never affects the gate — so a
+good-but-losing topic survives as a lead for a future run instead of being fully
+lost. Then discard the two drafts (and any of their scratch pingback stubs).
+Revise the winning draft to close the gaps the reviewer named, re-checking it
+against step 5's citation rigor if a revision adds or changes a claim. Then
+continue at **step 2** using this Persona, and steps 3–7 as normal — step 5
+becomes "save the already-drafted, now-revised text" rather than drafting fresh,
+and step 6 (if this candidate is a reaction) still applies as written.

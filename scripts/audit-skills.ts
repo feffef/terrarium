@@ -21,7 +21,10 @@
 //   `manuallyRescuedClosures` (the counterpart to `orphanedSessions`: a session
 //   that DID log, but only because a human nudged it — invisible to the orphan
 //   check because the log now exists; a session id can be permanently
-//   dismissed from this signal once it's tracked and fixed, issue #426) — and
+//   dismissed from this signal once it's tracked and fixed, issue #426, or —
+//   for `manuallyRescuedClosures` and `orphanedSessions` — annotated with a
+//   `resolvedBy` cutoff instead, which keeps the entry visible rather than
+//   dropping it, issue #447 item 4) — and
 //   `skillSessionFiles`, a skill → file-path map (all-time, not windowed, but
 //   capped per Skill at `MAX_SKILL_SESSION_FILES`, issue #426) for a targeted
 //   full-log deep-read once a regression is suspected for a specific Skill;
@@ -79,6 +82,23 @@ export const DISMISSED_HUMAN_PROMPTED_CLOSURES: ReadonlySet<string> = new Set([
   'session_01Y11Fou1pRvTW2ucEt1dhX8', // #483
   'session_01CGdWVh7DctbuH1sro8Xs4x', // #483
 ])
+/** Session id → resolving issue/PR reference, for a `manuallyRescuedClosures`
+ *  incident that's been triaged but should stay **visible** rather than
+ *  disappear outright (unlike `DISMISSED_MANUALLY_RESCUED_CLOSURES`, which
+ *  fully suppresses an entry) — the annotated entry keeps its `resolvedBy`
+ *  cutoff so a future run doesn't re-read it as fresh evidence, while a
+ *  reader can still see the incident happened and where it was tracked
+ *  (issue #447 item 4). Append an entry here once its resolving issue/PR is
+ *  known; use `DISMISSED_MANUALLY_RESCUED_CLOSURES` instead when the entry
+ *  should disappear entirely. */
+export const RESOLVED_MANUALLY_RESCUED_CLOSURES: ReadonlyMap<string, string> = new Map()
+/** Session id → resolving issue/PR reference, for an `orphanedSessions`
+ *  entry that's been triaged and should stay visible with a `resolvedBy`
+ *  cutoff rather than resurface as fresh evidence on every run — the
+ *  `orphanedSessions` counterpart to `RESOLVED_MANUALLY_RESCUED_CLOSURES`
+ *  (issue #447 item 4; `orphanedSessions` has no full-suppression mechanism
+ *  of its own, so this annotation is its only cutoff lever). */
+export const RESOLVED_ORPHANED_SESSIONS: ReadonlyMap<string, string> = new Map()
 /** Above this many session-file hits, `skillSessionFiles` caps that Skill's
  *  list to the newest `MAX_SKILL_SESSION_FILES` rather than handing Phase B
  *  (`audit-skills` SKILL.md step 4) an ever-growing full-file read — a
@@ -193,6 +213,9 @@ export interface OrphanedSession {
   session: string
   commits: string[]
   date: string
+  /** Set when `RESOLVED_ORPHANED_SESSIONS` names this session — see that
+   *  constant for what the annotation means. */
+  resolvedBy?: string
 }
 /** A session that logged but flagged its own closure as human-prompted (the
  *  `HUMAN_PROMPTED_CLOSURE` friction keyword). */
@@ -209,6 +232,10 @@ export interface ManuallyRescuedClosure {
   /** ISO date of the session's most recent work commit on `origin/main`. */
   lastWorkCommit: string
   gapHours: number
+  /** Set when `RESOLVED_MANUALLY_RESCUED_CLOSURES` names this session — see
+   *  that constant for what the annotation means, and `OrphanedSession.resolvedBy`
+   *  for the sibling signal's identical shape. */
+  resolvedBy?: string
 }
 /** A session whose authored `kind` contradicts a strong derived signal — today
  *  just `entrypoint: 'remote_trigger'` implying `kind: autonomous` (issue #449
@@ -510,7 +537,9 @@ export function parseCommitFileChanges(raw: string): CommitFileChange[] {
 }
 
 /** `date` is the earliest, not latest, commit referencing the session —
- *  matches an orphan's own actual age. */
+ *  matches an orphan's own actual age. Compares by parsed epoch, not raw
+ *  string — see `findManuallyRescuedClosures`'s inline comment for why
+ *  (mixed `git %aI` UTC offsets defeat a lexicographic compare). */
 export function groupSessionReferences(
   refs: SessionTrailerRef[],
 ): Map<string, { commits: string[]; date: string }> {
@@ -518,7 +547,7 @@ export function groupSessionReferences(
   for (const { sha, date, session } of refs) {
     const entry = out.get(session) ?? { commits: [], date }
     entry.commits.push(sha)
-    if (date < entry.date) entry.date = date
+    if (Date.parse(date) < Date.parse(entry.date)) entry.date = date
     out.set(session, entry)
   }
   return out
@@ -542,23 +571,41 @@ export function isResolvedMisfile(commits: string[], changes: CommitFileChange[]
   return false
 }
 
+/** Attaches `resolvedBy` to `obj` when `resolved` names `id` — the one shared
+ *  shape `findOrphanedSessions` and `findManuallyRescuedClosures` both need
+ *  for their `resolvedBy` annotation (see `RESOLVED_MANUALLY_RESCUED_CLOSURES`
+ *  for what the annotation means, issue #447 item 4). */
+function withResolvedBy<T extends object>(
+  obj: T,
+  id: string,
+  resolved: ReadonlyMap<string, string>,
+): T & { resolvedBy?: string } {
+  const resolvedBy = resolved.get(id)
+  return resolvedBy ? { ...obj, resolvedBy } : obj
+}
+
 /** Sorted oldest-first — the most actionable triage order (issue #349).
  *  `fileChanges` (default `[]`, backward compatible) feeds `isResolvedMisfile`
  *  to drop a resolved same-run mis-file rather than surface it as a fresh
- *  orphan (issue #574). */
+ *  orphan (issue #574). `resolved` (default `RESOLVED_ORPHANED_SESSIONS`)
+ *  feeds `withResolvedBy` above. */
 export function findOrphanedSessions(
   refs: SessionTrailerRef[],
   knownSessionIds: Set<string>,
   fileChanges: CommitFileChange[] = [],
+  resolved: ReadonlyMap<string, string> = RESOLVED_ORPHANED_SESSIONS,
 ): OrphanedSession[] {
   const grouped = groupSessionReferences(refs)
   const out: OrphanedSession[] = []
   for (const [session, { commits, date }] of grouped) {
     if (knownSessionIds.has(session)) continue
     if (isResolvedMisfile(commits, fileChanges)) continue
-    out.push({ session, commits, date })
+    out.push(withResolvedBy({ session, commits, date }, session, resolved))
   }
-  return out.sort((a, b) => a.date.localeCompare(b.date))
+  // Epoch, not string compare — same mixed-offset hazard groupSessionReferences
+  // guards against, one level up: two different sessions' dates can carry
+  // different `git %aI` offsets, and a lexicographic compare can misorder them.
+  return out.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
 }
 
 /** True when any friction `description` carries the exact keyword. Only
@@ -593,13 +640,16 @@ export function findHumanPromptedClosures(
  *  `dismissed` (default `DISMISSED_MANUALLY_RESCUED_CLOSURES`) is skipped
  *  outright — an already-tracked-and-fixed incident that would otherwise
  *  resurface in every future run (issue #426), since unlike `orphanedSessions`
- *  this check has no calendar recency window of its own. Sorted by gap,
- *  largest first (most conspicuous rescue first). */
+ *  this check has no calendar recency window of its own. `resolved` (default
+ *  `RESOLVED_MANUALLY_RESCUED_CLOSURES`) feeds `withResolvedBy` above — the
+ *  lighter-touch alternative to `dismissed`. Sorted by gap, largest first
+ *  (most conspicuous rescue first). */
 export function findManuallyRescuedClosures(
   refs: SessionTrailerRef[],
   sessions: WindowSession[],
   minGapHours = RESCUED_GAP_HOURS,
   dismissed: ReadonlySet<string> = DISMISSED_MANUALLY_RESCUED_CLOSURES,
+  resolved: ReadonlyMap<string, string> = RESOLVED_MANUALLY_RESCUED_CLOSURES,
 ): ManuallyRescuedClosure[] {
   // Compare by parsed epoch, not string: `git %aI` stamps carry the committer's
   // local offset (both `Z` and `+02:00` appear in practice), and a `+02:00`
@@ -616,12 +666,13 @@ export function findManuallyRescuedClosures(
     if (!last || !s.endedAt) continue
     const gapHours = (Date.parse(s.endedAt) - Date.parse(last)) / 3_600_000
     if (!Number.isFinite(gapHours) || gapHours < minGapHours) continue
-    out.push({
-      session: s.session,
-      endedAt: s.endedAt,
-      lastWorkCommit: last,
-      gapHours: Math.round(gapHours * 10) / 10,
-    })
+    out.push(
+      withResolvedBy(
+        { session: s.session, endedAt: s.endedAt, lastWorkCommit: last, gapHours: Math.round(gapHours * 10) / 10 },
+        s.session,
+        resolved,
+      ),
+    )
   }
   return out.sort((a, b) => b.gapHours - a.gapHours || a.session.localeCompare(b.session))
 }
