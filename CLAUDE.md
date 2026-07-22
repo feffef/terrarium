@@ -195,10 +195,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   within two days (issue #628), so that surface now has its own mechanical
   backstop too: `scripts/github-footer-guard.ts`, a `PreToolUse` hook on every
   GitHub-writing tool that can carry a footer, blocking a call whose body's
-  `Claude-Session:` footer diverges from the resolved ground truth (see
-  `docs/agents/github-footer-guard.md`). It runs before the post, closing the
-  after-the-fact gap the commit-trailer guard always had here — but it can't
-  fix an already-posted bad footer. Since no edit-comment tool exists, the
+  `Claude-Session:` footer diverges from the resolved ground truth. It runs
+  before the post, closing the after-the-fact gap the commit-trailer guard
+  always had here — but it can't fix an already-posted bad footer. Since no
+  edit-comment tool exists, the
   standing remedy for a bad footer caught after posting (a guard miss, or a
   non-tool-mediated post) is still to post a visible follow-up correction
   comment, not to try to rewrite the original.

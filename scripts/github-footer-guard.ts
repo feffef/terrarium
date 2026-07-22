@@ -1,28 +1,21 @@
-// Mechanical backstop for issue #628: CLAUDE.md's doc-only "never predict or
-// reconstruct a session id" rule (issue #387) was extended by #605/#606 to
-// call out GitHub comment/issue/PR-body footers as a surface
-// `scripts/session-id-guard.ts` structurally cannot see (it reads git commit
-// trailers only). That prose-only extension did not hold: the exact failure —
-// a fabricated `Claude-Session:` footer on a GitHub comment (issue #483) —
-// recurred within two days of the fix merging. This is the mechanical
-// safeguard #628 asked a human to choose between prose-again vs. a real
-// check; the owner chose the check.
+// Mechanical backstop for issue #628: a fabricated `Claude-Session:` footer on
+// a GitHub comment (issue #483) recurred two days after #605/#606's
+// prose-only fix for this exact surface — `session-id-guard.ts` only ever
+// sees git commit trailers, never a GitHub comment/PR/issue body. This is the
+// mechanical check #628 asked a human to choose over another prose pass.
 //
-// A `PreToolUse` hook (wired in `.claude/settings.json`, mirroring
-// `deferred-tool-guard.ts`'s #612 template) matches every GitHub-writing tool
-// whose body can carry a footer (`GITHUB_FOOTER_TOOLS`). On a match it reads
-// the hook payload's `transcript_path`, resolves ground truth exactly as
-// `session-id-guard.ts` does for commits (`resolveGroundTruthFromTranscript`,
-// reused rather than re-derived), and blocks the call if the body's
-// `Claude-Session:` footer names a different session id. No ground truth
-// resolvable, or no footer present at all, is always a pass — never a false
-// failure (the same skip-and-pass contract as `findSessionIdMismatches`).
-//
-// This closes the gap #605/#606 could only document, not prevent: the guard
-// runs BEFORE the comment/PR/issue is posted, not after. It cannot fix an
-// already-posted bad footer (no edit-comment tool exists — the standing
-// remedy stays "post a visible follow-up correction comment"), and it only
-// covers tool-mediated posts.
+// A `PreToolUse` hook (wired in `.claude/settings.json`, same template as
+// `deferred-tool-guard.ts`, #612) matches every GitHub-writing tool whose body
+// can carry a footer (`GITHUB_FOOTER_TOOLS`). It resolves ground truth from
+// the hook payload's `transcript_path` the same way `session-id-guard.ts`
+// does for commits (`resolveGroundTruthFromTranscript`, reused not
+// re-derived), and blocks the call if the body's footer names a different
+// session id. Skip-and-pass (never a false failure) when no ground truth is
+// resolvable or no footer is present — same contract as
+// `findSessionIdMismatches`. Runs before the post, closing the gap #605/#606
+// could only document; it can't fix an already-posted bad footer (no
+// edit-comment tool exists — the standing remedy is still a follow-up
+// correction comment) or a non-tool-mediated post.
 //
 // Pure core (`checkGithubFooter`) is kept separate from the stdin/transcript
 // I/O (`main`), mirroring `deferred-tool-guard.ts` / `session-id-guard.ts`.
