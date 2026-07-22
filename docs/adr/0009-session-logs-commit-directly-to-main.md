@@ -490,6 +490,20 @@ consumers split three ways:
   mechanical trace); we take the contributor's log at its word here, exactly as
   we do for its authored `goal`/`summary`/`frictions`.
 
+**Delivery — the one session log that travels a PR.** This ADR's Decision commits
+a session log **directly to `main`, never through a PR** — but that path is
+*ours*: it runs on the `Stop`/`SessionEnd` committer and pushes to `main`, neither
+of which an external contributor's environment has. So an external session log is
+delivered the only way it can be: **committed as an ordinary file inside the
+contributor's feature PR** (`layers/journal/content/current/sessions/<date>-session_<id>.yml`),
+landing on `main` when that gated PR merges. This is the **single sanctioned
+exception** to the "never through a PR" boundary above — narrow (one additive,
+schema-valid log file: the same inert content type the boundary already trusts)
+and self-limiting (it rides a human-reviewed, human-merged PR, an even higher bar
+than the direct-to-`main` path it stands in for). The direct-to-`main` rule is
+unchanged for every internal session. The external-contributor house rules are
+indexed in `docs/agents/guest-contributions.md`.
+
 ## `session` reclassified as derived, not authored (2026-07-16)
 
 > **Amended.** The "Automatic logging via a `SessionEnd` hook" section above
