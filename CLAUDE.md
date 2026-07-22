@@ -190,11 +190,18 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   resolved ground truth and records a mismatch — it catches a fabricated
   trailer after the fact, it doesn't replace writing the real id in the first
   place. **That guard only sees git commit trailers — it cannot see a GitHub
-  comment, issue, or PR-body footer**, so a fabricated session id in one of
-  those remains governed by this prose rule alone (issue #605); resolve it
-  the same way before posting. Since no edit-comment tool exists, the standing
-  remedy for a bad footer caught after posting is to post a visible follow-up
-  correction comment, not to try to rewrite the original.
+  comment, issue, or PR-body footer** (issue #605) — this prose-only
+  extension of the rule didn't hold on its own: the exact failure recurred
+  within two days (issue #628), so that surface now has its own mechanical
+  backstop too: `scripts/github-footer-guard.ts`, a `PreToolUse` hook on every
+  GitHub-writing tool that can carry a footer, blocking a call whose body's
+  `Claude-Session:` footer diverges from the resolved ground truth (see
+  `docs/agents/github-footer-guard.md`). It runs before the post, closing the
+  after-the-fact gap the commit-trailer guard always had here — but it can't
+  fix an already-posted bad footer. Since no edit-comment tool exists, the
+  standing remedy for a bad footer caught after posting (a guard miss, or a
+  non-tool-mediated post) is still to post a visible follow-up correction
+  comment, not to try to rewrite the original.
 - **Verify any subagent- or doc-derived factual or behavioral claim against a
   locally observable primary source before asserting it as fact** — whether
   the audience is external (an issue/PR comment, an external post, etc.) or
