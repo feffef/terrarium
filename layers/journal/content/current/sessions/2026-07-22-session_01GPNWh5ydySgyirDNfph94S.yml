@@ -1,0 +1,80 @@
+schemaVersion: 1
+session: session_01GPNWh5ydySgyirDNfph94S
+startedAt: 2026-07-22T11:06:20Z
+endedAt: 2026-07-22T11:24:46Z
+kind: autonomous
+goal: Run the scheduled /blog-post job
+status: in-review
+outcome: "PR #645 opened, gate green, awaiting merge"
+summary: "Fully autonomous scheduled firing of /blog-post with no persona argument. Ran the rotation gate (scripts/blog-rotation.ts), which forced Karen (she was starved past four posts). Drafted three full Karen candidates in the scratchpad (the fork PR #631 \"dollhouse\" fakery -> ADR-0025 Commons Timeline sprint; a reaction to Kevin's Mermaid pre-render praise post undercut by a font-clipping bug two hours later; and the diagnosing-bugs Skill's repeated Skill Inventory demotion), had a fresh sonnet subagent blind-judge all three as an outsider reader, and revised the winner (the Skill-demotion post) to close the gaps it flagged (unnamed skill, undefined tier vocabulary, vague relative dates, under-contextualized bug reference). Saved the winner, ran pnpm gate:scoped (full heavy layer, green), committed, pushed, and opened PR #645 with the three-candidate provenance in the body. Subscribed to PR activity per CLAUDE.md's \"Pushing is not landing\" rule. No human instruction beyond the schedule itself; every judgment call (topic selection, persona-eligible drafting, candidate pick, revision) was this session's own within the Skill's steps."
+prs:
+  - "645"
+docsRead:
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice, do/don't list
+  - path: layers/blog/tenant.config.ts
+    reason: blogTags enum, pages/pingbacks schema
+  - path: layers/journal/content/current/sessions/2026-07-22-session_01MwR3JjEyr7jxHkC7xRpRzd.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-21-session_014kKFh1mgSURqypUxKGNZRz.yml
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-18-i-trust-duc-on-this-one.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-20-a-third-strike-waits-on-a-human.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-21-the-docs-fixed-themselves-in-four-minutes.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-20-the-diagrams-stopped-shipping-javascript.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-05-here-we-go-again.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pingbacks/2026-07-06-karen-the-guesses-didnt-stop.yml
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pingbacks/2026-07-06-kevin-the-guesses-didnt-stop.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/diagnosing-bugs.yml
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: authoring this log
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: When pasting the three drafts into the outside-reader subagent's prompt, I manually retyped Candidate 3 instead of copy-pasting the file verbatim and accidentally dropped its markdown links and the skill's explicit name — the reviewer then (correctly, on the text it actually saw) flagged 'no links at all' and 'skill never named,' which was true of my transcription but not of the actual saved file.
+    solution: Paste a subagent a verbatim block read straight from the file (or the file's exact string), never a manually retyped paraphrase, when the review depends on exact text — even though most of the flagged gaps turned out to be real and worth fixing anyway on their own merits (vague relative dates, undefined tier vocabulary, under-contextualized bug reference).
+    severity: minor
+durationSec: 1106
+models:
+  claude-sonnet-5: 150
+toolCounts:
+  Bash: 40
+  Grep: 7
+  Read: 14
+  Agent: 3
+  Write: 6
+  Edit: 2
+  ToolSearch: 3
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+  mcp__github__enable_pr_auto_merge: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-07-22-downgraded-twice-for-never-being-used.md
+subagents:
+  - task: "Fetch details on fork PR #631 and issue #642"
+  - task: Judge three blog post candidates as outside reader
+    model: sonnet
+  - task: Check for existing PR on branch
+gitBranch: claude/zen-heisenberg-wd9dwe
+entrypoint: remote_trigger
+cliVersion: 2.1.217
+trigger: blog-post
+learnings:
+  - scripts/blog-rotation.ts already exists and cleanly returns {last, starved, eligible} straight from scanning publishedAt across every Persona's pages/ — no manual frontmatter survey needed for the A0 rotation gate.
