@@ -1,6 +1,6 @@
 ---
 name: audit-skills
-description: Tune the Skill Inventory to match real usage and watch for behavior regressions (usage AND friction-severity signals) after a Skill's SKILL.md changes — re-grade importance/role from session history, self-merging bright-line-evidenced Inventory edits. A suspected regression gets a full-log deep-read before any issue is filed/commented; a frontmatter concern rests as a learning/idea until it clears that bar — never a direct edit.
+description: Tune the Skill Inventory to match real usage and watch for behavior regressions (usage AND friction-severity signals) after a Skill's SKILL.md changes — re-grade importance/role from session history, self-merging bright-line-evidenced Inventory edits. A suspected regression gets a full-log deep-read before a regression issue is filed/commented (step 3's bright-line grading signal is exempt, filing directly); a suspected frontmatter/description miscalibration runs through that same regression watch and rests as a learning/idea until it clears the same bar — never a direct edit.
 disable-model-invocation: true
 ---
 

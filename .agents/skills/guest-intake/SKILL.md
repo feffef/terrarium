@@ -17,12 +17,11 @@ What guests may request, what is rejected or escalated, the untrusted-data rule,
 and *why* a guest's confirmation is allowed to green-light work — all live in
 ADR-0023. This Skill is only the mechanics; read the ADR first.
 
-**This is a time-boxed demo capability, not standing operation.** It is
-user-invoked and never self-fires — the guest pipeline is live only while the
-owner is actually running it (and `guest-build`), for the bounded window they
-choose. The owner running the loop *is* the standing green-light (ADR-0023,
-mirroring ADR-0022); stop running it and guests may still file issues but nothing
-acts on them.
+**This is a time-boxed demo capability, not standing operation** (ADR-0023 —
+user-invoked, never self-fires, live only for the bounded window the owner
+chooses to run it and `guest-build`). The owner running the loop *is* the
+standing green-light, mirroring ADR-0022; stop running it and guests may still
+file issues but nothing acts on them.
 
 **`disable-model-invocation` above is deliberate — the ADR-0023 security
 boundary, not a bug.** A session fired by a Routine or `/loop` cannot invoke

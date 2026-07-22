@@ -218,11 +218,9 @@ review-agent, not a bystander waiting for a human. For each PR:
    a future audit-docs finding — new duplication instead of a single-home
    pointer, stale-narration, an unlinked new doc, a rewritten Historical
    decision — is amended or bounced back, not merged.
-   **Always post the review result as a PR comment before merging — every time,
-   with no exception.** Even a clean, "looks perfect, merging as-is" verdict gets a
-   comment. The merge must never be the only trace: an unreviewed-looking merge and
-   a genuinely-reviewed one must be distinguishable on the PR, so leave a written
-   record of what you checked and what you concluded even when you change nothing.
+   **Always post the review result as a PR comment before merging, with no
+   exception** — see `docs/agents/pr-workflow.md`'s recipe (step 3) for the
+   rule and why it matters.
 3. **Decide, and act:**
    - **Merge right away** when the review is clean and the change is low-risk —
      follow `docs/agents/pr-workflow.md`'s recipe (poll for green, then

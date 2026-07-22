@@ -179,8 +179,10 @@ fresh branch off the latest `origin/main`.
 ## 2. Inventory & classify
 
 Glob every `*.md` outside `node_modules`, plus each `.agents/skills/*/`. Sort every
-surface into the three tiers above; a Skill's tier comes from its `external` flag
-(Skill Inventory `.yml` / its own frontmatter). The current journal's three facing
+surface into the three tiers above; a Skill's tier comes from whether it's keyed in
+`skills-lock.json` (Pack-generic if so, per ADR-0015 — `scripts/audit-skills.ts`
+derives the same `external` boolean from that membership check at runtime; no file
+stores a literal `external` field). The current journal's three facing
 pages are **Live**; its `pages/digests/*.md` are **Historical** (see the tiers
 above). Done when every surface is tiered.
 

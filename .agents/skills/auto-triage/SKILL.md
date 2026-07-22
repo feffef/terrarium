@@ -102,6 +102,22 @@ fighting wayfinder's mechanics** (read `/wayfinder` for them):
   judgment-call escalation above (e.g. external access the agent lacks) before
   granting `ready-for-agent` — there is no separate label splitting the two.
 
+## Coexisting with the guest pipeline
+
+`guest-intake` grants `ready-for-agent` to a **Public** guest's own confirmation
+comment (ADR-0023's own green-light, mirroring ADR-0022) — which, read against
+this Skill's own eligibility rule above, is human-authored and would otherwise
+make that ticket eligible again on the very next sweep, and this Skill's
+Public-issue rule (above) would then route it straight to `ready-for-human`,
+undoing the grant. In practice this window is narrow and self-closing: applying
+`ready-for-agent` is itself followed by an AI-authored comment from
+`guest-intake` (carrying the ADR-0017 footer), which becomes the new most-recent
+comment and makes the ticket ineligible again under the "skip once most-recent
+activity is AI's own" rule above — the same mechanism that keeps this Skill
+idempotent generally, not a guest-specific carve-out. A sweep that happens to run
+inside that narrow gap is still possible; if it recurs in practice, add an
+explicit skip here rather than relying on the timing alone.
+
 ## Run it
 
 1. **Resolve the set.** List every open issue and in-scope external PR; for each,

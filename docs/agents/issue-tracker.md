@@ -190,7 +190,7 @@ When set to `yes`, PRs run through the same labels and states as issues, using t
 
 GitHub shares one number space across issues and PRs, so a bare `#42` may be either — resolve with `gh pr view 42` and fall back to `gh issue view 42`.
 
-A reviewing agent must post its verdict as a PR review or comment **before merging** — every time, even on a clean "merging as-is" verdict — so the audit trail lives on the PR; otherwise `get_reviews`/`get_comments` return empty and a real review reads as none having happened.
+A reviewing agent must post its verdict before merging, every time — see `docs/agents/pr-workflow.md`'s recipe (step 3) for the rule and why it matters.
 
 **Reply before resolving a review thread.** Post a reply describing what changed (or why no change was made) before calling `resolve_review_thread` — a resolved thread with no reply leaves no record of what happened, especially on longer PRs.
 
