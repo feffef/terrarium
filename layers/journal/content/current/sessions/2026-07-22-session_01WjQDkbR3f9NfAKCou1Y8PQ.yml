@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01WjQDkbR3f9NfAKCou1Y8PQ
 startedAt: 2026-07-22T04:08:58Z
-endedAt: 2026-07-22T04:31:40Z
+endedAt: 2026-07-22T04:34:40Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: "9 findings fact-checked and fixed, PR #641 open"
-summary: "Agent-initiated: fired by a scheduled Routine (no live human input this session), running the audit-docs Skill end to end. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the repo's Live-tier docs and own Skills, pooled and deduped their 10 raw findings into 9, and dispatched an independent fact-checker against primary sources before touching anything (5 CONFIRMED, 4 CONFIRMED-BUT with a corrected scope/line). Fixed all 9 in place: deduped a CLAUDE.md self-duplication and two guest-build/guest-intake duplications, moved the \"post verdict before merging\" rule to its real home in docs/agents/pr-workflow.md, cut one inert stale-narration parenthetical, reworded one ambiguous CLAUDE.md sentence, documented a narrow auto-triage/guest-intake race-window interaction, and corrected two broken doc pointers (a Skill's `external` flag, and a frontmatter description's scope). No finding required escalation — none touched an ADR, the routing/manifest-expansion modules, or CI. `pnpm gate:scoped` ran green locally. Opened PR #641, posted the audit-trail comment, and subscribed to its activity; CI's gate check was still in_progress at session-log time."
+status: completed
+outcome: "9 findings fact-checked, fixed, PR #641 merged"
+summary: "Agent-initiated: fired by a scheduled Routine (no live human input this session), running the audit-docs Skill end to end. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the repo's Live-tier docs and own Skills, pooled and deduped their 10 raw findings into 9, and dispatched an independent fact-checker against primary sources before touching anything (5 CONFIRMED, 4 CONFIRMED-BUT with a corrected scope/line). Fixed all 9 in place: deduped a CLAUDE.md self-duplication and two guest-build/guest-intake duplications, moved the \"post verdict before merging\" rule to its real home in docs/agents/pr-workflow.md, cut one inert stale-narration parenthetical, reworded one ambiguous CLAUDE.md sentence, documented a narrow auto-triage/guest-intake race-window interaction, and corrected two broken doc pointers (a Skill's `external` flag, and a frontmatter description's scope). No finding required escalation — none touched an ADR, the routing/manifest-expansion modules, or CI. `pnpm gate:scoped` ran green locally. Opened PR #641, posted the audit-trail comment, subscribed to its activity, and merged it once CI's gate check reported green."
 prs:
   - "641"
 docsRead:
@@ -39,26 +39,29 @@ frictions:
   - description: enable_pr_auto_merge threw "required checks are failing" while the gate check was genuinely still in_progress — the exact misleading-error gotcha pr-workflow.md already documents.
     solution: No doc fix needed — the existing pr-workflow.md caveat correctly predicted this and told me to re-check via pull_request_read before concluding failure, which resolved it immediately.
     severity: nit
-durationSec: 1362
+durationSec: 1542
 models:
-  claude-sonnet-5: 147
+  claude-sonnet-5: 169
 toolCounts:
-  Bash: 13
+  Bash: 14
   Agent: 6
   ToolSearch: 4
   TaskCreate: 7
-  TaskUpdate: 11
+  TaskUpdate: 13
   ScheduleWakeup: 2
-  Read: 15
-  Edit: 11
+  Read: 16
+  Edit: 13
   Write: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 5
   mcp__github__add_issue_comment: 1
   mcp__github__enable_pr_auto_merge: 1
-  Skill: 2
+  Skill: 3
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - CLAUDE.md
   - .agents/skills/guest-build/SKILL.md
