@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01MwR3JjEyr7jxHkC7xRpRzd
 startedAt: 2026-07-22T05:30:58Z
-endedAt: 2026-07-22T06:30:08Z
+endedAt: 2026-07-22T07:24:58Z
 kind: interactive
 goal: Cross-Tenant read model + Commons aggregator
 status: in-review
-outcome: "Built, tested, PR #643 in review"
-summary: 'Human-instructed: review issue #642, iterate/improve the cross-Tenant read-model design, and add an aggregator to validate it beyond the dollhouse. Built collection kinds (a registry, an improvement over the proposal), a derived #catalog on the ADR-0014 pattern, and queryAcrossTenants. Shipped a Search Tenant, opened PR #643 (gate green). The user then directed a restructure — chose the name "commons" and asked for a Timeline Space — so I folded Search into a Commons aggregator with Search + Timeline Spaces (queryTimeline over the page kind). Agent judgment: deferred session-logs-in-timeline (a data kind currently replaces a schema, and log-session.ts reads the journal sessions schema directly). Recorded as ADR-0025.'
+outcome: "Built across 3 rounds, PR #643 in review"
+summary: 'Human-instructed: review issue #642, iterate/improve the cross-Tenant read-model design, add an aggregator to validate it beyond the dollhouse. Built collection kinds (a registry — an improvement over the proposal), a derived #catalog on the ADR-0014 pattern, queryAcrossTenants, and a Search Tenant; opened PR #643. The user then directed a restructure (chose the name "commons", asked for a Timeline Space): folded Search into a Commons aggregator with Search + Timeline Spaces. The user then asked to include session logs (via their deeplink) and daily digests in the timeline — so I promoted the session-log shape to a shared `session` data kind (schema relocated to shared/schemas/session.ts, log-session.ts re-sourced, behaviour-neutral) and made queryTimeline normalize three sources. All human- directed; the kind-registry and schema-relocation mechanics were agent judgment. Recorded as ADR-0025.'
 prs:
   - "643"
 docsRead:
@@ -60,6 +60,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/commits/CONTEXT.md
     reason: (no reason given)
+  - path: scripts/log-session.ts
+    reason: (read before editing)
 skillsUsed:
   - name: close-session
     reason: self-judged closure at PR-open and at the restructure milestone
@@ -84,26 +86,33 @@ frictions:
   - description: A backgrounded gate wrapped its pnpm call then echoed an exit line, and the harness notification reported the wrapper's exit (0), masking the real pnpm failure (1) momentarily.
     solution: Check the piped/redirected command's own exit code directly, per CLAUDE.md's tail-piping rule.
     severity: nit
-durationSec: 3550
+  - description: A `satisfies Record<...>`-narrowed KINDS literal broke a test loop twice (property `.schema` absent on the page-narrowed branch) — the second time only caught by the full gate's strict tsc.
+    solution: Iterate kind entries typed as KindDef[], not the narrowed literal, when reading optional fields.
+    severity: minor
+  - description: Including sessions forced relocating the ADR-0009 session schema and touching log-session.ts — the exact coupling I had flagged and deferred one turn earlier; the user overrode the deferral.
+    solution: The schema-relocation was behaviour-neutral and gated; the deferral was over-cautious given the ask.
+    severity: minor
+durationSec: 6840
 models:
-  claude-opus-4-8: 362
+  claude-opus-4-8: 483
 toolCounts:
   ToolSearch: 7
   mcp__github__issue_read: 2
-  Read: 28
-  Bash: 51
-  TaskCreate: 9
-  TaskUpdate: 15
-  Write: 25
-  Edit: 50
+  Read: 32
+  Bash: 72
+  TaskCreate: 10
+  TaskUpdate: 17
+  Write: 27
+  Edit: 75
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
   AskUserQuestion: 1
-  mcp__github__update_pull_request: 1
+  mcp__github__update_pull_request: 2
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
+  SendUserFile: 1
 filesEdited:
   - shared/kinds.ts
   - shared/manifest.ts
@@ -143,6 +152,9 @@ filesEdited:
   - layers/commons/app/pages/t/commons/[space]/index.vue
   - layers/commons/CONTEXT.md
   - layers/commons/tests/e2e/commons.e2e.ts
+  - shared/schemas/session.ts
+  - scripts/log-session.ts
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
 gitBranch: claude/design-review-tenant-search-0jyyvg
 entrypoint: remote_mobile
 cliVersion: 2.1.217
@@ -150,6 +162,7 @@ learnings:
   - "@nuxt/content exports PageCollections/PageCollectionItemBase — the clean way to type a cross-collection page query is casting the key to keyof PageCollections."
   - The page type already guarantees title/description/path across Tenants, so a page kind needs no schema — the marker-vs-schema asymmetry falls out of CollectionDef's existing page/data split.
   - A satisfies Record<...> narrows a marker literal so .schema isn't a readable property — a test must assert via the whole literal, not property access.
+  - Relocating the ADR-0009 session schema to a shared `session` kind was behaviour-neutral because every consumer (log-session.ts, session-end.ts, the dashboard) routes through validateEntry/generated types, not the manifest object — so sourcing the identical schema from a new home changed nothing observable.
 ideas:
   - "Resolve deferred session-logs-in-timeline: add a minimum-contract kind (a collection keeps its rich schema and asserts it covers the kind's required fields) plus a per-kind public-URL resolver, so data collections like sessions join the catalog/timeline without relocating their schema."
   - A 'recent everywhere' rail on the platform home that reuses queryTimeline() to surface the newest N cross-Tenant entries — the aggregator's first appearance outside its own Tenant.
