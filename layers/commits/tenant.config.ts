@@ -22,6 +22,7 @@ export default defineTenant({
     // authored frontmatter schema is needed here.
     pages: {
       type: 'page',
+      kind: 'page', // opt into the cross-Tenant #catalog (ADR-0025)
       source: '**/*.md',
     },
   },

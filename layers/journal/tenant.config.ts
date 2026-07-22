@@ -43,6 +43,7 @@ export default defineTenant({
     // Rendered documentation pages — 1:1 file → route within the Space.
     pages: {
       type: 'page',
+      kind: 'page', // opt into the cross-Tenant #catalog (ADR-0025)
       source: '**/*.md',
       schema: z.object({
         // `page` type already supplies path/title/description/body/seo.

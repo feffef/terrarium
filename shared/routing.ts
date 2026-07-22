@@ -57,6 +57,15 @@ export interface ResolvedRoute<T extends string = string> {
   atRoot: boolean
 }
 
+/** The canonical ADR-0006 route for a Document: `/t/<tenant>/<space>` plus its
+ *  Space-relative `path` ('/' at the Space root). Single-homes the URL scheme so
+ *  a cross-Tenant aggregator (`queryAcrossTenants`, ADR-0025) links back to a
+ *  page's real route instead of inventing a `/dollhouse/`-style one — the catalog
+ *  composing with routing, exactly as issue #642 intends. */
+export function documentUrl(tenant: string, space: string, path: string): string {
+  return `/t/${tenant}/${space}${path === '/' ? '' : path}`
+}
+
 /** Normalise a Nuxt catch-all slug param to a Space-relative document path. */
 export function slugToPath(slugParam: string | string[] | undefined): string {
   const joined = Array.isArray(slugParam) ? slugParam.join('/') : (slugParam ?? '')

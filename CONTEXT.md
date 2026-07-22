@@ -60,6 +60,17 @@ mechanism.
 ### Document
 An individual content entry within a Collection — one row / one file.
 
+### Collection kind
+A named, shared **read contract** a Collection may assert conformance to, so an
+**Aggregator** can read that Collection across every Tenant that opts in — without
+re-declaring each schema (drift) or importing another Tenant's manifest internals
+(coupling). Declared once in `shared/kinds.ts`; a Collection references one via
+`kind:` in its manifest. It is **orthogonal to a Collection's `type`**
+(page/data — the local build/route mechanism): the kind is the *cross-Tenant*
+contract and the **opt-in** to the **Catalog**. A Collection with no kind is
+invisible to every Aggregator — isolation is the default; cross-Tenant exposure is
+an explicit, per-Collection declaration (ADR-0025).
+
 ### Session
 One continuous Claude Code working session against the Platform, identified by a
 stable Claude session id. It is the unit of self-reporting: at **Session closure**
@@ -178,6 +189,26 @@ same underlying activity again at a higher, plain-language altitude. The
 back from several distinct points of view. Four altitudes, one underlying
 activity.
 
+### Catalog
+The build-time projection of every Collection that opted into a **Collection
+kind**, grouped by kind — derived from the same manifest expansion as the routing
+map and exposed as the `#catalog` virtual module (ADR-0025). It is the second
+cross-Tenant derivation after `#routing` (the routing map), and the read primitive
+an **Aggregator** consumes, via the sanctioned `queryAcrossTenants(kind)` read.
+**Derived, never hand-written:** a new Tenant with a kind-tagged Collection
+appears automatically; a removed one drops. Read-only — it names Collection keys,
+never writes, so write isolation (Trusted, below) is untouched.
+
+### Aggregator
+A **platform view** with a legitimate interest in reading *across* Tenants — a
+search, a platform-wide activity feed, an honest cross-Tenant showcase (ADR-0025).
+Its distinguishing feature is that it reads the **Catalog** (the sanctioned
+cross-Tenant read), where a normal **Tenant** reads only its own Spaces. It is
+still implemented as an ordinary Tenant layer and writes nothing across Tenants —
+strictly a consumer, owning none of the content it surfaces. Normal Tenants never
+read across; only a small, governed set of Aggregators may. The Search Tenant is
+the first.
+
 ### Trusted
 A user with **write access** to the repository — the owner and invited
 collaborators, indistinguishable for governance because write access already lets
@@ -204,7 +235,7 @@ opposite is **Trusted**.
 
 ## Tenants
 
-The Platform currently hosts six Tenants. Each has its own **context**
+The Platform currently hosts seven Tenants. Each has its own **context**
 (vocabulary + reason-to-exist) co-located with its code; this roster is the
 pointer into them (see `CONTEXT-MAP.md`).
 
@@ -227,6 +258,11 @@ pointer into them (see `CONTEXT-MAP.md`).
   in in-universe story order, one chapter per film. A guest-requested
   demo/content Tenant (ADR-0023, issue #551). →
   [`layers/marquee/CONTEXT.md`](./layers/marquee/CONTEXT.md)
+- **Search** — one search box over every Tenant that opts a Collection into the
+  **Catalog**. Not a demo/content Tenant: the first **Aggregator** (a platform
+  view that reads across Tenants), and the first consumer validating the
+  cross-Tenant read model (ADR-0025, issue #642). →
+  [`layers/search/CONTEXT.md`](./layers/search/CONTEXT.md)
 
 ## Retired terms
 

@@ -71,6 +71,7 @@ export default defineTenant({
     // about a find lives on the `artifacts` Document it embeds, never here.
     pages: {
       type: 'page',
+      kind: 'page', // opt into the cross-Tenant #catalog (ADR-0025)
       source: '**/*.md',
       // No `.strict()`: a page schema's fields are always optional additions on
       // top of `@nuxt/content`'s own built-ins (title/description/body/seo/…),

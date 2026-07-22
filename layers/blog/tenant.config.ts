@@ -66,6 +66,7 @@ export default defineTenant({
     // `page` type injects path/title/description/body/seo.
     pages: {
       type: 'page',
+      kind: 'page', // opt into the cross-Tenant #catalog (ADR-0025)
       source: '**/*.md',
       schema: z.object({
         // Posts carry a publish instant (drives the reverse-chron feed); the

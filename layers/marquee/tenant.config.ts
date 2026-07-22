@@ -33,6 +33,7 @@ export default defineTenant({
     // the Space's `index.md` landing carries none of them.
     pages: {
       type: 'page',
+      kind: 'page', // opt into the cross-Tenant #catalog (ADR-0025)
       source: '**/*.md',
       schema: z.object({
         // A Chapter's position in the in-universe MCU timeline this Tenant

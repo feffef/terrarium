@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url'
 import { createJiti } from 'jiti'
 import type { ZodObject, ZodRawShape } from 'zod'
 import { collectionKey, validateManifest, type TenantManifest } from './manifest'
+import { resolveKind, type KindName } from './kinds'
 
 export const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 // The Tenant manifests live one per layer under `layers/` (Nuxt's conventional
@@ -33,6 +34,10 @@ interface ExpandedCollectionBase {
   include: string
   /** Content dir for this (tenant, space, collection), relative to project root (posix). */
   cwdRel: string
+  /** The cross-Tenant contract this collection opts into, or undefined (isolation
+   *  default). Carried through so `catalogFrom()` and `modules/catalog.ts` need no
+   *  second manifest pass (ADR-0025). */
+  kind?: KindName
 }
 
 // Discriminated on `type` — mirrors `CollectionDef` (shared/manifest.ts) so the
@@ -91,6 +96,18 @@ function createLoader(): (id: string) => TenantManifest & { default?: TenantMani
   return (id: string) => jiti(id) as TenantManifest & { default?: TenantManifest }
 }
 
+/** Resolve a `data` kind to its shared schema, or throw. Separated so the throw
+ *  path (a kind carrying no schema — e.g. a `page` kind mis-referenced by a data
+ *  collection) is explicit; validateManifest already rejects that type mismatch,
+ *  so this is a defensive last line, not the primary check. */
+function resolveKindSchema(kind: KindName): ZodObject<ZodRawShape> {
+  const schema = resolveKind(kind).schema
+  if (!schema) {
+    throw new Error(`kind "${kind}" supplies no schema but is referenced by a data collection`)
+  }
+  return schema
+}
+
 /** Pure Tenant × Space × Collection expansion. Enforces the L3 key-uniqueness invariant. */
 export function expand(manifests: LoadedManifest[]): ExpandedCollection[] {
   const out: ExpandedCollection[] = []
@@ -108,15 +125,20 @@ export function expand(manifests: LoadedManifest[]): ExpandedCollection[] {
           collection,
           include: def.source ?? '**',
           cwdRel: `layers/${manifest.name}/content/${space}/${collection}`,
+          kind: def.kind,
         }
         // Branch on `def.type` (rather than spreading `def` in) so TS narrows
         // `def.schema` per-variant and the pushed object matches the matching
         // half of the `ExpandedCollection` discriminated union.
-        out.push(
-          def.type === 'page'
-            ? { ...base, type: 'page', schema: def.schema }
-            : { ...base, type: 'data', schema: def.schema },
-        )
+        if (def.type === 'page') {
+          out.push({ ...base, type: 'page', schema: def.schema })
+        } else {
+          // A `data` collection's schema is either inline or supplied by its
+          // `kind` (validateManifest guarantees exactly one). The kind's schema
+          // is the single home for that shared shape (ADR-0025).
+          const schema = def.schema ?? resolveKindSchema(def.kind)
+          out.push({ ...base, type: 'data', schema })
+        }
       }
     }
   }
@@ -139,4 +161,42 @@ export function entryRoutesFrom(cols: ExpandedCollection[]): string[] {
   return [
     ...new Set(cols.filter((c) => c.type === 'page').map((c) => `/t/${c.tenant}/${c.space}`)),
   ].sort()
+}
+
+/** One catalog-visible collection: its generated key plus provenance and the kind
+ *  it opted into. The row shape `#catalog` (modules/catalog.ts) exposes and
+ *  `queryAcrossTenants` (app/composables/catalog.ts) fans out over — read-only,
+ *  no schema re-declared (ADR-0025). Redeclared verbatim in the generated
+ *  `.nuxt/catalog.d.ts` so that virtual module stays self-contained (like
+ *  routing.d.ts); this is its single editable home. */
+export interface CatalogEntry {
+  key: string
+  tenant: string
+  space: string
+  collection: string
+  kind: string
+}
+
+/**
+ * Derive the cross-Tenant catalog from an expanded collection set: every
+ * collection that opted into a `kind`, grouped by kind. Single-homed here — like
+ * `entryRoutesFrom` — so `modules/catalog.ts` (build-time) and any test derive
+ * it identically. A collection with no `kind` is skipped: isolation is the
+ * default, catalog exposure is opt-in (ADR-0025). Insertion order is the
+ * deterministic `expand()` order (manifests sorted, then declared space/collection
+ * order), so the generated catalog is stable build-to-build.
+ */
+export function catalogFrom(cols: ExpandedCollection[]): Record<string, CatalogEntry[]> {
+  const out: Record<string, CatalogEntry[]> = {}
+  for (const c of cols) {
+    if (!c.kind) continue
+    ;(out[c.kind] ??= []).push({
+      key: c.key,
+      tenant: c.tenant,
+      space: c.space,
+      collection: c.collection,
+      kind: c.kind,
+    })
+  }
+  return out
 }

@@ -58,6 +58,7 @@ export default defineTenant({
     // the biome `index.md` landing is a plain page carrying none of them.
     pages: {
       type: 'page',
+      kind: 'page', // opt into the cross-Tenant #catalog (ADR-0025)
       source: '**/*.md',
       schema: z.object({
         // The museum label (#67). `title` (from the page type) holds the Latin
