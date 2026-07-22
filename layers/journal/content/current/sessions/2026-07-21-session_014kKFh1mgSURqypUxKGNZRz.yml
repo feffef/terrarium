@@ -1,70 +1,113 @@
 schemaVersion: 1
 session: session_014kKFh1mgSURqypUxKGNZRz
 startedAt: 2026-07-21T09:11:24Z
-endedAt: 2026-07-22T05:05:03Z
+endedAt: 2026-07-22T10:20:31Z
 kind: interactive
-goal: "Review and watch fork PR #631 (Eyra/dollhouse)"
+goal: "Review Eyra fork PR #631; add external-session support"
 status: completed
-outcome: Posted two review comments; watching for pushes
-summary: "Steffen (Trusted human) asked me to review an externally fork-built PR (feffef/terrarium #631) adding a fourth blog persona \"Eyra\" plus a static /dollhouse/ visualization. All work was human-directed — no net-new autonomous work. Confirmed the \"can't open a fork PR\" report was a repo setting (pull_request_creation_policy collaborators_only, which the owner then changed to \"all\"). Analysed the dollhouse from primary sources — fabricated \"green\" seed data, no probe.json generator, zero tests, hardcoded roster, bypasses the manifest/collection and routing models — and summarised ten ADR/concept violations. On explicit instruction, posted two friendly PR comments (architecture review + the session-log requirement). Rendered live screenshots and a webm of the dollhouse for the user. Subscribed to the PR; no code changed in our repo."
+outcome: "#644 merged (external-session support + docs); #631 awaits owner"
+summary: "All work human-directed by the owner (Trusted), no net-new autonomous work. Reviewed an external fork-built PR (#631) adding a fourth Blog persona \"Eyra\" + a static /dollhouse/ viz: diagnosed the \"can't open a fork PR\" report as a repo setting (pull_request_creation_policy), analysed the dollhouse from primary sources (fabricated \"green\" seed data, no generator, no tests, bypasses the manifest/routing model), summarised 10 ADR violations, and posted review + session-log-requirement comments. The external agent revised #631 (dropped the dollhouse, kept the persona, added an in-PR session log, reconciled the three→four persona model) — re-reviewed and verified. Opened design issue #642 (cross-tenant read model), which the owner implemented and merged as #643/ADR-0025 (live Commons Timeline). On the owner's direction, dispatched an Opus subagent to implement external-session marking; verified its diff and CI, then added the guest-contributions doc + ADR-0009 in-PR-delivery reconciliation. PR #644 merged."
 prs:
+  - "644"
   - "631"
 docsRead:
-  - path: .agents/skills/blog-post/SKILL.md
-    reason: confirm personas are david/karen/kevin only
-  - path: layers/blog/app/utils/personas.ts
-    reason: confirm the 3-persona roster on main
-  - path: layers/journal/content/current/sessions/2026-07-20-session_0179w5JW6hk3u2kdnLdkb1xW.yml
-    reason: session-log schema to cite in the PR comment
+  - path: shared/schemas/session.ts
+    reason: session-log schema — where the external flag + isExternalSession go
+  - path: scripts/sparks.ts
+    reason: verify ideas-kept/learnings-dropped for external sessions
+  - path: scripts/audit-skills.ts
+    reason: verify external sessions excluded from mining
+  - path: shared/expand.ts
+    reason: manifest→keyed-collection expansion for the cross-tenant design
+  - path: shared/manifest.ts
+    reason: per-tenant per-collection schema model (no shared kinds pre-#643)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: direct-to-main rule to reconcile with external in-PR delivery
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: check whether guest concept already owned external contributions
   - path: scripts/screenshot.ts
-    reason: Chromium screenshot recipe
-  - path: scripts/chromium-path.ts
-    reason: resolveChromiumPath for ad-hoc capture
+    reason: Chromium capture recipe for the dollhouse render
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
   - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: scripts/chromium-path.ts
+    reason: (no reason given)
+  - path: content.config.ts
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: layers/journal/tenant.config.ts
     reason: (no reason given)
 skillsUsed:
   - name: log-session
-    reason: author this session log
+    reason: author + refresh this session log
+  - name: context
+    reason: (invoked as a slash command)
 frictions:
-  - description: WebFetch of the GitHub cross-fork compare view timed out; had to fall back to the single commit page and raw files.
-    solution: For a large-divergence fork diff, read the commit + raw.githubusercontent files directly rather than the compare UI.
+  - description: WebFetch of the cross-fork GitHub compare view timed out on a large-divergence fork; had to fall back to the commit page + raw files.
+    solution: For a big fork diff, read the commit + raw.githubusercontent files directly rather than the compare UI.
     severity: minor
   - description: "mcp github get_files for #631 returned 115k chars, exceeding the tool token cap; had to slice the saved JSON with python."
-    solution: Request PR file lists without patches, or page them; parse paths from the saved tool-result file.
+    solution: Request PR file lists without patches, or parse paths from the saved tool-result file.
     severity: minor
-  - description: Ad-hoc tsx/playwright capture script run from the /tmp scratchpad failed twice — top-level await under CJS, then unresolved playwright-core.
-    solution: Wrap in async main() and set NODE_PATH to the repo node_modules; run from repo root, not via cd into scratchpad.
+  - description: Ad-hoc tsx/playwright capture run from the /tmp scratchpad failed twice — top-level await under CJS, then unresolved playwright-core.
+    solution: Wrap in async main() and set NODE_PATH to the repo node_modules; run from repo root, not cd into scratchpad.
     severity: minor
-  - description: Dollhouse timeline stepping first went the wrong way — ArrowRight is a no-op at the oldest-first boundary; ArrowLeft advances.
-    solution: Inspect initial cursor/keybinding before scripting interaction; the timeline starts at the oldest event.
+  - description: Dollhouse timeline stepping first went the wrong way — ArrowRight was a no-op at the oldest-first boundary; ArrowLeft advances.
+    solution: Inspect initial cursor/keybinding before scripting interaction.
     severity: nit
-  - description: No ffmpeg/ImageMagick/GIF encoder in the environment, so an animation could only be produced as webm, not GIF or MP4.
+  - description: No ffmpeg/ImageMagick/GIF encoder in the environment, so the animation could only be produced as webm, not GIF/MP4.
     solution: Used Playwright native video recording (webm); note the limitation when a specific format is requested.
     severity: minor
-durationSec: 71620
+  - description: My sibling-post-link existence check used the wrong path (omitted the /pages/ segment) and falsely reported the links MISSING.
+    solution: Re-checked with the correct layers/blog/content/<persona>/pages/ path before asserting — verify-before-assert caught it.
+    severity: minor
+  - description: gate:scoped ran the full heavy gate (build + 64 e2e) on a docs-only .md change that should have classified as inert and skipped heavy.
+    solution: Investigate the inert classifier's diff-base handling on this branch; a .md-only change outside layers/ is meant to skip build/test/e2e (CLAUDE.md).
+    severity: minor
+  - description: Dispatched subagent hit a stale .nuxt eslint config failing lint on untouched layers/commons Vue files on its first gate run.
+    solution: nuxt prepare regenerated the config and lint passed; CI runs prepare on install so it won't recur there.
+    severity: minor
+durationSec: 90547
 models:
-  claude-opus-4-8: 197
+  claude-opus-4-8: 335
 toolCounts:
-  ToolSearch: 4
-  Bash: 18
+  ToolSearch: 5
+  Bash: 31
   mcp__github__search_repositories: 2
   mcp__github__list_branches: 1
   WebFetch: 13
-  AskUserQuestion: 1
-  Read: 10
-  mcp__github__pull_request_read: 13
+  AskUserQuestion: 2
+  Read: 17
+  mcp__github__pull_request_read: 20
   mcp__github__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
-  mcp__github__add_issue_comment: 2
-  Write: 3
-  Edit: 4
+  mcp__github__add_issue_comment: 7
+  Write: 5
+  Edit: 6
   SendUserFile: 2
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 1
+  Agent: 1
+  Grep: 1
+filesEdited:
+  - docs/agents/guest-contributions.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - CLAUDE.md
+subagents:
+  - type: general-purpose
+    task: Implement external-session marking
+    model: opus
 gitBranch: claude/pr-fork-contribution-review-ghmnx1
 entrypoint: remote_mobile
 cliVersion: 2.1.216
 learnings:
   - pull_request_creation_policy=collaborators_only is a real GitHub repo setting that blocks fork PRs from non-collaborators — not a general GitHub limitation.
   - Ad-hoc tsx/playwright-core captures from /tmp need NODE_PATH pointed at the repo node_modules and an async main() wrapper (tsx emits CJS there, breaking top-level await).
+  - "A clean cross-tenant read seam needs shared collection 'kinds' single-homing each schema plus a derived #catalog projection (the #routing/ADR-0014 pattern), so an aggregator queries by kind without repeating schemas — realized in #643/ADR-0025."
 ideas:
-  - "Reimagine the dollhouse as an ADR-compliant Tenant: a build-time-baked platform-activity visualization whose data derives only from committed session logs plus a build-time git snapshot (no runtime or external GitHub data), rendered as a real Vue page under the routing model — turning the fun concept into something that fits ADR-0001/0002/0006."
+  - "A future 'rooms'/house-view aggregator built on the merged Commons #catalog + queryAcrossTenants — the honest, bake-time, manifest-derived successor to the dollhouse the fork PR reached for."
   - Add a committed scripts/capture-static.ts helper that serves an arbitrary static dir and screenshots/records it via resolveChromiumPath (handling the NODE_PATH/main() dance), so ad-hoc UI captures stop re-hitting the same friction.
