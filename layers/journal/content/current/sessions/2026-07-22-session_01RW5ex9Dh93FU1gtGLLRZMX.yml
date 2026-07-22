@@ -1,0 +1,63 @@
+schemaVersion: 1
+session: session_01RW5ex9Dh93FU1gtGLLRZMX
+startedAt: 2026-07-22T05:05:11Z
+endedAt: 2026-07-22T05:13:10Z
+kind: delegated
+goal: Autonomous auto-triage sweep of the open backlog
+status: completed
+outcome: 2 issues triaged; rest idempotently skipped
+summary: "Ran the /auto-triage sweep (single kickoff, no further human steering — a standing green-light per ADR-0022). Scanned all 19 open issues plus PR #631. After the human-authorship and wayfinder filters, only 2 issues were eligible; every other ticket's most-recent activity was already AI's own, and #279/#439 are wayfinder:map indexes. Dispatched one verify-then-label subagent per eligible issue. #628 (regression of the #605/#606 prose fix) went bug + ready-for-human — a genuine design judgment. #634 (add a session id to audit-skills' dismissal allowlist) went enhancement + ready-for-agent under the standing green-light, with claims verified against the actual script. No repo files changed; all writes were GitHub labels + comments."
+prs: []
+docsRead:
+  - path: .claude/skills/auto-triage/SKILL.md
+    reason: the sweep's eligibility + wayfinder-overlay rules
+  - path: .claude/skills/triage/SKILL.md
+    reason: per-issue state machine composed by auto-triage
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: brief structure for ready-for-agent/ready-for-human
+  - path: docs/agents/triage-labels.md
+    reason: canonical label vocabulary
+skillsUsed:
+  - name: auto-triage
+    reason: the sweep itself
+  - name: triage
+    reason: per-issue rules composed by the sweep
+  - name: close-session
+    reason: self-judged closure at sweep end
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: list_issues returned a 62k-char single-line result that overflowed the token limit, forcing a subagent to python-slice the file to parse it.
+    solution: Prefer minimal_output/pagination for list_issues, or a subagent-parse step by default when scanning a full open backlog.
+    severity: minor
+  - description: First ToolSearch with bare names (select:list_issues,...) found nothing; the deferred github tools require the full mcp__github__ prefix.
+    solution: "Always query ToolSearch select: with the fully-qualified mcp__github__* name."
+    severity: nit
+durationSec: 479
+models:
+  claude-opus-4-8: 51
+toolCounts:
+  Bash: 4
+  ToolSearch: 3
+  mcp__github__get_me: 1
+  mcp__github__list_issues: 1
+  mcp__github__list_pull_requests: 1
+  Agent: 4
+  Read: 3
+  mcp__github__list_repository_collaborators: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__issue_read: 4
+  Skill: 2
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Parse open issues list
+  - type: general-purpose
+    task: Check most-recent-comment authorship
+  - type: general-purpose
+    task: "Triage issue #628"
+  - type: general-purpose
+    task: "Triage issue #634"
+gitBranch: claude/auto-triage-hhwbsc
+entrypoint: remote_mobile
+cliVersion: 2.1.217
