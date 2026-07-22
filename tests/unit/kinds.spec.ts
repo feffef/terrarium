@@ -20,6 +20,20 @@ describe('KINDS registry', () => {
       expect(['page', 'data'], `kind "${name}"`).toContain(def.type)
     }
   })
+
+  it('ships the `session` data kind carrying a shared schema (the schema-bearing path)', () => {
+    expect(KINDS.session.type).toBe('data')
+    expect(typeof KINDS.session.schema?.safeParse).toBe('function')
+  })
+
+  it('every `data` kind carries a schema; every `page` kind does not', () => {
+    // Widen off the `satisfies`-narrowed literal so `.schema` is readable on both
+    // branches (the page literal has no `schema` property at all).
+    for (const [name, def] of Object.entries(KINDS) as [string, KindDef][]) {
+      if (def.type === 'data') expect(def.schema, `data kind "${name}"`).toBeDefined()
+      else expect(def.schema, `page kind "${name}"`).toBeUndefined()
+    }
+  })
 })
 
 describe('resolveKind()', () => {

@@ -8,6 +8,14 @@ Status: Accepted
 > `tenants/…` paths below (e.g. the session dir, now
 > `layers/journal/content/current/sessions/`) reflect the pre-rename layout.
 
+> **Amended by [ADR-0025](0025-cross-tenant-catalog-and-collection-kinds.md) (2026-07-22).**
+> The `sessions` schema moved verbatim from the Journal manifest to
+> `shared/schemas/session.ts` and became the shared **`session` collection kind**,
+> so the Commons Timeline can read session logs across the Catalog. Behaviour is
+> unchanged: the Journal references it by `kind`, and `scripts/log-session.ts`
+> validates against the same object. Where this ADR says the schema lives in the
+> Journal manifest, read `shared/schemas/session.ts`.
+
 > **Amended (2026-07-05):** added the **Schema evolution policy** section below
 > (issue #60). It is the single home for how an append-only strict `data`
 > collection may change its schema — `sessions` here, blog `pingbacks`

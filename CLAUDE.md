@@ -483,6 +483,7 @@ layers/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Spa
 layers/<tenant>/tests/              # this Tenant's OWN tests (unit + e2e module) — see tests/README.md
 shared/manifest.ts                  # manifest types + defineTenant() + validation
 shared/kinds.ts                     # collection-kind registry: shared cross-Tenant read contracts (human-only, ADR-0025)
+shared/schemas/                     # a shared kind's schema when it has one (e.g. session.ts — the session-log shape, ADR-0009/0025)
 shared/expand.ts                    # pure manifest→keyed-collection expansion + catalogFrom() (expand(), L3-tested)
 shared/routing.ts                   # runtime route resolution: request → keyed collections (human-only, ADR-0006)
 modules/routing.ts                  # build-time Nuxt module: manifests → #routing virtual module (ADR-0014)

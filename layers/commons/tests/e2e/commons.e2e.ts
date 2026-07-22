@@ -66,8 +66,8 @@ export function registerCommonsE2E(): void {
         const count = await entries.count()
         expect(count).toBeGreaterThan(1)
 
-        // Dated content comes from more than one Tenant (blog posts + marquee
-        // chapters both carry `publishedAt`).
+        // Content spans more than one Tenant — posts (blog/marquee) plus the
+        // Journal's sessions and digests.
         const provs = await page.locator('.tl-entry .prov').allTextContents()
         const tenants = new Set(provs.map((p) => p.trim().split(/\s/)[0]))
         expect(tenants.size).toBeGreaterThan(1)
@@ -86,6 +86,28 @@ export function registerCommonsE2E(): void {
         expect(hrefs.length).toBe(count)
         expect(hrefs.some((h) => h.startsWith('/t/commons'))).toBe(false)
         expect(hrefs.every((h) => /^\/t\/[a-z]+\/[a-z]+/.test(h))).toBe(true)
+      } finally {
+        await page.close()
+      }
+    })
+
+    it('timeline: includes session logs and daily digests, deep-linked into the Journal', async () => {
+      const { page, errors } = await renderAndCollectErrors('/t/commons/timeline')
+      try {
+        expect(errors).toEqual([])
+        // Session logs (the `session` data kind) and digests (Journal pages under
+        // /digests/) both appear, alongside posts — proving the cross-KIND read.
+        expect(await page.locator('.tl-entry .genre-session').count()).toBeGreaterThan(0)
+        expect(await page.locator('.tl-entry .genre-digest').count()).toBeGreaterThan(0)
+        expect(await page.locator('.tl-entry .genre-post').count()).toBeGreaterThan(0)
+
+        // Sessions/digests have no standalone page route, so they deep-link into
+        // the Journal dashboard by fragment.
+        const hrefs = await page.locator('.tl-entry a').evaluateAll((els) =>
+          els.map((el) => el.getAttribute('href') ?? ''),
+        )
+        expect(hrefs.some((h) => h.includes('/t/journal/') && h.includes('#session-'))).toBe(true)
+        expect(hrefs.some((h) => h.includes('/t/journal/') && h.includes('#digest-'))).toBe(true)
       } finally {
         await page.close()
       }

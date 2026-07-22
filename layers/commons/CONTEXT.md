@@ -21,8 +21,10 @@ directory — is another **Space** in the Commons, not another Tenant.
   opted into the **Catalog**, filtered client-side over the baked index. Each
   result links back to its real route.
 - **Timeline** (`/t/commons/timeline`) — a reverse-chronological feed of every
-  timestamped page across the Platform (posts that carry a publish date), one
-  line each, linking to where the content really lives.
+  timestamped piece of content across the Platform, one line each. Three sources:
+  **posts** (dated blog/marquee pages), **digests** (the Journal's daily
+  summaries), and **sessions** (session logs). Posts link to their real page;
+  sessions and digests deep-link into the Journal dashboard.
 
 ## Why it exists
 
@@ -48,15 +50,6 @@ from the Catalog and neither Search nor Timeline ever surfaces itself. That
 absence is the whole isolation stance in miniature: a Collection is invisible to
 every Aggregator unless it explicitly opts in. An e2e test asserts no result or
 entry ever links back into `/t/commons/*`.
-
-## What's deferred (and why)
-
-The Timeline draws today from the `page` kind only. Session logs — a natural next
-source — are a `data` collection with a rich, Journal-owned schema (ADR-0009) and
-no individual public route, so including them needs two decisions of their own: a
-way for a Tenant-owned `data` collection to expose a *narrow* shared projection
-without relocating its schema, and a public-URL story for non-page content.
-Recorded as a follow-up rather than rushed in (ADR-0025's Consequences).
 
 ## What lives where
 

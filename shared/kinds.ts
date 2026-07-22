@@ -17,6 +17,7 @@ import type { ZodObject, ZodRawShape } from 'zod'
 // Type-only import (erased at runtime) so there is no runtime import cycle with
 // `manifest.ts`, which imports the KINDS runtime value from here.
 import type { CollectionType } from './manifest'
+import { sessionSchema } from './schemas/session'
 
 /**
  * One collection kind: the Nuxt Content collection `type` it applies to, plus —
@@ -45,6 +46,11 @@ export interface KindDef {
  */
 export const KINDS = {
   page: { type: 'page' },
+  // The first schema-bearing (data) kind: one session-log shape, single-homed in
+  // shared/schemas/session.ts (ADR-0009/0025). The Journal's `sessions` collection
+  // references it; the Commons Timeline reads it. A second Tenant adopting
+  // `kind: 'session'` gets the same shape for free — zero re-declaration.
+  session: { type: 'data', schema: sessionSchema },
 } satisfies Record<string, KindDef>
 
 export type KindName = keyof typeof KINDS

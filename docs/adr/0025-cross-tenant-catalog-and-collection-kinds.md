@@ -113,11 +113,14 @@ Spaces that deliberately exercise *different* shapes of cross-Tenant read:
   collection (`queryAcrossTenants('page')`), filtered client-side over baked
   content, each result linking back to its real route.
 - **Timeline** (`/t/commons/timeline`) — a reverse-chronological feed of every
-  timestamped page across the Platform (`queryTimeline()`), one line each. This is
-  the "beyond the dollhouse" case: a cross-Tenant view that *normalizes* — each
-  timeline-eligible kind reduces to `{ when, summary, url }` in a per-kind adapter
-  in the composable (the aggregator understands the kinds it consumes, so adding a
-  kind is localized, never per-Tenant).
+  timestamped piece of content across the Platform (`queryTimeline()`), one line
+  each. This is the "beyond the dollhouse" case: a cross-Tenant view that
+  *normalizes* across **kinds**. Three sources today, each reduced to
+  `{ when, summary, url }` by a per-source adapter in the composable: **posts**
+  (`page`-kind rows with a `publishedAt`), **digests** (`page`-kind rows under
+  `/digests/<date>`, the Journal's daily summaries), and **sessions**
+  (`session`-kind rows — session logs). The aggregator understands the kinds it
+  consumes, so adding a source is localized, never per-Tenant.
 
 The Commons's *own* `pages` collections are deliberately **un-kinded**, so neither
 view surfaces the Commons itself — the isolation default, made concrete and tested.
@@ -146,14 +149,20 @@ A future cross-Tenant view is another Space here, not another Tenant.
   schema. No existing content or schema changed. A future shared `data` kind (e.g.
   a `session` shape adopted by more than one Tenant) is one `KINDS` entry away,
   with no change to `expand()` or the catalog module.
-- **Deferred — session logs in the Timeline, and the projection-vs-schema
-  question.** The Timeline draws today from the `page` kind only. Session logs are
-  the obvious next source, but including them surfaced two decisions worth their
-  own treatment rather than a rushed bundle: (1) a `data` kind currently *replaces*
-  a collection's schema, so a rich, Tenant-owned collection (the Journal's
-  `sessions`, ADR-0009 — also read directly by `scripts/log-session.ts`) can't yet
-  expose a *narrow* shared projection without relocating its whole schema; and
-  (2) session logs have no individual public route (they render on the Journal
-  dashboard), so a non-page kind needs a public-URL story. A likely answer is a
-  kind that is a *minimum contract* a collection's own schema satisfies (plus a
-  per-kind timeline adapter, already stubbed), but that is left for a follow-up.
+- **Session logs are a first-class `data` kind (the schema-relocation path taken).**
+  The Journal's `sessions` schema moved verbatim from its manifest to
+  `shared/schemas/session.ts` and became the `session` kind's schema; the Journal
+  references it by `kind`, and `scripts/log-session.ts` now sources the very same
+  object (behaviour-neutral — every session-logging test stays green). This is the
+  honest home for it: a session log is Platform self-documentation (ADR-0009), not
+  Tenant-private content, and now that the Timeline reads it across the Catalog it
+  is a genuine cross-consumer contract. The alternative — a *minimum-contract* kind
+  that leaves a collection's own schema in place — stays a reasonable future option
+  for a collection that truly needs to keep local schema ownership, but relocation
+  was cleaner here.
+- **Non-page content deep-links instead of routing.** Sessions and daily digests
+  have no standalone page route (they render on the Journal dashboard), so their
+  Timeline entries link to `<space-landing>#<anchor>` using the Journal's own
+  `session-`/`digest-` fragment scheme (owned by
+  `layers/journal/app/utils/dashboard.ts`, cited not restated). Posts keep their
+  real page route.

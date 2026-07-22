@@ -23,7 +23,7 @@ import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { isPair, isScalar, parse as parseYaml, parseDocument, visit } from 'yaml'
 import { z } from 'zod'
-import journal from '../layers/journal/tenant.config.ts'
+import { sessionSchema } from '../shared/schemas/session.ts'
 import { FALLBACK_MODEL, provenanceFooter } from './provenance-footer.ts'
 import { busiestModelId, formatModelId, SCRATCH_FILE, type AuthoredScratch } from './session-trace.ts'
 
@@ -32,12 +32,10 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 /** The one directory session logs may live in — the whole of the ADR-0009 scope. */
 export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
 
-/** The frozen `sessions` schema (ADR-0009). Single source of truth — never restated here. */
-const sessionsCollection = journal.collections.sessions
-if (!sessionsCollection?.schema) {
-  throw new Error('journal manifest is missing the sessions collection schema')
-}
-const sessionsSchema = sessionsCollection.schema
+/** The frozen `sessions` schema (ADR-0009) — the shared `session` collection kind,
+ *  single-homed in shared/schemas/session.ts (ADR-0025). The Journal manifest now
+ *  references it by `kind`; this validates authored logs against the very same object. */
+const sessionsSchema = sessionSchema
 
 /** The `schemaVersion` newly authored logs should carry; evolution policy: ADR-0009. */
 export const CURRENT_SESSIONS_SCHEMA_VERSION = 1

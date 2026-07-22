@@ -1,9 +1,9 @@
 <script setup lang="ts">
 // The Timeline view (`/t/commons/timeline`) — a reverse-chronological feed of
-// every timestamped page across the Platform, one line each, linking to the page
-// where it really lives. Reads only through the sanctioned, read-only
-// `queryTimeline` (ADR-0025); the feed is build-time/committed content (ADR-0001),
-// never a live feed.
+// every timestamped piece of content across the Platform (dated posts, daily
+// Journal digests, and session logs), one line each, linking to where it really
+// lives. Reads only through the sanctioned, read-only `queryTimeline` (ADR-0025);
+// the feed is build-time/committed content (ADR-0001), never a live feed.
 const { data, status, error } = await useAsyncData('commons-timeline', () => queryTimeline())
 const entries = computed(() => data.value ?? [])
 const tenantCount = computed(() => new Set(entries.value.map((e) => e.tenant)).size)
@@ -31,7 +31,10 @@ function calendarDate(iso: string): string {
         <NuxtLink :to="e.url" class="row">
           <time class="when" :datetime="e.when">{{ calendarDate(e.when) }}</time>
           <span class="body">
-            <span class="summary">{{ e.summary }}</span>
+            <span class="summary">
+              <span class="genre" :class="`genre-${e.genre}`">{{ e.genre }}</span>
+              {{ e.summary }}
+            </span>
             <span class="prov">{{ e.tenant }} <span class="dot">·</span> {{ e.space }}</span>
           </span>
         </NuxtLink>
@@ -87,6 +90,36 @@ function calendarDate(iso: string): string {
   font-weight: 600;
   font-size: 1rem;
   line-height: 1.35;
+}
+.genre {
+  display: inline-block;
+  margin-right: 0.4rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  vertical-align: 0.08em;
+  color: var(--co-card);
+  background: var(--co-muted);
+}
+.genre-post {
+  background: var(--co-accent);
+}
+.genre-digest {
+  background: #9a6a2f;
+}
+.genre-session {
+  background: #4a5b8c;
+}
+@media (prefers-color-scheme: dark) {
+  .genre-digest {
+    background: #c79a5c;
+  }
+  .genre-session {
+    background: #8fa2d8;
+  }
 }
 .prov {
   font-size: 0.72rem;

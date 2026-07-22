@@ -9,7 +9,7 @@
 // build-time + committed data only (ADR-0001): the corpus is whatever content was
 // baked, never a runtime/external fetch — which is exactly where the dollhouse
 // went wrong.
-import type { PageCollections } from '@nuxt/content'
+import type { Collections, PageCollections } from '@nuxt/content'
 import { catalogByKind } from '#catalog'
 import { documentUrl } from '#shared/routing'
 
@@ -30,6 +30,10 @@ export interface CatalogPageRow {
    *  the timestamp the Timeline orders by. Absent on undated pages (index
    *  landings, docs). */
   publishedAt?: string
+  /** A conventional one-line day/post headline (`summary`), when the page carries
+   *  one — the Timeline prefers it over the title (e.g. a Journal digest's
+   *  headline). Absent on ordinary pages. */
+  summary?: string
 }
 
 /**
@@ -58,15 +62,20 @@ export async function queryAcrossTenants(kind: 'page'): Promise<CatalogPageRow[]
         url: documentUrl(entry.tenant, entry.space, item.path),
         title: item.title,
         description: item.description,
-        // `publishedAt` is a per-collection schema field (blog/marquee posts), not
-        // on every page item's base type — read it as a conventional optional
-        // timestamp. The catalog stays the single home for cross-Tenant reads.
+        // `publishedAt`/`summary` are per-collection schema fields (not on every
+        // page item's base type) — read them as conventional optionals. The
+        // catalog stays the single home for cross-Tenant reads.
         publishedAt: (item as { publishedAt?: string }).publishedAt,
+        summary: (item as { summary?: string }).summary,
       }))
     }),
   )
   return perCollection.flat()
 }
+
+/** The timeline "genre" of an entry — post (a dated page), digest (a daily
+ *  Journal summary), or session (a session log). Drives a small label in the UI. */
+export type TimelineGenre = 'post' | 'digest' | 'session'
 
 /** One entry in the cross-Tenant **Timeline**: a timestamped piece of content,
  *  reduced to a one-line summary and a link to its real public route (ADR-0025). */
@@ -75,37 +84,102 @@ export interface TimelineEntry {
   when: string
   /** The one-line summary shown in the feed. */
   summary: string
-  /** Canonical ADR-0006 route the entry links to. */
+  /** Canonical ADR-0006 route (with a Journal deep-link fragment for sessions/digests). */
   url: string
   tenant: string
   space: string
-  /** The kind this entry was normalized from (for provenance / future grouping). */
-  kind: string
+  genre: TimelineGenre
 }
+
+// Journal deep-link fragment format, owned by layers/journal/app/utils/dashboard.ts
+// (sessionAnchor/digestAnchor). A session log and a daily digest have no standalone
+// page route — they render on the Journal dashboard, opened by this fragment — so
+// the Timeline links to `<space-landing>#<anchor>`. Cited, not re-reasoned, per the
+// single-home rule (CLAUDE.md).
+const sessionAnchor = (id: string) => `session-${id}`
+const digestAnchor = (date: string) => `digest-${date}`
+
+// A daily digest is a Journal page under `/digests/<YYYY-MM-DD>` (ADR-0010); the
+// date lives in the path, matching how the dashboard's `digestList` derives it.
+const DIGEST_PATH = /^\/digests\/(\d{4}-\d{2}-\d{2})$/
 
 /**
  * The cross-Tenant Timeline: every timestamped piece of content, newest first.
  *
- * Each timeline-eligible **kind** normalizes to `{ when, summary, url }` *here* —
- * the aggregator understands the kinds it consumes, so this per-kind adapter is
- * the seam, not a per-Tenant one. Today it draws from the `page` kind (posts that
- * carry a `publishedAt`); a future kind (e.g. session logs) slots in as one more
- * branch, with no change to any Tenant. Reads are build-time/committed only
- * (ADR-0001).
+ * Each source normalizes to `{ when, summary, url }` in a per-source adapter
+ * *here* — the aggregator understands the kinds it consumes, so this is the seam,
+ * never a per-Tenant one. Three sources today:
+ *  - **posts** — `page`-kind rows carrying a `publishedAt` (blog, marquee);
+ *  - **digests** — `page`-kind rows under `/digests/<date>` (the Journal's daily
+ *    summaries), dated from the path, headlined by their `summary`;
+ *  - **sessions** — `session`-kind rows (session logs), dated by `endedAt`.
+ * Reads are build-time/committed only (ADR-0001).
  */
 export async function queryTimeline(): Promise<TimelineEntry[]> {
-  const pages = await queryAcrossTenants('page')
-  const entries: TimelineEntry[] = pages
-    .filter((r): r is CatalogPageRow & { publishedAt: string } => Boolean(r.publishedAt))
-    .map((r) => ({
-      when: r.publishedAt,
-      summary: r.title ?? r.url,
-      url: r.url,
-      tenant: r.tenant,
-      space: r.space,
-      kind: 'page',
-    }))
+  const [pages, sessions] = await Promise.all([queryAcrossTenants('page'), querySessions()])
+
+  const entries: TimelineEntry[] = []
+
+  for (const p of pages) {
+    const digest = DIGEST_PATH.exec(p.path)
+    if (digest) {
+      entries.push({
+        when: `${digest[1]}T00:00:00Z`,
+        summary: p.summary ?? p.description ?? p.title ?? p.url,
+        url: `${documentUrl(p.tenant, p.space, '/')}#${digestAnchor(digest[1]!)}`,
+        tenant: p.tenant,
+        space: p.space,
+        genre: 'digest',
+      })
+    } else if (p.publishedAt) {
+      entries.push({
+        when: p.publishedAt,
+        summary: p.title ?? p.url,
+        url: p.url,
+        tenant: p.tenant,
+        space: p.space,
+        genre: 'post',
+      })
+    }
+  }
+
+  for (const s of sessions) {
+    entries.push({
+      when: s.endedAt,
+      summary: s.goal,
+      url: `${documentUrl(s.tenant, s.space, '/')}#${sessionAnchor(s.session)}`,
+      tenant: s.tenant,
+      space: s.space,
+      genre: 'session',
+    })
+  }
+
   // Reverse-chronological; UTC ISO-8601 sorts lexically, so string compare is
   // correct and needs no Date parsing.
   return entries.sort((a, b) => b.when.localeCompare(a.when))
+}
+
+/** Fan out over every `session`-kind collection, projecting the fields the Timeline
+ *  needs. The `session` kind guarantees this shape, asserted at the same single
+ *  cross-collection cast boundary `queryAcrossTenants` uses. */
+async function querySessions(): Promise<
+  Array<{ tenant: string; space: string; session: string; endedAt: string; goal: string }>
+> {
+  const perCollection = await Promise.all(
+    catalogByKind('session').map(async (entry) => {
+      const items = (await queryCollection(entry.key as keyof Collections).all()) as unknown as Array<{
+        session: string
+        endedAt: string
+        goal: string
+      }>
+      return items.map((item) => ({
+        tenant: entry.tenant,
+        space: entry.space,
+        session: item.session,
+        endedAt: item.endedAt,
+        goal: item.goal,
+      }))
+    }),
+  )
+  return perCollection.flat()
 }
