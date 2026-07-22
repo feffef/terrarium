@@ -1,0 +1,45 @@
+schemaVersion: 1
+session: session_01XmaZh9Dh2tvTwFYuDWSzqx
+startedAt: 2026-07-22T13:41:02Z
+endedAt: 2026-07-22T13:46:35Z
+kind: autonomous
+goal: Auto-triage sweep over open issues and PRs
+status: completed
+outcome: No eligible tickets; idempotent no-op sweep
+summary: "Ran the chartered /auto-triage sweep (the standing ADR-0022 green-light — no net-new implementation, read-only triage evaluation only). Scanned 19 open issues plus 1 in-scope external fork PR (#631). For each, fetched the most-recent comment (or body if none) and checked authorship via the ADR-0017 provenance footer rather than author_association. Skipped the two wayfinder:map issues (#439, #279) as indexes, not work. Every remaining item's most-recent activity was already AI's own, so the eligible set was empty — the correct idempotent quiet state. No subagents dispatched, no labels changed, no comments posted, no commits. Reported a per-item roll-up to the user."
+prs: []
+docsRead:
+  - path: .claude/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: .claude/skills/triage/OUT-OF-SCOPE.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: scripts/list-open-issues.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: auto-triage
+    reason: (invoked as a slash command)
+frictions:
+  - description: No reusable helper answers auto-triage's eligibility question ("is each open item's most-recent activity AI's own?") — had to write a scratch script.
+    solution: A committed helper alongside check-triage-drift.ts that emits per-issue most-recent-actor + provenance-footer verdict would make every sweep cheaper.
+    severity: minor
+durationSec: 333
+models:
+  claude-opus-4-8: 42
+toolCounts:
+  Bash: 10
+  Read: 6
+  Write: 2
+  Skill: 2
+gitBranch: claude/auto-triage-rlie0k
+entrypoint: remote_mobile
+cliVersion: 2.1.217
