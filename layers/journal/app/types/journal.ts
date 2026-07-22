@@ -54,6 +54,11 @@ export interface SessionDoc {
   gitBranch?: string
   entrypoint?: string
   cliVersion?: string
+  // Set only on a log authored by an EXTERNAL harness (ADR-0009 amendment) — a
+  // different agent/toolchain. Absent ⇒ internal. The dashboard still renders an
+  // external session's record (and its ideas surface in Sparks); only the
+  // self-improvement mining excludes it (scripts/audit-skills.ts, sparks.ts).
+  external?: boolean
   // Required: no `.default()` on `frictions` — the manifest forces every
   // session log to state its frictions explicitly (may be `[]`, not omitted).
   frictions: Friction[]

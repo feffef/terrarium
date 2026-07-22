@@ -2,8 +2,11 @@
 // ordering and the raw-log → triage-record reduction where correctness bugs
 // would hide. The FS IO is a thin shell over these and is exercised by running
 // the `frictions-to-fixes` Skill.
-import { describe, expect, it } from 'vitest'
-import { pickRecencyWindow, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { pickRecencyWindow, SESSIONS_DIR, survey, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
 
 function session(id: string, startedAt: string, opts: Partial<TriageSession> = {}): TriageSession {
   return {
@@ -79,5 +82,35 @@ describe('toTriageSession()', () => {
       prs: [],
       frictions: [],
     })
+  })
+})
+
+describe('survey() — external exclusion (ADR-0009 amendment)', () => {
+  let dir: string
+
+  beforeEach(() => {
+    dir = mkdtempSync(join(tmpdir(), 'session-frictions-'))
+    mkdirSync(join(dir, SESSIONS_DIR), { recursive: true })
+  })
+  afterEach(() => {
+    rmSync(dir, { recursive: true, force: true })
+  })
+
+  function writeLog(name: string, yaml: string): void {
+    writeFileSync(join(dir, SESSIONS_DIR, name), yaml)
+  }
+
+  it('excludes an external session from the frictions survey but keeps internal ones', () => {
+    writeLog(
+      'internal.yml',
+      'session: session_internal\nstartedAt: 2026-07-20T00:00:00Z\ngoal: internal work\noutcome: done\nfrictions:\n  - description: an internal friction\n    solution: fix it\n    severity: major\n',
+    )
+    writeLog(
+      'external.yml',
+      'session: session_external\nstartedAt: 2026-07-21T00:00:00Z\nexternal: true\ngoal: external work\noutcome: done\nfrictions:\n  - description: a toolchain friction\n    solution: n/a\n    severity: blocker\n',
+    )
+
+    const ids = survey(20, dir).map((s) => s.id)
+    expect(ids).toEqual(['session_internal'])
   })
 })

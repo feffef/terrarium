@@ -444,6 +444,52 @@ sweep is a distinct follow-up, not silently folded in here).
   a durable, machine-readable record that its `outcome` is known-incomplete
   and the true original text may be unrecoverable.
 
+## External sessions: marked, and excluded from self-improvement mining (2026-07-22)
+
+> **Amended.** Adds one optional field (`external`) to the schema and defines
+> which consumers must ignore an external session. The direct-to-`main` boundary,
+> the derived/authored split, and every other field are unchanged.
+
+**Context.** The Platform now accepts session logs authored by an **external**
+session — a completely different harness / agent / environment, not our Claude
+Code toolchain. The first real one arrived on fork PR #631: a contributor's own
+agent running on Grok via a "Hermes" harness (`entrypoint: external_hermes`).
+Such a log is a genuine, honest self-report and belongs in the record — the
+Timeline and dashboard should show it. But its **frictions** and **skill-usage**
+describe a toolchain our fixes cannot touch: a Hermes/Grok friction does not
+generalize to our Claude-Code development, and mining it would send the
+self-improvement loop chasing non-generalizing signal. Its **ideas**, by
+contrast, are toolchain-agnostic — a good idea is worth surfacing wherever it
+came from.
+
+**Decision.** Add an optional `external: z.boolean().optional()` to the frozen
+`sessions` schema (`shared/schemas/session.ts`). **Absent ⇒ internal** (our
+harness); only an external contributor's log ever sets it, so every existing
+internal log stays valid under `.strict()`, and our own sessions leave it absent.
+A single-homed `isExternalSession(raw)` predicate lives beside the schema. The
+consumers split three ways:
+
+- **Excluded entirely** — `frictions-to-fixes` (via `scripts/session-frictions.ts`)
+  and `audit-skills` (via `scripts/audit-skills.ts`) drop an external session
+  before it enters the corpus: no friction mining, no skill-usage tally, no
+  regression/closure signal from it.
+- **Ideas kept, learnings dropped** — the Sparks data layer (`scripts/sparks.ts`,
+  `readSparkMaterial`) still gathers an external session's `ideas` but omits its
+  `learnings`.
+- **Unchanged** — internal (non-external) behaviour is byte-for-byte identical;
+  external sessions remain visible in the Timeline/dashboard record.
+
+**Consequences.**
+
+- Additive and optional, so no `schemaVersion` bump per the evolution policy
+  above; older logs and every internal log validate unchanged.
+- The exclusion is enforced in the scripts' read layer, not left to the Skill
+  prose — an external log cannot leak into the mining corpus even if a future
+  survey forgets the rule.
+- `external` is self-declared by the external harness (unlike the derived
+  mechanical trace); we take the contributor's log at its word here, exactly as
+  we do for its authored `goal`/`summary`/`frictions`.
+
 ## `session` reclassified as derived, not authored (2026-07-16)
 
 > **Amended.** The "Automatic logging via a `SessionEnd` hook" section above

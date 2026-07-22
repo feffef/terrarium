@@ -26,6 +26,7 @@ import {
   RESCUED_GAP_HOURS,
   SEP,
   tallyUsage,
+  toSessionFile,
   type CommitFileChange,
   type InventoryEntry,
   type OnDiskSkill,
@@ -189,6 +190,55 @@ describe('buildSkillRows()', () => {
 
   it('flags an inventoried Skill gone from disk (stale entry)', () => {
     expect(row('retired')).toMatchObject({ onDisk: false, inventoried: true, description: null })
+  })
+})
+
+describe('toSessionFile() — external exclusion (ADR-0009 amendment)', () => {
+  const skillNames = new Set(['tdd'])
+
+  it('reduces an internal log to a SessionFile, keeping its skills/frictions', () => {
+    const raw = {
+      session: 'session_internal',
+      kind: 'interactive',
+      goal: 'do a thing',
+      summary: '  a   summary ',
+      endedAt: '2026-07-20T00:00:00Z',
+      skillsUsed: [{ name: 'tdd', reason: 'red-green' }],
+      frictions: [{ severity: 'minor', description: 'x' }],
+      entrypoint: 'remote',
+    }
+    expect(toSessionFile(raw, 'f.yml', skillNames)).toEqual({
+      session: {
+        session: 'session_internal',
+        kind: 'interactive',
+        goal: 'do a thing',
+        summary: 'a summary',
+        endedAt: '2026-07-20T00:00:00Z',
+        skillsUsed: [{ name: 'tdd', reason: 'red-green' }],
+        frictions: ['minor'],
+        humanPromptedClosure: false,
+        entrypoint: 'remote',
+      },
+      file: 'f.yml',
+    })
+  })
+
+  it('returns null for an external log — excluded from the mining corpus entirely', () => {
+    const raw = {
+      session: 'session_external',
+      kind: 'delegated',
+      goal: 'external contribution',
+      endedAt: '2026-07-20T00:00:00Z',
+      external: true,
+      skillsUsed: [{ name: 'tdd', reason: 'r' }],
+      frictions: [{ severity: 'major', description: 'toolchain friction' }],
+    }
+    expect(toSessionFile(raw, 'f.yml', skillNames)).toBeNull()
+  })
+
+  it('treats external:false as internal (not excluded)', () => {
+    const raw = { session: 's', endedAt: '2026-07-20T00:00:00Z', external: false, skillsUsed: [], frictions: [] }
+    expect(toSessionFile(raw, 'f.yml', skillNames)).not.toBeNull()
   })
 })
 

@@ -66,6 +66,16 @@ export const sessionSchema = z
     // derived by session-trace.ts's extractTrace ONLY when entrypoint is
     // 'remote_trigger' (issue #449 Gap 1); absent for every other session.
     trigger: z.string().optional(),
+    // Marks a log authored by an EXTERNAL harness — a different agent / toolchain /
+    // environment (first seen on fork PR #631's Hermes/Grok run, entrypoint
+    // `external_hermes`). ABSENT ⇒ internal (our Claude Code harness); only an
+    // external contributor's log ever sets it, so every existing internal log
+    // stays valid under `.strict()`. Governs self-improvement mining (ADR-0009
+    // amendment, 2026-07-22): `frictions-to-fixes` and `audit-skills` skip an
+    // external session entirely — its frictions/skill-usage reflect a toolchain
+    // our fixes don't touch — while the Sparks feed still surfaces its `ideas`
+    // (a good idea is toolchain-agnostic) and drops only its `learnings`.
+    external: z.boolean().optional(),
     // True ONLY on the synthetic placeholder session-end.ts's recoverDroppedScratch
     // lands when a scratch was authored then lost before it could land (issue #449
     // Gap 3). Gives consumers a structured way to exclude/label it. Absent on every
@@ -91,3 +101,12 @@ export const sessionSchema = z
     historicallyTruncated: z.array(z.string()).optional(),
   })
   .strict()
+
+/** True when a raw (parsed, not-yet-validated) session log was authored by an
+ *  EXTERNAL harness — the `external: true` flag above. Single home for that check,
+ *  shared by every self-improvement consumer that must exclude external sessions
+ *  (`scripts/sparks.ts`, `scripts/audit-skills.ts`, `scripts/session-frictions.ts`;
+ *  ADR-0009 amendment, 2026-07-22). Absent/false/non-object ⇒ internal. */
+export function isExternalSession(raw: unknown): boolean {
+  return typeof raw === 'object' && raw !== null && (raw as Record<string, unknown>).external === true
+}
