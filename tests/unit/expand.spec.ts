@@ -7,7 +7,8 @@
 // cross-Space leak.
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { expand, type LoadedManifest } from '../../shared/expand.ts'
+import { catalogFrom, expand, type LoadedManifest } from '../../shared/expand.ts'
+import { KINDS } from '../../shared/kinds.ts'
 import { collectionKey, validateManifest, type TenantManifest } from '../../shared/manifest.ts'
 
 const KEY = /^[a-z][a-z0-9]*_[a-z][a-z0-9]*_[a-z][a-z0-9]*$/
@@ -118,5 +119,156 @@ describe('validateManifest()', () => {
   it('rejects an unknown top-level key (e.g. a `space:` typo for `spaces:`)', () => {
     const bad = { ...ok, space: ['current'] } as unknown as TenantManifest
     expect(validateManifest(bad).join()).toMatch(/[Uu]nrecognized key/)
+  })
+})
+
+// ── Collection kinds → #catalog (ADR-0025, issue #642) ──────────────────────
+describe('validateManifest() — collection kinds', () => {
+  const withPages = (pages: TenantManifest['collections']['pages']): TenantManifest => ({
+    name: 'docs',
+    spaces: ['current'],
+    collections: { pages },
+  })
+
+  it('accepts `kind: "page"` on a page collection (with or without an inline schema)', () => {
+    expect(validateManifest(withPages({ type: 'page', kind: 'page' }))).toEqual([])
+    expect(validateManifest(withPages({ type: 'page', kind: 'page', schema: z.object({}) }))).toEqual([])
+  })
+
+  it('rejects an unknown kind', () => {
+    const bad = withPages({ type: 'page', kind: 'nope' } as unknown as TenantManifest['collections']['pages'])
+    expect(validateManifest(bad).join()).toMatch(/unknown kind "nope"/)
+  })
+
+  it('rejects a page kind on a data collection (type mismatch)', () => {
+    const bad = { ...withPages({ type: 'page' }), collections: { notes: { type: 'data', kind: 'page' } } }
+    expect(validateManifest(bad as unknown as TenantManifest).join()).toMatch(/is a page kind but the collection is type "data"/)
+  })
+
+  it('accepts a data collection carrying BOTH a kind and a local schema (minimum contract)', () => {
+    const both: TenantManifest = {
+      name: 'docs',
+      spaces: ['current'],
+      collections: { notes: { type: 'data', kind: 'session', schema: z.object({ mood: z.string() }) } },
+    }
+    expect(validateManifest(both)).toEqual([])
+  })
+
+  it('still rejects a data collection with neither schema nor kind', () => {
+    const bad = { collections: { notes: { type: 'data' } }, name: 'docs', spaces: ['current'] }
+    expect(validateManifest(bad as unknown as TenantManifest).join()).toMatch(/requires a schema \(or a `kind`/)
+  })
+})
+
+// ── Minimum-contract merge: effective schema = kind contract + local (ADR-0025) ──
+describe('expand() — effective schema merges the kind contract', () => {
+  const loaded = (collections: TenantManifest['collections']): LoadedManifest[] => [
+    { dir: 'docs', manifest: { name: 'docs', spaces: ['current'], collections } },
+  ]
+
+  it('a kinded page collection gets the page contract merged into its local schema', () => {
+    const [col] = expand(loaded({
+      pages: { type: 'page', kind: 'page', schema: z.object({ badge: z.string() }) },
+    }))
+    const schema = col!.schema!
+    // Local field + contract fields coexist; the contract's fields stay optional.
+    expect(schema.safeParse({ badge: 'b' }).success).toBe(true)
+    expect(
+      schema.safeParse({ badge: 'b', publishedAt: '2026-07-22T10:00:00Z', summary: 's' }).success,
+    ).toBe(true)
+    // The contract's refinement travels with the merge.
+    expect(schema.safeParse({ badge: 'b', publishedAt: 'not-a-timestamp' }).success).toBe(false)
+  })
+
+  it('a kinded page collection with no local schema gets the contract alone', () => {
+    const [col] = expand(loaded({ pages: { type: 'page', kind: 'page' } }))
+    expect(col!.schema).toBeDefined()
+    expect(Object.keys(col!.schema!.shape).sort()).toEqual(['publishedAt', 'summary'])
+  })
+
+  it('an un-kinded page collection keeps its local schema untouched (isolation default)', () => {
+    const local = z.object({ token: z.string() })
+    const [col] = expand(loaded({ pages: { type: 'page', schema: local } }))
+    expect(col!.schema).toBe(local)
+  })
+
+  it('a data collection with only a kind uses the contract as its whole schema', () => {
+    const [col] = expand(loaded({ sessions: { type: 'data', kind: 'session' } }))
+    expect(col!.schema).toBe(KINDS.session.contract)
+  })
+
+  it('a data collection may extend its kind contract with local fields', () => {
+    const [col] = expand(loaded({
+      sessions: { type: 'data', kind: 'session', schema: z.object({ mood: z.string() }) },
+    }))
+    const keys = Object.keys(col!.schema!.shape)
+    expect(keys).toContain('goal') // from the session contract
+    expect(keys).toContain('mood') // local extension
+  })
+})
+
+describe('expand() + catalogFrom() — the catalog projection', () => {
+  const manifests: LoadedManifest[] = [
+    {
+      dir: 'docs',
+      manifest: {
+        name: 'docs',
+        spaces: ['current', 'archived'],
+        collections: {
+          // opted in — appears in the catalog under `page`, both Spaces
+          pages: { type: 'page', kind: 'page', schema: z.object({}) },
+          // bespoke, un-kinded — must stay invisible to the catalog
+          secrets: { type: 'data', schema: z.object({ token: z.string() }) },
+        },
+      },
+    },
+    {
+      dir: 'marketing',
+      manifest: {
+        name: 'marketing',
+        spaces: ['prod'],
+        collections: { pages: { type: 'page', kind: 'page', schema: z.object({}) } },
+      },
+    },
+  ]
+
+  const cols = expand(manifests)
+
+  it('carries `kind` through onto the opted-in expanded collections only', () => {
+    const pages = cols.filter((c) => c.collection === 'pages')
+    const secrets = cols.filter((c) => c.collection === 'secrets')
+    expect(pages.every((c) => c.kind === 'page')).toBe(true)
+    expect(secrets.every((c) => c.kind === undefined)).toBe(true)
+  })
+
+  it('groups every kinded collection by kind, and excludes the un-kinded one', () => {
+    const catalog = catalogFrom(cols)
+    expect(Object.keys(catalog)).toEqual(['page'])
+    expect((catalog.page ?? []).map((e) => e.key)).toEqual([
+      'docs_current_pages',
+      'docs_archived_pages',
+      'marketing_prod_pages',
+    ])
+    // no `secrets` key leaked into any kind bucket (isolation default)
+    const allKeys = Object.values(catalog).flat().map((e) => e.key)
+    expect(allKeys.some((k) => k.includes('secrets'))).toBe(false)
+  })
+
+  it('tags each catalog entry with full provenance', () => {
+    const entry = (catalogFrom(cols).page ?? []).find((e) => e.key === 'marketing_prod_pages')!
+    expect(entry).toEqual({
+      key: 'marketing_prod_pages',
+      tenant: 'marketing',
+      space: 'prod',
+      collection: 'pages',
+      kind: 'page',
+    })
+  })
+
+  it('returns an empty catalog when nothing opts in', () => {
+    const noneKinded = expand([
+      { dir: 'x', manifest: { name: 'x', spaces: ['s'], collections: { pages: { type: 'page', schema: z.object({}) } } } },
+    ])
+    expect(catalogFrom(noneKinded)).toEqual({})
   })
 })

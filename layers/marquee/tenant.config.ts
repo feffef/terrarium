@@ -12,16 +12,6 @@
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
 
-// A UTC ISO-8601 timestamp kept as a *string* on purpose (NOT `z.date()`,
-// which truncates to a DATE column and drops time-of-day). Copied locally
-// rather than shared: Tenants share no code (CONTEXT.md isolation stance).
-const utcTimestamp = z
-  .string()
-  .refine(
-    (v) => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(v) && !Number.isNaN(Date.parse(v)),
-    'must be a UTC ISO-8601 timestamp ending in Z, e.g. 2026-07-17T09:00:00Z',
-  )
-
 export default defineTenant({
   name: 'marquee',
   spaces: ['reel'],
@@ -30,17 +20,18 @@ export default defineTenant({
     // resolver enforces (ADR-0006) though it holds film write-ups. The `page`
     // type injects path/title/description/body/seo; the schema below adds
     // only what a Chapter post actually carries. All fields optional because
-    // the Space's `index.md` landing carries none of them.
+    // the Space's `index.md` landing carries none of them. `publishedAt`
+    // (drives "posted" display) rides in from the `page` kind's contract
+    // (shared/kinds.ts, ADR-0025).
     pages: {
       type: 'page',
+      kind: 'page', // opt into the cross-Tenant #catalog (ADR-0025)
       source: '**/*.md',
       schema: z.object({
         // A Chapter's position in the in-universe MCU timeline this Tenant
         // tracks (1 = earliest story chronology, not release order). The
         // landing omits it — hence optional.
         order: z.number().int().positive().optional(),
-        // Publish instant — drives "posted" display, mirrors the Blog's field.
-        publishedAt: utcTimestamp.optional(),
         // The authored inner SVG markup for this Chapter's original,
         // Ghibli-inspired illustration (never a real film still or official
         // artwork — see the `MarqueePoster` component and layers/marquee/

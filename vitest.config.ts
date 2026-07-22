@@ -9,6 +9,9 @@ export default defineConfig({
       // a fixture) resolve it here so vitest can find it without the Nuxt alias layer.
       // fileURLToPath+URL keeps resolution correct regardless of invocation cwd.
       '#routing': fileURLToPath(new URL('.nuxt/routing.mjs', import.meta.url)),
+      // Same wiring for the cross-Tenant catalog (ADR-0025) so a test that reads
+      // the real `#catalog` resolves it without the Nuxt alias layer.
+      '#catalog': fileURLToPath(new URL('.nuxt/catalog.mjs', import.meta.url)),
     },
   },
   test: {

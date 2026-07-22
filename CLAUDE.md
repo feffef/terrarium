@@ -80,8 +80,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   You may note the tension in your session log, but don't let the restriction
   suppress the PR. (Supersedes #491's precedence clause; see #592.)
 - All work must clear the **safety gate** (build/validate/isolation, ADR-0004).
-  The manifest-expansion and routing modules (`content.config.ts`,
-  `shared/expand.ts`, `modules/routing.ts`, `shared/routing.ts`), isolation
+  The manifest-expansion, routing, and cross-Tenant-catalog modules
+  (`content.config.ts`, `shared/expand.ts`, `modules/routing.ts`,
+  `shared/routing.ts`, `shared/kinds.ts`, `modules/catalog.ts`,
+  `app/composables/catalog.ts` — ADR-0025), isolation
   logic, CI, and governance/ADRs are **human-only** — never auto-merge changes
   touching them (ADR-0004's high-risk set, which also escalates a PR that
   introduces a new dependency or changes untested/untestable runtime
@@ -480,11 +482,17 @@ layers/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Spa
                                     #   (Tenant layers live under Nuxt's `layers/`, auto-extended — ADR-0018)
 layers/<tenant>/tests/              # this Tenant's OWN tests (unit + e2e module) — see tests/README.md
 shared/manifest.ts                  # manifest types + defineTenant() + validation
-shared/expand.ts                    # pure manifest→keyed-collection expansion (expand(), L3-tested)
+shared/kinds.ts                     # collection-kind registry: shared cross-Tenant minimum contracts (human-only, ADR-0025)
+shared/schemas/                     # shared cross-consumer Zod schemas (session kind contract, utcTimestamp)
+shared/schemas/                     # a shared kind's schema when it has one (e.g. session.ts — the session-log shape, ADR-0009/0025)
+shared/expand.ts                    # pure manifest→keyed-collection expansion + catalogFrom() (expand(), L3-tested)
 shared/routing.ts                   # runtime route resolution: request → keyed collections (human-only, ADR-0006)
 modules/routing.ts                  # build-time Nuxt module: manifests → #routing virtual module (ADR-0014)
+modules/catalog.ts                  # build-time Nuxt module: manifests → #catalog cross-Tenant projection (human-only, ADR-0025)
 content.config.ts                   # ordinary module — builds keyed collections dynamically (ADR-0013)
 app/composables/space.ts            # useSpace(): route → keyed collections or 404 (auto-imported wrapper)
+app/composables/catalog.ts          # queryAcrossTenants(kind, project)/queryPages(): the sanctioned cross-Tenant read primitive (human-only, ADR-0025);
+                                    #   aggregator views normalize on top in their own layer (e.g. layers/commons/.../timeline.ts)
 app/pages/t/[tenant]/[space]/[...slug].vue   # runtime routing + ContentRenderer
 tests/unit/                         # PLATFORM unit tests (L3 isolation, shared/, scripts/)
 tests/e2e/smoke.spec.ts             # the ONE L2 smoke build; imports each Tenant's e2e module

@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url'
 import { createJiti } from 'jiti'
 import type { ZodObject, ZodRawShape } from 'zod'
 import { collectionKey, validateManifest, type TenantManifest } from './manifest'
+import { resolveKind, type KindName } from './kinds'
 
 export const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 // The Tenant manifests live one per layer under `layers/` (Nuxt's conventional
@@ -33,6 +34,10 @@ interface ExpandedCollectionBase {
   include: string
   /** Content dir for this (tenant, space, collection), relative to project root (posix). */
   cwdRel: string
+  /** The cross-Tenant contract this collection opts into, or undefined (isolation
+   *  default). Carried through so `catalogFrom()` and `modules/catalog.ts` need no
+   *  second manifest pass (ADR-0025). */
+  kind?: KindName
 }
 
 // Discriminated on `type` — mirrors `CollectionDef` (shared/manifest.ts) so the
@@ -91,6 +96,31 @@ function createLoader(): (id: string) => TenantManifest & { default?: TenantMani
   return (id: string) => jiti(id) as TenantManifest & { default?: TenantManifest }
 }
 
+/** A collection's *effective* schema: the kind's minimum contract merged with
+ *  the collection's own local `schema` — local fields win on a shared name
+ *  (ADR-0025). No `kind` ⇒ the local schema alone (possibly undefined, for a
+ *  bare page collection); no local schema ⇒ the contract alone.
+ *
+ *  Built via `local.extend(<contract fields local doesn't declare>)`, NOT
+ *  `contract.merge(local)`: the manifests are loaded by `loadManifests()`'s own
+ *  jiti instance, so a local schema's zod and the contract's zod can be two
+ *  module instances — `.merge()` adopts the *other* instance's catchall, whose
+ *  `instanceof ZodNever` strip-check then fails and silently turns
+ *  strip-unknown-keys into reject-as-never. Extending keeps the local schema's
+ *  own class and unknown-keys policy. */
+function effectiveSchema(
+  kind: KindName | undefined,
+  local: ZodObject<ZodRawShape> | undefined,
+): ZodObject<ZodRawShape> | undefined {
+  if (!kind) return local
+  const contract = resolveKind(kind).contract
+  if (!local) return contract
+  const additions = Object.fromEntries(
+    Object.entries(contract.shape).filter(([field]) => !(field in local.shape)),
+  )
+  return local.extend(additions)
+}
+
 /** Pure Tenant × Space × Collection expansion. Enforces the L3 key-uniqueness invariant. */
 export function expand(manifests: LoadedManifest[]): ExpandedCollection[] {
   const out: ExpandedCollection[] = []
@@ -108,15 +138,20 @@ export function expand(manifests: LoadedManifest[]): ExpandedCollection[] {
           collection,
           include: def.source ?? '**',
           cwdRel: `layers/${manifest.name}/content/${space}/${collection}`,
+          kind: def.kind,
         }
         // Branch on `def.type` (rather than spreading `def` in) so TS narrows
-        // `def.schema` per-variant and the pushed object matches the matching
-        // half of the `ExpandedCollection` discriminated union.
-        out.push(
-          def.type === 'page'
-            ? { ...base, type: 'page', schema: def.schema }
-            : { ...base, type: 'data', schema: def.schema },
-        )
+        // per-variant and the pushed object matches the matching half of the
+        // `ExpandedCollection` discriminated union.
+        const schema = effectiveSchema(def.kind, def.schema)
+        if (def.type === 'page') {
+          out.push({ ...base, type: 'page', schema })
+        } else {
+          // validateManifest guarantees at least one schema source for `data`;
+          // the throw narrows the type and backstops a manifest that never saw it.
+          if (!schema) throw new Error(`data collection "${base.key}" has no schema source`)
+          out.push({ ...base, type: 'data', schema })
+        }
       }
     }
   }
@@ -139,4 +174,42 @@ export function entryRoutesFrom(cols: ExpandedCollection[]): string[] {
   return [
     ...new Set(cols.filter((c) => c.type === 'page').map((c) => `/t/${c.tenant}/${c.space}`)),
   ].sort()
+}
+
+/** One catalog-visible collection: its generated key plus provenance and the kind
+ *  it opted into. The row shape `#catalog` (modules/catalog.ts) exposes and
+ *  `queryAcrossTenants` (app/composables/catalog.ts) fans out over — read-only,
+ *  no schema re-declared (ADR-0025). Redeclared verbatim in the generated
+ *  `.nuxt/catalog.d.ts` so that virtual module stays self-contained (like
+ *  routing.d.ts); this is its single editable home. */
+export interface CatalogEntry {
+  key: string
+  tenant: string
+  space: string
+  collection: string
+  kind: string
+}
+
+/**
+ * Derive the cross-Tenant catalog from an expanded collection set: every
+ * collection that opted into a `kind`, grouped by kind. Single-homed here — like
+ * `entryRoutesFrom` — so `modules/catalog.ts` (build-time) and any test derive
+ * it identically. A collection with no `kind` is skipped: isolation is the
+ * default, catalog exposure is opt-in (ADR-0025). Insertion order is the
+ * deterministic `expand()` order (manifests sorted, then declared space/collection
+ * order), so the generated catalog is stable build-to-build.
+ */
+export function catalogFrom(cols: ExpandedCollection[]): Record<string, CatalogEntry[]> {
+  const out: Record<string, CatalogEntry[]> = {}
+  for (const c of cols) {
+    if (!c.kind) continue
+    ;(out[c.kind] ??= []).push({
+      key: c.key,
+      tenant: c.tenant,
+      space: c.space,
+      collection: c.collection,
+      kind: c.kind,
+    })
+  }
+  return out
 }

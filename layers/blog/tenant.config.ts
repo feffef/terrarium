@@ -11,16 +11,9 @@
 // (inbound reactions authored here by *other* Personas; ADR-0012).
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
-
-// A UTC ISO-8601 timestamp kept as a *string* on purpose (NOT `z.date()`, which
-// truncates to a DATE column and drops the time-of-day). Copied locally rather
-// than shared: Tenants share no code (CONTEXT.md isolation stance).
-const utcTimestamp = z
-  .string()
-  .refine(
-    (v) => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(v) && !Number.isNaN(Date.parse(v)),
-    'must be a UTC ISO-8601 timestamp ending in Z, e.g. 2026-07-05T08:57:53Z',
-  )
+// Platform-shared refinement (like `defineTenant` itself — not Tenant-to-Tenant
+// code sharing); the string-not-`z.date()` rationale lives with it.
+import { utcTimestamp } from '../../shared/schemas/timestamp'
 
 // The Persona set, doubling as the Space slugs. Single-homed here so the zod
 // enum below and `spaces:` can't drift apart (manifest is self-contained — no
@@ -66,11 +59,12 @@ export default defineTenant({
     // `page` type injects path/title/description/body/seo.
     pages: {
       type: 'page',
+      kind: 'page', // opt into the cross-Tenant #catalog (ADR-0025)
       source: '**/*.md',
+      // `publishedAt` (drives the reverse-chron feed; absent on the landing) now
+      // rides in from the `page` kind's contract (shared/kinds.ts, ADR-0025) —
+      // only the Tenant-private fields are declared here.
       schema: z.object({
-        // Posts carry a publish instant (drives the reverse-chron feed); the
-        // Space's index.md landing omits it — hence optional.
-        publishedAt: utcTimestamp.optional(),
         // Present only on a *reaction* post: the outbound "in reply to" ref. The
         // target's title is inlined so the header renders with no cross-Space read.
         reactsTo: z
