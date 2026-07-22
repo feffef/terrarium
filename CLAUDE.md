@@ -515,9 +515,11 @@ separate, currently-unresolved question — see
 `main`'s actual branch-protection state), so you don't run the full gate
 locally yourself. **Known gap:** `gate.yml` is currently missing a `verify:mermaid`
 step that `package.json`'s `gate` script has (ADR-0024 added it to the floor but
-the human-only workflow file was never updated to match — the same
-companion-change gap `docs/proposals/README.md` documents for `validate:content`);
-tracked in `docs/proposals/` for a human to apply. Both the keyed collections
+the human-only workflow file was never updated to match — the same *kind* of
+companion-change gap `docs/proposals/README.md` cites `validate:content` as a
+now-closed historical example of, not a second live instance); this one is
+tracked in `docs/proposals/` (`630-add-verify-mermaid-to-gate-workflow.md`) for
+a human to apply. Both the keyed collections
 (Ground rules above) and the routing map derive from the manifests at build
 time — no regenerate step needed.
 
@@ -625,7 +627,7 @@ heavier automatic safety net (ADR-0009).
 
 Current-state facts — which Tenants, Spaces, and Collections exist, and what's
 still deferred — are single-homed elsewhere, not restated here where they rot
-(an earlier example list in this very sentence rotted and had to be cut): the **ADRs**
+(see "Single-home every fact" above): the **ADRs**
 record what is *decided vs. deliberately left open*, and the `journal` Tenant
 (`/t/journal/current`) narrates where the build actually is. Read those before
 building rather than a milestone summary duplicated in this file.
@@ -662,7 +664,7 @@ The land-a-gated-PR recipe (gate → green check → merge) and the per-tier mer
 
 ### Verifying UI changes
 
-What proves a presentational change, and the Playwright/Chromium/client-only sharp edges that make a passing test or clean screenshot untrustworthy (SSR HTML isn't proof, computed-style probing, ad-hoc `playwright-core` scripts, visibility ≠ in-viewport, `click()` auto-scroll, `clip` origin, viewport-meta, pre-render shutter, `<ClientOnly>` slot timing). See `docs/agents/verifying-ui-changes.md`.
+What proves a presentational change, and the Playwright/Chromium/client-only sharp edges that make a passing test or clean screenshot untrustworthy — see the "Verifying UI changes" subsection under Self-verification above for the headline rules, and `docs/agents/verifying-ui-changes.md` for the full methodology.
 
 ### Other research notes
 

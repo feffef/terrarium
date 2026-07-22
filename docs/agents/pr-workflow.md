@@ -27,7 +27,12 @@ flaking, `search_issues` scoped to the issue number is a viable fallback
    never merges, no exception.
 2. Poll `get_check_runs` for green. A check reporting `in_progress` is not
    the same as failing — don't read a still-running check as a failure.
-3. On green, call `merge_pull_request` directly. Do **not** reach for
+3. **Post the verdict as a PR review or comment before merging — every time,
+   even on a clean "merging as-is" verdict.** The merge must never be the
+   only trace: an unreviewed-looking merge and a genuinely-reviewed one must
+   stay distinguishable on the PR itself, or `get_reviews`/`get_comments`
+   return empty and a real review reads as none having happened.
+4. On green, call `merge_pull_request` directly. Do **not** reach for
    `enable_pr_auto_merge` on an already-green PR: it's for arming ahead of a
    still-pending check, not landing a PR that's already mergeable, and
    calling it on a green PR can throw a misleading error (e.g. "protected
@@ -35,10 +40,10 @@ flaking, `search_issues` scoped to the issue number is a viable fallback
    fire while a check is merely `in_progress`. If it errors, confirm the real
    check state via `pull_request_read` before concluding checks have
    genuinely failed and abandoning the PR.
-4. Arm `enable_pr_auto_merge` only when you need to land ahead of a still-pending
+5. Arm `enable_pr_auto_merge` only when you need to land ahead of a still-pending
    check — the PR then merges itself once the gate reports green, without you
    polling it to completion.
-5. Escalate a genuinely high-risk or out-of-scope PR to a human instead of
+6. Escalate a genuinely high-risk or out-of-scope PR to a human instead of
    merging it — see ADR-0004's high-risk set (also indexed in CLAUDE.md's
    Ground rules) for what counts.
 
