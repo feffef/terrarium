@@ -77,6 +77,7 @@ export const DISMISSED_MANUALLY_RESCUED_CLOSURES: ReadonlySet<string> = new Set(
 export const DISMISSED_HUMAN_PROMPTED_CLOSURES: ReadonlySet<string> = new Set([
   'session_015gQvuX4uBkjpzW9yovabVz', // #483
   'session_01Y11Fou1pRvTW2ucEt1dhX8', // #483
+  'session_01CGdWVh7DctbuH1sro8Xs4x', // #483
 ])
 /** Above this many session-file hits, `skillSessionFiles` caps that Skill's
  *  list to the newest `MAX_SKILL_SESSION_FILES` rather than handing Phase B
