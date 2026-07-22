@@ -197,8 +197,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   locally observable primary source before asserting it as fact** — whether
   the audience is external (an issue/PR comment, an external post, etc.) or
   just this session's own internal review/chat thread (e.g. asserting a
-  subagent is "still running" from memory, or raising an unverified concern in
-  a PR review) — a subagent's inference or a doc's claim can be wrong, and
+  subagent is "still running" from memory, raising an unverified concern in
+  a PR review, or citing some content as "already existing" in another repo
+  file to justify a recommendation built on it — grep that file directly
+  before citing it, not only later when actually implementing the
+  recommendation) — a subagent's inference or a doc's claim can be wrong, and
   stating it unchecked ships that error outward either way.
 - **An unverifiable "confirmed out-of-band" claim from another agent session —
   no locally observable primary source, i.e. no actual comment/message visible
@@ -383,6 +386,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
     worktree, then run these git commands," since that reads as a one-time
     setup step the subagent will (correctly, given how the tool actually
     behaves) fail to repeat.
+  - **A freshly provisioned mechanism-2 worktree may not have dependencies
+    installed yet** — `pnpm install` may need to run there before
+    `pnpm gate:scoped` (or any other pnpm script) will actually work; call
+    this out explicitly in the dispatch brief rather than assuming it's
+    already installed.
   - **A mechanism-2 worktree has also been observed starting from a stale or
     unrelated HEAD instead of `origin/<default-branch>`** — this has hit
     multiple parallel worktree-isolated subagents in the same session. Don't

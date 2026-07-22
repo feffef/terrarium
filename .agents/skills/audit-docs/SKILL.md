@@ -243,9 +243,12 @@ without the amendment banner on the old one** (adding that banner is an ADR
 edit, human-only) — never rides in the self-merged routine PR above. Bundle
 **all** human-only-surface findings from this one sweep into a **single shared,
 separately human-reviewed PR** — not one PR per finding (see the Historical-tier
-note above) — subscribe to it, and babysit it to merge/close. Likewise, if the
-gate is red for a reason that isn't yours, leave the PR open for a human rather
-than merging red — fix on the branch or escalate honestly instead.
+note above) — subscribe to it, and babysit it to merge/close. **If a prior
+sweep's escalation PR is still open, unmerged, and touches the same file this
+sweep's finding also touches, extend that existing branch/PR instead of
+opening a competing one.** Likewise, if the gate is red for a reason that isn't
+yours, leave the PR open for a human rather than merging red — fix on the
+branch or escalate honestly instead.
 
 **At PR-open, invoke `close-session`** — your first log (`in-review`).
 
