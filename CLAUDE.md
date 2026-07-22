@@ -491,7 +491,7 @@ modules/routing.ts                  # build-time Nuxt module: manifests → #rou
 modules/catalog.ts                  # build-time Nuxt module: manifests → #catalog cross-Tenant projection (human-only, ADR-0025)
 content.config.ts                   # ordinary module — builds keyed collections dynamically (ADR-0013)
 app/composables/space.ts            # useSpace(): route → keyed collections or 404 (auto-imported wrapper)
-app/composables/catalog.ts          # queryAcrossTenants(kind): the sanctioned cross-Tenant read primitive (human-only, ADR-0025);
+app/composables/catalog.ts          # queryAcrossTenants(kind, project)/queryPages(): the sanctioned cross-Tenant read primitive (human-only, ADR-0025);
                                     #   aggregator views normalize on top in their own layer (e.g. layers/commons/.../timeline.ts)
 app/pages/t/[tenant]/[space]/[...slug].vue   # runtime routing + ContentRenderer
 tests/unit/                         # PLATFORM unit tests (L3 isolation, shared/, scripts/)

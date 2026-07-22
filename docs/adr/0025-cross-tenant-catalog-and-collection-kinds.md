@@ -95,15 +95,20 @@ removed one drops. Written to `.nuxt/catalog.mjs` as plain data + a companion
 
 ### 3. `queryAcrossTenants(kind)` + a first-class **aggregator** role
 
-`app/composables/catalog.ts` exposes `queryAcrossTenants(kind)` — the sanctioned
-cross-Tenant read *primitive* (what `useSpace` is to `#routing`). It fans out over
-`#catalog` — `Promise.all(catalogByKind(kind).map(e => queryCollection(e.key)))` —
-merges, and tags every row with its provenance and its **canonical route** via a
-single-homed `documentUrl()` (`shared/routing.ts`). Because every contributing
-table carries the same merged kind contract, the union is uniformly typed — the
-"without repeating the schemas" answer. The cross-collection generic is narrowed
-at **one** documented assertion boundary (issue #642's flagged typing question),
-mirroring `resolveSpaceRoute`'s single cast.
+`app/composables/catalog.ts` exposes `queryAcrossTenants<T>(kind, project)` — the
+sanctioned cross-Tenant read *primitive* (what `useSpace` is to `#routing`). It is
+generic over the kind (any `KindName`) and over the projection `T`: the caller's
+`project` picks the fields that kind's contract guarantees, and the fan-out
+(`Promise.all(catalogByKind(kind).map(…))`) stamps each row with its provenance.
+Projecting *inside* the fan-out keeps large fields (a page `body` AST) out of the
+aggregated corpus. The cross-collection generic is narrowed at **one** documented
+assertion boundary per consumer (issue #642's flagged typing question), mirroring
+`resolveSpaceRoute`'s single cast; deriving `T` from the kind name at the type
+level is a deliberate non-goal (it fights Nuxt Content's per-collection generics).
+A thin `queryPages()` convenience specializes the primitive for the `page` kind,
+adding the **canonical route** via a single-homed `documentUrl()`
+(`shared/routing.ts`) — shared by Search and the Timeline so the page projection
+and URL derivation live in one place.
 
 The platform composable stays the generic, isolation-critical *floor* only. An
 aggregator's **normalization policy** — which kinds it consumes, what counts as
@@ -177,8 +182,9 @@ A future cross-Tenant view is another Space here, not another Tenant.
   page schema (which stops re-declaring them — `publishedAt` left the blog and
   marquee manifests, `summary` left the Journal's, all now sourced from the
   contract with unchanged names and types). No existing content changed. A future
-  shared kind is one `KINDS` entry away, with no change to `expand()` or the
-  catalog module (the *composable-level* generic is a recorded follow-up below).
+  shared kind is one `KINDS` entry away, with no change to `expand()`, the catalog
+  module, *or* the read primitive — `queryAcrossTenants<T>(kind, project)` already
+  serves any `KindName` (the session kind proves it).
 - **Session logs are a first-class `data` kind (the schema-relocation path taken).**
   The Journal's `sessions` schema moved verbatim from its manifest to
   `shared/schemas/session.ts` and became the `session` kind's contract; the Journal
@@ -201,22 +207,25 @@ A future cross-Tenant view is another Space here, not another Tenant.
 
 ### Deferred follow-ups (recorded, deliberately not built)
 
-- **Type-level kind→item linkage.** `queryAcrossTenants(kind)`'s signature
-  admits only `'page'`, and the session read is a private adapter in the
-  Commons layer — "one `KINDS` entry away" is true of the module, not yet of a
-  typed consumer surface. Deriving `KindItem<K>` from `KINDS` and making
-  `queryAcrossTenants<K extends KindName>` a real generic would remove the
-  documented casts; deferred until a second consumer needs it.
+- **Type-level kind→item linkage** *(the generic itself is now done; only the
+  type-inference remains deferred).* `queryAcrossTenants<T>(kind, project)` is
+  generic over any `KindName` and any projection `T`, and the session read now
+  goes through it — no private per-kind adapter remains. What is deliberately
+  *not* built is deriving `T` from the kind name at the type level (a real
+  `KindItem<K>` from `KINDS`): it would remove the projector's single documented
+  cast but fights Nuxt Content's per-collection generics for little gain. Deferred
+  until it earns itself.
 - **The sitemap/enumeration ambiguity.** `kind: 'page'` conflates
   "aggregatable/searchable" with "publicly enumerable" — a sitemap wants every
   routed page (`#routing`'s domain), including never-kinded ones like the
   Commons's own landings. Either bless a `#routing`-derived enumeration as a
   second, purpose-distinct sanctioned read, or split the exposure bit by
   purpose — a one-paragraph amendment, needed before anyone builds a sitemap.
-- **Query payload.** `queryAcrossTenants` runs `.all()` with no `.select()`, so
-  the Search corpus pulls full items (including `body` ASTs) before projecting
-  five scalar fields. Fine at today's scale; add `.select(…)` — or a baked
-  build-time index module (the ADR-0014 pattern again) — when the corpus grows.
+- **Query payload.** Projecting inside the fan-out keeps `body` ASTs out of the
+  aggregated *corpus*, but `queryAcrossTenants` still runs `.all()` (no
+  `.select()`), so they are still *fetched* before projection. Fine at today's
+  scale; add `.select(…)` — or a baked build-time index module (the ADR-0014
+  pattern again) — when the corpus grows.
 - **Module consolidation.** `content.config.ts`, `modules/routing.ts`, and
   `modules/catalog.ts` each run `expand(loadManifests())` with separately
   maintained dev watch lists. Fold into one derived-data module the next time

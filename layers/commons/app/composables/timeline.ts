@@ -7,8 +7,6 @@
 // (`queryAcrossTenants`, app/composables/catalog.ts) stays platform-side and
 // human-only; reads are build-time/committed only (ADR-0001), read-only by
 // construction (ADR-0020).
-import type { Collections } from '@nuxt/content'
-import { catalogByKind } from '#catalog'
 import { documentUrl } from '#shared/routing'
 
 /** The timeline "genre" of an entry — post (a dated page), digest (a daily
@@ -53,7 +51,18 @@ const DIGEST_PATH = /^\/digests\/(\d{4}-\d{2}-\d{2})$/
  *  - **sessions** — `session`-kind rows (session logs), dated by `endedAt`.
  */
 export async function queryTimeline(): Promise<TimelineEntry[]> {
-  const [pages, sessions] = await Promise.all([queryAcrossTenants('page'), querySessions()])
+  // The generic primitive for both sources: `queryPages()` for the page kind
+  // (posts + digests), and `queryAcrossTenants('session', …)` for the session
+  // kind — the projector is this aggregator's assertion of the session contract,
+  // replacing what used to be a duplicated private fan-out here.
+  const [pages, sessions] = await Promise.all([
+    queryPages(),
+    queryAcrossTenants('session', (item) => ({
+      session: item.session as string,
+      endedAt: item.endedAt as string,
+      goal: item.goal as string,
+    })),
+  ])
 
   const entries: TimelineEntry[] = []
 
@@ -96,29 +105,4 @@ export async function queryTimeline(): Promise<TimelineEntry[]> {
   // Reverse-chronological; UTC ISO-8601 sorts lexically, so string compare is
   // correct and needs no Date parsing.
   return entries.sort((a, b) => b.when.localeCompare(a.when))
-}
-
-/** Fan out over every `session`-kind collection, projecting the fields the Timeline
- *  needs. The `session` kind's contract guarantees this shape; asserted at the same
- *  single cross-collection cast boundary `queryAcrossTenants` uses. */
-async function querySessions(): Promise<
-  Array<{ tenant: string; space: string; session: string; endedAt: string; goal: string }>
-> {
-  const perCollection = await Promise.all(
-    catalogByKind('session').map(async (entry) => {
-      const items = (await queryCollection(entry.key as keyof Collections).all()) as unknown as Array<{
-        session: string
-        endedAt: string
-        goal: string
-      }>
-      return items.map((item) => ({
-        tenant: entry.tenant,
-        space: entry.space,
-        session: item.session,
-        endedAt: item.endedAt,
-        goal: item.goal,
-      }))
-    }),
-  )
-  return perCollection.flat()
 }

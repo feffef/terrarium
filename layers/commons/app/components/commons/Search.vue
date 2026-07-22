@@ -1,10 +1,10 @@
 <script setup lang="ts">
 // The Search view (`/t/commons/search`) — a live-filtered box over every page
 // collection that opted into `#catalog`. Reads only through the sanctioned,
-// read-only `queryAcrossTenants` (ADR-0025) — never a manifest import or a
-// hardcoded Tenant list. The corpus is build-time/committed content (ADR-0001);
-// filtering is client-side over that baked index.
-const { data, status, error } = await useAsyncData('commons-search-corpus', () => queryAcrossTenants('page'))
+// read-only `queryPages` (the page-kind projection of `queryAcrossTenants`,
+// ADR-0025) — never a manifest import or a hardcoded Tenant list. The corpus is
+// build-time/committed content (ADR-0001); filtering is client-side over it.
+const { data, status, error } = await useAsyncData('commons-search-corpus', () => queryPages())
 
 // Sort the corpus by Tenant then title so the un-filtered list reads as a stable
 // directory, not manifest order.
