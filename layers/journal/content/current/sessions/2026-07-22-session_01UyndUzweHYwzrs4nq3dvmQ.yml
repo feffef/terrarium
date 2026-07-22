@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01UyndUzweHYwzrs4nq3dvmQ
 startedAt: 2026-07-22T20:28:43Z
-endedAt: 2026-07-22T20:48:52Z
+endedAt: 2026-07-22T20:59:00Z
 kind: delegated
 goal: "Implement issue #447: audit-skills/blog-post process fixes"
-status: in-review
-outcome: "PR #650 opened, gate green, code-review folded in"
-summary: "Single kickoff prompt (/implement 447), no further human input since — a dispatched implementation task. Implemented the issue #447 triage-comment scope: audit-skills items 1 (collapse near-identical mechanical fixes across Skills), 3 (epoch-based timestamp comparison in groupSessionReferences), and 4 (resolvedBy/cutoff annotation for orphanedSessions and manuallyRescuedClosures); blog-post items 5 (topic-backlog scratch file), 6 (recorded the pre-screen design decision), and 7 (citation-checklist glossary table). Verified item 2 was already resolved by the existing filterSkillsUsed mechanism (issue #545) and left it out of scope rather than duplicate it. Ran /code-review (Standards + Spec sub-agents) before committing; folded in its findings — a genuine latent sort bug in findOrphanedSessions' cross-session ordering (same bug class as item 3, one level up), a duplicated resolvedBy-attach pattern (extracted into a shared helper), and several restated-rationale comments (trimmed to pointers). pnpm gate:scoped green (run twice — once before, once after the review fixes). Opened PR #650, subscribed to its activity, scheduled a 1h send_later check-in."
+status: completed
+outcome: "PR #650 merged"
+summary: "Single kickoff prompt (/implement 447), no further human input since — a dispatched implementation task. Implemented the issue #447 triage-comment scope: audit-skills items 1 (collapse near-identical mechanical fixes across Skills), 3 (epoch-based timestamp comparison in groupSessionReferences), and 4 (resolvedBy/cutoff annotation for orphanedSessions and manuallyRescuedClosures); blog-post items 5 (topic-backlog scratch file), 6 (recorded the pre-screen design decision), and 7 (citation-checklist glossary table). Verified item 2 was already resolved by the existing filterSkillsUsed mechanism (issue #545) and left it out of scope rather than duplicate it. Ran /code-review (Standards + Spec sub-agents) before committing; folded in its findings — a genuine latent sort bug in findOrphanedSessions' cross-session ordering (same bug class as item 3, one level up), a duplicated resolvedBy-attach pattern (extracted into a shared helper), and several restated-rationale comments (trimmed to pointers). pnpm gate:scoped green (run twice). Opened PR #650, subscribed to its activity, and it merged shortly after CI reported green — closing out this session."
 prs:
   - "650"
 docsRead:
@@ -20,6 +20,8 @@ docsRead:
     reason: (read before editing)
   - path: .agents/skills/audit-docs/SKILL.md
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: implement
     reason: top-level workflow for this task
@@ -28,7 +30,7 @@ skillsUsed:
   - name: close-session
     reason: session closure at PR-open
   - name: log-session
-    reason: authoring this log
+    reason: authoring this log, then finalizing it to completed on merge
 frictions:
   - description: "The issue #447 triage comment's item 2 (filter built-in CLI slash commands from skillsUsed) described stale pre-#545-fix behavior — the general filterSkillsUsed mechanism that landed for issue #545 already fully subsumes it, but the triage comment (written before #545 landed) didn't know that."
     solution: Verified directly against the current source + existing test coverage before treating it as still-needed work, and documented the reasoning in the PR body rather than adding a redundant duplicate mechanism.
@@ -36,15 +38,15 @@ frictions:
   - description: code-review's Standards pass found the resolvedBy annotation mechanism I added had its rationale restated near-identically across ~6 comment sites (file header, two constants, two interface fields, two function docstrings) instead of single-homed with pointers.
     solution: Consolidated to point at one home (the RESOLVED_MANUALLY_RESCUED_CLOSURES constant / a shared withResolvedBy helper) from the other five sites.
     severity: minor
-durationSec: 1209
+durationSec: 1817
 models:
-  claude-sonnet-5: 220
+  claude-sonnet-5: 234
 toolCounts:
   ToolSearch: 6
   mcp__github__issue_read: 2
-  Bash: 42
+  Bash: 46
   mcp__github__search_pull_requests: 1
-  Read: 13
+  Read: 14
   Grep: 2
   TaskCreate: 1
   Edit: 28
@@ -55,6 +57,7 @@ toolCounts:
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/audit-skills/SKILL.md
   - scripts/audit-skills.ts
