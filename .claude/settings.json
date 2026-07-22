@@ -17,6 +17,15 @@
             "command": "pnpm exec tsx scripts/deferred-tool-guard.ts || true"
           }
         ]
+      },
+      {
+        "matcher": "mcp__github__add_issue_comment|mcp__github__add_reply_to_pull_request_comment|mcp__github__create_pull_request|mcp__github__update_pull_request|mcp__github__pull_request_review_write|mcp__github__add_comment_to_pending_review|mcp__github__issue_write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pnpm exec tsx scripts/github-footer-guard.ts || true"
+          }
+        ]
       }
     ],
     "SessionStart": [
