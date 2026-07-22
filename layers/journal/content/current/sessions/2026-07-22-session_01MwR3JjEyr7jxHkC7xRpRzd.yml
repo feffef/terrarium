@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01MwR3JjEyr7jxHkC7xRpRzd
 startedAt: 2026-07-22T05:30:58Z
-endedAt: 2026-07-22T08:23:18Z
+endedAt: 2026-07-22T08:33:47Z
 kind: interactive
 goal: Cross-Tenant read model + Commons aggregator
-status: in-review
-outcome: "Built across 3 rounds, PR #643 in review"
+status: completed
+outcome: "Merged to main (PR #643)"
 summary: "Human-instructed: review issue #642, iterate/improve the cross-Tenant read-model design, add an aggregator to validate it beyond the dollhouse. Built collection kinds (a registry — an improvement over the proposal), a derived #catalog on the ADR-0014 pattern, queryAcrossTenants, and a Search Tenant; opened PR #643. The user then directed a restructure (chose the name \"commons\", asked for a Timeline Space): folded Search into a Commons aggregator with Search + Timeline Spaces. Then, human-directed: added session logs + digests to the timeline (promoting the session-log shape to a shared `session` data kind); ran two fable-model subagents (adversarial review, then finalize) that adopted minimum-contract kinds and moved the Timeline adapters into the Commons layer; and made queryAcrossTenants a pragmatic generic (projector, no type-inference). Every direction was the user's; the mechanics were agent judgment. Recorded as ADR-0025."
 prs:
   - "643"
@@ -91,7 +91,7 @@ frictions:
     solution: Grill the aggregator's shape (one Tenant vs many, naming) before building it out.
     severity: minor
   - description: scripts/log-session.ts reads journal.collections.sessions.schema directly, which blocks cleanly migrating sessions to a kind — the Timeline surfaced this coupling and constrained the design.
-    solution: A minimum-contract kind variant so a data collection keeps its own schema; deferred in ADR-0025.
+    solution: "Resolved this session: relocated the schema to a shared session kind (behaviour-neutral); minimum-contract kinds later removed the forced-relocation constraint entirely."
     severity: moderate
   - description: A backgrounded gate wrapped its pnpm call then echoed an exit line, and the harness notification reported the wrapper's exit (0), masking the real pnpm failure (1) momentarily.
     solution: Check the piped/redirected command's own exit code directly, per CLAUDE.md's tail-piping rule.
@@ -102,18 +102,18 @@ frictions:
   - description: Including sessions forced relocating the ADR-0009 session schema and touching log-session.ts — the exact coupling I had flagged and deferred one turn earlier; the user overrode the deferral.
     solution: The schema-relocation was behaviour-neutral and gated; the deferral was over-cautious given the ask.
     severity: minor
-durationSec: 10340
+durationSec: 10969
 models:
-  claude-opus-4-8: 607
+  claude-opus-4-8: 622
 toolCounts:
   ToolSearch: 7
   mcp__github__issue_read: 2
   Read: 41
-  Bash: 86
+  Bash: 89
   TaskCreate: 14
   TaskUpdate: 21
   Write: 29
-  Edit: 87
+  Edit: 89
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
@@ -185,5 +185,6 @@ learnings:
   - A caller-supplied projector makes queryAcrossTenants generic over any kind without a KindItem<K> type-inference that fights Nuxt Content's per-collection generics — and projecting inside the fan-out drops page body ASTs from the aggregated corpus for free.
   - Zod .merge() across two jiti module instances silently breaks strip-unknown-keys (its catchall instanceof ZodNever check fails cross-instance, turning strip into reject-as-never) — a subagent hit this merging a kind contract into a manifest schema; local.extend(missing-contract-fields) is the one-class fix.
 ideas:
-  - "Resolve deferred session-logs-in-timeline: add a minimum-contract kind (a collection keeps its rich schema and asserts it covers the kind's required fields) plus a per-kind public-URL resolver, so data collections like sessions join the catalog/timeline without relocating their schema."
-  - A 'recent everywhere' rail on the platform home that reuses queryTimeline() to surface the newest N cross-Tenant entries — the aggregator's first appearance outside its own Tenant.
+  - A 'recent everywhere' rail on the platform home that reuses the Commons Timeline's cross-Tenant read to surface the newest N entries — the aggregator's first appearance outside its own Tenant.
+  - "A Tenant-identity manifest block (display name, tagline, accent) surfaced through the catalog (or a #tenants projection), so a future directory/dollhouse view themes each room from a single home instead of a hardcoded map — the last gap for an honest dollhouse (ADR-0025 deferred list)."
+  - "Split the catalog opt-in bit by purpose: `kind` conflates 'searchable/aggregatable' with 'publicly enumerable', so a sitemap has no clean source today — either a #routing-derived enumeration read or a purpose-scoped exposure flag (ADR-0025 deferred list)."
