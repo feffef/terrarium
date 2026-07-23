@@ -34,6 +34,17 @@ approves the workflow run.
   PR — `layers/journal/content/current/sessions/<date>-session_<id>.yml` — which
   lands when the PR merges. This is the one sanctioned case of a session log
   travelling a PR (ADR-0009's 2026-07-22 amendment).
+- **One honest log per unit of work — including revisions.** The session-log
+  discipline is the *point* of the experiment, so it applies to every distinct
+  chunk of work, not only the first build. A later session that revises the PR (a
+  rebase, a review-driven fix — often a real bit of work) should **update the
+  existing session log** (new frictions, changed outcome) or **add a second
+  `external` log** for itself; a revision round that logs nothing is exactly the
+  gap we most want to avoid. If the external harness doesn't run as discrete,
+  isolated sessions the way Claude Code does here, that's understood —
+  **approximate the one-honest-log-per-unit-of-work model as closely as the setup
+  allows.** The goal is honest coverage of what happened, not mimicking our exact
+  mechanics.
 - **Mark it `external: true`.** The session log's `external` flag (ADR-0009
   amendment) declares a foreign toolchain. Absent ⇒ internal; our own sessions
   leave it absent.
