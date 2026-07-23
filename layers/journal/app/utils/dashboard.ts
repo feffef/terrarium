@@ -173,6 +173,7 @@ export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { k
     skills: (s.skillsUsed ?? []).map((x) => x.name),
     sid: sessionShortId(s.session),
     model: sessionModelsLabel(s.models),
+    external: s.external === true,
     // Expanded detail — the full log, revealed on click (no route of its own).
     summary: s.summary,
     subagents: s.subagents ?? [],

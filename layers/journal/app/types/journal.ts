@@ -120,6 +120,10 @@ export interface SessionCardView {
   // Model(s) that drove the session, formatted short (e.g. `opus-4-8`), busiest
   // first — an always-visible summary chip. Empty for older, authored-only logs.
   model: string
+  // Normalized from SessionDoc's optional `external` (ADR-0009 amendment) —
+  // absent/false ⇒ our own Claude Code harness. Drives the card's "external"
+  // marking; never affects which sessions are included, only how one renders.
+  external: boolean
   // Expanded detail:
   summary: string
   subagents: Subagent[]

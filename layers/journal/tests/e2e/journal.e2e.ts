@@ -66,6 +66,25 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       expect(html).toMatch(/role="button"/)
     })
 
+    // The fork-PR #631 salvage session (`external: true`, ADR-0009 amendment)
+    // is real content in this Space — assert its card carries the "external"
+    // marking (ribbon + `.card.external`), and that an ordinary session's card
+    // does not, so `SessionCardView.external` can't silently default `true`
+    // for every card.
+    it('marks only the externally-authored session with the "external" ribbon', async () => {
+      const html = await $fetch('/t/journal/current')
+      expect(html).toContain('class="ribbon"')
+      const externalGoalIdx = html.indexOf('Respond to owner review on PR #631')
+      expect(externalGoalIdx).toBeGreaterThan(-1)
+      const externalCardStart = html.lastIndexOf('<article', externalGoalIdx)
+      expect(html.slice(externalCardStart, externalGoalIdx)).toMatch(/class="card[^"]*\bexternal\b/)
+
+      const ownGoalIdx = html.indexOf('Run /audit-skills — audit the Skill Inventory')
+      expect(ownGoalIdx).toBeGreaterThan(-1)
+      const ownCardStart = html.lastIndexOf('<article', ownGoalIdx)
+      expect(html.slice(ownCardStart, ownGoalIdx)).not.toMatch(/class="card[^"]*\bexternal\b/)
+    })
+
     // Digests expand inline on the landing (like the session cards): the body is
     // preloaded for zero-request expansion, and the standalone page route still works.
     it('shows daily digests inline and keeps the digest route', async () => {

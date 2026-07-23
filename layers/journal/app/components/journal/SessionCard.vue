@@ -23,7 +23,8 @@ const detailId = useId()
 </script>
 
 <template>
-  <article :id="anchor" class="card" :class="{ open: expanded }">
+  <article :id="anchor" class="card" :class="{ open: expanded, external: card.external }">
+    <span v-if="card.external" class="ribbon" title="Authored by a different agent/toolchain (ADR-0009)">external</span>
     <JournalDisclosure class="head" :expanded="expanded" :controls="detailId" @toggle="emit('toggle')">
       <div class="top">
         <span class="when">{{ card.when }} <span class="dur">· {{ card.duration }} min</span></span>
@@ -126,6 +127,7 @@ const detailId = useId()
 
 <style scoped>
 .card {
+  position: relative;
   background: var(--jd-surface);
   border: 1px solid var(--jd-line);
   border-radius: var(--jd-radius);
@@ -139,9 +141,34 @@ const detailId = useId()
      (a file path, identifier) that would otherwise overflow the card on a
      narrow screen instead of wrapping. */
   overflow-wrap: anywhere;
+  overflow: hidden;
 }
 .card:hover { border-color: color-mix(in oklab, var(--jd-accent) 40%, var(--jd-line)); }
 .card:not(.open):hover { transform: translateY(-2px); }
+/* A session log authored by a different agent/toolchain (ADR-0009 amendment) —
+   marked so it's scannable at a glance while scrolling the feed, not just on
+   close reading. */
+.card.external {
+  border-left: 3px solid var(--jd-external);
+  background: color-mix(in oklab, var(--jd-external) 5%, var(--jd-surface));
+}
+.ribbon {
+  position: absolute;
+  top: 0.7rem;
+  right: -1.9rem;
+  transform: rotate(38deg);
+  width: 8rem;
+  text-align: center;
+  background: var(--jd-external);
+  color: #fff;
+  font-family: var(--jd-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.18rem 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
 .head { cursor: pointer; display: block; border-radius: 6px; }
 .head:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 4px; }
 .top {
