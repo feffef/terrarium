@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XtSRtGohT9eNzfT9mxJGko
 startedAt: 2026-07-23T04:08:28Z
-endedAt: 2026-07-23T04:34:34Z
+endedAt: 2026-07-23T18:51:20Z
 kind: autonomous
 goal: Run scheduled /audit-docs sweep
-status: in-review
-outcome: 9 fixes merged, 1 ADR fix escalated
-summary: "Fully autonomous scheduled run (no human prompt at any point). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across every Live-tier doc, pooled and deduped their output into 10 candidate findings, then dispatched an independent fact-checker before touching anything. 8 confirmed findings landed in a self-merged PR (#656, gate green, merged): a duplicated CLAUDE.md repo-layout row, a self-contradicting sentence about the gate's steps, two Skills and one research-doc cross-reference reconciled to their single home, SECURITY.md's vague issue-tracker pointer corrected to name ADR-0020 instead of a since-closed issue, an undefined self-merge size threshold pinned in frictions-to-fixes, and stale future-tense framing in two docs/research files fixed after confirming via a live GitHub API call and the 2026-07-11 journal digest that the repo actually already went public that day. A 9th finding (ADR-0004's human-only file list lagging ADR-0025) escalated to a separate human-reviewed PR (#657, still open) since it edits an ADR. Two findings were confirmed but needed no fix."
+status: completed
+outcome: 9 fixes merged across 2 PRs
+summary: "Fully autonomous scheduled run (no human prompt started it). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across every Live-tier doc, pooled and deduped their output into 10 candidate findings, then dispatched an independent fact-checker before touching anything. 8 confirmed findings landed in a self-merged PR (#656, gate green): a duplicated CLAUDE.md repo-layout row, a self-contradicting sentence about the gate's steps, two Skills and one research-doc cross-reference reconciled to their single home, SECURITY.md's vague issue-tracker pointer corrected to name ADR-0020 instead of a since-closed issue, an undefined self-merge size threshold pinned in frictions-to-fixes, and stale future-tense framing in two docs/research files fixed after confirming via a live GitHub API call and the 2026-07-11 journal digest that the repo actually already went public that day. A 9th finding (ADR-0004's human-only file list lagging ADR-0025) escalated to a separate human-reviewed PR (#657) since it edits an ADR; the human owner questioned the underlying policy in review (whether those 3 files need always-human review), I explained the isolation-boundary rationale and asked for an explicit direction rather than unilaterally relaxing it, and they merged the sync-only fix as-is roughly 14 hours later. Two findings were confirmed but needed no fix."
 prs:
   - "656"
   - "657"
@@ -56,26 +56,26 @@ frictions:
   - description: Called ScheduleWakeup with the /loop dynamic-mode sentinel to wait on background subagents, even though this session is a scheduled routine firing, not a /loop invocation — wrong tool for that wait.
     solution: Stopped the wakeup immediately and relied on the harness's automatic task-notification delivery for backgrounded Agent-tool calls instead, which is the correct mechanism and needs no manual scheduling.
     severity: nit
-durationSec: 1566
+durationSec: 52972
 models:
-  claude-sonnet-5: 216
+  claude-sonnet-5: 314
 toolCounts:
-  Bash: 29
+  Bash: 34
   ToolSearch: 6
   mcp__github__list_pull_requests: 1
   Agent: 5
   TaskCreate: 8
-  TaskUpdate: 14
+  TaskUpdate: 15
   ScheduleWakeup: 3
   Read: 20
   mcp__github__search_repositories: 1
-  Edit: 11
+  Edit: 12
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
   mcp__github__enable_pr_auto_merge: 2
-  mcp__github__pull_request_read: 7
-  mcp__Claude_Code_Remote__send_later: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__pull_request_read: 32
+  mcp__Claude_Code_Remote__send_later: 13
+  mcp__github__add_issue_comment: 3
   mcp__github__merge_pull_request: 1
   mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
   Skill: 2
