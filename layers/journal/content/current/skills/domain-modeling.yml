@@ -38,3 +38,26 @@ observations:
       that warrants a cleaner pattern before acting on it. Recording both
       citations here so a future run isn't starting from zero if the pattern
       recurs.
+  - date: 2026-07-23
+    note: >-
+      A third instance, still within this run's 40-session window: session_01MwR3JjEyr7jxHkC7xRpRzd
+      ("Cross-Tenant read model + Commons aggregator", ended 2026-07-22)
+      built a collection-kinds registry, a Commons Tenant with Search/Timeline
+      Spaces, and a shared `session` data kind, recorded as ADR-0025 — squarely
+      new vocabulary plus a new ADR — with no domain-modeling invocation
+      (skillsUsed: implement, code-review, close-session, log-session). The
+      two 2026-07-19 citations above have both aged out of the current
+      window, so this is the only in-window instance today, short of the
+      rule's literal ≥2-in-window bar on its own. Still not treated as a
+      demotion signal: beyond the raw count, CONTEXT.md's own importance-grade
+      definitions (`### Importance` section) name domain-modeling as *the*
+      worked example of `essential` ("its absence would be felt across many
+      kinds of session") — demoting it would put this Inventory entry in
+      direct contradiction with that definition, a bigger inconsistency than
+      a routine grade change and not something this Skill's narrow
+      Inventory-YAML mandate should paper over unilaterally. Recording this
+      third citation so a future run has the fuller pattern (three instances
+      across two runs, two of them strong domain fits) without re-deriving it
+      from scratch; if a fourth clear instance appears, that structural
+      tension between the evidence and CONTEXT.md's canonical-example framing
+      is probably worth a step-6 idea rather than another silent citation.
