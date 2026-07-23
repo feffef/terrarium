@@ -193,6 +193,9 @@ post in **real, verifiable facts** and **link them** so readers can go look:
   or the file on disk before publishing (`git log --date=format:'%A'`, `wc -l`,
   etc.) — a wrong number or weekday is as bad as an invented fact, and no gate
   catches it.
+- **Any relative-time or "X ago"/elapsed-time claim must be computed from the
+  actually-fetched `created_at`/timestamp data** (or a diff against it) —
+  never estimated or recalled from memory while drafting.
 - **Provenance and causal claims get the same rigor as links.** Before attributing
   intent ("X did this because…"), check **who actually authored/merged** the PR or
   commit via `git log`/GitHub — not assumption. Before repeating a "why it broke" /

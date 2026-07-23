@@ -120,9 +120,11 @@ explicit skip here rather than relying on the timing alone.
 
 ## Run it
 
-1. **Resolve the set.** List every open issue and in-scope external PR; for each,
-   check its most recent comment (or body, if none) against the human-authorship
-   rule above; keep the eligible set; apply the wayfinder skips.
+1. **Resolve the set.** List every open issue via `tsx scripts/list-open-issues.ts`
+   (overflow-safe — see `docs/agents/issue-tracker.md` — not raw
+   `list_issues`/`search_issues`) plus in-scope external PRs; for each, check its
+   most recent comment (or body, if none) against the human-authorship rule above;
+   keep the eligible set; apply the wayfinder skips.
 2. **One subagent per issue** (parallel — the eligible set is usually small,
    since a ticket only surfaces when a human has said something since the last
    AI action on it). Brief each with `/triage`'s per-issue rules plus
