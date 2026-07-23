@@ -1,0 +1,49 @@
+schemaVersion: 1
+session: session_018mKgKKusetuuGLJdvRDEVq
+startedAt: 2026-07-23T01:04:48Z
+endedAt: 2026-07-23T01:15:42Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: in-review
+outcome: 2 issues filed, 1 grouped PR open
+summary: "Scheduled Routine fired /frictions-to-fixes with no human present. Delegated the 20-session survey and tracker-screening to a subagent, which found the recency window overwhelmingly already resolved (fixed in-session, superseded, or already tracked by open issues like #544/#602) — only two small, doc-only candidates survived: blog-post drafting relative-time claims from memory instead of fetched timestamps, and auto-triage's set-resolution step not referencing the already-built overflow-safe scripts/list-open-issues.ts. Confirmed no duplicates via search_issues, filed issues #653 and #654, then dispatched one Sonnet impl agent (worktree-isolated) to fix both as a single grouped PR (#655, closing both issues) per the Skill's doc-fix batching rule. Gate passed (classified inert, floor-only). PR left open per the impl-agent constraints; this session now reviews and merges per the Skill's §6."
+prs:
+  - "655"
+docsRead:
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: the workflow this run executes
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the scheduled workflow itself
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: mcp__github__search_issues's own tool description nudges toward paraphrased/conceptual queries, in tension with the Skill's requirement to screen candidates via exact tool-name/error-message strings before concluding 'never fixed'.
+    solution: Worked around it with keyword-dense scoped queries (repo:owner/repo <keywords>), consistent with docs/agents/issue-tracker.md's existing guidance; no overflow or false-negative hit this run.
+    severity: nit
+durationSec: 653
+models:
+  claude-sonnet-5: 43
+toolCounts:
+  Agent: 2
+  ToolSearch: 3
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 2
+  Skill: 2
+  Write: 1
+  Bash: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__send_later: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Implement blog-post and auto-triage doc fixes
+    model: sonnet
+gitBranch: claude/hopeful-brown-vbl3wb
+entrypoint: remote_trigger
+cliVersion: 2.1.218
+trigger: frictions-to-fixes
