@@ -21,8 +21,8 @@ and `docs/adr/`). Reports of particular interest:
   returning another's Documents (ADR-0004 L3 / ADR-0006).
 - The **agent governance** boundary — an untrusted request (issue, PR, or
   comment body) steering an autonomous agent into a change it shouldn't make,
-  or clearing the safety gate with hostile intent (ADR-0003 / ADR-0004; see
-  the open governance discussion in the issue tracker).
+  or clearing the safety gate with hostile intent (ADR-0003 / ADR-0004; the
+  trust-tier line this draws is ADR-0020).
 - The **PoC deploy** path — the self-updating container that tracks `main`
   (ADR-0011): anything that lets untrusted code reach a build/run step.
 

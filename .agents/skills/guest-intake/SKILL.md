@@ -57,10 +57,9 @@ recent comment, or the body if there are none) and act only when it is
   writes again, so a tight loop is cheap.
 - **An `OWNER` comment _without_ the footer is the owner steering** — a Trusted
   override (ADR-0020). Obey it (e.g. "just build this" → `ready-for-agent`;
-  "reject this" → close or `ready-for-human`) and do not interview the owner. The
-  `OWNER` association alone can't tell the owner's own comment from the agent's —
-  agent writes land under the owner's connection — so the **footer's absence** is
-  what marks a real owner comment (see `docs/agents/issue-tracker.md`).
+  "reject this" → close or `ready-for-human`) and do not interview the owner.
+  Why the footer's absence, not the `OWNER` association, is what marks a real
+  owner comment: see `auto-triage/SKILL.md`'s eligibility section.
 
 ## The bounded interview — bounded, not a relentless grilling
 
