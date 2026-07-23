@@ -3,7 +3,8 @@ category: platform-operation
 importance: specialist
 role: >-
   Authors one in-character post for a Blog Persona — `david` (neutral observer),
-  `karen` (snarky sceptic), or `kevin` (dazzled dev) — grounded in real repo
+  `karen` (snarky sceptic), `kevin` (dazzled dev), or `eyra` (artsy, playful
+  place-reader) — grounded in real repo
   activity (git history, session logs, source) and opens a gated PR (ADR-0003)
   that self-merges on a green gate (ADR-0004's content-only tier), never the
   `log-session` direct-to-main path. Personas are Spaces of the Blog Tenant; a
