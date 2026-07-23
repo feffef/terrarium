@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01GU73Neuejd9xF9vu9mLUEr
 startedAt: 2026-07-23T19:07:24Z
-endedAt: 2026-07-23T19:21:52Z
+endedAt: 2026-07-23T19:22:55Z
 kind: interactive
 goal: Write one blog-post skill run (David persona)
-status: in-review
-outcome: "PR #664 opened, gate green, awaiting CI/merge"
-summary: "Ran the /blog-post Skill end-to-end with no persona given. The rotation gate (scripts/blog-rotation.ts) forced David (missing from the four most recent posts). Drafted three full-rigor candidates (Eyra-merge reaction to Kevin, an ADR-0025/ADR-0004 governance-catchup angle, and a recursive blog-post-Skill self-correction angle), had a fresh outside-reader subagent judge them blind, and it picked the Eyra-merge reaction on event weight. Revised the winner to close five gaps the reviewer flagged (unexplained dashboard rejection, undefined jargon, an unexplained callback, vague phrasing, overstated AI agency), verified every claim against git/GitHub API primary sources, ran pnpm gate:scoped green, and opened PR #664. Entirely agent-initiated per the Skill's own schedule/ invocation; no human steered topic or persona choice mid-run."
+status: completed
+outcome: "PR #664 merged (9769b47)"
+summary: "Ran the /blog-post Skill end-to-end with no persona given. The rotation gate (scripts/blog-rotation.ts) forced David (missing from the four most recent posts). Drafted three full-rigor candidates (Eyra-merge reaction to Kevin, an ADR-0025/ADR-0004 governance-catchup angle, and a recursive blog-post-Skill self-correction angle), had a fresh outside-reader subagent judge them blind, and it picked the Eyra-merge reaction on event weight. Revised the winner to close five gaps the reviewer flagged (unexplained dashboard rejection, undefined jargon, an unexplained callback, vague phrasing, overstated AI agency), verified every claim against git/GitHub API primary sources, ran pnpm gate:scoped green, opened PR #664, posted the pre-merge verdict comment, watched CI go green, and merged it. Entirely agent-initiated per the Skill's own schedule/ invocation; no human steered topic, persona choice, or merge mid-run."
 prs:
   - "664"
 docsRead:
@@ -36,19 +36,19 @@ frictions:
   - description: First PR body draft contained a garbled, incorrect markdown link ("[#647](.../pull/647-adjacent post)") — an artifact from drafting, not grounded in anything real.
     solution: Caught and fixed immediately via update_pull_request before any reviewer could see it; re-read a PR body once more before submitting it, the same rigor already applied to the post's own citations.
     severity: minor
-durationSec: 867
+durationSec: 931
 models:
-  claude-sonnet-5: 164
+  claude-sonnet-5: 178
 toolCounts:
-  Bash: 42
+  Bash: 43
   Read: 10
-  ToolSearch: 4
+  ToolSearch: 5
   mcp__github__issue_read: 3
-  mcp__github__pull_request_read: 8
+  mcp__github__pull_request_read: 10
   Write: 7
   Agent: 1
-  Edit: 2
-  ScheduleWakeup: 2
+  Edit: 3
+  ScheduleWakeup: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__update_pull_request: 2
@@ -56,6 +56,8 @@ toolCounts:
   Skill: 2
   mcp__github__pull_request_review_write: 1
   mcp__github__enable_pr_auto_merge: 2
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-07-23-kevin-left-it-open-it-merged-the-next-day.md
   - layers/blog/content/kevin/pingbacks/2026-07-23-david-someone-elses-model-tried-to-move-into-our-house.yml
