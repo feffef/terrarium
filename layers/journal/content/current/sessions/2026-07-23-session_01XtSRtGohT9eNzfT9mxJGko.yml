@@ -1,0 +1,107 @@
+schemaVersion: 1
+session: session_01XtSRtGohT9eNzfT9mxJGko
+startedAt: 2026-07-23T04:08:28Z
+endedAt: 2026-07-23T04:34:34Z
+kind: autonomous
+goal: Run scheduled /audit-docs sweep
+status: in-review
+outcome: 9 fixes merged, 1 ADR fix escalated
+summary: "Fully autonomous scheduled run (no human prompt at any point). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across every Live-tier doc, pooled and deduped their output into 10 candidate findings, then dispatched an independent fact-checker before touching anything. 8 confirmed findings landed in a self-merged PR (#656, gate green, merged): a duplicated CLAUDE.md repo-layout row, a self-contradicting sentence about the gate's steps, two Skills and one research-doc cross-reference reconciled to their single home, SECURITY.md's vague issue-tracker pointer corrected to name ADR-0020 instead of a since-closed issue, an undefined self-merge size threshold pinned in frictions-to-fixes, and stale future-tense framing in two docs/research files fixed after confirming via a live GitHub API call and the 2026-07-11 journal digest that the repo actually already went public that day. A 9th finding (ADR-0004's human-only file list lagging ADR-0025) escalated to a separate human-reviewed PR (#657, still open) since it edits an ADR. Two findings were confirmed but needed no fix."
+prs:
+  - "656"
+  - "657"
+docsRead:
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: amendment-banner convention for the ADR-0004 escalation fix
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe, enable_pr_auto_merge vs merge_pull_request mechanics
+  - path: layers/journal/content/current/pages/digests/2026-07-11.md
+    reason: primary-source confirmation the repo actually went public that day
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (read before editing)
+  - path: docs/research/public-readiness-review.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (read before editing)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (read before editing)
+  - path: CONTEXT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this run
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: mcp__github__enable_pr_auto_merge threw a misleading "required checks are failing" error while the gate check was merely in_progress, not actually failed.
+    solution: docs/agents/pr-workflow.md already documents this exact gotcha; confirmed real state via pull_request_read get_check_runs and merged directly once genuinely green instead of trusting the error text.
+    severity: nit
+  - description: First read of the deploy/README.md "repo is public" vs. two research docs' "before flipping to public" framing didn't immediately establish which side was stale.
+    solution: 'Had to independently verify via a live search_repositories API call (visibility: public) and the 2026-07-11 journal digest ("the repo went public") before editing anything — confirms the fact-check-before-touch step is essential even when a contradiction looks self-evident from the doc text alone.'
+    severity: minor
+  - description: Called ScheduleWakeup with the /loop dynamic-mode sentinel to wait on background subagents, even though this session is a scheduled routine firing, not a /loop invocation — wrong tool for that wait.
+    solution: Stopped the wakeup immediately and relied on the harness's automatic task-notification delivery for backgrounded Agent-tool calls instead, which is the correct mechanism and needs no manual scheduling.
+    severity: nit
+durationSec: 1566
+models:
+  claude-sonnet-5: 216
+toolCounts:
+  Bash: 29
+  ToolSearch: 6
+  mcp__github__list_pull_requests: 1
+  Agent: 5
+  TaskCreate: 8
+  TaskUpdate: 14
+  ScheduleWakeup: 3
+  Read: 20
+  mcp__github__search_repositories: 1
+  Edit: 11
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__enable_pr_auto_merge: 2
+  mcp__github__pull_request_read: 7
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  PushNotification: 1
+filesEdited:
+  - CLAUDE.md
+  - docs/research/making-repo-public.md
+  - docs/research/public-readiness-review.md
+  - docs/agents/mdc-when-to-use.md
+  - .agents/skills/guest-intake/SKILL.md
+  - SECURITY.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/adr/0004-objective-safety-gate.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens doc audit (Agent A)
+  - type: general-purpose
+    task: Single-home lens doc audit (Agent B)
+  - type: general-purpose
+    task: Concision lens doc audit (Agent C)
+  - type: general-purpose
+    task: Coherence lens doc audit (Agent D)
+  - type: general-purpose
+    task: Fact-check pooled audit-docs findings
+gitBranch: claude/festive-mayer-tw4ley
+entrypoint: remote_trigger
+cliVersion: 2.1.218
+trigger: audit-docs
