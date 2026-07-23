@@ -66,6 +66,16 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       expect(html).toMatch(/role="button"/)
     })
 
+    // No session log in this Space is authored by an external harness yet
+    // (ADR-0009 amendment) — the "external" ribbon must stay dark until one
+    // actually is, guarding against `SessionCardView.external` accidentally
+    // defaulting `true` for every card.
+    it('renders no external-session ribbon while no session is marked external', async () => {
+      const html = await $fetch('/t/journal/current')
+      expect(html).not.toContain('class="ribbon"')
+      expect(html).not.toMatch(/class="card[^"]*\bexternal\b/)
+    })
+
     // Digests expand inline on the landing (like the session cards): the body is
     // preloaded for zero-request expansion, and the standalone page route still works.
     it('shows daily digests inline and keeps the digest route', async () => {

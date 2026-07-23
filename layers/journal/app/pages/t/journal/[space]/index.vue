@@ -177,27 +177,6 @@ const groupedSkills = computed(() => skillGroups(platformSkills.value))
 const title = computed(() => rootDoc.value?.title ?? `The Platform Journal — ${space}`)
 const lede = computed(() => rootDoc.value?.description ?? `The ${space} Space of the journal Tenant.`)
 
-// ── THROWAWAY prototype — "how should an external session be marked?" ──
-// See layers/journal/app/components/journal/prototype/NOTES.md. Dev-only
-// (import.meta.dev), so it never ships to a production build. No real content
-// has `external: true` yet, so one card is faked as external here — for the
-// prototype only — purely as a rendering choice, not a data-fetching one.
-const PROTOTYPE_VARIANTS = ['A', 'B', 'C']
-const prototypeVariant = ref((route.query.variant as string) || 'A')
-const pickPrototypeVariant = (v: string) => {
-  prototypeVariant.value = v
-  const url = new URL(window.location.href)
-  url.searchParams.set('variant', v)
-  window.history.replaceState(window.history.state, '', url)
-}
-const demoExternalKey = computed(() => sessionCards.value[1]?.key ?? sessionCards.value[0]?.key ?? null)
-const isDemoExternal = (key: string) => key === demoExternalKey.value
-const groupedForVariantC = computed(() => ({
-  ours: sessionCards.value.filter((c) => !isDemoExternal(c.key)),
-  external: sessionCards.value.filter((c) => isDemoExternal(c.key)),
-}))
-const isDevBuild = import.meta.dev
-
 useSeoMeta({
   title: () => `${title.value} · journal/${space}`,
   description: () => lede.value,
@@ -397,67 +376,18 @@ useSeoMeta({
           <h2>Recent activity</h2>
           <span class="count">session logs, newest first</span>
         </div>
-        <div v-if="sessionCards.length && prototypeVariant === 'C'" class="cards proto-groups">
-          <div v-if="groupedForVariantC.ours.length">
-            <p class="proto-subhead">Our sessions</p>
-            <div class="cards">
-              <JournalSessionCard
-                v-for="c in groupedForVariantC.ours"
-                :key="c.key"
-                :card="c"
-                :anchor="sessionAnchor(c.key)"
-                :expanded="isOpen(sessionAnchor(c.key))"
-                @toggle="toggle(sessionAnchor(c.key))"
-              />
-            </div>
-          </div>
-          <div v-if="groupedForVariantC.external.length">
-            <p class="proto-subhead">External sessions</p>
-            <div class="cards">
-              <JournalSessionCard
-                v-for="c in groupedForVariantC.external"
-                :key="c.key"
-                :card="c"
-                :anchor="sessionAnchor(c.key)"
-                :expanded="isOpen(sessionAnchor(c.key))"
-                @toggle="toggle(sessionAnchor(c.key))"
-              />
-            </div>
-          </div>
-        </div>
-        <div v-else-if="sessionCards.length" class="cards">
-          <template v-if="prototypeVariant === 'B'">
-            <JournalPrototypeSessionCardVariantB
-              v-for="c in sessionCards"
-              :key="c.key"
-              :card="c"
-              :external="isDemoExternal(c.key)"
-              :anchor="sessionAnchor(c.key)"
-              :expanded="isOpen(sessionAnchor(c.key))"
-              @toggle="toggle(sessionAnchor(c.key))"
-            />
-          </template>
-          <template v-else>
-            <JournalPrototypeSessionCardVariantA
-              v-for="c in sessionCards"
-              :key="c.key"
-              :card="c"
-              :external="isDemoExternal(c.key)"
-              :anchor="sessionAnchor(c.key)"
-              :expanded="isOpen(sessionAnchor(c.key))"
-              @toggle="toggle(sessionAnchor(c.key))"
-            />
-          </template>
+        <div v-if="sessionCards.length" class="cards">
+          <JournalSessionCard
+            v-for="c in sessionCards"
+            :key="c.key"
+            :card="c"
+            :anchor="sessionAnchor(c.key)"
+            :expanded="isOpen(sessionAnchor(c.key))"
+            @toggle="toggle(sessionAnchor(c.key))"
+          />
         </div>
         <p v-else class="empty">No sessions logged in this Space yet.</p>
       </section>
-
-      <JournalPrototypeSwitcher
-        v-if="isDevBuild"
-        :variants="PROTOTYPE_VARIANTS"
-        :current="prototypeVariant"
-        @pick="pickPrototypeVariant"
-      />
 
       <!-- Rail -->
       <aside class="rail">
@@ -762,17 +692,6 @@ h1 {
 
 .cards { display: flex; flex-direction: column; gap: 0.85rem; min-width: 0; }
 .empty { color: var(--jd-faint); font-size: 0.9rem; margin: 0; }
-
-/* THROWAWAY prototype-only (variant C) — delete alongside components/journal/prototype/. */
-.proto-groups { gap: 1.4rem; }
-.proto-subhead {
-  margin: 0 0 0.6rem;
-  font-family: var(--jd-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--jd-faint);
-}
 
 .rail { display: flex; flex-direction: column; gap: 1.6rem; }
 .panel {

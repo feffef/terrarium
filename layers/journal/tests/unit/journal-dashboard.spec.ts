@@ -297,6 +297,15 @@ describe('sessionCardViews', () => {
     expect(without!.learnings).toEqual([])
     expect(without!.ideas).toEqual([])
   })
+
+  it('normalizes `external` to a boolean, defaulting to false when absent (ADR-0009 amendment)', () => {
+    const [marked] = sessionCardViews([session({ external: true })])
+    expect(marked!.external).toBe(true)
+    const [unmarked] = sessionCardViews([session()])
+    expect(unmarked!.external).toBe(false)
+    const [explicitFalse] = sessionCardViews([session({ external: false })])
+    expect(explicitFalse!.external).toBe(false)
+  })
 })
 
 describe('deep-link anchors', () => {
