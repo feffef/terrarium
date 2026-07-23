@@ -1,10 +1,12 @@
-# Public-readiness review — before flipping `feffef/terrarium` to public
+# Public-readiness review — `feffef/terrarium`'s 2026-07-11 flip to public
 
-A one-time review of what must be addressed before this repository's visibility
-is switched from **private** to **public read**. The generic GitHub mechanics
-(what becomes visible, which settings to enable, fork/secret-scanning behaviour)
-are single-homed in **[`making-repo-public.md`](./making-repo-public.md)** — this
-doc is the **repo-specific** findings and the owner decisions still open.
+A one-time review of what needed addressing before this repository's visibility
+switched from **private** to **public read** — the flip happened the same day
+this review was done (see the 2026-07-11 journal digest). The generic GitHub
+mechanics (what becomes visible, which settings to enable, fork/secret-scanning
+behaviour) are single-homed in **[`making-repo-public.md`](./making-repo-public.md)**
+— this doc is the **repo-specific** findings from that review, and the owner
+decisions that were still open as of it.
 
 _Review date: 2026-07-11. Scope: full working tree + all git history (92
 commits), CI, deploy, issues/PRs, and the ADR/skill agent workflow._
@@ -58,8 +60,11 @@ Actions logs, and the agent workflow's attack surface.**
    access: Trusted (write access) vs. Public (read-only), whose
    issues/PRs agents treat as untrusted input — never implemented without a
    Trusted green-light, never auto-merged. The mechanical half (fork-PR workflow
-   approval + human-only merge for Public PRs) still needs enabling at the flip.
-   The deploy-path `--ignore-scripts` hardening remains a separate open item.
+   approval + human-only merge for Public PRs) needed enabling at the flip;
+   whether it was actually turned on isn't verifiable from repo state (GitHub
+   Settings aren't tracked in the tree) — left as an open question, not
+   confirmed either way. The deploy-path `--ignore-scripts` hardening remains a
+   separate open item.
 
 ## GitHub settings to configure at/after the flip
 

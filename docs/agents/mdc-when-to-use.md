@@ -130,11 +130,12 @@ Rule of thumb: **one rich blurb → slots; a uniform list → a YAML array prop.
 
 ## The validation caveat (important in this repo)
 
-**Body MDC bypasses the collection's Zod schema entirely.** Confirmed by this
-repo's own `scripts/validate-content.ts`: only a `.md` file's **frontmatter** is
-`safeParse`d; the body "isn't part of the authored schema." And `nuxt build`
-uses each schema only to *derive SQL column types*, never to validate content at
-build.
+**Body MDC bypasses the collection's Zod schema entirely.** Only a `.md` file's
+**frontmatter** is `safeParse`d (by this repo's own `scripts/validate-content.ts`);
+the body "isn't part of the authored schema." Why that's true at the Nuxt
+Content level — what a collection `schema` is (and isn't) used for at build —
+is single-homed in `docs/research/nuxt-content-review-grounding.md` §2, with
+the primary-source line citations; not re-derived here.
 
 Consequence: data authored **in the body** (as MDC props) gets **zero gate
 validation** — a typo'd key or a missing field surfaces only at render, if at

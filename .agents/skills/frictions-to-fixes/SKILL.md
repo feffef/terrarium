@@ -124,12 +124,14 @@ From the subagent's ranked never-fixed candidates (already grouped by root cause
 if your judgement differs, but don't re-derive the ranking from scratch.)
 
 - **Simple (the bulk).** Passes the **ripeness test**, all three: **simple** (one
-  small code or config change, no redesign), **autonomous** (an agent lands it
-  start-to-finish with no human decision mid-way), and **safe surface** (touches
-  none of the human-only surfaces — CLAUDE.md's Ground rules, ADR-0004; those are
-  never dispatched here). These you review and merge yourself in §6.
-- **Hard (at most 2 per run).** A friction whose fix is a **large or multi-file
-  code change**, or one that turns on a **non-obvious design decision**. These are still confined to safe surfaces —
+  small code or config change — touches a single file with a bounded diff, no
+  redesign), **autonomous** (an agent lands it start-to-finish with no human
+  decision mid-way), and **safe surface** (touches none of the human-only
+  surfaces — CLAUDE.md's Ground rules, ADR-0004; those are never dispatched
+  here). These you review and merge yourself in §6.
+- **Hard (at most 2 per run).** A friction whose fix touches **2 or more
+  files**, or one that turns on a **non-obvious design decision** even within a
+  single file. These are still confined to safe surfaces —
   "hard" buys ambition within the dispatchable surface, never a licence to touch a
   human-only one. Cap them at **2** so the review-and-merge load stays sane; if
   more than two hard frictions rank highly, take the top two and leave the rest for

@@ -11,8 +11,10 @@ page content was retrieved via its `github/docs` source file (because
 **This repo's own posture**: per `CLAUDE.md` and ADR-0001, Terrarium is one
 repo, one container, with human-only merge gates on CI/routing/isolation
 files (ADR-0004) and a `pnpm gate` safety gate — this document doesn't change
-any of that; it's background reading for *if and when* a visibility change is
-ever considered, not a proposal to make one.
+any of that. This is the generic-mechanics grounding that fed the repo's actual
+flip to public on 2026-07-11 (see `public-readiness-review.md` for the
+repo-specific findings and decisions from that review) — kept here as
+reference for anyone reasoning about a repo's visibility, not a live proposal.
 
 ---
 
