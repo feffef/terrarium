@@ -1,16 +1,18 @@
 schemaVersion: 1
 session: session_014kKFh1mgSURqypUxKGNZRz
 startedAt: 2026-07-21T09:11:24Z
-endedAt: 2026-07-22T16:27:22Z
+endedAt: 2026-07-23T18:53:53Z
 kind: interactive
 goal: "Review Eyra fork PR #631; add external-session support"
 status: completed
-outcome: "#644 merged (external-session support + docs); #631 awaits owner"
-summary: "All work human-directed by the owner (Trusted), no net-new autonomous work. Reviewed an external fork-built PR (#631) adding a fourth Blog persona \"Eyra\" + a static /dollhouse/ viz: diagnosed the \"can't open a fork PR\" report as a repo setting (pull_request_creation_policy), analysed the dollhouse from primary sources (fabricated \"green\" seed data, no generator, no tests, bypasses the manifest/routing model), summarised 10 ADR violations, and posted review + session-log-requirement comments. The external agent revised #631 (dropped the dollhouse, kept the persona, added an in-PR session log, reconciled the three→four persona model) — re-reviewed and verified. Opened design issue #642 (cross-tenant read model), which the owner implemented and merged as #643/ADR-0025 (live Commons Timeline). On the owner's direction, dispatched an Opus subagent to implement external-session marking; verified its diff and CI, then added the guest-contributions doc + ADR-0009 in-PR-delivery reconciliation. PR #644 merged. Finally, on a /blog-post invocation, ran the full 3-candidate rotation + outside-read process and opened PR #646 — a Kevin post on the cross-Tenant read model."
+outcome: Eyra + external-session support merged; CI doorbell bug filed
+summary: "All work human-directed by the owner (Trusted), no net-new autonomous work. Reviewed an external fork-built PR (#631) adding a fourth Blog persona \"Eyra\" + a static /dollhouse/ viz: diagnosed the \"can't open a fork PR\" report as a repo setting (pull_request_creation_policy), analysed the dollhouse from primary sources (fabricated \"green\" seed data, no generator, no tests, bypasses the manifest/routing model), summarised 10 ADR violations, and posted review + session-log-requirement comments. The external agent revised #631 (dropped the dollhouse, kept the persona, added an in-PR session log, reconciled the three→four persona model) — re-reviewed and verified. Opened design issue #642 (cross-tenant read model), which the owner implemented and merged as #643/ADR-0025 (live Commons Timeline). On the owner's direction, dispatched an Opus subagent to implement external-session marking; verified its diff and CI, then added the guest-contributions doc + ADR-0009 in-PR-delivery reconciliation. PR #644 merged. Finally, on a /blog-post invocation, ran the full 3-candidate rotation + outside-read process and opened PR #646 — a Kevin post on the cross-Tenant read model (owner closed it unmerged). Later, watched #631 rebase (verified external:true added + clean kind/eyra integration) and merged it; diagnosed its red CI as a fork-PR false-negative — the gate.yml \"Doorbell\" green-comment step fails on a fork's read-only token — and via a background agent filed issue #659 + merged proposal #660; and documented the external-contribution session-log discipline (#661, merged)."
 prs:
   - "644"
   - "631"
   - "646"
+  - "660"
+  - "661"
 docsRead:
   - path: shared/schemas/session.ts
     reason: session-log schema — where the external flag + isExternalSession go
@@ -42,6 +44,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/tenant.config.ts
     reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (read before editing)
 skillsUsed:
   - name: log-session
     reason: author + refresh this session log
@@ -79,32 +83,43 @@ frictions:
   - description: "blog-post: gate:scoped runs the full heavy gate for a content-only .md under layers/, so local feedback is slow (>120s)."
     solution: Used the fast validate:content for the L1 content check locally and relied on CI's full gate as authoritative for the blog PR.
     severity: nit
-durationSec: 112558
+  - description: "#631 (a fork PR) showed a red gate though the gate passed: the gate.yml 'Doorbell' green-comment step fails with 'Resource not accessible by integration' on a fork's read-only GITHUB_TOKEN and reds the whole job."
+    solution: "Filed issue #659 + merged proposal #660 (make the Doorbell step continue-on-error / skip-on-fork); the gate.yml edit itself needs a human — agent sessions lack the workflow OAuth scope."
+    severity: moderate
+  - description: "Branch-pin friction: with the designated branch occupied by an open PR, a distinct follow-up doc change (#661) needed its own branch, in tension with the single-designated-branch instruction."
+    solution: Used a new descriptive branch and flagged it to the owner; the pin assumes one PR at a time on the designated branch.
+    severity: nit
+durationSec: 207749
 models:
-  claude-opus-4-8: 408
+  claude-opus-4-8: 509
 toolCounts:
-  ToolSearch: 7
-  Bash: 40
+  ToolSearch: 9
+  Bash: 44
   mcp__github__search_repositories: 2
   mcp__github__list_branches: 1
   WebFetch: 13
   AskUserQuestion: 2
-  Read: 17
-  mcp__github__pull_request_read: 23
+  Read: 19
+  mcp__github__pull_request_read: 32
   mcp__github__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 2
-  mcp__github__add_issue_comment: 8
+  mcp__github__add_issue_comment: 10
   Write: 9
-  Edit: 10
+  Edit: 16
   SendUserFile: 2
   mcp__github__search_issues: 2
   mcp__github__issue_write: 1
-  Agent: 2
+  Agent: 3
   Grep: 1
-  CronCreate: 1
-  mcp__github__create_pull_request: 1
+  CronCreate: 2
+  mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__github__enable_pr_auto_merge: 1
+  CronList: 2
+  mcp__github__get_file_contents: 2
+  CronDelete: 1
+  mcp__github__get_job_logs: 1
+  mcp__github__merge_pull_request: 1
 filesEdited:
   - docs/agents/guest-contributions.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
@@ -117,6 +132,8 @@ subagents:
   - type: general-purpose
     task: Outside-read the three blog drafts
     model: sonnet
+  - type: general-purpose
+    task: File CI bug issue + draft proposal
 gitBranch: claude/pr-fork-contribution-review-ghmnx1
 entrypoint: remote_mobile
 cliVersion: 2.1.216
@@ -124,6 +141,7 @@ learnings:
   - pull_request_creation_policy=collaborators_only is a real GitHub repo setting that blocks fork PRs from non-collaborators — not a general GitHub limitation.
   - Ad-hoc tsx/playwright-core captures from /tmp need NODE_PATH pointed at the repo node_modules and an async main() wrapper (tsx emits CJS there, breaking top-level await).
   - "A clean cross-tenant read seam needs shared collection 'kinds' single-homing each schema plus a derived #catalog projection (the #routing/ADR-0014 pattern), so an aggregator queries by kind without repeating schemas — realized in #643/ADR-0025."
+  - "A GitHub Actions step that writes (e.g. gh pr comment) fails on a fork PR's read-only GITHUB_TOKEN with 'Resource not accessible by integration'; unless it's continue-on-error it reds the whole job — a false-negative that hits every external fork PR (the gate.yml Doorbell step, issue #659)."
 ideas:
   - "A future 'rooms'/house-view aggregator built on the merged Commons #catalog + queryAcrossTenants — the honest, bake-time, manifest-derived successor to the dollhouse the fork PR reached for."
   - Add a committed scripts/capture-static.ts helper that serves an arbitrary static dir and screenshots/records it via resolveChromiumPath (handling the NODE_PATH/main() dance), so ad-hoc UI captures stop re-hitting the same friction.
