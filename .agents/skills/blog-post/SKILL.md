@@ -157,7 +157,7 @@ step reads standalone:
 | Term | What it means |
 | --- | --- |
 | SHA-pinned permalink | A file/line GitHub link anchored to a full 40-char commit SHA, not `main` — see the bullet below for why and how to get one. |
-| Persona | A blog voice (`david`/`karen`/`kevin`) — full definition in `layers/blog/CONTEXT.md`. |
+| Persona | A blog voice (`david`/`karen`/`kevin`/`eyra`) — full definition in `layers/blog/CONTEXT.md`. |
 | Persona factual hook | What each Persona anchors its citations in — spelled out per-Persona a few lines below. |
 | standalone / reaction | Whether this post replies to another Persona's post — see step 4 above. |
 | `reactsTo` | The frontmatter field naming a reaction's target post — see step 5's frontmatter example above. |
