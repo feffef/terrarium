@@ -93,6 +93,16 @@ Status: Accepted
 > Skills are actually granted auto-merge authority against that classification
 > is narrower than the general phrasing below implies.
 
+> **Amended by [ADR-0025](0025-cross-tenant-catalog-and-collection-kinds.md)
+> (2026-07-22).** The 2026-07-10 amendment's human-only-surface enumeration
+> above — `content.config.ts`, `shared/expand.ts`, `modules/routing.ts`,
+> `shared/routing.ts`, isolation logic, CI, and governance/ADRs — is missing
+> three files ADR-0025 joins to that same isolation-critical family:
+> `shared/kinds.ts`, `modules/catalog.ts`, and `app/composables/catalog.ts`.
+> CLAUDE.md's Ground rules already list all seven; this note brings this ADR's
+> own enumeration back in sync with it. See ADR-0025's Consequences for why
+> those three files carry the same never-auto-merge risk.
+
 ## Context
 
 Both the human reviewer (now) and the scheduled review-agent (mid-term, ADR-0003)
