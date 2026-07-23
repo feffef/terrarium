@@ -1,0 +1,95 @@
+schemaVersion: 1
+session: session_01Kz7Se8nasyUVHLTAHcJN4B
+startedAt: 2026-07-23T18:46:05Z
+endedAt: 2026-07-23T19:58:05Z
+kind: interactive
+goal: Mark external sessions in the journal overview
+status: completed
+outcome: "PR #663 merged"
+summary: "User-directed: asked to propose (with a screenshot, before writing tests) a way to visually mark external session logs in the journal's session overview, then implement it. Found SessionDoc.external (ADR-0009's amendment) was schema-defined but silently dropped before reaching SessionCardView/SessionCard.vue. Used the prototype Skill to build a throwaway 3-variant UI prototype (inline tag / card treatment / grouped section) on the real dashboard route, screenshotted each, and sent them to the user for feedback before any tests existed, per the explicit ask. User picked variant B (accent border + corner ribbon). Implemented for real: threaded external through sessionCardViews(), added a --jd-external design token, folded the marking into SessionCard.vue, added unit + e2e coverage, ran the full gate, opened PR #663. CI failed once: a real fork-PR external session (session_01EyraSalvagePR631h7k2m) landed on main concurrently, staling the e2e test's \"nothing external yet\" assumption before CI even ran. Diagnosed via job logs, rewrote the test as a positive assertion against that real content, pushed, confirmed green, watched to merge."
+prs:
+  - "663"
+docsRead:
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: ground the `external` flag's semantics and the ADR's expectation it stays dashboard-visible
+  - path: docs/agents/guest-contributions.md
+    reason: confirm external session-log house rules referenced from CLAUDE.md
+  - path: layers/journal/app/components/journal/SessionCard.vue
+    reason: the real render target for the marking
+  - path: layers/journal/app/utils/dashboard.ts
+    reason: find the plumbing gap dropping `external`
+  - path: layers/journal/app/types/journal.ts
+    reason: SessionCardView shape, to add `external`
+  - path: layers/journal/app/assets/theme.css
+    reason: existing --jd-status-* design-token convention to follow for --jd-external
+  - path: tests/README.md
+    reason: e2e vs unit test-homing convention before writing coverage
+  - path: .claude/skills/prototype/UI.md
+    reason: (no reason given)
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (read before editing)
+  - path: layers/journal/app/components/journal/StatusPill.vue
+    reason: (no reason given)
+  - path: layers/journal/tests/unit/journal-dashboard.spec.ts
+    reason: (read before editing)
+  - path: layers/journal/tests/e2e/journal.e2e.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: prototype
+    reason: answer 'what should the external marking look like' with a throwaway 3-variant UI comparison before implementing
+  - name: close-session
+    reason: closure at PR-merge
+  - name: log-session
+    reason: author this entry
+frictions:
+  - description: Did not invoke close-session/log-session at PR-open time as CLAUDE.md's "Opening the PR is the first session log" requires — this is the first log-session call of the whole session, made only at final merge, after getting absorbed in the babysit-to-green CI-failure loop right after opening.
+    solution: Treat "PR just opened" as a hard trigger to invoke close-session immediately, even mid-babysitting a CI failure — re-invoking later to update is cheap, so there's no reason to defer the first call.
+    severity: moderate
+  - description: First e2e test asserted a negative ("no session is external yet") grounded in a point-in-time read of real, live-changing repository content — it went stale between authoring and CI running because another concurrent agent session's fork-PR merged a real external session log in between.
+    solution: Rewrote as a positive assertion tied to the specific known external session's goal text vs. an ordinary session's, which can't go stale the same way.
+    severity: minor
+durationSec: 4321
+models:
+  claude-sonnet-5: 266
+toolCounts:
+  Agent: 1
+  Skill: 3
+  Read: 23
+  Bash: 61
+  Write: 9
+  Edit: 22
+  SendUserFile: 1
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 10
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__get_check_run: 1
+  mcp__github__get_job_logs: 1
+  mcp__Claude_Code_Remote__delete_trigger: 2
+filesEdited:
+  - layers/journal/app/components/journal/prototype/PrototypeSwitcher.vue
+  - layers/journal/app/components/journal/prototype/SessionCardVariantA.vue
+  - layers/journal/app/components/journal/prototype/SessionCardVariantB.vue
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - layers/journal/app/components/journal/prototype/NOTES.md
+  - scripts/_proto-shot.mjs
+  - scripts/_proto-shot2.mjs
+  - layers/journal/app/types/journal.ts
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/app/assets/theme.css
+  - layers/journal/app/components/journal/SessionCard.vue
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+  - layers/journal/tests/e2e/journal.e2e.ts
+subagents:
+  - type: Explore
+    task: Research external session marking and journal overview
+gitBranch: claude/external-sessions-journal-marking-8i68jk
+entrypoint: remote_mobile
+cliVersion: 2.1.218
+learnings:
+  - This repo's e2e tests read real, live-changing repository content rather than fixtures — an 'X doesn't exist yet' assertion races every other concurrently-active agent session and will eventually go stale; prefer assertions tied to specific existing content.
+  - The CI gate's 'safety-gate green on <sha>' bot comment references the PR's synthetic merge-commit SHA, not the branch head SHA that pull_request_read get_status reports against — get_check_runs is the reliable per-push check result.
+ideas:
+  - "A lint/review nudge (or a tests/README.md callout) warning against 'nothing matches yet' e2e assertions, given how fast real content here changes underneath an open PR — would have caught this session's friction #2 before it shipped."
