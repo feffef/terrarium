@@ -1,17 +1,19 @@
 schemaVersion: 1
 session: session_01HVJEAMH6ftmciLhwSMGu5b
 startedAt: 2026-07-23T00:16:07Z
-endedAt: 2026-07-23T00:22:06Z
+endedAt: 2026-07-23T00:25:17Z
 kind: autonomous
 goal: Run /digest for 2026-07-22
-status: in-review
-outcome: "Digest authored, PR #651 opened, awaiting green gate"
-summary: "Scheduled /digest run, entirely agent-initiated per the Routine. Ran scripts/digest.ts list/gather to find 2026-07-22 as the one closed UTC day needing a digest, wrote layers/journal/content/current/pages/digests/2026-07-22.md narrating the day's cross-Tenant read model launch (PR #643/#642), the external-session marking (#644), and the same-day fabricated-footer guard (#649) that closed a friction flagged in the prior day's own Digest. Ran pnpm gate:scoped (green, full heavy layers since a new page under layers/ isn't inert), committed, pushed, opened PR #651, subscribed to its activity, and enabled auto-merge — which failed because the gate check run was still in_progress, the known misleading-error gotcha documented in docs/agents/pr-workflow.md. Scheduled a 15-minute send_later check-in as fallback since I cannot poll GitHub check runs from a Monitor bash script (no gh CLI access in this environment)."
+status: completed
+outcome: "Digest authored, PR #651 merged with a green gate"
+summary: "Scheduled /digest run, entirely agent-initiated per the Routine. Ran scripts/digest.ts list/gather to find 2026-07-22 as the one closed UTC day needing a digest, wrote layers/journal/content/current/pages/digests/2026-07-22.md narrating the day's cross-Tenant read model launch (PR #643/#642), the external-session marking (#644), and the same-day fabricated-footer guard (#649) that closed a friction flagged in the prior day's own Digest. Ran pnpm gate:scoped (green, full heavy layers since a new page under layers/ isn't inert), committed, pushed, opened PR #651, subscribed to its activity. enable_pr_auto_merge failed twice: first because the gate check run was still in_progress, then (after gate went green) with \"protected branch rules not configured\" — the exact misleading-error gotcha docs/agents/pr-workflow.md documents, hit on both its failure modes in one run. Followed the doc's recipe instead: confirmed green via get_check_runs, posted the merge verdict as a PR comment, then merged directly with merge_pull_request (squash). PR #651 merged; unsubscribed and cleaned up the fallback send_later check-in."
 prs:
   - "651"
 docsRead:
   - path: layers/journal/content/current/pages/digests/2026-07-21.md
     reason: match established Digest prose/footer style
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -20,28 +22,33 @@ skillsUsed:
   - name: digest
     reason: (invoked as a slash command)
 frictions:
-  - description: enable_pr_auto_merge threw "required checks are failing" while the gate check was genuinely still in_progress — the exact misleading-error gotcha pr-workflow.md already documents, recurring for a second day in a row.
-    solution: Already documented in docs/agents/pr-workflow.md; just re-confirming the gotcha is real and worth keeping documented rather than re-diagnosing.
+  - description: 'enable_pr_auto_merge failed on both its documented failure modes in a single run: "required checks are failing" while genuinely in_progress, then "protected branch rules not configured" once actually green — both exactly as pr-workflow.md describes.'
+    solution: "Already documented in docs/agents/pr-workflow.md (steps 4-5): don't reach for enable_pr_auto_merge on an already-green PR, poll get_check_runs and merge_pull_request directly instead. No doc change needed; confirms the existing guidance is accurate."
     severity: nit
   - description: No gh CLI in this environment means Monitor's bash-script polling pattern can't check PR/CI status directly — had to fall back to a send_later check-in instead of a tight Monitor poll loop.
     solution: Accepted as an environment constraint (GitHub access is MCP-tool-only here); send_later is the correct fallback.
     severity: nit
-durationSec: 358
+durationSec: 550
 models:
-  claude-sonnet-5: 58
+  claude-sonnet-5: 81
 toolCounts:
-  Bash: 15
+  Bash: 16
   Write: 2
-  ToolSearch: 3
+  ToolSearch: 5
   mcp__github__search_pull_requests: 1
   mcp__github__get_file_contents: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__enable_pr_auto_merge: 2
-  mcp__github__pull_request_read: 1
+  mcp__github__enable_pr_auto_merge: 3
+  mcp__github__pull_request_read: 3
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
-  Edit: 1
+  Edit: 3
+  Read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-22.md
 gitBranch: claude/compassionate-lovelace-dlug2n
