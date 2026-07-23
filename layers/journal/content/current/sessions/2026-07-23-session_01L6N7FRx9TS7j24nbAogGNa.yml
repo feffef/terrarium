@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01L6N7FRx9TS7j24nbAogGNa
 startedAt: 2026-07-23T00:46:05Z
-endedAt: 2026-07-23T00:55:02Z
+endedAt: 2026-07-23T00:58:34Z
 kind: autonomous
 goal: Run /audit-skills — audit the Skill Inventory
-status: in-review
-outcome: One fresh citation recorded, no grade changes
-summary: 'Scheduled /audit-skills Routine run, no human prompt at any point. Branched off origin/main, gathered the 40-session scorecard (34 Skills) via scripts/audit-skills.ts. Re-graded every Skill against the bright-line evidence rule — no fresh promotion/demotion or role-refresh crossed the bar this window. Found one new in-window instance of domain-modeling being absent from structural/vocabulary work (session_01MwR3JjEyr7jxHkC7xRpRzd, the Cross-Tenant read model/ADR-0025 build) and appended it as a third observations entry, but declined to demote: the two 2026-07-19 citations toward the bright-line bar have aged out of the window, and CONTEXT.md itself names domain-modeling as the canonical `essential` example, so acting alone would contradict that single-homed definition. Phase A regression screen covered all 9 regressionChecks brackets (audit-docs, audit-skills, auto-triage, blog-post, digest, frictions-to-fixes, guest-build, guest-intake, log-session); none showed a before/after usage pair with a worsened friction profile, so nothing reached Phase B. orphanedSessions, humanPromptedClosures, and manuallyRescuedClosures were all empty. misclassifiedKind flagged the same 2 old sessions as prior runs (informational only, no issue filed). The "review" phantom Inventory entry was reconfirmed as the known built-in-CLI-Skill mirror case and left as-is. pnpm gate:scoped ran green (full heavy layers, 64/64 e2e). Opened PR #652 (Inventory-YAML-only diff) and subscribed to its activity.'
+status: completed
+outcome: One fresh citation recorded, PR merged
+summary: "Scheduled /audit-skills Routine run, no human prompt at any point. Branched off origin/main, gathered the 40-session scorecard (34 Skills) via scripts/audit-skills.ts. Re-graded every Skill against the bright-line evidence rule — no fresh promotion/demotion or role-refresh crossed the bar this window. Found one new in-window instance of domain-modeling being absent from structural/vocabulary work (session_01MwR3JjEyr7jxHkC7xRpRzd, the Cross-Tenant read model/ADR-0025 build) and appended it as a third observations entry, but declined to demote: the two 2026-07-19 citations toward the bright-line bar have aged out of the window, and CONTEXT.md itself names domain-modeling as the canonical `essential` example, so acting alone would contradict that single-homed definition. Phase A regression screen covered all 9 regressionChecks brackets (audit-docs, audit-skills, auto-triage, blog-post, digest, frictions-to-fixes, guest-build, guest-intake, log-session); none showed a before/after usage pair with a worsened friction profile, so nothing reached Phase B. orphanedSessions, humanPromptedClosures, and manuallyRescuedClosures were all empty. misclassifiedKind flagged the same 2 old sessions as prior runs (informational only, no issue filed). The \"review\" phantom Inventory entry was reconfirmed as the known built-in-CLI-Skill mirror case and left as-is. pnpm gate:scoped ran green (full heavy layers, 64/64 e2e). Opened PR #652 (Inventory-YAML-only diff), subscribed to its activity, and self-merged it (squash, cd2d2d5) once CI's gate reported green on the audit-skills Skill's bounded low-risk content tier. Unsubscribed after merge confirmation."
 prs:
   - "652"
 docsRead:
@@ -24,22 +24,26 @@ skillsUsed:
   - name: close-session
     reason: closure at PR-open
   - name: log-session
-    reason: authoring this log
+    reason: authoring this log, then finalizing it to completed on merge
 frictions: []
-durationSec: 536
+durationSec: 749
 models:
-  claude-sonnet-5: 84
+  claude-sonnet-5: 102
 toolCounts:
-  Bash: 26
+  Bash: 28
   Read: 3
   Edit: 1
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 3
   Skill: 2
-  Write: 1
+  Write: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__merge_pull_request: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/skills/domain-modeling.yml
 gitBranch: claude/upbeat-sagan-k9sur0
