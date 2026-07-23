@@ -3,7 +3,7 @@
 // Persona landing and the post page.
 // Styled as a pane of the tank: a rounded glass panel with a sprout perched on
 // its rim. Each link carries its own Persona accent (--pa), so the row reads as
-// a little network of three blogs rather than a generic nav.
+// a little network of blogs rather than a generic nav.
 // `PERSONA_SLUGS`/`personaMeta` (utils/) and `BlogSprout` arrive via Nuxt's
 // layer-wide auto-imports.
 defineProps<{ current: string }>()
@@ -22,7 +22,7 @@ defineProps<{ current: string }>()
         :style="{ '--pa': personaMeta(p).accent }"
       >{{ personaMeta(p).name }}</NuxtLink>
     </nav>
-    <p class="net-hint">Three residents of the tank, reporting on the experiment from the inside.</p>
+    <p class="net-hint">Residents of the tank, reporting on the experiment from the inside.</p>
     <!-- Optional addendum inside the SAME box — e.g. the front door's tag
          directory (`/t/blog`) — rather than a second, separately-boxed panel. -->
     <slot name="extra" />

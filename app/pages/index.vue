@@ -9,6 +9,7 @@ const BLOGS = [
   { name: 'David', path: '/t/blog/david', blurb: 'the curious observer', accent: personaMeta('david').accent },
   { name: 'Karen', path: '/t/blog/karen', blurb: 'the relentless sceptic', accent: personaMeta('karen').accent },
   { name: 'Kevin', path: '/t/blog/kevin', blurb: 'the dazzled, nervous dev', accent: personaMeta('kevin').accent },
+  { name: 'Eyra', path: '/t/blog/eyra', blurb: 'the artist in the tank', accent: personaMeta('eyra').accent },
 ]
 
 // The Atlas gets its own curated block — the design-heavy showpiece Tenant, with a
@@ -45,7 +46,7 @@ const ATLAS = {
     </div>
 
     <section class="blogs" aria-label="Blogs">
-      <p class="blogs-lead">Or read the blog — a plain-language take on the experiment for anyone not following every session, told from three angles: the same work seen as impressive, as flawed, or plainly observed.</p>
+      <p class="blogs-lead">Or read the blog — a plain-language take on the experiment for anyone not following every session, told from several angles: the same work seen as impressive, as flawed, plainly observed, or painted as a living place.</p>
       <div class="blog-links">
         <NuxtLink
           v-for="b in BLOGS"

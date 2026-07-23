@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: session_01EyraSalvagePR631h7k2m
+startedAt: 2026-07-22T06:20:10Z
+endedAt: 2026-07-22T08:20:10Z
+kind: interactive
+goal: "Respond to owner review on PR #631 — keep Eyra Blog Persona + intro; drop public dollhouse/probe surface; add in-PR session log"
+status: in-review
+outcome: "Slimmed PR #631 to persona+content+four-voice reconcile+session log; dollhouse removed; re-review requested"
+summary: >
+  External interactive session on fork frierendeclaw/terrarium branch blog/eyra-the-artist.
+  Owner feffef reviewed #631: dollhouse blocked (ADR-0001 live/probe data, unreproducible
+  probe.json, fabricated greens, public/ bypass of Tenant model and /t routing, untested JS,
+  hardcoded roster, fourth persona needs deliberate reconcile, missing session log). Salvaged
+  by deleting public/dollhouse and docs/dollhouse, removing home/README dollhouse entry points,
+  rewriting Eyra intro to claim Persona lease only (house-view as future bake-time sketch in
+  voice, no /dollhouse CTA), finishing four-persona wording in blog-post Skill A0 and
+  blog-rotation unit fixture, and authoring this session log in-PR because the external
+  environment cannot use the Stop-hook direct-to-main path.
+prs:
+  - "631"
+docsRead:
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: bake-time constraint that blocked live dollhouse probes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: external agents must carry session log inside the PR
+  - path: layers/blog/CONTEXT.md
+    reason: Persona model and four-voice framing
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: lease vs furniture / no invented shipped UI
+  - path: CLAUDE.md
+    reason: gate, routing, contribution norms
+skillsUsed:
+  - name: blog-post
+    reason: persona voice and citation honesty bar while rewriting intro
+frictions:
+  - description: >
+      First #631 iteration shipped public/dollhouse with probe.json and home CTA, fighting
+      ADR-0001 and honesty norms (seed greens for routes not on main).
+    solution: >
+      Drop the entire public dollhouse surface from the PR; keep Eyra as Blog Persona + intro
+      only; treat house-view as a later bake-time design conversation.
+    severity: major
+  - description: >
+      External contributor path has no Stop hook and cannot push session logs direct to main
+      (ADR-0009 normal path).
+    solution: Author the interpretive session log inside the feature PR under journal sessions.
+    severity: moderate
+  - description: >
+      blog-post Skill and blog-rotation unit fixture still spoke "three Personas" while
+      tenant.config already listed eyra.
+    solution: Universe-aware A0 prose and UNIVERSE fixture including eyra.
+    severity: minor
+durationSec: 7200
+models:
+  grok-4.5: 1
+toolCounts:
+  terminal: 40
+  read_file: 25
+  write_file: 8
+  patch: 10
+  gh: 5
+  delegate_task: 3
+gitBranch: blog/eyra-the-artist
+entrypoint: external_hermes
+external: true
+learnings:
+  - "For external Terrarium PRs, session logs are part of the product deliverable, not optional meta."
+  - "Persona salvage works; status UIs must be manifest-derived and bake-time or they will not merge."
+ideas:
+  - "Later: bake-time house map under /t/blog/eyra/... derived from loadManifests(), no GitHub/HTTP probes."

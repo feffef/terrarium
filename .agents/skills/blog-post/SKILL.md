@@ -1,6 +1,6 @@
 ---
 name: blog-post
-description: Write one in-character, repo-grounded blog post for a Terrarium Persona (david | karen | kevin) and open a self-merging gated PR.
+description: Write one in-character, repo-grounded blog post for a Terrarium Persona (david | karen | kevin | eyra) and open a self-merging gated PR.
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Write **one** blog post for a Blog Persona, in that Persona's voice, grounded in
 what has actually been happening in the repo. Takes an **optional** single
-argument: the persona name — `david`, `karen`, or `kevin` (layers/blog/CONTEXT.md: Persona).
+argument: the persona name — `david`, `karen`, `kevin`, or `eyra` (layers/blog/CONTEXT.md: Persona).
 The post lands through an ordinary **gated PR** (ADR-0003), like `digest` — never
 the direct-to-`main` `log-session` path.
 
@@ -33,7 +33,7 @@ A **rotation gate (A0)** decides which Personas are even eligible this run
 before any drafting, so the same one or two Personas can't monopolise the blog.
 Only how the Persona is chosen differs:
 
-- **Persona given** (`/blog-post david`, `/blog-post karen`, `/blog-post kevin`)
+- **Persona given** (`/blog-post david`, `/blog-post karen`, `/blog-post kevin`, `/blog-post eyra`)
   — all three candidates are written in that one Persona's voice. Section A's
   per-candidate Persona sub-decision (A3) is skipped; only the topic and the
   standalone-or-reaction call vary across the three. An explicit Persona is an
@@ -59,12 +59,14 @@ Section A didn't already capture).
 Read `personas/<persona>.md` (next to this file) — the stance, voice, and the
 do/don't list — for **every** Persona a Section-A candidate will be written in
 (just the one given persona, or up to three when none was given). Write each
-draft wholly *as that Persona*. The three:
+draft wholly *as that Persona*. The Personas (universe = Blog Spaces):
 
 - **david** — neutral, curious observer; enjoys the experiment, reserves judgment.
 - **karen** — hostile sceptic; snarky, funny, seizes on what failed — but specific
   and true.
 - **kevin** — dazzled, anxious dev; amazed and job-scared in the same paragraph.
+- **eyra** — artsy, playful place-reader; shows the platform as rooms and gifts,
+  still honest about pitch vs shipped.
 
 ## 2. Branch off `origin/main`
 
@@ -285,7 +287,7 @@ flags an override (given).
 
 ### A0. Rotation gate — compute the eligible Personas first
 
-The blog only works as a multi-voice commentary track if the three Personas
+The blog only works as a multi-voice commentary track if the Personas
 actually take turns; left to per-topic "who fits best?" judgement, one or two
 voices quietly dominate. So **before** gathering material or drafting anything,
 compute which Personas are eligible this run, and never draft — or, for the
@@ -298,9 +300,9 @@ pnpm exec tsx scripts/blog-rotation.ts
 ```
 
 `scripts/blog-rotation.ts` implements the rules below verbatim — it scans every
-post across all three Personas' `pages/` (skipping each `index.md`, which has
-no `publishedAt`), and prints `{ last, starved, eligible }` directly, no manual
-frontmatter scan needed.
+post across all Personas' `pages/` (each Blog Space under `layers/blog/content/`,
+skipping each `index.md`, which has no `publishedAt`), and prints
+`{ last, starved, eligible }` directly, no manual frontmatter scan needed.
 
 From that ordering read two things:
 
@@ -322,10 +324,10 @@ Two rules, applied together:
 - If any Persona is **missing from `recent-four`** → eligible = the missing
   Persona(s). (Rule 2 wins; it already satisfies rule 1, because `last` is always
   *in* `recent-four` and so never among the missing.)
-- Otherwise (all three appear in the last four) → eligible = all three **except
-  `last`** (rule 1 alone).
+- Otherwise (every Persona in the universe appears in the last four) → eligible =
+  the full universe **except `last`** (rule 1 alone).
 - Edge case: with **fewer than four posts total**, rule 2 can't apply yet — use
-  eligible = all Personas except `last` (and with zero posts, all three).
+  eligible = all Personas except `last` (and with zero posts, the full universe).
 
 The eligible set is never empty and never contains `last` unless `last` is the
 only Persona in existence. Carry it into A2 (topic pick) and A3 (persona
