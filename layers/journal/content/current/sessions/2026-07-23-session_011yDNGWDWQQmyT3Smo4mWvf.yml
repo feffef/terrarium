@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_011yDNGWDWQQmyT3Smo4mWvf
 startedAt: 2026-07-23T11:06:18Z
-endedAt: 2026-07-23T11:21:38Z
+endedAt: 2026-07-23T11:23:46Z
 kind: autonomous
 goal: Run the scheduled /blog-post job
-status: in-review
-outcome: "Opened PR #658, gate green"
+status: completed
+outcome: "PR #658 merged, gate green"
 summary: "Fully autonomous scheduled firing of /blog-post with no persona argument. Ran the rotation gate (scripts/blog-rotation.ts), which excluded Kevin (posted last) and left [david, karen] eligible. Drafted three full candidates in the scratchpad: Karen on the github-footer-guard saga (issue #628 recurrence, mechanical PreToolUse fix), David recapping the Commons Tenant / cross-Tenant Timeline shipping (PR #643, ADR-0025), and Karen on the blog-post Skill's own near-miss fabricating relative-time claims (issue #653). A fresh sonnet subagent blind-judged all three as an outsider reader and picked the footer-guard piece on real-world stakes; revised it to fix two flagged gaps (unexplained \"doc-only\" jargon, a bare parenthetical wall of issue numbers). Saved the winner, ran pnpm gate:scoped (full heavy layer, green, 64/64 e2e), committed, pushed, and opened PR #658 with the three-candidate provenance in the body. Subscribed to PR activity. No human instruction beyond the schedule itself; every judgment call (topic selection, persona-eligible drafting, candidate pick, revision) was this session's own within the Skill's steps."
 prs:
   - "658"
@@ -25,26 +25,28 @@ frictions:
   - description: "Drafted a commit-message Claude-Session footer by copying a session id seen in `git log` output (another session's, from an unrelated commit) instead of resolving my own from the system prompt's commit template — caught and fixed before the commit landed, but it's the exact fabrication failure mode issue #628/#653 (this run's own winning post topic) describes."
     solution: Resolved the real id from CLAUDE_CODE_REMOTE_SESSION_ID (cse_… → session_…), matching the system prompt's own commit-footer example, before committing. Re-affirms CLAUDE.md's "never predict or reconstruct an identifier" rule — it nearly recurred inside the very session writing about that exact recurrence.
     severity: moderate
-durationSec: 920
+durationSec: 1049
 models:
-  claude-sonnet-5: 174
+  claude-sonnet-5: 191
 toolCounts:
   Skill: 3
-  Bash: 53
+  Bash: 54
   Read: 7
-  ToolSearch: 6
+  ToolSearch: 7
   mcp__github__issue_read: 4
   Write: 5
-  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_read: 7
   Agent: 1
-  Edit: 2
+  Edit: 3
   TaskOutput: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
   mcp__github__enable_pr_auto_merge: 2
-  ScheduleWakeup: 1
+  ScheduleWakeup: 2
+  mcp__github__merge_pull_request: 1
+  TaskStop: 1
 filesEdited:
   - layers/blog/content/karen/pages/2026-07-23-we-told-it-not-to-lie.md
 subagents:
