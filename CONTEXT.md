@@ -138,6 +138,11 @@ major < blocker`:
 - `blocker` — the session could not proceed on its goal at all without a
   workaround or human help.
 
+Grade by the cost *this instance* actually incurred, not by how notorious the
+failure class is — a mistake fully caught before landing (self-review, or a
+guard working exactly as designed) stays `nit`/`minor`. Recurrence is tracked
+separately, by occurrence count, not by inflating each instance's severity.
+
 Frictions are the primary signal the self-improvement Skills mine for recurring
 pain (today, `frictions-to-fixes`), so agents report **every** friction honestly
 — even nits. A tagging taxonomy is deliberately *not* fixed up front: it is meant
