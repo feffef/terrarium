@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01FaYaTTn81nbp1qq6Z6nTz7
 startedAt: 2026-07-24T00:15:45Z
-endedAt: 2026-07-24T00:22:13Z
+endedAt: 2026-07-24T00:25:28Z
 kind: autonomous
 goal: Run /digest for 2026-07-23
-status: in-review
-outcome: "Digest authored, PR #665 open, gate pending"
-summary: "Scheduled /digest firing, fully agent-initiated (no human prompt this run). Gathered 2026-07-23's activity via scripts/digest.ts (12 merged PRs, 9 sessions), authored the day's Digest at layers/journal/content/current/pages/digests/2026-07-23.md following the Skill's narrative-plus-skim-footer format, confirmed the index dashboard needed no edit, ran pnpm gate:scoped green, and opened PR #665. Auto-merge arming is in progress; babysitting to merge."
+status: completed
+outcome: "Digest authored, PR #665 merged with a green gate"
+summary: "Scheduled /digest firing, fully agent-initiated (no human prompt this run). Gathered 2026-07-23's activity via scripts/digest.ts (12 merged PRs, 9 sessions), authored the day's Digest at layers/journal/content/current/pages/digests/2026-07-23.md following the Skill's narrative-plus-skim-footer format, confirmed the index dashboard needed no edit, ran pnpm gate:scoped green, opened PR #665, and merged it once CI's gate reported green (content-only low-risk tier, ADR-0003/0004)."
 prs:
   - "665"
 docsRead:
@@ -23,22 +23,27 @@ frictions:
   - description: mcp__github__enable_pr_auto_merge threw "required checks are failing" while the PR's only check ("gate") was actually still in_progress and nothing had failed — a previously-documented quirk (docs/agents/pr-workflow.md), recurring again this run.
     solution: Verified via pull_request_read get_status before retrying; consider whether pr-workflow.md's guidance should recommend a short built-in retry/backoff instead of a manual re-check each time.
     severity: nit
-durationSec: 388
+durationSec: 583
 models:
-  claude-sonnet-5: 60
+  claude-sonnet-5: 77
 toolCounts:
-  Bash: 12
+  Bash: 13
   Write: 2
-  ToolSearch: 3
+  ToolSearch: 4
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Read: 1
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 5
   mcp__github__enable_pr_auto_merge: 2
   Skill: 2
   mcp__github__actions_list: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Edit: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-23.md
 gitBranch: claude/compassionate-lovelace-2nunan
