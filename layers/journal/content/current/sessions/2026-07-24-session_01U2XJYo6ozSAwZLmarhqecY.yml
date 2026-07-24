@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01U2XJYo6ozSAwZLmarhqecY
 startedAt: 2026-07-24T15:49:59Z
-endedAt: 2026-07-24T16:15:06Z
+endedAt: 2026-07-24T17:30:53Z
 kind: interactive
 goal: Dig removed code to catalogue on the Midden
 status: in-review
-outcome: Four fresh finds catalogued; PR 679 open
-summary: "Human-instructed: dig for code/content discarded after the Midden's initial catalogue (assessedAt 2026-07-16) and showcase it. Added a self-referential dig-report Site (the-simpler-verdict) with four Artifacts from the current-midden season — the Midden's own removed reading instruments (condition glyph, tooltip, stratigraphy sidebar) plus the Journal's throwaway external-session prototype. validate:content and the full gate:scoped pass; PR #679 opened per ADR-0003 auto-open. On a human follow-up (\"any more findings outside the midden?\") I first answered \"none\" from a shallow clone, then caught that the clone was truncated at 2026-07-23; unshallowing revealed the 07-16→07-22 window, whose removals (the Search Tenant folded into Commons; a single-homed doc) all fail Gate B (→ Palimpsest), confirming the four finds are the complete qualifying set."
+outcome: Four finds + prose age-proofing; PR 679 open
+summary: "Human-instructed: dig for code/content discarded after the Midden's initial catalogue (assessedAt 2026-07-16) and showcase it. Added a self-referential dig-report Site (the-simpler-verdict) with four Artifacts from the current-midden season — the Midden's own removed reading instruments (condition glyph, tooltip, stratigraphy sidebar) plus the Journal's throwaway external-session prototype. validate:content and the full gate:scoped pass; PR #679 opened per ADR-0003 auto-open. On a human follow-up (\"any more findings outside the midden?\") I first answered \"none\" from a shallow clone, then caught that the clone was truncated at 2026-07-23; unshallowing revealed the 07-16→07-22 window, whose removals (the Search Tenant folded into Commons; a single-homed doc) all fail Gate B (→ Palimpsest), confirming the four finds are the complete qualifying set. A second human follow-up asked that the narrator prose age well; reworded calendar-anchored phrases (\"this very morning\", \"twelve days old\", \"today\") across four existing pages + strata.ts to carry freshness via the condition grade and stratum position instead. Both commits gate-green."
 prs:
   - "679"
 docsRead:
@@ -36,12 +36,12 @@ frictions:
   - description: A backgrounded `pnpm gate:scoped` was silently killed mid-unit-tests (no exit marker, process gone), so build/e2e never ran and it needed re-running.
     solution: Don't rely on a long backgrounded gate surviving across turns; run it foreground with a generous timeout when the result gates the next step.
     severity: minor
-durationSec: 1507
+durationSec: 6054
 models:
-  claude-opus-4-8: 131
+  claude-opus-4-8: 168
 toolCounts:
-  Bash: 34
-  Read: 8
+  Bash: 41
+  Read: 9
   Write: 7
   Monitor: 1
   ToolSearch: 3
@@ -50,16 +50,24 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  mcp__github__update_pull_request: 1
+  mcp__github__update_pull_request: 2
+  Edit: 9
 filesEdited:
   - layers/midden/content/trench/artifacts/the-condition-glyph.yml
   - layers/midden/content/trench/artifacts/the-condition-tooltip.yml
   - layers/midden/content/trench/artifacts/the-stratigraphy-sidebar.yml
   - layers/midden/content/trench/artifacts/the-external-session-prototype.yml
   - layers/midden/content/trench/pages/the-simpler-verdict.md
+  - layers/midden/content/trench/pages/the-current-cut.md
+  - layers/midden/content/trench/pages/the-first-almanac.md
+  - layers/midden/content/trench/pages/index.md
+  - layers/midden/app/utils/strata.ts
 gitBranch: claude/midden-removed-code-wy715y
 entrypoint: remote_mobile
 cliVersion: 2.1.218
 learnings:
   - A shallow clone's grafted boundary silently caps `git log --since` — a completeness claim over a date window is only as deep as the clone.
   - The Midden/Palimpsest split is the load-bearing classifier here — an entire Tenant deletion (Search→Commons) is Palimpsest, not Midden, because search is carried forward.
+  - Midden narrator prose should carry freshness through the `fresh` condition grade and a find's fixed stratum position, never a calendar anchor — the metaphor ages, "this very morning" does not.
+ideas:
+  - Add a gate check (or validate-content-refs rule) that flags calendar-anchored phrases ("today", "this morning", "N days old") in Midden/Blog narrator prose, so age-rotting copy is caught mechanically instead of by eye.
