@@ -31,7 +31,7 @@ Someone who wants to see what a complex, agent-grown *content structure* looks
 like after a platform has been running a while — not a reader looking for facts
 about the Terrarium. It is the demo side: the interest is in how the pieces
 interlock and hold a consistent voice and style across many sessions, not in
-anything the guide asserts (it asserts nothing real — the creatures are invented).
+anything the guide asserts — see above.
 
 ## Glossary
 

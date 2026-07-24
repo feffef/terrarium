@@ -15,12 +15,9 @@ the [Blog](https://terrarium.feffef.de/t/blog) (see **Observability** in
 ## The idea
 
 - **One Platform** — a single Nuxt app / repo / container hosting everything.
-- **Tenants** — logically distinct products, each with its own components (a Nuxt
-  layer) and content model. Adding one is a source
-  change on a feature branch, never a runtime operation.
-- **Spaces** — per-Tenant isolated content partitions (e.g. `current`, `archived`),
-  all baked into the one build and selected at request time.
-- **Collections** — content types within a Space, one per SQLite table.
+- **Tenants**, **Spaces**, **Collections** — the layers of isolation inside that
+  one Platform. Adding a Tenant is a source change on a feature branch, never a
+  runtime operation. Full definitions live in [`CONTEXT.md`](CONTEXT.md).
 - **Skills** — an ever-growing, repo-committed set of Claude Code capabilities
   that develop and consolidate the Platform. They are as much a deliverable as
   the Nuxt code.

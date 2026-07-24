@@ -116,9 +116,9 @@ Write to `layers/atlas/content/<biome>/pages/<slug>.md` where `<biome>` is one o
 museum-label record. The full schema is authoritative in
 `layers/atlas/tenant.config.ts`.
 
-**Give every new specimen its year.** The engraved almanac dial — not the old
-24-hour rhythm band — is the specimen page's primary instrument, and it reads
-the `phenology` block below. Add `phenology` as a matter of course when
+**Give every new specimen its year.** The engraved almanac dial is the
+specimen page's primary instrument, and it reads the `phenology` block below
+(#279). Add `phenology` as a matter of course when
 authoring a specimen, not as an afterthought: a creature with no phases is a
 creature the dial has nothing to show. `activity` still carries the daily fact
 as the museum-label caption (`activity.label` — "a dusk-flier"); its hour

@@ -48,9 +48,9 @@ flaking, `search_issues` scoped to the issue number is a viable fallback
    `in_progress`. If it errors, confirm the real check state via
    `pull_request_read` before concluding checks have genuinely failed and
    abandoning the PR.
-5. Arm `enable_pr_auto_merge` only when you need to land ahead of a still-pending
-   check — the PR then merges itself once the gate reports green, without you
-   polling it to completion.
+5. Use `enable_pr_auto_merge` for that still-pending-check case (step 4) — it
+   then merges itself once the gate reports green, without you polling it to
+   completion.
 6. Escalate a genuinely high-risk or out-of-scope PR to a human instead of
    merging it — see ADR-0004's high-risk set (also indexed in CLAUDE.md's
    Ground rules) for what counts.

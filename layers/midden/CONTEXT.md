@@ -41,10 +41,9 @@ A Space `pages` Document in `trench` — the Midden's word for what the Platform
 generically calls a page in this Space (root `CONTEXT.md`'s Collection term).
 One dig report: curator's-voice prose narrating a **cluster** of related
 Artifacts, embedding each inline via `::midden-artifact{slug="..."}` (#521 —
-no Artifact ever gets its own routed page; ADR-0006 keeps only `pages`
-route-addressable). Reused-per-Space collection naming (#516) — `gallery`
-(out of scope for v1, #522) would give the same collection an "exhibit"
-meaning instead.
+see Artifact below: never independently routed). Reused-per-Space collection
+naming (#516) — `gallery` (out of scope for v1, #522) would give the same
+collection an "exhibit" meaning instead.
 
 ### Dig season (Stratum)
 A curator-declared date range, named for what the Platform was mostly doing or
@@ -66,7 +65,8 @@ dependency, or a Skill — plus an optional live `url` and a `continuityCheck`
 note), a back-reference to the `site` that narrates it, a curator's-voice
 `catalogNote`, a required `assessedAt` date (#526 — never re-derived), and an
 optional verbatim `inscription` ({text, source}). Rendered only inline inside
-a Site's body (#521), never at its own route.
+a Site's body (#521), never at its own route (ADR-0006 keeps only `pages`
+route-addressable).
 
 ### Condition
 The curator-graded preservation state of an Artifact, one of six grades in
