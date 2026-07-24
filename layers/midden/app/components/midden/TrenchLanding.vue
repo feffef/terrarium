@@ -2,9 +2,12 @@
 // The Midden's single landing (owner-directed post-MVP simplification, this
 // branch): ONE page rendered at BOTH `/t/midden` and `/t/midden/trench` — the two
 // former near-duplicate landings (a front door + a trench index) merged into one
-// `land → read` surface. A tight foreword, the six-grade condition legend shown
-// ONCE (word + one-line definition), and a plain list of the dig reports. The
-// stats row, proportional season bars, and per-site tick strips are gone.
+// `land → read` surface. A tight foreword, the ruled pull-quote, and a plain list
+// of the dig reports — nothing else. The condition legend left this page entirely
+// (owner-directed, final design): it re-homed as the sticky condition key beside
+// each dig report's finds (MiddenConditionKey.vue), where the words it defines
+// actually appear. The stats row, proportional season bars, and per-site tick
+// strips are gone.
 //
 // Presentation-only (ADR-0004): resolves the trench Space through the SAME shared,
 // unit-tested `resolveSpaceRoute` — hardcoding ('midden','trench') rather than
@@ -15,7 +18,6 @@
 // former front-door `foreword1`/`foreword2` and the "corpse" line, itself the
 // inclusion bar from CONTEXT.md) — not placeholder.
 import { resolveSpaceRoute } from '#shared/routing'
-import { CONDITION_GRADES } from '../../utils/condition'
 
 const resolved = resolveSpaceRoute('midden', 'trench', undefined)
 
@@ -71,20 +73,6 @@ useHead({ title: 'The Midden' })
         </p>
       </div>
 
-      <section class="midden-landing__section" aria-labelledby="midden-legend-head">
-        <div class="midden-sechead">
-          <span id="midden-legend-head" class="hand midden-sechead__title">The condition ladder</span>
-          <span class="midden-sechead__rule" />
-          <span class="mono midden-sechead__aside">curator-graded, never computed</span>
-        </div>
-        <dl class="midden-legend">
-          <div v-for="c in CONDITION_GRADES" :key="c.grade" class="midden-legend__row">
-            <dt class="sc midden-legend__term">{{ c.label }}</dt>
-            <dd class="midden-legend__def">{{ c.definition }}</dd>
-          </div>
-        </dl>
-      </section>
-
       <section class="midden-landing__section" aria-labelledby="midden-sites-head">
         <div class="midden-sechead">
           <span id="midden-sites-head" class="hand midden-sechead__title">The dig reports</span>
@@ -127,19 +115,22 @@ useHead({ title: 'The Midden' })
   color: var(--midden-ink);
 }
 
+/* The foreword speaks in the curator's serif voice (the two-register split:
+   serif = human voice, mono = record facts — see theme.css's --midden-serif). */
 .midden-landing__foreword {
-  margin-top: 1.6rem;
-  max-width: 56ch;
+  margin-top: 2.2rem;
+  max-width: 58ch;
 }
 .midden-landing__foreword p {
-  margin: 1.05rem 0 0;
-  font-size: 1.04rem;
-  line-height: 1.66;
+  margin: 1.2rem 0 0;
+  font-family: var(--midden-serif);
+  font-size: 1.09rem;
+  line-height: 1.72;
   color: var(--midden-ink);
 }
 .midden-landing__foreword p:first-child { margin-top: 0; }
 .midden-landing__pull {
-  margin-top: 1.6rem;
+  margin-top: 2rem;
   padding-left: 1.1rem;
   border-left: 2px solid var(--midden-accent);
   font-size: 0.98rem;
@@ -148,34 +139,7 @@ useHead({ title: 'The Midden' })
   color: var(--midden-accent-2);
 }
 
-.midden-landing__section { margin-top: 0.5rem; }
-
-/* The legend: six quiet rows, each a word + its one-line definition. Shown once. */
-.midden-legend {
-  margin: 0;
-}
-.midden-legend__row {
-  display: grid;
-  grid-template-columns: 9.5rem 1fr;
-  gap: 0.5rem 1.1rem;
-  align-items: baseline;
-  padding: 0.6rem 0;
-  border-top: 1px solid var(--midden-line);
-}
-.midden-legend__row:first-child { border-top: 0; }
-.midden-legend__term {
-  margin: 0;
-  font-size: 0.88rem;
-  letter-spacing: 0.05em;
-  color: var(--midden-ink);
-}
-.midden-legend__def {
-  margin: 0;
-  font-style: italic;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  color: var(--midden-muted);
-}
+.midden-landing__section { margin-top: 1.9rem; }
 
 /* The dig-report list: a plain numbered list, each row a full-width link. */
 .midden-sites {
@@ -188,7 +152,7 @@ useHead({ title: 'The Midden' })
   grid-template-columns: 2.2rem 1fr auto;
   gap: 0 1.1rem;
   align-items: baseline;
-  padding: 0.95rem 0;
+  padding: 1.2rem 0 1.25rem;
   border-top: 1px solid var(--midden-rule);
   color: inherit;
 }
@@ -209,9 +173,11 @@ useHead({ title: 'The Midden' })
 }
 .midden-sites__blurb {
   display: block;
-  margin-top: 0.3rem;
-  font-size: 0.92rem;
-  line-height: 1.5;
+  margin-top: 0.35rem;
+  font-family: var(--midden-serif);
+  font-style: italic;
+  font-size: 0.96rem;
+  line-height: 1.55;
   color: var(--midden-muted);
 }
 .midden-sites__arrow {
@@ -231,7 +197,6 @@ useHead({ title: 'The Midden' })
 }
 
 @media (max-width: 34rem) {
-  .midden-legend__row { grid-template-columns: 1fr; gap: 0.15rem; }
   .midden-sites__link { grid-template-columns: 1.8rem 1fr; }
   .midden-sites__arrow { display: none; }
 }

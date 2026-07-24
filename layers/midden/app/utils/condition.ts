@@ -1,14 +1,15 @@
 // The single-homed condition-grade table for the Midden Tenant (#523/#526/#527).
-// Every condition-aware surface — the landing's condition legend and each inline
-// find — reads its label and definition FROM HERE; the definition string is
-// authored exactly once (#527: never a second copy of the legend text).
+// Every condition-aware surface — the dig-report page's condition key and each
+// inline find — reads its label and definition FROM HERE; the definition string
+// is authored exactly once (#527: never a second copy of the legend text).
 // The tenant.config.ts `condition` enum backs this table's `grade` values.
 //
 // Post-MVP simplification (owner-directed, this branch): condition now reads as a
 // plain WORD, not a glyph — the abstract SVG mark and its hover-to-decode tooltip
 // are gone (see CONTEXT.md's Condition term), so this table no longer carries any
-// glyph geometry. The word + its one-line definition, shown once on the landing,
-// are the whole encoding now.
+// glyph geometry. The word + its one-line definition — surfaced in the sticky
+// condition key beside each dig report's finds (owner-directed final design;
+// ConditionKey.vue), no longer on the landing — are the whole encoding now.
 //
 // Nuxt-free on purpose (mirrors layers/atlas/app/utils/biomes.ts): the SFCs read
 // the exported table and lookup helper, so the ordering guarantee is unit-testable
@@ -32,13 +33,13 @@ export interface ConditionMeta {
   grade: Grade
   /** The curator's short display label, shown as visible text (never glyph-only). */
   label: string
-  /** The one-line, fixed, curator-voice definition — the landing legend text
+  /** The one-line, fixed, curator-voice definition — the condition-key text
    *  (#527). Authored once, here; never re-authored at a call site. */
   definition: string
 }
 
 // The one authored table. Order IS the decay-then-orthogonal order (#523) and is
-// relied on by the condition legend and any tally rendering — do not re-sort at
+// relied on by the condition key and any tally rendering — do not re-sort at
 // call sites.
 export const CONDITION_GRADES: ConditionMeta[] = [
   {

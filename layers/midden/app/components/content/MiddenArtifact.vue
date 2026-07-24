@@ -149,15 +149,15 @@ function provenanceLine(p: MiddenProvenance): string {
    No full box, no shadow — the tint alone lifts it off the parchment, so a
    column of finds reads as a stack of specimen slips rather than boxed forms. */
 .midden-find {
-  margin: 2rem 0;
-  padding: 1.2rem 1.4rem 1.3rem;
+  margin: 2.8rem 0;
+  padding: 1.35rem 1.6rem 1.5rem;
   border-left: 3px solid var(--midden-accent);
   background: var(--midden-paper-2);
 }
 .midden-find--lost {
   border-left-color: var(--midden-faint);
   background: transparent;
-  padding-left: 1.1rem;
+  padding-left: 1.3rem;
   border-left-style: dashed;
 }
 
@@ -216,10 +216,13 @@ function provenanceLine(p: MiddenProvenance): string {
 }
 .midden-find__dot { opacity: 0.5; }
 
+/* The catalog note is the curator speaking — serif, against the mono facts
+   above it (theme.css's two-register split). */
 .midden-find__note {
-  margin: 0.85rem 0 0;
-  font-size: 0.99rem;
-  line-height: 1.62;
+  margin: 0.95rem 0 0;
+  font-family: var(--midden-serif);
+  font-size: 1.03rem;
+  line-height: 1.68;
   color: var(--midden-ink);
 }
 
@@ -244,9 +247,10 @@ function provenanceLine(p: MiddenProvenance): string {
 }
 
 .midden-find__silent {
-  margin: 0.85rem 0 0;
+  margin: 0.9rem 0 0;
+  font-family: var(--midden-serif);
   font-style: italic;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: var(--midden-faint);
 }
 
