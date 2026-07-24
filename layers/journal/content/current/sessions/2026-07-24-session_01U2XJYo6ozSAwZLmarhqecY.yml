@@ -1,0 +1,65 @@
+schemaVersion: 1
+session: session_01U2XJYo6ozSAwZLmarhqecY
+startedAt: 2026-07-24T15:49:59Z
+endedAt: 2026-07-24T16:15:06Z
+kind: interactive
+goal: Dig removed code to catalogue on the Midden
+status: in-review
+outcome: Four fresh finds catalogued; PR 679 open
+summary: "Human-instructed: dig for code/content discarded after the Midden's initial catalogue (assessedAt 2026-07-16) and showcase it. Added a self-referential dig-report Site (the-simpler-verdict) with four Artifacts from the current-midden season — the Midden's own removed reading instruments (condition glyph, tooltip, stratigraphy sidebar) plus the Journal's throwaway external-session prototype. validate:content and the full gate:scoped pass; PR #679 opened per ADR-0003 auto-open. On a human follow-up (\"any more findings outside the midden?\") I first answered \"none\" from a shallow clone, then caught that the clone was truncated at 2026-07-23; unshallowing revealed the 07-16→07-22 window, whose removals (the Search Tenant folded into Commons; a single-homed doc) all fail Gate B (→ Palimpsest), confirming the four finds are the complete qualifying set."
+prs:
+  - "679"
+docsRead:
+  - path: layers/midden/CONTEXT.md
+    reason: Site/Artifact/Condition/two-gate inclusion bar
+  - path: layers/midden/tenant.config.ts
+    reason: artifact schema + provenance union
+  - path: layers/midden/app/utils/strata.ts
+    reason: dig-season slugs for stratum ref
+  - path: layers/midden/app/utils/condition.ts
+    reason: condition grade definitions
+  - path: layers/midden/content/trench/artifacts/the-generator.yml
+    reason: (no reason given)
+  - path: layers/midden/content/trench/artifacts/the-committed-config.yml
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/TrenchLanding.vue
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Asserted "no more findings outside the midden" from a shallow clone truncated at 2026-07-23, before the 07-16→07-22 window was even visible.
+    solution: For any "search all history since <date>" claim, check `git rev-parse --is-shallow-repository` / earliest reachable commit and `--unshallow` FIRST — the CLAUDE.md shallow-clone caveat applies to completeness claims, not just history-rewrite diagnoses.
+    severity: major
+  - description: A backgrounded `pnpm gate:scoped` was silently killed mid-unit-tests (no exit marker, process gone), so build/e2e never ran and it needed re-running.
+    solution: Don't rely on a long backgrounded gate surviving across turns; run it foreground with a generous timeout when the result gates the next step.
+    severity: minor
+durationSec: 1507
+models:
+  claude-opus-4-8: 131
+toolCounts:
+  Bash: 34
+  Read: 8
+  Write: 7
+  Monitor: 1
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__update_pull_request: 1
+filesEdited:
+  - layers/midden/content/trench/artifacts/the-condition-glyph.yml
+  - layers/midden/content/trench/artifacts/the-condition-tooltip.yml
+  - layers/midden/content/trench/artifacts/the-stratigraphy-sidebar.yml
+  - layers/midden/content/trench/artifacts/the-external-session-prototype.yml
+  - layers/midden/content/trench/pages/the-simpler-verdict.md
+gitBranch: claude/midden-removed-code-wy715y
+entrypoint: remote_mobile
+cliVersion: 2.1.218
+learnings:
+  - A shallow clone's grafted boundary silently caps `git log --since` — a completeness claim over a date window is only as deep as the clone.
+  - The Midden/Palimpsest split is the load-bearing classifier here — an entire Tenant deletion (Search→Commons) is Palimpsest, not Midden, because search is carried forward.
