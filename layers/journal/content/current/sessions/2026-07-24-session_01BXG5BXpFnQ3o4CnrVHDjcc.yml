@@ -1,0 +1,73 @@
+schemaVersion: 1
+session: session_01BXG5BXpFnQ3o4CnrVHDjcc
+startedAt: 2026-07-24T01:04:42Z
+endedAt: 2026-07-24T01:31:32Z
+kind: autonomous
+goal: Run the frictions-to-fixes sweep
+status: completed
+outcome: 1 fix merged (#668), 1 regression escalated (#666)
+summary: "Fully agent-initiated scheduled run of the frictions-to-fixes Skill, no live human steering at any point. Delegated the 20-session survey to a subagent, which returned one actionable simple candidate and flagged two \"regressions.\" Independently verified both regression claims against primary sources before acting: one was genuine (caller-pinned-branch checklist still skipped despite issue #625's fix — filed as #666, escalated to the user since a second doc-only pass is unlikely to hold) and one was a false positive (the list_issues-overflow recurrence was already fully tracked and fixed by a prior run's issue #654, so it was dropped rather than re-filed). Filed #667 for the one simple candidate (a poll-then-merge helper to stop hand-rolling enable_pr_auto_merge's documented misleading-error retry), dispatched a worktree-isolated Sonnet impl agent to build it, then reviewed, gated, committed/pushed/opened PR #668 myself after the impl agent stalled waiting on its own background gate run, and merged #668 once CI's gate went green."
+prs: []
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: "the merge recipe #668's doc change extends"
+  - path: scripts/list-open-issues.ts
+    reason: "verify #667's imported gh/REST-fallback helpers are real"
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the whole run followed this Skill's steps 1-6
+  - name: close-session
+    reason: invoked at closure
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: "The survey subagent misclassified a friction as a fresh \"regression\" (list_issues overflow) when it was actually already fully tracked and fixed by a prior run's issue #654 covering that exact session — would have filed a duplicate issue if trusted as-is."
+    solution: Always independently re-verify a subagent's "regression"/"never fixed" classification with a targeted tracker search before filing or escalating, not just trust the survey report — this is exactly why CLAUDE.md requires verifying subagent claims against a primary source before asserting them.
+    severity: moderate
+  - description: First issue_write call for the regression issue used a fabricated-looking session id instead of resolving it from context, caught immediately by the github-footer-guard PreToolUse hook.
+    solution: Resolve the session id from the actual commit-footer template at the moment of writing, never reconstruct or guess one — the guard worked exactly as designed here.
+    severity: moderate
+  - description: The dispatched worktree-isolated impl agent stalled twice, ending its turn while "waiting" on its own backgrounded pnpm gate:scoped run with no concrete completion check (log tail / Monitor) — needed resuming twice via SendMessage, and I ultimately finished the commit/push/PR-open steps myself directly rather than round-tripping a third time.
+    solution: "Brief a worktree-isolated impl agent with an explicit, concrete way to confirm a backgrounded command finished (a log-file marker to grep, or the Monitor tool) rather than \"run it and wait\" — issue #602 already tracks this class of failure; this run is fresh evidence it's still live and worth weighing for a stronger fix."
+    severity: moderate
+  - description: "Tried to poll PR #668's CI status from a Monitor shell command via curl against the GitHub API, guessing a token file path that doesn't exist in this environment — no gh binary and no exposed token for direct API calls here."
+    solution: For orchestrator-side PR/CI status polling, use the mcp__github__pull_request_read MCP tool on a ScheduleWakeup cadence instead of scripting a raw curl/gh call in a Monitor/Bash command.
+    severity: minor
+  - description: cd-ing into the dispatched agent's worktree to inspect it (twice) left that cwd sitting across later Bash calls, triggering two spurious Stop-hook "uncommitted changes" warnings that needed re-verifying at the true repo root each time.
+    solution: Already documented in CLAUDE.md (cd back to repo root, or use absolute-path-prefixed one-off commands) — just noting this cost recurred again this run.
+    severity: nit
+durationSec: 1609
+models:
+  claude-sonnet-5: 165
+toolCounts:
+  Bash: 29
+  ToolSearch: 7
+  mcp__github__list_pull_requests: 1
+  Agent: 2
+  ScheduleWakeup: 5
+  mcp__github__issue_read: 3
+  mcp__github__search_issues: 5
+  mcp__github__issue_write: 3
+  PushNotification: 1
+  SendMessage: 2
+  Monitor: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_review_write: 2
+  TaskStop: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  Read: 1
+  Edit: 3
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Implement poll-then-merge PR helper
+    model: sonnet
+gitBranch: claude/hopeful-brown-32sfrv
+entrypoint: remote_trigger
+cliVersion: 2.1.218
+trigger: frictions-to-fixes
