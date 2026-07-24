@@ -1,0 +1,42 @@
+schemaVersion: 1
+session: session_01ND8orLwnkSMY6GBByfgFUt
+startedAt: 2026-07-24T06:01:18Z
+endedAt: 2026-07-24T06:04:29Z
+kind: autonomous
+goal: Screen a fabricated-session-id friction
+status: completed
+outcome: "Screened as drop: guard already covers it"
+summary: "Dispatched (no human prompt this session) to review a moderate friction logged by session_01BXG5BXpFnQ3o4CnrVHDjcc: its first `issue_write` call for a regression issue carried a fabricated-looking session id, caught immediately by the github-footer-guard PreToolUse hook. Investigated whether this represented an unaddressed gap warranting a fix. Confirmed `scripts/github-footer-guard.ts` already lists `mcp__github__issue_write` in its `GITHUB_FOOTER_TOOLS` registry (built for issue #628), and the originating friction's own solution note (\"the guard worked exactly as designed here\") confirms the backstop functioned correctly on this call site rather than exposing a new uncovered surface. Concluded no code or doc change is warranted and applied frictions-to-fixes' own screening rule (already fixed, working as intended -> drop, not a fresh issue). Opened no PR since no substantive change was made (ADR-0003)."
+prs: []
+docsRead:
+  - path: scripts/github-footer-guard.ts
+    reason: confirm issue_write is already in the GITHUB_FOOTER_TOOLS registry
+  - path: layers/journal/content/current/sessions/2026-07-24-session_01BXG5BXpFnQ3o4CnrVHDjcc.yml
+    reason: find the originating friction's full context
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: invoked at closure
+  - name: log-session
+    reason: authoring this log
+  - name: frictions-to-fixes
+    reason: applied its already-fixed screening rule to classify this candidate as a drop
+frictions:
+  - description: The dispatched task text was only a bare friction paragraph with no issue number or explicit instruction, requiring investigation to reconstruct what action (if any) was actually being asked for.
+    solution: When dispatching a session to screen a single friction candidate, name the expected action explicitly (e.g. 'confirm no fix needed and drop' vs 'file an issue') rather than handing over only the raw friction text.
+    severity: nit
+durationSec: 191
+models:
+  claude-sonnet-5: 28
+toolCounts:
+  Grep: 3
+  Read: 3
+  mcp__github__search_issues: 2
+  mcp__github__issue_read: 1
+  Bash: 3
+  Skill: 2
+  Write: 1
+gitBranch: claude/session-id-commit-footer-gkvwl4
+entrypoint: remote_mobile
+cliVersion: 2.1.218
