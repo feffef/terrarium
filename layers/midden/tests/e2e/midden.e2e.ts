@@ -32,12 +32,14 @@ export function registerMiddenE2E(): void {
 
     // `/t/midden/trench` IS a manifest-derived Space entry route, so the
     // platform sweep already covers its generic 200/<h1>/clean-hydration
-    // shape — this checks the trench landing's actual authored content
-    // (`layers/midden/content/trench/pages/index.md`'s `title: The Trench`),
-    // which the generic sweep can't know to assert.
-    it('renders the trench landing with its real title', async () => {
+    // shape — this checks that it MIRRORS the one flattened landing
+    // (TrenchLanding: title, condition legend, dig-report list), which the
+    // generic sweep can't know to assert.
+    it('renders the one shared landing with the dig-report list', async () => {
       const html = await $fetch('/t/midden/trench')
-      expect(html).toContain('The Trench')
+      expect(html).toContain('The Midden')
+      expect(html).toContain('Dig reports')
+      expect(html).toContain('The Generated Map')
     })
 
     it('hydrates the trench landing with no unresolved components', async () => {

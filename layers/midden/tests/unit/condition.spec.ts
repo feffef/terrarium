@@ -1,16 +1,13 @@
 // Unit tests for the Midden's single-homed condition table (utils/condition.ts).
 // The correctness-sensitive parts are invisible in a screenshot, so they're
 // pinned here: the LOCKED decay-then-orthogonal order (#523), the lookup's
-// safe fallback (#526 — condition is never fabricated), and the one glyph
-// distinction the resolution flagged as most-confusable (never-activated vs
-// lost, #523 — they must not share a shape).
+// safe fallback (#526 — condition is never fabricated), and the
+// authored-once definition text (#527).
 import { describe, expect, it } from 'vitest'
 import {
   CONDITION_GRADES,
   CONDITION_ORDER,
-  GLYPHS,
   conditionMeta,
-  glyphFor,
   type Grade,
 } from '../../app/utils/condition.ts'
 
@@ -48,38 +45,11 @@ describe('CONDITION_GRADES table', () => {
 describe('conditionMeta()', () => {
   it('looks up each grade to its own row', () => {
     expect(conditionMeta('fresh').label).toBe('Fresh')
-    expect(conditionMeta('never-activated').glyph).toBe('never-activated')
+    expect(conditionMeta('never-activated').label).toBe('Never activated')
   })
 
   it('falls back to `lost` for an unknown grade — claims nothing survived', () => {
     expect(conditionMeta(undefined).grade).toBe('lost')
     expect(conditionMeta('bogus' as Grade).grade).toBe('lost')
-  })
-})
-
-describe('glyph encoding (#523)', () => {
-  it('draws the erosion axis filled and the orthogonal axis as outline', () => {
-    expect(GLYPHS.fresh.filled).toBe(true)
-    expect(GLYPHS.intact.filled).toBe(true)
-    expect(GLYPHS.fragmentary.filled).toBe(true)
-    expect(GLYPHS.dissolved.filled).toBe(true)
-    expect(GLYPHS['never-activated'].filled).toBe(false)
-    expect(GLYPHS.lost.filled).toBe(false)
-  })
-
-  it('fades dissolved to a low-opacity boundary, keeps fresh solid', () => {
-    expect(GLYPHS.fresh.opacity).toBe(1)
-    expect(GLYPHS.dissolved.opacity).toBeLessThan(0.5)
-  })
-
-  it('draws lost and never-activated with DISTINCT shapes (the confusable pair)', () => {
-    // Both are outline-only; the whole point of #523 is that shape, not fill,
-    // separates them — so their path geometry must differ.
-    expect(GLYPHS.lost.d).not.toBe(GLYPHS['never-activated'].d)
-  })
-
-  it('resolves a grade to its glyph spec via glyphFor()', () => {
-    expect(glyphFor('lost')).toBe(GLYPHS.lost)
-    expect(glyphFor(undefined)).toBe(GLYPHS.lost) // fallback rides the same lookup
   })
 })

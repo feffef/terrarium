@@ -53,8 +53,9 @@ discarding during it (e.g. "the Routing Excavation" — never a bare "Q1 2026";
 seasons pattern. One season stays open-ended — "the Current Midden" — for
 freshly-discarded, not-yet-seasoned finds. An Artifact's `stratum` field
 references a season by slug; `scripts/validate-content-refs.ts` checks that
-reference resolves. Strata are the axis the **stratigraphy sidebar** (#524)
-scroll-syncs against on a Site page.
+reference resolves. A season surfaces as a plain label beside each find and in
+a Site's meta line (the scroll-synced stratigraphy sidebar of #524 was retired
+in the land → read flattening below).
 
 ### Artifact
 The Midden's atomic unit of contribution: one catalogued discarded thing, a
@@ -75,11 +76,11 @@ erosion axis) then `never-activated` (complete but never fired — a distinct
 axis, not a further decay step) and `lost` (its own gravestone template
 entirely; #523). **100% curator-authored, never mechanically re-derived** —
 not from `assessedAt`, not from any future continuity check (#526 closes this
-question explicitly). Always paired with its label as visible text, never
-glyph-only (accessibility). The six grades, their glyphs, and their fixed
-definitions are single-homed in `layers/midden/app/utils/condition.ts`, shared
-by the per-card tooltip and the `GradeLegend` component (#527) so the
-definition text is never authored twice.
+question explicitly). Rendered as its plain word beside every find — no glyph,
+no tooltip. The six grades and their fixed one-line definitions are
+single-homed in `layers/midden/app/utils/condition.ts`, shared by the find
+rendering and the landing's condition legend (#527) so the definition text is
+never authored twice.
 
 ### The inclusion bar (two-gate test)
 The classifier deciding what may become an Artifact (#525): **Gate A**
@@ -104,9 +105,14 @@ not the Midden (not yet cross-referenced; revisit once Palimpsest exists).
   recorded there and in this file, not as ADRs — ADR-0021).
 - **`layers/midden/app/utils/strata.ts`** — the canonical dig-season list.
 - **`layers/midden/app/utils/condition.ts`** — the single-homed
-  {grade, glyph, label, definition} table the glyph, tooltip, and legend
-  components all read from.
-- **`trench/pages/index.md`** landing and the Tenant-root
-  `app/pages/t/midden/index.vue` foreword — the in-fiction-free, in-voice
-  curatorial framing an actual visitor reads, written in the curator's
-  small-caps register, not this file's.
+  {grade, label, definition} table the find rendering and the landing legend
+  both read from.
+- **`app/components/midden/TrenchLanding.vue`** — the ONE landing (foreword,
+  condition legend, dig-report list), mirrored at both `/t/midden` and
+  `/t/midden/trench` — the in-fiction-free, in-voice curatorial framing an
+  actual visitor reads, written in the curator's register, not this file's.
+
+The visitor experience was flattened to **land → read** as an owner-directed
+post-MVP simplification (2026-07-24): one landing instead of a front door plus
+trench index, finds rendered fully open (condition as a plain word, no
+glyph/tooltip/accordion), and the stratigraphy sidebar retired.
