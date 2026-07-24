@@ -1,42 +1,53 @@
 schemaVersion: 1
 session: session_01ND8orLwnkSMY6GBByfgFUt
 startedAt: 2026-07-24T06:01:18Z
-endedAt: 2026-07-24T06:04:29Z
-kind: autonomous
-goal: Screen a fabricated-session-id friction
-status: completed
-outcome: "Screened as drop: guard already covers it"
-summary: "Dispatched (no human prompt this session) to review a moderate friction logged by session_01BXG5BXpFnQ3o4CnrVHDjcc: its first `issue_write` call for a regression issue carried a fabricated-looking session id, caught immediately by the github-footer-guard PreToolUse hook. Investigated whether this represented an unaddressed gap warranting a fix. Confirmed `scripts/github-footer-guard.ts` already lists `mcp__github__issue_write` in its `GITHUB_FOOTER_TOOLS` registry (built for issue #628), and the originating friction's own solution note (\"the guard worked exactly as designed here\") confirms the backstop functioned correctly on this call site rather than exposing a new uncovered surface. Concluded no code or doc change is warranted and applied frictions-to-fixes' own screening rule (already fixed, working as intended -> drop, not a fresh issue). Opened no PR since no substantive change was made (ADR-0003)."
-prs: []
+endedAt: 2026-07-24T06:30:59Z
+kind: interactive
+goal: Screen a friction, then fix severity guidance
+status: in-review
+outcome: "CONTEXT.md clarification pushed as PR #671"
+summary: "Dispatched to review a moderate friction logged by session_01BXG5BXpFnQ3o4CnrVHDjcc (a fabricated-looking session id on an `issue_write` call, caught immediately by the github-footer-guard PreToolUse hook). Confirmed `scripts/github-footer-guard.ts` already covers `mcp__github__issue_write` and the guard worked exactly as designed, so screened it as a drop (no code/doc gap). The human then asked, in conversation, why a fully-mitigated known failure was scored `moderate` rather than `nit`, and directed a scan of the last 50 sessions' frictions to look for similar cases before proposing (not yet applying) a severity-guideline fix. Scanned 107 frictions across 50 sessions (`session-frictions.ts --window 50`): found 3 session-id-fabrication near-misses scored `moderate` despite zero lasting cost, versus 2 structurally identical caught-cleanly frictions on other topics scored `nit` — a real inconsistency (severity anchored to topic notoriety, not this-instance cost, double-counting the recurrence signal frictions-to-fixes already tracks separately). Proposed a clarifying clause for CONTEXT.md's Friction entry; the human approved with \"trim it a bit,\" so I tightened and applied it, ran `pnpm gate:scoped` (green), committed, pushed, and opened gated PR #671."
+prs:
+  - "671"
 docsRead:
   - path: scripts/github-footer-guard.ts
     reason: confirm issue_write is already in the GITHUB_FOOTER_TOOLS registry
   - path: layers/journal/content/current/sessions/2026-07-24-session_01BXG5BXpFnQ3o4CnrVHDjcc.yml
     reason: find the originating friction's full context
+  - path: CONTEXT.md
+    reason: the Friction entry being clarified (read before editing)
   - path: .agents/skills/frictions-to-fixes/SKILL.md
     reason: (no reason given)
 skillsUsed:
   - name: close-session
-    reason: invoked at closure
+    reason: invoked at closure, then re-invoked at PR-open
   - name: log-session
-    reason: authoring this log
+    reason: authoring/updating this log
   - name: frictions-to-fixes
-    reason: applied its already-fixed screening rule to classify this candidate as a drop
+    reason: applied its already-fixed screening rule, and its recurrence-vs-severity framing informed the guideline fix
 frictions:
   - description: The dispatched task text was only a bare friction paragraph with no issue number or explicit instruction, requiring investigation to reconstruct what action (if any) was actually being asked for.
     solution: When dispatching a session to screen a single friction candidate, name the expected action explicitly (e.g. 'confirm no fix needed and drop' vs 'file an issue') rather than handing over only the raw friction text.
     severity: nit
-durationSec: 191
+durationSec: 1781
 models:
-  claude-sonnet-5: 28
+  claude-sonnet-5: 73
 toolCounts:
-  Grep: 3
-  Read: 3
+  Grep: 6
+  Read: 6
   mcp__github__search_issues: 2
   mcp__github__issue_read: 1
-  Bash: 3
+  Bash: 12
   Skill: 2
-  Write: 1
+  Write: 2
+  Edit: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - CONTEXT.md
 gitBranch: claude/session-id-commit-footer-gkvwl4
 entrypoint: remote_mobile
 cliVersion: 2.1.218
