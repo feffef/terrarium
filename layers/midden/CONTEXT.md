@@ -53,8 +53,11 @@ discarding during it (e.g. "the Routing Excavation" — never a bare "Q1 2026";
 seasons pattern. One season stays open-ended — "the Current Midden" — for
 freshly-discarded, not-yet-seasoned finds. An Artifact's `stratum` field
 references a season by slug; `scripts/validate-content-refs.ts` checks that
-reference resolves. Strata are the axis the **stratigraphy sidebar** (#524)
-scroll-syncs against on a Site page.
+reference resolves. **Post-MVP simplification (owner-directed):** the
+scroll-synced stratigraphy sidebar that used to track this axis down the
+margin of a Site page (#524) was removed when the visitor experience was
+flattened to land → read; a find now names its own dig season as a plain text
+label beside its condition, with nothing to scroll-sync against.
 
 ### Artifact
 The Midden's atomic unit of contribution: one catalogued discarded thing, a
@@ -75,11 +78,15 @@ erosion axis) then `never-activated` (complete but never fired — a distinct
 axis, not a further decay step) and `lost` (its own gravestone template
 entirely; #523). **100% curator-authored, never mechanically re-derived** —
 not from `assessedAt`, not from any future continuity check (#526 closes this
-question explicitly). Always paired with its label as visible text, never
-glyph-only (accessibility). The six grades, their glyphs, and their fixed
+question explicitly). Rendered as its plain-text label directly on the find —
+never a glyph to hover or decode. The six grades and their fixed one-line
 definitions are single-homed in `layers/midden/app/utils/condition.ts`, shared
-by the per-card tooltip and the `GradeLegend` component (#527) so the
-definition text is never authored twice.
+by the `GradeLegend` component (#527) so the definition text is never authored
+twice. **Post-MVP simplification (owner-directed):** the per-grade SVG glyph
+and its hover/keyboard-focus tooltip (#523's original two-tier interaction)
+were removed when the visitor experience was flattened to land → read; the
+definition table now surfaces exactly once, quietly, on the landing's
+condition legend — a find itself carries only the word.
 
 ### The inclusion bar (two-gate test)
 The classifier deciding what may become an Artifact (#525): **Gate A**
@@ -104,9 +111,11 @@ not the Midden (not yet cross-referenced; revisit once Palimpsest exists).
   recorded there and in this file, not as ADRs — ADR-0021).
 - **`layers/midden/app/utils/strata.ts`** — the canonical dig-season list.
 - **`layers/midden/app/utils/condition.ts`** — the single-homed
-  {grade, glyph, label, definition} table the glyph, tooltip, and legend
-  components all read from.
-- **`trench/pages/index.md`** landing and the Tenant-root
-  `app/pages/t/midden/index.vue` foreword — the in-fiction-free, in-voice
-  curatorial framing an actual visitor reads, written in the curator's
-  small-caps register, not this file's.
+  {grade, label, definition} table the find and legend components read from.
+- **`app/components/midden/TrenchLanding.vue`** — the ONE landing, rendered
+  identically (mirror, not redirect) from both `app/pages/t/midden/index.vue`
+  and `app/pages/t/midden/[space]/index.vue` (post-MVP simplification: the
+  Tenant-root front door and the `trench` Space entry used to be two
+  near-duplicate pages). Carries the in-fiction-free, in-voice curatorial
+  foreword an actual visitor reads first, written in the curator's small-caps
+  register, not this file's.

@@ -1,84 +1,74 @@
 <script setup lang="ts">
-// The condition ladder (#527; redesign handoff, direction 1d "The condition
-// ladder"): all six grades in the LOCKED decay-then-orthogonal order, each row
-// showing the glyph + its `.sc` label + the SAME terse one-line definition — all
-// read from utils/condition.ts, so the definition text lives in exactly one
-// place (#527, never authored twice). A dashed axis-break divider before
-// `never-activated` marks where the ladder stops being "further decay" and
-// becomes a different axis (the erosion grades above it; never-activated / lost
-// below). Self-contained; used on the trench index.
+// The condition legend (#527; flattened visitor experience): all six grades in
+// the LOCKED decay-then-orthogonal order, each row showing the `.sc` label +
+// the SAME terse one-line definition — read from utils/condition.ts, so the
+// definition text lives in exactly one place (#527, never authored twice).
+// Shown exactly ONCE, on the landing — a find never repeats it, so there is
+// nothing left to decode at the point of reading (post-MVP simplification,
+// layers/midden/CONTEXT.md).
+//
+// A quiet hairline (no label) marks where the ladder stops reading as further
+// decay and becomes a different axis (the erosion grades above it;
+// never-activated / lost below) — a visual hint, not a second copy of prose.
 import { CONDITION_GRADES } from '../../utils/condition'
 
-// The axis break falls before the first non-erosion grade. `never-activated`
-// and `lost` sit on their own axes (utils/condition.ts) — the divider is drawn
-// above whichever grade first leaves the erosion axis.
 const EROSION_AXIS = new Set(['fresh', 'intact', 'fragmentary', 'dissolved'])
 </script>
 
 <template>
-  <div class="midden-ladder">
-    <template v-for="c in CONDITION_GRADES" :key="c.grade">
-      <div v-if="!EROSION_AXIS.has(c.grade) && c.grade === 'never-activated'" class="mono midden-ladder__break">
-        a different axis — not further decay
-      </div>
-      <div class="midden-ladder__row">
-        <span class="midden-ladder__mark">
-          <MiddenConditionGlyph :grade="c.grade" :size="22" />
-          <span class="sc midden-ladder__label">{{ c.label }}</span>
-        </span>
-        <span class="midden-ladder__def">{{ c.definition }}</span>
-      </div>
-    </template>
+  <div class="midden-legend">
+    <div
+      v-for="c in CONDITION_GRADES"
+      :key="c.grade"
+      class="midden-legend__row"
+      :class="{ 'midden-legend__row--break': !EROSION_AXIS.has(c.grade) && c.grade === 'never-activated' }"
+    >
+      <span class="sc midden-legend__label">{{ c.label }}</span>
+      <span class="midden-legend__def">{{ c.definition }}</span>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.midden-ladder {
+.midden-legend {
   display: flex;
   flex-direction: column;
 }
 
-.midden-ladder__break {
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-size: 0.68rem;
-  color: var(--midden-faint);
-  margin: 14px 0 8px;
-  padding-top: 12px;
+.midden-legend__row {
+  display: grid;
+  grid-template-columns: 10rem 1fr;
+  gap: 6px 18px;
+  align-items: baseline;
+  padding: 8px 0;
+  border-top: 1px solid var(--midden-line);
+}
+.midden-legend__row:first-child {
+  border-top: none;
+}
+.midden-legend__row--break {
+  margin-top: 6px;
   border-top: 1px dashed var(--midden-rule);
 }
 
-.midden-ladder__row {
-  display: grid;
-  grid-template-columns: 12rem 1fr;
-  gap: 8px 18px;
-  align-items: baseline;
-  padding: 7px 0;
-}
-
-.midden-ladder__mark {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-}
-.midden-ladder__label {
-  font-size: 0.95rem;
+.midden-legend__label {
+  font-size: 0.92rem;
   letter-spacing: 0.03em;
   color: var(--midden-ink);
 }
 
-.midden-ladder__def {
+.midden-legend__def {
   font-style: italic;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   line-height: 1.45;
   color: var(--midden-muted);
 }
 
 @media (max-width: 34rem) {
-  .midden-ladder__row {
+  .midden-legend__row {
     grid-template-columns: 1fr;
     gap: 2px;
-    padding: 9px 0;
+    padding: 10px 0;
   }
 }
 </style>

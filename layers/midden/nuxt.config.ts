@@ -11,9 +11,9 @@
 import { fileURLToPath } from 'node:url'
 
 export default defineNuxtConfig({
-  // The `.midden` theme tokens (cream/parchment ground, one terracotta accent,
-  // muted slate for the stratigraphy sidebar), registered globally so every
-  // layer view and every nested component inherits them. Resolved from this
+  // The `.midden` theme tokens (cream/parchment ground, one terracotta
+  // accent), registered globally so every layer view and every nested
+  // component inherits them. Resolved from this
   // config's own URL so it is unambiguous regardless of layer alias resolution
   // (docs/agents/tenant-layers.md §1).
   css: [fileURLToPath(new URL('./app/assets/theme.css', import.meta.url))],

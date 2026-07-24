@@ -1,20 +1,23 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    The Midden — theme (issue #515; Claude-Design redesign handoff, direction 1a
-   "Section column")
+   "Section column"; post-MVP flattened-visitor-experience simplification —
+   see layers/midden/CONTEXT.md)
 
    An excavation catalogue of the Platform's own discarded work. Self-contained
    tokens (no sharing with other Tenants; ADR isolation stance, CONTEXT.md).
    Registered globally by the layer's nuxt.config, so every layer view and every
    nested component inherits the tokens (docs/agents/tenant-layers.md §2).
 
-   The redesign reads as a physical dig report on ruled parchment: a warm cream
-   ground, ONE fired-terracotta accent for the live thing on the page, and a cool
-   slate reserved for the stratigraphic depth-gauge. Three type registers:
+   Reads as a physical dig report on ruled parchment: a warm cream ground, ONE
+   fired-terracotta accent for the live thing on the page. The `--midden-slate*`
+   tokens are kept for any future use but are currently unused — the
+   stratigraphic depth-gauge they were reserved for was removed in the
+   flattening. Three type registers:
      · a MONO for the reading body, provenance ids, and assessed dates
        (the mockup's IBM Plex Mono — kept as this repo's existing system mono
        stack, no external font loaded);
-     · a TYPEWRITER for small-caps chrome, condition stamps, and UI labels
-       (the mockup's Special Elite → a Courier-family system stack);
+     · a TYPEWRITER for small-caps chrome and UI labels (the mockup's Special
+       Elite → a Courier-family system stack);
      · a HANDWRITING face for doc titles and the curator's hand-annotations
        (the mockup's Architects Daughter → a print/cursive system stack).
 
@@ -139,30 +142,6 @@
   letter-spacing: 0;
   text-transform: none;
 }
-/* The archive-style condition stamp: an inked rubber-stamp look, physically
-   rotated, positioned by the ArtifactCard that owns it. `mix-blend-mode` lets
-   the ink sink into the paper grain. */
-.stamp {
-  position: absolute;
-  font-family: var(--midden-typewriter);
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.86rem;
-  line-height: 1;
-  color: var(--midden-accent);
-  border: 2.5px solid var(--midden-accent);
-  border-radius: 5px;
-  padding: 7px 11px 4px;
-  opacity: 0.82;
-  mix-blend-mode: multiply;
-  white-space: nowrap;
-  pointer-events: none;
-}
-@media (prefers-color-scheme: dark) {
-  /* multiply darkens against a dark ground — screen keeps the ink legible. */
-  .stamp { mix-blend-mode: screen; opacity: 0.9; }
-}
 
 /* ── Shell ──────────────────────────────────────────────────────────────── */
 .midden {
@@ -237,70 +216,6 @@
   font-family: var(--midden-mono);
   font-size: 0.78rem;
   color: var(--midden-faint);
-}
-
-/* ── Condition glyph (#523) ────────────────────────────────────────────────
-   ConditionGlyph.vue now renders ONLY the SVG mark (fill/stroke/opacity per
-   grade — no blur), terracotta by default; callers that need the visible grade
-   label render it themselves (the stamp on a find, the `.sc` label in a
-   ladder). Accessibility is preserved by the glyph's own aria-label/<title>
-   plus the always-present visible label at each call site (never glyph-only). */
-.midden-glyph { flex: none; display: block; overflow: visible; color: var(--midden-accent); }
-
-/* ── Condition tooltip (#523 Tier-1) ───────────────────────────────────────
-   The FIXED grade-level definition, on hover / keyboard focus of the glyph.
-   A real popup (not a native title): styleable, testable, keyboard-reachable.
-   Layered onto the glyph in the same way as before the redesign. */
-.midden-tip { position: relative; display: inline-flex; }
-.midden-tip .tip-trigger {
-  appearance: none;
-  background: none;
-  border: 0;
-  padding: 0;
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  cursor: help;
-  display: inline-flex;
-}
-.midden-tip .tip-trigger:focus-visible { outline: 2px solid var(--midden-accent); outline-offset: 3px; border-radius: 3px; }
-.midden-tip .tip-bubble {
-  position: absolute;
-  bottom: calc(100% + 0.5rem);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 20;
-  width: max-content;
-  max-width: 18rem;
-  padding: 0.55rem 0.7rem;
-  background: var(--midden-paper-2);
-  color: var(--midden-ink);
-  border: 1px solid var(--midden-rule);
-  box-shadow: 0 6px 18px -12px rgba(0, 0, 0, 0.6);
-  border-radius: 3px;
-  font-family: var(--midden-mono);
-  font-size: 0.76rem;
-  letter-spacing: 0;
-  line-height: 1.45;
-  text-align: left;
-}
-.midden-tip .tip-bubble .tip-grade {
-  display: block;
-  font-family: var(--midden-typewriter);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-  color: var(--midden-accent);
-  margin-bottom: 0.15rem;
-}
-.midden-tip .tip-bubble::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 5px solid transparent;
-  border-top-color: var(--midden-rule);
 }
 
 /* ── Reduced motion ───────────────────────────────────────────────────────*/
