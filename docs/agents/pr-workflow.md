@@ -27,19 +27,27 @@ flaking, `search_issues` scoped to the issue number is a viable fallback
    never merges, no exception.
 2. Poll `get_check_runs` for green. A check reporting `in_progress` is not
    the same as failing — don't read a still-running check as a failure.
+   **`scripts/merge-pr.ts <pr-number>` automates exactly this poll-then-merge
+   step** (issue #667) — it polls the PR's check runs on a short interval
+   until they resolve (green/red/timeout) and, on green, merges directly via
+   `gh api`/REST, skipping `enable_pr_auto_merge` entirely rather than hitting
+   its misleading-error round-trip and manually re-checking. Reach for it
+   instead of hand-rolling steps 2 and 4 yourself; still do step 3 (the
+   verdict comment) around it.
 3. **Post the verdict as a PR review or comment before merging — every time,
    even on a clean "merging as-is" verdict.** The merge must never be the
    only trace: an unreviewed-looking merge and a genuinely-reviewed one must
    stay distinguishable on the PR itself, or `get_reviews`/`get_comments`
    return empty and a real review reads as none having happened.
-4. On green, call `merge_pull_request` directly. Do **not** reach for
-   `enable_pr_auto_merge` on an already-green PR: it's for arming ahead of a
-   still-pending check, not landing a PR that's already mergeable, and
-   calling it on a green PR can throw a misleading error (e.g. "protected
-   branch rules not configured") — its "checks are failing" text can even
-   fire while a check is merely `in_progress`. If it errors, confirm the real
-   check state via `pull_request_read` before concluding checks have
-   genuinely failed and abandoning the PR.
+4. On green, call `merge_pull_request` directly (or let `scripts/merge-pr.ts`
+   do it, per step 2). Do **not** reach for `enable_pr_auto_merge` on an
+   already-green PR: it's for arming ahead of a still-pending check, not
+   landing a PR that's already mergeable, and calling it on a green PR can
+   throw a misleading error (e.g. "protected branch rules not configured") —
+   its "checks are failing" text can even fire while a check is merely
+   `in_progress`. If it errors, confirm the real check state via
+   `pull_request_read` before concluding checks have genuinely failed and
+   abandoning the PR.
 5. Arm `enable_pr_auto_merge` only when you need to land ahead of a still-pending
    check — the PR then merges itself once the gate reports green, without you
    polling it to completion.
