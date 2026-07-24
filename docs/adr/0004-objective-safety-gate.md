@@ -67,14 +67,11 @@ Status: Accepted
 
 > **Amended by [ADR-0020](0020-requester-trust-tiers.md) (2026-07-11).** A third,
 > orthogonal axis joins the blast-radius policy below: **provenance of the
-> request.** A **Public**-originated PR (authored by someone without write
-> access — a read-only visitor's fork PR) is **human-merged regardless of file
-> classification** — the low-risk auto-merge tier does not apply to it — and its
-> executable code gets a genuine security review, never a gate rubber-stamp (the
-> gate is blind to malicious runtime behaviour by design). Enforcement note: the
-> gate/CI boundary is where this is mechanically enforceable (require fork-PR
-> workflow approval; human-only merge for Public PRs), so untrusted code never
-> runs in CI or lands without a **Trusted** user's action. See ADR-0020.
+> request.** A Public-originated PR is human-merged regardless of file
+> classification — the low-risk auto-merge tier does not apply to Public
+> authors. ADR-0020 is the single home for the requester-trust axis (the
+> Trusted/Public tiers, the security-review and enforcement mechanics); see it
+> for the full rule — this is a pointer, not a restatement.
 
 > **Amended (2026-07-19).** The **Auto-merge eligibility** line below reads as a
 > general policy — any low-risk PR is auto-mergeable when green. In practice it

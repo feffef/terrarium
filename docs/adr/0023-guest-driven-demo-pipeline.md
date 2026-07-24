@@ -11,6 +11,17 @@ Status: Accepted
 > bounded window. Governance is human-only to merge (ADR-0004); this ADR and its
 > two Skills land as a gated PR the owner merges.
 
+> **Amended (2026-07-24).** *What counts as a "major security concern"* (the
+> reject/escalate surface in the Decision below) was left undefined. Examples
+> that clear the bar, non-exhaustively: a request touching secrets, credentials,
+> or environment variables; an XSS- or injection-shaped ask; a request for
+> arbitrary code execution or shell access; or anything that would weaken the
+> isolation model (ADR-0001/ADR-0004) itself. An ordinary feature or design
+> request does **not**, on its own, clear the bar merely for being technically
+> ambitious — "major" tracks security blast-radius, not build difficulty.
+> `guest-intake` and `guest-build` both point here rather than restating this
+> list.
+
 ## Context
 
 We want to run a live experiment with invited colleagues. They are logged into
