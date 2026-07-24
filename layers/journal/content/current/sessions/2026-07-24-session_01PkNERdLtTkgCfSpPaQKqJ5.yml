@@ -1,0 +1,108 @@
+schemaVersion: 1
+session: session_01PkNERdLtTkgCfSpPaQKqJ5
+startedAt: 2026-07-24T10:31:39Z
+endedAt: 2026-07-24T13:02:41Z
+kind: interactive
+goal: Flatten the Midden's over-built visitor experience
+status: in-review
+outcome: Merged 3-agent design shipped, PR open, CI green
+summary: 'Owner directed the whole arc: explore the Midden, then "structure too complicated — simplify and flatten it," then "from a visitor perspective," then chose "keep dig reports, merge the landings." On explicit instruction I ran the simplification three times in parallel worktree agents (Sonnet, Opus, Fable), each doing three screenshot rounds, and presented all three for comparison. Owner then directed the merge ("best ideas, drop the grade legend from the entry page, re-home it as a useful sidebar; spawn a Fable agent to fine-tune"), and finally "Finish" to approve. Agent-initiated within those bounds: the concrete merge recipe, the condition-key-shows-only-present-grades behaviour, and auto-opening the gated PR (ADR-0003). Full gate green (68/68); PR #676 in review.'
+prs:
+  - "676"
+docsRead:
+  - path: layers/midden/CONTEXT.md
+    reason: "Midden vocabulary + locked #515 sub-decisions being reversed"
+  - path: app/pages/t/[tenant]/[space]/[...slug].vue
+    reason: platform generic renderer, to judge what the Tenant reimplements
+  - path: CLAUDE.md
+    reason: worktree-isolation discipline for parallel design agents
+  - path: layers/midden/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/midden/app/utils/strata.ts
+    reason: (no reason given)
+  - path: layers/midden/content/trench/pages/index.md
+    reason: (no reason given)
+  - path: layers/midden/content/trench/artifacts/the-committed-config.yml
+    reason: (no reason given)
+  - path: layers/midden/app/pages/t/midden/[space]/[...slug].vue
+    reason: (no reason given)
+  - path: layers/midden/app/composables/useMiddenTrenchData.ts
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/StratigraphySidebar.vue
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/ArtifactCard.vue
+    reason: (no reason given)
+  - path: layers/midden/app/pages/t/midden/[space]/index.vue
+    reason: (no reason given)
+  - path: layers/midden/app/pages/t/midden/index.vue
+    reason: (no reason given)
+  - path: layers/midden/app/utils/condition.ts
+    reason: (no reason given)
+  - path: layers/midden/content/trench/pages/the-generated-map.md
+    reason: (no reason given)
+  - path: layers/midden/tests/e2e/midden.e2e.ts
+    reason: (no reason given)
+  - path: tests/e2e/smoke.spec.ts
+    reason: (no reason given)
+  - path: layers/midden/app/assets/theme.css
+    reason: (no reason given)
+  - path: layers/midden/tests/unit/condition.spec.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Every Fable worktree agent stopped and blocked on the full gate before capturing its final production screenshots, stranding the deliverable.
+    solution: Brief must fully decouple "capture finals" from the gate — shoot finals immediately after the production build succeeds, never after the gate.
+    severity: moderate
+  - description: Resuming the stalled Fable agent to capture finals stalled again on the same gate wait; I captured its finals from its round shots myself.
+    solution: Same fix as above; also have the orchestrator capture from the pushed branch rather than re-resuming an agent that keeps blocking.
+    severity: minor
+  - description: "issue_read get_sub_issues on the #515 Wayfinder map returned 113k chars and overflowed the tool-result limit to a file."
+    solution: For large map issues, read specific sub-issues by number rather than the whole get_sub_issues payload.
+    severity: nit
+durationSec: 9062
+models:
+  claude-opus-4-8: 207
+toolCounts:
+  Bash: 22
+  Grep: 1
+  Read: 27
+  ToolSearch: 4
+  mcp__github__issue_read: 2
+  mcp__github__search_issues: 1
+  AskUserQuestion: 2
+  TaskCreate: 8
+  TaskUpdate: 11
+  Agent: 4
+  SendMessage: 1
+  SendUserFile: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  Write: 1
+  Edit: 1
+subagents:
+  - type: general-purpose
+    task: Sonnet Midden design
+    model: sonnet
+  - type: general-purpose
+    task: Opus Midden design
+    model: opus
+  - type: general-purpose
+    task: Fable Midden design
+    model: fable
+  - type: general-purpose
+    task: Fable fine-tune final design
+    model: fable
+gitBranch: claude/midden-state-issues-vu1ojh
+entrypoint: remote_mobile
+cliVersion: 2.1.218
+learnings:
+  - "The Agent tool's per-call `model` override plus `isolation: worktree` cleanly runs a model-diverse parallel design bake-off with no branch contention."
+ideas:
+  - "A \"design bake-off\" Skill: given one design brief, spawn N model-diverse worktree agents, standardize their screenshot outputs to fixed paths, auto-collect them, and present a side-by-side comparison for the human to pick or mix — generalizing exactly this session's flow into a repeatable tool."
