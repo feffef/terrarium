@@ -8,7 +8,7 @@
 // The seasons below are the REAL dig seasons, named for what the Platform was
 // mostly discarding in each window and dated from the actual termination dates
 // of the artifacts catalogued in `content/trench/` (#519). The Platform's own
-// history is only twelve days deep so far (first commit 2026-07-04), so these
+// history is still shallow at this first cut (first commit 2026-07-04), so these
 // strata are correspondingly thin — an honest young midden, not a deep one.
 export interface DigSeason {
   /** URL-safe identifier — the value an `artifacts` Document's `stratum` field references. */

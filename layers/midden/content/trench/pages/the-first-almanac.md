@@ -18,7 +18,7 @@ to a reader's own request for "a paragraph for each specific season." That whole
 second model lasted barely longer than the first: within the same afternoon every
 specimen was converted again, this time to phase-notes, and the season components
 came out for good. Nothing named `::phase`, `Season`, or `::season-note` survives
-in the content today. What is preserved here are the components themselves, whose
+in the live content. What is preserved here are the components themselves, whose
 header comments still read whole even where the model beneath them is gone.
 
 ::midden-artifact{slug="the-phase-directive"}
