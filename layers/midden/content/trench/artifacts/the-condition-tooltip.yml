@@ -1,0 +1,20 @@
+title: ConditionTooltip.vue (hover-to-decode)
+stratum: current-midden
+condition: intact
+provenance:
+  kind: file
+  path: layers/midden/app/components/midden/ConditionTooltip.vue
+  url: https://github.com/feffef/terrarium/commit/c399e92
+  continuityCheck: removed alongside the glyph it wrapped; the flat design shows
+    each grade's definition openly in the condition key, so no hover- or
+    focus-triggered decode affordance survives to carry it forward (Gate B).
+site: the-simpler-verdict
+catalogNote: A keyboard-reachable popup that revealed a grade's definition on hover
+  or focus — a real styled, testable tooltip rather than a native title. Whole and
+  well-mannered about accessibility right up to the day the definitions were simply
+  left visible and the reveal had nothing left to reveal.
+assessedAt: 2026-07-24
+inscription:
+  text: "A real hover/focus-triggered popup, not a native `title`: it must be
+    styleable and testable, and reachable by keyboard."
+  source: ConditionTooltip.vue, header

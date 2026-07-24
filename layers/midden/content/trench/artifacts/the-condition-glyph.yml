@@ -1,0 +1,20 @@
+title: ConditionGlyph.vue (the grade mark)
+stratum: current-midden
+condition: dissolved
+provenance:
+  kind: file
+  path: layers/midden/app/components/midden/ConditionGlyph.vue
+  url: https://github.com/feffef/terrarium/commit/c399e92
+  continuityCheck: condition now renders as a plain word (CONTEXT.md, Condition term);
+    the SVG mark and its `glyphFor` geometry in utils/condition.ts came out in the
+    same commit — nothing carries the mark forward, so Gate B holds.
+site: the-simpler-verdict
+catalogNote: The Midden's own reading instrument — one grade rendered as an inline
+  SVG mark, decay encoded in fill and opacity so a fluent visitor could scan a
+  find's condition without reading the word. The simplification decided the word
+  was enough, and the mark wore away to exactly that.
+assessedAt: 2026-07-24
+inscription:
+  text: "Decay is encoded by fill + opacity + stroke-width ONLY — no blur filter
+    (the redesign dropped the feathered edge)."
+  source: ConditionGlyph.vue, header

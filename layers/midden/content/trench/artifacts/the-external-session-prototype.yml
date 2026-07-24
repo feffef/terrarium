@@ -1,0 +1,22 @@
+title: the external-session marking prototype
+stratum: current-midden
+condition: dissolved
+provenance:
+  kind: commit
+  hash: 9eeeafa
+  path: layers/journal/app/components/journal/prototype/
+  url: https://github.com/feffef/terrarium/commit/9eeeafa
+  continuityCheck: variant B's border-and-ribbon treatment was folded into
+    SessionCard.vue, but the prototype apparatus itself — the switcher, all three
+    variant cards, and NOTES.md — has no successor; variants A and C never shipped.
+    The scaffolding is gone, not carried forward (Gate B).
+site: the-simpler-verdict
+catalogNote: Not the Midden's own, but a sibling from the same fresh season — the
+  Journal's throwaway bench for deciding how to mark an externally-authored session.
+  A floating switcher and three rival cards, built to be argued over for a day and
+  then swept out the moment a verdict landed. It swept out on schedule.
+assessedAt: 2026-07-24
+inscription:
+  text: "THROWAWAY — prototype-only. ... Delete this whole `prototype/` folder once
+    a variant is picked and folded in."
+  source: PrototypeSwitcher.vue, header

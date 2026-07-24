@@ -1,0 +1,23 @@
+title: StratigraphySidebar.vue (the depth gauge)
+stratum: current-midden
+condition: intact
+provenance:
+  kind: file
+  path: layers/midden/app/components/midden/StratigraphySidebar.vue
+  url: https://github.com/feffef/terrarium/commit/c399e92
+  continuityCheck: the flat dig report has no scroll-synced gauge; the static
+    condition key (ConditionKey.vue) that now occupies the same margin is a
+    reference beside the words, not a successor to the instrument — different
+    identity, so Gate B holds.
+site: the-simpler-verdict
+catalogNote: A scroll-synced cross-section of the seasons a report's finds span —
+  oldest at the bottom like a real trench wall, each band sized to how much that
+  season actually deposited, the current one lit and marked. Server-rendered first,
+  observer only as enhancement; complete down to the honest proportions, and taken
+  out whole when the page decided it would rather just be read than measured.
+assessedAt: 2026-07-24
+inscription:
+  text: "each segment sized proportionally to how much is actually deposited in
+    that season (an informationally-honest section, not decorative equal-height
+    bands)."
+  source: StratigraphySidebar.vue, header
