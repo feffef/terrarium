@@ -79,8 +79,10 @@ entirely; #523). **100% curator-authored, never mechanically re-derived** —
 not from `assessedAt`, not from any future continuity check (#526 closes this
 question explicitly). Rendered as a plain **word** (with its dig-season label),
 never a glyph to decode. The six grades and their fixed one-line definitions are
-single-homed in `layers/midden/app/utils/condition.ts`; the definition text is
-shown once, quietly, on the landing's condition legend (#527) and nowhere else,
+single-homed in `layers/midden/app/utils/condition.ts`; the definition text
+surfaces in exactly one place — the **condition key**, a slim sticky sidebar on
+each dig-report page listing only the grades present in that report's finds
+(owner-directed final design; it replaced the landing's condition legend, #527) —
 so it is never authored twice. The abstract SVG glyph and its hover-to-decode
 tooltip were removed in the post-MVP simplification (see the note at the foot of
 this file).
@@ -108,23 +110,31 @@ not the Midden (not yet cross-referenced; revisit once Palimpsest exists).
   recorded there and in this file, not as ADRs — ADR-0021).
 - **`layers/midden/app/utils/strata.ts`** — the canonical dig-season list.
 - **`layers/midden/app/utils/condition.ts`** — the single-homed
-  {grade, label, definition} table the landing's condition legend and each
+  {grade, label, definition} table the dig-report page's condition key and each
   inline find read from.
 - **`app/components/midden/TrenchLanding.vue`** — the single landing mirrored at
   both `/t/midden` and `/t/midden/trench`, carrying the curatorial foreword an
   actual visitor reads (verbatim in-voice copy, not this file's register), the
-  condition legend, and the dig-report list. (`trench/pages/index.md` remains
+  pull-quote, and the dig-report list. (`trench/pages/index.md` remains
   valid content but is no longer the rendered landing intro.)
+- **`app/components/midden/ConditionKey.vue`** — the condition key: the sticky
+  dig-report sidebar defining the grades present in that report's finds (see
+  Condition above).
 
 ## A note on the post-MVP simplification
 
 The visitor experience was flattened, owner-directed, after the MVP: the two
 near-duplicate landings (front door + trench index) were merged into one mirrored
-landing; the Site page's sticky scroll-synced stratigraphy gauge was removed for a
-single reading column; and each find now renders **open and flat** — condition as
-a plain word, the note and inscription visible on load — dropping the accordion,
-the hover-to-decode SVG glyph, the grade tooltip, and the rotating stamp. The
-underlying model (Site, Artifact, Dig season, the six Conditions, the inclusion
-bar) is unchanged; only its presentation is simpler. Several #515 sub-issue
-decisions about *presentation* (#523's glyph, #524's sidebar, #527's tooltip/
-legend split, #528's index sections) are superseded by this note.
+landing; the Site page's sticky scroll-synced stratigraphy gauge was removed; and
+each find now renders **open and flat** — condition as a plain word, the note and
+inscription visible on load — dropping the accordion, the hover-to-decode SVG
+glyph, the grade tooltip, and the rotating stamp. In the final merged design
+(also owner-directed) the condition legend then left the landing entirely and
+re-homed as the **condition key**: a static sticky sidebar on each dig-report
+page (in the margin the old gauge occupied), defining only the grades present in
+that report — a reference beside the words it defines, not a scroll-synced
+instrument. The underlying model (Site, Artifact, Dig season, the six
+Conditions, the inclusion bar) is unchanged; only its presentation is simpler.
+Several #515 sub-issue decisions about *presentation* (#523's glyph, #524's
+sidebar, #527's tooltip/legend split, #528's index sections) are superseded by
+this note.

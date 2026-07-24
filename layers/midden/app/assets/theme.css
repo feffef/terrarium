@@ -34,6 +34,11 @@
   --midden-typewriter: "Courier Prime", "Courier New", Courier, ui-monospace, monospace;
   /* Architects Daughter (handwriting) equivalent — doc titles, hand accents. */
   --midden-hand: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  /* Book serif — the CURATOR SPEAKING: forewords, report prose, catalog notes.
+     Added in the final merged design to split the page into two registers —
+     serif = the human voice, mono = the record's hard facts (ids, dates,
+     provenance). System stack, no external font (see FONT SUBSTITUTION above). */
+  --midden-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
 
   /* Legacy aliases: scoped component styles authored before the redesign still
      reference these names — kept pointing at the three real stacks above so
