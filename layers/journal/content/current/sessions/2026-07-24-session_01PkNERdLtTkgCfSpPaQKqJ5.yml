@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01PkNERdLtTkgCfSpPaQKqJ5
 startedAt: 2026-07-24T10:31:39Z
-endedAt: 2026-07-24T13:02:41Z
+endedAt: 2026-07-24T14:49:15Z
 kind: interactive
 goal: Flatten the Midden's over-built visitor experience
 status: in-review
 outcome: Merged 3-agent design shipped, PR open, CI green
-summary: 'Owner directed the whole arc: explore the Midden, then "structure too complicated — simplify and flatten it," then "from a visitor perspective," then chose "keep dig reports, merge the landings." On explicit instruction I ran the simplification three times in parallel worktree agents (Sonnet, Opus, Fable), each doing three screenshot rounds, and presented all three for comparison. Owner then directed the merge ("best ideas, drop the grade legend from the entry page, re-home it as a useful sidebar; spawn a Fable agent to fine-tune"), and finally "Finish" to approve. Agent-initiated within those bounds: the concrete merge recipe, the condition-key-shows-only-present-grades behaviour, and auto-opening the gated PR (ADR-0003). Full gate green (68/68); PR #676 in review.'
+summary: "Owner directed the whole arc: explore the Midden, then \"structure too complicated — simplify and flatten it,\" then \"from a visitor perspective,\" then chose \"keep dig reports, merge the landings.\" On explicit instruction I ran the simplification three times in parallel worktree agents (Sonnet, Opus, Fable), each doing three screenshot rounds, and presented all three for comparison. Owner then directed the merge (\"best ideas, drop the grade legend from the entry page, re-home it as a useful sidebar; spawn a Fable agent to fine-tune\"), and finally \"Finish\" to approve. Agent-initiated within those bounds: the concrete merge recipe, the condition-key-shows-only-present-grades behaviour, and auto-opening the gated PR (ADR-0003). Full gate green (68/68); PR #676 in review. Owner then asked to restore the earlier revisions' diagonal condition stamp; I reintroduced it as a slug-angled corner stamp on each find (SSR-stable, condition moved out of the masthead) and pushed to the same PR. Also deferred an artifacts-as-pages idea to issue #677 on owner request."
 prs:
   - "676"
 docsRead:
@@ -48,6 +48,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/midden/tests/unit/condition.spec.ts
     reason: (no reason given)
+  - path: layers/midden/app/components/content/MiddenArtifact.vue
+    reason: (read before editing)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -63,29 +65,33 @@ frictions:
   - description: "issue_read get_sub_issues on the #515 Wayfinder map returned 113k chars and overflowed the tool-result limit to a file."
     solution: For large map issues, read specific sub-issues by number rather than the whole get_sub_issues payload.
     severity: nit
-durationSec: 9062
+durationSec: 15456
 models:
-  claude-opus-4-8: 207
+  claude-opus-4-8: 274
 toolCounts:
-  Bash: 22
+  Bash: 31
   Grep: 1
-  Read: 27
-  ToolSearch: 4
+  Read: 32
+  ToolSearch: 5
   mcp__github__issue_read: 2
-  mcp__github__search_issues: 1
+  mcp__github__search_issues: 2
   AskUserQuestion: 2
   TaskCreate: 8
   TaskUpdate: 11
   Agent: 4
   SendMessage: 1
-  SendUserFile: 3
+  SendUserFile: 5
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
   Write: 1
-  Edit: 1
+  Edit: 10
+  mcp__github__issue_write: 1
+filesEdited:
+  - layers/midden/app/components/content/MiddenArtifact.vue
+  - layers/midden/CONTEXT.md
 subagents:
   - type: general-purpose
     task: Sonnet Midden design
