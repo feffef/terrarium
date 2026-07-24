@@ -1,0 +1,49 @@
+schemaVersion: 1
+session: session_01CqBDwV8GDcF4VbS6ydo1nM
+startedAt: 2026-07-24T08:15:04Z
+endedAt: 2026-07-24T08:47:47Z
+kind: interactive
+goal: Wire journal archive script into daily digest
+status: completed
+outcome: digest Skill now runs the sweep every run; PR merged
+summary: "Human-directed task (issue \"672 introduced a script to archive older journal content. Make sure it is invoked daily at the end of each digest skill execution\"): scripts/archive-journal-content.ts (#672) had no scheduled caller. Added a new step to .agents/skills/digest/SKILL.md that runs `archive-journal-content.ts --write` on every invocation of the digest Skill (which itself fires daily via a scheduled Routine), landing its git-mv moves in the same commit/PR as that run's Digest(s); renumbered the later gate/commit/log steps and widened the auto-merge scope note to cover the archival moves. Doc-only change, gate:scoped green, opened as PR #673, and the human merged it directly."
+prs:
+  - "673"
+docsRead:
+  - path: scripts/archive-journal-content.ts
+    reason: understand the script's flags/behavior to wire it correctly
+  - path: .agents/skills/digest/SKILL.md
+    reason: the file being edited
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: check prior mentions of a current-to-archived aging job
+  - path: CONTEXT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "subscribe_pr_activity was rejected by the user right after PR #673 opened, interrupting the standard subscribe-then-log-at-PR-open sequence; per the rejection's own instruction to stop, session closure/logging was deferred until the user later confirmed the merge instead of being done at PR-open as convention expects."
+    solution: When a tool call in the standard PR-open sequence is rejected, still author the in-review session log for the state reached so far (noting the skipped subscription) rather than deferring the entire closure step until further instruction.
+    severity: minor
+durationSec: 1963
+models:
+  claude-sonnet-5: 74
+toolCounts:
+  Bash: 21
+  Read: 6
+  mcp__Claude_Code_Remote__list_triggers: 1
+  ToolSearch: 2
+  mcp__github__pull_request_read: 2
+  Edit: 4
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - .agents/skills/digest/SKILL.md
+gitBranch: claude/journal-archive-daily-invoke-dxwlz7
+entrypoint: remote_mobile
+cliVersion: 2.1.218
