@@ -1,0 +1,40 @@
+schemaVersion: 1
+session: session_01CEYcSkjPsDtEi9VvYGuYCH
+startedAt: 2026-07-24T00:45:52Z
+endedAt: 2026-07-24T00:50:45Z
+kind: autonomous
+goal: Run /audit-skills — audit the Skill Inventory
+status: completed
+outcome: Clean run, no Inventory or issue changes needed
+summary: "Fully agent-initiated scheduled /audit-skills Routine run, no human prompt at any point. Branched off origin/main (already at HEAD, no new commit needed), gathered the 40-session scorecard via scripts/audit-skills.ts (34 Skills). Re-graded every Skill against the bright-line evidence rule: found no ≥2-session citable signal for any grade or role change this run — the last ~24h of new sessions since the prior run (session_01L6N7FRx9TS7j24nbAogGNa) didn't add a fresh instance beyond what's already tracked in each Skill's observations (including domain-modeling's ongoing essential-vs-rarity tension, which is not yet at a clear fourth instance). Confirmed the review.yml phantom entry (inventoried, not on disk) still correctly maps to the built-in CLI `review` Skill — left alone. Screened all 6 regressionChecks (Phase A): audit-skills' and log-session's own edits show fewer/milder post-edit frictions (improvement, not regression); the auto-triage/blog-post/frictions-to-fixes/guest-intake edits haven't been exercised by any session yet, so there's nothing to judge — no Phase B deep-read triggered. orphanedSessions, humanPromptedClosures, and manuallyRescuedClosures were all empty — the healthy state, nothing to file. misclassifiedKind flagged 2 sessions (informational only per issue #449's own spec, noted here for awareness, no issue filed). git status stayed clean throughout, so no PR was opened this run — a valid quiet outcome."
+prs: []
+docsRead: []
+skillsUsed:
+  - name: audit-skills
+    reason: this run's own invocation
+  - name: close-session
+    reason: closure at run end (no PR to open)
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: Called TaskCreate with Agent-tool-shaped params (prompt/subagent_type) before loading its schema via ToolSearch — the exact failure mode CLAUDE.md calls out as having "already been violated repeatedly" for this specific tool.
+    solution: Load the deferred tool's schema via ToolSearch before the first call, every time, even for a name that reads as self-evident — per CLAUDE.md's existing guidance, which this session failed to follow on the first try.
+    severity: minor
+durationSec: 293
+models:
+  claude-sonnet-5: 62
+toolCounts:
+  Bash: 17
+  TaskCreate: 7
+  ToolSearch: 2
+  TaskUpdate: 7
+  Glob: 1
+  Read: 2
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-xk0mb4
+entrypoint: remote_trigger
+cliVersion: 2.1.218
+trigger: audit-skills
+learnings:
+  - "Phase A's regressionChecks screen can be pure date-adjacency noise: 3 of 6 bracketed edits this run (auto-triage, frictions-to-fixes, guest-intake) had zero sessions in the after-bracket that actually invoked the edited Skill, so the friction-count delta there measures unrelated sessions, not the edit's effect. Worth checking each after-bracket session's skillsUsed before reading a friction-count shift as a regression signal."
