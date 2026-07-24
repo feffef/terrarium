@@ -1,6 +1,6 @@
 ---
 name: digest
-description: Bring the Journal's front pages up to date — write a Digest for each closed UTC day (from git + session logs); the index overview refreshes itself live — then open one gated PR and merge it once the safety gate is green.
+description: Bring the Journal's front pages up to date — write a Digest for each closed UTC day (from git + session logs), sweep aged-out Digests/sessions from `current` to `archived`; the index overview refreshes itself live — then open one gated PR and merge it once the safety gate is green.
 disable-model-invocation: true
 ---
 
@@ -23,7 +23,7 @@ direct-to-main path (that exception is bounded to inert `data`; a Digest is a
 rendered page). The PR is **eligible to merge as soon as the gate is green**
 (ADR-0003 amendment, activating ADR-0004's content-only low-risk tier); repo-level
 GitHub auto-merge is available (`docs/agents/pr-workflow.md`), so you enable it and
-the PR lands automatically on green — see step 6 for the boundary and the merge
+the PR lands automatically on green — see step 7 for the boundary and the merge
 mechanics.
 
 ## 1. Branch off `origin/main`
@@ -101,21 +101,41 @@ overview or a digest list (the dashboard already lists them, live).
 
 Done when you have confirmed the new Digest(s) will show — no index edit is needed.
 
-## 5. Clear the safety gate
+## 5. Archive aged-out content
+
+Run the retention sweep so the `current` Space doesn't keep growing (issue #672):
+
+```
+pnpm exec tsx scripts/archive-journal-content.ts --write
+```
+
+This `git mv`s Digests and session logs older than the newest 7 UTC calendar days
+from `current` to `archived` (preserving history) — every other Journal Collection
+is untouched. The script never commits itself; its moves ride the **same**
+commit/PR as this run, alongside whatever Digest(s) step 3 wrote. Run it on
+**every** invocation of this Skill, not only on days that also produce a new
+Digest — the sweep is what keeps `current` bounded, and this Skill is its
+only scheduled trigger.
+
+Done when the sweep has run (even a no-op day, reported as such) and any moves
+it made are staged for the commit below.
+
+## 6. Clear the safety gate
 
 Run `pnpm gate:scoped` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
 it runs). Done when it's green.
 
-## 6. Commit, push, open one gated PR — auto-merge on green
+## 7. Commit, push, open one gated PR — auto-merge on green
 
-Commit the new Digest(s) (a backfill of several days rides one commit/PR), push
-the branch with retry, and open **one gated PR**. Keep the PR description in
-sync with what it contains (`CLAUDE.md`).
+Commit the new Digest(s) and this run's archive sweep together (a backfill of
+several days, plus the sweep, rides one commit/PR), push the branch with retry,
+and open **one gated PR**. Keep the PR description in sync with what it
+contains (`CLAUDE.md`).
 
 Then **let it land once the CI gate is green** (ADR-0003 amendment; ADR-0004's
 content-only low-risk tier) — allowed **only** while the PR contains nothing
-beyond the digest scope (digest pages under `…/pages/digests/`, at most plus the
-index's editorial intro):
+beyond the digest scope (digest pages under `…/pages/digests/`, the `current` →
+`archived` moves step 5 produced, at most plus the index's editorial intro):
 
 - **Subscribe to the PR's activity right after opening it** (CLAUDE.md's
   "Pushing is not landing" rule — every opened PR is babysat to merge/close)
@@ -133,6 +153,6 @@ is open and honestly awaiting a human.
 
 **At PR-open, invoke `close-session`** — your first log (`in-review`).
 
-## 7. Log this session before you finish
+## 8. Log this session before you finish
 
 **At the very end, invoke `log-session`** with the final `status` (`completed` once merged) and every friction from the run. (See `close-session` for when a session is actually logged.)
