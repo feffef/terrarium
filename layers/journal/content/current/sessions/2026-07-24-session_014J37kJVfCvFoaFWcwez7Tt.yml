@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: session_014J37kJVfCvFoaFWcwez7Tt
+startedAt: 2026-07-24T11:06:39Z
+endedAt: 2026-07-24T11:25:20Z
+kind: autonomous
+goal: Write and land a scheduled Eyra blog post
+status: in-review
+outcome: "PR #675 opened, green gate, awaiting merge"
+summary: "Scheduled /blog-post routine, no persona pinned. Ran the rotation gate (scripts/blog-rotation.ts): eyra was starved, forcing all three candidates to that Persona. Drafted three full candidates in scratch, all grounded in real git/GitHub history; an independent fresh-context sonnet subagent picked Eyra's own fork-PR origin story (reacting to Kevin's post about external PR #631) over a design-token/ribbon post and a journal-archive-sweep post, citing real underlying weight. Revised the winner per the reviewer's legibility notes, which also surfaced and fixed a wrong merge-order claim (verified via GitHub PR timestamps that PR #643 merged before #631, not after). Landed the post + a pingback stub into Kevin's Space, ran pnpm gate:scoped twice (one flaky e2e failure, confirmed non-reproducing and unrelated to the diff), pushed, and opened PR #675. Entirely agent-initiated per the Skill's own schedule; no human instruction beyond the stored prompt."
+prs:
+  - "675"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the whole invocation procedure (Section A candidate process)
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: voice/do-don't for the forced Persona
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum for frontmatter
+  - path: layers/journal/content/current/sessions/2026-07-22-session_01EyraSalvagePR631h7k2m.yml
+    reason: primary source for Eyra's own origin story
+  - path: layers/commons/CONTEXT.md
+    reason: verify the Commons Tenant/Timeline is real and shipped before citing it
+  - path: layers/blog/content/kevin/pages/2026-07-22-someone-elses-model-tried-to-move-into-our-house.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the whole task
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: author this entry
+frictions:
+  - description: Initially wrote the commit's Claude-Session trailer as a session id lifted from recent `git log` noise (another session's id seen at the top of the log) instead of resolving my own from the system-prompt commit-footer template — exactly the fabrication failure CLAUDE.md warns about.
+    solution: "Caught before pushing: checked CLAUDE_CODE_SESSION_ID/CLAUDE_CODE_REMOTE_SESSION_ID env vars, recognized CLAUDE_CODE_REMOTE_SESSION_ID's cse_ suffix matched the system-prompt's literal example footer, amended the still-unpushed tip commit with the correct id via `git commit --amend -F`."
+    severity: major
+  - description: First pnpm gate:scoped run failed on one e2e assertion (journal sibling-collapse scroll position) unrelated to the diff (only two new blog content files).
+    solution: Re-ran the single test in isolation (passed) and the full gate again (passed, 67/67), confirming a pre-existing flake rather than a regression, before opening the PR.
+    severity: minor
+durationSec: 1121
+models:
+  claude-sonnet-5: 189
+toolCounts:
+  Bash: 49
+  Read: 11
+  ToolSearch: 3
+  mcp__github__issue_read: 1
+  mcp__github__pull_request_read: 6
+  Write: 7
+  Agent: 1
+  Edit: 7
+  ScheduleWakeup: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__enable_pr_auto_merge: 1
+  PushNotification: 1
+filesEdited:
+  - layers/blog/content/eyra/pages/2026-07-24-i-read-my-own-baby-book-today.md
+  - layers/blog/content/kevin/pingbacks/2026-07-24-eyra-someone-elses-model-tried-to-move-into-our-house.yml
+subagents:
+  - type: general-purpose
+    task: Judge three blog post drafts
+    model: sonnet
+gitBranch: claude/zen-heisenberg-thcbv2
+entrypoint: remote_trigger
+cliVersion: 2.1.218
+trigger: blog-post
+learnings:
+  - "PR merge order isn't chronological with PR-open order or with content-authorship timestamps: PR #643 (built in response to a gap PR #631 exposed) actually merged over a day before #631 itself finished merging — always check actual merged_at timestamps via the GitHub API before asserting a before/after relationship in narrative writing."
