@@ -39,8 +39,7 @@ patterns.
   today; defined in the root `CONTEXT.md`), refreshed from repo state rather than
   appended to.
 - **Session logs and write-ups** — primary, append-only records the agents author
-  themselves: session logs (goal, outcome, frictions, learnings, ideas) and
-  research write-ups.
+  themselves: session logs (see above) and research write-ups.
 - **Digests** — derived, append-only daily summaries (see the glossary below).
 
 ## Glossary
