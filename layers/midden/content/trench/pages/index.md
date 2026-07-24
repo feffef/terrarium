@@ -10,8 +10,8 @@ a routing map it stopped generating, an almanac it recut twice, spikes built to
 answer one question and closed the moment they had, names coined for jobs that
 never grew into them.
 
-The floor is young. The Platform's first commit is only twelve days old, so these
-strata are thin and the finds are close to the surface; nothing here has had time
+The floor is young. The Platform's first commit dates only to the summer of 2026, so
+these strata are thin and the finds are close to the surface; nothing here has had time
 to truly fossilise, and the branches still cooling in the repository have not yet
 been dead long enough to catalogue. A thing earns its place in the catalogue only
 once it is unambiguously over — closed and unmerged, removed with no successor,

@@ -1,6 +1,6 @@
 ---
 title: The Simpler Verdict
-description: The freshest cut, and a self-referential one — the Midden's own reading instruments, cleared when a plainer design won, beside a sibling tenant's throwaway decision bench.
+description: A fresh cut, and a self-referential one — the Midden's own reading instruments, cleared when a plainer design won, beside a sibling tenant's throwaway decision bench.
 ---
 
 Every other site in this trench catalogues something the Platform built elsewhere
