@@ -9,12 +9,41 @@
 // promote this to its own `*.e2e.spec.ts`: a second spec file re-runs `setup()`
 // → another full `nuxt build`, multiplying the gate's slowest step per Tenant
 // (ADR-0004 amendment; tests/README.md).
+import { readdirSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { $fetch } from '@nuxt/test-utils/e2e'
 import type { Locator, Page } from 'playwright-core'
 import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 import type { renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
+import { DIGESTS_DIR } from '../../../../scripts/digest.ts'
 import { PIN_SETTLED_EVENT } from '../../app/utils/expandTransition.ts'
+
+// The `current` Space's Digest dates, oldest first — read live rather than
+// hardcoded so these assertions stay valid regardless of which dates
+// scripts/archive-journal-content.ts has moved out to `archived` (issue: the
+// 7-day retention window ages a hardcoded date like 2026-07-04 out of
+// `current` over time).
+const repoRoot = fileURLToPath(new URL('../../../../', import.meta.url))
+function currentDigestDates(): string[] {
+  return readdirSync(join(repoRoot, DIGESTS_DIR))
+    .filter((f) => /^\d{4}-\d{2}-\d{2}\.md$/.test(f))
+    .map((f) => f.slice(0, -'.md'.length))
+    .sort()
+}
+
+/** A short, distinctive run of plain prose from a Digest's BODY (never its
+ *  frontmatter `summary`, which the collapsed row already shows) — proves the
+ *  body specifically preloads inline, not just the row's own headline. */
+function digestBodySnippet(date: string): string {
+  const raw = readFileSync(join(repoRoot, DIGESTS_DIR, `${date}.md`), 'utf8')
+  const body = raw.replace(/^---[\s\S]*?---\s*/, '').replace(/^#.*\n+/, '')
+  const firstParagraph = (body.split(/\n\s*\n/)[0] ?? '').replace(/\[[^\]]*\]\([^)]*\)/g, '')
+  const snippet = firstParagraph.replace(/\s+/g, ' ').trim().split(' ').slice(0, 6).join(' ')
+  if (snippet.length < 15) throw new Error(`journal.e2e: could not extract a body snippet for digest ${date}`)
+  return snippet
+}
 
 export interface JournalE2EContext {
   entryRoutes: string[]
@@ -88,10 +117,11 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
     // Digests expand inline on the landing (like the session cards): the body is
     // preloaded for zero-request expansion, and the standalone page route still works.
     it('shows daily digests inline and keeps the digest route', async () => {
+      const newest = currentDigestDates().at(-1)!
       const html = await $fetch('/t/journal/current')
       expect(html).toContain('Daily digests')
-      expect(html).toContain('went from empty repo') // the Digest body, preloaded inline
-      const digest = await $fetch('/t/journal/current/digests/2026-07-04')
+      expect(html).toContain(digestBodySnippet(newest)) // the Digest body, preloaded inline
+      const digest = await $fetch(`/t/journal/current/digests/${newest}`)
       expect(digest).toMatch(/<h1[ >]/) // the standalone route still renders
     })
 
@@ -100,7 +130,8 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
     // unstyled catch-all. Assert the `.jd` wrapper + breadcrumb are present so it
     // can't silently regress to the generic renderer.
     it('renders standalone journal documents in the Tenant theme', async () => {
-      for (const url of ['/t/journal/current/architecture', '/t/journal/current/digests/2026-07-04']) {
+      const newest = currentDigestDates().at(-1)!
+      for (const url of ['/t/journal/current/architecture', `/t/journal/current/digests/${newest}`]) {
         const html = await $fetch(url)
         expect(html).toContain('class="jd"') // themed wrapper, not system-ui catch-all
         expect(html).toContain('aria-label="Breadcrumb"')
@@ -130,11 +161,15 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       expect(html).not.toContain('Nuxt Content fits this experiment') // did NOT leak current/architecture
     })
 
-    // A Space with no sessions (archived) must render the same dashboard without
-    // erroring — the empty-state paths are exercised, isolation preserved.
-    it('renders a session-less Space gracefully', async () => {
+    // The archived Space dashboard must render cleanly on the same component
+    // as `current` — no crash, no fallthrough to a not-found. Once
+    // scripts/archive-journal-content.ts moves real sessions/digests in,
+    // `archived` is no longer reliably empty, so this doesn't assert the
+    // specific empty-state copy anymore (that would need a synthetic/mocked
+    // fixture — this repo has no component-test infra for that yet).
+    it('renders the archived Space dashboard without erroring', async () => {
       const html = await $fetch('/t/journal/archived')
-      expect(html).toContain('No sessions logged in this Space yet.')
+      expect(html).toContain('Recent activity')
       expect(html).not.toContain('No document at')
     })
 
@@ -260,29 +295,38 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
 
     // Deep-linking: loading the page with an item's anchor as the URL hash opens
     // that item on the client (the server never sees the fragment) AND scrolls it
-    // into the viewport. `2026-07-04` is the oldest digest — last in the list,
-    // below the fold on load — so the viewport check genuinely exercises the
-    // scroll, not a coincidental already-visible target. The `<li>`'s id is the
-    // anchor, so the deep-linked digest body is scoped by id here.
+    // into the viewport. Targets the oldest Digest still on `current` (read live,
+    // not hardcoded — scripts/archive-journal-content.ts ages old dates out) —
+    // it's last in the list, so it's below the fold on load, and the assertion
+    // that `window.scrollY` actually moved proves the target genuinely needed
+    // scrolling rather than being coincidentally already visible. The `<li>`'s id
+    // is the anchor, so the deep-linked digest body is scoped by id here.
     it('opens the item named in the URL hash on load and scrolls it into view (deep-link)', async () => {
-      const route = '/t/journal/current#digest-2026-07-04'
+      const oldest = currentDigestDates()[0]!
+      const anchorId = `digest-${oldest}`
+      const route = `/t/journal/current#${anchorId}`
       const { page, errors } = await renderAndCollectErrors(route)
       try {
-        const body = page.locator('#digest-2026-07-04 .digest-body')
+        const body = page.locator(`#${anchorId} .digest-body`)
         await body.waitFor({ state: 'visible' })
         expect(await body.isVisible()).toBe(true)
         // Poll past the (async, possibly animated) scroll: the row's top edge
         // must settle within the viewport.
         await expect
           .poll(() =>
-            page.evaluate(() => {
-              const el = document.getElementById('digest-2026-07-04')
+            page.evaluate((id) => {
+              const el = document.getElementById(id)
               if (!el) return false
               const { top } = el.getBoundingClientRect()
               return top >= 0 && top <= window.innerHeight
-            }),
+            }, anchorId),
           )
           .toBe(true)
+        // The target must have genuinely required scrolling — otherwise this
+        // test would silently stop exercising the scroll-into-view behavior it
+        // exists to cover (e.g. if a future retention change left `current`
+        // with so few digests the oldest is already visible on load).
+        expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(0)
         expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
       } finally {
         await page.close()
