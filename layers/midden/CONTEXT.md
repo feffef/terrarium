@@ -77,8 +77,9 @@ erosion axis) then `never-activated` (complete but never fired — a distinct
 axis, not a further decay step) and `lost` (its own gravestone template
 entirely; #523). **100% curator-authored, never mechanically re-derived** —
 not from `assessedAt`, not from any future continuity check (#526 closes this
-question explicitly). Rendered as a plain **word** (with its dig-season label),
-never a glyph to decode. The six grades and their fixed one-line definitions are
+question explicitly). Rendered as its **word** — a slug-angled corner *stamp* on each find (the label
+tilted like a specimen physically stamped with its grade; owner-restored), the
+dig-season label beside it — never a glyph to decode. The six grades and their fixed one-line definitions are
 single-homed in `layers/midden/app/utils/condition.ts`; the definition text
 surfaces in exactly one place — the **condition key**, a slim sticky sidebar on
 each dig-report page listing only the grades present in that report's finds
@@ -126,9 +127,11 @@ not the Midden (not yet cross-referenced; revisit once Palimpsest exists).
 The visitor experience was flattened, owner-directed, after the MVP: the two
 near-duplicate landings (front door + trench index) were merged into one mirrored
 landing; the Site page's sticky scroll-synced stratigraphy gauge was removed; and
-each find now renders **open and flat** — condition as a plain word, the note and
+each find now renders **open and flat** — condition as a word, the note and
 inscription visible on load — dropping the accordion, the hover-to-decode SVG
-glyph, the grade tooltip, and the rotating stamp. In the final merged design
+glyph, and the grade tooltip. (The condition's slug-angled corner *stamp* was
+dropped in this pass, then owner-restored — it now carries the condition word on
+each find, tilted like a specimen stamp.) In the final merged design
 (also owner-directed) the condition legend then left the landing entirely and
 re-homed as the **condition key**: a static sticky sidebar on each dig-report
 page (in the margin the old gauge occupied), defining only the grades present in

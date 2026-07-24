@@ -6,9 +6,10 @@
 // Sighting.vue's placement and the same reasoning.
 //
 // Post-MVP simplification (owner-directed, this branch): a find now renders OPEN
-// and FLAT — no accordion, no hover-to-decode glyph, no rotating stamp. The former
+// and FLAT — no accordion, no hover-to-decode glyph. The former
 // ArtifactCard + this embed are one component now (see CONTEXT.md's Condition
-// term). Condition reads as a plain WORD; the whole entry (note + inscription) is
+// term). Condition reads as its WORD, shown as a slug-angled corner STAMP
+// (owner-restored); the whole entry (note + inscription) is
 // visible on load. `land → read`, nothing to click.
 //
 // Same-Space read only (ADR-0004/0006): resolves the CURRENT route's Space through
@@ -65,6 +66,18 @@ const isLost = computed(() => artifact.value?.condition === 'lost')
 const label = computed(() => conditionMeta(artifact.value?.condition).label)
 const seasonLabel = computed(() => (artifact.value ? digSeasonOf(artifact.value.stratum)?.label : undefined))
 
+// Condition restored as a slug-angled corner STAMP (earlier revisions had it; owner
+// asked for it back). The tilt is derived from the slug so it is SSR-stable —
+// Math.random()/Date would hydrate-mismatch — reading like a specimen physically
+// stamped with its grade. It is the sole place the condition word now appears; the
+// dig-report Condition Key sidebar carries the definitions.
+const STAMP_ANGLES = [-8, 6, -5, 7, -4, 5]
+const stampStyle = computed(() => {
+  let h = 0
+  for (const ch of props.slug) h = (h * 31 + ch.charCodeAt(0)) >>> 0
+  return `transform: rotate(${STAMP_ANGLES[h % STAMP_ANGLES.length]}deg);`
+})
+
 // Structural omission, not a rendering-empty accident (#523): the `lost` grade's
 // silence is deliberate — even a document that carries an `inscription` shows none.
 const inscriptionForDisplay = computed(() =>
@@ -108,24 +121,29 @@ function provenanceLine(p: MiddenProvenance): string {
     class="midden-find"
     :class="{ 'midden-find--lost': isLost }"
   >
-    <p class="sc midden-find__grade">
-      <span class="midden-find__cond">{{ label }}</span>
-      <span v-if="seasonLabel" class="midden-find__season">{{ seasonLabel }}</span>
-    </p>
+    <span
+      class="midden-find__stamp"
+      :class="{ 'midden-find__stamp--lost': isLost }"
+      :style="stampStyle"
+    >{{ label }}</span>
 
-    <h3 class="mono midden-find__title">{{ artifact.title }}</h3>
+    <header class="midden-find__head">
+      <p v-if="seasonLabel" class="midden-find__season">{{ seasonLabel }}</p>
 
-    <p class="tech midden-find__prov">
-      <a
-        v-if="artifact.provenance.url"
-        :href="artifact.provenance.url"
-        target="_blank"
-        rel="noopener noreferrer"
-      >{{ provenanceLine(artifact.provenance) }}</a>
-      <span v-else>{{ provenanceLine(artifact.provenance) }}</span>
-      <span class="midden-find__dot" aria-hidden="true">·</span>
-      <span class="midden-find__assessed">assessed {{ formatAssessedAt(artifact.assessedAt) }}</span>
-    </p>
+      <h3 class="mono midden-find__title">{{ artifact.title }}</h3>
+
+      <p class="tech midden-find__prov">
+        <a
+          v-if="artifact.provenance.url"
+          :href="artifact.provenance.url"
+          target="_blank"
+          rel="noopener noreferrer"
+        >{{ provenanceLine(artifact.provenance) }}</a>
+        <span v-else>{{ provenanceLine(artifact.provenance) }}</span>
+        <span class="midden-find__dot" aria-hidden="true">·</span>
+        <span class="midden-find__assessed">assessed {{ formatAssessedAt(artifact.assessedAt) }}</span>
+      </p>
+    </header>
 
     <p class="midden-find__note">{{ artifact.catalogNote }}</p>
 
@@ -149,6 +167,7 @@ function provenanceLine(p: MiddenProvenance): string {
    No full box, no shadow — the tint alone lifts it off the parchment, so a
    column of finds reads as a stack of specimen slips rather than boxed forms. */
 .midden-find {
+  position: relative;
   margin: 2.8rem 0;
   padding: 1.35rem 1.6rem 1.5rem;
   border-left: 3px solid var(--midden-accent);
@@ -161,33 +180,62 @@ function provenanceLine(p: MiddenProvenance): string {
   border-left-style: dashed;
 }
 
-.midden-find__grade {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.55rem;
-  margin: 0;
-  font-size: 0.74rem;
-  letter-spacing: 0.11em;
+/* The head (season eyebrow + title + provenance) reserves right space so it never
+   runs under the corner stamp; the note/inscription below flow full width. */
+.midden-find__head {
+  padding-right: 9.5rem;
 }
-.midden-find__cond {
-  color: var(--midden-accent);
-  font-weight: 600;
-}
-.midden-find--lost .midden-find__cond {
-  color: var(--midden-muted);
-}
+
 .midden-find__season {
-  color: var(--midden-faint);
-  letter-spacing: 0.04em;
-  text-transform: none;
+  margin: 0;
   font-family: var(--midden-mono);
   font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--midden-faint);
 }
-.midden-find__season::before {
-  content: "·";
-  margin-right: 0.55rem;
-  opacity: 0.55;
+
+/* The condition, restored as a slug-angled corner stamp — a specimen physically
+   stamped with its grade. Rotation comes from the inline :style (slug-deterministic,
+   SSR-stable). It is the sole condition display; the sidebar carries definitions. */
+.midden-find__stamp {
+  position: absolute;
+  top: 1.15rem;
+  right: 1.4rem;
+  font-family: var(--midden-typewriter);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.8rem;
+  line-height: 1;
+  color: var(--midden-accent);
+  border: 2.5px solid var(--midden-accent);
+  border-radius: 5px;
+  padding: 6px 10px 4px;
+  opacity: 0.82;
+  mix-blend-mode: multiply;
+  white-space: nowrap;
+  pointer-events: none;
+}
+@media (prefers-color-scheme: dark) {
+  /* multiply darkens against a dark ground — screen keeps the ink legible. */
+  .midden-find__stamp { mix-blend-mode: screen; opacity: 0.9; }
+}
+.midden-find__stamp--lost {
+  color: var(--midden-faint);
+  border-color: var(--midden-faint);
+  opacity: 0.7;
+}
+
+/* On a narrow column the corner stamp would collide with the title — let it fall
+   inline above the head instead, upright. */
+@media (max-width: 38rem) {
+  .midden-find__head { padding-right: 0; }
+  .midden-find__stamp {
+    position: static;
+    display: inline-block;
+    transform: none !important;
+    margin-bottom: 0.75rem;
+    mix-blend-mode: normal;
+  }
 }
 
 .midden-find__title {
