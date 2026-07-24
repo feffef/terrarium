@@ -30,14 +30,36 @@ export function registerMiddenE2E(): void {
       expect(html.toLowerCase()).toContain('midden')
     })
 
-    // `/t/midden/trench` IS a manifest-derived Space entry route, so the
-    // platform sweep already covers its generic 200/<h1>/clean-hydration
-    // shape — this checks the trench landing's actual authored content
-    // (`layers/midden/content/trench/pages/index.md`'s `title: The Trench`),
-    // which the generic sweep can't know to assert.
-    it('renders the trench landing with its real title', async () => {
-      const html = await $fetch('/t/midden/trench')
-      expect(html).toContain('The Trench')
+    // Post-MVP simplification (owner-directed, this branch): `/t/midden` and
+    // `/t/midden/trench` render the SAME merged landing (mirror, not a redirect).
+    // The generic platform sweep covers the trench route's 200/<h1>/hydration
+    // shape; this pins the merged landing's own authored content — the foreword
+    // masthead ("The Midden") plus a real dig-report title from the site list
+    // (`the-generated-map.md`'s `title`) — which the sweep can't know to assert.
+    // The final merged design (owner-directed) removed the condition legend from
+    // the landing, so no grade definition text may render here — that text lives
+    // only in the dig-report page's condition key now (next test).
+    it('mirrors the merged landing at both routes with its authored content', async () => {
+      for (const route of ['/t/midden', '/t/midden/trench']) {
+        const html = await $fetch(route)
+        expect(html).toContain('The Midden')
+        expect(html).toContain('The Generated Map')
+        expect(html).not.toContain('Condition key')
+        // A definition string from utils/condition.ts's single-homed table.
+        expect(html).not.toContain('Discarded so recently the edges are still sharp')
+      }
+    })
+
+    // The dig-report page carries the condition key (owner-directed final
+    // design): a sticky sidebar defining ONLY the grades present in this
+    // report's finds. `the-generated-map`'s finds grade intact/dissolved/lost —
+    // so those definitions render and an absent grade's (fresh) must not.
+    it('renders the condition key on a dig report, scoped to present grades', async () => {
+      const html = await $fetch('/t/midden/trench/the-generated-map')
+      expect(html).toContain('Condition key')
+      expect(html).toContain('Whole and legible, but settled')
+      expect(html).toContain('Gone without trace')
+      expect(html).not.toContain('Discarded so recently the edges are still sharp')
     })
 
     it('hydrates the trench landing with no unresolved components', async () => {
