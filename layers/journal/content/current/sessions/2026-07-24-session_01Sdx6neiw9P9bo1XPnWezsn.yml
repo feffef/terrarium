@@ -1,0 +1,93 @@
+schemaVersion: 1
+session: session_01Sdx6neiw9P9bo1XPnWezsn
+startedAt: 2026-07-24T04:08:21Z
+endedAt: 2026-07-24T04:30:22Z
+kind: autonomous
+goal: Run scheduled audit-docs sweep, fix confirmed findings
+status: in-review
+outcome: "PR #669 merged; #670 (ADR edits) awaits human review"
+summary: "Scheduled /audit-docs firing, no human prompt this turn. Ran the full eight-lens sweep (four paired reviewer agents in parallel: Freshness, Single-home, Concision, Coherence), deduped the pool (no overlaps found), and dispatched an independent fact-checker over all 8 pooled findings — all came back CONFIRMED or CONFIRMED-BUT. Fixed all 8 bravely per the Skill's own instructions, no needs-triage issue needed (no unresolvable factual conflict arose). Six Live-tier duplication/verbose/stale-narration fixes (README.md, layers/atlas, layers/journal, layers/midden CONTEXT.md files, docs/agents/pr-workflow.md, atlas-specimen SKILL.md) landed on the designated branch, gate:scoped green; PR #669 opened, self-merged on a green gate per the Skill's charter (CI green, verdict comment posted, squash-merged). Two ADR-touching findings (ADR-0004's restatement of ADR-0020 rule 3; ADR-0023's undefined \"major security concern\" threshold) were bundled into a second, separately human-reviewed escalation PR #670 on its own branch, per the Skill's human-only-surface bundling rule — still open, awaiting human merge. A 60-minute check-in scheduled via send_later to keep driving #670 toward merge/close."
+prs:
+  - "669"
+  - "670"
+docsRead:
+  - path: CLAUDE.md
+    reason: chartered-job branch checklist, ADR/tier conventions
+  - path: docs/adr/0018-tenant-layers-live-under-nuxt-conventional-layers-directory.md
+    reason: factual-correction vs decision-reversal rule for editing ADR-0004/0023
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: verify ADR-0004's amendment banner against the rule it restates
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: add the missing definition of 'major security concern'
+  - path: README.md
+    reason: (read before editing)
+  - path: layers/atlas/CONTEXT.md
+    reason: (read before editing)
+  - path: layers/journal/CONTEXT.md
+    reason: (read before editing)
+  - path: layers/midden/CONTEXT.md
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (read before editing)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: this session's chartered job
+  - name: close-session
+    reason: session closure at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: An Edit call on docs/adr/0023 failed once with "string not found" immediately after Read returned matching content (git checkout had just reset the working tree).
+    solution: Re-Read the file before retrying the Edit; second attempt succeeded immediately. Possibly a stale-read-cache edge case around a git branch switch — worth a repo note if it recurs.
+    severity: nit
+  - description: ScheduleWakeup's tool description frames it as /loop-dynamic-mode-only, but this non-loop scheduled session was tempted to use it as a fallback heartbeat while waiting on four background lens agents; unclear whether that's sanctioned outside /loop.
+    solution: Used it once then immediately stopped it, relying on automatic task-notifications instead (which arrived reliably). Worth clarifying in the tool's own guidance whether a non-loop session may use it as a background-wait fallback.
+    severity: nit
+durationSec: 1321
+models:
+  claude-sonnet-5: 152
+toolCounts:
+  Bash: 34
+  Agent: 5
+  ScheduleWakeup: 2
+  Read: 7
+  Edit: 12
+  ToolSearch: 3
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  PushNotification: 1
+filesEdited:
+  - README.md
+  - layers/atlas/CONTEXT.md
+  - layers/journal/CONTEXT.md
+  - layers/midden/CONTEXT.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens audit (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens audit (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens audit (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens audit (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check pooled audit-docs findings
+gitBranch: claude/festive-mayer-95fjne
+entrypoint: remote_trigger
+cliVersion: 2.1.218
+trigger: audit-docs
