@@ -1,0 +1,62 @@
+schemaVersion: 1
+session: session_01FM1feLm9ak5Zq1BNSBTFDu
+startedAt: 2026-07-25T01:04:29Z
+endedAt: 2026-07-25T01:19:25Z
+kind: autonomous
+goal: Run a frictions-to-fixes cycle
+status: completed
+outcome: 3 doc fixes filed, reviewed, merged
+summary: "Scheduled Routine fired /frictions-to-fixes with no live human input. Dispatched a survey subagent that read the last 20 session logs, grouped and screened frictions against the tracker, and returned 4 ranked never-fixed candidates plus a dropped list (already-fixed, already-tracked, or off-limits pack-Skill items) and no fresh regressions. Selected the 3 moderate/major-severity, simple, safe-surface candidates (dropped the 4th, a lone minor one-off) entirely on autonomous judgement per the Skill's own default-to-everything-that-ranks rule for an unreachable user. Filed issues #682, #683, #684 on the tracker, each naming problem, evidence, weighed solutions, and a recommended fix. Dispatched one Sonnet impl agent in its own worktree to batch all three CLAUDE.md doc fixes into a single grouped PR (#685) closing all three issues; its local pnpm gate:scoped and typecheck both passed. Reviewed the diff against each issue's recommended option and the audit-docs house rules, posted the verdict comment, polled CI to green via scripts/merge-pr.ts, and merged (f3a4f8b). All entirely autonomous end-to-end per this Skill's own chartered review-agent role (ADR-0003) — no human input was available or needed at any decision point."
+prs:
+  - "685"
+docsRead:
+  - path: CLAUDE.md
+    reason: identified exact anchor bullets for the 3 fixes before briefing the impl agent
+  - path: docs/agents/issue-tracker.md
+    reason: issue-filing and MCP tool conventions
+  - path: docs/agents/triage-labels.md
+    reason: confirm ready-for-agent label wording
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe and merge authority tier
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run's own charter
+  - name: close-session
+    reason: PR-open closure point
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: Survey subagent called mcp__github__search_issues directly without first running ToolSearch to load its schema, the exact violation CLAUDE.md warns about repeatedly (worked anyway since the MCP server's own instructions block made the shape guessable).
+    solution: No repo change needed this time since the shape happened to be guessable; worth the next cycle's awareness that this rule keeps almost-slipping even inside a session whose job is auditing that exact rule.
+    severity: nit
+  - description: Survey subagent hit mcp__github__search_issues rate-limiting twice during tracker screening (~40s total wait, no data loss).
+    solution: No action needed; transient and self-resolved.
+    severity: nit
+  - description: Survey subagent's git log --oneline --follow -- scripts/deferred-tool-guard.ts returned an unexpectedly long/unrelated commit list once; a plain git log --oneline -- <path> immediately after gave the correct answer.
+    solution: Self-corrected; not repo-actionable unless it recurs.
+    severity: nit
+durationSec: 896
+models:
+  claude-sonnet-5: 91
+toolCounts:
+  Bash: 11
+  Agent: 2
+  ScheduleWakeup: 2
+  Read: 6
+  ToolSearch: 4
+  TaskCreate: 5
+  TaskUpdate: 10
+  mcp__github__issue_write: 3
+  mcp__github__pull_request_read: 4
+  Skill: 2
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - task: Grouped doc-fix PR for 3 CLAUDE.md issues
+    model: sonnet
+gitBranch: claude/hopeful-brown-x33z5k
+entrypoint: remote_trigger
+cliVersion: 2.1.219
+trigger: frictions-to-fixes
