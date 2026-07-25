@@ -41,6 +41,14 @@ Status: Accepted
 > reminder/block* `Stop` hook (issue #215 option A / issue #176 option 2) is
 > **again declined** — in favour of this measurable authoring affordance. **The
 > existing `Stop` *committer* is untouched.**
+>
+> **Amended (2026-07-25, `/audit-docs`):** corrects the **Aging is deferred**
+> Consequences bullet below — the "future `consolidate`/aging job" it deferred to
+> has shipped: `scripts/archive-journal-content.ts` (issue #672), wired as a
+> mandatory step of the `digest` Skill, moves aged-out `current` session logs to
+> `archived` on a 7-UTC-day retention. See ADR-0010's matching correction for the
+> Digest-pages side of the same migration, and ADR-0003's auto-merge ledger for
+> `digest`'s exemption scope.
 
 ## Context
 
@@ -119,9 +127,10 @@ exist and can be built with one.
   after the fact for signal, not as a gatekeeper.
 - The helper script is itself gated code — changing it is a normal PR — so the
   exception's boundary is protected by the very gate it steps around.
-- **Aging is deferred.** Session logs accumulate in `current` unbounded; a future
-  `consolidate`/aging job owns any `current → archived` migration (an ordinary
-  gated move). At expected volume this is a non-issue.
+- **Aging is handled.** Session logs accumulate in `current` until the `digest`
+  Skill's mandatory archive-sweep step (`scripts/archive-journal-content.ts`,
+  issue #672) moves aged-out entries to `archived` on a 7-UTC-day retention — see
+  the 2026-07-25 amendment above.
 
 ## Schema evolution policy
 

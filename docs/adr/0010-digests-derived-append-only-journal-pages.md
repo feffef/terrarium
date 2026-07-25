@@ -13,6 +13,13 @@ Status: Accepted
 > remit is partially live — realised by `digest` and `audit-skills`, both now
 > scheduled (see ADR-0015). The live-dashboard point below stands unchanged.
 
+> **Amended (2026-07-25, `/audit-docs`):** corrects the Consequences bullet on
+> backfill/aging below — the "future aging/`consolidate` job" it deferred to has
+> shipped: `scripts/archive-journal-content.ts` (issue #672), wired as a mandatory
+> step of the `digest` Skill, moves aged-out `current` Digest pages (and session
+> logs, ADR-0009) to `archived` on a 7-UTC-day retention. See ADR-0009's matching
+> correction and ADR-0003's auto-merge ledger for `digest`'s exemption scope.
+
 ## Context
 
 The Journal Tenant (ADR-0008) named two content kinds: **Inventories** (curated,
@@ -77,5 +84,5 @@ model, how it lands, and what authors it.
 - Digests surface **frictions** (as a rollup) in a human-facing page — visible
   self-improvement, consistent with the Journal's purpose.
 - Backfill is unbounded by design (every missing closed day), which is a non-issue
-  at this repo's age; a future aging/`consolidate` job owns any `current → archived`
-  migration, as it does for session logs (ADR-0009).
+  at this repo's age; aging is handled by the `digest` Skill's archive-sweep step,
+  as it is for session logs (ADR-0009) — see the 2026-07-25 amendment above.
