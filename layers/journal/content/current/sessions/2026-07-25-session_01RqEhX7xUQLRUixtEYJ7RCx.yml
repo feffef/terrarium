@@ -1,0 +1,53 @@
+schemaVersion: 1
+session: session_01RqEhX7xUQLRUixtEYJ7RCx
+startedAt: 2026-07-25T00:16:16Z
+endedAt: 2026-07-25T00:24:36Z
+kind: autonomous
+goal: Run /digest for 2026-07-24
+status: completed
+outcome: "Digest authored, archive swept, PR #680 merged green"
+summary: "Scheduled /digest Routine run, no human involved. Listed one backfill day (2026-07-24), authored its Digest from scripts/digest.ts's gather output (11 merged PRs, 11 sessions — the Midden's flatten/restyle, another Eyra post, the digest Skill's own archive-sweep wiring, an audit-docs pass), then ran scripts/archive-journal-content.ts --write, which moved 1 aged-out digest and 11 aged-out session logs from current to archived. pnpm gate:scoped passed locally (unit + build + 68/68 e2e). Opened PR #680, posted the pre-merge verdict comment, hit the documented enable_pr_auto_merge \"checks are failing\" false negative while the gate check was merely in_progress, confirmed via get_check_runs, waited for it to go green, then merged directly. PR merged clean, no review comments."
+prs:
+  - "680"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-07-23.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: digest
+    reason: this run's own driving Skill
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: mcp__github__enable_pr_auto_merge threw "required checks are failing" while the PR's only substantive check ("gate") was still in_progress and nothing had actually failed — the exact quirk docs/agents/pr-workflow.md already documents.
+    solution: "Followed the doc's own guidance: verified real state via pull_request_read get_check_runs, waited for it to resolve, merged directly once green instead of retrying enable_pr_auto_merge or escalating. No doc change needed — this is a known, already-recorded platform quirk, not a fresh finding."
+    severity: nit
+durationSec: 500
+models:
+  claude-sonnet-5: 117
+toolCounts:
+  Bash: 25
+  Read: 2
+  Write: 2
+  ScheduleWakeup: 1
+  ToolSearch: 4
+  Monitor: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 5
+  mcp__github__add_issue_comment: 1
+  mcp__github__enable_pr_auto_merge: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Skill: 2
+  Edit: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-07-24.md
+gitBranch: claude/compassionate-lovelace-gnchdv
+entrypoint: remote_trigger
+cliVersion: 2.1.219
+trigger: digest
