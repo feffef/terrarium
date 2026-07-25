@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_014gQCphYZMoUNTBC3bQQK3T
 startedAt: 2026-07-25T04:09:12Z
-endedAt: 2026-07-25T04:27:42Z
+endedAt: 2026-07-25T08:54:39Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: "PR #686 merged; PR #687 in review"
-summary: "Autonomous, schedule-triggered run of /audit-docs (no human prompt at any point). Fanned out 4 paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the repo's Live docs, pooled 6 raw findings, deduped 3 overlapping ones into a single composite root-cause finding (ADR-0009/ADR-0010's stale \"future aging job\" language plus a contradiction between digest's SKILL.md auto-merge claim and ADR-0003's ledger — all traced to the same shipped-but-undocumented archive-sweep mechanism). Fact-checked all 4 surviving findings independently; all 4 CONFIRMED. Fixed all of them: two Live-tier fixes (CONTEXT.md glossary implementation-detail strip, a duplicated Session-exclusion fact trimmed to a pointer) rode the self-merged routine PR (#686, per the Skill's ADR-0003 auto-merge grant) and have now merged. The ADR-touching cluster (ADR-0009, ADR-0010, ADR-0003) rode a separate, human-reviewed escalation PR (#687, still open awaiting human merge), since any ADR edit is a human-only surface (ADR-0004). No needs-triage issue filed — every finding resolved cleanly against primary sources."
+status: completed
+outcome: Both PRs merged
+summary: "Autonomous, schedule-triggered run of /audit-docs (no human prompt at any point). Fanned out 4 paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the repo's Live docs, pooled 6 raw findings, deduped 3 overlapping ones into a single composite root-cause finding (ADR-0009/ADR-0010's stale \"future aging job\" language plus a contradiction between digest's SKILL.md auto-merge claim and ADR-0003's ledger — all traced to the same shipped-but-undocumented archive-sweep mechanism). Fact-checked all 4 surviving findings independently; all 4 CONFIRMED. Fixed all of them: two Live-tier fixes (CONTEXT.md glossary implementation-detail strip, a duplicated Session-exclusion fact trimmed to a pointer) rode the self-merged routine PR (#686, per the Skill's ADR-0003 auto-merge grant) and merged on a green gate. The ADR-touching cluster (ADR-0009, ADR-0010, ADR-0003) rode a separate, human-reviewed escalation PR (#687, since any ADR edit is a human-only surface, ADR-0004) and has now also merged, after a human reviewed it. No needs-triage issue filed — every finding resolved cleanly against primary sources, no genuine unresolvable factual conflict."
 prs:
   - "686"
   - "687"
@@ -31,13 +31,13 @@ skillsUsed:
   - name: close-session
     reason: self-judged closure at PR-open
   - name: log-session
-    reason: "authoring this log, then updating it after #686 merged"
+    reason: "authored at PR-open, updated after #686 merged, finalized after #687 merged"
 frictions: []
-durationSec: 1110
+durationSec: 17127
 models:
-  claude-sonnet-5: 174
+  claude-sonnet-5: 199
 toolCounts:
-  Bash: 27
+  Bash: 28
   ToolSearch: 6
   mcp__github__list_pull_requests: 1
   TaskCreate: 7
@@ -49,13 +49,15 @@ toolCounts:
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
   mcp__github__enable_pr_auto_merge: 2
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 10
   Skill: 3
-  Write: 2
-  mcp__Claude_Code_Remote__send_later: 1
+  Write: 3
+  mcp__Claude_Code_Remote__send_later: 3
   PushNotification: 1
   mcp__github__merge_pull_request: 1
   mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__list_triggers: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - CONTEXT.md
   - docs/agents/guest-contributions.md
