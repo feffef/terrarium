@@ -1,0 +1,77 @@
+schemaVersion: 1
+session: session_014gQCphYZMoUNTBC3bQQK3T
+startedAt: 2026-07-25T04:09:12Z
+endedAt: 2026-07-25T04:26:05Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: in-review
+outcome: Two PRs opened, both gate-green
+summary: "Autonomous, schedule-triggered run of /audit-docs (no human prompt at any point). Fanned out 4 paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the repo's Live docs, pooled 6 raw findings, deduped 3 overlapping ones into a single composite root-cause finding (ADR-0009/ADR-0010's stale \"future aging job\" language plus a contradiction between digest's SKILL.md auto-merge claim and ADR-0003's ledger — all traced to the same shipped-but-undocumented archive-sweep mechanism). Fact-checked all 4 surviving findings independently; all 4 CONFIRMED. Fixed all of them: two Live-tier fixes (CONTEXT.md glossary implementation-detail strip, a duplicated Session-exclusion fact trimmed to a pointer) rode the self-merged routine PR (#686, per the Skill's ADR-0003 auto-merge grant); the ADR-touching cluster (ADR-0009, ADR-0010, ADR-0003) rode a separate, human-reviewed escalation PR (#687), since any ADR edit is a human-only surface (ADR-0004). No needs-triage issue filed — every finding resolved cleanly against primary sources."
+prs:
+  - "686"
+  - "687"
+docsRead:
+  - path: CLAUDE.md
+    reason: tier definitions, ADR-0004/0003 auto-merge rules, chartered-job branch-off checklist
+  - path: CONTEXT.md
+    reason: verified Session/Collection-kind/Catalog glossary entries for findings 1-3
+  - path: docs/agents/guest-contributions.md
+    reason: verified duplicated Session-exclusion bullet
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: verified stale aging-deferred bullet
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: verified stale aging-deferred bullet
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: verified digest's auto-merge ledger row lacked archive-sweep scope
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: confirmed as the correct ADR pointer for Collection-kind/Catalog glossary fixes
+skillsUsed:
+  - name: audit-docs
+    reason: the sweep itself
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions: []
+durationSec: 1013
+models:
+  claude-sonnet-5: 156
+toolCounts:
+  Bash: 26
+  ToolSearch: 5
+  mcp__github__list_pull_requests: 1
+  TaskCreate: 7
+  TaskUpdate: 11
+  Agent: 5
+  Read: 11
+  Grep: 5
+  Edit: 9
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__enable_pr_auto_merge: 2
+  mcp__github__pull_request_read: 2
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  PushNotification: 1
+filesEdited:
+  - CONTEXT.md
+  - docs/agents/guest-contributions.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens audit (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens audit (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens audit (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens audit (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check pooled audit-docs findings
+gitBranch: claude/festive-mayer-jpw5c2
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: audit-docs
