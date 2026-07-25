@@ -64,8 +64,7 @@ An individual content entry within a Collection — one row / one file.
 A named, shared **read contract** a Collection may assert conformance to, so an
 **Aggregator** can read that Collection across every Tenant that opts in — without
 re-declaring each schema (drift) or importing another Tenant's manifest internals
-(coupling). Declared once in `shared/kinds.ts`; a Collection references one via
-`kind:` in its manifest. Every kind carries a **minimum contract** — the shared
+(coupling) — see ADR-0025 for the mechanism. Every kind carries a **minimum contract** — the shared
 floor of fields an Aggregator may rely on — merged into the Collection's own
 schema, so opting in never costs a Tenant its private fields; how much of the
 shape the contract covers is a matter of degree (a few optional cross-cutting
@@ -212,9 +211,9 @@ activity.
 ### Catalog
 The build-time projection of every Collection that opted into a **Collection
 kind**, grouped by kind — derived from the same manifest expansion as the routing
-map and exposed as the `#catalog` virtual module (ADR-0025). It is the second
+map (ADR-0025 has the mechanism). It is the second
 cross-Tenant derivation after `#routing` (the routing map), and the read primitive
-an **Aggregator** consumes, via the sanctioned `queryAcrossTenants(kind)` read.
+an **Aggregator** consumes.
 **Derived, never hand-written:** a new Tenant with a kind-tagged Collection
 appears automatically; a removed one drops. Read-only — it names Collection keys,
 never writes, so write isolation (Trusted, below) is untouched.

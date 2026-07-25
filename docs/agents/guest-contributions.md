@@ -48,12 +48,9 @@ approves the workflow run.
 - **Mark it `external: true`.** The session log's `external` flag (ADR-0009
   amendment) declares a foreign toolchain. Absent ⇒ internal; our own sessions
   leave it absent.
-- **Self-improvement mining ignores it; ideas still surface.**
-  `frictions-to-fixes` and `audit-skills` exclude external sessions — their
-  frictions and skill-usage reflect a toolchain our fixes can't touch — while
-  the Sparks feed still surfaces their `ideas` and drops their `learnings`
-  (ADR-0009 amendment). External sessions stay visible in the Timeline/dashboard
-  record; only the mining excludes them.
+- **Self-improvement mining ignores it; ideas still surface.** See `CONTEXT.md`'s
+  **Session** glossary term for the exact mining-exclusion and Sparks-feed
+  behavior (ADR-0009 amendment, 2026-07-22).
 - **Provenance footer (ADR-0017)** on every agent-authored GitHub interaction,
   the same two lines we use.
 - **Merge is human-only.** A fork PR is Public; the owner reviews and merges by
