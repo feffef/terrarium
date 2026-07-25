@@ -453,6 +453,62 @@ sweep is a distinct follow-up, not silently folded in here).
   a durable, machine-readable record that its `outcome` is known-incomplete
   and the true original text may be unrecoverable.
 
+## Bounded exception: repairing a clobbered same-session log (2026-07-25, issue #688)
+
+> **Amended.** A second narrow carve-out from the append-only rule, in the same
+> spirit as the truncation sweep above — and subject to the same warning it
+> ends on. It repairs one mechanical defect's fallout on one entry; it is not a
+> licence to edit an entry's prose for any other reason.
+
+**The problem.** "Idempotent overwrite, diff-guarded" above justifies the
+same-session overwrite on the grounds that *"the transcript only grows, so a
+later extract is a **superset** of an earlier one."* That is true of the
+**mechanical** half, re-derived each time from a monotonically growing
+transcript. It is false of the **authored** half: `writeScratch()`
+(`scripts/log-session.ts`) replaces the scratch wholesale, and `stitch()`
+(`scripts/session-trace.ts`) takes `goal`/`status`/`outcome`/`summary`/`prs`/
+`frictions` from it verbatim. A session that authors twice for two materially
+different pieces of work therefore lands an entry whose authored half describes
+only the second pass while its trace half still describes both — a log that
+contradicts itself, with no marker saying so. Issue #688 records the first
+observed instance (a `/digest` Routine that fired twice in one session: the
+no-op second pass erased the pass that authored a Digest and merged PR #680,
+leaving `prs: []` beside a `merge_pull_request` tool count).
+
+**Decision.** Such an entry may be repaired **once**, by combining the authoring
+passes into a single honest log. The bounds:
+
+- **Only a demonstrably clobbered log** — every authoring pass must be
+  recoverable byte-for-byte from that file's own git history. Nothing is
+  reconstructed from memory or inference; if a pass isn't in history, it isn't
+  restored.
+- **Only the authored fields, and only by combination.** Frictions and `prs`
+  union; `goal`/`outcome`/`summary` are rewritten to describe *both* passes
+  honestly. No fact is invented and none is dropped — a repair that would have
+  to choose between two passes' claims is out of scope and stays unrepaired.
+- **The mechanical trace is untouched.** It was already correct: cumulative over
+  the whole session.
+- **Re-validate before landing**, against the frozen `sessions` schema, exactly
+  as the truncation sweep does.
+- **The repair travels an ordinary gated PR**, not this ADR's direct-to-`main`
+  path. That path is the *committer's*, scoped to a session landing its own log;
+  a later session correcting an earlier one's entry is a normal change and gets
+  normal review.
+
+**Consequences.**
+
+- The prior values stay visible in the file's git history for anyone who needs
+  the literal bytes that were on `main` before the repair.
+- This does **not** fix the underlying defect — the two halves still have
+  different overwrite semantics, and the next double-authoring session will
+  clobber the same way. Issue #688 carries the mechanism options; changing
+  `writeScratch()`/`stitch()` is runtime behaviour and needs a human call
+  (ADR-0004).
+- Like the truncation sweep, this is fallout-correction for a known mechanical
+  bug, **not** a precedent for editing session-log content generally. A future
+  agent citing this section to "improve" an entry that was never clobbered is
+  exactly the door it does not open.
+
 ## External sessions: marked, and excluded from self-improvement mining (2026-07-22)
 
 > **Amended.** Adds one optional field (`external`) to the schema and defines
