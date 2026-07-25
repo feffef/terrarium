@@ -453,6 +453,15 @@ sweep is a distinct follow-up, not silently folded in here).
   a durable, machine-readable record that its `outcome` is known-incomplete
   and the true original text may be unrecoverable.
 
+## Bounded exception: repairing a clobbered same-session log (2026-07-25, issue #688)
+
+> **Amended.** The "superset" premise above holds only for the derived half — a
+> second `log-session` firing replaces the authored half wholesale — so one
+> entry landed self-contradictory and was repaired by combining both authoring
+> passes, restoring only what its own git history already held. Like the
+> truncation sweep above, this is one bounded correction of a mechanical
+> defect's fallout, not a licence to edit log prose for any other reason.
+
 ## External sessions: marked, and excluded from self-improvement mining (2026-07-22)
 
 > **Amended.** Adds one optional field (`external`) to the schema and defines
