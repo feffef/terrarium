@@ -1,14 +1,13 @@
 schemaVersion: 1
 session: session_01RqEhX7xUQLRUixtEYJ7RCx
 startedAt: 2026-07-25T00:16:16Z
-endedAt: 2026-07-25T00:24:36Z
+endedAt: 2026-07-25T00:25:29Z
 kind: autonomous
-goal: Run /digest for 2026-07-24
+goal: Run /digest for 2026-07-25
 status: completed
-outcome: "Digest authored, archive swept, PR #680 merged green"
-summary: "Scheduled /digest Routine run, no human involved. Listed one backfill day (2026-07-24), authored its Digest from scripts/digest.ts's gather output (11 merged PRs, 11 sessions — the Midden's flatten/restyle, another Eyra post, the digest Skill's own archive-sweep wiring, an audit-docs pass), then ran scripts/archive-journal-content.ts --write, which moved 1 aged-out digest and 11 aged-out session logs from current to archived. pnpm gate:scoped passed locally (unit + build + 68/68 e2e). Opened PR #680, posted the pre-merge verdict comment, hit the documented enable_pr_auto_merge \"checks are failing\" false negative while the gate check was merely in_progress, confirmed via get_check_runs, waited for it to go green, then merged directly. PR merged clean, no review comments."
-prs:
-  - "680"
+outcome: No-op — no new digest day, archive sweep found nothing to move
+summary: "Scheduled /digest Routine fired a second time in the same session (continuing from the earlier 2026-07-24 digest run, already logged and merged as PR #680). No human involved. scripts/digest.ts list returned no backfill days (2026-07-25 itself is never listed — its midnight UTC hasn't passed), and scripts/archive-journal-content.ts --write found nothing past the 7-day retention cutoff to move. No files changed, so nothing to gate, commit, or open a PR for — CLAUDE.md's substantive-work bar for opening a PR was never reached this round."
+prs: []
 docsRead:
   - path: layers/journal/content/current/pages/digests/2026-07-23.md
     reason: (no reason given)
@@ -22,16 +21,16 @@ skillsUsed:
   - name: log-session
     reason: (no reason given)
 frictions:
-  - description: mcp__github__enable_pr_auto_merge threw "required checks are failing" while the PR's only substantive check ("gate") was still in_progress and nothing had actually failed — the exact quirk docs/agents/pr-workflow.md already documents.
-    solution: "Followed the doc's own guidance: verified real state via pull_request_read get_check_runs, waited for it to resolve, merged directly once green instead of retrying enable_pr_auto_merge or escalating. No doc change needed — this is a known, already-recorded platform quirk, not a fresh finding."
+  - description: The /digest slash command fired as a plain user message this time (no expanded skill body in the tag, unlike the session's first /digest firing), and the Skill tool refused it outright (disable-model-invocation). Had to re-read the Skill's steps from the earlier context/file directly instead of invoking it normally.
+    solution: Worked fine by following the already-known steps manually; no repo change needed unless this recurs enough to be worth a docs/agents note about re-firing /digest mid-session.
     severity: nit
-durationSec: 500
+durationSec: 553
 models:
-  claude-sonnet-5: 117
+  claude-sonnet-5: 134
 toolCounts:
-  Bash: 25
+  Bash: 31
   Read: 2
-  Write: 2
+  Write: 3
   ScheduleWakeup: 1
   ToolSearch: 4
   Monitor: 2
@@ -43,7 +42,7 @@ toolCounts:
   mcp__github__enable_pr_auto_merge: 1
   mcp__github__merge_pull_request: 1
   mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
   Edit: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-24.md
