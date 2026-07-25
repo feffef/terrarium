@@ -53,3 +53,12 @@ observations:
       (session_01CWmywSYZ2iY919UuP4M2V9's 6-issue parallel-agent batch,
       session_01G4rmUvezd1kADVdf5vcEyu's #236 fix, session_016rKpNdAWs7e5Vcz77FYm27's
       route-listing removal), confirming the adoption pattern in role is still accurate.
+  - date: 2026-07-25
+    note: >-
+      Prior citations aged out; used in 2 of this window's 40 sessions
+      (session_01UyndUzweHYwzrs4nq3dvmQ's #447 implement,
+      session_01ForHuq2k1hbNTHkTBVCjpH's DISMISSED_HUMAN_PROMPTED_CLOSURES
+      addition) — still skipped in another code-landing session this window
+      (session_01MwR3JjEyr7jxHkC7xRpRzd's Cross-Tenant read model + Commons
+      aggregator build, which recorded ADR-0025 with no code-review
+      invocation), confirming the adoption pattern in role is still accurate.

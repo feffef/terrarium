@@ -30,3 +30,11 @@ observations:
       example of that path in recent runs) and session_017dzPLRmeEMHeMswznBR9N4
       (stress-tested a ready-for-agent implementation plan via grill-with-docs,
       catching two brief mis-scopes before coding) — both still match role.
+  - date: 2026-07-25
+    note: >-
+      Prior citations aged out; used in 2 of this window's 40 sessions, both
+      via grill-with-docs: session_01Nbh46E53P4eK7773mxcmdf (grill-refined the
+      capture-static.ts idea before building it) and
+      session_01VsqSAkCvbaLvAVsySvXvdg (stress-tested the journal archival
+      script's design — cutoff basis, git-mv mechanics, dry-run default —
+      before building) — both still match role.
