@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: session_01YEVWiFEQDjGDjcKPck9JnU
+startedAt: 2026-07-25T00:45:59Z
+endedAt: 2026-07-25T01:00:47Z
+kind: autonomous
+goal: Run /audit-skills — audit the Skill Inventory
+status: in-review
+outcome: "PR #681 opened, gate green, awaiting merge"
+summary: Scheduled /audit-skills routine over the newest 40-session window. No grade changes this run — every Skill's importance still matched the evidence. Refreshed observations citations for four entries (code-review, implement, grilling, grill-with-docs) whose prior citations had fully aged out of the window; all still confirm existing role/grade. Screened three regression checks (atlas-specimen, blog-post, digest edits) via Phase A, and deep-read the blog-post one (Phase B) since the next real-world use logged a major friction — turned out unrelated to the edit (session-id fabrication, not the eyra persona addition). Commented on the standing humanPromptedClosures thread (#483) with one new instance. Orphaned sessions, manually-rescued closures, and misclassified-kind signals were all empty. Entirely agent-initiated per the Skill's own schedule; no human instruction beyond the stored prompt.
+prs:
+  - "681"
+docsRead:
+  - path: CONTEXT.md
+    reason: Importance grade definitions, Session Inventory glossary term
+  - path: scripts/audit-skills.ts
+    reason: verify DISMISSED_HUMAN_PROMPTED_CLOSURES didn't already cover the flagged session
+  - path: layers/journal/content/current/sessions/2026-07-24-session_014J37kJVfCvFoaFWcwez7Tt.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-24-session_01VsqSAkCvbaLvAVsySvXvdg.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/grilling.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/grill-with-docs.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/code-review.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/implement.yml
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-skills
+    reason: the whole task
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this entry
+frictions:
+  - description: Initially wrote a GitHub comment's Claude-Session footer using a session id copied from the scorecard's own window data (another session's id seen while analyzing evidence) instead of resolving my own from the system-prompt commit-footer template.
+    solution: "Caught by the github-footer-guard PreToolUse hook (issue #628) before the comment posted; corrected to the guard-resolved id and reposted."
+    severity: major
+durationSec: 888
+models:
+  claude-sonnet-5: 126
+toolCounts:
+  Bash: 32
+  ToolSearch: 4
+  TaskCreate: 5
+  TaskUpdate: 8
+  Read: 7
+  mcp__github__search_issues: 1
+  Grep: 1
+  Edit: 5
+  mcp__github__add_issue_comment: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - layers/journal/content/current/skills/grilling.yml
+  - layers/journal/content/current/skills/grill-with-docs.yml
+  - layers/journal/content/current/skills/code-review.yml
+  - layers/journal/content/current/skills/implement.yml
+gitBranch: claude/upbeat-sagan-ofo2l7
+entrypoint: remote_trigger
+cliVersion: 2.1.219
+trigger: audit-skills
+learnings:
+  - The regressionChecks before/after brackets are calendar-adjacent (5 sessions before/after the edit commit by count), not filtered to sessions that actually invoked the edited Skill — for a low-frequency Skill (blog-post, digest, atlas-specimen) this often means neither bracket contains a real invocation, so the Phase A screen needs a manual look at the Skill's actual nearest usedIn sessions rather than trusting the mechanical bracket alone.
