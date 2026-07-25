@@ -1,0 +1,64 @@
+schemaVersion: 1
+session: session_01GRuQEe4tZaxQB9MqELoYPX
+startedAt: 2026-07-25T05:49:11Z
+endedAt: 2026-07-25T09:32:39Z
+kind: interactive
+goal: "Trace and repair PR #680's clobbered session log"
+status: in-review
+outcome: "Log repaired, ADR amendment proposed, issue #688 filed"
+summary: "Human asked whether the session that opened PR #680 left traces in the logs. It did — but a scheduled /digest Routine had fired twice in that one session, and the second pass's authored half had wholesale replaced the first's, leaving a log claiming prs: [] beside a cumulative trace still carrying merge_pull_request and PR #680's branch. Human then instructed both follow-ups explicitly: file the issue (#688) and combine the two runs into one log. Agent-initiated on top of that ask: the ADR-0009 amendment, since the repair otherwise silently violates the append-only rule that ADR's own truncation-sweep section warns against reusing; and the gated PR (#689), opened automatically per ADR-0003. Escalated rather than self-merged — it touches docs/adr/, human-only under ADR-0004."
+prs:
+  - "689"
+docsRead:
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: the append-only rule and its one existing bounded exception
+  - path: shared/schemas/session.ts
+    reason: which fields are authored vs derived, and the frozen shape to re-validate against
+  - path: docs/agents/pr-workflow.md
+    reason: merge authority for a PR touching docs/adr/
+  - path: docs/agents/issue-tracker.md
+    reason: MCP equivalents and issue conventions
+  - path: scripts/session-trace.ts
+    reason: stitch() — confirmed the authored half is taken verbatim while the trace is re-derived
+  - path: layers/journal/content/current/sessions/2026-07-25-session_01RqEhX7xUQLRUixtEYJ7RCx.yml
+    reason: (read before editing)
+  - path: docs/adr/0009-session-logs.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: authored this entry
+frictions:
+  - description: "The issue #628 github-footer guard blocked an issue_write whose footer was correct — it matched a Claude-Session: line quoted inside the body as evidence about another session."
+    solution: Scope the guard's check to the trailing footer block (or the last such line) rather than any occurrence anywhere in the body; quoting another session's trailer as evidence is a legitimate thing an issue body needs to do. Worked around by rephrasing the evidence line.
+    severity: minor
+durationSec: 13408
+models:
+  claude-opus-5: 100
+toolCounts:
+  Bash: 21
+  Read: 7
+  ToolSearch: 5
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 2
+  Write: 3
+  Edit: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 6
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+filesEdited:
+  - layers/journal/content/current/sessions/2026-07-25-session_01RqEhX7xUQLRUixtEYJ7RCx.yml
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+gitBranch: claude/duplicate-digest-routine-session-e07kok
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - ADR-0009's "a later extract is a superset of an earlier one" guarantee holds only for the derived half. writeScratch() plainly overwrites the authored scratch, and stitch() takes goal/outcome/summary/prs/frictions from it verbatim — so the two halves of one log have opposite overwrite semantics, and nothing reconciles them.
+  - "A clobbered session log is self-diagnosing: because the trace half stays cumulative, the surviving entry contradicts itself (prs: [] beside a merge_pull_request tool count) rather than just looking thin."
+ideas:
+  - "Add a session-log self-consistency check to validate-content-refs.ts — cross-check each log's authored half against its own derived trace and fail on contradictions: prs empty while toolCounts has create_pull_request/merge_pull_request, or a summary claiming \"no files changed\" while filesEdited is non-empty. That single rule would have caught this clobber at the gate the moment it landed, instead of it sitting on main until someone happened to ask about PR #680 — and it generalizes to any future mechanism that lets the two halves drift apart."
