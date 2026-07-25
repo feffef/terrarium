@@ -13,7 +13,7 @@ table rather than restating the scope inline.
 
 | Skill | scope | date | PR |
 | --- | --- | --- | --- |
-| `digest` | digest pages under `tenants/journal/content/current/pages/digests/` (pre-rename path; see ADR-0018), plus optionally the Journal index's editorial intro | 2026-07-06 | — |
+| `digest` | digest pages under `tenants/journal/content/current/pages/digests/` (pre-rename path; see ADR-0018), plus optionally the Journal index's editorial intro, plus the `current` → `archived` archive-sweep moves its mandatory step 5 produces (`scripts/archive-journal-content.ts`, issue #672) | 2026-07-06 (archive-sweep scope added 2026-07-25) | — |
 | `frictions-to-fixes` | *reviewer, not author* — the Skill's main session reviews and merges PRs authored by its dispatched (Sonnet) impl agents; not purely mechanical, still escalates high-risk PRs to a human | 2026-07-06 | — |
 | `audit-docs` | fact-checked reconciliations to *live* docs and Skills only (its own Live/Historical/Pack-generic tiering); an ADR amendment, CI, isolation, or routing/manifest-expansion edit is out of scope | 2026-07-09 | #262 |
 | `audit-skills` | Inventory-only content citing an existing evidence rule (ADR-0015) | 2026-07-09 | — |
@@ -115,6 +115,16 @@ never auto-merged and falls back to ADR-0003's default (gated PR, human merge).
 > gated (ADR-0004), and genuine judgment calls or design uncertainty escalate to a
 > human instead. The green-light rule itself is unchanged; see ADR-0022 for the
 > boundary and why classification (not implementation) is what the sweep automates.
+>
+> **Amended (2026-07-25, `/audit-docs`).** The `digest` row's scope above now
+> explicitly names the `current` → `archived` archive-sweep moves its mandatory
+> step 5 already produces on every run (`scripts/archive-journal-content.ts`,
+> issue #672) — closing a gap this ADR never covered: ADR-0009 and ADR-0010
+> originally deferred that migration to an unnamed "future `consolidate`/aging
+> job," which shipped as part of `digest` itself (both ADRs corrected the same
+> day). Recorded after the fact to match `digest`'s actual, already-running
+> behaviour — bounded the same as every other row: outside this scope, or a red
+> gate, falls back to ADR-0003's default (gated PR, human merge).
 
 ## Context
 
