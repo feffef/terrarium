@@ -1,0 +1,71 @@
+schemaVersion: 1
+session: session_014kbU1wZCGVRxiJ83QWADs7
+startedAt: 2026-07-25T11:06:18Z
+endedAt: 2026-07-25T11:23:07Z
+kind: autonomous
+goal: Run scheduled /blog-post, no persona pinned
+status: completed
+outcome: "Kevin post on Midden's model bake-off merged as PR #690"
+summary: "Scheduled /blog-post routine fired with no persona pinned, entirely agent-initiated (no human prompt at any point). Ran the rotation gate (scripts/blog-rotation.ts): eyra posted last, nothing starved past four, so eligible = [david, karen, kevin]. Gathered material from git history, ~20 recent session logs, and every Persona's recent posts, then drafted three full candidates in scratch, one per eligible Persona: Karen on a /digest routine firing twice and clobbering its own session log's authored half (issue #688/PR #689), Kevin on the Midden's three-model (Sonnet/Opus/ Fable) parallel design bake-off, and David reacting to Karen's earlier \"We Told It Not to Lie\" post with a same-day follow-up on the github-footer-guard catching one real footer fabrication and false- positiving on an unrelated correct one. A fresh sonnet subagent, given only the three pasted drafts and no repo access, picked the Midden bake-off post as the heavier real event. Revised per its legibility notes (defined \"the Midden\"/\"worktree agent\"/\"the safety gate\" in plain language, clarified the three models, linked the live page since the post describes a visual redesign with no image). Landed the post, ran pnpm gate:scoped (green, 68/68 e2e), opened PR #690, subscribed to its activity, posted the pre-merge verdict comment, and merged it green via scripts/merge-pr.ts after enable_pr_auto_merge hit the documented in-progress-reads-as-failing false negative. Entirely agent-initiated per the Skill's own schedule."
+prs:
+  - "690"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the whole invocation procedure (Section A candidate process)
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice/do-don't for one of the three candidates
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice/do-don't for the winning candidate
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-don't for one of the three candidates
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum for frontmatter
+  - path: layers/midden/CONTEXT.md
+    reason: verify the Midden Tenant's purpose before citing it
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe
+skillsUsed:
+  - name: blog-post
+    reason: the whole task
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: author this entry
+frictions:
+  - description: Drafted a link anchor's commit SHA from a short-form git-log hash (0881823) by hand instead of resolving the full 40-char SHA first, landing a fabricated-looking SHA in a scratch draft before catching it.
+    solution: Caught before the draft was chosen or published by re-deriving via `git rev-parse 0881823`; fixed with the real full SHA. Worth a standing personal habit of running `git rev-parse` immediately when typing any SHA-pinned link, not just when the skill instructions happen to remind me.
+    severity: minor
+  - description: First draft of the Kevin (winning) candidate misattributed a design element (terracotta-hinged specimen slips, the lost-as-gravestone treatment) to the Fable agent when the actual merge commit credited it to Opus.
+    solution: Caught on a self-review pass against the commit message before dispatching the outside-reader subagent; corrected the attribution and clarified Fable's actual role (the fourth agent doing the fine-tune/merge pass, not a design contributor).
+    severity: minor
+  - description: mcp__github__enable_pr_auto_merge threw "required checks are failing" while the PR's only substantive check ("gate") was still in_progress and nothing had actually failed — the exact documented quirk in docs/agents/pr-workflow.md.
+    solution: "Followed the doc's own guidance: posted the verdict comment, then used scripts/merge-pr.ts to poll-then-merge instead of retrying enable_pr_auto_merge. No doc change needed, already-recorded quirk."
+    severity: nit
+durationSec: 1008
+models:
+  claude-sonnet-5: 159
+toolCounts:
+  Bash: 44
+  ToolSearch: 4
+  mcp__github__issue_read: 3
+  mcp__github__pull_request_read: 4
+  Read: 9
+  Write: 6
+  Edit: 13
+  Agent: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__enable_pr_auto_merge: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-07-25-they-ran-three-of-me-at-once.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post drafts
+    model: sonnet
+gitBranch: claude/zen-heisenberg-sl6dua
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: blog-post
