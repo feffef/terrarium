@@ -124,8 +124,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   present) is a hard stop-and-ask signal.** Ask the user what they want —
   don't infer a feature from the branch name, prior commits, or a matching
   repo pattern.
-- **A chartered autonomous job's first step is always this checklist, in
-  order — don't skip straight to the fetch:**
+- **Before the first `git branch`/`checkout` in any session, run this
+  checklist, in order — don't skip straight to the fetch.** This applies to
+  every session, not only one that already reads as obviously chartered: a
+  session can't know it's chartered until step 1 has actually checked.
   1. **Scan your own task / system-prompt instructions for a caller-pinned
      designated branch, before running any `git branch`/`checkout`.** The pin
      often lives in a harness-injected block, in a completely different part
@@ -337,12 +339,15 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   conflict markers, before trusting the merge — especially after a rename or
   refactor on either side.
 - **Before concluding a file or Skill's history was rewritten, squashed, or
-  re-rooted, rule out a shallow clone first.** Check `git rev-parse
-  --is-shallow-repository` (or the presence of `.git/shallow`) — a shallow
-  clone's grafted, parent-less boundary commit makes every file it touches
-  look newly-added, which can misread as a real history rewrite when it's
-  actually just a clone-depth artifact. `git fetch --deepen <n>` (or
-  `--unshallow`) to inspect the real history before drawing that conclusion.
+  re-rooted — or asserting a completeness claim like "searched everything
+  since X and found nothing more" — rule out a shallow clone first.** Check
+  `git rev-parse --is-shallow-repository` (or the presence of `.git/shallow`)
+  — a shallow clone's grafted, parent-less boundary commit makes every file
+  it touches look newly-added, which can misread as a real history rewrite
+  when it's actually just a clone-depth artifact, and the same boundary
+  silently truncates any search over history before it, making a
+  completeness claim false. `git fetch --deepen <n>` (or `--unshallow`) to
+  inspect the real history before drawing either conclusion.
 - **Keep a PR's description in sync with its content — hard rule.** If you
   fundamentally change what a PR does (switch approach, swap the files it touches,
   answer review with a different solution), update the PR title/description in the
@@ -448,6 +453,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
     order; the second branch can go stale the moment the first merges,
     especially when both touch the same file in adjacent (not overlapping)
     regions that git wouldn't flag as a conflict (issue #603).
+  - **A dispatch brief for a screenshot-capture agent must explicitly decouple
+    final-screenshot capture from gate completion.** Shoot finals immediately
+    once the production build (`pnpm build`) succeeds, independent of whether
+    the full gate (`pnpm gate:scoped`/CI) has finished — otherwise the agent
+    can stop and block on the gate before ever taking the shot it was
+    dispatched to produce, stranding the deliverable behind an unrelated,
+    often slower, gate (issue #683).
 - **Before dispatching subagents whose outputs share a load-bearing/structural
   design axis — the thing every one of their outputs depends on — grill it to
   a locked answer first**, using the `grilling` Skill by name. The trigger is
