@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01YEVWiFEQDjGDjcKPck9JnU
 startedAt: 2026-07-25T00:45:59Z
-endedAt: 2026-07-25T01:00:47Z
+endedAt: 2026-07-25T01:04:24Z
 kind: autonomous
 goal: Run /audit-skills — audit the Skill Inventory
-status: in-review
-outcome: "PR #681 opened, gate green, awaiting merge"
+status: completed
+outcome: "PR #681 merged"
 summary: Scheduled /audit-skills routine over the newest 40-session window. No grade changes this run — every Skill's importance still matched the evidence. Refreshed observations citations for four entries (code-review, implement, grilling, grill-with-docs) whose prior citations had fully aged out of the window; all still confirm existing role/grade. Screened three regression checks (atlas-specimen, blog-post, digest edits) via Phase A, and deep-read the blog-post one (Phase B) since the next real-world use logged a major friction — turned out unrelated to the edit (session-id fabrication, not the eyra persona addition). Commented on the standing humanPromptedClosures thread (#483) with one new instance. Orphaned sessions, manually-rescued closures, and misclassified-kind signals were all empty. Entirely agent-initiated per the Skill's own schedule; no human instruction beyond the stored prompt.
 prs:
   - "681"
@@ -26,6 +26,8 @@ docsRead:
     reason: (read before editing)
   - path: layers/journal/content/current/skills/implement.yml
     reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: audit-skills
     reason: the whole task
@@ -37,26 +39,29 @@ frictions:
   - description: Initially wrote a GitHub comment's Claude-Session footer using a session id copied from the scorecard's own window data (another session's id seen while analyzing evidence) instead of resolving my own from the system-prompt commit-footer template.
     solution: "Caught by the github-footer-guard PreToolUse hook (issue #628) before the comment posted; corrected to the guard-resolved id and reposted."
     severity: major
-durationSec: 888
+durationSec: 1106
 models:
-  claude-sonnet-5: 126
+  claude-sonnet-5: 151
 toolCounts:
-  Bash: 32
-  ToolSearch: 4
+  Bash: 34
+  ToolSearch: 5
   TaskCreate: 5
-  TaskUpdate: 8
-  Read: 7
+  TaskUpdate: 9
+  Read: 8
   mcp__github__search_issues: 1
   Grep: 1
-  Edit: 5
-  mcp__github__add_issue_comment: 2
+  Edit: 6
+  mcp__github__add_issue_comment: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 4
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
   Write: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/skills/grilling.yml
   - layers/journal/content/current/skills/grill-with-docs.yml
