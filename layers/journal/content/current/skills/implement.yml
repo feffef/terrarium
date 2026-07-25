@@ -57,3 +57,12 @@ observations:
       cleanly anymore (a batch session used it this time) — adoption remains
       genuinely inconsistent rather than following any one pattern; role and
       grade held as-is.
+  - date: 2026-07-25
+    note: >-
+      Prior citations aged out; used in 2 of this window's 40 sessions
+      (session_01UyndUzweHYwzrs4nq3dvmQ's #447 implement,
+      session_01ForHuq2k1hbNTHkTBVCjpH's DISMISSED_HUMAN_PROMPTED_CLOSURES
+      addition) — still skipped in another code-landing session this window
+      (session_01MwR3JjEyr7jxHkC7xRpRzd's Cross-Tenant read model + Commons
+      aggregator build, ADR-0025), same inconsistent-adoption pattern; role
+      and grade held as-is.

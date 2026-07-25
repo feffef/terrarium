@@ -18,3 +18,9 @@ observations:
       (Observability naming interview), session_01NkLUMugs5s6QRRM8Wq7UUb
       (designed the auto-triage skill + ADR-0022), session_01RqxwHHqJFDNBDjeqYVsTSC
       (close-session/log-session closure-model design) — matches role.
+  - date: 2026-07-25
+    note: >-
+      Prior citations aged out; used in 2 of this window's 40 sessions, again
+      always ahead of building: session_01Nbh46E53P4eK7773mxcmdf (the
+      capture-static.ts idea) and session_01VsqSAkCvbaLvAVsySvXvdg (the journal
+      archival script's design) — matches role.
