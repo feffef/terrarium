@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01GRuQEe4tZaxQB9MqELoYPX
 startedAt: 2026-07-25T05:49:11Z
-endedAt: 2026-07-25T09:44:49Z
+endedAt: 2026-07-25T10:03:34Z
 kind: interactive
 goal: "Trace and repair PR #680's clobbered session log"
-status: in-review
-outcome: "Log repaired, ADR note trimmed on review, issue #688 filed"
-summary: "Human asked whether the session that opened PR #680 left traces in the logs. It did — but a scheduled /digest Routine had fired twice in that one session, and the second pass's authored half had wholesale replaced the first's, leaving a log claiming prs: [] beside a cumulative trace still carrying merge_pull_request and PR #680's branch. Human then instructed both follow-ups explicitly: file the issue (#688) and combine the two runs into one log. Agent-initiated on top of that ask: the ADR-0009 note, since the repair otherwise silently violates the append-only rule that ADR's own truncation-sweep section warns against reusing; and the gated PR (#689), opened automatically per ADR-0003. Human reviewed and called the amendment excessive; cut it from ~55 lines to two sentences. Escalated rather than self-merged — docs/adr/ is human-only under ADR-0004."
+status: completed
+outcome: "Repair merged as PR #689; issue #688 filed"
+summary: "Human asked whether the session that opened PR #680 left traces in the logs. It did — but a scheduled /digest Routine had fired twice in that one session, and the second pass's authored half had wholesale replaced the first's, leaving a log claiming prs: [] beside a cumulative trace still carrying merge_pull_request and PR #680's branch. Human then instructed both follow-ups explicitly: file the issue (#688) and combine the two runs into one log. Agent-initiated on top of that ask: the ADR-0009 note, since the repair otherwise silently violates the append-only rule that ADR's own truncation-sweep section warns against reusing; and the gated PR (#689), opened automatically per ADR-0003. Human reviewed and called the amendment excessive; cut it from ~55 lines to two sentences. Escalated rather than self-merged — docs/adr/ is human-only under ADR-0004 — and the human merged it green."
 prs:
   - "689"
 docsRead:
@@ -36,17 +36,17 @@ frictions:
   - description: Wrote a full problem/decision/consequences ADR amendment for a one-entry repair. Human review cut it to two sentences; the bulk restated the issue and the section above it.
     solution: Default to the smallest note that records the decision, and check whether each paragraph single-homes something new before writing it — CLAUDE.md's single-home rule applies to new ADR prose, not just to reconciling existing docs. The repo's ADR template (Context/Decision/Consequences) invites full structure even where a sentence would do.
     severity: minor
-durationSec: 14138
+durationSec: 15262
 models:
-  claude-opus-5: 122
+  claude-opus-5: 147
 toolCounts:
-  Bash: 26
+  Bash: 33
   Read: 8
   ToolSearch: 6
   mcp__github__search_issues: 1
   mcp__github__issue_write: 2
   Write: 5
-  Edit: 3
+  Edit: 5
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 6
@@ -55,6 +55,7 @@ toolCounts:
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
   mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 2
 filesEdited:
   - layers/journal/content/current/sessions/2026-07-25-session_01RqEhX7xUQLRUixtEYJ7RCx.yml
   - docs/adr/0009-session-logs-commit-directly-to-main.md
