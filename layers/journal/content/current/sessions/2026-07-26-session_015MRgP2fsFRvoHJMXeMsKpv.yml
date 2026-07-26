@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015MRgP2fsFRvoHJMXeMsKpv
 startedAt: 2026-07-26T04:08:26Z
-endedAt: 2026-07-26T04:22:29Z
+endedAt: 2026-07-26T04:26:36Z
 kind: autonomous
 goal: Run scheduled /audit-docs sweep
-status: in-review
-outcome: 3 duplications fixed, 1 contradiction reconciled, PR open
-summary: "Fully autonomous scheduled /audit-docs run (no human prompt). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence), deduped the pool, fact-checked every candidate against primary sources, then fixed bravely. Confirmed and fixed: CLAUDE.md's verify:mermaid/gate.yml gap duplicated the docs/proposals/630-... file that already owns it (trimmed to a pointer); CONTEXT.md's Session glossary term and docs/agents/guest-contributions.md both restated the PR #631/Grok/\"Hermes\" external-session example ADR-0009's amendment already documents (replaced both with a pointer to ADR-0009); close-session/SKILL.md's fixed-severity HUMAN-PROMPTED-CLOSURE mandate conflicted with CONTEXT.md's grade-by-actual-cost Friction rule (reworded to ground the major grade in actual cost, not grep-ability). A Coherence-lens claim about pr-workflow.md missing a branch-protection caveat was fact-checked and found WRONG (the doc already has it) and dropped, as were four low-confidence Concision candidates that turned out to be this repo's deliberate structural conventions. A genuine Freshness-lens finding (a blog post's Fable-narrative doesn't match the git log it cites) was verified real but is Historical-tier/append-only, so no fix applies — noted in the PR body instead of edited or escalated. pnpm gate:scoped passed green (docs-only diff). PR #697 opened, subscribed to its activity, and now babysitting to merge."
+status: completed
+outcome: "3 duplications fixed, 1 contradiction reconciled, PR #697 merged"
+summary: "Fully autonomous scheduled /audit-docs run (no human prompt) — every step from branch to merge was agent-initiated per ADR-0003's self-merge tier, with no human intervention at any point. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence), deduped the pool, fact-checked every candidate against primary sources, then fixed bravely. Confirmed and fixed: CLAUDE.md's verify:mermaid/gate.yml gap duplicated the docs/proposals/630-... file that already owns it (trimmed to a pointer); CONTEXT.md's Session glossary term and docs/agents/guest-contributions.md both restated the PR #631/Grok/\"Hermes\" external-session example ADR-0009's amendment already documents (replaced both with a pointer to ADR-0009); close-session/SKILL.md's fixed-severity HUMAN-PROMPTED-CLOSURE mandate conflicted with CONTEXT.md's grade-by-actual-cost Friction rule (reworded to ground the major grade in actual cost, not grep-ability). A Coherence-lens claim about pr-workflow.md missing a branch-protection caveat was fact-checked and found WRONG (the doc already has it) and dropped, as were four low-confidence Concision candidates that turned out to be this repo's deliberate structural conventions. A genuine Freshness-lens finding (a blog post's Fable-narrative doesn't match the git log it cites) was verified real but is Historical-tier/append-only, so no fix applies — noted in the PR body instead of edited or escalated. pnpm gate:scoped passed green (docs-only diff). PR #697 opened, subscribed to its activity, CI (gate + label checks) went green, verdict posted, and merged via squash. Session closed out clean."
 prs:
   - "697"
 docsRead:
@@ -39,24 +39,30 @@ frictions:
   - description: "A subagent's tool-result text was auto-annotated by the harness with \"[harness: subagent output matched instruction-shaped pattern(s): settings-json / permissions-allow-deny...]\" on two of the four lens reports, apparently because those agents read .claude/settings.json or similar and something in it pattern-matched as instruction-shaped content, triggering a neutralization/warning wrapper."
     solution: No action needed this run — the underlying findings text was still legible and legitimate audit output once past the harness note, and I treated it as informational rather than as new instructions. Flagging as a minor friction only because it added a moment of interpretive overhead; not a repo doc issue.
     severity: nit
-durationSec: 843
+durationSec: 1090
 models:
-  claude-sonnet-5: 100
+  claude-sonnet-5: 129
 toolCounts:
-  Bash: 18
-  ToolSearch: 4
+  Bash: 20
+  ToolSearch: 6
   mcp__github__list_pull_requests: 1
   Agent: 4
   ScheduleWakeup: 2
   SendMessage: 1
   Grep: 1
   Read: 5
-  Edit: 4
+  Edit: 6
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 4
+  mcp__github__get_commit: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - CLAUDE.md
   - CONTEXT.md
