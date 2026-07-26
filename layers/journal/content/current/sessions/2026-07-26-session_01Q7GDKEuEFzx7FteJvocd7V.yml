@@ -1,0 +1,68 @@
+schemaVersion: 1
+session: session_01Q7GDKEuEFzx7FteJvocd7V
+startedAt: 2026-07-26T01:04:54Z
+endedAt: 2026-07-26T01:26:21Z
+kind: autonomous
+goal: Retire recurring session frictions via frictions-to-fixes
+status: completed
+outcome: 2 fixes merged, 1 regression escalated to user
+summary: "Fully autonomous run (fired by a scheduled Routine, no live human prompt this session). Delegated the survey of the latest 20 session logs plus tracker screening to a subagent, which returned 2 never-fixed simple candidates, 1 already-double-patched class not worth a third dispatch, and 1 regression (issue #602's fix for worktree-agent stalls on backgrounded commands did not hold, recurring 5 days later). Filed issues #692, #693, #694; dispatched two Sonnet impl agents in isolated worktrees for #692 and #693; reviewed and merged both resulting PRs (#695, #696) autonomously per ADR-0003's reviewer-agent tier. Deliberately did not dispatch a fix for the regression (#694) and alerted the user via push notification instead, per the skill's rule that a repeat prose-only fix on an already-once-failed class needs human judgment, not another agent PR."
+prs:
+  - "695"
+  - "696"
+docsRead:
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run's own governing skill
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Survey subagent: two git log -S pickaxe searches against CLAUDE.md returned empty even though grep confirmed the text was present, because the search string didn't match the file's actual line-wrapped text byte-for-byte."
+    solution: Fell back to grep + git blame -L <range> to pin down when a fix landed; cost a few wasted round-trips before switching strategy.
+    severity: minor
+  - description: "Survey subagent: the environment's clone was shallow, and the shallow graft boundary made git blame attribute every line of CLAUDE.md to one boundary commit, exactly the pitfall CLAUDE.md already documents."
+    solution: Ran git fetch --unshallow (pulled ~1538 commits) before trusting blame/pickaxe searches for the regression's fix-vs-recurrence ordering. Already covered by an existing CLAUDE.md bullet, but the subagent still paid for rediscovering it mid-survey rather than checking is-shallow-repository proactively before starting history archaeology.
+    severity: moderate
+  - description: "Survey subagent: one mcp__github__search_issues semantic query overflowed the tool-result limit (71,053 chars / 979 lines)."
+    solution: Abandoned it in favor of a narrower, more literal query.
+    severity: minor
+  - description: "Survey subagent: the tracker now holds many near-duplicate previously-filed frictions-to-fixes issues, phrased close enough to this window's candidates that distinguishing genuinely-new from already-covered-under-different-wording was slow."
+    solution: Required literal exact-string searches per candidate rather than one topic-level search, as the skill instructs; a real and growing recurring cost as the tracker accumulates more of this skill's own issues over successive cycles.
+    severity: minor
+  - description: "Orchestrator: both dispatched PRs (695, 696) opened and merged within the same closing turn, so the skill's instructed intermediate in-review close-session step (invoke at PR-open, before reviewing in section 6) was never actually exercised."
+    solution: Not a failure — nothing stalled and no human had to prompt closure — just a case the skill's phrasing doesn't explicitly anticipate (a fast merge outpacing the review turn). Worth a small note in the skill that skipping straight to a single completed-status close is fine when both PRs land before the closing turn ends.
+    severity: nit
+durationSec: 1287
+models:
+  claude-sonnet-5: 83
+toolCounts:
+  Agent: 3
+  ScheduleWakeup: 5
+  ToolSearch: 2
+  mcp__github__search_issues: 3
+  Bash: 7
+  Read: 2
+  mcp__github__issue_write: 3
+  PushNotification: 1
+  mcp__github__pull_request_read: 6
+  mcp__github__pull_request_review_write: 3
+  mcp__github__unsubscribe_pr_activity: 2
+  Skill: 2
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - task: Fix github-footer-guard false positive
+    model: sonnet
+  - task: Fix close-session rejected-tool-call gap
+    model: sonnet
+gitBranch: claude/hopeful-brown-z2ecli
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: frictions-to-fixes
