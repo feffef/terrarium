@@ -14,9 +14,9 @@ links, not here (single-home rule).
    live only while the owner runs the loops. The guest never runs an agent — we
    do.
 2. **External-agent fork PR.** An external contributor's *own* agent — a
-   different harness/model (the first, on PR #631, ran on Grok via a "Hermes"
-   harness) — does the work on a fork and opens a PR. The house rules below are
-   about this mode.
+   different harness/model (see ADR-0009's external-sessions amendment for the
+   first concrete instance) — does the work on a fork and opens a PR. The house
+   rules below are about this mode.
 
 ## Trust (ADR-0020)
 

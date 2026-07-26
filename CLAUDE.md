@@ -539,13 +539,9 @@ every PR** (`.github/workflows/gate.yml`) — the run that must go green to merg
 separate, currently-unresolved question — see
 `docs/research/github-branch-protection-vs-autonomous-log-commits.md` for
 `main`'s actual branch-protection state), so you don't run the full gate
-locally yourself. **Known gap:** `gate.yml` is currently missing a `verify:mermaid`
-step that `package.json`'s `gate` script has (ADR-0024 added it to the floor but
-the human-only workflow file was never updated to match — the same *kind* of
-companion-change gap `docs/proposals/README.md` cites `validate:content` as a
-now-closed historical example of, not a second live instance); this one is
-tracked in `docs/proposals/` (`630-add-verify-mermaid-to-gate-workflow.md`) for
-a human to apply. Both the keyed collections
+locally yourself. **Known gap:** `gate.yml` currently runs a stale subset of
+`pnpm gate` — see `docs/proposals/630-add-verify-mermaid-to-gate-workflow.md`
+for the missing step and why, pending a human to apply it. Both the keyed collections
 (Ground rules above) and the routing map derive from the manifests at build
 time — no regenerate step needed.
 

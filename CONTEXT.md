@@ -91,8 +91,8 @@ of where the work went, or whether any code was committed at all. Session logs
 are ground truth, not a projection of repo state (see the Journal Tenant).
 
 A session log may be **external** — authored by a different agent / harness /
-environment than our Claude Code toolchain (the first, on fork PR #631, ran on
-Grok via a "Hermes" harness). An external log is still a real, honest record and
+environment than our Claude Code toolchain (see ADR-0009's external-sessions
+amendment for the first concrete instance). An external log is still a real, honest record and
 stays visible in the Timeline and dashboard; the schema marks it with an optional
 `external` flag (absent ⇒ internal — our own sessions leave it off). Because its
 **Frictions** and **skills** reflect a toolchain our fixes can't touch, the
