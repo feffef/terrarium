@@ -1,0 +1,41 @@
+schemaVersion: 1
+session: session_016qtTjtW1uAHajyBC7cYW7b
+startedAt: 2026-07-26T00:46:31Z
+endedAt: 2026-07-26T00:51:46Z
+kind: autonomous
+goal: Run /audit-skills — audit the Skill Inventory
+status: completed
+outcome: "No grade changes; filed evidence to #483"
+summary: "Fully agent-initiated: a scheduled Routine fired /audit-skills with no human present. Ran scripts/audit-skills.ts's scorecard (40-session window), re-graded every Skill's importance/role against the bright-line evidence rule, and found no ≥2-session promotion/demotion signal this run — the previously-tracked borderline Skills (code-review, implement, domain-modeling, diagnosing-bugs) show the same evidence already cited in recent runs' observations, not fresh signal, so their grades/roles were left untouched. Checked the one mirror-case entry (`review`, inventoried but not on disk — the built-in CLI Skill, correctly left alone). Ran the regression watch (step 4) on both bracketed SKILL.md edits this run (atlas-specimen's doc single-homing pass, digest's archive-sweep-on-every-invocation change): atlas-specimen wasn't invoked in either bracket (no signal), and digest's two post-edit /digest runs (2026-07-25, 2026-07-26) both landed cleanly (nit-only frictions, archive sweep working as intended) — no regression. Commented on the standing manual-nudge-closure thread (#483) with this run's one new `humanPromptedClosures` entry (session_01VsqSAkCvbaLvAVsySvXvdg, major HUMAN-PROMPTED-CLOSURE friction); `manuallyRescuedClosures` was empty. No new/split/retire idea met the bar (step 6). Since no Inventory YAML changed, there was nothing to gate, commit, or open a PR for this run."
+prs: []
+docsRead:
+  - path: layers/journal/content/current/sessions/2026-07-24-session_01VsqSAkCvbaLvAVsySvXvdg.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the whole task
+  - name: close-session
+    reason: closure at run end (no PR to open)
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: "Drafted a GitHub comment on issue #483 with a fabricated Claude-Session footer — copied a plausible-looking session id (session_01P1BFUy…, from unrelated scorecard data I'd been reading) instead of resolving this session's own id from ground truth. Caught by the github-footer-guard PreToolUse hook (issue #628/#605) before the bad comment posted."
+    solution: Resolve the session id from the system-prompt commit-footer template at the moment of writing, per CLAUDE.md's never-predict-an-identifier rule — don't reuse an id seen elsewhere in the working context just because it "looks like" a session id.
+    severity: minor
+durationSec: 315
+models:
+  claude-sonnet-5: 72
+toolCounts:
+  Bash: 19
+  ToolSearch: 2
+  TaskCreate: 5
+  TaskUpdate: 8
+  Read: 3
+  mcp__github__search_issues: 1
+  mcp__github__add_issue_comment: 2
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-wizrv5
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: audit-skills
