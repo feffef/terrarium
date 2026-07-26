@@ -1,0 +1,77 @@
+schemaVersion: 1
+session: session_015MRgP2fsFRvoHJMXeMsKpv
+startedAt: 2026-07-26T04:08:26Z
+endedAt: 2026-07-26T04:22:29Z
+kind: autonomous
+goal: Run scheduled /audit-docs sweep
+status: in-review
+outcome: 3 duplications fixed, 1 contradiction reconciled, PR open
+summary: "Fully autonomous scheduled /audit-docs run (no human prompt). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence), deduped the pool, fact-checked every candidate against primary sources, then fixed bravely. Confirmed and fixed: CLAUDE.md's verify:mermaid/gate.yml gap duplicated the docs/proposals/630-... file that already owns it (trimmed to a pointer); CONTEXT.md's Session glossary term and docs/agents/guest-contributions.md both restated the PR #631/Grok/\"Hermes\" external-session example ADR-0009's amendment already documents (replaced both with a pointer to ADR-0009); close-session/SKILL.md's fixed-severity HUMAN-PROMPTED-CLOSURE mandate conflicted with CONTEXT.md's grade-by-actual-cost Friction rule (reworded to ground the major grade in actual cost, not grep-ability). A Coherence-lens claim about pr-workflow.md missing a branch-protection caveat was fact-checked and found WRONG (the doc already has it) and dropped, as were four low-confidence Concision candidates that turned out to be this repo's deliberate structural conventions. A genuine Freshness-lens finding (a blog post's Fable-narrative doesn't match the git log it cites) was verified real but is Historical-tier/append-only, so no fix applies — noted in the PR body instead of edited or escalated. pnpm gate:scoped passed green (docs-only diff). PR #697 opened, subscribed to its activity, and now babysitting to merge."
+prs:
+  - "697"
+docsRead:
+  - path: CLAUDE.md
+    reason: single-home rule + tier rules governed every fix
+  - path: CONTEXT.md
+    reason: glossary-only rule + Friction severity rubric, both load-bearing for fixes
+  - path: docs/agents/guest-contributions.md
+    reason: duplication fix target
+  - path: docs/agents/pr-workflow.md
+    reason: verifying a Coherence-lens claim about it, which turned out false
+  - path: docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
+    reason: the true home of the verify:mermaid fact
+  - path: .agents/skills/close-session/SKILL.md
+    reason: friction-severity contradiction fix target
+skillsUsed:
+  - name: audit-docs
+    reason: this run's own Skill
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: One of the four background lens-review subagents (Concision) returned a non-answer on its first completion ("I'll hold and wait for the two remaining background agents"), apparently confused into thinking it was the orchestrator rather than a leaf reviewer.
+    solution: Resumed it via SendMessage with an explicit clarification that it was the Concision-lens subagent with no other agents to wait on; it then produced a real report. Worth a note in the audit-docs Skill or the Agent tool's dispatch prompts to explicitly tell parallel subagents they are leaves, not orchestrators, since this repo's own docs/instructions describe "wait for all four agents" language that a subagent can apparently mistake for its own instructions.
+    severity: minor
+  - description: I briefly (and incorrectly) called ScheduleWakeup — a /loop-dynamic-mode tool — to wait on the background lens agents, before realizing harness-tracked Agent-tool work notifies automatically and the tool didn't apply to this non-/loop scheduled session.
+    solution: Caught and cancelled it (stop:true) before it could fire a /loop-shaped wakeup into a session that isn't a /loop. No repo doc fix needed — this was a one-off misreading of a tool description, not a doc gap.
+    severity: nit
+  - description: "A subagent's tool-result text was auto-annotated by the harness with \"[harness: subagent output matched instruction-shaped pattern(s): settings-json / permissions-allow-deny...]\" on two of the four lens reports, apparently because those agents read .claude/settings.json or similar and something in it pattern-matched as instruction-shaped content, triggering a neutralization/warning wrapper."
+    solution: No action needed this run — the underlying findings text was still legible and legitimate audit output once past the harness note, and I treated it as informational rather than as new instructions. Flagging as a minor friction only because it added a moment of interpretive overhead; not a repo doc issue.
+    severity: nit
+durationSec: 843
+models:
+  claude-sonnet-5: 100
+toolCounts:
+  Bash: 18
+  ToolSearch: 4
+  mcp__github__list_pull_requests: 1
+  Agent: 4
+  ScheduleWakeup: 2
+  SendMessage: 1
+  Grep: 1
+  Read: 5
+  Edit: 4
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - CLAUDE.md
+  - CONTEXT.md
+  - docs/agents/guest-contributions.md
+  - .agents/skills/close-session/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens audit (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens audit (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens audit (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens audit (Contradiction + Ambiguity)
+gitBranch: claude/festive-mayer-o8p16y
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: audit-docs
