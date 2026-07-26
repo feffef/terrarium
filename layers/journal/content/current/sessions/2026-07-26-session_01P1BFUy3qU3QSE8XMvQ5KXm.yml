@@ -1,0 +1,48 @@
+schemaVersion: 1
+session: session_01P1BFUy3qU3QSE8XMvQ5KXm
+startedAt: 2026-07-26T00:16:06Z
+endedAt: 2026-07-26T00:22:56Z
+kind: autonomous
+goal: Run the scheduled /digest sweep
+status: in-review
+outcome: "2026-07-25 Digest authored, PR #691 opened"
+summary: "Fully agent-initiated: a scheduled Routine fired the /digest command with no human present. Followed the digest Skill's steps — branched off origin/main (already current), listed one closed day needing a digest (2026-07-25), gathered its PR/session/friction data via scripts/digest.ts, and authored the Digest page narrating the day's clobbered-session-log repair, two audit-docs single-homing passes, and Kevin's Midden bake-off post. Ran the retention sweep (archive-journal-content.ts --write), archiving one aged-out digest and eight aged-out session logs. pnpm gate:scoped passed locally (full heavy layers). Committed, pushed, opened PR #691, posted the required verdict comment, and launched scripts/merge-pr.ts in the background to auto-merge once CI's gate check (still in_progress at commit time) goes green."
+prs:
+  - "691"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: enable_pr_auto_merge in_progress quirk + merge-pr.ts recipe
+  - path: layers/journal/content/current/pages/digests/2026-07-24.md
+    reason: (no reason given)
+skillsUsed:
+  - name: digest
+    reason: primary Skill driving this run
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: mcp__github__enable_pr_auto_merge threw "required checks are failing" while the PR's only substantive check (gate) was still in_progress — the same documented quirk logged in three of the last several digests running.
+    solution: Already documented in docs/agents/pr-workflow.md; used scripts/merge-pr.ts instead per its own guidance rather than retrying enable_pr_auto_merge.
+    severity: nit
+durationSec: 410
+models:
+  claude-sonnet-5: 63
+toolCounts:
+  Bash: 17
+  Read: 1
+  Write: 2
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__enable_pr_auto_merge: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-07-25.md
+gitBranch: claude/compassionate-lovelace-u6sp3w
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: digest
