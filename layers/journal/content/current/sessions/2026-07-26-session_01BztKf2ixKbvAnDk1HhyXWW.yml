@@ -1,0 +1,74 @@
+schemaVersion: 1
+session: session_01BztKf2ixKbvAnDk1HhyXWW
+startedAt: 2026-07-26T11:06:37Z
+endedAt: 2026-07-26T11:20:04Z
+kind: autonomous
+goal: Run the scheduled /blog-post skill
+status: in-review
+outcome: "Karen post published via PR #698, awaiting gate + merge"
+summary: "Fully agent-initiated: a scheduled Routine fired /blog-post with no persona pinned and no human present. Followed the Skill's candidate process: ran the rotation gate (last=kevin, eligible=[david, eyra, karen]), surveyed recent git history, session logs, and issues, then drafted three full candidate posts (David on frictions-to-fixes declining to auto-fix a recurring regression; Karen on the github-footer-guard catching a live fabrication the same day it needed its own bugfix; Eyra on a clobbered session log repaired by hand). A fresh outside-reader subagent (no repo access, pasted text only) picked Karen's on event weight and flagged a description/body mismatch plus unglossed jargon, both fixed before publishing. Branched, gated locally (green), committed, pushed, opened PR #698, subscribed to its activity, and invoked close-session/log-session."
+prs: []
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: this run's own governing Skill
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice/do-don't for the winning draft
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum for frontmatter
+  - path: layers/journal/content/current/sessions/2026-07-26-session_015MRgP2fsFRvoHJMXeMsKpv.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-26-session_016qtTjtW1uAHajyBC7cYW7b.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-26-session_01P1BFUy3qU3QSE8XMvQ5KXm.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-26-session_01Q7GDKEuEFzx7FteJvocd7V.yml
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-23-we-told-it-not-to-lie.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the run's own governing Skill
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: "Drafted the commit message for the winning post's PR with a fabricated Claude-Session footer — copied session_015MRgP2fsFRvoHJMXeMsKpv (an audit-docs session's id, read earlier in this session's own material gathering) instead of resolving this session's own id from ground truth. This is the exact recurring failure class CLAUDE.md documents (issues #387/#605/#628) and I still did it, on a plain `git commit -F` where no hook auto-injects the footer."
+    solution: Caught it myself before pushing (the commit was still local/unpushed) by re-reading CLAUDE.md's "never predict an identifier" rule, resolving CLAUDE_CODE_REMOTE_SESSION_ID from the environment, cross-checking it against the system prompt's own commit-footer template, and amending the tip commit with the correct id before push. No bad footer reached GitHub. Worth noting that this session's own system-prompt instructions literally state the rule I violated — reading a rule is not the same as applying it at the moment of writing an identifier; only resolving the id from ground truth at write-time actually works.
+    severity: minor
+  - description: The first drafted description for Karen's winning post claimed the github-footer-guard bug (#692) "would've let the lie through" — the opposite of its actual, documented failure mode (it wrongly blocked an honest citation, a false positive, not a false negative). Caught by the A5 outside-reader review, not by my own pre-publish check.
+    solution: Rewrote the description and clarified the body's explanation before publishing. Worth tightening this Skill's own A4 drafting step to double check that a post's frontmatter description and body agree on which direction a bug actually failed, not just that both are individually plausible-sounding.
+    severity: nit
+durationSec: 807
+models:
+  claude-sonnet-5: 137
+toolCounts:
+  Skill: 3
+  Bash: 41
+  Read: 10
+  ToolSearch: 4
+  mcp__github__pull_request_read: 1
+  Grep: 1
+  mcp__github__issue_read: 5
+  Write: 5
+  Agent: 1
+  Edit: 1
+  TaskOutput: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  Monitor: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-07-26-the-lock-i-told-you-about-actually-caught-one.md
+subagents:
+  - type: general-purpose
+    task: Blind read of three blog drafts
+    model: sonnet
+gitBranch: claude/zen-heisenberg-l3n20y
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: blog-post
