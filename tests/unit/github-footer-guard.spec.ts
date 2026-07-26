@@ -61,6 +61,41 @@ describe('checkGithubFooter() — the pure core (issue #628)', () => {
     expect(checkGithubFooter('mcp__github__add_issue_comment', input, undefined)).toBeNull()
   })
 
+  it('issue #692: does NOT block when an earlier quoted Claude-Session line is followed by a correct trailing footer', () => {
+    const finding = checkGithubFooter(
+      'mcp__github__add_issue_comment',
+      {
+        body:
+          'Confirmed by evidence:\n' +
+          '> "regressed again, session_OLD_EVIDENCE"\n' +
+          'Claude-Session: https://claude.ai/code/session_OLD_EVIDENCE\n\n' +
+          'Filed the fix.\n\n' +
+          'Claude-Session: https://claude.ai/code/session_REAL',
+      },
+      'session_REAL',
+    )
+    expect(finding).toBeNull()
+  })
+
+  it('issue #692: still blocks when the actual trailing footer is wrong, even with a correctly-quoted earlier one', () => {
+    const finding = checkGithubFooter(
+      'mcp__github__add_issue_comment',
+      {
+        body:
+          'Evidence from a prior session:\n' +
+          'Claude-Session: https://claude.ai/code/session_REAL\n\n' +
+          'Fix applied.\n\n' +
+          'Claude-Session: https://claude.ai/code/session_FABRICATED',
+      },
+      'session_REAL',
+    )
+    expect(finding).toEqual({
+      tool: 'mcp__github__add_issue_comment',
+      found: 'session_FABRICATED',
+      expected: 'session_REAL',
+    })
+  })
+
   it('only checks tools in the registry — an unrelated tool is never inspected', () => {
     expect(
       checkGithubFooter('Bash', { command: 'echo "Claude-Session: session_WRONG"' }, 'session_REAL'),

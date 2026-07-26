@@ -27,6 +27,15 @@ import { pathToFileURL } from 'node:url'
 import { SESSION_TRAILER } from './git-helpers.ts'
 import { resolveGroundTruthFromTranscript } from './session-id-guard.ts'
 
+/** A global copy of `SESSION_TRAILER` for `matchAll` (issue #692) — a body can
+ *  legitimately quote another session's `Claude-Session:` line as evidence
+ *  (e.g. citing a prior regression), so the real trailing footer must be
+ *  found by taking the LAST match, not the first. Built locally rather than
+ *  adding the `g` flag to the shared export: `provenance-footer.ts` calls
+ *  `SESSION_TRAILER.test()`, which is stateful (`lastIndex`) on a global
+ *  regex and would break under repeated calls. */
+const SESSION_TRAILER_GLOBAL = new RegExp(SESSION_TRAILER.source, 'g')
+
 /** One GitHub-writing tool whose call can carry an agent-authored footer, and
  *  which of its parameters holds that text. Verified against each tool's real
  *  schema via `ToolSearch` (issue #628 — CLAUDE.md: never guess a deferred
@@ -75,7 +84,7 @@ export function checkGithubFooter(
   if (toolInput === null || typeof toolInput !== 'object') return null
   const body = (toolInput as Record<string, unknown>)[entry.bodyField ?? 'body']
   if (typeof body !== 'string') return null
-  const m = body.match(SESSION_TRAILER)
+  const m = [...body.matchAll(SESSION_TRAILER_GLOBAL)].at(-1)
   if (!m) return null
   const found = m[1]!
   if (found === groundTruthId) return null
