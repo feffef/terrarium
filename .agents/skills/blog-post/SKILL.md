@@ -258,7 +258,7 @@ the objective gate:
 
 - **Subscribe to the PR's activity right after opening it** (CLAUDE.md's
   "Pushing is not landing" rule) and follow `docs/agents/pr-workflow.md`'s
-  `enable_pr_auto_merge`-vs-`merge_pull_request` guidance to land it once the
+  recipe (`scripts/merge-pr.ts` as the sole merge path) to land it once the
   gate reports green.
 - A **red gate is never merged** — diagnose and fix on the branch (the green
   re-run then auto-merges), or, if the failure isn't the post's fault, leave the

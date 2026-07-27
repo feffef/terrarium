@@ -139,8 +139,8 @@ beyond the digest scope (digest pages under `…/pages/digests/`, the `current` 
 
 - **Subscribe to the PR's activity right after opening it** (CLAUDE.md's
   "Pushing is not landing" rule — every opened PR is babysat to merge/close)
-  and follow `docs/agents/pr-workflow.md`'s `enable_pr_auto_merge`-vs-
-  `merge_pull_request` guidance to land it once the gate reports green.
+  and follow `docs/agents/pr-workflow.md`'s recipe (`scripts/merge-pr.ts` as
+  the sole merge path) to land it once the gate reports green.
 - A **red gate is never merged** — auto-merge only lands on green. Diagnose and
   fix on the branch (the green re-run then auto-merges), or leave the PR open and
   escalate to a human if the failure isn't yours.

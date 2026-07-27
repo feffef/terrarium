@@ -129,14 +129,12 @@ near-duplicate landings (front door + trench index) were merged into one mirrore
 landing; the Site page's sticky scroll-synced stratigraphy gauge was removed; and
 each find now renders **open and flat** — condition as a word, the note and
 inscription visible on load — dropping the accordion, the hover-to-decode SVG
-glyph, and the grade tooltip. (The condition's slug-angled corner *stamp* was
-dropped in this pass, then owner-restored — it now carries the condition word on
-each find, tilted like a specimen stamp.) In the final merged design
+glyph, and the grade tooltip. (The corner stamp was dropped in this pass, then
+owner-restored — see Condition above.) In the final merged design
 (also owner-directed) the condition legend then left the landing entirely and
-re-homed as the **condition key**: a static sticky sidebar on each dig-report
-page (in the margin the old gauge occupied), defining only the grades present in
-that report — a reference beside the words it defines, not a scroll-synced
-instrument. The underlying model (Site, Artifact, Dig season, the six
+re-homed as the **condition key** (see Condition above), now sitting in the
+margin the old gauge occupied — a reference beside the words it defines, not a
+scroll-synced instrument. The underlying model (Site, Artifact, Dig season, the six
 Conditions, the inclusion bar) is unchanged; only its presentation is simpler.
 Several #515 sub-issue decisions about *presentation* (#523's glyph, #524's
 sidebar, #527's tooltip/legend split, #528's index sections) are superseded by

@@ -109,8 +109,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   hand-editable module (ADR-0013).
 - **Only the `pages` Collection is route-addressable.** The resolver maps a
   slug to a Space's `pages` key only; every other Collection (`sessions`,
-  `skills`, digests, …) is surfaced by layer components, not its own slug
-  route (ADR-0006). A new page-like addressable Collection is therefore not
+  `skills`, …) is surfaced by layer components, not its own slug
+  route (ADR-0006). Digests are `pages`-collection documents under a
+  `digests/` subpath, not a separate Collection, so they *are* route-addressable
+  for free (ADR-0010). A new page-like addressable Collection is therefore not
   free — it means changing the human-only resolver/routing (ADR-0004/0006).
 - **Requester trust is drawn at write access (ADR-0020).** See `CONTEXT.md`'s
   **Trusted**/**Public** terms for what each may and may not do. ADR-0020 is the
@@ -144,8 +146,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   file is the home for repo-wide conventions and an **index** into the ADRs — so
   where it would restate ADR detail, link the ADR instead of copying it (the
   "Ground rules" index-with-pointers below is the right shape; a restated *status
-  narrative* is not). `CONTEXT.md` stays **glossary-only**; the ADRs are the
-  historical record. When a fact and reality diverge, fix the one home (an
+  narrative* is not). The **root** `CONTEXT.md` stays **glossary-only** (a
+  per-Tenant `CONTEXT.md` adds a purpose narrative on top of its own glossary —
+  ADR-0021); the ADRs are the historical record. When a fact and reality diverge, fix the one home (an
   amending note or superseding ADR), don't fork a second copy. Duplication is how
   contradictory guidance and doc-rot start — and agents act on documented state,
   so in this repo a stale copy is a *behavioral* bug.
@@ -364,7 +367,7 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   PR-completion discipline, distinct from *session logging*, which now fires at
   self-judged closure and records an in-review PR honestly — see "Logging your
   session".) The land-a-gated-PR recipe, the per-tier merge authority list, and
-  the `enable_pr_auto_merge`-vs-`merge_pull_request` mechanics now live in
+  the `merge-pr.ts`-as-sole-merge-path mechanics now live in
   `docs/agents/pr-workflow.md` — read that before landing a PR.
 - **Opening the PR is the first session log.** The moment you open the gated PR
   is a closure point: invoke `close-session` right then (it authors the log via
