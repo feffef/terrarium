@@ -1,0 +1,85 @@
+schemaVersion: 1
+session: session_016JX8PriyH38CJAgWQ9Cuv3
+startedAt: 2026-07-27T04:09:04Z
+endedAt: 2026-07-27T04:32:37Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: completed
+outcome: "13 findings fact-checked, fixed, and merged via PR #707"
+summary: 'Fully autonomous scheduled firing of the /audit-docs Skill (no human prompt this session). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over every Live-tier doc, pooled 15 candidate findings, dispatched an independent fact-checker to verify each against primary sources, then fixed all 13 CONFIRMED/CONFIRMED-BUT findings (2 dropped as WRONG). Fixes: 6 stale enable_pr_auto_merge-vs-merge_pull_request references across CLAUDE.md and 5 Skills (drifted since commit 5f01dfe collapsed merge-pr.ts into the sole merge path); 2 CLAUDE.md self-contradictions (CONTEXT.md glossary-only scope vs. per-Tenant narratives; digests wrongly listed as non-route-addressable, contradicting ADR-0010); 1 undefined "substantial" threshold in issue-tracker.md; 4 same-doc verbose restatements trimmed to a canonical statement plus pointer. pnpm gate:scoped ran green (unit, build, 68/68 e2e). Opened PR #707 (self-merge tier, no human-only surface touched), subscribed to its activity, then used scripts/merge-pr.ts to poll it to green and merge — merged clean, no review comments, no CI failures. Left the audit-trail comment and closed out.'
+prs:
+  - "707"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/issue-tracker.md
+    reason: (read before editing)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (read before editing)
+  - path: layers/midden/CONTEXT.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: the Skill this whole session executed
+  - name: close-session
+    reason: session closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: One of the four lens-reviewer subagents (Concision) misread its own role on first dispatch, returned a placeholder claiming it was orchestrating sub-agents that would report back, instead of doing the review itself
+    solution: Resumed it via SendMessage with an explicit corrective instruction clarifying it had no children and must do the review directly; it then completed correctly on the second pass
+    severity: minor
+durationSec: 1413
+models:
+  claude-sonnet-5: 120
+toolCounts:
+  Bash: 16
+  Agent: 5
+  ScheduleWakeup: 2
+  ToolSearch: 4
+  SendMessage: 1
+  Read: 14
+  Edit: 13
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - CLAUDE.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/verifying-ui-changes.md
+  - layers/midden/CONTEXT.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens audit (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens audit (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens audit (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens audit (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check pooled audit-docs findings
+gitBranch: claude/festive-mayer-dxdxae
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: audit-docs
