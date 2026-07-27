@@ -39,7 +39,7 @@ function currentDigestDates(): string[] {
 function digestBodySnippet(date: string): string {
   const raw = readFileSync(join(repoRoot, DIGESTS_DIR, `${date}.md`), 'utf8')
   const body = raw.replace(/^---[\s\S]*?---\s*/, '').replace(/^#.*\n+/, '')
-  const firstParagraph = (body.split(/\n\s*\n/)[0] ?? '').replace(/\[[^\]]*\]\([^)]*\)/g, '')
+  const firstParagraph = (body.split(/\n\s*\n/)[0] ?? '').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
   const snippet = firstParagraph.replace(/\s+/g, ' ').trim().split(' ').slice(0, 6).join(' ')
   if (snippet.length < 15) throw new Error(`journal.e2e: could not extract a body snippet for digest ${date}`)
   return snippet
