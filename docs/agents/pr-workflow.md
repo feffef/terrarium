@@ -39,19 +39,20 @@ flaking, `search_issues` scoped to the issue number is a viable fallback
    only trace: an unreviewed-looking merge and a genuinely-reviewed one must
    stay distinguishable on the PR itself, or `get_reviews`/`get_comments`
    return empty and a real review reads as none having happened.
-4. On green, call `merge_pull_request` directly (or let `scripts/merge-pr.ts`
-   do it, per step 2). Do **not** reach for `enable_pr_auto_merge` on an
-   already-green PR: it's for arming ahead of a still-pending check, not
-   landing a PR that's already mergeable, and calling it on a green PR can
-   throw a misleading error (e.g. "protected branch rules not configured") —
-   its "checks are failing" text can even fire while a check is merely
-   `in_progress`. If it errors, confirm the real check state via
-   `pull_request_read` before concluding checks have genuinely failed and
-   abandoning the PR.
-5. Use `enable_pr_auto_merge` for that still-pending-check case (step 4) — it
-   then merges itself once the gate reports green, without you polling it to
-   completion.
-6. Escalate a genuinely high-risk or out-of-scope PR to a human instead of
+4. `scripts/merge-pr.ts <pr-number>` is the **sole merge path** for every PR —
+   pending-check or already-green alike — per step 2; it already polls to
+   resolution and merges on green. **Never call `enable_pr_auto_merge`
+   directly in this repo.** That tool is documented as being for arming ahead
+   of a still-pending check, but in practice calling it — on a pending *or*
+   already-green PR — can throw a misleading error (e.g. "protected branch
+   rules not configured" or "checks are failing" firing while a check is
+   merely `in_progress`), forcing a manual `pull_request_read` round-trip to
+   confirm the real check state. `merge-pr.ts` exists precisely to skip that
+   round-trip; keep this rationale as context for *why* it exists, not as
+   licence to try `enable_pr_auto_merge` first. If `merge-pr.ts` is ever
+   unavailable, fall back to hand-polling `get_check_runs` and calling
+   `merge_pull_request` directly on green, still never `enable_pr_auto_merge`.
+5. Escalate a genuinely high-risk or out-of-scope PR to a human instead of
    merging it — see ADR-0004's high-risk set (also indexed in CLAUDE.md's
    Ground rules) for what counts.
 

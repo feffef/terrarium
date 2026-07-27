@@ -347,7 +347,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   when it's actually just a clone-depth artifact, and the same boundary
   silently truncates any search over history before it, making a
   completeness claim false. `git fetch --deepen <n>` (or `--unshallow`) to
-  inspect the real history before drawing either conclusion.
+  inspect the real history before drawing either conclusion. Don't wait for a
+  suspicious result to trigger this check: run `git rev-parse
+  --is-shallow-repository` as the *first* step before starting any
+  blame/pickaxe/history-completeness archaeology in the first place, not only
+  once a result already looks wrong.
 - **Keep a PR's description in sync with its content — hard rule.** If you
   fundamentally change what a PR does (switch approach, swap the files it touches,
   answer review with a different solution), update the PR title/description in the
