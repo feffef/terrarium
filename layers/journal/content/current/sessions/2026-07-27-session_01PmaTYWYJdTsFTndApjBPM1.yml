@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01PmaTYWYJdTsFTndApjBPM1
 startedAt: 2026-07-27T00:16:24Z
-endedAt: 2026-07-27T00:31:05Z
+endedAt: 2026-07-27T00:33:10Z
 kind: autonomous
 goal: Run scheduled /digest sweep
-status: in-review
-outcome: "2026-07-26 Digest authored, PR #699 opened"
-summary: "Scheduled, autonomous /digest run (no human prompt this turn). Branched off origin/main, found 2026-07-26 as the one backfill day via scripts/digest.ts list, gathered its data, and authored the Digest page. Ran the scripts/archive-journal-content.ts retention sweep (moved the 2026-07-20 Digest and its 10 session logs from current to archived). pnpm gate:scoped initially failed one journal e2e test because the Digest's first paragraph opened with a markdown link inside the first six words of prose, which the test's link-stripping snippet extractor mismatches against the real rendered payload (the extractor assumes stripped links leave nothing behind, but the actual MDC-rendered text keeps the link's visible anchor text). Rewrote the opening sentence to push the link past the snippet window, then gate:scoped passed clean (68/68). Committed, pushed, opened PR #699, subscribed to its activity, and am now babysitting it per CLAUDE.md's pushing-is-not-landing discipline."
+status: completed
+outcome: "2026-07-26 Digest authored, PR #699 merged"
+summary: "Scheduled, autonomous /digest run (no human prompt this turn). Branched off origin/main, found 2026-07-26 as the one backfill day via scripts/digest.ts list, gathered its data, and authored the Digest page. Ran the scripts/archive-journal-content.ts retention sweep (moved the 2026-07-20 Digest and its 10 session logs from current to archived). pnpm gate:scoped initially failed one journal e2e test because the Digest's first paragraph opened with a markdown link inside the first six words of prose, which the test's link-stripping snippet extractor mismatches against the real rendered payload (the extractor assumes stripped links leave nothing behind, but the actual MDC-rendered text keeps the link's visible anchor text). Rewrote the opening sentence to push the link past the snippet window, then gate:scoped passed clean (68/68). Committed, pushed, opened PR #699, subscribed to its activity, and babysat it per CLAUDE.md's pushing-is-not-landing discipline. GitHub's enable_pr_auto_merge threw the known \"required checks are failing\" false positive while the gate check was still in_progress; confirmed via pull_request_read and used scripts/merge-pr.ts to poll-then-merge instead, per docs/agents/pr-workflow.md. CI reported green and the PR merged cleanly with no review comments."
 prs:
   - "699"
 docsRead:
@@ -27,23 +27,27 @@ frictions:
   - description: The Digest's first paragraph opened with a markdown PR link inside the first six words. journal.e2e.ts's digestBodySnippet() strips `[text](url)` links to empty string when computing the expected inline preload snippet, but the real MDC-rendered payload keeps the link's visible anchor text (e.g. "#695"), so the computed expected snippet ("... repairs landed (, ):") never actually matches the rendered page, failing pnpm gate:scoped's smoke suite until the digest prose was restructured to keep the first ~6 words link-free.
     solution: Fixed locally by moving the links later in the sentence (matches how every prior digest happens to be phrased). A more durable fix would be to make digestBodySnippet() preserve a link's visible anchor text instead of stripping the whole node to empty, so any digest phrasing is safe — worth a small frictions-to-fixes follow-up.
     severity: minor
-durationSec: 881
+  - description: mcp__github__enable_pr_auto_merge threw "required checks are failing" while the PR's only substantive check (gate) was still in_progress — the same documented quirk logged in several recent digests running.
+    solution: Confirmed via pull_request_read/get_check_runs that the check was merely in_progress, then used scripts/merge-pr.ts to poll-then-merge instead of retrying enable_pr_auto_merge, per docs/agents/pr-workflow.md.
+    severity: nit
+durationSec: 1006
 models:
-  claude-sonnet-5: 108
+  claude-sonnet-5: 124
 toolCounts:
-  Bash: 34
+  Bash: 37
   Write: 2
   Read: 4
-  Edit: 3
+  Edit: 6
   ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 6
   mcp__github__add_issue_comment: 1
   mcp__github__enable_pr_auto_merge: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-26.md
 gitBranch: claude/compassionate-lovelace-t2qs2o
