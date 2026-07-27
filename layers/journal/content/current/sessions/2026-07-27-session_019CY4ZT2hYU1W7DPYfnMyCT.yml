@@ -1,0 +1,74 @@
+schemaVersion: 1
+session: session_019CY4ZT2hYU1W7DPYfnMyCT
+startedAt: 2026-07-27T11:08:37Z
+endedAt: 2026-07-27T11:27:58Z
+kind: autonomous
+goal: Run the scheduled /blog-post Skill (bare invocation, no Persona pinned)
+status: in-review
+outcome: "PR #708 opened, awaiting gate/merge"
+summary: "Fully autonomous scheduled firing of /blog-post with no Persona given, no live human prompt at any point. Ran the A0 rotation gate via scripts/blog-rotation.ts (last: karen, eligible: david/eyra/kevin), then drafted three full standalone candidates from that eligible set: David on the merge-pr.ts sole-path collapse and the audit-docs sweep that caught six stale docs three hours later; Kevin on issue #602's backgrounded-gate-stall fix recurring twice more despite an explicit human-escalation instead of a second patch; Eyra on the Midden Tenant's three-model design bake-off and its own self-referential cataloguing of its just-retired UI. Dispatched one independent outside-reader subagent (sonnet, no repo access, judging only pasted text) which picked Kevin's on underlying weight (a live, unresolved, recurring failure vs. two tidily-resolved stories) and flagged five jargon gaps, all revised inline. Discarded drafts logged to a scratch backlog file, not committed. pnpm gate:scoped ran green (68/68 e2e); opened and pushed PR #708, subscribed to its activity per CLAUDE.md."
+prs:
+  - "708"
+docsRead:
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum before drafting frontmatter
+  - path: layers/midden/CONTEXT.md
+    reason: verify Midden Tenant's own vocabulary/purpose before citing it in Eyra's draft
+  - path: layers/journal/content/current/sessions/2026-07-27-session_01MgwCDvMZuGHhRVCFZtqFts.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-27-session_015yikaSnQq9ZqCRidFf2W7H.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-26-session_01Q7GDKEuEFzx7FteJvocd7V.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-27-session_016JX8PriyH38CJAgWQ9Cuv3.yml
+    reason: (no reason given)
+  - path: layers/midden/content/trench/pages/the-simpler-verdict.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-24-session_01PkNERdLtTkgCfSpPaQKqJ5.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the run's own governing skill
+  - name: close-session
+    reason: invoked at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Drafting the Eyra candidate initially misattributed two follow-up Midden commits (9a5debd, 0314d3a) to a different model than their actual Co-Authored-By trailer, inferred from the session's stated multi-model bake-off structure rather than checked directly against each commit.
+    solution: Ran git show -s --format on the specific commits before finalizing the claim, caught and corrected the misattribution pre-publish. Always verify per-commit authorship/co-author trailers directly rather than inferring from a session summary's narrative description of who did what.
+    severity: minor
+  - description: First draft of the Kevin candidate miscounted the backgrounded-gate-stall's occurrence number (called the third real occurrence a 'fourth time'), conflating the July 26 issue-filing event with a fresh recurrence rather than a retroactive discovery of the July 24 one.
+    solution: "Re-derived the occurrence count carefully from the three primary sources (issue #602, issue #694, and the two session logs) before finalizing; fixed the miscount pre-review-agent. Worth double-checking any claim quoting stem in a repeated-event narrative."
+    severity: minor
+  - description: git rev-parse --is-shallow-repository returned true at session start; ran the completeness/history-archaeology check proactively (per CLAUDE.md's now-explicit trigger) before trusting blog-rotation.ts's real creation-commit history, rather than waiting for a suspicious result.
+    solution: "Not a failure — the proactive check worked exactly as CLAUDE.md now instructs (git fetch --unshallow), and it did matter: the shallow graft boundary would have misattributed scripts/blog-rotation.ts's origin to an unrelated journal-log commit."
+    severity: nit
+durationSec: 1162
+models:
+  claude-sonnet-5: 176
+toolCounts:
+  Bash: 55
+  Read: 12
+  ToolSearch: 4
+  mcp__github__issue_read: 2
+  Write: 7
+  Edit: 7
+  Agent: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  Monitor: 1
+  ScheduleWakeup: 2
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-07-27-it-hit-the-same-wall-a-third-time.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-8y2w62
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: blog-post
