@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_015yikaSnQq9ZqCRidFf2W7H
 startedAt: 2026-07-27T00:45:43Z
-endedAt: 2026-07-27T00:57:41Z
+endedAt: 2026-07-27T01:00:37Z
 kind: autonomous
 goal: Run /audit-skills — audit the Skill Inventory
-status: in-review
-outcome: Promoted auto-triage; filed a follow-up fix
+status: completed
+outcome: Promoted auto-triage; PR merged
 summary: "Fully agent-initiated scheduled /audit-skills Routine run, no human prompt at any point. Gathered the 40-session scorecard via scripts/audit-skills.ts (34 Skills). Re-graded every Skill against the bright-line evidence rule and promoted auto-triage from supporting to specialist, citing 2 windowed sessions (session_01XmaZh9Dh2tvTwFYuDWSzqx, session_01RW5ex9Dh93FU1gtGLLRZMX) that are dedicated auto-triage sweeps, matching the same essential-within-domain pattern already recognized for digest/audit-docs/ blog-post/audit-skills. Checked domain-modeling for a 4th absent-from-domain instance beyond its 3 already-tracked citations — the 2 candidate sessions this window only read CONTEXT.md/ADRs (docsRead), not edited them, so no new instance; held as-is. Reconfirmed the review.yml phantom Inventory entry maps to the built-in CLI review Skill. Ran the regression watch on the one bracketed edit (close-session), which showed improved, not worsened, friction counts post-edit. Commented on the standing humanPromptedClosures thread (#483) with this run's one entry, then discovered — after posting — that it duplicated citations already made by the 2026-07-25 and 2026-07-26 runs for the same session. Posted a visible correction on #483 and filed #700 to add that session to DISMISSED_HUMAN_PROMPTED_CLOSURES, mirroring the #540/#634 precedent. Ran pnpm gate:scoped green (68/68 e2e), opened PR #701 (Inventory-YAML-only diff), and subscribed to its activity."
 prs:
   - "701"
@@ -25,14 +25,14 @@ frictions:
   - description: "Commented on the standing #483 thread with a humanPromptedClosures finding without first checking the thread's recent comment history — the same session (session_01VsqSAkCvbaLvAVsySvXvdg) had already been cited there twice, by the 2026-07-25 and 2026-07-26 runs. Only DISMISSED_HUMAN_PROMPTED_CLOSURES is checked mechanically by the script; the \"is this actually new\" check for anything not yet in that set is left to the model, and I skipped it."
     solution: "Read the target issue's existing comments before posting a humanPromptedClosures citation, not just the script's dismissed-set output. Posted a visible correction and filed #700 (add this session to the dismissed set) rather than leaving the duplicate uncorrected."
     severity: moderate
-durationSec: 718
+durationSec: 894
 models:
-  claude-sonnet-5: 112
+  claude-sonnet-5: 130
 toolCounts:
-  Bash: 36
-  ToolSearch: 3
+  Bash: 38
+  ToolSearch: 4
   mcp__github__issue_read: 3
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 3
   mcp__github__search_issues: 1
   mcp__github__issue_write: 1
   Read: 1
@@ -40,9 +40,11 @@ toolCounts:
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 3
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__merge_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/skills/auto-triage.yml
 gitBranch: claude/upbeat-sagan-li7oj0
