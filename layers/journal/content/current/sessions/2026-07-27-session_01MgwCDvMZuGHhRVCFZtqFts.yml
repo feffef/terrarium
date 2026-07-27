@@ -1,0 +1,75 @@
+schemaVersion: 1
+session: session_01MgwCDvMZuGHhRVCFZtqFts
+startedAt: 2026-07-27T01:05:17Z
+endedAt: 2026-07-27T01:23:21Z
+kind: autonomous
+goal: Run frictions-to-fixes on recent session logs
+status: completed
+outcome: "Filed #702-#704, both PRs merged"
+summary: "Autonomous run of the frictions-to-fixes Skill, fired by a Routine (no live human prompt this session). Dispatched a survey subagent to read the latest 20 session logs, group/rank frictions, and screen each candidate against the issue tracker. Filed three never-fixed issues (#702, #703, #704), all simple/doc-or-code with no human-only surface. Dispatched two Sonnet impl agents in isolated worktrees per SKILL.md §5's doc-batching convention: one grouped doc PR for #702+#703 (pr-workflow.md + CLAUDE.md), one code PR for #704 (journal.e2e.ts regex fix). Acted as the ADR-0003 review-agent for both: confirmed green gates, code-reviewed each diff against its issue's recommended fix, posted the verdict as a PR comment, and merged both (feffef/terrarium#705, #706) via scripts/merge-pr.ts. No candidate needed human escalation this cycle. All actions — filing, dispatch, review, merge — were agent-initiated under the Routine's standing charter (ADR-0003/ADR-0009), not a fresh human instruction."
+prs:
+  - "705"
+  - "706"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: "verified current recipe text before filing #702 and reviewing #705's diff against it"
+  - path: CLAUDE.md
+    reason: "verified current shallow-clone bullet text before filing #703 and reviewing #705's diff against it"
+  - path: layers/journal/tests/e2e/journal.e2e.ts
+    reason: "verified digestBodySnippet() bug before filing #704"
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run itself
+  - name: log-session
+    reason: this closing log
+frictions:
+  - description: Survey subagent called mcp__github__search_issues directly without first running ToolSearch to load its schema — the second consecutive frictions-to-fixes cycle where the survey step made this exact CLAUDE.md-documented mistake.
+    solution: Make the survey subagent's brief in SKILL.md §1 explicitly name ToolSearch as its first action, rather than relying on the generic CLAUDE.md rule alone, which hasn't stuck across two consecutive cycles at this one call site.
+    severity: moderate
+  - description: mcp__github__search_issues rate-limited on 3 of 6 parallel calls during the survey ("Retry after ~10-11s").
+    solution: Single sleep+retry resolved it with no data loss (~15s total wait); not itself worth a dedicated fix, just worth tracking if it recurs.
+    severity: minor
+  - description: "The #704 impl agent made its code fix correctly, then backgrounded `pnpm gate:scoped` and stopped its own turn expecting an automatic wake that never arrives for a subagent's own backgrounded shell command — leaving the fix uncommitted and the agent silently stalled until I inspected its worktree directly and resumed it via SendMessage with explicit foreground-run instructions."
+    solution: 'Make the impl-agent dispatch template in SKILL.md §5 explicit that gate/test commands must run synchronously in the foreground, not backgrounded-and-waited — the existing CLAUDE.md guidance on this (issue #602) is written for orchestrator-authored dispatch briefs that explicitly background something, but this recurred inside a plain, unremarkable "run pnpm gate:scoped" instruction with no backgrounding language at all.'
+    severity: major
+  - description: Cd-ing into a dispatched subagent's worktree to inspect its git status left my shell's cwd there across a later Stop-hook check, producing a misleading "uncommitted changes" flag that actually belonged to the in-progress subagent, not this session's own repo state — the exact pitfall CLAUDE.md already documents.
+    solution: Already documented and already followed (cd back to repo root, re-check) — recorded here only as a reminder the pitfall is easy to hit even knowing about it going in; no new fix needed.
+    severity: nit
+  - description: The step-1 survey subagent flagged that a growing number of already-fixed/duplicate frictions-to-fixes issues in the tracker slows down screening each cycle, with no concrete single-file fix proposed.
+    solution: Not actioned this cycle — worth watching; may warrant a periodic tracker-cleanup pass if it keeps growing.
+    severity: nit
+durationSec: 1084
+models:
+  claude-sonnet-5: 111
+toolCounts:
+  Agent: 3
+  ToolSearch: 5
+  mcp__github__search_issues: 3
+  Bash: 10
+  mcp__github__issue_write: 3
+  ScheduleWakeup: 2
+  SendMessage: 1
+  mcp__github__pull_request_read: 14
+  mcp__github__subscribe_pr_activity: 1
+  TaskCreate: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  TaskUpdate: 6
+  mcp__github__pull_request_review_write: 3
+  mcp__github__unsubscribe_pr_activity: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Skill: 1
+  Write: 1
+  PushNotification: 1
+subagents:
+  - type: general-purpose
+    task: Survey session frictions and screen candidates
+  - type: general-purpose
+    task: Doc fixes for pr-workflow.md and CLAUDE.md
+    model: sonnet
+  - type: general-purpose
+    task: Fix digestBodySnippet link-stripping regex
+    model: sonnet
+gitBranch: claude/hopeful-brown-7dco3s
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: frictions-to-fixes
