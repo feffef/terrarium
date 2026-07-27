@@ -123,9 +123,8 @@ because its container ref was null in `onMounted`.)
   yourself and observe behavior before committing — this doc is the
   browser/UI-specific reference for that (no repo-wide `verify` Skill
   currently exists).
-- CLAUDE.md's self-verification section — how to *capture* a render
-  (`scripts/preview.ts`, `scripts/screenshot.ts`) and the DevTools-overlay
-  caveat for `--dev` shots.
+- CLAUDE.md's self-verification section (the capture tooling's home, see
+  above) — also has the DevTools-overlay caveat for `--dev` shots.
 - `docs/agents/tenant-layers.md` — Nuxt-layer render gotchas (auto-imports,
   alias resolution, Platform-wide component overrides, scoped-CSS token
   inheritance).

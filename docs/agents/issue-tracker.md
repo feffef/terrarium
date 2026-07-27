@@ -117,9 +117,8 @@ a fully-qualified typo — gives the same generic `Error: No such tool available
 That's the moment a plausible bare name gets wrongly abandoned as unsupported
 instead of retried as a keyword query.
 
-**Recovery tip:** if a `select:` lookup comes back empty, retry the same
-string as a plain keyword query, or broaden it into a phrase (see the
-fully-qualified-name rule above).
+**Recovery tip:** if the retry above still comes back empty, broaden the
+string into a phrase rather than a bare name.
 
 `actions_list` has no `minimal_output` and returns full run objects (~300KB),
 which overflow the tool-result limit — for an "is main green" check, slice the
@@ -135,7 +134,9 @@ tools. Use the `Blocked by: #<n>` body-line fallback described under
 - **`docs/research/` vs. a GitHub issue.** `docs/research/` is for verified,
   primary-source-grounded reference material — facts gathered and checked. An
   unimplemented idea, design proposal, or open question belongs in a GitHub
-  issue instead (a PRD, see below, if it's substantial).
+  issue instead — a PRD (see below) once it's substantial enough to decompose
+  into multiple user stories that need their own sub-issues; a plain issue
+  otherwise.
 - **`/triage`'s redundancy check applies to every open issue, no exemptions.**
   "Search for an existing implementation before actioning this issue" is not
   optional for issues that read as *not yet actionable by design* — e.g. a
