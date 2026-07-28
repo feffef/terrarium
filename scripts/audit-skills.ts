@@ -81,6 +81,7 @@ export const DISMISSED_HUMAN_PROMPTED_CLOSURES: ReadonlySet<string> = new Set([
   'session_015gQvuX4uBkjpzW9yovabVz', // #483
   'session_01Y11Fou1pRvTW2ucEt1dhX8', // #483
   'session_01CGdWVh7DctbuH1sro8Xs4x', // #483
+  'session_01VsqSAkCvbaLvAVsySvXvdg', // #483
 ])
 /** Session id → resolving issue/PR reference, for a `manuallyRescuedClosures`
  *  incident that's been triaged but should stay **visible** rather than
