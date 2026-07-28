@@ -20,7 +20,9 @@ Status: Accepted
 > softening (#318/#320: "verify it landed and amend if absent") did not hold. A
 > repo-side **commit-msg git hook** now backstops it: `.githooks/commit-msg`
 > invokes `scripts/provenance-footer.ts`, which appends the footer when a commit's
-> message lacks it, reconstructing the model name and session URL repo-side (from
+> message lacks it, and corrects it in place when a footer is present but its
+> `Claude-Session:` trailer doesn't match the resolved ground truth (issue #710),
+> reconstructing the model name and session URL repo-side (from
 > the transcript, else `CLAUDE_CODE_REMOTE_SESSION_ID`) — the *same* values
 > `buildLogCommit()` derives, now single-homed in `provenanceFooter()` /
 > `formatModelId` / `busiestModelId`. The hook is installed via `core.hooksPath`,
