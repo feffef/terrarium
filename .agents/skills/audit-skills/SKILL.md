@@ -252,9 +252,12 @@ as read-only history, same as a fully `DISMISSED_*` entry.
 For each own Skill flagged by step 3 or 4, and for each `orphanedSessions` entry:
 - **Search first** (`search_issues`, `is:issue is:open audit-skills <name>` for
   a Skill finding, or the session id for an orphan).
-- **Found** — add a comment citing this run's fresh evidence. A concern that
-  keeps recurring across runs is itself the strongest evidence it's real; that
-  history belongs on one thread, not a pile of near-duplicate issues.
+- **Found** — before posting, check the target issue's recent comments for a
+  citation of the same session id already on that thread — don't duplicate a
+  citation that's already there. Otherwise add a comment citing this run's fresh
+  evidence. A concern that keeps recurring across runs is itself the strongest
+  evidence it's real; that history belongs on one thread, not a pile of
+  near-duplicate issues.
 - **Not found** — file one `needs-triage` issue. For a Skill finding, name the
   session ids (and, for a step-4 finding, the quoted friction evidence) plus
   your best-guess hypothesis. For an orphan, name the session id, its

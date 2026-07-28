@@ -198,6 +198,10 @@ post in **real, verifiable facts** and **link them** so readers can go look:
 - **Any relative-time or "X ago"/elapsed-time claim must be computed from the
   actually-fetched `created_at`/timestamp data** (or a diff against it) —
   never estimated or recalled from memory while drafting.
+- **The same rigor extends to every commit-attributed claim: the exact SHA, the
+  actual author/model, and any occurrence count.** Verify each directly against
+  `git show`/`git log`/the GitHub API before it goes in the draft — never
+  recalled or estimated from memory while drafting.
 - **Provenance and causal claims get the same rigor as links.** Before attributing
   intent ("X did this because…"), check **who actually authored/merged** the PR or
   commit via `git log`/GitHub — not assumption. Before repeating a "why it broke" /
