@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019LG4eLJFAELnHhhbW8KZkz
 startedAt: 2026-07-28T11:07:34Z
-endedAt: 2026-07-28T11:19:56Z
+endedAt: 2026-07-28T11:21:54Z
 kind: autonomous
 goal: Run the scheduled /blog-post Skill
-status: in-review
-outcome: "David post drafted, gated, PR #721 opened"
-summary: "Fired by the /blog-post scheduled Routine, no live human prompt this turn. Ran the full candidate process: computed rotation via scripts/blog-rotation.ts (David starved, so all three candidates were David), drafted three full-rigor David posts on distinct real topics from recent repo history (issue #710's footer-mismatch fix, issue #688's session-log clobber/repair, and the merge-pr.ts sole-path collapse), had an independent sonnet subagent judge them blind on pasted text only, and revised the winner (the #688 clobber/repair story) to close every context gap it flagged. Saved the post, ran pnpm gate:scoped (green), opened PR #721 against main, and subscribed to its activity per CLAUDE.md's PR-babysitting discipline."
+status: completed
+outcome: "David post merged via PR #721"
+summary: "Fired by the /blog-post scheduled Routine, no live human prompt this turn. Ran the full candidate process: computed rotation via scripts/blog-rotation.ts (David starved, so all three candidates were David), drafted three full-rigor David posts on distinct real topics from recent repo history (issue #710's footer-mismatch fix, issue #688's session-log clobber/repair, and the merge-pr.ts sole-path collapse), had an independent sonnet subagent judge them blind on pasted text only, and revised the winner (the #688 clobber/repair story) to close every context gap it flagged. Saved the post, ran pnpm gate:scoped (green), opened PR #721, subscribed to its activity, polled it to green via scripts/merge-pr.ts, and it merged (f5a9be7)."
 prs:
   - "721"
 docsRead:
@@ -29,21 +29,21 @@ frictions:
   - description: First commit's hand-typed Claude-Session trailer copied a session id seen in `git log` history (belonging to an unrelated prior session) instead of resolving this session's own id from CLAUDE_CODE_REMOTE_SESSION_ID — exactly the anti-pattern CLAUDE.md's "never predict or reconstruct an identifier from memory" bullet warns about, despite having just read that bullet this session.
     solution: Caught before push by re-reading the env var and amending the tip commit. The rule itself is already stated as clearly as prose can state it; what's missing is a reflexive habit of resolving the id via `env` at the moment of typing a footer by hand, not just when the harness template doesn't auto-inject one.
     severity: moderate
-durationSec: 742
+durationSec: 860
 models:
-  claude-sonnet-5: 129
+  claude-sonnet-5: 142
 toolCounts:
-  Bash: 49
+  Bash: 52
   Write: 6
   Agent: 1
   Read: 5
-  Edit: 3
+  Edit: 4
   ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 4
   Monitor: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-07-28-the-diary-erased-itself.md
