@@ -9,12 +9,21 @@
 // `provenanceFooter()` and the model/session helpers, so the format is single-homed).
 //
 // The pure core (`hasProvenanceFooter` / `computeFooterAction` / `applyFooter` /
-// `provenanceFooter`) is kept separate from the git-hook I/O (`main`), mirroring
-// the `handle`/`main` split in `session-end.ts`. `main()` FAILS OPEN: any error,
-// missing transcript, or unresolvable session URL leaves the message untouched and
-// the commit proceeds — a guard bug must never wedge a commit (ADR-0017: a
-// regression degrades cleanly back to the manual-amend status quo, it is not a
-// blocking gate).
+// `correctSessionTrailer` / `provenanceFooter`) is kept separate from the
+// git-hook I/O (`main`), mirroring the `handle`/`main` split in
+// `session-end.ts`. `main()` FAILS OPEN: any error, missing transcript, or
+// unresolvable session URL leaves the message untouched and the commit
+// proceeds — a guard bug must never wedge a commit (ADR-0017: a regression
+// degrades cleanly back to the manual-amend status quo, it is not a blocking
+// gate).
+//
+// `computeFooterAction` also catches a *present-but-mismatched* `Claude-Session:`
+// trailer (issue #710) — the one commit surface where an agent hand-writes the
+// footer itself (`git commit -F`, no harness auto-injection) had zero preventive
+// coverage: `session-id-guard.ts`'s Stop-hook backstop only runs at teardown,
+// after the commit already landed. This reuses that same comparison shape
+// (`findSessionIdMismatches`) inline rather than importing across files, to keep
+// the fix a single-file change.
 //
 // Safety property: the guard is inert unless it can resolve an agent session URL
 // (from `CLAUDE_CODE_REMOTE_SESSION_ID` or the transcript's own session id). A
@@ -60,6 +69,15 @@ export function hasProvenanceFooter(message: string): boolean {
   return COAUTHOR_LINE.test(message) && SESSION_TRAILER.test(message)
 }
 
+/** The session id a `Claude-Session:` trailer names, or `null` if `text` carries
+ *  none — the same `SESSION_TRAILER` pattern `session-id-guard.ts` compares
+ *  against, applied here to either a full commit message or a lone freshly-built
+ *  `sessionLine()`, so both sides of the mismatch check share one extraction. */
+function trailerSessionId(text: string): string | null {
+  const match = text.match(SESSION_TRAILER)
+  return match?.[1] ?? null
+}
+
 // Each footer line built once (single home for the exact text) so the full-footer
 // path and the "append only the missing line" path in computeFooterAction can't
 // diverge.
@@ -83,18 +101,47 @@ export function applyFooter(message: string, footer: string): string {
   return `${message.replace(/\s+$/, '')}\n\n${footer}\n`
 }
 
-export type FooterAction = { action: 'noop' } | { action: 'append'; footer: string }
+/** Replace an existing `Claude-Session:` trailer line in place with `footer`
+ *  (itself a full `Claude-Session: <url>` line) — used for the issue #710
+ *  present-but-mismatched case, where the fix is to correct the one wrong
+ *  line, not append a second trailer. Only the first match is replaced;
+ *  `hasProvenanceFooter` (and therefore this path) only ever fires with
+ *  exactly one trailer line present. */
+export function correctSessionTrailer(message: string, footer: string): string {
+  return message.replace(/^Claude-Session:.*$/m, footer)
+}
 
-/** The pure, unit-testable core. Idempotent (present footer → `noop`); and when
- *  the session URL is unresolvable it also `noop`s rather than append half a
- *  footer — the `Claude-Session:` line is the load-bearing recoverable key, and a
- *  footer missing it is worse than none (ADR-0017 degrades to status quo). */
+export type FooterAction =
+  | { action: 'noop' }
+  | { action: 'append'; footer: string }
+  | { action: 'correct'; footer: string }
+
+/** The pure, unit-testable core. Idempotent (present-and-matching footer →
+ *  `noop`); when the session URL is unresolvable it also `noop`s rather than
+ *  append half a footer — the `Claude-Session:` line is the load-bearing
+ *  recoverable key, and a footer missing it is worse than none (ADR-0017
+ *  degrades to status quo).
+ *
+ *  A present footer is no longer an unconditional `noop` (issue #710): when
+ *  the existing `Claude-Session:` trailer's id doesn't match the resolved
+ *  ground-truth session, this returns `correct` instead — the same comparison
+ *  `session-id-guard.ts`'s `findSessionIdMismatches` makes at Stop-hook time,
+ *  run here at commit time instead so a hand-typed wrong id never lands in
+ *  the first place. Any resolution failure (`sessionUrl` null, no trailer id
+ *  extractable on either side) still falls through to `noop` — fail-open,
+ *  never a false-positive rewrite. */
 export function computeFooterAction(
   message: string,
   sessionUrl: string | null,
   modelName: string,
 ): FooterAction {
-  if (hasProvenanceFooter(message)) return { action: 'noop' }
+  if (hasProvenanceFooter(message)) {
+    if (!sessionUrl) return { action: 'noop' }
+    const existingId = trailerSessionId(message)
+    const expectedId = trailerSessionId(sessionLine(sessionUrl))
+    if (!existingId || !expectedId || existingId === expectedId) return { action: 'noop' }
+    return { action: 'correct', footer: sessionLine(sessionUrl) }
+  }
   if (!sessionUrl) return { action: 'noop' }
   // The harness template can inject the Co-Authored-By half without the
   // Claude-Session half; append only the missing line so a half-present footer
@@ -173,8 +220,12 @@ export function reconstructFooterValues(
 }
 
 /** The thin I/O shell: read the commit-message file (argv), reconstruct the
- *  footer values, and write the amended message back when one is appended. Every
- *  step is wrapped to fail open — see the file header. */
+ *  footer values, and write the amended message back when the core decides to
+ *  append or correct it. Every step is wrapped to fail open — see the file
+ *  header. Unlike before issue #710, a present footer no longer short-circuits
+ *  before resolving the transcript — `computeFooterAction` needs the resolved
+ *  ground truth to check an existing trailer for a mismatch, not just its
+ *  presence. */
 function main(): void {
   const msgFile = process.argv[2]
   if (!msgFile || !existsSync(msgFile)) return
@@ -184,9 +235,6 @@ function main(): void {
   } catch {
     return
   }
-  // Cheap idempotency check first — the common already-good path never touches
-  // the transcript.
-  if (hasProvenanceFooter(message)) return
 
   const env: SessionIdEnv = process.env
   let transcript: string | null = null
@@ -198,12 +246,15 @@ function main(): void {
   const { sessionUrl, modelName } = reconstructFooterValues(env, transcript)
 
   const action = computeFooterAction(message, sessionUrl, modelName)
-  if (action.action === 'append') {
-    try {
-      writeFileSync(msgFile, applyFooter(message, action.footer))
-    } catch {
-      /* fail open: never block the commit */
-    }
+  if (action.action === 'noop') return
+  try {
+    const updated =
+      action.action === 'append'
+        ? applyFooter(message, action.footer)
+        : correctSessionTrailer(message, action.footer)
+    writeFileSync(msgFile, updated)
+  } catch {
+    /* fail open: never block the commit */
   }
 }
 

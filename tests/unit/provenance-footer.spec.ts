@@ -14,6 +14,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import {
   applyFooter,
   computeFooterAction,
+  correctSessionTrailer,
   hasProvenanceFooter,
   provenanceFooter,
   reconstructFooterValues,
@@ -79,8 +80,20 @@ describe('applyFooter()', () => {
 })
 
 describe('computeFooterAction() — the decision matrix', () => {
-  it('no-ops when the footer is already present (idempotent, never double-append)', () => {
-    expect(computeFooterAction(FOOTERED, 'https://claude.ai/code/session_X', 'Claude')).toEqual({ action: 'noop' })
+  it('no-ops when the footer is already present and its trailer matches ground truth (idempotent, never double-append)', () => {
+    expect(computeFooterAction(FOOTERED, 'https://claude.ai/code/session_ABC', 'Claude')).toEqual({ action: 'noop' })
+  })
+
+  it('corrects a present-but-mismatched Claude-Session trailer instead of no-opping (issue #710)', () => {
+    // FOOTERED carries `session_ABC`; ground truth here resolves to `session_X`.
+    expect(computeFooterAction(FOOTERED, 'https://claude.ai/code/session_X', 'Claude')).toEqual({
+      action: 'correct',
+      footer: 'Claude-Session: https://claude.ai/code/session_X',
+    })
+  })
+
+  it('no-ops on a mismatched trailer when no ground-truth session URL is resolvable — never a false-positive rewrite', () => {
+    expect(computeFooterAction(FOOTERED, null, 'Claude')).toEqual({ action: 'noop' })
   })
 
   it('appends a full footer when absent and a session URL is available', () => {
@@ -104,6 +117,21 @@ describe('computeFooterAction() — the decision matrix', () => {
       expect((out.match(/Co-Authored-By:/g) ?? []).length).toBe(1)
       expect(hasProvenanceFooter(out)).toBe(true)
     }
+  })
+})
+
+describe('correctSessionTrailer() — issue #710', () => {
+  it('replaces the existing Claude-Session line in place, leaving everything else untouched', () => {
+    const out = correctSessionTrailer(FOOTERED, 'Claude-Session: https://claude.ai/code/session_X')
+    expect(out).toBe(
+      [
+        'a real commit subject',
+        '',
+        'Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>',
+        'Claude-Session: https://claude.ai/code/session_X',
+      ].join('\n'),
+    )
+    expect(hasProvenanceFooter(out)).toBe(true)
   })
 })
 
@@ -227,6 +255,38 @@ describe('end-to-end: running the script over a real commit-message file (issue 
     writeFileSync(msgFile, 'chore: human local commit\n')
     runScript({ CLAUDE_CODE_REMOTE_SESSION_ID: '' })
     expect(readFileSync(msgFile, 'utf8')).toBe('chore: human local commit\n')
+  })
+
+  it('corrects a present-but-mismatched Claude-Session trailer instead of leaving it (issue #710)', () => {
+    writeFileSync(
+      msgFile,
+      [
+        'feat: hand-typed footer with the wrong session id',
+        '',
+        'Co-Authored-By: Claude <noreply@anthropic.com>',
+        'Claude-Session: https://claude.ai/code/session_WRONG',
+        '',
+      ].join('\n'),
+    )
+    runScript({ CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_01CPwUoxTZ3wJ5LQW8Nd98Mm' })
+    const out = readFileSync(msgFile, 'utf8')
+    expect(out).toContain('Claude-Session: https://claude.ai/code/session_01CPwUoxTZ3wJ5LQW8Nd98Mm')
+    expect(out).not.toContain('session_WRONG')
+    expect((out.match(/Claude-Session:/g) ?? []).length).toBe(1)
+    expect((out.match(/Co-Authored-By:/g) ?? []).length).toBe(1)
+  })
+
+  it('does not touch an already-correct hand-typed footer (idempotent on a matching trailer)', () => {
+    const message = [
+      'feat: hand-typed footer with the right session id',
+      '',
+      'Co-Authored-By: Claude <noreply@anthropic.com>',
+      'Claude-Session: https://claude.ai/code/session_01CPwUoxTZ3wJ5LQW8Nd98Mm',
+      '',
+    ].join('\n')
+    writeFileSync(msgFile, message)
+    runScript({ CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_01CPwUoxTZ3wJ5LQW8Nd98Mm' })
+    expect(readFileSync(msgFile, 'utf8')).toBe(message)
   })
 
   it('derives the model from a transcript when one is present at the CLAUDE_CONFIG_DIR', () => {
