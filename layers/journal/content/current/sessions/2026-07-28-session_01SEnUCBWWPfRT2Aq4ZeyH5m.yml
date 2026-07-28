@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01SEnUCBWWPfRT2Aq4ZeyH5m
 startedAt: 2026-07-28T04:10:06Z
-endedAt: 2026-07-28T04:30:55Z
+endedAt: 2026-07-28T06:19:28Z
 kind: autonomous
 goal: Run the scheduled audit-docs sweep
-status: in-review
-outcome: 6 findings fixed across 2 PRs, one self-merging
-summary: Fully autonomous, schedule-triggered /audit-docs run, no human prompt at any point. Fanned out 4 paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the repo's docs, pooled 6 findings with no overlap, fact-checked all 6 against primary sources via an independent checker agent (all CONFIRMED, one CONFIRMED-BUT with a minor nuance), then fixed every one. 4 Live-tier findings (2 Duplication/Verbose trims in CLAUDE.md, a Duplication trim in frictions-to-fixes/SKILL.md, a Mis-location trim in layers/midden/CONTEXT.md, and the Live half of a Drift finding) landed in a self-merged PR (#719) per the audit-docs Skill's ADR-0003 auto-merge grant. 2 further findings touched docs/adr/* (a Drift in ADR-0017, a Contradiction in ADR-0004) — both pure factual corrections per ADR-0018, but ADRs are human-only to merge, so those rode a separate escalation PR (#720) instead. pnpm gate:scoped was green on both branches. No unresolvable factual conflict arose, so no needs-triage issue was filed.
+status: completed
+outcome: 6 findings fixed and merged across 2 PRs
+summary: Fully autonomous, schedule-triggered /audit-docs run, no human prompt at any point. Fanned out 4 paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the repo's docs, pooled 6 findings with no overlap, fact-checked all 6 against primary sources via an independent checker agent (all CONFIRMED, one CONFIRMED-BUT with a minor nuance), then fixed every one. 4 Live-tier findings (2 Duplication/Verbose trims in CLAUDE.md, a Duplication trim in frictions-to-fixes/SKILL.md, a Mis-location trim in layers/midden/CONTEXT.md, and the Live half of a Drift finding) landed in a self-merged PR (#719, merged) per the audit-docs Skill's ADR-0003 auto-merge grant. 2 further findings touched docs/adr/* (a Drift in ADR-0017, a Contradiction in ADR-0004) — both pure factual corrections per ADR-0018, but ADRs are human-only to merge, so those rode a separate escalation PR (#720, merged by a human) instead. pnpm gate:scoped was green on both branches. No unresolvable factual conflict arose, so no needs-triage issue was filed. Both PRs babysat via subscribe_pr_activity and send_later check-ins to confirmed merge.
 prs:
   - "719"
   - "720"
@@ -38,27 +38,28 @@ frictions:
   - description: One lens-reviewer subagent's returned text was auto-flagged by the harness as containing instruction-shaped content (a false positive from it quoting CLAUDE.md's own permissions.allow bullet verbatim).
     solution: No repo-side fix needed — verified by reading the actual returned findings, which contained no injected directives, just quoted doc text. Worth noting for future audit-docs runs that a quoted permissions/allow-list bullet in a subagent's own findings can trip this scanner; not a reason to distrust the finding.
     severity: nit
-durationSec: 1249
+durationSec: 7762
 models:
-  claude-sonnet-5: 172
+  claude-sonnet-5: 211
 toolCounts:
-  Bash: 25
+  Bash: 33
   ToolSearch: 5
   mcp__github__list_pull_requests: 2
   TaskCreate: 7
   TaskUpdate: 16
   Agent: 5
-  Read: 12
+  Read: 13
   mcp__github__search_pull_requests: 1
-  Edit: 9
+  Edit: 10
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 3
   Skill: 2
   Write: 1
-  mcp__github__pull_request_read: 2
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 7
+  mcp__Claude_Code_Remote__send_later: 2
   PushNotification: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - CLAUDE.md
   - .agents/skills/frictions-to-fixes/SKILL.md
