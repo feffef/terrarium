@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01BjsAFMhGuTStnt3LDtPWXC
 startedAt: 2026-07-28T00:16:09Z
-endedAt: 2026-07-28T00:21:56Z
+endedAt: 2026-07-28T00:25:13Z
 kind: autonomous
 goal: Run the scheduled /digest sweep
-status: in-review
-outcome: "2026-07-27 Digest authored, PR #709 opened"
-summary: "Fully agent-initiated, fired by the scheduled /digest Routine with no live human input this turn. Ran scripts/digest.ts to find 2026-07-27 as the one closed UTC day missing a Digest, gathered its PRs/commits/sessions/rollup, and authored layers/journal/content/current/pages/digests/2026-07-27.md — a narrative centered on the frictions-to-fixes cycle's repeated ToolSearch miss and a backgrounded-gate-stall silent stall, plus yesterday's digest link-stripping test bug getting fixed same-day. Ran the retention sweep (archive-journal-content.ts --write), which archived the 2026-07-21 digest and its 5 same-day session logs. pnpm gate:scoped passed green (full heavy layers ran, since content changed). Committed both the Digest and the sweep in one commit, pushed, and opened PR #709 against main. merge-pr.ts is polling checks in the background to merge on green per the digest Skill's auto-merge-on-green step; this log will be finalized to completed once merge is confirmed."
+status: completed
+outcome: "2026-07-27 Digest authored, PR #709 merged"
+summary: "Fully agent-initiated, fired by the scheduled /digest Routine with no live human input this turn. Ran scripts/digest.ts to find 2026-07-27 as the one closed UTC day missing a Digest, gathered its PRs/commits/sessions/rollup, and authored layers/journal/content/current/pages/digests/2026-07-27.md — a narrative centered on the frictions-to-fixes cycle's repeated ToolSearch miss and a backgrounded-gate-stall silent stall, plus yesterday's digest link-stripping test bug getting fixed same-day. Ran the retention sweep (archive-journal-content.ts --write), which archived the 2026-07-21 digest and its 5 same-day session logs. pnpm gate:scoped passed green (full heavy layers ran, since content changed). Committed both the Digest and the sweep in one commit, pushed, and opened PR #709 against main. Subscribed to PR activity, and merge-pr.ts polled checks in the background per the digest Skill's auto-merge-on-green step; the safety gate went green and merge-pr.ts merged the PR (990e672)."
 prs:
   - "709"
 docsRead:
@@ -22,21 +22,22 @@ skillsUsed:
   - name: log-session
     reason: author this log
 frictions: []
-durationSec: 347
+durationSec: 545
 models:
-  claude-sonnet-5: 58
+  claude-sonnet-5: 75
 toolCounts:
-  Bash: 18
+  Bash: 21
   Read: 3
   Write: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  Edit: 1
+  Edit: 2
   TaskCreate: 2
-  ScheduleWakeup: 1
+  ScheduleWakeup: 2
+  TaskUpdate: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-27.md
 gitBranch: claude/compassionate-lovelace-60ouxz
