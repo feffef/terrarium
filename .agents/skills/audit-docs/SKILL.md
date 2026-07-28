@@ -61,7 +61,9 @@ Classify every surface **before** editing. This decides everything.
 Eight lenses, fanned out as **four read-only reviewer agents** (Agent tool, in
 parallel) — each agent carries a **pair** of lenses that share either a theme or a
 mechanism, keeping agent count down while widening coverage. Every finding comes
-back as `file:line + quoted evidence`.
+back as `file:line + quoted evidence`. **Each dispatched agent is a leaf reviewer
+with no sub-agents of its own** — tell it plainly to perform this review itself
+and return its findings directly, never waiting on or referencing any other agent.
 
 **Agent A — Freshness** (what moved recently, and did the docs catch up?). Both
 lenses start from the **same git-history read** — `git log --since="48 hours ago"`
