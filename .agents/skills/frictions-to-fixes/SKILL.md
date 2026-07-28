@@ -206,10 +206,8 @@ who owns and needs that subscription for §6's review/babysitting (CLAUDE.md's
 impl agent disobeyed the sentence above, and don't log it as a fresh friction
 (#428).
 **Dispatched worktree-isolated impl agents must NOT self-invoke `close-session`
-or `log-session`** — see `close-session/SKILL.md` for why (they share the parent
-session id, so a second invocation clobbers the orchestrator's own log). The
-orchestrating session is the sole log author for the run; impl agents just
-implement, push, and hand back the PR.
+or `log-session`** — see `close-session/SKILL.md` for why and its mechanical
+enforcement.
 
 Done when every issue is covered by a pushed gated PR (doc issues by the one grouped
 PR, each code/config issue by its own), gate green, awaiting your review.

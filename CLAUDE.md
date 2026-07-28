@@ -142,8 +142,7 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   Skill only needs to point here, not restate the fetch/branch/override
   mechanics.
 - **Single-home every fact — one home, everywhere else points, never restates.**
-  Each fact lives in exactly one place; every other surface *references* it. This
-  file is the home for repo-wide conventions and an **index** into the ADRs — so
+  This file is the home for repo-wide conventions and an **index** into the ADRs — so
   where it would restate ADR detail, link the ADR instead of copying it (the
   "Ground rules" index-with-pointers below is the right shape; a restated *status
   narrative* is not). The **root** `CONTEXT.md` stays **glossary-only** (a
@@ -376,8 +375,7 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   `log-session` Skill for the exact status semantics (`in-review` vs `completed`).
   **Exception:** a dispatched worktree-isolated impl agent that opens a PR (e.g.
   `frictions-to-fixes`' impl agents) must **not** self-invoke `close-session` —
-  it shares the parent session id with the orchestrator, and a second invocation
-  clobbers the orchestrator's own scratch (see `close-session`'s own rule).
+  see `close-session/SKILL.md` for why and its mechanical enforcement.
 - **Three distinct worktree-isolation mechanisms exist in this environment — pick
   the one that matches the task, don't conflate them:**
   1. **`EnterWorktree`/`ExitWorktree`** (interactive, session-level) — switches
@@ -485,10 +483,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   The harness *usually* injects this footer into commits for free from its own
   commit template, and when it doesn't (cloud `-m` commits have been seen
   skipping the injection) a **fail-open commit-msg git hook backstops it** —
-  `.githooks/commit-msg` → `scripts/provenance-footer.ts` appends the footer at
-  commit time, reconstructing the values repo-side (ADR-0017's 2026-07-20
-  amendment, issue #346; installed via `core.hooksPath` in `postinstall`). The
-  hook covers only a local `git commit`, not MCP-API commits
+  `.githooks/commit-msg` → `scripts/provenance-footer.ts` appends the footer when
+  absent and corrects it in place when present but mismatched, reconstructing the
+  values repo-side (ADR-0017's 2026-07-20 amendment, issue #346; the
+  present-but-mismatched correction per issue #710; installed via `core.hooksPath`
+  in `postinstall`). The hook covers only a local `git commit`, not MCP-API commits
   (`create_or_update_file`/`push_files`), and can silently no-op if pnpm/tsx
   isn't on PATH — so still glance that a commit's footer landed, but you should
   rarely need to amend it by hand now. For everything else the footer covers,
@@ -610,8 +609,8 @@ The *how-to-capture* tooling (`scripts/preview.ts`, `scripts/screenshot.ts`)
 stays above.
 
 To **add a Space or Collection**: edit the Tenant's `tenant.config.ts`. The keyed
-collections and the routing map update automatically (see Self-verification
-above — no regenerate step needed). To **add a Tenant**: drop a `layers/<name>/` folder with a manifest and
+collections and the routing map update automatically — see Self-verification
+above. To **add a Tenant**: drop a `layers/<name>/` folder with a manifest and
 content, then run `pnpm install` (or `nuxt prepare`) to pick it up — Nuxt
 auto-extends every `layers/*`, so no `nuxt.config.ts` `extends` edit is needed
 (ADR-0018). Every Tenant layer needs its own `nuxt.config.ts` (even an empty
