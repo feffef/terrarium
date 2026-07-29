@@ -1,0 +1,95 @@
+schemaVersion: 1
+session: session_012NCZUhy7qDirkjp8t6YiNy
+startedAt: 2026-07-29T17:49:36Z
+endedAt: 2026-07-29T18:51:38Z
+kind: interactive
+goal: Add Midden link, then redesign root index showcase
+status: completed
+outcome: "Merged: scaling card-grid replaces stacked sections"
+summary: "Human asked for a Midden link on the root index; implemented as a small card, gated, and opened as PR #735. Human then asked to spawn three parallel design agents (Sonnet/Opus/Fable) to prototype a bigger redesign of the Blog/Atlas/Midden showcase, since the stacked layout couldn't scale with more entries — each built and screenshotted (desktop+mobile) in an isolated worktree for review. Human picked Opus's uniform card-grid design and asked for it implemented for real with Midden ordered before Atlas; implemented with new unit (entry-cap logic) and e2e (root-page) test coverage, pushed to the same PR, gate went green, and it merged."
+prs:
+  - "735"
+docsRead:
+  - path: layers/midden/CONTEXT.md
+    reason: Midden vocabulary and front-door route for the link and redesign
+  - path: tests/README.md
+    reason: where a Platform-level e2e test for the root page belongs
+  - path: scripts/preview.ts
+    reason: screenshot tooling contract (viewport-sized capture, no fullPage)
+  - path: app/pages/index.vue
+    reason: (read before editing)
+  - path: layers/midden/app/pages/t/midden/index.vue
+    reason: (no reason given)
+  - path: .claude/worktrees/agent-a0dbef28017f5c9ef/app/pages/index.vue
+    reason: (no reason given)
+  - path: .claude/worktrees/agent-a0dbef28017f5c9ef/app/components/HomeShowcase.vue
+    reason: (no reason given)
+  - path: tests/e2e/smoke.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: triggered by the user's direct question about logging
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: "Opened PR #735 at the first (Midden-link) commit but never invoked close-session/log-session then, per CLAUDE.md's \"opening the PR is the first session log\" rule. The user had to ask \"Session logged?\" to prompt this closure. HUMAN-PROMPTED-CLOSURE."
+    solution: Invoke close-session right at PR-open, before replying, not after a later prompt.
+    severity: major
+  - description: Sent three Agent tool calls with run_in_background:false in one message expecting them to block and return inline, but all three launched as async background agents anyway, arriving later as separate notifications.
+    solution: Treat a multi-agent dispatch in this harness as always-async regardless of run_in_background; plan the turn around notifications, not an inline return.
+    severity: minor
+  - description: Backgrounded `pnpm gate:scoped > log 2>&1 &` inside a Bash run_in_background call; the outer call reported "completed" almost immediately since it only waited for the detached shell to return, not for gate:scoped itself, which was still running minutes later.
+    solution: Don't put a trailing `&` inside a command already passed to run_in_background — let the tool background it, or from the start use Monitor/ps to track the real child process and a log completion marker.
+    severity: moderate
+  - description: The redirected vitest reporter's plain-text log omitted some individual e2e `it` lines (only ~70 of 76 printed) even though the aggregate pass/fail count and exit code were accurate — could be misread as missing test coverage if only skimming printed lines.
+    solution: Verify via the aggregate summary line and exit code, not by grepping for every individual test name in a redirected log.
+    severity: nit
+  - description: "A safety-gate PR comment cited a SHA that didn't match the PR's actual head SHA (a synthetic merge-test commit GitHub Actions sometimes reports against) — recurred on both pushes to PR #735 in this session."
+    solution: Cross-check the Actions API's workflow-run head_sha directly instead of trusting the comment's cited SHA when they disagree.
+    severity: nit
+durationSec: 3722
+models:
+  claude-sonnet-5: 253
+toolCounts:
+  Bash: 65
+  Grep: 1
+  Read: 17
+  Edit: 4
+  ToolSearch: 5
+  Monitor: 2
+  TaskOutput: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  Skill: 3
+  mcp__github__pull_request_read: 6
+  mcp__github__actions_list: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  Agent: 3
+  SendUserFile: 1
+  Write: 5
+  ScheduleWakeup: 3
+  mcp__github__update_pull_request: 1
+filesEdited:
+  - app/pages/index.vue
+  - app/utils/showcase.ts
+  - app/components/HomeShowcase.vue
+  - tests/unit/showcase.spec.ts
+  - tests/e2e/smoke.spec.ts
+subagents:
+  - type: general-purpose
+    task: "Redesign proposal: Sonnet"
+    model: sonnet
+  - type: general-purpose
+    task: "Redesign proposal: Opus"
+    model: opus
+  - type: general-purpose
+    task: "Redesign proposal: Fable"
+    model: fable
+gitBranch: claude/midden-link-root-index-k8d3w0
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - A Tenant layer's global CSS (registered via that layer's nuxt.config.ts `css:` array) loads app-wide, not scoped to that Tenant's own routes — so `var(--midden-accent)` resolves correctly even on the root index page outside `/t/midden/*`.
+ideas:
+  - A `/design-bakeoff` command formalizing today's ad-hoc pattern — dispatch N model-diverse Agent proposals in isolated worktrees, each building + auto-screenshotting desktop and mobile, then presenting them side by side for the human to pick — since this is a workflow likely to be asked for again for other pages/components.
