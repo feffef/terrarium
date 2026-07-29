@@ -379,19 +379,21 @@ export function commitDateWithinSeason(isoCommitDate: string, season: Pick<DigSe
 }
 
 /**
- * The `removedIn`/`stratum` corroboration. Format is schema-enforced
+ * The terminal-commit/`stratum` corroboration, run on `removedIn` and on a
+ * `commit`-kind provenance `hash` alike (both name the dated event the
+ * artifact's dig season was derived from). Format is schema-enforced
  * (tenant.config.ts); this pass adds what the per-document schema can't see:
  * a best-effort date check against the artifact's dig season. Same
  * shallow-clone stance as `checkProvenance`'s commit case — a failed `git
  * show` lookup is NEVER itself a violation; only a commit we can actually
  * date, sitting outside its declared season, is.
  */
-function checkRemovedIn(removedIn: string, stratum: unknown, projectRoot: string): string[] {
+function checkTerminalCommitSeason(field: string, hash: string, stratum: unknown, projectRoot: string): string[] {
   const season = typeof stratum === 'string' ? digSeasonOf(stratum) : undefined
   if (!season) return [] // an unknown stratum is already checkStratum's finding
   let isoCommitDate: string
   try {
-    isoCommitDate = execFileSync('git', ['show', '-s', '--format=%cI', `${removedIn}^{commit}`], {
+    isoCommitDate = execFileSync('git', ['show', '-s', '--format=%cI', `${hash}^{commit}`], {
       cwd: projectRoot,
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'ignore'],
@@ -401,7 +403,7 @@ function checkRemovedIn(removedIn: string, stratum: unknown, projectRoot: string
   }
   if (!commitDateWithinSeason(isoCommitDate, season)) {
     return [
-      `removedIn: commit ${removedIn} is dated ${isoCommitDate.slice(0, 10)}, outside its "${season.slug}" season (${season.start} – ${season.end ?? 'open'})`,
+      `${field}: commit ${hash} is dated ${isoCommitDate.slice(0, 10)}, outside its "${season.slug}" season (${season.start} – ${season.end ?? 'open'})`,
     ]
   }
   return []
@@ -430,7 +432,22 @@ function checkArtifacts(
 
     msgs.push(...checkProvenance(data.provenance, projectRoot))
 
-    if (typeof data.removedIn === 'string') msgs.push(...checkRemovedIn(data.removedIn, data.stratum, projectRoot))
+    if (typeof data.removedIn === 'string') {
+      msgs.push(...checkTerminalCommitSeason('removedIn', data.removedIn, data.stratum, projectRoot))
+    }
+    // A commit-kind referent is PRESUMED terminal (the discarded thing is the
+    // commit's own event) — but a declared `removedIn` overrides the
+    // presumption: a referent hash can be a birth record instead (e.g. the
+    // Spawn term's coining commit, whose retirement lives in `removedIn`).
+    const prov = data.provenance as Record<string, unknown> | undefined
+    if (
+      typeof data.removedIn !== 'string' &&
+      prov?.kind === 'commit' &&
+      typeof prov.hash === 'string' &&
+      /^[0-9a-f]{7,40}$/.test(prov.hash)
+    ) {
+      msgs.push(...checkTerminalCommitSeason('provenance.hash', prov.hash, data.stratum, projectRoot))
+    }
 
     if (msgs.length) violations.push({ key: col.key, file, messages: msgs })
   }

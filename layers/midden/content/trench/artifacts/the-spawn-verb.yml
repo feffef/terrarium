@@ -13,6 +13,7 @@ site: the-buried
 catalogNote: A glossary verb for adding a Tenant or Space, coined at the very
   first design and then never really used, kept now only as a note in the
   retired-terms list telling writers to say something else.
+removedIn: a1dc590
 assessedAt: 2026-07-16
 inscription:
   text: "### Spawn (a Tenant / Space) — It is never a runtime operation."

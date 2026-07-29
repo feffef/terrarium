@@ -70,8 +70,10 @@ optional verbatim `inscription` ({text, source}), and two optional
 preservation fields: `removedIn` — the terminal event, the bare hash of the
 commit that removed the thing (rendered as a derived commit link;
 `validate-content-refs.ts` corroborates its date against the `stratum` where
-history allows), distinct from `provenance.url` which links the referent
-itself — and `remains` — curator-curated, labelled links to the artifact's
+history allows — and presumes a `commit`-kind referent hash terminal for the
+same check unless a declared `removedIn` overrides it, since a referent can
+be a birth record, as with the Spawn term's coining commit), distinct from
+`provenance.url` which links the referent itself — and `remains` — curator-curated, labelled links to the artifact's
 preserved original state, each pinned to a full commit SHA so the link is
 immutable (schema-enforced), a few meaningful views rather than a mechanical
 dump of every touched path. Like `inscription`, `remains` is expected
