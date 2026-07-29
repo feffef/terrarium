@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01NTMpx8aVzhU9GPrEpVoASw
 startedAt: 2026-07-29T06:27:37Z
-endedAt: 2026-07-29T07:45:41Z
+endedAt: 2026-07-29T09:01:42Z
 kind: interactive
 goal: Midden ideas, surveyor Skill, artifact model
 status: in-review
 outcome: "Surveyor merged (#729); artifact model in PR #731"
-summary: "Two phases, both human-instructed. First (kickoff prompt): proposed five grounded Midden improvement ideas, screened against open issues so none duplicated tracked work. Second (explicit green-light, /implement 3 now): built idea 3, the midden-survey Skill — TDD'd scripts/midden-survey.ts (deleted-file and dropped-dependency sweep with noise/rename/Gate-B/ already-catalogued screens, shallow-clone refusal, 18 unit tests), the SKILL.md survey flow (MCP sweep for closed-unmerged PRs and dormant branches, two-gate judgment, one survey-report issue per run, everything curatorial left curator-authored), Skill Inventory entry, and a CONTEXT.md pointer. Full gate green; two-axis code review ran pre-push and its actionable findings were folded in. Gated PR #729 opened, gate green, merged by the owner. Third phase (owner-directed, remains locked curator-curated): extended the artifact model with removedIn (terminal commit, bare hash) and remains (SHA-pinned immutable links to original state), TDD'd the stratum corroboration check, rendered both in MiddenArtifact.vue, backfilled 12 artifacts whose provenance url was squatting as the removal link (then 4 more after a sibling session landed six survey finds on main mid-review — rebased in, all passing the new season corroboration), curated four remains exemplars, screenshot-verified; PR #731 in review."
+summary: "Two phases, both human-instructed. First (kickoff prompt): proposed five grounded Midden improvement ideas, screened against open issues so none duplicated tracked work. Second (explicit green-light, /implement 3 now): built idea 3, the midden-survey Skill — TDD'd scripts/midden-survey.ts (deleted-file and dropped-dependency sweep with noise/rename/Gate-B/ already-catalogued screens, shallow-clone refusal, 18 unit tests), the SKILL.md survey flow (MCP sweep for closed-unmerged PRs and dormant branches, two-gate judgment, one survey-report issue per run, everything curatorial left curator-authored), Skill Inventory entry, and a CONTEXT.md pointer. Full gate green; two-axis code review ran pre-push and its actionable findings were folded in. Gated PR #729 opened, gate green, merged by the owner. Third phase (owner-directed, remains locked curator-curated): extended the artifact model with removedIn (terminal commit, bare hash) and remains (SHA-pinned immutable links to original state), TDD'd the stratum corroboration check, rendered both in MiddenArtifact.vue, backfilled 12 artifacts whose provenance url was squatting as the removal link (then 4 more after a sibling session landed six survey finds on main mid-review — rebased in, all passing the new season corroboration), curated four remains exemplars, screenshot-verified. Fourth phase (owner-directed, \"Both\" + read-the-history redirect): extended the season corroboration to commit-kind referent hashes (its first run caught the Spawn term pointing at its coining commit), then dispatched six parallel Opus curator agents that read every removal commit and pre-removal revision; all 41 catalogNotes rewritten history-grounded, remains curated on 32 artifacts (43 full-SHA links, each cat-file-verified, closed-PR content via fetched pull refs), three latent content inaccuracies fixed. PR #731 in review."
 prs:
   - "729"
   - "731"
@@ -47,6 +47,9 @@ skillsUsed:
   - name: log-session
     reason: (no reason given)
 frictions:
+  - description: "Two artifact records contained latent inaccuracies only a primary-source dig exposed: a continuityCheck counting components that never existed and an inscription quoting a key the file never contained."
+    solution: "Curation passes should read the referenced revision, not trust the earlier record — the midden-survey Skill's draft-provenance step already pushes this; fixed both records in PR #731."
+    severity: minor
   - description: MiddenArtifact.vue's comment says validate-content-refs catches a bad embed slug, but the validator has no embed-side check at all.
     solution: Fix the comment or add the embed-side check (idea 1 of this session's proposals) — both directions of the page-body/artifact reference.
     severity: minor
@@ -59,29 +62,29 @@ frictions:
   - description: Stop hook flagged inherited origin/main commit adb167c as Unverified alongside this session's own tip; signing key unprovisioned so the suggested --reset-author remedy could fix nothing.
     solution: Followed CLAUDE.md's existing guidance (check origin/main..HEAD, known platform limitation) — no doc change needed, just noise.
     severity: nit
-durationSec: 4684
+durationSec: 9245
 models:
-  claude-fable-5: 304
+  claude-fable-5: 411
 toolCounts:
-  Bash: 67
+  Bash: 89
   Glob: 1
-  Read: 13
+  Read: 14
   ToolSearch: 5
   mcp__github__search_issues: 1
   Grep: 5
   Skill: 4
   Write: 7
-  Edit: 22
+  Edit: 29
   TaskCreate: 9
   TaskUpdate: 18
-  Agent: 2
+  Agent: 8
   mcp__github__search_pull_requests: 2
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
-  mcp__github__pull_request_read: 2
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 10
   mcp__Claude_Code_Remote__delete_trigger: 1
-  mcp__github__update_pull_request: 1
+  mcp__github__update_pull_request: 2
 filesEdited:
   - tests/unit/midden-survey.spec.ts
   - scripts/midden-survey.ts
@@ -92,11 +95,32 @@ filesEdited:
   - scripts/validate-content-refs.ts
   - layers/midden/tenant.config.ts
   - layers/midden/app/components/content/MiddenArtifact.vue
+  - layers/midden/content/trench/artifacts/the-spawn-verb.yml
+  - layers/midden/content/trench/artifacts/the-external-session-prototype.yml
+  - layers/midden/content/trench/artifacts/the-workspace-file.yml
 subagents:
   - type: general-purpose
     task: Standards review of diff
   - type: general-purpose
     task: Spec review of diff
+  - type: general-purpose
+    task: Curate Midden UI artifacts
+    model: opus
+  - type: general-purpose
+    task: Curate routing-era artifacts
+    model: opus
+  - type: general-purpose
+    task: Curate vocabulary/status artifacts
+    model: opus
+  - type: general-purpose
+    task: Curate Atlas-recut artifacts
+    model: opus
+  - type: general-purpose
+    task: Curate blog-corpus artifacts
+    model: opus
+  - type: general-purpose
+    task: Curate closed-PR artifacts
+    model: opus
 gitBranch: claude/midden-improvement-ideas-r58t1t
 entrypoint: remote_mobile
 cliVersion: 2.1.220
