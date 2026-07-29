@@ -32,7 +32,7 @@
 // (issue #97).
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { $fetch, setup } from '@nuxt/test-utils/e2e'
+import { $fetch, createPage, setup, url } from '@nuxt/test-utils/e2e'
 import { entryRoutes, expectCleanHydration, mermaidPageRoutes, renderAndCollectErrors } from '../support/e2e.ts'
 import { findPreinstalledChromium, findSystemChrome } from '../../scripts/chromium-path.ts'
 import { registerJournalE2E } from '../../layers/journal/tests/e2e/journal.e2e.ts'
@@ -81,6 +81,42 @@ describe('L2 smoke render', async () => {
         await expectCleanHydration(route)
       })
     }
+  })
+
+  // ── Platform: the root index page (`/`) ─────────────────────────────────────
+  // Not a Tenant/Space route, so — like a Tenant-root front door (ADR-0016) —
+  // it's outside the manifest-derived `entryRoutes` sweep above and asserted
+  // here directly rather than via a per-Tenant `register…()` module.
+  describe('root index page', () => {
+    it('renders the hero and lists the Blog, Midden, and Atlas showcases in order', async () => {
+      const html = await $fetch('/')
+      expect(html).toMatch(/<h1[ >]/)
+      const blogAt = html.indexOf('The Blog')
+      const middenAt = html.indexOf('The Midden')
+      const atlasAt = html.indexOf('The Atlas')
+      expect(blogAt).toBeGreaterThan(-1)
+      expect(middenAt).toBeGreaterThan(-1)
+      expect(atlasAt).toBeGreaterThan(-1)
+      expect(blogAt).toBeLessThan(middenAt)
+      expect(middenAt).toBeLessThan(atlasAt)
+    })
+
+    it('hydrates in a browser with no console/page errors', async () => {
+      await expectCleanHydration('/')
+    })
+
+    it('links each showcase card to its Tenant front door, in order', async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url('/'), { waitUntil: 'hydration' })
+        const hrefs = await page.locator('.explore-grid a.title-link').evaluateAll((els) =>
+          els.map((el) => el.getAttribute('href')),
+        )
+        expect(hrefs).toEqual(['/t/blog', '/t/midden', '/t/atlas'])
+      } finally {
+        await page.close()
+      }
+    })
   })
 
   // ── Platform: every content page with a fenced ```mermaid block (#469) ──────
