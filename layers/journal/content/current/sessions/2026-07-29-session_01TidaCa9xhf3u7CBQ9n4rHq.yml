@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_01TidaCa9xhf3u7CBQ9n4rHq
+startedAt: 2026-07-29T06:13:09Z
+endedAt: 2026-07-29T06:40:53Z
+kind: interactive
+goal: Fix the archive sweep's off-by-one retention
+status: in-review
+outcome: Retention now counts surviving dates
+summary: 'The user asked why the archive sweep leaves six sessions in `current` when they expected seven, and whether the daily digest Routine was the cause. Investigated and answered: the six is Digests, not sessions, and the Routine is not the cause — `RETAIN_DAYS` was a today-inclusive calendar window, but a Digest covers a closed UTC day, so today always spent a slot on a Digest that cannot exist yet. The user then asked for a PR, and on a follow-up explicitly asked that the algorithm and naming be less confusing, since "retain days" reads as the count that remains. Both the fix and that reframing were human-instructed. Reworked retention into a count of surviving distinct dates per kind (`RETAIN_DATES`), which drops the wall clock entirely.'
+prs:
+  - "728"
+docsRead:
+  - path: scripts/archive-journal-content.ts
+    reason: the retention logic under investigation
+  - path: .agents/skills/digest/SKILL.md
+    reason: confirms a Digest covers only closed UTC days — the actual cause
+  - path: docs/agents/pr-workflow.md
+    reason: merge authority for an ordinary work PR
+  - path: tests/unit/archive-journal-content.spec.ts
+    reason: (read before editing)
+  - path: layers/journal/tests/e2e/journal.e2e.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: A named constant encoded a calendar window while its name promised a surviving count; nothing tested the two against each other.
+    solution: Test the invariant the name states, not the arithmetic as written — the new spec asserts a full seven Digests survive.
+    severity: minor
+  - description: Two cosmetic edits landed after `pnpm gate:scoped` had already run lint and typecheck, so the gate never saw them.
+    solution: Freeze edits once the gate starts, or re-run the floor afterwards — did the latter here (lint and typecheck re-run green).
+    severity: nit
+  - description: Blocked chaining `sleep` before `tail` to poll a background gate; the corrective message named the right tools immediately.
+    solution: Guard worked as designed — used a backgrounded `until` loop on the log's completion marker instead.
+    severity: nit
+durationSec: 1665
+models:
+  claude-opus-5: 97
+toolCounts:
+  Bash: 27
+  Grep: 1
+  Read: 10
+  ToolSearch: 3
+  mcp__github__search_issues: 1
+  Write: 4
+  Edit: 6
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - scripts/archive-journal-content.ts
+  - tests/unit/archive-journal-content.spec.ts
+  - .agents/skills/digest/SKILL.md
+  - layers/journal/tests/e2e/journal.e2e.ts
+gitBranch: claude/session-archive-count-f09346
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - "`slice(-n)` with n=0 returns the whole array, so a count-based retention budget needs an explicit non-positive guard or it silently retains everything"
+  - A calendar-window retention drains `current` toward empty during a quiet stretch, whereas a count-of-dates budget holds the newest N however far apart they fall
+ideas:
+  - Add a gate check that renders the Journal's `current` Space inventory as a committed snapshot — counts per Collection, oldest and newest date — so a retention change's real effect on the dashboard shows up as a reviewable diff instead of only as a passing unit test. The archive sweep's off-by-one survived for weeks precisely because nothing made the resulting shape of `current` visible in review.
