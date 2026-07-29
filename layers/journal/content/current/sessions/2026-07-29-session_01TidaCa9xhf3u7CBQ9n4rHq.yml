@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01TidaCa9xhf3u7CBQ9n4rHq
 startedAt: 2026-07-29T06:13:09Z
-endedAt: 2026-07-29T06:40:53Z
+endedAt: 2026-07-29T06:49:35Z
 kind: interactive
 goal: Fix the archive sweep's off-by-one retention
-status: in-review
-outcome: Retention now counts surviving dates
-summary: 'The user asked why the archive sweep leaves six sessions in `current` when they expected seven, and whether the daily digest Routine was the cause. Investigated and answered: the six is Digests, not sessions, and the Routine is not the cause — `RETAIN_DAYS` was a today-inclusive calendar window, but a Digest covers a closed UTC day, so today always spent a slot on a Digest that cannot exist yet. The user then asked for a PR, and on a follow-up explicitly asked that the algorithm and naming be less confusing, since "retain days" reads as the count that remains. Both the fix and that reframing were human-instructed. Reworked retention into a count of surviving distinct dates per kind (`RETAIN_DATES`), which drops the wall clock entirely.'
+status: completed
+outcome: "Merged as PR #728, green gate"
+summary: 'The user asked why the archive sweep leaves six sessions in `current` when they expected seven, and whether the daily digest Routine was the cause. Investigated and answered: the six is Digests, not sessions, and the Routine is not the cause — `RETAIN_DAYS` was a today-inclusive calendar window, but a Digest covers a closed UTC day, so today always spent a slot on a Digest that cannot exist yet. The user then asked for a PR, and on a follow-up explicitly asked that the algorithm and naming be less confusing, since "retain days" reads as the count that remains. Both the fix and that reframing were human-instructed. Reworked retention into a count of surviving distinct dates per kind (`RETAIN_DATES`), which drops the wall clock entirely. The PR went green on both local and CI gates and a human merged it.'
 prs:
   - "728"
 docsRead:
@@ -35,23 +35,25 @@ frictions:
   - description: Blocked chaining `sleep` before `tail` to poll a background gate; the corrective message named the right tools immediately.
     solution: Guard worked as designed — used a backgrounded `until` loop on the log's completion marker instead.
     severity: nit
-durationSec: 1665
+durationSec: 2186
 models:
-  claude-opus-5: 97
+  claude-opus-5: 118
+  <synthetic>: 2
 toolCounts:
-  Bash: 27
+  Bash: 30
   Grep: 1
   Read: 10
   ToolSearch: 3
   mcp__github__search_issues: 1
   Write: 4
-  Edit: 6
+  Edit: 8
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  mcp__github__pull_request_read: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 4
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/archive-journal-content.ts
   - tests/unit/archive-journal-content.spec.ts
