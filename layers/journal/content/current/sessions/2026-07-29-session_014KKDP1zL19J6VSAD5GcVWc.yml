@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_014KKDP1zL19J6VSAD5GcVWc
 startedAt: 2026-07-29T06:54:15Z
-endedAt: 2026-07-29T07:30:28Z
+endedAt: 2026-07-29T08:00:06Z
 kind: interactive
 goal: Survey the Platform's discards, then catalogue them
-status: in-review
-outcome: "Survey issue #730 filed; six artifacts in PR #732"
+status: completed
+outcome: "Survey issue #730 filed; six artifacts merged via PR #732"
 summary: 'Human-instructed throughout, in two steps. First the user invoked /midden-survey - discovery only, no cataloguing - and I swept the full history unbounded (first run, no prior report to bound from): 38 deleted paths, 0 dropped deps, 12 closed-unmerged PRs, filed as "#730". Six candidates cleared both gates, 15 failed Gate B and were recorded as Palimpsest-boundary notes, and branches were excluded structurally - the repo is younger than the 30-day dormancy floor. The user then green-lit cataloguing all six and asked me to author the curatorial fields for review, so I wrote six artifacts, rewrote the four dig reports that narrate them, and opened "#732". Gate green, render verified against a live preview server.'
 prs:
   - "732"
@@ -58,12 +58,12 @@ frictions:
   - description: GitHub MCP list_issues and search_pull_requests overflowed the token cap three times; each needed a spill-file and an ad-hoc python parse.
     solution: Reach for minimal_output and a small perPage on the first call to any repo-wide GitHub list/search tool, not after the overflow.
     severity: minor
-durationSec: 2172
+durationSec: 3950
 models:
-  claude-opus-5: 254
+  claude-opus-5: 265
 toolCounts:
   Read: 14
-  Bash: 68
+  Bash: 70
   ToolSearch: 4
   mcp__github__search_issues: 2
   mcp__github__list_issues: 2
@@ -74,13 +74,14 @@ toolCounts:
   mcp__github__issue_read: 1
   Skill: 2
   AskUserQuestion: 1
-  Edit: 17
+  Edit: 18
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 3
   mcp__Claude_Code_Remote__send_later: 1
   SendUserFile: 1
+  mcp__Claude_Code_Remote__delete_trigger: 3
 filesEdited:
   - layers/midden/content/trench/artifacts/the-condition-popover.yml
   - layers/midden/content/trench/artifacts/the-dig-season-legend.yml
