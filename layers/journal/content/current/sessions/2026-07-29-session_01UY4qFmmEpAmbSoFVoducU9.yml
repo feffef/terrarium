@@ -1,0 +1,49 @@
+schemaVersion: 1
+session: session_01UY4qFmmEpAmbSoFVoducU9
+startedAt: 2026-07-29T01:05:52Z
+endedAt: 2026-07-29T01:21:08Z
+kind: autonomous
+goal: Run scheduled frictions-to-fixes cycle
+status: completed
+outcome: One PR landed, two regressions escalated
+summary: "Scheduled (Routine-triggered, no human prompt) frictions-to-fixes run. Delegated the survey step to a general-purpose subagent that read the last 20 session logs and screened candidates against the tracker/main. Most of the window had already been mined by 3 prior frictions-to-fixes runs, so almost everything screened to already-fixed or open-already. Filed 3 issues: #723 and #724 are regressions (the fabricated-Claude-Session-footer fix failing to hold a 5th time despite 2 doc + 2 mechanical prior fixes; the TaskCreate deferred-tool-guard coverage gap recurring a 4th time despite 2 doc + 1 mechanical prior fix) — per the Skill's own regression-handling rule these were escalated to a human rather than autonomously redispatched, and left open with no further action this run. #725 (close-session \"At PR-open\" step didn't say the intermediate in-review log is skippable when all dispatched PRs merge same-turn) was the one simple never-fixed candidate; dispatched to a Sonnet impl agent in an isolated worktree, which opened PR #726 unassisted. Reviewed the diff myself, confirmed CI green, posted the review verdict as a PR comment, merged via scripts/merge-pr.ts, then unsubscribed and cancelled the now-unneeded check-in. All actions in this run (survey, issue filing, dispatch, review, merge) were autonomous per the frictions-to-fixes Skill's own charter — no human touched this session."
+prs:
+  - "726"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 917
+models:
+  claude-sonnet-5: 57
+toolCounts:
+  Agent: 2
+  ToolSearch: 2
+  mcp__github__search_issues: 3
+  mcp__github__issue_write: 3
+  Skill: 3
+  Bash: 4
+  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Read: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix close-session sequencing doc note
+    model: sonnet
+gitBranch: claude/hopeful-brown-1gjdqv
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: frictions-to-fixes
