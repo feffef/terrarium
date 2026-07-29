@@ -121,6 +121,11 @@ not the Midden (not yet cross-referenced; revisit once Palimpsest exists).
 - **`app/components/midden/ConditionKey.vue`** — the condition key: the sticky
   dig-report sidebar defining the grades present in that report's finds (see
   Condition above).
+- **`.agents/skills/midden-survey/`** — the survey Skill that mechanizes
+  candidate *discovery* (deleted files / dropped dependencies via
+  `scripts/midden-survey.ts`; PRs / branches via the GitHub tools) and files a
+  survey-report issue. The inclusion bar above is the judgment it applies;
+  everything curatorial stays curator-authored.
 
 ## A note on the post-MVP simplification
 
