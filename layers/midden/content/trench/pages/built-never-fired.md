@@ -14,10 +14,13 @@ There is a no-op script left in the build only to hold a door; two spikes opened
 with "do not merge" written into their own bodies, each closed the moment it had
 its answer; a dependency installed with the very first milestone and never once
 imported before someone noticed, eight days later, that it had never been used;
-and a docs-drift gate finished down to nine passing tests and a break-then-fix
+a docs-drift gate finished down to nine passing tests and a break-then-fix
 proof, closed unmerged so that the check it performs has never run on the tree it
-was built to guard. Read in stratum order, they are a thin honest record of how
-much a fast platform builds that it never needs.
+was built to guard; and, at the top, one of this trench's own instruments — a
+panel built to open beneath a find and show the curator's reasoning, left
+deliberately unwired for a card that was written the same night and never reached
+for it. Read in stratum order, they are a thin honest record of how much a fast
+platform builds that it never needs.
 
 ::midden-artifact{slug="the-drift-shim"}
 ::
@@ -32,4 +35,7 @@ much a fast platform builds that it never needs.
 ::
 
 ::midden-artifact{slug="the-docs-drift-gate"}
+::
+
+::midden-artifact{slug="the-condition-popover"}
 ::

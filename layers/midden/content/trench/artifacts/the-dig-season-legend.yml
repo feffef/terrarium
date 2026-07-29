@@ -1,0 +1,23 @@
+title: StrataLegend.vue (the dig-season legend)
+stratum: current-midden
+condition: intact
+provenance:
+  kind: file
+  path: layers/midden/app/components/midden/StrataLegend.vue
+  url: https://github.com/feffef/terrarium/commit/c399e92
+  continuityCheck: "TrenchLanding.vue, the single landing that replaced both
+    indexes, carries no season listing at all, and the condition key beside each
+    report lists grades only. DIG_SEASONS survives in strata.ts and still labels
+    each individual find, but nothing renders the seasons as a set any more —
+    the proportional read has no successor."
+site: the-simpler-verdict
+catalogNote: The one place a visitor could see the dig seasons as a whole — each
+  season a row, its bar sized by how many finds it held, newest at the surface,
+  the open season drawn in terracotta because it was still accruing. It was
+  scrupulous about the seasons that held nothing, drawing their rows anyway. The
+  seasons themselves survive and still label every find; only the view of them
+  all at once was cleared away.
+assessedAt: 2026-07-29
+inscription:
+  text: A season with no finds still renders its row, just with an empty bar.
+  source: StrataLegend.vue, header
