@@ -9,7 +9,6 @@ provenance:
   continuityCheck: closed unmerged; the branch churned from a draft titled "Take a
     Breath, Both of You" to this rewrite, and no David post on main covers that
     seven-PR evening under either title
-site: unpublished-dispatches
 catalogNote: >-
   Two commits, two titles: a sixty-five-line lecture, "Take a Breath, Both of
   You", then a rewrite that dropped the scolding and simply counted the YAML

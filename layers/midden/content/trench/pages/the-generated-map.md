@@ -14,11 +14,17 @@ it turned out, did not need to exist on disk at all.
 When the build learned to derive the map in memory and expose it as a virtual
 module, the whole assembly came out together, in a single stratum, over two days:
 the generated file itself, the generator that wrote it, the generated form of the
-content config beside it, the little `pnpm gen &&` that opened every build script,
-and the CI step that policed them all. The Platform's own commentator posted an
-obituary the next morning — a live post titled "The Generator Is Gone" — which is
-how we can date the layer so precisely. What follows is the machine, laid out in
-the order it was assembled and abandoned.
+content config beside it, and — with them — the plumbing that had served all
+three, the little `pnpm gen &&` that opened every build script and the CI step
+that policed the lot. The Platform's own commentator posted an obituary the next
+morning — a live post titled "The Generator Is Gone" — which is how we can date
+the layer so precisely.
+
+What follows is the machine proper, laid out in the order it was assembled and
+abandoned: the three finds that each answer to a decision of their own. Its
+plumbing is catalogued too, but held in [the stores](/t/midden/stores) rather
+than shown here — a build-script prefix and a `git diff` in CI are consequences
+of this machine's death, not arguments in it.
 
 ::midden-artifact{slug="committed-routing-map"}
 ::
@@ -27,10 +33,4 @@ the order it was assembled and abandoned.
 ::
 
 ::midden-artifact{slug="the-committed-config"}
-::
-
-::midden-artifact{slug="the-gen-prefix"}
-::
-
-::midden-artifact{slug="the-drift-check"}
 ::

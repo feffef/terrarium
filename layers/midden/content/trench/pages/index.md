@@ -20,5 +20,10 @@ carried forward under a new shape, belongs to a different dig. Here we keep only
 the corpses, dated and graded, and quote them wherever anything survives to quote.
 
 Each site below is one report on a related cluster of finds. Open a site to read
-its layer; the stratigraphy alongside it marks which dig seasons that layer
-touches.
+its layer; each find carries the dig season it came from and the grade the curator
+gave it, and the key alongside says what the grades mean.
+
+Not every catalogued find is narrated here. A dig report earns its finds, and the
+ones that are sound but not significant — a build-script prefix, a dependency
+nobody imported, an instrument wired to nothing — are held in the stores instead,
+in full, boxed by season. The record does not shrink to fit the display.

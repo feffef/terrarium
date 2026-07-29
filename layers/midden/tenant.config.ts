@@ -8,9 +8,12 @@
 // this manifest at config-evaluation time, and the routing map is derived from
 // it at build time (ADR-0002/0013/0014) — no generated file involved.
 //
-// v1 scope is the `trench` Space only (#522 ruled `gallery` out of scope for
-// this MVP — deferred until `trench` has accumulated enough graded artifacts to
-// curate real exhibits from).
+// Two Spaces. `trench` is the excavation on display; `stores` holds finds kept
+// off display — fully catalogued, graded and dated, just not narrated by a dig
+// report (layers/midden/CONTEXT.md, "The Stores"). `gallery` remains out of
+// scope (#522 — deferred until `trench` has accumulated enough graded artifacts
+// to curate real exhibits from); trench → gallery → stores is the whole life of
+// a real institution's material: excavation, exhibition, storage.
 //
 // Three collections, all declared tenant-wide per `shared/manifest.ts`'s shape,
 // though `labels` is deliberately EMPTY in `trench` for v1 (it is a `gallery`
@@ -81,7 +84,7 @@ const remainEntry = z
 
 export default defineTenant({
   name: 'midden',
-  spaces: ['trench'],
+  spaces: ['trench', 'stores'],
   collections: {
     // The routed dig report (#516). `title` (from the `page` type) is the
     // site's name; the body is the curator's dig-report prose, embedding
@@ -108,7 +111,12 @@ export default defineTenant({
           stratum: z.string(), // dig-season slug — validated against utils/strata.ts by scripts/validate-content-refs.ts
           condition,
           provenance,
-          site: z.string(), // back-reference to the `pages` (site) Document slug that narrates it
+          // Back-reference to the `pages` (site) Document slug that narrates it.
+          // Optional at the SCHEMA level because the policy is per-Space and a
+          // schema is declared Tenant-wide: required-and-resolving in a Space
+          // that has dig reports, forbidden in one that has none (the stores).
+          // `scripts/validate-content-refs.ts` enforces the real rule.
+          site: z.string().optional(),
           // Curator's voice — small-caps register (theme.css). Terse; contrast
           // the more generous latitude the `lost` gravestone epitaph gets, which
           // still uses this same field (there's no separate epitaph field).

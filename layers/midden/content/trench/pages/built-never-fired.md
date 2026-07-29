@@ -1,6 +1,6 @@
 ---
 title: Built and Never Fired
-description: Complete, finished things — a spike, a smoke test, a dependency, a whole tested gate — that were never once put to use.
+description: Complete, finished things — a placeholder, a spike, a smoke test, a whole tested gate — that were never once put to use.
 ---
 
 Not everything in a midden is broken. Some of it is perfect: whole, unblemished,
@@ -10,17 +10,20 @@ sits off the erosion axis entirely, because these things did not decay so much a
 never begin.
 
 They cut across every season, which is the point of collecting them together.
-There is a no-op script left in the build only to hold a door; two spikes opened
-with "do not merge" written into their own bodies, each closed the moment it had
-its answer; a dependency installed with the very first milestone and never once
-imported before someone noticed, eight days later, that it had never been used;
-a docs-drift gate finished down to nine passing tests and a break-then-fix
-proof, closed unmerged so that the check it performs has never run on the tree it
-was built to guard; and, at the top, one of this trench's own instruments — a
-panel built to open beneath a find and show the curator's reasoning, left
-deliberately unwired for a card that was written the same night and never reached
-for it. Read in stratum order, they are a thin honest record of how much a fast
-platform builds that it never needs.
+There is a no-op script left in the build only to hold a door — six hours of
+placeholder standing in for a CI change its own authors were not permitted to
+push; a spike opened with "do not merge" written into its own body, closed the
+moment it had its answer, and a five-line smoke test whose whole content was an
+instruction to close the pull request carrying it, which dates the moment the
+Platform went public and its CI billing stop lifted; and, at the top, a gate finished
+down to nine passing tests and a break-then-fix proof, closed twenty seconds
+after it went green, so that the check it performs has never run on the tree it
+was built to guard. Read in stratum order, they are a thin honest record of how
+much a fast platform builds that it never needs.
+
+Smaller never-fired things are catalogued in [the stores](/t/midden/stores) — a
+dependency nobody imported, a panel wired to nothing — kept in full, just not
+narrated here.
 
 ::midden-artifact{slug="the-drift-shim"}
 ::
@@ -31,11 +34,5 @@ platform builds that it never needs.
 ::midden-artifact{slug="the-gate-smoke-test"}
 ::
 
-::midden-artifact{slug="the-unused-zod-adapter"}
-::
-
-::midden-artifact{slug="the-docs-drift-gate"}
-::
-
-::midden-artifact{slug="the-condition-popover"}
+::midden-artifact{slug="the-removed-noun-gate"}
 ::

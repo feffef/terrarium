@@ -423,8 +423,18 @@ function checkArtifacts(
     const file = join(col.cwdRel, rel)
     const msgs: string[] = []
 
+    // `site` policy is per-Space and derived, never a hardcoded Space name: a
+    // Space WITH dig reports must have every find narrated by one; a Space with
+    // none (the stores — layers/midden/CONTEXT.md) must not carry a dangling
+    // back-reference. The schema can't express this — it is declared Tenant-wide.
     const site = typeof data.site === 'string' ? data.site : undefined
-    if (site !== undefined && !siteSlugs.has(site)) {
+    if (siteSlugs.size === 0) {
+      if (site !== undefined) {
+        msgs.push(`site: "${site}" — this Space has no "pages" Documents, so a find here must carry no site back-reference`)
+      }
+    } else if (site === undefined) {
+      msgs.push('site: required — every find in a Space with dig reports must name the "pages" Document that narrates it')
+    } else if (!siteSlugs.has(site)) {
       msgs.push(`site: "${site}" is not a "pages" Document in this Space`)
     }
 

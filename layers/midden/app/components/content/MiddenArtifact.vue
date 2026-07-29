@@ -19,48 +19,9 @@
 // A broken `slug` reference is loud, not invisible — `scripts/
 // validate-content-refs.ts` plus the schema catch a bad reference at build/CI
 // time, so the fallback below exists only for the rare case that slips through.
-import { conditionMeta, type Grade } from '../../utils/condition'
+import { conditionMeta } from '../../utils/condition'
 import { digSeasonOf } from '../../utils/strata'
-
-/** An Artifact's own words, quoted verbatim (tenant.config.ts's `inscription`). */
-interface MiddenInscription {
-  text: string
-  source: string
-}
-
-/** One curator-curated link to the artifact's preserved original state
- *  (tenant.config.ts's `remainEntry` — SHA-pinned, immutable). */
-interface MiddenRemain {
-  label: string
-  url: string
-}
-
-/** The discriminated provenance union (tenant.config.ts's `provenance`), mirrored
- *  as a plain TS type — the manifest exports only the zod schema, not its inferred
- *  type. Single-homed here now: this embed is the sole consumer since the redesign
- *  folded ArtifactCard and the trench-data composable away. */
-type MiddenProvenance =
-  | { kind: 'pr'; number: number; merged: boolean; url?: string; continuityCheck?: string }
-  | { kind: 'branch'; name: string; url?: string; continuityCheck?: string }
-  | { kind: 'commit'; hash: string; path?: string; url?: string; continuityCheck?: string }
-  | { kind: 'file'; path: string; url?: string; continuityCheck?: string }
-  | { kind: 'dependency'; name: string; url?: string; continuityCheck?: string }
-  | { kind: 'skill'; name: string; url?: string; continuityCheck?: string }
-
-/** One raw `artifacts` Document, narrowed to the fields this find renders. The
- *  filename (`stem`) IS the slug; the schema carries no `slug` field of its own. */
-interface MiddenArtifactDoc {
-  stem: string
-  title: string
-  stratum: string
-  condition: Grade
-  provenance: MiddenProvenance
-  catalogNote: string
-  assessedAt: string
-  removedIn?: string
-  remains?: MiddenRemain[]
-  inscription?: MiddenInscription
-}
+import { formatMiddenDate, middenProvenanceLine, type MiddenArtifactDoc } from '../../utils/find'
 
 const props = defineProps<{ slug: string }>()
 
@@ -104,35 +65,6 @@ const removedInUrl = computed(() =>
   artifact.value?.removedIn ? `${REPO_URL}/commit/${artifact.value.removedIn}` : undefined,
 )
 const removedInShort = computed(() => artifact.value?.removedIn?.slice(0, 7))
-
-// Deterministic, locale-independent date prose (no `toLocaleDateString`, whose
-// SSR/client locale mismatch causes hydration errors). #526 asks only that
-// `assessedAt` render as prose, never re-derive condition.
-const MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-function formatAssessedAt(iso: string): string {
-  const [year, month, day] = iso.split('-')
-  return `${Number(day)} ${MONTH_ABBR[Number(month) - 1]} ${year}`
-}
-
-// A kind-appropriate provenance label derived from the REAL discriminated union.
-function provenanceLine(p: MiddenProvenance): string {
-  switch (p.kind) {
-    case 'pr':
-      return `PR #${p.number} · ${p.merged ? 'merged' : 'closed'}`
-    case 'branch':
-      return `branch · ${p.name}`
-    case 'commit':
-      return `commit ${p.hash.slice(0, 7)}${p.path ? ` · ${p.path}` : ''}`
-    case 'file':
-      return `file · ${p.path}`
-    case 'dependency':
-      return `dependency · ${p.name}`
-    case 'skill':
-      return `Skill · ${p.name}`
-    default:
-      return p // exhaustive: `p` is `never` if a provenance kind is added unhandled
-  }
-}
 </script>
 
 <template>
@@ -159,14 +91,14 @@ function provenanceLine(p: MiddenProvenance): string {
           :href="artifact.provenance.url"
           target="_blank"
           rel="noopener noreferrer"
-        >{{ provenanceLine(artifact.provenance) }}</a>
-        <span v-else>{{ provenanceLine(artifact.provenance) }}</span>
+        >{{ middenProvenanceLine(artifact.provenance) }}</a>
+        <span v-else>{{ middenProvenanceLine(artifact.provenance) }}</span>
         <template v-if="removedInUrl">
           <span class="midden-find__dot" aria-hidden="true">·</span>
           <a :href="removedInUrl" target="_blank" rel="noopener noreferrer">removed in {{ removedInShort }}</a>
         </template>
         <span class="midden-find__dot" aria-hidden="true">·</span>
-        <span class="midden-find__assessed">assessed {{ formatAssessedAt(artifact.assessedAt) }}</span>
+        <span class="midden-find__assessed">assessed {{ formatMiddenDate(artifact.assessedAt) }}</span>
       </p>
     </header>
 

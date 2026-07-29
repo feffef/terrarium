@@ -1,0 +1,33 @@
+title: the `sync` / `consolidate` / `codify` job-names
+stratum: spike-ashfall
+condition: dissolved
+provenance:
+  kind: commit
+  hash: a1dc590
+  path: CONTEXT.md
+  url: https://github.com/feffef/terrarium/commit/a1dc590
+  continuityCheck: three speculative names for self-improvement jobs, coined in one
+    glossary before any of the work existed; the work grew real names instead
+    (digest, audit-docs, audit-skills, frictions-to-fixes) and nothing was ever
+    built to answer to any of the three — only the ordinary English verbs survive,
+    which were never the artifact
+site: the-buried
+catalogNote: >-
+  One glossary, three chartered jobs, none of them built. `sync` was promised an
+  inventory of every Tenant, Space and Collection plus CI and drift health —
+  later — and ended up billed as a remit already served by other Skills, which
+  is a tidy way of saying `digest` and `audit-skills` did the work while nothing
+  bore the name. `consolidate` was named four times and defined in none of them:
+  twice in parentheses beside `codify`, once in a list of chartered jobs, once
+  as an ordinary verb. Only `codify` had an entry of its own, and it conceded in
+  bold that no such job ran, explaining the term was defined so writing could
+  refer to it consistently until it existed. It never existed. The taxonomy was
+  retired whole and only the plain verbs were allowed to stay.
+remains:
+  - label: codify’s own entry, conceding it was never built
+    url: https://github.com/feffef/terrarium/blob/2dc889cd8acb614b9424602b26648324ea62ea96/CONTEXT.md
+assessedAt: 2026-07-29
+inscription:
+  text: codify — same speculative taxonomy (a job that mints a new Skill). Avoid
+    it as a job-name.
+  source: CONTEXT.md, Retired terms

@@ -92,6 +92,10 @@ useHead({ title: 'The Midden' })
           </li>
         </ol>
         <p v-else class="midden-empty">No sites catalogued yet.</p>
+
+        <p class="tech midden-landing__stores">
+          <NuxtLink to="/t/midden/stores">The stores — finds held off display →</NuxtLink>
+        </p>
       </section>
     </div>
   </main>
@@ -195,6 +199,14 @@ useHead({ title: 'The Midden' })
   color: var(--midden-faint);
   font-style: italic;
 }
+
+/* The quiet door to the stores: deliberately not a dig-report row — it leads to
+   the register of what this landing does NOT show (CONTEXT.md, "The Stores"). */
+.midden-landing__stores {
+  margin: 1.4rem 0 0;
+}
+.midden-landing__stores a { color: var(--midden-faint); }
+.midden-landing__stores a:hover { color: var(--midden-accent); }
 
 @media (max-width: 34rem) {
   .midden-sites__link { grid-template-columns: 1.8rem 1fr; }

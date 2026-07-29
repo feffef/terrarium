@@ -9,7 +9,6 @@ provenance:
   continuityCheck: gate.yml is human-only CI, its history not carried in this
     clone; the step is gone and nothing checks generated-file drift because
     nothing is generated to drift (ADR-0014)
-site: the-generated-map
 catalogNote: >-
   It stood first in the gate, ahead of lint: regenerate, diff, fail if a
   manifest had moved without its output — ADR-0007 called that plain `git

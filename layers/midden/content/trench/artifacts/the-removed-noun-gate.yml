@@ -1,26 +1,35 @@
-title: flag removed-mechanism nouns outside their home
+title: the removed-mechanism-noun gate (PR #477)
 stratum: current-midden
-condition: fresh
+condition: never-activated
 provenance:
   kind: pr
   number: 477
   merged: false
   url: https://github.com/feffef/terrarium/pull/477
   continuityCheck: "closed unmerged; the merged-nowhere commit dcdebef is not an
-    ancestor of main, and #442’s removed-mechanism-noun check exists nowhere in
-    the live tree"
-site: the-current-cut
+    ancestor of main, and neither scripts/check-docs-drift.ts, its
+    `check:docs-drift` wiring, nor #442’s removed-mechanism-noun check exists
+    anywhere in the live tree — #442 remains unimplemented"
+site: built-never-fired
 catalogNote: >-
-  A grep gate for retired mechanism names lingering in live prose, proven with
-  a break-then-fix against a scratch doc written to fail it. The safety gate
+  A grep gate for retired mechanism names lingering in live prose: 135 lines,
+  nine unit tests, and a config listing exactly one retired noun — SessionEnd,
+  with three sanctioned homes. Whole-word matched so it would not trip over
+  SessionEndpoint, scoped to live docs outside layers, and wired into
+  validate:content so no workflow change was needed. It was proven with a
+  break-then-fix against a scratch doc written to fail it, and the safety gate
   reported green at 11:51; twenty seconds later the owner closed it with a
-  one-word verdict, overengineering, and an admission that he had missed it
-  when the solution was designed.
+  one-word verdict, overengineering, and an admission that he had missed it when
+  the solution was designed. The check it performs has never once run against
+  the tree it was built to guard.
 remains:
+  - label: the check, finished and never run
+    url: https://github.com/feffef/terrarium/blob/dcdebefa2e4d2effaa455f15f5e0b44329af8d12/scripts/check-docs-drift.ts
   - label: the nine tests, all passing
     url: https://github.com/feffef/terrarium/blob/dcdebefa2e4d2effaa455f15f5e0b44329af8d12/tests/unit/check-docs-drift.spec.ts
-assessedAt: 2026-07-16
+assessedAt: 2026-07-29
 inscription:
-  text: "feat(gate): flag removed-mechanism nouns referenced outside their
-    sanctioned home (part of #442)"
-  source: "PR #477 title"
+  text: "Cheap docs-drift check (issue #442, split off #439’s audit-docs sweep): a
+    removed/renamed mechanism noun ... tends to keep being *mentioned* in prose
+    long after the mechanism it names has moved on"
+  source: "scripts/check-docs-drift.ts, header (PR #477)"

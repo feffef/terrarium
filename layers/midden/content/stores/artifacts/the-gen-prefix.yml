@@ -8,7 +8,6 @@ provenance:
   url: https://github.com/feffef/terrarium/commit/e75bda0
   continuityCheck: every build/dev/typecheck script once began `pnpm gen &&`; that
     prefix is gone from package.json and no `gen` script remains to call
-site: the-generated-map
 catalogNote: >-
   Five scripts opened the same way — postinstall, dev, build, generate,
   typecheck — each running `pnpm gen &&` first so nobody could build against a

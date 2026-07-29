@@ -1,5 +1,7 @@
 <script setup lang="ts">
-// The site (dig-report) entry (`/t/midden/trench/<site>`). Post-MVP simplification
+// The site (dig-report) entry (`/t/midden/trench/<site>`). Only `trench` has Sites
+// — the `stores` Space has no `pages` Documents at all (CONTEXT.md, "The Stores"),
+// so this route resolves but never finds one there. Post-MVP simplification
 // (owner-directed, this branch): the scroll-synced stratigraphy gauge is gone —
 // the curator's prose with inline `::midden-artifact` embeds (each an open, flat
 // find; see MiddenArtifact.vue) is the page. `land → read`. The margin the gauge
@@ -70,7 +72,7 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
     <article v-if="site" class="midden-page midden-report">
       <header class="midden-report__head">
         <p class="tech midden-crumb">
-          <NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><NuxtLink :to="`/t/midden/${space}`">trench</NuxtLink><span class="sep">/</span><span class="here">{{ siteSlug }}</span>
+          <NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><NuxtLink :to="`/t/midden/${space}`">{{ space }}</NuxtLink><span class="sep">/</span><span class="here">{{ siteSlug }}</span>
         </p>
 
         <p class="sc midden-eyebrow">Dig report</p>
@@ -79,7 +81,7 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
 
         <div v-if="siteArtifacts.length" class="tech midden-report__meta">
           <span>{{ seasonSummary }}</span><span class="midden-report__dot">·</span>
-          <span>{{ siteArtifacts.length }} finds</span><span class="midden-report__dot">·</span>
+          <span>{{ siteArtifacts.length }} {{ siteArtifacts.length === 1 ? 'find' : 'finds' }}</span><span class="midden-report__dot">·</span>
           <span>assessed {{ assessedSpan }}</span>
         </div>
       </header>
@@ -93,12 +95,12 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
 
     <div v-else class="midden-page">
       <p class="tech midden-crumb">
-        <NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><NuxtLink :to="`/t/midden/${space}`">trench</NuxtLink>
+        <NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><NuxtLink :to="`/t/midden/${space}`">{{ space }}</NuxtLink>
       </p>
       <div class="midden-not-found">
         <h1 class="doctitle">Not catalogued</h1>
-        <p>No site answers to <code>{{ path }}</code> in the trench. Perhaps it was never dug; perhaps it is simply elsewhere.</p>
-        <p><NuxtLink :to="`/t/midden/${space}`">Back to the trench</NuxtLink></p>
+        <p>No site answers to <code>{{ path }}</code> in the {{ space }}. Perhaps it was never dug; perhaps it is simply elsewhere.</p>
+        <p><NuxtLink :to="`/t/midden/${space}`">Back to the {{ space }}</NuxtLink></p>
       </div>
     </div>
   </main>

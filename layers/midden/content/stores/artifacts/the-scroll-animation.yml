@@ -9,7 +9,6 @@ provenance:
   continuityCheck: the smooth-scroll behaviour was dropped from the dashboard; the
     position-preserving scroll it decorated remains, but the animation itself is
     gone
-site: toward-the-defaults
 catalogNote: >-
   Two lines: a prefers-reduced-motion check and the ternary it fed, easing the
   dashboard's correction for a click-caused reflow. The correction was meant

@@ -1,26 +1,34 @@
-title: ConditionGlyph.vue (the grade mark)
+title: ConditionGlyph.vue + ConditionTooltip.vue (the grade mark and its decode)
 stratum: current-midden
 condition: dissolved
 provenance:
   kind: file
   path: layers/midden/app/components/midden/ConditionGlyph.vue
   continuityCheck: condition now renders as a plain word (CONTEXT.md, Condition term);
-    the SVG mark and its `glyphFor` geometry in utils/condition.ts came out in the
-    same commit — nothing carries the mark forward, so Gate B holds.
+    the SVG mark, its `glyphFor` geometry in utils/condition.ts, and the popup that
+    decoded it all came out in the same commit. The condition key shows every grade's
+    definition openly, so neither the mark nor any hover- or focus-triggered decode
+    affordance survives to carry the pair forward — Gate B holds for both halves.
 site: the-simpler-verdict
 catalogNote: >-
-  Forty lines of SVG over three path constants — DISC, SHERD_BROKEN,
-  GRAVESTONE — encoding a grade in fill and opacity so a visitor could scan a
-  find's condition without reading the word. The simplification decided the
-  word was enough; the mark wore away to exactly that, eight days after it was
-  first drawn.
+  One affordance in two files. Forty lines of SVG over three path constants —
+  DISC, SHERD_BROKEN, GRAVESTONE — encoded a grade in fill and opacity so a
+  visitor could scan a find's condition without reading the word; forty more
+  opened on hover and keyboard focus alike to say what the mark meant, wiring
+  aria-describedby only while the bubble was open and honouring Escape, a real
+  styled popup rather than a native title. Eight days after the mark was first
+  drawn, the simplification decided the word was enough and left the definitions
+  simply visible. The mark wore away to exactly the word it had stood in for,
+  and the reveal had nothing left to reveal.
 removedIn: c399e92
 remains:
   - label: the mark, forty lines of it
     url: https://github.com/feffef/terrarium/blob/c37be970ca0d3e4158bc87965a4b19508fb7a70e/layers/midden/app/components/midden/ConditionGlyph.vue
+  - label: the bubble, keyboard-reachable to the end
+    url: https://github.com/feffef/terrarium/blob/c37be970ca0d3e4158bc87965a4b19508fb7a70e/layers/midden/app/components/midden/ConditionTooltip.vue
   - label: the geometry it rendered, before it was stripped out
     url: https://github.com/feffef/terrarium/blob/c37be970ca0d3e4158bc87965a4b19508fb7a70e/layers/midden/app/utils/condition.ts
-assessedAt: 2026-07-24
+assessedAt: 2026-07-29
 inscription:
   text: "Decay is encoded by fill + opacity + stroke-width ONLY — no blur filter
     (the redesign dropped the feathered edge)."
