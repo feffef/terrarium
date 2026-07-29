@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01NTMpx8aVzhU9GPrEpVoASw
 startedAt: 2026-07-29T06:27:37Z
-endedAt: 2026-07-29T06:59:06Z
+endedAt: 2026-07-29T07:20:33Z
 kind: interactive
-goal: Propose Midden ideas; build the surveyor Skill
-status: completed
-outcome: Ideas delivered; midden-survey Skill merged (#729)
-summary: "Two phases, both human-instructed. First (kickoff prompt): proposed five grounded Midden improvement ideas, screened against open issues so none duplicated tracked work. Second (explicit green-light, /implement 3 now): built idea 3, the midden-survey Skill — TDD'd scripts/midden-survey.ts (deleted-file and dropped-dependency sweep with noise/rename/Gate-B/ already-catalogued screens, shallow-clone refusal, 18 unit tests), the SKILL.md survey flow (MCP sweep for closed-unmerged PRs and dormant branches, two-gate judgment, one survey-report issue per run, everything curatorial left curator-authored), Skill Inventory entry, and a CONTEXT.md pointer. Full gate green; two-axis code review ran pre-push and its actionable findings were folded in. Gated PR #729 opened, gate green, and merged by the owner."
+goal: Midden ideas, surveyor Skill, artifact model
+status: in-review
+outcome: "Surveyor merged (#729); artifact model in PR #731"
+summary: "Two phases, both human-instructed. First (kickoff prompt): proposed five grounded Midden improvement ideas, screened against open issues so none duplicated tracked work. Second (explicit green-light, /implement 3 now): built idea 3, the midden-survey Skill — TDD'd scripts/midden-survey.ts (deleted-file and dropped-dependency sweep with noise/rename/Gate-B/ already-catalogued screens, shallow-clone refusal, 18 unit tests), the SKILL.md survey flow (MCP sweep for closed-unmerged PRs and dormant branches, two-gate judgment, one survey-report issue per run, everything curatorial left curator-authored), Skill Inventory entry, and a CONTEXT.md pointer. Full gate green; two-axis code review ran pre-push and its actionable findings were folded in. Gated PR #729 opened, gate green, merged by the owner. Third phase (owner-directed, remains locked curator-curated): extended the artifact model with removedIn (terminal commit, bare hash) and remains (SHA-pinned immutable links to original state), TDD'd the stratum corroboration check, rendered both in MiddenArtifact.vue, backfilled 12 artifacts whose provenance url was squatting as the removal link, curated four remains exemplars, screenshot-verified; PR #731 in review."
 prs:
   - "729"
+  - "731"
 docsRead:
   - path: layers/midden/CONTEXT.md
     reason: inclusion bar, vocabulary, post-MVP state
@@ -23,15 +24,17 @@ docsRead:
   - path: layers/midden/app/components/midden/TrenchLanding.vue
     reason: (no reason given)
   - path: layers/midden/app/components/content/MiddenArtifact.vue
-    reason: (no reason given)
+    reason: (read before editing)
   - path: scripts/validate-content-refs.ts
-    reason: (no reason given)
+    reason: (read before editing)
   - path: .agents/skills/frictions-to-fixes/SKILL.md
     reason: (no reason given)
   - path: layers/journal/content/current/skills/frictions-to-fixes.yml
     reason: (no reason given)
   - path: tests/unit/merged-since.spec.ts
     reason: (no reason given)
+  - path: tests/unit/validate-content-refs.spec.ts
+    reason: (read before editing)
 skillsUsed:
   - name: implement
     reason: green-lit build of idea 3
@@ -50,29 +53,32 @@ frictions:
   - description: git push --force-with-lease rejected with stale info because the pre-cloned environment carried a remote-tracking ref for a branch the remote no longer has.
     solution: git remote prune origin before the first push of a session whose branch name predates the clone; plain push then succeeded.
     severity: nit
+  - description: A git checkout -- used to restore a negative-test edit silently reverted that file's own uncommitted backfill too — caught only because the post-restore diff came back empty, then re-applied.
+    solution: "CLAUDE.md's check-first discipline applies to single-file checkout restores as much as reset --hard: stash or commit pending edits before any discard-and-restore probe on a file you have modified."
+    severity: minor
   - description: Stop hook flagged inherited origin/main commit adb167c as Unverified alongside this session's own tip; signing key unprovisioned so the suggested --reset-author remedy could fix nothing.
     solution: Followed CLAUDE.md's existing guidance (check origin/main..HEAD, known platform limitation) — no doc change needed, just noise.
     severity: nit
-durationSec: 1889
+durationSec: 3176
 models:
-  claude-fable-5: 180
+  claude-fable-5: 279
 toolCounts:
-  Bash: 37
+  Bash: 60
   Glob: 1
-  Read: 10
+  Read: 13
   ToolSearch: 4
   mcp__github__search_issues: 1
-  Grep: 4
+  Grep: 5
   Skill: 4
   Write: 7
-  Edit: 8
-  TaskCreate: 4
-  TaskUpdate: 8
+  Edit: 22
+  TaskCreate: 9
+  TaskUpdate: 18
   Agent: 2
-  mcp__github__search_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__search_pull_requests: 2
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
   mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
@@ -81,6 +87,10 @@ filesEdited:
   - .agents/skills/midden-survey/SKILL.md
   - layers/journal/content/current/skills/midden-survey.yml
   - layers/midden/CONTEXT.md
+  - tests/unit/validate-content-refs.spec.ts
+  - scripts/validate-content-refs.ts
+  - layers/midden/tenant.config.ts
+  - layers/midden/app/components/content/MiddenArtifact.vue
 subagents:
   - type: general-purpose
     task: Standards review of diff
