@@ -10,7 +10,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { scanDirectives, validateReferences } from '../../scripts/validate-content-refs.ts'
+import { commitDateWithinSeason, scanDirectives, validateReferences } from '../../scripts/validate-content-refs.ts'
 import type { ExpandedCollection } from '../../shared/expand.ts'
 
 let dir: string
@@ -310,5 +310,34 @@ describe('validateReferences() — Specimen body: unclosed MDC container (the #4
     const report = validateReferences([pagesCol('pages')], dir)
     expect(report.violations.length).toBeGreaterThan(0)
     expect(report.violations[0]?.messages.join()).toMatch(/"::almanac" is never closed/)
+  })
+})
+
+describe('commitDateWithinSeason() — the removedIn/stratum corroboration (Midden)', () => {
+  const closed = { slug: 's', label: 'the S', start: '2026-07-10', end: '2026-07-13' }
+  const open = { slug: 'o', label: 'the O', start: '2026-07-14', end: null }
+
+  it('accepts a commit date inside a closed season (inclusive bounds)', () => {
+    expect(commitDateWithinSeason('2026-07-10T00:12:00+00:00', closed)).toBe(true)
+    expect(commitDateWithinSeason('2026-07-13T23:59:59+02:00', closed)).toBe(true)
+    expect(commitDateWithinSeason('2026-07-11T09:00:00Z', closed)).toBe(true)
+  })
+
+  it('rejects a commit date outside a closed season', () => {
+    expect(commitDateWithinSeason('2026-07-09T23:59:59Z', closed)).toBe(false)
+    expect(commitDateWithinSeason('2026-07-14T00:00:00Z', closed)).toBe(false)
+  })
+
+  it('treats an open-ended season as bounded only below', () => {
+    expect(commitDateWithinSeason('2026-07-14T00:00:00Z', open)).toBe(true)
+    expect(commitDateWithinSeason('2027-01-01T00:00:00Z', open)).toBe(true)
+    expect(commitDateWithinSeason('2026-07-13T23:59:59Z', open)).toBe(false)
+  })
+
+  it('compares on the DATE PART of the commit instant, not clock time', () => {
+    // A commit late on the season's last day, expressed in a negative offset
+    // whose UTC instant crosses midnight, still belongs to that calendar day
+    // as git renders it (%cI carries the committer's own offset).
+    expect(commitDateWithinSeason('2026-07-13T20:00:00-07:00', closed)).toBe(true)
   })
 })

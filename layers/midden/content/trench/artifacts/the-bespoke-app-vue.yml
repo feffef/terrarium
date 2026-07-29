@@ -4,7 +4,6 @@ condition: intact
 provenance:
   kind: file
   path: app.vue
-  url: https://github.com/feffef/terrarium/commit/85b6613
   continuityCheck: removed to sit on Nuxt’s own default root; its three-line
     NuxtLayout/NuxtPage body is exactly what the framework now supplies, so no
     repo file carries it
@@ -12,6 +11,10 @@ site: toward-the-defaults
 catalogNote: A hand-written root component that did precisely what the framework
   already did for free; removed the day the platform decided to stop restating
   its defaults.
+removedIn: 85b6613
+remains:
+  - label: the three-line root, as last alive
+    url: https://github.com/feffef/terrarium/blob/d916f3398056915a2919014ede14999ebe2b93e3/app.vue
 assessedAt: 2026-07-16
 inscription:
   text: |-

@@ -4,7 +4,6 @@ condition: fresh
 provenance:
   kind: file
   path: pnpm-workspace.yaml
-  url: https://github.com/feffef/terrarium/commit/b23e8d3
   continuityCheck: existed only to declare the patched dependency to pnpm; removed
     in the same commit as the patch it served, with no successor — a single-repo
     tree needs no workspace file
@@ -12,6 +11,7 @@ site: the-current-cut
 catalogNote: A workspace manifest kept alive by exactly one thing — the
   dependency patch — and carried out in the same load as it, the morning the
   patch became unnecessary.
+removedIn: b23e8d3
 assessedAt: 2026-07-16
 inscription:
   text: onlyBuiltDependencies / patchedDependencies

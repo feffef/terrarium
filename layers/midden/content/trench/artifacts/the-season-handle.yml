@@ -4,7 +4,6 @@ condition: intact
 provenance:
   kind: file
   path: layers/atlas/app/components/content/Season.vue
-  url: https://github.com/feffef/terrarium/commit/856c264
   continuityCheck: the Glass-Year season handle retired with the whole season-note
     model; phase-notes carry a different mechanism, and no component named
     Season survives
@@ -12,6 +11,7 @@ site: the-first-almanac
 catalogNote: An inline season handle that swung the almanac needle when clicked
   and underlined itself while the needle rode its season — an elaborate small
   thing, whole and legible, and wholly retired.
+removedIn: 856c264
 assessedAt: 2026-07-16
 inscription:
   text: '`:season[display]{of="slug"}` (#283) — a Glass-Year season’s name as a
