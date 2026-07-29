@@ -1,0 +1,69 @@
+schemaVersion: 1
+session: session_01P3arkRTBbNEsEichGhvfrY
+startedAt: 2026-07-29T04:09:29Z
+endedAt: 2026-07-29T04:24:18Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: completed
+outcome: "PR #727 merged via merge-pr.ts on green gate"
+summary: "Scheduled, unprompted run of /audit-docs — no human input this session. Branched off origin/main, tiered every *.md file (Live/Historical/ Pack-generic), dispatched 4 parallel read-only reviewer agents (one per paired lens: Freshness, Single-home, Concision, Coherence) over the Live/ Historical doc set, pooled 3 candidate findings, and fact-checked all three with an independent verifier before touching anything. Fixed 2 confirmed findings: digest/SKILL.md's intro misattributed \"auto-merge is available, so you enable it\" to docs/agents/pr-workflow.md, which actually forbids calling enable_pr_auto_merge directly (reworded to the actual merge-pr.ts mechanism); and docs/agents/domain.md restated the same ADR-0021 descriptor clause twice (trimmed the repeat). Dropped one candidate (a Mis-location claim on layers/midden/CONTEXT.md) as WRONG — a prior /audit-docs sweep (5b089752) had already deliberately trimmed that exact section for that exact reason. Ran pnpm gate:scoped green, committed, pushed, opened PR #727, subscribed to its activity, and merged it via scripts/merge-pr.ts once CI reported green — left a one-line audit-trail comment on the PR after merge."
+prs:
+  - "727"
+docsRead:
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: this run's own instructions
+  - path: CLAUDE.md
+    reason: branch-off checklist
+  - path: docs/agents/pr-workflow.md
+    reason: verify the enable_pr_auto_merge contradiction
+  - path: .agents/skills/digest/SKILL.md
+    reason: fixed the contradiction here
+  - path: docs/agents/domain.md
+    reason: fixed the verbose restatement here
+  - path: layers/midden/CONTEXT.md
+    reason: verify the disputed Mis-location finding against prior sweep 5b089752
+  - path: CONTEXT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: PR-open closure checkpoint
+  - name: log-session
+    reason: author this log
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 889
+models:
+  claude-sonnet-5: 123
+toolCounts:
+  Bash: 35
+  Agent: 5
+  Read: 6
+  Edit: 6
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__get_file_contents: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - .agents/skills/digest/SKILL.md
+  - docs/agents/domain.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens audit (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens audit (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens audit (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens audit (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check pooled audit-docs findings
+gitBranch: claude/festive-mayer-okbhfu
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: audit-docs
