@@ -8,11 +8,15 @@ provenance:
     in the same commit as the patch it served, with no successor — a single-repo
     tree needs no workspace file
 site: the-current-cut
-catalogNote: A workspace manifest kept alive by exactly one thing — the
-  dependency patch — and carried out in the same load as it, the morning the
-  patch became unnecessary.
+catalogNote: >-
+  It never listed a package or a workspace member — one key,
+  patchedDependencies, mapping @nuxt/content@3.15.0 to the file beside it.
+  Created in the patch's commit and deleted in the patch's commit, eight days
+  apart, having served exactly one dependency.
 removedIn: b23e8d3
 assessedAt: 2026-07-16
 inscription:
-  text: onlyBuiltDependencies / patchedDependencies
-  source: pnpm-workspace.yaml, its whole reason to exist
+  text: |-
+    patchedDependencies:
+      '@nuxt/content@3.15.0': patches/@nuxt__content@3.15.0.patch
+  source: pnpm-workspace.yaml, in full — its whole reason to exist

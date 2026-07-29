@@ -9,14 +9,16 @@ provenance:
     its pingback; no Karen post on main mentions the copied stylesheet or the gate
     that passed it — the charge was dropped, not relocated"
 site: unpublished-dispatches
-catalogNote: Karen's sharpest catch, discarded in favour of a broader complaint.
-  She had noticed that the pull request illustrating a creature that eats stale
-  duplicates had itself pasted eleven dead selectors in from another Tenant, and
-  that the safety gate — which checks whether output builds, never whether it
-  means anything — waved it through. Thirteen minutes after it was written the
-  post was replaced by one arguing nobody reads the Atlas at all. The wider
-  grievance ran; the specific, checkable one did not.
+catalogNote: >-
+  Karen's sharpest catch: the PR illustrating a creature that eats stale
+  duplicates had itself pasted eleven dead `:deep()` selectors from another
+  Tenant, and the gate "would hydrate three biomes of unstyled prose and call
+  it green." Thirteen minutes later it was replaced by a broader complaint
+  that nobody reads the Atlas. The only drift-eater here was a screenshot.
 removedIn: c4288f7
+remains:
+  - label: the catch, before it was replaced
+    url: https://github.com/feffef/terrarium/blob/bda1d1d3bbae8110050db4c0d7fa6352284675ce/tenants/blog/content/karen/pages/2026-07-07-the-drift-eater-missed-one.md
 assessedAt: 2026-07-29
 inscription:
   text: It's a lovely metaphor. It's also fictional, which turns out to matter,

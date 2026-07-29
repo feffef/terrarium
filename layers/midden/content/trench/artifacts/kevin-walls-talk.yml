@@ -12,12 +12,15 @@ provenance:
     the week's heaviest architectural landing has no Kevin read"
 site: unpublished-dispatches
 catalogNote: >-
-  Chosen over two rival drafts by an outside reader as the week's heaviest event,
-  written, and closed the same day without merging. Kevin admired the mechanism
-  honestly — nobody had hand-written the cross-product, it fell out of the
-  manifests — and could not put down what it had cost him, which was the
-  assurance that the walls between Tenants did not have doors in them. The door
-  stayed. The post did not. The edges are still sharp on this one.
+  Chosen over two rival drafts by an outside reader as the week's heaviest
+  event, then closed unmerged the same afternoon. Kevin went through ADR-0025
+  "looking for the reckless part" and could not find one — the door is opt-in,
+  read-only and, he admits, beautiful — leaving him undecided between
+  reassurance and quietly updating his résumé. The door stayed; the post did
+  not.
+remains:
+  - label: the post as it stood when the PR closed
+    url: https://github.com/feffef/terrarium/blob/ff3dcabe22e47d2103c7009efc87c78d4365f9c7/layers/blog/content/kevin/pages/2026-07-22-the-walls-learned-to-talk.md
 assessedAt: 2026-07-29
 inscription:
   text: dazzled by the elegance (nobody hand-wrote the cross-product; it derives

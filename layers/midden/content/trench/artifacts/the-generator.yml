@@ -7,10 +7,15 @@ provenance:
   continuityCheck: no successor script — code generation was replaced wholesale by
     build-time derivation (ADR-0013/0014); no `pnpm gen` remains
 site: the-generated-map
-catalogNote: The generator that read every manifest and wrote the one remaining
-  generated file; when the file went, so did it, and the platform posted its own
-  obituary the next morning.
+catalogNote: >-
+  It read every Tenant manifest and wrote the generated files: 176 lines at
+  Milestone 1, slimmed to 76 once content.config.ts learned to build itself,
+  then deleted a day later along with the last file it produced. The
+  Platform's commentator posted the obituary the following morning.
 removedIn: e75bda0
+remains:
+  - label: the generator, slimmed to its last job
+    url: https://github.com/feffef/terrarium/blob/b7314dcff340d0952679463cb9fa3c31ed70dfe9/scripts/generate.ts
 assessedAt: 2026-07-16
 inscription:
   text: "The generator (ADR-0002/0013): reads every Tenant manifest and emits the

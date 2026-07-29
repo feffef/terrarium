@@ -4,13 +4,14 @@ condition: lost
 provenance:
   kind: commit
   hash: 04466d6
-  path: .
   url: https://github.com/feffef/terrarium/commit/04466d6
   continuityCheck: the manifest-driven foundation arrived as a single squashed
     commit; whatever exploratory commits produced it are not in any reachable
     history — the current foundation stands on ground whose making is gone
 site: the-buried
-catalogNote: The whole first milestone landed as one squashed commit; the
-  iterations that built the manifest foundation left no trace behind it, and the
-  trench floor rests directly on their absence.
+catalogNote: >-
+  One commit, 28 files, 12,214 insertions — 11,360 of them the lockfile — and
+  the manifest type, generator, routing map, safety gate and first Tenant all
+  arriving fully formed. Whatever attempts produced them are reachable from no
+  ref; the trench floor is the squash itself.
 assessedAt: 2026-07-16

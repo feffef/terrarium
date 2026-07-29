@@ -10,9 +10,14 @@ provenance:
     unlike its twins it kept a faint outline — "codify" stays a good plain word
     for turning a concept into code
 site: the-buried
-catalogNote: Last of the three speculative job-names, retired with the rest; it
-  wore away less completely than the others, kept as a plain word for turning a
-  concept into code but never again as a job.
+catalogNote: >-
+  Alone of the three it had a glossary entry of its own, which conceded in
+  bold that no such job ran and explained the term was defined so writing
+  could refer to it consistently until it existed. It never existed; the plain
+  verb outlived the taxonomy.
+remains:
+  - label: its own entry, conceding it was never built
+    url: https://github.com/feffef/terrarium/blob/2dc889cd8acb614b9424602b26648324ea62ea96/CONTEXT.md
 assessedAt: 2026-07-16
 inscription:
   text: codify — same speculative taxonomy (a job that mints a new Skill). Avoid

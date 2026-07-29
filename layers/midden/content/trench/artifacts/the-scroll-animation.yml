@@ -10,9 +10,15 @@ provenance:
     position-preserving scroll it decorated remains, but the animation itself is
     gone
 site: toward-the-defaults
-catalogNote: A smooth easing on the dashboard’s position-preserving scroll,
-  dropped when the motion turned out to cost more than it gave; the scroll it
-  dressed still works, plainly.
+catalogNote: >-
+  Two lines: a prefers-reduced-motion check and the ternary it fed, easing the
+  dashboard's correction for a click-caused reflow. The correction was meant
+  to be invisible, so the animation showed exactly the motion it was hiding;
+  the reduced-motion branch it shipped with became the only branch. The
+  removal traded two lines of code for five more of comment.
+remains:
+  - label: the easing, in the function it decorated
+    url: https://github.com/feffef/terrarium/blob/0ac1e13e38b2baaf537a6e350db8de75e7bd210c/layers/journal/app/pages/t/journal/[space]/index.vue#L107-L112
 assessedAt: 2026-07-16
 inscription:
   text: "journal(dashboard): drop the smooth animation from the

@@ -10,13 +10,15 @@ provenance:
     each individual find, but nothing renders the seasons as a set any more —
     the proportional read has no successor."
 site: the-simpler-verdict
-catalogNote: The one place a visitor could see the dig seasons as a whole — each
-  season a row, its bar sized by how many finds it held, newest at the surface,
-  the open season drawn in terracotta because it was still accruing. It was
-  scrupulous about the seasons that held nothing, drawing their rows anyway. The
-  seasons themselves survive and still label every find; only the view of them
-  all at once was cleared away.
+catalogNote: >-
+  121 lines: a row per season, newest at the surface, each bar sized by the
+  finds it held, the open one in terracotta because it was still accruing. It
+  drew rows for the empty seasons too, at zero width. The seasons survive and
+  still date every find; only this view of them all at once is gone.
 removedIn: c399e92
+remains:
+  - label: the season bars, empty rows and all
+    url: https://github.com/feffef/terrarium/blob/c37be970ca0d3e4158bc87965a4b19508fb7a70e/layers/midden/app/components/midden/StrataLegend.vue
 assessedAt: 2026-07-29
 inscription:
   text: A season with no finds still renders its row, just with an empty bar.

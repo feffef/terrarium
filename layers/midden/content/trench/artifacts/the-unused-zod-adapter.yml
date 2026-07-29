@@ -7,9 +7,11 @@ provenance:
   continuityCheck: added at Milestone 1 (04466d6), removed unused eight days later
     (5fd7ba4); no import ever referenced it, nothing replaced it
 site: built-never-fired
-catalogNote: A dependency installed with the very first milestone and never once
-  imported, carried in the manifest for eight days before anyone noticed it had
-  never been used.
+catalogNote: >-
+  A devDependency pinned at ^3.23.5, installed with the Milestone 1 foundation
+  beside the zod it was meant to adapt, and never named by a single import.
+  Eight days later one line left package.json and three left the lockfile, in
+  a commit whose whole argument was its own subject line.
 removedIn: 5fd7ba4
 assessedAt: 2026-07-16
 inscription:

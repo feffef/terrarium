@@ -10,9 +10,15 @@ provenance:
     ancestor of main, and #442’s removed-mechanism-noun check exists nowhere in
     the live tree"
 site: the-current-cut
-catalogNote: A gate to catch a retired mechanism’s name lingering in live docs,
-  proven out with a break-then-fix and closed unmerged two days ago — edges
-  still sharp, the check it proposed still never run.
+catalogNote: >-
+  A grep gate for retired mechanism names lingering in live prose, proven with
+  a break-then-fix against a scratch doc written to fail it. The safety gate
+  reported green at 11:51; twenty seconds later the owner closed it with a
+  one-word verdict, overengineering, and an admission that he had missed it
+  when the solution was designed.
+remains:
+  - label: the nine tests, all passing
+    url: https://github.com/feffef/terrarium/blob/dcdebefa2e4d2effaa455f15f5e0b44329af8d12/tests/unit/check-docs-drift.spec.ts
 assessedAt: 2026-07-16
 inscription:
   text: "feat(gate): flag removed-mechanism nouns referenced outside their

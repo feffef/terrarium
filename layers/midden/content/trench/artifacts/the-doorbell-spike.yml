@@ -10,9 +10,15 @@ provenance:
     doorbell-spike.yml workflow was never merged, the finding was captured in
     #278 instead"
 site: built-never-fired
-catalogNote: A throwaway workflow built only to answer one question — yes, a bot
-  comment does wake a subscribed session — and closed the moment it had, its
-  answer carried off to another issue.
+catalogNote: >-
+  Thirty-three lines that posted a simulated gate-green comment without ever
+  consulting the gate. The control was the finding: a genuinely green run woke
+  nobody, while the fake one — provoked by an empty commit pushed purely to
+  trigger a synchronize event — arrived as a wake event. Closed thirteen
+  minutes after opening.
+remains:
+  - label: the throwaway workflow, do-not-merge banner intact
+    url: https://github.com/feffef/terrarium/blob/e5976950382399c7c8a1eb3006e6dc185157b4e5/.github/workflows/doorbell-spike.yml
 assessedAt: 2026-07-16
 inscription:
   text: This spike (doorbell-spike.yml) is throwaway and is not merged.

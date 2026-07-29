@@ -8,10 +8,18 @@ provenance:
     for phase-notes; the ::phase directive has zero occurrences in content and
     no component of its name survives
 site: the-first-almanac
-catalogNote: The first way the Atlas bound a passage to a phenology phase,
-  retired for a season model that was itself retired days later; two
-  abandonments deep, only its header comment reads whole.
+catalogNote: >-
+  Sixty-five lines that kept a passage fully inked for readers who never
+  touched the dial, fading it to pencil only once the wheel was engaged.
+  Retired for a season model that outlived it by fifty-six minutes; the
+  engaged flag only it read went out in the same commit. Two abandonments
+  deep, its header comment reads whole.
 removedIn: ebcd802
+remains:
+  - label: the directive, all sixty-five lines
+    url: https://github.com/feffef/terrarium/blob/abe22c2555ce9f7789ea5f985622ab3bc54df228/layers/atlas/app/components/content/Phase.vue
+  - label: the engaged flag only it read
+    url: https://github.com/feffef/terrarium/blob/abe22c2555ce9f7789ea5f985622ab3bc54df228/layers/atlas/app/composables/almanac.ts
 assessedAt: 2026-07-16
 inscription:
   text: '`::phase{of="name"}` (#283) — binds the enclosed passage to one of this

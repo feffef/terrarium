@@ -9,14 +9,16 @@ provenance:
     reference beside the words, not a successor to the instrument — different
     identity, so Gate B holds.
 site: the-simpler-verdict
-catalogNote: A scroll-synced cross-section of the seasons a report's finds span —
-  oldest at the bottom like a real trench wall, each band sized to how much that
-  season actually deposited, the current one lit and marked. Server-rendered first,
-  observer only as enhancement; complete down to the honest proportions, and taken
-  out whole when the page decided it would rather just be read than measured.
+catalogNote: >-
+  Two hundred and fifty-seven lines of margin: bands grown by flexGrow set to
+  that season's find count, an IntersectionObserver that held the last active
+  season rather than blank the highlight through a prose gap, and a hand-
+  lettered "you're here". Server-rendered anchors first, the observer only
+  enhancement — taken out whole when the page decided it would rather be read
+  than measured.
 removedIn: c399e92
 remains:
-  - label: the sidebar, scroll-sync intact
+  - label: the gauge, scroll-sync and honest proportions intact
     url: https://github.com/feffef/terrarium/blob/c37be970ca0d3e4158bc87965a4b19508fb7a70e/layers/midden/app/components/midden/StratigraphySidebar.vue
 assessedAt: 2026-07-24
 inscription:

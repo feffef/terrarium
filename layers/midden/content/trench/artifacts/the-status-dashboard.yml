@@ -11,7 +11,9 @@ provenance:
     status-dashboard design it replaced was discarded, not carried forward — a
     curator judgment call
 site: the-buried
-catalogNote: The self-documentation Tenant’s first form, a status dashboard,
-  thrown out on the same day it was made when the platform decided its record
-  should read as a journal instead.
+catalogNote: >-
+  Its landing called itself the Platform's own status report and pointed at an
+  about page explaining the build. Under three hours later ADR-0008 ruled that
+  status mislabelled a logbook; the Tenant became the Journal, and the
+  dashboard framing was not invited along.
 assessedAt: 2026-07-16
