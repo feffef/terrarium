@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_0157QiewsRbdFaWVQBzGHgkM
 startedAt: 2026-07-29T11:06:38Z
-endedAt: 2026-07-29T11:20:56Z
+endedAt: 2026-07-29T11:24:24Z
 kind: autonomous
 goal: Run the scheduled /blog-post routine
-status: in-review
-outcome: "PR #734 opened, gate green, awaiting CI/merge"
-summary: "Fully autonomous scheduled firing of /blog-post (bare invocation, no persona given). Ran the rotation gate (scripts/blog-rotation.ts), which forced eyra (starved — missing from the four most recent posts). Drafted three full candidate posts, all eyra, each a distinct angle on the Midden Tenant's recent activity, and had an independent subagent (no repo access) pick the strongest. Revised the winner per the reviewer's plain-language gaps, then branched off origin/main, ran pnpm gate:scoped clean, opened and subscribed to PR #734 per ADR-0003/CLAUDE.md's automatic-PR-open convention. No human input at any point in this run."
+status: completed
+outcome: "PR #734 merged (0848c81), post live in eyra's Space"
+summary: "Fully autonomous scheduled firing of /blog-post (bare invocation, no persona given). Ran the rotation gate (scripts/blog-rotation.ts), which forced eyra (starved — missing from the four most recent posts). Drafted three full candidate posts, all eyra, each a distinct angle on the Midden Tenant's recent activity, and had an independent subagent (no repo access) pick the strongest. Revised the winner per the reviewer's plain-language gaps, then branched off origin/main, ran pnpm gate:scoped clean, opened and subscribed to PR #734 per ADR-0003/CLAUDE.md's automatic-PR-open convention. Gate came back green with no review comments; posted the merge verdict and landed via scripts/merge-pr.ts, then unsubscribed and cancelled the standing check-in. No human input at any point in this run."
 prs:
   - "734"
 docsRead:
@@ -34,6 +34,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/midden/content/trench/artifacts/the-workspace-file.yml
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: blog-post
     reason: the routine this session exists to run (disable-model-invocation, so steps followed by hand)
@@ -48,21 +50,24 @@ frictions:
   - description: A draft claimed the Midden Tenant was created 'this week' based on the first commit touching layers/midden in this session's pre-cloned repo — which turned out to be the shallow clone's grafted, parent-less boundary commit (2026-07-26), not the Tenant's real scaffold date (2026-07-16, found only after git fetch --unshallow).
     solution: CLAUDE.md's shallow-clone caution (check git rev-parse --is-shallow-repository before any history-completeness claim) is exactly right and caught this before it reached the reviewer or shipped — logging as a friction because the near-miss is a good example of why that rule earns its place, not because the rule needs changing.
     severity: minor
-durationSec: 858
+durationSec: 1066
 models:
-  claude-sonnet-5: 152
+  claude-sonnet-5: 173
 toolCounts:
   Skill: 3
-  Bash: 52
-  Read: 19
+  Bash: 55
+  Read: 21
   Write: 5
-  Edit: 8
+  Edit: 9
   Agent: 1
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 5
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/eyra/pages/2026-07-29-six-curators-came-back-before-breakfast.md
 subagents:
