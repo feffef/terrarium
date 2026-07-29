@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01QK3pU3agi9TWqiAdNNASJQ
 startedAt: 2026-07-29T00:16:50Z
-endedAt: 2026-07-29T00:35:03Z
+endedAt: 2026-07-29T06:01:14Z
 kind: autonomous
 goal: Run the scheduled /digest sweep
-status: in-review
-outcome: "2026-07-28 Digest authored, PR #722 open"
-summary: "Scheduled /digest routine, no human instruction. Listed one undigested day (2026-07-28), gathered its PRs/commits/sessions via scripts/digest.ts, and authored the Digest page. Ran the mandatory retention sweep (archive-journal-content.ts --write), which moved 1 digest + 12 sessions to archived — including the only `external: true` session ever logged (the fork-PR #631 salvage session), for the first time since that feature landed. This broke journal.e2e.ts's hardcoded-content assertion for the \"external\" ribbon. Diagnosed the root cause, fixed the test to read the external/ordinary session goals live from `current` (matching the existing currentDigestDates() pattern) and made the positive ribbon assertion degrade gracefully when no external session is currently in the 7-day window, since that will recur. Gate went green (68/68 e2e), committed, pushed, and opened PR #722 — left open for human review rather than auto-merged, since the test fix falls outside the Digest Skill's normal auto-merge-eligible scope (digest pages + archive moves only). Entirely agent-initiated per the Skill's own schedule."
+status: completed
+outcome: "2026-07-28 Digest authored, PR #722 merged"
+summary: "Scheduled /digest routine, no human instruction. Listed one undigested day (2026-07-28), gathered its PRs/commits/sessions via scripts/digest.ts, and authored the Digest page. Ran the mandatory retention sweep (archive-journal-content.ts --write), which moved 1 digest + 12 sessions to archived — including the only `external: true` session ever logged (the fork-PR #631 salvage session), for the first time since that feature landed. This broke journal.e2e.ts's hardcoded-content assertion for the \"external\" ribbon. Diagnosed the root cause, fixed the test to read the external/ordinary session goals live from `current` (matching the existing currentDigestDates() pattern) and made the positive ribbon assertion degrade gracefully when no external session is currently in the 7-day window, since that will recur. Gate went green (68/68 e2e), committed, pushed, and opened PR #722 — left open for human review rather than auto-merged, since the test fix falls outside the Digest Skill's normal auto-merge-eligible scope (digest pages + archive moves only). Babysat the PR through six ~1-hour check-ins (CI stayed green throughout, no review comments) until a human merged it. Entirely agent-initiated per the Skill's own schedule."
 prs:
   - "722"
 docsRead:
@@ -27,11 +27,14 @@ frictions:
   - description: "The mandatory retention sweep (step 5) moved the only `external: true` session out of `current` for the first time since the ribbon feature shipped, breaking an e2e test that hardcoded an assumption it would stay present. A latent conflict between the 7-day retention policy and a test asserting against rare, real content that the policy itself ages out."
     solution: Rewrote the test to read session goals live from `current` instead of hardcoding them, and made the "external session gets the ribbon" half degrade gracefully (skip, don't fail) on a day with none in the window — since external sessions are rare and not exempt from the sweep, this will keep recurring by design, not just today.
     severity: moderate
-durationSec: 1092
+  - description: A human took roughly six hours to merge a green, low-risk PR that was correctly left off auto-merge (it touched a test file outside the Digest Skill's pure digest scope). Not a defect in this session's own work, but the wait meant six ~1-hour babysitting check-ins were spent confirming "still nothing changed."
+    solution: No action needed from this session — the scope boundary that required human review was applied correctly. Noting only as a data point on how long a correctly-escalated digest PR can sit before a human reviews it.
+    severity: nit
+durationSec: 20663
 models:
-  claude-sonnet-5: 102
+  claude-sonnet-5: 150
 toolCounts:
-  Bash: 26
+  Bash: 28
   Read: 4
   Write: 1
   Edit: 6
@@ -41,8 +44,9 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  mcp__github__pull_request_read: 2
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 20
+  mcp__Claude_Code_Remote__send_later: 6
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-07-28.md
   - layers/journal/tests/e2e/journal.e2e.ts
