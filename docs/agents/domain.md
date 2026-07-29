@@ -30,7 +30,7 @@ If any of these files don't exist, **proceed silently**. Don't flag their absenc
 
 ## File structure
 
-This repo's actual shape (multi-context, shared-kernel — ADR-0021) diverges from
+This repo's actual shape (ADR-0021) diverges from
 the generic `domain-modeling` template: the template puts contexts under
 `src/<context>/` with per-context `docs/adr/`; this repo co-locates each
 Tenant's `CONTEXT.md` under `layers/<tenant>/` (where the Tenants already live)
