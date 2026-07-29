@@ -71,6 +71,14 @@ const ATLAS = {
         <span class="atlas-blurb">Engraved plates, a wanderable food web, and a resident naturalist — grown one specimen at a time.</span>
       </NuxtLink>
     </section>
+
+    <section class="midden-feature" aria-label="The Midden">
+      <p class="blogs-lead">Or dig through the Midden — an archaeology-themed catalogue of everything the Platform has deliberately discarded: dead branches, closed pull requests, deprecated Skills, and proposals that never landed.</p>
+      <NuxtLink to="/t/midden" class="midden-card">
+        <span class="midden-name">The Midden</span>
+        <span class="midden-blurb">Every find graded and dated like a real dig — read as evidence of iteration, not failure.</span>
+      </NuxtLink>
+    </section>
   </main>
 </template>
 
@@ -249,4 +257,36 @@ const ATLAS = {
 .atlas-swatches .sw { width: 16px; height: 16px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); }
 .atlas-name { font-weight: 650; font-size: 1.15rem; color: var(--root-ink); letter-spacing: -0.01em; }
 .atlas-blurb { font-size: 0.9rem; color: var(--root-muted); line-height: 1.5; }
+
+.midden-feature {
+  --midden-accent: #b4552d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 40rem;
+}
+@media (prefers-color-scheme: dark) {
+  .midden-feature { --midden-accent: #d4753f; }
+}
+.midden-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.3rem 1.6rem;
+  border: 1px solid var(--root-line);
+  border-radius: 12px;
+  background: transparent;
+  text-decoration: none;
+  max-width: 30rem;
+  transition: border-color 0.15s ease, transform 0.15s ease, background-color 0.15s ease;
+}
+.midden-card:hover {
+  border-color: var(--midden-accent);
+  transform: translateY(-2px);
+  background-color: color-mix(in srgb, var(--midden-accent) 5%, transparent);
+}
+.midden-name { font-weight: 650; font-size: 1.15rem; color: var(--root-ink); letter-spacing: -0.01em; }
+.midden-blurb { font-size: 0.9rem; color: var(--root-muted); line-height: 1.5; }
 </style>
