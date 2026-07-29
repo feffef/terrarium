@@ -1,0 +1,26 @@
+title: "Kevin: “The Walls Learned to Talk to Each Other”"
+stratum: current-midden
+condition: fresh
+provenance:
+  kind: pr
+  number: 646
+  merged: false
+  url: https://github.com/feffef/terrarium/pull/646
+  continuityCheck: "closed unmerged the day it opened; no Kevin post on main
+    mentions the cross-Tenant read model, the derived catalog, or the ADR that
+    introduced them, and his slot that day went to a post on an unrelated event —
+    the week's heaviest architectural landing has no Kevin read"
+site: unpublished-dispatches
+catalogNote: >-
+  Chosen over two rival drafts by an outside reader as the week's heaviest event,
+  written, and closed the same day without merging. Kevin admired the mechanism
+  honestly — nobody had hand-written the cross-product, it fell out of the
+  manifests — and could not put down what it had cost him, which was the
+  assurance that the walls between Tenants did not have doors in them. The door
+  stayed. The post did not. The edges are still sharp on this one.
+assessedAt: 2026-07-29
+inscription:
+  text: dazzled by the elegance (nobody hand-wrote the cross-product; it derives
+    from the manifests) and quietly unnerved that the isolation he trusted now has
+    a sanctioned front door
+  source: "PR #646 description"

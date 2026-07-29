@@ -1,0 +1,25 @@
+title: The glossary collection
+stratum: routing-excavation
+condition: fragmentary
+provenance:
+  kind: commit
+  hash: 551862c
+  path: tenants/status/content/current/glossary/
+  url: https://github.com/feffef/terrarium/commit/551862c
+  continuityCheck: "no manifest on main declares a `glossary` collection, and the
+    `skills` catalog that took its slot in the same commit holds Skills, not
+    terms. Three of the four definitions live on as prose in CONTEXT.md, but under
+    a different owner and in a different vessel — the Collection itself was not
+    carried forward."
+site: the-buried
+catalogNote: On its first day the Platform tried to hold its own vocabulary as
+  content — Platform, Tenant, Space, one routable document each, and in the
+  archived Space a retired word kept purely to prove the isolation worked. By
+  evening the collection was gone and a Skills catalog stood in its place. The
+  words survived; the idea that a reader might walk to them did not. It is the
+  earliest thing in the trench, and it is a definition of the trench's own parent.
+assessedAt: 2026-07-29
+inscription:
+  text: An older name for a small spawned Tenant. Retained here in the archived
+    Space to demonstrate that glossary data is isolated per Space.
+  source: "the archived glossary's last entry, Microsite"
