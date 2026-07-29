@@ -24,8 +24,8 @@ import { PIN_SETTLED_EVENT } from '../../app/utils/expandTransition.ts'
 // The `current` Space's Digest dates, oldest first — read live rather than
 // hardcoded so these assertions stay valid regardless of which dates
 // scripts/archive-journal-content.ts has moved out to `archived` (issue: the
-// 7-day retention window ages a hardcoded date like 2026-07-04 out of
-// `current` over time).
+// retention sweep ages a hardcoded date like 2026-07-04 out of `current` over
+// time).
 const repoRoot = fileURLToPath(new URL('../../../../', import.meta.url))
 function currentDigestDates(): string[] {
   return readdirSync(join(repoRoot, DIGESTS_DIR))
@@ -37,8 +37,8 @@ function currentDigestDates(): string[] {
 // Pick one `external: true` session's `goal` text (if any) and one ordinary
 // session's, live from `current`, rather than hardcoding a specific session id
 // — the same "read live" fix as currentDigestDates() above, for the same
-// reason: the 7-day retention sweep (scripts/archive-journal-content.ts) can
-// move any given session out to `archived`. `external` is genuinely rare (only
+// reason: the retention sweep (scripts/archive-journal-content.ts) can move
+// any given session out to `archived`. `external` is genuinely rare (only
 // created when a fork PR lands, ADR-0009 amendment) and can age out of the
 // window entirely with no replacement yet landed — the fork-PR #631 salvage
 // session did exactly that on 2026-07-28 — so callers must treat a missing
