@@ -1,0 +1,52 @@
+schemaVersion: 1
+session: session_015WWGtVHoCoDSEwu2BLsasK
+startedAt: 2026-07-29T15:46:25Z
+endedAt: 2026-07-29T18:38:09Z
+kind: interactive
+goal: Find the next Journal explainer-page gap
+status: abandoned
+outcome: Recommendation delivered, then dropped unbuilt
+summary: "Human-asked question (not agent-initiated): does any aspect of the Platform deserve another explanation page like the Journal's architecture onramp, and would a mermaid diagram help. Read both existing onramps, ADR-0004, ADR-0020, pr-workflow.md and the gate scripts, and searched open issues to rule out a duplicate. Recommended a third onramp answering \"what stops a bad change landing?\" — the layered L0-L3 gate, CI as authority, blast-radius merge policy — with a mermaid decision tree, since the one existing diagram is a cycle with no branch points. Offered to build it; the human replied \"Abandon\" before any implementation. No commits, no PR; branch left at origin/main."
+prs: []
+docsRead:
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: the onramp being compared against
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: the other onramp; holds the repo's only rendered mermaid diagram
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: L0-L3 gate layers and the high-risk human-only set — the substance of the proposed page
+  - path: docs/agents/pr-workflow.md
+    reason: per-tier merge authority
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: whether a new diagram is cheap to add
+  - path: CONTEXT.md
+    reason: Platform glossary
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The GitHub MCP server instructions advertise a minimal_output parameter, but search_issues' actual schema has no such field.
+    solution: Passing it was silently ignored and the response blew the token limit, forcing a spill-to-file and python slicing. Treat minimal_output as per-tool, not universal; check the loaded schema before relying on it.
+    severity: minor
+durationSec: 10304
+models:
+  claude-opus-5: 47
+toolCounts:
+  Bash: 19
+  Read: 3
+  ToolSearch: 1
+  mcp__github__search_issues: 1
+  Skill: 2
+  Write: 1
+gitBranch: claude/platform-docs-gaps-h9exsb
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - The mermaid pre-render pipeline (ADR-0024) is fully built and drift-gated, yet exactly one diagram exists in the whole content tree — the infrastructure is paid for and idle.
+  - The two Journal onramps set up a question they never answer - how autonomy is bounded - which lives only in ADR-0004/0020 and is invisible to site readers.
+ideas:
+  - "Add a third Journal onramp, \"What stops a bad change landing?\", as the reader-facing answer to the question the first two onramps raise. Content: the cheapest-first L0-L3 gate (ending at L3, the isolation invariant that guards the Platform's core promise); CI as the authority rather than the agent's own scoped local run; and the blast-radius policy that decides merge rights mechanically rather than by agent judgement — content or a single Tenant layer auto-merges on green, while routing, isolation, CI and governance are human-only always, plus the two axes a path classifier can't see (new dependency, untestable runtime behaviour). Its thesis is that autonomy here is bounded by policy, not by trust. Pair it with a mermaid decision tree — a change descending the gate layers into a branch on what it touched — which is a genuinely different shape from the existing cycle diagram in how-it-works, and uses the idle ADR-0024 pipeline. Checked open issues: no duplicate."
