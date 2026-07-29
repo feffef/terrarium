@@ -1,0 +1,126 @@
+schemaVersion: 1
+session: session_01F7W43Eh7KEEXUvX4gKeNiB
+startedAt: 2026-07-29T09:36:25Z
+endedAt: 2026-07-29T10:38:01Z
+kind: interactive
+goal: Review midden artifacts and build the stores
+status: in-review
+outcome: "PR #733 open, gate green locally, CI running"
+summary: "Human-instructed throughout, in three explicit steps. First: spawn three agents (Sonnet, Opus, Fable) to rate all 41 trench artifacts on interest and explanation quality; all three converged on selection, not writing, being the catalogue's binding constraint. Second: a Fable agent designed an archive Space, answering the user's own framing question (match the trench or differ) with \"reuse the record, replace the display\". Third: implement it — the `stores` Space, 10 majority-voted demotions, and 5 merges of entries describing one thing. Nothing net-new was agent-initiated; the merge criterion and the demotion threshold (\"most agents\") came from the user."
+prs:
+  - "733"
+docsRead:
+  - path: layers/midden/CONTEXT.md
+    reason: Site/Artifact/Condition/inclusion-bar vocabulary the new Space had to extend
+  - path: layers/midden/tenant.config.ts
+    reason: manifest shape; where spaces and the site field are declared
+  - path: scripts/validate-content-refs.ts
+    reason: where the per-Space site policy had to live once the schema went optional
+  - path: layers/midden/app/components/content/MiddenArtifact.vue
+    reason: the display slip the register deliberately does not reuse
+  - path: layers/midden/app/utils/condition.ts
+    reason: grade definitions, to regrade merged cards honestly
+  - path: layers/midden/app/components/midden/TrenchLanding.vue
+    reason: (read before editing)
+  - path: layers/midden/app/components/midden/ConditionKey.vue
+    reason: (no reason given)
+  - path: layers/midden/app/pages/t/midden/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-removed-noun-gate.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-condition-glyph.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-stratigraphy-sidebar.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-gate-smoke-test.yml
+    reason: (no reason given)
+  - path: layers/midden/content/trench/pages/built-never-fired.md
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-copy-link-button.yml
+    reason: (no reason given)
+  - path: layers/midden/content/trench/artifacts/the-bespoke-app-vue.yml
+    reason: (no reason given)
+  - path: layers/midden/app/pages/t/midden/[space]/index.vue
+    reason: (read before editing)
+  - path: layers/midden/tests/e2e/midden.e2e.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: self-judged closure at PR-open per CLAUDE.md
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Initial `ls -R | head -100` silently truncated the midden pages listing to 3 of 9 Sites; I briefed three review agents believing only 3 Sites existed.
+    solution: The agents caught it independently and read all 9. CLAUDE.md already warns against piping through head/tail when output matters — the rule is about exit status, but truncation of a listing is the same failure. Worth extending that bullet to cover directory listings, not just command output.
+    severity: minor
+  - description: Repo is a shallow clone, so a `remains` URL I wanted to add for the workspace file could not be verified against local git objects.
+    solution: "`git fetch --deepen 200` made the blob resolvable and confirmed the path existed at that SHA. CLAUDE.md's shallow-clone bullet covers history archaeology; it does not mention verifying a SHA-pinned content link, which is the Midden's most common need for deep history."
+    severity: minor
+  - description: Reviewer summaries contained a detail I nearly published verbatim — "42/42 local" restated as "green forty-two times locally", which the card does not say.
+    solution: Caught by reading the primary card before writing the Site prose, exactly as CLAUDE.md requires. No fix needed; recorded as evidence the rule earns its keep on subagent-derived prose specifically.
+    severity: nit
+  - description: Reducing a dig report to one find exposed a latent "1 finds" pluralization bug that had been unreachable while every report had multiple finds.
+    solution: Fixed inline. A content-shape change surfacing a presentation bug argues for pluralization helpers rather than inline ternaries, but two sites is too few to coin one (rule of two).
+    severity: nit
+durationSec: 3696
+models:
+  claude-opus-5: 240
+toolCounts:
+  Bash: 44
+  Agent: 4
+  Read: 22
+  Write: 12
+  Grep: 1
+  Edit: 36
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/midden/tenant.config.ts
+  - scripts/validate-content-refs.ts
+  - layers/midden/content/trench/artifacts/the-removed-noun-gate.yml
+  - layers/midden/content/trench/artifacts/the-job-taxonomy.yml
+  - layers/midden/content/trench/artifacts/the-nuxt-content-patch.yml
+  - layers/midden/content/trench/artifacts/the-condition-glyph.yml
+  - layers/midden/content/trench/artifacts/the-stratigraphy-sidebar.yml
+  - layers/midden/content/trench/pages/the-generated-map.md
+  - layers/midden/content/trench/pages/built-never-fired.md
+  - layers/midden/content/trench/pages/the-current-cut.md
+  - layers/midden/content/trench/pages/the-buried.md
+  - layers/midden/content/trench/pages/the-simpler-verdict.md
+  - layers/midden/content/trench/pages/toward-the-defaults.md
+  - layers/midden/content/trench/pages/unpublished-dispatches.md
+  - layers/midden/content/trench/pages/index.md
+  - layers/midden/app/components/midden/StoresLanding.vue
+  - layers/midden/app/utils/find.ts
+  - layers/midden/app/components/content/MiddenArtifact.vue
+  - layers/midden/app/pages/t/midden/[space]/index.vue
+  - layers/midden/app/components/midden/TrenchLanding.vue
+  - layers/midden/CONTEXT.md
+  - layers/midden/tests/e2e/midden.e2e.ts
+  - layers/midden/app/pages/t/midden/[space]/[...slug].vue
+subagents:
+  - type: general-purpose
+    task: Sonnet midden artifact review
+    model: sonnet
+  - type: general-purpose
+    task: Opus midden artifact review
+    model: opus
+  - type: general-purpose
+    task: Fable midden artifact review
+    model: fable
+  - type: general-purpose
+    task: Design midden archive space
+    model: fable
+gitBranch: claude/midden-artifact-review-emes0a
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - A per-Space content rule can often be derived from the data (does this Space have any pages?) instead of hardcoding Space names in a platform script — the derived form generalizes to future Spaces for free.
+  - Nuxt auto-imports every app/utils export globally across ALL layers, so extracting a shared helper out of an SFC turns a private function into a global name — the repo's answer is layer-prefixed exports (formatBlogDate, formatMarqueeDate).
+ideas:
+  - 'Make `condition` decay visible as a curator worklist. The reviewers found `fresh` is rotting — cards graded fresh weeks ago still claim "barely cold" — but #526 rightly forbids re-deriving condition mechanically. The gap is that nothing surfaces staleness at all. Add a `pnpm midden:stale` check (and a line on the stores register) that flags any card whose `assessedAt` is older than its grade plausibly survives — fresh > 14 days, say — and files a survey-report issue listing them. It never changes a grade; it just tells the curator which grades are now lying, turning a silent rot into a bounded regrade queue.'
