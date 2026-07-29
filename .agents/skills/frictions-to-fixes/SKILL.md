@@ -212,7 +212,7 @@ enforcement.
 Done when every issue is covered by a pushed gated PR (doc issues by the one grouped
 PR, each code/config issue by its own), gate green, awaiting your review.
 
-**At PR-open (the dispatched PRs are pushed), invoke `close-session`** — your first log (`in-review`), before you review and merge in §6.
+**At PR-open (the dispatched PRs are pushed), invoke `close-session`** — your first log (`in-review`), before you review and merge in §6. This `in-review` log is a safety net for review/merge *not* finishing in the same turn (session limits, waiting on CI, etc.) — when every dispatched PR merges before the closing turn ends, skipping straight to one final `completed`-status close in §6 is fine, not a deviation.
 
 ## 6. Review and merge — autonomously, escalate only high-risk
 
