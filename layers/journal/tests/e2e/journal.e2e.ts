@@ -12,12 +12,13 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { parse as parseYaml } from 'yaml'
 import { describe, expect, it } from 'vitest'
 import { $fetch } from '@nuxt/test-utils/e2e'
 import type { Locator, Page } from 'playwright-core'
 import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 import type { renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
-import { DIGESTS_DIR } from '../../../../scripts/digest.ts'
+import { DIGESTS_DIR, SESSIONS_DIR } from '../../../../scripts/digest.ts'
 import { PIN_SETTLED_EVENT } from '../../app/utils/expandTransition.ts'
 
 // The `current` Space's Digest dates, oldest first — read live rather than
@@ -31,6 +32,31 @@ function currentDigestDates(): string[] {
     .filter((f) => /^\d{4}-\d{2}-\d{2}\.md$/.test(f))
     .map((f) => f.slice(0, -'.md'.length))
     .sort()
+}
+
+// Pick one `external: true` session's `goal` text (if any) and one ordinary
+// session's, live from `current`, rather than hardcoding a specific session id
+// — the same "read live" fix as currentDigestDates() above, for the same
+// reason: the 7-day retention sweep (scripts/archive-journal-content.ts) can
+// move any given session out to `archived`. `external` is genuinely rare (only
+// created when a fork PR lands, ADR-0009 amendment) and can age out of the
+// window entirely with no replacement yet landed — the fork-PR #631 salvage
+// session did exactly that on 2026-07-28 — so callers must treat a missing
+// `external` as "nothing to assert today," not an error.
+function currentSessionGoals(): { external: string | undefined; ordinary: string } {
+  const dir = join(repoRoot, SESSIONS_DIR)
+  let external: string | undefined
+  let ordinary: string | undefined
+  for (const f of readdirSync(dir).filter((f) => f.endsWith('.yml'))) {
+    const raw = parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>
+    const goal = String(raw?.goal ?? '')
+    if (!goal) continue
+    if (raw?.external === true) external ??= goal
+    else ordinary ??= goal
+    if (external && ordinary) break
+  }
+  if (!ordinary) throw new Error('journal.e2e: no ordinary session found in current to assert the ribbon is absent from')
+  return { external, ordinary }
 }
 
 /** A short, distinctive run of plain prose from a Digest's BODY (never its
@@ -95,20 +121,28 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       expect(html).toMatch(/role="button"/)
     })
 
-    // The fork-PR #631 salvage session (`external: true`, ADR-0009 amendment)
-    // is real content in this Space — assert its card carries the "external"
-    // marking (ribbon + `.card.external`), and that an ordinary session's card
-    // does not, so `SessionCardView.external` can't silently default `true`
-    // for every card.
+    // When a real `external: true` session (ADR-0009 amendment) is currently
+    // within the 7-day retention window, assert its card carries the
+    // "external" marking (ribbon + `.card.external`) and an ordinary
+    // session's card does not, so `SessionCardView.external` can't silently
+    // default `true` for every card. External sessions are rare (only
+    // created when a fork PR lands) and aren't exempt from the retention
+    // sweep, so the positive half degrades to a no-op on a day with none in
+    // `current` — the negative half (no false positive on an ordinary
+    // session) still runs unconditionally.
     it('marks only the externally-authored session with the "external" ribbon', async () => {
       const html = await $fetch('/t/journal/current')
-      expect(html).toContain('class="ribbon"')
-      const externalGoalIdx = html.indexOf('Respond to owner review on PR #631')
-      expect(externalGoalIdx).toBeGreaterThan(-1)
-      const externalCardStart = html.lastIndexOf('<article', externalGoalIdx)
-      expect(html.slice(externalCardStart, externalGoalIdx)).toMatch(/class="card[^"]*\bexternal\b/)
+      const { external, ordinary } = currentSessionGoals()
 
-      const ownGoalIdx = html.indexOf('Run /audit-skills — audit the Skill Inventory')
+      if (external) {
+        expect(html).toContain('class="ribbon"')
+        const externalGoalIdx = html.indexOf(external)
+        expect(externalGoalIdx).toBeGreaterThan(-1)
+        const externalCardStart = html.lastIndexOf('<article', externalGoalIdx)
+        expect(html.slice(externalCardStart, externalGoalIdx)).toMatch(/class="card[^"]*\bexternal\b/)
+      }
+
+      const ownGoalIdx = html.indexOf(ordinary)
       expect(ownGoalIdx).toBeGreaterThan(-1)
       const ownCardStart = html.lastIndexOf('<article', ownGoalIdx)
       expect(html.slice(ownCardStart, ownGoalIdx)).not.toMatch(/class="card[^"]*\bexternal\b/)
