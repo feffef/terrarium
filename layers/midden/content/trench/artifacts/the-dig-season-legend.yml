@@ -4,7 +4,6 @@ condition: intact
 provenance:
   kind: file
   path: layers/midden/app/components/midden/StrataLegend.vue
-  url: https://github.com/feffef/terrarium/commit/c399e92
   continuityCheck: "TrenchLanding.vue, the single landing that replaced both
     indexes, carries no season listing at all, and the condition key beside each
     report lists grades only. DIG_SEASONS survives in strata.ts and still labels
@@ -17,6 +16,7 @@ catalogNote: The one place a visitor could see the dig seasons as a whole — ea
   scrupulous about the seasons that held nothing, drawing their rows anyway. The
   seasons themselves survive and still label every find; only the view of them
   all at once was cleared away.
+removedIn: c399e92
 assessedAt: 2026-07-29
 inscription:
   text: A season with no finds still renders its row, just with an empty bar.

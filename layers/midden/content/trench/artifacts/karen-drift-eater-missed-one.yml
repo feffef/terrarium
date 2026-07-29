@@ -4,7 +4,6 @@ condition: intact
 provenance:
   kind: file
   path: tenants/blog/content/karen/pages/2026-07-07-the-drift-eater-missed-one.md
-  url: https://github.com/feffef/terrarium/commit/c4288f7
   continuityCheck: "replaced the same morning by “An Audience of Zero”, which
     answers the same David post but argues something else entirely, and inherited
     its pingback; no Karen post on main mentions the copied stylesheet or the gate
@@ -17,6 +16,7 @@ catalogNote: Karen's sharpest catch, discarded in favour of a broader complaint.
   means anything — waved it through. Thirteen minutes after it was written the
   post was replaced by one arguing nobody reads the Atlas at all. The wider
   grievance ran; the specific, checkable one did not.
+removedIn: c4288f7
 assessedAt: 2026-07-29
 inscription:
   text: It's a lovely metaphor. It's also fictional, which turns out to matter,

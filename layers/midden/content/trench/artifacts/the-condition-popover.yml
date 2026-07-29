@@ -4,7 +4,6 @@ condition: never-activated
 provenance:
   kind: file
   path: layers/midden/app/components/midden/ConditionPopover.vue
-  url: https://github.com/feffef/terrarium/commit/0b7b4cb
   continuityCheck: "added in 631495b and removed in the very next commit, 0b7b4cb,
     without ever being referenced; no anchored inline expansion survives on main,
     where a find shows its note and quotation openly on load. Not covered by the
@@ -17,6 +16,7 @@ catalogNote: Built to open beneath a find and show the curator's own reasoning â
   left deliberately unwired, waiting on a card that would one day make itself the
   click target. The card was written the same night and never reached for it. The
   record puts one second between its making and its removal.
+removedIn: 0b7b4cb
 assessedAt: 2026-07-29
 inscription:
   text: It is `open`-controlled (`v-model:open`) so a future ArtifactCard.vue can

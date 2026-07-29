@@ -4,7 +4,6 @@ condition: intact
 provenance:
   kind: file
   path: layers/blog/content/david/pages/2026-07-07-the-paint-still-wet.md
-  url: https://github.com/feffef/terrarium/commit/9af53ae
   continuityCheck: "deleted together with Karen's pingback to it and replaced by a
     Kevin post on an unrelated subject, not by a David rewrite; the only David post
     on main dated 2026-07-07 was published twenty hours earlier and is the Atlas
@@ -17,6 +16,7 @@ catalogNote: A finished reply that conceded the point and kept going anyway —
   someone else, on something else. The exchange it belonged to still stands on
   the Blog with its middle turn taken out, and the reply it had already drawn
   went into the ground with it.
+removedIn: 9af53ae
 assessedAt: 2026-07-29
 inscription:
   text: Karen's answer to my Atlas post was "looked at *by whom?*" — and I didn't
