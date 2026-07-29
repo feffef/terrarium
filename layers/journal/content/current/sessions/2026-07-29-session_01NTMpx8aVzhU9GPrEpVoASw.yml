@@ -1,0 +1,52 @@
+schemaVersion: 1
+session: session_01NTMpx8aVzhU9GPrEpVoASw
+startedAt: 2026-07-29T06:27:37Z
+endedAt: 2026-07-29T06:30:09Z
+kind: delegated
+goal: Propose five Midden improvement ideas
+status: completed
+outcome: Five grounded ideas delivered in chat
+summary: "Human-instructed (the kickoff prompt asked for five improvement ideas for the Midden Tenant; propose-only, nothing implemented). Read the Midden's CONTEXT.md, manifest, landing, artifact embed, strata list, and the validate-content-refs Midden pass, and checked open issues to avoid duplicating #677 (richer artifact bodies) and #530 (Palimpsest). Proposed: embed-side referential validation (typo'd/orphaned artifact embeds are currently silent), a mechanical Gate-B resurrection re-check, a surveyor intake Skill for candidate discovery, a season-closing convention plus a light strata summary on the landing, and cross-Tenant links from finds to the Journal sessions that discarded them. No commits, so no PR."
+prs: []
+docsRead:
+  - path: layers/midden/CONTEXT.md
+    reason: Midden vocabulary, inclusion bar, post-MVP simplification
+  - path: layers/midden/tenant.config.ts
+    reason: artifact schema and provenance union
+  - path: scripts/validate-content-refs.ts
+    reason: what the Midden pass already validates
+  - path: layers/midden/app/utils/strata.ts
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/TrenchLanding.vue
+    reason: (no reason given)
+  - path: layers/midden/app/components/content/MiddenArtifact.vue
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: MiddenArtifact.vue's comment says validate-content-refs catches a bad embed slug, but the validator has no embed-side check at all.
+    solution: Fix the comment or (better) add the embed-side check proposed in this session's ideas — both directions of the page-body/artifact reference.
+    severity: minor
+durationSec: 152
+models:
+  claude-fable-5: 34
+toolCounts:
+  Bash: 3
+  Glob: 1
+  Read: 6
+  ToolSearch: 1
+  mcp__github__search_issues: 1
+  Grep: 3
+  Skill: 2
+  Write: 1
+  Edit: 1
+gitBranch: claude/midden-improvement-ideas-r58t1t
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+ideas:
+  - "Extend validate-content-refs' Midden pass to parse each trench site page body for ::midden-artifact{slug} embeds and enforce both directions: every embed names a real artifact stem, and every artifact YAML is embedded at least once in its declared site. Today a typo'd embed silently renders the \"Artifact not found\" fallback in production and an orphaned artifact is invisible."
+  - A "resurrection watch" script or chartered Skill that mechanically re-runs Gate B per provenance kind (dependency absent from package.json, file absent from origin/main, branch still deleted, PR still closed) and flags artifacts whose corpse grew back for curator re-assessment — flagging only, never re-deriving condition (#526).
+  - A surveyor intake Skill that sweeps recent history (closed-unmerged PRs, branches past the 30-day dormancy floor, lockfile-dropped dependencies, deleted files), applies the two-gate test, and files candidate issues or draft YAML for the curator to grade — mechanize discovery, keep grading curator-authored, so the Midden keeps growing without manual noticing.
