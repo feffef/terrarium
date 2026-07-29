@@ -21,11 +21,13 @@ first day comes the Platform's first attempt to define its own words: *Platform*
 *Tenant*, *Space*, each a routable document a reader could walk to, plus one
 retired term kept in the archived Space purely to prove the isolation worked. The
 definitions outlived the collection — the repository still keeps them, in prose —
-but the notion that a reader might walk to them did not. Higher up, in the
-ash of the spike season, lie four coined words: `Spawn`, a glossary verb for adding
-a Tenant that was never really used; and `sync`, `consolidate`, and `codify`, three
-names given to self-improvement jobs before any of the work existed. The work, when
-it came, took entirely different names. Nothing was ever built to answer to these.
+but the notion that a reader might walk to them did not. Higher up, in the ash of
+the spike season, lie the coined words: `Spawn`, a glossary verb for adding a
+Tenant that was never really used; and beside it a whole small taxonomy —
+`sync`, `consolidate`, and `codify`, three names given to self-improvement jobs
+before any of the work existed. They are catalogued as one find, because they
+were one act: named together in a single glossary, retired together, and never
+built either way. The work, when it came, took entirely different names.
 
 ::midden-artifact{slug="the-squashed-milestone"}
 ::
@@ -39,11 +41,5 @@ it came, took entirely different names. Nothing was ever built to answer to thes
 ::midden-artifact{slug="the-spawn-verb"}
 ::
 
-::midden-artifact{slug="the-sync-job"}
-::
-
-::midden-artifact{slug="the-consolidate-job"}
-::
-
-::midden-artifact{slug="the-codify-job"}
+::midden-artifact{slug="the-job-taxonomy"}
 ::

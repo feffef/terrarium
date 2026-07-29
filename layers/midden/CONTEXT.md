@@ -39,6 +39,7 @@ forward-looking narration doesn't carry.
 ### Site
 A Space `pages` Document in `trench` — the Midden's word for what the Platform
 generically calls a page in this Space (root `CONTEXT.md`'s Collection term).
+The `stores` Space has no Sites (see The Stores below).
 One dig report: curator's-voice prose narrating a **cluster** of related
 Artifacts, embedding each inline via `::midden-artifact{slug="..."}` (#521 —
 see Artifact below: never independently routed). Reused-per-Space collection
@@ -64,7 +65,10 @@ Document in `trench`'s `artifacts` data collection (#518). Carries a `title`,
 its dig-season `stratum`, a curator-graded `condition`, a discriminated-union
 `provenance` (which kind of thing it was — a PR, a branch, a commit, a file, a
 dependency, or a Skill — plus an optional live `url` and a `continuityCheck`
-note), a back-reference to the `site` that narrates it, a curator's-voice
+note), a back-reference to the `site` that narrates it (required in a Space that
+has Sites, **absent** in one that has none — the per-Space policy is enforced by
+`scripts/validate-content-refs.ts`, since the schema is declared Tenant-wide and
+cannot express it), a curator's-voice
 `catalogNote`, a required `assessedAt` date (#526 — never re-derived), an
 optional verbatim `inscription` ({text, source}), and two optional
 preservation fields: `removedIn` — the terminal event, the bare hash of the
@@ -99,6 +103,30 @@ so it is never authored twice. The abstract SVG glyph and its hover-to-decode
 tooltip were removed in the post-MVP simplification (see the note at the foot of
 this file).
 
+### The Stores
+The Midden's second Space (`stores`): catalogued finds held **off display**. An
+Artifact here is the same Artifact — same six Conditions, same Dig seasons, the
+same record card rendered whole — minus its `site` back-reference, because the
+stores have no Sites to narrate them. The organising axis is the Dig season
+instead: a single season-grouped register at `/t/midden/stores`, no sub-routes
+(ADR-0006 untouched — each find keeps an `#artifact-<slug>` anchor so a dig
+report can still point at one).
+
+A find moves here when the curator judges it **sound but not significant**: it
+passed the same two-gate inclusion bar as everything in the trench, but carries
+no decision, reversal, or transferable fact a dig report can argue from. The
+demotion is a file move plus the deleted `site:` line, so the diff is the
+demotion record; the reverse move is the same operation. Demotion is explicitly
+*not* a quality judgment and never edits a record down — a real museum keeps
+most of its collection in the stores and nobody reads that as a verdict.
+
+The name completes an institution the Midden had already half-named: **trench**
+(excavation) → **gallery** (exhibition, still out of scope — #522) → **stores**
+(storage). A find is on display in the trench, or held in the stores.
+
+Not to be confused with material that fails the inclusion bar outright, which is
+never catalogued at all — that is spoil, and spoil is by definition unrecorded.
+
 ### The inclusion bar (two-gate test)
 The classifier deciding what may become an Artifact (#525): **Gate A**
 (terminal disposition — the candidate's net-final state, never a transient
@@ -130,8 +158,13 @@ not the Midden (not yet cross-referenced; revisit once Palimpsest exists).
   pull-quote, and the dig-report list. (`trench/pages/index.md` remains
   valid content but is no longer the rendered landing intro.)
 - **`app/components/midden/ConditionKey.vue`** — the condition key: the sticky
-  dig-report sidebar defining the grades present in that report's finds (see
-  Condition above).
+  sidebar defining the grades present in the finds beside it (see Condition
+  above). Shared by the dig-report page and the stores register.
+- **`app/components/midden/StoresLanding.vue`** — the stores register: every
+  find held off display, grouped by Dig season. Deliberately not the trench's
+  specimen slip — same fields, quieter presentation (see The Stores above).
+- **`app/utils/find.ts`** — the Artifact document shape and the two record-fact
+  formatters, shared by both renderers so they cannot drift.
 - **`.agents/skills/midden-survey/`** — the survey Skill that mechanizes
   candidate *discovery* (deleted files / dropped dependencies via
   `scripts/midden-survey.ts`; PRs / branches via the GitHub tools) and files a

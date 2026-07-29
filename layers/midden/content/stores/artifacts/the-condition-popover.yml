@@ -9,7 +9,6 @@ provenance:
     where a find shows its note and quotation openly on load. Not covered by the
     already-catalogued tooltip: that was the other tier — the fixed grade
     definition read from condition.ts, not this artifact-specific rationale."
-site: built-never-fired
 catalogNote: >-
   Fifty-two lines, open-controlled by v-model:open and waiting on a future
   ArtifactCard to make itself the click target. It even carried a fallback for

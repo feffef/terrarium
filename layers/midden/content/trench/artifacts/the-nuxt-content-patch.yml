@@ -7,18 +7,25 @@ provenance:
   path: patches/@nuxt__content@3.15.0.patch
   url: https://github.com/feffef/terrarium/commit/b23e8d3
   continuityCheck: the patched behaviour was resolved upstream at the pinned
-    version; the patch was dropped (ADR-0019) with nothing needed in its place —
-    removed today
+    version; the patch was dropped (ADR-0019) with nothing needed in its place,
+    and the workspace file that existed only to declare it went out in the same
+    commit — a single-repo tree needs no workspace manifest
 site: the-current-cut
 catalogNote: >-
   One hundred and seven lines patched into a dependency's compiled dist: retry
   the SQL dump fetch four times, and evict the cached load promise in a
   finally so one rejected fetch could no longer leave a collection blank for
   the life of the page. Carried eight days, then given up rather than fork a
-  vendor's build.
+  vendor's build. It did not go alone: pnpm-workspace.yaml, which never listed
+  a package or a workspace member — one key, patchedDependencies, mapping
+  @nuxt/content@3.15.0 to the file beside it — was created in the patch's first
+  commit and deleted in the patch's last, having served exactly one dependency
+  for exactly as long as it existed.
 remains:
   - label: the patch, both hunks
     url: https://github.com/feffef/terrarium/blob/bf99a179677ef582734bddf336325a3daf8c4bbb/patches/@nuxt__content@3.15.0.patch
+  - label: the workspace file, in full — its whole reason to exist
+    url: https://github.com/feffef/terrarium/blob/bf99a179677ef582734bddf336325a3daf8c4bbb/pnpm-workspace.yaml
   - label: ADR-0019 before it was marked superseded
     url: https://github.com/feffef/terrarium/blob/bf99a179677ef582734bddf336325a3daf8c4bbb/docs/adr/0019-patched-nuxt-content-client-db-loading.md
 assessedAt: 2026-07-16
