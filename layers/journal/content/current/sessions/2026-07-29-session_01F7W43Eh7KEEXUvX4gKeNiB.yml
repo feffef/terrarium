@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01F7W43Eh7KEEXUvX4gKeNiB
 startedAt: 2026-07-29T09:36:25Z
-endedAt: 2026-07-29T10:38:01Z
+endedAt: 2026-07-29T15:40:35Z
 kind: interactive
 goal: Review midden artifacts and build the stores
-status: in-review
-outcome: "PR #733 open, gate green locally, CI running"
+status: completed
+outcome: "PR #733 merged; trench 41 finds to 25 plus 10 stored"
 summary: "Human-instructed throughout, in three explicit steps. First: spawn three agents (Sonnet, Opus, Fable) to rate all 41 trench artifacts on interest and explanation quality; all three converged on selection, not writing, being the catalogue's binding constraint. Second: a Fable agent designed an archive Space, answering the user's own framing question (match the trench or differ) with \"reuse the record, replace the display\". Third: implement it — the `stores` Space, 10 majority-voted demotions, and 5 merges of entries describing one thing. Nothing net-new was agent-initiated; the merge criterion and the demotion threshold (\"most agents\") came from the user."
 prs:
   - "733"
@@ -59,26 +59,31 @@ frictions:
   - description: Reviewer summaries contained a detail I nearly published verbatim — "42/42 local" restated as "green forty-two times locally", which the card does not say.
     solution: Caught by reading the primary card before writing the Site prose, exactly as CLAUDE.md requires. No fix needed; recorded as evidence the rule earns its keep on subagent-derived prose specifically.
     severity: nit
+  - description: GitHub silently stripped "<slug>" from the PR body as an HTML tag, even inside backticks, garbling a technical claim about the anchor format.
+    solution: Spotted by reading the created PR back via the API rather than trusting the submitted text, and fixed with update_pull_request. Angle-bracket placeholders in any GitHub-bound prose need escaping or rewording — worth a line wherever ADR-0017's external-post conventions are written down.
+    severity: nit
   - description: Reducing a dig report to one find exposed a latent "1 finds" pluralization bug that had been unreachable while every report had multiple finds.
     solution: Fixed inline. A content-shape change surfacing a presentation bug argues for pluralization helpers rather than inline ternaries, but two sites is too few to coin one (rule of two).
     severity: nit
-durationSec: 3696
+durationSec: 21851
 models:
-  claude-opus-5: 240
+  claude-opus-5: 261
+  <synthetic>: 3
 toolCounts:
-  Bash: 44
+  Bash: 47
   Agent: 4
   Read: 22
   Write: 12
   Grep: 1
-  Edit: 36
-  ToolSearch: 3
+  Edit: 38
+  ToolSearch: 4
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 3
   Skill: 2
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__update_pull_request: 1
 filesEdited:
   - layers/midden/tenant.config.ts
   - scripts/validate-content-refs.ts
