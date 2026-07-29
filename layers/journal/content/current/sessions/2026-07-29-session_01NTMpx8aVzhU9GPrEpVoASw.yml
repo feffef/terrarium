@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01NTMpx8aVzhU9GPrEpVoASw
 startedAt: 2026-07-29T06:27:37Z
-endedAt: 2026-07-29T09:08:57Z
+endedAt: 2026-07-29T09:49:32Z
 kind: interactive
 goal: Midden ideas, surveyor Skill, artifact model
 status: completed
 outcome: "Both PRs merged: surveyor and artifact model"
-summary: "Two phases, both human-instructed. First (kickoff prompt): proposed five grounded Midden improvement ideas, screened against open issues so none duplicated tracked work. Second (explicit green-light, /implement 3 now): built idea 3, the midden-survey Skill — TDD'd scripts/midden-survey.ts (deleted-file and dropped-dependency sweep with noise/rename/Gate-B/ already-catalogued screens, shallow-clone refusal, 18 unit tests), the SKILL.md survey flow (MCP sweep for closed-unmerged PRs and dormant branches, two-gate judgment, one survey-report issue per run, everything curatorial left curator-authored), Skill Inventory entry, and a CONTEXT.md pointer. Full gate green; two-axis code review ran pre-push and its actionable findings were folded in. Gated PR #729 opened, gate green, merged by the owner. Third phase (owner-directed, remains locked curator-curated): extended the artifact model with removedIn (terminal commit, bare hash) and remains (SHA-pinned immutable links to original state), TDD'd the stratum corroboration check, rendered both in MiddenArtifact.vue, backfilled 12 artifacts whose provenance url was squatting as the removal link (then 4 more after a sibling session landed six survey finds on main mid-review — rebased in, all passing the new season corroboration), curated four remains exemplars, screenshot-verified. Fourth phase (owner-directed, \"Both\" + read-the-history redirect): extended the season corroboration to commit-kind referent hashes (its first run caught the Spawn term pointing at its coining commit), then dispatched six parallel Opus curator agents that read every removal commit and pre-removal revision; all 41 catalogNotes rewritten history-grounded, remains curated on 32 artifacts (43 full-SHA links, each cat-file-verified, closed-PR content via fetched pull refs), three latent content inaccuracies fixed. PR #731 merged by the owner."
+summary: "Four phases, all human-instructed. First (kickoff): proposed five grounded Midden improvement ideas, screened against open issues. Second (/implement 3 now): built the midden-survey Skill — TDD'd scripts/midden-survey.ts (deleted-file/dropped-dependency sweep with noise/rename/Gate-B/catalogued screens, shallow-clone refusal, 18 unit tests), the SKILL.md survey flow, Inventory entry, CONTEXT.md pointer; two-axis code review pre-push; PR #729 merged. Third (owner-directed, remains locked curator-curated): removedIn + remains artifact model, TDD'd season corroboration, MiddenArtifact.vue rendering, 16 artifacts backfilled (4 after rebasing in #732's survey finds). Fourth (\"Both\" + read-the-history redirect): extended corroboration to commit-kind referents (first run caught the Spawn term pointing at its coining commit), dispatched six parallel Opus curator agents reading every removal commit and pre-removal revision; all 41 catalogNotes rewritten history-grounded, remains on 32 artifacts (43 cat-file-verified full-SHA links, closed-PR content via pull refs), three latent content inaccuracies fixed. PR #731 merged by the owner."
 prs:
   - "729"
   - "731"
@@ -43,37 +43,40 @@ skillsUsed:
   - name: code-review
     reason: two-axis pre-push review; findings folded in
   - name: close-session
-    reason: closure at answer delivery and at PR-open
+    reason: closure at each PR-open and at merge
   - name: log-session
     reason: (no reason given)
 frictions:
   - description: "Two artifact records contained latent inaccuracies only a primary-source dig exposed: a continuityCheck counting components that never existed and an inscription quoting a key the file never contained."
-    solution: "Curation passes should read the referenced revision, not trust the earlier record — the midden-survey Skill's draft-provenance step already pushes this; fixed both records in PR #731."
+    solution: "Curation passes should read the referenced revision, not trust the earlier record — fixed both in PR #731."
     severity: minor
   - description: MiddenArtifact.vue's comment says validate-content-refs catches a bad embed slug, but the validator has no embed-side check at all.
     solution: Fix the comment or add the embed-side check (idea 1 of this session's proposals) — both directions of the page-body/artifact reference.
     severity: minor
-  - description: git push --force-with-lease rejected with stale info because the pre-cloned environment carried a remote-tracking ref for a branch the remote no longer has.
-    solution: git remote prune origin before the first push of a session whose branch name predates the clone; plain push then succeeded.
-    severity: nit
   - description: A git checkout -- used to restore a negative-test edit silently reverted that file's own uncommitted backfill too — caught only because the post-restore diff came back empty, then re-applied.
     solution: "CLAUDE.md's check-first discipline applies to single-file checkout restores as much as reset --hard: stash or commit pending edits before any discard-and-restore probe on a file you have modified."
     severity: minor
+  - description: The authored session-log scratch reverted to a stale pre-curation state across a session resume (scratchpad under /tmp lost later writes), which would have let the Stop hook overwrite the landed log with outdated in-review content.
+    solution: Caught at the check-in wake by re-reading the scratch before trusting it; rewrote the file whole. Treat /tmp scratch as volatile across resumes — re-verify the authored scratch at every closure wake.
+    severity: minor
+  - description: git push --force-with-lease rejected with stale info because the pre-cloned environment carried a remote-tracking ref for a branch the remote no longer has.
+    solution: git remote prune origin before the first push of a session whose branch name predates the clone; plain push then succeeded.
+    severity: nit
   - description: Stop hook flagged inherited origin/main commit adb167c as Unverified alongside this session's own tip; signing key unprovisioned so the suggested --reset-author remedy could fix nothing.
     solution: Followed CLAUDE.md's existing guidance (check origin/main..HEAD, known platform limitation) — no doc change needed, just noise.
     severity: nit
-durationSec: 9680
+durationSec: 12115
 models:
-  claude-fable-5: 416
+  claude-fable-5: 423
 toolCounts:
-  Bash: 90
+  Bash: 91
   Glob: 1
   Read: 14
   ToolSearch: 5
   mcp__github__search_issues: 1
   Grep: 5
   Skill: 4
-  Write: 7
+  Write: 8
   Edit: 29
   TaskCreate: 9
   TaskUpdate: 18
@@ -82,7 +85,7 @@ toolCounts:
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
   mcp__github__pull_request_read: 3
-  mcp__Claude_Code_Remote__send_later: 10
+  mcp__Claude_Code_Remote__send_later: 11
   mcp__Claude_Code_Remote__delete_trigger: 1
   mcp__github__update_pull_request: 2
 filesEdited:
@@ -127,6 +130,7 @@ cliVersion: 2.1.220
 learnings:
   - mcp github list_branches can never surface a deleted branch — a dead branch's only remaining trace is its closed-unmerged PR's head ref
   - git log --diff-filter=D with -M reclassifies moved files as renames, giving a free mechanical slice of the Midden's Gate B
+  - git fetch origin refs/pull/N/head recovers a closed-unmerged PR's content for SHA-pinned permalinks — including non-head commits like a replaced draft
 ideas:
   - "Extend validate-content-refs' Midden pass to parse each trench site page body for ::midden-artifact{slug} embeds and enforce both directions: every embed names a real artifact stem, and every artifact YAML is embedded at least once in its declared site. Today a typo'd embed silently renders the \"Artifact not found\" fallback in production and an orphaned artifact is invisible."
   - A "resurrection watch" script or chartered Skill that mechanically re-runs Gate B per provenance kind (dependency absent from package.json, file absent from origin/main, branch still deleted, PR still closed) and flags artifacts whose corpse grew back for curator re-assessment — flagging only, never re-deriving condition. scripts/midden-survey.ts's provenanceKey/screen helpers are a ready substrate for it.
