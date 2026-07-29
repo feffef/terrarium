@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01NTMpx8aVzhU9GPrEpVoASw
 startedAt: 2026-07-29T06:27:37Z
-endedAt: 2026-07-29T07:20:33Z
+endedAt: 2026-07-29T07:45:41Z
 kind: interactive
 goal: Midden ideas, surveyor Skill, artifact model
 status: in-review
 outcome: "Surveyor merged (#729); artifact model in PR #731"
-summary: "Two phases, both human-instructed. First (kickoff prompt): proposed five grounded Midden improvement ideas, screened against open issues so none duplicated tracked work. Second (explicit green-light, /implement 3 now): built idea 3, the midden-survey Skill — TDD'd scripts/midden-survey.ts (deleted-file and dropped-dependency sweep with noise/rename/Gate-B/ already-catalogued screens, shallow-clone refusal, 18 unit tests), the SKILL.md survey flow (MCP sweep for closed-unmerged PRs and dormant branches, two-gate judgment, one survey-report issue per run, everything curatorial left curator-authored), Skill Inventory entry, and a CONTEXT.md pointer. Full gate green; two-axis code review ran pre-push and its actionable findings were folded in. Gated PR #729 opened, gate green, merged by the owner. Third phase (owner-directed, remains locked curator-curated): extended the artifact model with removedIn (terminal commit, bare hash) and remains (SHA-pinned immutable links to original state), TDD'd the stratum corroboration check, rendered both in MiddenArtifact.vue, backfilled 12 artifacts whose provenance url was squatting as the removal link, curated four remains exemplars, screenshot-verified; PR #731 in review."
+summary: "Two phases, both human-instructed. First (kickoff prompt): proposed five grounded Midden improvement ideas, screened against open issues so none duplicated tracked work. Second (explicit green-light, /implement 3 now): built idea 3, the midden-survey Skill — TDD'd scripts/midden-survey.ts (deleted-file and dropped-dependency sweep with noise/rename/Gate-B/ already-catalogued screens, shallow-clone refusal, 18 unit tests), the SKILL.md survey flow (MCP sweep for closed-unmerged PRs and dormant branches, two-gate judgment, one survey-report issue per run, everything curatorial left curator-authored), Skill Inventory entry, and a CONTEXT.md pointer. Full gate green; two-axis code review ran pre-push and its actionable findings were folded in. Gated PR #729 opened, gate green, merged by the owner. Third phase (owner-directed, remains locked curator-curated): extended the artifact model with removedIn (terminal commit, bare hash) and remains (SHA-pinned immutable links to original state), TDD'd the stratum corroboration check, rendered both in MiddenArtifact.vue, backfilled 12 artifacts whose provenance url was squatting as the removal link (then 4 more after a sibling session landed six survey finds on main mid-review — rebased in, all passing the new season corroboration), curated four remains exemplars, screenshot-verified; PR #731 in review."
 prs:
   - "729"
   - "731"
@@ -59,14 +59,14 @@ frictions:
   - description: Stop hook flagged inherited origin/main commit adb167c as Unverified alongside this session's own tip; signing key unprovisioned so the suggested --reset-author remedy could fix nothing.
     solution: Followed CLAUDE.md's existing guidance (check origin/main..HEAD, known platform limitation) — no doc change needed, just noise.
     severity: nit
-durationSec: 3176
+durationSec: 4684
 models:
-  claude-fable-5: 279
+  claude-fable-5: 304
 toolCounts:
-  Bash: 60
+  Bash: 67
   Glob: 1
   Read: 13
-  ToolSearch: 4
+  ToolSearch: 5
   mcp__github__search_issues: 1
   Grep: 5
   Skill: 4
@@ -81,6 +81,7 @@ toolCounts:
   mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
   mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - tests/unit/midden-survey.spec.ts
   - scripts/midden-survey.ts
