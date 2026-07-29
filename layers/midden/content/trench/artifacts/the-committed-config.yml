@@ -10,9 +10,15 @@ provenance:
     (ADR-0013) — the generated artifact of the same name is gone; identity not
     carried forward
 site: the-generated-map
-catalogNote: The config file that was once emitted and committed whole; the
-  filename outlived its generated body, which was rewritten by hand and is now
-  an ordinary module.
+catalogNote: >-
+  At Milestone 1 it was 35 generated lines and four collections; by the end,
+  76 lines spelling out all twelve keys, one defineCollection block each,
+  regenerated whenever a manifest moved. ADR-0013 replaced the body with a
+  module computing the same cross-product at config-evaluation time; only the
+  filename survived.
+remains:
+  - label: the cross-product, spelled out in full
+    url: https://github.com/feffef/terrarium/blob/66a17c8656bbcbf832a1c158759bceec887f7d89/content.config.ts
 assessedAt: 2026-07-16
 inscription:
   text: ⚠️  GENERATED FILE — DO NOT EDIT. // Produced by scripts/generate.ts from

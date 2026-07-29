@@ -9,9 +9,14 @@ provenance:
   continuityCheck: explicitly close-without-merging; added one temporary markdown
     file consumed by nothing, purely to trigger CI once the repo went public
 site: built-never-fired
-catalogNote: A pull request opened for the sole purpose of making the gate run
-  once, carrying a single file the build never touched, and asked in its own
-  body to be closed unmerged.
+catalogNote: >-
+  Five lines of markdown whose entire content was an instruction to close the
+  pull request carrying it. It worked: the gate reported green two and a half
+  minutes later, confirming the billing stop had lifted once the repo went
+  public, and the pull request was closed at four minutes.
+remains:
+  - label: the five lines, in full
+    url: https://github.com/feffef/terrarium/blob/3de96259527acfff62a6c2e77cdd254210b5cc40/GATE-SMOKE-TEST.md
 assessedAt: 2026-07-16
 inscription:
   text: Please close without merging and I'll delete the branch — this is only

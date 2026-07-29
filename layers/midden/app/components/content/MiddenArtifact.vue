@@ -28,6 +28,13 @@ interface MiddenInscription {
   source: string
 }
 
+/** One curator-curated link to the artifact's preserved original state
+ *  (tenant.config.ts's `remainEntry` — SHA-pinned, immutable). */
+interface MiddenRemain {
+  label: string
+  url: string
+}
+
 /** The discriminated provenance union (tenant.config.ts's `provenance`), mirrored
  *  as a plain TS type — the manifest exports only the zod schema, not its inferred
  *  type. Single-homed here now: this embed is the sole consumer since the redesign
@@ -50,6 +57,8 @@ interface MiddenArtifactDoc {
   provenance: MiddenProvenance
   catalogNote: string
   assessedAt: string
+  removedIn?: string
+  remains?: MiddenRemain[]
   inscription?: MiddenInscription
 }
 
@@ -83,6 +92,18 @@ const stampStyle = computed(() => {
 const inscriptionForDisplay = computed(() =>
   isLost.value ? undefined : artifact.value?.inscription,
 )
+
+// `remains` follows the same lost-grade silence convention as `inscription`
+// (tenant.config.ts's `remains` comment): nothing survives to view.
+const remainsForDisplay = computed(() => (isLost.value ? undefined : artifact.value?.remains))
+
+// `removedIn` is a bare hash (tenant.config.ts): the commit link is derived
+// here against REPO_URL (single-homed in layers/journal/app/utils/dashboard.ts,
+// auto-imported cross-layer like every app/utils export).
+const removedInUrl = computed(() =>
+  artifact.value?.removedIn ? `${REPO_URL}/commit/${artifact.value.removedIn}` : undefined,
+)
+const removedInShort = computed(() => artifact.value?.removedIn?.slice(0, 7))
 
 // Deterministic, locale-independent date prose (no `toLocaleDateString`, whose
 // SSR/client locale mismatch causes hydration errors). #526 asks only that
@@ -140,6 +161,10 @@ function provenanceLine(p: MiddenProvenance): string {
           rel="noopener noreferrer"
         >{{ provenanceLine(artifact.provenance) }}</a>
         <span v-else>{{ provenanceLine(artifact.provenance) }}</span>
+        <template v-if="removedInUrl">
+          <span class="midden-find__dot" aria-hidden="true">·</span>
+          <a :href="removedInUrl" target="_blank" rel="noopener noreferrer">removed in {{ removedInShort }}</a>
+        </template>
         <span class="midden-find__dot" aria-hidden="true">·</span>
         <span class="midden-find__assessed">assessed {{ formatAssessedAt(artifact.assessedAt) }}</span>
       </p>
@@ -153,6 +178,17 @@ function provenanceLine(p: MiddenProvenance): string {
     </blockquote>
     <p v-else-if="isLost" class="midden-find__silent">
       no inscription survives — nothing is left to quote.
+    </p>
+
+    <p v-if="remainsForDisplay?.length" class="tech midden-find__remains">
+      <span class="midden-find__remains-label">remains</span>
+      <a
+        v-for="remain in remainsForDisplay"
+        :key="remain.url"
+        :href="remain.url"
+        target="_blank"
+        rel="noopener noreferrer"
+      >{{ remain.label }}</a>
     </p>
   </article>
 
@@ -300,6 +336,30 @@ function provenanceLine(p: MiddenProvenance): string {
   font-style: italic;
   font-size: 0.95rem;
   color: var(--midden-faint);
+}
+
+/* The remains row: labelled SHA-pinned links to the artifact's preserved
+   original state, trailing the entry in the record's mono register. */
+.midden-find__remains {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.9rem;
+  margin: 0.9rem 0 0;
+  color: var(--midden-faint);
+}
+.midden-find__remains-label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.68rem;
+}
+.midden-find__remains a {
+  color: var(--midden-muted);
+  border-bottom: 1px solid var(--midden-rule);
+}
+.midden-find__remains a:hover {
+  color: var(--midden-accent);
+  border-bottom-color: currentColor;
 }
 
 .midden-artifact-missing {

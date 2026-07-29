@@ -99,7 +99,10 @@ survey gets a comment, not a duplicate). For each surviving candidate:
   PR/branch, dates, and links;
 - a **draft `provenance` block** in the artifact schema's shape
   (`layers/midden/tenant.config.ts`), including a `continuityCheck` line
-  recording exactly which Gate-B check ran and what it found;
+  recording exactly which Gate-B check ran and what it found — plus a draft
+  `removedIn` where the terminal event is a commit (the script already reports
+  the deleting/dropping hash per candidate); `remains` stays out of the draft —
+  it is curator-curated by definition (CONTEXT.md's Artifact term);
 - one line on why it passes both gates.
 
 State plainly in the issue that `condition`, `stratum`, `site`, and the

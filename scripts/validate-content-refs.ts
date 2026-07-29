@@ -36,7 +36,7 @@ import { globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { expand, loadManifests, root, type ExpandedCollection } from '../shared/expand.ts'
-import { DIG_SEASON_SLUGS } from '../layers/midden/app/utils/strata.ts'
+import { DIG_SEASON_SLUGS, digSeasonOf, type DigSeason } from '../layers/midden/app/utils/strata.ts'
 import { parseDocument, splitFrontmatter } from './validate-content.ts'
 
 export interface RefViolation {
@@ -364,6 +364,51 @@ function checkProvenance(provenance: unknown, projectRoot: string): string[] {
   }
 }
 
+/**
+ * Whether a commit instant falls inside a dig season's inclusive date range —
+ * the corroboration behind the `removedIn` check below: dig seasons are dated
+ * from the termination dates of their artifacts (layers/midden/CONTEXT.md,
+ * "Dig season"), so an artifact's removing commit should land inside its own
+ * `stratum`. Compares on the DATE PART of the instant as git renders it
+ * (`%cI` carries the committer's own offset) — the season bounds are calendar
+ * days, not UTC instants.
+ */
+export function commitDateWithinSeason(isoCommitDate: string, season: Pick<DigSeason, 'start' | 'end'>): boolean {
+  const day = isoCommitDate.slice(0, 10)
+  return day >= season.start && (season.end === null || day <= season.end)
+}
+
+/**
+ * The terminal-commit/`stratum` corroboration, run on `removedIn` and on a
+ * `commit`-kind provenance `hash` alike (both name the dated event the
+ * artifact's dig season was derived from). Format is schema-enforced
+ * (tenant.config.ts); this pass adds what the per-document schema can't see:
+ * a best-effort date check against the artifact's dig season. Same
+ * shallow-clone stance as `checkProvenance`'s commit case — a failed `git
+ * show` lookup is NEVER itself a violation; only a commit we can actually
+ * date, sitting outside its declared season, is.
+ */
+function checkTerminalCommitSeason(field: string, hash: string, stratum: unknown, projectRoot: string): string[] {
+  const season = typeof stratum === 'string' ? digSeasonOf(stratum) : undefined
+  if (!season) return [] // an unknown stratum is already checkStratum's finding
+  let isoCommitDate: string
+  try {
+    isoCommitDate = execFileSync('git', ['show', '-s', '--format=%cI', `${hash}^{commit}`], {
+      cwd: projectRoot,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim()
+  } catch {
+    return [] // not found on this (possibly shallow) clone — not evidence of anything
+  }
+  if (!commitDateWithinSeason(isoCommitDate, season)) {
+    return [
+      `${field}: commit ${hash} is dated ${isoCommitDate.slice(0, 10)}, outside its "${season.slug}" season (${season.start} – ${season.end ?? 'open'})`,
+    ]
+  }
+  return []
+}
+
 function checkArtifacts(
   col: ExpandedCollection,
   projectRoot: string,
@@ -386,6 +431,23 @@ function checkArtifacts(
     if (typeof data.stratum === 'string') msgs.push(...checkStratum(data.stratum))
 
     msgs.push(...checkProvenance(data.provenance, projectRoot))
+
+    if (typeof data.removedIn === 'string') {
+      msgs.push(...checkTerminalCommitSeason('removedIn', data.removedIn, data.stratum, projectRoot))
+    }
+    // A commit-kind referent is PRESUMED terminal (the discarded thing is the
+    // commit's own event) — but a declared `removedIn` overrides the
+    // presumption: a referent hash can be a birth record instead (e.g. the
+    // Spawn term's coining commit, whose retirement lives in `removedIn`).
+    const prov = data.provenance as Record<string, unknown> | undefined
+    if (
+      typeof data.removedIn !== 'string' &&
+      prov?.kind === 'commit' &&
+      typeof prov.hash === 'string' &&
+      /^[0-9a-f]{7,40}$/.test(prov.hash)
+    ) {
+      msgs.push(...checkTerminalCommitSeason('provenance.hash', prov.hash, data.stratum, projectRoot))
+    }
 
     if (msgs.length) violations.push({ key: col.key, file, messages: msgs })
   }

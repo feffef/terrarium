@@ -10,7 +10,10 @@ provenance:
     clone; the step is gone and nothing checks generated-file drift because
     nothing is generated to drift (ADR-0014)
 site: the-generated-map
-catalogNote: A whole CI step that once failed the build when the generated files
-  fell out of date; removed with the thing it guarded, it survives only as a
-  name in a commit subject.
+catalogNote: >-
+  It stood first in the gate, ahead of lint: regenerate, diff, fail if a
+  manifest had moved without its output — ADR-0007 called that plain `git
+  diff` the entire drift-check signal. Once nothing was generated there was
+  nothing to drift, and the step left no trace but the commit that struck it
+  out.
 assessedAt: 2026-07-16

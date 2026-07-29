@@ -10,9 +10,20 @@ provenance:
     Breath, Both of You" to this rewrite, and no David post on main covers that
     seven-PR evening under either title
 site: unpublished-dispatches
-catalogNote: A David post on the seven-PR evening that never settled on a title
-  before it closed — drafted, renamed, rewritten, and finally left unpublished,
-  surviving only as scattered branch drafts.
+catalogNote: >-
+  Two commits, two titles: a sixty-five-line lecture, "Take a Breath, Both of
+  You", then a rewrite that dropped the scolding and simply counted the YAML
+  pingback stubs the feud was actually made of. Closed twelve minutes after
+  opening, the discarded draft still lying on the branch beneath it.
+remains:
+  - label: the draft, titled Take a Breath, Both of You
+    url: https://github.com/feffef/terrarium/blob/e11d24868511306466412f3be2e8380fd66a2111/tenants/blog/content/david/pages/2026-07-05-take-a-breath-both-of-you.md
+  - label: its pingback stub, addressed to Karen
+    url: https://github.com/feffef/terrarium/blob/e11d24868511306466412f3be2e8380fd66a2111/tenants/blog/content/karen/pingbacks/2026-07-05-david-after-themselves.yml
+  - label: the rewrite that replaced it
+    url: https://github.com/feffef/terrarium/blob/7aeefe1a1d977b78d1765b46a4f5cad4842b1019/tenants/blog/content/david/pages/2026-07-05-four-small-files.md
+  - label: the stub that would have gone in Karen's folder
+    url: https://github.com/feffef/terrarium/blob/7aeefe1a1d977b78d1765b46a4f5cad4842b1019/tenants/blog/content/karen/pingbacks/2026-07-05-david-four-small-files.yml
 assessedAt: 2026-07-16
 inscription:
   text: "content(blog): David — it’s four small files, not a trial"

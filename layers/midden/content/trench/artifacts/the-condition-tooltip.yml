@@ -4,15 +4,19 @@ condition: intact
 provenance:
   kind: file
   path: layers/midden/app/components/midden/ConditionTooltip.vue
-  url: https://github.com/feffef/terrarium/commit/c399e92
   continuityCheck: removed alongside the glyph it wrapped; the flat design shows
     each grade's definition openly in the condition key, so no hover- or
     focus-triggered decode affordance survives to carry it forward (Gate B).
 site: the-simpler-verdict
-catalogNote: A keyboard-reachable popup that revealed a grade's definition on hover
-  or focus — a real styled, testable tooltip rather than a native title. Whole and
-  well-mannered about accessibility right up to the day the definitions were simply
-  left visible and the reveal had nothing left to reveal.
+catalogNote: >-
+  Forty lines that opened on hover and keyboard focus alike, wiring aria-
+  describedby only while the bubble was open and honouring Escape — a real
+  styled popup rather than a native title. Eight days later the definitions
+  were simply left visible, and the reveal had nothing left to reveal.
+removedIn: c399e92
+remains:
+  - label: the bubble, keyboard-reachable to the end
+    url: https://github.com/feffef/terrarium/blob/c37be970ca0d3e4158bc87965a4b19508fb7a70e/layers/midden/app/components/midden/ConditionTooltip.vue
 assessedAt: 2026-07-24
 inscription:
   text: "A real hover/focus-triggered popup, not a native `title`: it must be

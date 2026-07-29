@@ -9,9 +9,14 @@ provenance:
   continuityCheck: the workflow-loop diagram beside it was redrawn and kept; this
     containment diagram was dropped outright, not replaced (#364)
 site: toward-the-defaults
-catalogNote: One of two architecture diagrams; the workflow loop beside it was
-  redrawn and kept, and this one was simply removed, judged to be saying less
-  than the space it took.
+catalogNote: >-
+  A Mermaid graph tracing Platform to Tenant to Space to Collection, ending at
+  a node reading Document — this page: a chain the prose directly above it had
+  already walked. The workflow loop beside it survived, and inherited the e2e
+  assertion that had been watching this one render.
+remains:
+  - label: the diagram, one line under the prose that already said it
+    url: https://github.com/feffef/terrarium/blob/8867fe5924ea4027fc8e61ffdeb8939e14ff8006/layers/journal/content/current/pages/architecture.md
 assessedAt: 2026-07-16
 inscription:
   text: Drop the architecture containment diagram (#364)

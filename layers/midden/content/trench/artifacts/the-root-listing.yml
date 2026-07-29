@@ -10,9 +10,14 @@ provenance:
     machine-generated Tenant/Space directory was cut and nothing routed replaced
     it
 site: toward-the-defaults
-catalogNote: A directory of every Tenant and Space the root page assembled for
-  itself, forty-two lines lifted out clean once the landing found a better thing
-  to be.
+catalogNote: >-
+  A footer labelled Also on this site, sweeping the generated route map and
+  printing each surviving path as its own link text. Once the landing had
+  curated blocks for the Journal, the personas and the Atlas, the raw route
+  dump had nothing left to add; forty-two lines came out clean.
+remains:
+  - label: the footer, still sweeping the route map
+    url: https://github.com/feffef/terrarium/blob/b37f0067818476958953849ecbf99c0bdad58055/app/pages/index.vue
 assessedAt: 2026-07-16
 inscription:
   text: Remove auto-generated tenant/space listing from root index

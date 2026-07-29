@@ -10,9 +10,11 @@ provenance:
     lockstep gate.yml edit (#90), removed once the L0 step went (#97); never did
     anything either way
 site: built-never-fired
-catalogNote: A script built to do nothing — a no-op left in package.json so the
-  old CI step would not fail, holding the door until the step could be removed,
-  then removed itself.
+catalogNote: >-
+  A one-line script whose entire body was an echo explaining why it did
+  nothing: ADR-0014 had already removed the artifact that could drift, but the
+  human-only CI step still called `pnpm gate:drift`. It held that door for
+  some six hours before the step, and it, were deleted together.
 assessedAt: 2026-07-16
 inscription:
   text: "ADR-0014: the routing map is generated at build time from the manifests;

@@ -9,9 +9,12 @@ provenance:
   continuityCheck: every build/dev/typecheck script once began `pnpm gen &&`; that
     prefix is gone from package.json and no `gen` script remains to call
 site: the-generated-map
-catalogNote: The little `pnpm gen &&` that opened every build, dev and typecheck
-  script, threaded through package.json until the step it invoked no longer
-  existed.
+catalogNote: >-
+  Five scripts opened the same way — postinstall, dev, build, generate,
+  typecheck — each running `pnpm gen &&` first so nobody could build against a
+  stale map. The prefix was struck out of package.json in the same commit that
+  deleted the script it called, and the lines went back to naming only what
+  they do.
 assessedAt: 2026-07-16
 inscription:
   text: '"build": "pnpm gen && nuxt build"'

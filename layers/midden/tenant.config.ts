@@ -60,6 +60,25 @@ const provenance = z.discriminatedUnion('kind', [
 // an authoring convention, not a schema-level conditional).
 const inscription = z.object({ text: z.string(), source: z.string() }).strict()
 
+// One curator-curated link to the artifact's preserved original state — a
+// revision pinned to a FULL 40-char commit SHA (a branch-named link would
+// mutate under the reader; the regex is the immutability bar, enforced at
+// validate:content time). Curated means a few meaningful, labelled links per
+// artifact, never a mechanical dump of every path it touched. Like the
+// per-variant `url`, resolution is garnish: the artifact's meaning never
+// depends on the link staying reachable.
+const remainEntry = z
+  .object({
+    label: z.string().min(1), // curator's-voice caption, e.g. "the component, as last alive"
+    url: z
+      .string()
+      .regex(
+        /^https:\/\/github\.com\/[^/]+\/[^/]+\/(blob|tree|raw)\/[0-9a-f]{40}\/\S+$/,
+        'remains.url must be a GitHub revision link pinned to a full 40-char commit SHA',
+      ),
+  })
+  .strict()
+
 export default defineTenant({
   name: 'midden',
   spaces: ['trench'],
@@ -97,6 +116,19 @@ export default defineTenant({
           // REQUIRED (#526): condition is never re-derived from this — it's
           // rendered directly beside the grade+glyph, "fresh — as of 2026-05-01".
           assessedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'assessedAt must be YYYY-MM-DD'),
+          // The terminal event: the commit that actually removed the thing —
+          // distinct from the per-variant provenance `url` (a link to the
+          // referent itself). Bare hash, not a URL: every artifact is about
+          // this repo, so the renderer derives the commit link. Optional
+          // because not every terminal event is a commit (a closed-unmerged
+          // PR dies by closing). `validate-content-refs.ts` corroborates its
+          // commit date against the artifact's `stratum` where history allows.
+          removedIn: z.string().regex(/^[0-9a-f]{7,40}$/, 'removedIn must be a lowercase git commit hash').optional(),
+          // The preserved original state, viewable in situ — see `remainEntry`
+          // above. Like `inscription`, expected structurally ABSENT on a
+          // `lost` artifact (nothing survives to view) — the same authoring
+          // convention, renderer-suppressed, not schema-enforced.
+          remains: z.array(remainEntry).nonempty().optional(),
           // The artifact's own words, quoted verbatim. Expected omitted on a
           // `lost` artifact (nothing survives to quote) — see the field's own
           // comment above.

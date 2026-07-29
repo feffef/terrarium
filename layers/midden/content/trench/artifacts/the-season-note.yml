@@ -4,14 +4,20 @@ condition: fragmentary
 provenance:
   kind: file
   path: layers/atlas/app/components/content/SeasonNote.vue
-  url: https://github.com/feffef/terrarium/commit/856c264
   continuityCheck: the field-note-per-season block, retired when specimens
     converted to phase-notes; the reader-requested feature it was built for was
     rebuilt on a different model
 site: the-first-almanac
-catalogNote: A block that showed one season’s paragraph only while the dial rode
-  that season, built to a reader’s own request and torn out when the model
-  beneath it was recut a second time.
+catalogNote: >-
+  Sixty-seven lines built to a reader's request for a paragraph per season:
+  server-rendered expanded, collapsing to the needle's season only after
+  hydration, and using v-show so hidden sightings kept their dial ticks. Added
+  at 22:17 and removed at 23:51 the same night, when every specimen was recut
+  onto phase-notes.
+removedIn: 856c264
+remains:
+  - label: the block, collapse logic and all
+    url: https://github.com/feffef/terrarium/blob/454b320027e4338f3291841af76df7403186113e/layers/atlas/app/components/content/SeasonNote.vue
 assessedAt: 2026-07-16
 inscription:
   text: 'the reader’s own words: "a paragraph for each specific season … use the

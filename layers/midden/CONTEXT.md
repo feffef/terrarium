@@ -65,8 +65,19 @@ its dig-season `stratum`, a curator-graded `condition`, a discriminated-union
 `provenance` (which kind of thing it was — a PR, a branch, a commit, a file, a
 dependency, or a Skill — plus an optional live `url` and a `continuityCheck`
 note), a back-reference to the `site` that narrates it, a curator's-voice
-`catalogNote`, a required `assessedAt` date (#526 — never re-derived), and an
-optional verbatim `inscription` ({text, source}). Rendered only inline inside
+`catalogNote`, a required `assessedAt` date (#526 — never re-derived), an
+optional verbatim `inscription` ({text, source}), and two optional
+preservation fields: `removedIn` — the terminal event, the bare hash of the
+commit that removed the thing (rendered as a derived commit link;
+`validate-content-refs.ts` corroborates its date against the `stratum` where
+history allows — and presumes a `commit`-kind referent hash terminal for the
+same check unless a declared `removedIn` overrides it, since a referent can
+be a birth record, as with the Spawn term's coining commit), distinct from
+`provenance.url` which links the referent itself — and `remains` — curator-curated, labelled links to the artifact's
+preserved original state, each pinned to a full commit SHA so the link is
+immutable (schema-enforced), a few meaningful views rather than a mechanical
+dump of every touched path. Like `inscription`, `remains` is expected
+structurally absent on a `lost` artifact — nothing survives to view. Rendered only inline inside
 a Site's body (#521), never at its own route (ADR-0006 keeps only `pages`
 route-addressable).
 

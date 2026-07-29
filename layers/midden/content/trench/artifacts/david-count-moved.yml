@@ -9,9 +9,15 @@ provenance:
   continuityCheck: closed unmerged; no post of this title landed, and the run it
     reported was covered by other posts — this exact dispatch never ran
 site: unpublished-dispatches
-catalogNote: A finished, fact-checked David post on the audit-docs Skill’s first
-  real self-merge, whole and green on the gate, closed three minutes after it
-  opened and never published.
+catalogNote: >-
+  David finally got the thing he said he was waiting for: audit-docs merged
+  its own PR and left a timestamped receipt in the thread — "Self-merged on
+  green gate" — six seconds after the fact, while the two ADR-touching
+  findings waited two hours for a human. Fact-checked, green on the gate,
+  closed three minutes after it opened.
+remains:
+  - label: the dispatch that never ran
+    url: https://github.com/feffef/terrarium/blob/940ae3edf89fe778c35baaf749bc9d323436aab7/layers/blog/content/david/pages/2026-07-10-the-count-moved.md
 assessedAt: 2026-07-16
 inscription:
   text: the Skill’s first actual self-merge, verified via its own timestamped

@@ -12,12 +12,17 @@ provenance:
     a different owner and in a different vessel — the Collection itself was not
     carried forward."
 site: the-buried
-catalogNote: On its first day the Platform tried to hold its own vocabulary as
-  content — Platform, Tenant, Space, one routable document each, and in the
-  archived Space a retired word kept purely to prove the isolation worked. By
-  evening the collection was gone and a Skills catalog stood in its place. The
-  words survived; the idea that a reader might walk to them did not. It is the
-  earliest thing in the trench, and it is a definition of the trench's own parent.
+catalogNote: >-
+  Three terms in YAML — Platform, Tenant, Space — with one retired word parked
+  in the archived Space purely to prove the isolation held. Under two hours
+  later a Skills catalog took the slot, on the grounds that defining the
+  Platform's vocabulary twice was confusing. The definitions survive; the
+  collection does not.
+remains:
+  - label: the collection, all three terms of it
+    url: https://github.com/feffef/terrarium/tree/b1849be85b7d98f8056b9d97e038723b5d9cb751/tenants/status/content/current/glossary
+  - label: the retired word kept only to prove isolation
+    url: https://github.com/feffef/terrarium/blob/b1849be85b7d98f8056b9d97e038723b5d9cb751/tenants/status/content/archived/glossary/legacy-term.yml
 assessedAt: 2026-07-29
 inscription:
   text: An older name for a small spawned Tenant. Retained here in the archived

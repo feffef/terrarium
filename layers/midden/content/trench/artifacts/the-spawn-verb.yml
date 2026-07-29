@@ -10,9 +10,15 @@ provenance:
     overloaded with "spawn a sub-agent"; retired to the Retired-terms section —
     survives only as a gravestone entry telling readers to avoid it
 site: the-buried
-catalogNote: A glossary verb for adding a Tenant or Space, coined at the very
-  first design and then never really used, kept now only as a note in the
-  retired-terms list telling writers to say something else.
+catalogNote: >-
+  Coined in the repository's first commit, a week before there was anything to
+  spawn, and confident enough to mint a nested coinage: a spawned small Tenant
+  was a microsite. Seven days later the retired-terms list replaced the verb
+  with the instruction to just say add a Tenant or Space.
+removedIn: a1dc590
+remains:
+  - label: the first glossary, where it was coined
+    url: https://github.com/feffef/terrarium/blob/2cb2aa572616e7541f14b352d8d127ca84db84f1/CONTEXT.md
 assessedAt: 2026-07-16
 inscription:
   text: "### Spawn (a Tenant / Space) — It is never a runtime operation."

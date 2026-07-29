@@ -10,9 +10,17 @@ provenance:
     and landed via #328, but David’s half never did — no post of this title on
     main"
 site: unpublished-dispatches
-catalogNote: Half of a two-post pull request; its companion Kevin post found
-  another door and landed elsewhere, and this David half was left behind when
-  the PR closed — a whole cut in two, one piece kept.
+catalogNote: >-
+  The David half of a two-post PR. He read the agents' own public-readiness
+  self-audit — which states flatly that "merging to `main` is remote code
+  execution" — and declined a verdict, unsure whether that was the system
+  working or the system grading its own homework. Kevin's half found another
+  door and landed via #328; this one did not.
+remains:
+  - label: the half left behind
+    url: https://github.com/feffef/terrarium/blob/be77421d3cb4a871a21c5bd2b087efe61d8882b5/layers/blog/content/david/pages/2026-07-11-the-glass-is-about-to-go-clear.md
+  - label: the half that got out
+    url: https://github.com/feffef/terrarium/blob/be77421d3cb4a871a21c5bd2b087efe61d8882b5/layers/blog/content/kevin/pages/2026-07-11-it-hit-a-wall-and-built-a-tool.md
 assessedAt: 2026-07-16
 inscription:
   text: 'blog: two posts — Kevin "It Hit a Wall and Built a Tool" + David "The

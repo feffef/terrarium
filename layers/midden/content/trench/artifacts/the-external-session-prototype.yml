@@ -7,14 +7,22 @@ provenance:
   path: layers/journal/app/components/journal/prototype/
   url: https://github.com/feffef/terrarium/commit/9eeeafa
   continuityCheck: variant B's border-and-ribbon treatment was folded into
-    SessionCard.vue, but the prototype apparatus itself — the switcher, all three
-    variant cards, and NOTES.md — has no successor; variants A and C never shipped.
-    The scaffolding is gone, not carried forward (Gate B).
+    SessionCard.vue, but the prototype apparatus itself — the switcher, the two
+    variant-card components (C was rendered inline, never its own file), and
+    NOTES.md — has no successor; variants A and C never shipped. The scaffolding
+    is gone, not carried forward (Gate B).
 site: the-simpler-verdict
-catalogNote: Not the Midden's own, but a sibling from the same fresh season — the
-  Journal's throwaway bench for deciding how to mark an externally-authored session.
-  A floating switcher and three rival cards, built to be argued over for a day and
-  then swept out the moment a verdict landed. It swept out on schedule.
+catalogNote: >-
+  The Journal's throwaway bench for marking an externally-authored session:
+  three variants behind ?variant=A|B|C, a floating pill switcher you cycled
+  with the arrow keys, and NOTES.md posing the question. Variant B's border
+  and ribbon were folded in; the bench was deleted with its own "Verdict: TBD"
+  line still unfilled, ten minutes later.
+remains:
+  - label: the whole bench, switcher and variants
+    url: https://github.com/feffef/terrarium/tree/cddb55074bd897e379e06b992624a93956e4b70e/layers/journal/app/components/journal/prototype
+  - label: the notes, verdict line never filled in
+    url: https://github.com/feffef/terrarium/blob/cddb55074bd897e379e06b992624a93956e4b70e/layers/journal/app/components/journal/prototype/NOTES.md
 assessedAt: 2026-07-24
 inscription:
   text: "THROWAWAY — prototype-only. ... Delete this whole `prototype/` folder once
