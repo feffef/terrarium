@@ -1,0 +1,10 @@
+name: midden-survey
+category: platform-operation
+importance: specialist
+role: >-
+  The Midden's field-walk: sweeps for freshly discarded work — deleted files
+  and dropped dependencies mechanically (scripts/midden-survey.ts), closed
+  unmerged PRs and dormant branches via the GitHub tools — screens the two-gate
+  inclusion bar, and files one survey-report issue for the curator. Discovery
+  only; grading stays curator-authored.
+observations: []
