@@ -1,0 +1,60 @@
+schemaVersion: 1
+session: session_014KKDP1zL19J6VSAD5GcVWc
+startedAt: 2026-07-29T06:54:15Z
+endedAt: 2026-07-29T07:06:14Z
+kind: interactive
+goal: Survey the Platform's discards for the Midden
+status: completed
+outcome: "Six candidates filed as issue #730"
+summary: "Human-instructed: the user invoked /midden-survey, and the Skill's scope (discovery only, one survey-report issue, no cataloguing) defined the whole session — nothing here was agent-initiated beyond judgment calls the Skill explicitly delegates. First run of the Skill, so no prior report existed to bound --since from; I swept unbounded over the full history after unshallowing. 38 deleted paths across 16 commits, 0 dropped deps, 12 closed-unmerged PRs. Six candidates cleared both gates; 15 failed Gate B and are recorded as Palimpsest-boundary notes; 4 were false candidates from a dedupe defect I found in the script. Branches resolved structurally — the repo is younger than the 30-day dormancy floor. No code changed; the issue is the deliverable."
+prs: []
+docsRead:
+  - path: layers/midden/CONTEXT.md
+    reason: the inclusion bar (Gate A/B), Artifact and Condition terms
+  - path: layers/midden/tenant.config.ts
+    reason: the provenance discriminated-union shape the draft blocks must match
+  - path: scripts/midden-survey.ts
+    reason: what the mechanical sweep already screens out, so I judge only what it leaves
+skillsUsed:
+  - name: midden-survey
+    reason: the session's whole brief
+  - name: close-session
+    reason: self-judged closure once the issue was filed
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: GitHub MCP list_issues and search_pull_requests overflowed the token cap three times; each needed a spill-file and an ad-hoc python parse.
+    solution: Reach for minimal_output and a small perPage on the FIRST call to any repo-wide GitHub list/search tool, not after the overflow. Worth a line in docs/agents/issue-tracker.md's pagination guidance.
+    severity: minor
+  - description: search_issues returned total_count 0 for queries whose matches demonstrably exist, twice; only list_issues plus local filtering was trustworthy.
+    solution: Don't treat a zero-result search_issues as evidence of absence in this environment — confirm via list_issues before concluding nothing exists. This nearly made me report "no prior survey" without checking.
+    severity: moderate
+  - description: scripts/midden-survey.ts dedupes candidates on exact provenance path, but the trench catalogues clusters as kind:commit with one representative path.
+    solution: Dedupe on the deleting commit hash as well as the path. Four of 38 raw candidates this run were already-catalogued siblings resurfacing; the count grows every run as more clusters are catalogued. Written up in "#730".
+    severity: moderate
+  - description: The Skill says to bound the sweep with --since from the previous survey issue, but says nothing about the first run, when no such issue exists.
+    solution: "Add one line to the Skill's step 1: on the first run, sweep unbounded and say so in the report. I inferred this, but a less careful run might have guessed an arbitrary date and silently under-reported."
+    severity: nit
+durationSec: 718
+models:
+  claude-opus-5: 90
+toolCounts:
+  Read: 2
+  Bash: 29
+  ToolSearch: 3
+  mcp__github__search_issues: 2
+  mcp__github__list_issues: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__list_branches: 1
+  Write: 2
+  mcp__github__issue_write: 1
+  mcp__github__issue_read: 1
+  Skill: 2
+gitBranch: claude/midden-survey-rdse4q
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - The branch half of the sweep is fully decidable from the repo's oldest commit date while the repo is younger than the dormancy floor — no branch walk needed. A cheap precondition check that saves paginating 100+ branches.
+  - "git's -M rename detection silently misses a rename whose body also changed enough (the Atlas redate: same slug, new date filename, edited content). Those land in the deletion set looking terminal, so Gate B has to be checked by hand against same-slug successors — the script's mechanical slice can't see them."
+ideas:
+  - Charter the Palimpsest Tenant off this survey's own byproduct. Every run already produces a Gate-B-failure list (15 entries this run, each with a named living successor and commit evidence) that is richer and more narratively interesting than the Midden's haul — it is the story of what the Platform renamed, folded, and rewrote rather than what it dropped. Concretely - extend scripts/midden-survey.ts to emit two arrays instead of one (discarded vs. superseded), and have the Skill file two issues; Palimpsest's Artifact schema would carry a `successor` field where Midden's carries `continuityCheck`.
