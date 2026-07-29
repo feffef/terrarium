@@ -1,52 +1,97 @@
 schemaVersion: 1
 session: session_01NTMpx8aVzhU9GPrEpVoASw
 startedAt: 2026-07-29T06:27:37Z
-endedAt: 2026-07-29T06:30:09Z
-kind: delegated
-goal: Propose five Midden improvement ideas
-status: completed
-outcome: Five grounded ideas delivered in chat
-summary: "Human-instructed (the kickoff prompt asked for five improvement ideas for the Midden Tenant; propose-only, nothing implemented). Read the Midden's CONTEXT.md, manifest, landing, artifact embed, strata list, and the validate-content-refs Midden pass, and checked open issues to avoid duplicating #677 (richer artifact bodies) and #530 (Palimpsest). Proposed: embed-side referential validation (typo'd/orphaned artifact embeds are currently silent), a mechanical Gate-B resurrection re-check, a surveyor intake Skill for candidate discovery, a season-closing convention plus a light strata summary on the landing, and cross-Tenant links from finds to the Journal sessions that discarded them. No commits, so no PR."
-prs: []
+endedAt: 2026-07-29T06:50:52Z
+kind: interactive
+goal: Propose Midden ideas; build the surveyor Skill
+status: in-review
+outcome: "Ideas delivered; midden-survey Skill in PR #729"
+summary: "Two phases, both human-instructed. First (kickoff prompt): proposed five grounded Midden improvement ideas, screened against open issues so none duplicated tracked work. Second (explicit green-light, /implement 3 now): built idea 3, the midden-survey Skill — TDD'd scripts/midden-survey.ts (deleted-file and dropped-dependency sweep with noise/rename/Gate-B/ already-catalogued screens, shallow-clone refusal, 18 unit tests), the SKILL.md survey flow (MCP sweep for closed-unmerged PRs and dormant branches, two-gate judgment, one survey-report issue per run, everything curatorial left curator-authored), Skill Inventory entry, and a CONTEXT.md pointer. Full gate green; two-axis code review ran pre-push and its actionable findings were folded in. Gated PR #729 opened and subscribed."
+prs:
+  - "729"
 docsRead:
   - path: layers/midden/CONTEXT.md
-    reason: Midden vocabulary, inclusion bar, post-MVP simplification
+    reason: inclusion bar, vocabulary, post-MVP state
   - path: layers/midden/tenant.config.ts
     reason: artifact schema and provenance union
-  - path: scripts/validate-content-refs.ts
-    reason: what the Midden pass already validates
+  - path: scripts/merged-since.ts
+    reason: pure-core/thin-shell/CLI script convention
+  - path: layers/journal/tenant.config.ts
+    reason: Skill Inventory schema rules
   - path: layers/midden/app/utils/strata.ts
     reason: (no reason given)
   - path: layers/midden/app/components/midden/TrenchLanding.vue
     reason: (no reason given)
   - path: layers/midden/app/components/content/MiddenArtifact.vue
     reason: (no reason given)
-skillsUsed:
-  - name: close-session
+  - path: scripts/validate-content-refs.ts
     reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/frictions-to-fixes.yml
+    reason: (no reason given)
+  - path: tests/unit/merged-since.spec.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: implement
+    reason: green-lit build of idea 3
+  - name: tdd
+    reason: red-green on the survey script's pure core
+  - name: code-review
+    reason: two-axis pre-push review; findings folded in
+  - name: close-session
+    reason: closure at answer delivery and at PR-open
   - name: log-session
     reason: (no reason given)
 frictions:
   - description: MiddenArtifact.vue's comment says validate-content-refs catches a bad embed slug, but the validator has no embed-side check at all.
-    solution: Fix the comment or (better) add the embed-side check proposed in this session's ideas — both directions of the page-body/artifact reference.
+    solution: Fix the comment or add the embed-side check (idea 1 of this session's proposals) — both directions of the page-body/artifact reference.
     severity: minor
-durationSec: 152
+  - description: git push --force-with-lease rejected with stale info because the pre-cloned environment carried a remote-tracking ref for a branch the remote no longer has.
+    solution: git remote prune origin before the first push of a session whose branch name predates the clone; plain push then succeeded.
+    severity: nit
+  - description: Stop hook flagged inherited origin/main commit adb167c as Unverified alongside this session's own tip; signing key unprovisioned so the suggested --reset-author remedy could fix nothing.
+    solution: Followed CLAUDE.md's existing guidance (check origin/main..HEAD, known platform limitation) — no doc change needed, just noise.
+    severity: nit
+durationSec: 1395
 models:
-  claude-fable-5: 34
+  claude-fable-5: 167
 toolCounts:
-  Bash: 3
+  Bash: 34
   Glob: 1
-  Read: 6
-  ToolSearch: 1
+  Read: 10
+  ToolSearch: 4
   mcp__github__search_issues: 1
-  Grep: 3
-  Skill: 2
-  Write: 1
-  Edit: 1
+  Grep: 4
+  Skill: 4
+  Write: 7
+  Edit: 8
+  TaskCreate: 4
+  TaskUpdate: 8
+  Agent: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - tests/unit/midden-survey.spec.ts
+  - scripts/midden-survey.ts
+  - .agents/skills/midden-survey/SKILL.md
+  - layers/journal/content/current/skills/midden-survey.yml
+  - layers/midden/CONTEXT.md
+subagents:
+  - type: general-purpose
+    task: Standards review of diff
+  - type: general-purpose
+    task: Spec review of diff
 gitBranch: claude/midden-improvement-ideas-r58t1t
 entrypoint: remote_mobile
 cliVersion: 2.1.220
+learnings:
+  - mcp github list_branches can never surface a deleted branch — a dead branch's only remaining trace is its closed-unmerged PR's head ref
+  - git log --diff-filter=D with -M reclassifies moved files as renames, giving a free mechanical slice of the Midden's Gate B
 ideas:
   - "Extend validate-content-refs' Midden pass to parse each trench site page body for ::midden-artifact{slug} embeds and enforce both directions: every embed names a real artifact stem, and every artifact YAML is embedded at least once in its declared site. Today a typo'd embed silently renders the \"Artifact not found\" fallback in production and an orphaned artifact is invisible."
-  - A "resurrection watch" script or chartered Skill that mechanically re-runs Gate B per provenance kind (dependency absent from package.json, file absent from origin/main, branch still deleted, PR still closed) and flags artifacts whose corpse grew back for curator re-assessment — flagging only, never re-deriving condition (#526).
-  - A surveyor intake Skill that sweeps recent history (closed-unmerged PRs, branches past the 30-day dormancy floor, lockfile-dropped dependencies, deleted files), applies the two-gate test, and files candidate issues or draft YAML for the curator to grade — mechanize discovery, keep grading curator-authored, so the Midden keeps growing without manual noticing.
+  - A "resurrection watch" script or chartered Skill that mechanically re-runs Gate B per provenance kind (dependency absent from package.json, file absent from origin/main, branch still deleted, PR still closed) and flags artifacts whose corpse grew back for curator re-assessment — flagging only, never re-deriving condition. scripts/midden-survey.ts's provenanceKey/screen helpers are a ready substrate for it.
+  - "A Midden season-closing ritual: a documented convention (CONTEXT.md or a small Skill) for when the curator closes the open-ended current-midden stratum — name it, set its end date, open a fresh one, re-file settled finds — plus a text-only strata summary (label, range, find count) on the landing for orientation without resurrecting the removed gauge."
