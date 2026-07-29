@@ -5,19 +5,24 @@
 // Claude session, ADR-0009) — every other Journal Collection (skills, other
 // pages) is untouched.
 //
-// Retention: the newest `RETAIN_DAYS` UTC calendar dates stay on `current`
-// (today inclusive); anything older moves. A Digest is dated by its own
-// filename; a session is dated by its `endedAt` field (truncated to its UTC
-// calendar date), not its filename — the two can differ when a session
-// starts one day and ends the next.
+// Retention is a count of what *survives*, per kind: after a sweep, `current`
+// holds the newest `RETAIN_DATES` Digests and the session logs of the newest
+// `RETAIN_DATES` session dates. It counts the dates that actually exist rather
+// than walking back a calendar window, so a date carrying no content never
+// spends a slot — the reason a window measured from today used to leave only
+// six Digests, since a Digest covers a *closed* UTC day and today's therefore
+// cannot exist yet (see the `digest` Skill's "Today is never listed").
 //
-// Usage:  tsx scripts/archive-journal-content.ts [--write] [--now <iso>]
+// A Digest is dated by its own filename; a session by its `endedAt` field
+// (truncated to its UTC calendar date), not its filename — the two can differ
+// when a session starts one day and ends the next.
+//
+// Usage:  tsx scripts/archive-journal-content.ts [--write]
 //   (no flag) — print a report of what WOULD move, touch nothing
 //   --write   — actually `git mv` the aged-out files (preserves history);
 //               leaves the moves staged/unstaged for a normal reviewed
 //               commit — this is content restructuring, not a session log,
 //               so it doesn't qualify for ADR-0009's direct-to-main exception
-//   --now     — override "today" (UTC ISO-8601) for a deterministic dry run
 import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -32,50 +37,41 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
  *  it never reads archived content, so it had no reason to define this). */
 export const ARCHIVED_DIGESTS_DIR = 'layers/journal/content/archived/pages/digests'
 
-/** UTC calendar dates kept on `current`, today inclusive. */
-export const RETAIN_DAYS = 7
+/** How many dates' worth of each kind stay on `current` after a sweep — 7
+ *  Digests, and every session log belonging to the newest 7 session dates. */
+export const RETAIN_DATES = 7
 
 // ── Pure core (unit-tested) ───────────────────────────────────────────────
+
+/** A file paired with the UTC calendar date retention judges it by. */
+export interface DatedFile {
+  file: string
+  date: string
+}
 
 function toUtcDateString(d: Date): string {
   return d.toISOString().slice(0, 10)
 }
 
-/** The oldest UTC calendar date still kept on `current`: `retainDays` dates
- *  total, `now`'s own date inclusive. e.g. retainDays=7, now=2026-07-24 keeps
- *  2026-07-18..2026-07-24 — cutoff is 2026-07-18. A date `< cutoff` archives. */
-export function cutoffDate(now: Date, retainDays: number): string {
-  const day = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
-  day.setUTCDate(day.getUTCDate() - (retainDays - 1))
-  return toUtcDateString(day)
+/** The newest `retainDates` of the distinct dates present. Anything dated
+ *  outside this set archives; fewer dates present than the budget means the
+ *  set is everything and nothing archives. */
+export function datesToRetain(dates: string[], retainDates: number): Set<string> {
+  if (retainDates <= 0) return new Set()
+  return new Set([...new Set(dates)].sort().slice(-retainDates))
 }
 
-export function isOldEnoughToArchive(date: string, cutoff: string): boolean {
-  return date < cutoff
-}
-
-export interface ArchivePlanPart {
-  keep: string[]
-  archive: string[]
-}
-
-/** Classify Digest filenames (`YYYY-MM-DD.md`) against the cutoff. Any
- *  filename not in that exact shape means this dir holds something the
- *  script wasn't told about — abort rather than silently mis-sort it. */
-export function classifyDigests(files: string[], cutoff: string): ArchivePlanPart {
-  const keep: string[] = []
-  const archive: string[] = []
-  for (const file of files) {
-    const m = /^(\d{4}-\d{2}-\d{2})\.md$/.exec(file)
-    if (!m) {
-      throw new Error(`archive-journal-content: unexpected digest filename "${file}" — aborting`)
-    }
-    ;(isOldEnoughToArchive(m[1]!, cutoff) ? archive : keep).push(file)
+/** `YYYY-MM-DD.md` → its date. Any other filename means this directory holds
+ *  something the script wasn't told about — abort rather than mis-sort it. */
+export function digestDate(file: string): string {
+  const m = /^(\d{4}-\d{2}-\d{2})\.md$/.exec(file)
+  if (!m) {
+    throw new Error(`archive-journal-content: unexpected digest filename "${file}" — aborting`)
   }
-  return { keep, archive }
+  return m[1]!
 }
 
-/** A session's archival date is its `endedAt`, not its filename — a session
+/** A session's retention date is its `endedAt`, not its filename — a session
  *  can start one UTC day and end the next. Throws on anything unparseable
  *  rather than guessing or silently skipping (drift here should be loud). */
 export function parseSessionEndedDate(raw: string, file: string): string {
@@ -96,22 +92,25 @@ export function parseSessionEndedDate(raw: string, file: string): string {
   return toUtcDateString(d)
 }
 
-export interface SessionEntry {
-  file: string
-  endedAtDate: string
+export interface ArchivePlanPart {
+  /** The dates surviving on `current`, oldest first — at most `retainDates`. */
+  retained: string[]
+  keep: string[]
+  archive: string[]
 }
 
-export function classifySessions(entries: SessionEntry[], cutoff: string): ArchivePlanPart {
+/** Split one kind's files by whether their date survives the retention budget. */
+export function planPart(entries: DatedFile[], retainDates: number): ArchivePlanPart {
+  const retained = datesToRetain(entries.map((e) => e.date), retainDates)
   const keep: string[] = []
   const archive: string[] = []
-  for (const { file, endedAtDate } of entries) {
-    ;(isOldEnoughToArchive(endedAtDate, cutoff) ? archive : keep).push(file)
+  for (const { file, date } of entries) {
+    ;(retained.has(date) ? keep : archive).push(file)
   }
-  return { keep, archive }
+  return { retained: [...retained].sort(), keep, archive }
 }
 
 export interface ArchivePlan {
-  cutoff: string
   digests: ArchivePlanPart
   sessions: ArchivePlanPart
 }
@@ -120,15 +119,12 @@ export interface ArchivePlan {
  *  pure, no fs/git of its own, so it's directly unit-testable. */
 export function buildPlan(
   digestFiles: string[],
-  sessionEntries: SessionEntry[],
-  now: Date,
-  retainDays: number = RETAIN_DAYS,
+  sessionEntries: DatedFile[],
+  retainDates: number = RETAIN_DATES,
 ): ArchivePlan {
-  const cutoff = cutoffDate(now, retainDays)
   return {
-    cutoff,
-    digests: classifyDigests(digestFiles, cutoff),
-    sessions: classifySessions(sessionEntries, cutoff),
+    digests: planPart(digestFiles.map((file) => ({ file, date: digestDate(file) })), retainDates),
+    sessions: planPart(sessionEntries, retainDates),
   }
 }
 
@@ -142,18 +138,18 @@ function listFiles(dir: string): string[] {
     .sort()
 }
 
-/** Read every session file under `dir` and reduce it to what `classifySessions`
- *  needs — the one point where a malformed file aborts the whole run. */
-function readSessionEntries(dir: string): SessionEntry[] {
+/** Read every session file under `dir` and reduce it to what `planPart` needs
+ *  — the one point where a malformed file aborts the whole run. */
+function readSessionEntries(dir: string): DatedFile[] {
   return listFiles(dir)
     .filter((f) => f.endsWith('.yml'))
-    .map((file) => ({ file, endedAtDate: parseSessionEndedDate(readFileSync(join(dir, file), 'utf8'), file) }))
+    .map((file) => ({ file, date: parseSessionEndedDate(readFileSync(join(dir, file), 'utf8'), file) }))
 }
 
-export function planArchive(cwd: string, now: Date, retainDays: number = RETAIN_DAYS): ArchivePlan {
+export function planArchive(cwd: string, retainDates: number = RETAIN_DATES): ArchivePlan {
   const digestFiles = listFiles(join(cwd, DIGESTS_DIR))
   const sessionEntries = readSessionEntries(join(cwd, SESSIONS_DIR))
-  return buildPlan(digestFiles, sessionEntries, now, retainDays)
+  return buildPlan(digestFiles, sessionEntries, retainDates)
 }
 
 /** `git mv` one file, creating its destination directory first — `git mv`
@@ -181,23 +177,20 @@ function fail(msg: string): never {
   process.exit(1)
 }
 
-function parseArgs(argv: string[]): { write: boolean; now: Date } {
-  const write = argv.includes('--write')
-  const nowIdx = argv.indexOf('--now')
-  const nowArg = nowIdx >= 0 ? argv[nowIdx + 1] : undefined
-  const now = nowArg !== undefined ? new Date(nowArg) : new Date()
-  if (Number.isNaN(now.getTime())) fail(`--now value "${nowArg}" is not a valid date`)
-  return { write, now }
+function describePart(label: string, part: ArchivePlanPart): string {
+  const { retained, keep, archive } = part
+  const span = retained.length === 0 ? 'none' : `${retained[0]!}..${retained.at(-1)!}`
+  return `  ${`${label}:`.padEnd(10)}${keep.length} file(s) over ${retained.length} date(s) (${span}) kept, ${archive.length} to archive`
 }
 
 function main(): void {
-  const { write, now } = parseArgs(process.argv.slice(2))
-  const plan = planArchive(root, now)
+  const write = process.argv.slice(2).includes('--write')
+  const plan = planArchive(root)
 
-  console.log(`archive-journal-content: cutoff ${plan.cutoff} (keep newest ${RETAIN_DAYS} UTC days, today ${toUtcDateString(now)})`)
-  console.log(`  digests:  ${plan.digests.keep.length} kept, ${plan.digests.archive.length} to archive`)
+  console.log(`archive-journal-content: retaining the newest ${RETAIN_DATES} dates of each kind`)
+  console.log(describePart('digests', plan.digests))
   for (const f of plan.digests.archive) console.log(`    ${DIGESTS_DIR}/${f} -> ${ARCHIVED_DIGESTS_DIR}/${f}`)
-  console.log(`  sessions: ${plan.sessions.keep.length} kept, ${plan.sessions.archive.length} to archive`)
+  console.log(describePart('sessions', plan.sessions))
   for (const f of plan.sessions.archive) console.log(`    ${SESSIONS_DIR}/${f} -> ${ARCHIVED_SESSIONS_DIR}/${f}`)
 
   if (!write) {

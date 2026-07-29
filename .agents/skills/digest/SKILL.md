@@ -109,9 +109,10 @@ Run the retention sweep so the `current` Space doesn't keep growing (issue #672)
 pnpm exec tsx scripts/archive-journal-content.ts --write
 ```
 
-This `git mv`s Digests and session logs older than the newest 7 UTC calendar days
-from `current` to `archived` (preserving history) — every other Journal Collection
-is untouched. The script never commits itself; its moves ride the **same**
+This `git mv`s the Digests and session logs that fall outside the retention
+budget — the newest `RETAIN_DATES` dates of each kind, per
+`scripts/archive-journal-content.ts` — from `current` to `archived` (preserving
+history); every other Journal Collection is untouched. The script never commits itself; its moves ride the **same**
 commit/PR as this run, alongside whatever Digest(s) step 3 wrote. Run it on
 **every** invocation of this Skill, not only on days that also produce a new
 Digest — the sweep is what keeps `current` bounded, and this Skill is its

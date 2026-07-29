@@ -1,5 +1,6 @@
-// Unit tests for the Journal archival helper's pure core (cutoff math, digest/
-// session classification) and its git-mv shell over a throwaway git repo.
+// Unit tests for the Journal archival helper's pure core (the retained-date
+// budget, digest/session classification) and its git-mv shell over a throwaway
+// git repo.
 import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -9,59 +10,56 @@ import {
   applyArchive,
   ARCHIVED_DIGESTS_DIR,
   buildPlan,
-  classifyDigests,
-  classifySessions,
-  cutoffDate,
-  isOldEnoughToArchive,
+  datesToRetain,
+  digestDate,
   parseSessionEndedDate,
   planArchive,
-  RETAIN_DAYS,
+  planPart,
+  RETAIN_DATES,
 } from '../../scripts/archive-journal-content.ts'
 import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from '../../scripts/audit-skills.ts'
 import { DIGESTS_DIR } from '../../scripts/digest.ts'
 
-describe('cutoffDate()', () => {
-  it('keeps today + the previous (retainDays - 1) UTC dates, today inclusive', () => {
-    expect(cutoffDate(new Date('2026-07-24T10:00:00Z'), 7)).toBe('2026-07-18')
+describe('datesToRetain()', () => {
+  it('keeps the newest N distinct dates present', () => {
+    expect(datesToRetain(['2026-07-20', '2026-07-21', '2026-07-22'], 2)).toEqual(
+      new Set(['2026-07-21', '2026-07-22']),
+    )
   })
 
-  it('is unaffected by the time-of-day component', () => {
-    expect(cutoffDate(new Date('2026-07-24T23:59:59Z'), 7)).toBe('2026-07-18')
-    expect(cutoffDate(new Date('2026-07-24T00:00:00Z'), 7)).toBe('2026-07-18')
+  it('counts distinct dates, not files — a busy date spends one slot', () => {
+    const dates = ['2026-07-20', '2026-07-21', '2026-07-21', '2026-07-21', '2026-07-22']
+    expect(datesToRetain(dates, 2)).toEqual(new Set(['2026-07-21', '2026-07-22']))
   })
 
-  it('rolls over a month boundary correctly', () => {
-    expect(cutoffDate(new Date('2026-08-02T10:00:00Z'), 7)).toBe('2026-07-27')
+  it('ignores calendar gaps — a quiet day never spends a slot', () => {
+    // 07-21..07-23 are missing entirely; the budget still yields 3 real dates.
+    expect(datesToRetain(['2026-07-19', '2026-07-20', '2026-07-24'], 3)).toEqual(
+      new Set(['2026-07-19', '2026-07-20', '2026-07-24']),
+    )
   })
 
-  it('a single retained day keeps only today', () => {
-    expect(cutoffDate(new Date('2026-07-24T10:00:00Z'), 1)).toBe('2026-07-24')
+  it('keeps everything when fewer dates exist than the budget', () => {
+    expect(datesToRetain(['2026-07-20', '2026-07-21'], 7)).toEqual(new Set(['2026-07-20', '2026-07-21']))
+  })
+
+  it('retains nothing for a zero or negative budget', () => {
+    expect(datesToRetain(['2026-07-20'], 0)).toEqual(new Set())
+    expect(datesToRetain(['2026-07-20'], -1)).toEqual(new Set())
+  })
+
+  it('is empty for no dates at all', () => {
+    expect(datesToRetain([], 7)).toEqual(new Set())
   })
 })
 
-describe('isOldEnoughToArchive()', () => {
-  it('a date before the cutoff archives', () => {
-    expect(isOldEnoughToArchive('2026-07-17', '2026-07-18')).toBe(true)
-  })
-  it('the cutoff date itself is kept, not archived', () => {
-    expect(isOldEnoughToArchive('2026-07-18', '2026-07-18')).toBe(false)
-  })
-  it('a date after the cutoff is kept', () => {
-    expect(isOldEnoughToArchive('2026-07-24', '2026-07-18')).toBe(false)
-  })
-})
-
-describe('classifyDigests()', () => {
-  it('splits filenames by their own date against the cutoff', () => {
-    const files = ['2026-07-17.md', '2026-07-18.md', '2026-07-24.md']
-    expect(classifyDigests(files, '2026-07-18')).toEqual({
-      keep: ['2026-07-18.md', '2026-07-24.md'],
-      archive: ['2026-07-17.md'],
-    })
+describe('digestDate()', () => {
+  it('reads the date off a YYYY-MM-DD.md filename', () => {
+    expect(digestDate('2026-07-17.md')).toBe('2026-07-17')
   })
 
   it('throws on a filename that is not a plain YYYY-MM-DD.md', () => {
-    expect(() => classifyDigests(['index.md'], '2026-07-18')).toThrow(/unexpected digest filename/)
+    expect(() => digestDate('index.md')).toThrow(/unexpected digest filename/)
   })
 })
 
@@ -90,38 +88,65 @@ describe('parseSessionEndedDate()', () => {
   })
 })
 
-describe('classifySessions()', () => {
-  it('splits by endedAtDate against the cutoff', () => {
+describe('planPart()', () => {
+  it('splits files by whether their date survives the budget, reporting the survivors', () => {
     const entries = [
-      { file: 'a.yml', endedAtDate: '2026-07-17' },
-      { file: 'b.yml', endedAtDate: '2026-07-18' },
+      { file: 'old.yml', date: '2026-07-17' },
+      { file: 'a.yml', date: '2026-07-18' },
+      { file: 'b.yml', date: '2026-07-18' },
+      { file: 'c.yml', date: '2026-07-19' },
     ]
-    expect(classifySessions(entries, '2026-07-18')).toEqual({ keep: ['b.yml'], archive: ['a.yml'] })
+    expect(planPart(entries, 2)).toEqual({
+      retained: ['2026-07-18', '2026-07-19'],
+      keep: ['a.yml', 'b.yml', 'c.yml'],
+      archive: ['old.yml'],
+    })
+  })
+
+  it('archives nothing when the dates present fit inside the budget', () => {
+    const entries = [{ file: 'a.yml', date: '2026-07-18' }]
+    expect(planPart(entries, 7)).toEqual({ retained: ['2026-07-18'], keep: ['a.yml'], archive: [] })
   })
 })
 
 describe('buildPlan()', () => {
-  it('composes the cutoff with both classifications', () => {
+  it('applies the budget to each kind independently', () => {
     const plan = buildPlan(
-      ['2026-07-17.md', '2026-07-18.md'],
+      ['2026-07-17.md', '2026-07-18.md', '2026-07-19.md'],
       [
-        { file: 'a.yml', endedAtDate: '2026-07-10' },
-        { file: 'b.yml', endedAtDate: '2026-07-24' },
+        { file: 'a.yml', date: '2026-07-10' },
+        { file: 'b.yml', date: '2026-07-24' },
       ],
-      new Date('2026-07-24T12:00:00Z'),
-      7,
+      2,
     )
     expect(plan).toEqual({
-      cutoff: '2026-07-18',
-      digests: { keep: ['2026-07-18.md'], archive: ['2026-07-17.md'] },
-      sessions: { keep: ['b.yml'], archive: ['a.yml'] },
+      digests: {
+        retained: ['2026-07-18', '2026-07-19'],
+        keep: ['2026-07-18.md', '2026-07-19.md'],
+        archive: ['2026-07-17.md'],
+      },
+      sessions: { retained: ['2026-07-10', '2026-07-24'], keep: ['a.yml', 'b.yml'], archive: [] },
     })
   })
 
-  it('defaults retainDays to RETAIN_DAYS (7)', () => {
-    const plan = buildPlan(['2026-07-17.md'], [], new Date('2026-07-24T12:00:00Z'))
-    expect(plan.cutoff).toBe('2026-07-18')
-    expect(RETAIN_DAYS).toBe(7)
+  it('defaults the budget to RETAIN_DATES (7)', () => {
+    expect(RETAIN_DATES).toBe(7)
+    const digests = ['15', '16', '17', '18', '19', '20', '21', '22'].map((d) => `2026-07-${d}.md`)
+    const plan = buildPlan(digests, [])
+    expect(plan.digests.keep).toHaveLength(7)
+    expect(plan.digests.archive).toEqual(['2026-07-15.md'])
+  })
+
+  // The regression this retention model exists for: a Digest covers a *closed*
+  // UTC day, so today's never exists yet. A window measured back from today
+  // spent a slot on it and left only six Digests on `current`.
+  it("leaves a full RETAIN_DATES Digests even though today's is not written yet", () => {
+    // Today is 2026-07-29; digests run 07-23..07-28, i.e. seven closed days
+    // back from yesterday. All seven survive.
+    const digests = ['22', '23', '24', '25', '26', '27', '28'].map((d) => `2026-07-${d}.md`)
+    const plan = buildPlan(digests, [])
+    expect(plan.digests.keep).toHaveLength(RETAIN_DATES)
+    expect(plan.digests.archive).toEqual([])
   })
 })
 
@@ -167,15 +192,29 @@ describe('planArchive() / applyArchive() — the fs/git shell, over a throwaway 
 
   it('planArchive() reads real directories and produces the expected split', () => {
     initRepo()
-    const plan = planArchive(dir, new Date('2026-07-24T12:00:00Z'))
-    expect(plan.cutoff).toBe('2026-07-18')
-    expect(plan.digests).toEqual({ keep: ['2026-07-24.md'], archive: ['2026-07-17.md'] })
-    expect(plan.sessions).toEqual({ keep: ['2026-07-24-session_new.yml'], archive: ['2026-07-10-session_old.yml'] })
+    const plan = planArchive(dir, 1) // budget of 1 date, so the older of each pair ages out
+    expect(plan.digests).toEqual({
+      retained: ['2026-07-24'],
+      keep: ['2026-07-24.md'],
+      archive: ['2026-07-17.md'],
+    })
+    expect(plan.sessions).toEqual({
+      retained: ['2026-07-24'],
+      keep: ['2026-07-24-session_new.yml'],
+      archive: ['2026-07-10-session_old.yml'],
+    })
+  })
+
+  it('the default RETAIN_DATES budget keeps this whole fixture — two dates fit inside seven', () => {
+    initRepo()
+    const plan = planArchive(dir)
+    expect(plan.digests.archive).toEqual([])
+    expect(plan.sessions.archive).toEqual([])
   })
 
   it('applyArchive() git-mv\'s only the aged-out files, creating destination dirs as needed', () => {
     initRepo()
-    const plan = planArchive(dir, new Date('2026-07-24T12:00:00Z'))
+    const plan = planArchive(dir, 1)
     applyArchive(dir, plan)
 
     // Moved: no longer under current, now under archived, with content intact.
@@ -198,12 +237,12 @@ describe('planArchive() / applyArchive() — the fs/git shell, over a throwaway 
 
   it('is idempotent — a second planArchive() against the already-moved tree finds nothing left to archive', () => {
     initRepo()
-    const first = planArchive(dir, new Date('2026-07-24T12:00:00Z'))
+    const first = planArchive(dir, 1)
     applyArchive(dir, first)
     execFileSync('git', ['add', '-A'], { cwd: dir })
     execFileSync('git', ['commit', '-q', '-m', 'archive'], { cwd: dir })
 
-    const second = planArchive(dir, new Date('2026-07-24T12:00:00Z'))
+    const second = planArchive(dir, 1)
     expect(second.digests.archive).toEqual([])
     expect(second.sessions.archive).toEqual([])
   })
@@ -211,6 +250,6 @@ describe('planArchive() / applyArchive() — the fs/git shell, over a throwaway 
   it('aborts the whole run on a malformed session file, moving nothing', () => {
     initRepo()
     writeFileSync(join(dir, SESSIONS_DIR, '2026-07-01-session_bad.yml'), 'session: broken\n') // no endedAt
-    expect(() => planArchive(dir, new Date('2026-07-24T12:00:00Z'))).toThrow(/no valid endedAt/)
+    expect(() => planArchive(dir)).toThrow(/no valid endedAt/)
   })
 })
