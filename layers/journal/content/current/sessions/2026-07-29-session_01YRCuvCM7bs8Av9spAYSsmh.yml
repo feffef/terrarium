@@ -1,0 +1,68 @@
+schemaVersion: 1
+session: session_01YRCuvCM7bs8Av9spAYSsmh
+startedAt: 2026-07-29T18:52:43Z
+endedAt: 2026-07-29T19:02:44Z
+kind: interactive
+goal: Audit 14 days of PRs for session logs
+status: completed
+outcome: 3 issues filed, 1 stale issue corrected
+summary: "Human-instructed throughout: the user asked for an audit of every PR from the last 14 days against the session logs, then asked to file issues. Checked all 153 PRs created 2026-07-15 to 2026-07-29 using two independent linkages — PR body Claude-Session footer to log file, and log prs/prose to PR number. Found 148/153 clean. Agent-initiated within that green-light: choosing which gaps were issue-worthy, searching the tracker first (which caught that the biggest finding, PRs 546/547, was already tracked by open issue 564 — no duplicate filed), and commenting on 565 to correct a stale orphan report whose log actually landed 17 hours after filing. Filed 736 (third orphaned session), 737 (footer guard passes an absent footer), 738 (4-day orphan window). No code changed, so no PR to gate."
+prs: []
+docsRead:
+  - path: CLAUDE.md
+    reason: gated-PR, provenance-footer and shallow-clone conventions
+  - path: shared/schemas/session.ts
+    reason: the prs field's real shape before scanning for it
+  - path: scripts/audit-skills.ts
+    reason: verify ORPHAN_WINDOW_DAYS and RESOLVED_ORPHANED_SESSIONS before asserting them in issue 738
+  - path: scripts/github-footer-guard.ts
+    reason: verify the absent-footer skip-and-pass claim at source before filing 737
+  - path: docs/agents/triage-labels.md
+    reason: pick the right entry label for a new issue
+  - path: layers/journal/content/current/sessions/2026-07-24-session_01BXG5BXpFnQ3o4CnrVHDjcc.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-18-session_01FxNovsJKNpdYKa8X3XRwqd.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: invoked at closure
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: 'First cross-reference scan matched only "#NNN" and pull/NNN, missing that session-log prs: entries are bare quoted numbers. Reported 4 false unreferenced PRs.'
+    solution: "Parse the prs: field structurally against shared/schemas/session.ts rather than regex-scanning the whole YAML as prose — read the schema before scanning for a field."
+    severity: moderate
+  - description: Ran history archaeology on a shallow clone; git log --grep returned empty for real sessions and merged PRs looked like they had no merge commit.
+    solution: CLAUDE.md already says to run git rev-parse --is-shallow-repository as the FIRST step of any history work — I ran it only after a result looked wrong. Follow the rule up front.
+    severity: moderate
+  - description: search_pull_requests and search_issues blew the token limit three times, each dumping 100-500KB to a file that then needed python slicing.
+    solution: These search tools expose no minimal_output despite the server instructions advertising it; default to paging small and parsing the overflow file, or add field-projection support.
+    severity: minor
+  - description: Nearly filed a duplicate of open issue 564 for the audit's headline finding; only the pre-filing tracker search caught it.
+    solution: Worked as intended — noting it because the near-miss shows how easily a fresh audit re-reports an already-tracked gap when the tracked issue is weeks old.
+    severity: nit
+durationSec: 601
+models:
+  claude-opus-5: 98
+toolCounts:
+  Bash: 28
+  ToolSearch: 5
+  mcp__github__search_pull_requests: 2
+  Read: 3
+  mcp__github__pull_request_read: 4
+  mcp__github__list_pull_requests: 1
+  mcp__github__search_issues: 3
+  mcp__github__issue_read: 3
+  mcp__github__issue_write: 3
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+  Write: 1
+gitBranch: claude/pr-session-logging-check-viohof
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - scripts/audit-skills.ts' orphanedSessions check has a 4-day memory (ORPHAN_WINDOW_DAYS = 4) — an orphan older than that is permanently undetectable by it, so the check cannot support ADR-0009's close-session-invocation-rate measurement
+  - github-footer-guard blocks a divergent Claude-Session footer but explicitly skip-and-passes an absent one, so an unfootered PR body is the quieter ADR-0017 violation
+  - A PR body's Claude-Session footer is a window-free PR-to-session linkage — unlike commit-trailer scanning, it needs no calendar window at all
+ideas:
+  - "Build the audit this session ran by hand as a committed script (pnpm audit:pr-logs): for every merged PR, resolve its body's Claude-Session footer to a session-log file and report the misses. It is window-free by construction, so unlike orphanedSessions nothing ages out of detection — it is exactly option 3 in issue #738, and it would also surface footerless PR bodies (#737) as a side effect, since a PR with no footer is precisely the row it cannot resolve."
