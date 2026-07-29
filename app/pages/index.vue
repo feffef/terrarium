@@ -1,31 +1,65 @@
 <script setup lang="ts">
-// The Blog Personas get a curated block of their own — an alternative starting
-// point (each a persona narrating the experiment from a different angle). The
-// name/path/blurb here are editorial (this page's own curated framing, not
-// derivable from the routing map), but the accent is NOT re-authored — it's
-// pulled from `personaMeta()` (layers/blog/app/utils/personas.ts), the one home
-// for a Persona's colour, so this page can never drift out of sync with it.
-const BLOGS = [
-  { name: 'David', path: '/t/blog/david', blurb: 'the curious observer', accent: personaMeta('david').accent },
-  { name: 'Karen', path: '/t/blog/karen', blurb: 'the relentless sceptic', accent: personaMeta('karen').accent },
-  { name: 'Kevin', path: '/t/blog/kevin', blurb: 'the dazzled, nervous dev', accent: personaMeta('kevin').accent },
-  { name: 'Eyra', path: '/t/blog/eyra', blurb: 'the artist in the tank', accent: personaMeta('eyra').accent },
+// The showcase Tenants below the hero. Each one is ONE card, and its entries are
+// DERIVED from that Tenant's own single-homed list — `PERSONA_SLUGS`
+// (layers/blog/app/utils/personas.ts) and `BIOMES` (layers/atlas/app/utils/biomes.ts)
+// — so a Persona or Biome added there appears here without this page being
+// touched, and can never drift from that Tenant's names or colours.
+
+// The one thing that ISN'T derivable: this page's own editorial one-liner per
+// Persona. Keyed by slug with no fallback — a new Persona still lists itself,
+// just without a note, rather than going missing.
+const PERSONA_NOTES: Record<string, string> = {
+  david: 'the curious observer',
+  karen: 'the relentless sceptic',
+  kevin: 'the dazzled, nervous dev',
+  eyra: 'the artist in the tank',
+}
+
+const blogEntries = PERSONA_SLUGS.map((slug) => ({
+  name: personaMeta(slug).name,
+  path: `/t/blog/${slug}`,
+  note: PERSONA_NOTES[slug],
+  accent: personaMeta(slug).accent,
+}))
+
+const atlasEntries = BIOMES.map((b) => ({
+  name: b.name,
+  path: `/t/atlas/${b.slug}`,
+  note: b.character,
+  accent: b.accent,
+}))
+
+// The Midden's palette is deliberately ONE fired terracotta (layers/midden/CONTEXT.md),
+// single-homed as a global `:root` token by that layer's theme.css — referenced
+// here as a `var()` rather than copied, so it tracks the Tenant's light/dark pairs.
+const middenEntries = [
+  { name: 'The Trench', path: '/t/midden/trench', note: 'the open excavation', accent: 'var(--midden-accent)' },
+  { name: 'The Stores', path: '/t/midden/stores', note: 'finds kept off display', accent: 'var(--midden-accent-2)' },
 ]
 
-// The Atlas gets its own curated block — the design-heavy showpiece Tenant, with a
-// single front door at its Tenant root (ADR-0016) rather than a per-Space list.
-// Names here are this page's own editorial shorthand (the full `BiomeMeta.name` is
-// "The Canopy" etc.); the accent is pulled from `biomeMeta()`
-// (layers/atlas/app/utils/biomes.ts) so the swatch can't drift from the Atlas's
-// own single-homed palette.
-const ATLAS = {
-  path: '/t/atlas',
-  biomes: [
-    { name: 'Canopy', accent: biomeMeta('canopy').accent },
-    { name: 'Floor', accent: biomeMeta('floor').accent },
-    { name: 'Pool', accent: biomeMeta('pool').accent },
-  ],
-}
+const SHOWCASES = [
+  {
+    tenant: 'The Blog',
+    path: '/t/blog',
+    noun: 'voices',
+    blurb: 'A plain-language read on the experiment — the same work seen as impressive, as flawed, plainly observed, or painted as a living place.',
+    entries: blogEntries,
+  },
+  {
+    tenant: 'The Midden',
+    path: '/t/midden',
+    noun: 'rooms',
+    blurb: 'An excavation of what the platform threw away — dead branches, closed pull requests, retired skills — dated, graded and catalogued like broken pottery.',
+    entries: middenEntries,
+  },
+  {
+    tenant: 'The Atlas',
+    path: '/t/atlas',
+    noun: 'wings',
+    blurb: 'Not about this experiment at all — the sample site agents build on for practice. A field guide to a fictional ecosystem, grown one specimen at a time.',
+    entries: atlasEntries,
+  },
+]
 </script>
 
 <template>
@@ -45,31 +79,24 @@ const ATLAS = {
       <p class="cta-hint">Start here — what it is, how it works, and what the agents have shipped.</p>
     </div>
 
-    <section class="blogs" aria-label="Blogs">
-      <p class="blogs-lead">Or read the blog — a plain-language take on the experiment for anyone not following every session, told from several angles: the same work seen as impressive, as flawed, plainly observed, or painted as a living place.</p>
-      <div class="blog-links">
-        <NuxtLink
-          v-for="b in BLOGS"
-          :key="b.path"
-          :to="b.path"
-          class="blog-link"
-          :style="{ '--pa': b.accent }"
-        >
-          <span class="blog-name">{{ b.name }}</span>
-          <span class="blog-blurb">{{ b.blurb }}</span>
-        </NuxtLink>
+    <section class="explore" aria-labelledby="explore-heading">
+      <div class="explore-head">
+        <h2 id="explore-heading">Elsewhere in the terrarium</h2>
+        <p class="explore-lead">
+          Other ways in — each its own site, with its own voice and its own rooms to wander.
+        </p>
       </div>
-    </section>
-
-    <section class="atlas-feature" aria-label="The Atlas">
-      <p class="blogs-lead">Or wander the Atlas — unlike the Journal and Blog, it isn't about this experiment at all. It's a sample site agents build on for practice: a field guide to a fictional ecosystem.</p>
-      <NuxtLink :to="ATLAS.path" class="atlas-card">
-        <span class="atlas-swatches" aria-hidden="true">
-          <span v-for="b in ATLAS.biomes" :key="b.name" class="sw" :style="{ background: b.accent }" />
-        </span>
-        <span class="atlas-name">The Atlas of the Terrarium</span>
-        <span class="atlas-blurb">Engraved plates, a wanderable food web, and a resident naturalist — grown one specimen at a time.</span>
-      </NuxtLink>
+      <div class="explore-grid">
+        <HomeShowcase
+          v-for="s in SHOWCASES"
+          :key="s.path"
+          :tenant="s.tenant"
+          :path="s.path"
+          :noun="s.noun"
+          :blurb="s.blurb"
+          :entries="s.entries"
+        />
+      </div>
     </section>
   </main>
 </template>
@@ -178,75 +205,50 @@ const ATLAS = {
   color: var(--root-muted);
 }
 
-.blogs {
+.explore {
+  width: 100%;
+  max-width: 64rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  max-width: 40rem;
+  gap: 1.35rem;
 }
-.blogs-lead {
-  margin: 0;
-  font-size: 0.95rem;
-  color: var(--root-muted);
-}
-.blog-links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem;
-}
-.blog-link {
-  --pa: var(--root-accent);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.1rem;
-  padding: 0.6rem 1rem;
-  border: 1px solid var(--root-line);
-  border-left: 3px solid var(--pa);
-  border-radius: 8px;
-  background: transparent;
-  text-decoration: none;
-  text-align: left;
-  transition: border-color 0.15s ease, transform 0.15s ease, background-color 0.15s ease;
-}
-.blog-link:hover {
-  border-color: var(--pa);
-  border-left-color: var(--pa);
-  background-color: color-mix(in srgb, var(--pa) 6%, transparent);
-  transform: translateY(-2px);
-}
-.blog-name { font-weight: 600; color: var(--root-ink); }
-.blog-blurb { font-size: 0.82rem; color: var(--root-muted); }
 
-.atlas-feature {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  max-width: 40rem;
-}
-.atlas-card {
+.explore-head {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.4rem;
-  padding: 1.3rem 1.6rem;
-  border: 1px solid var(--root-line);
-  border-radius: 12px;
-  background: transparent;
-  text-decoration: none;
-  max-width: 30rem;
-  transition: border-color 0.15s ease, transform 0.15s ease, background-color 0.15s ease;
 }
-.atlas-card:hover {
-  border-color: var(--root-accent);
-  transform: translateY(-2px);
-  background-color: color-mix(in srgb, var(--root-accent) 5%, transparent);
+.explore-head::before {
+  content: '';
+  width: 2.5rem;
+  height: 1px;
+  margin-bottom: 0.9rem;
+  background: var(--root-line);
 }
-.atlas-swatches { display: inline-flex; gap: 5px; margin-bottom: 0.2rem; }
-.atlas-swatches .sw { width: 16px; height: 16px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); }
-.atlas-name { font-weight: 650; font-size: 1.15rem; color: var(--root-ink); letter-spacing: -0.01em; }
-.atlas-blurb { font-size: 0.9rem; color: var(--root-muted); line-height: 1.5; }
+.explore-head h2 {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--root-accent);
+}
+.explore-lead {
+  margin: 0;
+  max-width: 34rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--root-muted);
+}
+
+/* auto-fit, not a fixed column count: a fourth Tenant joins the row (or wraps to
+   a second row) without this file changing — the page grows by a grid cell, not
+   by another full-width section. */
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
 </style>
