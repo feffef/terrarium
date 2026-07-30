@@ -38,6 +38,11 @@ class to its MCP equivalent:
   it surfaces loosely-relevant, noisy hits alongside genuine ones. Eyeball
   every result for actual relevance; don't trust hit count or ranking/order
   as a precision signal.
+- **A `total_count: 0` from `search_issues`/`search_pull_requests` is not proof
+  nothing matches** — the search index can miss a genuine match the same query
+  phrased differently would find. Before asserting "nothing exists," cross-check
+  with a `list_issues`/`list_pull_requests` scan (narrow state/label filters to
+  dodge the overflow above) rather than trusting a zero-result search alone.
 - **"Which PRs merged recently, in what order, when" doesn't need `list_pull_requests`/
   `search_issues` at all** — `tsx scripts/recent-prs.ts [N]` answers it straight
   from `git log origin/main` (number/title/merge-time only; `author`/`merged_by`
@@ -198,6 +203,8 @@ A reviewing agent must post its verdict before merging, every time — see `docs
 **Never use a GitHub closing keyword (`Resolves`/`Closes`/`Fixes #N`) for an issue a PR only *references*** — e.g. a governance/tracking issue the PR touches on but doesn't complete. Merging a PR auto-closes anything named with a closing keyword, so using one on an issue the PR doesn't actually finish silently closes it out from under the tracker (it then has to be reopened with an explaining comment — this has already happened once, PR #326 → issue #213). Reserve closing keywords for the issue(s) the PR genuinely completes; use a plain-text reference ("relates to #N", "see #N") for every other issue the PR body mentions.
 
 **GitHub's comma-separated `Closes #A, #B, #C` only auto-closes the first (`#A`).** `#B` and `#C` stay open even though the line reads as closing all three. When a PR genuinely completes more than one issue, give each its own `Closes #N` line rather than comma-joining them.
+
+**Auditing PRs against session logs: parse `prs:`, don't regex it.** A session log's `prs` field (`shared/schemas/session.ts`) is a structured array of bare quoted PR-number strings (e.g. `["326"]`), not free-form prose — parse the log's YAML/frontmatter structurally and read the array, rather than regex-scanning the raw file text for something that looks like a PR reference.
 
 **Never submit an APPROVE-event review — use `add_issue_comment` or a COMMENT-event review instead.** The agent's GitHub identity under the shared connection is always the repo owner, and GitHub blocks a PR author from approving their own pull request.
 

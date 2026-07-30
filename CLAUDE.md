@@ -273,6 +273,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   after the `&&` never runs. Check existence first (e.g. `git rev-parse
   --verify <branch>`) and handle the already-exists case explicitly instead of
   chaining blindly.
+- **Never append a trailing shell `&` to a Bash command already passed with
+  `run_in_background: true`.** The tool already backgrounds the whole command
+  itself — adding `&` on top backgrounds the *inner* shell a second time, so
+  the outer call returns as soon as the detached shell forks, not when the
+  actual long-running process finishes, and "completed" stops meaning
+  anything. Use `Monitor`/`ps` plus a log completion marker to confirm the
+  process actually finished instead of trusting the outer call's return.
 - **Never pipe a backgrounded or long-running command through `tail`/`head`
   when its exit status or full output matters.** A pipeline reports the *last*
   command's exit status — `tail`'s, almost always 0 — not the piped command's,
