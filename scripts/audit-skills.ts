@@ -16,7 +16,9 @@
 //   `regressionSessions`, deduped since the same session commonly brackets more
 //   than one Skill's edit) — `orphanedSessions` (issue #349; a resolved
 //   same-run mis-file — a flagged commit's added file later removed by
-//   another commit — is excluded rather than surfaced, issue #574), the two
+//   another commit — is excluded rather than surfaced, issue #574, but is
+//   itemised in `orphanSuppressionLog` so the suppression itself stays
+//   auditable, issue #754), the two
 //   manual-nudge-closure signals `humanPromptedClosures` and
 //   `manuallyRescuedClosures` (the counterpart to `orphanedSessions`: a session
 //   that DID log, but only because a human nudged it — invisible to the orphan
@@ -218,6 +220,29 @@ export interface OrphanedSession {
    *  constant for what the annotation means. */
   resolvedBy?: string
 }
+/** Why an orphan candidate was suppressed — the two levers are attributed
+ *  separately so a reader can tell an automatic rule from a hand-written
+ *  annotation (issue #754). */
+export type OrphanSuppressionReason = 'misfile-cleanup' | 'resolved-annotation'
+/** One line of the orphan suppression log: a candidate one of the levers acted
+ *  on, reported rather than silently dropped (issue #754). A rule that moves
+ *  ADR-0009's `close-session`-invocation-rate metric must leave an audit trail,
+ *  or a false suppression is indistinguishable from a healthy denominator.
+ *  The two reasons are **asymmetric**, which is why this is a log and not a list
+ *  of removals: a `misfile-cleanup` entry is *removed from* `orphanedSessions`;
+ *  a `resolved-annotation` entry is *still listed* there, annotated with its
+ *  `resolvedBy` cutoff (issue #447 item 4). */
+export interface OrphanSuppressionEntry {
+  session: string
+  commits: string[]
+  date: string
+  reason: OrphanSuppressionReason
+  /** The added-then-removed session-log path `resolvedMisfilePath` matched on —
+   *  `misfile-cleanup` only. */
+  path?: string
+  /** `RESOLVED_ORPHANED_SESSIONS`' reference — `resolved-annotation` only. */
+  resolvedBy?: string
+}
 /** A session that logged but flagged its own closure as human-prompted (the
  *  `HUMAN_PROMPTED_CLOSURE` friction keyword). */
 export interface HumanPromptedClosure {
@@ -256,6 +281,12 @@ export interface Scorecard {
   regressionChecks: RegressionCheck[]
   regressionSessions: WindowSession[]
   orphanedSessions: OrphanedSession[]
+  /** The audit trail of every orphan candidate a suppression lever acted on —
+   *  always present, `[]` when nothing was suppressed. An entry here does not
+   *  imply the candidate left `orphanedSessions`: only `misfile-cleanup` does,
+   *  `resolved-annotation` leaves it listed and annotated (see the interface,
+   *  issue #754). */
+  orphanSuppressionLog: OrphanSuppressionEntry[]
   /** Sessions whose own log flagged a human-prompted closure (keyword grep). */
   humanPromptedClosures: HumanPromptedClosure[]
   /** Sessions whose authored `kind` contradicts the `remote_trigger` derived
@@ -483,7 +514,7 @@ export interface SessionTrailerRef {
 
 /** One commit's added/removed file paths (`git log --name-status`), scoped to
  *  the same `origin/main` + `ORPHAN_WINDOW_DAYS` window as `SessionTrailerRef` —
- *  the raw material `isResolvedMisfile` diffs against to catch a same-run
+ *  the raw material `resolvedMisfilePath` diffs against to catch a same-run
  *  mis-file cleanup (issue #574). */
 export interface CommitFileChange {
   sha: string
@@ -564,18 +595,20 @@ export function isSessionLogPath(path: string): boolean {
   )
 }
 
-/** True when a commit that references the orphan-candidate session added a
- *  SESSION LOG that some other commit in `changes` later removed — a same-run
- *  mis-file (e.g. a CLI-transcript-id session log filed under the wrong id)
- *  cleaned up before it became a genuine orphan, not a real gap (issue #574).
- *  Matches on the exact path only; a rename that changes the path doesn't
- *  count as a removal of the original.
+/** The SESSION LOG path a commit referencing the orphan-candidate session added
+ *  and some other commit in `changes` later removed — a same-run mis-file (e.g.
+ *  a CLI-transcript-id session log filed under the wrong id) cleaned up before
+ *  it became a genuine orphan, not a real gap (issue #574) — or `null` when no
+ *  such path exists. Returns the path rather than a bare boolean so the
+ *  suppression it drives can name what triggered it (issue #754). Matches on
+ *  the exact path only; a rename that changes the path doesn't count as a
+ *  removal of the original.
  *
  *  The `isSessionLogPath` scope is load-bearing, not a tidy-up: without it any
  *  added-then-deleted file suppressed the whole session, so a session that
  *  folded a doc into its single home and deleted the standalone file went
  *  unreported across four consecutive daily sweeps (issue #747). */
-export function isResolvedMisfile(commits: string[], changes: CommitFileChange[]): boolean {
+export function resolvedMisfilePath(commits: string[], changes: CommitFileChange[]): string | null {
   const bySha = new Map(changes.map((c) => [c.sha, c]))
   for (const sha of commits) {
     const change = bySha.get(sha)
@@ -585,10 +618,10 @@ export function isResolvedMisfile(commits: string[], changes: CommitFileChange[]
       // Epoch, not string compare — the same mixed-offset hazard
       // `groupSessionReferences` guards against (issue #747).
       const addedAt = Date.parse(change.date)
-      if (changes.some((c) => c.sha !== sha && Date.parse(c.date) > addedAt && c.removed.includes(path))) return true
+      if (changes.some((c) => c.sha !== sha && Date.parse(c.date) > addedAt && c.removed.includes(path))) return path
     }
   }
-  return false
+  return null
 }
 
 /** Attaches `resolvedBy` to `obj` when `resolved` names `id` — the one shared
@@ -604,28 +637,40 @@ function withResolvedBy<T extends object>(
   return resolvedBy ? { ...obj, resolvedBy } : obj
 }
 
-/** Sorted oldest-first — the most actionable triage order (issue #349).
- *  `fileChanges` (default `[]`, backward compatible) feeds `isResolvedMisfile`
- *  to drop a resolved same-run mis-file rather than surface it as a fresh
- *  orphan (issue #574). `resolved` (default `RESOLVED_ORPHANED_SESSIONS`)
- *  feeds `withResolvedBy` above. */
+/** Both halves of the orphan check, so no suppression is invisible: `orphaned`
+ *  is issue #349's signal, `suppressed` is the orphan suppression log — every
+ *  candidate a lever acted on (issue #754). Both sorted oldest-first — the most
+ *  actionable triage order (issue #349). `fileChanges` (default `[]`, backward
+ *  compatible) feeds `resolvedMisfilePath` to drop a resolved same-run mis-file
+ *  rather than surface it as a fresh orphan (issue #574) — that candidate is
+ *  removed from `orphaned`. `resolved` (default `RESOLVED_ORPHANED_SESSIONS`)
+ *  feeds `withResolvedBy` above, and is asymmetric to it: an annotated candidate
+ *  stays listed in `orphaned` *and* is attributed in `suppressed`. */
 export function findOrphanedSessions(
   refs: SessionTrailerRef[],
   knownSessionIds: Set<string>,
   fileChanges: CommitFileChange[] = [],
   resolved: ReadonlyMap<string, string> = RESOLVED_ORPHANED_SESSIONS,
-): OrphanedSession[] {
+): { orphaned: OrphanedSession[]; suppressed: OrphanSuppressionEntry[] } {
   const grouped = groupSessionReferences(refs)
-  const out: OrphanedSession[] = []
+  const orphaned: OrphanedSession[] = []
+  const suppressed: OrphanSuppressionEntry[] = []
   for (const [session, { commits, date }] of grouped) {
     if (knownSessionIds.has(session)) continue
-    if (isResolvedMisfile(commits, fileChanges)) continue
-    out.push(withResolvedBy({ session, commits, date }, session, resolved))
+    const misfilePath = resolvedMisfilePath(commits, fileChanges)
+    if (misfilePath) {
+      suppressed.push({ session, commits, date, reason: 'misfile-cleanup', path: misfilePath })
+      continue
+    }
+    const resolvedBy = resolved.get(session)
+    if (resolvedBy) suppressed.push({ session, commits, date, reason: 'resolved-annotation', resolvedBy })
+    orphaned.push(withResolvedBy({ session, commits, date }, session, resolved))
   }
   // Epoch, not string compare — same mixed-offset hazard groupSessionReferences
   // guards against, one level up: two different sessions' dates can carry
   // different `git %aI` offsets, and a lexicographic compare can misorder them.
-  return out.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
+  const oldestFirst = (a: { date: string }, b: { date: string }) => Date.parse(a.date) - Date.parse(b.date)
+  return { orphaned: orphaned.sort(oldestFirst), suppressed: suppressed.sort(oldestFirst) }
 }
 
 /** True when any friction `description` carries the exact keyword. Only
@@ -917,7 +962,7 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
   const rows = buildSkillRows(readOnDiskSkills(cwd, skillNames), readInventory(cwd), tallyUsage(window), external)
   const { checks, sessions } = buildRegressionChecks(all, readSkillEdits(cwd), external)
   const trailers = readSessionTrailers(cwd)
-  const orphanedSessions = findOrphanedSessions(trailers, readKnownSessionIds(cwd), readCommitFileChanges(cwd))
+  const orphans = findOrphanedSessions(trailers, readKnownSessionIds(cwd), readCommitFileChanges(cwd))
   return {
     windowSize,
     sessionsConsidered: all.length,
@@ -925,7 +970,8 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
     skills: rows,
     regressionChecks: checks,
     regressionSessions: sessions,
-    orphanedSessions,
+    orphanedSessions: orphans.orphaned,
+    orphanSuppressionLog: orphans.suppressed,
     humanPromptedClosures: findHumanPromptedClosures(all),
     manuallyRescuedClosures: findManuallyRescuedClosures(trailers, all),
     misclassifiedKind: findMisclassifiedKind(all),
