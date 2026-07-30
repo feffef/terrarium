@@ -114,4 +114,4 @@ doc (it lives outside git).
 
 Every issue/PR comment carries the ADR-0017 provenance footer (a no-exemptions
 convention that already discloses AI authorship) and nothing else — no AI-triage
-disclaimer. See `docs/agents/issue-tracker.md` for the MCP-tool mechanics.
+disclaimer. See `docs/agents/github-integration.md` for the MCP-tool mechanics.

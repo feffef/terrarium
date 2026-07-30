@@ -61,7 +61,7 @@ Its brief:
   don't resolve via ToolSearch). Call `ToolSearch` for the `mcp__github__*` tools
   you'll need (e.g. `select:mcp__github__search_issues,mcp__github__search_pull_requests`)
   **before** your first call to any of them — don't rely on a bare name resolving.
-  See `docs/agents/issue-tracker.md` for the
+  See `docs/agents/github-integration.md` for the
   `list_issues`/`search_issues` pagination and overflow guidance — it applies
   here too.
 

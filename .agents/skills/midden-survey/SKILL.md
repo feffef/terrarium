@@ -50,7 +50,7 @@ firing one).
 ## 2. Sweep what git can't see — PRs and branches, via the GitHub MCP tools
 
 Load schemas via `ToolSearch` before the first call (fully-qualified
-`mcp__github__*` names; see `docs/agents/issue-tracker.md` for
+`mcp__github__*` names; see `docs/agents/github-integration.md` for
 pagination/overflow guidance).
 
 - **Closed-unmerged PRs**: `mcp__github__search_pull_requests` with
