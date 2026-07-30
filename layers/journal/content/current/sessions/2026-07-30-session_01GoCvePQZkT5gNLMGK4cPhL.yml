@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01GoCvePQZkT5gNLMGK4cPhL
 startedAt: 2026-07-30T18:13:33Z
-endedAt: 2026-07-30T18:55:47Z
+endedAt: 2026-07-30T19:51:24Z
 kind: interactive
 goal: Modularize CLAUDE.md into per-topic agent docs
-status: in-review
-outcome: "Three docs extracted; PR #767 open"
-summary: Human-instructed throughout. The user asked me to identify groups of CLAUDE.md instructions not needed every session and analyse whether a docs/agents file or a new Skill was the better home; then, after two rounds of pushback, green-lit implementing exactly three groups (D1 git mechanics, D2 GitHub tool surface, D3 provenance) and filing an issue for the rest. Nothing net-new was agent-initiated. Extracted git-conventions.md, github-integration.md and provenance.md; re-homed the GitHub surface out of issue-tracker.md and pr-workflow.md; repointed five of our Skills and two script comments. CLAUDE.md 725 to 658 lines. Deferred groups triaged into an issue.
+status: completed
+outcome: "Three docs extracted; PR #767 merged"
+summary: "Human-instructed throughout. The user asked me to identify groups of CLAUDE.md instructions not needed every session and analyse whether a docs/agents file or a new Skill was the better home; then, after two rounds of pushback, green-lit implementing exactly three groups (D1 git mechanics, D2 GitHub tool surface, D3 provenance) and filing an issue for the rest. Nothing net-new was agent-initiated. Extracted git-conventions.md, github-integration.md and provenance.md; re-homed the GitHub surface out of issue-tracker.md and pr-workflow.md; repointed five of our Skills and two script comments. CLAUDE.md 725 to 658 lines. Deferred groups triaged into #766. Merged after the #768 accordion fix unblocked the gate."
 prs:
   - "767"
 docsRead:
@@ -55,12 +55,12 @@ frictions:
   - description: The background-task completion notification reported "exit code 0" for all three gate runs that actually exited 1 — the wrapper's trailing echo became the pipeline exit status.
     solution: Recurred three times this session. Always emit and grep an explicit exit marker; never trust the notification's reported code for a wrapped command.
     severity: minor
-durationSec: 2534
+durationSec: 5872
 models:
-  claude-opus-5: 259
+  claude-opus-5: 287
 toolCounts:
   Read: 9
-  Bash: 62
+  Bash: 71
   ToolSearch: 7
   mcp__github__search_issues: 3
   Write: 6
@@ -69,11 +69,12 @@ toolCounts:
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 2
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 2
   Skill: 2
   mcp__github__get_job_logs: 3
   mcp__github__add_issue_comment: 3
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/agents/provenance.md
   - docs/agents/git-conventions.md
