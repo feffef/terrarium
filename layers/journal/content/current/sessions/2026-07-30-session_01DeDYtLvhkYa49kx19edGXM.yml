@@ -1,0 +1,69 @@
+schemaVersion: 1
+session: session_01DeDYtLvhkYa49kx19edGXM
+startedAt: 2026-07-30T11:07:14Z
+endedAt: 2026-07-30T11:23:50Z
+kind: autonomous
+goal: Write and land one blog post via /blog-post
+status: completed
+outcome: "PR #755 merged: post landed on a green gate"
+summary: "Scheduled /blog-post run (bare invocation, no persona pinned) — entirely self-directed per the Skill's own chartered remit, no interactive human input this session. Ran the rotation gate (scripts/blog-rotation.ts): eligible = [david, karen, kevin], eyra excluded as last-posted. Gathered real recent activity (git log, session logs, GitHub issues) and drafted three full candidate posts to scratch: Karen on the isResolvedMisfile orphan-suppression regression (issue #747), Kevin on the Midden section-column illustration and its mobile-accessibility fix (PR #748/#751), David on the root-index redesign as a three-model design bake-off (PR #735). A fresh outside-read subagent, given only the three pasted drafts and no repo access, picked Kevin's as most interesting and flagged unexplained jargon (Tenant, DIG_SEASONS, Fable/Opus, 44rem, hydration). Revised to close those gaps, saved to layers/blog/content/kevin/pages/, ran pnpm gate:scoped (green), opened PR #755, subscribed to its activity, posted the verdict comment, ran scripts/merge-pr.ts (blog-post's merge-on-green-gate tier per ADR-0003/0004), and it merged clean on the first CI run."
+prs:
+  - "755"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the run's own governing steps
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: candidate voice/citation-hook
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: candidate voice/citation-hook
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: winning candidate's voice + do/don't recheck before PR
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: grounding a discarded candidate's auto-triage topic
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum + pages schema (reactsTo/tags)
+  - path: layers/midden/app/components/midden/SectionColumn.vue
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-29-session_012NCZUhy7qDirkjp8t6YiNy.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: closure front door at PR-open
+  - name: log-session
+    reason: this log
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: Drafted a Karen-candidate citation link pointing at scripts/audit-skills.ts#L578 for a claim actually about scripts/github-footer-guard.ts — a mislinked receipt that would have sent readers to unrelated code.
+    solution: Cross-check that a link's target file is the one the sentence next to it is actually describing, not just that the URL resolves — caught here only by re-reading the draft against the source commits before finalizing.
+    severity: minor
+  - description: Nearly asserted "Midden, the newest Tenant" in the David candidate from a per-directory git-log first-commit scan, without first checking for a shallow clone (CLAUDE.md's explicit first-step rule).
+    solution: git rev-parse --is-shallow-repository confirmed shallow (true) after the fact; the per-Tenant date scan was unreliable and the claim was cut rather than re-verified via a deepen, since it wasn't load-bearing for the topic.
+    severity: minor
+durationSec: 996
+models:
+  claude-sonnet-5: 144
+toolCounts:
+  Bash: 48
+  Read: 9
+  ToolSearch: 4
+  mcp__github__issue_read: 2
+  Write: 5
+  Edit: 6
+  Agent: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-07-30-four-rounds-of-self-review-mobile-miss.md
+subagents:
+  - type: general-purpose
+    task: Outside reader judges three blog drafts
+    model: sonnet
+gitBranch: claude/zen-heisenberg-g6uvfr
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: blog-post
