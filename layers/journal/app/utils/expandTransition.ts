@@ -57,8 +57,26 @@ export function expandOnLeave(el: Element, done: () => void): void {
 }
 
 // Dispatched on `window` when pinTopAcrossTransition settles, so the e2e can await
-// the exact end of the pin instead of polling a timeout (issue #450).
+// the exact end of the pin instead of polling a timeout (issue #450). Its `detail`
+// carries the PinRecord below.
 export const PIN_SETTLED_EVENT = 'journal:pin-settled'
+
+/**
+ * What the pin actually did, reported on `PIN_SETTLED_EVENT.detail`. Purely
+ * observational — the e2e reads it so an intermittent failure is attributable
+ * from CI output alone (issue #750), and asserts `scrolls > 0` so the guard
+ * can't silently go vacuous on a layout where nothing reflows.
+ */
+export interface PinRecord {
+  /** Frames the pin ran for. */
+  frames: number
+  /** Counter-scrolls issued — frames on which the item had drifted off `beforeTop`. */
+  scrolls: number
+  /** Whether a counter-scroll target fell above the page top and was clamped there. */
+  clipped: boolean
+  /** The item's remaining offset from `beforeTop` when the pin settled. */
+  residual: number
+}
 
 // Counter-scroll a just-opened item back to `beforeTop` every frame for the whole
 // disclosure transition, so a sibling collapsing above it can't make it visually
@@ -67,8 +85,9 @@ export const PIN_SETTLED_EVENT = 'journal:pin-settled'
 // uncompensated (issue #450). Never animated; clamped to 0 so we never scroll past
 // the page top. Fires PIN_SETTLED_EVENT on every exit path.
 export function pinTopAcrossTransition(el: HTMLElement | null, beforeTop: number | null): void {
+  const record: PinRecord = { frames: 0, scrolls: 0, clipped: false, residual: 0 }
   const settled = () => {
-    window.dispatchEvent(new CustomEvent(PIN_SETTLED_EVENT))
+    window.dispatchEvent(new CustomEvent<PinRecord>(PIN_SETTLED_EVENT, { detail: record }))
   }
   if (!el || beforeTop == null) {
     settled()
@@ -77,9 +96,16 @@ export function pinTopAcrossTransition(el: HTMLElement | null, beforeTop: number
   let start: number | null = null
   const step = (now: number) => {
     if (start === null) start = now
+    record.frames++
     const delta = el.getBoundingClientRect().top - beforeTop
-    if (delta) window.scrollTo({ top: Math.max(0, window.scrollY + delta), behavior: 'auto' })
+    if (delta) {
+      const target = window.scrollY + delta
+      if (target < 0) record.clipped = true
+      record.scrolls++
+      window.scrollTo({ top: Math.max(0, target), behavior: 'auto' })
+    }
     if (now - start >= DURATION_MS + SETTLE_GRACE_MS) {
+      record.residual = el.getBoundingClientRect().top - beforeTop
       settled()
       return
     }

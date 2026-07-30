@@ -44,5 +44,14 @@
     "tests/unit/**/*.ts",
     "layers/*/tests/unit/**/*.ts",
     "content.config.ts"
-  ]
+  ],
+  // The spec is out for the same reason the e2e specs are: it exercises a
+  // browser-side app module (the scroll pin's settle record, issue #750), so it
+  // pulls `window`, `HTMLElement` and friends into the program — the DOM lib this
+  // node/tsx program deliberately does not load. The module itself is typechecked
+  // by the Nuxt program (`layers/*/app/**/*`), and the spec asserts the record's
+  // shape at runtime, so a renamed field still fails `pnpm test`.
+  // `node_modules` is listed because naming `exclude` at all replaces TypeScript's
+  // implicit default (`node_modules`, `bower_components`, `jspm_packages`, outDir).
+  "exclude": ["node_modules", "layers/journal/tests/unit/expand-transition.spec.ts"]
 }

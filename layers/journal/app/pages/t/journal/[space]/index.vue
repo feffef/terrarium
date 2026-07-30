@@ -238,15 +238,22 @@ useSeoMeta({
          RIGHT of the Daily digests; on mobile it collapses to one column
          (digests first, then Sparks) via the media query below.
 
-         Why a grid and not a float: the pinned column here is the Daily digests
-         accordion. The grid row height tracks the digests (always the taller
-         column — ~14 day rows vs. 15 dense idea rows), so opening/collapsing a
-         digest moves the content below exactly as it did when digests were
-         full-width, and the scroll-pin behaves unchanged. An earlier float put
-         Sparks in the SAME band with a BFC digests, which coupled the two
-         heights and broke the pin e2e at wide viewports (PR #597). Keeping
-         digests the sole height-driver of the row is what makes side-by-side
-         safe here. -->
+         Why a grid and not a float: an earlier float put Sparks in the SAME band
+         with a BFC digests, which coupled the two heights and broke the scroll-pin
+         e2e at wide viewports (PR #597). Here each column keeps its natural height
+         and the row tracks whichever one is taller.
+
+         #597 relied on that always being the digests, so opening/collapsing a
+         digest would reflow the content below it exactly as when digests were
+         full-width. THAT INVARIANT HAS SINCE REGRESSED: Sparks now outgrows the
+         digests several times over — it sits in the narrow column, so every idea
+         wraps to many lines — and so a digest above the breakpoint expands into
+         existing slack and displaces nothing (PR #759 measured displacement 0 /
+         pin.scrolls 0 at 1280px). No user-facing bug — nothing moves, so
+         nothing needs pinning —
+         but the desktop layout now has no scroll-pin coverage, which is why the
+         e2e guard runs below the breakpoint instead. What to do about it is an
+         open layout decision, out of scope for #750 — see issue #760. -->
     <div v-if="digests.length" class="digests-sparks">
       <!-- Daily digests — a plain-language, day-by-day recap of project activity -->
       <section class="panel digests">
@@ -566,9 +573,10 @@ h1 {
 
 /* Digests + Sparks band. Mobile default: one column (digests, then Sparks) with
    a gap. Desktop (≥901px, media query below): two columns with Sparks on the
-   RIGHT. `align-items: start` keeps each column its natural height so the row
-   height tracks the (always-taller) digests — see the template comment for why
-   that's what keeps the accordion scroll-pin unaffected. */
+   RIGHT. `align-items: start` keeps each column its natural height, so the row
+   height tracks whichever column is taller — see the template comment for why
+   PR #597 needed that to be the digests, and issue #760 for the fact that it
+   no longer is. */
 .digests-sparks {
   margin-top: 1.75rem;
   display: grid;
@@ -708,9 +716,11 @@ h1 {
 .skill-note { margin: 0.9rem 0 0; font-size: 0.8rem; color: var(--jd-muted); }
 .skill-note .mono { color: var(--jd-ink); }
 
-/* Desktop: Sparks to the RIGHT of the Daily digests. Digests (col 1) drives the
-   row height; Sparks (col 2) is shorter, pinned to the top and made sticky so it
-   trails alongside the long digest list rather than leaving a tall gap. */
+/* Desktop: Sparks to the RIGHT of the Daily digests. Sparks (col 2) is topped out
+   by `align-items: start` and made sticky so it trails alongside a long digest
+   list rather than leaving a tall gap. It was the shorter column when that was
+   written; it no longer is, and so it — not digests (col 1) — now drives the row
+   height (issue #760). */
 @media (min-width: 901px) {
   .digests-sparks {
     grid-template-columns: 1fr clamp(300px, 32%, 360px);

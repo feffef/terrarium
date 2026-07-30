@@ -20,6 +20,7 @@ import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 import type { renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
 import { DIGESTS_DIR, SESSIONS_DIR } from '../../../../scripts/digest.ts'
 import { PIN_SETTLED_EVENT } from '../../app/utils/expandTransition.ts'
+import type { PinRecord } from '../../app/utils/expandTransition.ts'
 
 // The `current` Space's Digest dates, oldest first — read live rather than
 // hardcoded so these assertions stay valid regardless of which dates
@@ -77,27 +78,108 @@ export interface JournalE2EContext {
 }
 
 // Await the app's scroll-pin via its PIN_SETTLED_EVENT instead of polling a
-// timeout (issue #450). `armPinSettled` must run before the click that fires the
-// event so the one-shot listener can't miss it; `awaitPinSettled` then blocks on it.
-type PinSettledWindow = Window & { __pinSettled?: Promise<void> }
+// timeout (issue #450), and read back what the pin did (issue #750).
+// `armPinSettled` must run before the click that fires the event so the one-shot
+// listener can't miss it; `awaitPinSettled` then blocks on it and returns its record.
+//
+// EVERY open that starts a pin must be bracketed by this pair, including one done
+// only as setup: a pin still running from an earlier open keeps counter-scrolling
+// the page (moving a baseline measured under it) and fires the settle event the
+// listener armed for the open under test is waiting on. That cross-talk is the
+// mechanism behind #750's ~2800px failure.
+type PinSettledWindow = Window & { __pinSettled?: Promise<PinRecord> }
 async function armPinSettled(page: Page): Promise<void> {
   await page.evaluate((event) => {
     const w = window as PinSettledWindow
     w.__pinSettled = new Promise((resolve) => {
-      window.addEventListener(event, () => resolve(), { once: true })
+      window.addEventListener(event, (e) => resolve((e as CustomEvent<PinRecord>).detail), { once: true })
     })
   }, PIN_SETTLED_EVENT)
 }
-async function awaitPinSettled(page: Page): Promise<void> {
-  await page.evaluate(() => (window as PinSettledWindow).__pinSettled)
+function awaitPinSettled(page: Page): Promise<PinRecord> {
+  return page.evaluate(() => (window as PinSettledWindow).__pinSettled!)
 }
 
 // Open via dispatchEvent, not `locator.click()`: click() auto-scrolls the target
 // into view, which shifts the card before the app reads its pin baseline and breaks
 // these position assertions where there's no scroll anchoring to absorb it (issue
-// #450; docs/agents/verifying-ui-changes.md — click auto-scroll).
-function clickHeadNoScroll(card: Locator): Promise<void> {
-  return card.locator('.head').dispatchEvent('click')
+// #450; docs/agents/verifying-ui-changes.md — click auto-scroll). A real click also
+// focuses the control, and the browser's own focus-scroll lands asynchronously
+// (issue #750).
+function openNoScroll(control: Locator): Promise<void> {
+  return control.dispatchEvent('click')
+}
+
+// The tolerance the "held its position" assertions allow, and the viewport offset
+// the clicked item is parked at before the click. Note the direction: the pin
+// counter-scrolls UP when content above the item collapses, and `scrollY` is
+// `docTop - PARK_TOP_PX` — so a LARGER park top leaves LESS upward headroom, not
+// more. 600 is just a reproducible mid-viewport resting place; that the headroom
+// was actually sufficient is asserted directly, by `pin.clipped === false`.
+const HOLD_TOLERANCE_PX = 15
+const PARK_TOP_PX = 600
+// `window.scrollTo` lands on a whole device pixel, so a park computed from a
+// fractional element offset settles a sub-pixel away from its target.
+const PARK_PRECISION_PX = 2
+
+// Below the digests+Sparks band's two-column breakpoint (see the `.digests-sparks`
+// media queries) the digests column is the sole driver of its own height, so
+// collapsing a digest reflows everything under it. Above the breakpoint the taller
+// Sparks column sets the row height and a digest expands into existing slack,
+// displacing nothing — which is what made the sibling-collapse guard vacuous at the
+// gate's default 1280x720 viewport (issue #750).
+const SINGLE_COLUMN_WIDTH = 900
+
+// Chromium's own scroll anchoring also absorbs a collapse above the clicked item,
+// and it gets there first — with it on, the item holds its position whether or not
+// `pinTopAcrossTransition` scrolls at all, so the guard cannot tell a working pin
+// from a removed one. Opting the document out isolates the app's counter-scroll,
+// which is the only thing that holds the item in the cases anchoring does not
+// cover — and is what this test exists to guard (issue #750).
+//
+// The residual gap that buys, stated plainly: the sibling-collapse guard no longer
+// asserts the end-to-end outcome in the browser configuration the gate itself runs
+// (anchoring on). A regression that breaks the hold ONLY when anchoring is active —
+// the pin over-correcting and fighting the anchor — would go uncaught here. That is
+// hard to construct, because the pin is closed-loop (it re-measures the residual
+// every frame, so it no-ops once anchoring has absorbed the collapse rather than
+// double-correcting), but it is a real cost, not a free win.
+const DISABLE_SCROLL_ANCHORING = '* { overflow-anchor: none }'
+
+interface ItemGeometry {
+  /** The item's top edge relative to the viewport. */
+  top: number
+  /** The item's top edge relative to the document — moves only when content above it reflows. */
+  docTop: number
+  scrollY: number
+}
+function geometryOf(page: Page, id: string): Promise<ItemGeometry> {
+  return page.evaluate((itemId) => {
+    const { top } = document.getElementById(itemId)!.getBoundingClientRect()
+    return { top, docTop: top + window.scrollY, scrollY: window.scrollY }
+  }, id)
+}
+
+/** Everything needed to attribute a scroll-pin failure to a mechanism from CI
+ *  output alone, with no local repro (issue #750): where the page and the item
+ *  were before and after, how far the sibling collapsed, and what the pin did. */
+function pinEvidence(facts: {
+  before: ItemGeometry
+  after: ItemGeometry
+  pin: PinRecord
+  siblingHeight?: number
+  displacement?: number
+}): string {
+  return `\n${JSON.stringify(facts, null, 2)}`
+}
+
+/** Scroll the item's top edge to `top` in one explicit step — no alignment pass
+ *  whose outcome depends on how much of the element Chromium finds out of view. */
+function parkItemAt(page: Page, id: string, top: number): Promise<void> {
+  return page.evaluate(([itemId, parkTop]) => {
+    const el = document.getElementById(itemId as string)!
+    window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top - (parkTop as number))
+  }, [id, top] as const)
 }
 
 /** Register the journal Tenant's L2 assertions under the caller's active suite. */
@@ -262,26 +344,27 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       const { page, errors } = await renderAndCollectErrors(route)
       try {
         const card = page.locator('.feed .card').first()
-        const id = await card.getAttribute('id')
-        const topOf = () =>
-          page.evaluate((cardId) => document.getElementById(cardId!)!.getBoundingClientRect().top, id)
-        // Park the card mid-viewport, then measure `before` (opened without a
-        // scroll via clickHeadNoScroll, so it matches the app's pin baseline).
-        await page.evaluate((cardId) => {
-          const el = document.getElementById(cardId!)!
-          window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top - (window.innerHeight - 120))
-        }, id)
-        await card.locator('.head').scrollIntoViewIfNeeded()
-        const before = await topOf()
-        expect(before).toBeGreaterThan(250) // precondition: parked well below the top
+        const id = (await card.getAttribute('id'))!
+        // Park the card deep in the viewport, then measure `before` (opened without
+        // a scroll via openNoScroll, so it matches the app's pin baseline).
+        await parkItemAt(page, id, PARK_TOP_PX)
+        const before = await geometryOf(page, id)
         await armPinSettled(page)
-        await clickHeadNoScroll(card)
+        await openNoScroll(card.locator('.head'))
         await page.locator('.feed .card.open .detail').first().waitFor({ state: 'visible' })
         // With no sibling reflowing above it, opening must leave the card's top put.
-        await awaitPinSettled(page)
-        const after = await topOf()
-        expect(after).toBeGreaterThan(before - 15)
-        expect(after).toBeLessThan(before + 15)
+        const pin = await awaitPinSettled(page)
+        const after = await geometryOf(page, id)
+        const evidence = pinEvidence({ before, after, pin })
+
+        expect(Math.abs(before.top - PARK_TOP_PX), `park was not reproducible${evidence}`)
+          .toBeLessThan(PARK_PRECISION_PX)
+        // Precondition: this case's whole point is that nothing above the card
+        // moves, so the card's own document offset must be unchanged.
+        expect(Math.abs(after.docTop - before.docTop), `content above the card reflowed${evidence}`)
+          .toBeLessThan(1)
+        expect(after.top, `card did not hold its position${evidence}`).toBeGreaterThan(before.top - HOLD_TOLERANCE_PX)
+        expect(after.top, `card did not hold its position${evidence}`).toBeLessThan(before.top + HOLD_TOLERANCE_PX)
         expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
       } finally {
         await page.close()
@@ -292,35 +375,66 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
     // already-open digest ABOVE it, shrinking the page above the card. Assert the
     // just-clicked card's own top still holds at its pre-click position — the
     // sibling's collapse is exactly what the counter-scroll must absorb.
+    //
+    // The scenario only exists below the single-column breakpoint, and the test
+    // proves it holds rather than assuming it: it measures how far the collapse
+    // moved the card in DOCUMENT space (which no counter-scroll can hide) and
+    // fails unless that clears DOUBLE the tolerance, i.e. if a passing run would
+    // prove nothing (issue #750). Double, not 1×, so the premise and the hold
+    // can't both be satisfied marginally — at 1× a displacement a pixel over
+    // tolerance would satisfy the premise while a fully-broken pin missed the
+    // hold by a pixel. The real displacement is ~318px, so the margin is ample.
     it('holds the clicked item at its pre-click position when a sibling above it collapses', async () => {
       const route = '/t/journal/current'
       const { page, errors } = await renderAndCollectErrors(route)
       try {
-        await page.locator('.digest .drow').first().click()
-        await page.locator('.digest-body').first().waitFor({ state: 'visible' })
-        const card = page.locator('.feed .card').first()
-        const id = await card.getAttribute('id')
-        const topOf = () =>
-          page.evaluate((cardId) => document.getElementById(cardId!)!.getBoundingClientRect().top, id)
-        // Park mid-viewport, measure `before` — opened without a scroll, see
-        // the previous test.
-        await page.evaluate((cardId) => {
-          const el = document.getElementById(cardId!)!
-          window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top - (window.innerHeight - 120))
-        }, id)
-        await card.locator('.head').scrollIntoViewIfNeeded()
-        const before = await topOf()
+        await page.setViewportSize({ width: SINGLE_COLUMN_WIDTH, height: 720 })
+        await page.addStyleTag({ content: DISABLE_SCROLL_ANCHORING })
+        // Setup: open the digest that will later collapse — and wait out ITS OWN
+        // pin before measuring anything (see armPinSettled).
         await armPinSettled(page)
-        await clickHeadNoScroll(card)
+        await openNoScroll(page.locator('.digest .drow').first())
+        await page.locator('.digest-body').first().waitFor({ state: 'visible' })
+        await awaitPinSettled(page)
+
+        const card = page.locator('.feed .card').first()
+        const id = (await card.getAttribute('id'))!
+        const siblingHeight = await page.evaluate(() => {
+          const clip = document.querySelector('.digest-body-clip')
+          return clip ? clip.getBoundingClientRect().height : 0
+        })
+        // Park deep in the viewport, measure `before` — opened without a scroll,
+        // see the previous test.
+        await parkItemAt(page, id, PARK_TOP_PX)
+        const before = await geometryOf(page, id)
+        await armPinSettled(page)
+        await openNoScroll(card.locator('.head'))
         await page.locator('.feed .card.open .detail').first().waitFor({ state: 'visible' })
         // The pin settles only after both this card's expand and the sibling's
         // collapse above it finish — so waiting on it also waits out the reflow.
-        await awaitPinSettled(page)
+        const pin = await awaitPinSettled(page)
         await page.locator('.digest-body').first().waitFor({ state: 'detached' })
         expect(await page.locator('.digest-body').count()).toBe(0) // sibling digest collapsed
-        const after = await topOf()
-        expect(after).toBeGreaterThan(before - 15)
-        expect(after).toBeLessThan(before + 15)
+        const after = await geometryOf(page, id)
+        // How far the collapse moved the card with no counter-scroll applied.
+        const displacement = before.docTop - after.docTop
+        const evidence = pinEvidence({ before, after, pin, siblingHeight, displacement })
+
+        expect(Math.abs(before.top - PARK_TOP_PX), `park was not reproducible${evidence}`)
+          .toBeLessThan(PARK_PRECISION_PX)
+        expect(
+          displacement,
+          `premise no longer holds: the sibling's collapse displaced the card by only ${displacement}px, `
+          + `not clear of the ±${HOLD_TOLERANCE_PX}px tolerance by the required margin (need >${2 * HOLD_TOLERANCE_PX}px) `
+          + `— this guard would pass, or all but pass, with the pin removed. `
+          + `Restore a layout where the digests column drives its own height (see SINGLE_COLUMN_WIDTH)${evidence}`,
+        ).toBeGreaterThan(2 * HOLD_TOLERANCE_PX)
+        expect(pin.scrolls, `the pin issued no counter-scroll, so nothing was compensated${evidence}`)
+          .toBeGreaterThan(0)
+        expect(pin.clipped, `a counter-scroll target was clamped at the page top — park the card deeper${evidence}`)
+          .toBe(false)
+        expect(after.top, `card did not hold its position${evidence}`).toBeGreaterThan(before.top - HOLD_TOLERANCE_PX)
+        expect(after.top, `card did not hold its position${evidence}`).toBeLessThan(before.top + HOLD_TOLERANCE_PX)
         expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
       } finally {
         await page.close()
