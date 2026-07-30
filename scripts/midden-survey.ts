@@ -177,14 +177,58 @@ export function provenanceKey(p: Record<string, unknown>): string | undefined {
   }
 }
 
+/**
+ * The repo path a provenance declares, for the two kinds that carry one:
+ * `file` (required) and `commit` (optional — a commit-kind artifact about one
+ * path names it). The other four kinds have no `path` field in the schema
+ * (layers/midden/tenant.config.ts), so they screen nothing by path — inferring
+ * one would be a curatorial guess, not a read (#752).
+ */
+export function provenancePath(p: Record<string, unknown>): string | undefined {
+  if (p.kind !== 'file' && p.kind !== 'commit') return undefined
+  return typeof p.path === 'string' ? p.path : undefined
+}
+
+/** What the trench and the stores already hold, in the two shapes a candidate
+ *  is matched against: identity keys, and the paths artifacts declare. */
+export interface CataloguedIndex {
+  keys: Set<string>
+  paths: Set<string>
+}
+
+export function cataloguedIndex(provenances: Record<string, unknown>[]): CataloguedIndex {
+  const keys = new Set<string>()
+  const paths = new Set<string>()
+  for (const p of provenances) {
+    const key = provenanceKey(p)
+    if (key) keys.add(key)
+    const path = provenancePath(p)
+    if (path) paths.add(path)
+  }
+  return { keys, paths }
+}
+
+/**
+ * Whether a deletion candidate's path is one the trench already declares. A
+ * catalogued path ending in `/` denotes a directory (an artifact about a whole
+ * retired folder), so it screens everything beneath it — a deletion candidate
+ * is always an individual file, and exact matching would miss them all (#752).
+ */
+export function isCataloguedPath(path: string, cataloguedPaths: Set<string>): boolean {
+  if (cataloguedPaths.has(path)) return true
+  for (const catalogued of cataloguedPaths) {
+    if (catalogued.endsWith('/') && path.startsWith(catalogued)) return true
+  }
+  return false
+}
+
 export function screenCatalogued<T>(
   candidates: T[],
-  keyOf: (c: T) => string,
-  cataloguedKeys: Set<string>,
+  isCatalogued: (c: T) => boolean,
 ): { fresh: T[]; catalogued: T[] } {
   const fresh: T[] = []
   const catalogued: T[] = []
-  for (const c of candidates) (cataloguedKeys.has(keyOf(c)) ? catalogued : fresh).push(c)
+  for (const c of candidates) (isCatalogued(c) ? catalogued : fresh).push(c)
   return { fresh, catalogued }
 }
 
@@ -235,20 +279,20 @@ function readCurrentDependencyNames(cwd = root): Set<string> {
 
 const ARTIFACTS_DIRS = ['layers/midden/content/trench/artifacts', 'layers/midden/content/stores/artifacts']
 
-/** Identity keys of every artifact already catalogued in the trench or the stores. */
-function readCataloguedKeys(cwd = root): Set<string> {
-  const keys = new Set<string>()
+/** Every artifact already catalogued in the trench or the stores, indexed by
+ *  identity key and by declared path. */
+function readCataloguedIndex(cwd = root): CataloguedIndex {
+  const provenances: Record<string, unknown>[] = []
   for (const dir of ARTIFACTS_DIRS) {
     for (const file of readdirSync(join(cwd, dir))) {
       if (!file.endsWith('.yml')) continue
       const doc = parseYaml(readFileSync(join(cwd, dir, file), 'utf8')) as {
         provenance?: Record<string, unknown>
       }
-      const key = doc.provenance ? provenanceKey(doc.provenance) : undefined
-      if (key) keys.add(key)
+      if (doc.provenance) provenances.push(doc.provenance)
     }
   }
-  return keys
+  return cataloguedIndex(provenances)
 }
 
 // ── Command ─────────────────────────────────────────────────────────────────
@@ -274,17 +318,17 @@ export function surveyReport(cwd = root, sinceIso?: string): SurveyReport {
   // called before every read, and why a failure here is left fatal.
   fetchOriginMain(cwd)
 
-  const cataloguedKeys = readCataloguedKeys(cwd)
+  const catalogued = readCataloguedIndex(cwd)
 
   const allDeletions = parseDeletionLog(readDeletionLog(cwd, sinceIso))
   const signal = allDeletions.filter((c) => !isNoisePath(c.path))
   const { gone, regrown } = screenRegrown(signal, readCurrentTreePaths(cwd))
-  const files = screenCatalogued(gone, (c) => `file:${c.path}`, cataloguedKeys)
+  const files = screenCatalogued(gone, (c) => isCataloguedPath(c.path, catalogued.paths))
 
   const allRemovals = parseDependencyRemovals(readDependencyLog(cwd, sinceIso))
   const currentDeps = readCurrentDependencyNames(cwd)
   const stillGone = allRemovals.filter((r) => !currentDeps.has(r.name))
-  const deps = screenCatalogued(stillGone, (r) => `dependency:${r.name}`, cataloguedKeys)
+  const deps = screenCatalogued(stillGone, (r) => catalogued.keys.has(`dependency:${r.name}`))
 
   return {
     since: sinceIso ?? null,
