@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01YRCuvCM7bs8Av9spAYSsmh
 startedAt: 2026-07-29T18:52:43Z
-endedAt: 2026-07-30T07:03:55Z
+endedAt: 2026-07-30T07:31:25Z
 kind: interactive
 goal: Audit 14 days of PRs for session logs
-status: in-review
-outcome: "Orphan-check regression found and fixed; PR #749"
-summary: "Human-instructed throughout: audit every PR from the last 14 days against the session logs, file issues, re-verify on a non-shallow clone, then explain why the orphan check missed one. Audited all 153 PRs created 2026-07-15 to 2026-07-29 via two independent linkages; 148/153 clean. Re-ran everything on a fresh full clone (1640 commits vs 23 merge commits visible before) — identical. Agent-initiated within that green-light: choosing which gaps were issue-worthy, searching the tracker first (caught that PRs 546/547 were already tracked by 564, so no duplicate), correcting stale issue 565, and root-causing the missed orphan by executing audit-skills' real exported functions against real git data. Found a live regression — isResolvedMisfile suppresses any session that adds then deletes a file, not just a mis-filed session log. Filed 736, 737, 738, 747, 750; corrected 738's own wrong premise. On an explicit green-light, fixed 747 and opened PR 749: scoped the suppression to session-log paths and replaced a raw-string date compare with epoch."
+status: completed
+outcome: "Orphan-check regression fixed; PR #749 merged"
+summary: "Human-instructed throughout: audit every PR from the last 14 days against the session logs, file issues, re-verify on a non-shallow clone, then explain why the orphan check missed one. Audited all 153 PRs created 2026-07-15 to 2026-07-29 via two independent linkages; 148/153 clean. Re-ran everything on a fresh full clone (1640 commits vs 23 merge commits visible before) — identical. Agent-initiated within that green-light: choosing which gaps were issue-worthy, searching the tracker first (caught that PRs 546/547 were already tracked by 564, so no duplicate), correcting stale issue 565, and root-causing the missed orphan by executing audit-skills' real exported functions against real git data. Found a live regression — isResolvedMisfile suppresses any session that adds then deletes a file, not just a mis-filed session log. Filed 736, 737, 738, 747, 750; corrected 738's own wrong premise. On an explicit green-light, fixed 747 and opened PR 749: scoped the suppression to session-log paths and replaced a raw-string date compare with epoch. CI green, merged by the human as 79ef274; 747 auto-closed."
 prs:
   - "749"
 docsRead:
@@ -62,19 +62,19 @@ frictions:
   - description: Nearly filed a duplicate of open issue 564 for the audit's headline finding; only the pre-filing tracker search caught it.
     solution: Worked as intended — noting it because the near-miss shows how easily a fresh audit re-reports an already-tracked gap when the tracked issue is weeks old.
     severity: nit
-durationSec: 43872
+durationSec: 45522
 models:
-  claude-opus-5: 245
-  <synthetic>: 2
+  claude-opus-5: 271
+  <synthetic>: 4
 toolCounts:
-  Bash: 78
+  Bash: 81
   ToolSearch: 6
   mcp__github__search_pull_requests: 3
   Read: 5
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 8
   mcp__github__list_pull_requests: 1
   mcp__github__search_issues: 4
-  mcp__github__issue_read: 4
+  mcp__github__issue_read: 5
   mcp__github__issue_write: 5
   mcp__github__add_issue_comment: 3
   Skill: 2
@@ -82,7 +82,8 @@ toolCounts:
   Edit: 4
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 4
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/audit-skills.ts
   - tests/unit/audit-skills.spec.ts
