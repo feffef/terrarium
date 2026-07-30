@@ -16,9 +16,8 @@
 // `useSpace('midden')` to read this Space's own `artifacts` collection key, so an
 // embed inside one Site's body can never reach across Spaces.
 //
-// A broken `slug` reference is loud, not invisible — `scripts/
-// validate-content-refs.ts` plus the schema catch a bad reference at build/CI
-// time, so the fallback below exists only for the rare case that slips through.
+// A broken `slug` reference isn't caught at build/CI time (issue #740) — the
+// `v-else` fallback below is load-bearing, not a rare-case backstop.
 import { conditionMeta } from '../../utils/condition'
 import { digSeasonOf } from '../../utils/strata'
 import { formatMiddenDate, middenProvenanceLine, type MiddenArtifactDoc } from '../../utils/find'
