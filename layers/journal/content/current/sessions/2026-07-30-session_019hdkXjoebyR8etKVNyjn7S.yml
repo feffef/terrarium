@@ -1,72 +1,92 @@
 schemaVersion: 1
 session: session_019hdkXjoebyR8etKVNyjn7S
 startedAt: 2026-07-30T08:49:53Z
-endedAt: 2026-07-30T11:40:55Z
-kind: delegated
-goal: Autonomous triage sweep over the backlog
-status: completed
-outcome: 12 triaged, 3 follow-up issues filed
-summary: "Human-instructed: the user invoked /auto-triage, which is itself the ADR-0022 standing green-light for the sweep; everything below is that skill's prescribed work, not agent-initiated scope. Scanned 28 open issues and 0 open PRs, testing each one's most-recent comment (or body) for the ADR-0017 provenance footer via the repo's own isAiAuthored detector rather than author_association. Resolved 12 eligible, skipped 14 whose last activity was already AI's own and 2 wayfinder maps. Dispatched one subagent per eligible issue. Result: one objective close (already-implemented), one ready-for-agent, ten ready-for-human. Verified every label, state, and footer live over REST rather than trusting subagent reports. No repo commits — classification-only remit. Then, on a second explicit human green-light (\"Create issues\"), filed three follow-up issues for verified residues the sweep surfaced but could not itself file: \"#752\" and \"#753\" (midden-survey screening defects) and \"#754\" (audit-skills orphan-suppression observability, split out of \"#738\"). Re-verified every claim in code before filing rather than relaying the subagents' findings, and cross-linked the new issues from the two they came from. On a third green-light, promoted \"#752\" and \"#754\" to ready-for-agent and set \"#753\" to ready-for-human; promoting \"#752\" first required correcting its own body, which had overstated the fix as ambiguous."
-prs: []
+endedAt: 2026-07-30T14:36:40Z
+kind: interactive
+goal: Triage the backlog, then implement four issues
+status: in-review
+outcome: 12 triaged, 3 filed, 4 PRs open
+summary: "Human-instructed throughout, in four green-lit steps. (1) The user invoked /auto-triage: scanned 28 open issues and 0 open PRs, testing each one's most-recent comment or body for the ADR-0017 footer via the repo's own isAiAuthored detector rather than author_association; 12 eligible, one subagent each. One objective close, one ready-for-agent, ten ready-for-human. (2) On \"Create issues\", filed \"#752\"/\"#753\"/\"#754\" for verified residues the sweep surfaced but could not itself file. (3) On a conditional green-light, promoted \"#752\" and \"#754\" to ready-for-agent and set \"#753\" to ready-for-human; promoting \"#752\" first required correcting its own body. (4) On explicit permission to push outside the pinned branch, dispatched four worktree-isolated Opus agents for \"#544\"/\"#750\"/\"#752\"/\"#754\", then four reviewers. All four PRs are open, reviewed, and human-merge-only. Every subagent claim was re-verified against a primary source before being relayed."
+prs:
+  - "756"
+  - "757"
+  - "758"
+  - "759"
 docsRead:
   - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: standing green-light and its bounds
+    reason: standing green-light and its determinability bounds
   - path: docs/adr/0020-requester-trust-tiers.md
     reason: Trusted/Public split gating ready-for-agent
   - path: docs/agents/issue-tracker.md
-    reason: gh-less MCP/REST mapping and overflow traps
-  - path: docs/agents/triage-labels.md
-    reason: canonical label vocabulary
+    reason: gh-less REST mapping and the overflow traps
   - path: scripts/check-triage-drift.ts
     reason: reused its isAiAuthored footer detector
   - path: scripts/list-open-issues.ts
     reason: reused its curl/REST strategy helpers
-  - path: scripts/github-footer-guard.ts
-    reason: confirmed what footer the guard would enforce
   - path: scripts/session-trace.ts
     reason: resolved ground-truth session id from a primary source
+  - path: scripts/midden-survey.ts
+    reason: "verified the #752 defect myself before filing"
+  - path: scripts/audit-skills.ts
+    reason: "verified the #754 silent-suppression claim myself"
+  - path: layers/midden/tenant.config.ts
+    reason: "provenance schema — collapsed #752's supposed ambiguity"
   - path: .claude/skills/triage/SKILL.md
     reason: (no reason given)
   - path: .claude/skills/triage/AGENT-BRIEF.md
     reason: (no reason given)
   - path: .claude/skills/triage/OUT-OF-SCOPE.md
     reason: (no reason given)
-  - path: scripts/midden-survey.ts
+  - path: docs/agents/triage-labels.md
     reason: (no reason given)
-  - path: scripts/audit-skills.ts
+  - path: scripts/github-footer-guard.ts
     reason: (no reason given)
 skillsUsed:
   - name: auto-triage
-    reason: the sweep itself
+    reason: the sweep
   - name: triage
     reason: per-issue rules the sweep composes
+  - name: implement
+    reason: the four-issue implementation pass
+  - name: code-review
+    reason: one reviewer per PR, Standards + Spec axes
   - name: close-session
     reason: Session closure front door
   - name: log-session
     reason: (no reason given)
+  - name: context
+    reason: (invoked as a slash command)
 frictions:
-  - description: No committed helper answers auto-triage's own eligibility question — which open issues have human-authored most-recent activity. Hand-rolled a scratch script.
-    solution: Codify it as scripts/auto-triage-eligibility.ts, reusing isAiAuthored and the list-open-issues REST helpers exactly as the scratch did. Every sweep repeats this cost otherwise, and a hand-rolled script is a fresh chance to get the authorship signal wrong.
-    severity: minor
-  - description: The platform appends its own attribution footer after the ADR-0017 footer on GitHub comments, so a last-two-lines footer check false-negatives on all 12.
-    solution: Verify the provenance footer by searching the whole comment body, never by position. Worth a line in the issue-tracker doc so a future session doesn't misdiagnose a correctly-footered comment as missing one.
-    severity: minor
+  - description: Briefed four concurrent reviewers to diff against FETCH_HEAD in one shared checkout; siblings' fetches clobbered it, once to another PR's head entirely.
+    solution: Resolve and pin an explicit SHA per PR before dispatch, never hand a shared mutable ref to concurrent agents. The failure is silent — it yields confident, wrong findings rather than an error — and was caught only because one reviewer noticed its own grep contradicted the diff and said so. Two of four were affected; a third had pinned a SHA itself and was unharmed.
+    severity: moderate
   - description: Filed "#752" asserting its fix direction was ambiguous, having verified the defect in code but not read the provenance schema or the real artifacts.
     solution: '"Ambiguous" and "needs a human decision" are themselves factual claims about the code, not a safe default — they need the same primary-source check as any other assertion. Reading the schema and the artifact corpus took one command each and showed commit-kind provenance already carries the path, collapsing the ambiguity and narrowing the scope. Verify before escalating, not only before asserting.'
     severity: minor
-durationSec: 10262
+  - description: Issue "#754"'s spec contradicted itself — Desired behaviour said the field lists candidates that were dropped, while its own Verified section said one path isn't.
+    solution: Cross-check a spec's normative section against its own evidence section before filing. The implementer resolved it correctly and the reviewer caught the contradiction, but a spec that disagrees with itself invites either reading.
+    severity: minor
+  - description: No committed helper answers auto-triage's own eligibility question — which open issues have human-authored most-recent activity. Hand-rolled a scratch script.
+    solution: Codify it as scripts/auto-triage-eligibility.ts, reusing isAiAuthored and the list-open-issues REST helpers exactly as the scratch did. Every sweep repeats this cost otherwise, and a hand-rolled script is a fresh chance to get the authorship signal wrong.
+    severity: minor
+  - description: The platform appends its own attribution footer after the ADR-0017 footer on GitHub comments, so a last-two-lines footer check false-negatives.
+    solution: Verify the provenance footer by searching the whole comment body, never by position. Worth a line in the issue-tracker doc so a future session doesn't misdiagnose a correctly-footered comment as missing one.
+    severity: minor
+durationSec: 20807
 models:
-  claude-opus-5: 178
+  claude-opus-5: 265
 toolCounts:
-  Bash: 30
+  Bash: 39
   Read: 14
-  Write: 4
-  Agent: 12
+  Write: 6
+  Agent: 20
   Skill: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__issue_write: 6
-  mcp__github__add_issue_comment: 3
+  mcp__github__add_issue_comment: 7
   Edit: 5
+  AskUserQuestion: 6
+  SendMessage: 3
 subagents:
   - type: general-purpose
     task: Triage issue 666
@@ -92,13 +112,40 @@ subagents:
     task: Triage issue 738
   - type: general-purpose
     task: Triage issue 750
+  - type: general-purpose
+    task: Implement issue 544
+    model: opus
+  - type: general-purpose
+    task: Implement issue 750
+    model: opus
+  - type: general-purpose
+    task: Implement issue 752
+    model: opus
+  - type: general-purpose
+    task: Implement issue 754
+    model: opus
+  - type: general-purpose
+    task: Review PR 756
+    model: opus
+  - type: general-purpose
+    task: Review PR 757
+    model: opus
+  - type: general-purpose
+    task: Review PR 758
+    model: opus
+  - type: general-purpose
+    task: Review PR 759
+    model: opus
 gitBranch: claude/auto-triage-henuc5
 entrypoint: remote_mobile
 cliVersion: 2.1.220
 learnings:
   - "A sweep's own idempotency rule doubles as its cheapest correctness check: 14 of 28 issues skipped because AI acted last is the mechanism working, not coverage lost."
-  - "Two subagents on one shared checkout can race on repo state: one unshallowed the clone mid-sweep, and another observed shallow-then-not and correctly re-ran its history claims."
   - "Determinable and authorized are independent: #674's design was fully determined, yet its body withheld the green-light, so ready-for-agent would have granted what the ticket forbids."
+  - Safari and iOS Safari implement no scroll anchoring at all, so a test that disables it via overflow-anchor:none is reproducing the production configuration for WebKit users, not inventing a synthetic one — the opposite of how it first reads.
+  - A guard that still passes with the mechanism it guards deleted carries zero regression information; replacing it with one that goes red on sabotage is a strict gain, even when the new assertion is narrower.
+  - Concurrent agents on one checkout share more mutable git state than is obvious — FETCH_HEAD, shallow-ness, and cwd have each silently crossed between agents this session.
 ideas:
   - "Give auto-triage a bravery-calibration readout: record each sweep's state distribution over time, so a run of near-total ready-for-human escalation is visibly either the hard governance residue or a miscalibrated determinability bar, instead of a judgment no one can audit across runs."
-  - "Make the sweep's residue path first-class instead of ad-hoc. Three real defects this run were found by subagents, recorded only in issue comments, and would have died there without a human happening to say 'create issues' — see the filed \"#752\"/\"#753\"/\"#754\". A classification-only remit is right, but it needs a designated hand-off: have each triage subagent emit residues as structured output, and have the sweep report them as a distinct 'found but unfiled' section for one green-light decision, rather than burying them in per-issue prose."
+  - Make the sweep's residue path first-class. Three real defects this run were found by subagents, recorded only in issue comments, and would have died there without a human happening to say 'create issues'. Have each triage subagent emit residues as structured output, and have the sweep report them as a distinct 'found but unfiled' section for one green-light decision.
+  - Add a dispatch preflight that resolves every shared mutable git ref a fan-out will touch — PR head/base SHAs, shallow state — and injects the pinned values into each brief, so no subagent is ever handed a ref another subagent can move underneath it.
