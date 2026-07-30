@@ -20,11 +20,21 @@ describe('isInert()', () => {
     expect(isInert('layers/atlas/CONTEXT.md')).toBe(false)
   })
 
+  it('treats a .claude/skills/ entry as inert even though it is not a .md (#544)', () => {
+    expect(isInert('.claude/skills/wayfinder')).toBe(true)
+    expect(isInert('.claude/skills/frictions-to-fixes')).toBe(true)
+  })
+
   it('treats any non-.md path as non-inert', () => {
     expect(isInert('scripts/gate.ts')).toBe(false)
     expect(isInert('package.json')).toBe(false)
     expect(isInert('.github/workflows/gate.yml')).toBe(false)
     expect(isInert('docs/research/diagram.png')).toBe(false)
+  })
+
+  it('keeps .claude paths outside skills/, and the real Skill bodies, on their own footing', () => {
+    expect(isInert('.claude/settings.json')).toBe(false)
+    expect(isInert('.agents/skills/wayfinder/scripts/run.ts')).toBe(false)
   })
 })
 
@@ -40,6 +50,12 @@ describe('decideScope()', () => {
     expect(scope.skipHeavy).toBe(false)
     expect(scope.reason).toContain('scripts/gate.ts')
     expect(planSteps(scope)).toEqual([...FLOOR, ...HEAVY])
+  })
+
+  it('skips heavy layers for a docs + .claude/skills symlink changeset (#544)', () => {
+    const scope = decideScope(['.agents/skills/wayfinder/SKILL.md', '.claude/skills/wayfinder'])
+    expect(scope.skipHeavy).toBe(true)
+    expect(planSteps(scope)).toEqual([...FLOOR])
   })
 
   it('a single content .md under layers/ forces the full gate', () => {

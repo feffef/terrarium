@@ -539,8 +539,8 @@ tests/support/ , tests/README.md    # shared e2e helpers + the test-homing conve
 **Locally, run `pnpm gate:scoped` before proposing a change — not the full `pnpm gate`.**
 `gate:scoped` (`scripts/gate.ts`) runs the cheap floor always, and adds the heavy
 layers (`test`, `build`, `test:e2e`) only when the change isn't provably inert — for a change touching only `.md`
-files outside `layers/` it skips them (rationale and the inert-set proof: #350), and for
-anything else it runs the full gate itself. It fails safe: any non-inert path, or an
+files outside `layers/` and `.claude/skills/` symlink entries it skips them (rationale and
+the inert-set proof: #350, #544), and for anything else it runs the full gate itself. It fails safe: any non-inert path, or an
 undeterminable diff base, runs everything, so it never runs less than a change needs.
 The exact steps are single-homed in `package.json` (`gate` = the full sequence;
 `scripts/gate.ts`'s `FLOOR`/`HEAVY` = `gate:scoped`'s split of it), not restated here

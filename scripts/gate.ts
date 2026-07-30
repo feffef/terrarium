@@ -14,8 +14,11 @@ export const HEAVY = ['test', 'build', 'test:e2e'] as const
 
 // A `.md` under `layers/` is rendered content; `verify:skills-lock` (in FLOOR)
 // still covers `.agents/skills/**/SKILL.md`. Rationale: #350.
+// `.claude/skills/` is the symlink mirror of `.agents/skills/` (ADR-0005) and is
+// read by no HEAVY step — `test`/`test:e2e` collect only `tests/**` and
+// `layers/*/tests/**`, and `build` never reads `.claude/`. Rationale: #544.
 export function isInert(path: string): boolean {
-  return path.endsWith('.md') && !path.startsWith('layers/')
+  return (path.endsWith('.md') && !path.startsWith('layers/')) || path.startsWith('.claude/skills/')
 }
 
 export interface Scope {
@@ -34,7 +37,7 @@ export function decideScope(changed: string[] | null): Scope {
   }
   const firstNonInert = changed.find((p) => !isInert(p))
   if (firstNonInert === undefined) {
-    return { skipHeavy: true, reason: `change is docs-only outside layers/ (${changed.length} file(s)) — skipping ${HEAVY.join(', ')}` }
+    return { skipHeavy: true, reason: `every changed path is inert (${changed.length} file(s)) — skipping ${HEAVY.join(', ')}` }
   }
   return { skipHeavy: false, reason: `changed set includes non-inert path (${firstNonInert}) — running full gate` }
 }
