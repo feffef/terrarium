@@ -294,6 +294,31 @@ function checkStratum(stratum: string): string[] {
 }
 
 /**
+ * A DENYLIST of what makes a repo-relative path wrong, not an allowlist of
+ * permitted characters. The allowlist this replaced (`/^[\w./-]+$/`) rejected
+ * legitimate repo paths two real artifacts already cite — a pnpm patch
+ * filename's `@` and a Nuxt dynamic route's `[`/`]` — while still letting a
+ * `..` traversal through, since `.` and `/` were both permitted. Enumerating
+ * every valid filename shape is the losing side of that trade: this check only
+ * has to catch a typo or nonsense. A trailing `/` is deliberately fine — it
+ * declares a directory (layers/midden/tenant.config.ts, #752).
+ * Returns the reason it is implausible, or `null` when it is fine.
+ */
+function implausiblePathReason(path: string): string | null {
+  if (path.trim() === '') return 'must not be empty'
+  if (path.startsWith('/')) return 'must be repo-relative, not absolute'
+  if (/\s/.test(path)) return 'must not contain whitespace'
+  if (path.includes('\\')) return 'must use "/" separators, not "\\"'
+  if (path.split('/').includes('..')) return 'must not traverse out of the repo with ".."'
+  return null
+}
+
+function checkPath(field: string, path: string): string[] {
+  const reason = implausiblePathReason(path)
+  return reason ? [`${field}: "${path}" is not a plausible repo-relative path — it ${reason}`] : []
+}
+
+/**
  * Provenance existence check (issue #520). The goal is catching a TYPO'd
  * provenance reference, not proving the referent is still live — a
  * `dissolved`/`lost` Artifact's referent is EXPECTED to be gone (that's the
@@ -308,9 +333,10 @@ function checkStratum(stratum: string): string[] {
  *     itself a violation (it fails constantly on a shallow clone, or on a
  *     hash from history genuinely not fetched) — only a genuinely malformed
  *     hash is.
- *   - `file`: no strong check is possible without full history either —
- *     validate `path` is a plausible repo-relative path (non-empty, no
- *     leading "/", reasonable characters) and stop there.
+ *   - `file`/`commit`: no strong check is possible without full history either —
+ *     validate `path` is a plausible repo-relative path (see
+ *     `implausiblePathReason`) and stop there. `path` is required on `file`,
+ *     optional on `commit`.
  *   - `branch`: validate `name` is non-empty and slug-like.
  *   - `dependency`/`skill`: validate `name` is non-empty.
  *   - `pr`: nothing to add — `number` is already `z.number().int().positive()`
@@ -318,32 +344,30 @@ function checkStratum(stratum: string): string[] {
  * Don't "fix" this into a deep-history dependency — the shallow-clone
  * constraint above is the point, not a gap.
  */
-function checkProvenance(provenance: unknown, projectRoot: string): string[] {
+export function checkProvenance(provenance: unknown, projectRoot: string): string[] {
   const p = provenance && typeof provenance === 'object' ? (provenance as Record<string, unknown>) : {}
   const kind = typeof p.kind === 'string' ? p.kind : undefined
 
   switch (kind) {
     case 'commit': {
+      const msgs: string[] = []
       const hash = typeof p.hash === 'string' ? p.hash : ''
       if (!/^[0-9a-fA-F]{7,40}$/.test(hash)) {
-        return [`provenance.hash: "${hash}" does not look like a plausible git hash (7-40 hex chars)`]
+        msgs.push(`provenance.hash: "${hash}" does not look like a plausible git hash (7-40 hex chars)`)
+      } else {
+        // Best-effort confirmation only — see the block comment above for why a
+        // failed lookup here never becomes a violation.
+        try {
+          execFileSync('git', ['cat-file', '-e', `${hash}^{commit}`], { cwd: projectRoot, stdio: 'ignore' })
+        } catch {
+          // Not found on this (possibly shallow) clone — not evidence of a typo.
+        }
       }
-      // Best-effort confirmation only — see the block comment above for why a
-      // failed lookup here never becomes a violation.
-      try {
-        execFileSync('git', ['cat-file', '-e', `${hash}^{commit}`], { cwd: projectRoot, stdio: 'ignore' })
-      } catch {
-        // Not found on this (possibly shallow) clone — not evidence of a typo.
-      }
-      return []
+      if (typeof p.path === 'string') msgs.push(...checkPath('provenance.path', p.path))
+      return msgs
     }
-    case 'file': {
-      const path = typeof p.path === 'string' ? p.path : ''
-      if (path.trim() === '' || path.startsWith('/') || !/^[\w./-]+$/.test(path)) {
-        return [`provenance.path: "${path}" is not a plausible repo-relative path`]
-      }
-      return []
-    }
+    case 'file':
+      return checkPath('provenance.path', typeof p.path === 'string' ? p.path : '')
     case 'branch': {
       const name = typeof p.name === 'string' ? p.name : ''
       if (name.trim() === '' || !/^[\w][\w./-]*$/.test(name)) {

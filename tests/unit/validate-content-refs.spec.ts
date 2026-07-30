@@ -10,7 +10,12 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { commitDateWithinSeason, scanDirectives, validateReferences } from '../../scripts/validate-content-refs.ts'
+import {
+  checkProvenance,
+  commitDateWithinSeason,
+  scanDirectives,
+  validateReferences,
+} from '../../scripts/validate-content-refs.ts'
 import type { ExpandedCollection } from '../../shared/expand.ts'
 
 let dir: string
@@ -310,6 +315,93 @@ describe('validateReferences() — Specimen body: unclosed MDC container (the #4
     const report = validateReferences([pagesCol('pages')], dir)
     expect(report.violations.length).toBeGreaterThan(0)
     expect(report.violations[0]?.messages.join()).toMatch(/"::almanac" is never closed/)
+  })
+})
+
+// ── checkProvenance() — the provenance-reference soft checks (Midden) ───────
+//
+// The path rule is a DENYLIST of what is actually wrong, not an allowlist of
+// permitted characters: the check exists to catch a typo, and an allowlist
+// kept rejecting legitimate repo paths (a pnpm patch filename's `@`, a Nuxt
+// dynamic route's `[`/`]`) — both of which real artifacts already cite.
+
+describe('checkProvenance() — file-kind path plausibility', () => {
+  const filePath = (path: unknown) => checkProvenance({ kind: 'file', path }, dir)
+
+  it('accepts an ordinary repo-relative path', () => {
+    expect(filePath('scripts/validate-content-refs.ts')).toEqual([])
+    expect(filePath('CONTEXT.md')).toEqual([])
+  })
+
+  it('accepts a pnpm patch filename (the "@" an allowlist rejected)', () => {
+    expect(filePath('patches/@nuxt__content@3.15.0.patch')).toEqual([])
+  })
+
+  it('accepts a Nuxt dynamic route (the "[" / "]" an allowlist rejected)', () => {
+    expect(filePath('layers/journal/app/pages/t/journal/[space]/index.vue')).toEqual([])
+  })
+
+  it('accepts a trailing-slash directory path (load-bearing for midden-survey, #752)', () => {
+    expect(filePath('layers/journal/app/components/journal/prototype/')).toEqual([])
+  })
+
+  it('rejects an empty or whitespace-only path', () => {
+    expect(filePath('')).toHaveLength(1)
+    expect(filePath('   ')).toHaveLength(1)
+    expect(filePath(undefined)).toHaveLength(1)
+  })
+
+  it('rejects a leading "/" (absolute, not repo-relative)', () => {
+    expect(filePath('/etc/passwd')).toHaveLength(1)
+  })
+
+  it('rejects an embedded space', () => {
+    expect(filePath('scripts/validate content.ts')).toHaveLength(1)
+  })
+
+  it('rejects a backslash', () => {
+    expect(filePath('scripts\\validate-content.ts')).toHaveLength(1)
+  })
+
+  it('rejects a ".." traversal segment', () => {
+    expect(filePath('../outside/the/repo.ts')).toHaveLength(1)
+    expect(filePath('scripts/../../escape.ts')).toHaveLength(1)
+  })
+
+  it('accepts ".." inside a segment, which traverses nothing', () => {
+    expect(filePath('docs/notes..draft.md')).toEqual([])
+  })
+})
+
+describe('checkProvenance() — commit-kind path plausibility', () => {
+  // A well-formed hash whose `git cat-file` lookup fails is never itself a
+  // violation (shallow-clone stance) — so these isolate the path rule.
+  const hash = 'b23e8d3'
+  const commit = (path?: unknown) =>
+    checkProvenance(path === undefined ? { kind: 'commit', hash } : { kind: 'commit', hash, path }, dir)
+
+  it('stays valid with no path — it is optional on this kind', () => {
+    expect(commit()).toEqual([])
+  })
+
+  it('accepts the same real paths the file kind accepts', () => {
+    expect(commit('patches/@nuxt__content@3.15.0.patch')).toEqual([])
+    expect(commit('layers/journal/app/pages/t/journal/[space]/index.vue')).toEqual([])
+  })
+
+  it('rejects a malformed path instead of ignoring it', () => {
+    expect(commit('/absolute/path.ts')).toHaveLength(1)
+    expect(commit('has a space.ts')).toHaveLength(1)
+    expect(commit('../escape.ts')).toHaveLength(1)
+    expect(commit('  ')).toHaveLength(1)
+  })
+
+  it('still rejects a malformed hash', () => {
+    expect(checkProvenance({ kind: 'commit', hash: 'nothex' }, dir)).toHaveLength(1)
+  })
+
+  it('reports a malformed hash and a malformed path together', () => {
+    expect(checkProvenance({ kind: 'commit', hash: 'nothex', path: '/absolute' }, dir)).toHaveLength(2)
   })
 })
 
