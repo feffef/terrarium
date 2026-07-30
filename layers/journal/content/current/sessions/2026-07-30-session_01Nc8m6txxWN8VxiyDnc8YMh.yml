@@ -1,0 +1,47 @@
+schemaVersion: 1
+session: session_01Nc8m6txxWN8VxiyDnc8YMh
+startedAt: 2026-07-30T00:15:49Z
+endedAt: 2026-07-30T00:24:38Z
+kind: autonomous
+goal: Run the scheduled /digest sweep
+status: completed
+outcome: "2026-07-29 Digest authored, PR #739 merged"
+summary: "Scheduled /digest Routine fired with no human present this turn. Followed the Digest Skill: branched off origin/main, found one backfill day (2026-07-29) via `scripts/digest.ts list`, gathered its PRs/commits/sessions data, and authored a narrative Digest page covering the day's Midden-heavy work (survey Skill, artifact history model, six candidates catalogued, stores Space) plus the root index redesign and eyra's blog post. Ran the archive-retention sweep (no moves needed, all dates within window). `pnpm gate:scoped` passed green. Opened PR #739, subscribed to its activity, posted the verdict comment, and merged it via `scripts/merge-pr.ts` on a green gate per the digest tier's merge-on-green authority (docs/agents/pr-workflow.md). All steps were Skill-directed; no agent-initiated scope beyond what the Digest Skill specifies."
+prs:
+  - "739"
+docsRead:
+  - path: .claude/skills/digest/SKILL.md
+    reason: the invoked Skill's own steps
+  - path: layers/journal/content/current/pages/digests/2026-07-28.md
+    reason: format/convention reference for the new digest
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 529
+models:
+  claude-sonnet-5: 64
+toolCounts:
+  Bash: 19
+  Read: 2
+  Write: 2
+  ToolSearch: 3
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Edit: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-07-29.md
+gitBranch: claude/compassionate-lovelace-e2ry7k
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: digest
