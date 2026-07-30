@@ -1,15 +1,17 @@
 schemaVersion: 1
 session: session_01LbPeYJbL4he26MUdNDgB2a
 startedAt: 2026-07-30T01:06:16Z
-endedAt: 2026-07-30T01:27:18Z
+endedAt: 2026-07-30T01:30:26Z
 kind: autonomous
 goal: Run frictions-to-fixes scheduled sweep
-status: in-review
-outcome: 4 issues filed, 1 grouped PR open awaiting CI
-summary: "Scheduled frictions-to-fixes run. A general-purpose subagent surveyed the latest 20 session logs, screened every friction candidate against the tracker (search_issues/search_pull_requests exact-string search plus scripts/merged-since.ts), and returned 4 never-fixed, doc-only, safe-surface candidates. Filed issues #740-#743 for them after confirming no duplicates. Dispatched one worktree-isolated Sonnet impl agent to fix all 4 in a single grouped PR (#744) per the doc-fix batching rule; it ran the full gate locally (green) and pushed, awaiting GitHub CI before this orchestrating session reviews and merges. Also found 2 already-open tracking issues (#723, #483) with new in-window occurrences and added evidence comments to those standing threads rather than filing duplicates or dispatching fixes, per the skill's open-already/regression handling. Entire run is autonomous/scheduled — no live human input at any point."
+status: completed
+outcome: 4 issues filed, fixed in one PR, merged
+summary: "Scheduled frictions-to-fixes run, entirely autonomous — no live human input at any point. A general-purpose subagent surveyed the latest 20 session logs, screened every friction candidate against the tracker (search_issues/search_pull_requests exact-string search plus scripts/merged-since.ts), and returned 4 never-fixed, doc-only, safe-surface candidates. Filed issues #740-#743 after confirming no duplicates. Dispatched one worktree-isolated Sonnet impl agent to fix all 4 in a single grouped PR (#744) per the doc-fix batching rule; it ran the full gate locally (green, 76/76 e2e) and pushed. GitHub CI (safety-gate) went green, posted a review verdict, and merged via scripts/merge-pr.ts (merge commit 548c595) — all 4 issues auto-closed. Also found 2 already-open tracking issues (#723, #483) with new in-window occurrences and added evidence comments to those standing threads rather than filing duplicates or dispatching fixes, per the skill's open-already/regression handling."
 prs:
   - "744"
-docsRead: []
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -27,25 +29,29 @@ frictions:
   - description: The survey subagent's own search_issues call (broad query) returned a 103KB+ result that overflowed, forcing a narrower retry.
     solution: Same residual "targeted keyword search still overflows" gap the subagent flagged as untracked by any open issue; single occurrence this run, not filed separately per the low-severity-one-off drop rule.
     severity: minor
-durationSec: 1262
+durationSec: 1450
 models:
-  claude-sonnet-5: 72
+  claude-sonnet-5: 101
 toolCounts:
   Agent: 2
-  Bash: 2
+  Bash: 4
   ToolSearch: 4
   mcp__github__search_issues: 4
   mcp__github__list_pull_requests: 1
   TaskCreate: 6
-  TaskUpdate: 6
+  TaskUpdate: 10
   mcp__github__issue_write: 4
   mcp__github__issue_read: 2
-  mcp__github__add_issue_comment: 2
-  mcp__github__pull_request_read: 4
+  mcp__github__add_issue_comment: 3
+  mcp__github__pull_request_read: 9
   mcp__github__actions_list: 2
-  Skill: 2
+  Skill: 3
   Write: 1
   mcp__Claude_Code_Remote__send_later: 1
+  Read: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Edit: 1
 subagents:
   - type: general-purpose
     task: Survey and screen session frictions
