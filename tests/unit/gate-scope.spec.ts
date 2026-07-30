@@ -25,6 +25,14 @@ describe('isInert()', () => {
     expect(isInert('.claude/skills/frictions-to-fixes')).toBe(true)
   })
 
+  // Documentation-by-test, not a live case: the predicate is a plain prefix match,
+  // so it would classify a *nested* regular file too. Git cannot track a path under
+  // a symlink, so this is unreachable today — and harmless if the mirror ever became
+  // real directories, since no HEAVY step reads `.claude/` at all (#544, PR #756 review).
+  it('classifies any path under .claude/skills/ as inert, by prefix and deliberately', () => {
+    expect(isInert('.claude/skills/wayfinder/scripts/run.ts')).toBe(true)
+  })
+
   it('treats any non-.md path as non-inert', () => {
     expect(isInert('scripts/gate.ts')).toBe(false)
     expect(isInert('package.json')).toBe(false)

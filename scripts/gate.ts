@@ -15,8 +15,8 @@ export const HEAVY = ['test', 'build', 'test:e2e'] as const
 // A `.md` under `layers/` is rendered content; `verify:skills-lock` (in FLOOR)
 // still covers `.agents/skills/**/SKILL.md`. Rationale: #350.
 // `.claude/skills/` is the symlink mirror of `.agents/skills/` (ADR-0005) and is
-// read by no HEAVY step — `test`/`test:e2e` collect only `tests/**` and
-// `layers/*/tests/**`, and `build` never reads `.claude/`. Rationale: #544.
+// read by no HEAVY step — `test`/`test:e2e` collect only the spec globs owned by
+// `vitest.config.ts`, and `build` never reads `.claude/`. Rationale: #544.
 export function isInert(path: string): boolean {
   return (path.endsWith('.md') && !path.startsWith('layers/')) || path.startsWith('.claude/skills/')
 }
