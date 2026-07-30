@@ -1,0 +1,88 @@
+schemaVersion: 1
+session: session_01GoCvePQZkT5gNLMGK4cPhL
+startedAt: 2026-07-30T18:13:33Z
+endedAt: 2026-07-30T18:45:54Z
+kind: interactive
+goal: Modularize CLAUDE.md into per-topic agent docs
+status: in-review
+outcome: "Three docs extracted; PR #767 open"
+summary: Human-instructed throughout. The user asked me to identify groups of CLAUDE.md instructions not needed every session and analyse whether a docs/agents file or a new Skill was the better home; then, after two rounds of pushback, green-lit implementing exactly three groups (D1 git mechanics, D2 GitHub tool surface, D3 provenance) and filing an issue for the rest. Nothing net-new was agent-initiated. Extracted git-conventions.md, github-integration.md and provenance.md; re-homed the GitHub surface out of issue-tracker.md and pr-workflow.md; repointed five of our Skills and two script comments. CLAUDE.md 725 to 658 lines. Deferred groups triaged into an issue.
+prs:
+  - "767"
+docsRead:
+  - path: CLAUDE.md
+    reason: the file under restructure
+  - path: docs/agents/issue-tracker.md
+    reason: held a mis-homed GitHub tool surface
+  - path: docs/agents/pr-workflow.md
+    reason: "held the transient-503 note; extraction precedent from #448"
+  - path: .agents/skills/writing-great-skills/SKILL.md
+    reason: doc-vs-Skill criterion, context load
+  - path: docs/adr/0005-skill-model.md
+    reason: what counts as a Skill here
+  - path: scripts/github-footer-guard.ts
+    reason: verifying the guard coverage map
+skillsUsed:
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: My doc-vs-Skill analysis compared context cost but ignored that Skill descriptions sit in the system prompt while CLAUDE.md is conversation-injected and compactable.
+    solution: Treat durability as a separate axis from cost when siting agent-facing guidance; the user had to supply it. Recorded in the follow-up issue.
+    severity: minor
+  - description: First seam split git rules from GitHub gotchas, running straight through the provenance-footer rule, whose coverage map spans both and has one surface in neither.
+    solution: Split on subject, not tooling; extract provenance as its own home. Test a proposed seam against the rules that straddle it before recommending it.
+    severity: minor
+  - description: "Cited issue #605 as evidence for that git/GitHub seam when it actually records the failure caused by treating the two surfaces separately."
+    solution: Re-read a cited issue's actual failure mode before using it as supporting evidence; it cut against the argument it was offered for.
+    severity: minor
+  - description: Drafted an environment-caveat bullet into git-conventions.md, widening the agreed three-group scope the user had set for attributable changes.
+    solution: Caught and reverted to a pointer. When a scope is set for attribution, cross-group coupling gets a reference, never a copied bullet.
+    severity: nit
+  - description: Local gate went red on a pre-existing journal accordion e2e failure unrelated to this markdown-only diff; I began diagnosing before the user said another agent owned it.
+    solution: Check whether a failing test is already owned or fails on the base branch before investigating, especially when the diff cannot plausibly reach it.
+    severity: minor
+  - description: The background-task notification reported "exit code 0" while the gate had actually exited 1 — the wrapper's trailing echo became the pipeline's exit status.
+    solution: Writing an explicit GATE_EXIT marker into the log caught it. Never trust a wrapped background command's reported exit code; emit and grep an explicit marker.
+    severity: minor
+durationSec: 1941
+models:
+  claude-opus-5: 186
+toolCounts:
+  Read: 9
+  Bash: 45
+  ToolSearch: 5
+  mcp__github__search_issues: 2
+  Write: 6
+  Edit: 14
+  mcp__github__issue_write: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+filesEdited:
+  - docs/agents/provenance.md
+  - docs/agents/git-conventions.md
+  - docs/agents/github-integration.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - scripts/pr-timeline.ts
+  - scripts/list-open-issues.ts
+  - CLAUDE.md
+gitBranch: claude/claude-md-modularization-lcg6zw
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - Skill descriptions live in the re-sent system prompt; CLAUDE.md arrives as a conversation-injected system-reminder, so they differ in durability under compaction
+  - github-footer-guard.ts's bodyField was designed for exactly the uncovered create_or_update_file/push_files case — both tools take `message`, verified via ToolSearch
+  - A repo can grow a missing doc as fragments inside two neighbouring docs; the fragments are the signal the home is absent
+ideas:
+  - Add a PreToolUse Bash guard for the shell footguns (pkill self-match, trailing & with run_in_background, tail-piping a command whose exit status matters). The repo has three precedents where prose failed and a hook fixed it; these rules must fire mid-command, where no doc pointer and no Skill trigger can reach them.
