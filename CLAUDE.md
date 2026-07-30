@@ -401,6 +401,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   small pass need this if the axis is genuinely load-bearing across their
   outputs. A design axis that shifts mid-build after subagents have already
   authored against the old answer forces a full re-authoring pass.
+- **Every dispatch brief must grant the subagent explicit authority to refuse a
+  listed item — and require it to prove why instead of implementing it.**
+  Without that, a subagent that can see a listed change is wrong implements it
+  anyway and the reasoning never surfaces. A proven refusal is a finding about
+  the list: review it, don't re-dispatch the item.
 - **Every agent-authored interaction with GitHub, or any other external
   system, carries a two-line provenance footer** (ADR-0017 — read it for the
   full rationale, the no-exemptions scope, and why this is convention, not
