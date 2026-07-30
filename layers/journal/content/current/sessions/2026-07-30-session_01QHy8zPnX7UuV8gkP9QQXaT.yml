@@ -1,0 +1,46 @@
+schemaVersion: 1
+session: session_01QHy8zPnX7UuV8gkP9QQXaT
+startedAt: 2026-07-30T20:52:47Z
+endedAt: 2026-07-30T20:57:11Z
+kind: interactive
+goal: Record subagent refusal-authority learning in CLAUDE.md
+status: in-review
+outcome: "One bullet added; PR #770 open"
+summary: "Human-instructed throughout. The user supplied a session learning — subagents given explicit authority to refuse produce better outcomes; four declined a listed change, proved why, and each refusal was correct — and asked for it to be inserted at the appropriate spot. Added it as a top-level Working-conventions bullet in CLAUDE.md, directly after the grill-the-shared-design-axis bullet, covering all three parts: state the authority in the brief, require proof over compliance, and read a proven refusal as a finding about the list. gate:scoped green (inert path, floor only). The user then asked whether a dedicated agent-spawning doc existed; it does not, so the placement stood, and the user explicitly declined the doc-extraction follow-up for now."
+prs:
+  - "770"
+docsRead:
+  - path: CLAUDE.md
+    reason: home for repo-wide dispatch conventions; the file edited
+skillsUsed:
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: No dedicated agent-dispatch doc exists, so placing the new bullet meant judging against a 96-line inline CLAUDE.md block rather than an obvious home.
+    solution: Extract docs/agents/subagent-dispatch.md and leave a pointer bullet, as was already done for git-conventions, pr-workflow and verifying-ui-changes.
+    severity: minor
+durationSec: 265
+models:
+  claude-opus-5: 41
+toolCounts:
+  Bash: 9
+  Grep: 2
+  Read: 1
+  Edit: 1
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - CLAUDE.md
+gitBranch: claude/subagent-refusal-authority-9dty14
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+ideas:
+  - Extract a docs/agents/subagent-dispatch.md that single-homes everything about spawning agents — the three worktree-isolation mechanisms, the eight mechanism-2 sharp edges (cwd non-persistence, stale HEAD, uncommitted-on-abort, pnpm install, backgrounded-command waits, same-file parallel dispatch, screenshot/gate decoupling, SendMessage-to-resume), the grill-the-shared-axis trigger, and the new refusal-authority rule — leaving a one-line pointer bullet in CLAUDE.md. That inline block is now the largest remaining one in the file and is exactly the shape of the blocks already extracted (git-conventions.md, pr-workflow.md, verifying-ui-changes.md); every new dispatch learning currently grows CLAUDE.md instead of a doc built to hold it.
