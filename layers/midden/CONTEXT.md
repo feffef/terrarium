@@ -49,12 +49,12 @@ collection an "exhibit" meaning instead.
 ### Dig season (Stratum)
 A curator-declared date range, named for what the Platform was mostly doing or
 discarding during it (e.g. "the Routing Excavation" — never a bare "Q1 2026";
-#519). The canonical, ordered list is single-homed in
-`layers/midden/app/utils/strata.ts`, mirroring the Atlas's `almanac.ts`
+#519). The canonical, ordered list is single-homed (see `strata.ts` in What
+lives where below), mirroring the Atlas's `almanac.ts`
 seasons pattern. One season stays open-ended — "the Current Midden" — for
 freshly-discarded, not-yet-seasoned finds. An Artifact's `stratum` field
-references a season by slug; `scripts/validate-content-refs.ts` checks that
-reference resolves. A season also labels each inline find on a Site page (the
+references a season by slug (see `validate-content-refs.ts` in What lives
+where for how that reference is enforced). A season also labels each inline find on a Site page (the
 condition word carries its dig-season label). The former scroll-synced
 **stratigraphy sidebar** (#524) was removed in the post-MVP simplification (see
 the note at the foot of this file).
@@ -66,17 +66,14 @@ its dig-season `stratum`, a curator-graded `condition`, a discriminated-union
 `provenance` (which kind of thing it was — a PR, a branch, a commit, a file, a
 dependency, or a Skill — plus an optional live `url` and a `continuityCheck`
 note), a back-reference to the `site` that narrates it (required in a Space that
-has Sites, **absent** in one that has none — the per-Space policy is enforced by
-`scripts/validate-content-refs.ts`, since the schema is declared Tenant-wide and
-cannot express it), a curator's-voice
+has Sites, **absent** in one that has none — see `validate-content-refs.ts` in
+What lives where for how that per-Space policy is enforced), a curator's-voice
 `catalogNote`, a required `assessedAt` date (#526 — never re-derived), an
 optional verbatim `inscription` ({text, source}), and two optional
 preservation fields: `removedIn` — the terminal event, the bare hash of the
-commit that removed the thing (rendered as a derived commit link;
-`validate-content-refs.ts` corroborates its date against the `stratum` where
-history allows — and presumes a `commit`-kind referent hash terminal for the
-same check unless a declared `removedIn` overrides it, since a referent can
-be a birth record, as with the Spawn term's coining commit), distinct from
+commit that removed the thing (rendered as a derived commit link; see
+`validate-content-refs.ts` in What lives where for how its date is
+corroborated), distinct from
 `provenance.url` which links the referent itself — and `remains` — curator-curated, labelled links to the artifact's
 preserved original state, each pinned to a full commit SHA so the link is
 immutable (schema-enforced), a few meaningful views rather than a mechanical
@@ -95,7 +92,7 @@ not from `assessedAt`, not from any future continuity check (#526 closes this
 question explicitly). Rendered as its **word** — a slug-angled corner *stamp* on each find (the label
 tilted like a specimen physically stamped with its grade; owner-restored), the
 dig-season label beside it — never a glyph to decode. The six grades and their fixed one-line definitions are
-single-homed in `layers/midden/app/utils/condition.ts`; the definition text
+single-homed (see `condition.ts` in What lives where below); the definition text
 surfaces in exactly one place — the **condition key**, a slim sticky sidebar on
 each dig-report page listing only the grades present in that report's finds
 (owner-directed final design; it replaced the landing's condition legend, #527) —
@@ -152,6 +149,15 @@ not the Midden (not yet cross-referenced; revisit once Palimpsest exists).
 - **`layers/midden/app/utils/condition.ts`** — the single-homed
   {grade, label, definition} table the dig-report page's condition key and each
   inline find read from.
+- **`scripts/validate-content-refs.ts`** — enforces what the schema can't
+  express (see Artifact and Dig season above): an Artifact's `site`
+  back-reference is required only in a Space that has Sites, absent in the
+  Sites-less `stores`; an Artifact's `stratum` reference resolves to a real
+  dig season; and a `removedIn` commit hash's date is corroborated against
+  that `stratum` where history allows, presuming a `commit`-kind `provenance`
+  referent hash terminal for that same check unless a declared `removedIn`
+  overrides it (a referent can instead be a birth record, as with the
+  the-spawn-verb Artifact's coining commit).
 - **`app/components/midden/TrenchLanding.vue`** — the single landing mirrored at
   both `/t/midden` and `/t/midden/trench`, carrying the curatorial foreword an
   actual visitor reads (verbatim in-voice copy, not this file's register), the

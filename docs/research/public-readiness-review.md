@@ -91,7 +91,9 @@ Repo-specific priorities:
   reach `run:`), and pins actions to major tags. *Minor:* the doorbell
   `gh pr comment` step needs `pull-requests: write`, which a fork PR's read-only
   token lacks — it will fail on outside PRs (cosmetic). Consider pinning actions
-  to full commit SHAs for supply-chain hardening.
+  to full commit SHAs for supply-chain hardening. (This cosmetic prediction was
+  later confirmed as a real incident, with a fix proposed:
+  `docs/proposals/659-fork-pr-gate-doorbell-token.md`.)
 - Session logs / ADRs are professional; nothing embarrassing.
 - `Claude-Session:` URLs in commits/issues are auth-gated (opaque to the public)
   — fine to keep per ADR-0017.

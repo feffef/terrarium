@@ -4,7 +4,8 @@
 
 `#659` — first seen on `#631`, the first real external-contributor **fork**
 PR (the Eyra blog persona). The `gate` check went red even though the gate
-itself fully passed.
+itself fully passed. `docs/research/public-readiness-review.md` had already
+predicted this failure mode as a cosmetic minor risk before it happened.
 
 ## Target
 

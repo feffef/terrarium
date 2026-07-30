@@ -233,18 +233,20 @@ function readCurrentDependencyNames(cwd = root): Set<string> {
   return names
 }
 
-const ARTIFACTS_DIR = 'layers/midden/content/trench/artifacts'
+const ARTIFACTS_DIRS = ['layers/midden/content/trench/artifacts', 'layers/midden/content/stores/artifacts']
 
-/** Identity keys of every artifact already catalogued in the trench. */
+/** Identity keys of every artifact already catalogued in the trench or the stores. */
 function readCataloguedKeys(cwd = root): Set<string> {
   const keys = new Set<string>()
-  for (const file of readdirSync(join(cwd, ARTIFACTS_DIR))) {
-    if (!file.endsWith('.yml')) continue
-    const doc = parseYaml(readFileSync(join(cwd, ARTIFACTS_DIR, file), 'utf8')) as {
-      provenance?: Record<string, unknown>
+  for (const dir of ARTIFACTS_DIRS) {
+    for (const file of readdirSync(join(cwd, dir))) {
+      if (!file.endsWith('.yml')) continue
+      const doc = parseYaml(readFileSync(join(cwd, dir, file), 'utf8')) as {
+        provenance?: Record<string, unknown>
+      }
+      const key = doc.provenance ? provenanceKey(doc.provenance) : undefined
+      if (key) keys.add(key)
     }
-    const key = doc.provenance ? provenanceKey(doc.provenance) : undefined
-    if (key) keys.add(key)
   }
   return keys
 }
