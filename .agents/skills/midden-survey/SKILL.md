@@ -38,7 +38,10 @@ firing one).
   a moved file out of the deletion set), regrown paths / re-added deps (the
   mechanical slice of Gate B), and candidates the trench or the stores already
   catalogue — by provenance identity, or by a declared path, which screens a
-  whole subtree when it names a directory. The dependency sweep reads `package.json`
+  whole subtree when it names a directory, and which, on a commit-kind artifact,
+  screens only the deletion that artifact's own commit performed (a commit-kind
+  path records what the commit *touched*, so a later death of that path is still
+  an uncatalogued find). The dependency sweep reads `package.json`
   history, deliberately not the lockfile — transitive lockfile churn is not
   discarded *work*, only a direct dependency someone chose and then dropped is. Bound the sweep with `--since` (e.g. the
   previous survey's date, from the last survey-report issue) rather than

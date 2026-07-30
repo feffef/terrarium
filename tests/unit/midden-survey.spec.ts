@@ -16,6 +16,7 @@ import {
   provenancePath,
   screenCatalogued,
   screenRegrown,
+  type CataloguedPath,
   type DeletionCandidate,
   type DependencyRemovalCandidate,
 } from '../../scripts/midden-survey.ts'
@@ -235,18 +236,27 @@ describe('cataloguedIndex()', () => {
       ]),
     )
     expect(paths).toEqual(
-      new Map([
-        ['scripts/generate.ts', 'file:scripts/generate.ts'],
-        ['content.config.ts', 'commit:73bf3dc'],
+      new Map<string, CataloguedPath>([
+        ['scripts/generate.ts', { key: 'file:scripts/generate.ts' }],
+        ['content.config.ts', { key: 'commit:73bf3dc', onlyIfDeletedBy: '73bf3dc' }],
       ]),
     )
+  })
+  it('binds a commit-kind declaration to its own commit, normalized to 7 chars (#761)', () => {
+    const { paths } = cataloguedIndex([
+      { kind: 'commit', hash: 'c399e92b57843358d791e2e5aba1cc598bde171a', path: 'CONTEXT.md' },
+    ])
+    expect(paths.get('CONTEXT.md')).toEqual({ key: 'commit:c399e92', onlyIfDeletedBy: 'c399e92' })
+  })
+  it('leaves a file-kind declaration unconditional', () => {
+    expect(cataloguedIndex([{ kind: 'file', path: 'app.vue' }]).paths.get('app.vue')).toEqual({ key: 'file:app.vue' })
   })
   it('keeps the first declaration of a path a second artifact also declares', () => {
     const { paths } = cataloguedIndex([
       { kind: 'file', path: 'content.config.ts' },
       { kind: 'commit', hash: '73bf3dc', path: 'content.config.ts' },
     ])
-    expect(paths.get('content.config.ts')).toBe('file:content.config.ts')
+    expect(paths.get('content.config.ts')).toEqual({ key: 'file:content.config.ts' })
   })
   it('skips a provenance it cannot key, without throwing', () => {
     const { keys, paths } = cataloguedIndex([{ kind: 'unknown-kind' }, {}])
@@ -256,30 +266,58 @@ describe('cataloguedIndex()', () => {
 })
 
 describe('cataloguedPathVia()', () => {
-  const paths = new Map([
-    ['content.config.ts', 'commit:73bf3dc'],
-    ['tenants/status/content/current/glossary/', 'commit:551862c'],
-    ['layers/journal/app/components/journal/prototype/', 'file:layers/journal/app/components/journal/prototype/'],
+  const { paths } = cataloguedIndex([
+    { kind: 'file', path: 'scripts/generate.ts' },
+    { kind: 'file', path: 'layers/journal/app/components/journal/prototype/' },
+    { kind: 'commit', hash: '73bf3dc', path: 'content.config.ts' },
+    { kind: 'commit', hash: '551862c', path: 'tenants/status/content/current/glossary/' },
   ])
-  it('names the artifact that catalogued a path exactly', () => {
-    expect(cataloguedPathVia('content.config.ts', paths)).toBe('commit:73bf3dc')
+  // The deleting commit `parseDeletionLog` attaches to every candidate.
+  const deletedBy = (path: string, hash: string): DeletionCandidate => ({
+    path,
+    hash,
+    isoDate: '2026-07-01T00:00:00Z',
+    subject: 's',
   })
-  it('names the directory-valued artifact a file lived beneath', () => {
-    expect(cataloguedPathVia('tenants/status/content/current/glossary/tenant.md', paths)).toBe('commit:551862c')
-    expect(cataloguedPathVia('layers/journal/app/components/journal/prototype/VariantB.vue', paths)).toBe(
-      'file:layers/journal/app/components/journal/prototype/',
+
+  it('names the file-kind artifact that catalogued a path exactly, whichever commit deleted it', () => {
+    expect(cataloguedPathVia(deletedBy('scripts/generate.ts', 'e75bda0'), paths)).toBe('file:scripts/generate.ts')
+  })
+  it('names the file-kind directory-valued artifact a file lived beneath', () => {
+    expect(
+      cataloguedPathVia(deletedBy('layers/journal/app/components/journal/prototype/VariantB.vue', '9eeeafa'), paths),
+    ).toBe('file:layers/journal/app/components/journal/prototype/')
+  })
+
+  it('screens a commit-kind path when that artifact\'s own commit is the one that deleted it (#761)', () => {
+    expect(cataloguedPathVia(deletedBy('content.config.ts', '73bf3dc0111222333444555666777888999aaab'), paths)).toBe(
+      'commit:73bf3dc',
     )
   })
+  it('does NOT screen a commit-kind path its commit merely touched, killed later by another commit (#761)', () => {
+    expect(cataloguedPathVia(deletedBy('content.config.ts', 'c399e92'), paths)).toBeUndefined()
+  })
+  it('screens beneath a commit-kind directory only for that commit\'s own deletions (#761)', () => {
+    expect(cataloguedPathVia(deletedBy('tenants/status/content/current/glossary/tenant.md', '551862c'), paths)).toBe(
+      'commit:551862c',
+    )
+    expect(
+      cataloguedPathVia(deletedBy('tenants/status/content/current/glossary/tenant.md', 'c399e92'), paths),
+    ).toBeUndefined()
+  })
+
   it('does not match on a bare string prefix of a file-valued catalogued path', () => {
-    expect(cataloguedPathVia('content.config.ts.bak', paths)).toBeUndefined()
-    expect(cataloguedPathVia('tenants/status/content/current/glossaryx/tenant.md', paths)).toBeUndefined()
+    expect(cataloguedPathVia(deletedBy('content.config.ts.bak', '73bf3dc'), paths)).toBeUndefined()
+    expect(
+      cataloguedPathVia(deletedBy('tenants/status/content/current/glossaryx/tenant.md', '551862c'), paths),
+    ).toBeUndefined()
   })
   it('does not match an uncatalogued path', () => {
-    expect(cataloguedPathVia('app/pages/index.vue', paths)).toBeUndefined()
-    expect(cataloguedPathVia('', paths)).toBeUndefined()
+    expect(cataloguedPathVia(deletedBy('app/pages/index.vue', '5ebba8e'), paths)).toBeUndefined()
+    expect(cataloguedPathVia(deletedBy('', '5ebba8e'), paths)).toBeUndefined()
   })
   it('matches nothing when no path is catalogued', () => {
-    expect(cataloguedPathVia('content.config.ts', new Map())).toBeUndefined()
+    expect(cataloguedPathVia(deletedBy('content.config.ts', '73bf3dc'), new Map())).toBeUndefined()
   })
 })
 
@@ -308,17 +346,27 @@ describe('screenCatalogued()', () => {
   it('splits deletion candidates already catalogued as Midden artifacts from fresh ones', () => {
     const cands: DeletionCandidate[] = [
       { path: 'already/catalogued.ts', ...meta },
-      { path: 'tenants/status/content/current/pages/index.md', ...meta },
-      { path: 'tenants/status/content/current/glossary/tenant.md', ...meta },
+      { path: 'tenants/status/content/current/pages/index.md', ...meta, hash: '9d3e3bc' },
+      { path: 'tenants/status/content/current/glossary/tenant.md', ...meta, hash: '551862c' },
       { path: 'brand/new.ts', ...meta },
     ]
-    const { fresh, catalogued } = screenCatalogued(cands, (c) => cataloguedPathVia(c.path, index.paths) !== undefined)
+    const { fresh, catalogued } = screenCatalogued(cands, (c) => cataloguedPathVia(c, index.paths) !== undefined)
     expect(fresh.map((c) => c.path)).toEqual(['brand/new.ts'])
     expect(catalogued.map((c) => c.path)).toEqual([
       'already/catalogued.ts',
       'tenants/status/content/current/pages/index.md',
       'tenants/status/content/current/glossary/tenant.md',
     ])
+  })
+
+  it('leaves a commit-kind path a later commit killed among the fresh candidates (#761)', () => {
+    const cands: DeletionCandidate[] = [
+      { path: 'tenants/status/content/current/pages/index.md', ...meta, hash: 'facade1' },
+      { path: 'tenants/status/content/current/glossary/tenant.md', ...meta, hash: 'facade1' },
+    ]
+    const { fresh, catalogued } = screenCatalogued(cands, (c) => cataloguedPathVia(c, index.paths) !== undefined)
+    expect(catalogued).toEqual([])
+    expect(fresh).toHaveLength(2)
   })
 
   it('screens dropped dependencies by name, unaffected by the path index', () => {

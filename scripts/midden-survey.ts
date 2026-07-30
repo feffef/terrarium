@@ -189,24 +189,46 @@ export function provenancePath(p: Record<string, unknown>): string | undefined {
   return typeof p.path === 'string' ? p.path : undefined
 }
 
+/**
+ * One path a catalogued artifact declares, and what it is allowed to screen.
+ *
+ * The two kinds that carry a `path` do not mean the same thing by it: a `file`
+ * provenance means "this file is the artifact", but a `commit` provenance means
+ * "the path this commit touched" — usually a discarded fragment of a file that
+ * outlives it. So a commit-kind declaration screens only the deletion its own
+ * commit performed; a later, unrelated deletion of that same path is a genuine
+ * uncatalogued corpse, and hiding it would be a false negative in a discovery
+ * tool (#761).
+ */
+export interface CataloguedPath {
+  key: string
+  onlyIfDeletedBy?: string
+}
+
 /** What the trench and the stores already hold, in the two shapes a candidate
  *  is matched against: identity keys, and the paths artifacts declare — each
  *  path carrying the identity key of the artifact declaring it, so a screened
  *  candidate can name what screened it (#757 review). */
 export interface CataloguedIndex {
   keys: Set<string>
-  paths: Map<string, string>
+  paths: Map<string, CataloguedPath>
 }
 
 export function cataloguedIndex(provenances: Record<string, unknown>[]): CataloguedIndex {
   const keys = new Set<string>()
-  const paths = new Map<string, string>()
+  const paths = new Map<string, CataloguedPath>()
   for (const p of provenances) {
     const key = provenanceKey(p)
     if (key) keys.add(key)
     const path = provenancePath(p)
     // First declaration wins, so a re-run reports the same screening artifact.
-    if (path && !paths.has(path)) paths.set(path, key ?? `${String(p.kind)}:?`)
+    if (path && !paths.has(path)) {
+      const entry: CataloguedPath = { key: key ?? `${String(p.kind)}:?` }
+      // Same 7-char normalization as `provenanceKey`, matched against the
+      // deleting commit `parseDeletionLog` attaches to every candidate.
+      if (p.kind === 'commit' && typeof p.hash === 'string') entry.onlyIfDeletedBy = p.hash.slice(0, 7)
+      paths.set(path, entry)
+    }
   }
   return { keys, paths }
 }
@@ -216,13 +238,20 @@ export function cataloguedIndex(provenances: Record<string, unknown>[]): Catalog
  * identity key — or undefined if none does. A catalogued path ending in `/`
  * denotes a directory (an artifact about a whole retired folder), so it screens
  * everything beneath it — a deletion candidate is always an individual file,
- * and exact matching would miss them all (#752).
+ * and exact matching would miss them all (#752). A commit-kind declaration
+ * screens only the deletion its own commit performed (see `CataloguedPath`).
  */
-export function cataloguedPathVia(path: string, cataloguedPaths: Map<string, string>): string | undefined {
-  const exact = cataloguedPaths.get(path)
-  if (exact) return exact
-  for (const [catalogued, key] of cataloguedPaths) {
-    if (catalogued.endsWith('/') && path.startsWith(catalogued)) return key
+export function cataloguedPathVia(
+  candidate: Pick<DeletionCandidate, 'path' | 'hash'>,
+  cataloguedPaths: Map<string, CataloguedPath>,
+): string | undefined {
+  const deletedBy = candidate.hash.slice(0, 7)
+  const screens = (entry: CataloguedPath) => !entry.onlyIfDeletedBy || entry.onlyIfDeletedBy === deletedBy
+
+  const exact = cataloguedPaths.get(candidate.path)
+  if (exact && screens(exact)) return exact.key
+  for (const [catalogued, entry] of cataloguedPaths) {
+    if (catalogued.endsWith('/') && candidate.path.startsWith(catalogued) && screens(entry)) return entry.key
   }
   return undefined
 }
@@ -338,7 +367,7 @@ export function surveyReport(cwd = root, sinceIso?: string): SurveyReport {
   const allDeletions = parseDeletionLog(readDeletionLog(cwd, sinceIso))
   const signal = allDeletions.filter((c) => !isNoisePath(c.path))
   const { gone, regrown } = screenRegrown(signal, readCurrentTreePaths(cwd))
-  const files = screenCatalogued(gone, (c) => cataloguedPathVia(c.path, catalogued.paths) !== undefined)
+  const files = screenCatalogued(gone, (c) => cataloguedPathVia(c, catalogued.paths) !== undefined)
 
   const allRemovals = parseDependencyRemovals(readDependencyLog(cwd, sinceIso))
   const currentDeps = readCurrentDependencyNames(cwd)
@@ -354,7 +383,7 @@ export function surveyReport(cwd = root, sinceIso?: string): SurveyReport {
       regrownPaths: regrown.map((c) => c.path),
       readdedDependencies: allRemovals.filter((r) => currentDeps.has(r.name)).map((r) => r.name),
       alreadyCatalogued: [
-        ...files.catalogued.map((c) => cataloguedLabel(`file:${c.path}`, cataloguedPathVia(c.path, catalogued.paths))),
+        ...files.catalogued.map((c) => cataloguedLabel(`file:${c.path}`, cataloguedPathVia(c, catalogued.paths))),
         ...deps.catalogued.map((r) => `dependency:${r.name}`),
       ],
     },
