@@ -1,0 +1,50 @@
+schemaVersion: 1
+session: session_01XKjieLSNAJuQEGH2XFbH3v
+startedAt: 2026-07-30T00:46:03Z
+endedAt: 2026-07-30T00:52:04Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: "Inventory already accurate; one comment added to #483"
+summary: "Autonomous scheduled run of audit-skills (no live human prompt this session, per the Routine firing). Gathered the 40-session scorecard via scripts/audit-skills.ts and re-graded all 35 catalogued Skills against it: every existing importance grade and role already matched current usage evidence, so no Inventory YAML edit was warranted (no bright-line ≥2-session promotion/demotion signal this run). Ran the regression watch (Phase A + B) over all 6 regressionChecks brackets (audit-docs, audit-skills, blog-post, digest, frictions-to-fixes, midden-survey): three shared the same edit and showed flat-or-improved friction counts; frictions-to-fixes improved after its edit; digest had no post-edit usage to compare (inconclusive); midden-survey's one on-topic post-edit friction (survey script's provenance-path dedup) was verified via `git show` to predate the bracketed edit, so not a regression. orphanedSessions, manuallyRescuedClosures, and misclassifiedKind were all empty this run. humanPromptedClosures had one new entry (session_012NCZUhy7qDirkjp8t6YiNy) — found the standing thread (#483), confirmed via get_comments it wasn't already cited, and added a citing comment (agent-initiated, per the Skill's own step 5 instructions, not a fresh human ask). No PR opened: git status/diff against origin/main were both empty, so there was nothing to gate or commit this run."
+prs: []
+docsRead:
+  - path: scripts/audit-skills.ts
+    reason: understand DISMISSED_HUMAN_PROMPTED_CLOSURES / RESOLVED_* mechanics before treating a scorecard entry as fresh
+  - path: layers/journal/content/current/skills/code-review.yml
+    reason: gauge how densely other Skills' observations are already maintained, to calibrate whether a fresh entry was warranted here
+  - path: layers/journal/content/current/skills/audit-skills.yml
+    reason: check its own last observations entry before re-grading it
+  - path: layers/journal/content/current/sessions/2026-07-29-session_012NCZUhy7qDirkjp8t6YiNy.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-29-session_014KKDP1zL19J6VSAD5GcVWc.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the run itself
+  - name: close-session
+    reason: self-judged closure at the end of the sweep
+  - name: log-session
+    reason: this closing log
+frictions:
+  - description: "First draft of the issue #483 comment fabricated a Claude-Session footer by copying a session id out of the scorecard's own window data instead of resolving my own session's id."
+    solution: "Caught immediately by the github-footer-guard hook (issue #628), which named the correct id. Resolve the session id fresh from the commit-footer template even on a routine comment, never reach for the nearest id-shaped string already in context."
+    severity: minor
+durationSec: 361
+models:
+  claude-sonnet-5: 76
+toolCounts:
+  Bash: 25
+  Read: 4
+  ToolSearch: 2
+  mcp__github__search_issues: 1
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 2
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-284mfe
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: audit-skills
+learnings:
+  - "A well-maintained Inventory can legitimately produce a no-op audit-skills run: all 35 Skills' grades/roles already matched a fresh 40-session window, and the regression watch cleared every bracket without a confirmed regression — the healthy outcome is no PR, not a forced one."
