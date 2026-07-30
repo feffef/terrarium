@@ -110,9 +110,12 @@ function openNoScroll(control: Locator): Promise<void> {
   return control.dispatchEvent('click')
 }
 
-// The tolerance the "held its position" assertions allow, and the offset the
-// clicked item is parked at before the click. PARK_TOP_PX is deliberately deep
-// in the page so the pin has scroll headroom to counter-scroll into.
+// The tolerance the "held its position" assertions allow, and the viewport offset
+// the clicked item is parked at before the click. Note the direction: the pin
+// counter-scrolls UP when content above the item collapses, and `scrollY` is
+// `docTop - PARK_TOP_PX` — so a LARGER park top leaves LESS upward headroom, not
+// more. 600 is just a reproducible mid-viewport resting place; that the headroom
+// was actually sufficient is asserted directly, by `pin.clipped === false`.
 const HOLD_TOLERANCE_PX = 15
 const PARK_TOP_PX = 600
 // `window.scrollTo` lands on a whole device pixel, so a park computed from a
@@ -133,6 +136,14 @@ const SINGLE_COLUMN_WIDTH = 900
 // from a removed one. Opting the document out isolates the app's counter-scroll,
 // which is the only thing that holds the item in the cases anchoring does not
 // cover — and is what this test exists to guard (issue #750).
+//
+// The residual gap that buys, stated plainly: the sibling-collapse guard no longer
+// asserts the end-to-end outcome in the browser configuration the gate itself runs
+// (anchoring on). A regression that breaks the hold ONLY when anchoring is active —
+// the pin over-correcting and fighting the anchor — would go uncaught here. That is
+// hard to construct, because the pin is closed-loop (it re-measures the residual
+// every frame, so it no-ops once anchoring has absorbed the collapse rather than
+// double-correcting), but it is a real cost, not a free win.
 const DISABLE_SCROLL_ANCHORING = '* { overflow-anchor: none }'
 
 interface ItemGeometry {
@@ -368,8 +379,11 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
     // The scenario only exists below the single-column breakpoint, and the test
     // proves it holds rather than assuming it: it measures how far the collapse
     // moved the card in DOCUMENT space (which no counter-scroll can hide) and
-    // fails if that is inside the tolerance, i.e. if a passing run would prove
-    // nothing (issue #750).
+    // fails unless that clears DOUBLE the tolerance, i.e. if a passing run would
+    // prove nothing (issue #750). Double, not 1×, so the premise and the hold
+    // can't both be satisfied marginally — at 1× a displacement a pixel over
+    // tolerance would satisfy the premise while a fully-broken pin missed the
+    // hold by a pixel. The real displacement is ~318px, so the margin is ample.
     it('holds the clicked item at its pre-click position when a sibling above it collapses', async () => {
       const route = '/t/journal/current'
       const { page, errors } = await renderAndCollectErrors(route)
@@ -411,9 +425,10 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         expect(
           displacement,
           `premise no longer holds: the sibling's collapse displaced the card by only ${displacement}px, `
-          + `inside the ±${HOLD_TOLERANCE_PX}px tolerance — this guard would pass with the pin removed. `
+          + `not clear of the ±${HOLD_TOLERANCE_PX}px tolerance by the required margin (need >${2 * HOLD_TOLERANCE_PX}px) `
+          + `— this guard would pass, or all but pass, with the pin removed. `
           + `Restore a layout where the digests column drives its own height (see SINGLE_COLUMN_WIDTH)${evidence}`,
-        ).toBeGreaterThan(HOLD_TOLERANCE_PX)
+        ).toBeGreaterThan(2 * HOLD_TOLERANCE_PX)
         expect(pin.scrolls, `the pin issued no counter-scroll, so nothing was compensated${evidence}`)
           .toBeGreaterThan(0)
         expect(pin.clipped, `a counter-scroll target was clamped at the page top — park the card deeper${evidence}`)
