@@ -37,7 +37,7 @@ firing one).
   `origin/main`, already screened for noise paths, renames (`-M` reclassifies
   a moved file out of the deletion set), regrown paths / re-added deps (the
   mechanical slice of Gate B), and candidates whose provenance identity is
-  already catalogued in the trench. The dependency sweep reads `package.json`
+  already catalogued in the trench or the stores. The dependency sweep reads `package.json`
   history, deliberately not the lockfile — transitive lockfile churn is not
   discarded *work*, only a direct dependency someone chose and then dropped is. Bound the sweep with `--since` (e.g. the
   previous survey's date, from the last survey-report issue) rather than
@@ -62,8 +62,9 @@ pagination/overflow guidance).
   figure — checked against the branch's last-commit date
   (`mcp__github__list_commits` on the branch). A briefly quiet branch is not
   yet a corpse.
-- **Dedupe** both kinds against the trench yourself: grep
-  `layers/midden/content/trench/artifacts/` for the PR number or branch name,
+- **Dedupe** both kinds against the trench *and* the stores yourself: grep
+  `layers/midden/content/trench/artifacts/` and
+  `layers/midden/content/stores/artifacts/` for the PR number or branch name,
   and count only a hit inside an artifact's `provenance` block (a bare
   `name:`/number match elsewhere — an inscription, a catalog note — is not
   prior cataloguing). The script's dedupe covers only the file/dep candidates
