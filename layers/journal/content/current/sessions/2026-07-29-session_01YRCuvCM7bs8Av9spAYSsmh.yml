@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_01YRCuvCM7bs8Av9spAYSsmh
 startedAt: 2026-07-29T18:52:43Z
-endedAt: 2026-07-30T05:22:52Z
+endedAt: 2026-07-30T07:03:55Z
 kind: interactive
 goal: Audit 14 days of PRs for session logs
-status: completed
-outcome: Orphan-check regression found; 4 issues filed
-summary: "Human-instructed throughout: audit every PR from the last 14 days against the session logs, file issues, re-verify on a non-shallow clone, then explain why the orphan check missed one. Audited all 153 PRs created 2026-07-15 to 2026-07-29 via two independent linkages; 148/153 clean. Re-ran everything on a fresh full clone (1640 commits vs 23 merge commits visible before) — identical. Agent-initiated within that green-light: choosing which gaps were issue-worthy, searching the tracker first (caught that PRs 546/547 were already tracked by 564, so no duplicate), correcting stale issue 565, and root-causing the missed orphan by executing audit-skills' real exported functions against real git data. Found a live regression — isResolvedMisfile suppresses any session that adds then deletes a file, not just a mis-filed session log. Filed 736, 737, 738, 747; corrected 738's own wrong premise."
-prs: []
+status: in-review
+outcome: "Orphan-check regression found and fixed; PR #749"
+summary: "Human-instructed throughout: audit every PR from the last 14 days against the session logs, file issues, re-verify on a non-shallow clone, then explain why the orphan check missed one. Audited all 153 PRs created 2026-07-15 to 2026-07-29 via two independent linkages; 148/153 clean. Re-ran everything on a fresh full clone (1640 commits vs 23 merge commits visible before) — identical. Agent-initiated within that green-light: choosing which gaps were issue-worthy, searching the tracker first (caught that PRs 546/547 were already tracked by 564, so no duplicate), correcting stale issue 565, and root-causing the missed orphan by executing audit-skills' real exported functions against real git data. Found a live regression — isResolvedMisfile suppresses any session that adds then deletes a file, not just a mis-filed session log. Filed 736, 737, 738, 747, 750; corrected 738's own wrong premise. On an explicit green-light, fixed 747 and opened PR 749: scoped the suppression to session-log paths and replaced a raw-string date compare with epoch."
+prs:
+  - "749"
 docsRead:
   - path: CLAUDE.md
     reason: gated-PR, provenance-footer and shallow-clone conventions
@@ -23,12 +24,23 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-07-18-session_01FxNovsJKNpdYKa8X3XRwqd.yml
     reason: (no reason given)
+  - path: tests/unit/audit-skills.spec.ts
+    reason: (read before editing)
 skillsUsed:
   - name: close-session
     reason: invoked at closure
   - name: log-session
     reason: authoring and then amending this log
 frictions:
+  - description: Redirected `git stash pop` output to /dev/null; it failed silently, so a "base vs mine" comparison run actually re-tested base and looked like a clean pass.
+    solution: Never silence a state-changing git command. Assert the expected state afterwards (git status / git diff --stat) instead of trusting the command's own exit path.
+    severity: moderate
+  - description: Ruling out an unrelated intermittent e2e failure cost six full build/e2e/gate runs (~20 min) before the gate went green on an unchanged tree.
+    solution: Check whether the app actually imports the changed module FIRST — one grep showed nothing under app/layers/shared/modules imports scripts/, which bounded it immediately.
+    severity: moderate
+  - description: "My own filed fix proposal (#747 item 2, require the candidate's session id in the path) would have reintroduced #574 — a mis-file is by definition under the WRONG id."
+    solution: Read the existing tests before proposing a predicate change, not just the implementation; the test at audit-skills.spec.ts:570 encodes the semantics the docstring left ambiguous.
+    severity: minor
   - description: Filed issue 738 blaming ORPHAN_WINDOW_DAYS for the missed orphan without testing that causal claim. It was wrong — the real cause was a suppression bug — needing a public correction.
     solution: "CLAUDE.md's verify-before-asserting rule covers inferred CAUSAL claims, not just quoted facts. A cause is testable: execute the code path before naming it in an issue title."
     severity: moderate
@@ -50,23 +62,30 @@ frictions:
   - description: Nearly filed a duplicate of open issue 564 for the audit's headline finding; only the pre-filing tracker search caught it.
     solution: Worked as intended — noting it because the near-miss shows how easily a fresh audit re-reports an already-tracked gap when the tracked issue is weeks old.
     severity: nit
-durationSec: 37809
+durationSec: 43872
 models:
-  claude-opus-5: 151
-  <synthetic>: 1
+  claude-opus-5: 245
+  <synthetic>: 2
 toolCounts:
-  Bash: 47
-  ToolSearch: 5
-  mcp__github__search_pull_requests: 2
-  Read: 3
-  mcp__github__pull_request_read: 4
+  Bash: 78
+  ToolSearch: 6
+  mcp__github__search_pull_requests: 3
+  Read: 5
+  mcp__github__pull_request_read: 5
   mcp__github__list_pull_requests: 1
-  mcp__github__search_issues: 3
-  mcp__github__issue_read: 3
-  mcp__github__issue_write: 4
+  mcp__github__search_issues: 4
+  mcp__github__issue_read: 4
+  mcp__github__issue_write: 5
   mcp__github__add_issue_comment: 3
   Skill: 2
   Write: 3
+  Edit: 4
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - scripts/audit-skills.ts
+  - tests/unit/audit-skills.spec.ts
 gitBranch: claude/pr-session-logging-check-viohof
 entrypoint: remote_mobile
 cliVersion: 2.1.220
