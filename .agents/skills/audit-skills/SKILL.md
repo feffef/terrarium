@@ -85,6 +85,16 @@ It prints JSON:
   A session id in `RESOLVED_ORPHANED_SESSIONS` still appears, but carries a
   `resolvedBy` cutoff naming the issue/PR that already tracked it (issue #447
   item 4) — see step 5 for how to treat that entry.
+- **`suppressedOrphanCandidates`** — the audit trail for the above: every
+  orphan candidate a suppression lever acted on, so a suppression can be
+  checked rather than taken on trust (issue #754). `[]` is the healthy state.
+  Each entry carries the session id, its commit sha(s), date, and a `reason`:
+  `misfile-cleanup` (a resolved same-run mis-file, issue #574 — `path` names
+  the added-then-removed session log that triggered it; this candidate is
+  **absent** from `orphanedSessions`) or `resolved-annotation` (a
+  `RESOLVED_ORPHANED_SESSIONS` entry — that candidate is still in
+  `orphanedSessions` above, carrying its `resolvedBy`). Step 5 says what to do
+  with the list.
 - **`humanPromptedClosures`** and **`manuallyRescuedClosures`** — the two
   *manual-nudge-closure* signals, the counterpart to `orphanedSessions` for
   sessions that DID log but only because a human nudged them (so the orphan
@@ -248,6 +258,15 @@ doesn't apply to them.
 it stayed visible in the scorecard on purpose (so the incident isn't lost),
 but its cutoff means it's already tracked at the reference it names; treat it
 as read-only history, same as a fully `DISMISSED_*` entry.
+
+**Report `suppressedOrphanCandidates` in this run's summary alongside the
+orphans you did surface — every run, including an empty one** (`[]` is the
+healthy state, and saying so is what makes the suppression checkable rather
+than assumed). A suppressed candidate is an audit line, not by itself an issue
+to file. It becomes one — mechanical and objective, like the orphans — when a
+`misfile-cleanup` entry's `path` isn't plausibly that session's own mis-filed
+log: that's an over-broad rule silently shrinking ADR-0009's denominator
+(issue #747's shape, issue #754).
 
 For each own Skill flagged by step 3 or 4, and for each `orphanedSessions` entry:
 - **Search first** (`search_issues`, `is:issue is:open audit-skills <name>` for

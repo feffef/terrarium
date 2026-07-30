@@ -17,7 +17,6 @@ import {
   groupSessionReferences,
   hasHumanPromptedClosure,
   HUMAN_PROMPTED_CLOSURE,
-  isResolvedMisfile,
   isSessionLogPath,
   parseCommitFileChanges,
   parseSessionTrailers,
@@ -25,6 +24,7 @@ import {
   pickWindow,
   REC,
   RESCUED_GAP_HOURS,
+  resolvedMisfilePath,
   SEP,
   tallyUsage,
   toSessionFile,
@@ -529,14 +529,14 @@ describe('groupSessionReferences()', () => {
 describe('findOrphanedSessions()', () => {
   it('flags a referenced session id with no matching log file', () => {
     const refs: SessionTrailerRef[] = [{ sha: 'c1', date: '2026-07-12T00:00:00Z', session: 'session_orphan' }]
-    expect(findOrphanedSessions(refs, new Set())).toEqual([
+    expect(findOrphanedSessions(refs, new Set()).orphaned).toEqual([
       { session: 'session_orphan', commits: ['c1'], date: '2026-07-12T00:00:00Z' },
     ])
   })
 
   it('does not flag a session id that has a matching log file', () => {
     const refs: SessionTrailerRef[] = [{ sha: 'c1', date: '2026-07-12T00:00:00Z', session: 'session_logged' }]
-    expect(findOrphanedSessions(refs, new Set(['session_logged']))).toEqual([])
+    expect(findOrphanedSessions(refs, new Set(['session_logged'])).orphaned).toEqual([])
   })
 
   it('sorts orphans by earliest referencing commit date, oldest first', () => {
@@ -544,7 +544,7 @@ describe('findOrphanedSessions()', () => {
       { sha: 'c2', date: '2026-07-12T00:00:00Z', session: 'session_newer' },
       { sha: 'c1', date: '2026-07-10T00:00:00Z', session: 'session_older' },
     ]
-    expect(findOrphanedSessions(refs, new Set()).map((o) => o.session)).toEqual(['session_older', 'session_newer'])
+    expect(findOrphanedSessions(refs, new Set()).orphaned.map((o) => o.session)).toEqual(['session_older', 'session_newer'])
   })
 
   it('still resolves the correct earliest date for a session with mixed-offset refs (item 3)', () => {
@@ -552,7 +552,7 @@ describe('findOrphanedSessions()', () => {
       { sha: 'zulu', date: '2026-07-12T00:00:00Z', session: 'session_mixed' },
       { sha: 'plus2', date: '2026-07-12T01:00:00+02:00', session: 'session_mixed' },
     ]
-    expect(findOrphanedSessions(refs, new Set())).toEqual([
+    expect(findOrphanedSessions(refs, new Set()).orphaned).toEqual([
       { session: 'session_mixed', commits: ['zulu', 'plus2'], date: '2026-07-12T01:00:00+02:00' },
     ])
   })
@@ -565,7 +565,7 @@ describe('findOrphanedSessions()', () => {
       { sha: 'a1', date: '2026-07-12T00:00:00Z', session: 'session_a' },
       { sha: 'b1', date: '2026-07-12T01:00:00+02:00', session: 'session_b' },
     ]
-    expect(findOrphanedSessions(refs, new Set()).map((o) => o.session)).toEqual(['session_b', 'session_a'])
+    expect(findOrphanedSessions(refs, new Set()).orphaned.map((o) => o.session)).toEqual(['session_b', 'session_a'])
   })
 
   it('drops a resolved same-run mis-file: the flagged commit\'s added file was later removed (issue #574)', () => {
@@ -576,7 +576,7 @@ describe('findOrphanedSessions()', () => {
       { sha: 'c1', date: '2026-07-12T00:00:00Z', added: ['layers/journal/content/current/sessions/wrong-id.yml'], removed: [] },
       { sha: 'c2', date: '2026-07-12T00:05:00Z', added: [], removed: ['layers/journal/content/current/sessions/wrong-id.yml'] },
     ]
-    expect(findOrphanedSessions(refs, new Set(), changes)).toEqual([])
+    expect(findOrphanedSessions(refs, new Set(), changes).orphaned).toEqual([])
   })
 
   it('still flags a genuine orphan whose added file was never removed', () => {
@@ -584,7 +584,7 @@ describe('findOrphanedSessions()', () => {
     const changes: CommitFileChange[] = [
       { sha: 'c1', date: '2026-07-12T00:00:00Z', added: ['layers/journal/content/current/sessions/real.yml'], removed: [] },
     ]
-    expect(findOrphanedSessions(refs, new Set(), changes)).toEqual([
+    expect(findOrphanedSessions(refs, new Set(), changes).orphaned).toEqual([
       { session: 'session_orphan', commits: ['c1'], date: '2026-07-12T00:00:00Z' },
     ])
   })
@@ -595,7 +595,7 @@ describe('findOrphanedSessions()', () => {
       { sha: 'c1', date: '2026-07-12T00:00:00Z', added: [], removed: ['layers/journal/content/current/sessions/wrong-id.yml'] },
       { sha: 'c2', date: '2026-07-12T00:05:00Z', added: ['layers/journal/content/current/sessions/wrong-id.yml'], removed: [] },
     ]
-    expect(findOrphanedSessions(refs, new Set(), changes)).toEqual([
+    expect(findOrphanedSessions(refs, new Set(), changes).orphaned).toEqual([
       { session: 'session_orphan', commits: ['c2'], date: '2026-07-12T00:05:00Z' },
     ])
   })
@@ -608,7 +608,7 @@ describe('findOrphanedSessions()', () => {
       { sha: 'c1', date: '2026-07-12T00:00:00Z', added: ['layers/journal/content/current/sessions/a.yml'], removed: [] },
       { sha: 'c2', date: '2026-07-12T00:05:00Z', added: [], removed: ['layers/journal/content/current/sessions/b.yml'] },
     ]
-    expect(findOrphanedSessions(refs, new Set(), changes)).toEqual([
+    expect(findOrphanedSessions(refs, new Set(), changes).orphaned).toEqual([
       { session: 'session_orphan', commits: ['c1'], date: '2026-07-12T00:00:00Z' },
     ])
   })
@@ -629,7 +629,7 @@ describe('findOrphanedSessions()', () => {
       },
       { sha: '7111d70', date: '2026-07-22T20:49:58+00:00', added: [], removed: ['docs/agents/github-footer-guard.md'] },
     ]
-    expect(findOrphanedSessions(refs, new Set(), changes)).toEqual([
+    expect(findOrphanedSessions(refs, new Set(), changes).orphaned).toEqual([
       {
         session: 'session_019aeaoPHYWMJVekmUvTMhQ9',
         commits: ['7623eac', '7111d70'],
@@ -644,16 +644,94 @@ describe('findOrphanedSessions()', () => {
       { sha: 'c2', date: '2026-07-12T00:00:00Z', session: 'session_fresh' },
     ]
     const resolved = new Map([['session_triaged', '#650']])
-    expect(findOrphanedSessions(refs, new Set(), [], resolved)).toEqual([
+    expect(findOrphanedSessions(refs, new Set(), [], resolved).orphaned).toEqual([
       { session: 'session_triaged', commits: ['c1'], date: '2026-07-10T00:00:00Z', resolvedBy: '#650' },
       { session: 'session_fresh', commits: ['c2'], date: '2026-07-12T00:00:00Z' },
     ])
   })
 })
 
-describe('isResolvedMisfile()', () => {
-  it('returns false when the commit has no file-change data at all', () => {
-    expect(isResolvedMisfile(['c1'], [])).toBe(false)
+// The regression #747 could not have caught: the mis-file rule suppressed a
+// genuine orphan for four daily sweeps and left no trace that it had. These
+// assert the suppression is *reported*, not that it stops happening (issue #754).
+describe('findOrphanedSessions() suppression reporting (issue #754)', () => {
+  it('reports a mis-file-suppressed candidate, naming the triggering session-log path', () => {
+    const refs: SessionTrailerRef[] = [{ sha: 'c1', date: '2026-07-12T00:00:00Z', session: 'session_misfiled' }]
+    const changes: CommitFileChange[] = [
+      { sha: 'c1', date: '2026-07-12T00:00:00Z', added: ['layers/journal/content/current/sessions/wrong-id.yml'], removed: [] },
+      { sha: 'c2', date: '2026-07-12T00:05:00Z', added: [], removed: ['layers/journal/content/current/sessions/wrong-id.yml'] },
+    ]
+    const { orphaned, suppressed } = findOrphanedSessions(refs, new Set(), changes)
+    expect(orphaned).toEqual([])
+    expect(suppressed).toEqual([
+      {
+        session: 'session_misfiled',
+        commits: ['c1'],
+        date: '2026-07-12T00:00:00Z',
+        reason: 'misfile-cleanup',
+        path: 'layers/journal/content/current/sessions/wrong-id.yml',
+      },
+    ])
+  })
+
+  it('reports an empty list — not a missing one — when nothing was suppressed', () => {
+    const refs: SessionTrailerRef[] = [{ sha: 'c1', date: '2026-07-12T00:00:00Z', session: 'session_orphan' }]
+    const { orphaned, suppressed } = findOrphanedSessions(refs, new Set())
+    expect(orphaned).toHaveLength(1)
+    expect(suppressed).toEqual([])
+  })
+
+  it('attributes a resolvedBy-annotated candidate with a reason distinct from the mis-file one', () => {
+    const refs: SessionTrailerRef[] = [{ sha: 'c1', date: '2026-07-10T00:00:00Z', session: 'session_triaged' }]
+    const resolved = new Map([['session_triaged', '#650']])
+    const { orphaned, suppressed } = findOrphanedSessions(refs, new Set(), [], resolved)
+    // The annotated candidate stays visible in `orphanedSessions` too — only the
+    // mis-file path actually removes one (issue #447 item 4).
+    expect(orphaned).toEqual([
+      { session: 'session_triaged', commits: ['c1'], date: '2026-07-10T00:00:00Z', resolvedBy: '#650' },
+    ])
+    expect(suppressed).toEqual([
+      {
+        session: 'session_triaged',
+        commits: ['c1'],
+        date: '2026-07-10T00:00:00Z',
+        reason: 'resolved-annotation',
+        resolvedBy: '#650',
+      },
+    ])
+  })
+
+  it('does not let a suppressed candidate reappear in orphanedSessions', () => {
+    const refs: SessionTrailerRef[] = [
+      { sha: 'c1', date: '2026-07-12T00:00:00Z', session: 'session_misfiled' },
+      { sha: 'c3', date: '2026-07-13T00:00:00Z', session: 'session_genuine' },
+    ]
+    const changes: CommitFileChange[] = [
+      { sha: 'c1', date: '2026-07-12T00:00:00Z', added: ['layers/journal/content/current/sessions/wrong-id.yml'], removed: [] },
+      { sha: 'c2', date: '2026-07-12T00:05:00Z', added: [], removed: ['layers/journal/content/current/sessions/wrong-id.yml'] },
+    ]
+    const { orphaned, suppressed } = findOrphanedSessions(refs, new Set(), changes)
+    expect(orphaned.map((o) => o.session)).toEqual(['session_genuine'])
+    expect(suppressed.map((s) => s.session)).toEqual(['session_misfiled'])
+  })
+
+  it('sorts suppressed candidates oldest-first, like the orphans themselves', () => {
+    const refs: SessionTrailerRef[] = [
+      { sha: 'b1', date: '2026-07-12T00:00:00Z', session: 'session_newer' },
+      { sha: 'a1', date: '2026-07-10T00:00:00Z', session: 'session_older' },
+    ]
+    const resolved = new Map([
+      ['session_newer', '#1'],
+      ['session_older', '#2'],
+    ])
+    const { suppressed } = findOrphanedSessions(refs, new Set(), [], resolved)
+    expect(suppressed.map((s) => s.session)).toEqual(['session_older', 'session_newer'])
+  })
+})
+
+describe('resolvedMisfilePath()', () => {
+  it('returns null when the commit has no file-change data at all', () => {
+    expect(resolvedMisfilePath(['c1'], [])).toBe(null)
   })
 
   it('ignores a different commit\'s add/remove of the same-named path when the flagged commit itself added nothing', () => {
@@ -662,7 +740,7 @@ describe('isResolvedMisfile()', () => {
       { sha: 'c2', date: '2026-07-12T00:05:00Z', added: ['layers/journal/content/current/sessions/x.yml'], removed: [] },
       { sha: 'c3', date: '2026-07-12T00:10:00Z', added: [], removed: ['layers/journal/content/current/sessions/x.yml'] },
     ]
-    expect(isResolvedMisfile(['c1'], changes)).toBe(false)
+    expect(resolvedMisfilePath(['c1'], changes)).toBe(null)
   })
 
   // The exact shape of issue #747: session_019aeaoPHYWMJVekmUvTMhQ9 added
@@ -674,15 +752,15 @@ describe('isResolvedMisfile()', () => {
       { sha: 'c1', date: '2026-07-22T20:31:22+00:00', added: ['docs/agents/github-footer-guard.md'], removed: [] },
       { sha: 'c2', date: '2026-07-22T20:49:58+00:00', added: [], removed: ['docs/agents/github-footer-guard.md'] },
     ]
-    expect(isResolvedMisfile(['c1'], changes)).toBe(false)
+    expect(resolvedMisfilePath(['c1'], changes)).toBe(null)
   })
 
-  it('still resolves a mis-filed session log under archived/ (issue #574 scope, both dirs)', () => {
+  it('still resolves a mis-filed session log under archived/, returning the path (issue #574 scope, both dirs)', () => {
     const changes: CommitFileChange[] = [
       { sha: 'c1', date: '2026-07-12T00:00:00Z', added: ['layers/journal/content/archived/sessions/wrong-id.yml'], removed: [] },
       { sha: 'c2', date: '2026-07-12T00:05:00Z', added: [], removed: ['layers/journal/content/archived/sessions/wrong-id.yml'] },
     ]
-    expect(isResolvedMisfile(['c1'], changes)).toBe(true)
+    expect(resolvedMisfilePath(['c1'], changes)).toBe('layers/journal/content/archived/sessions/wrong-id.yml')
   })
 
   // Both directions of the raw-string date compare this function used to do —
@@ -694,7 +772,7 @@ describe('isResolvedMisfile()', () => {
       // string-greater, so the old compare wrongly treated it as a cleanup.
       { sha: 'c2', date: '2026-07-12T01:00:00+02:00', added: [], removed: ['layers/journal/content/current/sessions/wrong-id.yml'] },
     ]
-    expect(isResolvedMisfile(['c1'], changes)).toBe(false)
+    expect(resolvedMisfilePath(['c1'], changes)).toBe(null)
   })
 
   it('resolves when the removal is real-time later despite sorting earlier as a string (issue #747)', () => {
@@ -704,7 +782,7 @@ describe('isResolvedMisfile()', () => {
       // old compare missed a genuine cleanup.
       { sha: 'c2', date: '2026-07-12T04:00:00Z', added: [], removed: ['layers/journal/content/current/sessions/wrong-id.yml'] },
     ]
-    expect(isResolvedMisfile(['c1'], changes)).toBe(true)
+    expect(resolvedMisfilePath(['c1'], changes)).toBe('layers/journal/content/current/sessions/wrong-id.yml')
   })
 })
 
