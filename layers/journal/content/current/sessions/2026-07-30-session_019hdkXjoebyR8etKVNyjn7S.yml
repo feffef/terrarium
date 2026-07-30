@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019hdkXjoebyR8etKVNyjn7S
 startedAt: 2026-07-30T08:49:53Z
-endedAt: 2026-07-30T17:32:42Z
+endedAt: 2026-07-30T18:47:41Z
 kind: interactive
-goal: Triage the backlog, then implement four issues
+goal: Triage the backlog, then implement six issues
 status: completed
-outcome: 12 triaged, 5 filed, 6 PRs merged
-summary: "Human-instructed throughout, in four green-lit steps. (1) The user invoked /auto-triage: scanned 28 open issues and 0 open PRs, testing each one's most-recent comment or body for the ADR-0017 footer via the repo's own isAiAuthored detector rather than author_association; 12 eligible, one subagent each. One objective close, one ready-for-agent, ten ready-for-human. (2) On \"Create issues\", filed \"#752\"/\"#753\"/\"#754\" for verified residues the sweep surfaced but could not itself file. (3) On a conditional green-light, promoted \"#752\" and \"#754\" to ready-for-agent and set \"#753\" to ready-for-human; promoting \"#752\" first required correcting its own body. (4) On explicit permission to push outside the pinned branch, dispatched four worktree-isolated Opus agents for \"#544\"/\"#750\"/\"#752\"/\"#754\", then four reviewers. All four PRs are open, reviewed, and human-merge-only. (5) On \"Fix all findings\", four more worktree agents applied the review findings to the existing branches; filed \"#760\" and \"#761\" for the two findings needing a human decision. (6) On \"fix both\", the owner delegated those two decisions; I chose an option for each, stated it, and dispatched two stacked-branch agents — \"#762\" and \"#763\". (7) Subscribed to all six PRs; all merged, closing six issues. Every subagent claim was re-verified against a primary source before being relayed."
+outcome: 12 triaged, 6 filed, 6 PRs merged
+summary: "Human-instructed in seven green-lit steps. /auto-triage swept 28 open issues (12 eligible, one subagent each): 1 objective close, 1 ready-for-agent, 10 ready-for-human. Then, on successive green-lights: filed \"#752\"/\"#753\"/\"#754\" for verified residues; promoted two to ready-for-agent; implemented \"#544\", \"#750\", \"#752\", \"#754\" via worktree agents and reviewed each; applied the review findings and filed \"#760\"/\"#761\" for the two needing a human decision; fixed those two on delegated authority. All six PRs merged. Finally traced a red `main` to this session's own oversized session log. Every subagent claim was re-verified against a primary source before being relayed."
 prs:
   - "756"
   - "757"
@@ -14,23 +14,15 @@ prs:
   - "759"
   - "762"
   - "763"
+  - "764"
+  - "765"
 docsRead:
   - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: standing green-light and its determinability bounds
+    reason: standing green-light and its bounds
   - path: docs/adr/0020-requester-trust-tiers.md
-    reason: Trusted/Public split gating ready-for-agent
-  - path: docs/agents/issue-tracker.md
-    reason: gh-less REST mapping and the overflow traps
+    reason: Trusted/Public gate on ready-for-agent
   - path: scripts/check-triage-drift.ts
     reason: reused its isAiAuthored footer detector
-  - path: scripts/list-open-issues.ts
-    reason: reused its curl/REST strategy helpers
-  - path: scripts/session-trace.ts
-    reason: resolved ground-truth session id from a primary source
-  - path: scripts/midden-survey.ts
-    reason: "verified the #752 defect myself before filing"
-  - path: scripts/audit-skills.ts
-    reason: "verified the #754 silent-suppression claim myself"
   - path: layers/midden/tenant.config.ts
     reason: "provenance schema — collapsed #752's supposed ambiguity"
   - path: .claude/skills/triage/SKILL.md
@@ -39,9 +31,17 @@ docsRead:
     reason: (no reason given)
   - path: .claude/skills/triage/OUT-OF-SCOPE.md
     reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
   - path: docs/agents/triage-labels.md
     reason: (no reason given)
+  - path: scripts/list-open-issues.ts
+    reason: (no reason given)
   - path: scripts/github-footer-guard.ts
+    reason: (no reason given)
+  - path: scripts/midden-survey.ts
+    reason: (no reason given)
+  - path: scripts/audit-skills.ts
     reason: (no reason given)
   - path: layers/journal/app/pages/t/journal/[space]/index.vue
     reason: (no reason given)
@@ -49,55 +49,53 @@ skillsUsed:
   - name: auto-triage
     reason: the sweep
   - name: triage
-    reason: per-issue rules the sweep composes
+    reason: per-issue rules
   - name: implement
-    reason: the four-issue implementation pass
+    reason: the six-issue implementation pass
   - name: code-review
-    reason: one reviewer per PR, Standards + Spec axes
+    reason: one reviewer per PR
   - name: close-session
-    reason: Session closure front door
+    reason: Session closure
   - name: log-session
     reason: (no reason given)
   - name: context
     reason: (invoked as a slash command)
 frictions:
-  - description: Briefed four concurrent reviewers to diff against FETCH_HEAD in one shared checkout; siblings' fetches clobbered it, once to another PR's head entirely.
-    solution: Resolve and pin an explicit SHA per PR before dispatch, never hand a shared mutable ref to concurrent agents. The failure is silent — it yields confident, wrong findings rather than an error — and was caught only because one reviewer noticed its own grep contradicted the diff and said so. Two of four were affected; a third had pinned a SHA itself and was unharmed.
+  - description: This session's own session log grew to 11.3KB and broke `main` — the journal accordion e2e timed out because the first card's detail never became visible.
+    solution: Isolated by controlled experiment (remove mine → pass; remove another → fail; trim mine → pass), so it is document size, not log count. Trimmed this log to unblock; the underlying card fragility is filed separately. A log author has no signal that verbosity can red the gate — the cap belongs in the renderer.
+    severity: major
+  - description: Briefed four concurrent reviewers to diff against FETCH_HEAD in one shared checkout; siblings' fetches moved it, once to another PR's head entirely.
+    solution: Pin an explicit SHA per PR before dispatch; never hand a shared mutable ref to concurrent agents. Fails silently — yields confident wrong findings, not errors.
     severity: moderate
-  - description: check:worktrees reported 4 worktrees with unrescued work; all four were stale round-1 trees whose branch ref a round-2 agent had moved underneath them.
-    solution: The guard compares a worktree's tree against its branch HEAD, so it cannot distinguish "stale worktree, ref moved by another agent" from "real unrescued work" — and reports the alarming reading. Proving it benign took a per-worktree diff against the pre-fix commit. Two fan-outs over the same branches will hit this every time; the guard could say "tree matches an ancestor commit, likely stale" instead. Removing the dead worktrees restored a green signal.
+  - description: Filed "#752" calling its fix direction ambiguous without first reading the provenance schema or the real artifacts; both collapsed the ambiguity.
+    solution: '"Ambiguous" and "needs a human" are factual claims about the code and need the same primary-source check as any other. Verify before escalating, not only before asserting.'
     severity: minor
-  - description: Filed "#752" asserting its fix direction was ambiguous, having verified the defect in code but not read the provenance schema or the real artifacts.
-    solution: '"Ambiguous" and "needs a human decision" are themselves factual claims about the code, not a safe default — they need the same primary-source check as any other assertion. Reading the schema and the artifact corpus took one command each and showed commit-kind provenance already carries the path, collapsing the ambiguity and narrowing the scope. Verify before escalating, not only before asserting.'
+  - description: check:worktrees reported four worktrees with unrescued work; all four were stale trees whose branch ref a later agent had moved underneath them.
+    solution: It compares tree against branch HEAD, so it cannot tell "stale, ref moved" from "real unrescued work" and reports the alarming reading. Could say "matches an ancestor commit, likely stale".
     severity: minor
-  - description: Issue "#754"'s spec contradicted itself — Desired behaviour said the field lists candidates that were dropped, while its own Verified section said one path isn't.
-    solution: Cross-check a spec's normative section against its own evidence section before filing. The implementer resolved it correctly and the reviewer caught the contradiction, but a spec that disagrees with itself invites either reading.
+  - description: No committed helper answers auto-triage's own eligibility question (which open issues have human-authored most-recent activity); hand-rolled a scratch script.
+    solution: Codify as scripts/auto-triage-eligibility.ts, reusing isAiAuthored and the list-open-issues REST helpers.
     severity: minor
-  - description: No committed helper answers auto-triage's own eligibility question — which open issues have human-authored most-recent activity. Hand-rolled a scratch script.
-    solution: Codify it as scripts/auto-triage-eligibility.ts, reusing isAiAuthored and the list-open-issues REST helpers exactly as the scratch did. Every sweep repeats this cost otherwise, and a hand-rolled script is a fresh chance to get the authorship signal wrong.
-    severity: minor
-  - description: The platform appends its own attribution footer after the ADR-0017 footer on GitHub comments, so a last-two-lines footer check false-negatives.
-    solution: Verify the provenance footer by searching the whole comment body, never by position. Worth a line in the issue-tracker doc so a future session doesn't misdiagnose a correctly-footered comment as missing one.
-    severity: minor
-durationSec: 31369
+durationSec: 35868
 models:
-  claude-opus-5: 394
+  claude-opus-5: 498
   <synthetic>: 1
 toolCounts:
-  Bash: 62
+  Bash: 91
   Read: 16
-  Write: 7
-  Agent: 26
+  Write: 8
+  Agent: 29
   Skill: 2
-  ToolSearch: 2
-  mcp__github__issue_write: 8
-  mcp__github__add_issue_comment: 8
+  ToolSearch: 3
+  mcp__github__issue_write: 10
+  mcp__github__add_issue_comment: 11
   Edit: 13
   AskUserQuestion: 6
   SendMessage: 5
   mcp__Claude_Code_Remote__subscribe_pr_activity: 6
   mcp__Claude_Code_Remote__send_later: 4
   mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__get_job_logs: 2
 subagents:
   - type: general-purpose
     task: Triage issue 666
@@ -165,18 +163,25 @@ subagents:
   - type: general-purpose
     task: Fix issue 760
     model: opus
+  - type: general-purpose
+    task: Fix provenance path validation
+    model: opus
+  - type: general-purpose
+    task: Consolidate pin bracket helper
+    model: opus
+  - type: general-purpose
+    task: Fix journal card size fragility
+    model: fable
 gitBranch: claude/auto-triage-henuc5
 entrypoint: remote_mobile
 cliVersion: 2.1.220
 learnings:
-  - "A sweep's own idempotency rule doubles as its cheapest correctness check: 14 of 28 issues skipped because AI acted last is the mechanism working, not coverage lost."
-  - "Determinable and authorized are independent: #674's design was fully determined, yet its body withheld the green-light, so ready-for-agent would have granted what the ticket forbids."
-  - Safari and iOS Safari implement no scroll anchoring at all, so a test that disables it via overflow-anchor:none is reproducing the production configuration for WebKit users, not inventing a synthetic one — the opposite of how it first reads.
-  - A guard that still passes with the mechanism it guards deleted carries zero regression information; replacing it with one that goes red on sabotage is a strict gain, even when the new assertion is narrower.
-  - Concurrent agents on one checkout share more mutable git state than is obvious — FETCH_HEAD, shallow-ness, and cwd have each silently crossed between agents this session.
-  - "The schema field whose NAME matches an intent is not always the field that carries it: midden's `removedIn` reads as 'the commit that retired this', but only 1 of 14 commit-kind artifacts sets it, and there it names a different commit than `provenance.hash` — screening on it would have broken every screen firing today."
-  - "A subagent given explicit authority to refuse produces better outcomes than one given only instructions: three separate agents this session declined a listed change and proved why, and each refusal was correct."
+  - "A sweep's idempotency rule doubles as its cheapest correctness check: 14 of 28 issues skipped because AI acted last is the mechanism working, not coverage lost."
+  - "Determinable and authorized are independent — #674's design was settled, yet its body withheld the green-light."
+  - "The schema field whose NAME matches an intent may not carry it: midden's `removedIn` reads as 'the commit that retired this', but only 1 of 14 artifacts sets it, and there it names a different commit than `provenance.hash`."
+  - Safari and iOS Safari implement no scroll anchoring at all, so a test disabling it reproduces the WebKit production configuration rather than inventing a synthetic one.
+  - "Subagents given explicit authority to refuse produce better outcomes: four declined a listed change and proved why, and each refusal was correct."
 ideas:
-  - "Give auto-triage a bravery-calibration readout: record each sweep's state distribution over time, so a run of near-total ready-for-human escalation is visibly either the hard governance residue or a miscalibrated determinability bar, instead of a judgment no one can audit across runs."
-  - Make the sweep's residue path first-class. Three real defects this run were found by subagents, recorded only in issue comments, and would have died there without a human happening to say 'create issues'. Have each triage subagent emit residues as structured output, and have the sweep report them as a distinct 'found but unfiled' section for one green-light decision.
-  - Add a dispatch preflight that resolves every shared mutable git ref a fan-out will touch — PR head/base SHAs, shallow state — and injects the pinned values into each brief, so no subagent is ever handed a ref another subagent can move underneath it.
+  - Cap or lazily render a session card's detail so no single log can red the gate — and surface a size warning at authoring time, since the author is the one person who can act on it.
+  - "Give auto-triage a bravery-calibration readout: record each sweep's state distribution over time, so near-total escalation is visibly either the hard residue or a miscalibrated bar."
+  - "Make the sweep's residue path first-class: have triage subagents emit residues as structured output and report them as a distinct 'found but unfiled' section for one green-light decision."
