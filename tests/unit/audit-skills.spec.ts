@@ -18,6 +18,7 @@ import {
   hasHumanPromptedClosure,
   HUMAN_PROMPTED_CLOSURE,
   isResolvedMisfile,
+  isSessionLogPath,
   parseCommitFileChanges,
   parseSessionTrailers,
   parseSkillEditLog,
@@ -601,12 +602,39 @@ describe('findOrphanedSessions()', () => {
 
   it('does not resolve on a path mismatch', () => {
     const refs: SessionTrailerRef[] = [{ sha: 'c1', date: '2026-07-12T00:00:00Z', session: 'session_orphan' }]
+    // Both paths are session logs, so the mismatch itself is what must save the
+    // orphan here — not `isSessionLogPath` short-circuiting first (issue #747).
     const changes: CommitFileChange[] = [
-      { sha: 'c1', date: '2026-07-12T00:00:00Z', added: ['a.yml'], removed: [] },
-      { sha: 'c2', date: '2026-07-12T00:05:00Z', added: [], removed: ['b.yml'] },
+      { sha: 'c1', date: '2026-07-12T00:00:00Z', added: ['layers/journal/content/current/sessions/a.yml'], removed: [] },
+      { sha: 'c2', date: '2026-07-12T00:05:00Z', added: [], removed: ['layers/journal/content/current/sessions/b.yml'] },
     ]
     expect(findOrphanedSessions(refs, new Set(), changes)).toEqual([
       { session: 'session_orphan', commits: ['c1'], date: '2026-07-12T00:00:00Z' },
+    ])
+  })
+
+  // End-to-end guard for issue #747, using the real commit shas/timestamps of
+  // session_019aeaoPHYWMJVekmUvTMhQ9 — the orphan four daily sweeps suppressed.
+  it('still flags an orphan whose only added-then-deleted file was a doc, not a session log (issue #747)', () => {
+    const refs: SessionTrailerRef[] = [
+      { sha: '7623eac', date: '2026-07-22T20:31:22+00:00', session: 'session_019aeaoPHYWMJVekmUvTMhQ9' },
+      { sha: '7111d70', date: '2026-07-22T20:49:58+00:00', session: 'session_019aeaoPHYWMJVekmUvTMhQ9' },
+    ]
+    const changes: CommitFileChange[] = [
+      {
+        sha: '7623eac',
+        date: '2026-07-22T20:31:22+00:00',
+        added: ['docs/agents/github-footer-guard.md', 'scripts/github-footer-guard.ts'],
+        removed: [],
+      },
+      { sha: '7111d70', date: '2026-07-22T20:49:58+00:00', added: [], removed: ['docs/agents/github-footer-guard.md'] },
+    ]
+    expect(findOrphanedSessions(refs, new Set(), changes)).toEqual([
+      {
+        session: 'session_019aeaoPHYWMJVekmUvTMhQ9',
+        commits: ['7623eac', '7111d70'],
+        date: '2026-07-22T20:31:22+00:00',
+      },
     ])
   })
 
@@ -631,10 +659,66 @@ describe('isResolvedMisfile()', () => {
   it('ignores a different commit\'s add/remove of the same-named path when the flagged commit itself added nothing', () => {
     const changes: CommitFileChange[] = [
       { sha: 'c1', date: '2026-07-12T00:00:00Z', added: [], removed: [] },
-      { sha: 'c2', date: '2026-07-12T00:05:00Z', added: ['x.yml'], removed: [] },
-      { sha: 'c3', date: '2026-07-12T00:10:00Z', added: [], removed: ['x.yml'] },
+      { sha: 'c2', date: '2026-07-12T00:05:00Z', added: ['layers/journal/content/current/sessions/x.yml'], removed: [] },
+      { sha: 'c3', date: '2026-07-12T00:10:00Z', added: [], removed: ['layers/journal/content/current/sessions/x.yml'] },
     ]
     expect(isResolvedMisfile(['c1'], changes)).toBe(false)
+  })
+
+  // The exact shape of issue #747: session_019aeaoPHYWMJVekmUvTMhQ9 added
+  // docs/agents/github-footer-guard.md and deleted it 18 minutes later while
+  // folding the explanation into CLAUDE.md — ordinary single-home cleanup that
+  // suppressed the genuine orphan on four consecutive daily sweeps.
+  it('does not resolve on an added-then-deleted path that is not a session log (issue #747)', () => {
+    const changes: CommitFileChange[] = [
+      { sha: 'c1', date: '2026-07-22T20:31:22+00:00', added: ['docs/agents/github-footer-guard.md'], removed: [] },
+      { sha: 'c2', date: '2026-07-22T20:49:58+00:00', added: [], removed: ['docs/agents/github-footer-guard.md'] },
+    ]
+    expect(isResolvedMisfile(['c1'], changes)).toBe(false)
+  })
+
+  it('still resolves a mis-filed session log under archived/ (issue #574 scope, both dirs)', () => {
+    const changes: CommitFileChange[] = [
+      { sha: 'c1', date: '2026-07-12T00:00:00Z', added: ['layers/journal/content/archived/sessions/wrong-id.yml'], removed: [] },
+      { sha: 'c2', date: '2026-07-12T00:05:00Z', added: [], removed: ['layers/journal/content/archived/sessions/wrong-id.yml'] },
+    ]
+    expect(isResolvedMisfile(['c1'], changes)).toBe(true)
+  })
+
+  // Both directions of the raw-string date compare this function used to do —
+  // the hazard groupSessionReferences/findOrphanedSessions already guard against.
+  it('does not resolve when the removal only LOOKS later as a string but is real-time earlier (issue #747)', () => {
+    const changes: CommitFileChange[] = [
+      { sha: 'c1', date: '2026-07-12T00:00:00Z', added: ['layers/journal/content/current/sessions/wrong-id.yml'], removed: [] },
+      // 01:00+02:00 is 23:00Z the previous day — earlier than the add, but
+      // string-greater, so the old compare wrongly treated it as a cleanup.
+      { sha: 'c2', date: '2026-07-12T01:00:00+02:00', added: [], removed: ['layers/journal/content/current/sessions/wrong-id.yml'] },
+    ]
+    expect(isResolvedMisfile(['c1'], changes)).toBe(false)
+  })
+
+  it('resolves when the removal is real-time later despite sorting earlier as a string (issue #747)', () => {
+    const changes: CommitFileChange[] = [
+      { sha: 'c1', date: '2026-07-12T05:00:00+02:00', added: ['layers/journal/content/current/sessions/wrong-id.yml'], removed: [] },
+      // 04:00Z is 06:00+02:00 — later than the add, but string-lesser, so the
+      // old compare missed a genuine cleanup.
+      { sha: 'c2', date: '2026-07-12T04:00:00Z', added: [], removed: ['layers/journal/content/current/sessions/wrong-id.yml'] },
+    ]
+    expect(isResolvedMisfile(['c1'], changes)).toBe(true)
+  })
+})
+
+describe('isSessionLogPath()', () => {
+  it('accepts a .yml under either sessions dir', () => {
+    expect(isSessionLogPath('layers/journal/content/current/sessions/a.yml')).toBe(true)
+    expect(isSessionLogPath('layers/journal/content/archived/sessions/a.yml')).toBe(true)
+  })
+
+  it('rejects a non-session-log path, a non-yml, and a bare filename', () => {
+    expect(isSessionLogPath('docs/agents/github-footer-guard.md')).toBe(false)
+    expect(isSessionLogPath('layers/journal/content/current/sessions/a.md')).toBe(false)
+    expect(isSessionLogPath('a.yml')).toBe(false)
+    expect(isSessionLogPath('layers/journal/content/current/pages/a.yml')).toBe(false)
   })
 })
 
