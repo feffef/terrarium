@@ -1,42 +1,49 @@
 schemaVersion: 1
 session: session_01QHy8zPnX7UuV8gkP9QQXaT
 startedAt: 2026-07-30T20:52:47Z
-endedAt: 2026-07-30T20:57:11Z
+endedAt: 2026-07-30T21:07:24Z
 kind: interactive
 goal: Record subagent refusal-authority learning in CLAUDE.md
-status: in-review
-outcome: "One bullet added; PR #770 open"
-summary: "Human-instructed throughout. The user supplied a session learning — subagents given explicit authority to refuse produce better outcomes; four declined a listed change, proved why, and each refusal was correct — and asked for it to be inserted at the appropriate spot. Added it as a top-level Working-conventions bullet in CLAUDE.md, directly after the grill-the-shared-design-axis bullet, covering all three parts: state the authority in the brief, require proof over compliance, and read a proven refusal as a finding about the list. gate:scoped green (inert path, floor only). The user then asked whether a dedicated agent-spawning doc existed; it does not, so the placement stood, and the user explicitly declined the doc-extraction follow-up for now."
+status: completed
+outcome: "Bullet merged to main via PR #770"
+summary: "Human-instructed throughout. The user supplied a session learning — subagents given explicit authority to refuse produce better outcomes; four declined a listed change, proved why, and each refusal was correct — and asked for it to be inserted at the appropriate spot. Added it as a top-level Working-conventions bullet in CLAUDE.md, after the grill-the-shared-design-axis bullet. The user then asked whether a dedicated agent-spawning doc existed; it does not, so the placement stood, and the user explicitly declined the doc-extraction follow-up. Two further user-directed passes: cut the bullet to the rule alone (anecdote and work-order framing dropped), then restore the anecdote as PR-description background only. gate:scoped green on both commits, CI green, human-merged."
 prs:
   - "770"
 docsRead:
   - path: CLAUDE.md
     reason: home for repo-wide dispatch conventions; the file edited
+  - path: docs/agents/pr-workflow.md
+    reason: confirm an ordinary work PR is human-merged, not self-merged
 skillsUsed:
   - name: close-session
     reason: self-judged closure at PR-open
   - name: log-session
-    reason: author this log
+    reason: author this log, then finalize it on merge
 frictions:
   - description: No dedicated agent-dispatch doc exists, so placing the new bullet meant judging against a 96-line inline CLAUDE.md block rather than an obvious home.
     solution: Extract docs/agents/subagent-dispatch.md and leave a pointer bullet, as was already done for git-conventions, pr-workflow and verifying-ui-changes.
     severity: minor
-durationSec: 265
+  - description: First draft of the bullet was nine lines — it argued the rule and carried the supporting anecdote inline; the user had to ask for it to be cut to five.
+    solution: For a CLAUDE.md convention, write the rule and the failure mode it prevents; the evidence belongs in the PR description, not the standing doc.
+    severity: minor
+durationSec: 877
 models:
-  claude-opus-5: 41
+  claude-opus-5: 69
 toolCounts:
-  Bash: 9
+  Bash: 13
   Grep: 2
-  Read: 1
-  Edit: 1
-  ToolSearch: 2
+  Read: 2
+  Edit: 2
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 5
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
-  Write: 1
+  Write: 2
+  mcp__github__update_pull_request: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - CLAUDE.md
 gitBranch: claude/subagent-refusal-authority-9dty14
