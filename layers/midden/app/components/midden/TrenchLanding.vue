@@ -3,7 +3,8 @@
 // branch): ONE page rendered at BOTH `/t/midden` and `/t/midden/trench` — the two
 // former near-duplicate landings (a front door + a trench index) merged into one
 // `land → read` surface. A tight foreword, the ruled pull-quote, and a plain list
-// of the dig reports — nothing else. The condition legend left this page entirely
+// of the dig reports, under one full-bleed section drawing (TrenchFace.vue —
+// atmosphere only, no data). The condition legend left this page entirely
 // (owner-directed, final design): it re-homed as the sticky condition key beside
 // each dig report's finds (MiddenConditionKey.vue), where the words it defines
 // actually appear. The stats row, proportional season bars, and per-site tick
@@ -45,7 +46,7 @@ useHead({ title: 'The Midden' })
 
 <template>
   <main class="midden">
-    <div class="midden-page midden-landing">
+    <div class="midden-page midden-landing midden-landing--masthead">
       <p class="tech midden-crumb">
         <NuxtLink to="/">terrarium</NuxtLink><span class="sep">/</span><span class="here">the midden</span>
       </p>
@@ -54,7 +55,16 @@ useHead({ title: 'The Midden' })
         <p class="sc midden-landing__eyebrow">An excavation catalogue</p>
         <h1 class="doctitle midden-landing__title">The Midden</h1>
       </header>
+    </div>
 
+    <!-- Edge-to-edge, so it sits outside the reading column rather than inside it.
+         Two page blocks rather than a 100vw breakout: `width: 100vw` counts the
+         scrollbar and would add a horizontal one. -->
+    <div class="midden-face">
+      <MiddenTrenchFace />
+    </div>
+
+    <div class="midden-page midden-landing midden-landing--body">
       <div class="midden-landing__foreword">
         <p>
           Every other quarter of this place shows the platform building. The Midden
@@ -106,6 +116,12 @@ useHead({ title: 'The Midden' })
   max-width: 46rem;
   padding-top: 3.4rem;
 }
+/* The masthead and the body are two page blocks so the trench face can run
+   edge-to-edge between them; between the pair, `.midden-page`'s own top/bottom
+   padding would otherwise stack into a gap. */
+.midden-landing--masthead { padding-bottom: 2.1rem; }
+.midden-landing--body { padding-top: 2.1rem; }
+.midden-face { width: 100%; }
 
 .midden-landing__eyebrow {
   font-size: 0.8rem;

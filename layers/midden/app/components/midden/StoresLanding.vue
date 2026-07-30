@@ -41,6 +41,14 @@ const shelves = computed(() =>
   })).filter((shelf) => shelf.finds.length > 0),
 )
 
+// Every season, including any holding nothing — the section drawing states the
+// sterile ones, which `shelves` above deliberately drops.
+const seasonCounts = computed<Record<string, number>>(() =>
+  Object.fromEntries(
+    DIG_SEASONS.map((season) => [season.slug, finds.value.filter((f) => f.stratum === season.slug).length]),
+  ),
+)
+
 const presentGrades = computed<Grade[]>(() => {
   const present = new Set(finds.value.map((f) => f.condition))
   return CONDITION_ORDER.filter((g) => present.has(g))
@@ -84,6 +92,8 @@ useHead({ title: 'The Stores · The Midden' })
           &ldquo;The record does not shrink to fit the display.&rdquo;
         </p>
       </div>
+
+      <MiddenSectionColumn v-if="finds.length" :counts="seasonCounts" class="midden-stores__section" />
 
       <MiddenConditionKey v-if="presentGrades.length" :grades="presentGrades" class="midden-stores__key" />
 
@@ -167,7 +177,7 @@ useHead({ title: 'The Stores · The Midden' })
 .midden-stores {
   display: grid;
   grid-template-columns: minmax(0, 44rem) 13.5rem;
-  grid-template-rows: auto auto auto;
+  grid-template-rows: auto auto auto auto;
   column-gap: 3.4rem;
   justify-content: center;
   max-width: 64rem;
@@ -175,11 +185,14 @@ useHead({ title: 'The Stores · The Midden' })
 }
 .midden-stores__head,
 .midden-stores__foreword,
+.midden-stores__section,
 .midden-stores__register,
 .midden-stores__back { grid-column: 1; }
+.midden-stores__section { grid-row: 3; }
+.midden-stores__register { grid-row: 4; }
 .midden-stores__key {
   grid-column: 2;
-  grid-row: 3;
+  grid-row: 4;
   align-self: start;
   position: sticky;
   top: 2.2rem;
