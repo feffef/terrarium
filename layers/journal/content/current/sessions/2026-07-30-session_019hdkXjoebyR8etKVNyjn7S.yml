@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019hdkXjoebyR8etKVNyjn7S
 startedAt: 2026-07-30T08:49:53Z
-endedAt: 2026-07-30T14:36:40Z
+endedAt: 2026-07-30T15:26:06Z
 kind: interactive
 goal: Triage the backlog, then implement four issues
 status: in-review
-outcome: 12 triaged, 3 filed, 4 PRs open
-summary: "Human-instructed throughout, in four green-lit steps. (1) The user invoked /auto-triage: scanned 28 open issues and 0 open PRs, testing each one's most-recent comment or body for the ADR-0017 footer via the repo's own isAiAuthored detector rather than author_association; 12 eligible, one subagent each. One objective close, one ready-for-agent, ten ready-for-human. (2) On \"Create issues\", filed \"#752\"/\"#753\"/\"#754\" for verified residues the sweep surfaced but could not itself file. (3) On a conditional green-light, promoted \"#752\" and \"#754\" to ready-for-agent and set \"#753\" to ready-for-human; promoting \"#752\" first required correcting its own body. (4) On explicit permission to push outside the pinned branch, dispatched four worktree-isolated Opus agents for \"#544\"/\"#750\"/\"#752\"/\"#754\", then four reviewers. All four PRs are open, reviewed, and human-merge-only. Every subagent claim was re-verified against a primary source before being relayed."
+outcome: 12 triaged, 5 filed, 4 PRs reviewed and fixed
+summary: "Human-instructed throughout, in four green-lit steps. (1) The user invoked /auto-triage: scanned 28 open issues and 0 open PRs, testing each one's most-recent comment or body for the ADR-0017 footer via the repo's own isAiAuthored detector rather than author_association; 12 eligible, one subagent each. One objective close, one ready-for-agent, ten ready-for-human. (2) On \"Create issues\", filed \"#752\"/\"#753\"/\"#754\" for verified residues the sweep surfaced but could not itself file. (3) On a conditional green-light, promoted \"#752\" and \"#754\" to ready-for-agent and set \"#753\" to ready-for-human; promoting \"#752\" first required correcting its own body. (4) On explicit permission to push outside the pinned branch, dispatched four worktree-isolated Opus agents for \"#544\"/\"#750\"/\"#752\"/\"#754\", then four reviewers. All four PRs are open, reviewed, and human-merge-only. (5) On \"Fix all findings\", four more worktree agents applied the review findings to the existing branches; filed \"#760\" and \"#761\" for the two findings needing a human decision. Every subagent claim was re-verified against a primary source before being relayed."
 prs:
   - "756"
   - "757"
@@ -41,6 +41,8 @@ docsRead:
     reason: (no reason given)
   - path: scripts/github-footer-guard.ts
     reason: (no reason given)
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (no reason given)
 skillsUsed:
   - name: auto-triage
     reason: the sweep
@@ -60,6 +62,9 @@ frictions:
   - description: Briefed four concurrent reviewers to diff against FETCH_HEAD in one shared checkout; siblings' fetches clobbered it, once to another PR's head entirely.
     solution: Resolve and pin an explicit SHA per PR before dispatch, never hand a shared mutable ref to concurrent agents. The failure is silent — it yields confident, wrong findings rather than an error — and was caught only because one reviewer noticed its own grep contradicted the diff and said so. Two of four were affected; a third had pinned a SHA itself and was unharmed.
     severity: moderate
+  - description: check:worktrees reported 4 worktrees with unrescued work; all four were stale round-1 trees whose branch ref a round-2 agent had moved underneath them.
+    solution: The guard compares a worktree's tree against its branch HEAD, so it cannot distinguish "stale worktree, ref moved by another agent" from "real unrescued work" — and reports the alarming reading. Proving it benign took a per-worktree diff against the pre-fix commit. Two fan-outs over the same branches will hit this every time; the guard could say "tree matches an ancestor commit, likely stale" instead. Removing the dead worktrees restored a green signal.
+    severity: minor
   - description: Filed "#752" asserting its fix direction was ambiguous, having verified the defect in code but not read the provenance schema or the real artifacts.
     solution: '"Ambiguous" and "needs a human decision" are themselves factual claims about the code, not a safe default — they need the same primary-source check as any other assertion. Reading the schema and the artifact corpus took one command each and showed commit-kind provenance already carries the path, collapsing the ambiguity and narrowing the scope. Verify before escalating, not only before asserting.'
     severity: minor
@@ -72,21 +77,21 @@ frictions:
   - description: The platform appends its own attribution footer after the ADR-0017 footer on GitHub comments, so a last-two-lines footer check false-negatives.
     solution: Verify the provenance footer by searching the whole comment body, never by position. Worth a line in the issue-tracker doc so a future session doesn't misdiagnose a correctly-footered comment as missing one.
     severity: minor
-durationSec: 20807
+durationSec: 23773
 models:
-  claude-opus-5: 265
+  claude-opus-5: 329
 toolCounts:
-  Bash: 39
-  Read: 14
-  Write: 6
-  Agent: 20
+  Bash: 51
+  Read: 16
+  Write: 7
+  Agent: 24
   Skill: 2
   ToolSearch: 2
-  mcp__github__issue_write: 6
-  mcp__github__add_issue_comment: 7
-  Edit: 5
+  mcp__github__issue_write: 8
+  mcp__github__add_issue_comment: 8
+  Edit: 8
   AskUserQuestion: 6
-  SendMessage: 3
+  SendMessage: 5
 subagents:
   - type: general-purpose
     task: Triage issue 666
@@ -135,6 +140,18 @@ subagents:
     model: opus
   - type: general-purpose
     task: Review PR 759
+    model: opus
+  - type: general-purpose
+    task: Fix findings on PR 756
+    model: opus
+  - type: general-purpose
+    task: Fix findings on PR 757
+    model: opus
+  - type: general-purpose
+    task: Fix findings on PR 758
+    model: opus
+  - type: general-purpose
+    task: Fix findings on PR 759
     model: opus
 gitBranch: claude/auto-triage-henuc5
 entrypoint: remote_mobile
