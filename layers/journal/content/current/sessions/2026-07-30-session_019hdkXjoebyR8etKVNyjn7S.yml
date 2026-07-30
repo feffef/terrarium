@@ -1,0 +1,93 @@
+schemaVersion: 1
+session: session_019hdkXjoebyR8etKVNyjn7S
+startedAt: 2026-07-30T08:49:53Z
+endedAt: 2026-07-30T09:10:22Z
+kind: delegated
+goal: Autonomous triage sweep over the backlog
+status: completed
+outcome: 12 issues triaged, verified live
+summary: "Human-instructed: the user invoked /auto-triage, which is itself the ADR-0022 standing green-light for the sweep; everything below is that skill's prescribed work, not agent-initiated scope. Scanned 28 open issues and 0 open PRs, testing each one's most-recent comment (or body) for the ADR-0017 provenance footer via the repo's own isAiAuthored detector rather than author_association. Resolved 12 eligible, skipped 14 whose last activity was already AI's own and 2 wayfinder maps. Dispatched one subagent per eligible issue. Result: one objective close (already-implemented), one ready-for-agent, ten ready-for-human. Verified every label, state, and footer live over REST rather than trusting subagent reports. No repo commits — classification-only remit."
+prs: []
+docsRead:
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: standing green-light and its bounds
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: Trusted/Public split gating ready-for-agent
+  - path: docs/agents/issue-tracker.md
+    reason: gh-less MCP/REST mapping and overflow traps
+  - path: docs/agents/triage-labels.md
+    reason: canonical label vocabulary
+  - path: scripts/check-triage-drift.ts
+    reason: reused its isAiAuthored footer detector
+  - path: scripts/list-open-issues.ts
+    reason: reused its curl/REST strategy helpers
+  - path: scripts/github-footer-guard.ts
+    reason: confirmed what footer the guard would enforce
+  - path: scripts/session-trace.ts
+    reason: resolved ground-truth session id from a primary source
+  - path: .claude/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: .claude/skills/triage/OUT-OF-SCOPE.md
+    reason: (no reason given)
+skillsUsed:
+  - name: auto-triage
+    reason: the sweep itself
+  - name: triage
+    reason: per-issue rules the sweep composes
+  - name: close-session
+    reason: Session closure front door
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: No committed helper answers auto-triage's own eligibility question — which open issues have human-authored most-recent activity. Hand-rolled a scratch script.
+    solution: Codify it as scripts/auto-triage-eligibility.ts, reusing isAiAuthored and the list-open-issues REST helpers exactly as the scratch did. Every sweep repeats this cost otherwise, and a hand-rolled script is a fresh chance to get the authorship signal wrong.
+    severity: minor
+  - description: The platform appends its own attribution footer after the ADR-0017 footer on GitHub comments, so a last-two-lines footer check false-negatives on all 12.
+    solution: Verify the provenance footer by searching the whole comment body, never by position. Worth a line in the issue-tracker doc so a future session doesn't misdiagnose a correctly-footered comment as missing one.
+    severity: minor
+durationSec: 1229
+models:
+  claude-opus-5: 111
+toolCounts:
+  Bash: 17
+  Read: 11
+  Write: 4
+  Agent: 12
+  Skill: 2
+subagents:
+  - type: general-purpose
+    task: Triage issue 666
+  - type: general-purpose
+    task: Triage issue 674
+  - type: general-purpose
+    task: Triage issue 677
+  - type: general-purpose
+    task: Triage issue 688
+  - type: general-purpose
+    task: Triage issue 694
+  - type: general-purpose
+    task: Triage issue 723
+  - type: general-purpose
+    task: Triage issue 724
+  - type: general-purpose
+    task: Triage issue 730
+  - type: general-purpose
+    task: Triage issue 736
+  - type: general-purpose
+    task: Triage issue 737
+  - type: general-purpose
+    task: Triage issue 738
+  - type: general-purpose
+    task: Triage issue 750
+gitBranch: claude/auto-triage-henuc5
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - "A sweep's own idempotency rule doubles as its cheapest correctness check: 14 of 28 issues skipped because AI acted last is the mechanism working, not coverage lost."
+  - "Two subagents on one shared checkout can race on repo state: one unshallowed the clone mid-sweep, and another observed shallow-then-not and correctly re-ran its history claims."
+  - "Determinable and authorized are independent: #674's design was fully determined, yet its body withheld the green-light, so ready-for-agent would have granted what the ticket forbids."
+ideas:
+  - "File the verified midden-survey.ts dedupe defect: surveyReport() keys deletion candidates as file:<path> but matches against provenanceKey(), which returns commit:<hash7> for a commit-kind provenance, so a commit-kind cluster can never screen out its sibling paths; separately screenRegrown() compares paths by exact string, which is why a relocated file resurfaced. Both confirmed in code during #730's triage and tracked by no issue."
+  - "Give auto-triage a bravery-calibration readout: record each sweep's state distribution over time, so a run of near-total ready-for-human escalation is visibly either the hard governance residue or a miscalibrated determinability bar, instead of a judgment no one can audit across runs."
