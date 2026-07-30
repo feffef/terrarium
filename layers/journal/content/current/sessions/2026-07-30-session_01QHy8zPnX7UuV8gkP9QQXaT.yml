@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01QHy8zPnX7UuV8gkP9QQXaT
 startedAt: 2026-07-30T20:52:47Z
-endedAt: 2026-07-30T21:07:24Z
+endedAt: 2026-07-30T21:11:47Z
 kind: interactive
 goal: Record subagent refusal-authority learning in CLAUDE.md
 status: completed
@@ -14,6 +14,8 @@ docsRead:
     reason: home for repo-wide dispatch conventions; the file edited
   - path: docs/agents/pr-workflow.md
     reason: confirm an ordinary work PR is human-merged, not self-merged
+  - path: docs/agents/provenance.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: self-judged closure at PR-open
@@ -26,19 +28,25 @@ frictions:
   - description: First draft of the bullet was nine lines — it argued the rule and carried the supporting anecdote inline; the user had to ask for it to be cut to five.
     solution: For a CLAUDE.md convention, write the rule and the failure mode it prevents; the evidence belongs in the PR description, not the standing doc.
     severity: minor
-durationSec: 877
+  - description: Hand-wrote ADR-0017 footers on two commits and two PR bodies without reading docs/agents/provenance.md first, which CLAUDE.md requires before doing exactly that.
+    solution: Treat "about to type a footer or an identifier" as the trigger to open provenance.md, not "about to debug a footer problem"; the guard-coverage map is what tells you which surfaces are already handled for you.
+    severity: minor
+  - description: "\"GitHub strips the angle-bracketed <noreply@anthropic.com> from a markdown PR body as an HTML tag, so ADR-0017's two-line footer cannot render verbatim there.\""
+    solution: Document the PR-body form of the footer in provenance.md (session line is what matters and survives), so a later agent doesn't read the loss as its own error.
+    severity: nit
+durationSec: 1140
 models:
-  claude-opus-5: 69
+  claude-opus-5: 80
 toolCounts:
-  Bash: 13
+  Bash: 15
   Grep: 2
-  Read: 2
-  Edit: 2
+  Read: 3
+  Edit: 3
   ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 6
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
   Write: 2
