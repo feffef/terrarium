@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01GoCvePQZkT5gNLMGK4cPhL
 startedAt: 2026-07-30T18:13:33Z
-endedAt: 2026-07-30T18:45:54Z
+endedAt: 2026-07-30T18:55:47Z
 kind: interactive
 goal: Modularize CLAUDE.md into per-topic agent docs
 status: in-review
@@ -43,26 +43,37 @@ frictions:
   - description: Local gate went red on a pre-existing journal accordion e2e failure unrelated to this markdown-only diff; I began diagnosing before the user said another agent owned it.
     solution: Check whether a failing test is already owned or fails on the base branch before investigating, especially when the diff cannot plausibly reach it.
     severity: minor
-  - description: The background-task notification reported "exit code 0" while the gate had actually exited 1 — the wrapper's trailing echo became the pipeline's exit status.
-    solution: Writing an explicit GATE_EXIT marker into the log caught it. Never trust a wrapped background command's reported exit code; emit and grep an explicit marker.
+  - description: A single oversized session log on main reds the journal accordion e2e, blocking every open PR; the stopgap trim regrew the moment its own session re-logged.
+    solution: "Tracked as #768 with a narrowed threshold (7021 PASS, 8368 FAIL, 11.3KB FAIL). Trimming is not durable; the card or the test needs to tolerate a large document."
+    severity: major
+  - description: The accordion trim commit round-tripped the YAML through a serializer, rewriting startedAt/endedAt from Z form to +00:00 and swapping a red e2e for a red validate:content.
+    solution: "Edit session-log prose in place rather than re-serializing the document; utcTimestamp requires the Z form. Reported on #768."
+    severity: moderate
+  - description: Misread a CI failure as a CI-vs-local gate divergence before recalling that GitHub tests refs/pull/N/merge against the current base, not the pushed head.
+    solution: Check gate.yml and the run's actual base before concluding CI and local run different steps; the base had moved between my push and the run.
     severity: minor
-durationSec: 1941
+  - description: The background-task completion notification reported "exit code 0" for all three gate runs that actually exited 1 — the wrapper's trailing echo became the pipeline exit status.
+    solution: Recurred three times this session. Always emit and grep an explicit exit marker; never trust the notification's reported code for a wrapped command.
+    severity: minor
+durationSec: 2534
 models:
-  claude-opus-5: 186
+  claude-opus-5: 259
 toolCounts:
   Read: 9
-  Bash: 45
-  ToolSearch: 5
-  mcp__github__search_issues: 2
+  Bash: 62
+  ToolSearch: 7
+  mcp__github__search_issues: 3
   Write: 6
   Edit: 14
   mcp__github__issue_write: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
+  mcp__github__get_job_logs: 3
+  mcp__github__add_issue_comment: 3
 filesEdited:
   - docs/agents/provenance.md
   - docs/agents/git-conventions.md
