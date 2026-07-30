@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_016TyZnqwj5NVh9i1LaPKNix
 startedAt: 2026-07-29T18:54:19Z
-endedAt: 2026-07-30T06:20:47Z
+endedAt: 2026-07-30T07:56:43Z
 kind: interactive
 goal: Ship SVG illustrations for the Midden
-status: completed
-outcome: "Two drawings merged in PR #748"
-summary: "Human-instructed throughout, in four explicit steps: spawn two ideation agents (fable and opus) for Midden SVG ideas; draft the combined top ten as screenshots; refine the two the human picked over four self-reviewed iterations each; then implement both. Agent-initiated within those bounds: the merge of the two idea lists into ten, the decision to keep the contested provenance plates as a reduced draft so the disagreement could be settled by eye, and the choice to make SectionColumn data-driven from DIG_SEASONS rather than hand-plotted. Verified the agents' load-bearing factual claims against the corpus before relaying. Gate green; PR merged."
+status: in-review
+outcome: Two drawings merged; mobile fix in review
+summary: "Human-instructed throughout, in four explicit steps: spawn two ideation agents (fable and opus) for Midden SVG ideas; draft the combined top ten as screenshots; refine the two the human picked over four self-reviewed iterations each; then implement both. Agent-initiated within those bounds: the merge of the two idea lists into ten, the decision to keep the contested provenance plates as a reduced draft so the disagreement could be settled by eye, and the choice to make SectionColumn data-driven from DIG_SEASONS rather than hand-plotted. Verified the agents' load-bearing factual claims against the corpus before relaying. PR 748 merged. The human then caught that the section column was hidden on mobile — a wrong call from the first cut, fixed in PR 751 with a narrow drawing plus an HTML legend rather than a breakpoint that hides it."
 prs:
   - "748"
+  - "751"
 docsRead:
   - path: layers/midden/CONTEXT.md
     reason: Midden vocabulary, and the post-MVP cuts that disciplined every proposal
@@ -20,6 +21,8 @@ docsRead:
     reason: host surface and its grid rows
   - path: layers/midden/app/components/midden/TrenchLanding.vue
     reason: host surface; restructured for the full-bleed band
+  - path: layers/midden/app/components/midden/SectionColumn.vue
+    reason: (read before editing)
 skillsUsed:
   - name: close-session
     reason: closure front door after the PR merged
@@ -35,27 +38,30 @@ frictions:
   - description: An ideation agent's flagship idea was invalidated by corpus counts a single grep would have surfaced before it ever drew anything.
     solution: Ship the corpus statistics (per-kind, per-grade counts) inside the ideation brief, so agents cannot propose iconography for fields that never render.
     severity: moderate
+  - description: Shipped the section column hidden below 44rem, and the human caught it. The drawing was the only place one dig season appears at all.
+    solution: Treat a display-none breakpoint as a design failure to justify in the PR, not a default. The real constraint was SVG text scaling, which a narrow variant plus an HTML legend solves without hiding anything.
+    severity: moderate
   - description: Two parallel refinement agents would have raced on one shared gallery.html in the scratchpad.
     solution: Hand-partitioned them into per-idea subdirectories in the dispatch brief; a convention for per-agent scratch dirs would make this automatic.
     severity: minor
-durationSec: 41188
+durationSec: 46944
 models:
-  claude-opus-5: 164
-  <synthetic>: 5
+  claude-opus-5: 211
+  <synthetic>: 9
 toolCounts:
-  Bash: 20
-  Read: 14
+  Bash: 32
+  Read: 17
   Agent: 5
-  SendUserFile: 3
+  SendUserFile: 4
   ToolSearch: 3
   SendMessage: 3
-  Write: 3
-  Edit: 8
+  Write: 4
+  Edit: 10
   mcp__github__search_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 5
-  mcp__github__pull_request_read: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 7
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 2
   Skill: 2
 filesEdited:
   - layers/midden/app/components/midden/TrenchFace.vue
