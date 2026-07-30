@@ -101,6 +101,20 @@ Status: Accepted
 > own enumeration back in sync with it. See ADR-0025's Consequences for why
 > those three files carry the same never-auto-merge risk.
 
+> **Amended (2026-07-30, `/audit-docs`).** *What counts as "changes
+> untested/untestable runtime behaviour"* (the 2026-07-06 amendment above) was
+> left undefined — unlike [ADR-0023](0023-guest-driven-demo-pipeline.md)'s
+> parallel "major security concern" gate, which got a worked example list once
+> the bare phrase proved unactionable. Examples that clear this bar,
+> non-exhaustively: new client-visible JS behaviour with no test asserting it;
+> a hook, cron job, or script meant to run unattended with no dry-run or test
+> harness around it; timing-, ordering-, or concurrency-dependent logic a unit
+> test can't reliably exercise; and anything the gate's L0–L2 layers structurally
+> cannot observe (e.g. an external side effect, a webhook delivery). An ordinary
+> change with real test coverage does **not** clear the bar merely for touching
+> unfamiliar code. `frictions-to-fixes` — the reviewer-agent this axis is aimed
+> at (ADR-0003) — should point here rather than restating this list.
+
 ## Context
 
 Both the human reviewer (now) and the scheduled review-agent (mid-term, ADR-0003)
