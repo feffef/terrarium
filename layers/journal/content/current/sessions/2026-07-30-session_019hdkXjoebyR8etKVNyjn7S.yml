@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019hdkXjoebyR8etKVNyjn7S
 startedAt: 2026-07-30T08:49:53Z
-endedAt: 2026-07-30T18:47:41Z
+endedAt: 2026-07-30T19:53:49Z
 kind: interactive
 goal: Triage the backlog, then implement six issues
 status: completed
-outcome: 12 triaged, 6 filed, 6 PRs merged
-summary: "Human-instructed in seven green-lit steps. /auto-triage swept 28 open issues (12 eligible, one subagent each): 1 objective close, 1 ready-for-agent, 10 ready-for-human. Then, on successive green-lights: filed \"#752\"/\"#753\"/\"#754\" for verified residues; promoted two to ready-for-agent; implemented \"#544\", \"#750\", \"#752\", \"#754\" via worktree agents and reviewed each; applied the review findings and filed \"#760\"/\"#761\" for the two needing a human decision; fixed those two on delegated authority. All six PRs merged. Finally traced a red `main` to this session's own oversized session log. Every subagent claim was re-verified against a primary source before being relayed."
+outcome: 12 triaged, 7 filed, 8 PRs merged
+summary: "Human-instructed in seven green-lit steps. /auto-triage swept 28 open issues (12 eligible, one subagent each): 1 objective close, 1 ready-for-agent, 10 ready-for-human. Then, on successive green-lights: filed \"#752\"/\"#753\"/\"#754\" for verified residues; promoted two to ready-for-agent; implemented \"#544\", \"#750\", \"#752\", \"#754\" via worktree agents and reviewed each; applied the review findings and filed \"#760\"/\"#761\" for the two needing a human decision; fixed those two on delegated authority. All six PRs merged. Finally traced a red `main` to this session's own log, misdiagnosed it as size, and had it correctly re-diagnosed as click-target geometry (#768/#769). Every subagent claim was re-verified against a primary source before being relayed."
 prs:
   - "756"
   - "757"
@@ -16,6 +16,7 @@ prs:
   - "763"
   - "764"
   - "765"
+  - "769"
 docsRead:
   - path: docs/adr/0022-autonomous-triage-sweep.md
     reason: standing green-light and its bounds
@@ -61,8 +62,8 @@ skillsUsed:
   - name: context
     reason: (invoked as a slash command)
 frictions:
-  - description: This session's own session log grew to 11.3KB and broke `main` — the journal accordion e2e timed out because the first card's detail never became visible.
-    solution: Isolated by controlled experiment (remove mine → pass; remove another → fail; trim mine → pass), so it is document size, not log count. Trimmed this log to unblock; the underlying card fragility is filed separately. A log author has no signal that verbosity can red the gate — the cap belongs in the renderer.
+  - description: This session's own log reddened `main` for ~2h, and I misdiagnosed the cause as document size, then "fixed" it by trimming — which did not work.
+    solution: "Real cause (#768, proven by an elementFromPoint probe): `locator.click()` aims at the bounding-box CENTRE, and this log's 8 PR chips wrapped the card head tall enough that the centre landed on a chip link whose `@click.stop` suppressed the toggle and navigated away. Size was a proxy for head-layout coincidence — which is why no threshold bisected. `main` recovered only when a newer log displaced mine as the first card; the real fix was #769. Lesson: a controlled table varying one input can still support a wrong causal story. Probe the mechanism before asserting it."
     severity: major
   - description: Briefed four concurrent reviewers to diff against FETCH_HEAD in one shared checkout; siblings' fetches moved it, once to another PR's head entirely.
     solution: Pin an explicit SHA per PR before dispatch; never hand a shared mutable ref to concurrent agents. Fails silently — yields confident wrong findings, not errors.
@@ -76,26 +77,27 @@ frictions:
   - description: No committed helper answers auto-triage's own eligibility question (which open issues have human-authored most-recent activity); hand-rolled a scratch script.
     solution: Codify as scripts/auto-triage-eligibility.ts, reusing isAiAuthored and the list-open-issues REST helpers.
     severity: minor
-durationSec: 35868
+durationSec: 39836
 models:
-  claude-opus-5: 498
+  claude-opus-5: 543
   <synthetic>: 1
 toolCounts:
-  Bash: 91
+  Bash: 105
   Read: 16
   Write: 8
   Agent: 29
   Skill: 2
-  ToolSearch: 3
+  ToolSearch: 4
   mcp__github__issue_write: 10
-  mcp__github__add_issue_comment: 11
-  Edit: 13
+  mcp__github__add_issue_comment: 12
+  Edit: 15
   AskUserQuestion: 6
   SendMessage: 5
   mcp__Claude_Code_Remote__subscribe_pr_activity: 6
   mcp__Claude_Code_Remote__send_later: 4
   mcp__Claude_Code_Remote__delete_trigger: 1
   mcp__github__get_job_logs: 2
+  mcp__github__update_pull_request_branch: 1
 subagents:
   - type: general-purpose
     task: Triage issue 666
@@ -182,6 +184,7 @@ learnings:
   - Safari and iOS Safari implement no scroll anchoring at all, so a test disabling it reproduces the WebKit production configuration rather than inventing a synthetic one.
   - "Subagents given explicit authority to refuse produce better outcomes: four declined a listed change and proved why, and each refusal was correct."
 ideas:
-  - Cap or lazily render a session card's detail so no single log can red the gate — and surface a size warning at authoring time, since the author is the one person who can act on it.
+  - "Treat 'a click target whose centre can be covered by an interactive child' as a checkable class, not a one-off: #769's sweep guards session cards, but the same shape recurs anywhere a container both toggles and hosts links (digest rows already qualify). A lint or shared e2e helper asserting every toggle's centre hit-tests to the toggle would generalise it."
+  - "Decide whether a card head crowded with PR chips is acceptable UX: a real user clicking the middle of a tall head is navigated to GitHub rather than expanding the card, and the chips' share of the head grows with PR count. #769 fixed the test's aim, not the interaction."
   - "Give auto-triage a bravery-calibration readout: record each sweep's state distribution over time, so near-total escalation is visibly either the hard residue or a miscalibrated bar."
   - "Make the sweep's residue path first-class: have triage subagents emit residues as structured output and report them as a distinct 'found but unfiled' section for one green-light decision."
