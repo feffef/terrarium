@@ -1,153 +1,187 @@
 schemaVersion: 1
 session: session_019hdkXjoebyR8etKVNyjn7S
-startedAt: 2026-07-30 08:49:53+00:00
-endedAt: 2026-07-30 17:32:42+00:00
+startedAt: 2026-07-30T08:49:53Z
+endedAt: 2026-07-30T18:47:41Z
 kind: interactive
 goal: Triage the backlog, then implement six issues
 status: completed
 outcome: 12 triaged, 6 filed, 6 PRs merged
-summary: 'Human-instructed in seven green-lit steps. /auto-triage swept 28 open issues (12 eligible, one subagent each): 1 objective close, 1 ready-for-agent, 10 ready-for-human. Then, on successive green-lights: filed "#752"/"#753"/"#754" for verified residues; promoted two to ready-for-agent; implemented "#544", "#750", "#752", "#754" via worktree agents and reviewed each; applied the review findings and filed "#760"/"#761" for the two needing a human decision; fixed those two on delegated authority. All six PRs merged. Finally traced a red `main` to this session''s own oversized session log. Every subagent claim was re-verified against a primary source before being relayed.'
+summary: "Human-instructed in seven green-lit steps. /auto-triage swept 28 open issues (12 eligible, one subagent each): 1 objective close, 1 ready-for-agent, 10 ready-for-human. Then, on successive green-lights: filed \"#752\"/\"#753\"/\"#754\" for verified residues; promoted two to ready-for-agent; implemented \"#544\", \"#750\", \"#752\", \"#754\" via worktree agents and reviewed each; applied the review findings and filed \"#760\"/\"#761\" for the two needing a human decision; fixed those two on delegated authority. All six PRs merged. Finally traced a red `main` to this session's own oversized session log. Every subagent claim was re-verified against a primary source before being relayed."
 prs:
-- '756'
-- '757'
-- '758'
-- '759'
-- '762'
-- '763'
-- '764'
-- '765'
+  - "756"
+  - "757"
+  - "758"
+  - "759"
+  - "762"
+  - "763"
+  - "764"
+  - "765"
 docsRead:
-- path: docs/adr/0022-autonomous-triage-sweep.md
-  reason: standing green-light and its bounds
-- path: docs/adr/0020-requester-trust-tiers.md
-  reason: Trusted/Public gate on ready-for-agent
-- path: scripts/check-triage-drift.ts
-  reason: reused its isAiAuthored footer detector
-- path: layers/midden/tenant.config.ts
-  reason: 'provenance schema — collapsed #752''s supposed ambiguity'
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: standing green-light and its bounds
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: Trusted/Public gate on ready-for-agent
+  - path: scripts/check-triage-drift.ts
+    reason: reused its isAiAuthored footer detector
+  - path: layers/midden/tenant.config.ts
+    reason: "provenance schema — collapsed #752's supposed ambiguity"
+  - path: .claude/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: .claude/skills/triage/OUT-OF-SCOPE.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: scripts/list-open-issues.ts
+    reason: (no reason given)
+  - path: scripts/github-footer-guard.ts
+    reason: (no reason given)
+  - path: scripts/midden-survey.ts
+    reason: (no reason given)
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (no reason given)
 skillsUsed:
-- name: auto-triage
-  reason: the sweep
-- name: triage
-  reason: per-issue rules
-- name: implement
-  reason: the six-issue implementation pass
-- name: code-review
-  reason: one reviewer per PR
-- name: close-session
-  reason: Session closure
+  - name: auto-triage
+    reason: the sweep
+  - name: triage
+    reason: per-issue rules
+  - name: implement
+    reason: the six-issue implementation pass
+  - name: code-review
+    reason: one reviewer per PR
+  - name: close-session
+    reason: Session closure
+  - name: log-session
+    reason: (no reason given)
+  - name: context
+    reason: (invoked as a slash command)
 frictions:
-- description: This session's own session log grew to 11.3KB and broke `main` — the journal accordion e2e timed out because the first card's detail never became visible.
-  solution: Isolated by controlled experiment (remove mine → pass; remove another → fail; trim mine → pass), so it is document size, not log count. Trimmed this log to unblock; the underlying card fragility is filed separately. A log author has no signal that verbosity can red the gate — the cap belongs in the renderer.
-  severity: major
-- description: Briefed four concurrent reviewers to diff against FETCH_HEAD in one shared checkout; siblings' fetches moved it, once to another PR's head entirely.
-  solution: Pin an explicit SHA per PR before dispatch; never hand a shared mutable ref to concurrent agents. Fails silently — yields confident wrong findings, not errors.
-  severity: moderate
-- description: Filed "#752" calling its fix direction ambiguous without first reading the provenance schema or the real artifacts; both collapsed the ambiguity.
-  solution: '"Ambiguous" and "needs a human" are factual claims about the code and need the same primary-source check as any other. Verify before escalating, not only before asserting.'
-  severity: minor
-- description: check:worktrees reported four worktrees with unrescued work; all four were stale trees whose branch ref a later agent had moved underneath them.
-  solution: It compares tree against branch HEAD, so it cannot tell "stale, ref moved" from "real unrescued work" and reports the alarming reading. Could say "matches an ancestor commit, likely stale".
-  severity: minor
-- description: No committed helper answers auto-triage's own eligibility question (which open issues have human-authored most-recent activity); hand-rolled a scratch script.
-  solution: Codify as scripts/auto-triage-eligibility.ts, reusing isAiAuthored and the list-open-issues REST helpers.
-  severity: minor
-durationSec: 31369
+  - description: This session's own session log grew to 11.3KB and broke `main` — the journal accordion e2e timed out because the first card's detail never became visible.
+    solution: Isolated by controlled experiment (remove mine → pass; remove another → fail; trim mine → pass), so it is document size, not log count. Trimmed this log to unblock; the underlying card fragility is filed separately. A log author has no signal that verbosity can red the gate — the cap belongs in the renderer.
+    severity: major
+  - description: Briefed four concurrent reviewers to diff against FETCH_HEAD in one shared checkout; siblings' fetches moved it, once to another PR's head entirely.
+    solution: Pin an explicit SHA per PR before dispatch; never hand a shared mutable ref to concurrent agents. Fails silently — yields confident wrong findings, not errors.
+    severity: moderate
+  - description: Filed "#752" calling its fix direction ambiguous without first reading the provenance schema or the real artifacts; both collapsed the ambiguity.
+    solution: '"Ambiguous" and "needs a human" are factual claims about the code and need the same primary-source check as any other. Verify before escalating, not only before asserting.'
+    severity: minor
+  - description: check:worktrees reported four worktrees with unrescued work; all four were stale trees whose branch ref a later agent had moved underneath them.
+    solution: It compares tree against branch HEAD, so it cannot tell "stale, ref moved" from "real unrescued work" and reports the alarming reading. Could say "matches an ancestor commit, likely stale".
+    severity: minor
+  - description: No committed helper answers auto-triage's own eligibility question (which open issues have human-authored most-recent activity); hand-rolled a scratch script.
+    solution: Codify as scripts/auto-triage-eligibility.ts, reusing isAiAuthored and the list-open-issues REST helpers.
+    severity: minor
+durationSec: 35868
 models:
-  claude-opus-5: 394
+  claude-opus-5: 498
   <synthetic>: 1
 toolCounts:
-  Bash: 62
+  Bash: 91
   Read: 16
-  Write: 7
-  Agent: 26
+  Write: 8
+  Agent: 29
   Skill: 2
-  ToolSearch: 2
-  mcp__github__issue_write: 8
-  mcp__github__add_issue_comment: 8
+  ToolSearch: 3
+  mcp__github__issue_write: 10
+  mcp__github__add_issue_comment: 11
   Edit: 13
   AskUserQuestion: 6
   SendMessage: 5
   mcp__Claude_Code_Remote__subscribe_pr_activity: 6
   mcp__Claude_Code_Remote__send_later: 4
   mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__get_job_logs: 2
 subagents:
-- type: general-purpose
-  task: Triage issue 666
-- type: general-purpose
-  task: Triage issue 674
-- type: general-purpose
-  task: Triage issue 677
-- type: general-purpose
-  task: Triage issue 688
-- type: general-purpose
-  task: Triage issue 694
-- type: general-purpose
-  task: Triage issue 723
-- type: general-purpose
-  task: Triage issue 724
-- type: general-purpose
-  task: Triage issue 730
-- type: general-purpose
-  task: Triage issue 736
-- type: general-purpose
-  task: Triage issue 737
-- type: general-purpose
-  task: Triage issue 738
-- type: general-purpose
-  task: Triage issue 750
-- type: general-purpose
-  task: Implement issue 544
-  model: opus
-- type: general-purpose
-  task: Implement issue 750
-  model: opus
-- type: general-purpose
-  task: Implement issue 752
-  model: opus
-- type: general-purpose
-  task: Implement issue 754
-  model: opus
-- type: general-purpose
-  task: Review PR 756
-  model: opus
-- type: general-purpose
-  task: Review PR 757
-  model: opus
-- type: general-purpose
-  task: Review PR 758
-  model: opus
-- type: general-purpose
-  task: Review PR 759
-  model: opus
-- type: general-purpose
-  task: Fix findings on PR 756
-  model: opus
-- type: general-purpose
-  task: Fix findings on PR 757
-  model: opus
-- type: general-purpose
-  task: Fix findings on PR 758
-  model: opus
-- type: general-purpose
-  task: Fix findings on PR 759
-  model: opus
-- type: general-purpose
-  task: Fix issue 761
-  model: opus
-- type: general-purpose
-  task: Fix issue 760
-  model: opus
+  - type: general-purpose
+    task: Triage issue 666
+  - type: general-purpose
+    task: Triage issue 674
+  - type: general-purpose
+    task: Triage issue 677
+  - type: general-purpose
+    task: Triage issue 688
+  - type: general-purpose
+    task: Triage issue 694
+  - type: general-purpose
+    task: Triage issue 723
+  - type: general-purpose
+    task: Triage issue 724
+  - type: general-purpose
+    task: Triage issue 730
+  - type: general-purpose
+    task: Triage issue 736
+  - type: general-purpose
+    task: Triage issue 737
+  - type: general-purpose
+    task: Triage issue 738
+  - type: general-purpose
+    task: Triage issue 750
+  - type: general-purpose
+    task: Implement issue 544
+    model: opus
+  - type: general-purpose
+    task: Implement issue 750
+    model: opus
+  - type: general-purpose
+    task: Implement issue 752
+    model: opus
+  - type: general-purpose
+    task: Implement issue 754
+    model: opus
+  - type: general-purpose
+    task: Review PR 756
+    model: opus
+  - type: general-purpose
+    task: Review PR 757
+    model: opus
+  - type: general-purpose
+    task: Review PR 758
+    model: opus
+  - type: general-purpose
+    task: Review PR 759
+    model: opus
+  - type: general-purpose
+    task: Fix findings on PR 756
+    model: opus
+  - type: general-purpose
+    task: Fix findings on PR 757
+    model: opus
+  - type: general-purpose
+    task: Fix findings on PR 758
+    model: opus
+  - type: general-purpose
+    task: Fix findings on PR 759
+    model: opus
+  - type: general-purpose
+    task: Fix issue 761
+    model: opus
+  - type: general-purpose
+    task: Fix issue 760
+    model: opus
+  - type: general-purpose
+    task: Fix provenance path validation
+    model: opus
+  - type: general-purpose
+    task: Consolidate pin bracket helper
+    model: opus
+  - type: general-purpose
+    task: Fix journal card size fragility
+    model: fable
 gitBranch: claude/auto-triage-henuc5
 entrypoint: remote_mobile
 cliVersion: 2.1.220
 learnings:
-- 'A sweep''s idempotency rule doubles as its cheapest correctness check: 14 of 28 issues skipped because AI acted last is the mechanism working, not coverage lost.'
-- 'Determinable and authorized are independent — #674''s design was settled, yet its body withheld the green-light.'
-- 'The schema field whose NAME matches an intent may not carry it: midden''s `removedIn` reads as ''the commit that retired this'', but only 1 of 14 artifacts sets it, and there it names a different commit than `provenance.hash`.'
-- Safari and iOS Safari implement no scroll anchoring at all, so a test disabling it reproduces the WebKit production configuration rather than inventing a synthetic one.
-- 'Subagents given explicit authority to refuse produce better outcomes: four declined a listed change and proved why, and each refusal was correct.'
+  - "A sweep's idempotency rule doubles as its cheapest correctness check: 14 of 28 issues skipped because AI acted last is the mechanism working, not coverage lost."
+  - "Determinable and authorized are independent — #674's design was settled, yet its body withheld the green-light."
+  - "The schema field whose NAME matches an intent may not carry it: midden's `removedIn` reads as 'the commit that retired this', but only 1 of 14 artifacts sets it, and there it names a different commit than `provenance.hash`."
+  - Safari and iOS Safari implement no scroll anchoring at all, so a test disabling it reproduces the WebKit production configuration rather than inventing a synthetic one.
+  - "Subagents given explicit authority to refuse produce better outcomes: four declined a listed change and proved why, and each refusal was correct."
 ideas:
-- Cap or lazily render a session card's detail so no single log can red the gate — and surface a size warning at authoring time, since the author is the one person who can act on it.
-- 'Give auto-triage a bravery-calibration readout: record each sweep''s state distribution over time, so near-total escalation is visibly either the hard residue or a miscalibrated bar.'
-- 'Make the sweep''s residue path first-class: have triage subagents emit residues as structured output and report them as a distinct ''found but unfiled'' section for one green-light decision.'
+  - Cap or lazily render a session card's detail so no single log can red the gate — and surface a size warning at authoring time, since the author is the one person who can act on it.
+  - "Give auto-triage a bravery-calibration readout: record each sweep's state distribution over time, so near-total escalation is visibly either the hard residue or a miscalibrated bar."
+  - "Make the sweep's residue path first-class: have triage subagents emit residues as structured output and report them as a distinct 'found but unfiled' section for one green-light decision."
