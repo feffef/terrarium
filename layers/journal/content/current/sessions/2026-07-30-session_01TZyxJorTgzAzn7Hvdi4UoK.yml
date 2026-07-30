@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01TZyxJorTgzAzn7Hvdi4UoK
 startedAt: 2026-07-30T04:08:25Z
-endedAt: 2026-07-30T04:31:37Z
+endedAt: 2026-07-30T05:18:27Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: "4 findings merged (#745); 2 escalated in #746"
-summary: "A scheduled Routine fired /audit-docs with no human prompt. Dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel across every *.md file and Skill in the repo, pooled 6 candidate findings (Concision found none), then dispatched an independent fact-checker that confirmed all 6 against primary sources. Fixed the 4 findings that touch no human-only surface bravely and in place (midden-survey's dedupe missing the new stores/artifacts directory; layers/midden/CONTEXT.md restating its strata.ts/condition.ts single-home claim twice and inlining validate-content-refs.ts's mechanics in its glossary; a doorbell fork-PR token issue documented independently in two docs with no cross-reference), ran pnpm gate:scoped green, opened PR #745 (audit-docs' self-merge tier per ADR-0003), confirmed CI green via get_check_runs, and merged it via scripts/merge-pr.ts — now on origin/main. The other 2 confirmed findings — an ADR-0003/pr-workflow.md contradiction over the auto-merge mechanism, and an undefined \"untested/untestable runtime behaviour\" threshold in ADR-0004 — touch ADR text, so per CLAUDE.md's human-only-surface rule they were fixed on a separate branch and opened as escalation PR #746, which does not self-merge and awaits a human. Subscribed to #746's activity; will babysit (respond to CI/review, never merge it myself) until it resolves. Every step of this session was agent-initiated; no human was present to steer it."
+status: completed
+outcome: "Both PRs merged: #745 self-merged, #746 human-merged"
+summary: "A scheduled Routine fired /audit-docs with no human prompt. Dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel across every *.md file and Skill in the repo, pooled 6 candidate findings (Concision found none), then dispatched an independent fact-checker that confirmed all 6 against primary sources. Fixed the 4 findings that touch no human-only surface bravely and in place (midden-survey's dedupe missing the new stores/artifacts directory; layers/midden/CONTEXT.md restating its strata.ts/condition.ts single-home claim twice and inlining validate-content-refs.ts's mechanics in its glossary; a doorbell fork-PR token issue documented independently in two docs with no cross-reference), ran pnpm gate:scoped green, opened PR #745 (audit-docs' self-merge tier per ADR-0003), confirmed CI green via get_check_runs, and merged it via scripts/merge-pr.ts. The other 2 confirmed findings — an ADR-0003/pr-workflow.md contradiction over the auto-merge mechanism, and an undefined \"untested/untestable runtime behaviour\" threshold in ADR-0004 — touch ADR text, so per CLAUDE.md's human-only-surface rule they were fixed on a separate branch and opened as escalation PR #746, which never self-merges. A human merged #746 directly; this session only watched and took no merge action on it. Both PRs are now on origin/main. Every step of this session's own work was agent-initiated; no human prompted it at any point."
 prs:
   - "745"
   - "746"
@@ -41,25 +41,26 @@ frictions:
   - description: ADR-0004's "changes untested/untestable runtime behaviour" human-only escalation axis has no operational test anywhere, including in frictions-to-fixes/SKILL.md, the Skill actually tasked with judging it.
     solution: Amend ADR-0004 with a concrete example list, mirroring ADR-0023's own precedent for its similarly-vague "major security concern" gate. Escalating in a human-reviewed PR since it's an ADR edit.
     severity: minor
-durationSec: 1391
+durationSec: 4201
 models:
-  claude-sonnet-5: 177
+  claude-sonnet-5: 189
 toolCounts:
-  Bash: 37
+  Bash: 39
   Agent: 6
   ScheduleWakeup: 2
-  Read: 10
-  Edit: 14
+  Read: 11
+  Edit: 15
   Grep: 2
   Write: 3
   ToolSearch: 3
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
-  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_read: 5
   mcp__github__add_issue_comment: 2
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
   PushNotification: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/midden-survey.ts
   - .agents/skills/midden-survey/SKILL.md
