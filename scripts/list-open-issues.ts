@@ -71,7 +71,7 @@ export interface OpenIssue {
 // ── Pure core (unit-tested) ─────────────────────────────────────────────────
 
 /** GitHub's REST API HTML-entity-encodes issue text in this repo's
- *  environment (the same quirk `docs/agents/issue-tracker.md` notes for
+ *  environment (the same quirk `docs/agents/github-integration.md` notes for
  *  `issue_read`/`pull_request_read`) — decode the handful of entities GitHub
  *  actually emits so the listing reads as plain text. */
 export function decodeHtmlEntities(s: string): string {

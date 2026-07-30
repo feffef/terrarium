@@ -182,30 +182,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   `InputValidationError` (`scripts/deferred-tool-guard.ts`; see
   `docs/agents/deferred-tool-guard.md`, issue #612).
 - **Never predict or reconstruct an identifier — a line number, a blob SHA, an
-  issue/PR number — from memory.** Always resolve it via a fresh tool call
-  (a Read, `git rev-parse`/`git log -1 --format=%H`, or the actual `issue_write`
-  response) at the moment you write it down. For a session id specifically,
-  resolve it from the system-prompt commit-footer template / session context
-  at the moment of writing — never construct one from a plausible-looking
-  pattern. This rule alone has repeatedly failed to hold (issue #387), so it
-  now has a mechanical backstop too: `scripts/session-id-guard.ts`, wired into
-  the `Stop`-hook path (`scripts/session-end.ts`), compares every
-  `Claude-Session:` trailer on this session's own commits against the
-  resolved ground truth and records a mismatch — it catches a fabricated
-  trailer after the fact, it doesn't replace writing the real id in the first
-  place. **That guard only sees git commit trailers — it cannot see a GitHub
-  comment, issue, or PR-body footer** (issue #605) — this prose-only
-  extension of the rule didn't hold on its own: the exact failure recurred
-  within two days (issue #628), so that surface now has its own mechanical
-  backstop too: `scripts/github-footer-guard.ts`, a `PreToolUse` hook on every
-  GitHub-writing tool that can carry a footer, blocking a call whose body's
-  `Claude-Session:` footer diverges from the resolved ground truth. It runs
-  before the post, closing the after-the-fact gap the commit-trailer guard
-  always had here — but it can't fix an already-posted bad footer. Since no
-  edit-comment tool exists, the
-  standing remedy for a bad footer caught after posting (a guard miss, or a
-  non-tool-mediated post) is still to post a visible follow-up correction
-  comment, not to try to rewrite the original.
+  issue/PR number, a session id — from memory.** Always resolve it via a fresh
+  tool call at the moment you write it down. This rule has failed repeatedly
+  (#387, #605, #628), so parts of it are now hook-enforced — but the guards
+  cover three of four surfaces, not all four, and one of them only *detects*.
+  **`docs/agents/provenance.md` holds the coverage map and the per-surface
+  remedies; read it before writing any footer or identifier by hand.**
 - **Verify any subagent- or doc-derived factual or behavioral claim against a
   locally observable primary source before asserting it as fact** — whether
   the audience is external (an issue/PR comment, an external post, etc.) or
@@ -292,75 +274,15 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   `git reset --hard HEAD~1` mid-teardown once discarded uncommitted edits to 5
   tracked files (recovered) — the same "check first" discipline as the
   pkill/branch-rename/tail-piping footguns above, applied to this one.
-- **A session-closure Stop hook "Unverified" commit flag isn't automatically
-  this session's to fix.** The hook can flag commits that are actually
-  inherited history — landed on `main` before this branch existed, reachable
-  from `origin/main`. Before acting on the flag, run `git log
-  origin/main..HEAD`: if the flagged commits aren't in that list, they predate
-  this branch and must **not** be rebased/rewritten (e.g. via the hook's
-  suggested `--reset-author`) — doing so would rewrite public history. Only
-  commits that *are* in `origin/main..HEAD` are this session's own and fair
-  game to fix.
-- **Keep session-log-only commits content-only.** Never let substantive work
-  ride along inside a commit titled as a session-log commit — title the commit
-  for the work it actually contains instead.
-- **Commit messages containing backticks or `$(...)` must be written with
-  `git commit -F <file>`** (or a quoted heredoc), never `git commit -m` —
-  inside a double-quoted `-m` argument the shell runs the backtick/`$()` span
-  as a command and mangles the commit body. **The harness's automatic
-  Co-Authored-By/Claude-Session footer injection only applies to
-  interactive/`-m` commits, not `-F`** — when using `-F`, append both
-  provenance lines to the message file yourself.
-- **Never use `git commit-tree` or other history-rewriting techniques to inject
-  a missing provenance footer** — it can silently re-parent the chain onto a
-  different base and drop intervening commits. The safe fix is `git commit
-  --amend -F <file>` on the tip commit only (or including the footer at commit
-  time); never rewrite non-tip history to add it.
-- **For any since-last-merge diff or review, run `git fetch origin main` first
-  and anchor on the merge-base** (`git merge-base origin/main HEAD`) or the
-  commit under review (`HEAD~1`) — the environment's pre-cloned `origin/main`
-  is often stale and inflates the diff to 100+ unrelated files. The same
-  staleness bites two related cases: scope any `-S`/pickaxe search
-  (`git log -S<string>`) to `origin/main` specifically, never `--all`, which
-  mixes divergent/rewritten branch histories and can misread an
-  incrementally-built file as a brand-new-file commit; and don't assume a
-  nonempty merge-base — check `git merge-base origin/main HEAD` first and be
-  ready for the pre-cloned repo to be a fully unrelated root (empty
-  merge-base, 100+ commits of divergence), not just stale — resetting onto it
-  blindly would destroy real history. **This isn't only a pre-diff step** —
-  in this fast-moving, multi-agent repo, re-fetch and rebase onto
-  `origin/main` periodically during a long-running session too, not just
-  right before a final push, especially before landing/merging a PR that
-  touches a shared doc or list other concurrent sessions likely edit.
-  **The same applies before *starting* work, not just before pushing it:**
-  when a Trusted user verbally directs an edit on a PR, fetch (`git fetch
-  origin <branch>` + inspect the latest commits) before beginning it — a
-  concurrent session may have already pushed that exact change, and catching
-  it before you redundantly re-author it is cheaper than catching it at push
-  time.
-  **A clean, no-conflict auto-merge/rebase is not proof of correctness on a
-  file both branches restructured.** Git only flags a conflict where the two
-  sides touched overlapping lines — a rename or refactor on one side can leave
-  a now-stale reference on the other with no conflict marker to catch it (e.g.
-  a rebase once silently kept a stale `specimen.value?.slug` reference after
-  `main` had renamed it to `entry.value?.specimen`). On any file both branches
-  actually restructured, read both sides **in full**, not just the (absent)
-  conflict markers, before trusting the merge — especially after a rename or
-  refactor on either side.
-- **Before concluding a file or Skill's history was rewritten, squashed, or
-  re-rooted — or asserting a completeness claim like "searched everything
-  since X and found nothing more" — rule out a shallow clone first.** Check
-  `git rev-parse --is-shallow-repository` (or the presence of `.git/shallow`)
-  — a shallow clone's grafted, parent-less boundary commit makes every file
-  it touches look newly-added, which can misread as a real history rewrite
-  when it's actually just a clone-depth artifact, and the same boundary
-  silently truncates any search over history before it, making a
-  completeness claim false. `git fetch --deepen <n>` (or `--unshallow`) to
-  inspect the real history before drawing either conclusion. Don't wait for a
-  suspicious result to trigger this check: run `git rev-parse
-  --is-shallow-repository` as the *first* step before starting any
-  blame/pickaxe/history-completeness archaeology in the first place, not only
-  once a result already looks wrong.
+- **Git mechanics — staleness, history archaeology, commit hygiene — are
+  single-homed in `docs/agents/git-conventions.md`.** The rules that bite most
+  often: `git fetch origin main` and anchor on the merge-base before *any*
+  since-last-merge diff (the pre-cloned `origin/main` is usually stale); check
+  `git rev-parse --is-shallow-repository` before any blame/pickaxe work; a
+  clean auto-merge is not proof of correctness on a file both branches
+  restructured; and a Stop-hook "Unverified" flag may be inherited history
+  that is not yours to rewrite. Read that doc before rebasing, amending, or
+  drawing a conclusion from history.
 - **Keep a PR's description in sync with its content — hard rule.** If you
   fundamentally change what a PR does (switch approach, swap the files it touches,
   answer review with a different solution), update the PR title/description in the
@@ -487,19 +409,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   Co-Authored-By: <model name> <noreply@anthropic.com>
   Claude-Session: <session URL>
   ```
-  The harness *usually* injects this footer into commits for free from its own
-  commit template, and when it doesn't (cloud `-m` commits have been seen
-  skipping the injection) a **fail-open commit-msg git hook backstops it** —
-  `.githooks/commit-msg` → `scripts/provenance-footer.ts` appends the footer when
-  absent and corrects it in place when present but mismatched, reconstructing the
-  values repo-side (ADR-0017's 2026-07-20 amendment, issue #346; the
-  present-but-mismatched correction per issue #710; installed via `core.hooksPath`
-  in `postinstall`). The hook covers only a local `git commit`, not MCP-API commits
-  (`create_or_update_file`/`push_files`), and can silently no-op if pnpm/tsx
-  isn't on PATH — so still glance that a commit's footer landed, but you should
-  rarely need to amend it by hand now. For everything else the footer covers,
-  ADR-0017's Decision section is the full enumerated scope — append the same two
-  lines yourself as the last lines of the body.
+  Hooks backstop this on some surfaces but **not all** — notably MCP-API commits
+  (`create_or_update_file`/`push_files`) carry no guard at all. The coverage map,
+  the two known gaps, and the per-surface remedy for a bad footer are single-homed
+  in `docs/agents/provenance.md`.
 
 ## Repo layout
 
@@ -675,6 +588,26 @@ Per-repo configuration for Matt Pocock's engineering skills lives in `docs/agent
 ### Issue tracker
 
 Issues and PRDs are tracked as GitHub issues in `feffef/terrarium` (via the `gh` CLI, or the GitHub MCP tools when `gh` is absent); external PRs are also pulled into the triage queue. See `docs/agents/issue-tracker.md`.
+
+### GitHub integration
+
+The `mcp__github__*` tool surface underneath the issue-tracker and PR-workflow
+recipes — tool→operation mapping for `gh`-less sessions, the `list_*`/`search_*`
+overflow and fuzzy-match traps, `get_check_runs` polling, and `ToolSearch` name
+resolution. See `docs/agents/github-integration.md`.
+
+### Provenance & identity
+
+The ADR-0017 footer and the never-fabricate-an-identifier rule, plus the map of
+which mechanical guard covers which surface (and the one surface covered by
+none). See `docs/agents/provenance.md`.
+
+### Git conventions
+
+Driving git here without losing work or drawing a false conclusion from history
+— `origin/main` staleness and merge-base anchoring, shallow-clone artifacts,
+commit hygiene, and the Stop-hook "Unverified" flag. See
+`docs/agents/git-conventions.md`.
 
 ### Triage labels
 

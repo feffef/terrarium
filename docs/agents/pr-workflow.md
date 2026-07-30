@@ -13,13 +13,9 @@ branch-protection state, see
 (issue #348) rather than assuming this doc's own description of that state
 hasn't drifted.
 
-**`mcp__github__*` calls (`create_pull_request`, `merge_pull_request`,
-`add_issue_comment`, `issue_read`, `issue_write`, etc.) can intermittently
-return a transient 503** ("no server currently available") that succeeds on
-retry — retry once or twice with a short pause before treating it as a real
-failure, not a genuine error to escalate. When `issue_read` itself is the one
-flaking, `search_issues` scoped to the issue number is a viable fallback
-(issue #611).
+For the `mcp__github__*` tool surface this recipe runs on — transient 503s and
+when to retry, `get_check_runs` vs `get_status`, the `list_*`/`search_*`
+overflow traps — see [`github-integration.md`](./github-integration.md).
 
 ## The recipe
 

@@ -13,7 +13,7 @@
 //
 // Deliberate scope limit: `merged_by` is out of scope here — git can't
 // produce it, this environment has no `gh` CLI, and no caller needs it
-// (`recent-prs.ts` and `docs/agents/issue-tracker.md:43` already exclude
+// (`recent-prs.ts` and `docs/agents/github-integration.md` already exclude
 // author/merged_by on the same grounds; ADR-0017 notes it reads as the human
 // owner anyway).
 //
