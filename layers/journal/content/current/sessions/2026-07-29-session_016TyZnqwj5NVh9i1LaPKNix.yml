@@ -1,0 +1,90 @@
+schemaVersion: 1
+session: session_016TyZnqwj5NVh9i1LaPKNix
+startedAt: 2026-07-29T18:54:19Z
+endedAt: 2026-07-30T06:20:47Z
+kind: interactive
+goal: Ship SVG illustrations for the Midden
+status: completed
+outcome: "Two drawings merged in PR #748"
+summary: "Human-instructed throughout, in four explicit steps: spawn two ideation agents (fable and opus) for Midden SVG ideas; draft the combined top ten as screenshots; refine the two the human picked over four self-reviewed iterations each; then implement both. Agent-initiated within those bounds: the merge of the two idea lists into ten, the decision to keep the contested provenance plates as a reduced draft so the disagreement could be settled by eye, and the choice to make SectionColumn data-driven from DIG_SEASONS rather than hand-plotted. Verified the agents' load-bearing factual claims against the corpus before relaying. Gate green; PR merged."
+prs:
+  - "748"
+docsRead:
+  - path: layers/midden/CONTEXT.md
+    reason: Midden vocabulary, and the post-MVP cuts that disciplined every proposal
+  - path: layers/midden/app/assets/theme.css
+    reason: token palette; revealed the orphaned slate set
+  - path: layers/midden/app/utils/strata.ts
+    reason: dig-season list the section column derives its geometry from
+  - path: layers/midden/app/components/midden/StoresLanding.vue
+    reason: host surface and its grid rows
+  - path: layers/midden/app/components/midden/TrenchLanding.vue
+    reason: host surface; restructured for the full-bleed band
+skillsUsed:
+  - name: close-session
+    reason: closure front door after the PR merged
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Three transient API 500s killed both refinement subagents mid-run, twice during grounding before either wrote a byte.
+    solution: SendMessage resume preserved their grounding rather than restarting cold. Brief long subagents to bank each iteration's artifacts to disk before starting the next, so an interruption leaves a partial deliverable.
+    severity: major
+  - description: Did not invoke close-session at PR-open as CLAUDE.md requires; closure slipped to post-merge because the PR-open sequence was interrupted.
+    solution: Treat the create_pull_request tool result itself as the closure trigger and invoke close-session in that same turn, before subscribing.
+    severity: moderate
+  - description: An ideation agent's flagship idea was invalidated by corpus counts a single grep would have surfaced before it ever drew anything.
+    solution: Ship the corpus statistics (per-kind, per-grade counts) inside the ideation brief, so agents cannot propose iconography for fields that never render.
+    severity: moderate
+  - description: Two parallel refinement agents would have raced on one shared gallery.html in the scratchpad.
+    solution: Hand-partitioned them into per-idea subdirectories in the dispatch brief; a convention for per-agent scratch dirs would make this automatic.
+    severity: minor
+durationSec: 41188
+models:
+  claude-opus-5: 164
+  <synthetic>: 5
+toolCounts:
+  Bash: 20
+  Read: 14
+  Agent: 5
+  SendUserFile: 3
+  ToolSearch: 3
+  SendMessage: 3
+  Write: 3
+  Edit: 8
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 5
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+filesEdited:
+  - layers/midden/app/components/midden/TrenchFace.vue
+  - layers/midden/app/components/midden/SectionColumn.vue
+  - layers/midden/app/components/midden/StoresLanding.vue
+  - layers/midden/app/components/midden/TrenchLanding.vue
+subagents:
+  - type: general-purpose
+    task: "Fable: midden SVG ideas"
+    model: fable
+  - type: general-purpose
+    task: "Opus: midden SVG ideas"
+    model: opus
+  - type: general-purpose
+    task: "Fable: draft midden SVGs"
+    model: fable
+  - type: general-purpose
+    task: "Fable: refine Section Column"
+    model: fable
+  - type: general-purpose
+    task: "Fable: refine Trench Face"
+    model: fable
+gitBranch: claude/midden-svg-illustrations-dhml7q
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - preserveAspectRatio="slice" crops the sides at narrow viewports and the top and bottom at wide ones, so an illustration's safe zone is the intersection of both crops, not the viewBox
+  - The --midden-slate* tokens were defined in both theme blocks but referenced by zero components, orphaned since the depth-gauge was removed
+  - A full-bleed band inside a max-width column is safer as two page blocks than a width 100vw breakout, which counts the scrollbar and adds a horizontal one
+  - Asking an agent to review its own rendered screenshots between iterations produces real reversals; both agents reverted a prior iteration's overshoot rather than defending it
+ideas:
+  - Commit an illustration contact-sheet script (scripts/illustration-sheet.ts) that renders every Tenant's inline SVG illustrations across light and dark and three viewport widths into one PNG. This session hand-built that scaffolding twice in scratch and threw it away both times, and the slice-crop defect it caught (objects falling outside the crop at 700px) is invisible to the e2e gate, which only asserts hydration. A committed sheet turns presentational regression from something each session re-improvises into one command a reviewer can eyeball on any PR touching a drawing.
