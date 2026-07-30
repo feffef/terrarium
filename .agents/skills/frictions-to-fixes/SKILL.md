@@ -243,8 +243,11 @@ review-agent, not a bystander waiting for a human. For each PR:
    - **Escalate to a human** only when the change is **genuinely high-risk** per
      ADR-0004 (CLAUDE.md's Ground rules — same test as the safe-surface filter in
      §3, just applied to the actual diff instead of the issue's stated scope).
-     Leave the PR open, say precisely why it is high-risk, and **alert the user**.
-     A **hard** selection (§3) usually lands here — that is expected.
+     ADR-0004's 2026-07-30 amendment gives worked examples for its vaguest axis,
+     "changes untested/untestable runtime behaviour" — check the diff against
+     that list rather than guessing. Leave the PR open, say precisely why it is
+     high-risk, and **alert the user**. A **hard** selection (§3) usually lands
+     here — that is expected.
 
 Autonomy is the default; escalation is the exception, reserved for the three cases
 above. A PR is finished only when **merged** (by you) or **escalated/abandoned** —

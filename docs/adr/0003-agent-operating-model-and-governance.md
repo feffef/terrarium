@@ -125,6 +125,19 @@ never auto-merged and falls back to ADR-0003's default (gated PR, human merge).
 > day). Recorded after the fact to match `digest`'s actual, already-running
 > behaviour — bounded the same as every other row: outside this scope, or a red
 > gate, falls back to ADR-0003's default (gated PR, human merge).
+>
+> **Amended (2026-07-30, `/audit-docs`).** The 2026-07-06 note above says the
+> auto-merging chartered job "enables GitHub auto-merge" — i.e. calls
+> `enable_pr_auto_merge`. That mechanism is superseded: `docs/agents/pr-workflow.md`
+> (issue #667) is now the single home for how every one of this ledger's rows
+> actually lands its PR — `scripts/merge-pr.ts` polls the PR's checks and merges
+> directly on green, and calling `enable_pr_auto_merge` is explicitly disallowed
+> there (it can throw a misleading error on a pending or already-green PR). The
+> `digest`, `blog-post`, and other affected Skills already merge this way; only
+> this ADR's prose still described the old mechanism. **The authorization this
+> ADR grants is unchanged** — a chartered job's gated PR still merges on a green
+> gate, without a human in the loop, for the ledger's bounded scope; only the
+> *how* moves to `pr-workflow.md`.
 
 ## Context
 
