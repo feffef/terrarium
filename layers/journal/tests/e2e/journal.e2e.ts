@@ -77,37 +77,34 @@ export interface JournalE2EContext {
   renderAndCollectErrors: typeof renderAndCollectErrors
 }
 
-// Await the app's scroll-pin via its PIN_SETTLED_EVENT instead of polling a
-// timeout (issue #450), and read back what the pin did (issue #750).
-// `armPinSettled` must run before the click that fires the event so the one-shot
-// listener can't miss it; `awaitPinSettled` then blocks on it and returns its record.
-//
-// EVERY open that starts a pin must be bracketed by this pair, including one done
-// only as setup: a pin still running from an earlier open keeps counter-scrolling
-// the page (moving a baseline measured under it) and fires the settle event the
-// listener armed for the open under test is waiting on. That cross-talk is the
-// mechanism behind #750's ~2800px failure.
+/** Open `control`, wait for `readyFor` to become visible, and return what the app's
+ *  scroll-pin did.
+ *
+ *  Deep on purpose: arming the one-shot PIN_SETTLED_EVENT listener, dispatching the
+ *  open, and reading the record back are one indivisible step, so an open that starts
+ *  a pin nobody waits out is not expressible here — including one done only as setup.
+ *  A pin still running from an earlier open keeps counter-scrolling the page (moving a
+ *  baseline measured under it) and fires the settle event a later open's listener is
+ *  waiting on; that cross-talk is the mechanism behind #750's ~2800px failure.
+ *
+ *  Awaiting the event beats polling a timeout (issue #450), and its record makes an
+ *  intermittent failure attributable from CI output alone (issue #750) — hence arming
+ *  before the open that fires it. The open is a dispatched event, not `locator.click()`:
+ *  click() auto-scrolls the target into view, shifting the card before the app reads its
+ *  pin baseline where no scroll anchoring absorbs it (issue #450;
+ *  docs/agents/verifying-ui-changes.md — click auto-scroll), and a real click also
+ *  focuses the control, whose focus-scroll lands asynchronously (issue #750). */
 type PinSettledWindow = Window & { __pinSettled?: Promise<PinRecord> }
-async function armPinSettled(page: Page): Promise<void> {
+async function openAndAwaitPin(page: Page, control: Locator, readyFor: Locator): Promise<PinRecord> {
   await page.evaluate((event) => {
     const w = window as PinSettledWindow
     w.__pinSettled = new Promise((resolve) => {
       window.addEventListener(event, (e) => resolve((e as CustomEvent<PinRecord>).detail), { once: true })
     })
   }, PIN_SETTLED_EVENT)
-}
-function awaitPinSettled(page: Page): Promise<PinRecord> {
+  await control.dispatchEvent('click')
+  await readyFor.waitFor({ state: 'visible' })
   return page.evaluate(() => (window as PinSettledWindow).__pinSettled!)
-}
-
-// Open via dispatchEvent, not `locator.click()`: click() auto-scrolls the target
-// into view, which shifts the card before the app reads its pin baseline and breaks
-// these position assertions where there's no scroll anchoring to absorb it (issue
-// #450; docs/agents/verifying-ui-changes.md — click auto-scroll). A real click also
-// focuses the control, and the browser's own focus-scroll lands asynchronously
-// (issue #750).
-function openNoScroll(control: Locator): Promise<void> {
-  return control.dispatchEvent('click')
 }
 
 // The tolerance the "held its position" assertions allow, and the viewport offset
@@ -433,15 +430,16 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       try {
         const card = page.locator('.feed .card').first()
         const id = (await card.getAttribute('id'))!
-        // Park the card deep in the viewport, then measure `before` (opened without
-        // a scroll via openNoScroll, so it matches the app's pin baseline).
+        // Park the card deep in the viewport, then measure `before` (openAndAwaitPin
+        // opens without a scroll, so it matches the app's pin baseline).
         await parkItemAt(page, id, PARK_TOP_PX)
         const before = await geometryOf(page, id)
-        await armPinSettled(page)
-        await openNoScroll(card.locator('.head'))
-        await page.locator('.feed .card.open .detail').first().waitFor({ state: 'visible' })
         // With no sibling reflowing above it, opening must leave the card's top put.
-        const pin = await awaitPinSettled(page)
+        const pin = await openAndAwaitPin(
+          page,
+          card.locator('.head'),
+          page.locator('.feed .card.open .detail').first(),
+        )
         const after = await geometryOf(page, id)
         const evidence = pinEvidence({ before, after, pin })
 
@@ -478,12 +476,13 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       try {
         await page.setViewportSize({ width: SINGLE_COLUMN_WIDTH, height: 720 })
         await page.addStyleTag({ content: DISABLE_SCROLL_ANCHORING })
-        // Setup: open the digest that will later collapse — and wait out ITS OWN
-        // pin before measuring anything (see armPinSettled).
-        await armPinSettled(page)
-        await openNoScroll(page.locator('.digest .drow').first())
-        await page.locator('.digest-body').first().waitFor({ state: 'visible' })
-        await awaitPinSettled(page)
+        // Setup: open the digest that will later collapse. This open starts a pin of
+        // its own, which openAndAwaitPin waits out before anything below is measured.
+        await openAndAwaitPin(
+          page,
+          page.locator('.digest .drow').first(),
+          page.locator('.digest-body').first(),
+        )
 
         const card = page.locator('.feed .card').first()
         const id = (await card.getAttribute('id'))!
@@ -495,12 +494,13 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         // see the previous test.
         await parkItemAt(page, id, PARK_TOP_PX)
         const before = await geometryOf(page, id)
-        await armPinSettled(page)
-        await openNoScroll(card.locator('.head'))
-        await page.locator('.feed .card.open .detail').first().waitFor({ state: 'visible' })
         // The pin settles only after both this card's expand and the sibling's
         // collapse above it finish — so waiting on it also waits out the reflow.
-        const pin = await awaitPinSettled(page)
+        const pin = await openAndAwaitPin(
+          page,
+          card.locator('.head'),
+          page.locator('.feed .card.open .detail').first(),
+        )
         await page.locator('.digest-body').first().waitFor({ state: 'detached' })
         expect(await page.locator('.digest-body').count()).toBe(0) // sibling digest collapsed
         const after = await geometryOf(page, id)
