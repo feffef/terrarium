@@ -554,19 +554,38 @@ export function groupSessionReferences(
   return out
 }
 
+/** True when a path is one a session log could have been mis-filed to — the
+ *  scope of the mis-file this check suppresses. Deliberately does NOT require
+ *  the candidate session's own id: a mis-file is by definition filed under the
+ *  *wrong* id (issue #574), so matching on the candidate's id would never fire. */
+export function isSessionLogPath(path: string): boolean {
+  return (
+    path.endsWith('.yml') && (path.startsWith(`${SESSIONS_DIR}/`) || path.startsWith(`${ARCHIVED_SESSIONS_DIR}/`))
+  )
+}
+
 /** True when a commit that references the orphan-candidate session added a
- *  file that some other commit in `changes` later removed — a same-run
+ *  SESSION LOG that some other commit in `changes` later removed — a same-run
  *  mis-file (e.g. a CLI-transcript-id session log filed under the wrong id)
  *  cleaned up before it became a genuine orphan, not a real gap (issue #574).
  *  Matches on the exact path only; a rename that changes the path doesn't
- *  count as a removal of the original. */
+ *  count as a removal of the original.
+ *
+ *  The `isSessionLogPath` scope is load-bearing, not a tidy-up: without it any
+ *  added-then-deleted file suppressed the whole session, so a session that
+ *  folded a doc into its single home and deleted the standalone file went
+ *  unreported across four consecutive daily sweeps (issue #747). */
 export function isResolvedMisfile(commits: string[], changes: CommitFileChange[]): boolean {
   const bySha = new Map(changes.map((c) => [c.sha, c]))
   for (const sha of commits) {
     const change = bySha.get(sha)
     if (!change) continue
     for (const path of change.added) {
-      if (changes.some((c) => c.sha !== sha && c.date > change.date && c.removed.includes(path))) return true
+      if (!isSessionLogPath(path)) continue
+      // Epoch, not string compare — the same mixed-offset hazard
+      // `groupSessionReferences` guards against (issue #747).
+      const addedAt = Date.parse(change.date)
+      if (changes.some((c) => c.sha !== sha && Date.parse(c.date) > addedAt && c.removed.includes(path))) return true
     }
   }
   return false
