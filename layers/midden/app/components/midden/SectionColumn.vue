@@ -5,13 +5,20 @@
 // Unlike the trench face (TrenchFace.vue, pure atmosphere) this drawing carries a
 // fact the page states nowhere else. The register lists only seasons that hold
 // finds, so a season holding NONE is invisible there — here it is drawn, labelled
-// `sterile`, and counted. That is why it takes a real `aria-label` rather than
-// `aria-hidden`.
+// `sterile`, and counted.
 //
 // Geometry derives from DIG_SEASONS (strata.ts) rather than being hand-plotted, so
 // a new season redraws the section instead of silently rotting it. The waver that
 // keeps the boundaries from reading as a bar chart is a fixed table sampled at a
 // per-boundary phase — deterministic, so the server and client render identically.
+//
+// TWO VARIANTS, chosen by CSS, both in the DOM: a viewport can only be measured on
+// the client, and branching on a measurement would render one variant on the server
+// and the other after hydration. The wide plate carries its dates and season labels
+// as SVG text; the narrow one is the drawing alone, because that text scales with
+// the viewBox and lands at roughly 5px on a phone. The season facts are therefore
+// authored ONCE as a real HTML list, which is the drawing's accessible form at every
+// width and the visible legend below the narrow one.
 import { DIG_SEASONS } from '../../utils/strata'
 
 const props = defineProps<{
@@ -37,6 +44,13 @@ const RAGGED: [number, number][] = [
   [300, 1.5], [340, -2.5], [395, 2.5], [430, -1], [470, 2], [500, 0.5],
 ]
 
+/** `text` also selects which horizontal span is worth showing: the wide plate must
+ *  fit the date rule and the label column, the narrow one only the section itself. */
+const VARIANTS = [
+  { key: 'wide', x: 0, width: 700, text: true },
+  { key: 'compact', x: 80, width: 430, text: false },
+] as const
+
 const DAY_MS = 86_400_000
 
 /** Inclusive day count. `Date.parse` on a YYYY-MM-DD is UTC, so this never varies
@@ -47,12 +61,12 @@ function inclusiveDays(start: string, end: string): number {
 
 interface Point { x: number, y: number }
 
-function waver(y: number, phase: number): Point[] {
-  return XS.map((x, i) => ({ x, y: round(y + WAVER[(i + phase) % WAVER.length]!) }))
-}
-
 function round(n: number): number {
   return Math.round(n * 100) / 100
+}
+
+function waver(y: number, phase: number): Point[] {
+  return XS.map((x, i) => ({ x, y: round(y + WAVER[(i + phase) % WAVER.length]!) }))
 }
 
 function points(ps: Point[]): string {
@@ -79,7 +93,6 @@ const bands = computed(() => {
       /** Textures cycle so a fifth season is drawn rather than left blank. */
       texture: (['hatch', 'ash', 'tick', null] as const)[i % 4],
       wash: i % 2 === 0,
-      isOpen: season.end === null,
     }
     bottom = top
     return band
@@ -118,41 +131,40 @@ const rod = computed(() => {
   return Array.from({ length: 5 }, (_, i) => ({ y: round(top + i * seg), h: seg, fired: i % 2 === 0 }))
 })
 
-const vbTop = computed(() => Math.min(0, round(topY.value - 11)))
-const vbHeight = computed(() => 164 - vbTop.value)
+/** Just above the rod's head, so neither variant carries dead space at the top. */
+const vbTop = computed(() => round(topY.value - 11))
+const vbHeight = computed(() => round(FLOOR_Y + 8 - vbTop.value))
 
 function countLabel(n: number): string {
   if (n === 0) return 'sterile'
   return `${n} ${n === 1 ? 'find' : 'finds'}`
 }
 
-const summary = computed(() =>
-  `The stores in section, oldest at the floor: ${bands.value
-    .map((b) => `${b.season.label}, ${countLabel(b.count)}`)
-    .reverse()
-    .join('; ')}. The surface is still accumulating.`,
-)
+/** Newest first, matching the drawing read top-down. */
+const legend = computed(() => [...bands.value].reverse())
 </script>
 
 <template>
   <figure class="midden-section">
     <svg
+      v-for="variant in VARIANTS"
+      :key="variant.key"
       class="midden-section__svg"
-      :viewBox="`0 ${vbTop} 700 ${vbHeight}`"
+      :class="`midden-section__svg--${variant.key}`"
+      :viewBox="`${variant.x} ${vbTop} ${variant.width} ${vbHeight}`"
       width="100%"
-      role="img"
-      :aria-label="summary"
+      aria-hidden="true"
     >
       <defs>
-        <pattern id="ms-hatch45" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <pattern :id="`ms-hatch45-${variant.key}`" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <line x1="0" y1="0" x2="0" y2="6" class="p-hair" />
         </pattern>
-        <pattern id="ms-ash" width="4" height="4" patternUnits="userSpaceOnUse">
+        <pattern :id="`ms-ash-${variant.key}`" width="4" height="4" patternUnits="userSpaceOnUse">
           <circle cx="1.1" cy="1.1" r="0.58" class="p-dot" />
           <circle cx="3.1" cy="3.2" r="0.48" class="p-dot" />
         </pattern>
         <!-- Four dashes of varied length and phase: irregular loam, not ruled lines. -->
-        <pattern id="ms-tick" width="30" height="9" patternUnits="userSpaceOnUse">
+        <pattern :id="`ms-tick-${variant.key}`" width="30" height="9" patternUnits="userSpaceOnUse">
           <line x1="1" y1="2.5" x2="7.5" y2="2.5" class="p-tick" />
           <line x1="16" y1="2.5" x2="20.5" y2="2.5" class="p-tick" />
           <line x1="9.5" y1="7" x2="15" y2="7" class="p-tick" />
@@ -162,9 +174,9 @@ const summary = computed(() =>
 
       <template v-for="(band, i) in bands" :key="band.season.slug">
         <path v-if="band.wash" :d="bandPath(i)" class="f-wash" />
-        <path v-if="band.texture === 'hatch'" :d="bandPath(i)" fill="url(#ms-hatch45)" opacity="0.6" />
-        <path v-else-if="band.texture === 'ash'" :d="bandPath(i)" fill="url(#ms-ash)" opacity="0.75" />
-        <path v-else-if="band.texture === 'tick'" :d="bandPath(i)" fill="url(#ms-tick)" opacity="0.6" />
+        <path v-if="band.texture === 'hatch'" :d="bandPath(i)" :fill="`url(#ms-hatch45-${variant.key})`" opacity="0.6" />
+        <path v-else-if="band.texture === 'ash'" :d="bandPath(i)" :fill="`url(#ms-ash-${variant.key})`" opacity="0.75" />
+        <path v-else-if="band.texture === 'tick'" :d="bandPath(i)" :fill="`url(#ms-tick-${variant.key})`" opacity="0.6" />
       </template>
 
       <!-- Frame: sides and floor. No top rule — the open season tears off instead. -->
@@ -173,8 +185,8 @@ const summary = computed(() =>
       <line :x1="X0" :y1="FLOOR_Y" :x2="X1" :y2="FLOOR_Y" class="s-slate2" stroke-width="1.6" />
 
       <polyline
-        v-for="(edge, i) in boundaries"
-        :key="`edge-${i}`"
+        v-for="(edge, e) in boundaries"
+        :key="`edge-${e}`"
         :points="edge"
         class="f-none s-slateline"
         stroke-width="0.8"
@@ -183,8 +195,8 @@ const summary = computed(() =>
 
       <g class="s-mutedc" stroke-width="0.9">
         <rect
-          v-for="(seg, i) in rod"
-          :key="`rod-${i}`"
+          v-for="(seg, r) in rod"
+          :key="`rod-${r}`"
           x="106"
           :y="seg.y"
           width="7"
@@ -193,27 +205,39 @@ const summary = computed(() =>
         />
       </g>
 
-      <line x1="82" :y1="bands[bands.length - 1]!.bottom" x2="82" :y2="FLOOR_Y" class="s-slate2" stroke-width="0.8" />
-      <g class="s-slate2" stroke-width="0.8">
-        <line v-for="band in bands" :key="`tick-${band.season.slug}`" x1="78" :y1="band.bottom" x2="86" :y2="band.bottom" />
-      </g>
-      <g class="svg-tech f-muted" font-size="8" text-anchor="end">
-        <text v-for="band in bands" :key="`date-${band.season.slug}`" x="74" :y="band.bottom + 2.5">{{ band.season.start }}</text>
-      </g>
+      <template v-if="variant.text">
+        <line x1="82" :y1="bands[bands.length - 1]!.bottom" x2="82" :y2="FLOOR_Y" class="s-slate2" stroke-width="0.8" />
+        <g class="s-slate2" stroke-width="0.8">
+          <line v-for="band in bands" :key="`tick-${band.season.slug}`" x1="78" :y1="band.bottom" x2="86" :y2="band.bottom" />
+        </g>
+        <g class="svg-tech f-muted" font-size="8" text-anchor="end">
+          <text v-for="band in bands" :key="`date-${band.season.slug}`" x="74" :y="band.bottom + 2.5">{{ band.season.start }}</text>
+        </g>
 
-      <g class="s-slateline" stroke-width="1">
-        <line v-for="band in bands" :key="`lead-${band.season.slug}`" x1="502" :y1="band.mid" x2="511" :y2="band.mid" />
-      </g>
-      <g class="svg-sc f-slate2" font-size="9">
-        <text v-for="band in bands" :key="`label-${band.season.slug}`" x="515" :y="band.mid + 3">
-          {{ band.season.label }}<tspan class="svg-tech f-faint" font-size="7.5" dx="6">{{ countLabel(band.count) }}</tspan>
-        </text>
-      </g>
-
-      <text :x="X0" y="158" class="svg-tech f-faint" font-size="7.5">
-        the stores in section &#183; oldest at the floor &#183; the surface still accumulating
-      </text>
+        <g class="s-slateline" stroke-width="1">
+          <line v-for="band in bands" :key="`lead-${band.season.slug}`" x1="502" :y1="band.mid" x2="511" :y2="band.mid" />
+        </g>
+        <g class="svg-sc f-slate2" font-size="9">
+          <text v-for="band in bands" :key="`label-${band.season.slug}`" x="515" :y="band.mid + 3">
+            {{ band.season.label }}<tspan class="svg-tech f-faint" font-size="7.5" dx="6">{{ countLabel(band.count) }}</tspan>
+          </text>
+        </g>
+      </template>
     </svg>
+
+    <!-- The drawing's facts as real text: the visible legend under the narrow
+         variant, and the accessible reading of both. -->
+    <ul class="midden-section__legend">
+      <li v-for="band in legend" :key="band.season.slug" class="midden-section__season">
+        <span class="sc midden-section__label">{{ band.season.label }}</span>
+        <span class="tech midden-section__from">from {{ band.season.start }}</span>
+        <span class="tech midden-section__count">{{ countLabel(band.count) }}</span>
+      </li>
+    </ul>
+
+    <figcaption class="tech midden-section__caption">
+      the stores in section &middot; oldest at the floor &middot; the surface still accumulating
+    </figcaption>
   </figure>
 </template>
 
@@ -222,6 +246,60 @@ const summary = computed(() =>
   margin: 2.2rem 0 0;
 }
 .midden-section__svg { display: block; }
+.midden-section__svg--compact { display: none; }
+
+.midden-section__caption {
+  margin: 0.5rem 0 0;
+  color: var(--midden-faint);
+}
+
+/* Above the breakpoint the plate carries its own labels, so the list is the
+   screen-reader reading only. Not `display: none`, which would hide it there too. */
+.midden-section__legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 44rem) {
+  .midden-section__svg--wide { display: none; }
+  .midden-section__svg--compact { display: block; }
+
+  .midden-section__legend {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0.9rem 0 0;
+    clip: auto;
+    overflow: visible;
+    white-space: normal;
+    list-style: none;
+  }
+  .midden-section__season {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.6rem;
+    padding: 0.42rem 0;
+    border-top: 1px solid var(--midden-line);
+  }
+  /* The label takes its own line on every row: the longest season name cannot
+     share one with the date and count, and a rule that fires only for that row
+     leaves the list ragged. */
+  .midden-section__label {
+    flex: 1 1 100%;
+    font-size: 0.72rem;
+    color: var(--midden-slate);
+  }
+  .midden-section__from { color: var(--midden-faint); }
+  .midden-section__count { color: var(--midden-muted); }
+}
 
 /* Colour comes from classes referencing the theme tokens, never from `fill=`/
    `stroke=` attributes — that is what makes the dark-mode token flip carry here
@@ -249,12 +327,5 @@ const summary = computed(() =>
   font-family: var(--midden-mono);
   text-transform: none;
   letter-spacing: 0;
-}
-
-/* Below the stores' two-column breakpoint the drawing's right-hand labels would
-   be squeezed to nothing, and it is supplementary — the register carries the same
-   seasons as text. */
-@media (max-width: 44rem) {
-  .midden-section { display: none; }
 }
 </style>
