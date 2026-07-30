@@ -20,11 +20,29 @@ describe('isInert()', () => {
     expect(isInert('layers/atlas/CONTEXT.md')).toBe(false)
   })
 
+  it('treats a .claude/skills/ entry as inert even though it is not a .md (#544)', () => {
+    expect(isInert('.claude/skills/wayfinder')).toBe(true)
+    expect(isInert('.claude/skills/frictions-to-fixes')).toBe(true)
+  })
+
+  // Documentation-by-test, not a live case: the predicate is a plain prefix match,
+  // so it would classify a *nested* regular file too. Git cannot track a path under
+  // a symlink, so this is unreachable today — and harmless if the mirror ever became
+  // real directories, since no HEAVY step reads `.claude/` at all (#544, PR #756 review).
+  it('classifies any path under .claude/skills/ as inert, by prefix and deliberately', () => {
+    expect(isInert('.claude/skills/wayfinder/scripts/run.ts')).toBe(true)
+  })
+
   it('treats any non-.md path as non-inert', () => {
     expect(isInert('scripts/gate.ts')).toBe(false)
     expect(isInert('package.json')).toBe(false)
     expect(isInert('.github/workflows/gate.yml')).toBe(false)
     expect(isInert('docs/research/diagram.png')).toBe(false)
+  })
+
+  it('keeps .claude paths outside skills/, and the real Skill bodies, on their own footing', () => {
+    expect(isInert('.claude/settings.json')).toBe(false)
+    expect(isInert('.agents/skills/wayfinder/scripts/run.ts')).toBe(false)
   })
 })
 
@@ -40,6 +58,12 @@ describe('decideScope()', () => {
     expect(scope.skipHeavy).toBe(false)
     expect(scope.reason).toContain('scripts/gate.ts')
     expect(planSteps(scope)).toEqual([...FLOOR, ...HEAVY])
+  })
+
+  it('skips heavy layers for a docs + .claude/skills symlink changeset (#544)', () => {
+    const scope = decideScope(['.agents/skills/wayfinder/SKILL.md', '.claude/skills/wayfinder'])
+    expect(scope.skipHeavy).toBe(true)
+    expect(planSteps(scope)).toEqual([...FLOOR])
   })
 
   it('a single content .md under layers/ forces the full gate', () => {
