@@ -352,11 +352,68 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         await page.locator('.digest .drow').first().click()
         await page.locator('.digest-body').first().waitFor({ state: 'visible' })
         expect(await page.locator('.digest-body').count()).toBe(1)
-        // Opening a session card must collapse the open digest.
-        await page.locator('.feed .card .head').first().click()
+        // Opening a session card must collapse the open digest. Click the head
+        // via its `.goal` heading — never `.head` itself: a real click aims at
+        // the target's bounding-box CENTER, and the head's center is content-
+        // shaped — one session log with enough PR chips and skill names wrapped
+        // `.foot` tall enough that the center landed on a PR chip, whose
+        // @click.stop suppressed the toggle and navigated the page to GitHub,
+        // redding the gate as a silent 30s timeout (issue #768). `.goal` is
+        // schema-required on every card and never interactive.
+        const head = page.locator('.feed .card .head').first()
+        await head.locator('.goal').click()
+        // Fail fast and attributably if the click ever stops toggling again:
+        // the toggle flips aria-expanded on the head within a frame, and a
+        // click that landed on a link navigates the page off the route.
+        await expect.poll(() => head.getAttribute('aria-expanded')).toBe('true')
+        expect(
+          new URL(page.url()).pathname,
+          'the head click navigated the page instead of toggling the card (issue #768)',
+        ).toBe(route)
         await page.locator('.feed .card .detail').first().waitFor({ state: 'visible' })
         await expect.poll(() => page.locator('.digest-body').count()).toBe(0)
         expect(await page.locator('.feed .card.open').count()).toBe(1)
+        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
+      } finally {
+        await page.close()
+      }
+    })
+
+    // The regression guard for issue #768's actual mechanism. What looked like
+    // "an oversized log's card never renders its detail" was the accordion
+    // test's real click landing on content: a click aims at its target's
+    // bounding-box center, the head's center position is a function of how the
+    // log's PR chips and skill names wrap, and for one 11.3KB log it fell on a
+    // PR chip — a link that swallows the toggle (@click.stop) and navigates
+    // away. The expand transition itself handles a panel that tall (both
+    // scroll-pin tests open the same card and its detail becomes visible).
+    //
+    // So the guard is not "an oversized document opens" — any document opens
+    // once the click lands on the toggle — but that the designated click
+    // target (`.goal`) stays hit-testable on EVERY card in the live feed, no
+    // matter what shape future logs take. Playwright's own click hit-test is
+    // reproduced per card (scroll to it, elementFromPoint at the goal's
+    // center), so a card whose goal a link or overlay would intercept fails
+    // here by name instead of as a silent 30s waitFor timeout.
+    it('keeps every session card head clickable at its goal, whatever the log size (issue #768)', async () => {
+      const route = '/t/journal/current'
+      const { page, errors } = await renderAndCollectErrors(route)
+      try {
+        expect(await page.locator('.feed .card .head .goal').count()).toBeGreaterThan(0)
+        const intercepted = await page.evaluate(() => {
+          const bad: string[] = []
+          for (const goal of document.querySelectorAll('.feed .card .head .goal')) {
+            goal.scrollIntoView({ block: 'center' })
+            const r = goal.getBoundingClientRect()
+            const at = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)
+            if (at !== goal && !goal.contains(at)) {
+              const card = goal.closest('.card')
+              bad.push(`${card?.id ?? '(no id)'}: goal center hits <${at?.tagName.toLowerCase()} class="${(at as HTMLElement | null)?.className ?? ''}">`)
+            }
+          }
+          return bad
+        })
+        expect(intercepted, `cards whose toggle target is covered:\n${intercepted.join('\n')}`).toEqual([])
         expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
       } finally {
         await page.close()
