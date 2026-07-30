@@ -17,7 +17,7 @@
 //   than one Skill's edit) — `orphanedSessions` (issue #349; a resolved
 //   same-run mis-file — a flagged commit's added file later removed by
 //   another commit — is excluded rather than surfaced, issue #574, but is
-//   itemised in `suppressedOrphanCandidates` so the suppression itself stays
+//   itemised in `orphanSuppressionLog` so the suppression itself stays
 //   auditable, issue #754), the two
 //   manual-nudge-closure signals `humanPromptedClosures` and
 //   `manuallyRescuedClosures` (the counterpart to `orphanedSessions`: a session
@@ -224,13 +224,15 @@ export interface OrphanedSession {
  *  separately so a reader can tell an automatic rule from a hand-written
  *  annotation (issue #754). */
 export type OrphanSuppressionReason = 'misfile-cleanup' | 'resolved-annotation'
-/** An orphan candidate one of the suppression levers acted on, reported rather
- *  than silently dropped (issue #754): a rule that moves ADR-0009's
- *  `close-session`-invocation-rate metric must leave an audit trail, or a false
- *  suppression is indistinguishable from a healthy denominator. `misfile-cleanup`
- *  entries are absent from `orphanedSessions`; `resolved-annotation` entries are
- *  still there, carrying their `resolvedBy` cutoff (issue #447 item 4). */
-export interface SuppressedOrphanCandidate {
+/** One line of the orphan suppression log: a candidate one of the levers acted
+ *  on, reported rather than silently dropped (issue #754). A rule that moves
+ *  ADR-0009's `close-session`-invocation-rate metric must leave an audit trail,
+ *  or a false suppression is indistinguishable from a healthy denominator.
+ *  The two reasons are **asymmetric**, which is why this is a log and not a list
+ *  of removals: a `misfile-cleanup` entry is *removed from* `orphanedSessions`;
+ *  a `resolved-annotation` entry is *still listed* there, annotated with its
+ *  `resolvedBy` cutoff (issue #447 item 4). */
+export interface OrphanSuppressionEntry {
   session: string
   commits: string[]
   date: string
@@ -279,9 +281,12 @@ export interface Scorecard {
   regressionChecks: RegressionCheck[]
   regressionSessions: WindowSession[]
   orphanedSessions: OrphanedSession[]
-  /** Orphan candidates a suppression lever acted on — always present, `[]` when
-   *  nothing was suppressed (see the interface, issue #754). */
-  suppressedOrphanCandidates: SuppressedOrphanCandidate[]
+  /** The audit trail of every orphan candidate a suppression lever acted on —
+   *  always present, `[]` when nothing was suppressed. An entry here does not
+   *  imply the candidate left `orphanedSessions`: only `misfile-cleanup` does,
+   *  `resolved-annotation` leaves it listed and annotated (see the interface,
+   *  issue #754). */
+  orphanSuppressionLog: OrphanSuppressionEntry[]
   /** Sessions whose own log flagged a human-prompted closure (keyword grep). */
   humanPromptedClosures: HumanPromptedClosure[]
   /** Sessions whose authored `kind` contradicts the `remote_trigger` derived
@@ -633,22 +638,23 @@ function withResolvedBy<T extends object>(
 }
 
 /** Both halves of the orphan check, so no suppression is invisible: `orphaned`
- *  is issue #349's signal, `suppressed` is every candidate a lever acted on
- *  (issue #754). Both sorted oldest-first — the most actionable triage order
- *  (issue #349). `fileChanges` (default `[]`, backward compatible) feeds
- *  `resolvedMisfilePath` to drop a resolved same-run mis-file rather than
- *  surface it as a fresh orphan (issue #574). `resolved` (default
- *  `RESOLVED_ORPHANED_SESSIONS`) feeds `withResolvedBy` above — an annotated
- *  candidate stays in `orphaned` *and* is attributed in `suppressed`. */
+ *  is issue #349's signal, `suppressed` is the orphan suppression log — every
+ *  candidate a lever acted on (issue #754). Both sorted oldest-first — the most
+ *  actionable triage order (issue #349). `fileChanges` (default `[]`, backward
+ *  compatible) feeds `resolvedMisfilePath` to drop a resolved same-run mis-file
+ *  rather than surface it as a fresh orphan (issue #574) — that candidate is
+ *  removed from `orphaned`. `resolved` (default `RESOLVED_ORPHANED_SESSIONS`)
+ *  feeds `withResolvedBy` above, and is asymmetric to it: an annotated candidate
+ *  stays listed in `orphaned` *and* is attributed in `suppressed`. */
 export function findOrphanedSessions(
   refs: SessionTrailerRef[],
   knownSessionIds: Set<string>,
   fileChanges: CommitFileChange[] = [],
   resolved: ReadonlyMap<string, string> = RESOLVED_ORPHANED_SESSIONS,
-): { orphaned: OrphanedSession[]; suppressed: SuppressedOrphanCandidate[] } {
+): { orphaned: OrphanedSession[]; suppressed: OrphanSuppressionEntry[] } {
   const grouped = groupSessionReferences(refs)
   const orphaned: OrphanedSession[] = []
-  const suppressed: SuppressedOrphanCandidate[] = []
+  const suppressed: OrphanSuppressionEntry[] = []
   for (const [session, { commits, date }] of grouped) {
     if (knownSessionIds.has(session)) continue
     const misfilePath = resolvedMisfilePath(commits, fileChanges)
@@ -965,7 +971,7 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
     regressionChecks: checks,
     regressionSessions: sessions,
     orphanedSessions: orphans.orphaned,
-    suppressedOrphanCandidates: orphans.suppressed,
+    orphanSuppressionLog: orphans.suppressed,
     humanPromptedClosures: findHumanPromptedClosures(all),
     manuallyRescuedClosures: findManuallyRescuedClosures(trailers, all),
     misclassifiedKind: findMisclassifiedKind(all),
