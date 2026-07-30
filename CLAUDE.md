@@ -402,14 +402,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   outputs. A design axis that shifts mid-build after subagents have already
   authored against the old answer forces a full re-authoring pass.
 - **Every dispatch brief must grant the subagent explicit authority to refuse a
-  listed item — and require it to prove why instead of implementing it.** A
-  brief that reads as a work-order invites compliance: a subagent that can see a
-  listed change is wrong will make it anyway because the list said so, and the
-  reasoning never reaches the orchestrator. Granting refusal authority is what
-  surfaces that evidence — in one pass four subagents each declined a listed
-  change and proved the case, and every one of those refusals was correct. A
-  refusal with proof is a successful dispatch, not a failed one: it is a finding
-  about the list, so review it as one rather than re-dispatching the item.
+  listed item — and require it to prove why instead of implementing it.**
+  Without that, a subagent that can see a listed change is wrong implements it
+  anyway and the reasoning never surfaces. A proven refusal is a finding about
+  the list: review it, don't re-dispatch the item.
 - **Every agent-authored interaction with GitHub, or any other external
   system, carries a two-line provenance footer** (ADR-0017 — read it for the
   full rationale, the no-exemptions scope, and why this is convention, not
