@@ -252,8 +252,11 @@ useSeoMeta({
          pin.scrolls 0 at 1280px). No user-facing bug — nothing moves, so
          nothing needs pinning —
          but the desktop layout now has no scroll-pin coverage, which is why the
-         e2e guard runs below the breakpoint instead. What to do about it is an
-         open layout decision, out of scope for #750 — see issue #760. -->
+         e2e guard runs below the breakpoint instead. Issue #760 accepted that
+         rather than restoring #597's invariant, and guards the height driver
+         instead: see the "keeps Sparks the driver" test in
+         `layers/journal/tests/e2e/journal.e2e.ts` for why a flip back would
+         matter, and don't change these column widths without re-reading it. -->
     <div v-if="digests.length" class="digests-sparks">
       <!-- Daily digests — a plain-language, day-by-day recap of project activity -->
       <section class="panel digests">
