@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019hdkXjoebyR8etKVNyjn7S
 startedAt: 2026-07-30T08:49:53Z
-endedAt: 2026-07-30T09:17:15Z
+endedAt: 2026-07-30T11:40:55Z
 kind: delegated
 goal: Autonomous triage sweep over the backlog
 status: completed
 outcome: 12 triaged, 3 follow-up issues filed
-summary: "Human-instructed: the user invoked /auto-triage, which is itself the ADR-0022 standing green-light for the sweep; everything below is that skill's prescribed work, not agent-initiated scope. Scanned 28 open issues and 0 open PRs, testing each one's most-recent comment (or body) for the ADR-0017 provenance footer via the repo's own isAiAuthored detector rather than author_association. Resolved 12 eligible, skipped 14 whose last activity was already AI's own and 2 wayfinder maps. Dispatched one subagent per eligible issue. Result: one objective close (already-implemented), one ready-for-agent, ten ready-for-human. Verified every label, state, and footer live over REST rather than trusting subagent reports. No repo commits — classification-only remit. Then, on a second explicit human green-light (\"Create issues\"), filed three follow-up issues for verified residues the sweep surfaced but could not itself file: \"#752\" and \"#753\" (midden-survey screening defects) and \"#754\" (audit-skills orphan-suppression observability, split out of \"#738\"). Re-verified every claim in code before filing rather than relaying the subagents' findings, and cross-linked the new issues from the two they came from."
+summary: "Human-instructed: the user invoked /auto-triage, which is itself the ADR-0022 standing green-light for the sweep; everything below is that skill's prescribed work, not agent-initiated scope. Scanned 28 open issues and 0 open PRs, testing each one's most-recent comment (or body) for the ADR-0017 provenance footer via the repo's own isAiAuthored detector rather than author_association. Resolved 12 eligible, skipped 14 whose last activity was already AI's own and 2 wayfinder maps. Dispatched one subagent per eligible issue. Result: one objective close (already-implemented), one ready-for-agent, ten ready-for-human. Verified every label, state, and footer live over REST rather than trusting subagent reports. No repo commits — classification-only remit. Then, on a second explicit human green-light (\"Create issues\"), filed three follow-up issues for verified residues the sweep surfaced but could not itself file: \"#752\" and \"#753\" (midden-survey screening defects) and \"#754\" (audit-skills orphan-suppression observability, split out of \"#738\"). Re-verified every claim in code before filing rather than relaying the subagents' findings, and cross-linked the new issues from the two they came from. On a third green-light, promoted \"#752\" and \"#754\" to ready-for-agent and set \"#753\" to ready-for-human; promoting \"#752\" first required correcting its own body, which had overstated the fix as ambiguous."
 prs: []
 docsRead:
   - path: docs/adr/0022-autonomous-triage-sweep.md
@@ -51,19 +51,22 @@ frictions:
   - description: The platform appends its own attribution footer after the ADR-0017 footer on GitHub comments, so a last-two-lines footer check false-negatives on all 12.
     solution: Verify the provenance footer by searching the whole comment body, never by position. Worth a line in the issue-tracker doc so a future session doesn't misdiagnose a correctly-footered comment as missing one.
     severity: minor
-durationSec: 1642
+  - description: Filed "#752" asserting its fix direction was ambiguous, having verified the defect in code but not read the provenance schema or the real artifacts.
+    solution: '"Ambiguous" and "needs a human decision" are themselves factual claims about the code, not a safe default — they need the same primary-source check as any other assertion. Reading the schema and the artifact corpus took one command each and showed commit-kind provenance already carries the path, collapsing the ambiguity and narrowing the scope. Verify before escalating, not only before asserting.'
+    severity: minor
+durationSec: 10262
 models:
-  claude-opus-5: 158
+  claude-opus-5: 178
 toolCounts:
-  Bash: 26
+  Bash: 30
   Read: 14
   Write: 4
   Agent: 12
   Skill: 2
   ToolSearch: 1
-  mcp__github__issue_write: 3
-  mcp__github__add_issue_comment: 2
-  Edit: 3
+  mcp__github__issue_write: 6
+  mcp__github__add_issue_comment: 3
+  Edit: 5
 subagents:
   - type: general-purpose
     task: Triage issue 666
