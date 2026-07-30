@@ -49,6 +49,9 @@ const condition = z.enum(['fresh', 'intact', 'fragmentary', 'dissolved', 'never-
 //     live to link to; the artifact's meaning never depends on the link resolving.
 //   - `continuityCheck` is a short record of which Gate-B check ran and what it
 //     found, e.g. "git log --follow: no live successor" (the #525 two-gate test).
+//   - a `path` (on `file` or `commit`) ending in `/` declares a DIRECTORY, and
+//     scripts/midden-survey.ts screens every candidate beneath it; without the
+//     slash it screens that one file only (#752).
 const provenance = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('pr'), number: z.number().int().positive(), merged: z.boolean(), url: z.string().url().optional(), continuityCheck: z.string().optional() }).strict(),
   z.object({ kind: z.literal('branch'), name: z.string(), url: z.string().url().optional(), continuityCheck: z.string().optional() }).strict(),

@@ -190,36 +190,51 @@ export function provenancePath(p: Record<string, unknown>): string | undefined {
 }
 
 /** What the trench and the stores already hold, in the two shapes a candidate
- *  is matched against: identity keys, and the paths artifacts declare. */
+ *  is matched against: identity keys, and the paths artifacts declare — each
+ *  path carrying the identity key of the artifact declaring it, so a screened
+ *  candidate can name what screened it (#757 review). */
 export interface CataloguedIndex {
   keys: Set<string>
-  paths: Set<string>
+  paths: Map<string, string>
 }
 
 export function cataloguedIndex(provenances: Record<string, unknown>[]): CataloguedIndex {
   const keys = new Set<string>()
-  const paths = new Set<string>()
+  const paths = new Map<string, string>()
   for (const p of provenances) {
     const key = provenanceKey(p)
     if (key) keys.add(key)
     const path = provenancePath(p)
-    if (path) paths.add(path)
+    // First declaration wins, so a re-run reports the same screening artifact.
+    if (path && !paths.has(path)) paths.set(path, key ?? `${String(p.kind)}:?`)
   }
   return { keys, paths }
 }
 
 /**
- * Whether a deletion candidate's path is one the trench already declares. A
- * catalogued path ending in `/` denotes a directory (an artifact about a whole
- * retired folder), so it screens everything beneath it — a deletion candidate
- * is always an individual file, and exact matching would miss them all (#752).
+ * The catalogued artifact already declaring a deletion candidate's path — its
+ * identity key — or undefined if none does. A catalogued path ending in `/`
+ * denotes a directory (an artifact about a whole retired folder), so it screens
+ * everything beneath it — a deletion candidate is always an individual file,
+ * and exact matching would miss them all (#752).
  */
-export function isCataloguedPath(path: string, cataloguedPaths: Set<string>): boolean {
-  if (cataloguedPaths.has(path)) return true
-  for (const catalogued of cataloguedPaths) {
-    if (catalogued.endsWith('/') && path.startsWith(catalogued)) return true
+export function cataloguedPathVia(path: string, cataloguedPaths: Map<string, string>): string | undefined {
+  const exact = cataloguedPaths.get(path)
+  if (exact) return exact
+  for (const [catalogued, key] of cataloguedPaths) {
+    if (catalogued.endsWith('/') && path.startsWith(catalogued)) return key
   }
-  return false
+  return undefined
+}
+
+/**
+ * One `alreadyCatalogued` entry: the candidate's own identity, plus the
+ * catalogued artifact that screened it whenever that is a different one — the
+ * audit trail that lets a curator tell an exact file-kind match from a
+ * commit-kind or directory-prefix one, and so catch a wrong screen (#757 review).
+ */
+export function cataloguedLabel(candidateKey: string, via: string | undefined): string {
+  return !via || via === candidateKey ? candidateKey : `${candidateKey} (via ${via})`
 }
 
 export function screenCatalogued<T>(
@@ -323,7 +338,7 @@ export function surveyReport(cwd = root, sinceIso?: string): SurveyReport {
   const allDeletions = parseDeletionLog(readDeletionLog(cwd, sinceIso))
   const signal = allDeletions.filter((c) => !isNoisePath(c.path))
   const { gone, regrown } = screenRegrown(signal, readCurrentTreePaths(cwd))
-  const files = screenCatalogued(gone, (c) => isCataloguedPath(c.path, catalogued.paths))
+  const files = screenCatalogued(gone, (c) => cataloguedPathVia(c.path, catalogued.paths) !== undefined)
 
   const allRemovals = parseDependencyRemovals(readDependencyLog(cwd, sinceIso))
   const currentDeps = readCurrentDependencyNames(cwd)
@@ -339,7 +354,7 @@ export function surveyReport(cwd = root, sinceIso?: string): SurveyReport {
       regrownPaths: regrown.map((c) => c.path),
       readdedDependencies: allRemovals.filter((r) => currentDeps.has(r.name)).map((r) => r.name),
       alreadyCatalogued: [
-        ...files.catalogued.map((c) => `file:${c.path}`),
+        ...files.catalogued.map((c) => cataloguedLabel(`file:${c.path}`, cataloguedPathVia(c.path, catalogued.paths))),
         ...deps.catalogued.map((r) => `dependency:${r.name}`),
       ],
     },

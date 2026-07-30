@@ -6,7 +6,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   cataloguedIndex,
-  isCataloguedPath,
+  cataloguedLabel,
+  cataloguedPathVia,
   isDependencyLine,
   isNoisePath,
   parseDeletionLog,
@@ -216,7 +217,7 @@ describe('provenancePath()', () => {
 })
 
 describe('cataloguedIndex()', () => {
-  it('indexes every declared path alongside the identity keys', () => {
+  it('indexes every declared path against the key of the artifact declaring it', () => {
     const { keys, paths } = cataloguedIndex([
       { kind: 'file', path: 'scripts/generate.ts' },
       { kind: 'commit', hash: '73bf3dc', path: 'content.config.ts' },
@@ -233,7 +234,19 @@ describe('cataloguedIndex()', () => {
         'pr:477',
       ]),
     )
-    expect(paths).toEqual(new Set(['scripts/generate.ts', 'content.config.ts']))
+    expect(paths).toEqual(
+      new Map([
+        ['scripts/generate.ts', 'file:scripts/generate.ts'],
+        ['content.config.ts', 'commit:73bf3dc'],
+      ]),
+    )
+  })
+  it('keeps the first declaration of a path a second artifact also declares', () => {
+    const { paths } = cataloguedIndex([
+      { kind: 'file', path: 'content.config.ts' },
+      { kind: 'commit', hash: '73bf3dc', path: 'content.config.ts' },
+    ])
+    expect(paths.get('content.config.ts')).toBe('file:content.config.ts')
   })
   it('skips a provenance it cannot key, without throwing', () => {
     const { keys, paths } = cataloguedIndex([{ kind: 'unknown-kind' }, {}])
@@ -242,29 +255,43 @@ describe('cataloguedIndex()', () => {
   })
 })
 
-describe('isCataloguedPath()', () => {
-  const paths = new Set([
-    'content.config.ts',
-    'tenants/status/content/current/glossary/',
-    'layers/journal/app/components/journal/prototype/',
+describe('cataloguedPathVia()', () => {
+  const paths = new Map([
+    ['content.config.ts', 'commit:73bf3dc'],
+    ['tenants/status/content/current/glossary/', 'commit:551862c'],
+    ['layers/journal/app/components/journal/prototype/', 'file:layers/journal/app/components/journal/prototype/'],
   ])
-  it('matches a path catalogued exactly', () => {
-    expect(isCataloguedPath('content.config.ts', paths)).toBe(true)
+  it('names the artifact that catalogued a path exactly', () => {
+    expect(cataloguedPathVia('content.config.ts', paths)).toBe('commit:73bf3dc')
   })
-  it('matches a file that lived beneath a directory-valued catalogued path', () => {
-    expect(isCataloguedPath('tenants/status/content/current/glossary/tenant.md', paths)).toBe(true)
-    expect(isCataloguedPath('layers/journal/app/components/journal/prototype/VariantB.vue', paths)).toBe(true)
+  it('names the directory-valued artifact a file lived beneath', () => {
+    expect(cataloguedPathVia('tenants/status/content/current/glossary/tenant.md', paths)).toBe('commit:551862c')
+    expect(cataloguedPathVia('layers/journal/app/components/journal/prototype/VariantB.vue', paths)).toBe(
+      'file:layers/journal/app/components/journal/prototype/',
+    )
   })
   it('does not match on a bare string prefix of a file-valued catalogued path', () => {
-    expect(isCataloguedPath('content.config.ts.bak', paths)).toBe(false)
-    expect(isCataloguedPath('tenants/status/content/current/glossaryx/tenant.md', paths)).toBe(false)
+    expect(cataloguedPathVia('content.config.ts.bak', paths)).toBeUndefined()
+    expect(cataloguedPathVia('tenants/status/content/current/glossaryx/tenant.md', paths)).toBeUndefined()
   })
   it('does not match an uncatalogued path', () => {
-    expect(isCataloguedPath('app/pages/index.vue', paths)).toBe(false)
-    expect(isCataloguedPath('', paths)).toBe(false)
+    expect(cataloguedPathVia('app/pages/index.vue', paths)).toBeUndefined()
+    expect(cataloguedPathVia('', paths)).toBeUndefined()
   })
   it('matches nothing when no path is catalogued', () => {
-    expect(isCataloguedPath('content.config.ts', new Set())).toBe(false)
+    expect(cataloguedPathVia('content.config.ts', new Map())).toBeUndefined()
+  })
+})
+
+describe('cataloguedLabel()', () => {
+  it('leaves a candidate screened by its own file-kind identity unadorned', () => {
+    expect(cataloguedLabel('file:scripts/generate.ts', 'file:scripts/generate.ts')).toBe('file:scripts/generate.ts')
+  })
+  it('names the commit-kind artifact that screened a file with no identity of its own', () => {
+    expect(cataloguedLabel('file:content.config.ts', 'commit:73bf3dc')).toBe('file:content.config.ts (via commit:73bf3dc)')
+  })
+  it('names the directory-valued artifact a file was screened beneath', () => {
+    expect(cataloguedLabel('file:a/b/c.ts', 'file:a/b/')).toBe('file:a/b/c.ts (via file:a/b/)')
   })
 })
 
@@ -285,7 +312,7 @@ describe('screenCatalogued()', () => {
       { path: 'tenants/status/content/current/glossary/tenant.md', ...meta },
       { path: 'brand/new.ts', ...meta },
     ]
-    const { fresh, catalogued } = screenCatalogued(cands, (c) => isCataloguedPath(c.path, index.paths))
+    const { fresh, catalogued } = screenCatalogued(cands, (c) => cataloguedPathVia(c.path, index.paths) !== undefined)
     expect(fresh.map((c) => c.path)).toEqual(['brand/new.ts'])
     expect(catalogued.map((c) => c.path)).toEqual([
       'already/catalogued.ts',
