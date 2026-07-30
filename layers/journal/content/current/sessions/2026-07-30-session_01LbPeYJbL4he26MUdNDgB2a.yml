@@ -1,0 +1,58 @@
+schemaVersion: 1
+session: session_01LbPeYJbL4he26MUdNDgB2a
+startedAt: 2026-07-30T01:06:16Z
+endedAt: 2026-07-30T01:27:18Z
+kind: autonomous
+goal: Run frictions-to-fixes scheduled sweep
+status: in-review
+outcome: 4 issues filed, 1 grouped PR open awaiting CI
+summary: "Scheduled frictions-to-fixes run. A general-purpose subagent surveyed the latest 20 session logs, screened every friction candidate against the tracker (search_issues/search_pull_requests exact-string search plus scripts/merged-since.ts), and returned 4 never-fixed, doc-only, safe-surface candidates. Filed issues #740-#743 for them after confirming no duplicates. Dispatched one worktree-isolated Sonnet impl agent to fix all 4 in a single grouped PR (#744) per the doc-fix batching rule; it ran the full gate locally (green) and pushed, awaiting GitHub CI before this orchestrating session reviews and merges. Also found 2 already-open tracking issues (#723, #483) with new in-window occurrences and added evidence comments to those standing threads rather than filing duplicates or dispatching fixes, per the skill's open-already/regression handling. Entire run is autonomous/scheduled — no live human input at any point."
+prs:
+  - "744"
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: "MiddenArtifact.vue's inaccurate comment about validate-content-refs.ts was flagged in PR #732's own body weeks ago but never turned into a tracked issue, so it sat unaddressed until this survey caught it."
+    solution: When a PR review/body flags a follow-up gap it doesn't fix itself, file the issue at that point rather than leaving it as PR-body prose that a later survey has to rediscover.
+    severity: moderate
+  - description: "mcp__github__search_issues returned total_count:0 for a genuinely-scoped duplicate-check query during this session's own issue-filing pass — the same false-negative failure mode issue #741 documents."
+    solution: "Re-scoped the query narrower and cross-checked; issue #741 (now filed) should prevent this from causing a missed duplicate in future runs."
+    severity: moderate
+  - description: The survey subagent's own search_issues call (broad query) returned a 103KB+ result that overflowed, forcing a narrower retry.
+    solution: Same residual "targeted keyword search still overflows" gap the subagent flagged as untracked by any open issue; single occurrence this run, not filed separately per the low-severity-one-off drop rule.
+    severity: minor
+durationSec: 1262
+models:
+  claude-sonnet-5: 72
+toolCounts:
+  Agent: 2
+  Bash: 2
+  ToolSearch: 4
+  mcp__github__search_issues: 4
+  mcp__github__list_pull_requests: 1
+  TaskCreate: 6
+  TaskUpdate: 6
+  mcp__github__issue_write: 4
+  mcp__github__issue_read: 2
+  mcp__github__add_issue_comment: 2
+  mcp__github__pull_request_read: 4
+  mcp__github__actions_list: 2
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix 4 doc frictions in one PR
+    model: sonnet
+gitBranch: claude/hopeful-brown-czmn2q
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: frictions-to-fixes
