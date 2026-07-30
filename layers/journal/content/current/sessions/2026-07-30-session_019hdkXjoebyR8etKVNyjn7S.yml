@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019hdkXjoebyR8etKVNyjn7S
 startedAt: 2026-07-30T08:49:53Z
-endedAt: 2026-07-30T09:10:22Z
+endedAt: 2026-07-30T09:17:15Z
 kind: delegated
 goal: Autonomous triage sweep over the backlog
 status: completed
-outcome: 12 issues triaged, verified live
-summary: "Human-instructed: the user invoked /auto-triage, which is itself the ADR-0022 standing green-light for the sweep; everything below is that skill's prescribed work, not agent-initiated scope. Scanned 28 open issues and 0 open PRs, testing each one's most-recent comment (or body) for the ADR-0017 provenance footer via the repo's own isAiAuthored detector rather than author_association. Resolved 12 eligible, skipped 14 whose last activity was already AI's own and 2 wayfinder maps. Dispatched one subagent per eligible issue. Result: one objective close (already-implemented), one ready-for-agent, ten ready-for-human. Verified every label, state, and footer live over REST rather than trusting subagent reports. No repo commits — classification-only remit."
+outcome: 12 triaged, 3 follow-up issues filed
+summary: "Human-instructed: the user invoked /auto-triage, which is itself the ADR-0022 standing green-light for the sweep; everything below is that skill's prescribed work, not agent-initiated scope. Scanned 28 open issues and 0 open PRs, testing each one's most-recent comment (or body) for the ADR-0017 provenance footer via the repo's own isAiAuthored detector rather than author_association. Resolved 12 eligible, skipped 14 whose last activity was already AI's own and 2 wayfinder maps. Dispatched one subagent per eligible issue. Result: one objective close (already-implemented), one ready-for-agent, ten ready-for-human. Verified every label, state, and footer live over REST rather than trusting subagent reports. No repo commits — classification-only remit. Then, on a second explicit human green-light (\"Create issues\"), filed three follow-up issues for verified residues the sweep surfaced but could not itself file: \"#752\" and \"#753\" (midden-survey screening defects) and \"#754\" (audit-skills orphan-suppression observability, split out of \"#738\"). Re-verified every claim in code before filing rather than relaying the subagents' findings, and cross-linked the new issues from the two they came from."
 prs: []
 docsRead:
   - path: docs/adr/0022-autonomous-triage-sweep.md
@@ -31,6 +31,10 @@ docsRead:
     reason: (no reason given)
   - path: .claude/skills/triage/OUT-OF-SCOPE.md
     reason: (no reason given)
+  - path: scripts/midden-survey.ts
+    reason: (no reason given)
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
 skillsUsed:
   - name: auto-triage
     reason: the sweep itself
@@ -47,15 +51,19 @@ frictions:
   - description: The platform appends its own attribution footer after the ADR-0017 footer on GitHub comments, so a last-two-lines footer check false-negatives on all 12.
     solution: Verify the provenance footer by searching the whole comment body, never by position. Worth a line in the issue-tracker doc so a future session doesn't misdiagnose a correctly-footered comment as missing one.
     severity: minor
-durationSec: 1229
+durationSec: 1642
 models:
-  claude-opus-5: 111
+  claude-opus-5: 158
 toolCounts:
-  Bash: 17
-  Read: 11
+  Bash: 26
+  Read: 14
   Write: 4
   Agent: 12
   Skill: 2
+  ToolSearch: 1
+  mcp__github__issue_write: 3
+  mcp__github__add_issue_comment: 2
+  Edit: 3
 subagents:
   - type: general-purpose
     task: Triage issue 666
@@ -89,5 +97,5 @@ learnings:
   - "Two subagents on one shared checkout can race on repo state: one unshallowed the clone mid-sweep, and another observed shallow-then-not and correctly re-ran its history claims."
   - "Determinable and authorized are independent: #674's design was fully determined, yet its body withheld the green-light, so ready-for-agent would have granted what the ticket forbids."
 ideas:
-  - "File the verified midden-survey.ts dedupe defect: surveyReport() keys deletion candidates as file:<path> but matches against provenanceKey(), which returns commit:<hash7> for a commit-kind provenance, so a commit-kind cluster can never screen out its sibling paths; separately screenRegrown() compares paths by exact string, which is why a relocated file resurfaced. Both confirmed in code during #730's triage and tracked by no issue."
   - "Give auto-triage a bravery-calibration readout: record each sweep's state distribution over time, so a run of near-total ready-for-human escalation is visibly either the hard governance residue or a miscalibrated determinability bar, instead of a judgment no one can audit across runs."
+  - "Make the sweep's residue path first-class instead of ad-hoc. Three real defects this run were found by subagents, recorded only in issue comments, and would have died there without a human happening to say 'create issues' — see the filed \"#752\"/\"#753\"/\"#754\". A classification-only remit is right, but it needs a designated hand-off: have each triage subagent emit residues as structured output, and have the sweep report them as a distinct 'found but unfiled' section for one green-light decision, rather than burying them in per-issue prose."
