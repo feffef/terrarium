@@ -1,0 +1,83 @@
+schemaVersion: 1
+session: session_019jnggE1yiAs9FyakmE8qQN
+startedAt: 2026-07-31T06:00:10Z
+endedAt: 2026-07-31T07:05:58Z
+kind: interactive
+goal: Fix the provenance convention losing to the harness
+status: in-review
+outcome: Footer replaced by header; guard now blocks missing
+summary: "Human-asked: investigate why docs/agents/provenance.md looked unread while PR footers stayed correct. Audited all 114 GitHub artefacts since it landed — 86 agent-authored, 84 carrying the footer, zero fabricated session ids. Both premises were false. The 2 misses used the harness's own footer: the harness prescribes three footers, two contradicting ADR-0017, and no repo doc named the conflict. The user then set the real requirement (a full session URL, format irrelevant) and green-lit a header, explicitly choosing backward compatibility plus a cleanup issue over a clean sweep. Agent-initiated within that: the guard broadening, the permanent-vs-temporary compat split, and preserving issue \"#692\"'s guarantee."
+prs:
+  - "785"
+docsRead:
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: the convention being amended; its own Consequences reserved this reversal
+  - path: docs/agents/provenance.md
+    reason: the doc whose read-rate started the question; single home for the rules
+  - path: scripts/session-trace.ts
+    reason: how filesRead/docsRead is actually derived — the core of the second question
+  - path: scripts/session-end.ts
+    reason: the landing gate that freezes the docsRead snapshot
+  - path: scripts/provenance-footer.ts
+    reason: reused reconstructFooterValues for the header's model/session resolution
+  - path: scripts/check-triage-drift.ts
+    reason: isAiAuthored — load-bearing for two pipelines the format change would break
+  - path: scripts/github-footer-guard.ts
+    reason: (no reason given)
+  - path: tests/unit/github-provenance-guard.spec.ts
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: The ADR-0017 footer convention was in direct, undocumented conflict with the harness's own PR-body and comment attribution footers. Agents that "failed" it were resolving a conflict they were never told existed, and the harness won.
+    solution: Moved the repo marker to a header so the positions no longer compete; documented the conflict in ADR-0017's amendment and provenance.md; stated the requirement as the invariant (a full session URL) rather than one spelling, so following the harness is no longer a breach.
+    severity: major
+  - description: The footer guard was in-path for both observed misses and passed them — it only blocked a divergent Claude-Session footer, never a missing one (known gap "#737"). A guard that is in-path and silent is worse than none, because it reads as coverage.
+    solution: Broadened to checkGithubProvenance with an explicit missing/mismatch split, plus an end-to-end hook test for the missing case.
+    severity: major
+  - description: The session log's docsRead field cannot support the inference it invites. Only Read tool calls count; subagent reads never appear (one session, 29 subagents and 9 PRs, showed zero create_pull_request calls — 12 of 23 PR bodies in the window came from invisible subagents); auto-injected context is not a Read (CLAUDE.md in only 3 of 12 logs); and the scratch-hash gate freezes the snapshot at the last log-session call.
+    solution: Not fixed here. Document the subagent blind spot in session-trace.ts's header beside the existing cat/grep caveat, and treat docsRead as a floor, never as evidence of absence — frictions-to-fixes currently mines a heavily undercounted field.
+    severity: major
+  - description: The obvious way to express the new format-agnostic rule — "is the ground-truth id present anywhere" — would have silently regressed issue "#692"'s quoted-citation guarantee. Caught only because the existing spec pinned that case.
+    solution: The guard adjudicates the most-canonical slot first (header, then legacy last-match trailer, then any URL), preserving the old rule verbatim for legacy content.
+    severity: minor
+durationSec: 3948
+models:
+  claude-opus-5: 179
+toolCounts:
+  Bash: 49
+  Read: 8
+  Write: 4
+  AskUserQuestion: 1
+  Edit: 15
+  ToolSearch: 1
+  mcp__github__issue_write: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+filesEdited:
+  - scripts/provenance-header.ts
+  - scripts/github-provenance-guard.ts
+  - scripts/check-triage-drift.ts
+  - .claude/settings.json
+  - tests/unit/provenance-header.spec.ts
+  - docs/agents/provenance.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - CLAUDE.md
+gitBranch: claude/provenance-file-reading-check-y0onz4
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - Correct footers were never evidence the doc was read — the format and the resolved session id both come from the harness system prompt, not from any repo doc. A reference doc consulted only when something breaks shows a low read rate by design; that is not a failure signal.
+  - ADR-0017 had already retired the "the harness gives us this for free" premise twice, in two amendments, before this session re-derived it a third time from measurement. Reading an ADR's amendments first would have shortened the investigation.
+  - Measuring the user's actual requirement rather than the documented format inverted the finding — by "a full session URL is present", the state was already 86/86 and both apparent failures passed.
+ideas:
+  - Give session logs a real reads signal, spanning subagents. The parent transcript is structurally blind to dispatched work — the extractor could fold each subagent's own transcript into the parent's filesRead at stitch time, turning docsRead from a floor into a measurement and making frictions-to-fixes' mining trustworthy.
+  - Reconsider isAiAuthored as the authorship key now that guest-intake idempotency and triage-drift both depend on it. A marker an agent can simply omit is a fragile basis for loop prevention; a durable signal (a bot identity per "#124", or a recorded post ledger) would not fail open the way a forgotten marker does.
