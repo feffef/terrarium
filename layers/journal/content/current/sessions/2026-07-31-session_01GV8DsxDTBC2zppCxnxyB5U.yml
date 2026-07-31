@@ -1,0 +1,44 @@
+schemaVersion: 1
+session: session_01GV8DsxDTBC2zppCxnxyB5U
+startedAt: 2026-07-31T00:46:12Z
+endedAt: 2026-07-31T00:51:35Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: No Inventory changes; one signal already tracked
+summary: "Scheduled /audit-skills Routine fired with no human present. Gathered the scorecard (40-session window), re-graded importance for all 35 Skills against the bright-line evidence rule — every current grade/role held (0-usage specialist Skills like guest-build/guest-intake/wayfinder gate on occasions that didn't occur this window; code-review's documented inconsistent-adoption pattern still holds; domain-modeling's essential grade, already extensively discussed in prior runs' observations, wasn't newly contradicted). The `review` Inventory entry is inventoried-but-not-onDisk because it maps to a built-in CLI Skill invisible to the on-disk scan — left as-is per the mirror case in the Skill's own instructions. Checked all 7 regressionChecks: only auto-triage and digest actually fired inside their before/after brackets. auto-triage's one post-edit session (session_019hdkXjoebyR8etKVNyjn7S) had frictions unrelated to the edited content (a doc-link modularization) — inconclusive, nothing recorded. digest's edit was itself an in-session bug fix (the archive-sweep off-by-one, session_01TidaCa9xhf3u7CBQ9n4rHq) and the next scheduled digest run afterward (session_01Nc8m6txxWN8VxiyDnc8YMh) logged zero frictions — a clean confirmation, not a regression. orphanedSessions, orphanSuppressionLog, manuallyRescuedClosures, and misclassifiedKind were all empty (healthy). humanPromptedClosures flagged one session (session_012NCZUhy7qDirkjp8t6YiNy), but it was already cited twice on the standing thread (#483) by two other sessions on 2026-07-30, so no new comment was posted to avoid duplicating an existing citation. All steps were Skill-directed; no agent-initiated scope beyond the Skill's own instructions."
+prs: []
+docsRead:
+  - path: scripts/audit-skills.ts
+    reason: the scorecard gathering script's own field semantics
+  - path: layers/journal/content/current/sessions/2026-07-29-session_01TidaCa9xhf3u7CBQ9n4rHq.yml
+    reason: "Phase B deep-read: digest's edit-authoring session"
+  - path: layers/journal/content/current/sessions/2026-07-30-session_01Nc8m6txxWN8VxiyDnc8YMh.yml
+    reason: "Phase B deep-read: first post-edit digest run"
+  - path: layers/journal/content/current/sessions/2026-07-30-session_019hdkXjoebyR8etKVNyjn7S.yml
+    reason: "Phase B deep-read: auto-triage's post-edit session"
+  - path: layers/journal/content/current/sessions/2026-07-29-session_012NCZUhy7qDirkjp8t6YiNy.yml
+    reason: verify this run's humanPromptedClosures citation
+skillsUsed:
+  - name: audit-skills
+    reason: the run's own governing Skill
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 322
+models:
+  claude-sonnet-5: 61
+toolCounts:
+  Bash: 21
+  Read: 4
+  ToolSearch: 2
+  mcp__github__search_issues: 1
+  mcp__github__issue_read: 1
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-6cxfxw
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: audit-skills
