@@ -4,11 +4,9 @@ How to drive git in this environment without losing work or drawing a false
 conclusion from history. Moved out of `CLAUDE.md` so that file could stay an
 index (the same treatment `pr-workflow.md` got in #448).
 
-Scope: local git mechanics only. Two neighbours own the adjacent material —
-[`provenance.md`](./provenance.md) for the footer and identifier rules (they
-span commits *and* GitHub posts, so they are not git-specific), and
-[`github-integration.md`](./github-integration.md) for the `mcp__github__*` tool
-surface.
+Scope: local git mechanics only.
+[`github-integration.md`](./github-integration.md) owns the adjacent
+`mcp__github__*` tool surface.
 
 ## Staleness — fetch before you conclude anything
 
@@ -73,9 +71,11 @@ asserting any completeness claim over history.
 - **Commit messages containing backticks or `$(...)` must be written with `git
   commit -F <file>`** (or a quoted heredoc), never `git commit -m` — inside a
   double-quoted `-m` argument the shell runs the backtick/`$()` span as a
-  command and mangles the commit body. Note that the harness's automatic footer
-  injection only applies to interactive/`-m` commits, not `-F`; see
-  [`provenance.md`](./provenance.md) for what to append yourself.
+  command and mangles the commit body. The harness's automatic footer injection
+  only applies to interactive/`-m` commits, not `-F` — but `.githooks/commit-msg`
+  (`scripts/provenance-footer.ts`) backstops both, appending the ADR-0017 trailer
+  when absent and correcting it when it names the wrong session. It can no-op
+  silently if pnpm/tsx is off PATH, so glance that the footer actually landed.
 - **Keep session-log-only commits content-only.** Never let substantive work
   ride along inside a commit titled as a session-log commit — title the commit
   for the work it actually contains instead.
