@@ -20,6 +20,10 @@
 //     reference being obviously malformed (issue #520 — see the
 //     "Provenance existence check" block comment below for the deliberately
 //     soft scope).
+//   - A page body's `::midden-artifact{slug="..."}` embed (MiddenArtifact.vue,
+//     #521) naming no real Document in this (Tenant, Space)'s `artifacts`
+//     collection — otherwise silent until a human/agent views the rendered
+//     page and hits the runtime "Artifact not found" fallback (issue #773).
 //
 // Scope: this pass only fires on a (Tenant, Space) that actually has an
 // Atlas-shaped collection (a `pages` Document with `phenology`, alongside
@@ -151,6 +155,9 @@ interface PageRefContext {
   phaseNames: Set<string>
   /** Every `observations.date` in this (Tenant, Space) — the biome's ledger. */
   observationDates: Set<string>
+  /** Every Artifact `stem` (filename minus extension) in this (Tenant, Space)'s
+   *  `artifacts` collection — empty when the group has none. */
+  artifactSlugs: Set<string>
 }
 
 interface TagResolver {
@@ -175,11 +182,36 @@ const TAG_RESOLVERS: Record<string, TagResolver> = {
       return ctx.observationDates.has(value) ? null : "matches no observation in this biome's field log"
     },
   },
+  'midden-artifact': {
+    attr: 'slug',
+    resolve: (value, ctx) =>
+      ctx.artifactSlugs.has(value) ? null : "names no Document in this Space's \"artifacts\" collection",
+  },
+}
+
+// ── Per-body reference resolution (any page, any Tenant) ───────────────────
+// `TAG_RESOLVERS` is keyed by tag, not by Tenant — so this runs identically
+// whether the page belongs to an Atlas Specimen or a Midden Site.
+
+function resolveDirectiveRefs(instances: DirectiveInstance[], ctx: PageRefContext): string[] {
+  const msgs: string[] = []
+  for (const inst of instances) {
+    const resolver = TAG_RESOLVERS[inst.tag]
+    if (!resolver) continue
+    const value = inst.attrs[resolver.attr]
+    if (value === undefined) {
+      msgs.push(`line ${inst.line}: "::${inst.tag}" has no "${resolver.attr}" attribute to resolve`)
+      continue
+    }
+    const err = resolver.resolve(value, ctx)
+    if (err) msgs.push(`line ${inst.line}: ${inst.tag}{${resolver.attr}="${value}"} ${err}`)
+  }
+  return msgs
 }
 
 // ── Per-Specimen-body checks (structural + reference resolution) ───────────
 
-function checkSpecimenBody(body: string, phaseNames: Set<string>, observationDates: Set<string>): string[] {
+function checkSpecimenBody(body: string, ctx: PageRefContext): string[] {
   const msgs: string[] = []
   const { instances, unclosed } = scanDirectives(body)
 
@@ -199,24 +231,27 @@ function checkSpecimenBody(body: string, phaseNames: Set<string>, observationDat
       const of = inst.attrs.of
       if (of !== undefined) phaseNoteCounts.set(of, (phaseNoteCounts.get(of) ?? 0) + 1)
     }
-
-    const resolver = TAG_RESOLVERS[inst.tag]
-    if (!resolver) continue
-    const value = inst.attrs[resolver.attr]
-    if (value === undefined) {
-      msgs.push(`line ${inst.line}: "::${inst.tag}" has no "${resolver.attr}" attribute to resolve`)
-      continue
-    }
-    const err = resolver.resolve(value, { phaseNames, observationDates })
-    if (err) msgs.push(`line ${inst.line}: ${inst.tag}{${resolver.attr}="${value}"} ${err}`)
   }
 
-  for (const phase of phaseNames) {
+  msgs.push(...resolveDirectiveRefs(instances, ctx))
+
+  for (const phase of ctx.phaseNames) {
     const count = phaseNoteCounts.get(phase) ?? 0
     if (count !== 1) msgs.push(`phase "${phase}" has ${count} "::phase-note" block(s) in the body; expected exactly 1`)
   }
 
   return msgs
+}
+
+// ── Per-page-body checks for a non-Specimen page (Midden Sites, issue #773) ─
+// No phenology, so none of checkSpecimenBody's Atlas-only structural
+// invariants (almanac/phase-note cardinality) apply here — only reference
+// resolution, the same TAG_RESOLVERS table checkSpecimenBody uses (today:
+// `::midden-artifact{slug="..."}` against this Space's `artifacts` collection).
+
+function checkEmbedRefs(body: string, ctx: PageRefContext): string[] {
+  const { instances } = scanDirectives(body)
+  return resolveDirectiveRefs(instances, ctx)
 }
 
 // ── Collection-level checks (interactions / observations) ──────────────────
@@ -438,11 +473,15 @@ function checkArtifacts(
   projectRoot: string,
   siteSlugs: Set<string>,
   violations: RefViolation[],
-): number {
+): { checked: number; slugs: Set<string> } {
   const cwd = join(projectRoot, col.cwdRel)
   let checked = 0
+  const slugs = new Set<string>()
   for (const rel of globSync(col.include, { cwd })) {
     checked++
+    // Matches Nuxt Content's own `stem` field (path minus extension) — the
+    // same value `MiddenArtifact.vue` queries `artifacts` by (issue #773).
+    slugs.add(rel.replace(/\.yml$/, ''))
     const data = parseDocument(join(cwd, rel))
     const file = join(col.cwdRel, rel)
     const msgs: string[] = []
@@ -485,7 +524,7 @@ function checkArtifacts(
 
     if (msgs.length) violations.push({ key: col.key, file, messages: msgs })
   }
-  return checked
+  return { checked, slugs }
 }
 
 // ── Main pass ────────────────────────────────────────────────────────────────
@@ -559,12 +598,20 @@ export function validateReferences(cols: ExpandedCollection[], projectRoot = roo
       observationDates = result.dates
     }
 
-    if (artifactsCol) filesChecked += checkArtifacts(artifactsCol, projectRoot, specimenSlugs, violations)
+    let artifactSlugs = new Set<string>()
+    if (artifactsCol) {
+      const result = checkArtifacts(artifactsCol, projectRoot, specimenSlugs, violations)
+      filesChecked += result.checked
+      artifactSlugs = result.slugs
+    }
 
     for (const { file, frontmatter, body } of pageBodies.values()) {
       const phaseNames = phaseNamesOf(frontmatter)
-      if (phaseNames.size === 0) continue // not a Specimen field note (no phenology declared)
-      const msgs = checkSpecimenBody(body, phaseNames, observationDates)
+      const ctx: PageRefContext = { phaseNames, observationDates, artifactSlugs }
+      // A Specimen field note (phenology declared) gets the full Atlas
+      // structural pass; any other page in a checked group (e.g. a Midden
+      // Site) only gets reference resolution — see checkEmbedRefs above.
+      const msgs = phaseNames.size > 0 ? checkSpecimenBody(body, ctx) : checkEmbedRefs(body, ctx)
       if (msgs.length) violations.push({ key: pagesCol.key, file, messages: msgs })
     }
   }

@@ -123,6 +123,32 @@ function observationsCol(cwdRel: string): ExpandedCollection {
   }
 }
 
+function middenPagesCol(cwdRel: string): ExpandedCollection {
+  return {
+    key: 'midden_trench_pages',
+    tenant: 'midden',
+    space: 'trench',
+    collection: 'pages',
+    include: '**/*.md',
+    cwdRel,
+    type: 'page',
+    schema: pageSchema,
+  }
+}
+
+function middenArtifactsCol(cwdRel: string): ExpandedCollection {
+  return {
+    key: 'midden_trench_artifacts',
+    tenant: 'midden',
+    space: 'trench',
+    collection: 'artifacts',
+    include: '**/*.yml',
+    cwdRel,
+    type: 'data',
+    schema: dataSchema,
+  }
+}
+
 /** A valid Specimen page: one declared phase, one `::almanac`, one
  *  `::phase-note` naming that phase, and (optionally) one `::sighting`
  *  quoting a real ledger date. */
@@ -315,6 +341,66 @@ describe('validateReferences() — Specimen body: unclosed MDC container (the #4
     const report = validateReferences([pagesCol('pages')], dir)
     expect(report.violations.length).toBeGreaterThan(0)
     expect(report.violations[0]?.messages.join()).toMatch(/"::almanac" is never closed/)
+  })
+})
+
+// ── validateReferences() — Midden page body: ::midden-artifact resolution ──
+// (issue #773) — a page body embedding `::midden-artifact{slug="..."}`
+// (MiddenArtifact.vue, #521) with a typo'd or stale `slug` previously sailed
+// through `validate:content` silently; only a runtime "Artifact not found"
+// fallback caught it. This Space has no `phenology`, so unlike a Specimen
+// page it gets reference resolution only — no almanac/phase-note checks.
+
+/** Writes a minimal valid Midden Site: one `pages` Document ("home") whose
+ *  body embeds one real Artifact by slug, and the Artifact Document itself. */
+function writeValidMiddenSite(root: string): ExpandedCollection[] {
+  mkdirSync(join(root, 'pages'), { recursive: true })
+  mkdirSync(join(root, 'artifacts'), { recursive: true })
+  writeFileSync(join(root, 'pages', 'index.md'), '---\ntitle: Trench\n---\nLanding.\n')
+  writeFileSync(
+    join(root, 'pages', 'home.md'),
+    ['---', 'title: Home', '---', '', 'Some dig report prose.', '', '::midden-artifact{slug="the-find"}', '::', ''].join(
+      '\n',
+    ),
+  )
+  writeFileSync(join(root, 'artifacts', 'the-find.yml'), 'site: home\n')
+  return [middenPagesCol('pages'), middenArtifactsCol('artifacts')]
+}
+
+describe('validateReferences() — Midden page body: ::midden-artifact resolution (issue #773)', () => {
+  it('reports no violations when the slug resolves to a real Artifact', () => {
+    const cols = writeValidMiddenSite(dir)
+    const report = validateReferences(cols, dir)
+    expect(report.violations).toEqual([])
+    expect(report.groupsChecked).toBe(1)
+  })
+
+  it('fails when ::midden-artifact{slug} names no real Artifact (a typo/stale slug)', () => {
+    const cols = writeValidMiddenSite(dir)
+    writeFileSync(
+      join(dir, 'pages', 'home.md'),
+      ['---', 'title: Home', '---', '', '::midden-artifact{slug="the-ghost-find"}', '::', ''].join('\n'),
+    )
+    const report = validateReferences(cols, dir)
+    expect(report.violations).toHaveLength(1)
+    expect(report.violations[0]?.key).toBe('midden_trench_pages')
+    expect(report.violations[0]?.messages.join()).toMatch(
+      /midden-artifact\{slug="the-ghost-find"\}.*names no Document in this Space's "artifacts" collection/,
+    )
+  })
+
+  it('fails when ::midden-artifact has no "slug" attribute to resolve', () => {
+    const cols = writeValidMiddenSite(dir)
+    writeFileSync(join(dir, 'pages', 'home.md'), ['---', 'title: Home', '---', '', '::midden-artifact', '::', ''].join('\n'))
+    const report = validateReferences(cols, dir)
+    expect(report.violations).toHaveLength(1)
+    expect(report.violations[0]?.messages.join()).toMatch(/"::midden-artifact" has no "slug" attribute to resolve/)
+  })
+
+  it('does not require an ::almanac or ::phase-note — those are Atlas-only invariants', () => {
+    const cols = writeValidMiddenSite(dir)
+    const report = validateReferences(cols, dir)
+    expect(report.violations).toEqual([])
   })
 })
 
