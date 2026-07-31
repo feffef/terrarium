@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01R3PG8Komhz36po4FzR1WHc
 startedAt: 2026-07-31T18:39:29Z
-endedAt: 2026-07-31T18:50:56Z
+endedAt: 2026-07-31T18:54:59Z
 kind: interactive
 goal: Fix Midden long paths breaking mobile layout
 status: in-review
@@ -20,31 +20,39 @@ docsRead:
     reason: (no reason given)
   - path: layers/midden/app/components/midden/StoresLanding.vue
     reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/provenance.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: closure at PR-open
   - name: log-session
     reason: this log
 frictions:
+  - description: 'Wrote the PR provenance header from memory as "> Session: <url>" instead of reading docs/agents/provenance.md, which CLAUDE.md says to read first. The PreToolUse guard is format-agnostic, so it passed and the deviation only surfaced when the owner asked where the format came from.'
+    solution: Either have the guard warn on a body that carries the session URL in a non-canonical shape, or have scripts/provenance-header.ts emit the header so it is never hand-typed — prose alone has now missed five times.
+    severity: moderate
   - description: preview.ts shot takes only WxH, so reaching a mid-page component meant guessing a tall viewport before I thought to pass a URL hash anchor.
     solution: 'Document the "route can carry #anchor" trick in the CLAUDE.md screenshot section — it is the cheap way to shoot below-the-fold content.'
     severity: nit
-durationSec: 687
+durationSec: 930
 models:
-  claude-opus-5: 71
+  claude-opus-5: 89
 toolCounts:
-  Bash: 20
+  Bash: 22
   Grep: 5
-  Read: 10
-  Edit: 3
+  Read: 12
+  Edit: 4
   Write: 2
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 2
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - layers/midden/app/utils/find.ts
   - layers/midden/app/components/midden/StoresLanding.vue
