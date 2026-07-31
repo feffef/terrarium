@@ -45,6 +45,7 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { hasProvenance } from './provenance-header.ts'
 import {
   decodeHtmlEntities,
   envToken,
@@ -104,16 +105,25 @@ export interface FlaggedIssue {
 
 // ── Pure core (unit-tested) ─────────────────────────────────────────────────
 
-/** The ADR-0017 provenance footer every AI-authored comment in this repo
- *  carries — see the header comment above for why this, not
- *  `author_association`, is the authorship signal. Case-insensitive: git
- *  trailers conventionally use `Co-authored-by`, GitHub's own rendering
- *  doesn't normalize case, and neither should this check. */
-const PROVENANCE_FOOTER = /co-authored-by:.*noreply@anthropic\.com/i
+/** The legacy ADR-0017 two-line footer, carried by every AI-authored comment
+ *  posted before the 2026-07-31 amendment moved the convention to a header.
+ *  Still matched, and permanently: nothing is backfilled (ADR-0017's
+ *  "asymmetric history" consequence), so historical comments would otherwise
+ *  silently stop reading as AI-authored. Case-insensitive: git trailers
+ *  conventionally use `Co-authored-by`, GitHub's own rendering doesn't
+ *  normalize case, and neither should this check. */
+const LEGACY_PROVENANCE_FOOTER = /co-authored-by:.*noreply@anthropic\.com/i
 
-/** True when `commentBody` carries the ADR-0017 provenance footer. */
+/** True when `commentBody` carries ADR-0017 provenance in any recognized shape
+ *  — see the header comment above for why this, not `author_association`, is
+ *  the authorship signal.
+ *
+ *  Load-bearing beyond drift detection: `guest-intake-scan.ts` uses this to
+ *  skip the pipeline's OWN prior replies, so a shape this misses would make the
+ *  intake loop re-answer itself. Hence both the current header (via
+ *  `hasProvenance`, which reads any full session URL) and the legacy footer. */
 export function isAiAuthored(commentBody: string): boolean {
-  return PROVENANCE_FOOTER.test(commentBody)
+  return hasProvenance(commentBody) || LEGACY_PROVENANCE_FOOTER.test(commentBody)
 }
 
 /** The phrasings this repo's AI-authored comments actually use to assert a

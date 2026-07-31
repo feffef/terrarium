@@ -114,6 +114,6 @@ State plainly in the issue that `condition`, `stratum`, `site`, and the
 `catalogNote` are the curator's to author — never proposed here (the
 CONTEXT.md Condition term's "100% curator-authored" rule). Label the issue
 `needs-triage`, list any Palimpsest-boundary notes from §3 at the end, and
-carry the ADR-0017 provenance footer. Filing the issue is where this Skill
+carry the ADR-0017 provenance header. Filing the issue is where this Skill
 stops — implementing any accepted candidate is a later, separately green-lit
 session's work.

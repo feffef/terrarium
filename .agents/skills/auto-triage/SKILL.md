@@ -28,9 +28,10 @@ comments yet, the issue/PR **body** — and check who wrote it:
   evaluation is still in progress — regardless of who commented last.
 - **Any other state** (`needs-info`, `ready-for-human`, even `ready-for-agent`)
   **is eligible when its most recent comment (or body) is human-authored.**
-  Every agent-authored comment in this repo carries the ADR-0017 provenance
-  footer (`Co-Authored-By: ... <noreply@anthropic.com>` / `Claude-Session:
-  ...`) — its **absence** is the signal, not the GitHub author/association
+  Every agent-authored comment in this repo carries ADR-0017 provenance — a
+  full session URL, as the provenance header today or the legacy two-line
+  footer historically (`isAiAuthored` reads both) — and its **absence** is the
+  signal, not the GitHub author/association
   field. The latter can't be trusted here: agent-driven writes land under the
   human owner's own connection (ADR-0017), so an AI-authored comment and the
   owner's own comment both show `author_association: OWNER` under the same
@@ -111,7 +112,7 @@ make that ticket eligible again on the very next sweep, and this Skill's
 Public-issue rule (above) would then route it straight to `ready-for-human`,
 undoing the grant. In practice this window is narrow and self-closing: applying
 `ready-for-agent` is itself followed by an AI-authored comment from
-`guest-intake` (carrying the ADR-0017 footer), which becomes the new most-recent
+`guest-intake` (carrying ADR-0017 provenance), which becomes the new most-recent
 comment and makes the ticket ineligible again under the "skip once most-recent
 activity is AI's own" rule above — the same mechanism that keeps this Skill
 idempotent generally, not a guest-specific carve-out. A sweep that happens to run
@@ -130,7 +131,7 @@ explicit skip here rather than relying on the timing alone.
    AI action on it). Brief each with `/triage`'s per-issue rules plus
    the brave/uncertainty line and the wayfinder overlay above. Each subagent
    verifies every claim against a primary source in the repo, then applies its own
-   labels and posts its own single comment (disclaimer + ADR-0017 footer). A label
+   labels and posts its own single comment (disclaimer + ADR-0017 provenance). A label
    update **replaces** the set, so each passes the complete final label set and
    preserves any `wayfinder:*` label.
 3. **Report** a one-line-per-issue roll-up (`#N | category | state | rationale |

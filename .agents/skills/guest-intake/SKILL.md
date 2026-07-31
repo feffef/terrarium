@@ -38,7 +38,7 @@ This Skill adds only the guest loop.
 The three labels it moves between — `needs-info`, `ready-for-agent`, and
 `ready-for-human` — are defined in `docs/agents/triage-labels.md`, and every
 transition it needs is spelled out below. Comments carry only the ADR-0017
-provenance footer — no AI-triage disclaimer, same as `guest-build` (see its
+provenance header — no AI-triage disclaimer, same as `guest-build` (see its
 "Run it" section for why).
 
 ## What it acts on — guest activity
@@ -52,7 +52,7 @@ recent comment, or the body if there are none) and act only when it is
   reliable *for spotting guests* precisely because a guest cannot post as
   `OWNER`.
 - **Skip when the newest activity is the agent's own** — an `OWNER` comment
-  carrying the ADR-0017 provenance footer. This is the idempotency guard (same as
+  carrying ADR-0017 provenance. This is the idempotency guard (same as
   `auto-triage`): once it has responded, the issue stays quiet until the guest
   writes again, so a tight loop is cheap.
 - **An `OWNER` comment _without_ the footer is the owner steering** — a Trusted
@@ -212,7 +212,7 @@ not per whole issue:
    issue only surfaces when a guest has written since the last intake action).
    Each issue is at exactly one stage: ask the next round, post the reframe
    proposals, post the confirmation summary, green-light, or escalate. Claim
-   `guest-in-flight` first (see above), post **one** comment (ADR-0017 footer
+   `guest-in-flight` first (see above), post **one** comment (ADR-0017 header
    only), then apply the resulting label set — including dropping the
    marker — in one `issue_write` call.
 3. **Report** a one-line-per-issue roll-up (`#N | stage | action`).

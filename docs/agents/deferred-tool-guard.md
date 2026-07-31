@@ -89,6 +89,6 @@ addition — both live next to each other conceptually.
 ## Relationship to the CLAUDE.md rule
 
 This guard does not replace the `ToolSearch`-first rule — it backstops it, exactly
-as the `commit-msg` provenance hook (#346) backstops the ADR-0017 footer
+as the `commit-msg` provenance hook (#346) backstops the ADR-0017 provenance
 convention. The rule remains the primary discipline; the guard catches the
 specific, thrice-recurring failure mode when the rule doesn't hold.

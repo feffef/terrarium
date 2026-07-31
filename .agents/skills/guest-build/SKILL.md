@@ -112,6 +112,6 @@ Fire this Skill by name on an interval — a Routine (survives teardown) or `/lo
 above keep a tight interval cheap; don't restate the schedule in any committed
 doc (it lives outside git).
 
-Every issue/PR comment carries the ADR-0017 provenance footer (a no-exemptions
+Every issue/PR comment carries the ADR-0017 provenance header (a no-exemptions
 convention that already discloses AI authorship) and nothing else — no AI-triage
 disclaimer. See `docs/agents/github-integration.md` for the MCP-tool mechanics.

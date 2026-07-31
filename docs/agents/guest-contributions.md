@@ -64,6 +64,6 @@ approves the workflow run.
   delivery.
 - **ADR-0023** — guest-driven demo pipeline; the `guest-intake` / `guest-build`
   Skills.
-- **ADR-0017** — provenance footer on agent-authored content.
+- **ADR-0017** — provenance header/trailer on agent-authored content.
 - `docs/agents/issue-tracker.md` — how external PRs enter the triage queue
   (`authorAssociation` mechanics).

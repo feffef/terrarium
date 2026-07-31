@@ -9,7 +9,7 @@ two workflow docs sit on top of it and own their own recipes:
 Re-homed from `issue-tracker.md` and `pr-workflow.md`, which had each grown a
 piece of this surface.
 
-For the provenance footer that every GitHub write must carry, and which of these
+For the provenance header that every GitHub write must carry, and which of these
 tools is guarded, see [`provenance.md`](./provenance.md).
 
 ## Transient failures — retry before escalating
