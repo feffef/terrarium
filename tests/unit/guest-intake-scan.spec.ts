@@ -1,5 +1,5 @@
 // Unit tests for the guest-intake scan's pure core: newest-activity
-// selection, the guest/owner-steering/agent-footer-skip classification, and
+// selection, the guest/owner-steering/agent-authored-skip classification, and
 // the per-issue → report reduction. The `gh api` / REST shell is a thin
 // wrapper over these, exercised by running the script directly (same split as
 // `check-triage-drift.spec.ts`).
@@ -73,10 +73,10 @@ describe('newestActivity()', () => {
 })
 
 describe('classifyActivity()', () => {
-  it('is agent-footer-skip when the ADR-0017 footer is present, regardless of association', () => {
+  it('is agent-authored-skip when the ADR-0017 footer is present, regardless of association', () => {
     expect(
       classifyActivity({ author: 'owner', authorAssociation: 'OWNER', body: FOOTER_COMMENT, createdAt: 'x', isComment: true }),
-    ).toBe('agent-footer-skip')
+    ).toBe('agent-authored-skip')
   })
 
   it('is guest-activity for every Public author_association value', () => {
@@ -187,7 +187,7 @@ describe('scanIssue()', () => {
 
   it('behaves exactly as before when there is no missed owner comment (no cursor regression)', () => {
     const result = scanIssue(issue(), [comment({ body: FOOTER_COMMENT, author_association: 'OWNER' })], null)
-    expect(result?.stage).toBe('agent-footer-skip')
+    expect(result?.stage).toBe('agent-authored-skip')
   })
 
   it('does not perpetually re-flag an old, already-answered OWNER comment when there is no persisted cursor', () => {
@@ -204,7 +204,7 @@ describe('scanIssue()', () => {
     })
     const laterFooterReply = comment({ body: FOOTER_COMMENT, author_association: 'OWNER', created_at: '2026-06-01T00:00:00Z' })
     const result = scanIssue(issue(), [oldOwnerComment, laterFooterReply], null)
-    expect(result?.stage).toBe('agent-footer-skip')
+    expect(result?.stage).toBe('agent-authored-skip')
   })
 
   it('decodes HTML entities in the title, body, and comment text', () => {
@@ -221,7 +221,7 @@ describe('scanIssue()', () => {
       comment({ body: FOOTER_COMMENT, created_at: '2026-07-16T01:00:00Z' }),
       comment({ body: 'a plain reply', created_at: '2026-07-16T02:00:00Z' }),
     ])
-    expect(result?.priorFooterCommentCount).toBe(1)
+    expect(result?.priorAgentCommentCount).toBe(1)
   })
 
   it('classifies a guest-authored issue with no comments as guest-activity', () => {
@@ -236,9 +236,9 @@ describe('buildReport()', () => {
     number: 1,
     title: 'x',
     labels: [],
-    stage: 'agent-footer-skip',
+    stage: 'agent-authored-skip',
     newestActivity: { author: 'a', authorAssociation: 'OWNER', body: FOOTER_COMMENT, createdAt: 'x', isComment: true },
-    priorFooterCommentCount: 1,
+    priorAgentCommentCount: 1,
   }
 
   it('counts every stage and only surfaces guest-activity/owner-steering in actionable', () => {
@@ -253,7 +253,7 @@ describe('buildReport()', () => {
     expect(report.counts).toEqual({
       'guest-activity': 1,
       'owner-steering': 1,
-      'agent-footer-skip': 1,
+      'agent-authored-skip': 1,
       'unrecognized-association': 1,
     })
     expect(report.actionable.map((i) => i.number).sort()).toEqual([2, 3])
@@ -265,7 +265,7 @@ describe('buildReport()', () => {
       counts: {
         'guest-activity': 0,
         'owner-steering': 0,
-        'agent-footer-skip': 0,
+        'agent-authored-skip': 0,
         'unrecognized-association': 0,
       },
       actionable: [],

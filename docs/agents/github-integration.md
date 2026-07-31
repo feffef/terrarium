@@ -9,7 +9,7 @@ two workflow docs sit on top of it and own their own recipes:
 Re-homed from `issue-tracker.md` and `pr-workflow.md`, which had each grown a
 piece of this surface.
 
-For the provenance footer that every GitHub write must carry, and which of these
+For the provenance header that every GitHub write must carry, and which of these
 tools is guarded, see [`provenance.md`](./provenance.md).
 
 ## Transient failures — retry before escalating
@@ -97,7 +97,7 @@ each recipe class to its MCP equivalent:
   to ready-for-agent` while the issue stayed `ready-for-human`) — nothing
   catches that mismatch automatically. `tsx scripts/check-triage-drift.ts [N]`
   cross-checks each open issue's most recent AI-authored comment (detected via
-  the ADR-0017 provenance footer, not `author_association` — see the script's
+  an ADR-0017 authorship marker, not `author_association` — see the script's
   header comment for why that field can't be trusted here) against a small
   phrase list for the five canonical labels, and prints the mismatches as JSON
   (issue #507). It is a standalone check today, not yet wired into any

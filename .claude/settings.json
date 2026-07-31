@@ -23,7 +23,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pnpm exec tsx scripts/github-footer-guard.ts || true"
+            "command": "pnpm exec tsx scripts/github-provenance-guard.ts || true"
           }
         ]
       }

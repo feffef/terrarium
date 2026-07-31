@@ -169,7 +169,7 @@ cannot resolve.** Two sources state contradictory facts and the primary sources
 (code, schemas, ADRs) don't settle which is correct — the right value turns on
 human-held intent you can't recover. Then file it (both readings + your best
 guess), leave that one finding, and move on. Search first (`search_issues`), never
-re-file an open one, and append the provenance footer (ADR-0017). This is the
+re-file an open one, and open with the provenance header (ADR-0017). This is the
 *sole* reason to file — everything else, you fix.
 
 ## 1. Branch off `origin/main`
