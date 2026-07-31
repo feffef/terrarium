@@ -134,10 +134,30 @@ Status: Accepted
 >   surface, because every recorded recurrence happened to a session that had
 >   prose available and did not apply it.
 >
+> **Interaction with #784.** That issue scheduled the removal of the guard's
+> legacy-trailer branch about a week out, and with it `SESSION_TRAILER_GLOBAL`
+> and the `git-helpers` import as "now-unused". This amendment does the removal
+> early *for bodies* and invalidates the unused premise: the trailer reader now
+> has a permanent second job on the commit surface. Deleting it per #784's
+> literal text would silently unenforce MCP-API commits. #784's other
+> instructions stand, in particular that `hasAuthorshipMarker`, `isAiAuthored`,
+> and `sessionIdsIn` keep reading the legacy footer permanently.
+>
+> **What this deliberately does not do: inject.** #737's triage brief named a
+> third option — have the hook *supply* the missing marker rather than block,
+> the shape `provenance-footer.ts` already uses for commits — and noted that
+> whether a `PreToolUse` hook can rewrite tool input at all "is not established
+> anywhere in this repo". That remains unverified and unowned. It is the
+> strictly stronger form of #723's option 3, since an agent that never writes
+> the marker cannot write it wrongly; blocking still leaves a choice point, only
+> a supervised one. Recorded here so the next pass starts from the open
+> question rather than rediscovering it.
+>
 > **Scope unchanged.** This narrows *how strictly* the existing convention is
 > enforced. It does not make provenance a build-gate check (#444 still owns
-> that), does not revisit the marker's format, and does not reopen bot identity
-> (#124).
+> that, and its human-opt-out-trailer design does not apply to a hook that only
+> ever sees agent-authored calls), does not revisit the marker's format, and
+> does not reopen bot identity (#124).
 
 ## Context
 

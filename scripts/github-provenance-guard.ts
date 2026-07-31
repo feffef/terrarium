@@ -51,11 +51,19 @@ import { provenanceFooter } from './provenance-footer.ts'
 import { provenanceHeader, readProvenanceHeader, sessionIdsIn } from './provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from './session-id-guard.ts'
 
-/** A global copy of `SESSION_TRAILER` for `matchAll` (issue #692) — the legacy
- *  footer's last-match rule needs every occurrence. Built locally rather than
- *  adding the `g` flag to the shared export: `provenance-footer.ts` calls
- *  `SESSION_TRAILER.test()`, which is stateful (`lastIndex`) on a global regex
- *  and would break under repeated calls. */
+/** A global copy of `SESSION_TRAILER` for `matchAll` — the last-match rule needs
+ *  every occurrence (issue #692). Built locally rather than adding the `g` flag
+ *  to the shared export: `provenance-footer.ts` calls `SESSION_TRAILER.test()`,
+ *  which is stateful (`lastIndex`) on a global regex and would break under
+ *  repeated calls.
+ *
+ *  **Not dead code, despite issue #784.** That issue scheduled the removal of
+ *  this constant and its `git-helpers` import along with the legacy
+ *  body-surface fallback, on the correct premise that nothing would use it once
+ *  bodies required the header. The 2026-08-01 amendment removed that fallback
+ *  but gave the trailer a new, permanent job: reading the COMMIT surface, where
+ *  the two-line trailer is still the prescribed marker. Deleting this now
+ *  silently unenforces MCP-API commits. */
 const SESSION_TRAILER_GLOBAL = new RegExp(SESSION_TRAILER.source, 'g')
 
 /** Which marker shape a surface prescribes. A commit message renders no
