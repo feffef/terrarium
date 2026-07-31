@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_019co5cuEAZNRrh8BWe9V4E8
 startedAt: 2026-07-31T18:40:59Z
-endedAt: 2026-07-31T19:00:05Z
+endedAt: 2026-07-31T19:06:19Z
 kind: interactive
 goal: Extract subagent dispatch into a Skill
 status: in-review
@@ -32,6 +32,10 @@ docsRead:
     reason: (read before editing)
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: (read before editing)
+  - path: docs/agents/provenance.md
+    reason: (no reason given)
+  - path: scripts/provenance-header.ts
+    reason: (no reason given)
 skillsUsed:
   - name: writing-great-skills
     reason: user-invoked mid-build; drove the description rewrite and the §3/§4 completion criteria
@@ -44,6 +48,9 @@ skillsUsed:
   - name: implement
     reason: (invoked as a slash command)
 frictions:
+  - description: "Invented a `**Session:** <url>` provenance header for PR #788 instead of reading provenance.md's documented `🤖 [model](url)` format first."
+    solution: CLAUDE.md already says read provenance.md before writing either marker by hand; the miss was skipping that step, not missing guidance. The guard is format-agnostic (URL present and matching), so nothing flagged it — only a human question did. Fifth recurrence of the class provenance.md tracks.
+    severity: moderate
   - description: Extraction added pointers to the new Skill but left the restated prose in frictions-to-fixes §5 — duplication doubled instead of removed.
     solution: Treat "delete the restatement" as part of the extraction, not a follow-up; the code-review Standards axis caught both instances before merge.
     severity: minor
@@ -56,23 +63,23 @@ frictions:
   - description: Every new Skill needs an inventory .yml under layers/, so the full gate runs (~5 min) even for an otherwise prose-only change — twice here.
     solution: Working as designed rather than a bug (content changes affect the build), but worth knowing that no new-Skill PR can ever hit the inert skip path.
     severity: nit
-durationSec: 1147
+durationSec: 1521
 models:
-  claude-opus-5: 156
+  claude-opus-5: 180
 toolCounts:
   ToolSearch: 5
-  Bash: 36
+  Bash: 40
   mcp__github__issue_read: 2
-  Read: 14
+  Read: 16
   Write: 5
-  Edit: 15
+  Edit: 17
   Skill: 3
   Agent: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
-  mcp__github__update_pull_request: 1
+  mcp__github__update_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 4
   mcp__Claude_Code_Remote__send_later: 1
 filesEdited:
   - .agents/skills/dispatch-subagents/SKILL.md
@@ -90,6 +97,7 @@ gitBranch: claude/implement-766-a-fhlia8
 entrypoint: remote_mobile
 cliVersion: 2.1.220
 learnings:
+  - The github-provenance-guard is deliberately format-agnostic — it blocks a missing or mismatched session URL, never a wrongly-formatted header — so a self-invented marker shape passes every mechanical check and only a reader catches it.
   - gate.ts's inert rule covers .agents/skills/**/SKILL.md via its generic non-layers `.md` clause, not via the `.claude/skills/` prefix clause — the symlink mirror is only what makes non-.md skill assets inert.
   - writing-great-skills defines cross-skill reach as exactly what model-invocation provides, which settles 'reachable by X' requirements without needing a pointer inside X.
 ideas:
