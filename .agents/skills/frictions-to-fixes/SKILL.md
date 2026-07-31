@@ -165,7 +165,9 @@ tagged simple or hard.
 
 Dispatch the implementation to **Sonnet** agents (`model: sonnet`) — the impl work
 is well-scoped once §4 named the fix, so it doesn't need the main model. Each agent
-runs in its **own git worktree** (parallel PRs must not share a working tree):
+runs in its **own git worktree** (parallel PRs must not share a working tree) —
+invoke `dispatch-subagents` for the mechanism, the brief checklist, and the
+post-dispatch check:
 
 - **Doc-only fixes** (Markdown / prose — CLAUDE.md, a **repo-owned** SKILL, a Skill
   Inventory entry): hand them **all to one agent as a single grouped PR** that
@@ -192,10 +194,7 @@ implement the **recommended** option only, clear the **safety gate**, push, and 
 a **gated PR**. The brief must instruct the agent to run `pnpm typecheck` (or
 equivalent `tsc --noEmit`) on touched files before pushing — not just its targeted
 test file(s) — so a type error surfaces locally instead of on the next full CI gate
-round-trip. The brief must also tell the agent to run `pnpm gate:scoped` (and any
-other verification step) in the foreground and wait for it to finish before
-continuing — a dispatched subagent's own backgrounded commands do not wake it
-automatically the way a background `Agent`/`Workflow` call does. The impl agent **never merges and never enables auto-merge**
+round-trip. The impl agent **never merges and never enables auto-merge**
 (ADR-0003) — it hands the open PR back to you. You are the reviewer (§6). The
 impl agent also must **not call `subscribe_pr_activity`** on the PR it opens —
 the orchestrator (§6) owns that PR's lifecycle and subscribes if/when needed.

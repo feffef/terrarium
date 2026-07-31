@@ -31,7 +31,7 @@ worktree** that branches from `origin/main`, implements, clears the **safety
 gate** (ADR-0004), pushes, and opens a **gated PR** — never merging, never
 enabling auto-merge, never self-invoking `close-session`/`log-session`, and
 committing + pushing before it stops even mid-gate (read `frictions-to-fixes`
-§5 and CLAUDE.md's worktree bullets for the exact mechanics). Review is
+§5 and the `dispatch-subagents` Skill for the exact mechanics). Review is
 `/code-review`; the land recipe is `docs/agents/pr-workflow.md`. This Skill adds
 only what a guest-demo build needs — and one hard subtraction.
 
@@ -92,8 +92,8 @@ building against the same issue (#555) — before a human intervened.
    new dependency is the loud one: ADR-0004 makes it human-only to merge
    regardless, so it never belongs on an auto-dispatched build.
 2. **Claim the marker, then dispatch one Sonnet impl agent** (`model: sonnet`,
-   `isolation: 'worktree'`) with a self-contained brief per `frictions-to-fixes`
-   §5 and the prohibitions above: read the issue, branch from `origin/main`,
+   `isolation: 'worktree'`) with a self-contained brief per `dispatch-subagents`,
+   `frictions-to-fixes` §5, and the prohibitions above: read the issue, branch from `origin/main`,
    implement, clear the gate, push, and open a **gated PR** that `Closes #N` —
    then stop and hand back rather than touch any human-only surface.
 3. **Review on a different model.** The impl is Sonnet; run `/code-review` on the

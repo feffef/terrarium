@@ -113,8 +113,9 @@ lenses start from the **same git-history read** — `git log --since="48 hours a
 - **Stale-narration** — a doc that is *correct about the present* but
   over-narrates a **superseded pre-edit state** ("we used to do X"). Cut it
   **only** where knowing that history changes no future reader action; **keep**
-  every load-bearing "don't regress to the old way" rationale (the pkill saga, the
-  worktree-HEAD and `permissions.allow` bullets in `CLAUDE.md` stay — their whole
+  every load-bearing "don't regress to the old way" rationale (`CLAUDE.md`'s pkill
+  saga, `dispatch-subagents`' worktree-HEAD rule and `environment-caveats.md`'s
+  `permissions.allow` bullet stay — their whole
   point is preventing regression). When you do cut, cut to the **rule plus a
   pointer** to the history's home (the issue/ADR), **never** to a bare ruleless
   rule that strips the why with no forwarding address.
