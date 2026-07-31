@@ -31,7 +31,7 @@ worktree** that branches from `origin/main`, implements, clears the **safety
 gate** (ADR-0004), pushes, and opens a **gated PR** — never merging, never
 enabling auto-merge, never self-invoking `close-session`/`log-session`, and
 committing + pushing before it stops even mid-gate (read `frictions-to-fixes`
-§5 and CLAUDE.md's worktree bullets for the exact mechanics). Review is
+§5 and the `dispatch-subagents` Skill for the exact mechanics). Review is
 `/code-review`; the land recipe is `docs/agents/pr-workflow.md`. This Skill adds
 only what a guest-demo build needs — and one hard subtraction.
 

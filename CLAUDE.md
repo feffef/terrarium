@@ -296,107 +296,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   **Exception:** a dispatched worktree-isolated impl agent that opens a PR (e.g.
   `frictions-to-fixes`' impl agents) must **not** self-invoke `close-session` —
   see `close-session/SKILL.md` for why and its mechanical enforcement.
-- **Three distinct worktree-isolation mechanisms exist in this environment — pick
-  the one that matches the task, don't conflate them:**
-  1. **`EnterWorktree`/`ExitWorktree`** (interactive, session-level) — switches
-     *this whole session's* working directory into a new git worktree. Use it
-     only when the user explicitly says "worktree", or CLAUDE.md/memory directs
-     the current task to run in one — never invoke it proactively for routine
-     work.
-  2. **The Agent tool's `isolation: 'worktree'` parameter** (per-subagent) — the
-     mechanism for dispatched subagents, especially parallel ones, that will
-     touch git. Pass it **explicitly** — it is an Agent-tool parameter, not
-     implied by the prompt. Without it, "parallel" agents share one checkout and
-     race on branches.
-  3. **Plain manual `git worktree add`** — an ordinary git operation with no
-     session-switching or Agent-tool wiring. Use it only for an ad-hoc, one-off
-     worktree you'll manage by hand yourself (e.g. inspecting another branch's
-     tree side by side) — it is not a substitute for either tool above, and a
-     subagent brief that says "use `git worktree add`" instead of passing
-     `isolation: 'worktree'` is doing mechanism 2's job with the wrong mechanism.
-  - **For mechanism 2, "pin its worktree root" is not enough on its own — the
-    sharp edge is that a dispatched subagent's Bash tool does not preserve
-    working directory across separate tool calls.** A single `cd` into the
-    worktree root early in a subagent's work does **not** carry over to a later,
-    separate Bash invocation — each call starts from whatever cwd the harness
-    resets to. So when briefing a worktree-isolated subagent, **every
-    git-touching command in the brief must itself include the
-    `cd <worktree-root> &&` step** — never phrase the brief as "cd into your
-    worktree, then run these git commands," since that reads as a one-time
-    setup step the subagent will (correctly, given how the tool actually
-    behaves) fail to repeat.
-  - **A freshly provisioned mechanism-2 worktree may not have dependencies
-    installed yet** — `pnpm install` may need to run there before
-    `pnpm gate:scoped` (or any other pnpm script) will actually work; call
-    this out explicitly in the dispatch brief rather than assuming it's
-    already installed.
-  - **A mechanism-2 worktree has also been observed starting from a stale or
-    unrelated HEAD instead of `origin/<default-branch>`** — this has hit
-    multiple parallel worktree-isolated subagents in the same session. Don't
-    assume the freshly provisioned worktree is already on top of
-    `origin/<default-branch>`: after dispatch, verify the worktree's branch
-    HEAD matches `origin/<default-branch>` before any commit, and rebranch
-    explicitly if it doesn't.
-  - **A worktree-isolated subagent can also end its turn with finished work
-    still uncommitted** — mid-gate, or on an external "session limit" abort —
-    leaving it invisible to the orchestrator, and a silently-aborted subagent
-    may never even surface as a "returned" worktree to inspect. Guard both
-    ends: every worktree-isolated subagent's brief must instruct it to
-    **commit + push before it stops, even mid-gate**, and the orchestrator
-    must run **`pnpm check:worktrees`** (`scripts/check-worktrees.ts`, issue
-    #427) as its post-dispatch check — it enumerates every worktree from git
-    state itself, not from subagent return values, so it catches an orphaned
-    worktree too, and exits non-zero naming any linked worktree left
-    uncommitted or unpushed. (The platform "session limit" abort itself is
-    external and this doesn't prevent it — it only ensures the damage is
-    caught.)
-  - **The orchestrator's own habit of `cd`-ing into a subagent's worktree to
-    inspect it can leave that cwd sitting there across later Bash calls.** A
-    session-closure Stop hook's "uncommitted changes" flag seen after such an
-    inspection may belong to that still-in-progress subagent's tree, not the
-    orchestrator's own repo state. After inspecting a subagent's worktree via
-    `cd`, `cd` back to the repo root (or use absolute-path-prefixed one-off
-    commands instead of a standalone `cd`), and re-check `git status`/branch
-    at the root before trusting the warning as this session's own.
-  - **To resume a stopped/paused mechanism-2 subagent, use `SendMessage` to its
-    existing agent id — never a fresh `Agent` call.** A new `Agent` call
-    provisions a brand-new checkout with no memory of the prior work, risking
-    a duplicate branch/push or losing the first attempt's already-committed
-    local work; `SendMessage` continues the same agent, worktree, and history.
-  - **A dispatch brief that tells a worktree-isolated subagent to wait on a
-    backgrounded command (e.g. `pnpm gate:scoped`) must also name the concrete
-    way to confirm it finished** — a log-file completion marker to check, or
-    the `Monitor` tool — not just "run it and wait." A subagent that only
-    checks once and stops can stall waiting on a still-running job, needing to
-    be resumed via `SendMessage` with the log's actual tail pasted in (issue
-    #602).
-  - **Before dispatching several parallel impl agents (mechanism 2), check
-    whether their issues plausibly touch the same file.** If they might,
-    either serialize dispatch for that file or explicitly budget
-    rebase-and-reconcile review time — a green gate on each branch
-    independently does **not** mean the branches are safe to merge in any
-    order; the second branch can go stale the moment the first merges,
-    especially when both touch the same file in adjacent (not overlapping)
-    regions that git wouldn't flag as a conflict (issue #603).
-  - **A dispatch brief for a screenshot-capture agent must explicitly decouple
-    final-screenshot capture from gate completion.** Shoot finals immediately
-    once the production build (`pnpm build`) succeeds, independent of whether
-    the full gate (`pnpm gate:scoped`/CI) has finished — otherwise the agent
-    can stop and block on the gate before ever taking the shot it was
-    dispatched to produce, stranding the deliverable behind an unrelated,
-    often slower, gate (issue #683).
-- **Before dispatching subagents whose outputs share a load-bearing/structural
-  design axis — the thing every one of their outputs depends on — grill it to
-  a locked answer first**, using the `grilling` Skill by name. The trigger is
-  the shared dependency, not headcount or pass size: even two subagents on a
-  small pass need this if the axis is genuinely load-bearing across their
-  outputs. A design axis that shifts mid-build after subagents have already
-  authored against the old answer forces a full re-authoring pass.
-- **Every dispatch brief must grant the subagent explicit authority to refuse a
-  listed item — and require it to prove why instead of implementing it.**
-  Without that, a subagent that can see a listed change is wrong implements it
-  anyway and the reasoning never surfaces. A proven refusal is a finding about
-  the list: review it, don't re-dispatch the item.
+- **Dispatching a subagent is a procedure, not a tool call — invoke the
+  `dispatch-subagents` Skill before spawning one.** It single-homes the three
+  worktree-isolation mechanisms and which to pick (they are easy to conflate),
+  the self-contained brief checklist, the grill-the-shared-axis trigger, the
+  post-dispatch `pnpm check:worktrees` verification, and the `SendMessage`
+  resume path. Every rule in it was paid for by a session that lost work.
 - **Every agent-authored interaction with GitHub, or any other external
   system, carries a full session URL** (ADR-0017 — read it for the full
   rationale, the no-exemptions scope, and why this is convention, not
@@ -650,10 +555,6 @@ How contributions from outside our own Claude Code toolchain are handled — the
 ### Verifying UI changes
 
 See the "Verifying UI changes" subsection under Self-verification above for the headline rules, and `docs/agents/verifying-ui-changes.md` for the full methodology.
-
-### Subagent dispatch
-
-Dispatch-brief conventions for any subagent, worktree-isolated or not: banking progress before continuing a long-running subagent, pinning an explicit SHA rather than resolving a shared moving ref when concurrent subagents share one checkout, and front-loading grounding/corpus statistics in an ideation dispatch brief. See `docs/agents/subagent-dispatch.md`.
 
 ### Other research notes
 

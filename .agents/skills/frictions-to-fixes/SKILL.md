@@ -165,7 +165,9 @@ tagged simple or hard.
 
 Dispatch the implementation to **Sonnet** agents (`model: sonnet`) — the impl work
 is well-scoped once §4 named the fix, so it doesn't need the main model. Each agent
-runs in its **own git worktree** (parallel PRs must not share a working tree):
+runs in its **own git worktree** (parallel PRs must not share a working tree) —
+invoke `dispatch-subagents` for the mechanism, the brief checklist, and the
+post-dispatch check:
 
 - **Doc-only fixes** (Markdown / prose — CLAUDE.md, a **repo-owned** SKILL, a Skill
   Inventory entry): hand them **all to one agent as a single grouped PR** that
