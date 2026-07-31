@@ -63,11 +63,13 @@ The subagent cannot see this session's context, so the brief is self-contained:
 - **Commit + push before stopping, even mid-gate.** A subagent can end its turn —
   or die to an external "session limit" abort — leaving finished work **stranded**:
   uncommitted, and invisible to the orchestrator.
-- **Name the concrete way to confirm a backgrounded command finished** — a
-  log-file completion marker to check, or the `Monitor` tool — not just "run it
-  and wait". A subagent that checks once and stops stalls on a still-running job,
-  needing a `SendMessage` resume with the log's actual tail pasted in (issue
-  #602).
+- **Run verification (`pnpm gate:scoped`, and any other check) in the foreground
+  and wait** — a dispatched subagent's own backgrounded commands do not wake it
+  the way a background `Agent`/`Workflow` call wakes you. Where something must be
+  backgrounded anyway, **name the concrete way to confirm it finished** — a
+  log-file completion marker, or the `Monitor` tool — not just "run it and wait":
+  a subagent that checks once and stops stalls on a still-running job, needing a
+  `SendMessage` resume with the log's actual tail pasted in (issue #602).
 - **Decouple screenshot capture from gate completion.** A screenshot-capture
   agent shoots finals as soon as `pnpm build` succeeds, independent of whether
   `pnpm gate:scoped`/CI has finished — otherwise it blocks on the gate and never
@@ -106,6 +108,9 @@ branch independently does **not** mean the branches are safe to merge in any
 order. The second branch can go stale the moment the first merges — especially
 when both touch the same file in adjacent (not overlapping) regions git wouldn't
 flag as a conflict (issue #603).
+
+Done when every file two dispatches might both touch is either serialized or has
+reconcile time budgeted.
 
 ## 5. Verify after dispatch — nothing **stranded**
 

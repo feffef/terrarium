@@ -5,6 +5,5 @@ role: >-
   Single-homes how this Platform spawns work: which worktree-isolation mechanism
   to use, the self-contained brief that survives this environment's sharp edges,
   and the post-dispatch check that no finished subagent work is stranded. Every
-  orchestrating Skill here dispatches impl agents, and each rule in it was paid
-  for by a session that lost work.
+  rule in it was paid for by a session that lost work.
 observations: []

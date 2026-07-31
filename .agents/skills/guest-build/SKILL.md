@@ -92,8 +92,8 @@ building against the same issue (#555) — before a human intervened.
    new dependency is the loud one: ADR-0004 makes it human-only to merge
    regardless, so it never belongs on an auto-dispatched build.
 2. **Claim the marker, then dispatch one Sonnet impl agent** (`model: sonnet`,
-   `isolation: 'worktree'`) with a self-contained brief per `frictions-to-fixes`
-   §5 and the prohibitions above: read the issue, branch from `origin/main`,
+   `isolation: 'worktree'`) with a self-contained brief per `dispatch-subagents`,
+   `frictions-to-fixes` §5, and the prohibitions above: read the issue, branch from `origin/main`,
    implement, clear the gate, push, and open a **gated PR** that `Closes #N` —
    then stop and hand back rather than touch any human-only surface.
 3. **Review on a different model.** The impl is Sonnet; run `/code-review` on the
