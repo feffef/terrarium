@@ -220,6 +220,9 @@ const removedInShort = computed(() => artifact.value?.removedIn?.slice(0, 7))
   gap: 0.4rem;
   margin: 0.5rem 0 0;
   color: var(--midden-faint);
+  /* A record fact is one unbreakable token (a file name, a branch); on a narrow
+     column it must wrap inside itself rather than widen the slip. */
+  overflow-wrap: anywhere;
 }
 .midden-find__prov a {
   color: var(--midden-muted);

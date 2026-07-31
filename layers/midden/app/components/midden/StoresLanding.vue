@@ -272,6 +272,9 @@ useHead({ title: 'The Stores · The Midden' })
   gap: 0.4rem;
   margin: 0;
   color: var(--midden-faint);
+  /* A record fact is one unbreakable token (a file name, a branch); on a narrow
+     column it must wrap inside itself rather than widen the entry. */
+  overflow-wrap: anywhere;
 }
 .midden-entry__facts a {
   color: var(--midden-muted);
