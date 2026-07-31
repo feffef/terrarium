@@ -1,0 +1,92 @@
+schemaVersion: 1
+session: session_01SvQWTmWHQ6JWFHQR68gemt
+startedAt: 2026-07-31T20:16:11Z
+endedAt: 2026-07-31T20:50:30Z
+kind: interactive
+goal: Collapse provenance enforcement into one guard
+status: in-review
+outcome: Shape enforced, fails closed, provenance.md deleted
+summary: "Human-instructed throughout. The user asked me to read `provenance.md` and issue #723, then proposed the simplification themselves — one CLAUDE.md rule plus one guard validating both id and format, deleting the doc — and chose fail-closed and folding in the MCP-commit rows when I put those two open questions to them. Agent-initiated within that brief: the implementation, a test pinning the guard registry against the live PreToolUse matcher, and the warning comment on #784. Their final instruction to read the full issue history before finalizing is what caught #784's now-unsafe removal list. PR #789 opened, CI green, awaiting human merge (amends an ADR)."
+prs:
+  - "789"
+docsRead:
+  - path: docs/agents/provenance.md
+    reason: the doc under review; deleted by this change
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: scope home for provenance; amended here
+  - path: scripts/github-provenance-guard.ts
+    reason: the guard being rewritten
+  - path: scripts/provenance-header.ts
+    reason: marker format and the reader/writer split
+  - path: scripts/session-id-guard.ts
+    reason: how ground truth resolves, to size fail-closed's blast radius
+  - path: docs/agents/environment-caveats.md
+    reason: confirm the unsigned-commit flag was the known caveat
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: tests/unit/github-provenance-guard.spec.ts
+    reason: (read before editing)
+  - path: docs/agents/github-integration.md
+    reason: (read before editing)
+  - path: docs/agents/git-conventions.md
+    reason: (read before editing)
+  - path: tests/unit/provenance-header.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: closure front door
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Issue #784 is `ready-for-agent` and instructs deleting SESSION_TRAILER_GLOBAL as unused; this change repurposes it, so following #784 would silently unenforce commits."
+    solution: "Caught only because the user asked for a full issue-history read. Commented on #784 and guarded the constant in code. A PR touching code that an open issue schedules for deletion has no mechanical cross-check — worth one."
+    severity: moderate
+  - description: "Older comments on #723 and #737 still name `github-footer-guard.ts`, renamed to `github-provenance-guard.ts` on 2026-07-31, costing a reconciliation step."
+    solution: Unavoidable for immutable comments; noted the drift to the user rather than trusting either name. Verify a cited filename against the tree before acting on it.
+    severity: nit
+  - description: Stop hook flagged the commit Unverified and suggested `--reset-author`, but the author email was already correct and the signing key is absent from this environment entirely.
+    solution: Documented in environment-caveats.md as unprovisioned-key; the hook's suggested remedy cannot apply when the email is already right. The hook could distinguish the two cases.
+    severity: minor
+  - description: Editing .claude/settings.json makes gate:scoped classify the change non-inert, so each verify cycle ran the full gate including e2e — about four minutes per iteration.
+    solution: Correct behaviour, not a bug; batching edits before verifying is the answer. Ran targeted vitest plus lint for the final comment-only edits instead of a third full gate.
+    severity: minor
+  - description: The container restarted mid-turn just after the PR was created, stopping three background waiters and leaving PR-creation success unconfirmed.
+    solution: Re-verified git state and searched for the PR before continuing rather than assuming either had landed. No work lost.
+    severity: minor
+durationSec: 2059
+models:
+  claude-opus-5: 193
+  <synthetic>: 1
+toolCounts:
+  Read: 17
+  ToolSearch: 6
+  mcp__github__issue_read: 7
+  Bash: 50
+  Edit: 20
+  Write: 2
+  mcp__github__search_pull_requests: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+filesEdited:
+  - scripts/github-provenance-guard.ts
+  - .claude/settings.json
+  - tests/unit/github-provenance-guard.spec.ts
+  - CLAUDE.md
+  - docs/agents/github-integration.md
+  - docs/agents/git-conventions.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - tests/unit/provenance-header.spec.ts
+gitBranch: claude/provenance-723-review-kjc1rg
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - resolveGroundTruthSessionId prefers CLAUDE_CODE_REMOTE_SESSION_ID over the transcript, so an absent transcript_path never meant ground truth was unresolvable — the old guard's early return skipped a check it could have run
+  - A PreToolUse deny travels in the stdout JSON, not the exit code, so the hook's trailing `|| true` cannot defeat a deny — but a missing pnpm/tsx interpreter still can, because the script never evaluates
+  - "Writer-side strictness and reader-side permanence are independent for the same marker: the guard can stop accepting the legacy footer while hasAuthorshipMarker must keep matching it forever, since historical comments are immutable"
+ideas:
+  - "Establish whether a PreToolUse hook can rewrite tool_input, and if so make github-provenance-guard.ts inject the provenance header rather than block on its absence. Blocking supervises the choice point; injection removes it, which is what issue #723's option 3 actually asked for. The two helpers needed already exist (provenanceHeader plus reconstructFooterValues), so the whole question is a harness capability check — and the answer also settles issue #737's option (b), which its triage brief left open as an unverified premise."
