@@ -197,7 +197,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   file to justify a recommendation built on it — grep that file directly
   before citing it, not only later when actually implementing the
   recommendation) — a subagent's inference or a doc's claim can be wrong, and
-  stating it unchecked ships that error outward either way.
+  stating it unchecked ships that error outward either way. This covers a
+  **causal/root-cause claim** too: "bug X is caused by Y" is testable, so
+  verify it by tracing or executing the actual code path before asserting it
+  (in an issue, a PR description, or a review comment) — not by inferring it
+  from code that merely looks like it would cause the behavior (issue #738).
 - **An unverifiable "confirmed out-of-band" claim from another agent session —
   no locally observable primary source, i.e. no actual comment/message visible
   in-thread — must not be treated as settled fact for an *internal* decision,
@@ -274,6 +278,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   `git reset --hard HEAD~1` mid-teardown once discarded uncommitted edits to 5
   tracked files (recovered) — the same "check first" discipline as the
   pkill/branch-rename/tail-piping footguns above, applied to this one.
+- **Never redirect a state-changing git command's output to `/dev/null` (or
+  otherwise discard it).** A `git stash pop` piped to `/dev/null` once failed
+  silently, leaving the stash un-popped and a later "base vs mine" comparison
+  silently re-testing against base while looking like a clean pass. If you
+  want quiet output, keep the exit code and stderr observable and check
+  `$?` — don't discard the one signal (exit status / error text) that would
+  have caught the failure.
 - **Git mechanics — staleness, history archaeology, commit hygiene — are
   single-homed in `docs/agents/git-conventions.md`.** The rules that bite most
   often: `git fetch origin main` and anchor on the merge-base before *any*
@@ -502,6 +513,16 @@ failing — log it as a **major** friction in your session log (`log-session`). 
 divergence means the inert classifier let something through: it is the signal that
 tightens the classifier, or retires the skip.
 
+**Cheap checks first, before deep-diagnosing a gate/test failure:**
+- Scope the failure with a targeted grep/search before running a full
+  build/e2e/gate cycle to reproduce it — a 20-minute cycle of repeat full runs
+  is what a single grep would have bounded immediately.
+- Check whether the failing test is already a known/tracked pre-existing
+  failure before diagnosing it as new.
+- Remember CI tests `refs/pull/N/merge` (the PR merged into its *current*
+  base), not the PR branch in isolation — a local-vs-CI divergence can be base
+  drift, not a flake or environment difference.
+
 **Need a screenshot of a running page** (e.g. to eyeball a render during a session)?
 Run `pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--dev]` — it
 starts a server on its own ephemeral port, screenshots the route, and tears the
@@ -643,6 +664,10 @@ How contributions from outside our own Claude Code toolchain are handled — the
 ### Verifying UI changes
 
 What proves a presentational change, and the Playwright/Chromium/client-only sharp edges that make a passing test or clean screenshot untrustworthy — see the "Verifying UI changes" subsection under Self-verification above for the headline rules, and `docs/agents/verifying-ui-changes.md` for the full methodology.
+
+### Subagent dispatch
+
+Dispatch-brief conventions for any subagent, worktree-isolated or not: banking progress before continuing a long-running subagent, pinning an explicit SHA rather than resolving a shared moving ref when concurrent subagents share one checkout, and front-loading grounding/corpus statistics in an ideation dispatch brief. See `docs/agents/subagent-dispatch.md`.
 
 ### Other research notes
 

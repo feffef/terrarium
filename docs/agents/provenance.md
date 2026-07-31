@@ -33,6 +33,13 @@ it is convention rather than gate-enforced. This doc holds the mechanics.
   Co-Authored-By: <model name> <noreply@anthropic.com>
   Claude-Session: <session URL>
   ```
+- **GitHub strips bare `<...>` angle-bracket text in a rendered issue/PR body
+  as HTML markup.** This has silently garbled both the footer's own
+  `<noreply@anthropic.com>` and an unrelated placeholder written in prose
+  (e.g. `<slug>`) — the text simply vanishes from the rendered body, with no
+  error. Verify the rendered body after posting when angle brackets are
+  involved, or avoid bare angle-bracket placeholder syntax in prose (issue
+  #779).
 
 ## Guard coverage map
 

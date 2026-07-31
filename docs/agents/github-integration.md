@@ -54,6 +54,11 @@ each recipe class to its MCP equivalent:
   `search_issues`/`search_pull_requests` query is not a free escape from the
   `list_*` overflow; always scope the query narrowly (state/label/keyword) or
   expect to slice the persisted file by hand just as you would for a full list.
+- **`search_issues`/`search_pull_requests` don't support the server-advertised
+  `minimal_output` param** — confirmed against the loaded tool schema, it has
+  no effect on these two tools. Use `fields: [...]` instead: an array of field
+  names to keep, letting you omit `body`/`labels`/`reactions` — the largest
+  per-result data — when only counts/titles/numbers are needed.
 - **Scoping the query narrowly doesn't buy precision.** Even a narrowly scoped,
   quoted, multi-term `search_issues`/`search_pull_requests` query still does
   fuzzy term-matching under the hood, not exact-phrase matching — it surfaces
