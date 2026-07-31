@@ -262,17 +262,16 @@ the objective gate:
 
 - **Subscribe to the PR's activity right after opening it** (CLAUDE.md's
   "Pushing is not landing" rule) and follow `docs/agents/pr-workflow.md`'s
-  recipe (`scripts/merge-pr.ts` as the sole merge path) to land it once the
-  gate reports green.
-- A **red gate is never merged** — diagnose and fix on the branch (the green
-  re-run then auto-merges), or, if the failure isn't the post's fault, leave the
-  PR open and escalate to a human.
+  recipe (`scripts/merge-pr.ts` as the sole merge path — never
+  `enable_pr_auto_merge`) to land it once the gate reports green.
+- A **red gate is never merged** — diagnose and fix on the branch, then re-run
+  `merge-pr.ts` once it's green, or, if the failure isn't the post's fault,
+  leave the PR open and escalate to a human.
 - If anything **outside the blog-content scope** above rode into the PR, do
-  **not** enable auto-merge — leave it open for human review (ADR-0003's default).
+  **not** run `merge-pr.ts` — leave it open for human review (ADR-0003's default).
 
-Done when the PR has **merged with a green gate**, or is **set to auto-merge and
-will land when the running gate goes green** — or, in the escalation case above,
-is open and honestly awaiting a human.
+Done when the PR has **merged with a green gate**, or — in the escalation case
+above — is open and honestly awaiting a human.
 
 ## 8. Log this session before you finish
 
