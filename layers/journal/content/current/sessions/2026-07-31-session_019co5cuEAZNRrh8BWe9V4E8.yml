@@ -1,0 +1,96 @@
+schemaVersion: 1
+session: session_019co5cuEAZNRrh8BWe9V4E8
+startedAt: 2026-07-31T18:40:59Z
+endedAt: 2026-07-31T19:00:05Z
+kind: interactive
+goal: Extract subagent dispatch into a Skill
+status: in-review
+outcome: "PR #788 open, gate green twice"
+summary: "Human-instructed via `/implement 766 A`: implement group A of issue #766 — move CLAUDE.md's ~100-line worktree/dispatch block into a new model-invokable `dispatch-subagents` Skill. Built the Skill as a six-step procedure with checkable completion criteria, added the symlink and Skill Inventory entry, and repointed `frictions-to-fixes`, `guest-build` and `audit-docs`. One agent-initiated call beyond the ask: folding `docs/agents/subagent-dispatch.md` into the Skill and deleting it, so dispatch conventions keep one home rather than two near-identically-named ones. The user then invoked `/writing-great-skills` mid-build, which sharpened the description and completion criteria. `/code-review` found two real single-home breaches, both fixed before the PR opened."
+prs:
+  - "788"
+docsRead:
+  - path: .agents/skills/writing-great-skills/SKILL.md
+    reason: how to write the new Skill — description, hierarchy, pruning
+  - path: .agents/skills/close-session/SKILL.md
+    reason: model for a repo-own Skill's shape
+  - path: layers/journal/tenant.config.ts
+    reason: skills collection schema — role word cap, category/importance enums
+  - path: scripts/gate.ts
+    reason: verify which paths the inert classifier actually covers
+  - path: docs/agents/subagent-dispatch.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: writing-great-skills
+    reason: user-invoked mid-build; drove the description rewrite and the §3/§4 completion criteria
+  - name: code-review
+    reason: "two-axis review before opening the PR (issue #766 group A as the spec)"
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+  - name: implement
+    reason: (invoked as a slash command)
+frictions:
+  - description: Extraction added pointers to the new Skill but left the restated prose in frictions-to-fixes §5 — duplication doubled instead of removed.
+    solution: Treat "delete the restatement" as part of the extraction, not a follow-up; the code-review Standards axis caught both instances before merge.
+    severity: minor
+  - description: 'Nearly shipped "Closes #766 group A only" in the PR body; GitHub parses the keyword and would have closed an issue with five groups left.'
+    solution: 'Never put a close keyword plus a scoping qualifier in one phrase — say "Part of #766" and put the scope in its own section.'
+    severity: minor
+  - description: Spec review agent asserted the implement-reachability requirement was unmet, using a definition of "reachable" that contradicts writing-great-skills.
+    solution: Verified against the primary source and rejected the finding; cross-skill reach IS model-invocation in this repo's vocabulary.
+    severity: minor
+  - description: Every new Skill needs an inventory .yml under layers/, so the full gate runs (~5 min) even for an otherwise prose-only change — twice here.
+    solution: Working as designed rather than a bug (content changes affect the build), but worth knowing that no new-Skill PR can ever hit the inert skip path.
+    severity: nit
+durationSec: 1147
+models:
+  claude-opus-5: 156
+toolCounts:
+  ToolSearch: 5
+  Bash: 36
+  mcp__github__issue_read: 2
+  Read: 14
+  Write: 5
+  Edit: 15
+  Skill: 3
+  Agent: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - layers/journal/content/current/skills/dispatch-subagents.yml
+  - CLAUDE.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Standards axis review
+  - type: general-purpose
+    task: Spec axis review
+gitBranch: claude/implement-766-a-fhlia8
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - gate.ts's inert rule covers .agents/skills/**/SKILL.md via its generic non-layers `.md` clause, not via the `.claude/skills/` prefix clause — the symlink mirror is only what makes non-.md skill assets inert.
+  - writing-great-skills defines cross-skill reach as exactly what model-invocation provides, which settles 'reachable by X' requirements without needing a pointer inside X.
+ideas:
+  - "Issue #766's own finding — that skill descriptions live in the durable system prompt while CLAUDE.md rides in a summarizable message — is now testable against this PR: `dispatch-subagents` is the first must-not-miss rule set to move from CLAUDE.md prose into a Skill. Mine the next ~40 session logs for dispatch frictions (stale worktree HEAD, uncommitted-on-abort, missing `cd &&`) and compare their rate to the pre-move window. If the rate drops, group B's revised ranking is evidenced and the remaining Bash/process footguns should follow the same path; if it doesn't, the asymmetry argument is dead and B stays inline or gets mechanized as a hook."
