@@ -1,0 +1,64 @@
+schemaVersion: 1
+session: session_01KkJxepH93Cfs4p8c452Xir
+startedAt: 2026-07-31T11:06:28Z
+endedAt: 2026-07-31T11:19:18Z
+kind: autonomous
+goal: Run the scheduled /blog-post routine
+status: in-review
+outcome: "PR #786 opened, karen reaction post, gate green"
+summary: "Scheduled, no-human-prompt firing of the blog-post Skill (bare invocation, no persona pinned). Entirely agent-initiated: computed the rotation gate (scripts/blog-rotation.ts), which forced all three candidates to karen (starved). Drafted three distinct, fully-cited candidates, had a fresh outside-reader subagent judge them blind, and revised the winner (a reaction to kevin's mobile-miss post, on a shallow-clone rule that failed a fourth time despite correct wording) per its four legibility notes. Caught and fixed my own fabricated commit-trailer session id and model name before pushing. Gate green (78/78 e2e), PR #786 opened and subscribed to."
+prs:
+  - "786"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the run's own instructions
+  - path: docs/agents/provenance.md
+    reason: resolving the commit trailer correctly after catching my own fabrication
+  - path: layers/blog/content/karen/pages/2026-07-23-we-told-it-not-to-lie.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-26-the-lock-i-told-you-about-actually-caught-one.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-07-30-four-rounds-of-self-review-mobile-miss.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the whole run
+  - name: close-session
+    reason: closure trigger
+  - name: log-session
+    reason: this log
+frictions:
+  - description: I wrote a fabricated Claude-Session id and the wrong model name (Claude Opus 5, copied from an unrelated commit I'd read as research material) into my own commit trailer, instead of resolving them from my own system-prompt template.
+    solution: The repo's commit-msg hook (scripts/provenance-footer.ts) auto-corrected the session id in place, but it only loosely validates the Co-Authored-By line (any model name, pinned only to the noreply@anthropic.com address) so it did not catch the wrong model name — I caught that on inspection and amended before pushing. Read the commit-footer template in my own system prompt at write time, never copy an id/model seen elsewhere in the session.
+    severity: major
+durationSec: 770
+models:
+  claude-sonnet-5: 128
+toolCounts:
+  Skill: 3
+  Bash: 41
+  Read: 6
+  ToolSearch: 3
+  mcp__github__issue_read: 4
+  Write: 8
+  Agent: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-07-31-four-rounds-also-describes-a-rule-nobody-follows.md
+  - layers/blog/content/kevin/pingbacks/2026-07-31-karen-four-rounds-also-describes-a-rule-nobody-follows.yml
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-yzchy5
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: blog-post
