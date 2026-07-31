@@ -1,0 +1,91 @@
+schemaVersion: 1
+session: session_0159mPyC4Wf1J45K7NopBcTM
+startedAt: 2026-07-31T01:06:00Z
+endedAt: 2026-07-31T05:50:28Z
+kind: interactive
+goal: "Run frictions-to-fixes: survey, fix, land"
+status: completed
+outcome: 9 issues filed, 2 PRs merged
+summary: "Scheduled frictions-to-fixes run (autonomous kickoff, no human prompt at start). Delegated the 20-session survey to a subagent, which found a regression: the shallow-clone check-first rule (issue #703) isn't holding despite correct CLAUDE.md wording, recurring a 4th time — filed #772 and escalated to the user, since a mechanical fix needs human sign-off. Selected 8 never-fixed frictions (1 hard, 7 simple), filed issues #773-780, dispatched 2 Sonnet worktree-isolated impl agents. Both PRs (#781 doc batch, #783 MiddenArtifact validation) were reviewed and merged. Mid-session the human asked status questions rather than redirecting scope — one exchange caught me almost trusting a premature \"all merged\" claim; verifying it surfaced that the #773 agent's backgrounded process had been silently killed by this session's own resume event."
+prs:
+  - "781"
+  - "783"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: sole merge-path recipe (merge-pr.ts) + per-tier merge authority
+  - path: docs/agents/git-conventions.md
+    reason: "verified #703's shallow-clone fix wording before filing the regression issue"
+  - path: CONTEXT.md
+    reason: Session kind (interactive/delegated/autonomous) classification for this log
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the whole run
+  - name: close-session
+    reason: closure trigger
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Regression: shallow-clone check-first rule (issue #703) still not followed by agents in 2 more sessions, despite its exact fixed wording already live in docs/agents/git-conventions.md — a 4th round of the same gap (#413 -> #682 -> #703 -> now)."
+    solution: "Filed #772 as a distinct regression issue rather than a 5th prose tweak; recommended a mechanical nudge (SessionStart hook or preflight script) and escalated to the user for the design decision, per the skill's regression-handling rule."
+    severity: major
+  - description: Survey subagent's `session-frictions.ts` default-20 output (37KB) blew the Bash tool's inline-output cap and silently redirected to a spill file instead of erroring.
+    solution: Expect this pattern up front; read the persisted file directly rather than relying on inline stdout.
+    severity: nit
+  - description: Both the survey subagent and I independently hit the known `search_issues`/`search_pull_requests` total_count:0 false-negative bug repeatedly while duplicate-checking candidates, forcing fallback to full `list_issues` scans each time.
+    solution: "Already tracked by a separate fix (PR #744/issue #741); this run is more evidence the fallback-to-list_issues habit is the right one until that lands more durably."
+    severity: moderate
+  - description: "`scripts/merged-since.ts`'s `git fetch` progress line landed in the same file as its JSON output when the subagent redirected `2>&1` together, breaking `json.load`."
+    solution: Redirect stdout and stderr separately when calling merged-since.ts; note this in the script's usage comment.
+    severity: minor
+  - description: 'Confirming the real scope of a "fixed" candidate (e.g. whether #740 closed the actual gap or only a misleading comment) required reading the issue body and commit diff by hand each time, since merged-since.ts only returns commit subjects.'
+    solution: Subject-matching alone risks a false 'fixed' classification; worth flagging in the skill or script docs.
+    severity: minor
+  - description: "The #773 impl agent stalled twice waiting on a backgrounded `pnpm gate:scoped`, checking once and stopping instead of monitoring to completion — the exact issue #602 failure mode recurring despite the dispatch brief explicitly naming Monitor/log-tail as the confirmation method."
+    solution: Resumed it via SendMessage each time with the actual process state I'd verified myself. A future dispatch brief may need an even more forceful instruction, or tooling that verifies backgrounded-command completion for the subagent rather than trusting it to keep polling.
+    severity: major
+  - description: "The #773 impl agent's backgrounded process was silently killed by this orchestrating session's own resume event (~4h after dispatch, no error, no notification) — only discovered because the user asked \"Is the agent really still running?\" and I had to verify independently via SendMessage (\"had no active task\")."
+    solution: Generalizes the already-documented CronCreate/session-resume caveat to backgrounded Agent-tool subagents too. After any session-resume event, proactively re-verify outstanding backgrounded subagents' liveness rather than passively waiting on a notification that may never arrive.
+    severity: major
+  - description: "Mistakenly called `ScheduleWakeup` (scoped to `/loop` dynamic mode) right after dispatching background impl agents in this plain scheduled routine; had to call it again with `stop: true` to cancel."
+    solution: Background Agent-tool notifications arrive automatically without ScheduleWakeup; reserve that tool strictly for actual /loop sessions.
+    severity: nit
+  - description: "`list_pull_requests` returned a stale `merged: false` for PR #781 immediately after `merge-pr.ts` had already reported `merged: true` and merged it."
+    solution: After a merge, prefer pull_request_read (method get) over list_pull_requests for the just-merged PR's state — the list endpoint can lag.
+    severity: minor
+  - description: 'The #773 impl agent self-caught a trailing `&` appended to a `run_in_background: true` Bash call for `pnpm gate:scoped`, which produced a false "completed" signal — the exact footgun CLAUDE.md already documents, still hit despite the existing warning.'
+    solution: No new fix — already documented. Recurrence is evidence the prose warning alone isn't fully preventing the mistake; worth a future pass considering a mechanical guard if it keeps recurring.
+    severity: moderate
+durationSec: 17068
+models:
+  claude-sonnet-5: 178
+toolCounts:
+  Agent: 3
+  ToolSearch: 6
+  mcp__github__issue_read: 1
+  Read: 3
+  mcp__github__issue_write: 9
+  TaskCreate: 6
+  TaskUpdate: 11
+  mcp__github__list_issues: 1
+  ScheduleWakeup: 2
+  mcp__github__pull_request_read: 12
+  Bash: 19
+  SendMessage: 2
+  mcp__github__add_issue_comment: 2
+  mcp__github__list_pull_requests: 3
+  Skill: 2
+  Write: 1
+  PushNotification: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: "Implement MiddenArtifact embed-slug validation (issue #773)"
+    model: sonnet
+  - type: general-purpose
+    task: Batch doc-fix PR for 7 friction issues
+    model: sonnet
+gitBranch: claude/hopeful-brown-mhnust
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: frictions-to-fixes
