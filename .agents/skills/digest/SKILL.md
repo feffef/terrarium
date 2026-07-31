@@ -126,31 +126,32 @@ it made are staged for the commit below.
 Run `pnpm gate:scoped` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
 it runs). Done when it's green.
 
-## 7. Commit, push, open one gated PR — auto-merge on green
+## 7. Commit, push, open one gated PR — self-merge on green
 
 Commit the new Digest(s) and this run's archive sweep together (a backfill of
 several days, plus the sweep, rides one commit/PR), push the branch with retry,
 and open **one gated PR**. Keep the PR description in sync with what it
 contains (`CLAUDE.md`).
 
-Then **let it land once the CI gate is green** (ADR-0003 amendment; ADR-0004's
-content-only low-risk tier) — allowed **only** while the PR contains nothing
-beyond the digest scope (digest pages under `…/pages/digests/`, the `current` →
-`archived` moves step 5 produced, at most plus the index's editorial intro):
+Then **land it yourself once the CI gate is green** (ADR-0003 amendment;
+ADR-0004's content-only low-risk tier) — allowed **only** while the PR contains
+nothing beyond the digest scope (digest pages under `…/pages/digests/`, the
+`current` → `archived` moves step 5 produced, at most plus the index's
+editorial intro):
 
 - **Subscribe to the PR's activity right after opening it** (CLAUDE.md's
   "Pushing is not landing" rule — every opened PR is babysat to merge/close)
   and follow `docs/agents/pr-workflow.md`'s recipe (`scripts/merge-pr.ts` as
-  the sole merge path) to land it once the gate reports green.
-- A **red gate is never merged** — auto-merge only lands on green. Diagnose and
-  fix on the branch (the green re-run then auto-merges), or leave the PR open and
-  escalate to a human if the failure isn't yours.
-- If anything **outside the digest scope** rode into the PR, do **not** enable
-  auto-merge — leave it open for human review (ADR-0003's default).
+  the sole merge path — never `enable_pr_auto_merge`) to land it once the gate
+  reports green.
+- A **red gate is never merged**. Diagnose and fix on the branch, then re-run
+  `merge-pr.ts` once it's green — or leave the PR open and escalate to a human
+  if the failure isn't yours.
+- If anything **outside the digest scope** rode into the PR, do **not** run
+  `merge-pr.ts` — leave it open for human review (ADR-0003's default).
 
-Done when the PR has **merged with a green gate**, or is **set to auto-merge and
-will land when the running gate goes green** — or, in the escalation cases above,
-is open and honestly awaiting a human.
+Done when the PR has **merged with a green gate**, or — in the escalation
+cases above — is open and honestly awaiting a human.
 
 **At PR-open, invoke `close-session`** — your first log (`in-review`).
 

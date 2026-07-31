@@ -53,11 +53,10 @@ discarding during it (e.g. "the Routing Excavation" — never a bare "Q1 2026";
 lives where below), mirroring the Atlas's `almanac.ts`
 seasons pattern. One season stays open-ended — "the Current Midden" — for
 freshly-discarded, not-yet-seasoned finds. An Artifact's `stratum` field
-references a season by slug (see `validate-content-refs.ts` in What lives
-where for how that reference is enforced). A season also labels each inline find on a Site page (the
+references a season by slug. A season also labels each inline find on a Site page (the
 condition word carries its dig-season label). The former scroll-synced
-**stratigraphy sidebar** (#524) was removed in the post-MVP simplification (see
-the note at the foot of this file).
+**stratigraphy sidebar** (#524) was removed in the post-MVP simplification
+(issue #515).
 
 ### Artifact
 The Midden's atomic unit of contribution: one catalogued discarded thing, a
@@ -66,14 +65,11 @@ its dig-season `stratum`, a curator-graded `condition`, a discriminated-union
 `provenance` (which kind of thing it was — a PR, a branch, a commit, a file, a
 dependency, or a Skill — plus an optional live `url` and a `continuityCheck`
 note), a back-reference to the `site` that narrates it (required in a Space that
-has Sites, **absent** in one that has none — see `validate-content-refs.ts` in
-What lives where for how that per-Space policy is enforced), a curator's-voice
+has Sites, **absent** in one that has none), a curator's-voice
 `catalogNote`, a required `assessedAt` date (#526 — never re-derived), an
 optional verbatim `inscription` ({text, source}), and two optional
 preservation fields: `removedIn` — the terminal event, the bare hash of the
-commit that removed the thing (rendered as a derived commit link; see
-`validate-content-refs.ts` in What lives where for how its date is
-corroborated), distinct from
+commit that removed the thing (rendered as a derived commit link), distinct from
 `provenance.url` which links the referent itself — and `remains` — curator-curated, labelled links to the artifact's
 preserved original state, each pinned to a full commit SHA so the link is
 immutable (schema-enforced), a few meaningful views rather than a mechanical
@@ -97,8 +93,7 @@ surfaces in exactly one place — the **condition key**, a slim sticky sidebar o
 each dig-report page listing only the grades present in that report's finds
 (owner-directed final design; it replaced the landing's condition legend, #527) —
 so it is never authored twice. The abstract SVG glyph and its hover-to-decode
-tooltip were removed in the post-MVP simplification (see the note at the foot of
-this file).
+tooltip were removed in the post-MVP simplification (issue #515).
 
 ### The Stores
 The Midden's second Space (`stores`): catalogued finds held **off display**. An
@@ -179,12 +174,10 @@ not the Midden (not yet cross-referenced; revisit once Palimpsest exists).
 
 ## A note on the post-MVP simplification
 
-The visitor experience was simplified after the MVP: the two landings merged into
-one; each find now renders **open and flat** — condition as a word, the note and
-inscription visible on load, no accordion; and the Site page's scroll-synced
-stratigraphy gauge, the hover-to-decode SVG glyph, and the grade tooltip are all
-gone, replaced by the corner stamp and the condition key (see Condition above).
-The underlying model (Site, Artifact, Dig season, the six Conditions, the
-inclusion bar) is unchanged; only its presentation is simpler. Full decision
-history — including which #515 sub-issue decisions this superseded (#523, #524,
-#527, #528) and why — is at issue #515.
+The visitor experience was simplified after the MVP — each find now renders
+**open and flat** (condition as a word, the note and inscription visible on
+load, no accordion), replaced by the corner stamp and the condition key (see
+Condition above). The underlying model (Site, Artifact, Dig season, the six
+Conditions, the inclusion bar) is unchanged; only its presentation is simpler.
+Full decision history — including which #515 sub-issue decisions this
+superseded (#523, #524, #527, #528) and why — is at issue #515.

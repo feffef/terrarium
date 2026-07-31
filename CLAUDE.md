@@ -182,11 +182,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   `InputValidationError` (`scripts/deferred-tool-guard.ts`; see
   `docs/agents/deferred-tool-guard.md`, issue #612).
 - **Never predict or reconstruct an identifier — a line number, a blob SHA, an
-  issue/PR number, a session id — from memory.** Always resolve it via a fresh
-  tool call at the moment you write it down. This rule has failed repeatedly
-  (#387, #605, #628), so parts of it are now hook-enforced — but the guards
-  cover three of four surfaces, not all four, and one of them only *detects*.
-  **`docs/agents/provenance.md` holds the coverage map and the per-surface
+  issue/PR number, a session id — from memory.** This rule has failed
+  repeatedly (#387, #605, #628). **`docs/agents/provenance.md` is the single
+  home for the rule itself, the guard coverage map, and the per-surface
   remedies; read it before writing any footer or identifier by hand.**
 - **Verify any subagent- or doc-derived factual or behavioral claim against a
   locally observable primary source before asserting it as fact** — whether
@@ -210,31 +208,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   a narrower and arguably higher-stakes case — building an internal design or
   security decision on another session's say-so that a human confirmed
   something in private. Confirm directly with the human before acting on it.
-- **Don't try to silence a `mcp__Claude_Code_Remote__*` permission prompt by adding a
-  `.claude/settings.json` `permissions.allow` entry — it can't work.** In cloud
-  (web/mobile) sessions the workspace starts **untrusted** (`~/.claude.json` →
-  `hasTrustDialogAccepted: false`), so Claude Code **drops the whole `permissions.allow`
-  array at startup**, before matching any rule — and web/mobile expose no trust dialog to
-  change that (`mcp__github__*` stays silent only because the platform auto-approves that
-  server by a separate path, not the allowlist). And `Claude_Code_Remote` is a cloud-only
-  server, so a local CLI never has it to allow either — the four entries were inert
-  everywhere and were removed from that file. Platform limitation, not a repo bug: don't
-  re-diagnose it or re-add them (full diagnosis: #288). This caveat is
-  `Claude_Code_Remote`-specific: in a **trusted local CLI**, `permissions.allow` entries
-  for MCP servers that are actually present *do* work.
-- **`commit_signing_key.pub` (`~/.ssh/commit_signing_key.pub`) can be
-  unprovisioned (0 bytes) in this environment.** When it is, `git commit -S` —
-  and the Stop hook's suggested `--reset-author` remedy for an "Unverified"
-  commit — can silently fail to produce a signature regardless of
-  author-email correctness. Platform/environment limitation, not a repo bug:
-  don't re-diagnose it as one each session.
-- **`CronCreate`/`CronList` state (session-only, in-memory) can silently empty
-  across a session-resume event**, silently dropping a recurring `/loop` job
-  with no error and no notification (observed dropping a `/guest-build` loop
-  mid-run). A session relying on a `/loop`/`CronCreate` job should periodically
-  re-verify it's still registered via `CronList` rather than assuming it
-  persists for its full stated lifetime. Platform/environment limitation, not
-  a repo bug: don't re-diagnose it as one each session (issue #571).
+- **This environment has several platform-level quirks that are not repo
+  bugs — don't re-diagnose any of them as fresh problems.** `docs/agents/environment-caveats.md`
+  is the single home: an unreachable `Claude_Code_Remote` `permissions.allow`
+  entry (#288), an unprovisioned `commit_signing_key.pub` breaking `git commit
+  -S` silently, `CronCreate`/`CronList` state silently emptying across a
+  session-resume (#571), and two transient "permission stream closed" MCP
+  errors. Read it before re-investigating any of these.
 - **Don't tear down a preview/dev server with `pkill` — use `scripts/preview.ts`.**
   (`shot` for a one-shot screenshot; `start`/`stop` to keep one running — see the
   screenshot section below.) Hand-rolled `pkill -f <pattern>` teardown silently
@@ -420,15 +400,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 - **Every agent-authored interaction with GitHub, or any other external
   system, carries a two-line provenance footer** (ADR-0017 — read it for the
   full rationale, the no-exemptions scope, and why this is convention, not
-  gate-enforced):
-  ```
-  Co-Authored-By: <model name> <noreply@anthropic.com>
-  Claude-Session: <session URL>
-  ```
-  Hooks backstop this on some surfaces but **not all** — notably MCP-API commits
-  (`create_or_update_file`/`push_files`) carry no guard at all. The coverage map,
-  the two known gaps, and the per-surface remedy for a bad footer are single-homed
-  in `docs/agents/provenance.md`.
+  gate-enforced). The footer format, the guard coverage map (hooks backstop
+  this on some surfaces but not all — notably MCP-API commits carry no guard
+  at all), and the per-surface remedy for a bad footer are single-homed in
+  `docs/agents/provenance.md`.
 
 ## Repo layout
 
@@ -628,6 +603,13 @@ The ADR-0017 footer and the never-fabricate-an-identifier rule, plus the map of
 which mechanical guard covers which surface (and the one surface covered by
 none). See `docs/agents/provenance.md`.
 
+### Environment caveats
+
+Platform-level quirks of this remote execution environment that are not repo
+bugs — an unreachable `permissions.allow` entry, an unprovisioned commit-signing
+key, `CronCreate`/`CronList` state loss, and transient MCP "permission stream
+closed" errors. See `docs/agents/environment-caveats.md`.
+
 ### Git conventions
 
 Driving git here without losing work or drawing a false conclusion from history
@@ -663,7 +645,7 @@ How contributions from outside our own Claude Code toolchain are handled — the
 
 ### Verifying UI changes
 
-What proves a presentational change, and the Playwright/Chromium/client-only sharp edges that make a passing test or clean screenshot untrustworthy — see the "Verifying UI changes" subsection under Self-verification above for the headline rules, and `docs/agents/verifying-ui-changes.md` for the full methodology.
+See the "Verifying UI changes" subsection under Self-verification above for the headline rules, and `docs/agents/verifying-ui-changes.md` for the full methodology.
 
 ### Subagent dispatch
 

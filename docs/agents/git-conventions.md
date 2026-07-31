@@ -98,6 +98,5 @@ would rewrite public history. Only commits that *are* in `origin/main..HEAD` are
 this session's own and fair game to fix.
 
 Before reaching for `--reset-author`, note the unprovisioned-signing-key caveat
-that governs whether it can work at all — it stays in `CLAUDE.md`'s working
-conventions alongside the other environment caveats, pending their own
-extraction.
+that governs whether it can work at all — see
+[`environment-caveats.md`](./environment-caveats.md).

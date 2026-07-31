@@ -59,4 +59,7 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
 - `reviewer-agent` (`frictions-to-fixes`) — not purely mechanical: the
   reviewing session's own risk judgement is also required, escalating a
   genuinely high-risk PR to a human even when the gate is green (ADR-0003).
+- `guest-build` — agent-dispatched but always **owner-merged**: it opens and
+  reviews the PR but never calls `merge_pull_request` or arms auto-merge (see
+  `docs/agents/guest-contributions.md`).
 - An ordinary work PR — merged by a human, never self-merged.

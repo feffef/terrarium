@@ -6,11 +6,8 @@ two workflow docs sit on top of it and own their own recipes:
 [`issue-tracker.md`](./issue-tracker.md) (issues, PRDs, triage) and
 [`pr-workflow.md`](./pr-workflow.md) (landing a gated PR).
 
-Re-homed from those two docs, which had each grown a piece of this surface —
-`issue-tracker.md` carried the whole MCP mapping under an issues-scoped title
-(most of it PR-side), and `pr-workflow.md` carried the transient-503 note even
-though it names `issue_read`/`issue_write`. Content below is unchanged from
-those homes; only its location moved.
+Re-homed from `issue-tracker.md` and `pr-workflow.md`, which had each grown a
+piece of this surface.
 
 For the provenance footer that every GitHub write must carry, and which of these
 tools is guarded, see [`provenance.md`](./provenance.md).
@@ -124,20 +121,12 @@ each recipe class to its MCP equivalent:
   it does not apply to a dispatched Agent-tool subagent.** A background
   `Agent` tool completion self-notifies automatically; waiting on one needs no
   wait/poll tool at all (no `ScheduleWakeup`, no `send_later`).
-- **Any `mcp__Claude_Code_Remote__*` call — not just `send_later` — can fail
-  with a transient "permission stream closed before response received"
-  error.** Converged workaround (mirrors the poll-until-green pattern above,
-  issue #145): retry the same call once after reconnect; if it fails again,
-  route around it — for `send_later` specifically, fall back to the built-in
-  `ScheduleWakeup` tool instead of retrying further (issue #229).
-- **`AskUserQuestion` (a core tool, not a `Claude_Code_Remote` MCP tool) can hit
-  the same transient "permission stream closed" error.** Retry once; if it
-  fails again, don't retry-loop — fall back immediately to the safer default
-  option and note the fallback explicitly in the resulting output (issue #359).
-
-> The last two bullets are harness caveats rather than GitHub ones. They ride
-> here because the polling recipe above depends on them; they belong with the
-> other environment caveats once those are extracted from `CLAUDE.md`.
+- **`mcp__Claude_Code_Remote__*` calls and `AskUserQuestion` can both fail with a
+  transient "permission stream closed before response received" error** —
+  retry once, then route around it (issue #145/#229/#359). These are harness
+  caveats rather than GitHub ones, mentioned here only because the polling
+  recipe above depends on them; full detail is single-homed in
+  [`environment-caveats.md`](./environment-caveats.md).
 
 ## Resolving deferred tool names
 
