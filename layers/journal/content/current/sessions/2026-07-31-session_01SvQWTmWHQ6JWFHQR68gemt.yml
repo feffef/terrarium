@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01SvQWTmWHQ6JWFHQR68gemt
 startedAt: 2026-07-31T20:16:11Z
-endedAt: 2026-07-31T20:56:53Z
+endedAt: 2026-07-31T21:02:00Z
 kind: interactive
 goal: Collapse provenance enforcement into one guard
 status: completed
@@ -38,6 +38,9 @@ skillsUsed:
   - name: log-session
     reason: this log
 frictions:
+  - description: "Passed `body` to an `issue_write` update meaning to comment, silently overwriting issue #723's entire body — problem statement, five occurrence records, four options weighed."
+    solution: "Restored verbatim from the pre-overwrite read held in context, with a restoration note, and reposted the text as a real comment. `issue_write` update replaces the body with no warning while `add_issue_comment` appends — two very different verbs behind similar names. A guard could flag an `issue_write` update that supplies `body` without `issue_number` having just been read, or the habit is simply: comments use `add_issue_comment`, never `issue_write`."
+    severity: major
   - description: "Issue #784 is `ready-for-agent` and instructs deleting SESSION_TRAILER_GLOBAL as unused; this change repurposes it, so following #784 would silently unenforce commits."
     solution: "Caught only because the user asked for a full issue-history read. Commented on #784 and guarded the constant in code. A PR touching code that an open issue schedules for deletion has no mechanical cross-check — worth one."
     severity: moderate
@@ -53,26 +56,27 @@ frictions:
   - description: The container restarted mid-turn just after the PR was created, stopping three background waiters and leaving PR-creation success unconfirmed.
     solution: Re-verified git state and searched for the PR before continuing rather than assuming either had landed. No work lost.
     severity: minor
-durationSec: 2441
+durationSec: 2748
 models:
-  claude-opus-5: 202
+  claude-opus-5: 222
   <synthetic>: 1
 toolCounts:
   Read: 17
-  ToolSearch: 6
-  mcp__github__issue_read: 7
-  Bash: 52
-  Edit: 22
+  ToolSearch: 7
+  mcp__github__issue_read: 9
+  Bash: 54
+  Edit: 23
   Write: 2
   mcp__github__search_pull_requests: 2
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 3
   mcp__github__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
-  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__delete_trigger: 2
+  mcp__github__issue_write: 2
 filesEdited:
   - scripts/github-provenance-guard.ts
   - .claude/settings.json
