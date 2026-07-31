@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019jnggE1yiAs9FyakmE8qQN
 startedAt: 2026-07-31T06:00:10Z
-endedAt: 2026-07-31T07:25:55Z
+endedAt: 2026-07-31T07:50:22Z
 kind: interactive
 goal: Fix the provenance convention losing to the harness
-status: in-review
-outcome: Header shipped; review caught three of my defects
-summary: "Human-asked: investigate why docs/agents/provenance.md looked unread while PR footers stayed correct. Audited all 114 GitHub artefacts since it landed — 86 agent-authored, 84 carrying the footer, zero fabricated session ids. Both premises were false. The 2 misses used the harness's own footer: the harness prescribes three footers, two contradicting ADR-0017, and no repo doc named the conflict. The user then set the real requirement (a full session URL, format irrelevant) and green-lit a header, explicitly choosing backward compatibility plus a cleanup issue over a clean sweep. Agent-initiated within that: the guard broadening, the permanent-vs-temporary compat split, and preserving issue \"#692\"'s guarantee. A human-invoked two-axis code review then found three real defects in my own first commit — all reproduced by executing the code path, all fixed in a second commit."
+status: completed
+outcome: Merged, after review caught three of my defects
+summary: "Human-asked: investigate why docs/agents/provenance.md looked unread while PR footers stayed correct. Audited all 114 GitHub artefacts since it landed — 86 agent-authored, 84 carrying the footer, zero fabricated session ids. Both premises were false. The 2 misses used the harness's own footer: the harness prescribes three footers, two contradicting ADR-0017, and no repo doc named the conflict. The user then set the real requirement (a full session URL, format irrelevant) and green-lit a header, explicitly choosing backward compatibility plus a cleanup issue over a clean sweep. Agent-initiated within that: the guard broadening, the permanent-vs-temporary compat split, and preserving issue \"#692\"'s guarantee. A human-invoked two-axis code review then found three real defects in my own first commit — all reproduced by executing the code path, all fixed in a second commit. Merged by a human as \"#785\" (human-only: touches an ADR and .claude/settings.json); cleanup tracked on \"#784\"."
 prs:
   - "785"
 docsRead:
@@ -60,11 +60,11 @@ frictions:
   - description: My own change left roughly ten stale "footer" references in the very files it edited — including a line that appeared as diff CONTEXT beside one I changed — plus two identifiers (agent-footer-skip, hasProvenanceFooter) whose names silently began to lie.
     solution: When retiring a term, grep the whole repo for it and triage every hit, rather than fixing the sites you happen to touch. Distinguish real drift from immutable record (session logs, blog posts, ADR history) instead of rewriting the latter.
     severity: minor
-durationSec: 5145
+durationSec: 6612
 models:
-  claude-opus-5: 242
+  claude-opus-5: 249
 toolCounts:
-  Bash: 65
+  Bash: 67
   Read: 8
   Write: 5
   AskUserQuestion: 1
@@ -78,6 +78,7 @@ toolCounts:
   Skill: 2
   Agent: 2
   mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/provenance-header.ts
   - scripts/github-provenance-guard.ts
