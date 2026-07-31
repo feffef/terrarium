@@ -60,6 +60,13 @@ export function formatMiddenDate(iso: string): string {
   return `${Number(day)} ${MONTH_ABBR[Number(month) - 1]} ${year}`
 }
 
+/** The file name alone: a repo-root-relative path is long enough to overflow the
+ *  record line on a narrow column, and the provenance link already carries the
+ *  full path for anyone who follows it. */
+function fileNameOf(path: string): string {
+  return path.split('/').filter(Boolean).pop() ?? path
+}
+
 /** A kind-appropriate provenance label derived from the REAL discriminated union. */
 export function middenProvenanceLine(p: MiddenProvenance): string {
   switch (p.kind) {
@@ -68,9 +75,9 @@ export function middenProvenanceLine(p: MiddenProvenance): string {
     case 'branch':
       return `branch · ${p.name}`
     case 'commit':
-      return `commit ${p.hash.slice(0, 7)}${p.path ? ` · ${p.path}` : ''}`
+      return `commit ${p.hash.slice(0, 7)}${p.path ? ` · ${fileNameOf(p.path)}` : ''}`
     case 'file':
-      return `file · ${p.path}`
+      return `file · ${fileNameOf(p.path)}`
     case 'dependency':
       return `dependency · ${p.name}`
     case 'skill':
