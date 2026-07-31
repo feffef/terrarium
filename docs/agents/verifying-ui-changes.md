@@ -47,6 +47,14 @@ specific session cite it.
   see `layers/journal/CONTEXT.md`'s "What lives where" for what it renders.
   Editing `index.md` alone will not change what most of that page shows; check
   the `.vue` file too.
+- **A `display: none` (or equivalent hide-at-breakpoint) rule that hides the
+  only rendering of real content/data is a design smell to justify, not a
+  default to ship silently.** Before shipping one, check whether it hides
+  purely decorative/redundant markup (fine) or the sole rendering of some
+  actual data (e.g. a dataset dimension with no other place it appears at
+  that breakpoint) — if the latter, call it out explicitly in the PR
+  description: why it's acceptable for that data to disappear at this
+  breakpoint, or where it reappears instead.
 
 ## The sharp edges
 
