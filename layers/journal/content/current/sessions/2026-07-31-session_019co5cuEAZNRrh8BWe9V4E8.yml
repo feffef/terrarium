@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019co5cuEAZNRrh8BWe9V4E8
 startedAt: 2026-07-31T18:40:59Z
-endedAt: 2026-07-31T19:06:19Z
+endedAt: 2026-07-31T20:12:55Z
 kind: interactive
 goal: Extract subagent dispatch into a Skill
-status: in-review
-outcome: "PR #788 open, gate green twice"
-summary: "Human-instructed via `/implement 766 A`: implement group A of issue #766 — move CLAUDE.md's ~100-line worktree/dispatch block into a new model-invokable `dispatch-subagents` Skill. Built the Skill as a six-step procedure with checkable completion criteria, added the symlink and Skill Inventory entry, and repointed `frictions-to-fixes`, `guest-build` and `audit-docs`. One agent-initiated call beyond the ask: folding `docs/agents/subagent-dispatch.md` into the Skill and deleting it, so dispatch conventions keep one home rather than two near-identically-named ones. The user then invoked `/writing-great-skills` mid-build, which sharpened the description and completion criteria. `/code-review` found two real single-home breaches, both fixed before the PR opened."
+status: completed
+outcome: "PR #788 merged; Skill live on main"
+summary: "Human-instructed via `/implement 766 A`: implement group A of issue #766 — move CLAUDE.md's ~100-line worktree/dispatch block into a new model-invokable `dispatch-subagents` Skill. Built the Skill as a six-step procedure with checkable completion criteria, added the symlink and Skill Inventory entry, and repointed `frictions-to-fixes`, `guest-build` and `audit-docs`. Merged. One agent-initiated call beyond the ask: folding `docs/agents/subagent-dispatch.md` into the Skill and deleting it, so dispatch conventions keep one home rather than two near-identically-named ones. The user then invoked `/writing-great-skills` mid-build, which sharpened the description and completion criteria. `/code-review` found two real single-home breaches, both fixed before the PR opened."
 prs:
   - "788"
 docsRead:
@@ -63,24 +63,27 @@ frictions:
   - description: Every new Skill needs an inventory .yml under layers/, so the full gate runs (~5 min) even for an otherwise prose-only change — twice here.
     solution: Working as designed rather than a bug (content changes affect the build), but worth knowing that no new-Skill PR can ever hit the inert skip path.
     severity: nit
-durationSec: 1521
+durationSec: 5516
 models:
-  claude-opus-5: 180
+  claude-opus-5: 231
 toolCounts:
-  ToolSearch: 5
-  Bash: 40
-  mcp__github__issue_read: 2
+  ToolSearch: 6
+  Bash: 47
+  mcp__github__issue_read: 5
   Read: 16
   Write: 5
-  Edit: 17
+  Edit: 20
   Skill: 3
   Agent: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__update_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 4
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 8
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__search_issues: 4
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/dispatch-subagents/SKILL.md
   - layers/journal/content/current/skills/dispatch-subagents.yml
