@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01SvQWTmWHQ6JWFHQR68gemt
 startedAt: 2026-07-31T20:16:11Z
-endedAt: 2026-07-31T20:50:30Z
+endedAt: 2026-07-31T20:56:53Z
 kind: interactive
 goal: Collapse provenance enforcement into one guard
-status: in-review
-outcome: Shape enforced, fails closed, provenance.md deleted
-summary: "Human-instructed throughout. The user asked me to read `provenance.md` and issue #723, then proposed the simplification themselves — one CLAUDE.md rule plus one guard validating both id and format, deleting the doc — and chose fail-closed and folding in the MCP-commit rows when I put those two open questions to them. Agent-initiated within that brief: the implementation, a test pinning the guard registry against the live PreToolUse matcher, and the warning comment on #784. Their final instruction to read the full issue history before finalizing is what caught #784's now-unsafe removal list. PR #789 opened, CI green, awaiting human merge (amends an ADR)."
+status: completed
+outcome: "Merged: shape enforced, fails closed, doc deleted"
+summary: "Human-instructed throughout. The user asked me to read `provenance.md` and issue #723, then proposed the simplification themselves — one CLAUDE.md rule plus one guard validating both id and format, deleting the doc — and chose fail-closed and folding in the MCP-commit rows when I put those two open questions to them. Agent-initiated within that brief: the implementation, a test pinning the guard registry against the live PreToolUse matcher, and the warning comment on #784. Their final instruction to read the full issue history before finalizing is what caught #784's now-unsafe removal list. PR #789 merged."
 prs:
   - "789"
 docsRead:
@@ -53,16 +53,16 @@ frictions:
   - description: The container restarted mid-turn just after the PR was created, stopping three background waiters and leaving PR-creation success unconfirmed.
     solution: Re-verified git state and searched for the PR before continuing rather than assuming either had landed. No work lost.
     severity: minor
-durationSec: 2059
+durationSec: 2441
 models:
-  claude-opus-5: 193
+  claude-opus-5: 202
   <synthetic>: 1
 toolCounts:
   Read: 17
   ToolSearch: 6
   mcp__github__issue_read: 7
-  Bash: 50
-  Edit: 20
+  Bash: 52
+  Edit: 22
   Write: 2
   mcp__github__search_pull_requests: 2
   mcp__github__create_pull_request: 1
@@ -72,6 +72,7 @@ toolCounts:
   mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
   Skill: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/github-provenance-guard.ts
   - .claude/settings.json
