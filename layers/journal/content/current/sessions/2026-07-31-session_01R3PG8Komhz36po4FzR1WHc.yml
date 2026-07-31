@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01R3PG8Komhz36po4FzR1WHc
 startedAt: 2026-07-31T18:39:29Z
-endedAt: 2026-07-31T18:55:49Z
+endedAt: 2026-07-31T18:57:28Z
 kind: interactive
 goal: Fix Midden long paths breaking mobile layout
-status: in-review
-outcome: File-name-only provenance, PR open
-summary: "Human-instructed throughout: the owner supplied a mobile screenshot of a Midden find whose provenance line ran off-screen, and directed the fix — show only the file name on mobile and desktop, since the link carries the path. Both Midden renderers share middenProvenanceLine(), so the fix landed in one formatter for the file and commit kinds. Agent-initiated on top of that: overflow-wrap on the two record lines (a dated post file name is still long), and a new unit spec for the formatter, which had none. Verified with 390px and 1280px screenshots against a production preview server; pnpm gate:scoped green. PR #787 opened and subscribed."
+status: completed
+outcome: File-name-only provenance merged
+summary: "Human-instructed throughout: the owner supplied a mobile screenshot of a Midden find whose provenance line ran off-screen, and directed the fix — show only the file name on mobile and desktop, since the link carries the path. Both Midden renderers share middenProvenanceLine(), so the fix landed in one formatter for the file and commit kinds. Agent-initiated on top of that: overflow-wrap on the two record lines (a dated post file name is still long), and a new unit spec for the formatter, which had none. Verified with 390px and 1280px screenshots against a production preview server; pnpm gate:scoped green. PR #787 opened, gate green, merged by the owner."
 prs:
   - "787"
 docsRead:
@@ -39,14 +39,14 @@ frictions:
   - description: preview.ts shot takes only WxH, so reaching a mid-page component meant guessing a tall viewport before I thought to pass a URL hash anchor.
     solution: 'Document the "route can carry #anchor" trick in the CLAUDE.md screenshot section — it is the cheap way to shoot below-the-fold content.'
     severity: nit
-durationSec: 980
+durationSec: 1079
 models:
-  claude-opus-5: 97
+  claude-opus-5: 107
 toolCounts:
-  Bash: 24
+  Bash: 27
   Grep: 5
   Read: 12
-  Edit: 5
+  Edit: 7
   Write: 2
   ToolSearch: 3
   mcp__github__search_pull_requests: 1
@@ -56,6 +56,7 @@ toolCounts:
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
   mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/midden/app/utils/find.ts
   - layers/midden/app/components/midden/StoresLanding.vue
