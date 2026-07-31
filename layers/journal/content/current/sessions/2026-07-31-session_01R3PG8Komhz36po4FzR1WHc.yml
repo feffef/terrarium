@@ -1,0 +1,57 @@
+schemaVersion: 1
+session: session_01R3PG8Komhz36po4FzR1WHc
+startedAt: 2026-07-31T18:39:29Z
+endedAt: 2026-07-31T18:50:56Z
+kind: interactive
+goal: Fix Midden long paths breaking mobile layout
+status: in-review
+outcome: File-name-only provenance, PR open
+summary: "Human-instructed throughout: the owner supplied a mobile screenshot of a Midden find whose provenance line ran off-screen, and directed the fix — show only the file name on mobile and desktop, since the link carries the path. Both Midden renderers share middenProvenanceLine(), so the fix landed in one formatter for the file and commit kinds. Agent-initiated on top of that: overflow-wrap on the two record lines (a dated post file name is still long), and a new unit spec for the formatter, which had none. Verified with 390px and 1280px screenshots against a production preview server; pnpm gate:scoped green. PR #787 opened and subscribed."
+prs:
+  - "787"
+docsRead:
+  - path: layers/midden/app/utils/find.ts
+    reason: the shared provenance formatter
+  - path: layers/midden/app/components/content/MiddenArtifact.vue
+    reason: the trench find renderer
+  - path: layers/midden/content/trench/artifacts/the-stratigraphy-sidebar.yml
+    reason: the artifact in the screenshot
+  - path: layers/midden/tests/unit/strata.spec.ts
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/StoresLanding.vue
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: preview.ts shot takes only WxH, so reaching a mid-page component meant guessing a tall viewport before I thought to pass a URL hash anchor.
+    solution: 'Document the "route can carry #anchor" trick in the CLAUDE.md screenshot section — it is the cheap way to shoot below-the-fold content.'
+    severity: nit
+durationSec: 687
+models:
+  claude-opus-5: 71
+toolCounts:
+  Bash: 20
+  Grep: 5
+  Read: 10
+  Edit: 3
+  Write: 2
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/midden/app/utils/find.ts
+  - layers/midden/app/components/midden/StoresLanding.vue
+  - layers/midden/app/components/content/MiddenArtifact.vue
+  - layers/midden/tests/unit/find.spec.ts
+gitBranch: claude/midden-long-paths-mobile-fzqi4a
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - scripts/preview.ts shot passes the route through verbatim, so a URL hash (/t/midden/stores#artifact-slug) scrolls the shot to that element — far cheaper than a 5000px-tall viewport.
