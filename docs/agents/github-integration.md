@@ -9,8 +9,18 @@ two workflow docs sit on top of it and own their own recipes:
 Re-homed from `issue-tracker.md` and `pr-workflow.md`, which had each grown a
 piece of this surface.
 
-For the provenance header that every GitHub write must carry, and which of these
-tools is guarded, see [`provenance.md`](./provenance.md).
+Every GitHub body an agent writes must open with the ADR-0017 provenance header
+(CLAUDE.md's Working Conventions). It is enforced mechanically rather than by
+convention — `scripts/github-provenance-guard.ts` is both the registry of which
+tools are guarded and the rule's operative statement.
+
+## Bare angle brackets vanish from a rendered body
+
+**GitHub strips bare `<...>` text in a rendered issue/PR body as HTML markup.**
+The text simply disappears, with no error — it has silently eaten both a
+footer's own `<noreply@anthropic.com>` and an unrelated placeholder written in
+prose (e.g. `<slug>`). Wrap such placeholders in backticks, or verify the
+rendered body after posting (issue #779).
 
 ## Transient failures — retry before escalating
 

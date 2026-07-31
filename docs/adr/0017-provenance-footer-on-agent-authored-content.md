@@ -77,8 +77,87 @@ Status: Accepted
 > commits: still not a gate check, but no longer unbacked prose.
 >
 > **Nothing is backfilled**, per the original "asymmetric history" consequence,
-> so readers accept both shapes; see `docs/agents/provenance.md` for which
-> deprecation is permanent and which is scheduled for removal.
+> so readers accept both shapes.
+>
+> **Amended (2026-08-01, issue #723).** Enforcement becomes the rule's only
+> agent-facing home, and it **fails closed**. This resolves #723's option 3 vs.
+> option 4 in favour of 3 — remove the choice point — with a human decision on
+> the fail-open posture that option 3's acceptance criteria explicitly asked for.
+>
+> **Why now.** #723 tracked five recurrences that four prose passes did not stop.
+> PR #788 then added a sixth of a *new* kind: a **correct** session id in a
+> hand-invented shape (`**Session:** <url>`), posted by a session that had read
+> none of the three prose homes and synthesized a plausible marker instead. The
+> guard passed it, because format-agnosticism was deliberate. That combination —
+> prose unread, shape unenforced — is what this amendment closes.
+>
+> - **Shape is now enforced, not just presence.** A body naming this session in
+>   any shape other than the header is a `malformed` finding and is blocked.
+>   Format-agnosticism existed only while this ADR's footer competed with the
+>   harness's own for the trailing position; the 2026-07-31 header moved to a
+>   position nothing else claims, so the concession has no remaining purpose.
+>   This retires the guard's legacy-trailer acceptance (issue #784) for GitHub
+>   bodies. It does **not** touch `hasAuthorshipMarker`, which keeps matching the
+>   legacy footer permanently — historical comments are immutable, and a reader
+>   that stopped recognizing them would make `guest-intake-scan.ts` re-answer
+>   threads it already answered. Writer-side strictness and reader-side
+>   permanence are independent; conflating them is a live footgun.
+> - **The MCP-API commit hole is closed.** `create_or_update_file` and
+>   `push_files` join the guard's registry with `surface: 'commit'`, checked for
+>   the two-line trailer rather than the header. The 2026-07-20 amendment named
+>   this hole and left it open; it was the one surface with a rule and no guard.
+>   `merge_pull_request` stays out: `scripts/merge-pr.ts` is the sole merge path
+>   and passes no commit message, so no agent-authored text exists there.
+> - **Fail-closed.** An unresolvable ground truth, an unparseable hook payload,
+>   or a crash inside the guard now **denies** the call instead of passing it.
+>   The prior fail-open posture meant "cannot verify" was indistinguishable from
+>   "verified fine". Cost is bounded: `resolveGroundTruthSessionId` prefers
+>   `CLAUDE_CODE_REMOTE_SESSION_ID` and falls back to the transcript, so both
+>   must be absent to trigger it — and a bug fixed here means an absent
+>   transcript alone no longer skips the check, which it previously did by
+>   returning before the env lookup. A call with no authored text to stamp (a
+>   label-only `issue_write`, a bare approving review) still passes unverified,
+>   so the triage sweep cannot wedge.
+> - **One residual fail-open is accepted, not hidden.** The hook runs as
+>   `pnpm exec tsx … || true`; if pnpm or tsx is unavailable the script never
+>   evaluates and no deny is emitted. Closing that requires changing the
+>   invocation, not the script. Recorded here rather than left to be
+>   rediscovered.
+> - **`docs/agents/provenance.md` is deleted.** Its coverage map described holes
+>   this amendment closes, and its central claim — that prose keeps failing — was
+>   an argument against its own existence. What survived moved to where it is
+>   load-bearing: the header rule to CLAUDE.md's Working Conventions, the
+>   angle-bracket rendering trap (#779) to `github-integration.md`, the commit-msg
+>   backstop's behaviour to `git-conventions.md`, and everything about
+>   enforcement into the guard, whose block message now teaches the format at the
+>   moment of the mistake. That message — not a doc — is the rule's teaching
+>   surface, because every recorded recurrence happened to a session that had
+>   prose available and did not apply it.
+>
+> **Interaction with #784.** That issue scheduled the removal of the guard's
+> legacy-trailer branch about a week out, and with it `SESSION_TRAILER_GLOBAL`
+> and the `git-helpers` import as "now-unused". This amendment does the removal
+> early *for bodies* and invalidates the unused premise: the trailer reader now
+> has a permanent second job on the commit surface. Deleting it per #784's
+> literal text would silently unenforce MCP-API commits. #784's other
+> instructions stand, in particular that `hasAuthorshipMarker`, `isAiAuthored`,
+> and `sessionIdsIn` keep reading the legacy footer permanently.
+>
+> **What this deliberately does not do: inject.** #737's triage brief named a
+> third option — have the hook *supply* the missing marker rather than block,
+> the shape `provenance-footer.ts` already uses for commits — and noted that
+> whether a `PreToolUse` hook can rewrite tool input at all "is not established
+> anywhere in this repo". That remains unverified and unowned. It is the
+> strictly stronger form of #723's option 3, since an agent that never writes
+> the marker cannot write it wrongly; blocking still leaves a choice point, only
+> a supervised one. Recorded here so the next pass starts from the open
+> question rather than rediscovering it.
+>
+> **Scope unchanged.** This narrows *how strictly* the existing convention is
+> enforced. It does not make provenance a build-gate check (#444 still owns
+> that, and its human-opt-out-trailer design does not apply to a hook that only
+> ever sees agent-authored calls), does not revisit the marker's format, and
+> does not reopen bot identity (#124).
 
 ## Context
 

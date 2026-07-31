@@ -41,8 +41,8 @@ describe('provenanceHeader() — the format', () => {
     expect(readProvenanceHeader(quoting)).toBeNull()
   })
 
-  it('is not fooled by the repo\'s own doc example embedded in a body', () => {
-    const body = 'See provenance.md:\n\n```\n' + provenanceHeader('Claude Opus 5', URL) + '\n```\n'
+  it('is not fooled by a fenced example of the header embedded in a body', () => {
+    const body = 'The format is:\n\n```\n' + provenanceHeader('Claude Opus 5', URL) + '\n```\n'
     expect(readProvenanceHeader(body)).toBeNull()
   })
 

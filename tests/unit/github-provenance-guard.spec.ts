@@ -1,14 +1,20 @@
-// Coverage for the GitHub-comment/PR/issue-body footer guard (issue #628): a
-// fabricated `Claude-Session:` footer recurred on a GitHub comment two days
-// after the prose-only #605/#606 fix was meant to prevent exactly that,
-// because `scripts/session-id-guard.ts` only ever sees git commit trailers.
-// The pure core (`checkGithubProvenance`) is pinned here directly; the CLI's
-// stdin→deny-JSON path is exercised end to end against the real built script
-// with a real transcript file, so the exact regression case (a fabricated
-// footer on `mcp__github__add_issue_comment`, the tool used to post to #483)
-// is proven to be blocked, not just asserted in the abstract.
+// Coverage for the single ADR-0017 provenance enforcement point. This guard is
+// the repo's only agent-facing home for the rule, so these tests are also the
+// spec: what each surface requires, and what happens when it can't be verified.
+//
+// Three regressions are pinned by name, because each one passed the version of
+// the guard that preceded it:
+//   • #628 — a fabricated session id (the original mechanical fix)
+//   • #737 — no provenance at all (passed, because only divergence was checked)
+//   • #788 — the RIGHT id in the WRONG shape (passed, because the guard was
+//     deliberately format-agnostic)
+// Plus the 2026-08-01 posture flip: unverifiable now denies instead of passing.
+//
+// The pure core is pinned directly; the CLI's stdin→deny-JSON path is exercised
+// end to end against the real script with a real transcript file, so the
+// regression cases are proven blocked rather than asserted in the abstract.
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -23,175 +29,205 @@ import {
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const SCRIPT = join(root, 'scripts', 'github-provenance-guard.ts')
 
-describe('checkGithubProvenance() — the pure core (issue #628)', () => {
-  it('THE REGRESSION: a fabricated Claude-Session footer on a GitHub comment body is flagged', () => {
-    const finding = checkGithubProvenance(
-      'mcp__github__add_issue_comment',
-      {
-        owner: 'feffef',
-        repo: 'terrarium',
-        issue_number: 483,
-        body: 'fix applied\n\nClaude-Session: https://claude.ai/code/session_FABRICATED',
-      },
-      'session_REAL',
-    )
-    expect(finding).toEqual({
+const COMMENT = 'mcp__github__add_issue_comment'
+const header = (id: string): string => `\u{1F916} [Claude Opus 5](https://claude.ai/code/${id})`
+const trailer = (id: string): string =>
+  `Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/${id}`
+
+describe('body surface — GitHub prose requires the header, first', () => {
+  it('#628: a fabricated session id in the header is blocked', () => {
+    expect(checkGithubProvenance(COMMENT, { issue_number: 483, body: `${header('session_FAKE')}\n\nfix applied` }, 'session_REAL')).toEqual({
       kind: 'mismatch',
-      tool: 'mcp__github__add_issue_comment',
-      found: 'session_FABRICATED',
+      tool: COMMENT,
+      surface: 'body',
+      found: 'session_FAKE',
       expected: 'session_REAL',
     })
   })
 
-  it('passes silently when the footer matches the resolved ground truth', () => {
-    const finding = checkGithubProvenance(
-      'mcp__github__add_issue_comment',
-      { body: 'fix applied\n\nClaude-Session: https://claude.ai/code/session_REAL' },
-      'session_REAL',
+  it('#737: a body with no session URL at all is blocked', () => {
+    expect(checkGithubProvenance(COMMENT, { body: 'just a plain comment' }, 'session_REAL')).toEqual({
+      kind: 'missing',
+      tool: COMMENT,
+      surface: 'body',
+      expected: 'session_REAL',
+    })
+  })
+
+  it('#788 THE NEW CASE: the right id in a hand-invented shape is blocked as malformed', () => {
+    // The exact text posted on PR #788 — a correct id, a shape nobody defined.
+    expect(
+      checkGithubProvenance(COMMENT, { body: '**Session:** https://claude.ai/code/session_REAL\n\nwork done' }, 'session_REAL'),
+    ).toEqual({ kind: 'malformed', tool: COMMENT, surface: 'body', expected: 'session_REAL' })
+  })
+
+  it('#788: a header not at the start of the body is malformed — position is the marker', () => {
+    expect(checkGithubProvenance(COMMENT, { body: `some prose first\n\n${header('session_REAL')}` }, 'session_REAL')?.kind).toBe(
+      'malformed',
     )
-    expect(finding).toBeNull()
   })
 
-  it('THE #737 FIX: a body with NO session URL at all is now blocked, not passed', () => {
-    expect(
-      checkGithubProvenance('mcp__github__add_issue_comment', { body: 'just a plain comment' }, 'session_REAL'),
-    ).toEqual({ kind: 'missing', tool: 'mcp__github__add_issue_comment', expected: 'session_REAL' })
+  it('#784: the legacy two-line footer on a BODY is now malformed, not accepted', () => {
+    // Deliberate tightening. `hasAuthorshipMarker` still matches it permanently
+    // for READERS of historical content (check-triage-drift.ts) — that reader
+    // and this writer-side check must not be conflated.
+    expect(checkGithubProvenance(COMMENT, { body: `fix applied\n\n${trailer('session_REAL')}` }, 'session_REAL')?.kind).toBe(
+      'malformed',
+    )
   })
 
-  it('#737 scope guard: a call with NO body field is still passed — a label-only issue_write must not be wedged', () => {
-    expect(checkGithubProvenance('mcp__github__issue_write', { method: 'update', labels: ['bug'] }, 'session_REAL')).toBeNull()
-    expect(checkGithubProvenance('mcp__github__issue_write', { method: 'update', body: '   ' }, 'session_REAL')).toBeNull()
-  })
-
-  it('accepts the provenance header as the canonical slot', () => {
-    expect(
-      checkGithubProvenance(
-        'mcp__github__add_issue_comment',
-        { body: '\u{1F916} [Claude Opus 5](https://claude.ai/code/session_REAL)\n\nfix applied' },
-        'session_REAL',
-      ),
-    ).toBeNull()
-  })
-
-  it('blocks a header naming the wrong session, even when the right id appears later in the body', () => {
-    expect(
-      checkGithubProvenance(
-        'mcp__github__add_issue_comment',
-        { body: '\u{1F916} [Claude Opus 5](https://claude.ai/code/session_WRONG)\n\nsee https://claude.ai/code/session_REAL' },
-        'session_REAL',
-      ),
-    ).toEqual({ kind: 'mismatch', tool: 'mcp__github__add_issue_comment', found: 'session_WRONG', expected: 'session_REAL' })
-  })
-
-  it("accepts the harness's own footer as provenance — the repo convention must not fight it", () => {
+  it("the harness's own footer alone no longer satisfies the check", () => {
+    // Previously accepted, to stop the repo convention competing with the
+    // harness for the trailing position. The header claims a position the
+    // harness never uses, so there is nothing left to concede.
     expect(
       checkGithubProvenance(
         'mcp__github__create_pull_request',
         { body: 'a PR\n\n---\n_Generated by [Claude Code](https://claude.ai/code/session_REAL)_' },
         'session_REAL',
-      ),
-    ).toBeNull()
+      )?.kind,
+    ).toBe('malformed')
   })
 
-  it('skips (passes) when no ground-truth id is resolvable — no false failure', () => {
-    const input = { body: 'Claude-Session: https://claude.ai/code/session_WRONG' }
-    expect(checkGithubProvenance('mcp__github__add_issue_comment', input, null)).toBeNull()
-    expect(checkGithubProvenance('mcp__github__add_issue_comment', input, undefined)).toBeNull()
+  it('passes a compliant body', () => {
+    expect(checkGithubProvenance(COMMENT, { body: `${header('session_REAL')}\n\nfix applied` }, 'session_REAL')).toBeNull()
   })
 
-  it('issue #692: does NOT block when an earlier quoted Claude-Session line is followed by a correct trailing footer', () => {
-    const finding = checkGithubProvenance(
-      'mcp__github__add_issue_comment',
-      {
-        body:
-          'Confirmed by evidence:\n' +
-          '> "regressed again, session_OLD_EVIDENCE"\n' +
-          'Claude-Session: https://claude.ai/code/session_OLD_EVIDENCE\n\n' +
-          'Filed the fix.\n\n' +
-          'Claude-Session: https://claude.ai/code/session_REAL',
-      },
-      'session_REAL',
-    )
-    expect(finding).toBeNull()
+  it('#692: a body quoting another agent post passes, in either order, on its own header', () => {
+    const mine = header('session_REAL')
+    const quoted = header('session_OLD')
+    expect(checkGithubProvenance(COMMENT, { body: `${mine}\n\nEvidence:\n\n${quoted}` }, 'session_REAL')).toBeNull()
+    expect(checkGithubProvenance(COMMENT, { body: `${mine}\n\nsee https://claude.ai/code/session_OLD` }, 'session_REAL')).toBeNull()
   })
 
-  it('issue #692: still blocks when the actual trailing footer is wrong, even with a correctly-quoted earlier one', () => {
-    const finding = checkGithubProvenance(
-      'mcp__github__add_issue_comment',
-      {
-        body:
-          'Evidence from a prior session:\n' +
-          'Claude-Session: https://claude.ai/code/session_REAL\n\n' +
-          'Fix applied.\n\n' +
-          'Claude-Session: https://claude.ai/code/session_FABRICATED',
-      },
-      'session_REAL',
-    )
-    expect(finding).toEqual({
+  it('#692: a wrong header is still blocked even when the right id appears later', () => {
+    expect(
+      checkGithubProvenance(COMMENT, { body: `${header('session_WRONG')}\n\nsee https://claude.ai/code/session_REAL` }, 'session_REAL'),
+    ).toMatchObject({ kind: 'mismatch', found: 'session_WRONG' })
+  })
+
+  it('a body naming only OTHER sessions is a mismatch, not a malformed', () => {
+    expect(checkGithubProvenance(COMMENT, { body: 'see https://claude.ai/code/session_OTHER' }, 'session_REAL')).toMatchObject({
       kind: 'mismatch',
-      tool: 'mcp__github__add_issue_comment',
-      found: 'session_FABRICATED',
-      expected: 'session_REAL',
+      found: 'session_OTHER',
     })
   })
+})
 
-  it('THE ANCHOR: a body quoting another agent post, with its own header first, passes (#692 class)', () => {
-    const mine = '\u{1F916} [Claude Opus 5](https://claude.ai/code/session_REAL)'
-    const quoted = '\u{1F916} [Claude Opus 5](https://claude.ai/code/session_OLD)'
-    expect(checkGithubProvenance('mcp__github__add_issue_comment', { body: `${mine}\n\nEvidence:\n\n${quoted}` }, 'session_REAL')).toBeNull()
-    // ...and the reverse order must not flip the verdict, which /m anchoring did.
-    expect(checkGithubProvenance('mcp__github__add_issue_comment', { body: `Evidence:\n\n${quoted}\n\n${mine}` }, 'session_REAL')).toBeNull()
+describe('commit surface — MCP-API commits require the trailer, last (#723 carve-out A)', () => {
+  const FILE = 'mcp__github__create_or_update_file'
+
+  it('closes the hole: a fabricated id in an MCP-API commit message is blocked', () => {
+    expect(
+      checkGithubProvenance(FILE, { path: 'a.md', content: 'x', message: `docs: tweak\n\n${trailer('session_FAKE')}` }, 'session_REAL'),
+    ).toEqual({ kind: 'mismatch', tool: FILE, surface: 'commit', found: 'session_FAKE', expected: 'session_REAL' })
   })
 
-  it('blocks a body-less create_pull_request — a PR must not publish with zero provenance', () => {
-    expect(checkGithubProvenance('mcp__github__create_pull_request', { title: 't', head: 'h', base: 'main' }, 'session_REAL')).toEqual({
+  it('blocks an MCP-API commit message with no provenance at all', () => {
+    expect(checkGithubProvenance(FILE, { message: 'docs: tweak' }, 'session_REAL')).toEqual({
       kind: 'missing',
-      tool: 'mcp__github__create_pull_request',
+      tool: FILE,
+      surface: 'commit',
       expected: 'session_REAL',
     })
   })
 
-  it('blocks a body-less issue CREATE but passes a body-less issue UPDATE', () => {
-    expect(checkGithubProvenance('mcp__github__issue_write', { method: 'create', title: 't' }, 'session_REAL')?.kind).toBe('missing')
-    expect(checkGithubProvenance('mcp__github__issue_write', { method: 'update', labels: ['bug'] }, 'session_REAL')).toBeNull()
+  it('a commit message carrying the URL but not as a trailer is malformed', () => {
+    expect(checkGithubProvenance(FILE, { message: 'docs: tweak (https://claude.ai/code/session_REAL)' }, 'session_REAL')?.kind).toBe(
+      'malformed',
+    )
   })
 
-  it('passes a body-less partial PR update and a bare approving review — neither must be wedged', () => {
+  it('passes a compliant commit message, and applies to push_files too', () => {
+    const message = `docs: tweak\n\n${trailer('session_REAL')}`
+    expect(checkGithubProvenance(FILE, { message }, 'session_REAL')).toBeNull()
+    expect(checkGithubProvenance('mcp__github__push_files', { files: [], message }, 'session_REAL')).toBeNull()
+  })
+
+  it('#692 last-match adjudication still governs commit messages', () => {
+    const message = `quoting ${trailer('session_OLD')}\n\nreal work\n\n${trailer('session_REAL')}`
+    expect(checkGithubProvenance(FILE, { message }, 'session_REAL')).toBeNull()
+  })
+
+  it('does NOT demand the header on a commit message — a commit renders no markdown', () => {
+    expect(checkGithubProvenance(FILE, { message: `docs: tweak\n\n${header('session_REAL')}` }, 'session_REAL')?.kind).toBe('malformed')
+  })
+})
+
+describe('fail-closed: unresolvable ground truth denies (2026-08-01 posture flip)', () => {
+  it('denies a bodied call when no ground truth is resolvable — the old behaviour passed it', () => {
+    for (const truth of [null, undefined]) {
+      expect(checkGithubProvenance(COMMENT, { body: `${header('session_ANY')}\n\nprose` }, truth)).toEqual({
+        kind: 'unverified',
+        tool: COMMENT,
+        surface: 'body',
+      })
+    }
+  })
+
+  it('still passes a legitimately text-less call even when unverifiable — the triage sweep must not wedge', () => {
+    expect(checkGithubProvenance('mcp__github__update_pull_request', { state: 'closed' }, null)).toBeNull()
+    expect(checkGithubProvenance('mcp__github__issue_write', { method: 'update', labels: ['bug'] }, null)).toBeNull()
+  })
+
+  it('the unverified message refuses to invite a hand-written id as the workaround', () => {
+    const msg = formatGuardMessage({ kind: 'unverified', tool: COMMENT, surface: 'body' })
+    expect(msg).toContain('fails CLOSED')
+    expect(msg).toMatch(/do not hand-write a session id/i)
+  })
+})
+
+describe('scope — what the guard must never police', () => {
+  it('passes a call with no text where that is legitimate', () => {
+    expect(checkGithubProvenance('mcp__github__issue_write', { method: 'update', labels: ['bug'] }, 'session_REAL')).toBeNull()
+    expect(checkGithubProvenance('mcp__github__issue_write', { method: 'update', body: '   ' }, 'session_REAL')).toBeNull()
     expect(checkGithubProvenance('mcp__github__update_pull_request', { state: 'closed' }, 'session_REAL')).toBeNull()
     expect(checkGithubProvenance('mcp__github__pull_request_review_write', { method: 'submit_pending', event: 'APPROVE' }, 'session_REAL')).toBeNull()
   })
 
-  it('only checks tools in the registry — an unrelated tool is never inspected', () => {
-    expect(
-      checkGithubProvenance('Bash', { command: 'echo "Claude-Session: session_WRONG"' }, 'session_REAL'),
-    ).toBeNull()
+  it('blocks a text-less call where text was required', () => {
+    expect(checkGithubProvenance('mcp__github__create_pull_request', { title: 't', head: 'h', base: 'main' }, 'session_REAL')?.kind).toBe(
+      'missing',
+    )
+    expect(checkGithubProvenance('mcp__github__issue_write', { method: 'create', title: 't' }, 'session_REAL')?.kind).toBe('missing')
   })
 
-  it('generalizes across the whole registry, not just add_issue_comment', () => {
-    for (const { tool } of GITHUB_PROVENANCE_TOOLS) {
-      const finding = checkGithubProvenance(
-        tool,
-        { body: 'Claude-Session: https://claude.ai/code/session_WRONG' },
-        'session_REAL',
-      )
-      expect(finding?.tool).toBe(tool)
+  it('never inspects a tool outside the registry', () => {
+    expect(checkGithubProvenance('Bash', { command: 'echo "Claude-Session: session_WRONG"' }, 'session_REAL')).toBeNull()
+  })
+
+  it('never throws on an unreadable tool_input or a non-string field', () => {
+    for (const input of [null, undefined, 'a string']) {
+      expect(checkGithubProvenance(COMMENT, input, 'session_REAL')).toBeNull()
     }
-  })
-
-  it('never throws on a null / non-object tool_input — nothing readable, so nothing policed', () => {
-    expect(checkGithubProvenance('mcp__github__add_issue_comment', null, 'session_REAL')).toBeNull()
-    expect(checkGithubProvenance('mcp__github__add_issue_comment', undefined, 'session_REAL')).toBeNull()
-    expect(checkGithubProvenance('mcp__github__add_issue_comment', 'a string', 'session_REAL')).toBeNull()
-  })
-
-  it('treats a non-string body as no body — so a body-required tool still reports missing, without throwing', () => {
-    expect(checkGithubProvenance('mcp__github__add_issue_comment', { body: 42 }, 'session_REAL')?.kind).toBe('missing')
+    expect(checkGithubProvenance(COMMENT, { body: 42 }, 'session_REAL')?.kind).toBe('missing')
     expect(checkGithubProvenance('mcp__github__update_pull_request', { body: 42 }, 'session_REAL')).toBeNull()
+  })
+
+  it('generalizes across the whole registry — every row reports against its own tool', () => {
+    for (const row of GITHUB_PROVENANCE_TOOLS) {
+      const field = row.field ?? 'body'
+      const finding = checkGithubProvenance(row.tool, { [field]: 'text naming https://claude.ai/code/session_WRONG' }, 'session_REAL')
+      expect(finding?.tool).toBe(row.tool)
+      expect(finding?.kind).toBe('mismatch')
+    }
   })
 })
 
-describe('the seed registry', () => {
-  it('carries every GitHub-writing tool that can post a body (issue #628 scope)', () => {
+describe('the registry and the live hook matcher must not drift', () => {
+  it('every registered tool is matched by the PreToolUse hook that invokes this guard', () => {
+    const settings = JSON.parse(readFileSync(join(root, '.claude', 'settings.json'), 'utf8'))
+    const entry = settings.hooks.PreToolUse.find((h: { hooks: { command: string }[] }) =>
+      h.hooks.some((c) => c.command.includes('github-provenance-guard.ts')),
+    )
+    expect(entry, 'no PreToolUse hook invokes github-provenance-guard.ts').toBeDefined()
+    const matched = new Set<string>(entry.matcher.split('|'))
+    // Both directions: an unmatched row is a silently unenforced rule, and a
+    // matched-but-unregistered tool pays hook latency for nothing.
+    expect([...GITHUB_PROVENANCE_TOOLS.map((r) => r.tool)].sort()).toEqual([...matched].sort())
+  })
+
+  it('carries both body-surface and commit-surface rows', () => {
     const names = GITHUB_PROVENANCE_TOOLS.map((r) => r.tool)
     expect(names).toEqual(
       expect.arrayContaining([
@@ -202,35 +238,49 @@ describe('the seed registry', () => {
         'mcp__github__pull_request_review_write',
         'mcp__github__add_comment_to_pending_review',
         'mcp__github__issue_write',
+        'mcp__github__create_or_update_file',
+        'mcp__github__push_files',
       ]),
     )
+    expect(GITHUB_PROVENANCE_TOOLS.filter((r) => r.surface === 'commit').map((r) => r.field)).toEqual(['message', 'message'])
   })
 })
 
-describe('formatGuardMessage()', () => {
+describe('formatGuardMessage() — the rule\'s only teaching surface', () => {
   it('names the offending tool, the found id, and the expected id', () => {
-    const msg = formatGuardMessage({
-      kind: 'mismatch',
-      tool: 'mcp__github__add_issue_comment',
-      found: 'session_WRONG',
-      expected: 'session_REAL',
-    })
-    expect(msg).toContain('issue #628')
-    expect(msg).toContain('mcp__github__add_issue_comment')
+    const msg = formatGuardMessage({ kind: 'mismatch', tool: COMMENT, surface: 'body', found: 'session_WRONG', expected: 'session_REAL' })
+    expect(msg).toContain(COMMENT)
     expect(msg).toContain('session_WRONG')
+    expect(msg).toContain('session_REAL')
+  })
+
+  it('prescribes the HEADER for a body and the TRAILER for a commit — never the wrong one', () => {
+    const body = formatGuardMessage({ kind: 'missing', tool: COMMENT, surface: 'body', expected: 'session_REAL' })
+    expect(body).toContain('\u{1F916} [')
+    expect(body).not.toContain('Co-Authored-By:')
+
+    const commit = formatGuardMessage({ kind: 'missing', tool: 'mcp__github__push_files', surface: 'commit', expected: 'session_REAL' })
+    expect(commit).toContain('Co-Authored-By:')
+    expect(commit).toContain('Claude-Session: https://claude.ai/code/session_REAL')
+    expect(commit).not.toContain('\u{1F916} [')
+  })
+
+  it('tells a malformed marker that only the shape is wrong, so the id is not retyped', () => {
+    const msg = formatGuardMessage({ kind: 'malformed', tool: COMMENT, surface: 'body', expected: 'session_REAL' })
+    expect(msg).toMatch(/only the shape and position change/i)
     expect(msg).toContain('session_REAL')
   })
 })
 
 describe('denyOutputFor() — the PreToolUse control object', () => {
   it('emits a deny decision for a finding', () => {
-    const out = denyOutputFor({ kind: 'mismatch', tool: 'mcp__github__add_issue_comment', found: 'session_WRONG', expected: 'session_REAL' })
+    const out = denyOutputFor({ kind: 'mismatch', tool: COMMENT, surface: 'body', found: 'session_WRONG', expected: 'session_REAL' })
     expect(out?.hookSpecificOutput.hookEventName).toBe('PreToolUse')
     expect(out?.hookSpecificOutput.permissionDecision).toBe('deny')
     expect(out?.hookSpecificOutput.permissionDecisionReason).toContain('session_REAL')
   })
 
-  it('emits nothing (null) for an allowed call, so the call proceeds untouched', () => {
+  it('emits nothing for an allowed call, so the call proceeds untouched', () => {
     expect(denyOutputFor(null)).toBeNull()
   })
 })
@@ -260,34 +310,28 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
     )
   }
 
-  /** Run the guard exactly as the PreToolUse hook would. Explicitly clears
-   *  `CLAUDE_CODE_REMOTE_SESSION_ID` — this repo's own sessions run inside a
-   *  Claude Code Remote container where that env var IS set, and
-   *  `resolveGroundTruthSessionId` prefers it over the transcript's own
-   *  `sessionId`. Without clearing it, these tests would silently resolve
-   *  ground truth from the real outer session instead of the fixture
-   *  transcript they construct. */
-  function runHook(payload: unknown): { hookSpecificOutput: Record<string, string> } | null {
+  /** Run the guard exactly as the PreToolUse hook would. Clears
+   *  `CLAUDE_CODE_REMOTE_SESSION_ID` by default — this repo's own sessions run
+   *  inside a Claude Code Remote container where it IS set, and
+   *  `resolveGroundTruthSessionId` prefers it over the transcript's `sessionId`.
+   *  Without clearing it these tests would silently resolve ground truth from
+   *  the real outer session instead of their fixture. */
+  function runHook(payload: unknown, remoteSessionId = ''): { hookSpecificOutput: Record<string, string> } | null {
     const out = execFileSync('pnpm', ['exec', 'tsx', SCRIPT], {
       cwd: root,
       input: JSON.stringify(payload),
       encoding: 'utf8',
-      env: { ...process.env, CLAUDE_CODE_REMOTE_SESSION_ID: '' },
+      env: { ...process.env, CLAUDE_CODE_REMOTE_SESSION_ID: remoteSessionId },
     }).trim()
     return out ? JSON.parse(out) : null
   }
 
-  it('END TO END: THE REGRESSION — blocks a fabricated footer resolved against the real transcript', () => {
+  it('END TO END #628: blocks a fabricated id resolved against the real transcript', () => {
     writeTranscript('session_REAL')
     const deny = runHook({
       hook_event_name: 'PreToolUse',
-      tool_name: 'mcp__github__add_issue_comment',
-      tool_input: {
-        owner: 'feffef',
-        repo: 'terrarium',
-        issue_number: 483,
-        body: 'fix applied\n\nClaude-Session: https://claude.ai/code/session_FABRICATED',
-      },
+      tool_name: COMMENT,
+      tool_input: { issue_number: 483, body: `${header('session_FABRICATED')}\n\nfix applied` },
       transcript_path: transcriptPath,
     })
     expect(deny?.hookSpecificOutput.permissionDecision).toBe('deny')
@@ -295,51 +339,85 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
     expect(deny?.hookSpecificOutput.permissionDecisionReason).toContain('session_REAL')
   })
 
-  it('END TO END: stays silent when the footer matches the resolved ground truth', () => {
-    writeTranscript('session_REAL')
-    const out = runHook({
-      hook_event_name: 'PreToolUse',
-      tool_name: 'mcp__github__add_issue_comment',
-      tool_input: { body: 'fix applied\n\nClaude-Session: https://claude.ai/code/session_REAL' },
-      transcript_path: transcriptPath,
-    })
-    expect(out).toBeNull()
-  })
-
-  it('END TO END: stays silent when no transcript_path is supplied (no ground truth resolvable)', () => {
-    const out = runHook({
-      hook_event_name: 'PreToolUse',
-      tool_name: 'mcp__github__add_issue_comment',
-      tool_input: { body: 'fix applied\n\nClaude-Session: https://claude.ai/code/session_FABRICATED' },
-    })
-    expect(out).toBeNull()
-  })
-
-  it('END TO END: THE #737 FIX — denies a bodied call carrying no session URL at all', () => {
+  it('END TO END #788: blocks the right id in the wrong shape', () => {
     writeTranscript('session_REAL')
     const deny = runHook({
       hook_event_name: 'PreToolUse',
-      tool_name: 'mcp__github__add_issue_comment',
-      tool_input: { body: 'just a plain comment, no provenance' },
+      tool_name: 'mcp__github__create_pull_request',
+      tool_input: { title: 't', head: 'h', base: 'main', body: '**Session:** https://claude.ai/code/session_REAL\n\nwork' },
       transcript_path: transcriptPath,
     })
+    expect(deny?.hookSpecificOutput.permissionDecision).toBe('deny')
+    expect(deny?.hookSpecificOutput.permissionDecisionReason).toContain('\u{1F916} [')
+  })
+
+  it('END TO END #723: blocks a fabricated id in an MCP-API commit message', () => {
+    writeTranscript('session_REAL')
+    const deny = runHook({
+      hook_event_name: 'PreToolUse',
+      tool_name: 'mcp__github__push_files',
+      tool_input: { branch: 'b', files: [], message: `docs: tweak\n\n${trailer('session_FABRICATED')}` },
+      transcript_path: transcriptPath,
+    })
+    expect(deny?.hookSpecificOutput.permissionDecision).toBe('deny')
+    expect(deny?.hookSpecificOutput.permissionDecisionReason).toContain('Co-Authored-By:')
+  })
+
+  it('END TO END: stays silent on a compliant body', () => {
+    writeTranscript('session_REAL')
+    expect(
+      runHook({
+        hook_event_name: 'PreToolUse',
+        tool_name: COMMENT,
+        tool_input: { body: `${header('session_REAL')}\n\nfix applied` },
+        transcript_path: transcriptPath,
+      }),
+    ).toBeNull()
+  })
+
+  it('END TO END: resolves ground truth from the env var with NO transcript_path at all', () => {
+    // The old main() returned early here without ever consulting the env var,
+    // so these calls went unchecked. Both halves matter: the compliant one must
+    // pass, and the fabricated one must now be caught.
+    expect(
+      runHook({ hook_event_name: 'PreToolUse', tool_name: COMMENT, tool_input: { body: `${header('session_REAL')}\n\nok` } }, 'cse_REAL'),
+    ).toBeNull()
+
+    const deny = runHook(
+      { hook_event_name: 'PreToolUse', tool_name: COMMENT, tool_input: { body: `${header('session_FABRICATED')}\n\nok` } },
+      'cse_REAL',
+    )
     expect(deny?.hookSpecificOutput.permissionDecision).toBe('deny')
     expect(deny?.hookSpecificOutput.permissionDecisionReason).toContain('session_REAL')
   })
 
-  it('END TO END: stays silent when the provenance header names the resolved ground truth', () => {
-    writeTranscript('session_REAL')
-    const out = runHook({
+  it('END TO END: denies when nothing can resolve ground truth (fail-closed)', () => {
+    const deny = runHook({
       hook_event_name: 'PreToolUse',
-      tool_name: 'mcp__github__add_issue_comment',
-      tool_input: { body: '\u{1F916} [Claude Opus 4.8](https://claude.ai/code/session_REAL)\n\nfix applied' },
-      transcript_path: transcriptPath,
+      tool_name: COMMENT,
+      tool_input: { body: `${header('session_ANY')}\n\nfix applied` },
     })
-    expect(out).toBeNull()
+    expect(deny?.hookSpecificOutput.permissionDecision).toBe('deny')
+    expect(deny?.hookSpecificOutput.permissionDecisionReason).toContain('fails CLOSED')
   })
 
-  it('END TO END: stays silent on non-JSON / empty stdin (fails open)', () => {
+  it('END TO END: denies an unparseable hook payload instead of waving it through', () => {
+    const out = execFileSync('pnpm', ['exec', 'tsx', SCRIPT], { cwd: root, input: '{not json', encoding: 'utf8' }).trim()
+    expect(JSON.parse(out).hookSpecificOutput.permissionDecision).toBe('deny')
+  })
+
+  it('END TO END: a bare manual run with no stdin is not a tool call, and stays silent', () => {
     const out = execFileSync('pnpm', ['exec', 'tsx', SCRIPT], { cwd: root, input: '', encoding: 'utf8' }).trim()
     expect(out).toBe('')
+  })
+})
+
+describe('the no-ground-truth edge of a required-but-empty body', () => {
+  it('never renders a literal `undefined` into the URL it tells the agent to paste', () => {
+    const finding = checkGithubProvenance('mcp__github__create_pull_request', { title: 't' }, null)
+    expect(finding).toEqual({ kind: 'missing', tool: 'mcp__github__create_pull_request', surface: 'body', expected: undefined })
+    const msg = formatGuardMessage(finding!)
+    expect(msg).not.toContain('undefined')
+    expect(msg).toMatch(/resolve the session URL from your system prompt/i)
   })
 })
