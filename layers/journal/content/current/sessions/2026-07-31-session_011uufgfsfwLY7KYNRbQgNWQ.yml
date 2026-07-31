@@ -1,0 +1,97 @@
+schemaVersion: 1
+session: session_011uufgfsfwLY7KYNRbQgNWQ
+startedAt: 2026-07-31T04:09:10Z
+endedAt: 2026-07-31T04:46:05Z
+kind: autonomous
+goal: Audit repo docs against code and each other
+status: completed
+outcome: "10 fact-checked fixes shipped, PR #782 merged"
+summary: "Entirely agent-initiated: fired by the /audit-docs scheduled Routine with no human prompt at any point. Followed the Skill's full recipe — branched off origin/main, inventoried and tiered every Live/Historical/Pack-generic doc surface, fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence), pooled 12 candidate findings, deduped overlaps by reading the underlying files myself, then dispatched one independent fact-checker that re-derived every claim from primary sources. Fixed all 10 CONFIRMED/CONFIRMED-BUT findings: trimmed two duplicated CLAUDE.md passages to pointers at docs/agents/provenance.md; extracted three self-acknowledged \"pending extraction\" environment-caveat bullets (plus two more from github-integration.md) into a new docs/agents/environment-caveats.md; stripped implementation-detail asides out of Midden's CONTEXT.md glossary to match sibling Tenants; deduped a twice-stated CLAUDE.md section; trimmed two stale-narration passages to rule-plus-pointer form; corrected a wrong factual claim in issue-tracker.md about ready-for-agent's label provenance; rewrote digest/SKILL.md and blog-post/SKILL.md's \"auto-merge\" language, which contradicted pr-workflow.md's explicit ban on enable_pr_auto_merge; and added the missing guest-build row to pr-workflow.md's \"complete list\" of merge-authority tiers. Correctly left 2 pooled findings unfixed (ruled WRONG by the fact-checker — legitimate index-with-pointers, or genuinely different-purpose docs). Gate green on retry. Opened PR #782 (no human-only surfaces touched), posted the verdict comment, and merged it via merge-pr.ts on the self-merge tier — landed clean, no review comments."
+prs:
+  - "782"
+docsRead:
+  - path: CLAUDE.md
+    reason: the doc-tier system and Ground rules being audited
+  - path: docs/agents/provenance.md
+    reason: verify single-home claim for identifier rule + footer format
+  - path: docs/agents/git-conventions.md
+    reason: verify self-acknowledged environment-caveat mis-location
+  - path: docs/agents/github-integration.md
+    reason: verify the second half of the environment-caveat mis-location
+  - path: docs/agents/issue-tracker.md
+    reason: verify the ready-for-agent label-provenance contradiction
+  - path: docs/agents/triage-labels.md
+    reason: primary source for ready-for-agent curated-set membership
+  - path: docs/agents/pr-workflow.md
+    reason: verify the auto-merge contradiction and the merge-tier ambiguity
+  - path: layers/midden/CONTEXT.md
+    reason: verify mis-location and stale-narration findings against sibling-Tenant convention
+  - path: .agents/skills/digest/SKILL.md
+    reason: verify + fix the auto-merge contradiction
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: verify + fix the auto-merge contradiction
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: verify the missing merge-tier ambiguity finding
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the entry-point Skill this scheduled run executed
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: Mistakenly called ScheduleWakeup (a /loop dynamic-mode tool) while waiting on parallel background review agents, in a plain scheduled (non-/loop) session — wrong tool for this context.
+    solution: Caught it before it could fire and cancelled with stop:true. Background Agent-tool completions already self-notify the session, so no wakeup/polling tool was needed at all here — worth a CLAUDE.md/doc callout if this mistake recurs across scheduled Skill runs.
+    severity: nit
+  - description: pnpm gate:scoped's first run failed with a 120000ms hook timeout in the L2 smoke Nuxt/Playwright browser setup, on a diff that only touched Markdown files.
+    solution: Retried once — passed clean (78/78) on the second run, confirming environmental flakiness rather than a regression from the doc edits.
+    severity: minor
+  - description: Two dispatched reviewer subagents' returned findings quoted CLAUDE.md prose about `permissions.allow`, which tripped the harness's instruction-pattern detector and wrapped their output in a neutralization notice.
+    solution: Verified the flagged text was genuinely just quoted CLAUDE.md content, not a prompt-injection attempt, before proceeding. No repo-side fix needed — noting it in case the pattern recurs on future audit-docs runs, since it could mask a real finding under repeated false positives.
+    severity: nit
+durationSec: 2215
+models:
+  claude-sonnet-5: 191
+toolCounts:
+  Bash: 31
+  ToolSearch: 4
+  mcp__github__list_pull_requests: 1
+  Agent: 5
+  ScheduleWakeup: 2
+  Read: 25
+  Edit: 21
+  Write: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - CLAUDE.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/git-conventions.md
+  - docs/agents/github-integration.md
+  - layers/midden/CONTEXT.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens doc audit (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens doc audit (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens doc audit (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens doc audit (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check pooled doc-audit findings
+gitBranch: claude/festive-mayer-jrimus
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: audit-docs
+learnings:
+  - digest/SKILL.md and blog-post/SKILL.md both independently drifted into the same "auto-merge" misnomer for their landing step — a sign that a Skill describing its own PR-landing mechanics should quote pr-workflow.md's ban verbatim (or just point to it) rather than paraphrasing it, since paraphrases of the same rule drift independently in more than one place.
