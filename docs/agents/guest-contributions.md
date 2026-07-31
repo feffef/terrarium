@@ -51,8 +51,8 @@ approves the workflow run.
 - **Self-improvement mining ignores it; ideas still surface.** See `CONTEXT.md`'s
   **Session** glossary term for the exact mining-exclusion and Sparks-feed
   behavior (ADR-0009 amendment, 2026-07-22).
-- **Provenance footer (ADR-0017)** on every agent-authored GitHub interaction,
-  the same two lines we use.
+- **Provenance marker (ADR-0017)** on every agent-authored GitHub interaction,
+  the same marker we use.
 - **Merge is human-only.** A fork PR is Public; the owner reviews and merges by
   hand — no auto-merge (ADR-0020, ADR-0003, ADR-0004).
 

@@ -14,13 +14,13 @@ carry it, on two different surfaces, and they are not interchangeable:
 
 Moved out of `CLAUDE.md` so that file could stay an index (the same treatment
 `pr-workflow.md` got in #448). This
-doc is deliberately *not* split along a git/GitHub line: the same footer rule
+doc is deliberately *not* split along a git/GitHub line: the same provenance rule
 spans local commits, GitHub posts, and commits made through the GitHub API, and
 the coverage map below is only legible whole. Splitting it is what produced
 #605 (the commit-trailer guard can't see GitHub surfaces) and its recurrence
 #628 two days later.
 
-ADR-0017 remains the single home for *scope* — what the footer covers and why
+ADR-0017 remains the single home for *scope* — what provenance covers and why
 it is convention rather than gate-enforced. This doc holds the mechanics.
 
 ## The rules
@@ -85,9 +85,11 @@ One further gap worth holding in mind:
   works, so you should rarely need to amend by hand — but glance that a
   commit's footer actually landed rather than assuming it.
 
-**A call with no body field at all is passed deliberately** — a label- or
-state-only `issue_write` has nothing to stamp, and denying it would wedge the
-triage sweep. Only a body that exists is policed.
+**A call with no body is judged per tool**, via `bodyRequired` on the registry
+row. A comment or a `create_pull_request` / `issue_write` *create* must carry one,
+so a body-less PR can't publish with zero provenance; a partial `update_pull_request`,
+a label- or state-only `issue_write` *update*, and a bare approving review legitimately
+have none and are passed, so the triage sweep is never wedged.
 
 ## Remedies, which differ by surface
 

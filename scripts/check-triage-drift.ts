@@ -13,10 +13,13 @@
 // write runs under the human owner's own connection (ADR-0017), so an
 // AI-authored comment and the owner's own comment both show
 // `author_association: OWNER` under the same login. The only reliable signal
-// is the ADR-0017 provenance footer every AI-authored comment carries
-// (`Co-Authored-By: ... <noreply@anthropic.com>`) — its *absence* means human,
-// matching the existing `auto-triage` convention rather than inventing a
-// second one.
+// is the ADR-0017 authorship marker every AI-authored comment carries — the
+// provenance header today, the legacy two-line footer historically, or the
+// harness's own footer (`hasAuthorshipMarker`, single-homed in
+// `provenance-header.ts`) — its *absence* means human, matching the existing
+// `auto-triage` convention rather than inventing a second one. Note it is
+// deliberately NOT "contains a session URL": a human pasting one in prose must
+// not read as agent-authored, or this pipeline never answers them.
 //
 // The claimed-transition check is deliberately a small, literal phrase list
 // (issue #507's own scoping: "lightweight semantic check ... not an NLP
@@ -45,7 +48,7 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { hasProvenance } from './provenance-header.ts'
+import { hasAuthorshipMarker } from './provenance-header.ts'
 import {
   decodeHtmlEntities,
   envToken,
@@ -105,25 +108,18 @@ export interface FlaggedIssue {
 
 // ── Pure core (unit-tested) ─────────────────────────────────────────────────
 
-/** The legacy ADR-0017 two-line footer, carried by every AI-authored comment
- *  posted before the 2026-07-31 amendment moved the convention to a header.
- *  Still matched, and permanently: nothing is backfilled (ADR-0017's
- *  "asymmetric history" consequence), so historical comments would otherwise
- *  silently stop reading as AI-authored. Case-insensitive: git trailers
- *  conventionally use `Co-authored-by`, GitHub's own rendering doesn't
- *  normalize case, and neither should this check. */
-const LEGACY_PROVENANCE_FOOTER = /co-authored-by:.*noreply@anthropic\.com/i
-
-/** True when `commentBody` carries ADR-0017 provenance in any recognized shape
- *  — see the header comment above for why this, not `author_association`, is
- *  the authorship signal.
+/** True when `commentBody` carries an ADR-0017 authorship marker in any
+ *  recognized shape — see the header comment above for why this, not
+ *  `author_association`, is the authorship signal.
  *
- *  Load-bearing beyond drift detection: `guest-intake-scan.ts` uses this to
- *  skip the pipeline's OWN prior replies, so a shape this misses would make the
- *  intake loop re-answer itself. Hence both the current header (via
- *  `hasProvenance`, which reads any full session URL) and the legacy footer. */
+ *  Load-bearing in both directions, which is why it delegates to
+ *  `hasAuthorshipMarker` rather than "contains a session URL":
+ *  `guest-intake-scan.ts` skips the pipeline's own prior replies on this
+ *  signal, so a miss makes the intake loop re-answer itself — and a false
+ *  positive silently drops a real human comment that merely pasted a session
+ *  URL, never answering them at all. */
 export function isAiAuthored(commentBody: string): boolean {
-  return hasProvenance(commentBody) || LEGACY_PROVENANCE_FOOTER.test(commentBody)
+  return hasAuthorshipMarker(commentBody)
 }
 
 /** The phrasings this repo's AI-authored comments actually use to assert a

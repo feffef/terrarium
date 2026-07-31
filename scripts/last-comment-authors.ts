@@ -9,7 +9,7 @@
 // This script fetches the same data `check-triage-drift.ts` does, but emits
 // only the compact fields a sweep needs — issue number, the last commenter's
 // login, their `author_association`, the comment's timestamp, and whether it
-// carries the ADR-0017 provenance footer — never the comment body itself.
+// carries an ADR-0017 authorship marker — never the comment body itself.
 //
 // Fetch strategy mirrors `check-triage-drift.ts` (issue #637's own
 // instruction to reuse it): `gh api` when the `gh` binary is present,
@@ -23,7 +23,7 @@
 //   Checks up to N open issues (default 50, newest-updated-first) and prints
 //   one compact record per issue that has at least one comment as JSON:
 //   { number, lastCommenterLogin, authorAssociation, commentCreatedAt,
-//     hasProvenanceFooter, commentUrl }. An issue with no comments is
+//     hasProvenance, commentUrl }. An issue with no comments is
 //   omitted rather than padded with nulls.
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
@@ -65,7 +65,7 @@ export interface LastCommentAuthor {
   lastCommenterLogin: string
   authorAssociation: string
   commentCreatedAt: string
-  hasProvenanceFooter: boolean
+  hasProvenance: boolean
   commentUrl: string
 }
 
@@ -86,7 +86,7 @@ export function toLastCommentAuthor(
     lastCommenterLogin: last.user?.login ?? '(unknown)',
     authorAssociation: last.author_association,
     commentCreatedAt: last.created_at,
-    hasProvenanceFooter: isAiAuthored(last.body),
+    hasProvenance: isAiAuthored(last.body),
     commentUrl: last.html_url,
   }
 }

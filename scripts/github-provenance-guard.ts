@@ -60,6 +60,12 @@ const SESSION_TRAILER_GLOBAL = new RegExp(SESSION_TRAILER.source, 'g')
 export interface ProvenanceTool {
   tool: string
   bodyField?: string
+  /** Whether THIS call must carry a body at all. Default: always. Set it for a
+   *  tool whose call can legitimately have none — a label- or state-only
+   *  `issue_write` update, an approve-without-comment review — so the guard
+   *  never wedges those. Without it, "no body" was an unconditional pass, which
+   *  let a body-less `create_pull_request` post with zero provenance. */
+  bodyRequired?: (input: Record<string, unknown>) => boolean
 }
 
 /** The registry: every GitHub MCP tool that writes a comment, issue, PR, or
@@ -71,13 +77,19 @@ export interface ProvenanceTool {
  *  surface, not this one — see `docs/agents/provenance.md`'s coverage map for
  *  that still-open hole. */
 export const GITHUB_PROVENANCE_TOOLS: readonly ProvenanceTool[] = [
+  // A comment IS its body — one with none is malformed, not exempt.
   { tool: 'mcp__github__add_issue_comment' },
   { tool: 'mcp__github__add_reply_to_pull_request_comment' },
-  { tool: 'mcp__github__create_pull_request' },
-  { tool: 'mcp__github__update_pull_request' },
-  { tool: 'mcp__github__pull_request_review_write' },
   { tool: 'mcp__github__add_comment_to_pending_review' },
-  { tool: 'mcp__github__issue_write' },
+  // `body` is optional in the schema, but a PR published with an empty
+  // description is exactly the #737 case — both observed misses were PR bodies.
+  { tool: 'mcp__github__create_pull_request' },
+  // Creating an issue publishes prose; updating one may only touch labels/state.
+  { tool: 'mcp__github__issue_write', bodyRequired: (input) => input.method === 'create' },
+  // Partial updates (title, base, state) carry no body and must not be wedged.
+  { tool: 'mcp__github__update_pull_request', bodyRequired: () => false },
+  // A review can be submitted with no comment (a bare approval).
+  { tool: 'mcp__github__pull_request_review_write', bodyRequired: () => false },
 ]
 
 /** `missing` — no session URL at all (issue #737); `mismatch` — a session URL
@@ -107,9 +119,14 @@ export function checkGithubProvenance(
   const entry = registry.find((r) => r.tool === toolName)
   if (!entry) return null
   if (toolInput === null || typeof toolInput !== 'object') return null
-  const body = (toolInput as Record<string, unknown>)[entry.bodyField ?? 'body']
-  // A call with no body carries nothing to stamp — not a violation (header).
-  if (typeof body !== 'string' || body.trim() === '') return null
+  const input = toolInput as Record<string, unknown>
+  const body = input[entry.bodyField ?? 'body']
+  if (typeof body !== 'string' || body.trim() === '') {
+    // No body: a violation only for a call that should have published prose.
+    return (entry.bodyRequired ?? (() => true))(input)
+      ? { kind: 'missing', tool: toolName, expected: groundTruthId }
+      : null
+  }
 
   // Adjudicated most-canonical slot first, so a body that HAS a designated
   // provenance slot is judged on that slot alone — a body may legitimately
@@ -117,7 +134,7 @@ export function checkGithubProvenance(
   // neither satisfy nor break the check.
   const header = readProvenanceHeader(body)
   if (header) {
-    const found = sessionIdsIn(header.sessionUrl)[0]
+    const found = header.sessionId
     return found === groundTruthId ? null : { kind: 'mismatch', tool: toolName, found, expected: groundTruthId }
   }
 

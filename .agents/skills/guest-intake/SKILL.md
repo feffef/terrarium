@@ -55,10 +55,10 @@ recent comment, or the body if there are none) and act only when it is
   carrying ADR-0017 provenance. This is the idempotency guard (same as
   `auto-triage`): once it has responded, the issue stays quiet until the guest
   writes again, so a tight loop is cheap.
-- **An `OWNER` comment _without_ the footer is the owner steering** — a Trusted
+- **An `OWNER` comment _without_ an ADR-0017 marker is the owner steering** — a Trusted
   override (ADR-0020). Obey it (e.g. "just build this" → `ready-for-agent`;
   "reject this" → close or `ready-for-human`) and do not interview the owner.
-  Why the footer's absence, not the `OWNER` association, is what marks a real
+  Why the marker's absence, not the `OWNER` association, is what marks a real
   owner comment: see `auto-triage/SKILL.md`'s eligibility section.
 
 ## The bounded interview — bounded, not a relentless grilling
@@ -71,7 +71,7 @@ with a guest is neither, so this Skill is **bounded**:
 - **≤3 rounds total**, and fewer when the idea is already clear — a simple,
   well-formed request skips straight to the confirmation summary with **zero**
   question rounds. Count rounds from this Skill's own prior question-comments in
-  the thread (each carries the footer).
+  the thread (each carries the marker).
 - **Apply `needs-info` the moment you first engage a guest issue** — with the
   first question round (or immediately, before it, for a still-unlabelled issue)
   — so the ticket visibly enters the intake state machine from the start. Keep it

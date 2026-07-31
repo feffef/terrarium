@@ -10,12 +10,12 @@
 // Deliberate scope split: this script only *classifies* — it fetches every
 // open issue's newest activity and buckets it into a stage per
 // `.agents/skills/guest-intake/SKILL.md`'s authorship rules (Public
-// `author_association` = guest, Trusted without the ADR-0017 footer = owner
-// steering, footer present = this pipeline's own prior reply). It does not
+// `author_association` = guest, Trusted without an ADR-0017 marker = owner
+// steering, marker present = this pipeline's own prior reply). It does not
 // interview, comment, or label — that judgment (reading a guest's actual
 // words, deciding round count, running the ADR-0023 safety screen) stays with
 // the calling agent. Only the `guest-activity` and `owner-steering` buckets
-// carry full body text in the output; `agent-footer-skip` (the idempotency
+// carry full body text in the output; `agent-authored-skip` (the idempotency
 // guard — already answered, waiting on the guest) is collapsed to a count, so
 // a quiet pass — the common case — returns a handful of bytes instead of
 // every issue's full comment history.
@@ -23,11 +23,11 @@
 // Scan cursor (issue #569): a "newest activity only" check can silently skip
 // a real OWNER comment that lands between two of the agent's own rapid
 // replies — the *overall* newest comment ends up being the agent's own later
-// footer reply, which the idempotency guard then treats as "already
+// marked reply, which the idempotency guard then treats as "already
 // answered," burying the owner comment in between. To catch that, each scan
 // persists a per-issue cursor (the newest comment `created_at` this scan
 // pass has accounted for, in a local gitignored state file — see "Cursor
-// state" below) and surfaces any OWNER-authored, non-footer comment newer
+// state" below) and surfaces any OWNER-authored, unmarked comment newer
 // than that cursor, not just the single newest comment overall.
 //
 // Fetch strategy: same `gh`-then-REST-fallback split as `check-triage-drift.ts`
@@ -36,7 +36,7 @@
 // Usage:  tsx scripts/guest-intake-scan.ts [N]
 //   Scans up to N open issues (default 100) and prints a `ScanReport` JSON:
 //   { scannedCount, counts: {guest-activity, owner-steering,
-//   agent-footer-skip, unrecognized-association}, actionable: ScannedIssue[] }
+//   agent-authored-skip, unrecognized-association}, actionable: ScannedIssue[] }
 //
 // Also skips an issue already carrying the `guest-in-flight` marker
 // (issue #570) whose age can't be shown stale — another session may be
@@ -109,7 +109,7 @@ export const TRUSTED_ASSOCIATIONS = new Set(['OWNER', 'MEMBER', 'COLLABORATOR'])
 
 /** The classification `guest-intake`'s authorship rules reduce every issue's
  *  newest activity to. */
-export type Stage = 'guest-activity' | 'owner-steering' | 'agent-footer-skip' | 'unrecognized-association'
+export type Stage = 'guest-activity' | 'owner-steering' | 'agent-authored-skip' | 'unrecognized-association'
 
 /** An issue's newest activity — its most recent comment, or its own body when
  *  it has no comments — with HTML entities already decoded. */
@@ -123,14 +123,14 @@ export interface Activity {
 
 /** One scanned issue: its stage plus enough to act on it without a further
  *  fetch — full newest-activity text, and how many prior comments already
- *  carry the ADR-0017 footer (for the Skill's own "≤3 rounds" count). */
+ *  carry an ADR-0017 authorship marker (for the Skill's own "≤3 rounds" count). */
 export interface ScannedIssue {
   number: number
   title: string
   labels: string[]
   stage: Stage
   newestActivity: Activity
-  priorFooterCommentCount: number
+  priorAgentCommentCount: number
 }
 
 /** The scan's full result: a per-stage count (cheap to skim even for a large
@@ -165,14 +165,14 @@ export function newestActivity(issue: RawIssueRecord, comments: RawCommentRecord
   }
 }
 
-/** Classify one activity per `guest-intake`'s rules: the ADR-0017 footer
+/** Classify one activity per `guest-intake`'s rules: the ADR-0017 marker
  *  always wins first (it marks this pipeline's own prior reply, regardless of
  *  the shared-connection `author_association` it lands under — see
  *  `check-triage-drift.ts`'s header for why the footer, not the association,
  *  is the authorship signal); otherwise Public is a guest, Trusted is the
  *  owner steering. */
 export function classifyActivity(activity: Activity): Stage {
-  if (isAiAuthored(activity.body)) return 'agent-footer-skip'
+  if (isAiAuthored(activity.body)) return 'agent-authored-skip'
   if (PUBLIC_ASSOCIATIONS.has(activity.authorAssociation)) return 'guest-activity'
   if (TRUSTED_ASSOCIATIONS.has(activity.authorAssociation)) return 'owner-steering'
   return 'unrecognized-association'
@@ -186,7 +186,7 @@ export function classifyActivity(activity: Activity): Stage {
  *  issue's entire history: the alternative — treating "no cursor" as "every
  *  comment ever" — would re-surface an owner comment from long ago as
  *  perpetually actionable on every cursor-less scan, even one a later
- *  (non-footer-carrying, so invisible to this filter) human action already
+ *  (unmarked, so invisible to this filter) human action already
  *  resolved. */
 export function commentsSinceCursor(comments: RawCommentRecord[], cursor: string | null): RawCommentRecord[] {
   if (cursor === null) return []
@@ -194,7 +194,7 @@ export function commentsSinceCursor(comments: RawCommentRecord[], cursor: string
 }
 
 /** The newest real OWNER comment (Trusted `author_association`, no ADR-0017
- *  footer — see `classifyActivity`) among the comments newer than `cursor`,
+ *  marker — see `classifyActivity`) among the comments newer than `cursor`,
  *  or `null` when none qualify (including whenever `cursor` is `null` itself
  *  — see `commentsSinceCursor`). See the header comment for issue #569's fix
  *  this implements.
@@ -246,7 +246,7 @@ export function scanIssue(rawIssue: RawIssueRecord, rawComments: RawCommentRecor
     labels: rawIssue.labels.map((label) => (typeof label === 'string' ? label : label.name)),
     stage: classifyActivity(activity),
     newestActivity: activity,
-    priorFooterCommentCount: comments.filter((c) => isAiAuthored(c.body)).length,
+    priorAgentCommentCount: comments.filter((c) => isAiAuthored(c.body)).length,
   }
 }
 
@@ -257,7 +257,7 @@ export function buildReport(scanned: ScannedIssue[]): ScanReport {
   const counts: Record<Stage, number> = {
     'guest-activity': 0,
     'owner-steering': 0,
-    'agent-footer-skip': 0,
+    'agent-authored-skip': 0,
     'unrecognized-association': 0,
   }
   for (const issue of scanned) counts[issue.stage]++

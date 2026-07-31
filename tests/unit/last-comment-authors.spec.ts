@@ -39,7 +39,7 @@ describe('toLastCommentAuthor()', () => {
       lastCommenterLogin: 'feffef',
       authorAssociation: 'OWNER',
       commentCreatedAt: AI_COMMENT.created_at,
-      hasProvenanceFooter: true,
+      hasProvenance: true,
       commentUrl: AI_COMMENT.html_url,
     })
   })
@@ -51,7 +51,7 @@ describe('toLastCommentAuthor()', () => {
       lastCommenterLogin: 'someuser',
       authorAssociation: 'CONTRIBUTOR',
       commentCreatedAt: HUMAN_COMMENT.created_at,
-      hasProvenanceFooter: false,
+      hasProvenance: false,
       commentUrl: HUMAN_COMMENT.html_url,
     })
   })

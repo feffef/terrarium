@@ -97,7 +97,7 @@ each recipe class to its MCP equivalent:
   to ready-for-agent` while the issue stayed `ready-for-human`) — nothing
   catches that mismatch automatically. `tsx scripts/check-triage-drift.ts [N]`
   cross-checks each open issue's most recent AI-authored comment (detected via
-  the ADR-0017 provenance footer, not `author_association` — see the script's
+  an ADR-0017 authorship marker, not `author_association` — see the script's
   header comment for why that field can't be trusted here) against a small
   phrase list for the five canonical labels, and prints the mismatches as JSON
   (issue #507). It is a standalone check today, not yet wired into any

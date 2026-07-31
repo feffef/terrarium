@@ -60,7 +60,7 @@ describe('checkGithubProvenance() — the pure core (issue #628)', () => {
 
   it('#737 scope guard: a call with NO body field is still passed — a label-only issue_write must not be wedged', () => {
     expect(checkGithubProvenance('mcp__github__issue_write', { method: 'update', labels: ['bug'] }, 'session_REAL')).toBeNull()
-    expect(checkGithubProvenance('mcp__github__issue_write', { body: '   ' }, 'session_REAL')).toBeNull()
+    expect(checkGithubProvenance('mcp__github__issue_write', { method: 'update', body: '   ' }, 'session_REAL')).toBeNull()
   })
 
   it('accepts the provenance header as the canonical slot', () => {
@@ -135,6 +135,32 @@ describe('checkGithubProvenance() — the pure core (issue #628)', () => {
     })
   })
 
+  it('THE ANCHOR: a body quoting another agent post, with its own header first, passes (#692 class)', () => {
+    const mine = '\u{1F916} [Claude Opus 5](https://claude.ai/code/session_REAL)'
+    const quoted = '\u{1F916} [Claude Opus 5](https://claude.ai/code/session_OLD)'
+    expect(checkGithubProvenance('mcp__github__add_issue_comment', { body: `${mine}\n\nEvidence:\n\n${quoted}` }, 'session_REAL')).toBeNull()
+    // ...and the reverse order must not flip the verdict, which /m anchoring did.
+    expect(checkGithubProvenance('mcp__github__add_issue_comment', { body: `Evidence:\n\n${quoted}\n\n${mine}` }, 'session_REAL')).toBeNull()
+  })
+
+  it('blocks a body-less create_pull_request — a PR must not publish with zero provenance', () => {
+    expect(checkGithubProvenance('mcp__github__create_pull_request', { title: 't', head: 'h', base: 'main' }, 'session_REAL')).toEqual({
+      kind: 'missing',
+      tool: 'mcp__github__create_pull_request',
+      expected: 'session_REAL',
+    })
+  })
+
+  it('blocks a body-less issue CREATE but passes a body-less issue UPDATE', () => {
+    expect(checkGithubProvenance('mcp__github__issue_write', { method: 'create', title: 't' }, 'session_REAL')?.kind).toBe('missing')
+    expect(checkGithubProvenance('mcp__github__issue_write', { method: 'update', labels: ['bug'] }, 'session_REAL')).toBeNull()
+  })
+
+  it('passes a body-less partial PR update and a bare approving review — neither must be wedged', () => {
+    expect(checkGithubProvenance('mcp__github__update_pull_request', { state: 'closed' }, 'session_REAL')).toBeNull()
+    expect(checkGithubProvenance('mcp__github__pull_request_review_write', { method: 'submit_pending', event: 'APPROVE' }, 'session_REAL')).toBeNull()
+  })
+
   it('only checks tools in the registry — an unrelated tool is never inspected', () => {
     expect(
       checkGithubProvenance('Bash', { command: 'echo "Claude-Session: session_WRONG"' }, 'session_REAL'),
@@ -152,11 +178,15 @@ describe('checkGithubProvenance() — the pure core (issue #628)', () => {
     }
   })
 
-  it('never throws on a null / non-object tool_input, or a non-string body', () => {
+  it('never throws on a null / non-object tool_input — nothing readable, so nothing policed', () => {
     expect(checkGithubProvenance('mcp__github__add_issue_comment', null, 'session_REAL')).toBeNull()
     expect(checkGithubProvenance('mcp__github__add_issue_comment', undefined, 'session_REAL')).toBeNull()
     expect(checkGithubProvenance('mcp__github__add_issue_comment', 'a string', 'session_REAL')).toBeNull()
-    expect(checkGithubProvenance('mcp__github__add_issue_comment', { body: 42 }, 'session_REAL')).toBeNull()
+  })
+
+  it('treats a non-string body as no body — so a body-required tool still reports missing, without throwing', () => {
+    expect(checkGithubProvenance('mcp__github__add_issue_comment', { body: 42 }, 'session_REAL')?.kind).toBe('missing')
+    expect(checkGithubProvenance('mcp__github__update_pull_request', { body: 42 }, 'session_REAL')).toBeNull()
   })
 })
 
