@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019gqLV9BAyjsKmjYYdM7gaL
 startedAt: 2026-08-01T10:11:10Z
-endedAt: 2026-08-01T10:29:25Z
+endedAt: 2026-08-01T10:31:41Z
 kind: interactive
 goal: Give scheduled Skills their own importance grade
-status: in-review
-outcome: New `routine` grade shipped; PR open, CI green
-summary: "Human-instructed throughout: the user observed that the Skills run by scheduled Routines were graded `specialist`, said they are really the daily routine, and explicitly authorised introducing a new category if none fit. Scanned five days of session logs to identify the set from evidence — digest, audit-docs, audit-skills, blog-post (all `specialist`) plus frictions-to-fixes (`essential`). Clarified that `specialist` is an `importance` value, not `category`, and added a fifth grade `routine` between `essential` and `specialist` — defined in CONTEXT.md, amended into ADR-0015, taught to audit-skills, wired through schema, type, ordering and the inventory component. Pulling frictions-to-fixes off `essential` was my own judgement call, flagged to the user as reversible. Gate green; live-DOM probe confirmed the render."
+status: completed
+outcome: New `routine` grade merged into the Skill Inventory
+summary: "Human-instructed throughout: the user observed that the Skills run by scheduled Routines were graded `specialist`, said they are really the daily routine, and explicitly authorised introducing a new category if none fit. Scanned five days of session logs to identify the set from evidence — digest, audit-docs, audit-skills, blog-post (all `specialist`) plus frictions-to-fixes (`essential`). Clarified that `specialist` is an `importance` value, not `category`, and added a fifth grade `routine` between `essential` and `specialist` — defined in CONTEXT.md, amended into ADR-0015, taught to audit-skills, wired through schema, type, ordering and the inventory component. Pulling frictions-to-fixes off `essential` was my own judgement call, flagged to the user as reversible. Gate green; live-DOM probe confirmed the render. PR #803 merged by a human, as required for a change touching docs/adr/."
 prs:
   - "803"
 docsRead:
@@ -44,13 +44,13 @@ frictions:
   - description: The Stop hook flagged uncommitted changes mid-task, while edits were deliberately still in progress and not yet in a committable state.
     solution: Nothing to fix in-repo; noting it because the signal reads as a defect when the session is simply mid-edit rather than winding down.
     severity: nit
-durationSec: 1094
+durationSec: 1231
 models:
-  claude-opus-5: 103
+  claude-opus-5: 113
 toolCounts:
-  Bash: 32
+  Bash: 34
   Read: 9
-  Edit: 13
+  Edit: 15
   Write: 2
   ToolSearch: 2
   mcp__github__search_pull_requests: 1
@@ -59,6 +59,7 @@ toolCounts:
   mcp__github__pull_request_read: 2
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/tenant.config.ts
   - layers/journal/app/types/journal.ts
