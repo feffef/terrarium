@@ -8,6 +8,11 @@
 // The extraction is a pure function over parsed records (unit-tested); the file
 // IO is a thin shell. Read-tool paths are the only source of `filesRead` — a
 // `cat`/`grep` inspection is invisible here by design (see the ADR amendment).
+// `docsRead` (and any other Read-tool-derived count) reflects ONLY this
+// session's own direct tool calls — a subagent's Read calls never appear in
+// this transcript, so these counts are a floor, not a complete count; treat
+// them accordingly downstream (including in the `frictions-to-fixes` Skill,
+// which mines these fields to rank frictions — issue #796).
 //
 // `skillsUsed` has two derived sources: `Skill` tool_use blocks, and slash-command
 // expansions in user turns (`<command-name>`). The second exists because a Skill

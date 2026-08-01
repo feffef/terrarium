@@ -22,13 +22,20 @@ new; don't re-diagnose any of these as a fresh problem.
   commit — can silently fail to produce a signature regardless of
   author-email correctness. Platform/environment limitation, not a repo bug:
   don't re-diagnose it as one each session.
-- **`CronCreate`/`CronList` state (session-only, in-memory) can silently empty
-  across a session-resume event**, silently dropping a recurring `/loop` job
-  with no error and no notification (observed dropping a `/guest-build` loop
-  mid-run). A session relying on a `/loop`/`CronCreate` job should periodically
-  re-verify it's still registered via `CronList` rather than assuming it
-  persists for its full stated lifetime. Platform/environment limitation, not
-  a repo bug: don't re-diagnose it as one each session (issue #571).
+- **Session-only, in-memory state can silently empty across a session-resume
+  event**, with no error and no notification. Observed in two independent
+  forms: `CronCreate`/`CronList` state dropping a recurring `/loop` job mid-run
+  (a `/guest-build` loop, issue #571), and a **backgrounded `Agent`-tool
+  subagent** being silently killed by the orchestrating session's own resume
+  event — the #773 impl agent's backgrounded process died ~4h after dispatch,
+  with no error and no notification, only discovered because a human asked
+  whether it was still running (issue #794). A session relying on a
+  `/loop`/`CronCreate` job should periodically re-verify it's still registered
+  via `CronList` rather than assuming it persists for its full stated
+  lifetime; likewise, after a session resumes, proactively re-verify any
+  outstanding backgrounded subagent's liveness rather than assuming it
+  survived the resume. Platform/environment limitation, not a repo bug: don't
+  re-diagnose it as one each session (issues #571, #794).
 - **Any `mcp__Claude_Code_Remote__*` call — not just `send_later` — can fail
   with a transient "permission stream closed before response received"
   error.** Converged workaround (mirrors the poll-until-green pattern in
