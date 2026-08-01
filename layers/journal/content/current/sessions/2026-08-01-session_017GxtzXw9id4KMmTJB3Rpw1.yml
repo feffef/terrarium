@@ -1,0 +1,94 @@
+schemaVersion: 1
+session: session_017GxtzXw9id4KMmTJB3Rpw1
+startedAt: 2026-08-01T05:13:00Z
+endedAt: 2026-08-01T05:37:49Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: completed
+outcome: "5 findings fixed and fact-checked, PR #802 merged"
+summary: "Entirely agent-initiated: fired by a scheduled Routine with no human prompt this turn, running the /audit-docs Skill end to end. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the Live-tier docs; two lenses (Freshness, Concision) returned empty, Single-home found 3 duplications and Coherence found 1 ambiguity + 1 contradiction. An independent checker agent confirmed all 5 (2 with minor line-range corrections) against primary sources. Fixed all 5 in place — none touched a human-only surface, so no needs-triage issue was filed. pnpm gate:scoped went green (build + 78/78 e2e), PR #802 was opened, reviewed with a verdict comment, and merged via merge-pr.ts on a green CI gate, confirmed on origin/main."
+prs:
+  - "802"
+docsRead:
+  - path: CLAUDE.md
+    reason: governs the whole audit — tier definitions, single-home rule, gate/PR discipline
+  - path: .claude/skills/audit-docs/SKILL.md
+    reason: the Skill this run executes
+  - path: CONTEXT-MAP.md
+    reason: verified as the designated home for the derives-vs-denormalizes contrast (finding 2)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: verified guest-build's no-merge claim (finding 4)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (read before editing)
+  - path: layers/atlas/CONTEXT.md
+    reason: (read before editing)
+  - path: layers/blog/CONTEXT.md
+    reason: (read before editing)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: the Skill invoked this run
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Ran `git reset --hard origin/main` to align the pre-existing branch before checking `git status` first, against CLAUDE.md's explicit pre-reset-hard checklist.
+    solution: Run `git status` before any `git reset --hard` unconditionally, even when the branch looks freshly checked out. (Turned out benign here — no uncommitted work existed — but the sequencing was wrong.)
+    severity: nit
+  - description: Piped a long-running `pnpm gate:scoped` through `| tail -100`, which CLAUDE.md explicitly warns against since it loses the real command's exit status behind tail's.
+    solution: Redirect long-running/state-changing commands to a file and check `$?` directly instead of piping through tail/head, per CLAUDE.md's own git-conventions guidance. (No actual harm — the background-task notification separately reported the true exit code — but the practice itself was the violation.)
+    severity: nit
+  - description: "Passed `run_in_background: false` to the Agent tool for all 4 lens-review agents and the fact-checker expecting synchronous foreground execution, but they all launched as background async agents anyway."
+    solution: Treat Agent tool calls as background-by-default regardless of run_in_background, and plan for waiting on task-notifications rather than expecting inline results.
+    severity: nit
+durationSec: 1488
+models:
+  claude-sonnet-5: 159
+toolCounts:
+  Bash: 24
+  ToolSearch: 4
+  Glob: 5
+  mcp__github__search_pull_requests: 1
+  TaskCreate: 7
+  TaskUpdate: 13
+  Agent: 5
+  ScheduleWakeup: 2
+  Read: 14
+  Edit: 8
+  Grep: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_review_write: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  PushNotification: 1
+filesEdited:
+  - .agents/skills/log-session/SKILL.md
+  - layers/atlas/CONTEXT.md
+  - layers/blog/CONTEXT.md
+  - .agents/skills/digest/SKILL.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/audit-skills/SKILL.md
+subagents:
+  - task: "Freshness lens: Drift + Orphan-addition"
+  - task: "Single-home lens: Duplication + Mis-location"
+  - task: "Concision lens: Verbose + Stale-narration"
+  - task: "Coherence lens: Contradiction + Ambiguity"
+  - task: Fact-check pooled audit findings
+gitBranch: claude/festive-mayer-yu5min
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: audit-docs
