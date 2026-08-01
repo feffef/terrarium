@@ -141,10 +141,10 @@ export function skillsSub(own: SkillDoc[]): string {
   return skillGroups(own).map((g) => `${g.skills.length} ${g.importance}`).join(' · ') || 'none yet'
 }
 
-// Own Skills grouped by importance (essential → specialist → supporting →
-// peripheral), alpha within a group, empty groups dropped.
+// Own Skills grouped by importance (essential → routine → specialist →
+// supporting → peripheral), alpha within a group, empty groups dropped.
 export function skillGroups(own: SkillDoc[]): { importance: Importance; skills: SkillDoc[] }[] {
-  const order: Importance[] = ['essential', 'specialist', 'supporting', 'peripheral']
+  const order: Importance[] = ['essential', 'routine', 'specialist', 'supporting', 'peripheral']
   return order
     .map((importance) => ({
       importance,

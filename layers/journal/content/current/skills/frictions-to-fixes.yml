@@ -1,6 +1,6 @@
 name: frictions-to-fixes
 category: platform-operation
-importance: essential
+importance: routine
 role: >-
   The consuming half of the self-improvement loop `log-session` feeds, and the
   first place the project's autonomy actually closes end-to-end: it reads the
@@ -14,6 +14,6 @@ role: >-
   behaviour, or a human-only surface). Regressions — a friction back after its fix
   merged — are flagged as their own alerting issue, never re-fixed blindly. The
   precursor to the deferred `consolidate`/`codify` jobs (ADR-0009) — no longer
-  purely manual, it also fires on a twice-daily Routine; reach for it on demand
+  purely manual, it also fires on a scheduled Routine; reach for it on demand
   when frictions have piled up and you want them retired in a batch.
 observations: []

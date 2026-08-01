@@ -136,9 +136,9 @@ Done when you hold the scorecard.
 
 ## 3. Re-grade importance and refresh role
 
-`importance` is **conditional essentialness** — *never* raw frequency. The four
-grades (`essential | specialist | supporting | peripheral`) are defined in
-`CONTEXT.md` (the single home) — read them there. For each Skill, read `usedIn`
+`importance` is **conditional essentialness** — *never* raw frequency. The five
+grades (`essential | routine | specialist | supporting | peripheral`) are defined
+in `CONTEXT.md` (the single home) — read them there. For each Skill, read `usedIn`
 **and the `goal`/`summary`/`kind` of the sessions that used it** (and the sessions
 that plausibly *should* have), then set the grade per those definitions.
 
@@ -146,6 +146,13 @@ that plausibly *should* have), then set the grade per those definitions.
 - **Rarity alone never lowers a grade.** A Skill unused only because *its kind of
   session did not occur* keeps its grade — frequency lives in the `role` prose, not
   the grade.
+- **`routine` is decided before the other four**, and on different evidence: it
+  asks the observable question "do scheduled, unattended sessions run this
+  Skill?", not the conditional-essentialness question. Windowed sessions whose
+  `kind` is `autonomous` and whose `goal` reads as running that Skill are the
+  citation. When the answer flips — a Skill's Routine is retired, or a Skill
+  gains one — re-grade it, and grade it on the other four scales again if it
+  leaves `routine`.
 - **The bright-line evidence rule — symmetric for promote and demote:** a grade
   change is only ever justified by **≥2 windowed sessions of the kind the Skill
   serves where it was absent** (a demotion signal, also step 5's signal) or **≥2
