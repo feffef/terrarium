@@ -1,0 +1,44 @@
+schemaVersion: 1
+session: session_01PZ5Qo2fcL39JCSgsiy5cEA
+startedAt: 2026-08-01T00:16:22Z
+endedAt: 2026-08-01T00:24:06Z
+kind: autonomous
+goal: Run the scheduled /digest sweep for 2026-07-31
+status: in-review
+outcome: "2026-07-31 Digest authored, archive sweep run, PR #791 open with a green gate"
+summary: "Fully agent-initiated: fired by the scheduled /digest Routine, no human prompt. Followed the digest Skill's steps: ran scripts/digest.ts list (found 2026-07-31 as the one undigested closed day), gathered its data (9 merged PRs, 9 sessions, 36 frictions), and authored the Digest narrative to layers/journal/content/current/pages/digests/2026-07-31.md, leading with the day's provenance-guard collapse and its sharpest friction (a mistaken issue_write overwriting issue #723's body). Ran scripts/archive-journal-content.ts --write, which archived 1 aged-out digest and 11 aged-out session logs. Cleared pnpm gate:scoped (the diff was non-inert, so the full gate ran: lint, typecheck, validate:content, unit tests, build, and the 78-test e2e smoke suite, all green). Committed, pushed to the pinned branch, opened PR #791, and subscribed to its activity per CLAUDE.md's PR-babysitting discipline."
+prs:
+  - "791"
+docsRead:
+  - path: .claude/skills/digest/SKILL.md
+    reason: the invoked Skill's step-by-step procedure
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Session worker process restarted mid-task, right after the archive sweep staged its git mv moves but before the gate ran.
+    solution: None needed — staged git state and the untracked digest file both survived the restart intact, and work resumed with no rework.
+    severity: nit
+durationSec: 464
+models:
+  claude-sonnet-5: 55
+toolCounts:
+  Bash: 16
+  Write: 2
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-07-31.md
+gitBranch: claude/compassionate-lovelace-4bjhu7
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: digest
