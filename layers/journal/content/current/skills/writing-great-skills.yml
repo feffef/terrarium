@@ -32,3 +32,14 @@ observations:
       session_013JM1j1xdWw3XJx2bkdK3NB. One authoring use is not yet the ≥2
       needed to promote the grade, but it's a step past the prior
       judgement-only pattern — role updated to reflect it.
+  - date: 2026-08-01
+    note: >-
+      Prior citations all aged out; used in only 1 of this window's 40
+      sessions, session_019co5cuEAZNRrh8BWe9V4E8 — but another genuine
+      authoring instance: user-invoked mid-build while extracting the new
+      `dispatch-subagents` Skill from CLAUDE.md, and it "drove the description
+      rewrite and the §3/§4 completion criteria" per the session's own
+      skillsUsed reason. A third authored-Skill instance overall (after the
+      guest-intake/guest-build pair cited 2026-07-17), but still only 1
+      in-window occurrence — the ≥2-in-window bright-line bar for promotion
+      isn't met this run; role and grade held as-is.

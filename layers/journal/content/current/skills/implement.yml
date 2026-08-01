@@ -66,3 +66,16 @@ observations:
       (session_01MwR3JjEyr7jxHkC7xRpRzd's Cross-Tenant read model + Commons
       aggregator build, ADR-0025), same inconsistent-adoption pattern; role
       and grade held as-is.
+  - date: 2026-08-01
+    note: >-
+      Prior citations aged out; used in 3 of this window's 40 sessions:
+      session_019co5cuEAZNRrh8BWe9V4E8 (extracted the dispatch-subagents
+      Skill), session_019hdkXjoebyR8etKVNyjn7S (six-issue triage+implement
+      batch — another batch session invoking it, same as the 07-19-noted
+      session_01CWmywSYZ2iY919UuP4M2V9), and session_01NTMpx8aVzhU9GPrEpVoASw
+      (Midden ideas/surveyor/artifact-model build) — but still skipped in two
+      other code-landing sessions this window that each merged a PR
+      (session_01R3PG8Komhz36po4FzR1WHc's PR #787 file-name-only provenance
+      fix, session_01SvQWTmWHQ6JWFHQR68gemt's PR #789 provenance-guard
+      collapse), same genuinely-inconsistent adoption; role and grade held
+      as-is.
