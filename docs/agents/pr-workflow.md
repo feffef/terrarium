@@ -21,22 +21,30 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
 
 1. Run the safety gate (ADR-0004) and wait for it to finish — a red gate
    never merges, no exception.
-2. Poll `get_check_runs` for green. A check reporting `in_progress` is not
+2. Run `tsx scripts/check-conflicting-issues.ts --pr <number>` (or `<base>
+   <head>` for a locally-resolvable diff) and eyeball any hits — it flags an
+   *open* issue whose body names one of the PR's changed files alongside
+   deletion-language ("delete", "remove", "unused", …), the mechanical
+   cross-check issue #798 added after PR #789 was caught mid-review only
+   because a human happened to read the full issue history. File-level
+   heuristic, advisory only — a hit is a prompt to go read that issue, not
+   proof of a real conflict, and this step never blocks the gate.
+3. Poll `get_check_runs` for green. A check reporting `in_progress` is not
    the same as failing — don't read a still-running check as a failure.
    **`scripts/merge-pr.ts <pr-number>` automates exactly this poll-then-merge
    step** (issue #667) — it polls the PR's check runs on a short interval
    until they resolve (green/red/timeout) and, on green, merges directly via
    `gh api`/REST, skipping `enable_pr_auto_merge` entirely rather than hitting
    its misleading-error round-trip and manually re-checking. Reach for it
-   instead of hand-rolling steps 2 and 4 yourself; still do step 3 (the
+   instead of hand-rolling steps 3 and 5 yourself; still do step 4 (the
    verdict comment) around it.
-3. **Post the verdict as a PR review or comment before merging — every time,
+4. **Post the verdict as a PR review or comment before merging — every time,
    even on a clean "merging as-is" verdict.** The merge must never be the
    only trace: an unreviewed-looking merge and a genuinely-reviewed one must
    stay distinguishable on the PR itself, or `get_reviews`/`get_comments`
    return empty and a real review reads as none having happened.
-4. `scripts/merge-pr.ts <pr-number>` is the **sole merge path** for every PR —
-   pending-check or already-green alike — per step 2; it already polls to
+5. `scripts/merge-pr.ts <pr-number>` is the **sole merge path** for every PR —
+   pending-check or already-green alike — per step 3; it already polls to
    resolution and merges on green. **Never call `enable_pr_auto_merge`
    directly in this repo.** That tool is documented as being for arming ahead
    of a still-pending check, but in practice calling it — on a pending *or*
@@ -48,7 +56,7 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
    licence to try `enable_pr_auto_merge` first. If `merge-pr.ts` is ever
    unavailable, fall back to hand-polling `get_check_runs` and calling
    `merge_pull_request` directly on green, still never `enable_pr_auto_merge`.
-5. Escalate a genuinely high-risk or out-of-scope PR to a human instead of
+6. Escalate a genuinely high-risk or out-of-scope PR to a human instead of
    merging it — see ADR-0004's high-risk set (also indexed in CLAUDE.md's
    Ground rules) for what counts.
 
