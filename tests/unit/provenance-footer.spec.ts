@@ -12,10 +12,15 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import {
+  applyCorrections,
   applyFooter,
   computeFooterAction,
+  correctCoAuthorLine,
   correctSessionTrailer,
+  FALLBACK_MODEL,
   hasProvenanceFooter,
+  isKnownModelName,
+  KNOWN_MODEL_NAMES,
   provenanceFooter,
   reconstructFooterValues,
   sessionUrlFor,
@@ -25,10 +30,14 @@ import { busiestModelId, formatModelId } from '../../scripts/session-trace.ts'
 
 const scriptPath = resolve(dirname(fileURLToPath(import.meta.url)), '../../scripts/provenance-footer.ts')
 
+// A known-good model name (an allowlisted `KNOWN_MODEL_NAMES` entry) so the
+// existing-footer fixtures below only exercise the axis each test is about
+// (session id vs. model name) — see the `model-name allowlist (issue #797)`
+// describe block for the allowlist-specific fixtures.
 const FOOTERED = [
   'a real commit subject',
   '',
-  'Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>',
+  'Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>',
   'Claude-Session: https://claude.ai/code/session_ABC',
 ].join('\n')
 
@@ -120,6 +129,89 @@ describe('computeFooterAction() — the decision matrix', () => {
   })
 })
 
+describe('model-name allowlist (issue #797)', () => {
+  it('isKnownModelName accepts every KNOWN_MODEL_NAMES entry and the generic FALLBACK_MODEL', () => {
+    for (const name of KNOWN_MODEL_NAMES) {
+      expect(isKnownModelName(name)).toBe(true)
+    }
+    expect(isKnownModelName(FALLBACK_MODEL)).toBe(true)
+  })
+
+  it('isKnownModelName rejects an unrecognized model name', () => {
+    expect(isKnownModelName('Claude Nonexistent 9')).toBe(false)
+  })
+
+  it('computeFooterAction no-ops when the Co-Authored-By model name is already known and the session id matches', () => {
+    expect(computeFooterAction(FOOTERED, 'https://claude.ai/code/session_ABC', 'Claude')).toEqual({ action: 'noop' })
+  })
+
+  it('computeFooterAction corrects an unrecognized Co-Authored-By model name in an otherwise-matching footer', () => {
+    const wrongModel = [
+      'a real commit subject',
+      '',
+      'Co-Authored-By: Claude Nonexistent 9 <noreply@anthropic.com>',
+      'Claude-Session: https://claude.ai/code/session_ABC',
+    ].join('\n')
+    expect(computeFooterAction(wrongModel, 'https://claude.ai/code/session_ABC', 'Claude Sonnet 5')).toEqual({
+      action: 'correct',
+      footer: 'Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>',
+    })
+  })
+
+  it('computeFooterAction corrects BOTH a mismatched session id and an unrecognized model name at once', () => {
+    const bothWrong = [
+      'a real commit subject',
+      '',
+      'Co-Authored-By: Claude Nonexistent 9 <noreply@anthropic.com>',
+      'Claude-Session: https://claude.ai/code/session_WRONG',
+    ].join('\n')
+    expect(computeFooterAction(bothWrong, 'https://claude.ai/code/session_X', 'Claude Sonnet 5')).toEqual({
+      action: 'correct',
+      footer: 'Claude-Session: https://claude.ai/code/session_X\nCo-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>',
+    })
+  })
+
+  it('computeFooterAction no-ops on an unknown model name when no ground-truth session URL is resolvable', () => {
+    const wrongModel = [
+      'a real commit subject',
+      '',
+      'Co-Authored-By: Claude Nonexistent 9 <noreply@anthropic.com>',
+      'Claude-Session: https://claude.ai/code/session_ABC',
+    ].join('\n')
+    expect(computeFooterAction(wrongModel, null, 'Claude Sonnet 5')).toEqual({ action: 'noop' })
+  })
+
+  it('correctCoAuthorLine() replaces the existing Co-Authored-By line in place, leaving everything else untouched', () => {
+    const out = correctCoAuthorLine(FOOTERED, 'Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>')
+    expect(out).toBe(
+      [
+        'a real commit subject',
+        '',
+        'Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>',
+        'Claude-Session: https://claude.ai/code/session_ABC',
+      ].join('\n'),
+    )
+  })
+
+  it('applyCorrections() rewrites only the lines named in the correction footer, leaving the rest untouched', () => {
+    const wrongModel = [
+      'a real commit subject',
+      '',
+      'Co-Authored-By: Claude Nonexistent 9 <noreply@anthropic.com>',
+      'Claude-Session: https://claude.ai/code/session_ABC',
+    ].join('\n')
+    const out = applyCorrections(wrongModel, 'Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>')
+    expect(out).toBe(
+      [
+        'a real commit subject',
+        '',
+        'Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>',
+        'Claude-Session: https://claude.ai/code/session_ABC',
+      ].join('\n'),
+    )
+  })
+})
+
 describe('correctSessionTrailer() — issue #710', () => {
   it('replaces the existing Claude-Session line in place, leaving everything else untouched', () => {
     const out = correctSessionTrailer(FOOTERED, 'Claude-Session: https://claude.ai/code/session_X')
@@ -127,7 +219,7 @@ describe('correctSessionTrailer() — issue #710', () => {
       [
         'a real commit subject',
         '',
-        'Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>',
+        'Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>',
         'Claude-Session: https://claude.ai/code/session_X',
       ].join('\n'),
     )
@@ -281,6 +373,38 @@ describe('end-to-end: running the script over a real commit-message file (issue 
       'feat: hand-typed footer with the right session id',
       '',
       'Co-Authored-By: Claude <noreply@anthropic.com>',
+      'Claude-Session: https://claude.ai/code/session_01CPwUoxTZ3wJ5LQW8Nd98Mm',
+      '',
+    ].join('\n')
+    writeFileSync(msgFile, message)
+    runScript({ CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_01CPwUoxTZ3wJ5LQW8Nd98Mm' })
+    expect(readFileSync(msgFile, 'utf8')).toBe(message)
+  })
+
+  it('corrects an unrecognized Co-Authored-By model name in a hand-typed footer (issue #797)', () => {
+    writeFileSync(
+      msgFile,
+      [
+        'feat: hand-typed footer with a wrong model name',
+        '',
+        'Co-Authored-By: Claude Nonexistent 9 <noreply@anthropic.com>',
+        'Claude-Session: https://claude.ai/code/session_01CPwUoxTZ3wJ5LQW8Nd98Mm',
+        '',
+      ].join('\n'),
+    )
+    runScript({ CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_01CPwUoxTZ3wJ5LQW8Nd98Mm' })
+    const out = readFileSync(msgFile, 'utf8')
+    expect(out).not.toContain('Claude Nonexistent 9')
+    expect(out).toContain('Claude-Session: https://claude.ai/code/session_01CPwUoxTZ3wJ5LQW8Nd98Mm')
+    expect((out.match(/Co-Authored-By:/g) ?? []).length).toBe(1)
+    expect((out.match(/Claude-Session:/g) ?? []).length).toBe(1)
+  })
+
+  it('does not touch a hand-typed footer whose model name is already known (idempotent)', () => {
+    const message = [
+      'feat: hand-typed footer with an already-known model name',
+      '',
+      'Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>',
       'Claude-Session: https://claude.ai/code/session_01CPwUoxTZ3wJ5LQW8Nd98Mm',
       '',
     ].join('\n')
