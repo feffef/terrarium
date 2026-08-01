@@ -1,6 +1,6 @@
 name: audit-skills
 category: platform-operation
-importance: specialist
+importance: routine
 role: >-
   The `sync`-family Skill that keeps the Skill Inventory honest and watches for
   behavior regressions after a Skill's own `SKILL.md` edits. Self-merges

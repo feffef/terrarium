@@ -15,7 +15,7 @@
 // typechecks (shapes agree) or fails loudly, with no `as unknown
 // as` escape hatch erasing the check either way.
 export type Severity = 'nit' | 'minor' | 'moderate' | 'major' | 'blocker'
-export type Importance = 'essential' | 'specialist' | 'supporting' | 'peripheral'
+export type Importance = 'essential' | 'routine' | 'specialist' | 'supporting' | 'peripheral'
 export type Status = 'completed' | 'in-review' | 'partial' | 'blocked' | 'abandoned'
 
 export interface Friction {

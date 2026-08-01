@@ -1,6 +1,6 @@
 name: audit-docs
 category: platform-operation
-importance: specialist
+importance: routine
 role: >-
   The prose counterpart to `audit-skills`: an autonomous sweep that audits
   every live doc and Skill for correctness, single-homing, concision, and

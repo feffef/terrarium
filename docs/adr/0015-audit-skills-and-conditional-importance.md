@@ -68,6 +68,24 @@ Status: Accepted
 > lenses when auditing that Skill's own `SKILL.md`. The 8 drifted entries above
 > were migrated in the same change: PR/issue/session ids moved out of `role`
 > into a dated `observations` entry (dated by that file's last commit).
+>
+> **Amended (2026-08-01).** The `importance` enum gains a fifth grade,
+> **`routine`**, between `essential` and `specialist`. The four-grade scale
+> graded only *conditional essentialness*, so the Skills that ARE the Platform's
+> scheduled unattended operation — each driving whole sessions of its own —
+> could only be filed as `specialist`, the grade whose defining example is a
+> rare-but-essential Skill. That reads as "narrow tool, seldom reached for" and
+> inverts the truth for the Skills that account for most of the Platform's
+> autonomous sessions. `routine` names that different way of mattering; it is
+> assigned from an *observable* fact (scheduled sessions run this Skill), not
+> from the conditional-essentialness judgement the other four grades share, so
+> it is the one grade whose assignment is not a re-derivation from the window's
+> usage judgement. Grade definitions stay single-homed in `CONTEXT.md`. Migrated
+> in the same change: `audit-docs`, `audit-skills`, `blog-post`, `digest` (all
+> `specialist`) and `frictions-to-fixes` (`essential`) → `routine`.
+> `frictions-to-fixes` moving off `essential` is not a demotion — it is the same
+> reclassification, and it is what keeps the grade honest: a `routine` bucket
+> that omitted a scheduled Skill would misdescribe the schedule.
 
 ## Context
 

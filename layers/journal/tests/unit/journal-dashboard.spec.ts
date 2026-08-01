@@ -188,13 +188,14 @@ describe('skill inventory', () => {
   const skills = [
     skill({ name: 'edit-content', category: 'platform-operation', importance: 'essential' }),
     skill({ name: 'add-space', category: 'platform-operation', importance: 'essential' }),
+    skill({ name: 'digest', category: 'platform-operation', importance: 'routine' }),
     skill({ name: 'triage', category: 'platform-operation', importance: 'supporting' }),
     skill({ name: 'tdd', category: 'general-engineering', importance: 'essential' }),
     skill({ name: 'code-review', category: 'general-engineering', importance: 'supporting' }),
   ]
 
   it('ownSkills keeps only platform-operation Skills', () => {
-    expect(ownSkills(skills).map((s) => s.name).sort()).toEqual(['add-space', 'edit-content', 'triage'])
+    expect(ownSkills(skills).map((s) => s.name).sort()).toEqual(['add-space', 'digest', 'edit-content', 'triage'])
   })
 
   it('externalSkillCount counts the non-own Skills', () => {
@@ -207,15 +208,16 @@ describe('skill inventory', () => {
   })
 
   it('skillsSub joins non-empty importance buckets, else "none yet"', () => {
-    expect(skillsSub(ownSkills(skills))).toBe('2 essential · 1 supporting')
+    expect(skillsSub(ownSkills(skills))).toBe('2 essential · 1 routine · 1 supporting')
     expect(skillsSub([])).toBe('none yet')
   })
 
-  it('skillGroups orders essential → specialist → supporting → peripheral, alpha within a group, dropping empties', () => {
+  it('skillGroups orders essential → routine → specialist → supporting → peripheral, alpha within a group, dropping empties', () => {
     const groups = skillGroups(ownSkills(skills))
-    expect(groups.map((g) => g.importance)).toEqual(['essential', 'supporting']) // specialist + peripheral empty → dropped
+    expect(groups.map((g) => g.importance)).toEqual(['essential', 'routine', 'supporting']) // specialist + peripheral empty → dropped
     expect(groups[0]!.skills.map((s) => s.name)).toEqual(['add-space', 'edit-content']) // alpha within essential
-    expect(groups[1]!.skills.map((s) => s.name)).toEqual(['triage'])
+    expect(groups[1]!.skills.map((s) => s.name)).toEqual(['digest'])
+    expect(groups[2]!.skills.map((s) => s.name)).toEqual(['triage'])
   })
 })
 

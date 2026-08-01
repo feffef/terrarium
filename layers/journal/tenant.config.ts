@@ -56,7 +56,7 @@ export default defineTenant({
         .object({
           name: z.string(),
           category: z.enum(['platform-operation', 'general-engineering']),
-          importance: z.enum(['essential', 'specialist', 'supporting', 'peripheral']),
+          importance: z.enum(['essential', 'routine', 'specialist', 'supporting', 'peripheral']),
           // ≤ ~50 words — a tight paragraph on the Skill's role + importance to
           // this project, NOT a copy of its own description; deeper detail lives
           // in the Skill's own docs. ~80 is the outer limit; beyond that, trim.

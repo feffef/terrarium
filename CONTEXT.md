@@ -173,11 +173,18 @@ changes, regression notes) — kept separate from `role` and not rendered in the
 A Skill Inventory entry's grade for how much a Skill matters to the Platform — a
 judgement of **conditional essentialness** (how essential the Skill is *when its
 kind of work occurs*), never raw frequency, so a rare-but-essential Skill is not
-graded down for the rarity of its domain. Four grades:
+graded down for the rarity of its domain. Five grades:
 - **essential** — essential *and broad*: its absence would be felt across many
   kinds of session (e.g. `log-session`, `domain-modeling`).
+- **routine** — the Platform's standing operation: the Skill *is* a scheduled
+  Routine's job, driving whole unattended sessions of its own rather than being
+  reached for inside someone else's (e.g. `digest`, `audit-docs`). Assigned from
+  the observed fact that scheduled sessions run it, not from a judgement about
+  breadth — so it doesn't compete with `essential`, it names a different way of
+  mattering. A Skill that is merely *fireable* on an interval but is in practice
+  invoked by hand is not `routine`.
 - **specialist** — essential *within a specific kind* of work, even when that work
-  is rare (e.g. `blog-post`).
+  is rare (e.g. `atlas-specimen`).
 - **supporting** — genuinely useful but not essential; work proceeds without it.
 - **peripheral** — marginal or superseded: little observed pull even when it could
   have applied.
