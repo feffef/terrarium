@@ -1,0 +1,60 @@
+schemaVersion: 1
+session: session_01NKs6znYhDj3jds219myzg8
+startedAt: 2026-08-01T11:07:28Z
+endedAt: 2026-08-01T11:21:13Z
+kind: autonomous
+goal: Run the scheduled /blog-post Skill
+status: in-review
+outcome: "Kevin post opened as PR #805, awaiting merge"
+summary: "Fully agent-initiated: fired by the scheduled `/blog-post` Routine with no persona argument and no live human input this session. Ran the rotation gate (scripts/blog-rotation.ts: last=karen, eligible=[david, eyra, kevin]), surveyed ~100 commits, ~20 recent session logs, and every existing blog post across all four Personas, then drafted three full candidates per Section A: David on the audit-docs session's own self-admitted git-conventions violations (PR #802), Eyra on the new `routine` Skill Inventory grade (PR #803), and Kevin reacting to Karen's session-id-lock post with the new Co-Authored-By model-name allowlist (PR #801/issue #797). A fresh outside-reader subagent, blind to the repo, picked the Kevin candidate for covering the highest-weight event and named several under-explained terms, which were closed in a revision before publishing. Saved the winning post plus its pingback stub, ran pnpm gate:scoped (full gate ran since a pingback file isn't in the inert set; all green including 78/78 e2e), committed, pushed to the pinned branch, opened PR #805, and subscribed to its activity."
+prs:
+  - "805"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the invoked Skill's step-by-step procedure
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: candidate voice check
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: candidate voice check
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: candidate voice check
+  - path: /root/.claude/projects/-home-user-terrarium/1b2a6106-c22d-5f4d-8354-e0bb6d27b8ef/tool-results/bc169izap.txt
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the run itself
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: The Skill's step 0/A0 rotation-gate output and the three candidates' citation rigor required reading ~850 lines of existing blog post frontmatter/excerpts across four Personas via a single large `for` loop Bash command, whose output got persisted to a side file above the inline-capture size and needed a follow-up paginated Read.
+    solution: No fix needed this round — the Read tool's pagination handled it cleanly — but a future run drafting from scratch could grep for a persona's `reactsTo`/pingback history directly instead of dumping every post's frontmatter, if the corpus keeps growing.
+    severity: nit
+durationSec: 824
+models:
+  claude-sonnet-5: 115
+toolCounts:
+  Bash: 31
+  Read: 11
+  Grep: 3
+  Write: 5
+  Edit: 5
+  Agent: 1
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/karen/pingbacks/2026-08-01-kevin-the-lock-i-told-you-about-actually-caught-one.yml
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-07pawe
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: blog-post
