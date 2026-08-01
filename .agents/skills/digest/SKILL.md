@@ -88,11 +88,11 @@ leads with narrative and carries the skim footer.
 
 ## 4. The index refreshes itself — nothing to bake
 
-The Journal's Space landing (`/t/journal/current`) is a **live dashboard**: it
-queries this Space's collections at request time — state tiles, the session-log
-feed, the friction signal, the Skill Inventory, and a **Recent digests** panel
-that reads the digest pages directly. A Digest you wrote in step 3 therefore
-appears with **no edit to `index.md`**.
+The Journal's Space landing (`/t/journal/current`) is a **live dashboard**
+that queries this Space's collections at request time, not a Markdown render
+of any file — see `layers/journal/CONTEXT.md`'s "What lives where" for what it
+renders. A Digest you wrote in step 3 therefore appears with **no edit to
+`index.md`**.
 
 `index.md` still owns two things — its **free-form editorial intro** (its Markdown
 body, rendered above the dashboard) and its title/description. Touch those only

@@ -19,7 +19,7 @@ judgement.**
 Every run produces up to four things, only the first of which is ever a code
 change:
 - an **Inventory PR** — `importance`/`role` edits that cite the bright-line
-  evidence rule (step 3) — **self-merged on a green gate** (step 7, ADR-0004's
+  evidence rule (step 3) — **self-merged on a green gate** (step 8, ADR-0004's
   low-risk content tier, ADR-0015);
 - a **filed or commented `needs-triage` issue** — for step 3's bright-line
   signal (≥2 sessions, citable evidence), or for a step 4 regression that
@@ -152,7 +152,7 @@ that plausibly *should* have), then set the grade per those definitions.
   windowed sessions that clearly show it earning a higher grade** (a promotion
   signal) — cite the session ids either way. A `role` refresh is justified by
   plainly matching `usedIn`. **This citation is also what makes a change
-  self-merge-eligible (step 7)** — a change you can't point at ≥2 session ids
+  self-merge-eligible (step 8)** — a change you can't point at ≥2 session ids
   for doesn't belong in this PR (see step 4 instead).
 - **Every grade change or `role` refresh gets an `observations` entry** —
   `{ date: <today, UTC>, note: <the citation — session ids, PR/issue numbers,
