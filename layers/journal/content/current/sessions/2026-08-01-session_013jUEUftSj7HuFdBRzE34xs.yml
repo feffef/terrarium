@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013jUEUftSj7HuFdBRzE34xs
 startedAt: 2026-08-01T01:04:31Z
-endedAt: 2026-08-01T07:26:08Z
+endedAt: 2026-08-01T08:46:52Z
 kind: autonomous
 goal: Run frictions-to-fixes to retire recurring session frictions
-status: in-review
-outcome: 2 of 3 dispatched PRs merged, 1 still open
-summary: "Autonomous scheduled run of frictions-to-fixes (no live human input this session). A subagent surveyed the latest 20 session logs and screened candidates against the tracker, returning 5 never-fixed actionable candidates (3 simple/doc, 2 hard/code) plus a known open regression (#772, no action needed) and a recurring regression (#694) that got a fresh evidence comment rather than a duplicate issue. Filed issues #794-#798 for the 5 candidates, then dispatched 3 Sonnet impl agents in isolated worktrees: one grouped doc PR closing #794/#795/#796, and one PR each for the two hard fixes (#797 commit-msg model-name allowlist, #798 PR-vs-issue deletion cross-check). Reviewed all three PRs myself as the ADR-0003 reviewer-agent, escalating both hard PRs to the human per the Skill's own guidance (non-obvious design trade-offs the issues themselves flagged). Since escalating: PR #799 (docs) and PR #800 (#798's cross-check script) have both merged after the human's own decision; PR #801 (#797's commit-msg allowlist) remains open, gate green, awaiting the human's merge call — babysitting it via scheduled check-ins until it resolves. All steps in this session (survey, issue-filing, dispatch, review, escalation) were agent-initiated per the Skill's own schedule-driven charter — no live human input was received or needed to authorize any of it."
+status: completed
+outcome: All 3 dispatched PRs merged
+summary: "Autonomous scheduled run of frictions-to-fixes (no live human input this session). A subagent surveyed the latest 20 session logs and screened candidates against the tracker, returning 5 never-fixed actionable candidates (3 simple/doc, 2 hard/code) plus a known open regression (#772, no action needed) and a recurring regression (#694) that got a fresh evidence comment rather than a duplicate issue. Filed issues #794-#798 for the 5 candidates, then dispatched 3 Sonnet impl agents in isolated worktrees: one grouped doc PR closing #794/#795/#796, and one PR each for the two hard fixes (#797 commit-msg model-name allowlist, #798 PR-vs-issue deletion cross-check). Reviewed all three PRs myself as the ADR-0003 reviewer-agent: merged PR #799 (docs) directly after a clean review and green gate; escalated both hard PRs (#800, #798's cross-check; #801, #797's allowlist) to the human per the Skill's own guidance, since both turned on non-obvious design trade-offs the issues themselves flagged for human judgement. Babysat both via scheduled check-ins; the human merged #800 and then #801, closing out all five filed issues. All steps in this session (survey, issue-filing, dispatch, review, escalation, babysitting) were agent-initiated per the Skill's own schedule-driven charter — no live human input was received or needed to authorize any of it; the only human involvement was the merge decision on the two escalated PRs, which is exactly what the escalation was for."
 prs:
   - "799"
   - "800"
@@ -30,7 +30,7 @@ skillsUsed:
   - name: close-session
     reason: session closure
   - name: log-session
-    reason: this log, updated as PRs 799/800 merged
+    reason: this log, finalized to completed now all 3 PRs merged
 frictions:
   - description: "Survey subagent's mcp__github__search_pull_requests returned total_count:0 for a targeted query even though matching PRs existed (known false-negative pattern, issue #741)."
     solution: Worked around via pull_request_read by number directly; no new fix needed, existing doc guidance already covers this and held up.
@@ -41,9 +41,9 @@ frictions:
   - description: frictions-to-fixes SKILL.md doesn't explicitly say whether a doc-fix dispatch brief needs the audit-docs house rules restated in full vs. referenced; I referenced rather than restated, consistent with the single-home rule, and it worked, but this was a judgment call not spelled out in the Skill text.
     solution: Skill text could be more explicit that a reference to the house rules suffices in the dispatch brief rather than a restatement.
     severity: nit
-durationSec: 22898
+durationSec: 27741
 models:
-  claude-sonnet-5: 110
+  claude-sonnet-5: 121
   <synthetic>: 1
 toolCounts:
   Agent: 4
@@ -52,12 +52,13 @@ toolCounts:
   ToolSearch: 2
   mcp__github__issue_write: 5
   mcp__github__add_issue_comment: 4
-  mcp__github__pull_request_read: 11
-  Bash: 6
+  mcp__github__pull_request_read: 12
+  Bash: 7
   Skill: 3
-  Write: 2
+  Write: 3
   PushNotification: 1
-  mcp__Claude_Code_Remote__send_later: 3
+  mcp__Claude_Code_Remote__send_later: 4
+  mcp__Claude_Code_Remote__delete_trigger: 1
 subagents:
   - type: general-purpose
     task: Survey and screen session frictions
