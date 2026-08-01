@@ -1,0 +1,80 @@
+schemaVersion: 1
+session: session_019gqLV9BAyjsKmjYYdM7gaL
+startedAt: 2026-08-01T10:11:10Z
+endedAt: 2026-08-01T10:29:25Z
+kind: interactive
+goal: Give scheduled Skills their own importance grade
+status: in-review
+outcome: New `routine` grade shipped; PR open, CI green
+summary: "Human-instructed throughout: the user observed that the Skills run by scheduled Routines were graded `specialist`, said they are really the daily routine, and explicitly authorised introducing a new category if none fit. Scanned five days of session logs to identify the set from evidence — digest, audit-docs, audit-skills, blog-post (all `specialist`) plus frictions-to-fixes (`essential`). Clarified that `specialist` is an `importance` value, not `category`, and added a fifth grade `routine` between `essential` and `specialist` — defined in CONTEXT.md, amended into ADR-0015, taught to audit-skills, wired through schema, type, ordering and the inventory component. Pulling frictions-to-fixes off `essential` was my own judgement call, flagged to the user as reversible. Gate green; live-DOM probe confirmed the render."
+prs:
+  - "803"
+docsRead:
+  - path: CONTEXT.md
+    reason: the single home for the importance grades
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: why the four-grade scale exists, and its amendment style
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: the Skill that assigns grades and had to learn the new one
+  - path: layers/journal/app/utils/dashboard.ts
+    reason: grade ordering for the dashboard groups
+  - path: layers/journal/app/types/journal.ts
+    reason: (read before editing)
+  - path: layers/journal/app/components/journal/SkillInventory.vue
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/frictions-to-fixes.yml
+    reason: (read before editing)
+  - path: layers/journal/tests/unit/journal-dashboard.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: authored this log
+frictions:
+  - description: The grade set was written out in seven places (Zod enum, TS union, order array, two comments, a test name, CONTEXT.md, ADR, SKILL.md); adding one value meant editing all of them by hand with nothing to catch a miss.
+    solution: Derive the `Importance` TS union from the manifest's Zod enum, or add a unit test asserting the two literal lists agree, so a partially-added grade fails the gate instead of shipping.
+    severity: moderate
+  - description: A shipped inventory entry already violated CLAUDE.md's "never state a Routine's schedule in a committed doc" rule — frictions-to-fixes' role prose named an interval. The rule has no mechanical enforcement.
+    solution: Add a validate-content check flagging cadence words (daily, twice-daily, hourly, nightly) adjacent to "Routine" in Skill Inventory roles and docs.
+    severity: minor
+  - description: SkillInventory.vue branched on an allow-list of two grades to decide role-vs-chip rendering, so a newly added grade would have silently collapsed to chips rather than showing its role.
+    solution: Inverted it to exclude supporting/peripheral, so any future grade shows its role by default and the failure mode is visible, not silent.
+    severity: minor
+  - description: The Stop hook flagged uncommitted changes mid-task, while edits were deliberately still in progress and not yet in a committable state.
+    solution: Nothing to fix in-repo; noting it because the signal reads as a defect when the session is simply mid-edit rather than winding down.
+    severity: nit
+durationSec: 1094
+models:
+  claude-opus-5: 103
+toolCounts:
+  Bash: 32
+  Read: 9
+  Edit: 13
+  Write: 2
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 2
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/tenant.config.ts
+  - layers/journal/app/types/journal.ts
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/app/components/journal/SkillInventory.vue
+  - CONTEXT.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - .agents/skills/audit-skills/SKILL.md
+  - layers/journal/content/current/skills/frictions-to-fixes.yml
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+gitBranch: claude/daily-routine-skills-category-p296i4
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - "`importance` and `category` are two separate Skill Inventory fields; `specialist`/`essential` are importance grades, while `category` is only platform-operation vs general-engineering."
+  - The dashboard's Skill Inventory renders only platform-operation Skills (ownSkills), so a grade change on an external-pack Skill would not be visible on the page at all.
+ideas:
+  - Assert the manifest Zod enums and their hand-maintained TS mirrors in layers/journal/app/types/journal.ts agree, as a unit test over the two literal lists. journal.ts already documents why it cannot alias the generated Collections types, which is exactly why the drift is possible; a test closes the gap the comment only warns about.
+  - Have audit-skills read the live Routine set (via CronList or the scheduled sessions' goals) and reconcile it against which entries carry the `routine` grade, so a Skill that gains or loses a Routine is re-graded automatically instead of waiting for a human to notice the inventory has gone stale.
