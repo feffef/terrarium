@@ -61,5 +61,6 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
   genuinely high-risk PR to a human even when the gate is green (ADR-0003).
 - `guest-build` — agent-dispatched but always **owner-merged**: it opens and
   reviews the PR but never calls `merge_pull_request` or arms auto-merge (see
-  `docs/agents/guest-contributions.md`).
+  `.agents/skills/guest-build/SKILL.md`'s "one hard subtraction" section and
+  ADR-0023).
 - An ordinary work PR — merged by a human, never self-merged.

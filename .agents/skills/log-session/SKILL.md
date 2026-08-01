@@ -87,18 +87,15 @@ ideas:                             # OPTIONAL — omit unless something sparked
   unchanged by kind).
 - **`learnings`/`ideas` are optional sparks — leave them off unless the session
   genuinely produced one.** Don't pad them; an empty session log carries neither.
-  - `learnings` — useful knowledge you *inferred during the work* that you neither
-    knew up front nor read from the repo. A fact you read from a file is a
-    `docsRead` entry, not a learning. Some things you'd log as a `nit` friction are
-    better here — a learning is a friction's positive twin (what you gained, not
-    where it hurt), and research/interactive sessions often end with learnings and
-    no friction at all.
-  - `ideas` — a genuine, ambitious swing at what the Platform or a Tenant could
-    become next, not a vague hunch. Be creative *and* be concrete: name the actual
-    thing to build and say why it's worth doing — a fast tactical win and a big
-    structural bet are equally welcome, but "someone should look into X" isn't
-    specific enough. Write it so a later reader could turn it straight into a
-    GitHub issue without having to re-derive your reasoning.
+  Definitions live in `CONTEXT.md` → **Session** — don't restate them here.
+  - `learnings` — a fact you read from a file is a `docsRead` entry, not a
+    learning. Some things you'd log as a `nit` friction are better here —
+    research/interactive sessions often end with learnings and no friction at all.
+  - `ideas` — be creative *and* be concrete: name the actual thing to build and
+    say why it's worth doing — a fast tactical win and a big structural bet are
+    equally welcome, but "someone should look into X" isn't specific enough.
+    Write it so a later reader could turn it straight into a GitHub issue
+    without having to re-derive your reasoning.
 
 - **Do NOT write** `startedAt`/`endedAt`, `durationSec`, `models`, `toolCounts`,
   `filesEdited`, `subagents`, `gitBranch`, … — all derived (ADR-0009's amendment).

@@ -58,9 +58,9 @@ A single directed relationship between two Specimens **of the same Biome** — o
 of *preys-on, pollinates, mimics, shelters, fears*. Authored once as a directed
 edge (a Document in the Biome's `interactions` data collection); the reverse label
 ("preyed on by") is *derived*, so a Specimen's own Relations and the Biome's
-food-web diagram are two views of the one single-homed fact. Contrast the Blog's
-Pingback, which *denormalizes* a cross-Space fact: an Interaction is same-Space,
-so it is derived, not copied.
+food-web diagram are two views of the one single-homed fact. (Contrast the Blog's
+Pingback — see `CONTEXT-MAP.md`'s Relationships section for the derives-vs-
+denormalizes contrast.)
 
 ### Observation
 A dated sighting in a Biome's **field log** (a Document in its `observations` data

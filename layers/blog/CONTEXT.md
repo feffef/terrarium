@@ -87,8 +87,8 @@ Persona's Space — denormalized there at author time (persona/path/title/blurb
 inlined), so surfacing it is a **same-Space read**, never a cross-Space runtime
 query (ADR-0012). The reacting post is itself a first-class post in its own Space,
 optionally headed by a `reactsTo` reference to the post it answers. (Contrast the
-Atlas's Interaction, which *derives* a same-Space reverse edge rather than
-denormalizing a cross-Space one.)
+Atlas's Interaction — see `CONTEXT-MAP.md`'s Relationships section for the
+derives-vs-denormalizes contrast.)
 
 ### Tag
 A topic label on a blog post, drawn from a small **curated, enforced**
