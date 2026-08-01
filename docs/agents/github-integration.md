@@ -49,6 +49,19 @@ each recipe class to its MCP equivalent:
 - **List / search PRs** → `list_pull_requests` / `search_pull_requests`
 - **Link sub-issues** → `sub_issue_write`
 
+## `issue_write update` overwrites the description — it is not a comment
+
+**`issue_write` with `method: update` and a `body` field REPLACES the entire
+issue/PR description.** It does not append or annotate — the previous body is
+gone, with no confirmation and no diff shown. Never reach for it to add
+commentary; use `add_issue_comment` instead, which appends a new comment and
+leaves the description untouched. This already bit a session that intended to
+add a note and instead silently overwrote an issue's description, recovered
+only because the original text was preserved elsewhere (issue #723 is the
+incident record). The mapping-table row above states the same rule in one
+line — this callout exists because that placement wasn't visible enough to
+catch the mistake in practice.
+
 ## Overflow and precision traps
 
 - **`list_issues` and `list_pull_requests` have no `minimal_output` param** —
