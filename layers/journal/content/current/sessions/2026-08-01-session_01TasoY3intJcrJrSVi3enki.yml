@@ -1,0 +1,64 @@
+schemaVersion: 1
+session: session_01TasoY3intJcrJrSVi3enki
+startedAt: 2026-08-01T00:46:02Z
+endedAt: 2026-08-01T00:59:08Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: in-review
+outcome: "3 usage citations refreshed, 1 issue filed, PR #793 open"
+summary: "Fully agent-initiated: fired by the scheduled /audit-skills Routine, no human prompt. Ran scripts/audit-skills.ts (40-session window), then judged every step: re-graded importance/role for skills with usedIn evidence (added dated observations entries to code-review, implement, and writing-great-skills — role/grade held as-is on all three, evidence matched existing role text), walked every regressionChecks bracket for a behavior regression after a Skill's own recent SKILL.md edit (one Phase-A signal, blog-post's major friction after an audit-docs fix batch, deep-read and ruled unrelated — a fabricated commit-trailer id, not the doc edit), and checked the closure-completeness signals (orphanedSessions and manuallyRescuedClosures both empty; humanPromptedClosures re-flagged session_012NCZUhy7qDirkjp8t6YiNy, already cited twice on #483's standing thread, so filed #792 to add it to DISMISSED_HUMAN_PROMPTED_CLOSURES instead of re-citing a third time). Noted misclassifiedKind's one entry and the review.yml phantom-entry mismatch (maps to a built-in CLI Skill) for the record, no action needed on either. Cleared pnpm gate:scoped (green: lint, typecheck, validate:content, unit tests, build, 78/78 e2e). Committed, pushed to the pinned branch, opened PR #793, and subscribed to its activity."
+prs:
+  - "793"
+docsRead:
+  - path: scripts/audit-skills.ts
+    reason: understood the scorecard fields and suppression-set mechanics before judging signals
+  - path: layers/journal/content/current/skills/code-review.yml
+    reason: existing citation history and role text before refreshing
+  - path: layers/journal/content/current/skills/implement.yml
+    reason: existing citation history and role text before refreshing
+  - path: layers/journal/content/current/skills/writing-great-skills.yml
+    reason: existing citation history and role text before refreshing
+  - path: /root/.claude/projects/-home-user-terrarium/cbe138b4-33c0-5d29-a4d3-0c08bdbe8b28/tool-results/b63n6u0gm.txt
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-30-session_019hdkXjoebyR8etKVNyjn7S.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-31-session_01KkJxepH93Cfs4p8c452Xir.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the whole run
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: audit-skills's own SKILL.md doesn't spell out that a brand-new own Skill (created this run's own bracketed edit, e.g. dispatch-subagents) will have zero windowed usedIn on both sides of its regressionChecks bracket, making Phase A structurally inconclusive rather than a real screen — I had to reason this out from the edit dates myself.
+    solution: Note in step 4 that a regressionChecks bracket with zero usedIn on both sides (not just the after side) is a no-signal case to skip immediately, distinct from a genuine before/after comparison.
+    severity: nit
+durationSec: 786
+models:
+  claude-sonnet-5: 111
+toolCounts:
+  Bash: 33
+  Read: 6
+  ToolSearch: 3
+  mcp__github__search_issues: 3
+  mcp__github__issue_read: 4
+  mcp__github__issue_write: 2
+  Edit: 4
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/skills/code-review.yml
+  - layers/journal/content/current/skills/implement.yml
+  - layers/journal/content/current/skills/writing-great-skills.yml
+gitBranch: claude/upbeat-sagan-mtmehu
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: audit-skills
+learnings:
+  - A Skill's own most-recent-edit commit sha in regressionChecks can be shared across several Skills at once (e.g. one "apply code-review findings" commit touching dispatch-subagents, frictions-to-fixes, and guest-build SKILL.md files together) — worth checking the sha before treating each entry as an independent signal.
