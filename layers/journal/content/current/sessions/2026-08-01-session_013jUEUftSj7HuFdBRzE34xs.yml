@@ -1,0 +1,71 @@
+schemaVersion: 1
+session: session_013jUEUftSj7HuFdBRzE34xs
+startedAt: 2026-08-01T01:04:31Z
+endedAt: 2026-08-01T01:25:42Z
+kind: autonomous
+goal: Run frictions-to-fixes to retire recurring session frictions
+status: in-review
+outcome: 1 doc PR merged, 2 hard PRs escalated for human review
+summary: "Autonomous scheduled run of frictions-to-fixes (no live human input this session). A subagent surveyed the latest 20 session logs and screened candidates against the tracker, returning 5 never-fixed actionable candidates (3 simple/doc, 2 hard/code) plus a known open regression (#772, no action needed) and a recurring regression (#694) that got a fresh evidence comment rather than a duplicate issue. Filed issues #794-#798 for the 5 candidates, then dispatched 3 Sonnet impl agents in isolated worktrees: one grouped doc PR closing #794/#795/#796, and one PR each for the two hard fixes (#797 commit-msg model-name allowlist, #798 PR-vs-issue deletion cross-check). Reviewed all three PRs myself as the ADR-0003 reviewer-agent: merged the doc PR (#799) after a clean review and green gate; escalated both hard PRs (#800, #801) to the human with detailed review comments, since both were explicitly tagged hard for non-obvious design trade-offs the issues themselves flagged for human judgement, per the Skill's own escalation guidance. All steps in this session were agent-initiated per the Skill's own schedule-driven mandate — no human green-light was sought or needed for filing issues or dispatching fixes, consistent with frictions-to-fixes' standing charter."
+prs:
+  - "799"
+  - "800"
+  - "801"
+docsRead:
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run itself
+  - name: dispatch-subagents
+    reason: worktree isolation + brief checklist for the 3 impl agents
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Survey subagent's mcp__github__search_pull_requests returned total_count:0 for a targeted query even though matching PRs existed (known false-negative pattern, issue #741)."
+    solution: Worked around via pull_request_read by number directly; no new fix needed, existing doc guidance already covers this and held up.
+    severity: minor
+  - description: Survey subagent's session-frictions.ts --window 20 output (39.7KB) exceeded Bash's inline capture and was silently spilled to a file rather than erroring; had to read the persisted file directly. Second known occurrence of this exact pattern.
+    solution: No fix filed this round (single occurrence within this window, below the recurrence bar) — worth a doc caveat on scripts/session-frictions.ts if it recurs a third time.
+    severity: minor
+  - description: frictions-to-fixes SKILL.md doesn't explicitly say whether a doc-fix dispatch brief needs the audit-docs house rules restated in full vs. referenced; I referenced rather than restated, consistent with the single-home rule, and it worked, but this was a judgment call not spelled out in the Skill text.
+    solution: Skill text could be more explicit that a reference to the house rules suffices in the dispatch brief rather than a restatement.
+    severity: nit
+durationSec: 1271
+models:
+  claude-sonnet-5: 86
+toolCounts:
+  Agent: 4
+  ScheduleWakeup: 3
+  Read: 5
+  ToolSearch: 2
+  mcp__github__issue_write: 5
+  mcp__github__add_issue_comment: 4
+  mcp__github__pull_request_read: 8
+  Bash: 5
+  Skill: 2
+  Write: 1
+  PushNotification: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - task: Doc-fix batch for issues 794/795/796
+    model: sonnet
+  - task: Hard fix for issue 797 (commit-msg model validation)
+    model: sonnet
+  - task: Hard fix for issue 798 (PR vs deletion-issue cross-check)
+    model: sonnet
+gitBranch: claude/hopeful-brown-dtr1ec
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: frictions-to-fixes
