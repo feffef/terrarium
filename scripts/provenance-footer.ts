@@ -9,7 +9,8 @@
 // `provenanceFooter()` and the model/session helpers, so the format is single-homed).
 //
 // The pure core (`hasProvenanceFooter` / `computeFooterAction` / `applyFooter` /
-// `correctSessionTrailer` / `provenanceFooter`) is kept separate from the
+// `correctSessionTrailer` / `correctCoAuthorLine` / `applyCorrections` /
+// `provenanceFooter` / `isKnownModelName`) is kept separate from the
 // git-hook I/O (`main`), mirroring the `handle`/`main` split in
 // `session-end.ts`. `main()` FAILS OPEN: any error, missing transcript, or
 // unresolvable session URL leaves the message untouched and the commit
@@ -24,6 +25,15 @@
 // after the commit already landed. This reuses that same comparison shape
 // (`findSessionIdMismatches`) inline rather than importing across files, to keep
 // the fix a single-file change.
+//
+// Issue #797 extends that same "already-present footer" check to the
+// `Co-Authored-By:` line's model name: it was previously matched loosely (any
+// name, pinned only to the `noreply@anthropic.com` address), so a wrong model
+// name never got caught mechanically. `computeFooterAction` now also compares
+// the existing name against `KNOWN_MODEL_NAMES` and, on a miss, corrects that
+// line too — the same auto-correct treatment (never a hard commit failure) the
+// session-id mismatch above already gets, generalized so a `correct` action can
+// carry either or both trailer lines.
 //
 // Safety property: the guard is inert unless it can resolve an agent session URL
 // (from `CLAUDE_CODE_REMOTE_SESSION_ID` or the transcript's own session id). A
@@ -56,10 +66,40 @@ import {
  *  ADR-0017 has no "the trace didn't say" exemption; the footer still needs a value. */
 export const FALLBACK_MODEL = 'Claude'
 
+/** The current Claude model family display names a `Co-Authored-By:` line is
+ *  expected to name (issue #797) — the single named list a future model
+ *  release updates, rather than a literal buried inside the validation logic.
+ *  Sourced from this harness's own commit-footer template; keep in sync with
+ *  it as new models ship. `isKnownModelName` also accepts `FALLBACK_MODEL`
+ *  itself, since that's this file's own legitimate stand-in when no transcript
+ *  is available to name a specific model. */
+export const KNOWN_MODEL_NAMES: readonly string[] = [
+  'Claude Opus 5',
+  'Claude Sonnet 5',
+  'Claude Fable 5',
+  'Claude Haiku 4.5',
+]
+
+/** True when `name` is a recognized `Co-Authored-By:` model name — a
+ *  `KNOWN_MODEL_NAMES` entry, or the generic `FALLBACK_MODEL`. */
+export function isKnownModelName(name: string): boolean {
+  return name === FALLBACK_MODEL || KNOWN_MODEL_NAMES.includes(name)
+}
+
 /** The `Co-Authored-By:` half of the ADR-0017 footer — matched loosely (any
  *  model name) but pinned to the `noreply@anthropic.com` address so an unrelated
- *  human co-author line never reads as "footer already present". */
+ *  human co-author line never reads as "footer already present". Model-name
+ *  *validity* is a separate, stricter check (`coAuthorModelName` +
+ *  `isKnownModelName`, issue #797) — this one only gates presence. */
 const COAUTHOR_LINE = /^Co-Authored-By:.*<noreply@anthropic\.com>/m
+
+/** The model name a `Co-Authored-By:` line names, or `null` if `text` carries
+ *  none — the extraction half of the issue #797 allowlist check, mirroring
+ *  `trailerSessionId`'s shape for the session half. */
+function coAuthorModelName(text: string): string | null {
+  const match = text.match(/^Co-Authored-By:\s*(.+?)\s*<noreply@anthropic\.com>/m)
+  return match?.[1] ?? null
+}
 
 /** True when BOTH footer lines are already present (harness template fired, or a
  *  `git commit -F` path already appended them). The `Claude-Session:` half reuses
@@ -111,6 +151,28 @@ export function correctSessionTrailer(message: string, footer: string): string {
   return message.replace(/^Claude-Session:.*$/m, footer)
 }
 
+/** Replace an existing `Co-Authored-By:` trailer line in place with `footer`
+ *  (itself a full `Co-Authored-By: <name> <noreply@anthropic.com>` line) — the
+ *  model-name analog of `correctSessionTrailer` (issue #797). Only the first
+ *  match is replaced, mirroring that function's contract. */
+export function correctCoAuthorLine(message: string, footer: string): string {
+  return message.replace(/^Co-Authored-By:.*$/m, footer)
+}
+
+/** Apply a `correct` action's replacement footer — one or two full trailer
+ *  lines, `\n`-joined — each line replacing its own matching trailer in place
+ *  (issue #710's single-line-fix contract, generalized so a session-id fix and
+ *  a model-name fix (issue #797) can land together in one pass). */
+export function applyCorrections(message: string, footer: string): string {
+  let updated = message
+  for (const line of footer.split('\n')) {
+    updated = line.startsWith('Claude-Session:')
+      ? correctSessionTrailer(updated, line)
+      : correctCoAuthorLine(updated, line)
+  }
+  return updated
+}
+
 export type FooterAction =
   | { action: 'noop' }
   | { action: 'append'; footer: string }
@@ -129,7 +191,15 @@ export type FooterAction =
  *  run here at commit time instead so a hand-typed wrong id never lands in
  *  the first place. Any resolution failure (`sessionUrl` null, no trailer id
  *  extractable on either side) still falls through to `noop` — fail-open,
- *  never a false-positive rewrite. */
+ *  never a false-positive rewrite.
+ *
+ *  Issue #797 adds the same treatment for the `Co-Authored-By:` line's model
+ *  name: an existing name not in `KNOWN_MODEL_NAMES` also earns a `correct`,
+ *  replaced with `modelName` (the resolved ground truth, same as the append
+ *  path uses). Both checks run independently and their corrected lines are
+ *  combined into one `correct` action when both fire, so a footer wrong on
+ *  both axes at once is fixed in a single pass rather than needing a second
+ *  commit-msg invocation to catch the second one. */
 export function computeFooterAction(
   message: string,
   sessionUrl: string | null,
@@ -137,10 +207,21 @@ export function computeFooterAction(
 ): FooterAction {
   if (hasProvenanceFooter(message)) {
     if (!sessionUrl) return { action: 'noop' }
+    const corrections: string[] = []
+
     const existingId = trailerSessionId(message)
     const expectedId = trailerSessionId(sessionLine(sessionUrl))
-    if (!existingId || !expectedId || existingId === expectedId) return { action: 'noop' }
-    return { action: 'correct', footer: sessionLine(sessionUrl) }
+    if (existingId && expectedId && existingId !== expectedId) {
+      corrections.push(sessionLine(sessionUrl))
+    }
+
+    const existingModel = coAuthorModelName(message)
+    if (existingModel !== null && !isKnownModelName(existingModel)) {
+      corrections.push(coAuthorLine(modelName))
+    }
+
+    if (corrections.length === 0) return { action: 'noop' }
+    return { action: 'correct', footer: corrections.join('\n') }
   }
   if (!sessionUrl) return { action: 'noop' }
   // The harness template can inject the Co-Authored-By half without the
@@ -251,7 +332,7 @@ function main(): void {
     const updated =
       action.action === 'append'
         ? applyFooter(message, action.footer)
-        : correctSessionTrailer(message, action.footer)
+        : applyCorrections(message, action.footer)
     writeFileSync(msgFile, updated)
   } catch {
     /* fail open: never block the commit */
