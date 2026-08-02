@@ -12,8 +12,7 @@ role: >-
   always leaving a review comment as an audit trace, and escalates to a human only
   when a change is genuinely high-risk (new dependency, untested/untestable
   behaviour, or a human-only surface). Regressions — a friction back after its fix
-  merged — are flagged as their own alerting issue, never re-fixed blindly. The
-  precursor to the deferred `consolidate`/`codify` jobs (ADR-0009) — no longer
-  purely manual, it also fires on a scheduled Routine; reach for it on demand
+  merged — are flagged as their own alerting issue, never re-fixed blindly. No
+  longer purely manual — it also fires on a scheduled Routine; reach for it on demand
   when frictions have piled up and you want them retired in a batch.
 observations: []

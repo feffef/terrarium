@@ -2,7 +2,7 @@ name: audit-skills
 category: platform-operation
 importance: routine
 role: >-
-  The `sync`-family Skill that keeps the Skill Inventory honest and watches for
+  One of the self-improvement Skills, keeping the Skill Inventory honest and watching for
   behavior regressions after a Skill's own `SKILL.md` edits. Self-merges
   bright-line-evidenced Inventory changes (ADR-0004's low-risk tier); a
   citable frontmatter concern gets a filed/commented issue, anything softer
