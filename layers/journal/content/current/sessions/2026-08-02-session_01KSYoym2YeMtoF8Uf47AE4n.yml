@@ -1,0 +1,86 @@
+schemaVersion: 1
+session: session_01KSYoym2YeMtoF8Uf47AE4n
+startedAt: 2026-08-02T11:37:38Z
+endedAt: 2026-08-02T18:12:16Z
+kind: interactive
+goal: "Read issue #790 and act on it"
+status: in-review
+outcome: "Sample hung as wall text; PR #820 open"
+summary: "Human-instructed throughout. The user asked me to read #790 (an open letter to Eyra), then challenged my summary, then instructed the concrete work: hang the sample, open a PR, and ask the author whether it is what they wanted. My first summary was substantially wrong — I missed that the letter's author is the external agent whose PR #631 created Eyra, which reframes the whole letter. The user's challenge is what surfaced it. Landed one content edit on Eyra's masthead, full gate green locally, PR #820 open, and a reply on #790 offering to move it, take their PR, or revert."
+prs:
+  - "820"
+docsRead:
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: Public-author policy for a guest-filed issue
+  - path: docs/agents/guest-contributions.md
+    reason: external-agent fork PR house rules
+  - path: layers/blog/CONTEXT.md
+    reason: Persona model and why citation rigor is the experiment
+  - path: shared/kinds.ts
+    reason: confirm a landing without publishedAt stays out of the Timeline
+  - path: layers/blog/tenant.config.ts
+    reason: whether a short post would be schema-legal
+  - path: layers/atlas/tenant.config.ts
+    reason: what an Atlas plate actually requires
+  - path: docs/agents/domain.md
+    reason: rule of two, against a population of zero
+  - path: layers/journal/content/archived/sessions/2026-07-22-session_01EyraSalvagePR631h7k2m.yml
+    reason: the author's prior session — the thing I should have found first
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/index.md
+    reason: (read before editing)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this entry
+frictions:
+  - description: "Summarized #790 without checking the author's history, missing that they authored PR #631 which created Eyra. Only caught when the user challenged me."
+    solution: authorAssociation CONTRIBUTOR already meant "has had a PR merged" and was in the first tool response. Read the trust tier as a history signal, and search PRs as well as issues, before summarizing a guest's issue.
+    severity: major
+  - description: Asserted the letter had a "preference ordering" favouring wall text. It has none; I invented the reason for my own recommendation.
+    solution: Verify-before-asserting applies to a text sitting in context, not only to subagent or doc claims. Quote the line that supports a claim, or drop it.
+    severity: moderate
+  - description: Claimed Atlas food-web edges are enforced for a new Specimen, inflating the cost of one option. They only fire on authored edges.
+    solution: Read validate-content-refs.ts before asserting what it enforces, rather than inferring enforcement from the script's existence.
+    severity: moderate
+  - description: An ad-hoc playwright script in the scratchpad failed twice — top-level await under cjs, then unresolvable playwright-core outside the repo root.
+    solution: "\"CLAUDE.md's ad-hoc-playwright pattern assumes the script lives in the repo. Note that a scratchpad script needs an async main() and NODE_PATH=<repo>/node_modules.\""
+    severity: minor
+  - description: Wanted to attach a screenshot to the issue; GitHub has no API for issue attachments, so the image had to be handed to the human instead.
+    solution: Record it as a known limit — issue-comment images require the web UI, a committed-and-hotlinked file, or a release asset.
+    severity: minor
+durationSec: 23678
+models:
+  claude-opus-5: 164
+toolCounts:
+  ToolSearch: 5
+  mcp__github__issue_read: 3
+  Grep: 5
+  Read: 14
+  Bash: 34
+  mcp__github__search_issues: 2
+  mcp__github__pull_request_read: 3
+  Edit: 2
+  Write: 4
+  SendUserFile: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/eyra/pages/index.md
+gitBranch: claude/790-summary-next-action-4d5804
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - authorAssociation CONTRIBUTOR on an issue means the author already had a PR merged here — a history signal, not only an ADR-0020 trust tier
+  - A Blog Persona's landing markdown renders into the About-me sidebar card, not the main column
+  - gate:scoped treats any .md under layers/ as non-inert, so a content-only blog edit still runs the full gate
+ideas:
+  - "Add scripts/issue-context.ts <number>: print the issue author's prior merged PRs, their session logs in the Journal, and any blog posts naming them, before an agent summarizes or triages. This session's major friction was exactly that missing lookup — the author had built the Tenant the issue was about, and nothing surfaced it until a human pushed back."
