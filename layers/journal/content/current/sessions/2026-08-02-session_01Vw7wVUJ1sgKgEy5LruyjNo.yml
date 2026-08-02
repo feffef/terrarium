@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Vw7wVUJ1sgKgEy5LruyjNo
 startedAt: 2026-08-02T04:10:00Z
-endedAt: 2026-08-02T04:32:17Z
+endedAt: 2026-08-02T04:36:11Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: "PR #818 opened, gate green"
-summary: "Fully agent-initiated: a scheduled Routine fired /audit-docs with no live human in the session. Followed the Skill exactly — inventoried and tiered every doc surface (Live/Historical/Pack-generic), dispatched four parallel paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) covering all eight lenses, pooled the resulting 5 findings (no overlap, so no dedup needed), fact-checked all 5 against primary sources with an independent checker agent (4 CONFIRMED, 1 CONFIRMED-BUT with softer framing), then fixed every one directly: two CLAUDE.md summaries that hadn't caught up to environment-caveats.md's generalization, a CLAUDE.md bullet duplicating ADR-0003's amendment, four Skill Inventory entries still using retired sync/consolidate/codify vocabulary, a redundant merge-mechanics restatement in digest/SKILL.md, and a softened claim in guest-contributions.md to match public-readiness-review.md's unverified-from-repo-state framing. No factual conflict was unresolvable, so no needs-triage issue was filed. pnpm gate:scoped passed green (full build/test/e2e, since the touched paths weren't provably inert). Opened PR #818, subscribed to its activity, and will babysit it to self-merge on green per the Skill's low-risk content tier."
+status: completed
+outcome: "PR #818 merged green"
+summary: "Fully agent-initiated: a scheduled Routine fired /audit-docs with no live human in the session. Followed the Skill exactly — inventoried and tiered every doc surface (Live/Historical/Pack-generic), dispatched four parallel paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) covering all eight lenses, pooled the resulting 5 findings (no overlap, so no dedup needed), fact-checked all 5 against primary sources with an independent checker agent (4 CONFIRMED, 1 CONFIRMED-BUT with softer framing), then fixed every one directly: two CLAUDE.md summaries that hadn't caught up to environment-caveats.md's generalization, a CLAUDE.md bullet duplicating ADR-0003's amendment, four Skill Inventory entries still using retired sync/consolidate/codify vocabulary, a redundant merge-mechanics restatement in digest/SKILL.md, and a softened claim in guest-contributions.md to match public-readiness-review.md's unverified-from-repo-state framing. No factual conflict was unresolvable, so no needs-triage issue was filed. pnpm gate:scoped passed green (full build/test/e2e, since the touched paths weren't provably inert). Opened PR #818, eyeballed and cleared 2 advisory conflicting-issue hits (both false positives), and self-merged it via merge-pr.ts once CI reported green, per the Skill's low-risk content tier (ADR-0003/0004)."
 prs:
   - "818"
 docsRead:
@@ -32,6 +32,8 @@ docsRead:
     reason: (read before editing)
   - path: .agents/skills/digest/SKILL.md
     reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: dispatch-subagents
     reason: brief the four parallel lens reviewers correctly
@@ -48,26 +50,30 @@ frictions:
   - description: Used the ScheduleWakeup tool as a generic fallback heartbeat while waiting on background review agents, even though its own description scopes it to /loop dynamic mode. The scheduled wakeup would have resent "/audit-docs" mid-PR-review had it fired before I cancelled it.
     solution: For background-agent waits outside /loop, rely on the automatic task-notification alone; don't reach for ScheduleWakeup as a general-purpose fallback timer.
     severity: minor
-durationSec: 1337
+durationSec: 1571
 models:
-  claude-sonnet-5: 135
+  claude-sonnet-5: 162
 toolCounts:
-  Bash: 21
+  Bash: 24
   Glob: 1
   Skill: 3
   Agent: 5
   TaskCreate: 1
   ScheduleWakeup: 2
-  Read: 15
+  Read: 17
   Grep: 2
-  Edit: 11
-  ToolSearch: 3
+  Edit: 12
+  ToolSearch: 5
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Write: 1
   mcp__github__pull_request_read: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__issue_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - CLAUDE.md
   - layers/journal/content/current/skills/digest.yml
