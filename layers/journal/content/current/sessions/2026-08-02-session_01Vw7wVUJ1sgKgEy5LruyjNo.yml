@@ -1,0 +1,93 @@
+schemaVersion: 1
+session: session_01Vw7wVUJ1sgKgEy5LruyjNo
+startedAt: 2026-08-02T04:10:00Z
+endedAt: 2026-08-02T04:32:17Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: in-review
+outcome: "PR #818 opened, gate green"
+summary: "Fully agent-initiated: a scheduled Routine fired /audit-docs with no live human in the session. Followed the Skill exactly — inventoried and tiered every doc surface (Live/Historical/Pack-generic), dispatched four parallel paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) covering all eight lenses, pooled the resulting 5 findings (no overlap, so no dedup needed), fact-checked all 5 against primary sources with an independent checker agent (4 CONFIRMED, 1 CONFIRMED-BUT with softer framing), then fixed every one directly: two CLAUDE.md summaries that hadn't caught up to environment-caveats.md's generalization, a CLAUDE.md bullet duplicating ADR-0003's amendment, four Skill Inventory entries still using retired sync/consolidate/codify vocabulary, a redundant merge-mechanics restatement in digest/SKILL.md, and a softened claim in guest-contributions.md to match public-readiness-review.md's unverified-from-repo-state framing. No factual conflict was unresolvable, so no needs-triage issue was filed. pnpm gate:scoped passed green (full build/test/e2e, since the touched paths weren't provably inert). Opened PR #818, subscribed to its activity, and will babysit it to self-merge on green per the Skill's low-risk content tier."
+prs:
+  - "818"
+docsRead:
+  - path: CLAUDE.md
+    reason: entry point + tier classification + single-home rule
+  - path: CONTEXT.md
+    reason: Retired terms section, for the vocabulary finding
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: verify the Ground-rules duplication finding
+  - path: docs/agents/environment-caveats.md
+    reason: verify the Drift finding's generalized caveat
+  - path: docs/agents/guest-contributions.md
+    reason: Contradiction finding
+  - path: docs/research/public-readiness-review.md
+    reason: Contradiction finding's other side
+  - path: layers/journal/content/current/skills/digest.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/audit-skills.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/log-session.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/frictions-to-fixes.yml
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief the four parallel lens reviewers correctly
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Called TaskCreate with a guessed {tasks:[...]} array shape before loading its schema via ToolSearch, despite CLAUDE.md explicitly naming TaskCreate as a repeat offender for this exact mistake.
+    solution: Load every deferred tool's schema via ToolSearch before the first call, with no exceptions for tools whose name reads as self-evident.
+    severity: minor
+  - description: Used the ScheduleWakeup tool as a generic fallback heartbeat while waiting on background review agents, even though its own description scopes it to /loop dynamic mode. The scheduled wakeup would have resent "/audit-docs" mid-PR-review had it fired before I cancelled it.
+    solution: For background-agent waits outside /loop, rely on the automatic task-notification alone; don't reach for ScheduleWakeup as a general-purpose fallback timer.
+    severity: minor
+durationSec: 1337
+models:
+  claude-sonnet-5: 135
+toolCounts:
+  Bash: 21
+  Glob: 1
+  Skill: 3
+  Agent: 5
+  TaskCreate: 1
+  ScheduleWakeup: 2
+  Read: 15
+  Grep: 2
+  Edit: 11
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Write: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - CLAUDE.md
+  - layers/journal/content/current/skills/digest.yml
+  - layers/journal/content/current/skills/audit-skills.yml
+  - layers/journal/content/current/skills/log-session.yml
+  - layers/journal/content/current/skills/frictions-to-fixes.yml
+  - .agents/skills/digest/SKILL.md
+  - docs/agents/guest-contributions.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens audit (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens audit (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens audit (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens audit (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check pooled audit-docs findings
+gitBranch: claude/festive-mayer-sfpohu
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: audit-docs
