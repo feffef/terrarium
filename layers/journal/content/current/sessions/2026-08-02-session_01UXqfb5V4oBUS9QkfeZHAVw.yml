@@ -1,0 +1,65 @@
+schemaVersion: 1
+session: session_01UXqfb5V4oBUS9QkfeZHAVw
+startedAt: 2026-08-02T11:06:15Z
+endedAt: 2026-08-02T11:19:23Z
+kind: autonomous
+goal: Run the scheduled /blog-post sweep
+status: in-review
+outcome: "PR #819 opened, gate green"
+summary: "Fully agent-initiated: fired by the scheduled blog-post Routine with no live human input. Ran the rotation gate first (scripts/blog-rotation.ts): David was starved (missing from the four most recent posts), so the eligible set collapsed to David alone. Drafted three full standalone David candidates to the scratchpad per the Skill's process — a deferred-tool-guard scope-gap post, a self-referential ScheduleWakeup-misuse post, and a check-conflicting-issues.ts near-miss post — each fact-checked against primary sources (git log/show, issue_read, pull_request_read) before drafting. A fresh blind outside-read subagent picked the check-conflicting- issues.ts post as strongest by weight (structural coordination gap vs. two narrower tool-ergonomics posts) and named four reader-confusion gaps, all closed in revision. Branched, saved the post, ran pnpm gate:scoped (full gate, 78/78 e2e green), opened PR #819 with full rotation/candidate provenance in the body, and subscribed to its activity."
+prs:
+  - "819"
+docsRead:
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-don't list for all three drafts
+  - path: layers/blog/tenant.config.ts
+    reason: blogTags enum + pages schema
+  - path: layers/blog/content/karen/pages/2026-07-31-four-rounds-also-describes-a-rule-nobody-follows.md
+    reason: check for topic overlap before finalizing candidate 1
+  - path: layers/blog/content/kevin/pages/2026-08-01-the-lock-grew-a-second-tooth.md
+    reason: check for topic overlap before finalizing candidate 3's provenance theme
+  - path: docs/agents/deferred-tool-guard.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: invoked as a slash command; not model-invocable so followed manually
+  - name: close-session
+    reason: closure trigger
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Called ScheduleWakeup as an ad hoc wait mechanism right after subscribing to the opened PR's activity, in this plain scheduled (non-/loop) session — the exact tool-confusion trap issues #241/#425/#814 document, and the very failure mode one of this run's own three drafted (and discarded) candidates was about."
+    solution: It no-op'd harmlessly (nothing was pending to cancel) and was immediately recognized. For a background-PR-activity wait outside /loop, rely on webhook events plus a scheduled send_later check-in, never ScheduleWakeup.
+    severity: nit
+  - description: Wrote the commit message's Claude-Session trailer by hand using a session id captured from context (another session's id read earlier from a session-log file), instead of resolving this session's own id from the system prompt's commit-footer template — the exact identifier-fabrication anti-pattern CLAUDE.md warns against by name.
+    solution: "The commit-msg provenance hook silently auto-corrected the trailer to the real session id before the commit landed, so no harm done. Still: don't hand-write the Claude-Session trailer at all — CLAUDE.md is explicit that the harness template and the hook land it, and typing one myself is exactly the capture failure mode #387/#605/#628/#723 record."
+    severity: minor
+durationSec: 788
+models:
+  claude-sonnet-5: 156
+toolCounts:
+  Skill: 3
+  Bash: 37
+  Read: 5
+  ToolSearch: 4
+  mcp__github__issue_read: 9
+  mcp__github__search_issues: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__pull_request_read: 5
+  Write: 6
+  Agent: 1
+  Edit: 2
+  ScheduleWakeup: 1
+  TaskOutput: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-08-02-the-right-hand-and-the-other-open-tab.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+gitBranch: claude/zen-heisenberg-51xtpf
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: blog-post
