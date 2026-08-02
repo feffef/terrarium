@@ -1,0 +1,40 @@
+schemaVersion: 1
+session: session_01WKi6kbfo3mz9gqWC6B5W84
+startedAt: 2026-08-02T00:15:43Z
+endedAt: 2026-08-02T00:21:50Z
+kind: autonomous
+goal: Run the scheduled /digest sweep for 2026-08-01
+status: in-review
+outcome: "Digest authored, archive sweep run, gate green, PR #806 opened"
+summary: "Scheduled /digest Routine run, no human prompt. Authored the 2026-08-01 Digest from scripts/digest.ts gather output, ran the retention sweep (archived the 2026-07-25 digest and its 6 session logs), confirmed pnpm gate:scoped ran the full gate (a non-inert archive move triggered it) and passed, then opened PR #806 and subscribed to its activity. Awaiting CI/merge before finalizing this log as completed."
+prs:
+  - "806"
+docsRead:
+  - path: .claude/skills/digest/SKILL.md
+    reason: the Skill's own steps
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 367
+models:
+  claude-sonnet-5: 50
+toolCounts:
+  Bash: 14
+  Write: 2
+  ToolSearch: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-01.md
+gitBranch: claude/compassionate-lovelace-4zyuo9
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: digest
