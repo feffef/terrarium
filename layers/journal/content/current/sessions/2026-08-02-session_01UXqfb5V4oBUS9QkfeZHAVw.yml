@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01UXqfb5V4oBUS9QkfeZHAVw
 startedAt: 2026-08-02T11:06:15Z
-endedAt: 2026-08-02T11:19:23Z
+endedAt: 2026-08-02T11:22:44Z
 kind: autonomous
 goal: Run the scheduled /blog-post sweep
-status: in-review
-outcome: "PR #819 opened, gate green"
-summary: "Fully agent-initiated: fired by the scheduled blog-post Routine with no live human input. Ran the rotation gate first (scripts/blog-rotation.ts): David was starved (missing from the four most recent posts), so the eligible set collapsed to David alone. Drafted three full standalone David candidates to the scratchpad per the Skill's process — a deferred-tool-guard scope-gap post, a self-referential ScheduleWakeup-misuse post, and a check-conflicting-issues.ts near-miss post — each fact-checked against primary sources (git log/show, issue_read, pull_request_read) before drafting. A fresh blind outside-read subagent picked the check-conflicting- issues.ts post as strongest by weight (structural coordination gap vs. two narrower tool-ergonomics posts) and named four reader-confusion gaps, all closed in revision. Branched, saved the post, ran pnpm gate:scoped (full gate, 78/78 e2e green), opened PR #819 with full rotation/candidate provenance in the body, and subscribed to its activity."
+status: completed
+outcome: "PR #819 merged green"
+summary: "Fully agent-initiated: fired by the scheduled blog-post Routine with no live human input. Ran the rotation gate first (scripts/blog-rotation.ts): David was starved (missing from the four most recent posts), so the eligible set collapsed to David alone. Drafted three full standalone David candidates to the scratchpad per the Skill's process — a deferred-tool-guard scope-gap post, a self-referential ScheduleWakeup-misuse post, and a check-conflicting-issues.ts near-miss post — each fact-checked against primary sources (git log/show, issue_read, pull_request_read) before drafting. A fresh blind outside-read subagent picked the check-conflicting- issues.ts post as strongest by weight (structural coordination gap vs. two narrower tool-ergonomics posts) and named four reader-confusion gaps, all closed in revision. Branched, saved the post, ran pnpm gate:scoped (full gate, 78/78 e2e green), opened PR #819 with full rotation/candidate provenance in the body, subscribed to its activity, and, once CI reported green with no check-conflicting-issues.ts hits, posted the verdict comment and self-merged via merge-pr.ts per the Skill's low-risk content tier (ADR-0003/0004)."
 prs:
   - "819"
 docsRead:
@@ -34,26 +34,29 @@ frictions:
   - description: Wrote the commit message's Claude-Session trailer by hand using a session id captured from context (another session's id read earlier from a session-log file), instead of resolving this session's own id from the system prompt's commit-footer template — the exact identifier-fabrication anti-pattern CLAUDE.md warns against by name.
     solution: "The commit-msg provenance hook silently auto-corrected the trailer to the real session id before the commit landed, so no harm done. Still: don't hand-write the Claude-Session trailer at all — CLAUDE.md is explicit that the harness template and the hook land it, and typing one myself is exactly the capture failure mode #387/#605/#628/#723 record."
     severity: minor
-durationSec: 788
+durationSec: 989
 models:
-  claude-sonnet-5: 156
+  claude-sonnet-5: 178
 toolCounts:
   Skill: 3
-  Bash: 37
+  Bash: 41
   Read: 5
   ToolSearch: 4
   mcp__github__issue_read: 9
   mcp__github__search_issues: 2
   mcp__github__search_pull_requests: 1
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 8
   Write: 6
   Agent: 1
-  Edit: 2
+  Edit: 3
   ScheduleWakeup: 1
   TaskOutput: 2
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-08-02-the-right-hand-and-the-other-open-tab.md
 subagents:
