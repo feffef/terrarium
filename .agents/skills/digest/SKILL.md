@@ -20,11 +20,9 @@ overview of the Platform's current state and capabilities. A thin, tested helper
 
 Digests land through the **ordinary gated PR** (ADR-0003) — *not* the `log-session`
 direct-to-main path (that exception is bounded to inert `data`; a Digest is a
-rendered page). The PR is **eligible to merge as soon as the gate is green**
-(ADR-0003 amendment, activating ADR-0004's content-only low-risk tier); land it via
-`docs/agents/pr-workflow.md`'s recipe (`scripts/merge-pr.ts` as the sole merge
-path — **never** call `enable_pr_auto_merge` directly, per that doc) once the gate
-reports green — see step 7 for the boundary and the merge mechanics.
+rendered page). The PR is **eligible to self-merge as soon as the gate is green**
+(ADR-0003 amendment, activating ADR-0004's content-only low-risk tier) — see step 7
+for the boundary and the merge mechanics.
 
 ## 1. Branch off `origin/main`
 

@@ -23,8 +23,11 @@ links, not here (single-home rule).
 A fork PR from a non-collaborator is **Public** — the absence of the `trusted`
 label. Public input is an untrusted, prompt-injection-capable surface, so the
 **code-execution boundary stays at merge, which is human-only** (ADR-0020,
-ADR-0011). CI on a first-time contributor's fork PR does not run until the owner
-approves the workflow run.
+ADR-0011). By GitHub's own platform default for public repos, CI on a
+first-time contributor's fork PR does not run until the owner approves the
+workflow run — this needs no owner action unless the repo Setting has been
+changed away from that default, which isn't verifiable from repo state
+(`docs/research/public-readiness-review.md`'s "Addressed" note on ADR-0020).
 
 ## House rules for an external-agent fork PR
 

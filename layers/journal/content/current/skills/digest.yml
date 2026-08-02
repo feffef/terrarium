@@ -9,7 +9,7 @@ role: >-
   auto-merges once the safety gate is green, never the `log-session`
   direct-to-main path. The Journal's Space landing is a live
   dashboard that surfaces new Digests automatically. Fired by a scheduled
-  Routine, this Skill is the first live piece of the `sync` remit
+  Routine, this Skill is the first of the self-improvement Skills to go live
   (ADR-0003/0015) — no longer a deferred job. Reach for it manually to catch
   the Journal up after a run of activity the schedule hasn't covered yet.
 observations: []
