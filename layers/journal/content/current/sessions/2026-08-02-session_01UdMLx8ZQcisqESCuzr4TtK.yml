@@ -1,0 +1,36 @@
+schemaVersion: 1
+session: session_01UdMLx8ZQcisqESCuzr4TtK
+startedAt: 2026-08-02T00:46:05Z
+endedAt: 2026-08-02T00:52:49Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: Scorecard reviewed, zero changes warranted
+summary: "Fully agent-initiated: fired by the scheduled /audit-skills Routine with no live human input. Gathered scripts/audit-skills.ts's 40-session scorecard and reviewed every one of the 36 Inventory entries' importance/role against usedIn evidence — found no bright-line grade/role change (≥2 windowed sessions either direction) since the prior audit-skills run (session_01TasoY3intJcrJrSVi3enki, 2026-08-01), since only 5 sessions landed after it and none touched the borderline-adoption Skills (code-review, implement, domain-modeling, diagnosing-bugs, writing-great-skills). Screened all 11 regressionChecks (Phase A); none warranted a Phase B deep-read — the brackets that looked worse were dominated by two unrelated provenance/harness sessions coincidentally adjacent in time to several Skills' edits, not evidence the edited Skill itself regressed, and the edited Skill had zero usage in most of those brackets. orphanedSessions, orphanSuppressionLog, and manuallyRescuedClosures were all empty. humanPromptedClosures flagged session_012NCZUhy7qDirkjp8t6YiNy again, but it's a stale re-citation (already on standing thread #483 twice, and already tracked by open issue #792 proposing the DISMISSED_HUMAN_PROMPTED_CLOSURES fix) — no new action taken. misclassifiedKind flagged session_0159mPyC4Wf1J45K7NopBcTM, informational only per #449's spec. The `review` Inventory entry is a phantom (inventoried, not onDisk) but maps to a built-in CLI Skill invisible to the on-disk scan, so left untouched per the Skill's own instructions. Diff was empty throughout, so no PR was opened."
+prs: []
+docsRead: []
+skillsUsed:
+  - name: audit-skills
+    reason: the run itself
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 404
+models:
+  claude-sonnet-5: 74
+toolCounts:
+  Bash: 17
+  ToolSearch: 2
+  TaskCreate: 5
+  TaskUpdate: 6
+  Read: 4
+  mcp__github__issue_read: 3
+  mcp__github__search_issues: 1
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-onw77o
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: audit-skills
