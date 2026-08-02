@@ -70,6 +70,10 @@ The subagent cannot see this session's context, so the brief is self-contained:
   log-file completion marker, or the `Monitor` tool — not just "run it and wait":
   a subagent that checks once and stops stalls on a still-running job, needing a
   `SendMessage` resume with the log's actual tail pasted in (issue #602).
+- **The Agent tool ignores `run_in_background: false`.** Every Agent-tool call
+  launches as a background async task regardless of the `run_in_background`
+  parameter passed — plan to wait on the automatic task-notification for the
+  subagent's result, not a synchronous inline return.
 - **Decouple screenshot capture from gate completion.** A screenshot-capture
   agent shoots finals as soon as `pnpm build` succeeds, independent of whether
   `pnpm gate:scoped`/CI has finished — otherwise it blocks on the gate and never

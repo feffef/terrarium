@@ -15,6 +15,13 @@
 //   Prints the N most-recent sessions (by startedAt, oldest of the window first)
 //   as JSON: id, file, startedAt, goal, outcome, prs, and every friction's
 //   description/solution/severity.
+//
+// A large --window value can produce output that exceeds the Bash tool's
+// inline-capture cap; the tool silently redirects the overflow to a spill
+// file rather than erroring, which is easy to miss. For --window values of
+// roughly 15 or more, redirect straight to a file instead of relying on
+// inline capture, e.g.:
+//   pnpm exec tsx scripts/session-frictions.ts --window 20 > /tmp/frictions.json
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
