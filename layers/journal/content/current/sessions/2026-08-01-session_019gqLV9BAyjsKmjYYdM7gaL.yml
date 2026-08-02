@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019gqLV9BAyjsKmjYYdM7gaL
 startedAt: 2026-08-01T10:11:10Z
-endedAt: 2026-08-02T17:41:17Z
+endedAt: 2026-08-02T18:01:33Z
 kind: interactive
 goal: Give scheduled Skills their own importance grade
-status: in-review
-outcome: Grade merged; its drift-guard test in review
-summary: "Human-instructed throughout: the user observed that the Skills run by scheduled Routines were graded `specialist`, said they are really the daily routine, and explicitly authorised introducing a new category if none fit. Scanned five days of session logs to identify the set from evidence — digest, audit-docs, audit-skills, blog-post (all `specialist`) plus frictions-to-fixes (`essential`). Clarified that `specialist` is an `importance` value, not `category`, and added a fifth grade `routine` between `essential` and `specialist` — defined in CONTEXT.md, amended into ADR-0015, taught to audit-skills, wired through schema, type, ordering and the inventory component. Pulling frictions-to-fixes off `essential` was my own judgement call, flagged to the user as reversible. Gate green; live-DOM probe confirmed the render. PR #803 merged by a human, as required for a change touching docs/adr/. The user then green-lit a follow-up closing this session's own top friction: PR #804 adds a spec pinning journal.ts's hand-maintained unions to the Zod enums they mirror, verified by mutating each side and confirming the matching half actually fails."
+status: completed
+outcome: Grade and its drift-guard test both merged
+summary: "Human-instructed throughout: the user observed that the Skills run by scheduled Routines were graded `specialist`, said they are really the daily routine, and explicitly authorised introducing a new category if none fit. Scanned five days of session logs to identify the set from evidence — digest, audit-docs, audit-skills, blog-post (all `specialist`) plus frictions-to-fixes (`essential`). Clarified that `specialist` is an `importance` value, not `category`, and added a fifth grade `routine` between `essential` and `specialist` — defined in CONTEXT.md, amended into ADR-0015, taught to audit-skills, wired through schema, type, ordering and the inventory component. Pulling frictions-to-fixes off `essential` was my own judgement call, flagged to the user as reversible. Gate green; live-DOM probe confirmed the render. PR #803 merged by a human, as required for a change touching docs/adr/. The user then green-lit a follow-up closing this session's own top friction: PR #804 adds a spec pinning journal.ts's hand-maintained unions to the Zod enums they mirror, verified by mutating each side and confirming the matching half actually fails. Both PRs merged by a human."
 prs:
   - "803"
   - "804"
@@ -56,23 +56,24 @@ frictions:
   - description: The Stop hook flagged uncommitted changes mid-task, while edits were deliberately still in progress and not yet in a committable state.
     solution: Nothing to fix in-repo; noting it because the signal reads as a defect when the session is simply mid-edit rather than winding down.
     severity: nit
-durationSec: 113406
+durationSec: 114623
 models:
-  claude-opus-5: 1113
-  <synthetic>: 1
+  claude-opus-5: 1131
+  <synthetic>: 2
 toolCounts:
-  Bash: 47
+  Bash: 48
   Read: 15
-  Edit: 19
+  Edit: 21
   Write: 3
   ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 332
-  mcp__github__pull_request_read: 6
+  mcp__github__pull_request_read: 7
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 2
   mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 4
 filesEdited:
   - layers/journal/tenant.config.ts
   - layers/journal/app/types/journal.ts
