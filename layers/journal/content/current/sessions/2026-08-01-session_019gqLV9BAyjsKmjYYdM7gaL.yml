@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_019gqLV9BAyjsKmjYYdM7gaL
 startedAt: 2026-08-01T10:11:10Z
-endedAt: 2026-08-01T10:31:41Z
+endedAt: 2026-08-02T17:41:17Z
 kind: interactive
 goal: Give scheduled Skills their own importance grade
-status: completed
-outcome: New `routine` grade merged into the Skill Inventory
-summary: "Human-instructed throughout: the user observed that the Skills run by scheduled Routines were graded `specialist`, said they are really the daily routine, and explicitly authorised introducing a new category if none fit. Scanned five days of session logs to identify the set from evidence — digest, audit-docs, audit-skills, blog-post (all `specialist`) plus frictions-to-fixes (`essential`). Clarified that `specialist` is an `importance` value, not `category`, and added a fifth grade `routine` between `essential` and `specialist` — defined in CONTEXT.md, amended into ADR-0015, taught to audit-skills, wired through schema, type, ordering and the inventory component. Pulling frictions-to-fixes off `essential` was my own judgement call, flagged to the user as reversible. Gate green; live-DOM probe confirmed the render. PR #803 merged by a human, as required for a change touching docs/adr/."
+status: in-review
+outcome: Grade merged; its drift-guard test in review
+summary: "Human-instructed throughout: the user observed that the Skills run by scheduled Routines were graded `specialist`, said they are really the daily routine, and explicitly authorised introducing a new category if none fit. Scanned five days of session logs to identify the set from evidence — digest, audit-docs, audit-skills, blog-post (all `specialist`) plus frictions-to-fixes (`essential`). Clarified that `specialist` is an `importance` value, not `category`, and added a fifth grade `routine` between `essential` and `specialist` — defined in CONTEXT.md, amended into ADR-0015, taught to audit-skills, wired through schema, type, ordering and the inventory component. Pulling frictions-to-fixes off `essential` was my own judgement call, flagged to the user as reversible. Gate green; live-DOM probe confirmed the render. PR #803 merged by a human, as required for a change touching docs/adr/. The user then green-lit a follow-up closing this session's own top friction: PR #804 adds a spec pinning journal.ts's hand-maintained unions to the Zod enums they mirror, verified by mutating each side and confirming the matching half actually fails."
 prs:
   - "803"
+  - "804"
 docsRead:
   - path: CONTEXT.md
     reason: the single home for the importance grades
@@ -26,6 +27,14 @@ docsRead:
     reason: (read before editing)
   - path: layers/journal/tests/unit/journal-dashboard.spec.ts
     reason: (read before editing)
+  - path: layers/journal/tenant.config.ts
+    reason: (read before editing)
+  - path: shared/expand.ts
+    reason: (no reason given)
+  - path: tests/unit/typecheck-coverage.spec.ts
+    reason: (no reason given)
+  - path: shared/schemas/session.ts
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: self-judged closure at PR-open
@@ -33,8 +42,11 @@ skillsUsed:
     reason: authored this log
 frictions:
   - description: The grade set was written out in seven places (Zod enum, TS union, order array, two comments, a test name, CONTEXT.md, ADR, SKILL.md); adding one value meant editing all of them by hand with nothing to catch a miss.
-    solution: Derive the `Importance` TS union from the manifest's Zod enum, or add a unit test asserting the two literal lists agree, so a partially-added grade fails the gate instead of shipping.
+    solution: "Derive the `Importance` TS union from the manifest's Zod enum, or add a unit test asserting the two literal lists agree, so a partially-added grade fails the gate instead of shipping. Done in PR #804."
     severity: moderate
+  - description: 'After #803 merged, restarting the branch and pushing failed with "stale info" — the remote branch was deleted on merge, but the local remote-tracking ref still pointed at it, so --force-with-lease compared against a ref that no longer existed.'
+    solution: "CLAUDE.md's merged-PR restart recipe should note the remote branch is usually gone by then: prune first (git remote prune origin), or push without the lease since it is a new remote branch — rather than reading \"stale info\" as a genuine concurrent-write conflict."
+    severity: minor
   - description: A shipped inventory entry already violated CLAUDE.md's "never state a Routine's schedule in a committed doc" rule — frictions-to-fixes' role prose named an interval. The rule has no mechanical enforcement.
     solution: Add a validate-content check flagging cadence words (daily, twice-daily, hourly, nightly) adjacent to "Routine" in Skill Inventory roles and docs.
     severity: minor
@@ -44,21 +56,22 @@ frictions:
   - description: The Stop hook flagged uncommitted changes mid-task, while edits were deliberately still in progress and not yet in a committable state.
     solution: Nothing to fix in-repo; noting it because the signal reads as a defect when the session is simply mid-edit rather than winding down.
     severity: nit
-durationSec: 1231
+durationSec: 113406
 models:
-  claude-opus-5: 113
+  claude-opus-5: 1113
+  <synthetic>: 1
 toolCounts:
-  Bash: 34
-  Read: 9
-  Edit: 15
-  Write: 2
+  Bash: 47
+  Read: 15
+  Edit: 19
+  Write: 3
   ToolSearch: 2
   mcp__github__search_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
-  mcp__github__pull_request_read: 2
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 332
+  mcp__github__pull_request_read: 6
   Skill: 2
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 2
   mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/tenant.config.ts
@@ -70,6 +83,7 @@ filesEdited:
   - .agents/skills/audit-skills/SKILL.md
   - layers/journal/content/current/skills/frictions-to-fixes.yml
   - layers/journal/tests/unit/journal-dashboard.spec.ts
+  - layers/journal/tests/unit/journal-type-mirrors.spec.ts
 gitBranch: claude/daily-routine-skills-category-p296i4
 entrypoint: remote_mobile
 cliVersion: 2.1.220
