@@ -248,13 +248,17 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   actual long-running process finishes, and "completed" stops meaning
   anything. Use `Monitor`/`ps` plus a log completion marker to confirm the
   process actually finished instead of trusting the outer call's return.
-- **Never pipe a backgrounded or long-running command through `tail`/`head`
-  when its exit status or full output matters.** A pipeline reports the *last*
+- **Never pipe a backgrounded or long-running command through ANY trailing
+  command in a pipe/chain — `tail`/`head` are only the most common case — when
+  its exit status or full output matters.** A pipeline reports the *last*
   command's exit status — `tail`'s, almost always 0 — not the piped command's,
   so checking `$?` after `cmd | tail -N` can report success on a genuine
-  failure; and `tail -N`/`head -N` can truncate before the section you actually
-  need. Redirect to a file instead (`cmd > log 2>&1`), check `$?` directly, and
-  read the file in full — or truncate it only after confirming exit status.
+  failure; the same trap applies to any other trailing command (e.g. a wrapped
+  command ending in `| echo done` reports `echo`'s exit status, not the
+  original command's), and `tail -N`/`head -N` can additionally truncate
+  before the section you actually need. Redirect to a file instead (`cmd >
+  log 2>&1`), check `$?` directly, and read the file in full — or truncate it
+  only after confirming exit status.
 - **Before `git reset --hard` (or any other command that discards uncommitted
   work), run `git status` first and stash or commit anything it finds.** A
   `git reset --hard HEAD~1` mid-teardown once discarded uncommitted edits to 5
@@ -429,6 +433,9 @@ against `nuxt dev` — but the dev server injects a Nuxt DevTools overlay badge
 (e.g. a small "26 ms" timing pill) that can overlap real content and read as a
 UI bug, so prefer preview for a shot you're trusting. The optional `WxH` (e.g.
 `1280x1600`) sets the window size — use it to reach below-the-fold content.
+The `<route>` argument also accepts a `#anchor` fragment (e.g. `/t/journal/current#some-id`)
+to scroll directly to a specific element — often simpler than guessing a tall
+`WxH` when the target content is below the fold.
 
 **Need the server to stay up** across several captures (e.g. `scripts/plate-gallery.ts`
 or an ad-hoc Playwright probe)? `scripts/preview.ts start [--dev]` prints a `PID=`

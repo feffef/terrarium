@@ -16,6 +16,13 @@
 //   instant, each additionally carrying `afterAll` — the subset of the given
 //   instants that commit postdates. One `git log`, bounded by the earliest
 //   instant, regardless of how many instants are given.
+//
+// This script runs `git fetch` internally, which writes progress lines to
+// stderr, while the JSON result goes to stdout. A caller that combines the
+// two streams (e.g. `2>&1`) will get fetch progress interleaved with the
+// JSON, breaking any JSON parser. Redirect stdout and stderr separately
+// (e.g. `... > out.json 2> err.log`) when the output needs to be parsed as
+// JSON.
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { execFileSync } from 'node:child_process'
