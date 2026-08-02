@@ -1,0 +1,80 @@
+schemaVersion: 1
+session: session_01NcHoZeJE6ev2yVk3TiiCAw
+startedAt: 2026-08-02T01:05:32Z
+endedAt: 2026-08-02T01:42:32Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: completed
+outcome: 3 PRs merged, 1 escalated
+summary: "Scheduled (autonomous, no live human prompt) frictions-to-fixes run. A survey subagent read the latest 20 session logs, screened candidates against the tracker, and returned 7 never-fixed candidates plus one regression (ScheduleWakeup misused in plain scheduled sessions, despite two prior doc-only fixes #241/#425). Verified the subagent's key claims directly (issue_read on #241/#425, grep on the raw session-log YAMLs, code reads of tenant.config.ts/dashboard.ts) before acting on any of them. Filed 8 issues (#807-#814), dispatched 3 Sonnet impl agents in worktree isolation (one batched doc-only PR for #808-#812, one for #807, one for #813), reviewed each PR's diff and gate result myself, posted a review comment on each, and merged all three (PR #815, #816, #817) — all agent-initiated work per ADR-0003's autonomous-Skill charter, no human turn in this session. Filed #814 (the ScheduleWakeup regression) for human review rather than dispatching a third doc-only fix, per the skill's regression-handling rule."
+prs:
+  - "815"
+  - "816"
+  - "817"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe (merge-pr.ts as sole merge path)
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: brief checklist before dispatching 3 impl agents
+  - path: layers/journal/tenant.config.ts
+    reason: "scope the Importance-grade drift-guard fix accurately before filing #807"
+  - path: layers/journal/app/utils/dashboard.ts
+    reason: (no reason given)
+  - path: layers/journal/tests/unit/journal-dashboard.spec.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run this session executed end to end
+  - name: dispatch-subagents
+    reason: brief + isolation mechanism for the 3 impl agents
+  - name: close-session
+    reason: closure trigger
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Immediately after dispatching this run's own survey subagent (a plain scheduled, non-/loop session), called ScheduleWakeup as a \"fallback heartbeat\" — the exact tool-confusion trap two prior doc-only fixes (#241, #425) were meant to prevent, and the same mistake the survey's own regression finding (filed as #814 in this session) had just identified recurring in two other 2026-07-31 sessions."
+    solution: "Caught and cancelled with stop:true before it fired, once #814's finding was read back. Already escalated as regression issue #814 for human review — a third doc-only fix has no strong reason to succeed where two already didn't; don't re-dispatch a doc fix for this in a future frictions-to-fixes run without checking #814's resolution first."
+    severity: nit
+  - description: "The survey subagent classified the \"background-task notification reports wrong exit code\" friction as a clean \"never-fixed\" candidate, but direct verification found it's actually a generalization gap in already-merged #384 (same root cause — a trailing command in a pipe/chain swallows the real exit status — just via `echo` instead of `tail`/`head`), not a wholly separate never-addressed issue."
+    solution: "Caught by reading the cited session log directly and cross-checking the exact wording of #384's existing CLAUDE.md bullet before filing, rather than trusting the subagent's total_count:0 search alone. Filed #808 as an explicit generalization of #384's bullet (amend in place) instead of a duplicate-feeling new one. Worth the survey subagent itself doing this nearby-issue eyeball before labeling something \"never-fixed\", not just relying on an exact-string search returning zero hits."
+    severity: minor
+durationSec: 2220
+models:
+  claude-sonnet-5: 192
+  <synthetic>: 1
+toolCounts:
+  Bash: 21
+  Agent: 4
+  ScheduleWakeup: 3
+  ToolSearch: 3
+  mcp__github__issue_read: 3
+  mcp__github__search_issues: 8
+  Grep: 1
+  mcp__github__issue_write: 8
+  Skill: 3
+  Read: 4
+  TaskCreate: 5
+  mcp__github__pull_request_read: 21
+  mcp__github__search_pull_requests: 2
+  TaskUpdate: 8
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__pull_request_review_write: 3
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 3
+  Write: 1
+  PushNotification: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Doc-only batch fix for 5 frictions
+    model: sonnet
+  - type: general-purpose
+    task: Importance grade drift-guard test
+    model: sonnet
+  - type: general-purpose
+    task: Routine cadence mechanical check
+    model: sonnet
+gitBranch: claude/hopeful-brown-j62vlk
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: frictions-to-fixes
