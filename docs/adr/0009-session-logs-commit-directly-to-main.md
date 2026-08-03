@@ -46,9 +46,11 @@ Status: Accepted
 > Consequences bullet below — the "future `consolidate`/aging job" it deferred to
 > has shipped: `scripts/archive-journal-content.ts` (issue #672), wired as a
 > mandatory step of the `digest` Skill, moves aged-out `current` session logs to
-> `archived` on a 7-UTC-day retention. See ADR-0010's matching correction for the
-> Digest-pages side of the same migration, and ADR-0003's auto-merge ledger for
-> `digest`'s exemption scope.
+> `archived`, retaining the newest 7 session-log dates that actually exist (a
+> count, not a calendar window — a window measured from today used to
+> undercount, since today's own Digest can't exist yet). See ADR-0010's
+> matching correction for the Digest-pages side of the same migration, and
+> ADR-0003's auto-merge ledger for `digest`'s exemption scope.
 
 ## Context
 
@@ -129,8 +131,8 @@ exist and can be built with one.
   exception's boundary is protected by the very gate it steps around.
 - **Aging is handled.** Session logs accumulate in `current` until the `digest`
   Skill's mandatory archive-sweep step (`scripts/archive-journal-content.ts`,
-  issue #672) moves aged-out entries to `archived` on a 7-UTC-day retention — see
-  the 2026-07-25 amendment above.
+  issue #672) moves aged-out entries to `archived`, retaining the newest 7
+  session-log dates that actually exist — see the 2026-07-25 amendment above.
 
 ## Schema evolution policy
 

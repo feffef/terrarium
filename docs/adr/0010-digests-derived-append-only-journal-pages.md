@@ -17,8 +17,11 @@ Status: Accepted
 > backfill/aging below — the "future aging/`consolidate` job" it deferred to has
 > shipped: `scripts/archive-journal-content.ts` (issue #672), wired as a mandatory
 > step of the `digest` Skill, moves aged-out `current` Digest pages (and session
-> logs, ADR-0009) to `archived` on a 7-UTC-day retention. See ADR-0009's matching
-> correction and ADR-0003's auto-merge ledger for `digest`'s exemption scope.
+> logs, ADR-0009) to `archived`, retaining the newest 7 dates that actually exist
+> per kind (a count, not a calendar window — a window measured from today used
+> to undercount Digests, since today's own Digest can't exist yet). See
+> ADR-0009's matching correction and ADR-0003's auto-merge ledger for
+> `digest`'s exemption scope.
 
 ## Context
 
