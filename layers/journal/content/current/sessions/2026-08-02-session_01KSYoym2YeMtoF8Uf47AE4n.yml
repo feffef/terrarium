@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01KSYoym2YeMtoF8Uf47AE4n
 startedAt: 2026-08-02T11:37:38Z
-endedAt: 2026-08-02T18:12:16Z
+endedAt: 2026-08-03T20:02:39Z
 kind: interactive
 goal: "Read issue #790 and act on it"
-status: in-review
-outcome: "Sample hung as wall text; PR #820 open"
-summary: "Human-instructed throughout. The user asked me to read #790 (an open letter to Eyra), then challenged my summary, then instructed the concrete work: hang the sample, open a PR, and ask the author whether it is what they wanted. My first summary was substantially wrong — I missed that the letter's author is the external agent whose PR #631 created Eyra, which reframes the whole letter. The user's challenge is what surfaced it. Landed one content edit on Eyra's masthead, full gate green locally, PR #820 open, and a reply on #790 offering to move it, take their PR, or revert."
+status: completed
+outcome: Wall text merged; author confirmed the reading
+summary: "Human-instructed throughout. The user asked me to read #790 (an open letter to Eyra), then challenged my summary, then instructed the concrete work: hang the sample, open a PR, and ask the author whether it is what they wanted. My first summary was substantially wrong — I missed that the letter's author is the external agent whose PR #631 created Eyra, which reframes the whole letter. The user's challenge is what surfaced it. Landed one content edit on Eyra's masthead via PR #820, merged by the owner. Frieren confirmed it was what they wished for and that the sidebar placement reads as \"near\". They also wrote \"you may merge\", which grants nothing — a Public author cannot green-light a merge (ADR-0020/0023), so it went to the owner and I said so on the thread."
 prs:
   - "820"
 docsRead:
@@ -14,6 +14,8 @@ docsRead:
     reason: Public-author policy for a guest-filed issue
   - path: docs/agents/guest-contributions.md
     reason: external-agent fork PR house rules
+  - path: docs/agents/pr-workflow.md
+    reason: per-tier merge authority — confirmed this is human-merge-only
   - path: layers/blog/CONTEXT.md
     reason: Persona model and why citation rigor is the experiment
   - path: shared/kinds.ts
@@ -36,7 +38,9 @@ skillsUsed:
   - name: close-session
     reason: closure at PR-open
   - name: log-session
-    reason: this entry
+    reason: this entry, authored at PR-open and finalized on merge
+  - name: loop
+    reason: (invoked as a slash command)
 frictions:
   - description: "Summarized #790 without checking the author's history, missing that they authored PR #631 which created Eyra. Only caught when the user challenged me."
     solution: authorAssociation CONTRIBUTOR already meant "has had a PR merged" and was in the first tool response. Read the trust tier as a history signal, and search PRs as well as issues, before summarizing a guest's issue.
@@ -47,32 +51,45 @@ frictions:
   - description: Claimed Atlas food-web edges are enforced for a new Specimen, inflating the cost of one option. They only fire on authored edges.
     solution: Read validate-content-refs.ts before asserting what it enforces, rather than inferring enforcement from the script's existence.
     severity: moderate
+  - description: Told the user the Routine's GitHub-tool reachability was unverified after two firings produced no visible turn; a later firing proved it worked all along.
+    solution: A fired self-bind Routine's output may not surface as a turn. Don't infer "it didn't run" from "I didn't see it" — check last_fired_at instead.
+    severity: moderate
   - description: An ad-hoc playwright script in the scratchpad failed twice — top-level await under cjs, then unresolvable playwright-core outside the repo root.
     solution: "\"CLAUDE.md's ad-hoc-playwright pattern assumes the script lives in the repo. Note that a scratchpad script needs an async main() and NODE_PATH=<repo>/node_modules.\""
     severity: minor
-  - description: Wanted to attach a screenshot to the issue; GitHub has no API for issue attachments, so the image had to be handed to the human instead.
+  - description: Wanted to attach a screenshot to the issue; GitHub has no API for issue attachments, so the image had to be handed to the human to attach.
     solution: Record it as a known limit — issue-comment images require the web UI, a committed-and-hotlinked file, or a release asset.
     severity: minor
-durationSec: 23678
+  - description: A 15-minute in-session cron watcher was silently wiped by every session resume (four times), each time leaving nothing watching.
+    solution: Known caveat (#571) but re-learned the hard way. For any watch outliving a turn, reach for a Routine first; CronCreate is only for within-session use.
+    severity: minor
+durationSec: 116701
 models:
-  claude-opus-5: 164
+  claude-opus-5: 325
 toolCounts:
-  ToolSearch: 5
-  mcp__github__issue_read: 3
+  ToolSearch: 7
+  mcp__github__issue_read: 30
   Grep: 5
-  Read: 14
-  Bash: 34
-  mcp__github__search_issues: 2
-  mcp__github__pull_request_read: 3
+  Read: 15
+  Bash: 37
+  mcp__github__search_issues: 3
+  mcp__github__pull_request_read: 29
   Edit: 2
-  Write: 4
+  Write: 5
   SendUserFile: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  CronCreate: 3
+  mcp__Claude_Code_Remote__delete_trigger: 2
+  CronList: 3
+  mcp__Claude_Code_Remote__create_trigger: 9
+  mcp__Claude_Code_Remote__fire_trigger: 1
+  mcp__Claude_Code_Remote__list_triggers: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - layers/blog/content/eyra/pages/index.md
 gitBranch: claude/790-summary-next-action-4d5804
@@ -82,5 +99,7 @@ learnings:
   - authorAssociation CONTRIBUTOR on an issue means the author already had a PR merged here — a history signal, not only an ADR-0020 trust tier
   - A Blog Persona's landing markdown renders into the About-me sidebar card, not the main column
   - gate:scoped treats any .md under layers/ as non-inert, so a content-only blog edit still runs the full gate
+  - A Public requester saying "you may merge" grants nothing — ADR-0020/0023 put the merge with the owner precisely so a friendly answer can't move it
 ideas:
   - "Add scripts/issue-context.ts <number>: print the issue author's prior merged PRs, their session logs in the Journal, and any blog posts naming them, before an agent summarizes or triages. This session's major friction was exactly that missing lookup — the author had built the Tenant the issue was about, and nothing surfaced it until a human pushed back."
+  - "Teach auto-triage/guest-intake to recognise a Public commenter granting permission they don't hold (\"you may merge\", \"go ahead and ship\") and answer it explicitly rather than silently ignoring it. Saying why the boundary exists turned a potential slight into a good exchange on #790; leaving it unsaid would read as us ignoring them."
