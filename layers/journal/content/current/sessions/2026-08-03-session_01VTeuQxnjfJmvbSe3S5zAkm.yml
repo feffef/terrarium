@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01VTeuQxnjfJmvbSe3S5zAkm
 startedAt: 2026-08-03T04:09:25Z
-endedAt: 2026-08-03T04:30:07Z
+endedAt: 2026-08-03T04:31:28Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
 status: in-review
-outcome: "PR #827 (self-merge) and #828 (escalated ADR fix) opened"
-summary: "Fully agent-initiated scheduled run of the /audit-docs Skill, no human turns this session. Dispatched four paired-lens reviewer agents in parallel (Freshness, Single-home, Concision, Coherence) over every Live-tier doc, pooled seven findings with no overlaps, and ran an independent fact-checker against primary sources before touching anything. Six findings were CONFIRMED/CONFIRMED-BUT and fixed directly: two stale \"step 3\" citations for pr-workflow.md's verdict-posting rule (now step 4), a Nuxt-Content validation fact restated in CLAUDE.md instead of pointed at its research home, a one-off empirical investigation split out of deferred-tool-guard.md into a new docs/research/ note (keeping the load-bearing design-consequence paragraph in the living doc), a redundant \"not a repo bug\" clause trimmed from three environment-caveats.md bullets, and CLAUDE.md's unpinned \"isolation logic\" catch-all given concrete examples to resolve a real ambiguity flagged by the Coherence lens. gate:scoped ran green; committed, pushed, opened self-merge-tier PR #827, subscribed to its activity. The seventh finding — ADR-0009/ADR-0010's \"7-UTC-day retention\" framing for the Journal archive-sweep contradicts archive-journal-content.ts's actual count-based RETAIN_DATES rule, verified directly against the script — touches two ADRs, a human-only surface, so it was fixed as a pure factual correction (ADR-0018's rule) on a separate branch off origin/main and opened as its own human-reviewed PR #828, also subscribed. Both PRs are now being babysat to merge/close."
+outcome: "PR #827 merged; PR #828 (escalated ADR fix) awaiting human review"
+summary: "Fully agent-initiated scheduled run of the /audit-docs Skill, no human turns this session. Dispatched four paired-lens reviewer agents in parallel (Freshness, Single-home, Concision, Coherence) over every Live-tier doc, pooled seven findings with no overlaps, and ran an independent fact-checker against primary sources before touching anything. Six findings were CONFIRMED/CONFIRMED-BUT and fixed directly: two stale \"step 3\" citations for pr-workflow.md's verdict-posting rule (now step 4), a Nuxt-Content validation fact restated in CLAUDE.md instead of pointed at its research home, a one-off empirical investigation split out of deferred-tool-guard.md into a new docs/research/ note (keeping the load-bearing design-consequence paragraph in the living doc), a redundant \"not a repo bug\" clause trimmed from three environment-caveats.md bullets, and CLAUDE.md's unpinned \"isolation logic\" catch-all given concrete examples to resolve a real ambiguity flagged by the Coherence lens. gate:scoped ran green; committed, pushed, opened self-merge-tier PR #827, subscribed to its activity, posted the pre-merge verdict comment (2 advisory conflicting-issues hits eyeballed and dismissed as false positives), and merged it via scripts/merge-pr.ts once CI reported green. The seventh finding — ADR-0009/ADR-0010's \"7-UTC-day retention\" framing for the Journal archive-sweep contradicts archive-journal-content.ts's actual count-based RETAIN_DATES rule, verified directly against the script — touches two ADRs, a human-only surface, so it was fixed as a pure factual correction (ADR-0018's rule) on a separate branch off origin/main and opened as its own human-reviewed PR #828, still open and subscribed, awaiting a human merge."
 prs:
   - "827"
   - "828"
@@ -52,18 +52,18 @@ frictions:
   - description: The four parallel lens-review Agent calls were sent with run_in_background:false but still launched asynchronously as background agents, contrary to the tool's documented foreground-blocking behavior.
     solution: Treat run_in_background:false as best-effort for the Agent tool in this environment; plan on waiting for completion notifications regardless, and don't assume a synchronous return.
     severity: minor
-durationSec: 1242
+durationSec: 1323
 models:
-  claude-sonnet-5: 139
+  claude-sonnet-5: 160
 toolCounts:
-  Bash: 27
-  ToolSearch: 3
+  Bash: 31
+  ToolSearch: 4
   Glob: 1
   mcp__github__search_pull_requests: 1
   Agent: 5
   ScheduleWakeup: 2
-  Read: 16
-  Edit: 12
+  Read: 17
+  Edit: 14
   Write: 2
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
@@ -71,6 +71,8 @@ toolCounts:
   mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
   PushNotification: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/agents/issue-tracker.md
   - .agents/skills/frictions-to-fixes/SKILL.md
