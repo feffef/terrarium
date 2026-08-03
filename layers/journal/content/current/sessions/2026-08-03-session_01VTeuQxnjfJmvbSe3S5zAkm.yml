@@ -1,0 +1,97 @@
+schemaVersion: 1
+session: session_01VTeuQxnjfJmvbSe3S5zAkm
+startedAt: 2026-08-03T04:09:25Z
+endedAt: 2026-08-03T04:30:07Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: in-review
+outcome: "PR #827 (self-merge) and #828 (escalated ADR fix) opened"
+summary: "Fully agent-initiated scheduled run of the /audit-docs Skill, no human turns this session. Dispatched four paired-lens reviewer agents in parallel (Freshness, Single-home, Concision, Coherence) over every Live-tier doc, pooled seven findings with no overlaps, and ran an independent fact-checker against primary sources before touching anything. Six findings were CONFIRMED/CONFIRMED-BUT and fixed directly: two stale \"step 3\" citations for pr-workflow.md's verdict-posting rule (now step 4), a Nuxt-Content validation fact restated in CLAUDE.md instead of pointed at its research home, a one-off empirical investigation split out of deferred-tool-guard.md into a new docs/research/ note (keeping the load-bearing design-consequence paragraph in the living doc), a redundant \"not a repo bug\" clause trimmed from three environment-caveats.md bullets, and CLAUDE.md's unpinned \"isolation logic\" catch-all given concrete examples to resolve a real ambiguity flagged by the Coherence lens. gate:scoped ran green; committed, pushed, opened self-merge-tier PR #827, subscribed to its activity. The seventh finding — ADR-0009/ADR-0010's \"7-UTC-day retention\" framing for the Journal archive-sweep contradicts archive-journal-content.ts's actual count-based RETAIN_DATES rule, verified directly against the script — touches two ADRs, a human-only surface, so it was fixed as a pure factual correction (ADR-0018's rule) on a separate branch off origin/main and opened as its own human-reviewed PR #828, also subscribed. Both PRs are now being babysat to merge/close."
+prs:
+  - "827"
+  - "828"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: verify current recipe step numbering for the Drift finding
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: confirm the researched home for the duplicated validation fact
+  - path: docs/agents/mdc-when-to-use.md
+    reason: the sanctioned cite-back pattern CLAUDE.md's duplicate should have followed
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: model for how a one-off research note self-labels
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: verify the archive-retention contradiction (escalated, not fixed here)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: verify the archive-retention contradiction (escalated, not fixed here)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: check the human-only seven-file completeness claim
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: check shared/manifest.ts isolation framing
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: check nuxt.config.ts human-only framing
+  - path: docs/agents/issue-tracker.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/environment-caveats.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: docs/agents/deferred-tool-guard.md
+    reason: (read before editing)
+  - path: scripts/archive-journal-content.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the scheduled routine this session runs
+  - name: close-session
+    reason: session closure at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: The four parallel lens-review Agent calls were sent with run_in_background:false but still launched asynchronously as background agents, contrary to the tool's documented foreground-blocking behavior.
+    solution: Treat run_in_background:false as best-effort for the Agent tool in this environment; plan on waiting for completion notifications regardless, and don't assume a synchronous return.
+    severity: minor
+durationSec: 1242
+models:
+  claude-sonnet-5: 139
+toolCounts:
+  Bash: 27
+  ToolSearch: 3
+  Glob: 1
+  mcp__github__search_pull_requests: 1
+  Agent: 5
+  ScheduleWakeup: 2
+  Read: 16
+  Edit: 12
+  Write: 2
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  Skill: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  PushNotification: 1
+filesEdited:
+  - docs/agents/issue-tracker.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - CLAUDE.md
+  - docs/agents/environment-caveats.md
+  - docs/research/deferred-tool-guard-hook-viability.md
+  - docs/agents/deferred-tool-guard.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens review (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens review (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens review (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens review (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check pooled audit-docs findings
+gitBranch: claude/festive-mayer-tw82rh
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: audit-docs
