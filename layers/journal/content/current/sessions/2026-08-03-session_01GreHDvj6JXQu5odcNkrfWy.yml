@@ -1,0 +1,47 @@
+schemaVersion: 1
+session: session_01GreHDvj6JXQu5odcNkrfWy
+startedAt: 2026-08-03T00:16:10Z
+endedAt: 2026-08-03T00:22:05Z
+kind: autonomous
+goal: Run the scheduled /digest sweep for 2026-08-02
+status: in-review
+outcome: "PR #821 open, gate green"
+summary: "Entirely agent-initiated: a scheduled Routine fired /digest with no human prompt at any point. Gathered the day's PRs/commits/sessions via scripts/digest.ts, authored the 2026-08-02 Digest narrating 7 merged PRs and 7 sessions (including the day's own sharpest friction, an issue summary that missed the author's prior-PR history), ran the archive sweep (moved 2026-07-26's digest and 5 session logs from current to archived), cleared pnpm gate:scoped locally including the e2e layer, and opened PR #821 against main with activity subscription live."
+prs:
+  - "821"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-08-01.md
+    reason: (no reason given)
+skillsUsed:
+  - name: digest
+    reason: the skill this run executes
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Called ScheduleWakeup to poll a backgrounded pnpm gate:scoped run — the exact tool-confusion trap (issues #241/#425/#814) three other sessions hit today, ironic given this same run's Digest narrates that recurring mistake."
+    solution: For a plain scheduled (non-/loop) session waiting on a backgrounded Bash tool call, just end the turn — the harness delivers a task-notification automatically; ScheduleWakeup is for /loop dynamic pacing only.
+    severity: minor
+durationSec: 354
+models:
+  claude-sonnet-5: 72
+toolCounts:
+  Bash: 19
+  Read: 1
+  Write: 2
+  ScheduleWakeup: 1
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Grep: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-02.md
+gitBranch: claude/compassionate-lovelace-w3xidb
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: digest
