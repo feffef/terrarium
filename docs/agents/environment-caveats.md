@@ -12,16 +12,14 @@ new; don't re-diagnose any of these as a fresh problem.
   change that (`mcp__github__*` stays silent only because the platform auto-approves that
   server by a separate path, not the allowlist). And `Claude_Code_Remote` is a cloud-only
   server, so a local CLI never has it to allow either — the four entries were inert
-  everywhere and were removed from that file. Platform limitation, not a repo bug: don't
-  re-diagnose it or re-add them (full diagnosis: #288). This caveat is
+  everywhere and were removed from that file (full diagnosis: #288). This caveat is
   `Claude_Code_Remote`-specific: in a **trusted local CLI**, `permissions.allow` entries
   for MCP servers that are actually present *do* work.
 - **`commit_signing_key.pub` (`~/.ssh/commit_signing_key.pub`) can be
   unprovisioned (0 bytes) in this environment.** When it is, `git commit -S` —
   and the Stop hook's suggested `--reset-author` remedy for an "Unverified"
   commit — can silently fail to produce a signature regardless of
-  author-email correctness. Platform/environment limitation, not a repo bug:
-  don't re-diagnose it as one each session.
+  author-email correctness.
 - **Session-only, in-memory state can silently empty across a session-resume
   event**, with no error and no notification. Observed in two independent
   forms: `CronCreate`/`CronList` state dropping a recurring `/loop` job mid-run
@@ -34,8 +32,7 @@ new; don't re-diagnose any of these as a fresh problem.
   via `CronList` rather than assuming it persists for its full stated
   lifetime; likewise, after a session resumes, proactively re-verify any
   outstanding backgrounded subagent's liveness rather than assuming it
-  survived the resume. Platform/environment limitation, not a repo bug: don't
-  re-diagnose it as one each session (issues #571, #794).
+  survived the resume (issues #571, #794).
 - **Any `mcp__Claude_Code_Remote__*` call — not just `send_later` — can fail
   with a transient "permission stream closed before response received"
   error.** Converged workaround (mirrors the poll-until-green pattern in

@@ -82,7 +82,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   logic, CI, and governance/ADRs are **human-only** — never auto-merge changes
   touching them (ADR-0004's high-risk set, which also escalates a PR that
   introduces a new dependency or changes untested/untestable runtime
-  behaviour — see ADR-0004's 2026-07-06 amendment for the exact axes).
+  behaviour — see ADR-0004's 2026-07-06 amendment for the exact axes). The
+  pinned seven above are the manifest-expansion/routing/catalog family
+  specifically (ADR-0004/ADR-0025), not an exhaustive list of every human-only
+  file in the repo — "isolation logic" is a deliberately unpinned catch-all
+  that also covers e.g. `shared/manifest.ts` (ADR-0025 calls it "the unit of
+  isolation") and the root `nuxt.config.ts` (ADR-0018 treats it as a
+  human-only surface).
   "Human-only" gates *merging*, not editing:
   `content.config.ts` is hand-editable (below), but a PR touching it still
   needs a human to merge.
@@ -394,8 +400,10 @@ pnpm gate:scoped --dry  # print the decision + planned steps, run nothing
 **Iterating on content only?** `pnpm validate:content` is a three-script chain
 (`scripts/validate-content.ts && scripts/validate-content-refs.ts && scripts/validate-skill-cadence.ts`)
 — the first actually runs each Document's data through its Collection's Zod schema
-(`.safeParse()`), since `pnpm build` only uses the schema to derive SQL column types and
-never validates real content against it; the second catches what a per-document schema
+(`.safeParse()`) against real content, which `pnpm build` never does (`pnpm build` only
+uses the schema to derive SQL column types — why: single-homed in
+`docs/research/nuxt-content-review-grounding.md` §2, not re-derived here); the second
+catches what a per-document schema
 can't see — cross-Document referential integrity (e.g. a food-web edge naming a slug
 that isn't a real Specimen) and Atlas MDC structural invariants (unclosed containers,
 phase-note/almanac cardinality — issue #446); the third flags a Skill Inventory entry
@@ -584,6 +592,9 @@ pushes (ADR-0009) bypass branch protection without breaking repo auto-merge —
 the tension in issue #348
 (`docs/research/github-branch-protection-vs-autonomous-log-commits.md`) — and
 what's actually possible for server-/build-side Mermaid rendering, grounding
-ADR-0024's pre-render decision (`docs/research/mermaid-server-side-rendering.md`).
+ADR-0024's pre-render decision (`docs/research/mermaid-server-side-rendering.md`),
+and whether a `PreToolUse` hook actually intercepts a deferred-tool call in this
+cloud environment, grounding the `deferred-tool-guard`'s design
+(`docs/research/deferred-tool-guard-hook-viability.md`).
 For the line between this directory and a GitHub issue — verified reference vs.
 an unimplemented idea or proposal — see `docs/agents/issue-tracker.md`.

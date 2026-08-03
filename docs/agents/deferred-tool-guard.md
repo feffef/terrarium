@@ -30,33 +30,16 @@ logic change.
 
 ## Viability: does a `PreToolUse` hook intercept the bad call in this cloud env?
 
-This is the empirical question #612 asked for a straight answer on (and that
-#318/#320's sibling provenance work modelled). The honest finding, in three parts:
+Empirically grounded in `docs/research/deferred-tool-guard-hook-viability.md`
+(issue #612): hooks do run in this cloud environment, and the `PreToolUse`
+contract matches exactly what the guard emits. The one open question is
+ordering — whether `PreToolUse` fires *before* the harness rejects a
+schema-invalid deferred-tool call on its own (the `InputValidationError`
+path) — which couldn't be live-tested in the session that authored the guard
+and awaits confirmation from a session that starts with the hook installed.
 
-1. **Hooks run in this cloud environment — observed, not assumed.** This repo's own
-   `SessionStart` / `Stop` / `SessionEnd` hooks in the same `.claude/settings.json`
-   demonstrably fire in cloud sessions (e.g. `session-end.ts` runs on resume). So
-   the hook *infrastructure* is active here — unlike `permissions.allow`, which is
-   dropped in untrusted cloud workspaces (#288). The hook mechanism is not subject
-   to that drop.
-2. **The contract matches exactly (verified against the official docs).** The
-   [Claude Code hooks reference](https://code.claude.com/docs/en/hooks) confirms
-   `PreToolUse` fires *before a tool call executes and can block it*, receives
-   `tool_name` + `tool_input` on stdin, and denies via
-   `hookSpecificOutput.{hookEventName, permissionDecision: "deny",
-   permissionDecisionReason}` — precisely what `denyOutputFor()` emits, and a
-   `"TaskCreate|Monitor"` list is valid matcher syntax.
-3. **Residual unknown — ordering vs. schema validation — recorded, not papered
-   over.** Whether `PreToolUse` fires *before* the harness rejects a schema-invalid
-   **deferred**-tool call (the `InputValidationError` path) is a property of the
-   host, not of this repo, and could not be definitively live-tested in the session
-   that authored this: hooks load at session start, so a mid-session install does
-   not activate in the same session. The definitive confirmation is the next
-   session that *starts* with this hook installed and reproduces the
-   `TaskCreate`-with-`Agent`-shape call.
-
-Because of (3) the module is built to be the **strongest reachable mechanism either
-way**, with no regression risk:
+Because of that residual unknown, the module is built to be the **strongest
+reachable mechanism either way**, with no regression risk:
 
 - If `PreToolUse` fires at call time, it blocks pre-emptively with a useful message.
 - If a schema-invalid deferred call is rejected *before* the hook, the same pure
