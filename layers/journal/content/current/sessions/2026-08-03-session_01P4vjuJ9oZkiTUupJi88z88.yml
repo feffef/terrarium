@@ -1,0 +1,65 @@
+schemaVersion: 1
+session: session_01P4vjuJ9oZkiTUupJi88z88
+startedAt: 2026-08-03T01:05:55Z
+endedAt: 2026-08-03T01:21:39Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: completed
+outcome: 3 doc fixes filed, dispatched, merged
+summary: "Scheduled Routine fired the frictions-to-fixes Skill with no live human input. Delegated the survey/screen (steps 1-2) to a general-purpose subagent, which read the latest 20 session logs, ranked candidates, and screened against the tracker; it returned only 3 never-fixed, actionable candidates, all doc-only, none touching human-only surfaces. Filed one GitHub issue per candidate (#823 guest-issue PR-history check, #824 branch-restart stale-info note, #825 audit-skills regressionChecks no-signal bracket), then dispatched one Sonnet impl agent in a worktree to implement all three as a single grouped PR (#826) per the doc-fix batching rule. Reviewed the diff myself against each issue's recommended fix and the audit-docs house rules, confirmed the gate green, posted the review verdict, and merged via scripts/merge-pr.ts (reviewer-agent tier, ADR-0003/pr-workflow.md). All three issues auto-closed on merge. No step required human escalation; entirely agent-initiated end-to-end per the Routine's standing charter."
+prs:
+  - "826"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe + reviewer-agent tier authority
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: the run's own charter
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: this run's charter
+  - name: dispatch-subagents
+    reason: "worktree-isolated impl-agent dispatch brief for PR #826"
+  - name: close-session
+    reason: closure trigger at PR merge
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Reflexively called ScheduleWakeup (built for /loop dynamic-pacing mode) while waiting on a background dispatch agent in this plain scheduled Routine session, immediately after the tool's own description says it's for /loop. Caught before it fired anything wrong and cancelled it.
+    solution: Background Agent/task-notification completion already wakes the session automatically; a scheduled-Routine session waiting on a background agent needs no explicit wakeup mechanism at all. Reread the tool description's first sentence before reaching for it out of habit.
+    severity: nit
+  - description: pull_request_review_write(event=APPROVE) fails with "Can not approve your own pull request" when the reviewing session's GitHub token is the same account that opened the PR (the repo owner's account, since both the impl-agent's PR and this session's review post under the same identity) - true for every frictions-to-fixes reviewer-agent run, not just this one. docs/agents/pr-workflow.md's step 4 doesn't warn about this; had to fall back to event=COMMENT to record the verdict.
+    solution: Add a note to pr-workflow.md's step 4 (or the reviewer-agent tier entry) that a self-authored PR under the same account can't be formally APPROVEd - use event=COMMENT (or add_issue_comment) for the verdict instead, and don't treat the APPROVE error as a real blocker.
+    severity: minor
+  - description: "The survey subagent's own friction, relayed here per the Skill's instruction: its first session-frictions.ts call was piped through `| head -500`, which is the exact anti-pattern CLAUDE.md already warns against, and it truncated the persisted output mid-JSON-object. Re-ran with a plain redirect and no data was lost, but it's a repeat of a documented mistake."
+    solution: No new fix needed - CLAUDE.md already states the rule (never pipe a long-running/large command through a trailing command). This is a single-session lapse in following it, not a doc gap; logged for the recurrence count only.
+    severity: nit
+durationSec: 944
+models:
+  claude-sonnet-5: 72
+toolCounts:
+  Agent: 2
+  ToolSearch: 3
+  mcp__github__search_issues: 3
+  mcp__github__issue_write: 3
+  Skill: 3
+  ScheduleWakeup: 2
+  Bash: 5
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Read: 1
+  mcp__github__pull_request_review_write: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__github__issue_read: 1
+  Write: 1
+  Edit: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Batched doc-fix PR for 3 frictions issues
+    model: sonnet
+gitBranch: claude/hopeful-brown-9rcme2
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: frictions-to-fixes
