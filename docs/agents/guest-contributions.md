@@ -29,6 +29,17 @@ workflow run — this needs no owner action unless the repo Setting has been
 changed away from that default, which isn't verifiable from repo state
 (`docs/research/public-readiness-review.md`'s "Addressed" note on ADR-0020).
 
+## Before summarizing or recommending on a Public/guest-filed issue
+
+Read `authorAssociation` on the issue as a **history** signal, not only the
+Trusted/Public write-access split (`docs/agents/issue-tracker.md`'s
+`authorAssociation` line) — `CONTRIBUTOR` already means "has had a PR merged
+into this repo," and it's available in the very first tool response for the
+issue. Search PRs authored by that user (e.g.
+`mcp__github__search_pull_requests author:<user>` or equivalent) before
+writing a summary — don't summarize a guest issue blind to what that author
+has already built.
+
 ## House rules for an external-agent fork PR
 
 - **The session log rides *in the PR*.** An external session cannot use our
