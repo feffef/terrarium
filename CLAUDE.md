@@ -479,14 +479,12 @@ prepare` emits a "Cannot extend config from layers/<tenant>/" warning.
 
 Every session ends with an honest **session log** in the Journal (ADR-0009,
 issue #2) — the raw signal the self-improvement Skills mine (`frictions-to-fixes`
-today). A log
-has two halves (ADR-0009 amendment): the **mechanical** trace (timings, models,
-tools, files read/edited, subagents) is **derived from the transcript** by a
-committed hook — never self-reported; the **interpretive** half (goal, outcome,
-summary, and *every* friction) only you can write. The **`log-session`** Skill
-authors the interpretive half to a scratch file; a committed hook derives the
-rest and commits to `main` **live, normally well before session teardown** —
-see the `log-session` Skill for which hook lands it and why.
+today). A log has two halves (ADR-0009 amendment): a **mechanical** trace
+derived from the transcript by a committed hook — never self-reported — and an
+**interpretive** half only you can write. The **`log-session`** Skill owns the
+exact field-level split, how you author the interpretive half to a scratch
+file, and which hook derives and commits the rest to `main` **live, normally
+well before session teardown** — read it rather than this summary.
 
 **You self-judge closure — invoke the `close-session` Skill when the session is
 wrapping up.** `close-session` is the single **front door** for Session closure
@@ -535,17 +533,12 @@ resolution. See `docs/agents/github-integration.md`.
 
 ### Environment caveats
 
-Platform-level quirks of this remote execution environment that are not repo
-bugs — an unreachable `permissions.allow` entry, an unprovisioned commit-signing
-key, session-only in-memory state loss across a session-resume (`CronCreate`/`CronList`
-or a backgrounded subagent), and transient MCP "permission stream closed" errors.
-See `docs/agents/environment-caveats.md`.
+See the Working conventions bullet on platform-level quirks above. Full detail:
+`docs/agents/environment-caveats.md`.
 
 ### Git conventions
 
-Driving git here without losing work or drawing a false conclusion from history
-— `origin/main` staleness and merge-base anchoring, shallow-clone artifacts,
-commit hygiene, and the Stop-hook "Unverified" flag. See
+See the Working conventions bullet on git mechanics above. Full detail:
 `docs/agents/git-conventions.md`.
 
 ### Triage labels

@@ -10,13 +10,11 @@ and reinstallable (ADR-0005).*
 
 Issues and PRDs for this repo live as GitHub issues. Use the `gh` CLI for all operations.
 
-## No `gh`? Remote sessions: use the GitHub MCP tools
+## No `gh`? See `github-integration.md`
 
-Remote/managed agent sessions have **no `gh` binary** — GitHub access goes
-through the GitHub MCP tools (`mcp__github__*`). The recipes below stay written
-as `gh` commands (the canonical form); for the MCP equivalent of each recipe
-class, plus the overflow/precision traps, the polling rules and the
-`ToolSearch` name-resolution mechanics, see
+The recipes below stay written as `gh` commands (the canonical form); for the
+MCP-tool equivalent when `gh` is absent, plus the overflow/precision traps, the
+polling rules and the `ToolSearch` name-resolution mechanics, see
 [`github-integration.md`](./github-integration.md) — the single home for that
 tool surface.
 
