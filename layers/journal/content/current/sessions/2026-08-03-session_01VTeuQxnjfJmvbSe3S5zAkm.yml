@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_01VTeuQxnjfJmvbSe3S5zAkm
 startedAt: 2026-08-03T04:09:25Z
-endedAt: 2026-08-03T04:31:28Z
+endedAt: 2026-08-03T04:56:59Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
 status: in-review
-outcome: "PR #827 merged; PR #828 (escalated ADR fix) awaiting human review"
-summary: "Fully agent-initiated scheduled run of the /audit-docs Skill, no human turns this session. Dispatched four paired-lens reviewer agents in parallel (Freshness, Single-home, Concision, Coherence) over every Live-tier doc, pooled seven findings with no overlaps, and ran an independent fact-checker against primary sources before touching anything. Six findings were CONFIRMED/CONFIRMED-BUT and fixed directly: two stale \"step 3\" citations for pr-workflow.md's verdict-posting rule (now step 4), a Nuxt-Content validation fact restated in CLAUDE.md instead of pointed at its research home, a one-off empirical investigation split out of deferred-tool-guard.md into a new docs/research/ note (keeping the load-bearing design-consequence paragraph in the living doc), a redundant \"not a repo bug\" clause trimmed from three environment-caveats.md bullets, and CLAUDE.md's unpinned \"isolation logic\" catch-all given concrete examples to resolve a real ambiguity flagged by the Coherence lens. gate:scoped ran green; committed, pushed, opened self-merge-tier PR #827, subscribed to its activity, posted the pre-merge verdict comment (2 advisory conflicting-issues hits eyeballed and dismissed as false positives), and merged it via scripts/merge-pr.ts once CI reported green. The seventh finding — ADR-0009/ADR-0010's \"7-UTC-day retention\" framing for the Journal archive-sweep contradicts archive-journal-content.ts's actual count-based RETAIN_DATES rule, verified directly against the script — touches two ADRs, a human-only surface, so it was fixed as a pure factual correction (ADR-0018's rule) on a separate branch off origin/main and opened as its own human-reviewed PR #828, still open and subscribed, awaiting a human merge."
+outcome: "PR #827 merged; #828 awaiting human review; #830 opened; issue #829 filed"
+summary: "Fully agent-initiated: two consecutive /audit-docs sweeps, both scheduled firings, no human turns this session. First sweep: four paired-lens reviewer agents pooled seven findings, fact-checked, six fixed directly (stale pr-workflow.md step citations, a CLAUDE.md/research-doc duplication, deferred-tool-guard.md's Viability section split into docs/research/, a redundant environment-caveats.md clause, CLAUDE.md's isolation-logic catch-all pinned with examples) and merged as PR #827 via scripts/merge-pr.ts (pre-merge verdict posted, 2 advisory conflicting-issues hits eyeballed as false positives). The seventh finding — ADR-0009/ADR-0010's \"7-UTC-day retention\" framing contradicting archive-journal-content.ts's actual count-based rule, verified against the script — touched two ADRs (human-only), so it landed as a pure factual correction on a separate branch, PR #828, still open awaiting human merge (verdict posted there too, marked ready). A second scheduled /audit-docs firing then ran the same process end to end on a fresh branch (restarted from origin/main since #827's branch had merged): four more paired-lens agents, five of six pooled findings confirmed and fixed (two CLAUDE.md index sections trimmed to bare pointers that were restating Working-conventions facts, CLAUDE.md's session-log field enumeration pointed at log-session/SKILL.md instead of restated, issue-tracker.md's \"no gh\" section trimmed to a pointer, and a genuine contradiction fixed in audit-skills/SKILL.md's frontmatter where it claimed frontmatter-miscalibration concerns must go through the slow step-4 path when ADR-0015 and the Skill's own step 5 put that exact signal on the fast direct-filing path). One pooled finding (a third \"restated PR-workflow index entry\") was fact-checked and found NOT to be a real violation — left alone rather than fixed on faith. A sixth finding — whether shared/schemas/ should be classified human-only alongside its sibling shared/kinds.ts — is a genuine scope ambiguity the primary sources argue both ways on; filed as needs-triage issue #829 instead of guessing. gate:scoped green; committed, pushed, opened self-merge-tier PR #830, subscribed. Both #828 and #830 remain open, subscribed, and being babysat to merge/close as of this log."
 prs:
   - "827"
   - "828"
+  - "830"
 docsRead:
   - path: docs/agents/pr-workflow.md
     reason: verify current recipe step numbering for the Drift finding
@@ -41,6 +42,12 @@ docsRead:
     reason: (read before editing)
   - path: scripts/archive-journal-content.ts
     reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
 skillsUsed:
   - name: audit-docs
     reason: the scheduled routine this session runs
@@ -52,27 +59,29 @@ frictions:
   - description: The four parallel lens-review Agent calls were sent with run_in_background:false but still launched asynchronously as background agents, contrary to the tool's documented foreground-blocking behavior.
     solution: Treat run_in_background:false as best-effort for the Agent tool in this environment; plan on waiting for completion notifications regardless, and don't assume a synchronous return.
     severity: minor
-durationSec: 1323
+durationSec: 2854
 models:
-  claude-sonnet-5: 160
+  claude-sonnet-5: 257
 toolCounts:
-  Bash: 31
-  ToolSearch: 4
+  Bash: 43
+  ToolSearch: 6
   Glob: 1
-  mcp__github__search_pull_requests: 1
-  Agent: 5
-  ScheduleWakeup: 2
-  Read: 17
-  Edit: 14
+  mcp__github__search_pull_requests: 2
+  Agent: 10
+  ScheduleWakeup: 5
+  Read: 28
+  Edit: 19
   Write: 2
-  mcp__github__create_pull_request: 2
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__create_pull_request: 3
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 3
   Skill: 2
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 3
   mcp__Claude_Code_Remote__send_later: 1
   PushNotification: 1
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 3
   mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 1
 filesEdited:
   - docs/agents/issue-tracker.md
   - .agents/skills/frictions-to-fixes/SKILL.md
@@ -82,6 +91,7 @@ filesEdited:
   - docs/agents/deferred-tool-guard.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
   - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - .agents/skills/audit-skills/SKILL.md
 subagents:
   - type: general-purpose
     task: Freshness lens review (Drift + Orphan-addition)
@@ -93,6 +103,16 @@ subagents:
     task: Coherence lens review (Contradiction + Ambiguity)
   - type: general-purpose
     task: Fact-check pooled audit-docs findings
+  - type: general-purpose
+    task: Freshness lens review (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens review (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens review (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens review (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check second-sweep pooled findings
 gitBranch: claude/festive-mayer-tw82rh
 entrypoint: remote_trigger
 cliVersion: 2.1.220
