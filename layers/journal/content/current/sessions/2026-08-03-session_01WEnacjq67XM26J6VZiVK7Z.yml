@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01WEnacjq67XM26J6VZiVK7Z
 startedAt: 2026-08-03T11:07:41Z
-endedAt: 2026-08-03T11:25:08Z
+endedAt: 2026-08-03T11:28:53Z
 kind: autonomous
 goal: Run the scheduled /blog-post sweep
-status: in-review
-outcome: "PR #831 opened, awaiting CI/merge"
-summary: "Fully agent-initiated: fired by the scheduled blog-post Routine with no live human input. Ran the rotation gate (scripts/blog-rotation.ts): last was david, eyra was starved (missing from the four most recent posts), so the eligible set collapsed to Eyra alone. Drafted three full standalone Eyra candidates to the scratchpad per the Skill's process — the ADR-0017 provenance-header/fail-closed-guard saga, the recurring ScheduleWakeup tool-confusion trap (still recurring after issue #814 was filed), and the Skill Inventory's new `routine` importance grade — each fact-checked against primary sources (git show/log, issue_read, the ADR file itself) before drafting. A fresh blind outside-read subagent picked the ADR-0017 post as strongest by real-world weight (a genuine measure-diagnose-fix-harden arc) over the other two, and named four reader-confusion gaps (unglossed \"ADR\" jargon, \"the guard\" appearing unintroduced, an unexplained \"three shapes\" claim, an unwalked \"four amendments\" tally), all closed in revision — closing the last two also caught and fixed a factual slip of my own (the ADR's self-labeled \"2026-08-01\" amendment date didn't match the underlying commit's actual 2026-07-31T20:38 timestamp; used the verified git timestamp instead). Branched (the session's own pinned branch was already fresh off origin/main, so used it directly rather than creating a second), saved the post, ran pnpm gate:scoped (full gate, 78/78 e2e green), opened PR #831 with full rotation/candidate provenance in the body, and subscribed to its activity. CI was still pending as of this log; babysitting continues per CLAUDE.md's PR-completion discipline."
+status: completed
+outcome: "PR #831 merged green"
+summary: "Fully agent-initiated: fired by the scheduled blog-post Routine with no live human input. Ran the rotation gate (scripts/blog-rotation.ts): last was david, eyra was starved (missing from the four most recent posts), so the eligible set collapsed to Eyra alone. Drafted three full standalone Eyra candidates to the scratchpad per the Skill's process — the ADR-0017 provenance-header/fail-closed-guard saga, the recurring ScheduleWakeup tool-confusion trap (still recurring after issue #814 was filed), and the Skill Inventory's new `routine` importance grade — each fact-checked against primary sources (git show/log, issue_read, the ADR file itself) before drafting. A fresh blind outside-read subagent picked the ADR-0017 post as strongest by real-world weight (a genuine measure-diagnose-fix-harden arc) over the other two, and named four reader-confusion gaps (unglossed \"ADR\" jargon, \"the guard\" appearing unintroduced, an unexplained \"three shapes\" claim, an unwalked \"four amendments\" tally), all closed in revision — closing the last two also caught and fixed a factual slip of my own (the ADR's self-labeled \"2026-08-01\" amendment date didn't match the underlying commit's actual 2026-07-31T20:38 timestamp; used the verified git timestamp instead). Branched (the session's own pinned branch was already fresh off origin/main, so used it directly rather than creating a second), saved the post, ran pnpm gate:scoped (full gate, 78/78 e2e green), opened PR #831 with full rotation/candidate provenance in the body, and subscribed to its activity. Both CI checks (gate, label) reported green with no unresolved review threads; check-conflicting-issues.ts had no hits; posted the pre-merge verdict and landed via scripts/merge-pr.ts (blog-post's low-risk content tier, ADR-0003/0004), then unsubscribed and cancelled the standing check-in."
 prs:
   - "831"
 docsRead:
@@ -30,25 +30,28 @@ frictions:
   - description: One draft citation stated a document's own self-labeled amendment date ("2026-08-01") without cross-checking it against the underlying commit's actual authored timestamp (2026-07-31T20:38 UTC) until a late verification pass caught the mismatch.
     solution: Always verify a doc's self-reported date against the commit that actually implements it (git show -s --format=%aI) before asserting the date in published text, per CLAUDE.md's 're-derive any weekday/count/date straight from git' rule — a doc's own claim is not itself primary-source proof of its landing date.
     severity: minor
-durationSec: 1047
+durationSec: 1272
 models:
-  claude-sonnet-5: 197
+  claude-sonnet-5: 221
 toolCounts:
-  Bash: 61
-  Read: 9
+  Bash: 65
+  Read: 10
   Grep: 9
-  ToolSearch: 4
+  ToolSearch: 5
   mcp__github__issue_read: 3
   Write: 5
-  Edit: 10
+  Edit: 12
   Agent: 1
   TaskOutput: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 5
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 subagents:
   - type: general-purpose
     task: Judge three blog draft candidates
