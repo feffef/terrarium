@@ -1,0 +1,62 @@
+schemaVersion: 1
+session: session_01JJhuApaQnsPqREU1FeB8yU
+startedAt: 2026-08-03T00:45:55Z
+endedAt: 2026-08-03T00:58:00Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: in-review
+outcome: "PR #822 open, gate green, no bright-line grade changes"
+summary: "Entirely agent-initiated: a scheduled Routine fired /audit-skills with no human prompt at any point. Gathered the 40-session scorecard via scripts/audit-skills.ts, re-graded all 36 Inventory entries against the bright-line evidence rule (step 3) — no promote/demote qualified this run, but a fourth instance of clear domain-modeling-shaped vocabulary work landing without invoking the Skill surfaced (session_019gqLV9BAyjsKmjYYdM7gaL coined a new `routine` importance grade in CONTEXT.md and ADR-0015), so appended an observations entry and, per the 2026-07-23 entry's own stated plan, recorded it as a step-6 idea rather than acting on the grade unilaterally. Screened all 11 step-4 regressionChecks brackets (Phase A) — friction severity held flat or improved after every bracketed SKILL.md edit, none warranted a Phase B deep-read. orphanedSessions and orphanSuppressionLog were both empty; the one humanPromptedClosures entry was already cited twice on the standing thread #483, so not re-commented per step 5's dedup rule; manuallyRescuedClosures was empty; misclassifiedKind flagged one session informationally per #449's spec (no issue expected). Confirmed the phantom `review` Inventory entry maps to a built-in CLI Skill and left it untouched. pnpm gate:scoped ran the full heavy layers (the diff is a .yml under layers/) and passed; opened PR #822 (Inventory-only diff) and subscribed to its activity."
+prs:
+  - "822"
+docsRead:
+  - path: CLAUDE.md
+    reason: chartered-job branch-off checklist
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: the run's own instructions
+  - path: layers/journal/content/current/skills/domain-modeling.yml
+    reason: prior observations history before adding a fourth citation
+  - path: layers/journal/content/current/skills/code-review.yml
+    reason: cross-checking whether this run's usage matched the last-cited sessions
+  - path: layers/journal/content/current/skills/implement.yml
+    reason: cross-checking whether this run's usage matched the last-cited sessions
+  - path: layers/journal/content/current/sessions/2026-07-31-session_01KkJxepH93Cfs4p8c452Xir.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the skill this run executes
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: step 4's regressionChecks brackets (5 sessions before/after an edit by date) were often unrepresentative of the edited Skill's own domain — the auto-triage/guest-build/guest-intake/midden-survey brackets each contained zero sessions of that Skill's own kind of work, making the raw before/after arrays alone uninformative without cross-checking the full window's usedIn list filtered by edit date.
+    solution: Wrote a small script cross-referencing scorecard.window's skillsUsed against each edit's date instead of relying on the fixed 5-session bracket; a future run (or the tool itself) could compute that full-window before/after split directly so Phase A doesn't need an ad-hoc script each time.
+    severity: minor
+durationSec: 725
+models:
+  claude-sonnet-5: 124
+toolCounts:
+  Bash: 35
+  ToolSearch: 5
+  TaskCreate: 6
+  Read: 4
+  TaskUpdate: 9
+  Edit: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_read: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - layers/journal/content/current/skills/domain-modeling.yml
+gitBranch: claude/upbeat-sagan-nziti3
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: audit-skills
+ideas:
+  - domain-modeling's `essential` grade is now in tension with four cited instances (2026-07-14, -16, -19, -23, and this run's) of clear new-vocabulary/ADR work landing without invoking the Skill — most recently session_019gqLV9BAyjsKmjYYdM7gaL's new `routine` importance grade, which directly amended CONTEXT.md's own `### Importance` section (the definition naming domain-modeling as the canonical `essential` worked example) and ADR-0015, with skillsUsed only close-session/ log-session. Worth a dedicated look at either (a) revising CONTEXT.md's essential-example framing to match observed reality, or (b) sharpening domain-modeling's own SKILL.md/description so it's actually reached for when a session is about to coin a CONTEXT.md term, add an importance grade, or amend an ADR — since four separate sessions doing exactly that didn't recognize it as this Skill's job.
