@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01JJhuApaQnsPqREU1FeB8yU
 startedAt: 2026-08-03T00:45:55Z
-endedAt: 2026-08-03T00:58:00Z
+endedAt: 2026-08-03T01:01:14Z
 kind: autonomous
 goal: Run the scheduled /audit-skills sweep
-status: in-review
-outcome: "PR #822 open, gate green, no bright-line grade changes"
-summary: "Entirely agent-initiated: a scheduled Routine fired /audit-skills with no human prompt at any point. Gathered the 40-session scorecard via scripts/audit-skills.ts, re-graded all 36 Inventory entries against the bright-line evidence rule (step 3) — no promote/demote qualified this run, but a fourth instance of clear domain-modeling-shaped vocabulary work landing without invoking the Skill surfaced (session_019gqLV9BAyjsKmjYYdM7gaL coined a new `routine` importance grade in CONTEXT.md and ADR-0015), so appended an observations entry and, per the 2026-07-23 entry's own stated plan, recorded it as a step-6 idea rather than acting on the grade unilaterally. Screened all 11 step-4 regressionChecks brackets (Phase A) — friction severity held flat or improved after every bracketed SKILL.md edit, none warranted a Phase B deep-read. orphanedSessions and orphanSuppressionLog were both empty; the one humanPromptedClosures entry was already cited twice on the standing thread #483, so not re-commented per step 5's dedup rule; manuallyRescuedClosures was empty; misclassifiedKind flagged one session informationally per #449's spec (no issue expected). Confirmed the phantom `review` Inventory entry maps to a built-in CLI Skill and left it untouched. pnpm gate:scoped ran the full heavy layers (the diff is a .yml under layers/) and passed; opened PR #822 (Inventory-only diff) and subscribed to its activity."
+status: completed
+outcome: "PR #822 merged, no bright-line grade changes"
+summary: "Entirely agent-initiated: a scheduled Routine fired /audit-skills with no human prompt at any point. Gathered the 40-session scorecard via scripts/audit-skills.ts, re-graded all 36 Inventory entries against the bright-line evidence rule (step 3) — no promote/demote qualified this run, but a fourth instance of clear domain-modeling-shaped vocabulary work landing without invoking the Skill surfaced (session_019gqLV9BAyjsKmjYYdM7gaL coined a new `routine` importance grade in CONTEXT.md and ADR-0015), so appended an observations entry and, per the 2026-07-23 entry's own stated plan, recorded it as a step-6 idea rather than acting on the grade unilaterally. Screened all 11 step-4 regressionChecks brackets (Phase A) — friction severity held flat or improved after every bracketed SKILL.md edit, none warranted a Phase B deep-read. orphanedSessions and orphanSuppressionLog were both empty; the one humanPromptedClosures entry was already cited twice on the standing thread #483, so not re-commented per step 5's dedup rule; manuallyRescuedClosures was empty; misclassifiedKind flagged one session informationally per #449's spec (no issue expected). Confirmed the phantom `review` Inventory entry maps to a built-in CLI Skill and left it untouched. pnpm gate:scoped ran the full heavy layers (the diff is a .yml under layers/) and passed; opened PR #822 (Inventory-only diff), subscribed to its activity, and self-merged it once CI reported green (per-tier merge authority — audit-skills merges on a green gate alone) after posting the verdict comment and checking check-conflicting-issues.ts (no hits) and review threads (none)."
 prs:
   - "822"
 docsRead:
@@ -33,16 +33,16 @@ frictions:
   - description: step 4's regressionChecks brackets (5 sessions before/after an edit by date) were often unrepresentative of the edited Skill's own domain — the auto-triage/guest-build/guest-intake/midden-survey brackets each contained zero sessions of that Skill's own kind of work, making the raw before/after arrays alone uninformative without cross-checking the full window's usedIn list filtered by edit date.
     solution: Wrote a small script cross-referencing scorecard.window's skillsUsed against each edit's date instead of relying on the fixed 5-session bracket; a future run (or the tool itself) could compute that full-window before/after split directly so Phase A doesn't need an ad-hoc script each time.
     severity: minor
-durationSec: 725
+durationSec: 920
 models:
-  claude-sonnet-5: 124
+  claude-sonnet-5: 146
 toolCounts:
-  Bash: 35
+  Bash: 39
   ToolSearch: 5
   TaskCreate: 6
   Read: 4
-  TaskUpdate: 9
-  Edit: 1
+  TaskUpdate: 10
+  Edit: 3
   mcp__github__search_issues: 1
   mcp__github__issue_read: 1
   mcp__github__search_pull_requests: 1
@@ -51,7 +51,10 @@ toolCounts:
   Skill: 2
   Write: 1
   mcp__Claude_Code_Remote__send_later: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/domain-modeling.yml
 gitBranch: claude/upbeat-sagan-nziti3
