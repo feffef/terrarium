@@ -61,3 +61,21 @@ observations:
       from scratch; if a fourth clear instance appears, that structural
       tension between the evidence and CONTEXT.md's canonical-example framing
       is probably worth a step-6 idea rather than another silent citation.
+  - date: 2026-08-03
+    note: >-
+      A fourth instance, within this run's 40-session window:
+      session_019gqLV9BAyjsKmjYYdM7gaL ("Give scheduled Skills their own
+      importance grade", ended 2026-08-02) coined a new `routine` importance
+      grade — new vocabulary defined in CONTEXT.md's own `### Importance`
+      section and amended into ADR-0015 — with no domain-modeling invocation
+      (skillsUsed: close-session, log-session only). All three prior
+      citations (2026-07-14/16/19/23) have aged out of the current window, so
+      this is again the sole in-window instance, but it is a stronger fit than
+      most: it is the exact "new vocabulary" case the role text names, and it
+      directly touched CONTEXT.md's importance-grade definitions — the same
+      section that names this Skill as the canonical `essential` example. Per
+      the 2026-07-23 note's own plan, this fourth clear instance is recorded
+      as a step-6 idea this run (see the session log) rather than acted on
+      unilaterally here: the grade is held as-is pending that broader look,
+      since a demotion would still directly contradict CONTEXT.md's own
+      worked-example text.
