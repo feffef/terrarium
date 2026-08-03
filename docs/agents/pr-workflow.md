@@ -60,6 +60,13 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
    merging it — see ADR-0004's high-risk set (also indexed in CLAUDE.md's
    Ground rules) for what counts.
 
+**Restarting a branch after its PR merged?** GitHub deletes the remote branch
+by default on merge, so a `push --force-with-lease` on a restarted branch of
+the same name will typically fail with "stale info" against the local
+(now-stale) remote-tracking ref — that's expected, not a genuine
+concurrent-write conflict. Run `git remote prune origin` first, or just push
+without `--force-with-lease` since it's effectively a new remote branch.
+
 ## Per-tier merge authority
 
 - `digest` / `audit-docs` / `audit-skills` / `blog-post` — merge on a green

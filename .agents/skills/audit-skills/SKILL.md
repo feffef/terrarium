@@ -201,7 +201,9 @@ or a shift toward `moderate`/`major`/`blocker`)? This screen only catches
 *usage-rate* and *coarse friction-count* shifts — it can't tell you the
 frictions were actually about this Skill's edited guidance rather than
 something unrelated, because it only has severities, not content. Treat a
-signal here as **suspected, not confirmed**.
+signal here as **suspected, not confirmed**. A bracket with zero `usedIn` on
+**both** sides is a no-signal case — skip it immediately rather than treating
+it as an inconclusive-but-real before/after comparison.
 
 **Phase B — deep-read, only for a suspected Skill.** Before judging anything,
 `Read` every file `skillSessionFiles[name]` lists — as much of that Skill's
