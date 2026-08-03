@@ -1,0 +1,59 @@
+schemaVersion: 1
+session: session_01WEnacjq67XM26J6VZiVK7Z
+startedAt: 2026-08-03T11:07:41Z
+endedAt: 2026-08-03T11:25:08Z
+kind: autonomous
+goal: Run the scheduled /blog-post sweep
+status: in-review
+outcome: "PR #831 opened, awaiting CI/merge"
+summary: "Fully agent-initiated: fired by the scheduled blog-post Routine with no live human input. Ran the rotation gate (scripts/blog-rotation.ts): last was david, eyra was starved (missing from the four most recent posts), so the eligible set collapsed to Eyra alone. Drafted three full standalone Eyra candidates to the scratchpad per the Skill's process — the ADR-0017 provenance-header/fail-closed-guard saga, the recurring ScheduleWakeup tool-confusion trap (still recurring after issue #814 was filed), and the Skill Inventory's new `routine` importance grade — each fact-checked against primary sources (git show/log, issue_read, the ADR file itself) before drafting. A fresh blind outside-read subagent picked the ADR-0017 post as strongest by real-world weight (a genuine measure-diagnose-fix-harden arc) over the other two, and named four reader-confusion gaps (unglossed \"ADR\" jargon, \"the guard\" appearing unintroduced, an unexplained \"three shapes\" claim, an unwalked \"four amendments\" tally), all closed in revision — closing the last two also caught and fixed a factual slip of my own (the ADR's self-labeled \"2026-08-01\" amendment date didn't match the underlying commit's actual 2026-07-31T20:38 timestamp; used the verified git timestamp instead). Branched (the session's own pinned branch was already fresh off origin/main, so used it directly rather than creating a second), saved the post, ran pnpm gate:scoped (full gate, 78/78 e2e green), opened PR #831 with full rotation/candidate provenance in the body, and subscribed to its activity. CI was still pending as of this log; babysitting continues per CLAUDE.md's PR-completion discipline."
+prs:
+  - "831"
+docsRead:
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: voice/do-don't list for all three drafts
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: primary source for the winning post's every claim
+skillsUsed:
+  - name: blog-post
+    reason: this run's charter
+  - name: close-session
+    reason: closure trigger at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: The repo is a shallow clone; an early git log/blame pickaxe on scripts/blog-rotation.ts and other files returned the shallow-boundary commit instead of the file's real introduction history, which would have produced a wrong 'added on X' claim if used uncritically.
+    solution: Caught by checking git rev-parse --is-shallow-repository per docs/agents/git-conventions.md's warning, then avoiding any file-introduction-date claim not independently corroborated (GitHub issue/PR data or a commit's own diff content) rather than trusting git log -1 on a shallow clone.
+    severity: minor
+  - description: One draft citation stated a document's own self-labeled amendment date ("2026-08-01") without cross-checking it against the underlying commit's actual authored timestamp (2026-07-31T20:38 UTC) until a late verification pass caught the mismatch.
+    solution: Always verify a doc's self-reported date against the commit that actually implements it (git show -s --format=%aI) before asserting the date in published text, per CLAUDE.md's 're-derive any weekday/count/date straight from git' rule — a doc's own claim is not itself primary-source proof of its landing date.
+    severity: minor
+durationSec: 1047
+models:
+  claude-sonnet-5: 197
+toolCounts:
+  Bash: 61
+  Read: 9
+  Grep: 9
+  ToolSearch: 4
+  mcp__github__issue_read: 3
+  Write: 5
+  Edit: 10
+  Agent: 1
+  TaskOutput: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+subagents:
+  - type: general-purpose
+    task: Judge three blog draft candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-odbbbz
+entrypoint: remote_trigger
+cliVersion: 2.1.220
+trigger: blog-post
