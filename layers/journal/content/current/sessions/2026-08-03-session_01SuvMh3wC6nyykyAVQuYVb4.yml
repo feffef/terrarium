@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: session_01SuvMh3wC6nyykyAVQuYVb4
+startedAt: 2026-08-03T20:03:03Z
+endedAt: 2026-08-03T20:13:08Z
+kind: delegated
+goal: Autonomous triage sweep over the open backlog
+status: completed
+outcome: Five issues triaged, one closed as implemented
+summary: "The user invoked /auto-triage; everything here follows from that single kickoff, with no further human prompt. Scanned 30 open issues and 0 open PRs, resolved 5 eligible under the Skill's authorship rule, and dispatched one read-only triage subagent per issue. Results: #792 to ready-for-agent under ADR-0022's standing green-light; #829, #772 and #766 escalated to ready-for-human on genuine governance or competing-design calls; #790, the one Public-authored ticket, closed as already-implemented after verifying its PR merged to main. No repo changes, no PR - auto-triage is a classification remit."
+prs: []
+docsRead:
+  - path: .claude/skills/triage/SKILL.md
+    reason: per-issue rules the sweep composes
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: brief format handed to subagents
+  - path: .claude/skills/triage/OUT-OF-SCOPE.md
+    reason: prior-rejection check; no such dir exists here
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: standing green-light bounds and wayfinder overlay
+  - path: docs/agents/triage-labels.md
+    reason: canonical label vocabulary
+  - path: scripts/last-comment-authors.ts
+    reason: eligibility signal; found its comment-less-issue gap
+  - path: .claude/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: auto-triage
+    reason: (invoked as a slash command)
+frictions:
+  - description: last-comment-authors.ts omits issues with zero comments, but the sweep's eligibility rule needs the body's authorship for exactly those.
+    solution: Emit a record for a comment-less issue too, with hasProvenance read off the issue body - otherwise every sweep re-derives it with ad-hoc curl.
+    severity: minor
+  - description: Python heredoc check failed on an f-string backslash, costing a retry on a pure verification step.
+    solution: Write the checker to a scratch .py file rather than inlining it in the shell.
+    severity: nit
+durationSec: 605
+models:
+  claude-opus-5: 62
+toolCounts:
+  Read: 9
+  Bash: 15
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  Skill: 3
+  Agent: 5
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Triage issue 829
+  - type: general-purpose
+    task: Triage issue 792
+  - type: general-purpose
+    task: Triage issue 772
+  - type: general-purpose
+    task: Triage issue 766
+  - type: general-purpose
+    task: Triage issue 790 (Public)
+gitBranch: claude/auto-triage-9qni41
+entrypoint: remote_mobile
+cliVersion: 2.1.220
+learnings:
+  - A GitHub label update replaces the whole set, so a triage write must resend every label that should survive.
+ideas:
+  - Add a scripts/triage-eligibility.ts that emits the auto-triage eligible set directly - per open issue, its labels, the author's association, and whether the most-recent activity (last comment, else the body) carries an ADR-0017 marker. Today step 1 of the sweep takes three tools plus hand-rolled curl to reconstruct that, and the body fallback is re-derived from scratch each run; one command would make the sweep's entry point verifiable and unit-testable the way the pure cores of its sibling scripts already are.
