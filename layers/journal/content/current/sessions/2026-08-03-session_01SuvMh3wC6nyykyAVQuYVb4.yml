@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01SuvMh3wC6nyykyAVQuYVb4
 startedAt: 2026-08-03T20:03:03Z
-endedAt: 2026-08-04T19:48:56Z
+endedAt: 2026-08-04T20:10:20Z
 kind: interactive
 goal: Triage sweep, escalation audit, then implement the backlog
-status: in-review
-outcome: 8 issues closed, 7 PRs open for review
-summary: "Two phases. The user invoked /auto-triage - a sweep of 30 open issues and 0 open PRs surfaced 5 eligible; subagents landed 792 on ready-for-agent, closed 790 as already-implemented, and escalated 829, 772 and 766. The user then asked what was required from them to green-light more work, and steered a /grill-with-docs session through five questions to a plan they chose at every branch - audit the unaudited escalations, no authority to override a stated rationale, decisions surfaced in chat in plain language, results written back into each issue. 11 audit subagents ran. The user then made every disposition themselves; the label writes, closes, briefs and the .out-of-scope records implement their decisions, not mine. Third phase, also on their instruction: implement everything ready-for-agent, in parallel background agents. 7 worktree-isolated agents ran; 6 opened PRs, all gate-green in CI, and one refused its whole brief with proof that a merged PR had already delivered it. I held 784 back as mislabelled rather than implement a change its own last comment calls unsafe. Nothing net-new was proposed or built unprompted."
+status: completed
+outcome: 12 issues closed, 8 PRs merged
+summary: "Two phases. The user invoked /auto-triage - a sweep of 30 open issues and 0 open PRs surfaced 5 eligible; subagents landed 792 on ready-for-agent, closed 790 as already-implemented, and escalated 829, 772 and 766. The user then asked what was required from them to green-light more work, and steered a /grill-with-docs session through five questions to a plan they chose at every branch - audit the unaudited escalations, no authority to override a stated rationale, decisions surfaced in chat in plain language, results written back into each issue. 11 audit subagents ran. The user then made every disposition themselves; the label writes, closes, briefs and the .out-of-scope records implement their decisions, not mine. Third phase, also on their instruction: implement everything ready-for-agent, in parallel background agents. 7 worktree-isolated agents ran; 6 opened PRs, all gate-green in CI, and one refused its whole brief with proof that a merged PR had already delivered it. I held 784 back as mislabelled rather than implement a change its own last comment calls unsafe. All 8 PRs merged; I verified the two branches that both touched audit-skills.ts produced a coherent main rather than trusting the clean auto-merge. Nothing net-new was proposed or built unprompted."
 prs:
   - "839"
   - "840"
@@ -80,20 +80,20 @@ frictions:
   - description: Python heredoc checks broke twice - once on an f-string backslash, once when a shell cd left pnpm unable to find the workspace.
     solution: Write checkers to a scratch .py/.ts file and pass absolute paths; never cd.
     severity: nit
-durationSec: 85553
+durationSec: 86836
 models:
-  claude-opus-5: 334
+  claude-opus-5: 387
 toolCounts:
   Read: 15
-  Bash: 66
+  Bash: 79
   ToolSearch: 4
   mcp__github__list_pull_requests: 2
   Skill: 8
   Agent: 23
   Write: 7
-  Edit: 7
-  mcp__github__add_issue_comment: 10
-  mcp__github__issue_write: 8
+  Edit: 10
+  mcp__github__add_issue_comment: 13
+  mcp__github__issue_write: 11
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 3
   mcp__github__pull_request_read: 11
@@ -161,6 +161,7 @@ learnings:
   - "Idempotency makes every settled issue permanently sweep-invisible: with AI-authored last activity on a non-needs-triage state, nothing re-examines it until a human speaks."
   - GitHub's Link header for the pulls endpoint points at the numeric repositories/{id}/pulls form, which this environment's proxy 403s - so parseNextLink-driven pagination truncates at page 1 while page 1 succeeds. check-conflicting-issues.ts is the one other script with that exposure; the issues endpoint does not return numeric-ID links.
   - "A dispatched agent given explicit authority to refuse will use it: one proved all 12 of its acceptance criteria were already delivered by a merged PR that had referenced the issue without a closing keyword, which is why it had stayed open three weeks."
+  - "A closing keyword only fires when the issue reference immediately follows it: 'Closes the remaining half of #445' and 'Closes the three live items on #450' both close nothing. Four instances surfaced in this one session (#236, #445, #450, and #451, which had sat open three weeks after its work shipped) - the hedge that makes the sentence honest is exactly what disarms it."
 ideas:
   - 'Require an escalation receipt: nothing gets stamped ready-for-human without a machine-detectable rationale block naming which escalation trigger fired. This session spent 11 subagents and ~1.3M tokens answering "was this escalation ever justified?" - a question a structured block would answer with a grep. It also makes the backlog measurable: how many escalations cite each trigger, and which ones have gone stale because the thing that blocked them has since landed.'
   - Add a scripts/triage-eligibility.ts that emits the auto-triage eligible set directly - per open issue, its labels, the author's association, and whether the most-recent activity (last comment, else the body) carries an ADR-0017 marker. Step 1 of the sweep currently takes three tools plus hand-rolled curl to reconstruct that, and the body fallback is re-derived every run; one command would make the sweep's entry point verifiable and unit-testable the way its sibling scripts' pure cores already are.
