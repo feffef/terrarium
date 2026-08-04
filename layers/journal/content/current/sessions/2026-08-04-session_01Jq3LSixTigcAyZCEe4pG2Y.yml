@@ -1,0 +1,72 @@
+schemaVersion: 1
+session: session_01Jq3LSixTigcAyZCEe4pG2Y
+startedAt: 2026-08-04T11:09:49Z
+endedAt: 2026-08-04T11:27:28Z
+kind: autonomous
+goal: Run the scheduled /blog-post sweep
+status: in-review
+outcome: "PR #838 opened"
+summary: "Fully agent-initiated: fired by the scheduled blog-post Routine with no live human input. Ran the rotation gate (scripts/blog-rotation.ts): last was eyra, none starved, eligible set [david, karen, kevin] — no persona given, so all three candidates drew from that set. Gathered material broadly (git log -100, ~20 recent session logs, existing blog posts to avoid topic overlap), then drafted three full standalone candidates to the scratchpad, each fact-checked against primary sources (issue_read, pull_request_read, git show/log, direct file reads) before drafting: Karen on the ScheduleWakeup tool-confusion trap recurring repeatedly despite two doc-only fixes (issues #241/#425/#814) plus its same-day sibling regression (#835); David on CLAUDE.md's verify-before-asserting rule extending to self-generated claims (#833/#834); Kevin on a preventive drift-guard test for a 3-places-hand-copied enum (#807/PR #817). A fresh blind outside-read subagent picked Karen's post as strongest by weight (a real, still-unresolved structural failure vs. two contained wins) and named five reader-confusion gaps (unglossed /loop, an opaque 'sentinel value' phrase, the nit/minor severity scale, ready-for-human jargon, frictions-to-fixes introduced too late) — all closed in revision. Branched onto the session's own pinned branch (already fresh off origin/main), saved the post, ran pnpm gate:scoped (full gate, 78/78 e2e green), opened PR #838 with full rotation/candidate provenance in the body, and subscribed to its activity."
+prs:
+  - "838"
+docsRead:
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice/do-don't list for all three drafts
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-don't list for all three drafts
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice/do-don't list for all three drafts
+  - path: layers/blog/tenant.config.ts
+    reason: blogTags enum + pages/pingbacks schema
+  - path: layers/journal/tests/unit/importance-consistency.spec.ts
+    reason: ground Kevin's discarded candidate's technical claims
+  - path: CLAUDE.md
+    reason: branch-off checklist + citation-rigor conventions
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: invoked as a slash command; not model-invocable so followed manually
+  - name: close-session
+    reason: closure trigger at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: A CLAUDE.md line-anchor citation initially pointed at commit 7a3edbc (the drift-guard-test PR) for three production files that PR never touched, since that PR only added a new test file with no production-code changes.
+    solution: Distinguished a file's own last-touch SHA from a merely-related commit before pinning a GitHub blob link — used the current HEAD SHA for the three unrelated files and reserved the PR's own SHA for the new test file it actually added.
+    severity: minor
+  - description: "An early draft claimed a precise ordinal count (\"third, fourth, and fifth time\") for ScheduleWakeup recurrences that issue #814's own text states ambiguously (\"third/fourth\") and that I could not independently pin down from the session logs I'd read."
+    solution: Dropped the invented precise ordinal and rewrote the passage to cite each recurrence by date and session instead of by number, per CLAUDE.md's re-derive-any-count rule.
+    severity: minor
+durationSec: 1058
+models:
+  claude-sonnet-5: 174
+toolCounts:
+  Skill: 3
+  Bash: 32
+  ToolSearch: 2
+  mcp__github__issue_read: 7
+  mcp__github__pull_request_read: 5
+  Read: 10
+  Grep: 10
+  Write: 6
+  Edit: 18
+  Agent: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-08-04-we-fixed-it-twice-its-still-broken.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-85krpk
+entrypoint: remote_trigger
+cliVersion: 2.1.221
+trigger: blog-post
+learnings:
+  - "The frictions-to-fixes Skill's own regression-escalation issues (#814, #835) are themselves excellent blog material — they're self-documenting near-real-time case studies of a fix not holding, written by the very process that keeps re-discovering the recurrence."
