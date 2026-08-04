@@ -263,49 +263,73 @@ function curlGetPage(url: string, token: string, cwd: string): { status: string;
   }
 }
 
-async function fetchAllPagesViaRest<T>(initialUrl: string, token: string, cwd: string): Promise<T[]> {
+/** One raw REST page response, as `curlGetPage` returns it — named so
+ *  `walkPagesByNumber` can be driven by a fixture with no network (issue #848). */
+export interface RestPage {
+  status: string
+  body: string
+  linkHeader: string | null
+}
+
+/** Every mid-walk failure says *incomplete*, not just *failed*: this check's
+ *  whole output is "these open issues conflict", and a caller who reads a
+ *  truncated walk as a finished one concludes "no conflict" about issues it
+ *  never looked at (issue #848). */
+function incompleteScanMessage(url: string, cause: string, recordsSoFar: number, page: number): string {
+  return (
+    `GitHub REST API request to ${url} ${cause} — scan INCOMPLETE at page ${page} after ${recordsSoFar} record(s). ` +
+    'No conflict verdict can be drawn from a partial read.'
+  )
+}
+
+/** Walks pages by NUMBER on our own `repos/{owner}/{repo}` URL, using the
+ *  `Link` header only as the "is there another page" signal rather than
+ *  following its URL — the approach `audit-skills.ts` already proved against
+ *  the same endpoint (issue #738), applied here per issue #848: GitHub answers
+ *  `pulls` with a `rel="next"` pointing at the numeric `repositories/{id}/pulls`
+ *  form, which this environment's agent proxy rejects outright, so following it
+ *  verbatim 403s on page 2.
+ *
+ *  Throws on any mid-walk failure rather than returning the pages already
+ *  read — see `incompleteScanMessage`. */
+export function walkPagesByNumber<T>(
+  pageUrl: (page: number) => string,
+  fetchPage: (url: string) => RestPage,
+): T[] {
   const out: T[] = []
-  let url: string | null = initialUrl
-  while (url) {
-    const { status, body, linkHeader } = curlGetPage(url, token, cwd)
+  for (let page = 1; ; page++) {
+    const url = pageUrl(page)
+    const { status, body, linkHeader } = fetchPage(url)
     if (status[0] !== '2') {
-      throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
+      throw new Error(incompleteScanMessage(url, `failed: HTTP ${status}`, out.length, page))
     }
-    out.push(...(JSON.parse(body) as T[]))
-    url = parseNextLink(linkHeader)
+    let records: T[]
+    try {
+      records = JSON.parse(body) as T[]
+    } catch (err) {
+      throw new Error(incompleteScanMessage(url, 'returned a malformed JSON body', out.length, page), { cause: err })
+    }
+    out.push(...records)
+    if (parseNextLink(linkHeader) === null) return out
   }
-  return out
 }
 
 interface RawPrFile {
   filename: string
 }
 
-async function readPrFilesViaRest(
-  owner: string,
-  repo: string,
-  prNumber: number,
-  token: string,
-  cwd: string,
-): Promise<string[]> {
-  const files = await fetchAllPagesViaRest<RawPrFile>(
-    `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/files?per_page=100`,
-    token,
-    cwd,
+function readPrFilesViaRest(owner: string, repo: string, prNumber: number, token: string, cwd: string): string[] {
+  const files = walkPagesByNumber<RawPrFile>(
+    (page) => `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/files?per_page=100&page=${page}`,
+    (url) => curlGetPage(url, token, cwd),
   )
   return files.map((f) => f.filename)
 }
 
-async function readOpenIssuesViaRest(
-  owner: string,
-  repo: string,
-  token: string,
-  cwd: string,
-): Promise<RawConflictIssue[]> {
-  return fetchAllPagesViaRest<RawConflictIssue>(
-    `https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=100`,
-    token,
-    cwd,
+function readOpenIssuesViaRest(owner: string, repo: string, token: string, cwd: string): RawConflictIssue[] {
+  return walkPagesByNumber<RawConflictIssue>(
+    (page) => `https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=100&page=${page}`,
+    (url) => curlGetPage(url, token, cwd),
   )
 }
 
