@@ -44,3 +44,7 @@ new; don't re-diagnose any of these as a fresh problem.
   the same transient "permission stream closed" error.** Retry once; if it
   fails again, don't retry-loop — fall back immediately to the safer default
   option and note the fallback explicitly in the resulting output (issue #359).
+- **A fired self-bind Routine's output may not surface as a visible turn in
+  the session.** Before concluding a Routine "didn't run" or "didn't fire,"
+  check `last_fired_at` via `list_triggers` rather than relying on turn
+  visibility (issue #834).
