@@ -3,7 +3,7 @@
 Date: 2026-07-08 (decision made); documented retroactively 2026-07-11
 
 Status: **Superseded (2026-07-16, issue #236)** — the patch was removed in favour
-of an app-level surface (see the Amendment at the end). Originally Accepted as a
+of an app-level surface (see the Amendments at the end). Originally Accepted as a
 retroactive record: the patch had been live on `main` since commit `12a9564`
 (2026-07-08); this ADR was written after the fact once a review found the
 decision met the 3-part test but had no ADR. The Context/Decision/Consequences
@@ -148,3 +148,48 @@ surfaces the underlying error directly instead. If an invisible self-heal is
 wanted back later, it belongs upstream (or in a fresh, re-validated patch), not
 in this reverted one. This amendment is governance/dependency-runtime behaviour,
 so it stays human-only to merge (ADR-0004).
+
+## Amendment (2026-08-04, issue #236): the chunk-load funnel auto-recovers
+
+The amendment above concluded that a reload is the only reliable recovery and
+left the user to click it. The first real production capture (2026-07-19) then
+identified *which* failure the owner had actually been hitting, and it is not
+the dump fetch this ADR was written about: on `/t/blog/david`, with no deploy in
+flight, the dialog recorded `Failed to fetch dynamically imported module:
+…/_nuxt/5YSETiN2.js` with `status: 500` — a transient 500 on an existing,
+content-hashed build chunk. `@nuxt/content` lazily `import()`s
+`@sqlite.org/sqlite-wasm` on its first client-side query, *inside* the page's
+`useAsyncData` handler, so the failed import is captured as that block's `error`
+and never reaches the router. Nuxt's own `nuxt:chunk-reload` plugin only acts on
+chunk errors that surface through `router.onError`, so it stays dormant here —
+verified against `nuxt@4.4.8` and reproduced end-to-end by 500-ing that chunk
+during a client navigation.
+
+**Narrowed, not reversed.** The recovery is still a reload, for the same reason
+this ADR's previous amendment gives — a fresh page renders from the *server* DB
+and app code cannot clear `@nuxt/content`'s poisoned client state. What changes
+is who clicks it: for this one failure class the app now reloads itself via
+`reloadNuxtApp`, so a transient chunk 500 no longer parks the user on a modal.
+
+- Classification: an error is chunk-load if Nuxt's own `app:chunkError` hook
+  (fed by Vite's `vite:preloadError`) saw it — matched by identity through the
+  `cause` chain `useAsyncData`'s `createError()` wrapper adds — or, as a
+  fallback for an import that never passed through Vite's preload helper, if its
+  message matches any engine's wording for a failed dynamic import.
+- Loop safety: `reloadNuxtApp`'s own per-path `sessionStorage` TTL guard is the
+  only attempt counter. The app reads that same entry *before* calling, because
+  `reloadNuxtApp` returns nothing when it declines — so a failure that persists
+  past one auto-recovery falls back to `ContentLoadErrorDialog` rather than
+  reloading again.
+- Every other funnel is untouched: a rejected dump fetch, a decompression or
+  `db.exec` throw on a 200, and a genuinely absent document all keep the dialog,
+  since a reload cannot fix them and a reload loop on an unfixable error is
+  worse than a modal.
+
+**Trade-off accepted.** The auto-reload is a full page load: any unsaved
+in-page state is lost, and the user sees a flash rather than an explanation.
+That is judged better than a modal for the one class where the reload
+demonstrably restores the content — and it is bounded to that class precisely so
+the modal remains the answer everywhere a reload would just repeat. This
+amendment is governance, and it changes global runtime error/reload behaviour,
+so it too stays human-only to merge (ADR-0004).

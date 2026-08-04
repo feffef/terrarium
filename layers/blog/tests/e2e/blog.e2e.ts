@@ -12,6 +12,11 @@
 // (ContentLoadErrorDialog) that a reload recovers from, since the reloaded page
 // renders from the server DB. These tests inject a failed dump load on a client
 // navigation and assert the dialog shows and a reload restores the content.
+//
+// One funnel is the exception: a failed dynamic *import* of a build chunk
+// reloads itself (ADR-0019 amendment, 2026-08-04), so its tests assert the
+// content comes back with no click — and that a failure surviving that one
+// attempt settles on the dialog instead of reloading again.
 import { describe, expect, it } from 'vitest'
 import { createPage, url } from '@nuxt/test-utils/e2e'
 import type { Page } from 'playwright-core'

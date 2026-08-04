@@ -11,6 +11,11 @@
 // Driven by the page's `useAsyncData` `status` so it opens on 'error'. The page
 // keeps it mounted rather than v-if'ing it, so the dialog isn't torn down and
 // re-created as `status` transitions.
+//
+// One failure class never gets this far: a failed dynamic import of a build
+// chunk auto-recovers by reloading instead (ADR-0019's 2026-08-04 amendment).
+// Every Space page already mounts this component, so wiring the recovery here
+// is what keeps it a single mechanism rather than one per page.
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 const props = withDefaults(
@@ -26,6 +31,7 @@ const props = withDefaults(
 const dialog = ref<HTMLDialogElement | null>(null)
 
 function sync() {
+  if (props.status === 'error' && recoverFromContentLoadError(props.error)) return
   const el = dialog.value
   if (!el || typeof el.showModal !== 'function') return
   if (props.status === 'error' && !el.open) el.showModal()
