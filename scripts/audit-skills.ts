@@ -14,11 +14,13 @@
 //   `regressionChecks` — each own Skill's most recent edit commit with the
 //   sessions immediately before/after it (session ids only; resolve against
 //   `regressionSessions`, deduped since the same session commonly brackets more
-//   than one Skill's edit) — `orphanedSessions` (issue #349; a resolved
-//   same-run mis-file — a flagged commit's added file later removed by
-//   another commit — is excluded rather than surfaced, issue #574, but is
-//   itemised in `orphanSuppressionLog` so the suppression itself stays
-//   auditable, issue #754), the two
+//   than one Skill's edit) — `orphanedSessions` (issue #349; candidates come
+//   from every merged pull request's recorded originating session, with no
+//   time window at all, issue #738 — read `orphanScan` before reading an empty
+//   list as "no orphans"; a resolved same-run mis-file — a flagged commit's
+//   added file later removed by another commit — is excluded rather than
+//   surfaced, issue #574, but is itemised in `orphanSuppressionLog` so the
+//   suppression itself stays auditable, issue #754), the two
 //   manual-nudge-closure signals `humanPromptedClosures` and
 //   `manuallyRescuedClosures` (the counterpart to `orphanedSessions`: a session
 //   that DID log, but only because a human nudged it — invisible to the orphan
@@ -32,12 +34,22 @@
 //   full-log deep-read once a regression is suspected for a specific Skill;
 //   `skillSessionFileTotals` carries the true, uncapped count alongside it.
 import { execFileSync } from 'node:child_process'
-import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
 import { isExternalSession } from '../shared/schemas/session.ts'
 import { isParentlessBoundaryCommit, SESSION_TRAILER } from './git-helpers.ts'
+import {
+  envToken,
+  hasGhBinary,
+  parseNextLink,
+  parseOwnerRepo,
+  pickFetchStrategy,
+  type FetchStrategy,
+} from './list-open-issues.ts'
+import { readProvenanceHeader } from './provenance-header.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -49,9 +61,12 @@ export const REGRESSION_BRACKET = 5
  *  for "did the last change help", and every extra one multiplies the scorecard's
  *  size across every own Skill with edit history. */
 export const MAX_EDITS_PER_SKILL = 1
-/** Calendar, not session-count, window (issue #349) — the point is catching
- *  every zero-log session, not just the newest ones. */
-export const ORPHAN_WINDOW_DAYS = 4
+/** Calendar window bounding the work-commit scan behind `manuallyRescuedClosures`
+ *  ONLY. It deliberately no longer reaches the orphan check, whose candidates now
+ *  come from merged pull requests with no window at all (issue #738) — that check
+ *  is the one a windowed scan silently truncated. A rescue is a *timing* signal
+ *  about a recent close, so a short window costs it nothing. */
+export const WORK_COMMIT_SCAN_DAYS = 4
 /** The exact keyword a session records — in a friction's `description` — when a
  *  human, not the session's own judgement, prompted its closure (`close-session`
  *  SKILL.md is the single home for the rule). Grepping for it turns the
@@ -281,6 +296,10 @@ export interface Scorecard {
   regressionChecks: RegressionCheck[]
   regressionSessions: WindowSession[]
   orphanedSessions: OrphanedSession[]
+  /** Whether the orphan candidate source could be read at all (issue #738).
+   *  `scanned: false` means `orphanedSessions` is empty because nothing was
+   *  looked at — read this BEFORE reading that empty list as a clean sweep. */
+  orphanScan: OrphanScanStatus
   /** The audit trail of every orphan candidate a suppression lever acted on —
    *  always present, `[]` when nothing was suppressed. An entry here does not
    *  imply the candidate left `orphanedSessions`: only `misfile-cleanup` does,
@@ -512,10 +531,35 @@ export interface SessionTrailerRef {
   session: string
 }
 
-/** One commit's added/removed file paths (`git log --name-status`), scoped to
- *  the same `origin/main` + `ORPHAN_WINDOW_DAYS` window as `SessionTrailerRef` —
- *  the raw material `resolvedMisfilePath` diffs against to catch a same-run
- *  mis-file cleanup (issue #574). */
+/** One raw record as read off the GitHub REST `pulls` list endpoint, trimmed to
+ *  what the orphan check reads. */
+export interface RawPullRequestApiRecord {
+  number: number
+  body: string | null
+  merged_at: string | null
+  merge_commit_sha: string | null
+}
+
+/** Whether the orphan check's candidate source could be read at all, and how
+ *  much of it there was. The failure arm is the whole point of issue #738: a
+ *  source that could not be read must stay distinguishable from one that was
+ *  read and found nothing, because the silent version of that difference is
+ *  what let a real orphan pass as a clean sweep. Reported on the scorecard;
+ *  carries no candidate data, so it stays cheap to include on every run. */
+export type OrphanScanStatus =
+  | { scanned: true; mergedPullRequests: number; withSession: number }
+  | { scanned: false; reason: string }
+
+/** `OrphanScanStatus` plus the candidates themselves — the reader's own return
+ *  shape, kept separate so the scorecard reports the status without carrying one
+ *  entry per merged pull request. */
+export type PullRequestScan = { status: OrphanScanStatus; refs: SessionTrailerRef[] }
+
+/** One commit's added/removed file paths (`git log --name-status`) along
+ *  `origin/main`'s first-parent line — the raw material `resolvedMisfilePath`
+ *  diffs against to catch a same-run mis-file cleanup (issue #574). First-parent
+ *  because an orphan candidate is now keyed on its pull request's MERGE commit
+ *  (issue #738), and a merge only carries a file list on that line. */
 export interface CommitFileChange {
   sha: string
   date: string // commit author date, UTC ISO-8601 (git %aI)
@@ -537,6 +581,56 @@ export function parseSessionTrailers(raw: string): SessionTrailerRef[] {
     out.push({ sha, date, session: m[1] as string })
   }
   return out
+}
+
+/** The legacy `Claude-Session:` footer's id, in genuine TRAILER POSITION — its
+ *  own line, not mid-sentence. The anchor and the id-shape check are both
+ *  load-bearing, not tidying: PR #120's body explains the trailer format inline
+ *  (`… (\`Claude-Session: https://claude.ai/code/session_01…\`) …`) and the
+ *  unanchored `SESSION_TRAILER` matched it, inventing an orphan for the elided
+ *  id `session_01…\`)`. That is issue #692's class of bug — a quoted marker read
+ *  as authorship — and `SESSION_TRAILER` stays as-is because other readers
+ *  (`session-id-guard.ts`) want its looser reach. */
+function legacyTrailerSession(body: string): string | undefined {
+  for (const line of body.split('\n')) {
+    if (!/^Claude-Session:/.test(line)) continue
+    const id = line.match(SESSION_TRAILER)?.[1]
+    if (id && /^[A-Za-z0-9_-]+$/.test(id)) return id
+  }
+  return undefined
+}
+
+/** The session a merged pull request records as its origin, shaped as the same
+ *  `SessionTrailerRef` the comparison already consumes so only the *source*
+ *  changes (issue #738). `null` for a closed-unmerged pull request, or a merged
+ *  one whose body carries no session marker at all — a body predating #737's
+ *  fix can lack one, and contributing no candidate is the honest outcome there.
+ *
+ *  Only the two DELIBERATE authorship markers count: ADR-0017's header (anchored
+ *  at the body's start) and the legacy `Claude-Session:` footer (anchored to its
+ *  own line — see `legacyTrailerSession`). `sessionIdsIn` is deliberately NOT
+ *  used: it reads any session URL wherever it appears, so a body quoting another
+ *  session would be attributed to it (issue #692's class of bug), and a
+ *  mis-attributed candidate is a fabricated orphan.
+ *
+ *  Keyed on the merge commit so `resolvedMisfilePath` can still match this
+ *  candidate against `readCommitFileChanges`; `pr-<number>` is the fallback for
+ *  a merged pull request GitHub reports without one, since dropping the
+ *  candidate to preserve a tidy sha is the silent truncation this issue exists
+ *  to remove. */
+export function pullRequestSessionRef(record: RawPullRequestApiRecord): SessionTrailerRef | null {
+  if (!record.merged_at) return null
+  const body = record.body ?? ''
+  const session = readProvenanceHeader(body)?.sessionId ?? legacyTrailerSession(body)
+  if (!session) return null
+  return { sha: record.merge_commit_sha || `pr-${record.number}`, date: record.merged_at, session }
+}
+
+/** Every merged pull request's originating session, as the candidate set the
+ *  orphan comparison runs against (issue #738). Ordering and per-session
+ *  grouping are `groupSessionReferences`' job, not this one's. */
+export function parseMergedPullRequests(records: RawPullRequestApiRecord[]): SessionTrailerRef[] {
+  return records.map(pullRequestSessionRef).filter((ref): ref is SessionTrailerRef => ref !== null)
 }
 
 /** Expects `readCommitFileChanges`'s `git log --name-status` format: a header
@@ -832,8 +926,10 @@ function readKnownSessionIds(cwd = root): Set<string> {
   return ids
 }
 
-/** Scoped to `origin/main` per CLAUDE.md's git-log guidance, not `--all`. */
-function readSessionTrailers(cwd = root, days = ORPHAN_WINDOW_DAYS): SessionTrailerRef[] {
+/** Scoped to `origin/main` per CLAUDE.md's git-log guidance, not `--all`. Feeds
+ *  `manuallyRescuedClosures` only — see `WORK_COMMIT_SCAN_DAYS` for why the
+ *  orphan check no longer reads from here (issue #738). */
+function readSessionTrailers(cwd = root, days = WORK_COMMIT_SCAN_DAYS): SessionTrailerRef[] {
   let raw: string
   try {
     raw = execFileSync(
@@ -847,15 +943,17 @@ function readSessionTrailers(cwd = root, days = ORPHAN_WINDOW_DAYS): SessionTrai
   return parseSessionTrailers(raw)
 }
 
-/** Same window as `readSessionTrailers` — the mis-file and its same-run
- *  cleanup both land within it (issue #574). Scoped to `origin/main`, not
- *  `--all`, per CLAUDE.md's git-log guidance. */
-function readCommitFileChanges(cwd = root, days = ORPHAN_WINDOW_DAYS): CommitFileChange[] {
+/** Unwindowed, and along `origin/main`'s first-parent line — see
+ *  `CommitFileChange` for why both (issue #738). Scoped to `origin/main`, not
+ *  `--all`, per CLAUDE.md's git-log guidance. History this can't see (a shallow
+ *  clone) only costs a suppression, so a candidate surfaces as a visible orphan
+ *  rather than disappearing — the safe direction for issue #747's lesson. */
+function readCommitFileChanges(cwd = root): CommitFileChange[] {
   let raw: string
   try {
     raw = execFileSync(
       'git',
-      ['log', 'origin/main', `--since=${days} days ago`, '--name-status', `--pretty=format:${REC}%H${SEP}%aI`],
+      ['log', 'origin/main', '--first-parent', '--name-status', `--pretty=format:${REC}%H${SEP}%aI`],
       { cwd, encoding: 'utf8' },
     )
   } catch {
@@ -951,6 +1049,134 @@ function readSkillEdits(cwd = root): Map<string, SkillEdit[]> {
   return parseSkillEditLog(raw)
 }
 
+// ── GitHub IO (thin shell) ───────────────────────────────────────────────────
+//
+// The orphan check's candidate source (issue #738). It sits behind the same
+// boundary as the git readers above — everything below returns raw records, and
+// every judgement is made by the pure `parseMergedPullRequests`/
+// `findOrphanedSessions` pair, so the comparison stays testable with no network.
+//
+// The `gh`/`rest` strategy switch (`pickFetchStrategy`, `parseNextLink`,
+// `hasGhBinary`, `envToken`, `parseOwnerRepo`) is single-homed in
+// `list-open-issues.ts` (issue #505) and imported at the top of this file.
+
+function readOriginUrl(cwd: string): string {
+  return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
+}
+
+function readClosedPullRequestsViaGh(owner: string, repo: string, cwd: string): RawPullRequestApiRecord[] {
+  const raw = execFileSync(
+    'gh',
+    ['api', '--method', 'GET', `repos/${owner}/${repo}/pulls`, '-f', 'state=closed', '-f', 'per_page=100', '--paginate', '--jq', '.[]'],
+    { cwd, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 },
+  )
+  return raw
+    .split('\n')
+    .filter((line) => line.length > 0)
+    .map((line) => JSON.parse(line) as RawPullRequestApiRecord)
+}
+
+// See `poll-guest-tickets.ts`'s `curlGetPage` for why `curl` over `fetch` here
+// (issue #567) — mirrored, down to the header/body temp-file split that makes
+// `Link`-header pagination readable.
+function curlGetPage(url: string, token: string, cwd: string): { status: string; body: string; linkHeader: string | null } {
+  const dir = mkdtempSync(join(tmpdir(), 'audit-skills-'))
+  const headerFile = join(dir, 'headers')
+  const bodyFile = join(dir, 'body')
+  try {
+    const status = execFileSync(
+      'curl',
+      [
+        '-sS',
+        '-o',
+        bodyFile,
+        '-D',
+        headerFile,
+        '-w',
+        '%{http_code}',
+        '-H',
+        `Authorization: Bearer ${token}`,
+        '-H',
+        'Accept: application/vnd.github+json',
+        '-H',
+        'User-Agent: terrarium-audit-skills',
+        url,
+      ],
+      { cwd, encoding: 'utf8' },
+    ).trim()
+    const headers = readFileSync(headerFile, 'utf8')
+    const linkLine = headers.split(/\r?\n/).find((l) => /^link:/i.test(l))
+    return {
+      status,
+      body: readFileSync(bodyFile, 'utf8'),
+      linkHeader: linkLine ? linkLine.slice(linkLine.indexOf(':') + 1).trim() : null,
+    }
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+}
+
+/** Walks pages by NUMBER on our own `repos/{owner}/{repo}` URL, using the `Link`
+ *  header only as the "is there another page" signal rather than following its
+ *  URL. GitHub answers this endpoint with `rel="next"` pointing at the numeric
+ *  `repositories/{id}/pulls` form, which this environment's agent proxy rejects
+ *  outright ("Numeric-ID repository paths … are not supported through this
+ *  proxy"), so following it verbatim 403s on page 2 — and a partial scan that
+ *  reads as complete is exactly the failure issue #738 exists to remove. */
+function readClosedPullRequestsViaRest(
+  owner: string,
+  repo: string,
+  token: string,
+  cwd: string,
+): RawPullRequestApiRecord[] {
+  const out: RawPullRequestApiRecord[] = []
+  for (let page = 1; ; page++) {
+    const url = `https://api.github.com/repos/${owner}/${repo}/pulls?state=closed&per_page=100&page=${page}`
+    const { status, body, linkHeader } = curlGetPage(url, token, cwd)
+    if (status[0] !== '2') throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
+    out.push(...(JSON.parse(body) as RawPullRequestApiRecord[]))
+    if (parseNextLink(linkHeader) === null) return out
+  }
+}
+
+function readClosedPullRequests(strategy: FetchStrategy, owner: string, repo: string, cwd: string): RawPullRequestApiRecord[] {
+  if (strategy === 'gh') return readClosedPullRequestsViaGh(owner, repo, cwd)
+  const token = envToken()
+  if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
+  return readClosedPullRequestsViaRest(owner, repo, token, cwd)
+}
+
+/** Every merged pull request's originating session — the orphan check's whole
+ *  candidate set, unbounded in time (issue #738). Every failure to reach the
+ *  source returns `scanned: false` with the reason rather than an empty set: an
+ *  empty set is a claim that nothing is orphaned, and this reader is not
+ *  entitled to make that claim when it could not look. */
+export function readPullRequestSessionRefs(cwd = root): PullRequestScan {
+  try {
+    const originUrl = readOriginUrl(cwd)
+    const ownerRepo = parseOwnerRepo(originUrl)
+    if (ownerRepo === null) {
+      return { status: { scanned: false, reason: `could not parse owner/repo from origin remote: ${originUrl}` }, refs: [] }
+    }
+    const strategy = pickFetchStrategy(hasGhBinary(cwd), Boolean(envToken()))
+    if (strategy === null) {
+      return {
+        status: {
+          scanned: false,
+          reason: '`gh` is not installed and neither GH_TOKEN nor GITHUB_TOKEN is set',
+        },
+        refs: [],
+      }
+    }
+    const records = readClosedPullRequests(strategy, ownerRepo.owner, ownerRepo.repo, cwd)
+    const merged = records.filter((r) => r.merged_at !== null)
+    const refs = parseMergedPullRequests(merged)
+    return { status: { scanned: true, mergedPullRequests: merged.length, withSession: refs.length }, refs }
+  } catch (err) {
+    return { status: { scanned: false, reason: err instanceof Error ? err.message : String(err) }, refs: [] }
+  }
+}
+
 // ── Command ─────────────────────────────────────────────────────────────────
 
 export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
@@ -962,7 +1188,8 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
   const rows = buildSkillRows(readOnDiskSkills(cwd, skillNames), readInventory(cwd), tallyUsage(window), external)
   const { checks, sessions } = buildRegressionChecks(all, readSkillEdits(cwd), external)
   const trailers = readSessionTrailers(cwd)
-  const orphans = findOrphanedSessions(trailers, readKnownSessionIds(cwd), readCommitFileChanges(cwd))
+  const scan = readPullRequestSessionRefs(cwd)
+  const orphans = findOrphanedSessions(scan.refs, readKnownSessionIds(cwd), readCommitFileChanges(cwd))
   return {
     windowSize,
     sessionsConsidered: all.length,
@@ -971,6 +1198,7 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
     regressionChecks: checks,
     regressionSessions: sessions,
     orphanedSessions: orphans.orphaned,
+    orphanScan: scan.status,
     orphanSuppressionLog: orphans.suppressed,
     humanPromptedClosures: findHumanPromptedClosures(all),
     manuallyRescuedClosures: findManuallyRescuedClosures(trailers, all),
