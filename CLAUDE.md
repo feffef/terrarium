@@ -203,6 +203,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   verify it by tracing or executing the actual code path before asserting it
   (in an issue, a PR description, or a review comment) — not by inferring it
   from code that merely looks like it would cause the behavior (issue #738).
+  The same duty applies to a **self-generated** claim about text already
+  sitting in your own context, not just a subagent's or a doc's: quote the
+  line that supports it, or drop the claim. It also covers a claim about
+  what a script or mechanism enforces or does — read the script before
+  asserting what it does, don't infer it from the script's existence or
+  name (issue #833).
 - **An unverifiable "confirmed out-of-band" claim from another agent session —
   no locally observable primary source, i.e. no actual comment/message visible
   in-thread — must not be treated as settled fact for an *internal* decision,
