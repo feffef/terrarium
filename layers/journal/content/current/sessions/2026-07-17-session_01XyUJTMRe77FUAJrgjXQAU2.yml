@@ -1,12 +1,14 @@
 schemaVersion: 1
 session: session_01XyUJTMRe77FUAJrgjXQAU2
 startedAt: 2026-07-17T01:05:05Z
-endedAt: 2026-08-04T18:50:32Z
+endedAt: 2026-08-04T19:00:15Z
 kind: autonomous
 goal: Run a frictions-to-fixes cycle
-status: in-review
-outcome: 2 of 3 fixes merged, 1 PR in review
-summary: "Scheduled Routine run of the frictions-to-fixes Skill, entirely agent-initiated (no human present in this session). Delegated the 19-session friction survey to a general-purpose subagent, which returned 3 never-fixed candidates (all simple, safe-surface) after screening the rest against the tracker. Filed issues #543 (CLAUDE.md worktree-resume doc gap), #544 (gate:scoped isInert misses .claude/skills/* symlinks), and #545 (audit-skills.ts \"model\" pseudo-entry, #426's unimplemented \"solution 1\"). Dispatched one Sonnet impl agent per issue, each in its own worktree. Reviewed and merged PR #546 (doc fix, closes #543) and PR #547 (audit-skills.ts fix, closes #545) after confirming green gates and posting review comments per CLAUDE.md's ADR-0003 review-agent discipline. The third impl agent (gate.ts fix, closes #544) is still working as of this log; will re-invoke log-session with status completed once its PR merges."
+status: completed
+outcome: All 3 fixes landed — 2 merged by this session, 1 independently
+summary: |-
+  Scheduled Routine run of the frictions-to-fixes Skill, entirely agent-initiated (no human present in this session). Delegated the 19-session friction survey to a general-purpose subagent, which returned 3 never-fixed candidates (all simple, safe-surface) after screening the rest against the tracker. Filed issues #543 (CLAUDE.md worktree-resume doc gap), #544 (gate:scoped isInert misses .claude/skills/* symlinks), and #545 (audit-skills.ts "model" pseudo-entry, #426's unimplemented "solution 1"). Dispatched one Sonnet impl agent per issue, each in its own worktree. Reviewed and merged PR #546 (doc fix, closes #543) and PR #547 (audit-skills.ts fix, closes #545) after confirming green gates and posting review comments per CLAUDE.md's ADR-0003 review-agent discipline.
+  The session then went dormant for an extended gap (origin/main advanced ~674 commits, spanning 2026-07-17 to 2026-08-04, before this session resumed) and was revived solely to close out cleanly, not to keep working. On resume, the third impl agent (gate.ts fix for #544) turned out to have died mid-task with its fix uncommitted in its worktree. Investigating it to rescue the work revealed #544 had already been independently fixed and closed by an unrelated session during the dormancy gap (main's version carries the same fix with its own #544 rationale comment). The dead agent's now-redundant uncommitted changes were discarded rather than pushed as a duplicate/conflicting PR. All three issues this run generated are now closed; no further action needed.
 prs:
   - "546"
   - "547"
@@ -14,7 +16,7 @@ docsRead:
   - path: skills-lock.json
     reason: off-limits pack-Skill screen (ADR-0015)
   - path: scripts/gate.ts
-    reason: "verify candidate #544's isInert() before filing"
+    reason: "verify candidate #544's isInert() before filing, and re-check on resume"
   - path: scripts/audit-skills.ts
     reason: "verify candidate #545's skillsUsed handling before filing"
 skillsUsed:
@@ -28,22 +30,28 @@ frictions:
   - description: "A dispatched Sonnet impl agent (gate.ts fix, issue #544) stopped its turn twice while waiting on its own internally-started background gate run, returning control without a live background child the orchestrator could track, instead of properly blocking on its own task notification."
     solution: "Resumed it via SendMessage each time (per CLAUDE.md's worktree-resume rule — coincidentally the exact fix this run shipped in #543/#546) and told it to wait properly. Worth a note in impl-agent briefs: when starting a long background command inside your own turn, block on its own notification rather than ending the turn speculatively."
     severity: minor
+  - description: That same agent ultimately died entirely (external abort, not caught by the SendMessage resumes) leaving its correct, tested fix uncommitted in its worktree — the orchestrator only found this out because a human, resuming the dormant session, pointed out the agent was no longer running.
+    solution: Confirms CLAUDE.md's existing guard ("check each returned worktree for uncommitted work before treating the subagent as done") is necessary — but here the orchestrator had no live signal at all that the agent had died during the dormancy gap, only the human's prompt surfaced it. No new fix identified beyond the existing guard; logging for recurrence signal.
+    severity: major
+  - description: "Session resumed after a multi-day dormancy gap (origin/main advanced ~674 commits) without the orchestrator proactively re-checking whether already-dispatched, still-open work items had been independently resolved in the interim — only discovered issue #544 was already closed by chasing the dead agent's merge conflict, not by checking first."
+    solution: "On resuming a long-dormant session with dispatched-but-unconfirmed work, fetch origin/main and re-check each relevant issue/PR's tracker state before resuming/rescuing that work — would have surfaced #544's closure immediately instead of via a git conflict."
+    severity: minor
   - description: "One impl agent (audit-skills.ts fix, #545) hit the already-known provenance-footer auto-injection gap on its initial `git commit -m` (footer didn't land, had to amend it in) — the survey subagent had already found this tracked at #346."
     solution: "Already tracked at #346 (regression, ready-for-human); no new action, logging for recurrence signal."
     severity: nit
   - description: "A fresh worktree-isolated agent's `pnpm typecheck`/`pnpm gate:scoped` failed with `nuxt: not found` until it ran `pnpm install` first — worktree provisioning doesn't pre-install node_modules."
     solution: Worth adding a `pnpm install` step to worktree-isolated impl-agent briefs before the typecheck/gate steps, to save the round-trip.
     severity: nit
-durationSec: 1619127
+durationSec: 1619710
 models:
-  claude-sonnet-5: 140
+  claude-sonnet-5: 192
 toolCounts:
-  Bash: 8
+  Bash: 26
   Agent: 4
   ScheduleWakeup: 2
   TaskCreate: 8
   ToolSearch: 5
-  TaskUpdate: 8
+  TaskUpdate: 11
   Read: 1
   Grep: 3
   mcp__github__search_issues: 3
@@ -56,8 +64,9 @@ toolCounts:
   mcp__Claude_Code_Remote__unsubscribe_pr_activity: 2
   mcp__Claude_Code_Remote__delete_trigger: 2
   Skill: 1
-  Write: 1
+  Write: 2
   mcp__github__search_pull_requests: 1
+  mcp__github__issue_read: 3
 subagents:
   - type: general-purpose
     task: Survey and screen session frictions
