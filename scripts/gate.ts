@@ -2,8 +2,11 @@
 // Skips the heavy layers when the whole changeset is inert, else runs the full
 // gate. Design, safety argument, and the inert-set proof: issue #350.
 //   pnpm gate:scoped [--dry]
+//   pnpm exec tsx scripts/gate.ts --decide --base <ref> [--head <ref>]
+//     — decision only, for CI to guard its own heavy steps on (#445; the
+//       workflow half is docs/proposals/445-ci-reuse-gate-scoped-classifier.md)
 import { execFileSync, spawnSync } from 'node:child_process'
-import { statSync } from 'node:fs'
+import { appendFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { root } from '../shared/expand.ts'
@@ -30,10 +33,10 @@ export interface Scope {
 // run the full gate, so the skip path is only ever reached on a proven inert set.
 export function decideScope(changed: string[] | null): Scope {
   if (changed === null) {
-    return { skipHeavy: false, reason: 'could not determine changed files (no merge-base with origin/main) — running full gate' }
+    return { skipHeavy: false, reason: 'could not determine changed files (no usable diff base) — running full gate' }
   }
   if (changed.length === 0) {
-    return { skipHeavy: false, reason: 'no changes vs origin/main — running full gate' }
+    return { skipHeavy: false, reason: 'no changes vs the diff base — running full gate' }
   }
   const firstNonInert = changed.find((p) => !isInert(p))
   if (firstNonInert === undefined) {
@@ -78,6 +81,32 @@ export function changedPaths(): string[] | null {
   } catch {
     return null
   }
+}
+
+// ── CI decision mode (#445) ─────────────────────────────────────────────────
+// CI asks this script for the decision instead of re-expressing `isInert` in
+// YAML, where the two classifications would drift apart unnoticed (#350). The
+// base ref is the caller's to supply — a PR's base is whatever it targets, and
+// CI has it from the event payload — so this never consults `origin/main`.
+export function changedPathsBetween(baseRef: string, headRef = 'HEAD'): string[] | null {
+  if (!baseRef || !headRef) return null
+  try {
+    // On a shallow checkout (actions/checkout's default depth) a graft boundary
+    // answers `merge-base` in place of the real one, so the diff would be
+    // plausible but wrong. Refuse to classify rather than trust it.
+    if (git(['rev-parse', '--is-shallow-repository']) === 'true') return null
+    const base = git(['merge-base', baseRef, headRef])
+    if (!base) return null
+    return lines(git(['diff', '--name-only', `${base}..${headRef}`]))
+  } catch {
+    return null
+  }
+}
+
+// Heredoc form, not `key=value`: a reason string is prose, and the bare form
+// silently truncates at the first newline one ever grows.
+export function githubOutputBlock(scope: Scope): string {
+  return `skip_heavy=${scope.skipHeavy}\nreason<<GATE_SCOPE_EOF\n${scope.reason}\nGATE_SCOPE_EOF\n`
 }
 
 // ── Stale-deps preflight (#445) ─────────────────────────────────────────────
@@ -127,8 +156,23 @@ function run(step: string): void {
   if (typeof r.status === 'number' && r.status !== 0) process.exit(r.status)
 }
 
+function flagValue(args: string[], name: string): string | undefined {
+  const i = args.indexOf(name)
+  return i === -1 ? undefined : args[i + 1]
+}
+
+function decide(args: string[]): void {
+  const scope = decideScope(changedPathsBetween(flagValue(args, '--base') ?? '', flagValue(args, '--head')))
+  console.log(`gate:scoped: ${scope.reason}`)
+  console.log(`gate:scoped: caller should run ${planSteps(scope).join(' → ')}`)
+  const out = process.env.GITHUB_OUTPUT
+  if (out) appendFileSync(out, githubOutputBlock(scope))
+}
+
 function main(): void {
-  const dry = process.argv.slice(2).includes('--dry')
+  const args = process.argv.slice(2)
+  if (args.includes('--decide')) return decide(args)
+  const dry = args.includes('--dry')
   if (!dry) ensureFreshDeps()
   const scope = decideScope(changedPaths())
   const steps = planSteps(scope)
