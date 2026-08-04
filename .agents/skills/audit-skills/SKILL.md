@@ -60,6 +60,11 @@ Done when you are on a fresh branch off the latest `origin/main`.
 pnpm exec tsx scripts/audit-skills.ts
 ```
 
+It reads GitHub for the orphan check's candidate set (`gh` when present,
+otherwise `GH_TOKEN`/`GITHUB_TOKEN`), so it takes a few seconds and needs
+network. Losing that access degrades **only** that one signal, and says so
+via `orphanScan` below — every other signal is local and unaffected.
+
 It prints JSON:
 - the **window** (the 40 newest sessions by `endedAt`, each with
   `kind`/`goal`/`summary`/`skillsUsed`, and `frictions` — that session's
@@ -75,16 +80,28 @@ It prints JSON:
   above — an edit can be older than the newest 40 sessions). Resolve ids
   against **`regressionSessions`** — a deduped pool, since the same session
   commonly brackets more than one Skill's edit.
-- **`orphanedSessions`** — every session id referenced by a `Claude-Session:`
-  commit trailer on `origin/main` in the last `ORPHAN_WINDOW_DAYS` days (4,
-  `scripts/audit-skills.ts`) (a calendar window, independent of the primary
-  window above — the point is catching **zero**-log sessions, not recent ones)
+- **`orphanedSessions`** — every session recorded as the origin of a **merged
+  pull request** (its ADR-0017 header, or the legacy `Claude-Session:` footer)
   with **no** matching file anywhere in the sessions Collection (current or
-  archived). Each entry carries the referencing commit sha(s) and date — a
+  archived). Each entry carries the merge commit sha(s) and merge date — a
   session that never invoked `close-session`/`log-session` at all (ADR-0009).
+  **No time window bounds this at all** (issue #738): a session that shipped a
+  merged PR at any point in the project's history and never logged still
+  surfaces. It is deliberately independent of the primary window above — the
+  point is catching **zero**-log sessions, not recent ones. Two known
+  incompletenesses, neither silent: a merged PR whose body carries no session
+  marker (bodies predating #737's fix) contributes no candidate, and a session
+  that shipped no merged PR is out of this check's reach by construction.
   A session id in `RESOLVED_ORPHANED_SESSIONS` still appears, but carries a
   `resolvedBy` cutoff naming the issue/PR that already tracked it (issue #447
   item 4) — see step 5 for how to treat that entry.
+- **`orphanScan`** — whether the candidate source above could be read at all.
+  **Read it before reading an empty `orphanedSessions` as a clean sweep**
+  (issue #738): `{"scanned": true, …}` carries `mergedPullRequests` and
+  `withSession` counts and means the list is trustworthy; `{"scanned": false,
+  "reason": …}` means GitHub could not be reached and **nothing was looked
+  at** — report that as an inconclusive run, not as zero orphans, and say so
+  in this run's summary.
 - **`orphanSuppressionLog`** — the audit trail for the above: every orphan
   candidate a suppression lever acted on, so a suppression can be checked
   rather than taken on trust (issue #754). `[]` is the healthy state. Each
@@ -268,6 +285,13 @@ doesn't apply to them.
 it stayed visible in the scorecard on purpose (so the incident isn't lost),
 but its cutoff means it's already tracked at the reference it names; treat it
 as read-only history, same as a fully `DISMISSED_*` entry.
+
+**Report `orphanScan` in this run's summary too — every run.** A
+`scanned: false` run has an empty `orphanedSessions` because it looked at
+nothing; say the orphan check was **inconclusive** and name the `reason`,
+rather than reporting zero orphans. Treating an unreadable source as a clean
+sweep is the exact failure issue #738 removed, and re-introducing it in the
+write-up would undo the fix.
 
 **Report `orphanSuppressionLog` in this run's summary alongside the
 orphans you did surface — every run, including an empty one** (`[]` is the

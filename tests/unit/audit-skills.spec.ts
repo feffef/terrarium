@@ -19,8 +19,10 @@ import {
   HUMAN_PROMPTED_CLOSURE,
   isSessionLogPath,
   parseCommitFileChanges,
+  parseMergedPullRequests,
   parseSessionTrailers,
   parseSkillEditLog,
+  pullRequestSessionRef,
   pickWindow,
   REC,
   RESCUED_GAP_HOURS,
@@ -30,6 +32,7 @@ import {
   toSessionFile,
   type CommitFileChange,
   type InventoryEntry,
+  type RawPullRequestApiRecord,
   type OnDiskSkill,
   type SessionFile,
   type SessionTrailerRef,
@@ -501,6 +504,95 @@ describe('parseSessionTrailers()', () => {
       trailerBlock('c2', '2026-07-12T00:00:00Z', ['b', '', 'Claude-Session: https://claude.ai/code/session_B']),
     ].join('\n')
     expect(parseSessionTrailers(raw).map((r) => r.session)).toEqual(['session_A', 'session_B'])
+  })
+})
+
+describe('pullRequestSessionRef() — the orphan candidate source (issue #738)', () => {
+  function pr(over: Partial<RawPullRequestApiRecord> = {}): RawPullRequestApiRecord {
+    return {
+      number: 649,
+      body: null,
+      merged_at: '2026-07-22T21:01:30Z',
+      merge_commit_sha: 'cc9f82d',
+      ...over,
+    }
+  }
+
+  it('reads the session out of the ADR-0017 header, keyed on the merge commit', () => {
+    const record = pr({ body: '🤖 [Claude Opus 5](https://claude.ai/code/session_A)\n\nSome summary.' })
+    expect(pullRequestSessionRef(record)).toEqual({
+      sha: 'cc9f82d',
+      date: '2026-07-22T21:01:30Z',
+      session: 'session_A',
+    })
+  })
+
+  it('falls back to the legacy Claude-Session footer — most merged PRs predate the header', () => {
+    const record = pr({
+      body: ['## Summary', '', 'Co-Authored-By: Claude <noreply@anthropic.com>', 'Claude-Session: https://claude.ai/code/session_B'].join('\n'),
+    })
+    expect(pullRequestSessionRef(record)?.session).toBe('session_B')
+  })
+
+  it('prefers the header over a footer naming a different session', () => {
+    const record = pr({
+      body: ['🤖 [Claude Opus 5](https://claude.ai/code/session_HEADER)', '', 'Claude-Session: https://claude.ai/code/session_FOOTER'].join('\n'),
+    })
+    expect(pullRequestSessionRef(record)?.session).toBe('session_HEADER')
+  })
+
+  it('ignores a closed-but-unmerged pull request', () => {
+    expect(pullRequestSessionRef(pr({ merged_at: null, body: '🤖 [M](https://claude.ai/code/session_A)' }))).toBeNull()
+  })
+
+  it('contributes no candidate for a merged PR whose body carries no session marker', () => {
+    expect(pullRequestSessionRef(pr({ body: 'Fixes a typo.' }))).toBeNull()
+    expect(pullRequestSessionRef(pr({ body: null }))).toBeNull()
+  })
+
+  it('does not attribute a session URL merely quoted mid-sentence (issue #692 class, seen on PR #120)', () => {
+    const record = pr({
+      body: '- **Primary**: read the id from the harness template (`Claude-Session: https://claude.ai/code/session_01…`) — zero commits needed.',
+    })
+    expect(pullRequestSessionRef(record)).toBeNull()
+  })
+
+  it('does not attribute a session URL quoted anywhere else in the body either', () => {
+    const record = pr({ body: 'Re-verified the fix filed as https://claude.ai/code/session_OTHER — no change needed.' })
+    expect(pullRequestSessionRef(record)).toBeNull()
+  })
+
+  it('falls back to a pr-<number> reference rather than dropping a merged PR with no merge sha', () => {
+    const record = pr({ merge_commit_sha: null, body: '🤖 [M](https://claude.ai/code/session_A)' })
+    expect(pullRequestSessionRef(record)?.sha).toBe('pr-649')
+  })
+
+  it('is bounded by no time window at all — an arbitrarily old merged PR still yields a candidate', () => {
+    const ancient = pr({ merged_at: '2026-01-01T00:00:00Z', body: '🤖 [M](https://claude.ai/code/session_OLD)' })
+    expect(pullRequestSessionRef(ancient)?.date).toBe('2026-01-01T00:00:00Z')
+  })
+})
+
+describe('parseMergedPullRequests()', () => {
+  it('keeps only the merged, session-carrying records, in input order', () => {
+    const records: RawPullRequestApiRecord[] = [
+      { number: 1, merged_at: '2026-07-01T00:00:00Z', merge_commit_sha: 'a', body: '🤖 [M](https://claude.ai/code/session_A)' },
+      { number: 2, merged_at: null, merge_commit_sha: null, body: '🤖 [M](https://claude.ai/code/session_B)' },
+      { number: 3, merged_at: '2026-07-03T00:00:00Z', merge_commit_sha: 'c', body: 'no marker' },
+      { number: 4, merged_at: '2026-07-04T00:00:00Z', merge_commit_sha: 'd', body: '🤖 [M](https://claude.ai/code/session_D)' },
+    ]
+    expect(parseMergedPullRequests(records).map((r) => r.session)).toEqual(['session_A', 'session_D'])
+  })
+
+  it('feeds the unchanged comparison: a PR-derived candidate with no log reads as an orphan', () => {
+    const records: RawPullRequestApiRecord[] = [
+      { number: 1, merged_at: '2026-07-22T21:01:30Z', merge_commit_sha: 'cc9f82d', body: '🤖 [M](https://claude.ai/code/session_orphan)' },
+      { number: 2, merged_at: '2026-07-23T00:00:00Z', merge_commit_sha: 'dd0', body: '🤖 [M](https://claude.ai/code/session_logged)' },
+    ]
+    const { orphaned } = findOrphanedSessions(parseMergedPullRequests(records), new Set(['session_logged']))
+    expect(orphaned).toEqual([
+      { session: 'session_orphan', commits: ['cc9f82d'], date: '2026-07-22T21:01:30Z' },
+    ])
   })
 })
 
