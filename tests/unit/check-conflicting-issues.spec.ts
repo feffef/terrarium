@@ -1,10 +1,12 @@
 // Unit tests for the conflicting-issue cross-check's pure core (issue #798):
 // the deletion-keyword matcher, the file-path mention check, the per-issue
-// hit finder, and the raw-record screen. The `gh api`/REST shell and the
-// `git diff` shell are thin wrappers over these, not exercised here — same
-// split `check-triage-drift.spec.ts` uses for its sibling script. The shared
-// `gh`/`rest` strategy decision (`pickFetchStrategy`, `parseNextLink`) is
-// single-homed in `list-open-issues.ts` (issue #505) and tested there.
+// hit finder, and the raw-record screen — plus the page walker (issue #848),
+// driven by a fixture fetcher so no request leaves the test. The `gh api`/REST
+// transport and the `git diff` shell are thin wrappers over these, not
+// exercised here — same split `check-triage-drift.spec.ts` uses for its sibling
+// script. The shared `gh`/`rest` strategy decision (`pickFetchStrategy`,
+// `parseNextLink`) is single-homed in `list-open-issues.ts` (issue #505) and
+// tested there.
 import { describe, expect, it } from 'vitest'
 import {
   bodyMentionsFilePath,
@@ -14,8 +16,10 @@ import {
   findDeletionKeywords,
   parseChangedFileList,
   toConflictCandidateIssue,
+  walkPagesByNumber,
   type ConflictCandidateIssue,
   type RawConflictIssue,
+  type RestPage,
 } from '../../scripts/check-conflicting-issues.ts'
 
 // The motivating case from issue #798: issue #784 instructs deleting
@@ -188,5 +192,63 @@ describe('parseChangedFileList()', () => {
   })
   it('returns an empty array for empty input', () => {
     expect(parseChangedFileList('')).toEqual([])
+  })
+})
+
+describe('walkPagesByNumber()', () => {
+  // The real shape of GitHub's `rel="next"` on the `pulls` endpoint: the
+  // numeric `repositories/{id}/…` form this environment's agent proxy rejects
+  // (issue #848). A walker that follows it verbatim 403s on page 2.
+  const NUMERIC_NEXT_LINK =
+    '<https://api.github.com/repositories/1300192/pulls/42/files?per_page=100&page=2>; rel="next", ' +
+    '<https://api.github.com/repositories/1300192/pulls/42/files?per_page=100&page=2>; rel="last"'
+
+  const pageUrl = (page: number) =>
+    `https://api.github.com/repos/feffef/terrarium/pulls/42/files?per_page=100&page=${page}`
+
+  /** A fixture fetcher: serves `pages` in order and records every URL asked for. */
+  function fixtureFetcher(pages: RestPage[]): { fetchPage: (url: string) => RestPage; requested: string[] } {
+    const requested: string[] = []
+    let index = 0
+    return {
+      requested,
+      fetchPage: (url) => {
+        requested.push(url)
+        const page = pages[index++]
+        if (!page) throw new Error(`fixture exhausted: unexpected request for ${url}`)
+        return page
+      },
+    }
+  }
+
+  it('reaches page 2 by number instead of following the numeric next link', () => {
+    const { fetchPage, requested } = fixtureFetcher([
+      { status: '200', body: JSON.stringify([{ filename: 'a.ts' }]), linkHeader: NUMERIC_NEXT_LINK },
+      { status: '200', body: JSON.stringify([{ filename: 'b.ts' }]), linkHeader: null },
+    ])
+    expect(walkPagesByNumber(pageUrl, fetchPage)).toEqual([{ filename: 'a.ts' }, { filename: 'b.ts' }])
+    expect(requested).toEqual([pageUrl(1), pageUrl(2)])
+    expect(requested.some((url) => url.includes('/repositories/'))).toBe(false)
+  })
+
+  it('stops after one page when there is no next link', () => {
+    const { fetchPage, requested } = fixtureFetcher([
+      { status: '200', body: JSON.stringify([{ filename: 'a.ts' }]), linkHeader: null },
+    ])
+    expect(walkPagesByNumber(pageUrl, fetchPage)).toEqual([{ filename: 'a.ts' }])
+    expect(requested).toEqual([pageUrl(1)])
+  })
+
+  it('throws an explicit incomplete-scan error on a mid-walk rejection, never the short list', () => {
+    const { fetchPage } = fixtureFetcher([
+      { status: '200', body: JSON.stringify([{ filename: 'a.ts' }]), linkHeader: NUMERIC_NEXT_LINK },
+      { status: '403', body: 'Numeric-ID repository paths are not supported through this proxy', linkHeader: null },
+    ])
+    expect(() => walkPagesByNumber(pageUrl, fetchPage)).toThrow(/INCOMPLETE at page 2 after 1 record/)
+  })
+
+  it('throws an explicit incomplete-scan error on a malformed page body', () => {
+    const { fetchPage } = fixtureFetcher([{ status: '200', body: '<html>nope</html>', linkHeader: null }])
+    expect(() => walkPagesByNumber(pageUrl, fetchPage)).toThrow(/INCOMPLETE at page 1 after 0 record/)
   })
 })
