@@ -1,59 +1,80 @@
 // Unit tests for the midden-survey helper's pure core — deletion-log parsing,
 // package.json dependency-removal parsing, the noise filter, the mechanical
-// Gate-B screens (regrown paths / re-added deps), and the dedupe against
-// already-catalogued Midden artifacts. The git shell is a thin wrapper over
-// these, exercised by running the script directly (`tsx scripts/midden-survey.ts`).
+// Gate-B screens (regrown paths / relocated files / re-added deps), and the
+// dedupe against already-catalogued Midden artifacts. The git shell is a thin
+// wrapper over these, exercised by running the script directly
+// (`tsx scripts/midden-survey.ts`).
 import { describe, expect, it } from 'vitest'
 import {
   cataloguedIndex,
   cataloguedLabel,
   cataloguedPathVia,
+  indexCurrentTree,
   isDependencyLine,
   isNoisePath,
   parseDeletionLog,
   parseDependencyRemovals,
   provenanceKey,
   provenancePath,
+  relocationLabel,
+  renamesByOldPath,
+  resolveRenamed,
   screenCatalogued,
   screenRegrown,
+  screenRelocated,
   type CataloguedPath,
   type DeletionCandidate,
   type DependencyRemovalCandidate,
+  type Relocation,
 } from '../../scripts/midden-survey.ts'
 
 const SEP = '\x1f'
+const ZERO = '0'.repeat(40)
+/** A distinct 40-hex blob SHA per fixture file, readable in a failure message. */
+const blobOf = (seed: string) => seed.padEnd(40, '0').replace(/[^0-9a-f]/g, 'a')
 
-// Mirrors real `git log --diff-filter=D -M --name-only --format=%H<SEP>%cI<SEP>%s`
-// output: a header line per commit, a blank line, then one path per line.
+// Mirrors real `git log --diff-filter=DR -M --raw --no-abbrev --format=%H<SEP>%cI<SEP>%s`
+// output: a header line per commit, a blank line, then one `:<modes> <shas>
+// <status>\t<paths>` line per changed file.
+const CARD = blobOf('ca4d')
+const GLYPH = blobOf('617f')
+const DOC = blobOf('d0c')
+const SPEC_BEFORE = blobOf('5bef')
+const SPEC_AFTER = blobOf('5aft')
+
 const DELETION_LOG = [
   `c399e92${SEP}2026-07-24T12:46:36+00:00${SEP}midden: flatten the visitor experience`,
   '',
-  'layers/midden/app/components/midden/ArtifactCard.vue',
-  'layers/midden/app/components/midden/ConditionGlyph.vue',
+  `:100644 000000 ${CARD} ${ZERO} D\tlayers/midden/app/components/midden/ArtifactCard.vue`,
+  `:100644 000000 ${GLYPH} ${ZERO} D\tlayers/midden/app/components/midden/ConditionGlyph.vue`,
   '',
   `7111d70${SEP}2026-07-22T20:50:03+00:00${SEP}Drop redundant doc file`,
   '',
-  'docs/agents/github-footer-guard.md',
+  `:100644 000000 ${DOC} ${ZERO} D\tdocs/agents/github-footer-guard.md`,
+  `:100644 100644 ${SPEC_BEFORE} ${SPEC_AFTER} R067\ttests/unit/github-footer-guard.spec.ts\ttests/unit/github-provenance-guard.spec.ts`,
   '',
 ].join('\n')
 
 describe('parseDeletionLog()', () => {
-  it('yields one candidate per deleted path, carrying its deleting commit', () => {
-    expect(parseDeletionLog(DELETION_LOG)).toEqual<DeletionCandidate[]>([
+  it('yields one candidate per deleted path, carrying its deleting commit and dead content', () => {
+    expect(parseDeletionLog(DELETION_LOG).deletions).toEqual<DeletionCandidate[]>([
       {
         path: 'layers/midden/app/components/midden/ArtifactCard.vue',
+        blob: CARD,
         hash: 'c399e92',
         isoDate: '2026-07-24T12:46:36+00:00',
         subject: 'midden: flatten the visitor experience',
       },
       {
         path: 'layers/midden/app/components/midden/ConditionGlyph.vue',
+        blob: GLYPH,
         hash: 'c399e92',
         isoDate: '2026-07-24T12:46:36+00:00',
         subject: 'midden: flatten the visitor experience',
       },
       {
         path: 'docs/agents/github-footer-guard.md',
+        blob: DOC,
         hash: '7111d70',
         isoDate: '2026-07-22T20:50:03+00:00',
         subject: 'Drop redundant doc file',
@@ -61,14 +82,31 @@ describe('parseDeletionLog()', () => {
     ])
   })
 
+  it('surfaces a rename git detected as a relocation, naming both paths (#753)', () => {
+    expect(parseDeletionLog(DELETION_LOG).renames).toEqual<Relocation[]>([
+      {
+        path: 'tests/unit/github-footer-guard.spec.ts',
+        newPath: 'tests/unit/github-provenance-guard.spec.ts',
+        hash: '7111d70',
+        isoDate: '2026-07-22T20:50:03+00:00',
+        subject: 'Drop redundant doc file',
+      },
+    ])
+  })
+
+  it('never reports a detected rename among the deletions', () => {
+    const dead = parseDeletionLog(DELETION_LOG).deletions.map((c) => c.path)
+    expect(dead).not.toContain('tests/unit/github-footer-guard.spec.ts')
+  })
+
   it('returns nothing for empty input', () => {
-    expect(parseDeletionLog('')).toEqual([])
-    expect(parseDeletionLog('\n\n')).toEqual([])
+    expect(parseDeletionLog('')).toEqual({ deletions: [], renames: [] })
+    expect(parseDeletionLog('\n\n')).toEqual({ deletions: [], renames: [] })
   })
 
   it('tolerates a subject containing the odd character but not the separator', () => {
-    const raw = `${'a'.repeat(7)}${SEP}2026-07-01T00:00:00Z${SEP}fix: drop "quoted" file (#42)\n\nsome/file.ts\n`
-    const [cand] = parseDeletionLog(raw)
+    const raw = `${'a'.repeat(7)}${SEP}2026-07-01T00:00:00Z${SEP}fix: drop "quoted" file (#42)\n\n:100644 000000 ${DOC} ${ZERO} D\tsome/file.ts\n`
+    const [cand] = parseDeletionLog(raw).deletions
     expect(cand?.subject).toBe('fix: drop "quoted" file (#42)')
     expect(cand?.path).toBe('some/file.ts')
   })
@@ -165,8 +203,8 @@ describe('parseDependencyRemovals()', () => {
 describe('screenRegrown() — the mechanical half of Gate B', () => {
   const meta = { hash: 'h', isoDate: '2026-07-01T00:00:00Z', subject: 's' }
   const cands: DeletionCandidate[] = [
-    { path: 'gone/forever.ts', ...meta },
-    { path: 'came/back.ts', ...meta },
+    { path: 'gone/forever.ts', blob: blobOf('60e'), ...meta },
+    { path: 'came/back.ts', blob: blobOf('bac'), ...meta },
   ]
   it('splits candidates whose path exists again in the current tree from truly gone ones', () => {
     const { gone, regrown } = screenRegrown(cands, new Set(['came/back.ts', 'other/live.ts']))
@@ -177,6 +215,161 @@ describe('screenRegrown() — the mechanical half of Gate B', () => {
     const { gone, regrown } = screenRegrown(cands, new Set())
     expect(gone).toHaveLength(2)
     expect(regrown).toHaveLength(0)
+  })
+})
+
+// Mirrors real `git ls-tree -r origin/main` output.
+const MOVED = blobOf('m0ed')
+const EMPTY = blobOf('e69de29bb2d1d6434b8b29ae775ad8c2e48c5391')
+const TREE = [
+  `100644 blob ${MOVED}\tlayers/status/content/current/pages/index.md`,
+  `100644 blob ${blobOf('11e')}\tapp/app.vue`,
+  `100644 blob ${EMPTY}\tlayers/a/.gitkeep`,
+  `100644 blob ${EMPTY}\tlayers/b/.gitkeep`,
+  '',
+].join('\n')
+
+describe('indexCurrentTree()', () => {
+  it('reads every path in the tree', () => {
+    expect(indexCurrentTree(TREE).paths).toEqual(
+      new Set(['layers/status/content/current/pages/index.md', 'app/app.vue', 'layers/a/.gitkeep', 'layers/b/.gitkeep']),
+    )
+  })
+  it('keys a blob only one live path holds to that path', () => {
+    expect(indexCurrentTree(TREE).uniqueBlobPaths.get(MOVED)).toBe('layers/status/content/current/pages/index.md')
+  })
+  it('refuses to key content several live paths share — it names no survivor (#753)', () => {
+    expect(indexCurrentTree(TREE).uniqueBlobPaths.has(EMPTY)).toBe(false)
+  })
+  it('returns nothing for empty input', () => {
+    expect(indexCurrentTree('')).toEqual({ paths: new Set(), uniqueBlobPaths: new Map() })
+  })
+})
+
+// A rename git detected a day after the candidate died, and the archival move
+// that followed it — the two hops #730's session log survived through.
+const move = (path: string, newPath: string, isoDate: string): Relocation => ({
+  path,
+  newPath,
+  isoDate,
+  hash: 'r' + '0'.repeat(6),
+  subject: 'move',
+})
+const CHAIN = [
+  move('tenants/journal/x.yml', 'layers/journal/current/x.yml', '2026-05-02T00:00:00Z'),
+  move('layers/journal/current/x.yml', 'layers/journal/archived/x.yml', '2026-06-01T00:00:00Z'),
+]
+
+describe('resolveRenamed() — following git\'s rename records across commits (#753)', () => {
+  const byOldPath = renamesByOldPath(CHAIN)
+
+  it('follows a multi-hop chain to where the path stands today', () => {
+    expect(resolveRenamed({ path: 'tenants/journal/x.yml', isoDate: '2026-05-01T00:00:00Z' }, byOldPath)).toBe(
+      'layers/journal/archived/x.yml',
+    )
+  })
+  it('yields nothing for a path nothing ever moved', () => {
+    expect(resolveRenamed({ path: 'scripts/generate.ts', isoDate: '2026-05-01T00:00:00Z' }, byOldPath)).toBeUndefined()
+  })
+  it('ignores a move that predates the deletion — that was a different occupant (#753)', () => {
+    expect(resolveRenamed({ path: 'tenants/journal/x.yml', isoDate: '2026-07-01T00:00:00Z' }, byOldPath)).toBeUndefined()
+  })
+  it('compares instants, not strings, across differing UTC offsets', () => {
+    expect(resolveRenamed({ path: 'tenants/journal/x.yml', isoDate: '2026-05-02T01:30:00+02:00' }, byOldPath)).toBe(
+      'layers/journal/archived/x.yml',
+    )
+  })
+  it('terminates on a chain that loops back on itself', () => {
+    const cycle = renamesByOldPath([
+      move('a.ts', 'b.ts', '2026-05-02T00:00:00Z'),
+      move('b.ts', 'a.ts', '2026-05-03T00:00:00Z'),
+    ])
+    expect(resolveRenamed({ path: 'a.ts', isoDate: '2026-05-01T00:00:00Z' }, cycle)).toBe('b.ts')
+  })
+})
+
+describe('screenRelocated() — the cross-commit half of Gate B (#753)', () => {
+  const meta = { hash: 'a1b2c3d', isoDate: '2026-05-01T00:00:00Z', subject: 'move tenants/ to layers/' }
+  const tree = indexCurrentTree(`${TREE}100644 blob ${blobOf('ed17ed')}\tlayers/journal/archived/x.yml\n`)
+  const byOldPath = renamesByOldPath(CHAIN)
+  const none = new Map<string, Relocation[]>()
+
+  it('screens a file whose content stands at another path today, naming both paths', () => {
+    const moved: DeletionCandidate = { path: 'tenants/status/content/current/pages/index.md', blob: MOVED, ...meta }
+    const { gone, relocated } = screenRelocated([moved], tree, none)
+    expect(gone).toEqual([])
+    expect(relocated).toEqual<Relocation[]>([
+      {
+        path: 'tenants/status/content/current/pages/index.md',
+        newPath: 'layers/status/content/current/pages/index.md',
+        ...meta,
+      },
+    ])
+  })
+
+  it('screens a file whose body changed after it moved, via the rename chain (#730)', () => {
+    const moved: DeletionCandidate = { path: 'tenants/journal/x.yml', blob: blobOf('01d'), ...meta }
+    const { gone, relocated } = screenRelocated([moved], tree, byOldPath)
+    expect(gone).toEqual([])
+    expect(relocated.map(relocationLabel)).toEqual(['tenants/journal/x.yml → layers/journal/archived/x.yml'])
+  })
+
+  it('still reports a file that moved and then died at the end of its chain', () => {
+    const chain = renamesByOldPath([move('old/dead.ts', 'new/dead.ts', '2026-05-02T00:00:00Z')])
+    const dead: DeletionCandidate = { path: 'old/dead.ts', blob: blobOf('dead'), ...meta }
+    const { gone, relocated } = screenRelocated([dead], tree, chain)
+    expect(gone).toEqual([dead])
+    expect(relocated).toEqual([])
+  })
+
+  it('still reports a file whose content is nowhere in the current tree', () => {
+    const dead: DeletionCandidate = { path: 'scripts/generate.ts', blob: blobOf('dead'), ...meta }
+    const { gone, relocated } = screenRelocated([dead], tree, none)
+    expect(gone).toEqual([dead])
+    expect(relocated).toEqual([])
+  })
+
+  it('still reports a dead file whose content several live paths share — no false screen (#753)', () => {
+    const dead: DeletionCandidate = { path: 'layers/retired/.gitkeep', blob: EMPTY, ...meta }
+    const { gone, relocated } = screenRelocated([dead], tree, none)
+    expect(gone).toEqual([dead])
+    expect(relocated).toEqual([])
+  })
+})
+
+describe('the three outcomes a deletion candidate can have, in report order (#753)', () => {
+  const meta = { isoDate: '2026-05-01T00:00:00Z', subject: 's' }
+  const tree = indexCurrentTree(TREE)
+  const candidates: DeletionCandidate[] = [
+    // Deleted and re-created at the same path, in a later commit with different content.
+    { path: 'app/app.vue', blob: blobOf('01d'), hash: 'aaaaaaa', ...meta },
+    // Deleted in one commit, its content already living at a new path (#730's tree move).
+    { path: 'tenants/status/content/current/pages/index.md', blob: MOVED, hash: 'bbbbbbb', ...meta },
+    // Deleted and gone.
+    { path: 'scripts/generate.ts', blob: blobOf('dead'), hash: 'ccccccc', ...meta },
+  ]
+
+  const { gone: notRegrown, regrown } = screenRegrown(candidates, tree.paths)
+  const { gone, relocated } = screenRelocated(notRegrown, tree, new Map())
+
+  it('reports a same-path regrowth as regrown, never as a relocation', () => {
+    expect(regrown.map((c) => c.path)).toEqual(['app/app.vue'])
+    expect(relocated.map((r) => r.path)).not.toContain('app/app.vue')
+  })
+  it('reports a relocation as relocated, never as a fresh candidate', () => {
+    expect(relocated.map(relocationLabel)).toEqual([
+      'tenants/status/content/current/pages/index.md → layers/status/content/current/pages/index.md',
+    ])
+    expect(gone.map((c) => c.path)).not.toContain('tenants/status/content/current/pages/index.md')
+  })
+  it('leaves a true death among the fresh candidates', () => {
+    expect(gone.map((c) => c.path)).toEqual(['scripts/generate.ts'])
+  })
+})
+
+describe('relocationLabel()', () => {
+  it('names both paths', () => {
+    expect(relocationLabel({ path: 'a/old.ts', newPath: 'b/new.ts' })).toBe('a/old.ts → b/new.ts')
   })
 })
 
@@ -275,6 +468,7 @@ describe('cataloguedPathVia()', () => {
   // The deleting commit `parseDeletionLog` attaches to every candidate.
   const deletedBy = (path: string, hash: string): DeletionCandidate => ({
     path,
+    blob: blobOf('b10b'),
     hash,
     isoDate: '2026-07-01T00:00:00Z',
     subject: 's',
@@ -334,7 +528,7 @@ describe('cataloguedLabel()', () => {
 })
 
 describe('screenCatalogued()', () => {
-  const meta = { hash: 'h', isoDate: '2026-07-01T00:00:00Z', subject: 's' }
+  const meta = { blob: blobOf('b10b'), hash: 'h', isoDate: '2026-07-01T00:00:00Z', subject: 's' }
   const index = cataloguedIndex([
     { kind: 'file', path: 'already/catalogued.ts' },
     { kind: 'commit', hash: '9d3e3bc', path: 'tenants/status/content/current/pages/index.md' },
