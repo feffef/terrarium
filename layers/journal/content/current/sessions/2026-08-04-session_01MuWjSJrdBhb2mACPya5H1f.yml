@@ -1,0 +1,63 @@
+schemaVersion: 1
+session: session_01MuWjSJrdBhb2mACPya5H1f
+startedAt: 2026-08-04T00:46:32Z
+endedAt: 2026-08-04T00:52:53Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: Clean run — no changes needed
+summary: "Fully agent-initiated: a scheduled Routine fired /audit-skills with no live human in the session. Ran scripts/audit-skills.ts for the 40-session scorecard, then worked through all six steps. Step 3 (re-grade importance/role): checked every used Skill's usedIn against its existing .yml observations and found this window's evidence is already captured by the 2026-08-01/2026-08-03 entries (code-review, implement, writing-great-skills, domain-modeling) — no fresh bright-line signal, no edits made. Step 4 (regression watch): Phase A screened all 11 regressionChecks; 4 were zero-usedIn-both-sides no-signal cases (auto-triage, guest-build, guest-intake, midden-survey), and Phase B deep-read the session logs behind the other 7's after-bracket frictions (blog-post, dispatch-subagents, audit-skills, frictions-to-fixes, digest, audit-docs, log-session) — every cited friction traced to something unrelated to the audited Skill's own edited guidance (commit-trailer provenance, deferred-tool-schema habits, ScheduleWakeup misuse, subagent survey misjudgment), so nothing confirmed or even suggestive enough to record. Step 5: orphanedSessions and orphanSuppressionLog were both empty (healthy); the sole humanPromptedClosures entry (session_012NCZUhy7q, \"Add Midden link, then redesign root index showcase\") was already cited twice on the standing thread #483 by the 2026-07-30 audit-skills and frictions-to-fixes runs, so per the skill's own dedup rule it was not re-commented; manuallyRescuedClosures was empty. misclassifiedKind flagged one session (session_0159mPyC4Wf1J45K7NopBcTM) — informational only per #449's spec, noted here rather than filed. The mirror-case phantom entry `review.yml` (inventoried, not onDisk) was confirmed to map to a built-in CLI Skill (present in this session's available-skills listing) rather than a stale entry, so left untouched per the skill's own instruction. Step 6: no new/split/retire signal this run. Net result: no Inventory edit, no issue filed or commented, no PR — git status confirmed clean before closing."
+prs: []
+docsRead:
+  - path: layers/journal/content/current/skills/code-review.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/implement.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/writing-great-skills.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/auto-triage.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/domain-modeling.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/audit-skills.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/triage.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/review.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-07-31-session_01KkJxepH93Cfs4p8c452Xir.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-02-session_01Vw7wVUJ1sgKgEy5LruyjNo.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-02-session_01NcHoZeJE6ev2yVk3TiiCAw.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-01-session_013jUEUftSj7HuFdBRzE34xs.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this run's own scheduled sweep
+  - name: close-session
+    reason: closure at self-judged completion
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Assumed scripts/audit-skills.ts's top-level `skills` field was keyed by name (used Object.entries/print by index) before checking its actual shape; it's an array with a `name` field, and the first printed listing came out as bare numeric indices.
+    solution: Caught immediately by inspecting one array element directly and re-printed with `s.name`; cost one extra script run. Worth checking a script's actual JSON shape with a small probe before writing a longer analysis one-liner against it.
+    severity: nit
+durationSec: 380
+models:
+  claude-sonnet-5: 93
+toolCounts:
+  Bash: 23
+  ToolSearch: 2
+  TaskCreate: 5
+  TaskUpdate: 8
+  Grep: 1
+  Read: 12
+  mcp__github__issue_read: 3
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-hr09ii
+entrypoint: remote_trigger
+cliVersion: 2.1.221
+trigger: audit-skills
