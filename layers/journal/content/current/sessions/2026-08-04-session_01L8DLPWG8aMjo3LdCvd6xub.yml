@@ -1,0 +1,52 @@
+schemaVersion: 1
+session: session_01L8DLPWG8aMjo3LdCvd6xub
+startedAt: 2026-08-04T18:44:05Z
+endedAt: 2026-08-04T18:51:45Z
+kind: interactive
+goal: Critical simplicity review of app and workflow
+status: completed
+outcome: Four-agent review synthesized into recommendations
+summary: "Human-instructed throughout: the user asked for a critical review of the Nuxt/TS code, content structure, ADRs, and skills/docs via Sonnet agents, plus a redesign-for-simplicity assessment of both the application and the session/feedback-loop workflow. Dispatched four parallel read-only Sonnet analysts (app code, content, ADRs, workflow), verified their load-bearing claims against primary sources, and delivered a synthesis in chat: the app is lean but roughly half its platform plumbing is scaffolding; the workflow machinery is an order of magnitude larger than the app; concrete collapse targets identified. No code changes, no PR — analysis only, per the request."
+prs: []
+docsRead:
+  - path: CLAUDE.md
+    reason: conventions and dispatch/closure discipline
+skillsUsed:
+  - name: dispatch-subagents
+    reason: procedure before spawning four parallel analysts
+  - name: close-session
+    reason: closure front door
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Workflow-analysis subagent report tripped the harness instruction-shaped-pattern neutralizer (settings-json match), escaping angle brackets in its output.
+    solution: Harness-level quirk; cosmetic only. Phrase subagent briefs to avoid quoting hook-config keys verbatim if clean output matters.
+    severity: nit
+durationSec: 461
+models:
+  claude-fable-5: 36
+toolCounts:
+  Bash: 5
+  Skill: 3
+  Agent: 4
+  Write: 1
+subagents:
+  - type: Explore
+    task: Review Nuxt/TS app code
+    model: sonnet
+  - type: Explore
+    task: Review content/tenant structure
+    model: sonnet
+  - type: Explore
+    task: Summarize all ADRs
+    model: sonnet
+  - type: Explore
+    task: Review skills and session workflow
+    model: sonnet
+gitBranch: claude/nuxt-typescript-review-nitv95
+entrypoint: remote
+cliVersion: 2.1.221
+ideas:
+  - Merge modules/routing.ts and modules/catalog.ts into one virtual-module writer sharing a single expand() evaluation - they duplicate ~80 lines of addTemplate/addTypeTemplate/watch boilerplate verbatim, and a single evaluation also removes the cross-jiti-instance zod trap that forced the extend-not-merge workaround in shared/expand.ts.
+  - Express the ADR-0003 auto-merge exemption ledger and ADR-0004 human-only path list as one machine-readable config consumed by scripts/merge-pr.ts and the gate, so adding a skill to a tier is a data edit plus review, not a new dated ADR amendment paragraph - would cut most future amendment churn on ADR-0003.
+  - Collapse frictions-to-fixes, audit-skills, and audit-docs into one self-improvement skill with three output targets sharing a single session-window survey and one already-fixed screening helper - the three loops are structurally identical (survey, screen, grade evidence, fix, self-merge).
