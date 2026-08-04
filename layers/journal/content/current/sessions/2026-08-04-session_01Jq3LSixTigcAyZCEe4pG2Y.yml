@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Jq3LSixTigcAyZCEe4pG2Y
 startedAt: 2026-08-04T11:09:49Z
-endedAt: 2026-08-04T11:27:28Z
+endedAt: 2026-08-04T11:30:33Z
 kind: autonomous
 goal: Run the scheduled /blog-post sweep
-status: in-review
-outcome: "PR #838 opened"
-summary: "Fully agent-initiated: fired by the scheduled blog-post Routine with no live human input. Ran the rotation gate (scripts/blog-rotation.ts): last was eyra, none starved, eligible set [david, karen, kevin] — no persona given, so all three candidates drew from that set. Gathered material broadly (git log -100, ~20 recent session logs, existing blog posts to avoid topic overlap), then drafted three full standalone candidates to the scratchpad, each fact-checked against primary sources (issue_read, pull_request_read, git show/log, direct file reads) before drafting: Karen on the ScheduleWakeup tool-confusion trap recurring repeatedly despite two doc-only fixes (issues #241/#425/#814) plus its same-day sibling regression (#835); David on CLAUDE.md's verify-before-asserting rule extending to self-generated claims (#833/#834); Kevin on a preventive drift-guard test for a 3-places-hand-copied enum (#807/PR #817). A fresh blind outside-read subagent picked Karen's post as strongest by weight (a real, still-unresolved structural failure vs. two contained wins) and named five reader-confusion gaps (unglossed /loop, an opaque 'sentinel value' phrase, the nit/minor severity scale, ready-for-human jargon, frictions-to-fixes introduced too late) — all closed in revision. Branched onto the session's own pinned branch (already fresh off origin/main), saved the post, ran pnpm gate:scoped (full gate, 78/78 e2e green), opened PR #838 with full rotation/candidate provenance in the body, and subscribed to its activity."
+status: completed
+outcome: "PR #838 merged green"
+summary: "Fully agent-initiated: fired by the scheduled blog-post Routine with no live human input. Ran the rotation gate (scripts/blog-rotation.ts): last was eyra, none starved, eligible set [david, karen, kevin] — no persona given, so all three candidates drew from that set. Gathered material broadly (git log -100, ~20 recent session logs, existing blog posts to avoid topic overlap), then drafted three full standalone candidates to the scratchpad, each fact-checked against primary sources (issue_read, pull_request_read, git show/log, direct file reads) before drafting: Karen on the ScheduleWakeup tool-confusion trap recurring repeatedly despite two doc-only fixes (issues #241/#425/#814) plus its same-day sibling regression (#835); David on CLAUDE.md's verify-before-asserting rule extending to self-generated claims (#833/#834); Kevin on a preventive drift-guard test for a 3-places-hand-copied enum (#807/PR #817). A fresh blind outside-read subagent picked Karen's post as strongest by weight (a real, still-unresolved structural failure vs. two contained wins) and named five reader-confusion gaps (unglossed /loop, an opaque 'sentinel value' phrase, the nit/minor severity scale, ready-for-human jargon, frictions-to-fixes introduced too late) — all closed in revision. Branched onto the session's own pinned branch (already fresh off origin/main), saved the post, ran pnpm gate:scoped (full gate, 78/78 e2e green), opened PR #838 with full rotation/candidate provenance in the body, subscribed to its activity, ran check-conflicting-issues.ts (no hits), and landed it via scripts/merge-pr.ts once CI's gate and label checks reported green — merged as commit b107c500ee9c79a3c7188352da972093da9fee4e."
 prs:
   - "838"
 docsRead:
@@ -40,24 +40,25 @@ frictions:
   - description: "An early draft claimed a precise ordinal count (\"third, fourth, and fifth time\") for ScheduleWakeup recurrences that issue #814's own text states ambiguously (\"third/fourth\") and that I could not independently pin down from the session logs I'd read."
     solution: Dropped the invented precise ordinal and rewrote the passage to cite each recurrence by date and session instead of by number, per CLAUDE.md's re-derive-any-count rule.
     severity: minor
-durationSec: 1058
+durationSec: 1244
 models:
-  claude-sonnet-5: 174
+  claude-sonnet-5: 189
 toolCounts:
   Skill: 3
-  Bash: 32
+  Bash: 35
   ToolSearch: 2
   mcp__github__issue_read: 7
-  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_read: 7
   Read: 10
   Grep: 10
   Write: 6
-  Edit: 18
+  Edit: 20
   Agent: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/karen/pages/2026-08-04-we-fixed-it-twice-its-still-broken.md
 subagents:
