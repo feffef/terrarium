@@ -34,9 +34,11 @@ firing one).
   ```
 
   It enumerates **deleted files** and **dropped dependencies** on
-  `origin/main`, already screened for noise paths, renames (`-M` reclassifies
-  a moved file out of the deletion set), regrown paths / re-added deps (the
-  mechanical slice of Gate B), and candidates the trench or the stores already
+  `origin/main`, already screened for noise paths, relocations (a file that
+  moved rather than died — git's own rename records, followed forward across
+  commits so a move made *later* than the deletion still counts, plus exact
+  content standing at another path today), regrown paths / re-added
+  deps (the mechanical slice of Gate B), and candidates the trench or the stores already
   catalogue — by provenance identity, or by a declared path, which screens a
   whole subtree when it names a directory, and which, on a commit-kind artifact,
   screens only the deletion that artifact's own commit performed (a commit-kind
@@ -83,12 +85,16 @@ what passes **both** gates:
   branches need the dormancy floor, per the inclusion bar). A file deleted
   mid-refactor whose purpose obviously moved elsewhere is not terminal.
 - **Gate B** — nothing living in current `origin/main` carries the identity or
-  purpose forward. The script rules out same-path regrowth and same-name
-  re-adds mechanically; **successor-under-a-new-shape is your judgment call**
-  — check where the deleting commit's siblings moved the behavior before
-  concluding nothing did. A candidate that *fails* Gate B because something
-  renamed or superseded it in place is out of the Midden's scope — record it as
-  a Gate-B exclusion rather than silently dropping it.
+  purpose forward. The script rules out same-path regrowth, same-name re-adds,
+  and files that merely moved mechanically; **successor-under-a-new-shape is
+  your judgment call** — a file rewritten into a successor git never paired as
+  a rename is invisible to the script by design, so check where the deleting
+  commit's siblings moved the behavior before concluding nothing did. A
+  candidate that *fails* Gate B because something renamed or superseded it in
+  place is out of the Midden's scope — record it as a Gate-B exclusion rather
+  than silently dropping it. The report's `screenedOut.relocations` are already
+  exactly that: exclusions the machine could decide, carry them into the issue's
+  list alongside your own.
 - **Cluster, don't enumerate**: a batch of files deleted by one commit for one
   reason (a prototype swept away, a component family retired together) is
   **one** candidate with several paths, not N candidates. The Midden

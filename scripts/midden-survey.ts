@@ -220,25 +220,84 @@ export function indexCurrentTree(raw: string): CurrentTree {
   return { paths, uniqueBlobPaths }
 }
 
-/** The half of Gate B no same-path comparison can reach: a file whose content
- *  stands somewhere else in the current tree moved rather than died, even when
- *  the move happened in a different commit from the deletion and git's
- *  per-commit rename detection could never have paired the two (#753, and the
- *  `tenants/` → `layers/` relocation reported in #730).
+/** Git's own rename records indexed by the path each moved *from*, so a dead
+ *  path can be followed forward through the moves that came after it. */
+export function renamesByOldPath(renames: Relocation[]): Map<string, Relocation[]> {
+  const byOldPath = new Map<string, Relocation[]>()
+  for (const r of renames) {
+    const moves = byOldPath.get(r.path)
+    if (moves) moves.push(r)
+    else byOldPath.set(r.path, [r])
+  }
+  return byOldPath
+}
+
+/**
+ * Where a deleted path ended up, following git's own rename records forward
+ * from the deletion — or undefined if nothing moved it afterwards.
  *
- *  Identity only — exact content, uniquely held. A file moved *and* rewritten
- *  stays a candidate on purpose: whether it has a living successor is the
- *  curator's Gate-B call, which `.agents/skills/midden-survey/SKILL.md` §3
- *  keeps out of this script. */
+ * Per-commit rename detection only ever pairs a move with the commit that made
+ * it. Chaining those pairs is what reaches a move made *later* than the
+ * deletion, which is the shape #730 hit: a path deleted on 2026-07-06, carried
+ * to `layers/` by the tree-wide move a day later, then archived — two hops, and
+ * a body edited in between that puts it out of reach of content identity.
+ *
+ * Only a move dated at or after the deletion counts: git emits a rename for a
+ * path that was alive at that commit, so an *earlier* move of the same path
+ * belongs to a different occupant, and following it would screen out a real
+ * corpse.
+ */
+export function resolveRenamed(
+  candidate: Pick<DeletionCandidate, 'path' | 'isoDate'>,
+  byOldPath: Map<string, Relocation[]>,
+): string | undefined {
+  let path = candidate.path
+  let since = Date.parse(candidate.isoDate)
+  const seen = new Set<string>([path])
+  let moved = false
+  for (;;) {
+    const next = (byOldPath.get(path) ?? [])
+      .filter((r) => Date.parse(r.isoDate) >= since)
+      .sort((a, b) => Date.parse(a.isoDate) - Date.parse(b.isoDate))[0]
+    if (!next || seen.has(next.newPath)) break
+    path = next.newPath
+    since = Date.parse(next.isoDate)
+    seen.add(path)
+    moved = true
+  }
+  return moved ? path : undefined
+}
+
+/** Where a deletion candidate is still standing today, or undefined if it is
+ *  genuinely gone — the half of Gate B no same-path comparison can reach
+ *  (#753). Two mechanisms, both identity rather than resemblance: git's own
+ *  rename records followed forward, then exact content uniquely held elsewhere
+ *  in the tree.
+ *
+ *  A file moved *and* rewritten past both stays a candidate on purpose —
+ *  whether it has a living successor is the curator's Gate-B call, which
+ *  `.agents/skills/midden-survey/SKILL.md` §3 keeps out of this script. */
+export function relocatedTo(
+  candidate: DeletionCandidate,
+  tree: CurrentTree,
+  byOldPath: Map<string, Relocation[]>,
+): string | undefined {
+  const renamedTo = resolveRenamed(candidate, byOldPath)
+  if (renamedTo !== undefined && tree.paths.has(renamedTo)) return renamedTo
+  const sameContent = tree.uniqueBlobPaths.get(candidate.blob)
+  return sameContent !== undefined && sameContent !== candidate.path ? sameContent : undefined
+}
+
 export function screenRelocated(
   candidates: DeletionCandidate[],
-  uniqueBlobPaths: Map<string, string>,
+  tree: CurrentTree,
+  byOldPath: Map<string, Relocation[]>,
 ): { gone: DeletionCandidate[]; relocated: Relocation[] } {
   const gone: DeletionCandidate[] = []
   const relocated: Relocation[] = []
   for (const c of candidates) {
-    const newPath = uniqueBlobPaths.get(c.blob)
-    if (newPath !== undefined && newPath !== c.path) {
+    const newPath = relocatedTo(c, tree, byOldPath)
+    if (newPath !== undefined) {
       relocated.push({ path: c.path, newPath, hash: c.hash, isoDate: c.isoDate, subject: c.subject })
     } else {
       gone.push(c)
@@ -480,7 +539,9 @@ export function surveyReport(cwd = root, sinceIso?: string): SurveyReport {
 
   const tree = readCurrentTree(cwd)
   const { gone: notRegrown, regrown } = screenRegrown(deletions, tree.paths)
-  const { gone, relocated } = screenRelocated(notRegrown, tree.uniqueBlobPaths)
+  // Chained off every rename, noise included: a dead path's route to safety
+  // runs through the journal's own archival moves as often as not (#730).
+  const { gone, relocated } = screenRelocated(notRegrown, tree, renamesByOldPath(log.renames))
   const files = screenCatalogued(gone, (c) => cataloguedPathVia(c, catalogued.paths) !== undefined)
 
   const allRemovals = parseDependencyRemovals(readDependencyLog(cwd, sinceIso))

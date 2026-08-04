@@ -17,6 +17,8 @@ import {
   provenanceKey,
   provenancePath,
   relocationLabel,
+  renamesByOldPath,
+  resolveRenamed,
   screenCatalogued,
   screenRegrown,
   screenRelocated,
@@ -244,13 +246,57 @@ describe('indexCurrentTree()', () => {
   })
 })
 
+// A rename git detected a day after the candidate died, and the archival move
+// that followed it — the two hops #730's session log survived through.
+const move = (path: string, newPath: string, isoDate: string): Relocation => ({
+  path,
+  newPath,
+  isoDate,
+  hash: 'r' + '0'.repeat(6),
+  subject: 'move',
+})
+const CHAIN = [
+  move('tenants/journal/x.yml', 'layers/journal/current/x.yml', '2026-05-02T00:00:00Z'),
+  move('layers/journal/current/x.yml', 'layers/journal/archived/x.yml', '2026-06-01T00:00:00Z'),
+]
+
+describe('resolveRenamed() — following git\'s rename records across commits (#753)', () => {
+  const byOldPath = renamesByOldPath(CHAIN)
+
+  it('follows a multi-hop chain to where the path stands today', () => {
+    expect(resolveRenamed({ path: 'tenants/journal/x.yml', isoDate: '2026-05-01T00:00:00Z' }, byOldPath)).toBe(
+      'layers/journal/archived/x.yml',
+    )
+  })
+  it('yields nothing for a path nothing ever moved', () => {
+    expect(resolveRenamed({ path: 'scripts/generate.ts', isoDate: '2026-05-01T00:00:00Z' }, byOldPath)).toBeUndefined()
+  })
+  it('ignores a move that predates the deletion — that was a different occupant (#753)', () => {
+    expect(resolveRenamed({ path: 'tenants/journal/x.yml', isoDate: '2026-07-01T00:00:00Z' }, byOldPath)).toBeUndefined()
+  })
+  it('compares instants, not strings, across differing UTC offsets', () => {
+    expect(resolveRenamed({ path: 'tenants/journal/x.yml', isoDate: '2026-05-02T01:30:00+02:00' }, byOldPath)).toBe(
+      'layers/journal/archived/x.yml',
+    )
+  })
+  it('terminates on a chain that loops back on itself', () => {
+    const cycle = renamesByOldPath([
+      move('a.ts', 'b.ts', '2026-05-02T00:00:00Z'),
+      move('b.ts', 'a.ts', '2026-05-03T00:00:00Z'),
+    ])
+    expect(resolveRenamed({ path: 'a.ts', isoDate: '2026-05-01T00:00:00Z' }, cycle)).toBe('b.ts')
+  })
+})
+
 describe('screenRelocated() — the cross-commit half of Gate B (#753)', () => {
   const meta = { hash: 'a1b2c3d', isoDate: '2026-05-01T00:00:00Z', subject: 'move tenants/ to layers/' }
-  const { uniqueBlobPaths } = indexCurrentTree(TREE)
+  const tree = indexCurrentTree(`${TREE}100644 blob ${blobOf('ed17ed')}\tlayers/journal/archived/x.yml\n`)
+  const byOldPath = renamesByOldPath(CHAIN)
+  const none = new Map<string, Relocation[]>()
 
   it('screens a file whose content stands at another path today, naming both paths', () => {
     const moved: DeletionCandidate = { path: 'tenants/status/content/current/pages/index.md', blob: MOVED, ...meta }
-    const { gone, relocated } = screenRelocated([moved], uniqueBlobPaths)
+    const { gone, relocated } = screenRelocated([moved], tree, none)
     expect(gone).toEqual([])
     expect(relocated).toEqual<Relocation[]>([
       {
@@ -261,16 +307,31 @@ describe('screenRelocated() — the cross-commit half of Gate B (#753)', () => {
     ])
   })
 
+  it('screens a file whose body changed after it moved, via the rename chain (#730)', () => {
+    const moved: DeletionCandidate = { path: 'tenants/journal/x.yml', blob: blobOf('01d'), ...meta }
+    const { gone, relocated } = screenRelocated([moved], tree, byOldPath)
+    expect(gone).toEqual([])
+    expect(relocated.map(relocationLabel)).toEqual(['tenants/journal/x.yml → layers/journal/archived/x.yml'])
+  })
+
+  it('still reports a file that moved and then died at the end of its chain', () => {
+    const chain = renamesByOldPath([move('old/dead.ts', 'new/dead.ts', '2026-05-02T00:00:00Z')])
+    const dead: DeletionCandidate = { path: 'old/dead.ts', blob: blobOf('dead'), ...meta }
+    const { gone, relocated } = screenRelocated([dead], tree, chain)
+    expect(gone).toEqual([dead])
+    expect(relocated).toEqual([])
+  })
+
   it('still reports a file whose content is nowhere in the current tree', () => {
     const dead: DeletionCandidate = { path: 'scripts/generate.ts', blob: blobOf('dead'), ...meta }
-    const { gone, relocated } = screenRelocated([dead], uniqueBlobPaths)
+    const { gone, relocated } = screenRelocated([dead], tree, none)
     expect(gone).toEqual([dead])
     expect(relocated).toEqual([])
   })
 
   it('still reports a dead file whose content several live paths share — no false screen (#753)', () => {
     const dead: DeletionCandidate = { path: 'layers/retired/.gitkeep', blob: EMPTY, ...meta }
-    const { gone, relocated } = screenRelocated([dead], uniqueBlobPaths)
+    const { gone, relocated } = screenRelocated([dead], tree, none)
     expect(gone).toEqual([dead])
     expect(relocated).toEqual([])
   })
@@ -289,7 +350,7 @@ describe('the three outcomes a deletion candidate can have, in report order (#75
   ]
 
   const { gone: notRegrown, regrown } = screenRegrown(candidates, tree.paths)
-  const { gone, relocated } = screenRelocated(notRegrown, tree.uniqueBlobPaths)
+  const { gone, relocated } = screenRelocated(notRegrown, tree, new Map())
 
   it('reports a same-path regrowth as regrown, never as a relocation', () => {
     expect(regrown.map((c) => c.path)).toEqual(['app/app.vue'])
