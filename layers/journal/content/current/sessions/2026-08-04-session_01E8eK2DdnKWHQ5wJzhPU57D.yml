@@ -1,0 +1,63 @@
+schemaVersion: 1
+session: session_01E8eK2DdnKWHQ5wJzhPU57D
+startedAt: 2026-08-04T01:05:37Z
+endedAt: 2026-08-04T01:21:19Z
+kind: autonomous
+goal: Run the scheduled frictions-to-fixes cycle
+status: in-review
+outcome: "PR #836 open; issues #833, #834, #835 filed"
+summary: "Fully agent-initiated: the scheduled frictions-to-fixes Routine fired with no human prompt. Delegated survey/screening of the last 20 session logs to a subagent per the Skill; it returned 3 never-fixed candidates, several already-fixed/open-already drops, and 2 regressions (one already tracked as open issue #814, one new). Verified the subagent's citations against primary sources before acting: two candidates checked out (filed as issues #833 and #834, then dispatched as a single grouped doc-only PR, #836, awaiting CI/merge), but the third (audit-skills regressionChecks \"domain-mismatch\") turned out on direct log verification to be the exact same case issue #825 already fixed, not a distinct gap — dropped rather than filed. Filed a new regression issue (#835) for the Agent-tool run_in_background:false fix (#810/#815) not holding outside dispatch-subagents/SKILL.md, escalated per the Skill's regression rule rather than re-dispatched. Did not file anything new for the already-open ScheduleWakeup regression (#814) but surfaced it in the user notification, including this session's own live recurrence of it."
+prs:
+  - "836"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe for step 6
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: this run's own instructions
+  - path: layers/journal/content/current/sessions/2026-08-03-session_01VTeuQxnjfJmvbSe3S5zAkm.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-02-session_01KSYoym2YeMtoF8Uf47AE4n.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: mechanism for the worktree-isolated impl agent
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this entry
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: "Called ScheduleWakeup (a /loop dynamic-mode-only tool) as a fallback heartbeat right after dispatching this run's own survey subagent, in this plain scheduled (non-/loop) session — the exact tool-confusion trap already tracked as an open regression in issue #814."
+    solution: "Caught mid-run while reading #814 during screening and cancelled with stop:true before it fired. No new fix needed — already escalated; this occurrence is itself more live evidence for #814's human-review escalation."
+    severity: minor
+  - description: "The survey subagent's report classified an audit-skills regressionChecks \"domain-mismatch\" candidate as a distinct unfixed remainder of issue #825's fix. Verifying both cited session logs directly showed they describe the exact same zero-usedIn-both-sides case #825 already fixed — the subagent's classification was wrong."
+    solution: Verify a subagent's tracker-screening classification against the actually-cited primary sources before filing on it, not just the report's framing — this is the CLAUDE.md verify-before-asserting rule catching a real case live. Worth an explicit reminder in frictions-to-fixes's own screening step to confirm a claimed "remaining half" is textually distinct from the already-fixed half.
+    severity: minor
+durationSec: 942
+models:
+  claude-sonnet-5: 84
+toolCounts:
+  Bash: 11
+  Agent: 2
+  ScheduleWakeup: 2
+  ToolSearch: 2
+  mcp__github__issue_read: 3
+  mcp__github__pull_request_read: 7
+  mcp__github__search_issues: 4
+  Read: 2
+  mcp__github__issue_write: 3
+  Skill: 3
+  Write: 1
+  Edit: 1
+  mcp__Claude_Code_Remote__send_later: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Batch doc-fix PR for 2 frictions
+    model: sonnet
+gitBranch: claude/hopeful-brown-j4z8ab
+entrypoint: remote_trigger
+cliVersion: 2.1.221
+trigger: frictions-to-fixes
