@@ -276,15 +276,20 @@ useSeoMeta({
             class="digest"
             :class="{ open: isOpen(digestAnchor(d.date)) }"
           >
-            <JournalDisclosure
-              class="drow"
-              :expanded="isOpen(digestAnchor(d.date))"
-              @toggle="toggle(digestAnchor(d.date))"
-            >
-              <span class="digest-date">{{ d.date }}</span>
-              <span class="digest-summary">{{ d.summary }}</span>
-              <span class="caret" aria-hidden="true">{{ isOpen(digestAnchor(d.date)) ? '▾' : '▸' }}</span>
-            </JournalDisclosure>
+            <!-- The copy control is a SIBLING of the row's disclosure, not a child
+                 of it — see JournalCopyLink's header for why (issue #450). -->
+            <div class="drow-wrap">
+              <JournalDisclosure
+                class="drow"
+                :expanded="isOpen(digestAnchor(d.date))"
+                @toggle="toggle(digestAnchor(d.date))"
+              >
+                <span class="digest-date">{{ d.date }}</span>
+                <span class="digest-summary">{{ d.summary }}</span>
+                <span class="caret" aria-hidden="true">{{ isOpen(digestAnchor(d.date)) ? '▾' : '▸' }}</span>
+              </JournalDisclosure>
+              <JournalCopyLink class="drow-copy" :anchor="digestAnchor(d.date)" what="digest" />
+            </div>
             <Transition :css="false" @enter="expandOnEnter" @leave="expandOnLeave">
               <div v-if="isOpen(digestAnchor(d.date))" class="digest-body-clip">
                 <div class="digest-body">
@@ -591,6 +596,11 @@ h1 {
 /* scroll-margin-top: breathing room when a deep-linked digest is scrolled to the viewport top. */
 .digest { border-top: 1px solid var(--jd-line); scroll-margin-top: 1.5rem; }
 .digest:first-child { border-top: 0; }
+/* Containing block for the copy control, with the lane it occupies reserved so
+   it never overlaps the caret — positioned out of the row's flow so it can't
+   intercept a click meant for the toggle (issue #450). */
+.drow-wrap { position: relative; padding-right: 1.5rem; }
+.drow-copy { position: absolute; right: 0; top: 0.72rem; }
 .drow {
   display: grid;
   grid-template-columns: max-content 1fr max-content;

@@ -25,23 +25,28 @@ const detailId = useId()
 <template>
   <article :id="anchor" class="card" :class="{ open: expanded, external: card.external }">
     <span v-if="card.external" class="ribbon" title="Authored by a different agent/toolchain (ADR-0009)">external</span>
-    <JournalDisclosure class="head" :expanded="expanded" :controls="detailId" @toggle="emit('toggle')">
-      <div class="top">
-        <span class="when">{{ card.when }} <span class="dur">· {{ card.duration }} min</span></span>
-        <JournalStatusPill :status="card.status" />
-      </div>
-      <h3 class="goal">{{ card.goal }}</h3>
-      <p class="outcome">{{ card.outcome }}</p>
-      <div class="foot">
-        <!-- @click.stop: the whole head toggles the card; a PR chip navigates instead -->
-        <a v-for="pr in card.prs" :key="pr" class="chip pr" :href="prUrl(pr)" @click.stop>PR {{ pr.startsWith('#') ? pr : '#' + pr }}</a>
-        <span v-if="card.model" class="chip model" title="Model(s) that drove this session">{{ card.model }}</span>
-        <JournalFrictionStrata variant="inline" :counts="card.frictionCounts" :total="card.frictionTotal" />
-        <span v-if="card.skills.length" class="skills">{{ card.skills.join(' · ') }}</span>
-        <span class="sid">{{ card.sid }}</span>
-        <span class="caret" aria-hidden="true">{{ expanded ? '▾' : '▸' }}</span>
-      </div>
-    </JournalDisclosure>
+    <!-- The copy control is a SIBLING of the head, not a child of it — see
+         JournalCopyLink's header for why (issue #450). -->
+    <div class="head-wrap">
+      <JournalDisclosure class="head" :expanded="expanded" :controls="detailId" @toggle="emit('toggle')">
+        <div class="top">
+          <span class="when">{{ card.when }} <span class="dur">· {{ card.duration }} min</span></span>
+          <JournalStatusPill :status="card.status" />
+        </div>
+        <h3 class="goal">{{ card.goal }}</h3>
+        <p class="outcome">{{ card.outcome }}</p>
+        <div class="foot">
+          <!-- @click.stop: the whole head toggles the card; a PR chip navigates instead -->
+          <a v-for="pr in card.prs" :key="pr" class="chip pr" :href="prUrl(pr)" @click.stop>PR {{ pr.startsWith('#') ? pr : '#' + pr }}</a>
+          <span v-if="card.model" class="chip model" title="Model(s) that drove this session">{{ card.model }}</span>
+          <JournalFrictionStrata variant="inline" :counts="card.frictionCounts" :total="card.frictionTotal" />
+          <span v-if="card.skills.length" class="skills">{{ card.skills.join(' · ') }}</span>
+          <span class="sid">{{ card.sid }}</span>
+          <span class="caret" aria-hidden="true">{{ expanded ? '▾' : '▸' }}</span>
+        </div>
+      </JournalDisclosure>
+      <JournalCopyLink class="head-copy" :anchor="anchor" what="session log" />
+    </div>
 
     <Transition :css="false" @enter="expandOnEnter" @leave="expandOnLeave">
       <div v-if="expanded" class="detail-clip">
@@ -169,8 +174,12 @@ const detailId = useId()
   padding: 0.18rem 0;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
+/* Containing block for the copy control, which is positioned out of the head's
+   flow so it can never intercept a click meant for the toggle (issue #450). */
+.head-wrap { position: relative; }
 .head { cursor: pointer; display: block; border-radius: 6px; }
 .head:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 4px; }
+.head-copy { position: absolute; right: 0; bottom: 0.1rem; }
 .top {
   display: flex;
   align-items: center;
@@ -199,6 +208,8 @@ const detailId = useId()
   align-items: center;
   gap: 0.7rem;
   flex-wrap: wrap;
+  /* Reserve the lane the absolutely-positioned `.head-copy` occupies. */
+  padding-right: 1.6rem;
 }
 .chip {
   font-family: var(--jd-mono);
