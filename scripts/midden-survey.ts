@@ -2,9 +2,9 @@
 // candidate sweep (layers/midden/CONTEXT.md — "The inclusion bar"). It
 // enumerates the git-derivable kinds of discarded thing — files deleted from
 // `origin/main` and dependencies dropped from `package.json` — screens out what
-// the machine can already rule out (noise paths, rename-detected moves, paths
-// regrown in the current tree, deps re-added, candidates already catalogued as
-// Midden artifacts), and prints the rest as a JSON report for the Skill to
+// the machine can already rule out (noise paths, files that moved rather than
+// died, paths regrown in the current tree, deps re-added, candidates already
+// catalogued as Midden artifacts), and prints the rest as a JSON report for the Skill to
 // carry through the judgment half of the two-gate test. It decides NOTHING
 // curatorial: condition, stratum, and the catalog note stay curator-authored
 // (#526), and Gate A/B judgment calls stay with the running agent.
@@ -28,6 +28,12 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 const FIELD_SEP = '\x1f'
 
+/** `:<srcmode> <dstmode> <srcsha> <dstsha> <status>\t<path>[\t<newpath>]` */
+const RAW_DIFF_LINE = /^:\d{6} \d{6} ([0-9a-f]+) [0-9a-f]+ ([DR])\d*\t(.*)$/
+
+/** `<mode> blob <sha>\t<path>` */
+const LS_TREE_LINE = /^\d{6} blob ([0-9a-f]+)\t(.+)$/
+
 // ── Types ───────────────────────────────────────────────────────────────────
 
 /** The deleting/dropping commit a candidate points back at — the evidence the
@@ -39,9 +45,22 @@ interface CommitMeta {
   subject: string
 }
 
-/** One file deleted from `origin/main` and (so far) not regrown. */
+/** One file deleted from `origin/main` and (so far) not regrown. `blob` is the
+ *  content it held when it died — the identity `screenRelocated` looks for in
+ *  the current tree, and the handle a curator reads it back with
+ *  (`git cat-file -p <blob>`). */
 export interface DeletionCandidate extends CommitMeta {
   path: string
+  blob: string
+}
+
+/** One file that did not die: the same thing stands at another path in the
+ *  current tree. A Gate-B exclusion, not a candidate — the Midden records what
+ *  the Platform discarded, never what it carried forward under a new shape
+ *  (layers/midden/CONTEXT.md, "The inclusion bar"). */
+export interface Relocation extends CommitMeta {
+  path: string
+  newPath: string
 }
 
 /** One dependency dropped from `package.json` and (so far) not re-added. */
@@ -51,25 +70,39 @@ export interface DependencyRemovalCandidate extends CommitMeta {
 
 // ── Pure core (unit-tested) ───────────────────────────────────────────────────
 
+/** What the deletion sweep carries back: the deaths to judge, and the moves
+ *  git itself paired off — reported rather than dropped, since a rename it
+ *  reclassified out of the deletion set is a Gate-B exclusion the curator
+ *  still wants to see (#753). */
+export interface DeletionLog {
+  deletions: DeletionCandidate[]
+  renames: Relocation[]
+}
+
 /**
- * Parse `git log --diff-filter=D -M --name-only --format=%H<SEP>%cI<SEP>%s`
- * output into one candidate per deleted path. `-M` matters upstream: rename
- * detection reclassifies a moved file as R, not D, so a rename never reaches
- * this parser — the cheapest mechanical slice of Gate B (identity continued
- * under a new name).
+ * Parse `git log --diff-filter=DR -M --raw --no-abbrev --format=%H<SEP>%cI<SEP>%s`
+ * output. `-M` pairs a move made *within one commit* into an R entry; `--raw`
+ * is what makes that pairing (and each deleted file's pre-image blob) visible
+ * here instead of discarded before the script sees it.
  */
-export function parseDeletionLog(raw: string): DeletionCandidate[] {
-  const out: DeletionCandidate[] = []
+export function parseDeletionLog(raw: string): DeletionLog {
+  const deletions: DeletionCandidate[] = []
+  const renames: Relocation[] = []
   let current: CommitMeta | undefined
   for (const line of raw.split('\n')) {
     if (line.includes(FIELD_SEP)) {
       const [hash = '', isoDate = '', subject = ''] = line.split(FIELD_SEP)
       current = { hash, isoDate, subject }
-    } else if (line.trim() !== '' && current) {
-      out.push({ path: line.trim(), ...current })
+      continue
     }
+    const m = RAW_DIFF_LINE.exec(line)
+    if (!m || !current) continue
+    const [, blob = '', status = '', rest = ''] = m
+    const [path = '', newPath = ''] = rest.split('\t')
+    if (status === 'D') deletions.push({ path, blob, ...current })
+    else if (newPath) renames.push({ path, newPath, ...current })
   }
-  return out
+  return { deletions, renames }
 }
 
 /**
@@ -151,6 +184,73 @@ export function screenRegrown(
   const regrown: DeletionCandidate[] = []
   for (const c of candidates) (currentTreePaths.has(c.path) ? regrown : gone).push(c)
   return { gone, regrown }
+}
+
+/** The current `origin/main` tree in the two shapes Gate B is checked against:
+ *  every path, and every blob held by exactly **one** path today.
+ *
+ *  Uniqueness is what turns content into an identity. A blob several live paths
+ *  share (an empty file, a boilerplate `defineNuxtConfig({})`) names no
+ *  particular survivor, so a candidate matching it is left to be reported: a
+ *  false candidate costs the curator one Gate-B judgment call, a false screen
+ *  loses a real corpse from a tool whose whole job is finding them (#753). */
+export interface CurrentTree {
+  paths: Set<string>
+  uniqueBlobPaths: Map<string, string>
+}
+
+/** Parse `git ls-tree -r origin/main` output into a `CurrentTree`. */
+export function indexCurrentTree(raw: string): CurrentTree {
+  const paths = new Set<string>()
+  const pathsByBlob = new Map<string, string[]>()
+  for (const line of raw.split('\n')) {
+    const m = LS_TREE_LINE.exec(line)
+    if (!m) continue
+    const [, blob = '', path = ''] = m
+    paths.add(path)
+    const held = pathsByBlob.get(blob)
+    if (held) held.push(path)
+    else pathsByBlob.set(blob, [path])
+  }
+  const uniqueBlobPaths = new Map<string, string>()
+  for (const [blob, held] of pathsByBlob) {
+    const only = held.length === 1 ? held[0] : undefined
+    if (only !== undefined) uniqueBlobPaths.set(blob, only)
+  }
+  return { paths, uniqueBlobPaths }
+}
+
+/** The half of Gate B no same-path comparison can reach: a file whose content
+ *  stands somewhere else in the current tree moved rather than died, even when
+ *  the move happened in a different commit from the deletion and git's
+ *  per-commit rename detection could never have paired the two (#753, and the
+ *  `tenants/` → `layers/` relocation reported in #730).
+ *
+ *  Identity only — exact content, uniquely held. A file moved *and* rewritten
+ *  stays a candidate on purpose: whether it has a living successor is the
+ *  curator's Gate-B call, which `.agents/skills/midden-survey/SKILL.md` §3
+ *  keeps out of this script. */
+export function screenRelocated(
+  candidates: DeletionCandidate[],
+  uniqueBlobPaths: Map<string, string>,
+): { gone: DeletionCandidate[]; relocated: Relocation[] } {
+  const gone: DeletionCandidate[] = []
+  const relocated: Relocation[] = []
+  for (const c of candidates) {
+    const newPath = uniqueBlobPaths.get(c.blob)
+    if (newPath !== undefined && newPath !== c.path) {
+      relocated.push({ path: c.path, newPath, hash: c.hash, isoDate: c.isoDate, subject: c.subject })
+    } else {
+      gone.push(c)
+    }
+  }
+  return { gone, relocated }
+}
+
+/** One `relocations` entry: both paths, since "it came back where it was" and
+ *  "it lives somewhere else now" are facts a curator reads differently. */
+export function relocationLabel(r: Pick<Relocation, 'path' | 'newPath'>): string {
+  return `${r.path} → ${r.newPath}`
 }
 
 /**
@@ -292,7 +392,15 @@ function assertNotShallow(cwd = root): void {
 }
 
 function readDeletionLog(cwd = root, sinceIso?: string): string {
-  const args = ['log', 'origin/main', '--diff-filter=D', '-M', '--name-only', `--format=%H${FIELD_SEP}%cI${FIELD_SEP}%s`]
+  const args = [
+    'log',
+    'origin/main',
+    '--diff-filter=DR',
+    '-M',
+    '--raw',
+    '--no-abbrev',
+    `--format=%H${FIELD_SEP}%cI${FIELD_SEP}%s`,
+  ]
   if (sinceIso) args.push(`--since=${sinceIso}`)
   return git(args, cwd)
 }
@@ -304,8 +412,8 @@ function readDependencyLog(cwd = root, sinceIso?: string): string {
   return git(args, cwd)
 }
 
-function readCurrentTreePaths(cwd = root): Set<string> {
-  return new Set(git(['ls-tree', '-r', '--name-only', 'origin/main'], cwd).split('\n').filter(Boolean))
+function readCurrentTree(cwd = root): CurrentTree {
+  return indexCurrentTree(git(['ls-tree', '-r', 'origin/main'], cwd))
 }
 
 /** Every dependency name in the current `origin/main` package.json, across
@@ -351,6 +459,7 @@ export interface SurveyReport {
   screenedOut: {
     noisePaths: number
     regrownPaths: string[]
+    relocations: string[]
     readdedDependencies: string[]
     alreadyCatalogued: string[]
   }
@@ -364,9 +473,14 @@ export function surveyReport(cwd = root, sinceIso?: string): SurveyReport {
 
   const catalogued = readCataloguedIndex(cwd)
 
-  const allDeletions = parseDeletionLog(readDeletionLog(cwd, sinceIso))
-  const signal = allDeletions.filter((c) => !isNoisePath(c.path))
-  const { gone, regrown } = screenRegrown(signal, readCurrentTreePaths(cwd))
+  const log = parseDeletionLog(readDeletionLog(cwd, sinceIso))
+  const deletions = log.deletions.filter((c) => !isNoisePath(c.path))
+  const renames = log.renames.filter((r) => !isNoisePath(r.path))
+  const noisePaths = log.deletions.length - deletions.length + (log.renames.length - renames.length)
+
+  const tree = readCurrentTree(cwd)
+  const { gone: notRegrown, regrown } = screenRegrown(deletions, tree.paths)
+  const { gone, relocated } = screenRelocated(notRegrown, tree.uniqueBlobPaths)
   const files = screenCatalogued(gone, (c) => cataloguedPathVia(c, catalogued.paths) !== undefined)
 
   const allRemovals = parseDependencyRemovals(readDependencyLog(cwd, sinceIso))
@@ -379,8 +493,9 @@ export function surveyReport(cwd = root, sinceIso?: string): SurveyReport {
     deletedFiles: files.fresh,
     droppedDependencies: deps.fresh,
     screenedOut: {
-      noisePaths: allDeletions.length - signal.length,
+      noisePaths,
       regrownPaths: regrown.map((c) => c.path),
+      relocations: [...renames, ...relocated].map(relocationLabel),
       readdedDependencies: allRemovals.filter((r) => currentDeps.has(r.name)).map((r) => r.name),
       alreadyCatalogued: [
         ...files.catalogued.map((c) => cataloguedLabel(`file:${c.path}`, cataloguedPathVia(c, catalogued.paths))),
