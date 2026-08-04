@@ -1,0 +1,76 @@
+schemaVersion: 1
+session: session_01XyUJTMRe77FUAJrgjXQAU2
+startedAt: 2026-07-17T01:05:05Z
+endedAt: 2026-08-04T18:50:32Z
+kind: autonomous
+goal: Run a frictions-to-fixes cycle
+status: in-review
+outcome: 2 of 3 fixes merged, 1 PR in review
+summary: "Scheduled Routine run of the frictions-to-fixes Skill, entirely agent-initiated (no human present in this session). Delegated the 19-session friction survey to a general-purpose subagent, which returned 3 never-fixed candidates (all simple, safe-surface) after screening the rest against the tracker. Filed issues #543 (CLAUDE.md worktree-resume doc gap), #544 (gate:scoped isInert misses .claude/skills/* symlinks), and #545 (audit-skills.ts \"model\" pseudo-entry, #426's unimplemented \"solution 1\"). Dispatched one Sonnet impl agent per issue, each in its own worktree. Reviewed and merged PR #546 (doc fix, closes #543) and PR #547 (audit-skills.ts fix, closes #545) after confirming green gates and posting review comments per CLAUDE.md's ADR-0003 review-agent discipline. The third impl agent (gate.ts fix, closes #544) is still working as of this log; will re-invoke log-session with status completed once its PR merges."
+prs:
+  - "546"
+  - "547"
+docsRead:
+  - path: skills-lock.json
+    reason: off-limits pack-Skill screen (ADR-0015)
+  - path: scripts/gate.ts
+    reason: "verify candidate #544's isInert() before filing"
+  - path: scripts/audit-skills.ts
+    reason: "verify candidate #545's skillsUsed handling before filing"
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run itself
+  - name: log-session
+    reason: (no reason given)
+  - name: close-session
+    reason: (invoked as a slash command)
+frictions:
+  - description: "A dispatched Sonnet impl agent (gate.ts fix, issue #544) stopped its turn twice while waiting on its own internally-started background gate run, returning control without a live background child the orchestrator could track, instead of properly blocking on its own task notification."
+    solution: "Resumed it via SendMessage each time (per CLAUDE.md's worktree-resume rule — coincidentally the exact fix this run shipped in #543/#546) and told it to wait properly. Worth a note in impl-agent briefs: when starting a long background command inside your own turn, block on its own notification rather than ending the turn speculatively."
+    severity: minor
+  - description: "One impl agent (audit-skills.ts fix, #545) hit the already-known provenance-footer auto-injection gap on its initial `git commit -m` (footer didn't land, had to amend it in) — the survey subagent had already found this tracked at #346."
+    solution: "Already tracked at #346 (regression, ready-for-human); no new action, logging for recurrence signal."
+    severity: nit
+  - description: "A fresh worktree-isolated agent's `pnpm typecheck`/`pnpm gate:scoped` failed with `nuxt: not found` until it ran `pnpm install` first — worktree provisioning doesn't pre-install node_modules."
+    solution: Worth adding a `pnpm install` step to worktree-isolated impl-agent briefs before the typecheck/gate steps, to save the round-trip.
+    severity: nit
+durationSec: 1619127
+models:
+  claude-sonnet-5: 140
+toolCounts:
+  Bash: 8
+  Agent: 4
+  ScheduleWakeup: 2
+  TaskCreate: 8
+  ToolSearch: 5
+  TaskUpdate: 8
+  Read: 1
+  Grep: 3
+  mcp__github__search_issues: 3
+  mcp__github__issue_write: 3
+  mcp__github__pull_request_read: 13
+  SendMessage: 1
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__add_issue_comment: 2
+  mcp__github__merge_pull_request: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 2
+  mcp__Claude_Code_Remote__delete_trigger: 2
+  Skill: 1
+  Write: 1
+  mcp__github__search_pull_requests: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix CLAUDE.md worktree resume doc gap
+    model: sonnet
+  - type: general-purpose
+    task: Fix gate:scoped isInert for .claude/skills
+    model: sonnet
+  - type: general-purpose
+    task: Fix audit-skills.ts model pseudo-entry
+    model: sonnet
+gitBranch: claude/hopeful-brown-e4a7o4
+entrypoint: remote_trigger
+cliVersion: 2.1.212
+trigger: frictions-to-fixes
