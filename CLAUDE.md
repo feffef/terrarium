@@ -182,6 +182,25 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   argument shape — and blocks it with a corrective message rather than a terse
   `InputValidationError` (`scripts/deferred-tool-guard.ts`; see
   `docs/agents/deferred-tool-guard.md`, issue #612).
+- **`ScheduleWakeup` is valid in exactly one mode — inside a `/loop` session's
+  dynamic (self-paced) pacing. Never reach for it as a general-purpose wait,
+  heartbeat, or poll.** Outside `/loop` it is *not* a harmless no-op: a fired
+  wakeup delivers a spurious turn that can re-run this session's whole prompt
+  (one recorded misfire produced an unwanted "autonomous loop tick" that had to
+  be diagnosed and stopped; another would have re-sent `/audit-docs`
+  mid-PR-review). What to do instead, by situation: waiting on a dispatched
+  Agent-tool subagent needs **no** wait/poll tool at all — it self-notifies on
+  completion; waiting on a backgrounded Bash command needs none either — end
+  the turn, the harness delivers a task notification when it exits; polling
+  non-webhook-delivered external state such as CI/gate completion uses
+  `mcp__Claude_Code_Remote__send_later` to schedule your own check-in. Two
+  doc-only fixes (#241, #425) wrote this rule only into
+  `docs/agents/github-integration.md`, which the affected sessions had no reason
+  to open, and it kept recurring — so a `PreToolUse` guard now refuses the call
+  outside `/loop`,
+  failing **closed** when the mode can't be determined
+  (`scripts/loop-only-tool-guard.ts`; see `docs/agents/loop-only-tool-guard.md`,
+  issue #814).
 - **Never predict or reconstruct an identifier — a line number, a blob SHA, an
   issue/PR number, a session id — from memory.** Resolve it with a fresh tool
   call at the moment you write it down (a Read, `git rev-parse`, the actual

@@ -38,8 +38,21 @@ new; don't re-diagnose any of these as a fresh problem.
   error.** Converged workaround (mirrors the poll-until-green pattern in
   [`github-integration.md`](./github-integration.md), issue #145): retry the
   same call once after reconnect; if it fails again, route around it — for
-  `send_later` specifically, fall back to the built-in `ScheduleWakeup` tool
-  instead of retrying further (issue #229).
+  `send_later` specifically, fall back to
+  `mcp__Claude_Code_Remote__create_trigger` with a `run_once_at` timestamp,
+  which is the same mechanism (`send_later`'s own tool description states it is
+  a thin wrapper over a self-bind `run_once_at` Routine), so the fallback is
+  capability-equivalent rather than a different tool doing a different thing
+  (issue #229).
+
+  **Withdrawn 2026-08-04 (issue #814): the original wording named
+  `ScheduleWakeup` as this fallback.** It is not one. `ScheduleWakeup` is
+  valid only inside a `/loop` session's dynamic pacing, and outside `/loop` a
+  fired wakeup delivers a spurious turn that can re-run the session's whole
+  prompt — so the recommendation was pointing sessions at the exact misuse
+  #814 tracks, and a `PreToolUse` guard now refuses that call
+  (`scripts/loop-only-tool-guard.ts`). There is no carve-out: this fallback is
+  gone, not narrowed.
 - **`AskUserQuestion` (a core tool, not a `Claude_Code_Remote` MCP tool) can hit
   the same transient "permission stream closed" error.** Retry once; if it
   fails again, don't retry-loop — fall back immediately to the safer default
