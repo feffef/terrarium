@@ -63,6 +63,14 @@ The subagent cannot see this session's context, so the brief is self-contained:
 - **Commit + push before stopping, even mid-gate.** A subagent can end its turn —
   or die to an external "session limit" abort — leaving finished work **stranded**:
   uncommitted, and invisible to the orchestrator.
+- **Name every artifact the subagent writes uniquely to that subagent** — logs,
+  screenshots, scratch scripts. Dispatched subagents inherit the *orchestrator's*
+  scratchpad, not one of their own, so parallel agents all reaching for the
+  obvious `gate.log` overwrite each other. The collision does not error: it hands
+  an agent a well-formed log describing a **different** worktree's run, which it
+  then quotes as its own. Two agents hit this independently in one dispatch, and
+  the orchestrator published a wrong root-cause diagnosis built on the clobbered
+  output before the second report surfaced the real mechanism (issue #847).
 - **Run verification (`pnpm gate:scoped`, and any other check) in the foreground
   and wait** — a dispatched subagent's own backgrounded commands do not wake it
   the way a background `Agent`/`Workflow` call wakes you. Where something must be
