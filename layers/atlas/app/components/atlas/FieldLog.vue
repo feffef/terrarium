@@ -19,15 +19,21 @@ const props = defineProps<{
   limit?: number
 }>()
 
+// Client-side only, and false on the server, so the capped recent view is what
+// renders initially (issue #450). Each mounted log owns its own state, so one
+// wing's full ledger says nothing about another's.
+const expanded = ref(false)
+
 const rows = computed(() => {
   const sorted = [...props.observations].sort((a, b) => b.date.localeCompare(a.date))
-  return props.limit ? sorted.slice(0, props.limit) : sorted
+  return props.limit && !expanded.value ? sorted.slice(0, props.limit) : sorted
 })
 
 // When a `limit` hides older entries, say so plainly rather than letting the log
 // simply stop — otherwise a wing with a long ledger looks as sparse as a young
-// one. The count keeps the naturalist honest about what the reader isn't seeing.
-const hidden = computed(() => Math.max(0, props.observations.length - rows.value.length))
+// one. The count keeps the naturalist honest about what the reader isn't seeing,
+// and doubles as the label of the control that reveals them.
+const truncatable = computed(() => Boolean(props.limit) && props.observations.length > props.limit!)
 </script>
 
 <template>
@@ -45,9 +51,20 @@ const hidden = computed(() => Math.max(0, props.observations.length - rows.value
         </span>
       </li>
     </ul>
-    <p v-if="hidden" class="atlas-log-more">
-      The {{ rows.length }} most recent of {{ observations.length }} sightings; the
-      ledger keeps the earlier ones.
+    <p v-if="truncatable" class="atlas-log-more">
+      <template v-if="expanded">
+        All {{ observations.length }} sightings, newest first — the ledger is open.
+      </template>
+      <template v-else>
+        The {{ limit }} most recent of {{ observations.length }} sightings; the
+        ledger keeps the earlier ones.
+      </template>
+      <button
+        type="button"
+        class="atlas-log-toggle"
+        :aria-expanded="expanded"
+        @click="expanded = !expanded"
+      >{{ expanded ? `Show only the ${limit} most recent` : `Show all ${observations.length} sightings` }}</button>
     </p>
   </template>
   <p v-else class="atlas-log empty">No sightings recorded here yet; the season is young.</p>
