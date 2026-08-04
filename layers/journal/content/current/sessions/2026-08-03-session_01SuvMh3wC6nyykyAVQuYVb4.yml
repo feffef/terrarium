@@ -1,27 +1,36 @@
 schemaVersion: 1
 session: session_01SuvMh3wC6nyykyAVQuYVb4
 startedAt: 2026-08-03T20:03:03Z
-endedAt: 2026-08-03T20:13:08Z
-kind: delegated
-goal: Autonomous triage sweep over the open backlog
-status: completed
-outcome: Five issues triaged, one closed as implemented
-summary: "The user invoked /auto-triage; everything here follows from that single kickoff, with no further human prompt. Scanned 30 open issues and 0 open PRs, resolved 5 eligible under the Skill's authorship rule, and dispatched one read-only triage subagent per issue. Results: #792 to ready-for-agent under ADR-0022's standing green-light; #829, #772 and #766 escalated to ready-for-human on genuine governance or competing-design calls; #790, the one Public-authored ticket, closed as already-implemented after verifying its PR merged to main. No repo changes, no PR - auto-triage is a classification remit."
-prs: []
+endedAt: 2026-08-04T19:08:53Z
+kind: interactive
+goal: Triage sweep, then audit the ready-for-human backlog
+status: in-review
+outcome: 8 issues cleared or green-lit, 1 PR open
+summary: Two phases. The user invoked /auto-triage - a sweep of 30 open issues and 0 open PRs surfaced 5 eligible; subagents landed 792 on ready-for-agent, closed 790 as already-implemented, and escalated 829, 772 and 766. The user then asked what was required from them to green-light more work, and steered a /grill-with-docs session through five questions to a plan they chose at every branch - audit the unaudited escalations, no authority to override a stated rationale, decisions surfaced in chat in plain language, results written back into each issue. 11 audit subagents ran. The user then made every disposition themselves; the label writes, closes, briefs and the .out-of-scope records implement their decisions, not mine. Nothing net-new was proposed or built unprompted.
+prs:
+  - "839"
 docsRead:
   - path: .claude/skills/triage/SKILL.md
-    reason: per-issue rules the sweep composes
-  - path: .claude/skills/triage/AGENT-BRIEF.md
-    reason: brief format handed to subagents
+    reason: per-issue rules both phases compose
   - path: .claude/skills/triage/OUT-OF-SCOPE.md
-    reason: prior-rejection check; no such dir exists here
+    reason: the KB format for the two owner rejections
   - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: standing green-light bounds and wayfinder overlay
-  - path: docs/agents/triage-labels.md
-    reason: canonical label vocabulary
+    reason: standing green-light bounds; its escalation taxonomy drove the audit
   - path: scripts/last-comment-authors.ts
     reason: eligibility signal; found its comment-less-issue gap
+  - path: scripts/audit-skills.ts
+    reason: orphan-detection internals for the 483/738 checks
+  - path: layers/midden/CONTEXT.md
+    reason: the Gate-B pointer the Palimpsest rejection stranded
   - path: .claude/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-status-dashboard.yml
     reason: (no reason given)
 skillsUsed:
   - name: dispatch-subagents
@@ -30,26 +39,53 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: grill-with-docs
+    reason: (no reason given)
+  - name: grilling
+    reason: (no reason given)
+  - name: domain-modeling
+    reason: (no reason given)
   - name: auto-triage
     reason: (invoked as a slash command)
 frictions:
+  - description: I told the user 11 issues had "no recorded rationale" on the strength of a keyword grep. The audit found 7 of those 7 were false negatives.
+    solution: Don't characterise a set from a heuristic and hand the characterisation to a human as fact - either read the sources first, or label the number as unverified before it reaches them, not after.
+    severity: moderate
   - description: last-comment-authors.ts omits issues with zero comments, but the sweep's eligibility rule needs the body's authorship for exactly those.
     solution: Emit a record for a comment-less issue too, with hasProvenance read off the issue body - otherwise every sweep re-derives it with ad-hoc curl.
     severity: minor
-  - description: Python heredoc check failed on an f-string backslash, costing a retry on a pure verification step.
-    solution: Write the checker to a scratch .py file rather than inlining it in the shell.
+  - description: audit-skills.ts keeps its git readers module-private, so scanning orphans over a non-default window meant duplicating them in a scratch script.
+    solution: Export the readers, or a findOrphanedSessionsFromRepo(days) wrapper, so a one-off scan reuses the real code path instead of a copy that can drift.
+    severity: minor
+  - description: That scratch scan silently returned "0 orphans" because I stubbed the record separators as empty strings - a wrong parse reads as a clean scan.
+    solution: Import the exported REC/SEP constants rather than re-declaring them, which is what fixed it; a mis-parse should not be indistinguishable from a pass.
+    severity: minor
+  - description: Python heredoc checks broke twice - once on an f-string backslash, once when a shell cd left pnpm unable to find the workspace.
+    solution: Write checkers to a scratch .py/.ts file and pass absolute paths; never cd.
     severity: nit
-durationSec: 605
+durationSec: 83150
 models:
-  claude-opus-5: 62
+  claude-opus-5: 212
 toolCounts:
-  Read: 9
-  Bash: 15
-  ToolSearch: 1
-  mcp__github__list_pull_requests: 1
-  Skill: 3
-  Agent: 5
-  Write: 1
+  Read: 13
+  Bash: 46
+  ToolSearch: 4
+  mcp__github__list_pull_requests: 2
+  Skill: 7
+  Agent: 16
+  Write: 7
+  Edit: 3
+  mcp__github__add_issue_comment: 9
+  mcp__github__issue_write: 7
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/midden/CONTEXT.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .out-of-scope/ci-enforced-doc-invariants.md
+  - .out-of-scope/palimpsest-tenant.md
 subagents:
   - type: general-purpose
     task: Triage issue 829
@@ -61,10 +97,35 @@ subagents:
     task: Triage issue 766
   - type: general-purpose
     task: Triage issue 790 (Public)
+  - type: general-purpose
+    task: Audit escalation on 814
+  - type: general-purpose
+    task: Audit escalation on 753
+  - type: general-purpose
+    task: Audit escalation on 659
+  - type: general-purpose
+    task: Audit escalation on 577
+  - type: general-purpose
+    task: Audit escalation on 694
+  - type: general-purpose
+    task: Audit escalation on 738
+  - type: general-purpose
+    task: Audit escalation on 483
+  - type: general-purpose
+    task: Audit escalation on 564
+  - type: general-purpose
+    task: Audit escalation on 530
+  - type: general-purpose
+    task: Audit escalation on 442
+  - type: general-purpose
+    task: Audit escalation on 444
 gitBranch: claude/auto-triage-9qni41
 entrypoint: remote_mobile
 cliVersion: 2.1.220
 learnings:
-  - A GitHub label update replaces the whole set, so a triage write must resend every label that should survive.
+  - The orphan scan's real reach is set by the shallow clone, not its configured window - 7-day and 14-day runs returned byte-identical results because history floors at 2026-07-30.
+  - A GitHub label update replaces the whole set, so every triage write must resend the wayfinder:* labels it means to preserve.
+  - "Idempotency makes every settled issue permanently sweep-invisible: with AI-authored last activity on a non-needs-triage state, nothing re-examines it until a human speaks."
 ideas:
-  - Add a scripts/triage-eligibility.ts that emits the auto-triage eligible set directly - per open issue, its labels, the author's association, and whether the most-recent activity (last comment, else the body) carries an ADR-0017 marker. Today step 1 of the sweep takes three tools plus hand-rolled curl to reconstruct that, and the body fallback is re-derived from scratch each run; one command would make the sweep's entry point verifiable and unit-testable the way the pure cores of its sibling scripts already are.
+  - 'Require an escalation receipt: nothing gets stamped ready-for-human without a machine-detectable rationale block naming which escalation trigger fired. This session spent 11 subagents and ~1.3M tokens answering "was this escalation ever justified?" - a question a structured block would answer with a grep. It also makes the backlog measurable: how many escalations cite each trigger, and which ones have gone stale because the thing that blocked them has since landed.'
+  - Add a scripts/triage-eligibility.ts that emits the auto-triage eligible set directly - per open issue, its labels, the author's association, and whether the most-recent activity (last comment, else the body) carries an ADR-0017 marker. Step 1 of the sweep currently takes three tools plus hand-rolled curl to reconstruct that, and the body fallback is re-derived every run; one command would make the sweep's entry point verifiable and unit-testable the way its sibling scripts' pure cores already are.
