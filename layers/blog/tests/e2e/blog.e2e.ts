@@ -14,7 +14,37 @@
 // navigation and assert the dialog shows and a reload restores the content.
 import { describe, expect, it } from 'vitest'
 import { createPage, url } from '@nuxt/test-utils/e2e'
+import type { Page } from 'playwright-core'
 import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
+
+/**
+ * Serve a 500 for the build chunk @nuxt/content dynamically imports on its first
+ * client-side query (`await import('@sqlite.org/sqlite-wasm')`) — the failure the
+ * production capture recorded (issue #236, 2026-07-19). The chunk is matched by
+ * its *content*, not its name: Nuxt emits pure content-hash filenames, so there
+ * is no stable path to route on. Routing also disables the page's HTTP cache, so
+ * an already-fetched chunk still reaches this handler.
+ */
+async function failContentChunkImport(page: Page): Promise<void> {
+  await page.route('**/_nuxt/*.js', async (route) => {
+    const response = await route.fetch()
+    const body = await response.text()
+    const isSqliteEntry = body.includes('sqlite3InitModule') && !route.request().url().includes('worker1')
+    return isSqliteEntry
+      ? route.fulfill({ status: 500, contentType: 'application/javascript', body: '' })
+      : route.fulfill({ response, body })
+  })
+}
+
+/** True while no full page load has happened since the sentinel was planted. */
+async function plantReloadSentinel(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    ;(window as unknown as { __noReloadSince?: boolean }).__noReloadSince = true
+  })
+}
+async function noReloadHappened(page: Page): Promise<boolean> {
+  return page.evaluate(() => (window as unknown as { __noReloadSince?: boolean }).__noReloadSince === true)
+}
 
 /** Register the blog Tenant's L2 assertions under the caller's active suite. */
 export function registerBlogE2E(): void {
@@ -91,6 +121,7 @@ export function registerBlogE2E(): void {
         )
 
         await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
+        await plantReloadSentinel(page)
         await page.locator('.net-links a', { hasText: 'David' }).click()
         await page.waitForFunction(() => location.pathname.endsWith('/t/blog/david'))
 
@@ -102,6 +133,69 @@ export function registerBlogE2E(): void {
         // proves the dialog reads the useAsyncData error object directly.
         await dialog.locator('.cle-details summary').click()
         expect((await dialog.locator('.cle-pre').textContent())?.trim().length).toBeGreaterThan(0)
+
+        // A reload cannot fix a body that decompresses to garbage, so this
+        // funnel must NOT auto-recover (issue #236): auto-reloading an
+        // unfixable error is strictly worse than the modal.
+        expect(await noReloadHappened(page)).toBe(true)
+      } finally {
+        await page.close()
+      }
+    })
+
+    // The chunk-load funnel is the one the production capture actually recorded
+    // (issue #236, 2026-07-19): a 500 on an existing, content-hashed `_nuxt/*.js`
+    // chunk that @nuxt/content lazily imports on its first client-side query.
+    // Unlike the dump funnels above it is *reload-fixable*, so it auto-recovers
+    // via `reloadNuxtApp` instead of parking the user on the modal.
+
+    it('auto-recovers from a failed content-chunk import on a client navigation', async () => {
+      const page = await createPage()
+      try {
+        await failContentChunkImport(page)
+
+        await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
+        await page.locator('.net-links a', { hasText: 'David' }).click()
+
+        // No "Reload page" click: the recovery is the app's job. The reloaded
+        // page renders the About from the SERVER DB during SSR, so the content
+        // arrives even while the chunk keeps 500-ing.
+        const about = page.locator('.about-prose')
+        await expect
+          .poll(async () => (await about.textContent().catch(() => '') ?? '').trim().slice(0, 9), {
+            timeout: 20000,
+          })
+          .toBe("I'm David")
+        expect(await page.locator('dialog.cle-dialog[open]').count()).toBe(0)
+      } finally {
+        await page.close()
+      }
+    })
+
+    it('falls back to the dialog instead of reloading again when the chunk keeps failing', async () => {
+      const page = await createPage()
+      try {
+        await failContentChunkImport(page)
+        // The exact state `reloadNuxtApp` leaves behind for a path it has just
+        // reloaded (its sessionStorage guard, still inside its TTL — see
+        // nuxt/dist/app/composables/chunk.js). Standing in it is how a
+        // *persistent* failure is reproduced deterministically: a real second
+        // pass would need the reloaded page to re-query the client DB, which a
+        // hydrated page never does.
+        await page.addInitScript(() => {
+          sessionStorage.setItem(
+            'nuxt:reload',
+            JSON.stringify({ path: '/t/blog/david', expires: Date.now() + 10_000 }),
+          )
+        })
+
+        await page.goto(url('/t/blog/karen'), { waitUntil: 'hydration' })
+        await plantReloadSentinel(page)
+        await page.locator('.net-links a', { hasText: 'David' }).click()
+
+        const dialog = page.locator('dialog.cle-dialog[open]')
+        await expect.poll(async () => dialog.isVisible().catch(() => false), { timeout: 8000 }).toBe(true)
+        expect(await noReloadHappened(page)).toBe(true)
       } finally {
         await page.close()
       }
