@@ -223,9 +223,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   entry (#288), an unprovisioned `commit_signing_key.pub` breaking `git commit
   -S` silently, session-only in-memory state silently emptying across a
   session-resume (observed for both `CronCreate`/`CronList` state, #571, and a
-  backgrounded `Agent`-tool subagent killed by the resume itself, #794), and
-  two transient "permission stream closed" MCP errors. Read it before
-  re-investigating any of these.
+  backgrounded `Agent`-tool subagent killed by the resume itself, #794), two
+  transient "permission stream closed" MCP errors, and a fired self-bind
+  Routine's output not always surfacing as a visible turn (#834). Read it
+  before re-investigating any of these.
 - **Don't tear down a preview/dev server with `pkill` — use `scripts/preview.ts`.**
   (`shot` for a one-shot screenshot; `start`/`stop` to keep one running — see the
   screenshot section below.) Hand-rolled `pkill -f <pattern>` teardown silently
