@@ -87,8 +87,8 @@ what passes **both** gates:
   re-adds mechanically; **successor-under-a-new-shape is your judgment call**
   — check where the deleting commit's siblings moved the behavior before
   concluding nothing did. A candidate that *fails* Gate B because something
-  renamed or superseded it in place is Palimpsest territory, not Midden — note
-  it as such rather than silently dropping it.
+  renamed or superseded it in place is out of the Midden's scope — record it as
+  a Gate-B exclusion rather than silently dropping it.
 - **Cluster, don't enumerate**: a batch of files deleted by one commit for one
   reason (a prototype swept away, a component family retired together) is
   **one** candidate with several paths, not N candidates. The Midden
@@ -113,7 +113,7 @@ survey gets a comment, not a duplicate). For each surviving candidate:
 State plainly in the issue that `condition`, `stratum`, `site`, and the
 `catalogNote` are the curator's to author — never proposed here (the
 CONTEXT.md Condition term's "100% curator-authored" rule). Label the issue
-`needs-triage`, list any Palimpsest-boundary notes from §3 at the end, and
+`needs-triage`, list any Gate-B exclusions from §3 at the end, and
 carry the ADR-0017 provenance header. Filing the issue is where this Skill
 stops — implementing any accepted candidate is a later, separately green-lit
 session's work.

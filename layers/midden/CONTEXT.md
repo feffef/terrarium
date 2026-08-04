@@ -128,8 +128,8 @@ identity or purpose forward in current `origin/main`, checked mechanically
 where possible and by curator judgment otherwise). Both gates must hold. One
 line: "you catalog a corpse only where nothing living grew back." A candidate
 that fails Gate B — something moved, was renamed, or was superseded in place —
-belongs to the separately-proposed, not-yet-chartered **Palimpsest** Tenant,
-not the Midden (not yet cross-referenced; revisit once Palimpsest exists).
+is out of the Midden's scope entirely: the Midden records what the Platform
+discarded, never what it carried forward under a new shape.
 
 ## What lives where
 
