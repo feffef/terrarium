@@ -79,7 +79,10 @@ Repo-specific priorities:
 - Set Actions fork-PR approval to **require approval for all outside
   collaborators** — CI runs `pnpm install` + `pnpm build` on fork code.
 - Confirm `GITHUB_TOKEN` default stays **read-only**.
-- Enable Dependabot alerts + updates; enable private vulnerability reporting.
+- Enable Dependabot alerts + updates; enable private vulnerability reporting
+  (`SECURITY.md` already points reporters at it, but whether it was actually
+  turned on isn't verifiable from repo state either — same open question as
+  the fork-PR-approval setting above).
 
 ## Verified clean / low-risk (no action)
 

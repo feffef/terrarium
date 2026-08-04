@@ -94,11 +94,10 @@ A session log may be **external** — authored by a different agent / harness /
 environment than our Claude Code toolchain (see ADR-0009's external-sessions
 amendment for the first concrete instance). An external log is still a real, honest record and
 stays visible in the Timeline and dashboard; the schema marks it with an optional
-`external` flag (absent ⇒ internal — our own sessions leave it off). Because its
-**Frictions** and **skills** reflect a toolchain our fixes can't touch, the
-self-improvement Skills (`frictions-to-fixes`, `audit-skills`) **exclude external
-sessions entirely**, and the Sparks feed keeps an external session's **ideas** but
-drops its **learnings** (ADR-0009 amendment, 2026-07-22).
+`external` flag (absent ⇒ internal — our own sessions leave it off). Its
+**Frictions** and **skills** are excluded from self-improvement mining, while its
+**ideas** (but not **learnings**) still surface in Sparks — see ADR-0009's
+external-sessions amendment for the exact split.
 
 Every session log records the Session's **kind** — where it sat on the autonomy
 spectrum, judged by **who prompted**: **interactive** (a human prompted again
