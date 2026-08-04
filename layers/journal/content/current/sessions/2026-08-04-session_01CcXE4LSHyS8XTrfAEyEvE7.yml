@@ -1,0 +1,65 @@
+schemaVersion: 1
+session: session_01CcXE4LSHyS8XTrfAEyEvE7
+startedAt: 2026-08-04T04:12:01Z
+endedAt: 2026-08-04T04:29:21Z
+kind: autonomous
+goal: Run scheduled /audit-docs sweep
+status: in-review
+outcome: "3 confirmed fixes shipped in PR #837"
+summary: "Scheduled Routine fired /audit-docs with no human input this turn. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over CLAUDE.md, CONTEXT.md, CONTEXT-MAP.md, README.md, SECURITY.md, all 25 ADRs, docs/agents/*, docs/research/*, deploy/README.md, tests/README.md, every layers/<tenant>/CONTEXT.md, our own non-pack Skills, and the journal's current facing pages. Pooled 4 findings (no overlap), fact-checked each with an independent checker against primary sources: 3 CONFIRMED(-BUT), 1 WRONG (dropped — deploy/README.md's \"that clone\" pronoun turned out to be disambiguated by an explicit backward pointer). Fixed all 3 confirmed findings (CLAUDE.md drift, CONTEXT.md duplication of ADR-0009, an unconfirmed-setting ambiguity in docs/research/public-readiness-review.md), ran pnpm gate:scoped green, committed, pushed, and opened PR #837 as the self-merged brave-fix path. Entirely autonomous end to end; no human interaction occurred at any point."
+prs:
+  - "837"
+docsRead:
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: CONTEXT.md
+    reason: (read before editing)
+  - path: docs/research/public-readiness-review.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 1040
+models:
+  claude-sonnet-5: 115
+toolCounts:
+  Bash: 14
+  ToolSearch: 5
+  mcp__github__list_pull_requests: 1
+  TaskCreate: 7
+  TaskUpdate: 11
+  Agent: 5
+  ScheduleWakeup: 5
+  Read: 4
+  Edit: 4
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - CLAUDE.md
+  - CONTEXT.md
+  - docs/research/public-readiness-review.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens audit (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens audit (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens audit (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens audit (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check 4 pooled audit findings
+gitBranch: claude/festive-mayer-ylx2lk
+entrypoint: remote_trigger
+cliVersion: 2.1.221
+trigger: audit-docs
