@@ -135,11 +135,13 @@ catch the mistake in practice.
   hasn't run. **Gate completion is not webhook-delivered** — there's no event
   to wait on, so to babysit a PR to green you must poll `get_check_runs`
   yourself (e.g. re-poll at agent-completion checkpoints, or `send_later` a
-  wake when no agent is running to re-poll). **`ScheduleWakeup` is scoped to
-  `/loop` dynamic-mode pacing and is unreliable outside it** (treat it only as
-  the last-resort fallback below) — a session polling non-webhook-delivered
-  state (like CI completion) should use `mcp__Claude_Code_Remote__send_later`
-  to schedule its own check-in instead.
+  wake when no agent is running to re-poll). **`ScheduleWakeup` is not an
+  option here at any priority: it is valid only inside a `/loop` session's
+  dynamic pacing, and a `PreToolUse` guard now refuses it outside that mode**
+  (CLAUDE.md owns the rule; `docs/agents/loop-only-tool-guard.md` the
+  mechanism, issue #814). A session polling non-webhook-delivered state (like
+  CI completion) uses `mcp__Claude_Code_Remote__send_later` to schedule its own
+  check-in instead.
 - **This polling advice is scoped to non-webhook-delivered state like CI —
   it does not apply to a dispatched Agent-tool subagent.** A background
   `Agent` tool completion self-notifies automatically; waiting on one needs no
