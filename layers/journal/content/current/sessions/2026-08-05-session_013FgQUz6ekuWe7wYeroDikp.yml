@@ -1,18 +1,20 @@
 schemaVersion: 1
 session: session_013FgQUz6ekuWe7wYeroDikp
 startedAt: 2026-08-05T00:17:48Z
-endedAt: 2026-08-05T00:24:32Z
+endedAt: 2026-08-05T00:28:49Z
 kind: autonomous
 goal: Run the scheduled /digest sweep for 2026-08-04
-status: in-review
-outcome: "PR #852 opened, gate green, awaiting merge"
-summary: "Fully agent-initiated scheduled run (no human prompt this session): the /digest Routine fired /digest. Listed the closed UTC days needing a Digest (one: 2026-08-04), gathered that day's PRs/commits/sessions via scripts/digest.ts, and authored a Digest narrating the day's triage-and-backlog sweep (15 issues closed, 10 PRs), the new /loop-only ScheduleWakeup guard landing the same day a separate frictions-to-fixes run tripped that exact trap, and the day's sharpest friction (a dispatched impl agent dying mid-run and stranding an uncommitted fix). Ran the archive-journal-content retention sweep (1 digest + 5 session logs moved to archived), confirmed pnpm gate:scoped was green (80/80 e2e), committed, pushed, and opened PR #852 with the ADR-0017 provenance header. Subscribed to the PR's activity per CLAUDE.md's babysitting rule; landing (merge via merge-pr.ts once CI is green) is still pending as of this log."
+status: completed
+outcome: "PR #852 merged with a green gate"
+summary: "Fully agent-initiated scheduled run (no human prompt this session): the /digest Routine fired /digest. Listed the closed UTC days needing a Digest (one: 2026-08-04), gathered that day's PRs/commits/sessions via scripts/digest.ts, and authored a Digest narrating the day's triage-and-backlog sweep (15 issues closed, 10 PRs), the new /loop-only ScheduleWakeup guard landing the same day a separate frictions-to-fixes run tripped that exact trap, and the day's sharpest friction (a dispatched impl agent dying mid-run and stranding an uncommitted fix). Ran the archive-journal-content retention sweep (1 digest + 5 session logs moved to archived), confirmed pnpm gate:scoped was green (80/80 e2e), committed, pushed, and opened PR #852 with the ADR-0017 provenance header. Subscribed to the PR's activity per CLAUDE.md's babysitting rule; scheduled a 1-hour check-in, but CI reported green before it fired. Ran check-conflicting-issues.ts (no hits), posted the merge verdict comment, and landed the PR via scripts/merge-pr.ts. Unsubscribed and cancelled the now-unneeded check-in trigger."
 prs:
   - "852"
 docsRead:
   - path: .claude/skills/digest/SKILL.md
     reason: step-by-step recipe for this run
   - path: layers/journal/content/current/pages/digests/2026-08-03.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
 skillsUsed:
   - name: close-session
@@ -22,20 +24,23 @@ skillsUsed:
   - name: digest
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 404
+durationSec: 662
 models:
-  claude-sonnet-5: 50
+  claude-sonnet-5: 69
 toolCounts:
-  Bash: 14
-  Read: 1
+  Bash: 17
+  Read: 2
   Write: 2
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  Edit: 1
-  mcp__github__pull_request_read: 2
+  Edit: 2
+  mcp__github__pull_request_read: 3
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-08-04.md
 gitBranch: claude/compassionate-lovelace-txxfch
