@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_013ZVJh6GFa2UcB9cPeDri6b
+startedAt: 2026-08-05T01:05:22Z
+endedAt: 2026-08-05T01:27:28Z
+kind: autonomous
+goal: Run frictions-to-fixes end to end
+status: completed
+outcome: 3 fixes merged, 1 regression escalated
+summary: "Scheduled frictions-to-fixes run. A survey subagent read the last 20 session logs and screened frictions against the tracker, returning 4 actionable candidates. All work was agent-initiated (a scheduled Routine fired this session; no live human prompt). Filed issue #853 as a regression (issue #301's self-approval-review fix never carried from docs/agents/issue-tracker.md into the newer docs/agents/pr-workflow.md) and left it open for human judgement per the regression-handling protocol, rather than auto-dispatching it. Filed #854 (frictions-to-fixes screening gap), #855 (last-comment-authors.ts omits zero-comment issues), and #856 (audit-skills.ts private git readers) as simple, safe-surface fixes, dispatched to 3 parallel Sonnet impl agents each in its own worktree. All three opened gated PRs (#857, #858, #859), all gates went green, all were code-reviewed with a posted verdict comment and merged via scripts/merge-pr.ts. check-worktrees.ts confirmed nothing stranded afterward."
+prs:
+  - "857"
+  - "858"
+  - "859"
+docsRead: []
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: this run's own procedure
+  - name: dispatch-subagents
+    reason: worktree isolation + brief checklist for the 3 parallel impl agents
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Dispatched impl agent for #855 used Monitor to watch its own backgrounded pnpm gate:scoped run, then ended its turn expecting Monitor's notification to wake it back up -- a stopped subagent isn't resumed by Monitor, only by an orchestrator SendMessage. Needed two resumes before it ran the gate as a single foregrounded call with a long explicit timeout and finished."
+    solution: Sharpen dispatch-subagents's "run verification in the foreground and wait" bullet to explicitly warn against a dispatched subagent backgrounding its own verification command and using Monitor/"wait for it" phrasing to end its turn -- it silently strands the agent rather than erroring visibly.
+    severity: moderate
+  - description: The frictions-to-fixes survey subagent piped scripts/session-frictions.ts through head -c 100000, the same pipe-a-long-command-through-a-trailing-command anti-pattern CLAUDE.md already warns against. No truncation happened this time, but it was luck.
+    solution: Redirect to a file and read that instead of piping through head.
+    severity: minor
+  - description: scripts/merged-since.ts prints a git fetch progress banner to stdout before its JSON array, breaking naive JSON.parse on stdout; the survey subagent had to fall back to grep instead of structured parsing.
+    solution: Route the fetch banner to stderr (or suppress it) so stdout stays clean JSON.
+    severity: nit
+durationSec: 1325
+models:
+  claude-sonnet-5: 128
+toolCounts:
+  Bash: 16
+  Agent: 4
+  ToolSearch: 4
+  mcp__github__search_issues: 4
+  TaskCreate: 7
+  mcp__github__issue_write: 8
+  TaskUpdate: 9
+  Skill: 3
+  ScheduleWakeup: 1
+  SendMessage: 2
+  mcp__github__pull_request_read: 11
+  mcp__github__add_issue_comment: 3
+  Write: 1
+  PushNotification: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix frictions-to-fixes screening gap (#854)
+    model: sonnet
+  - type: general-purpose
+    task: Fix last-comment-authors.ts zero-comment gap (#855)
+    model: sonnet
+  - type: general-purpose
+    task: Export audit-skills.ts readers (#856)
+    model: sonnet
+gitBranch: claude/hopeful-brown-p9zw0v
+entrypoint: remote_trigger
+cliVersion: 2.1.222
+trigger: frictions-to-fixes
