@@ -1,0 +1,57 @@
+schemaVersion: 1
+session: session_01XA3ZqmkWLprTN6cukQUpmM
+startedAt: 2026-08-05T04:08:57Z
+endedAt: 2026-08-05T04:24:33Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: in-review
+outcome: One fix made, PR opened
+summary: "Scheduled /audit-docs run (no human prompt this cycle). Dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across every Live/Historical/Pack-generic doc in the repo, pooled 3 candidate findings, and fact-checked each against primary sources with an independent checker agent. Two findings (a suspected placeholder-session-ID contradiction in CLAUDE.md vs. real session IDs in ADR-0017/ADR-0019, and a suspected staleness in CLAUDE.md's proposal-630 pointer vs. proposal-445) came back WRONG on fact-check and were dropped. One Duplication finding was CONFIRMED: docs/agents/environment-caveats.md's ScheduleWakeup withdrawal note restated CLAUDE.md's /loop-only rule substance with no ownership pointer, unlike github-integration.md's equivalent passage. Fixed by trimming to the withdrawal event and adding the same ownership pointer. Gate ran green (inert single-file docs/agents/* change); opened PR #860 and subscribed to its activity to babysit to merge, per CLAUDE.md's self-merge tier for this Skill."
+prs:
+  - "860"
+docsRead:
+  - path: docs/agents/environment-caveats.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's own Skill
+  - name: close-session
+    reason: closure front door
+  - name: log-session
+    reason: this log
+frictions: []
+durationSec: 935
+models:
+  claude-sonnet-5: 80
+toolCounts:
+  Bash: 15
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  Agent: 5
+  ScheduleWakeup: 1
+  Read: 1
+  Grep: 2
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - docs/agents/environment-caveats.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: Drift + Orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: Duplication + Mis-location"
+  - type: general-purpose
+    task: "Concision lens: Verbose + Stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: Contradiction + Ambiguity"
+  - type: general-purpose
+    task: Fact-check 3 pooled audit-docs findings
+gitBranch: claude/festive-mayer-8uaush
+entrypoint: remote_trigger
+cliVersion: 2.1.222
+trigger: audit-docs
