@@ -930,7 +930,7 @@ function readKnownSessionIds(cwd = root): Set<string> {
 /** Scoped to `origin/main` per CLAUDE.md's git-log guidance, not `--all`. Feeds
  *  `manuallyRescuedClosures` only — see `WORK_COMMIT_SCAN_DAYS` for why the
  *  orphan check no longer reads from here (issue #738). */
-function readSessionTrailers(cwd = root, days = WORK_COMMIT_SCAN_DAYS): SessionTrailerRef[] {
+export function readSessionTrailers(cwd = root, days = WORK_COMMIT_SCAN_DAYS): SessionTrailerRef[] {
   let raw: string
   try {
     raw = execFileSync(
@@ -949,7 +949,7 @@ function readSessionTrailers(cwd = root, days = WORK_COMMIT_SCAN_DAYS): SessionT
  *  `--all`, per CLAUDE.md's git-log guidance. History this can't see (a shallow
  *  clone) only costs a suppression, so a candidate surfaces as a visible orphan
  *  rather than disappearing — the safe direction for issue #747's lesson. */
-function readCommitFileChanges(cwd = root): CommitFileChange[] {
+export function readCommitFileChanges(cwd = root): CommitFileChange[] {
   let raw: string
   try {
     raw = execFileSync(
