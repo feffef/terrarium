@@ -46,13 +46,12 @@ new; don't re-diagnose any of these as a fresh problem.
   (issue #229).
 
   **Withdrawn 2026-08-04 (issue #814): the original wording named
-  `ScheduleWakeup` as this fallback.** It is not one. `ScheduleWakeup` is
-  valid only inside a `/loop` session's dynamic pacing, and outside `/loop` a
-  fired wakeup delivers a spurious turn that can re-run the session's whole
-  prompt — so the recommendation was pointing sessions at the exact misuse
-  #814 tracks, and a `PreToolUse` guard now refuses that call
-  (`scripts/loop-only-tool-guard.ts`). There is no carve-out: this fallback is
-  gone, not narrowed.
+  `ScheduleWakeup` as this fallback.** It is not one — the recommendation was
+  pointing sessions at the exact misuse #814 tracks, and a `PreToolUse` guard
+  now refuses that call (`scripts/loop-only-tool-guard.ts`). There is no
+  carve-out: this fallback is gone, not narrowed. (CLAUDE.md owns the
+  `ScheduleWakeup` rule itself; `docs/agents/loop-only-tool-guard.md` the
+  mechanism, issue #814.)
 - **`AskUserQuestion` (a core tool, not a `Claude_Code_Remote` MCP tool) can hit
   the same transient "permission stream closed" error.** Retry once; if it
   fails again, don't retry-loop — fall back immediately to the safer default
