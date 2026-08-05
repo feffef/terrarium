@@ -8,7 +8,9 @@ import { describe, expect, it } from 'vitest'
 import {
   openIssueNumbers,
   toLastCommentAuthor,
+  toLastCommentAuthorFromIssue,
   type RawCommentAuthorApiRecord,
+  type RawIssueBodyApiRecord,
 } from '../../scripts/last-comment-authors.ts'
 import type { RawIssueApiRecord } from '../../scripts/list-open-issues.ts'
 
@@ -65,6 +67,47 @@ describe('toLastCommentAuthor()', () => {
   it('falls back to "(unknown)" when the comment has no user (e.g. a deleted account)', () => {
     const noUser: RawCommentAuthorApiRecord = { ...AI_COMMENT, user: null }
     expect(toLastCommentAuthor(1, [noUser])?.lastCommenterLogin).toBe('(unknown)')
+  })
+})
+
+describe('toLastCommentAuthorFromIssue()', () => {
+  const AI_ISSUE: RawIssueBodyApiRecord = {
+    number: 5,
+    title: 'a zero-comment issue',
+    labels: [],
+    updated_at: '2026-08-01T00:00:00Z',
+    html_url: 'https://github.com/feffef/terrarium/issues/5',
+    body: 'Update: took a look.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01VhL2mH3yYgkDqrMv61qe11',
+    created_at: '2026-08-01T00:00:00Z',
+    user: { login: 'feffef' },
+    author_association: 'OWNER',
+  }
+
+  it('derives a record from the issue body when there are no comments', () => {
+    expect(toLastCommentAuthorFromIssue(AI_ISSUE)).toEqual({
+      number: 5,
+      lastCommenterLogin: 'feffef',
+      authorAssociation: 'OWNER',
+      commentCreatedAt: AI_ISSUE.created_at,
+      hasProvenance: true,
+      commentUrl: AI_ISSUE.html_url,
+    })
+  })
+
+  it('reports no provenance when the issue body carries no marker', () => {
+    const humanIssue: RawIssueBodyApiRecord = { ...AI_ISSUE, body: 'just a bug report' }
+    expect(toLastCommentAuthorFromIssue(humanIssue).hasProvenance).toBe(false)
+  })
+
+  it('never includes the issue body in the output', () => {
+    const record = toLastCommentAuthorFromIssue(AI_ISSUE)
+    expect(record).not.toHaveProperty('body')
+    expect(JSON.stringify(record)).not.toContain('took a look')
+  })
+
+  it('falls back to "(unknown)" when the issue has no user (e.g. a deleted account)', () => {
+    const noUser: RawIssueBodyApiRecord = { ...AI_ISSUE, user: null }
+    expect(toLastCommentAuthorFromIssue(noUser).lastCommenterLogin).toBe('(unknown)')
   })
 })
 

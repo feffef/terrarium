@@ -21,10 +21,11 @@
 //
 // Usage:  tsx scripts/last-comment-authors.ts [N]
 //   Checks up to N open issues (default 50, newest-updated-first) and prints
-//   one compact record per issue that has at least one comment as JSON:
-//   { number, lastCommenterLogin, authorAssociation, commentCreatedAt,
-//     hasProvenance, commentUrl }. An issue with no comments is
-//   omitted rather than padded with nulls.
+//   one compact record per issue as JSON: { number, lastCommenterLogin,
+//   authorAssociation, commentCreatedAt, hasProvenance, commentUrl }. An
+//   issue with no comments still gets a record — derived from the issue
+//   body itself (its author, creation time, and whether the body carries an
+//   ADR-0017 provenance marker) rather than omitted (issue #855).
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -51,6 +52,18 @@ const DEFAULT_LIMIT = 50
  *  endpoint, trimmed to what this report needs — `body` is only ever passed
  *  through `isAiAuthored()`, never included in this script's own output. */
 export interface RawCommentAuthorApiRecord {
+  html_url: string
+  body: string
+  created_at: string
+  user: { login: string } | null
+  author_association: string
+}
+
+/** `RawIssueApiRecord` (`list-open-issues.ts`'s allowlisted subset) plus the
+ *  fields a zero-comment issue's fallback record needs off the issue itself —
+ *  all present on the same raw REST/`gh api` issue object already fetched by
+ *  `readOpenIssues`, just not previously allowlisted through. */
+export interface RawIssueBodyApiRecord extends RawIssueApiRecord {
   html_url: string
   body: string
   created_at: string
@@ -91,6 +104,21 @@ export function toLastCommentAuthor(
   }
 }
 
+/** The fallback compact authorship record for an issue with zero comments,
+ *  derived from the issue body itself rather than a (nonexistent) last
+ *  comment — same provenance-detection logic `toLastCommentAuthor` applies
+ *  to a comment body, applied here to `issue.body` (issue #855). */
+export function toLastCommentAuthorFromIssue(issue: RawIssueBodyApiRecord): LastCommentAuthor {
+  return {
+    number: issue.number,
+    lastCommenterLogin: issue.user?.login ?? '(unknown)',
+    authorAssociation: issue.author_association,
+    commentCreatedAt: issue.created_at,
+    hasProvenance: isAiAuthored(issue.body),
+    commentUrl: issue.html_url,
+  }
+}
+
 /** The open-issue numbers out of `records`, pull requests filtered out (the
  *  REST `issues` endpoint mixes both in — same quirk `list-open-issues.ts`
  *  and `check-triage-drift.ts` screen for), newest-updated-first. */
@@ -112,7 +140,7 @@ function readOriginUrl(cwd: string): string {
   return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
 }
 
-function readOpenIssuesViaGh(owner: string, repo: string, cwd: string): RawIssueApiRecord[] {
+function readOpenIssuesViaGh(owner: string, repo: string, cwd: string): RawIssueBodyApiRecord[] {
   const raw = execFileSync(
     'gh',
     [
@@ -133,7 +161,7 @@ function readOpenIssuesViaGh(owner: string, repo: string, cwd: string): RawIssue
   return raw
     .split('\n')
     .filter((line) => line.length > 0)
-    .map((line) => JSON.parse(line) as RawIssueApiRecord)
+    .map((line) => JSON.parse(line) as RawIssueBodyApiRecord)
 }
 
 function readIssueCommentsViaGh(
@@ -219,8 +247,8 @@ async function readOpenIssuesViaRest(
   repo: string,
   token: string,
   cwd: string,
-): Promise<RawIssueApiRecord[]> {
-  return fetchAllPagesViaRest<RawIssueApiRecord>(
+): Promise<RawIssueBodyApiRecord[]> {
+  return fetchAllPagesViaRest<RawIssueBodyApiRecord>(
     `https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=100`,
     token,
     cwd,
@@ -246,7 +274,7 @@ async function readOpenIssues(
   owner: string,
   repo: string,
   cwd: string,
-): Promise<RawIssueApiRecord[]> {
+): Promise<RawIssueBodyApiRecord[]> {
   if (strategy === 'gh') return readOpenIssuesViaGh(owner, repo, cwd)
   const token = envToken()
   if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
@@ -283,12 +311,18 @@ export async function lastCommentAuthors(limit = DEFAULT_LIMIT, cwd = root): Pro
   const { owner, repo } = ownerRepo
   const rawIssues = await readOpenIssues(strategy, owner, repo, cwd)
   const numbers = openIssueNumbers(rawIssues, limit)
+  const issuesByNumber = new Map(rawIssues.map((issue) => [issue.number, issue]))
 
   const out: LastCommentAuthor[] = []
   for (const number of numbers) {
     const comments = await readIssueComments(strategy, owner, repo, number, cwd)
     const record = toLastCommentAuthor(number, comments)
-    if (record !== null) out.push(record)
+    if (record !== null) {
+      out.push(record)
+      continue
+    }
+    const issue = issuesByNumber.get(number)
+    if (issue !== undefined) out.push(toLastCommentAuthorFromIssue(issue))
   }
   return out
 }
