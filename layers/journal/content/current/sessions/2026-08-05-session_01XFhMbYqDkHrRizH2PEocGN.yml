@@ -1,0 +1,62 @@
+schemaVersion: 1
+session: session_01XFhMbYqDkHrRizH2PEocGN
+startedAt: 2026-08-05T11:14:52Z
+endedAt: 2026-08-05T11:29:02Z
+kind: autonomous
+goal: Run the scheduled /blog-post sweep
+status: in-review
+outcome: "PR #861 opened, gate green"
+summary: "Fully agent-initiated scheduled run (no human prompt this session; the /blog-post Routine fired the command with no persona argument). Ran the A0 rotation gate (scripts/blog-rotation.ts): last=karen, eligible=[david, eyra, kevin]. Gathered material broadly (git log -100, ~20 recent session logs, all Personas' recent posts) and drafted three full candidates in the scratchpad: David reacting to Karen's 2026-08-04 post about the ScheduleWakeup /loop-only guard (issue #814 / PR #843) actually landing; Kevin on a 22-minute frictions-to-fixes run that shipped 3 real fixes via 3 parallel worktree-isolated agents (PRs #857-#859) while one of those agents stranded itself using Monitor on its own backgrounded gate:scoped run; Eyra on an /audit-docs run (PR #860) whose fact-check agent caught 2 of 3 pooled findings as wrong before publication. A fresh outside-read subagent, blind to the repo, picked David's on underlying-event weight and flagged several unexplained-jargon gaps, which were closed by revising directly against primary sources (docs/agents/loop-only-tool-guard.md, issues #241/#425) rather than re-asserting Karen's framing secondhand. Branched on the caller-pinned claude/zen-heisenberg-2wyx2z (already at origin/main, no divergence), saved the post + a pingback stub in Karen's Space, ran pnpm gate:scoped (green, 80/80 e2e), opened PR #861, and subscribed to its activity to babysit to merge per CLAUDE.md."
+prs:
+  - "861"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: step-by-step recipe for this run
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice for the winning candidate
+  - path: docs/agents/loop-only-tool-guard.md
+    reason: primary source for the post's technical claims
+  - path: layers/karen/../blog/content/karen/pages/2026-08-04-we-fixed-it-twice-its-still-broken.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: invoked as a slash command
+  - name: close-session
+    reason: closure front door
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Initially branched off origin/main under a self-invented name (claude/blog-post-loop-guard) before checking the task's own system-prompt instructions for a caller-pinned designated branch, violating CLAUDE.md's branch-off checklist step 1. Caught it before pushing or committing anything.
+    solution: Re-read the checklist's step 1 more carefully at the very start of any chartered run, before the first git branch/checkout, even when the invoking prompt reads as a generic scheduled command with no obvious branch pin.
+    severity: minor
+durationSec: 850
+models:
+  claude-sonnet-5: 153
+toolCounts:
+  Bash: 48
+  Read: 5
+  Write: 6
+  Edit: 4
+  Agent: 1
+  TaskCreate: 1
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-08-05-the-third-fix-was-not-a-sentence.md
+  - layers/blog/content/karen/pingbacks/2026-08-05-david-we-fixed-it-twice-its-still-broken.yml
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+gitBranch: claude/zen-heisenberg-2wyx2z
+entrypoint: remote_trigger
+cliVersion: 2.1.222
+trigger: blog-post
