@@ -100,7 +100,12 @@ git-timestamp archaeology. **Before landing on "Never fixed," search the tracker
 for the friction's exact tool name and exact error-message string** (not a
 paraphrase or a topic-level guess) — a loosely-worded search can miss an issue or
 PR that already covers it, and re-recommending a fix for something already closed
-wastes a dispatch. Classify each into one branch:
+wastes a dispatch. **An exact-string miss alone is not sufficient proof of
+"never-fixed"** — before finalizing that label, do a quick nearby-issue eyeball
+(same file/script/mechanism as the candidate) for a closed issue covering the
+same root cause under different wording; a paraphrase or a nearby instance of an
+already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each
+into one branch:
 
 - **Never fixed** — no issue/PR addresses it, confirmed by the exact-string
   search above. Carries on to step 3.
