@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_016fPM6YpKbEhVfXzf31bnfE
 startedAt: 2026-08-06T04:11:26Z
-endedAt: 2026-08-06T04:36:40Z
+endedAt: 2026-08-06T04:41:03Z
 kind: autonomous
 goal: Run the scheduled audit-docs sweep
-status: in-review
-outcome: 3 confirmed findings fixed, PR opened
-summary: "Fully agent-initiated: fired by the scheduled /audit-docs Routine, no human prompt in this session. Classified all 265 repo .md files into the Live/Historical/Pack-generic tiers, fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence), pooled 5 findings, merged two overlapping ones (Duplication + Contradiction both centered on the same ScheduleWakeup bullet), and dispatched an independent fact-checker against primary sources (code, ADRs, git history) before touching anything. Fixed 3 CONFIRMED findings: CLAUDE.md/github-integration.md's ScheduleWakeup rule omitted the guard's actual stop:true exemption; layers/midden/CONTEXT.md's Artifact/Condition glossary entries leaked Zod-schema jargon and CSS rendering detail; docs/research/public-readiness-review.md's branch-protection bullet lacked a cross-reference to the later, more complete research on why a blanket re-enable would re-block ADR-0009 session-log commits. One candidate finding (missing CLAUDE.md index entry for the new loop-only-tool-guard.md doc) was fact-checked to CONFIRMED-BUT-not-a-defect — it matches an established pattern shared with deferred-tool-guard.md — so left unfixed. Gate green (80/80 e2e), PR #875 opened and subscribed."
+status: completed
+outcome: "3 confirmed findings fixed, PR #875 merged"
+summary: "Fully agent-initiated: fired by the scheduled /audit-docs Routine, no human prompt in this session. Classified all 265 repo .md files into the Live/Historical/Pack-generic tiers, fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence), pooled 5 findings, merged two overlapping ones (Duplication + Contradiction both centered on the same ScheduleWakeup bullet), and dispatched an independent fact-checker against primary sources (code, ADRs, git history) before touching anything. Fixed 3 CONFIRMED findings: CLAUDE.md/github-integration.md's ScheduleWakeup rule omitted the guard's actual stop:true exemption; layers/midden/CONTEXT.md's Artifact/Condition glossary entries leaked Zod-schema jargon and CSS rendering detail; docs/research/public-readiness-review.md's branch-protection bullet lacked a cross-reference to the later, more complete research on why a blanket re-enable would re-block ADR-0009 session-log commits. One candidate finding (missing CLAUDE.md index entry for the new loop-only-tool-guard.md doc) was fact-checked to CONFIRMED-BUT-not-a-defect — it matches an established pattern shared with deferred-tool-guard.md — so left unfixed. Gate green (80/80 e2e), PR #875 opened, self-merged on green gate per audit-docs's merge-on-green-gate tier (ADR-0003), no human-only surface touched."
 prs:
   - "875"
 docsRead:
@@ -38,24 +38,28 @@ frictions:
   - description: A leading-dot top-level directory (.out-of-scope/) and .agents/skills/ paths tripped up a naive Python lstrip('./') during inventory scripting — it strips characters, not a prefix, silently mangling ".agents/..." to "agents/...". Caught and fixed before it affected classification, but cost a re-run.
     solution: "Not a repo issue — just a note for future inventory scripting: use os.path.relpath or a proper prefix strip, never str.lstrip() for path prefixes."
     severity: nit
-durationSec: 1514
+durationSec: 1777
 models:
-  claude-sonnet-5: 94
+  claude-sonnet-5: 125
 toolCounts:
-  Bash: 18
-  Read: 6
+  Bash: 23
+  Read: 7
   Agent: 5
   ScheduleWakeup: 1
   Grep: 1
-  Edit: 5
-  ToolSearch: 2
+  Edit: 8
+  ToolSearch: 4
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 3
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - CLAUDE.md
   - docs/agents/github-integration.md
