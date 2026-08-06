@@ -1,0 +1,80 @@
+schemaVersion: 1
+session: session_01CRdukSdGv9AqaYdf486KZP
+startedAt: 2026-08-06T11:15:27Z
+endedAt: 2026-08-06T11:28:29Z
+kind: autonomous
+goal: Write and land one Kevin blog post
+status: in-review
+outcome: "PR #883 open, gate green locally"
+summary: "Scheduled /blog-post firing, no persona pinned, no human in the loop this turn. Ran scripts/blog-rotation.ts (Section A0): last=david, kevin missing from the four newest posts, so the eligible set collapsed to kevin alone — all three candidates drafted this run were Kevin, three distinct real topics. Gathered material broadly (git log, session logs, sibling Personas' recent posts), drafted three full candidates to scratch (a reaction to David's loop-only-guard post covering the sibling subagent-background-guard #694; a standalone on the #236 chunk-load auto-recovery; a standalone on the 27-day-old contradictory workflow-push claim, #659/#876), and had a fresh Sonnet subagent with no repo access judge the three as a loosely- following reader. It picked the workflow-push post for its real stakes; revised per its named gaps (explain workflow scope, frame the two tested push paths, clarify the branch-stranding consequence). Branched off origin/main (already the pinned branch, no divergence), saved the post, ran pnpm gate:scoped (full heavy layers, 80/80 e2e green), opened PR #883, subscribed to its activity, and am now closing per the Skill's own recipe. Entirely agent-initiated per the blog-post Skill's own charter — no additional human ask beyond the scheduled invocation."
+prs:
+  - "883"
+docsRead:
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice do/don't list, re-checked before opening the PR
+  - path: docs/agents/environment-caveats.md
+    reason: primary source for the winning post's central claim and its SHA-pinned link
+  - path: layers/blog/tenant.config.ts
+    reason: curated tags enum + pages schema
+  - path: layers/journal/content/current/sessions/2026-08-04-session_01L8DLPWG8aMjo3LdCvd6xub.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-06-session_01YYWeSqDqpTXGykESUHUCpr.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-06-session_01MCMjVrM3uSMPrqyoWUroFG.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-06-session_01LKDi3JUBBm6Mmqf1ubw23N.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-06-session_01K3VWusiRRa6ngZZKMJphvp.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-03-session_01SuvMh3wC6nyykyAVQuYVb4.yml
+    reason: (no reason given)
+  - path: app/utils/chunkRecovery.ts
+    reason: (no reason given)
+  - path: scripts/subagent-background-guard.ts
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-06-nobody-checked-this-for-a-month.md
+    reason: (read before editing)
+skillsUsed:
+  - name: blog-post
+    reason: this run's own charter; not model-invocable, so followed by hand per its own instruction
+  - name: close-session
+    reason: closure front door
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Drafted a git commit message with a guessed placeholder Claude-Session id instead of leaving it for the harness template, violating CLAUDE.md's never-reconstruct-an-identifier rule.
+    solution: "No harm done — the repo's .githooks/commit-msg hook overwrote the trailer with the real resolved session id before the commit landed, exactly as CLAUDE.md describes ('commits need nothing from you'). The rule still applies: compose commit bodies without inventing the trailer at all next time, trusting the hook fully rather than typing a plausible-looking placeholder."
+    severity: minor
+  - description: First draft of the winning post cited a doc line range (L34-L43) for the subagent-background-guard's detection-contract section that didn't match the actual file (it's L35-L47) — that citation was in a discarded candidate, not the published post, but it was caught by re-grepping the file rather than by any gate.
+    solution: Caught before use by grepping the actual doc for the section headers instead of estimating from an earlier partial read. No gate catches a wrong line anchor in prose; citation rigor has to stay manual.
+    severity: nit
+durationSec: 782
+models:
+  claude-sonnet-5: 137
+toolCounts:
+  Skill: 3
+  Bash: 38
+  Read: 17
+  Write: 7
+  Edit: 4
+  Agent: 1
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__get_file_contents: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 2
+  TaskCreate: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-08-06-nobody-checked-this-for-a-month.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog draft candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-g4o7jf
+entrypoint: remote_trigger
+cliVersion: 2.1.223
+trigger: blog-post
+learnings:
+  - scripts/blog-rotation.ts's own printed {last, starved, eligible} is authoritative and sufficient — no need to hand-scan pages/ frontmatter across four Spaces to reconstruct the rotation state.
