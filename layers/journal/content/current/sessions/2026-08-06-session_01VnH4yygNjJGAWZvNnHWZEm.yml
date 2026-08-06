@@ -1,0 +1,42 @@
+schemaVersion: 1
+session: session_01VnH4yygNjJGAWZvNnHWZEm
+startedAt: 2026-08-06T00:16:49Z
+endedAt: 2026-08-06T00:22:22Z
+kind: autonomous
+goal: Run the scheduled /digest sweep for 2026-08-05
+status: in-review
+outcome: "PR #870 opened, gate green, awaiting merge"
+summary: "Scheduled /digest Routine run, no human prompt. Listed one closed day needing a Digest (2026-08-05), gathered its PRs/commits/sessions via scripts/digest.ts, and authored the catch-up prose at layers/journal/content/current/pages/digests/2026-08-05.md. Ran the routine archive-journal-content.ts retention sweep, which archived the 2026-07-29 digest and its 11 same-day session logs. pnpm gate:scoped passed (full floor + heavy layers, 80/80 e2e tests). Committed, pushed, and opened PR #870, scoped entirely to digest content per the Skill's self-merge eligibility bar. Subscribed to the PR's activity; will land it via merge-pr.ts once CI reports green."
+prs:
+  - "870"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-08-04.md
+    reason: (no reason given)
+skillsUsed:
+  - name: digest
+    reason: the Skill this run executes
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions: []
+durationSec: 333
+models:
+  claude-sonnet-5: 55
+toolCounts:
+  Bash: 15
+  Read: 1
+  Write: 2
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-05.md
+gitBranch: claude/compassionate-lovelace-1lw0cy
+entrypoint: remote_trigger
+cliVersion: 2.1.222
+trigger: digest
