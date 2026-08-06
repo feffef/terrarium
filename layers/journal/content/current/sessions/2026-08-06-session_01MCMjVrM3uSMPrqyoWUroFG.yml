@@ -1,0 +1,86 @@
+schemaVersion: 1
+session: session_01MCMjVrM3uSMPrqyoWUroFG
+startedAt: 2026-08-06T06:37:56Z
+endedAt: 2026-08-06T07:39:08Z
+kind: interactive
+goal: "Grill issue #659 into an implementable state"
+status: in-review
+outcome: Premise tested; branch-strand trap documented
+summary: "Human asked (via /grill-with-docs) to get #659 — the fork-PR false-red gate — ready to implement. Grilling surfaced that its whole premise, \"an agent can't push workflow files\", was an assertion contradicted by a 2026-07-10 session log, with no record of anyone testing it. On the human's explicit green-light I tested both credentials: git push refuses (no workflow OAuth scope) and the GitHub App contents API 404s. #659 stays correctly ready-for-human. Also human-approved, then agent-authored: a docs/agents/environment-caveats.md entry (PR #876) recording the untested consequence — the push rejection covers every commit in the ref update, so committing a workflow edit strands the whole branch — plus a comment on #659 replacing an unachievable fork-PR close condition."
+prs:
+  - "876"
+docsRead:
+  - path: docs/proposals/659-fork-pr-gate-doorbell-token.md
+    reason: the paste-ready fix under grilling
+  - path: docs/proposals/445-ci-reuse-gate-scoped-classifier.md
+    reason: "checked whether its gate.yml region overlaps #659's"
+  - path: docs/proposals/README.md
+    reason: the workflow-handoff convention this all rests on
+  - path: .github/workflows/gate.yml
+    reason: confirmed the doorbell defect is still live on main
+  - path: docs/agents/guest-contributions.md
+    reason: fork-PR trust and CI-approval context for the close condition
+  - path: docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (read before editing)
+skillsUsed:
+  - name: grilling
+    reason: the session's mode — one question at a time, each with a recommendation
+  - name: domain-modeling
+    reason: loaded by grill-with-docs; no new terms earned a glossary entry
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: this log
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
+  - name: implement
+    reason: (invoked as a slash command)
+frictions:
+  - description: Two session logs flatly contradict each other on whether agents can write .github/workflows, and nothing recorded that anyone had tested either claim.
+    solution: "Fixed by this session's PR #876 — docs/agents/environment-caveats.md now carries the tested result and names the false claim by path."
+    severity: moderate
+  - description: Committing a workflow edit strands the entire branch — the push rejection covers every commit in the ref update, not just the offending one.
+    solution: "Documented in PR #876. A PreToolUse guard refusing Edit/Write on .github/workflows/* would catch it before the commit exists."
+    severity: moderate
+  - description: Posted an issue comment whose markdown table contained literal string concatenation syntax, and no MCP tool can edit a comment in place.
+    solution: Required a second correction comment. Build the table body as plain text before posting; a comment-update tool would make this a silent fix.
+    severity: minor
+  - description: "Issue #659's triage set a close condition — a green fork PR — that only one event in repo history could ever have satisfied."
+    solution: Replaced with an observation available on the next same-repo PR. Prefer a close condition reachable by ordinary repo traffic.
+    severity: minor
+durationSec: 3672
+models:
+  claude-opus-5: 103
+toolCounts:
+  Skill: 4
+  ToolSearch: 4
+  mcp__github__issue_read: 2
+  Read: 8
+  Bash: 16
+  Grep: 4
+  AskUserQuestion: 1
+  Edit: 2
+  mcp__github__create_branch: 1
+  mcp__github__create_or_update_file: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__search_pull_requests: 2
+  mcp__github__add_issue_comment: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Write: 1
+filesEdited:
+  - .github/workflows/gate.yml
+  - docs/agents/environment-caveats.md
+gitBranch: claude/issue-659-docs-review-73yqe5
+entrypoint: remote
+cliVersion: 2.1.223
+learnings:
+  - The workflow-scope push rejection is evaluated over the whole ref update, so one workflow commit makes every other commit on the branch unpushable
+  - The GitHub App contents API returns 404 (not 403) for .github/workflows paths — a permission denial wearing a not-found mask
+  - "A step-level continue-on-error keeps the job conclusion green, which is why it alone fixes #659's false-red gate"
+ideas:
+  - Add a PreToolUse guard refusing Edit/Write to .github/workflows/* that prints the docs/proposals/ handoff instead — same shape as the existing provenance and loop-only guards. Today the constraint is only discovered at push time, by which point the offending commit already strands every other commit on the branch and the escape is history surgery. A guard turns a branch-recovery incident into a one-line redirect.
+  - "Teach the triage path to sanity-check its own close conditions against repo history: #659's was 'a green fork PR', and exactly one fork PR has ever existed here. A condition no ordinary repo traffic can satisfy converts a fixed bug into an issue that never closes."
