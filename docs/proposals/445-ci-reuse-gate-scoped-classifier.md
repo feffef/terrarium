@@ -1,5 +1,13 @@
 # Let the CI safety gate reuse the `gate:scoped` classifier
 
+> **SUPERSEDED by [`879-gate-yml-thin-shell.md`](879-gate-yml-thin-shell.md)
+> — do not apply this file.** The `Scope` step and the four `if:` guards below
+> now live in `.github/actions/gate/action.yml` instead, unchanged in behaviour
+> (ADR-0026). Applying the region replacement below would put the steps back
+> into the workflow and undo that. Both files are deleted together when `879`
+> is applied. Kept meanwhile only so the drop-zone still records the pending
+> intent.
+
 ## Origin
 
 `#445` (the CI half; the stale-deps preflight half shipped in PR #470 and is

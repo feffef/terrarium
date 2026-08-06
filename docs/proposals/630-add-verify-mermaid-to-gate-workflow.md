@@ -1,5 +1,12 @@
 # Add a `verify:mermaid` step to the CI safety gate
 
+> **SUPERSEDED by [`879-gate-yml-thin-shell.md`](879-gate-yml-thin-shell.md)
+> — do not apply this file.** The `'L0 · mermaid drift'` step now lives in
+> `.github/actions/gate/action.yml`, in the position this file asked for
+> (ADR-0026), and `tests/unit/gate-parity.spec.ts` makes its omission a test
+> failure, so this particular gap cannot recur. Both files are deleted together
+> when `879` is applied.
+
 ## Origin
 
 `#630` — discovered during a scheduled `/audit-docs` sweep: CLAUDE.md claimed

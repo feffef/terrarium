@@ -1,0 +1,100 @@
+schemaVersion: 1
+session: session_01LKDi3JUBBm6Mmqf1ubw23N
+startedAt: 2026-08-06T06:38:29Z
+endedAt: 2026-08-06T08:44:05Z
+kind: interactive
+goal: Fix gate:scoped's shallow-clone diff base
+status: in-review
+outcome: PR open; issue's safety premise disproven
+summary: "Human asked (via /grill-with-docs, then /implement) to grill issue #849 to a decision and build it. #849 asked what the local classifier should do on a shallow clone, and argued the failure was safe because an older base only over-reports. The human chose \"unshallow on demand\" and picked each design branch; every option below that was agent-proposed with a recommendation. Grilling by construction disproved two of the issue's premises: the detection-based option is unimplementable (a wrong merge-base is an ordinary commit, not in .git/shallow, not parentless), and the diff can UNDER-report, because git diff compares endpoints, so a revert branch hides a file — a real gate hole, not wasted minutes. Shipped unshallow-when-shallow, fail-closed, CI sibling left refusing, plus a fixture regression test."
+prs:
+  - "882"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: existing shallow-clone home; extended here
+  - path: docs/proposals/445-ci-reuse-gate-scoped-classifier.md
+    reason: why the CI sibling refuses
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: high-risk set / merge authority
+  - path: tests/README.md
+    reason: test-homing + tests/support convention
+  - path: scripts/gate.ts
+    reason: (read before editing)
+  - path: scripts/git-helpers.ts
+    reason: (read before editing)
+  - path: tests/unit/gate-ci-decide.spec.ts
+    reason: (no reason given)
+  - path: tests/unit/gate-scope.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: grilling
+    reason: walked the design tree one branch at a time
+  - name: domain-modeling
+    reason: 3-part ADR test ruled out an ADR here
+  - name: dispatch-subagents
+    reason: procedure before spawning the two review agents
+  - name: code-review
+    reason: found a real fail-closed gap in my own fix
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
+  - name: implement
+    reason: (invoked as a slash command)
+frictions:
+  - description: A review subagent temporarily edited the shared checkout to verify the test bites; the harness surfaced that transient state to me as an intentional user modification, with instructions not to revert it and not to tell the user.
+    solution: "dispatch-subagents already says to pin a SHA when subagents share a checkout, but that covers reads, not writes. Add a rule: a read-only reviewer that must experiment should copy the file aside or use a worktree, never mutate the orchestrator's tree. Without it, the orchestrator can read a half-reverted file as user intent and ship gutted code."
+    severity: major
+  - description: My fix's first commit treated "unshallow did not throw" as "clone is now complete"; a fetch can exit 0 and still leave .git/shallow populated, falling through to the exact base the change exists to avoid.
+    solution: "Caught by the spec-axis review agent before merge. The fixture test asserted the invariant while the code did not — a signal worth generalising: when a test asserts a post-condition, check the production path asserts it too."
+    severity: minor
+  - description: I wrote three full copies of the same rationale (code comment, test header, doc) despite CLAUDE.md's explicit comment and single-home rules, and the standards review flagged all three as hard violations.
+    solution: The rules were read and still violated, which suggests comment-writing happens on autopilot after a hard debugging stretch. A pre-commit self-check — "does any comment I just wrote restate a doc this same diff touches?" — would have caught it.
+    severity: minor
+  - description: Two of my own confident intermediate claims were wrong (that a bad merge-base is always a graft boundary; that unconditional unshallow costs per-run rather than once).
+    solution: "Both were refuted by cheap execution — a synthetic repo and a timed clone, each under two minutes. Reinforces CLAUDE.md's verify-by-execution rule for causal claims: plausible structural reasoning about git topology is not evidence."
+    severity: nit
+durationSec: 7536
+models:
+  claude-opus-5: 232
+toolCounts:
+  Skill: 6
+  ToolSearch: 5
+  mcp__github__issue_read: 2
+  Read: 9
+  Bash: 53
+  Write: 4
+  Edit: 19
+  Agent: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - tests/unit/gate-shallow-base.spec.ts
+  - scripts/git-helpers.ts
+  - scripts/gate.ts
+  - tests/unit/gate-scope.spec.ts
+  - tests/unit/git-helpers.spec.ts
+  - docs/agents/git-conventions.md
+  - tests/support/git-fixture.ts
+subagents:
+  - type: general-purpose
+    task: Standards review of gate.ts change
+  - type: general-purpose
+    task: Spec review of gate.ts change
+gitBranch: claude/grill-docs-849-p0okez
+entrypoint: remote
+cliVersion: 2.1.223
+learnings:
+  - git merge-base in a shallow clone can return an ordinary hydrated commit that is neither in .git/shallow nor parentless, so a bad base is undetectable without the missing history
+  - git diff A..B compares endpoints, not the path between them, so an older base can OMIT a file rather than over-report it when a branch reverts an intervening change
+  - git fetch --unshallow errors on a complete repository, so the is-shallow check is required for correctness, not just to save a fetch
+  - git clone --depth=N over file:// is shallow only if the bare origin's HEAD points at a branch that was actually pushed; otherwise it reports an empty repository
+ideas:
+  - Add a `pnpm verify:no-restated-docs` gate step that flags a comment block in a diff whose prose substantially overlaps a .md file the same diff touches. Three hard single-home violations in one commit here, all caught only by a review agent; the rule is documented, read, and still violated, which is exactly the profile of a rule that wants mechanical enforcement rather than more prose.
+  - Make the review-subagent brief template mandate a scratch copy for any experiment that mutates tracked files. A reviewer proving a regression test bites is a genuinely useful move, but doing it in the orchestrator's checkout races the orchestrator's own reads and surfaces as a misleading "user modified this file" notice.

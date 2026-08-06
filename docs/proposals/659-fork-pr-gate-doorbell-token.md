@@ -1,5 +1,12 @@
 # Stop the green-comment doorbell step from red-flagging fork PRs
 
+> **SUPERSEDED by [`879-gate-yml-thin-shell.md`](879-gate-yml-thin-shell.md)
+> — do not apply this file.** The doorbell moved into
+> `.github/actions/gate/action.yml` (ADR-0026) carrying both halves of the
+> recommendation below — the same-repo `if:` guard and `continue-on-error:
+> true` — so the fix is unchanged, only relocated. Both files are deleted
+> together when `879` is applied.
+
 ## Origin
 
 `#659` — first seen on `#631`, the first real external-contributor **fork**
