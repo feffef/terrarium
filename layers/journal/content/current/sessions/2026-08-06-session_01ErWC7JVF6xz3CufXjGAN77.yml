@@ -1,0 +1,125 @@
+schemaVersion: 1
+session: session_01ErWC7JVF6xz3CufXjGAN77
+startedAt: 2026-08-06T06:38:13Z
+endedAt: 2026-08-06T08:34:44Z
+kind: interactive
+goal: Make Gate workflow changes agent-pushable
+status: in-review
+outcome: "Composite action, ADR-0026, glossary; PR #881"
+summary: "Asked to grill issue #445 into an implementable state. Grilling established that #445's agent half was already done and only a human YAML paste remained, so the user green-lit (ADR-0003) a larger structural change instead: move the Gate's steps into a composite action. A probe verified empirically that the `workflow` OAuth scope fences `.github/workflows/` only, so `.github/actions/**` is agent-pushable — the finding the whole design rests on. The user chose every branch (scope, fence, sequencing, ADR placement, glossary terms) and pushed back on naming, which evidence then redirected. Agent-initiated within that mandate the parity spec, the superseded banners, and the review fixes."
+prs:
+  - "881"
+docsRead:
+  - path: CLAUDE.md
+    reason: conventions
+  - path: CONTEXT.md
+    reason: glossary — found zero Gate terms defined
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: the Gate's decision and high-risk set
+  - path: docs/proposals/README.md
+    reason: proposal format and companion-change discipline
+  - path: scripts/gate.ts
+    reason: FLOOR/HEAVY
+  - path: .github/workflows/gate.yml
+    reason: the steps the composite had to reproduce exactly
+  - path: scripts/validate-content-refs.ts
+    reason: its docstring asserts CI's clone is shallow — fetch-depth 0 falsifies it
+  - path: docs/proposals/445-ci-reuse-gate-scoped-classifier.md
+    reason: (read before editing)
+  - path: docs/proposals/659-fork-pr-gate-doorbell-token.md
+    reason: (read before editing)
+  - path: tests/unit/gate-ci-decide.spec.ts
+    reason: (no reason given)
+  - path: tests/unit/typecheck-coverage.spec.ts
+    reason: (no reason given)
+  - path: tests/unit/gate-parity.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: grilling
+    reason: walked the design tree one question at a time; the user redirected twice
+  - name: domain-modeling
+    reason: seven Gate glossary terms; rule-of-two declined coining 'gate shell'
+  - name: code-review
+    reason: two-axis review; both axes found real defects in my own work
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
+  - name: implement
+    reason: (invoked as a slash command)
+frictions:
+  - description: docs.github.com returns 403 through the agent proxy, so composite-action semantics could not be verified from the canonical URL.
+    solution: Use raw.githubusercontent.com/github/docs for GitHub docs primary sources. Worth a line in docs/agents/environment-caveats.md — a subagent hit the same wall independently.
+    severity: moderate
+  - description: The spec-review subagent hit that 403, could not verify composite continue-on-error, and reported the fail-open argument as unverified — a false finding I had already disproven.
+    solution: Dispatch briefs should hand subagents the primary sources the parent already fetched, rather than making each re-derive them against a proxy that blocks the obvious URL.
+    severity: moderate
+  - description: WebSearch confidently reported continue-on-error as unsupported in composite actions, citing 2021-23 runner issues; current docs say otherwise.
+    solution: Treat search summaries about platform capabilities as leads only; grep the vendor's own docs source before designing on them.
+    severity: minor
+  - description: Three pending proposals silently contradicted each other; 445's still instructed a human to do the thing that would undo this change. The drop-zone has no supersede convention.
+    solution: Add a superseded-banner convention to docs/proposals/README.md so a replaced proposal says so at the top instead of quietly staying applicable.
+    severity: moderate
+  - description: I violated the very staleness rule this change argues for — ADR-0004's amendment asserted the Gate's steps had already moved when gate.yml still runs them.
+    solution: When splitting "land the decision, defer the behavioural claim", check the landed half for present-tense claims about the deferred half. Caught by code-review, not by me.
+    severity: minor
+  - description: Spawned two review subagents without first invoking the dispatch-subagents Skill, which CLAUDE.md requires before spawning any subagent.
+    solution: The code-review Skill embeds its own dispatch instructions, which read as sufficient and displaced the repo rule; it should point at dispatch-subagents.
+    severity: minor
+  - description: Scratchpad files were truncated or removed mid-session — a docs copy shrank to 14 bytes and several logs vanished, so a re-verification silently returned nothing.
+    solution: Do not treat the scratchpad as durable across turns; re-fetch and re-confirm rather than re-reading a file cached earlier. Possible environment-caveats entry.
+    severity: minor
+  - description: The session worker restarted mid-edit, leaving a malformed markdown bold marker in ADR-0004 that only a re-read caught.
+    solution: After a worker restart, re-read files edited in the interrupted turn rather than assuming the last edit applied cleanly.
+    severity: nit
+durationSec: 6991
+models:
+  claude-opus-5: 253
+toolCounts:
+  Bash: 57
+  ToolSearch: 7
+  Skill: 5
+  mcp__github__issue_read: 2
+  Read: 14
+  Write: 6
+  WebFetch: 3
+  WebSearch: 1
+  mcp__github__issue_write: 1
+  Edit: 17
+  Agent: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - .github/actions/probe/action.yml
+  - tests/unit/gate-parity.spec.ts
+  - .github/actions/gate/action.yml
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0004-objective-safety-gate.md
+  - CONTEXT.md
+  - CLAUDE.md
+  - docs/proposals/879-gate-yml-thin-shell.md
+  - docs/proposals/445-ci-reuse-gate-scoped-classifier.md
+  - docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
+  - docs/proposals/659-fork-pr-gate-doorbell-token.md
+subagents:
+  - type: general-purpose
+    task: Standards axis review
+  - type: general-purpose
+    task: Spec axis review
+gitBranch: claude/grill-with-docs-445-gm8ser
+entrypoint: remote
+cliVersion: 2.1.223
+learnings:
+  - The `workflow` OAuth scope fences `.github/workflows/` only — `.github/actions/**` is agent-pushable (probe-verified, not inferred)
+  - Composite action steps support `if` AND `continue-on-error`; the widely-cited runner issues saying otherwise are stale
+  - The `secrets` context is unreachable inside a composite action — pass tokens as declared inputs
+  - "`gate.yml`'s human-only status never protected the Gate: `package.json` already defined what each step means, and is agent-pushable"
+ideas:
+  - Add a supersede convention to docs/proposals/README.md — a replaced proposal must carry a banner naming its replacement. Three proposals in the drop-zone silently contradicted each other this session, and one actively instructed a human to undo in-flight work.
+  - Give pr-authorassociation-label.yml the same thin-shell treatment. That would be the concept's second instance, which under the rule of two is exactly when 'gate shell' and 'gate action' earn CONTEXT.md entries.
+  - "Build a stale-proposal detector in the gate floor: parse each docs/proposals/*.md Target block and fail when the quoted before-state no longer matches the real workflow file. Proposals rot silently today, and the only thing that catches it is a human reading all of them."
