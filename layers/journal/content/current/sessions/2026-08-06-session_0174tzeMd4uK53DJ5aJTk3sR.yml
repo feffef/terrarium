@@ -1,0 +1,40 @@
+schemaVersion: 1
+session: session_0174tzeMd4uK53DJ5aJTk3sR
+startedAt: 2026-08-06T00:46:24Z
+endedAt: 2026-08-06T00:52:02Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: Clean sweep, no changes warranted
+summary: "Fully agent-initiated: a scheduled Routine fired /audit-skills with no live human in the session. Ran scripts/audit-skills.ts for the 40-session scorecard. The one orphanedSessions entry (session_019aeaoPHYWMJVekmUvTMhQ9) was already tracked in issue #736 with identical evidence, so nothing new to file. Of 4 regressionChecks brackets, midden-survey had zero usage on both sides (skipped per rule); audit-skills and frictions-to-fixes showed friction counts/severity improve after their edits (no signal); dispatch-subagents showed elevated post-edit friction counts, so I deep-read both \"after\" session logs in full — one's friction was the very discovery that produced the edit (authored within the same session), the other's friction (a dispatched agent stranding itself via Monitor on its own backgrounded verification command) is unrelated to the edited guidance (artifact-filename uniqueness) and not caused by it. Reviewed all 36 Skill Inventory entries against this window's usage; every grade and role still matches the evidence, no bright-line change met. Confirmed the `review` phantom entry (onDisk: false) maps to a built-in CLI skill invisible to the on-disk scan, not a stale entry, per the mirror-case rule (left untouched). humanPromptedClosures and manuallyRescuedClosures were both empty (healthy). orphanScan was scanned:true (489 merged PRs, 345 with sessions) - trustworthy. orphanSuppressionLog was empty. No Inventory YAML changes were citable, so no commit/PR this run."
+prs: []
+docsRead:
+  - path: scripts/audit-skills.ts
+    reason: resolving RESOLVED_ORPHANED_SESSIONS/DISMISSED_* maps for the orphan and closure-nudge signals
+  - path: layers/journal/content/current/sessions/2026-08-03-session_01SuvMh3wC6nyykyAVQuYVb4.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-05-session_013ZVJh6GFa2UcB9cPeDri6b.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this run's own scheduled sweep
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 338
+models:
+  claude-sonnet-5: 62
+toolCounts:
+  Bash: 20
+  Grep: 2
+  ToolSearch: 1
+  mcp__github__search_issues: 1
+  Read: 3
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-63kgvt
+entrypoint: remote_trigger
+cliVersion: 2.1.222
+trigger: audit-skills
