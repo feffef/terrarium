@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CRdukSdGv9AqaYdf486KZP
 startedAt: 2026-08-06T11:15:27Z
-endedAt: 2026-08-06T11:28:29Z
+endedAt: 2026-08-06T11:31:49Z
 kind: autonomous
 goal: Write and land one Kevin blog post
-status: in-review
-outcome: "PR #883 open, gate green locally"
-summary: "Scheduled /blog-post firing, no persona pinned, no human in the loop this turn. Ran scripts/blog-rotation.ts (Section A0): last=david, kevin missing from the four newest posts, so the eligible set collapsed to kevin alone — all three candidates drafted this run were Kevin, three distinct real topics. Gathered material broadly (git log, session logs, sibling Personas' recent posts), drafted three full candidates to scratch (a reaction to David's loop-only-guard post covering the sibling subagent-background-guard #694; a standalone on the #236 chunk-load auto-recovery; a standalone on the 27-day-old contradictory workflow-push claim, #659/#876), and had a fresh Sonnet subagent with no repo access judge the three as a loosely- following reader. It picked the workflow-push post for its real stakes; revised per its named gaps (explain workflow scope, frame the two tested push paths, clarify the branch-stranding consequence). Branched off origin/main (already the pinned branch, no divergence), saved the post, ran pnpm gate:scoped (full heavy layers, 80/80 e2e green), opened PR #883, subscribed to its activity, and am now closing per the Skill's own recipe. Entirely agent-initiated per the blog-post Skill's own charter — no additional human ask beyond the scheduled invocation."
+status: completed
+outcome: "PR #883 merged, gate green"
+summary: "Scheduled /blog-post firing, no persona pinned, no human in the loop this turn. Ran scripts/blog-rotation.ts (Section A0): last=david, kevin missing from the four newest posts, so the eligible set collapsed to kevin alone — all three candidates drafted this run were Kevin, three distinct real topics. Gathered material broadly (git log, session logs, sibling Personas' recent posts), drafted three full candidates to scratch (a reaction to David's loop-only-guard post covering the sibling subagent-background-guard #694; a standalone on the #236 chunk-load auto-recovery; a standalone on the 27-day-old contradictory workflow-push claim, #659/#876), and had a fresh Sonnet subagent with no repo access judge the three as a loosely- following reader. It picked the workflow-push post for its real stakes; revised per its named gaps (explain workflow scope, frame the two tested push paths, clarify the branch-stranding consequence). Branched off origin/main (already the pinned branch, no divergence), saved the post, ran pnpm gate:scoped (full heavy layers, 80/80 e2e green), opened PR #883, subscribed to its activity, posted a verdict comment, and landed it via scripts/merge-pr.ts once CI confirmed green (merge commit ec70242). Entirely agent-initiated per the blog-post Skill's own charter — no additional human ask beyond the scheduled invocation."
 prs:
   - "883"
 docsRead:
@@ -34,6 +34,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/blog/content/kevin/pages/2026-08-06-nobody-checked-this-for-a-month.md
     reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: blog-post
     reason: this run's own charter; not model-invocable, so followed by hand per its own instruction
@@ -48,24 +50,27 @@ frictions:
   - description: First draft of the winning post cited a doc line range (L34-L43) for the subagent-background-guard's detection-contract section that didn't match the actual file (it's L35-L47) — that citation was in a discarded candidate, not the published post, but it was caught by re-grepping the file rather than by any gate.
     solution: Caught before use by grepping the actual doc for the section headers instead of estimating from an earlier partial read. No gate catches a wrong line anchor in prose; citation rigor has to stay manual.
     severity: nit
-durationSec: 782
+durationSec: 982
 models:
-  claude-sonnet-5: 137
+  claude-sonnet-5: 158
 toolCounts:
   Skill: 3
-  Bash: 38
-  Read: 17
+  Bash: 41
+  Read: 18
   Write: 7
-  Edit: 4
+  Edit: 5
   Agent: 1
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__get_file_contents: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 4
   TaskCreate: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/kevin/pages/2026-08-06-nobody-checked-this-for-a-month.md
 subagents:
