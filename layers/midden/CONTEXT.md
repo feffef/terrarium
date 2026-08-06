@@ -60,23 +60,21 @@ condition word carries its dig-season label). The former scroll-synced
 
 ### Artifact
 The Midden's atomic unit of contribution: one catalogued discarded thing, a
-Document in `trench`'s `artifacts` data collection (#518). Carries a `title`,
-its dig-season `stratum`, a curator-graded `condition`, a discriminated-union
-`provenance` (which kind of thing it was — a PR, a branch, a commit, a file, a
-dependency, or a Skill — plus an optional live `url` and a `continuityCheck`
-note), a back-reference to the `site` that narrates it (required in a Space that
-has Sites, **absent** in one that has none), a curator's-voice
-`catalogNote`, a required `assessedAt` date (#526 — never re-derived), an
-optional verbatim `inscription` ({text, source}), and two optional
-preservation fields: `removedIn` — the terminal event, the bare hash of the
-commit that removed the thing (rendered as a derived commit link), distinct from
-`provenance.url` which links the referent itself — and `remains` — curator-curated, labelled links to the artifact's
-preserved original state, each pinned to a full commit SHA so the link is
-immutable (schema-enforced), a few meaningful views rather than a mechanical
-dump of every touched path. Like `inscription`, `remains` is expected
-structurally absent on a `lost` artifact — nothing survives to view. Rendered only inline inside
-a Site's body (#521), never at its own route (ADR-0006 keeps only `pages`
-route-addressable).
+Document in `trench`'s `artifacts` data collection (#518). Names what kind of
+thing it was — a PR, a branch, a commit, a file, a dependency, or a Skill —
+with an optional live link and a note on whether that link still resolves;
+carries its dig-season, a curator-graded condition, and a curator's-voice
+note, plus a required assessment date that stays 100% curator-set and is
+never mechanically re-derived (#526 closes this question explicitly).
+Narrates from inside the `site` that discusses it — required in a Space that
+has Sites, absent in one that has none. May also carry a verbatim inscription
+and preservation links to the artifact's original state, each pinned to a
+full commit SHA so the link stays immutable — a few meaningful views, not a
+mechanical dump of every touched path. Both are expected absent on a `lost`
+artifact, since nothing survives to view. Rendered only inline inside a
+Site's body (#521), never at its own route (ADR-0006 keeps only `pages`
+route-addressable). Exact document shape: `app/utils/find.ts` (What lives
+where below).
 
 ### Condition
 The curator-graded preservation state of an Artifact, one of six grades in
@@ -85,9 +83,10 @@ erosion axis) then `never-activated` (complete but never fired — a distinct
 axis, not a further decay step) and `lost` (its own gravestone template
 entirely; #523). **100% curator-authored, never mechanically re-derived** —
 not from `assessedAt`, not from any future continuity check (#526 closes this
-question explicitly). Rendered as its **word** — a slug-angled corner *stamp* on each find (the label
-tilted like a specimen physically stamped with its grade; owner-restored), the
-dig-season label beside it — never a glyph to decode. The six grades and their fixed one-line definitions are
+question explicitly). Rendered as its word on each find, the dig-season label
+beside it — never a glyph to decode (see `app/components/midden/ConditionKey.vue`
+and `app/utils/find.ts` in What lives where below for the presentation). The
+six grades and their fixed one-line definitions are
 single-homed (see `condition.ts` in What lives where below); the definition text
 surfaces in exactly one place — the **condition key**, a slim sticky sidebar on
 each dig-report page listing only the grades present in that report's finds
