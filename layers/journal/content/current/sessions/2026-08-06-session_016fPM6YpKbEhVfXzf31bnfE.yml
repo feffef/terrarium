@@ -1,0 +1,78 @@
+schemaVersion: 1
+session: session_016fPM6YpKbEhVfXzf31bnfE
+startedAt: 2026-08-06T04:11:26Z
+endedAt: 2026-08-06T04:36:40Z
+kind: autonomous
+goal: Run the scheduled audit-docs sweep
+status: in-review
+outcome: 3 confirmed findings fixed, PR opened
+summary: "Fully agent-initiated: fired by the scheduled /audit-docs Routine, no human prompt in this session. Classified all 265 repo .md files into the Live/Historical/Pack-generic tiers, fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence), pooled 5 findings, merged two overlapping ones (Duplication + Contradiction both centered on the same ScheduleWakeup bullet), and dispatched an independent fact-checker against primary sources (code, ADRs, git history) before touching anything. Fixed 3 CONFIRMED findings: CLAUDE.md/github-integration.md's ScheduleWakeup rule omitted the guard's actual stop:true exemption; layers/midden/CONTEXT.md's Artifact/Condition glossary entries leaked Zod-schema jargon and CSS rendering detail; docs/research/public-readiness-review.md's branch-protection bullet lacked a cross-reference to the later, more complete research on why a blanket re-enable would re-block ADR-0009 session-log commits. One candidate finding (missing CLAUDE.md index entry for the new loop-only-tool-guard.md doc) was fact-checked to CONFIRMED-BUT-not-a-defect — it matches an established pattern shared with deferred-tool-guard.md — so left unfixed. Gate green (80/80 e2e), PR #875 opened and subscribed."
+prs:
+  - "875"
+docsRead:
+  - path: CLAUDE.md
+    reason: tier rules + single-home/ADR-0018/ADR-0004 conventions
+  - path: skills-lock.json
+    reason: derive Pack-generic tier membership
+  - path: scripts/loop-only-tool-guard.ts
+    reason: verify stop:true exemption in code, not just the doc's word
+  - path: layers/midden/CONTEXT.md
+    reason: fix Mis-location finding
+  - path: docs/research/public-readiness-review.md
+    reason: fix Contradiction finding
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: ground-truth for the branch-protection Contradiction fix
+  - path: docs/agents/github-integration.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: the whole run
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "The skill's three tiers (Live/Historical/Pack-generic) don't explicitly classify ~43 files: fictional Tenant content (atlas/marquee/midden-trench/ commits/commons pages), individual docs/proposals/<N>-*.md bodies, and .out-of-scope/*.md. Had to infer a fourth de-facto \"excluded\" bucket by judgment rather than a rule in the Skill."
+    solution: audit-docs/SKILL.md could name this fourth bucket explicitly (e.g. "fictional Tenant content and individual proposal bodies are out of this audit's scope entirely") so a future run doesn't have to re-derive the same judgment call.
+    severity: nit
+  - description: A leading-dot top-level directory (.out-of-scope/) and .agents/skills/ paths tripped up a naive Python lstrip('./') during inventory scripting — it strips characters, not a prefix, silently mangling ".agents/..." to "agents/...". Caught and fixed before it affected classification, but cost a re-run.
+    solution: "Not a repo issue — just a note for future inventory scripting: use os.path.relpath or a proper prefix strip, never str.lstrip() for path prefixes."
+    severity: nit
+durationSec: 1514
+models:
+  claude-sonnet-5: 94
+toolCounts:
+  Bash: 18
+  Read: 6
+  Agent: 5
+  ScheduleWakeup: 1
+  Grep: 1
+  Edit: 5
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - CLAUDE.md
+  - docs/agents/github-integration.md
+  - layers/midden/CONTEXT.md
+  - docs/research/public-readiness-review.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens audit (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens audit (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens audit (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens audit (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Independent fact-check of pooled audit findings
+gitBranch: claude/festive-mayer-vg8rrh
+entrypoint: remote_trigger
+cliVersion: 2.1.223
+trigger: audit-docs
