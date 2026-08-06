@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01LKDi3JUBBm6Mmqf1ubw23N
 startedAt: 2026-08-06T06:38:29Z
-endedAt: 2026-08-06T08:44:05Z
+endedAt: 2026-08-06T08:50:46Z
 kind: interactive
 goal: Fix gate:scoped's shallow-clone diff base
 status: in-review
 outcome: PR open; issue's safety premise disproven
-summary: "Human asked (via /grill-with-docs, then /implement) to grill issue #849 to a decision and build it. #849 asked what the local classifier should do on a shallow clone, and argued the failure was safe because an older base only over-reports. The human chose \"unshallow on demand\" and picked each design branch; every option below that was agent-proposed with a recommendation. Grilling by construction disproved two of the issue's premises: the detection-based option is unimplementable (a wrong merge-base is an ordinary commit, not in .git/shallow, not parentless), and the diff can UNDER-report, because git diff compares endpoints, so a revert branch hides a file — a real gate hole, not wasted minutes. Shipped unshallow-when-shallow, fail-closed, CI sibling left refusing, plus a fixture regression test."
+summary: "Human asked (via /grill-with-docs, then /implement) to grill issue #849 to a decision and build it. #849 asked what the local classifier should do on a shallow clone, and argued the failure was safe because an older base only over-reports. The human chose \"unshallow on demand\" and picked each design branch; every option below that was agent-proposed with a recommendation. Grilling by construction disproved two of the issue's premises: the detection-based option is unimplementable (a wrong merge-base is an ordinary commit, not in .git/shallow, not parentless), and the diff can UNDER-report, because git diff compares endpoints, so a revert branch hides a file — a real gate hole, not wasted minutes. Shipped unshallow-when-shallow, fail-closed, CI sibling left refusing, plus a fixture regression test. After PR-open the human asked twice about rebasing; the second time #881 had landed, moving the Gate's CI half into a composite action and superseding a proposal this PR cited, so main was merged in, a stale pointer fixed, and the PR description re-synced."
 prs:
   - "882"
 docsRead:
@@ -53,27 +53,31 @@ frictions:
   - description: I wrote three full copies of the same rationale (code comment, test header, doc) despite CLAUDE.md's explicit comment and single-home rules, and the standards review flagged all three as hard violations.
     solution: The rules were read and still violated, which suggests comment-writing happens on autopilot after a hard debugging stretch. A pre-commit self-check — "does any comment I just wrote restate a doc this same diff touches?" — would have caught it.
     severity: minor
+  - description: I judged a rebase unnecessary on solid evidence (clean mergeable_state, no file overlap, CI green on the merge ref), but had not re-checked whether main's new commits invalidated the PR's cited reasoning. The human's prompt is what caught it.
+    solution: '"Do I conflict?" and "is my rationale still true?" are different questions, and only the first is answerable from git. A PR citing an ADR or proposal should re-read those cited docs whenever the base moves — worth adding to the babysitting check-in prompt, which currently checks state, CI, and mergeability but not citation staleness.'
+    severity: moderate
   - description: Two of my own confident intermediate claims were wrong (that a bad merge-base is always a graft boundary; that unconditional unshallow costs per-run rather than once).
     solution: "Both were refuted by cheap execution — a synthetic repo and a timed clone, each under two minutes. Reinforces CLAUDE.md's verify-by-execution rule for causal claims: plausible structural reasoning about git topology is not evidence."
     severity: nit
-durationSec: 7536
+durationSec: 7936
 models:
-  claude-opus-5: 232
+  claude-opus-5: 286
 toolCounts:
   Skill: 6
-  ToolSearch: 5
+  ToolSearch: 6
   mcp__github__issue_read: 2
-  Read: 9
-  Bash: 53
+  Read: 10
+  Bash: 71
   Write: 4
-  Edit: 19
+  Edit: 22
   Agent: 2
   mcp__github__add_issue_comment: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 3
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - tests/unit/gate-shallow-base.spec.ts
   - scripts/git-helpers.ts
