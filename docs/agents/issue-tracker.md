@@ -80,7 +80,7 @@ When set to `yes`, PRs run through the same labels and states as issues, using t
 
 GitHub shares one number space across issues and PRs, so a bare `#42` may be either — resolve with `gh pr view 42` and fall back to `gh issue view 42`.
 
-A reviewing agent must post its verdict before merging, every time — see `docs/agents/pr-workflow.md`'s recipe (step 4) for the rule and why it matters.
+A reviewing agent must post its verdict before merging, every time — and never as an APPROVE-event review — see `docs/agents/pr-workflow.md`'s recipe (step 4) for both rules and why they matter.
 
 **Reply before resolving a review thread.** Post a reply describing what changed (or why no change was made) before calling `resolve_review_thread` — a resolved thread with no reply leaves no record of what happened, especially on longer PRs.
 
@@ -89,8 +89,6 @@ A reviewing agent must post its verdict before merging, every time — see `docs
 **GitHub's comma-separated `Closes #A, #B, #C` only auto-closes the first (`#A`).** `#B` and `#C` stay open even though the line reads as closing all three. When a PR genuinely completes more than one issue, give each its own `Closes #N` line rather than comma-joining them.
 
 **Auditing PRs against session logs: parse `prs:`, don't regex it.** A session log's `prs` field (`shared/schemas/session.ts`) is a structured array of bare quoted PR-number strings (e.g. `["326"]`), not free-form prose — parse the log's YAML/frontmatter structurally and read the array, rather than regex-scanning the raw file text for something that looks like a PR reference.
-
-**Never submit an APPROVE-event review — use `add_issue_comment` or a COMMENT-event review instead.** The agent's GitHub identity under the shared connection is always the repo owner, and GitHub blocks a PR author from approving their own pull request.
 
 **A "you already have a pending review" error is a stop-and-ask signal, never a call-`delete_pending`-and-retry one.** This can surface from `pull_request_review_write` (or the raw GitHub review API) mid-triage. Because agent-driven GitHub API calls run under the human owner's own authorized connection (ADR-0017), there is no reliable way to tell whether the pending review is the agent's own leftover state or the maintainer's own in-progress draft. Deleting the wrong one permanently erases the maintainer's unsubmitted draft text, with no undo. On this error, stop and ask the user before touching `delete_pending` — don't guess.
 

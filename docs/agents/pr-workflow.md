@@ -43,6 +43,16 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
    only trace: an unreviewed-looking merge and a genuinely-reviewed one must
    stay distinguishable on the PR itself, or `get_reviews`/`get_comments`
    return empty and a real review reads as none having happened.
+
+   **Never post it as an APPROVE-event review** — use `event=COMMENT`, or
+   `add_issue_comment`. On a PR this toolchain opened it simply fails: under
+   the shared GitHub connection the agent's identity *is* the repo owner, and
+   GitHub blocks a PR author from approving their own pull request. On an
+   external fork PR it would succeed, which is worse — a green "Approved" from
+   the owner account fakes a merge-authority signal that
+   [`guest-contributions.md`](./guest-contributions.md) reserves for the human.
+   A COMMENT-event review records the same verdict in both cases (issue #301,
+   recurred as #853).
 5. `scripts/merge-pr.ts <pr-number>` is the **sole merge path** for every PR —
    pending-check or already-green alike — per step 3; it already polls to
    resolution and merges on green. **Never call `enable_pr_auto_merge`
