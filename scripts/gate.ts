@@ -3,8 +3,8 @@
 // gate. Design, safety argument, and the inert-set proof: issue #350.
 //   pnpm gate:scoped [--dry]
 //   pnpm exec tsx scripts/gate.ts --decide --base <ref> [--head <ref>]
-//     — decision only, for CI to guard its own heavy steps on (#445; the
-//       workflow half is docs/proposals/445-ci-reuse-gate-scoped-classifier.md)
+//     — decision only, for CI to guard its own heavy steps on (#445; the CI
+//       half now lives in .github/actions/gate/action.yml — ADR-0026)
 import { execFileSync, spawnSync } from 'node:child_process'
 import { appendFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
