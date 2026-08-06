@@ -171,6 +171,24 @@ describe('changedPaths() — shallow clone is repaired, never classified off (#8
     )
   })
 
+  // `gate:scoped --dry` unshallows too, so the mutation must never be silent —
+  // it is the only signal a read-only-looking command touched the clone.
+  it('announces the one-time history fetch before performing it', () => {
+    const said: string[] = []
+    const realLog = console.log
+    console.log = (...args: unknown[]) => void said.push(args.join(' '))
+    try {
+      withGitStub(
+        'if [ "$1" = "rev-parse" ] && [ "$2" = "--is-shallow-repository" ]; then echo true; exit 0; fi\n' +
+          'if [ "$1" = "fetch" ]; then exit 1; fi',
+        () => void changedPaths(),
+      )
+    } finally {
+      console.log = realLog
+    }
+    expect(said.join('\n')).toMatch(/clone is shallow — fetching full history/)
+  })
+
   // git errors with "--unshallow on a complete repository does not make sense",
   // so the shallow check is required for correctness, not just to save a fetch.
   it('never runs `--unshallow` on a complete clone', () => {

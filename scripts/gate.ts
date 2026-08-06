@@ -60,20 +60,15 @@ function lines(out: string): string[] {
 // Untracked files are unioned in because a plain `git diff` omits them. Any
 // uncertainty returns `null` → full gate.
 //
-// Unlike its CI sibling below, a shallow clone is *repaired* here rather than
-// refused. The two answers differ because the environments do: CI owns its
-// checkout declaratively (`fetch-depth: 0`) and keeps refusal as a backstop
-// against that line being deleted, whereas sessions in this environment simply
-// start shallow and have no equivalent knob — refusing would degrade
-// `gate:scoped` to a full `pnpm gate` for the doc-only edits it exists to make
-// fast. Repairing is affordable precisely because it is one-shot: afterwards the
-// clone is complete and neither the check nor the fetch is reached again.
-//
-// Classifying off a shallow clone is not an option: `merge-base` can answer with
-// an ordinary-looking commit that is not the true base, and the resulting diff
-// can OMIT a changed file rather than over-report it — a skipped heavy layer,
-// not a wasted one. Reproduced in tests/unit/gate-shallow-base.spec.ts; #849
-// records the reasoning error that first ruled it harmless.
+// Why a shallow clone is *repaired* here but *refused* by the CI sibling below —
+// the asymmetry is deliberate: CI owns its checkout declaratively
+// (`fetch-depth: 0`) and keeps refusal as the backstop for that line being
+// dropped, whereas a session's clone simply starts shallow with no equivalent
+// knob, so refusing would degrade `gate:scoped` to a full `pnpm gate` for the
+// doc-only edits it exists to make fast. Repair is affordable because it is
+// one-shot, and `--unshallow` is itself a fetch, so #246's freshen-before-read
+// contract still holds on that branch. Why classifying off a shallow clone is
+// unsafe at all: docs/agents/git-conventions.md, and #849.
 export function changedPaths(cwd: string = root): string[] | null {
   try {
     if (isShallowRepository(cwd)) {
@@ -83,6 +78,9 @@ export function changedPaths(cwd: string = root): string[] | null {
       } catch {
         return null // fail closed: an untrustworthy base can under-report (#849)
       }
+      // A fetch can exit 0 and still leave the clone shallow (limited refspec,
+      // partial fetch), so success is re-checked rather than assumed.
+      if (isShallowRepository(cwd)) return null
     } else {
       try {
         fetchOriginMain(cwd)
@@ -115,12 +113,9 @@ export function changedPaths(cwd: string = root): string[] | null {
 export function changedPathsBetween(baseRef: string, headRef = 'HEAD'): string[] | null {
   if (!baseRef || !headRef) return null
   try {
-    // On a shallow checkout (actions/checkout's default depth) `merge-base` can
-    // answer with a commit that is not the real one, so the diff would be
-    // plausible but wrong — and wrong in the under-reporting direction (#849).
-    // Refuse rather than trust it: unlike `changedPaths` above, CI's fix is
-    // declarative (`fetch-depth: 0`), so refusing here costs a full gate only if
-    // that line is ever dropped, which is exactly the backstop intended.
+    // Refuses where `changedPaths` above repairs — see its comment for why the
+    // two differ. On actions/checkout's default depth this costs a full gate
+    // only if `fetch-depth: 0` is ever dropped, which is the intended backstop.
     if (isShallowRepository(root)) return null
     const base = git(['merge-base', baseRef, headRef])
     if (!base) return null

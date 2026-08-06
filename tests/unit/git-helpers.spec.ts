@@ -5,8 +5,8 @@ import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { execFileSync } from 'node:child_process'
 import { fetchOriginMain, FETCH_TIMEOUT_MS, isFetchTimeout, isParentlessBoundaryCommit, isShallowRepository, unshallow, UNSHALLOW_TIMEOUT_MS } from '../../scripts/git-helpers.ts'
+import { commitFile, createGitFixture, git, shallowClone } from '../support/git-fixture.ts'
 
 describe('isParentlessBoundaryCommit()', () => {
   it('is true for an empty %P — a shallow-clone graft or the true repo root', () => {
@@ -66,37 +66,17 @@ describe('isShallowRepository()', () => {
   })
 
   it('is true for a shallow clone and false once it is completed', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'git-helpers-shallow-'))
+    const fixture = createGitFixture('git-helpers-shallow')
     try {
-      const origin = join(dir, 'origin.git')
-      const work = join(dir, 'work')
-      const env = {
-        ...process.env,
-        GIT_AUTHOR_NAME: 'h',
-        GIT_AUTHOR_EMAIL: 'h@example.invalid',
-        GIT_COMMITTER_NAME: 'h',
-        GIT_COMMITTER_EMAIL: 'h@example.invalid',
-      }
-      const g = (cwd: string, args: string[]) => execFileSync('git', args, { cwd, env, encoding: 'utf8' })
-      // `-b main` on the bare repo too: without it HEAD points at a `master`
-      // that is never pushed, and the clone reports an empty repository.
-      g(dir, ['init', '-q', '--bare', '-b', 'main', 'origin.git'])
-      g(dir, ['init', '-q', '-b', 'main', 'work'])
-      for (const n of [1, 2, 3]) {
-        writeFileSync(join(work, `${n}.txt`), `${n}\n`)
-        g(work, ['add', '-A'])
-        g(work, ['commit', '-qm', `c${n}`])
-      }
-      g(work, ['remote', 'add', 'origin', origin])
-      g(work, ['push', '-q', 'origin', 'main'])
-      const clone = join(dir, 'clone')
-      g(dir, ['clone', '-q', '--depth=1', `file://${origin}`, 'clone'])
+      for (const n of [1, 2, 3]) commitFile(fixture.work, `${n}.txt`, `${n}`, `c${n}`)
+      git(fixture.work, ['push', '-q', 'origin', 'main'])
+      const clone = shallowClone(fixture, 'clone', 1)
 
       expect(isShallowRepository(clone)).toBe(true)
       unshallow(clone)
       expect(isShallowRepository(clone)).toBe(false)
     } finally {
-      rmSync(dir, { recursive: true, force: true })
+      rmSync(fixture.dir, { recursive: true, force: true })
     }
   })
 })
