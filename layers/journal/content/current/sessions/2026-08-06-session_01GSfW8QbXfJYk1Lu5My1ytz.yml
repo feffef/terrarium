@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01GSfW8QbXfJYk1Lu5My1ytz
 startedAt: 2026-08-06T06:38:50Z
-endedAt: 2026-08-06T07:39:17Z
+endedAt: 2026-08-06T08:22:47Z
 kind: interactive
 goal: Single-home the never-APPROVE PR-review rule
-status: in-review
-outcome: "PR #877 open, gate running"
-summary: "Human-instructed throughout: the user invoked /grill-with-docs on issue #853 (a regression filed ready-for-human), answered five design questions, then invoked /implement. The grilling green-lit doc-only (no PreToolUse guard), pr-workflow.md step 4 as the single home, folding issue-tracker.md's copy into its existing pointer, and a second bolded paragraph as the placement. Agent-initiated within those bounds: surfacing github-integration.md as an unconsidered third candidate home, and proposing the external-fork-PR second reason that makes the rule's \"never\" earned — both explicitly green-lit before implementing. Gate green; both code-review axes clean."
+status: completed
+outcome: "Merged; issue #853 auto-closed"
+summary: "Human-instructed throughout: the user invoked /grill-with-docs on issue #853 (a regression filed ready-for-human), answered five design questions, then invoked /implement. The grilling green-lit doc-only (no PreToolUse guard), pr-workflow.md step 4 as the single home, folding issue-tracker.md's copy into its existing pointer, and a second bolded paragraph as the placement. Agent-initiated within those bounds: surfacing github-integration.md as an unconsidered third candidate home, and proposing the external-fork-PR second reason that makes the rule's \"never\" earned — both explicitly green-lit before implementing. Both code-review axes came back clean; CI green; the owner merged PR #877, auto-closing #853."
 prs:
   - "877"
 docsRead:
@@ -46,18 +46,18 @@ frictions:
   - description: The Stop hook's unpushed-commit prompt fired while both review subagents were still running, so the branch was pushed before findings could be folded in.
     solution: Cost an amend plus a force-with-lease re-push for a one-line nit. Dispatching review before the first push, or accepting a follow-up commit, both avoid it.
     severity: nit
-durationSec: 3627
+durationSec: 6237
 models:
-  claude-opus-5: 118
+  claude-opus-5: 136
 toolCounts:
   Skill: 6
   ToolSearch: 3
-  mcp__github__issue_read: 3
+  mcp__github__issue_read: 4
   Read: 7
   Grep: 7
   AskUserQuestion: 1
-  Bash: 15
-  Edit: 4
+  Bash: 19
+  Edit: 6
   Agent: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
@@ -65,6 +65,7 @@ toolCounts:
   mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
   Write: 1
+  mcp__Claude_Code_Remote__delete_trigger: 2
 filesEdited:
   - docs/agents/pr-workflow.md
   - docs/agents/issue-tracker.md
