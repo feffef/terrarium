@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01MCMjVrM3uSMPrqyoWUroFG
 startedAt: 2026-08-06T06:37:56Z
-endedAt: 2026-08-06T07:39:08Z
+endedAt: 2026-08-06T08:23:38Z
 kind: interactive
 goal: "Grill issue #659 into an implementable state"
-status: in-review
-outcome: Premise tested; branch-strand trap documented
-summary: "Human asked (via /grill-with-docs) to get #659 — the fork-PR false-red gate — ready to implement. Grilling surfaced that its whole premise, \"an agent can't push workflow files\", was an assertion contradicted by a 2026-07-10 session log, with no record of anyone testing it. On the human's explicit green-light I tested both credentials: git push refuses (no workflow OAuth scope) and the GitHub App contents API 404s. #659 stays correctly ready-for-human. Also human-approved, then agent-authored: a docs/agents/environment-caveats.md entry (PR #876) recording the untested consequence — the push rejection covers every commit in the ref update, so committing a workflow edit strands the whole branch — plus a comment on #659 replacing an unachievable fork-PR close condition."
+status: completed
+outcome: Premise tested; branch-strand trap documented, merged
+summary: "Human asked (via /grill-with-docs) to get #659 — the fork-PR false-red gate — ready to implement. Grilling surfaced that its whole premise, \"an agent can't push workflow files\", was an assertion contradicted by a 2026-07-10 session log, with no record of anyone testing it. On the human's explicit green-light I tested both credentials: git push refuses (no workflow OAuth scope) and the GitHub App contents API 404s. #659 stays correctly ready-for-human, its remaining half a human paste. Also human-approved, then agent-authored: a docs/agents/environment-caveats.md entry (PR #876, merged) recording the untested consequence — the push rejection covers every commit in the ref update, so committing a workflow edit strands the whole branch — plus a comment on #659 replacing an unachievable fork-PR close condition."
 prs:
   - "876"
 docsRead:
@@ -30,7 +30,7 @@ skillsUsed:
   - name: domain-modeling
     reason: loaded by grill-with-docs; no new terms earned a glossary entry
   - name: close-session
-    reason: self-judged closure at PR-open
+    reason: self-judged closure at PR-open, re-fired on merge
   - name: log-session
     reason: this log
   - name: grill-with-docs
@@ -50,18 +50,21 @@ frictions:
   - description: "Issue #659's triage set a close condition — a green fork PR — that only one event in repo history could ever have satisfied."
     solution: Replaced with an observation available on the next same-repo PR. Prefer a close condition reachable by ordinary repo traffic.
     severity: minor
-durationSec: 3672
+  - description: A worker-process restart deleted the authored log scratch file from the session scratchpad, so finalizing the log meant rewriting it from context.
+    solution: Extend the environment-caveats resume bullet to cover scratchpad files, not just in-memory state — or write the authored YAML somewhere durable.
+    severity: nit
+durationSec: 6342
 models:
-  claude-opus-5: 103
+  claude-opus-5: 122
 toolCounts:
   Skill: 4
   ToolSearch: 4
   mcp__github__issue_read: 2
   Read: 8
-  Bash: 16
+  Bash: 20
   Grep: 4
   AskUserQuestion: 1
-  Edit: 2
+  Edit: 3
   mcp__github__create_branch: 1
   mcp__github__create_or_update_file: 2
   mcp__github__pull_request_read: 2
@@ -70,7 +73,8 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
-  Write: 1
+  Write: 2
+  mcp__Claude_Code_Remote__delete_trigger: 2
 filesEdited:
   - .github/workflows/gate.yml
   - docs/agents/environment-caveats.md
