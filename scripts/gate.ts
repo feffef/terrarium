@@ -10,7 +10,7 @@ import { appendFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { root } from '../shared/expand.ts'
-import { fetchOriginMain } from './git-helpers.ts'
+import { fetchOriginMain, isShallowRepository, unshallow } from './git-helpers.ts'
 
 export const FLOOR = ['verify:skills-lock', 'verify:mermaid', 'lint', 'typecheck', 'validate:content'] as const
 export const HEAVY = ['test', 'build', 'test:e2e'] as const
@@ -49,8 +49,8 @@ export function planSteps(scope: Scope): string[] {
   return scope.skipHeavy ? [...FLOOR] : [...FLOOR, ...HEAVY]
 }
 
-function git(args: string[]): string {
-  return execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim()
+function git(args: string[], cwd: string = root): string {
+  return execFileSync('git', args, { cwd, encoding: 'utf8' }).trim()
 }
 
 function lines(out: string): string[] {
@@ -59,24 +59,48 @@ function lines(out: string): string[] {
 
 // Untracked files are unioned in because a plain `git diff` omits them. Any
 // uncertainty returns `null` → full gate.
-export function changedPaths(): string[] | null {
+//
+// Unlike its CI sibling below, a shallow clone is *repaired* here rather than
+// refused. The two answers differ because the environments do: CI owns its
+// checkout declaratively (`fetch-depth: 0`) and keeps refusal as a backstop
+// against that line being deleted, whereas sessions in this environment simply
+// start shallow and have no equivalent knob — refusing would degrade
+// `gate:scoped` to a full `pnpm gate` for the doc-only edits it exists to make
+// fast. Repairing is affordable precisely because it is one-shot: afterwards the
+// clone is complete and neither the check nor the fetch is reached again.
+//
+// Classifying off a shallow clone is not an option: `merge-base` can answer with
+// an ordinary-looking commit that is not the true base, and the resulting diff
+// can OMIT a changed file rather than over-report it — a skipped heavy layer,
+// not a wasted one. Reproduced in tests/unit/gate-shallow-base.spec.ts; #849
+// records the reasoning error that first ruled it harmless.
+export function changedPaths(cwd: string = root): string[] | null {
   try {
-    try {
-      fetchOriginMain(root)
-    } catch {
-      // best-effort: a stale origin/main still yields a usable merge-base
-      // (including on timeout — a `--dry` run must never hang, #451)
+    if (isShallowRepository(cwd)) {
+      console.log('gate:scoped: clone is shallow — fetching full history (one-time) so the diff base is trustworthy')
+      try {
+        unshallow(cwd)
+      } catch {
+        return null // fail closed: an untrustworthy base can under-report (#849)
+      }
+    } else {
+      try {
+        fetchOriginMain(cwd)
+      } catch {
+        // best-effort: a stale origin/main still yields a usable merge-base
+        // (including on timeout — a `--dry` run must never hang, #451)
+      }
     }
     let base: string
     try {
-      base = git(['merge-base', 'origin/main', 'HEAD'])
+      base = git(['merge-base', 'origin/main', 'HEAD'], cwd)
     } catch {
       return null
     }
     if (!base) return null
-    const committed = lines(git(['diff', '--name-only', `${base}..HEAD`]))
-    const tracked = lines(git(['diff', '--name-only', 'HEAD']))
-    const untracked = lines(git(['ls-files', '--others', '--exclude-standard']))
+    const committed = lines(git(['diff', '--name-only', `${base}..HEAD`], cwd))
+    const tracked = lines(git(['diff', '--name-only', 'HEAD'], cwd))
+    const untracked = lines(git(['ls-files', '--others', '--exclude-standard'], cwd))
     return [...new Set([...committed, ...tracked, ...untracked])]
   } catch {
     return null
@@ -91,10 +115,13 @@ export function changedPaths(): string[] | null {
 export function changedPathsBetween(baseRef: string, headRef = 'HEAD'): string[] | null {
   if (!baseRef || !headRef) return null
   try {
-    // On a shallow checkout (actions/checkout's default depth) a graft boundary
-    // answers `merge-base` in place of the real one, so the diff would be
-    // plausible but wrong. Refuse to classify rather than trust it.
-    if (git(['rev-parse', '--is-shallow-repository']) === 'true') return null
+    // On a shallow checkout (actions/checkout's default depth) `merge-base` can
+    // answer with a commit that is not the real one, so the diff would be
+    // plausible but wrong — and wrong in the under-reporting direction (#849).
+    // Refuse rather than trust it: unlike `changedPaths` above, CI's fix is
+    // declarative (`fetch-depth: 0`), so refusing here costs a full gate only if
+    // that line is ever dropped, which is exactly the backstop intended.
+    if (isShallowRepository(root)) return null
     const base = git(['merge-base', baseRef, headRef])
     if (!base) return null
     return lines(git(['diff', '--name-only', `${base}..${headRef}`]))

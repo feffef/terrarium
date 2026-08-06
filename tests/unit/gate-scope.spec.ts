@@ -1,7 +1,7 @@
 // Pure-core tests for gate:scoped (#350) — the inert predicate and scope
 // decision, where a misclassification would skip a heavy layer it shouldn't.
 import { execFileSync } from 'node:child_process'
-import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -117,5 +117,70 @@ describe('changedPaths() — fetch-degrade path (#451)', () => {
     expect(() => changedPaths()).not.toThrow()
     const result = changedPaths()
     expect(result === null || Array.isArray(result)).toBe(true)
+  })
+})
+
+describe('changedPaths() — shallow clone is repaired, never classified off (#849)', () => {
+  let dir: string | undefined
+  let originalPath: string | undefined
+
+  afterEach(() => {
+    if (originalPath !== undefined) process.env.PATH = originalPath
+    if (dir) rmSync(dir, { recursive: true, force: true })
+    dir = undefined
+    originalPath = undefined
+  })
+
+  /** Shadows `git` on PATH with a stub; anything it does not intercept falls
+   *  through to real git, so the repo still answers normally. Every invocation
+   *  is appended to a log file so a test can assert what was *not* run. */
+  function withGitStub(script: string, run: (log: () => string) => void): void {
+    const realGit = execFileSync('which', ['git'], { encoding: 'utf8' }).trim()
+    dir = mkdtempSync(join(tmpdir(), 'gate-scope-shallow-'))
+    const logPath = join(dir, 'invocations.log')
+    const stub = join(dir, 'git')
+    writeFileSync(stub, `#!/bin/sh\necho "$@" >> ${logPath}\n${script}\nexec ${realGit} "$@"\n`)
+    chmodSync(stub, 0o755)
+    originalPath = process.env.PATH
+    process.env.PATH = `${dir}${originalPath ? `:${originalPath}` : ''}`
+    run(() => (existsSync(logPath) ? readFileSync(logPath, 'utf8') : ''))
+  }
+
+  // The safety-critical case. `merge-base` still answers here (real git handles
+  // it), so the pre-#849 code would have happily classified off a base it could
+  // not trust. `null` is the only acceptable result.
+  it('fails closed when the clone is shallow and the unshallow fails', () => {
+    withGitStub(
+      'if [ "$1" = "rev-parse" ] && [ "$2" = "--is-shallow-repository" ]; then echo true; exit 0; fi\n' +
+        'if [ "$1" = "fetch" ]; then exit 1; fi',
+      () => {
+        expect(changedPaths()).toBeNull()
+        expect(decideScope(changedPaths()).skipHeavy).toBe(false)
+      },
+    )
+  })
+
+  it('attempts `fetch --unshallow` — not a plain fetch — when the clone is shallow', () => {
+    withGitStub(
+      'if [ "$1" = "rev-parse" ] && [ "$2" = "--is-shallow-repository" ]; then echo true; exit 0; fi\n' +
+        'if [ "$1" = "fetch" ]; then exit 1; fi',
+      (log) => {
+        changedPaths()
+        expect(log()).toContain('fetch --unshallow')
+      },
+    )
+  })
+
+  // git errors with "--unshallow on a complete repository does not make sense",
+  // so the shallow check is required for correctness, not just to save a fetch.
+  it('never runs `--unshallow` on a complete clone', () => {
+    withGitStub(
+      'if [ "$1" = "rev-parse" ] && [ "$2" = "--is-shallow-repository" ]; then echo false; exit 0; fi\n' +
+        'if [ "$1" = "fetch" ]; then exit 1; fi',
+      (log) => {
+        changedPaths()
+        expect(log()).not.toContain('--unshallow')
+      },
+    )
   })
 })

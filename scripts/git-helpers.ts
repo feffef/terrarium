@@ -51,6 +51,37 @@ export function isFetchTimeout(err: unknown): boolean {
   )
 }
 
+/** Bound on a `git fetch --unshallow`. Larger than `FETCH_TIMEOUT_MS` because
+ *  it transfers the repository's whole history rather than freshening one ref
+ *  (measured at ~1.6s for this repo when #849 landed), and still bounded so a
+ *  `gate:scoped --dry` degrades visibly instead of appearing hung (#451). */
+export const UNSHALLOW_TIMEOUT_MS = 30_000
+
+/** True when `cwd` is a shallow clone — one whose history stops at grafted,
+ *  parent-less boundary commits. Worth asking before any history-derived
+ *  answer: see `docs/agents/git-conventions.md` for what a shallow clone
+ *  silently gets wrong (blame/pickaxe archaeology, and `merge-base`). */
+export function isShallowRepository(cwd: string): boolean {
+  return execFileSync('git', ['rev-parse', '--is-shallow-repository'], { cwd, encoding: 'utf8' }).trim() === 'true'
+}
+
+/** Complete a shallow clone's history in place, so commit-graph reads
+ *  (`merge-base` above all) stop being answered off a truncated graph.
+ *
+ *  Callers MUST gate this on `isShallowRepository` — git refuses with
+ *  "--unshallow on a complete repository does not make sense", so calling it
+ *  unconditionally turns a no-op into a throw. Bounded by `timeoutMs`; the
+ *  error is left to propagate because the only caller (`gate.ts`'s
+ *  `changedPaths`) must fail closed rather than fall back to the shallow
+ *  graph — see #849 for why that fallback is unsafe. */
+export function unshallow(cwd: string, timeoutMs = UNSHALLOW_TIMEOUT_MS): void {
+  execFileSync('git', ['fetch', '--unshallow'], {
+    cwd,
+    stdio: ['ignore', 'ignore', 'inherit'],
+    timeout: timeoutMs,
+  })
+}
+
 /** Bring the local `<remote>/main` ref up to date before it's read. Without
  *  this, a stale local ref silently returns an empty, wrong, or truncated
  *  result that reads identically to "genuinely nothing new" (issue #246) —

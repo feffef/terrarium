@@ -5,7 +5,8 @@ import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { fetchOriginMain, FETCH_TIMEOUT_MS, isFetchTimeout, isParentlessBoundaryCommit } from '../../scripts/git-helpers.ts'
+import { execFileSync } from 'node:child_process'
+import { fetchOriginMain, FETCH_TIMEOUT_MS, isFetchTimeout, isParentlessBoundaryCommit, isShallowRepository, unshallow, UNSHALLOW_TIMEOUT_MS } from '../../scripts/git-helpers.ts'
 
 describe('isParentlessBoundaryCommit()', () => {
   it('is true for an empty %P — a shallow-clone graft or the true repo root', () => {
@@ -49,6 +50,54 @@ describe('FETCH_TIMEOUT_MS', () => {
   it('is a positive, bounded number of milliseconds', () => {
     expect(FETCH_TIMEOUT_MS).toBeGreaterThan(0)
     expect(FETCH_TIMEOUT_MS).toBeLessThanOrEqual(60_000)
+  })
+})
+
+describe('UNSHALLOW_TIMEOUT_MS', () => {
+  it('is bounded, and roomier than a single-ref freshen (#849)', () => {
+    expect(UNSHALLOW_TIMEOUT_MS).toBeGreaterThan(FETCH_TIMEOUT_MS)
+    expect(UNSHALLOW_TIMEOUT_MS).toBeLessThanOrEqual(120_000)
+  })
+})
+
+describe('isShallowRepository()', () => {
+  it('reports a real clone without throwing', () => {
+    expect(typeof isShallowRepository(process.cwd())).toBe('boolean')
+  })
+
+  it('is true for a shallow clone and false once it is completed', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'git-helpers-shallow-'))
+    try {
+      const origin = join(dir, 'origin.git')
+      const work = join(dir, 'work')
+      const env = {
+        ...process.env,
+        GIT_AUTHOR_NAME: 'h',
+        GIT_AUTHOR_EMAIL: 'h@example.invalid',
+        GIT_COMMITTER_NAME: 'h',
+        GIT_COMMITTER_EMAIL: 'h@example.invalid',
+      }
+      const g = (cwd: string, args: string[]) => execFileSync('git', args, { cwd, env, encoding: 'utf8' })
+      // `-b main` on the bare repo too: without it HEAD points at a `master`
+      // that is never pushed, and the clone reports an empty repository.
+      g(dir, ['init', '-q', '--bare', '-b', 'main', 'origin.git'])
+      g(dir, ['init', '-q', '-b', 'main', 'work'])
+      for (const n of [1, 2, 3]) {
+        writeFileSync(join(work, `${n}.txt`), `${n}\n`)
+        g(work, ['add', '-A'])
+        g(work, ['commit', '-qm', `c${n}`])
+      }
+      g(work, ['remote', 'add', 'origin', origin])
+      g(work, ['push', '-q', 'origin', 'main'])
+      const clone = join(dir, 'clone')
+      g(dir, ['clone', '-q', '--depth=1', `file://${origin}`, 'clone'])
+
+      expect(isShallowRepository(clone)).toBe(true)
+      unshallow(clone)
+      expect(isShallowRepository(clone)).toBe(false)
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
   })
 })
 
