@@ -1,0 +1,130 @@
+name: Terrarium Gate
+description: The Gate's layered steps (ADR-0004), cheapest-first, with the Heavy tier skipped on a provably Inert changeset.
+
+# Why the Gate's steps live here and not in `.github/workflows/gate.yml`, and why
+# this file is Human-only to *merge* but not to edit: ADR-0026.
+# `tests/unit/gate-parity.spec.ts` pins this step list against `scripts/gate.ts`.
+
+inputs:
+  github-token:
+    description: Token for the doorbell comment. Passed in because the `secrets` context is unreachable inside a composite action.
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/action-setup@v6
+
+    - uses: actions/setup-node@v6
+      with:
+        node-version: 22
+        cache: pnpm
+
+    - name: Install
+      shell: bash
+      run: pnpm install --frozen-lockfile
+
+    # Asks scripts/gate.ts — the same classifier `pnpm gate:scoped` runs locally
+    # — whether this changeset can skip the Heavy tier, rather than re-expressing
+    # `isInert` in YAML where the two would drift (#350, #445). Skipped entirely
+    # on push:main, which leaves the output empty and so runs everything below.
+    # continue-on-error so a broken optimizer can only ever cost time — never
+    # skip a layer, never red the Gate.
+    - name: 'Scope · can the Heavy tier be skipped?'
+      id: scope
+      if: github.event_name == 'pull_request'
+      continue-on-error: true
+      shell: bash
+      env:
+        BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        HEAD_SHA: ${{ github.sha }}
+      run: pnpm exec tsx scripts/gate.ts --decide --base "$BASE_SHA" --head "$HEAD_SHA"
+
+    # Pins each external pack Skill's installed SKILL.md hash against its
+    # Skill Inventory entry (ADR-0015 amendment) — a governance/provenance
+    # check, arguably its own layer rather than one of L0-L3, but the
+    # cheapest check available, so it runs first, mirroring `pnpm gate`'s order.
+    - name: 'L0 · skills-lock integrity'
+      shell: bash
+      run: pnpm verify:skills-lock
+
+    - name: 'L0 · mermaid drift'
+      shell: bash
+      run: pnpm verify:mermaid
+
+    - name: 'L0 · lint'
+      shell: bash
+      run: pnpm lint
+
+    - name: 'L0 · typecheck'
+      shell: bash
+      run: pnpm typecheck
+
+    # L1 — content validates against strict Collection schemas via Zod
+    # .safeParse() (scripts/validate-content.ts). Nuxt Content 3 never
+    # validates content at build time (docs/research/nuxt-content-review-grounding.md
+    # §2) — this script is what actually enforces L1.
+    - name: 'L1 · content validation'
+      shell: bash
+      run: pnpm validate:content
+
+    # The Heavy tier below is guarded on the scope decision (#445, ADR-0026). An
+    # empty or absent output — step skipped, step failed, base undeterminable —
+    # is not 'true', so it runs. The skip is only ever reached on a
+    # positively-proven Inert changeset.
+
+    # L3 — isolation invariant: unique, correctly-scoped collection keys.
+    - name: 'L3 · isolation'
+      if: steps.scope.outputs.skip_heavy != 'true'
+      shell: bash
+      run: pnpm test
+
+    # L0 — build succeeds. Does NOT validate content against schemas — Nuxt
+    # Content 3 has no safeParse in its parse/insert pipeline; schemas only
+    # derive SQL column types (docs/research/nuxt-content-review-grounding.md §2).
+    - name: 'L0 · build'
+      if: steps.scope.outputs.skip_heavy != 'true'
+      shell: bash
+      run: pnpm build
+
+    # L2 — every (Tenant, Space) entry route renders 200 with content. Pins the
+    # browser to a Playwright-managed Chromium instead of the runner image's
+    # system Chrome; the smoke spec reads PLAYWRIGHT_BROWSERS_PATH to find it. A
+    # workspace path — not /opt/pw-browsers — so no sudo is needed.
+    - name: Install Chromium for the L2 browser smoke gate
+      if: steps.scope.outputs.skip_heavy != 'true'
+      shell: bash
+      env:
+        PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.pw-browsers
+      run: pnpm exec playwright-core install --with-deps chromium
+
+    - name: 'L2 · smoke render'
+      if: steps.scope.outputs.skip_heavy != 'true'
+      shell: bash
+      env:
+        PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.pw-browsers
+      run: pnpm test:e2e
+
+    # Doorbell — CI success is not delivered to subscribed sessions (only comments
+    # and CI failures are), so post a fresh comment on green to wake a session
+    # waiting to act on the Gate. New comment each run, not a sticky edit (edits
+    # may not fire a webhook). See issue #278.
+    #
+    # Fork PRs get a read-only GITHUB_TOKEN, so the comment call fails and used to
+    # take the whole Gate red on a green contribution (#659, first seen on #631).
+    # Hence both the same-repo guard and continue-on-error. Values reach the script
+    # through env rather than inline `${{ }}` so PR-controlled text is never
+    # interpolated into the shell.
+    - name: 'Doorbell · comment on green so a subscribed session wakes'
+      if: >-
+        success() && github.event_name == 'pull_request'
+        && github.event.pull_request.head.repo.full_name == github.repository
+      continue-on-error: true
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        REPO: ${{ github.repository }}
+        HEAD_SHA: ${{ github.sha }}
+      run: gh pr comment "$PR_NUMBER" -R "$REPO" --body "✅ safety-gate green on $HEAD_SHA"
