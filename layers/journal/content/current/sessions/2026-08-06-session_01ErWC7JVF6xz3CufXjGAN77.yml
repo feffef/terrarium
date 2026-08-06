@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01ErWC7JVF6xz3CufXjGAN77
 startedAt: 2026-08-06T06:38:13Z
-endedAt: 2026-08-06T08:34:44Z
+endedAt: 2026-08-06T08:47:44Z
 kind: interactive
 goal: Make Gate workflow changes agent-pushable
-status: in-review
-outcome: "Composite action, ADR-0026, glossary; PR #881"
-summary: "Asked to grill issue #445 into an implementable state. Grilling established that #445's agent half was already done and only a human YAML paste remained, so the user green-lit (ADR-0003) a larger structural change instead: move the Gate's steps into a composite action. A probe verified empirically that the `workflow` OAuth scope fences `.github/workflows/` only, so `.github/actions/**` is agent-pushable — the finding the whole design rests on. The user chose every branch (scope, fence, sequencing, ADR placement, glossary terms) and pushed back on naming, which evidence then redirected. Agent-initiated within that mandate the parity spec, the superseded banners, and the review fixes."
+status: completed
+outcome: Merged; CI activation awaits hand-applied shell
+summary: "Asked to grill issue #445 into an implementable state. Grilling established that #445's agent half was already done and only a human YAML paste remained, so the user green-lit (ADR-0003) a larger structural change instead: move the Gate's steps into a composite action. A probe verified empirically that the `workflow` OAuth scope fences `.github/workflows/` only, so `.github/actions/**` is agent-pushable — the finding the whole design rests on. The user chose every branch (scope, fence, sequencing, ADR placement, glossary terms) and pushed back on naming, which evidence then redirected. Agent-initiated within that mandate the parity spec, the superseded banners, and the review fixes. PR #881 merged green; #879 auto-closed. The behaviour is not live — CI still runs the old gate.yml until a human applies the shell swap, which is by design."
 prs:
   - "881"
 docsRead:
@@ -74,26 +74,28 @@ frictions:
   - description: The session worker restarted mid-edit, leaving a malformed markdown bold marker in ADR-0004 that only a re-read caught.
     solution: After a worker restart, re-read files edited in the interrupted turn rather than assuming the last edit applied cleanly.
     severity: nit
-durationSec: 6991
+durationSec: 7770
 models:
-  claude-opus-5: 253
+  claude-opus-5: 280
 toolCounts:
-  Bash: 57
-  ToolSearch: 7
+  Bash: 60
+  ToolSearch: 8
   Skill: 5
-  mcp__github__issue_read: 2
+  mcp__github__issue_read: 3
   Read: 14
   Write: 6
   WebFetch: 3
   WebSearch: 1
   mcp__github__issue_write: 1
-  Edit: 17
+  Edit: 19
   Agent: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 4
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .github/actions/probe/action.yml
   - tests/unit/gate-parity.spec.ts
