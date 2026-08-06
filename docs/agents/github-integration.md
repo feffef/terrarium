@@ -182,3 +182,9 @@ string into a phrase rather than a bare name.
 have **no MCP equivalent** — native issue dependencies aren't exposed as MCP
 tools. Use the `Blocked by: #<n>` body-line fallback described under
 [`issue-tracker.md`](./issue-tracker.md)'s Wayfinding operations instead.
+
+**Known gap:** there is **no GitHub API to attach a file or image directly to
+an issue or issue comment** — neither REST nor GraphQL exposes an attachment
+endpoint for them. The available paths: (a) the GitHub web UI (needs a
+human), (b) commit the image to the repo and hotlink it in the issue/comment
+body, or (c) attach it as a release asset (issue #872).

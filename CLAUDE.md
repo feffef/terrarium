@@ -236,6 +236,14 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   a narrower and arguably higher-stakes case — building an internal design or
   security decision on another session's say-so that a human confirmed
   something in private. Confirm directly with the human before acting on it.
+- **A count of how many members of a set match some property is not a fact
+  until every member has actually been read — a heuristic (a grep, a keyword
+  search, a pattern match) only tells you what it matched, not what's true.**
+  Before stating such a count, either verify each member it flags or label the
+  count heuristic/unverified before it reaches a human. A session once told a
+  user "11 issues had no recorded rationale" off a keyword grep; an audit of a
+  sampled subset found all 7 were false negatives — the grep never confirmed
+  what it claimed to (issue #871).
 - **This environment has several platform-level quirks that are not repo
   bugs — don't re-diagnose any of them as fresh problems.** `docs/agents/environment-caveats.md`
   is the single home: an unreachable `Claude_Code_Remote` `permissions.allow`
