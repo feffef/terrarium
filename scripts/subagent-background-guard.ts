@@ -1,32 +1,10 @@
-// Mechanical backstop for issue #694: a dispatched subagent must never
-// background its own Bash command (`run_in_background: true`), because no
-// backgrounded command ever wakes a stopped subagent — the harness's
-// task-notification wake exists only for the main session. Four recorded
-// sessions (the #602 → #712 → #694 lineage) each backgrounded `pnpm
-// gate:scoped` inside a worktree-isolated impl agent, ended their turn
-// "waiting", and stalled until an orchestrator `SendMessage` resume. Two prose
-// passes (#602, #712) and a consolidated third wording did not hold; the
-// owner's standing rule on #694 (2026-08-04) escalates the next recurrence —
-// recorded 2026-08-05 — to tooling instead of a fourth wording.
-//
-// Detection is a payload-field check: a PreToolUse payload for a dispatched
-// subagent's tool call carries `agent_id` + `agent_type`, which a main-session
-// payload lacks — established empirically (probe recorded in
-// docs/agents/subagent-background-guard.md, which is also the single home for
-// this guard's residual fail-opens and the hot-path pre-filter contract:
-// `subagent-background-guard.sh` forwards only payloads that textually carry
-// `run_in_background: true`, so the overwhelmingly common foreground Bash call
-// never pays a tsx start).
-//
-// Pure core (`detectAgentContext`, `checkBackgroundedBash`) is kept separate
-// from the stdin I/O (`main`), mirroring `loop-only-tool-guard.ts` /
-// `deferred-tool-guard.ts` / `github-provenance-guard.ts`. `--dry-run`
-// exercises the same core by hand (ADR-0004's 2026-07-30 amendment makes an
-// unattended, un-exercisable hook human-only to merge; this keeps that review
-// tractable). Fails CLOSED: an undeterminable context, or an uninspectable
-// payload, denies — bounded, because the pre-filter only ever forwards
-// backgrounded-looking calls, so a deny can never wedge ordinary foreground
-// tool use.
+// Mechanical backstop for issue #694: a dispatched subagent's own backgrounded
+// Bash command can never wake it, so `run_in_background: true` is denied in
+// subagent context. Rationale, detection contract, and residual fail-opens are
+// single-homed in docs/agents/subagent-background-guard.md — this header does
+// not restate them. Pure core is kept separate from the stdin I/O and
+// exercised by --dry-run, mirroring the sibling guards (ADR-0004's
+// unattended-hook reviewability bar).
 //
 // Usage:
 //   sh scripts/subagent-background-guard.sh          # the installed hook entry
@@ -36,16 +14,11 @@
 import { readFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 
-/** What the guard could establish about the calling session. `undeterminable`
- *  is a denial, not a pass — see `checkBackgroundedBash`. */
+/** `undeterminable` is a denial, not a pass — see `checkBackgroundedBash`. */
 export type AgentContext = 'subagent' | 'main' | 'undeterminable'
 
-/** The pure context reader: PreToolUse payload → who is calling. A dispatched
- *  subagent's payload carries `agent_id`/`agent_type` (either suffices — deny
- *  scope should not hinge on both surviving a harness change); a main-session
- *  payload positively identifies itself by carrying its session identity
- *  (`session_id`/`transcript_path`) WITHOUT the agent fields. Anything else —
- *  a payload with neither identity — is `undeterminable`. */
+/** PreToolUse payload → who is calling. Either agent field suffices — deny
+ *  scope must not hinge on both surviving a harness change. */
 export function detectAgentContext(payload: unknown): AgentContext {
   if (payload === null || typeof payload !== 'object') return 'undeterminable'
   const p = payload as Record<string, unknown>
@@ -59,10 +32,8 @@ export interface BackgroundFinding {
   context: Exclude<AgentContext, 'main'>
 }
 
-/** The pure predicate: `(tool, input, context) → deny finding | null`. Denies
- *  exactly a `Bash` call with `run_in_background: true` outside a positively
- *  established main session. Everything else — any other tool, a foreground
- *  call, the main session itself — passes. Never throws; a non-object
+/** Denies exactly a `Bash` call with `run_in_background: true` outside a
+ *  positively established main session. Never throws; a non-object
  *  `toolInput` simply carries no `run_in_background`. */
 export function checkBackgroundedBash(
   toolName: string,
@@ -76,10 +47,8 @@ export function checkBackgroundedBash(
   return { context }
 }
 
-/** The corrective message shown at the moment of the mistake. Self-contained by
- *  design: every recorded recurrence happened in a subagent whose brief already
- *  said "foreground" — so the message, not a doc, is this rule's teaching
- *  surface, and it must carry the working alternative in full. */
+/** Self-contained by design: every recorded recurrence had "foreground" prose
+ *  available and skipped — the deny message is the rule's teaching surface. */
 export function formatGuardMessage(f: BackgroundFinding): string {
   const why =
     f.context === 'subagent'
@@ -105,9 +74,8 @@ export function formatGuardMessage(f: BackgroundFinding): string {
   )
 }
 
-/** The `PreToolUse` "deny" control object a hook writes to stdout to block a
- *  call (Claude Code hooks reference). `null` when nothing should be blocked,
- *  so `main` writes nothing and the call proceeds untouched. */
+/** `null` when nothing should be blocked, so `main` writes nothing and the
+ *  call proceeds untouched. */
 export function denyOutputFor(finding: BackgroundFinding | null): { hookSpecificOutput: Record<string, string> } | null {
   if (!finding) return null
   return {
@@ -119,16 +87,13 @@ export function denyOutputFor(finding: BackgroundFinding | null): { hookSpecific
   }
 }
 
-/** Hook payload shape we rely on — the same subset the sibling guards read,
- *  plus the agent-identity fields the probe established for subagent calls. */
 interface PreToolUsePayload {
   tool_name?: string
   tool_input?: unknown
 }
 
-/** Deny a call we could not even inspect. Fail-closed's edge, and bounded: the
- *  pre-filter only forwards payloads that already look backgrounded, so this
- *  can never wedge ordinary foreground tool use. */
+/** Fail-closed's edge, bounded: the pre-filter only forwards
+ *  backgrounded-looking calls, so this can never wedge foreground tool use. */
 function denyUninspectable(detail: string): void {
   process.stdout.write(
     JSON.stringify({
@@ -144,16 +109,7 @@ function denyUninspectable(detail: string): void {
   )
 }
 
-/** Reads the hook JSON on stdin, resolves the caller's context from the
- *  payload itself, runs the pure predicate, and writes a deny control object
- *  for any finding. Always exits 0 — the deny travels in stdout, not the exit
- *  code.
- *
- *  **The residual fail-opens this cannot close** (recorded in
- *  `docs/agents/subagent-background-guard.md`): the pre-filter's textual match
- *  on the serialized payload, and the hook's `|| true` invocation surviving a
- *  missing pnpm/tsx. Closing either needs a change of invocation, not of this
- *  script. */
+/** Always exits 0 — the deny travels in stdout, not the exit code. */
 export function main(): void {
   let raw: string
   try {
@@ -178,10 +134,8 @@ export function main(): void {
   if (output) process.stdout.write(JSON.stringify(output))
 }
 
-/** `--dry-run`: print the decision the hook would reach, and exit. Runs no tool
- *  and emits no control object, so a reviewer (or a future session) can
- *  exercise every branch by hand. `--payload` derives the context exactly as
- *  the hook would; `--context` forces it directly. */
+/** Print the decision the hook would reach, running nothing. `--payload`
+ *  derives the context exactly as the hook would; `--context` forces it. */
 function dryRun(argv: string[]): void {
   const flag = (name: string): string | undefined => {
     const i = argv.indexOf(name)

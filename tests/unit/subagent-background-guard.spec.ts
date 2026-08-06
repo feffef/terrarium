@@ -1,12 +1,7 @@
-// Coverage for the subagent background guard (issue #694). Three wording
-// passes (#602, #712, and the consolidated 2026-07-31 bullet) did not stop a
-// dispatched subagent backgrounding its own verification run and stalling, so
-// the owner's standing rule escalated the next recurrence (2026-08-05) to a
-// mechanical guard. Everything that decides allow/deny is pure —
-// `detectAgentContext` over the PreToolUse payload, `checkBackgroundedBash`
-// over (tool, input, context) — and is pinned here directly; the CLI's
-// stdin→deny-JSON path, the `--dry-run` path, and the `subagent-background-guard.sh`
-// hot-path pre-filter are exercised end to end against the real scripts.
+// Coverage for the subagent background guard (issue #694; rationale and
+// detection contract: docs/agents/subagent-background-guard.md). The pure
+// core is pinned directly; the CLI's stdin→deny-JSON path, `--dry-run`, and
+// the hot-path pre-filter are exercised end to end against the real scripts.
 import { execFileSync } from 'node:child_process'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -23,9 +18,7 @@ const SCRIPT = join(root, 'scripts', 'subagent-background-guard.ts')
 const PREFILTER = join(root, 'scripts', 'subagent-background-guard.sh')
 
 /** A dispatched subagent's PreToolUse payload, in the exact shape observed
- *  live (issue #694's feasibility probe, recorded in
- *  docs/agents/subagent-background-guard.md) — notably `agent_id` +
- *  `agent_type`, which a main-session payload lacks. */
+ *  live (the probe recorded in docs/agents/subagent-background-guard.md). */
 function subagentPayload(toolInput: Record<string, unknown>): Record<string, unknown> {
   return {
     session_id: '657b9532-8ed5-5695-a08d-d87a60f7a665',
@@ -38,8 +31,7 @@ function subagentPayload(toolInput: Record<string, unknown>): Record<string, unk
   }
 }
 
-/** A main-session payload: same identity fields, no agent ones (observed live
- *  in the same probe). */
+/** A main-session payload: same identity fields, no agent ones. */
 function mainPayload(toolInput: Record<string, unknown>): Record<string, unknown> {
   return {
     session_id: '657b9532-8ed5-5695-a08d-d87a60f7a665',
