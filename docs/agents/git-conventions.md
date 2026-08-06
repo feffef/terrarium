@@ -66,6 +66,34 @@ since X, found nothing more") false.
 concluding a file's history was rewritten, squashed, or re-rooted — or before
 asserting any completeness claim over history.
 
+### A shallow `merge-base` can be wrong, and its diff can OMIT files
+
+This is the sharper edge of the same problem, and it bites the *routine*
+operation CLAUDE.md asks for — "anchor on the merge-base before any
+since-last-merge diff" — not just history archaeology.
+
+In a shallow clone `git merge-base` answers off a truncated commit graph. When
+the true merge-base lies below the graft boundary but a merge commit keeps some
+*older* commit reachable, `merge-base` returns that older commit. The answer is
+an ordinary, fully-hydrated commit: **not** listed in `.git/shallow`, **not**
+parentless. Nothing about it looks wrong, so there is no way to detect the bad
+answer short of having the history that would make the question moot.
+
+The tempting conclusion — an older base only over-reports, so the diff is a
+harmless superset — is **false**. `git diff A..B` compares the two *endpoints*,
+not the path between them. A branch that reverts a change which landed between
+the wrong base and the true base restores that file to its wrong-base content,
+so it drops out of the diff entirely. Revert branches make this everyday.
+
+So a shallow `merge-base` diff can silently **under-report** what a branch
+touched. Anything gating on "what changed" — a scoped test run, a review scope,
+a risk classification — can therefore under-run. Complete the clone first
+(`git fetch --unshallow`), or refuse to answer; do not classify off the
+truncated graph. This is exactly what `scripts/gate.ts` does, in both
+directions: `changedPaths()` unshallows, and its CI sibling
+`changedPathsBetween()` refuses (issue #849; reproduced in
+`tests/unit/gate-shallow-base.spec.ts`).
+
 ## Commit hygiene
 
 - **Commit messages containing backticks or `$(...)` must be written with `git

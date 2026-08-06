@@ -3,14 +3,14 @@
 // gate. Design, safety argument, and the inert-set proof: issue #350.
 //   pnpm gate:scoped [--dry]
 //   pnpm exec tsx scripts/gate.ts --decide --base <ref> [--head <ref>]
-//     — decision only, for CI to guard its own heavy steps on (#445; the
-//       workflow half is docs/proposals/445-ci-reuse-gate-scoped-classifier.md)
+//     — decision only, for CI to guard its own heavy steps on (#445; the CI
+//       half now lives in .github/actions/gate/action.yml — ADR-0026)
 import { execFileSync, spawnSync } from 'node:child_process'
 import { appendFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { root } from '../shared/expand.ts'
-import { fetchOriginMain } from './git-helpers.ts'
+import { fetchOriginMain, isShallowRepository, unshallow } from './git-helpers.ts'
 
 export const FLOOR = ['verify:skills-lock', 'verify:mermaid', 'lint', 'typecheck', 'validate:content'] as const
 export const HEAVY = ['test', 'build', 'test:e2e'] as const
@@ -49,8 +49,8 @@ export function planSteps(scope: Scope): string[] {
   return scope.skipHeavy ? [...FLOOR] : [...FLOOR, ...HEAVY]
 }
 
-function git(args: string[]): string {
-  return execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim()
+function git(args: string[], cwd: string = root): string {
+  return execFileSync('git', args, { cwd, encoding: 'utf8' }).trim()
 }
 
 function lines(out: string): string[] {
@@ -59,24 +59,46 @@ function lines(out: string): string[] {
 
 // Untracked files are unioned in because a plain `git diff` omits them. Any
 // uncertainty returns `null` → full gate.
-export function changedPaths(): string[] | null {
+//
+// Why a shallow clone is *repaired* here but *refused* by the CI sibling below —
+// the asymmetry is deliberate: CI owns its checkout declaratively
+// (`fetch-depth: 0`) and keeps refusal as the backstop for that line being
+// dropped, whereas a session's clone simply starts shallow with no equivalent
+// knob, so refusing would degrade `gate:scoped` to a full `pnpm gate` for the
+// doc-only edits it exists to make fast. Repair is affordable because it is
+// one-shot, and `--unshallow` is itself a fetch, so #246's freshen-before-read
+// contract still holds on that branch. Why classifying off a shallow clone is
+// unsafe at all: docs/agents/git-conventions.md, and #849.
+export function changedPaths(cwd: string = root): string[] | null {
   try {
-    try {
-      fetchOriginMain(root)
-    } catch {
-      // best-effort: a stale origin/main still yields a usable merge-base
-      // (including on timeout — a `--dry` run must never hang, #451)
+    if (isShallowRepository(cwd)) {
+      console.log('gate:scoped: clone is shallow — fetching full history (one-time) so the diff base is trustworthy')
+      try {
+        unshallow(cwd)
+      } catch {
+        return null // fail closed: an untrustworthy base can under-report (#849)
+      }
+      // A fetch can exit 0 and still leave the clone shallow (limited refspec,
+      // partial fetch), so success is re-checked rather than assumed.
+      if (isShallowRepository(cwd)) return null
+    } else {
+      try {
+        fetchOriginMain(cwd)
+      } catch {
+        // best-effort: a stale origin/main still yields a usable merge-base
+        // (including on timeout — a `--dry` run must never hang, #451)
+      }
     }
     let base: string
     try {
-      base = git(['merge-base', 'origin/main', 'HEAD'])
+      base = git(['merge-base', 'origin/main', 'HEAD'], cwd)
     } catch {
       return null
     }
     if (!base) return null
-    const committed = lines(git(['diff', '--name-only', `${base}..HEAD`]))
-    const tracked = lines(git(['diff', '--name-only', 'HEAD']))
-    const untracked = lines(git(['ls-files', '--others', '--exclude-standard']))
+    const committed = lines(git(['diff', '--name-only', `${base}..HEAD`], cwd))
+    const tracked = lines(git(['diff', '--name-only', 'HEAD'], cwd))
+    const untracked = lines(git(['ls-files', '--others', '--exclude-standard'], cwd))
     return [...new Set([...committed, ...tracked, ...untracked])]
   } catch {
     return null
@@ -91,10 +113,10 @@ export function changedPaths(): string[] | null {
 export function changedPathsBetween(baseRef: string, headRef = 'HEAD'): string[] | null {
   if (!baseRef || !headRef) return null
   try {
-    // On a shallow checkout (actions/checkout's default depth) a graft boundary
-    // answers `merge-base` in place of the real one, so the diff would be
-    // plausible but wrong. Refuse to classify rather than trust it.
-    if (git(['rev-parse', '--is-shallow-repository']) === 'true') return null
+    // Refuses where `changedPaths` above repairs — see its comment for why the
+    // two differ. On actions/checkout's default depth this costs a full gate
+    // only if `fetch-depth: 0` is ever dropped, which is the intended backstop.
+    if (isShallowRepository(root)) return null
     const base = git(['merge-base', baseRef, headRef])
     if (!base) return null
     return lines(git(['diff', '--name-only', `${base}..${headRef}`]))

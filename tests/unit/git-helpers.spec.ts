@@ -5,7 +5,8 @@ import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { fetchOriginMain, FETCH_TIMEOUT_MS, isFetchTimeout, isParentlessBoundaryCommit } from '../../scripts/git-helpers.ts'
+import { fetchOriginMain, FETCH_TIMEOUT_MS, isFetchTimeout, isParentlessBoundaryCommit, isShallowRepository, unshallow, UNSHALLOW_TIMEOUT_MS } from '../../scripts/git-helpers.ts'
+import { commitFile, createGitFixture, git, shallowClone } from '../support/git-fixture.ts'
 
 describe('isParentlessBoundaryCommit()', () => {
   it('is true for an empty %P — a shallow-clone graft or the true repo root', () => {
@@ -49,6 +50,34 @@ describe('FETCH_TIMEOUT_MS', () => {
   it('is a positive, bounded number of milliseconds', () => {
     expect(FETCH_TIMEOUT_MS).toBeGreaterThan(0)
     expect(FETCH_TIMEOUT_MS).toBeLessThanOrEqual(60_000)
+  })
+})
+
+describe('UNSHALLOW_TIMEOUT_MS', () => {
+  it('is bounded, and roomier than a single-ref freshen (#849)', () => {
+    expect(UNSHALLOW_TIMEOUT_MS).toBeGreaterThan(FETCH_TIMEOUT_MS)
+    expect(UNSHALLOW_TIMEOUT_MS).toBeLessThanOrEqual(120_000)
+  })
+})
+
+describe('isShallowRepository()', () => {
+  it('reports a real clone without throwing', () => {
+    expect(typeof isShallowRepository(process.cwd())).toBe('boolean')
+  })
+
+  it('is true for a shallow clone and false once it is completed', () => {
+    const fixture = createGitFixture('git-helpers-shallow')
+    try {
+      for (const n of [1, 2, 3]) commitFile(fixture.work, `${n}.txt`, `${n}`, `c${n}`)
+      git(fixture.work, ['push', '-q', 'origin', 'main'])
+      const clone = shallowClone(fixture, 'clone', 1)
+
+      expect(isShallowRepository(clone)).toBe(true)
+      unshallow(clone)
+      expect(isShallowRepository(clone)).toBe(false)
+    } finally {
+      rmSync(fixture.dir, { recursive: true, force: true })
+    }
   })
 })
 
