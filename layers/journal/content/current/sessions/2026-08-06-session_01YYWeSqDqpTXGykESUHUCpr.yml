@@ -1,0 +1,54 @@
+schemaVersion: 1
+session: session_01YYWeSqDqpTXGykESUHUCpr
+startedAt: 2026-08-06T01:05:47Z
+endedAt: 2026-08-06T01:23:52Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: completed
+outcome: Filed 3 issues, merged 1 doc PR
+summary: "Scheduled, no-human-in-the-loop frictions-to-fixes run. Delegated the survey/screening of the latest 20 session logs to a subagent, then acted on its report myself. Filed #871 and #872 (simple doc-only fixes) and #873 (a REGRESSION — piping a backgrounded command through tail/head still loses exit status/truncates output despite #384 and #812 both already closing this; per the skill's regression rule this was escalated for human review rather than dispatched for a third same-idea fix). Dispatched one Sonnet impl agent in an isolated worktree to fix #871+#872 as a single grouped PR (#874); reviewed the diff myself, confirmed gate green and scope match, posted the review verdict as a PR comment, then merged via scripts/merge-pr.ts. Both issues auto-closed on merge. Also posted fresh-evidence comments (verified against primary sources, not taken on the subagent's word) on three already-open regressions that recurred again in this window: #853, #694, #666. All work in this run was agent-initiated per the frictions-to-fixes Skill's own charter — no additional human ask beyond the scheduled invocation."
+prs:
+  - "874"
+docsRead: []
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: this run's own charter
+  - name: dispatch-subagents
+    reason: "worktree-isolated impl agent brief for PR #874"
+  - name: close-session
+    reason: closure trigger
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Survey subagent's causal framing for the #873 regression's merged-since.ts angle (\"combining stdout+stderr\") diverged from the friction session's own self-report (\"script prints to stdout\"); had to independently read scripts/merged-since.ts and scripts/git-helpers.ts's stdio config to confirm which was accurate before asserting it in a public GitHub issue."
+    solution: "No new fix needed — this is CLAUDE.md's verify-causal-claims rule working as intended. Recording for the pattern signal only: a subagent's narrative framing can be more accurate than a session's own hurried self-report, but both still need primary-source grounding before either is asserted externally."
+    severity: moderate
+  - description: mcp__github__issue_write's ADR-0017 provenance guard rejected all three batched issue-creation calls (#871/#872/#873) in one round because none of the three drafts had the session-URL header yet.
+    solution: No new fix needed — the guard did its documented job and returned the real session URL to use. Front-load the provenance header into the first draft next time a batch of issue_write calls goes out together.
+    severity: nit
+durationSec: 1085
+models:
+  claude-sonnet-5: 82
+toolCounts:
+  Agent: 2
+  ToolSearch: 2
+  mcp__github__search_issues: 5
+  mcp__github__issue_write: 6
+  Skill: 3
+  Bash: 11
+  mcp__github__add_issue_comment: 4
+  mcp__github__pull_request_read: 7
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Write: 1
+  PushNotification: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: "Doc fixes for issues #871 and #872"
+    model: sonnet
+gitBranch: claude/hopeful-brown-a4jt90
+entrypoint: remote_trigger
+cliVersion: 2.1.223
+trigger: frictions-to-fixes
