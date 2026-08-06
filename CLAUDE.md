@@ -288,6 +288,17 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   actual long-running process finishes, and "completed" stops meaning
   anything. Use `Monitor`/`ps` plus a log completion marker to confirm the
   process actually finished instead of trusting the outer call's return.
+- **A dispatched subagent must never background a Bash command at all**
+  (`run_in_background: true` — orchestrator/main sessions are untouched): no
+  backgrounded command ever wakes a stopped subagent, and `Monitor`
+  notifications don't resume one either — only an orchestrator `SendMessage`
+  does. Four recorded impl agents stalled exactly this way on backgrounded
+  `pnpm gate:scoped` runs despite three wording passes, so a `PreToolUse`
+  guard now denies the call in subagent context, teaching the working
+  alternative (foreground with an explicit `timeout`, split steps that exceed
+  10 minutes) in its deny message
+  (`scripts/subagent-background-guard.ts`; see
+  `docs/agents/subagent-background-guard.md`, issue #694).
 - **Never pipe a backgrounded or long-running command through ANY trailing
   command in a pipe/chain — `tail`/`head` are only the most common case — when
   its exit status or full output matters.** A pipeline reports the *last*
