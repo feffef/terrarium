@@ -1,0 +1,83 @@
+schemaVersion: 1
+session: session_01GSfW8QbXfJYk1Lu5My1ytz
+startedAt: 2026-08-06T06:38:50Z
+endedAt: 2026-08-06T07:39:17Z
+kind: interactive
+goal: Single-home the never-APPROVE PR-review rule
+status: in-review
+outcome: "PR #877 open, gate running"
+summary: "Human-instructed throughout: the user invoked /grill-with-docs on issue #853 (a regression filed ready-for-human), answered five design questions, then invoked /implement. The grilling green-lit doc-only (no PreToolUse guard), pr-workflow.md step 4 as the single home, folding issue-tracker.md's copy into its existing pointer, and a second bolded paragraph as the placement. Agent-initiated within those bounds: surfacing github-integration.md as an unconsidered third candidate home, and proposing the external-fork-PR second reason that makes the rule's \"never\" earned — both explicitly green-lit before implementing. Gate green; both code-review axes clean."
+prs:
+  - "877"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: the doc that lost the rule; step 4 is where it now lives
+  - path: docs/agents/issue-tracker.md
+    reason: "held the only surviving copy since #301"
+  - path: docs/agents/github-integration.md
+    reason: candidate third home — claims the mcp__github__* tool surface
+  - path: docs/agents/guest-contributions.md
+    reason: verified the human-only-merge claim the new second reason leans on
+  - path: scripts/github-provenance-guard.ts
+    reason: checked what a PreToolUse guard would cost before rejecting one
+  - path: .claude/settings.json
+    reason: confirmed pull_request_review_write is already hook-matched
+skillsUsed:
+  - name: grilling
+    reason: five-question interview that resolved the ready-for-human decision
+  - name: domain-modeling
+    reason: applied the 3-part test; concluded no ADR and no new vocabulary
+  - name: dispatch-subagents
+    reason: pinned explicit SHAs for the two read-only reviewers sharing one checkout
+  - name: code-review
+    reason: Standards + Spec axes on the final diff
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
+  - name: implement
+    reason: (invoked as a slash command)
+frictions:
+  - description: "Issue #853's solutions-considered listed only two candidate homes; github-integration.md, which claims the mcp__github__* surface in its own header, was never weighed."
+    solution: When a fix relocates a rule between docs/agents/*.md, enumerate candidates from those docs' own stated ownership headers rather than from the issue's list alone.
+    severity: minor
+  - description: The Stop hook's unpushed-commit prompt fired while both review subagents were still running, so the branch was pushed before findings could be folded in.
+    solution: Cost an amend plus a force-with-lease re-push for a one-line nit. Dispatching review before the first push, or accepting a follow-up commit, both avoid it.
+    severity: nit
+durationSec: 3627
+models:
+  claude-opus-5: 118
+toolCounts:
+  Skill: 6
+  ToolSearch: 3
+  mcp__github__issue_read: 3
+  Read: 7
+  Grep: 7
+  AskUserQuestion: 1
+  Bash: 15
+  Edit: 4
+  Agent: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  Write: 1
+filesEdited:
+  - docs/agents/pr-workflow.md
+  - docs/agents/issue-tracker.md
+subagents:
+  - type: general-purpose
+    task: Standards review of doc diff
+  - type: general-purpose
+    task: Spec review of doc diff
+gitBranch: claude/grill-docs-853-fs5z4q
+entrypoint: remote
+cliVersion: 2.1.223
+learnings:
+  - This repo's bar for escalating a doc rule to a PreToolUse guard is that the failure is SILENT, not merely that it recurred — a loud, self-correcting footgun stays doc-only however often it repeats.
+  - "A 'never' rule whose stated rationale covers only some of its cases is a latent regression: #301's wording only explained self-authored PRs, leaving the fork-PR case visibly unargued."
+ideas:
+  - "Add a validate-docs-pointers.ts step to the gate that resolves every 'see <doc>.md's recipe (step N)' cross-reference against the target's actual numbered list, failing when N doesn't exist. This session created exactly such a pointer, and step numbers in pr-workflow.md renumber silently whenever a step is inserted — the pointer keeps rendering fine while aiming at the wrong rule, which is the same invisible-drift shape that produced #853 in the first place."
