@@ -184,7 +184,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   `docs/agents/deferred-tool-guard.md`, issue #612).
 - **`ScheduleWakeup` is valid in exactly one mode — inside a `/loop` session's
   dynamic (self-paced) pacing. Never reach for it as a general-purpose wait,
-  heartbeat, or poll.** Outside `/loop` it is *not* a harmless no-op: a fired
+  heartbeat, or poll.** (The one exception: cancelling an already-scheduled
+  wakeup with `stop: true` is exempt in every mode, since a cancel can only
+  ever remove a pending wakeup — see `docs/agents/loop-only-tool-guard.md`.)
+  Outside `/loop` it is *not* a harmless no-op: a fired
   wakeup delivers a spurious turn that can re-run this session's whole prompt
   (one recorded misfire produced an unwanted "autonomous loop tick" that had to
   be diagnosed and stopped; another would have re-sent `/audit-docs`
