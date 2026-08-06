@@ -291,17 +291,16 @@ changeset that is entirely Inert may skip Heavy.
 
 ### Human-only
 A surface that a **Trusted** human must **merge** — never auto-merged by any
-chartered Skill, whatever the **Gate** says (ADR-0004's high-risk set). It says
-nothing about who may *edit* it: agents author changes to Human-only surfaces
-routinely, and the review is the control. Reading it as an edit prohibition is
-the recurring mistake the distinction exists to prevent.
+chartered Skill, whatever the **Gate** says (ADR-0004's high-risk set holds the
+list). It constrains merging only: agents author changes to Human-only surfaces
+routinely, and review is the control.
 
 ### Proposal
-An intended change to a file agents cannot push — `.github/workflows/*`, for want
-of the `workflow` OAuth scope — written down under `docs/proposals/` for a human
-to apply by hand. A Proposal records *pending* intent, so it is deleted when
+An intended change that an agent cannot push itself, written down for a human to
+apply by hand. A Proposal records *pending* intent, so it is deleted once
 applied; one left behind is a claim about the world that is no longer true. The
-class is deliberately shrinking (ADR-0026).
+class is deliberately shrinking (ADR-0026). See `CLAUDE.md` for where Proposals
+live and what one must contain.
 
 ## Tenants
 

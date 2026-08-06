@@ -114,7 +114,17 @@ it replaces:
 1. Drop CLAUDE.md's now-false "**Known gap:** `gate.yml` currently runs a stale
    subset of `pnpm gate`…" sentence in the Self-verification section — it points
    at #630's deleted file, and the parity spec supersedes it.
-2. Paste the ADR-0004 amendment below, after the existing `2026-08-06` ADR-0026
+2. Correct `scripts/validate-content-refs.ts`'s `checkProvenance` docstring. It
+   states as fact that "CI checks out with `actions/checkout@v7` and no
+   `fetch-depth` override (`.github/workflows/gate.yml`), so CI's own clone is
+   SHALLOW", and closes "Don't 'fix' this into a deep-history dependency". The
+   shell above adds `fetch-depth: 0`, so CI's clone becomes **deep** and that
+   premise is false. Nothing breaks — the check is deliberately soft, and a
+   failed lookup is never a violation either way — but leave the softness and
+   fix the reasoning: the check stays soft because a `dissolved`/`lost`
+   Artifact's referent is *expected* to be gone, which is reason enough on its
+   own. Local clones may still be shallow regardless.
+3. Paste the ADR-0004 amendment below, after the existing `2026-08-06` ADR-0026
    amendment, re-dated to the day you apply it. It is drafted here rather than
    landed because it asserts live CI behaviour that does not exist until you
    apply this file, and in this repo a stale doc is a behavioural bug (CLAUDE.md,

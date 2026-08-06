@@ -1,16 +1,9 @@
 name: Terrarium Gate
 description: The Gate's layered steps (ADR-0004), cheapest-first, with the Heavy tier skipped on a provably Inert changeset.
 
-# Why the Gate's substance lives here and not in `.github/workflows/gate.yml`:
-# ADR-0026. In short — the `workflow` OAuth scope agent sessions lack is fenced
-# at `.github/workflows/` only, so holding the steps here makes them agent-
-# pushable, while `gate.yml` shrinks to a shell a human applies once. This file
-# is Human-only to *merge* (ADR-0004's high-risk set), not to edit.
-#
-# `tests/unit/gate-parity.spec.ts` pins this step list against `scripts/gate.ts`'s
-# FLOOR/HEAVY and `package.json`'s `gate`, so CI can no longer drift into gating
-# on a stale subset of `pnpm gate` the way it did for `validate:content` and
-# `verify:mermaid`.
+# Why the Gate's steps live here and not in `.github/workflows/gate.yml`, and why
+# this file is Human-only to *merge* but not to edit: ADR-0026.
+# `tests/unit/gate-parity.spec.ts` pins this step list against `scripts/gate.ts`.
 
 inputs:
   github-token:

@@ -3,13 +3,14 @@
 Date: 2026-07-04
 Status: Accepted — high-risk set extended by ADR-0026
 
-> **Amended by [ADR-0026](0026-gate-workflow-thin-shell.md) (2026-08-06).** The
-> Gate's steps move out of `.github/workflows/gate.yml` into
-> `.github/actions/gate/action.yml`, a composite action agents *can* push
-> (the `workflow` OAuth scope is fenced at `.github/workflows/` only). That file
-> joins the high-risk set below — Human-only to **merge**, never auto-merged —
-> exactly as `content.config.ts` is. Nothing about what the Gate covers changes;
-> see ADR-0026 for why removing the push barrier removes no protection that the
+> **Amended by [ADR-0026](0026-gate-workflow-thin-shell.md) (2026-08-06).**
+> `.github/actions/gate/action.yml` — the composite action that will hold the
+> Gate's steps — **joins the high-risk set below**: Human-only to *merge*, never
+> auto-merged, exactly as `content.config.ts` is. That much binds now, because
+> the file exists now. The steps themselves still run from
+> `.github/workflows/gate.yml` until the shell swap in
+> `docs/proposals/879-gate-yml-thin-shell.md` is hand-applied. ADR-0026 records
+> the decision, and why removing the push barrier removes no protection the
 > merge barrier was not already providing.
 
 > **Amended (2026-07-06).** The high-risk (always human-only) set is extended

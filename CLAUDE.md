@@ -403,6 +403,8 @@ tests/e2e/smoke.spec.ts             # the ONE L2 smoke build; imports each Tenan
 tests/support/ , tests/README.md    # shared e2e helpers + the test-homing convention (ADR-0004)
 .github/workflows/gate.yml          # the safety gate (installed & live); human-only to
                                     #   merge — a PR touching it never auto-merges (ADR-0004)
+.github/actions/gate/action.yml     # the Gate's steps, agent-PUSHABLE but still human-only
+                                    #   to merge (ADR-0026); goes live on the gate.yml shell swap
 .agents/skills/ , .claude/skills/   # committed Skills (general + platform-operation)
 ```
 

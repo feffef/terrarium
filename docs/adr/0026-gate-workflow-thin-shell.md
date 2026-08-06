@@ -33,6 +33,18 @@ verified empirically rather than inferred: a throwaway
 `.github/actions/probe/action.yml` was committed, pushed, read back from
 `origin/`, and reverted (issue #879).
 
+The composite-step semantics this design leans on were confirmed against
+GitHub's own docs source (`github/docs@main`,
+`content/actions/reference/workflows-and-actions/`) rather than from memory,
+because two of them are widely believed to be unsupported and a stale search
+result says so: `metadata-syntax.md` documents `runs.steps[*].if`,
+`runs.steps[*].continue-on-error` ("Prevents the action from failing when a step
+fails"), and `runs.steps[*].uses`; `contexts.md` states that the `secrets`
+context "is not available for composite actions", which is why the doorbell's
+token is an input. A reviewer has already re-raised the `continue-on-error`
+doubt once — if the fail-open behaviour ever does misbehave in a real run, that
+is the assumption to re-test first.
+
 ## Decision
 
 **The Gate's substance lives in `.github/actions/gate/action.yml`, a composite
