@@ -259,6 +259,50 @@ their own issue can grant `ready-for-agent` without a per-issue Trusted
 green-light, live only while the owner is actually running that pipeline. Its
 opposite is **Trusted**.
 
+### Gate
+The objective, layered bar every change must clear before it lands (ADR-0004);
+formally the *safety gate*, but "the Gate" everywhere in practice. It is a single
+bar with two places it runs: locally, and in CI — where it is **authoritative**,
+the run that decides whether a gated PR may merge. Its steps split into a
+**Floor** and a **Heavy** tier; running both is a **Full gate**. Objective by
+construction: it asks machine-checkable questions only, so it can be trusted
+without trusting the author (see **Agent Authorship**).
+
+### Floor
+The **Gate** tier that always runs, whatever changed. Named for a minimum never
+gone below — not for being fast, which is incidental and not always true. The
+same sense the Platform uses elsewhere for a shared minimum contract.
+
+### Heavy
+The **Gate** tier that may be skipped when every changed path is **Inert**. Named
+for cost: these are the steps expensive enough to be worth not running. Skipping
+is one-directional — any uncertainty runs them.
+
+### Full gate
+**Floor** plus **Heavy** — the whole **Gate**. What runs unless a changeset is
+positively proven **Inert**; every unclear case resolves here rather than to a
+reduced run.
+
+### Inert
+A changed path that provably cannot affect the **Heavy** tier, so running Heavy
+against it could only re-confirm the previous answer. A property of the *path*,
+not of the change's importance: an Inert change may still be substantial. Only a
+changeset that is entirely Inert may skip Heavy.
+
+### Human-only
+A surface that a **Trusted** human must **merge** — never auto-merged by any
+chartered Skill, whatever the **Gate** says (ADR-0004's high-risk set). It says
+nothing about who may *edit* it: agents author changes to Human-only surfaces
+routinely, and the review is the control. Reading it as an edit prohibition is
+the recurring mistake the distinction exists to prevent.
+
+### Proposal
+An intended change to a file agents cannot push — `.github/workflows/*`, for want
+of the `workflow` OAuth scope — written down under `docs/proposals/` for a human
+to apply by hand. A Proposal records *pending* intent, so it is deleted when
+applied; one left behind is a claim about the world that is no longer true. The
+class is deliberately shrinking (ADR-0026).
+
 ## Tenants
 
 The Platform currently hosts seven Tenants. Each has its own **context**

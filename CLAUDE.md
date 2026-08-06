@@ -88,10 +88,13 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   file in the repo — "isolation logic" is a deliberately unpinned catch-all
   that also covers e.g. `shared/manifest.ts` (ADR-0025 calls it "the unit of
   isolation") and the root `nuxt.config.ts` (ADR-0018 treats it as a
-  human-only surface).
+  human-only surface), and `.github/actions/gate/action.yml`, which holds the
+  Gate's own steps (ADR-0026).
   "Human-only" gates *merging*, not editing:
   `content.config.ts` is hand-editable (below), but a PR touching it still
-  needs a human to merge.
+  needs a human to merge. `.github/actions/gate/action.yml` is the sharpest
+  case — agents *can* push it, unlike `.github/workflows/*`, and still must not
+  merge it.
 - **Skills** are generic, repo-committed, and first-class (ADR-0005). But the
   **external pack Skills** — the ones keyed in `skills-lock.json` (installed from
   `mattpocock/skills`) — are **off limits to edit**: their `SKILL.md` is not ours
