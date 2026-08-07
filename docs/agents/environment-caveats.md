@@ -15,6 +15,12 @@ new; don't re-diagnose any of these as a fresh problem.
   everywhere and were removed from that file (full diagnosis: #288). This caveat is
   `Claude_Code_Remote`-specific: in a **trusted local CLI**, `permissions.allow` entries
   for MCP servers that are actually present *do* work.
+- **`docs.github.com` returns 403 through the agent proxy.** Use
+  `raw.githubusercontent.com/github/docs/...` as the primary source instead
+  when verifying GitHub's own documentation — it has hit the same session
+  twice independently (main session and its own subagent) and once produced a
+  false "unverified" finding when the 403 was mistaken for the fact actually
+  being unconfirmable (issue #888).
 - **`commit_signing_key.pub` (`~/.ssh/commit_signing_key.pub`) can be
   unprovisioned (0 bytes) in this environment.** When it is, `git commit -S` —
   and the Stop hook's suggested `--reset-author` remedy for an "Unverified"
@@ -32,7 +38,13 @@ new; don't re-diagnose any of these as a fresh problem.
   via `CronList` rather than assuming it persists for its full stated
   lifetime; likewise, after a session resumes, proactively re-verify any
   outstanding backgrounded subagent's liveness rather than assuming it
-  survived the resume (issues #571, #794).
+  survived the resume (issues #571, #794). The same emptying hits **scratchpad
+  files on disk**, distinct from the already-fixed cross-agent-filename-collision
+  issue #847: a worker-process restart has deleted or truncated scratchpad
+  files mid-session (a docs copy shrunk to 14 bytes, session-log scratches
+  vanishing outright). Treat a scratchpad file as non-durable across a
+  restart/resume too — re-fetch or re-verify its content rather than trusting
+  a cached read (issue #891).
 - **Any `mcp__Claude_Code_Remote__*` call — not just `send_later` — can fail
   with a transient "permission stream closed before response received"
   error.** Converged workaround (mirrors the poll-until-green pattern in

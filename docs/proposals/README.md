@@ -40,3 +40,19 @@ subset of `pnpm gate` in the interim.
 A human applies the proposal by hand-editing the target workflow file and,
 once landed, deletes (or marks resolved) the proposal file in the same
 commit — this directory tracks *pending* proposals, not a permanent archive.
+
+## Superseding a pending proposal
+
+A proposal that a later proposal replaces must say so on its own file, not
+rely on a reader noticing the contradiction — three pending proposals once
+silently disagreed with each other, with an earlier one still instructing a
+human to do the thing the later one would undo (issue #890). Whoever adds the
+superseding proposal adds, in the same PR, a banner as the **first line** of
+the superseded file's body naming the replacement:
+
+```
+> **Superseded by [`docs/proposals/NNN-new-slug.md`](./NNN-new-slug.md).**
+```
+
+The superseded file otherwise stays as-is — this is an announcement, not a
+rewrite of its historical content — until a human applies or deletes it.
