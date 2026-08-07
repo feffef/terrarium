@@ -40,9 +40,10 @@ We keep mermaid syntax, so **(a)**.
 
 ## Why commit the SVGs (not render during CI)
 
-Rendering during every CI build would drag Chromium into CI and require a
-human-only `gate.yml` reorder (agents can't push workflow files — ADR-0004).
-Committing the rendered SVGs and drift-checking them instead:
+Rendering during every CI build would drag Chromium into CI and require adding
+a step to the Gate's own layered steps (`.github/actions/gate/action.yml`,
+agent-pushable but still human-only to merge — ADR-0026). Committing the
+rendered SVGs and drift-checking them instead:
 
 - keeps the browser out of CI **and** prod — only the author's machine renders;
 - makes each diagram **reviewable in the PR diff**;

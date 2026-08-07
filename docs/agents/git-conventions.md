@@ -113,6 +113,30 @@ directions: `changedPaths()` unshallows, and its CI sibling
   safe fix is `git commit --amend -F <file>` on the **tip commit only** — never
   rewrite non-tip history.
 
+## Don't `&&`-chain a branch rename/creation with what follows it
+
+**Never `&&`-chain a branch rename/creation with the commit/push steps that
+follow it** — `git branch -m ... && git commit ... && git push` (or
+`checkout -b`) fails at the rename/create when the branch already exists
+locally, and every step after the `&&` never runs, with no error pointing at
+it. Check existence first (e.g. `git rev-parse --verify <branch>`) and handle
+the already-exists case explicitly instead of chaining blindly.
+
+## Check `git status` before a destructive command, and never silence a state-changing command's output
+
+**Before `git reset --hard` (or any other command that discards uncommitted
+work), run `git status` first and stash or commit anything it finds.** A
+`git reset --hard HEAD~1` mid-teardown once discarded uncommitted edits to 5
+tracked files (recovered).
+
+**Never redirect a state-changing git command's output to `/dev/null` (or
+otherwise discard it).** A `git stash pop` piped to `/dev/null` once failed
+silently, leaving the stash un-popped and a later "base vs mine" comparison
+silently re-testing against base while looking like a clean pass. If you
+want quiet output, keep the exit code and stderr observable and check `$?`
+— don't discard the one signal (exit status / error text) that would have
+caught the failure.
+
 ## A Stop-hook "Unverified" flag isn't automatically yours to fix
 
 A session-closure Stop hook can flag commits that are actually **inherited
