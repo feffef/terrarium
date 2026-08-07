@@ -120,5 +120,13 @@ on the Read/Edit/Bash hot path.
 ## Merging
 
 ADR-0004's 2026-07-30 amendment makes a hook that runs unattended **human-only to
-merge**. This one will not auto-merge. The pure-core/dry-run split above exists
-partly to keep that review tractable.
+merge**. This one will not auto-merge — even though `detectSessionMode` and
+`checkLoopOnlyToolCall` are unit-tested and dry-run-able (which is exactly what
+the amendment says does *not*, by itself, clear the bar), the thing that still
+isn't gate-observable is the *live* hook-interception behaviour: whether
+`PreToolUse` actually fires before the harness's own call handling in this
+cloud environment (the open question `docs/research/deferred-tool-guard-hook-viability.md`
+raises for the sibling guard) is exactly the "external side effect... the
+gate's L0–L2 layers structurally cannot observe" the amendment separately
+escalates on. The pure-core/dry-run split above keeps *that* review tractable —
+it narrows what a human still has to reason about to the untestable slice.

@@ -277,13 +277,6 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   **144** (128 + 16, i.e. terminated by `SIGTERM`); that's the expected result of a
   successful kill, not itself evidence of a problem — don't re-derive it as a
   failure signal each session.
-- **Don't `&&`-chain a branch rename/creation with the commit/push steps that
-  follow it** — the same silent-drop failure mode as the pkill bullet above:
-  `git branch -m ... && git commit ... && git push` (or `checkout -b`) fails at
-  the rename/create when the branch already exists locally, and every step
-  after the `&&` never runs. Check existence first (e.g. `git rev-parse
-  --verify <branch>`) and handle the already-exists case explicitly instead of
-  chaining blindly.
 - **Never append a trailing shell `&` to a Bash command already passed with
   `run_in_background: true`.** The tool already backgrounds the whole command
   itself — adding `&` on top backgrounds the *inner* shell a second time, so
@@ -295,11 +288,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   (`run_in_background: true` — orchestrator/main sessions are untouched): no
   backgrounded command ever wakes a stopped subagent, and `Monitor`
   notifications don't resume one either — only an orchestrator `SendMessage`
-  does. Four recorded impl agents stalled exactly this way on backgrounded
-  `pnpm gate:scoped` runs despite three wording passes, so a `PreToolUse`
-  guard now denies the call in subagent context, teaching the working
-  alternative (foreground with an explicit `timeout`, split steps that exceed
-  10 minutes) in its deny message
+  does. Repeated impl-agent stalls on backgrounded `pnpm gate:scoped` runs drove
+  this — see the doc for the full incident count — so a `PreToolUse` guard now
+  denies the call in subagent context, teaching the working alternative
+  (foreground with an explicit `timeout`, split steps that exceed 10 minutes)
+  in its deny message
   (`scripts/subagent-background-guard.ts`; see
   `docs/agents/subagent-background-guard.md`, issue #694).
 - **Never pipe a backgrounded or long-running command through ANY trailing
@@ -313,27 +306,21 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   before the section you actually need. Redirect to a file instead (`cmd >
   log 2>&1`), check `$?` directly, and read the file in full — or truncate it
   only after confirming exit status.
-- **Before `git reset --hard` (or any other command that discards uncommitted
-  work), run `git status` first and stash or commit anything it finds.** A
-  `git reset --hard HEAD~1` mid-teardown once discarded uncommitted edits to 5
-  tracked files (recovered) — the same "check first" discipline as the
-  pkill/branch-rename/tail-piping footguns above, applied to this one.
-- **Never redirect a state-changing git command's output to `/dev/null` (or
-  otherwise discard it).** A `git stash pop` piped to `/dev/null` once failed
-  silently, leaving the stash un-popped and a later "base vs mine" comparison
-  silently re-testing against base while looking like a clean pass. If you
-  want quiet output, keep the exit code and stderr observable and check
-  `$?` — don't discard the one signal (exit status / error text) that would
-  have caught the failure.
-- **Git mechanics — staleness, history archaeology, commit hygiene — are
-  single-homed in `docs/agents/git-conventions.md`.** The rules that bite most
-  often: `git fetch origin main` and anchor on the merge-base before *any*
-  since-last-merge diff (the pre-cloned `origin/main` is usually stale); check
-  `git rev-parse --is-shallow-repository` before any blame/pickaxe work; a
-  clean auto-merge is not proof of correctness on a file both branches
-  restructured; and a Stop-hook "Unverified" flag may be inherited history
-  that is not yours to rewrite. Read that doc before rebasing, amending, or
-  drawing a conclusion from history.
+- **Git mechanics — staleness, history archaeology, commit hygiene, and the
+  git-specific chaining/output-discarding footguns (the same "check first"/
+  "never silence a state-changing command" discipline as the pkill/tail-piping
+  footguns above, applied to `git branch` renames, `git reset --hard`, and any
+  state-changing git command's output) — are single-homed in
+  `docs/agents/git-conventions.md`.** The rules that bite most often: `git
+  fetch origin main` and anchor on the merge-base before *any* since-last-merge
+  diff (the pre-cloned `origin/main` is usually stale); check `git rev-parse
+  --is-shallow-repository` before any blame/pickaxe work; a clean auto-merge is
+  not proof of correctness on a file both branches restructured; never `&&`-chain
+  a branch rename/creation with steps that follow it; run `git status` before a
+  destructive command like `git reset --hard`; never redirect a state-changing
+  git command's output to `/dev/null`; and a Stop-hook "Unverified" flag may be
+  inherited history that is not yours to rewrite. Read that doc before
+  rebasing, amending, or drawing a conclusion from history.
 - **Keep a PR's description in sync with its content — hard rule.** If you
   fundamentally change what a PR does (switch approach, swap the files it touches,
   answer review with a different solution), update the PR title/description in the
@@ -439,8 +426,9 @@ separate, currently-unresolved question — see
 `docs/research/github-branch-protection-vs-autonomous-log-commits.md` for
 `main`'s actual branch-protection state), so you don't run the full gate
 locally yourself. **Known gap:** `gate.yml` currently runs a stale subset of
-`pnpm gate` — see `docs/proposals/630-add-verify-mermaid-to-gate-workflow.md`
-for the missing step and why, pending a human to apply it. Both the keyed collections
+`pnpm gate` — see `docs/proposals/879-gate-yml-thin-shell.md` (which supersedes
+the earlier `630-add-verify-mermaid-to-gate-workflow.md`) for the fix and why,
+pending a human to apply it. Both the keyed collections
 (Ground rules above) and the routing map derive from the manifests at build
 time — no regenerate step needed.
 

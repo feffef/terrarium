@@ -136,10 +136,8 @@ catch the mistake in practice.
   to wait on, so to babysit a PR to green you must poll `get_check_runs`
   yourself (e.g. re-poll at agent-completion checkpoints, or `send_later` a
   wake when no agent is running to re-poll). **`ScheduleWakeup` isn't the tool
-  for this** — CLAUDE.md owns that rule (`docs/agents/loop-only-tool-guard.md`
-  has the mechanism, issue #814). A session polling non-webhook-delivered state
-  (like CI completion) uses `mcp__Claude_Code_Remote__send_later` to schedule
-  its own check-in instead.
+  for this** — CLAUDE.md owns that rule and the `send_later` mechanism
+  (`docs/agents/loop-only-tool-guard.md` has the guard, issue #814).
 - **This polling advice is scoped to non-webhook-delivered state like CI —
   it does not apply to a dispatched Agent-tool subagent.** A background
   `Agent` tool completion self-notifies automatically; waiting on one needs no
