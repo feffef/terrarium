@@ -31,6 +31,12 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
    proof of a real conflict, and this step never blocks the gate.
 3. Poll `get_check_runs` for green. A check reporting `in_progress` is not
    the same as failing — don't read a still-running check as a failure.
+   **"Do I conflict?" and "is my rationale still true?" are different
+   questions** — a clean `mergeable_state` and green CI on the merge ref only
+   answer the first. If the PR cites an ADR or a proposal, and the base has
+   moved since it was opened, re-read those cited docs before judging a
+   rebase unnecessary; new commits on `main` can invalidate the cited
+   reasoning without ever touching a file the PR itself changed (issue #889).
    **`scripts/merge-pr.ts <pr-number>` automates exactly this poll-then-merge
    step** (issue #667) — it polls the PR's check runs on a short interval
    until they resolve (green/red/timeout) and, on green, merges directly via
