@@ -1,0 +1,57 @@
+schemaVersion: 1
+session: session_01Khpkr5SXJspULPxtyG88tU
+startedAt: 2026-08-07T01:05:21Z
+endedAt: 2026-08-07T01:17:45Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: in-review
+outcome: 5 doc fixes PR opened, 1 regression escalated
+summary: "Scheduled, autonomous run of the frictions-to-fixes routine (no human prompt). Dispatched a survey subagent to read the last 20 session logs and screen candidates against the tracker. Filed 5 doc-only issues (#887-#891) for never-fixed frictions (reviewer-subagent-mutating-shared-checkout, docs.github.com 403 via proxy, PR-babysitting not re-checking cited-rationale staleness, no supersede convention for docs/proposals, scratchpad files not durable across a worker restart) and dispatched one Sonnet impl agent (worktree-isolated) to fix all five in a single grouped PR (#892, gate green locally). Also identified a regression: issue #779's doc-only fix for GitHub stripping angle-bracket text from issue/PR bodies did not hold — a later session hit the identical failure twice — so per this repo's regression-handling rule I filed a distinct issue (#886) rather than auto-dispatching a fix, and am alerting the user rather than deciding a guard's scope myself. PR #892 is open with CI in progress; babysitting to merge before finalizing this log as completed."
+prs:
+  - "892"
+docsRead:
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: the routine's own procedure
+  - path: skills-lock.json
+    reason: confirm dispatch-subagents is repo-owned, not an external pack skill
+  - path: docs/agents/pr-workflow.md
+    reason: "babysitting recipe for PR #892"
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the scheduled routine itself
+  - name: dispatch-subagents
+    reason: briefed and dispatched the worktree-isolated doc-fix impl agent
+  - name: close-session
+    reason: PR-open closure checkpoint
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Survey subagent's mcp__github__search_issues call for "angle bracket" returned an oversized result (60k+ chars, exceeded token limit) and had to be re-run with a narrower query.
+    solution: Prefer fields-filtered, narrowly-scoped search_issues queries from the start when searching for a common phrase likely to match many issues.
+    severity: nit
+durationSec: 744
+models:
+  claude-sonnet-5: 57
+toolCounts:
+  Agent: 2
+  Bash: 3
+  ToolSearch: 1
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 6
+  Skill: 3
+  mcp__github__pull_request_read: 6
+  Grep: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix 5 doc frictions in one grouped PR
+    model: sonnet
+gitBranch: claude/hopeful-brown-coxedc
+entrypoint: remote_trigger
+cliVersion: 2.1.223
+trigger: frictions-to-fixes
+learnings:
+  - dispatch-subagents is confirmed repo-owned (not in skills-lock.json), so it is agent-editable per ADR-0015 — worth remembering next time a friction fix targets it.
