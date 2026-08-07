@@ -1,0 +1,83 @@
+schemaVersion: 1
+session: session_01578F2gMiCGstNn4uWr1kvA
+startedAt: 2026-08-07T04:10:54Z
+endedAt: 2026-08-07T04:30:55Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: completed
+outcome: 6 findings fact-checked, fixed, PR merged
+summary: "Scheduled, unattended /audit-docs run (no human prompt this turn). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel across every Live-tier doc; pooled 7 findings (Concision found none). Dispatched one independent fact-checker that re-derived each claim from primary sources: 6 CONFIRMED/CONFIRMED-BUT, 1 WRONG (a claimed CLAUDE.md/tenant-layers.md duplication that on close read covers two different facts). Fixed all 6 in CLAUDE.md, docs/agents/git-conventions.md, docs/agents/github-integration.md, docs/agents/loop-only-tool-guard.md, and docs/research/mermaid-server-side-rendering.md — a stale proposal pointer, a single-home claim that pointed at content never actually moved, a near-verbatim incident-count duplication, a restated send_later sentence, an ADR-0026-outdated rationale, and an under-argued merge-status claim. Ran `pnpm gate:scoped` green (all 5 changed paths classified Inert), committed, pushed, and opened PR #893. Checked `check-conflicting-issues.ts`'s advisory hit against issue #766 (an on-hold future CLAUDE.md-modularization proposal) and judged no real conflict. Posted the verdict as a COMMENT-event review (never APPROVE — self-authored PR) and merged via `merge-pr.ts` on green — no human-only surface touched, so it rode the audit-docs self-merge tier. Entirely agent-initiated end to end; no live human input was received this session."
+prs:
+  - "893"
+docsRead:
+  - path: CLAUDE.md
+    reason: the Live/Historical/Pack-generic tier map and the ADR-0018 amendment convention this sweep classifies against
+  - path: docs/agents/git-conventions.md
+    reason: verify whether the three git-mechanics bullets CLAUDE.md claimed were single-homed here actually were
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: verify loop-only-tool-guard.md's merge-status claim against the actual 2026-07-30 amendment text
+  - path: docs/agents/loop-only-tool-guard.md
+    reason: the doc under the Coherence-lens Ambiguity finding
+  - path: docs/proposals/879-gate-yml-thin-shell.md
+    reason: confirm it is the live pending proposal superseding 630, and that gate.yml still has the old inline steps
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (read before editing)
+  - path: docs/agents/github-integration.md
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this session's whole task
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: TaskCreate errored on first call — I guessed its shape (a bulk `tasks` array) instead of loading the schema via ToolSearch first, exactly the failure CLAUDE.md's deferred-tool rule warns about.
+    solution: Load ToolSearch for a deferred tool before the first call, every time, even when the name reads as self-evident (CLAUDE.md already says this — I just didn't follow it).
+    severity: minor
+  - description: One lens finding (subagent-backgrounding duplication) required judgment-call reconciliation against CLAUDE.md's own established index-bullet-with-rationale pattern for guard docs — the fact-checker's CONFIRMED-BUT was narrower than the original finding claimed (only 2 of 3 files duplicated, not all 3), which took an extra manual read of two more guard docs to settle correctly rather than trusting the pooled finding at face value.
+    solution: No repo change needed; this is exactly why the skill requires an independent fact-check pass before fixing rather than acting on lens-agent findings directly.
+    severity: nit
+durationSec: 1200
+models:
+  claude-sonnet-5: 138
+toolCounts:
+  Bash: 29
+  Agent: 5
+  TaskCreate: 2
+  ToolSearch: 3
+  Read: 9
+  Edit: 11
+  mcp__github__search_pull_requests: 1
+  mcp__github__get_file_contents: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__issue_read: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  TaskUpdate: 1
+filesEdited:
+  - CLAUDE.md
+  - docs/research/mermaid-server-side-rendering.md
+  - docs/agents/git-conventions.md
+  - docs/agents/github-integration.md
+  - docs/agents/loop-only-tool-guard.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check pooled audit-docs findings
+gitBranch: claude/festive-mayer-0n4nz1
+entrypoint: remote_trigger
+cliVersion: 2.1.224
+trigger: audit-docs
