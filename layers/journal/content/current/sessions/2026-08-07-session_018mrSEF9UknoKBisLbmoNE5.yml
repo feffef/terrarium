@@ -1,0 +1,54 @@
+schemaVersion: 1
+session: session_018mrSEF9UknoKBisLbmoNE5
+startedAt: 2026-08-07T00:46:09Z
+endedAt: 2026-08-07T00:57:02Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: in-review
+outcome: "PR #885 opened, 1 stale entry removed"
+summary: "Fully agent-initiated: fired by the scheduled audit-skills Routine with no live human input. Ran scripts/audit-skills.ts for the 40-session scorecard. Graded every Skill's importance/role against usedIn + session goals/summaries: all current grades and roles already matched the evidence, so no bright-line (>=2-session) grade/role change qualified. Found one inventoried && !onDisk phantom entry, review.yml — verified it maps to no on-disk Skill directory, no skills-lock.json pack entry, and no built-in CLI Skill in this session's available list — and removed it as the SKILL.md's mirror-case rule directs. Ran the regression watch (step 4) on the 4 bracketed SKILL.md edits (audit-skills, dispatch-subagents, frictions-to-fixes, midden-survey): midden-survey had zero usage both sides (skipped, no signal); audit-skills and frictions-to-fixes showed fewer frictions after their edits (no regression); dispatch-subagents' Phase A screen showed a friction-count increase, but the Phase B deep-read of both bracketing sessions (session_01SuvMh3wC6nyykyAVQuYVb4, session_013ZVJh6GFa2UcB9cPeDri6b) found the post-edit frictions were unrelated to the edited guidance (one was the motivating incident the edit itself fixed; the other was a distinct Monitor/backgrounding friction) - no regression confirmed, nothing recorded. Checked orphanedSessions (orphanScan: scanned=true): the sole candidate, session_019aeaoPHYWMJVekmUvTMhQ9, is already thoroughly tracked at #736 (root cause fixed at #747) with this exact session id/commits/date already cited in its comments, so no duplicate comment was posted per the SKILL's no-duplicate-citation rule. humanPromptedClosures, manuallyRescuedClosures, and orphanSuppressionLog were all empty (healthy). misclassifiedKind flagged session_0159mPyC4Wf1J45K7NopBcTM, informational only per issue #449's spec, no action taken. Ran pnpm gate:scoped (full gate, 80/80 e2e green), opened PR #885 touching only the one Inventory YAML file, and subscribed to its activity."
+prs:
+  - "885"
+docsRead:
+  - path: CLAUDE.md
+    reason: chartered-job branch-off checklist
+  - path: scripts/audit-skills.ts
+    reason: RESOLVED_ORPHANED_SESSIONS / RESOLVED_MANUALLY_RESCUED_CLOSURES contents, MAX_SKILL_SESSION_FILES cap
+  - path: skills-lock.json
+    reason: confirm review is not a pack Skill key
+  - path: layers/journal/content/current/sessions/2026-08-04-session_01Jq3LSixTigcAyZCEe4pG2Y.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-03-session_01SuvMh3wC6nyykyAVQuYVb4.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-05-session_013ZVJh6GFa2UcB9cPeDri6b.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this run's own procedure
+  - name: close-session
+    reason: closure trigger at PR-open
+  - name: log-session
+    reason: this log
+frictions: []
+durationSec: 653
+models:
+  claude-sonnet-5: 88
+toolCounts:
+  Bash: 28
+  Read: 3
+  ToolSearch: 4
+  mcp__github__search_issues: 1
+  mcp__github__get_commit: 1
+  mcp__github__issue_read: 1
+  Grep: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+gitBranch: claude/upbeat-sagan-dnawhr
+entrypoint: remote_trigger
+cliVersion: 2.1.223
+trigger: audit-skills
