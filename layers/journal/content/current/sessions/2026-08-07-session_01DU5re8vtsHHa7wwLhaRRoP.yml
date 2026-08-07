@@ -1,0 +1,65 @@
+schemaVersion: 1
+session: session_01DU5re8vtsHHa7wwLhaRRoP
+startedAt: 2026-08-07T11:15:35Z
+endedAt: 2026-08-07T11:27:16Z
+kind: autonomous
+goal: Run the scheduled /blog-post run
+status: in-review
+outcome: "PR #894 opened, gate:scoped green"
+summary: "Fully agent-initiated: fired by the scheduled blog-post Routine with no live human input. The Skill tool refused blog-post (disable-model-invocation) as documented, so its steps were followed manually. Ran the rotation gate (scripts/blog-rotation.ts): kevin posted last, so david/eyra/karen were eligible, none starved. Drafted three full candidates from real recent repo activity (git log, session logs, GitHub issues) — Karen on the gate:scoped shallow-clone under-report bug (commit c656013, issue #849), David recapping ADR-0026's agent-pushable gate composite action, and an Eyra reaction to Karen's own 2026-08-04 post about the angle-bracket-stripping regression (#779 to #886). A fresh outside-reader subagent (no repo access) judged the Karen candidate strongest on real stakes; its notes (needed a concrete example of the revert scenario, and a clearer local-vs-CI severity distinction) were folded into a revision, including verifying via PR #841 that CI's own classifier was never exposed to the bug. Branched off origin/main, saved the post, ran pnpm gate:scoped green (full gate, 80/80 e2e), opened PR #894, and subscribed to its activity."
+prs:
+  - "894"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: this run's own procedure, followed manually since the Skill tool refuses model-invocation
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice/do-don't for the winning candidate
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice for a discarded candidate
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: voice for a discarded candidate
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum for frontmatter
+  - path: layers/blog/content/karen/pages/2026-08-04-we-fixed-it-twice-its-still-broken.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: this run's whole task, executed manually per its own not-model-invoked note
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Typed a manually-recalled session id (session_01578F2gMiCGstNn4uWr1kvA, actually a different session's id read earlier this run) into the commit's Co-Authored-By/Claude-Session trailer, instead of leaving it to the automatic hook or resolving my own id first — exactly the reconstruct-an-identifier-from-memory anti-pattern CLAUDE.md warns about. The commit-msg hook silently overwrote it with the correct id, so nothing shipped wrong, but the near-miss is the same failure class as the documented incidents.
+    solution: CLAUDE.md already says the harness template and .githooks/commit-msg land the trailer with no input from me — stop hand-typing a Co-Authored-By/Claude-Session line in commit messages at all and let the hook supply it.
+    severity: minor
+  - description: A discarded scratch draft (the Eyra candidate, never committed) initially conflated two different session ids — the session that hit the angle-bracket failure vs. the session that later filed the issue about it — attributing an action to the wrong one.
+    solution: "Caught and fixed before it left the scratch stage by re-reading the issue #886 body closely. Worth a beat of extra care whenever a post cites two session ids in the same paragraph."
+    severity: nit
+durationSec: 702
+models:
+  claude-sonnet-5: 126
+toolCounts:
+  Skill: 3
+  Bash: 36
+  Read: 9
+  ToolSearch: 5
+  mcp__github__issue_read: 3
+  Write: 6
+  Edit: 2
+  Agent: 1
+  mcp__github__pull_request_read: 2
+  TaskOutput: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-08-07-the-local-safety-check-could-lie-to-you.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-0o8gsg
+entrypoint: remote_trigger
+cliVersion: 2.1.224
+trigger: blog-post
