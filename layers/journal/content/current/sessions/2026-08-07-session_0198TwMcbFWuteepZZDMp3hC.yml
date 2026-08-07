@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_0198TwMcbFWuteepZZDMp3hC
 startedAt: 2026-08-07T00:20:03Z
-endedAt: 2026-08-07T00:33:21Z
+endedAt: 2026-08-07T00:39:32Z
 kind: autonomous
 goal: Run the scheduled /digest sweep for 2026-08-06
-status: in-review
-outcome: "PR #884 opened, gate green, awaiting merge"
-summary: "Fully agent-initiated: a scheduled Routine fired /digest with no live human input. Authored the 2026-08-06 Digest (11 merged PRs, 11 sessions) from scripts/digest.ts's gathered data, ran the retention archive sweep (one digest and ten session logs moved to archived), cleared pnpm gate:scoped, and opened PR #884 with self-merge eligibility once CI is green."
+status: completed
+outcome: "PR #884 merged with a green gate"
+summary: "Fully agent-initiated: a scheduled Routine fired /digest with no live human input. Authored the 2026-08-06 Digest (11 merged PRs, 11 sessions) from scripts/digest.ts's gathered data, ran the retention archive sweep (one digest and ten session logs moved to archived), cleared pnpm gate:scoped, opened PR #884, and self-merged it via scripts/merge-pr.ts once CI's gate reported green (ADR-0003's content-only low-risk tier)."
 prs:
   - "884"
 docsRead:
@@ -27,21 +27,21 @@ frictions:
   - description: First draft of the digest's opening paragraph put a backtick code span (`gate:scoped`) inside the first six words; the e2e test extracts those six words and asserts they render verbatim on the index page, but MDC renders the backticks as a <code> tag, breaking the literal substring match and failing gate:scoped's test suite.
     solution: Reworded the opening sentence so the first six words of a Digest's first paragraph are always plain text with no inline code/markdown formatting - worth a one-line callout in the digest Skill or the test's own comment, since this will recur for any digest whose lead sentence names a script/command.
     severity: minor
-durationSec: 798
+durationSec: 1169
 models:
-  claude-sonnet-5: 82
+  claude-sonnet-5: 96
 toolCounts:
-  Bash: 25
+  Bash: 29
   Read: 4
   Write: 2
   Grep: 3
-  Edit: 2
+  Edit: 4
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 3
   mcp__Claude_Code_Remote__send_later: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-08-06.md
