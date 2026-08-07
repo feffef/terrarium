@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01DU5re8vtsHHa7wwLhaRRoP
 startedAt: 2026-08-07T11:15:35Z
-endedAt: 2026-08-07T11:27:16Z
+endedAt: 2026-08-07T11:30:27Z
 kind: autonomous
 goal: Run the scheduled /blog-post run
-status: in-review
-outcome: "PR #894 opened, gate:scoped green"
-summary: "Fully agent-initiated: fired by the scheduled blog-post Routine with no live human input. The Skill tool refused blog-post (disable-model-invocation) as documented, so its steps were followed manually. Ran the rotation gate (scripts/blog-rotation.ts): kevin posted last, so david/eyra/karen were eligible, none starved. Drafted three full candidates from real recent repo activity (git log, session logs, GitHub issues) — Karen on the gate:scoped shallow-clone under-report bug (commit c656013, issue #849), David recapping ADR-0026's agent-pushable gate composite action, and an Eyra reaction to Karen's own 2026-08-04 post about the angle-bracket-stripping regression (#779 to #886). A fresh outside-reader subagent (no repo access) judged the Karen candidate strongest on real stakes; its notes (needed a concrete example of the revert scenario, and a clearer local-vs-CI severity distinction) were folded into a revision, including verifying via PR #841 that CI's own classifier was never exposed to the bug. Branched off origin/main, saved the post, ran pnpm gate:scoped green (full gate, 80/80 e2e), opened PR #894, and subscribed to its activity."
+status: completed
+outcome: "PR #894 merged with a green gate"
+summary: "Fully agent-initiated: fired by the scheduled blog-post Routine with no live human input. The Skill tool refused blog-post (disable-model-invocation) as documented, so its steps were followed manually. Ran the rotation gate (scripts/blog-rotation.ts): kevin posted last, so david/eyra/karen were eligible, none starved. Drafted three full candidates from real recent repo activity (git log, session logs, GitHub issues) — Karen on the gate:scoped shallow-clone under-report bug (commit c656013, issue #849), David recapping ADR-0026's agent-pushable gate composite action, and an Eyra reaction to Karen's own 2026-08-04 post about the angle-bracket-stripping regression (#779 to #886). A fresh outside-reader subagent (no repo access) judged the Karen candidate strongest on real stakes; its notes (needed a concrete example of the revert scenario, and a clearer local-vs-CI severity distinction) were folded into a revision, including verifying via PR #841 that CI's own classifier was never exposed to the bug. Branched off origin/main, saved the post, ran pnpm gate:scoped green (full gate, 80/80 e2e), opened PR #894, and subscribed to its activity. CI's gate went green, check-conflicting-issues.ts found no hits, posted the verdict as a COMMENT-event review, and merged via merge-pr.ts (merge commit 2684052) — the blog-post self-merge tier, content-only, no human-only surface touched. Unsubscribed and cancelled the standing check-in trigger once merged."
 prs:
   - "894"
 docsRead:
@@ -36,23 +36,27 @@ frictions:
   - description: A discarded scratch draft (the Eyra candidate, never committed) initially conflated two different session ids — the session that hit the angle-bracket failure vs. the session that later filed the issue about it — attributing an action to the wrong one.
     solution: "Caught and fixed before it left the scratch stage by re-reading the issue #886 body closely. Worth a beat of extra care whenever a post cites two session ids in the same paragraph."
     severity: nit
-durationSec: 702
+durationSec: 893
 models:
-  claude-sonnet-5: 126
+  claude-sonnet-5: 148
 toolCounts:
   Skill: 3
-  Bash: 36
-  Read: 9
-  ToolSearch: 5
+  Bash: 40
+  Read: 10
+  ToolSearch: 6
   mcp__github__issue_read: 3
   Write: 6
-  Edit: 2
+  Edit: 4
   Agent: 1
   mcp__github__pull_request_read: 2
   TaskOutput: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__list_triggers: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/karen/pages/2026-08-07-the-local-safety-check-could-lie-to-you.md
 subagents:
