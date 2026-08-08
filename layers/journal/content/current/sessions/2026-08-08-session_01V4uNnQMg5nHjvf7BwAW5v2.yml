@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01V4uNnQMg5nHjvf7BwAW5v2
 startedAt: 2026-08-08T00:16:38Z
-endedAt: 2026-08-08T00:23:13Z
+endedAt: 2026-08-08T00:27:32Z
 kind: autonomous
 goal: Run the scheduled /digest sweep for 2026-08-07
-status: in-review
-outcome: "PR #896 opened, awaiting green gate"
-summary: "Scheduled /digest Routine fired autonomously (no human prompt this session). Ran scripts/digest.ts list/gather, authored the 2026-08-07 Digest narrating the day's 5 merged PRs (audit-docs reconciliation, a frictions-to-fixes cycle, audit-skills cleanup, the 2026-08-06 digest, and Kevin's third blog post), ran the archive-journal-content retention sweep (moved 2026-07-31's digest and 9 session logs to archived), cleared pnpm gate:scoped locally, and opened PR #896 with digest-only scope, eligible for self-merge on a green CI gate per the digest content-only low-risk tier (ADR-0003/ADR-0004)."
+status: completed
+outcome: "PR #896 merged with a green gate"
+summary: "Scheduled /digest Routine fired autonomously (no human prompt this session). Ran scripts/digest.ts list/gather, authored the 2026-08-07 Digest narrating the day's 5 merged PRs (audit-docs reconciliation, a frictions-to-fixes cycle, audit-skills cleanup, the 2026-08-06 digest, and Kevin's third blog post), ran the archive-journal-content retention sweep (moved 2026-07-31's digest and 9 session logs to archived), cleared pnpm gate:scoped locally, opened PR #896 with digest-only scope, and self-merged it on a green CI gate per the digest content-only low-risk tier (ADR-0003/ADR-0004, docs/agents/pr-workflow.md)."
 prs:
   - "896"
 docsRead:
@@ -20,21 +20,24 @@ skillsUsed:
   - name: log-session
     reason: (no reason given)
 frictions: []
-durationSec: 395
+durationSec: 654
 models:
-  claude-sonnet-5: 49
+  claude-sonnet-5: 69
 toolCounts:
-  Bash: 14
+  Bash: 19
   Read: 1
   Write: 2
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  Edit: 1
+  Edit: 2
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-08-07.md
 gitBranch: claude/compassionate-lovelace-oyad36
