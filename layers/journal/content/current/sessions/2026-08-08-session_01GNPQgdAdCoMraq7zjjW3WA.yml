@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01GNPQgdAdCoMraq7zjjW3WA
 startedAt: 2026-08-08T11:12:06Z
-endedAt: 2026-08-08T11:25:46Z
+endedAt: 2026-08-08T11:29:27Z
 kind: autonomous
 goal: Run the scheduled /blog-post run
-status: in-review
-outcome: "PR #901 open, subscribed for merge"
-summary: "Fully agent-initiated: fired by the scheduled blog-post Routine, no live human input this run. Ran the rotation gate (scripts/blog-rotation.ts): karen posted last and eyra was missing from the four most recent posts, so the eligible set collapsed to exactly eyra — all three candidates were hers. Drafted three full candidates from real recent activity (git log, session logs, issue #886, ADR-0026, the branch-protection research note): a reaction to Kevin's \"Nobody Checked This For a Month\" about ADR-0026's narrower workflow-scope fence, a standalone on the recurring angle-bracket-stripping regression (issue #886), and a standalone on main having no GitHub branch protection or ruleset at all. A fresh outside-reader subagent (no repo access) judged the branch-protection post strongest on real stakes; its notes (unglossed ADR/ruleset jargon, an unidentified \"the owner\", an unverifiable-sounding audit citation) were folded into a revision. Branched on the caller-pinned claude/zen-heisenberg-7qldqe (already at origin/main), saved the post, ran pnpm gate:scoped green (full gate, 80/80 e2e — a new content file isn't in the inert set), committed, pushed, opened PR #901, and subscribed to its activity."
+status: completed
+outcome: "PR #901 merged with a green gate"
+summary: "Fully agent-initiated: fired by the scheduled blog-post Routine, no live human input this run. Ran the rotation gate (scripts/blog-rotation.ts): karen posted last and eyra was missing from the four most recent posts, so the eligible set collapsed to exactly eyra — all three candidates were hers. Drafted three full candidates from real recent activity (git log, session logs, issue #886, ADR-0026, the branch-protection research note): a reaction to Kevin's \"Nobody Checked This For a Month\" about ADR-0026's narrower workflow-scope fence, a standalone on the recurring angle-bracket-stripping regression (issue #886), and a standalone on main having no GitHub branch protection or ruleset at all. A fresh outside-reader subagent (no repo access) judged the branch-protection post strongest on real stakes; its notes (unglossed ADR/ruleset jargon, an unidentified \"the owner\", an unverifiable-sounding audit citation) were folded into a revision. Branched on the caller-pinned claude/zen-heisenberg-7qldqe (already at origin/main), saved the post, ran pnpm gate:scoped green (full gate, 80/80 e2e — a new content file isn't in the inert set), committed, pushed, opened PR #901, and subscribed to its activity. CI's gate went green, check-conflicting-issues.ts found no hits, posted the verdict as a COMMENT-event issue comment, and merged via scripts/merge-pr.ts (merge commit 79aa9dd) — the blog-post self-merge tier, content-only, no human-only surface touched. Unsubscribed and cancelled the standing check-in trigger once merged."
 prs:
   - "901"
 docsRead:
@@ -45,24 +45,27 @@ frictions:
   - description: Ran a bare `sleep 1` Bash call while waiting on a backgrounded pnpm gate:scoped run, against CLAUDE.md's explicit "avoid unnecessary sleep" guidance for a task the harness already notifies on completion.
     solution: When a backgrounded command is already running, just end the turn and let the completion notification arrive — no filler Bash call needed at all.
     severity: nit
-durationSec: 820
+durationSec: 1041
 models:
-  claude-sonnet-5: 136
+  claude-sonnet-5: 158
 toolCounts:
-  Bash: 42
-  Read: 13
+  Bash: 46
+  Read: 14
   mcp__github__issue_read: 1
   Write: 7
-  Edit: 3
+  Edit: 6
   Agent: 1
   ToolSearch: 2
   TaskCreate: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/eyra/pages/2026-08-08-the-front-door-has-no-lock.md
 subagents:
