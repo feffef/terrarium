@@ -1,0 +1,69 @@
+schemaVersion: 1
+session: session_0173pkX2YKNJNvzZuQcjM1a9
+startedAt: 2026-08-08T04:08:48Z
+endedAt: 2026-08-08T04:27:13Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: completed
+outcome: "2 findings fixed, PR #900 merged"
+summary: "Scheduled-routine firing of /audit-docs (no human prompt this run). Fanned out four parallel paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the repo's Live-tier docs, pooled their findings, deduped, and dispatched an independent fact-checker against primary sources before fixing. Freshness and Concision reported no findings; Single-home and Coherence together surfaced 4 candidates, of which the fact-checker confirmed 2 and found 2 WRONG. Fixed both confirmed findings in CLAUDE.md (trimmed a restated ScheduleWakeup incident narrative to a pointer at docs/agents/loop-only-tool-guard.md; corrected a misattributed ADR-0025 quote). Ran pnpm gate:scoped (green, floor only — the single changed file classified inert), committed, pushed, and opened PR #900, posted the pre-merge verdict comment, and merged it via scripts/merge-pr.ts on a green safety-gate check — self-merged per the Skill's ADR-0003 low-risk-content-tier grant, no human-only surface touched. No needs-triage issue filed — no unresolvable factual conflict turned up. All work this run was agent-initiated per the Skill's own autonomous, bounded charter; no direct human instruction was given during the run itself."
+prs:
+  - "900"
+docsRead:
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: docs/agents/loop-only-tool-guard.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the run's own charter
+  - name: dispatch-subagents
+    reason: brief checklist before fanning out the 4 lens agents + fact-checker
+  - name: close-session
+    reason: closure trigger at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Drafted the commit message with a hardcoded Claude-Session URL copied from an unrelated prior commit visible in `git log` output, instead of leaving it for the repo's commit-msg hook or resolving it fresh — exactly the "never reconstruct an identifier from memory" failure CLAUDE.md calls out. The repo's `.githooks/commit-msg` hook (ADR-0017 backstop) silently overwrote it with the correct session id, so no wrong id actually landed, but the guard rail that saved this was the hook, not my own discipline.
+    solution: Never type a Claude-Session trailer by hand in a commit message body — per CLAUDE.md, commits need nothing from the author; the harness template and commit-msg hook land it. Only include the provenance header inline (PR/issue/comment bodies), and there resolve the id from the system-prompt template at the moment of writing, not from any value seen elsewhere in the transcript. Caught before publish, zero user-facing impact, but still a rule violation worth logging.
+    severity: minor
+durationSec: 1105
+models:
+  claude-sonnet-5: 169
+toolCounts:
+  Skill: 4
+  Bash: 24
+  Agent: 5
+  ToolSearch: 6
+  TaskCreate: 6
+  TaskUpdate: 16
+  Read: 12
+  Edit: 9
+  Glob: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Write: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  TaskList: 1
+filesEdited:
+  - CLAUDE.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: drift + orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: duplication + mis-location"
+  - type: general-purpose
+    task: "Concision lens: verbose + stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: contradiction + ambiguity"
+  - type: general-purpose
+    task: Independent fact-check of pooled findings
+gitBranch: claude/festive-mayer-4njkrx
+entrypoint: remote_trigger
+cliVersion: 2.1.226
+trigger: audit-docs
+learnings:
+  - The .githooks/commit-msg hook (scripts/provenance-footer.ts) reconstructs and overwrites a wrong/hand-typed Claude-Session trailer rather than just appending when absent — it's a stronger backstop than CLAUDE.md's prose suggests ("appends it when absent"); it also corrects a present-but-wrong one.
