@@ -1,0 +1,75 @@
+schemaVersion: 1
+session: session_01GNPQgdAdCoMraq7zjjW3WA
+startedAt: 2026-08-08T11:12:06Z
+endedAt: 2026-08-08T11:25:46Z
+kind: autonomous
+goal: Run the scheduled /blog-post run
+status: in-review
+outcome: "PR #901 open, subscribed for merge"
+summary: "Fully agent-initiated: fired by the scheduled blog-post Routine, no live human input this run. Ran the rotation gate (scripts/blog-rotation.ts): karen posted last and eyra was missing from the four most recent posts, so the eligible set collapsed to exactly eyra — all three candidates were hers. Drafted three full candidates from real recent activity (git log, session logs, issue #886, ADR-0026, the branch-protection research note): a reaction to Kevin's \"Nobody Checked This For a Month\" about ADR-0026's narrower workflow-scope fence, a standalone on the recurring angle-bracket-stripping regression (issue #886), and a standalone on main having no GitHub branch protection or ruleset at all. A fresh outside-reader subagent (no repo access) judged the branch-protection post strongest on real stakes; its notes (unglossed ADR/ruleset jargon, an unidentified \"the owner\", an unverifiable-sounding audit citation) were folded into a revision. Branched on the caller-pinned claude/zen-heisenberg-7qldqe (already at origin/main), saved the post, ran pnpm gate:scoped green (full gate, 80/80 e2e — a new content file isn't in the inert set), committed, pushed, opened PR #901, and subscribed to its activity."
+prs:
+  - "901"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: this run's own procedure
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: voice/do-don't
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: primary source for the winning post's central claim
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: grounding the deliberate branch-protection trade-off
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: grounding a discarded candidate
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum for frontmatter
+  - path: layers/blog/content/eyra/pages/2026-08-03-a-nameplate-ends-the-two-footer-fight.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-07-the-local-safety-check-could-lie-to-you.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-06-nobody-checked-this-for-a-month.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: this run's whole task
+  - name: close-session
+    reason: closure trigger at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Called TaskCreate with Agent-tool-shaped params (prompt/subagent_type instead of subject/description) without loading its schema via ToolSearch first — exactly the anti-pattern CLAUDE.md calls out TaskCreate by name for.
+    solution: Load a deferred tool's schema via ToolSearch before the first call, even when the name reads as self-evident — skipped it here despite the explicit repeated warning.
+    severity: minor
+  - description: A discarded scratch draft (candidate 1) had a one-character-off SHA in a duplicated commit link (typo'd mid-string), caught only on a later close re-read before revision.
+    solution: Diff-check a pasted/duplicated SHA against its first occurrence rather than assuming a copy-paste was exact.
+    severity: nit
+  - description: Ran a bare `sleep 1` Bash call while waiting on a backgrounded pnpm gate:scoped run, against CLAUDE.md's explicit "avoid unnecessary sleep" guidance for a task the harness already notifies on completion.
+    solution: When a backgrounded command is already running, just end the turn and let the completion notification arrive — no filler Bash call needed at all.
+    severity: nit
+durationSec: 820
+models:
+  claude-sonnet-5: 136
+toolCounts:
+  Bash: 42
+  Read: 13
+  mcp__github__issue_read: 1
+  Write: 7
+  Edit: 3
+  Agent: 1
+  ToolSearch: 2
+  TaskCreate: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/eyra/pages/2026-08-08-the-front-door-has-no-lock.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-7qldqe
+entrypoint: remote_trigger
+cliVersion: 2.1.226
+trigger: blog-post
