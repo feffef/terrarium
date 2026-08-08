@@ -86,8 +86,9 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   pinned seven above are the manifest-expansion/routing/catalog family
   specifically (ADR-0004/ADR-0025), not an exhaustive list of every human-only
   file in the repo — "isolation logic" is a deliberately unpinned catch-all
-  that also covers e.g. `shared/manifest.ts` (ADR-0025 calls it "the unit of
-  isolation") and the root `nuxt.config.ts` (ADR-0018 treats it as a
+  that also covers e.g. `shared/manifest.ts` (ADR-0025: defines the
+  `tenant_space_collection` key it calls "the unit of isolation") and the root
+  `nuxt.config.ts` (ADR-0018 treats it as a
   human-only surface), and `.github/actions/gate/action.yml`, which holds the
   Gate's own steps (ADR-0026).
   "Human-only" gates *merging*, not editing:
@@ -190,13 +191,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   heartbeat, or poll.** (The one exception: cancelling an already-scheduled
   wakeup with `stop: true` is exempt in every mode, since a cancel can only
   ever remove a pending wakeup — see `docs/agents/loop-only-tool-guard.md`.)
-  Outside `/loop` it is *not* a harmless no-op: a fired
-  wakeup delivers a spurious turn that can re-run this session's whole prompt
-  (one recorded misfire produced an unwanted "autonomous loop tick" that had to
-  be diagnosed and stopped; another would have re-sent `/audit-docs`
-  mid-PR-review). What to do instead, by situation: waiting on a dispatched
-  Agent-tool subagent needs **no** wait/poll tool at all — it self-notifies on
-  completion; waiting on a backgrounded Bash command needs none either — end
+  Outside `/loop` it is *not* a harmless no-op: a fired wakeup delivers a
+  spurious turn that can re-run this session's whole prompt — see the doc for
+  the recorded misfire incidents. What to do instead, by situation: waiting
+  on a dispatched Agent-tool subagent needs **no** wait/poll tool at all — it
+  self-notifies on completion; waiting on a backgrounded Bash command needs
+  none either — end
   the turn, the harness delivers a task notification when it exits; polling
   non-webhook-delivered external state such as CI/gate completion uses
   `mcp__Claude_Code_Remote__send_later` to schedule your own check-in. Two
