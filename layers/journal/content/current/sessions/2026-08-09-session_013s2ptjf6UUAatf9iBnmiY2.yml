@@ -1,0 +1,46 @@
+schemaVersion: 1
+session: session_013s2ptjf6UUAatf9iBnmiY2
+startedAt: 2026-08-09T01:05:21Z
+endedAt: 2026-08-09T01:18:09Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: in-review
+outcome: "One issue filed and fixed, PR #904 open"
+summary: "Autonomous scheduled run of the frictions-to-fixes Skill. Delegated the survey (steps 1-2) to a general-purpose subagent that read the latest 20 session logs and screened candidates against the tracker. The tracker was already well-maintained: every moderate+ friction in the window had already been fixed by an earlier in-window frictions-to-fixes cycle (PR #892). Only one genuine never-fixed candidate survived screening (a recurring digest-authoring gotcha), one lone nit was dropped for lacking true recurrence, and one already-tracked regression (#886, angle-bracket stripping) was confirmed still open and awaiting a human decision per the regression-handling rule (not re-dispatched). Filed issue #903 for the digest fix, dispatched a Sonnet impl agent in an isolated worktree which implemented it and opened gated PR #904 (Closes #903), gate currently running. No human input occurred this session; all decisions (selection, filing, dispatch) were made autonomously per the Skill's instructions."
+prs:
+  - "904"
+docsRead: []
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run itself
+  - name: dispatch-subagents
+    reason: briefed the impl agent dispatch
+  - name: close-session
+    reason: PR-open closure checkpoint
+  - name: log-session
+    reason: this log
+frictions: []
+durationSec: 768
+models:
+  claude-sonnet-5: 36
+toolCounts:
+  Agent: 2
+  ToolSearch: 2
+  mcp__github__issue_read: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 2
+  Skill: 3
+  mcp__github__pull_request_read: 2
+  Write: 1
+  Bash: 1
+  mcp__Claude_Code_Remote__send_later: 1
+subagents:
+  - type: general-purpose
+    task: Survey session frictions and screen against tracker
+  - type: general-purpose
+    task: Fix digest SKILL.md opening-paragraph gotcha
+    model: sonnet
+gitBranch: claude/hopeful-brown-d8ntus
+entrypoint: remote_trigger
+cliVersion: 2.1.226
+trigger: frictions-to-fixes
