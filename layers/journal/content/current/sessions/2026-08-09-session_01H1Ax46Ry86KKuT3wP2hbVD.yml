@@ -1,0 +1,49 @@
+schemaVersion: 1
+session: session_01H1Ax46Ry86KKuT3wP2hbVD
+startedAt: 2026-08-09T00:16:12Z
+endedAt: 2026-08-09T00:31:14Z
+kind: autonomous
+goal: Run the scheduled /digest sweep for 2026-08-08
+status: completed
+outcome: "PR #902 merged with a green gate"
+summary: "Scheduled /digest run (no human prompt). Authored the 2026-08-08 Digest from scripts/digest.ts's gather output (3 merged PRs, 4 completed sessions) and ran the journal retention sweep, archiving the 2026-08-01 digest and 5 aged-out session logs. pnpm gate:scoped failed once: the digest's first paragraph put a markdown-backtick term inside the first 6 words that the smoke e2e test literal-matches against rendered HTML, so the rendered <code> tag broke the match — rewrote the opening as plain text and the gate passed clean on rerun. Opened PR #902, posted the merge verdict comment, and landed it via merge-pr.ts under the digest tier's green-gate-alone merge authority."
+prs:
+  - "902"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-08-08.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: The digest's first paragraph placed a backtick-formatted term (`` `/audit-docs` ``) within the first 6 words, which the journal.e2e.ts smoke test literal-matches against rendered HTML via digestBodySnippet() — MDC renders backticks as <code>, so the literal match failed the gate on the first run.
+    solution: Rewrote the opening sentence to be plain prose with no markdown formatting in the first ~10 words. Worth calling out explicitly in the digest Skill's authoring guidance (step 3) so future digest authors know to keep the opening clause of the first paragraph free of backticks/links/bold, since the smoke test snippets exactly 6 words from it.
+    severity: minor
+durationSec: 902
+models:
+  claude-sonnet-5: 83
+toolCounts:
+  Bash: 25
+  Write: 2
+  Grep: 2
+  Read: 3
+  Edit: 2
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-08.md
+gitBranch: claude/compassionate-lovelace-f8rxp9
+entrypoint: remote_trigger
+cliVersion: 2.1.226
+trigger: digest
+learnings:
+  - tests/e2e/journal.e2e.ts's digestBodySnippet() takes the literal first 6 words of a Digest's first paragraph (after stripping frontmatter/heading and markdown links) and asserts that exact string appears in the rendered HTML — so any markdown formatting (backticks, bold, links) inside those first 6 words will break the match once MDC renders it, even though the same formatting later in the paragraph is fine.
