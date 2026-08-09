@@ -75,7 +75,12 @@ gained, anything notable or surprising. Link inline by number: PRs as
 ```
 
 Write for a **human catching up**, not a changelog: lead with narrative, keep it
-short (~120 words of prose), fold the counts into the one-line footer. **Include
+short (~120 words of prose), fold the counts into the one-line footer. **Keep the
+opening paragraph's first ~10 words plain prose — no backticks, links, or bold**:
+`tests/e2e`'s `journal.e2e.ts` (`digestBodySnippet()`) literal-matches the first
+six rendered words against the rendered HTML, and MDC renders inline markdown
+(e.g. a backtick code span) as an HTML tag, breaking that match (issue #903).
+**Include
 the frictions rollup** — visible self-improvement is the Journal's point — as a
 severity tally plus the 1–3 sharpest, never a dump of every nit. Issue/PR links
 are constructable from numbers; optionally enrich with issues active that day via
