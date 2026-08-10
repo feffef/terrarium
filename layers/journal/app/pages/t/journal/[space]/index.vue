@@ -192,20 +192,23 @@ useSeoMeta({
          e2e at wide viewports (PR #597). Here each column keeps its natural height
          and the row tracks whichever one is taller.
 
-         #597 relied on that always being the digests, so opening/collapsing a
-         digest would reflow the content below it exactly as when digests were
-         full-width. THAT INVARIANT HAS SINCE REGRESSED: Sparks now outgrows the
-         digests several times over — it sits in the narrow column, so every idea
-         wraps to many lines — and so a digest above the breakpoint expands into
-         existing slack and displaces nothing (PR #759 measured displacement 0 /
-         pin.scrolls 0 at 1280px). No user-facing bug — nothing moves, so
-         nothing needs pinning —
-         but the desktop layout now has no scroll-pin coverage, which is why the
-         e2e guard runs below the breakpoint instead. Issue #760 accepted that
-         rather than restoring #597's invariant, and guards the height driver
-         instead: see the "keeps Sparks the driver" test in
-         `layers/journal/tests/e2e/journal.e2e.ts` for why a flip back would
-         matter, and don't change these column widths without re-reading it. -->
+         WHICH column that is, is incidental, and nothing depends on the answer.
+         #597 read it as always the digests and #760 as always Sparks; it is
+         neither. The Sparks feed is windowed to the last few days and capped
+         (see dashboard.ts's latestIdeas), so it swings between one row and
+         fifteen wrapped ones from day to day, while the digests column tracks
+         seven retained multi-line summaries — so the taller of the two changes
+         with the day's content, and issue #906 stopped treating either side as
+         an invariant after ordinary `/digest` runs kept flipping it.
+
+         Both regimes are correct. Digests taller: collapsing one reflows the
+         content below and the scroll-pin absorbs it. Sparks taller: a digest
+         expands into existing slack and nothing moves, so there is nothing to
+         pin. The e2e proves the pin holds in THIS two-column layout either way,
+         by bounding Sparks so digests drives rather than waiting for the content
+         to land that way — see the sibling-collapse guards in
+         `layers/journal/tests/e2e/journal.e2e.ts`, and don't change these column
+         widths without re-reading them. -->
     <div v-if="digests.length" class="digests-sparks">
       <!-- Daily digests — a plain-language, day-by-day recap of project activity -->
       <section class="panel digests">
@@ -531,9 +534,8 @@ h1 {
 /* Digests + Sparks band. Mobile default: one column (digests, then Sparks) with
    a gap. Desktop (≥901px, media query below): two columns with Sparks on the
    RIGHT. `align-items: start` keeps each column its natural height, so the row
-   height tracks whichever column is taller — see the template comment for why
-   PR #597 needed that to be the digests, and issue #760 for the fact that it
-   no longer is. */
+   height tracks whichever column is taller — which one that is follows from the
+   day's content and is not relied on anywhere (see the template comment). */
 .digests-sparks {
   margin-top: 1.75rem;
   display: grid;
@@ -680,9 +682,8 @@ h1 {
 
 /* Desktop: Sparks to the RIGHT of the Daily digests. Sparks (col 2) is topped out
    by `align-items: start` and made sticky so it trails alongside a long digest
-   list rather than leaving a tall gap. It was the shorter column when that was
-   written; it no longer is, and so it — not digests (col 1) — now drives the row
-   height (issue #760). */
+   list rather than leaving a tall gap. Either column may end up the taller one
+   and drive the row height — see the template comment. */
 @media (min-width: 901px) {
   .digests-sparks {
     grid-template-columns: 1fr clamp(300px, 32%, 360px);

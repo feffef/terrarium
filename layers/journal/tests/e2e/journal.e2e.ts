@@ -121,22 +121,38 @@ const PARK_PRECISION_PX = 2
 
 // Below the digests+Sparks band's two-column breakpoint (see the `.digests-sparks`
 // media queries) the digests column is the sole driver of its own height, so
-// collapsing a digest reflows everything under it. Above the breakpoint the taller
-// Sparks column sets the row height and a digest expands into existing slack,
-// displacing nothing — which is what made the sibling-collapse guard vacuous at the
-// gate's default 1280x720 viewport (issue #750).
+// collapsing a digest reflows everything under it.
 const SINGLE_COLUMN_WIDTH = 900
-// A width comfortably inside the two-column regime, for the guard that asserts
-// WHICH column drives the band there (issue #760).
+// A width comfortably inside the two-column regime, where the two columns share a
+// grid row and the taller of them drives its height.
 const TWO_COLUMN_WIDTH = 1280
+
+// Above the breakpoint the band's height driver is whichever column is taller,
+// and that is a property of the day's content, not of the layout: the Sparks feed
+// is windowed to the last SPARK_FEED_DAYS days and capped at SPARK_FEED_LIMIT
+// ideas, so it swings from a single row on a quiet window to fifteen wrapped rows
+// several times the digests column's height on a busy one. Both directions are
+// routinely reachable, which is why nothing here asserts one of them (issue #906,
+// after issue #760 pinned Sparks as the driver and ordinary `/digest` runs kept
+// flipping it back).
+//
+// The desktop pin path still needs deterministic coverage, so the guard below
+// CONSTRUCTS the only regime in which there is anything to pin — digests taller,
+// so collapsing one reflows the content under the band — instead of waiting for
+// the content to land that way. Bounding the Sparks column is the smallest lever
+// that does it: the column stays in flow and sticky, so the real desktop grid
+// (two tracks, `align-items: start`, sticky col 2) is what gets exercised.
+// `!important` is required — the SFC's scoped rule carries a `[data-v-…]`
+// attribute selector on top of the same two classes, so it outranks a plain
+// injected rule.
+const FORCE_DIGESTS_DRIVE_BAND
+  = '.digests-sparks .sparks { max-height: 120px !important; overflow: hidden !important }'
 
 interface BandGeometry {
   /** The whole `.digests-sparks` band — one grid row, so this is the row height. */
   band: number
   digests: number
   sparks: number
-  /** The tallest collapsed digest row: how much one more digest day would add. */
-  tallestDigestRow: number
   gridTemplateColumns: string
   alignItems: string
 }
@@ -149,9 +165,6 @@ function bandGeometryOf(page: Page): Promise<BandGeometry> {
       band: band.getBoundingClientRect().height,
       digests: heightOf(':scope > .digests'),
       sparks: heightOf(':scope > .sparks'),
-      tallestDigestRow: Math.max(
-        ...[...band.querySelectorAll(':scope > .digests .digest')].map((r) => r.getBoundingClientRect().height),
-      ),
       gridTemplateColumns: style.gridTemplateColumns,
       alignItems: style.alignItems,
     }
@@ -462,20 +475,24 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
     // just-clicked card's own top still holds at its pre-click position — the
     // sibling's collapse is exactly what the counter-scroll must absorb.
     //
-    // The scenario only exists below the single-column breakpoint, and the test
-    // proves it holds rather than assuming it: it measures how far the collapse
-    // moved the card in DOCUMENT space (which no counter-scroll can hide) and
-    // fails unless that clears DOUBLE the tolerance, i.e. if a passing run would
-    // prove nothing (issue #750). Double, not 1×, so the premise and the hold
-    // can't both be satisfied marginally — at 1× a displacement a pixel over
-    // tolerance would satisfy the premise while a fully-broken pin missed the
-    // hold by a pixel. The real displacement is ~318px, so the margin is ample.
-    it('holds the clicked item at its pre-click position when a sibling above it collapses', async () => {
+    // The test proves the scenario exists rather than assuming it: it measures how
+    // far the collapse moved the card in DOCUMENT space (which no counter-scroll
+    // can hide) and fails unless that clears DOUBLE the tolerance, i.e. if a
+    // passing run would prove nothing (issue #750). Double, not 1×, so the premise
+    // and the hold can't both be satisfied marginally — at 1× a displacement a
+    // pixel over tolerance would satisfy the premise while a fully-broken pin
+    // missed the hold by a pixel. The real displacement is several hundred px, so
+    // the margin is ample.
+    async function expectSiblingCollapseHeld(
+      width: number,
+      bandStyle?: string,
+    ): Promise<void> {
       const route = '/t/journal/current'
       const { page, errors } = await renderAndCollectErrors(route)
       try {
-        await page.setViewportSize({ width: SINGLE_COLUMN_WIDTH, height: 720 })
+        await page.setViewportSize({ width, height: 720 })
         await page.addStyleTag({ content: DISABLE_SCROLL_ANCHORING })
+        if (bandStyle) await page.addStyleTag({ content: bandStyle })
         // Setup: open the digest that will later collapse. This open starts a pin of
         // its own, which openAndAwaitPin waits out before anything below is measured.
         await openAndAwaitPin(
@@ -512,10 +529,10 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
           .toBeLessThan(PARK_PRECISION_PX)
         expect(
           displacement,
-          `premise no longer holds: the sibling's collapse displaced the card by only ${displacement}px, `
+          `premise no longer holds at ${width}px: the sibling's collapse displaced the card by only ${displacement}px, `
           + `not clear of the ±${HOLD_TOLERANCE_PX}px tolerance by the required margin (need >${2 * HOLD_TOLERANCE_PX}px) `
-          + `— this guard would pass, or all but pass, with the pin removed. `
-          + `Restore a layout where the digests column drives its own height (see SINGLE_COLUMN_WIDTH)${evidence}`,
+          + `— this guard would pass, or all but pass, with the pin removed. The digests column must drive its own `
+          + `height for a collapse to reflow anything below it${evidence}`,
         ).toBeGreaterThan(2 * HOLD_TOLERANCE_PX)
         expect(pin.scrolls, `the pin issued no counter-scroll, so nothing was compensated${evidence}`)
           .toBeGreaterThan(0)
@@ -527,62 +544,63 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       } finally {
         await page.close()
       }
+    }
+
+    // Below the breakpoint the band is one column, so the digests column drives its
+    // own height unconditionally and the scenario is the page's real behaviour.
+    it('holds the clicked item at its pre-click position when a sibling above it collapses', async () => {
+      await expectSiblingCollapseHeld(SINGLE_COLUMN_WIDTH)
     })
 
-    // The other half of the guard above: that one runs below the breakpoint
-    // because ABOVE it the Sparks column is the taller one, so a digest expands
-    // into existing slack and displaces nothing. Issue #760 accepted that as the
-    // layout's real behaviour rather than restoring #597's digests-drives-the-row
-    // invariant — at desktop width collapsing a digest moves nothing, so there is
-    // genuinely nothing for the scroll-pin to hold, and the absence of desktop pin
-    // coverage is correct rather than a gap.
+    // The same hold in the two-column desktop layout, whose sticky second column and
+    // shared grid row are a genuinely different reflow path from the stacked one
+    // above — and one the pin used to have no coverage of at all (issue #760).
     //
-    // What #760 did NOT accept is leaving that unmonitored. Which column is taller
-    // depends on content volume, so if Sparks ever shrinks below digests the driver
-    // flips back, collapsing a digest starts displacing content at desktop width
-    // again, and the desktop pin path becomes live AND untested — silently, because
-    // nothing else here would notice. This guard turns that drift into a failure.
-    it('keeps Sparks the driver of the digests+Sparks band height at desktop width', async () => {
+    // Whether a collapse displaces anything here depends on which column is taller,
+    // which is a daily property of the content rather than of the layout (see
+    // FORCE_DIGESTS_DRIVE_BAND). So this constructs the case that has something to
+    // pin instead of depending on the day: bound Sparks, and digests drives. When
+    // live content puts Sparks on top instead, a digest expands into existing slack
+    // and nothing moves — no bug, and nothing for the pin to do. Both regimes are
+    // therefore correct, which is exactly what issue #906 replaced #760's
+    // "Sparks must stay the driver" invariant with.
+    it('holds the clicked item when a sibling collapses in the two-column desktop band', async () => {
+      await expectSiblingCollapseHeld(TWO_COLUMN_WIDTH, FORCE_DIGESTS_DRIVE_BAND)
+    })
+
+    // The desktop guard above is only worth its runtime if it runs in the real
+    // two-column regime — a moved breakpoint or a renamed column class would leave
+    // it silently duplicating the single-column one, or bounding nothing. Assert
+    // the shape it assumes, with the same fixture applied.
+    it('exercises the desktop pin guard against the real two-column band', async () => {
       const route = '/t/journal/current'
       const { page, errors } = await renderAndCollectErrors(route)
       try {
         await page.setViewportSize({ width: TWO_COLUMN_WIDTH, height: 720 })
+        await page.addStyleTag({ content: FORCE_DIGESTS_DRIVE_BAND })
         const band = await bandGeometryOf(page)
         const evidence = `\n${JSON.stringify(band, null, 2)}`
-        const headroom = band.sparks - band.digests
 
-        // Preconditions: with one track the columns are stacked, and with stretched
-        // items they are equal by force — either way the comparison below is vacuous.
         expect(
           band.gridTemplateColumns.split(' ').length,
-          `the band is not two-column at ${TWO_COLUMN_WIDTH}px, so it has no height-driver to assert${evidence}`,
+          `the band is not two-column at ${TWO_COLUMN_WIDTH}px, so the desktop guard is testing the stacked `
+          + `layout the ${SINGLE_COLUMN_WIDTH}px one already covers${evidence}`,
         ).toBe(2)
         expect(
           band.alignItems,
-          `the columns are stretched, so their heights say nothing about which one drives the row${evidence}`,
+          `the columns are stretched to equal heights, so neither drives the row and bounding Sparks cannot `
+          + `create the displacement the desktop guard needs${evidence}`,
         ).toBe('start')
-
         expect(
-          headroom,
-          `the band's height driver has FLIPPED BACK to digests at ${TWO_COLUMN_WIDTH}px: `
-          + `digests is ${band.digests}px against Sparks' ${band.sparks}px. Collapsing a digest now displaces `
-          + `the content below it at desktop width again, and the scroll-pin that absorbs that is only exercised `
-          + `at ${SINGLE_COLUMN_WIDTH}px (the guard above) — so the desktop pin path is live and untested. `
-          + `Read issue #760 before relaxing this${evidence}`,
+          band.digests - band.sparks,
+          `FORCE_DIGESTS_DRIVE_BAND no longer makes digests the taller column — check that its selector still `
+          + `matches the Sparks column and still outranks the SFC's scoped rule${evidence}`,
         ).toBeGreaterThan(0)
         expect(
-          band.band - band.sparks,
-          `the band is taller than both its columns, so neither drives it — this layout no longer works the way `
-          + `issue #760's decision assumed${evidence}`,
+          band.band - band.digests,
+          `the band is taller than both its columns, so neither drives it and a collapse would reflow nothing`
+          + `${evidence}`,
         ).toBeLessThan(1)
-        // Fire before the flip, not at it: one more digest day's worth of growth
-        // must still leave Sparks the taller column.
-        expect(
-          headroom,
-          `Sparks leads digests by only ${headroom}px at ${TWO_COLUMN_WIDTH}px — less than one more digest row `
-          + `(${band.tallestDigestRow}px), so the next digest flips the band's height driver back. `
-          + `See issue #760 for what flips with it${evidence}`,
-        ).toBeGreaterThan(band.tallestDigestRow)
         expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
       } finally {
         await page.close()
