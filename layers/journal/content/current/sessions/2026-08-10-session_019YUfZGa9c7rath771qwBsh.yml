@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_019YUfZGa9c7rath771qwBsh
 startedAt: 2026-08-10T16:04:58Z
-endedAt: 2026-08-10T16:58:16Z
+endedAt: 2026-08-10T17:04:14Z
 kind: interactive
 goal: Fix the journal dashboard band-height guard
-status: in-review
-outcome: "Invariant decoupled, PR #913 open on green gate"
+status: completed
+outcome: "Invariant decoupled, PR #913 merged"
 summary: "The user asked to fix issue #906 — a `ready-for-human` bug where the journal dashboard's \"Sparks drives the digests+Sparks band height\" e2e guard failed, blocking routine `/digest` self-merges. That ask was the green light for the design call #906 and #760 both left open. Measuring the live page showed the guard asserted a property of the day's content as a layout invariant: one spark item wraps to 254.8px in the narrow column and the feed is windowed to 3 days, so Sparks swings from ~90px to thousands while digests sits at ~1040px — the driver is near a daily coin flip, and both #597 and #760 had pinned opposite sides of it. Fixed by decoupling rather than restoring: the sibling-collapse pin guard is now width-parameterized and runs at 900px and 1280px, the desktop run bounding Sparks so digests necessarily drives, plus a third assertion keeping that fixture honest. index.vue's three comments now describe both regimes as correct. All agent-initiated within the user's ask."
 prs:
   - "913"
@@ -33,22 +33,23 @@ frictions:
   - description: 'Issue #906 offered three options but its framing ("the invariant has regressed again") pointed at restoring it, which measurement showed was never viable.'
     solution: Measure the live page before accepting an issue's causal framing — the report was right about the symptom and wrong about the invariant ever holding.
     severity: nit
-durationSec: 3198
+durationSec: 3556
 models:
-  claude-opus-5: 124
+  claude-opus-5: 133
 toolCounts:
   ToolSearch: 3
-  Bash: 33
-  mcp__github__issue_read: 3
+  Bash: 35
+  mcp__github__issue_read: 4
   Read: 8
   Write: 3
-  Edit: 6
+  Edit: 7
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 8
   mcp__github__pull_request_read: 2
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - tmp-probe.ts
   - layers/journal/tests/e2e/journal.e2e.ts
