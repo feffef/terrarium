@@ -1,0 +1,42 @@
+schemaVersion: 1
+session: session_014a87DRxep6RXJgzgWu55K4
+startedAt: 2026-08-10T00:46:18Z
+endedAt: 2026-08-10T00:50:08Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: No Inventory changes; orphan already tracked
+summary: "Scheduled /audit-skills Routine fired with no human prompt. Gathered the scorecard (scripts/audit-skills.ts, 40-session window, orphan scan succeeded). Step 3: reviewed every Skill's usedIn against its current importance/role; all windowed usage matched existing grades and roles, and every zero-usage Skill's domain (research, prototyping, bug diagnosis, guest contributions, Atlas/Midden content work) simply didn't occur this window, so per the rarity rule no grade change was warranted. Step 4: checked both regressionChecks brackets (digest's opening-paragraph-prose edit, dispatch-subagents' doc-friction fixes) via a full deep-read of the implicated sessions' logs — the digest edit's \"after\" bracket had one major friction, but it was a pre-existing e2e flakiness/verification issue (#906/#760) unrelated to the edited guidance, and dispatch-subagents showed fewer/lighter frictions after its edit — no regression in either case. Step 5: the sole orphanedSessions entry (session_019aeaoPHYWMJVekmUvTMhQ9) is already tracked and thoroughly triaged on open issue #736 (ready-for-human, no delegatable remedy) with the identical evidence already cited twice on that thread, so no new comment was added per the no-duplicate-citation rule. humanPromptedClosures, manuallyRescuedClosures, orphanSuppressionLog, and misclassifiedKind were all empty. No file changed, so no PR was opened (nothing to gate) — this run's entire output is this log."
+prs: []
+docsRead:
+  - path: CLAUDE.md
+    reason: chartered-job branch-off checklist
+  - path: layers/journal/content/current/sessions/2026-08-10-session_01Qj2h4wWXuWNB9VjC1Kn6py.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-09-session_01H1Ax46Ry86KKuT3wP2hbVD.yml
+    reason: (no reason given)
+  - path: /root/.claude/projects/-home-user-terrarium/2cb34d81-44d9-5b2d-b174-6943a1a88ffb/tool-results/bqdwid9gt.txt
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: closure at self-judged completion
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-skills
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 230
+models:
+  claude-sonnet-5: 53
+toolCounts:
+  Bash: 16
+  Read: 3
+  ToolSearch: 2
+  mcp__github__search_issues: 1
+  mcp__github__issue_read: 1
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-ntw4lm
+entrypoint: remote_trigger
+cliVersion: 2.1.226
+trigger: audit-skills
