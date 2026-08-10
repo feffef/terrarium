@@ -26,6 +26,15 @@ specific session cite it.
   immediately** — don't iterate cache-busting/rebuild theories first. A stale
   build can look identical to a live logic bug from the outside; a debug marker
   settles which one you're looking at in one step.
+- **Before asserting an e2e/Playwright failure is "pre-existing" or
+  "environment-only," reproduce it with the full `test:e2e` suite — never a
+  `-t`-filtered single test — against a fresh `pnpm build` — never a reused
+  `.output` — on both `origin/main` and the branch.** A narrowed or stale
+  repro is not a valid comparison: a single filtered test skips setup/ordering
+  the full suite exercises, and a reused `.output` can quietly omit the very
+  change under test. A PR once asserted a failing assertion was pre-existing
+  on exactly this kind of invalid repro, and CI then failed for real on the
+  same assertion (issue #907).
 - **To verify a click/interaction, not just a static render**, write a small
   ad-hoc `playwright-core` script against the same pre-installed Chromium
   `scripts/screenshot.ts` uses — import `resolveChromiumPath()` from
