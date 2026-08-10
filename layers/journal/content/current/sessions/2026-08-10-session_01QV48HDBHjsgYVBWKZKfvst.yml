@@ -1,0 +1,64 @@
+schemaVersion: 1
+session: session_01QV48HDBHjsgYVBWKZKfvst
+startedAt: 2026-08-10T01:07:06Z
+endedAt: 2026-08-10T01:25:27Z
+kind: autonomous
+goal: Run frictions-to-fixes on the last 20 sessions
+status: in-review
+outcome: "PR #910 open and clean, held on unrelated pre-existing CI failure"
+summary: "Autonomous scheduled run of frictions-to-fixes. Dispatched a survey subagent that read the last 20 session logs and found 3 never-fixed, doc-only, safe-surface candidates. Filed issues #907, #908, #909. Dispatched one Sonnet worktree-isolated impl agent to batch all three into a grouped PR (#910). The agent implemented #907 and #909 as recommended, but found #908's requested fix already existed on main (added by commit 4988709 while closing the same-root-cause issue #889), and closed #908 as a duplicate rather than duplicating text — I independently verified that judgment against primary sources before accepting it. Reviewed PR #910's diff (clean) and posted the review as a PR comment. CI's gate failed, but the failure is a pre-existing Journal dashboard regression unrelated to this docs-only diff, independently confirmed via already-open issue #906 (filed by an unrelated /digest session ~40 min earlier, reproducing the same failure on origin/main itself). Held the merge per the base-branch-recovered convention instead of merging over a red gate. No human prompted any part of this run; the schedule fired it."
+prs:
+  - "910"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: "verify #908's cited fix already exists"
+  - path: docs/agents/verifying-ui-changes.md
+    reason: "confirm PR #910's added rule fits the doc"
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run's own top-level Skill
+  - name: dispatch-subagents
+    reason: worktree isolation + brief checklist for the impl agent
+  - name: close-session
+    reason: closure trigger at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Dispatch brief for issue #908 named specific candidate doc homes without first re-confirming via merged-since.ts that the fix wasn't already on main, even though the survey subagent's own screening had done that check earlier for other candidates."
+    solution: Re-run a fresh merged-since.ts screen immediately before dispatch for each selected issue, not just during the original survey pass, to catch drift between survey time and dispatch time.
+    severity: nit
+  - description: Reflexively reached for ScheduleWakeup as a fallback heartbeat while waiting on a background subagent; correctly blocked by the loop-only-tool-guard since this is not a /loop session.
+    solution: Self-corrected immediately by just ending the turn (the Agent tool self-notifies on completion) — no real cost, confirms the guard works as documented.
+    severity: nit
+  - description: mcp__github__actions_list list_workflow_runs on gate.yml overflowed (351,602 characters) when trying to broadly check main's recent CI run history to diagnose the failing gate check.
+    solution: "Prefer targeted mcp__github__issue_read/search_issues over actions_list's full run history when the target commit/run isn't already known — used issue #906's existing evidence instead, which was sufficient."
+    severity: nit
+durationSec: 1101
+models:
+  claude-sonnet-5: 74
+toolCounts:
+  Bash: 7
+  Agent: 2
+  ToolSearch: 5
+  mcp__github__issue_write: 4
+  Skill: 3
+  ScheduleWakeup: 1
+  mcp__github__pull_request_read: 2
+  Grep: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__get_check_run: 1
+  mcp__github__get_job_logs: 1
+  mcp__github__issue_read: 2
+  mcp__github__actions_list: 1
+  mcp__github__add_issue_comment: 1
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Implement 3 doc fixes, grouped PR
+    model: sonnet
+gitBranch: claude/hopeful-brown-p9ohp3
+entrypoint: remote_trigger
+cliVersion: 2.1.226
+trigger: frictions-to-fixes

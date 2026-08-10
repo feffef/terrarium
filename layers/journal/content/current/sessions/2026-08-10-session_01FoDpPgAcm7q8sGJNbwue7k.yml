@@ -1,0 +1,63 @@
+schemaVersion: 1
+session: session_01FoDpPgAcm7q8sGJNbwue7k
+startedAt: 2026-08-10T04:10:50Z
+endedAt: 2026-08-10T04:23:49Z
+kind: autonomous
+goal: Run the scheduled audit-docs sweep
+status: in-review
+outcome: One Drift fix confirmed, fixed, PR opened
+summary: "Scheduled /audit-docs routine, no human prompting during the run. Fanned out four paired-lens reviewer agents (Freshness/Drift+Orphan-addition, Single-home/Duplication+Mis-location, Concision/Verbose+Stale-narration, Coherence/Contradiction+Ambiguity) over the repo's Live-tier docs. Only one finding survived across all eight lenses: digest/SKILL.md:80 misattributed journal.e2e.ts's location as root tests/e2e instead of layers/journal/tests/e2e. An independent fact-checker agent confirmed it against tests/README.md and the file on disk before I applied the one-line fix. pnpm gate:scoped ran green (change classified inert). Opened PR #911 (self-merge-eligible tier, touches no human-only surface) and subscribed to its activity to babysit it to merge."
+prs:
+  - "911"
+docsRead:
+  - path: CLAUDE.md
+    reason: audit-docs tier rules, branch-off checklist, provenance footer
+  - path: tests/README.md
+    reason: primary source confirming journal.e2e.ts's real path
+  - path: skills-lock.json
+    reason: classify Pack-generic vs our own Skills
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: the routine this session ran
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions: []
+durationSec: 779
+models:
+  claude-sonnet-5: 89
+toolCounts:
+  Bash: 16
+  ToolSearch: 2
+  TaskCreate: 6
+  TaskUpdate: 12
+  Agent: 5
+  Read: 1
+  Edit: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - .agents/skills/digest/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: Drift + Orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: Duplication + Mis-location"
+  - type: general-purpose
+    task: "Concision lens: Verbose + Stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: Contradiction + Ambiguity"
+  - type: general-purpose
+    task: Fact-check the Drift finding
+gitBranch: claude/festive-mayer-zmzg38
+entrypoint: remote_trigger
+cliVersion: 2.1.226
+trigger: audit-docs
