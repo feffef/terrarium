@@ -77,7 +77,7 @@ gained, anything notable or surprising. Link inline by number: PRs as
 Write for a **human catching up**, not a changelog: lead with narrative, keep it
 short (~120 words of prose), fold the counts into the one-line footer. **Keep the
 opening paragraph's first ~10 words plain prose — no backticks, links, or bold**:
-`tests/e2e`'s `journal.e2e.ts` (`digestBodySnippet()`) literal-matches the first
+`layers/journal/tests/e2e/journal.e2e.ts`'s `digestBodySnippet()` literal-matches the first
 six rendered words against the rendered HTML, and MDC renders inline markdown
 (e.g. a backtick code span) as an HTML tag, breaking that match (issue #903).
 **Include
