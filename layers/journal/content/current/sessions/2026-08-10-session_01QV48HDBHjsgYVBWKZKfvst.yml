@@ -1,17 +1,17 @@
 schemaVersion: 1
 session: session_01QV48HDBHjsgYVBWKZKfvst
 startedAt: 2026-08-10T01:07:06Z
-endedAt: 2026-08-10T01:25:27Z
+endedAt: 2026-08-10T17:16:37Z
 kind: autonomous
 goal: Run frictions-to-fixes on the last 20 sessions
-status: in-review
-outcome: "PR #910 open and clean, held on unrelated pre-existing CI failure"
-summary: "Autonomous scheduled run of frictions-to-fixes. Dispatched a survey subagent that read the last 20 session logs and found 3 never-fixed, doc-only, safe-surface candidates. Filed issues #907, #908, #909. Dispatched one Sonnet worktree-isolated impl agent to batch all three into a grouped PR (#910). The agent implemented #907 and #909 as recommended, but found #908's requested fix already existed on main (added by commit 4988709 while closing the same-root-cause issue #889), and closed #908 as a duplicate rather than duplicating text — I independently verified that judgment against primary sources before accepting it. Reviewed PR #910's diff (clean) and posted the review as a PR comment. CI's gate failed, but the failure is a pre-existing Journal dashboard regression unrelated to this docs-only diff, independently confirmed via already-open issue #906 (filed by an unrelated /digest session ~40 min earlier, reproducing the same failure on origin/main itself). Held the merge per the base-branch-recovered convention instead of merging over a red gate. No human prompted any part of this run; the schedule fired it."
+status: completed
+outcome: "PR #910 merged; 2 of 3 friction issues fixed, 1 closed as duplicate"
+summary: "Autonomous scheduled run of frictions-to-fixes. Surveyed 20 session logs via a subagent, found 3 never-fixed, doc-only, safe-surface candidates, filed issues #907, #908, #909. Dispatched one Sonnet worktree-isolated impl agent to batch all three into a grouped PR (#910). The agent implemented #907 and #909 as recommended, but found #908's requested fix already existed on main (commit 4988709, closing the same-root-cause issue #889) and closed #908 as a duplicate rather than duplicating text — I independently verified that judgment against primary sources before accepting it. Reviewed PR #910's diff (clean) and posted the review as a PR comment. CI's gate failed on an unrelated pre-existing Journal dashboard regression, independently confirmed via already-open issue #906 (filed by an unrelated /digest session). Held the merge per the base-branch-recovered convention, babysat via a spaced series of self-scheduled check-ins over roughly 16 hours, and sent 3 proactive notifications as the wait crossed 2hr/6hr/12hr thresholds with zero activity on #906. The human (steffen) ultimately landed PR #913 fixing #906 (the decouple option) and merged main into PR #910's branch; CI then went green with the diff unchanged from what I'd already reviewed, so I merged PR #910 via scripts/merge-pr.ts without re-review. No human prompted any part of this run — the schedule fired it, and every decision (issue filing, dispatch, duplicate-closure verification, hold-vs-merge, notification timing, final merge) was agent-initiated."
 prs:
   - "910"
 docsRead:
   - path: docs/agents/pr-workflow.md
-    reason: "verify #908's cited fix already exists"
+    reason: "verify #908's cited fix already exists, and the base-branch-recovered convention"
   - path: docs/agents/verifying-ui-changes.md
     reason: "confirm PR #910's added rule fits the doc"
 skillsUsed:
@@ -20,7 +20,7 @@ skillsUsed:
   - name: dispatch-subagents
     reason: worktree isolation + brief checklist for the impl agent
   - name: close-session
-    reason: closure trigger at PR-open
+    reason: closure trigger at PR-open and again at merge
   - name: log-session
     reason: (no reason given)
 frictions:
@@ -33,25 +33,29 @@ frictions:
   - description: mcp__github__actions_list list_workflow_runs on gate.yml overflowed (351,602 characters) when trying to broadly check main's recent CI run history to diagnose the failing gate check.
     solution: "Prefer targeted mcp__github__issue_read/search_issues over actions_list's full run history when the target commit/run isn't already known — used issue #906's existing evidence instead, which was sufficient."
     severity: nit
-durationSec: 1101
+  - description: A PR merge/CI-recovery wait that spans many hours (here, roughly 16h) has no crisp single rule for notification cadence — improvised an escalating/spacing-out schedule (2h, 6h, 12h) ad hoc each check-in rather than following a documented convention.
+    solution: Consider documenting a standard notification-spacing convention for long PR-babysitting waits (e.g. in docs/agents/pr-workflow.md or the routine/check-in guidance) so future sessions don't reinvent the cadence each time.
+    severity: minor
+durationSec: 58171
 models:
-  claude-sonnet-5: 74
+  claude-sonnet-5: 144
 toolCounts:
-  Bash: 7
+  Bash: 9
   Agent: 2
   ToolSearch: 5
   mcp__github__issue_write: 4
-  Skill: 3
+  Skill: 4
   ScheduleWakeup: 1
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 14
   Grep: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 7
   mcp__github__get_check_run: 1
   mcp__github__get_job_logs: 1
-  mcp__github__issue_read: 2
+  mcp__github__issue_read: 9
   mcp__github__actions_list: 1
   mcp__github__add_issue_comment: 1
-  Write: 1
+  Write: 2
+  PushNotification: 3
 subagents:
   - type: general-purpose
     task: Survey and screen session frictions
