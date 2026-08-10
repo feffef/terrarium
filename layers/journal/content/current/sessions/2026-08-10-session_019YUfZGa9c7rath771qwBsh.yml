@@ -1,0 +1,65 @@
+schemaVersion: 1
+session: session_019YUfZGa9c7rath771qwBsh
+startedAt: 2026-08-10T16:04:58Z
+endedAt: 2026-08-10T17:04:14Z
+kind: interactive
+goal: Fix the journal dashboard band-height guard
+status: completed
+outcome: "Invariant decoupled, PR #913 merged"
+summary: "The user asked to fix issue #906 — a `ready-for-human` bug where the journal dashboard's \"Sparks drives the digests+Sparks band height\" e2e guard failed, blocking routine `/digest` self-merges. That ask was the green light for the design call #906 and #760 both left open. Measuring the live page showed the guard asserted a property of the day's content as a layout invariant: one spark item wraps to 254.8px in the narrow column and the feed is windowed to 3 days, so Sparks swings from ~90px to thousands while digests sits at ~1040px — the driver is near a daily coin flip, and both #597 and #760 had pinned opposite sides of it. Fixed by decoupling rather than restoring: the sibling-collapse pin guard is now width-parameterized and runs at 900px and 1280px, the desktop run bounding Sparks so digests necessarily drives, plus a third assertion keeping that fixture honest. index.vue's three comments now describe both regimes as correct. All agent-initiated within the user's ask."
+prs:
+  - "913"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: confirm an ordinary work PR is human-merged, not self-merged
+  - path: layers/journal/app/utils/dashboard.ts
+    reason: SPARK_FEED_DAYS/SPARK_FEED_LIMIT — the root cause of the height volatility
+  - path: layers/journal/tests/e2e/journal.e2e.ts
+    reason: (read before editing)
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: An ad-hoc Playwright probe compiled by tsx threw "__name is not defined" inside page.evaluate — esbuild's keepNames injects a helper the browser lacks.
+    solution: Pass the evaluate body as a string instead of a function. Worth a line in docs/agents/verifying-ui-changes.md, which covers ad-hoc probes but does not mention this (grepped — no hit for __name, keepNames, or evaluate).
+    severity: moderate
+  - description: Measuring computed geometry on a route needed a throwaway probe written into the repo root, because a scratchpad file cannot resolve playwright-core.
+    solution: A scripts/probe.ts alongside screenshot.ts, taking a route plus an expression to evaluate, would have made this a one-liner and left nothing to clean up.
+    severity: minor
+  - description: 'Issue #906 offered three options but its framing ("the invariant has regressed again") pointed at restoring it, which measurement showed was never viable.'
+    solution: Measure the live page before accepting an issue's causal framing — the report was right about the symptom and wrong about the invariant ever holding.
+    severity: nit
+durationSec: 3556
+models:
+  claude-opus-5: 133
+toolCounts:
+  ToolSearch: 3
+  Bash: 35
+  mcp__github__issue_read: 4
+  Read: 8
+  Write: 3
+  Edit: 7
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 8
+  mcp__github__pull_request_read: 2
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+filesEdited:
+  - tmp-probe.ts
+  - layers/journal/tests/e2e/journal.e2e.ts
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+gitBranch: claude/issue-906-esybr1
+entrypoint: remote
+cliVersion: 2.1.226
+learnings:
+  - esbuild's keepNames (tsx's default) injects a `__name` helper, so a function passed to Playwright's page.evaluate throws in the browser; pass the body as a string instead.
+  - A style injected with page.addStyleTag needs !important to beat a Vue SFC's scoped rule, which carries a [data-v-…] attribute selector on top of the same classes.
+ideas:
+  - "Add scripts/probe.ts next to screenshot.ts: take a route, an optional CSS override, and a JS expression, and print the evaluated result as JSON. Every layout-debugging session so far has hand-rolled this and deleted it; a committed version would also be the natural place to encode the string-not-function page.evaluate rule so nobody rediscovers __name."
+  - "Teach the gate (or a validate:content check) to flag an e2e assertion whose threshold is derived from live content volume. Both #760 and #906 were the same defect class — a content-dependent quantity frozen into a test as an invariant — and each cost a red gate on an unrelated content PR before anyone noticed."
