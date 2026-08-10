@@ -1,0 +1,58 @@
+schemaVersion: 1
+session: session_01CV3dBwvj8RYuvmtTXczKTd
+startedAt: 2026-08-09T00:38:00Z
+endedAt: 2026-08-10T19:22:23Z
+kind: interactive
+goal: "Diagnose PR #895 gate failure, sync branch"
+status: in-review
+outcome: Root cause bisected; branch synced with main
+summary: "Human-instructed: find why the open PR's test fails, then \"rebase to main\". PR #895 (Nuxt 4.4.8 to 4.5.1) fails 36 of 80 e2e tests, all on \"Hydration completed but contains mismatches\". Reproduced locally in both preview and dev builds: the mismatch is inside MDCRenderer (server renders a plain element, client resolves ProseP), alongside an SSR-only \"resolveComponent can only be used in render() or setup()\" warning absent on main. Bisected by pinning versions - broken only on Nuxt 4.5.x plus Vue 3.5.41; Nuxt 4.5.1 with Vue 3.5.40/3.5.39 and Nuxt 4.4.8 with Vue 3.5.41 are both clean. Nuxt 4.5.2 still reproduces. Agent-initiated: nothing beyond the two asks - the vue 3.5.40 pin was offered, not applied. Merged current main into the dependabot branch (fast-forward, no history rewrite) after the user expressed no preference among the branch options; gate floor green locally."
+prs:
+  - "895"
+docsRead:
+  - path: CLAUDE.md
+    reason: gate/verification and PR conventions
+  - path: tests/support/e2e.ts
+    reason: the failing assertion, expectCleanHydration
+  - path: scripts/preview.ts
+    reason: sanctioned dev/preview server lifecycle
+skillsUsed:
+  - name: close-session
+    reason: self-judged closure after the sync push
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: get_job_logs returned 84k characters on one line, over the tool's token cap, needing a save-and-split detour before the failure was readable.
+    solution: Fetch failed-job logs with a small tail first, or split on the timestamp prefix immediately; the file is one line, so Read's offset/limit is useless.
+    severity: minor
+  - description: Bisecting a transitive dependency took five install-plus-boot-plus-probe cycles, each hand-assembled from package.json edits and ad-hoc probe scripts.
+    solution: A script that pins a version via pnpm overrides, boots dev, and probes a route for console errors would collapse each cycle to one command.
+    severity: minor
+  - description: pnpm gate:scoped --dry printed roughly twenty git fetch branch lines above its decision, so the plan was easy to miss in the output.
+    solution: Quiet the gate script's fetch, or print the decision after a separator.
+    severity: nit
+durationSec: 153863
+models:
+  claude-opus-5: 162
+toolCounts:
+  Bash: 74
+  ToolSearch: 4
+  mcp__github__list_pull_requests: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__get_job_logs: 2
+  Read: 2
+  WebSearch: 1
+  WebFetch: 3
+  AskUserQuestion: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  Write: 1
+gitBranch: claude/open-pr-test-failure-bpjt8y
+entrypoint: remote_mobile
+cliVersion: 2.1.226
+learnings:
+  - Nuxt dev forwards SSR-side logs to the browser in the data-nuxt-logs payload - a server-only Vue warning invisible in the browser console shows up there
+  - An MDC prose component can produce byte-identical SSR HTML and still mismatch on hydration, because ProseP renders exactly the plain tag it falls back to
+  - Under pnpm's strict node_modules, require('./node_modules/vue/package.json') fails for a transitive dep - read versions from pnpm-lock.yaml instead
+ideas:
+  - Add scripts/dep-bisect.ts - given a package and a list of versions, it pins each via pnpm.overrides, boots the dev server on an ephemeral port, probes a route for console errors, and prints a clean/broken table. Today's five-permutation Nuxt/Vue bisect was assembled by hand each round; a dependabot bump that reddens the gate is a recurring event, and this turns the diagnosis into one command.
