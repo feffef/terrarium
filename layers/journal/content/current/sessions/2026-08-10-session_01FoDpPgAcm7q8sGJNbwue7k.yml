@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01FoDpPgAcm7q8sGJNbwue7k
 startedAt: 2026-08-10T04:10:50Z
-endedAt: 2026-08-10T04:23:49Z
+endedAt: 2026-08-10T17:17:19Z
 kind: autonomous
 goal: Run the scheduled audit-docs sweep
-status: in-review
-outcome: One Drift fix confirmed, fixed, PR opened
-summary: "Scheduled /audit-docs routine, no human prompting during the run. Fanned out four paired-lens reviewer agents (Freshness/Drift+Orphan-addition, Single-home/Duplication+Mis-location, Concision/Verbose+Stale-narration, Coherence/Contradiction+Ambiguity) over the repo's Live-tier docs. Only one finding survived across all eight lenses: digest/SKILL.md:80 misattributed journal.e2e.ts's location as root tests/e2e instead of layers/journal/tests/e2e. An independent fact-checker agent confirmed it against tests/README.md and the file on disk before I applied the one-line fix. pnpm gate:scoped ran green (change classified inert). Opened PR #911 (self-merge-eligible tier, touches no human-only surface) and subscribed to its activity to babysit it to merge."
+status: completed
+outcome: One Drift fix confirmed, fixed, PR merged
+summary: "Scheduled /audit-docs routine, no human prompting during the run. Fanned out four paired-lens reviewer agents (Freshness/Drift+Orphan-addition, Single-home/Duplication+Mis-location, Concision/Verbose+Stale-narration, Coherence/Contradiction+Ambiguity) over the repo's Live-tier docs. Only one finding survived across all eight lenses: digest/SKILL.md:80 misattributed journal.e2e.ts's location as root tests/e2e instead of layers/journal/tests/e2e. An independent fact-checker agent confirmed it against tests/README.md and the file on disk before the one-line fix was applied. pnpm gate:scoped ran green locally (change classified inert). Opened PR #911 (self-merge-eligible tier, touches no human-only surface). CI's gate then failed for reasons unrelated to this PR: an unrelated, pre-existing base-branch regression tracked in issue #906 (journal dashboard Sparks/digests band-height invariant, labeled ready-for-human). Verified the failure reproduced identically against origin/main in a local worktree before commenting \"not mine\" on the PR per CLAUDE.md's drive-to-green posture, then babysat via repeated send_later check-ins (~13.5 hours total) until a different session's PR #913 fixed #906. Once main recovered, PR #911's branch auto-updated, the gate went green, and the PR was merged via scripts/merge-pr.ts after check-conflicting-issues.ts and a posted verdict comment."
 prs:
   - "911"
 docsRead:
@@ -16,6 +16,8 @@ docsRead:
     reason: primary source confirming journal.e2e.ts's real path
   - path: skills-lock.json
     reason: classify Pack-generic vs our own Skills
+  - path: docs/agents/pr-workflow.md
+    reason: "the land-a-gated-PR recipe used to merge #911"
   - path: .agents/skills/digest/SKILL.md
     reason: (read before editing)
 skillsUsed:
@@ -24,26 +26,37 @@ skillsUsed:
   - name: close-session
     reason: closure at PR-open
   - name: log-session
-    reason: this log
-frictions: []
-durationSec: 779
+    reason: this log, authored twice (in-review, then completed)
+frictions:
+  - description: "PR #911's gate stayed red for ~13.5 hours purely because of an unrelated, pre-existing base-branch regression (issue #906), so a trivial one-line docs fix sat blocked on an unrelated architectural decision needing a human. Not a defect in this session's work, but a real cost of the self-merge tier being gated on a shared, sometimes-red base branch."
+    solution: "No action needed from audit-docs itself — #906 was already correctly tracked and labeled ready-for-human before this session started, and was fixed by an unrelated session's PR #913. Worth noting as a general pattern: a self-merge-eligible PR can be silently stuck for a long time whenever main's gate is red for unrelated reasons, with no escalation path other than long-interval polling."
+    severity: nit
+durationSec: 47189
 models:
-  claude-sonnet-5: 89
+  claude-sonnet-5: 196
 toolCounts:
-  Bash: 16
-  ToolSearch: 2
+  Bash: 34
+  ToolSearch: 4
   TaskCreate: 6
-  TaskUpdate: 12
+  TaskUpdate: 20
   Agent: 5
   Read: 1
   Edit: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  Skill: 2
-  Write: 1
-  mcp__github__pull_request_read: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 3
+  Write: 2
+  mcp__github__pull_request_read: 6
+  mcp__Claude_Code_Remote__send_later: 8
+  mcp__github__get_check_run: 1
+  mcp__github__get_job_logs: 1
+  mcp__github__actions_list: 1
+  mcp__github__search_issues: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__issue_read: 6
+  PushNotification: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/digest/SKILL.md
 subagents:
