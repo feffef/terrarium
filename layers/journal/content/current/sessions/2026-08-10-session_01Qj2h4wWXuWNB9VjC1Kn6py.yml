@@ -1,0 +1,58 @@
+schemaVersion: 1
+session: session_01Qj2h4wWXuWNB9VjC1Kn6py
+startedAt: 2026-08-10T00:19:05Z
+endedAt: 2026-08-10T00:28:10Z
+kind: autonomous
+goal: Run the scheduled /digest sweep for 2026-08-09
+status: in-review
+outcome: "PR #905 opened, awaiting CI gate"
+summary: "Scheduled /digest Routine fired with no human prompt this turn. Authored the 2026-08-09 Digest from scripts/digest.ts gather output, ran the retention archive sweep (archived the 2026-08-02 digest and 6 aged-out session logs), and opened PR #905 with both riding one commit as the skill directs. Local pnpm gate:scoped surfaced one test:e2e failure unrelated to the digest content (see frictions) — confirmed pre-existing via a stash-and-rerun against clean origin/main before proceeding, rather than assuming it was caused by this session's changes. Deferred to CI as the authoritative gate per CLAUDE.md and noted the finding in the PR body; will self-merge via merge-pr.ts once CI reports green, or escalate if CI itself goes red."
+prs:
+  - "905"
+docsRead:
+  - path: CLAUDE.md
+    reason: chartered-job branch-off checklist + gate discipline
+  - path: docs/agents/environment-caveats.md
+    reason: checked for a documented font/Chromium rendering divergence before treating one as a fresh finding
+  - path: layers/journal/content/current/pages/digests/2026-08-08.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: PR-open closure point
+  - name: log-session
+    reason: first (in-review) log at PR-open
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: "Local `pnpm gate:scoped` failed one test:e2e assertion (journal Tenant \"keeps Sparks the driver of the digests+Sparks band height at desktop width\", tracking issue #760) that reproduces identically on a clean origin/main checkout with no digest changes applied. CI has been consistently green on the same main commits. The local sandbox's Chromium/font set (59 fonts, DejaVu/Liberation only) is a minimal subset of what CI's `playwright-core install --with-deps chromium` provisions, which plausibly explains a divergent pixel-height layout assertion for text-heavy digest cards."
+    solution: "Documented the finding and reasoning in PR #905's body and deferred to CI as authoritative rather than blocking the digest on an unreproducible local-only failure. If this recurs, worth adding a note to docs/agents/environment-caveats.md once a human confirms the font-set theory, so future sessions don't re-diagnose it as a fresh regression each time digest content grows the journal dashboard's rendered height."
+    severity: moderate
+  - description: "`git stash` / `git stash pop` around the archive sweep's `git mv` renames split each rename into a separate staged-add + unstaged-delete instead of preserving the rename, requiring a `git add -A` to re-consolidate before the gate run."
+    solution: Minor mechanical wrinkle of stashing around already-staged renames — no repo change needed, just worth remembering `git add -A` after any stash pop that touches `git mv`'d paths.
+    severity: nit
+durationSec: 545
+models:
+  claude-sonnet-5: 84
+toolCounts:
+  Bash: 24
+  Read: 1
+  Write: 2
+  ToolSearch: 4
+  mcp__github__issue_read: 1
+  mcp__github__search_issues: 1
+  mcp__github__actions_list: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Edit: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-09.md
+gitBranch: claude/compassionate-lovelace-xkksy8
+entrypoint: remote_trigger
+cliVersion: 2.1.226
+trigger: digest
+learnings:
+  - This sandbox's pre-installed Chromium (/opt/pw-browsers) ships a much smaller font set (59 fonts, DejaVu/Liberation) than CI's `playwright-core install --with-deps chromium` step provisions — worth remembering before trusting a local pixel-height/layout e2e failure as real without cross-checking against CI.
