@@ -56,6 +56,12 @@ Classify every surface **before** editing. This decides everything.
   rewrite them** — where they diverge from repo reality, note the reconciliation
   in a *live* doc instead.
 
+A fourth bucket sits outside these three tiers and needs no classification:
+fictional Tenant content (e.g. Atlas), individual `docs/proposals/<N>-*.md`
+proposal bodies (`docs/proposals/README.md` itself stays Live, per above), and
+`.out-of-scope/*.md` files are **excluded** from the sweep — skip them
+entirely.
+
 ## The eight lenses, in four paired agents
 
 Eight lenses, fanned out as **four read-only reviewer agents** (Agent tool, in
