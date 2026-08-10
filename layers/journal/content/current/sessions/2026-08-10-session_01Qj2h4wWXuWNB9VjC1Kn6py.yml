@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Qj2h4wWXuWNB9VjC1Kn6py
 startedAt: 2026-08-10T00:19:05Z
-endedAt: 2026-08-10T00:39:01Z
+endedAt: 2026-08-10T19:03:05Z
 kind: autonomous
 goal: Run the scheduled /digest sweep for 2026-08-09
-status: in-review
-outcome: "PR #905 open, red gate, escalated as #906"
-summary: "Scheduled /digest Routine fired with no human prompt this turn. Authored the 2026-08-09 Digest from scripts/digest.ts gather output, ran the retention archive sweep (archived the 2026-08-02 digest and 6 aged-out session logs), and opened PR #905 with both riding one commit as the skill directs. CI's test:e2e gate then failed on a real, PR-905-caused regression (see frictions): the previously-fixed \"Sparks drives row height\" invariant (issue #760) has drifted back to its tipping point on main, and this PR's new digest content is what tips it over in CI's own environment, confirmed via a controlled clean-rebuild A/B in an isolated worktree. Corrected an earlier (wrong) claim in the PR body that had misattributed the failure to local Chromium/font differences and proposed deferring to CI — CI itself is red and the cause is real. Filed issue #906 (referencing #760) with the evidence, updated PR #905's description, and left the PR open rather than self-merging, since the fix is a product/design call outside this run's scope (per #760's own \"ready-for-human\" framing). Every future /digest run will likely keep tripping this until #906 is resolved."
+status: completed
+outcome: "PR #905 merged after #906 fixed by human (#913)"
+summary: "Scheduled /digest Routine fired with no human prompt this turn. Authored the 2026-08-09 Digest from scripts/digest.ts gather output, ran the retention archive sweep (archived the 2026-08-02 digest and 6 aged-out session logs), and opened PR #905 with both riding one commit as the skill directs. CI's test:e2e gate then failed on a real, PR-905-caused regression (see frictions): the previously-fixed \"Sparks drives row height\" invariant (issue #760) had drifted back to its tipping point on main, and this PR's new digest content tipped it over in CI's own environment, confirmed via a controlled clean-rebuild A/B in an isolated worktree. Corrected an earlier (wrong) claim in the PR body that had misattributed the failure to local Chromium/font differences and proposed deferring to CI — CI itself was red and the cause was real. Filed issue #906 (referencing #760, human-facing, not asked for by the user this turn — an agent-initiated escalation) with the evidence, updated PR #905's description, and left the PR open rather than self-merging, since the fix was a product/design call outside this run's scope. Sent one proactive notification when the run first stalled on that human decision, then babysat PR #905/#906 via ~13 scheduled check-ins over ~17 hours with no engagement, correctly skipping two duplicate/ re-delivered CI-failure webhooks for the same already-diagnosed commit along the way. The human (Steffen) then resolved it directly: opened and merged PR #913 (\"decouple the digests+Sparks pin guard from which column is taller,\" option 2 of #760/#906's three choices), closing #906, and merged main into PR #905's branch. On the next check-in, CI came back green (check run 93533837854) and mergeable_state clean with the diff unchanged from what I'd originally opened (still just the digest content + archive sweep). Verified via check-conflicting-issues.ts (no hits), posted the verdict comment, and landed PR #905 via merge-pr.ts (merge commit 99efdcfb)."
 prs:
   - "905"
 docsRead:
@@ -20,7 +20,7 @@ skillsUsed:
   - name: close-session
     reason: PR-open closure point
   - name: log-session
-    reason: first (in-review) log at PR-open, updated after the CI-red investigation
+    reason: in-review log at PR-open, updated after the CI-red investigation, finalized to completed at merge
   - name: digest
     reason: (invoked as a slash command)
 frictions:
@@ -30,29 +30,33 @@ frictions:
   - description: "`git stash` / `git stash pop` around the archive sweep's `git mv` renames split each rename into a separate staged-add + unstaged-delete instead of preserving the rename, requiring a `git add -A` to re-consolidate before the gate run."
     solution: Minor mechanical wrinkle of stashing around already-staged renames — no repo change needed, just worth remembering `git add -A` after any stash pop that touches `git mv`'d paths.
     severity: nit
-durationSec: 1195
+durationSec: 67440
 models:
-  claude-sonnet-5: 134
+  claude-sonnet-5: 250
+  <synthetic>: 1
 toolCounts:
-  Bash: 36
-  Read: 2
+  Bash: 40
+  Read: 3
   Write: 3
-  ToolSearch: 7
-  mcp__github__issue_read: 1
+  ToolSearch: 8
+  mcp__github__issue_read: 15
   mcp__github__search_issues: 1
   mcp__github__actions_list: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  Edit: 1
-  mcp__github__pull_request_read: 1
+  Edit: 3
+  mcp__github__pull_request_read: 22
   mcp__Claude_Code_Remote__send_later: 1
   mcp__github__get_job_logs: 2
   mcp__github__update_pull_request: 1
   mcp__github__issue_write: 1
-  mcp__Claude_Code_Remote__update_trigger: 1
-  PushNotification: 1
+  mcp__Claude_Code_Remote__update_trigger: 15
+  PushNotification: 2
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-08-09.md
 gitBranch: claude/compassionate-lovelace-xkksy8
