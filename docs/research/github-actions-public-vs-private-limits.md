@@ -9,11 +9,12 @@ bottom; the sections trace each fact back to the GitHub Docs page that owns it.
 
 **Verified against** the official GitHub Docs (docs.github.com), **date accessed
 2026-07-11**. Pricing, included quotas, and limits change over time — re-check
-the linked pages before relying on a number. The rendered docs.github.com pages
-return HTTP 403 to the automated fetcher, so the quotes below were read from the
-**canonical Markdown source** of the same pages in the public
-[`github/docs`](https://github.com/github/docs) repository (`content/…` and
-`data/reusables/…`); each fact is cited to the docs.github.com page it renders on.
+the linked pages before relying on a number. `docs.github.com` returns 403 to
+the automated fetcher here (`docs/agents/environment-caveats.md` owns this
+caveat), so the quotes below were read from the **canonical Markdown source**
+of the same pages in the public [`github/docs`](https://github.com/github/docs)
+repository (`content/…` and `data/reusables/…`); each fact is cited to the
+docs.github.com page it renders on.
 Where a fact is only corroborated by a non-owning source (e.g. a community
 thread), it is marked as such.
 

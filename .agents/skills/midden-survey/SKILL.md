@@ -78,14 +78,13 @@ pagination/overflow guidance).
 
 ## 3. Judge the candidates — both gates, curatorial signal over bulk
 
-For each remaining candidate, apply the two-gate test honestly and keep only
-what passes **both** gates:
+For each remaining candidate, apply the two-gate test (`layers/midden/CONTEXT.md`'s
+inclusion bar owns Gate A/Gate B's definitions) honestly and keep only what
+passes **both** gates:
 
-- **Gate A** — the disposition is net-final (removed / closed / non-landing;
-  branches need the dormancy floor, per the inclusion bar). A file deleted
-  mid-refactor whose purpose obviously moved elsewhere is not terminal.
-- **Gate B** — nothing living in current `origin/main` carries the identity or
-  purpose forward. The script rules out same-path regrowth, same-name re-adds,
+- **Gate A** — a file deleted mid-refactor whose purpose obviously moved
+  elsewhere is not terminal.
+- **Gate B** — the script rules out same-path regrowth, same-name re-adds,
   and files that merely moved mechanically; **successor-under-a-new-shape is
   your judgment call** — a file rewritten into a successor git never paired as
   a rename is invisible to the script by design, so check where the deleting

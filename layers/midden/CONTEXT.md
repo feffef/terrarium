@@ -15,7 +15,7 @@ is truly finished stopping.
 
 Full MVP spec, decision history, and the resolution of every sub-decision below:
 [issue #515](https://github.com/feffef/terrarium/issues/515) (a Wayfinder map;
-its 12 sub-issues #516–#528 carry the individual resolutions cited by number
+its 13 sub-issues #516–#528 carry the individual resolutions cited by number
 throughout this file).
 
 ## Why it exists

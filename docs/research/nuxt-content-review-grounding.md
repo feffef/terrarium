@@ -6,7 +6,10 @@ app. Every claim below is traced to the official docs or the installed source
 in `node_modules` — nothing is from memory or third-party posts.
 
 **Researched 2026-07-11.** Versions verified against `node_modules` (re-check
-if they've moved):
+if they've moved) — **stale as of 2026-08-10** (commit `e3538b0` bumped
+installed `nuxt`/`@nuxt/kit` to **4.5.2**); the line-number citations below are
+pinned to the versions actually read at research time and have not been
+re-verified against 4.5.2:
 
 - `nuxt` **4.4.8** (`node_modules/nuxt/package.json`)
 - `@nuxt/content` **3.15.0** (`node_modules/@nuxt/content/package.json`)

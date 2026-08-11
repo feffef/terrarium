@@ -10,7 +10,7 @@ The *how-to-capture* tooling — `scripts/preview.ts` (`shot`/`start`/`stop`) an
 doc is the *methodology*: what proves a change, and what only looks like proof.
 
 **Browser facts verified against** (from `node_modules`, re-check if they've
-moved): `playwright-core` **1.61.1**, `nuxt` **4.4.8**. Entries that came from a
+moved): `playwright-core` **1.61.1**, `nuxt` **4.5.2**. Entries that came from a
 specific session cite it.
 
 ## The methodology

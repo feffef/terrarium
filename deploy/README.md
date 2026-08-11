@@ -114,7 +114,9 @@ redeploys the image** — the container updates itself.
    > found`**, you skipped `docker network create web` in step 3 — create it and
    > re-run. Confirm both containers share it:
    > `docker network inspect web --format '{{range .Containers}}{{.Name}} {{end}}'`
-   > → should list the Caddy container **and** `terrarium-terrarium-1`.
+   > → should list the Caddy container **and** `deploy-terrarium-1` (Compose's
+   > default project name is the compose file's directory basename —
+   > `deploy` here, since step 6 `cd`s into `deploy/` first).
 
 ## Operations
 
@@ -122,7 +124,7 @@ redeploys the image** — the container updates itself.
 - **Force an immediate update** (instead of waiting for the poll):
   `docker compose restart terrarium` (re-runs the boot path against latest `main`).
 - **Rebuild from scratch** (rare — clears the volume):
-  `docker compose down && docker volume rm terrarium_terrarium_app && docker compose up -d --build`
+  `docker compose down && docker volume rm deploy_terrarium_app && docker compose up -d --build`
 - **Update the runner image itself** (only when `deploy/*` changes): pull the
   repo at `/opt/terrarium/repo`, then `docker compose up -d --build`.
 - **Rotate the PAT:** edit `/opt/terrarium/.env`, then

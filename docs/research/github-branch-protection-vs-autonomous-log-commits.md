@@ -12,10 +12,10 @@ answers: can a **repository ruleset** (Settings → Rules → Rulesets) thread
 that needle instead of classic protection, and if so, how precisely.
 
 **Verified against** the official GitHub Docs (docs.github.com), **date
-accessed 2026-07-12**. As with the prior research note in this directory,
-docs.github.com returns HTTP 403 to the automated fetcher — the quotes below
-are read from the **canonical Markdown source** of the same pages (and their
-`{% data reusables/… %}` includes) in the public
+accessed 2026-07-12**. `docs.github.com` returns 403 to the automated fetcher
+here (`docs/agents/environment-caveats.md` owns this caveat) — the quotes
+below are read from the **canonical Markdown source** of the same pages (and
+their `{% data reusables/… %}` includes) in the public
 [`github/docs`](https://github.com/github/docs) repository, located via GitHub
 code search. Each fact is cited to the docs.github.com page it renders on plus
 the source file it was pulled from.
