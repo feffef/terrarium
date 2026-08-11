@@ -91,11 +91,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   `nuxt.config.ts` (ADR-0018 treats it as a
   human-only surface), and `.github/actions/gate/action.yml`, which holds the
   Gate's own steps (ADR-0026).
-  "Human-only" gates *merging*, not editing:
-  `content.config.ts` is hand-editable (below), but a PR touching it still
-  needs a human to merge. `.github/actions/gate/action.yml` is the sharpest
-  case — agents *can* push it, unlike `.github/workflows/*`, and still must not
-  merge it.
+  Human-only constrains merging, not editing (`CONTEXT.md`'s `### Human-only`
+  glossary term owns the rule) — e.g. `content.config.ts` is hand-editable
+  (below), but a PR touching it still needs a human to merge.
+  `.github/actions/gate/action.yml` is the sharpest case — agents *can* push
+  it, unlike `.github/workflows/*`, and still must not merge it.
 - **Skills** are generic, repo-committed, and first-class (ADR-0005). But the
   **external pack Skills** — the ones keyed in `skills-lock.json` (installed from
   `mattpocock/skills`) — are **off limits to edit**: their `SKILL.md` is not ours
@@ -285,12 +285,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   anything. Use `Monitor`/`ps` plus a log completion marker to confirm the
   process actually finished instead of trusting the outer call's return.
 - **A dispatched subagent must never background a Bash command at all**
-  (`run_in_background: true` — orchestrator/main sessions are untouched): no
-  backgrounded command ever wakes a stopped subagent, and `Monitor`
-  notifications don't resume one either — only an orchestrator `SendMessage`
-  does. Repeated impl-agent stalls on backgrounded `pnpm gate:scoped` runs drove
-  this — see the doc for the full incident count — so a `PreToolUse` guard now
-  denies the call in subagent context, teaching the working alternative
+  (`run_in_background: true` — orchestrator/main sessions are untouched):
+  `docs/agents/subagent-background-guard.md`'s "Why" section owns the reason
+  (no wake mechanism ever resumes a stopped subagent) and the incident count.
+  A `PreToolUse` guard now denies the call in subagent context, teaching the
+  working alternative
   (foreground with an explicit `timeout`, split steps that exceed 10 minutes)
   in its deny message
   (`scripts/subagent-background-guard.ts`; see
