@@ -74,3 +74,14 @@ observations:
       file-name-only provenance fix, session_01SvQWTmWHQ6JWFHQR68gemt's PR
       #789 provenance-guard collapse), confirming the adoption pattern in
       role is still accurate.
+  - date: 2026-08-11
+    note: >-
+      Prior citations aged out; used in 3 of this window's 40 sessions
+      (session_01LKDi3JUBBm6Mmqf1ubw23N's gate:scoped shallow-clone diff-base
+      fix, session_01ErWC7JVF6xz3CufXjGAN77's Gate-workflow agent-pushable
+      change, session_01GSfW8QbXfJYk1Lu5My1ytz's never-APPROVE PR-review
+      single-homing) — still skipped in two other code-landing sessions this
+      window that both used `implement` (session_01MCMjVrM3uSMPrqyoWUroFG's
+      #659 implement, session_01SuvMh3wC6nyykyAVQuYVb4's triage+implement
+      backlog sweep), confirming the adoption pattern in role is still
+      accurate.
