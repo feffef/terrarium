@@ -129,6 +129,11 @@ work), run `git status` first and stash or commit anything it finds.** A
 `git reset --hard HEAD~1` mid-teardown once discarded uncommitted edits to 5
 tracked files (recovered).
 
+**`git stash`/`git stash pop` around already-staged `git mv` renames splits
+each rename into a staged add + an unstaged delete on pop**, instead of
+preserving it as a rename. Run `git add -A` afterward to re-consolidate
+before gating/committing.
+
 **Never redirect a state-changing git command's output to `/dev/null` (or
 otherwise discard it).** A `git stash pop` piped to `/dev/null` once failed
 silently, leaving the stash un-popped and a later "base vs mine" comparison
