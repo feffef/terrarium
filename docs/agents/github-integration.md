@@ -96,6 +96,10 @@ catch the mistake in practice.
 - `actions_list` has no `minimal_output` and returns full run objects (~300KB),
   which overflow the tool-result limit — for an "is main green" check, slice the
   persisted file or query by SHA instead of pulling the full list.
+- **`get_job_logs` can return its output as a single very long line (84k+
+  chars observed)** — `Read`'s offset/limit pages by line, so it doesn't help
+  here. Redirect the output to a file and slice it, or fetch a small tail
+  first.
 
 ## Script escapes — cheaper than the API for three common questions
 
@@ -138,6 +142,11 @@ catch the mistake in practice.
   wake when no agent is running to re-poll). **`ScheduleWakeup` isn't the tool
   for this** — CLAUDE.md owns that rule and the `send_later` mechanism
   (`docs/agents/loop-only-tool-guard.md` has the guard, issue #814).
+- **Re-running an old/existing workflow run does not recompute the merge
+  ref.** It re-checks-out that run's original `refs/pull/N/merge` snapshot —
+  so a re-run can still report red after the real fix has already merged.
+  Only a fresh push/branch-update recomputes `refs/pull/N/merge` and gets a
+  true re-check.
 - **This polling advice is scoped to non-webhook-delivered state like CI —
   it does not apply to a dispatched Agent-tool subagent.** A background
   `Agent` tool completion self-notifies automatically; waiting on one needs no
