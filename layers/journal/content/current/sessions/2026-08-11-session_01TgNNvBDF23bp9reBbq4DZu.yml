@@ -1,0 +1,48 @@
+schemaVersion: 1
+session: session_01TgNNvBDF23bp9reBbq4DZu
+startedAt: 2026-08-11T00:17:44Z
+endedAt: 2026-08-11T00:27:28Z
+kind: autonomous
+goal: Run the scheduled /digest sweep for 2026-08-10
+status: completed
+outcome: "PR #915 merged, gate green"
+summary: "Fully agent-initiated per the scheduled /digest Routine — no human prompt this turn. Authored the 2026-08-10 Digest from scripts/digest.ts's gather output (6 merged PRs, 7 sessions, dominated by the day's #906 band-height regression that blocked several gates until #913 fixed it), ran the archive-journal-content.ts retention sweep (moved 1 digest + 6 session logs to archived), and cleared pnpm gate:scoped end to end (lint, validate:content, test, build, test:e2e all green). typecheck failed on a pre-existing layers/commits/LatestCommit.vue TS2339 error, confirmed unrelated by re-running typecheck on a clean stash of origin/main, which failed identically. Opened PR #915, subscribed to its activity, and am babysitting it to a green-gate self-merge per the digest Skill's content-only low-risk tier. CI's own safety-gate check reported green and scripts/merge-pr.ts merged the PR directly (merge commit 4bbbf4e)."
+prs:
+  - "915"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-08-09.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: git stash / stash pop around the archive sweep's git mv renames (done to isolate a clean origin/main for the typecheck pre-existing-failure check) again split each rename into a separate staged add + unstaged delete, exactly as the 2026-08-09 digest session logged.
+    solution: git add -A re-consolidated the renames before the gate run; this is the second recorded instance (see 2026-08-09 log) — a solution worth writing into the digest Skill or git-conventions doc directly rather than re-discovering each run.
+    severity: nit
+durationSec: 584
+models:
+  claude-sonnet-5: 80
+toolCounts:
+  Bash: 26
+  Read: 2
+  Write: 2
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Edit: 2
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-10.md
+gitBranch: claude/compassionate-lovelace-v5n70k
+entrypoint: remote_trigger
+cliVersion: 2.1.227
+trigger: digest
