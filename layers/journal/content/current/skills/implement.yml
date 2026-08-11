@@ -79,3 +79,17 @@ observations:
       fix, session_01SvQWTmWHQ6JWFHQR68gemt's PR #789 provenance-guard
       collapse), same genuinely-inconsistent adoption; role and grade held
       as-is.
+  - date: 2026-08-11
+    note: >-
+      Prior citations aged out; used in 5 of this window's 40 sessions, every
+      single-issue or grill-then-implement session that landed code this
+      window: session_01LKDi3JUBBm6Mmqf1ubw23N (gate:scoped diff-base fix),
+      session_01ErWC7JVF6xz3CufXjGAN77 (Gate-workflow agent-pushable change),
+      session_01GSfW8QbXfJYk1Lu5My1ytz (never-APPROVE PR-review
+      single-homing), session_01MCMjVrM3uSMPrqyoWUroFG (#659 implement), and
+      session_01SuvMh3wC6nyykyAVQuYVb4 (triage+implement backlog sweep) — no
+      counter-example this window, but the autonomous frictions-to-fixes
+      dispatch-and-review sessions still land code without invoking it (a
+      distinct, already-established batch-dispatch path, not a same-domain
+      skip), so this isn't yet the clean ≥2-counter-example-free signal the
+      promotion rule asks for; role and grade held as-is.
