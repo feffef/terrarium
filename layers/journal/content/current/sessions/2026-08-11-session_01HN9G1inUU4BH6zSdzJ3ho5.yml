@@ -1,0 +1,108 @@
+schemaVersion: 1
+session: session_01HN9G1inUU4BH6zSdzJ3ho5
+startedAt: 2026-08-11T04:11:38Z
+endedAt: 2026-08-11T04:32:21Z
+kind: autonomous
+goal: Run scheduled /audit-docs sweep
+status: in-review
+outcome: 8 findings fixed, PR open, blocked on unrelated CI break
+summary: "Scheduled autonomous run of /audit-docs. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over every Live-tier doc, pooled 8 candidate findings with no overlap, then independently fact-checked each against primary sources (code, git log, live GitHub sub-issue data, a reproduced `docker compose config` run) — all 8 confirmed (two as CONFIRMED-BUT with minor corrections). Fixed all 8 in place: two stale nuxt-4.4.8 version references (Drift), four single-homing trims of restated facts (Duplication), and two factual corrections (a wrong deploy/README.md container/volume name pair, an off-by-one sub-issue count in layers/midden/CONTEXT.md). None touched a human-only surface, so all rode one self-merge-eligible PR (#924). While confirming a green `pnpm gate:scoped`, discovered `pnpm typecheck` fails on clean `origin/main` itself (unrelated to this diff, reproduced via `git stash`) — the 2026-08-10 Nuxt 4.5.2 security bump broke Nitro's typed-route inference for the Commits Tenant's `/api/latest-commit` endpoint. Filed that as issue #923 (a code fix, out of this Skill's charter) since it means CI's gate is red for every PR right now, this one included. Entirely agent-initiated end to end — no human prompt at any point, per this Skill's own autonomous, bounded, self-fact-checking charter."
+prs:
+  - "924"
+docsRead:
+  - path: CONTEXT.md
+    reason: Tenant roster + tier boundaries (which layers/*/CONTEXT.md files are Live vs. which content is fictional/excluded)
+  - path: CONTEXT-MAP.md
+    reason: confirm Midden/Marquee/Blog are real (not Atlas-style fiction), scoping the Live-tier file list for the lens agents
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: the skill this run executes
+  - path: deploy/docker-compose.yml
+    reason: verify no project-name override, confirming the C1 contradiction finding
+  - path: .github/workflows/gate.yml
+    reason: confirm typecheck is an unconditional required CI step before concluding the gate is red repo-wide
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (read before editing)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (read before editing)
+  - path: layers/midden/CONTEXT.md
+    reason: (read before editing)
+  - path: deploy/README.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: docs/agents/subagent-background-guard.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (read before editing)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (read before editing)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (read before editing)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: layers/commits/app/components/content/LatestCommit.vue
+    reason: (no reason given)
+  - path: layers/commits/server/api/latest-commit.get.ts
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's own charter — command-only, fired by schedule
+  - name: close-session
+    reason: invoked at PR-open per its own trigger rule
+  - name: log-session
+    reason: this log
+frictions:
+  - description: gate:scoped's typecheck step fails on clean origin/main, unrelated to this docs-only diff — a real, unnoticed break from the 2026-08-10 Nuxt 4.5.2 bump that makes CI's gate red for every PR right now.
+    solution: "Filed issue #923 with root-cause hypothesis and repro steps; this PR stays open (not force-merged red) until #923 lands, per the skill's own \"red gate never merges\" rule."
+    severity: moderate
+  - description: S4's Duplication finding named three research docs restating the docs.github.com-403 caveat, but one of the three (nuxt-content-review-grounding.md) turned out on fact-check to describe a different pair of domains (content.nuxt.com/nuxt.com) — the lens agent's own scope note had already flagged this as its weakest finding.
+    solution: Independent fact-check step caught it before any fix was applied; no action needed beyond leaving that one file alone.
+    severity: nit
+durationSec: 1243
+models:
+  claude-sonnet-5: 153
+toolCounts:
+  Skill: 3
+  Bash: 17
+  ToolSearch: 4
+  mcp__github__list_pull_requests: 1
+  Read: 20
+  Agent: 5
+  TaskCreate: 8
+  TaskUpdate: 16
+  Edit: 10
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  PushNotification: 1
+filesEdited:
+  - docs/agents/verifying-ui-changes.md
+  - docs/research/nuxt-content-review-grounding.md
+  - CLAUDE.md
+  - .agents/skills/midden-survey/SKILL.md
+  - docs/research/github-actions-public-vs-private-limits.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - deploy/README.md
+  - layers/midden/CONTEXT.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens review (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens review (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens review (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens review (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Independent fact-check of 8 pooled findings
+gitBranch: claude/festive-mayer-yfdoch
+entrypoint: remote_trigger
+cliVersion: 2.1.227
+trigger: audit-docs
+learnings:
+  - Docker Compose's default project name (absent an explicit name:/COMPOSE_PROJECT_NAME override) is the basename of the directory containing the compose file, not the repo name or any other convention — this determines default container/volume names and is easy to get wrong when the compose file lives in a subdirectory (deploy/) rather than the repo root.
