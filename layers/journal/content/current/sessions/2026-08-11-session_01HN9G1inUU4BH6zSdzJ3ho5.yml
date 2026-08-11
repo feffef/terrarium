@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01HN9G1inUU4BH6zSdzJ3ho5
 startedAt: 2026-08-11T04:11:38Z
-endedAt: 2026-08-11T04:32:21Z
+endedAt: 2026-08-11T04:39:23Z
 kind: autonomous
 goal: Run scheduled /audit-docs sweep
-status: in-review
-outcome: 8 findings fixed, PR open, blocked on unrelated CI break
-summary: "Scheduled autonomous run of /audit-docs. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over every Live-tier doc, pooled 8 candidate findings with no overlap, then independently fact-checked each against primary sources (code, git log, live GitHub sub-issue data, a reproduced `docker compose config` run) — all 8 confirmed (two as CONFIRMED-BUT with minor corrections). Fixed all 8 in place: two stale nuxt-4.4.8 version references (Drift), four single-homing trims of restated facts (Duplication), and two factual corrections (a wrong deploy/README.md container/volume name pair, an off-by-one sub-issue count in layers/midden/CONTEXT.md). None touched a human-only surface, so all rode one self-merge-eligible PR (#924). While confirming a green `pnpm gate:scoped`, discovered `pnpm typecheck` fails on clean `origin/main` itself (unrelated to this diff, reproduced via `git stash`) — the 2026-08-10 Nuxt 4.5.2 security bump broke Nitro's typed-route inference for the Commits Tenant's `/api/latest-commit` endpoint. Filed that as issue #923 (a code fix, out of this Skill's charter) since it means CI's gate is red for every PR right now, this one included. Entirely agent-initiated end to end — no human prompt at any point, per this Skill's own autonomous, bounded, self-fact-checking charter."
+status: completed
+outcome: 8 doc findings fixed and merged; self-caused false alarm corrected
+summary: "Scheduled autonomous run of /audit-docs. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over every Live-tier doc, pooled 8 candidate findings with no overlap, then independently fact-checked each against primary sources (code, git log, live GitHub sub-issue data, a reproduced `docker compose config` run) — all 8 confirmed (two as CONFIRMED-BUT with minor corrections). Fixed all 8 in place: two stale nuxt-4.4.8 version references (Drift), four single-homing trims of restated facts (Duplication), and two factual corrections (a wrong deploy/README.md container/volume name pair, an off-by-one sub-issue count in layers/midden/CONTEXT.md). None touched a human-only surface, so all rode one self-merge-eligible PR (#924), which merged (b23504f). Entirely agent-initiated end to end — no human prompt at any point, per this Skill's own autonomous, bounded, self-fact-checking charter. Self-caused a false alarm mid-run (see frictions) that was self-caught and corrected before it caused any lasting harm, beyond one inaccurate proactive notification already sent to the user."
 prs:
   - "924"
 docsRead:
@@ -19,7 +19,9 @@ docsRead:
   - path: deploy/docker-compose.yml
     reason: verify no project-name override, confirming the C1 contradiction finding
   - path: .github/workflows/gate.yml
-    reason: confirm typecheck is an unconditional required CI step before concluding the gate is red repo-wide
+    reason: "confirm typecheck is an unconditional required CI step, which is what made the false #923 alarm look repo-critical rather than checking a clean install first"
+  - path: docs/agents/pr-workflow.md
+    reason: the land-a-gated-PR recipe (check-conflicting-issues.ts, verdict comment, merge-pr.ts) followed once the gate was confirmed genuinely green
   - path: docs/agents/verifying-ui-changes.md
     reason: (read before editing)
   - path: docs/research/nuxt-content-review-grounding.md
@@ -52,34 +54,39 @@ skillsUsed:
   - name: close-session
     reason: invoked at PR-open per its own trigger rule
   - name: log-session
-    reason: this log
+    reason: "this log, authored twice: in-review at PR-open, completed after merge"
 frictions:
-  - description: gate:scoped's typecheck step fails on clean origin/main, unrelated to this docs-only diff — a real, unnoticed break from the 2026-08-10 Nuxt 4.5.2 bump that makes CI's gate red for every PR right now.
-    solution: "Filed issue #923 with root-cause hypothesis and repro steps; this PR stays open (not force-merged red) until #923 lands, per the skill's own \"red gate never merges\" rule."
-    severity: moderate
+  - description: "Declared a repo-wide \"main's typecheck is broken\" finding, filed a public issue (#923) and sent the user a proactive push notification about it, based on a local repro that only used `git stash` to revert tracked-file changes — which does not reset `node_modules`/`.nuxt`. The local sandbox's node_modules was apparently left inconsistent by an earlier non-frozen `pnpm install` in this same session, and both the \"before\" and \"after\" repro runs shared that same contaminated install, so they agreed with each other but not with reality. PR #924's own CI run came back green on typecheck, which prompted a proper re-check: `rm -rf node_modules .nuxt && pnpm install --frozen-lockfile` (matching CI's install exactly) passes typecheck cleanly. Caught and corrected within the same session (closed #923 with an explanation, corrected the PR verdict comment, merged once gate was genuinely confirmed green) but a false public issue and an inaccurate user notification both went out before the correction."
+    solution: "When a local repro of a build/type/test failure is meant to establish \"this is broken on main, unrelated to my change,\" reset the full install state (`rm -rf node_modules .nuxt && pnpm install --frozen-lockfile`), not just tracked files via `git stash` — mirror CI's actual install path before trusting a same-sandbox repro, especially before filing a public issue or notifying a human based on it. This is a sharper form of CLAUDE.md's existing verify-before-asserting-a-causal-claim rule: the primary source that would have caught this (a truly clean install) was one command away and wasn't run before the claim shipped externally."
+    severity: major
   - description: S4's Duplication finding named three research docs restating the docs.github.com-403 caveat, but one of the three (nuxt-content-review-grounding.md) turned out on fact-check to describe a different pair of domains (content.nuxt.com/nuxt.com) — the lens agent's own scope note had already flagged this as its weakest finding.
     solution: Independent fact-check step caught it before any fix was applied; no action needed beyond leaving that one file alone.
     severity: nit
-durationSec: 1243
+durationSec: 1665
 models:
-  claude-sonnet-5: 153
+  claude-sonnet-5: 193
 toolCounts:
   Skill: 3
-  Bash: 17
-  ToolSearch: 4
+  Bash: 25
+  ToolSearch: 6
   mcp__github__list_pull_requests: 1
-  Read: 20
+  Read: 21
   Agent: 5
   TaskCreate: 8
   TaskUpdate: 16
   Edit: 10
   mcp__github__search_issues: 1
-  mcp__github__issue_write: 1
+  mcp__github__issue_write: 2
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Write: 1
+  Write: 2
   mcp__Claude_Code_Remote__send_later: 1
-  PushNotification: 1
+  PushNotification: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__actions_list: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/agents/verifying-ui-changes.md
   - docs/research/nuxt-content-review-grounding.md
@@ -106,3 +113,4 @@ cliVersion: 2.1.227
 trigger: audit-docs
 learnings:
   - Docker Compose's default project name (absent an explicit name:/COMPOSE_PROJECT_NAME override) is the basename of the directory containing the compose file, not the repo name or any other convention — this determines default container/volume names and is easy to get wrong when the compose file lives in a subdirectory (deploy/) rather than the repo root.
+  - "`git stash` only reverts tracked-file changes — it does not reset node_modules, .nuxt, or any other gitignored build/install state, so a 'stash and re-run to isolate the cause' repro can silently share a contaminated dependency install between the 'before' and 'after' runs and agree with itself while disagreeing with a truly clean environment (like CI's)."
