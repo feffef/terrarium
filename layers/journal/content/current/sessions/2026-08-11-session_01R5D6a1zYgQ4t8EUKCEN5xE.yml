@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01R5D6a1zYgQ4t8EUKCEN5xE
 startedAt: 2026-08-11T00:46:36Z
-endedAt: 2026-08-11T00:56:29Z
+endedAt: 2026-08-11T01:00:12Z
 kind: autonomous
 goal: Run the scheduled /audit-skills sweep
-status: in-review
-outcome: "PR #916 opened, Inventory-only"
-summary: "Scheduled /audit-skills Routine fired with no human prompt this turn. Gathered the scorecard via scripts/audit-skills.ts, re-graded importance/role for all 35 Skills against usedIn evidence (no promotion/demotion signal met the bright-line bar; appended confirming observations to code-review and implement, both held at supporting), ran the regression watch on the 3 bracketed edits (audit-docs, digest, dispatch-subagents) — Phase A flagged digest's friction-severity shift, Phase B deep-read of all 8 digest session logs found the major friction was an unrelated CI e2e Sparks/digest-band-height regression (#760/#906), not caused by digest's own path-misattribution fix, so ruled inconclusive/unrelated. Checked orphanedSessions (1 entry, already fully tracked on issue #736 with this run's evidence already cited — no new comment, would have duplicated). closure-nudge signals and misclassifiedKind empty. Opened gated PR #916 (Inventory-only, self-merge-eligible tier) and subscribed to its activity per CLAUDE.md."
+status: completed
+outcome: "PR #916 merged, Inventory-only"
+summary: "Scheduled /audit-skills Routine fired with no human prompt this turn. Gathered the scorecard via scripts/audit-skills.ts, re-graded importance/role for all 35 Skills against usedIn evidence (no promotion/demotion signal met the bright-line bar; appended confirming observations to code-review and implement, both held at supporting), ran the regression watch on the 3 bracketed edits (audit-docs, digest, dispatch-subagents) — Phase A flagged digest's friction-severity shift, Phase B deep-read of all 8 digest session logs found the major friction was an unrelated CI e2e Sparks/digest-band-height regression (#760/#906), not caused by digest's own path-misattribution fix, so ruled inconclusive/unrelated. Checked orphanedSessions (1 entry, already fully tracked on issue #736 with this run's evidence already cited — no new comment, would have duplicated). closure-nudge signals and misclassifiedKind empty. Opened gated PR #916 (Inventory-only, self-merge-eligible tier) and subscribed to its activity per CLAUDE.md. CI's safety-gate went green, check-conflicting-issues.ts had no hits, posted the COMMENT-event verdict, and landed it via merge-pr.ts (merge commit a04ced9b). Unsubscribed on the merged-PR notification."
 prs:
   - "916"
 docsRead:
@@ -33,27 +33,30 @@ frictions:
   - description: Local `pnpm gate:scoped` failed on a pre-existing-looking typecheck error in layers/commits/app/components/content/LatestCommit.vue (useFetch('/api/latest-commit') resolving to `{}` instead of the route's typed discriminated union), unrelated to this run's Inventory-only diff. A fresh `rm -rf .nuxt && nuxt prepare` did not fix it locally.
     solution: Verified via mcp__github__actions_list that CI's own "L0 · typecheck" step is green on the exact same base commit (4521e5fc, run 31446107827) — confirming this is a local-environment-only divergence, not a repo regression or something caused by this diff. Proceeded to push/open the PR rather than blocking on it; worth a future session investigating why nuxt typecheck's typed-route inference for this one PoC endpoint differs between this sandbox and the GitHub Actions runner (possibly nitro type-generation timing or a Node/pnpm version difference not yet documented in docs/agents/environment-caveats.md).
     severity: minor
-durationSec: 593
+durationSec: 816
 models:
-  claude-sonnet-5: 123
+  claude-sonnet-5: 144
 toolCounts:
   Skill: 3
-  Bash: 34
+  Bash: 38
   TaskCreate: 1
-  ToolSearch: 5
+  ToolSearch: 6
   mcp__github__search_issues: 2
   mcp__github__issue_read: 1
   Read: 4
-  Edit: 3
+  Edit: 5
   mcp__github__actions_list: 2
   mcp__github__search_pull_requests: 1
   mcp__github__get_file_contents: 2
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Write: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
   mcp__Claude_Code_Remote__send_later: 1
   PushNotification: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/skills/code-review.yml
   - layers/journal/content/current/skills/implement.yml
