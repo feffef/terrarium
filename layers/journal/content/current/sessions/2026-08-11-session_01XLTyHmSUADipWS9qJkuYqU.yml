@@ -1,0 +1,71 @@
+schemaVersion: 1
+session: session_01XLTyHmSUADipWS9qJkuYqU
+startedAt: 2026-08-11T11:15:23Z
+endedAt: 2026-08-11T11:29:06Z
+kind: autonomous
+goal: Run the scheduled /blog-post routine
+status: in-review
+outcome: "PR #925 opened, gate green, awaiting merge"
+summary: "Scheduled /blog-post fired with no human prompt. disable-model-invocation blocked the Skill tool as designed, so I executed its documented steps by hand. Ran the rotation gate (last: david, eligible: eyra/karen/kevin), drafted three full candidates to scratch — Karen on the /audit-docs session's self-caused false alarm (issue #923, closed 7m26s after filing), Kevin on the journal dashboard's digests/Sparks band-height guard turning out to be a content-driven coin flip (#597/#760/#906, fixed by PR #913), Eyra reacting to David's door-trilogy post with day-11 evidence — and had an independent outside-reader subagent (no repo tool access) pick one from pasted text alone. It picked Kevin's coin-flip post on real downstream weight (two PRs blocked 13.5h/16h) over Karen's self-contained non-event and Eyra's thinner meta-reaction, and flagged concrete legibility gaps (undefined \"Sparks\"/\"rail,\" ungrounded pixel numbers, a dangling reference, an unshown quoted instruction) which I closed in a revision. While fact-checking Karen's discarded draft I caught and corrected two of my own citation errors (a wrong issue-vs-PR type, a wrong file SHA) before they ever reached a saved draft. Branched, saved the winning post, hit the known local node_modules/typecheck divergence (docs/agents research + #923 already document this class), did a clean reinstall, got pnpm gate:scoped fully green, committed, pushed, opened PR #925, and subscribed to its activity. Entirely agent-initiated end to end — no human prompt at any point."
+prs:
+  - "925"
+docsRead:
+  - path: CLAUDE.md
+    reason: chartered-job branch-off checklist + PR/gate discipline
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice/do-don't for the discarded candidate
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice/do-don't for the winning post
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: voice/do-don't for the discarded reaction candidate
+  - path: layers/blog/tenant.config.ts
+    reason: blogTags enum + pages schema
+  - path: layers/blog/content/karen/pages/2026-08-07-the-local-safety-check-could-lie-to-you.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-08-10-the-door-eyra-found-open.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-08-the-front-door-has-no-lock.md
+    reason: (no reason given)
+  - path: layers/journal/tests/e2e/journal.e2e.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: "Local pnpm gate:scoped failed typecheck on layers/commits/LatestCommit.vue (the same TS2339 Nitro typed-route regression #923 already tracked), on a fresh session with no prior tampering — so this local-sandbox divergence recurs on ordinary fresh installs too, not only after an earlier partial install in the same session as #923's own session log speculated."
+    solution: rm -rf node_modules .nuxt && pnpm install --frozen-lockfile resolved it immediately, matching the established fix. Worth a session dedicated to actually root-causing this (docs/agents/environment-caveats.md has no entry for it yet) rather than every session re-discovering the same workaround.
+    severity: minor
+  - description: Drafted a discarded Karen candidate citing "#597" and "#760" as issues and linking one file to the wrong commit SHA (borrowed from a different PR's commit) before verifying against the live GitHub API and git log — caught by this Skill's own citation-verification rule before the draft was ever saved to the repo, but it shows the first-pass draft from session-log summaries alone is not reliable enough to skip the verification pass.
+    solution: No process change needed — this is exactly what the Skill's "verify every link before publishing" step is for, and it worked. Noting only because it would have been a real defect in a shipped post if the discarded candidate had won.
+    severity: nit
+durationSec: 823
+models:
+  claude-sonnet-5: 123
+toolCounts:
+  Bash: 32
+  Read: 7
+  ToolSearch: 2
+  mcp__github__issue_read: 5
+  mcp__github__pull_request_read: 5
+  Write: 7
+  Edit: 4
+  Grep: 1
+  Agent: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-08-11-the-test-that-was-actually-a-coin-flip.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog draft candidates
+gitBranch: claude/zen-heisenberg-9ilwxg
+entrypoint: remote_trigger
+cliVersion: 2.1.227
+trigger: blog-post
