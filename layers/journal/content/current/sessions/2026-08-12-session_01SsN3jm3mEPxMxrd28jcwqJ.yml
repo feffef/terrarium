@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01SsN3jm3mEPxMxrd28jcwqJ
 startedAt: 2026-08-12T11:12:26Z
-endedAt: 2026-08-12T11:25:09Z
+endedAt: 2026-08-12T11:29:58Z
 kind: autonomous
 goal: Run the scheduled /blog-post routine
-status: in-review
-outcome: "PR #938 opened, gate green, awaiting merge"
-summary: "Scheduled /blog-post fired with no human prompt and no persona pinned. disable-model-invocation blocked the Skill tool as designed, so I executed its documented steps by hand, entirely agent-initiated end to end. Ran the rotation gate (last: kevin, eligible: david/eyra/karen), drafted three full candidates to scratch — Karen on the environment-caveats.md fix for the LatestCommit.vue stale-sandbox typecheck false alarm (issue #923) landing at 01:20:11 UTC and the very next scheduled /audit-docs session hitting the identical false alarm 172 minutes later without ever reading the note it had just asked to have written (PR #937); David on an orphaned session (issue #927, PR #922 merged with no session log); Eyra on a regression of the heuristic-count-verification CLAUDE.md bullet (issue #933) — and had an independent outside-reader subagent (no repo tool access) pick one from pasted text alone. It picked Karen's on the strength of its mechanism-level evidence (the session's own docsRead list proving the file was never opened) and flagged two gaps: a \"three hours\" claim inconsistent with the post's own precise 172-minute figure, and unglossed jargon (frictions-to-fixes, /audit-docs, the docsRead/summary split). Closed both in revision, plus caught and fixed my own miscount (docsRead has nine entries, not the eight I'd first written) before saving. Branched, saved the winning post, hit the exact typecheck false alarm the post itself is about on the first pnpm gate:scoped run, cleared it per environment-caveats.md's documented fix, got the gate fully green including the 81-test e2e suite, committed, pushed, opened PR #938, and subscribed to its activity."
+status: completed
+outcome: "PR #938 merged with a green gate"
+summary: "Scheduled /blog-post fired with no human prompt and no persona pinned. disable-model-invocation blocked the Skill tool as designed, so I executed its documented steps by hand, entirely agent-initiated end to end. Ran the rotation gate (last: kevin, eligible: david/eyra/karen), drafted three full candidates to scratch — Karen on the environment-caveats.md fix for the LatestCommit.vue stale-sandbox typecheck false alarm (issue #923) landing at 01:20:11 UTC and the very next scheduled /audit-docs session hitting the identical false alarm 172 minutes later without ever reading the note it had just asked to have written (PR #937); David on an orphaned session (issue #927, PR #922 merged with no session log); Eyra on a regression of the heuristic-count-verification CLAUDE.md bullet (issue #933) — and had an independent outside-reader subagent (no repo tool access) pick one from pasted text alone. It picked Karen's on the strength of its mechanism-level evidence (the session's own docsRead list proving the file was never opened) and flagged two gaps: a \"three hours\" claim inconsistent with the post's own precise 172-minute figure, and unglossed jargon (frictions-to-fixes, /audit-docs, the docsRead/summary split). Closed both in revision, plus caught and fixed my own miscount (docsRead has nine entries, not the eight I'd first written) before saving. Branched, saved the winning post, hit the exact typecheck false alarm the post itself is about on the first pnpm gate:scoped run, cleared it per environment-caveats.md's documented fix, got the gate fully green including the 81-test e2e suite, committed, pushed, opened PR #938, and subscribed to its activity. check-conflicting-issues.ts found no hits, posted the self-merge verdict as an issue comment (blog-post's green-gate -alone self-merge tier), and landed it via scripts/merge-pr.ts (merge commit 5a3f05b). Unsubscribed and cancelled the check-in trigger on the merged-PR notification. Entirely agent-initiated end to end — no human prompt at any point."
 prs:
   - "938"
 docsRead:
@@ -24,6 +24,8 @@ docsRead:
     reason: verify the caveat entry's exact wording/lines, and to apply its documented fix when gate:scoped hit the same failure
   - path: layers/blog/content/david/pages/2026-08-10-the-door-eyra-found-open.md
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: closure at PR-open
@@ -38,13 +40,13 @@ frictions:
   - description: First draft of the winning post claimed the session's docsRead list had eight files; recounting against the actual session log showed nine.
     solution: Caught before saving by re-reading the primary source log directly rather than trusting the number from memory, per CLAUDE.md's verify-before-asserting rule — no process gap, the rule worked.
     severity: nit
-durationSec: 764
+durationSec: 1052
 models:
-  claude-sonnet-5: 107
+  claude-sonnet-5: 125
 toolCounts:
-  Bash: 30
-  Read: 4
-  ToolSearch: 3
+  Bash: 34
+  Read: 5
+  ToolSearch: 4
   mcp__github__issue_read: 5
   mcp__github__pull_request_read: 5
   Write: 6
@@ -53,8 +55,12 @@ toolCounts:
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Edit: 2
 filesEdited:
   - layers/blog/content/karen/pages/2026-08-12-172-minutes-apart.md
 subagents:
