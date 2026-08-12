@@ -72,9 +72,10 @@ The subagent cannot see this session's context, so the brief is self-contained:
   the orchestrator published a wrong root-cause diagnosis built on the clobbered
   output before the second report surfaced the real mechanism (issue #847).
 - **Run verification (`pnpm gate:scoped`, and any other check) in the foreground
-  and wait** — a dispatched subagent's own backgrounded commands do not wake it
-  the way a background `Agent`/`Workflow` call wakes you. Where something must be
-  backgrounded anyway, **name the concrete way to confirm it finished** — a
+  and wait** — `docs/agents/subagent-background-guard.md`'s "Why" section owns
+  the reason (no wake mechanism ever resumes a stopped subagent, issue #694).
+  Where something must be backgrounded anyway, **name the concrete way to
+  confirm it finished** — a
   log-file completion marker, or the `Monitor` tool — not just "run it and wait":
   a subagent that checks once and stops stalls on a still-running job, needing a
   `SendMessage` resume with the log's actual tail pasted in (issue #602).

@@ -41,17 +41,16 @@ A Space `pages` Document in `trench` — the Midden's word for what the Platform
 generically calls a page in this Space (root `CONTEXT.md`'s Collection term).
 The `stores` Space has no Sites (see The Stores below).
 One dig report: curator's-voice prose narrating a **cluster** of related
-Artifacts, embedding each inline via `::midden-artifact{slug="..."}` (#521 —
-see Artifact below: never independently routed). Reused-per-Space collection
-naming (#516) — `gallery` (out of scope for v1, #522) would give the same
-collection an "exhibit" meaning instead.
+Artifacts, each embedded inline (#521 — see Artifact below: never
+independently routed). Reused-per-Space collection naming (#516) —
+`gallery` (out of scope for v1, #522) would give the same collection an
+"exhibit" meaning instead.
 
 ### Dig season (Stratum)
 A curator-declared date range, named for what the Platform was mostly doing or
 discarding during it (e.g. "the Routing Excavation" — never a bare "Q1 2026";
-#519). The canonical, ordered list is single-homed (see `strata.ts` in What
-lives where below), mirroring the Atlas's `almanac.ts`
-seasons pattern. One season stays open-ended — "the Current Midden" — for
+#519). The canonical, ordered list is single-homed (see What lives where
+below), mirroring the Atlas's `almanac.ts` seasons pattern. One season stays open-ended — "the Current Midden" — for
 freshly-discarded, not-yet-seasoned finds. An Artifact's `stratum` field
 references a season by slug. A season also labels each inline find on a Site page (the
 condition word carries its dig-season label). The former scroll-synced
@@ -73,8 +72,7 @@ full commit SHA so the link stays immutable — a few meaningful views, not a
 mechanical dump of every touched path. Both are expected absent on a `lost`
 artifact, since nothing survives to view. Rendered only inline inside a
 Site's body (#521), never at its own route (ADR-0006 keeps only `pages`
-route-addressable). Exact document shape: `app/utils/find.ts` (What lives
-where below).
+route-addressable). Exact document shape: see What lives where below.
 
 ### Condition
 The curator-graded preservation state of an Artifact, one of six grades in
@@ -84,10 +82,9 @@ axis, not a further decay step) and `lost` (its own gravestone template
 entirely; #523). **100% curator-authored, never mechanically re-derived** —
 not from `assessedAt`, not from any future continuity check (#526 closes this
 question explicitly). Rendered as its word on each find, the dig-season label
-beside it — never a glyph to decode (see `app/components/midden/ConditionKey.vue`
-and `app/utils/find.ts` in What lives where below for the presentation). The
-six grades and their fixed one-line definitions are
-single-homed (see `condition.ts` in What lives where below); the definition text
+beside it — never a glyph to decode (see What lives where below for the
+presentation). The six grades and their fixed one-line definitions are
+single-homed (see What lives where below); the definition text
 surfaces in exactly one place — the **condition key**, a slim sticky sidebar on
 each dig-report page listing only the grades present in that report's finds
 (owner-directed final design; it replaced the landing's condition legend, #527) —
@@ -152,19 +149,22 @@ discarded, never what it carried forward under a new shape.
   referent hash terminal for that same check unless a declared `removedIn`
   overrides it (a referent can instead be a birth record, as with the
   the-spawn-verb Artifact's coining commit).
-- **`app/components/midden/TrenchLanding.vue`** — the single landing mirrored at
-  both `/t/midden` and `/t/midden/trench`, carrying the curatorial foreword an
-  actual visitor reads (verbatim in-voice copy, not this file's register), the
-  pull-quote, and the dig-report list. (`trench/pages/index.md` remains
-  valid content but is no longer the rendered landing intro.)
-- **`app/components/midden/ConditionKey.vue`** — the condition key: the sticky
-  sidebar defining the grades present in the finds beside it (see Condition
-  above). Shared by the dig-report page and the stores register.
-- **`app/components/midden/StoresLanding.vue`** — the stores register: every
-  find held off display, grouped by Dig season. Deliberately not the trench's
-  specimen slip — same fields, quieter presentation (see The Stores above).
-- **`app/utils/find.ts`** — the Artifact document shape and the two record-fact
-  formatters, shared by both renderers so they cannot drift.
+- **`layers/midden/app/components/midden/TrenchLanding.vue`** — the single
+  landing mirrored at both `/t/midden` and `/t/midden/trench`, carrying the
+  curatorial foreword an actual visitor reads (verbatim in-voice copy, not
+  this file's register), the pull-quote, and the dig-report list.
+  (`trench/pages/index.md` remains valid content but is no longer the
+  rendered landing intro.)
+- **`layers/midden/app/components/midden/ConditionKey.vue`** — the condition
+  key: the sticky sidebar defining the grades present in the finds beside it
+  (see Condition above). Shared by the dig-report page and the stores
+  register.
+- **`layers/midden/app/components/midden/StoresLanding.vue`** — the stores
+  register: every find held off display, grouped by Dig season. Deliberately
+  not the trench's specimen slip — same fields, quieter presentation (see The
+  Stores above).
+- **`layers/midden/app/utils/find.ts`** — the Artifact document shape and the
+  two record-fact formatters, shared by both renderers so they cannot drift.
 - **`.agents/skills/midden-survey/`** — the survey Skill that mechanizes
   candidate *discovery* (deleted files / dropped dependencies via
   `scripts/midden-survey.ts`; PRs / branches via the GitHub tools) and files a
