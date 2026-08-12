@@ -44,6 +44,13 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
    its misleading-error round-trip and manually re-checking. Reach for it
    instead of hand-rolling steps 3 and 5 yourself; still do step 4 (the
    verdict comment) around it.
+
+   **A long CI/merge wait needs a standard check-in cadence, not an ad hoc
+   one.** When babysitting a PR across a wait that's expected to span many
+   hours, schedule `mcp__Claude_Code_Remote__send_later` check-ins on an
+   escalating cadence — roughly **2h, then 6h, then 12h**, capping at ~12h
+   between check-ins for any wait beyond that — instead of improvising a
+   schedule each time (issue #929).
 4. **Post the verdict as a PR review or comment before merging — every time,
    even on a clean "merging as-is" verdict.** The merge must never be the
    only trace: an unreviewed-looking merge and a genuinely-reviewed one must

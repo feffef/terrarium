@@ -59,3 +59,9 @@ This is now mechanically reinforced, not prose-only (issue #449 Gap 4):
 `log-session.ts --author` refuses to run from inside a linked git worktree
 (`isLinkedWorktree()`) unless `--allow-worktree` is passed explicitly — so a
 dispatched agent's own attempt fails loudly instead of silently overwriting.
+A dispatched impl agent's PR therefore carries the *parent* orchestrating
+session's id in its ADR-0017 footer by design, not an id of its own — and the
+orphan check already accounts for this by looking for *any* session-log
+reference to that id (the orchestrator's own log, not necessarily one keyed
+to that specific PR), so a footer id alone, with no matching log found yet,
+isn't itself evidence of an orphan (issue #931).
