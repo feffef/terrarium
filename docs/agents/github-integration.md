@@ -89,6 +89,12 @@ catch the mistake in practice.
   phrased differently would find. Before asserting "nothing exists," cross-check
   with a `list_issues`/`list_pull_requests` scan (narrow state/label filters to
   dodge the overflow above) rather than trusting a zero-result search alone.
+- **For an identifier lookup — a session id, an issue/PR number as text, an
+  exact error string — wrap the `search_issues`/`search_pull_requests` query
+  in quotes for an exact-string match.** An unquoted natural-language query for
+  the same target can still hit the oversized-result trap above; a quoted
+  exact-string query reliably returns a small, precise result set instead
+  (issue #932).
 - **`issue_read`/`pull_request_read` bodies come back HTML-entity-encoded.**
   `&`, `"`, `'`, `<`, `>` arrive as `&amp;`, `&#34;`, `&#39;`, `&lt;`, `&gt;` —
   decode before quoting the text elsewhere (a comment, a commit message) or
