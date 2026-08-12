@@ -78,5 +78,5 @@ visibly alive without adding a Specimen.
   Observation gets authored (the naturalist's voice, the engraved-plate art
   direction).
 - **Each Biome's `pages/index.md` landing** and the Tenant-root
-  `app/pages/t/atlas/index.vue` foreword — the in-fiction framing an actual
-  visitor reads, written in the naturalist's voice, not this file's.
+  `layers/atlas/app/pages/t/atlas/index.vue` foreword — the in-fiction framing
+  an actual visitor reads, written in the naturalist's voice, not this file's.

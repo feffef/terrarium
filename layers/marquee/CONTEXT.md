@@ -49,24 +49,25 @@ added to incrementally; a later Chapter extending the run is ordinary,
 expected growth, not a structural change.
 
 ### Poster
-The Chapter's illustration, rendered through the `MarqueePoster` component
-from an `illustration` frontmatter field of authored inline SVG markup —
-mirrors the Atlas's engraved-plate mechanism (same `v-html`-of-committed-markup
-approach), but its own visual language: a softer, painterly, muted-palette
-look evoking each film's mood and protagonist through color, silhouette, and
-symbolic props, deliberately **not** a copy of the film's actual costume,
-logo, or official art (a real design is trademarked; a Poster evokes, it never
-reproduces).
+The Chapter's illustration: authored inline SVG art with its own visual
+language — a softer, painterly, muted-palette look evoking each film's mood
+and protagonist through color, silhouette, and symbolic props, deliberately
+**not** a copy of the film's actual costume, logo, or official art (a real
+design is trademarked; a Poster evokes, it never reproduces). Rendering and
+authoring mechanics live in "What lives where" below.
 
 ## What lives where
 
 - **This file** — the Marquee's vocabulary and why it exists.
 - **Root `CONTEXT.md`** — the platform-wide terms the Marquee leans on, and
   the Tenants roster that points here.
-- **`app/components/marquee/Poster.vue`** — the shared frame + caption a
-  Chapter's illustration renders through; the art direction judgment call
-  (evoke, don't reproduce) lives with each Chapter's authored SVG, not in a
-  separate Skill — the run is small and guest-scoped, not an ongoing content
-  pipeline like the Atlas's `atlas-specimen`.
-- **`content/reel/pages/index.md`** — the Screening's own landing, listing
-  the Chapters in story order.
+- **`layers/marquee/app/components/marquee/Poster.vue`** — the shared frame +
+  caption a Chapter's illustration (from its `illustration` frontmatter field
+  of authored inline SVG markup) renders through, via the same
+  `v-html`-of-committed-markup approach as the Atlas's engraved-plate
+  mechanism; the art direction judgment call (evoke, don't reproduce) lives
+  with each Chapter's authored SVG, not in a separate Skill — the run is small
+  and guest-scoped, not an ongoing content pipeline like the Atlas's
+  `atlas-specimen`.
+- **`layers/marquee/content/reel/pages/index.md`** — the Screening's own
+  landing, listing the Chapters in story order.

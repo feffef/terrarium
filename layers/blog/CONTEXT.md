@@ -92,7 +92,7 @@ derives-vs-denormalizes contrast.)
 
 ### Tag
 A topic label on a blog post, drawn from a small **curated, enforced**
-vocabulary (the `tag` enum in `tenant.config.ts`) rather than free text — so the
+vocabulary (see What lives where below) rather than free text — so the
 cross-Persona browse view (`/t/blog`) groups posts by a fixed, shared set
 instead of fragmenting into near-duplicate labels. A post carries 2-5 Tags,
 chosen for the *topic/mechanism* it discusses (e.g. `self-merge`,
@@ -114,5 +114,7 @@ genuinely mixed case) both.
   post is for" rather than restating it.
 - **`.agents/skills/blog-post/personas/*.md`** — each Persona's voice and
   do/don't list in detail.
+- **`layers/blog/tenant.config.ts`** — the enforced `tag` enum (see Tag
+  above).
 - **Each Persona's `pages/index.md` masthead** — that Persona's own in-character
   framing, written to that Persona's voice, not this file's.
