@@ -1,0 +1,64 @@
+schemaVersion: 1
+session: session_0182gKDt4o6atStxVKGXuRb2
+startedAt: 2026-08-12T01:07:23Z
+endedAt: 2026-08-12T01:27:32Z
+kind: autonomous
+goal: "Run frictions-to-fixes: survey, fix, merge"
+status: completed
+outcome: 2 PRs merged, 1 regression flagged
+summary: "Scheduled autonomous run of frictions-to-fixes, no live human input this session. Dispatched a survey subagent over the latest 20 session logs, which returned 5 never-fixed actionable candidates, several already-fixed drops (citing #874, #903/#904, #907/#910, #917/#922, #918/#922, #919/#922, #920/#922), two open-already duplicates (#724, #921), and one regression of #871. Filed issues #928-#932 for the 5 candidates and #933 for the regression (flagged for human review per the skill's regression handling, not dispatched). Dispatched two Sonnet impl agents in isolated worktrees: one grouped 4 doc-only fixes (#928, #929, #931, #932) into PR #934, one fixed #930 (scripts/gate.ts --dry fetch-noise) as PR #935. Reviewed both diffs myself as the reviewer-agent tier, confirmed CI green and safe surfaces, posted COMMENT-event review verdicts on each, and merged both via scripts/merge-pr.ts. Sent the user a push notification summarizing the merges and alerting them to the #933 regression, which needs human judgment on why the earlier #871 fix (a CLAUDE.md bullet) didn't generalize."
+prs:
+  - "934"
+  - "935"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe + per-tier merge authority
+skillsUsed:
+  - name: dispatch-subagents
+    reason: worktree isolation + brief checklist for the 2 impl-agent dispatches
+  - name: log-session
+    reason: this log
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: Three parallel mcp__github__search_issues calls (in the survey subagent) hit a 403 rate limit when batched together.
+    solution: Don't fire more than ~2 search_issues calls in one parallel block; retry sequentially after the ~49s reset.
+    severity: minor
+  - description: Dating a doc bullet via git log -S '<phrase>' matched a large re-homing/bulk-add commit rather than the bullet's true original authoring point, in the survey subagent.
+    solution: Cross-check via the linked issue's created_at/closed_by_pull_requests, or read the matched commit's actual diff/stat to rule out a mass-move, before trusting git log -S alone for text provenance.
+    severity: nit
+  - description: Reflexively reached for ScheduleWakeup as a fallback heartbeat while two dispatched Agent-tool subagents were running in the background, before remembering CLAUDE.md already states dispatched-subagent waits need no wait/poll tool at all.
+    solution: The loop-only-tool-guard correctly blocked the call with a corrective message; no doc gap here, just a reminder the guard is doing its job — self-corrected immediately, no repeat.
+    severity: nit
+durationSec: 1209
+models:
+  claude-sonnet-5: 90
+toolCounts:
+  Skill: 3
+  Agent: 3
+  ToolSearch: 4
+  mcp__github__issue_write: 6
+  ScheduleWakeup: 1
+  mcp__github__pull_request_read: 9
+  Bash: 6
+  mcp__Claude_Code_Remote__send_later: 1
+  Read: 1
+  mcp__github__issue_read: 1
+  mcp__github__pull_request_review_write: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Write: 1
+  PushNotification: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Doc fixes for 4 frictions-to-fixes issues
+    model: sonnet
+  - type: general-purpose
+    task: Quiet gate.ts --dry fetch output
+    model: sonnet
+gitBranch: claude/hopeful-brown-jb9z8n
+entrypoint: remote_trigger
+cliVersion: 2.1.228
+trigger: frictions-to-fixes
