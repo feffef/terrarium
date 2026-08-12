@@ -1,0 +1,87 @@
+schemaVersion: 1
+session: session_01LywVFqVo7Z7pSGna3vAqhx
+startedAt: 2026-08-12T04:12:17Z
+endedAt: 2026-08-12T04:37:46Z
+kind: autonomous
+goal: Run scheduled /audit-docs sweep
+status: in-review
+outcome: "6 findings fixed, PR #937 opened"
+summary: 'Fully agent-initiated scheduled run of the /audit-docs Skill (no live human prompt this session; fired by the scheduler). Branched off origin/main, dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel across the whole Live/Historical/ Pack-generic doc corpus. Freshness and Concision returned no findings; Single-home and Coherence returned 7 candidate findings with no overlap. An independent fact-checker re-derived each against primary sources: 6 CONFIRMED/CONFIRMED-BUT, 1 WRONG (a CLAUDE.md/architecture.md duplication claim — the architecture.md restatement is a legitimate cited, different-audience retelling). Fixed all 6 in place across dispatch-subagents/SKILL.md and five Tenant CONTEXT.md files (stripped implementation detail out of glossary entries, fixed broken layers/<tenant>/-prefixed path pointers, resolved a Skill-Inventory-count contradiction). pnpm gate:scoped went green after a false-alarm detour (below). Opened PR #937 (self-merge tier, no human-only surface touched), subscribed to its activity, and closed this session at PR-open per ADR-0003/the "Pushing is not landing" rule.'
+prs:
+  - "937"
+docsRead:
+  - path: CLAUDE.md
+    reason: tier definitions, self-merge/escalation rules
+  - path: docs/agents/subagent-background-guard.md
+    reason: single-home target for finding 1
+  - path: layers/marquee/CONTEXT.md
+    reason: fixed Poster glossary entry + path pointers
+  - path: layers/midden/CONTEXT.md
+    reason: fixed 4 glossary entries + path pointers
+  - path: layers/blog/CONTEXT.md
+    reason: fixed Tag entry
+  - path: layers/journal/CONTEXT.md
+    reason: fixed Inventory-count contradiction
+  - path: layers/atlas/CONTEXT.md
+    reason: fixed broken path pointer
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: the scheduled task this session ran
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Hand-typed a guessed Claude-Session id in the commit trailer instead of leaving it to the commit-msg hook — captured a real, id-shaped string from a git log entry seen earlier in context (a different session's log commit) rather than resolving my own. The hook silently overwrote it with the correct id, so no lasting harm, but this is exactly the capture failure mode CLAUDE.md's identifier-guarding rule warns about.
+    solution: Never hand-author the Co-Authored-By/Claude-Session trailer on a commit in this repo at all — CLAUDE.md already says the harness template and .githooks/commit-msg land it automatically; the PR-body provenance header is the only place a session needs to self-resolve the id.
+    severity: minor
+  - description: "pnpm gate:scoped's first run failed typecheck on layers/commits/app/components/content/LatestCommit.vue with the exact same symptom already diagnosed and closed as a stale-sandbox false alarm in issue #923 (not a real break in main). This is the second time this exact failure mode has cost an /audit-docs session real time (a full clean reinstall + re-run) with no durable record anywhere an agent would see it before hitting it again."
+    solution: "Add a short entry to docs/agents/environment-caveats.md (the single-homed list of platform-level quirks) documenting this specific failure signature and the rm -rf node_modules .nuxt && pnpm install --frozen-lockfile fix, cross-referencing issue #923, so the next session that hits it recognizes it immediately instead of re-diagnosing or re-filing."
+    severity: moderate
+durationSec: 1529
+models:
+  claude-sonnet-5: 162
+toolCounts:
+  Bash: 24
+  ToolSearch: 6
+  TaskCreate: 8
+  TaskUpdate: 13
+  Agent: 5
+  ScheduleWakeup: 1
+  Read: 8
+  Edit: 10
+  mcp__github__search_issues: 1
+  mcp__github__issue_read: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - layers/marquee/CONTEXT.md
+  - layers/midden/CONTEXT.md
+  - layers/blog/CONTEXT.md
+  - layers/journal/CONTEXT.md
+  - layers/atlas/CONTEXT.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: Drift + Orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: Duplication + Mis-location"
+  - type: general-purpose
+    task: "Concision lens: Verbose + Stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: Contradiction + Ambiguity"
+  - type: general-purpose
+    task: Fact-check 7 pooled audit-docs findings
+gitBranch: claude/festive-mayer-gh57oj
+entrypoint: remote_trigger
+cliVersion: 2.1.228
+trigger: audit-docs
+ideas:
+  - Add the LatestCommit.vue typecheck stale-sandbox signature to docs/agents/environment-caveats.md (see friction above) so a future /audit-docs or gate run recognizes it on sight instead of re-diagnosing via git stash + clean reinstall.
