@@ -69,12 +69,15 @@ function lines(out: string): string[] {
 // one-shot, and `--unshallow` is itself a fetch, so #246's freshen-before-read
 // contract still holds on that branch. Why classifying off a shallow clone is
 // unsafe at all: docs/agents/git-conventions.md, and #849.
-export function changedPaths(cwd: string = root): string[] | null {
+// `quiet` suppresses the underlying fetch's own progress/branch-listing
+// output (git-helpers.ts's `unshallow`/`fetchOriginMain`) — `--dry` passes
+// this so its decision isn't buried under it (#930).
+export function changedPaths(cwd: string = root, quiet = false): string[] | null {
   try {
     if (isShallowRepository(cwd)) {
       console.log('gate:scoped: clone is shallow — fetching full history (one-time) so the diff base is trustworthy')
       try {
-        unshallow(cwd)
+        unshallow(cwd, undefined, quiet)
       } catch {
         return null // fail closed: an untrustworthy base can under-report (#849)
       }
@@ -83,7 +86,7 @@ export function changedPaths(cwd: string = root): string[] | null {
       if (isShallowRepository(cwd)) return null
     } else {
       try {
-        fetchOriginMain(cwd)
+        fetchOriginMain(cwd, undefined, undefined, quiet)
       } catch {
         // best-effort: a stale origin/main still yields a usable merge-base
         // (including on timeout — a `--dry` run must never hang, #451)
@@ -196,7 +199,7 @@ function main(): void {
   if (args.includes('--decide')) return decide(args)
   const dry = args.includes('--dry')
   if (!dry) ensureFreshDeps()
-  const scope = decideScope(changedPaths())
+  const scope = decideScope(changedPaths(root, dry))
   const steps = planSteps(scope)
   console.log(`gate:scoped: ${scope.reason}`)
   console.log(`gate:scoped: ${dry ? 'would run' : 'running'} ${steps.join(' → ')}`)
