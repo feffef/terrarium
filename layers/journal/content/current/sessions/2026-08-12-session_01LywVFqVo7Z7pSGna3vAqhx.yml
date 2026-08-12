@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01LywVFqVo7Z7pSGna3vAqhx
 startedAt: 2026-08-12T04:12:17Z
-endedAt: 2026-08-12T04:37:46Z
+endedAt: 2026-08-12T04:41:15Z
 kind: autonomous
 goal: Run scheduled /audit-docs sweep
-status: in-review
-outcome: "6 findings fixed, PR #937 opened"
-summary: 'Fully agent-initiated scheduled run of the /audit-docs Skill (no live human prompt this session; fired by the scheduler). Branched off origin/main, dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel across the whole Live/Historical/ Pack-generic doc corpus. Freshness and Concision returned no findings; Single-home and Coherence returned 7 candidate findings with no overlap. An independent fact-checker re-derived each against primary sources: 6 CONFIRMED/CONFIRMED-BUT, 1 WRONG (a CLAUDE.md/architecture.md duplication claim — the architecture.md restatement is a legitimate cited, different-audience retelling). Fixed all 6 in place across dispatch-subagents/SKILL.md and five Tenant CONTEXT.md files (stripped implementation detail out of glossary entries, fixed broken layers/<tenant>/-prefixed path pointers, resolved a Skill-Inventory-count contradiction). pnpm gate:scoped went green after a false-alarm detour (below). Opened PR #937 (self-merge tier, no human-only surface touched), subscribed to its activity, and closed this session at PR-open per ADR-0003/the "Pushing is not landing" rule.'
+status: completed
+outcome: "6 findings fixed, PR #937 merged"
+summary: 'Fully agent-initiated scheduled run of the /audit-docs Skill (no live human prompt this session; fired by the scheduler). Branched off origin/main, dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel across the whole Live/Historical/ Pack-generic doc corpus. Freshness and Concision returned no findings; Single-home and Coherence returned 7 candidate findings with no overlap. An independent fact-checker re-derived each against primary sources: 6 CONFIRMED/CONFIRMED-BUT, 1 WRONG (a CLAUDE.md/architecture.md duplication claim — the architecture.md restatement is a legitimate cited, different-audience retelling). Fixed all 6 in place across dispatch-subagents/SKILL.md and five Tenant CONTEXT.md files (stripped implementation detail out of glossary entries, fixed broken layers/<tenant>/-prefixed path pointers, resolved a Skill-Inventory-count contradiction). pnpm gate:scoped went green after a false-alarm detour (below). Opened PR #937 (self-merge tier, no human-only surface touched), subscribed to its activity, closed this session at PR-open per ADR-0003/ the "Pushing is not landing" rule, then merged it on green gate (audit-docs self-merge tier, docs/agents/pr-workflow.md) and unsubscribed.'
 prs:
   - "937"
 docsRead:
@@ -26,6 +26,8 @@ docsRead:
     reason: fixed broken path pointer
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: audit-docs
     reason: the scheduled task this session ran
@@ -40,18 +42,18 @@ frictions:
   - description: "pnpm gate:scoped's first run failed typecheck on layers/commits/app/components/content/LatestCommit.vue with the exact same symptom already diagnosed and closed as a stale-sandbox false alarm in issue #923 (not a real break in main). This is the second time this exact failure mode has cost an /audit-docs session real time (a full clean reinstall + re-run) with no durable record anywhere an agent would see it before hitting it again."
     solution: "Add a short entry to docs/agents/environment-caveats.md (the single-homed list of platform-level quirks) documenting this specific failure signature and the rm -rf node_modules .nuxt && pnpm install --frozen-lockfile fix, cross-referencing issue #923, so the next session that hits it recognizes it immediately instead of re-diagnosing or re-filing."
     severity: moderate
-durationSec: 1529
+durationSec: 1738
 models:
-  claude-sonnet-5: 162
+  claude-sonnet-5: 193
 toolCounts:
-  Bash: 24
-  ToolSearch: 6
+  Bash: 28
+  ToolSearch: 7
   TaskCreate: 8
-  TaskUpdate: 13
+  TaskUpdate: 14
   Agent: 5
   ScheduleWakeup: 1
-  Read: 8
-  Edit: 10
+  Read: 10
+  Edit: 12
   mcp__github__search_issues: 1
   mcp__github__issue_read: 2
   mcp__github__search_pull_requests: 1
@@ -59,8 +61,12 @@ toolCounts:
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
-  mcp__github__pull_request_read: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  TaskList: 1
 filesEdited:
   - .agents/skills/dispatch-subagents/SKILL.md
   - layers/marquee/CONTEXT.md
