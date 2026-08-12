@@ -73,11 +73,17 @@ export function isShallowRepository(cwd: string): boolean {
  *  unconditionally turns a no-op into a throw. Bounded by `timeoutMs`; the
  *  error is left to propagate because the only caller (`gate.ts`'s
  *  `changedPaths`) must fail closed rather than fall back to the shallow
- *  graph — see #849 for why that fallback is unsafe. */
-export function unshallow(cwd: string, timeoutMs = UNSHALLOW_TIMEOUT_MS): void {
+ *  graph — see #849 for why that fallback is unsafe.
+ *
+ *  `quiet` suppresses git's own progress/branch-listing lines (normally
+ *  inherited to stderr) — an unshallow fetch of this repo's full history
+ *  prints one line per remote branch, which buries a `gate:scoped --dry`
+ *  caller's decision under noise (#930). Default stays inherited so a real
+ *  (non-dry) run keeps that output for debugging. */
+export function unshallow(cwd: string, timeoutMs = UNSHALLOW_TIMEOUT_MS, quiet = false): void {
   execFileSync('git', ['fetch', '--unshallow'], {
     cwd,
-    stdio: ['ignore', 'ignore', 'inherit'],
+    stdio: ['ignore', 'ignore', quiet ? 'ignore' : 'inherit'],
     timeout: timeoutMs,
   })
 }
@@ -93,16 +99,21 @@ export function unshallow(cwd: string, timeoutMs = UNSHALLOW_TIMEOUT_MS): void {
  *  is its own call: `merged-since.ts`/`recent-prs.ts` let it propagate as
  *  fatal (a result computed against an unconfirmed-fresh ref is worse than no
  *  result); `gate.ts`'s `changedPaths` and `session-end.ts`'s `mainVersion`
- *  both catch it and degrade to best-effort instead. */
+ *  both catch it and degrade to best-effort instead.
+ *
+ *  `quiet` suppresses git's own progress lines (normally inherited to
+ *  stderr) — see `unshallow`'s doc comment for why (#930). Default stays
+ *  inherited for every existing caller. */
 export function fetchOriginMain(
   cwd: string,
   remote = 'origin',
   timeoutMs = FETCH_TIMEOUT_MS,
+  quiet = false,
 ): void {
   try {
     execFileSync('git', ['fetch', remote, 'main'], {
       cwd,
-      stdio: ['ignore', 'ignore', 'inherit'],
+      stdio: ['ignore', 'ignore', quiet ? 'ignore' : 'inherit'],
       timeout: timeoutMs,
     })
   } catch (err) {
