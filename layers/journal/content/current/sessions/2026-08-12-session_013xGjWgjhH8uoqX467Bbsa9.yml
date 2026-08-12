@@ -1,0 +1,52 @@
+schemaVersion: 1
+session: session_013xGjWgjhH8uoqX467Bbsa9
+startedAt: 2026-08-12T00:46:01Z
+endedAt: 2026-08-12T00:54:13Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: No grade changes warranted; filed 1 new orphan issue (#927)
+summary: "Scheduled, no-human-prompt run of the audit-skills scorecard (scripts/audit-skills.ts) over the 40 newest sessions. Step 3 (re-grade importance/role): checked every Skill's usedIn against its current grade — found no bright-line (>=2 session) evidence for any promotion or demotion this window; most prior citations had simply aged out with role/grade still matching, so no .yml edits were made. Step 4 (regression watch): screened the 4 flagged post-edit brackets (audit-docs, digest, dispatch-subagents, midden-survey); deep-read the one suggestive signal (a \"major\" friction after the digest SKILL.md path-fix) and confirmed via the full session log it was an unrelated CI/Playwright verification incident (issue #760), not caused by the doc edit — no regression confirmed for any of the four. Step 5 (orphanedSessions, mechanical): of 2 candidates, session_019aeaoPHYWMJVekmUvTMhQ9 is already the subject of open issue #736 (skipped, citation already there); session_01UTrFNDBJFVkXFtWdfj4HHn (PR #922, merged, closing #917-#920) had no existing issue and no session log anywhere in history, so filed new issue #927 with full evidence. misclassifiedKind, humanPromptedClosures, manuallyRescuedClosures, and orphanSuppressionLog were all empty this run (healthy state, no action). No Inventory YAML changes were warranted, so no PR was opened this run (git status confirmed a clean tree throughout)."
+prs: []
+docsRead:
+  - path: layers/journal/content/current/sessions/2026-08-10-session_01Qj2h4wWXuWNB9VjC1Kn6py.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-10-session_01QV48HDBHjsgYVBWKZKfvst.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this run's own procedure
+  - name: close-session
+    reason: closure at self-judged completion
+  - name: log-session
+    reason: this log
+frictions:
+  - description: mcp__github__search_issues' natural-language query mode returned oversized results (127k-144k chars, exceeding tool output limits) when searching for an exact session id string, twice.
+    solution: Fell back to reading the saved overflow files directly and grepping for the literal session id substring, which worked; a later exact-quoted-string query ("session_01...") to the same tool returned a small, precise result set — prefer a quoted literal query over unquoted natural language when searching for an exact identifier.
+    severity: nit
+  - description: "close-session/SKILL.md states a dispatched worktree-isolated impl agent \"shares the parent session id with the orchestrator\", which made it initially ambiguous whether PR #922's footer session id belonged to a non-logging impl agent (expected, not an orphan) or a genuinely unlogged orchestrator session (a real orphan)."
+    solution: "Resolved by exhaustively grepping all current+archived session logs and full git history for any reference to the session id, PR #922, or issues #917-920 — none existed anywhere, confirming this is the orchestrating session itself and a genuine orphan, not an expected non-logging impl agent. Worth noting in a future audit-skills run: the orphan check itself doesn't need to distinguish these cases since it already checks for any session-log reference to the id, but a human triaging the filed issue should know this disambiguation was already done."
+    severity: nit
+durationSec: 492
+models:
+  claude-sonnet-5: 112
+toolCounts:
+  Bash: 27
+  ToolSearch: 5
+  TaskCreate: 5
+  TaskUpdate: 8
+  Read: 3
+  mcp__github__get_commit: 2
+  mcp__github__search_issues: 3
+  mcp__github__issue_read: 2
+  mcp__github__pull_request_read: 1
+  Grep: 1
+  mcp__github__issue_write: 1
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-8chmph
+entrypoint: remote_trigger
+cliVersion: 2.1.228
+trigger: audit-skills
+learnings:
+  - For an exact-identifier GitHub issue search, a quoted literal query (e.g. '"session_01XXX"') to mcp__github__search_issues returns a small precise result set, while an unquoted natural-language query with the same id embedded can return a huge fuzzy-matched result set that overflows the tool's output limit.
