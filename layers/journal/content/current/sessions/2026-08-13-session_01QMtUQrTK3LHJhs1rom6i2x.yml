@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01QMtUQrTK3LHJhs1rom6i2x
 startedAt: 2026-08-13T21:58:46Z
-endedAt: 2026-08-13T23:30:47Z
+endedAt: 2026-08-13T23:51:31Z
 kind: interactive
 goal: Auto-triage sweep, then implement both ready-for-agent issues
 status: in-review
@@ -87,6 +87,14 @@ docsRead:
   - path: .agents/skills/blog-post/SKILL.md
     reason: (no reason given)
   - path: docs/agents/commit-trailer-guard.md
+    reason: (read before editing)
+  - path: scripts/commit-trailer-guard.ts
+    reason: (read before editing)
+  - path: tests/unit/commit-trailer-guard.spec.ts
+    reason: (read before editing)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (read before editing)
+  - path: scripts/commit-trailer-guard.sh
     reason: (read before editing)
   - path: layers/journal/content/current/sessions/2026-08-13-session_01Pda3sV3LLMvGje6nBsbG16.yml
     reason: (no reason given)
@@ -196,6 +204,18 @@ skillsUsed:
   - name: implement
     reason: (invoked as a slash command)
 frictions:
+  - description: Wrote a 109-line `docs/agents/commit-trailer-guard.md` documenting a 213-line script — a second copy of facts the code owns, which is the duplication this repo's single-home rule exists to prevent.
+    solution: "Deleted it; residuals and false-positive shapes now sit above the patterns they describe. Worst part was the residual-fail-open list: it described what the regexes miss, from another file, where it rots on the next regex edit."
+    severity: moderate
+  - description: Challenged on that doc, I defended it from precedent — the brief asked for it, all four siblings have one — instead of evaluating whether the pattern was right. The user had to push twice.
+    solution: '"Every sibling does it" is how a bad pattern reaches five copies. When I finally checked, `docs/agents/` is described as per-repo skill configuration and the four guard docs are the same five sections four times.'
+    severity: moderate
+  - description: The PR body claimed this change answered a residual both sibling guard docs leave open. Their actual open question is ordering — whether PreToolUse fires before the harness's own handling — which a Bash probe cannot test.
+    solution: Caught by reading both docs before writing the note, not before writing the PR body. An "I confirmed X" claim needs the *other* document's exact wording read first, not recalled.
+    severity: moderate
+  - description: Deleting the doc left four dangling references — CLAUDE.md, the spec header, the pre-filter comment, the research table's own exclusion row. I fixed three, then re-grepped with a wider include list and found the fourth.
+    solution: Grep for the filename across every extension before deleting a referenced file, not after. My first pass omitted `*.sh`.
+    severity: minor
   - description: Asserted a 137-row aggregate in the research asset from estimation, not counting. The real figure was 208 — off by ~70.
     solution: "Caught only because I then parsed the file to check. This is exactly #871/#933's failure class, authored into a doc whose own CM-32 row describes it."
     severity: moderate
@@ -220,22 +240,23 @@ frictions:
   - description: issue_write rejects a PR number when the call carries state or state_reason, though a labels-only update on the same number succeeds.
     solution: Record in github-integration.md that closing a PR needs two calls — labels via issue_write, then state via update_pull_request.
     severity: minor
-durationSec: 5521
+durationSec: 6765
 models:
-  claude-opus-5: 292
+  claude-opus-5: 352
 toolCounts:
-  Read: 40
-  Bash: 59
+  Read: 47
+  Bash: 70
   Skill: 4
   Agent: 14
-  Write: 10
-  Edit: 25
+  Write: 11
+  Edit: 33
   ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 4
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - tests/unit/commit-trailer-guard.spec.ts
   - scripts/provenance-footer.ts
@@ -245,6 +266,7 @@ filesEdited:
   - docs/agents/commit-trailer-guard.md
   - CLAUDE.md
   - docs/research/rulebook-migration-table.md
+  - docs/agents/loop-only-tool-guard.md
 subagents:
   - type: general-purpose
     task: Triage issue 927
@@ -283,6 +305,6 @@ learnings:
   - All 34 open issues had AI-authored most-recent activity, so auto-triage's human-authored eligibility branch matched nothing at all
   - The rejection of CI-enforced doc invariants is not absolute — two doc/metadata gate checks merged after it was recorded, and the line falls between a prose property and a structured artifact checked against its own schema
 ideas:
-  - Extract `scripts/guard-harness.ts`. Five PreToolUse guards now duplicate `denyUninspectable`, `denyOutputFor`, the flag parser, and the `import.meta.url` bootstrap almost verbatim; the fifth instance is the point to collapse them. Deliberately not done in PR 946 because it would drag four human-only-to-merge guards into that diff — so it needs its own change.
+  - Extract `scripts/guard-harness.ts` AND collapse the guard docs, as one change — two findings that point at the same seam. Five guards duplicate `denyUninspectable`, `denyOutputFor`, the flag parser and the `import.meta.url` bootstrap almost verbatim; separately, the four `docs/agents/*-guard.md` notes are the same five sections four times (283 lines describing one mechanism, in a directory CLAUDE.md describes as per-repo skill configuration). One harness plus one shared doc on the guard pattern replaces both piles. Deliberately not done in PR 946 because it drags four human-only-to-merge guards into that diff.
   - Add `scripts/triage-eligibility.ts` emitting one record per open issue with everything auto-triage's step 1 needs — labels, last-comment provenance, assignees, native blocked_by AND the body "Blocked by:" fallback, author association, and the wayfinder:map skip — so the sweep starts from one command instead of three scripts plus ad-hoc curl, and the body-fallback blocker this session missed cannot be missed again.
   - "Make the rulebook migration table refreshable instead of a one-off: a script that lists the in-scope corpus (deriving repo-authored Skills from skills-lock.json) and diffs it against the table's row set, so a rule added to CLAUDE.md after 2026-08-13 shows up as an unclassified gap rather than silently aging the asset out of date."
