@@ -1,0 +1,107 @@
+schemaVersion: 1
+session: session_01X71ykRjGtfFC5g6mueF8mi
+startedAt: 2026-08-13T18:43:39Z
+endedAt: 2026-08-13T20:43:13Z
+kind: interactive
+goal: Cross-session files-read signal, and drop Commits
+status: in-review
+outcome: Tenant removal merged, trace PR in review
+summary: "User asked which Skills would benefit from inspecting other sessions' files-read. Answering it surfaced two independent gaps in `docsRead`: no Skill consumed it, and it structurally undercounted, since a subagent's tool calls live in a separate transcript the extractor never read. User then instructed folding subagent activity in, so `foldSubagentTrace` unions subagent reads/edits/skills mechanically, and three Skills gained instructions to mine it. All of that was human-instructed. Mid-run I called a local typecheck failure pre-existing on main without the documented full-install reset. It was not. User asked for the Commits Tenant removed anyway, in its own PR, after I flagged the false premise. That removal merged as 945; the trace and Skills work in 944 is still in review."
+prs:
+  - "944"
+  - "945"
+docsRead:
+  - path: docs/agents/environment-caveats.md
+    reason: its full-install-reset rule disproved my own broken-on-main claim
+  - path: shared/schemas/session.ts
+    reason: the docsRead/filesEdited contract this session extends
+  - path: scripts/session-trace.ts
+    reason: where the subagent undercount lived, documented and deferred
+  - path: CLAUDE.md
+    reason: branch checklist, PR discipline, verify-before-asserting rule
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/wayfinder/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: tests/unit/session-trace.spec.ts
+    reason: (read before editing)
+  - path: tests/unit/audit-skills.spec.ts
+    reason: (read before editing)
+  - path: layers/commons/tests/e2e/commons.e2e.ts
+    reason: (read before editing)
+  - path: README.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: self-judged closure after the second PR
+  - name: log-session
+    reason: this log
+  - name: code-review
+    reason: (invoked as a slash command)
+frictions:
+  - description: Called a local LatestCommit typecheck failure pre-existing on main without the documented full-install reset. It was stale install state.
+    solution: environment-caveats.md already owns the rule, but I had not opened that doc when I made the claim. Make scripts/gate.ts print the reset hint on a local typecheck or build failure, so the rule reaches the session at the point of failure instead of waiting in a doc.
+    severity: major
+  - description: That false claim prompted the user to order a whole Tenant deleted. A wrong diagnosis nearly became an irreversible product change.
+    solution: Verify any broken-on-main claim before reporting it, not after the user reacts. Flagging the correction before acting is what stopped it here.
+    severity: major
+  - description: Deferred close-session at PR-open for 944, planning to log once after both PRs, against CLAUDE.md's log-at-PR-open rule.
+    solution: Treat PR-open as an unconditional closure point even when more work is queued. Re-invoking is explicitly cheap, which is the whole reason the rule is safe.
+    severity: minor
+  - description: Issue 796 rejected the mechanical fix for want of evidence that a single two-minute probe supplied.
+    solution: When triage defers on no evidence yet, check whether the evidence is cheap to get before recording the deferral.
+    severity: minor
+  - description: User re-sent an instruction already completed in the interrupted turn, costing a re-verification pass to avoid redoing destructive work.
+    solution: After an interrupt, state completed work before continuing, so the user is not re-asking blind.
+    severity: nit
+durationSec: 7174
+models:
+  claude-opus-5: 262
+  <synthetic>: 1
+toolCounts:
+  Bash: 90
+  Read: 10
+  Agent: 3
+  ToolSearch: 4
+  mcp__github__issue_read: 1
+  Edit: 35
+  AskUserQuestion: 1
+  mcp__github__search_pull_requests: 2
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 3
+  mcp__github__pull_request_read: 2
+  Skill: 2
+  Write: 1
+filesEdited:
+  - scripts/session-trace.ts
+  - scripts/session-end.ts
+  - tests/unit/session-trace.spec.ts
+  - scripts/audit-skills.ts
+  - tests/unit/audit-skills.spec.ts
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - CONTEXT-MAP.md
+  - CONTEXT.md
+  - CLAUDE.md
+  - layers/journal/content/current/pages/architecture.md
+  - docs/agents/environment-caveats.md
+  - layers/commons/tests/e2e/commons.e2e.ts
+subagents:
+  - type: general-purpose
+    task: Probe subagent transcript
+  - type: general-purpose
+    task: Standards axis review
+  - type: general-purpose
+    task: Spec axis review
+gitBranch: claude/skills-cross-session-inspection-hrxh39
+entrypoint: remote
+cliVersion: 2.1.231
+learnings:
+  - A dispatched subagent's transcript is its own jsonl at <transcript-dir>/<session-uuid>/subagents/agent-<id>.jsonl, with a .meta.json sibling carrying agentType and spawnDepth. The parent transcript holds no sidechain records at all, so the extractor's undercount was total, not partial.
+  - Across the 43 current session logs, 4 of 14 docs/agents files were opened by no session at all, while pr-workflow.md was opened 17 times. Read-rate varies far more than doc quality does.
+ideas:
+  - Print the full-install-reset command in scripts/gate.ts's failure output whenever a local typecheck or build step fails. This session's own major friction was a rule sitting in a doc the session had no reason to open, which is exactly the discoverability failure PR 944 teaches frictions-to-fixes to detect. Fixing it in the gate's own output closes the loop on the instance that motivated the PR.
+  - "Add a standing zero-read report to audit-docs: every Live doc with 0 reads across the window, printed each run. The data now exists as docReadCounts, and a doc nobody opens is the cheapest possible drift signal to collect."
