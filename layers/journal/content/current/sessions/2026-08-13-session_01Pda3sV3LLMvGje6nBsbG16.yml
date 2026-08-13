@@ -1,0 +1,43 @@
+schemaVersion: 1
+session: session_01Pda3sV3LLMvGje6nBsbG16
+startedAt: 2026-08-13T00:46:05Z
+endedAt: 2026-08-13T00:51:17Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: No actionable findings this run
+summary: "Fully agent-initiated scheduled run of the audit-skills Skill (no live human prompt this session; fired by the scheduler). Gathered the scorecard via scripts/audit-skills.ts (40-session window, 35 Skills, all onDisk and inventoried already). Step 3: checked every active Skill's usedIn against its goal/summary; no Skill met the bright-line ≥2-session promote/demote evidence bar this run — the actively-tracked grill/domain-modeling/ code-review/grill-with-docs/implement cluster continued its already extensively-documented inconsistent-but-stable adoption pattern, and the routine/essential Skills (close-session, log-session, dispatch-subagents, digest, blog-post, audit-docs, audit-skills, frictions-to-fixes) matched their grades exactly. Step 4: of 5 regressionChecks, 2 (dispatch-subagents, midden-survey) were no-signal (zero relevant usedIn on the after/both sides); audit-docs's before/after friction actually improved (minor→nit); the two that looked suggestive on Phase A (digest, close-session) were dismissed after a Phase-B full-log read: digest's \"after\" major friction (session_01Qj2h4wWXuWNB9VjC1Kn6py) was a pre-existing CI/Playwright \"Sparks band height\" flake (issues #760/#906), unrelated to the digest SKILL.md's path-misattribution fix; close-session's \"after\" moderate friction (session_01LywVFqVo7Z7pSGna3vAqhx) was a stale-sandbox typecheck false alarm (issue #923), unrelated to close-session's edit. Step 2/5: both orphanedSessions entries (session_01UTrFNDBJFVkXFtWdfj4HHn, session_019aeaoPHYWMJVekmUvTMhQ9) already have open, fully-evidenced issues (#927, #736 respectively) citing the identical commits/dates this run found — no fresh citation to add, so no comment posted. humanPromptedClosures, manuallyRescuedClosures, misclassifiedKind, and orphanSuppressionLog were all empty (the healthy state). No Inventory YAML changes, no new issue, no PR — working tree stayed clean throughout."
+prs: []
+docsRead:
+  - path: layers/journal/content/current/sessions/2026-08-10-session_01Qj2h4wWXuWNB9VjC1Kn6py.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-09-session_01H1Ax46Ry86KKuT3wP2hbVD.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-12-session_01LywVFqVo7Z7pSGna3vAqhx.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this run's own scheduled sweep
+  - name: close-session
+    reason: closure at self-judged completion, no PR to open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Called the Skill tool for audit-skills first, per habit, and it errored with "cannot be used with Skill tool due to disable-model-invocation" — the scheduled trigger's prompt had already inlined the full skill body (command-name/base-directory header) rather than needing a Skill-tool re-invocation.
+    solution: For a scheduled/command-fired session, check whether the skill content is already inlined into the prompt (a <command-name> block) before calling the Skill tool — if it's already expanded, follow the inlined instructions directly instead of re-invoking.
+    severity: nit
+durationSec: 313
+models:
+  claude-sonnet-5: 57
+toolCounts:
+  Skill: 3
+  Bash: 16
+  ToolSearch: 2
+  mcp__github__search_issues: 2
+  mcp__github__issue_read: 2
+  Read: 3
+  Write: 1
+gitBranch: claude/upbeat-sagan-50umrj
+entrypoint: remote_trigger
+cliVersion: 2.1.229
+trigger: audit-skills
