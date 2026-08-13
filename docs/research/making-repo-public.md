@@ -5,8 +5,9 @@ repository's visibility from Private to Public. Every claim below is sourced
 from GitHub's own docs (`docs.github.com`) — fetched from the primary content
 in the `github/docs` repository, which is what renders those pages — cited
 inline. Where a canonical `docs.github.com` URL is given but the underlying
-page content was retrieved via its `github/docs` source file (because
-`docs.github.com` blocked the fetch), that's noted.
+page content was retrieved via its `github/docs` source file, that's noted:
+`docs.github.com` returns 403 to the automated fetcher here
+(`docs/agents/environment-caveats.md` owns this caveat).
 
 **This repo's own posture**: per `CLAUDE.md` and ADR-0001, Terrarium is one
 repo, one container, with human-only merge gates on CI/routing/isolation

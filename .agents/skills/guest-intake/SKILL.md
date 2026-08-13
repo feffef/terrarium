@@ -219,8 +219,7 @@ not per whole issue:
 
 **Loop it** by firing this Skill by name on an interval — a Routine (survives
 teardown) or `/loop` (within a live session). Idempotency above keeps a tight
-interval cheap; don't restate the schedule in any committed doc (it lives outside
-git).
+interval cheap (CLAUDE.md: don't restate a Routine's schedule).
 
 Comment via `add_issue_comment` (never `issue_write` — that overwrites the body);
 label via `issue_write`; read via `issue_read` and decode HTML entities before

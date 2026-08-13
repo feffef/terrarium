@@ -94,16 +94,18 @@ new; don't re-diagnose any of these as a fresh problem.
   records the opposite ("both git push and the GitHub API can write
   .github/workflows files to a feature branch") — that claim is **false**; don't
   spend a cycle re-testing it (issue #659).
-- **A `TS2339` Nitro typed-route typecheck error in `LatestCommit.vue` can
-  surface locally during `pnpm gate:scoped`/typecheck without being a real
-  regression** — a recurring local-only divergence, not a repo bug. Workaround:
-  `rm -rf node_modules .nuxt && pnpm install --frozen-lockfile` to mirror CI's
-  install path; a `git stash` on tracked files, or `rm -rf .nuxt && nuxt
-  prepare` alone, does not reset `node_modules`/`.nuxt` and won't clear it.
-  Generalized lesson: before asserting "X is broken on main" from a local
-  repro — especially a typecheck/build failure — reset the *full* install
-  state to mirror CI's `--frozen-lockfile` path rather than only reverting
-  tracked files. Skipping this once produced a false public issue (#923,
-  closed `not_planned`) plus a proactive push notification claiming main was
-  broken, based on a repro that never actually cleaned `node_modules`/`.nuxt`
-  (issue #928).
+- **A `TS2339` Nitro typed-route typecheck error in `LatestCommit.vue` used to
+  surface locally during `pnpm gate:scoped`/typecheck as a recurring
+  local-only divergence, not a repo bug** — root-caused and fixed in
+  `layers/commits/server/api/latest-commit.get.ts` by explicitly annotating
+  `defineEventHandler`'s return type (issue #940, PR #941). A recurrence now
+  is a real regression signal, not routine local-cache noise. If it does
+  resurface, the still-valid environment lesson stands: before asserting "X is
+  broken on main" from a local repro — especially a typecheck/build failure —
+  reset the *full* install state (`rm -rf node_modules .nuxt && pnpm install
+  --frozen-lockfile`) to mirror CI's `--frozen-lockfile` path rather than only
+  reverting tracked files; a `git stash` or `rm -rf .nuxt && nuxt prepare`
+  alone won't clear `node_modules`/`.nuxt`. Skipping this once produced a
+  false public issue (#923, closed `not_planned`) plus a proactive push
+  notification claiming main was broken, based on a repro that never actually
+  cleaned `node_modules`/`.nuxt` (issue #928).

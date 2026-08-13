@@ -208,9 +208,12 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   (`scripts/loop-only-tool-guard.ts`; see `docs/agents/loop-only-tool-guard.md`,
   issue #814).
 - **Never predict or reconstruct an identifier — a line number, a blob SHA, an
-  issue/PR number, a session id — from memory.** Resolve it with a fresh tool
-  call at the moment you write it down (a Read, `git rev-parse`, the actual
-  `issue_write` response). The recorded failures are not invention but
+  issue/PR number, a session id — from memory.** Resolve it fresh at the
+  moment you write it down: a tool call for the first three (a Read,
+  `git rev-parse`, the actual `issue_write` response); a session id instead
+  comes from your own system-prompt instructions verbatim, per `log-session`'s
+  "Recovering the id" section — not a tool call, but not memory either. The
+  recorded failures are not invention but
   *capture*: reaching for a real, id-shaped string already in context — a
   subagent's report, `git log` output, scorecard data — which is why this fires
   hardest in survey and audit sessions (#387, #605, #628, #723).

@@ -109,8 +109,8 @@ building against the same issue (#555) — before a human intervened.
 
 Fire this Skill by name on an interval — a Routine (survives teardown) or `/loop`
 (within a live session). The skip-already-built and skip-already-marked rules
-above keep a tight interval cheap; don't restate the schedule in any committed
-doc (it lives outside git).
+above keep a tight interval cheap (CLAUDE.md: don't restate a Routine's
+schedule).
 
 Every issue/PR comment carries the ADR-0017 provenance header (a no-exemptions
 convention that already discloses AI authorship) and nothing else — no AI-triage
