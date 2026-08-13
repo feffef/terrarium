@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01X71ykRjGtfFC5g6mueF8mi
 startedAt: 2026-08-13T18:43:39Z
-endedAt: 2026-08-13T20:43:13Z
+endedAt: 2026-08-13T21:12:03Z
 kind: interactive
 goal: Cross-session files-read signal, and drop Commits
 status: in-review
-outcome: Tenant removal merged, trace PR in review
+outcome: Removal merged; reviewed trace PR in review
 summary: "User asked which Skills would benefit from inspecting other sessions' files-read. Answering it surfaced two independent gaps in `docsRead`: no Skill consumed it, and it structurally undercounted, since a subagent's tool calls live in a separate transcript the extractor never read. User then instructed folding subagent activity in, so `foldSubagentTrace` unions subagent reads/edits/skills mechanically, and three Skills gained instructions to mine it. All of that was human-instructed. Mid-run I called a local typecheck failure pre-existing on main without the documented full-install reset. It was not. User asked for the Commits Tenant removed anyway, in its own PR, after I flagged the false premise. That removal merged as 945; the trace and Skills work in 944 is still in review."
 prs:
   - "944"
@@ -38,6 +38,8 @@ skillsUsed:
     reason: self-judged closure after the second PR
   - name: log-session
     reason: this log
+  - name: dispatch-subagents
+    reason: (no reason given)
   - name: code-review
     reason: (invoked as a slash command)
 frictions:
@@ -56,24 +58,36 @@ frictions:
   - description: User re-sent an instruction already completed in the interrupted turn, costing a re-verification pass to avoid redoing destructive work.
     solution: After an interrupt, state completed work before continuing, so the user is not re-asking blind.
     severity: nit
-durationSec: 7174
+  - description: Asserted an unverified harness layout in a code comment, claiming nested subagents needed no special case. The code read exactly one directory.
+    solution: CLAUDE.md's verify-before-asserting rule covers code comments too, not just outward claims. A comment stating a fact about an external system needs the same probe as an issue comment would. Caught only by the review subagent.
+    severity: major
+  - description: Dispatched three subagents before invoking the dispatch-subagents Skill, which CLAUDE.md requires before spawning any.
+    solution: Invoke it on the first dispatch of a session, not the fourth. The brief-quality rules it carries are what the earlier dispatches were missing.
+    severity: minor
+  - description: GitHub stripped angle-bracket path segments from the PR body even inside inline backticks, mangling the PR's central technical fact into an unreadable path.
+    solution: Put any path containing angle brackets in a fenced code block, not inline backticks, when writing a GitHub body.
+    severity: minor
+durationSec: 8905
 models:
-  claude-opus-5: 262
+  claude-opus-5: 335
   <synthetic>: 1
 toolCounts:
-  Bash: 90
+  Bash: 103
   Read: 10
-  Agent: 3
-  ToolSearch: 4
+  Agent: 4
+  ToolSearch: 5
   mcp__github__issue_read: 1
-  Edit: 35
+  Edit: 53
   AskUserQuestion: 1
   mcp__github__search_pull_requests: 2
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 3
-  mcp__github__pull_request_read: 2
-  Skill: 2
+  mcp__github__pull_request_read: 3
+  Skill: 3
   Write: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__send_later: 1
 filesEdited:
   - scripts/session-trace.ts
   - scripts/session-end.ts
@@ -96,10 +110,13 @@ subagents:
     task: Standards axis review
   - type: general-purpose
     task: Spec axis review
+  - type: general-purpose
+    task: Sample docsRead md-vs-code
 gitBranch: claude/skills-cross-session-inspection-hrxh39
 entrypoint: remote
 cliVersion: 2.1.231
 learnings:
+  - "Filtering a read-trace by file extension is the wrong axis: a sampled pass found non-Markdown reads carrying the strongest signal in the corpus (a workflow file that settled an audit's central finding, a manifest holding a schema enum), while every zero-signal entry was harness scratch. Presence of an authored reason discriminates far better than the extension does."
   - A dispatched subagent's transcript is its own jsonl at <transcript-dir>/<session-uuid>/subagents/agent-<id>.jsonl, with a .meta.json sibling carrying agentType and spawnDepth. The parent transcript holds no sidechain records at all, so the extractor's undercount was total, not partial.
   - Across the 43 current session logs, 4 of 14 docs/agents files were opened by no session at all, while pr-workflow.md was opened 17 times. Read-rate varies far more than doc quality does.
 ideas:
