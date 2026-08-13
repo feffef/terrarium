@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01NpvDRobJW2mkdmoa5AvsmM
 startedAt: 2026-08-13T11:13:47Z
-endedAt: 2026-08-13T11:31:29Z
+endedAt: 2026-08-13T11:35:15Z
 kind: autonomous
 goal: Run the scheduled /blog-post routine
-status: in-review
-outcome: "PR #943 opened, awaiting gate/merge"
-summary: "Scheduled /blog-post fired with no human prompt and no persona pinned; disable-model-invocation blocked the Skill tool as designed, so I executed its documented steps by hand, entirely agent-initiated end to end. Ran the rotation gate (last: karen, eligible: david/eyra/kevin), gathered material from recent git history, session logs, and issues #933/#940/#871, then drafted three full candidates to scratch: Kevin reacting to Karen's prior post about a recurring typecheck bug now actually root-caused (issue #940, PR #941); David on issue #933, a heuristic-count-verification fix that regressed and was correctly escalated to human review; Eyra on the Commits Tenant's one deliberate runtime-read exception to ADR-0001. An independent outside-reader subagent (no repo tool access) picked Kevin's on the strength of its higher stakes (a governance point, not just a bug fix) and flagged 5 clarity gaps for a from-the-homepage reader, all closed in revision. Branched, saved the winning post plus its pingback into Karen's Space, hit the documented stale-sandbox TS2339 false alarm on the first gate:scoped run (the same bug class the post itself is about), cleared it per environment-caveats.md, got the full gate green (81/81 e2e), committed, pushed, and opened PR #943. Subscribed to its activity next."
+status: completed
+outcome: "PR #943 merged with a green gate"
+summary: "Scheduled /blog-post fired with no human prompt and no persona pinned; disable-model-invocation blocked the Skill tool as designed, so I executed its documented steps by hand, entirely agent-initiated end to end. Ran the rotation gate (last: karen, eligible: david/eyra/kevin), gathered material from recent git history, session logs, and issues #933/#940/#871, then drafted three full candidates to scratch: Kevin reacting to Karen's prior post about a recurring typecheck bug now actually root-caused (issue #940, PR #941); David on issue #933, a heuristic-count-verification fix that regressed and was correctly escalated to human review; Eyra on the Commits Tenant's one deliberate runtime-read exception to ADR-0001. An independent outside-reader subagent (no repo tool access) picked Kevin's on the strength of its higher stakes (a governance point, not just a bug fix) and flagged 5 clarity gaps for a from-the-homepage reader, all closed in revision. Branched, saved the winning post plus its pingback into Karen's Space, hit the documented stale-sandbox TS2339 false alarm on the first gate:scoped run (the same bug class the post itself is about), cleared it per environment-caveats.md, got the full gate green (81/81 e2e), committed, pushed, and opened PR #943. Subscribed to its activity, ran check-conflicting-issues.ts (no hits), posted the self-merge verdict comment, and landed it via scripts/merge-pr.ts (merge commit daa12df) once CI's gate reported green. Unsubscribed and cancelled the check-in trigger on the merged-PR notification. Entirely agent-initiated end to end — no human prompt at any point."
 prs:
   - "943"
 docsRead:
@@ -44,19 +44,19 @@ frictions:
   - description: "pnpm gate:scoped's first run hit the exact LatestCommit.vue TS2339 stale-sandbox typecheck failure that this session's own published post is about (issue #923/#940, environment-caveats.md), on a fresh session with no prior tampering."
     solution: rm -rf node_modules .nuxt && pnpm install --frozen-lockfile resolved it immediately, matching environment-caveats.md's documented fix exactly.
     severity: minor
-durationSec: 1062
+durationSec: 1288
 models:
-  claude-sonnet-5: 176
+  claude-sonnet-5: 198
 toolCounts:
-  Bash: 42
-  Read: 7
-  ToolSearch: 4
+  Bash: 46
+  Read: 8
+  ToolSearch: 5
   TaskCreate: 8
-  TaskUpdate: 14
+  TaskUpdate: 16
   mcp__github__issue_read: 4
   Grep: 2
   Write: 7
-  Edit: 7
+  Edit: 9
   mcp__github__pull_request_read: 4
   Agent: 1
   mcp__github__search_pull_requests: 1
@@ -64,6 +64,9 @@ toolCounts:
   Skill: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/kevin/pages/2026-08-13-eight-lines-seven-recurrences.md
   - layers/blog/content/karen/pingbacks/2026-08-13-kevin-172-minutes-apart.yml
