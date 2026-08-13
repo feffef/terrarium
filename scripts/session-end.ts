@@ -37,7 +37,7 @@ import {
   extractTrace,
   foldSubagentTrace,
   parseTranscript,
-  subagentTranscriptPaths,
+  readSubagentJsonls,
   stitch,
   SCRATCH_FILE,
   STAGING_DIR,
@@ -300,21 +300,6 @@ export function handle(
   }
 
   return stageAndLand(relPath, yaml, opts)
-}
-
-/** Every subagent transcript beside `transcriptPath`, read tolerantly: this hook
- *  must never wedge the log land, and a subagent jsonl is a best-effort bonus —
- *  one that vanished or won't read costs its reads, not the whole log. */
-function readSubagentJsonls(transcriptPath: string): string[] {
-  const out: string[] = []
-  for (const p of subagentTranscriptPaths(transcriptPath)) {
-    try {
-      out.push(readFileSync(p, 'utf8'))
-    } catch {
-      /* skip this subagent's contribution */
-    }
-  }
-  return out
 }
 
 function main(): void {

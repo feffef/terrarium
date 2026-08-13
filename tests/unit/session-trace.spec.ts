@@ -13,6 +13,7 @@ import {
   foldSubagentTrace,
   normalizeRemoteSessionId,
   parseTranscript,
+  readSubagentJsonls,
   resolveGroundTruthSessionId,
   stitch,
   subagentTranscriptPaths,
@@ -138,11 +139,49 @@ describe('subagentTranscriptPaths()', () => {
     expect(subagentTranscriptPaths(parent)).toEqual([join(subs, 'agent-a.jsonl'), join(subs, 'agent-b.jsonl')])
   })
 
+  it('recurses into a subagent that dispatched its own subagent', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'trace-'))
+    const parent = join(dir, 'session-uuid.jsonl')
+    writeFileSync(parent, '')
+    const subs = join(dir, 'session-uuid', 'subagents')
+    mkdirSync(subs, { recursive: true })
+    writeFileSync(join(subs, 'agent-a.jsonl'), '')
+    const deeper = join(subs, 'agent-a', 'subagents') // depth 2, same naming rule
+    mkdirSync(deeper, { recursive: true })
+    writeFileSync(join(deeper, 'agent-a1.jsonl'), '')
+    expect(subagentTranscriptPaths(parent)).toEqual([
+      join(subs, 'agent-a.jsonl'),
+      join(deeper, 'agent-a1.jsonl'),
+    ])
+  })
+
   it('returns [] when no subagent ran', () => {
     const dir = mkdtempSync(join(tmpdir(), 'trace-'))
     const parent = join(dir, 'session-uuid.jsonl')
     writeFileSync(parent, '')
     expect(subagentTranscriptPaths(parent)).toEqual([])
+  })
+})
+
+describe('readSubagentJsonls()', () => {
+  it('reads each transcript, and skips one it cannot read rather than throwing', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'trace-'))
+    const parent = join(dir, 'session-uuid.jsonl')
+    writeFileSync(parent, '')
+    const subs = join(dir, 'session-uuid', 'subagents')
+    mkdirSync(subs, { recursive: true })
+    writeFileSync(join(subs, 'agent-a.jsonl'), 'A')
+    // A directory named like a transcript: readdir lists it, readFileSync throws
+    // on it — the hook must lose that one contribution, not the whole trace.
+    mkdirSync(join(subs, 'agent-b.jsonl'))
+    expect(readSubagentJsonls(parent)).toEqual(['A'])
+  })
+
+  it('returns [] for a session that dispatched nobody', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'trace-'))
+    const parent = join(dir, 'session-uuid.jsonl')
+    writeFileSync(parent, '')
+    expect(readSubagentJsonls(parent)).toEqual([])
   })
 })
 

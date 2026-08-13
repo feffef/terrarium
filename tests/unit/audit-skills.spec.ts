@@ -9,6 +9,9 @@ import {
   buildSkillRows,
   buildSkillSessionFileTotals,
   buildDocReadCounts,
+  buildDocsReadTotals,
+  capSessionDocsRead,
+  MAX_SESSION_DOCS_READ,
   buildSkillSessionFiles,
   filterSkillsUsed,
   findHumanPromptedClosures,
@@ -356,6 +359,29 @@ describe('buildDocReadCounts()', () => {
 
   it('omits a never-read doc rather than listing it as 0 — absence is the signal', () => {
     expect(buildDocReadCounts([sess({ docsRead: ['CLAUDE.md'] })])).not.toHaveProperty('docs/agents/domain.md')
+  })
+})
+
+describe('capSessionDocsRead() / buildDocsReadTotals() — issue #426\'s cap, applied to docsRead', () => {
+  const many = Array.from({ length: MAX_SESSION_DOCS_READ + 5 }, (_, i) => `doc-${i}.md`)
+
+  it('trims an over-long list and records its true length', () => {
+    const window = [sess({ session: 'big', docsRead: many }), sess({ session: 'small', docsRead: ['a.md'] })]
+    const capped = capSessionDocsRead(window)
+    expect(capped[0]!.docsRead).toHaveLength(MAX_SESSION_DOCS_READ)
+    expect(capped[1]!.docsRead).toEqual(['a.md'])
+    expect(buildDocsReadTotals(window)).toEqual({ big: MAX_SESSION_DOCS_READ + 5 })
+  })
+
+  it('leaves an uncapped session out of the totals — absence means complete', () => {
+    expect(buildDocsReadTotals([sess({ session: 'small', docsRead: ['a.md'] })])).toEqual({})
+  })
+
+  it('does not mutate its input, so the tally can still see the uncapped list', () => {
+    const window = [sess({ session: 'big', docsRead: many })]
+    capSessionDocsRead(window)
+    expect(window[0]!.docsRead).toHaveLength(MAX_SESSION_DOCS_READ + 5)
+    expect(Object.keys(buildDocReadCounts(window))).toHaveLength(MAX_SESSION_DOCS_READ + 5)
   })
 })
 

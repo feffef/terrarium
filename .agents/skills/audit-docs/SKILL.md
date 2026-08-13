@@ -103,10 +103,9 @@ scripts/audit-skills.ts` reports `docReadCounts` — path → how many of the
 windowed sessions actually opened it. A well-argued fact in a doc nobody opens
 is mis-homed however correct it is, and read-rate is the only evidence of that.
 Treat it exactly like Agent A treats Inventory `observations`: **corroborating
-evidence for a finding you reached another way, never a finding on its own** —
-a topic-scoped doc (`mdc-when-to-use.md`, `tenant-layers.md`) reads 0 because
-that work didn't come up, and a `cat`/`grep` inspection is invisible to the
-trace by design (`session-trace.ts`).
+evidence for a finding you reached another way, never a finding on its own.**
+The reasons it undercounts are single-homed in that field's docstring in
+`scripts/audit-skills.ts` — read them before citing a count.
 
 - **Duplication** — a fact restated in >1 place instead of single-homed. The home
   keeps it; every copy becomes a pointer.

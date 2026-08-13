@@ -99,8 +99,22 @@ export interface MechanicalTrace {
 const EDIT_TOOLS = new Set(['Edit', 'Write', 'NotebookEdit'])
 
 /** Paths that are never "docs read" — harness scratch, build output, deps, git
- *  internals. Filtered so the mechanical half doesn't drown the curated list. */
-const NOISE = [/\/node_modules\//, /\/\.nuxt\//, /\/\.output\//, /\/\.git\//, /\/scratchpad\//, /^\/tmp\//]
+ *  internals. Filtered so the mechanical half doesn't drown the curated list.
+ *  `tool-results/` and `.claude/projects/` are the harness's own spill files and
+ *  transcript store: a sampling pass found them to be the ONLY zero-signal reads
+ *  in the corpus (8 across 43 logs), which is why this list, not a file-type
+ *  filter, is the right place to cut. Reads of code — a manifest holding a
+ *  schema, a workflow file settling a CI question — carry real signal and stay. */
+const NOISE = [
+  /\/node_modules\//,
+  /\/\.nuxt\//,
+  /\/\.output\//,
+  /\/\.git\//,
+  /\/scratchpad\//,
+  /^\/tmp\//,
+  /\/tool-results\//,
+  /\/\.claude\/projects\//,
+]
 export function isContentPath(p: string | undefined): p is string {
   return typeof p === 'string' && p.length > 0 && !NOISE.some((re) => re.test(p))
 }
@@ -323,7 +337,14 @@ export function extractTrace(
  *  harness writes them to `<parent-dir>/<parent-basename>/subagents/*.jsonl`
  *  (each with a `.meta.json` sibling this fold has no use for). Returns [] when
  *  the directory is absent — the shape of a session that dispatched nobody.
- *  Sorted so a fold is deterministic. */
+ *  Sorted so a fold is deterministic.
+ *
+ *  Recurses on each transcript it finds, applying the same naming rule. A live
+ *  probe confirmed the layout only for depth 1 (`.meta.json` carries a
+ *  `spawnDepth`, so deeper is possible); recursing costs one `existsSync` per
+ *  subagent and is correct whether the harness nests a depth-2 agent under its
+ *  parent or flattens it into the same directory — which is why this doesn't
+ *  assert which one it does. */
 export function subagentTranscriptPaths(transcriptPath: string): string[] {
   const dir = join(dirname(transcriptPath), basename(transcriptPath, '.jsonl'), 'subagents')
   if (!existsSync(dir)) return []
@@ -331,6 +352,23 @@ export function subagentTranscriptPaths(transcriptPath: string): string[] {
     .filter((f) => f.endsWith('.jsonl'))
     .sort()
     .map((f) => join(dir, f))
+    .flatMap((p) => [p, ...subagentTranscriptPaths(p)])
+}
+
+/** Every subagent transcript beside `transcriptPath`, read tolerantly. Callers
+ *  are a Stop hook and a CLI, neither of which should die over a sibling jsonl
+ *  that vanished or won't read: one lost subagent costs its reads, not the
+ *  whole trace. Single-homed here so the hook and the CLI can't diverge on it. */
+export function readSubagentJsonls(transcriptPath: string): string[] {
+  const out: string[] = []
+  for (const p of subagentTranscriptPaths(transcriptPath)) {
+    try {
+      out.push(readFileSync(p, 'utf8'))
+    } catch {
+      /* skip this subagent's contribution */
+    }
+  }
+  return out
 }
 
 /** Union a parent trace with its subagents' — the *attention* fields only:
@@ -354,21 +392,6 @@ export function foldSubagentTrace(
     filesEdited: dedup([...trace.filesEdited, ...subs.flatMap((s) => s.filesEdited)]),
     skillsUsed: dedup([...trace.skillsUsed, ...subs.flatMap((s) => s.skillsUsed)]),
   }
-}
-
-/** `extractTrace` over a transcript and every subagent transcript beside it —
- *  the IO shell both the CLI and the SessionEnd handler use, so neither
- *  re-derives the discovery-and-fold pairing. */
-export function traceFromTranscript(
-  transcriptPath: string,
-  transcriptJsonl: string,
-  env: SessionIdEnv = process.env,
-): MechanicalTrace {
-  const trace = extractTrace(parseTranscript(transcriptJsonl), env)
-  const subagentRecords = subagentTranscriptPaths(transcriptPath).map((p) =>
-    parseTranscript(readFileSync(p, 'utf8')),
-  )
-  return foldSubagentTrace(trace, subagentRecords, env)
 }
 
 // ── Stitch ────────────────────────────────────────────────────────────────
@@ -475,8 +498,9 @@ function main(): void {
     console.error('usage: tsx scripts/session-trace.ts <transcript.jsonl>')
     process.exit(1)
   }
-  const trace = traceFromTranscript(path, readFileSync(path, 'utf8'))
-  console.log(JSON.stringify(trace, null, 2))
+  const trace = extractTrace(parseTranscript(readFileSync(path, 'utf8')))
+  const folded = foldSubagentTrace(trace, readSubagentJsonls(path).map(parseTranscript))
+  console.log(JSON.stringify(folded, null, 2))
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {

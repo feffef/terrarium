@@ -153,10 +153,12 @@ It prints JSON:
   window's `docsRead` already tallied for you (never re-count it by eye).
   Its use here is **reach of a Skill's pointers**: a doc a SKILL.md tells you
   to read that sits at 0, or far below the Skill's own `useCount`, says the
-  pointer isn't landing. Two things it never proves — a topic-scoped doc reads
-  0 because that work didn't come up, and a `cat`/`grep` inspection is
-  invisible to the trace by design (`session-trace.ts`) — so it corroborates a
-  finding, never carries one alone.
+  pointer isn't landing. It **corroborates a finding, never carries one alone**
+  — the field's own docstring in `scripts/audit-skills.ts` is the single home
+  for the three reasons why, and is required reading before you cite a count.
+  Companion: **`docsReadTotals`** — session id → true `docsRead` length for the
+  sessions `MAX_SESSION_DOCS_READ` trimmed; an id appearing there means that
+  session's `docsRead` in the window is partial.
 
 Done when you hold the scorecard.
 
