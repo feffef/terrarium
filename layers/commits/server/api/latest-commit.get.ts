@@ -15,7 +15,14 @@ const run = promisify(execFile)
 const SEP = '\x1f'
 const FORMAT = ['%H', '%an', '%aI', '%s', '%b'].join(SEP)
 
-export default defineEventHandler(async () => {
+// Explicit return type instead of relying on Nitro's typed-route inference to
+// derive it from the function body — that inference intermittently fails
+// after a clean install, surfacing as TS2339 in LatestCommit.vue (issue #940).
+type LatestCommitResponse =
+  | { ok: true; hash: string; author: string; date: string; subject: string; body: string }
+  | { ok: false; error: string }
+
+export default defineEventHandler(async (): Promise<LatestCommitResponse> => {
   try {
     const { stdout } = await run('git', ['log', '-1', `--pretty=format:${FORMAT}`])
     const [hash = '', author = '', date = '', subject = '', body = ''] = stdout.split(SEP)
