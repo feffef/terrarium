@@ -139,5 +139,4 @@ explicit skip here rather than relying on the timing alone.
 
 **Loop it** by firing this skill by name on an interval — a Routine (standing,
 survives teardown) or `/loop` (within a live session). Idempotency above keeps a
-tight interval cheap; do not restate the schedule in any committed doc (it lives
-outside git).
+tight interval cheap (CLAUDE.md: don't restate a Routine's schedule).
