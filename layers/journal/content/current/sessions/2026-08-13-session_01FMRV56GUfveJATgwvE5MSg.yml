@@ -1,18 +1,20 @@
 schemaVersion: 1
 session: session_01FMRV56GUfveJATgwvE5MSg
 startedAt: 2026-08-13T00:20:04Z
-endedAt: 2026-08-13T00:28:00Z
+endedAt: 2026-08-13T00:32:06Z
 kind: autonomous
 goal: Run the scheduled /digest sweep for 2026-08-12
-status: in-review
-outcome: "PR #939 opened, gate green"
-summary: "Fully agent-initiated scheduled /digest run. Authored the 2026-08-12 Digest, centered on the same stale-sandbox LatestCommit.vue typecheck failure recurring across three sessions that day (already the subject of that day's blog post, #938). Ran the Journal retention sweep, which archived the 2026-08-05 digest. The archive move was a non-inert path, so gate:scoped ran the full gate; the first pass hit the documented stale-sandbox TS2339 false alarm, resolved with a clean rm -rf node_modules .nuxt && pnpm install --frozen-lockfile per environment-caveats.md, after which the full gate (including test:e2e, 81/81) passed green. Opened PR #939 and subscribed to its activity."
+status: completed
+outcome: "PR #939 merged with a green gate"
+summary: "Fully agent-initiated scheduled /digest run. Authored the 2026-08-12 Digest, centered on the same stale-sandbox LatestCommit.vue typecheck failure recurring across three sessions that day (already the subject of that day's blog post, #938). Ran the Journal retention sweep, which archived the 2026-08-05 digest. The archive move was a non-inert path, so gate:scoped ran the full gate; the first pass hit the documented stale-sandbox TS2339 false alarm, resolved with a clean rm -rf node_modules .nuxt && pnpm install --frozen-lockfile per environment-caveats.md, after which the full gate (including test:e2e, 81/81) passed green. Opened PR #939, subscribed to its activity, posted a verdict comment, and merged it via scripts/merge-pr.ts once CI reported green."
 prs:
   - "939"
 docsRead:
   - path: docs/agents/environment-caveats.md
     reason: confirmed the LatestCommit.vue TS2339 failure is the known stale-sandbox artifact, not a regression
   - path: layers/journal/content/current/pages/digests/2026-08-11.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
 skillsUsed:
   - name: close-session
@@ -25,19 +27,23 @@ frictions:
   - description: gate:scoped's first run hit the same stale-sandbox LatestCommit.vue TS2339 typecheck failure the digest itself documents recurring three times that same day — a fourth occurrence, this time on the digest-authoring session.
     solution: Already documented in docs/agents/environment-caveats.md with the clean-reinstall workaround; resolved in one extra step. The recurrence itself (now 4x) may warrant escalating from a documented quirk to an actual root-cause fix in the Nitro typed-route generation, rather than a workaround every session re-applies.
     severity: minor
-durationSec: 475
+durationSec: 722
 models:
-  claude-sonnet-5: 57
+  claude-sonnet-5: 80
 toolCounts:
-  Bash: 17
-  ToolSearch: 2
+  Bash: 23
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
-  Read: 1
+  Read: 3
   Write: 2
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Edit: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-08-12.md
 gitBranch: claude/compassionate-lovelace-qwghwb
