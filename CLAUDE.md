@@ -45,10 +45,11 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
 ## Ground rules (from the ADRs)
 
 - One repo, one container, build-time-baked; nothing is created at runtime
-  (ADR-0001) — except two scoped relaxations, neither touching the application
+  (ADR-0001) — except one scoped relaxation, which doesn't touch the application
   model itself: the PoC deploy container, for the live `deploy/` runner only
-  (ADR-0011), and the Commits Tenant's own `server/api/latest-commit` endpoint,
-  a runtime git read scoped to that one PoC endpoint (`layers/commits/CONTEXT.md`).
+  (ADR-0011). (A second relaxation existed for the Commits Tenant's runtime git
+  read; that Tenant was removed, taking the only runtime read in the application
+  model with it.)
 - Agents edit a Tenant's **manifest** (declarative intent); `content.config.ts`
   builds the keyed collections dynamically from the manifests at
   config-evaluation time (ADR-0002/0013). Don't hand-write the keyed cross-product.

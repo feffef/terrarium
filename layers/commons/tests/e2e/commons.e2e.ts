@@ -22,7 +22,7 @@ export function registerCommonsE2E(): void {
       for (const tenant of ['atlas', 'marquee', 'midden', 'journal']) {
         expect(html, `expected a result from "${tenant}"`).toContain(tenant)
       }
-      expect(html).toMatch(/across [6-9] tenants/)
+      expect(html).toMatch(/across [5-9] tenants/)
     })
 
     it('search: does not index the Commons itself (opt-in isolation default)', async () => {
