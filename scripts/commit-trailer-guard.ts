@@ -1,22 +1,42 @@
-// Mechanical backstop for issue #921: agents keep hand-typing the ADR-0017
-// `Co-Authored-By:`/`Claude-Session:` commit trailer that the harness template
-// and `.githooks/commit-msg` already land, so the guard refuses a `git commit`
-// whose message text carries either line. Rationale, detection contract, and
-// residual fail-opens are single-homed in docs/agents/commit-trailer-guard.md —
-// this header does not restate them. Pure core is kept separate from the stdin
-// I/O and exercised by --dry-run, mirroring the sibling guards (ADR-0004's
-// unattended-hook reviewability bar).
+// Mechanical backstop for issue #921 (which holds the incident history): agents
+// keep hand-typing the ADR-0017 `Co-Authored-By:`/`Claude-Session:` trailer that
+// the harness template and `.githooks/commit-msg` already land, so this refuses
+// a `git commit` whose message text carries either line. Preventive only — the
+// commit-msg hook stays the backstop and keeps failing open (ADR-0017).
+//
+// Runs unattended, so it is human-only to merge (ADR-0004, 2026-07-30). Pure
+// core split from the stdin I/O and exercised by --dry-run, per that amendment's
+// reviewability bar and the sibling guards' shape.
 //
 // Usage:
 //   sh scripts/commit-trailer-guard.sh               # the installed hook entry
 //   tsx scripts/commit-trailer-guard.ts              # payload on stdin
 //   tsx scripts/commit-trailer-guard.ts --dry-run --tool Bash (--input '<json>' | --input-file <path>)
+//
+// A denying --input cannot be passed inline: that Bash call is itself denied.
+// Write the payload with the Write tool and pass --input-file.
 import { readFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import { COAUTHOR_TRAILER } from './provenance-footer.ts'
 
-// What these three match, and the false positives that follow, are single-homed
-// in docs/agents/commit-trailer-guard.md ("Mechanism" and "Residual limits").
+// Fail-open by construction, in rough order of how often it will matter:
+//   - `git commit -F <file>`: the text is in the file, not the command string.
+//     The commit-msg hook's #710/#797 correction is the backstop. `-F -` with an
+//     inline heredoc IS covered.
+//   - MCP-API commits (create_or_update_file/push_files) never touch local git;
+//     they belong to github-provenance-guard.ts's registry.
+//   - The .sh pre-filter only forwards payloads textually mentioning a trailer
+//     key, so a re-encoded one is never seen.
+//   - Repo scripts that commit (the session-log lander) bypass the Bash tool.
+//
+// False-positive shapes, accepted — this reads a command string, not a shell
+// AST. All three were hit live, all three have a workaround:
+//   - A heredoc writing a file ABOUT this guard (an example commit + an example
+//     trailer) is denied. Use the Write tool, which CLAUDE.md prefers anyway.
+//   - `git commit -m "fix: Claude-Session: handling"` is denied: SESSION_TRAILER_KEY
+//     matches the bare key while COAUTHOR_KEY needs the address. Deliberate — a
+//     hand-typed session trailer's failure mode is its *value*. Reword, or -F.
+//   - `git commit … && git log | grep Claude-Session` is denied. Split the chain.
 
 const GIT_COMMIT = /\bgit\s+(?:(?:-{1,2}[^\s]+)(?:\s+[^\s-][^\s]*)?\s+)*commit\b/
 

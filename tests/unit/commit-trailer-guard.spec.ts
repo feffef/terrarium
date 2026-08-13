@@ -1,5 +1,5 @@
 // Coverage for the commit-trailer guard (issue #921; rationale and detection
-// contract: docs/agents/commit-trailer-guard.md). The pure core is pinned
+// contract in `scripts/commit-trailer-guard.ts`). The pure core is pinned
 // directly; the CLI's stdin→deny-JSON path, `--dry-run`, and the hot-path
 // pre-filter are exercised end to end against the real scripts — the same
 // reviewability bar the sibling guards' specs set for an unattended hook

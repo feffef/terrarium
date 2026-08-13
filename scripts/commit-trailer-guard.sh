@@ -3,8 +3,8 @@
 # payload textually mentioning one of the two ADR-0017 trailer keys pays the tsx
 # start, so ordinary Bash calls — the highest-frequency tool — never do. A
 # textual false positive is harmless (the guard re-checks the parsed input, and
-# only denies when the mention sits inside a `git commit`). Trade-offs:
-# docs/agents/commit-trailer-guard.md.
+# only denies when the mention sits inside a `git commit`). The fail-opens this
+# pre-filter creates are listed in that file's header.
 payload=$(cat)
 printf '%s' "$payload" | grep -qiE 'Claude-Session:|Co-Authored-By:' || exit 0
 printf '%s' "$payload" | pnpm exec tsx scripts/commit-trailer-guard.ts

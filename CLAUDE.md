@@ -371,8 +371,7 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   harness template and `.githooks/commit-msg` land the two-line trailer
   themselves — so **never hand-write that trailer into a commit message**, a
   near-miss that recurred four times before earning its own `PreToolUse` guard
-  (`scripts/commit-trailer-guard.ts`; see
-  `docs/agents/commit-trailer-guard.md`, issue #921). A second `PreToolUse`
+  (`scripts/commit-trailer-guard.ts`, issue #921). A second `PreToolUse`
   guard (`scripts/github-provenance-guard.ts`) blocks
   a non-compliant call before it posts and prints the exact marker to paste, so
   it — not this bullet — is the operative rule; it fails **closed**, and its

@@ -63,7 +63,6 @@ non-starter.
 | `docs/agents/deferred-tool-guard.md` | **Mechanism record, not a rule source.** Documents an already-built guard; the rule it backstops is homed in `CLAUDE.md` and appears there. Its own mechanism appears in §4. |
 | `docs/agents/loop-only-tool-guard.md` | Same — mechanism record for the `ScheduleWakeup` guard. |
 | `docs/agents/subagent-background-guard.md` | Same — mechanism record for the subagent-background guard. |
-| `docs/agents/commit-trailer-guard.md` | Same — mechanism record for the commit-trailer guard (#921), added on the branch that produced this asset. |
 | `docs/agents/mdc-when-to-use.md` | **Decision reference, not a rulebook.** 257 lines of "when is MDC the right tool", ending in a 6-question checklist. It carries exactly two normative rules (extracted below); the rest is capability reference. |
 | `.agents/skills/blog-post/personas/*.md` (4 files) | **Voice guidance for a fictional persona.** Do/don't lists about tone, not agent behaviour. |
 | `docs/agents/triage-labels.md` | **Vocabulary mapping table** (24 lines). Its one normative statement — the ADR-0020 trust gate on `ready-for-agent` — is homed in ADR-0020 and appears via `auto-triage`. |
