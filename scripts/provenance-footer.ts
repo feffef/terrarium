@@ -86,12 +86,18 @@ export function isKnownModelName(name: string): boolean {
   return name === FALLBACK_MODEL || KNOWN_MODEL_NAMES.includes(name)
 }
 
-/** The `Co-Authored-By:` half of the ADR-0017 footer — matched loosely (any
- *  model name) but pinned to the `noreply@anthropic.com` address so an unrelated
- *  human co-author line never reads as "footer already present". Model-name
- *  *validity* is a separate, stricter check (`coAuthorModelName` +
- *  `isKnownModelName`, issue #797) — this one only gates presence. */
-const COAUTHOR_LINE = /^Co-Authored-By:.*<noreply@anthropic\.com>/m
+/** The `Co-Authored-By:` half of the ADR-0017 footer, unanchored — matched
+ *  loosely (any model name) but pinned to the `noreply@anthropic.com` address so
+ *  an unrelated human co-author line never reads as "footer already present".
+ *  Model-name *validity* is a separate, stricter check (`coAuthorModelName` +
+ *  `isKnownModelName`, issue #797) — this one only gates presence.
+ *
+ *  Exported as the single home of the pattern's text so `commit-trailer-guard.ts`
+ *  reuses it rather than coining a second co-author regex (issue #921); the
+ *  anchored, line-oriented form this file itself matches with is derived below. */
+export const COAUTHOR_TRAILER = /Co-Authored-By:.*<noreply@anthropic\.com>/
+
+const COAUTHOR_LINE = new RegExp(`^${COAUTHOR_TRAILER.source}`, 'm')
 
 /** The model name a `Co-Authored-By:` line names, or `null` if `text` carries
  *  none — the extraction half of the issue #797 allowlist check, mirroring
