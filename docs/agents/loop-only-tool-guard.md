@@ -130,3 +130,10 @@ raises for the sibling guard) is exactly the "external side effect... the
 gate's L0–L2 layers structurally cannot observe" the amendment separately
 escalates on. The pure-core/dry-run split above keeps *that* review tractable —
 it narrows what a human still has to reason about to the untestable slice.
+
+**Partly answered since (2026-08-13, #946).** The commit-trailer guard was
+observed firing live on the `Bash` matcher in the session that authored it — two
+probe commands were denied with the guard's own message and nothing ran. So
+interception itself is confirmed, on that matcher. The *ordering* question above
+is untouched: a `Bash` call has no competing harness-rejection path, so nothing
+was learned about `PreToolUse` versus the `InputValidationError` handling.

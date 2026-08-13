@@ -369,7 +369,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   template in your system prompt — **never reconstruct either from memory**, the
   same rule as any other identifier above. Commits need nothing from you: the
   harness template and `.githooks/commit-msg` land the two-line trailer
-  themselves. A `PreToolUse` guard (`scripts/github-provenance-guard.ts`) blocks
+  themselves — so **never hand-write that trailer into a commit message**, a
+  near-miss that recurred four times before earning its own `PreToolUse` guard
+  (`scripts/commit-trailer-guard.ts`, issue #921). A second `PreToolUse`
+  guard (`scripts/github-provenance-guard.ts`) blocks
   a non-compliant call before it posts and prints the exact marker to paste, so
   it — not this bullet — is the operative rule; it fails **closed**, and its
   registry is where a newly-found provenance-carrying surface gets added.
@@ -632,6 +635,9 @@ what's actually possible for server-/build-side Mermaid rendering, grounding
 ADR-0024's pre-render decision (`docs/research/mermaid-server-side-rendering.md`),
 and whether a `PreToolUse` hook actually intercepts a deferred-tool call in this
 cloud environment, grounding the `deferred-tool-guard`'s design
-(`docs/research/deferred-tool-guard-hook-viability.md`).
+(`docs/research/deferred-tool-guard-hook-viability.md`), and every prose rule in
+this file, `docs/agents/*`, and the repo-authored Skills classified into the
+mechanize-or-drop buckets — the rulebook migration table the Wave-3 re-founding
+depends on, issue #867 (`docs/research/rulebook-migration-table.md`).
 For the line between this directory and a GitHub issue — verified reference vs.
 an unimplemented idea or proposal — see `docs/agents/issue-tracker.md`.

@@ -33,6 +33,10 @@
           {
             "type": "command",
             "command": "sh scripts/subagent-background-guard.sh || true"
+          },
+          {
+            "type": "command",
+            "command": "sh scripts/commit-trailer-guard.sh || true"
           }
         ]
       },
