@@ -35,7 +35,9 @@ import { stringify as stringifyYaml } from 'yaml'
 import { fetchOriginMain } from './git-helpers.ts'
 import {
   extractTrace,
+  foldSubagentTrace,
   parseTranscript,
+  readSubagentJsonls,
   stitch,
   SCRATCH_FILE,
   STAGING_DIR,
@@ -230,9 +232,10 @@ export function recoverDroppedScratch(
     landFn?: typeof land
     mainVersionFn?: (relPath: string, remote: string) => string | null
     env?: SessionIdEnv
+    subagentJsonls?: string[]
   },
 ): HandlerResult {
-  const trace = extractTrace(parseTranscript(transcriptJsonl), opts.env)
+  const trace = traceOf(transcriptJsonl, opts)
   if (!trace.session || !declaredClosure(trace)) {
     return { action: 'skipped-no-scratch' }
   }
@@ -254,6 +257,17 @@ export function recoverDroppedScratch(
   return stageAndLand(relPath, yaml, opts)
 }
 
+/** The parent transcript's trace with every dispatched subagent's reads, edits,
+ *  and Skill invocations folded in — `subagentJsonls` is passed by `main` from
+ *  disk and by tests inline, so neither entry point can drift from the other. */
+function traceOf(
+  transcriptJsonl: string,
+  opts: { env?: SessionIdEnv; subagentJsonls?: string[] },
+): MechanicalTrace {
+  const trace = extractTrace(parseTranscript(transcriptJsonl), opts.env)
+  return foldSubagentTrace(trace, (opts.subagentJsonls ?? []).map(parseTranscript), opts.env)
+}
+
 /** The testable core: given a scratch and a transcript, produce + (maybe) land
  *  the log. `push`/`build` flow through `land`, injectable for tests via opts. */
 export function handle(
@@ -265,9 +279,10 @@ export function handle(
     landFn?: typeof land
     mainVersionFn?: (relPath: string, remote: string) => string | null
     env?: SessionIdEnv
+    subagentJsonls?: string[]
   },
 ): HandlerResult {
-  const trace = extractTrace(parseTranscript(transcriptJsonl), opts.env)
+  const trace = traceOf(transcriptJsonl, opts)
   const entry = stitch(scratch, trace)
 
   const valid = validateEntry(entry)
@@ -314,7 +329,11 @@ function main(): void {
   // tell the two apart, so check it before giving up silently.
   if (!existsSync(scratchPath)) {
     if (transcriptPath && existsSync(transcriptPath)) {
-      const result = recoverDroppedScratch(readFileSync(transcriptPath, 'utf8'), { dryRun, remote: 'origin' })
+      const result = recoverDroppedScratch(readFileSync(transcriptPath, 'utf8'), {
+        dryRun,
+        remote: 'origin',
+        subagentJsonls: readSubagentJsonls(transcriptPath),
+      })
       if (result.action === 'landed' || result.action === 'dry-run') {
         console.error(
           `session-end: authored scratch was lost before landing — recorded a placeholder log at ${result.relPath} (${DROPPED_SCRATCH_FRICTION})`,
@@ -373,7 +392,11 @@ function main(): void {
     return
   }
 
-  const result = handle(scratch, transcriptJsonl, { dryRun, remote: 'origin' })
+  const result = handle(scratch, transcriptJsonl, {
+    dryRun,
+    remote: 'origin',
+    subagentJsonls: readSubagentJsonls(transcriptPath),
+  })
   switch (result.action) {
     case 'invalid':
       console.error(`session-end: stitched entry is invalid, not logging:\n${result.detail}`)

@@ -10,13 +10,19 @@ import {
   DERIVED_REASON_EDITED,
   deriveTrigger,
   extractTrace,
+  foldSubagentTrace,
   normalizeRemoteSessionId,
   parseTranscript,
+  readSubagentJsonls,
   resolveGroundTruthSessionId,
   stitch,
+  subagentTranscriptPaths,
   type AuthoredScratch,
 } from '../../scripts/session-trace.ts'
 import { validateEntry } from '../../scripts/log-session.ts'
+import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 
 // A tiny synthetic transcript: two assistant turns, a Read, an Edit, a Skill, a
 // subagent, a noise read (node_modules), spanning two timestamps — plus the two
@@ -82,6 +88,100 @@ describe('extractTrace()', () => {
   it('prefers a real CLAUDE_CODE_REMOTE_SESSION_ID env var over the transcript\'s own sessionId (issue #387)', () => {
     const withCcr = extractTrace(parseTranscript(transcript), { CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_REALSESSION123' })
     expect(withCcr.session).toBe('session_REALSESSION123') // NOT the transcript's 'session_01ABC'
+  })
+})
+
+// A dispatched subagent's own transcript: same record shape as the parent's,
+// flagged `isSidechain`. Its reads are invisible to the parent transcript —
+// that gap is what foldSubagentTrace closes (issue #796).
+const subagentTranscript = [
+  { type: 'user', sessionId: 'session_01ABC', cwd: '/repo', isSidechain: true, timestamp: '2026-07-06T10:01:00Z', message: { content: 'go' } },
+  { type: 'assistant', isSidechain: true, timestamp: '2026-07-06T10:02:00Z', message: { model: 'claude-sonnet-5', content: [
+    { type: 'tool_use', name: 'Read', input: { file_path: '/repo/docs/agents/pr-workflow.md' } },
+    { type: 'tool_use', name: 'Read', input: { file_path: '/repo/app.ts' } }, // also read by the parent
+    { type: 'tool_use', name: 'Write', input: { file_path: '/repo/new.ts' } },
+    { type: 'tool_use', name: 'Skill', input: { skill: 'code-review' } },
+  ] } },
+].map((r) => JSON.stringify(r)).join('\n')
+
+describe('foldSubagentTrace() — subagent work counts as the session\'s (issue #796)', () => {
+  const parent = extractTrace(parseTranscript(transcript), NO_ENV)
+  const folded = foldSubagentTrace(parent, [parseTranscript(subagentTranscript)], NO_ENV)
+
+  it('unions the attention fields, deduping a path both read', () => {
+    expect(folded.filesRead).toEqual(['CONTEXT.md', 'app.ts', 'docs/agents/pr-workflow.md'])
+    expect(folded.filesEdited).toEqual(['app.ts', 'new.ts'])
+    expect(folded.skillsUsed).toEqual(['tdd', 'digest', 'frictions-to-fixes', 'code-review'])
+  })
+
+  it('leaves the parent-scoped fields alone, so counts stay comparable', () => {
+    expect(folded.models).toEqual(parent.models) // no claude-sonnet-5 from the subagent
+    expect(folded.toolCounts).toEqual(parent.toolCounts)
+    expect(folded.durationSec).toBe(parent.durationSec)
+    expect(folded.subagents).toEqual(parent.subagents)
+  })
+
+  it('is identity for a session that dispatched nobody', () => {
+    expect(foldSubagentTrace(parent, [], NO_ENV)).toBe(parent)
+  })
+})
+
+describe('subagentTranscriptPaths()', () => {
+  it('finds the harness\'s sibling subagents/ directory, sorted, .jsonl only', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'trace-'))
+    const parent = join(dir, 'session-uuid.jsonl')
+    writeFileSync(parent, '')
+    const subs = join(dir, 'session-uuid', 'subagents')
+    mkdirSync(subs, { recursive: true })
+    writeFileSync(join(subs, 'agent-b.jsonl'), '')
+    writeFileSync(join(subs, 'agent-a.jsonl'), '')
+    writeFileSync(join(subs, 'agent-a.meta.json'), '{}') // metadata, not a transcript
+    expect(subagentTranscriptPaths(parent)).toEqual([join(subs, 'agent-a.jsonl'), join(subs, 'agent-b.jsonl')])
+  })
+
+  it('recurses into a subagent that dispatched its own subagent', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'trace-'))
+    const parent = join(dir, 'session-uuid.jsonl')
+    writeFileSync(parent, '')
+    const subs = join(dir, 'session-uuid', 'subagents')
+    mkdirSync(subs, { recursive: true })
+    writeFileSync(join(subs, 'agent-a.jsonl'), '')
+    const deeper = join(subs, 'agent-a', 'subagents') // depth 2, same naming rule
+    mkdirSync(deeper, { recursive: true })
+    writeFileSync(join(deeper, 'agent-a1.jsonl'), '')
+    expect(subagentTranscriptPaths(parent)).toEqual([
+      join(subs, 'agent-a.jsonl'),
+      join(deeper, 'agent-a1.jsonl'),
+    ])
+  })
+
+  it('returns [] when no subagent ran', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'trace-'))
+    const parent = join(dir, 'session-uuid.jsonl')
+    writeFileSync(parent, '')
+    expect(subagentTranscriptPaths(parent)).toEqual([])
+  })
+})
+
+describe('readSubagentJsonls()', () => {
+  it('reads each transcript, and skips one it cannot read rather than throwing', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'trace-'))
+    const parent = join(dir, 'session-uuid.jsonl')
+    writeFileSync(parent, '')
+    const subs = join(dir, 'session-uuid', 'subagents')
+    mkdirSync(subs, { recursive: true })
+    writeFileSync(join(subs, 'agent-a.jsonl'), 'A')
+    // A directory named like a transcript: readdir lists it, readFileSync throws
+    // on it — the hook must lose that one contribution, not the whole trace.
+    mkdirSync(join(subs, 'agent-b.jsonl'))
+    expect(readSubagentJsonls(parent)).toEqual(['A'])
+  })
+
+  it('returns [] for a session that dispatched nobody', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'trace-'))
+    const parent = join(dir, 'session-uuid.jsonl')
+    writeFileSync(parent, '')
+    expect(readSubagentJsonls(parent)).toEqual([])
   })
 })
 

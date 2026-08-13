@@ -7,12 +7,16 @@
 //
 // The extraction is a pure function over parsed records (unit-tested); the file
 // IO is a thin shell. Read-tool paths are the only source of `filesRead` — a
-// `cat`/`grep` inspection is invisible here by design (see the ADR amendment).
-// `docsRead` (and any other Read-tool-derived count) reflects ONLY this
-// session's own direct tool calls — a subagent's Read calls never appear in
-// this transcript, so these counts are a floor, not a complete count; treat
-// them accordingly downstream (including in the `frictions-to-fixes` Skill,
-// which mines these fields to rank frictions — issue #796).
+// `cat`/`grep` inspection is invisible here by design (see the ADR amendment),
+// so these counts remain a floor rather than a complete count.
+//
+// A dispatched subagent's tool calls are NOT inlined into the parent transcript
+// (it carries no sidechain records at all); the harness writes each one its own
+// jsonl under `subagents/` beside the parent — see `subagentTranscriptPaths`.
+// `foldSubagentTrace` unions those in, so `filesRead`/`filesEdited`/`skillsUsed`
+// cover delegated work too. Issue #796 documented the gap and deferred the fix
+// for want of evidence the access was cheap; it is — same record shape, sibling
+// directory. Everything stays derived, never self-reported (ADR-0009).
 //
 // `skillsUsed` has two derived sources: `Skill` tool_use blocks, and slash-command
 // expansions in user turns (`<command-name>`). The second exists because a Skill
@@ -23,8 +27,8 @@
 //
 // Usage:  tsx scripts/session-trace.ts <transcript.jsonl>
 //   Prints the derived trace as JSON.
-import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { basename, dirname, join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 /** The one authored-scratch file per container (one session per container in the
@@ -95,8 +99,22 @@ export interface MechanicalTrace {
 const EDIT_TOOLS = new Set(['Edit', 'Write', 'NotebookEdit'])
 
 /** Paths that are never "docs read" — harness scratch, build output, deps, git
- *  internals. Filtered so the mechanical half doesn't drown the curated list. */
-const NOISE = [/\/node_modules\//, /\/\.nuxt\//, /\/\.output\//, /\/\.git\//, /\/scratchpad\//, /^\/tmp\//]
+ *  internals. Filtered so the mechanical half doesn't drown the curated list.
+ *  `tool-results/` and `.claude/projects/` are the harness's own spill files and
+ *  transcript store: a sampling pass found them to be the ONLY zero-signal reads
+ *  in the corpus (8 across 43 logs), which is why this list, not a file-type
+ *  filter, is the right place to cut. Reads of code — a manifest holding a
+ *  schema, a workflow file settling a CI question — carry real signal and stay. */
+const NOISE = [
+  /\/node_modules\//,
+  /\/\.nuxt\//,
+  /\/\.output\//,
+  /\/\.git\//,
+  /\/scratchpad\//,
+  /^\/tmp\//,
+  /\/tool-results\//,
+  /\/\.claude\/projects\//,
+]
 export function isContentPath(p: string | undefined): p is string {
   return typeof p === 'string' && p.length > 0 && !NOISE.some((re) => re.test(p))
 }
@@ -315,6 +333,67 @@ export function extractTrace(
   }
 }
 
+/** Every dispatched subagent's own transcript, given the parent's path: the
+ *  harness writes them to `<parent-dir>/<parent-basename>/subagents/*.jsonl`
+ *  (each with a `.meta.json` sibling this fold has no use for). Returns [] when
+ *  the directory is absent — the shape of a session that dispatched nobody.
+ *  Sorted so a fold is deterministic.
+ *
+ *  Recurses on each transcript it finds, applying the same naming rule. A live
+ *  probe confirmed the layout only for depth 1 (`.meta.json` carries a
+ *  `spawnDepth`, so deeper is possible); recursing costs one `existsSync` per
+ *  subagent and is correct whether the harness nests a depth-2 agent under its
+ *  parent or flattens it into the same directory — which is why this doesn't
+ *  assert which one it does. */
+export function subagentTranscriptPaths(transcriptPath: string): string[] {
+  const dir = join(dirname(transcriptPath), basename(transcriptPath, '.jsonl'), 'subagents')
+  if (!existsSync(dir)) return []
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.jsonl'))
+    .sort()
+    .map((f) => join(dir, f))
+    .flatMap((p) => [p, ...subagentTranscriptPaths(p)])
+}
+
+/** Every subagent transcript beside `transcriptPath`, read tolerantly. Callers
+ *  are a Stop hook and a CLI, neither of which should die over a sibling jsonl
+ *  that vanished or won't read: one lost subagent costs its reads, not the
+ *  whole trace. Single-homed here so the hook and the CLI can't diverge on it. */
+export function readSubagentJsonls(transcriptPath: string): string[] {
+  const out: string[] = []
+  for (const p of subagentTranscriptPaths(transcriptPath)) {
+    try {
+      out.push(readFileSync(p, 'utf8'))
+    } catch {
+      /* skip this subagent's contribution */
+    }
+  }
+  return out
+}
+
+/** Union a parent trace with its subagents' — the *attention* fields only:
+ *  what was read, edited, and which Skills ran. Nested subagents need no special
+ *  case: each spawn depth gets its own transcript in the same directory.
+ *
+ *  Deliberately NOT merged: `models`/`toolCounts`/`durationSec`/`subagents`
+ *  describe the parent's own turns, and a consumer reading `toolCounts.Read`
+ *  against `filesRead` would otherwise compare two different populations.
+ *  Timings stay the parent's for the same reason. */
+export function foldSubagentTrace(
+  trace: MechanicalTrace,
+  subagentRecordSets: Record<string, unknown>[][],
+  env: SessionIdEnv = process.env,
+): MechanicalTrace {
+  if (subagentRecordSets.length === 0) return trace
+  const subs = subagentRecordSets.map((records) => extractTrace(records, env))
+  return {
+    ...trace,
+    filesRead: dedup([...trace.filesRead, ...subs.flatMap((s) => s.filesRead)]),
+    filesEdited: dedup([...trace.filesEdited, ...subs.flatMap((s) => s.filesEdited)]),
+    skillsUsed: dedup([...trace.skillsUsed, ...subs.flatMap((s) => s.skillsUsed)]),
+  }
+}
+
 // ── Stitch ────────────────────────────────────────────────────────────────
 
 /** The reason a transcript-observed read/skill carries when the agent never
@@ -420,7 +499,8 @@ function main(): void {
     process.exit(1)
   }
   const trace = extractTrace(parseTranscript(readFileSync(path, 'utf8')))
-  console.log(JSON.stringify(trace, null, 2))
+  const folded = foldSubagentTrace(trace, readSubagentJsonls(path).map(parseTranscript))
+  console.log(JSON.stringify(folded, null, 2))
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {

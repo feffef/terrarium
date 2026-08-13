@@ -39,6 +39,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
+import { isContentPath } from './session-trace.ts'
 import { isExternalSession } from '../shared/schemas/session.ts'
 import { isParentlessBoundaryCommit, SESSION_TRAILER } from './git-helpers.ts'
 import {
@@ -163,6 +164,12 @@ export interface WindowSession {
    *  absent — the strong derived signal `findMisclassifiedKind` cross-checks
    *  the authored `kind` against (issue #449 Gap 2). */
   entrypoint: string
+  /** The paths this session read — `docsRead`'s `path`s, without their
+   *  `reason` prose (a reason is per-session narrative; the signal here is
+   *  which surfaces got opened at all). Pairs with `skillsUsed` on the same
+   *  record, which is the whole point: it answers whether the sessions that
+   *  did (or skipped) a Skill's work ever opened the doc pointing at it. */
+  docsRead: string[]
 }
 /** A Skill's on-disk facts: it exists, and its SKILL.md frontmatter `description`. */
 export interface OnDiskSkill {
@@ -333,6 +340,24 @@ export interface Scorecard {
    *  `orphanedSessions`/`manuallyRescuedClosures` rather than trust the file
    *  list as this Skill's exhaustive history. */
   skillSessionFileTotals: Record<string, number>
+  /** Path → how many of the `window` sessions opened it (`buildDocReadCounts`).
+   *  Built from the uncapped window, so it stays accurate even where
+   *  `window[].docsRead` was trimmed.
+   *
+   *  **This docstring is the single home for how to read a doc-read count**
+   *  (CLAUDE.md's single-home rule); the three consuming Skills carry the rule
+   *  plus a pointer here, not their own copy of the reasoning. A doc a Skill
+   *  tells you to read, sitting at 0, is evidence the pointer isn't landing —
+   *  but only ever *corroborating* evidence, for three independent reasons:
+   *  a topic-scoped doc reads 0 because that work didn't come up; a
+   *  `cat`/`grep` inspection is invisible to the trace by design; and since
+   *  subagent reads are folded into the parent's list
+   *  (`session-trace.ts`'s `foldSubagentTrace`), "opened" can mean a subagent
+   *  opened it, not the session that hit the friction. Never a finding alone. */
+  docReadCounts: Record<string, number>
+  /** Session id → true `docsRead` length, for the sessions `MAX_SESSION_DOCS_READ`
+   *  trimmed. Absent id ⇒ that session's list is complete. */
+  docsReadTotals: Record<string, number>
 }
 
 /** A session paired with the repo-relative path it was read from. */
@@ -887,9 +912,61 @@ export function toSessionFile(
         frictions.map((fr: Record<string, unknown>) => String(fr.description ?? '')),
       ),
       entrypoint: String(raw.entrypoint ?? ''),
+      // `isContentPath` is session-trace.ts's noise rule, reused rather than
+      // restated. It runs there at derivation time, so it only cleans logs
+      // written since — applying the same predicate on read also clears the
+      // harness-scratch paths already committed to older logs.
+      docsRead: (Array.isArray(raw.docsRead) ? raw.docsRead : [])
+        .map((d: Record<string, unknown>) => String(d.path ?? ''))
+        .filter(isContentPath),
     },
     file,
   }
+}
+
+/** The per-session `docsRead` cap, mirroring `MAX_SKILL_SESSION_FILES`'s reason
+ *  (issue #426): a list that grows without bound doesn't belong in a payload read
+ *  whole every run. The fold of subagent reads (`session-trace.ts`) is what makes
+ *  this one grow — a delegating session inherits every subagent's reads. */
+export const MAX_SESSION_DOCS_READ = 40
+
+/** Path → how many sessions in the window opened it. The tally is the script's
+ *  job, not the reading agent's: eyeballing 40 lists to claim "nothing reads
+ *  this doc" is exactly the heuristic-passed-off-as-a-count CLAUDE.md forbids.
+ *  A session that read a path twice still counts once — this measures reach,
+ *  not volume. Descending, then by path for a stable order.
+ *
+ *  Always built from the UNCAPPED window, before `capSessionDocsRead` trims the
+ *  verbose per-session lists — otherwise the cap would silently undercount the
+ *  one field whose whole purpose is to be counted. */
+export function buildDocReadCounts(window: readonly WindowSession[]): Record<string, number> {
+  const counts = new Map<string, number>()
+  for (const s of window) {
+    for (const path of new Set(s.docsRead)) counts.set(path, (counts.get(path) ?? 0) + 1)
+  }
+  return Object.fromEntries([...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])))
+}
+
+/** Trim each session's `docsRead` to `MAX_SESSION_DOCS_READ`. Run AFTER
+ *  `buildDocReadCounts`, never before. */
+export function capSessionDocsRead(window: readonly WindowSession[]): WindowSession[] {
+  return window.map((s) =>
+    s.docsRead.length > MAX_SESSION_DOCS_READ
+      ? { ...s, docsRead: s.docsRead.slice(0, MAX_SESSION_DOCS_READ) }
+      : s,
+  )
+}
+
+/** Session id → its true `docsRead` length, for the sessions the cap actually
+ *  trimmed. Emitted only for those (unlike `skillSessionFileTotals`, which
+ *  covers every Skill): an entry here IS the "this list is partial" signal, and
+ *  listing the untrimmed majority would spend tokens restating `.length`. */
+export function buildDocsReadTotals(window: readonly WindowSession[]): Record<string, number> {
+  const totals: Record<string, number> = {}
+  for (const s of window) {
+    if (s.docsRead.length > MAX_SESSION_DOCS_READ) totals[s.session] = s.docsRead.length
+  }
+  return totals
 }
 
 // ── FS IO (thin shell) ────────────────────────────────────────────────────────
@@ -1194,7 +1271,7 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
   return {
     windowSize,
     sessionsConsidered: all.length,
-    window,
+    window: capSessionDocsRead(window), // pure — the tallies below still see the uncapped list
     skills: rows,
     regressionChecks: checks,
     regressionSessions: sessions,
@@ -1206,6 +1283,8 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
     misclassifiedKind: findMisclassifiedKind(all),
     skillSessionFiles: buildSkillSessionFiles(files),
     skillSessionFileTotals: buildSkillSessionFileTotals(files),
+    docReadCounts: buildDocReadCounts(window), // uncapped window — must precede the cap
+    docsReadTotals: buildDocsReadTotals(window),
   }
 }
 
