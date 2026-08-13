@@ -5,6 +5,8 @@
 // reviewability bar the sibling guards' specs set for an unattended hook
 // (ADR-0004).
 import { execFileSync } from 'node:child_process'
+import { rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
@@ -254,5 +256,24 @@ describe('the --dry-run path (ADR-0004: an unattended hook needs a way to be exe
   it('prints the allow decision for an ordinary commit and a non-Bash tool', () => {
     expect(dryRun(['--tool', 'Bash', '--input', '{"command":"git commit -m \\"fix: x\\""}']).decision).toBe('allow')
     expect(dryRun(['--tool', 'Edit', '--input', '{"command":"git commit -m \\"x\\nClaude-Session: y\\""}']).decision).toBe('allow')
+  })
+
+  // The guard denies its own Bash probe when `--input` carries a trailer inline
+  // — so inline JSON cannot express the inputs most worth probing. `--input-file`
+  // is the reachable path; see the doc's false-positive shapes.
+  it('reads the input from --input-file, the only way to probe a denying input from a shell', () => {
+    const file = join(tmpdir(), 'commit-trailer-guard-dryrun.json')
+    writeFileSync(file, JSON.stringify({ command: HAND_TYPED_COMMIT }))
+    try {
+      const out = dryRun(['--tool', 'Bash', '--input-file', file])
+      expect(out.decision).toBe('deny')
+      expect(out.kinds).toEqual(['coauthor', 'session'])
+    } finally {
+      rmSync(file, { force: true })
+    }
+  })
+
+  it('fails loudly on an unreadable --input-file rather than silently allowing', () => {
+    expect(() => dryRun(['--tool', 'Bash', '--input-file', join(tmpdir(), 'no-such-file.json')])).toThrow()
   })
 })

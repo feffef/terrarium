@@ -10,29 +10,21 @@
 // Usage:
 //   sh scripts/commit-trailer-guard.sh               # the installed hook entry
 //   tsx scripts/commit-trailer-guard.ts              # payload on stdin
-//   tsx scripts/commit-trailer-guard.ts --dry-run --tool Bash --input '<json>'
+//   tsx scripts/commit-trailer-guard.ts --dry-run --tool Bash (--input '<json>' | --input-file <path>)
 import { readFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import { COAUTHOR_TRAILER } from './provenance-footer.ts'
 
-/** A `git commit`, allowing the global options that may sit between the two
- *  words (`-C <path>`, `-c <cfg>`, `--no-pager`). Deliberately permissive about
- *  what precedes it — a chain (`git add -A && git commit …`) is the common
- *  shape, and matching a `git commit` quoted inside some other command is a
- *  harmless false positive that still needs a trailer present to deny. */
+// What these three match, and the false positives that follow, are single-homed
+// in docs/agents/commit-trailer-guard.md ("Mechanism" and "Residual limits").
+
 const GIT_COMMIT = /\bgit\s+(?:(?:-{1,2}[^\s]+)(?:\s+[^\s-][^\s]*)?\s+)*commit\b/
 
-/** The `Claude-Session:` trailer KEY. Deliberately broader than
- *  `SESSION_TRAILER` (git-helpers.ts), which requires the well-formed URL shape:
- *  the mistake this guard prevents is typing the line at all, and a value
- *  recalled from memory is exactly the malformed case. The spec pins containment
- *  — anything `SESSION_TRAILER` matches also trips this — so the two cannot
- *  drift into disagreement. */
+/** Broader than `SESSION_TRAILER` (git-helpers.ts) on purpose; the spec pins
+ *  containment between them. */
 const SESSION_TRAILER_KEY = /Claude-Session:/i
 
-/** The co-author half, case-insensitive over the single-homed pattern text:
- *  git trailers conventionally render as `Co-authored-by`, and a hand-typed one
- *  is as likely to use that case as the harness's own. */
+/** The single-homed co-author pattern text, re-flagged case-insensitive. */
 const COAUTHOR_KEY = new RegExp(COAUTHOR_TRAILER.source, 'i')
 
 /** Which half of the ADR-0017 footer was hand-typed. */
@@ -166,16 +158,30 @@ function dryRun(argv: string[]): void {
   }
   const tool = flag('--tool')
   if (!tool) {
-    console.error('usage: --dry-run --tool <name> [--input <json>]')
+    console.error('usage: --dry-run --tool <name> [--input <json> | --input-file <path>]')
     process.exit(1)
   }
-  const rawInput = flag('--input')
+  // `--input-file` exists because a denying `--input` cannot survive the trip:
+  // this guard blocks the very Bash call that would pass one inline. See the
+  // doc's false-positive shapes.
+  const inputFile = flag('--input-file')
+  let rawInput = flag('--input')
+  if (inputFile !== undefined) {
+    try {
+      rawInput = readFileSync(inputFile, 'utf8')
+    } catch (err) {
+      // Explicit, not left to the bootstrap's catch: that one fails CLOSED and
+      // would print a deny control object, which a dry run must never emit.
+      console.error(`--input-file could not be read: ${err instanceof Error ? err.message : String(err)}`)
+      process.exit(1)
+    }
+  }
   let input: unknown = {}
   if (rawInput !== undefined) {
     try {
       input = JSON.parse(rawInput)
     } catch {
-      console.error('--input must be valid JSON')
+      console.error(inputFile !== undefined ? `${inputFile} does not contain valid JSON` : '--input must be valid JSON')
       process.exit(1)
     }
   }
