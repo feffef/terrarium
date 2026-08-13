@@ -1,0 +1,199 @@
+schemaVersion: 1
+session: session_01QMtUQrTK3LHJhs1rom6i2x
+startedAt: 2026-08-13T21:58:46Z
+endedAt: 2026-08-13T22:15:52Z
+kind: interactive
+goal: Autonomous triage sweep over the open backlog
+status: completed
+outcome: 11 issues and 1 PR triaged, none stranded
+summary: "Human-invoked `/auto-triage`. Resolved 34 open issues plus 1 open PR, checked each item's most-recent-activity authorship, and found every one AI-authored — so eligibility collapsed entirely onto the \"no state label or needs-triage\" branch, yielding 11 issues plus PR 895; three wayfinder maps were never scanned. Dispatched one read-only subagent per item, each applying its own labels and single comment. Outcomes: two ready-for-agent with full Agent Briefs, seven ready-for-human, one needs-info, and one PR closed as objectively already-implemented. Everything after the initial slash-command invocation was agent-initiated under ADR-0022's standing green-light; no code was written and nothing was committed to the repo."
+prs: []
+docsRead:
+  - path: .claude/skills/auto-triage/SKILL.md
+    reason: the sweep procedure being run
+  - path: .claude/skills/triage/SKILL.md
+    reason: per-issue state machine the sweep composes
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: brief format passed to subagents
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: standing green-light and escalation taxonomy
+  - path: docs/agents/issue-tracker.md
+    reason: external-PR filter, and the Blocked-by body fallback I under-read
+  - path: docs/agents/triage-labels.md
+    reason: label vocabulary
+  - path: scripts/list-open-issues.ts
+    reason: overflow-safe open-issue listing
+  - path: scripts/last-comment-authors.ts
+    reason: last-comment authorship report
+  - path: scripts/provenance-header.ts
+    reason: exact ADR-0017 marker format for subagent briefs
+  - path: scripts/github-provenance-guard.ts
+    reason: which write paths the guard actually inspects
+  - path: layers/journal/content/current/sessions/2026-08-13-session_01Pda3sV3LLMvGje6nBsbG16.yml
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+  - path: .out-of-scope/ci-enforced-doc-invariants.md
+    reason: (no reason given)
+  - path: .out-of-scope/palimpsest-tenant.md
+    reason: (no reason given)
+  - path: scripts/session-end.ts
+    reason: (no reason given)
+  - path: docs/adr/0009-session-log.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: .claude/skills/triage/OUT-OF-SCOPE.md
+    reason: (no reason given)
+  - path: .claude/skills/wayfinder/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: .claude/settings.json
+    reason: (no reason given)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: scripts/archive-journal-content.ts
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .claude/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .claude/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: scripts/session-frictions.ts
+    reason: (no reason given)
+  - path: .claude/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: scripts/merged-since.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-04-session_01L8DLPWG8aMjo3LdCvd6xub.yml
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+  - path: scripts/validate-skill-cadence.ts
+    reason: (no reason given)
+  - path: scripts/log-session.ts
+    reason: (no reason given)
+  - path: scripts/check-worktrees.ts
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/adr/0007-generated-config-committed-drift-checked.md
+    reason: (no reason given)
+  - path: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    reason: (no reason given)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (no reason given)
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: scripts/merge-pr.ts
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: scripts/gate.ts
+    reason: (no reason given)
+  - path: app/utils/chunkRecovery.ts
+    reason: (no reason given)
+  - path: app/composables/contentLoadRecovery.ts
+    reason: (no reason given)
+  - path: app/components/ContentLoadErrorDialog.vue
+    reason: (no reason given)
+  - path: layers/blog/tests/e2e/blog.e2e.ts
+    reason: (no reason given)
+  - path: .claude/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .githooks/commit-msg
+    reason: (no reason given)
+  - path: scripts/provenance-footer.ts
+    reason: (no reason given)
+  - path: scripts/subagent-background-guard.ts
+    reason: (no reason given)
+  - path: scripts/session-id-guard.ts
+    reason: (no reason given)
+  - path: docs/agents/subagent-background-guard.md
+    reason: (no reason given)
+  - path: package.json
+    reason: (no reason given)
+skillsUsed:
+  - name: auto-triage
+    reason: the invoked sweep
+  - name: dispatch-subagents
+    reason: procedure for the 12 parallel triage agents
+  - name: close-session
+    reason: closure front door
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Resolved "blocked" only from GitHub's native issue_dependencies_summary; issue 869's body-line blocker was invisible, so its subagent got wrong grounding.
+    solution: auto-triage's step 1 should read both blocker representations — issue-tracker.md already documents the body "Blocked by:" line as the fallback.
+    severity: moderate
+  - description: No single helper emits the sweep's eligibility record; needed three scripts plus hand-rolled curl for assignees, blockers and author association.
+    solution: Extend last-comment-authors.ts, or add a sibling, to emit the complete per-issue eligibility record the sweep's step 1 actually consumes.
+    severity: minor
+  - description: issue_write rejects a PR number when the call carries state or state_reason, though a labels-only update on the same number succeeds.
+    solution: Record in github-integration.md that closing a PR needs two calls — labels via issue_write, then state via update_pull_request, which has no labels param.
+    severity: minor
+  - description: The gh binary is absent in this container, so every issue field the helper scripts do not expose had to go through raw curl against REST.
+    solution: Already partly handled by the scripts' rest fallback; the gap is coverage of fields, not of transport.
+    severity: nit
+durationSec: 1026
+models:
+  claude-opus-5: 80
+toolCounts:
+  Read: 5
+  Bash: 20
+  Skill: 3
+  Agent: 12
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Triage issue 927
+  - type: general-purpose
+    task: Triage issue 921
+  - type: general-purpose
+    task: Triage issue 886
+  - type: general-purpose
+    task: Triage issue 880
+  - type: general-purpose
+    task: Triage issue 236
+  - type: general-purpose
+    task: Triage issue 867
+  - type: general-purpose
+    task: Triage issue 869
+  - type: general-purpose
+    task: Triage issue 868
+  - type: general-purpose
+    task: Triage issue 866
+  - type: general-purpose
+    task: Triage issue 865
+  - type: general-purpose
+    task: Triage issue 864
+  - type: general-purpose
+    task: Triage PR 895
+gitBranch: claude/auto-triage-qzuyqn
+entrypoint: remote_mobile
+cliVersion: 2.1.231
+learnings:
+  - All 34 open issues had AI-authored most-recent activity, so the sweep's human-authored eligibility branch matched nothing at all
+  - A wayfinder map child carries no consolidation label — subagents confirmed this empirically across all seven children rather than assuming it
+ideas:
+  - Add scripts/triage-eligibility.ts emitting one record per open issue with everything auto-triage's step 1 needs — labels, last-comment provenance, assignees, native blocked_by AND the body "Blocked by:" fallback, author association, and the wayfinder:map skip — so the sweep starts from one command instead of three scripts plus ad-hoc curl, and the body-fallback blocker this session missed cannot be missed again.
