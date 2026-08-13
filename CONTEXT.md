@@ -317,9 +317,6 @@ pointer into them (see `CONTEXT-MAP.md`).
   [`layers/blog/CONTEXT.md`](./layers/blog/CONTEXT.md)
 - **Atlas** — a fictional natural-history field guide; the design-heavy showpiece.
   A demo/content Tenant. → [`layers/atlas/CONTEXT.md`](./layers/atlas/CONTEXT.md)
-- **Commits** — a tiny technical proof-of-concept: read the repo's latest commit
-  at runtime via a backend git call. Not a demo/content Tenant. →
-  [`layers/commits/CONTEXT.md`](./layers/commits/CONTEXT.md)
 - **Midden** — an archaeology-themed catalogue of the Platform's own discarded
   work (dead branches, closed-unmerged PRs, deprecated Skills, removed
   files/dependencies, unapplied proposals). A demo/content Tenant. →

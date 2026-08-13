@@ -94,14 +94,14 @@ new; don't re-diagnose any of these as a fresh problem.
   records the opposite ("both git push and the GitHub API can write
   .github/workflows files to a feature branch") — that claim is **false**; don't
   spend a cycle re-testing it (issue #659).
-- **A `TS2339` Nitro typed-route typecheck error in `LatestCommit.vue` used to
-  surface locally during `pnpm gate:scoped`/typecheck as a recurring
-  local-only divergence, not a repo bug** — root-caused and fixed in
-  `layers/commits/server/api/latest-commit.get.ts` by explicitly annotating
-  `defineEventHandler`'s return type (issue #940, PR #941). A recurrence now
-  is a real regression signal, not routine local-cache noise. If it does
-  resurface, the still-valid environment lesson stands: before asserting "X is
-  broken on main" from a local repro — especially a typecheck/build failure —
+- **A local-only typecheck/build failure is usually stale install state, not a
+  repo bug.** The recurring instance was a `TS2339` Nitro typed-route error in
+  the Commits Tenant's `LatestCommit.vue`, surfacing during `pnpm
+  gate:scoped`/typecheck; it was root-caused and fixed by annotating
+  `defineEventHandler`'s return type (issue #940, PR #941), and that Tenant has
+  since been removed, so this exact error can no longer appear. The lesson
+  outlives the file, because the failure mode is the *environment*, not the
+  component: before asserting "X is broken on main" from a local repro — especially a typecheck/build failure —
   reset the *full* install state (`rm -rf node_modules .nuxt && pnpm install
   --frozen-lockfile`) to mirror CI's `--frozen-lockfile` path rather than only
   reverting tracked files; a `git stash` or `rm -rf .nuxt && nuxt prepare`
