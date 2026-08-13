@@ -163,6 +163,12 @@ export interface WindowSession {
    *  absent — the strong derived signal `findMisclassifiedKind` cross-checks
    *  the authored `kind` against (issue #449 Gap 2). */
   entrypoint: string
+  /** The paths this session read — `docsRead`'s `path`s, without their
+   *  `reason` prose (a reason is per-session narrative; the signal here is
+   *  which surfaces got opened at all). Pairs with `skillsUsed` on the same
+   *  record, which is the whole point: it answers whether the sessions that
+   *  did (or skipped) a Skill's work ever opened the doc pointing at it. */
+  docsRead: string[]
 }
 /** A Skill's on-disk facts: it exists, and its SKILL.md frontmatter `description`. */
 export interface OnDiskSkill {
@@ -333,6 +339,13 @@ export interface Scorecard {
    *  `orphanedSessions`/`manuallyRescuedClosures` rather than trust the file
    *  list as this Skill's exhaustive history. */
   skillSessionFileTotals: Record<string, number>
+  /** Path → how many of the `window` sessions opened it (`buildDocReadCounts`).
+   *  A doc a Skill tells you to read, sitting at 0 here, is evidence the
+   *  pointer isn't landing — but only ever *corroborating* evidence: a
+   *  topic-scoped doc reads 0 simply because that work didn't come up, and a
+   *  `cat`/`grep` inspection is invisible to the trace by design
+   *  (`session-trace.ts`). Never a finding on its own. */
+  docReadCounts: Record<string, number>
 }
 
 /** A session paired with the repo-relative path it was read from. */
@@ -887,9 +900,25 @@ export function toSessionFile(
         frictions.map((fr: Record<string, unknown>) => String(fr.description ?? '')),
       ),
       entrypoint: String(raw.entrypoint ?? ''),
+      docsRead: (Array.isArray(raw.docsRead) ? raw.docsRead : [])
+        .map((d: Record<string, unknown>) => String(d.path ?? ''))
+        .filter(Boolean),
     },
     file,
   }
+}
+
+/** Path → how many sessions in the window opened it. The tally is the script's
+ *  job, not the reading agent's: eyeballing 40 lists to claim "nothing reads
+ *  this doc" is exactly the heuristic-passed-off-as-a-count CLAUDE.md forbids.
+ *  A session that read a path twice still counts once — this measures reach,
+ *  not volume. Descending, then by path for a stable order. */
+export function buildDocReadCounts(window: readonly WindowSession[]): Record<string, number> {
+  const counts = new Map<string, number>()
+  for (const s of window) {
+    for (const path of new Set(s.docsRead)) counts.set(path, (counts.get(path) ?? 0) + 1)
+  }
+  return Object.fromEntries([...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])))
 }
 
 // ── FS IO (thin shell) ────────────────────────────────────────────────────────
@@ -1206,6 +1235,7 @@ export function scorecard(windowSize = DEFAULT_WINDOW, cwd = root): Scorecard {
     misclassifiedKind: findMisclassifiedKind(all),
     skillSessionFiles: buildSkillSessionFiles(files),
     skillSessionFileTotals: buildSkillSessionFileTotals(files),
+    docReadCounts: buildDocReadCounts(window),
   }
 }
 

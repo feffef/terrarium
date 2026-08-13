@@ -7,12 +7,16 @@
 //
 // The extraction is a pure function over parsed records (unit-tested); the file
 // IO is a thin shell. Read-tool paths are the only source of `filesRead` — a
-// `cat`/`grep` inspection is invisible here by design (see the ADR amendment).
-// `docsRead` (and any other Read-tool-derived count) reflects ONLY this
-// session's own direct tool calls — a subagent's Read calls never appear in
-// this transcript, so these counts are a floor, not a complete count; treat
-// them accordingly downstream (including in the `frictions-to-fixes` Skill,
-// which mines these fields to rank frictions — issue #796).
+// `cat`/`grep` inspection is invisible here by design (see the ADR amendment),
+// so these counts remain a floor rather than a complete count.
+//
+// A dispatched subagent's tool calls are NOT inlined into the parent transcript
+// (it carries no sidechain records at all); the harness writes each one its own
+// jsonl under `subagents/` beside the parent — see `subagentTranscriptPaths`.
+// `foldSubagentTrace` unions those in, so `filesRead`/`filesEdited`/`skillsUsed`
+// cover delegated work too. Issue #796 documented the gap and deferred the fix
+// for want of evidence the access was cheap; it is — same record shape, sibling
+// directory. Everything stays derived, never self-reported (ADR-0009).
 //
 // `skillsUsed` has two derived sources: `Skill` tool_use blocks, and slash-command
 // expansions in user turns (`<command-name>`). The second exists because a Skill
@@ -23,8 +27,8 @@
 //
 // Usage:  tsx scripts/session-trace.ts <transcript.jsonl>
 //   Prints the derived trace as JSON.
-import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { basename, dirname, join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 /** The one authored-scratch file per container (one session per container in the
@@ -315,6 +319,58 @@ export function extractTrace(
   }
 }
 
+/** Every dispatched subagent's own transcript, given the parent's path: the
+ *  harness writes them to `<parent-dir>/<parent-basename>/subagents/*.jsonl`
+ *  (each with a `.meta.json` sibling this fold has no use for). Returns [] when
+ *  the directory is absent — the shape of a session that dispatched nobody.
+ *  Sorted so a fold is deterministic. */
+export function subagentTranscriptPaths(transcriptPath: string): string[] {
+  const dir = join(dirname(transcriptPath), basename(transcriptPath, '.jsonl'), 'subagents')
+  if (!existsSync(dir)) return []
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.jsonl'))
+    .sort()
+    .map((f) => join(dir, f))
+}
+
+/** Union a parent trace with its subagents' — the *attention* fields only:
+ *  what was read, edited, and which Skills ran. Nested subagents need no special
+ *  case: each spawn depth gets its own transcript in the same directory.
+ *
+ *  Deliberately NOT merged: `models`/`toolCounts`/`durationSec`/`subagents`
+ *  describe the parent's own turns, and a consumer reading `toolCounts.Read`
+ *  against `filesRead` would otherwise compare two different populations.
+ *  Timings stay the parent's for the same reason. */
+export function foldSubagentTrace(
+  trace: MechanicalTrace,
+  subagentRecordSets: Record<string, unknown>[][],
+  env: SessionIdEnv = process.env,
+): MechanicalTrace {
+  if (subagentRecordSets.length === 0) return trace
+  const subs = subagentRecordSets.map((records) => extractTrace(records, env))
+  return {
+    ...trace,
+    filesRead: dedup([...trace.filesRead, ...subs.flatMap((s) => s.filesRead)]),
+    filesEdited: dedup([...trace.filesEdited, ...subs.flatMap((s) => s.filesEdited)]),
+    skillsUsed: dedup([...trace.skillsUsed, ...subs.flatMap((s) => s.skillsUsed)]),
+  }
+}
+
+/** `extractTrace` over a transcript and every subagent transcript beside it —
+ *  the IO shell both the CLI and the SessionEnd handler use, so neither
+ *  re-derives the discovery-and-fold pairing. */
+export function traceFromTranscript(
+  transcriptPath: string,
+  transcriptJsonl: string,
+  env: SessionIdEnv = process.env,
+): MechanicalTrace {
+  const trace = extractTrace(parseTranscript(transcriptJsonl), env)
+  const subagentRecords = subagentTranscriptPaths(transcriptPath).map((p) =>
+    parseTranscript(readFileSync(p, 'utf8')),
+  )
+  return foldSubagentTrace(trace, subagentRecords, env)
+}
+
 // ── Stitch ────────────────────────────────────────────────────────────────
 
 /** The reason a transcript-observed read/skill carries when the agent never
@@ -419,7 +475,7 @@ function main(): void {
     console.error('usage: tsx scripts/session-trace.ts <transcript.jsonl>')
     process.exit(1)
   }
-  const trace = extractTrace(parseTranscript(readFileSync(path, 'utf8')))
+  const trace = traceFromTranscript(path, readFileSync(path, 'utf8'))
   console.log(JSON.stringify(trace, null, 2))
 }
 

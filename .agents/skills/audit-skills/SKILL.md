@@ -67,7 +67,8 @@ via `orphanScan` below — every other signal is local and unaffected.
 
 It prints JSON:
 - the **window** (the 40 newest sessions by `endedAt`, each with
-  `kind`/`goal`/`summary`/`skillsUsed`, and `frictions` — that session's
+  `kind`/`goal`/`summary`/`skillsUsed`, `docsRead` — the paths that session
+  opened, without their `reason` prose — and `frictions`, that session's
   friction **severities only**, e.g. `["minor","blocker"]`, not the full
   description/solution text) and, per Skill, `onDisk`, `inventoried`,
   `external`, current `importance`/`role`/`observations` (prior runs' own
@@ -148,6 +149,14 @@ It prints JSON:
   #426) — cross-check `skillSessionFileTotals[name]` against this list's length
   to tell a capped list from an exhaustive one. Paths only. This is step 4's
   deep-read entry point, not something to read wholesale now.
+- **`docReadCounts`** — path → how many windowed sessions opened it, the
+  window's `docsRead` already tallied for you (never re-count it by eye).
+  Its use here is **reach of a Skill's pointers**: a doc a SKILL.md tells you
+  to read that sits at 0, or far below the Skill's own `useCount`, says the
+  pointer isn't landing. Two things it never proves — a topic-scoped doc reads
+  0 because that work didn't come up, and a `cat`/`grep` inspection is
+  invisible to the trace by design (`session-trace.ts`) — so it corroborates a
+  finding, never carries one alone.
 
 Done when you hold the scorecard.
 
@@ -178,6 +187,13 @@ that plausibly *should* have), then set the grade per those definitions.
   plainly matching `usedIn`. **This citation is also what makes a change
   self-merge-eligible (step 8)** — a change you can't point at ≥2 session ids
   for doesn't belong in this PR (see step 4 instead).
+  - **On an absence signal, check what those sessions read** (their `docsRead`).
+    A session that opened the doc pointing at the Skill and *still* didn't
+    invoke it is evidence about the **Skill** — its description or frontmatter
+    isn't matching the work, which is the miscalibration step 5 files. A
+    session that never opened it is evidence about the **pointer**, and demotes
+    nothing: the Skill was never offered. Say which one the absence is when you
+    cite it.
 - **Every grade change or `role` refresh gets an `observations` entry** —
   `{ date: <today, UTC>, note: <the citation — session ids, PR/issue numbers,
   usage counts> }`, appended (never overwriting an earlier entry, required on

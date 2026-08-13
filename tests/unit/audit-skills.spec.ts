@@ -8,6 +8,7 @@ import {
   buildRegressionChecks,
   buildSkillRows,
   buildSkillSessionFileTotals,
+  buildDocReadCounts,
   buildSkillSessionFiles,
   filterSkillsUsed,
   findHumanPromptedClosures,
@@ -52,6 +53,7 @@ function sess(over: Partial<WindowSession> = {}): WindowSession {
     frictions: [],
     humanPromptedClosure: false,
     entrypoint: '',
+    docsRead: [],
     ...over,
   }
 }
@@ -210,6 +212,7 @@ describe('toSessionFile() — external exclusion (ADR-0009 amendment)', () => {
       skillsUsed: [{ name: 'tdd', reason: 'red-green' }],
       frictions: [{ severity: 'minor', description: 'x' }],
       entrypoint: 'remote',
+      docsRead: [{ path: 'CLAUDE.md', reason: 'conventions' }],
     }
     expect(toSessionFile(raw, 'f.yml', skillNames)).toEqual({
       session: {
@@ -222,9 +225,15 @@ describe('toSessionFile() — external exclusion (ADR-0009 amendment)', () => {
         frictions: ['minor'],
         humanPromptedClosure: false,
         entrypoint: 'remote',
+        docsRead: ['CLAUDE.md'], // paths only — the `reason` prose is dropped
       },
       file: 'f.yml',
     })
+  })
+
+  it('tolerates a log with no docsRead at all (older logs predate the field)', () => {
+    const raw = { session: 's', kind: 'interactive', goal: 'g', endedAt: '2026-07-20T00:00:00Z' }
+    expect(toSessionFile(raw, 'f.yml', skillNames)?.session.docsRead).toEqual([])
   })
 
   it('returns null for an external log — excluded from the mining corpus entirely', () => {
@@ -332,6 +341,21 @@ describe('buildRegressionChecks()', () => {
     expect(checks).toHaveLength(2)
     // session 'b' brackets both edits (after s1, before s2) but appears once in the pool
     expect(pool.filter((s) => s.session === 'b')).toHaveLength(1)
+  })
+})
+
+describe('buildDocReadCounts()', () => {
+  it('counts sessions per path, descending, and never a doc twice for one session', () => {
+    expect(
+      buildDocReadCounts([
+        sess({ docsRead: ['CLAUDE.md', 'docs/agents/pr-workflow.md', 'CLAUDE.md'] }),
+        sess({ docsRead: ['CLAUDE.md'] }),
+      ]),
+    ).toEqual({ 'CLAUDE.md': 2, 'docs/agents/pr-workflow.md': 1 })
+  })
+
+  it('omits a never-read doc rather than listing it as 0 — absence is the signal', () => {
+    expect(buildDocReadCounts([sess({ docsRead: ['CLAUDE.md'] })])).not.toHaveProperty('docs/agents/domain.md')
   })
 })
 

@@ -97,7 +97,16 @@ lenses start from the **same git-history read** — `git log --since="48 hours a
   dir, never hand-maintain a list). *Boundary:* an un-referenced addition **older**
   than the 48h window is out of this lens's scope.
 
-**Agent B — Single-home** (right fact, right home, once):
+**Agent B — Single-home** (right fact, right home, once). This agent also has a
+**usage signal** available that the others don't need: `pnpm exec tsx
+scripts/audit-skills.ts` reports `docReadCounts` — path → how many of the
+windowed sessions actually opened it. A well-argued fact in a doc nobody opens
+is mis-homed however correct it is, and read-rate is the only evidence of that.
+Treat it exactly like Agent A treats Inventory `observations`: **corroborating
+evidence for a finding you reached another way, never a finding on its own** —
+a topic-scoped doc (`mdc-when-to-use.md`, `tenant-layers.md`) reads 0 because
+that work didn't come up, and a `cat`/`grep` inspection is invisible to the
+trace by design (`session-trace.ts`).
 
 - **Duplication** — a fact restated in >1 place instead of single-homed. The home
   keeps it; every copy becomes a pointer.
@@ -148,7 +157,10 @@ A plausible-but-wrong finding acted on is a fresh drift *you* authored.
 The primary source depends on the lens: **Drift/Contradiction** verify against the
 **code**; **Duplication/Mis-location/Ambiguity** against the repo's home
 convention (which doc actually owns the fact, and whether the named owner really
-holds it); **Verbose** against the **doc's own text** (is the fact genuinely
+holds it) — and, where a Mis-location finding **cites a read count**, against a
+re-run of `scripts/audit-skills.ts`, never a remembered or eyeballed figure
+(CLAUDE.md: a count is not a fact until the set has actually been read);
+**Verbose** against the **doc's own text** (is the fact genuinely
 stated twice?); **Orphan-addition** against the **git history** (was the surface
 really added inside the 48h window?) *and* the expected home (does it genuinely
 lack the incoming reference?); **Stale-narration** against the **actual

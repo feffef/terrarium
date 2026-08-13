@@ -45,6 +45,17 @@ Its brief:
   PR #631's Hermes/Grok run) because its frictions don't generalize to our
   Claude-Code development (ADR-0009 amendment); you never see them here, so don't
   go hunting the raw corpus for them.
+- **For a friction a doc already covers, check whether that session read the
+  doc.** The full log's `docsRead` lists the paths the session opened (the
+  triage extract drops it — re-read the log via the record's `file`). This
+  splits one question into two very different frictions: **doc not opened** ⇒ a
+  *discoverability* failure — the rule's home is wrong, or prose is the wrong
+  mechanism entirely; **doc opened and the friction happened anyway** ⇒ the
+  prose itself is unclear, wrong, or too easy to read past. Report which, with
+  the paths as evidence. This repo has paid for the distinction repeatedly: the
+  fixes for #241/#425 landed in `docs/agents/github-integration.md`, "which the
+  affected sessions had no reason to open" (CLAUDE.md), and the friction kept
+  recurring until a `PreToolUse` guard replaced the prose.
 - **Group and rank.** Fold related/recurring frictions (shared root cause or single
   fix) into one candidate; rank by **recurrence and severity together** (severity
   is an ordered rank, not a number — weigh it qualitatively, never multiply it).
@@ -162,6 +173,17 @@ weighed, and the **recommended** one. For a **simple** selection, the recommende
 option must be a single, unambiguous change — that is what §5 implements. For a
 **hard** selection, scope the intended change and note it is expected to need
 human review at merge. Search the tracker first to avoid duplicates.
+
+**Before recommending "add a line to doc X", check that anyone reads doc X.**
+`pnpm exec tsx scripts/audit-skills.ts` reports `docReadCounts` — path → how many
+of the windowed sessions opened it. A doc sitting at **0** is where a prose fix
+goes to die; recommend a mechanism that reaches the session instead (a
+`PreToolUse` guard, a gate check, a line in a doc sessions demonstrably open),
+or move the rule to a home that is read. Two caveats keep this honest: a
+topic-scoped doc reads 0 because that work didn't come up, not because it's
+dead, and a `cat`/`grep` inspection never appears in the trace at all
+(`session-trace.ts`) — so a low count **argues for a different fix shape, and is
+never itself the friction**.
 
 Done when every selection has an open issue with a clearly recommended solution,
 tagged simple or hard.
