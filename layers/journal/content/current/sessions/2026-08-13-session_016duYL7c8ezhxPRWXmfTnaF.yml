@@ -1,0 +1,69 @@
+schemaVersion: 1
+session: session_016duYL7c8ezhxPRWXmfTnaF
+startedAt: 2026-08-13T04:09:20Z
+endedAt: 2026-08-13T04:30:26Z
+kind: autonomous
+goal: Run the /audit-docs sweep
+status: in-review
+outcome: "4 fact-checked fixes, PR #942 opened"
+summary: "Scheduled, unattended /audit-docs run. Dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the Live-tier docs using the last-48h git-history window, pooled 6 candidate findings (no overlapping spans to dedupe), then an independent fact-checker verified each against primary sources: 3 CONFIRMED, 1 CONFIRMED-BUT (minor wording), 1 WRONG (a guest-screen \"duplication\" that ADR-0023 itself sanctions and both Skills already comply with). Fixed all 4 surviving findings directly — a stale environment-caveats.md entry about a LatestCommit.vue TS2339 error that has since been root-caused and fixed in code, a session-id-resolution gap in CLAUDE.md's identifier rule, an un-pointed docs.github.com-403 re-derivation in making-repo-public.md, and three Skill files restating CLAUDE.md's Routine-schedule rule verbatim. All 4 fixes are Live-tier only, no human-only surface touched. gate:scoped went green (one transient TS2339 from a stale pre-fix .nuxt cache cleared by a full reinstall, which itself confirmed the fixed caveat's own remaining advice). Opened PR #942, subscribed to its activity, entirely agent-initiated per this Skill's standing autonomous charter — no human prompt in this session."
+prs:
+  - "942"
+docsRead:
+  - path: docs/agents/environment-caveats.md
+    reason: (read before editing)
+  - path: docs/research/making-repo-public.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: the sweep this session runs
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Called TaskCreate without loading its schema via ToolSearch first, per CLAUDE.md's deferred-tool rule; the call errored.
+    solution: Loaded the tool via ToolSearch before any deferred-tool call, per the existing rule; no code change needed, just self-correction.
+    severity: nit
+  - description: "A gate:scoped run mid-session hit a stale TS2339 in LatestCommit.vue from a pre-fix .nuxt cache, even though the code fix (PR #941) was already on origin/main."
+    solution: A clean rm -rf node_modules .nuxt && pnpm install --frozen-lockfile cleared it, matching the caveat doc's own retained workaround advice — no new fix needed beyond the doc update already in this PR.
+    severity: nit
+durationSec: 1266
+models:
+  claude-sonnet-5: 117
+toolCounts:
+  Bash: 28
+  Agent: 5
+  TaskCreate: 1
+  Read: 2
+  Edit: 8
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - docs/agents/environment-caveats.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - docs/research/making-repo-public.md
+  - CLAUDE.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: Drift + Orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: Duplication + Mis-location"
+  - type: general-purpose
+    task: "Concision lens: Verbose + Stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: Contradiction + Ambiguity"
+  - type: general-purpose
+    task: Fact-check pooled audit-docs findings
+gitBranch: claude/festive-mayer-til093
+entrypoint: remote_trigger
+cliVersion: 2.1.229
+trigger: audit-docs
