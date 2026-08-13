@@ -186,7 +186,7 @@ blank.
 | --- | --- | --- | --- | --- | --- | --- |
 | CM-01 | Read `CONTEXT-MAP.md`, then `CONTEXT.md`, then the Tenant's own `CONTEXT.md`, before working on a Tenant | Read these first | J | none | Reading-order judgement; no trigger a hook could see | — |
 | CM-02 | Read **all** ADRs before any planning or structural work | Read these first | W | none | A stage in a planning workflow script that reads `docs/adr/` and summarizes before design begins | M |
-| CM-03 | Never rely on a hand-maintained ADR list; read the directory | Read these first | G | none | Validator: fail if any doc enumerates ADR filenames as a list. **See §6** — this is the rejected shape | S |
+| CM-03 | Never rely on a hand-maintained ADR list; read the directory | Read these first | J | none | **Reclassified G→J in §6** — a validator over ADR-list prose is squarely the shape `.out-of-scope/ci-enforced-doc-invariants.md` rejects, so no mechanism is proposed | — |
 | CM-04 | Stop and reconcile when your wording conflicts with a glossary | Read these first | J | none | Genuine judgement — requires knowing two terms mean the same thing | — |
 | CM-05 | Prefer the Skill Inventory's catalogued Skills over ad-hoc approaches | Read these first | J | none | Selection judgement; `audit-skills` already measures the outcome post-hoc | — |
 | CM-06 | Never edit an external-pack Skill's `SKILL.md` (ADR-0015) | Ground rules | G | none | **Built** — `pnpm verify:skills-lock` | 0 |
@@ -555,14 +555,14 @@ tables.)
 | --- | --- | --- |
 | **hook** — fail-closed refusal | 54 | 11 |
 | **hook** — refusal + post-hoc detection (`CM-29`) | 1 | 0 |
-| **gate check** | 36 | 13 |
+| **gate check** | 35 | 13 |
 | **workflow stage** | 39 | 18 |
-| **judgment-keep** | 78 | 1 |
+| **judgment-keep** | 79 | 1 |
 | **drop** (candidates flagged, none asserted) | 0 | — |
 | **residue** (§7) | 1 | — |
 
 43 of the 208 are already built. The `CM-03` reclassification from §6 is applied
-in the table itself, so it is counted as `J` here.
+in the table's own row, so it is counted as `J` here, not `G`.
 
 Note that **post-hoc detection barely appears as a *proposal*** — only `CM-29`
 proposes it, and every other post-hoc mechanism in the repo (`check-worktrees`,
@@ -581,7 +581,7 @@ Three observations a human might act on:
    low-stakes, self-diagnosing — but dropping a rule is a decision about
    acceptable failure, which is the human's to make, not a classification. They
    are marked, not dropped.
-3. **Judgment-keep is 78 rows — 38% of the corpus — and it does not shrink much
+3. **Judgment-keep is 79 rows — 38% of the corpus — and it does not shrink much
    further.**
    The genuinely irreducible ones cluster tightly: verifying claims (`CM-30`,
    `BP-05`, `TL-10`), honest self-report (`LS-05`, `BP-01`), untrusted-input
