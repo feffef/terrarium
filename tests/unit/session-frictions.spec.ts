@@ -6,7 +6,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { pickRecencyWindow, SESSIONS_DIR, survey, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
+import { pickRecencyWindow, SESSIONS_DIR, survey, toCompactSession, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
 
 function session(id: string, startedAt: string, opts: Partial<TriageSession> = {}): TriageSession {
   return {
@@ -81,6 +81,24 @@ describe('toTriageSession()', () => {
       outcome: '',
       prs: [],
       frictions: [],
+    })
+  })
+})
+
+describe('toCompactSession()', () => {
+  it('keeps id/file/startedAt/prs and only description/severity per friction', () => {
+    const s = session('session_abc', '2026-07-04T12:00:00Z', {
+      goal: 'fix the thing',
+      outcome: 'PR',
+      prs: ['187'],
+      frictions: [{ description: 'a stale claim', solution: 'fix it', severity: 'minor' }],
+    })
+    expect(toCompactSession(s)).toEqual({
+      id: 'session_abc',
+      file: s.file,
+      startedAt: '2026-07-04T12:00:00Z',
+      prs: ['187'],
+      frictions: [{ description: 'a stale claim', severity: 'minor' }],
     })
   })
 })
