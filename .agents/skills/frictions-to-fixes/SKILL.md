@@ -18,6 +18,11 @@ without touching a human-only surface — but keep the hard ones rare (§3).
 Run it when asked (a Routine also fires it on a schedule), or after a batch of
 sessions has piled up unaddressed friction.
 
+> **Simplify first.** Every fix this run ships must shrink the Platform or its
+> agent instructions — less code, less documentation, same behaviour — and state
+> goals rather than steps wherever a goal will do (CLAUDE.md, "Simplify first").
+> Prefer the friction a deletion retires over the one a new mechanism would.
+
 ## 1. Survey & screen the frictions — in a subagent
 
 Reading 20 logs and surveying the whole tracker is context-heavy (the tracker JSON

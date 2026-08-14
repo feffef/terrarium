@@ -24,6 +24,10 @@ rendered page). The PR is **eligible to self-merge as soon as the gate is green*
 (ADR-0003 amendment, activating ADR-0004's content-only low-risk tier) — see step 7
 for the boundary and the merge mechanics.
 
+> **Simplify first.** Should this run touch the Platform or its agent
+> instructions, the change must shrink them — less code, less documentation,
+> same behaviour, goals rather than steps (CLAUDE.md, "Simplify first").
+
 ## 1. Branch off `origin/main`
 
 Follow CLAUDE.md's chartered-job branch-off checklist, so the digest PR is

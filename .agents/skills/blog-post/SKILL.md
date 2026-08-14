@@ -25,6 +25,10 @@ rigor applies to **every** draft this Skill produces, including the two a run
 always ends up discarding — a rejected draft is still a real document a reviewer
 read and judged; it doesn't get a lower bar because it might not ship.
 
+> **Simplify first.** Should this run touch the Platform or its agent
+> instructions, the change must shrink them — less code, less documentation,
+> same behaviour, goals rather than steps (CLAUDE.md, "Simplify first").
+
 ## 0. Read the argument, then run the candidate process
 
 Every run — persona given or not — drafts **three** candidates and has a fresh

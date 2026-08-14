@@ -21,6 +21,10 @@ correct. It runs start to finish **without interaction**.
 > itself and fixes, escalating to an issue only for an unresolvable factual
 > conflict.
 
+> **Simplify first.** Every edit this run makes must shrink the Platform or its
+> agent instructions — less code, less documentation, same behaviour — and state
+> goals rather than steps wherever a goal will do (CLAUDE.md, "Simplify first").
+
 > **Command-only.** This Skill is invoked as `/audit-docs`, not via the Skill
 > tool — it stays Skill-tool-invocation-blocked (`disable-model-invocation`)
 > even when preloaded by the slash command.
