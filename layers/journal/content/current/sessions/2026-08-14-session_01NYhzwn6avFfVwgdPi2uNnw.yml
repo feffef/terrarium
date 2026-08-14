@@ -1,0 +1,108 @@
+schemaVersion: 1
+session: session_01NYhzwn6avFfVwgdPi2uNnw
+startedAt: 2026-08-14T01:08:33Z
+endedAt: 2026-08-14T01:32:25Z
+kind: autonomous
+goal: Land recurring friction fixes
+status: completed
+outcome: 4 friction-fix PRs merged
+summary: Fired by a scheduled Routine running /frictions-to-fixes, entirely without a live human in the loop. A survey subagent read the latest 20 session logs, ranked frictions, and screened them against the issue tracker; it returned 7 never-fixed candidates (all simple/safe-surface). I filed one GitHub issue per candidate ("#948" verify-before-asserting/code-comments, "#949" gate.ts reset hint, "#950" auto-triage blocked-ticket fallback, "#951" session-frictions.ts compact mode, "#952"/"#954" github-integration.md doc gaps, "#953" new probe.ts script), then dispatched 4 Sonnet impl agents in isolated worktrees — one grouped doc-only PR closing "#948"/"#950"/"#952"/"#954", plus three separate code-fix PRs for "#949"/"#951"/"#953". I reviewed each PR as the ADR-0003 reviewer-agent (gate status, diff-vs-issue match, check-conflicting-issues.ts) and merged all four via merge-pr.ts ("#955", "#956", "#957", "#958"). No escalation was needed; nothing was high-risk.
+prs:
+  - "955"
+  - "956"
+  - "957"
+  - "958"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe (check-conflicting-issues, verdict comment, merge-pr.ts)
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: worktree-isolation mechanics and brief checklist before dispatching 4 impl agents
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/scripts/session-frictions.ts
+    reason: (read before editing)
+  - path: /home/user/terrarium/tests/unit/session-frictions.spec.ts
+    reason: (no reason given)
+  - path: scripts/session-frictions.ts
+    reason: (read before editing)
+  - path: scripts/gate.ts
+    reason: (read before editing)
+  - path: /home/user/terrarium/scripts/screenshot.ts
+    reason: (no reason given)
+  - path: /home/user/terrarium/scripts/preview.ts
+    reason: (no reason given)
+  - path: /home/user/terrarium/scripts/chromium-path.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: The session-frictions.ts impl agent (fixing issue "#951", ironically) backgrounded `pnpm gate:scoped` / waited via a Monitor-style pattern despite its brief explicitly saying to run it in the foreground, then reported it was "waiting for the background monitor's notification" and stopped — a dispatched subagent has no wake mechanism, so it stalled with uncommitted, unpushed work until I caught it via `pnpm check:worktrees` plus a direct worktree inspection.
+    solution: "Resumed it via SendMessage with an explicit correction rather than re-dispatching, and it finished correctly on the second pass. Worth checking whether the subagent-background-guard PreToolUse hook actually covers a Monitor-tool-based wait pattern, not just `Bash run_in_background: true` — this agent seems to have found a path around it despite an explicit brief instruction."
+    severity: moderate
+  - description: "`pnpm exec tsx scripts/session-frictions.ts` at the default 20-session window again exceeded the Bash tool's inline-capture cap during the survey subagent's run, silently redirecting to a spill file."
+    solution: Filed as issue "#951" and fixed within this same run (PR "#958" adds a `--compact` flag) — noting it here for the record since it recurred live during this session, on top of the logged sessions that motivated the fix.
+    severity: minor
+  - description: '`scripts/check-conflicting-issues.ts` flagged self-referential false positives on 2 of the 4 reviewed PRs — the issue the PR itself closes matching generic "delete"/"remove" keywords against its own body text.'
+    solution: Harmless (advisory-only, easy to eyeball and dismiss), but the script could exclude the issue(s) the PR's body already says it Closes from its own conflict scan to cut this recurring noise.
+    severity: nit
+  - description: Confirming each survey candidate's fixed/drop status required manually grepping ~7 separate docs plus several `git log -S` calls — the survey subagent's own reported friction, carried over from a prior session's already-dropped nit (non-trivial fix, correctly left unaddressed).
+    solution: No action taken this run (correctly dropped per the skill's own low-severity/non-trivial-fix rule) — logged again only because it recurred, in case the recurrence count itself becomes worth acting on.
+    severity: nit
+durationSec: 1432
+models:
+  claude-sonnet-5: 149
+toolCounts:
+  Agent: 5
+  ToolSearch: 3
+  mcp__github__get_me: 1
+  mcp__github__issue_write: 7
+  Skill: 2
+  TaskCreate: 5
+  mcp__github__pull_request_read: 17
+  mcp__Claude_Code_Remote__send_later: 2
+  Bash: 20
+  SendMessage: 1
+  mcp__github__add_issue_comment: 4
+  TaskUpdate: 7
+  Write: 1
+  ScheduleWakeup: 1
+filesEdited:
+  - CLAUDE.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/agents/github-integration.md
+  - /home/user/terrarium/scripts/session-frictions.ts
+  - scripts/session-frictions.ts
+  - tests/unit/session-frictions.spec.ts
+  - scripts/gate.ts
+  - /home/user/terrarium/scripts/probe.ts
+  - scripts/probe.ts
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - task: Implement doc-only friction fixes batch
+    model: sonnet
+  - task: Implement gate.ts reset-hint fix
+    model: sonnet
+  - task: Implement session-frictions.ts compact mode
+    model: sonnet
+  - task: Implement scripts/probe.ts new script
+    model: sonnet
+gitBranch: claude/hopeful-brown-knex13
+entrypoint: remote_trigger
+cliVersion: 2.1.231
+trigger: frictions-to-fixes
