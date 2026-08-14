@@ -1,0 +1,58 @@
+schemaVersion: 1
+session: session_01W3e7UAJL4uTtsw9i6cCLF2
+startedAt: 2026-08-14T21:17:26Z
+endedAt: 2026-08-14T21:22:11Z
+kind: interactive
+goal: Make simplification the standing platform priority
+status: in-review
+outcome: Rule added to CLAUDE.md and five Routine Skills
+summary: "The user asked, directly, for a key instruction in CLAUDE.md and every Routine Skill: for now, changes to the Platform and its agent instructions should only simplify — cut bravely, preserve behaviour, use the plainest precise language. Mid-session they added a second clause, also directly: prefer goals over concrete instructions. Everything here is human-instructed; nothing was agent-initiated beyond wording and placement choices. Added a `Simplify first` section at the top of CLAUDE.md and a one-line pointer in each of the five Skills the Inventory grades `importance: routine` (audit-docs, audit-skills, blog-post, digest, frictions-to-fixes), keeping the rule single-homed. `pnpm gate:scoped` green; PR #962 open, gate CI in progress."
+prs:
+  - "962"
+docsRead:
+  - path: CLAUDE.md
+    reason: the file the instruction had to land in
+  - path: CONTEXT.md
+    reason: the Importance grades define what a Routine Skill is
+  - path: layers/journal/content/current/skills/digest.yml
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: '"All routine skills" has no direct listing; had to grep the Skill Inventory for `importance: routine` to derive the five.'
+    solution: Fine as is — the Inventory is the single home, and a committed list would rot. Worth knowing that grep is the lookup.
+    severity: nit
+durationSec: 285
+models:
+  claude-opus-5: 61
+toolCounts:
+  Bash: 17
+  Read: 4
+  Edit: 12
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - CLAUDE.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+gitBranch: claude/simplification-instruction-claude-md-37dzte
+entrypoint: remote_mobile
+cliVersion: 2.1.233
+learnings:
+  - "The Skill Inventory's `importance: routine` grade is the only durable list of Routine-fired Skills"
