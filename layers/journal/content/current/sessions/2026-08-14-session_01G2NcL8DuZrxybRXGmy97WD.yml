@@ -1,0 +1,33 @@
+schemaVersion: 1
+session: session_01G2NcL8DuZrxybRXGmy97WD
+startedAt: 2026-08-14T00:50:01Z
+endedAt: 2026-08-14T00:54:20Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: Clean scorecard, nothing actionable found
+summary: "Fully agent-initiated — fired by the scheduled /audit-skills Routine, no human prompt. Ran scripts/audit-skills.ts (40-session window, 35 considered) and worked through all six steps. Step 3 (re-grade importance/role): no skill had a bright-line (≥2 session) absence or promotion signal this window — the window is dominated by autonomous routine sweeps (digest/blog-post/audit-docs/frictions-to-fixes/audit-skills itself) that don't touch the low-usage general-engineering Skills, and the handful of code-landing sessions (code-review/implement/tdd, both from session_01QMtUQr and session_01X71yk) only added 1-2 data points to already-well-established \"inconsistent adoption\" observations, not a fresh bright line. No onDisk-but-uninventoried or inventoried-but-missing Skills. Step 4 (regression watch): checked all 9 regressionChecks brackets; 3 (guest-build, guest-intake, midden-survey) had zero usedIn on both sides and were skipped per the no-signal rule; the rest (audit-docs, audit-skills, frictions-to-fixes, auto-triage) had no same-skill sessions in the after-bracket to compare against, and the remaining two (dispatch-subagents, close-session) showed only a mild, not severity-worsening friction shift on thin samples — none cleared the suspected-signal bar for a Phase B deep-read. Step 5: both orphanedSessions entries (session_019aeaoPHYWMJVekmUvTMhQ9, session_01UTrFNDBJFVkXFtWdfj4HHn) already have open tracking issues (#736, #927) whose bodies already cite the exact same merge commit sha and date this run's scorecard surfaced, so no new comment was needed. orphanScan was a full, trustworthy scan (scanned: true, 532 merged PRs, 387 with a session). orphanSuppressionLog, humanPromptedClosures, manuallyRescuedClosures, and misclassifiedKind were all empty. Step 6: no new-Skill/split/retire idea emerged. Net result: no Inventory diff, no PR, nothing to gate."
+prs: []
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: closure
+  - name: log-session
+    reason: this log
+  - name: audit-skills
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 259
+models:
+  claude-sonnet-5: 48
+toolCounts:
+  Bash: 18
+  ToolSearch: 2
+  mcp__github__search_issues: 1
+  mcp__github__issue_read: 2
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-efww9c
+entrypoint: remote_trigger
+cliVersion: 2.1.231
+trigger: audit-skills
