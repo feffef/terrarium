@@ -16,6 +16,10 @@ judgement.**
 
 > Runs via a scheduled Routine, same as `digest` — also runnable on demand.
 
+> **Simplify first.** Every edit this run makes must shrink the Platform or its
+> agent instructions — less code, less documentation, same behaviour — and state
+> goals rather than steps wherever a goal will do (CLAUDE.md, "Simplify first").
+
 Every run produces up to four things, only the first of which is ever a code
 change:
 - an **Inventory PR** — `importance`/`role` edits that cite the bright-line

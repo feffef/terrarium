@@ -5,6 +5,19 @@ Guidance for Claude Code agents working in this repo. Terrarium is developed
 This file is the entry point for every session: it holds the conventions, the
 repo layout, and how to self-verify. `README.md` is only a primer for humans.
 
+## Simplify first
+
+For now, every change to the Platform or its agent instructions must **shrink**
+it: less code, less documentation, same behaviour. Cut bravely — delete, merge,
+shorten — and write what is left in the plainest words that stay exact.
+
+Prefer **goals over instructions**: say what a good outcome is and let the agent
+find the means. Spell out concrete steps only where getting them wrong is
+expensive or irreversible.
+
+Work that would grow the Platform waits: file it as an issue instead, unless a
+human asks for it outright.
+
 ## Read these first
 
 - **`CONTEXT-MAP.md`, then `CONTEXT.md`** — the domain model and ubiquitous
