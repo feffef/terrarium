@@ -162,9 +162,9 @@ catch the mistake in practice.
   Only a fresh push/branch-update recomputes `refs/pull/N/merge` and gets a
   true re-check.
 - **This polling advice is scoped to non-webhook-delivered state like CI —
-  it does not apply to a dispatched Agent-tool subagent.** A background
-  `Agent` tool completion self-notifies automatically; waiting on one needs no
-  wait/poll tool at all (no `ScheduleWakeup`, no `send_later`).
+  it does not apply to a dispatched Agent-tool subagent.** See CLAUDE.md's
+  `ScheduleWakeup` rule for why: a background `Agent` tool self-notifies on
+  completion, so waiting on one needs no wait/poll tool at all.
 - **`mcp__Claude_Code_Remote__*` calls and `AskUserQuestion` can both fail with a
   transient "permission stream closed before response received" error** —
   retry once, then route around it (issue #145/#229/#359). These are harness

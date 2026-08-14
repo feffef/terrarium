@@ -304,7 +304,7 @@ live and what one must contain.
 
 ## Tenants
 
-The Platform currently hosts seven Tenants. Each has its own **context**
+The Platform currently hosts six Tenants. Each has its own **context**
 (vocabulary + reason-to-exist) co-located with its code; this roster is the
 pointer into them (see `CONTEXT-MAP.md`).
 
