@@ -1,0 +1,42 @@
+schemaVersion: 1
+session: session_015kcRwn5C3ALsSE1qhEFUDa
+startedAt: 2026-08-14T00:28:05Z
+endedAt: 2026-08-14T00:34:22Z
+kind: autonomous
+goal: Run the scheduled /digest sweep for 2026-08-13
+status: in-review
+outcome: "PR #947 opened with a green local gate, awaiting merge"
+summary: "Fully agent-initiated — fired by the scheduled /digest Routine, no human prompt. Ran scripts/digest.ts list, found 2026-08-13 as the sole closed UTC day without a Digest, authored layers/journal/content/current/pages/digests/2026-08-13.md from the gathered PR/session/friction data, and ran the archive-journal-content.ts retention sweep (moved 1 digest + 11 session logs from current to archived). pnpm gate:scoped ran the full heavy layers (build + e2e) and passed green. Committed, pushed to claude/compassionate-lovelace-jc4ujm, opened PR #947 against main, subscribed to its activity. Per the Skill, the PR is in self-merge scope (digest page + archive-sweep moves only) and will be landed automatically once CI's gate is green; this log will be updated to completed on merge."
+prs:
+  - "947"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-08-12.md
+    reason: (no reason given)
+skillsUsed:
+  - name: digest
+    reason: the Skill this scheduled run executes
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions: []
+durationSec: 377
+models:
+  claude-sonnet-5: 49
+toolCounts:
+  Bash: 15
+  Read: 1
+  Write: 2
+  ToolSearch: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Edit: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-13.md
+gitBranch: claude/compassionate-lovelace-jc4ujm
+entrypoint: remote_trigger
+cliVersion: 2.1.231
+trigger: digest
