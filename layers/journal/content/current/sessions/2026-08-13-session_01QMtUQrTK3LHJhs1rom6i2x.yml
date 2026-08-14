@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01QMtUQrTK3LHJhs1rom6i2x
 startedAt: 2026-08-13T21:58:46Z
-endedAt: 2026-08-13T23:51:31Z
+endedAt: 2026-08-14T10:04:24Z
 kind: interactive
-goal: Auto-triage sweep, then implement both ready-for-agent issues
+goal: Auto-triage sweep, implement two issues, fix trace note
 status: in-review
-outcome: 12 items triaged; 2 issues built in PR 946
-summary: "Two human-instructed halves. First `/auto-triage`: 34 open issues plus 1 PR scanned, 11 issues and 1 PR eligible, one read-only subagent each — two ready-for-agent, seven ready-for-human, one needs-info, one PR closed as objectively already-implemented. Then `/implement both issues that are now ready for agent`. #921 got a fifth PreToolUse guard refusing a hand-written ADR-0017 commit trailer, built test-first, with a doc note and hook wiring. #867 got the rulebook migration table — 208 rules from CLAUDE.md, docs/agents, and the 13 repo-authored Skills, classified into the five mechanize-or-drop buckets, every calibration count re-derived. `/code-review` ran both axes and found four real defects, all fixed. Everything after each slash command was agent-initiated; nothing beyond the two named issues was built."
+outcome: 12 triaged; PR 946 merged, PR 960 open
+summary: "Three human-instructed pieces. First `/auto-triage`: 34 open issues plus 1 PR scanned, 11 issues and 1 PR eligible, one read-only subagent each — two ready-for-agent, seven ready-for-human, one needs-info, one PR closed as already-implemented. Then `/implement both issues that are now ready for agent` — a fifth PreToolUse guard refusing hand-written ADR-0017 commit trailers, and the 208-rule rulebook migration table; both landed in PR 946, now merged. Finally the user pasted the session-card subagent disclaimer verbatim: it had claimed the tools, Skills and files below it were the main session's only, which `foldSubagentTrace` falsified on 2026-08-13 for files and Skills. Rewrote it along the real seam, verified by DOM probe, opened PR 960. Everything after each prompt was agent-initiated."
 prs:
   - "946"
+  - "960"
 docsRead:
   - path: .claude/skills/auto-triage/SKILL.md
     reason: the sweep procedure
@@ -30,6 +31,16 @@ docsRead:
     reason: corpus for the table
   - path: docs/agents/github-integration.md
     reason: corpus; also the Blocked-by body-line fallback the sweep misses
+  - path: scripts/session-trace.ts
+    reason: foldSubagentTrace — which trace fields actually fold in subagent activity
+  - path: layers/journal/app/components/journal/SessionCard.vue
+    reason: the stale subagent disclaimer and what renders below it
+  - path: shared/schemas/session.ts
+    reason: which mechanical fields the card reads
+  - path: scripts/probe.ts
+    reason: the repo's own DOM-probe tool, instead of a scratchpad Playwright script
+  - path: docs/agents/pr-workflow.md
+    reason: per-tier merge authority — confirmed an ordinary work PR is human-merge
   - path: .claude/skills/triage/SKILL.md
     reason: (no reason given)
   - path: scripts/last-comment-authors.ts
@@ -48,8 +59,6 @@ docsRead:
     reason: (no reason given)
   - path: CLAUDE.md
     reason: (read before editing)
-  - path: docs/agents/pr-workflow.md
-    reason: (no reason given)
   - path: docs/agents/environment-caveats.md
     reason: (no reason given)
   - path: docs/agents/verifying-ui-changes.md
@@ -96,6 +105,14 @@ docsRead:
     reason: (read before editing)
   - path: scripts/commit-trailer-guard.sh
     reason: (read before editing)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (no reason given)
+  - path: app/pages/index.vue
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-13-session_01QMtUQrTK3LHJhs1rom6i2x.yml
+    reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-08-13-session_01Pda3sV3LLMvGje6nBsbG16.yml
     reason: (no reason given)
   - path: .agents/skills/close-session/SKILL.md
@@ -141,8 +158,6 @@ docsRead:
   - path: scripts/merged-since.ts
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-08-04-session_01L8DLPWG8aMjo3LdCvd6xub.yml
-    reason: (no reason given)
-  - path: scripts/session-trace.ts
     reason: (no reason given)
   - path: scripts/validate-skill-cadence.ts
     reason: (no reason given)
@@ -240,23 +255,40 @@ frictions:
   - description: issue_write rejects a PR number when the call carries state or state_reason, though a labels-only update on the same number succeeds.
     solution: Record in github-integration.md that closing a PR needs two calls — labels via issue_write, then state via update_pull_request.
     severity: minor
-durationSec: 6765
+  - description: A user-facing sentence describing a code-level split drifted for a month and was caught by a human reading the page, not by CI. No test pinned it, and none could have.
+    solution: Fixed the prose and pointed a comment at `foldSubagentTrace`, but that is the weakest guard — it relies on the next author reading it. Deriving the note from one exported field list would make divergence impossible.
+    severity: moderate
+  - description: '`git push --force-with-lease` failed with "stale info" on a branch whose PR had merged. The remote ref was deleted on merge, so the stale local tracking ref failed the lease against a branch that no longer existed.'
+    solution: "`git remote prune origin` first, after which a plain push recreates the branch and no force is needed. Worth a line in git-conventions.md — the error text points at the lease, not at the deleted ref."
+    severity: minor
+  - description: "`scripts/probe.ts` evaluates its expression immediately after `page.goto` with no hydration wait, so clicking a hydrated control silently no-opped and returned an empty result that read like a bad selector."
+    solution: Hand-rolled a `setTimeout` inside the probe expression. A `--wait-ms` flag, or a `networkidle` waitUntil, would stop every caller re-deriving this.
+    severity: minor
+  - description: "`preview.ts shot` with a `#anchor` fragment returned a top-of-page capture rather than the anchored card, so the intended visual check produced nothing useful and I fell back to a DOM probe."
+    solution: The DOM probe was the better verification anyway (a screenshot cannot prove text). Worth checking whether the anchor scroll needs a post-hydration wait before CLAUDE.md keeps advertising it for below-the-fold content.
+    severity: minor
+durationSec: 43539
 models:
-  claude-opus-5: 352
+  claude-opus-5: 528
+  <synthetic>: 6
 toolCounts:
-  Read: 47
-  Bash: 70
-  Skill: 4
+  Read: 56
+  Bash: 117
+  Skill: 6
   Agent: 14
-  Write: 11
-  Edit: 33
-  ToolSearch: 2
+  Write: 13
+  Edit: 35
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 4
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 13
+  mcp__Claude_Code_Remote__send_later: 4
   mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__list_triggers: 4
+  AskUserQuestion: 2
+  mcp__github__list_pull_requests: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
 filesEdited:
   - tests/unit/commit-trailer-guard.spec.ts
   - scripts/provenance-footer.ts
@@ -267,6 +299,7 @@ filesEdited:
   - CLAUDE.md
   - docs/research/rulebook-migration-table.md
   - docs/agents/loop-only-tool-guard.md
+  - layers/journal/app/components/journal/SessionCard.vue
 subagents:
   - type: general-purpose
     task: Triage issue 927
@@ -304,7 +337,11 @@ learnings:
   - A guard that pattern-matches command strings will block authoring content about itself; the repo's Write-over-cat convention is already the workaround
   - All 34 open issues had AI-authored most-recent activity, so auto-triage's human-authored eligibility branch matched nothing at all
   - The rejection of CI-enforced doc invariants is not absolute — two doc/metadata gate checks merged after it was recorded, and the line falls between a prose property and a structured artifact checked against its own schema
+  - "`foldSubagentTrace` unions subagent transcripts into `filesRead`/`filesEdited`/`skillsUsed` only; `models`/`toolCounts`/`durationSec` stay the parent's, deliberately, so a reader cannot compare `toolCounts.Read` against a `filesRead` drawn from a different population"
+  - A merged-and-deleted remote branch makes `--force-with-lease` fail with "stale info", which reads as a lease conflict rather than as the branch being gone
 ideas:
   - Extract `scripts/guard-harness.ts` AND collapse the guard docs, as one change — two findings that point at the same seam. Five guards duplicate `denyUninspectable`, `denyOutputFor`, the flag parser and the `import.meta.url` bootstrap almost verbatim; separately, the four `docs/agents/*-guard.md` notes are the same five sections four times (283 lines describing one mechanism, in a directory CLAUDE.md describes as per-repo skill configuration). One harness plus one shared doc on the guard pattern replaces both piles. Deliberately not done in PR 946 because it drags four human-only-to-merge guards into that diff.
   - Add `scripts/triage-eligibility.ts` emitting one record per open issue with everything auto-triage's step 1 needs — labels, last-comment provenance, assignees, native blocked_by AND the body "Blocked by:" fallback, author association, and the wayfinder:map skip — so the sweep starts from one command instead of three scripts plus ad-hoc curl, and the body-fallback blocker this session missed cannot be missed again.
   - "Make the rulebook migration table refreshable instead of a one-off: a script that lists the in-scope corpus (deriving repo-authored Skills from skills-lock.json) and diffs it against the table's row set, so a rule added to CLAUDE.md after 2026-08-13 shows up as an unclassified gap rather than silently aging the asset out of date."
+  - Export the folded-field list from `session-trace.ts` as one constant and have `SessionCard.vue` render its subagent note from it, so the prose cannot contradict the code. The note just drifted for a month undetected because it restates a split the code owns — the same single-home failure the repo already polices in docs, applied to user-facing UI copy, which nothing currently checks.
+  - Give `scripts/probe.ts` a `--wait-ms` (or `--wait-for <selector>`) flag. Every caller probing a hydrated Vue control currently has to hand-roll a `setTimeout` inside the evaluated expression, and the failure mode when they forget is a silent empty result that looks like a wrong selector rather than a timing problem.
