@@ -62,10 +62,13 @@ const detailId = useId()
                 ><template v-if="a.task"> — {{ a.task }}</template>
               </li>
             </ul>
+            <!-- Which fields fold in subagent activity is decided by
+                 `foldSubagentTrace` (scripts/session-trace.ts) — keep this note
+                 in step with it. -->
             <p class="subnote">
-              The tools, Skills, and files below are the main session's only — each
-              subagent works in its own context, so its internal activity isn't
-              traced here.
+              Files read, files edited, and Skills used fold in each subagent's own
+              activity as well as the main session's. Tool counts — and the duration
+              and model above — cover the main session's turns only.
             </p>
           </div>
 
