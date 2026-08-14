@@ -11,7 +11,7 @@
 // dropped at this stage (summary, docsRead, learnings, …) can still be read in
 // full later — this is a triage extract, not a replacement for the source log.
 //
-// Usage:  tsx scripts/session-frictions.ts [--window N]
+// Usage:  tsx scripts/session-frictions.ts [--window N] [--compact]
 //   Prints the N most-recent sessions (by startedAt, oldest of the window first)
 //   as JSON: id, file, startedAt, goal, outcome, prs, and every friction's
 //   description/solution/severity.
@@ -22,6 +22,11 @@
 // roughly 15 or more, redirect straight to a file instead of relying on
 // inline capture, e.g.:
 //   pnpm exec tsx scripts/session-frictions.ts --window 20 > /tmp/frictions.json
+//
+// --compact drops the prose fields (goal/outcome/solution) that make the
+// default output large, keeping only id/file/startedAt/prs and each
+// friction's description/severity — a --window 20 --compact run comfortably
+// fits the inline-capture cap (issue #951).
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -56,6 +61,22 @@ export interface TriageSession {
   frictions: TriageFriction[]
 }
 
+export interface CompactFriction {
+  description: string
+  severity: string
+}
+/** The `--compact` reduction of a TriageSession: drops the prose fields
+ *  (goal/outcome/solution) that make the default output exceed the Bash
+ *  tool's inline-capture cap at the default window (issue #951). `id`/`file`
+ *  are kept so a candidate can still be traced back to its full log. */
+export interface CompactSession {
+  id: string
+  file: string
+  startedAt: string
+  prs: string[]
+  frictions: CompactFriction[]
+}
+
 // ── Pure core (unit-tested) ───────────────────────────────────────────────────
 
 /** The newest `n` sessions by `startedAt` (ISO), returned oldest-of-the-window
@@ -84,6 +105,17 @@ export function toTriageSession(raw: Record<string, unknown>, file: string): Tri
       solution: String(fr.solution ?? '').replace(/\s+/g, ' ').trim(),
       severity: String(fr.severity ?? ''),
     })),
+  }
+}
+
+/** Reduce a TriageSession to its `--compact` fields (see CompactSession). */
+export function toCompactSession(s: TriageSession): CompactSession {
+  return {
+    id: s.id,
+    file: s.file,
+    startedAt: s.startedAt,
+    prs: s.prs,
+    frictions: s.frictions.map((fr) => ({ description: fr.description, severity: fr.severity })),
   }
 }
 
@@ -123,7 +155,9 @@ function main(): void {
   const wIdx = argv.indexOf('--window')
   const windowSize = wIdx >= 0 && argv[wIdx + 1] ? Number(argv[wIdx + 1]) : DEFAULT_WINDOW
   if (!Number.isInteger(windowSize) || windowSize <= 0) fail('--window must be a positive integer')
-  process.stdout.write(JSON.stringify(survey(windowSize), null, 2) + '\n')
+  const sessions = survey(windowSize)
+  const output = argv.includes('--compact') ? sessions.map(toCompactSession) : sessions
+  process.stdout.write(JSON.stringify(output, null, 2) + '\n')
 }
 
 // Only run when executed directly (not when imported by the unit test).
