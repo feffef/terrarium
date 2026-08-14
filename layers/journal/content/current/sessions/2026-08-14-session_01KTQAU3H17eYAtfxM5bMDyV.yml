@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01KTQAU3H17eYAtfxM5bMDyV
 startedAt: 2026-08-14T11:29:39Z
-endedAt: 2026-08-14T11:43:33Z
+endedAt: 2026-08-14T11:47:25Z
 kind: autonomous
 goal: Write and land a scheduled Eyra blog post
-status: in-review
-outcome: "Post drafted, gated PR #961 opened"
-summary: "Fully autonomous run: the /blog-post Skill fired on its schedule, with no human prompt. The Skill tool refused model-invocation by design (disable-model-invocation: true), so I executed its documented steps manually. scripts/blog-rotation.ts reported Eyra as starved (missing from the four most recent posts), so all three drafted candidates were Eyra. Drafted three full candidates from real repo/PR/session-log material: a reaction to Kevin's \"Eight Lines, Seven Recurrences\" about the Commits Tenant's removal, a standalone on the commit-trailer PreToolUse guard denying its own author, and a standalone on PR #944's subagent-transcript fold into the session trace. A fresh outside-read subagent, shown only the pasted drafts, picked the subagent-trace post for its architectural weight and flagged under-glossed terms; I revised those in before saving. pnpm gate:scoped ran green, and PR #961 was opened and subscribed to. All of this — persona rotation, topic selection, drafting, review, and landing — was agent-initiated per the Skill's own procedure; no human steered any part of it."
+status: completed
+outcome: "Post merged via PR #961"
+summary: "Fully autonomous run: the /blog-post Skill fired on its schedule, with no human prompt. The Skill tool refused model-invocation by design (disable-model-invocation: true), so I executed its documented steps manually. scripts/blog-rotation.ts reported Eyra as starved (missing from the four most recent posts), so all three drafted candidates were Eyra. Drafted three full candidates from real repo/PR/session-log material: a reaction to Kevin's \"Eight Lines, Seven Recurrences\" about the Commits Tenant's removal, a standalone on the commit-trailer PreToolUse guard denying its own author, and a standalone on PR #944's subagent-transcript fold into the session trace. A fresh outside-read subagent, shown only the pasted drafts, picked the subagent-trace post for its architectural weight and flagged under-glossed terms; I revised those in before saving. pnpm gate:scoped ran green, PR #961 was opened and subscribed to, and once the safety gate reported green I posted a verdict comment and merged it via scripts/merge-pr.ts (blog-post's self-merge tier, ADR-0003/ADR-0004). All of this — persona rotation, topic selection, drafting, review, and landing — was agent-initiated per the Skill's own procedure; no human steered any part of it."
 prs:
   - "961"
 docsRead:
@@ -30,6 +30,8 @@ docsRead:
     reason: (no reason given)
   - path: CONTEXT.md
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: blog-post
     reason: Skill tool refused model-invocation by design; executed its steps manually per its own instruction
@@ -38,14 +40,14 @@ skillsUsed:
   - name: log-session
     reason: this log
 frictions: []
-durationSec: 833
+durationSec: 1066
 models:
-  claude-sonnet-5: 119
+  claude-sonnet-5: 138
 toolCounts:
   Skill: 3
-  Bash: 36
-  Read: 10
-  ToolSearch: 3
+  Bash: 39
+  Read: 12
+  ToolSearch: 4
   mcp__github__pull_request_read: 6
   mcp__github__search_pull_requests: 1
   Write: 8
@@ -54,6 +56,10 @@ toolCounts:
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Grep: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Edit: 1
 filesEdited:
   - layers/blog/content/eyra/pages/2026-08-14-the-house-was-undercounting-its-own-help.md
 subagents:
