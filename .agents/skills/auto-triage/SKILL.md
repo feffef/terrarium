@@ -90,9 +90,11 @@ Much of the backlog is wayfinder tickets. Overlay triage readiness **without
 fighting wayfinder's mechanics** (read `/wayfinder` for them):
 
 - **Never** triage a `wayfinder:map` — it is an index, not work.
-- **Skip** a **claimed** (assigned) ticket and a **blocked** ticket (an open native
-  dependency): wayfinder's frontier is open + unblocked + unclaimed, so a blocked
-  ticket is not takeable and must not be stamped `ready-for-agent`.
+- **Skip** a **claimed** (assigned) ticket and a **blocked** ticket — an open
+  native dependency *or* a `Blocked by:` body line, the documented fallback
+  when a blocker isn't set as a native dependency (see `docs/agents/issue-tracker.md`'s
+  Wayfinding operations): wayfinder's frontier is open + unblocked + unclaimed,
+  so a blocked ticket is not takeable and must not be stamped `ready-for-agent`.
 - **Preserve** every `wayfinder:*` label — this is an overlay, never a replacement.
 - Honour the ticket type: `wayfinder:grilling` and `wayfinder:prototype` are
   **HITL** (human-in-the-loop) → `ready-for-human`; `wayfinder:research` is

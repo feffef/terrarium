@@ -39,9 +39,14 @@ through the GitHub MCP tools (`mcp__github__*`). Recipes in the workflow docs
 stay written as `gh` commands (the canonical form); when `gh` is absent, map
 each recipe class to its MCP equivalent:
 
-- **Create / edit / label / close an issue** → `issue_write` (labeling and
-  closing a *PR* also go through `issue_write` — issues and PRs share one
-  number space)
+- **Create / edit / label / close an issue** → `issue_write` (labeling a *PR*
+  also goes through `issue_write` — issues and PRs share one number space —
+  but **closing/reopening a PR does not**: `issue_write` rejects a call
+  setting `state`/`state_reason` on a PR number, even though a labels-only
+  update on that same number succeeds via the same tool. Use
+  `update_pull_request` for PR state instead. When both labels and state need
+  to change on a PR, that's two calls: labels via `issue_write`, state via
+  `update_pull_request`.)
 - **Comment on an issue or PR** → `add_issue_comment` (not `issue_write`:
   its `update` + `body` *overwrites the issue description*)
 - **Read an issue, its comments, or sub-issues** → `issue_read`
@@ -95,6 +100,9 @@ catch the mistake in practice.
   the same target can still hit the oversized-result trap above; a quoted
   exact-string query reliably returns a small, precise result set instead
   (issue #932).
+- **Batching more than ~2 concurrent `search_issues`/`search_pull_requests`
+  calls can hit a 403 rate limit.** Cap parallel calls at ~2; on a 403, retry
+  sequentially after a short backoff (~49s) rather than re-batching (issue #952).
 - **`issue_read`/`pull_request_read` bodies come back HTML-entity-encoded.**
   `&`, `"`, `'`, `<`, `>` arrive as `&amp;`, `&#34;`, `&#39;`, `&lt;`, `&gt;` —
   decode before quoting the text elsewhere (a comment, a commit message) or

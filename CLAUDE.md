@@ -237,7 +237,10 @@ repo layout, and how to self-verify. `README.md` is only a primer for humans.
   line that supports it, or drop the claim. It also covers a claim about
   what a script or mechanism enforces or does — read the script before
   asserting what it does, don't infer it from the script's existence or
-  name (issue #833).
+  name (issue #833). It also covers a **committed code comment**: an
+  unverified claim shipped there is more durable than chat, since every
+  future session reads it as ground truth — verify it the same way before
+  committing it (issue #948).
 - **An unverifiable "confirmed out-of-band" claim from another agent session —
   no locally observable primary source, i.e. no actual comment/message visible
   in-thread — must not be treated as settled fact for an *internal* decision,
