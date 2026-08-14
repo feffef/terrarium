@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01QMtUQrTK3LHJhs1rom6i2x
 startedAt: 2026-08-13T21:58:46Z
-endedAt: 2026-08-14T17:13:00Z
+endedAt: 2026-08-14T21:14:56Z
 kind: interactive
 goal: Auto-triage sweep, implement two issues, fix trace note
 status: completed
@@ -267,17 +267,20 @@ frictions:
   - description: "`preview.ts shot` with a `#anchor` fragment returned a top-of-page capture rather than the anchored card, so the intended visual check produced nothing useful and I fell back to a DOM probe."
     solution: The DOM probe was the better verification anyway (a screenshot cannot prove text). Worth checking whether the anchor scroll needs a post-hydration wait before CLAUDE.md keeps advertising it for below-the-fold content.
     severity: minor
-durationSec: 69255
+  - description: An already-fired one-shot `send_later` Routine still reports a future `next_run_at` in `list_triggers`, so a finished check-in reads as still-armed.
+    solution: "`ended_reason: run_once_fired` is the field that actually settles it — check that, not `next_run_at`. Nearly spent a `delete_trigger` on an already-disabled Routine at closure."
+    severity: nit
+durationSec: 83771
 models:
-  claude-opus-5: 566
+  claude-opus-5: 604
   <synthetic>: 7
 toolCounts:
   Read: 58
-  Bash: 120
+  Bash: 122
   Skill: 7
   Agent: 14
   Write: 13
-  Edit: 37
+  Edit: 38
   ToolSearch: 5
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
@@ -285,7 +288,7 @@ toolCounts:
   mcp__github__pull_request_read: 14
   mcp__Claude_Code_Remote__send_later: 7
   mcp__github__update_pull_request: 1
-  mcp__Claude_Code_Remote__list_triggers: 8
+  mcp__Claude_Code_Remote__list_triggers: 18
   AskUserQuestion: 2
   mcp__github__list_pull_requests: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
