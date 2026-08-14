@@ -1,0 +1,182 @@
+schemaVersion: 1
+session: session_01JYFQZPd3syhe7bd8Bes1Sm
+startedAt: 2026-08-14T04:16:55Z
+endedAt: 2026-08-14T04:31:19Z
+kind: autonomous
+goal: Run scheduled /audit-docs sweep
+status: completed
+outcome: 2 findings fact-checked, fixed, PR merged
+summary: "Fully agent-initiated scheduled run — a Routine fired the /audit-docs Skill with no human turn in between. Fanned out the four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence), pooled and deduped their findings to two distinct issues, ran an independent fact-checker against primary sources (both CONFIRMED), then fixed both directly per the Skill's \"fix bravely\" mandate: CONTEXT.md's stale \"seven Tenants\" count (post Commits-Tenant removal) corrected to six, and a duplicated Agent-tool-self-notify fact in docs/agents/github-integration.md trimmed to a pointer at CLAUDE.md's ScheduleWakeup rule. pnpm gate:scoped ran green (both paths inert). Opened PR #959 (self-merge tier, no human-only surface touched), posted the verdict comment, and merged it via scripts/merge-pr.ts once CI reported green."
+prs:
+  - "959"
+docsRead:
+  - path: CLAUDE.md
+    reason: chartered-job branch checklist, human-only surface list, provenance header format
+  - path: .claude/skills/audit-docs/SKILL.md
+    reason: the sweep's own procedure — tiers, lenses, dedupe/fact-check/fix steps
+  - path: CONTEXT.md
+    reason: (read before editing)
+  - path: docs/agents/github-integration.md
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/loop-only-tool-guard.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/subagent-background-guard.md
+    reason: (no reason given)
+  - path: docs/agents/deferred-tool-guard.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/research/deferred-tool-guard-hook-viability.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: scripts/deferred-tool-guard.ts
+    reason: (no reason given)
+  - path: scripts/loop-only-tool-guard.ts
+    reason: (no reason given)
+  - path: scripts/subagent-background-guard.ts
+    reason: (no reason given)
+  - path: scripts/github-provenance-guard.ts
+    reason: (no reason given)
+  - path: scripts/commit-trailer-guard.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's charter
+  - name: close-session
+    reason: closure sequence at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Reflexively reached for ScheduleWakeup as a fallback heartbeat while the 4 background lens agents ran, before recalling waiting on Agent-tool subagents needs no wait/poll tool at all.
+    solution: The loop-only-tool-guard PreToolUse hook caught it immediately with a clear corrective message — worked as designed, but the instinct to reach for it is worth noting since CLAUDE.md already documents the correct no-op-wait behavior.
+    severity: nit
+durationSec: 864
+models:
+  claude-sonnet-5: 86
+toolCounts:
+  Bash: 16
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__list_pull_requests: 1
+  TaskCreate: 1
+  Grep: 2
+  Agent: 5
+  ScheduleWakeup: 1
+  Read: 3
+  Edit: 3
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__issue_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - CONTEXT.md
+  - docs/agents/github-integration.md
+subagents:
+  - type: general-purpose
+    task: "Audit-docs Lens A: Freshness"
+  - type: general-purpose
+    task: "Audit-docs Lens B: Single-home"
+  - type: general-purpose
+    task: "Audit-docs Lens C: Concision"
+  - type: general-purpose
+    task: "Audit-docs Lens D: Coherence"
+  - type: general-purpose
+    task: Audit-docs fact-checker
+gitBranch: claude/festive-mayer-aj4rx7
+entrypoint: remote_trigger
+cliVersion: 2.1.231
+trigger: audit-docs
