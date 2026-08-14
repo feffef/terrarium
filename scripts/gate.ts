@@ -172,13 +172,23 @@ export function ensureFreshDeps(projectRoot = root): void {
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
+const RESET_HINT_STEPS = ['typecheck', 'build']
+
 function run(step: string): void {
   const r = spawnSync('pnpm', [step], { cwd: root, stdio: 'inherit' })
   if (r.error) {
     console.error(`gate:scoped: failed to launch \`pnpm ${step}\`: ${r.error.message}`)
     process.exit(1)
   }
-  if (typeof r.status === 'number' && r.status !== 0) process.exit(r.status)
+  if (typeof r.status === 'number' && r.status !== 0) {
+    if (RESET_HINT_STEPS.includes(step)) {
+      console.error(`
+If this looks like a stale-sandbox/type-generation issue (not a real code error), try:
+  rm -rf node_modules .nuxt && pnpm install --frozen-lockfile
+See docs/agents/environment-caveats.md for details.`)
+    }
+    process.exit(r.status)
+  }
 }
 
 function flagValue(args: string[], name: string): string | undefined {
