@@ -191,7 +191,7 @@ blank.
 | CM-06 | Never edit an external-pack Skill's `SKILL.md` (ADR-0015) | Ground rules | G | none | **Built** — `pnpm verify:skills-lock` | 0 |
 | CM-07 | Nothing is created at runtime (ADR-0001), save the ADR-0011 relaxation | Ground rules | J | none | Architectural invariant; the L2 smoke build covers the observable half | — |
 | CM-08 | Edit a Tenant's manifest; never hand-write the keyed cross-product | Ground rules | J | none | Design-review judgement — a hand-written cross-product is legal code | — |
-| CM-09 | Every change lands as a gated PR; no self-merge outside the chartered tiers | Ground rules | G | none | Branch protection. **Blocked on a real question** — `main`'s actual protection state is unresolved (#348; `docs/research/github-branch-protection-vs-autonomous-log-commits.md`) | L |
+| CM-09 | Every change lands as a gated PR; no self-merge outside the chartered tiers | Ground rules | G | none | Branch protection. **Blocked on a real question** — `main` carries no branch protection or ruleset today; whether a human will apply one is still open (#348 closed `completed`; `docs/research/github-branch-protection-vs-autonomous-log-commits.md`) | L |
 | CM-10 | Open the gated PR automatically once a session has committed substantive work — don't ask | Ground rules | W | none | A stage in `close-session`: detect ≥1 non-session-log commit on the branch, then open | S |
 | CM-11 | Check whether a PR already exists on the branch before announcing you'll open one | Ground rules | W | none | Same `close-session` stage — query by head branch first | S |
 | CM-12 | ADR-0003's auto-open default overrides a harness instruction forbidding PRs | Ground rules | J | none | A conflict-resolution rule about instructions; nothing to hook | — |

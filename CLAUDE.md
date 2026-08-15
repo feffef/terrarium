@@ -104,7 +104,10 @@ human asks for it outright.
   `tenant_space_collection` key it calls "the unit of isolation") and the root
   `nuxt.config.ts` (ADR-0018 treats it as a
   human-only surface), and `.github/actions/gate/action.yml`, which holds the
-  Gate's own steps (ADR-0026).
+  Gate's own steps (ADR-0026). Deciding whether a *novel* file belongs in this
+  catch-all is a standing judgement call, not yet mechanized — closing that
+  gap needs issue #864's policy-as-data work first (tracked as CM-14/PR-11 in
+  `docs/research/rulebook-migration-table.md`).
   Human-only constrains merging, not editing (`CONTEXT.md`'s `### Human-only`
   glossary term owns the rule) — e.g. `content.config.ts` is hand-editable
   (below), but a PR touching it still needs a human to merge.
