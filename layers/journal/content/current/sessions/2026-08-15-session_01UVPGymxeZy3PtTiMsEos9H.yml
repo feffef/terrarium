@@ -1,0 +1,39 @@
+schemaVersion: 1
+session: session_01UVPGymxeZy3PtTiMsEos9H
+startedAt: 2026-08-15T00:45:56Z
+endedAt: 2026-08-15T00:49:41Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: No changes warranted this run
+summary: "Scheduled, agent-initiated autonomous run of the audit-skills sweep (no human turn in this session). Gathered the scorecard (36 windowed sessions, 35 Skills, 9 regression-check brackets, 2 orphanedSessions). Reviewed every Skill's usedIn against its importance grade — found no bright-line (>=2 session) promote/demote signal and no stale role text worth refreshing. Screened all 9 regression-check brackets: five share one edit commit whose before/after sessions barely used the checked Skill at all (no comparable signal), one bracket (dispatch-subagents) showed matching friction profiles before/after, two brackets (guest-build/guest-intake) had zero usedIn on both sides. The one borderline case (auto-triage, after-bracket session session_01QMtUQrTK3LHJhs1rom6i2x) deep-read in full: its one auto-triage- specific friction (missed body-line blocker fallback) ran before the checked edit landed and is already self-documented with its own idea in that session's own log, so it's not attributable to the edit under review and not logged again here. Checked orphanScan (scanned: true, healthy) and both orphanedSessions entries (session_019aeaoPHYWMJVekmUvTMhQ9, session_01UTrFNDBJFVkXFtWdfj4HHn) against GitHub — both already have open, extensively-triaged tracking issues (#736, #927) citing the same commits and dates this run found, so no new comment was posted. humanPromptedClosures, manuallyRescuedClosures, misclassifiedKind, and orphanSuppressionLog were all empty. No Inventory diff resulted; no PR opened."
+prs: []
+docsRead:
+  - path: scripts/audit-skills.ts
+    reason: suppression-list constants (RESOLVED_ORPHANED_SESSIONS etc.) to confirm neither orphan was already annotated
+  - path: layers/journal/content/current/sessions/2026-08-13-session_01QMtUQrTK3LHJhs1rom6i2x.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: (invoked as a slash command)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 225
+models:
+  claude-sonnet-5: 52
+toolCounts:
+  Skill: 3
+  Bash: 15
+  TaskCreate: 1
+  Read: 1
+  ToolSearch: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_read: 3
+  Write: 1
+gitBranch: claude/upbeat-sagan-9cbk2q
+entrypoint: remote_trigger
+cliVersion: 2.1.233
+trigger: audit-skills
