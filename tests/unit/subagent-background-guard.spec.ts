@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   checkBackgroundedBash,
+  checkMonitorCall,
   denyOutputFor,
   detectAgentContext,
   formatGuardMessage,
@@ -100,6 +101,70 @@ describe('checkBackgroundedBash() — the pure predicate (issue #694)', () => {
   })
 })
 
+describe('checkBackgroundedBash() — the command-text bypass (issue #964)', () => {
+  it('DENIES: a trailing bare `&` — the same detach as run_in_background: true', () => {
+    expect(checkBackgroundedBash('Bash', { command: 'pnpm gate:scoped &' }, 'subagent')?.signal).toBe('command-text')
+  })
+
+  it('DENIES: `nohup … &`, even when the `&` is not the last character', () => {
+    expect(checkBackgroundedBash('Bash', { command: 'nohup pnpm gate:scoped & echo started' }, 'subagent')?.signal).toBe(
+      'command-text',
+    )
+  })
+
+  it('DENIES: nohup after a `;`/`&&`/`|` separator, not just at the start of the command', () => {
+    expect(checkBackgroundedBash('Bash', { command: 'cd /repo && nohup pnpm build &' }, 'subagent')?.signal).toBe(
+      'command-text',
+    )
+  })
+
+  it('ALLOWS: `&&` chaining — not a backgrounding operator', () => {
+    expect(checkBackgroundedBash('Bash', { command: 'pnpm build && pnpm test' }, 'subagent')).toBeNull()
+  })
+
+  it('ALLOWS: `2>&1` and `&>`/`>&` redirection — fd duplication, not backgrounding', () => {
+    expect(checkBackgroundedBash('Bash', { command: 'pnpm build > out.log 2>&1' }, 'subagent')).toBeNull()
+    expect(checkBackgroundedBash('Bash', { command: 'pnpm build &> out.log' }, 'subagent')).toBeNull()
+  })
+
+  it('ALLOWS: a literal `&` inside a quoted string argument', () => {
+    expect(checkBackgroundedBash('Bash', { command: 'echo "foo & bar"' }, 'subagent')).toBeNull()
+    expect(checkBackgroundedBash('Bash', { command: "echo 'run in background &'" }, 'subagent')).toBeNull()
+  })
+
+  it('ALLOWS: a backslash-escaped `&` outside quotes', () => {
+    expect(checkBackgroundedBash('Bash', { command: 'echo foo \\& bar' }, 'subagent')).toBeNull()
+  })
+
+  it('ALLOWS: "nohup" appearing only as a substring of another word, or with no `&` at all', () => {
+    expect(checkBackgroundedBash('Bash', { command: 'echo "not-a-nohup-call"' }, 'subagent')).toBeNull()
+    expect(checkBackgroundedBash('Bash', { command: 'nohup pnpm build > out.log' }, 'subagent')).toBeNull()
+  })
+
+  it('ALLOWS the same trailing `&`/`nohup` commands from the main session', () => {
+    expect(checkBackgroundedBash('Bash', { command: 'pnpm gate:scoped &' }, 'main')).toBeNull()
+    expect(checkBackgroundedBash('Bash', { command: 'nohup pnpm gate:scoped &' }, 'main')).toBeNull()
+  })
+})
+
+describe('checkMonitorCall() — the Monitor-tool bypass (issue #964)', () => {
+  it('DENIES a Monitor call from a subagent', () => {
+    expect(checkMonitorCall('Monitor', 'subagent')?.signal).toBe('monitor')
+  })
+
+  it('DENIES a Monitor call from an undeterminable context — fails closed', () => {
+    expect(checkMonitorCall('Monitor', 'undeterminable')?.signal).toBe('monitor')
+  })
+
+  it('ALLOWS a Monitor call from the main session', () => {
+    expect(checkMonitorCall('Monitor', 'main')).toBeNull()
+  })
+
+  it('never touches another tool', () => {
+    expect(checkMonitorCall('Bash', 'subagent')).toBeNull()
+  })
+})
+
 describe('formatGuardMessage()', () => {
   it('names the issue, the wake that never comes, and the full foreground alternative', () => {
     const msg = formatGuardMessage(checkBackgroundedBash('Bash', { run_in_background: true }, 'subagent')!)
@@ -152,6 +217,22 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
 
   it('END TO END: stays silent for a foreground subagent call', () => {
     expect(runHook(subagentPayload({ command: 'pnpm gate:scoped', timeout: 600000 }))).toBeNull()
+  })
+
+  it('END TO END: blocks a subagent command with a trailing `&` (issue #964)', () => {
+    const deny = runHook(subagentPayload({ command: 'pnpm gate:scoped &' }))
+    expect(deny?.hookSpecificOutput.permissionDecision).toBe('deny')
+    expect(deny?.hookSpecificOutput.permissionDecisionReason).toContain('#964')
+  })
+
+  it('END TO END: blocks a subagent Monitor call (issue #964)', () => {
+    const deny = runHook({ ...subagentPayload({}), tool_name: 'Monitor', tool_input: {} })
+    expect(deny?.hookSpecificOutput.permissionDecision).toBe('deny')
+    expect(deny?.hookSpecificOutput.permissionDecisionReason).toContain('Monitor')
+  })
+
+  it('END TO END: stays silent for a main-session Monitor call', () => {
+    expect(runHook({ ...mainPayload({}), tool_name: 'Monitor', tool_input: {} })).toBeNull()
   })
 
   it('END TO END: denies uninspectable stdin (not JSON) — fail-closed', () => {

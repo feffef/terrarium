@@ -1,10 +1,13 @@
 // Mechanical backstop for issue #694: a dispatched subagent's own backgrounded
 // Bash command can never wake it, so `run_in_background: true` is denied in
-// subagent context. Rationale, detection contract, and residual fail-opens are
-// single-homed in docs/agents/subagent-background-guard.md — this header does
-// not restate them. Pure core is kept separate from the stdin I/O and
-// exercised by --dry-run, mirroring the sibling guards (ADR-0004's
-// unattended-hook reviewability bar).
+// subagent context — and per issue #964, so is a trailing `&`/`nohup … &` in
+// the command text, and a `Monitor` call, the two bypass shapes the original
+// deny message already warned about but never mechanized. Rationale,
+// detection contract, and residual fail-opens are single-homed in
+// docs/agents/subagent-background-guard.md — this header does not restate
+// them. Pure core is kept separate from the stdin I/O and exercised by
+// --dry-run, mirroring the sibling guards (ADR-0004's unattended-hook
+// reviewability bar).
 //
 // Usage:
 //   sh scripts/subagent-background-guard.sh          # the installed hook entry
@@ -30,11 +33,72 @@ export function detectAgentContext(payload: unknown): AgentContext {
 export interface BackgroundFinding {
   /** Never `main` — that is the allowed caller, which yields no finding. */
   context: Exclude<AgentContext, 'main'>
+  /** Which bypass shape tripped the guard — informational only (e.g. for
+   *  `--dry-run` output); every signal shares the same deny message. */
+  signal: 'run_in_background' | 'command-text' | 'monitor'
 }
 
-/** Denies exactly a `Bash` call with `run_in_background: true` outside a
- *  positively established main session. Never throws; a non-object
- *  `toolInput` simply carries no `run_in_background`. */
+/** Scans `command` for `&` characters that act as a shell job-control
+ *  operator — i.e. NOT `&&` (AND-chaining), NOT `&>`/`>&`/`<&` (redirection,
+ *  including the common `2>&1`), and NOT inside a single- or double-quoted
+ *  string or backslash-escaped. Returns their indices, left to right.
+ *
+ *  Not a full shell parser (issue #964 accepts this trade-off explicitly):
+ *  it does not resolve command substitution (`$(...)`/backticks), here-docs,
+ *  or ANSI-C quoting (`$'...'`), so a `&` inside one of those can still
+ *  false-positive or false-negative. See
+ *  docs/agents/subagent-background-guard.md for the residual list. */
+function findUnquotedAmpersands(command: string): number[] {
+  const positions: number[] = []
+  let inSingle = false
+  let inDouble = false
+  for (let i = 0; i < command.length; i++) {
+    const c = command[i]
+    if (inSingle) {
+      if (c === "'") inSingle = false
+      continue
+    }
+    if (inDouble) {
+      if (c === '\\') { i++; continue } // escaped char inside double quotes
+      if (c === '"') inDouble = false
+      continue
+    }
+    if (c === '\\') { i++; continue } // escaped char outside quotes
+    if (c === "'") { inSingle = true; continue }
+    if (c === '"') { inDouble = true; continue }
+    if (c === '&') {
+      if (command[i + 1] === '&') { i++; continue } // `&&` — chaining, not backgrounding
+      if (command[i + 1] === '>') continue // `&>` — redirect stdout+stderr
+      if (command[i - 1] === '>' || command[i - 1] === '<') continue // `>&`/`<&`/`2>&1` — fd dup
+      positions.push(i)
+    }
+  }
+  return positions
+}
+
+/** True if `command`'s last non-whitespace character is a bare `&` job-
+ *  control operator — e.g. `pnpm gate:scoped &`, `long-cmd arg1 arg2   &`. */
+function endsWithBackgroundOperator(command: string): boolean {
+  const trimmed = command.replace(/\s+$/, '')
+  if (!trimmed.endsWith('&')) return false
+  const amps = findUnquotedAmpersands(command)
+  return amps[amps.length - 1] === trimmed.length - 1
+}
+
+/** True if `command` invokes `nohup` as a command word (start of string, or
+ *  after a `;`/`&`/`|`/`(` separator) AND contains a bare `&` job-control
+ *  operator somewhere after it — nohup's standard backgrounding idiom, even
+ *  when the `&` isn't the very last character (e.g. `nohup long & echo hi`). */
+function hasNohupBackground(command: string): boolean {
+  if (!/(^|[;&|(])\s*nohup\b/.test(command)) return false
+  return findUnquotedAmpersands(command).length > 0
+}
+
+/** Denies a `Bash` call outside a positively established main session when
+ *  either: `run_in_background: true` is set, or the command text itself
+ *  backgrounds via a trailing `&` or a `nohup … &` idiom (issue #964 — both
+ *  are text-level bypasses of the `run_in_background` flag). Never throws; a
+ *  non-object `toolInput` simply carries no `run_in_background`/`command`. */
 export function checkBackgroundedBash(
   toolName: string,
   toolInput: unknown,
@@ -43,8 +107,22 @@ export function checkBackgroundedBash(
   if (toolName !== 'Bash') return null
   if (context === 'main') return null
   const input = toolInput !== null && typeof toolInput === 'object' ? (toolInput as Record<string, unknown>) : {}
-  if (input.run_in_background !== true) return null
-  return { context }
+  if (input.run_in_background === true) return { context, signal: 'run_in_background' }
+  const command = typeof input.command === 'string' ? input.command : ''
+  if (command !== '' && (endsWithBackgroundOperator(command) || hasNohupBackground(command))) {
+    return { context, signal: 'command-text' }
+  }
+  return null
+}
+
+/** Denies a `Monitor` call outside a positively established main session
+ *  (issue #964): a dispatched subagent has no wake mechanism a `Monitor`
+ *  notification could ever resume, so the call can only strand it "waiting"
+ *  the same way a backgrounded Bash command does. */
+export function checkMonitorCall(toolName: string, context: AgentContext): BackgroundFinding | null {
+  if (toolName !== 'Monitor') return null
+  if (context === 'main') return null
+  return { context, signal: 'monitor' }
 }
 
 /** Self-contained by design: every recorded recurrence had "foreground" prose
@@ -55,8 +133,8 @@ export function formatGuardMessage(f: BackgroundFinding): string {
       ? `this session is a dispatched subagent (the hook payload carries an agent id)`
       : `this session's context could not be positively established, and the guard fails CLOSED`
   return (
-    `Blocked by the subagent background guard (issue #694): \`run_in_background: true\` is not usable ` +
-    `from a dispatched subagent — and ${why}.\n\n` +
+    `Blocked by the subagent background guard (issues #694, #964): a dispatched subagent may not ` +
+    `background a command, or call \`Monitor\` to wait on one — and ${why}.\n\n` +
     `A subagent's own backgrounded command can NEVER wake it: the task-notification wake exists only ` +
     `for the main session, and \`Monitor\` notifications do not resume a stopped subagent either — only ` +
     `an orchestrator's \`SendMessage\` does. Four recorded impl agents backgrounded \`pnpm gate:scoped\`, ` +
@@ -67,10 +145,11 @@ export function formatGuardMessage(f: BackgroundFinding): string {
     `(e.g. \`pnpm test\`, then \`pnpm build\`, then \`pnpm test:e2e\`).\n` +
     `  • A preview/dev server needs no backgrounding: \`scripts/preview.ts start\` daemonizes itself ` +
     `from a foreground call and returns.\n\n` +
-    `Do not work around this with a trailing \`&\` — that detaches the process the same way and adds ` +
-    `the silent-drop pitfalls CLAUDE.md records. If you believe this genuinely IS the main session, ` +
-    `that is a gap in the guard's context detection — report it on issue #694 rather than routing ` +
-    `around it.`
+    `This guard also blocks a trailing \`&\` or a \`nohup … &\` idiom in the command text itself, and a ` +
+    `\`Monitor\` call — do not try to route around \`run_in_background: true\` with any of those; they ` +
+    `detach or strand the process the same way and add the silent-drop pitfalls CLAUDE.md records. If ` +
+    `you believe this genuinely IS the main session, that is a gap in the guard's context detection — ` +
+    `report it on issue #694 rather than routing around it.`
   )
 }
 
@@ -130,7 +209,10 @@ export function main(): void {
   }
 
   const context = detectAgentContext(payload)
-  const output = denyOutputFor(checkBackgroundedBash(payload.tool_name, payload.tool_input, context))
+  const finding =
+    checkBackgroundedBash(payload.tool_name, payload.tool_input, context) ??
+    checkMonitorCall(payload.tool_name, context)
+  const output = denyOutputFor(finding)
   if (output) process.stdout.write(JSON.stringify(output))
 }
 
@@ -159,7 +241,7 @@ function dryRun(argv: string[]): void {
   const forced = flag('--context') as AgentContext | undefined
   const context = forced ?? detectAgentContext(parse('--payload') ?? null)
   const input = parse('--input') ?? {}
-  const finding = checkBackgroundedBash(tool, input, context)
+  const finding = checkBackgroundedBash(tool, input, context) ?? checkMonitorCall(tool, context)
   console.log(
     JSON.stringify(
       { tool, context, decision: finding ? 'deny' : 'allow', reason: finding ? formatGuardMessage(finding) : undefined },

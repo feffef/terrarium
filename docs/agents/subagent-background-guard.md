@@ -1,9 +1,17 @@
-# The subagent background guard (issue #694)
+# The subagent background guard (issue #694, #964)
 
 The single home for the `PreToolUse` guard that denies a **dispatched
-subagent** any Bash call with `run_in_background: true`
+subagent** any way of backgrounding a command or waiting on one instead of
+running it in the foreground: a Bash call with `run_in_background: true`, a
+Bash command whose text itself backgrounds via a trailing `&` or a `nohup …
+&` idiom (issue #964), or a `Monitor` tool call (issue #964)
 (`scripts/subagent-background-guard.ts`, pre-filtered by
 `scripts/subagent-background-guard.sh`, wired in `.claude/settings.json`).
+The command-text and `Monitor` checks close two bypass shapes the original
+deny message already warned about ("do not work around this with a trailing
+`&`", "`Monitor` notifications do not resume a stopped subagent either") but
+never mechanized — a dispatched impl agent found and used exactly this gap
+(session `01NYhzwn6avFfVwgdPi2uNnw`, 2026-08-14).
 
 ## Why
 
@@ -21,13 +29,24 @@ explicit `timeout` (≤ 600000 ms), split into separate calls if a step exceeds
 
 ## Mechanism
 
-- **Matcher `Bash`, hot path pre-filtered.** `Bash` is the highest-frequency
-  tool, so the hook entry is the `sh` pre-filter: it forwards to the tsx
-  guard only when the payload textually carries `"run_in_background": true`
-  (whitespace-tolerant); everything else pays one `grep`.
-- **Deny predicate.** `Bash` + `run_in_background: true` is denied unless the
-  payload positively identifies the main session. *All* backgrounding is
-  denied in subagent context — a command registry would invite rephrasing.
+- **Matcher `Bash`/`Monitor`, hot path pre-filtered.** `Bash` is the
+  highest-frequency tool, so the hook entry is the `sh` pre-filter: it
+  forwards to the tsx guard only when the payload textually carries
+  `"run_in_background": true` or any `&` character (whitespace-tolerant);
+  everything else pays one `grep`. `Monitor` calls are comparatively rare and
+  always forwarded.
+- **Deny predicate — three signals, one deny.** In subagent (or
+  undeterminable) context: `Bash` + `run_in_background: true`; `Bash` whose
+  command text ends with a bare `&` job-control operator or invokes `nohup …
+  &` (a quote-aware scan — `findUnquotedAmpersands` — skips `&&` chaining,
+  `&>`/`>&`/`2>&1` redirection, and any `&` inside a quoted string or
+  backslash-escaped); or any `Monitor` call. *All* three are denied
+  unconditionally in subagent context — a command registry would invite
+  rephrasing.
+- **The command-text scan is not a full shell parser (issue #964's accepted
+  trade-off):** it does not resolve command substitution (`$(...)`/backticks),
+  here-docs, or ANSI-C quoting (`$'...'`), so a `&` inside one of those can
+  still false-positive or false-negative.
 - **Fail closed, bounded.** Undeterminable context, unparseable payload, or a
   guard crash denies — and can't wedge foreground use, since the pre-filter
   never forwards it.
@@ -59,6 +78,13 @@ Established empirically in session `session_01K3VWusiRRa6ngZZKMJphvp`:
   guard failed.
 - **Payload fields are harness-owned:** dropping `agent_id`/`agent_type`
   would read subagent calls as `main` — silent fail-open.
+- **Command-text scan residuals (issue #964):** a `&` reached only through
+  command substitution, a here-doc, or ANSI-C quoting is outside the
+  quote-aware scan's model and can false-positive or false-negative; the
+  pre-filter's `&`-anywhere check is broader than the guard's own
+  job-control-only scan, so a quoted or escaped `&` still pays the tsx start
+  even though the guard then allows it — a correctness/perf trade-off, not a
+  bug.
 
 ## Exercising it by hand
 
