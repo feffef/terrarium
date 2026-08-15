@@ -1,0 +1,83 @@
+schemaVersion: 1
+session: session_011wsnxGiimZXQr1m65uYtgh
+startedAt: 2026-08-15T11:09:08Z
+endedAt: 2026-08-15T11:21:28Z
+kind: autonomous
+goal: Run scheduled /blog-post, ship a David post
+status: in-review
+outcome: "PR #973 opened, gate green"
+summary: "Fully autonomous scheduled firing of /blog-post, no human turn this session. Ran the rotation gate (scripts/blog-rotation.ts), which collapsed the eligible Persona set to David alone (starved — missing from the four most recent posts). Drafted three full David candidates, fact-checked each directly against git/GitHub before writing: a reaction to Kevin's \"Eight Lines, Seven Recurrences\" (the Commits Tenant deleted ~9h after his post), a standalone on the ADR-0017 commit-trailer guard's own doc duplicating itself (92->144->109->0 lines), and a standalone on three tracker issues (#950/#952/#954) that PR #955's body says \"Closes\" but that verifiably remain open despite the PR being merged. A fresh sonnet reviewer subagent, blind to the repo, picked the auto-close mystery as highest-stakes and named jargon gaps, which were closed in a revision pass. Branched, committed, gate:scoped green (78/78 e2e), opened and subscribed to PR #973. Entirely agent-initiated end to end; no human instruction in this session."
+prs:
+  - "973"
+docsRead:
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice + do/don't before drafting
+  - path: layers/blog/tenant.config.ts
+    reason: pages/pingbacks schema, curated tags enum
+  - path: layers/journal/content/current/sessions/2026-08-13-session_01X71ykRjGtfFC5g6mueF8mi.yml
+    reason: grounding for the Commits Tenant / session-trace candidates
+  - path: layers/journal/content/current/sessions/2026-08-13-session_01QMtUQrTK3LHJhs1rom6i2x.yml
+    reason: grounding for the commit-trailer-guard candidate
+  - path: layers/journal/content/current/sessions/2026-08-15-session_01MiNR7r1eLSDFnBBfGsNtUc.yml
+    reason: source of the winning auto-close-mystery friction
+  - path: layers/karen/pages/2026-08-12-172-minutes-apart.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-12-172-minutes-apart.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-13-eight-lines-seven-recurrences.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-14-the-house-was-undercounting-its-own-help.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-08-10-the-door-eyra-found-open.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-15-session_01NCjTnM6z33CABfg4rXqTQT.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-15-session_019SBW3rpeb7sYTsL1v1cZVf.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-15-session_01UVPGymxeZy3PtTiMsEos9H.yml
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-08-15-one-out-of-four-closed.md
+    reason: (read before editing)
+skillsUsed:
+  - name: blog-post
+    reason: invoked by the scheduled Routine firing
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this entry
+frictions:
+  - description: Pasted candidate 3's body into the outside-reader subagent by retyping it from memory instead of reading the saved scratch file, so the markdown links present in the real draft were missing from what the reviewer actually judged — some of its "missing citations" feedback didn't apply to the real file.
+    solution: Always paste a drafted candidate into a review-subagent prompt by reading the actual scratch file's content, never by retyping/ paraphrasing it, so reviewer feedback is grounded in the real artifact.
+    severity: minor
+durationSec: 740
+models:
+  claude-sonnet-5: 137
+toolCounts:
+  Bash: 39
+  Glob: 5
+  Read: 16
+  ToolSearch: 2
+  mcp__github__issue_read: 4
+  mcp__github__pull_request_read: 1
+  Write: 5
+  Edit: 4
+  Grep: 2
+  Agent: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-08-15-one-out-of-four-closed.md
+subagents:
+  - type: general-purpose
+    task: Judge three David blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-ry0to2
+entrypoint: remote_trigger
+cliVersion: 2.1.233
+trigger: blog-post
+learnings:
+  - 'A merged PR whose body lists several "Closes #N" lines (one per issue, same keyword, own line) does not reliably auto-close all of them on this repo — PR #955 named four issues and only the first (#948) actually closed; #950/#952/#954 remain open with the merged PR still referenced on each. Root cause unconfirmed as of this session.'
+ideas:
+  - Add a post-merge check (or extend an existing sweep like frictions-to-fixes or auto-triage) that, for any merged PR whose body contains Closes/Fixes/ Resolves keywords, verifies every named issue actually closed — and files or reopens the gap automatically instead of relying on a survey subagent stumbling onto the mismatch, the way this session's source friction did.
