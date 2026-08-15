@@ -1,0 +1,66 @@
+schemaVersion: 1
+session: session_01UTrFNDBJFVkXFtWdfj4HHn
+startedAt: 2026-08-11T01:05:38Z
+endedAt: 2026-08-15T06:38:37Z
+kind: autonomous
+goal: Run frictions-to-fixes on last 20 sessions
+status: completed
+outcome: 5 frictions fixed, both PRs merged
+summary: "Scheduled/autonomous frictions-to-fixes run, no human prompt. A subagent surveyed the last 20 session logs and screened candidates against the tracker; I selected 4 simple doc frictions (stale-CI-rerun, page.evaluate/esbuild __name, git stash+mv rename split, get_job_logs overflow) plus 1 hard candidate (a PreToolUse guard against hand-typed commit trailers), filed issues #917-921, and dispatched two Sonnet impl agents in isolated worktrees. The doc batch (PR #922, closing #917-920) I reviewed and merged myself. The hard-fix agent for #921 stalled without committing across a multi-day gap between dispatch and this session's resume; by the time I resumed, #921 had already been independently fixed and merged by a separate auto-triage session (PR #946) - I cleaned up the stranded, never-committed worktree rather than duplicating that work. All 5 filed issues are now closed. No part of this run was human-instructed beyond the original scheduled skill invocation."
+prs:
+  - "922"
+docsRead:
+  - path: scripts/session-id-guard.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run's own procedure
+  - name: dispatch-subagents
+    reason: worktree isolation + brief checklist for the two impl agents
+  - name: close-session
+    reason: closure trigger
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Forgot the ADR-0017 provenance header on the first mcp__github__issue_write call for all 5 filed issues; the PreToolUse guard blocked every one, needing a uniform retry with the header added.
+    solution: Include the "🤖 [<model>](session URL)" header as the first line on every GitHub post by default, not just after the guard fires.
+    severity: nit
+  - description: "Filed issue #917 partly on the survey subagent's unverified claim that github-integration.md \"already documents the adjacent trap\" about refs/pull/N/merge - the doc-fix impl agent later found that note actually lives in root CLAUDE.md, not that file. Didn't affect the fix's correctness but violated the \"verify a subagent-derived claim before asserting it\" rule."
+    solution: Grep the target file directly for a subagent's specific "doc already says X" claim before citing it in a filed issue, not just before implementing the fix.
+    severity: minor
+  - description: "The dispatched hard-fix agent for #921 (isolated worktree, claude/commit-trailer-guard) died without ever committing, stranding two untracked draft files, sometime during a multi-day gap between dispatch and this session's resume. Meanwhile a separate auto-triage session independently picked up and merged a fix for the same issue (PR #946) before I could recover or resume mine."
+    solution: pnpm check:worktrees caught the stranded worktree correctly and it was safe to discard since the issue was already closed elsewhere - but a long gap between dispatching a subagent and the orchestrator's next resume risks exactly this kind of wasted/duplicated effort when other sessions can independently pick up the same open issue. No clean fix identified beyond resuming dispatched agents promptly when possible.
+    severity: minor
+  - description: The survey subagent's report was flagged by the harness as containing an "instruction-shaped pattern" (settings-json) — turned out benign, just the report's own text describing a recommended fix that touches .claude/settings.json.
+    solution: No action needed this time; noting only because it cost a moment to confirm it was a false positive rather than an actual injection attempt.
+    severity: nit
+durationSec: 365579
+models:
+  claude-sonnet-5: 103
+toolCounts:
+  Bash: 12
+  Agent: 3
+  ToolSearch: 3
+  mcp__github__search_issues: 7
+  mcp__github__issue_write: 10
+  Skill: 3
+  Read: 1
+  mcp__github__pull_request_read: 4
+  mcp__github__add_issue_comment: 1
+  mcp__github__issue_read: 1
+  ListAgents: 1
+  mcp__github__search_pull_requests: 1
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Batch doc-fix PR for 4 frictions
+    model: sonnet
+  - type: general-purpose
+    task: Commit-trailer PreToolUse guard PR
+    model: sonnet
+gitBranch: claude/hopeful-brown-1j34uh
+entrypoint: remote_trigger
+cliVersion: 2.1.227
+trigger: frictions-to-fixes
