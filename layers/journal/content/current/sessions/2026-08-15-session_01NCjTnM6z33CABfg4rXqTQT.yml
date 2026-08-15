@@ -1,0 +1,178 @@
+schemaVersion: 1
+session: session_01NCjTnM6z33CABfg4rXqTQT
+startedAt: 2026-08-15T04:10:05Z
+endedAt: 2026-08-15T04:30:07Z
+kind: autonomous
+goal: Run scheduled /audit-docs sweep
+status: completed
+outcome: "3 fact-checked fixes merged via PR #971"
+summary: "Fully autonomous scheduled firing of /audit-docs, no human input this run. Classified every *.md into Live/Historical/Pack-generic/excluded tiers, fanned out the four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence), pooled 3 candidate findings (Freshness and Concision came back clean), fact-checked all 3 with an independent checker, and fixed every CONFIRMED(-BUT) finding: a Duplication in docs/agents/issue-tracker.md trimmed to a pointer at pr-workflow.md's single home; a Contradiction in docs/research/rulebook-migration-table.md's CM-09 row reworded to match its own cited source's verified branch-protection state; and CLAUDE.md's \"isolation logic\" catch-all given a pointer noting it's a standing judgement call pending issue #864, not an oversight. No unresolvable factual conflict, so no needs-triage issue filed. No human-only surface touched, so all three rode in one self-merged PR. gate:scoped passed (inert doc-only diff). PR #971 opened, subscribed, verdict posted, merged via merge-pr.ts on a green gate, and unsubscribed."
+prs:
+  - "971"
+docsRead:
+  - path: CLAUDE.md
+    reason: tier rules, self-merge scope, branch checklist
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: this run's own procedure
+  - path: docs/agents/pr-workflow.md
+    reason: verified single-home for the Duplication finding
+  - path: docs/agents/issue-tracker.md
+    reason: fixed the Duplication finding here
+  - path: docs/research/rulebook-migration-table.md
+    reason: fixed the Contradiction finding here
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: primary source for the Contradiction fact-check
+  - path: docs/agents/domain.md
+    reason: verified the pointer-vs-duplication test cited by a finding
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: app/assets/fonts/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: docs/agents/deferred-tool-guard.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/loop-only-tool-guard.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/subagent-background-guard.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/research/deferred-tool-guard-hook-viability.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the procedure this whole session ran
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: The skill's tier rules (Live/Historical/Pack-generic/excluded file lists) exist only as prose in SKILL.md, so each of the 4 parallel lens agents needed the full classification re-typed into its dispatch prompt by hand.
+    solution: A small machine-readable tier manifest (or a shared helper script) the orchestrator could compute once and hand to every dispatched agent would cut duplicated prompt text and reduce the chance of a copy-paste tier mismatch between agents.
+    severity: nit
+  - description: Skill text names only Atlas as excluded 'fictional Tenant content'; Marquee/Midden/Commons content pages aren't explicitly bucketed, so I had to infer from each Tenant's own CONTEXT.md wording (e.g. Marquee's 'same as the Atlas's fiction') that they're excluded too.
+    solution: "Have the skill explicitly enumerate which Tenants' content pages are excluded (or state the general test: any Tenant content page that isn't the platform-facing CONTEXT.md/journal-facing-pages is out of scope), rather than one example."
+    severity: nit
+durationSec: 1202
+models:
+  claude-sonnet-5: 144
+toolCounts:
+  Bash: 18
+  ToolSearch: 5
+  mcp__github__list_pull_requests: 2
+  mcp__github__search_pull_requests: 1
+  TaskCreate: 7
+  TaskUpdate: 12
+  Agent: 5
+  ReadNotifications: 7
+  Grep: 2
+  Read: 7
+  Edit: 4
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - docs/agents/issue-tracker.md
+  - docs/research/rulebook-migration-table.md
+  - CLAUDE.md
+subagents:
+  - task: Freshness lens doc audit (Drift + Orphan-addition)
+  - task: Single-home lens doc audit (Duplication + Mis-location)
+  - task: Concision lens doc audit (Verbose + Stale-narration)
+  - task: Coherence lens doc audit (Contradiction + Ambiguity)
+  - task: Fact-check three pooled doc-audit findings
+gitBranch: claude/festive-mayer-rxygg7
+entrypoint: remote_trigger
+cliVersion: 2.1.233
+trigger: audit-docs
