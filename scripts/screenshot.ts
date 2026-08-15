@@ -82,9 +82,15 @@ async function withPage<T>(width: number, height: number, fn: (page: Page) => Pr
  */
 export async function captureScreenshot(url: string, out: string, windowSize = '1280,800', waitMs = DEFAULT_WAIT_MS): Promise<void> {
   const [width, height] = parseWindowSize(windowSize)
+  const anchor = new URL(url).hash.slice(1)
   await withPage(width, height, async (page) => {
     await page.goto(url)
     if (waitMs > 0) await page.waitForTimeout(waitMs)
+    // The browser's native anchor-scroll fires once, at navigation time —
+    // before Nuxt's client-side hydration has added the target element to
+    // the DOM, so it never actually scrolls anywhere (issue #965). Re-scroll
+    // explicitly now that hydration has had the wait above to complete.
+    if (anchor) await page.locator(`#${anchor}`).scrollIntoViewIfNeeded({ timeout: waitMs > 0 ? waitMs : 5000 })
     await page.screenshot({ path: out })
   })
 }
