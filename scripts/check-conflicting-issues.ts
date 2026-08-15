@@ -27,6 +27,12 @@
 //     same shared base `check-triage-drift.ts` already imports from (issue
 //     #505/#507).
 //
+// `--pr <number>` mode also excludes the issue(s) the PR's own body
+// auto-closes (`Closes`/`Fixes`/`Resolves #N`, GitHub's linking-keyword
+// syntax) from that PR's own scan — otherwise the closed issue's own text
+// routinely self-matches the generic keyword list and reports back as a
+// false "conflict" with the PR that's resolving it (issue #967).
+//
 // Usage:
 //   tsx scripts/check-conflicting-issues.ts <base> <head>
 //   tsx scripts/check-conflicting-issues.ts --pr <number>
@@ -144,6 +150,33 @@ export function findAllConflictHits(issues: ConflictCandidateIssue[], changedFil
   return issues.flatMap((issue) => findConflictHits(issue, changedFiles))
 }
 
+/** GitHub's own auto-close keyword list (singular/plural/past-tense forms),
+ *  lowercase — https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue */
+const CLOSING_KEYWORDS = [
+  'close', 'closes', 'closed',
+  'fix', 'fixes', 'fixed',
+  'resolve', 'resolves', 'resolved',
+] as const
+
+/** Every issue number a PR body auto-closes (issue #967): the numbers a PR
+ *  itself declares via `Closes`/`Fixes`/`Resolves #N` (and their plural/past
+ *  forms, case-insensitive), matched the way GitHub parses linking keywords —
+ *  a keyword followed by one or more `#N` references, comma- or
+ *  "and"-separated. Excluded from that PR's own conflict scan below: the
+ *  issue a PR closes is expected to name the same file/keywords the PR
+ *  itself is changing, which is a false positive, not a real conflict. */
+export function findClosingIssueNumbers(body: string): Set<number> {
+  const numbers = new Set<number>()
+  const keywordPattern = CLOSING_KEYWORDS.join('|')
+  const re = new RegExp(`\\b(?:${keywordPattern})\\b:?((?:\\s*(?:,|and)?\\s*#\\d+)+)`, 'gi')
+  for (const match of body.matchAll(re)) {
+    for (const ref of (match[1] ?? '').matchAll(/#(\d+)/g)) {
+      if (ref[1] !== undefined) numbers.add(Number(ref[1]))
+    }
+  }
+  return numbers
+}
+
 /** Turn one raw REST issue record into a `ConflictCandidateIssue`, or `null`
  *  if it's actually a pull request (the REST `issues` endpoint mixes both in,
  *  same quirk `list-open-issues.ts`/`check-triage-drift.ts` screen for) or has
@@ -200,6 +233,18 @@ function readPrFilesViaGh(owner: string, repo: string, prNumber: number, cwd: st
     { cwd, encoding: 'utf8' },
   )
   return parseChangedFileList(raw)
+}
+
+/** The PR's own body text — `''` when it has none — used to find the issues
+ *  it self-closes (issue #967). `.body // ""` (not a bare `.body`) so a null
+ *  body prints as an empty string rather than the literal text `"null"`,
+ *  which `gh api --jq` would otherwise emit for a raw `null` value. */
+function readPrBodyViaGh(owner: string, repo: string, prNumber: number, cwd: string): string {
+  return execFileSync(
+    'gh',
+    ['api', '--method', 'GET', `repos/${owner}/${repo}/pulls/${prNumber}`, '--jq', '.body // ""'],
+    { cwd, encoding: 'utf8' },
+  ).trim()
 }
 
 function readOpenIssuesViaGh(owner: string, repo: string, cwd: string): RawConflictIssue[] {
@@ -333,6 +378,20 @@ function readOpenIssuesViaRest(owner: string, repo: string, token: string, cwd: 
   )
 }
 
+interface RawPr {
+  body: string | null
+}
+
+function readPrBodyViaRest(owner: string, repo: string, prNumber: number, token: string, cwd: string): string {
+  const url = `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}`
+  const { status, body } = curlGetPage(url, token, cwd)
+  if (status[0] !== '2') {
+    throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
+  }
+  const pr = JSON.parse(body) as RawPr
+  return pr.body ?? ''
+}
+
 async function readChangedFilesFromPr(
   strategy: FetchStrategy,
   owner: string,
@@ -358,6 +417,19 @@ async function readOpenIssues(
   return readOpenIssuesViaRest(owner, repo, token, cwd)
 }
 
+async function readPrBody(
+  strategy: FetchStrategy,
+  owner: string,
+  repo: string,
+  prNumber: number,
+  cwd: string,
+): Promise<string> {
+  if (strategy === 'gh') return readPrBodyViaGh(owner, repo, prNumber, cwd)
+  const token = envToken()
+  if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
+  return readPrBodyViaRest(owner, repo, prNumber, token, cwd)
+}
+
 // ── Command ──────────────────────────────────────────────────────────────────
 
 /** Runs the check against a locally-resolvable diff (`git diff --name-only
@@ -369,12 +441,19 @@ export async function checkConflictingIssuesForDiff(base: string, head: string, 
 }
 
 /** Runs the check for a PR by number — resolves both the changed-file list
- *  and the open-issue listing from the GitHub API/`gh`. */
+ *  and the open-issue listing from the GitHub API/`gh`. Excludes the
+ *  issue(s) the PR's own body auto-closes (issue #967) — a self-referential
+ *  false positive, not a real conflict. */
 export async function checkConflictingIssuesForPr(prNumber: number, cwd = root): Promise<ConflictHit[]> {
   const { strategy, owner, repo } = resolveAccess(cwd)
   const changedFiles = await readChangedFilesFromPr(strategy, owner, repo, prNumber, cwd)
+  const prBody = await readPrBody(strategy, owner, repo, prNumber, cwd)
+  const excludedIssueNumbers = findClosingIssueNumbers(decodeHtmlEntities(prBody))
   const rawIssues = await readOpenIssues(strategy, owner, repo, cwd)
-  const issues = rawIssues.map(toConflictCandidateIssue).filter((x): x is ConflictCandidateIssue => x !== null)
+  const issues = rawIssues
+    .map(toConflictCandidateIssue)
+    .filter((x): x is ConflictCandidateIssue => x !== null)
+    .filter((issue) => !excludedIssueNumbers.has(issue.number))
   return findAllConflictHits(issues, changedFiles)
 }
 
