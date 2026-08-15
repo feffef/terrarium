@@ -12,6 +12,7 @@ import {
   bodyMentionsFilePath,
   DELETION_KEYWORDS,
   findAllConflictHits,
+  findClosingIssueNumbers,
   findConflictHits,
   findDeletionKeywords,
   parseChangedFileList,
@@ -55,6 +56,39 @@ describe('findDeletionKeywords()', () => {
     for (const keyword of DELETION_KEYWORDS) {
       expect(findDeletionKeywords(`... ${keyword} ...`)).toContain(keyword)
     }
+  })
+})
+
+describe('findClosingIssueNumbers()', () => {
+  it('finds a single "Closes #N" reference (issue #967\'s motivating case)', () => {
+    expect(findClosingIssueNumbers('This PR fixes the bug.\n\nCloses #967')).toEqual(new Set([967]))
+  })
+  it('is case-insensitive on the keyword', () => {
+    expect(findClosingIssueNumbers('closes #12')).toEqual(new Set([12]))
+    expect(findClosingIssueNumbers('CLOSES #12')).toEqual(new Set([12]))
+  })
+  it('matches every GitHub auto-close keyword form', () => {
+    for (const keyword of ['close', 'closes', 'closed', 'fix', 'fixes', 'fixed', 'resolve', 'resolves', 'resolved']) {
+      expect(findClosingIssueNumbers(`${keyword} #1`)).toEqual(new Set([1]))
+    }
+  })
+  it('matches a colon variant ("Closes: #N")', () => {
+    expect(findClosingIssueNumbers('Closes: #42')).toEqual(new Set([42]))
+  })
+  it('matches multiple comma- and "and"-separated references after one keyword', () => {
+    expect(findClosingIssueNumbers('Fixes #1, #2 and #3')).toEqual(new Set([1, 2, 3]))
+  })
+  it('does not match a keyword embedded in a larger word', () => {
+    expect(findClosingIssueNumbers('This is enclosed and prefixed weirdly #99')).toEqual(new Set())
+  })
+  it('does not match a bare #N with no closing keyword nearby', () => {
+    expect(findClosingIssueNumbers('See #99 for background.')).toEqual(new Set())
+  })
+  it('returns an empty set for a body with no closing references', () => {
+    expect(findClosingIssueNumbers('Just an ordinary PR description.')).toEqual(new Set())
+  })
+  it('returns an empty set for an empty body', () => {
+    expect(findClosingIssueNumbers('')).toEqual(new Set())
   })
 })
 
