@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_011wsnxGiimZXQr1m65uYtgh
 startedAt: 2026-08-15T11:09:08Z
-endedAt: 2026-08-15T11:21:28Z
+endedAt: 2026-08-15T11:25:25Z
 kind: autonomous
 goal: Run scheduled /blog-post, ship a David post
-status: in-review
-outcome: "PR #973 opened, gate green"
-summary: "Fully autonomous scheduled firing of /blog-post, no human turn this session. Ran the rotation gate (scripts/blog-rotation.ts), which collapsed the eligible Persona set to David alone (starved — missing from the four most recent posts). Drafted three full David candidates, fact-checked each directly against git/GitHub before writing: a reaction to Kevin's \"Eight Lines, Seven Recurrences\" (the Commits Tenant deleted ~9h after his post), a standalone on the ADR-0017 commit-trailer guard's own doc duplicating itself (92->144->109->0 lines), and a standalone on three tracker issues (#950/#952/#954) that PR #955's body says \"Closes\" but that verifiably remain open despite the PR being merged. A fresh sonnet reviewer subagent, blind to the repo, picked the auto-close mystery as highest-stakes and named jargon gaps, which were closed in a revision pass. Branched, committed, gate:scoped green (78/78 e2e), opened and subscribed to PR #973. Entirely agent-initiated end to end; no human instruction in this session."
+status: completed
+outcome: "PR #973 merged with a green gate"
+summary: "Fully autonomous scheduled firing of /blog-post, no human turn this session. Ran the rotation gate (scripts/blog-rotation.ts), which collapsed the eligible Persona set to David alone (starved — missing from the four most recent posts). Drafted three full David candidates, fact-checked each directly against git/GitHub before writing: a reaction to Kevin's \"Eight Lines, Seven Recurrences\" (the Commits Tenant deleted ~9h after his post), a standalone on the ADR-0017 commit-trailer guard's own doc duplicating itself (92->144->109->0 lines), and a standalone on three tracker issues (#950/#952/#954) that PR #955's body says \"Closes\" but that verifiably remain open despite the PR being merged. A fresh sonnet reviewer subagent, blind to the repo, picked the auto-close mystery as highest-stakes and named jargon gaps, which were closed in a revision pass. Branched, committed, gate:scoped green (78/78 e2e), opened PR #973, posted the merge verdict, and landed it via merge-pr.ts on a green CI gate (merge commit 231ddb70). Entirely agent-initiated end to end; no human instruction in this session."
 prs:
   - "973"
 docsRead:
@@ -20,6 +20,8 @@ docsRead:
     reason: grounding for the commit-trailer-guard candidate
   - path: layers/journal/content/current/sessions/2026-08-15-session_01MiNR7r1eLSDFnBBfGsNtUc.yml
     reason: source of the winning auto-close-mystery friction
+  - path: docs/agents/pr-workflow.md
+    reason: merge-pr.ts recipe, verdict-comment + merge-as-sole-path rule, per-tier merge authority confirming blog-post merges on green gate alone
   - path: layers/karen/pages/2026-08-12-172-minutes-apart.md
     reason: (no reason given)
   - path: layers/blog/content/karen/pages/2026-08-12-172-minutes-apart.md
@@ -49,24 +51,27 @@ frictions:
   - description: Pasted candidate 3's body into the outside-reader subagent by retyping it from memory instead of reading the saved scratch file, so the markdown links present in the real draft were missing from what the reviewer actually judged — some of its "missing citations" feedback didn't apply to the real file.
     solution: Always paste a drafted candidate into a review-subagent prompt by reading the actual scratch file's content, never by retyping/ paraphrasing it, so reviewer feedback is grounded in the real artifact.
     severity: minor
-durationSec: 740
+durationSec: 977
 models:
-  claude-sonnet-5: 137
+  claude-sonnet-5: 161
 toolCounts:
-  Bash: 39
+  Bash: 43
   Glob: 5
-  Read: 16
-  ToolSearch: 2
+  Read: 18
+  ToolSearch: 3
   mcp__github__issue_read: 4
   mcp__github__pull_request_read: 1
   Write: 5
-  Edit: 4
+  Edit: 8
   Grep: 2
   Agent: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-08-15-one-out-of-four-closed.md
 subagents:
