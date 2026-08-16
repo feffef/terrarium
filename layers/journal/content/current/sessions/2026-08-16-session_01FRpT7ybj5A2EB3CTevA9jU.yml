@@ -1,0 +1,40 @@
+schemaVersion: 1
+session: session_01FRpT7ybj5A2EB3CTevA9jU
+startedAt: 2026-08-16T00:46:19Z
+endedAt: 2026-08-16T00:51:32Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: Clean run — no changes needed
+summary: "Fully agent-initiated scheduled run of the audit-skills Skill (no live human prompt; fired by the scheduler). Branched off origin/main (no pinned branch in the task), gathered the scorecard via scripts/audit-skills.ts, and worked every signal in sequence. Step 3 (re-grade importance/role): checked usedIn, goal/summary, and absence patterns for all 35 Inventoried Skills against the bright-line ≥2-session rule; found no session clearly earning a promotion or demotion and no role contradicted by usage — zero Inventory edits made. Step 4 (regression watch): Phase A screened all 8 regressionChecks brackets (audit-docs/audit-skills/blog-post/digest/frictions-to-fixes/guest-build/ guest-intake sharing one 2026-08-14 batch SKILL.md edit, auto-triage tied to a separate 2026-08-14 edit); most were zero-signal (flat or all-nit friction counts) or zero-usedIn-both-sides (skipped immediately). Two were suspected enough for Phase B deep-read — audit-docs (1 nit before vs 2 nits after) and auto-triage (0 usedIn before vs 1 heavy-friction session after) — both deep-reads found the post-edit frictions unrelated to what the audited edit actually changed (audit-docs: pre-existing tier-manifest/exclusion-list gaps; auto-triage: a blocker-representation gap unconnected to the \"doc-only recurring friction\" commit). Concluded inconclusive both times — no learning entries, per the Skill's own guidance that most runs land there. Step 5: orphanedSessions surfaced exactly one entry, session_019aeaoPHYWMJVekmUvTMhQ9 — searched first and found it's the exact subject of open issue #736, already fully evidenced with the identical commits/PR and explicitly parked for a human governance call, so no new comment (nothing fresh to add). orphanScan was a full, trustworthy scan (547 merged PRs, 402 with a session log); orphanSuppressionLog, humanPromptedClosures, manuallyRescuedClosures, and misclassifiedKind were all empty — the healthy state. No Inventory YAML changed, so no PR was opened (nothing substantive to gate per ADR-0003)."
+prs: []
+docsRead:
+  - path: layers/journal/content/current/sessions/2026-08-13-session_01QMtUQrTK3LHJhs1rom6i2x.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the scheduled task this session ran
+  - name: close-session
+    reason: closure with no PR to open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: While scripting a quick lookup of window/regressionSessions entries by id, first assumed the key was `id` (KeyError) before checking the actual JSON shape, which uses `session`.
+    solution: Read one sample object's real keys before writing the lookup dict comprehension, rather than assuming a key name from habit.
+    severity: nit
+durationSec: 313
+models:
+  claude-sonnet-5: 63
+toolCounts:
+  Bash: 21
+  Read: 1
+  Grep: 2
+  ToolSearch: 2
+  mcp__github__search_issues: 1
+  mcp__github__issue_read: 1
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-foy2dz
+entrypoint: remote_trigger
+cliVersion: 2.1.233
+trigger: audit-skills
