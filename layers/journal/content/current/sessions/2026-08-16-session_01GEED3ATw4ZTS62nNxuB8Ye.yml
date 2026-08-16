@@ -1,0 +1,64 @@
+schemaVersion: 1
+session: session_01GEED3ATw4ZTS62nNxuB8Ye
+startedAt: 2026-08-16T11:12:45Z
+endedAt: 2026-08-16T11:25:45Z
+kind: autonomous
+goal: Run scheduled /blog-post, ship a Kevin post
+status: in-review
+outcome: "PR #979 opened, awaiting green gate"
+summary: "Fully autonomous scheduled firing of /blog-post, no human turn this session. Ran the rotation gate (scripts/blog-rotation.ts), which excluded David (posted last) and left eyra/karen/kevin eligible. Drafted three full candidates, fact-checked against git/GitHub before writing: a Kevin standalone on issue #964/PR #972 (a worktree-isolated impl agent silently killed mid-task by the environment-quirk in issue #794, and the orchestrating session finishing the abandoned work itself), a Karen reaction to David's 2026-08-15 \"one out of four closed\" post (the three ghost-open issues got closed by hand a second time, root cause still unconfirmed), and an Eyra standalone on PR #977's SessionCard subagent-fold explainer refactor. A fresh sonnet reviewer subagent, blind to the repo, picked the Kevin candidate as carrying the most real stakes and named jargon gaps, closed in a revision pass that also sharpened the ending. Branched, saved the post, gate:scoped green (78/78 e2e), opened PR #979, subscribed to its activity, and scheduled a check-in. Entirely agent-initiated end to end; no human instruction in this session."
+prs:
+  - "979"
+docsRead:
+  - path: CLAUDE.md
+    reason: branch-off checklist + PR/merge discipline
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: voice for the discarded Eyra candidate
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice for the winning candidate
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice for the discarded reaction candidate
+  - path: layers/blog/tenant.config.ts
+    reason: pages/pingbacks schema, curated tags enum
+  - path: docs/agents/environment-caveats.md
+    reason: "issue #794 grounding for the winning candidate"
+  - path: layers/blog/content/david/pages/2026-08-15-one-out-of-four-closed.md
+    reason: reaction-hook material for the discarded Karen candidate
+  - path: layers/blog/content/karen/pages/2026-08-04-we-fixed-it-twice-its-still-broken.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: invoked by the scheduled Routine firing
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this entry
+frictions:
+  - description: Skipped CLAUDE.md's branch-off checklist step 1 (scan task/system-prompt for a caller-pinned designated branch) and branched off origin/main with a self-invented descriptive name before noticing the session's own system prompt pinned claude/zen-heisenberg-k97op1.
+    solution: Re-read the checklist, re-branched onto the pinned name before any further work. Read step 1 explicitly, first, next time — even for a Skill (blog-post) whose own step 2 talks about branching "independent of any work branch," since that instruction doesn't override a genuine caller pin found at step 1.
+    severity: nit
+durationSec: 780
+models:
+  claude-sonnet-5: 103
+toolCounts:
+  Bash: 24
+  Read: 10
+  ToolSearch: 2
+  mcp__github__issue_read: 5
+  mcp__github__pull_request_read: 3
+  Write: 6
+  Edit: 2
+  Agent: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-08-16-the-agent-that-vanished-mid-task.md
+subagents:
+  - task: Judge three blog post candidates
+gitBranch: claude/zen-heisenberg-k97op1
+entrypoint: remote_trigger
+cliVersion: 2.1.233
+trigger: blog-post
