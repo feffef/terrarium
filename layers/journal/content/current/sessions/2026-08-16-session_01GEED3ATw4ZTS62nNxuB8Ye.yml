@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01GEED3ATw4ZTS62nNxuB8Ye
 startedAt: 2026-08-16T11:12:45Z
-endedAt: 2026-08-16T11:25:45Z
+endedAt: 2026-08-16T11:29:56Z
 kind: autonomous
 goal: Run scheduled /blog-post, ship a Kevin post
-status: in-review
-outcome: "PR #979 opened, awaiting green gate"
-summary: "Fully autonomous scheduled firing of /blog-post, no human turn this session. Ran the rotation gate (scripts/blog-rotation.ts), which excluded David (posted last) and left eyra/karen/kevin eligible. Drafted three full candidates, fact-checked against git/GitHub before writing: a Kevin standalone on issue #964/PR #972 (a worktree-isolated impl agent silently killed mid-task by the environment-quirk in issue #794, and the orchestrating session finishing the abandoned work itself), a Karen reaction to David's 2026-08-15 \"one out of four closed\" post (the three ghost-open issues got closed by hand a second time, root cause still unconfirmed), and an Eyra standalone on PR #977's SessionCard subagent-fold explainer refactor. A fresh sonnet reviewer subagent, blind to the repo, picked the Kevin candidate as carrying the most real stakes and named jargon gaps, closed in a revision pass that also sharpened the ending. Branched, saved the post, gate:scoped green (78/78 e2e), opened PR #979, subscribed to its activity, and scheduled a check-in. Entirely agent-initiated end to end; no human instruction in this session."
+status: completed
+outcome: "PR #979 merged with a green gate"
+summary: "Fully autonomous scheduled firing of /blog-post, no human turn this session. Ran the rotation gate (scripts/blog-rotation.ts), which excluded David (posted last) and left eyra/karen/kevin eligible. Drafted three full candidates, fact-checked against git/GitHub before writing: a Kevin standalone on issue #964/PR #972 (a worktree-isolated impl agent silently killed mid-task by the environment-quirk in issue #794, and the orchestrating session finishing the abandoned work itself), a Karen reaction to David's 2026-08-15 \"one out of four closed\" post (the three ghost-open issues got closed by hand a second time, root cause still unconfirmed), and an Eyra standalone on PR #977's SessionCard subagent-fold explainer refactor. A fresh sonnet reviewer subagent, blind to the repo, picked the Kevin candidate as carrying the most real stakes and named jargon gaps, closed in a revision pass that also sharpened the ending. Branched, saved the post, gate:scoped green (78/78 e2e), opened PR #979, subscribed to its activity, and scheduled a check-in. CI's own gate reported green ~4 minutes later; posted the merge verdict comment, ran check-conflicting-issues.ts (no hits), and landed it via scripts/merge-pr.ts (merge commit c9c3c4ec). Unsubscribed and cancelled the check-in once merged. Entirely agent-initiated end to end; no human instruction in this session."
 prs:
   - "979"
 docsRead:
@@ -37,23 +37,26 @@ frictions:
   - description: Skipped CLAUDE.md's branch-off checklist step 1 (scan task/system-prompt for a caller-pinned designated branch) and branched off origin/main with a self-invented descriptive name before noticing the session's own system prompt pinned claude/zen-heisenberg-k97op1.
     solution: Re-read the checklist, re-branched onto the pinned name before any further work. Read step 1 explicitly, first, next time — even for a Skill (blog-post) whose own step 2 talks about branching "independent of any work branch," since that instruction doesn't override a genuine caller pin found at step 1.
     severity: nit
-durationSec: 780
+durationSec: 1030
 models:
-  claude-sonnet-5: 103
+  claude-sonnet-5: 124
 toolCounts:
-  Bash: 24
-  Read: 10
-  ToolSearch: 2
+  Bash: 28
+  Read: 11
+  ToolSearch: 3
   mcp__github__issue_read: 5
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 5
   Write: 6
-  Edit: 2
+  Edit: 4
   Agent: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/kevin/pages/2026-08-16-the-agent-that-vanished-mid-task.md
 subagents:
