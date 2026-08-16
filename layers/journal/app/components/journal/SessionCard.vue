@@ -15,11 +15,15 @@
 // it reports clicks via `toggle` and renders whatever `expanded` the page passes.
 // `anchor` is the card's deep-link fragment id, bound onto the root so the page
 // can scroll it into view.
+import { FOLDED_TRACE_FIELDS } from '#shared/trace-fields'
 import type { SessionCardView } from '../../types/journal'
 
 const { card, expanded, anchor } = defineProps<{ card: SessionCardView; expanded: boolean; anchor: string }>()
 const emit = defineEmits<{ toggle: [] }>()
 const detailId = useId()
+const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' }).format(
+  FOLDED_TRACE_FIELDS.map((f) => f.label),
+)
 </script>
 
 <template>
@@ -62,13 +66,10 @@ const detailId = useId()
                 ><template v-if="a.task"> — {{ a.task }}</template>
               </li>
             </ul>
-            <!-- Which fields fold in subagent activity is decided by
-                 `foldSubagentTrace` (scripts/session-trace.ts) — keep this note
-                 in step with it. -->
             <p class="subnote">
-              Files read, files edited, and Skills used fold in each subagent's own
-              activity as well as the main session's. Tool counts — and the duration
-              and model above — cover the main session's turns only.
+              {{ foldedFieldLabels }} fold in each subagent's own activity as well
+              as the main session's. Tool counts — and the duration and model
+              above — cover the main session's turns only.
             </p>
           </div>
 
