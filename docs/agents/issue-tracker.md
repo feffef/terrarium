@@ -80,7 +80,7 @@ When set to `yes`, PRs run through the same labels and states as issues, using t
 
 GitHub shares one number space across issues and PRs, so a bare `#42` may be either — resolve with `gh pr view 42` and fall back to `gh issue view 42`.
 
-A reviewing agent's verdict-posting rules — post before merging every time, never as an APPROVE-event review — live in `docs/agents/pr-workflow.md`'s recipe, step 4; follow them there rather than here.
+A reviewing agent's verdict-posting rules live in `docs/agents/pr-workflow.md`'s recipe, step 4 — follow them there.
 
 **Reply before resolving a review thread.** Post a reply describing what changed (or why no change was made) before calling `resolve_review_thread` — a resolved thread with no reply leaves no record of what happened, especially on longer PRs.
 
