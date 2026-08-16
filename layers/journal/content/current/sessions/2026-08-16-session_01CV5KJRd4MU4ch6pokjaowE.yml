@@ -1,0 +1,44 @@
+schemaVersion: 1
+session: session_01CV5KJRd4MU4ch6pokjaowE
+startedAt: 2026-08-16T00:16:43Z
+endedAt: 2026-08-16T00:21:37Z
+kind: autonomous
+goal: Run the scheduled /digest sweep for 2026-08-15
+status: in-review
+outcome: "PR #974 opened, gate green, awaiting merge"
+summary: "Scheduled Routine fired /digest with no live human input. Followed the digest Skill: listed the backfill set (2026-08-15), gathered its PRs/ sessions/frictions via scripts/digest.ts, authored the Digest at layers/journal/content/current/pages/digests/2026-08-15.md, ran the retention sweep (archived the 2026-08-08 digest and 4 session logs), confirmed pnpm gate:scoped passed (build + 78-test e2e smoke), then committed, pushed, and opened PR #974 against main. Subscribed to the PR's activity to babysit it to merge per CLAUDE.md."
+prs:
+  - "974"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-08-14.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 294
+models:
+  claude-sonnet-5: 54
+toolCounts:
+  Bash: 14
+  Read: 1
+  Write: 2
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Edit: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-15.md
+gitBranch: claude/compassionate-lovelace-q1v3qm
+entrypoint: remote_trigger
+cliVersion: 2.1.233
+trigger: digest
