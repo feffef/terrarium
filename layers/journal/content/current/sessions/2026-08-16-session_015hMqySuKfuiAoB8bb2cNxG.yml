@@ -1,0 +1,187 @@
+schemaVersion: 1
+session: session_015hMqySuKfuiAoB8bb2cNxG
+startedAt: 2026-08-16T04:09:10Z
+endedAt: 2026-08-16T04:21:24Z
+kind: autonomous
+goal: Run a scheduled /audit-docs sweep
+status: in-review
+outcome: Two findings fixed, PR opened
+summary: "Scheduled Routine fired /audit-docs with no live human prompt this turn. Fanned out the four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the Live-tier doc set. Two of the four agents' findings landed on the same span of text (docs/agents/issue-tracker.md:83) with conflicting readings, so I read the primary sources directly to merge them into one coherent finding before fact-checking. An independent fact-checker agent confirmed both surviving findings: a stale-narration parenthetical in CLAUDE.md about the removed Commits Tenant, and a residual rule-restatement in issue-tracker.md that survived a prior partial fix (commit 3b5ea016) plus the now-stale rulebook-migration-table.md row describing it. Fixed all three files, ran pnpm gate:scoped green, opened PR #978 (self-merge tier, no human-only surface touched), and subscribed to its activity. No factual conflict required filing a needs-triage issue this run. All work this session was agent-initiated per the Routine's standing charter; no additional human direction occurred mid-session."
+prs:
+  - "978"
+docsRead:
+  - path: CLAUDE.md
+    reason: tier classification + Ground rules for the fix
+  - path: docs/agents/issue-tracker.md
+    reason: duplication finding site
+  - path: docs/agents/pr-workflow.md
+    reason: single-home target for the verdict-posting rule
+  - path: docs/research/rulebook-migration-table.md
+    reason: IT-05 row, stale after the fix
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: docs/agents/deferred-tool-guard.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/loop-only-tool-guard.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/subagent-background-guard.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/research/deferred-tool-guard-hook-viability.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: (no reason given)
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's Skill
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Two of the four paired-lens reviewer agents independently converged on the same file:line (issue-tracker.md:83) but reached opposite verdicts (one called it duplication, the other called it already-fixed and the cross-referencing table stale) — the skill's dedupe step doesn't spell out how to resolve a genuine disagreement between two lens agents on the same span, only how to merge non-conflicting overlaps.
+    solution: Read the primary sources myself to adjudicate before fact-checking; worked fine here but the audit-docs SKILL.md could note explicitly that a disagreement (not just an overlap) between two agents on one span gets resolved by the orchestrating session reading the primary source directly, same as a fact-check, before pooling.
+    severity: nit
+durationSec: 735
+models:
+  claude-sonnet-5: 119
+toolCounts:
+  Bash: 16
+  ToolSearch: 4
+  TaskCreate: 9
+  TaskUpdate: 14
+  mcp__github__list_pull_requests: 1
+  Agent: 5
+  ReadNotifications: 7
+  Read: 5
+  Edit: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - CLAUDE.md
+  - docs/agents/issue-tracker.md
+  - docs/research/rulebook-migration-table.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens audit (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens audit (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens audit (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens audit (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Independently fact-check two pooled doc findings
+gitBranch: claude/festive-mayer-th4oml
+entrypoint: remote_trigger
+cliVersion: 2.1.233
+trigger: audit-docs
