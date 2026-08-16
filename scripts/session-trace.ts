@@ -30,6 +30,9 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
 import { pathToFileURL } from 'node:url'
+import { FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
+
+export { FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 
 /** The one authored-scratch file per container (one session per container in the
  *  remote model). Gitignored — its home is `main`, written by the `--author` mode
@@ -372,8 +375,9 @@ export function readSubagentJsonls(transcriptPath: string): string[] {
 }
 
 /** Union a parent trace with its subagents' — the *attention* fields only:
- *  what was read, edited, and which Skills ran. Nested subagents need no special
- *  case: each spawn depth gets its own transcript in the same directory.
+ *  what was read, edited, and which Skills ran (`FOLDED_TRACE_FIELDS`). Nested
+ *  subagents need no special case: each spawn depth gets its own transcript in
+ *  the same directory.
  *
  *  Deliberately NOT merged: `models`/`toolCounts`/`durationSec`/`subagents`
  *  describe the parent's own turns, and a consumer reading `toolCounts.Read`
@@ -386,12 +390,11 @@ export function foldSubagentTrace(
 ): MechanicalTrace {
   if (subagentRecordSets.length === 0) return trace
   const subs = subagentRecordSets.map((records) => extractTrace(records, env))
-  return {
-    ...trace,
-    filesRead: dedup([...trace.filesRead, ...subs.flatMap((s) => s.filesRead)]),
-    filesEdited: dedup([...trace.filesEdited, ...subs.flatMap((s) => s.filesEdited)]),
-    skillsUsed: dedup([...trace.skillsUsed, ...subs.flatMap((s) => s.skillsUsed)]),
+  const folded = { ...trace }
+  for (const { field } of FOLDED_TRACE_FIELDS) {
+    folded[field] = dedup([...trace[field], ...subs.flatMap((s) => s[field])])
   }
+  return folded
 }
 
 // ── Stitch ────────────────────────────────────────────────────────────────
