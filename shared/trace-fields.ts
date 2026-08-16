@@ -9,6 +9,6 @@ export type FoldedTraceField = 'filesRead' | 'filesEdited' | 'skillsUsed'
 
 export const FOLDED_TRACE_FIELDS: { field: FoldedTraceField; label: string }[] = [
   { field: 'filesRead', label: 'Files read' },
-  { field: 'filesEdited', label: 'Files edited' },
+  { field: 'filesEdited', label: 'files edited' },
   { field: 'skillsUsed', label: 'Skills used' },
 ]
