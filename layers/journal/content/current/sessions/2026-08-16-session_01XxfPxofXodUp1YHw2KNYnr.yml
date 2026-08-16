@@ -1,0 +1,90 @@
+schemaVersion: 1
+session: session_01XxfPxofXodUp1YHw2KNYnr
+startedAt: 2026-08-16T01:05:19Z
+endedAt: 2026-08-16T01:35:01Z
+kind: autonomous
+goal: Turn session frictions into merged fixes
+status: completed
+outcome: 1 PR merged, 1 regression escalated
+summary: "Scheduled Routine fired /frictions-to-fixes with no human live. Delegated the 20-session survey to a subagent, which screened candidates against the tracker. Filed issue #975 (SessionCard.vue's subagent-fold explainer was hand-typed prose, not derived from session-trace.ts's field list) and dispatched a Sonnet impl agent in its own worktree; reviewed the resulting PR #977, caught and fixed a capitalization nit myself, then merged it. Separately identified that the survey's own recurring inline-capture-cap friction (session-frictions.ts --window 20) is a genuine regression: two prior fixes (#811, #951) already shipped and didn't hold for this specific call site, so per the Skill's own regression rule I filed issue #976 distinctly instead of routing it through ordinary dispatch, and alerted the user rather than silently re-attempting a third fix. Also found and closed three stale issues (#950, #952, #954) whose fixes had already merged via PR #955 but never auto-closed on GitHub. All of this was agent-initiated per the Routine's standing charter — no human was live this session."
+prs:
+  - "977"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: "merge recipe + verdict-comment discipline before merging PR #977"
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: brief checklist for the worktree-isolated impl agent
+  - path: scripts/session-frictions.ts
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (read before editing)
+  - path: .claude/worktrees/agent-a6fc7d1b70df2c183/shared/trace-fields.ts
+    reason: (read before editing)
+  - path: layers/journal/app/components/journal/SessionCard.vue
+    reason: (read before editing)
+  - path: layers/journal/types/journal.ts
+    reason: (no reason given)
+  - path: layers/journal/app/types/journal.ts
+    reason: (no reason given)
+  - path: shared/schemas/session.ts
+    reason: (no reason given)
+  - path: shared/kinds.ts
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: shared/trace-fields.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: "worktree-isolated Sonnet impl agent for issue #975"
+  - name: close-session
+    reason: session closure at PR-merge
+  - name: log-session
+    reason: final completed-status log
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: "session-frictions.ts --window 20 (non-compact) still blows the Bash inline-capture cap in a frictions-to-fixes survey dispatch, after two prior fixes (#811's redirect-to-file doc comment, #951's --compact flag) already shipped; --compact strips the goal/outcome/solution fields a survey specifically needs, so it isn't a real substitute. My own survey-subagent dispatch brief repeated the same gap: it did not instruct a redirect-to-file, so the subagent hit the cap live again."
+    solution: "Filed issue #976 as a REGRESSION rather than a routine dispatch candidate (per the Skill's own §2 rule for a friction that recurred after its fix merged) — recommends moving the guidance from the script's source comment into .agents/skills/frictions-to-fixes/SKILL.md step 1 itself, where the orchestrating session actually reads it when authoring each run's dispatch brief. Alerted the user instead of attempting a third fix unreviewed."
+    severity: major
+  - description: "PR #955's \"Closes #950/#952/#954\" keywords never auto-closed those three issues on merge, even though closed_by_pull_requests correctly showed the link — they sat open for two days despite the fix already shipping."
+    solution: "Closed all three manually with a comment citing PR #955, during this run's tracker-hygiene pass. Did not root-cause why GitHub's keyword-close didn't fire — flagging for awareness only, no fix filed since the cause isn't yet clear enough to act on."
+    severity: minor
+  - description: The dispatched impl agent's Intl.ListFormat-built explainer sentence in SessionCard.vue capitalized "Files edited" mid-list, where the original hand-typed prose used lowercase "files edited" there — a small prose regression that pnpm gate:scoped (lint/typecheck/e2e) had no way to catch since it's a grammar nuance, not a functional bug.
+    solution: Caught by reading the PR description's quoted rendered sentence during review, not by any automated check; amended directly (one-line label fix) before merging. No broader fix recommended — this is the kind of nit a human/agent reviewer eyeballing rendered prose is the right layer for, not worth a mechanized check.
+    severity: nit
+durationSec: 1782
+models:
+  claude-sonnet-5: 97
+toolCounts:
+  Agent: 2
+  ToolSearch: 2
+  mcp__github__issue_read: 5
+  mcp__github__search_issues: 2
+  Bash: 11
+  Read: 4
+  Grep: 2
+  mcp__github__get_me: 1
+  mcp__github__issue_write: 6
+  mcp__github__add_issue_comment: 4
+  Skill: 3
+  mcp__github__pull_request_read: 5
+  Edit: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  Write: 1
+  PushNotification: 1
+filesEdited:
+  - .claude/worktrees/agent-a6fc7d1b70df2c183/shared/trace-fields.ts
+  - scripts/session-trace.ts
+  - layers/journal/app/components/journal/SessionCard.vue
+  - shared/trace-fields.ts
+subagents:
+  - type: general-purpose
+    task: Survey session frictions and screen against tracker
+  - type: general-purpose
+    task: "Implement fix for issue #975"
+    model: sonnet
+gitBranch: claude/hopeful-brown-rdqno2
+entrypoint: remote_trigger
+cliVersion: 2.1.233
+trigger: frictions-to-fixes
