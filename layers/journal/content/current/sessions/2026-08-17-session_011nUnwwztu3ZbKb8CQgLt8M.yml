@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_011nUnwwztu3ZbKb8CQgLt8M
 startedAt: 2026-08-17T04:13:34Z
-endedAt: 2026-08-17T04:32:04Z
+endedAt: 2026-08-17T04:36:29Z
 kind: autonomous
 goal: Run scheduled /audit-docs sweep
-status: in-review
-outcome: "PR #987 opened; one escalation PR still pending"
-summary: "Entirely agent-initiated: a scheduled Routine fired /audit-docs with no live human present. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel per the Skill, pooled their findings (no overlaps), and ran an independent fact-checker before touching anything. Two fact-checked findings touched only Live docs and landed in a self-merged PR (#987): CLAUDE.md's \"rule of two\" parenthetical contradicted its own designated source of truth (docs/agents/domain.md) by dropping the \"or is concretely scheduled\" clause, and audit-docs/SKILL.md restated the same three facts in its intro paragraph and the blockquote right after it. A third, real finding (near-verbatim duplication between scripts/loop-only-tool-guard.ts + scripts/deferred-tool-guard.ts and their docs/agents/*.md companions) needs its own human-reviewed escalation PR since it touches human-only-to-merge PreToolUse hook scripts (ADR-0004's 2026-07-30 amendment) — not yet opened as of this log. A fourth candidate (an \"isolation logic\" catch-all ambiguity in CLAUDE.md) was confirmed accurate but is already honestly documented as a tracked, unmechanized gap (issue #864); no textual fix was actionable, so nothing was changed."
+status: completed
+outcome: "PR #987 merged; three doc findings fixed"
+summary: "Entirely agent-initiated: a scheduled Routine fired /audit-docs with no live human present. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel per the Skill, pooled their findings (no overlaps), and ran an independent fact-checker before touching anything. Three fact-checked findings landed, all in one self-merged PR (#987, merged): CLAUDE.md's \"rule of two\" parenthetical contradicted its own designated source of truth (docs/agents/domain.md) by dropping the \"or is concretely scheduled\" clause, so it was replaced with a bare pointer; audit-docs/SKILL.md restated the same three facts in its intro paragraph and the blockquote right after it, so the blockquote was trimmed to its non-duplicated content; and docs/agents/loop-only-tool-guard.md + deferred-tool-guard.md restated design rationale that already lives in the scripts/*-guard.ts files they document, so each duplicated passage became a pointer at the owning code comment. That third fix was originally flagged ESCALATION-REQUIRED by the reviewer agent (assuming the fix would touch the human-only-to-merge PreToolUse hook scripts themselves), but the actual applied fix only ever touched the two Live-tier .md files — no guard-script logic changed — so on inspection it didn't cross into human-only territory and rode the same self-merged PR as the other two rather than a separate escalation PR. A fourth candidate (an \"isolation logic\" catch-all ambiguity in CLAUDE.md) was confirmed accurate but is already honestly documented as a tracked, unmechanized gap (issue #864); no textual fix was actionable, so nothing was changed there."
 prs:
   - "987"
 docsRead:
@@ -134,34 +134,40 @@ skillsUsed:
   - name: audit-docs
     reason: this run's own Skill
   - name: close-session
-    reason: logging at PR-open
+    reason: logging at PR-open and at final merge
   - name: log-session
     reason: (no reason given)
 frictions:
   - description: Agent B's duplication finding claimed commit 2998802's message "explicitly named" three guard docs (loop-only-tool-guard.md, deferred-tool-guard.md, subagent-background-guard.md) as deferred follow-ups; the fact-checker found the message only says "three", never naming them — the filenames appear only as unchanged context lines in a diff, not in the prose.
-    solution: Fact-checked before use; the escalation PR's description will cite the precedent pattern without the inaccurate "explicitly named" claim.
+    solution: Fact-checked before use; the merged PR's description cites the precedent pattern without the inaccurate "explicitly named" claim.
     severity: nit
-durationSec: 1110
+  - description: The reviewer agent's own finding pre-judged escalation scope (assumed fixing the guard-doc duplication would require editing the human-only .ts scripts) before a fix was actually designed. The narrower, purely doc-side fix it also proposed as an alternative turned out to be sufficient and stayed self-mergeable, avoiding an unnecessary second human-reviewed PR — a session briefly went down the escalation-branch path before catching this.
+    solution: When a finding's proposed fix would touch a human-only surface, design the actual fix first and re-check its real diff footprint before committing to the escalation path, rather than trusting the finding's own escalation flag at face value.
+    severity: nit
+durationSec: 1375
 models:
-  claude-sonnet-5: 141
+  claude-sonnet-5: 173
 toolCounts:
-  Bash: 25
-  ToolSearch: 5
+  Bash: 31
+  ToolSearch: 6
   TaskCreate: 6
   TaskUpdate: 9
   Agent: 5
   ScheduleWakeup: 1
   mcp__github__list_pull_requests: 1
-  Read: 6
+  Read: 7
   Edit: 6
   Grep: 3
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
+  Write: 2
   mcp__github__update_pull_request: 1
-  mcp__github__pull_request_read: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/audit-docs/SKILL.md
   - CLAUDE.md
