@@ -93,3 +93,12 @@ observations:
       distinct, already-established batch-dispatch path, not a same-domain
       skip), so this isn't yet the clean ≥2-counter-example-free signal the
       promotion rule asks for; role and grade held as-is.
+  - date: 2026-08-17
+    note: >-
+      Prior citations aged out; used in only 1 of this window's 40 sessions
+      (session_01QMtUQrTK3LHJhs1rom6i2x, a two-issue triage+implement batch)
+      — session_019YUfZGa9c7rath771qwBsh (fix already-triaged issue #906's
+      journal band-height guard) landed a fix for a tracked, green-lit issue
+      without invoking it, one domain-fit skip short of the ≥2 bright-line
+      demotion bar on its own this run; role and grade held as-is, same
+      genuinely-inconsistent-adoption pattern.

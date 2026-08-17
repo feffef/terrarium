@@ -85,3 +85,13 @@ observations:
       #659 implement, session_01SuvMh3wC6nyykyAVQuYVb4's triage+implement
       backlog sweep), confirming the adoption pattern in role is still
       accurate.
+  - date: 2026-08-17
+    note: >-
+      Prior citations aged out; used in 2 of this window's 40 sessions
+      (session_01QMtUQrTK3LHJhs1rom6i2x's two-issue auto-triage+implement
+      batch, session_01X71ykRjGtfFC5g6mueF8mi's cross-session files-read
+      signal) — still skipped in two other code-landing sessions this window
+      that each merged a PR (session_01CV3dBwvj8RYuvmtTXczKTd's Nuxt/Vue
+      dependency-bisect fix PR #914, session_019YUfZGa9c7rath771qwBsh's
+      journal band-height-guard fix PR #913), confirming the adoption pattern
+      in role is still accurate.
