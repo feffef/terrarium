@@ -1,0 +1,104 @@
+schemaVersion: 1
+session: session_01Ua2A7k6jmw7q4Q9f2ifCGw
+startedAt: 2026-08-17T01:10:18Z
+endedAt: 2026-08-17T01:41:11Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: in-review
+outcome: 1 PR merged, 1 escalated, 1 regression flagged
+summary: "Scheduled /frictions-to-fixes run, no human prompt. A subagent surveyed the latest 20 session logs and screened frictions against the tracker, returning 4 candidates. Filed 4 issues (#981-#984), then dispatched two Sonnet impl agents in isolated worktrees: one batched two doc-only fixes (#981, #982) into PR #985, which I reviewed and merged via merge-pr.ts after CI went green; the other investigated and fixed a \"Closes #N doesn't always auto-close\" issue (#983) in PR #986, which I reviewed favorably but escalated to the user rather than self-merging, since it gives merge-pr.ts (the repo's sole merge path) a new, only-unit-tested capability to close issues. Caught, mid-run, that the survey subagent had misclassified a recurring force-with-lease friction as \"never fixed\" when it was actually a regression of already-closed #824 — filed #984 flagging the earlier fix as ineffective instead of dispatching a duplicate fix, per this Skill's regression rule. All agent-initiated; no live human input this run."
+prs:
+  - "985"
+  - "986"
+docsRead:
+  - path: CLAUDE.md
+    reason: ground rules, PR/gate/regression discipline
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: the run's own procedure
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: worktree isolation mechanics before dispatching
+  - path: docs/agents/pr-workflow.md
+    reason: merge-pr.ts recipe and per-tier merge authority
+  - path: layers/journal/content/current/sessions/2026-08-13-session_01QMtUQrTK3LHJhs1rom6i2x.yml
+    reason: (no reason given)
+  - path: scripts/merge-pr.ts
+    reason: (read before editing)
+  - path: layers/blog/content/david/pages/2026-08-15-one-out-of-four-closed.md
+    reason: (no reason given)
+  - path: scripts/list-open-issues.ts
+    reason: (no reason given)
+  - path: tests/unit/merge-pr.spec.ts
+    reason: (read before editing)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-17-session_01YErE5meTfkma8R7XzveZK5.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-15-session_01MiNR7r1eLSDFnBBfGsNtUc.yml
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/environment-caveats.md
+    reason: (read before editing)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: this run's own procedure
+  - name: dispatch-subagents
+    reason: isolation mechanics before spawning 2 impl agents
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "The survey subagent's tracker screen found #824 (an identical, already-closed force-with-lease friction) in its own exact-string search results but dismissed it as \"unrelated\" without reading the issue body, so it mislabeled a regression as \"never fixed.\" Caught only because I independently re-verified each candidate's classification before filing."
+    solution: "This is a repeat of exactly the failure issue #854 already warns about (exact-string miss alone is insufficient — do a nearby-issue eyeball, read the body). The subagent's brief already included that instruction; it just didn't follow it here. Worth reinforcing in the survey brief that \"nearby hit found in search results\" specifically means read that hit's body before ruling it unrelated, not just judging by title."
+    severity: moderate
+  - description: 'Meant to relay live evidence to the still-running #983 investigation subagent via SendMessage, but called the Agent tool instead (wrong tool for "send a message to an existing agent") — spawned a redundant duplicate agent that had to be stopped with TaskStop before sending the correct SendMessage.'
+    solution: "Caught immediately (the Agent-tool result clearly showed a fresh agentId with no relation to the target), cost one wasted agent spin-up plus a TaskStop call. No lasting harm, but worth remembering: to inject new context into an already-running background subagent, use SendMessage to its agent id, never a fresh Agent call."
+    severity: minor
+  - description: One dispatched impl agent's worktree started from a stale base relative to origin/main (origin/main had moved during the investigation) and had to rebranch mid-session to carry its changes over.
+    solution: Already a documented sharp edge in dispatch-subagents/SKILL.md ("verify HEAD before any commit... rebranch explicitly if it doesn't") — the agent followed that guidance correctly and self-recovered. No new fix needed, just confirms the existing guidance earns its place.
+    severity: nit
+durationSec: 1853
+models:
+  claude-sonnet-5: 120
+toolCounts:
+  Bash: 13
+  ToolSearch: 6
+  Agent: 4
+  mcp__github__search_issues: 4
+  mcp__github__issue_read: 6
+  Grep: 4
+  Read: 1
+  mcp__github__issue_write: 4
+  Skill: 3
+  ScheduleWakeup: 1
+  mcp__github__pull_request_read: 7
+  mcp__github__add_issue_comment: 2
+  ListAgents: 1
+  TaskStop: 1
+  SendMessage: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Write: 1
+  PushNotification: 2
+filesEdited:
+  - scripts/merge-pr.ts
+  - tests/unit/merge-pr.spec.ts
+  - docs/agents/pr-workflow.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/environment-caveats.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Batch doc-fix PR for issues 981+982
+    model: sonnet
+  - type: general-purpose
+    task: Investigate and fix merge-pr.ts auto-close issue
+    model: sonnet
+  - task: "Share live evidence: merge-pr.ts auto-close worked this time"
+gitBranch: claude/hopeful-brown-6kdibp
+entrypoint: remote_trigger
+cliVersion: 2.1.233
+trigger: frictions-to-fixes
+ideas:
+  - "scripts/audit-skills.ts-style tooling could flag \"candidate cites a tracker hit in its own report but doesn't quote the hit's body\" during frictions-to-fixes screening, as a cheap mechanical backstop for the exact failure mode in this run's moderate friction above — the subagent already found #824, it just didn't read it."
