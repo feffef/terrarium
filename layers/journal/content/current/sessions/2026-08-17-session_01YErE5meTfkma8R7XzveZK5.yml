@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01YErE5meTfkma8R7XzveZK5
 startedAt: 2026-08-17T00:20:04Z
-endedAt: 2026-08-17T20:14:40Z
+endedAt: 2026-08-17T20:18:30Z
 kind: autonomous
 goal: Run scheduled /digest sweep for 2026-08-16
-status: in-review
-outcome: "PR #989 open, gate polling for auto-merge"
-summary: "Scheduled /digest run with no human present throughout. Authored the Digest for the closed UTC day 2026-08-16 (4 merged PRs, 5 completed sessions, frictions-by-severity rollup), ran the retention sweep (scripts/archive-journal-content.ts --write, archived one digest and two session logs), and cleared pnpm gate:scoped green. The first attempt could not open the gated PR because the github MCP server was unauthenticated in this non-interactive session; the user was notified and, on the next turn, GitHub access had been restored. Before opening the PR, caught and corrected a self-caused branch-naming mistake (see frictions) by fast-forwarding the correctly pinned branch onto the already-committed, already-gate-green work, then opened PR #989 and subscribed to its activity. merge-pr.ts is polling the gate in the background to self-merge once green. All steps were agent-initiated per the digest Skill's own schedule; no human gave task-specific instructions beyond the initial \"tryagain\" prompt after being notified of the blocker."
+status: completed
+outcome: "PR #989 merged with a green gate"
+summary: "Scheduled /digest run with no human present throughout. Authored the Digest for the closed UTC day 2026-08-16 (4 merged PRs, 5 completed sessions, frictions-by-severity rollup), ran the retention sweep (scripts/archive-journal-content.ts --write, archived one digest and two session logs), and cleared pnpm gate:scoped green. The first attempt could not open the gated PR because the github MCP server was unauthenticated in this non-interactive session; the user was notified and, on the next turn, GitHub access had been restored. Before opening the PR, caught and corrected a self-caused branch-naming mistake (see frictions) by fast-forwarding the correctly pinned branch onto the already-committed, already-gate-green work, then opened PR #989, subscribed to its activity, and landed it via merge-pr.ts once CI's gate reported green. All steps were agent-initiated per the digest Skill's own schedule; no human gave task-specific instructions beyond the initial \"tryagain\" prompt after being notified of the blocker."
 prs:
   - "989"
 docsRead:
@@ -29,12 +29,12 @@ frictions:
   - description: Deleting the stray digest/2026-08-17 remote branch after the rename fix failed with an HTTP 403 (git push origin --delete) — this session apparently lacks remote branch-delete permission even though it can push commits and open PRs.
     solution: Harmless since the branch is unreferenced and gate-green work already lives on the correct pinned branch; left it in place rather than retrying. No action needed beyond noting the permission gap for whoever tidies stray branches.
     severity: nit
-durationSec: 71676
+durationSec: 71906
 models:
-  claude-sonnet-5: 89
+  claude-sonnet-5: 102
 toolCounts:
   Skill: 3
-  Bash: 25
+  Bash: 29
   Read: 2
   Write: 3
   ToolSearch: 4
@@ -43,7 +43,7 @@ toolCounts:
   mcp__github__pull_request_read: 2
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Edit: 1
+  Edit: 2
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-08-16.md
 gitBranch: claude/compassionate-lovelace-qdejg9
