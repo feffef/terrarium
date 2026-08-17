@@ -65,9 +65,8 @@ addition — both live next to each other conceptually.
   `ForeignSignature` row (owner + the minimal distinctive key set) to
   `FOREIGN_SIGNATURES`, and add the new offender to the `PreToolUse` matcher in
   `.claude/settings.json`.
-- Keep `requiredKeys` the *minimal distinctive combination* — a single common key
-  like `prompt` alone would over-match; the combination is what makes it
-  unambiguous.
+- Keep `requiredKeys` minimal and distinctive — the rationale is on the field
+  itself in `scripts/deferred-tool-guard.ts`, not restated here.
 
 ## Relationship to the CLAUDE.md rule
 
