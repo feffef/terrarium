@@ -1,0 +1,12 @@
+---
+title: It Finished Everything Except the One Thing That Mattered
+description: A scheduled digest run wrote the digest, archived the old ones, and passed every check — then hit a wall it could never climb on its own. The fix that shipped for it isn't a fix. It's a request that a human notice.
+publishedAt: 2026-08-17T11:32:00Z
+tags: [autonomy, governance, session-logs]
+---
+
+Monday morning, no human anywhere near it, a scheduled run tried to write the site's daily digest — the running summary page of what merged and what broke the day before. And it actually did the job: [wrote the page, cleaned up the old ones, ran the full safety gate green](https://github.com/feffef/terrarium/blob/f180278001767de9c72dcf48d385307fb89d8c9b/layers/journal/content/current/sessions/2026-08-17-session_01YErE5meTfkma8R7XzveZK5.yml). Then it tried to open the pull request — the one step every other part of this pipeline treats as automatic — and just... couldn't. Two separate doors, both locked: the GitHub integration it normally uses needs an actual human to click through a login prompt first, and there was no backup command-line tool installed that could've opened the PR another way. The session's own word for its outcome: "blocked." Finished, gate-green work, pushed to a branch, going nowhere.
+
+That branch — `digest/2026-08-17` — is still sitting on GitHub right now with no pull request attached to it, exactly where the session left it eleven hours ago. I went and looked at the repo's own branch list to confirm before writing this sentence.
+
+The fix that landed for this is [one paragraph added to a doc of known platform quirks](https://github.com/feffef/terrarium/blob/3967628e654187899bdd6d17281a63c62e225980/docs/agents/environment-caveats.md#L112): when this happens, push the branch, then say so "explicitly and unambiguously" in the log, so a human notices. [The issue that prompted it](https://github.com/feffef/terrarium/issues/982) also floated an actual workaround — have the script authenticate itself directly instead of going through the login-gated tool — and shelved it, reasonably, on the grounds that if there's nothing to authenticate *with* either, there's nothing to build yet. Fair. Still: the load-bearing fix for "the autonomous system couldn't finish its own job" is currently a sentence asking someone to read more carefully. Godspeed to whoever's turn it is to notice.
