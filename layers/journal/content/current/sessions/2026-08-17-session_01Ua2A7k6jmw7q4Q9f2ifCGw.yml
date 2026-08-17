@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Ua2A7k6jmw7q4Q9f2ifCGw
 startedAt: 2026-08-17T01:10:18Z
-endedAt: 2026-08-17T01:41:11Z
+endedAt: 2026-08-17T20:15:16Z
 kind: autonomous
 goal: Run frictions-to-fixes cycle
-status: in-review
-outcome: 1 PR merged, 1 escalated, 1 regression flagged
-summary: "Scheduled /frictions-to-fixes run, no human prompt. A subagent surveyed the latest 20 session logs and screened frictions against the tracker, returning 4 candidates. Filed 4 issues (#981-#984), then dispatched two Sonnet impl agents in isolated worktrees: one batched two doc-only fixes (#981, #982) into PR #985, which I reviewed and merged via merge-pr.ts after CI went green; the other investigated and fixed a \"Closes #N doesn't always auto-close\" issue (#983) in PR #986, which I reviewed favorably but escalated to the user rather than self-merging, since it gives merge-pr.ts (the repo's sole merge path) a new, only-unit-tested capability to close issues. Caught, mid-run, that the survey subagent had misclassified a recurring force-with-lease friction as \"never fixed\" when it was actually a regression of already-closed #824 — filed #984 flagging the earlier fix as ineffective instead of dispatching a duplicate fix, per this Skill's regression rule. All agent-initiated; no live human input this run."
+status: completed
+outcome: 2 PRs merged, 1 regression flagged for the user
+summary: "Scheduled /frictions-to-fixes run, no human prompt. A subagent surveyed the latest 20 session logs and screened frictions against the tracker, returning 4 candidates. Filed 4 issues (#981-#984), then dispatched two Sonnet impl agents in isolated worktrees: one batched two doc-only fixes (#981, #982) into PR #985, which I reviewed and merged via merge-pr.ts after CI went green; the other investigated and fixed a \"Closes #N doesn't always auto-close\" issue (#983) in PR #986, which I reviewed favorably but escalated to the user rather than self-merging, since it gives merge-pr.ts (the repo's sole merge path) a new, only-unit-tested capability to close issues. Caught, mid-run, that the survey subagent had misclassified a recurring force-with-lease friction as \"never fixed\" when it was actually a regression of already-closed #824 — filed #984 flagging the earlier fix as ineffective instead of dispatching a duplicate fix, per this Skill's regression rule. Babysat PR #986 across several hours of check-ins; the user reviewed and merged it themselves, which also live-confirmed the new self-heal logic by correctly auto-closing #983 on merge. Issue #984 (the regression) remains open, correctly left for the user's own fix decision. All agent-initiated; no live human input this run beyond the eventual PR merge itself."
 prs:
   - "985"
   - "986"
@@ -58,28 +58,29 @@ frictions:
   - description: One dispatched impl agent's worktree started from a stale base relative to origin/main (origin/main had moved during the investigation) and had to rebranch mid-session to carry its changes over.
     solution: Already a documented sharp edge in dispatch-subagents/SKILL.md ("verify HEAD before any commit... rebranch explicitly if it doesn't") — the agent followed that guidance correctly and self-recovered. No new fix needed, just confirms the existing guidance earns its place.
     severity: nit
-durationSec: 1853
+durationSec: 68698
 models:
-  claude-sonnet-5: 120
+  claude-sonnet-5: 179
 toolCounts:
-  Bash: 13
+  Bash: 14
   ToolSearch: 6
   Agent: 4
   mcp__github__search_issues: 4
-  mcp__github__issue_read: 6
+  mcp__github__issue_read: 16
   Grep: 4
-  Read: 1
+  Read: 2
   mcp__github__issue_write: 4
   Skill: 3
   ScheduleWakeup: 1
-  mcp__github__pull_request_read: 7
+  mcp__github__pull_request_read: 15
   mcp__github__add_issue_comment: 2
   ListAgents: 1
   TaskStop: 1
   SendMessage: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 9
   Write: 1
-  PushNotification: 2
+  PushNotification: 3
+  Edit: 1
 filesEdited:
   - scripts/merge-pr.ts
   - tests/unit/merge-pr.spec.ts
