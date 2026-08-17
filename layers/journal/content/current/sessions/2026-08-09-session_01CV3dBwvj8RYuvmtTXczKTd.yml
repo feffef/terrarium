@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CV3dBwvj8RYuvmtTXczKTd
 startedAt: 2026-08-09T00:38:00Z
-endedAt: 2026-08-10T20:56:58Z
+endedAt: 2026-08-17T20:29:37Z
 kind: interactive
 goal: "Diagnose PR #895 gate failure, sync branch"
 status: completed
 outcome: "Bisected and fixed; PR #914 merged"
-summary: "Human-instructed: find why the open PR's test fails, then \"rebase to main\". PR #895 (Nuxt 4.4.8 to 4.5.1) fails 36 of 80 e2e tests, all on \"Hydration completed but contains mismatches\". Reproduced locally in both preview and dev builds: the mismatch is inside MDCRenderer (server renders a plain element, client resolves ProseP), alongside an SSR-only \"resolveComponent can only be used in render() or setup()\" warning absent on main. Bisected by pinning versions - broken only on Nuxt 4.5.x plus Vue 3.5.41; Nuxt 4.5.1 with Vue 3.5.40/3.5.39 and Nuxt 4.4.8 with Vue 3.5.41 are both clean. Nuxt 4.5.2 still reproduces. Merged current main into the dependabot branch (fast-forward, no history rewrite) after the user expressed no preference among the branch options. On a later explicit green-light, opened PR #914 - nuxt ^4.5.1 plus a pnpm.overrides pin of vue to 3.5.40 - which passes the full gate locally and in CI, 81/81 e2e, and has since been merged to main. Nothing was agent-initiated beyond the diagnosis itself. #895 is left open and superseded, with a comment pointing at #914."
+summary: "Human-instructed: find why the open PR's test fails, then \"rebase to main\". PR #895 (Nuxt 4.4.8 to 4.5.1) fails 36 of 80 e2e tests, all on \"Hydration completed but contains mismatches\". Reproduced locally in both preview and dev builds: the mismatch is inside MDCRenderer (server renders a plain element, client resolves ProseP), alongside an SSR-only \"resolveComponent can only be used in render() or setup()\" warning absent on main. Bisected by pinning versions - broken only on Nuxt 4.5.x plus Vue 3.5.41; Nuxt 4.5.1 with Vue 3.5.40/3.5.39 and Nuxt 4.4.8 with Vue 3.5.41 are both clean. Nuxt 4.5.2 still reproduces. Merged current main into the dependabot branch (fast-forward, no history rewrite) after the user expressed no preference among the branch options. On a later explicit green-light, opened PR #914 - nuxt ^4.5.1 plus a pnpm.overrides pin of vue to 3.5.40 - which passes the full gate locally and in CI, 81/81 e2e, and has since been merged to main. Nothing was agent-initiated beyond the diagnosis itself. #895 is left open and superseded, with a comment pointing at #914. On a further green-light, filed issue #926 to track removing the pin and created a scheduled Routine that tests each new Vue release and opens the un-pin PR when the gate goes green."
 prs:
   - "914"
   - "895"
@@ -37,13 +37,13 @@ frictions:
   - description: pnpm gate:scoped --dry printed roughly twenty git fetch branch lines above its decision, so the plan was easy to miss in the output.
     solution: Quiet the gate script's fetch, or print the decision after a separator.
     severity: nit
-durationSec: 159538
+durationSec: 762697
 models:
-  claude-opus-5: 221
-  <synthetic>: 3
+  claude-opus-5: 423
+  <synthetic>: 4
 toolCounts:
-  Bash: 90
-  ToolSearch: 6
+  Bash: 95
+  ToolSearch: 7
   mcp__github__list_pull_requests: 2
   mcp__github__pull_request_read: 6
   mcp__github__get_job_logs: 5
@@ -59,6 +59,10 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__delete_trigger: 1
   mcp__github__add_issue_comment: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__get_label: 1
+  mcp__github__issue_write: 1
+  mcp__Claude_Code_Remote__create_trigger: 61
 filesEdited:
   - package.json
 gitBranch: claude/open-pr-test-failure-bpjt8y
