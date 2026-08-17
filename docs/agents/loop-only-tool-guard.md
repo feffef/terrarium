@@ -8,16 +8,13 @@ trade-offs, and how to extend it.
 ## Why a second layer at all
 
 Two prior fixes wrote the rule into `docs/agents/github-integration.md` — #241
-(2026-07-08) and #425 (2026-07-14). It kept recurring anyway, because none of the
-affected sessions were doing GitHub work and none had any reason to open that
-doc; the file every session *does* read carried no mention of the tool at all.
-The owner's decision on #814 was therefore **both** layers, in order: state the
-rule where every session reads it (CLAUDE.md), *and* refuse the call
-mechanically.
-
-The misfire is not a no-op. Two recorded cases had real consequences: an unwanted
-"autonomous loop tick" turn that had to be diagnosed and stopped, and a wakeup
-that would have re-sent `/audit-docs` mid-PR-review had it not been cancelled.
+(2026-07-08) and #425 (2026-07-14) — and it kept recurring anyway, since neither
+doc-only fix was read by the affected sessions; the file every session *does*
+read carried no mention of the tool at all. The owner's decision on #814 was
+therefore **both** layers: state the rule where every session reads it
+(CLAUDE.md), *and* refuse the call mechanically. The full history and the two
+recorded misfire cases are on `scripts/loop-only-tool-guard.ts`'s header —
+not restated here.
 
 ## What it is
 
@@ -44,11 +41,9 @@ this repo, every session that called the tool was `autonomous` or `interactive`
 with no `/loop` goal, so the mode the guard exists to permit has not yet occurred
 even once.
 
-**The residual fail-open it cannot close** (shared with the provenance guard, and
-recorded in both): the hook runs as `pnpm exec tsx … || true`. If `tsx` or `pnpm`
-is unavailable the command dies before the script is evaluated, producing no
-stdout and therefore no deny. Closing that needs a change of invocation, not of
-this script.
+**The residual fail-open it cannot close** (shared with the provenance guard) is
+recorded on `main()`'s docstring in `scripts/loop-only-tool-guard.ts` — not
+restated here.
 
 ## How the mode is read
 
@@ -62,10 +57,9 @@ very trap does not thereby look like a `/loop` session.
 
 Two deliberate imprecisions:
 
-- **Any `/loop` reads as `loop`, not just dynamic mode.** A fixed-interval
-  `/loop 5m /foo` is paced by the harness and would not call the tool anyway, so
-  widening here only avoids false denials. Narrowing would need the command's
-  arguments, which the transcript does not reliably carry.
+- **Any `/loop` reads as `loop`, not just dynamic mode** — the rationale is on
+  `detectSessionMode`'s docstring in `scripts/loop-only-tool-guard.ts`, not
+  restated here.
 - **A `/loop` established outside this transcript is invisible**, and would be
   denied. That is fail-closed working as intended; the deny message says so and
   asks for it to be reported on #814 rather than routed around.
