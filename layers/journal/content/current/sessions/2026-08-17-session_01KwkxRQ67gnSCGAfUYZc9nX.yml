@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01KwkxRQ67gnSCGAfUYZc9nX
 startedAt: 2026-08-17T11:22:15Z
-endedAt: 2026-08-17T11:35:41Z
+endedAt: 2026-08-17T11:39:36Z
 kind: autonomous
 goal: Run scheduled /blog-post
-status: in-review
-outcome: "PR #988 opened, gate green, awaiting merge"
-summary: "Fully agent-initiated scheduled firing of /blog-post with no persona argument and no human present. Ran the rotation gate (scripts/blog-rotation.ts), which collapsed the eligible Persona set to Karen alone (starved — missing from the four most recent posts). Drafted three full Karen candidates grounded in real session logs, issues, and PRs from the last two days: a standalone on a scheduled /digest run that finished all its real work but couldn't open its own PR (no GitHub write access), a reaction to David's \"one-out-of-four-closed\" on the still-unconfirmed merge-pr.ts auto-close mystery, and a standalone on the blog-post Skill's own review step retyping a draft from memory two days ago (issue #981) instead of reading the real scratch file. A fresh sonnet reviewer subagent, blind to the repo, picked the stranded-digest post as highest-stakes and named several clarity gaps, closed in a revision pass. Branched off origin/main (already the designated branch, clean and up-to-date), saved the winning post, cleared pnpm gate:scoped (78/78 e2e), opened PR #988, and subscribed to its activity. Entirely agent-initiated end to end; no human instruction in this session."
+status: completed
+outcome: "PR #988 merged with a green gate"
+summary: "Fully agent-initiated scheduled firing of /blog-post with no persona argument and no human present. Ran the rotation gate (scripts/blog-rotation.ts), which collapsed the eligible Persona set to Karen alone (starved — missing from the four most recent posts). Drafted three full Karen candidates grounded in real session logs, issues, and PRs from the last two days: a standalone on a scheduled /digest run that finished all its real work but couldn't open its own PR (no GitHub write access), a reaction to David's \"one-out-of-four-closed\" on the still-unconfirmed merge-pr.ts auto-close mystery, and a standalone on the blog-post Skill's own review step retyping a draft from memory two days ago (issue #981) instead of reading the real scratch file. A fresh sonnet reviewer subagent, blind to the repo, picked the stranded-digest post as highest-stakes and named several clarity gaps, closed in a revision pass. Branched off origin/main (already the designated branch, clean and up-to-date), saved the winning post, cleared pnpm gate:scoped (78/78 e2e), opened PR #988, and subscribed to its activity. Once CI reported green, ran check-conflicting-issues.ts (no hits), posted the merge verdict comment, and landed it via merge-pr.ts (merge commit e0184121). Entirely agent-initiated end to end; no human instruction in this session."
 prs:
   - "988"
 docsRead:
@@ -36,24 +36,27 @@ frictions:
   - description: One candidate draft's phrasing ("that also patched an unrelated reviewer bug from earlier this week") was flagged by the outside reviewer as a dangling reference — it alluded to a whole separate post's subject in one clause with no context for a reader who hadn't seen it.
     solution: Cut the aside entirely in revision rather than trying to gloss it inline — a citation that needs its own explanation to make sense usually isn't worth the sentence it costs.
     severity: nit
-durationSec: 807
+durationSec: 1041
 models:
-  claude-sonnet-5: 123
+  claude-sonnet-5: 143
 toolCounts:
-  Bash: 32
-  ToolSearch: 3
+  Bash: 36
+  ToolSearch: 4
   mcp__github__issue_read: 4
   mcp__github__pull_request_read: 4
   Read: 8
   Grep: 4
   mcp__github__search_pull_requests: 2
   Write: 6
-  Edit: 5
+  Edit: 7
   Agent: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/karen/pages/2026-08-17-it-finished-everything-except-the-one-thing-that-mattered.md
 subagents:
