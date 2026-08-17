@@ -43,3 +43,18 @@ observations:
       tracking it (2026-07-13 through 2026-07-20), only the first ever used
       this Skill: "little observed pull even when it could have applied" is
       now the better fit than "genuinely useful but not essential."
+  - date: 2026-08-17
+    note: >-
+      Two more bright-line instances, both in this run's 40-session window:
+      session_01CV3dBwvj8RYuvmtTXczKTd bisected PR #895's hydration-mismatch
+      e2e failures across Nuxt/Vue version pins to the real root cause (Nuxt
+      4.5.x + Vue 3.5.41), and session_019YUfZGa9c7rath771qwBsh measured the
+      live journal dashboard to find issue #906's own causal framing
+      ("the invariant has regressed again") was wrong — the invariant had
+      never held — before landing a decoupling fix. Both are squarely the
+      "first-pass theory resists, needs root-causing" case this Skill
+      describes; neither invoked it. Grade is already at the floor
+      (peripheral), so this doesn't change it, but it's now six consecutive
+      hard-bug sessions on record (2026-07-13 through 2026-08-10) with only
+      the first ever invoking this Skill — recorded as a step-6 idea this run
+      (consider retiring or replacing it) rather than acted on here.
