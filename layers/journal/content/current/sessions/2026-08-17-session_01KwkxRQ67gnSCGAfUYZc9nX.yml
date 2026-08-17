@@ -1,0 +1,66 @@
+schemaVersion: 1
+session: session_01KwkxRQ67gnSCGAfUYZc9nX
+startedAt: 2026-08-17T11:22:15Z
+endedAt: 2026-08-17T11:35:41Z
+kind: autonomous
+goal: Run scheduled /blog-post
+status: in-review
+outcome: "PR #988 opened, gate green, awaiting merge"
+summary: "Fully agent-initiated scheduled firing of /blog-post with no persona argument and no human present. Ran the rotation gate (scripts/blog-rotation.ts), which collapsed the eligible Persona set to Karen alone (starved — missing from the four most recent posts). Drafted three full Karen candidates grounded in real session logs, issues, and PRs from the last two days: a standalone on a scheduled /digest run that finished all its real work but couldn't open its own PR (no GitHub write access), a reaction to David's \"one-out-of-four-closed\" on the still-unconfirmed merge-pr.ts auto-close mystery, and a standalone on the blog-post Skill's own review step retyping a draft from memory two days ago (issue #981) instead of reading the real scratch file. A fresh sonnet reviewer subagent, blind to the repo, picked the stranded-digest post as highest-stakes and named several clarity gaps, closed in a revision pass. Branched off origin/main (already the designated branch, clean and up-to-date), saved the winning post, cleared pnpm gate:scoped (78/78 e2e), opened PR #988, and subscribed to its activity. Entirely agent-initiated end to end; no human instruction in this session."
+prs:
+  - "988"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: this run's own procedure
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice + do/don't before drafting
+  - path: layers/blog/tenant.config.ts
+    reason: pages schema
+  - path: docs/agents/environment-caveats.md
+    reason: cited fact
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: invoked by the scheduled Routine firing
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this entry
+frictions:
+  - description: "First drafts of two of the three candidates asserted a day-of-week (\"David's cliffhanger from Monday\") and a same-day framing (\"issue #981 got filed the same day the pattern surfaced\") without checking either against `date -u` / the issue's actual `created_at`. Both were wrong — 2026-08-15 was a Saturday, and the retyping bug (2026-08-15) and the issue that caught it (2026-08-17) were two days apart, not same-day."
+    solution: Caught before publishing by explicitly re-deriving both facts (a `date -u -d` call and re-reading the issue's created_at) per CLAUDE.md's "verify any weekday, count, or date straight from git/the file on disk" rule — but the first draft should have done that check at drafting time, not as a separate pass afterward.
+    severity: minor
+  - description: One candidate draft's phrasing ("that also patched an unrelated reviewer bug from earlier this week") was flagged by the outside reviewer as a dangling reference — it alluded to a whole separate post's subject in one clause with no context for a reader who hadn't seen it.
+    solution: Cut the aside entirely in revision rather than trying to gloss it inline — a citation that needs its own explanation to make sense usually isn't worth the sentence it costs.
+    severity: nit
+durationSec: 807
+models:
+  claude-sonnet-5: 123
+toolCounts:
+  Bash: 32
+  ToolSearch: 3
+  mcp__github__issue_read: 4
+  mcp__github__pull_request_read: 4
+  Read: 8
+  Grep: 4
+  mcp__github__search_pull_requests: 2
+  Write: 6
+  Edit: 5
+  Agent: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-08-17-it-finished-everything-except-the-one-thing-that-mattered.md
+subagents:
+  - type: general-purpose
+    task: Judge three Karen blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-th2jzn
+entrypoint: remote_trigger
+cliVersion: 2.1.233
+trigger: blog-post
