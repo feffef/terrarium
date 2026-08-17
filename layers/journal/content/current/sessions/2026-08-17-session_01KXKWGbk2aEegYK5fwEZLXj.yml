@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01KXKWGbk2aEegYK5fwEZLXj
 startedAt: 2026-08-17T00:46:09Z
-endedAt: 2026-08-17T00:58:18Z
+endedAt: 2026-08-17T01:02:12Z
 kind: autonomous
 goal: Run the scheduled /audit-skills sweep
-status: in-review
-outcome: "3 Inventory YAML edits, PR #980 open"
-summary: "Fully agent-initiated scheduled run of the audit-skills Skill (no human prompt this session; fired by the scheduler). Gathered the scorecard via scripts/audit-skills.ts (40-session window, 35 Skills). Re-graded importance/role per the bright-line rule: no grade changes this run, but refreshed observations on code-review and implement (both stay supporting; this window's usage/skip counts confirm the already-documented inconsistent-adoption pattern) and on diagnosing-bugs (peripheral, already at the demotion floor — two more ad hoc hard-bug diagnoses this window bring the total to six consecutive hard-bug sessions with only the first ever invoking it). Ran the step-4 regression watch over all regressionChecks brackets: the one suspected signal (auto-triage's recent \"Blocked by:\" body-line fix) turned out, on a full Phase B deep-read of session_01QMtUQrTK3LHJhs1rom6i2x, to be the friction that motivated the fix rather than a regression — that session started before the fix commit landed. The scorecard's one orphaned session was already tracked in open issue #736 with matching commit/PR evidence, so nothing new was filed. humanPromptedClosures and manuallyRescuedClosures were both empty (healthy state). Cleared pnpm gate:scoped, opened PR #980 (Inventory-YAML-only), and subscribed to its activity to land it per ADR-0004's low-risk tier."
+status: completed
+outcome: "3 Inventory YAML edits, PR #980 merged"
+summary: "Fully agent-initiated scheduled run of the audit-skills Skill (no human prompt this session; fired by the scheduler). Gathered the scorecard via scripts/audit-skills.ts (40-session window, 35 Skills). Re-graded importance/role per the bright-line rule: no grade changes this run, but refreshed observations on code-review and implement (both stay supporting; this window's usage/skip counts confirm the already-documented inconsistent-adoption pattern) and on diagnosing-bugs (peripheral, already at the demotion floor — two more ad hoc hard-bug diagnoses this window bring the total to six consecutive hard-bug sessions with only the first ever invoking it). Ran the step-4 regression watch over all regressionChecks brackets: the one suspected signal (auto-triage's recent \"Blocked by:\" body-line fix) turned out, on a full Phase B deep-read of session_01QMtUQrTK3LHJhs1rom6i2x, to be the friction that motivated the fix rather than a regression — that session started before the fix commit landed. The scorecard's one orphaned session was already tracked in open issue #736 with matching commit/PR evidence, so nothing new was filed. humanPromptedClosures and manuallyRescuedClosures were both empty (healthy state). Cleared pnpm gate:scoped, opened PR #980 (Inventory-YAML-only), subscribed to its activity, then on green CI posted the verdict comment and self-merged via scripts/merge-pr.ts per ADR-0004's low-risk content tier — merged as dcac5e8c1ecf2453623c8f1837520269956b8533."
 prs:
   - "980"
 docsRead:
@@ -41,17 +41,17 @@ frictions:
   - description: The regressionChecks bracket for auto-triage flagged a session with a high friction count as "after" the SKILL.md edit, but that session's auto-triage invocation actually happened hours before the fix commit landed (the session spanned the edit's landing time) — a naive Phase A read would have mis-flagged an already-fixed bug as a fresh regression.
     solution: Always check whether a bracketed session's actual skill invocation predates the edit commit, not just whether its endedAt falls after it, before treating a Phase A signal as suspected regression evidence — end-time bracketing on a long-running session can straddle the edit.
     severity: minor
-durationSec: 729
+durationSec: 963
 models:
-  claude-sonnet-5: 129
+  claude-sonnet-5: 154
 toolCounts:
-  Bash: 30
-  ToolSearch: 3
+  Bash: 35
+  ToolSearch: 4
   TaskCreate: 6
   TaskUpdate: 11
-  Read: 9
+  Read: 10
   Glob: 1
-  Edit: 5
+  Edit: 8
   mcp__github__get_commit: 1
   mcp__github__search_issues: 1
   mcp__Claude_Code_Remote__get_session: 1
@@ -60,6 +60,9 @@ toolCounts:
   Skill: 2
   Write: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/code-review.yml
   - layers/journal/content/current/skills/implement.yml
