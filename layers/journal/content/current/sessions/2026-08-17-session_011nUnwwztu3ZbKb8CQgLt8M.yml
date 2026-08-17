@@ -1,0 +1,184 @@
+schemaVersion: 1
+session: session_011nUnwwztu3ZbKb8CQgLt8M
+startedAt: 2026-08-17T04:13:34Z
+endedAt: 2026-08-17T04:32:04Z
+kind: autonomous
+goal: Run scheduled /audit-docs sweep
+status: in-review
+outcome: "PR #987 opened; one escalation PR still pending"
+summary: "Entirely agent-initiated: a scheduled Routine fired /audit-docs with no live human present. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel per the Skill, pooled their findings (no overlaps), and ran an independent fact-checker before touching anything. Two fact-checked findings touched only Live docs and landed in a self-merged PR (#987): CLAUDE.md's \"rule of two\" parenthetical contradicted its own designated source of truth (docs/agents/domain.md) by dropping the \"or is concretely scheduled\" clause, and audit-docs/SKILL.md restated the same three facts in its intro paragraph and the blockquote right after it. A third, real finding (near-verbatim duplication between scripts/loop-only-tool-guard.ts + scripts/deferred-tool-guard.ts and their docs/agents/*.md companions) needs its own human-reviewed escalation PR since it touches human-only-to-merge PreToolUse hook scripts (ADR-0004's 2026-07-30 amendment) — not yet opened as of this log. A fourth candidate (an \"isolation logic\" catch-all ambiguity in CLAUDE.md) was confirmed accurate but is already honestly documented as a tracked, unmechanized gap (issue #864); no textual fix was actionable, so nothing was changed."
+prs:
+  - "987"
+docsRead:
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: scripts/loop-only-tool-guard.ts
+    reason: (no reason given)
+  - path: docs/agents/loop-only-tool-guard.md
+    reason: (read before editing)
+  - path: scripts/deferred-tool-guard.ts
+    reason: (no reason given)
+  - path: docs/agents/deferred-tool-guard.md
+    reason: (read before editing)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/subagent-background-guard.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: docs/proposals/879-gate-yml-thin-shell.md
+    reason: (no reason given)
+  - path: docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: scripts/gate.ts
+    reason: (no reason given)
+  - path: app/composables/catalog.ts
+    reason: (no reason given)
+  - path: docs/research/deferred-tool-guard-hook-viability.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's own Skill
+  - name: close-session
+    reason: logging at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Agent B's duplication finding claimed commit 2998802's message "explicitly named" three guard docs (loop-only-tool-guard.md, deferred-tool-guard.md, subagent-background-guard.md) as deferred follow-ups; the fact-checker found the message only says "three", never naming them — the filenames appear only as unchanged context lines in a diff, not in the prose.
+    solution: Fact-checked before use; the escalation PR's description will cite the precedent pattern without the inaccurate "explicitly named" claim.
+    severity: nit
+durationSec: 1110
+models:
+  claude-sonnet-5: 141
+toolCounts:
+  Bash: 25
+  ToolSearch: 5
+  TaskCreate: 6
+  TaskUpdate: 9
+  Agent: 5
+  ScheduleWakeup: 1
+  mcp__github__list_pull_requests: 1
+  Read: 6
+  Edit: 6
+  Grep: 3
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - .agents/skills/audit-docs/SKILL.md
+  - CLAUDE.md
+  - docs/agents/deferred-tool-guard.md
+  - docs/agents/loop-only-tool-guard.md
+subagents:
+  - type: general-purpose
+    task: "Audit Agent A: Freshness (Drift + Orphan-addition)"
+  - type: general-purpose
+    task: "Audit Agent B: Single-home (Duplication + Mis-location)"
+  - type: general-purpose
+    task: "Audit Agent C: Concision (Verbose + Stale-narration)"
+  - type: general-purpose
+    task: "Audit Agent D: Coherence (Contradiction + Ambiguity)"
+  - type: general-purpose
+    task: Fact-check pooled audit findings
+gitBranch: claude/festive-mayer-86gkii
+entrypoint: remote_trigger
+cliVersion: 2.1.233
+trigger: audit-docs
