@@ -11,7 +11,9 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   failingCheckNames,
   mergeMethodFlag,
+  parseClosingKeywordIssues,
   pollUntilResolved,
+  reconcileClosingKeywords,
   verdictFromCheckRuns,
   type RawCheckRun,
 } from '../../scripts/merge-pr.ts'
@@ -86,6 +88,86 @@ describe('mergeMethodFlag()', () => {
     expect(mergeMethodFlag('merge')).toBe('--merge')
     expect(mergeMethodFlag('squash')).toBe('--squash')
     expect(mergeMethodFlag('rebase')).toBe('--rebase')
+  })
+})
+
+describe('parseClosingKeywordIssues()', () => {
+  it('finds a single "Closes #N" reference', () => {
+    expect(parseClosingKeywordIssues('Closes #42')).toEqual([42])
+  })
+
+  it('finds each keyword on its own line (PR #955\'s well-formed body)', () => {
+    const body = 'Closes #948\nCloses #950\nCloses #952\nCloses #954'
+    expect(parseClosingKeywordIssues(body)).toEqual([948, 950, 952, 954])
+  })
+
+  it('finds every number in a comma-separated list after one keyword, even though GitHub itself only recognizes the first (per GitHub\'s own "keyword before each reference" requirement)', () => {
+    const body = 'Closes #948, #950, #952, #954'
+    expect(parseClosingKeywordIssues(body)).toEqual([948, 950, 952, 954])
+  })
+
+  it('handles an "and" before the last item in a list', () => {
+    expect(parseClosingKeywordIssues('Fixes #1, #2, and #3')).toEqual([1, 2, 3])
+  })
+
+  it('recognizes fix/fixes/fixed/resolve/resolves/resolved/close/closed too', () => {
+    for (const keyword of ['Fix', 'Fixes', 'Fixed', 'Resolve', 'Resolves', 'Resolved', 'Close', 'Closed']) {
+      expect(parseClosingKeywordIssues(`${keyword} #7`)).toEqual([7])
+    }
+  })
+
+  it('is case-insensitive', () => {
+    expect(parseClosingKeywordIssues('closes #7')).toEqual([7])
+  })
+
+  it('deduplicates and sorts ascending', () => {
+    expect(parseClosingKeywordIssues('Closes #5\nFixes #3, #5')).toEqual([3, 5])
+  })
+
+  it('ignores a cross-repo owner/repo#N reference', () => {
+    expect(parseClosingKeywordIssues('Fixes octo-org/octo-repo#100')).toEqual([])
+  })
+
+  it('ignores a bare issue mention with no closing keyword', () => {
+    expect(parseClosingKeywordIssues('See #42 for context')).toEqual([])
+  })
+
+  it('is empty for a body with no closing keywords', () => {
+    expect(parseClosingKeywordIssues('Just a plain description, no keywords here.')).toEqual([])
+  })
+})
+
+describe('reconcileClosingKeywords()', () => {
+  it('closes only the still-open issues a body names with a closing keyword', async () => {
+    const states: Record<number, string> = { 1: 'open', 2: 'closed', 3: 'open' }
+    const closer = vi.fn()
+    const result = await reconcileClosingKeywords(
+      'Closes #1, #2, #3',
+      (n) => states[n]!,
+      closer,
+    )
+    expect(result).toEqual({ closed: [1, 3], failed: [] })
+    expect(closer).toHaveBeenCalledTimes(2)
+    expect(closer).toHaveBeenCalledWith(1)
+    expect(closer).toHaveBeenCalledWith(3)
+  })
+
+  it('does nothing when the body names no issues', async () => {
+    const closer = vi.fn()
+    const result = await reconcileClosingKeywords('No keywords here.', () => 'open', closer)
+    expect(result).toEqual({ closed: [], failed: [] })
+    expect(closer).not.toHaveBeenCalled()
+  })
+
+  it('collects a failure without throwing and keeps reconciling the rest', async () => {
+    const closer = vi.fn()
+    const reader = vi.fn((n: number) => {
+      if (n === 2) throw new Error('boom')
+      return 'open'
+    })
+    const result = await reconcileClosingKeywords('Closes #1, #2, #3', reader, closer)
+    expect(result.closed).toEqual([1, 3])
+    expect(result.failed).toEqual([2])
   })
 })
 

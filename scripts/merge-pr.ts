@@ -28,6 +28,30 @@
 //   Exits 0 only when the merge actually happened; 1 otherwise (red, timeout,
 //   or a merge-call error) — an unmerged PR is a caller-actionable outcome,
 //   not a script bug, but still worth a non-zero exit for CI/scripting.
+//
+// Closing-keyword reconciliation (issue #983): GitHub's own auto-close on
+// merge does not always close every issue a PR's `Closes #N`/`Fixes #N`
+// keywords name. Confirmed on PR #955 (four issues, one `Closes #N` per
+// line — a well-formed body by GitHub's own documented syntax): only #948
+// auto-closed; #950/#952/#954 sat open for two days until a human closed
+// them by hand. Two theories were checked and *ruled out* against fresh
+// evidence rather than assumed: it is not a missing-keyword-repetition
+// formatting problem (#955's body already repeated `Closes` before every
+// number), and it is not the merge commit's own message driving the close —
+// PR #985 (two issues, same script, same default `--merge-method merge`)
+// closed both correctly on merge even though its underlying commit carries
+// no closing keyword at all, proving the close comes from the PR
+// *description*, not the commit that lands on `main`. #985 also rules out a
+// systemic defect in this script's REST/`gh api` merge call itself: the
+// identical call closed 2-for-2 there. What's actually left unconfirmed is
+// why #955 specifically dropped 3 of its 4 well-formed references — the
+// evidence points at an intermittent reliability limit in GitHub's own
+// multi-issue-closing pipeline, not anything this script's request shape
+// controls, but that mechanism itself is unverified. Rather than chase it
+// further, this script re-checks every issue its own merged PR named with a
+// closing keyword and closes any GitHub's auto-close left open — a
+// self-healing safety net that doesn't depend on ever nailing the exact
+// GitHub-side trigger.
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -71,6 +95,10 @@ export interface MergeResult {
   merged: boolean
   mergeCommitSha?: string
   message: string
+  /** Issues this run's closing-keyword reconciliation closed itself because
+   *  GitHub's own auto-close didn't (issue #983) — empty when the PR named no
+   *  issues, or when every named issue was already closed by GitHub. */
+  reconciledClosedIssues?: number[]
 }
 
 // ── Pure core (unit-tested) ──────────────────────────────────────────────────
@@ -109,6 +137,31 @@ export function mergeMethodFlag(method: MergeMethod): string {
   return `--${method}`
 }
 
+// ── Closing-keyword reconciliation (pure, issue #983) ────────────────────────
+
+/** GitHub's documented closing keywords: `close(s|d)`, `fix(es|ed)`,
+ *  `resolve(s|d)`. The capture group grabs the keyword's own `#N` plus any
+ *  further `#N`s joined by a comma (optionally with "and") — the shape GitHub
+ *  itself does *not* treat as additional closing references (only the first
+ *  `#N` right after the keyword is), but which this reconciliation step
+ *  treats as the same intent and closes in full (see header comment). A bare
+ *  `owner/repo#N` cross-repo reference is deliberately not matched — this
+ *  reconciliation only ever targets this repo's own issues. */
+const CLOSING_KEYWORD_RE = /\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\b((?:\s+#\d+|\s*,\s*(?:and\s+)?#\d+)+)/gi
+
+/** Every issue number named by a closing keyword anywhere in `body`,
+ *  deduplicated and ascending. Pure and independently testable — the actual
+ *  network calls to verify/close each number happen only in `mergePrWhenGreen`. */
+export function parseClosingKeywordIssues(body: string): number[] {
+  const found = new Set<number>()
+  for (const match of body.matchAll(CLOSING_KEYWORD_RE)) {
+    for (const numMatch of match[1]!.matchAll(/#(\d+)/g)) {
+      found.add(Number(numMatch[1]))
+    }
+  }
+  return [...found].sort((a, b) => a - b)
+}
+
 // ── Poll loop ─────────────────────────────────────────────────────────────────
 
 const sleep = (ms: number): Promise<void> => new Promise((res) => setTimeout(res, ms))
@@ -137,12 +190,22 @@ function readOriginUrl(cwd: string): string {
   return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
 }
 
-function readPrHeadShaViaGh(owner: string, repo: string, prNumber: number, cwd: string): string {
-  return execFileSync(
+/** A PR's head SHA (for check-run polling) and body (for closing-keyword
+ *  reconciliation, issue #983) — one GET, both fields, since both are read
+ *  from the same `pulls/{number}` record. */
+export interface PrMeta {
+  sha: string
+  body: string
+}
+
+function readPrMetaViaGh(owner: string, repo: string, prNumber: number, cwd: string): PrMeta {
+  const raw = execFileSync(
     'gh',
-    ['api', '--method', 'GET', `repos/${owner}/${repo}/pulls/${prNumber}`, '--jq', '.head.sha'],
+    ['api', '--method', 'GET', `repos/${owner}/${repo}/pulls/${prNumber}`, '--jq', '{sha: .head.sha, body: .body}'],
     { cwd, encoding: 'utf8' },
-  ).trim()
+  )
+  const parsed = JSON.parse(raw) as { sha: string; body: string | null }
+  return { sha: parsed.sha, body: parsed.body ?? '' }
 }
 
 function readCheckRunsViaGh(owner: string, repo: string, sha: string, cwd: string): RawCheckRun[] {
@@ -186,7 +249,13 @@ function mergePrViaGh(owner: string, repo: string, prNumber: number, mergeMethod
 // (the merge call) — folded into one helper since neither of this script's
 // two REST reads (`pulls/{number}`, `commits/{sha}/check-runs`) need `Link`
 // pagination (a single PR's check-run set fits in one `per_page=100` page).
-function curlRequestJson(method: 'GET' | 'PUT', url: string, token: string, cwd: string, body?: unknown): unknown {
+function curlRequestJson(
+  method: 'GET' | 'PUT' | 'PATCH',
+  url: string,
+  token: string,
+  cwd: string,
+  body?: unknown,
+): unknown {
   const dir = mkdtempSync(join(tmpdir(), 'merge-pr-'))
   const bodyFile = join(dir, 'body')
   try {
@@ -220,11 +289,12 @@ function curlRequestJson(method: 'GET' | 'PUT', url: string, token: string, cwd:
   }
 }
 
-function readPrHeadShaViaRest(owner: string, repo: string, prNumber: number, token: string, cwd: string): string {
+function readPrMetaViaRest(owner: string, repo: string, prNumber: number, token: string, cwd: string): PrMeta {
   const pr = curlRequestJson('GET', `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}`, token, cwd) as {
     head: { sha: string }
+    body: string | null
   }
-  return pr.head.sha
+  return { sha: pr.head.sha, body: pr.body ?? '' }
 }
 
 function readCheckRunsViaRest(owner: string, repo: string, sha: string, token: string, cwd: string): RawCheckRun[] {
@@ -255,9 +325,92 @@ function mergePrViaRest(
   return result.sha
 }
 
-function readPrHeadSha(strategy: FetchStrategy, owner: string, repo: string, prNumber: number, cwd: string): string {
-  if (strategy === 'gh') return readPrHeadShaViaGh(owner, repo, prNumber, cwd)
-  return readPrHeadShaViaRest(owner, repo, prNumber, envToken()!, cwd)
+function readIssueStateViaGh(owner: string, repo: string, issueNumber: number, cwd: string): string {
+  return execFileSync(
+    'gh',
+    ['api', '--method', 'GET', `repos/${owner}/${repo}/issues/${issueNumber}`, '--jq', '.state'],
+    { cwd, encoding: 'utf8' },
+  ).trim()
+}
+
+function readIssueStateViaRest(owner: string, repo: string, issueNumber: number, token: string, cwd: string): string {
+  const issue = curlRequestJson(
+    'GET',
+    `https://api.github.com/repos/${owner}/${repo}/issues/${issueNumber}`,
+    token,
+    cwd,
+  ) as { state: string }
+  return issue.state
+}
+
+function closeIssueViaGh(owner: string, repo: string, issueNumber: number, cwd: string): void {
+  execFileSync(
+    'gh',
+    [
+      'api',
+      '--method',
+      'PATCH',
+      `repos/${owner}/${repo}/issues/${issueNumber}`,
+      '-f',
+      'state=closed',
+      '-f',
+      'state_reason=completed',
+    ],
+    { cwd, encoding: 'utf8' },
+  )
+}
+
+function closeIssueViaRest(owner: string, repo: string, issueNumber: number, token: string, cwd: string): void {
+  curlRequestJson(
+    'PATCH',
+    `https://api.github.com/repos/${owner}/${repo}/issues/${issueNumber}`,
+    token,
+    cwd,
+    { state: 'closed', state_reason: 'completed' },
+  )
+}
+
+function readPrMeta(strategy: FetchStrategy, owner: string, repo: string, prNumber: number, cwd: string): PrMeta {
+  if (strategy === 'gh') return readPrMetaViaGh(owner, repo, prNumber, cwd)
+  return readPrMetaViaRest(owner, repo, prNumber, envToken()!, cwd)
+}
+
+function readIssueState(strategy: FetchStrategy, owner: string, repo: string, issueNumber: number, cwd: string): string {
+  if (strategy === 'gh') return readIssueStateViaGh(owner, repo, issueNumber, cwd)
+  return readIssueStateViaRest(owner, repo, issueNumber, envToken()!, cwd)
+}
+
+function closeIssue(strategy: FetchStrategy, owner: string, repo: string, issueNumber: number, cwd: string): void {
+  if (strategy === 'gh') return closeIssueViaGh(owner, repo, issueNumber, cwd)
+  return closeIssueViaRest(owner, repo, issueNumber, envToken()!, cwd)
+}
+
+/** Verify + close (via `issueCloser`) every issue `prBody` names with a
+ *  closing keyword that is not already closed (via `issueStateReader`) —
+ *  the issue #983 safety net. Errors on any one issue (a transient API
+ *  failure, a since-deleted issue) are swallowed into `failed` rather than
+ *  thrown, so one bad number never masks the merge's own success or blocks
+ *  reconciling the rest. Injected reader/closer functions keep this
+ *  independently testable without a real network call. */
+export async function reconcileClosingKeywords(
+  prBody: string,
+  issueStateReader: (issueNumber: number) => Promise<string> | string,
+  issueCloser: (issueNumber: number) => Promise<void> | void,
+): Promise<{ closed: number[]; failed: number[] }> {
+  const closed: number[] = []
+  const failed: number[] = []
+  for (const issueNumber of parseClosingKeywordIssues(prBody)) {
+    try {
+      const state = await issueStateReader(issueNumber)
+      if (state === 'open') {
+        await issueCloser(issueNumber)
+        closed.push(issueNumber)
+      }
+    } catch {
+      failed.push(issueNumber)
+    }
+  }
+  return { closed, failed }
 }
 
 function readCheckRuns(strategy: FetchStrategy, owner: string, repo: string, sha: string, cwd: string): RawCheckRun[] {
@@ -295,7 +448,7 @@ export async function mergePrWhenGreen(
   }
   const { owner, repo } = ownerRepo
 
-  const sha = readPrHeadSha(strategy, owner, repo, prNumber, cwd)
+  const { sha, body: prBody } = readPrMeta(strategy, owner, repo, prNumber, cwd)
   const { verdict, runs } = await pollUntilResolved(
     async () => readCheckRuns(strategy, owner, repo, sha, cwd),
     opts,
@@ -318,9 +471,9 @@ export async function mergePrWhenGreen(
     }
   }
 
+  let mergeCommitSha: string
   try {
-    const mergeCommitSha = mergePr(strategy, owner, repo, prNumber, opts.mergeMethod, cwd)
-    return { pr: prNumber, verdict, merged: true, mergeCommitSha, message: 'merged' }
+    mergeCommitSha = mergePr(strategy, owner, repo, prNumber, opts.mergeMethod, cwd)
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
     return {
@@ -329,6 +482,28 @@ export async function mergePrWhenGreen(
       merged: false,
       message: `checks were green but the merge call itself failed: ${msg}`,
     }
+  }
+
+  // Merge succeeded — reconcile closing keywords (issue #983) as a
+  // best-effort follow-up. A reconciliation failure never turns a successful
+  // merge into a reported failure; it's folded into the message instead.
+  const { closed, failed } = await reconcileClosingKeywords(
+    prBody,
+    (issueNumber) => readIssueState(strategy, owner, repo, issueNumber, cwd),
+    (issueNumber) => closeIssue(strategy, owner, repo, issueNumber, cwd),
+  )
+  const reconcileNote =
+    closed.length > 0
+      ? ` — closed ${closed.length} referenced issue(s) GitHub's own auto-close missed: ${closed.map((n) => `#${n}`).join(', ')}`
+      : ''
+  const failNote = failed.length > 0 ? ` (failed to verify/close: ${failed.map((n) => `#${n}`).join(', ')})` : ''
+  return {
+    pr: prNumber,
+    verdict,
+    merged: true,
+    mergeCommitSha,
+    message: `merged${reconcileNote}${failNote}`,
+    reconciledClosedIssues: closed,
   }
 }
 
