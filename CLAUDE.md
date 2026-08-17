@@ -44,9 +44,8 @@ human asks for it outright.
   skill's `## Language`/`_Avoid_` layout); and the repo is multi-context with a
   Platform context plus per-Tenant contexts co-located under `layers/` (ADR-0021;
   the shape is documented in `docs/agents/domain.md`). Match the repo's actual
-  files. This repo's **rule of two** for new vocabulary (coin a glossary/ADR term
-  only on a concept's *second* instance) is defined in `docs/agents/domain.md`,
-  complementing that skill's 3-part test.
+  files. This repo's **rule of two** for new vocabulary is defined in
+  `docs/agents/domain.md`, complementing that skill's 3-part test.
 - **Which Skills to actually use** is curated in the journal Tenant's **Skill
   Inventory** (`layers/journal/content/current/skills/`, rendered at
   `/t/journal/current`; see `CONTEXT.md`'s glossary term for what it records) —

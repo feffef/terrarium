@@ -13,13 +13,10 @@ repo's self-improvement Skills (ADR-0003): it fact-checks each finding and
 for the rare case it genuinely can't tell which of two conflicting facts is
 correct. It runs start to finish **without interaction**.
 
-> **Autonomous, bounded.** Runs unattended and **self-merges** its gated PR on a
-> green gate (ADR-0003 amendment, step 8) — the PR carries only fact-checked
-> reconciliations that touch no human-only surface (ADR-0004's low-risk content
-> tier). It edits only *live* docs, **never** rewrites a historical record's
-> decision or a pack template, and is **brave by default**: it decides scope
-> itself and fixes, escalating to an issue only for an unresolvable factual
-> conflict.
+> **Bounded.** The self-merged PR (ADR-0003 amendment, step 8) carries only
+> fact-checked reconciliations that touch no human-only surface (ADR-0004's
+> low-risk content tier). It edits only *live* docs — **never** rewrites a
+> historical record's decision or a pack template.
 
 > **Simplify first.** Every edit this run makes must shrink the Platform or its
 > agent instructions — less code, less documentation, same behaviour — and state
