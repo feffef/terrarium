@@ -111,6 +111,13 @@ The subagent cannot see this session's context, so the brief is self-contained:
   grades, whatever the domain's cheap grep-able facts are. A subagent that
   develops a flagship idea the data already rules out is effort spent re-deriving
   what the dispatcher had cheap access to.
+- **A review-subagent's prompt must be populated by reading the target scratch/draft
+  file's actual content (Read tool), never retyped or paraphrased from memory.**
+  Retyping drifts from the real file — a `/blog-post` run judged a reviewer against
+  a retyped candidate missing the real draft's markdown links, so the "missing
+  citations" feedback it produced didn't apply to the document that actually
+  existed (issue #981). This is CLAUDE.md's "quote the line that supports it"
+  discipline applied to brief-authoring specifically.
 - **A dispatched worktree-isolated impl agent must not self-invoke
   `close-session`/`log-session`** — see `close-session/SKILL.md` for why, and its
   mechanical enforcement.

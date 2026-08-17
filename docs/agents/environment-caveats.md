@@ -109,3 +109,13 @@ new; don't re-diagnose any of these as a fresh problem.
   false public issue (#923, closed `not_planned`) plus a proactive push
   notification claiming main was broken, based on a repro that never actually
   cleaned `node_modules`/`.nuxt` (issue #928).
+- **A scheduled/autonomous session can find `mcp__github__*` tools unauthenticated
+  and no `gh` CLI on PATH** — the GitHub MCP server needs an OAuth flow a
+  non-interactive session can't run, and there is no code-level fix from inside
+  the repo (a session can't grant itself OAuth credentials). Left undetected,
+  finished, gate-green work sits silently stranded on a pushed branch with no PR
+  opened and no signal a human needs to step in. **Fallback procedure:** push the
+  branch as usual, then say so explicitly and unambiguously in the session log's
+  `outcome`/`summary` — e.g. "branch pushed, PR NOT opened — no GitHub write
+  access this run" — so it surfaces to a human instead of reading as ordinary
+  completion (issue #982).
