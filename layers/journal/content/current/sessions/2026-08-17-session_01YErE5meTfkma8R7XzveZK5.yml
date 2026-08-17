@@ -1,0 +1,40 @@
+schemaVersion: 1
+session: session_01YErE5meTfkma8R7XzveZK5
+startedAt: 2026-08-17T00:20:04Z
+endedAt: 2026-08-17T00:25:27Z
+kind: autonomous
+goal: Run scheduled /digest sweep for 2026-08-16
+status: blocked
+outcome: Digest written and gate green, but PR-open blocked
+summary: "Scheduled /digest run with no human present. Authored the Digest for the closed UTC day 2026-08-16 (4 merged PRs, 5 completed sessions, frictions-by-severity rollup), ran the retention sweep (scripts/archive-journal-content.ts --write, archived one digest and two session logs), and cleared pnpm gate:scoped green. Committed and pushed the work to branch digest/2026-08-17. Could not complete the required step of opening the gated PR: the github MCP server needs an interactive OAuth authorization this non-interactive scheduled session cannot perform, and no gh/hub CLI is installed as a fallback. All work is unauthored-agent, per the Skill's own instructions — no human-instructed steps in this run."
+prs: []
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-08-15.md
+    reason: (no reason given)
+skillsUsed:
+  - name: digest
+    reason: (invoked as a slash command)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The digest Skill's step 7 requires opening a gated PR via GitHub, but this scheduled session had no authenticated github MCP tools (server needs an OAuth flow this non-interactive session can't run) and no gh CLI installed as a fallback — so the finished, gate-green work sits on a pushed branch with no PR opened.
+    solution: Either pre-authorize the github MCP connector for scheduled/autonomous sessions so a Routine-fired run always has GitHub write access, or add a raw GitHub REST fallback (a token + curl/fetch path) the digest workflow can use when the MCP server isn't authenticated.
+    severity: blocker
+durationSec: 323
+models:
+  claude-sonnet-5: 46
+toolCounts:
+  Skill: 3
+  Bash: 13
+  Read: 1
+  Write: 2
+  ToolSearch: 2
+  PushNotification: 2
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-16.md
+gitBranch: claude/compassionate-lovelace-qdejg9
+entrypoint: remote_trigger
+cliVersion: 2.1.233
+trigger: digest
