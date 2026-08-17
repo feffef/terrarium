@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_01YErE5meTfkma8R7XzveZK5
 startedAt: 2026-08-17T00:20:04Z
-endedAt: 2026-08-17T00:25:27Z
+endedAt: 2026-08-17T20:14:40Z
 kind: autonomous
 goal: Run scheduled /digest sweep for 2026-08-16
-status: blocked
-outcome: Digest written and gate green, but PR-open blocked
-summary: "Scheduled /digest run with no human present. Authored the Digest for the closed UTC day 2026-08-16 (4 merged PRs, 5 completed sessions, frictions-by-severity rollup), ran the retention sweep (scripts/archive-journal-content.ts --write, archived one digest and two session logs), and cleared pnpm gate:scoped green. Committed and pushed the work to branch digest/2026-08-17. Could not complete the required step of opening the gated PR: the github MCP server needs an interactive OAuth authorization this non-interactive scheduled session cannot perform, and no gh/hub CLI is installed as a fallback. All work is unauthored-agent, per the Skill's own instructions — no human-instructed steps in this run."
-prs: []
+status: in-review
+outcome: "PR #989 open, gate polling for auto-merge"
+summary: "Scheduled /digest run with no human present throughout. Authored the Digest for the closed UTC day 2026-08-16 (4 merged PRs, 5 completed sessions, frictions-by-severity rollup), ran the retention sweep (scripts/archive-journal-content.ts --write, archived one digest and two session logs), and cleared pnpm gate:scoped green. The first attempt could not open the gated PR because the github MCP server was unauthenticated in this non-interactive session; the user was notified and, on the next turn, GitHub access had been restored. Before opening the PR, caught and corrected a self-caused branch-naming mistake (see frictions) by fast-forwarding the correctly pinned branch onto the already-committed, already-gate-green work, then opened PR #989 and subscribed to its activity. merge-pr.ts is polling the gate in the background to self-merge once green. All steps were agent-initiated per the digest Skill's own schedule; no human gave task-specific instructions beyond the initial \"tryagain\" prompt after being notified of the blocker."
+prs:
+  - "989"
 docsRead:
   - path: layers/journal/content/current/pages/digests/2026-08-15.md
     reason: (no reason given)
@@ -19,19 +20,30 @@ skillsUsed:
   - name: log-session
     reason: (no reason given)
 frictions:
-  - description: The digest Skill's step 7 requires opening a gated PR via GitHub, but this scheduled session had no authenticated github MCP tools (server needs an OAuth flow this non-interactive session can't run) and no gh CLI installed as a fallback — so the finished, gate-green work sits on a pushed branch with no PR opened.
+  - description: The digest Skill's step 7 requires opening a gated PR via GitHub, but the first attempt had no authenticated github MCP tools (server needed an OAuth flow a non-interactive scheduled session can't run) and no gh CLI installed as a fallback — so the finished, gate-green work sat on a pushed branch with no PR opened until a later turn restored GitHub access.
     solution: Either pre-authorize the github MCP connector for scheduled/autonomous sessions so a Routine-fired run always has GitHub write access, or add a raw GitHub REST fallback (a token + curl/fetch path) the digest workflow can use when the MCP server isn't authenticated.
     severity: blocker
-durationSec: 323
+  - description: Skipped CLAUDE.md's branch-off checklist step 1 (scan the task/ system-prompt for a caller-pinned designated branch before any git branch/checkout) and branched off origin/main with a self-invented name (digest/2026-08-17) instead of the pinned claude/compassionate-lovelace-qdejg9 — the same failure mode already recorded for session_01GEED3ATw4ZTS62nNxuB8Ye the day before. Caught it only when opening the PR, after already committing and pushing to the wrong branch.
+    solution: This is now the second recorded instance of this exact miss in two consecutive days — the prose-only checklist in CLAUDE.md isn't sticking. Worth a mechanical guard (a PreToolUse check on the first git branch/checkout of a session, similar to the deferred-tool-guard and loop-only-tool-guard pattern) that greps the session's own system-prompt instructions for a pinned branch name before allowing the branch/checkout to proceed with a different name.
+    severity: minor
+  - description: Deleting the stray digest/2026-08-17 remote branch after the rename fix failed with an HTTP 403 (git push origin --delete) — this session apparently lacks remote branch-delete permission even though it can push commits and open PRs.
+    solution: Harmless since the branch is unreferenced and gate-green work already lives on the correct pinned branch; left it in place rather than retrying. No action needed beyond noting the permission gap for whoever tidies stray branches.
+    severity: nit
+durationSec: 71676
 models:
-  claude-sonnet-5: 46
+  claude-sonnet-5: 89
 toolCounts:
   Skill: 3
-  Bash: 13
-  Read: 1
-  Write: 2
-  ToolSearch: 2
+  Bash: 25
+  Read: 2
+  Write: 3
+  ToolSearch: 4
   PushNotification: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Edit: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-08-16.md
 gitBranch: claude/compassionate-lovelace-qdejg9
