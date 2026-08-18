@@ -141,9 +141,11 @@ It prints JSON:
   `RESOLVED_MANUALLY_RESCUED_CLOSURES` stays visible but carries a
   `resolvedBy` cutoff, same as `orphanedSessions` above (issue #447 item 4).
 - **`misclassifiedKind`** — sessions whose authored `kind` contradicts the
-  `entrypoint: 'remote_trigger'` derived signal (a Routine/`/loop`-fired
-  session implies `kind: autonomous` per CONTEXT.md's Session definitions —
-  issue #449 Gap 2). Per #449's own spec this is a reporting/flagging finding,
+  `entrypoint: 'remote_trigger'` derived signal (a Routine-fired session
+  implies `kind: autonomous` per CONTEXT.md's Session definitions — issue
+  #449 Gap 2; this checks `entrypoint`, not `/loop` — a `/loop` session is
+  kicked off by a human and is ordinarily `delegated`, not `autonomous`).
+  Per #449's own spec this is a reporting/flagging finding,
   **not an auto-correction** — informational only, unlike the four signals in
   step 5 below. Note any flagged session in this run's own summary for
   awareness; no issue-filing is expected for it.
