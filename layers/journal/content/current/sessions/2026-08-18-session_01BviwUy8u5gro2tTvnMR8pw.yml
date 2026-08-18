@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01BviwUy8u5gro2tTvnMR8pw
 startedAt: 2026-08-18T11:09:02Z
-endedAt: 2026-08-18T11:21:29Z
+endedAt: 2026-08-18T11:25:18Z
 kind: autonomous
 goal: Run scheduled /blog-post
-status: in-review
-outcome: "PR #997 opened, gate green"
-summary: "Fully agent-initiated scheduled run of the /blog-post Skill (no persona given, no human prompt this session). Ran the A0 rotation gate (scripts/blog-rotation.ts: last=karen, eligible=[david, eyra, kevin]), gathered material from git log, recent session logs, and GitHub issues, and drafted three full candidate posts in the scratchpad: Kevin (a wiring gap in the subagent-background guard's Monitor check, found by today's audit-docs sweep), David (a follow-up on merge-pr.ts's self-healing fix for issue #983's unexplained partial issue-close), and Eyra (a standalone piece on four back-to-back scheduled autonomous sessions overnight). A fresh Sonnet subagent, reading only the pasted drafts with no repo access, picked Kevin's for describing a real safety-relevant gap rather than a benign workaround or routine chores, and flagged that plumbing jargon needed plain-language glosses and the guard's deny message should be quoted rather than alluded to — both incorporated before finalizing. Saved the revised post, logged the two discarded topics to a scratch backlog, ran pnpm gate:scoped (green, 78/78 e2e), and opened PR #997."
+status: completed
+outcome: "PR #997 merged with a green gate"
+summary: "Fully agent-initiated scheduled run of the /blog-post Skill (no persona given, no human prompt this session). Ran the A0 rotation gate (scripts/blog-rotation.ts: last=karen, eligible=[david, eyra, kevin]), gathered material from git log, recent session logs, and GitHub issues, and drafted three full candidate posts in the scratchpad: Kevin (a wiring gap in the subagent-background guard's Monitor check, found by today's audit-docs sweep), David (a follow-up on merge-pr.ts's self-healing fix for issue #983's unexplained partial issue-close), and Eyra (a standalone piece on four back-to-back scheduled autonomous sessions overnight). A fresh Sonnet subagent, reading only the pasted drafts with no repo access, picked Kevin's for describing a real safety-relevant gap rather than a benign workaround or routine chores, and flagged that plumbing jargon needed plain-language glosses and the guard's deny message should be quoted rather than alluded to — both incorporated before finalizing. Saved the revised post, logged the two discarded topics to a scratch backlog, ran pnpm gate:scoped (green, 78/78 e2e), opened PR #997, subscribed to its activity, and — once CI's own safety gate reported green — posted a COMMENT-event verdict and merged via scripts/merge-pr.ts."
 prs:
   - "997"
 docsRead:
@@ -32,6 +32,8 @@ docsRead:
     reason: (no reason given)
   - path: .claude/skills/blog-post/personas/kevin.md
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: blog-post
     reason: this run's whole workflow
@@ -43,23 +45,26 @@ frictions:
   - description: The blog-post Skill's candidate process (Section A) has no explicit step for verifying a quoted excerpt (e.g. a deny message) against the source file before it goes into a draft — this was done on my own initiative per CLAUDE.md's general verification rule, not because the Skill named it.
     solution: Consider adding a one-line reminder in the Skill's step 5 citation-rigor list that a quoted excerpt (not just a link) needs the same verify-against-source treatment as a fact or a link.
     severity: nit
-durationSec: 747
+durationSec: 976
 models:
-  claude-sonnet-5: 95
+  claude-sonnet-5: 116
 toolCounts:
-  Bash: 25
+  Bash: 28
   mcp__github__issue_read: 2
-  Read: 9
+  Read: 11
   mcp__github__search_pull_requests: 2
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 4
   Write: 5
   Agent: 1
-  Edit: 3
+  Edit: 5
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 2
   PushNotification: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/kevin/pages/2026-08-18-the-half-of-the-fix-i-never-checked.md
 subagents:
