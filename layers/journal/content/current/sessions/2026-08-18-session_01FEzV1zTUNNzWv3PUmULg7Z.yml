@@ -1,0 +1,43 @@
+schemaVersion: 1
+session: session_01FEzV1zTUNNzWv3PUmULg7Z
+startedAt: 2026-08-18T00:16:02Z
+endedAt: 2026-08-18T00:21:47Z
+kind: autonomous
+goal: Run scheduled /digest sweep for 2026-08-17
+status: in-review
+outcome: "PR #990 opened, gate green"
+summary: "Fully agent-initiated scheduled run of the /digest Skill (no human prompt). Followed the pinned-branch checklist correctly this time (checked the harness-injected block, found claude/compassionate-lovelace-0y9oha pinned, branched off origin/main with it) — a fix over the prior day's digest session, which skipped that check. Authored the 2026-08-17 Digest from scripts/digest.ts gather output (8 merged PRs, 6 sessions, 15 frictions including a blocker), ran the retention archive sweep (1 digest + 6 sessions moved to archived), confirmed pnpm gate:scoped green, pushed, and opened PR #990 with GitHub MCP tools available on the first attempt (no access blocker this time). Subscribed to PR activity for babysitting."
+prs:
+  - "990"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-08-16.md
+    reason: format reference for the new digest
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 345
+models:
+  claude-sonnet-5: 47
+toolCounts:
+  Bash: 13
+  Read: 1
+  Write: 2
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Edit: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-17.md
+gitBranch: claude/compassionate-lovelace-0y9oha
+entrypoint: remote_trigger
+cliVersion: 2.1.234
+trigger: digest
