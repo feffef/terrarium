@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01S47MF7UZZUq16PKU2YcTeE
 startedAt: 2026-08-18T04:08:03Z
-endedAt: 2026-08-18T04:25:39Z
+endedAt: 2026-08-18T04:29:05Z
 kind: autonomous
 goal: Run scheduled audit-docs sweep
-status: in-review
-outcome: "3 findings fixed, PR #996 opened"
-summary: "Fully autonomous run of the scheduled /audit-docs routine (no human prompt this session — CLAUDE.md/ADR-0003 already green-lights this Skill's self-merged fix tier). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the repo's Live-tier docs, pooled four findings with no overlap, ran an independent fact-check pass (3 CONFIRMED/CONFIRMED-BUT, 1 WRONG and dropped), then fixed the three confirmed findings: corrected a Drift claim in docs/agents/subagent-background-guard.md that overstated what .claude/settings.json actually wires (Monitor calls are not forwarded to this guard at all — filed issue #995 for the wiring gap itself, since fixing that means editing hook config, outside this audit's scope); moved UI/rendering-mechanism detail out of layers/midden/CONTEXT.md's Glossary into its existing \"What lives where\" and post-MVP-simplification sections; and corrected a Contradiction in .agents/skills/audit-skills/SKILL.md that claimed a /loop-fired session implies kind:autonomous, when both CONTEXT.md's own definition and the actual code say otherwise. Gate green, PR #996 opened and subscribed."
+status: completed
+outcome: "3 findings fixed, PR #996 merged"
+summary: "Fully autonomous run of the scheduled /audit-docs routine (no human prompt this session — CLAUDE.md/ADR-0003 already green-lights this Skill's self-merged fix tier). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the repo's Live-tier docs, pooled four findings with no overlap, ran an independent fact-check pass (3 CONFIRMED/CONFIRMED-BUT, 1 WRONG and dropped), then fixed the three confirmed findings: corrected a Drift claim in docs/agents/subagent-background-guard.md that overstated what .claude/settings.json actually wires (Monitor calls are not forwarded to this guard at all — filed issue #995 for the wiring gap itself, since fixing that means editing hook config, outside this audit's scope); moved UI/rendering-mechanism detail out of layers/midden/CONTEXT.md's Glossary into its existing \"What lives where\" and post-MVP-simplification sections; and corrected a Contradiction in .agents/skills/audit-skills/SKILL.md that claimed a /loop-fired session implies kind:autonomous, when both CONTEXT.md's own definition and the actual code say otherwise. Gate green, PR #996 opened, subscribed, and merged (via scripts/merge-pr.ts on green gate) within the same session."
 prs:
   - "996"
 docsRead:
@@ -148,19 +148,19 @@ frictions:
   - description: "Fact-checking issue #964's own scope note revealed its fix (\"confined to scripts/subagent-background-guard.ts, not a human-only surface\") never touched the .claude/settings.json hook wiring the doc claimed — so the Monitor-tool-call bypass #964 set out to close is still open in practice, just with untested-looking code that's actually unreachable."
     solution: "Filed issue #995 recommending the hook wiring be extended (fold Monitor into the TaskCreate|Monitor entry, or add a dedicated Monitor-matched entry) — flagged for human review since it changes PreToolUse enforcement behavior."
     severity: moderate
-durationSec: 1056
+durationSec: 1262
 models:
-  claude-sonnet-5: 91
+  claude-sonnet-5: 107
 toolCounts:
   Skill: 3
-  Bash: 14
+  Bash: 18
   Agent: 5
   ScheduleWakeup: 1
   Read: 6
   ToolSearch: 1
   mcp__github__search_issues: 1
   mcp__github__issue_read: 1
-  Edit: 10
+  Edit: 12
   mcp__github__issue_write: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
@@ -168,6 +168,8 @@ toolCounts:
   Write: 1
   PushNotification: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/agents/subagent-background-guard.md
   - layers/midden/CONTEXT.md
