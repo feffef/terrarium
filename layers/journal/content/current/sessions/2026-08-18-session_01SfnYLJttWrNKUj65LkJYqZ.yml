@@ -1,0 +1,40 @@
+schemaVersion: 1
+session: session_01SfnYLJttWrNKUj65LkJYqZ
+startedAt: 2026-08-18T00:45:48Z
+endedAt: 2026-08-18T00:50:07Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: Scorecard reviewed, nothing warranted a change
+summary: "Scheduled /audit-skills routine. Gathered the scorecard (scripts/audit-skills.ts), then worked every step by hand: checked the one orphanedSessions entry (session_019aeaoPHYWMJVekmUvTMhQ9) and found it already extensively tracked and triaged on open issue #736 (consolidation:on-hold), so posting there would only duplicate an existing citation — skipped per the Skill's own dedup rule. orphanSuppressionLog, humanPromptedClosures, manuallyRescuedClosures, and misclassifiedKind were all empty (healthy state, nothing to report beyond noting it). Walked all 7 regressionChecks brackets: five had no real before/after usage signal worth a deep read; two (auto-triage, dispatch-subagents) got a Phase B deep-read of the actual friction text in the sessions that used them. auto-triage's flagged friction (missing \"Blocked by:\" body-line fallback, issue 869) turned out to be the exact bug that motivated the edit being tested, not a regression from it — the auto-triage sweep in that session ran before the fix commit landed even though the session's endedAt sorted it into the \"after\" bracket. dispatch-subagents' bracketed frictions in both sessions were about unrelated tooling (a survey subagent's tracker screen, a wrong-tool SendMessage/Agent mixup) or, in one case, a friction entry actively confirming the Skill's existing guidance worked as intended. No grade/role change had citable ≥2-session evidence either direction, so the Inventory YAML is untouched — no diff, no PR this run. Entirely agent-initiated; no human input this session."
+prs: []
+docsRead:
+  - path: layers/journal/content/current/skills/dispatch-subagents.yml
+    reason: cross-checking current grade against usedIn evidence
+skillsUsed:
+  - name: audit-skills
+    reason: the scheduled task this session ran
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The regressionChecks Phase-A bracket sorts a long-spanning session into "before"/"after" purely by its endedAt relative to the edit commit date, even when the session's actual relevant work (the auto-triage sweep) happened hours before the edit landed. Read literally, that made a friction which had *motivated* the fix look like a post-fix regression.
+    solution: Always check the session's startedAt/endedAt against the edit's exact timestamp before trusting which side of the bracket a long session's cited work actually falls on, rather than trusting the bracket label alone.
+    severity: nit
+durationSec: 259
+models:
+  claude-sonnet-5: 60
+toolCounts:
+  Bash: 23
+  Agent: 1
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  Skill: 2
+  Write: 1
+subagents:
+  - task: Search GitHub issues for orphan session
+gitBranch: claude/upbeat-sagan-9ka0q5
+entrypoint: remote_trigger
+cliVersion: 2.1.234
+trigger: audit-skills
