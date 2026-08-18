@@ -1,0 +1,59 @@
+schemaVersion: 1
+session: session_01TzG62K5RFR51imwGYSZTAx
+startedAt: 2026-08-18T01:05:41Z
+endedAt: 2026-08-18T01:19:10Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: completed
+outcome: 2 doc fixes merged, 1 regression flagged
+summary: "Scheduled (Routine-fired) frictions-to-fixes run, no human prompt this turn. Dispatched a survey subagent to read the last 20 session logs, rank frictions, and screen them against the tracker. Found two never-fixed, simple, doc-only candidates (audit-docs lens-agent disagreement handling; audit-skills regressionChecks Phase-A bracket-timing caveat) and one regression (audit-docs' #909 \"excluded\" bucket fix only worked-examples Atlas, so other Tenants' fictional content still needs inference). Filed issues #991, #992, #993. Dispatched a Sonnet worktree-isolated impl agent for the two simple fixes as one grouped PR (#994); reviewed the diff myself, posted a COMMENT-event review verdict, and merged via scripts/merge-pr.ts (closed #991 and #992). Per the skill's regression-handling step, #993 was left open for human judgement rather than auto-dispatched, and the user was notified via PushNotification with the regression's specifics."
+prs:
+  - "994"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe + per-tier merge authority for the reviewer-agent tier
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: mechanism + brief checklist for the worktree-isolated impl agent
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 809
+models:
+  claude-sonnet-5: 60
+toolCounts:
+  Agent: 2
+  ToolSearch: 4
+  mcp__github__search_issues: 3
+  mcp__github__issue_read: 1
+  mcp__github__issue_write: 3
+  Skill: 3
+  PushNotification: 1
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 1
+  Bash: 4
+  Read: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Doc fixes for audit-docs and audit-skills SKILL.md
+    model: sonnet
+gitBranch: claude/hopeful-brown-f38nt6
+entrypoint: remote_trigger
+cliVersion: 2.1.234
+trigger: frictions-to-fixes
