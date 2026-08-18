@@ -29,20 +29,26 @@ explicit `timeout` (≤ 600000 ms), split into separate calls if a step exceeds
 
 ## Mechanism
 
-- **Matcher `Bash`/`Monitor`, hot path pre-filtered.** `Bash` is the
-  highest-frequency tool, so the hook entry is the `sh` pre-filter: it
-  forwards to the tsx guard only when the payload textually carries
+- **Matcher `Bash` only, hot path pre-filtered.** `.claude/settings.json`
+  wires this guard's `sh` pre-filter to the `Bash` matcher alone: it forwards
+  to the tsx guard only when the payload textually carries
   `"run_in_background": true` or any `&` character (whitespace-tolerant);
-  everything else pays one `grep`. `Monitor` calls are comparatively rare and
-  always forwarded.
-- **Deny predicate — three signals, one deny.** In subagent (or
-  undeterminable) context: `Bash` + `run_in_background: true`; `Bash` whose
-  command text ends with a bare `&` job-control operator or invokes `nohup …
-  &` (a quote-aware scan — `findUnquotedAmpersands` — skips `&&` chaining,
-  `&>`/`>&`/`2>&1` redirection, and any `&` inside a quoted string or
-  backslash-escaped); or any `Monitor` call. *All* three are denied
-  unconditionally in subagent context — a command registry would invite
-  rephrasing.
+  everything else pays one `grep`. **No wired hook entry currently forwards a
+  `Monitor` call to this guard** — `Monitor` is matched only by the separate
+  `TaskCreate|Monitor` entry, which routes to `scripts/deferred-tool-guard.ts`
+  instead. `checkMonitorCall` below is implemented and unit-tested but
+  presently unreachable via the live hook chain (issue #964 scoped its fix to
+  the script only, not the hook wiring — tracked as a gap in a follow-up
+  issue).
+- **Deny predicate — three signals, one deny (once reachable).** In subagent
+  (or undeterminable) context: `Bash` + `run_in_background: true`; `Bash`
+  whose command text ends with a bare `&` job-control operator or invokes
+  `nohup … &` (a quote-aware scan — `findUnquotedAmpersands` — skips `&&`
+  chaining, `&>`/`>&`/`2>&1` redirection, and any `&` inside a quoted string
+  or backslash-escaped); or any `Monitor` call. The first two are live today;
+  the third (`Monitor`) is denied by the guard's own logic whenever it's
+  invoked, but per the bullet above nothing currently invokes it for a real
+  `Monitor` call — a command registry would invite rephrasing.
 - **The command-text scan is not a full shell parser (issue #964's accepted
   trade-off):** it does not resolve command substitution (`$(...)`/backticks),
   here-docs, or ANSI-C quoting (`$'...'`), so a `&` inside one of those can

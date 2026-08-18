@@ -53,9 +53,7 @@ discarding during it (e.g. "the Routing Excavation" — never a bare "Q1 2026";
 below), mirroring the Atlas's `almanac.ts` seasons pattern. One season stays open-ended — "the Current Midden" — for
 freshly-discarded, not-yet-seasoned finds. An Artifact's `stratum` field
 references a season by slug. A season also labels each inline find on a Site page (the
-condition word carries its dig-season label). The former scroll-synced
-**stratigraphy sidebar** (#524) was removed in the post-MVP simplification
-(issue #515).
+condition word carries its dig-season label).
 
 ### Artifact
 The Midden's atomic unit of contribution: one catalogued discarded thing, a
@@ -70,9 +68,7 @@ has Sites, absent in one that has none. May also carry a verbatim inscription
 and preservation links to the artifact's original state, each pinned to a
 full commit SHA so the link stays immutable — a few meaningful views, not a
 mechanical dump of every touched path. Both are expected absent on a `lost`
-artifact, since nothing survives to view. Rendered only inline inside a
-Site's body (#521), never at its own route (ADR-0006 keeps only `pages`
-route-addressable). Exact document shape: see What lives where below.
+artifact, since nothing survives to view. Exact document shape: see What lives where below.
 
 ### Condition
 The curator-graded preservation state of an Artifact, one of six grades in
@@ -81,15 +77,9 @@ erosion axis) then `never-activated` (complete but never fired — a distinct
 axis, not a further decay step) and `lost` (its own gravestone template
 entirely; #523). **100% curator-authored, never mechanically re-derived** —
 not from `assessedAt`, not from any future continuity check (#526 closes this
-question explicitly). Rendered as its word on each find, the dig-season label
-beside it — never a glyph to decode (see What lives where below for the
-presentation). The six grades and their fixed one-line definitions are
-single-homed (see What lives where below); the definition text
-surfaces in exactly one place — the **condition key**, a slim sticky sidebar on
-each dig-report page listing only the grades present in that report's finds
-(owner-directed final design; it replaced the landing's condition legend, #527) —
-so it is never authored twice. The abstract SVG glyph and its hover-to-decode
-tooltip were removed in the post-MVP simplification (issue #515).
+question explicitly). Shown as its word, never a glyph to decode. The six
+grades and their fixed one-line definitions are single-homed (see What lives
+where below), surfaced there exactly once so they're never authored twice.
 
 ### The Stores
 The Midden's second Space (`stores`): catalogued finds held **off display**. An
@@ -120,8 +110,8 @@ The classifier deciding what may become an Artifact (#525): **Gate A**
 (terminal disposition — the candidate's net-final state, never a transient
 one, is removal/closure/non-landing; a branch additionally needs a 30-day
 dormancy floor) **and Gate B** (no living successor carries the candidate's
-identity or purpose forward in current `origin/main`, checked mechanically
-where possible and by curator judgment otherwise). Both gates must hold. One
+identity or purpose forward in current `origin/main` — a curator judgment
+call). Both gates must hold. One
 line: "you catalog a corpse only where nothing living grew back." A candidate
 that fails Gate B — something moved, was renamed, or was superseded in place —
 is out of the Midden's scope entirely: the Midden records what the Platform
@@ -156,9 +146,11 @@ discarded, never what it carried forward under a new shape.
   (`trench/pages/index.md` remains valid content but is no longer the
   rendered landing intro.)
 - **`layers/midden/app/components/midden/ConditionKey.vue`** — the condition
-  key: the sticky sidebar defining the grades present in the finds beside it
-  (see Condition above). Shared by the dig-report page and the stores
-  register.
+  key: a slim sticky sidebar on each dig-report/stores page listing only the
+  grades present in that report's finds and their one-line definitions
+  (owner-directed final design; it replaced the landing's condition legend,
+  #527). Shared by the dig-report page and the stores register (see
+  Condition above).
 - **`layers/midden/app/components/midden/StoresLanding.vue`** — the stores
   register: every find held off display, grouped by Dig season. Deliberately
   not the trench's specimen slip — same fields, quieter presentation (see The
@@ -175,8 +167,10 @@ discarded, never what it carried forward under a new shape.
 
 The visitor experience was simplified after the MVP — each find now renders
 **open and flat** (condition as a word, the note and inscription visible on
-load, no accordion), replaced by the corner stamp and the condition key (see
-Condition above). The underlying model (Site, Artifact, Dig season, the six
-Conditions, the inclusion bar) is unchanged; only its presentation is simpler.
+load, no accordion), replacing the earlier scroll-synced stratigraphy sidebar
+(#524) and the abstract SVG condition glyph with its hover-to-decode tooltip,
+in favor of the corner stamp and the condition key (see Condition above). The
+underlying model (Site, Artifact, Dig season, the six Conditions, the
+inclusion bar) is unchanged; only its presentation is simpler.
 Full decision history — including which #515 sub-issue decisions this
 superseded (#523, #524, #527, #528) and why — is at issue #515.
