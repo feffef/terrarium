@@ -1,17 +1,19 @@
 schemaVersion: 1
 session: session_01FEzV1zTUNNzWv3PUmULg7Z
 startedAt: 2026-08-18T00:16:02Z
-endedAt: 2026-08-18T00:21:47Z
+endedAt: 2026-08-18T00:26:06Z
 kind: autonomous
 goal: Run scheduled /digest sweep for 2026-08-17
-status: in-review
-outcome: "PR #990 opened, gate green"
-summary: "Fully agent-initiated scheduled run of the /digest Skill (no human prompt). Followed the pinned-branch checklist correctly this time (checked the harness-injected block, found claude/compassionate-lovelace-0y9oha pinned, branched off origin/main with it) — a fix over the prior day's digest session, which skipped that check. Authored the 2026-08-17 Digest from scripts/digest.ts gather output (8 merged PRs, 6 sessions, 15 frictions including a blocker), ran the retention archive sweep (1 digest + 6 sessions moved to archived), confirmed pnpm gate:scoped green, pushed, and opened PR #990 with GitHub MCP tools available on the first attempt (no access blocker this time). Subscribed to PR activity for babysitting."
+status: completed
+outcome: "PR #990 merged with a green gate"
+summary: "Fully agent-initiated scheduled run of the /digest Skill (no human prompt). Followed the pinned-branch checklist correctly this time (checked the harness-injected block, found claude/compassionate-lovelace-0y9oha pinned, branched off origin/main with it) — a fix over the prior day's digest session, which skipped that check. Authored the 2026-08-17 Digest from scripts/digest.ts gather output (8 merged PRs, 6 sessions, 15 frictions including a blocker), ran the retention archive sweep (1 digest + 6 sessions moved to archived), confirmed pnpm gate:scoped green, pushed, and opened PR #990 with GitHub MCP tools available on the first attempt (no access blocker this time). Subscribed to PR activity, verified no conflicting-issue hits, posted the verdict comment, and merged via merge-pr.ts once CI's gate check reported green — landed cleanly with no further intervention needed."
 prs:
   - "990"
 docsRead:
   - path: layers/journal/content/current/pages/digests/2026-08-16.md
     reason: format reference for the new digest
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -20,21 +22,24 @@ skillsUsed:
   - name: digest
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 345
+durationSec: 604
 models:
-  claude-sonnet-5: 47
+  claude-sonnet-5: 66
 toolCounts:
-  Bash: 13
-  Read: 1
+  Bash: 16
+  Read: 2
   Write: 2
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  Edit: 1
+  Edit: 2
   mcp__github__pull_request_read: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-08-17.md
 gitBranch: claude/compassionate-lovelace-0y9oha
