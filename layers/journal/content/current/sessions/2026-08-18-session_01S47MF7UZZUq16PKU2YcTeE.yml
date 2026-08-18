@@ -1,0 +1,191 @@
+schemaVersion: 1
+session: session_01S47MF7UZZUq16PKU2YcTeE
+startedAt: 2026-08-18T04:08:03Z
+endedAt: 2026-08-18T04:25:39Z
+kind: autonomous
+goal: Run scheduled audit-docs sweep
+status: in-review
+outcome: "3 findings fixed, PR #996 opened"
+summary: "Fully autonomous run of the scheduled /audit-docs routine (no human prompt this session — CLAUDE.md/ADR-0003 already green-lights this Skill's self-merged fix tier). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the repo's Live-tier docs, pooled four findings with no overlap, ran an independent fact-check pass (3 CONFIRMED/CONFIRMED-BUT, 1 WRONG and dropped), then fixed the three confirmed findings: corrected a Drift claim in docs/agents/subagent-background-guard.md that overstated what .claude/settings.json actually wires (Monitor calls are not forwarded to this guard at all — filed issue #995 for the wiring gap itself, since fixing that means editing hook config, outside this audit's scope); moved UI/rendering-mechanism detail out of layers/midden/CONTEXT.md's Glossary into its existing \"What lives where\" and post-MVP-simplification sections; and corrected a Contradiction in .agents/skills/audit-skills/SKILL.md that claimed a /loop-fired session implies kind:autonomous, when both CONTEXT.md's own definition and the actual code say otherwise. Gate green, PR #996 opened and subscribed."
+prs:
+  - "996"
+docsRead:
+  - path: docs/agents/subagent-background-guard.md
+    reason: fixed Drift finding
+  - path: layers/midden/CONTEXT.md
+    reason: fixed Mis-location finding
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: fixed Contradiction finding
+  - path: .claude/settings.json
+    reason: verified actual PreToolUse hook wiring
+  - path: CONTEXT.md
+    reason: verified Session kind definition for the contradiction finding
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/deferred-tool-guard.md
+    reason: (no reason given)
+  - path: docs/agents/loop-only-tool-guard.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: docs/research/deferred-tool-guard-hook-viability.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: scripts/subagent-background-guard.sh
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-model.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-08-17.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's whole workflow
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Tried invoking the audit-docs Skill via the Skill tool even though its full body was already pasted inline in the scheduled prompt (marked by a <command-name> block) — the Skill tool call errored since audit-docs is disable-model-invocation (command-only).
+    solution: Recognize a pre-loaded <command-name> block as "skill already loaded, follow it directly" before reaching for the Skill tool — this is already stated in the Skill-tool's own description, just missed on first pass.
+    severity: nit
+  - description: "Fact-checking issue #964's own scope note revealed its fix (\"confined to scripts/subagent-background-guard.ts, not a human-only surface\") never touched the .claude/settings.json hook wiring the doc claimed — so the Monitor-tool-call bypass #964 set out to close is still open in practice, just with untested-looking code that's actually unreachable."
+    solution: "Filed issue #995 recommending the hook wiring be extended (fold Monitor into the TaskCreate|Monitor entry, or add a dedicated Monitor-matched entry) — flagged for human review since it changes PreToolUse enforcement behavior."
+    severity: moderate
+durationSec: 1056
+models:
+  claude-sonnet-5: 91
+toolCounts:
+  Skill: 3
+  Bash: 14
+  Agent: 5
+  ScheduleWakeup: 1
+  Read: 6
+  ToolSearch: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_read: 1
+  Edit: 10
+  mcp__github__issue_write: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Write: 1
+  PushNotification: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - docs/agents/subagent-background-guard.md
+  - layers/midden/CONTEXT.md
+  - .agents/skills/audit-skills/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: Drift + Orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: Duplication + Mis-location"
+  - type: general-purpose
+    task: "Concision lens: Verbose + Stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: Contradiction + Ambiguity"
+  - type: general-purpose
+    task: Fact-check four audit-docs findings
+gitBranch: claude/festive-mayer-rsbc9s
+entrypoint: remote_trigger
+cliVersion: 2.1.234
+trigger: audit-docs
+learnings:
+  - A guard's own unit tests passing for its exported check function is not evidence the check is reachable in production — trace the actual .claude/settings.json hook wiring separately.
