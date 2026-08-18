@@ -221,8 +221,12 @@ noticing. Look for overlapping `file:line` ranges or overlapping quoted
 evidence across findings, including across different lens pairs. Merge any
 overlapping findings into one coherent finding before fact-checking proceeds —
 fact-checking two overlapping findings separately produces two fixes fighting
-over one home instead of one single-home fix. Done when no two surviving
-findings describe the same span of text.
+over one home instead of one single-home fix. A genuine disagreement — two
+lens-agents reaching **opposite verdicts** on the same `file:line` span, not an
+overlap to merge — is resolved by reading the primary source directly, the same
+way the fact-checking pass below resolves any other finding, before either
+verdict is pooled. Done when no two surviving findings describe the same span
+of text.
 
 ## 5. Fact-check the findings
 
