@@ -1,0 +1,160 @@
+schemaVersion: 1
+session: session_017Zw3WGhVpwUwbCzkJiFe8K
+startedAt: 2026-08-19T04:08:25Z
+endedAt: 2026-08-19T04:19:49Z
+kind: autonomous
+goal: Run scheduled audit-docs sweep
+status: in-review
+outcome: 3 findings fixed, PR opened
+summary: "Scheduled `/audit-docs` run, not human-prompted. Dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the Live-tier docs, ADRs, and repo-authored Skills. Freshness and Single-home found nothing solid — prior sweeps have kept the corpus clean. Fact-checked and fixed three confirmed findings against primary sources before touching anything: a Contradiction between layers/journal/CONTEXT.md and layers/commons/CONTEXT.md over who consumes Digests (verified against shared/kinds.ts and layers/commons/app/composables/timeline.ts), a Stale-narration passage in docs/agents/environment-caveats.md naming a removed Tenant's dead bug, and a merged Verbose+Stale-narration finding in layers/midden/CONTEXT.md's post-MVP note. All edits are Live-tier only, no human-only surface touched. pnpm gate:scoped is green. Opened PR #1001, subscribed to its activity, and am babysitting it to merge."
+prs:
+  - "1001"
+docsRead:
+  - path: CLAUDE.md
+    reason: tier classification and self-merge scope rules for audit-docs
+  - path: layers/journal/CONTEXT.md
+    reason: verified Contradiction finding
+  - path: layers/commons/CONTEXT.md
+    reason: verified Contradiction finding
+  - path: docs/agents/environment-caveats.md
+    reason: verified Stale-narration finding
+  - path: layers/midden/CONTEXT.md
+    reason: verified merged Verbose/Stale-narration finding
+  - path: docs/agents/loop-only-tool-guard.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/subagent-background-guard.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/deferred-tool-guard.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/deferred-tool-guard-hook-viability.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: layers/commons/app/composables/timeline.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the scheduled task this session ran
+  - name: close-session
+    reason: session closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions: []
+durationSec: 684
+models:
+  claude-sonnet-5: 85
+toolCounts:
+  Skill: 3
+  Bash: 15
+  Agent: 4
+  ScheduleWakeup: 1
+  Read: 6
+  Edit: 3
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Write: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/CONTEXT.md
+  - docs/agents/environment-caveats.md
+  - layers/midden/CONTEXT.md
+subagents:
+  - type: general-purpose
+    task: "Audit-docs Agent A: Freshness (Drift + Orphan-addition)"
+    model: sonnet
+  - type: general-purpose
+    task: "Audit-docs Agent B: Single-home (Duplication + Mis-location)"
+    model: sonnet
+  - type: general-purpose
+    task: "Audit-docs Agent C: Concision (Verbose + Stale-narration)"
+    model: sonnet
+  - type: general-purpose
+    task: "Audit-docs Agent D: Coherence (Contradiction + Ambiguity)"
+    model: sonnet
+gitBranch: claude/festive-mayer-0ohcmt
+entrypoint: remote_trigger
+cliVersion: 2.1.235
+trigger: audit-docs
