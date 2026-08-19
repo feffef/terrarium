@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_017Zw3WGhVpwUwbCzkJiFe8K
 startedAt: 2026-08-19T04:08:25Z
-endedAt: 2026-08-19T04:19:49Z
+endedAt: 2026-08-19T04:23:48Z
 kind: autonomous
 goal: Run scheduled audit-docs sweep
-status: in-review
-outcome: 3 findings fixed, PR opened
-summary: "Scheduled `/audit-docs` run, not human-prompted. Dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the Live-tier docs, ADRs, and repo-authored Skills. Freshness and Single-home found nothing solid — prior sweeps have kept the corpus clean. Fact-checked and fixed three confirmed findings against primary sources before touching anything: a Contradiction between layers/journal/CONTEXT.md and layers/commons/CONTEXT.md over who consumes Digests (verified against shared/kinds.ts and layers/commons/app/composables/timeline.ts), a Stale-narration passage in docs/agents/environment-caveats.md naming a removed Tenant's dead bug, and a merged Verbose+Stale-narration finding in layers/midden/CONTEXT.md's post-MVP note. All edits are Live-tier only, no human-only surface touched. pnpm gate:scoped is green. Opened PR #1001, subscribed to its activity, and am babysitting it to merge."
+status: completed
+outcome: "3 findings fixed, PR #1001 merged"
+summary: "Scheduled `/audit-docs` run, not human-prompted. Dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the Live-tier docs, ADRs, and repo-authored Skills. Freshness and Single-home found nothing solid — prior sweeps have kept the corpus clean. Fact-checked and fixed three confirmed findings against primary sources before touching anything: a Contradiction between layers/journal/CONTEXT.md and layers/commons/CONTEXT.md over who consumes Digests (verified against shared/kinds.ts and layers/commons/app/composables/timeline.ts), a Stale-narration passage in docs/agents/environment-caveats.md naming a removed Tenant's dead bug, and a merged Verbose+Stale-narration finding in layers/midden/CONTEXT.md's post-MVP note. All edits were Live-tier only, no human-only surface touched. pnpm gate:scoped and CI's gate check were both green; merged PR #1001 via scripts/merge-pr.ts under the audit-docs self-merge tier."
 prs:
   - "1001"
 docsRead:
@@ -20,13 +20,13 @@ docsRead:
     reason: verified Stale-narration finding
   - path: layers/midden/CONTEXT.md
     reason: verified merged Verbose/Stale-narration finding
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
   - path: docs/agents/loop-only-tool-guard.md
     reason: (no reason given)
   - path: CONTEXT.md
     reason: (no reason given)
   - path: docs/agents/git-conventions.md
-    reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: docs/agents/github-integration.md
     reason: (no reason given)
@@ -120,23 +120,25 @@ skillsUsed:
   - name: log-session
     reason: authoring this log
 frictions: []
-durationSec: 684
+durationSec: 923
 models:
-  claude-sonnet-5: 85
+  claude-sonnet-5: 113
 toolCounts:
   Skill: 3
-  Bash: 15
+  Bash: 19
   Agent: 4
   ScheduleWakeup: 1
-  Read: 6
-  Edit: 3
-  ToolSearch: 2
+  Read: 8
+  Edit: 5
+  ToolSearch: 4
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Write: 1
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 3
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/CONTEXT.md
   - docs/agents/environment-caveats.md
