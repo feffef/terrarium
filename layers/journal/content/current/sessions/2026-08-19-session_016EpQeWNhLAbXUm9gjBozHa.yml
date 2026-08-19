@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_016EpQeWNhLAbXUm9gjBozHa
 startedAt: 2026-08-19T00:15:54Z
-endedAt: 2026-08-19T00:21:39Z
+endedAt: 2026-08-19T00:25:38Z
 kind: autonomous
 goal: Run scheduled /digest for 2026-08-18
-status: in-review
-outcome: "PR #998 opened, gate green"
-summary: "Scheduled Routine fired /digest with no human present. Followed the digest Skill's steps unmodified: branched off origin/main (the pinned branch was already at origin/main's tip), listed 2026-08-18 as the one closed day needing a Digest, authored it from `scripts/digest.ts gather` output, ran the archive-journal-content.ts retention sweep (1 digest + 4 session logs moved to archived), ran pnpm gate:scoped (green, 78/78 e2e tests), and opened PR #998 with the digest and sweep together. Subscribed to the PR's activity per CLAUDE.md's babysitting rule; will land it via merge-pr.ts once CI reports green, since the PR contains nothing beyond digest scope."
+status: completed
+outcome: "PR #998 merged with a green gate"
+summary: "Scheduled Routine fired /digest with no human present. Followed the digest Skill's steps unmodified: branched off origin/main (the pinned branch was already at origin/main's tip), listed 2026-08-18 as the one closed day needing a Digest, authored it from `scripts/digest.ts gather` output, ran the archive-journal-content.ts retention sweep (1 digest + 4 session logs moved to archived), ran pnpm gate:scoped (green, 78/78 e2e tests), opened PR #998 with the digest and sweep together, subscribed to its activity, and landed it via merge-pr.ts once the gate reported green — the PR contained nothing beyond digest scope."
 prs:
   - "998"
 docsRead:
@@ -23,22 +23,24 @@ frictions:
   - description: First attempted to invoke the digest Skill via the Skill tool even though its full body was already pasted inline in the scheduled prompt (marked by a <command-name> block) — the call errored since digest is disable-model-invocation (command-only), mirroring a friction logged by another session the day before for audit-docs.
     solution: Recognize the <command-name>/<command-message> pattern as "the Skill body is already inline, don't re-invoke via the Skill tool" before the first tool call, for any disable-model-invocation Skill fired by a scheduled Routine.
     severity: nit
-durationSec: 345
+durationSec: 584
 models:
-  claude-sonnet-5: 59
+  claude-sonnet-5: 74
 toolCounts:
   Skill: 3
-  Bash: 16
+  Bash: 20
   Write: 2
   ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__get_file_contents: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  Edit: 1
-  mcp__github__pull_request_read: 1
+  Edit: 2
+  mcp__github__pull_request_read: 2
   mcp__github__actions_list: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 2
+  Read: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-08-18.md
 gitBranch: claude/compassionate-lovelace-5hpneo
