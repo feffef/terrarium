@@ -1,0 +1,45 @@
+schemaVersion: 1
+session: session_01S6WTYaeq3gqhspRwehbkTU
+startedAt: 2026-08-19T00:46:09Z
+endedAt: 2026-08-19T00:50:35Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: Scorecard reviewed, no Inventory changes warranted
+summary: "Scheduled Routine fired /audit-skills, no human present. Branched off origin/main, ran scripts/audit-skills.ts for the scorecard (40-session window, orphan scan succeeded). All 35 Skills are onDisk and inventoried, none phantom; usage in the window matched every current importance grade and role, so step 3's bright-line rule (>=2 session citation) found no promote/demote/refresh candidate. Step 4's Phase A screen flagged two skills (auto-triage, dispatch-subagents) whose friction counts rose after their last SKILL.md edit; Phase B deep-read of the full session logs cleared both — auto-triage's flagged friction (issue 869's body-line blocker) came from work that happened before the fixing commit landed, mis-bracketed only because the session's endedAt fell after it, and dispatch-subagents' friction rise came entirely from unrelated sessions (a digest-routine blocker, a Nuxt bisection session) that never invoked it. The one orphanedSessions entry (session_019aeaoPHYWMJVekmUvTMhQ9) is already tracked verbatim in issue #736, so no new comment. orphanSuppressionLog, humanPromptedClosures, manuallyRescuedClosures, and misclassifiedKind were all empty. Nothing in the diff to commit, so per CLAUDE.md's substantive-work rule no PR was opened. Everything in this run was the Skill's own prescribed procedure; nothing was human-instructed."
+prs: []
+docsRead:
+  - path: CLAUDE.md
+    reason: chartered branch-off checklist
+  - path: CONTEXT.md
+    reason: importance-grade definitions for step 3
+  - path: layers/journal/content/current/sessions/2026-08-17-session_01Ua2A7k6jmw7q4Q9f2ifCGw.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-13-session_01QMtUQrTK3LHJhs1rom6i2x.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this run's own procedure
+  - name: close-session
+    reason: closure at self-judged completion
+  - name: log-session
+    reason: this log
+frictions:
+  - description: The Skill's step 8 assumes there is usually an Inventory diff to commit and PR; it has no explicit branch for "the scorecard checks out clean, nothing to change."
+    solution: Add a one-line note to step 8 (or step 3's intro) that a clean run commits nothing and closes without opening a PR, so a future run doesn't second-guess whether it missed a required change.
+    severity: nit
+durationSec: 266
+models:
+  claude-sonnet-5: 56
+toolCounts:
+  Bash: 18
+  Grep: 2
+  ToolSearch: 1
+  mcp__github__search_issues: 1
+  Read: 2
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-yfbed6
+entrypoint: remote_trigger
+cliVersion: 2.1.235
+trigger: audit-skills
