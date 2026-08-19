@@ -166,10 +166,8 @@ discarded, never what it carried forward under a new shape.
 ## A note on the post-MVP simplification
 
 The visitor experience was simplified after the MVP — each find now renders
-**open and flat** (condition as a word, the note and inscription visible on
-load, no accordion), replacing the earlier scroll-synced stratigraphy sidebar
-(#524) and the abstract SVG condition glyph with its hover-to-decode tooltip,
-in favor of the corner stamp and the condition key (see Condition above). The
+**open and flat** (the note and inscription visible on load, no accordion),
+using the corner stamp and the condition key (see Condition above). The
 underlying model (Site, Artifact, Dig season, the six Conditions, the
 inclusion bar) is unchanged; only its presentation is simpler.
 Full decision history — including which #515 sub-issue decisions this
