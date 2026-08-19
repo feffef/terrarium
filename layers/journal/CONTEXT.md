@@ -53,10 +53,11 @@ current-state readout that is refreshed in place) a Digest is historical and
 never rewritten once its day closes; unlike a **session log** (also append-only,
 but primary — authored from scratch) a Digest is derived by condensing existing
 records. The Skill Inventory (root `CONTEXT.md`'s glossary term) is an
-Inventory; the per-day summaries are Digests. Only the Journal website
-renders Digests — no other part of the
-Platform consumes them, which is why the term is Journal-local rather than
-platform-wide.
+Inventory; the per-day summaries are Digests. The Journal website renders
+them, and the Commons Timeline also reads them cross-Tenant as one of its
+three sources (`layers/commons/CONTEXT.md`) — but the *word* "Digest" is
+defined once, here, because the Commons only consumes the concept through
+the Catalog rather than redefining it.
 
 ## What lives where
 

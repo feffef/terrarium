@@ -95,12 +95,9 @@ new; don't re-diagnose any of these as a fresh problem.
   .github/workflows files to a feature branch") — that claim is **false**; don't
   spend a cycle re-testing it (issue #659).
 - **A local-only typecheck/build failure is usually stale install state, not a
-  repo bug.** The recurring instance was a `TS2339` Nitro typed-route error in
-  the Commits Tenant's `LatestCommit.vue`, surfacing during `pnpm
-  gate:scoped`/typecheck; it was root-caused and fixed by annotating
-  `defineEventHandler`'s return type (issue #940, PR #941), and that Tenant has
-  since been removed, so this exact error can no longer appear. The lesson
-  outlives the file, because the failure mode is the *environment*, not the
+  repo bug.** A past instance is on record in issue #940 for the curious, but
+  it traced to a Tenant since removed, so that exact error can no longer
+  recur. The lesson outlives the instance, because the failure mode is the *environment*, not the
   component: before asserting "X is broken on main" from a local repro — especially a typecheck/build failure —
   reset the *full* install state (`rm -rf node_modules .nuxt && pnpm install
   --frozen-lockfile`) to mirror CI's `--frozen-lockfile` path rather than only
