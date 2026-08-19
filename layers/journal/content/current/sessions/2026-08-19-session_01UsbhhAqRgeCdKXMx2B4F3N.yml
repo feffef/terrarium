@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01UsbhhAqRgeCdKXMx2B4F3N
 startedAt: 2026-08-19T11:09:41Z
-endedAt: 2026-08-19T11:39:18Z
+endedAt: 2026-08-19T11:43:07Z
 kind: autonomous
 goal: Run scheduled /blog-post
-status: in-review
-outcome: "PR #1002 opened, gate green"
-summary: "Fully agent-initiated scheduled run of the /blog-post Skill (no persona given, no human prompt this session). Ran the A0 rotation gate (scripts/blog-rotation.ts: last=kevin, starved=[eyra]), which forced all three candidates to be Eyra. Gathered material from git log, recent session logs, and existing blog posts, then drafted three full candidates in the scratchpad: the merge-pr.ts closing-keyword self-heal (#983), a Skill-tool hard error on an already-inlined command-name Skill (#999), and a screenshot.ts #anchor scroll bug (#965). A fresh Sonnet subagent, reading only the pasted drafts with no repo access, picked the merge-pr.ts piece for having real stakes (a merge tool that stopped trusting GitHub's own auto-close) versus a trivial redundant-tool-call story or a narrow test-tooling fix, and flagged missing context (why merge-pr.ts is the sole merge path, what a closing keyword is, what PR #955/#985 actually contained, how the self-heal works). Before incorporating the reviewer's notes, re-verified PR #955's actual content via the GitHub API rather than assuming — the original claim in the draft (\"three doc frictions plus a flake\") was wrong and was corrected to the real batch-of-four doc fixes. Logged the two discarded topics to a scratch backlog, ran pnpm gate:scoped (green, 78/78 e2e), opened PR #1002, and subscribed to its activity."
+status: completed
+outcome: "PR #1002 merged with a green gate"
+summary: "Fully agent-initiated scheduled run of the /blog-post Skill (no persona given, no human prompt this session). Ran the A0 rotation gate (scripts/blog-rotation.ts: last=kevin, starved=[eyra]), which forced all three candidates to be Eyra. Gathered material from git log, recent session logs, and existing blog posts, then drafted three full candidates in the scratchpad: the merge-pr.ts closing-keyword self-heal (#983), a Skill-tool hard error on an already-inlined command-name Skill (#999), and a screenshot.ts #anchor scroll bug (#965). A fresh Sonnet subagent, reading only the pasted drafts with no repo access, picked the merge-pr.ts piece for having real stakes (a merge tool that stopped trusting GitHub's own auto-close) versus a trivial redundant-tool-call story or a narrow test-tooling fix, and flagged missing context (why merge-pr.ts is the sole merge path, what a closing keyword is, what PR #955/#985 actually contained, how the self-heal works). Before incorporating the reviewer's notes, re-verified PR #955's actual content via the GitHub API rather than assuming — the original claim in the draft (\"three doc frictions plus a flake\") was wrong and was corrected to the real batch-of-four doc fixes. Logged the two discarded topics to a scratch backlog, ran pnpm gate:scoped (green, 78/78 e2e), opened PR #1002, subscribed to its activity, and once CI's safety gate reported green, ran check-conflicting-issues.ts (no hits), posted a COMMENT-event verdict, and merged via scripts/merge-pr.ts. reconciledClosedIssues was empty (this post's body cited no closing keywords). Unsubscribed and cleaned up the scheduled check-in trigger."
 prs:
   - "1002"
 docsRead:
@@ -34,6 +34,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-08-15-session_01MiNR7r1eLSDFnBBfGsNtUc.yml
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: blog-post
     reason: this run's whole workflow
@@ -45,14 +47,14 @@ frictions:
   - description: "Drafted a plausible-sounding but unverified detail about PR #955's contents (\"three doc frictions plus a flake\") before checking it against the GitHub API — caught before it shipped, but it was a real near-miss on the never-invent-detail rule."
     solution: The blog-post Skill's citation-rigor list already requires verifying every factual claim; this instance argues for treating any *inferred/paraphrased* detail about a linked PR/issue's content with the same suspicion as a quoted excerpt, not just links themselves.
     severity: minor
-durationSec: 1778
+durationSec: 2007
 models:
-  claude-sonnet-5: 113
+  claude-sonnet-5: 130
 toolCounts:
-  Bash: 27
-  Read: 16
+  Bash: 30
+  Read: 17
   Write: 5
-  Edit: 5
+  Edit: 7
   Agent: 1
   ToolSearch: 1
   mcp__github__pull_request_read: 2
@@ -61,6 +63,9 @@ toolCounts:
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/eyra/pages/2026-08-19-the-tool-that-stopped-trusting-githubs-word.md
 subagents:
