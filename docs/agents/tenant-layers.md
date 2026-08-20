@@ -10,8 +10,10 @@ this before editing a layer's `nuxt.config.ts`, pages, or components.
 
 **Reach for Nuxt's auto-imports before writing any import.** A layer's
 `app/components/`, `app/composables/`, and `app/utils/` directories are all
-scanned, layer-aware, and shared app-wide — components resolve under their
-directory-prefixed name (`layers/atlas/app/components/atlas/SpecimenPlate.vue`
+auto-imported and layer-aware — the mechanism and primary-source citations are
+single-homed in `docs/research/nuxt-content-review-grounding.md` §6, not
+re-derived here. Components resolve under their directory-prefixed name
+(`layers/atlas/app/components/atlas/SpecimenPlate.vue`
 → `<AtlasSpecimenPlate>`), and utils/composables exports resolve by name in
 every SFC and every layer, with no import block at all. The root app's
 `useSpace()` composable and each layer's own utils (`personaMeta`,

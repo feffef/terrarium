@@ -397,8 +397,116 @@ Source: `@nuxt/content/dist/module.mjs:2652` (`loadContentConfig`) and `c12`
   module chokidar-watches each source's cwd/prefix dirs and re-parses changed
   files live, `module.mjs:1769-1800`.)
 
+## 13. MDC syntax (`remark-mdc`) and component resolution
+
+**Versions verified** (confirmed from `node_modules`, not assumed — re-check
+if they've moved): `@nuxtjs/mdc` **0.22.1** + `remark-mdc` **3.11.1** — i.e.
+**MDC v3**. Syntax quotes below are verbatim from the installed `remark-mdc`
+README (`node_modules/.pnpm/remark-mdc@3.11.1/node_modules/remark-mdc/README.md`)
+— the hosted docs at `remark-mdc.nuxt.space` and `content.nuxt.com/docs` both
+403 the fetcher, so the vendored README is used instead, same content,
+version-pinned.
+
+**Inline component** — single `:` — sits inside a paragraph (spans, icons):
+
+```md
+A simple :inline-component
+A simple :inline-component[John Doe]
+```
+
+`[...]` is the inline component's default-slot text.
+
+**Block component** — `::` — owns its own block and can hold slots, and
+**requires a closing `::`**:
+
+```md
+::card
+The content of the card
+::
+```
+
+**Drop the closing `::` and it silently degrades to plain prose** — no parse
+error, no console error, just wrong rendered output (issue #355; the content
+bug it caused: PR #334). Verify a block component actually rendered by
+checking the DOM, not by trusting a clean build/hydration.
+
+**Props, inline** via a `{}` scope after the tag:
+
+```md
+::block-component{no-border title="My Component"}
+::
+```
+
+**Props, as a YAML block** — the `---` form inside the fenced component. The
+README calls this "useful for readability"; crucially the block is parsed as
+**full YAML** (verified in `remark-mdc/dist/index.mjs`: it `import { parseDocument } from 'yaml'`
+and parses via `parseFrontMatter(toFrontMatter(yaml), …)`), so **nested arrays
+of objects are a first-class fit** with no escaping:
+
+```md
+::icon-card
+---
+cards:
+  - title: Nuxt Architecture
+    description: Harness the full power of Nuxt.
+  - title: Content
+    description: File-based, Git-native content.
+---
+::
+```
+
+(Arrays can also go inline as a `:`-prefixed JSON string —
+`::dropdown{:items='["Nuxt","Vue"]'}` — but that's awkward for anything larger
+than a couple of values; prefer the YAML block.)
+
+**Slots** — default plus named `#slots`; **slot content is itself rendered
+Markdown** (so a slot can hold emphasis, links, `code`, even a nested block):
+
+```md
+::hero
+Default slot text
+
+#description
+Rendered inside the `description` slot.
+::
+```
+
+**Nesting** — more colons per depth, and **indentation is significant**:
+
+```md
+::hero
+  :::card
+    A nested card
+  :::
+::
+```
+
+Rule of thumb: **one rich blurb → slots; a uniform list → a YAML array prop.**
+
+**Where the component lives, and how it resolves:**
+
+- `@nuxt/content` registers a **`components/content/`** dir *per Nuxt layer* as
+  an auto-import dir (`@nuxt/content/dist/module.mjs` iterates layers and hooks
+  `components:dirs` for each `<layer>/app/components/content`). A `::foo` tag
+  resolves to a component there (Nuxt 4 srcDir = `app/`). Globally-registered
+  components resolve too.
+- `ContentRenderer.vue` resolves body tags through `#content/components` and
+  hands the map to `MDCRenderer`. So MDC resolves **through the ordinary
+  `<ContentRenderer :value="doc" />` call** — the same one used to render any
+  page body.
+- Practical cost in a layer that doesn't already use MDC: you must **create the
+  `components/content/` dir and a new SFC**.
+
 ## Sources
 
+- MDC/`remark-mdc` grounding (§13): the installed README
+  (`node_modules/.pnpm/remark-mdc@3.11.1/node_modules/remark-mdc/README.md`) —
+  block/inline syntax, `{}` inline props, `---` YAML props, slots, nesting; the
+  parser (`…/remark-mdc/dist/index.mjs` — YAML block parsed as full YAML via
+  `parseDocument` from `yaml`); `@nuxt/content/dist/runtime/components/ContentRenderer.vue`
+  (tag resolution via `#content/components`, `MDCRenderer` hand-off); versions
+  from `@nuxt/content` and `@nuxtjs/mdc`/`remark-mdc` `package.json` under
+  `node_modules`.
 - Nuxt Content docs source, tag **v3.15.0** (`github.com/nuxt/content`,
   rendered at `content.nuxt.com/docs/…`): `docs/content/docs/2.collections/`
   `1.define.md` / `2.types.md` / `3.sources.md` / `4.validators.md`;

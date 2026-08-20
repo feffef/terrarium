@@ -6,18 +6,9 @@ checklist at the end. The Journal on-ramp cards are used as a worked example of
 a case where MDC is *capable but not the right fit*; the guidance itself is
 meant to outlast that feature.
 
-**Versions this was verified against** (confirmed from `node_modules`, not
-assumed — re-check if they've moved):
-
-- `@nuxt/content` **3.15.0** (`node_modules/@nuxt/content/package.json`)
-- `nuxt` **4** (project pins `^4.0.0`)
-- MDC engine: `@nuxtjs/mdc` **0.22.1** + `remark-mdc` **3.11.1** — i.e. **MDC v3**
-
-Syntax quotes below are verbatim from the installed `remark-mdc` README
-(`node_modules/.pnpm/remark-mdc@3.11.1/node_modules/remark-mdc/README.md`) — the
-exact source shipping in this repo. (The hosted docs at `remark-mdc.nuxt.space`
-and `content.nuxt.com/docs` both 403 the fetcher; the vendored README is the
-same content, version-pinned.)
+Version pins, verbatim syntax quotes, and component-resolution mechanics are
+grounding detail, not the decision itself — single-homed in
+`docs/research/nuxt-content-review-grounding.md` §13, not re-derived here.
 
 ---
 
@@ -34,99 +25,19 @@ palette of components without writing Vue or leaving the Markdown file.** That
 framing — *author-facing, in-prose composition* — is the lens for every
 "should I use it?" decision below.
 
-## Syntax essentials
+The syntax forms are: inline components (single `:`), block components (`::`,
+requiring a closing `::` — dropping it silently degrades to plain prose with no
+parse error, issue #355/PR #334, so verify a block component actually rendered
+by checking the DOM, not by trusting a clean build), inline `{}` props, a YAML
+`---` block for props (nested arrays of objects are a first-class fit, no
+escaping needed), default plus named `#slots` (slot content is itself rendered
+Markdown), and nesting (more colons per depth, indentation-significant). Full
+verbatim syntax reference, with citations: `docs/research/nuxt-content-review-grounding.md` §13.
 
-**Inline component** — single `:` — sits inside a paragraph (spans, icons):
-
-```md
-A simple :inline-component
-A simple :inline-component[John Doe]
-```
-
-`[...]` is the inline component's default-slot text.
-
-**Block component** — `::` — owns its own block and can hold slots, and
-**requires a closing `::`**:
-
-```md
-::card
-The content of the card
-::
-```
-
-**Drop the closing `::` and it silently degrades to plain prose** — no parse
-error, no console error, just wrong rendered output (issue #355; the content
-bug it caused: PR #334). Verify a block component actually rendered by
-checking the DOM, not by trusting a clean build/hydration.
-
-**Props, inline** via a `{}` scope after the tag:
-
-```md
-::block-component{no-border title="My Component"}
-::
-```
-
-**Props, as a YAML block** — the `---` form inside the fenced component. The
-README calls this "useful for readability"; crucially the block is parsed as
-**full YAML** (verified in `remark-mdc/dist/index.mjs`: it `import { parseDocument } from 'yaml'`
-and parses via `parseFrontMatter(toFrontMatter(yaml), …)`), so **nested arrays
-of objects are a first-class fit** with no escaping:
-
-```md
-::icon-card
----
-cards:
-  - title: Nuxt Architecture
-    description: Harness the full power of Nuxt.
-  - title: Content
-    description: File-based, Git-native content.
----
-::
-```
-
-(Arrays can also go inline as a `:`-prefixed JSON string —
-`::dropdown{:items='["Nuxt","Vue"]'}` — but that's awkward for anything larger
-than a couple of values; prefer the YAML block.)
-
-**Slots** — default plus named `#slots`; **slot content is itself rendered
-Markdown** (so a slot can hold emphasis, links, `code`, even a nested block):
-
-```md
-::hero
-Default slot text
-
-#description
-Rendered inside the `description` slot.
-::
-```
-
-**Nesting** — more colons per depth, and **indentation is significant**:
-
-```md
-::hero
-  :::card
-    A nested card
-  :::
-::
-```
-
-Rule of thumb: **one rich blurb → slots; a uniform list → a YAML array prop.**
-
-## Where the component lives, and how it resolves
-
-- `@nuxt/content` registers a **`components/content/`** dir *per Nuxt layer* as
-  an auto-import dir (`@nuxt/content/dist/module.mjs` iterates layers and hooks
-  `components:dirs` for each `<layer>/app/components/content`). A `::foo` tag
-  resolves to a component there (Nuxt 4 srcDir = `app/`). Globally-registered
-  components resolve too.
-- `ContentRenderer.vue` resolves body tags through `#content/components` and
-  hands the map to `MDCRenderer`. So MDC resolves **through the ordinary
-  `<ContentRenderer :value="doc" />` call** — the same one used to render any
-  page body.
-- Practical cost in a layer that doesn't already use MDC: you must **create the
-  `components/content/` dir and a new SFC**. (This repo's journal layer keeps its
-  components under a *prefixed* `components/journal/` dir and has no
-  `components/content/` today.)
+Practical cost in a layer that doesn't already use MDC: adopting it means
+creating a `components/content/` dir and a new SFC (component-resolution
+mechanics: same §13). This repo's journal layer keeps its components under a
+*prefixed* `components/journal/` dir and has no `components/content/` today.
 
 ## The validation caveat (important in this repo)
 
@@ -240,18 +151,4 @@ and single-home rule (CLAUDE.md). This is the general pattern: **structural,
 layout-positioned, gate-validated data → frontmatter or a data collection; rich
 in-prose editorial → MDC.**
 
-## Sources
-
-- `remark-mdc` README (installed **3.11.1**):
-  `node_modules/.pnpm/remark-mdc@3.11.1/node_modules/remark-mdc/README.md` —
-  block/inline syntax, `{}` inline props, `---` YAML props, slots, nesting.
-- `remark-mdc` parser: `…/remark-mdc/dist/index.mjs` — YAML block parsed as full
-  YAML (`parseDocument` from `yaml`).
-- `@nuxt/content/dist/module.mjs` — per-layer `components/content/` registration;
-  Zod schema used only for SQL type derivation.
-- `@nuxt/content/dist/runtime/components/ContentRenderer.vue` — tag resolution
-  via `#content/components`, `MDCRenderer` hand-off, `prose` component map.
-- This repo's `scripts/validate-content.ts` — frontmatter-only validation; body
-  is not schema-checked.
-- Versions: `@nuxt/content` and `@nuxtjs/mdc`/`remark-mdc` `package.json` under
-  `node_modules`.
+Sources for the syntax/version/resolution claims above: `docs/research/nuxt-content-review-grounding.md` §13 and its own Sources section.
