@@ -1,0 +1,44 @@
+schemaVersion: 1
+session: session_01T7ZsFnDJ2NpuVrAdqvihpp
+startedAt: 2026-08-20T00:16:31Z
+endedAt: 2026-08-20T00:22:25Z
+kind: autonomous
+goal: Run scheduled /digest for 2026-08-19
+status: in-review
+outcome: "PR #1003 opened, awaiting green gate"
+summary: "Fully agent-initiated, fired by the scheduled /digest Routine with no human in the loop. Listed closed UTC days lacking a Digest (2026-08-19 only), authored that day's Digest from scripts/digest.ts gather output plus primary-source reads of the day's blog post and audit-docs commit to keep the narrative accurate, ran the retention archive sweep (1 digest + 5 session logs moved from current to archived), cleared pnpm gate:scoped (full build + e2e, all green), and opened gated PR #1003. Subscribed to the PR's activity per CLAUDE.md's babysit-to-merge rule."
+prs:
+  - "1003"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-08-18.md
+    reason: match the established Digest prose/footer style
+  - path: layers/blog/content/eyra/pages/2026-08-19-the-tool-that-stopped-trusting-githubs-word.md
+    reason: verify the blog post's actual content before summarizing it in the Digest
+skillsUsed:
+  - name: digest
+    reason: the scheduled skill this run executes
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: author this log
+frictions: []
+durationSec: 354
+models:
+  claude-sonnet-5: 60
+toolCounts:
+  Bash: 18
+  Read: 2
+  Write: 2
+  ToolSearch: 2
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  ScheduleWakeup: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-19.md
+gitBranch: claude/compassionate-lovelace-2q5f2r
+entrypoint: remote_trigger
+cliVersion: 2.1.236
+trigger: digest
