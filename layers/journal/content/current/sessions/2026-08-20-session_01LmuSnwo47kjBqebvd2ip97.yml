@@ -1,0 +1,69 @@
+schemaVersion: 1
+session: session_01LmuSnwo47kjBqebvd2ip97
+startedAt: 2026-08-20T01:05:28Z
+endedAt: 2026-08-20T01:13:29Z
+kind: autonomous
+goal: Run scheduled frictions-to-fixes cycle
+status: completed
+outcome: "No net-new fixes; attached evidence to #666"
+summary: "Scheduled firing of /frictions-to-fixes, no human turn. Dispatched a general-purpose subagent to survey the latest 20 session logs and screen every candidate friction against the tracker. Every friction that cleared the severity/recurrence bar resolved to already-fixed-with-no-recurrence, open-already, or a documented regression already tracked by an existing issue — the never-fixed list came back empty, so no issues were filed and no PRs dispatched this cycle. One item was worth surfacing: issue #666 (caller-pinned-branch checklist miss, on-hold pending a human precedence decision) had two new in-window occurrences. Verified both directly against their session log YAMLs (not just the survey's triage extract) before posting a comment attaching them as continuing evidence, matching the precedent already set on that issue. Entirely agent-initiated end to end."
+prs: []
+docsRead:
+  - path: CLAUDE.md
+    reason: branch-off checklist + gated-PR discipline
+  - path: layers/journal/content/current/sessions/2026-08-16-session_01GEED3ATw4ZTS62nNxuB8Ye.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-17-session_01YErE5meTfkma8R7XzveZK5.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-16-session_01XxfPxofXodUp1YHw2KNYnr.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-17-session_01Ua2A7k6jmw7q4Q9f2ifCGw.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-18-session_01S47MF7UZZUq16PKU2YcTeE.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-17-session_01KXKWGbk2aEegYK5fwEZLXj.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-18-session_01SfnYLJttWrNKUj65LkJYqZ.yml
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: closure at cycle end, no PR opened
+  - name: log-session
+    reason: this entry
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: The survey subagent's brief asked it to search the tracker by "exact tool name and exact error-message string," but mcp__github__search_issues does natural-language semantic matching, not literal substring search — a literal-miss doesn't prove "no exact-string hit exists" the way a grep-backed search would.
+    solution: Reword the frictions-to-fixes Skill's screening instructions to say "targeted keyword search" rather than "exact string search" for the GitHub MCP tools specifically, since the tool doesn't support the latter.
+    severity: nit
+  - description: Confirming that two dropped candidates were already fixed by the same commit (94b476e) required opening the actual SKILL.md source and doing git log -S archaeology — the raw friction-record text alone would have looked like a fresh, unfixed candidate.
+    solution: No doc gap — this is the "verify against a primary source" rule working as intended; noting it as a learning rather than a friction to fix.
+    severity: nit
+durationSec: 481
+models:
+  claude-sonnet-5: 44
+toolCounts:
+  Skill: 3
+  mcp__Claude_Code_Remote__list_triggers: 1
+  Bash: 5
+  Agent: 1
+  ScheduleWakeup: 1
+  ToolSearch: 2
+  mcp__github__issue_read: 2
+  Grep: 1
+  Read: 2
+  mcp__github__add_issue_comment: 1
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+gitBranch: claude/hopeful-brown-8kea1v
+entrypoint: remote_trigger
+cliVersion: 2.1.237
+trigger: frictions-to-fixes
+learnings:
+  - "Issue #666's own comment history already establishes the precedent for this exact situation (a tracked-but-on-hold regression recurring again): attach the new evidence as a comment, file no new issue. Consistent handling across cycles keeps the tracker from fragmenting the same root cause into multiple threads."
