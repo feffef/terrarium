@@ -1,0 +1,172 @@
+schemaVersion: 1
+session: session_01AcHAu7ZPLJzyiMv4M6T6t4
+startedAt: 2026-08-20T04:09:32Z
+endedAt: 2026-08-20T04:25:58Z
+kind: autonomous
+goal: Run scheduled audit-docs doc-consistency sweep
+status: in-review
+outcome: "PR #1004 opened, gate green, awaiting CI/merge"
+summary: "Scheduled /audit-docs trigger fired with no human prompt this session. Dispatched four paired-lens reviewer agents (Freshness/Drift+Orphan, Single-home/Duplication+Mis-location, Concision/Verbose+Stale-narration, Coherence/Contradiction+Ambiguity) in parallel, pooled five candidate findings, then ran one independent fact-checker against primary sources. Four findings confirmed and fixed: a duplicated Nuxt layer-auto-import fact (tenant-layers.md pointed at nuxt-content-review-grounding.md instead of restating it), mis-located MDC syntax/version/sources content moved out of docs/agents/mdc-when-to-use.md into a new §13 of nuxt-content-review-grounding.md, an arithmetic contradiction in rulebook-migration-table.md (208 vs 209 — CM-20 double-counted under both judgment-keep and residue), and stale corpus-size numbers in the same table. A fifth finding (an \"ambiguity\" in CLAUDE.md's isolation-logic catch-all) was fact-checked WRONG — it's an explicitly self-acknowledged gap deferred to issue #864, not a fixable ambiguity — and dropped per the Skill's own guidance. pnpm gate:scoped ran green (all changed paths classified inert). Opened PR #1004, subscribed to its activity; it is bounded to the self-merge tier and will land once CI is green."
+prs:
+  - "1004"
+docsRead:
+  - path: docs/agents/mdc-when-to-use.md
+    reason: mis-location fix target
+  - path: docs/agents/tenant-layers.md
+    reason: duplication fix target
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: single-home destination for MDC grounding
+  - path: docs/research/rulebook-migration-table.md
+    reason: arithmetic contradiction + stale corpus counts
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/deferred-tool-guard.md
+    reason: (no reason given)
+  - path: docs/agents/loop-only-tool-guard.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/subagent-background-guard.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/deferred-tool-guard-hook-viability.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: .agents/skills/domain-modeling/CONTEXT-FORMAT.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-08-19.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-08-18.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the scheduled task itself
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: recording this log
+frictions:
+  - description: create_pull_request was rejected by the ADR-0017 provenance guard on the first call because the body lacked the session-header first line — had to retry with the header added.
+    solution: Working as designed; but a reminder in the PR-workflow doc (or a pre-filled template) to always open the body with the provenance header would save the round trip.
+    severity: nit
+durationSec: 987
+models:
+  claude-sonnet-5: 87
+toolCounts:
+  Bash: 11
+  Agent: 5
+  ReadNotifications: 1
+  ScheduleWakeup: 1
+  Read: 6
+  Grep: 1
+  Edit: 7
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  Glob: 4
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - docs/agents/tenant-layers.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/research/rulebook-migration-table.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: Drift + Orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: Duplication + Mis-location"
+  - type: general-purpose
+    task: "Concision lens: Verbose + Stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: Contradiction + Ambiguity"
+  - type: general-purpose
+    task: Fact-check pooled audit findings
+gitBranch: claude/festive-mayer-ab5ftn
+entrypoint: remote_trigger
+cliVersion: 2.1.237
+trigger: audit-docs
