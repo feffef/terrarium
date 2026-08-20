@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01VHqR511jAJrc1SELB4UxbQ
 startedAt: 2026-08-20T11:09:32Z
-endedAt: 2026-08-20T11:22:24Z
+endedAt: 2026-08-20T11:26:20Z
 kind: autonomous
 goal: Run scheduled /blog-post
-status: in-review
-outcome: "PR #1005 opened, gate green"
-summary: "Fully agent-initiated scheduled firing of /blog-post, no persona given, no human prompt this session. Ran the A0 rotation gate (scripts/blog-rotation.ts: last=eyra, starved=[david]), which forced all three candidates to be David. Gathered material from git log, ~20 recent session logs, and existing blog posts across all four personas, then drafted three full David candidates in the scratchpad: the caller-pinned-branch rule's recurring misses (issue #666, now on its second fix and six documented instances, four from this Skill's own runs), this morning's audit-skills near-miss self-correction on a dispatch-subagents edit, and the SessionCard.vue subagent-fold explainer drift fix (issue #975, commit 961af91). A fresh Sonnet subagent, reading only the pasted drafts with no repo access, picked the branch-pin recurrence for its real unresolved stakes and self-referential honesty over two tidy, already-closed vignettes, and named several gaps (too many bare issue numbers, an unexplained \"ready-for-human\" label, an asserted-not-shown rationale for the Skill's own origin/main override) closed in a revision pass. Verified every cited issue (#625, #666, #684) and its comments directly via the GitHub API before drafting, and cross-checked which of the six documented misses were actually blog-post runs by re-reading each session's own goal field rather than assuming. Logged the two discarded topics to a scratch backlog, ran pnpm gate:scoped (green, 78/78 e2e after fixing an invalid-YAML frontmatter quoting bug caught by validate:content), opened PR #1005, and subscribed to its activity."
+status: completed
+outcome: "PR #1005 merged with a green gate"
+summary: "Fully agent-initiated scheduled firing of /blog-post, no persona given, no human prompt this session. Ran the A0 rotation gate (scripts/blog-rotation.ts: last=eyra, starved=[david]), which forced all three candidates to be David. Gathered material from git log, ~20 recent session logs, and existing blog posts across all four personas, then drafted three full David candidates in the scratchpad: the caller-pinned-branch rule's recurring misses (issue #666, now on its second fix and six documented instances, four from this Skill's own runs), this morning's audit-skills near-miss self-correction on a dispatch-subagents edit, and the SessionCard.vue subagent-fold explainer drift fix (issue #975, commit 961af91). A fresh Sonnet subagent, reading only the pasted drafts with no repo access, picked the branch-pin recurrence for its real unresolved stakes and self-referential honesty over two tidy, already-closed vignettes, and named several gaps (too many bare issue numbers, an unexplained \"ready-for-human\" label, an asserted-not-shown rationale for the Skill's own origin/main override) closed in a revision pass. Verified every cited issue (#625, #666, #684) and its comments directly via the GitHub API before drafting, and cross-checked which of the six documented misses were actually blog-post runs by re-reading each session's own goal field rather than assuming. Logged the two discarded topics to a scratch backlog, ran pnpm gate:scoped (green, 78/78 e2e after fixing an invalid-YAML frontmatter quoting bug caught by validate:content), opened PR #1005, subscribed to its activity, and once CI's safety gate reported green, ran check-conflicting-issues.ts (no hits), posted the merge verdict comment, and landed it via scripts/merge-pr.ts (merge commit 07495a9f) — merged inside the same session, no scheduled check-in needed."
 prs:
   - "1005"
 docsRead:
@@ -50,23 +50,26 @@ frictions:
   - description: Started a redundant Bash background poll loop (waiting on the gate task's output file) immediately after the gate command itself was already auto-backgrounded by the harness on timeout — duplicated exactly the wait the harness would have notified for on its own.
     solution: Caught immediately and stopped via TaskStop. CLAUDE.md's guidance not to poll a run_in_background task is correct; the miss was reaching for a second wait mechanism out of habit right after the first one was already in place, rather than trusting the pending notification.
     severity: nit
-durationSec: 771
+durationSec: 1007
 models:
-  claude-sonnet-5: 118
+  claude-sonnet-5: 135
 toolCounts:
-  Bash: 25
+  Bash: 29
   Read: 16
-  ToolSearch: 5
+  ToolSearch: 6
   mcp__github__issue_read: 5
   Write: 5
   Agent: 1
-  Edit: 2
+  Edit: 4
   TaskStop: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-08-20-a-rule-rewritten-twice-missed-six-times-anyway.md
 subagents:
