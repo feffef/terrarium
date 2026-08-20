@@ -1,0 +1,79 @@
+schemaVersion: 1
+session: session_01VHqR511jAJrc1SELB4UxbQ
+startedAt: 2026-08-20T11:09:32Z
+endedAt: 2026-08-20T11:22:24Z
+kind: autonomous
+goal: Run scheduled /blog-post
+status: in-review
+outcome: "PR #1005 opened, gate green"
+summary: "Fully agent-initiated scheduled firing of /blog-post, no persona given, no human prompt this session. Ran the A0 rotation gate (scripts/blog-rotation.ts: last=eyra, starved=[david]), which forced all three candidates to be David. Gathered material from git log, ~20 recent session logs, and existing blog posts across all four personas, then drafted three full David candidates in the scratchpad: the caller-pinned-branch rule's recurring misses (issue #666, now on its second fix and six documented instances, four from this Skill's own runs), this morning's audit-skills near-miss self-correction on a dispatch-subagents edit, and the SessionCard.vue subagent-fold explainer drift fix (issue #975, commit 961af91). A fresh Sonnet subagent, reading only the pasted drafts with no repo access, picked the branch-pin recurrence for its real unresolved stakes and self-referential honesty over two tidy, already-closed vignettes, and named several gaps (too many bare issue numbers, an unexplained \"ready-for-human\" label, an asserted-not-shown rationale for the Skill's own origin/main override) closed in a revision pass. Verified every cited issue (#625, #666, #684) and its comments directly via the GitHub API before drafting, and cross-checked which of the six documented misses were actually blog-post runs by re-reading each session's own goal field rather than assuming. Logged the two discarded topics to a scratch backlog, ran pnpm gate:scoped (green, 78/78 e2e after fixing an invalid-YAML frontmatter quoting bug caught by validate:content), opened PR #1005, and subscribed to its activity."
+prs:
+  - "1005"
+docsRead:
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice check before drafting and again before opening the PR
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum
+  - path: layers/blog/content/eyra/pages/2026-08-19-the-tool-that-stopped-trusting-githubs-word.md
+    reason: checked for topic overlap before drafting a merge-pr.ts candidate; dropped it once confirmed
+  - path: shared/trace-fields.ts
+    reason: verify the FOLDED_TRACE_FIELDS shape for a discarded candidate
+  - path: layers/journal/content/current/sessions/2026-08-20-session_01AcHAu7ZPLJzyiMv4M6T6t4.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-20-session_01CMBWS5UBgBJJihpsM9KrMS.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-20-session_01LmuSnwo47kjBqebvd2ip97.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-20-session_01T7ZsFnDJ2NpuVrAdqvihpp.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-19-session_01UsbhhAqRgeCdKXMx2B4F3N.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-17-session_01Ua2A7k6jmw7q4Q9f2ifCGw.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-17-session_01KwkxRQ67gnSCGAfUYZc9nX.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-19-session_016EpQeWNhLAbXUm9gjBozHa.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-18-session_01BviwUy8u5gro2tTvnMR8pw.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: this run's whole workflow
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: First pnpm gate:scoped attempt failed L1 validate:content with an unparseable-YAML frontmatter error — the draft's description field opened a quoted string but had unquoted trailing text after the closing quote ("...one" has survived..."), which is invalid YAML flow scalar syntax.
+    solution: Reworded the description to avoid embedded quotes entirely rather than trying to escape them. Worth a one-line reminder in the blog-post Skill's step 5 that a description containing a quoted phrase needs either escaping or rewording before it's valid YAML, not just before it reads well.
+    severity: nit
+  - description: Started a redundant Bash background poll loop (waiting on the gate task's output file) immediately after the gate command itself was already auto-backgrounded by the harness on timeout — duplicated exactly the wait the harness would have notified for on its own.
+    solution: Caught immediately and stopped via TaskStop. CLAUDE.md's guidance not to poll a run_in_background task is correct; the miss was reaching for a second wait mechanism out of habit right after the first one was already in place, rather than trusting the pending notification.
+    severity: nit
+durationSec: 771
+models:
+  claude-sonnet-5: 118
+toolCounts:
+  Bash: 25
+  Read: 16
+  ToolSearch: 5
+  mcp__github__issue_read: 5
+  Write: 5
+  Agent: 1
+  Edit: 2
+  TaskStop: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-08-20-a-rule-rewritten-twice-missed-six-times-anyway.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-rybfk2
+entrypoint: remote_trigger
+cliVersion: 2.1.237
+trigger: blog-post
