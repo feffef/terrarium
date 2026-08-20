@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01T7ZsFnDJ2NpuVrAdqvihpp
 startedAt: 2026-08-20T00:16:31Z
-endedAt: 2026-08-20T00:22:25Z
+endedAt: 2026-08-20T00:26:23Z
 kind: autonomous
 goal: Run scheduled /digest for 2026-08-19
-status: in-review
-outcome: "PR #1003 opened, awaiting green gate"
-summary: "Fully agent-initiated, fired by the scheduled /digest Routine with no human in the loop. Listed closed UTC days lacking a Digest (2026-08-19 only), authored that day's Digest from scripts/digest.ts gather output plus primary-source reads of the day's blog post and audit-docs commit to keep the narrative accurate, ran the retention archive sweep (1 digest + 5 session logs moved from current to archived), cleared pnpm gate:scoped (full build + e2e, all green), and opened gated PR #1003. Subscribed to the PR's activity per CLAUDE.md's babysit-to-merge rule."
+status: completed
+outcome: "PR #1003 merged with a green gate"
+summary: "Fully agent-initiated, fired by the scheduled /digest Routine with no human in the loop. Listed closed UTC days lacking a Digest (2026-08-19 only), authored that day's Digest from scripts/digest.ts gather output plus primary-source reads of the day's blog post and audit-docs commit to keep the narrative accurate, ran the retention archive sweep (1 digest + 5 session logs moved from current to archived), cleared pnpm gate:scoped (full build + e2e, all green), and opened gated PR #1003. Verified CI's gate check run (not just the bot comment's SHA, which named the merge ref rather than the head commit) before landing it via scripts/merge-pr.ts."
 prs:
   - "1003"
 docsRead:
@@ -22,20 +22,22 @@ skillsUsed:
   - name: log-session
     reason: author this log
 frictions: []
-durationSec: 354
+durationSec: 591
 models:
-  claude-sonnet-5: 60
+  claude-sonnet-5: 80
 toolCounts:
-  Bash: 18
-  Read: 2
+  Bash: 21
+  Read: 3
   Write: 2
   ToolSearch: 2
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 5
   mcp__Claude_Code_Remote__send_later: 1
   ScheduleWakeup: 1
+  Edit: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-08-19.md
 gitBranch: claude/compassionate-lovelace-2q5f2r
