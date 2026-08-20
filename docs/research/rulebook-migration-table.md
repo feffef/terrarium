@@ -41,8 +41,8 @@ In scope, per the ticket:
 
 | Surface | Count | Note |
 | --- | --- | --- |
-| Root agent-instructions file (`CLAUDE.md`) | 1 | 641 lines |
-| Per-topic agent docs (`docs/agents/*.md`) | 15 | 1,811 lines |
+| Root agent-instructions file (`CLAUDE.md`) | 1 | 659 lines |
+| Per-topic agent docs (`docs/agents/*.md`) | 14 | 1,804 lines |
 | **Repo-authored** Skills (`.agents/skills/*/SKILL.md`) | 13 | 2,917 lines |
 
 Out of scope: the **external-pack** Skills. `skills-lock.json` is the
@@ -558,10 +558,14 @@ tables.)
 | **workflow stage** | 39 | 18 |
 | **judgment-keep** | 79 | 1 |
 | **drop** (candidates flagged, none asserted) | 0 | — |
-| **residue** (§7) | 1 | — |
+| **residue** (§7) | 0 (see below) | — |
 
 43 of the 208 are already built. The `CM-03` reclassification from §6 is applied
-in the table's own row, so it is counted as `J` here, not `G`.
+in the table's own row, so it is counted as `J` here, not `G`. `CM-20`'s own row
+Class is `J`, so it is already counted once, under **judgment-keep** — §7 discusses
+it separately as the one row whose judgement is itself residue-flavored, not as
+an additional row, so the residue bucket adds nothing on top and the buckets sum
+to 208, not 209.
 
 Note that **post-hoc detection barely appears as a *proposal*** — only `CM-29`
 proposes it, and every other post-hoc mechanism in the repo (`check-worktrees`,
