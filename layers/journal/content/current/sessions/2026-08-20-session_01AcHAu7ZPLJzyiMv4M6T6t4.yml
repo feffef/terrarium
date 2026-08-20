@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01AcHAu7ZPLJzyiMv4M6T6t4
 startedAt: 2026-08-20T04:09:32Z
-endedAt: 2026-08-20T04:25:58Z
+endedAt: 2026-08-20T04:30:09Z
 kind: autonomous
 goal: Run scheduled audit-docs doc-consistency sweep
-status: in-review
-outcome: "PR #1004 opened, gate green, awaiting CI/merge"
-summary: "Scheduled /audit-docs trigger fired with no human prompt this session. Dispatched four paired-lens reviewer agents (Freshness/Drift+Orphan, Single-home/Duplication+Mis-location, Concision/Verbose+Stale-narration, Coherence/Contradiction+Ambiguity) in parallel, pooled five candidate findings, then ran one independent fact-checker against primary sources. Four findings confirmed and fixed: a duplicated Nuxt layer-auto-import fact (tenant-layers.md pointed at nuxt-content-review-grounding.md instead of restating it), mis-located MDC syntax/version/sources content moved out of docs/agents/mdc-when-to-use.md into a new §13 of nuxt-content-review-grounding.md, an arithmetic contradiction in rulebook-migration-table.md (208 vs 209 — CM-20 double-counted under both judgment-keep and residue), and stale corpus-size numbers in the same table. A fifth finding (an \"ambiguity\" in CLAUDE.md's isolation-logic catch-all) was fact-checked WRONG — it's an explicitly self-acknowledged gap deferred to issue #864, not a fixable ambiguity — and dropped per the Skill's own guidance. pnpm gate:scoped ran green (all changed paths classified inert). Opened PR #1004, subscribed to its activity; it is bounded to the self-merge tier and will land once CI is green."
+status: completed
+outcome: "PR #1004 merged (b55ac8b)"
+summary: "Scheduled /audit-docs trigger fired with no human prompt this session. Dispatched four paired-lens reviewer agents (Freshness/Drift+Orphan, Single-home/Duplication+Mis-location, Concision/Verbose+Stale-narration, Coherence/Contradiction+Ambiguity) in parallel, pooled five candidate findings, then ran one independent fact-checker against primary sources. Four findings confirmed and fixed: a duplicated Nuxt layer-auto-import fact (tenant-layers.md pointed at nuxt-content-review-grounding.md instead of restating it), mis-located MDC syntax/version/sources content moved out of docs/agents/mdc-when-to-use.md into a new §13 of nuxt-content-review-grounding.md, an arithmetic contradiction in rulebook-migration-table.md (208 vs 209 — CM-20 double-counted under both judgment-keep and residue), and stale corpus-size numbers in the same table. A fifth finding (an \"ambiguity\" in CLAUDE.md's isolation-logic catch-all) was fact-checked WRONG — it's an explicitly self-acknowledged gap deferred to issue #864, not a fixable ambiguity — and dropped per the Skill's own guidance. pnpm gate:scoped ran green (all changed paths classified inert). Opened PR #1004, subscribed to its activity, then on CI green ran check-conflicting-issues.ts (no hits), posted the verdict comment, and merged via scripts/merge-pr.ts per the audit-docs self-merge tier — merge commit b55ac8b."
 prs:
   - "1004"
 docsRead:
@@ -131,18 +131,18 @@ frictions:
   - description: create_pull_request was rejected by the ADR-0017 provenance guard on the first call because the body lacked the session-header first line — had to retry with the header added.
     solution: Working as designed; but a reminder in the PR-workflow doc (or a pre-filled template) to always open the body with the provenance header would save the round trip.
     severity: nit
-durationSec: 987
+durationSec: 1237
 models:
-  claude-sonnet-5: 87
+  claude-sonnet-5: 110
 toolCounts:
-  Bash: 11
+  Bash: 15
   Agent: 5
   ReadNotifications: 1
   ScheduleWakeup: 1
-  Read: 6
+  Read: 7
   Grep: 1
-  Edit: 7
-  ToolSearch: 1
+  Edit: 9
+  ToolSearch: 2
   mcp__github__search_pull_requests: 1
   Glob: 4
   mcp__github__create_pull_request: 2
@@ -150,6 +150,10 @@ toolCounts:
   Skill: 2
   Write: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/agents/tenant-layers.md
   - docs/agents/mdc-when-to-use.md
