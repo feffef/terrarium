@@ -213,6 +213,11 @@ post in **real, verifiable facts** and **link them** so readers can go look:
   itself**: a session log's interpretive half (`goal`/`outcome`/`frictions`) is an
   **unverified self-report** and can be wrong, so don't launder it into the post as
   established fact.
+- **A quoted excerpt (e.g. a deny message, an error string) and an
+  inferred/paraphrased summary of a linked PR/issue's actual content — as
+  opposed to its metadata — need the same verify-against-source treatment as a
+  link.** Check both against the real source or API content before the draft
+  is finalized.
 - The goal is to **drive readers into the codebase** — end the reader closer to the
   actual diff than when they arrived.
 
