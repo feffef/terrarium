@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01J1JxTGTFVnRhSyLjDEJXnB
 startedAt: 2026-08-21T04:09:00Z
-endedAt: 2026-08-21T04:23:29Z
+endedAt: 2026-08-21T04:27:07Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: "5 confirmed findings fixed, PR #1010 opened"
-summary: "Scheduled, unattended run of /audit-docs. Dispatched 4 paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the Live-tier doc corpus; pooled 5 findings (3 Drift, 2 Duplication — Concision and Coherence reported zero, no overlap to dedupe). An independent fact-checker re-derived every claim from primary sources (wc -l line counts, exact-text greps, skills-lock.json membership) and confirmed all 5 with no corrections. Fixed all 5 in place: 3 stale line-count claims in docs/research/rulebook-migration-table.md (left stale by commit b6be445, which computed them before its own edits landed), and single-homed a \"Simplify first\" callout plus closing log-session/subscribe-to-PR boilerplate duplicated across 5 SKILL.md files (audit-docs, audit-skills, blog-post, digest, frictions-to-fixes) down to pointers at CLAUDE.md. Net diff: 35 insertions, 48 deletions. No human-only surface touched, so no needs-triage issue and no escalation PR. pnpm gate:scoped ran green. Opened PR #1010 on feffef/terrarium and subscribed to its activity; self-merge tier per ADR-0003. Entirely agent-initiated per this Skill's standing charter — no human instructed any specific finding or fix in this run."
+status: completed
+outcome: "5 confirmed findings fixed, PR #1010 merged"
+summary: "Scheduled, unattended run of /audit-docs. Dispatched 4 paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the Live-tier doc corpus; pooled 5 findings (3 Drift, 2 Duplication — Concision and Coherence reported zero, no overlap to dedupe). An independent fact-checker re-derived every claim from primary sources (wc -l line counts, exact-text greps, skills-lock.json membership) and confirmed all 5 with no corrections. Fixed all 5 in place: 3 stale line-count claims in docs/research/rulebook-migration-table.md (left stale by commit b6be445, which computed them before its own edits landed), and single-homed a \"Simplify first\" callout plus closing log-session/subscribe-to-PR boilerplate duplicated across 5 SKILL.md files (audit-docs, audit-skills, blog-post, digest, frictions-to-fixes) down to pointers at CLAUDE.md. Net diff: 35 insertions, 48 deletions. No human-only surface touched, so no needs-triage issue and no escalation PR. pnpm gate:scoped ran green. Opened PR #1010 on feffef/terrarium and subscribed to its activity; self-merge tier per ADR-0003. check-conflicting-issues.ts flagged issue #976 on frictions-to-fixes/SKILL.md as an advisory hit; eyeballed it — unrelated section (survey-subagent dispatch guidance vs. this PR's Simplify-first/ log-session pointer edits), not a real conflict. Posted the verdict comment, merged via merge-pr.ts (mergeCommitSha 1084dcc8), unsubscribed, and confirmed the merge commit on origin/main. Entirely agent-initiated per this Skill's standing charter — no human instructed any specific finding or fix in this run."
 prs:
   - "1010"
 docsRead:
@@ -24,13 +24,13 @@ docsRead:
     reason: (read before editing)
   - path: .agents/skills/frictions-to-fixes/SKILL.md
     reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
   - path: layers/commons/app/composables/timeline.ts
     reason: (no reason given)
   - path: CONTEXT.md
     reason: (no reason given)
   - path: CONTEXT-MAP.md
-    reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: docs/agents/guest-contributions.md
     reason: (no reason given)
@@ -118,18 +118,18 @@ skillsUsed:
   - name: log-session
     reason: this log
 frictions: []
-durationSec: 869
+durationSec: 1087
 models:
-  claude-sonnet-5: 118
+  claude-sonnet-5: 152
 toolCounts:
-  Bash: 18
+  Bash: 22
   Agent: 5
   TaskCreate: 1
-  ReadNotifications: 1
-  Read: 8
-  Edit: 17
+  ReadNotifications: 3
+  Read: 9
+  Edit: 19
   Grep: 3
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   Glob: 2
   mcp__github__create_pull_request: 2
@@ -137,6 +137,11 @@ toolCounts:
   Skill: 2
   Write: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/research/rulebook-migration-table.md
   - .agents/skills/audit-docs/SKILL.md
