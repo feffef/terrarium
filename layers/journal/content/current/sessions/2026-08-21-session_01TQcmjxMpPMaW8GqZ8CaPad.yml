@@ -1,16 +1,18 @@
 schemaVersion: 1
 session: session_01TQcmjxMpPMaW8GqZ8CaPad
 startedAt: 2026-08-21T00:15:59Z
-endedAt: 2026-08-21T00:21:30Z
+endedAt: 2026-08-21T00:25:31Z
 kind: autonomous
 goal: Run scheduled /digest for 2026-08-20
-status: in-review
-outcome: "PR #1006 opened, gate green"
-summary: "Fully agent-initiated: fired by a scheduled Routine invoking the /digest slash command, no live human input this session. Ran the digest skill's full recipe — branched off origin/main (already on the pinned branch with no divergence), listed the one closed UTC day needing a Digest (2026-08-20), gathered its data via scripts/digest.ts, and authored the Digest prose (3 merged PRs, 5 completed sessions, 5 nit-level frictions, sharpest being an unquoted-YAML frontmatter bug in the blog-post session's content gate). Ran the retention sweep, archiving the 2026-08-13 digest and its six session logs to `archived`. pnpm gate:scoped passed clean on the first attempt (full heavy layers, including the 78-test L2 smoke suite). Committed both changes together, pushed, and opened PR #1006 with no existing PR found on the branch beforehand. Subscribed to the PR's activity and will babysit it to merge."
+status: completed
+outcome: "PR #1006 merged with a green gate"
+summary: "Fully agent-initiated: fired by a scheduled Routine invoking the /digest slash command, no live human input this session. Ran the digest skill's full recipe — branched off origin/main (already on the pinned branch with no divergence), listed the one closed UTC day needing a Digest (2026-08-20), gathered its data via scripts/digest.ts, and authored the Digest prose (3 merged PRs, 5 completed sessions, 5 nit-level frictions, sharpest being an unquoted-YAML frontmatter bug in the blog-post session's content gate). Ran the retention sweep, archiving the 2026-08-13 digest and its six session logs to `archived`. pnpm gate:scoped passed clean on the first attempt (full heavy layers, including the 78-test L2 smoke suite). Committed both changes together, pushed, and opened PR #1006 with no existing PR found on the branch beforehand. Subscribed to the PR's activity; CI (gate + label checks) went green within minutes. Verified the true PR diff against its merge-base was digest-only scope (no unrelated content had ridden in), posted the verdict comment, and landed it via scripts/merge-pr.ts per the digest tier's green-gate-alone self-merge authority. Unsubscribed from PR activity and cancelled the now-unneeded fallback check-in trigger."
 prs:
   - "1006"
 docsRead:
   - path: layers/blog/content/david/pages/2026-08-20-a-rule-rewritten-twice-missed-six-times-anyway.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
 skillsUsed:
   - name: digest
@@ -20,20 +22,25 @@ skillsUsed:
   - name: log-session
     reason: (no reason given)
 frictions: []
-durationSec: 331
+durationSec: 572
 models:
-  claude-sonnet-5: 51
+  claude-sonnet-5: 76
 toolCounts:
   Skill: 3
-  Bash: 15
-  Read: 1
-  Write: 2
-  ToolSearch: 1
+  Bash: 19
+  Read: 2
+  Write: 3
+  ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__get_file_contents: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-08-20.md
 gitBranch: claude/compassionate-lovelace-ne7con
