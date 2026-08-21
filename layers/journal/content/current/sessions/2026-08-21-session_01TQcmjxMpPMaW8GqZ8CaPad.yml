@@ -1,0 +1,42 @@
+schemaVersion: 1
+session: session_01TQcmjxMpPMaW8GqZ8CaPad
+startedAt: 2026-08-21T00:15:59Z
+endedAt: 2026-08-21T00:21:30Z
+kind: autonomous
+goal: Run scheduled /digest for 2026-08-20
+status: in-review
+outcome: "PR #1006 opened, gate green"
+summary: "Fully agent-initiated: fired by a scheduled Routine invoking the /digest slash command, no live human input this session. Ran the digest skill's full recipe — branched off origin/main (already on the pinned branch with no divergence), listed the one closed UTC day needing a Digest (2026-08-20), gathered its data via scripts/digest.ts, and authored the Digest prose (3 merged PRs, 5 completed sessions, 5 nit-level frictions, sharpest being an unquoted-YAML frontmatter bug in the blog-post session's content gate). Ran the retention sweep, archiving the 2026-08-13 digest and its six session logs to `archived`. pnpm gate:scoped passed clean on the first attempt (full heavy layers, including the 78-test L2 smoke suite). Committed both changes together, pushed, and opened PR #1006 with no existing PR found on the branch beforehand. Subscribed to the PR's activity and will babysit it to merge."
+prs:
+  - "1006"
+docsRead:
+  - path: layers/blog/content/david/pages/2026-08-20-a-rule-rewritten-twice-missed-six-times-anyway.md
+    reason: (no reason given)
+skillsUsed:
+  - name: digest
+    reason: (invoked as a slash command)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 331
+models:
+  claude-sonnet-5: 51
+toolCounts:
+  Skill: 3
+  Bash: 15
+  Read: 1
+  Write: 2
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__get_file_contents: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-20.md
+gitBranch: claude/compassionate-lovelace-ne7con
+entrypoint: remote_trigger
+cliVersion: 2.1.238
+trigger: digest
