@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01SFqLeZYN488s8wAQGfvHdR
 startedAt: 2026-08-21T01:04:56Z
-endedAt: 2026-08-21T01:18:00Z
+endedAt: 2026-08-21T01:21:25Z
 kind: autonomous
 goal: Run frictions-to-fixes cycle
-status: in-review
-outcome: 1 PR in review, 1 regression escalated
-summary: "Scheduled /frictions-to-fixes run, no human prompt. A subagent surveyed the latest 20 session logs and screened frictions against the tracker, returning one actionable never-fixed candidate plus a self-reported regression. Verified the candidate's screening independently (a second subagent plus a direct primary-source read of the flagged session log) before acting, per CLAUDE.md's causal-claim verification rule. Filed #1007 (blog-post Skill's citation-rigor list doesn't cover quoted excerpts or paraphrased PR-content claims — simple doc fix) and dispatched a Sonnet impl agent in an isolated worktree, which opened PR #1009; reviewed the diff and posted approval, now waiting on CI to merge. Filed #1008 as a distinct regression issue (PR #857's \"nearby-issue eyeball\" rule, added for #854, was skipped again 12 days after merging) per the Skill's regression rule — not dispatched for a fix, since a prose reminder already failed once; alerted the user via push notification instead. All agent-initiated; no live human input this run."
+status: completed
+outcome: "PR #1009 merged, 1 regression escalated"
+summary: "Scheduled /frictions-to-fixes run, no human prompt. A subagent surveyed the latest 20 session logs and screened frictions against the tracker, returning one actionable never-fixed candidate plus a self-reported regression. Verified the candidate's screening independently (a second subagent plus a direct primary-source read of the flagged session log) before acting, per CLAUDE.md's causal-claim verification rule. Filed #1007 (blog-post Skill's citation-rigor list doesn't cover quoted excerpts or paraphrased PR-content claims — simple doc fix) and dispatched a Sonnet impl agent in an isolated worktree, which opened PR #1009; reviewed the diff, posted approval, and merged via merge-pr.ts once CI went green (which also self-healed closing #1007). Filed #1008 as a distinct regression issue (PR #857's \"nearby-issue eyeball\" rule, added for #854, was skipped again 12 days after merging) per the Skill's regression rule — not dispatched for a fix, since a prose reminder already failed once; alerted the user via push notification instead, left open for a human decision. All agent-initiated; no live human input this run."
 prs:
   - "1009"
 docsRead:
@@ -33,24 +33,27 @@ frictions:
   - description: "The §1 survey subagent's own report needed a second verification pass before it could be trusted: it flagged a 'regression' whose citation (issue #984) turned out, on direct read, to cover a different underlying friction than the meta-failure being described."
     solution: "Dispatched a dedicated verification subagent plus a direct primary-source read of the flagged session log before filing anything, per CLAUDE.md's causal-claim rule. Worth reinforcing in the survey brief: a 'regression' classification needs the same nearby-issue-eyeball rigor as a 'never-fixed' one, not just a title match on the cited issue."
     severity: minor
-durationSec: 784
+durationSec: 989
 models:
-  claude-sonnet-5: 50
+  claude-sonnet-5: 67
 toolCounts:
   Skill: 3
   Agent: 3
   ToolSearch: 1
-  Bash: 4
+  Bash: 8
   Grep: 1
   mcp__github__get_me: 1
   mcp__github__issue_write: 2
-  ReadNotifications: 1
+  ReadNotifications: 3
   mcp__github__pull_request_read: 3
   mcp__github__pull_request_review_write: 1
   mcp__github__add_issue_comment: 1
   mcp__Claude_Code_Remote__send_later: 1
   PushNotification: 1
   Write: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Edit: 2
 filesEdited:
   - .agents/skills/blog-post/SKILL.md
 subagents:
