@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: session_011oou9doFGhmwTXzBBn5v3u
+startedAt: 2026-08-21T11:12:01Z
+endedAt: 2026-08-21T11:24:52Z
+kind: autonomous
+goal: Run the scheduled /blog-post routine
+status: in-review
+outcome: "PR #1011 opened, awaiting gate"
+summary: "Scheduled, unattended /blog-post firing (bare invocation, no persona pinned). The Skill tool refused direct invocation by design (disable-model-invocation), so I followed its documented steps by hand. Ran the rotation gate (scripts/blog-rotation.ts: last=david, eligible=[eyra,karen,kevin]), gathered material from git log, session logs, and GitHub (issues #1007/#1008/#984, PRs #1009/#1010/#826), and drafted three full candidates to scratch, one per eligible Persona: Karen reacting to David's branch-pinning-rule post with a fresh regression (issue #1008, a nearby-issue-eyeball rule ignored 12 days after being written into the Skill it governs), Kevin on the blog-post Skill's own SKILL.md being edited twice today (PR #1009, PR #1010) hours before this run executed it, and Eyra on a recurring force-with-lease git regression (issue #984). A fresh outside-reader subagent (sonnet, no repo access) judged Kevin's the most interesting on underlying weight, and flagged a few reader-confusion points, which I revised before saving. Branched off origin/main (already the pinned, undiverged branch for this scheduled run), saved the revised post, ran pnpm gate:scoped green, committed, pushed, opened PR #1011, and subscribed to its activity. Entirely agent-initiated; no human prompt beyond the standing schedule."
+prs:
+  - "1011"
+docsRead:
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: this run's own procedure
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: candidate voice check
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: candidate voice check
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: candidate voice check
+  - path: layers/blog/content/david/pages/2026-08-20-a-rule-rewritten-twice-missed-six-times-anyway.md
+    reason: checked for reaction hook and topic overlap
+  - path: layers/blog/content/kevin/pages/2026-08-18-the-half-of-the-fix-i-never-checked.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-19-the-tool-that-stopped-trusting-githubs-word.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-17-it-finished-everything-except-the-one-thing-that-mattered.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-06-nobody-checked-this-for-a-month.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: this run's own procedure (Skill tool refused; steps followed by hand per its own instructions)
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "The Skill tool refuses blog-post directly (disable-model-invocation: true) even when fired by its own configured schedule, not just on model self-invocation — the skill's own doc anticipates this (\"If the Skill tool refuses it, that's by design — execute the steps yourself\") but it's a real extra step every scheduled firing pays."
+    solution: Working as designed per the skill's own documentation; no change needed. Noting only because it cost a tool-call round-trip to confirm.
+    severity: nit
+durationSec: 770
+models:
+  claude-sonnet-5: 128
+toolCounts:
+  Skill: 3
+  Bash: 44
+  Read: 13
+  ToolSearch: 2
+  mcp__github__issue_read: 4
+  mcp__github__pull_request_read: 4
+  Write: 6
+  Agent: 1
+  Edit: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-08-21-the-instructions-changed-twice-before-i-ever-opened-them.md
+subagents:
+  - type: general-purpose
+    task: Outside reader judges three blog drafts
+    model: sonnet
+gitBranch: claude/zen-heisenberg-n5n96g
+entrypoint: remote_trigger
+cliVersion: 2.1.238
+trigger: blog-post
