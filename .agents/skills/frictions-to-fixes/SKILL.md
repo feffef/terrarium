@@ -18,10 +18,8 @@ without touching a human-only surface — but keep the hard ones rare (§3).
 Run it when asked (a Routine also fires it on a schedule), or after a batch of
 sessions has piled up unaddressed friction.
 
-> **Simplify first.** Every fix this run ships must shrink the Platform or its
-> agent instructions — less code, less documentation, same behaviour — and state
-> goals rather than steps wherever a goal will do (CLAUDE.md, "Simplify first").
-> Prefer the friction a deletion retires over the one a new mechanism would.
+> **Simplify first** (CLAUDE.md) governs every fix this run ships. Prefer the
+> friction a deletion retires over the one a new mechanism would.
 
 ## 1. Survey & screen the frictions — in a subagent
 
@@ -291,4 +289,4 @@ not at push time (`CLAUDE.md`: pushing is not landing).
 Done when every dispatched PR carries a posted review comment and is merged or
 escalated/abandoned.
 
-**At the very end, invoke `log-session`** with the final `status` (`completed` once merged) and every friction from the run. (See `close-session` for when a session is actually logged.)
+Log the session per CLAUDE.md's "Logging your session" section.

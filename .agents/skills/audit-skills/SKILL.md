@@ -16,9 +16,7 @@ judgement.**
 
 > Runs via a scheduled Routine, same as `digest` — also runnable on demand.
 
-> **Simplify first.** Every edit this run makes must shrink the Platform or its
-> agent instructions — less code, less documentation, same behaviour — and state
-> goals rather than steps wherever a goal will do (CLAUDE.md, "Simplify first").
+> **Simplify first** (CLAUDE.md) governs every edit this run makes.
 
 Every run produces up to four things, only the first of which is ever a code
 change:
@@ -400,16 +398,13 @@ it runs). Done when it's green.
   in this PR.
 - Commit (one run rides one commit/PR), push with retry, and open **one gated
   PR** citing the evidence per entry.
-- **Subscribe to the PR's activity right after opening it** (CLAUDE.md's
-  "Pushing is not landing" rule — every opened PR is babysat to merge/close,
-  this tier included) and follow `docs/agents/pr-workflow.md`'s recipe
-  (`scripts/merge-pr.ts` as the sole merge path) to land it once the
-  gate is green — the same
-  landing path `digest`/`audit-docs` use (ADR-0004's low-risk content tier,
-  ADR-0003/0015 — this Skill is the third name on that exemption list). A red
-  gate simply never merges (see the escalation bullet below). Leave a
-  one-line PR comment citing the evidence per change — the merge must never
-  be the only trace.
+- **Subscribe to the PR's activity right after opening it** and follow
+  `docs/agents/pr-workflow.md`'s recipe (`scripts/merge-pr.ts` as the sole
+  merge path) to land it once the gate is green — the same landing path
+  `digest`/`audit-docs` use (ADR-0004's low-risk content tier, ADR-0003/0015 —
+  this Skill is the third name on that exemption list). A red gate simply
+  never merges (see the escalation bullet below). Leave a one-line PR comment
+  citing the evidence per change — the merge must never be the only trace.
 - **Escalate instead — leave the PR open for a human** — if the gate is red for
   a reason that isn't yours, or the diff touches anything beyond Inventory YAML
   (a human-only surface, or step 4-6 output that slipped in by mistake).
@@ -418,4 +413,4 @@ it runs). Done when it's green.
 
 Done when the gate is green and the PR is merged (by you), or open and honestly escalated.
 
-**At the very end, invoke `log-session`** with the final `status` (`completed` once merged) and every friction from the run. (See `close-session` for when a session is actually logged.)
+Log the session per CLAUDE.md's "Logging your session" section.

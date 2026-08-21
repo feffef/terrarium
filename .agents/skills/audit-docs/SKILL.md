@@ -18,9 +18,7 @@ correct. It runs start to finish **without interaction**.
 > low-risk content tier). It edits only *live* docs — **never** rewrites a
 > historical record's decision or a pack template.
 
-> **Simplify first.** Every edit this run makes must shrink the Platform or its
-> agent instructions — less code, less documentation, same behaviour — and state
-> goals rather than steps wherever a goal will do (CLAUDE.md, "Simplify first").
+> **Simplify first** (CLAUDE.md) governs every edit this run makes.
 
 > **Command-only.** This Skill is invoked as `/audit-docs`, not via the Skill
 > tool — it stays Skill-tool-invocation-blocked (`disable-model-invocation`)
@@ -254,11 +252,10 @@ gated PR** listing what was fixed and any issue filed. **This PR self-merges on 
 green gate** (ADR-0003 amendment) — the reconciliations are fact-checked and
 touch no human-only surface, so this is ADR-0004's low-risk content tier (a
 second, bounded grant of the same kind as `digest`'s). **Subscribe to the PR's
-activity right after opening it** (CLAUDE.md's "Pushing is not landing" rule —
-every opened PR is babysat to merge/close, this tier included) and follow
-`docs/agents/pr-workflow.md`'s recipe (`scripts/merge-pr.ts` as the sole
-merge path) to land it once the gate reports green — a red gate simply never
-merges (see below). Leave a one-line PR comment as the audit trail.
+activity right after opening it** and follow `docs/agents/pr-workflow.md`'s
+recipe (`scripts/merge-pr.ts` as the sole merge path) to land it once the gate
+reports green — a red gate simply never merges (see below). Leave a one-line
+PR comment as the audit trail.
 
 **Keep human-only-surface fixes out of this PR — those escalate instead.** A fix
 that touches an ADR **at all** (either edit category, ADR-0018 — see the
@@ -281,4 +278,4 @@ branch or escalate honestly instead.
 
 Done when the PR is merged green, or open and honestly escalated.
 
-**At the very end, invoke `log-session`** with the final `status` (`completed` once merged) and every friction from the run. (See `close-session` for when a session is actually logged.)
+Log the session per CLAUDE.md's "Logging your session" section.

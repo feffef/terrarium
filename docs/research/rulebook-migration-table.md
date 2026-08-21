@@ -42,8 +42,8 @@ In scope, per the ticket:
 | Surface | Count | Note |
 | --- | --- | --- |
 | Root agent-instructions file (`CLAUDE.md`) | 1 | 659 lines |
-| Per-topic agent docs (`docs/agents/*.md`) | 14 | 1,804 lines |
-| **Repo-authored** Skills (`.agents/skills/*/SKILL.md`) | 13 | 2,917 lines |
+| Per-topic agent docs (`docs/agents/*.md`) | 14 | 1,703 lines |
+| **Repo-authored** Skills (`.agents/skills/*/SKILL.md`) | 13 | 2,959 lines |
 
 Out of scope: the **external-pack** Skills. `skills-lock.json` is the
 authoritative discriminator and was read programmatically rather than by
@@ -63,7 +63,7 @@ non-starter.
 | `docs/agents/deferred-tool-guard.md` | **Mechanism record, not a rule source.** Documents an already-built guard; the rule it backstops is homed in `CLAUDE.md` and appears there. Its own mechanism appears in §4. |
 | `docs/agents/loop-only-tool-guard.md` | Same — mechanism record for the `ScheduleWakeup` guard. |
 | `docs/agents/subagent-background-guard.md` | Same — mechanism record for the subagent-background guard. |
-| `docs/agents/mdc-when-to-use.md` | **Decision reference, not a rulebook.** 257 lines of "when is MDC the right tool", ending in a 6-question checklist. It carries exactly two normative rules (extracted below); the rest is capability reference. |
+| `docs/agents/mdc-when-to-use.md` | **Decision reference, not a rulebook.** 154 lines of "when is MDC the right tool", ending in a 6-question checklist. It carries exactly two normative rules (extracted below); the rest is capability reference. |
 | `.agents/skills/blog-post/personas/*.md` (4 files) | **Voice guidance for a fictional persona.** Do/don't lists about tone, not agent behaviour. |
 | `docs/agents/triage-labels.md` | **Vocabulary mapping table** (24 lines). Its one normative statement — the ADR-0020 trust gate on `ready-for-agent` — is homed in ADR-0020 and appears via `auto-triage`. |
 
