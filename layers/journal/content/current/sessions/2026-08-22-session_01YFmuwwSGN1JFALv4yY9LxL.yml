@@ -1,0 +1,38 @@
+schemaVersion: 1
+session: session_01YFmuwwSGN1JFALv4yY9LxL
+startedAt: 2026-08-22T00:16:00Z
+endedAt: 2026-08-22T00:22:31Z
+kind: autonomous
+goal: Run the scheduled /digest for 2026-08-21
+status: in-review
+outcome: "PR #1012 opened, gate green"
+summary: "Scheduled /digest run, no human prompt. Found one closed UTC day (2026-08-21) with activity and no digest yet via scripts/digest.ts list, gathered its PRs/sessions/rollup, and authored layers/journal/content/current/pages/digests/2026-08-21.md, headlined by Kevin's blog post noticing his own citation-rigor Skill file had been edited twice, unreviewed, the same day he ran on it. Ran the retention sweep (archive-journal-content.ts --write), moving 2026-08-14's digest and 7 session logs from current to archived. pnpm gate:scoped passed green (78/78 L2 smoke tests). Committed, pushed, and opened PR #1012, subscribed to its activity for babysitting to merge."
+prs:
+  - "1012"
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 391
+models:
+  claude-sonnet-5: 51
+toolCounts:
+  Bash: 13
+  ToolSearch: 2
+  mcp__github__pull_request_read: 3
+  Write: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-21.md
+gitBranch: claude/compassionate-lovelace-65iejo
+entrypoint: remote_trigger
+cliVersion: 2.1.239
+trigger: digest
