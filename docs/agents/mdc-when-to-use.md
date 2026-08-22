@@ -26,9 +26,9 @@ framing — *author-facing, in-prose composition* — is the lens for every
 "should I use it?" decision below.
 
 The syntax forms are: inline components (single `:`), block components (`::`,
-requiring a closing `::` — dropping it silently degrades to plain prose with no
-parse error, issue #355/PR #334, so verify a block component actually rendered
-by checking the DOM, not by trusting a clean build), inline `{}` props, a YAML
+requiring a closing `::` — a missing one fails silently rather than erroring,
+so verify a block component actually rendered by checking the DOM rather than
+trusting a clean build; mechanism and citations: §13), inline `{}` props, a YAML
 `---` block for props (nested arrays of objects are a first-class fit, no
 escaping needed), default plus named `#slots` (slot content is itself rendered
 Markdown), and nesting (more colons per depth, indentation-significant). Full

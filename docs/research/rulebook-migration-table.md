@@ -43,7 +43,7 @@ In scope, per the ticket:
 | --- | --- | --- |
 | Root agent-instructions file (`CLAUDE.md`) | 1 | 659 lines |
 | Per-topic agent docs (`docs/agents/*.md`) | 14 | 1,703 lines |
-| **Repo-authored** Skills (`.agents/skills/*/SKILL.md`) | 13 | 2,959 lines |
+| **Repo-authored** Skills (`.agents/skills/*/SKILL.md`) | 13 | 2,949 lines |
 
 Out of scope: the **external-pack** Skills. `skills-lock.json` is the
 authoritative discriminator and was read programmatically rather than by
@@ -409,7 +409,7 @@ each rule that carries independent normative force beyond its step ordering.
 | CS-01 | A dispatched worktree-isolated impl agent must not self-invoke `close-session`/`log-session` | close-session | H (refusal) | #449 | **Built** — `log-session.ts --author` refuses from inside a linked worktree unless `--allow-worktree` | 0 |
 | CS-02 | Log a `major` friction containing `HUMAN-PROMPTED-CLOSURE` when a human triggered the close | close-session | W | #483 | **Built as instrumentation** — `audit-skills` greps the keyword. The keyword convention *is* the mechanism | 0 |
 | FF-01 | Never re-fix what is already fixed — classify every candidate against the tracker first | frictions-to-fixes §2 | W | #854 | A stage; `merged-since.ts` is the tool | 0 |
-| FF-02 | An exact-string miss alone is not proof of "never fixed" — eyeball nearby issues too | §2 | J | #854 | Search judgement | — |
+| FF-02 | A keyword-search miss alone is not proof of "never fixed" — eyeball nearby issues too | §2 | J | #854 | Search judgement | — |
 | FF-03 | Route a **regression** to a human, never a second run of the same fix | §2 | J | none | The classification judgement this whole asset is downstream of | — |
 | FF-04 | Cap a run at 10 fixes, at most 2 hard | §3 | G | none | A counter in a workflow script — trivially mechanizable if the workflow is scripted (#866) | S |
 | FF-05 | Check `docReadCounts` before recommending "add a line to doc X" | §4 | W | none | **Built** — `audit-skills.ts` reports it; the rule is to consult it | 0 |
