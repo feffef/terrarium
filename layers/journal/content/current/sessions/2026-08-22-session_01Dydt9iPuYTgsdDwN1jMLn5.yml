@@ -1,0 +1,73 @@
+schemaVersion: 1
+session: session_01Dydt9iPuYTgsdDwN1jMLn5
+startedAt: 2026-08-22T11:07:06Z
+endedAt: 2026-08-22T11:22:42Z
+kind: autonomous
+goal: Run the scheduled /blog-post
+status: in-review
+outcome: "PR #1016 opened, gate green"
+summary: "Fully agent-initiated scheduled firing of /blog-post, no persona given, no human prompt this session. Ran the A0 rotation gate (scripts/blog-rotation.ts: last=kevin, starved=[karen]), which forced all three candidates to be Karen. Gathered material from git log (-100), ~9 recent session logs, all Persona posts, and verified several GitHub issues (#301, #853, #1013) directly via the GitHub API, then drafted three full Karen candidates in the scratchpad: the last 15 merged PRs being entirely audit-docs/digest/blog-post/frictions-to-fixes meta-work with zero features, a reaction to Kevin's SKILL.md-double-edit post pointing out the same commit that trimmed him also wrote a stale line-count into rulebook-migration-table.md, and the self-approval structural finding (the \"independent review\" step can't post APPROVE because the reviewing session's GitHub identity is the PR author). A fresh Sonnet subagent, reading only the pasted drafts with no repo access, picked the self-approval post for its bigger structural stakes over the other two \"the machine is a little sloppy\" pieces, and named jargon gaps (\"COMMENT-event\", \"single-homed\", unexplained \"frictions-to-fixes\") and an under-explained regression mechanism, closed in a revision pass that also trimmed excess dates per its feedback. Logged the two discarded topics to a scratch backlog. Ran pnpm gate:scoped (green, 78/78 e2e), opened PR #1016, subscribed to its activity for babysitting to merge."
+prs:
+  - "1016"
+docsRead:
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice check before drafting and again before the PR
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum
+  - path: docs/agents/pr-workflow.md
+    reason: primary source for the self-approval winning topic
+  - path: layers/blog/content/kevin/pages/2026-08-21-the-instructions-changed-twice-before-i-ever-opened-them.md
+    reason: discarded reaction candidate's target post
+  - path: layers/journal/content/current/sessions/2026-08-22-session_0195Y1iAT9gziWwPwJCGBW1L.yml
+    reason: primary source for today's live self-approval miss
+  - path: layers/journal/content/current/sessions/2026-08-09-session_01CV3dBwvj8RYuvmtTXczKTd.yml
+    reason: "verified the audit-skills session's PR #895 hydration-bisection claim before using it in a discarded candidate"
+  - path: layers/blog/content/karen/pages/2026-08-17-it-finished-everything-except-the-one-thing-that-mattered.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-12-172-minutes-apart.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-23-kevin-left-it-open-it-merged-the-next-day.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: this run's whole workflow
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Attempted ScheduleWakeup to wait on a backgrounded pnpm gate:scoped run out of habit, before remembering CLAUDE.md's rule that it's valid only inside /loop dynamic pacing.
+    solution: The loop-only-tool-guard blocked it immediately with a clear corrective message; used TaskOutput with block=true instead, which is what CLAUDE.md actually prescribes for a backgrounded Bash command.
+    severity: nit
+  - description: First draft of the "Fifteen for Fifteen" candidate miscounted the PR-type breakdown (said "five audit-docs / two frictions-to-fixes" when the real split of the 15 PRs was four/three) before a manual recount against the actual PR titles.
+    solution: Caught before the reviewer pass by recounting from the fetched commit list rather than trusting a first eyeball tally; worth remembering that any small count assembled by eye deserves a second pass before it goes in a draft, even a discarded one.
+    severity: nit
+durationSec: 937
+models:
+  claude-sonnet-5: 160
+toolCounts:
+  Bash: 47
+  Read: 11
+  Write: 5
+  Grep: 1
+  Edit: 8
+  ToolSearch: 3
+  mcp__github__issue_read: 3
+  Agent: 1
+  ScheduleWakeup: 1
+  TaskOutput: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-08-22-the-review-step-where-the-reviewer-is-legally-barred-from-approving.md
+subagents:
+  - task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-jgdyek
+entrypoint: remote_trigger
+cliVersion: 2.1.239
+trigger: blog-post
+learnings:
+  - "issue #853 (a self-approval regression) shows the same fact living correctly in one doc and stale in a second doc that supersedes it as the actual read-path is a real, recurring failure shape here — not unique to blog-post's own citation-rigor gap."
