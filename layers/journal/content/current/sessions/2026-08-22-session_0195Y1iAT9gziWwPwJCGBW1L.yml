@@ -1,0 +1,65 @@
+schemaVersion: 1
+session: session_0195Y1iAT9gziWwPwJCGBW1L
+startedAt: 2026-08-22T01:04:46Z
+endedAt: 2026-08-22T01:18:02Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: completed
+outcome: One fix filed, dispatched, reviewed, merged
+summary: "Autonomous, schedule-fired frictions-to-fixes run (no human prompt). Dispatched a survey subagent to read the latest 20 session logs and screen frictions against the tracker; it returned one never-fixed, actionable candidate (self-referential to the Skill itself) and a long dropped list, most already fixed or already tracked as open issues/regressions from prior cycles. Verified the candidate directly against the live SKILL.md wording and the mcp__github__search_issues tool description before filing issue #1013 (the Skill's own §2 instruction overstated the tracker search as \"exact tool name and exact error-message string\" when the only available tool does semantic matching, not literal substring search). Dispatched a Sonnet impl agent in an isolated worktree to implement the recommended reword; it opened PR #1014, gate green locally and in CI. Reviewed the diff myself (as the ADR-0003 review-agent), posted a COMMENT-event review verdict, ran check-conflicting-issues.ts (one advisory hit, issue #976, eyeballed and confirmed unrelated — different section of the same file), and merged via merge-pr.ts, which also closed #1013. No human-only surface touched at any point. This orchestrating session made no direct commits of its own (all code changes went through the dispatched agent's separately-merged PR), so no PR was opened on this session's own branch."
+prs:
+  - "1014"
+docsRead:
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: the skill being run, and the file the fix landed in
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe — confirmed COMMENT-event review + merge-pr.ts as sole merge path
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: this session's whole task
+  - name: dispatch-subagents
+    reason: worktree-isolated impl agent dispatch mechanics
+  - name: close-session
+    reason: closure at end of cycle
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Called TaskCreate without loading its schema via ToolSearch first, despite CLAUDE.md explicitly calling this out as a repeatedly-violated rule for deceptively-obvious tool names. Caught immediately by the tool's own error.
+    solution: Load ToolSearch for any deferred tool before the first call, even one that "obviously" needs no schema check — the mechanical PreToolUse guard exists precisely because this keeps recurring despite the prose rule.
+    severity: nit
+  - description: pull_request_review_write with event=APPROVE failed with "Can not approve your own pull request" — the dispatched impl agent's PR is authored under the same GitHub identity this session posts as (the shared connection's owner account), so self-approval is rejected by GitHub itself.
+    solution: Already documented in docs/agents/pr-workflow.md step 4 ("never post it as an APPROVE-event review... use event=COMMENT") — I hadn't internalized it before the first attempt. Re-read that doc before the *next* review write, not just before merging.
+    severity: nit
+durationSec: 796
+models:
+  claude-sonnet-5: 89
+toolCounts:
+  Bash: 9
+  ToolSearch: 5
+  mcp__github__list_pull_requests: 1
+  Agent: 2
+  mcp__github__search_issues: 2
+  Read: 2
+  mcp__github__issue_write: 2
+  Skill: 3
+  TaskCreate: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 7
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_review_write: 2
+  mcp__github__issue_read: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix frictions-to-fixes exact-string wording
+    model: sonnet
+gitBranch: claude/hopeful-brown-lbac13
+entrypoint: remote_trigger
+cliVersion: 2.1.239
+trigger: frictions-to-fixes
+learnings:
+  - "A single frictions-to-fixes cycle can legitimately produce just one small doc fix when the prior cycles' unfixed tail is thin — most of a 20-session window's frictions were already retired by #1000, #1008, #1009, #995 etc. before this run even started. Small output is not itself a signal the run underperformed."
