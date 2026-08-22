@@ -115,19 +115,22 @@ has it). `pnpm exec tsx scripts/merged-since.ts <friction session's startedAt>` 
 `origin/main` commit landed after that instant (UTC-normalized, newest-first,
 `isMerge`-flagged) — scan it for the fixing commit/PR to turn the
 already-fixed/regression join into a direct comparison instead of manual
-git-timestamp archaeology. **Before landing on "Never fixed," search the tracker
-for the friction's exact tool name and exact error-message string** (not a
-paraphrase or a topic-level guess) — a loosely-worded search can miss an issue or
-PR that already covers it, and re-recommending a fix for something already closed
-wastes a dispatch. **An exact-string miss alone is not sufficient proof of
-"never-fixed"** — before finalizing that label, do a quick nearby-issue eyeball
+git-timestamp archaeology. **Before landing on "Never fixed," run a targeted
+keyword search of the tracker using the friction's tool name and error-message
+text as query terms** (not a paraphrase or a topic-level guess) — the available
+search tools (e.g. `mcp__github__search_issues`) do natural-language semantic
+matching, not literal substring search, so a query miss is weaker evidence than
+a literal grep miss would be, and a loosely-worded query can still miss an issue
+or PR that already covers it, wasting a dispatch on re-recommending a fix for
+something already closed. **A keyword-search miss alone is not sufficient proof
+of "never-fixed"** — before finalizing that label, do a quick nearby-issue eyeball
 (same file/script/mechanism as the candidate) for a closed issue covering the
 same root cause under different wording; a paraphrase or a nearby instance of an
 already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each
 into one branch:
 
-- **Never fixed** — no issue/PR addresses it, confirmed by the exact-string
-  search above. Carries on to step 3.
+- **Never fixed** — no issue/PR addresses it, confirmed by the keyword search
+  above. Carries on to step 3.
 - **Fixed, and not logged since the fix merged** — drop it (cite the issue/PR).
   Done is done; spending a PR here is duplicate work.
 - **Open already** — an **open** issue or **open** PR already tracks it (cite the
