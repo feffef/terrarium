@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Nwg4xRmmFnKgpHnQAtpQ1g
 startedAt: 2026-08-22T04:08:33Z
-endedAt: 2026-08-22T04:19:06Z
+endedAt: 2026-08-22T04:23:26Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: 3 findings confirmed and fixed, PR opened
-summary: "Scheduled, fully agent-initiated run of the /audit-docs Skill (no human prompt this turn). Dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the repo's Live-tier docs. Freshness found a stale line-count total and a superseded term (\"exact-string miss\" vs the renamed \"keyword-search miss\") in docs/research/rulebook-migration-table.md; Single-home found the MDC unclosed-`::`-fails-silently fact duplicated between docs/agents/mdc-when-to-use.md and nuxt-content-review-grounding.md despite the former's own stated single-home policy. Concision and Coherence reported clean passes. Deduped the pool (no overlap), dispatched an independent fact-checker that CONFIRMED all 3 (one CONFIRMED-BUT with a corrected sum: 2,949 not 2,959), fixed all 3 in place, ran pnpm gate:scoped green, and opened PR #1015 (self-merge-eligible, no human-only surface touched)."
+status: completed
+outcome: 3 findings confirmed, fixed, PR merged
+summary: "Scheduled, fully agent-initiated run of the /audit-docs Skill (no human prompt this turn). Dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the repo's Live-tier docs. Freshness found a stale line-count total and a superseded term (\"exact-string miss\" vs the renamed \"keyword-search miss\") in docs/research/rulebook-migration-table.md; Single-home found the MDC unclosed-`::`-fails-silently fact duplicated between docs/agents/mdc-when-to-use.md and nuxt-content-review-grounding.md despite the former's own stated single-home policy. Concision and Coherence reported clean passes. Deduped the pool (no overlap), dispatched an independent fact-checker that CONFIRMED all 3 (one CONFIRMED-BUT with a corrected sum: 2,949 not 2,959), fixed all 3 in place, ran pnpm gate:scoped green, and opened PR #1015 (self-merge-eligible, no human-only surface touched). Gate went green in CI, posted the verdict comment, and merged via scripts/merge-pr.ts."
 prs:
   - "1015"
 docsRead:
@@ -16,6 +16,8 @@ docsRead:
     reason: fixed two findings here
   - path: docs/agents/mdc-when-to-use.md
     reason: fixed duplication finding here
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
   - path: CONTEXT.md
     reason: (no reason given)
   - path: docs/agents/domain.md
@@ -25,8 +27,6 @@ docsRead:
   - path: docs/agents/git-conventions.md
     reason: (no reason given)
   - path: docs/agents/github-integration.md
-    reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: docs/agents/issue-tracker.md
     reason: (no reason given)
@@ -144,25 +144,29 @@ skillsUsed:
   - name: log-session
     reason: this log
 frictions: []
-durationSec: 633
+durationSec: 894
 models:
-  claude-sonnet-5: 76
+  claude-sonnet-5: 106
 toolCounts:
-  Bash: 12
-  ToolSearch: 3
+  Bash: 15
+  ToolSearch: 4
   mcp__github__list_pull_requests: 2
   Agent: 5
   ScheduleWakeup: 1
   TaskCreate: 1
-  ReadNotifications: 3
-  Read: 3
-  Edit: 3
+  ReadNotifications: 5
+  Read: 4
+  Edit: 5
   Glob: 1
   mcp__Claude_Code_Remote__get_session: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/research/rulebook-migration-table.md
   - docs/agents/mdc-when-to-use.md
