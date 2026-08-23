@@ -20,7 +20,7 @@
 // VIABILITY / SCOPE (recorded, not papered over — issue #612 asked for this):
 // whether this hook fires *before* the harness rejects a schema-invalid
 // deferred-tool call is a property of the host, not of this repo — see the PR
-// and `docs/agents/deferred-tool-guard.md` for the empirical finding. This
+// and `docs/agents/guards.md` for the empirical finding. This
 // module is written to be the strongest reachable mechanism either way: if the
 // hook fires at call time it blocks pre-emptively with a useful message; the
 // same pure core (`checkToolCall`) is also exposed so an after-the-fact

@@ -2,12 +2,11 @@
 // Bash command can never wake it, so `run_in_background: true` is denied in
 // subagent context — and per issue #964, so is a trailing `&`/`nohup … &` in
 // the command text, and a `Monitor` call, the two bypass shapes the original
-// deny message already warned about but never mechanized. Rationale,
-// detection contract, and residual fail-opens are single-homed in
-// docs/agents/subagent-background-guard.md — this header does not restate
-// them. Pure core is kept separate from the stdin I/O and exercised by
-// --dry-run, mirroring the sibling guards (ADR-0004's unattended-hook
-// reviewability bar).
+// deny message already warned about but never mechanized. The detection
+// contract, the residual fail-opens, and the conventions every guard here
+// shares are in docs/agents/guards.md. Pure core is kept separate from the
+// stdin I/O and exercised by --dry-run, mirroring the sibling guards
+// (ADR-0004's unattended-hook reviewability bar).
 //
 // Usage:
 //   sh scripts/subagent-background-guard.sh          # the installed hook entry
@@ -46,8 +45,7 @@ export interface BackgroundFinding {
  *  Not a full shell parser (issue #964 accepts this trade-off explicitly):
  *  it does not resolve command substitution (`$(...)`/backticks), here-docs,
  *  or ANSI-C quoting (`$'...'`), so a `&` inside one of those can still
- *  false-positive or false-negative. See
- *  docs/agents/subagent-background-guard.md for the residual list. */
+ *  false-positive or false-negative. */
 function findUnquotedAmpersands(command: string): number[] {
   const positions: number[] = []
   let inSingle = false
