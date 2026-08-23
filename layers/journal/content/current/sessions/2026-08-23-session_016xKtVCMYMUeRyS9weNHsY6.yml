@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_016xKtVCMYMUeRyS9weNHsY6
 startedAt: 2026-08-23T12:40:06Z
-endedAt: 2026-08-23T15:51:24Z
+endedAt: 2026-08-23T15:53:58Z
 kind: interactive
 goal: Charter a Skill that prunes instruction prose
-status: in-review
-outcome: "Charter open as PR #1021, audited and dry-run"
-summary: "Human-instructed throughout: the user asked for a scheduled Skill that bravely cuts agent-instruction markdown, told me to orient with a Sonnet background agent first, then to grill via /grill-with-docs. Every design decision was the user's own answer to a grill question — notably rejecting a fixed cut-license taxonomy in favour of pure judgement that distills scattered rules into a goal, and reframing the unit of work from a cut into a three-day trial judged by later sessions' frictions. Two follow-ups were also human-initiated: the Opus-vs-Sonnet model question and the CLAUDE.md coordination note. I authored the Skill, ADR-0027, the ledger, the glossary term and the Inventory entry, ran the full gate green, and opened the gated PR. The user then asked for a context-free review of the diff; two Sonnet agents audited it in turn under the same brief; five such passes ran in total, each finding real defects, which I verified against primary sources and fixed at their source files rather than by qualifying the new text. The user then asked for dry runs: three Opus agents executed the Skill literally in isolated worktrees, opening unmerged PRs (#1022, #1023, #1024). Those found the defects that mattered."
+status: completed
+outcome: ADR-0027 and /prune-trial merged to main
+summary: "Human-instructed throughout: the user asked for a scheduled Skill that bravely cuts agent-instruction markdown, told me to orient with a Sonnet background agent first, then to grill via /grill-with-docs. Every design decision was the user's own answer to a grill question — notably rejecting a fixed cut-license taxonomy in favour of pure judgement that distills scattered rules into a goal, and reframing the unit of work from a cut into a three-day trial judged by later sessions' frictions. Two follow-ups were also human-initiated: the Opus-vs-Sonnet model question and the CLAUDE.md coordination note. I authored the Skill, ADR-0027, the ledger, the glossary term and the Inventory entry, ran the full gate green, and opened the gated PR. The user then asked for a context-free review of the diff; two Sonnet agents audited it in turn under the same brief; five such passes ran in total, each finding real defects, which I verified against primary sources and fixed at their source files rather than by qualifying the new text. The user then asked for dry runs: three Opus agents executed the Skill literally in isolated worktrees, opening unmerged PRs (#1022, #1023, #1024). Those found the defects that mattered. PR #1021 merged; the Routine that fires the Skill is the user's to create, as it lives outside git."
 prs:
   - "1021"
 docsRead:
@@ -112,11 +112,11 @@ frictions:
   - description: Gate ran full heavy layers (~6 min) because two of eight changed paths were .yml; the six markdown files were inert.
     solution: Expected behaviour of the fail-safe classifier, not a defect — noting it only because prose-authoring sessions will keep paying it whenever a Skill ships an Inventory entry alongside its docs.
     severity: nit
-durationSec: 11479
+durationSec: 11633
 models:
-  claude-opus-5: 386
+  claude-opus-5: 393
 toolCounts:
-  Bash: 97
+  Bash: 99
   Agent: 9
   Skill: 4
   AskUserQuestion: 20
@@ -126,11 +126,12 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  ReadNotifications: 23
+  ReadNotifications: 24
   mcp__github__pull_request_read: 7
   mcp__Claude_Code_Remote__send_later: 5
   mcp__github__update_pull_request: 8
   mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/agents/git-conventions.md
   - .agents/prune-trials.yml
