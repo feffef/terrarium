@@ -12,30 +12,4 @@
 #     opened: 2026-08-23
 #     check: how you would tell this broke — written now, while you still
 #            remember what the prose was for
-trials:
-  - problem: >-
-      Drawing a conclusion from an incomplete local git view: a stale pre-cloned
-      origin/main, a shallow clone's truncated graph (including a merge-base
-      that silently under-reports what a branch touched), or a clean merge that
-      hid a stale reference. 85 lines of worked argument in git-conventions.md
-      plus a 15-line restatement in CLAUDE.md, pruned to the goal and the
-      commands that satisfy it. The shallow half had already failed four times
-      as prose (#413 -> #682 -> #703 -> #772), so what was cut is the
-      justification, not the rule.
-    territory:
-      - docs/agents/git-conventions.md
-      - CLAUDE.md "Git mechanics" bullet
-      - shallow clone
-      - merge-base
-      - git fetch origin main
-      - pickaxe / git log -S
-      - clean merge is not proof
-    opened: 2026-08-19
-    check: >-
-      A session scopes a diff or review, or asserts a history/completeness
-      claim, off an unfetched or shallow clone and does not catch it. Look in
-      the Frictions for --is-shallow-repository, --unshallow, merge-base, a diff
-      that turned out inflated or short, or a stale reference that survived a
-      clean merge. Second signal, subtler: a session re-deriving why a shallow
-      merge-base can omit files -- that argument is what this prune cut, and
-      needing it back means the surviving rule was not believable on its own.
+trials: []
