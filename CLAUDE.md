@@ -170,6 +170,13 @@ human asks for it outright.
   amending note or superseding ADR), don't fork a second copy. Duplication is how
   contradictory guidance and doc-rot start — and agents act on documented state,
   so in this repo a stale copy is a *behavioral* bug.
+- **A missing instruction may be on trial.** `.agents/prune-trials.yml` lists
+  instructions pruned on purpose in the last few days, to find out whether they
+  were load-bearing (ADR-0027). Hit a problem in a trial's territory: **record
+  it** — a Friction, honestly graded, and an issue if it recurs — and carry on.
+  Work around it unless it genuinely blocks you; don't re-legislate the pruned
+  prose. `/prune-trial` weighs what you recorded and decides whether the trial
+  keeps, reverts, or earns a hook.
 - **Don't restate a Routine's schedule in a committed doc** — it lives outside
   git and can change without a commit. Say a Skill *is* scheduled; never say *when*.
 - **Hitting a needed `.github/workflows/*` edit? You can't push it** (agent

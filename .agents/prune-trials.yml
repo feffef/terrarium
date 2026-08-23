@@ -1,0 +1,13 @@
+# Open Prune Trials (ADR-0027). One entry per pruned problem; the verdict is
+# due three days after `opened`. An entry is deleted the moment `/prune-trial`
+# judges it — git holds the history, this file holds only what is unjudged.
+#
+# trials:
+#   - problem: what the pruned prose was trying to prevent
+#     territory: [paths, keywords]   # the next trial must not overlap these
+#     opened: 2026-08-23
+#     pr: 1234
+#     revert: <merge commit sha>     # where a restore starts from
+#     check: how you would tell this broke — written now, while you still
+#            remember what the prose was for
+trials: []
