@@ -118,6 +118,12 @@ describe('checkBackgroundedBash() — the command-text bypass (issue #964)', () 
     )
   })
 
+  it('DENIES: a bare mid-command `&` with no `nohup` at all — the general job-control case, not just the trailing/nohup idioms', () => {
+    expect(checkBackgroundedBash('Bash', { command: 'pnpm gate:scoped & echo started' }, 'subagent')?.signal).toBe(
+      'command-text',
+    )
+  })
+
   it('ALLOWS: `&&` chaining — not a backgrounding operator', () => {
     expect(checkBackgroundedBash('Bash', { command: 'pnpm build && pnpm test' }, 'subagent')).toBeNull()
   })
@@ -173,7 +179,7 @@ describe('formatGuardMessage()', () => {
     expect(msg).toContain('FOREGROUND')
     expect(msg).toContain('600000')
     expect(msg).toContain('preview.ts start')
-    expect(msg).toMatch(/trailing `&`/)
+    expect(msg).toMatch(/bare `&` anywhere/)
   })
 
   it('says plainly that an undeterminable context is a fail-closed denial', () => {

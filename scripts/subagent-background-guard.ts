@@ -1,16 +1,18 @@
 // Mechanical backstop for issue #694: a dispatched subagent's own backgrounded
 // Bash command can never wake it, so `run_in_background: true` is denied in
-// subagent context — and per issue #964, so is a trailing `&`/`nohup … &` in
-// the command text, and a `Monitor` call, the two bypass shapes the original
-// deny message already warned about but never mechanized. The detection
-// contract, the residual fail-opens, and the conventions every guard here
-// shares are in docs/agents/guards.md. Pure core is kept separate from the
-// stdin I/O and exercised by --dry-run, mirroring the sibling guards
-// (ADR-0004's unattended-hook reviewability bar).
+// subagent context — and per issue #964, so is a bare `&` (anywhere in the
+// command text, `nohup … &` included) and a `Monitor` call, the two bypass
+// shapes the original deny message already warned about but never
+// mechanized (and, per issue #995, the `Monitor` half was implemented and
+// tested but never actually wired to a live hook until this fix). The
+// detection contract, the residual fail-opens, and the conventions every
+// guard here shares are in docs/agents/guards.md. Pure core is kept
+// separate from the stdin I/O and exercised by --dry-run, mirroring the
+// sibling guards (ADR-0004's unattended-hook reviewability bar).
 //
 // Usage:
-//   sh scripts/subagent-background-guard.sh          # the installed hook entry
-//   tsx scripts/subagent-background-guard.ts         # payload on stdin
+//   sh scripts/subagent-background-guard.sh          # the installed Bash hook entry
+//   tsx scripts/subagent-background-guard.ts         # payload on stdin (Bash and Monitor alike)
 //   tsx scripts/subagent-background-guard.ts --dry-run --tool Bash \
 //       [--context subagent|main|undeterminable] [--payload '<json>'] [--input '<json>']
 import { readFileSync } from 'node:fs'
@@ -37,66 +39,33 @@ export interface BackgroundFinding {
   signal: 'run_in_background' | 'command-text' | 'monitor'
 }
 
-/** Scans `command` for `&` characters that act as a shell job-control
- *  operator — i.e. NOT `&&` (AND-chaining), NOT `&>`/`>&`/`<&` (redirection,
- *  including the common `2>&1`), and NOT inside a single- or double-quoted
- *  string or backslash-escaped. Returns their indices, left to right.
+/** True if `command` contains a bare `&` job-control operator ANYWHERE, not
+ *  just trailing — `pnpm gate:scoped &`, `nohup long-cmd &`, and
+ *  `pnpm gate:scoped & echo started` all background a process the same way;
+ *  the tool call returning only waits out the command's foreground portion,
+ *  the backgrounded part keeps running detached. Checking only the last
+ *  token would miss that last, non-trailing case entirely (issue #964).
  *
- *  Not a full shell parser (issue #964 accepts this trade-off explicitly):
- *  it does not resolve command substitution (`$(...)`/backticks), here-docs,
- *  or ANSI-C quoting (`$'...'`), so a `&` inside one of those can still
- *  false-positive or false-negative. */
-function findUnquotedAmpersands(command: string): number[] {
-  const positions: number[] = []
-  let inSingle = false
-  let inDouble = false
-  for (let i = 0; i < command.length; i++) {
-    const c = command[i]
-    if (inSingle) {
-      if (c === "'") inSingle = false
-      continue
-    }
-    if (inDouble) {
-      if (c === '\\') { i++; continue } // escaped char inside double quotes
-      if (c === '"') inDouble = false
-      continue
-    }
-    if (c === '\\') { i++; continue } // escaped char outside quotes
-    if (c === "'") { inSingle = true; continue }
-    if (c === '"') { inDouble = true; continue }
-    if (c === '&') {
-      if (command[i + 1] === '&') { i++; continue } // `&&` — chaining, not backgrounding
-      if (command[i + 1] === '>') continue // `&>` — redirect stdout+stderr
-      if (command[i - 1] === '>' || command[i - 1] === '<') continue // `>&`/`<&`/`2>&1` — fd dup
-      positions.push(i)
-    }
-  }
-  return positions
-}
-
-/** True if `command`'s last non-whitespace character is a bare `&` job-
- *  control operator — e.g. `pnpm gate:scoped &`, `long-cmd arg1 arg2   &`. */
-function endsWithBackgroundOperator(command: string): boolean {
-  const trimmed = command.replace(/\s+$/, '')
-  if (!trimmed.endsWith('&')) return false
-  const amps = findUnquotedAmpersands(command)
-  return amps[amps.length - 1] === trimmed.length - 1
-}
-
-/** True if `command` invokes `nohup` as a command word (start of string, or
- *  after a `;`/`&`/`|`/`(` separator) AND contains a bare `&` job-control
- *  operator somewhere after it — nohup's standard backgrounding idiom, even
- *  when the `&` isn't the very last character (e.g. `nohup long & echo hi`). */
-function hasNohupBackground(command: string): boolean {
-  if (!/(^|[;&|(])\s*nohup\b/.test(command)) return false
-  return findUnquotedAmpersands(command).length > 0
+ *  Strips quoted/escaped spans, then `&&` chaining and `&>`/`>&`/`<&`
+ *  redirection (the common `2>&1` included), and checks what's left for a
+ *  bare `&`. Not a full shell parser (issue #964 accepts this trade-off
+ *  explicitly): command substitution (`$(...)`/backticks), here-docs, and
+ *  ANSI-C quoting (`$'...'`) aren't resolved, so a `&` inside one of those
+ *  can still false-positive or false-negative — see docs/agents/guards.md
+ *  for the residual list. */
+function hasBackgroundOperator(command: string): boolean {
+  const unquoted = command.replace(/'[^']*'|"(?:[^"\\]|\\.)*"|\\./g, '')
+  const withoutOperators = unquoted.replace(/&&|[<>]&|&>/g, '')
+  return withoutOperators.includes('&')
 }
 
 /** Denies a `Bash` call outside a positively established main session when
  *  either: `run_in_background: true` is set, or the command text itself
- *  backgrounds via a trailing `&` or a `nohup … &` idiom (issue #964 — both
- *  are text-level bypasses of the `run_in_background` flag). Never throws; a
- *  non-object `toolInput` simply carries no `run_in_background`/`command`. */
+ *  backgrounds via any bare `&` job-control operator, trailing or not — the
+ *  `nohup … &` idiom included, since it's just this same operator with a
+ *  `nohup` prefix (issue #964 — both are text-level bypasses of the
+ *  `run_in_background` flag). Never throws; a non-object `toolInput` simply
+ *  carries no `run_in_background`/`command`. */
 export function checkBackgroundedBash(
   toolName: string,
   toolInput: unknown,
@@ -107,7 +76,7 @@ export function checkBackgroundedBash(
   const input = toolInput !== null && typeof toolInput === 'object' ? (toolInput as Record<string, unknown>) : {}
   if (input.run_in_background === true) return { context, signal: 'run_in_background' }
   const command = typeof input.command === 'string' ? input.command : ''
-  if (command !== '' && (endsWithBackgroundOperator(command) || hasNohupBackground(command))) {
+  if (command !== '' && hasBackgroundOperator(command)) {
     return { context, signal: 'command-text' }
   }
   return null
@@ -143,9 +112,9 @@ export function formatGuardMessage(f: BackgroundFinding): string {
     `(e.g. \`pnpm test\`, then \`pnpm build\`, then \`pnpm test:e2e\`).\n` +
     `  • A preview/dev server needs no backgrounding: \`scripts/preview.ts start\` daemonizes itself ` +
     `from a foreground call and returns.\n\n` +
-    `This guard also blocks a trailing \`&\` or a \`nohup … &\` idiom in the command text itself, and a ` +
-    `\`Monitor\` call — do not try to route around \`run_in_background: true\` with any of those; they ` +
-    `detach or strand the process the same way and add the silent-drop pitfalls CLAUDE.md records. If ` +
+    `This guard also blocks a bare \`&\` anywhere in the command text (trailing or not — \`nohup … &\` ` +
+    `included), and a \`Monitor\` call — do not try to route around \`run_in_background: true\` with any ` +
+    `of those; they detach or strand the process the same way and add the silent-drop pitfalls CLAUDE.md records. If ` +
     `you believe this genuinely IS the main session, that is a gap in the guard's context detection — ` +
     `report it on issue #694 rather than routing around it.`
   )
