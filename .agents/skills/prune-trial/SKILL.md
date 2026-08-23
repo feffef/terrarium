@@ -56,6 +56,11 @@ chasing. Write that, in the plainest words that stay exact, in one home. Delete
 the rest: the incident histories, the restatements, the step-by-step for
 decisions the reader is capable of making.
 
+Cut an incident history to **the rule plus a pointer** to where the history
+lives (the issue, the ADR) — never to a ruleless rule with no forwarding
+address. `audit-docs`' Stale-narration lens owns that shape; it is barred from
+retiring these, and you are not.
+
 **Write for Sonnet.** It runs most sessions here and cannot reconstruct the
 means from a goal as readily as you can. A goal it can't act on isn't simpler,
 just shorter.
@@ -78,7 +83,8 @@ Sonnet can't execute.
 
 ## 5. Ship and record
 
-One PR, the line delta in its title, Gate green, self-merge
+One PR, the line delta in its title. **At PR-open, invoke `close-session`** —
+your first log (`in-review`). Then Gate green, self-merge
 (`docs/agents/pr-workflow.md`; ADR-0027 charters the tier). Then append the
 trial to the ledger — the file documents its own shape — and `close-session`.
 

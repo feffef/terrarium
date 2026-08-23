@@ -123,7 +123,10 @@ kind:
 This is a rule about **how** an ADR is edited, not about **who** may merge
 the edit. Every ADR PR — factual-correction or decision-reversal alike —
 still lands as an ordinary, human-reviewed PR and is never auto-merged; ADRs
-are a human-only-to-merge surface regardless of category (ADR-0004).
+are a human-only-to-merge surface regardless of category (ADR-0004) — with the
+single exception added by ADR-0027 (2026-08-23): a Prune Trial self-merges a
+prune of the **explanatory prose only**, and the record-integrity rule above
+binds it like everyone else.
 Classifying a finding as a pure factual correction only changes whether the
 fix is an in-place edit or a new amendment section — it never changes the
 merge gate.

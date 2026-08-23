@@ -129,7 +129,9 @@ The reasons it undercounts are single-homed in that field's docstring in
   every load-bearing "don't regress to the old way" rationale (`CLAUDE.md`'s pkill
   saga, `dispatch-subagents`' worktree-HEAD rule and `environment-caveats.md`'s
   `permissions.allow` bullet stay — their whole
-  point is preventing regression). When you do cut, cut to the **rule plus a
+  point is preventing regression). Retiring one of those is a **Prune Trial**'s
+  call, never yours: it has the reversibility and the verdict window you don't
+  (ADR-0027). When you do cut, cut to the **rule plus a
   pointer** to the history's home (the issue/ADR), **never** to a bare ruleless
   rule that strips the why with no forwarding address.
 

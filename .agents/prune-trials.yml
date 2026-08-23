@@ -7,7 +7,10 @@
 #     territory: [paths, keywords]   # the next trial must not overlap these
 #     opened: 2026-08-23
 #     pr: 1234
-#     revert: <merge commit sha>     # where a restore starts from
+#     revert: <merge commit sha>     # the prune's own commit, for reading back
+#                                    # what was cut. Never `git revert` it
+#                                    # wholesale — a restore is one line, not
+#                                    # the old wall (SKILL.md step 1)
 #     check: how you would tell this broke — written now, while you still
 #            remember what the prose was for
 trials: []

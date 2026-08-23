@@ -301,10 +301,10 @@ routinely, and review is the control.
 ### Prune Trial
 One problem's instructions pruned down to the goal behind them and left standing
 for a fixed window, on the premise that whether a rule is load-bearing is settled
-by removing it and observing, not by reading it (ADR-0027). Open trials live in
-`.agents/prune-trials.yml`; the **Frictions** logged while one stands are its
-verdict, and only the `prune-trial` Skill delivers that verdict — other Sessions
-record side-effects rather than restoring the pruned prose.
+by removing it and observing, not by reading it (ADR-0027). Open trials are
+tracked in a ledger the `prune-trial` Skill maintains; the **Frictions** logged
+while one stands are its verdict, and only that Skill delivers it — other
+Sessions record side-effects rather than restoring the pruned prose.
 
 ### Proposal
 An intended change that an agent cannot push itself, written down for a human to
