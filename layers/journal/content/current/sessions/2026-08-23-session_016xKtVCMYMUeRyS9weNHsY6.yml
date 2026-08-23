@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_016xKtVCMYMUeRyS9weNHsY6
 startedAt: 2026-08-23T12:40:06Z
-endedAt: 2026-08-23T13:53:43Z
+endedAt: 2026-08-23T15:51:24Z
 kind: interactive
 goal: Charter a Skill that prunes instruction prose
 status: in-review
-outcome: "Charter open as PR #1021, twice audited"
-summary: "Human-instructed throughout: the user asked for a scheduled Skill that bravely cuts agent-instruction markdown, told me to orient with a Sonnet background agent first, then to grill via /grill-with-docs. Every design decision was the user's own answer to a grill question — notably rejecting a fixed cut-license taxonomy in favour of pure judgement that distills scattered rules into a goal, and reframing the unit of work from a cut into a three-day trial judged by later sessions' frictions. Two follow-ups were also human-initiated: the Opus-vs-Sonnet model question and the CLAUDE.md coordination note. I authored the Skill, ADR-0027, the ledger, the glossary term and the Inventory entry, ran the full gate green, and opened the gated PR. The user then asked for a context-free review of the diff; two Sonnet agents audited it in turn under the same brief, and both found real defects, which I verified against primary sources and fixed at their source files rather than by qualifying the new text."
+outcome: "Charter open as PR #1021, audited and dry-run"
+summary: "Human-instructed throughout: the user asked for a scheduled Skill that bravely cuts agent-instruction markdown, told me to orient with a Sonnet background agent first, then to grill via /grill-with-docs. Every design decision was the user's own answer to a grill question — notably rejecting a fixed cut-license taxonomy in favour of pure judgement that distills scattered rules into a goal, and reframing the unit of work from a cut into a three-day trial judged by later sessions' frictions. Two follow-ups were also human-initiated: the Opus-vs-Sonnet model question and the CLAUDE.md coordination note. I authored the Skill, ADR-0027, the ledger, the glossary term and the Inventory entry, ran the full gate green, and opened the gated PR. The user then asked for a context-free review of the diff; two Sonnet agents audited it in turn under the same brief; five such passes ran in total, each finding real defects, which I verified against primary sources and fixed at their source files rather than by qualifying the new text. The user then asked for dry runs: three Opus agents executed the Skill literally in isolated worktrees, opening unmerged PRs (#1022, #1023, #1024). Those found the defects that mattered."
 prs:
   - "1021"
 docsRead:
@@ -22,12 +22,54 @@ docsRead:
     reason: Skill Inventory schema — importance vocabulary and role word limit
   - path: .agents/skills/prune-trial/SKILL.md
     reason: (no reason given)
-  - path: CLAUDE.md
-    reason: (no reason given)
   - path: .agents/skills/frictions-to-fixes/SKILL.md
     reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (read before editing)
   - path: docs/agents/triage-labels.md
     reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (read before editing)
+  - path: .claude/settings.json
+    reason: (no reason given)
+  - path: scripts/commit-trailer-guard.sh
+    reason: (no reason given)
+  - path: scripts/commit-trailer-guard.ts
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (read before editing)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0009-journal-and-session-logging.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: docs/agents/subagent-background-guard.md
+    reason: (read before editing)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (read before editing)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (read before editing)
+  - path: docs/agents/loop-only-tool-guard.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (read before editing)
+  - path: docs/agents/github-integration.md
+    reason: (read before editing)
+  - path: scripts/loop-only-tool-guard.ts
+    reason: (read before editing)
 skillsUsed:
   - name: grilling
     reason: the whole design interview, via grill-with-docs
@@ -37,7 +79,21 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: dispatch-subagents
+    reason: (no reason given)
 frictions:
+  - description: Chartered the Skill's targeting rule with "such a rule has proven it isn't load-bearing" — which authorises deleting the rule, not its justification.
+    solution: A dry run executing the text caught it; five reading-based audits had not. Distinguish prose from behaviour explicitly wherever a rule's own failure is the selection signal.
+    severity: major
+  - description: The verdict step dated its window from when the ledger entry was written, not from when the prune landed, so it could not tell "no damage" from "never shipped" and would close an unexposed trial as passed.
+    solution: Date the landing from main before judging. Any evidence window measured from authoring time rather than exposure time has this bug.
+    severity: major
+  - description: Step 2 steered runs at guard mechanism records while step 5 said to self-merge unconditionally — ADR-0004 escalates unattended-script changes to a human.
+    solution: Re-check what a change actually touched against the human-only set before merging, rather than trusting the tier the Skill was chartered into.
+    severity: major
+  - description: My own single-homing edit removed the trial window constant from the ledger header, leaving the judging step unexecutable without opening the ADR.
+    solution: A single-home fix that moves a constant away from the surface that operates on it trades a duplication nit for an executability failure. Only running the step revealed it.
+    severity: moderate
   - description: Chartered the Skill to prune "ADR prose" without excluding an ADR's Decision and Consequences, which ADR-0018 forbids rewriting in place.
     solution: Bounded the grant to explanatory prose in all four places it appears and gave ADR-0018 the amendment banner its own convention requires. Found only by the second adversarial audit — the first pass missed it entirely.
     severity: major
@@ -56,13 +112,13 @@ frictions:
   - description: Gate ran full heavy layers (~6 min) because two of eight changed paths were .yml; the six markdown files were inert.
     solution: Expected behaviour of the fail-safe classifier, not a defect — noting it only because prose-authoring sessions will keep paying it whenever a Skill ships an Inventory entry alongside its docs.
     severity: nit
-durationSec: 4418
+durationSec: 11479
 models:
-  claude-opus-5: 245
+  claude-opus-5: 386
 toolCounts:
-  Bash: 67
-  Agent: 4
-  Skill: 3
+  Bash: 97
+  Agent: 9
+  Skill: 4
   AskUserQuestion: 20
   ToolSearch: 5
   mcp__github__issue_read: 2
@@ -70,10 +126,21 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  ReadNotifications: 8
-  mcp__github__pull_request_read: 3
-  mcp__Claude_Code_Remote__send_later: 2
-  mcp__github__update_pull_request: 2
+  ReadNotifications: 23
+  mcp__github__pull_request_read: 7
+  mcp__Claude_Code_Remote__send_later: 5
+  mcp__github__update_pull_request: 8
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - docs/agents/git-conventions.md
+  - .agents/prune-trials.yml
+  - CLAUDE.md
+  - docs/agents/subagent-background-guard.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - scripts/loop-only-tool-guard.ts
+  - docs/agents/environment-caveats.md
+  - docs/agents/github-integration.md
+  - docs/research/rulebook-migration-table.md
 subagents:
   - type: general-purpose
     task: Orient on doc-bloat pain points
@@ -87,10 +154,27 @@ subagents:
   - type: general-purpose
     task: Third audit-docs-style review of diff
     model: sonnet
+  - type: general-purpose
+    task: Fourth audit-docs-style review of diff
+    model: sonnet
+  - type: general-purpose
+    task: Fifth audit-docs-style review of diff
+    model: sonnet
+  - type: general-purpose
+    task: Dry run of the prune-trial Skill
+    model: opus
+  - type: general-purpose
+    task: Second dry run — verdict machinery
+    model: opus
+  - type: general-purpose
+    task: Third dry run — revised Skill
+    model: opus
 gitBranch: claude/simplify-platform-instructions-mr7zmq
 entrypoint: remote
 cliVersion: 2.1.241
 learnings:
+  - "Reading-based review and execution-based review find disjoint defect classes here: five audits found propagation gaps and contradictions; three dry runs found a targeting rule that authorised the wrong deletion, a verdict window measured from the wrong event, and a merge tier that would have merged guard code. None of the three was visible to a reader."
+  - A Skill written to shrink prose grew 94 to 154 lines under three rounds of execution feedback — every line paid for by an observed failure. Accretion is not caused by carelessness; it is what happens when each fix is locally justified.
   - Two independent context-free audits of the same diff, same brief, found disjoint defect sets — the second caught the more dangerous one. For a change granting an autonomous Skill new authority, one audit pass is not enough.
   - A trial protocol can detect damage from a removed rule but never from a removed capability — nothing fails when a Skill stops running, so silence reads as success.
 ideas:
