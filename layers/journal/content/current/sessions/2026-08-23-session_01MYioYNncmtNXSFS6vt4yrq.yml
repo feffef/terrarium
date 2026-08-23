@@ -1,0 +1,119 @@
+schemaVersion: 1
+session: session_01MYioYNncmtNXSFS6vt4yrq
+startedAt: 2026-08-23T19:17:37Z
+endedAt: 2026-08-23T19:25:56Z
+kind: delegated
+goal: Run one /auto-triage sweep over open issues
+status: completed
+outcome: 5 of 36 open issues eligible, all triaged
+summary: "Human-kicked-off /auto-triage sweep (single command invocation, no further human prompts). Listed all 36 open issues via scripts/list-open-issues.ts, then used scripts/last-comment-authors.ts to apply the auto-triage idempotency rule: an issue is eligible only if it has no state label / is needs-triage, or its most recent comment/body lacks ADR-0017 AI provenance. 31 issues (3 wayfinder:map, 28 others) had AI-authored last activity and were correctly skipped. The 5 eligible issues (#1018, #1008, #993, #984, #976 — all \"REGRESSION\" tickets self-filed by frictions-to-fixes) were each triaged by a dedicated parallel subagent per the /triage per-issue procedure: verify claims against primary sources, decide category/state, post an Agent Brief or ready-for-human rationale. All 5 landed as ready-for-human (bug x4, enhancement x1) — each involved a genuine design/mechanism judgment call (a repeat-regression pattern, or a factual error the subagent caught in the issue's own suggested fix for #993). No code was changed; no PR was opened."
+prs: []
+docsRead:
+  - path: .claude/skills/auto-triage/SKILL.md
+    reason: sweep procedure
+  - path: .claude/skills/triage/SKILL.md
+    reason: per-issue triage state machine
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: agent brief template
+  - path: .claude/skills/triage/OUT-OF-SCOPE.md
+    reason: wontfix/out-of-scope mechanics
+  - path: scripts/last-comment-authors.ts
+    reason: eligibility/provenance check tool
+  - path: docs/agents/triage-labels.md
+    reason: label vocabulary mapping
+  - path: docs/agents/issue-tracker.md
+    reason: wayfinding + issue-tracker conventions
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: scripts/github-provenance-guard.ts
+    reason: (no reason given)
+  - path: scripts/provenance-header.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-17-session_01Ua2A7k6jmw7q4Q9f2ifCGw.yml
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: scripts/loop-only-tool-guard.ts
+    reason: (no reason given)
+  - path: scripts/deferred-tool-guard.ts
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-18-session_01S47MF7UZZUq16PKU2YcTeE.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-19-session_016EpQeWNhLAbXUm9gjBozHa.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-21-session_011oou9doFGhmwTXzBBn5v3u.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-23-session_01S1NCgkE3rg9mAPgxRJ44A1.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-23-session_01Kf4ZfDF3SENEg9kbVhsGyc.yml
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: layers/journal/content/archived/sessions/2026-08-13-session_01QMtUQrTK3LHJhs1rom6i2x.yml
+    reason: (no reason given)
+  - path: .out-of-scope/ci-enforced-doc-invariants.md
+    reason: (no reason given)
+  - path: .out-of-scope/palimpsest-tenant.md
+    reason: (no reason given)
+  - path: skills-lock.json
+    reason: (no reason given)
+  - path: scripts/session-frictions.ts
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: auto-triage
+    reason: the sweep itself
+  - name: triage
+    reason: per-issue state machine, composed by auto-triage
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "auto-triage's SKILL.md doesn't mention this repo's consolidation:on-hold / consolidation:before labels (set by the owner on issue #862, the re-founding map); had to read that map issue to confirm they were safe to leave alone this sweep. Turned out moot — every consolidation-labeled issue was already ineligible via the provenance check — but the investigation cost real time."
+    solution: "Add a short note to the auto-triage Skill (or point at #862/the map) that consolidation:* is an orthogonal prioritization axis, not a triage state, so a future sweep doesn't have to re-derive that."
+    severity: nit
+  - description: "The #984 triage subagent's dispatch brief pointed at layers/journal/content/current/sessions/ for a cited session log, but the log had moved to content/archived/sessions/ by the time of this sweep, costing it extra search time before finding it."
+    solution: When briefing a subagent to look up a specific session log, note that it may live under either content/current/ or content/archived/.
+    severity: nit
+durationSec: 499
+models:
+  claude-sonnet-5: 63
+toolCounts:
+  Bash: 9
+  Read: 6
+  Grep: 3
+  ToolSearch: 1
+  mcp__github__issue_read: 7
+  Agent: 5
+  Skill: 2
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: "Triage issue #1018"
+  - type: general-purpose
+    task: "Triage issue #1008"
+  - type: general-purpose
+    task: "Triage issue #993"
+  - type: general-purpose
+    task: "Triage issue #984"
+  - type: general-purpose
+    task: "Triage issue #976"
+gitBranch: claude/auto-triage-ja25io
+entrypoint: remote
+cliVersion: 2.1.241
