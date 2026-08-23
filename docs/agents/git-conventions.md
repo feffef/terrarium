@@ -8,91 +8,42 @@ Scope: local git mechanics only.
 [`github-integration.md`](./github-integration.md) owns the adjacent
 `mcp__github__*` tool surface.
 
-## Staleness — fetch before you conclude anything
+## Your local git view is incomplete until you make it complete
 
-**For any since-last-merge diff or review, run `git fetch origin main` first and
-anchor on the merge-base** (`git merge-base origin/main HEAD`) or the commit
-under review (`HEAD~1`). The environment's pre-cloned `origin/main` is often
-stale and inflates the diff to 100+ unrelated files.
+**Goal: never conclude anything from git — a diff, a review scope, a history or
+completeness claim — off a view you have not made complete.** Here it is
+incomplete by default, three ways.
 
-The same staleness bites two related cases:
+**Stale.** The pre-cloned `origin/main` lags, inflating a since-last-merge diff
+to 100+ unrelated files. `git fetch origin main`, then anchor on `git merge-base
+origin/main HEAD` (or `HEAD~1` for a single commit under review). Re-fetch
+through a long session, not only before pushing — and before *starting* a
+directed edit, since a concurrent session may already have pushed it. Don't
+assume the merge-base is nonempty: the pre-cloned repo is occasionally an
+unrelated root, and resetting onto it blindly destroys real history.
 
-- Scope any `-S`/pickaxe search (`git log -S<string>`) to `origin/main`
-  specifically, never `--all`, which mixes divergent/rewritten branch histories
-  and can misread an incrementally-built file as a brand-new-file commit.
-- Don't assume a nonempty merge-base — check `git merge-base origin/main HEAD`
-  first and be ready for the pre-cloned repo to be a fully unrelated root (empty
-  merge-base, 100+ commits of divergence), not just stale. Resetting onto it
-  blindly would destroy real history.
+**Shallow.** Run `git rev-parse --is-shallow-repository` **first**, before any
+blame/pickaxe/completeness work — not once a result already looks wrong. The
+graft boundary makes every file it touches look newly-added and silently
+truncates any search past it. Worse, `merge-base` answers off the truncated
+graph with an older, ordinary-looking commit — not in `.git/shallow`, not
+parentless, nothing about it detectably wrong — and that diff can *omit* files,
+not merely over-report, because `A..B` compares endpoints and a revert restores
+the wrong base's content. Anything gating on "what changed" then under-runs. So
+`git fetch --unshallow` (or `--deepen <n>`), or refuse to answer; never classify
+off a truncated graph. `scripts/gate.ts` does both — `changedPaths()` unshallows,
+`changedPathsBetween()` refuses (#849, `tests/unit/gate-shallow-base.spec.ts`).
+Scope a `-S`/pickaxe search to `origin/main`, never `--all`, which mixes
+rewritten histories.
 
-**This isn't only a pre-diff step.** In this fast-moving, multi-agent repo,
-re-fetch and rebase onto `origin/main` periodically during a long-running
-session too — not just right before a final push, and especially before
-landing/merging a PR that touches a shared doc or list other concurrent sessions
-likely edit.
+**Merged clean, but wrong.** Git flags a conflict only where both sides touched
+the same lines, so a rename on one side leaves a stale reference on the other
+with no marker. On a file both branches restructured, read both sides **in
+full** before trusting the merge.
 
-**The same applies before *starting* work, not just before pushing it.** When a
-Trusted user verbally directs an edit on a PR, fetch (`git fetch origin
-<branch>` + inspect the latest commits) before beginning it — a concurrent
-session may have already pushed that exact change, and catching it before you
-redundantly re-author it is cheaper than catching it at push time.
-
-## A clean merge is not proof of correctness
-
-**A clean, no-conflict auto-merge/rebase is not proof of correctness on a file
-both branches restructured.** Git only flags a conflict where the two sides
-touched overlapping lines — a rename or refactor on one side can leave a
-now-stale reference on the other with no conflict marker to catch it (a rebase
-once silently kept a stale `specimen.value?.slug` reference after `main` had
-renamed it to `entry.value?.specimen`).
-
-On any file both branches actually restructured, read both sides **in full**,
-not just the (absent) conflict markers, before trusting the merge — especially
-after a rename or refactor on either side.
-
-## Rule out a shallow clone before any history archaeology
-
-**Run `git rev-parse --is-shallow-repository` as the *first* step** before
-starting any blame/pickaxe/history-completeness work — not only once a result
-already looks wrong.
-
-A shallow clone's grafted, parent-less boundary commit makes every file it
-touches look newly-added, which reads as a real history rewrite when it's
-actually a clone-depth artifact. The same boundary silently truncates any search
-over history before it, which makes a completeness claim ("searched everything
-since X, found nothing more") false.
-
-`git fetch --deepen <n>` (or `--unshallow`) to inspect the real history before
-concluding a file's history was rewritten, squashed, or re-rooted — or before
-asserting any completeness claim over history.
-
-### A shallow `merge-base` can be wrong, and its diff can OMIT files
-
-This is the sharper edge of the same problem, and it bites the *routine*
-operation CLAUDE.md asks for — "anchor on the merge-base before any
-since-last-merge diff" — not just history archaeology.
-
-In a shallow clone `git merge-base` answers off a truncated commit graph. When
-the true merge-base lies below the graft boundary but a merge commit keeps some
-*older* commit reachable, `merge-base` returns that older commit. The answer is
-an ordinary, fully-hydrated commit: **not** listed in `.git/shallow`, **not**
-parentless. Nothing about it looks wrong, so there is no way to detect the bad
-answer short of having the history that would make the question moot.
-
-The tempting conclusion — an older base only over-reports, so the diff is a
-harmless superset — is **false**. `git diff A..B` compares the two *endpoints*,
-not the path between them. A branch that reverts a change which landed between
-the wrong base and the true base restores that file to its wrong-base content,
-so it drops out of the diff entirely. Revert branches make this everyday.
-
-So a shallow `merge-base` diff can silently **under-report** what a branch
-touched. Anything gating on "what changed" — a scoped test run, a review scope,
-a risk classification — can therefore under-run. Complete the clone first
-(`git fetch --unshallow`), or refuse to answer; do not classify off the
-truncated graph. This is exactly what `scripts/gate.ts` does, in both
-directions: `changedPaths()` unshallows, and its CI sibling
-`changedPathsBetween()` refuses (issue #849; reproduced in
-`tests/unit/gate-shallow-base.spec.ts`).
+Prose has not held the shallow half — it failed four times (#413 → #682 → #703 →
+**#772**, still open, which argues for mechanizing it; the design is row `GC-03`
+of `docs/research/rulebook-migration-table.md`).
 
 ## Commit hygiene
 
