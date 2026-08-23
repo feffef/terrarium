@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01DLmcXwjGGirmBYtx366GsX
 startedAt: 2026-08-23T15:55:29Z
-endedAt: 2026-08-23T17:41:51Z
+endedAt: 2026-08-23T17:52:56Z
 kind: delegated
 goal: Prune instruction prose to a goal
 status: completed
 outcome: Guard docs consolidated; merged, trial open
-summary: "Human kickoff was `/prune-trial`; everything after was machinery (task notifications, a self check-in, GitHub events), so all judgement calls below were agent-initiated within that charter. No open trials to judge — the ledger had never carried an entry, so this is the first. Chose the guard mechanism records: four documents, 354 lines, explaining three PreToolUse guards whose rules are already enforced by wired hooks, restating the same conventions three times over. Wrote one `docs/agents/guards.md` indexing six guards (three previously had no doc at all), left each rule in CLAUDE.md as a goal-shaped line and each rationale in its script header. Delta −414/+142. A Sonnet probe answered 5/5 from the surviving text, so no hook shipped. Wrongly escalated to human merge instead of self-merging: read prune-trial §5's \"reaches a guard script\" as a file-path test, when ADR-0003's ledger row — the single home for the exemption scope — bounds it by reversibility, not by file. The human caught it after merge. PR #1025 merged as 20bd1140."
+summary: "Human kickoff was `/prune-trial`; everything after was machinery (task notifications, a self check-in, GitHub events), so all judgement calls below were agent-initiated within that charter. No open trials to judge — the ledger had never carried an entry, so this is the first. Chose the guard mechanism records: four documents, 354 lines, explaining three PreToolUse guards whose rules are already enforced by wired hooks, restating the same conventions three times over. Wrote one `docs/agents/guards.md` indexing six guards (three previously had no doc at all), left each rule in CLAUDE.md as a goal-shaped line and each rationale in its script header. Delta −414/+142. A Sonnet probe answered 5/5 from the surviving text, so no hook shipped. Wrongly escalated to human merge instead of self-merging: read prune-trial §5's \"reaches a guard script\" as a file-path test, when ADR-0003's ledger row — the single home for the exemption scope — bounds it by reversibility, not by file. The human caught it after merge and asked for the wording fixed: #1026 rewords §5 to a behaviour test, net −2 lines. Both merged (20bd1140, 1cd658c2)."
 prs:
   - "1025"
+  - "1026"
 docsRead:
   - path: .agents/prune-trials.yml
     reason: the trial ledger — empty, so nothing to judge
@@ -29,7 +30,7 @@ skillsUsed:
     reason: (no reason given)
 frictions:
   - description: Escalated a comment-only guard-script edit to a human merge that should have self-merged. Read prune-trial §5's "reaches a guard script" as a test on files touched, not on behaviour.
-    solution: ADR-0003's ledger row is the single home ADR-0027 points at, and bounds the exemption by "reversibility, not by file" — explicitly including a whole warn-only hook a trial writes. §5's path-shaped wording contradicts it; reword §5 to say behaviour, not files, and cite the ledger row. Human had to merge a PR the charter already allowed.
+    solution: "ADR-0003's ledger row is the single home ADR-0027 points at, and bounds the exemption by \"reversibility, not by file\" — explicitly including a whole warn-only hook a trial writes. §5's path-shaped wording contradicted it. Fixed in #1026: §5 now says behaviour, not files, and cites the ledger row — net −2 lines. Cost: a human merged a PR the charter already allowed."
     severity: moderate
   - description: Rewrote a guard script's header to claim it carried the detection contract; it does not. Caught on self-review before commit, but it would have shipped a false claim in code.
     solution: "CLAUDE.md's issue #948 rule (verify a committed code comment like any other claim) already covers this; the near-miss came from editing a pointer without re-reading what it pointed at."
@@ -40,16 +41,16 @@ frictions:
   - description: Polled the gate log by hand several times instead of waiting for the background-task notification that the harness delivers on exit.
     solution: The notification is the signal; the log tail added nothing but tokens. Wait unless the intermediate output is itself needed.
     severity: nit
-durationSec: 6382
+durationSec: 7047
 models:
-  claude-opus-5: 190
+  claude-opus-5: 212
 toolCounts:
-  Bash: 60
+  Bash: 69
   Skill: 4
   Agent: 1
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
+  mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   ReadNotifications: 5
   mcp__github__pull_request_read: 6
