@@ -15,7 +15,8 @@ not by a rulebook they skim.** You get there by pruning, and you find out
 whether a prune was right the only honest way — by leaving it standing as a
 **trial** and letting real sessions deliver the verdict.
 
-One trial per run. Branch per CLAUDE.md's pre-`checkout` checklist before you
+One **new** trial per run — §1 may close several. Branch per CLAUDE.md's
+pre-`checkout` checklist before you
 edit anything. Everything below is mechanism; the goal above is the point.
 
 ## 1. Judge the open trials
@@ -24,7 +25,9 @@ edit anything. Everything below is mechanism; the goal above is the point.
 
 **A trial is judgeable only once its prune has landed on `main` and sessions
 have run against it since.** `opened:` records when the entry was written, which
-is earlier — date the landing with `git log origin/main -- .agents/prune-trials.yml`.
+is earlier — date the landing with `git log origin/main -S'<the entry's problem text>' --
+.agents/prune-trials.yml` — plain `git log` on that file dates every trial's
+commit, not this one's.
 Before that, silence is not evidence: leave the entry alone and judge nothing.
 
 For each trial that has landed and is past its window: **apply** its `check`
@@ -47,7 +50,8 @@ Delete every entry you judged — git holds the history.
 ## 2. Choose the problem
 
 One problem, chosen in this order — and when several clear a criterion, take the
-one with the most prose mass:
+one with the most prose mass (its largest single home is a fair proxy; don't map
+every candidate's full smear to rank them):
 
 1. **Prose that already failed.** A rule whose own failure is on the tracker —
    an issue filed because the rule didn't hold, or a rule narrowed repeatedly and
@@ -56,7 +60,9 @@ one with the most prose mass:
    its "excluded from rule-extraction" list is not out of your scope: a mechanism
    record for a guard already built is often the largest prose mass going. Such a
    rule has proven **the prose** isn't load-bearing — not the behaviour, which
-   may matter more than ever. Prune the justification and the restatements; keep
+   may matter more than ever. Check what holds that behaviour now: a rule a wired
+   guard, gate or test already enforces is the safest prune on the board; one
+   nothing holds is the riskiest, whatever its history. Prune the justification and the restatements; keep
    the rule, as one goal-shaped line.
 2. **Prose mass.** The problem the most words are spent avoiding.
 3. **Context cost.** Text loaded into every session beats text read on demand.
@@ -68,7 +74,9 @@ attributed.
 ## 3. Prune it to the goal
 
 Read every place the problem is legislated — it is usually smeared across
-CLAUDE.md, a `docs/agents/` page and several Skills. Work out what all of it is
+CLAUDE.md, a `docs/agents/` page and several Skills. Search the instruction
+corpus, not the Journal: session logs quote these rules constantly and will
+swamp any grep. Work out what all of it is
 chasing. Write that, in the plainest words that stay exact, in one home. Delete
 the rest: the incident histories, the restatements, the step-by-step for
 decisions the reader is capable of making.
@@ -92,7 +100,9 @@ Around 100 lines **deleted** is the bar for the prune itself — the goal you
 write back and the ledger entry don't count against it. Clear it by retiring a whole problem,
 never by deleting the worked examples a weaker reader needs.
 
-Write a hook **only when §4's probe fails**. One shipped beside a passing prune
+Write a hook **only when §4's probe fails, or when a landed trial's verdict in
+§1 showed real damage** — the two moments the behaviour has proven it needs
+holding. One shipped beside a passing prune
 holds the very behaviour the trial is testing, so no verdict can form (ADR-0027);
 and a guard here runs to a few hundred lines, which a prune can't absorb — so it
 lands as its own PR. Keep it the smallest thing that fires on the wrong shape,
@@ -107,13 +117,20 @@ surviving text only — never the deleted prose — plus a real situation the pr
 scaffolding covered, and ask what it would do. A wrong answer means the goal
 isn't clear enough yet, or the behaviour needs the hook. Never ship a prune
 Sonnet can't execute. If no subagent tool is available to you, say so in the PR
-and mark the prune **unproven** — never treat the step as satisfied.
+**and set `proven: false` on the ledger entry** — the PR body is read once, the
+entry is what the verdict reads later. Never treat the step as satisfied.
 
 ## 5. Ship and record
 
-One PR, the line delta in its title. **At PR-open, invoke `close-session`** —
-your first log (`in-review`); a dispatched worktree-isolated agent must not (see
-`close-session/SKILL.md`). Then Gate green, self-merge
+One PR, the line delta in its title. At PR-open, invoke `close-session` — your
+first log (`in-review`). **A dispatched worktree-isolated agent must not**: the
+log belongs to the session that dispatched it (`close-session/SKILL.md`).
+
+Then Gate green, and — before self-merging — **re-check what the prune actually
+touched against ADR-0004's high-risk set**. Your tier covers prose. A prune that
+reaches a guard script, CI, or anything else meant to run unattended escalates to
+a human, whatever the Gate says; §2 steers you at mechanism records, so this is a
+foreseeable landing, not a remote one. Otherwise self-merge
 (`docs/agents/pr-workflow.md`; ADR-0027 charters the tier).
 
 ## Bounds

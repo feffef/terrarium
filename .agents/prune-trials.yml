@@ -11,6 +11,7 @@
 #   - problem: what the pruned prose was trying to prevent
 #     territory: [paths, keywords]   # the next trial must not overlap these
 #     opened: 2026-08-23
+#     proven: false                  # only when §4's Sonnet probe could not run
 #     check: how you would tell this broke — written now, while you still
 #            remember what the prose was for. Prose, not a command; say what
 #            distinguishes real damage from a session simply using the pruned
