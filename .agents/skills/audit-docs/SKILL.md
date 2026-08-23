@@ -143,6 +143,12 @@ The reasons it undercounts are single-homed in that field's docstring in
   no clear statement — a reader can't extract one confident instruction from
   either.)
 
+Before either lens fires on a rule that reads thin, check
+`.agents/prune-trials.yml`: text inside an open **Prune Trial**'s territory is
+deliberately terse and under observation (ADR-0027). Restoring it destroys the
+trial's verdict — record what you found as a Friction and leave it to
+`prune-trial`.
+
 ## Fact-check before you touch anything
 
 Every finding is a **hypothesis** until verified against **primary sources** — the

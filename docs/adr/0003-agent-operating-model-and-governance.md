@@ -18,6 +18,7 @@ table rather than restating the scope inline.
 | `audit-docs` | fact-checked reconciliations to *live* docs and Skills only (its own Live/Historical/Pack-generic tiering); an ADR amendment, CI, isolation, or routing/manifest-expansion edit is out of scope | 2026-07-09 | #262 |
 | `audit-skills` | Inventory-only content citing an existing evidence rule (ADR-0015) | 2026-07-09 | — |
 | `blog-post` | the post itself under `layers/blog/content/<persona>/pages/`, plus for a reaction one pingback stub under `…/pingbacks/` | 2026-07-12 | — |
+| `prune-trial` | prunes of agent-instruction prose anywhere in the rulebook, **including ADR prose** (ADR-0027's narrow amendment to ADR-0004) — each shipped as a reversible three-day trial; the warn-only hook a trial may write is in scope, hardening it to block is not | 2026-08-23 | #1021 |
 
 Every row's bound is exact: content outside that scope, or a red gate, is
 never auto-merged and falls back to ADR-0003's default (gated PR, human merge).
@@ -138,6 +139,14 @@ never auto-merged and falls back to ADR-0003's default (gated PR, human merge).
 > ADR grants is unchanged** — a chartered job's gated PR still merges on a green
 > gate, without a human in the loop, for the ledger's bounded scope; only the
 > *how* moves to `pr-workflow.md`.
+
+> **Amended by [ADR-0027](0027-prune-trials.md) (2026-08-23).** `prune-trial`
+> joins the ledger above, and is the first row whose scope reaches a **Human-only**
+> surface: ADR *prose* may be pruned and self-merged as part of a Prune Trial.
+> That reach is bounded by reversibility, not by file — every prune stands for a
+> fixed window and is judged by the sessions that follow it (ADR-0027 holds the
+> reasoning). Retiring a Skill or Routine stays outside it: that is filed as an
+> issue for a human, since no verdict could detect a mistaken retirement.
 
 ## Context
 

@@ -57,10 +57,11 @@ governance:
   trials*, which are reversible by construction. Everything else in ADR-0004's
   high-risk set is untouched, and the external pack Skills (ADR-0015) remain
   unreachable because the Gate rejects the edit.
-- **Merge authority: green Gate alone**, the `audit-docs` tier
-  (`docs/agents/pr-workflow.md`). A hook a trial writes warns and exits 0 — it
-  cannot block a session, including when it crashes — so no unattended run can
-  wedge the repo.
+- **Merge authority: green Gate alone.** The exemption's exact scope is a row in
+  ADR-0003's auto-merge exemption ledger, which single-homes it; how the PR
+  actually lands is `docs/agents/pr-workflow.md`. A hook a trial writes warns and
+  exits 0 — it cannot block a session, including when it crashes — so no
+  unattended run can wedge the repo.
 - **Other Sessions detect; `prune-trial` decides.** A standing note in
   CLAUDE.md tells every Session that a pruned instruction may be on trial: record
   the side-effects you hit, work around anything short of a blocker, and leave

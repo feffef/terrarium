@@ -21,8 +21,9 @@ One trial per run. Everything below is mechanism; the goal above is the point.
 
 `.agents/prune-trials.yml` holds them. Every trial past its window gets a
 verdict now: run its `check`, and read the Frictions logged since it landed
-(`scripts/session-frictions.ts`, redirected to a file), plus REGRESSION issues
-and Gate failures.
+(`scripts/session-frictions.ts`, redirected to a file), plus Gate failures and
+any issue filed since as a regression of an earlier fix — `frictions-to-fixes`
+files those, naming the fix that didn't hold.
 
 - `major` or `blocker` damage that traces to the trial → restore the
   **minimum**: the one goal-shaped line that would have prevented it, never the
@@ -37,9 +38,11 @@ ledger is past its window.
 
 One problem, chosen in this order:
 
-1. **Prose that already failed.** A rule with a REGRESSION issue behind it, or
-   one narrowed repeatedly and still not followed. It has proven it isn't
-   load-bearing — the safest thing in the repo to replace with a goal.
+1. **Prose that already failed.** A rule whose own failure is on the tracker —
+   an issue filed because the rule didn't hold, or a rule narrowed repeatedly and
+   still not followed. Search the tracker for issues naming a fix that recurred;
+   the repo has a run of them. Such a rule has proven it isn't load-bearing —
+   the safest thing here to replace with a goal.
 2. **Prose mass.** The problem the most words are spent avoiding.
 3. **Context cost.** Text loaded into every session beats text read on demand.
 
