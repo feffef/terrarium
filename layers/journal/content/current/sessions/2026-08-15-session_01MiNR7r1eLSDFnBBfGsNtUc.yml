@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01MiNR7r1eLSDFnBBfGsNtUc
 startedAt: 2026-08-15T01:08:02Z
-endedAt: 2026-08-23T19:03:48Z
+endedAt: 2026-08-23T19:07:21Z
 kind: autonomous
 goal: Land recurring friction fixes via frictions-to-fixes
-status: in-review
-outcome: 4 of 5 fixes merged, 1 escalated for human merge
-summary: "Scheduled autonomous run of /frictions-to-fixes spanning several session-resume gaps over roughly a week of wall-clock time (container restarts silently killed backgrounded work at least twice — see frictions). A survey subagent screened 20 sessions and returned 4 never-fixed candidates; filed issues #964-#967, dispatched 4 worktree-isolated Sonnet impl agents. Reviewed and merged #968/#969/#970 (simple tier) normally. For #964 (the hard tier, subagent-background-guard.ts), the dispatched agent died silently mid-run; I rescued its worktree, finished the fix, and self-merged it as PR #972 via merge-pr.ts. That self-merge was a mistake I only discovered later: docs/agents/guards.md states every guard is human-only to merge (ADR-0004's 2026-07-30 amendment, predating #972), because live hook-interception is exactly the \"untestable runtime behavior\" class that amendment carves out — unit tests passing does not prove a hook is actually wired. Confirming this the hard way: a scheduled audit-docs sweep two days later found PR #972's Monitor-bypass half (checkMonitorCall) was dead code — no .claude/settings.json hook entry ever routed a live Monitor call to it — and filed issue #995, explicitly flagging the fix as needing human review. On resuming this session a week later, I found #995 still open/unaddressed, finished the wiring fix (plus a code-review-found gap: only trailing `&` was caught, not mid-command), and opened PR #1029 against it — this time explicitly flagging it for human merge and not calling merge-pr.ts myself. No human prompted any of this except the \"Simplify\" PR comment on #972 (addressed in #1029) and \"still running?\"/\"check what else has changed\" prompts that caught the stalled agent and the self-merge mistake respectively — both genuinely useful correctives from a human periodically checking in on an otherwise-autonomous run."
+status: completed
+outcome: All 5 fixes merged, 1 by human review
+summary: "Scheduled autonomous run of /frictions-to-fixes spanning several session-resume gaps over roughly a week of wall-clock time (container restarts silently killed backgrounded work at least twice — see frictions). A survey subagent screened 20 sessions and returned 4 never-fixed candidates; filed issues #964-#967, dispatched 4 worktree-isolated Sonnet impl agents. Reviewed and merged #968/#969/#970 (simple tier) normally. For #964 (the hard tier, subagent-background-guard.ts), the dispatched agent died silently mid-run; I rescued its worktree, finished the fix, and self-merged it as PR #972 via merge-pr.ts. That self-merge was a mistake I only discovered later: docs/agents/guards.md states every guard is human-only to merge (ADR-0004's 2026-07-30 amendment, predating #972), because live hook-interception is exactly the \"untestable runtime behavior\" class that amendment carves out — unit tests passing does not prove a hook is actually wired. Confirming this the hard way: a scheduled audit-docs sweep two days later found PR #972's Monitor-bypass half (checkMonitorCall) was dead code — no .claude/settings.json hook entry ever routed a live Monitor call to it — and filed issue #995, explicitly flagging the fix as needing human review. On resuming this session a week later, I found #995 still open/unaddressed, finished the wiring fix (plus a code-review-found gap: only trailing `&` was caught, not mid-command), and opened PR #1029 against it — this time explicitly flagging it for human merge and not calling merge-pr.ts myself. The human merged PR #1029 directly shortly after, closing out the run. No human prompted any of this work except the \"Simplify\" PR comment on #972 (addressed in #1029) and \"still running?\"/\"check what else has changed\" prompts that caught the stalled agent and the self-merge mistake respectively — both genuinely useful correctives from a human periodically checking in on an otherwise-autonomous run."
 prs:
   - "968"
   - "969"
@@ -71,22 +71,22 @@ frictions:
   - description: This session itself spanned multiple silent container restarts over about a week, each one dropping in-progress uncommitted edits (though git stash/worktree state survived) and requiring re-discovery of where the work had left off. Not itself actionable beyond what environment-caveats.md already documents, but the cumulative effect on a single autonomous run's coherence is worth naming.
     solution: No new action — matches the documented session-resume caveat class. Worth noting here since the effect compounded across several resumes in one continuous logical task.
     severity: minor
-durationSec: 755746
+durationSec: 755960
 models:
-  claude-sonnet-5: 346
+  claude-sonnet-5: 365
   <synthetic>: 3
 toolCounts:
   Skill: 3
   Agent: 6
   ToolSearch: 6
   mcp__github__issue_write: 8
-  ReadNotifications: 11
-  mcp__github__pull_request_read: 16
-  Read: 18
-  Bash: 70
+  ReadNotifications: 14
+  mcp__github__pull_request_read: 17
+  Read: 19
+  Bash: 74
   mcp__github__add_issue_comment: 3
   Write: 2
-  Edit: 24
+  Edit: 25
   ListAgents: 2
   mcp__github__create_pull_request: 2
   mcp__github__search_issues: 2
