@@ -55,15 +55,7 @@ new; don't re-diagnose any of these as a fresh problem.
   which is the same mechanism (`send_later`'s own tool description states it is
   a thin wrapper over a self-bind `run_once_at` Routine), so the fallback is
   capability-equivalent rather than a different tool doing a different thing
-  (issue #229).
-
-  **Withdrawn 2026-08-04 (issue #814): the original wording named
-  `ScheduleWakeup` as this fallback.** It is not one — the recommendation was
-  pointing sessions at the exact misuse #814 tracks, and a `PreToolUse` guard
-  now refuses that call (`scripts/loop-only-tool-guard.ts`). There is no
-  carve-out: this fallback is gone, not narrowed. (CLAUDE.md owns the
-  `ScheduleWakeup` rule itself; `docs/agents/loop-only-tool-guard.md` the
-  mechanism, issue #814.)
+  (issue #229). Never `ScheduleWakeup` — a guard refuses it (issue #814).
 - **`AskUserQuestion` (a core tool, not a `Claude_Code_Remote` MCP tool) can hit
   the same transient "permission stream closed" error.** Retry once; if it
   fails again, don't retry-loop — fall back immediately to the safer default

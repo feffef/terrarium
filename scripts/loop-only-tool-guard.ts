@@ -34,7 +34,10 @@ const LOOP_SKILL = 'loop'
 export type SessionMode = 'loop' | 'non-loop' | 'undeterminable'
 
 /** One tool that is only ever valid inside `/loop`. Data-driven so a
- *  newly-observed variant of the trap is a row here, never a logic change. */
+ *  newly-observed variant of the trap is a row here plus the tool's name in
+ *  `.claude/settings.json`'s `PreToolUse` matcher — never a logic change. The
+ *  matcher names tools rather than `"*"` so no `tsx` runs on the Read/Edit/Bash
+ *  hot path. */
 export interface LoopOnlyTool {
   tool: string
   /** What to reach for instead, one line per situation the tool gets misused

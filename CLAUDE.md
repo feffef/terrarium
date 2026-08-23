@@ -208,27 +208,15 @@ human asks for it outright.
   argument shape — and blocks it with a corrective message rather than a terse
   `InputValidationError` (`scripts/deferred-tool-guard.ts`; see
   `docs/agents/deferred-tool-guard.md`, issue #612).
-- **`ScheduleWakeup` is valid in exactly one mode — inside a `/loop` session's
-  dynamic (self-paced) pacing. Never reach for it as a general-purpose wait,
-  heartbeat, or poll.** (The one exception: cancelling an already-scheduled
-  wakeup with `stop: true` is exempt in every mode, since a cancel can only
-  ever remove a pending wakeup — see `docs/agents/loop-only-tool-guard.md`.)
-  Outside `/loop` it is *not* a harmless no-op: a fired wakeup delivers a
-  spurious turn that can re-run this session's whole prompt — see the doc for
-  the recorded misfire incidents. What to do instead, by situation: waiting
-  on a dispatched Agent-tool subagent needs **no** wait/poll tool at all — it
-  self-notifies on completion; waiting on a backgrounded Bash command needs
-  none either — end
-  the turn, the harness delivers a task notification when it exits; polling
-  non-webhook-delivered external state such as CI/gate completion uses
-  `mcp__Claude_Code_Remote__send_later` to schedule your own check-in. Two
-  doc-only fixes (#241, #425) wrote this rule only into
-  `docs/agents/github-integration.md`, which the affected sessions had no reason
-  to open, and it kept recurring — so a `PreToolUse` guard now refuses the call
-  outside `/loop`,
-  failing **closed** when the mode can't be determined
-  (`scripts/loop-only-tool-guard.ts`; see `docs/agents/loop-only-tool-guard.md`,
-  issue #814).
+- **`ScheduleWakeup` belongs to a `/loop` session's dynamic pacing and nothing
+  else — never a general-purpose wait, heartbeat, or poll.** Reach for the
+  right thing instead: a dispatched Agent-tool subagent self-notifies, so wait
+  on nothing; a backgrounded Bash command notifies when it exits, so end the
+  turn; non-webhook-delivered external state such as CI/gate completion needs
+  `mcp__Claude_Code_Remote__send_later` to schedule your own check-in.
+  Cancelling an already-scheduled wakeup (`stop: true`) is allowed in any mode.
+  A fail-closed `PreToolUse` guard refuses the rest and repeats this list at the
+  call site (`scripts/loop-only-tool-guard.ts`, issue #814).
 - **Never predict or reconstruct an identifier — a line number, a blob SHA, an
   issue/PR number, a session id — from memory.** Resolve it fresh at the
   moment you write it down: a tool call for the first three (a Read,

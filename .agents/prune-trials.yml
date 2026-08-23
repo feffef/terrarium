@@ -15,4 +15,31 @@
 #            remember what the prose was for. Prose, not a command; say what
 #            distinguishes real damage from a session simply using the pruned
 #            topic's tools correctly.
-trials: []
+trials:
+  - problem: >
+      Sessions reaching for `ScheduleWakeup` outside a `/loop` session as a
+      general-purpose wait, heartbeat or poll (#241, #425, #814). Since
+      2026-08-04 a fail-closed `PreToolUse` guard refuses the call and its deny
+      message states the constraint, the consequence, the three alternatives and
+      the `stop: true` carve-out at the call site. The pruned prose was the
+      second layer around that guard: a 133-line mechanism record and the
+      incident history restated in CLAUDE.md and two `docs/agents/` pages.
+    territory:
+      - docs/agents/loop-only-tool-guard.md
+      - scripts/loop-only-tool-guard.ts
+      - CLAUDE.md ScheduleWakeup bullet
+      - ScheduleWakeup
+      - /loop
+      - loop-only guard
+    opened: 2026-08-23
+    check: >
+      Damage looks like a session that could not act on the surviving rule: one
+      that reaches for `ScheduleWakeup` and, once denied, cannot work out what to
+      use instead — visibly casting about, re-shaping the call to evade the deny,
+      or abandoning the wait entirely — or one that cannot extend or debug the
+      guard because the mechanism record is gone. It is NOT damage when a guard
+      deny simply appears in a trace: the deny is the mechanism working, and a
+      session that is denied once and immediately switches to `send_later`,
+      ending the turn, or waiting on nothing has been steered correctly. Nor is a
+      session merely discussing or citing the guard. Read the friction's own
+      words before counting it.

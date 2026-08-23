@@ -153,18 +153,15 @@ catch the mistake in practice.
   hasn't run. **Gate completion is not webhook-delivered** — there's no event
   to wait on, so to babysit a PR to green you must poll `get_check_runs`
   yourself (e.g. re-poll at agent-completion checkpoints, or `send_later` a
-  wake when no agent is running to re-poll). **`ScheduleWakeup` isn't the tool
-  for this** — CLAUDE.md owns that rule and the `send_later` mechanism
-  (`docs/agents/loop-only-tool-guard.md` has the guard, issue #814).
+  wake when no agent is running to re-poll — not `ScheduleWakeup`; see
+  CLAUDE.md).
 - **Re-running an old/existing workflow run does not recompute the merge
   ref.** It re-checks-out that run's original `refs/pull/N/merge` snapshot —
   so a re-run can still report red after the real fix has already merged.
   Only a fresh push/branch-update recomputes `refs/pull/N/merge` and gets a
   true re-check.
-- **This polling advice is scoped to non-webhook-delivered state like CI —
-  it does not apply to a dispatched Agent-tool subagent.** See CLAUDE.md's
-  `ScheduleWakeup` rule for why: a background `Agent` tool self-notifies on
-  completion, so waiting on one needs no wait/poll tool at all.
+- **This polling advice is scoped to non-webhook-delivered state like CI.** A
+  dispatched Agent-tool subagent self-notifies — wait on nothing.
 - **`mcp__Claude_Code_Remote__*` calls and `AskUserQuestion` can both fail with a
   transient "permission stream closed before response received" error** —
   retry once, then route around it (issue #145/#229/#359). These are harness
