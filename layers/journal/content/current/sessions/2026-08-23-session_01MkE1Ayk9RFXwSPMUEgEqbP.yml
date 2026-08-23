@@ -1,0 +1,57 @@
+schemaVersion: 1
+session: session_01MkE1Ayk9RFXwSPMUEgEqbP
+startedAt: 2026-08-23T01:04:48Z
+endedAt: 2026-08-23T01:11:34Z
+kind: autonomous
+goal: Run the scheduled frictions-to-fixes sweep
+status: completed
+outcome: "No fixes ripe; filed regression issue #1018"
+summary: "Fully agent-initiated scheduled firing of frictions-to-fixes, no live human input. Delegated the 20-session survey/screen to a subagent, which found the window almost entirely pre-resolved: of 12 friction records across 8 sessions, all but one were already fixed or already open-tracked. The one exception looked like a genuine regression of #999/PR #1000 (scheduled command-only sessions still calling the Skill tool on an already-inlined disable-model-invocation Skill) — I verified this myself against the three sessions' own docsRead fields and the current environment-caveats.md content (per CLAUDE.md's verify-before-asserting rule) rather than trusting the subagent's report as-is, confirmed the fix is real but the affected session types never read the doc it lives in, then filed issue #1018 with three options (reword the doc again, add a mechanical PreToolUse guard, or accept the cost) and no auto-selected recommendation, per the Skill's own rule that a fix which already failed once needs human judgment, not a repeat prose attempt. Alerted the user via push notification. No simple/hard fixes were dispatched this cycle since nothing else qualified, so no PRs were opened and no §5/§6 review work was needed."
+prs: []
+docsRead:
+  - path: docs/agents/triage-labels.md
+    reason: confirm correct label for a human-escalation issue
+  - path: docs/agents/environment-caveats.md
+    reason: "verify #999/PR #1000's fix is actually on disk before citing it in a regression issue"
+  - path: layers/journal/content/current/sessions/2026-08-21-session_011oou9doFGhmwTXzBBn5v3u.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-23-session_01S1NCgkE3rg9mAPgxRJ44A1.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-23-session_01Kf4ZfDF3SENEg9kbVhsGyc.yml
+    reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: this run's own procedure
+  - name: close-session
+    reason: closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: scripts/merged-since.ts returns an unfiltered flat commit list; the survey subagent had to pipe it through an ad-hoc filter to find a relevant subject line for an older session's startedAt.
+    solution: Add an optional --grep flag to merged-since.ts so a candidate's subject-line search doesn't need an ad-hoc workaround.
+    severity: nit
+durationSec: 406
+models:
+  claude-sonnet-5: 33
+toolCounts:
+  Agent: 1
+  ToolSearch: 2
+  Bash: 3
+  Read: 4
+  mcp__github__issue_read: 1
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 1
+  PushNotification: 1
+  Skill: 2
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+    model: sonnet
+gitBranch: claude/hopeful-brown-1o08wj
+entrypoint: remote_trigger
+cliVersion: 2.1.241
+trigger: frictions-to-fixes
+learnings:
+  - A recency window this size (20 sessions) can be almost entirely pre-resolved by the time a friction sweep runs — most of the survey budget goes to tracker archaeology confirming that, not fresh triage. Worth remembering before assuming a sweep with few new issues means the survey was shallow.
