@@ -1,0 +1,68 @@
+schemaVersion: 1
+session: session_016xKtVCMYMUeRyS9weNHsY6
+startedAt: 2026-08-23T12:40:06Z
+endedAt: 2026-08-23T13:22:30Z
+kind: interactive
+goal: Charter a Skill that prunes instruction prose
+status: in-review
+outcome: "Skill, ADR-0027 and ledger open as PR #1021"
+summary: "Human-instructed throughout: the user asked for a scheduled Skill that bravely cuts agent-instruction markdown, told me to orient with a Sonnet background agent first, then to grill via /grill-with-docs. Every design decision was the user's own answer to a grill question — notably rejecting a fixed cut-license taxonomy in favour of pure judgement that distills scattered rules into a goal, and reframing the unit of work from a cut into a three-day trial judged by later sessions' frictions. Two follow-ups were also human-initiated: the Opus-vs-Sonnet model question and the CLAUDE.md coordination note. I authored the Skill, ADR-0027, the ledger, the glossary term and the Inventory entry, ran the full gate green, and opened the gated PR."
+prs:
+  - "1021"
+docsRead:
+  - path: .agents/skills/writing-great-skills/SKILL.md
+    reason: Skill-authoring conventions the user asked me to apply
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: the closest existing Skill — established what this one must not duplicate
+  - path: CONTEXT.md
+    reason: Friction severity ladder and glossary shape for the new term
+  - path: docs/agents/pr-workflow.md
+    reason: per-tier merge authority
+  - path: layers/journal/tenant.config.ts
+    reason: Skill Inventory schema — importance vocabulary and role word limit
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: grilling
+    reason: the whole design interview, via grill-with-docs
+  - name: writing-great-skills
+    reason: pruning no-ops and picking the leading word (trial)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Subagent report asserted a 24-of-30-PRs prose-only tally from PR titles alone and flagged it as heuristic; I could not cite it as fact.
+    solution: Verified the parallel claim I did cite (40/41 autonomous session logs, exact 8-way trigger split) locally with grep before putting it in a committed ADR.
+    severity: nit
+  - description: The window constant "three days" wanted to live in the ADR, the ledger header and the glossary term at once — a single-home violation in a doc about bloat.
+    solution: Kept it in ADR-0027 and the ledger's own header; the glossary term says "a fixed window" and points at the ADR.
+    severity: nit
+  - description: Gate ran full heavy layers (~6 min) because two of eight changed paths were .yml; the six markdown files were inert.
+    solution: Expected behaviour of the fail-safe classifier, not a defect — noting it only because prose-authoring sessions will keep paying it whenever a Skill ships an Inventory entry alongside its docs.
+    severity: nit
+durationSec: 2545
+models:
+  claude-opus-5: 157
+toolCounts:
+  Bash: 42
+  Agent: 1
+  Skill: 3
+  AskUserQuestion: 20
+  ToolSearch: 3
+  mcp__github__issue_read: 2
+  Read: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+subagents:
+  - type: general-purpose
+    task: Orient on doc-bloat pain points
+    model: sonnet
+gitBranch: claude/simplify-platform-instructions-mr7zmq
+entrypoint: remote
+cliVersion: 2.1.241
+learnings:
+  - A trial protocol can detect damage from a removed rule but never from a removed capability — nothing fails when a Skill stops running, so silence reads as success.
+ideas:
+  - "A PreToolUse or CI check that flags a PR re-adding prose on a topic with an open entry in .agents/prune-trials.yml. The CLAUDE.md note asking sessions not to re-legislate a pruned topic is itself prose, in a repo whose own regression issues (#772, #1018) show prose rules of exactly that shape don't hold — so the coordination rule that makes trials work is the least defended part of the design."
