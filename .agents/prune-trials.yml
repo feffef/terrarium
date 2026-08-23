@@ -30,7 +30,7 @@ trials:
       - git fetch origin main
       - pickaxe / git log -S
       - clean merge is not proof
-    opened: 2026-08-23
+    opened: 2026-08-19
     check: >-
       A session scopes a diff or review, or asserts a history/completeness
       claim, off an unfetched or shallow clone and does not catch it. Look in
