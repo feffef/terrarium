@@ -71,18 +71,12 @@ The subagent cannot see this session's context, so the brief is self-contained:
   then quotes as its own. Two agents hit this independently in one dispatch, and
   the orchestrator published a wrong root-cause diagnosis built on the clobbered
   output before the second report surfaced the real mechanism (issue #847).
-- **Run verification (`pnpm gate:scoped`, and any other check) in the foreground
-  and wait** — `docs/agents/subagent-background-guard.md`'s "Why" section owns
-  the reason (no wake mechanism ever resumes a stopped subagent, issue #694).
-  Where something must be backgrounded anyway, **name the concrete way to
-  confirm it finished** — a
-  log-file completion marker, or the `Monitor` tool — not just "run it and wait":
-  a subagent that checks once and stops stalls on a still-running job, needing a
-  `SendMessage` resume with the log's actual tail pasted in (issue #602).
+- **Tell the subagent to run every check in the foreground and wait** — a
+  guard denies it any other option, and nothing would wake it if it stopped
+  (`docs/agents/subagent-background-guard.md`).
 - **The Agent tool ignores `run_in_background: false`.** Every Agent-tool call
-  launches as a background async task regardless of the `run_in_background`
-  parameter passed — plan to wait on the automatic task-notification for the
-  subagent's result, not a synchronous inline return.
+  launches as a background async task whatever you pass — wait on the automatic
+  task-notification, not a synchronous inline return.
 - **Decouple screenshot capture from gate completion.** A screenshot-capture
   agent shoots finals as soon as `pnpm build` succeeds, independent of whether
   `pnpm gate:scoped`/CI has finished — otherwise it blocks on the gate and never

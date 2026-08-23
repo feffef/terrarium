@@ -305,23 +305,18 @@ human asks for it outright.
   **144** (128 + 16, i.e. terminated by `SIGTERM`); that's the expected result of a
   successful kill, not itself evidence of a problem — don't re-derive it as a
   failure signal each session.
-- **Never append a trailing shell `&` to a Bash command already passed with
-  `run_in_background: true`.** The tool already backgrounds the whole command
-  itself — adding `&` on top backgrounds the *inner* shell a second time, so
-  the outer call returns as soon as the detached shell forks, not when the
-  actual long-running process finishes, and "completed" stops meaning
-  anything. Use `Monitor`/`ps` plus a log completion marker to confirm the
-  process actually finished instead of trusting the outer call's return.
-- **A dispatched subagent must never background a Bash command at all**
-  (`run_in_background: true` — orchestrator/main sessions are untouched):
-  `docs/agents/subagent-background-guard.md`'s "Why" section owns the reason
-  (no wake mechanism ever resumes a stopped subagent) and the incident count.
-  A `PreToolUse` guard now denies the call in subagent context, teaching the
-  working alternative
-  (foreground with an explicit `timeout`, split steps that exceed 10 minutes)
-  in its deny message
-  (`scripts/subagent-background-guard.ts`; see
-  `docs/agents/subagent-background-guard.md`, issue #694).
+- **Background a command only when you have a definite way to learn it
+  finished** — otherwise run it in the foreground with an explicit `timeout`,
+  splitting steps that exceed 10 minutes. Two rules follow, and getting either
+  wrong makes "completed" mean nothing:
+  - **A dispatched subagent never backgrounds at all** — nothing wakes a
+    stopped subagent, so it must finish every command inside the turn that
+    starts it. A fail-closed `PreToolUse` guard denies the call and teaches
+    the alternative (`docs/agents/subagent-background-guard.md`, issue #694).
+  - **In a main session, never add a trailing `&` to a command already passed
+    `run_in_background: true`** — the outer call then returns when the inner
+    shell forks, not when the work ends. Confirm completion from a log
+    marker or `Monitor`/`ps`, never from that return (issue #835).
 - **Never pipe a backgrounded or long-running command through ANY trailing
   command in a pipe/chain — `tail`/`head` are only the most common case — when
   its exit status or full output matters.** A pipeline reports the *last*

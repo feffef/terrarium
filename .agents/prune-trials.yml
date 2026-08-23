@@ -12,4 +12,33 @@
 #     opened: 2026-08-23
 #     check: how you would tell this broke — written now, while you still
 #            remember what the prose was for
-trials: []
+trials:
+  - problem: >-
+      Backgrounding a command without a definite way to learn it finished. Two
+      rules, one goal: a dispatched subagent must not background at all (nothing
+      wakes a stopped subagent), and a main session must not add a trailing `&`
+      to a call already passed run_in_background: true. 134 lines across a
+      CLAUDE.md bullet pair, a 106-line mechanism record, and a
+      dispatch-subagents bullet, pruned to the goal plus the two live limits of
+      the guard. The subagent half had already failed three times as prose
+      (#602 -> #712 -> #694) before scripts/subagent-background-guard.ts was
+      built, so what was cut is the justification, not the rule; the
+      main-session half (#835) is still unmechanized and was kept as a rule.
+    territory:
+      - docs/agents/subagent-background-guard.md
+      - CLAUDE.md backgrounding bullet
+      - .agents/skills/dispatch-subagents/SKILL.md foreground bullet
+      - run_in_background
+      - trailing & / nohup
+      - Monitor polling
+      - subagent wake / SendMessage resume
+    opened: 2026-08-23
+    check: >-
+      A subagent stalls on a command it could not finish in one turn, or a
+      session reports a backgrounded command "completed" off the outer call's
+      return rather than a log marker. Look in the Frictions for a stalled or
+      SendMessage-resumed impl agent, a gate run reported done that was not,
+      or a trailing `&` added to a backgrounded call. Second signal, subtler:
+      a session concluding the guard failed when it merely never fired -- the
+      Monitor deny is wired to the wrong script today, and that fact is the
+      one piece of the deleted mechanism record this prune deliberately kept.

@@ -1,5 +1,5 @@
-// Coverage for the subagent background guard (issue #694; rationale and
-// detection contract: docs/agents/subagent-background-guard.md). The pure
+// Coverage for the subagent background guard (issue #694; rule and live
+// limits: docs/agents/subagent-background-guard.md). The pure
 // core is pinned directly; the CLI's stdin→deny-JSON path, `--dry-run`, and
 // the hot-path pre-filter are exercised end to end against the real scripts.
 import { execFileSync } from 'node:child_process'
@@ -19,7 +19,7 @@ const SCRIPT = join(root, 'scripts', 'subagent-background-guard.ts')
 const PREFILTER = join(root, 'scripts', 'subagent-background-guard.sh')
 
 /** A dispatched subagent's PreToolUse payload, in the exact shape observed
- *  live (the probe recorded in docs/agents/subagent-background-guard.md). */
+ *  live; `detectContext` in the guard script owns what distinguishes it. */
 function subagentPayload(toolInput: Record<string, unknown>): Record<string, unknown> {
   return {
     session_id: '657b9532-8ed5-5695-a08d-d87a60f7a665',
