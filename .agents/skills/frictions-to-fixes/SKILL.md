@@ -112,7 +112,8 @@ SKILL.md fails the gate, so screening it out here just avoids the wasted round-t
 an open **Prune Trial**'s territory (`.agents/prune-trials.yml`) is not yours to
 retire — that friction *is* the trial's evidence, and re-legislating it destroys
 the verdict `prune-trial` is waiting for (ADR-0027). Drop it with that reason. A
-`blocker` is the exception: file it, naming the trial. Then, for the
+`blocker` is the exception: after the usual tracker search, file it, naming the
+trial. Then, for the
 rest: the §1 subagent applies these rules to every
 candidate, checking the tracker for an issue or PR that already covers it — and
 confirming against **`main`** where cheap (a "solution" isn't ripe if main already

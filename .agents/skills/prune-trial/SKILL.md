@@ -104,6 +104,7 @@ Two exceptions and one refusal:
 - **External pack Skills** (`skills-lock.json`) — the Gate rejects the edit.
 - **Session logs** — the record, not instructions.
 - **Retiring a Skill or a Routine, including your own** — file a `needs-triage`
-  issue, never act. Nothing breaks when a Skill stops running, so no verdict could tell you
+  issue, never act; `audit-skills` records the same class of signal as an
+  `ideas` entry, so look for one and cite it rather than filing twice. Nothing breaks when a Skill stops running, so no verdict could tell you
   it was a mistake. Two runs in a row that find nothing worth ~100 lines is the
   signal to file yours.

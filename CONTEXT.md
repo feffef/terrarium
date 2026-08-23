@@ -141,9 +141,10 @@ failure class is — a mistake fully caught before landing (self-review, or a
 guard working exactly as designed) stays `nit`/`minor`. Recurrence is tracked
 separately, by occurrence count, not by inflating each instance's severity.
 
-Frictions are the primary signal the self-improvement Skills mine for recurring
-pain (today, `frictions-to-fixes`), so agents report **every** friction honestly
-— even nits. A tagging taxonomy is deliberately *not* fixed up front: it is meant
+Frictions are the primary signal the self-improvement Skills mine — for recurring
+pain (`frictions-to-fixes`), and as the verdict on an open **Prune Trial**
+(`prune-trial`) — so agents report **every** friction honestly, even nits. A
+tagging taxonomy is deliberately *not* fixed up front: it is meant
 to **emerge** from clustering real frictions, once a future session judges there
 are enough to cluster meaningfully, rather than be guessed before there is data.
 No session count, calendar window, or owning Skill is set in advance — that
