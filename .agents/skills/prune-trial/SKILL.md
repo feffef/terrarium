@@ -20,8 +20,15 @@ edit anything. Everything below is mechanism; the goal above is the point.
 
 ## 1. Judge the open trials
 
-`.agents/prune-trials.yml` holds them. Every trial past its window gets a
-verdict now: run its `check`, and read the Frictions logged since it landed
+`.agents/prune-trials.yml` holds them; its header states the window.
+
+**A trial is judgeable only once its prune has landed on `main` and sessions
+have run against it since.** `opened:` records when the entry was written, which
+is earlier — date the landing with `git log origin/main -- .agents/prune-trials.yml`.
+Before that, silence is not evidence: leave the entry alone and judge nothing.
+
+For each trial that has landed and is past its window: **apply** its `check`
+(prose, not a command), and read the Frictions logged since it landed
 (`scripts/session-frictions.ts`, redirected to a file), plus Gate failures and
 any issue filed since as a regression of an earlier fix — `frictions-to-fixes`
 files those, naming the fix that didn't hold.
@@ -32,8 +39,10 @@ files those, naming the fix that didn't hold.
 - `nit`, `minor`, silence → the prune holds.
 - `moderate` → your judgement; restore the same minimum if you do.
 
-Delete every entry you judged — git holds the history. Done when nothing in the
-ledger is past its window.
+Read every hit in full before counting it: a session using the pruned topic's
+tools *correctly* trips a keyword check without being damage.
+
+Delete every entry you judged — git holds the history.
 
 ## 2. Choose the problem
 
@@ -43,14 +52,18 @@ one with the most prose mass:
 1. **Prose that already failed.** A rule whose own failure is on the tracker —
    an issue filed because the rule didn't hold, or a rule narrowed repeatedly and
    still not followed. `docs/research/rulebook-migration-table.md` indexes these
-   against the issues they failed on; start there, confirm on the tracker. Such a
+   against the issues they failed on; start there, confirm on the tracker — but
+   its "excluded from rule-extraction" list is not out of your scope: a mechanism
+   record for a guard already built is often the largest prose mass going. Such a
    rule has proven **the prose** isn't load-bearing — not the behaviour, which
    may matter more than ever. Prune the justification and the restatements; keep
    the rule, as one goal-shaped line.
 2. **Prose mass.** The problem the most words are spent avoiding.
 3. **Context cost.** Text loaded into every session beats text read on demand.
 
-It must not touch an open trial's territory, or no verdict can be attributed.
+It must not touch the territory of any trial that was open at the **start** of
+this run — including one you just judged and deleted — or no verdict can be
+attributed.
 
 ## 3. Prune it to the goal
 
@@ -59,6 +72,11 @@ CLAUDE.md, a `docs/agents/` page and several Skills. Work out what all of it is
 chasing. Write that, in the plainest words that stay exact, in one home. Delete
 the rest: the incident histories, the restatements, the step-by-step for
 decisions the reader is capable of making.
+
+Write the trial's ledger entry as you prune, and commit it **with** the prune.
+Before committing, grep the repo for inbound references to anything you deleted —
+Skills, docs and code comments cite sections by name, and the Gate does not catch
+a dangling one.
 
 Cut an incident history to **the rule plus a pointer** to where the history
 lives (the issue, the ADR) — never to a ruleless rule with no forwarding
@@ -70,8 +88,8 @@ means from a goal as readily as you can. A goal it can't act on isn't simpler,
 just shorter — and neither is a surviving rule now buried mid-paragraph where a
 skimmer will miss it.
 
-Around 100 lines **deleted** is the bar for a run — the goal you write back and
-the ledger entry don't count against it. Clear it by retiring a whole problem,
+Around 100 lines **deleted** is the bar for the prune itself — the goal you
+write back and the ledger entry don't count against it. Clear it by retiring a whole problem,
 never by deleting the worked examples a weaker reader needs.
 
 Write a hook **only when §4's probe fails**. One shipped beside a passing prune
@@ -88,16 +106,15 @@ Before shipping, dispatch a Sonnet subagent (`dispatch-subagents`). Give it the
 surviving text only — never the deleted prose — plus a real situation the pruned
 scaffolding covered, and ask what it would do. A wrong answer means the goal
 isn't clear enough yet, or the behaviour needs the hook. Never ship a prune
-Sonnet can't execute.
+Sonnet can't execute. If no subagent tool is available to you, say so in the PR
+and mark the prune **unproven** — never treat the step as satisfied.
 
 ## 5. Ship and record
 
-The trial's ledger entry ships in the prune's **own commit** — the file
-documents its shape — so nothing has to land after the merge. Then one PR, the
-line delta in its title. **At PR-open, invoke `close-session`** — your first log
-(`in-review`); a dispatched worktree-isolated agent must not (see
-`close-session/SKILL.md`). Then Gate green, self-merge (`docs/agents/pr-workflow.md`;
-ADR-0027 charters the tier).
+One PR, the line delta in its title. **At PR-open, invoke `close-session`** —
+your first log (`in-review`); a dispatched worktree-isolated agent must not (see
+`close-session/SKILL.md`). Then Gate green, self-merge
+(`docs/agents/pr-workflow.md`; ADR-0027 charters the tier).
 
 ## Bounds
 
