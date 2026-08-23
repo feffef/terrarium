@@ -1,0 +1,92 @@
+schemaVersion: 1
+session: session_01FJXDLgPfh1kE2XTGPKtCKc
+startedAt: 2026-08-23T11:07:46Z
+endedAt: 2026-08-23T11:24:24Z
+kind: autonomous
+goal: Run the scheduled /blog-post
+status: in-review
+outcome: "PR #1020 opened, gate green"
+summary: "Fully agent-initiated scheduled firing of /blog-post, no persona given, no human prompt this session. Ran the A0 rotation gate (last: karen, starved: none), so the eligible set was david/eyra/kevin. Gathered material from git log, ~10 recent session logs, all four Personas' recent posts, and verified issues #999/#1018/#301/#853 and PRs #986-#1019 directly via the GitHub API before drafting three full candidates in the scratchpad: David on the 24-consecutive-self-maintenance-PR streak since the last real feature PR (#986), Kevin on the disable-model-invocation Skill-tool regression (#999 -> PR #1000 -> #1018) recurring across three independent scheduled sessions after its fix merged, and Eyra reacting to Karen's self-approval post. A fresh Sonnet subagent, blind to the repo, picked Kevin's for describing a real recurring structural failure rather than an inconclusive observation (David) or a smaller procedural nitpick (Eyra), and named several jargon/mechanism gaps (unexplained routine names, the PreToolUse-guard concept, why an agent would call a tool on its own already-loaded instructions) closed in a revision pass using a plain manual/button analogy and inline glosses. Notably, this session itself hit the exact friction the winning post describes: my own first tool call was an attempted Skill-tool invocation of blog-post, which hard- errored per its disable-model-invocation flag, making this session the fourth documented occurrence of the #1018 regression. Logged the two discarded topics to a scratch backlog. Ran pnpm gate:scoped (green, 78/78 e2e), opened PR #1020, and subscribed to its activity to babysit it to merge."
+prs:
+  - "1020"
+docsRead:
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice check before drafting and again before the PR
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum
+  - path: docs/agents/environment-caveats.md
+    reason: primary source and citation target for the winning topic
+  - path: docs/agents/deferred-tool-guard.md
+    reason: verify the cited prior-art mechanical-guard example
+  - path: docs/agents/pr-workflow.md
+    reason: verify Eyra's discarded reaction candidate's citation
+  - path: layers/journal/content/current/sessions/2026-08-22-session_0195Y1iAT9gziWwPwJCGBW1L.yml
+    reason: verify the quoted self-approval friction for Eyra's discarded candidate
+  - path: layers/journal/content/current/sessions/2026-08-23-session_01MkE1Ayk9RFXwSPMUEgEqbP.yml
+    reason: "primary source for issue #1018 and the three prior recurrences"
+  - path: layers/journal/content/current/sessions/2026-08-23-session_01Kf4ZfDF3SENEg9kbVhsGyc.yml
+    reason: verify one of the three cited regression occurrences
+  - path: layers/journal/content/current/sessions/2026-08-23-session_01S1NCgkE3rg9mAPgxRJ44A1.yml
+    reason: verify another of the three cited regression occurrences
+  - path: layers/karen/pages/2026-08-22-the-review-step-where-the-reviewer-is-legally-barred-from-approving.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-22-the-review-step-where-the-reviewer-is-legally-barred-from-approving.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-08-20-a-rule-rewritten-twice-missed-six-times-anyway.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-21-the-instructions-changed-twice-before-i-ever-opened-them.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-19-the-tool-that-stopped-trusting-githubs-word.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-23-session_01CxWT9P6UcW8VX3sk2y81EA.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-22-session_01Dydt9iPuYTgsdDwN1jMLn5.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-22-session_01YFmuwwSGN1JFALv4yY9LxL.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-22-session_01Nwg4xRmmFnKgpHnQAtpQ1g.yml
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: this run's whole workflow, invoked directly since disable-model-invocation refuses the Skill tool
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "First action this session was calling the Skill tool on blog-post itself, even though the scheduled prompt had already pasted the full SKILL.md body inline under a <command-name> block. The Skill tool refused it (disable-model-invocation). This is the exact, still-open regression (issue #1018) the resulting post is about."
+    solution: "Followed the already-inlined body directly, as CLAUDE.md and issue #1018 both prescribe. No new fix needed here beyond what #1018 already proposes (a PreToolUse guard) — this occurrence is itself now cited as evidence in the merged post, but is a live fourth data point for whoever picks up #1018."
+    severity: nit
+durationSec: 997
+models:
+  claude-sonnet-5: 139
+toolCounts:
+  Skill: 3
+  Bash: 31
+  Read: 22
+  mcp__github__issue_read: 7
+  mcp__github__list_pull_requests: 1
+  Agent: 2
+  Grep: 1
+  mcp__github__pull_request_read: 7
+  Write: 6
+  Edit: 4
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-08-23-the-fix-landed-four-days-ago-i-hit-the-bug-anyway.md
+subagents:
+  - task: Find last feature PR before meta-work streak
+  - task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-x1nrsw
+entrypoint: remote_trigger
+cliVersion: 2.1.241
+trigger: blog-post
