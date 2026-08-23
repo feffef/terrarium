@@ -15,7 +15,8 @@ not by a rulebook they skim.** You get there by pruning, and you find out
 whether a prune was right the only honest way — by leaving it standing as a
 **trial** and letting real sessions deliver the verdict.
 
-One trial per run. Everything below is mechanism; the goal above is the point.
+One trial per run. Branch per CLAUDE.md's pre-`checkout` checklist before you
+edit anything. Everything below is mechanism; the goal above is the point.
 
 ## 1. Judge the open trials
 
@@ -36,13 +37,16 @@ ledger is past its window.
 
 ## 2. Choose the problem
 
-One problem, chosen in this order:
+One problem, chosen in this order — and when several clear a criterion, take the
+one with the most prose mass:
 
 1. **Prose that already failed.** A rule whose own failure is on the tracker —
    an issue filed because the rule didn't hold, or a rule narrowed repeatedly and
-   still not followed. Search the tracker for issues naming a fix that recurred;
-   the repo has a run of them. Such a rule has proven it isn't load-bearing —
-   the safest thing here to replace with a goal.
+   still not followed. `docs/research/rulebook-migration-table.md` indexes these
+   against the issues they failed on; start there, confirm on the tracker. Such a
+   rule has proven **the prose** isn't load-bearing — not the behaviour, which
+   may matter more than ever. Prune the justification and the restatements; keep
+   the rule, as one goal-shaped line.
 2. **Prose mass.** The problem the most words are spent avoiding.
 3. **Context cost.** Text loaded into every session beats text read on demand.
 
@@ -63,15 +67,20 @@ retiring these, and you are not.
 
 **Write for Sonnet.** It runs most sessions here and cannot reconstruct the
 means from a goal as readily as you can. A goal it can't act on isn't simpler,
-just shorter.
+just shorter — and neither is a surviving rule now buried mid-paragraph where a
+skimmer will miss it.
 
-Around 100 lines is the bar for a run. Clear it by retiring a whole problem —
+Around 100 lines **deleted** is the bar for a run — the goal you write back and
+the ledger entry don't count against it. Clear it by retiring a whole problem,
 never by deleting the worked examples a weaker reader needs.
 
-If the behaviour genuinely needs enforcement to survive, write one hook: the
-smallest thing that fires on the wrong shape. It warns and exits 0 — it never
-blocks, including when it crashes — and it ships with one unit test. Making a
-hook block is its own later trial.
+Write a hook **only when §4's probe fails**. One shipped beside a passing prune
+holds the very behaviour the trial is testing, so no verdict can form (ADR-0027);
+and a guard here runs to a few hundred lines, which a prune can't absorb — so it
+lands as its own PR. Keep it the smallest thing that fires on the wrong shape,
+with one unit test. It warns and exits 0, never blocking, not even when it
+crashes — deliberately unlike the repo's fail-closed guards, because this one is
+written unattended. Hardening it to block is a later trial.
 
 ## 4. Prove it on Sonnet
 
@@ -86,7 +95,8 @@ Sonnet can't execute.
 The trial's ledger entry ships in the prune's **own commit** — the file
 documents its shape — so nothing has to land after the merge. Then one PR, the
 line delta in its title. **At PR-open, invoke `close-session`** — your first log
-(`in-review`). Then Gate green, self-merge (`docs/agents/pr-workflow.md`;
+(`in-review`); a dispatched worktree-isolated agent must not (see
+`close-session/SKILL.md`). Then Gate green, self-merge (`docs/agents/pr-workflow.md`;
 ADR-0027 charters the tier).
 
 ## Bounds
