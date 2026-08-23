@@ -1,16 +1,15 @@
-# Open Prune Trials (ADR-0027). One entry per pruned problem; the verdict is
-# due three days after `opened`. An entry is deleted the moment `/prune-trial`
+# Open Prune Trials (ADR-0027). One entry per pruned problem; the verdict is due
+# after the window ADR-0027 sets. An entry is deleted the moment `/prune-trial`
 # judges it — git holds the history, this file holds only what is unjudged.
+#
+# The entry ships in the prune's own commit, so that commit is the record: to
+# read back what was cut, `git log` this file. Nothing here has to be filled in
+# after the PR merges.
 #
 # trials:
 #   - problem: what the pruned prose was trying to prevent
 #     territory: [paths, keywords]   # the next trial must not overlap these
 #     opened: 2026-08-23
-#     pr: 1234
-#     revert: <merge commit sha>     # the prune's own commit, for reading back
-#                                    # what was cut. Never `git revert` it
-#                                    # wholesale — a restore is one line, not
-#                                    # the old wall (SKILL.md step 1)
 #     check: how you would tell this broke — written now, while you still
 #            remember what the prose was for
 trials: []

@@ -83,10 +83,11 @@ Sonnet can't execute.
 
 ## 5. Ship and record
 
-One PR, the line delta in its title. **At PR-open, invoke `close-session`** —
-your first log (`in-review`). Then Gate green, self-merge
-(`docs/agents/pr-workflow.md`; ADR-0027 charters the tier). Then append the
-trial to the ledger — the file documents its own shape — and `close-session`.
+The trial's ledger entry ships in the prune's **own commit** — the file
+documents its shape — so nothing has to land after the merge. Then one PR, the
+line delta in its title. **At PR-open, invoke `close-session`** — your first log
+(`in-review`). Then Gate green, self-merge (`docs/agents/pr-workflow.md`;
+ADR-0027 charters the tier).
 
 ## Bounds
 

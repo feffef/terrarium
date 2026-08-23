@@ -2,7 +2,7 @@ name: prune-trial
 category: platform-operation
 importance: routine
 role: >-
-  The Platform's only subtractive Skill, and a scheduled Routine's whole job:
+  The only Skill whose whole job is subtraction, and a scheduled Routine's work:
   each run prunes one problem's instructions to the goal behind them and leaves
   the cut standing as a trial, letting later sessions' frictions decide whether
   the prose was load-bearing. Charters its own merge tier and may prune ADR
