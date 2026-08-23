@@ -91,11 +91,11 @@ human asks for it outright.
   `shared/routing.ts`, `shared/kinds.ts`, `modules/catalog.ts`,
   `app/composables/catalog.ts` — ADR-0025), isolation
   logic, CI, and governance/ADRs are **human-only** — never auto-merge changes
-  touching them — the sole exception is a `prune-trial` prune of ADR prose
-  (ADR-0027). (ADR-0004's high-risk set, which also escalates a PR that
+  touching them (ADR-0004's high-risk set, which also escalates a PR that
   introduces a new dependency or changes untested/untestable runtime
-  behaviour — see ADR-0004's 2026-07-06 amendment for the exact axes). The
-  pinned seven above are the manifest-expansion/routing/catalog family
+  behaviour — see ADR-0004's 2026-07-06 amendment for the exact axes); the sole
+  exception is a `prune-trial` prune of an ADR's explanatory prose (ADR-0027).
+  The pinned seven above are the manifest-expansion/routing/catalog family
   specifically (ADR-0004/ADR-0025), not an exhaustive list of every human-only
   file in the repo — "isolation logic" is a deliberately unpinned catch-all
   that also covers e.g. `shared/manifest.ts` (ADR-0025: defines the

@@ -293,8 +293,9 @@ changeset that is entirely Inert may skip Heavy.
 A surface that a **Trusted** human must **merge** — never auto-merged by any
 chartered Skill, whatever the **Gate** says (ADR-0004's high-risk set holds the
 list). One exception, granted by ADR-0027: a **Prune Trial** may self-merge a
-prune of ADR *prose*, which is reversible by construction. Nothing else in the
-high-risk set is reachable that way. It constrains merging only: agents author changes to Human-only surfaces
+prune of an ADR's *explanatory prose*, which is reversible by construction — never
+its Decision or Consequences (ADR-0018). Nothing else in the high-risk set is
+reachable that way. It constrains merging only: agents author changes to Human-only surfaces
 routinely, and review is the control.
 
 ### Prune Trial

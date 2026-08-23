@@ -86,13 +86,17 @@ trial to the ledger — the file documents its own shape — and `close-session`
 
 Everything the Platform tells its agents is in scope: CLAUDE.md, CONTEXT.md,
 `docs/`, our own Skills including the scheduled ones, and the ADRs — ADR-0027
-grants that; ADR-0004's Human-only merge rule otherwise stands.
+grants that; ADR-0004's Human-only merge rule otherwise stands. In an ADR you
+prune the **explanatory prose only**: its Decision and Consequences are the
+historical record and are never rewritten (ADR-0018). Skip
+`docs/proposals/<N>-*.md` and `.out-of-scope/*.md` — written for a human to
+apply once, not for agents to read.
 
 Two exceptions and one refusal:
 
 - **External pack Skills** (`skills-lock.json`) — the Gate rejects the edit.
 - **Session logs** — the record, not instructions.
-- **Retiring a Skill or a Routine, including your own** — file an issue, never
-  act. Nothing breaks when a Skill stops running, so no verdict could tell you
+- **Retiring a Skill or a Routine, including your own** — file a `needs-triage`
+  issue, never act. Nothing breaks when a Skill stops running, so no verdict could tell you
   it was a mistake. Two runs in a row that find nothing worth ~100 lines is the
   signal to file yours.

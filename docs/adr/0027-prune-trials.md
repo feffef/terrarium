@@ -54,7 +54,10 @@ governance:
 - **Scope is the whole rulebook, ADRs included.** A trial may prune any
   instruction the Platform gives its agents. This is a narrow amendment to
   ADR-0004: ADR prose loses its Human-only merge status *for prune-only
-  trials*, which are reversible by construction. Everything else in ADR-0004's
+  trials*, which are reversible by construction. It reaches an ADR's
+  **explanatory prose only** — ADR-0018's record-integrity rule stands, so an
+  ADR's Decision and Consequences text is never rewritten, and no prune ever
+  changes what an ADR decided. Everything else in ADR-0004's
   high-risk set is untouched, and the external pack Skills (ADR-0015) remain
   unreachable because the Gate rejects the edit.
 - **Merge authority: green Gate alone.** The exemption's exact scope is a row in

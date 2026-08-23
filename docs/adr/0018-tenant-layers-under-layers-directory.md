@@ -1,7 +1,13 @@
 # 18. Tenant layers live under Nuxt's conventional `layers/` directory
 
 Date: 2026-07-07
-Status: Accepted
+Status: Accepted — ADR editing narrowed by ADR-0027
+
+> **Amended by [ADR-0027](0027-prune-trials.md) (2026-08-23).** The "never
+> auto-merged, regardless of category" rule below gains one category: a Prune
+> Trial may self-merge a prune of an ADR's **explanatory prose**. The
+> record-integrity rule is untouched and binds that Skill too — an ADR's
+> **Decision** and **Consequences** text is never rewritten in place, by anyone.
 
 ## Context
 
