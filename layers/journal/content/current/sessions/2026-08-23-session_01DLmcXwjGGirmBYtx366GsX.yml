@@ -1,0 +1,63 @@
+schemaVersion: 1
+session: session_01DLmcXwjGGirmBYtx366GsX
+startedAt: 2026-08-23T15:55:29Z
+endedAt: 2026-08-23T16:08:14Z
+kind: delegated
+goal: Prune-trial the guard mechanism records
+status: in-review
+outcome: "Four docs folded into one index, PR #1025"
+summary: "Human-instructed: the whole run, via a /prune-trial invocation; every choice inside it was agent-initiated under that charter. Section 1 was a no-op — the ledger held no entries and never has, so this is the first trial. Chose the guard mechanism records as the problem: four documents (354 lines) explaining three PreToolUse guards that already enforce their rules mechanically, all three confirmed wired in settings.json first. Wrote one docs/agents/guards.md indexing all six guards (three previously had no doc at all), stating the triplicated conventions once. Minus 414 plus 142. A Sonnet probe answered 5/5 situations from the surviving text, so no hook shipped. Escalated to human merge — the prune touched guard-script comments."
+prs:
+  - "1025"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the trial ledger — empty, so section 1 was a no-op
+  - path: docs/research/rulebook-migration-table.md
+    reason: section 2 starts here; its excluded-docs list named the three mechanism records
+  - path: .claude/settings.json
+    reason: confirm all three guards are actually wired before treating them as load-bearing
+  - path: docs/agents/loop-only-tool-guard.md
+    reason: largest of the pruned records
+  - path: docs/agents/subagent-background-guard.md
+    reason: held the subagent detection contract worth preserving
+  - path: docs/agents/deferred-tool-guard.md
+    reason: held the matcher-scoping rationale the others cited
+skillsUsed:
+  - name: prune-trial
+    reason: the run itself
+  - name: dispatch-subagents
+    reason: before the section 4 Sonnet probe, per CLAUDE.md
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: A find-replace of doc pointers produced a code comment claiming the detection contract lived "in this header" when it did not — a false claim in committed code.
+    solution: "Caught in self-review before commit. Re-read every mechanically-rewritten comment in context rather than trusting the substitution — the issue #948 class exactly."
+    severity: minor
+  - description: "The ledger template documents `proven: false` for a probe that could not run, but not whether a passing probe should record `proven: true` or omit the field."
+    solution: Have prune-trial section 4 say explicitly that a passing probe omits the field, or make it tri-state, so a later verdict reader can tell "probe passed" from "entry predates the field".
+    severity: nit
+durationSec: 765
+models:
+  claude-opus-5: 128
+toolCounts:
+  Bash: 51
+  Skill: 3
+  Agent: 1
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+subagents:
+  - type: general-purpose
+    task: Sonnet prune probe
+    model: sonnet
+gitBranch: claude/prune-trial-ntklk2
+entrypoint: remote_mobile
+cliVersion: 2.1.241
+learnings:
+  - The three pruned docs already deferred to their script headers ("not restated here"); the real prose mass was the shared conventions stated three times over, not per-guard detail
+  - Three of the repo's six guards had no doc at all, so consolidating raised coverage while cutting 414 lines — a prune is not always a net loss of information
+ideas:
+  - Add a gate step that fails on a dangling repo-relative path referenced from any committed markdown, Skill, or code comment. This prune had to hand-grep four deleted filenames across scripts, specs, docs and Skills to find eight inbound pointers, and CLAUDE.md already admits "the Gate does not catch a dangling one". A script that extracts backtick-quoted paths matching a repo-path shape and stats each one, plus a unit spec, is roughly 40 lines and would make every future consolidation safe by construction rather than by careful grepping.
