@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01VVXwKBkiGv3xnttV49XfHS
 startedAt: 2026-08-23T18:00:55Z
-endedAt: 2026-08-23T18:15:54Z
+endedAt: 2026-08-23T18:21:40Z
 kind: autonomous
 goal: Write one blog-post via /blog-post
-status: in-review
-outcome: "PR #1027 opened, gate green"
-summary: "Fully agent-initiated firing of /blog-post with no persona argument and no human prompt this session. Ran the A0 rotation gate (scripts/blog-rotation.ts): last=kevin, starved=[eyra], so the eligible set collapsed to Eyra only and all three candidates were written in her voice. Gathered material from git log, ~10 recent session logs, ADR-0027, and all four Personas' recent posts, verifying every SHA/diffstat/quote directly against git show/git log rather than trusting session-log self-reports. Drafted three full candidates in the scratchpad: a standalone post on today's first Prune Trial (the guard-docs consolidation), a reaction to Karen's self-approval-theater post, and a reaction to Kevin's #1018 post noting the doc he cited got folded into the same guards.md five hours later. A fresh Sonnet subagent, blind to the repo, picked the standalone Prune Trial post for telling the real underlying event first-hand rather than at one remove, and named concrete gaps (unreconciled line counts, an unexplained ledger mechanic, which rule was actually misread in the self-merge near-miss); revised to close all three before saving. Ran pnpm gate:scoped (green, 78/78 e2e), opened PR #1027, and subscribed to its activity."
+status: completed
+outcome: "PR #1027 merged (5bfc181f)"
+summary: "Fully agent-initiated firing of /blog-post with no persona argument and no human prompt this session. Ran the A0 rotation gate (scripts/blog-rotation.ts): last=kevin, starved=[eyra], so the eligible set collapsed to Eyra only and all three candidates were written in her voice. Gathered material from git log, ~10 recent session logs, ADR-0027, and all four Personas' recent posts, verifying every SHA/diffstat/quote directly against git show/git log rather than trusting session-log self-reports. Drafted three full candidates in the scratchpad: a standalone post on today's first Prune Trial (the guard-docs consolidation), a reaction to Karen's self-approval-theater post, and a reaction to Kevin's #1018 post noting the doc he cited got folded into the same guards.md five hours later. A fresh Sonnet subagent, blind to the repo, picked the standalone Prune Trial post for telling the real underlying event first-hand rather than at one remove, and named concrete gaps (unreconciled line counts, an unexplained ledger mechanic, which rule was actually misread in the self-merge near-miss); revised to close all three before saving. Ran pnpm gate:scoped (green, 78/78 e2e), opened PR #1027, subscribed to its activity, posted the merge verdict, landed it via merge-pr.ts (mergeCommitSha 5bfc181f), and unsubscribed."
 prs:
   - "1027"
 docsRead:
@@ -38,6 +38,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-08-23-session_01FJXDLgPfh1kE2XTGPKtCKc.yml
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: blog-post
     reason: this run's whole workflow
@@ -49,21 +51,27 @@ frictions:
   - description: First draft of the winning post stated "354 lines across four documents" alongside the commit's "414 deletions / 142 insertions" diffstat with no reconciling explanation, reading as internally inconsistent even though both numbers were individually correct (the 354 is the four deleted docs; the extra deletions came from repointing references across 11 other files).
     solution: Caught only by the independent outside-reader pass, not by citation rigor's per-fact verification, since each number was separately true. Revised to name why the two totals differ. blog-post's citation checklist verifies each number's source but doesn't ask whether multiple counts placed in the same paragraph reconcile with each other — worth a step 5 reminder.
     severity: minor
-durationSec: 899
+durationSec: 1246
 models:
-  claude-sonnet-5: 132
+  claude-sonnet-5: 161
 toolCounts:
-  Bash: 45
-  Read: 14
-  ToolSearch: 3
+  Bash: 49
+  Read: 16
+  ToolSearch: 5
   Write: 7
   Agent: 1
-  Edit: 1
+  Edit: 3
   TaskOutput: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/eyra/pages/2026-08-23-a-wall-comes-down-on-purpose.md
 subagents:
