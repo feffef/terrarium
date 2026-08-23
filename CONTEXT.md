@@ -141,9 +141,10 @@ failure class is — a mistake fully caught before landing (self-review, or a
 guard working exactly as designed) stays `nit`/`minor`. Recurrence is tracked
 separately, by occurrence count, not by inflating each instance's severity.
 
-Frictions are the primary signal the self-improvement Skills mine for recurring
-pain (today, `frictions-to-fixes`), so agents report **every** friction honestly
-— even nits. A tagging taxonomy is deliberately *not* fixed up front: it is meant
+Frictions are the primary signal the self-improvement Skills mine — for recurring
+pain (`frictions-to-fixes`), and as the verdict on an open **Prune Trial**
+(`prune-trial`) — so agents report **every** friction honestly, even nits. A
+tagging taxonomy is deliberately *not* fixed up front: it is meant
 to **emerge** from clustering real frictions, once a future session judges there
 are enough to cluster meaningfully, rather than be guessed before there is data.
 No session count, calendar window, or owning Skill is set in advance — that
@@ -292,8 +293,19 @@ changeset that is entirely Inert may skip Heavy.
 ### Human-only
 A surface that a **Trusted** human must **merge** — never auto-merged by any
 chartered Skill, whatever the **Gate** says (ADR-0004's high-risk set holds the
-list). It constrains merging only: agents author changes to Human-only surfaces
+list). One exception, granted by ADR-0027: a **Prune Trial** may self-merge a
+prune of an ADR's *explanatory prose*, which is reversible by construction — never
+its Decision or Consequences (ADR-0018). Nothing else in the high-risk set is
+reachable that way. It constrains merging only: agents author changes to Human-only surfaces
 routinely, and review is the control.
+
+### Prune Trial
+One problem's instructions pruned down to the goal behind them and left standing
+for a fixed window, on the premise that whether a rule is load-bearing is settled
+by removing it and observing, not by reading it (ADR-0027). Open trials are
+tracked in a ledger the `prune-trial` Skill maintains; the **Frictions** logged
+while one stands are its verdict, and only that Skill delivers it — other
+Sessions record side-effects rather than restoring the pruned prose.
 
 ### Proposal
 An intended change that an agent cannot push itself, written down for a human to

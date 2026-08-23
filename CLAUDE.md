@@ -93,8 +93,9 @@ human asks for it outright.
   logic, CI, and governance/ADRs are **human-only** — never auto-merge changes
   touching them (ADR-0004's high-risk set, which also escalates a PR that
   introduces a new dependency or changes untested/untestable runtime
-  behaviour — see ADR-0004's 2026-07-06 amendment for the exact axes). The
-  pinned seven above are the manifest-expansion/routing/catalog family
+  behaviour — see ADR-0004's 2026-07-06 amendment for the exact axes); the sole
+  exception is a `prune-trial` prune of an ADR's explanatory prose (ADR-0027).
+  The pinned seven above are the manifest-expansion/routing/catalog family
   specifically (ADR-0004/ADR-0025), not an exhaustive list of every human-only
   file in the repo — "isolation logic" is a deliberately unpinned catch-all
   that also covers e.g. `shared/manifest.ts` (ADR-0025: defines the
@@ -170,6 +171,13 @@ human asks for it outright.
   amending note or superseding ADR), don't fork a second copy. Duplication is how
   contradictory guidance and doc-rot start — and agents act on documented state,
   so in this repo a stale copy is a *behavioral* bug.
+- **A missing instruction may be on trial.** `.agents/prune-trials.yml` lists
+  instructions pruned on purpose in the last few days, to find out whether they
+  were load-bearing (ADR-0027). Hit a problem in a trial's territory: **record
+  it** — a Friction, honestly graded — and carry on. Work around it unless it
+  genuinely blocks you; file an issue only then, naming the trial. Don't
+  re-legislate the pruned prose. `/prune-trial` weighs what you recorded and decides whether the trial
+  keeps, reverts, or earns a hook.
 - **Don't restate a Routine's schedule in a committed doc** — it lives outside
   git and can change without a commit. Say a Skill *is* scheduled; never say *when*.
 - **Hitting a needed `.github/workflows/*` edit? You can't push it** (agent
@@ -541,8 +549,9 @@ prepare` emits a "Cannot extend config from layers/<tenant>/" warning.
 ## Logging your session
 
 Every session ends with an honest **session log** in the Journal (ADR-0009,
-issue #2) — the raw signal the self-improvement Skills mine (`frictions-to-fixes`
-today). A log has two halves (ADR-0009 amendment): a **mechanical** trace
+issue #2) — the raw signal the self-improvement Skills mine
+(`frictions-to-fixes` and `prune-trial` today). A log has two halves (ADR-0009
+amendment): a **mechanical** trace
 derived from the transcript by a committed hook — never self-reported — and an
 **interpretive** half only you can write. The **`log-session`** Skill owns the
 exact field-level split, how you author the interpretive half to a scratch

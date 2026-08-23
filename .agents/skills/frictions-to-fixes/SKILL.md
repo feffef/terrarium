@@ -107,7 +107,13 @@ fix belongs upstream, not here (ADR-0015; CLAUDE.md "Skills … off limits to ed
 Drop it with that reason (a repo-specific fit-note can still go to that Skill's
 Inventory entry, but that's `audit-skills`' job, not a friction fix). `pnpm gate`
 enforces this (`verify:skills-lock`) — an impl agent that edits a pack Skill's
-SKILL.md fails the gate, so screening it out here just avoids the wasted round-trip. Then, for the
+SKILL.md fails the gate, so screening it out here just avoids the wasted round-trip.
+**Next, drop what is on trial:** a candidate whose fix would restore prose inside
+an open **Prune Trial**'s territory (`.agents/prune-trials.yml`) is not yours to
+retire — that friction *is* the trial's evidence, and re-legislating it destroys
+the verdict `prune-trial` is waiting for (ADR-0027). Drop it with that reason. A
+`blocker` is the exception: after the usual tracker search, file it, naming the
+trial. Then, for the
 rest: the §1 subagent applies these rules to every
 candidate, checking the tracker for an issue or PR that already covers it — and
 confirming against **`main`** where cheap (a "solution" isn't ripe if main already

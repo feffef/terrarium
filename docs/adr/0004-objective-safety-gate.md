@@ -1,7 +1,14 @@
 # 4. Objective safety gate for agent PRs
 
 Date: 2026-07-04
-Status: Accepted — high-risk set extended by ADR-0026
+Status: Accepted — high-risk set extended by ADR-0026; ADR prose exempted for
+Prune Trials by ADR-0027
+
+> **Amended by [ADR-0027](0027-prune-trials.md) (2026-08-23).** ADR **prose**
+> leaves the never-auto-merged set for one caller only: a `prune-trial` Prune
+> Trial, whose every edit is reversible by construction and judged by the
+> sessions that follow it. The rest of the high-risk set below is untouched, and
+> no other Skill gains ADR reach.
 
 > **Amended by [ADR-0026](0026-gate-workflow-thin-shell.md) (2026-08-06).**
 > `.github/actions/gate/action.yml` — the composite action that will hold the
