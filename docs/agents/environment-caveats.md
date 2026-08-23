@@ -62,8 +62,8 @@ new; don't re-diagnose any of these as a fresh problem.
   pointing sessions at the exact misuse #814 tracks, and a `PreToolUse` guard
   now refuses that call (`scripts/loop-only-tool-guard.ts`). There is no
   carve-out: this fallback is gone, not narrowed. (CLAUDE.md owns the
-  `ScheduleWakeup` rule itself; `docs/agents/loop-only-tool-guard.md` the
-  mechanism, issue #814.)
+  `ScheduleWakeup` rule itself; `docs/agents/guards.md` the mechanism,
+  issue #814.)
 - **`AskUserQuestion` (a core tool, not a `Claude_Code_Remote` MCP tool) can hit
   the same transient "permission stream closed" error.** Retry once; if it
   fails again, don't retry-loop — fall back immediately to the safer default

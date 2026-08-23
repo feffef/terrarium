@@ -155,7 +155,7 @@ catch the mistake in practice.
   yourself (e.g. re-poll at agent-completion checkpoints, or `send_later` a
   wake when no agent is running to re-poll). **`ScheduleWakeup` isn't the tool
   for this** — CLAUDE.md owns that rule and the `send_later` mechanism
-  (`docs/agents/loop-only-tool-guard.md` has the guard, issue #814).
+  (`docs/agents/guards.md` has the guard, issue #814).
 - **Re-running an old/existing workflow run does not recompute the merge
   ref.** It re-checks-out that run's original `refs/pull/N/merge` snapshot —
   so a re-run can still report red after the real fix has already merged.

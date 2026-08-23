@@ -199,36 +199,23 @@ human asks for it outright.
   `ToolSearch`** rather than guessing its shape from a similarly-named tool. A
   deferred tool appears by name only, with no parameter schema, until `ToolSearch`
   loads it — a guessed shape (e.g. borrowing `Agent`'s `prompt`/`subagent_type` for
-  `TaskCreate`) errors on the first call. This rule has already been violated
-  repeatedly by tools whose names read as self-evident enough that the rule didn't
-  feel like it applied: `TaskCreate` (looks like an obvious task-list tool) and
-  `Monitor` (looks like an obvious log-watcher) — a deceptively-obvious name is
-  not an exemption, load the schema anyway. A mechanical `PreToolUse` backstop now
-  catches this specific failure — a deferred tool called with another tool's
-  argument shape — and blocks it with a corrective message rather than a terse
-  `InputValidationError` (`scripts/deferred-tool-guard.ts`; see
-  `docs/agents/deferred-tool-guard.md`, issue #612).
+  `TaskCreate`) errors on the first call. A deceptively-obvious name is not an
+  exemption: `TaskCreate` and `Monitor` both read as self-evident, and both are
+  recorded repeat offenders — load the schema anyway. A `PreToolUse` guard
+  backstops this (`docs/agents/guards.md`, issue #612).
 - **`ScheduleWakeup` is valid in exactly one mode — inside a `/loop` session's
   dynamic (self-paced) pacing. Never reach for it as a general-purpose wait,
-  heartbeat, or poll.** (The one exception: cancelling an already-scheduled
-  wakeup with `stop: true` is exempt in every mode, since a cancel can only
-  ever remove a pending wakeup — see `docs/agents/loop-only-tool-guard.md`.)
-  Outside `/loop` it is *not* a harmless no-op: a fired wakeup delivers a
-  spurious turn that can re-run this session's whole prompt — see the doc for
-  the recorded misfire incidents. What to do instead, by situation: waiting
-  on a dispatched Agent-tool subagent needs **no** wait/poll tool at all — it
-  self-notifies on completion; waiting on a backgrounded Bash command needs
-  none either — end
-  the turn, the harness delivers a task notification when it exits; polling
+  heartbeat, or poll.** Outside `/loop` it is *not* a harmless no-op: a fired
+  wakeup delivers a spurious turn that can re-run this session's whole prompt.
+  Cancelling an already-scheduled wakeup with `stop: true` is exempt in every
+  mode. What to do instead, by situation: waiting on a dispatched Agent-tool
+  subagent needs **no** wait/poll tool at all — it self-notifies on completion;
+  waiting on a backgrounded Bash command needs none either — end the turn, the
+  harness delivers a task notification when it exits; polling
   non-webhook-delivered external state such as CI/gate completion uses
-  `mcp__Claude_Code_Remote__send_later` to schedule your own check-in. Two
-  doc-only fixes (#241, #425) wrote this rule only into
-  `docs/agents/github-integration.md`, which the affected sessions had no reason
-  to open, and it kept recurring — so a `PreToolUse` guard now refuses the call
-  outside `/loop`,
-  failing **closed** when the mode can't be determined
-  (`scripts/loop-only-tool-guard.ts`; see `docs/agents/loop-only-tool-guard.md`,
-  issue #814).
+  `mcp__Claude_Code_Remote__send_later` to schedule your own check-in. A
+  fail-closed `PreToolUse` guard refuses the call outside `/loop`
+  (`docs/agents/guards.md`, issue #814).
 - **Never predict or reconstruct an identifier — a line number, a blob SHA, an
   issue/PR number, a session id — from memory.** Resolve it fresh at the
   moment you write it down: a tool call for the first three (a Read,
@@ -313,15 +300,10 @@ human asks for it outright.
   anything. Use `Monitor`/`ps` plus a log completion marker to confirm the
   process actually finished instead of trusting the outer call's return.
 - **A dispatched subagent must never background a Bash command at all**
-  (`run_in_background: true` — orchestrator/main sessions are untouched):
-  `docs/agents/subagent-background-guard.md`'s "Why" section owns the reason
-  (no wake mechanism ever resumes a stopped subagent) and the incident count.
-  A `PreToolUse` guard now denies the call in subagent context, teaching the
-  working alternative
-  (foreground with an explicit `timeout`, split steps that exceed 10 minutes)
-  in its deny message
-  (`scripts/subagent-background-guard.ts`; see
-  `docs/agents/subagent-background-guard.md`, issue #694).
+  (`run_in_background: true`, or a trailing `&` — orchestrators are untouched):
+  no wake mechanism ever resumes a stopped subagent. Run it in the foreground
+  with an explicit `timeout`, splitting any step that exceeds 10 minutes. A
+  `PreToolUse` guard denies it (`docs/agents/guards.md`, issue #694).
 - **Never pipe a backgrounded or long-running command through ANY trailing
   command in a pipe/chain — `tail`/`head` are only the most common case — when
   its exit status or full output matters.** A pipeline reports the *last*
@@ -613,6 +595,12 @@ See the Working conventions bullet on platform-level quirks above. Full detail:
 See the Working conventions bullet on git mechanics above. Full detail:
 `docs/agents/git-conventions.md`.
 
+### Guards
+
+The mechanical `PreToolUse` guards that hold rules prose stopped holding — the
+roster, the conventions they share, and how to extend one. See
+`docs/agents/guards.md`.
+
 ### Triage labels
 
 Canonical label vocabulary — `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
@@ -658,9 +646,7 @@ the tension in issue #348
 (`docs/research/github-branch-protection-vs-autonomous-log-commits.md`) — and
 what's actually possible for server-/build-side Mermaid rendering, grounding
 ADR-0024's pre-render decision (`docs/research/mermaid-server-side-rendering.md`),
-and whether a `PreToolUse` hook actually intercepts a deferred-tool call in this
-cloud environment, grounding the `deferred-tool-guard`'s design
-(`docs/research/deferred-tool-guard-hook-viability.md`), and every prose rule in
+and every prose rule in
 this file, `docs/agents/*`, and the repo-authored Skills classified into the
 mechanize-or-drop buckets — the rulebook migration table the Wave-3 re-founding
 depends on, issue #867 (`docs/research/rulebook-migration-table.md`).
