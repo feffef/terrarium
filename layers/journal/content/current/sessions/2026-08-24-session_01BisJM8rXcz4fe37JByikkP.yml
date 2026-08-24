@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01BisJM8rXcz4fe37JByikkP
 startedAt: 2026-08-24T00:16:38Z
-endedAt: 2026-08-24T00:22:15Z
+endedAt: 2026-08-24T00:26:24Z
 kind: autonomous
 goal: Run the scheduled /digest sweep
-status: in-review
-outcome: "PR #1030 opened, gate green"
-summary: "Fully agent-initiated — a scheduled Routine fired /digest with no human prompt this session. Followed the digest Skill's steps: listed one closed day needing a digest (2026-08-23), gathered its PR/commit/session/friction data via scripts/digest.ts, and authored the Digest page narrating the day's through-line — a guard-script self-merge miscalibration hit twice (an actual wrongful self-merge of #972, and the same gap baked into the new prune-trial Skill's own chartering session, later corrected by #1025/#1026). Ran the retention archive sweep (1 digest + 5 session logs moved to archived), cleared pnpm gate:scoped, committed, pushed, and opened PR #1030, subscribing to its activity to babysit it to merge."
+status: completed
+outcome: "PR #1030 merged"
+summary: "Fully agent-initiated — a scheduled Routine fired /digest with no human prompt this session. Followed the digest Skill's steps: listed one closed day needing a digest (2026-08-23), gathered its PR/commit/session/friction data via scripts/digest.ts, and authored the Digest page narrating the day's through-line — a guard-script self-merge miscalibration hit twice (an actual wrongful self-merge of #972, and the same gap baked into the new prune-trial Skill's own chartering session, later corrected by #1025/#1026). Ran the retention archive sweep (1 digest + 5 session logs moved to archived), cleared pnpm gate:scoped, committed, pushed, opened PR #1030, subscribed to its activity, posted the pre-merge verdict comment, and landed it via merge-pr.ts once the gate reported green (mergeCommitSha f70f1be9)."
 prs:
   - "1030"
 docsRead:
@@ -27,21 +27,27 @@ frictions:
   - description: The Skill tool refused to invoke digest directly (disable-model-invocation), even though the scheduled prompt had already pasted the Skill's full body inline under a <command-name> block.
     solution: "Already documented as a known, non-actionable environment quirk in docs/agents/environment-caveats.md (issue #999) — recognized it and followed the already-pasted body directly instead of retrying the tool call or re-diagnosing it as new."
     severity: nit
-durationSec: 337
+durationSec: 587
 models:
-  claude-sonnet-5: 58
+  claude-sonnet-5: 91
 toolCounts:
   Skill: 3
-  Read: 3
-  Bash: 15
+  Read: 4
+  Bash: 20
   Write: 2
-  Edit: 1
-  ToolSearch: 1
+  Edit: 2
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__get_file_contents: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Grep: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-08-23.md
 gitBranch: claude/compassionate-lovelace-y9s5fu
