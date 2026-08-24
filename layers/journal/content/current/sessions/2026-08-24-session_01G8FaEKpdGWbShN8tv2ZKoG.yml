@@ -1,0 +1,93 @@
+schemaVersion: 1
+session: session_01G8FaEKpdGWbShN8tv2ZKoG
+startedAt: 2026-08-24T13:22:27Z
+endedAt: 2026-08-24T13:45:48Z
+kind: autonomous
+goal: Run the scheduled /prune-trial cycle
+status: in-review
+outcome: Pruned Closes-#N narrative, opened PR "#1034"
+summary: "Scheduled, unattended /prune-trial run. Judged the one open trial (guards.md consolidation) as not yet past its 3-day verdict window and left it alone. Chose the next problem myself, per the Skill's priority order: dispatched a background research agent to survey docs/agents/*.md and the repo-authored Skills for candidates, then reasoned through the results — ruled out the pkill teardown saga (explicitly flagged load-bearing elsewhere), the provenance/commit-trailer bullets (already tight, little left to cut), and git-conventions.md's shallow-clone/staleness section (biggest single mass found, ~90 lines, but issue \"#772\" is still open after 4 failed narrowing attempts — nothing mechanically holds that rule yet, the \"riskiest\" case the framework warns against). Settled on pr-workflow.md's \"Closes #N\" investigation narrative (PR \"#955\"/\"#985\"), which scripts/merge-pr.ts's self-heal has already made obsolete, plus issue-tracker.md's redundant comma-join bullet covering the same now-fixed behavior. Pruned both to a goal-shaped rule plus a pointer, wrote the ledger entry, proved it on a fresh Sonnet subagent (passed both branches with high confidence), ran the full local gate green, and opened a gated PR. All of this run's choices were agent-initiated end to end — no human present, per the scheduled-task framing."
+prs:
+  - "1034"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the open-trial ledger to judge and extend
+  - path: docs/research/rulebook-migration-table.md
+    reason: cross-checking mechanization status of candidate rules
+  - path: docs/agents/guards.md
+    reason: confirming the open trial's territory boundary
+  - path: docs/agents/pr-workflow.md
+    reason: the chosen prune target
+  - path: docs/agents/issue-tracker.md
+    reason: the chosen prune target's second home
+  - path: docs/agents/git-conventions.md
+    reason: assessing a bigger but riskier candidate before ruling it out
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: checking which topics are flagged load-bearing
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .claude/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: this run's own driving Skill
+  - name: close-session
+    reason: closure sequence at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: No single problem outside the currently-open guards.md trial's territory cleared the ~100-line prune target while also being safely mechanized; the repo's docs read as already fairly tight after prior consolidation passes.
+    solution: Shipped the best safe candidate found (~26 net lines) rather than forcing a bigger but riskier or load-bearing cut. A future run may find more once issue "#772" (git staleness/shallow-clone, still open after 4 narrowing attempts) lands a real mechanism — that section would then be a much stronger candidate.
+    severity: nit
+  - description: .agents/prune-trials.yml does not parse as strict YAML for either the pre-existing entry or my own addition (pyyaml chokes on the multi-line `keywords:` plain-scalar continuation inside a list-item mapping).
+    solution: No script parses this file programmatically (confirmed by grep), so it's pure agent-read documentation and the quirk is harmless — but worth a nit for whoever next hand-authors an entry in this exact shape.
+    severity: nit
+durationSec: 1402
+models:
+  claude-sonnet-5: 126
+toolCounts:
+  Bash: 27
+  Read: 12
+  Grep: 12
+  Agent: 2
+  Edit: 4
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - docs/agents/pr-workflow.md
+  - docs/agents/issue-tracker.md
+  - .agents/prune-trials.yml
+subagents:
+  - type: general-purpose
+    task: Find best prune-trial candidate
+  - type: general-purpose
+    task: Prove pruned Closes-keyword text on Sonnet
+    model: sonnet
+gitBranch: claude/practical-rubin-ucsnik
+entrypoint: remote_trigger
+cliVersion: 2.1.241
+trigger: prune-trial
