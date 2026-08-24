@@ -184,7 +184,9 @@ human asks for it outright.
   sessions lack the `workflow` OAuth scope, ADR-0004) — route it through the
   `docs/proposals/` drop-zone instead of pushing it or leaving it as ad hoc PR
   prose, and **read `docs/proposals/README.md`** for the file format and the
-  companion-change discipline.
+  companion-change discipline. The failure triggers on the *commit*, not the
+  push, and can strand an entire branch — see `docs/agents/environment-caveats.md`
+  for that sharp edge.
 - **In TS/Vue code, an inline comment explains WHY, never WHAT — default to no
   comment at all, and when the why isn't obvious, point at the existing doc
   that owns it rather than restating the reasoning.** Well-named code already
@@ -300,10 +302,11 @@ human asks for it outright.
   anything. Use `Monitor`/`ps` plus a log completion marker to confirm the
   process actually finished instead of trusting the outer call's return.
 - **A dispatched subagent must never background a Bash command at all**
-  (`run_in_background: true`, or a trailing `&` — orchestrators are untouched):
-  no wake mechanism ever resumes a stopped subagent. Run it in the foreground
-  with an explicit `timeout`, splitting any step that exceeds 10 minutes. A
-  `PreToolUse` guard denies it (`docs/agents/guards.md`, issue #694).
+  (`run_in_background: true`, or a trailing `&` — orchestrators are untouched),
+  **or call `Monitor` to wait on one**: no wake mechanism ever resumes a
+  stopped subagent. Run it in the foreground with an explicit `timeout`,
+  splitting any step that exceeds 10 minutes. A `PreToolUse` guard denies both
+  (`docs/agents/guards.md`, issue #694/#995).
 - **Never pipe a backgrounded or long-running command through ANY trailing
   command in a pipe/chain — `tail`/`head` are only the most common case — when
   its exit status or full output matters.** A pipeline reports the *last*

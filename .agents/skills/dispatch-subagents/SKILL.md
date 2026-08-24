@@ -75,10 +75,11 @@ The subagent cannot see this session's context, so the brief is self-contained:
   and wait** — no wake mechanism ever resumes a stopped subagent, so a
   `PreToolUse` guard denies it (`docs/agents/guards.md`, issue #694).
   Where something must be backgrounded anyway, **name the concrete way to
-  confirm it finished** — a
-  log-file completion marker, or the `Monitor` tool — not just "run it and wait":
-  a subagent that checks once and stops stalls on a still-running job, needing a
-  `SendMessage` resume with the log's actual tail pasted in (issue #602).
+  confirm it finished** — a log-file completion marker, never the `Monitor`
+  tool (a `PreToolUse` guard denies any subagent's `Monitor` call outright,
+  issue #995) — not just "run it and wait": a subagent that checks once and
+  stops stalls on a still-running job, needing a `SendMessage` resume with the
+  log's actual tail pasted in (issue #602).
 - **The Agent tool ignores `run_in_background: false`.** Every Agent-tool call
   launches as a background async task regardless of the `run_in_background`
   parameter passed — plan to wait on the automatic task-notification for the
