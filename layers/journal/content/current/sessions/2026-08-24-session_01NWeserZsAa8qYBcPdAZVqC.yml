@@ -1,0 +1,39 @@
+schemaVersion: 1
+session: session_01NWeserZsAa8qYBcPdAZVqC
+startedAt: 2026-08-24T02:05:34Z
+endedAt: 2026-08-24T02:11:04Z
+kind: autonomous
+goal: Run frictions-to-fixes over the last 20 session logs
+status: completed
+outcome: No fixes ripe this cycle
+summary: "Scheduled Routine firing of /frictions-to-fixes. Dispatched a general-purpose subagent to survey the last 20 session logs and screen every recurring or moderate+ friction against the GitHub tracker. Zero never-fixed candidates survived screening: the recurring disable-model-invocation-on-scheduled-runs pattern (5x this window) is already tracked as regression issue #1018 (ready-for-human); the \"regression classification needs re-verification\" friction is already tracked as issue #1008 (ready-for-human); a block of 9 frictions from a prune-trial chartering session were self-corrected before their own PR (#1021) merged; two guard-territory nits are on an open Prune Trial and not ours to re-legislate; two cheap single-occurrence fixes were dropped per the recurrence-required rule for low-severity items. No issues filed, no PRs opened, no dispatch, no code changes — entirely agent-initiated per the Routine's standing schedule, no human prompt this cycle."
+prs: []
+docsRead:
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skill tool refused direct invocation of frictions-to-fixes (disable-model-invocation) even though the slash command's full body was already inlined into the scheduled prompt by the harness.
+    solution: Recognized the inlined command body as already-loaded skill content and proceeded directly from the prompt instead of retrying the Skill tool call. Working as designed, not a proposed change.
+    severity: nit
+durationSec: 330
+models:
+  claude-sonnet-5: 15
+toolCounts:
+  Skill: 3
+  Agent: 1
+  Write: 1
+  Bash: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+gitBranch: claude/eager-ptolemy-l0b4dw
+entrypoint: remote_trigger
+cliVersion: 2.1.241
+trigger: frictions-to-fixes
