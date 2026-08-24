@@ -183,7 +183,11 @@ Skill, each producing scoped PRs with a known expected shape):
 
 **Merge is always gated. No self-merge.** Every change — interactive or
 autonomous — lands as a PR on a feature branch. Merge → tag release → the single
-container redeploys.
+container redeploys. *(The chartered-Skill amendments above narrow this: each
+grants one named Skill authority to merge its own gated PR on a green gate. The
+gate still decides — the grant delegates the merge to an objective check, it does
+not restore author judgement — but the merging session is the authoring one, so
+read those amendments before applying this line to a chartered Skill.)*
 - **One bounded exception (ADR-0009):** a session's own **session-log** Journal
   entry is committed **directly to `main`** by a helper script — never via a
   PR — because it is inert, schema-validated content the gate cannot protect and
