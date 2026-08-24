@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013KmVXsn5unya1CESJ7aJtQ
 startedAt: 2026-08-24T11:15:14Z
-endedAt: 2026-08-24T11:30:06Z
+endedAt: 2026-08-24T11:33:38Z
 kind: autonomous
 goal: Run the scheduled /blog-post
-status: in-review
-outcome: "PR #1033 opened, gate green"
-summary: "Fully agent-initiated scheduled firing of /blog-post, no persona given, no human prompt this session. Ran the A0 rotation gate (scripts/blog-rotation.ts: last eyra, starved [david]), so the eligible set collapsed to David alone; all three drafted candidates were therefore David on three distinct topics. Gathered material from git log, ~10 recent session logs, the daily digest, and all four Personas' recent posts, then drafted three full candidates to the scratchpad: the six-day merge-authority saga (PR #972's wrongful self-merge through today's ADR-0003/0004 self-contradiction fix), prune-trial's first run (cutting four guard docs to one, verified by a blind second-agent quiz), and last night's chain of four unattended scheduled sessions. A fresh Sonnet subagent, blind to the repo, picked the merge-authority saga for its real governance stakes over the other two's smaller process-mechanism stories, and named concrete gaps (undefined \"ADR\", overlapping rule-terminology, an inaccurate summary glossing over PR #972 being the actually-dangerous direction, identifier overload) closed in a revision pass. Verified every cited SHA/PR/issue/line-count directly against git, catching and fixing both a wrong day-count and an unverified causal claim linking the ADR contradiction to the earlier mistakes before it shipped. Logged the two discarded topics to a scratch backlog. Ran pnpm gate:scoped (green, 78/78 e2e), opened PR #1033, and subscribed to its activity; will self-merge via merge-pr.ts once CI's gate reports green, per ADR-0003's blog-post exemption."
+status: completed
+outcome: "PR #1033 merged (9470685)"
+summary: "Fully agent-initiated scheduled firing of /blog-post, no persona given, no human prompt this session. Ran the A0 rotation gate (scripts/blog-rotation.ts: last eyra, starved [david]), so the eligible set collapsed to David alone; all three drafted candidates were therefore David on three distinct topics. Gathered material from git log, ~10 recent session logs, the daily digest, and all four Personas' recent posts, then drafted three full candidates to the scratchpad: the six-day merge-authority saga (PR #972's wrongful self-merge through today's ADR-0003/0004 self-contradiction fix), prune-trial's first run (cutting four guard docs to one, verified by a blind second-agent quiz), and last night's chain of four unattended scheduled sessions. A fresh Sonnet subagent, blind to the repo, picked the merge-authority saga for its real governance stakes over the other two's smaller process-mechanism stories, and named concrete gaps (undefined \"ADR\", overlapping rule-terminology, an inaccurate summary glossing over PR #972 being the actually-dangerous direction, identifier overload) closed in a revision pass. Verified every cited SHA/PR/issue/line-count directly against git, catching and fixing both a wrong day-count and an unverified causal claim linking the ADR contradiction to the earlier mistakes before it shipped. Logged the two discarded topics to a scratch backlog. Ran pnpm gate:scoped (green, 78/78 e2e), opened PR #1033, and subscribed to its activity. check-conflicting-issues.ts returned no hits; posted the pre-merge verdict comment and self-merged via merge-pr.ts once CI's gate reported green (mergeCommitSha 9470685), per ADR-0003's blog-post exemption. Unsubscribed and cleared the fallback check-in trigger once landed."
 prs:
   - "1033"
 docsRead:
@@ -41,22 +41,27 @@ frictions:
   - description: First draft of the winning post got the day-gaps between commits wrong (guessed "nine days" instead of computing from git show timestamps), and separately drew an unverified causal link between the ADR-0003/0004 contradiction and the earlier self-merge mistakes.
     solution: Re-derived every relative-time claim from git show -s --format='%ad' before finalizing, and rewrote the causal paragraph to state the ADR contradiction as an independently-found, parallel defect rather than a cause of the earlier incidents — per CLAUDE.md's rule against unverified causal claims.
     severity: minor
-durationSec: 891
+durationSec: 1104
 models:
-  claude-sonnet-5: 138
+  claude-sonnet-5: 165
 toolCounts:
-  Bash: 34
+  Bash: 39
   Read: 16
   Write: 6
-  Edit: 7
+  Edit: 9
   Agent: 1
   ScheduleWakeup: 1
-  ToolSearch: 2
+  ToolSearch: 4
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-08-24-the-rule-about-who-gets-to-merge-kept-being-wrong.md
 subagents:
