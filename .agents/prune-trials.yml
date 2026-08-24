@@ -45,3 +45,29 @@ trials:
       session correctly following its deny message (that is the mechanism
       working); a session citing docs/agents/guards.md; a session discussing
       these tools correctly. Read every hit in full before counting it.
+  - problem: >
+      pr-workflow.md narrated a full investigation of a multi-issue PR silently
+      leaving all-but-the-first `Closes #N` issue open (PR #955 vs #985, ruled-out
+      causes, the GitHub-pipeline theory) behind a fix that's already built:
+      `scripts/merge-pr.ts` self-heals it post-merge, comma-joined or
+      one-per-line alike. issue-tracker.md separately restated the comma-join
+      symptom as if nothing covered it. Trimmed both to the operative rule plus
+      a pointer to the self-heal and issue #983.
+    territory:
+      - docs/agents/pr-workflow.md: the Closes-keyword self-heal paragraph
+      - docs/agents/issue-tracker.md: the comma-join bullet (now a pointer)
+      - keywords: Closes #N, Fixes #N, closing keyword, merge-pr.ts self-heal,
+        #983, #955, #985
+    opened: 2026-08-24
+    proven: true
+    check: >
+      Damage is a PR merged through `merge-pr.ts` that still leaves a named
+      issue open with nobody catching it, or a session that — after reading
+      only the surviving text — doesn't fall back to a manual `issue_read`
+      check when it lands a PR through some other path (hand-rolled
+      `merge_pull_request`, the web UI). A Sonnet probe given only the
+      surviving text answered both branches correctly (self-heal covers the
+      `merge-pr.ts` path, manual verification needed on any other path).
+      NOT damage: a session trusting `merge-pr.ts`'s self-heal and not
+      manually re-verifying every closed issue (that's the mechanism working);
+      a session citing pr-workflow.md's pointer instead of the old narrative.
