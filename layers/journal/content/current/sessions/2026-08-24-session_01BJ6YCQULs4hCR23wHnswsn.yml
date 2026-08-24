@@ -1,0 +1,43 @@
+schemaVersion: 1
+session: session_01BJ6YCQULs4hCR23wHnswsn
+startedAt: 2026-08-24T00:46:21Z
+endedAt: 2026-08-24T00:50:24Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: Clean run — no changes warranted
+summary: "Fully agent-initiated scheduled firing of audit-skills, no live human input. Ran scripts/audit-skills.ts for the 40-newest-session scorecard. Checked all four regressionChecks brackets: dispatch-subagents' and frictions-to-fixes' edits both looked suspicious on Phase A's coarse friction-count screen, but a Phase B deep-read of the full session logs on both sides of each edit showed the elevated-severity frictions traced to unrelated causes (a guard-script self-merge mistake, a killed subagent going unnoticed, prune-trial §5 wording) rather than to the edited Skills' own guidance — both landed inconclusive, nothing written. audit-docs' and prune-trial's brackets showed no signal at all. Reviewed all 36 Skills' importance/role against this window's usage (dominated by recurring digest/audit-skills/frictions-to-fixes/ blog-post/audit-docs/auto-triage sweeps plus the prune-trial charter chain); no grade met the bright-line ≥2-windowed-session bar for a change this run — every entry's existing grade and role still matched observed usage. No onDisk/inventoried mismatches (36/36 both). The one orphanedSessions entry (session_019aeaoPHYWMJVekmUvTMhQ9, PR #649's merge commit cc9f82dc) is already fully tracked by open issue #736 with identical evidence, so no new comment was posted. orphanScan succeeded (586 merged PRs, 441 with a session log); orphanSuppressionLog, humanPromptedClosures, manuallyRescuedClosures, and misclassifiedKind were all empty this run — the healthy state on every signal. Result: no Inventory PR, no filed/commented issue, no learning or idea entry."
+prs: []
+docsRead:
+  - path: docs/agents/guards.md
+    reason: checked why the flagged self-merge friction wasn't about dispatch-subagents' guidance
+  - path: layers/journal/content/current/sessions/2026-08-15-session_01MiNR7r1eLSDFnBBfGsNtUc.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-23-session_01DLmcXwjGGirmBYtx366GsX.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-23-session_01MkE1Ayk9RFXwSPMUEgEqbP.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this run's own procedure
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 244
+models:
+  claude-sonnet-5: 58
+toolCounts:
+  Bash: 18
+  Read: 4
+  ToolSearch: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_read: 1
+  mcp__github__get_commit: 1
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-429ti3
+entrypoint: remote_trigger
+cliVersion: 2.1.241
+trigger: audit-skills
