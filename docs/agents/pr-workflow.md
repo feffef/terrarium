@@ -83,35 +83,15 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
    merging it — see ADR-0004's high-risk set (also indexed in CLAUDE.md's
    Ground rules) for what counts.
 
-**A merged PR's `Closes #N`/`Fixes #N` keywords can still leave the named
-issue open — even a well-formed one-keyword-per-line body (issue #983).**
-Confirmed on PR #955: four issues, one `Closes #N` per line, only the first
-auto-closed on merge — the other three sat open for two days until a human
-closed them by hand. Two plausible causes were checked and ruled out with
-fresh evidence rather than assumed: it wasn't a missing-keyword-repetition
-formatting problem (#955's body already repeated the keyword before every
-number, which GitHub's docs require), and it wasn't the merge commit's own
-message driving the close, nor a systemic defect in `merge-pr.ts`'s REST/`gh
-api` merge call — PR #985 (two issues, same script, same default
-`--merge-method merge`) closed both correctly even though its underlying
-commit carried no closing keyword at all, proving the close is read from the
-PR *description*, not the commit landing on `main`, and that the same script
-path works reliably in the common case. What's genuinely unconfirmed is why
-#955 specifically dropped 3 of its 4 well-formed references — the evidence
-points at an intermittent limit in GitHub's own multi-issue-closing pipeline
-rather than anything in this repo's control, but that exact mechanism is
-unverified.
-
-Rather than chase the exact trigger further, `scripts/merge-pr.ts` now
-self-heals: after a merge succeeds, it re-parses the PR's own body for
-closing-keyword references (repeated-keyword and comma-listed styles alike)
-and closes any that are still open — so a session landing a PR through
-`merge-pr.ts` doesn't need to separately verify closure. If you ever land a
-PR through some other path (hand-rolled `merge_pull_request`, the web UI),
-this safety net doesn't run — verify each named issue's state with
-`issue_read`/`mcp__github__issue_read` afterward and close by hand
-(`issue_write` with `state: closed`, `state_reason: completed`) if it didn't
-fire.
+**GitHub can silently leave some `Closes #N`/`Fixes #N`-named issues open on a
+multi-issue PR, even a well-formed body** — an intermittent limit in GitHub's
+own closing pipeline, not this repo's doing (issue #983; root-caused via PRs
+#955/#985). `scripts/merge-pr.ts` self-heals it: after a merge succeeds, it
+re-parses the PR body's closing-keyword references (repeated-keyword and
+comma-listed styles alike) and closes any still open. Land through it.
+Using another merge path (hand-rolled `merge_pull_request`, the web UI)? This
+safety net doesn't run — verify each named issue's state with `issue_read`
+afterward and close by hand if it didn't fire.
 
 **Restarting a branch after its PR merged?** GitHub deletes the remote branch
 by default on merge, so a `push --force-with-lease` on a restarted branch of

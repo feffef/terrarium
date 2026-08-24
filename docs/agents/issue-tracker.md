@@ -86,7 +86,7 @@ A reviewing agent's verdict-posting rules live in `docs/agents/pr-workflow.md`'s
 
 **Never use a GitHub closing keyword (`Resolves`/`Closes`/`Fixes #N`) for an issue a PR only *references*** — e.g. a governance/tracking issue the PR touches on but doesn't complete. Merging a PR auto-closes anything named with a closing keyword, so using one on an issue the PR doesn't actually finish silently closes it out from under the tracker (it then has to be reopened with an explaining comment — this has already happened once, PR #326 → issue #213). Reserve closing keywords for the issue(s) the PR genuinely completes; use a plain-text reference ("relates to #N", "see #N") for every other issue the PR body mentions.
 
-**GitHub's comma-separated `Closes #A, #B, #C` only auto-closes the first (`#A`).** `#B` and `#C` stay open even though the line reads as closing all three. When a PR genuinely completes more than one issue, give each its own `Closes #N` line rather than comma-joining them.
+**A multi-issue `Closes` line can drop all but the first issue** — `docs/agents/pr-workflow.md`'s merge recipe is the single home for that failure mode and the `merge-pr.ts` self-heal that covers it.
 
 **Auditing PRs against session logs: parse `prs:`, don't regex it.** A session log's `prs` field (`shared/schemas/session.ts`) is a structured array of bare quoted PR-number strings (e.g. `["326"]`), not free-form prose — parse the log's YAML/frontmatter structurally and read the array, rather than regex-scanning the raw file text for something that looks like a PR reference.
 
