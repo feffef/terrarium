@@ -166,7 +166,11 @@ there is anything to render.
 **Auto-merge eligibility (mid-term review-agent) = green gate AND blast-radius
 policy.** Risk is a function of *what the PR touches*, not judgement:
 - **Low-risk (auto-mergeable when green):** content only, or a single Tenant's
-  layer/manifest.
+  layer/manifest. *(Read with the 2026-07-19 amendment above: this
+  classification stands, but only the named chartered-Skill tiers actually hold
+  auto-merge authority against it — an ordinary work PR of this shape is still
+  human-merged. `docs/agents/pr-workflow.md` is authoritative on who may merge
+  what.)*
 - **High-risk (human-only, always):** the generator, routing, isolation logic,
   CI itself, or governance/ADRs.
 
