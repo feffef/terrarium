@@ -1,0 +1,63 @@
+schemaVersion: 1
+session: session_01Qp4hhcyKkXuHMhzXAgKgmQ
+startedAt: 2026-08-25T17:51:22Z
+endedAt: 2026-08-25T18:08:16Z
+kind: interactive
+goal: Rewrite how-it-works page for newcomers
+status: in-review
+outcome: Three diagrams, four sections, full routine roster
+summary: "The user asked whether the Journal's How Humans & Agents Work page should gain more diagrams, noted that audit-docs and audit-skills watch for things frictions-to-fixes doesn't look for, then clarified they wanted high-level prose for new visitors too. Both halves were human-instructed. Audited the page: it is onramp card 2 but opened mid-mechanism, ran as one prose block, and named frictions-to-fixes as the only autonomous loop — audit-docs, audit-skills and prune-trial were absent. Rewrote it into four sections with an orientation opening, added a merge-authority section, covered the full routine roster framed by the reactive-versus-proactive distinction, and went from one diagram to three. Gate green; PR #1042 open."
+prs:
+  - "1042"
+docsRead:
+  - path: docs/adr/0024-mermaid-diagrams-are-pre-rendered-to-committed-theme-adaptive-svg.md
+    reason: author-time render + drift-gate mechanics before touching diagrams
+  - path: docs/agents/pr-workflow.md
+    reason: per-tier merge authority — the source for the new merge section
+  - path: layers/journal/CONTEXT.md
+    reason: why the Journal exists, for the orientation prose
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: what audit-docs actually sweeps for
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: the never-edit-a-Skill boundary
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: the trial mechanism, in its own words
+  - path: app/utils/mermaid.ts
+    reason: which tokens theme live vs. bake, before writing classDefs
+skillsUsed:
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: render:mermaid writes new SVGs but never deletes the superseded one, so verify:mermaid fails on the orphan right after a legitimate re-render.
+    solution: Have render-mermaid.ts prune orphaned SVGs itself (it already computes the live key set), or print the exact rm command the way verify-mermaid prints its regenerate hint.
+    severity: minor
+  - description: First mermaid render was visually poor — multi-line diamonds inflate hugely and wide graphs scale to unreadable text under max-width 100%.
+    solution: "Record the label-length guidance in the ADR-0024 area or a diagramming note: keep decision-node text to one short line, prefer narrow graphs."
+    severity: minor
+  - description: Each committed diagram SVG is 60-150 KB and MermaidDiagram.vue eager-globs them all, so every diagram's weight ships with the content chunk site-wide.
+    solution: Worth measuring whether the eager glob can become lazy per-key, or whether rough.js hand-drawn output can be slimmed; flag before diagram count grows.
+    severity: nit
+durationSec: 1015
+models:
+  claude-opus-5: 95
+toolCounts:
+  Bash: 43
+  Read: 3
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  Skill: 2
+gitBranch: claude/journal-page-diagrams-i4l9vp
+entrypoint: remote_mobile
+cliVersion: 2.1.245
+learnings:
+  - "Baked mermaid geometry means narrow diagrams read better: a wide graph scales down under max-width 100% until its 20px baked text is unreadable, so label brevity is a legibility lever, not a style choice."
+  - "The how-it-works page's audience is set by frontmatter: an `onramp` value opts a page into the Journal index's \"New here?\" card, which is what makes newcomer-level prose its job rather than a nicety."
+ideas:
+  - "The Journal has no page that simply lists the scheduled routines and what each one watches — how-it-works now narrates four of six in prose, but the roster lives only in the Skill Inventory's importance field. A small derived panel on /t/journal/current, built from `importance: routine` entries, would stay honest automatically as routines are added or retired, and would stop prose pages from having to re-list them."
