@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01WdTifh5L2sLw82ZgT9W3ek
 startedAt: 2026-08-25T11:16:38Z
-endedAt: 2026-08-25T11:33:11Z
+endedAt: 2026-08-25T11:36:37Z
 kind: autonomous
 goal: Run the scheduled /blog-post
-status: in-review
-outcome: "PR #1040 opened, awaiting gate/merge"
-summary: "Fully agent-initiated scheduled firing of /blog-post, no persona given, no human prompt this session. Ran the A0 rotation gate (scripts/blog-rotation.ts: last david, eligible {eyra, karen, kevin}). Gathered material from git log, ~10 recent session logs, and all four Personas' recent posts, then drafted three full candidates to scratch: Karen on prune-trial's 2026-08-23 wrongful self-merge escalation (session_01DLmcXwjGGirmBYtx366GsX), Kevin on the 2026-08-25 audit-docs session's own identifier-capture near-miss (session_019R6YNCNKbwZ1FfAMja55ya), and Eyra on the Monitor guard (checkMonitorCall) that was implemented and unit-tested per issue #964/PR #972 but silently unwired in .claude/settings.json for six days until commit 4b09514 (closes #995). A fresh Sonnet subagent, blind to the repo, picked Eyra's for the larger real-world stakes (a safety mechanism offline, not a single bounded slip) and named concrete gaps (undefined Monitor/checkMonitorCall, the other misrouted guard never named, the ampersand-scanner fix reading as an unrelated footnote) closed in a revision pass. Verified every cited SHA/issue/PR/line/quote directly against git and the GitHub API before shipping, catching and fixing three inaccuracies in the winning draft before publish (a wrong commit attribution, a wrong \"weeks\" elapsed-time claim that was actually six days, and a title implying hours between reading a rule and breaking it when the source session was ~14 minutes long). Logged the two discarded topics to a scratch backlog. Ran pnpm gate:scoped (green, build + 78/78 e2e), opened PR #1040, subscribed to its activity."
+status: completed
+outcome: "PR #1040 merged (9dce7708)"
+summary: "Fully agent-initiated scheduled firing of /blog-post, no persona given, no human prompt this session. Ran the A0 rotation gate (scripts/blog-rotation.ts: last david, eligible {eyra, karen, kevin}). Gathered material from git log, ~10 recent session logs, and all four Personas' recent posts, then drafted three full candidates to scratch: Karen on prune-trial's 2026-08-23 wrongful self-merge escalation (session_01DLmcXwjGGirmBYtx366GsX), Kevin on the 2026-08-25 audit-docs session's own identifier-capture near-miss (session_019R6YNCNKbwZ1FfAMja55ya), and Eyra on the Monitor guard (checkMonitorCall) that was implemented and unit-tested per issue #964/PR #972 but silently unwired in .claude/settings.json for six days until commit 4b09514 (closes #995). A fresh Sonnet subagent, blind to the repo, picked Eyra's for the larger real-world stakes (a safety mechanism offline, not a single bounded slip) and named concrete gaps (undefined Monitor/checkMonitorCall, the other misrouted guard never named, the ampersand-scanner fix reading as an unrelated footnote) closed in a revision pass. Verified every cited SHA/issue/PR/line/quote directly against git and the GitHub API before shipping, catching and fixing three inaccuracies in the winning draft before publish (a wrong commit attribution, a wrong \"weeks\" elapsed-time claim that was actually six days, and a title implying hours between reading a rule and breaking it when the source session was ~14 minutes long). Logged the two discarded topics to a scratch backlog. Ran pnpm gate:scoped (green, build + 78/78 e2e), opened PR #1040, subscribed to its activity, posted the pre-merge verdict comment, and self-merged via merge-pr.ts once CI's gate reported green (mergeCommitSha 9dce7708), per the blog-post self-merge tier (ADR-0003/0004). Unsubscribed once landed."
 prs:
   - "1040"
 docsRead:
@@ -46,24 +46,25 @@ frictions:
   - description: The A5 outside-reader subagent's plain-text discussion of `.claude/settings.json` triggered the harness's instruction-shaped-pattern neutralization on its output, tagging otherwise-benign analysis text.
     solution: No actual injection was present; read the flagged output directly and confirmed it was ordinary review content before using it. Worth noting in case future blog-post runs see the same false-positive pattern when a candidate discusses guard/settings internals.
     severity: nit
-durationSec: 994
+durationSec: 1199
 models:
-  claude-sonnet-5: 148
+  claude-sonnet-5: 172
 toolCounts:
-  Bash: 36
+  Bash: 42
   ToolSearch: 3
   mcp__github__issue_read: 3
-  Read: 17
+  Read: 18
   Grep: 5
   Write: 6
-  Edit: 8
+  Edit: 10
   Agent: 1
-  ReadNotifications: 1
+  ReadNotifications: 4
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/eyra/pages/2026-08-25-the-guard-who-stood-at-a-door-nobody-walked-through.md
 subagents:
