@@ -1,0 +1,72 @@
+schemaVersion: 1
+session: session_01Khiu4TdQcz1ZS4PBWFYPUw
+startedAt: 2026-08-25T02:06:41Z
+endedAt: 2026-08-25T02:24:05Z
+kind: autonomous
+goal: Run frictions-to-fixes sweep
+status: completed
+outcome: One fix merged, one regression escalated
+summary: "Scheduled autonomous firing of /frictions-to-fixes. A survey subagent read the latest 20 session logs, screened candidates against the tracker, and returned one never-fixed candidate (blog-post's citation-rigor list doesn't check that multiple counts in the same paragraph reconcile) plus one regression (issue #653/PR #655's relative-time-claim fix recurred in a session that started weeks after the fix merged). No human prompt occurred at any point. Filed issue #1036 for the simple candidate and dispatched a Sonnet impl agent in an isolated worktree, which opened PR #1038; reviewed the diff directly, posted a COMMENT-event verdict, and merged via scripts/merge-pr.ts (green gate, floor-only since the path was inert). Filed issue #1037 for the regression per the Skill's own rule that a fix which already failed once needs human eyes rather than a second doc attempt, and notified the user since no one was watching the run live."
+prs:
+  - "1038"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: merge-pr.ts recipe + verdict-comment discipline
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: "verify citation-rigor list state before filing #1036"
+  - path: /home/user/terrarium/.agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run itself
+  - name: dispatch-subagents
+    reason: "worktree-isolated impl agent brief for #1036's fix"
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "The Skill tool refused a direct call to frictions-to-fixes (disable-model-invocation: true) even though the scheduled prompt had already pasted the full skill body inline via the command-name block — same recurring pattern tracked by open issue #1018."
+    solution: "Recovered per the Skill tool's own instruction (\"if a command-name block is already present this turn, the skill is loaded — follow it directly rather than calling again\") and proceeded from the inlined body. No new issue needed; #1018 already owns this regression."
+    severity: minor
+  - description: "The survey subagent's report cited issue #715/PR #716 as the original fix for the recurring relative-time-claim friction, but the actual originating fix for that specific rule was issue #653/PR #655 (#715 extended the rigor to SHA/attribution/occurrence counts, a different axis) — caught only by reading #715's own body, which named #653 as the prior fix, before filing the regression issue."
+    solution: "Verified the claim against the primary source (the actual issue bodies) before citing either in the filed regression issue, per CLAUDE.md's subagent-claim verification rule. Worth noting for future frictions-to-fixes runs: a subagent's issue-number citation for \"the original fix\" should be double-checked against that issue's own body, not trusted as final."
+    severity: minor
+durationSec: 1044
+models:
+  claude-sonnet-5: 69
+toolCounts:
+  Skill: 4
+  Agent: 2
+  Bash: 11
+  ToolSearch: 1
+  mcp__github__issue_read: 3
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 4
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 3
+  Read: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  Grep: 2
+  Write: 1
+  PushNotification: 1
+filesEdited:
+  - /home/user/terrarium/.agents/skills/blog-post/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Implement blog-post reconciliation fix
+    model: sonnet
+gitBranch: claude/eager-ptolemy-18jrdn
+entrypoint: remote_trigger
+cliVersion: 2.1.243
+trigger: frictions-to-fixes
