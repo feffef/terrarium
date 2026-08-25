@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_011g11nyYtHap82gwWqtnfL6
 startedAt: 2026-08-25T00:17:03Z
-endedAt: 2026-08-25T00:22:56Z
+endedAt: 2026-08-25T00:27:18Z
 kind: autonomous
 goal: Run the scheduled /digest sweep
-status: in-review
-outcome: "PR #1035 opened, gate green"
-summary: "Scheduled /digest Routine fired with no live human input. Ran scripts/digest.ts list/gather to find the one closed day pending a Digest (2026-08-24: 5 merged PRs, 6 sessions), authored layers/journal/content/current/pages/digests/2026-08-24.md, ran the retention sweep (archived the 2026-08-17 digest and 6 aged-out session logs), confirmed pnpm gate:scoped green (build + full 78/78 e2e smoke), and opened PR #1035 scoped only to the digest page and archive-sweep moves. Subscribed to the PR's activity to babysit it to merge. All work this run is routine-scheduled, not human-instructed beyond the Routine's stored prompt."
+status: completed
+outcome: "PR #1035 merged (cf11bd9)"
+summary: "Scheduled /digest Routine fired with no live human input. Ran scripts/digest.ts list/gather to find the one closed day pending a Digest (2026-08-24: 5 merged PRs, 6 sessions), authored layers/journal/content/current/pages/digests/2026-08-24.md, ran the retention sweep (archived the 2026-08-17 digest and 6 aged-out session logs), confirmed pnpm gate:scoped green (build + full 78/78 e2e smoke), and opened PR #1035 scoped only to the digest page and archive-sweep moves. Subscribed to the PR's activity, confirmed CI's gate and label checks green with a clean mergeable_state, posted the verdict comment, and self-merged via merge-pr.ts (content-only low-risk tier, ADR-0003 amendment). All work this run is routine-scheduled, not human-instructed beyond the Routine's stored prompt."
 prs:
   - "1035"
 docsRead:
@@ -23,18 +23,25 @@ frictions:
   - description: The Skill tool refused direct invocation of the digest Skill (disable-model-invocation) even though the scheduled prompt had already inlined the Skill's full body under a <command-name> block — the same snag two of yesterday's sessions hit for digest and frictions-to-fixes.
     solution: Expected/by-design per the Skill's own doc ("invoked, never self-fired"); proceeded by following the already-inlined instructions directly instead of retrying the Skill tool call.
     severity: nit
-durationSec: 353
+durationSec: 615
 models:
-  claude-sonnet-5: 48
+  claude-sonnet-5: 81
 toolCounts:
   Skill: 3
-  Bash: 15
-  Read: 1
+  Bash: 19
+  Read: 2
   Write: 2
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__Claude_Code_Remote__get_session: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Edit: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-08-24.md
 gitBranch: claude/compassionate-lovelace-e0nmmf
