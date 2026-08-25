@@ -287,7 +287,7 @@ blank.
 | PR-08 | `scripts/merge-pr.ts` is the sole merge path; never call `enable_pr_auto_merge` | Recipe | H (refusal) | #667 | `PreToolUse`: deny `mcp__github__enable_pr_auto_merge` outright, and deny `merge_pull_request` except from `merge-pr.ts`. The tool is already documented as never-correct here | S |
 | PR-09 | Escalate a genuinely high-risk or out-of-scope PR instead of merging it | Recipe | J | none | The judgement ADR-0004 explicitly reserves for a human/reviewer | — |
 | PR-10 | Run `git remote prune origin` before force-pushing a restarted branch whose PR merged | Restarting | J | none | Narrow, self-diagnosing; **D** candidate | — |
-| PR-11 | Per-tier merge authority: `digest`/`audit-docs`/`audit-skills`/`blog-post` merge on green; `frictions-to-fixes` adds risk judgement; `guest-build` never merges; an ordinary PR is human-merged | Merge authority | G | none | **This is #864's policy-as-data ticket.** Today it is prose duplicated across ≥7 homes (all stating the same policy, not conflicting) and `merge-pr.ts` carries no caller identity at all, so there is nothing to key a ledger on | L |
+| PR-11 | Per-tier merge authority: `digest`/`audit-docs`/`audit-skills`/`blog-post` merge on green; `prune-trial` merges on green and uniquely may prune ADR prose; `frictions-to-fixes` adds risk judgement; `guest-build` never merges; an ordinary PR is human-merged | Merge authority | G | none | **This is #864's policy-as-data ticket.** Today it is prose duplicated across ≥7 homes (all stating the same policy, not conflicting) and `merge-pr.ts` carries no caller identity at all, so there is nothing to key a ledger on | L |
 
 ### 5.5 `docs/agents/environment-caveats.md`
 
