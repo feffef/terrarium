@@ -1,5 +1,5 @@
 title: the removed-mechanism-noun gate (PR #477)
-stratum: current-midden
+stratum: plainer-cut
 condition: never-activated
 provenance:
   kind: pr

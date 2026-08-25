@@ -1,5 +1,5 @@
 title: the external-session marking prototype
-stratum: current-midden
+stratum: plainer-cut
 condition: dissolved
 provenance:
   kind: commit

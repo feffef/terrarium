@@ -1,5 +1,5 @@
 title: ConditionPopover.vue (the Tier-2 expansion)
-stratum: current-midden
+stratum: plainer-cut
 condition: never-activated
 provenance:
   kind: file

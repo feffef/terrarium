@@ -1,5 +1,5 @@
 title: "the @nuxt/content #236 client-DB patch"
-stratum: current-midden
+stratum: plainer-cut
 condition: fresh
 provenance:
   kind: commit

@@ -1,5 +1,5 @@
 title: the auto-generated tenant/space listing
-stratum: current-midden
+stratum: plainer-cut
 condition: fresh
 provenance:
   kind: commit

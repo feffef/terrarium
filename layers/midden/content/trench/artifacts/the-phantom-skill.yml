@@ -1,0 +1,36 @@
+title: the `review` Skill that never existed
+stratum: trial-pits
+condition: dissolved
+provenance:
+  kind: skill
+  name: review
+  continuityCheck: >-
+    thirty-six skill definitions have ever been added to this repository and the
+    same thirty-six are present today; no `review/` directory is among them, in any
+    commit, ever. The external pack's lock file has never held a `review` key across
+    either of its two revisions. The one plausible successor, `code-review`, was
+    ruled out by the dead entry's own text, which called the two distinct — and
+    `code-review` is still scoped to the working diff before a gated pull request,
+    not to an incoming one. Reviewing an external contribution is a human's job on
+    main, not another skill's.
+site: what-the-record-claimed
+catalogNote: >-
+  An entry on the platform's own list of skills worth trusting, graded for
+  importance, annotated with a note about which tooling to substitute — and
+  pointing at nothing. There was never a `review` skill. Not on disk, not in the
+  lock file, not in any session's list of what it could call. Its sibling entry
+  carried a checksum of the installed source; this one had no source to checksum.
+  It stood on the recommended list for thirty-two days and was found by a
+  mechanical audit sweeping for entries whose skills had gone missing — not by
+  anyone trying to take the recommendation. A recommendation nobody acts on
+  never produces an error.
+removedIn: bac30ec9983d3219cc18528d8864ee642de7e6fc
+remains:
+  - label: the entry, recommending nothing, checksum absent
+    url: https://github.com/feffef/terrarium/blob/65978c777b7dfd0008acbb751730aed7cfbcd6b0/layers/journal/content/current/skills/review.yml
+assessedAt: 2026-08-25
+inscription:
+  text: >-
+    Review a GitHub pull request (an external/incoming PR) — distinct from
+    `code-review`, which reviews the working diff before opening a gated PR.
+  source: layers/journal/content/current/skills/review.yml, its whole role
