@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_01Wr8N7AFivfAZz13LAeNhKk
 startedAt: 2026-08-25T17:56:00Z
-endedAt: 2026-08-25T18:27:18Z
+endedAt: 2026-08-25T20:23:36Z
 kind: interactive
-goal: Survey the Midden for uncatalogued discards
-status: completed
-outcome: "Six candidates filed as issue #1043"
-summary: "Human-instructed throughout. The user asked for a five-way subagent fan-out over session, GitHub and git history to find discarded work the Midden has not catalogued, plus a view on whether finds fit existing dig reports, and whether a Skill owns this job. They invoked /grill-with-docs, then interrupted it to invoke /midden-survey directly, which settled scope. Ran the Skill: unshallowed the clone, ran the mechanical sweep, and dispatched five read-only agents pinned to one SHA. Six candidates cleared the two-gate bar, including the first-ever branch- and skill-provenance finds; the eight doc deletions all failed Gate B. Filed one survey-report issue per the Skill's charter. No cataloguing, no commits."
-prs: []
+goal: Survey the Midden, then catalogue the finds
+status: in-review
+outcome: "Six finds catalogued in PR #1044"
+summary: "Human-instructed throughout. The user asked for a five-way subagent fan-out over session, GitHub and git history to find discarded work the Midden has not catalogued, plus a view on whether finds fit existing dig reports, and whether a Skill owns this job. They invoked /grill-with-docs, then interrupted it to invoke /midden-survey directly, which settled scope. Ran the Skill: unshallowed the clone, ran the mechanical sweep, and dispatched five read-only agents pinned to one SHA. Six candidates cleared the two-gate bar, including the first-ever branch- and skill-provenance finds; the eight doc deletions all failed Gate B. Filed one survey-report issue per the Skill's charter (#1043). The user then gave an explicit green-light to catalogue everything found, loosening the rule that reserves condition/stratum/site/catalogNote to the curator — so all four were authored here. Six Artifacts landed (the Tenant's first branch- and skill-provenance finds), three new dig reports, a fifth find folded into an existing report, and the dig-season list rebuilt: the 43-day open season named and closed, a new one coined, nine artifacts repointed. Gate green end to end; PR #1044 opened and subscribed."
+prs:
+  - "1044"
 docsRead:
   - path: layers/midden/CONTEXT.md
     reason: the inclusion bar and Artifact shape
@@ -21,6 +22,28 @@ docsRead:
     reason: dig-season list, to measure stratum staleness
   - path: scripts/midden-survey.ts
     reason: root-caused the noise-path screening defect
+  - path: layers/midden/content/stores/artifacts/the-condition-popover.yml
+    reason: (read before editing)
+  - path: layers/midden/content/stores/artifacts/the-root-listing.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/kevin-walls-talk.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-condition-glyph.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-copy-link-button.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-external-session-prototype.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-nuxt-content-patch.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-removed-noun-gate.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-stratigraphy-sidebar.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/pages/unpublished-dispatches.md
+    reason: (read before editing)
+  - path: layers/midden/app/components/midden/TrenchLanding.vue
+    reason: (no reason given)
 skillsUsed:
   - name: midden-survey
     reason: the chartered discovery procedure
@@ -45,11 +68,11 @@ frictions:
   - description: My first attempt to verify the query defect passed an HTML-escaped `>` and returned zero, which looked like confirmation for the wrong reason.
     solution: Caught it before asserting; re-ran with an unqualified search. Watch for entity-escaping in MCP query strings.
     severity: nit
-durationSec: 1878
+durationSec: 8856
 models:
-  claude-opus-5: 108
+  claude-opus-5: 220
 toolCounts:
-  Bash: 30
+  Bash: 53
   ToolSearch: 2
   mcp__github__search_issues: 2
   mcp__github__issue_read: 2
@@ -58,6 +81,37 @@ toolCounts:
   mcp__github__search_pull_requests: 2
   mcp__github__issue_write: 1
   Skill: 2
+  Read: 12
+  Edit: 13
+  Grep: 1
+  Write: 9
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/midden/content/stores/artifacts/the-condition-popover.yml
+  - layers/midden/content/stores/artifacts/the-root-listing.yml
+  - layers/midden/content/trench/artifacts/kevin-walls-talk.yml
+  - layers/midden/content/trench/artifacts/the-condition-glyph.yml
+  - layers/midden/content/trench/artifacts/the-copy-link-button.yml
+  - layers/midden/content/trench/artifacts/the-external-session-prototype.yml
+  - layers/midden/content/trench/artifacts/the-nuxt-content-patch.yml
+  - layers/midden/content/trench/artifacts/the-removed-noun-gate.yml
+  - layers/midden/content/trench/artifacts/the-stratigraphy-sidebar.yml
+  - layers/midden/content/trench/artifacts/the-commits-tenant.yml
+  - layers/midden/content/trench/artifacts/the-rehearsed-prune.yml
+  - layers/midden/content/trench/artifacts/the-losing-designs.yml
+  - layers/midden/content/trench/artifacts/david-spoke-too-soon.yml
+  - layers/midden/content/trench/artifacts/the-phantom-skill.yml
+  - layers/midden/content/trench/artifacts/the-third-onramp.yml
+  - layers/midden/content/trench/pages/the-thirty-day-exception.md
+  - layers/midden/content/trench/pages/the-rehearsals.md
+  - layers/midden/content/trench/pages/what-the-record-claimed.md
+  - layers/midden/content/trench/pages/unpublished-dispatches.md
+  - layers/midden/tests/e2e/midden.e2e.ts
 subagents:
   - type: general-purpose
     task: Sweep closed-unmerged PRs
