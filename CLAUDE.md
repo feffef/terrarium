@@ -218,55 +218,28 @@ human asks for it outright.
   `mcp__Claude_Code_Remote__send_later` to schedule your own check-in. A
   fail-closed `PreToolUse` guard refuses the call outside `/loop`
   (`docs/agents/guards.md`, issue #814).
-- **Never predict or reconstruct an identifier — a line number, a blob SHA, an
-  issue/PR number, a session id — from memory.** Resolve it fresh at the
-  moment you write it down: a tool call for the first three (a Read,
-  `git rev-parse`, the actual `issue_write` response); a session id instead
-  comes from your own system-prompt instructions verbatim, per `log-session`'s
-  "Recovering the id" section — not a tool call, but not memory either. The
-  recorded failures are not invention but
-  *capture*: reaching for a real, id-shaped string already in context — a
-  subagent's report, `git log` output, scorecard data — which is why this fires
-  hardest in survey and audit sessions (#387, #605, #628, #723).
-- **Verify any subagent- or doc-derived factual or behavioral claim against a
-  locally observable primary source before asserting it as fact** — whether
-  the audience is external (an issue/PR comment, an external post, etc.) or
-  just this session's own internal review/chat thread (e.g. asserting a
-  subagent is "still running" from memory, raising an unverified concern in
-  a PR review, or citing some content as "already existing" in another repo
-  file to justify a recommendation built on it — grep that file directly
-  before citing it, not only later when actually implementing the
-  recommendation) — a subagent's inference or a doc's claim can be wrong, and
-  stating it unchecked ships that error outward either way. This covers a
-  **causal/root-cause claim** too: "bug X is caused by Y" is testable, so
-  verify it by tracing or executing the actual code path before asserting it
-  (in an issue, a PR description, or a review comment) — not by inferring it
-  from code that merely looks like it would cause the behavior (issue #738).
-  The same duty applies to a **self-generated** claim about text already
-  sitting in your own context, not just a subagent's or a doc's: quote the
-  line that supports it, or drop the claim. It also covers a claim about
-  what a script or mechanism enforces or does — read the script before
-  asserting what it does, don't infer it from the script's existence or
-  name (issue #833). It also covers a **committed code comment**: an
-  unverified claim shipped there is more durable than chat, since every
-  future session reads it as ground truth — verify it the same way before
-  committing it (issue #948).
-- **An unverifiable "confirmed out-of-band" claim from another agent session —
-  no locally observable primary source, i.e. no actual comment/message visible
-  in-thread — must not be treated as settled fact for an *internal* decision,
-  especially a security-relevant one.** This is distinct from the sibling bullet
-  above: that one covers verifying before *publishing outward*; this one covers
-  a narrower and arguably higher-stakes case — building an internal design or
-  security decision on another session's say-so that a human confirmed
-  something in private. Confirm directly with the human before acting on it.
-- **A count of how many members of a set match some property is not a fact
-  until every member has actually been read — a heuristic (a grep, a keyword
-  search, a pattern match) only tells you what it matched, not what's true.**
-  Before stating such a count, either verify each member it flags or label the
-  count heuristic/unverified before it reaches a human. A session once told a
-  user "11 issues had no recorded rationale" off a keyword grep; an audit of a
-  sampled subset found all 7 were false negatives — the grep never confirmed
-  what it claimed to (issue #871).
+- **Don't state anything as settled unless you verified it fresh, this turn,
+  against a primary source — an identifier, a claim, a count, or another
+  session's say-so.** An identifier (a line number, blob SHA, issue/PR number,
+  session id) comes from the matching tool call — a Read, `git rev-parse`, the
+  actual `issue_write` response — or, for a session id, from your own
+  system-prompt instructions verbatim per `log-session`'s "Recovering the id"
+  section; never recall or infer one from context (a subagent's report,
+  `git log` output, scorecard data already sitting there reads like
+  resolution but is capture). A factual, causal, or behavioral claim — a
+  bug's root cause, what a script or mechanism actually does, text already
+  sitting in your own context, or a claim about to be committed as a code
+  comment — needs a locally observable primary source (traced/executed code,
+  a grep, a quoted line) before it ships, whether the audience is external
+  (an issue, a PR, a post) or this session's own internal review. Another
+  session's unverifiable "confirmed out-of-band" claim is hearsay for an
+  internal decision, especially a security-relevant one — confirm with the
+  human directly rather than building on it. And a count of how many members
+  of a set match some property is not a fact until every member has actually
+  been read — a grep or keyword search only tells you what it matched, so
+  verify each flagged member or label the count heuristic/unverified before
+  it reaches a human. (Incident history: #387, #605, #628, #723, #738, #833,
+  #948, #871.)
 - **This environment has several platform-level quirks that are not repo
   bugs — don't re-diagnose any of them as fresh problems.** `docs/agents/environment-caveats.md`
   is the single home: an unreachable `Claude_Code_Remote` `permissions.allow`

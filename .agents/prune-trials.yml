@@ -71,3 +71,33 @@ trials:
       NOT damage: a session trusting `merge-pr.ts`'s self-heal and not
       manually re-verifying every closed issue (that's the mechanism working);
       a session citing pr-workflow.md's pointer instead of the old narrative.
+  - problem: >
+      Four CLAUDE.md bullets (49 lines) restated the same "verify before you
+      assert" duty four times over — an identifier, a subagent/doc/self claim,
+      an out-of-band claim, and a set-count — each with its own worked example
+      and issue citation. Collapsed into one bullet stating the shared rule
+      once ("Don't state anything as settled unless you verified it fresh,
+      this turn, against a primary source"), covering all four cases in one
+      pass, with a compact incident-history pointer instead of four narrated
+      incidents.
+    territory:
+      - CLAUDE.md: the identifier/claim/out-of-band/count-verification bullet
+        (now one bullet beginning "Don't state anything as settled")
+      - keywords: locally observable primary source, reconstruct an
+        identifier, confirmed out-of-band, count is not a fact, verify before
+        asserting
+    opened: 2026-08-25
+    proven: true
+    check: >
+      Damage is a session that ships an unverified identifier, claim, hearsay
+      confirmation, or grepped count because the merged bullet no longer
+      spells out a case the old four-bullet version named explicitly — e.g.
+      citing a script's behavior without reading it, asserting a causal root
+      cause from code inspection alone, trusting another session's "a human
+      confirmed this" without asking, or reporting a grep-derived count as
+      settled fact. A Sonnet probe given only the surviving bullet answered
+      all four of those situations correctly (resolve the identifier fresh;
+      trace/execute before asserting the cause; confirm with the human before
+      acting on hearsay; label the grep count heuristic or verify each hit).
+      NOT damage: a session performing the same verification under the new
+      wording, or citing the merged bullet instead of the old four.
