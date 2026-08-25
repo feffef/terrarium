@@ -1,0 +1,64 @@
+schemaVersion: 1
+session: session_01Fz3uNP5HvE615R6QcLG1rL
+startedAt: 2026-08-25T13:22:53Z
+endedAt: 2026-08-25T13:38:16Z
+kind: autonomous
+goal: Run the scheduled prune-trial routine
+status: completed
+outcome: "Merged 4 CLAUDE.md bullets into 1, PR #1041 landed"
+summary: "Scheduled /prune-trial run, entirely agent-initiated (no human prompt this session). Judged the two open trials in .agents/prune-trials.yml: both landed too recently (2026-08-23, 2026-08-24) to have cleared ADR-0027's 3-day window, so neither was judgeable yet. Chose a new problem: four CLAUDE.md \"Working conventions\" bullets (49 lines) all restated the same \"verify before you assert\" duty — an identifier, a subagent/doc/self claim, an out-of-band claim, a set-count — each with its own worked example and issue citation, confirmed single-homed (grepped clean elsewhere in the corpus). Collapsed into one bullet (net -27 lines), proved it on a Sonnet subagent given only the surviving text (4/4 situations answered correctly, so proven: true, no hook shipped), ran pnpm gate:scoped full sequence (green, 78/78 e2e), opened PR #1041 against main, posted the merge verdict (3 advisory conflict-check hits eyeballed and ruled out), and landed it via scripts/merge-pr.ts once CI resolved green."
+prs:
+  - "1041"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: (read before editing)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (read before editing)
+skillsUsed:
+  - name: prune-trial
+    reason: the run itself
+  - name: close-session
+    reason: closure sequence at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: ".agents/prune-trials.yml's existing \"keywords: a, b,\\n  c, d\" line-wrap style (used by both open trials and now mine, for consistency) is not valid YAML — js-yaml/yaml both fail to parse the file at trial 1's keywords line. Nothing currently parses this file mechanically, so it's inert today, but it would break the moment any tooling tried to read trial entries structurally."
+    solution: Either fold multi-value "keywords:" lines onto one physical line, or switch them to a YAML block/flow sequence, across all trial entries in one pass; out of scope for this run since it touches trial 1's already- open, not-yet-judged entry.
+    severity: nit
+durationSec: 923
+models:
+  claude-sonnet-5: 113
+toolCounts:
+  Bash: 27
+  Read: 9
+  Grep: 2
+  Edit: 5
+  Agent: 1
+  ToolSearch: 5
+  mcp__github__search_pull_requests: 1
+  mcp__github__get_file_contents: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__issue_read: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+filesEdited:
+  - CLAUDE.md
+  - .agents/prune-trials.yml
+subagents:
+  - type: general-purpose
+    task: Probe pruned verification rule
+    model: sonnet
+gitBranch: claude/practical-rubin-iod5bm
+entrypoint: remote_trigger
+cliVersion: 2.1.245
+trigger: prune-trial
