@@ -1,0 +1,41 @@
+schemaVersion: 1
+session: session_01TNQWNPJLChbgKQoyg1PTGh
+startedAt: 2026-08-25T00:46:18Z
+endedAt: 2026-08-25T00:50:48Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: Clean run, no Inventory changes met the bar
+summary: "Scheduled autonomous run of /audit-skills. Ran scripts/audit-skills.ts and reviewed the 40-session window, the 4 bracketed regression checks, and the 1 orphaned-session candidate. No Skill's importance/role met step 3's bright-line (>=2 session) evidence bar for a change - the window is dominated by ~7 routine automation Skills whose current grades already match observed usage. Regression Phase A flagged dispatch-subagents, frictions-to-fixes, and prune-trial edits for a closer look; Phase B deep-reads of the flagged sessions (session_01MiNR7r1eLSDFnBBfGsNtUc, session_01DLmcXwjGGirmBYtx366GsX) traced their frictions to an unrelated merge-authority mistake and to the very friction that motivated the prune-trial edit itself, not to a regression caused by either edit - both judged inconclusive, nothing filed. The one orphaned session (session_019aeaoPHYWMJVekmUvTMhQ9) is already tracked, fully cited, and left open ready-for-human at issue #736 - no duplicate filed. humanPromptedClosures, manuallyRescuedClosures, misclassifiedKind, and orphanSuppressionLog were all empty. No PR opened (empty diff). All work this session was self-directed per the audit-skills charter; no human input."
+prs: []
+docsRead:
+  - path: .claude/skills/audit-skills/SKILL.md
+    reason: this run's own charter
+  - path: layers/journal/content/current/sessions/2026-08-15-session_01MiNR7r1eLSDFnBBfGsNtUc.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-23-session_01DLmcXwjGGirmBYtx366GsX.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this run's own procedure
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 271
+models:
+  claude-sonnet-5: 41
+toolCounts:
+  Bash: 15
+  Read: 2
+  Agent: 1
+  Skill: 2
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Search GitHub issues for orphaned session
+gitBranch: claude/upbeat-sagan-ga7uf8
+entrypoint: remote_trigger
+cliVersion: 2.1.243
+trigger: audit-skills
