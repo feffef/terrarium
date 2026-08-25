@@ -1,0 +1,81 @@
+schemaVersion: 1
+session: session_01Wr8N7AFivfAZz13LAeNhKk
+startedAt: 2026-08-25T17:56:00Z
+endedAt: 2026-08-25T18:27:18Z
+kind: interactive
+goal: Survey the Midden for uncatalogued discards
+status: completed
+outcome: "Six candidates filed as issue #1043"
+summary: "Human-instructed throughout. The user asked for a five-way subagent fan-out over session, GitHub and git history to find discarded work the Midden has not catalogued, plus a view on whether finds fit existing dig reports, and whether a Skill owns this job. They invoked /grill-with-docs, then interrupted it to invoke /midden-survey directly, which settled scope. Ran the Skill: unshallowed the clone, ran the mechanical sweep, and dispatched five read-only agents pinned to one SHA. Six candidates cleared the two-gate bar, including the first-ever branch- and skill-provenance finds; the eight doc deletions all failed Gate B. Filed one survey-report issue per the Skill's charter. No cataloguing, no commits."
+prs: []
+docsRead:
+  - path: layers/midden/CONTEXT.md
+    reason: the inclusion bar and Artifact shape
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: the procedure this session ran
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: brief-authoring rules before the fan-out
+  - path: layers/midden/tenant.config.ts
+    reason: provenance schema for the draft blocks
+  - path: layers/midden/app/utils/strata.ts
+    reason: dig-season list, to measure stratum staleness
+  - path: scripts/midden-survey.ts
+    reason: root-caused the noise-path screening defect
+skillsUsed:
+  - name: midden-survey
+    reason: the chartered discovery procedure
+  - name: dispatch-subagents
+    reason: five parallel read-only agents on a shared checkout
+  - name: close-session
+    reason: self-judged closure
+  - name: log-session
+    reason: (no reason given)
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: midden-survey SKILL.md tells the surveyor to bound closed PRs with `closed:>=<since>`. Run literally it returned 1 of 4 in-window PRs.
+    solution: "Sweep unqualified and filter locally; fix the Skill. Filed as D1 in issue #1043."
+    severity: major
+  - description: scripts/midden-survey.ts isNoisePath screens all of layers/journal/content/, which contains the Skill Inventory, so a deleted Inventory entry never surfaces.
+    solution: "Exempt layers/journal/content/*/skills/ from the noise screen. Filed as D2 in issue #1043."
+    severity: major
+  - description: I propagated the Skill's broken PR query verbatim into a subagent brief; the agent caught it and cross-checked two ways rather than building on it.
+    solution: Sanity-check a Skill's literal query against an unqualified control before briefing it out.
+    severity: minor
+  - description: My first attempt to verify the query defect passed an HTML-escaped `>` and returned zero, which looked like confirmation for the wrong reason.
+    solution: Caught it before asserting; re-ran with an unqualified search. Watch for entity-escaping in MCP query strings.
+    severity: nit
+durationSec: 1878
+models:
+  claude-opus-5: 108
+toolCounts:
+  Bash: 30
+  ToolSearch: 2
+  mcp__github__search_issues: 2
+  mcp__github__issue_read: 2
+  AskUserQuestion: 1
+  Agent: 5
+  mcp__github__search_pull_requests: 2
+  mcp__github__issue_write: 1
+  Skill: 2
+subagents:
+  - type: general-purpose
+    task: Sweep closed-unmerged PRs
+  - type: general-purpose
+    task: Sweep dormant branches
+  - type: general-purpose
+    task: Dig the removed Commits Tenant
+  - type: general-purpose
+    task: Judge the doc/guard deletions
+  - type: general-purpose
+    task: Sweep session logs and Skills
+gitBranch: claude/midden-content-audit-mwkash
+entrypoint: remote_mobile
+cliVersion: 2.1.245
+learnings:
+  - isNoisePath's layers/journal/content/ prefix makes the survey structurally blind to Skill Inventory deletions — the likely reason kind:skill has never once been used in 34 artifacts
+  - A GitHub `closed:>=` range qualifier can silently under-report against this repo's search index; the unqualified search plus a local merged_at filter is the reliable control
+  - Author-date fingerprinting a branch against main false-negatives on squash merges, since the squash commit carries the merge time, not the original author date
+ideas:
+  - Build a `midden-catalogue` Skill for the curatorial half the survey deliberately stops before — grading condition, coining/closing dig seasons, and authoring the dig report. Today that work is freehand every run, which is why `current-midden` has been left open 43 days holding 9 of 34 finds while three closed seasons cover 10 days total. A Skill could at minimum flag the open season for closure once it passes a threshold.
+  - Add a survey self-check that reports coverage per provenance kind. Two of six declared kinds (`branch`, `skill`) sat at zero for the Midden's whole life, and in the `skill` case that was a tooling blind spot rather than an absence of finds — a per-kind zero is exactly the signal that the sweep, not the history, is empty.
