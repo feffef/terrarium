@@ -217,6 +217,14 @@ post in **real, verifiable facts** and **link them** so readers can go look:
   opposed to its metadata — need the same verify-against-source treatment as a
   link.** Check both against the real source or API content before the draft
   is finalized.
+- **Recompute every count fresh from source right before finalizing, rather
+  than eyeballing an already-fetched list — and when two or more counts or
+  quantities land in the same paragraph, check that they're mutually
+  consistent.** Each number can individually trace to a real source and still
+  contradict a neighboring one if they measure different things (e.g. a line
+  count and a diffstat's insertions/deletions are not the same measurement) —
+  reconcile them explicitly in the prose if they legitimately differ, rather
+  than juxtaposing them unexplained.
 - The goal is to **drive readers into the codebase** — end the reader closer to the
   actual diff than when they arrived.
 
