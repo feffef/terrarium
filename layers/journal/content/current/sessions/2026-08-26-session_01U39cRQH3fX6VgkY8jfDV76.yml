@@ -1,0 +1,43 @@
+schemaVersion: 1
+session: session_01U39cRQH3fX6VgkY8jfDV76
+startedAt: 2026-08-26T00:45:58Z
+endedAt: 2026-08-26T00:50:31Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: No Inventory changes; findings already tracked
+summary: "Fully agent-initiated scheduled firing of /audit-skills, no human prompt this session. Ran scripts/audit-skills.ts for the scorecard (40-session window, 36 Skills, all onDisk/inventoried with no phantom entries). Step 3 (re-grade): no bright-line (>=2 session) evidence for any importance/role change surfaced — the window is saturated by the same six recurring scheduled Skills (digest, blog-post, audit-docs, frictions-to-fixes, prune-trial, audit-skills itself) plus a handful of one-off interactive/delegated sessions, same saturation pattern a prior run already found. Step 4 (regression watch): checked all three regressionChecks brackets (blog-post's count-reconciliation edit, dispatch-subagents' guard sweep, prune-trial's self-merge-tier wording fix). blog-post: friction count rose in the generic after-bracket but the only true before/after blog-post-specific session pair showed unrelated frictions (a caught citation error, a false-positive injection flag) already resolved by the skill's own rigor step — no regression. dispatch-subagents: friction severity/count fell after the edit — no regression. prune-trial: the sole \"after\" session with real prune-trial usage (session_01DLmcXwjGGirmBYtx366GsX) turned out, on deep-read, to be the very session whose friction motivated and produced the edit itself (its endedAt landed 6 minutes after the edit commit) - the exact wrong-side-of-the-boundary case the Skill's own doc warns about, not a post-edit regression. Step 5: the one orphanedSessions hit (session_019aeaoPHYWMJVekmUvTMhQ9) is already tracked and extensively triaged on open issue #736 (labeled consolidation:on-hold, pending #738's governance call) - checked its comments, evidence already thorough, added nothing new. orphanScan was a full trustworthy scan (597 merged PRs, 452 with a session). orphanSuppressionLog, humanPromptedClosures, manuallyRescuedClosures, and misclassifiedKind were all empty - healthy. No new/split/retire Skill signal (step 6). Working tree stayed clean throughout; no PR to open."
+prs: []
+docsRead:
+  - path: layers/journal/content/current/sessions/2026-08-25-session_01WdTifh5L2sLw82ZgT9W3ek.yml
+    reason: deep-read blog-post's post-edit friction for the regression check
+  - path: layers/journal/content/current/sessions/2026-08-23-session_01DLmcXwjGGirmBYtx366GsX.yml
+    reason: deep-read prune-trial's post-edit friction for the regression check
+skillsUsed:
+  - name: audit-skills
+    reason: the session's charter
+  - name: close-session
+    reason: self-judged closure, no PR to babysit
+  - name: log-session
+    reason: this entry
+frictions:
+  - description: "The orphanedSessions entry's commit sha (cc9f82d...) didn't match the shas already cited on issue #736 (7623eac/7111d70) for the same session id, and the local clone is shallow so the sha couldn't be resolved directly to confirm it's the same commit family."
+    solution: Relied on the exact session-id match plus the issue's already-thorough evidence trail instead of re-verifying the sha; an unshallow fetch would have confirmed it directly but wasn't worth the cost for an issue already this deeply triaged and on hold.
+    severity: nit
+durationSec: 273
+models:
+  claude-sonnet-5: 58
+toolCounts:
+  Bash: 21
+  Read: 2
+  mcp__github__search_issues: 1
+  ToolSearch: 1
+  mcp__github__issue_read: 1
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-ehptr3
+entrypoint: remote_trigger
+cliVersion: 2.1.246
+trigger: audit-skills
+learnings:
+  - "A regressionChecks bracket session can be the very session that produced the edit under review, not one that came after it - endedAt landing a few minutes past the edit's commit timestamp is enough to flip it to the wrong side. Worth a specific example for a future audit-skills run's Phase A: prune-trial's 2026-08-23 self-merge-tier edit (d8da2ec) was authored by session_01DLmcXwjGGirmBYtx366GsX itself (PR #1026, endedAt 17:52:56Z vs. edit commit 17:46:50Z), so its moderate friction is the motivating cause, not a post-edit regression."
