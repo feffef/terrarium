@@ -22,7 +22,7 @@ catalogNote: >-
   displayed it. The break from build-time baking was not smuggled in: it was
   declared in the Tenant's own context file, under a heading that named the ADR it
   was breaking, and again in the platform's ground rules as one of two scoped
-  relaxations. It lived thirty days and one hour. On the last of them a typecheck
+  relaxations. It lived thirty days. On the last of them a typecheck
   failure was read as rot — and by the time the removal was proposed that diagnosis
   had already been retracted, in the same pull request, under a heading flagging it
   to the reviewer. It merged seventeen minutes later regardless, on a human's

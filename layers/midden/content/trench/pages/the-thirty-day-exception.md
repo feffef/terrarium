@@ -34,11 +34,11 @@ describing it.
 The tidying continued after the burial. The next morning a session corrected a
 roster count that still said seven; two days after that, another cut the
 parenthetical mentioning the Tenant had ever existed, on the grounds that it
-narrated a superseded state. The governing documents no longer hold it — the
-roster, the map, the ground rules and the architecture page all read now as though
-it never was. The Journal's dated record still does, and that split was chosen
-rather than allowed: the removal argued explicitly that the archived session logs
-and the digest naming the Tenant should stay, because those record what happened.
+narrated a superseded state. The governing documents no longer hold it: the roster,
+the map, the ground rules and the architecture page all read now as though it never
+was. Only the dated record still says otherwise, and it says so on the removal's own
+instruction — the archived session logs and the digest naming the Tenant were to
+keep it, because their job is to record what happened rather than what is true now.
 
 ::midden-artifact{slug="the-commits-tenant"}
 ::

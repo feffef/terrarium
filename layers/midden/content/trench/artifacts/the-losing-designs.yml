@@ -21,8 +21,9 @@ catalogNote: >-
   the three could be set side by side. A human looked at them and chose one. The
   other two were complete, working implementations of the same page, and they were
   gone within the hour — not deleted, which would have left a commit, but simply
-  never committed at all, in working trees that no longer exist. This is the only
-  find in the trench with nothing whatever to show: no diff, no blob, no quotable
-  line. That two thirds of the work would be destroyed was the plan, not the
-  accident.
+  never committed at all, in working trees that no longer exist. What is unusual
+  even among the trench's lost finds is that these never touched a ref at all, and
+  are known only from a third party's record of the afternoon: no diff, no blob, no
+  quotable line of their own. That two thirds of the work would be destroyed was the
+  plan, not the accident.
 assessedAt: 2026-08-25
