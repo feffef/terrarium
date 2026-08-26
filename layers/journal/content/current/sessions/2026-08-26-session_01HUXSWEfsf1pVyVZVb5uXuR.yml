@@ -1,0 +1,62 @@
+schemaVersion: 1
+session: session_01HUXSWEfsf1pVyVZVb5uXuR
+startedAt: 2026-08-26T13:26:38Z
+endedAt: 2026-08-26T13:38:04Z
+kind: autonomous
+goal: Run scheduled prune-trial sweep
+status: in-review
+outcome: "Pruned pkill saga bullets, PR #1052 opened"
+summary: "A scheduled /prune-trial firing. §1: checked the three open trials in .agents/prune-trials.yml against their landing commits (found by git log -S on the ledger text, not the opened: field) — all three landed within the last 1-3 days and none had cleared ADR-0027's 3-day verdict window yet, so none were judgeable and none were touched. §2/§3: chose CLAUDE.md's pkill-teardown bullets (17 lines narrating a 3x-recurred regression's internal mechanism, #102/#183/#240) as the problem — audit-docs/SKILL.md explicitly names this \"pkill saga\" as a rationale reserved for a Prune Trial's call. Merged two bullets into one, same rule and load-bearing why, net -8 lines in CLAUDE.md, plus a new ledger entry. §4: a fresh Sonnet subagent given only the surviving text answered all 3 real scenarios correctly, so no hook shipped. pnpm gate:scoped ran green locally. Opened PR #1052 and subscribed to its activity. Entirely autonomous — no human prompted or steered any step."
+prs:
+  - "1052"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: judge open trials + append new ledger entry
+  - path: docs/research/rulebook-migration-table.md
+    reason: scan for a bucket-1 already-failed-prose candidate
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: confirms the pkill saga is a Prune-Trial-owned decision
+  - path: docs/agents/github-integration.md
+    reason: checked as a prose-mass candidate, ruled out (overlaps trial-1 territory / already terse)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (read before editing)
+skillsUsed:
+  - name: prune-trial
+    reason: this run's own Skill
+  - name: close-session
+    reason: PR-open closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Finding a criterion-1 (\"prose that already failed\") candidate outside the three recent trials' territories took a lot of searching — the obvious big regression-class issues (#772 shallow-clone, #835 run_in_background, #873 tail-piping) are all cases where nothing mechanically holds the behavior yet, making them risky prune targets, and the largest docs/agents/*.md files turned out to be either already-terse reference material or legitimately non-redundant worked examples (dispatch-subagents/SKILL.md) that the Skill explicitly says not to gut."
+    solution: A pointer from rulebook-migration-table.md's own table straight to "already-Built mechanism rows whose doc still narrates full incident history" would have cut the search meaningfully.
+    severity: nit
+durationSec: 687
+models:
+  claude-sonnet-5: 91
+toolCounts:
+  Bash: 22
+  Read: 9
+  Grep: 9
+  Edit: 2
+  Agent: 1
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - CLAUDE.md
+  - .agents/prune-trials.yml
+subagents:
+  - type: general-purpose
+    task: Probe pruned pkill bullet on Sonnet
+    model: sonnet
+gitBranch: claude/practical-rubin-p70htn
+entrypoint: remote_trigger
+cliVersion: 2.1.246
+trigger: prune-trial
