@@ -4,8 +4,8 @@ description: A fresh cut, and a self-referential one — the Midden's own readin
 ---
 
 Every other site in this trench catalogues something the Platform built elsewhere
-and set down. This one catalogues the dig itself. In the loose top soil of the
-current cut lie the Midden's own instruments — the small machines it built to make
+and set down. This one catalogues the dig itself. In the loose soil of the Plainer
+Cut lie the Midden's own instruments — the small machines it built to make
 its finds legible — dug back out a few days later when the curator decided a
 plainer presentation read better than a cleverer one. It is a strange thing to
 excavate your own tools, but an honest midden does not get to exempt itself.
@@ -30,7 +30,7 @@ were never in question — they still date every find on every page — but the
 Midden decided a reader did not need to be shown the shape of them, only told
 which one a find came from.
 
-The third is not ours, but it came out of the same fresh season and belongs to
+The third is not ours, but it came out of the same season and belongs to
 the same gesture: the Journal's throwaway bench for deciding how to mark an
 externally-authored session — a floating switcher and three rival cards, built to
 be argued over for a day and then swept out the moment a verdict landed. One

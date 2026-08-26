@@ -20,19 +20,25 @@ thirty days the repository contained a documented contradiction and everyone
 concerned knew exactly where it was.
 
 It ended on the thirtieth day, and the ending is the part a curator should read
-twice. A typecheck error appeared, was taken for decay, and the Tenant was removed
-whole. The error was afterwards found not to have been real — a stale install, not
-a broken file — and the pull request that carried the removal says so in its own
-words, in the past tense, having already merged. The file it names had itself
-carried a comment for weeks warning that this exact error appears after a clean
-install and means nothing. It documented the false alarm that killed it. What the
-removal is recorded as having bought is not correctness but brevity: the rule, it
-says, is now simpler than the docs describing it.
+twice. A typecheck error appeared and was taken for decay. But the diagnosis did
+not outlive the morning: by the time the removal was proposed it had already been
+retracted, in the opening words of the pull request carrying it — a stale install,
+not a broken file — and a human, told as much, asked for the Tenant to go anyway.
+It merged seventeen minutes later. The file at the centre of it had been repaired
+that same morning, and the repair added a comment warning that this exact error
+appears after a clean install and means nothing. Nineteen hours separated that
+comment from the burial. It documented the false alarm, and was deleted by it.
+What the removal is recorded as having bought is not correctness but brevity: the
+rule, it says, is now simpler than the docs describing it.
 
 The tidying continued after the burial. Three days later a session removed the
 parenthetical that mentioned the Tenant had ever existed, on the grounds that it
 narrated a superseded state; another corrected a count that still said seven. The
-trench holds the Tenant. Nothing on the surface holds the fact that it was here.
+governing documents no longer hold it — the roster, the map, the ground rules and
+the architecture page all read now as though it never was. Only the Journal's
+dated record of that day still says otherwise, and it was deliberately left
+standing: the removal itself argued that the digest and the session logs should
+keep it, because those record what happened.
 
 ::midden-artifact{slug="the-commits-tenant"}
 ::

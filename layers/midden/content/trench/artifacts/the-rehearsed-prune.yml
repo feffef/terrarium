@@ -22,11 +22,12 @@ catalogNote: >-
   reasoning. The gate went green at 14:54. It was closed, unmerged, at 14:57. What
   the rehearsal found was folded into the skill one minute before it closed; what
   the rehearsal did was thrown away. The problem it fixed is still recorded as
-  unsolved, and still described as the strongest unbuilt candidate in the corpus.
+  unsolved, and still described as the strongest unbuilt refusal candidate in the
+  corpus.
 assessedAt: 2026-08-25
 inscription:
   text: >-
     This is a dry run of `/prune-trial`, not for merge. It exists to find out
-    whether the unmerged Skill's instructions work when followed literally. Do not
-    merge it.
+    whether the unmerged Skill's instructions work when followed literally. […]
+    Do not merge it.
   source: "PR #1022, description"

@@ -1,6 +1,6 @@
 title: the `review` Skill that never existed
 stratum: trial-pits
-condition: dissolved
+condition: never-activated
 provenance:
   kind: skill
   name: review
@@ -33,4 +33,4 @@ inscription:
   text: >-
     Review a GitHub pull request (an external/incoming PR) — distinct from
     `code-review`, which reviews the working diff before opening a gated PR.
-  source: layers/journal/content/current/skills/review.yml, its whole role
+  source: layers/journal/content/current/skills/review.yml, the opening of its role

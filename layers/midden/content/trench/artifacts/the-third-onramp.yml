@@ -1,6 +1,6 @@
 title: the third onramp
 stratum: trial-pits
-condition: dissolved
+condition: never-activated
 provenance:
   kind: commit
   hash: 33409ef

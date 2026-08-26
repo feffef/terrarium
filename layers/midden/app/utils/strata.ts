@@ -23,7 +23,13 @@ export interface DigSeason {
 
 /** Every dig season, oldest-first. Exactly one entry has `end: null` (the
  * open-ended "Current Midden" for freshly-discarded, not-yet-seasoned finds),
- * and it is always the last entry (pinned by strata.spec.ts). */
+ * and it is always the last entry (pinned by strata.spec.ts).
+ *
+ * `current-midden` is a ROLE slug, not a fixed period: it always names whichever
+ * cut is still open. Closing the open season therefore renames it to what it
+ * turned out to be (2026-08-25: `current-midden` → `plainer-cut`) and re-opens
+ * `current-midden` on the next one, repointing the closed season's artifacts.
+ * A diff that moves the slug is that handover, not history being edited. */
 export const DIG_SEASONS: DigSeason[] = [
   {
     // The trench floor: the generated-config-and-drift machinery (ADR-0007) dug

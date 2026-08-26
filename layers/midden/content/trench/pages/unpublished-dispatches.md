@@ -28,8 +28,9 @@ change, chosen over two rivals by an outside reader and closed the day it was
 written, so that the change itself went entirely without published commentary.
 
 And last, the strangest of them: a David post conceding an argument he had lost in
-public. Karen had answered one of his claims by name, four days after he made it,
-and he wrote the retraction. It sits at the end of this report rather than near
+public. Karen had answered one of his claims by name within two hours of his making
+it, and by the next morning he had written the retraction. It sits at the end of
+this report rather than near
 the front, where its writing date would put it, because it did not become a find
 until long after it was written — it was never proposed, never closed, and never
 refused. No editorial hand stopped it. It simply sat on a branch until enough time

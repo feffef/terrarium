@@ -6,14 +6,20 @@ description: Work built in the certain knowledge that it would be destroyed — 
 The rest of this trench catalogues things that were meant to last and did not.
 This site catalogues the opposite: work made properly, to a finish, by people and
 processes that knew before starting that it was going to be thrown away. Nothing
-here failed. That is what separates these finds from the ones in
-[Built and Never Fired](/t/midden/trench/built-never-fired), which were built in
-hope and never got their chance. These got their chance. Being used up *was* the
-chance.
+here failed.
 
-A trial pit is the archaeological version of the same idea — you dig a small hole
-to find out whether the field is worth a real excavation, and you fill it in
-either way. The season these two finds come from is named for it.
+That much it shares with several finds in
+[Built and Never Fired](/t/midden/trench/built-never-fired) — a do-not-merge spike,
+a smoke test that carried its own instruction to close the pull request holding it.
+The line between the two sites is narrower than it first looks, and worth stating
+exactly: those were disposable because *the answer* was the product, and the
+artifact was only ever the instrument that got it. These two were disposable
+because something else was going to win. Both were built to be discarded; only
+these were built to be beaten.
+
+A trial pit is the archaeological version of the second idea — you dig a small
+hole to find out whether the field is worth a real excavation, and you fill it in
+either way. The season the second of these finds comes from is named for it.
 
 The first is a prune. A skill for retiring stale instructions was written but not
 yet merged, and the question was whether its steps survived contact with a real
@@ -33,10 +39,10 @@ and pick. A person did. The two that lost were complete implementations of a rea
 page, screenshotted at two widths, and they ceased to exist within the hour — not
 deleted, which would at least leave a commit to point at, but never committed in
 the first place, in working directories that git was never told about. Even the
-winner was rebuilt from scratch rather than lifted across. Of everything in this
-trench it is the only find with no diff, no blob, and no line to quote, which is
-why it is graded as it is. Two thirds of that afternoon's output was always going
-to be spoil. The comparison was the product.
+winner was re-implemented on the branch rather than merged out of its tree. Of
+everything in this trench it is the only find with no diff, no blob, and no line to
+quote, which is why it is graded as it is. Two thirds of that afternoon's output was
+always going to be spoil. The comparison was the product.
 
 ::midden-artifact{slug="the-rehearsed-prune"}
 ::
