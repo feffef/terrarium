@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01EeBUuD5nevSA27Sgrnzfwc
 startedAt: 2026-08-26T18:25:17Z
-endedAt: 2026-08-26T19:46:33Z
+endedAt: 2026-08-26T20:42:15Z
 kind: interactive
 goal: Rewrite the Journal's Architecture page
-status: in-review
-outcome: "PR #1054 open and green, two rounds"
+status: completed
+outcome: "Merged as PR #1054, two rounds"
 summary: "Human-instructed: rewrite /t/journal/current/architecture using the recently-rewritten How Humans & Agents Work as the model for language and length. Grounded it in the ADRs, the Tenant manifests and package.json rather than the old page's prose, which surfaced two claims it implied wrongly (digests are pages-collection Documents, not a Collection; the runtime dependency list is three packages). Second human instruction after review: show how the Blog and Midden use Spaces, pages and Collections differently — replaced the Journal-only diagram with a two-column Blog/ Midden contrast and added the pages-is-the-only-routed-Collection point. Section structure, diagram design and both corrections were agent-initiated within those asks."
 prs:
   - "1054"
@@ -46,11 +46,11 @@ frictions:
   - description: A `cd` inside one Bash call persisted into later calls, so a later relative path failed with a confusing "no such directory".
     solution: Use absolute paths or a subshell for any directory change; the tool description does say the working directory persists.
     severity: nit
-durationSec: 4876
+durationSec: 8218
 models:
-  claude-opus-5: 191
+  claude-opus-5: 201
 toolCounts:
-  Bash: 69
+  Bash: 71
   Read: 10
   ToolSearch: 3
   mcp__github__search_pull_requests: 2
@@ -58,10 +58,11 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 2
-  ReadNotifications: 6
-  mcp__github__pull_request_read: 7
+  ReadNotifications: 7
+  mcp__github__pull_request_read: 8
   mcp__github__update_pull_request: 2
   SendUserFile: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
 gitBranch: claude/journal-architecture-rewrite-r936vg
 entrypoint: remote_mobile
 cliVersion: 2.1.246
