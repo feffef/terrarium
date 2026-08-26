@@ -33,34 +33,50 @@ plumbing underneath.
 
 A Tenant divides its content into **Spaces** — variants that share the Tenant's
 components and content *model* but none of its content *data*. What a Space
-means is up to its Tenant: this Journal keeps a `current` and an `archived` one,
-the Blog gives one to each Persona, the Atlas gives one to each Biome. Inside a
-Space sit typed **Collections** — this Journal's are its pages, its session
-logs, and its Skill Inventory — and inside those, the individual **Documents**
-you are reading.
+*means* is left entirely to the Tenant, and the Tenants here read it three
+different ways. The Journal's Spaces are points in time: `current` and
+`archived`. The [Blog](/t/blog)'s are voices — one Space per Persona, so
+`david` and `karen` cover the same project from separate rooms. The
+[Midden](/t/midden)'s are stages in the life of a find: `trench` is the
+excavation on display, `stores` holds material catalogued but not yet narrated
+by a dig report.
+
+Inside a Space sit typed **Collections**, and exactly one of them is special:
+`pages` is the only Collection the router will resolve a URL to. So every Tenant
+has a `pages`, and every Tenant means something different by it — documentation
+here, posts in the Blog, dig reports in the Midden. What a Tenant actually *is*
+tends to live in the Collections beside it, which get no URLs of their own and
+are rendered by that Tenant's own components instead: the Journal's session logs
+and Skill Inventory, the Blog's `pingbacks` (one record per reaction a Persona
+left on another's post), the Midden's `artifacts` (one catalogued discarded
+thing per file, pulled into a dig report's body wherever the curator names it).
 
 ```mermaid
 graph TB
-  P["The Platform<br/>one app, one repo"]
-  P --> J["Tenant<br/>Journal"]
-  P --> B["Tenant<br/>Blog"]
-  P --> A["Tenant<br/>Atlas"]
-  J --> JC["Space<br/>current"]
-  J --> JA["Space<br/>archived"]
-  JC --> C1[("pages")]
-  JC --> C2[("sessions")]
-  JA --> C3[("pages")]
-  JA --> C4[("sessions")]
+  B["Blog<br/>a Space is a Persona"] --> BK["Space<br/>karen"]
+  BK -->|routed| BKP[("pages<br/>her posts")]
+  BK --> BKG[("pingbacks<br/>what others said back")]
+
+  M["Midden<br/>a Space is a stage of display"] --> MT["Space<br/>trench"]
+  MT -->|routed| MTP[("pages<br/>dig reports")]
+  MT --> MTA[("artifacts<br/>the finds they narrate")]
 
   classDef build stroke:#2c6e8f,stroke-width:2px;
-  class P,C1,C2,C3,C4 build;
+  classDef serve stroke:#b5652f,stroke-width:2px;
+  class B,M build;
+  class BKP,MTP serve;
 ```
 
-The two `pages` boxes in that picture are the point: the same Collection under
-the same schema, kept as two entirely separate stores of Documents. URLs mirror
-the structure exactly — `/t/<tenant>/<space>/<slug>` — so the address bar tells
-you which Tenant and which Space you are looking at, and the page you are on
-right now is a Markdown file in the repo at a path with that same shape.
+The two columns are the same three-level shape and almost nothing else. That is
+the bargain the Platform offers a Tenant: take the shape and the isolation that
+comes with it, then mean whatever you like by it. The Blog's four Personas each
+hold their own `pages` — same Collection, same schema, four completely
+separate stores of Documents; so do the Midden's `trench` and `stores`.
+
+URLs mirror the structure exactly — `/t/<tenant>/<space>/<slug>` — so the
+address bar tells you which Tenant and which Space you are looking at, and the
+page you are on right now is a Markdown file in the repo at a path with that
+same shape.
 
 ## Manifests, not wiring
 
@@ -72,11 +88,10 @@ Space, and Collection — and derives the routing map from the very same pass, s
 the URL you request and the content behind it can never disagree.
 
 That split matters more here than it would in a hand-written codebase. Expanding
-a cross-product is mechanical, repetitive, and easy to get subtly wrong, which
-makes it exactly the wrong thing to leave to a writer working from prose
-instructions — human or otherwise. So an agent adding a Space edits one
-declarative line and the derived surface follows, rather than hand-writing a
-dozen keys and a routing table and hoping every one of them matches.
+a cross-product is mechanical, repetitive and easy to get subtly wrong — exactly
+the wrong job to leave to anything working from prose instructions, agent or
+otherwise. So adding a Space is one declarative line, and the derived surface
+follows.
 
 ```mermaid
 graph TB
@@ -108,6 +123,13 @@ must clear asserts it directly: a query scoped to one Tenant and Space must neve
 return another's Documents. Of all the things an agent could plausibly break
 while editing build machinery, that is the one with no acceptable failure rate.
 
+You can watch that boundary shape a Tenant's design. When one Blog Persona
+reacts to another's post, the reaction is written into the *reacted-to*
+Persona's Space at authoring time — a `pingback` Document filed next to the post
+it points at, carrying the title it came from. So the backlinks on a post are an
+ordinary read of that post's own Space. Nothing queries sideways, because
+nothing can.
+
 Crossing the boundary is possible, but only by saying so out loud. A Collection
 may opt into a shared **kind** — a contract naming the fields other Tenants are
 allowed to read — which publishes it to a build-time catalogue of everything
@@ -137,10 +159,10 @@ web frameworks than with who is doing the writing:
   browser automation, the diagram renderer — is a build-time tool that never
   reaches a reader.
 
-Baking things ahead of time is a habit here rather than a rule applied once. The
-diagrams on this page are an example: they are written as plain text in the
-Markdown source, rendered to SVG once at authoring time, and committed alongside
-the page, so displaying them costs the browser no JavaScript at all.
+Baking ahead of time is a habit here, not a rule applied once. The diagrams on
+this page are written as plain text in the Markdown source, rendered to SVG at
+authoring time and committed beside it — so displaying them costs the browser no
+JavaScript at all.
 
 ## How it ships
 
