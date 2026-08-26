@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Wr8N7AFivfAZz13LAeNhKk
 startedAt: 2026-08-25T17:56:00Z
-endedAt: 2026-08-26T01:21:02Z
+endedAt: 2026-08-26T16:08:57Z
 kind: interactive
 goal: Survey the Midden, then catalogue the finds
-status: in-review
-outcome: Six finds catalogued, reviewed, corrected
-summary: "Human-instructed throughout. The user asked for a five-way subagent fan-out over session, GitHub and git history to find discarded work the Midden has not catalogued, plus a view on whether finds fit existing dig reports, and whether a Skill owns this job. They invoked /grill-with-docs, then interrupted it to invoke /midden-survey directly, which settled scope. Ran the Skill: unshallowed the clone, ran the mechanical sweep, and dispatched five read-only agents pinned to one SHA. Six candidates cleared the two-gate bar, including the first-ever branch- and skill-provenance finds; the eight doc deletions all failed Gate B. Filed one survey-report issue per the Skill's charter (#1043). The user then gave an explicit green-light to catalogue everything found, loosening the rule that reserves condition/stratum/site/catalogNote to the curator — so all four were authored here. Six Artifacts landed (the Tenant's first branch- and skill-provenance finds), three new dig reports, a fifth find folded into an existing report, and the dig-season list rebuilt: the 43-day open season named and closed, a new one coined, nine artifacts repointed. Gate green end to end; PR #1044 opened and subscribed. The user then asked for a review: two read-only agents (adversarial fact-check; craft and domain conformance) went over the content and both found real defects, including a misquoted inscription. All fixed and re-verified against primary sources in a second push; gate green again and the PR description rewritten to drop claims the review disproved."
+status: completed
+outcome: Six finds catalogued and merged
+summary: "Human-instructed throughout. The user asked for a five-way subagent fan-out over session, GitHub and git history to find discarded work the Midden has not catalogued, plus a view on whether finds fit existing dig reports, and whether a Skill owns this job. They invoked /grill-with-docs, then interrupted it to invoke /midden-survey directly, which settled scope. Ran the Skill: unshallowed the clone, ran the mechanical sweep, and dispatched five read-only agents pinned to one SHA. Six candidates cleared the two-gate bar, including the first-ever branch- and skill-provenance finds; the eight doc deletions all failed Gate B. Filed one survey-report issue per the Skill's charter (#1043). The user then gave an explicit green-light to catalogue everything found, loosening the rule that reserves condition/stratum/site/catalogNote to the curator — so all four were authored here. Six Artifacts landed (the Tenant's first branch- and skill-provenance finds), three new dig reports, a fifth find folded into an existing report, and the dig-season list rebuilt: the 43-day open season named and closed, a new one coined, nine artifacts repointed. Gate green end to end; PR #1044 opened and subscribed. The user then asked for a review: two read-only agents (adversarial fact-check; craft and domain conformance) went over the content and both found real defects, including a misquoted inscription. All fixed and re-verified against primary sources in a second push; gate green again and the PR description rewritten to drop claims the review disproved. Two further review rounds followed, each finding real defects in the previous round's fixes (12, then 8, then 7, then 6). The fourth round found a fix I had asserted in a commit message but never actually made — the phrase sat on a context line of the hunk. Mid-flight, main added a `### Cataloguing discipline` term to the Midden's CONTEXT.md codifying this session's own two major frictions; the branch was checked against it, merged main in, and PR #1044 merged at 888816aa."
 prs:
   - "1044"
 docsRead:
@@ -50,6 +50,12 @@ docsRead:
     reason: (read before editing)
   - path: layers/midden/content/trench/artifacts/the-commits-tenant.yml
     reason: (read before editing)
+  - path: layers/midden/content/trench/pages/the-rehearsals.md
+    reason: (read before editing)
+  - path: layers/midden/content/trench/pages/what-the-record-claimed.md
+    reason: (read before editing)
+  - path: layers/midden/content/trench/pages/the-thirty-day-exception.md
+    reason: (read before editing)
 skillsUsed:
   - name: midden-survey
     reason: the chartered discovery procedure
@@ -83,31 +89,41 @@ frictions:
   - description: Two condition grades (`dissolved`) described erosion that never happened, and one dig report called a find "preserved intact" beside that grade.
     solution: Grade against the single-homed definition text in condition.ts, not against the grade's connotation. Both regraded `never-activated`.
     severity: minor
-durationSec: 26701
+  - description: "A commit message asserted a correction that its own diff did not contain: the target phrase sat on a context line of the hunk, so I rewrote around it and recorded it as fixed."
+    solution: After editing to fix a specific phrase, grep for that phrase before claiming it in a commit message. Seeing corrected text in a diff is not evidence the wrong text is gone. Caught only by a diff-scoped review two rounds later.
+    severity: major
+  - description: Each rewrite overstated by one notch — "opening body" became "opening words", "same day" became "the morning", a true-but-narrow claim became a punchier false one. Four consecutive correcting rounds each introduced fresh defects.
+    solution: When correcting a factual error, write the weakest phrasing the evidence supports, not the sharpest one it permits. A correction that is merely less wrong still fails.
+    severity: major
+durationSec: 79976
 models:
-  claude-opus-5: 349
+  claude-opus-5: 581
 toolCounts:
-  Bash: 69
-  ToolSearch: 3
+  Bash: 113
+  ToolSearch: 4
   mcp__github__search_issues: 2
   mcp__github__issue_read: 2
   AskUserQuestion: 1
-  Agent: 7
+  Agent: 10
   mcp__github__search_pull_requests: 2
-  mcp__github__issue_write: 1
+  mcp__github__issue_write: 2
   Skill: 2
-  Read: 15
-  Edit: 34
-  Grep: 2
-  Write: 9
+  Read: 20
+  Edit: 67
+  Grep: 3
+  Write: 11
   mcp__github__list_pull_requests: 2
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  ReadNotifications: 10
-  mcp__github__pull_request_read: 11
-  mcp__Claude_Code_Remote__send_later: 6
-  mcp__github__actions_list: 2
+  ReadNotifications: 34
+  mcp__github__pull_request_read: 22
+  mcp__Claude_Code_Remote__send_later: 19
+  mcp__github__actions_list: 5
   mcp__github__update_pull_request: 1
+  mcp__github__actions_get: 1
+  SendMessage: 1
+  mcp__Claude_Code_Remote__list_triggers: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/midden/content/stores/artifacts/the-condition-popover.yml
   - layers/midden/content/stores/artifacts/the-root-listing.yml
@@ -132,6 +148,7 @@ filesEdited:
   - layers/midden/content/trench/pages/the-current-cut.md
   - layers/midden/content/trench/pages/the-simpler-verdict.md
   - layers/midden/app/utils/strata.ts
+  - layers/midden/content/trench/pages/built-never-fired.md
 subagents:
   - type: general-purpose
     task: Sweep closed-unmerged PRs
@@ -147,6 +164,12 @@ subagents:
     task: Fact-check the midden content
   - type: general-purpose
     task: Review midden voice and domain fit
+  - type: general-purpose
+    task: Second-pass fact-check of fixes
+  - type: general-purpose
+    task: Second-pass craft review
+  - type: general-purpose
+    task: Verify the fix diffs only
 gitBranch: claude/midden-content-audit-mwkash
 entrypoint: remote_mobile
 cliVersion: 2.1.245
