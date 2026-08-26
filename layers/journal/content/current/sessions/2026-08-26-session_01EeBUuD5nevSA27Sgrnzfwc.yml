@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01EeBUuD5nevSA27Sgrnzfwc
 startedAt: 2026-08-26T18:25:17Z
-endedAt: 2026-08-26T18:45:11Z
+endedAt: 2026-08-26T19:46:33Z
 kind: interactive
 goal: Rewrite the Journal's Architecture page
 status: in-review
-outcome: "PR #1054 open, full gate green"
-summary: "Human-instructed: rewrite /t/journal/current/architecture, using the recently-rewritten How Humans & Agents Work as the model for language and length. Grounded the rewrite in the ADRs, the manifests and package.json rather than the old page's prose, which let me correct two claims it implied (digests are pages-collection Documents, not a Collection; the runtime dependency list is three packages). Body grew ~480 to ~1350 words, matching the sibling page. Added three pre-rendered mermaid diagrams where there were none, and gave isolation its own section. Diagram choices, section split and the two corrections were agent-initiated within that ask."
+outcome: "PR #1054 open and green, two rounds"
+summary: "Human-instructed: rewrite /t/journal/current/architecture using the recently-rewritten How Humans & Agents Work as the model for language and length. Grounded it in the ADRs, the Tenant manifests and package.json rather than the old page's prose, which surfaced two claims it implied wrongly (digests are pages-collection Documents, not a Collection; the runtime dependency list is three packages). Second human instruction after review: show how the Blog and Midden use Spaces, pages and Collections differently — replaced the Journal-only diagram with a two-column Blog/ Midden contrast and added the pages-is-the-only-routed-Collection point. Section structure, diagram design and both corrections were agent-initiated within those asks."
 prs:
   - "1054"
 docsRead:
@@ -20,6 +20,10 @@ docsRead:
     reason: collection kinds and the Commons as first aggregator
   - path: docs/adr/0024-build-time-mermaid-prerender.md
     reason: how to add diagrams without shipping mermaid JS
+  - path: layers/blog/tenant.config.ts
+    reason: Personas-as-Spaces and the pingbacks denormalization (ADR-0012)
+  - path: layers/midden/tenant.config.ts
+    reason: trench/stores as stages of display; artifacts embedded, never routed
   - path: layers/journal/tenant.config.ts
     reason: which Collections the Journal actually declares
   - path: app/utils/mermaid.ts
@@ -28,33 +32,42 @@ skillsUsed:
   - name: close-session
     reason: self-judged closure at PR-open
   - name: log-session
-    reason: this log
+    reason: this log, re-authored after a second round of work
 frictions:
-  - description: CONTEXT.md's Tenant glossary entry says "see the Tenants roster below for the current four"; the roster directly below it lists six.
-    solution: Fix the one home — drop the count from the Tenant entry rather than re-syncing a number that rots on every new Tenant. Left unfixed here to keep this content PR scoped; audit-docs' territory.
+  - description: Editing a mermaid block orphans its old SVG, and verify:mermaid only reports it on a later run, after render:mermaid appears to have succeeded. Hit twice this session.
+    solution: Have render:mermaid prune the SVGs its own pass orphaned — it already knows every live key it just rendered — instead of leaving the drift gate as the first place you learn about it.
     severity: minor
-  - description: Editing a mermaid block orphans its old SVG, and verify:mermaid only reports the orphan on a later run, after render:mermaid appears to succeed.
-    solution: Have render:mermaid delete SVGs its own pass orphaned, or name them in its output, so the drift gate isn't the first place you learn about it.
-    severity: nit
-  - description: A `cd` inside one Bash call persisted into later calls, so a subsequent relative path failed with a confusing "no such directory".
+  - description: Wanted a comparison table for the Blog/Midden contrast, but no content page in any Tenant uses a markdown table and no prose CSS styles one.
+    solution: Either style tables in the shared prose CSS and prove it with one page, or record in docs/agents/mdc-when-to-use.md that tables are an unsupported surface, so the next author doesn't have to grep to find out.
+    severity: minor
+  - description: CONTEXT.md's Tenant glossary entry says "see the Tenants roster below for the current four"; the roster directly below it lists six.
+    solution: Fix the one home — drop the count from the Tenant entry rather than re-syncing a number that rots on every new Tenant. Left unfixed to keep this content PR scoped; audit-docs' territory.
+    severity: minor
+  - description: A `cd` inside one Bash call persisted into later calls, so a later relative path failed with a confusing "no such directory".
     solution: Use absolute paths or a subshell for any directory change; the tool description does say the working directory persists.
     severity: nit
-durationSec: 1194
+durationSec: 4876
 models:
-  claude-opus-5: 103
+  claude-opus-5: 191
 toolCounts:
-  Bash: 47
-  Read: 7
-  ToolSearch: 1
-  mcp__github__search_pull_requests: 1
+  Bash: 69
+  Read: 10
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 2
+  ReadNotifications: 6
+  mcp__github__pull_request_read: 7
+  mcp__github__update_pull_request: 2
+  SendUserFile: 2
 gitBranch: claude/journal-architecture-rewrite-r936vg
 entrypoint: remote_mobile
 cliVersion: 2.1.246
 learnings:
-  - dagre routes a mermaid edge behind an unrelated sibling node when a parent's children fan wider than the parent, so the edge reads as belonging to the sibling — checking the rendered SVG, not the source, is what catches it
+  - dagre routes a mermaid edge behind an unrelated sibling node when a parent's children fan wider than the parent, so the edge reads as belonging to the sibling — it bit twice, and only checking the rendered SVG (never the source) catches it
+  - Keeping each Tenant's fan symmetric — every sibling at a rank carrying the same number of children — is what actually avoids that mis-routing; it is a layout constraint on the diagram, not a content choice
 ideas:
-  - Teach scripts/render-mermaid.ts to prune SVGs its own pass orphaned (it already knows every live key it just rendered), turning today's two-step render-then-verify-then-rm into one command and removing a whole class of gate-red-on-commit surprises.
+  - Teach scripts/render-mermaid.ts to prune SVGs its own pass orphaned (it already knows every live key it just rendered), turning today's render-then-verify-then-rm into one command and removing a class of gate-red-on-commit surprises.
+  - Add a Playwright check to the e2e module that fails when a committed diagram SVG has an edge path crossing a node's bounding box — the mis-routing above is invisible in review and currently only caught by a human eyeballing a screenshot.
