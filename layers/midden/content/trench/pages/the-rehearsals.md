@@ -7,19 +7,17 @@ The rest of this trench catalogues things that were meant to last and did not.
 This site catalogues the opposite: work made properly, to a finish, by agents told
 before they started that it would be thrown away. Nothing here failed.
 
-That much it shares with several finds in
-[Built and Never Fired](/t/midden/trench/built-never-fired) — a do-not-merge spike,
-a smoke test that carried its own instruction to close the pull request holding it.
-The line between the two sites is narrower than it first looks, and worth stating
-exactly: those were disposable because *the answer* was the product, and the
-artifact was only ever the instrument that got it. These two were disposable
-because something else was going to win. Both were built to be discarded; only
-these were built to be beaten. The season the second comes from is named for the
-trial pit — a hole dug to learn whether the field is worth excavating, and
-backfilled either way.
+It overlaps [Built and Never Fired](/t/midden/trench/built-never-fired), which
+holds a do-not-merge spike and a smoke test carrying its own instruction to close
+the pull request holding it. The two sites cut the same material differently: that
+one gathers by grade, everything that reached completion and never fired; this one
+gathers by intent, the work whose destruction was scheduled before it was made. A
+find can honestly answer to both, and these two do. The season the second comes
+from is named for the trial pit — a hole dug to learn whether the field is worth
+excavating, and backfilled either way.
 
 The first is a prune, performed on a real file by an instruction set that was not
-yet law. What makes it worth the space is the split verdict: the rehearsal
+yet law. The verdict on it split: the rehearsal
 changed the script — a fix landed on the skill's branch a minute before the
 rehearsal closed, titled for what the dry run had found — while the prune itself
 went nowhere. The problem it had just demonstrated a fix for is still on the books

@@ -28,7 +28,8 @@ export interface DigSeason {
  * `current-midden` is a ROLE slug, not a fixed period: it always names whichever
  * cut is still open. Closing the open season therefore renames it to what it
  * turned out to be (2026-08-25: `current-midden` → `plainer-cut`) and re-opens
- * `current-midden` on the next one, repointing the closed season's artifacts.
+ * `current-midden` on whichever cut is open at the time, repointing the closed
+ * season's artifacts.
  * A diff that moves the slug is that handover, not history being edited. */
 export const DIG_SEASONS: DigSeason[] = [
   {
@@ -65,7 +66,7 @@ export const DIG_SEASONS: DigSeason[] = [
     // reading instruments dug back out when a simpler presentation won, a
     // retired root-index listing, a copy-link affordance, and the
     // @nuxt/content client-DB patch dropped once upstream no longer needed it
-    // (ADR-0019). It held the open-ended "Current Midden" name for 43 days
+    // (ADR-0019). It held the open-ended "Current Midden" name for 42 days
     // before there was enough in it to say what it was.
     slug: 'plainer-cut',
     label: 'the Plainer Cut',
@@ -78,7 +79,7 @@ export const DIG_SEASONS: DigSeason[] = [
     // built to be compared and thrown away (three rival root-index designs,
     // two of them destroyed on the hour), a recommendation delivered in full
     // and abandoned in one word, and an Inventory entry that turned out to
-    // have had no referent for its entire 32-day life.
+    // have had no referent for its entire 31-day life.
     slug: 'trial-pits',
     label: 'the Trial Pits',
     start: '2026-07-25',

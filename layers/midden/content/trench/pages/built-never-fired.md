@@ -4,8 +4,8 @@ description: Complete, finished things — a placeholder, a spike, a smoke test,
 ---
 
 Not everything in a midden is broken. Some of it is perfect: whole, unblemished,
-and never used. This site gathers the finds that reached completion and then
-simply never fired — the archaeologist's *never-activated* grade, a category that
+and never used. This site gathers four of the finds that reached completion and
+then simply never fired — the archaeologist's *never-activated* grade, a category that
 sits off the erosion axis entirely, because these things did not decay so much as
 never begin.
 

@@ -24,9 +24,9 @@ catalogNote: >-
   was breaking, and again in the platform's ground rules as one of two scoped
   relaxations. It lived thirty days and one hour. On the last of them a typecheck
   failure was read as rot — and by the time the removal was proposed that diagnosis
-  had already been retracted in the pull request's own opening words. It merged
-  seventeen minutes later regardless, on a human's say-so. The gain recorded for
-  its removal was that a paragraph got shorter.
+  had already been retracted, in the same pull request, under a heading flagging it
+  to the reviewer. It merged seventeen minutes later regardless, on a human's
+  say-so. The gain recorded for its removal was that a paragraph got shorter.
 remains:
   - label: the live wire, and its own warning about the error that killed it
     url: https://github.com/feffef/terrarium/blob/65b4d583cc7949e300bb5c2e4e7131b03a2f83c6/layers/commits/server/api/latest-commit.get.ts
