@@ -1,0 +1,44 @@
+schemaVersion: 1
+session: session_014UEwWPuhoVJpS4mikRQprm
+startedAt: 2026-08-26T00:18:24Z
+endedAt: 2026-08-26T00:23:48Z
+kind: autonomous
+goal: Run the scheduled /digest sweep
+status: in-review
+outcome: "PR #1045 opened, gate green"
+summary: "Scheduled /digest routine fired. Followed the digest Skill's steps: listed closed UTC days with no digest (just 2026-08-25), gathered that day's PRs, commits, sessions, and frictions via scripts/digest.ts, and authored a human-readable catch-up at layers/journal/content/current/pages/digests/2026-08-25.md. Ran the retention sweep (archive-journal-content.ts --write), which moved 1 digest and 5 session logs dated 2026-08-18 into archived. Validated content and ran pnpm gate:scoped (full gate, since the content diff was non-inert) — all green including the 78-test e2e suite. Committed, pushed to the pinned branch, and opened gated PR #1045, subscribed to its activity. All steps were routine and mechanical per the Skill; no human input was involved beyond the schedule itself."
+prs:
+  - "1045"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-08-24.md
+    reason: (no reason given)
+skillsUsed:
+  - name: digest
+    reason: (invoked as a slash command)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The Skill tool refused direct invocation of the digest Skill (disable-model-invocation) even though the scheduled prompt had already inlined the Skill's full body under a <command-name> block — the same recurring snag prior digest/frictions-to-fixes sessions hit.
+    solution: Recognize the inlined instructions in the scheduled prompt as sufficient and follow them directly without re-attempting the Skill tool call; this is now a known, tracked pattern (see 2026-08-24 and 2026-08-25 digest sessions' frictions).
+    severity: nit
+durationSec: 324
+models:
+  claude-sonnet-5: 51
+toolCounts:
+  Skill: 3
+  Bash: 17
+  Read: 1
+  Write: 2
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-25.md
+gitBranch: claude/compassionate-lovelace-nfjp2t
+entrypoint: remote_trigger
+cliVersion: 2.1.246
+trigger: digest
