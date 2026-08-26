@@ -250,23 +250,16 @@ human asks for it outright.
   transient "permission stream closed" MCP errors, and a fired self-bind
   Routine's output not always surfacing as a visible turn (#834). Read it
   before re-investigating any of these.
-- **Don't tear down a preview/dev server with `pkill` — use `scripts/preview.ts`.**
-  (`shot` for a one-shot screenshot; `start`/`stop` to keep one running — see the
-  screenshot section below.) Hand-rolled `pkill -f <pattern>` teardown silently
-  corrupted work **three times** (#102 → #183 → #240) and the fix is now a tool,
-  not more prose: `pkill -f` matches the invoking shell's *own* command line
-  (self-match — it SIGTERM-kills the chain mid-flight) and, in a shared container,
-  *other agents'* servers too; `preview.ts` instead kills only the specific child
-  PID it started, on its own ephemeral port, and its `stop` always exits 0.
-- **For any *other* process-killing teardown, run it as its own command, never
-  `&&`- or `;`-chained** before steps that must run. Two failure modes: `pkill`
-  exits 1 when nothing matched (routine in idempotent teardown), and a kill that
-  matches the chain's *own* shell drops everything after the separator — a chained
-  `git add` never runs and no error points at it. When a teardown/`pkill` step
-  *does* match and kill its target the command it kills commonly reports exit code
-  **144** (128 + 16, i.e. terminated by `SIGTERM`); that's the expected result of a
-  successful kill, not itself evidence of a problem — don't re-derive it as a
-  failure signal each session.
+- **Never tear down a process with a hand-rolled `pkill`, and never chain a
+  process-kill with `&&`/`;` into steps that must run after it** — a `pkill -f`
+  match can hit the invoking shell's own command line or another agent's process
+  in this shared container, and a chained kill can silently drop everything after
+  the separator with no error pointing at it. For a preview/dev server, use
+  `scripts/preview.ts` instead (`shot` for a one-shot screenshot; `start`/`stop`
+  to keep one running — see the screenshot section below); a killed process
+  commonly reports exit code 144 (`SIGTERM`) — that confirms the kill worked, it
+  isn't itself a failure signal. Recurred three times before the fix became a
+  tool instead of more prose (#102 → #183 → #240).
 - **Never append a trailing shell `&` to a Bash command already passed with
   `run_in_background: true`.** The tool already backgrounds the whole command
   itself — adding `&` on top backgrounds the *inner* shell a second time, so
