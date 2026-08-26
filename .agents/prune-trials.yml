@@ -9,7 +9,11 @@
 #
 # trials:
 #   - problem: what the pruned prose was trying to prevent
-#     territory: [paths, keywords]   # the next trial must not overlap these
+#     territory:                     # the next trial must not overlap these
+#       paths:
+#         - path/or/file/touched
+#       keywords:
+#         - keyword or phrase
 #     opened: 2026-08-23
 #     proven: false                  # only when §4's Sonnet probe could not run
 #     check: how you would tell this broke — written now, while you still
@@ -26,12 +30,21 @@ trials:
       rule stays in CLAUDE.md as a goal-shaped line, each guard's rationale stays
       in its own script header.
     territory:
-      - docs/agents/guards.md
-      - docs/agents/{deferred-tool,loop-only-tool,subagent-background}-guard.md (deleted)
-      - docs/research/deferred-tool-guard-hook-viability.md (deleted)
-      - CLAUDE.md: the ToolSearch, ScheduleWakeup and subagent-background bullets
-      - keywords: PreToolUse, deferred tool, ToolSearch, ScheduleWakeup, /loop,
-        run_in_background, fail-closed, guard registry, matcher
+      paths:
+        - docs/agents/guards.md
+        - docs/agents/{deferred-tool,loop-only-tool,subagent-background}-guard.md (deleted)
+        - docs/research/deferred-tool-guard-hook-viability.md (deleted)
+        - "CLAUDE.md: the ToolSearch, ScheduleWakeup and subagent-background bullets"
+      keywords:
+        - PreToolUse
+        - deferred tool
+        - ToolSearch
+        - ScheduleWakeup
+        - /loop
+        - run_in_background
+        - fail-closed
+        - guard registry
+        - matcher
     opened: 2026-08-23
     check: >
       Damage is a session that cannot act on what the prose used to spell out:
@@ -54,10 +67,17 @@ trials:
       symptom as if nothing covered it. Trimmed both to the operative rule plus
       a pointer to the self-heal and issue #983.
     territory:
-      - docs/agents/pr-workflow.md: the Closes-keyword self-heal paragraph
-      - docs/agents/issue-tracker.md: the comma-join bullet (now a pointer)
-      - keywords: Closes #N, Fixes #N, closing keyword, merge-pr.ts self-heal,
-        #983, #955, #985
+      paths:
+        - "docs/agents/pr-workflow.md: the Closes-keyword self-heal paragraph"
+        - "docs/agents/issue-tracker.md: the comma-join bullet (now a pointer)"
+      keywords:
+        - "Closes #N"
+        - "Fixes #N"
+        - closing keyword
+        - merge-pr.ts self-heal
+        - "#983"
+        - "#955"
+        - "#985"
     opened: 2026-08-24
     proven: true
     check: >
@@ -81,11 +101,16 @@ trials:
       pass, with a compact incident-history pointer instead of four narrated
       incidents.
     territory:
-      - CLAUDE.md: the identifier/claim/out-of-band/count-verification bullet
-        (now one bullet beginning "Don't state anything as settled")
-      - keywords: locally observable primary source, reconstruct an
-        identifier, confirmed out-of-band, count is not a fact, verify before
-        asserting
+      paths:
+        - >-
+          CLAUDE.md: the identifier/claim/out-of-band/count-verification bullet
+          (now one bullet beginning "Don't state anything as settled")
+      keywords:
+        - locally observable primary source
+        - reconstruct an identifier
+        - confirmed out-of-band
+        - count is not a fact
+        - verify before asserting
     opened: 2026-08-25
     proven: true
     check: >
