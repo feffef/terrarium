@@ -3,7 +3,7 @@
 // NOT a standalone `*.spec.ts` (a second spec re-runs `setup()` → another full
 // build; ADR-0004 amendment, tests/README.md).
 //
-// Content covers the real `trench` Space (8 catalogued Sites, 25 Artifacts), the
+// Content covers the real `trench` Space (11 catalogued Sites, 31 Artifacts), the
 // `stores` Space (10 Artifacts held off display, no Sites — CONTEXT.md's "The
 // Stores"), plus the Tenant-root `/t/midden` foreword page (issue #515). Assertions
 // here target ROUTES, not files on disk — mirroring

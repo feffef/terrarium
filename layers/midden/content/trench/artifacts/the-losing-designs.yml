@@ -1,0 +1,29 @@
+title: the two root-index designs that lost the bake-off
+stratum: trial-pits
+condition: lost
+provenance:
+  kind: commit
+  hash: 449bf46
+  path: layers/journal/content/current/sessions/2026-07-29-session_012NCZUhy7qDirkjp8t6YiNy.yml
+  url: https://github.com/feffef/terrarium/commit/449bf46
+  continuityCheck: >-
+    nothing under `.claude/worktrees/` is tracked by git, so neither losing design
+    exists in any ref, any branch, or any diff — there is no object to recover. The
+    only showcase implementation on main is the winner's, and the log records that
+    even that was re-implemented on the branch rather than merged out of its
+    worktree. The
+    workflow itself was not carried forward either: no design bake-off skill exists
+    and no issue proposes one.
+site: the-rehearsals
+catalogNote: >-
+  Three agents on three different models were given one brief and one page to
+  redesign, each in its own isolated worktree, each screenshotted at two widths so
+  the three could be set side by side. A human looked at them and chose one. The
+  other two were complete, working implementations of the same page, and they were
+  gone within the hour — not deleted, which would have left a commit, but simply
+  never committed at all, in working trees that no longer exist. What is unusual
+  even among the trench's lost finds is that these never touched a ref at all, and
+  are known only from the log of the session that commissioned them: no diff, no
+  blob, no quotable line of their own. That two thirds of the work would be
+  destroyed was the plan, not the accident.
+assessedAt: 2026-08-25

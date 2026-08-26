@@ -1,13 +1,14 @@
 ---
 title: The Current Cut
-description: The freshest spoil, still settling — a complete feature PR closed when its own CI went unstable, and the dependency patch lifted out the morning upstream made it unnecessary.
+description: The finds that were freshest when this cut was dug — a complete feature PR closed when its own CI went unstable, and the dependency patch lifted out the morning upstream made it unnecessary.
 ---
 
-At the top of the trench, where the soil is loose and the edges are still sharp,
-lies the newest spoil in the trench. These finds are graded *fresh* not because
-they are unfinished — most are as complete as anything deeper down — but because
-they were discarded so recently that they read as if they might yet be picked back
-up. They have not yet begun to settle; they are barely cold.
+This cut was the open one when it was dug, and the finds in it are graded *fresh*
+not because they are unfinished — most are as complete as anything deeper down —
+but because, at the moment they were assessed, they had been discarded so recently
+that they read as if they might yet be picked back up. Their season has since been
+named and closed as the Plainer Cut, with two more opened over the top, and a grade
+is never re-derived once set. Read them, then, as they were: barely cold.
 
 The first is a finished feature pull request closed without merging: a small
 copy-link button for the journal's session and digest heads, screenshot-verified

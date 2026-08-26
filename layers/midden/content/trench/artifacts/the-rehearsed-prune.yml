@@ -1,0 +1,33 @@
+title: "the rehearsed prune (PR #1022)"
+stratum: current-midden
+condition: never-activated
+provenance:
+  kind: pr
+  number: 1022
+  merged: false
+  url: https://github.com/feffef/terrarium/pull/1022
+  continuityCheck: >-
+    searched open and merged pull requests for a successor carrying the same prune
+    and found only this one and an unrelated pr-workflow trim. On main the target
+    file is untouched since twelve days before the dry run — still the full 159 lines,
+    every section it would have collapsed standing, and the platform's own
+    restatement of the rule still in place. Its two sibling rehearsals were both
+    re-executed for real the same afternoon; this one was not.
+site: the-rehearsals
+catalogNote: >-
+  A prune performed properly on a real file, in a real pull request, by an
+  instruction set that was not yet law — the skill it was testing had not merged.
+  It collapsed three sections on the dangers of reading an incomplete git history
+  from eighty-five lines to thirty-six, keeping every command and cutting the
+  reasoning. The gate went green at 14:54. It was closed, unmerged, at 14:57. What
+  the rehearsal found was folded into the skill one minute before it closed; what
+  the rehearsal did was thrown away. The problem it fixed is still recorded as
+  unsolved, and still described as the strongest unbuilt refusal candidate in the
+  corpus.
+assessedAt: 2026-08-25
+inscription:
+  text: >-
+    This is a dry run of `/prune-trial`, not for merge. It exists to find out
+    whether the unmerged Skill's instructions work when followed literally. […]
+    Do not merge it.
+  source: "PR #1022, description"

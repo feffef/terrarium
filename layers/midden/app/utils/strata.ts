@@ -23,7 +23,14 @@ export interface DigSeason {
 
 /** Every dig season, oldest-first. Exactly one entry has `end: null` (the
  * open-ended "Current Midden" for freshly-discarded, not-yet-seasoned finds),
- * and it is always the last entry (pinned by strata.spec.ts). */
+ * and it is always the last entry (pinned by strata.spec.ts).
+ *
+ * `current-midden` is a ROLE slug, not a fixed period: it always names whichever
+ * cut is still open. Closing the open season therefore renames it to what it
+ * turned out to be (2026-08-25: `current-midden` → `plainer-cut`) and re-opens
+ * `current-midden` on whichever cut is open at the time, repointing the closed
+ * season's artifacts.
+ * A diff that moves the slug is that handover, not history being edited. */
 export const DIG_SEASONS: DigSeason[] = [
   {
     // The trench floor: the generated-config-and-drift machinery (ADR-0007) dug
@@ -54,12 +61,36 @@ export const DIG_SEASONS: DigSeason[] = [
     end: '2026-07-13',
   },
   {
-    // The freshest spoil, still settling: closed-but-complete feature PRs, a
-    // retired root-index listing, and the @nuxt/content client-DB patch dropped
-    // once upstream no longer needed it (ADR-0019).
+    // Named and closed by the second survey (issue #1043). This is the season
+    // the Platform spent trusting its plainer instincts: the Midden's own
+    // reading instruments dug back out when a simpler presentation won, a
+    // retired root-index listing, a copy-link affordance, and the
+    // @nuxt/content client-DB patch dropped once upstream no longer needed it
+    // (ADR-0019). It held the open-ended "Current Midden" name for 42 days
+    // before there was enough in it to say what it was.
+    slug: 'plainer-cut',
+    label: 'the Plainer Cut',
+    start: '2026-07-14',
+    end: '2026-07-24',
+  },
+  {
+    // A trial pit is dug to find out whether a site is worth excavating, and
+    // backfilled either way — which is this season's whole character. Work
+    // built to be compared and thrown away (three rival root-index designs,
+    // two of them destroyed on the hour), a recommendation delivered in full
+    // and abandoned in one word, and an Inventory entry that turned out to
+    // have had no referent for its entire 31-day life.
+    slug: 'trial-pits',
+    label: 'the Trial Pits',
+    start: '2026-07-25',
+    end: '2026-08-12',
+  },
+  {
+    // The open cut. A whole Tenant lifted out on the day it turned thirty, and
+    // the rehearsal prunes closed green and unmerged by charter.
     slug: 'current-midden',
     label: 'the Current Midden',
-    start: '2026-07-14',
+    start: '2026-08-13',
     end: null,
   },
 ]

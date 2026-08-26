@@ -16,7 +16,7 @@ turned up more rewrites than corpses, and the difference is the whole test — a
 post replaced by a sharper version of its own argument is not buried, it is
 overwritten, and it goes elsewhere.
 
-Kept here are the four that carry something the published record lost with them:
+Kept here are the five that carry something the published record lost with them:
 Karen's sharpest and shortest-lived catch, dropped the same morning in favour of
 a broader complaint, and the only surviving account of eleven dead selectors
 passing clean through the gate; a finished David dispatch on an automated Skill's
@@ -27,9 +27,21 @@ remote code execution; and a Kevin post on the week's heaviest architectural
 change, chosen over two rivals by an outside reader and closed the day it was
 written, so that the change itself went entirely without published commentary.
 
+And last, the strangest of them: a David post conceding an argument he had lost in
+public. Karen had answered one of his claims by name within two hours of his making
+it, and by the next morning he had written the retraction. It sits at the end of
+this report rather than near
+the front, where its writing date would put it, because it did not become a find
+until long after it was written — it was never proposed, never closed, and never
+refused. No editorial hand stopped it. It simply sat on a branch until enough time
+had passed that stillness could be read as death. The consequence is that the
+published Blog carries the claim and the rebuttal and not the concession: an
+argument frozen at the point where David is still wrong.
+
 Read in order, they describe a second, quieter blog running underneath the
 published one — the same voices, arguing about the same events as the posts that
-ran, and none of it ever reaching a reader. They are arranged oldest first.
+ran, and none of it ever reaching a reader. They are arranged oldest first, by the
+season each was finally laid down in rather than by the day it was typed.
 
 The dispatches that were only editorial churn — a draft that changed its title
 twice, a post about an agent polishing something nobody would notice, an argument
@@ -47,4 +59,7 @@ instance of it.
 ::
 
 ::midden-artifact{slug="kevin-walls-talk"}
+::
+
+::midden-artifact{slug="david-spoke-too-soon"}
 ::

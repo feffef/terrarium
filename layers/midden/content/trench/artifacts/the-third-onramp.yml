@@ -1,0 +1,30 @@
+title: the third onramp
+stratum: trial-pits
+condition: never-activated
+provenance:
+  kind: commit
+  hash: 33409ef
+  path: layers/journal/content/current/sessions/2026-07-29-session_015WWGtVHoCoDSEwu2BLsasK.yml
+  url: https://github.com/feffef/terrarium/commit/33409ef
+  continuityCheck: >-
+    the Journal still carries exactly two onramps and no third; every page added
+    since is a dated digest, never an explainer. The gap the proposal was built on
+    is also still open — the repository's one rendered diagram remains a cycle with
+    no branch points, which was the argument for drawing a decision tree in the
+    first place. Two searches of the tracker for an issue carrying the idea forward
+    return nothing.
+site: what-the-record-claimed
+catalogNote: >-
+  A session of two hours and fifty-two minutes, spent reading — both existing onramps, two
+  architecture decisions, the merge-authority table, the gate scripts themselves —
+  produced a single recommendation: a third explainer answering what stops a bad
+  change from landing, with a decision tree, because the one diagram the platform
+  had was a loop and could not show a choice. The work was delivered whole. The
+  human replied with one word. There are no commits on any branch, no pull request
+  was opened, and the session's branch was left exactly where it started. Of a
+  hundred and seventy-three sessions logged in the month this dig swept, it is the only one that
+  ends in the word abandoned.
+assessedAt: 2026-08-25
+inscription:
+  text: Recommendation delivered, then dropped unbuilt
+  source: session_015WWGtVHoCoDSEwu2BLsasK, its outcome line

@@ -1,0 +1,41 @@
+title: the Commits Tenant
+stratum: current-midden
+condition: intact
+provenance:
+  kind: commit
+  hash: b008ec1
+  path: layers/commits/
+  url: https://github.com/feffef/terrarium/commit/b008ec1
+  continuityCheck: >-
+    no `server/` directory is tracked anywhere on main and `git grep -l
+    defineEventHandler` returns nothing — the runtime-read capability left with the
+    Tenant rather than moving. The Commons, the only plausible successor, asserts
+    the opposite property in its own comments ("reads are build-time/committed only
+    (ADR-0001)", "never a live feed"). The removing commit is purely subtractive,
+    +16/-278, and fifteen of the sixteen insertions are prose rewords — the
+    sixteenth only widens a test's tenant-count band from [6-9] to [5-9] — so
+    nothing was rewritten into a successor a rename check could miss.
+site: the-thirty-day-exception
+catalogNote: >-
+  Seven files and one live wire. Alone among the Tenants it read at runtime — a
+  git call behind a server route, handing the repo's newest commit to a page that
+  displayed it. The break from build-time baking was not smuggled in: it was
+  declared in the Tenant's own context file, under a heading that named the ADR it
+  was breaking, and again in the platform's ground rules as one of two scoped
+  relaxations. It lived thirty days. On the last of them a typecheck
+  failure was read as rot — and by the time the removal was proposed that diagnosis
+  had already been retracted, in the same pull request, under a heading flagging it
+  to the reviewer. It merged seventeen minutes later regardless, on a human's
+  say-so. The gain recorded for its removal was that a paragraph got shorter.
+remains:
+  - label: the live wire, and its own warning about the error that killed it
+    url: https://github.com/feffef/terrarium/blob/65b4d583cc7949e300bb5c2e4e7131b03a2f83c6/layers/commits/server/api/latest-commit.get.ts
+  - label: the exception, declared under its own heading
+    url: https://github.com/feffef/terrarium/blob/65b4d583cc7949e300bb5c2e4e7131b03a2f83c6/layers/commits/CONTEXT.md
+assessedAt: 2026-08-25
+inscription:
+  text: >-
+    Explicit return type instead of relying on Nitro's typed-route inference to
+    derive it from the function body — that inference intermittently fails after a
+    clean install, surfacing as TS2339 in LatestCommit.vue (issue #940).
+  source: layers/commits/server/api/latest-commit.get.ts, the comment above its return type

@@ -1,5 +1,5 @@
 title: ConditionGlyph.vue + ConditionTooltip.vue (the grade mark and its decode)
-stratum: current-midden
+stratum: plainer-cut
 condition: dissolved
 provenance:
   kind: file
