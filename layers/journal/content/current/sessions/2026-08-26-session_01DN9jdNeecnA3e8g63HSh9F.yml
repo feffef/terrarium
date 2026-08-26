@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01DN9jdNeecnA3e8g63HSh9F
 startedAt: 2026-08-26T04:09:44Z
-endedAt: 2026-08-26T04:23:44Z
+endedAt: 2026-08-26T04:27:20Z
 kind: autonomous
 goal: Run scheduled audit-docs sweep
-status: in-review
-outcome: Fixed 3 confirmed findings, opened PR
-summary: "A scheduled /audit-docs firing. Fanned out four paired-lens reviewer agents (Freshness/Drift+Orphan-addition, Single-home/Duplication+Mis-location, Concision/Verbose+Stale-narration, Coherence/Contradiction+Ambiguity) over every Live/Historical/Pack-generic doc surface, pooled 4 findings with no overlap, and fact-checked each against primary sources before touching anything. 3 were CONFIRMED(-BUT) and fixed: docs/agents/tenant-layers.md's stale \"two gotchas\" intro (doc has grown to six sections), a same-doc restatement of the transcript-privacy premise in layers/journal/CONTEXT.md, and a CLAUDE.md paragraph duplicating CONTEXT.md's Friction glossary term. A fourth candidate (CLAUDE.md's ADR-0011 bullet vs. journal architecture.md narrating the same exception) was ruled WRONG by the fact-checker — legitimate independent restatement for a different, public-facing audience, not a single-home violation. No orphaned docs, drift, or contradictions survived. No human-only surface touched, so no escalation PR. No unresolvable factual conflict, so no issue filed. pnpm gate:scoped ran green before push. Entirely autonomous — no human prompted or steered any step; PR #1050 opened and subscribed for babysitting to merge."
+status: completed
+outcome: "Fixed 3 confirmed findings, PR #1050 merged"
+summary: "A scheduled /audit-docs firing. Fanned out four paired-lens reviewer agents (Freshness/Drift+Orphan-addition, Single-home/Duplication+Mis-location, Concision/Verbose+Stale-narration, Coherence/Contradiction+Ambiguity) over every Live/Historical/Pack-generic doc surface, pooled 4 findings with no overlap, and fact-checked each against primary sources before touching anything. 3 were CONFIRMED(-BUT) and fixed: docs/agents/tenant-layers.md's stale \"two gotchas\" intro (doc has grown to six sections), a same-doc restatement of the transcript-privacy premise in layers/journal/CONTEXT.md, and a CLAUDE.md paragraph duplicating CONTEXT.md's Friction glossary term. A fourth candidate (CLAUDE.md's ADR-0011 bullet vs. journal architecture.md narrating the same exception) was ruled WRONG by the fact-checker — legitimate independent restatement for a different, public-facing audience, not a single-home violation. No orphaned docs, drift, or contradictions survived. No human-only surface touched, so no escalation PR. No unresolvable factual conflict, so no issue filed. pnpm gate:scoped ran green locally; CI's safety-gate also went green; check-conflicting-issues.ts's 5 advisory hits were eyeballed and none were real conflicts. PR #1050 merged via merge-pr.ts. Entirely autonomous — no human prompted or steered any step."
 prs:
   - "1050"
 docsRead:
@@ -17,7 +17,7 @@ docsRead:
   - path: layers/journal/CONTEXT.md
     reason: "fixed: redundant transcript-privacy restatement"
   - path: docs/agents/pr-workflow.md
-    reason: (no reason given)
+    reason: land-a-gated-PR recipe
   - path: layers/journal/content/current/pages/architecture.md
     reason: (no reason given)
   - path: docs/adr/0004-objective-safety-gate.md
@@ -112,27 +112,29 @@ skillsUsed:
   - name: close-session
     reason: closure at PR-open
   - name: log-session
-    reason: (no reason given)
+    reason: finalize status to completed on merge
 frictions: []
-durationSec: 840
+durationSec: 1056
 models:
-  claude-sonnet-5: 105
+  claude-sonnet-5: 124
 toolCounts:
   Skill: 3
-  Bash: 13
+  Bash: 18
   ToolSearch: 4
   mcp__github__search_pull_requests: 1
   Agent: 5
   TaskCreate: 10
   TaskUpdate: 20
   Read: 4
-  Edit: 3
+  Edit: 4
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Write: 1
+  Write: 2
   mcp__github__issue_read: 1
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/agents/tenant-layers.md
   - layers/journal/CONTEXT.md
