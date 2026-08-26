@@ -1,0 +1,60 @@
+schemaVersion: 1
+session: session_01EeBUuD5nevSA27Sgrnzfwc
+startedAt: 2026-08-26T18:25:17Z
+endedAt: 2026-08-26T18:45:11Z
+kind: interactive
+goal: Rewrite the Journal's Architecture page
+status: in-review
+outcome: "PR #1054 open, full gate green"
+summary: "Human-instructed: rewrite /t/journal/current/architecture, using the recently-rewritten How Humans & Agents Work as the model for language and length. Grounded the rewrite in the ADRs, the manifests and package.json rather than the old page's prose, which let me correct two claims it implied (digests are pages-collection Documents, not a Collection; the runtime dependency list is three packages). Body grew ~480 to ~1350 words, matching the sibling page. Added three pre-rendered mermaid diagrams where there were none, and gave isolation its own section. Diagram choices, section split and the two corrections were agent-initiated within that ask."
+prs:
+  - "1054"
+docsRead:
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: the model for voice, length and diagram style
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: build-time-baked content model, table-level isolation
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: the deployment section's ground truth
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: collection kinds and the Commons as first aggregator
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: how to add diagrams without shipping mermaid JS
+  - path: layers/journal/tenant.config.ts
+    reason: which Collections the Journal actually declares
+  - path: app/utils/mermaid.ts
+    reason: the --diagram-* token contract the committed SVGs resolve against
+skillsUsed:
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: CONTEXT.md's Tenant glossary entry says "see the Tenants roster below for the current four"; the roster directly below it lists six.
+    solution: Fix the one home — drop the count from the Tenant entry rather than re-syncing a number that rots on every new Tenant. Left unfixed here to keep this content PR scoped; audit-docs' territory.
+    severity: minor
+  - description: Editing a mermaid block orphans its old SVG, and verify:mermaid only reports the orphan on a later run, after render:mermaid appears to succeed.
+    solution: Have render:mermaid delete SVGs its own pass orphaned, or name them in its output, so the drift gate isn't the first place you learn about it.
+    severity: nit
+  - description: A `cd` inside one Bash call persisted into later calls, so a subsequent relative path failed with a confusing "no such directory".
+    solution: Use absolute paths or a subshell for any directory change; the tool description does say the working directory persists.
+    severity: nit
+durationSec: 1194
+models:
+  claude-opus-5: 103
+toolCounts:
+  Bash: 47
+  Read: 7
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+gitBranch: claude/journal-architecture-rewrite-r936vg
+entrypoint: remote_mobile
+cliVersion: 2.1.246
+learnings:
+  - dagre routes a mermaid edge behind an unrelated sibling node when a parent's children fan wider than the parent, so the edge reads as belonging to the sibling — checking the rendered SVG, not the source, is what catches it
+ideas:
+  - Teach scripts/render-mermaid.ts to prune SVGs its own pass orphaned (it already knows every live key it just rendered), turning today's two-step render-then-verify-then-rm into one command and removing a whole class of gate-red-on-commit surprises.
