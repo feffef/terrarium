@@ -27,8 +27,8 @@ together, session by session.
 ## Who it's for
 
 Anyone who wants the Platform's actual current state, or how it got there,
-without being *in* the session that did the work — which, since no one outside a
-session can read its transcript, is everyone. A human checking on progress; a
+without being *in* the session that did the work — which, per above, is
+everyone. A human checking on progress; a
 later session hunting recurring friction to fix; the self-improvement Skills
 (`audit-docs`, `audit-skills`, `frictions-to-fixes`) that read session logs for
 patterns.

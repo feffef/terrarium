@@ -507,8 +507,8 @@ prepare` emits a "Cannot extend config from layers/<tenant>/" warning.
 ## Logging your session
 
 Every session ends with an honest **session log** in the Journal (ADR-0009,
-issue #2) — the raw signal the self-improvement Skills mine
-(`frictions-to-fixes` and `prune-trial` today). A log has two halves (ADR-0009
+issue #2) — the raw signal the self-improvement Skills mine (see `CONTEXT.md`'s
+**Friction** term for which, and why). A log has two halves (ADR-0009
 amendment): a **mechanical** trace
 derived from the transcript by a committed hook — never self-reported — and an
 **interpretive** half only you can write. The **`log-session`** Skill owns the
