@@ -1,0 +1,159 @@
+schemaVersion: 1
+session: session_01Wr8N7AFivfAZz13LAeNhKk
+startedAt: 2026-08-25T17:56:00Z
+endedAt: 2026-08-26T01:21:02Z
+kind: interactive
+goal: Survey the Midden, then catalogue the finds
+status: in-review
+outcome: Six finds catalogued, reviewed, corrected
+summary: "Human-instructed throughout. The user asked for a five-way subagent fan-out over session, GitHub and git history to find discarded work the Midden has not catalogued, plus a view on whether finds fit existing dig reports, and whether a Skill owns this job. They invoked /grill-with-docs, then interrupted it to invoke /midden-survey directly, which settled scope. Ran the Skill: unshallowed the clone, ran the mechanical sweep, and dispatched five read-only agents pinned to one SHA. Six candidates cleared the two-gate bar, including the first-ever branch- and skill-provenance finds; the eight doc deletions all failed Gate B. Filed one survey-report issue per the Skill's charter (#1043). The user then gave an explicit green-light to catalogue everything found, loosening the rule that reserves condition/stratum/site/catalogNote to the curator — so all four were authored here. Six Artifacts landed (the Tenant's first branch- and skill-provenance finds), three new dig reports, a fifth find folded into an existing report, and the dig-season list rebuilt: the 43-day open season named and closed, a new one coined, nine artifacts repointed. Gate green end to end; PR #1044 opened and subscribed. The user then asked for a review: two read-only agents (adversarial fact-check; craft and domain conformance) went over the content and both found real defects, including a misquoted inscription. All fixed and re-verified against primary sources in a second push; gate green again and the PR description rewritten to drop claims the review disproved."
+prs:
+  - "1044"
+docsRead:
+  - path: layers/midden/CONTEXT.md
+    reason: the inclusion bar and Artifact shape
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: the procedure this session ran
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: brief-authoring rules before the fan-out
+  - path: layers/midden/tenant.config.ts
+    reason: provenance schema for the draft blocks
+  - path: layers/midden/app/utils/strata.ts
+    reason: dig-season list, to measure stratum staleness
+  - path: scripts/midden-survey.ts
+    reason: root-caused the noise-path screening defect
+  - path: layers/midden/content/stores/artifacts/the-condition-popover.yml
+    reason: (read before editing)
+  - path: layers/midden/content/stores/artifacts/the-root-listing.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/kevin-walls-talk.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-condition-glyph.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-copy-link-button.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-external-session-prototype.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-nuxt-content-patch.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-removed-noun-gate.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-stratigraphy-sidebar.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/pages/unpublished-dispatches.md
+    reason: (read before editing)
+  - path: layers/midden/app/components/midden/TrenchLanding.vue
+    reason: (no reason given)
+  - path: layers/midden/content/trench/artifacts/the-rehearsed-prune.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/david-spoke-too-soon.yml
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-commits-tenant.yml
+    reason: (read before editing)
+skillsUsed:
+  - name: midden-survey
+    reason: the chartered discovery procedure
+  - name: dispatch-subagents
+    reason: five parallel read-only agents on a shared checkout
+  - name: close-session
+    reason: self-judged closure
+  - name: log-session
+    reason: (no reason given)
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: midden-survey SKILL.md tells the surveyor to bound closed PRs with `closed:>=<since>`. Run literally it returned 1 of 4 in-window PRs.
+    solution: "Sweep unqualified and filter locally; fix the Skill. Filed as D1 in issue #1043."
+    severity: major
+  - description: scripts/midden-survey.ts isNoisePath screens all of layers/journal/content/, which contains the Skill Inventory, so a deleted Inventory entry never surfaces.
+    solution: "Exempt layers/journal/content/*/skills/ from the noise screen. Filed as D2 in issue #1043."
+    severity: major
+  - description: I propagated the Skill's broken PR query verbatim into a subagent brief; the agent caught it and cross-checked two ways rather than building on it.
+    solution: Sanity-check a Skill's literal query against an unqualified control before briefing it out.
+    severity: minor
+  - description: My first attempt to verify the query defect passed an HTML-escaped `>` and returned zero, which looked like confirmation for the wrong reason.
+    solution: Caught it before asserting; re-ran with an unqualified search. Watch for entity-escaping in MCP query strings.
+    severity: nit
+  - description: I catalogued from my own survey issue instead of re-opening the primary sources, producing 12 factual defects — including an inscription that silently dropped a 17-word sentence mid-quote and presented the result as continuous quotation.
+    solution: A survey report is one remove from the evidence and that was enough. Cataloguing must re-read the PR body, the file at its revision, and the frontmatter itself — never the report that summarised them. Caught only because a review was requested.
+    severity: major
+  - description: Closing the open dig season silently falsified two pre-existing pages that called their finds "the newest spoil" and "the current cut". Gate was green throughout.
+    solution: A rename that changes a term's meaning must grep for prose asserting the old meaning. No validator can catch a page whose claim rotted; only a reader can.
+    severity: moderate
+  - description: Two condition grades (`dissolved`) described erosion that never happened, and one dig report called a find "preserved intact" beside that grade.
+    solution: Grade against the single-homed definition text in condition.ts, not against the grade's connotation. Both regraded `never-activated`.
+    severity: minor
+durationSec: 26701
+models:
+  claude-opus-5: 349
+toolCounts:
+  Bash: 69
+  ToolSearch: 3
+  mcp__github__search_issues: 2
+  mcp__github__issue_read: 2
+  AskUserQuestion: 1
+  Agent: 7
+  mcp__github__search_pull_requests: 2
+  mcp__github__issue_write: 1
+  Skill: 2
+  Read: 15
+  Edit: 34
+  Grep: 2
+  Write: 9
+  mcp__github__list_pull_requests: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  ReadNotifications: 10
+  mcp__github__pull_request_read: 11
+  mcp__Claude_Code_Remote__send_later: 6
+  mcp__github__actions_list: 2
+  mcp__github__update_pull_request: 1
+filesEdited:
+  - layers/midden/content/stores/artifacts/the-condition-popover.yml
+  - layers/midden/content/stores/artifacts/the-root-listing.yml
+  - layers/midden/content/trench/artifacts/kevin-walls-talk.yml
+  - layers/midden/content/trench/artifacts/the-condition-glyph.yml
+  - layers/midden/content/trench/artifacts/the-copy-link-button.yml
+  - layers/midden/content/trench/artifacts/the-external-session-prototype.yml
+  - layers/midden/content/trench/artifacts/the-nuxt-content-patch.yml
+  - layers/midden/content/trench/artifacts/the-removed-noun-gate.yml
+  - layers/midden/content/trench/artifacts/the-stratigraphy-sidebar.yml
+  - layers/midden/content/trench/artifacts/the-commits-tenant.yml
+  - layers/midden/content/trench/artifacts/the-rehearsed-prune.yml
+  - layers/midden/content/trench/artifacts/the-losing-designs.yml
+  - layers/midden/content/trench/artifacts/david-spoke-too-soon.yml
+  - layers/midden/content/trench/artifacts/the-phantom-skill.yml
+  - layers/midden/content/trench/artifacts/the-third-onramp.yml
+  - layers/midden/content/trench/pages/the-thirty-day-exception.md
+  - layers/midden/content/trench/pages/the-rehearsals.md
+  - layers/midden/content/trench/pages/what-the-record-claimed.md
+  - layers/midden/content/trench/pages/unpublished-dispatches.md
+  - layers/midden/tests/e2e/midden.e2e.ts
+  - layers/midden/content/trench/pages/the-current-cut.md
+  - layers/midden/content/trench/pages/the-simpler-verdict.md
+  - layers/midden/app/utils/strata.ts
+subagents:
+  - type: general-purpose
+    task: Sweep closed-unmerged PRs
+  - type: general-purpose
+    task: Sweep dormant branches
+  - type: general-purpose
+    task: Dig the removed Commits Tenant
+  - type: general-purpose
+    task: Judge the doc/guard deletions
+  - type: general-purpose
+    task: Sweep session logs and Skills
+  - type: general-purpose
+    task: Fact-check the midden content
+  - type: general-purpose
+    task: Review midden voice and domain fit
+gitBranch: claude/midden-content-audit-mwkash
+entrypoint: remote_mobile
+cliVersion: 2.1.245
+learnings:
+  - isNoisePath's layers/journal/content/ prefix makes the survey structurally blind to Skill Inventory deletions — the likely reason kind:skill has never once been used in 34 artifacts
+  - A GitHub `closed:>=` range qualifier can silently under-report against this repo's search index; the unqualified search plus a local merged_at filter is the reliable control
+  - Author-date fingerprinting a branch against main false-negatives on squash merges, since the squash commit carries the merge time, not the original author date
+ideas:
+  - Build a `midden-catalogue` Skill for the curatorial half the survey deliberately stops before — grading condition, coining/closing dig seasons, and authoring the dig report. Today that work is freehand every run, which is why `current-midden` has been left open 43 days holding 9 of 34 finds while three closed seasons cover 10 days total. A Skill could at minimum flag the open season for closure once it passes a threshold.
+  - Add a survey self-check that reports coverage per provenance kind. Two of six declared kinds (`branch`, `skill`) sat at zero for the Midden's whole life, and in the `skill` case that was a tooling blind spot rather than an absence of finds — a per-kind zero is exactly the signal that the sweep, not the history, is empty.

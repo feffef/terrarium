@@ -3,7 +3,7 @@
 A Tenant is implemented as a Nuxt layer under `layers/<tenant>/` — Nuxt's
 conventional layer directory, so every `layers/*` is auto-extended with no
 `extends` list (ADR-0018). It extends the main app (CONTEXT.md, ADR-0001). Nuxt
-layers have two gotchas that get re-discovered from scratch most sessions. Read
+layers have gotchas that get re-discovered from scratch most sessions. Read
 this before editing a layer's `nuxt.config.ts`, pages, or components.
 
 ## 1. Auto-imports first; aliases resolve to the main app, not the layer

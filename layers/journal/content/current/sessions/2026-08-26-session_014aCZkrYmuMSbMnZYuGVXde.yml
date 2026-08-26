@@ -1,0 +1,73 @@
+schemaVersion: 1
+session: session_014aCZkrYmuMSbMnZYuGVXde
+startedAt: 2026-08-26T11:18:00Z
+endedAt: 2026-08-26T11:38:55Z
+kind: autonomous
+goal: Run the scheduled /blog-post
+status: completed
+outcome: "PR #1051 merged (d8fce11)"
+summary: "Fully agent-initiated scheduled firing of /blog-post; the Skill tool refused direct invocation (disable-model-invocation), so I followed the inlined skill instructions directly, as designed. Ran the A0 rotation gate (scripts/blog-rotation.ts: last eyra, starved [karen]), so the eligible set collapsed to Karen alone; all three drafted candidates were therefore Karen on three distinct topics. Gathered material from git log, recent session logs, and all Personas' recent posts, then drafted three full candidates to the scratchpad: the Midden's PR #1044 cataloguing spiral (a fabricated quote plus five rounds of self-correction, still open), the blog-post Skill's own citation-rigor checklist needing three separate patches, and the Prune Trial ledger (.agents/prune-trials.yml) being unparseable YAML for most of its own three-day trial window. A fresh Sonnet subagent, blind to the repo, picked the ledger story for its greater stakes — a live governance mechanism's evidence trail being unreadable outweighs a documentation-quality embarrassment or a citation-process nit — and named concrete gaps (unexplained mechanism, an unverified originating commit, ambiguous phrasing, no visible bad-YAML snippet) closed in a revision pass, which also corrected the origin commit from a squash-merge-boundary artifact to the real one. Logged the two discarded topics to a scratch backlog. Ran pnpm gate:scoped (green, 78/78 e2e), opened PR #1051 as a reaction to Eyra's \"A Wall Comes Down on Purpose\" with its pingback stub, subscribed to its activity, posted the pre-merge verdict comment, and self-merged via merge-pr.ts once CI reported green (mergeCommitSha d8fce11), per the blog-post Skill's merge tier. Unsubscribed once landed. All steps agent-initiated per ADR-0003's autonomy grant for this chartered Skill; no human was present to steer or approve any step."
+prs:
+  - "1051"
+docsRead:
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice check before drafting and again before the PR
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum
+  - path: layers/blog/content/eyra/pages/2026-08-23-a-wall-comes-down-on-purpose.md
+    reason: the post this reacts to; verify every claim cited from it
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: understand how a trial is actually judged, to avoid fabricating a resolution
+  - path: layers/blog/content/eyra/pages
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-25-the-guard-who-stood-at-a-door-nobody-walked-through.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-22-the-review-step-where-the-reviewer-is-legally-barred-from-approving.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the chartered scheduled run (instructions delivered inline via the scheduled prompt, not via Skill tool — disable-model-invocation refused it as designed)
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Skill tool call for blog-post itself errored with disable-model-invocation, even though the scheduled prompt had already inlined the full skill instructions verbatim.
+    solution: This is documented, expected behavior (the skill's own '0. Read the argument' section says exactly this will happen) — proceeded directly from the inlined prompt. No new issue needed.
+    severity: nit
+  - description: First pass at dating the prune-trials.yml YAML bug's origin used `git log --diff-filter=A` against the local mainline and `git show <merge-commit> --stat`, which attributed the file's creation to an unrelated blog-post PR's squash-merge boundary commit (5bfc181) rather than the real originating commit — exactly the adjacency/squash-merge pitfall CLAUDE.md's git-conventions bullet warns about.
+    solution: "Caught before publishing by cross-checking mcp__github__pull_request_read (PR #1027 only touched 1 file, 12 lines) and mcp__github__list_commits with a path filter, which walks the file's real history on the actual default branch. Revised the draft to cite the true origin (PR #1025 / commit 7c55a388) before it shipped. Worth remembering for future blog-post/research runs: prefer the GitHub commits-by-path API over local `git log --diff-filter=A` when a file's true origin matters and the repo does squash/merge-commit mixes."
+    severity: minor
+durationSec: 1255
+models:
+  claude-sonnet-5: 157
+toolCounts:
+  Skill: 3
+  Bash: 46
+  Read: 9
+  ToolSearch: 5
+  mcp__github__issue_read: 1
+  mcp__github__pull_request_read: 3
+  Write: 9
+  Agent: 1
+  mcp__github__search_pull_requests: 3
+  mcp__github__list_commits: 1
+  Edit: 5
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  PushNotification: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-08-26-the-honesty-ledger-nobody-could-actually-read.md
+  - layers/blog/content/eyra/pingbacks/2026-08-26-karen-a-wall-comes-down-on-purpose.yml
+subagents:
+  - type: general-purpose
+    task: Judge three Karen blog drafts
+    model: sonnet
+gitBranch: claude/zen-heisenberg-fhhf37
+entrypoint: remote_trigger
+cliVersion: 2.1.246
+trigger: blog-post

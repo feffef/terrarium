@@ -1,0 +1,74 @@
+schemaVersion: 1
+session: session_018w2uzgWya2PVdkah8r5vxH
+startedAt: 2026-08-26T02:06:55Z
+endedAt: 2026-08-26T02:27:11Z
+kind: autonomous
+goal: Run scheduled frictions-to-fixes sweep
+status: completed
+outcome: Filed 2 issues, dispatched fixes, both PRs merged
+summary: "Scheduled Routine fired /frictions-to-fixes with no human prompt this session. Delegated the survey/screening of the last 20 session logs to a general-purpose subagent, which returned two never-fixed candidates (screened against skills-lock.json off-limits Skills, open Prune Trials, and the GitHub tracker) plus a dropped list citing prior issues/PRs already covering everything else. I independently re-verified both candidates against primary sources before filing (confirmed the midden-survey Skill is repo-owned, not pack-locked; reproduced the prune-trials.yml YAML parse failure myself with pyyaml) and filed issues #1046 (Midden cataloguing has no verification-against-primary- source discipline) and #1047 (prune-trials.yml's territory field is invalid YAML). Dispatched two Sonnet impl agents in isolated worktrees (no shared design axis, no file overlap, so no serialization needed), each of which implemented its issue's recommended fix, ran the local gate, and opened a PR. I reviewed both diffs directly, confirmed CI green, posted a review comment on each, and merged both via scripts/merge-pr.ts (PR #1048 closing #1046, PR #1049 closing #1047). All work in this session — survey, screening, issue filing, dispatch, review, and merge — was agent-initiated per ADR-0003's autonomy grant for this chartered Skill; no human was present to steer or approve any step."
+prs:
+  - "1048"
+  - "1049"
+docsRead:
+  - path: CLAUDE.md
+    reason: ground rules for human-only surfaces, PR/merge discipline, provenance header
+  - path: layers/midden/CONTEXT.md
+    reason: "picked the fix location for issue #1046, checked existing structure/register"
+  - path: skills-lock.json
+    reason: confirmed midden-survey is repo-owned, not an off-limits pack Skill
+  - path: .agents/prune-trials.yml
+    reason: "reproduced the YAML parse failure before filing #1047"
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: brief checklist and worktree-isolation mechanism before dispatch
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the chartered sweep this session ran (instructions delivered inline via the scheduled prompt, not via Skill tool — see friction below)
+  - name: dispatch-subagents
+    reason: worktree isolation + brief checklist for the two impl-agent dispatches
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skill tool call for "frictions-to-fixes" itself errored with disable-model-invocation, even though the scheduled prompt had already inlined the full skill instructions verbatim. Had to proceed directly from the inlined prompt instead of via the Skill tool.
+    solution: "Already tracked as issue #1018 (open, ready-for-human) — this session is another occurrence confirming the recurrence count, no new issue needed."
+    severity: nit
+  - description: "mcp__github__search_issues is natural-language/semantic, not literal substring search — several queries (for both #1046 and #1047, and in the survey subagent's own screening) needed 2-3 reformulations plus a direct issue_read before \"never fixed\" could be asserted with confidence, since a search miss alone is weak evidence."
+    solution: Documented, expected tool behavior per docs/agents/github-integration.md guidance already followed here (cross-check with a keyword search + nearby-issue eyeball) — no process gap, just a real per-query cost worth naming so it isn't mistaken for wasted effort next time.
+    severity: nit
+durationSec: 1216
+models:
+  claude-sonnet-5: 99
+toolCounts:
+  Skill: 4
+  Agent: 3
+  Bash: 12
+  Read: 1
+  ToolSearch: 3
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 2
+  TaskCreate: 3
+  ReadNotifications: 5
+  mcp__github__pull_request_read: 9
+  mcp__github__actions_list: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 2
+  TaskUpdate: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Grep: 1
+  Write: 1
+filesEdited:
+  - layers/midden/CONTEXT.md
+  - .agents/prune-trials.yml
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - task: Implement Midden cataloguing discipline fix
+    model: sonnet
+  - task: Fix prune-trials.yml invalid YAML
+    model: sonnet
+gitBranch: claude/eager-ptolemy-6e8l1j
+entrypoint: remote_trigger
+cliVersion: 2.1.246
+trigger: frictions-to-fixes
