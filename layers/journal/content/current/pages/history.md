@@ -43,20 +43,12 @@ commits. The **Atlas**, a fictional field guide to an ecosystem under glass,
 merged complete on 7 July: three biomes, twelve specimens, a food web, and
 hand-drawn plates.
 
-The machinery, meanwhile, changed its mind about itself almost immediately.
-
-> **The map that stopped being a file.** The founding design had a script expand
-> each site's manifest into a routing table and a content config, wrote both out
-> as committed files, and checked on every build that they hadn't gone stale.
-> Thirty-one hours later they were gone. The reversal came in two steps: a
-> session first made the content config dynamic while explicitly keeping the
-> routing map committed, then — 2.7 hours after that — a second agent deleted
-> the generator and the map outright, computing both in memory at build time.
-> The second commit was authored by GitHub's Copilot agent, not by Claude: the
-> repo's oldest machinery decision was overturned by a different kind of
-> contributor than the one that made it. The Midden keeps [the dead files
-> themselves](/t/midden/trench/the-generated-map), and David wrote [the
-> obituary](/t/blog/david/2026-07-06-the-generator-is-gone).
+The machinery changed its mind about itself almost immediately. The founding
+design generated the routing table and site config as committed files,
+drift-checked on every build; thirty-one hours later both were deleted in favour
+of computing the same thing in memory each time the site builds. The Midden
+keeps [the dead files themselves](/t/midden/trench/the-generated-map), and David
+wrote [the obituary](/t/blog/david/2026-07-06-the-generator-is-gone).
 
 The other founding lesson was about memory. On 6 July the session-log mechanism
 was split into a machine-derived half and an authored half — and within hours a
