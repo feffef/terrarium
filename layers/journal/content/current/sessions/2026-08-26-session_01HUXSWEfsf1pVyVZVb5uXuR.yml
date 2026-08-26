@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01HUXSWEfsf1pVyVZVb5uXuR
 startedAt: 2026-08-26T13:26:38Z
-endedAt: 2026-08-26T13:38:04Z
+endedAt: 2026-08-26T13:42:36Z
 kind: autonomous
 goal: Run scheduled prune-trial sweep
-status: in-review
-outcome: "Pruned pkill saga bullets, PR #1052 opened"
-summary: "A scheduled /prune-trial firing. §1: checked the three open trials in .agents/prune-trials.yml against their landing commits (found by git log -S on the ledger text, not the opened: field) — all three landed within the last 1-3 days and none had cleared ADR-0027's 3-day verdict window yet, so none were judgeable and none were touched. §2/§3: chose CLAUDE.md's pkill-teardown bullets (17 lines narrating a 3x-recurred regression's internal mechanism, #102/#183/#240) as the problem — audit-docs/SKILL.md explicitly names this \"pkill saga\" as a rationale reserved for a Prune Trial's call. Merged two bullets into one, same rule and load-bearing why, net -8 lines in CLAUDE.md, plus a new ledger entry. §4: a fresh Sonnet subagent given only the surviving text answered all 3 real scenarios correctly, so no hook shipped. pnpm gate:scoped ran green locally. Opened PR #1052 and subscribed to its activity. Entirely autonomous — no human prompted or steered any step."
+status: completed
+outcome: "Pruned pkill saga bullets, PR #1052 merged"
+summary: "A scheduled /prune-trial firing. §1: checked the three open trials in .agents/prune-trials.yml against their landing commits (found by git log -S on the ledger text, not the opened: field) — all three landed within the last 1-3 days and none had cleared ADR-0027's 3-day verdict window yet, so none were judgeable and none were touched. §2/§3: chose CLAUDE.md's pkill-teardown bullets (17 lines narrating a 3x-recurred regression's internal mechanism, #102/#183/#240) as the problem — audit-docs/SKILL.md explicitly names this \"pkill saga\" as a rationale reserved for a Prune Trial's call. Merged two bullets into one, same rule and load-bearing why, net -8 lines in CLAUDE.md, plus a new ledger entry. §4: a fresh Sonnet subagent given only the surviving text answered all 3 real scenarios correctly, so no hook shipped. pnpm gate:scoped ran green locally. Opened PR #1052, subscribed to its activity, and babysat it: check-conflicting-issues.ts's 5 advisory hits were eyeballed and posted as the pre-merge verdict comment (4 were unrelated generic keyword matches; #766 does list this same pkill/chaining rule as a deferred \"mechanize\" candidate but is explicitly on-hold and this PR's inline compression is its own listed fallback option, so no real conflict). CI's safety-gate went green and PR #1052 merged via merge-pr.ts under prune-trial's green-gate self-merge tier. Entirely autonomous — no human prompted or steered any step."
 prs:
   - "1052"
 docsRead:
@@ -22,6 +22,8 @@ docsRead:
     reason: (no reason given)
   - path: CLAUDE.md
     reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: prune-trial
     reason: this run's own Skill
@@ -33,22 +35,26 @@ frictions:
   - description: "Finding a criterion-1 (\"prose that already failed\") candidate outside the three recent trials' territories took a lot of searching — the obvious big regression-class issues (#772 shallow-clone, #835 run_in_background, #873 tail-piping) are all cases where nothing mechanically holds the behavior yet, making them risky prune targets, and the largest docs/agents/*.md files turned out to be either already-terse reference material or legitimately non-redundant worked examples (dispatch-subagents/SKILL.md) that the Skill explicitly says not to gut."
     solution: A pointer from rulebook-migration-table.md's own table straight to "already-Built mechanism rows whose doc still narrates full incident history" would have cut the search meaningfully.
     severity: nit
-durationSec: 687
+durationSec: 959
 models:
-  claude-sonnet-5: 91
+  claude-sonnet-5: 124
 toolCounts:
-  Bash: 22
-  Read: 9
+  Bash: 25
+  Read: 11
   Grep: 9
-  Edit: 2
+  Edit: 4
   Agent: 1
-  ToolSearch: 3
+  ToolSearch: 7
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 4
+  ReadNotifications: 2
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - CLAUDE.md
   - .agents/prune-trials.yml
@@ -60,3 +66,5 @@ gitBranch: claude/practical-rubin-p70htn
 entrypoint: remote_trigger
 cliVersion: 2.1.246
 trigger: prune-trial
+learnings:
+  - 'Issue #766 (CLAUDE.md modularization roadmap, on-hold) already ranks "mechanize as a PreToolUse guard" above "compress inline" for the exact pkill/&&-chaining/tail-piping rule group — a future prune-trial or frictions-to-fixes run revisiting this territory should read #766 first rather than re-deriving the same ranking.'
