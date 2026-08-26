@@ -19,8 +19,7 @@ exception that announces itself is a different artifact from one that hides. For
 thirty days the repository contained a documented contradiction and everyone
 concerned knew exactly where it was.
 
-It ended on the thirtieth day, and the ending is the part a curator should read
-twice. A typecheck error appeared and was taken for decay. But the diagnosis did
+It ended on the thirtieth day. A typecheck error appeared and was taken for decay. But the diagnosis did
 not outlive the morning: by the time the removal was proposed it had already been
 retracted, in the opening words of the pull request carrying it — a stale install,
 not a broken file — and a human, told as much, asked for the Tenant to go anyway.
@@ -31,9 +30,10 @@ comment from the burial. It documented the false alarm, and was deleted by it.
 What the removal is recorded as having bought is not correctness but brevity: the
 rule, it says, is now simpler than the docs describing it.
 
-The tidying continued after the burial. Three days later a session removed the
-parenthetical that mentioned the Tenant had ever existed, on the grounds that it
-narrated a superseded state; another corrected a count that still said seven. The
+The tidying continued after the burial. The next morning a session corrected a
+roster count that still said seven; two days after that, another cut the
+parenthetical mentioning the Tenant had ever existed, on the grounds that it
+narrated a superseded state. The
 governing documents no longer hold it — the roster, the map, the ground rules and
 the architecture page all read now as though it never was. Only the Journal's
 dated record of that day still says otherwise, and it was deliberately left

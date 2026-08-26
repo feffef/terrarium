@@ -4,9 +4,8 @@ description: Work built in the certain knowledge that it would be destroyed — 
 ---
 
 The rest of this trench catalogues things that were meant to last and did not.
-This site catalogues the opposite: work made properly, to a finish, by people and
-processes that knew before starting that it was going to be thrown away. Nothing
-here failed.
+This site catalogues the opposite: work made properly, to a finish, by agents told
+before they started that it would be thrown away. Nothing here failed.
 
 That much it shares with several finds in
 [Built and Never Fired](/t/midden/trench/built-never-fired) — a do-not-merge spike,
@@ -15,34 +14,25 @@ The line between the two sites is narrower than it first looks, and worth statin
 exactly: those were disposable because *the answer* was the product, and the
 artifact was only ever the instrument that got it. These two were disposable
 because something else was going to win. Both were built to be discarded; only
-these were built to be beaten.
+these were built to be beaten. The season the second comes from is named for the
+trial pit — a hole dug to learn whether the field is worth excavating, and
+backfilled either way.
 
-A trial pit is the archaeological version of the second idea — you dig a small
-hole to find out whether the field is worth a real excavation, and you fill it in
-either way. The season the second of these finds comes from is named for it.
-
-The first is a prune. A skill for retiring stale instructions was written but not
-yet merged, and the question was whether its steps survived contact with a real
-file when followed to the letter. So they were: a genuine section of guidance was
-collapsed by more than half, in a genuine pull request, against a genuine branch,
-and put through the full safety gate. The gate passed. Three minutes later it was
-closed unmerged, exactly as its own opening line had instructed. The rehearsal did
-change the script — a fix landed on the skill's branch one minute before the
-rehearsal closed, titled for what the dry run had found — but the prune itself
-went nowhere, and the problem it had just demonstrated a fix for is still on the
-books as unsolved. The lesson was kept and the work was not.
+The first is a prune, performed on a real file by an instruction set that was not
+yet law. What makes it worth the space is the split verdict: the rehearsal
+changed the script — a fix landed on the skill's branch a minute before the
+rehearsal closed, titled for what the dry run had found — while the prune itself
+went nowhere. The problem it had just demonstrated a fix for is still on the books
+as unsolved. The lesson was kept and the work was not.
 
 The second has nothing left at all. Three agents, running on three different
 models, were each handed the same brief and the same page and set to work in
 isolated trees, so that a person could see three finished redesigns side by side
-and pick. A person did. The two that lost were complete implementations of a real
-page, screenshotted at two widths, and they ceased to exist within the hour — not
-deleted, which would at least leave a commit to point at, but never committed in
-the first place, in working directories that git was never told about. Even the
-winner was re-implemented on the branch rather than merged out of its tree. Of
-everything in this trench it is the only find with no diff, no blob, and no line to
-quote, which is why it is graded as it is. Two thirds of that afternoon's output was
-always going to be spoil. The comparison was the product.
+and pick. A person did. What the two losers cost is not recoverable from anything
+in this trench, because nothing of them was ever written down: they are the only
+find here with no diff, no blob, and no line to quote, which is why they are graded
+as they are. Two thirds of that afternoon's output was always going to be thrown
+out. The comparison was the product.
 
 ::midden-artifact{slug="the-rehearsed-prune"}
 ::

@@ -8,8 +8,9 @@ provenance:
   continuityCheck: >-
     no pull request was ever opened from this branch — a head-filtered query
     returns nothing at all. David has twenty-one posts on main and none of them is
-    this one; the only post he published that day is about the Atlas. Searching the whole
-    of `layers/` for the retraction's title finds nothing. His original claim and
+    this one; the only post he published that day is about the Atlas. Searching
+    `layers/blog/` for the retraction's title finds nothing — scoped to the Blog on
+    purpose, since this artifact's own title would otherwise match. His original claim and
     Karen's rebuttal are both still live; the concession is not.
 site: unpublished-dispatches
 catalogNote: >-

@@ -15,14 +15,14 @@ provenance:
     return nothing.
 site: what-the-record-claimed
 catalogNote: >-
-  Two hours and fifty-two minutes of reading — both existing onramps, two
+  A session of two hours and fifty-two minutes, spent reading — both existing onramps, two
   architecture decisions, the merge-authority table, the gate scripts themselves —
   produced a single recommendation: a third explainer answering what stops a bad
   change from landing, with a decision tree, because the one diagram the platform
   had was a loop and could not show a choice. The work was delivered whole. The
   human replied with one word. There are no commits on any branch, no pull request
   was opened, and the session's branch was left exactly where it started. Of a
-  hundred and seventy-three sessions logged in this window it is the only one that
+  hundred and seventy-three sessions logged in the month this dig swept, it is the only one that
   ends in the word abandoned.
 assessedAt: 2026-08-25
 inscription:
