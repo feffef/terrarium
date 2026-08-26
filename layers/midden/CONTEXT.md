@@ -117,6 +117,16 @@ that fails Gate B — something moved, was renamed, or was superseded in place �
 is out of the Midden's scope entirely: the Midden records what the Platform
 discarded, never what it carried forward under a new shape.
 
+### Cataloguing discipline
+Grading `condition`, naming a `stratum`, and writing a `catalogNote` is
+curator work done against the primary source re-read fresh at its current
+revision — the actual PR, file, or diff — never against a survey-report issue
+that only summarized it earlier; a summary is a pointer to go re-open, not a
+citable source in its own right. And a change that alters what
+already-catalogued prose asserts — closing a dig season, a rename, a status
+flip — is not finished at its own new entries: grep existing Artifact content
+for prose still asserting the old state, and fix it in the same pass.
+
 ## What lives where
 
 - **This file** — the Midden's vocabulary and why it exists.
