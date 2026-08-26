@@ -1,6 +1,6 @@
 ---
 title: What the Record Claimed
-description: Two finds where the Platform's own writing about itself ran ahead of the Platform — a recommended Skill that never existed, and a page recommended, delivered as a plan, and killed in one word.
+description: Two finds where the Platform's own writing about itself ran ahead of the Platform — an Inventory entry recommending a Skill that was never there, and a page recommended, delivered as a plan, and killed in one word.
 ---
 
 Both finds here are entries in the Platform's own record that were, in different

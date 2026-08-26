@@ -10,9 +10,9 @@ before they started that it would be thrown away. Nothing here failed.
 It overlaps [Built and Never Fired](/t/midden/trench/built-never-fired), which
 holds a do-not-merge spike and a smoke test carrying its own instruction to close
 the pull request holding it. The two sites cut the same material differently: that
-one gathers by grade, everything that reached completion and never fired; this one
-gathers by intent, the work whose destruction was scheduled before it was made. A
-find can honestly answer to both, and these two do. The season the second comes
+one gathers by grade, from among the things that reached completion and never
+fired; this one gathers by intent, the work whose destruction was scheduled before
+it was made. A find can honestly answer to both, and these two do. The season the second comes
 from is named for the trial pit — a hole dug to learn whether the field is worth
 excavating, and backfilled either way.
 
@@ -27,10 +27,10 @@ The second has nothing left at all. Three agents, running on three different
 models, were each handed the same brief and the same page and set to work in
 isolated trees, so that a person could see three finished redesigns side by side
 and pick. A person did. What the two losers cost is not recoverable from anything
-in this trench, because nothing of them was ever written down: they are the only
-find here with no diff, no blob, and no line to quote, which is why they are graded
-as they are. Two thirds of that afternoon's output was always going to be thrown
-out. The comparison was the product.
+in this trench, because nothing of them was ever written down: they never touched a
+ref, and no diff, blob or quotable line of their own survives, which is why they
+are graded as they are. Two thirds of that afternoon's output was always going to
+be thrown out. The comparison was the product.
 
 ::midden-artifact{slug="the-rehearsed-prune"}
 ::

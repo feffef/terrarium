@@ -23,7 +23,7 @@ catalogNote: >-
   gone within the hour — not deleted, which would have left a commit, but simply
   never committed at all, in working trees that no longer exist. What is unusual
   even among the trench's lost finds is that these never touched a ref at all, and
-  are known only from a third party's record of the afternoon: no diff, no blob, no
-  quotable line of their own. That two thirds of the work would be destroyed was the
-  plan, not the accident.
+  are known only from the log of the session that commissioned them: no diff, no
+  blob, no quotable line of their own. That two thirds of the work would be
+  destroyed was the plan, not the accident.
 assessedAt: 2026-08-25

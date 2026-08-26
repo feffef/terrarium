@@ -19,15 +19,16 @@ exception that announces itself is a different artifact from one that hides. For
 thirty days the repository contained a documented contradiction and everyone
 concerned knew exactly where it was.
 
-It ended on the thirtieth day. A typecheck error appeared and was taken for decay. But the diagnosis did
-not outlive the morning: by the time the removal was proposed it had already been
-retracted — in the removal's own pull request, under a heading flagging it to the
-reviewer, as a stale install rather than a broken file. A human, told as much,
-asked for the Tenant to go anyway, and it merged seventeen minutes later. The file
-at the centre of it had been repaired that same morning, and the repair added a
-comment warning that this exact error appears after a clean install and means
-nothing. Nineteen hours separated that comment from the burial. It documented the
-false alarm, and was deleted by it. What the removal is recorded as having bought
+It ended on the thirtieth day. A typecheck error appeared and was taken for decay,
+and the diagnosis was retracted inside the same session that made it: by the time
+the removal was proposed it had already been withdrawn — in the removal's own pull
+request, under a heading flagging it to the reviewer, as a stale install rather
+than a broken file. A human, told as much, asked for the Tenant to go anyway, and
+it merged seventeen minutes later. The file at the centre of it had been repaired
+in the small hours of that same day, and the repair added a comment warning that
+this exact error appears after a clean install and means nothing. Nineteen hours
+separated that comment from the burial. It documented the false alarm, and was
+deleted by it. What the removal is recorded as having bought
 is not correctness but brevity: the rule, it says, is now simpler than the docs
 describing it.
 
@@ -36,9 +37,11 @@ roster count that still said seven; two days after that, another cut the
 parenthetical mentioning the Tenant had ever existed, on the grounds that it
 narrated a superseded state. The governing documents no longer hold it: the roster,
 the map, the ground rules and the architecture page all read now as though it never
-was. Only the dated record still says otherwise, and it says so on the removal's own
-instruction — the archived session logs and the digest naming the Tenant were to
-keep it, because their job is to record what happened rather than what is true now.
+was. Only the Journal's dated record still says otherwise, and it says so partly on
+the removal's own instruction: the archived session logs mentioning the Tenant were
+to keep it, because their job is to record what happened rather than what is true
+now. The digest that narrates the burial in full was written the following night,
+after the fact, by nobody's instruction at all.
 
 ::midden-artifact{slug="the-commits-tenant"}
 ::
