@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Qp4hhcyKkXuHMhzXAgKgmQ
 startedAt: 2026-08-25T17:51:22Z
-endedAt: 2026-08-25T18:08:16Z
+endedAt: 2026-08-26T02:41:30Z
 kind: interactive
 goal: Rewrite how-it-works page for newcomers
-status: in-review
-outcome: Three diagrams, four sections, full routine roster
-summary: "The user asked whether the Journal's How Humans & Agents Work page should gain more diagrams, noted that audit-docs and audit-skills watch for things frictions-to-fixes doesn't look for, then clarified they wanted high-level prose for new visitors too. Both halves were human-instructed. Audited the page: it is onramp card 2 but opened mid-mechanism, ran as one prose block, and named frictions-to-fixes as the only autonomous loop — audit-docs, audit-skills and prune-trial were absent. Rewrote it into four sections with an orientation opening, added a merge-authority section, covered the full routine roster framed by the reactive-versus-proactive distinction, and went from one diagram to three. Gate green; PR #1042 open."
+status: completed
+outcome: "Merged: three diagrams, four sections, full routine roster"
+summary: "The user asked whether the Journal's How Humans & Agents Work page should gain more diagrams, noted that audit-docs and audit-skills watch for things frictions-to-fixes doesn't look for, then clarified they wanted high-level prose for new visitors too. Both halves were human-instructed, as was the later full-page screenshot. Audited the page: it is onramp card 2 but opened mid-mechanism, ran as one prose block, and named frictions-to-fixes as the only autonomous loop — audit-docs, audit-skills and prune-trial were absent. Rewrote it into four sections with an orientation opening, added a merge-authority section, covered the full routine roster framed by the reactive-versus-proactive distinction, and went from one diagram to three. PR #1042 opened, gate green, merged by the owner at 00:08Z."
 prs:
   - "1042"
 docsRead:
@@ -24,11 +24,13 @@ docsRead:
     reason: the trial mechanism, in its own words
   - path: app/utils/mermaid.ts
     reason: which tokens theme live vs. bake, before writing classDefs
+  - path: scripts/screenshot.ts
+    reason: checking for a full-page capture option
 skillsUsed:
   - name: close-session
     reason: self-judged closure at PR-open
   - name: log-session
-    reason: this log
+    reason: this log, authored at PR-open and finalized on merge
 frictions:
   - description: render:mermaid writes new SVGs but never deletes the superseded one, so verify:mermaid fails on the orphan right after a legitimate re-render.
     solution: Have render-mermaid.ts prune orphaned SVGs itself (it already computes the live key set), or print the exact rm command the way verify-mermaid prints its regenerate hint.
@@ -36,23 +38,32 @@ frictions:
   - description: First mermaid render was visually poor — multi-line diamonds inflate hugely and wide graphs scale to unreadable text under max-width 100%.
     solution: "Record the label-length guidance in the ADR-0024 area or a diagramming note: keep decision-node text to one short line, prefer narrow graphs."
     severity: minor
+  - description: No full-page screenshot path exists — screenshot.ts captures a fixed WxH viewport, so a full-page shot needs an ad-hoc script to measure scrollHeight first, then a second capture at that height.
+    solution: Add a --full flag to scripts/screenshot.ts (and preview.ts shot) that reads document.documentElement.scrollHeight and sizes the viewport to it, instead of every caller re-deriving the two-step dance.
+    severity: minor
+  - description: A one-off tsx probe run from the scratchpad failed twice — first on top-level await under the cjs output format, then on module resolution outside the repo root.
+    solution: When scripting an ad-hoc browser probe, write it inside the repo root and wrap the body in an async main(); the two failures cost a round trip each.
+    severity: nit
   - description: Each committed diagram SVG is 60-150 KB and MermaidDiagram.vue eager-globs them all, so every diagram's weight ships with the content chunk site-wide.
     solution: Worth measuring whether the eager glob can become lazy per-key, or whether rough.js hand-drawn output can be slimmed; flag before diagram count grows.
     severity: nit
-durationSec: 1015
+durationSec: 31808
 models:
-  claude-opus-5: 95
+  claude-opus-5: 172
+  <synthetic>: 1
 toolCounts:
-  Bash: 43
-  Read: 3
+  Bash: 60
+  Read: 4
   ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  ReadNotifications: 1
-  mcp__github__pull_request_read: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 10
+  mcp__github__pull_request_read: 11
+  mcp__Claude_Code_Remote__send_later: 6
   Skill: 2
+  SendUserFile: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 gitBranch: claude/journal-page-diagrams-i4l9vp
 entrypoint: remote_mobile
 cliVersion: 2.1.245
