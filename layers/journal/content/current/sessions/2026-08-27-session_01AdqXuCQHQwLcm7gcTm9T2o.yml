@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01AdqXuCQHQwLcm7gcTm9T2o
 startedAt: 2026-08-27T02:05:27Z
-endedAt: 2026-08-27T02:22:07Z
+endedAt: 2026-08-27T02:25:44Z
 kind: autonomous
 goal: Run frictions-to-fixes on latest 20 session logs
-status: in-review
-outcome: "Filed issue #1057, PR #1058 open"
-summary: "Scheduled, autonomous run of the frictions-to-fixes Skill (no human prompt). Delegated the 20-session survey and tracker screening to a subagent, which returned two never-fixed candidates. Judged the \"verify commit message before claiming fixed\" candidate to be territory of Prune Trial 3 (CLAUDE.md's consolidated verify-before-asserting bullet, due for a verdict 2026-08-28) and dropped it rather than re-legislate the pruned prose, per CLAUDE.md's trial-handling rule. Filed issue #1057 for the remaining candidate (render:mermaid never deletes orphaned SVGs after a diagram edit, so verify:mermaid fails right after a clean render), dispatched a worktree-isolated Sonnet impl agent per the dispatch-subagents Skill, which implemented the fix, verified it end-to-end, and opened PR #1058. This log captures the in-review checkpoint; merge/review is next."
+status: completed
+outcome: "Issue #1057 fixed; PR #1058 merged"
+summary: "Scheduled, autonomous run of the frictions-to-fixes Skill (no human prompt). Delegated the 20-session survey and tracker screening to a subagent, which returned two never-fixed candidates. Judged the \"verify commit message before claiming fixed\" candidate to be territory of Prune Trial 3 (CLAUDE.md's consolidated verify-before-asserting bullet, due for a verdict 2026-08-28) and dropped it rather than re-legislate the pruned prose, per CLAUDE.md's trial-handling rule. Filed issue #1057 for the remaining candidate (render:mermaid never deletes orphaned SVGs after a diagram edit, so verify:mermaid fails right after a clean render), dispatched a worktree-isolated Sonnet impl agent per the dispatch-subagents Skill, which implemented the fix, verified it end-to-end, and opened PR #1058. Reviewed the diff, confirmed a green gate, and merged via merge-pr.ts (closed #1057)."
 prs:
   - "1058"
 docsRead:
@@ -18,6 +18,8 @@ docsRead:
     reason: "verify the orphaned-SVG claim before filing issue #1057"
   - path: scripts/verify-mermaid.ts
     reason: confirm diffMermaid() already computes the orphan set
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
   - path: scripts/mermaid-lib.ts
     reason: (no reason given)
   - path: layers/journal/content/current/pages/how-it-works.md
@@ -44,23 +46,27 @@ frictions:
   - description: Survey subagent needed two grep attempts to find CONTEXT.md's "the current four" Tenant-roster phrasing (an initial regex guess missed the actual literal wording).
     solution: No action needed — a plain case-insensitive sweep found it on the second try.
     severity: nit
-durationSec: 1000
+durationSec: 1217
 models:
-  claude-sonnet-5: 64
+  claude-sonnet-5: 88
 toolCounts:
-  Bash: 9
+  Bash: 12
   Agent: 2
   ToolSearch: 2
   mcp__github__search_issues: 3
   mcp__github__issue_read: 1
   mcp__github__issue_write: 2
   Skill: 3
-  ReadNotifications: 1
+  ReadNotifications: 3
   ScheduleWakeup: 1
   Write: 1
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 5
   mcp__github__pull_request_review_write: 1
   mcp__Claude_Code_Remote__send_later: 1
+  Read: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Edit: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - scripts/render-mermaid.ts
   - layers/journal/content/current/pages/how-it-works.md
