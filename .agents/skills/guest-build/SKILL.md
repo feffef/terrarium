@@ -16,9 +16,8 @@ newly-labelled story and start building it right away.
 The guest request bounds, the deface / security / new-dependency screen, and the
 owner-merge backstop live there. Read it first.
 
-**This is a time-boxed demo capability, not standing operation** (ADR-0023 —
-user-invoked, never self-fires, live only for the bounded window the owner
-chooses to run it and `guest-intake`). Stop running it and no new
+**This is a time-boxed demo capability, not standing operation** — see
+ADR-0023's Decision section for the full policy. Stop running it and no new
 `ready-for-agent` story gets built.
 
 **`disable-model-invocation` above is deliberate — the ADR-0023 security
