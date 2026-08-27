@@ -22,43 +22,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      Four documents (~354 lines) explaining three `PreToolUse` guards that
-      already enforce their rules mechanically, plus CLAUDE.md bullets retelling
-      each guard's incident history. The same design conventions — fail-closed,
-      matcher-scoping, how to extend, "does PreToolUse fire here" — were stated
-      three times over. Consolidated into one `docs/agents/guards.md` index; each
-      rule stays in CLAUDE.md as a goal-shaped line, each guard's rationale stays
-      in its own script header.
-    territory:
-      paths:
-        - docs/agents/guards.md
-        - docs/agents/{deferred-tool,loop-only-tool,subagent-background}-guard.md (deleted)
-        - docs/research/deferred-tool-guard-hook-viability.md (deleted)
-        - "CLAUDE.md: the ToolSearch, ScheduleWakeup and subagent-background bullets"
-      keywords:
-        - PreToolUse
-        - deferred tool
-        - ToolSearch
-        - ScheduleWakeup
-        - /loop
-        - run_in_background
-        - fail-closed
-        - guard registry
-        - matcher
-    opened: 2026-08-23
-    check: >
-      Damage is a session that cannot act on what the prose used to spell out:
-      guessing a deferred tool's argument shape instead of loading it via
-      ToolSearch; reaching for ScheduleWakeup as a wait/poll outside /loop, or
-      not finding send_later as the alternative; a dispatched subagent
-      backgrounding a command and stalling; or a maintainer extending a guard
-      who has to re-derive the matcher-scoping or fail-closed conventions, or
-      asks where a guard's design rationale went.
-      NOT damage, though each trips a keyword grep: a guard firing and the
-      session correctly following its deny message (that is the mechanism
-      working); a session citing docs/agents/guards.md; a session discussing
-      these tools correctly. Read every hit in full before counting it.
-  - problem: >
       pr-workflow.md narrated a full investigation of a multi-issue PR silently
       leaving all-but-the-first `Closes #N` issue open (PR #955 vs #985, ruled-out
       causes, the GitHub-pipeline theory) behind a fix that's already built:
