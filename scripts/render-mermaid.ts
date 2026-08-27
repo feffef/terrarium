@@ -15,7 +15,7 @@
 // host Tenant's `--diagram-*` palette and `prefers-color-scheme: dark` with no
 // JS. Font family/size are baked (they drive getBBox layout geometry) — see
 // app/utils/mermaid.ts.
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { chromium } from 'playwright-core'
@@ -25,7 +25,15 @@ import {
   DIAGRAM_TOKEN_FALLBACKS,
   MERMAID_RENDER_FONT,
 } from '../app/utils/mermaid.ts'
-import { type Diagram, discoverDiagrams, root, svgPathFor, SVG_DIR } from './mermaid-lib.ts'
+import {
+  type Diagram,
+  committedSvgKeys,
+  discoverDiagrams,
+  root,
+  svgPathFor,
+  SVG_DIR,
+} from './mermaid-lib.ts'
+import { diffMermaid } from './verify-mermaid.ts'
 
 // A unique, deliberately-unusual sentinel hex per colour token — far from any
 // palette or author `classDef` colour so the rewrite can't hit a real value.
@@ -203,6 +211,17 @@ async function main(): Promise<void> {
     }
   } finally {
     await browser.close()
+  }
+
+  const { orphaned } = diffMermaid(diagrams, committedSvgKeys())
+  for (const key of orphaned) {
+    if (check) {
+      drift.push(svgPathFor(key))
+      console.log(`render-mermaid: WOULD REMOVE ${svgPathFor(key)}  (orphaned)`)
+      continue
+    }
+    unlinkSync(join(root, svgPathFor(key)))
+    console.log(`render-mermaid: removed      ${svgPathFor(key)}  (orphaned)`)
   }
 
   if (check && drift.length) {
