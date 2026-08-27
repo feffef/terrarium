@@ -1,16 +1,18 @@
 schemaVersion: 1
 session: session_012fDwwZ8NcsYZasvWLwmFA3
 startedAt: 2026-08-27T00:16:58Z
-endedAt: 2026-08-27T00:22:22Z
+endedAt: 2026-08-27T00:26:44Z
 kind: autonomous
 goal: Run the scheduled /digest sweep
-status: in-review
-outcome: "PR #1056 opened, awaiting gate"
-summary: "Fully agent-initiated: a scheduled Routine fired /digest with no live human present. Authored the 2026-08-26 Digest from scripts/digest.ts's gathered data (9 merged PRs, 9 completed sessions), leading the frictions rollup with the Midden catalogue session's own fabrication defects and the same-day fix that responded to them. Ran the retention sweep (archived 2026-08-19's digest and 5 session logs). pnpm gate:scoped passed clean (build + 79/79 L2 smoke tests). Opened PR #1056 and subscribed to its activity for babysitting to merge."
+status: completed
+outcome: "PR #1056 merged (b1945bb)"
+summary: "Fully agent-initiated: a scheduled Routine fired /digest with no live human present. Authored the 2026-08-26 Digest from scripts/digest.ts's gathered data (9 merged PRs, 9 completed sessions), leading the frictions rollup with the Midden catalogue session's own fabrication defects and the same-day fix that responded to them. Ran the retention sweep (archived 2026-08-19's digest and 5 session logs). pnpm gate:scoped passed clean (build + 79/79 L2 smoke tests). Opened PR #1056, subscribed to its activity, confirmed the CI gate green with no conflicting-issue hits, posted the merge verdict comment, and landed it via scripts/merge-pr.ts — digest tier merges on a green gate alone (ADR-0003/0004)."
 prs:
   - "1056"
 docsRead:
   - path: layers/journal/content/current/pages/digests/2026-08-25.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
 skillsUsed:
   - name: digest
@@ -23,19 +25,24 @@ frictions:
   - description: The Skill tool refused direct invocation of the digest Skill (disable-model-invocation) even though the scheduled prompt had already inlined the Skill's full body under a <command-name> block — same recurring snag prior digest/blog-post/frictions-to-fixes sessions hit.
     solution: Proceeded directly from the inlined prompt instead of via the Skill tool, per the Skill's own note that this is by design. Worth revisiting whether disable-model-invocation should still refuse when the caller is the very scheduled firing the Skill exists for.
     severity: nit
-durationSec: 324
+durationSec: 585
 models:
-  claude-sonnet-5: 46
+  claude-sonnet-5: 73
 toolCounts:
   Skill: 3
-  Bash: 13
-  Read: 1
+  Bash: 16
+  Read: 3
   Write: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_review_write: 2
+  Edit: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-08-26.md
 gitBranch: claude/compassionate-lovelace-suumdo
