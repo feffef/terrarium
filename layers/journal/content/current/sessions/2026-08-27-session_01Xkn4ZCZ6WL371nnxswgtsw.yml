@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Xkn4ZCZ6WL371nnxswgtsw
 startedAt: 2026-08-27T13:21:39Z
-endedAt: 2026-08-27T13:30:26Z
+endedAt: 2026-08-27T13:34:51Z
 kind: autonomous
 goal: Judge open prune trials; open a new one
-status: in-review
-outcome: Trial-1 verdict recorded; no new trial opened
-summary: "Fully autonomous scheduled /prune-trial run, no human prompt. Judged the four open ledger entries: only the guards.md-consolidation trial (opened 2026-08-23) had cleared its 3-day window. Surveyed session-frictions and searched GitHub issues/PRs (via a background agent) for a regression traceable to that consolidation; found none, so the prune holds and the entry was deleted. The other three trials haven't cleared their windows yet. Searched extensively for a new problem to prune outside the three still-open trials' territory (rulebook-migration-table.md's calibration section, the ADR-0017 provenance bullets, ADR-0009/ADR-0017's amendment histories, several large docs/agents/*.md files and Skills, CONTEXT.md) but every candidate was either inside open-trial territory, already tightly single-homed, protected ADR Decision/Consequences text, or legitimately dense non-redundant reference. Chose not to force a weak or risky prune; opened PR #1061 with just the judged verdict and subscribed to its activity."
+status: completed
+outcome: Trial-1 verdict recorded and merged; no new trial
+summary: "Fully autonomous scheduled /prune-trial run, no human prompt. Judged the four open ledger entries: only the guards.md-consolidation trial (opened 2026-08-23) had cleared its 3-day window. Surveyed session-frictions and searched GitHub issues/PRs (via a background agent) for a regression traceable to that consolidation; found none, so the prune holds and the entry was deleted. The other three trials haven't cleared their windows yet. Searched extensively for a new problem to prune outside the three still-open trials' territory (rulebook-migration-table.md's calibration section, the ADR-0017 provenance bullets, ADR-0009/ADR-0017's amendment histories, several large docs/agents/*.md files and Skills, CONTEXT.md) but every candidate was either inside open-trial territory, already tightly single-homed, protected ADR Decision/Consequences text, or legitimately dense non-redundant reference. Chose not to force a weak or risky prune; opened PR #1061 with just the judged verdict, subscribed to its activity, and merged it once the gate reported green via scripts/merge-pr.ts (merge commit 4777c74)."
 prs:
   - "1061"
 docsRead:
@@ -47,22 +47,26 @@ frictions:
   - description: Found no safe new prune candidate this run outside the three still-open trials' territory — every large-prose surface was either already guard-vocabulary-adjacent to the open guards.md trial (would make a future verdict unattributable), protected ADR Decision/Consequences text, or legitimately dense non-redundant reference/procedure the Skill says not to gut. This is the third consecutive run (after 2026-08-24 and 2026-08-26) to log this same difficulty, suggesting the easy criterion-1/prose-mass targets in CLAUDE.md and docs/agents/*.md are largely exhausted and future runs may need to look harder at ADR explanatory prose (carefully, respecting ADR-0018) or repo-authored Skills to keep finding ~100-line-scale problems.
     solution: No action taken this run beyond recording it — shipping only the judged verdict rather than forcing a weak prune. A future run could try Section A's per-topic approach at a coarser grain (survey ALL ADR amendment sections at once for ones whose narrated mechanism is now fully superseded by a script, similar to how guards.md superseded the guard docs) if this pattern persists.
     severity: nit
-durationSec: 526
+durationSec: 792
 models:
-  claude-sonnet-5: 92
+  claude-sonnet-5: 126
 toolCounts:
-  Bash: 25
+  Bash: 30
   Agent: 1
-  Read: 10
+  Read: 11
   Grep: 1
-  Edit: 1
-  ToolSearch: 3
+  Edit: 3
+  ToolSearch: 7
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
+  ReadNotifications: 2
+  Monitor: 1
+  ScheduleWakeup: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .agents/prune-trials.yml
 subagents:
