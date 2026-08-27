@@ -1,0 +1,61 @@
+schemaVersion: 1
+session: session_01CvCmhas7pyXvgzUAbhfWVC
+startedAt: 2026-08-27T11:16:55Z
+endedAt: 2026-08-27T11:29:45Z
+kind: autonomous
+goal: Run the scheduled /blog-post routine
+status: in-review
+outcome: Kevin post drafted, gate green, PR opened
+summary: "Fully agent-initiated scheduled firing of /blog-post, no human prompt this session. The Skill tool refused direct invocation (disable-model-invocation, a known/expected pattern) so I followed the inlined command body directly. Rotation gate (scripts/blog-rotation.ts) forced Kevin (last: karen, starved: [kevin]), so all three candidates were his voice. Gathered material broadly from git log, session logs, and existing blog posts; drafted three full candidates in the scratchpad (history.md's 11-false-claims self-review catch; the Midden PR #1044 multi-round review saga; the orphaned-mermaid-SVG recurring bug fix). A fresh sonnet subagent, given only the pasted text and no repo access, picked the Midden saga as most interesting and named legibility gaps (undefined \"Midden\"/\"find\", unclear round provenance, a silent midnight crossing in the timestamps); revised the winning draft to close them. Saved to layers/blog/content/kevin/pages/2026-08-27-the-fix-it-claimed-to-make-on-a-line-it-never-touched.md, ran pnpm gate:scoped (green, full heavy layers incl. 79 e2e tests), opened PR #1060, and subscribed to its activity."
+prs:
+  - "1060"
+docsRead:
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice/do-don't check before and after drafting
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum and pages schema
+  - path: docs/agents/git-conventions.md
+    reason: confirm the 'forced update' fetch message was the known shallow-clone artifact, not a real force-push
+  - path: layers/midden/CONTEXT.md
+    reason: verify what a Midden 'find'/Artifact actually is, to close a reviewer-flagged gap
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the chartered scheduled run; Skill tool refused it (disable-model-invocation) so followed the inlined body per its own step 0
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Skill tool call for blog-post itself errored with disable-model-invocation, even though the scheduled prompt had already inlined the full skill instructions verbatim — the same recurring pattern prior digest/blog-post/frictions-to-fixes sessions logged.
+    solution: "Already documented as expected behavior (the skill's own step 0 says this will happen); proceeded directly from the inlined prompt. No new issue needed — already tracked by issue #1018/#999."
+    severity: nit
+  - description: First-pass drafts of two candidates (history.md and mermaid) cited a line number and a line-count for the render-mermaid.ts fix from memory/assumption before verifying; both turned out slightly off on a fresh git show (import line was 36 not 28; diffstat was +21/-2 not 11 lines).
+    solution: Re-verified every cited line number and diffstat directly via git show before finalizing, per the skill's citation-rigor rule. Worth remembering that even a small, seemingly-obvious number (an import's line, a diffstat) needs the same verify-before-writing discipline as a date or SHA.
+    severity: nit
+durationSec: 770
+models:
+  claude-sonnet-5: 144
+toolCounts:
+  Skill: 3
+  Bash: 53
+  Read: 6
+  Write: 5
+  Edit: 5
+  Agent: 1
+  ScheduleWakeup: 1
+  ToolSearch: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-08-27-the-fix-it-claimed-to-make-on-a-line-it-never-touched.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-d75k50
+entrypoint: remote_trigger
+cliVersion: 2.1.247
+trigger: blog-post
