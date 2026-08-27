@@ -1,0 +1,58 @@
+schemaVersion: 1
+session: session_014zKmBmpoVHJG2ijsH9198g
+startedAt: 2026-08-27T00:46:11Z
+endedAt: 2026-08-27T00:51:12Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: Clean run, no changes warranted
+summary: "Fully agent-initiated scheduled firing of /audit-skills, no human present. Gathered the scorecard via scripts/audit-skills.ts (40-session window, orphan scan succeeded). Investigated the sole orphanedSessions entry (session_019aeaoPHYWMJVekmUvTMhQ9) and found it already fully tracked with extensive prior analysis on open issue #736 — no new evidence to add, no comment posted. Ran the Phase A/B regression watch on both flagged SKILL.md edits (blog-post's count-reconciliation check, dispatch-subagents' doc-sweep edit): deep-read all 8 blog-post and cross-checked the dispatch-subagents session logs in the bracket. Neither showed a regression — blog-post's fix hasn't recurred as a friction in three subsequent runs, and dispatch-subagents' bracket improved (major/moderate/minor frictions before, none after). Re-graded all 36 Inventory entries against usedIn/docReadCounts against the bright-line evidence rule (step 3): none cleared the >=2-session bar for a grade or role change this run — the Inventory is already well-tuned by several recent clean runs. Confirmed all 36 on-disk Skills are inventoried and vice versa (no missing or phantom entries). humanPromptedClosures and manuallyRescuedClosures were both empty (healthy). No Inventory diff, so no PR opened this run."
+prs: []
+docsRead:
+  - path: scripts/audit-skills.ts
+    reason: resolve RESOLVED_ORPHANED_SESSIONS/suppression constants before treating the orphan entry as fresh
+  - path: layers/journal/content/current/sessions/2026-08-25-session_01WdTifh5L2sLw82ZgT9W3ek.yml
+    reason: "Phase B deep-read: blog-post session immediately after its edit"
+  - path: layers/journal/content/current/sessions/2026-08-24-session_013KmVXsn5unya1CESJ7aJtQ.yml
+    reason: "Phase B deep-read: blog-post session immediately before its edit"
+  - path: layers/journal/content/current/sessions/2026-08-26-session_014aCZkrYmuMSbMnZYuGVXde.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-23-session_01VVXwKBkiGv3xnttV49XfHS.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-23-session_01FJXDLgPfh1kE2XTGPKtCKc.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-22-session_01Dydt9iPuYTgsdDwN1jMLn5.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-21-session_011oou9doFGhmwTXzBBn5v3u.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-20-session_01VHqR511jAJrc1SELB4UxbQ.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the chartered scheduled run (instructions delivered inline via the scheduled prompt)
+  - name: close-session
+    reason: self-judged closure at natural completion, no PR to babysit
+  - name: log-session
+    reason: this log
+frictions:
+  - description: scripts/audit-skills.ts's window/regressionSessions entries key each session by `session`, not `id` — a first pass keyed a lookup dict on `id` and hit a KeyError.
+    solution: Re-keyed on `session` after inspecting one raw window entry. Worth a step 2 doc note for a future run's own ad-hoc JSON scripting.
+    severity: nit
+durationSec: 301
+models:
+  claude-sonnet-5: 79
+toolCounts:
+  Bash: 16
+  ToolSearch: 3
+  TaskCreate: 6
+  mcp__github__search_issues: 2
+  mcp__github__issue_read: 2
+  TaskUpdate: 8
+  Read: 10
+  Skill: 2
+  Write: 1
+  Edit: 1
+gitBranch: claude/upbeat-sagan-4an5ix
+entrypoint: remote_trigger
+cliVersion: 2.1.247
+trigger: audit-skills
