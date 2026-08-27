@@ -1,0 +1,76 @@
+schemaVersion: 1
+session: session_01AdqXuCQHQwLcm7gcTm9T2o
+startedAt: 2026-08-27T02:05:27Z
+endedAt: 2026-08-27T02:22:07Z
+kind: autonomous
+goal: Run frictions-to-fixes on latest 20 session logs
+status: in-review
+outcome: "Filed issue #1057, PR #1058 open"
+summary: "Scheduled, autonomous run of the frictions-to-fixes Skill (no human prompt). Delegated the 20-session survey and tracker screening to a subagent, which returned two never-fixed candidates. Judged the \"verify commit message before claiming fixed\" candidate to be territory of Prune Trial 3 (CLAUDE.md's consolidated verify-before-asserting bullet, due for a verdict 2026-08-28) and dropped it rather than re-legislate the pruned prose, per CLAUDE.md's trial-handling rule. Filed issue #1057 for the remaining candidate (render:mermaid never deletes orphaned SVGs after a diagram edit, so verify:mermaid fails right after a clean render), dispatched a worktree-isolated Sonnet impl agent per the dispatch-subagents Skill, which implemented the fix, verified it end-to-end, and opened PR #1058. This log captures the in-review checkpoint; merge/review is next."
+prs:
+  - "1058"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: screen candidate against open Prune Trial 3 territory
+  - path: docs/agents/dispatch-subagents.md
+    reason: dispatch mechanics for the impl agent (via Skill)
+  - path: scripts/render-mermaid.ts
+    reason: "verify the orphaned-SVG claim before filing issue #1057"
+  - path: scripts/verify-mermaid.ts
+    reason: confirm diffMermaid() already computes the orphan set
+  - path: scripts/mermaid-lib.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (read before editing)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: this run's own scheduled skill
+  - name: dispatch-subagents
+    reason: brief + isolation mechanism for the impl agent
+  - name: close-session
+    reason: PR-open closure checkpoint
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: "Called ScheduleWakeup as a fallback check-in while waiting on a background Agent-tool subagent; blocked by the /loop-only guard (issue #814) as designed, since this isn't a /loop session."
+    solution: Use no wait/poll tool at all when waiting on a dispatched Agent-tool subagent — it self-notifies on completion; reserve send_later for polling non-webhook external state like CI.
+    severity: nit
+  - description: "Deciding whether the \"verify a commit message against its own diff before claiming fixed\" friction fell inside Prune Trial 3's territory took real judgment: the trial's territory list names only a specific CLAUDE.md bullet, but the candidate's recommended fix lived in a different file (docs/agents/git-conventions.md) while addressing the exact same generic \"verify before asserting\" pattern the trial is testing (the 8th instance of a 7-times-recurring \"extend the audience list\" antipattern per issues #871/#833/#775/#715/#635/#626/#948)."
+    solution: frictions-to-fixes' §2 screening rule could spell out that a candidate counts as trial territory when its underlying *rule* matches an open trial's keywords, even if the proposed fix location is a different file than the trial's listed paths — not just an exact path match.
+    severity: minor
+  - description: Survey subagent hit a one-off GitHub API rate limit (403) on a semantic search_issues call mid-survey; recovered after an ~18s wait and retry with no data lost.
+    solution: A brief retry-after-rate-limit note in github-integration.md would save the subagent a discovery cycle next time.
+    severity: nit
+  - description: Survey subagent needed two grep attempts to find CONTEXT.md's "the current four" Tenant-roster phrasing (an initial regex guess missed the actual literal wording).
+    solution: No action needed — a plain case-insensitive sweep found it on the second try.
+    severity: nit
+durationSec: 1000
+models:
+  claude-sonnet-5: 64
+toolCounts:
+  Bash: 9
+  Agent: 2
+  ToolSearch: 2
+  mcp__github__search_issues: 3
+  mcp__github__issue_read: 1
+  mcp__github__issue_write: 2
+  Skill: 3
+  ReadNotifications: 1
+  ScheduleWakeup: 1
+  Write: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - scripts/render-mermaid.ts
+  - layers/journal/content/current/pages/how-it-works.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix render:mermaid orphaned SVG cleanup
+    model: sonnet
+gitBranch: claude/eager-ptolemy-jdxjb8
+entrypoint: remote_trigger
+cliVersion: 2.1.247
+trigger: frictions-to-fixes
