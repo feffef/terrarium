@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_017svsQPUq1joR5w1fMtm9Am
+startedAt: 2026-08-28T13:22:58Z
+endedAt: 2026-08-28T13:36:43Z
+kind: autonomous
+goal: Run the scheduled /prune-trial sweep
+status: in-review
+outcome: "Judged 2 trials (both held), pruned ADR-0009, PR #1068 opened"
+summary: "Autonomous scheduled firing, no human input this session. Judged the two open prune trials past their 3-day window: the pr-workflow.md/issue-tracker.md Closes-keyword trim (landed 2026-08-25, no post-landing frictions or regression issues found) and the CLAUDE.md verify-before-asserting bullet merge (landed 2026-08-25, post-landing sessions show the rule working correctly; one adjacent friction about an unverified commit-message claim wasn't clearly traceable to the merge). Both pruned, entries deleted. The third open trial (pkill bullet, landed 2026-08-26) isn't judgeable until 2026-08-29, left untouched. Chose ADR-0009's amendment-index duplication as the new prune target: a top-of-file blockquote index restated each amendment's content, already stated in full at that amendment's own section below (and, for external-session delivery, a third time in guest-contributions.md), while also being stale (missing 3 amendment sections). Compressed the index to two load-bearing pointers plus a generic \"see sections below\" line, and compressed the Delivery paragraph to a pointer at guest-contributions.md. Left every Decision/Consequences section untouched per ADR-0018. Ran a Sonnet probe against only the surviving file text (2/2 correct, no hook needed), ran the full gate (green), opened PR #1068, and subscribed to its activity."
+prs:
+  - "1068"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the open trial ledger to judge
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: the prune target
+  - path: docs/agents/guest-contributions.md
+    reason: checking overlap with ADR-0009's Delivery paragraph
+  - path: docs/research/rulebook-migration-table.md
+    reason: scanning for a "prose already failed" candidate
+  - path: docs/agents/git-conventions.md
+    reason: evaluated the shallow-clone rule (#772) as a candidate, didn't pick it
+  - path: layers/journal/content/current/sessions/2026-08-25-session_01Wr8N7AFivfAZz13LAeNhKk.yml
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: "The rulebook-migration-table.md's strongest \"prose already failed\" candidate (GC-03, the shallow-clone check-first rule, #772/#703/#849, 3 narrowing attempts) is flagged as needing a mechanized guard, not more prose — but building a guard is a bigger, separate change than this run's prune scope, and the rule's own failure mode (no natural doc-reading trigger) means a Sonnet probe would likely pass anyway without proving the prose actually holds in real sessions, so I passed on it rather than force a probe I didn't trust."
+    solution: "Worth its own follow-up: file (or point to) an issue proposing the PreToolUse guard the research table already specs (deny git log -S / blame / merge-base when git rev-parse --is-shallow-repository is true), since the table already judges it the strongest unbuilt refusal candidate in the corpus."
+    severity: minor
+  - description: Confirming the two judged trials' landing commits' exact dates required working around a shallow clone (git rev-parse --is-shallow-repository is true) and one -S search initially returning what looked like a squash-merge boundary commit before I checked its parent existed in the shallow window.
+    solution: Checked git cat-file -p on the parent commit to confirm it wasn't the shallow boundary before trusting the "new file" diff as a genuine creation date. No new gap found, just a reminder that git-conventions.md's shallow-clone guidance is worth the extra verification step it asks for.
+    severity: nit
+durationSec: 825
+models:
+  claude-sonnet-5: 105
+toolCounts:
+  Bash: 28
+  Read: 10
+  Agent: 2
+  Grep: 1
+  Edit: 4
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/prune-trials.yml
+subagents:
+  - task: Check GitHub for regression issues on two prune trials
+  - task: Sonnet probe on pruned ADR-0009 index
+gitBranch: claude/practical-rubin-0g59mf
+entrypoint: remote_trigger
+cliVersion: 2.1.250
+trigger: prune-trial
+ideas:
+  - docs/research/rulebook-migration-table.md already ranks GC-03 (shallow-clone check-first) as "the strongest unbuilt refusal candidate in the corpus" with a small build cost — a good next /prune-trial or general session could build that PreToolUse guard directly (deny git log -S/blame/merge-base when git rev-parse --is-shallow-repository is true) rather than waiting for a future prune's §4 probe to fail on it first.
