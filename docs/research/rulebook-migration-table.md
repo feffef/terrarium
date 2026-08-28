@@ -96,6 +96,15 @@ finding.
 | **M** | Multi-file, or a new mechanism shape the repo doesn't have yet. |
 | **L** | Needs a design decision or an ADR before it can be specified. |
 
+### Prune-trial shortcut: Built rows as prune candidates
+
+A row marked **Cost: 0 (Built)** means a mechanism already enforces that rule —
+which makes it worth checking the origin doc (the row's Home (section) column)
+for prose that still narrates the full incident history the mechanism has
+since made redundant. That pattern is exactly `prune-trial`'s criterion-1
+bait (#1064). Check the Built rows first instead of re-scanning the whole
+table.
+
 ---
 
 ## 2. Calibration: the incident counts, re-derived
