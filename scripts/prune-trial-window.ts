@@ -18,6 +18,13 @@
 // it; `--reverse` is what makes the first hit the addition rather than some
 // later touch.
 //
+// The reported window is a FLOOR, not a deadline: the earliest instant a
+// judgment is valid, never a time a judgment is due. `/prune-trial` runs on a
+// scheduled Routine, and a Routine's fire time carries no exact-timing
+// guarantee — judging a trial some hours (or a day) after its window closes
+// is normal and fine; judging it before is the one thing that's wrong. Don't
+// read `closes:` below as something to hit precisely.
+//
 // Usage:
 //   tsx scripts/prune-trial-window.ts                # every open trial in the ledger
 //   tsx scripts/prune-trial-window.ts <problem-substr> # just the trial(s) whose
@@ -52,7 +59,11 @@ export interface TrialWindow {
    *  ledger's own header rule applies: "silence is not evidence: leave the
    *  entry alone and judge nothing." */
   landing: LandingCommit | null
-  closesAtUtc: string | null
+  /** The earliest instant this trial may be judged — a floor, not a deadline.
+   *  No scheduled Routine fires at a guaranteed exact time, so being judged
+   *  any amount of time after this is expected and fine; only *before* it is
+   *  the failure this whole script exists to prevent (PR #1061). */
+  earliestJudgeableAtUtc: string | null
   judgeableNow: boolean
 }
 
@@ -84,14 +95,19 @@ export function rawProblemFirstLines(yamlText: string): string[] {
   return lines
 }
 
-/** True once `now` is at or past `landing + WINDOW_MS`. Exported so the
- *  boundary (exactly three days, not "the third calendar date") is
- *  independently testable. */
+/** True once `now` is at or past the floor (`landing + WINDOW_MS`) — never
+ *  earlier. There's no matching upper bound to test: arriving late is not a
+ *  failure this function needs to detect, since nothing guarantees a
+ *  judging Routine runs at any particular time. Exported so the floor
+ *  itself (exactly three days from landing, not "the third calendar date")
+ *  is independently testable. */
 export function isJudgeable(landingIsoUtc: string, now: Date): boolean {
   return now.getTime() >= Date.parse(landingIsoUtc) + WINDOW_MS
 }
 
-export function windowClosesAtUtc(landingIsoUtc: string): string {
+/** The floor from `isJudgeable`, as a timestamp to report — not a deadline a
+ *  judging Routine needs to hit. */
+export function earliestJudgeableAtUtc(landingIsoUtc: string): string {
   return new Date(Date.parse(landingIsoUtc) + WINDOW_MS).toISOString()
 }
 
@@ -145,7 +161,7 @@ export function buildWindows(pairs: TrialWithSearchKey[], now = new Date(), cwd 
     return {
       trial,
       landing,
-      closesAtUtc: landing ? windowClosesAtUtc(landing.isoCommitTime) : null,
+      earliestJudgeableAtUtc: landing ? earliestJudgeableAtUtc(landing.isoCommitTime) : null,
       judgeableNow: landing ? isJudgeable(landing.isoCommitTime, now) : false,
     }
   })
@@ -165,8 +181,8 @@ function formatWindow(w: TrialWindow): string {
   const verdict = w.judgeableNow ? 'JUDGEABLE' : 'not yet judgeable'
   return (
     `${label}\n` +
-    `  landed:  ${w.landing.isoCommitTime}  (commit ${w.landing.hash})\n` +
-    `  closes:  ${w.closesAtUtc}\n` +
+    `  landed:         ${w.landing.isoCommitTime}  (commit ${w.landing.hash})\n` +
+    `  judgeable from: ${w.earliestJudgeableAtUtc}  (a floor — judging later than this is fine)\n` +
     `  ${verdict}`
   )
 }

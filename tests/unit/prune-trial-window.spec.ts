@@ -4,11 +4,11 @@
 // by running the script directly against this repo's real ledger, not here.
 import { describe, expect, it } from 'vitest'
 import {
+  earliestJudgeableAtUtc,
   isJudgeable,
   parseTrials,
   rawProblemFirstLines,
   selectTrials,
-  windowClosesAtUtc,
   type TrialWithSearchKey,
 } from '../../scripts/prune-trial-window.ts'
 
@@ -75,11 +75,15 @@ describe('rawProblemFirstLines()', () => {
   })
 })
 
-describe('windowClosesAtUtc() / isJudgeable() — the three-day boundary', () => {
+// These pin down the pure floor math exactly, but the floor itself is a
+// "never before this" bound, not a deadline any real run is expected to hit —
+// `/prune-trial` runs on a scheduled Routine with no exact-timing guarantee,
+// so judging any amount of time *after* the floor is normal and correct.
+describe('earliestJudgeableAtUtc() / isJudgeable() — the three-day floor', () => {
   const LANDED = '2026-08-25T20:23:39.000Z'
 
-  it('closes exactly 72 hours after landing, not "the third calendar date"', () => {
-    expect(windowClosesAtUtc(LANDED)).toBe('2026-08-28T20:23:39.000Z')
+  it('the floor sits exactly three days after landing, not "the third calendar date"', () => {
+    expect(earliestJudgeableAtUtc(LANDED)).toBe('2026-08-28T20:23:39.000Z')
   })
 
   it('is not judgeable one day after landing, even on a later calendar date', () => {
@@ -88,12 +92,13 @@ describe('windowClosesAtUtc() / isJudgeable() — the three-day boundary', () =>
     expect(isJudgeable(LANDED, new Date('2026-08-27T13:28:18.000Z'))).toBe(false)
   })
 
-  it('is not judgeable a moment before the window closes', () => {
+  it('is not judgeable a moment before the floor', () => {
     expect(isJudgeable(LANDED, new Date('2026-08-28T20:23:38.999Z'))).toBe(false)
   })
 
-  it('is judgeable exactly at window close, and after', () => {
+  it('is judgeable at the floor, and any time after it', () => {
     expect(isJudgeable(LANDED, new Date('2026-08-28T20:23:39.000Z'))).toBe(true)
+    // A day-plus late, as an actual scheduled run's fire time would be — still fine.
     expect(isJudgeable(LANDED, new Date('2026-08-31T00:00:00.000Z'))).toBe(true)
   })
 })
