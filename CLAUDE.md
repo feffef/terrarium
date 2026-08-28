@@ -267,12 +267,13 @@ human asks for it outright.
   actual long-running process finishes, and "completed" stops meaning
   anything. Use `Monitor`/`ps` plus a log completion marker to confirm the
   process actually finished instead of trusting the outer call's return.
-- **A dispatched subagent must never background a Bash command at all**
-  (`run_in_background: true`, or a trailing `&` — orchestrators are untouched),
-  **or call `Monitor` to wait on one**: no wake mechanism ever resumes a
-  stopped subagent. Run it in the foreground with an explicit `timeout`,
-  splitting any step that exceeds 10 minutes. A `PreToolUse` guard denies both
-  (`docs/agents/guards.md`, issue #694/#995).
+- **A dispatched subagent must never background a Bash command at all, or call
+  `Monitor` to wait on one** — no wake mechanism ever resumes a stopped
+  subagent, and a `PreToolUse` guard denies both (`docs/agents/guards.md`,
+  issue #694/#995). The mechanics — running in the foreground with an explicit
+  `timeout`, splitting a step over 10 minutes, naming a completion marker when
+  something must background anyway — are single-homed in
+  `dispatch-subagents/SKILL.md`.
 - **Never pipe a backgrounded or long-running command through ANY trailing
   command in a pipe/chain — `tail`/`head` are only the most common case — when
   its exit status or full output matters.** A pipeline reports the *last*
