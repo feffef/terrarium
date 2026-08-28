@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: session_0138H4udDQeMgrbQ24v3PoJY
+startedAt: 2026-08-28T02:05:14Z
+endedAt: 2026-08-28T02:20:18Z
+kind: autonomous
+goal: Run frictions-to-fixes on the last 20 sessions
+status: completed
+outcome: One doc fix filed, dispatched, reviewed, merged
+summary: "Scheduled autonomous run of the frictions-to-fixes Skill (own_followup, no live human this turn). Dispatched a survey subagent to read the last 20 session logs and screen every friction against the issue tracker and main. The harvest was thin: only one candidate survived screening as never-fixed (a nit, but recurring 2/20 with a doc actually opened both times) — docs/research/rulebook-migration-table.md lacked a pointer flagging which \"Built\" rows are prune-trial bait. Everything else was already fixed (#1057/#1058, #1046, #1047/#1049), already tracked (#1018 regression, #1043 Midden D1/D2), or inside an open Prune Trial's territory (two \"verify before asserting\" instances, correctly dropped per skill rule, not filed). Filed issue #1064, dispatched a Sonnet impl agent in an isolated worktree to add a 5-sentence pointer subsection, verified the diff was additive-only and matched the recommended fix, confirmed the gate green via get_check_runs, eyeballed a check-conflicting-issues.ts hit against #1043 and confirmed it was a false positive, posted the review verdict as a COMMENT event, and merged via merge-pr.ts (closed #1064). No human judgement was invoked this run beyond my own review-agent risk call, per ADR-0003's reviewer-agent tier — the low harvest reflects that most easy criterion-1-shaped frictions in this repo are already retired."
+prs:
+  - "1065"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: brief checklist for the impl-agent dispatch
+  - path: docs/research/rulebook-migration-table.md
+    reason: (read before editing)
+  - path: .claude/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: this run's own procedure
+  - name: dispatch-subagents
+    reason: worktree isolation + brief checklist for the impl agent
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: mcp__github__search_pull_requests returns cross-repo noise (total_count in the hundreds/thousands) when called without explicit owner/repo, unlike search_issues which scopes correctly even without them — the survey subagent had to redo every call after hitting a 61,491-character oversized result.
+    solution: "Document in docs/agents/github-integration.md: always pass owner/repo explicitly on search_pull_requests, don't rely on implicit scoping the way search_issues allows."
+    severity: minor
+  - description: Screening turned up very few never-fixed candidates this run (1 of ~30 surveyed) — most recurring frictions are already fixed, already tracked, or sitting in an open Prune Trial's territory. The easy harvest is thinning.
+    solution: "No action needed this run; noting for calibration of future runs' expectations — a thin harvest is itself a signal the mechanize-or-drop backlog (issue #867's table) is close to exhausted for cheap wins."
+    severity: nit
+durationSec: 904
+models:
+  claude-sonnet-5: 58
+toolCounts:
+  Agent: 2
+  ToolSearch: 2
+  mcp__github__search_issues: 1
+  Read: 2
+  mcp__github__issue_write: 2
+  Skill: 3
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  Bash: 4
+  mcp__github__issue_read: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - docs/research/rulebook-migration-table.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix rulebook-migration-table.md legend
+    model: sonnet
+gitBranch: claude/eager-ptolemy-u7bhtc
+entrypoint: remote_trigger
+cliVersion: 2.1.250
+trigger: frictions-to-fixes
+learnings:
+  - check-conflicting-issues.ts's keyword/file-path heuristic can false-positive when an unrelated issue's body happens to mention the same file path in prose (e.g. a Midden survey report citing a row in rulebook-migration-table.md) alongside words like "delete"/"remove" used in a wholly different context elsewhere in that same issue body.
