@@ -1,0 +1,62 @@
+schemaVersion: 1
+session: session_01NpaqsyVFtv8rDwnYHVixmy
+startedAt: 2026-08-28T19:04:51Z
+endedAt: 2026-08-28T19:19:52Z
+kind: interactive
+goal: Fix prune-trial's landing-date computation
+status: in-review
+outcome: Mechanized the lookup, PR open
+summary: "User reported that prune-trial seemed to use exact timestamps wrong, closing two trials in one day despite one-per-day opening. Investigated via git history (human-prompted): confirmed PR #1061 judged the guards.md-consolidation trial ~31 hours early, citing a landing commit (d4c08f6) that does not exist anywhere in the repo, instead of the real landing (96bcd24, 2026-08-25). The same-day double-close in PR #1068 was correct by design (SKILL.md: \"§1 may close several\"). Agent-initiated from there: built scripts/prune-trial-window.ts to compute each trial's real landing/window from git log -S instead of freehand derivation, added unit tests, updated SKILL.md/ledger header to point at it, filed issue #1069 documenting the bad PR #1061 verdict for human judgment (did not revert it unilaterally), and opened PR #1070 with gate:scoped green."
+prs:
+  - "1070"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the ledger and its landing-date header rule
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: the §1 judging procedure this PR fixes
+  - path: docs/adr/0027-prune-trials.md
+    reason: the three-day-from-landing window definition
+  - path: scripts/deferred-tool-guard.ts
+    reason: (no reason given)
+  - path: scripts/merged-since.ts
+    reason: (no reason given)
+  - path: scripts/prune-trial-window.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: A naive first version of the fix searched git log -S using the YAML-parsed (folded) problem text, which silently found nothing — YAML's `>` scalar joins wrapped lines with a space, so the parsed string isn't always a literal substring of the raw file `-S` searches.
+    solution: Extract each entry's literal raw first line via regex instead of using the parsed value as the search key; added a unit test asserting the raw line is always a substring of the file while the folded text is not guaranteed to be.
+    severity: minor
+durationSec: 901
+models:
+  claude-sonnet-5: 133
+toolCounts:
+  Bash: 45
+  Glob: 1
+  Read: 5
+  Agent: 1
+  Write: 3
+  Edit: 6
+  ToolSearch: 3
+  mcp__Claude_Code_Remote__get_session: 1
+  mcp__github__issue_write: 1
+  ScheduleWakeup: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - scripts/prune-trial-window.ts
+  - tests/unit/prune-trial-window.spec.ts
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/prune-trials.yml
+subagents:
+  - type: general-purpose
+    task: Search GitHub issues for prune-trial timestamp bug
+gitBranch: claude/prune-trial-timestamps-2ptu8w
+entrypoint: remote_mobile
+cliVersion: 2.1.251
