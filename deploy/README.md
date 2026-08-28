@@ -66,10 +66,13 @@ redeploys the image** — the container updates itself.
    chmod 600 .env                       # holds the PAT
    # edit .env: paste GITHUB_PAT (GIT_REPO_URL is already correct)
    ```
-   (As noted above under **On-VPS layout**, that clone still needs the PAT
-   from step 1 regardless of the repo's visibility: `entrypoint.sh` requires
-   `GITHUB_PAT` unconditionally and injects it via `GIT_ASKPASS` — see below —
-   so it's kept out of `.git/config` there too.)
+   (This host clone is genuinely unauthenticated — the PAT above is for a
+   **different** clone: the **container's own**, done by `entrypoint.sh`
+   inside the `terrarium_app` volume, independent of the one just above per
+   **On-VPS layout**. That clone needs the PAT from step 1 regardless of the
+   repo's visibility — `entrypoint.sh` requires `GITHUB_PAT` unconditionally
+   and injects it via `GIT_ASKPASS` — see below — so it's kept out of
+   `.git/config` there too.)
 
 3. **Shared proxy network.** Terrarium is reached by the existing Caddy over a
    shared network called `web`. Create it once:

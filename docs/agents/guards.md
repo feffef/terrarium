@@ -15,7 +15,7 @@ issue below rather than rephrasing the call until it passes.
 | --- | --- | --- | --- |
 | `deferred-tool-guard.ts` | a deferred tool called with another tool's argument shape | CLAUDE.md (load the schema via `ToolSearch` first) | #612; **#724 open** |
 | `loop-only-tool-guard.ts` | `ScheduleWakeup` outside a `/loop` session — `stop: true` is exempt in every mode, since a cancel can only remove a pending wakeup | CLAUDE.md | #814 |
-| `subagent-background-guard.ts` | a **dispatched subagent** backgrounding a Bash command (`run_in_background: true`, or a bare `&` anywhere in the command text, `nohup … &` included), or calling `Monitor` to wait on one. Orchestrators are untouched | CLAUDE.md, `dispatch-subagents` | #694, #964, #995 |
+| `subagent-background-guard.ts` | a **dispatched subagent** backgrounding a Bash command (`run_in_background: true`, or a bare `&` anywhere in the command text, `nohup … &` included), or calling `Monitor` to wait on one. Orchestrators are untouched | `dispatch-subagents` | #694, #964, #995 |
 | `commit-trailer-guard.ts` | a `git commit` whose message hand-types the ADR-0017 trailer the harness already lands | CLAUDE.md, ADR-0017 | #921 |
 | `github-provenance-guard.ts` | a GitHub body, or an MCP-API commit, missing this session's provenance in the shape its surface prescribes | ADR-0017 — the deny message is the agent-facing home | — |
 | `session-id-guard.ts` | nothing: **post-hoc**. Reports a wrong session id on this session's own commits, at teardown | CLAUDE.md | #387 |

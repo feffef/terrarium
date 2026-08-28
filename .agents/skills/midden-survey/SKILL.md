@@ -112,12 +112,13 @@ survey gets a comment, not a duplicate). For each surviving candidate:
   recording exactly which Gate-B check ran and what it found — plus a draft
   `removedIn` where the terminal event is a commit (the script already reports
   the deleting/dropping hash per candidate); `remains` stays out of the draft —
-  it is curator-curated by definition (CONTEXT.md's Artifact term);
+  it is curator-curated by definition (`layers/midden/CONTEXT.md`'s Artifact
+  term);
 - one line on why it passes both gates.
 
 State plainly in the issue that `condition`, `stratum`, `site`, and the
 `catalogNote` are the curator's to author — never proposed here (the
-CONTEXT.md Condition term's "100% curator-authored" rule). Label the issue
+`layers/midden/CONTEXT.md` Condition term's "100% curator-authored" rule). Label the issue
 `needs-triage`, list any Gate-B exclusions from §3 at the end, and
 carry the ADR-0017 provenance header. Filing the issue is where this Skill
 stops — implementing any accepted candidate is a later, separately green-lit
