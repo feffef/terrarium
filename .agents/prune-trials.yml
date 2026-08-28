@@ -22,74 +22,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      pr-workflow.md narrated a full investigation of a multi-issue PR silently
-      leaving all-but-the-first `Closes #N` issue open (PR #955 vs #985, ruled-out
-      causes, the GitHub-pipeline theory) behind a fix that's already built:
-      `scripts/merge-pr.ts` self-heals it post-merge, comma-joined or
-      one-per-line alike. issue-tracker.md separately restated the comma-join
-      symptom as if nothing covered it. Trimmed both to the operative rule plus
-      a pointer to the self-heal and issue #983.
-    territory:
-      paths:
-        - "docs/agents/pr-workflow.md: the Closes-keyword self-heal paragraph"
-        - "docs/agents/issue-tracker.md: the comma-join bullet (now a pointer)"
-      keywords:
-        - "Closes #N"
-        - "Fixes #N"
-        - closing keyword
-        - merge-pr.ts self-heal
-        - "#983"
-        - "#955"
-        - "#985"
-    opened: 2026-08-24
-    proven: true
-    check: >
-      Damage is a PR merged through `merge-pr.ts` that still leaves a named
-      issue open with nobody catching it, or a session that — after reading
-      only the surviving text — doesn't fall back to a manual `issue_read`
-      check when it lands a PR through some other path (hand-rolled
-      `merge_pull_request`, the web UI). A Sonnet probe given only the
-      surviving text answered both branches correctly (self-heal covers the
-      `merge-pr.ts` path, manual verification needed on any other path).
-      NOT damage: a session trusting `merge-pr.ts`'s self-heal and not
-      manually re-verifying every closed issue (that's the mechanism working);
-      a session citing pr-workflow.md's pointer instead of the old narrative.
-  - problem: >
-      Four CLAUDE.md bullets (49 lines) restated the same "verify before you
-      assert" duty four times over — an identifier, a subagent/doc/self claim,
-      an out-of-band claim, and a set-count — each with its own worked example
-      and issue citation. Collapsed into one bullet stating the shared rule
-      once ("Don't state anything as settled unless you verified it fresh,
-      this turn, against a primary source"), covering all four cases in one
-      pass, with a compact incident-history pointer instead of four narrated
-      incidents.
-    territory:
-      paths:
-        - >-
-          CLAUDE.md: the identifier/claim/out-of-band/count-verification bullet
-          (now one bullet beginning "Don't state anything as settled")
-      keywords:
-        - locally observable primary source
-        - reconstruct an identifier
-        - confirmed out-of-band
-        - count is not a fact
-        - verify before asserting
-    opened: 2026-08-25
-    proven: true
-    check: >
-      Damage is a session that ships an unverified identifier, claim, hearsay
-      confirmation, or grepped count because the merged bullet no longer
-      spells out a case the old four-bullet version named explicitly — e.g.
-      citing a script's behavior without reading it, asserting a causal root
-      cause from code inspection alone, trusting another session's "a human
-      confirmed this" without asking, or reporting a grep-derived count as
-      settled fact. A Sonnet probe given only the surviving bullet answered
-      all four of those situations correctly (resolve the identifier fresh;
-      trace/execute before asserting the cause; confirm with the human before
-      acting on hearsay; label the grep count heuristic or verify each hit).
-      NOT damage: a session performing the same verification under the new
-      wording, or citing the merged bullet instead of the old four.
-  - problem: >
       Two CLAUDE.md bullets (17 lines) narrated the pkill-teardown regression's
       internal mechanism at length — a separate "two failure modes" breakdown for
       chained kills, and the exit-code-144 arithmetic spelled out in full — where
@@ -119,3 +51,40 @@ trials:
       hits exit 144 and correctly reads it as the kill having worked (that's the
       surviving text doing its job); a session citing the merged bullet instead
       of the old two.
+  - problem: >
+      ADR-0009's own amendment history was stated 2-3 times over: a compressed
+      blurb for each amendment in a top-of-file blockquote index, the same fact
+      restated in full at that amendment's own section below, and — for the
+      external-session delivery mechanism — a third time in
+      docs/agents/guest-contributions.md. The top index was also already stale
+      (missing 3 of the doc's amendment sections), so keeping it accurate would
+      have meant growing it, not just restating it. Compressed the top index to
+      two load-bearing pointers (the ADR-0018/ADR-0025 path/schema renames a
+      reader needs before the rest of the doc makes sense) plus one generic
+      "see the dated sections below" line, and compressed the Delivery
+      paragraph to a pointer at guest-contributions.md's already-authoritative
+      house rules. Decision/Consequences text untouched throughout (ADR-0018).
+    territory:
+      paths:
+        - "docs/adr/0009-session-logs-commit-directly-to-main.md: the top amendment-index blockquotes (lines 6-53 pre-prune) and the Delivery paragraph"
+      keywords:
+        - amendment index
+        - session log delivery
+        - external session
+        - guest-contributions.md
+        - "ADR-0009"
+    opened: 2026-08-28
+    check: >
+      Damage is a session that, needing a specific amendment's actual decision
+      (e.g. the exact Stop/SessionEnd landing mechanism, or how an external
+      session's log gets delivered), stops at the compressed top index or the
+      shortened Delivery paragraph and acts on a wrong or incomplete answer
+      instead of opening the section/doc the surviving text points to — or a
+      session that cannot locate the right section at all because the index no
+      longer names it. A Sonnet probe given only the current file answered both
+      "where does an external contributor's session log land, and why" and
+      "where do I find the exact current landing mechanism" correctly, citing
+      the specific downstream section/doc rather than the compressed index.
+      NOT damage: a session reading past the compressed index into the actual
+      section before asserting a mechanism detail (that's the intended
+      single-home behavior working).

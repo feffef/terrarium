@@ -10,47 +10,14 @@ Status: Accepted
 
 > **Amended by [ADR-0025](0025-cross-tenant-catalog-and-collection-kinds.md) (2026-07-22).**
 > The `sessions` schema moved verbatim from the Journal manifest to
-> `shared/schemas/session.ts` and became the shared **`session` collection kind**,
-> so the Commons Timeline can read session logs across the Catalog. Behaviour is
-> unchanged: the Journal references it by `kind`, and `scripts/log-session.ts`
-> validates against the same object. Where this ADR says the schema lives in the
-> Journal manifest, read `shared/schemas/session.ts`.
+> `shared/schemas/session.ts` and became the shared **`session` collection kind**.
+> Where this ADR says the schema lives in the Journal manifest, read
+> `shared/schemas/session.ts` instead.
 
-> **Amended (2026-07-05):** added the **Schema evolution policy** section below
-> (issue #60). It is the single home for how an append-only strict `data`
-> collection may change its schema — `sessions` here, blog `pingbacks`
-> (ADR-0012) being the second instance that generalizes it.
->
-> **Amended (2026-07-06):** added **Automatic logging via a `SessionEnd` hook**
-> below — supersedes the *deferred end-of-session trigger* left open in the
-> Decision, records the measured Claude-Code-on-the-web freeze behaviour, and
-> fixes the derive-vs-author split and the commit rule. Decision accepted;
-> implementation is a follow-up gated PR.
->
-> **Amended (2026-07-06, PR #148):** the follow-up implementation landed with a
-> correction to the section below — added **Landing mechanism as shipped** at
-> the end. `SessionEnd` turned out to be an unreliable *sole* committer (it
-> fires fire-and-forget and a network-freezing suspend makes its push throw
-> silently), so the shipped mechanism lands primarily on the live `Stop` hook
-> instead, with `SessionEnd` kept only as a fallback for whatever `Stop` misses.
->
-> **Amended (2026-07-07, issue #215):** added **Closure invoked via a
-> `close-session` front door** below. The closure *trigger* moves off
-> `log-session`'s description onto a dedicated model-facing `close-session` Skill;
-> `log-session` becomes a capability it calls. The general *no-scratch
-> reminder/block* `Stop` hook (issue #215 option A / issue #176 option 2) is
-> **again declined** — in favour of this measurable authoring affordance. **The
-> existing `Stop` *committer* is untouched.**
->
-> **Amended (2026-07-25, `/audit-docs`):** corrects the **Aging is deferred**
-> Consequences bullet below — the "future `consolidate`/aging job" it deferred to
-> has shipped: `scripts/archive-journal-content.ts` (issue #672), wired as a
-> mandatory step of the `digest` Skill, moves aged-out `current` session logs to
-> `archived`, retaining the newest 7 session-log dates that actually exist (a
-> count, not a calendar window — a window measured from today used to
-> undercount, since today's own Digest can't exist yet). See ADR-0010's
-> matching correction for the Digest-pages side of the same migration, and
-> ADR-0003's auto-merge ledger for `digest`'s exemption scope.
+> **Every other amendment is dated inline at its own section below** — each
+> states its own decision and rationale there; this index doesn't restate them
+> (and would go stale trying to, since sections have been added since the last
+> time this list was updated).
 
 ## Context
 
@@ -510,19 +477,12 @@ consumers split three ways:
   mechanical trace); we take the contributor's log at its word here, exactly as
   we do for its authored `goal`/`summary`/`frictions`.
 
-**Delivery — the one session log that travels a PR.** This ADR's Decision commits
-a session log **directly to `main`, never through a PR** — but that path is
-*ours*: it runs on the `Stop`/`SessionEnd` committer and pushes to `main`, neither
-of which an external contributor's environment has. So an external session log is
-delivered the only way it can be: **committed as an ordinary file inside the
-contributor's feature PR** (`layers/journal/content/current/sessions/<date>-session_<id>.yml`),
-landing on `main` when that gated PR merges. This is the **single sanctioned
-exception** to the "never through a PR" boundary above — narrow (one additive,
-schema-valid log file: the same inert content type the boundary already trusts)
-and self-limiting (it rides a human-reviewed, human-merged PR, an even higher bar
-than the direct-to-`main` path it stands in for). The direct-to-`main` rule is
-unchanged for every internal session. The external-contributor house rules are
-indexed in `docs/agents/guest-contributions.md`.
+**Delivery — the one session log that travels a PR.** An external contributor's
+environment has no `Stop`/`SessionEnd` committer and no `main` push access, so
+its session log commits as an ordinary file inside the contributor's feature PR
+instead, landing when that PR merges — the single sanctioned exception to the
+"never through a PR" boundary above. The direct-to-`main` rule is unchanged for
+every internal session. House rules: `docs/agents/guest-contributions.md`.
 
 ## `session` reclassified as derived, not authored (2026-07-16)
 
