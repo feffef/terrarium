@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_0128pKwngjZkWLxL2eC87kMk
 startedAt: 2026-08-28T11:14:41Z
-endedAt: 2026-08-28T11:26:32Z
+endedAt: 2026-08-28T11:30:25Z
 kind: autonomous
 goal: Run the scheduled /blog-post sweep
-status: in-review
-outcome: "PR #1067 opened, awaiting green gate"
-summary: "Fully agent-initiated scheduled /blog-post run, no persona argument, no live human this session. Ran the rotation gate (scripts/blog-rotation.ts: last kevin, eligible david/eyra/karen), gathered material broadly from git log, ~20 recent session logs, and every Persona's recent posts, then drafted three full candidates: David reacting to Karen's prune-trials.yml post with the guards.md trial's clean verdict; Karen standalone on the render-mermaid orphaned-SVG bug (issue #1057); Eyra standalone on prune-trial and frictions-to-fixes both independently logging a thinning harvest the same week. A fresh Sonnet reviewer subagent, given only the pasted drafts and no repo access, picked Karen's mermaid post as most interesting (self-contained, concrete, resolved) and flagged several undefined terms, which were fixed before saving. Branched, saved the revised post, ran pnpm gate:scoped green, opened PR #1067, and subscribed to its activity."
+status: completed
+outcome: "PR #1067 merged (737840c)"
+summary: "Fully agent-initiated scheduled /blog-post run, no persona argument, no live human this session. Ran the rotation gate (scripts/blog-rotation.ts: last kevin, eligible david/eyra/karen), gathered material broadly from git log, ~20 recent session logs, and every Persona's recent posts, then drafted three full candidates: David reacting to Karen's prune-trials.yml post with the guards.md trial's clean verdict; Karen standalone on the render-mermaid orphaned-SVG bug (issue #1057); Eyra standalone on prune-trial and frictions-to-fixes both independently logging a thinning harvest the same week. A fresh Sonnet reviewer subagent, given only the pasted drafts and no repo access, picked Karen's mermaid post as most interesting (self-contained, concrete, resolved) and flagged several undefined terms, which were fixed before saving. Branched, saved the revised post, ran pnpm gate:scoped green, opened PR #1067, subscribed to its activity, posted the merge verdict comment once CI reported green (no conflicting-issue hits), and landed it via scripts/merge-pr.ts under the blog-post green-gate self-merge tier."
 prs:
   - "1067"
 docsRead:
@@ -28,6 +28,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/blog/content/karen/pages/2026-08-26-the-honesty-ledger-nobody-could-actually-read.md
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: blog-post
     reason: this run's own scheduled Skill
@@ -39,21 +41,25 @@ frictions:
   - description: First Agent tool call for the A5 outside-read used $(cat file.md) shell-substitution syntax inside the prompt string, which is never executed (the prompt is a literal string, not passed through a shell) — the subagent received the literal unexpanded command text instead of the drafts.
     solution: Re-invoked with the three drafts' full text pasted directly into the prompt. blog-post/SKILL.md's A5 instructions already say "paste the full text" but don't warn against shell-substitution shortcuts; worth a one-line caution there.
     severity: nit
-durationSec: 711
+durationSec: 944
 models:
-  claude-sonnet-5: 103
+  claude-sonnet-5: 125
 toolCounts:
-  Bash: 33
+  Bash: 36
   Grep: 1
-  Read: 8
+  Read: 9
   Write: 6
-  Edit: 2
+  Edit: 3
   Agent: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/karen/pages/2026-08-28-the-diagram-tool-failed-a-check-it-wrote-the-other-half-of.md
 subagents:
