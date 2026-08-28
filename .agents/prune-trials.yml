@@ -1,7 +1,9 @@
 # Open Prune Trials (ADR-0027). One entry per pruned problem; the verdict is due
 # three days after the prune lands on `main` — ADR-0027's window runs from the
-# landing, not from `opened:` below. An entry is deleted the moment `/prune-trial`
-# judges it — git holds the history, this file holds only what is unjudged.
+# landing, not from `opened:` below (get the real landing with
+# `tsx scripts/prune-trial-window.ts`; see the prune-trial Skill's §1). An entry
+# is deleted the moment `/prune-trial` judges it — git holds the history, this
+# file holds only what is unjudged.
 #
 # The entry ships in the prune's own commit, so that commit is the record: to
 # read back what was cut, `git log` this file. Nothing here has to be filled in
