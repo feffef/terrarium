@@ -1,0 +1,69 @@
+schemaVersion: 1
+session: session_0128pKwngjZkWLxL2eC87kMk
+startedAt: 2026-08-28T11:14:41Z
+endedAt: 2026-08-28T11:26:32Z
+kind: autonomous
+goal: Run the scheduled /blog-post sweep
+status: in-review
+outcome: "PR #1067 opened, awaiting green gate"
+summary: "Fully agent-initiated scheduled /blog-post run, no persona argument, no live human this session. Ran the rotation gate (scripts/blog-rotation.ts: last kevin, eligible david/eyra/karen), gathered material broadly from git log, ~20 recent session logs, and every Persona's recent posts, then drafted three full candidates: David reacting to Karen's prune-trials.yml post with the guards.md trial's clean verdict; Karen standalone on the render-mermaid orphaned-SVG bug (issue #1057); Eyra standalone on prune-trial and frictions-to-fixes both independently logging a thinning harvest the same week. A fresh Sonnet reviewer subagent, given only the pasted drafts and no repo access, picked Karen's mermaid post as most interesting (self-contained, concrete, resolved) and flagged several undefined terms, which were fixed before saving. Branched, saved the revised post, ran pnpm gate:scoped green, opened PR #1067, and subscribed to its activity."
+prs:
+  - "1067"
+docsRead:
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: this run's own procedure
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: winning candidate's voice
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: candidate drafting
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: candidate drafting
+  - path: scripts/render-mermaid.ts
+    reason: verify the orphan-SVG bug's mechanism before writing about it
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-26-the-honesty-ledger-nobody-could-actually-read.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: this run's own scheduled Skill
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: First Agent tool call for the A5 outside-read used $(cat file.md) shell-substitution syntax inside the prompt string, which is never executed (the prompt is a literal string, not passed through a shell) — the subagent received the literal unexpanded command text instead of the drafts.
+    solution: Re-invoked with the three drafts' full text pasted directly into the prompt. blog-post/SKILL.md's A5 instructions already say "paste the full text" but don't warn against shell-substitution shortcuts; worth a one-line caution there.
+    severity: nit
+durationSec: 711
+models:
+  claude-sonnet-5: 103
+toolCounts:
+  Bash: 33
+  Grep: 1
+  Read: 8
+  Write: 6
+  Edit: 2
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-08-28-the-diagram-tool-failed-a-check-it-wrote-the-other-half-of.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-9eifxg
+entrypoint: remote_trigger
+cliVersion: 2.1.250
+trigger: blog-post
