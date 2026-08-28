@@ -1,0 +1,182 @@
+schemaVersion: 1
+session: session_014Y3CXSPkfNWu7rpF38YFYa
+startedAt: 2026-08-28T04:09:14Z
+endedAt: 2026-08-28T04:22:29Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: in-review
+outcome: 4 findings fixed, gated PR opened
+summary: "Scheduled autonomous /audit-docs run (own_followup — no live human prompt this turn). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across the Live-tier doc set, pooled and deduped their findings (no overlapping spans), then dispatched an independent fact-checker that confirmed 4 of the 6 reported findings against primary sources: CLAUDE.md restating dispatch-subagents/SKILL.md's foreground-only rule verbatim instead of pointing to it (also fixed docs/agents/guards.md's roster row to match); audit-skills/SKILL.md re-deriving pr-workflow.md's \"merge must never be the only trace\" rationale; a contradiction plus a false backward-pointer in deploy/README.md's PAT parenthetical; and two unqualified CONTEXT.md references in midden-survey/SKILL.md pointing at terms that only exist in the Tenant-scoped glossary. Fixed all four (self-merge tier, no human-only surface touched), ran pnpm gate:scoped green, opened PR #1066, subscribed to its activity. No unresolvable factual conflict arose, so no needs-triage issue was filed."
+prs:
+  - "1066"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: avoid flagging text under an open Prune Trial
+  - path: docs/agents/guards.md
+    reason: verify subagent-backgrounding guard's roster row
+  - path: deploy/entrypoint.sh
+    reason: verify the PAT-required claim underlying the contradiction fix
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (read before editing)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
+    reason: (no reason given)
+  - path: docs/proposals/879-gate-yml-thin-shell.md
+    reason: (no reason given)
+  - path: .github/workflows/gate.yml
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's own Skill
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: record this log
+frictions:
+  - description: "One of the two Duplication findings (CLAUDE.md vs dispatch-subagents' subagent-backgrounding rule) had a real caveat the fact-checker surfaced: docs/agents/guards.md's own roster table already listed this guard's rule as dual-homed (\"CLAUDE.md, dispatch-subagents\"), the only row doing so — arguably documenting an intentional exception rather than an oversight."
+    solution: Resolved by treating guards.md's dual-listing as itself inconsistent with every other row's single-doc format, so fixed both CLAUDE.md (trim to pointer) and guards.md (single-doc row) together rather than treating it as an unresolvable conflict needing a needs-triage issue.
+    severity: nit
+durationSec: 795
+models:
+  claude-sonnet-5: 95
+toolCounts:
+  Bash: 15
+  Read: 6
+  Agent: 5
+  ToolSearch: 2
+  TaskCreate: 6
+  TaskUpdate: 11
+  Edit: 5
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - CLAUDE.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/agents/guards.md
+  - deploy/README.md
+  - .agents/skills/midden-survey/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Audit-docs lens A: Freshness"
+  - type: general-purpose
+    task: "Audit-docs lens B: Single-home"
+  - type: general-purpose
+    task: "Audit-docs lens C: Concision"
+  - type: general-purpose
+    task: "Audit-docs lens D: Coherence"
+  - type: general-purpose
+    task: Fact-check audit-docs findings
+gitBranch: claude/festive-mayer-i2ui2x
+entrypoint: remote_trigger
+cliVersion: 2.1.250
+trigger: audit-docs
