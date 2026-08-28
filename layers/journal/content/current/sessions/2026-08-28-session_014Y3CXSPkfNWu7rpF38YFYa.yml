@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_014Y3CXSPkfNWu7rpF38YFYa
 startedAt: 2026-08-28T04:09:14Z
-endedAt: 2026-08-28T04:22:29Z
+endedAt: 2026-08-28T04:26:27Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: 4 findings fixed, gated PR opened
-summary: "Scheduled autonomous /audit-docs run (own_followup — no live human prompt this turn). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across the Live-tier doc set, pooled and deduped their findings (no overlapping spans), then dispatched an independent fact-checker that confirmed 4 of the 6 reported findings against primary sources: CLAUDE.md restating dispatch-subagents/SKILL.md's foreground-only rule verbatim instead of pointing to it (also fixed docs/agents/guards.md's roster row to match); audit-skills/SKILL.md re-deriving pr-workflow.md's \"merge must never be the only trace\" rationale; a contradiction plus a false backward-pointer in deploy/README.md's PAT parenthetical; and two unqualified CONTEXT.md references in midden-survey/SKILL.md pointing at terms that only exist in the Tenant-scoped glossary. Fixed all four (self-merge tier, no human-only surface touched), ran pnpm gate:scoped green, opened PR #1066, subscribed to its activity. No unresolvable factual conflict arose, so no needs-triage issue was filed."
+status: completed
+outcome: "4 findings fixed, PR #1066 merged"
+summary: "Scheduled autonomous /audit-docs run (own_followup — no live human prompt this turn). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across the Live-tier doc set, pooled and deduped their findings (no overlapping spans), then dispatched an independent fact-checker that confirmed 4 of the 6 reported findings against primary sources: CLAUDE.md restating dispatch-subagents/SKILL.md's foreground-only rule verbatim instead of pointing to it (also fixed docs/agents/guards.md's roster row to match); audit-skills/SKILL.md re-deriving pr-workflow.md's \"merge must never be the only trace\" rationale; a contradiction plus a false backward-pointer in deploy/README.md's PAT parenthetical; and two unqualified CONTEXT.md references in midden-survey/SKILL.md pointing at terms that only exist in the Tenant-scoped glossary. Fixed all four (self-merge tier, no human-only surface touched), ran pnpm gate:scoped green, opened PR #1066, subscribed to its activity, and landed it once CI on the merge ref went green (verdict comment posted first per pr-workflow.md step 4) via scripts/merge-pr.ts. No unresolvable factual conflict arose, so no needs-triage issue was filed."
 prs:
   - "1066"
 docsRead:
@@ -143,22 +143,28 @@ frictions:
   - description: "One of the two Duplication findings (CLAUDE.md vs dispatch-subagents' subagent-backgrounding rule) had a real caveat the fact-checker surfaced: docs/agents/guards.md's own roster table already listed this guard's rule as dual-homed (\"CLAUDE.md, dispatch-subagents\"), the only row doing so — arguably documenting an intentional exception rather than an oversight."
     solution: Resolved by treating guards.md's dual-listing as itself inconsistent with every other row's single-doc format, so fixed both CLAUDE.md (trim to pointer) and guards.md (single-doc row) together rather than treating it as an unresolvable conflict needing a needs-triage issue.
     severity: nit
-durationSec: 795
+durationSec: 1033
 models:
-  claude-sonnet-5: 95
+  claude-sonnet-5: 138
 toolCounts:
-  Bash: 15
-  Read: 6
+  Bash: 22
+  Read: 7
   Agent: 5
-  ToolSearch: 2
+  ToolSearch: 4
   TaskCreate: 6
-  TaskUpdate: 11
-  Edit: 5
+  TaskUpdate: 12
+  Edit: 7
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_review_write: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - CLAUDE.md
   - .agents/skills/audit-skills/SKILL.md
