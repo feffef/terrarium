@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_017svsQPUq1joR5w1fMtm9Am
 startedAt: 2026-08-28T13:22:58Z
-endedAt: 2026-08-28T13:36:43Z
+endedAt: 2026-08-28T13:40:52Z
 kind: autonomous
 goal: Run the scheduled /prune-trial sweep
-status: in-review
-outcome: "Judged 2 trials (both held), pruned ADR-0009, PR #1068 opened"
-summary: "Autonomous scheduled firing, no human input this session. Judged the two open prune trials past their 3-day window: the pr-workflow.md/issue-tracker.md Closes-keyword trim (landed 2026-08-25, no post-landing frictions or regression issues found) and the CLAUDE.md verify-before-asserting bullet merge (landed 2026-08-25, post-landing sessions show the rule working correctly; one adjacent friction about an unverified commit-message claim wasn't clearly traceable to the merge). Both pruned, entries deleted. The third open trial (pkill bullet, landed 2026-08-26) isn't judgeable until 2026-08-29, left untouched. Chose ADR-0009's amendment-index duplication as the new prune target: a top-of-file blockquote index restated each amendment's content, already stated in full at that amendment's own section below (and, for external-session delivery, a third time in guest-contributions.md), while also being stale (missing 3 amendment sections). Compressed the index to two load-bearing pointers plus a generic \"see sections below\" line, and compressed the Delivery paragraph to a pointer at guest-contributions.md. Left every Decision/Consequences section untouched per ADR-0018. Ran a Sonnet probe against only the surviving file text (2/2 correct, no hook needed), ran the full gate (green), opened PR #1068, and subscribed to its activity."
+status: completed
+outcome: "Judged 2 trials (both held), pruned ADR-0009, PR #1068 merged"
+summary: "Autonomous scheduled firing, no human input this session. Judged the two open prune trials past their 3-day window: the pr-workflow.md/issue-tracker.md Closes-keyword trim (landed 2026-08-25, no post-landing frictions or regression issues found) and the CLAUDE.md verify-before-asserting bullet merge (landed 2026-08-25, post-landing sessions show the rule working correctly; one adjacent friction about an unverified commit-message claim wasn't clearly traceable to the merge). Both pruned, entries deleted. The third open trial (pkill bullet, landed 2026-08-26) isn't judgeable until 2026-08-29, left untouched. Chose ADR-0009's amendment-index duplication as the new prune target: a top-of-file blockquote index restated each amendment's content, already stated in full at that amendment's own section below (and, for external-session delivery, a third time in guest-contributions.md), while also being stale (missing 3 amendment sections). Compressed the index to two load-bearing pointers plus a generic \"see sections below\" line, and compressed the Delivery paragraph to a pointer at guest-contributions.md. Left every Decision/Consequences section untouched per ADR-0018. Ran a Sonnet probe against only the surviving file text (2/2 correct, no hook needed), ran the full gate (green), opened PR #1068, and subscribed to its activity. Gate CI ran green, no conflicting-issue hits and no review comments to address; merged via scripts/merge-pr.ts (0fa1f4d) per prune-trial's green-gate-only merge authority (ADR-0027)."
 prs:
   - "1068"
 docsRead:
@@ -38,21 +38,25 @@ frictions:
   - description: Confirming the two judged trials' landing commits' exact dates required working around a shallow clone (git rev-parse --is-shallow-repository is true) and one -S search initially returning what looked like a squash-merge boundary commit before I checked its parent existed in the shallow window.
     solution: Checked git cat-file -p on the parent commit to confirm it wasn't the shallow boundary before trusting the "new file" diff as a genuine creation date. No new gap found, just a reminder that git-conventions.md's shallow-clone guidance is worth the extra verification step it asks for.
     severity: nit
-durationSec: 825
+durationSec: 1074
 models:
-  claude-sonnet-5: 105
+  claude-sonnet-5: 136
 toolCounts:
-  Bash: 28
-  Read: 10
+  Bash: 33
+  Read: 11
   Agent: 2
   Grep: 1
-  Edit: 4
-  ToolSearch: 2
+  Edit: 6
+  ToolSearch: 5
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 5
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/adr/0009-session-logs-commit-directly-to-main.md
   - .agents/prune-trials.yml
