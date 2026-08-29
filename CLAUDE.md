@@ -241,15 +241,10 @@ human asks for it outright.
   it reaches a human. (Incident history: #387, #605, #628, #723, #738, #833,
   #948, #871.)
 - **This environment has several platform-level quirks that are not repo
-  bugs — don't re-diagnose any of them as fresh problems.** `docs/agents/environment-caveats.md`
-  is the single home: an unreachable `Claude_Code_Remote` `permissions.allow`
-  entry (#288), an unprovisioned `commit_signing_key.pub` breaking `git commit
-  -S` silently, session-only in-memory state silently emptying across a
-  session-resume (observed for both `CronCreate`/`CronList` state, #571, and a
-  backgrounded `Agent`-tool subagent killed by the resume itself, #794), two
-  transient "permission stream closed" MCP errors, and a fired self-bind
-  Routine's output not always surfacing as a visible turn (#834). Read it
-  before re-investigating any of these.
+  bugs — don't re-diagnose any of them as fresh problems.**
+  `docs/agents/environment-caveats.md` is the single home and grows as new ones
+  surface — read it before concluding an odd failure is new, rather than
+  trusting a list here that will always be behind it.
 - **Never tear down a process with a hand-rolled `pkill`, and never chain a
   process-kill with `&&`/`;` into steps that must run after it** — a `pkill -f`
   match can hit the invoking shell's own command line or another agent's process
