@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01NpaqsyVFtv8rDwnYHVixmy
 startedAt: 2026-08-28T19:04:51Z
-endedAt: 2026-08-28T19:19:52Z
+endedAt: 2026-08-29T05:29:44Z
 kind: interactive
 goal: Fix prune-trial's landing-date computation
-status: in-review
-outcome: Mechanized the lookup, PR open
-summary: "User reported that prune-trial seemed to use exact timestamps wrong, closing two trials in one day despite one-per-day opening. Investigated via git history (human-prompted): confirmed PR #1061 judged the guards.md-consolidation trial ~31 hours early, citing a landing commit (d4c08f6) that does not exist anywhere in the repo, instead of the real landing (96bcd24, 2026-08-25). The same-day double-close in PR #1068 was correct by design (SKILL.md: \"§1 may close several\"). Agent-initiated from there: built scripts/prune-trial-window.ts to compute each trial's real landing/window from git log -S instead of freehand derivation, added unit tests, updated SKILL.md/ledger header to point at it, filed issue #1069 documenting the bad PR #1061 verdict for human judgment (did not revert it unilaterally), and opened PR #1070 with gate:scoped green."
+status: completed
+outcome: "Mechanized the lookup, PR #1070 merged"
+summary: "User reported that prune-trial seemed to use exact timestamps wrong, closing two trials in one day despite one-per-day opening. Investigated via git history (human-prompted): confirmed PR #1061 judged the guards.md-consolidation trial ~31 hours early, citing a landing commit (d4c08f6) that does not exist anywhere in the repo, instead of the real landing (96bcd24, 2026-08-25). The same-day double-close in PR #1068 was correct by design (SKILL.md: \"§1 may close several\"). Agent-initiated from there: built scripts/prune-trial-window.ts to compute each trial's real landing/window from git log -S instead of freehand derivation, added unit tests, updated SKILL.md/ledger header to point at it, filed issue #1069 documenting the bad PR #1061 verdict for human judgment (did not revert it unilaterally), and opened PR #1070. User then pushed back (human-prompted): the window shouldn't be framed as an exact deadline since scheduled Routines have no exact-timing guarantee. Reframed the computed window as a floor (earliestJudgeableAtUtc), not a deadline, renamed the field/CLI output/SKILL.md wording accordingly, and confirmed in discussion that the ledger's re-scan-every-run design already prevents a judgeable trial from ever being silently skipped (only judged later than the floor, never dropped). Gate green throughout; PR #1070 merged, needing no self-merge since it was an ordinary work PR under this repo's per-tier merge authority."
 prs:
   - "1070"
 docsRead:
@@ -16,11 +16,15 @@ docsRead:
     reason: the §1 judging procedure this PR fixes
   - path: docs/adr/0027-prune-trials.md
     reason: the three-day-from-landing window definition
+  - path: docs/agents/pr-workflow.md
+    reason: per-tier merge authority — confirmed this PR needed human merge
   - path: scripts/deferred-tool-guard.ts
     reason: (no reason given)
   - path: scripts/merged-since.ts
     reason: (no reason given)
   - path: scripts/prune-trial-window.ts
+    reason: (read before editing)
+  - path: tests/unit/prune-trial-window.spec.ts
     reason: (read before editing)
 skillsUsed:
   - name: close-session
@@ -31,24 +35,33 @@ frictions:
   - description: A naive first version of the fix searched git log -S using the YAML-parsed (folded) problem text, which silently found nothing — YAML's `>` scalar joins wrapped lines with a space, so the parsed string isn't always a literal substring of the raw file `-S` searches.
     solution: Extract each entry's literal raw first line via regex instead of using the parsed value as the search key; added a unit test asserting the raw line is always a substring of the file while the folded text is not guaranteed to be.
     severity: minor
-durationSec: 901
+  - description: First shipped version framed the computed window as "closes at T", which reads as a deadline to hit rather than a floor never to precede — misleading given /prune-trial runs on a scheduled Routine with no exact-timing guarantee. User caught this after the PR was already open and merged-ready.
+    solution: Renamed windowClosesAtUtc()/closesAtUtc to earliestJudgeableAtUtc(), rewrote CLI output and SKILL.md wording to say explicitly that judging later than the floor is normal and correct, only judging before it is the failure. Pushed as a follow-up commit before merge.
+    severity: minor
+durationSec: 37493
 models:
-  claude-sonnet-5: 133
+  claude-sonnet-5: 249
 toolCounts:
-  Bash: 45
+  Bash: 60
   Glob: 1
-  Read: 5
+  Read: 7
   Agent: 1
-  Write: 3
-  Edit: 6
-  ToolSearch: 3
+  Write: 4
+  Edit: 16
+  ToolSearch: 5
   mcp__Claude_Code_Remote__get_session: 1
   mcp__github__issue_write: 1
   ScheduleWakeup: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  ReadNotifications: 10
+  mcp__github__pull_request_read: 12
+  mcp__Claude_Code_Remote__send_later: 4
+  mcp__github__pull_request_review_write: 2
+  mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/prune-trial-window.ts
   - tests/unit/prune-trial-window.spec.ts
@@ -60,3 +73,5 @@ subagents:
 gitBranch: claude/prune-trial-timestamps-2ptu8w
 entrypoint: remote_mobile
 cliVersion: 2.1.251
+ideas:
+  - prune-trial-window.ts could grow a --json flag so a future automated sweep (rather than an agent reading formatted CLI text) could consume the per-trial judgeable/floor data programmatically, if /prune-trial ever moves off manual prose-following for this step.
