@@ -89,7 +89,8 @@ new; don't re-diagnose any of these as a fresh problem.
   history surgery on a branch that by then may hold real work. So keep the
   workflow edit out of the branch entirely rather than committing it and
   discovering this at push time. `docs/proposals/`
-  ([README](../proposals/README.md)) owns the handoff convention.
+  ([README](../proposals/README.md)) owns the handoff convention, and
+  `workflow-edit-guard` ([guards](./guards.md)) now refuses the write outright.
   `layers/journal/content/archived/sessions/2026-07-10-session_01QxEToo6MA65uDa4vo3AwCh.yml`
   records the opposite ("both git push and the GitHub API can write
   .github/workflows files to a feature branch") — that claim is **false**; don't

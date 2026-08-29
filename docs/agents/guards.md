@@ -17,6 +17,7 @@ issue below rather than rephrasing the call until it passes.
 | `loop-only-tool-guard.ts` | `ScheduleWakeup` outside a `/loop` session — `stop: true` is exempt in every mode, since a cancel can only remove a pending wakeup | CLAUDE.md | #814 |
 | `subagent-background-guard.ts` | a **dispatched subagent** backgrounding a Bash command (`run_in_background: true`, or a bare `&` anywhere in the command text, `nohup … &` included), or calling `Monitor` to wait on one. Orchestrators are untouched | `dispatch-subagents` | #694, #964, #995 |
 | `commit-trailer-guard.ts` | a `git commit` whose message hand-types the ADR-0017 trailer the harness already lands | CLAUDE.md, ADR-0017 | #921 |
+| `workflow-edit-guard.ts` | a **write** into `.github/workflows/` — an `Edit`/`Write` path there, or a write-shaped `Bash` command. Reads pass, and `.github/actions/gate/action.yml` is untouched: agents may push that one (ADR-0026) | CLAUDE.md, `environment-caveats.md` | #897 |
 | `github-provenance-guard.ts` | a GitHub body, or an MCP-API commit, missing this session's provenance in the shape its surface prescribes | ADR-0017 — the deny message is the agent-facing home | — |
 | `session-id-guard.ts` | nothing: **post-hoc**. Reports a wrong session id on this session's own commits, at teardown | CLAUDE.md | #387 |
 
@@ -69,3 +70,7 @@ case to `tests/unit/<guard>.spec.ts` too.
 - `subagent-background-guard`'s command-text scan is not a full shell parser:
   a `&` reached only through command substitution, a here-doc, or ANSI-C
   quoting is outside its model (#964's accepted trade-off).
+- `workflow-edit-guard`'s Bash arm has the same limit: a workflow path reached
+  through a variable or `xargs`, or a `git commit -a` after an out-of-band
+  modification, names nothing it can match. The push rejection stays the
+  backstop there.
