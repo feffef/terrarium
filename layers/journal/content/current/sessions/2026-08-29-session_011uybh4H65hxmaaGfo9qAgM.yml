@@ -1,0 +1,80 @@
+schemaVersion: 1
+session: session_011uybh4H65hxmaaGfo9qAgM
+startedAt: 2026-08-29T15:55:33Z
+endedAt: 2026-08-29T16:14:58Z
+kind: interactive
+goal: Implement two ready-for-agent tracker issues
+status: in-review
+outcome: Workflow-write guard and dispatch-brief bullet, PR open
+summary: The user asked whether any ready-for-agent issues could be implemented now, which is the green-light for the work that followed. Three were open; I picked the two that were mine to do and left the third alone, since its own body says a scheduled Routine already handles it. Built a PreToolUse guard refusing writes into the workflows directory, and added one brief-authoring bullet to dispatch-subagents. Widening the guard from the issue's Edit/Write scope to also cover write-shaped Bash commands was my own call, not instructed - auto mode tells this session to edit via heredocs, which an Edit/Write-only guard would not have caught. PR "#1078" is open and subscribed.
+prs:
+  - "1078"
+docsRead:
+  - path: docs/agents/guards.md
+    reason: guard conventions, roster, and the fail-closed rule
+  - path: docs/agents/environment-caveats.md
+    reason: the workflows push-rejection mechanic the guard enforces
+  - path: scripts/commit-trailer-guard.ts
+    reason: closest sibling guard - copied its pure-core/CLI/pre-filter shape
+  - path: .agents/prune-trials.yml
+    reason: checked whether this territory was on trial before editing
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: confirmed no existing bullet covered issue 898
+skillsUsed:
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Started implementing after checking only that the guard did not already exist - not whether anything since August had superseded either issue. The user had to ask.
+    solution: Make the ready-for-agent premise re-check explicit before writing code - search for a superseding PR/commit and check prune-trial territory, not just "does the artifact exist".
+    severity: moderate
+  - description: Twenty-six unit tests passed while the Bash deny message was garbled - the command was interpolated mid-sentence, so the clause after it ran into the code block.
+    solution: Substring assertions cannot see an assembled sentence. Live-probe a guard's deny path once, or snapshot the whole message, rather than only asserting it contains keywords.
+    severity: minor
+  - description: "\"git add -A\" swept the second issue's doc change into the first issue's commit; needed a soft reset and a restage to split them."
+    solution: Stage explicitly per issue when one session implements more than one - "git add -A" has no way to know two unrelated changes are sitting in the same tree.
+    severity: minor
+  - description: The new guard denied my own diagnostic command, because it quoted an example write as a dry-run argument - the same trait commit-trailer-guard already documents.
+    solution: Accepted and recorded in the script header. The escape is the Edit tool or --input-file.
+    severity: nit
+durationSec: 1165
+models:
+  claude-opus-5: 117
+toolCounts:
+  ToolSearch: 2
+  Bash: 38
+  mcp__github__list_issues: 1
+  mcp__github__issue_read: 3
+  Write: 5
+  Edit: 10
+  mcp__github__search_issues: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - scripts/workflow-edit-guard.ts
+  - scripts/workflow-edit-guard.sh
+  - tests/unit/workflow-edit-guard.spec.ts
+  - docs/agents/guards.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .claude/settings.json
+  - .github/workflows/guard-probe.yml
+docsReadViaShell:
+  - docs/agents/triage-labels.md
+  - docs/agents/guards.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+gitBranch: claude/ready-agent-issues-bnmp3o
+entrypoint: remote_mobile
+cliVersion: 2.1.251
+learnings:
+  - A PreToolUse hook added to .claude/settings.json takes effect immediately in the same session - no restart needed
+  - A guard's unit tests cannot observe live interception, but a Write to a NEW file under the protected path probes it safely - a deny writes nothing, and a miss leaves only an untracked file
+ideas:
+  - Add a tests/unit/guards-wiring.spec.ts that walks every "scripts/*-guard.ts" and asserts each is either wired into a PreToolUse matcher in .claude/settings.json or named in an explicit post-hoc allowlist (today only session-id-guard). A guard that lands unwired is silently unenforced, and nothing currently catches that - I wrote the per-guard drift test for this one by hand after noticing github-provenance-guard had one, which is exactly the kind of convention that gets skipped when it depends on an author remembering it.
