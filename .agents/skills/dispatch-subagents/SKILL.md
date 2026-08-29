@@ -108,6 +108,12 @@ The subagent cannot see this session's context, so the brief is self-contained:
   whatever diff results as an intentional user edit, with no signal it was a
   subagent's throwaway probe — it can ship gutted or reverted code without
   ever knowing the change wasn't real (issue #887).
+- **Hand over primary sources you already fetched** — paste the content, or name
+  a file you wrote it to, rather than only citing the URL or path. A subagent
+  re-deriving it pays for the fetch twice, and against a source the proxy blocks
+  (`environment-caveats.md`) it cannot verify the claim at all: one reported a
+  finding as "unverified" that the dispatching session had already disproven
+  (issue #898).
 - **Front-load grounding data** in an ideation/exploration brief — counts, kinds,
   grades, whatever the domain's cheap grep-able facts are. A subagent that
   develops a flagship idea the data already rules out is effort spent re-deriving
