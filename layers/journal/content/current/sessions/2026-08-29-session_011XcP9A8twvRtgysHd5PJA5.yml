@@ -1,0 +1,156 @@
+schemaVersion: 1
+session: session_011XcP9A8twvRtgysHd5PJA5
+startedAt: 2026-08-29T04:08:20Z
+endedAt: 2026-08-29T04:23:32Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: in-review
+outcome: Two fixes found, fact-checked, two PRs opened
+summary: "Fully agent-initiated scheduled run of the /audit-docs Skill (no human prompt this session). Fanned out 4 paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the Live-tier doc corpus, pooled their findings (2 total, no overlap), dispatched an independent fact-checker that CONFIRMED both, then fixed both. Fix 1 (Duplication, Live tier): docs/agents/github-integration.md restated CLAUDE.md's \"Agent-tool subagent self-notifies\" fact instead of pointing to it — trimmed to a bare pointer, self-merge PR #1072 opened (gate green locally, merge-pr.ts running to land on CI green). Fix 2 (Contradiction, human-only surface): ADR-0015's Decision text still frames a frontmatter-suspect finding as \"a referral to frictions-to-fixes\", but current audit-skills/SKILL.md only files a plain needs-triage issue and frictions-to-fixes has no intake path to pick up such a referral; how-it-works.md already matches reality. Added a dated amendment note to ADR-0015 (never rewriting original Decision prose, per ADR-0018) and opened a separate, human-reviewed escalation PR #1073 per the Skill's human-only-surface tiering rule. Both PRs subscribed for babysitting."
+prs:
+  - "1072"
+  - "1073"
+docsRead:
+  - path: CLAUDE.md
+    reason: audit-docs tier definitions and self-merge/escalation rules
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: verifying and fixing the Contradiction finding
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: ADR amendment convention (never rewrite Decision prose)
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe
+  - path: .agents/prune-trials.yml
+    reason: excluding open Prune Trial territory from findings
+  - path: docs/agents/github-integration.md
+    reason: (read before editing)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's own Skill
+  - name: close-session
+    reason: session closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: docReadCounts includes stale entries for renamed/old file paths (e.g. an old ADR-0004/0024 filename) that look like real doc-mismatch findings at a glance but are just historical Read-tool calls to paths that no longer exist.
+    solution: Cross-check any suspicious docReadCounts path against the current directory listing before treating a low/odd count as a Mis-location signal; already documented as a caveat in scripts/audit-skills.ts, just easy to trip over.
+    severity: nit
+durationSec: 912
+models:
+  claude-sonnet-5: 106
+toolCounts:
+  Bash: 27
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  Agent: 5
+  ScheduleWakeup: 1
+  TaskCreate: 1
+  Read: 3
+  Edit: 2
+  mcp__github__create_pull_request: 3
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - docs/agents/github-integration.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+subagents:
+  - type: general-purpose
+    task: Audit lens A - Freshness (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Audit lens B - Single-home (Duplication + Mis-location)
+  - type: general-purpose
+    task: Audit lens C - Concision (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Audit lens D - Coherence (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check two audit-docs findings
+gitBranch: claude/festive-mayer-2rb7d1
+entrypoint: remote_trigger
+cliVersion: 2.1.251
+trigger: audit-docs
