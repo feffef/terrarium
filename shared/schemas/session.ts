@@ -50,6 +50,17 @@ export const sessionSchema = z
     models: z.record(z.string(), z.number().int()).optional(), // model id → assistant-turn count
     toolCounts: z.record(z.string(), z.number().int()).optional(), // tool name → call count
     filesEdited: z.array(z.string()).optional(),
+    // The shell half of "what it read": instruction docs a Bash command streamed
+    // into the session, which a Read-tool-only trace misses. An entry claims a
+    // COMMAND RAN THAT SHOWED THIS DOC, not that the agent attended to it.
+    //
+    // Derived only — never authored, and the one field carrying a no-consumer
+    // rule: nothing may act on its presence beyond the Journal card and
+    // `log-session`'s verification loop (a unit test enforces the allowlist).
+    // ADR-0009's shell-read amendment owns both rules and their rationale;
+    // `log-session/SKILL.md` owns the Friction an agent files instead of
+    // correcting a wrong value.
+    docsReadViaShell: z.array(z.string()).optional(),
     subagents: z
       .array(
         z.object({
