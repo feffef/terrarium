@@ -11,6 +11,7 @@ import {
   expectedFilename,
   findTruncatedScalars,
   land,
+  validateAuthored,
   validateEntry,
 } from '../../scripts/log-session.ts'
 
@@ -200,5 +201,27 @@ describe('land() — cleanup after landing (issue #7)', () => {
     expect(build).toHaveBeenCalledOnce()
     expect(push).not.toHaveBeenCalled()
     expect(existsSync(absPath)).toBe(true)
+  })
+})
+
+describe('derived-only fields cannot be authored', () => {
+  // `.strict()` would reject it as an anonymous "Unrecognized key"; the named
+  // refusal exists because the right next action — log a Friction — is not
+  // guessable from that (issue #1074).
+  it('refuses an authored docsReadViaShell and names the friction route', () => {
+    const res = validateAuthored({
+      session: 'session_01A',
+      goal: 'g',
+      status: 'completed',
+      outcome: 'o',
+      summary: 's',
+      frictions: [],
+      docsReadViaShell: ['docs/agents/x.md'],
+    })
+    expect(res.ok).toBe(false)
+    if (!res.ok) {
+      expect(res.errors).toContain('cannot be authored')
+      expect(res.errors).toContain('SHELL-READ-DETECTION')
+    }
   })
 })

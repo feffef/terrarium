@@ -15,6 +15,7 @@ import {
   parseTranscript,
   readSubagentJsonls,
   resolveGroundTruthSessionId,
+  shellReadScanOf,
   stitch,
   subagentTranscriptPaths,
   type AuthoredScratch,
@@ -342,5 +343,65 @@ describe('stitch()', () => {
     expect(withSparks.learnings).toEqual(['layer `~/` resolves to the main app'])
     expect(withSparks.ideas).toEqual(['cluster frictions into tags'])
     expect(validateEntry(withSparks).ok).toBe(true)
+  })
+})
+
+describe('docsReadViaShell (issue #1074)', () => {
+  const bashTurn = (command: string) => ({
+    type: 'assistant',
+    timestamp: '2026-08-29T10:00:00.000Z',
+    message: { model: 'claude-opus-5', content: [{ type: 'tool_use', name: 'Bash', input: { command } }] },
+  })
+  const withCwd = (...commands: string[]) => [
+    { type: 'user', sessionId: 'session_01SH', cwd: '/repo', timestamp: '2026-08-29T09:59:00Z', message: { content: 'go' } },
+    ...commands.map(bashTurn),
+  ]
+
+  it('derives instruction docs from Bash commands, relativized like filesRead', () => {
+    const trace = extractTrace(withCwd('sed -n "1,40p" /repo/docs/agents/guards.md'))
+    expect(trace.docsReadViaShell).toEqual(['docs/agents/guards.md'])
+    // The Read-tool half is untouched — the two are independent records.
+    expect(trace.filesRead).toEqual([])
+  })
+
+  it('does NOT dedup against a Read of the same doc: both mechanisms are true', () => {
+    const records = withCwd('cat docs/agents/guards.md')
+    records.push({
+      type: 'assistant',
+      timestamp: '2026-08-29T10:01:00.000Z',
+      message: { model: 'claude-opus-5', content: [{ type: 'tool_use', name: 'Read', input: { file_path: '/repo/docs/agents/guards.md' } }] },
+    } as never)
+    const trace = extractTrace(records)
+    expect(trace.filesRead).toEqual(['docs/agents/guards.md'])
+    expect(trace.docsReadViaShell).toEqual(['docs/agents/guards.md'])
+  })
+
+  it("folds a subagent's shell reads in, as #796 did for filesRead", () => {
+    const parent = extractTrace(withCwd('cat CONTEXT.md'))
+    const folded = foldSubagentTrace(parent, [withCwd('cat docs/agents/domain.md')])
+    expect(folded.docsReadViaShell.sort()).toEqual(['CONTEXT.md', 'docs/agents/domain.md'])
+  })
+
+  it('stitches in only when non-empty, and only from the trace', () => {
+    const authored: AuthoredScratch = {
+      session: 'session_01SH',
+      goal: 'g',
+      status: 'completed',
+      outcome: 'o',
+      summary: 's',
+      frictions: [],
+    }
+    const withReads = stitch(authored, extractTrace(withCwd('cat CONTEXT.md')))
+    expect(withReads.docsReadViaShell).toEqual(['CONTEXT.md'])
+    expect(validateEntry(withReads).ok).toBe(true)
+
+    const without = stitch(authored, extractTrace(withCwd('ls docs/')))
+    expect('docsReadViaShell' in without).toBe(false)
+  })
+
+  it('reports near-misses for the author-time check, without persisting them', () => {
+    const scan = shellReadScanOf(withCwd('cat > docs/agents/new.md <<EOF'))
+    expect(scan.paths).toEqual([])
+    expect(scan.nearMisses.map((m) => m.rule)).toEqual(['redirect target: written, not read'])
   })
 })
