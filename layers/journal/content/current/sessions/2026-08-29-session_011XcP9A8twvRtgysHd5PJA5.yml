@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_011XcP9A8twvRtgysHd5PJA5
 startedAt: 2026-08-29T04:08:20Z
-endedAt: 2026-08-29T04:25:57Z
+endedAt: 2026-08-29T05:33:29Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: "Two fixes found, fact-checked; #1072 merged, #1073 awaiting human review"
-summary: "Fully agent-initiated scheduled run of the /audit-docs Skill (no human prompt this session). Fanned out 4 paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the Live-tier doc corpus, pooled their findings (2 total, no overlap), dispatched an independent fact-checker that CONFIRMED both, then fixed both. Fix 1 (Duplication, Live tier): docs/agents/github-integration.md restated CLAUDE.md's \"Agent-tool subagent self-notifies\" fact instead of pointing to it — trimmed to a bare pointer, self-merge PR #1072 opened, gate went green, merged via merge-pr.ts (commit 857493b). Fix 2 (Contradiction, human-only surface): ADR-0015's Decision text still frames a frontmatter-suspect finding as \"a referral to frictions-to-fixes\", but current audit-skills/SKILL.md only files a plain needs-triage issue and frictions-to-fixes has no intake path to pick up such a referral; how-it-works.md already matches reality. Added a dated amendment note to ADR-0015 (never rewriting original Decision prose, per ADR-0018) and opened a separate, human-reviewed escalation PR #1073 per the Skill's human-only-surface tiering rule. Both PRs subscribed for babysitting."
+status: completed
+outcome: "Two fixes found, fact-checked, and merged (#1072 self-merged, #1073 by a human)"
+summary: "Fully agent-initiated scheduled run of the /audit-docs Skill (no human prompt this session). Fanned out 4 paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the Live-tier doc corpus, pooled their findings (2 total, no overlap), dispatched an independent fact-checker that CONFIRMED both, then fixed both. Fix 1 (Duplication, Live tier): docs/agents/github-integration.md restated CLAUDE.md's \"Agent-tool subagent self-notifies\" fact instead of pointing to it — trimmed to a bare pointer, self-merge PR #1072 opened, gate went green, merged via merge-pr.ts (commit 857493b). Fix 2 (Contradiction, human-only surface): ADR-0015's Decision text still frames a frontmatter-suspect finding as \"a referral to frictions-to-fixes\", but current audit-skills/SKILL.md only files a plain needs-triage issue and frictions-to-fixes has no intake path to pick up such a referral; how-it-works.md already matches reality. Added a dated amendment note to ADR-0015 (never rewriting original Decision prose, per ADR-0018) and opened a separate, human-reviewed escalation PR #1073 per the Skill's human-only-surface tiering rule. Both PRs subscribed for babysitting; #1073 was reviewed and merged by the human owner."
 prs:
   - "1072"
   - "1073"
@@ -118,28 +118,30 @@ frictions:
   - description: docReadCounts includes stale entries for renamed/old file paths (e.g. an old ADR-0004/0024 filename) that look like real doc-mismatch findings at a glance but are just historical Read-tool calls to paths that no longer exist.
     solution: Cross-check any suspicious docReadCounts path against the current directory listing before treating a low/odd count as a Mis-location signal; already documented as a caveat in scripts/audit-skills.ts, just easy to trip over.
     severity: nit
-durationSec: 1057
+durationSec: 5109
 models:
-  claude-sonnet-5: 125
+  claude-sonnet-5: 149
 toolCounts:
-  Bash: 29
+  Bash: 30
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
   Agent: 5
   ScheduleWakeup: 1
   TaskCreate: 1
-  Read: 4
-  Edit: 3
+  Read: 5
+  Edit: 6
   mcp__github__create_pull_request: 3
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
   mcp__github__issue_read: 1
   mcp__github__add_issue_comment: 1
   Skill: 2
   Write: 1
-  ReadNotifications: 2
+  ReadNotifications: 6
   mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 2
   PushNotification: 1
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/agents/github-integration.md
   - docs/adr/0015-audit-skills-and-conditional-importance.md
