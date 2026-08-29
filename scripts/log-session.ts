@@ -30,6 +30,7 @@ import {
   findLatestTranscript,
   formatModelId,
   parseTranscript,
+  readSubagentJsonls,
   SCRATCH_FILE,
   shellReadScanOf,
   type AuthoredScratch,
@@ -424,15 +425,19 @@ const NEAR_MISS_LIMIT = 5
  *  against the session it just lived through (#1074's loop). Prints nothing when
  *  there is nothing to check — including when the transcript can't be found,
  *  which is a degraded report, never a failure to author. */
-export function reportShellReads(
-  transcriptPath: string | undefined,
-  log: (line: string) => void = console.log,
-): void {
-  if (!transcriptPath || !existsSync(transcriptPath)) return
+export function reportShellReads(cwd: string, log: (line: string) => void = console.log): void {
   let scan
   try {
-    scan = shellReadScanOf(parseTranscript(readFileSync(transcriptPath, 'utf8')))
+    const transcriptPath = findLatestTranscript(cwd, process.env.HOME)
+    if (!transcriptPath || !existsSync(transcriptPath)) return
+    scan = shellReadScanOf(
+      parseTranscript(readFileSync(transcriptPath, 'utf8')),
+      readSubagentJsonls(transcriptPath).map(parseTranscript),
+    )
   } catch {
+    // Locating and reading the transcript is best-effort: a report that can't be
+    // built degrades to silence, never to a failed authoring (the scratch is
+    // already written by the time this runs).
     return
   }
   if (scan.paths.length === 0 && scan.nearMisses.length === 0) return
@@ -500,7 +505,7 @@ export function authorMain(
   writeScratch(result.data, scratchAbs)
   console.log(`✓ authored scratch written → ${SCRATCH_FILE}`)
   console.log('  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.')
-  reportShellReads(findLatestTranscript(cwd, process.env.HOME))
+  reportShellReads(cwd)
 }
 
 function main(): void {

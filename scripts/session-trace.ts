@@ -141,11 +141,8 @@ function relativizer(records: Record<string, unknown>[]): (p: string) => string 
   return (p) => (cwd && p.startsWith(cwd + '/') ? p.slice(cwd.length + 1) : p)
 }
 
-/** The shell-read scan WITH its near-misses, for the author-time advisory the
- *  `log-session` Skill prints (#1074's verification loop). `extractTrace` keeps
- *  only `.paths`; the rejected candidates exist to turn "did it miss one?" from
- *  a recall task into a recognition one, and are never persisted. */
-export function shellReadScanOf(records: Record<string, unknown>[]): ShellReadScan {
+/** Every Bash command a transcript recorded, in order. */
+function bashCommandsOf(records: Record<string, unknown>[]): string[] {
   const commands: string[] = []
   for (const rec of records) {
     const content = (rec.message as { content?: unknown } | undefined)?.content
@@ -157,7 +154,26 @@ export function shellReadScanOf(records: Record<string, unknown>[]): ShellReadSc
       }
     }
   }
-  return scanShellReads(commands, relativizer(records))
+  return commands
+}
+
+/** The shell-read scan WITH its near-misses, for the author-time advisory the
+ *  `log-session` Skill prints (#1074's verification loop). `extractTrace` keeps
+ *  only `.paths`; the rejected candidates exist to turn "did it miss one?" from
+ *  a recall task into a recognition one, and are never persisted.
+ *
+ *  Subagent transcripts belong here for the same reason `docsReadViaShell` is in
+ *  `FOLDED_TRACE_FIELDS`: the value that LANDS folds them in, so an advisory
+ *  scanning only the parent would ask the agent to verify a strict subset of what
+ *  the log actually carries. */
+export function shellReadScanOf(
+  records: Record<string, unknown>[],
+  subagentRecordSets: Record<string, unknown>[][] = [],
+): ShellReadScan {
+  const scans = [records, ...subagentRecordSets].map((rs) => scanShellReads(bashCommandsOf(rs), relativizer(rs)))
+  const paths = [...new Set(scans.flatMap((s) => s.paths))]
+  const seen = new Set(paths)
+  return { paths, nearMisses: scans.flatMap((s) => s.nearMisses).filter((m) => !seen.has(m.token)) }
 }
 
 function dedup(xs: (string | undefined)[]): string[] {
@@ -315,7 +331,6 @@ export function extractTrace(
   const edits: (string | undefined)[] = []
   const skills: (string | undefined)[] = []
   const commandSkills: string[] = []
-  const bashCommands: string[] = []
   const subagents: SubagentRef[] = []
   const prSignals: string[] = []
 
@@ -354,7 +369,6 @@ export function extractTrace(
 
       if (name === 'Bash') {
         const cmd = (input.command as string) ?? ''
-        bashCommands.push(cmd)
         if (cmd.includes('git push') || cmd.includes('pr create')) {
           prSignals.push(`(bash) ${cmd.slice(0, 60)}`)
         }
@@ -381,7 +395,7 @@ export function extractTrace(
     toolCounts,
     filesRead: dedup(reads).filter(isContentPath).map(rel),
     filesEdited: dedup(edits).filter(isContentPath).map(rel),
-    docsReadViaShell: scanShellReads(bashCommands, rel).paths,
+    docsReadViaShell: scanShellReads(bashCommandsOf(records), rel).paths,
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),
     subagents,

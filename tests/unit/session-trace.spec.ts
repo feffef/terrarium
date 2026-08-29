@@ -10,6 +10,7 @@ import {
   DERIVED_REASON_EDITED,
   deriveTrigger,
   extractTrace,
+  findLatestTranscript,
   foldSubagentTrace,
   normalizeRemoteSessionId,
   parseTranscript,
@@ -400,8 +401,46 @@ describe('docsReadViaShell (issue #1074)', () => {
   })
 
   it('reports near-misses for the author-time check, without persisting them', () => {
-    const scan = shellReadScanOf(withCwd('cat > docs/agents/new.md <<EOF'))
+    const scan = shellReadScanOf(withCwd('cat foo.txt > docs/agents/new.md'))
     expect(scan.paths).toEqual([])
     expect(scan.nearMisses.map((m) => m.rule)).toEqual(['redirect target: written, not read'])
+  })
+
+  it("scans subagent transcripts too, so the advisory matches what is committed", () => {
+    // The landed value folds subagents in (FOLDED_TRACE_FIELDS). An advisory
+    // over the parent alone would ask the agent to verify a strict subset of
+    // its own log — and the unverifiable entries would be exactly the ones an
+    // orchestrator is least able to judge.
+    const scan = shellReadScanOf(withCwd('cat CONTEXT.md'), [withCwd('cat docs/agents/domain.md')])
+    expect(scan.paths.sort()).toEqual(['CONTEXT.md', 'docs/agents/domain.md'])
+  })
+})
+
+describe('findLatestTranscript', () => {
+  const plant = (cwd: string, names: string[]): string => {
+    const home = mkdtempSync(join(tmpdir(), 'trace-home-'))
+    const dir = join(home, '.claude', 'projects', cwd.replace(/[/.]/g, '-'))
+    mkdirSync(dir, { recursive: true })
+    for (const n of names) writeFileSync(join(dir, n), '{}')
+    return home
+  }
+
+  it('encodes the cwd the way the harness store does', () => {
+    const home = plant('/home/user/terrarium', ['a.jsonl'])
+    expect(findLatestTranscript('/home/user/terrarium', home)).toBe(
+      join(home, '.claude', 'projects', '-home-user-terrarium', 'a.jsonl'),
+    )
+  })
+
+  it('returns undefined rather than throwing when there is nothing to find', () => {
+    expect(findLatestTranscript('/repo', undefined)).toBeUndefined()
+    expect(findLatestTranscript('/nope', plant('/repo', ['a.jsonl']))).toBeUndefined()
+    expect(findLatestTranscript('/repo', plant('/repo', []))).toBeUndefined()
+  })
+
+  it('ignores the subagents subdirectory, which is not a session transcript', () => {
+    const home = plant('/repo', ['a.jsonl'])
+    mkdirSync(join(home, '.claude', 'projects', '-repo', 'a', 'subagents'), { recursive: true })
+    expect(findLatestTranscript('/repo', home)).toContain('a.jsonl')
   })
 })
