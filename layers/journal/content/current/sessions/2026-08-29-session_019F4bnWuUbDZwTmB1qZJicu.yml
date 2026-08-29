@@ -1,0 +1,68 @@
+schemaVersion: 1
+session: session_019F4bnWuUbDZwTmB1qZJicu
+startedAt: 2026-08-29T13:08:52Z
+endedAt: 2026-08-29T13:18:35Z
+kind: autonomous
+goal: Run /prune-trial
+status: in-review
+outcome: Judged 2 open trials (not ripe), opened 1 new small prune
+summary: "Fully autonomous scheduled /prune-trial run, no live human input. Per the Skill: judged the two currently-open ledger trials via scripts/prune-trial-window.ts -- neither had cleared its 3-day window yet, so both were left alone. For a new problem, two obvious priority-1 candidates (CLAUDE.md's \"verify anything fresh against a primary source\" bullet, and the tail/head exit-status piping bullet) were ruled out after reading their cited issues in full: both are the subject of open, ready-for-human-labeled regression issues (#933, #873) explicitly asking a human to decide whether to strengthen the prose or add a mechanical guard, not shrink it. Settled instead on CLAUDE.md's \"platform-level quirks\" bullet, which hardcoded a now-stale six-item enumeration of docs/agents/environment-caveats.md's caveats (the doc has since grown to ~10). Compressed it to a pointer, ran the required Sonnet probe (passed: it correctly named environment-caveats.md before treating an ambiguous environment failure as novel), recorded the ledger entry, and opened PR #1077. All steps agent-initiated per the /prune-trial Skill; no human input this session."
+prs:
+  - "1077"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: judging the two open trials + writing the new entry
+  - path: docs/research/rulebook-migration-table.md
+    reason: hunting for a "prose that already failed" candidate
+  - path: docs/agents/environment-caveats.md
+    reason: confirming the CLAUDE.md index was actually stale
+  - path: docs/agents/guards.md
+    reason: checking whether the "verify fresh" bullet was already mechanized
+  - path: docs/agents/github-integration.md
+    reason: scanning a large doc for duplicate/restatable prose
+  - path: CLAUDE.md
+    reason: (read before editing)
+skillsUsed:
+  - name: prune-trial
+    reason: this session's whole task
+  - name: close-session
+    reason: PR-open closure trigger
+  - name: log-session
+    reason: recording this log
+frictions:
+  - description: "Two natural priority-1 prune targets (the primary-source/counts bullet, the tail/head piping bullet) looked like strong candidates from a grep-level read -- large incident counts, clearly narrated -- but each turned out to have an open ready-for-human regression issue (#933, #873) recommending the opposite of a prune. Only caught by reading the full issue bodies, not the migration-table's summary rows."
+    solution: Before committing to a prune target cited by issue numbers, pull the full issue (not just a table summary) for each one and check its state/labels -- an open ready-for-human tag is a hard exclusion this run had to discover the expensive way.
+    severity: minor
+  - description: "pnpm gate:scoped failed on this branch straight off origin/main's own tip: a session-log YAML uses a docsReadViaShell key the content schema doesn't recognize yet, unrelated to this prune's two-file diff."
+    solution: "Confirmed pre-existing via git diff --stat (only CLAUDE.md and .agents/prune-trials.yml touched) and git show origin/main:<file>, then found the in-flight fix already open as PR #1076 rather than fixing or porting it myself, and noted it in the PR body per the CI-red base-branch-failure convention."
+    severity: nit
+durationSec: 584
+models:
+  claude-sonnet-5: 119
+toolCounts:
+  Bash: 35
+  Grep: 1
+  Read: 10
+  ToolSearch: 2
+  mcp__github__issue_read: 1
+  mcp__github__search_issues: 2
+  Edit: 2
+  Agent: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - CLAUDE.md
+  - .agents/prune-trials.yml
+subagents:
+  - type: claude
+    task: Probe pruned CLAUDE.md bullet on Sonnet
+    model: sonnet
+gitBranch: claude/practical-rubin-t60sas
+entrypoint: remote_trigger
+cliVersion: 2.1.251
+trigger: prune-trial
+ideas:
+  - "Record ruled-out prune candidates (topic + disqualifying issue #) somewhere lightweight -- e.g. a short comment block in .agents/prune-trials.yml or a sibling note -- so a future /prune-trial run doesn't re-spend a full read-the-issue cycle rediscovering that #933 and #873 block the primary-source and tail/head-piping bullets specifically."
