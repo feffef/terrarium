@@ -108,10 +108,13 @@ The subagent cannot see this session's context, so the brief is self-contained:
   whatever diff results as an intentional user edit, with no signal it was a
   subagent's throwaway probe — it can ship gutted or reverted code without
   ever knowing the change wasn't real (issue #887).
-- **Front-load grounding data** in an ideation/exploration brief — counts, kinds,
-  grades, whatever the domain's cheap grep-able facts are. A subagent that
-  develops a flagship idea the data already rules out is effort spent re-deriving
-  what the dispatcher had cheap access to.
+- **Front-load what you already hold** — the cheap grep-able facts of an
+  ideation brief (counts, kinds, grades), and the content of any primary source
+  you fetched, pasted in or written to a file you name. Re-deriving costs a
+  subagent a flagship idea the data already ruled out, or the fetch twice — and
+  against a source the proxy blocks (`environment-caveats.md`) it cannot verify
+  the claim at all, so it reports "unverified" on what you had disproven
+  (issue #898).
 - **A review-subagent's prompt must be populated by reading the target scratch/draft
   file's actual content (Read tool), never retyped or paraphrased from memory.**
   Retyping drifts from the real file — a `/blog-post` run judged a reviewer against
