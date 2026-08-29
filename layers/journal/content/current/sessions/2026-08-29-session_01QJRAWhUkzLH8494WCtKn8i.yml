@@ -1,31 +1,76 @@
 schemaVersion: 1
 session: session_01QJRAWhUkzLH8494WCtKn8i
 startedAt: 2026-08-29T07:33:11Z
-endedAt: 2026-08-29T07:34:14Z
+endedAt: 2026-08-29T12:28:06Z
 kind: interactive
-goal: "Read and report GitHub issue #1074"
-status: completed
-outcome: Issue read and summarized for the user
-summary: 'Human-instructed, one-step read task: the user asked only "Read 1074". Loaded the mcp__github__issue_read schema via ToolSearch (no gh CLI in this container), fetched feffef/terrarium issue 1074, and reported its substance back — a proposal to derive a heuristic "docsShellRead" session-trace field covering shell-based (cat/sed/grep) reads of platform agent instruction docs, kept as a sibling of filesRead rather than folded into it, validated over time by a friction-driven improvement loop in close-session/log-session. Nothing agent-initiated; no code changed, no branch work, no PR.'
-prs: []
-docsRead: []
+goal: Derive docsReadViaShell for session traces
+status: in-review
+outcome: "PR #1076 open, full gate green"
+summary: "Human-instructed throughout. Started as \"Read 1074\" (report the issue), became a naming review when asked whether its proposed names were good, then a /grill-with-docs design session, then implementation on explicit go. Named decisions were the human's: docsReadViaShell over docsShellRead, derived-only with corrections solely via Frictions, a moderate severity floor because the mechanism is on trial, keep-the-rule with friction volume as its own exit signal, independent of docsRead, report near-misses, comment plus test. Agent-initiated within those: path-shape matching instead of the issue's scanned needle set (extractTrace is pure over records), and the redirect and heredoc false-positive classes the issue never named. Landed the field, the detector, the Journal disclosure, the ADR-0009 amendment and the no-consumer test."
+prs:
+  - "1076"
+docsRead:
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: schema-evolution policy and the authored/derived split this amends
+  - path: CONTEXT.md
+    reason: Friction severity rule and the Session entry, both of which the issue's spec collided with
+  - path: docs/agents/domain.md
+    reason: the rule of two, which settled that no glossary term is earned yet
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: how severity is actually consumed — moderate is the never-dropped floor
 skillsUsed:
+  - name: grilling
+    reason: nine questions that changed the spec materially, not a rubber stamp
+  - name: domain-modeling
+    reason: checked the field against the glossary; caught the severity collision
   - name: close-session
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
 frictions:
-  - description: Prompt was two words; implement-vs-summarize intent had to be inferred from the read-shaped ask
-    solution: Answered the literal ask and offered implementation as a follow-up rather than assuming scope
+  - description: Told the user docsReadViaShell would be 'weaker evidence' than docsRead without checking; it is 34.5% self-report
+    solution: Measure the corpus before characterising an existing field's reliability — the data was one script away and inverted the claim
+    severity: minor
+  - description: Chained git status after a preview-server stop; the SIGTERM ate it and only exit 144 hinted why
+    solution: CLAUDE.md already forbids chaining after a process kill — the rule is right, I ran the command anyway
+    severity: minor
+  - description: tsx could not resolve a repo .ts imported by absolute path from a scratchpad script; TransformError with no clear cause
+    solution: Put ad-hoc probe scripts inside the repo and delete them after, rather than importing outward from the scratchpad
+    severity: minor
+  - description: Guessed the session card's anchor format instead of reading sessionAnchor, wasting a screenshot round trip
+    solution: Grep for the anchor helper before constructing a deep link
     severity: nit
-durationSec: 63
+  - description: Wrote a test expectation asserting a near-miss for `awk -v P=docs/x.md`, where the token is P=docs/… and correctly matches nothing
+    solution: Reason about what the tokenizer actually sees before pinning an expectation on it
+    severity: nit
+durationSec: 17695
 models:
-  claude-opus-5: 11
+  claude-opus-5: 206
 toolCounts:
-  ToolSearch: 1
-  Bash: 2
+  ToolSearch: 2
+  Bash: 87
   mcp__github__issue_read: 1
-  Skill: 2
+  Skill: 4
+  Read: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+docsReadViaShell:
+  - CONTEXT.md
+  - docs/agents/domain.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/log-session/SKILL.md
 gitBranch: claude/read-1074-6thsa9
 entrypoint: remote_mobile
 cliVersion: 2.1.251
+learnings:
+  - docsRead is 34.5% authored self-report across all 528 logs (1216 of 4554 entries); its derived guarantee covers only the marked entries, which makes a new derived-only field the stricter of the two
+  - A heredoc body is part of the Bash command string in the transcript, so any analysis over commands reads written file content as if it were commands that ran — this repo writes docs and fixtures that way constantly
+  - grep -e supplies the pattern, so the first positional is then a FILE; a blanket skip-the-first-positional rule silently loses that read
+ideas:
+  - "Apply this PR's recognition-over-recall trick to docsRead itself: have log-session --author print the transcript-derived reads before the agent writes its curated list, so authoring becomes checking a list rather than recalling one. It attacks the 34.5% self-report share directly, needs no schema change, and reuses the reporting path just built."
+  - Add a scripts/corpus-stats.ts that answers questions like 'what fraction of docsRead entries are derived' over the session-log corpus. Three separate sessions have now hand-rolled a one-off parser for that (this one included); a committed script would make claims about the corpus cheap to verify instead of quietly optional.
