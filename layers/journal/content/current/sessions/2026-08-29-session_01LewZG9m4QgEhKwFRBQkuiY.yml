@@ -1,0 +1,49 @@
+schemaVersion: 1
+session: session_01LewZG9m4QgEhKwFRBQkuiY
+startedAt: 2026-08-29T02:05:03Z
+endedAt: 2026-08-29T02:12:26Z
+kind: autonomous
+goal: Run scheduled frictions-to-fixes sweep
+status: completed
+outcome: Zero candidates cleared the bar
+summary: "Scheduled Routine fired /frictions-to-fixes with no live human input. Dispatched a general-purpose subagent to survey the latest 20 session logs (25 frictions across 12 sessions) and screen each against the tracker. Every friction in the window was nit or minor severity; only one (a CONTEXT.md single-home slip, \"current four\" vs. a six-entry roster) was never-fixed and untracked, but at 1/20 recurrence it fails the skill's own ripeness rule for low-severity one-offs (\"drop lone low-severity one-offs with non-trivial fixes\" — recurrence-and-severity together). Everything else was already fixed (e.g. mermaid-orphan-SVG friction closed by PR #1058 the very next session), already tracked as an open issue (#1018, #772, #952), or a genuine one-off with no lasting cost. Per the skill's own step 3 selection criteria, nothing this window qualified for an issue/dispatch/PR. No code or docs changed this session; this is an honest empty-harvest run, consistent with the prior cycle's own note that \"the easy harvest is thinning.\""
+prs: []
+docsRead:
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: this session's own instructions
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-26-session_014aCZkrYmuMSbMnZYuGVXde.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: scheduled Routine invocation (delivered inline, not via the Skill tool)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "The Skill tool refuses frictions-to-fixes itself with disable-model-invocation, even though a scheduled Routine legitimately fires it with the full skill body pre-inlined into the prompt (not a model-initiated Skill-tool call). Already tracked as open issue #1018."
+    solution: "See #1018 — a design tradeoff, not a bounded fix for this session to make."
+    severity: nit
+  - description: The survey subagent's preloaded ToolSearch query (search_issues, search_pull_requests, list_issues, get_me) didn't include issue_read/pull_request_read, which its own nearby-issue eyeball step needed mid-survey, forcing a second ToolSearch round-trip.
+    solution: Add issue_read and pull_request_read to the frictions-to-fixes SKILL.md's recommended preload list for the survey subagent's GitHub-MCP hygiene section.
+    severity: nit
+  - description: "The subagent hit two consecutive 403 rate limits on search_issues even after the documented ~49s backoff (issue #952); recovery needed a longer/unrelated wait. Confirms existing guidance is directionally right but optimistic on the number."
+    solution: Low priority — a single subagent's timing observation, not yet a repeated pattern. Worth revisiting if it recurs.
+    severity: nit
+durationSec: 443
+models:
+  claude-sonnet-5: 15
+toolCounts:
+  Skill: 3
+  Agent: 1
+  Bash: 2
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+gitBranch: claude/eager-ptolemy-ybzevk
+entrypoint: remote_trigger
+cliVersion: 2.1.251
+trigger: frictions-to-fixes
