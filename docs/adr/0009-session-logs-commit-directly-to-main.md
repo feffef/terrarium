@@ -538,28 +538,15 @@ use the split wording.
 
 ## The shell half of "what it read": `docsReadViaShell` (2026-08-29, issue #1074)
 
-> **Amended.** The mechanical trace gains one field, and with it the first
-> standing rule about who may *consume* a session-log field.
+> **Amended.** The mechanical trace gains one field, and the first standing rule
+> about who may *consume* one.
 
-`filesRead` sees `Read` tool calls only, so a `cat`/`sed`/`grep` inspection was
-invisible — and #1074 measured shell-first reading overtaking it. `docsReadViaShell`
-records the agent-instruction docs a Bash command streamed into the session:
-optional and additive, so no `schemaVersion` bump, and excluding `CLAUDE.md`, which
-is harness-injected and so unmeasurable this way. An entry claims a command ran,
-not that the agent attended to it — which makes a wrong entry an extractor bug
-rather than a softer kind of evidence. Like `filesRead` it is a floor.
-
-Three decisions, each easy to undo by accident:
-
-- **Derived only; corrections travel as Frictions.** An agent verifies the list
-  and reports an error — it never edits the value, and `log-session.ts` refuses an
-  authored one by name. Patching it instead would put a self-report back inside
-  the mechanical half, the failure the `session`-is-derived amendment above closed.
-- **Those Frictions carry a severity floor of `moderate`** (marker
-  `SHELL-READ-DETECTION`), overriding CONTEXT.md's grade-by-cost rule: it is the
-  lowest severity `frictions-to-fixes` never drops, so it is the minimum that
-  keeps a young extractor's tuning signal alive. No expiry and no threshold for
-  retiring the mechanism — left open by design, like the friction-tag taxonomy's.
-- **No consumer may act on its presence** beyond the trace, the stitch, the
-  authoring loop and the Journal card, while the extractor is unproven. A unit
-  test enforces the allowlist rather than trusting this paragraph.
+`filesRead` sees `Read` calls only, so the `cat`/`sed`/`grep` inspection #1074
+measured overtaking it was invisible. `docsReadViaShell` records agent-instruction
+docs a Bash command streamed into the session — optional, additive, excluding
+harness-injected `CLAUDE.md`, a floor like `filesRead`, and claiming a command
+ran rather than that the agent attended, so a wrong entry is an extractor bug.
+**Derived only:** an agent reports an error as a Friction (floor `moderate`, the
+lowest `frictions-to-fixes` never drops; marker `SHELL-READ-DETECTION`) rather
+than editing it back into a self-report. **No consumer** may act on its presence
+beyond the trace, stitch, authoring loop and Journal card; a unit test enforces it.
