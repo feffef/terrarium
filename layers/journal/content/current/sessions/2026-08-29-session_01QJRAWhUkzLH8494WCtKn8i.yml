@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01QJRAWhUkzLH8494WCtKn8i
 startedAt: 2026-08-29T07:33:11Z
-endedAt: 2026-08-29T12:28:06Z
+endedAt: 2026-08-29T13:08:51Z
 kind: interactive
 goal: Derive docsReadViaShell for session traces
 status: in-review
-outcome: "PR #1076 open, full gate green"
-summary: "Human-instructed throughout. Started as \"Read 1074\" (report the issue), became a naming review when asked whether its proposed names were good, then a /grill-with-docs design session, then implementation on explicit go. Named decisions were the human's: docsReadViaShell over docsShellRead, derived-only with corrections solely via Frictions, a moderate severity floor because the mechanism is on trial, keep-the-rule with friction volume as its own exit signal, independent of docsRead, report near-misses, comment plus test. Agent-initiated within those: path-shape matching instead of the issue's scanned needle set (extractTrace is pure over records), and the redirect and heredoc false-positive classes the issue never named. Landed the field, the detector, the Journal disclosure, the ADR-0009 amendment and the no-consumer test."
+outcome: "PR #1076 open, reviewed, eight bugs fixed"
+summary: "Human-instructed throughout. Started as \"Read 1074\" (report the issue), became a naming review when asked whether its proposed names were good, then a /grill-with-docs design session, then implementation on explicit go. Named decisions were the human's: docsReadViaShell over docsShellRead, derived-only with corrections solely via Frictions, a moderate severity floor because the mechanism is on trial, keep-the-rule with friction volume as its own exit signal, independent of docsRead, report near-misses, comment plus test. Agent-initiated within those: path-shape matching instead of the issue's scanned needle set (extractTrace is pure over records), and the redirect and heredoc false-positive classes the issue never named. Landed the field, the detector, the Journal disclosure, the ADR-0009 amendment and the no-consumer test. A human-requested background review then found twelve wrong command shapes in the detector; all reproduced locally and were fixed across two further pushes."
 prs:
   - "1076"
 docsRead:
@@ -27,9 +27,17 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: dispatch-subagents
+    reason: (no reason given)
   - name: grill-with-docs
     reason: (invoked as a slash command)
 frictions:
+  - description: Shipped a shell-command parser with six wrong rule classes; a background review found all of them
+    solution: Adversarial cases for a parser belong in the first test pass — I tested the shapes I had thought of, which is not the same as testing the shapes that occur
+    severity: moderate
+  - description: sed -i recorded a WRITE as a read, the likeliest shape to occur since agents here are told to edit with sed
+    solution: When a verb can both read and write, enumerate its write flags before its read flags — the write case is the one that corrupts data
+    severity: moderate
   - description: Told the user docsReadViaShell would be 'weaker evidence' than docsRead without checking; it is 34.5% self-report
     solution: Measure the corpus before characterising an existing field's reliability — the data was one script away and inverted the claim
     severity: minor
@@ -45,29 +53,40 @@ frictions:
   - description: Wrote a test expectation asserting a near-miss for `awk -v P=docs/x.md`, where the token is P=docs/… and correctly matches nothing
     solution: Reason about what the tokenizer actually sees before pinning an expectation on it
     severity: nit
-durationSec: 17695
+durationSec: 20140
 models:
-  claude-opus-5: 206
+  claude-opus-5: 274
 toolCounts:
-  ToolSearch: 2
-  Bash: 87
+  ToolSearch: 4
+  Bash: 109
   mcp__github__issue_read: 1
-  Skill: 4
+  Skill: 5
   Read: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 4
+  Agent: 1
+  mcp__github__update_pull_request: 1
 docsReadViaShell:
   - CONTEXT.md
   - docs/agents/domain.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
   - .agents/skills/frictions-to-fixes/SKILL.md
   - .agents/skills/log-session/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Review PR 1076 changes
+    model: opus
 gitBranch: claude/read-1074-6thsa9
 entrypoint: remote_mobile
 cliVersion: 2.1.251
 learnings:
+  - grep/rg context flags (-A/-B/-C/-m) consume their argument, so a naive positional index puts the pattern in slot 2 — the same decoy class returns whenever a context flag is present
+  - rg -L means --follow; grep -L means --files-without-match. Sharing one flag table across the two silently drops real reads
+  - A quoted argument that looks like a flag will be read as one unless the tokenizer keeps the quoting — `grep -rn "-l" file` is indistinguishable from a names-only grep after quote-stripping
   - docsRead is 34.5% authored self-report across all 528 logs (1216 of 4554 entries); its derived guarantee covers only the marked entries, which makes a new derived-only field the stricter of the two
   - A heredoc body is part of the Bash command string in the transcript, so any analysis over commands reads written file content as if it were commands that ran — this repo writes docs and fixtures that way constantly
   - grep -e supplies the pattern, so the first positional is then a FILE; a blanket skip-the-first-positional rule silently loses that read
