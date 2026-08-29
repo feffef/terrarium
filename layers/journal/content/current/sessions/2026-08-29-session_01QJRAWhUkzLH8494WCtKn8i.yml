@@ -1,0 +1,31 @@
+schemaVersion: 1
+session: session_01QJRAWhUkzLH8494WCtKn8i
+startedAt: 2026-08-29T07:33:11Z
+endedAt: 2026-08-29T07:34:14Z
+kind: interactive
+goal: "Read and report GitHub issue #1074"
+status: completed
+outcome: Issue read and summarized for the user
+summary: 'Human-instructed, one-step read task: the user asked only "Read 1074". Loaded the mcp__github__issue_read schema via ToolSearch (no gh CLI in this container), fetched feffef/terrarium issue 1074, and reported its substance back — a proposal to derive a heuristic "docsShellRead" session-trace field covering shell-based (cat/sed/grep) reads of platform agent instruction docs, kept as a sibling of filesRead rather than folded into it, validated over time by a friction-driven improvement loop in close-session/log-session. Nothing agent-initiated; no code changed, no branch work, no PR.'
+prs: []
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Prompt was two words; implement-vs-summarize intent had to be inferred from the read-shaped ask
+    solution: Answered the literal ask and offered implementation as a follow-up rather than assuming scope
+    severity: nit
+durationSec: 63
+models:
+  claude-opus-5: 11
+toolCounts:
+  ToolSearch: 1
+  Bash: 2
+  mcp__github__issue_read: 1
+  Skill: 2
+gitBranch: claude/read-1074-6thsa9
+entrypoint: remote_mobile
+cliVersion: 2.1.251
