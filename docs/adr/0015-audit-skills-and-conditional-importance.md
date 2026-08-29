@@ -86,6 +86,15 @@ Status: Accepted
 > `frictions-to-fixes` moving off `essential` is not a demotion — it is the same
 > reclassification, and it is what keeps the grade honest: a `routine` bucket
 > that omitted a scheduled Skill would misdescribe the schedule.
+>
+> **Amended (2026-08-29).** The Decision's "frontmatter-suspect issue — a
+> *referral to `frictions-to-fixes`*" framing (below) no longer matches
+> implementation: `audit-skills/SKILL.md` step 5 files a plain `needs-triage`
+> issue, with no hand-off mechanism naming `frictions-to-fixes`; that Skill's
+> own intake mines the 20 newest session-log frictions only and has no step
+> that scans open issues for such a referral. `how-it-works.md`'s "files an
+> issue and leaves it to a human" already describes current behaviour — the
+> "referral" term below is historical, not a live routing path.
 
 ## Context
 
