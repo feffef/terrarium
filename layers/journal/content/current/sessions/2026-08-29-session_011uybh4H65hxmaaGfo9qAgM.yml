@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_011uybh4H65hxmaaGfo9qAgM
 startedAt: 2026-08-29T15:55:33Z
-endedAt: 2026-08-29T16:14:58Z
+endedAt: 2026-08-29T18:56:00Z
 kind: interactive
 goal: Implement two ready-for-agent tracker issues
 status: in-review
-outcome: Workflow-write guard and dispatch-brief bullet, PR open
-summary: The user asked whether any ready-for-agent issues could be implemented now, which is the green-light for the work that followed. Three were open; I picked the two that were mine to do and left the third alone, since its own body says a scheduled Routine already handles it. Built a PreToolUse guard refusing writes into the workflows directory, and added one brief-authoring bullet to dispatch-subagents. Widening the guard from the issue's Edit/Write scope to also cover write-shaped Bash commands was my own call, not instructed - auto mode tells this session to edit via heredocs, which an Edit/Write-only guard would not have caught. PR "#1078" is open and subscribed.
+outcome: Guard and dispatch bullet, split across two PRs
+summary: The user asked whether any ready-for-agent issues could be implemented now, which is the green-light for the work that followed. Three were open; I took the two that were mine to do and left the third alone, since its own body says a scheduled Routine already handles it. Built a PreToolUse guard refusing writes into the workflows directory, and added one brief-authoring bullet to dispatch-subagents. Widening the guard from the issue's Edit/Write scope to also cover write-shaped Bash commands was my own call, not instructed - auto mode tells this session to edit via heredocs, which an Edit/Write-only guard would not have caught. Both landed in PR "#1078" first; on the user's later instruction I split the doc bullet into its own PR "#1079" and force-pushed "#1078" down to the guard alone.
 prs:
   - "1078"
+  - "1079"
 docsRead:
   - path: docs/agents/guards.md
     reason: guard conventions, roster, and the fail-closed rule
@@ -20,15 +21,23 @@ docsRead:
     reason: checked whether this territory was on trial before editing
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: confirmed no existing bullet covered issue 898
+  - path: docs/agents/git-conventions.md
+    reason: checked the history-rewrite rule before force-pushing my own branch
 skillsUsed:
   - name: close-session
     reason: self-judged closure at PR-open
   - name: log-session
-    reason: this log
+    reason: this log, authored at PR-open and amended after the split
 frictions:
+  - description: Bundled two unrelated issues into one PR because the harness pinned a single designated branch. The user caught it and had to authorize extra branches before I could split.
+    solution: A pinned branch is a packaging constraint, not an editorial one. Say so when picking up more than one issue, and ask up front whether separate branches are allowed.
+    severity: moderate
   - description: Started implementing after checking only that the guard did not already exist - not whether anything since August had superseded either issue. The user had to ask.
     solution: Make the ready-for-agent premise re-check explicit before writing code - search for a superseding PR/commit and check prune-trial territory, not just "does the artifact exist".
     severity: moderate
+  - description: Auto mode's classifier denied "git push --force-with-lease" on my own unshared branch, blocking the split cleanup until the user granted it.
+    solution: Expected for a history-rewriting command. Reverting was not a valid workaround here - a revert commit would have deleted the bullet again after the sibling PR merged it.
+    severity: minor
   - description: Twenty-six unit tests passed while the Bash deny message was garbled - the command was interpolated mid-sentence, so the clause after it ran into the code block.
     solution: Substring assertions cannot see an assembled sentence. Live-probe a guard's deny path once, or snapshot the whole message, rather than only asserting it contains keywords.
     severity: minor
@@ -38,24 +47,29 @@ frictions:
   - description: The new guard denied my own diagnostic command, because it quoted an example write as a dry-run argument - the same trait commit-trailer-guard already documents.
     solution: Accepted and recorded in the script header. The escape is the Edit tool or --input-file.
     severity: nit
-durationSec: 1165
+durationSec: 10827
 models:
-  claude-opus-5: 117
+  claude-opus-5: 199
+  <synthetic>: 1
 toolCounts:
-  ToolSearch: 2
-  Bash: 38
+  ToolSearch: 3
+  Bash: 54
   mcp__github__list_issues: 1
   mcp__github__issue_read: 3
-  Write: 5
+  Write: 6
   Edit: 10
   mcp__github__search_issues: 1
   mcp__github__list_pull_requests: 1
   mcp__github__search_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
   Skill: 2
-  mcp__github__pull_request_read: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 9
+  mcp__Claude_Code_Remote__send_later: 3
+  ReadNotifications: 5
+  mcp__github__actions_list: 4
+  AskUserQuestion: 2
+  mcp__github__update_pull_request: 1
 filesEdited:
   - scripts/workflow-edit-guard.ts
   - scripts/workflow-edit-guard.sh
@@ -70,11 +84,14 @@ docsReadViaShell:
   - docs/agents/guards.md
   - docs/agents/environment-caveats.md
   - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/git-conventions.md
 gitBranch: claude/ready-agent-issues-bnmp3o
 entrypoint: remote_mobile
 cliVersion: 2.1.251
 learnings:
   - A PreToolUse hook added to .claude/settings.json takes effect immediately in the same session - no restart needed
   - A guard's unit tests cannot observe live interception, but a Write to a NEW file under the protected path probes it safely - a deny writes nothing, and a miss leaves only an untracked file
+  - Splitting a bundled PR by reverting is unsafe when a sibling PR carries the same commit - the revert deletes the sibling's change once both merge. Dropping the commit with a force-push is the only correct move
 ideas:
   - Add a tests/unit/guards-wiring.spec.ts that walks every "scripts/*-guard.ts" and asserts each is either wired into a PreToolUse matcher in .claude/settings.json or named in an explicit post-hoc allowlist (today only session-id-guard). A guard that lands unwired is silently unenforced, and nothing currently catches that - I wrote the per-guard drift test for this one by hand after noticing github-provenance-guard had one, which is exactly the kind of convention that gets skipped when it depends on an author remembering it.
+  - CLAUDE.md's PR discipline assumes one session produces one PR, which collides with a harness-pinned designated branch when a session picks up several unrelated issues. Give the "one issue, one PR" default an explicit home, and say what to do when the branch is pinned - ask for a second branch, or state the bundle in the PR body as a constraint rather than letting the description imply the issues belong together.
