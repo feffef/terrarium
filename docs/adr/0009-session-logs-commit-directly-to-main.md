@@ -541,54 +541,25 @@ use the split wording.
 > **Amended.** The mechanical trace gains one field, and with it the first
 > standing rule about who may *consume* a session-log field.
 
-**The gap.** `filesRead` derives from `Read` tool_use blocks only, so a
-`cat`/`sed`/`grep` inspection was invisible. Issue #1074 measured the cost: the
-Read:Bash ratio across the corpus fell 0.38 → 0.21 between W28 and W35, so
-shell-first inspection is now the dominant access path and the trace's picture
-of "what it read" had quietly become the minority of it.
+`filesRead` sees `Read` tool calls only, so a `cat`/`sed`/`grep` inspection was
+invisible — and #1074 measured shell-first reading overtaking it. `docsReadViaShell`
+records the agent-instruction docs a Bash command streamed into the session:
+optional and additive, so no `schemaVersion` bump, and excluding `CLAUDE.md`, which
+is harness-injected and so unmeasurable this way. An entry claims a command ran,
+not that the agent attended to it — which makes a wrong entry an extractor bug
+rather than a softer kind of evidence. Like `filesRead` it is a floor.
 
-**The field.** `docsReadViaShell` — platform agent-instruction docs
-(`docs/**`, `.agents/**`, each Tenant's `CONTEXT.md`, the root contexts) that a
-Bash command streamed into the session. Optional and additive, so it needs no
-`schemaVersion` bump under the evolution policy above. `CLAUDE.md` is excluded
-on purpose: it is harness-injected and produces no tool call, so this method
-could only ever report it unread.
+Three decisions, each easy to undo by accident:
 
-**An entry claims a command, not attention** — "a command ran that showed this
-doc" — which is what keeps it inside this ADR's authored/derived split rather
-than beside it. It is derived from the transcript like every other mechanical
-field; that its extractor is young makes a wrong entry a *bug*, not a softer
-kind of evidence. Like `filesRead` it is a floor: a doc reached via glob,
-variable or `xargs` appears in neither.
-
-Three decisions worth recording, because each is easy to undo by accident:
-
-- **Derived only; corrections travel as Frictions.** An agent verifies the
-  detected list against the session it just lived through, and reports an error
-  as a Friction — it never edits the value. `log-session.ts` refuses an authored
-  `docsReadViaShell` by name, and prints the detected paths plus the *rejected*
-  candidates and the rule that rejected each, so noticing a MISS is recognition
-  rather than recall. Letting an agent patch the field instead would put a
-  self-report back inside the mechanical half, which is the exact failure the
-  `session`-is-derived amendment above closed.
-- **Those Frictions carry a severity floor of `moderate`,** overriding
-  CONTEXT.md's grade-by-cost rule, which would put most of them at `nit`. The
-  floor is deliberate: `moderate` is the lowest severity `frictions-to-fixes`
-  never drops, so it is the minimum that keeps a young extractor's tuning signal
-  alive. It needs no expiry — a detector that works stops producing these
-  Frictions, and one that doesn't produces a recurring cluster, which is the
-  evidence to retire the mechanism. No count or window is fixed for what counts
-  as that cluster: like the friction-tag taxonomy's own threshold (CONTEXT.md),
-  that judgement is left open by design until there is data to make it, not
-  through oversight. They carry the marker
-  `SHELL-READ-DETECTION` so the cluster is greppable, following
-  `HUMAN-PROMPTED-CLOSURE`'s precedent.
-- **No consumer may act on its presence** beyond the trace that derives it, the
-  stitch that lands it, the authoring loop, and the Journal session card. The
-  self-improvement jobs, the digest, and the Timeline all ignore it while the
-  extractor is unproven. A unit test enforces the allowlist rather than trusting
-  this paragraph — the lesson of `docs/agents/guards.md`.
-
-**Not done here.** #1074 also proposed this as evidence for #766's doc-placement
-question. That reading is left to a later session with data; this amendment
-only lands the signal.
+- **Derived only; corrections travel as Frictions.** An agent verifies the list
+  and reports an error — it never edits the value, and `log-session.ts` refuses an
+  authored one by name. Patching it instead would put a self-report back inside
+  the mechanical half, the failure the `session`-is-derived amendment above closed.
+- **Those Frictions carry a severity floor of `moderate`** (marker
+  `SHELL-READ-DETECTION`), overriding CONTEXT.md's grade-by-cost rule: it is the
+  lowest severity `frictions-to-fixes` never drops, so it is the minimum that
+  keeps a young extractor's tuning signal alive. No expiry and no threshold for
+  retiring the mechanism — left open by design, like the friction-tag taxonomy's.
+- **No consumer may act on its presence** beyond the trace, the stitch, the
+  authoring loop and the Journal card, while the extractor is unproven. A unit
+  test enforces the allowlist rather than trusting this paragraph.
