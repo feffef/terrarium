@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019F4bnWuUbDZwTmB1qZJicu
 startedAt: 2026-08-29T13:08:52Z
-endedAt: 2026-08-29T13:18:35Z
+endedAt: 2026-08-29T13:24:32Z
 kind: autonomous
 goal: Run /prune-trial
 status: in-review
-outcome: Judged 2 open trials (not ripe), opened 1 new small prune
-summary: "Fully autonomous scheduled /prune-trial run, no live human input. Per the Skill: judged the two currently-open ledger trials via scripts/prune-trial-window.ts -- neither had cleared its 3-day window yet, so both were left alone. For a new problem, two obvious priority-1 candidates (CLAUDE.md's \"verify anything fresh against a primary source\" bullet, and the tail/head exit-status piping bullet) were ruled out after reading their cited issues in full: both are the subject of open, ready-for-human-labeled regression issues (#933, #873) explicitly asking a human to decide whether to strengthen the prose or add a mechanical guard, not shrink it. Settled instead on CLAUDE.md's \"platform-level quirks\" bullet, which hardcoded a now-stale six-item enumeration of docs/agents/environment-caveats.md's caveats (the doc has since grown to ~10). Compressed it to a pointer, ran the required Sonnet probe (passed: it correctly named environment-caveats.md before treating an ambiguous environment failure as novel), recorded the ledger entry, and opened PR #1077. All steps agent-initiated per the /prune-trial Skill; no human input this session."
+outcome: Judged 2 open trials (not ripe), opened + drove 1 new small prune
+summary: "Fully autonomous scheduled /prune-trial run, no live human input. Per the Skill: judged the two currently-open ledger trials via scripts/prune-trial-window.ts -- neither had cleared its 3-day window yet, so both were left alone. For a new problem, two obvious priority-1 candidates (CLAUDE.md's \"verify anything fresh against a primary source\" bullet, and the tail/head exit-status piping bullet) were ruled out after reading their cited issues in full: both are the subject of open, ready-for-human-labeled regression issues (#933, #873) explicitly asking a human to decide whether to strengthen the prose or add a mechanical guard, not shrink it. Settled instead on CLAUDE.md's \"platform-level quirks\" bullet, which hardcoded a now-stale six-item enumeration of docs/agents/environment-caveats.md's caveats (the doc has since grown to ~10). Compressed it to a pointer, ran the required Sonnet probe (passed: it correctly named environment-caveats.md before treating an ambiguous environment failure as novel), recorded the ledger entry, and opened PR #1077. CI then went red on a pre-existing origin/main issue unrelated to the prune (a session-log schema gap); ported the minimal fix from open PR #1076 rather than the whole donor PR, verified gate green, pushed, and synced the PR body/comment. All steps agent-initiated per the /prune-trial Skill and the CI-red drive-to-green convention; no human input this session."
 prs:
   - "1077"
 docsRead:
@@ -22,6 +22,8 @@ docsRead:
     reason: scanning a large doc for duplicate/restatable prose
   - path: CLAUDE.md
     reason: (read before editing)
+  - path: shared/schemas/session.ts
+    reason: (read before editing)
 skillsUsed:
   - name: prune-trial
     reason: this session's whole task
@@ -33,29 +35,36 @@ frictions:
   - description: "Two natural priority-1 prune targets (the primary-source/counts bullet, the tail/head piping bullet) looked like strong candidates from a grep-level read -- large incident counts, clearly narrated -- but each turned out to have an open ready-for-human regression issue (#933, #873) recommending the opposite of a prune. Only caught by reading the full issue bodies, not the migration-table's summary rows."
     solution: Before committing to a prune target cited by issue numbers, pull the full issue (not just a table summary) for each one and check its state/labels -- an open ready-for-human tag is a hard exclusion this run had to discover the expensive way.
     severity: minor
-  - description: "pnpm gate:scoped failed on this branch straight off origin/main's own tip: a session-log YAML uses a docsReadViaShell key the content schema doesn't recognize yet, unrelated to this prune's two-file diff."
-    solution: "Confirmed pre-existing via git diff --stat (only CLAUDE.md and .agents/prune-trials.yml touched) and git show origin/main:<file>, then found the in-flight fix already open as PR #1076 rather than fixing or porting it myself, and noted it in the PR body per the CI-red base-branch-failure convention."
-    severity: nit
-durationSec: 584
+  - description: "pnpm gate:scoped failed on this branch straight off origin/main's own tip: a session-log YAML uses a docsReadViaShell key the content schema doesn't recognize yet, unrelated to this prune's two-file diff. Found the in-flight fix already open as PR #1076 but first judged it too big to port (14 files: detection script, UI card, docs, tests) and instead just noted the gap in the PR body -- then the actual CI-red wake on #1077 arrived and made clear the convention wants the minimal fix ported, not the whole donor PR, and that doing so isn't \"widening.\""
+    solution: "Re-read #1076's diff, ported only its 11-line schema addition (shared/schemas/session.ts) into this PR, verified pnpm gate:scoped green locally, pushed, and corrected both the PR body and a stale PR comment that still said \"not ported here\" (the sync-the-description rule applies to a comment's factual claims too, not just the top-level body)."
+    severity: minor
+durationSec: 940
 models:
-  claude-sonnet-5: 119
+  claude-sonnet-5: 165
 toolCounts:
-  Bash: 35
+  Bash: 43
   Grep: 1
-  Read: 10
-  ToolSearch: 2
+  Read: 12
+  ToolSearch: 7
   mcp__github__issue_read: 1
   mcp__github__search_issues: 2
-  Edit: 2
+  Edit: 5
   Agent: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  ReadNotifications: 1
+  mcp__github__get_job_logs: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__update_pull_request: 1
+  ScheduleWakeup: 1
 filesEdited:
   - CLAUDE.md
   - .agents/prune-trials.yml
+  - shared/schemas/session.ts
 subagents:
   - type: claude
     task: Probe pruned CLAUDE.md bullet on Sonnet
