@@ -17,9 +17,9 @@
 //   tsx scripts/workflow-edit-guard.ts --dry-run --tool Edit --input '<json>'
 //
 // Fail-open by construction, in rough order of how often it will matter:
-//   - `git commit -a` after an out-of-band modification names no workflow path,
-//     so nothing in the command text betrays it. The push rejection stays the
-//     backstop for that one.
+//   - A command that names no workflow path cannot be matched at all: `git add .`
+//     and `git add -A`, and `git commit -a` after an out-of-band modification.
+//     The push rejection stays the backstop for those.
 //   - The `.sh` pre-filter only forwards payloads textually mentioning the
 //     directory, so a re-encoded path is never seen.
 //   - `mcp__github__create_or_update_file`/`push_files` write through the
@@ -42,22 +42,37 @@ import { pathToFileURL } from 'node:url'
  *  worktree path and a repo-relative one both hit. */
 const WORKFLOW_DIR = /\.github\/workflows\//
 
+/** What separates one command from the next. A newline counts: without it a
+ *  negated class spans lines, and an unrelated `rm` above a `grep` of a
+ *  workflow reads as one write — a false positive on multi-line Bash, which is
+ *  routine here (caught in review of this file). */
+const SEG = '[^;&|\\n]*'
+
 /** Commands whose *argument* is a file they write, delete, or stage. Staging is
- *  included because `git add` is the last step before the commit that strands
- *  the branch — the point of this guard is to bite earlier than that. */
-const WRITE_COMMANDS =
-  /\b(?:tee|cp|mv|rm|ln|touch|truncate|patch|install|git\s+(?:mv|rm|add|apply|checkout|restore))\b[^;&|]*\.github\/workflows\//
+ *  included because `git add <path>` is the last step before the commit that
+ *  strands the branch — the point of this guard is to bite earlier than that.
+ *  `git add .`/`-A` name no path and so pass; see `guards.md`'s known gaps. */
+const WRITE_COMMANDS = new RegExp(
+  `\\b(?:tee|cp|mv|rm|ln|touch|truncate|patch|install|git\\s+(?:mv|rm|add|apply|checkout|restore))\\b${SEG}\\.github/workflows/`,
+)
 
 /** A redirection whose target sits in the directory — `>`, `>>`, and the
  *  `cat > path <<EOF` heredoc form, which is how a shell-first session writes
- *  a file. Anchored on the target, so a heredoc *body* merely mentioning the
- *  directory (this file's own docs, say) is not a match. */
-const WRITE_REDIRECT = /(?:^|[^0-9<>])>>?\s*['"]?[^\s'"|;&]*\.github\/workflows\//
+ *  a file. Anchored on the redirect operator, so a heredoc body is matched only
+ *  if it too contains a redirect at the directory — plain prose naming the
+ *  directory is not (the header's "quotes a write" caveat covers the rest). */
+const WRITE_REDIRECT = /(?:^|[^0-9<>])>>?[ \t]*['"]?[^\s'"|;&]*\.github\/workflows\//
 
-/** In-place editors, whose target is not a redirect and not the first argument. */
-const WRITE_IN_PLACE = /\b(?:sed|perl|ruby|python3?)\b[^;&|]*\s-i[^\s;&|]*\s[^;&|]*\.github\/workflows\//
+/** In-place editors, which name their target as an argument rather than a
+ *  redirect, so `WRITE_REDIRECT` cannot see them. */
+const WRITE_IN_PLACE = new RegExp(
+  `\\b(?:sed|perl|ruby|python3?)\\b${SEG}[ \\t]-i[^\\s;&|]*[ \\t]${SEG}\\.github/workflows/`,
+)
 
-const BASH_WRITE_SHAPES = [WRITE_COMMANDS, WRITE_REDIRECT, WRITE_IN_PLACE]
+/** The write shapes, in the order they are tried. Exported as this guard's
+ *  registry, per `guards.md`'s "Extending one": a newly-observed write shape is
+ *  a row here, never a change to `checkWorkflowEdit`. */
+export const BASH_WRITE_SHAPES: readonly RegExp[] = [WRITE_COMMANDS, WRITE_REDIRECT, WRITE_IN_PLACE]
 
 export interface WorkflowEditFinding {
   tool: string
@@ -72,7 +87,11 @@ export interface WorkflowEditFinding {
  *  targets it. Reading a workflow (`cat`, `grep`, `git log`) is untouched —
  *  only writing is what strands a branch. Never throws; a non-object
  *  `toolInput` simply carries no path. */
-export function checkWorkflowEdit(toolName: string, toolInput: unknown): WorkflowEditFinding | null {
+export function checkWorkflowEdit(
+  toolName: string,
+  toolInput: unknown,
+  writeShapes: readonly RegExp[] = BASH_WRITE_SHAPES,
+): WorkflowEditFinding | null {
   const input = toolInput !== null && typeof toolInput === 'object' ? (toolInput as Record<string, unknown>) : {}
   if (toolName === 'Edit' || toolName === 'Write') {
     const path = input.file_path
@@ -82,7 +101,7 @@ export function checkWorkflowEdit(toolName: string, toolInput: unknown): Workflo
   if (toolName === 'Bash') {
     const command = input.command
     if (typeof command !== 'string') return null
-    if (!BASH_WRITE_SHAPES.some((shape) => shape.test(command))) return null
+    if (!writeShapes.some((shape) => shape.test(command))) return null
     return { tool: toolName, via: 'command', target: command }
   }
   return null

@@ -10,7 +10,12 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { checkWorkflowEdit, denyOutputFor, formatGuardMessage } from '../../scripts/workflow-edit-guard.ts'
+import {
+  BASH_WRITE_SHAPES,
+  checkWorkflowEdit,
+  denyOutputFor,
+  formatGuardMessage,
+} from '../../scripts/workflow-edit-guard.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const SCRIPT = join(root, 'scripts', 'workflow-edit-guard.ts')
@@ -90,6 +95,25 @@ describe('checkWorkflowEdit() — Bash write shapes, the shell-first bypass', ()
     allows("grep -rn '.github/workflows' docs/ > /tmp/hits.txt")
   })
 
+  it('ALLOWS a read on a LATER LINE of a multi-line command whose earlier line writes elsewhere', () => {
+    // A negated class matches newlines, so the write shapes once spanned lines:
+    // an unrelated `rm` above a workflow read denied the whole call. Multi-line
+    // Bash is routine here, so this is the regression that matters most.
+    allows('rm -rf /tmp/x\ngrep -n foo .github/workflows/gate.yml')
+    allows('git add docs/x.md\ngit diff -- .github/workflows/')
+    allows("sed -i 's/a/b/' docs/x.md\ncat .github/workflows/gate.yml")
+  })
+
+  it('still DENIES a write on a later line — the newline bounds the segment, it does not exempt it', () => {
+    denies('pnpm gate:scoped\ncp /tmp/new.yml .github/workflows/gate.yml')
+    denies("echo hi\ncat > .github/workflows/gate.yml <<'EOF'\nx\nEOF")
+  })
+
+  it('ALLOWS `git add .`/`-A` — they name no path, a known gap the push rejection backstops', () => {
+    allows('git add -A')
+    allows('git add .')
+  })
+
   it('ALLOWS writing a proposal file that quotes the directory in its heredoc body', () => {
     allows("cat > docs/proposals/897.md <<'EOF'\nApply this to .github/workflows/gate.yml.\nEOF")
   })
@@ -165,6 +189,24 @@ describe('the workflow-edit-guard.sh hot-path pre-filter', () => {
 
   it('forwards a textual false positive (a read), which the guard then allows', () => {
     expect(runPrefilter(payloadFor('Bash', { command: 'cat .github/workflows/gate.yml' }))).toBe('')
+  })
+})
+
+describe('BASH_WRITE_SHAPES as the registry (guards.md: a new write shape is a data row)', () => {
+  it('drives the predicate: an injected shape denies, and an empty registry denies nothing', () => {
+    const command = 'flarb .github/workflows/gate.yml'
+    expect(checkWorkflowEdit('Bash', { command })).toBeNull()
+    expect(checkWorkflowEdit('Bash', { command }, [/\bflarb\b[^;&|\n]*\.github\/workflows\//])).not.toBeNull()
+    expect(checkWorkflowEdit('Bash', { command: 'rm .github/workflows/x.yml' }, [])).toBeNull()
+  })
+
+  it('is exported, non-empty, and every entry is newline-bounded', () => {
+    expect(BASH_WRITE_SHAPES.length).toBeGreaterThan(0)
+    // The multi-line false positive came from a class that matched newlines.
+    // Pin the property rather than the three current patterns.
+    for (const shape of BASH_WRITE_SHAPES) {
+      expect(shape.test('rm -rf /tmp/x\ngrep -n foo .github/workflows/gate.yml'), String(shape)).toBe(false)
+    }
   })
 })
 

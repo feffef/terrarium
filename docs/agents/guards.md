@@ -31,8 +31,9 @@ issue below rather than rephrasing the call until it passes.
   has no context to be unsure about: it fails **open**, never blocking a call it
   cannot positively identify.
 - **Matcher-scoped, never `"*"`.** Matching every tool would run a `tsx` process
-  (~0.3s) on the Read/Edit/Bash hot path. The two `Bash`-matched guards add an
-  `sh` pre-filter, so only a payload that could possibly match pays that start.
+  (~0.3s) on the Read/Edit/Bash hot path. The three guards matching `Bash` (or
+  `Edit`/`Write`) add an `sh` pre-filter, so only a payload that could possibly
+  match pays that start.
 - **Pure core split from the I/O, reachable by `--dry-run`, with a unit test in
   `tests/unit/<guard>.spec.ts`** — ADR-0004's reviewability bar for code that
   runs unattended. Run the `--dry-run` in a script's `Usage:` header to exercise
@@ -43,7 +44,8 @@ issue below rather than rephrasing the call until it passes.
 ## Extending one
 
 Add a row to the guard's registry — an exported array at the top of its script
-(`FOREIGN_SIGNATURES`, `LOOP_ONLY_TOOLS`, `GITHUB_PROVENANCE_TOOLS`) — and add
+(`FOREIGN_SIGNATURES`, `LOOP_ONLY_TOOLS`, `GITHUB_PROVENANCE_TOOLS`,
+`BASH_WRITE_SHAPES`) — and add
 the tool to that guard's `PreToolUse` matcher in `.claude/settings.json`. The
 predicates are registry-driven, so a newly-observed confusion is a data row —
 never a logic change — and the tests pin that property directly. Add the new
@@ -70,7 +72,8 @@ case to `tests/unit/<guard>.spec.ts` too.
 - `subagent-background-guard`'s command-text scan is not a full shell parser:
   a `&` reached only through command substitution, a here-doc, or ANSI-C
   quoting is outside its model (#964's accepted trade-off).
-- `workflow-edit-guard`'s Bash arm has the same limit: a workflow path reached
-  through a variable or `xargs`, or a `git commit -a` after an out-of-band
-  modification, names nothing it can match. The push rejection stays the
-  backstop there.
+- `workflow-edit-guard`'s Bash arm has the same limit, and it is a *matcher* of
+  paths: a command naming no workflow path has nothing to match — a path reached
+  through a variable or `xargs`, `git commit -a` after an out-of-band
+  modification, and `git add .`/`-A`, which are the common forms of the `git add`
+  it does catch. The push rejection stays the backstop there.
