@@ -1,0 +1,65 @@
+schemaVersion: 1
+session: session_01WShMNxbR58bBQnX7kEAp8N
+startedAt: 2026-08-29T11:07:39Z
+endedAt: 2026-08-29T11:21:05Z
+kind: autonomous
+goal: Run the scheduled /blog-post sweep
+status: in-review
+outcome: "PR #1075 opened, subscribed, awaiting gate"
+summary: "Fully agent-initiated scheduled /blog-post run, no persona argument, no live human this session. The Skill tool refused direct invocation (disable-model-invocation, expected) so I followed the inlined command body. Ran the rotation gate (scripts/blog-rotation.ts: last karen, starved [david]), which forced all three candidates into David's voice. Gathered material from git log, recent session logs, and issue #1074, then drafted three full candidates: David on issue #1074's session-trace shell-read blind spot (filesRead only tracks the Read tool, so shell-based inspection is invisible — grounded in one session's own filesRead:[] despite 44 Bash calls); David on the Journal's history.md page shipping 11 false claims before a same-day independent review fixed them; David on the blog-rotation.ts mechanism itself forcing his own eligibility today. Caught and fixed two mid-draft errors before the outside review: a shallow-clone git-log attempt to verify \"the actual first commit\" (repo is shallow; corrected to cite the already-verified fix commit instead) and a false claim that Kevin was never previously starved (he was, on 2026-08-27, found via grep before publishing). A fresh Sonnet reviewer subagent, given only the three pasted drafts and no repo access, picked the shell-read-gap post as most interesting (biggest real stakes: a worsening structural gap in self-verification infra) and flagged several unexplained terms/claims for a first-time reader. Revised the winning draft to close each gap, and caught two more factual slips during that pass (wrong weekday \"Friday\" for a Saturday date; an off-by-one \"eight weeks\" that should have been seven, per ISO week arithmetic). Branched off origin/main, saved the revised post, ran pnpm gate:scoped green (79 e2e tests), opened PR #1075, subscribed to its activity. The two discarded candidates were logged to a scratch backlog file for a future run per the Skill's own step A6."
+prs:
+  - "1075"
+docsRead:
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: this run's own procedure
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: winning candidate's voice
+  - path: docs/agents/git-conventions.md
+    reason: shallow-clone caveat, avoided a fabricated first-commit claim
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-26-the-honesty-ledger-nobody-could-actually-read.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: this run's own scheduled Skill
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: "Nearly asserted 'the actual first commit holds five ADRs' via a fresh git log --reverse, without first checking git rev-parse --is-shallow-repository — this repo IS shallow, so that would have derived a wrong commit (the shallow boundary, not the true root) as fact, the exact failure mode CLAUDE.md and issue #1074 both warn about."
+    solution: "Checked is-shallow-repository before trusting the output, caught it was true, and rewrote the claim to cite the already fact-checked fix commit's own message instead of re-deriving history myself. Worth a standing habit: check shallow status before ANY git log --reverse / first-commit claim, not just blame/pickaxe work as CLAUDE.md's bullet currently scopes it to."
+    severity: minor
+  - description: Drafted a claim that the rotation gate's starved-forces-eligibility case (this run) was 'the first real test' of that rule, without checking prior blog-post session logs first — it wasn't; Kevin was starved and forced on 2026-08-27, two days earlier.
+    solution: Grepped prior blog-post session summaries for 'starved'/'last:' before finalizing and found the counterexample, then corrected the post to describe it as the second recent forced case instead of the first. A blog-post step 3/A1 material-gathering pass should routinely grep prior blog-post runs' own rotation-gate output, not just their published posts, when a candidate's premise involves the rotation mechanism's history.
+    severity: minor
+  - description: First draft of the winning candidate said the session in question happened 'on Friday' and that the Read:Bash ratio fell over 'eight weeks' — both wrong (the date was a Saturday; the week gap was seven weeks by ISO week number), caught only by explicitly re-deriving each with date -u rather than trusting the drafted prose.
+    solution: Both were caught before publishing by treating every weekday/count claim as needing fresh derivation, per CLAUDE.md's existing rule — no new fix needed, just confirms the rule's value; worth noting the same discipline should apply mid-revision, not only on first draft.
+    severity: nit
+durationSec: 806
+models:
+  claude-sonnet-5: 147
+toolCounts:
+  Skill: 3
+  Bash: 38
+  ToolSearch: 2
+  Read: 11
+  mcp__github__issue_read: 1
+  Write: 6
+  Edit: 12
+  Grep: 4
+  Agent: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-08-29-the-log-that-streams-five-hundred-files-and-remembers-none-of-them.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-78x12l
+entrypoint: remote_trigger
+cliVersion: 2.1.251
+trigger: blog-post
