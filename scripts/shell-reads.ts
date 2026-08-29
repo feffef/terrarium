@@ -329,7 +329,16 @@ export function scanShellReads(commands: string[], rel: (p: string) => string = 
   }
 
   // A path that WAS counted somewhere is not a near-miss, however many other
-  // commands mentioned it — the session has it either way.
-  const missed = [...fromReader, ...fromOther].filter((m) => !paths.has(norm(m.token)))
+  // commands mentioned it — the session has it either way. Collapse the rest by
+  // canonical path and rule: the report is capped, so one file rejected the same
+  // way twice (`.claude/…` and `.agents/…` name one file) must not take two of
+  // the slots a genuinely different miss needs.
+  const seen = new Set<string>()
+  const missed = [...fromReader, ...fromOther].filter((m) => {
+    const key = `${norm(m.token)}\u0000${m.rule}`
+    if (paths.has(norm(m.token)) || seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
   return { paths: [...paths], nearMisses: missed }
 }

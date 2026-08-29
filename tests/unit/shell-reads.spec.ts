@@ -220,6 +220,14 @@ describe('near-misses', () => {
     expect(miss?.token).toBe('docs/adr/*.md')
   })
 
+  it('collapses one file rejected the same way twice', () => {
+    // `.claude/skills/x` and `.agents/skills/x` are one file; the report is
+    // capped, so duplicate rows would crowd out a genuinely different miss.
+    const scan = scanShellReads(['ls .claude/skills/tdd/SKILL.md .agents/skills/tdd/SKILL.md'], rel)
+    expect(scan.nearMisses).toHaveLength(1)
+    expect(canonicalizeInstructionPath(scan.nearMisses[0]!.token)).toBe('.agents/skills/tdd/SKILL.md')
+  })
+
   it('orders reader-segment rejections before other commands', () => {
     // A rejected token inside a real reader is likelier to be a genuine
     // extractor bug than a doc path some other program merely mentioned.
