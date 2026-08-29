@@ -577,7 +577,10 @@ Three decisions worth recording, because each is easy to undo by accident:
   never drops, so it is the minimum that keeps a young extractor's tuning signal
   alive. It needs no expiry — a detector that works stops producing these
   Frictions, and one that doesn't produces a recurring cluster, which is the
-  evidence to retire the mechanism. They carry the marker
+  evidence to retire the mechanism. No count or window is fixed for what counts
+  as that cluster: like the friction-tag taxonomy's own threshold (CONTEXT.md),
+  that judgement is left open by design until there is data to make it, not
+  through oversight. They carry the marker
   `SHELL-READ-DETECTION` so the cluster is greppable, following
   `HUMAN-PROMPTED-CLOSURE`'s precedent.
 - **No consumer may act on its presence** beyond the trace that derives it, the

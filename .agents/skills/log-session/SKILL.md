@@ -173,10 +173,9 @@ The helper is gated code (ADR-0009): changing `log-session.ts` / `session-trace.
 `--author` prints what the shell-read detector found: the instruction docs it
 believes a `cat`/`sed`/`grep` command showed you (`docsReadViaShell`), and the
 candidates it *rejected* with the rule that rejected each. Read both lists
-against the session you just lived through. The rejects are there so spotting a
-**miss** is recognition rather than recall — you don't have to re-enumerate
-everything you read, just notice a rejected command that really did show you the
-file.
+against the session you just lived through: a rejected command that really did
+show you the file is a **miss**. (ADR-0009's shell-read amendment says why the
+rejects are printed at all.)
 
 **You cannot correct the field** — it is derived, and an authored
 `docsReadViaShell` is refused by name. A wrong result is reported as a Friction
