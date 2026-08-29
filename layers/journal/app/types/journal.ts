@@ -50,6 +50,9 @@ export interface SessionDoc {
   models?: Record<string, number>
   toolCounts?: Record<string, number>
   filesEdited?: string[]
+  // Agent-instruction docs a shell command streamed into the session (#1074) —
+  // the shell half of "what it read". Derived only; see shared/schemas/session.ts.
+  docsReadViaShell?: string[]
   subagents?: Subagent[]
   gitBranch?: string
   entrypoint?: string
@@ -137,6 +140,7 @@ export interface SessionCardView {
   // inform without cluttering. All may be empty (older logs, or a session that
   // edited nothing / spawned no subagent).
   filesEdited: string[]
+  docsReadViaShell: string[]
   tools: { name: string; count: number }[]
 }
 

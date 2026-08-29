@@ -6,9 +6,11 @@
 // frictions) cannot provide, and the SessionEnd handler stitches the two.
 //
 // The extraction is a pure function over parsed records (unit-tested); the file
-// IO is a thin shell. Read-tool paths are the only source of `filesRead` — a
-// `cat`/`grep` inspection is invisible here by design (see the ADR amendment),
-// so these counts remain a floor rather than a complete count.
+// IO is a thin shell. Read-tool paths are the only source of `filesRead`; a
+// `cat`/`grep` inspection of an agent-instruction doc is picked up separately as
+// `docsReadViaShell` (shell-reads.ts, issue #1074). Both remain a floor rather
+// than a complete count — a path reached via glob, variable or `xargs` appears
+// in neither.
 //
 // A dispatched subagent's tool calls are NOT inlined into the parent transcript
 // (it carries no sidechain records at all); the harness writes each one its own
@@ -27,10 +29,11 @@
 //
 // Usage:  tsx scripts/session-trace.ts <transcript.jsonl>
 //   Prints the derived trace as JSON.
-import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
+import { scanShellReads, type ShellReadScan } from './shell-reads.ts'
 
 export { FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 
@@ -90,6 +93,10 @@ export interface MechanicalTrace {
   toolCounts: Record<string, number>
   filesRead: string[]
   filesEdited: string[]
+  /** Agent-instruction docs a Bash command streamed into the session (#1074).
+   *  Derived, never authored: an agent verifies it and reports an error as a
+   *  Friction — it may not correct the value. See shared/schemas/session.ts. */
+  docsReadViaShell: string[]
   skillsUsed: string[]
   /** The subset of `skillsUsed` seen only as a slash-command expansion — kept
    *  alongside (not instead of) the union so the stitch can annotate provenance
@@ -120,6 +127,53 @@ const NOISE = [
 ]
 export function isContentPath(p: string | undefined): p is string {
   return typeof p === 'string' && p.length > 0 && !NOISE.some((re) => re.test(p))
+}
+
+/** Relativize repo paths to match how the agent cites them (`docs/adr/…`, not
+ *  `/home/user/terrarium/docs/adr/…`) so the stitch dedups a curated entry
+ *  against its observed twin instead of listing the file twice. Applied AFTER
+ *  the noise filter, which keys on absolute paths. Paths outside the repo stay
+ *  absolute — honestly flagging an external file. Shared with the author-time
+ *  shell-read scan so both derive the same key for one file. */
+function relativizer(records: Record<string, unknown>[]): (p: string) => string {
+  const meta = records.find((r) => r.type === 'user' || r.type === 'assistant') ?? {}
+  const cwd = typeof meta.cwd === 'string' ? meta.cwd : ''
+  return (p) => (cwd && p.startsWith(cwd + '/') ? p.slice(cwd.length + 1) : p)
+}
+
+/** Every Bash command a transcript recorded, in order. */
+function bashCommandsOf(records: Record<string, unknown>[]): string[] {
+  const commands: string[] = []
+  for (const rec of records) {
+    const content = (rec.message as { content?: unknown } | undefined)?.content
+    if (!Array.isArray(content)) continue
+    for (const block of content) {
+      const b = block as { type?: string; name?: string; input?: { command?: unknown } }
+      if (b?.type === 'tool_use' && b.name === 'Bash' && typeof b.input?.command === 'string') {
+        commands.push(b.input.command)
+      }
+    }
+  }
+  return commands
+}
+
+/** The shell-read scan WITH its near-misses, for the author-time advisory the
+ *  `log-session` Skill prints (#1074's verification loop). `extractTrace` keeps
+ *  only `.paths`; the rejected candidates exist to turn "did it miss one?" from
+ *  a recall task into a recognition one, and are never persisted.
+ *
+ *  Subagent transcripts belong here for the same reason `docsReadViaShell` is in
+ *  `FOLDED_TRACE_FIELDS`: the value that LANDS folds them in, so an advisory
+ *  scanning only the parent would ask the agent to verify a strict subset of what
+ *  the log actually carries. */
+export function shellReadScanOf(
+  records: Record<string, unknown>[],
+  subagentRecordSets: Record<string, unknown>[][] = [],
+): ShellReadScan {
+  const scans = [records, ...subagentRecordSets].map((rs) => scanShellReads(bashCommandsOf(rs), relativizer(rs)))
+  const paths = [...new Set(scans.flatMap((s) => s.paths))]
+  const seen = new Set(paths)
+  return { paths, nearMisses: scans.flatMap((s) => s.nearMisses).filter((m) => !seen.has(m.token)) }
 }
 
 function dedup(xs: (string | undefined)[]): string[] {
@@ -246,6 +300,24 @@ export function parseTranscript(jsonl: string): Record<string, unknown>[] {
   return out
 }
 
+/** This container's session transcript, best-effort: the newest `*.jsonl` in the
+ *  harness's project store for `cwd`. ADVISORY ONLY — it feeds the author-time
+ *  shell-read report (#1074); the log itself is always stitched from the real
+ *  `transcript_path` the SessionEnd hook is handed, never from this guess. A
+ *  container holds one session's transcript, so "newest" is unambiguous in
+ *  practice; `undefined` when the store isn't where we expect, which degrades
+ *  the report to silence rather than failing authoring. */
+export function findLatestTranscript(cwd: string, home: string | undefined): string | undefined {
+  if (!home) return undefined
+  const dir = join(home, '.claude', 'projects', cwd.replace(/[/.]/g, '-'))
+  if (!existsSync(dir)) return undefined
+  const jsonls = readdirSync(dir, { withFileTypes: true })
+    .filter((e) => e.isFile() && e.name.endsWith('.jsonl'))
+    .map((e) => join(dir, e.name))
+  if (jsonls.length === 0) return undefined
+  return jsonls.sort((a, b) => statSync(b).mtimeMs - statSync(a).mtimeMs)[0]
+}
+
 /** Derive the mechanical trace from parsed transcript records. Pure — the
  *  testable core. `env` is injectable (defaults to `process.env`). */
 export function extractTrace(
@@ -308,13 +380,7 @@ export function extractTrace(
   const started = stamps.length ? Math.min(...stamps) : undefined
   const ended = stamps.length ? Math.max(...stamps) : undefined
 
-  // Relativize repo paths to match how the agent cites them (`docs/adr/…`, not
-  // `/home/user/terrarium/docs/adr/…`) so the stitch dedups a curated entry
-  // against its observed twin instead of listing the file twice. Applied AFTER
-  // the noise filter, which keys on absolute paths. Reads outside the repo stay
-  // absolute — honestly flagging an external file.
-  const cwd = typeof meta.cwd === 'string' ? meta.cwd : ''
-  const rel = (p: string): string => (cwd && p.startsWith(cwd + '/') ? p.slice(cwd.length + 1) : p)
+  const rel = relativizer(records)
 
   return {
     session: resolveGroundTruthSessionId(meta.sessionId as string | undefined, env),
@@ -329,6 +395,7 @@ export function extractTrace(
     toolCounts,
     filesRead: dedup(reads).filter(isContentPath).map(rel),
     filesEdited: dedup(edits).filter(isContentPath).map(rel),
+    docsReadViaShell: scanShellReads(bashCommandsOf(records), rel).paths,
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),
     subagents,
@@ -482,6 +549,9 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   if (Object.keys(trace.models).length) entry.models = trace.models
   if (Object.keys(trace.toolCounts).length) entry.toolCounts = trace.toolCounts
   if (trace.filesEdited.length) entry.filesEdited = trace.filesEdited
+  // Derived only — never read from `authored`. See the field's home in
+  // shared/schemas/session.ts for why an agent may not correct it here.
+  if (trace.docsReadViaShell.length) entry.docsReadViaShell = trace.docsReadViaShell
   if (trace.subagents.length) entry.subagents = trace.subagents
   if (trace.gitBranch) entry.gitBranch = trace.gitBranch
   if (trace.entrypoint) entry.entrypoint = trace.entrypoint

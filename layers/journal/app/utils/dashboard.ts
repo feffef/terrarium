@@ -183,6 +183,7 @@ export function sessionCardViews(sessions: SessionDoc[]): (SessionCardView & { k
     learnings: s.learnings ?? [],
     ideas: s.ideas ?? [],
     filesEdited: s.filesEdited ?? [],
+    docsReadViaShell: s.docsReadViaShell ?? [],
     tools: sessionToolEntries(s.toolCounts),
   }))
 }

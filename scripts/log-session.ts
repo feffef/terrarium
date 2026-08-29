@@ -17,7 +17,7 @@
 //   --dry-run  do everything except the final push (builds + validates the commit)
 //   --remote   push target remote (default: origin)
 import { execFileSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -25,7 +25,16 @@ import { isPair, isScalar, parse as parseYaml, parseDocument, visit } from 'yaml
 import { z } from 'zod'
 import { sessionSchema } from '../shared/schemas/session.ts'
 import { FALLBACK_MODEL, provenanceFooter } from './provenance-footer.ts'
-import { busiestModelId, formatModelId, SCRATCH_FILE, type AuthoredScratch } from './session-trace.ts'
+import {
+  busiestModelId,
+  findLatestTranscript,
+  formatModelId,
+  parseTranscript,
+  readSubagentJsonls,
+  SCRATCH_FILE,
+  shellReadScanOf,
+  type AuthoredScratch,
+} from './session-trace.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -105,9 +114,27 @@ const authoredScratchSchema = z
   })
   .strict()
 
+/** Derived-only fields an agent might reach for, with the reason each is refused.
+ *  `.strict()` would reject them anyway, as an anonymous "Unrecognized key" — this
+ *  names the rule instead, because the correct next action is not obvious from the
+ *  generic error (issue #1074). */
+const DERIVED_ONLY_FIELDS: Record<string, string> = {
+  docsReadViaShell:
+    'it is derived from the transcript and an agent may not correct it. If the detected list is wrong, ' +
+    "log a Friction instead — severity at least 'moderate', with the marker SHELL-READ-DETECTION, the " +
+    'command verbatim, the path expected, and whether it was a miss or a false positive.',
+}
+
 export function validateAuthored(
   raw: unknown,
 ): { ok: true; data: AuthoredScratch } | { ok: false; errors: string } {
+  if (raw !== null && typeof raw === 'object') {
+    for (const [field, why] of Object.entries(DERIVED_ONLY_FIELDS)) {
+      if (field in (raw as Record<string, unknown>)) {
+        return { ok: false, errors: `  ${field}: cannot be authored — ${why}` }
+      }
+    }
+  }
   const res = authoredScratchSchema.safeParse(raw)
   if (!res.success) {
     const errors = res.error.issues
@@ -389,6 +416,50 @@ function fail(msg: string): never {
   process.exit(1)
 }
 
+/** How many near-misses to show. Capped: the list exists to make a MISS
+ *  recognisable at a glance, and an uncapped dump of every rejected candidate
+ *  would bury the detected paths it sits beside. */
+const NEAR_MISS_LIMIT = 5
+
+/** Print what the shell-read detector saw, so the authoring agent can check it
+ *  against the session it just lived through (#1074's loop). Prints nothing when
+ *  there is nothing to check — including when the transcript can't be found,
+ *  which is a degraded report, never a failure to author. */
+export function reportShellReads(cwd: string, log: (line: string) => void = console.log): void {
+  let scan
+  try {
+    const transcriptPath = findLatestTranscript(cwd, process.env.HOME)
+    if (!transcriptPath || !existsSync(transcriptPath)) return
+    scan = shellReadScanOf(
+      parseTranscript(readFileSync(transcriptPath, 'utf8')),
+      readSubagentJsonls(transcriptPath).map(parseTranscript),
+    )
+  } catch {
+    // Locating and reading the transcript is best-effort: a report that can't be
+    // built degrades to silence, never to a failed authoring (the scratch is
+    // already written by the time this runs).
+    return
+  }
+  if (scan.paths.length === 0 && scan.nearMisses.length === 0) return
+
+  log('')
+  log(`  docsReadViaShell — ${scan.paths.length} instruction doc(s) detected as read via shell:`)
+  for (const p of scan.paths) log(`    ${p}`)
+  if (scan.nearMisses.length) {
+    log(`  Not counted (${scan.nearMisses.length}), and why:`)
+    for (const m of scan.nearMisses.slice(0, NEAR_MISS_LIMIT)) {
+      log(`    ${m.token} — ${m.rule}`)
+      log(`      ${m.command.replace(/\s+/g, ' ').slice(0, 100)}`)
+    }
+    if (scan.nearMisses.length > NEAR_MISS_LIMIT) {
+      log(`    …and ${scan.nearMisses.length - NEAR_MISS_LIMIT} more`)
+    }
+  }
+  log('  Check both lists against what you actually ran. You cannot edit this field —')
+  log("  if it missed a doc or listed one you never read, log a Friction: severity at least 'moderate',")
+  log('  marker SHELL-READ-DETECTION, the command verbatim, the path expected, and the direction.')
+}
+
 /** `--author <authored.yml>`: validate the interpretive fields and write the
  *  scratch. This is what the model-invocable `log-session` Skill calls at
  *  closure; it does NOT commit — the session-end handler does, live on the
@@ -434,6 +505,7 @@ export function authorMain(
   writeScratch(result.data, scratchAbs)
   console.log(`✓ authored scratch written → ${SCRATCH_FILE}`)
   console.log('  the Stop hook will stitch it with the derived trace and commit, live, at the end of this turn.')
+  reportShellReads(cwd)
 }
 
 function main(): void {

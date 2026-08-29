@@ -106,11 +106,25 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 
           <!-- Mechanical trace — verbose, transcript-derived lists. Tucked behind
                individual disclosures so they inform without swamping the narrative. -->
-          <div v-if="card.docsRead.length || card.filesEdited.length || card.tools.length" class="trace-group">
+          <div
+            v-if="card.docsRead.length || card.docsReadViaShell.length || card.filesEdited.length || card.tools.length"
+            class="trace-group"
+          >
             <details v-if="card.docsRead.length" class="trace">
               <summary>Files read <span class="n">{{ card.docsRead.length }}</span></summary>
               <ul>
                 <li v-for="d in card.docsRead" :key="d.path"><code>{{ d.path }}</code> — {{ d.reason }}</li>
+              </ul>
+            </details>
+            <details v-if="card.docsReadViaShell.length" class="trace">
+              <summary>Read via shell <span class="n">{{ card.docsReadViaShell.length }}</span></summary>
+              <p class="subnote">
+                Instruction docs a <code>cat</code>/<code>sed</code>/<code>grep</code> command showed the
+                session — the reads the tool-call trace above can't see. Listed separately because it is
+                inferred from the command, so a wrong entry is a bug in that inference.
+              </p>
+              <ul>
+                <li v-for="p in card.docsReadViaShell" :key="p"><code>{{ p }}</code></li>
               </ul>
             </details>
             <details v-if="card.filesEdited.length" class="trace">

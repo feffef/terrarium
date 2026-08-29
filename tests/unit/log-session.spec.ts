@@ -2,7 +2,7 @@
 // (fetch → rebuild → push) is side-effecting and exercised via `--dry-run`; here we
 // pin the two guards that decide whether an entry is safe to land on `main`:
 // schema validation (the L1 stand-in) and the canonical `<date>-<session>.yml` filename.
-import { existsSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -11,6 +11,8 @@ import {
   expectedFilename,
   findTruncatedScalars,
   land,
+  reportShellReads,
+  validateAuthored,
   validateEntry,
 } from '../../scripts/log-session.ts'
 
@@ -200,5 +202,80 @@ describe('land() — cleanup after landing (issue #7)', () => {
     expect(build).toHaveBeenCalledOnce()
     expect(push).not.toHaveBeenCalled()
     expect(existsSync(absPath)).toBe(true)
+  })
+})
+
+describe('derived-only fields cannot be authored', () => {
+  // `.strict()` would reject it as an anonymous "Unrecognized key"; the named
+  // refusal exists because the right next action — log a Friction — is not
+  // guessable from that (issue #1074).
+  it('refuses an authored docsReadViaShell and names the friction route', () => {
+    const res = validateAuthored({
+      session: 'session_01A',
+      goal: 'g',
+      status: 'completed',
+      outcome: 'o',
+      summary: 's',
+      frictions: [],
+      docsReadViaShell: ['docs/agents/x.md'],
+    })
+    expect(res.ok).toBe(false)
+    if (!res.ok) {
+      expect(res.errors).toContain('cannot be authored')
+      expect(res.errors).toContain('SHELL-READ-DETECTION')
+    }
+  })
+})
+
+describe('reportShellReads (the author-time verification report)', () => {
+  // Builds a fake harness transcript store so the report can be driven end to
+  // end — it is the agent-facing half of #1074's loop, and its silence rules
+  // matter as much as its output.
+  const bash = (command: string) => ({
+    type: 'assistant',
+    message: { content: [{ type: 'tool_use', name: 'Bash', input: { command } }] },
+  })
+  function store(cwd: string, commands: string[]): string {
+    const home = mkdtempSync(join(tmpdir(), 'shellread-home-'))
+    const dir = join(home, '.claude', 'projects', cwd.replace(/[/.]/g, '-'))
+    mkdirSync(dir, { recursive: true })
+    const records = [{ type: 'user', cwd, message: { content: 'go' } }, ...commands.map(bash)]
+    writeFileSync(join(dir, 'session.jsonl'), records.map((r) => JSON.stringify(r)).join('\n'))
+    return home
+  }
+  const run = (cwd: string, home: string): string[] => {
+    const lines: string[] = []
+    vi.stubEnv('HOME', home)
+    try {
+      reportShellReads(cwd, (l) => lines.push(l))
+    } finally {
+      vi.unstubAllEnvs()
+    }
+    return lines
+  }
+
+  it('lists the detected paths and the rule that rejected each near-miss', () => {
+    const home = store('/repo', ['cat docs/agents/guards.md', 'ls docs/adr/0001-x.md'])
+    const out = run('/repo', home).join('\n')
+    expect(out).toContain('docs/agents/guards.md')
+    expect(out).toContain('not a reader command')
+    expect(out).toContain('SHELL-READ-DETECTION')
+  })
+
+  it('says nothing at all when there is nothing to check', () => {
+    expect(run('/repo', store('/repo', ['echo hello', 'git status']))).toEqual([])
+  })
+
+  it('degrades to silence when the transcript store is missing', () => {
+    expect(run('/repo', mkdtempSync(join(tmpdir(), 'shellread-empty-')))).toEqual([])
+  })
+
+  it('caps the near-miss list rather than burying the detected paths', () => {
+    const many = Array.from({ length: 9 }, (_, i) => `echo docs/agents/d${i}.md`)
+    const out = run('/repo', store('/repo', many)).join('\n')
+    expect(out).toContain('Not counted (9)')
+    expect(out).toContain('…and 4 more')
+    // One rule line per rendered near-miss (each also echoes its command).
+    expect(out.match(/not a reader command/g)?.length).toBe(5)
   })
 })

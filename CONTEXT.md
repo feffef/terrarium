@@ -139,7 +139,10 @@ major < blocker`:
 Grade by the cost *this instance* actually incurred, not by how notorious the
 failure class is — a mistake fully caught before landing (self-review, or a
 guard working exactly as designed) stays `nit`/`minor`. Recurrence is tracked
-separately, by occurrence count, not by inflating each instance's severity.
+separately, by occurrence count, not by inflating each instance's severity. One
+deliberate exception exists — a severity **floor** for a mechanism on trial, so
+its tuning signal survives; ADR-0009's shell-read amendment defines it, and why
+a floor beats honest grading there.
 
 Frictions are the primary signal the self-improvement Skills mine — for recurring
 pain (`frictions-to-fixes`), and as the verdict on an open **Prune Trial**

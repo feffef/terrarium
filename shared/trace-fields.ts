@@ -5,10 +5,11 @@
 // scripts/session-trace.ts itself, because that module also pulls in Node's
 // fs/path/url for its CLI/file-IO half — imports SessionCard.vue (bundled for
 // the browser via the `#shared` alias) can't resolve.
-export type FoldedTraceField = 'filesRead' | 'filesEdited' | 'skillsUsed'
+export type FoldedTraceField = 'filesRead' | 'filesEdited' | 'skillsUsed' | 'docsReadViaShell'
 
 export const FOLDED_TRACE_FIELDS: { field: FoldedTraceField; label: string }[] = [
   { field: 'filesRead', label: 'Files read' },
   { field: 'filesEdited', label: 'files edited' },
   { field: 'skillsUsed', label: 'Skills used' },
+  { field: 'docsReadViaShell', label: 'docs read via shell' },
 ]

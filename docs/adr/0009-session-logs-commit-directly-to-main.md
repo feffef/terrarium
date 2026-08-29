@@ -535,3 +535,18 @@ a same-field wording refinement, not a schema change, so it needs no
 `schemaVersion` bump per the policy above. Older logs already committed with
 the literal `(unknown)` string stay valid history; only newly-derived entries
 use the split wording.
+
+## The shell half of "what it read": `docsReadViaShell` (2026-08-29, issue #1074)
+
+> **Amended.** The mechanical trace gains one field, and the first standing rule
+> about who may *consume* one.
+
+`filesRead` sees `Read` calls only, so the `cat`/`sed`/`grep` inspection #1074
+measured overtaking it was invisible. `docsReadViaShell` records agent-instruction
+docs a Bash command streamed into the session — optional, additive, excluding
+harness-injected `CLAUDE.md`, a floor like `filesRead`, and claiming a command
+ran rather than that the agent attended, so a wrong entry is an extractor bug.
+**Derived only:** an agent reports an error as a Friction (floor `moderate`, the
+lowest `frictions-to-fixes` never drops; marker `SHELL-READ-DETECTION`) rather
+than editing it back into a self-report. **No consumer** may act on its presence
+beyond the trace, stitch, authoring loop and Journal card; a unit test enforces it.
