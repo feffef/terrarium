@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01QJRAWhUkzLH8494WCtKn8i
 startedAt: 2026-08-29T07:33:11Z
-endedAt: 2026-08-29T13:08:51Z
+endedAt: 2026-08-29T15:16:17Z
 kind: interactive
 goal: Derive docsReadViaShell for session traces
-status: in-review
-outcome: "PR #1076 open, reviewed, eight bugs fixed"
-summary: "Human-instructed throughout. Started as \"Read 1074\" (report the issue), became a naming review when asked whether its proposed names were good, then a /grill-with-docs design session, then implementation on explicit go. Named decisions were the human's: docsReadViaShell over docsShellRead, derived-only with corrections solely via Frictions, a moderate severity floor because the mechanism is on trial, keep-the-rule with friction volume as its own exit signal, independent of docsRead, report near-misses, comment plus test. Agent-initiated within those: path-shape matching instead of the issue's scanned needle set (extractTrace is pure over records), and the redirect and heredoc false-positive classes the issue never named. Landed the field, the detector, the Journal disclosure, the ADR-0009 amendment and the no-consumer test. A human-requested background review then found twelve wrong command shapes in the detector; all reproduced locally and were fixed across two further pushes."
+status: completed
+outcome: "Merged as PR #1076, after two reviews"
+summary: "Human-instructed throughout. Started as \"Read 1074\" (report the issue), became a naming review when asked whether its proposed names were good, then a /grill-with-docs design session, then implementation on explicit go. Named decisions were the human's: docsReadViaShell over docsShellRead, derived-only with corrections solely via Frictions, a moderate severity floor because the mechanism is on trial, keep-the-rule with friction volume as its own exit signal, independent of docsRead, report near-misses, comment plus test. Agent-initiated within those: path-shape matching instead of the issue's scanned needle set (extractTrace is pure over records), and the redirect and heredoc false-positive classes the issue never named. Landed the field, the detector, the Journal disclosure, the ADR-0009 amendment and the no-consumer test. A human-requested background review then found twelve wrong command shapes in the detector; all reproduced locally and were fixed across two further pushes. A second review predicted what /audit-docs would raise and caught a false claim in CONTEXT.md. Merged as af867ce2; the ADR amendment was cut 56 lines to 11 on human instruction."
 prs:
   - "1076"
 docsRead:
@@ -18,6 +18,8 @@ docsRead:
     reason: the rule of two, which settled that no glossary term is earned yet
   - path: .agents/skills/frictions-to-fixes/SKILL.md
     reason: how severity is actually consumed — moderate is the never-dropped floor
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
 skillsUsed:
   - name: grilling
     reason: nine questions that changed the spec materially, not a rubber stamp
@@ -53,32 +55,38 @@ frictions:
   - description: Wrote a test expectation asserting a near-miss for `awk -v P=docs/x.md`, where the token is P=docs/… and correctly matches nothing
     solution: Reason about what the tokenizer actually sees before pinning an expectation on it
     severity: nit
-durationSec: 20140
+durationSec: 27786
 models:
-  claude-opus-5: 274
+  claude-opus-5: 368
 toolCounts:
   ToolSearch: 4
-  Bash: 109
+  Bash: 132
   mcp__github__issue_read: 1
   Skill: 5
   Read: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__Claude_Code_Remote__send_later: 1
-  ReadNotifications: 3
-  mcp__github__pull_request_read: 4
-  Agent: 1
+  mcp__Claude_Code_Remote__send_later: 3
+  ReadNotifications: 15
+  mcp__github__pull_request_read: 12
+  Agent: 2
   mcp__github__update_pull_request: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 docsReadViaShell:
   - CONTEXT.md
   - docs/agents/domain.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
   - .agents/skills/frictions-to-fixes/SKILL.md
   - .agents/skills/log-session/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/close-session/SKILL.md
 subagents:
   - type: general-purpose
     task: Review PR 1076 changes
+    model: opus
+  - type: general-purpose
+    task: Audit-docs lens check on PR 1076
     model: opus
 gitBranch: claude/read-1074-6thsa9
 entrypoint: remote_mobile
