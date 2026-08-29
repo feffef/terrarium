@@ -1,0 +1,59 @@
+schemaVersion: 1
+session: session_016SXybUa3M6UcWzEdygj1FX
+startedAt: 2026-08-29T06:47:14Z
+endedAt: 2026-08-29T07:32:34Z
+kind: interactive
+goal: Audit what session logs record as files read
+status: completed
+outcome: Shell-read blind spot quantified, issue 1074 filed
+summary: "Human-instructed throughout. The user asked whether the derived trace records subagent file reads, then narrowed step by step to whether instruction-doc pointers are actually followed. Established subagent reads ARE folded in (foldSubagentTrace), but shell reads are not: this session derived an empty filesRead across 40 Bash calls having streamed ~500 files. Measured Read:Bash falling 0.38 to 0.21 over eight weeks across 527 logs. Prototyped a detector (2/2 on this session's own transcript) and, on the user's explicit instruction, filed issue 1074 carrying their friction-driven improvement loop. No code committed, so no PR."
+prs: []
+docsRead:
+  - path: scripts/session-trace.ts
+    reason: the derivation under investigation
+  - path: shared/trace-fields.ts
+    reason: which fields fold in from subagents
+  - path: docs/agents/github-integration.md
+    reason: search_* traps - read only AFTER the GitHub work
+  - path: docs/agents/issue-tracker.md
+    reason: filing conventions before opening 1074
+  - path: docs/agents/triage-labels.md
+    reason: label vocabulary
+skillsUsed:
+  - name: close-session
+    reason: self-judged closure after filing
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Session derived an empty filesRead despite ~500 files inspected via Bash; every instruction doc read this session is invisible to the trace.
+    solution: Filed issue 1074 - heuristic docsShellRead field plus friction-driven detector improvement
+    severity: major
+  - description: Did shallow-clone git archaeology without reading git-conventions.md, which CLAUDE.md names for exactly that moment; nearly asserted a wrong landing date.
+    solution: Self-caught via the shallow check restated inline in CLAUDE.md; fourth instance of issue 772
+    severity: minor
+  - description: Called mcp__github__* tools before reading github-integration.md; complied with its five applicable rules by instinct and MCP-prompt duplication, not knowledge.
+    solution: Motivating evidence for 1074; a close-session reminder naming unread activity-relevant docs would catch it
+    severity: minor
+  - description: Wrote an ad-hoc regex classifier for shell reads and showed its output before validating it; it mis-classified 3 of 7 cases where ground truth was known.
+    solution: Retracted in-turn and reclassified by reading each command; validate a heuristic before presenting its output
+    severity: minor
+durationSec: 2720
+models:
+  claude-opus-5: 141
+toolCounts:
+  Bash: 44
+  ToolSearch: 2
+  mcp__github__search_issues: 3
+  mcp__github__issue_read: 3
+  mcp__github__issue_write: 1
+  Skill: 2
+gitBranch: claude/session-log-file-tracking-w87anb
+entrypoint: remote_mobile
+cliVersion: 2.1.251
+learnings:
+  - Splitting a shell command on | shreds quoted grep alternation patterns, orphaning file paths into segments with a junk first token - a shell-read detector needs a quote-aware tokenizer
+  - CLAUDE.md reaches docsRead almost entirely by self-report (121 authored vs 8 derived across 527 logs) because the harness injects it with no tool call - it is permanently underivable
+  - "find .claude -name '*.md' returns 0: the Skills there are symlinks into .agents/, so both spellings must be canonicalized before counting reads"
+  - Both documented rules that saved this session had a second durable copy (restated inline in CLAUDE.md, or in the MCP server's system prompt) - placement evidence bearing on issue 766
+ideas:
+  - "Invert the close-session doc reminder: map session activity to the doc CLAUDE.md points at for it (called mcp__github__* implies github-integration.md, ran git log -S implies git-conventions.md) and surface the pointers that went unread. The plain list of what was read is recognition support; the unread list is the actual pointer-following signal that issue 766's five deferred relocations rest on."
