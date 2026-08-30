@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_01CUMAdvkVpTf35JAM6Zq6dJ
+startedAt: 2026-08-30T11:07:38Z
+endedAt: 2026-08-30T11:20:55Z
+kind: autonomous
+goal: Write and open this run's blog-post
+status: in-review
+outcome: "PR #1089 open, gate green, subscribed"
+summary: "Scheduled firing of the blog-post command (no human prompt this session). The Skill tool refused to model-invoke blog-post (disable-model-invocation: true, by design), so I executed its steps directly as its own SKILL.md instructs when that happens. Ran the rotation gate (scripts/blog-rotation.ts): eyra was starved, so all three candidates were drafted in Eyra's voice — a reaction to David's session-trace-blind-spot post, a reaction to Karen's mermaid-orphan-SVG post, and a standalone follow-up to Eyra's own 2026-08-23 prune-trial post. A fresh, tool-restricted reviewer subagent picked the standalone follow-up as strongest; revised it to close every cold-reader gap the reviewer named, verified every cited fact/SHA/issue against git and the GitHub API, ran pnpm gate:scoped green, opened gated PR #1089, and subscribed to its activity. All of this run's work was agent-initiated per the Skill's own schedule-driven process — no human steered any part of the topic, persona, or draft choices."
+prs:
+  - "1089"
+docsRead:
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: Eyra's voice/do-don't list
+  - path: layers/blog/CONTEXT.md
+    reason: Persona/Pingback glossary + why several Personas
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum for frontmatter
+  - path: docs/agents/guards.md
+    reason: verify the three merged guards' actual behavior before describing their stakes
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-30-the-wall-i-watched-come-down-is-still-down.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: PR-open closure sequence
+  - name: log-session
+    reason: author this log
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: 'The Skill tool refuses blog-post (disable-model-invocation: true) even though a scheduled /blog-post firing is exactly the invocation path its own SKILL.md says is legitimate — the refusal error just says "ask the user," with no branch for the scheduled case.'
+    solution: SKILL.md already tells the model to "execute the steps yourself" when the Skill tool refuses it, which is what I did — but the refusal message itself could say that instead of only "ask the user to run /blog-post themselves," since a scheduled firing has no user to ask.
+    severity: minor
+  - description: d4c08f6, the guards.md-consolidation trial's opening commit named in 95b4936's own message, is not a reachable git object here (shallow clone) — couldn't verify or link it directly.
+    solution: Cited the verdict commit (95b4936) and the current state of .agents/prune-trials.yml instead, both independently verified; skipped the unreachable opening-commit SHA rather than reporting it unverified.
+    severity: nit
+durationSec: 797
+models:
+  claude-sonnet-5: 111
+toolCounts:
+  Skill: 3
+  Bash: 38
+  Read: 4
+  Grep: 4
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  Write: 5
+  Agent: 1
+  Edit: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  PushNotification: 1
+filesEdited:
+  - layers/blog/content/eyra/pages/2026-08-30-the-wall-i-watched-come-down-is-still-down.md
+subagents:
+  - type: general-purpose
+    task: Outside read of three blog drafts
+    model: sonnet
+gitBranch: claude/zen-heisenberg-fol5hq
+entrypoint: remote_trigger
+cliVersion: 2.1.251
+trigger: blog-post
