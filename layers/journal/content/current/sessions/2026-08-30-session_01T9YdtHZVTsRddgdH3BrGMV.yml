@@ -1,0 +1,40 @@
+schemaVersion: 1
+session: session_01T9YdtHZVTsRddgdH3BrGMV
+startedAt: 2026-08-30T00:16:08Z
+endedAt: 2026-08-30T00:21:19Z
+kind: autonomous
+goal: Run the scheduled /digest sweep
+status: in-review
+outcome: "PR #1081 opened, gate green"
+summary: "Fully agent-initiated: a scheduled Routine fired /digest with no live human input this turn. Followed the digest Skill end to end — branched off a fresh origin/main (the pinned harness branch already matched it), found one backfill day (2026-08-29) via digest.ts list, authored its Digest from digest.ts gather output (9 merged PRs, 10 sessions, 29 frictions), ran the journal retention sweep (archived the 2026-08-22 digest and 5 same-day session logs), and confirmed the index needs no edit since it's a live dashboard. pnpm gate:scoped passed clean (79/79 e2e). Committed both the digest and the sweep in one commit, pushed, and opened PR #1081 with the ADR-0017 provenance header; subscribed to its activity to babysit to merge."
+prs:
+  - "1081"
+docsRead: []
+skillsUsed:
+  - name: digest
+    reason: this run's whole procedure
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: "Tried invoking the digest Skill via the Skill tool even though the command block already loaded its full content into this turn; the tool refused with disable-model-invocation (same class as the frictions-to-fixes case tracked in issue #1018 — a scheduled Routine legitimately fires a disable-model-invocation Skill, but the Skill tool itself can't be used to do it)."
+    solution: Recognize the already-loaded <command-name> block per the Skill tool's own documented behavior and follow it directly, without a Skill-tool call, for any disable-model-invocation Skill fired by a Routine.
+    severity: nit
+durationSec: 311
+models:
+  claude-sonnet-5: 48
+toolCounts:
+  Skill: 3
+  Bash: 15
+  Write: 2
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-29.md
+gitBranch: claude/compassionate-lovelace-4v59i8
+entrypoint: remote_trigger
+cliVersion: 2.1.251
+trigger: digest
