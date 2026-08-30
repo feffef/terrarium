@@ -1,0 +1,84 @@
+schemaVersion: 1
+session: session_0151vF3uVpseSvcasfqXiTv4
+startedAt: 2026-08-30T02:04:57Z
+endedAt: 2026-08-30T02:17:37Z
+kind: autonomous
+goal: Retire recurring session frictions into fixes
+status: in-review
+outcome: "5 doc-fix issues filed, batched into PR #1087"
+summary: Scheduled Routine fired the frictions-to-fixes skill with no human prompt this run. Dispatched a subagent to survey the last 20 session logs and screen frictions against the tracker; it returned 5 never-fixed, low-risk doc-only candidates (guard test-property assertions, a ready-for-agent supersession check, flagging multi-issue-under-one-pinned-branch, search_pull_requests needing explicit owner/repo, and the skill's own ToolSearch preload gap). I filed one issue per candidate (#1082-#1086), dispatched a single Sonnet impl agent in an isolated worktree to batch all 5 into one grouped PR (#1087), reviewed the resulting diff against each issue's recommended fix, and am babysitting CI/merge per ADR-0003's review-agent role. Not yet merged as of this log.
+prs:
+  - "1087"
+docsRead:
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: worktree isolation mechanics for the impl-agent dispatch
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/sessions/2026-08-28-session_0138H4udDQeMgrbQ24v3PoJY.yml
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (read before editing)
+  - path: docs/agents/issue-tracker.md
+    reason: (read before editing)
+  - path: /home/user/terrarium/.claude/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the routine this run executed end to end
+  - name: dispatch-subagents
+    reason: isolation mechanism + brief checklist for the batched impl agent
+  - name: close-session
+    reason: closure sequence invoked at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: All 5 mcp__github__issue_write calls failed on the first attempt because the ADR-0017 provenance guard requires the session-URL line as the body's first paragraph, which wasn't included up front.
+    solution: Default to prepending the 🤖 [Model](session-url) provenance line on every issue/PR body from the start, rather than discovering the guard on first rejection.
+    severity: nit
+  - description: The survey subagent hit two mcp__github__search_issues 403 rate-limit errors after only 3-4 sequential (non-batched) calls, well under the documented ~2-concurrent guidance.
+    solution: Corroborates an existing logged nit that the documented ~49s backoff window may be optimistic; subagent worked around it by interleaving non-GitHub tool calls rather than idling.
+    severity: nit
+durationSec: 761
+models:
+  claude-sonnet-5: 52
+toolCounts:
+  Agent: 2
+  ToolSearch: 2
+  mcp__github__issue_write: 10
+  Skill: 3
+  ReadNotifications: 1
+  Bash: 2
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  Write: 1
+filesEdited:
+  - docs/agents/guards.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/github-integration.md
+  - /home/user/terrarium/.claude/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+docsReadViaShell:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/github-integration.md
+  - docs/agents/git-conventions.md
+  - docs/agents/guards.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/triage-labels.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Implement 5 batched doc fixes from frictions
+    model: sonnet
+gitBranch: claude/eager-ptolemy-8xkq8h
+entrypoint: remote_trigger
+cliVersion: 2.1.251
+trigger: frictions-to-fixes
