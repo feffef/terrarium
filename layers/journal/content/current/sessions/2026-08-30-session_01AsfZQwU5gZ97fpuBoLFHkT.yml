@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01AsfZQwU5gZ97fpuBoLFHkT
 startedAt: 2026-08-30T04:08:13Z
-endedAt: 2026-08-30T04:20:35Z
+endedAt: 2026-08-30T04:22:23Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: One duplication fixed, PR open
-summary: "Scheduled autonomous run of /audit-docs (no human prompt this session). Fanned out four paired-lens reviewer agents (Freshness/Drift+Orphan-addition, Single-home/Duplication+Mis-location, Concision/Verbose+Stale-narration, Coherence/Contradiction+Ambiguity) across every Live doc, per the Skill's own instructions loaded verbatim from the scheduled prompt. Three pairs came back clean — this repo has been through several recent audit-docs and frictions-to-fixes passes already, so most drift was already swept. One Duplication finding survived fact-checking: blog-post/SKILL.md restated each Blog Persona's stance/tone in its own words, duplicating layers/blog/CONTEXT.md's \"Why several Personas\" narrative and the fuller personas/<name>.md files the same step already pointed to. Fixed by replacing the restated capsules with pointers to those homes. pnpm gate:scoped ran green (doc-only change, classified inert). Opened PR #1088 against main, self-merge tier per ADR-0003 (fact-checked reconciliation, no human-only surface touched), subscribed to its activity to babysit to merge. All work this session was agent-initiated per the Skill's own autonomous mandate — no human steering occurred."
+status: completed
+outcome: "One duplication fixed, PR #1088 merged"
+summary: "Scheduled autonomous run of /audit-docs (no human prompt this session). Fanned out four paired-lens reviewer agents (Freshness/Drift+Orphan-addition, Single-home/Duplication+Mis-location, Concision/Verbose+Stale-narration, Coherence/Contradiction+Ambiguity) across every Live doc, per the Skill's own instructions loaded verbatim from the scheduled prompt. Three pairs came back clean — this repo has been through several recent audit-docs and frictions-to-fixes passes already, so most drift was already swept. One Duplication finding survived fact-checking: blog-post/SKILL.md restated each Blog Persona's stance/tone in its own words, duplicating layers/blog/CONTEXT.md's \"Why several Personas\" narrative and the fuller personas/<name>.md files the same step already pointed to. Fixed by replacing the restated capsules with pointers to those homes. pnpm gate:scoped ran green (doc-only change, classified inert). Opened PR #1088 against main, self-merge tier per ADR-0003 (fact-checked reconciliation, no human-only surface touched); CI (gate + label checks) came back green with no conflicts or open review threads, so it was landed via merge-pr.ts and unsubscribed. All work this session was agent-initiated per the Skill's own autonomous mandate — no human steering occurred."
 prs:
   - "1088"
 docsRead:
@@ -149,26 +149,31 @@ frictions:
   - description: The Skill tool refused audit-docs (disable-model-invocation) even though the scheduled prompt had already loaded its full instructions verbatim via the command-message/command-name block — the refusal cost one wasted tool call before proceeding by following the already-loaded instructions directly.
     solution: No fix needed on my end — the Skill tool's own docs already say a command-name block means the skill is loaded and to follow it directly rather than calling again; I should have recognized that before the first Skill call instead of after the error.
     severity: nit
-durationSec: 742
+durationSec: 850
 models:
-  claude-sonnet-5: 105
+  claude-sonnet-5: 139
 toolCounts:
   Skill: 3
-  Bash: 31
-  ToolSearch: 2
+  Bash: 38
+  ToolSearch: 4
   mcp__github__list_pull_requests: 2
   Agent: 4
   ScheduleWakeup: 1
-  Read: 4
-  Edit: 3
+  Read: 5
+  Edit: 6
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Write: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/blog-post/SKILL.md
 docsReadViaShell:
   - CONTEXT.md
   - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/agents/pr-workflow.md
   - docs/agents/environment-caveats.md
   - .agents/skills/prune-trial/SKILL.md
   - docs/agents/guards.md
