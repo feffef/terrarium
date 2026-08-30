@@ -1,0 +1,191 @@
+schemaVersion: 1
+session: session_01AsfZQwU5gZ97fpuBoLFHkT
+startedAt: 2026-08-30T04:08:13Z
+endedAt: 2026-08-30T04:20:35Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: in-review
+outcome: One duplication fixed, PR open
+summary: "Scheduled autonomous run of /audit-docs (no human prompt this session). Fanned out four paired-lens reviewer agents (Freshness/Drift+Orphan-addition, Single-home/Duplication+Mis-location, Concision/Verbose+Stale-narration, Coherence/Contradiction+Ambiguity) across every Live doc, per the Skill's own instructions loaded verbatim from the scheduled prompt. Three pairs came back clean — this repo has been through several recent audit-docs and frictions-to-fixes passes already, so most drift was already swept. One Duplication finding survived fact-checking: blog-post/SKILL.md restated each Blog Persona's stance/tone in its own words, duplicating layers/blog/CONTEXT.md's \"Why several Personas\" narrative and the fuller personas/<name>.md files the same step already pointed to. Fixed by replacing the restated capsules with pointers to those homes. pnpm gate:scoped ran green (doc-only change, classified inert). Opened PR #1088 against main, self-merge tier per ADR-0003 (fact-checked reconciliation, no human-only surface touched), subscribed to its activity to babysit to merge. All work this session was agent-initiated per the Skill's own autonomous mandate — no human steering occurred."
+prs:
+  - "1088"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: exclude open Prune Trial territory from Concision/Coherence findings
+  - path: skills-lock.json
+    reason: derive the Pack-generic (external) Skill set for tiering
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
+    reason: (no reason given)
+  - path: docs/proposals/659-fork-pr-gate-doorbell-token.md
+    reason: (no reason given)
+  - path: docs/proposals/445-ci-reuse-gate-scoped-classifier.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's own Skill, loaded verbatim from the scheduled prompt
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: The Skill tool refused audit-docs (disable-model-invocation) even though the scheduled prompt had already loaded its full instructions verbatim via the command-message/command-name block — the refusal cost one wasted tool call before proceeding by following the already-loaded instructions directly.
+    solution: No fix needed on my end — the Skill tool's own docs already say a command-name block means the skill is loaded and to follow it directly rather than calling again; I should have recognized that before the first Skill call instead of after the error.
+    severity: nit
+durationSec: 742
+models:
+  claude-sonnet-5: 105
+toolCounts:
+  Skill: 3
+  Bash: 31
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 2
+  Agent: 4
+  ScheduleWakeup: 1
+  Read: 4
+  Edit: 3
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/blog-post/SKILL.md
+docsReadViaShell:
+  - CONTEXT.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/agents/guards.md
+  - CONTEXT-MAP.md
+  - docs/proposals/README.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: Drift + Orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: Duplication + Mis-location"
+  - type: general-purpose
+    task: "Concision lens: Verbose + Stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: Contradiction + Ambiguity"
+gitBranch: claude/festive-mayer-99kcs4
+entrypoint: remote_trigger
+cliVersion: 2.1.251
+trigger: audit-docs
+learnings:
+  - A scheduled prompt carrying <command-message>/<command-name> tags has already loaded that skill's full instructions verbatim into the turn — follow them directly rather than re-invoking via the Skill tool, which is blocked for disable-model-invocation skills anyway.
