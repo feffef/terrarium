@@ -78,7 +78,8 @@ Its brief:
 - **GitHub-MCP hygiene** (these are themselves recurring frictions — heed them):
   call the tools by their **fully-qualified `mcp__github__*` names** (bare names
   don't resolve via ToolSearch). Call `ToolSearch` for the `mcp__github__*` tools
-  you'll need (e.g. `select:mcp__github__search_issues,mcp__github__search_pull_requests`)
+  you'll need (e.g. `select:mcp__github__search_issues,mcp__github__search_pull_requests,mcp__github__issue_read,mcp__github__pull_request_read`
+  — the §2 nearby-issue eyeball step needs the read tools too)
   **before** your first call to any of them — don't rely on a bare name resolving.
   See `docs/agents/github-integration.md` for the
   `list_issues`/`search_issues` pagination and overflow guidance — it applies

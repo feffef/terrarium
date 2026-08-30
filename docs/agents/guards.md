@@ -40,6 +40,15 @@ issue below rather than rephrasing the call until it passes.
   a branch by hand.
 - **Human-only to merge** (ADR-0004, 2026-07-30). Unit tests don't clear that
   bar: what they cannot observe is the *live* interception.
+- **A unit test must assert the underlying property, not a handful of
+  hand-picked substring fixtures.** A regex built on a negated character class
+  can match across newlines, letting an unrelated verb on one line accidentally
+  deny an unrelated action on the next — 26 passing tests gave no signal
+  because every one of them asserted against single-line substrings, never the
+  multi-line property actually at risk. Cover multi-line and adversarial
+  inputs, and live-probe the real deny path once before trusting the suite as
+  sufficient — the "Human-only to merge" bullet above is exactly why a test
+  alone can't be the whole story.
 
 ## Extending one
 

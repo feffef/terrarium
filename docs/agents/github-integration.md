@@ -103,6 +103,10 @@ catch the mistake in practice.
 - **Batching more than ~2 concurrent `search_issues`/`search_pull_requests`
   calls can hit a 403 rate limit.** Cap parallel calls at ~2; on a 403, retry
   sequentially after a short backoff (~49s) rather than re-batching (issue #952).
+- **`search_pull_requests` requires explicit `owner`/`repo` parameters** —
+  unlike `search_issues`, it does not scope to the current repo implicitly.
+  Omitting them searches across all of GitHub, returning cross-repo noise
+  (`total_count` in the hundreds or thousands) and risking an oversized result.
 - **`issue_read`/`pull_request_read` bodies come back HTML-entity-encoded.**
   `&`, `"`, `'`, `<`, `>` arrive as `&amp;`, `&#34;`, `&#39;`, `&lt;`, `&gt;` —
   decode before quoting the text elsewhere (a comment, a commit message) or

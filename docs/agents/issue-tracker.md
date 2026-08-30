@@ -34,6 +34,19 @@ tool surface.
   a proposal can quietly ship anyway (via a different issue or PR) while it's
   still open and unlabeled, and the redundancy check is exactly what catches
   that. Check both, every time, even when an issue looks obviously pending.
+- **Before implementing a `ready-for-agent` issue, check for supersession —
+  not just that the issue's named target artifact doesn't already exist.**
+  Search for a merged PR or commit that already addressed the issue a
+  different way (`scripts/merged-since.ts`, or a tracker search), and check
+  whether the issue's territory overlaps an open Prune Trial
+  (`.agents/prune-trials.yml`, ADR-0027) — implementing over a trial
+  re-legislates the prose the trial is still weighing. A missing target file
+  is not the only way an issue goes stale.
+- **A session picking up more than one issue under a single caller-pinned
+  branch (CLAUDE.md's branch-pin checklist) should flag that packaging
+  constraint upfront and ask whether separate branches are allowed** — rather
+  than silently bundling unrelated issues into one PR and discovering the
+  objection only after push.
 - **Create an issue**: `gh issue create --title "..." --body "..."`. Use a heredoc for multi-line bodies.
 - **Read an issue**: `gh issue view <number> --comments`, filtering comments by `jq` and also fetching labels.
 - **List issues**: `gh issue list --state open --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'` with appropriate `--label` and `--state` filters.
