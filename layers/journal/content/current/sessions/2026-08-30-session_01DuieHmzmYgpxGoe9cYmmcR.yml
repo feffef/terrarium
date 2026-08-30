@@ -1,0 +1,97 @@
+schemaVersion: 1
+session: session_01DuieHmzmYgpxGoe9cYmmcR
+startedAt: 2026-08-30T13:11:43Z
+endedAt: 2026-08-30T13:28:44Z
+kind: autonomous
+goal: Run scheduled /prune-trial maintenance
+status: completed
+outcome: "One new trial opened, PR #1090 merged"
+summary: Scheduled, unattended /prune-trial run. Judged the three open trials first (scripts/prune-trial-window.ts) — none had reached their judgeable-from floor yet, so nothing closed this run. Dispatched a research subagent to survey docs/research/rulebook-migration-table.md for the largest prunable prose-mass problem outside the three open trials' territory; it found that five chartered Skills (audit-docs, audit-skills, blog-post, digest, frictions-to-fixes) each re-derived docs/agents/pr-workflow.md's own landing mechanics near-verbatim in their self-merge steps, even though that doc exists specifically so other docs can point rather than restate, and the mechanics are already Built (scripts/merge-pr.ts). Collapsed each Skill's restatement to one pointer line, keeping only genuinely Skill-specific tier rationale and escalation conditions (-13 net lines). Proved the collapsed text on a fresh Sonnet subagent (§4) before shipping — it correctly deferred to pr-workflow.md and got every mechanic right. Gate green, check-conflicting-issues.ts's one hit read and ruled a false positive (#976, unrelated topic in the same file), verdict comment posted, and merged via merge-pr.ts (prune-trial's own self-merge-on-green tier). Entirely agent-initiated; no human was present (this is a scheduled routine).
+prs:
+  - "1090"
+docsRead:
+  - path: docs/research/rulebook-migration-table.md
+    reason: finding the prunable problem
+  - path: docs/agents/pr-workflow.md
+    reason: confirming it's the correct single home
+  - path: .agents/prune-trials.yml
+    reason: judging open trials + recording the new one
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: this run's own procedure
+  - name: close-session
+    reason: PR-open closure point
+  - name: log-session
+    reason: recording this log
+frictions:
+  - description: "Called ScheduleWakeup to bridge a background research-agent dispatch, mistaking this scheduled task for a /loop session; the loop-only-tool guard correctly refused it (issue #814)."
+    solution: Dispatched agents self-notify on completion — no wait/poll tool is needed at all outside /loop. Recognized this immediately from the guard's own error message and proceeded without it.
+    severity: nit
+durationSec: 1021
+models:
+  claude-sonnet-5: 107
+toolCounts:
+  Bash: 22
+  Read: 12
+  Grep: 3
+  Agent: 2
+  ScheduleWakeup: 1
+  Edit: 8
+  ToolSearch: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/prune-trials.yml
+docsReadViaShell:
+  - docs/agents/guards.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/github-integration.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/tenant-layers.md
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/guest-contributions.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/guest-intake/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Find largest prunable prose-mass rule
+  - type: general-purpose
+    task: Prove prune is executable by Sonnet
+    model: sonnet
+gitBranch: claude/practical-rubin-5wfhws
+entrypoint: remote_trigger
+cliVersion: 2.1.251
+trigger: prune-trial
+ideas:
+  - prune-trial's own §2 candidate-search (grep the corpus for a Built row's origin doc still narrating full incident history) is expensive to do by hand every run — a small script that cross-references rulebook-migration-table.md's Built rows against each Home doc's current line count could shortlist candidates automatically, rather than requiring a dispatched research subagent each time.
