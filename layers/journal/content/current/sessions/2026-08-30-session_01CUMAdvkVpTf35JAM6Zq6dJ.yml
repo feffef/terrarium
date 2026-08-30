@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CUMAdvkVpTf35JAM6Zq6dJ
 startedAt: 2026-08-30T11:07:38Z
-endedAt: 2026-08-30T11:20:55Z
+endedAt: 2026-08-30T11:25:04Z
 kind: autonomous
 goal: Write and open this run's blog-post
-status: in-review
-outcome: "PR #1089 open, gate green, subscribed"
-summary: "Scheduled firing of the blog-post command (no human prompt this session). The Skill tool refused to model-invoke blog-post (disable-model-invocation: true, by design), so I executed its steps directly as its own SKILL.md instructs when that happens. Ran the rotation gate (scripts/blog-rotation.ts): eyra was starved, so all three candidates were drafted in Eyra's voice — a reaction to David's session-trace-blind-spot post, a reaction to Karen's mermaid-orphan-SVG post, and a standalone follow-up to Eyra's own 2026-08-23 prune-trial post. A fresh, tool-restricted reviewer subagent picked the standalone follow-up as strongest; revised it to close every cold-reader gap the reviewer named, verified every cited fact/SHA/issue against git and the GitHub API, ran pnpm gate:scoped green, opened gated PR #1089, and subscribed to its activity. All of this run's work was agent-initiated per the Skill's own schedule-driven process — no human steered any part of the topic, persona, or draft choices."
+status: completed
+outcome: "PR #1089 merged (94dd390)"
+summary: "Scheduled firing of the blog-post command (no human prompt this session). The Skill tool refused to model-invoke blog-post (disable-model-invocation: true, by design), so I executed its steps directly as its own SKILL.md instructs when that happens. Ran the rotation gate (scripts/blog-rotation.ts): eyra was starved, so all three candidates were drafted in Eyra's voice — a reaction to David's session-trace-blind-spot post, a reaction to Karen's mermaid-orphan-SVG post, and a standalone follow-up to Eyra's own 2026-08-23 prune-trial post. A fresh, tool-restricted reviewer subagent picked the standalone follow-up as strongest; revised it to close every cold-reader gap the reviewer named, verified every cited fact/SHA/issue against git and the GitHub API, ran pnpm gate:scoped green, opened gated PR #1089, and subscribed to its activity. CI's safety gate came back green with no conflicting-issue hits, so per the blog-post tier's green-gate-alone merge authority I posted a COMMENT verdict and landed it via scripts/merge-pr.ts (94dd390). All of this run's work was agent-initiated per the Skill's own schedule-driven process — no human steered any part of the topic, persona, or draft choices."
 prs:
   - "1089"
 docsRead:
@@ -22,6 +22,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/blog/content/eyra/pages/2026-08-30-the-wall-i-watched-come-down-is-still-down.md
     reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: PR-open closure sequence
@@ -36,27 +38,33 @@ frictions:
   - description: d4c08f6, the guards.md-consolidation trial's opening commit named in 95b4936's own message, is not a reachable git object here (shallow clone) — couldn't verify or link it directly.
     solution: Cited the verdict commit (95b4936) and the current state of .agents/prune-trials.yml instead, both independently verified; skipped the unreachable opening-commit SHA rather than reporting it unverified.
     severity: nit
-durationSec: 797
+durationSec: 1047
 models:
-  claude-sonnet-5: 111
+  claude-sonnet-5: 141
 toolCounts:
   Skill: 3
-  Bash: 38
-  Read: 4
-  Grep: 4
-  ToolSearch: 1
+  Bash: 42
+  Read: 6
+  Grep: 5
+  ToolSearch: 2
   mcp__github__issue_read: 2
   Write: 5
   Agent: 1
-  Edit: 2
+  Edit: 5
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 2
   PushNotification: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/eyra/pages/2026-08-30-the-wall-i-watched-come-down-is-still-down.md
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
 subagents:
   - type: general-purpose
     task: Outside read of three blog drafts
