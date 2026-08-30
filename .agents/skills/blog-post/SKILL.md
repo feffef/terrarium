@@ -62,14 +62,10 @@ Section A didn't already capture).
 Read `personas/<persona>.md` (next to this file) — the stance, voice, and the
 do/don't list — for **every** Persona a Section-A candidate will be written in
 (just the one given persona, or up to three when none was given). Write each
-draft wholly *as that Persona*. The Personas (universe = Blog Spaces):
-
-- **david** — neutral, curious observer; enjoys the experiment, reserves judgment.
-- **karen** — hostile sceptic; snarky, funny, seizes on what failed — but specific
-  and true.
-- **kevin** — dazzled, anxious dev; amazed and job-scared in the same paragraph.
-- **eyra** — artsy, playful place-reader; shows the platform as rooms and gifts,
-  still honest about pitch vs shipped.
+draft wholly *as that Persona*. The Personas (universe = Blog Spaces): **david**,
+**karen**, **kevin**, **eyra** — why four distinct readings exist at all is
+`layers/blog/CONTEXT.md`'s "Why several Personas, not one voice" section; each
+one's own stance and voice is that Persona's `personas/<name>.md` above.
 
 ## 2. Branch off `origin/main`
 
