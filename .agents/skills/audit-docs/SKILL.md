@@ -259,10 +259,8 @@ Commit the fixes (one run rides one commit/PR), push with retry, and open **one
 gated PR** listing what was fixed and any issue filed. **This PR self-merges on a
 green gate** (ADR-0003 amendment) — the reconciliations are fact-checked and
 touch no human-only surface, so this is ADR-0004's low-risk content tier (a
-second, bounded grant of the same kind as `digest`'s). **Subscribe to the PR's
-activity right after opening it** and follow `docs/agents/pr-workflow.md`'s
-recipe (`scripts/merge-pr.ts` as the sole merge path) to land it once the gate
-reports green — a red gate simply never merges (see below). Leave a one-line
+second, bounded grant of the same kind as `digest`'s). Subscribe on open and
+land via `docs/agents/pr-workflow.md`'s recipe once green. Leave a one-line
 PR comment as the audit trail.
 
 **Keep human-only-surface fixes out of this PR — those escalate instead.** A fix

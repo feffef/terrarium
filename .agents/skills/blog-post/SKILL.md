@@ -272,13 +272,9 @@ under `layers/blog/content/<target>/pingbacks/` — and its editorial judgement 
 already spent in the A5 outside-read, so the merge decision is safely delegated to
 the objective gate:
 
-- **Subscribe to the PR's activity right after opening it** and follow
-  `docs/agents/pr-workflow.md`'s recipe (`scripts/merge-pr.ts` as the sole
-  merge path — never `enable_pr_auto_merge`) to land it once the gate reports
-  green.
-- A **red gate is never merged** — diagnose and fix on the branch, then re-run
-  `merge-pr.ts` once it's green, or, if the failure isn't the post's fault,
-  leave the PR open and escalate to a human.
+- Subscribe on open and land via `docs/agents/pr-workflow.md`'s recipe once
+  green; if the failure isn't the post's fault, leave the PR open and
+  escalate to a human instead.
 - If anything **outside the blog-content scope** above rode into the PR, do
   **not** run `merge-pr.ts` — leave it open for human review (ADR-0003's default).
 
