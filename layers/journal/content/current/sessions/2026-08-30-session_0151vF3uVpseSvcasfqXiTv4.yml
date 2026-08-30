@@ -1,17 +1,19 @@
 schemaVersion: 1
 session: session_0151vF3uVpseSvcasfqXiTv4
 startedAt: 2026-08-30T02:04:57Z
-endedAt: 2026-08-30T02:17:37Z
+endedAt: 2026-08-30T02:20:57Z
 kind: autonomous
 goal: Retire recurring session frictions into fixes
-status: in-review
-outcome: "5 doc-fix issues filed, batched into PR #1087"
-summary: Scheduled Routine fired the frictions-to-fixes skill with no human prompt this run. Dispatched a subagent to survey the last 20 session logs and screen frictions against the tracker; it returned 5 never-fixed, low-risk doc-only candidates (guard test-property assertions, a ready-for-agent supersession check, flagging multi-issue-under-one-pinned-branch, search_pull_requests needing explicit owner/repo, and the skill's own ToolSearch preload gap). I filed one issue per candidate (#1082-#1086), dispatched a single Sonnet impl agent in an isolated worktree to batch all 5 into one grouped PR (#1087), reviewed the resulting diff against each issue's recommended fix, and am babysitting CI/merge per ADR-0003's review-agent role. Not yet merged as of this log.
+status: completed
+outcome: "5 doc-fix issues filed and merged via PR #1087"
+summary: "Scheduled Routine fired the frictions-to-fixes skill with no human prompt this run. Dispatched a subagent to survey the last 20 session logs and screen frictions against the tracker; it returned 5 never-fixed, low-risk doc-only candidates (guard test-property assertions, a ready-for-agent supersession check, flagging multi-issue-under-one-pinned-branch, search_pull_requests needing explicit owner/repo, and the skill's own ToolSearch preload gap). I filed one issue per candidate (#1082-#1086), dispatched a single Sonnet impl agent in an isolated worktree to batch all 5 into one grouped PR (#1087), reviewed the diff against each issue's recommended fix, eyeballed 3 false-positive advisory conflict hits from check-conflicting-issues.ts, posted the review verdict as a PR comment, and merged via scripts/merge-pr.ts (which self-healed one issue #1082's auto-close miss). All 5 issues confirmed closed."
 prs:
   - "1087"
 docsRead:
   - path: .claude/skills/dispatch-subagents/SKILL.md
     reason: worktree isolation mechanics for the impl-agent dispatch
+  - path: docs/agents/pr-workflow.md
+    reason: the land-a-gated-PR recipe (merge-pr.ts as sole merge path)
   - path: .claude/skills/frictions-to-fixes/SKILL.md
     reason: (no reason given)
   - path: docs/agents/git-conventions.md
@@ -34,7 +36,7 @@ skillsUsed:
   - name: dispatch-subagents
     reason: isolation mechanism + brief checklist for the batched impl agent
   - name: close-session
-    reason: closure sequence invoked at PR-open
+    reason: closure sequence invoked at PR-open, then finalized on merge
   - name: log-session
     reason: author this log
 frictions:
@@ -44,19 +46,23 @@ frictions:
   - description: The survey subagent hit two mcp__github__search_issues 403 rate-limit errors after only 3-4 sequential (non-batched) calls, well under the documented ~2-concurrent guidance.
     solution: Corroborates an existing logged nit that the documented ~49s backoff window may be optimistic; subagent worked around it by interleaving non-GitHub tool calls rather than idling.
     severity: nit
-durationSec: 761
+durationSec: 960
 models:
-  claude-sonnet-5: 52
+  claude-sonnet-5: 79
 toolCounts:
   Agent: 2
   ToolSearch: 2
   mcp__github__issue_write: 10
   Skill: 3
-  ReadNotifications: 1
-  Bash: 2
-  mcp__github__pull_request_read: 3
+  ReadNotifications: 2
+  Bash: 5
+  mcp__github__pull_request_read: 4
   mcp__Claude_Code_Remote__send_later: 1
-  Write: 1
+  Write: 2
+  Read: 1
+  mcp__github__issue_read: 7
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/agents/guards.md
   - docs/agents/issue-tracker.md
