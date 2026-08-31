@@ -53,7 +53,10 @@ import { provenanceHeader, readProvenanceHeader, sessionIdsIn } from './provenan
 import { resolveGroundTruthFromTranscript } from './session-id-guard.ts'
 
 const LABEL = 'provenance guard'
-const REF = 'ADR-0017'
+// The dated amendment, not just the ADR: this guard's fail-closed posture is a
+// deliberate 2026-08-01 policy flip, not the default — the citation is worth
+// keeping in the one message this guard can still show without ground truth.
+const REF = 'ADR-0017, 2026-08-01'
 
 /** A global copy of `SESSION_TRAILER` for `matchAll` — the last-match rule needs
  *  every occurrence (issue #692). Built locally rather than adding the `g` flag
