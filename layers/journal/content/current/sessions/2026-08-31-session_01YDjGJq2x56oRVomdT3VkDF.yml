@@ -1,0 +1,100 @@
+schemaVersion: 1
+session: session_01YDjGJq2x56oRVomdT3VkDF
+startedAt: 2026-08-31T13:23:26Z
+endedAt: 2026-08-31T13:42:13Z
+kind: autonomous
+goal: Run the scheduled /prune-trial sweep
+status: in-review
+outcome: "Judged pkill trial (holds); opened new prune PR #1097"
+summary: "Fully agent-initiated scheduled run, no human prompt. Judged the one judgeable open trial (CLAUDE.md's pkill-teardown bullet, landed 2026-08-28): checked frictions logged since landing across all 20 sessions, found one minor, non-attributable hit, so the prune holds per the trial's own bright line. Deleted that ledger entry. Chose a new prune candidate via a background research agent that thoroughly scanned docs/research/rulebook-migration-table.md's \"Built\" rows for redundant incident narration already covered by a mechanism; every candidate except CLAUDE.md's GitHub-provenance bullet was already a tight pointer. Compressed that bullet's mechanism narration (-5 net lines), proved it on a fresh Sonnet subagent (correct on both probe scenarios), recorded the new trial entry, ran pnpm gate:scoped clean, and opened PR #1097 (subscribed to its activity)."
+prs:
+  - "1097"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: judge open trials + append new one
+  - path: docs/research/rulebook-migration-table.md
+    reason: candidate search for criterion-1 prunes
+  - path: docs/agents/guards.md
+    reason: verify the mechanism the pruned prose duplicated
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: confirm CLAUDE.md is the header rule's assigned home
+  - path: docs/agents/git-conventions.md
+    reason: evaluate as an alternate prune-mass candidate
+  - path: docs/agents/github-integration.md
+    reason: evaluate as an alternate prune-mass candidate
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: this run's own skill
+  - name: dispatch-subagents
+    reason: not directly invoked (chartered-Skill single-step search/probe dispatches, judged low-risk); noting the gap honestly
+  - name: close-session
+    reason: PR-open closure point
+  - name: log-session
+    reason: this log
+frictions:
+  - description: The criterion-1 ("prose that already failed, now mechanized") search came back with only a ~5-line real cut after a thorough background-agent scan, well short of the skill's "around 100 lines" typical bar. Moving to criterion 2 (prose mass) risked cutting genuinely load-bearing judgment-only (unmechanized) guidance with no backstop, which the skill itself flags as the riskiest kind of prune.
+    solution: Shipped the smaller, safe, criterion-1 cut rather than force a larger criterion-2/3 one under time pressure. If this keeps happening on future runs, the ~100-line expectation may need recalibrating now that the easy criterion-1 backlog (pkill, ADR-0009 index, environment-caveats enumeration, this provenance bullet) is mostly cleared.
+    severity: nit
+durationSec: 1128
+models:
+  claude-sonnet-5: 114
+toolCounts:
+  Skill: 3
+  Bash: 28
+  Read: 8
+  ToolSearch: 4
+  mcp__github__search_issues: 1
+  Edit: 4
+  Grep: 3
+  Agent: 2
+  ScheduleWakeup: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - CLAUDE.md
+docsReadViaShell:
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/agents/git-conventions.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+subagents:
+  - type: Explore
+    task: Find prunable over-narrated rule prose
+  - type: general-purpose
+    task: Probe pruned CLAUDE.md provenance bullet
+    model: sonnet
+gitBranch: claude/practical-rubin-o8uj3z
+entrypoint: remote_trigger
+cliVersion: 2.1.251
+trigger: prune-trial
+ideas:
+  - "The recurring pattern across the last several prune-trial runs is that criterion-1 candidates are drying up (this run's background search found nothing bigger than 5 lines). Worth a standing note in the prune-trial Skill itself: once criterion-1 is thin, criterion-2 candidates need an explicit extra caution step (e.g. require the row be class J with a documented backstop before cutting, not just 'most words spent') so future runs don't feel pressured to hit a line-count target by cutting real guidance."
