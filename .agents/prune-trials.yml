@@ -65,36 +65,6 @@ trials:
       intended single-home behavior working), or a Skill's own tier-specific
       escalation bullet (kept, untouched) doing its job.
   - problem: >
-      Two CLAUDE.md bullets (17 lines) narrated the pkill-teardown regression's
-      internal mechanism at length — a separate "two failure modes" breakdown for
-      chained kills, and the exit-code-144 arithmetic spelled out in full — where
-      one merged bullet says the same rule (never hand-roll a `pkill` teardown,
-      never chain a process-kill before steps that must run) with the same
-      load-bearing why (self-match risk; other agents' servers in a shared
-      container; a chained kill drops trailing steps silently) in about half the
-      space, pointing at the issue chain instead of re-deriving it.
-    territory:
-      paths:
-        - "CLAUDE.md: the pkill/process-teardown bullet"
-      keywords:
-        - pkill
-        - preview.ts
-        - process-killing teardown
-        - SIGTERM
-        - exit code 144
-    opened: 2026-08-26
-    check: >
-      Damage is a session that hand-rolls a `pkill -f` teardown and corrupts
-      another agent's server or its own chain (the failure the surviving text
-      still names as the reason not to), or that chains a process-kill with
-      `&&`/`;` and doesn't notice a step after it silently never ran, or that
-      sees a killed process report exit 144 and misreads it as a fresh failure
-      instead of the expected result of a successful kill.
-      NOT damage: a session using `scripts/preview.ts` correctly; a session that
-      hits exit 144 and correctly reads it as the kill having worked (that's the
-      surviving text doing its job); a session citing the merged bullet instead
-      of the old two.
-  - problem: >
       ADR-0009's own amendment history was stated 2-3 times over: a compressed
       blurb for each amendment in a top-of-file blockquote index, the same fact
       restated in full at that amendment's own section below, and — for the
