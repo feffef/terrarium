@@ -1,0 +1,48 @@
+schemaVersion: 1
+session: session_01NcYLknFpguLS4cKGPSmCqe
+startedAt: 2026-08-31T00:16:51Z
+endedAt: 2026-08-31T00:23:37Z
+kind: autonomous
+goal: Run the scheduled /digest sweep
+status: in-review
+outcome: "PR #1091 opened, awaiting gate"
+summary: "Scheduled autonomous run of /digest, no human prompt for any step. Authored the 2026-08-30 Digest from scripts/digest.ts's gathered data (5 merged PRs, 6 completed sessions, 7 frictions). Ran the retention archive sweep, which hit a real data-integrity bug mid-run: scripts/archive-journal-content.ts fatal-erred because the 2026-08-15 session log already existed in both current (amended, completed status) and archived (stale, in-review status) -- apparently log-session re-wrote an amended copy into current on a later resume without checking the file had already been archived by an earlier sweep. Confirmed via git history and a full current/archived filename diff that this was the only such collision. Removed the stale archived copy, kept the amended current version, and re-ran the sweep, which then completed cleanly (10 session logs + 1 digest archived). pnpm gate:scoped passed (79/79 e2e). Opened PR #1091 and subscribed to its activity."
+prs:
+  - "1091"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-08-29.md
+    reason: style reference for the new Digest's prose/footer format
+skillsUsed:
+  - name: digest
+    reason: (invoked as a slash command)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: scripts/archive-journal-content.ts has no handling for a session log that was archived once, then later amended by log-session back into current -- it just fatal-errors on the git mv collision instead of detecting/resolving the staleness.
+    solution: Teach archive-journal-content.ts to detect a same-named file already in archived/, compare content (e.g. endedAt/status), and either overwrite the stale archived copy or skip with a clear warning, rather than a bare git mv fatal error.
+    severity: moderate
+  - description: "Called the Skill tool on 'digest' even though the scheduled prompt's command-name block had already loaded the skill's full instructions verbatim into this turn -- refused with disable-model-invocation, same recurring class as issue #1018 and yesterday's own digest run."
+    solution: Recognize a present <command-name> block as 'skill already loaded, follow directly' before reaching for the Skill tool again -- CLAUDE.md/Skill-tool docs already say this, just missed it once more.
+    severity: nit
+durationSec: 405
+models:
+  claude-sonnet-5: 61
+toolCounts:
+  Skill: 3
+  Bash: 19
+  Read: 1
+  Write: 2
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Edit: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-30.md
+gitBranch: claude/compassionate-lovelace-x344ul
+entrypoint: remote_trigger
+cliVersion: 2.1.251
+trigger: digest
