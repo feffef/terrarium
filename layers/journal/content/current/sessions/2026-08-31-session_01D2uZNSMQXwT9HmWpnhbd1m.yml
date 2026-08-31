@@ -1,0 +1,74 @@
+schemaVersion: 1
+session: session_01D2uZNSMQXwT9HmWpnhbd1m
+startedAt: 2026-08-31T02:05:17Z
+endedAt: 2026-08-31T02:24:06Z
+kind: autonomous
+goal: Run frictions-to-fixes end to end
+status: completed
+outcome: 1 fix merged, 1 regression escalated
+summary: "A scheduled Routine fired /frictions-to-fixes with no human prompt this turn. Dispatched a survey subagent to read the last 20 session logs and screen frictions against the tracker; it returned two never-fixed candidates. One (GitHub search_issues/search_pull_requests still hitting 403s despite issue #952's documented backoff, recurring in sessions that started after that fix merged) was a regression per the skill's rule — filed as issue #1092 and escalated to the human via a push notification instead of dispatching a fix, since the same idea already failed once. The other (scripts/archive-journal-content.ts fatal-erroring on a git-mv collision when a session log is archived then later amended back into current, moderate severity) was filed as issue #1093 with a single named recommended fix, dispatched to a Sonnet impl agent in an isolated worktree, reviewed (diff matched the recommendation, included a regression test, gate green, mergeable clean, one advisory conflicting-issue hit eyeballed and dismissed as unrelated), and merged via scripts/merge-pr.ts as PR #1094 (closed #1093). No human-only surface was touched. Every step — issue filing, dispatch, review, merge, escalation — was agent-initiated per the frictions-to-fixes Skill; no human was in the loop this turn."
+prs:
+  - "1094"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: the land-a-gated-PR recipe (merge-pr.ts as sole merge path, review-comment-before-merge rule)
+  - path: scripts/archive-journal-content.ts
+    reason: "understand the git-mv collision bug before writing issue #1093's recommended fix"
+  - path: layers/journal/content/current/sessions/2026-08-29-session_01LewZG9m4QgEhKwFRBQkuiY.yml
+    reason: (no reason given)
+  - path: tests/unit/archive-journal-content.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run this whole session executes
+  - name: dispatch-subagents
+    reason: brief + isolation checklist for the survey and impl-agent dispatches
+  - name: close-session
+    reason: self-judged closure at PR-merge
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Drafted issue #1092's body using a session id copied from a survey evidence quote instead of this session's own canonical id; the ADR-0017 provenance guard correctly blocked the mcp__github__issue_write call and named the right id to use."
+    solution: Guard worked exactly as designed — no fix needed beyond continuing to resolve the session id from the commit-footer template rather than from any string sitting in context, evidence quotes included.
+    severity: nit
+  - description: The survey subagent's mcp__github__search_issues call returned an oversized result (80,752 chars) on a broad query and errored out entirely rather than truncating, forcing a narrower query plus a `fields` filter to get a usable response.
+    solution: docs/agents/github-integration.md's GitHub-MCP hygiene guidance already covers pagination and quoted-exact-string queries for the oversized-result trap; it should also recommend a fields filter as the default for exploratory tracker searches, not only for paginated ones.
+    severity: minor
+durationSec: 1129
+models:
+  claude-sonnet-5: 80
+toolCounts:
+  Bash: 6
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  Agent: 2
+  ScheduleWakeup: 1
+  Read: 2
+  mcp__github__issue_read: 2
+  mcp__github__search_issues: 1
+  mcp__github__pull_request_read: 6
+  mcp__github__issue_write: 3
+  Skill: 3
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  Write: 1
+  PushNotification: 1
+filesEdited:
+  - scripts/archive-journal-content.ts
+  - tests/unit/archive-journal-content.spec.ts
+docsReadViaShell:
+  - docs/agents/github-integration.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix archive-journal-content.ts git-mv collision
+    model: sonnet
+gitBranch: claude/eager-ptolemy-2oimp3
+entrypoint: remote_trigger
+cliVersion: 2.1.251
+trigger: frictions-to-fixes
+ideas:
+  - "Issue #1092 (the search_issues/search_pull_requests 403 regression) keeps resurfacing with looser numbers each time (concurrency-gated, then sequential-and-still-fails) — worth a small instrumented probe session that deliberately fires N sequential/concurrent calls against the real API and records exactly where the 403 starts, instead of continuing to infer the shape from session friction logs after the fact."
