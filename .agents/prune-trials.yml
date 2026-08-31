@@ -65,36 +65,6 @@ trials:
       intended single-home behavior working), or a Skill's own tier-specific
       escalation bullet (kept, untouched) doing its job.
   - problem: >
-      Two CLAUDE.md bullets (17 lines) narrated the pkill-teardown regression's
-      internal mechanism at length — a separate "two failure modes" breakdown for
-      chained kills, and the exit-code-144 arithmetic spelled out in full — where
-      one merged bullet says the same rule (never hand-roll a `pkill` teardown,
-      never chain a process-kill before steps that must run) with the same
-      load-bearing why (self-match risk; other agents' servers in a shared
-      container; a chained kill drops trailing steps silently) in about half the
-      space, pointing at the issue chain instead of re-deriving it.
-    territory:
-      paths:
-        - "CLAUDE.md: the pkill/process-teardown bullet"
-      keywords:
-        - pkill
-        - preview.ts
-        - process-killing teardown
-        - SIGTERM
-        - exit code 144
-    opened: 2026-08-26
-    check: >
-      Damage is a session that hand-rolls a `pkill -f` teardown and corrupts
-      another agent's server or its own chain (the failure the surviving text
-      still names as the reason not to), or that chains a process-kill with
-      `&&`/`;` and doesn't notice a step after it silently never ran, or that
-      sees a killed process report exit 144 and misreads it as a fresh failure
-      instead of the expected result of a successful kill.
-      NOT damage: a session using `scripts/preview.ts` correctly; a session that
-      hits exit 144 and correctly reads it as the kill having worked (that's the
-      surviving text doing its job); a session citing the merged bullet instead
-      of the old two.
-  - problem: >
       ADR-0009's own amendment history was stated 2-3 times over: a compressed
       blurb for each amendment in a top-of-file blockquote index, the same fact
       restated in full at that amendment's own section below, and — for the
@@ -172,3 +142,40 @@ trials:
       first. NOT damage: a session opening the doc before concluding an odd
       failure is new (the compressed pointer doing its job), or citing a
       caveat the old enumerated list also would have named.
+  - problem: >
+      CLAUDE.md's GitHub-provenance bullet (Working Conventions) narrated the
+      commit-trailer guard's incident count and the github-provenance-guard's
+      registry/fail-closed mechanics inline, even though `docs/agents/guards.md`
+      already documents both guards' rule, registry, and fail-closed convention
+      as the single mechanism record (guards.md's roster table and "Conventions
+      every guard follows" section), and ADR-0017's 2026-08-01 amendment already
+      says the guard's own deny message — not a doc — is the format's teaching
+      surface. Compressed the bullet's second half to state both are
+      `PreToolUse`-guarded and fail closed, pointing at `guards.md` for the
+      roster, and dropped the retold incident count (issue #921) and mechanism
+      internals (registry name, exact deny-message behaviour) that guards.md
+      already owns. The header-format rule and example stay in CLAUDE.md
+      untouched — ADR-0017 explicitly names CLAUDE.md's Working Conventions as
+      that rule's home.
+    territory:
+      paths:
+        - "CLAUDE.md: the GitHub-provenance bullet (Working Conventions), the two paragraphs after the header example"
+      keywords:
+        - github-provenance-guard.ts
+        - commit-trailer-guard.ts
+        - provenance header
+        - ADR-0017
+        - guards.md
+    opened: 2026-08-31
+    check: >
+      Damage is a session that, needing the guard's actual behaviour (which
+      surfaces it covers, what "fails closed" means operationally, where to
+      register a newly-found provenance-carrying surface), stops at the
+      compressed pointer and guesses instead of opening `docs/agents/guards.md`
+      — or a session that hand-writes the commit trailer or skips the GitHub
+      header because the compressed bullet reads as less binding than the old
+      inline mechanism description. NOT damage: a session opening `guards.md`
+      before asserting a guard's exact behaviour (the intended single-home
+      behavior working), or a session relying on a guard's own deny message to
+      fix a rejected call in the moment (ADR-0017's documented teaching surface
+      doing its job).

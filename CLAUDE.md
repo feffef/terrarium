@@ -333,22 +333,17 @@ human asks for it outright.
   🤖 [Claude Opus 5](https://claude.ai/code/session_EXAMPLE_NOT_A_REAL_ID)
   ```
 
-  The id above is deliberately not a real one: a realistic example sitting in
-  the file every session reads is itself the hazard — the recorded failures are
-  agents capturing a real, id-shaped string from context rather than resolving
-  their own.
+  The id above is a placeholder, never a real one — copying a real, id-shaped
+  string from context is the actual failure mode, not a typo'd format.
 
   Resolve the model name and session URL from the harness's own commit-footer
   template in your system prompt — **never reconstruct either from memory**, the
   same rule as any other identifier above. Commits need nothing from you: the
   harness template and `.githooks/commit-msg` land the two-line trailer
-  themselves — so **never hand-write that trailer into a commit message**, a
-  near-miss that recurred four times before earning its own `PreToolUse` guard
-  (`scripts/commit-trailer-guard.ts`, issue #921). A second `PreToolUse`
-  guard (`scripts/github-provenance-guard.ts`) blocks
-  a non-compliant call before it posts and prints the exact marker to paste, so
-  it — not this bullet — is the operative rule; it fails **closed**, and its
-  registry is where a newly-found provenance-carrying surface gets added.
+  themselves — so **never hand-write that trailer into a commit message**.
+  Both the header and the trailer are `PreToolUse`-guarded and fail **closed**;
+  a guard's deny message is the operative rule at the moment it matters — see
+  `docs/agents/guards.md` for the roster and how to extend one.
 
 ## Repo layout
 
