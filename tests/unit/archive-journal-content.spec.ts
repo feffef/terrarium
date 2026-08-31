@@ -252,4 +252,27 @@ describe('planArchive() / applyArchive() — the fs/git shell, over a throwaway 
     writeFileSync(join(dir, SESSIONS_DIR, '2026-07-01-session_bad.yml'), 'session: broken\n') // no endedAt
     expect(() => planArchive(dir)).toThrow(/no valid endedAt/)
   })
+
+  // Regression test for issue #1093: a session log archived once, then
+  // amended by log-session back into `current` under the same filename, must
+  // not fatal-error the next sweep on the `git mv` destination collision.
+  it('applyArchive() overwrites a stale archived copy left by an earlier pass, instead of failing', () => {
+    initRepo()
+    const file = '2026-07-10-session_old.yml'
+    const archivedPath = join(dir, ARCHIVED_SESSIONS_DIR, file)
+
+    // Simulate the prior archive pass having already moved this file out...
+    writeFileSync(archivedPath, session('2026-07-10T12:00:00Z'))
+    // ...and log-session having since amended it back into `current`.
+    writeFileSync(join(dir, SESSIONS_DIR, file), session('2026-07-10T18:00:00Z'))
+    execFileSync('git', ['add', '-A'], { cwd: dir })
+    execFileSync('git', ['commit', '-q', '-m', 'simulate archive + amend'], { cwd: dir })
+
+    const plan = planArchive(dir, 1)
+    expect(() => applyArchive(dir, plan)).not.toThrow()
+
+    // The amended (current) copy wins — its content overwrote the stale archived one.
+    expect(existsSync(join(dir, SESSIONS_DIR, file))).toBe(false)
+    expect(readFileSync(archivedPath, 'utf8')).toBe(session('2026-07-10T18:00:00Z'))
+  })
 })
