@@ -181,12 +181,14 @@ human asks for it outright.
 - **Don't restate a Routine's schedule in a committed doc** — it lives outside
   git and can change without a commit. Say a Skill *is* scheduled; never say *when*.
 - **Hitting a needed `.github/workflows/*` edit? You can't push it** (agent
-  sessions lack the `workflow` OAuth scope, ADR-0004) — route it through the
-  `docs/proposals/` drop-zone instead of pushing it or leaving it as ad hoc PR
-  prose, and **read `docs/proposals/README.md`** for the file format and the
-  companion-change discipline. The failure triggers on the *commit*, not the
-  push, and can strand an entire branch — see `docs/agents/environment-caveats.md`
-  for that sharp edge.
+  sessions lack the `workflow` OAuth scope, ADR-0004), and `workflow-edit-guard`
+  (`docs/agents/guards.md`) now refuses the write itself before it ever reaches
+  a commit — route it through the `docs/proposals/` drop-zone instead of pushing
+  it or leaving it as ad hoc PR prose, and **read `docs/proposals/README.md`**
+  for the file format and the companion-change discipline. The underlying
+  OAuth-scope failure still triggers on the *commit*, not the push, and can
+  strand an entire branch if the guard's documented gaps let an edit through —
+  see `docs/agents/environment-caveats.md` for that sharp edge.
 - **In TS/Vue code, an inline comment explains WHY, never WHAT — default to no
   comment at all, and when the why isn't obvious, point at the existing doc
   that owns it rather than restating the reasoning.** Well-named code already
