@@ -152,7 +152,7 @@ argument that they should have been bucket 1 from the start.
 ## 4. Already mechanized (the current surface)
 
 Read off the live configuration, not inferred. `.claude/settings.json` registers
-**five** `PreToolUse` guards as of this branch:
+**six** `PreToolUse` guards as of this branch:
 
 | Mechanism | Shape | Rule it enforces | Matcher |
 | --- | --- | --- | --- |
@@ -161,6 +161,7 @@ Read off the live configuration, not inferred. `.claude/settings.json` registers
 | `scripts/subagent-background-guard.sh` | Fail-closed refusal | A subagent never backgrounds a Bash command | `Bash` |
 | `scripts/commit-trailer-guard.sh` | Fail-closed refusal | Never hand-write the ADR-0017 commit trailer (#921) | `Bash` |
 | `scripts/github-provenance-guard.ts` | Fail-closed refusal | ADR-0017 provenance header on every GitHub body | 9 `mcp__github__*` tools |
+| `scripts/workflow-edit-guard.ts` | Fail-closed refusal | No agent write into `.github/workflows/` (#897) | `Edit\|Write\|Bash` |
 
 Plus, outside `PreToolUse`:
 
@@ -214,7 +215,7 @@ blank.
 | CM-21 | `git fetch origin main` and branch off `origin/main` before starting work | Working conventions | H (refusal) | **#666** (open), #625 | `PreToolUse` on `Bash`: deny `git checkout -b`/`git branch <new>` unless a fetch was observed this session | M |
 | CM-22 | Single-home every fact — one home, everywhere else points | Working conventions | J | none | The defining judgement call; `audit-docs`' Duplication lens is the post-hoc detector | — |
 | CM-23 | Never restate a Routine's schedule in a committed doc | Working conventions | G | #813 | **Built** — `scripts/validate-skill-cadence.ts` | 0 |
-| CM-24 | Never push a `.github/workflows/*` edit; route it through `docs/proposals/` | Working conventions | H (refusal) | #659 (open) | `PreToolUse` on `Bash`/`Edit`/`Write`: deny any write under `.github/workflows/`. **This is open issue #897, already `ready-for-agent`** | S |
+| CM-24 | Never push a `.github/workflows/*` edit; route it through `docs/proposals/` | Working conventions | H (refusal) | #659 (open) | **Built** — `scripts/workflow-edit-guard.ts`, closing #897 | 0 |
 | CM-25 | An inline comment explains WHY, never WHAT; point at the doc that owns the reasoning | Working conventions | J | none | Style judgement | — |
 | CM-26 | Inspect files with the Read tool, not `cat` | Working conventions | H (refusal) | none | `PreToolUse` on `Bash` denying bare `cat <repo-file>`. **Marginal** — the cost is a wasted re-read, and legitimate `cat` uses (piping, heredocs) make false positives likely. Candidate for **D** instead | S |
 | CM-27 | Load a deferred tool's schema via `ToolSearch` before its first call | Working conventions | H (refusal) | #386, #432, #612; **#724 open** | **Built** — `scripts/deferred-tool-guard.ts`. #724 is a registry gap, not a mechanism gap | 0 |
@@ -312,7 +313,7 @@ of them and splitting would inflate the row count without adding a decision.
 | EC-04 | Re-verify a `/loop`/`CronCreate` job, a backgrounded subagent, and any scratchpad file after a session resume | (bullet 4) | W | #571, #794, #891 | A `SessionStart(resume)` stage that re-lists registered jobs and re-stats scratch files. The one caveat here with a real mechanism | M |
 | EC-05 | Retry a transient "permission stream closed" once, then route around it (never via `ScheduleWakeup`) | (bullet 5) | J | #145, #229, #359 | The forbidden fallback is already guarded; the retry itself is judgement | 0 |
 | EC-06 | Check `last_fired_at` via `list_triggers` before concluding a Routine didn't fire | (bullet 6) | J | #834 | Recognition judgement | — |
-| EC-07 | Never commit a `.github/workflows/*` edit — it strands the whole branch | (bullet 7) | H (refusal) | #659 (open) | Same guard as `CM-24` / issue **#897** | S |
+| EC-07 | Never commit a `.github/workflows/*` edit — it strands the whole branch | (bullet 7) | H (refusal) | #659 (open) | Same guard as `CM-24` — **Built**, closing #897 | 0 |
 | EC-08 | Reset the full install state (`rm -rf node_modules .nuxt && pnpm install --frozen-lockfile`) before asserting "X is broken on main" from a local repro | (bullet 8) | J | #923, #928, #940 | Judgement about when a claim is load-bearing enough to warrant the reset | — |
 
 ### 5.6 `docs/agents/verifying-ui-changes.md`
