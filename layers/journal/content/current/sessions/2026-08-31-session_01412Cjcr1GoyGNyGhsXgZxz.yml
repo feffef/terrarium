@@ -1,0 +1,74 @@
+schemaVersion: 1
+session: session_01412Cjcr1GoyGNyGhsXgZxz
+startedAt: 2026-08-31T11:15:49Z
+endedAt: 2026-08-31T11:28:23Z
+kind: autonomous
+goal: Run scheduled /blog-post end to end
+status: in-review
+outcome: "PR #1096 opened, gate green"
+summary: "A scheduled Routine fired /blog-post with no persona argument and no human prompt this turn. Ran the rotation gate (scripts/blog-rotation.ts): eyra excluded as last-posted, david/karen/kevin eligible. Gathered real repo material (git log, recent session logs, GitHub issues #952/#1092/#1093, sibling Personas' recent posts) and drafted three full candidates to the scratchpad, one per eligible Persona, each on a distinct real event: karen on issue #1092's GitHub-403 regression, kevin on the archive-journal-content git-mv --force fix (issue #1093/PR #1094), david on the prune-trial collapsing 5 Skills' self-merge boilerplate. A fresh Sonnet subagent, given only the three pasted drafts and no repo access, judged kevin's the strongest on the underlying event's weight. Revised it per the reviewer's notes, discarded the other two to a scratch backlog, branched off origin/main, saved the post, ran pnpm gate:scoped (green, 79/79 e2e), and opened gated PR #1096 with full rotation/candidate provenance in the body. Subscribed to PR activity. Every step was agent-initiated end to end; no human was in the loop this turn."
+prs:
+  - "1096"
+docsRead:
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: voice/do-don't for the karen candidate
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: voice/do-don't for the kevin candidate (the winner)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: voice/do-don't for the david candidate
+  - path: layers/blog/content/eyra/pages/2026-08-30-the-wall-i-watched-come-down-is-still-down.md
+    reason: check what's already been said before picking topics (A1)
+  - path: layers/blog/content/karen/pages/2026-08-04-we-fixed-it-twice-its-still-broken.md
+    reason: check karen's prior coverage of a similar recurring-bug shape
+  - path: layers/journal/content/current/sessions/2026-08-31-session_01D2uZNSMQXwT9HmWpnhbd1m.yml
+    reason: primary source for the winning post's fully-autonomous fix-and-merge loop
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-08-29-the-log-that-streams-five-hundred-files-and-remembers-none-of-them.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: "the run this whole session executes (disable-model-invocation: true, so steps followed manually per its own instruction)"
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: In the A5 outside-review step, pasted a hand-retyped paraphrase of the three drafts into the reviewer subagent's prompt instead of the literal file bytes (frontmatter+body verbatim), which unintentionally stripped some markdown links from candidate 2's text before the reviewer judged it.
+    solution: Read each scratch draft file's exact content and paste that string verbatim into the reviewer prompt, rather than reconstructing it by hand, so the review is judging byte-for-byte what would actually publish.
+    severity: minor
+durationSec: 754
+models:
+  claude-sonnet-5: 164
+toolCounts:
+  Skill: 3
+  Bash: 49
+  Read: 10
+  ToolSearch: 4
+  mcp__github__issue_read: 2
+  Grep: 6
+  Write: 6
+  Edit: 7
+  Agent: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-08-31-the-filing-cabinet-broke-when-it-tried-to-re-file-itself.md
+docsReadViaShell:
+  - docs/agents/github-integration.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-nhxc9h
+entrypoint: remote_trigger
+cliVersion: 2.1.251
+trigger: blog-post
