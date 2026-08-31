@@ -8,8 +8,8 @@
 // by the time a commit exists the branch is already the expensive case.
 //
 // Runs unattended, so it is human-only to merge (ADR-0004, 2026-07-30). Pure
-// core split from the stdin I/O and exercised by `--dry-run`, per that
-// amendment's reviewability bar and the sibling guards' shape.
+// core (below) split from the shared stdin/`--dry-run`/bootstrap plumbing
+// (`guard-io.ts`, issue #1080), per that amendment's reviewability bar.
 //
 // Usage:
 //   sh scripts/workflow-edit-guard.sh                 # the installed hook entry
@@ -35,8 +35,19 @@
 // (`sed -i 's|x|.github/workflows/|' docs/…`) or a probe passing an example
 // write as an argument (both hit while building this guard). Use the Edit tool,
 // which CLAUDE.md prefers anyway, or `--dry-run --input-file`.
-import { readFileSync } from 'node:fs'
-import { pathToFileURL } from 'node:url'
+import {
+  denyUninspectable,
+  buildDenyOutput,
+  printDryRunResult,
+  readHookPayload,
+  requireToolFlag,
+  resolveDryRunInput,
+  runIfMain,
+  type DenyOutput,
+} from './guard-io.ts'
+
+const LABEL = 'workflow-edit guard'
+const REF = 'issue #897'
 
 /** The one protected directory. Matched anywhere in a path, so an absolute
  *  worktree path and a repo-relative one both hit. */
@@ -136,122 +147,34 @@ export function formatGuardMessage(f: WorkflowEditFinding): string {
 
 /** `null` when nothing should be blocked, so an ordinary edit writes nothing
  *  and the call proceeds untouched. */
-export function denyOutputFor(
-  finding: WorkflowEditFinding | null,
-): { hookSpecificOutput: Record<string, string> } | null {
-  if (!finding) return null
-  return {
-    hookSpecificOutput: {
-      hookEventName: 'PreToolUse',
-      permissionDecision: 'deny',
-      permissionDecisionReason: formatGuardMessage(finding),
-    },
-  }
-}
-
-interface PreToolUsePayload {
-  tool_name?: string
-  tool_input?: unknown
-}
-
-/** Fail-closed's edge, bounded: the pre-filter only forwards payloads that
- *  textually mention the directory, so this can never wedge ordinary editing. */
-function denyUninspectable(detail: string): void {
-  process.stdout.write(
-    JSON.stringify({
-      hookSpecificOutput: {
-        hookEventName: 'PreToolUse',
-        permissionDecision: 'deny',
-        permissionDecisionReason:
-          `Blocked by the workflow-edit guard (issue #897): ${detail}, so this call could not be ` +
-          `checked. The guard fails CLOSED. This is a guard fault, not an authoring mistake — report ` +
-          `it rather than working around it.`,
-      },
-    }),
-  )
+export function denyOutputFor(finding: WorkflowEditFinding | null): DenyOutput | null {
+  return finding ? buildDenyOutput(formatGuardMessage(finding)) : null
 }
 
 /** Always exits 0 — the deny travels in stdout, not the exit code. */
 export function main(): void {
-  let raw: string
-  try {
-    raw = readFileSync(0, 'utf8')
-  } catch {
-    return // not invoked as a hook (no stdin at all) — nothing was requested
-  }
-  if (!raw.trim()) return // a bare manual run, not a tool call to police
+  const result = readHookPayload()
+  if (result.kind === 'none') return
+  if (result.kind === 'invalid') return denyUninspectable(LABEL, REF, 'the hook payload was not valid JSON')
+  if (result.kind === 'no-tool') return denyUninspectable(LABEL, REF, 'the hook payload named no tool')
 
-  let payload: PreToolUsePayload
-  try {
-    payload = JSON.parse(raw)
-  } catch {
-    return denyUninspectable('the hook payload was not valid JSON')
-  }
-  if (typeof payload.tool_name !== 'string') {
-    return denyUninspectable('the hook payload named no tool')
-  }
-
-  const output = denyOutputFor(checkWorkflowEdit(payload.tool_name, payload.tool_input))
+  const output = denyOutputFor(checkWorkflowEdit(result.payload.tool_name, result.payload.tool_input))
   if (output) process.stdout.write(JSON.stringify(output))
 }
 
 /** Print the decision the hook would reach, running nothing. */
 function dryRun(argv: string[]): void {
-  const flag = (name: string): string | undefined => {
-    const i = argv.indexOf(name)
-    return i >= 0 ? argv[i + 1] : undefined
-  }
-  const tool = flag('--tool')
-  if (!tool) {
-    console.error('usage: --dry-run --tool <name> [--input <json> | --input-file <path>]')
-    process.exit(1)
-  }
+  const tool = requireToolFlag(argv, 'usage: --dry-run --tool <name> [--input <json> | --input-file <path>]')
   // `--input-file` mirrors commit-trailer-guard's: a denying `--input` cannot
   // always survive the trip, since this guard blocks write-shaped Bash calls.
-  const inputFile = flag('--input-file')
-  let rawInput = flag('--input')
-  if (inputFile !== undefined) {
-    try {
-      rawInput = readFileSync(inputFile, 'utf8')
-    } catch (err) {
-      // Explicit, not left to the bootstrap's catch: that one fails CLOSED and
-      // would print a deny control object, which a dry run must never emit.
-      console.error(`--input-file could not be read: ${err instanceof Error ? err.message : String(err)}`)
-      process.exit(1)
-    }
-  }
-  let input: unknown = {}
-  if (rawInput !== undefined) {
-    try {
-      input = JSON.parse(rawInput)
-    } catch {
-      console.error(inputFile !== undefined ? `${inputFile} does not contain valid JSON` : '--input must be valid JSON')
-      process.exit(1)
-    }
-  }
+  const input = resolveDryRunInput(argv)
   const finding = checkWorkflowEdit(tool, input)
-  console.log(
-    JSON.stringify(
-      {
-        tool,
-        decision: finding ? 'deny' : 'allow',
-        via: finding?.via,
-        reason: finding ? formatGuardMessage(finding) : undefined,
-      },
-      null,
-      2,
-    ),
-  )
+  printDryRunResult({
+    tool,
+    decision: finding ? 'deny' : 'allow',
+    via: finding?.via,
+    reason: finding ? formatGuardMessage(finding) : undefined,
+  })
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  const argv = process.argv.slice(2)
-  try {
-    if (argv.includes('--dry-run')) dryRun(argv)
-    else main()
-  } catch (err) {
-    // Fail closed: a crash in the guard is a reason to stop, not to wave the
-    // call through — matching the sibling guards.
-    denyUninspectable(`the guard itself crashed (${err instanceof Error ? err.message : String(err)})`)
-  }
-}
+runIfMain(import.meta.url, { main, dryRun, label: LABEL, ref: REF })

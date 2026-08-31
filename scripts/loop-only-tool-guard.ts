@@ -12,19 +12,32 @@
 // re-sent `/audit-docs` mid-PR-review had it not been cancelled (#814).
 //
 // Pure core (`detectSessionMode`, `checkLoopOnlyToolCall`) is kept separate from
-// the stdin/transcript I/O (`main`), mirroring `deferred-tool-guard.ts` /
-// `github-provenance-guard.ts` / `session-id-guard.ts`. `--dry-run` exercises
-// the same core by hand, so the decision is inspectable without a live tool call
-// (ADR-0004's 2026-07-30 amendment makes an unattended, un-exercisable hook
-// human-only to merge; this is what keeps that review tractable).
+// the shared stdin/`--dry-run`/bootstrap plumbing (`guard-io.ts`, issue #1080);
+// `--dry-run` exercises the same core by hand, so the decision is inspectable
+// without a live tool call (ADR-0004's 2026-07-30 amendment makes an
+// unattended, un-exercisable hook human-only to merge; this is what keeps that
+// review tractable).
 //
 // Usage:
 //   tsx scripts/loop-only-tool-guard.ts                      # hook: payload on stdin
 //   tsx scripts/loop-only-tool-guard.ts --dry-run --tool ScheduleWakeup \
 //       [--mode loop|non-loop|undeterminable] [--transcript <p>] [--input '<json>']
 import { readFileSync } from 'node:fs'
-import { pathToFileURL } from 'node:url'
+import {
+  denyUninspectable,
+  buildDenyOutput,
+  flagValue,
+  printDryRunResult,
+  readHookPayload,
+  requireToolFlag,
+  resolveDryRunInput,
+  runIfMain,
+  type DenyOutput,
+} from './guard-io.ts'
 import { commandSkillNames, parseTranscript } from './session-trace.ts'
+
+const LABEL = '/loop-only tool guard'
+const REF = 'issue #814'
 
 /** The only mode `LOOP_ONLY_TOOLS` may be called in, as the harness names it. */
 const LOOP_SKILL = 'loop'
@@ -155,40 +168,8 @@ export function formatGuardMessage(f: LoopToolFinding): string {
 /** The `PreToolUse` "deny" control object a hook writes to stdout to block a
  *  call (Claude Code hooks reference). `null` when nothing should be blocked, so
  *  `main` writes nothing and the call proceeds untouched. */
-export function denyOutputFor(finding: LoopToolFinding | null): { hookSpecificOutput: Record<string, string> } | null {
-  if (!finding) return null
-  return {
-    hookSpecificOutput: {
-      hookEventName: 'PreToolUse',
-      permissionDecision: 'deny',
-      permissionDecisionReason: formatGuardMessage(finding),
-    },
-  }
-}
-
-/** Hook payload shape we rely on — the same subset `github-provenance-guard.ts`
- *  already reads off a live PreToolUse payload. */
-interface PreToolUsePayload {
-  tool_name?: string
-  tool_input?: unknown
-  transcript_path?: string
-}
-
-/** Deny a call we could not even inspect. Fail-closed's edge: with an unreadable
- *  payload we do not know which tool it is, so the message cannot name one. */
-function denyUninspectable(detail: string): void {
-  process.stdout.write(
-    JSON.stringify({
-      hookSpecificOutput: {
-        hookEventName: 'PreToolUse',
-        permissionDecision: 'deny',
-        permissionDecisionReason:
-          `Blocked by the /loop-only tool guard (issue #814): ${detail}, so this call could not be ` +
-          `checked. The guard fails CLOSED. This is a guard fault, not an authoring mistake — report ` +
-          `it rather than working around it.`,
-      },
-    }),
-  )
+export function denyOutputFor(finding: LoopToolFinding | null): DenyOutput | null {
+  return finding ? buildDenyOutput(formatGuardMessage(finding)) : null
 }
 
 function readTranscript(path: string | undefined): Record<string, unknown>[] | null {
@@ -205,35 +186,15 @@ function readTranscript(path: string | undefined): Record<string, unknown>[] | n
  *  every branch by hand — including with an explicit `--mode`, which is the only
  *  way to reach the `loop` branch without a real `/loop` transcript. */
 function dryRun(argv: string[]): void {
-  const flag = (name: string): string | undefined => {
-    const i = argv.indexOf(name)
-    return i >= 0 ? argv[i + 1] : undefined
-  }
-  const tool = flag('--tool')
-  if (!tool) {
-    console.error('usage: --dry-run --tool <name> [--mode loop|non-loop|undeterminable] [--transcript <path>] [--input <json>]')
-    process.exit(1)
-  }
-  const forced = flag('--mode') as SessionMode | undefined
-  const mode = forced ?? detectSessionMode(readTranscript(flag('--transcript')))
-  let input: unknown = {}
-  const rawInput = flag('--input')
-  if (rawInput) {
-    try {
-      input = JSON.parse(rawInput)
-    } catch {
-      console.error('--input must be valid JSON')
-      process.exit(1)
-    }
-  }
-  const finding = checkLoopOnlyToolCall(tool, input, mode)
-  console.log(
-    JSON.stringify(
-      { tool, mode, decision: finding ? 'deny' : 'allow', reason: finding ? formatGuardMessage(finding) : undefined },
-      null,
-      2,
-    ),
+  const tool = requireToolFlag(
+    argv,
+    'usage: --dry-run --tool <name> [--mode loop|non-loop|undeterminable] [--transcript <path>] [--input <json>]',
   )
+  const forced = flagValue(argv, '--mode') as SessionMode | undefined
+  const mode = forced ?? detectSessionMode(readTranscript(flagValue(argv, '--transcript')))
+  const input = resolveDryRunInput(argv)
+  const finding = checkLoopOnlyToolCall(tool, input, mode)
+  printDryRunResult({ tool, mode, decision: finding ? 'deny' : 'allow', reason: finding ? formatGuardMessage(finding) : undefined })
 }
 
 /** Reads the hook JSON on stdin, resolves the session's mode from its
@@ -246,23 +207,12 @@ function dryRun(argv: string[]): void {
  *  before this file is evaluated, producing no stdout and therefore no deny.
  *  Closing that needs a change of invocation, not of this script. */
 export function main(): void {
-  let raw: string
-  try {
-    raw = readFileSync(0, 'utf8')
-  } catch {
-    return // not invoked as a hook (no stdin at all) — nothing was requested
-  }
-  if (!raw.trim()) return // a bare manual run, not a tool call to police
+  const result = readHookPayload()
+  if (result.kind === 'none') return
+  if (result.kind === 'invalid') return denyUninspectable(LABEL, REF, 'the hook payload was not valid JSON')
+  if (result.kind === 'no-tool') return denyUninspectable(LABEL, REF, 'the hook payload named no tool')
+  const { payload } = result
 
-  let payload: PreToolUsePayload
-  try {
-    payload = JSON.parse(raw)
-  } catch {
-    return denyUninspectable('the hook payload was not valid JSON')
-  }
-  if (typeof payload.tool_name !== 'string') {
-    return denyUninspectable('the hook payload named no tool')
-  }
   // Cheap exit for every tool this guard has nothing to say about, BEFORE
   // paying to read a transcript that can be megabytes late in a session.
   if (!LOOP_ONLY_TOOLS.some((t) => t.tool === payload.tool_name)) return
@@ -272,14 +222,4 @@ export function main(): void {
   if (output) process.stdout.write(JSON.stringify(output))
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  const argv = process.argv.slice(2)
-  try {
-    if (argv.includes('--dry-run')) dryRun(argv)
-    else main()
-  } catch (err) {
-    // Fail closed: a crash in the guard is a reason to stop, not to wave the
-    // call through — matching `github-provenance-guard.ts`.
-    denyUninspectable(`the guard itself crashed (${err instanceof Error ? err.message : String(err)})`)
-  }
-}
+runIfMain(import.meta.url, { main, dryRun, label: LABEL, ref: REF })
