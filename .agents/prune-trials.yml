@@ -142,3 +142,40 @@ trials:
       first. NOT damage: a session opening the doc before concluding an odd
       failure is new (the compressed pointer doing its job), or citing a
       caveat the old enumerated list also would have named.
+  - problem: >
+      CLAUDE.md's GitHub-provenance bullet (Working Conventions) narrated the
+      commit-trailer guard's incident count and the github-provenance-guard's
+      registry/fail-closed mechanics inline, even though `docs/agents/guards.md`
+      already documents both guards' rule, registry, and fail-closed convention
+      as the single mechanism record (guards.md's roster table and "Conventions
+      every guard follows" section), and ADR-0017's 2026-08-01 amendment already
+      says the guard's own deny message — not a doc — is the format's teaching
+      surface. Compressed the bullet's second half to state both are
+      `PreToolUse`-guarded and fail closed, pointing at `guards.md` for the
+      roster, and dropped the retold incident count (issue #921) and mechanism
+      internals (registry name, exact deny-message behaviour) that guards.md
+      already owns. The header-format rule and example stay in CLAUDE.md
+      untouched — ADR-0017 explicitly names CLAUDE.md's Working Conventions as
+      that rule's home.
+    territory:
+      paths:
+        - "CLAUDE.md: the GitHub-provenance bullet (Working Conventions), the two paragraphs after the header example"
+      keywords:
+        - github-provenance-guard.ts
+        - commit-trailer-guard.ts
+        - provenance header
+        - ADR-0017
+        - guards.md
+    opened: 2026-08-31
+    check: >
+      Damage is a session that, needing the guard's actual behaviour (which
+      surfaces it covers, what "fails closed" means operationally, where to
+      register a newly-found provenance-carrying surface), stops at the
+      compressed pointer and guesses instead of opening `docs/agents/guards.md`
+      — or a session that hand-writes the commit trailer or skips the GitHub
+      header because the compressed bullet reads as less binding than the old
+      inline mechanism description. NOT damage: a session opening `guards.md`
+      before asserting a guard's exact behaviour (the intended single-home
+      behavior working), or a session relying on a guard's own deny message to
+      fix a rejected call in the moment (ADR-0017's documented teaching surface
+      doing its job).
