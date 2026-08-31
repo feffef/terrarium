@@ -1,0 +1,181 @@
+schemaVersion: 1
+session: session_01EFCqgSkDo4LGPunVqtNuxK
+startedAt: 2026-08-31T04:08:54Z
+endedAt: 2026-08-31T04:23:36Z
+kind: autonomous
+goal: Run scheduled /audit-docs sweep
+status: in-review
+outcome: One doc-drift fix confirmed and pushed as PR
+summary: "Scheduled, unattended /audit-docs run. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the Live-tier docs, pooled and deduped their findings, then dispatched an independent fact-checker against primary sources. Two of three raw findings converged on the same root cause and were merged before fact-checking; the checker confirmed the merged drift/contradiction finding and rejected a mis-location finding as WRONG (issue #867 explicitly commissions the flagged table shape, so moving it would violate its own deliverable spec). Fixed CLAUDE.md and docs/research/rulebook-migration-table.md, both of which predated scripts/workflow-edit-guard.ts landing (#897) and never picked up the new guard. Ran pnpm gate:scoped (green, floor-only since both changed paths are inert), committed, pushed, opened PR #1095, and subscribed to its activity. All work this session was agent-initiated per the audit-docs Skill's own charter (no human prompt occurred)."
+prs:
+  - "1095"
+docsRead:
+  - path: CLAUDE.md
+    reason: the drift/mis-location fix target and the tier/branch-off rules
+  - path: docs/research/rulebook-migration-table.md
+    reason: the contradiction/mis-location fix target
+  - path: docs/agents/guards.md
+    reason: ground truth for the live PreToolUse guard roster
+  - path: docs/agents/environment-caveats.md
+    reason: confirmed which docs already picked up the new guard
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: this run's own charter (tiers, lens pairing, dedupe/fact-check/fix steps)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .claude/settings.json
+    reason: (no reason given)
+  - path: scripts/workflow-edit-guard.sh
+    reason: (no reason given)
+  - path: scripts/workflow-edit-guard.ts
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's own charter
+  - name: close-session
+    reason: session closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: audit-docs's fourth bucket ("fictional Tenant content, e.g. Atlas") doesn't explicitly name Marquee or Midden by example, so classifying their content pages as excluded (vs. their CONTEXT.md, which is Live) took inference from the Tenants roster rather than a direct rule.
+    solution: Name Marquee and Midden alongside Atlas in the audit-docs Skill's fourth-bucket bullet, or point at CONTEXT.md's Tenants roster explicitly for the demo/content vs. infrastructure split.
+    severity: nit
+durationSec: 882
+models:
+  claude-sonnet-5: 94
+toolCounts:
+  Bash: 25
+  Agent: 5
+  ScheduleWakeup: 1
+  Read: 4
+  Edit: 4
+  Grep: 2
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - CLAUDE.md
+  - docs/research/rulebook-migration-table.md
+docsReadViaShell:
+  - CONTEXT.md
+  - docs/agents/guards.md
+  - docs/agents/environment-caveats.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - CONTEXT-MAP.md
+  - docs/proposals/README.md
+subagents:
+  - type: general-purpose
+    task: "Audit-docs Agent A: Freshness lens"
+  - type: general-purpose
+    task: "Audit-docs Agent B: Single-home lens"
+  - type: general-purpose
+    task: "Audit-docs Agent C: Concision lens"
+  - type: general-purpose
+    task: "Audit-docs Agent D: Coherence lens"
+  - type: general-purpose
+    task: Audit-docs fact-checker
+gitBranch: claude/festive-mayer-gj5fez
+entrypoint: remote_trigger
+cliVersion: 2.1.251
+trigger: audit-docs
+learnings:
+  - docs/research/*.md files can legitimately carry unbuilt-proposal content when the commissioning GitHub issue's own body specifies that shape as the deliverable — issue-tracker.md's docs/research-vs-issue convention has an exception a fact-checker has to verify against the issue body, not just the convention doc.
