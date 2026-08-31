@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01YDjGJq2x56oRVomdT3VkDF
 startedAt: 2026-08-31T13:23:26Z
-endedAt: 2026-08-31T13:42:13Z
+endedAt: 2026-08-31T13:46:28Z
 kind: autonomous
 goal: Run the scheduled /prune-trial sweep
-status: in-review
-outcome: "Judged pkill trial (holds); opened new prune PR #1097"
-summary: "Fully agent-initiated scheduled run, no human prompt. Judged the one judgeable open trial (CLAUDE.md's pkill-teardown bullet, landed 2026-08-28): checked frictions logged since landing across all 20 sessions, found one minor, non-attributable hit, so the prune holds per the trial's own bright line. Deleted that ledger entry. Chose a new prune candidate via a background research agent that thoroughly scanned docs/research/rulebook-migration-table.md's \"Built\" rows for redundant incident narration already covered by a mechanism; every candidate except CLAUDE.md's GitHub-provenance bullet was already a tight pointer. Compressed that bullet's mechanism narration (-5 net lines), proved it on a fresh Sonnet subagent (correct on both probe scenarios), recorded the new trial entry, ran pnpm gate:scoped clean, and opened PR #1097 (subscribed to its activity)."
+status: completed
+outcome: "Judged pkill trial (holds); PR #1097 merged"
+summary: "Fully agent-initiated scheduled run, no human prompt. Judged the one judgeable open trial (CLAUDE.md's pkill-teardown bullet, landed 2026-08-28): checked frictions logged since landing across all 20 sessions, found one minor, non-attributable hit, so the prune holds per the trial's own bright line. Deleted that ledger entry. Chose a new prune candidate via a background research agent that thoroughly scanned docs/research/rulebook-migration-table.md's \"Built\" rows for redundant incident narration already covered by a mechanism; every candidate except CLAUDE.md's GitHub-provenance bullet was already a tight pointer. Compressed that bullet's mechanism narration (-5 net lines), proved it on a fresh Sonnet subagent (correct on both probe scenarios), recorded the new trial entry, ran pnpm gate:scoped clean, opened PR #1097, posted the merge verdict comment, and merged it via scripts/merge-pr.ts (prune-trial's green-gate-alone merge tier)."
 prs:
   - "1097"
 docsRead:
@@ -24,6 +24,8 @@ docsRead:
     reason: evaluate as an alternate prune-mass candidate
   - path: CLAUDE.md
     reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
   - path: docs/agents/issue-tracker.md
     reason: (no reason given)
   - path: docs/agents/tenant-layers.md
@@ -55,16 +57,16 @@ frictions:
   - description: The criterion-1 ("prose that already failed, now mechanized") search came back with only a ~5-line real cut after a thorough background-agent scan, well short of the skill's "around 100 lines" typical bar. Moving to criterion 2 (prose mass) risked cutting genuinely load-bearing judgment-only (unmechanized) guidance with no backstop, which the skill itself flags as the riskiest kind of prune.
     solution: Shipped the smaller, safe, criterion-1 cut rather than force a larger criterion-2/3 one under time pressure. If this keeps happening on future runs, the ~100-line expectation may need recalibrating now that the easy criterion-1 backlog (pkill, ADR-0009 index, environment-caveats enumeration, this provenance bullet) is mostly cleared.
     severity: nit
-durationSec: 1128
+durationSec: 1382
 models:
-  claude-sonnet-5: 114
+  claude-sonnet-5: 142
 toolCounts:
   Skill: 3
-  Bash: 28
-  Read: 8
-  ToolSearch: 4
+  Bash: 33
+  Read: 10
+  ToolSearch: 6
   mcp__github__search_issues: 1
-  Edit: 4
+  Edit: 5
   Grep: 3
   Agent: 2
   ScheduleWakeup: 1
@@ -72,6 +74,10 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .agents/prune-trials.yml
   - CLAUDE.md
