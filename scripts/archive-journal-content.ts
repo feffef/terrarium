@@ -153,10 +153,20 @@ export function planArchive(cwd: string, retainDates: number = RETAIN_DATES): Ar
 }
 
 /** `git mv` one file, creating its destination directory first — `git mv`
- *  (like plain `mv`) requires the destination directory to already exist. */
+ *  (like plain `mv`) requires the destination directory to already exist.
+ *  Forces the move because a session log can be archived once, then amended
+ *  by `log-session` back into `current` under the same filename — the next
+ *  sweep must overwrite the stale archived copy rather than fatal-erroring
+ *  on the collision (issue #1093); the `current` copy is always the
+ *  authoritative one. */
 function gitMv(cwd: string, srcRel: string, destRel: string): void {
   mkdirSync(dirname(resolve(cwd, destRel)), { recursive: true })
-  execFileSync('git', ['mv', srcRel, destRel], { cwd })
+  if (existsSync(resolve(cwd, destRel))) {
+    console.log(
+      `archive-journal-content: ${destRel} already exists from an earlier archive pass — overwriting with the current (amended) copy`,
+    )
+  }
+  execFileSync('git', ['mv', '--force', srcRel, destRel], { cwd })
 }
 
 /** Apply a plan's archive lists via `git mv`. Leaves the moves staged for a
