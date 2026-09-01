@@ -1,0 +1,204 @@
+schemaVersion: 1
+session: session_01XdcutrBYdRDo7rqJWY61QR
+startedAt: 2026-09-01T04:09:16Z
+endedAt: 2026-09-01T04:22:16Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: in-review
+outcome: "One contradiction fixed, PR #1100 opened"
+summary: "Fired by the audit-docs Routine with no live human present. Ran the full Skill: branched off origin/main, fanned out four parallel lens-reviewer agents (Freshness, Single-home, Concision, Coherence) over the Live-tier doc corpus, pooled and fact-checked their findings against primary sources, then fixed the one confirmed issue myself. Freshness and Concision reported nothing (no commits in the last 48h; corpus already tight). Single-home found a real Duplication (per-tier merge-authority restated in each self-merging Skill's own SKILL.md) but it's already tracked as a deliberate tradeoff pending a policy-as-data fix (issue #864 / rulebook-migration-table.md row PR-11), so I took no action on it. Coherence found a genuine contradiction: the journal's architecture.md described Midden's `stores` Space as \"not yet narrated\" (implying a pending pipeline stage), but layers/midden/CONTEXT.md defines stores membership as a permanent significance judgment, not a provisional one. Verified against midden/CONTEXT.md:93-99 and fixed the journal page's wording. Ran pnpm gate:scoped (green, full heavy layers since the content edit isn't provably inert), committed, pushed, and opened gated PR #1100, which self-merges on green per this Skill's bounded self-merge grant. All of this was agent-initiated per the audit-docs Skill's own charter — no human was present this run."
+prs:
+  - "1100"
+docsRead:
+  - path: layers/midden/CONTEXT.md
+    reason: primary source for the Coherence-lens contradiction fact-check
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: the Live-tier doc that had the contradiction; edited
+  - path: docs/research/rulebook-migration-table.md
+    reason: "confirmed the merge-authority duplication finding was already tracked (issue #864, row PR-11)"
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: .agents/skills/domain-modeling/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's own Skill
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions: []
+durationSec: 780
+models:
+  claude-sonnet-5: 76
+toolCounts:
+  Bash: 18
+  Agent: 4
+  TaskCreate: 1
+  ReadNotifications: 1
+  Read: 2
+  Edit: 3
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  PushNotification: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/architecture.md
+docsReadViaShell:
+  - layers/midden/CONTEXT.md
+  - docs/adr/0007-generated-config-committed-drift-checked.md
+  - docs/adr/0013-dynamic-content-config-committed-routing-map.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - CONTEXT.md
+  - docs/agents/triage-labels.md
+  - CONTEXT-MAP.md
+  - docs/proposals/README.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/audit-docs/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Audit docs: Freshness lens (Drift + Orphan-addition)"
+  - type: general-purpose
+    task: "Audit docs: Single-home lens (Duplication + Mis-location)"
+  - type: general-purpose
+    task: "Audit docs: Concision lens (Verbose + Stale-narration)"
+  - type: general-purpose
+    task: "Audit docs: Coherence lens (Contradiction + Ambiguity)"
+gitBranch: claude/festive-mayer-v7lprk
+entrypoint: remote_trigger
+cliVersion: 2.1.252
+trigger: audit-docs
