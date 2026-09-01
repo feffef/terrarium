@@ -304,46 +304,17 @@ voices quietly dominate. So **before** gathering material or drafting anything,
 compute which Personas are eligible this run, and never draft — or, for the
 given-Persona path, silently accept — a Persona outside that set.
 
-**Compute it** by running:
-
 ```bash
 pnpm exec tsx scripts/blog-rotation.ts
 ```
 
-`scripts/blog-rotation.ts` implements the rules below verbatim — it scans every
-post across all Personas' `pages/` (each Blog Space under `layers/blog/content/`,
-skipping each `index.md`, which has no `publishedAt`), and prints
-`{ last, starved, eligible }` directly, no manual frontmatter scan needed.
-
-From that ordering read two things:
-
-- **`last`** — the Persona of the single newest post.
-- **`recent-four`** — the *set* of Personas among the four newest posts.
-
-Two rules, applied together:
-
-1. **No two in a row.** `last` is excluded. If David posted last, no candidate is
-   David.
-2. **No Persona starved past four.** If a Persona is **missing from
-   `recent-four`**, it has now sat out four straight posts; to keep the gap ≤4
-   the next post must be it. So the eligible set **collapses to exactly the
-   missing Persona(s)** — if the four newest posts contain no Karen, every
-   candidate is Karen.
-
-**Eligible set:**
-
-- If any Persona is **missing from `recent-four`** → eligible = the missing
-  Persona(s). (Rule 2 wins; it already satisfies rule 1, because `last` is always
-  *in* `recent-four` and so never among the missing.)
-- Otherwise (every Persona in the universe appears in the last four) → eligible =
-  the full universe **except `last`** (rule 1 alone).
-- Edge case: with **fewer than four posts total**, rule 2 can't apply yet — use
-  eligible = all Personas except `last` (and with zero posts, the full universe).
-
-The eligible set is never empty and never contains `last` unless `last` is the
-only Persona in existence. Carry it into A2 (topic pick) and A3 (persona
-assignment); for a **given** Persona, use A0 only to detect and flag an override
-that fights rotation (step 0) — the given Persona still ships.
+It scans every post across all Personas' `pages/` and prints `{ last, starved,
+eligible }` directly — the rotation rules (no two posts in a row; no Persona
+starved past four) are implemented and documented on `eligiblePersonas()`
+there, not re-derived here. Use `eligible` as given: carry it into A2 (topic
+pick) and A3 (persona assignment); for a **given** Persona, use it only to
+detect and flag an override that fights rotation (step 0) — the given Persona
+still ships.
 
 ### A1. Gather material broadly
 
