@@ -24,6 +24,50 @@
 #            topic's tools correctly.
 trials:
   - problem: >
+      `.agents/skills/blog-post/SKILL.md`'s "A0. Rotation gate" section told the
+      agent to run `scripts/blog-rotation.ts` (which prints `{ last, starved,
+      eligible }` directly) and then spent ~30 lines re-deriving the exact same
+      algorithm in prose anyway — the `last`/`recent-four` extraction, the two
+      numbered rules, and the three-branch `eligible` derivation with its
+      fewer-than-four-posts edge case — even though the section's own text
+      already said "`scripts/blog-rotation.ts` implements the rules below
+      verbatim." The script's own doc comment on `eligiblePersonas()`
+      (`scripts/blog-rotation.ts` lines 36-51) already states the identical
+      rule numbering, so the prose was a pure restatement of code the doc told
+      you to run instead of read. Compressed A0 to: run the script, use its
+      `eligible` field as given, and — for a given Persona outside that set —
+      flag it but still ship it (the one disposition rule that isn't in the
+      script, since the script has no concept of "given"). Deleted the manual
+      last/recent-four walkthrough and the eligible-set case analysis entirely.
+    territory:
+      paths:
+        - ".agents/skills/blog-post/SKILL.md: \"A0. Rotation gate\" section (under \"A. Candidate selection\")"
+        - "scripts/blog-rotation.ts: eligiblePersonas() (the now-sole home of the algorithm)"
+      keywords:
+        - blog-rotation.ts
+        - eligiblePersonas
+        - rotation gate
+        - recent-four
+        - starved
+    opened: 2026-09-01
+    proven: true
+    check: >
+      Damage is a session running blog-post that, needing the actual rotation
+      algorithm (e.g. to sanity-check the script's output, or because the
+      script errored and it must reason about eligibility by hand), can't
+      reconstruct the rule from the compressed pointer and either guesses wrong
+      or gives up — or a session that reads the compressed A0 section and
+      concludes it no longer needs to run the script at all (treating the
+      pointer as optional rather than the actual mechanism). NOT damage: a
+      session running `scripts/blog-rotation.ts` and using its `eligible` field
+      directly (the intended single-home behavior working), or one that opens
+      the script's own doc comment when it needs the algorithm's reasoning
+      rather than just its output. A Sonnet probe given only the compressed A0
+      text correctly ran the script, used `eligible` as its answer, and
+      correctly derived — from the surviving text alone — that a given Persona
+      outside the eligible set is flagged but still shipped, never refused or
+      silently accepted.
+  - problem: >
       Five chartered Skills (audit-docs, audit-skills, blog-post, digest,
       frictions-to-fixes) each re-derived `docs/agents/pr-workflow.md`'s own
       landing mechanics — "subscribe to the PR, follow the recipe, `merge-pr.ts`
