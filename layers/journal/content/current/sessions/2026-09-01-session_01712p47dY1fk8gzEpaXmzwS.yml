@@ -1,0 +1,46 @@
+schemaVersion: 1
+session: session_01712p47dY1fk8gzEpaXmzwS
+startedAt: 2026-09-01T00:46:18Z
+endedAt: 2026-09-01T00:51:07Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: Clean run - no Inventory edits, no new issues, no PR
+summary: "Scheduled /audit-skills run, no human prompt. Branched off origin/main (already at HEAD, no divergence), ran scripts/audit-skills.ts for the scorecard (40-session window, 36 Skills, all onDisk and inventoried - no missing or phantom entries). Step 3: checked every low-usage Skill against the bright-line rule; none of this window's sessions gave a clean >=2-session absence-in-domain signal, so no importance/role changes. Step 4: Phase A flagged the dispatch-subagents and log-session brackets (two sessions with major/moderate frictions right after their edits); Phase B deep-read both full session logs (session_011uybh4H65hxmaaGfo9qAgM, session_01QJRAWhUkzLH8494WCtKn8i) and found every friction was about a guard regex bug, PR-bundling, and a shell-command parser - none implicated either edited Skill, so inconclusive, nothing written. Step 5: orphanScan was a full, trustworthy scan (635 merged PRs, 490 with a session log); its 2 orphanedSessions (session_019aeaoPHYWMJVekmUvTMhQ9, session_01QdPGeF2hNwJLtnvzv1Rsi1) both already have open, fully-evidenced tracking issues (#736, #1063) with the session id already cited on-thread, so no new comment per the dedup rule. orphanSuppressionLog, humanPromptedClosures, and manuallyRescuedClosures were all empty. Step 6: recorded one idea below. No Inventory file changed, so no PR to open this run."
+prs: []
+docsRead:
+  - path: scripts/audit-skills.ts
+    reason: resolved RESOLVED_ORPHANED_SESSIONS and MAX_SKILL_SESSION_FILES semantics
+  - path: layers/journal/content/current/skills/implement.yml
+    reason: checked whether this run's evidence changed the standing inconsistent-adoption verdict
+  - path: layers/journal/content/current/skills/code-review.yml
+    reason: same check as implement.yml
+  - path: layers/journal/content/current/sessions/2026-08-29-session_011uybh4H65hxmaaGfo9qAgM.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-29-session_01QJRAWhUkzLH8494WCtKn8i.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: invoked as a slash command (this run)
+  - name: close-session
+    reason: self-judged closure - no PR opened this run
+  - name: log-session
+    reason: this log
+frictions: []
+durationSec: 289
+models:
+  claude-sonnet-5: 65
+toolCounts:
+  Bash: 22
+  ToolSearch: 1
+  mcp__github__search_issues: 3
+  mcp__github__issue_read: 3
+  Read: 2
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-rytp75
+entrypoint: remote_trigger
+cliVersion: 2.1.252
+trigger: audit-skills
+ideas:
+  - implement.yml and code-review.yml have accumulated 10+ observations entries since 2026-07-13, every single one concluding "inconsistent adoption, role and grade held as-is" - the bright-line rule has never once been crossed for either Skill across a month and a half of runs. Either accept "supporting" as their stable steady-state and stop re-litigating it every run (the entries add no new information once the pattern is this well-established), or fold the recurring evidence into each Skill's own SKILL.md as an explicit reminder to invoke it for single-issue work, which is the one sub-pattern (07-17's note) that showed real signal before aging out.
