@@ -1,0 +1,114 @@
+schemaVersion: 1
+session: session_01EQQRCf2wcFwvTjRWs7tvL2
+startedAt: 2026-09-01T13:23:59Z
+endedAt: 2026-09-01T13:48:21Z
+kind: autonomous
+goal: Run scheduled /prune-trial
+status: in-review
+outcome: No trials judgeable yet; opened one new prune
+summary: "Scheduled, agent-initiated /prune-trial run — no human prompt this session. Judged the four open trials in .agents/prune-trials.yml via scripts/prune-trial-window.ts: all four had landed but were still short of their judgeable-from floor, so none were judged (correct per the skill: silence, not a guess, when a trial isn't past its window). Dispatched a background research agent to search the corpus for a new, non-overlapping prune candidate; it identified blog-post/SKILL.md's \"A0. Rotation gate\" section as a ~30-line prose re-derivation of scripts/blog-rotation.ts's eligiblePersonas(), which the section already told the reader to run. Compressed A0 to a pointer, ran a Sonnet comprehension probe on the surviving text alone (passed: correctly ran the script and derived the override disposition), verified with pnpm gate:scoped (green, full L2 smoke suite), added the ledger entry (proven: true), and opened PR #1102."
+prs:
+  - "1102"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: judge open trials + author new ledger entry
+  - path: docs/research/rulebook-migration-table.md
+    reason: candidate index for criterion 1
+  - path: scripts/blog-rotation.ts
+    reason: confirm it's the canonical algorithm home before pointing to it
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: scripts/last-comment-authors.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: this run's own charter
+  - name: dispatch-subagents
+    reason: background research + Sonnet comprehension probe
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Instinctively reached for ScheduleWakeup to wait on a background research agent before remembering Agent-tool dispatches self-notify on completion with no wait/poll needed; the loop-only-tool guard correctly refused it.
+    solution: No doc change needed — CLAUDE.md already states this rule and the guard caught it before any harm; just a personal habit to drop, noted for the record since the guard's deny message is the actual teaching moment here.
+    severity: nit
+  - description: The only clean, verified prune candidate found nets -29 lines, well under the prune-trial Skill's ~100-line aspirational bar; an extensive corpus search found the repo already tightly single-homed after several prior successful trials, with no other pure (behavior-preserving, doc-only) duplication of comparable size available this run.
+    solution: Shipped honestly at the smaller size rather than forcing scope to hit the bar or padding the change. If this recurs across future runs, the Skill may want an explicit note that the ~100-line bar is a target that naturally shrinks as the corpus gets pruned, not a floor to force.
+    severity: minor
+  - description: "SHELL-READ-DETECTION false positive: docsReadViaShell credited at least auto-triage/SKILL.md, docs/adr/0003-agent-operating-model-and-governance.md, docs/adr/0004-objective-safety-gate.md, guest-build/SKILL.md, and guest-intake/SKILL.md as read this session; I never opened any of their content (no Read/Grep-with-content call touched them). The one candidate command whose file-list overlaps several other flagged entries (guards.md, tenant-layers.md, mdc-when-to-use.md, guest-contributions.md) is `wc -l /home/user/terrarium/docs/agents/guards.md /home/user/terrarium/docs/agents/*.md /home/user/terrarium/.agents/skills/*/SKILL.md`, run only to compare file sizes — `wc -l` never shows file content, only line counts, so every path it names should be rejected the same way the detector already correctly rejects a plain `wc -l <single-file>` call elsewhere in this same run. docs/adr/0003 and 0004 aren't even in that glob, so at least one more unidentified command or heuristic is also over-crediting."
+    solution: Have the shell-read detector treat `wc -l`/`wc -c`/similar count-only utilities as never content-revealing regardless of how many file args they take (it already gets this right for a single-file `wc -l` call elsewhere in this run — the multi-file case falls through the same rule it should hit). Also worth an isolated repro to find what credited the two ADR paths, since they weren't arguments to any command in this session's transcript at all.
+    severity: moderate
+durationSec: 1462
+models:
+  claude-sonnet-5: 83
+toolCounts:
+  Skill: 3
+  Bash: 17
+  Read: 8
+  Grep: 2
+  Agent: 2
+  ScheduleWakeup: 1
+  Edit: 4
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/prune-trials.yml
+docsReadViaShell:
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/agents/guards.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/tenant-layers.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/digest/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Find best prune-trial candidate
+  - type: general-purpose
+    task: Probe pruned blog-rotation instructions
+gitBranch: claude/practical-rubin-nl7xpb
+entrypoint: remote_trigger
+cliVersion: 2.1.252
+trigger: prune-trial
+learnings:
+  - "scripts/prune-trial-window.ts is the only trustworthy source for a trial's judgeable-from time — two of the four open trials had an opened: date matching today's date but were still correctly reported not-yet-judgeable, confirming opened: is not the window start."
+ideas:
+  - As single-homing matures and remaining pure-prose duplication shrinks, /prune-trial runs may increasingly need to bundle several small, non-overlapping clean prunes into one PR to keep hitting a meaningful line-delta bar, rather than treating one candidate per run as fixed.
