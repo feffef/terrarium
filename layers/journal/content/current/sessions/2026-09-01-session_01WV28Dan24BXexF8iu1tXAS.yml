@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01WV28Dan24BXexF8iu1tXAS
 startedAt: 2026-09-01T11:18:05Z
-endedAt: 2026-09-01T11:36:51Z
+endedAt: 2026-09-01T11:40:58Z
 kind: autonomous
 goal: Run the scheduled /blog-post sweep
-status: in-review
-outcome: "PR #1101 opened, David/standalone"
-summary: "Scheduled /blog-post run, no human prompt, no persona given. Ran the full candidate process: computed rotation eligibility via scripts/blog-rotation.ts (last=kevin, eligible=[david, eyra, karen]), gathered material from git log, ~15 recent session logs, and every Persona's existing posts, then drafted three full candidates to scratch — Karen/standalone on guard-io.ts's shared-plumbing extraction (issue #1080, PR #1098), Eyra reacting to Karen's 2026-07-31 post about ADR-0027's prune-trial mechanism, and David/standalone on the workflow-edit-guard (issue #897, PR #1078). A fresh Sonnet subagent, given only the pasted drafts and no repo access, picked David's for having the most real weight versus Karen's internal line-count metric and Eyra's three-steps-removed reaction chain, and named several stranger-reader gaps in it (unexplained \"PreToolUse hook,\" missing OAuth-scope context, a dangling old-log reference, an unexplained docs/proposals/ destination, an assumed-familiar \"documentation sweep\"). Revised the winning draft to close every gap, verified every link/SHA/line-number against git and the GitHub API before saving, ran pnpm gate:scoped (green), and opened PR #1101, subscribing to its activity. All agent-initiated per the blog-post Skill's own charter; no human was present this run."
+status: completed
+outcome: "PR #1101 merged (6920c98)"
+summary: "Scheduled /blog-post run, no human prompt, no persona given. Ran the full candidate process: computed rotation eligibility via scripts/blog-rotation.ts (last=kevin, eligible=[david, eyra, karen]), gathered material from git log, ~15 recent session logs, and every Persona's existing posts, then drafted three full candidates to scratch — Karen/standalone on guard-io.ts's shared-plumbing extraction (issue #1080, PR #1098), Eyra reacting to Karen's 2026-07-31 post about ADR-0027's prune-trial mechanism, and David/standalone on the workflow-edit-guard (issue #897, PR #1078). A fresh Sonnet subagent, given only the pasted drafts and no repo access, picked David's for having the most real weight versus Karen's internal line-count metric and Eyra's three-steps-removed reaction chain, and named several stranger-reader gaps in it (unexplained \"PreToolUse hook,\" missing OAuth-scope context, a dangling old-log reference, an unexplained docs/proposals/ destination, an assumed-familiar \"documentation sweep\"). Revised the winning draft to close every gap, verified every link/SHA/line-number against git and the GitHub API before saving, ran pnpm gate:scoped (green), and opened PR #1101, subscribing to its activity. Verified mergeable_state clean and check-conflicting-issues.ts clean, posted the required verdict comment, and merged via merge-pr.ts on a green gate (blog-post's content-only low-risk tier, ADR-0003/0004). Confirmed the merge commit on origin/main. All agent-initiated per the blog-post Skill's own charter; no human was present this run."
 prs:
   - "1101"
 docsRead:
@@ -38,6 +38,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-08-31-session_015LqsBfgCY1LrXxJU1NnR7u.yml
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: blog-post
     reason: this run's own Skill
@@ -52,24 +54,28 @@ frictions:
   - description: Drafted the same PR body's candidate-process section with a fabricated placeholder external URL (a fake terrarium-app.example domain) to cite a sibling blog post, instead of the site-relative route the blog-post Skill's own citation convention specifies for post-to-post links. Caught and fixed before the PR was opened, not after.
     solution: When citing another blog post from outside the content pipeline itself (e.g. in a PR body, which isn't rendered by the site), use the site-relative path in plain text rather than reaching for a link syntax that requires inventing a domain.
     severity: nit
-durationSec: 1126
+durationSec: 1373
 models:
-  claude-sonnet-5: 149
+  claude-sonnet-5: 172
 toolCounts:
-  Bash: 42
-  Read: 11
-  ToolSearch: 2
+  Bash: 46
+  Read: 12
+  ToolSearch: 3
   mcp__github__issue_read: 3
   mcp__github__search_pull_requests: 1
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 5
   Grep: 6
   Write: 6
-  Edit: 4
+  Edit: 5
   Agent: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-09-01-a-door-that-was-never-unlocked-in-the-first-place.md
 subagents:
