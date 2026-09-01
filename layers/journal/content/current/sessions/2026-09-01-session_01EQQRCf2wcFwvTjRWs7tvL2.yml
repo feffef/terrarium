@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01EQQRCf2wcFwvTjRWs7tvL2
 startedAt: 2026-09-01T13:23:59Z
-endedAt: 2026-09-01T13:48:21Z
+endedAt: 2026-09-01T13:50:36Z
 kind: autonomous
 goal: Run scheduled /prune-trial
-status: in-review
-outcome: No trials judgeable yet; opened one new prune
-summary: "Scheduled, agent-initiated /prune-trial run — no human prompt this session. Judged the four open trials in .agents/prune-trials.yml via scripts/prune-trial-window.ts: all four had landed but were still short of their judgeable-from floor, so none were judged (correct per the skill: silence, not a guess, when a trial isn't past its window). Dispatched a background research agent to search the corpus for a new, non-overlapping prune candidate; it identified blog-post/SKILL.md's \"A0. Rotation gate\" section as a ~30-line prose re-derivation of scripts/blog-rotation.ts's eligiblePersonas(), which the section already told the reader to run. Compressed A0 to a pointer, ran a Sonnet comprehension probe on the surviving text alone (passed: correctly ran the script and derived the override disposition), verified with pnpm gate:scoped (green, full L2 smoke suite), added the ledger entry (proven: true), and opened PR #1102."
+status: completed
+outcome: No trials judgeable yet; shipped and merged one prune
+summary: "Scheduled, agent-initiated /prune-trial run — no human prompt this session. Judged the four open trials in .agents/prune-trials.yml via scripts/prune-trial-window.ts: all four had landed but were still short of their judgeable-from floor, so none were judged (correct per the skill: silence, not a guess, when a trial isn't past its window). Dispatched a background research agent to search the corpus for a new, non-overlapping prune candidate; it identified blog-post/SKILL.md's \"A0. Rotation gate\" section as a ~30-line prose re-derivation of scripts/blog-rotation.ts's eligiblePersonas(), which the section already told the reader to run. Compressed A0 to a pointer, ran a Sonnet comprehension probe on the surviving text alone (passed: correctly ran the script and derived the override disposition), verified with pnpm gate:scoped (green, full L2 smoke suite), added the ledger entry (proven: true), opened PR #1102, babysat it through a green gate with no review comments, and self-merged per prune-trial's green-gate merge tier."
 prs:
   - "1102"
 docsRead:
@@ -59,26 +59,30 @@ frictions:
   - description: "SHELL-READ-DETECTION false positive: docsReadViaShell credited at least auto-triage/SKILL.md, docs/adr/0003-agent-operating-model-and-governance.md, docs/adr/0004-objective-safety-gate.md, guest-build/SKILL.md, and guest-intake/SKILL.md as read this session; I never opened any of their content (no Read/Grep-with-content call touched them). The one candidate command whose file-list overlaps several other flagged entries (guards.md, tenant-layers.md, mdc-when-to-use.md, guest-contributions.md) is `wc -l /home/user/terrarium/docs/agents/guards.md /home/user/terrarium/docs/agents/*.md /home/user/terrarium/.agents/skills/*/SKILL.md`, run only to compare file sizes — `wc -l` never shows file content, only line counts, so every path it names should be rejected the same way the detector already correctly rejects a plain `wc -l <single-file>` call elsewhere in this same run. docs/adr/0003 and 0004 aren't even in that glob, so at least one more unidentified command or heuristic is also over-crediting."
     solution: Have the shell-read detector treat `wc -l`/`wc -c`/similar count-only utilities as never content-revealing regardless of how many file args they take (it already gets this right for a single-file `wc -l` call elsewhere in this run — the multi-file case falls through the same rule it should hit). Also worth an isolated repro to find what credited the two ADR paths, since they weren't arguments to any command in this session's transcript at all.
     severity: moderate
-durationSec: 1462
+durationSec: 1597
 models:
-  claude-sonnet-5: 83
+  claude-sonnet-5: 118
 toolCounts:
   Skill: 3
-  Bash: 17
+  Bash: 22
   Read: 8
   Grep: 2
   Agent: 2
   ScheduleWakeup: 1
-  Edit: 4
-  ToolSearch: 1
+  Edit: 5
+  ToolSearch: 5
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 4
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .agents/skills/blog-post/SKILL.md
   - .agents/prune-trials.yml
 docsReadViaShell:
+  - docs/agents/pr-workflow.md
   - docs/research/rulebook-migration-table.md
   - .agents/skills/guest-build/SKILL.md
   - .agents/skills/prune-trial/SKILL.md
