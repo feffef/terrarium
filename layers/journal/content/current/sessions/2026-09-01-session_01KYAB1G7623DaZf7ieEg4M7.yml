@@ -1,0 +1,40 @@
+schemaVersion: 1
+session: session_01KYAB1G7623DaZf7ieEg4M7
+startedAt: 2026-09-01T00:16:10Z
+endedAt: 2026-09-01T00:23:13Z
+kind: autonomous
+goal: Run the scheduled /digest sweep
+status: in-review
+outcome: "PR #1099 open, gate green"
+summary: "Scheduled /digest run, no human prompt. Authored the 2026-08-31 Digest (5 merged PRs, 7 sessions, 8 frictions, headlined by a same-day repair of the previous day's own archive-sweep gap), ran the retention sweep (archived 2026-08-24's digest and 6 session logs), cleared pnpm gate:scoped, and opened/subscribed to PR #1099 for human review and eventual self-merge on green CI, per the digest Skill's content-only low-risk tier."
+prs:
+  - "1099"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-08-30.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 423
+models:
+  claude-sonnet-5: 38
+toolCounts:
+  Bash: 11
+  Read: 1
+  Write: 2
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-08-31.md
+gitBranch: claude/compassionate-lovelace-iyc0j4
+entrypoint: remote_trigger
+cliVersion: 2.1.252
+trigger: digest
