@@ -1,16 +1,18 @@
 schemaVersion: 1
 session: session_01KYAB1G7623DaZf7ieEg4M7
 startedAt: 2026-09-01T00:16:10Z
-endedAt: 2026-09-01T00:23:13Z
+endedAt: 2026-09-01T00:27:11Z
 kind: autonomous
 goal: Run the scheduled /digest sweep
-status: in-review
-outcome: "PR #1099 open, gate green"
-summary: "Scheduled /digest run, no human prompt. Authored the 2026-08-31 Digest (5 merged PRs, 7 sessions, 8 frictions, headlined by a same-day repair of the previous day's own archive-sweep gap), ran the retention sweep (archived 2026-08-24's digest and 6 session logs), cleared pnpm gate:scoped, and opened/subscribed to PR #1099 for human review and eventual self-merge on green CI, per the digest Skill's content-only low-risk tier."
+status: completed
+outcome: "PR #1099 merged (3d61854)"
+summary: "Scheduled /digest run, no human prompt. Authored the 2026-08-31 Digest (5 merged PRs, 7 sessions, 8 frictions, headlined by a same-day repair of the previous day's own archive-sweep gap), ran the retention sweep (archived 2026-08-24's digest and 6 session logs), cleared pnpm gate:scoped, opened PR #1099, and self-merged it on a green safety gate per the digest Skill's content-only low-risk tier (ADR-0003/ADR-0004) after posting a verdict comment and checking for conflicting issues."
 prs:
   - "1099"
 docsRead:
   - path: layers/journal/content/current/pages/digests/2026-08-30.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
 skillsUsed:
   - name: close-session
@@ -20,18 +22,25 @@ skillsUsed:
   - name: digest
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 423
+durationSec: 661
 models:
-  claude-sonnet-5: 38
+  claude-sonnet-5: 70
 toolCounts:
-  Bash: 11
-  Read: 1
+  Bash: 14
+  Read: 3
   Write: 2
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 6
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  Edit: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-08-31.md
 gitBranch: claude/compassionate-lovelace-iyc0j4
