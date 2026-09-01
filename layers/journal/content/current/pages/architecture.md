@@ -37,9 +37,9 @@ components and content *model* but none of its content *data*. What a Space
 different ways. The Journal's Spaces are points in time: `current` and
 `archived`. The [Blog](/t/blog)'s are voices — one Space per Persona, so
 `david` and `karen` cover the same project from separate rooms. The
-[Midden](/t/midden)'s are stages in the life of a find: `trench` is the
-excavation on display, `stores` holds material catalogued but not yet narrated
-by a dig report.
+[Midden](/t/midden)'s are what a find is judged: `trench` is the excavation on
+display, `stores` holds material judged sound but not significant enough for a
+dig report.
 
 Inside a Space sit typed **Collections**, and exactly one of them is special:
 `pages` is the only Collection the router will resolve a URL to. So every Tenant
