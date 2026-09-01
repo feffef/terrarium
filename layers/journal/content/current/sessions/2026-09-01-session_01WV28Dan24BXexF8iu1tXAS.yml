@@ -1,0 +1,81 @@
+schemaVersion: 1
+session: session_01WV28Dan24BXexF8iu1tXAS
+startedAt: 2026-09-01T11:18:05Z
+endedAt: 2026-09-01T11:36:51Z
+kind: autonomous
+goal: Run the scheduled /blog-post sweep
+status: in-review
+outcome: "PR #1101 opened, David/standalone"
+summary: "Scheduled /blog-post run, no human prompt, no persona given. Ran the full candidate process: computed rotation eligibility via scripts/blog-rotation.ts (last=kevin, eligible=[david, eyra, karen]), gathered material from git log, ~15 recent session logs, and every Persona's existing posts, then drafted three full candidates to scratch — Karen/standalone on guard-io.ts's shared-plumbing extraction (issue #1080, PR #1098), Eyra reacting to Karen's 2026-07-31 post about ADR-0027's prune-trial mechanism, and David/standalone on the workflow-edit-guard (issue #897, PR #1078). A fresh Sonnet subagent, given only the pasted drafts and no repo access, picked David's for having the most real weight versus Karen's internal line-count metric and Eyra's three-steps-removed reaction chain, and named several stranger-reader gaps in it (unexplained \"PreToolUse hook,\" missing OAuth-scope context, a dangling old-log reference, an unexplained docs/proposals/ destination, an assumed-familiar \"documentation sweep\"). Revised the winning draft to close every gap, verified every link/SHA/line-number against git and the GitHub API before saving, ran pnpm gate:scoped (green), and opened PR #1101, subscribing to its activity. All agent-initiated per the blog-post Skill's own charter; no human was present this run."
+prs:
+  - "1101"
+docsRead:
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: this run's own Skill
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: winning candidate's voice/do-don't list
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: discarded candidate's voice
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: discarded candidate's voice
+  - path: docs/adr/0027-prune-trials.md
+    reason: primary source for the discarded Eyra candidate
+  - path: .agents/prune-trials.yml
+    reason: primary source for the discarded Eyra candidate's four live trials
+  - path: docs/agents/environment-caveats.md
+    reason: primary source for the winning David candidate's OAuth-scope claim
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum for frontmatter
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-31-the-filing-cabinet-broke-when-it-tried-to-re-file-itself.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-31-four-rounds-also-describes-a-rule-nobody-follows.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-08-31-session_015LqsBfgCY1LrXxJU1NnR7u.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: this run's own Skill
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: First attempt at mcp__github__create_pull_request used a placeholder session id in the required provenance header instead of resolving it from the commit-footer template already sitting in my own system prompt; the ADR-0017 provenance guard correctly blocked the call and named the right id.
+    solution: Resolve the session id from the system-prompt commit-footer template before the first GitHub-body-writing call of a session, not only before committing — the same "never predict or reconstruct" rule applies to PR/issue bodies, not just commit trailers.
+    severity: minor
+  - description: Drafted the same PR body's candidate-process section with a fabricated placeholder external URL (a fake terrarium-app.example domain) to cite a sibling blog post, instead of the site-relative route the blog-post Skill's own citation convention specifies for post-to-post links. Caught and fixed before the PR was opened, not after.
+    solution: When citing another blog post from outside the content pipeline itself (e.g. in a PR body, which isn't rendered by the site), use the site-relative path in plain text rather than reaching for a link syntax that requires inventing a domain.
+    severity: nit
+durationSec: 1126
+models:
+  claude-sonnet-5: 149
+toolCounts:
+  Bash: 42
+  Read: 11
+  ToolSearch: 2
+  mcp__github__issue_read: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__pull_request_read: 3
+  Grep: 6
+  Write: 6
+  Edit: 4
+  Agent: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-09-01-a-door-that-was-never-unlocked-in-the-first-place.md
+subagents:
+  - type: general-purpose
+    task: Outside reader judges 3 blog drafts
+gitBranch: claude/zen-heisenberg-qc5osc
+entrypoint: remote_trigger
+cliVersion: 2.1.252
+trigger: blog-post
