@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01ArT8ikw3CjbcEXRcSdtmka
 startedAt: 2026-09-02T13:18:53Z
-endedAt: 2026-09-02T13:34:10Z
+endedAt: 2026-09-02T13:38:05Z
 kind: autonomous
 goal: Run scheduled /prune-trial maintenance
-status: in-review
-outcome: "Judged 2 trials (hold), opened PR #1109 pruning 1 new"
+status: completed
+outcome: "Judged 2 trials (hold); PR #1109 pruning 1 new merged"
 summary: "Scheduled, no human input this session. §1: judged the two open trials past their window (ADR-0009 amendment-index compression, CLAUDE.md platform-quirks bullet compression) against session-frictions.ts and a GitHub issue search for regressions — both held, no damage, deleted their ledger entries. §2/§3: chose the next problem via a background Explore agent scan of docs/research/rulebook-migration-table.md's Built-mechanism rows, landing on close-session/SKILL.md's and log-session/SKILL.md's over-narrated mechanism paragraphs (CS-01/LS-03) — compressed both to the rule plus a one-line pointer, -11 lines net, excluding the three currently-open trials' territory. §4: proved the compressed text on a fresh Sonnet subagent given only the surviving prose — it correctly answered both scenario questions. Ran pnpm gate:scoped (full sequence, all green) and opened PR #1109."
 prs:
   - "1109"
@@ -53,16 +53,16 @@ frictions:
   - description: "Called ScheduleWakeup to bridge the wait on a background Explore-agent dispatch, mistaking the wait for something that needed bridging; the loop-only-tool guard correctly refused it (issue #814) since this is not a /loop session."
     solution: Dispatched agents self-notify on completion — no wait/poll tool is needed at all outside /loop. Recognized this from the guard's own error message and proceeded without it.
     severity: nit
-durationSec: 917
+durationSec: 1152
 models:
-  claude-sonnet-5: 106
+  claude-sonnet-5: 126
 toolCounts:
-  Bash: 24
+  Bash: 29
   Read: 9
   Grep: 7
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__search_issues: 1
-  Edit: 4
+  Edit: 5
   Agent: 2
   ScheduleWakeup: 1
   mcp__github__list_pull_requests: 1
@@ -70,6 +70,8 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 3
 filesEdited:
   - .agents/prune-trials.yml
   - .agents/skills/close-session/SKILL.md
