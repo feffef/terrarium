@@ -1,0 +1,56 @@
+schemaVersion: 1
+session: session_01RgYJW1mLQMEqRmJrTBbZTB
+startedAt: 2026-09-02T11:10:50Z
+endedAt: 2026-09-02T11:22:58Z
+kind: autonomous
+goal: Run the scheduled /blog-post routine
+status: in-review
+outcome: "PR #1108 opened, gate green"
+summary: "Scheduled /blog-post firing, no human prompt this turn. Ran the rotation gate (scripts/blog-rotation.ts): only karen eligible (starved; david posted last), so all three drafted candidates were karen, on distinct angles. Gathered real material (git log, session logs, GitHub issues #952/#1092/#1106, sibling personas' recent posts) and drafted three full candidates to scratch: (1) a reaction to kevin's filing-cabinet post, following up on issue #1092's still-open GitHub-403 regression; (2) a standalone on prune-trial's 48-hour track record; (3) a standalone on today's /audit-docs sweep finding doc drift including an unfixable ADR-0017 arithmetic error (#1106). A fresh Sonnet subagent, given only the three pasted drafts and no repo access, judged candidate (1) strongest on underlying stakes and named gaps to close. Revised it per the reviewer's notes, discarded the other two to a scratch backlog, branched off origin/main onto the pinned claude/zen-heisenberg-g06rcx branch, saved the post + matching pingback, ran pnpm gate:scoped (green, 79/79 e2e), and opened gated PR #1108 with full rotation/candidate provenance in the body. Subscribed to PR activity. Every step was agent-initiated; no human was in the loop this turn."
+prs:
+  - "1108"
+docsRead:
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: voice/do-don't for the drafts
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe for once CI is green
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-31-the-filing-cabinet-broke-when-it-tried-to-re-file-itself.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: this session's whole task
+  - name: close-session
+    reason: session closure at PR-open
+  - name: log-session
+    reason: this log
+frictions: []
+durationSec: 728
+models:
+  claude-sonnet-5: 102
+toolCounts:
+  Bash: 35
+  Read: 3
+  Grep: 1
+  ToolSearch: 3
+  mcp__github__issue_read: 3
+  Write: 6
+  Agent: 1
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+docsReadViaShell:
+  - docs/agents/github-integration.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog draft candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-g06rcx
+entrypoint: remote_trigger
+cliVersion: 2.1.258
+trigger: blog-post
