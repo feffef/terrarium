@@ -24,6 +24,55 @@
 #            topic's tools correctly.
 trials:
   - problem: >
+      Two Built-mechanism rows (`docs/research/rulebook-migration-table.md`'s
+      CS-01 and LS-03) each carried prose narrating internal mechanism detail
+      past what compliance needs. `close-session/SKILL.md`'s "dispatched
+      worktree-isolated impl agents must NOT self-invoke this Skill" paragraph
+      named the internal helper (`isLinkedWorktree()`), cited "issue #449 Gap
+      4" for when the guard was added, then continued into a second, only
+      loosely-related explanation of how the orphan check (issue #931)
+      tolerates a footer id with no matching log yet — none of which changes
+      what the agent should do (don't self-invoke; the guard already refuses
+      the call loudly). `log-session/SKILL.md`'s "Recovering the id" section
+      similarly over-explained `session-end.ts`'s id-resolution internals
+      (which env var, the `cse_…` → `session_…` transform, the transcript
+      fallback) in the paragraph stating the field is a fallback, not the
+      source of truth — the preceding paragraph already tells the agent how
+      to type the id correctly by hand. Compressed both to state the rule and
+      point at the mechanism, dropping the internal function/variable names
+      and the loosely-related orphan-check tangent. Net -11 lines across the
+      two files.
+    territory:
+      paths:
+        - ".agents/skills/close-session/SKILL.md: the \"Dispatched worktree-isolated impl agents\" paragraph"
+        - ".agents/skills/log-session/SKILL.md: \"Recovering the id\" section, the \"fallback, not the source of truth\" paragraph"
+      keywords:
+        - isLinkedWorktree
+        - allow-worktree
+        - session-end.ts
+        - CLAUDE_CODE_REMOTE_SESSION_ID
+        - Recovering the id
+    opened: 2026-09-02
+    proven: true
+    check: >
+      Damage is a dispatched worktree-isolated impl agent that self-invokes
+      close-session anyway because the compressed paragraph reads as less
+      binding than the old one, or a session that — hitting the guard's
+      refusal — can't tell from the compressed text who *is* responsible for
+      the log and gives up instead of leaving it to the orchestrator; or a
+      session authoring the log's `session:` field that, needing the actual
+      id-recovery mechanism (which env var, the transform, the fallback
+      order), can't reconstruct it from the compressed text and either
+      guesses wrong or asserts a wrong mechanism claim. NOT damage: a
+      dispatched impl agent correctly not invoking close-session and leaving
+      the log to the orchestrator (the intended behavior working), or a
+      session typing the `session:` field from the still-intact "Recovering
+      the id" first paragraph and trusting session-end.ts's stitch to correct
+      it if wrong. A Sonnet probe given only the compressed text correctly
+      derived that a dispatched impl agent must not self-invoke the Skill,
+      that the orchestrator is the sole log author, and that a wrong typed
+      `session:` value is silently corrected rather than fatal.
+  - problem: >
       `.agents/skills/blog-post/SKILL.md`'s "A0. Rotation gate" section told the
       agent to run `scripts/blog-rotation.ts` (which prints `{ last, starved,
       eligible }` directly) and then spent ~30 lines re-deriving the exact same
