@@ -28,13 +28,13 @@
 // a well-formed call (a guard must never wedge normal tool use).
 //
 // Pure core (`checkToolCall`, `denyOutputFor`) is kept separate from the
-// stdin/stdout hook I/O (`main`), mirroring the `session-id-guard.ts` /
-// `session-end.ts` split (`findSessionIdMismatches` vs the hook wiring).
+// shared stdin/bootstrap plumbing (`guard-io.ts`, issue #1080) — the one guard
+// there wired with `failOpen: true`, since it must never deny a call it could
+// not positively identify.
 //
 // Usage (normally invoked by the PreToolUse hook with the payload on stdin):
 //   tsx scripts/deferred-tool-guard.ts        # reads hook JSON on stdin
-import { readFileSync } from 'node:fs'
-import { pathToFileURL } from 'node:url'
+import { buildDenyOutput, readHookPayload, runIfMain, type DenyOutput } from './guard-io.ts'
 
 /** A distinctive argument fingerprint that uniquely identifies ONE tool. When a
  *  call to a *different* tool carries every one of `requiredKeys`, it is almost
@@ -110,21 +110,8 @@ export function formatGuardMessage(f: GuardFinding): string {
  *  call and show `permissionDecisionReason` to the model (Claude Code hooks
  *  reference). Returns `null` when nothing should be blocked, so `main` writes
  *  nothing and the call proceeds untouched. */
-export function denyOutputFor(finding: GuardFinding | null): { hookSpecificOutput: Record<string, string> } | null {
-  if (!finding) return null
-  return {
-    hookSpecificOutput: {
-      hookEventName: 'PreToolUse',
-      permissionDecision: 'deny',
-      permissionDecisionReason: formatGuardMessage(finding),
-    },
-  }
-}
-
-/** Hook payload shape we rely on — a subset of the PreToolUse stdin JSON. */
-interface PreToolUsePayload {
-  tool_name?: string
-  tool_input?: unknown
+export function denyOutputFor(finding: GuardFinding | null): DenyOutput | null {
+  return finding ? buildDenyOutput(formatGuardMessage(finding)) : null
 }
 
 /** Reads the hook JSON on stdin, runs the pure check, and — only on a match —
@@ -133,31 +120,11 @@ interface PreToolUsePayload {
  *  backstop, so it fails OPEN — it never blocks a call it could not positively
  *  identify as the confusion. */
 export function main(): void {
-  let raw: string
-  try {
-    raw = readFileSync(0, 'utf8')
-  } catch {
-    return // no stdin — nothing to inspect
-  }
-  if (!raw.trim()) return
+  const result = readHookPayload()
+  if (result.kind !== 'ok') return // no stdin, blank stdin, bad JSON, or no tool_name — do not interfere
 
-  let payload: PreToolUsePayload
-  try {
-    payload = JSON.parse(raw)
-  } catch {
-    return // not JSON — do not interfere
-  }
-  if (typeof payload.tool_name !== 'string') return
-
-  const finding = checkToolCall(payload.tool_name, payload.tool_input)
-  const output = denyOutputFor(finding)
+  const output = denyOutputFor(checkToolCall(result.payload.tool_name, result.payload.tool_input))
   if (output) process.stdout.write(JSON.stringify(output))
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch {
-    // A hook must never wedge tool use with its own crash — swallow and allow.
-  }
-}
+runIfMain(import.meta.url, { main, label: 'deferred-tool guard', ref: 'issue #612', failOpen: true })

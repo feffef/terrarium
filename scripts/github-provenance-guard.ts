@@ -39,17 +39,24 @@
 // (`update_pull_request`); a comment is not, and its standing remedy is a
 // visible follow-up correction, never a rewrite of the original.
 //
-// Pure core (`checkGithubProvenance`) is kept separate from the stdin/transcript
-// I/O (`main`), mirroring `deferred-tool-guard.ts` / `session-id-guard.ts`.
+// Pure core (`checkGithubProvenance`) is kept separate from the shared
+// stdin/bootstrap plumbing (`guard-io.ts`, issue #1080) and this guard's own
+// transcript-ground-truth resolution (`main`).
 //
 // Usage (normally invoked by the PreToolUse hook with the payload on stdin):
 //   tsx scripts/github-provenance-guard.ts
 import { readFileSync } from 'node:fs'
-import { pathToFileURL } from 'node:url'
 import { SESSION_TRAILER } from './git-helpers.ts'
+import { buildDenyOutput, denyUninspectable, readHookPayload, runIfMain, type DenyOutput } from './guard-io.ts'
 import { provenanceFooter } from './provenance-footer.ts'
 import { provenanceHeader, readProvenanceHeader, sessionIdsIn } from './provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from './session-id-guard.ts'
+
+const LABEL = 'provenance guard'
+// The dated amendment, not just the ADR: this guard's fail-closed posture is a
+// deliberate 2026-08-01 policy flip, not the default — the citation is worth
+// keeping in the one message this guard can still show without ground truth.
+const REF = 'ADR-0017, 2026-08-01'
 
 /** A global copy of `SESSION_TRAILER` for `matchAll` — the last-match rule needs
  *  every occurrence (issue #692). Built locally rather than adding the `g` flag
@@ -272,41 +279,8 @@ export function formatGuardMessage(f: ProvenanceFinding): string {
 /** The `PreToolUse` "deny" control object a hook writes to stdout to block a
  *  call (Claude Code hooks reference). `null` when nothing should be blocked,
  *  so `main` writes nothing and the call proceeds untouched. */
-export function denyOutputFor(finding: ProvenanceFinding | null): { hookSpecificOutput: Record<string, string> } | null {
-  if (!finding) return null
-  return {
-    hookSpecificOutput: {
-      hookEventName: 'PreToolUse',
-      permissionDecision: 'deny',
-      permissionDecisionReason: formatGuardMessage(finding),
-    },
-  }
-}
-
-/** Hook payload shape we rely on — a subset of the PreToolUse stdin JSON.
- *  `transcript_path` is what `session-end.ts` already reads off the same
- *  payload shape (confirmed there, not guessed here). */
-interface PreToolUsePayload {
-  tool_name?: string
-  tool_input?: unknown
-  transcript_path?: string
-}
-
-/** Deny a call we could not even inspect. Fail-closed's edge: if the payload is
- *  unreadable we do not know which tool it is, so the message cannot name one. */
-function denyUninspectable(detail: string): void {
-  process.stdout.write(
-    JSON.stringify({
-      hookSpecificOutput: {
-        hookEventName: 'PreToolUse',
-        permissionDecision: 'deny',
-        permissionDecisionReason:
-          `Blocked by the ADR-0017 provenance guard: ${detail}, so this call's provenance could ` +
-          `not be checked. The guard fails CLOSED (ADR-0017, 2026-08-01). This is a guard fault, ` +
-          `not an authoring mistake — report it rather than working around it.`,
-      },
-    }),
-  )
+export function denyOutputFor(finding: ProvenanceFinding | null): DenyOutput | null {
+  return finding ? buildDenyOutput(formatGuardMessage(finding)) : null
 }
 
 /** Reads the hook JSON on stdin, resolves ground truth, runs the pure check,
@@ -328,23 +302,11 @@ function denyUninspectable(detail: string): void {
  *  deny. Closing that needs a change of invocation, not of this script — see
  *  ADR-0017's 2026-08-01 amendment, which records it as accepted. */
 export function main(): void {
-  let raw: string
-  try {
-    raw = readFileSync(0, 'utf8')
-  } catch {
-    return // not invoked as a hook (no stdin at all) — nothing was requested
-  }
-  if (!raw.trim()) return // ditto: a bare manual run, not a tool call to police
-
-  let payload: PreToolUsePayload
-  try {
-    payload = JSON.parse(raw)
-  } catch {
-    return denyUninspectable('the hook payload was not valid JSON')
-  }
-  if (typeof payload.tool_name !== 'string') {
-    return denyUninspectable('the hook payload named no tool')
-  }
+  const result = readHookPayload()
+  if (result.kind === 'none') return
+  if (result.kind === 'invalid') return denyUninspectable(LABEL, REF, 'the hook payload was not valid JSON')
+  if (result.kind === 'no-tool') return denyUninspectable(LABEL, REF, 'the hook payload named no tool')
+  const { payload } = result
 
   // An unreadable transcript is not fatal on its own — the env var may still
   // carry ground truth — so fall through with an empty transcript and let
@@ -364,12 +326,4 @@ export function main(): void {
   if (output) process.stdout.write(JSON.stringify(output))
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch (err) {
-    // Fail closed: a crash in the guard is a reason to stop, not to wave the
-    // call through. Reversed from the pre-2026-08-01 swallow-and-allow.
-    denyUninspectable(`the guard itself crashed (${err instanceof Error ? err.message : String(err)})`)
-  }
-}
+runIfMain(import.meta.url, { main, label: LABEL, ref: REF })

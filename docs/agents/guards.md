@@ -5,6 +5,13 @@ rationale, detection contract and residual fail-opens are single-homed in **its
 own script header** — read that before changing one. This page is the index and
 the conventions they share.
 
+`scripts/guard-io.ts` (issue #1080) owns the stdin→deny-JSON, `--dry-run`, and
+direct-run-bootstrap plumbing every `PreToolUse` guard needs — the mechanical
+shape, not the rules. Every guard but `subagent-background-guard.ts` and
+`session-id-guard.ts` (a different shape: quote-aware command scanning and a
+post-hoc trace read, respectively) builds on it; each still contributes only
+its own registry, pure predicate, and `formatGuardMessage`.
+
 **If a guard just denied your call, its deny message is the instruction** — it
 names what to do instead. Don't route around it. If it is wrong, say so on the
 issue below rather than rephrasing the call until it passes.

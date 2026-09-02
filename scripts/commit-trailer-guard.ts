@@ -5,8 +5,8 @@
 // commit-msg hook stays the backstop and keeps failing open (ADR-0017).
 //
 // Runs unattended, so it is human-only to merge (ADR-0004, 2026-07-30). Pure
-// core split from the stdin I/O and exercised by --dry-run, per that amendment's
-// reviewability bar and the sibling guards' shape.
+// core (below) split from the shared stdin/`--dry-run`/bootstrap plumbing
+// (`guard-io.ts`, issue #1080), per that amendment's reviewability bar.
 //
 // Usage:
 //   sh scripts/commit-trailer-guard.sh               # the installed hook entry
@@ -15,9 +15,20 @@
 //
 // A denying --input cannot be passed inline: that Bash call is itself denied.
 // Write the payload with the Write tool and pass --input-file.
-import { readFileSync } from 'node:fs'
-import { pathToFileURL } from 'node:url'
+import {
+  denyUninspectable,
+  buildDenyOutput,
+  printDryRunResult,
+  readHookPayload,
+  requireToolFlag,
+  resolveDryRunInput,
+  runIfMain,
+  type DenyOutput,
+} from './guard-io.ts'
 import { COAUTHOR_TRAILER } from './provenance-footer.ts'
+
+const LABEL = 'commit-trailer guard'
+const REF = 'issue #921'
 
 // Fail-open by construction, in rough order of how often it will matter:
 //   - `git commit -F <file>`: the text is in the file, not the command string.
@@ -113,121 +124,35 @@ export function formatGuardMessage(f: TrailerFinding): string {
 
 /** `null` when nothing should be blocked, so an ordinary commit writes nothing
  *  and the call proceeds untouched. */
-export function denyOutputFor(finding: TrailerFinding | null): { hookSpecificOutput: Record<string, string> } | null {
-  if (!finding) return null
-  return {
-    hookSpecificOutput: {
-      hookEventName: 'PreToolUse',
-      permissionDecision: 'deny',
-      permissionDecisionReason: formatGuardMessage(finding),
-    },
-  }
-}
-
-interface PreToolUsePayload {
-  tool_name?: string
-  tool_input?: unknown
-}
-
-/** Fail-closed's edge, bounded: the pre-filter only forwards payloads that
- *  textually mention a trailer, so this can never wedge ordinary Bash use. */
-function denyUninspectable(detail: string): void {
-  process.stdout.write(
-    JSON.stringify({
-      hookSpecificOutput: {
-        hookEventName: 'PreToolUse',
-        permissionDecision: 'deny',
-        permissionDecisionReason:
-          `Blocked by the commit-trailer guard (issue #921): ${detail}, so this call could not be ` +
-          `checked. The guard fails CLOSED. This is a guard fault, not an authoring mistake — report ` +
-          `it rather than working around it.`,
-      },
-    }),
-  )
+export function denyOutputFor(finding: TrailerFinding | null): DenyOutput | null {
+  return finding ? buildDenyOutput(formatGuardMessage(finding)) : null
 }
 
 /** Always exits 0 — the deny travels in stdout, not the exit code. */
 export function main(): void {
-  let raw: string
-  try {
-    raw = readFileSync(0, 'utf8')
-  } catch {
-    return // not invoked as a hook (no stdin at all) — nothing was requested
-  }
-  if (!raw.trim()) return // a bare manual run, not a tool call to police
+  const result = readHookPayload()
+  if (result.kind === 'none') return
+  if (result.kind === 'invalid') return denyUninspectable(LABEL, REF, 'the hook payload was not valid JSON')
+  if (result.kind === 'no-tool') return denyUninspectable(LABEL, REF, 'the hook payload named no tool')
 
-  let payload: PreToolUsePayload
-  try {
-    payload = JSON.parse(raw)
-  } catch {
-    return denyUninspectable('the hook payload was not valid JSON')
-  }
-  if (typeof payload.tool_name !== 'string') {
-    return denyUninspectable('the hook payload named no tool')
-  }
-
-  const output = denyOutputFor(checkCommitTrailer(payload.tool_name, payload.tool_input))
+  const output = denyOutputFor(checkCommitTrailer(result.payload.tool_name, result.payload.tool_input))
   if (output) process.stdout.write(JSON.stringify(output))
 }
 
 /** Print the decision the hook would reach, running nothing. */
 function dryRun(argv: string[]): void {
-  const flag = (name: string): string | undefined => {
-    const i = argv.indexOf(name)
-    return i >= 0 ? argv[i + 1] : undefined
-  }
-  const tool = flag('--tool')
-  if (!tool) {
-    console.error('usage: --dry-run --tool <name> [--input <json> | --input-file <path>]')
-    process.exit(1)
-  }
+  const tool = requireToolFlag(argv, 'usage: --dry-run --tool <name> [--input <json> | --input-file <path>]')
   // `--input-file` exists because a denying `--input` cannot survive the trip:
   // this guard blocks the very Bash call that would pass one inline. See the
   // doc's false-positive shapes.
-  const inputFile = flag('--input-file')
-  let rawInput = flag('--input')
-  if (inputFile !== undefined) {
-    try {
-      rawInput = readFileSync(inputFile, 'utf8')
-    } catch (err) {
-      // Explicit, not left to the bootstrap's catch: that one fails CLOSED and
-      // would print a deny control object, which a dry run must never emit.
-      console.error(`--input-file could not be read: ${err instanceof Error ? err.message : String(err)}`)
-      process.exit(1)
-    }
-  }
-  let input: unknown = {}
-  if (rawInput !== undefined) {
-    try {
-      input = JSON.parse(rawInput)
-    } catch {
-      console.error(inputFile !== undefined ? `${inputFile} does not contain valid JSON` : '--input must be valid JSON')
-      process.exit(1)
-    }
-  }
+  const input = resolveDryRunInput(argv)
   const finding = checkCommitTrailer(tool, input)
-  console.log(
-    JSON.stringify(
-      {
-        tool,
-        decision: finding ? 'deny' : 'allow',
-        kinds: finding?.kinds,
-        reason: finding ? formatGuardMessage(finding) : undefined,
-      },
-      null,
-      2,
-    ),
-  )
+  printDryRunResult({
+    tool,
+    decision: finding ? 'deny' : 'allow',
+    kinds: finding?.kinds,
+    reason: finding ? formatGuardMessage(finding) : undefined,
+  })
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  const argv = process.argv.slice(2)
-  try {
-    if (argv.includes('--dry-run')) dryRun(argv)
-    else main()
-  } catch (err) {
-    // Fail closed: a crash in the guard is a reason to stop, not to wave the
-    // call through — matching the sibling guards.
-    denyUninspectable(`the guard itself crashed (${err instanceof Error ? err.message : String(err)})`)
-  }
-}
+runIfMain(import.meta.url, { main, dryRun, label: LABEL, ref: REF })
