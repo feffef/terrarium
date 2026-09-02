@@ -1,0 +1,202 @@
+schemaVersion: 1
+session: session_01Ri9bm163HUJvfxyrp3rmfu
+startedAt: 2026-09-02T04:08:30Z
+endedAt: 2026-09-02T04:24:13Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: in-review
+outcome: "3 findings fixed, 1 filed as #1106, PR #1107 open"
+summary: "Scheduled, unattended firing of /audit-docs. Ran the full eight-lens sweep as four paired reviewer agents (Freshness, Single-home, Concision, Coherence), deduped the pool (no overlaps), then fact-checked all five candidates with an independent verifier before touching anything. Fixed three CONFIRMED findings: a stale Mermaid label in the journal's architecture.md that a same-file prose fix (commit 09c29b6) missed sweeping into, a restated authorAssociation value list in docs/agents/issue-tracker.md collapsed to point at its ADR-0020 home, and a stale/misattributed parenthetical in docs/research/rulebook-migration-table.md (cited ADR-0027, which is unrelated to the guards.md consolidation it described). A fifth candidate finding (a CLAUDE.md duplicate heading, flagged Verbose) was fact-checked as an intentional same-document backreference, not a genuine redundancy, and left alone. The Mermaid source edit required regenerating its committed SVG (pnpm render:mermaid, ADR-0024) before the gate would pass. A sixth candidate — an internal arithmetic inconsistency in ADR-0017's 2026-07-31 amendment (\"22 of 23\" vs. two named PRs not summing to 23) — is a Historical/ADR-tier surface whose original measurement isn't recoverable from the repo today, so it was filed as issue #1106 rather than guessed at. pnpm gate:scoped ran the full gate (Mermaid + journal-page changes aren't inert) and passed clean. PR #1107 opened and subscribed for babysitting to merge. This entire run was unattended — no human input was received at any point; every action follows directly from the /audit-docs Skill's own instructions."
+prs:
+  - "1107"
+docsRead:
+  - path: CLAUDE.md
+    reason: repo conventions, tier classification, gate/PR recipe
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: the Skill this run executes
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: Drift finding site
+  - path: docs/agents/issue-tracker.md
+    reason: Duplication finding site
+  - path: docs/research/rulebook-migration-table.md
+    reason: Stale-narration finding site
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: "Contradiction finding site, escalated as #1106"
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: single-home target for the Duplication fix
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: (no reason given)
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0007-generated-config-committed-drift-checked.md
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: (no reason given)
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: (no reason given)
+  - path: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    reason: (no reason given)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: closure trigger at PR-open
+  - name: log-session
+    reason: this log
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: pnpm gate:scoped's inert-path classifier correctly ran the full gate for the architecture.md edit, but the Mermaid-source change also required a separate manual pnpm render:mermaid step before verify:mermaid would pass — easy to miss on a first pass since gate:scoped doesn't call it automatically.
+    solution: Consider having gate:scoped (or verify:mermaid itself) auto-run render:mermaid and diff-check the result when a changed path contains a live ```mermaid fence, rather than failing and pointing the agent at a separate command.
+    severity: nit
+  - description: "A pooled Duplication finding (merge-authority prose restated across several Skills' own SKILL.md files) turned out to already be tracked as the pending policy-as-data work in issue #864 (recorded in docs/research/rulebook-migration-table.md's PR-11 row) — this sweep correctly recognized it as known/pending rather than re-deciding it, but only because the fact-checking agent happened to surface that cross-reference."
+    solution: No action needed this run; noting for future audit-docs runs so a similar already-tracked duplication isn't mistaken for a fresh, independently-fixable finding.
+    severity: nit
+durationSec: 943
+models:
+  claude-sonnet-5: 91
+toolCounts:
+  Bash: 16
+  mcp__github__search_pull_requests: 2
+  Agent: 5
+  TaskCreate: 1
+  ReadNotifications: 5
+  Read: 4
+  ToolSearch: 1
+  Edit: 3
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/architecture.md
+  - docs/agents/issue-tracker.md
+  - docs/research/rulebook-migration-table.md
+docsReadViaShell:
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/guards.md
+  - layers/midden/CONTEXT.md
+  - CONTEXT-MAP.md
+  - CONTEXT.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/adr/0027-prune-trials.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/guest-contributions.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+subagents:
+  - type: Explore
+    task: "Freshness lens: Drift + Orphan-addition"
+  - type: Explore
+    task: "Single-home lens: Duplication + Mis-location"
+  - type: Explore
+    task: "Concision lens: Verbose + Stale-narration"
+  - type: Explore
+    task: "Coherence lens: Contradiction + Ambiguity"
+  - type: Explore
+    task: Fact-check pooled audit-docs findings
+gitBranch: claude/festive-mayer-2hsbco
+entrypoint: remote_trigger
+cliVersion: 2.1.258
+trigger: audit-docs
+ideas:
+  - "A small `known-duplications.yml` ledger (paths + the tracking issue #) that audit-docs' Single-home lens checks before treating a Duplication finding as fresh — would remove the current reliance on a lens agent happening across the cross-reference in rulebook-migration-table.md."
