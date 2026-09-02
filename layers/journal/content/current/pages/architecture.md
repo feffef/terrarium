@@ -57,7 +57,7 @@ graph TB
   BK -->|routed| BKP[("pages<br/>her posts")]
   BK --> BKG[("pingbacks<br/>what others said back")]
 
-  M["Midden<br/>a Space is a stage of display"] --> MT["Space<br/>trench"]
+  M["Midden<br/>a Space is what a find is judged"] --> MT["Space<br/>trench"]
   MT -->|routed| MTP[("pages<br/>dig reports")]
   MT --> MTA[("artifacts<br/>the finds they narrate")]
 
