@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_01N7ZiXxpVtt8TdADBjhSqmh
+startedAt: 2026-09-02T17:32:02Z
+endedAt: 2026-09-02T17:48:43Z
+kind: interactive
+goal: "Blog post: Karen rants about issue #1069"
+status: in-review
+outcome: "PR #1110 opened, awaiting gate/merge"
+summary: "User ran /blog-post karen with a pinned topic (issue #1069, a \"correction\" of a Prune Trial verdict). Followed the blog-post Skill's candidate process: A0 rotation gate reported Karen ineligible (posted last) — flagged as an explicit user override per the Skill's own instructions, not silently overridden. Drafted three full candidates (all Karen, same topic, varying angle/standalone-vs-reaction). While fact-checking every citation against the repo's full unshallowed history (this session's clone started shallow; git cat-file -t on the accused commit reproduced the same false \"bad object\" issue #1069 reported), discovered the \"correction\" issue itself cites a second wrong commit — the real landing commit is a third one, meaning PR #1061's original verdict was not premature at all once checked against real history. An independent Sonnet reviewer (no repo access, given only the pasted drafts) picked the \"incident list\" framing candidate; revised it per the reviewer's notes (added plain-language framing, reduced SHA clutter) and shipped it. Gate green, PR opened and subscribed. All research, drafting, and verification steps were agent-initiated per the Skill's own procedure; the topic and persona were the only human-given inputs."
+prs:
+  - "1110"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: governing procedure for this run
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice/do-don't list
+  - path: layers/blog/CONTEXT.md
+    reason: Persona/Pingback vocabulary
+  - path: layers/blog/content/eyra/pages/2026-08-25-the-guard-who-stood-at-a-door-nobody-walked-through.md
+    reason: reaction-candidate source post
+  - path: layers/blog/content/karen/pages/2026-08-26-the-honesty-ledger-nobody-could-actually-read.md
+    reason: prior post on the same ledger/trial territory
+  - path: tests/unit/prune-trial-window.spec.ts
+    reason: found the hardcoded-wrong-date receipt used in the winning post
+skillsUsed:
+  - name: blog-post
+    reason: the invoked command
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Session started from a shallow git clone, which made `git cat-file -t` on a real commit falsely report \"bad object\" — the exact failure mode that produced issue #1069's core (wrong) claim in the first place."
+    solution: Ran `git fetch --unshallow` before trusting any "commit doesn't exist" result; CLAUDE.md's git-conventions doc already names checking `git rev-parse --is-shallow-repository` before blame/pickaxe work — this confirms it's worth doing before ANY commit-existence check too, not only blame/-S work.
+    severity: minor
+  - description: The blog-post Skill's step 0 doesn't spell out how to handle a run where the user pins BOTH persona and topic (only "persona given" vs "no persona" are covered) — left A2/A3's topic-diversity requirement ambiguous for this run.
+    solution: "Adapted in place: kept A0's rotation-conflict-flagging requirement, and varied only angle/standalone-vs-reaction across the three candidates instead of topic. Worth a small SKILL.md clarification for a pinned-topic run."
+    severity: nit
+durationSec: 1001
+models:
+  claude-sonnet-5: 114
+toolCounts:
+  ToolSearch: 2
+  Read: 10
+  mcp__github__issue_read: 2
+  Bash: 27
+  mcp__github__search_pull_requests: 1
+  mcp__github__pull_request_read: 1
+  Write: 5
+  Edit: 10
+  Grep: 1
+  Agent: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-09-02-the-list-of-its-own-mistakes-is-already-out-of-date.md
+subagents:
+  - task: Fresh outside read of 3 blog drafts
+    model: sonnet
+gitBranch: claude/karen-rant-1069-vc869l
+entrypoint: remote_mobile
+cliVersion: 2.1.258
+learnings:
+  - "A \"corrected\" governance claim (issue #1069/PR #1070) can itself be wrong in a way that's now permanently gated (a hardcoded date in tests/unit/prune-trial-window.spec.ts:83) — verification failures compound silently when each correction trusts the previous one's git investigation instead of re-deriving it from scratch."
