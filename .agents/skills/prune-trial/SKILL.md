@@ -104,7 +104,11 @@ skimmer will miss it.
 
 Around 100 lines **deleted** is the bar for the prune itself — the goal you
 write back and the ledger entry don't count against it. Clear it by retiring a whole problem,
-never by deleting the worked examples a weaker reader needs.
+never by deleting the worked examples a weaker reader needs. The figure is a
+target expected to shrink as prior prunes clear the easy backlog, not a floor
+to force by padding scope — an honest search can legitimately turn up nothing
+near it. The "two runs in a row" signal under Bounds below is the same
+recalibration mechanism, not only a trigger for retiring a Skill.
 
 Write a hook **only when §4's probe fails, or when a landed trial's verdict in
 §1 showed real damage** — the two moments the behaviour has proven it needs
