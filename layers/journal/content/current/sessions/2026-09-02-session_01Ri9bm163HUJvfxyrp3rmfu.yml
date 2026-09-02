@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Ri9bm163HUJvfxyrp3rmfu
 startedAt: 2026-09-02T04:08:30Z
-endedAt: 2026-09-02T04:24:13Z
+endedAt: 2026-09-02T04:28:16Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: "3 findings fixed, 1 filed as #1106, PR #1107 open"
-summary: "Scheduled, unattended firing of /audit-docs. Ran the full eight-lens sweep as four paired reviewer agents (Freshness, Single-home, Concision, Coherence), deduped the pool (no overlaps), then fact-checked all five candidates with an independent verifier before touching anything. Fixed three CONFIRMED findings: a stale Mermaid label in the journal's architecture.md that a same-file prose fix (commit 09c29b6) missed sweeping into, a restated authorAssociation value list in docs/agents/issue-tracker.md collapsed to point at its ADR-0020 home, and a stale/misattributed parenthetical in docs/research/rulebook-migration-table.md (cited ADR-0027, which is unrelated to the guards.md consolidation it described). A fifth candidate finding (a CLAUDE.md duplicate heading, flagged Verbose) was fact-checked as an intentional same-document backreference, not a genuine redundancy, and left alone. The Mermaid source edit required regenerating its committed SVG (pnpm render:mermaid, ADR-0024) before the gate would pass. A sixth candidate — an internal arithmetic inconsistency in ADR-0017's 2026-07-31 amendment (\"22 of 23\" vs. two named PRs not summing to 23) — is a Historical/ADR-tier surface whose original measurement isn't recoverable from the repo today, so it was filed as issue #1106 rather than guessed at. pnpm gate:scoped ran the full gate (Mermaid + journal-page changes aren't inert) and passed clean. PR #1107 opened and subscribed for babysitting to merge. This entire run was unattended — no human input was received at any point; every action follows directly from the /audit-docs Skill's own instructions."
+status: completed
+outcome: "3 findings fixed, 1 filed as #1106, PR #1107 merged"
+summary: "Scheduled, unattended firing of /audit-docs. Ran the full eight-lens sweep as four paired reviewer agents (Freshness, Single-home, Concision, Coherence), deduped the pool (no overlaps), then fact-checked all five candidates with an independent verifier before touching anything. Fixed three CONFIRMED findings: a stale Mermaid label in the journal's architecture.md that a same-file prose fix (commit 09c29b6) missed sweeping into, a restated authorAssociation value list in docs/agents/issue-tracker.md collapsed to point at its ADR-0020 home, and a stale/misattributed parenthetical in docs/research/rulebook-migration-table.md (cited ADR-0027, which is unrelated to the guards.md consolidation it described). A fifth candidate finding (a CLAUDE.md duplicate heading, flagged Verbose) was fact-checked as an intentional same-document backreference, not a genuine redundancy, and left alone. The Mermaid source edit required regenerating its committed SVG (pnpm render:mermaid, ADR-0024) before the gate would pass. A sixth candidate — an internal arithmetic inconsistency in ADR-0017's 2026-07-31 amendment (\"22 of 23\" vs. two named PRs not summing to 23) — is a Historical/ADR-tier surface whose original measurement isn't recoverable from the repo today, so it was filed as issue #1106 rather than guessed at. pnpm gate:scoped ran the full gate (Mermaid + journal-page changes aren't inert) and passed clean. PR #1107 opened, subscribed, and merged on green via merge-pr.ts (audit-docs' own per-tier authority) after eyeballing one advisory check-conflicting-issues hit (an unrelated Midden survey report, not a real conflict). This entire run was unattended — no human input was received at any point; every action follows directly from the /audit-docs Skill's own instructions."
 prs:
   - "1107"
 docsRead:
@@ -24,6 +24,8 @@ docsRead:
     reason: "Contradiction finding site, escalated as #1106"
   - path: docs/adr/0020-requester-trust-tiers.md
     reason: single-home target for the Duplication fix
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
   - path: .agents/prune-trials.yml
     reason: (no reason given)
   - path: docs/agents/domain.md
@@ -39,8 +41,6 @@ docsRead:
   - path: docs/agents/guest-contributions.md
     reason: (no reason given)
   - path: docs/agents/mdc-when-to-use.md
-    reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: docs/agents/tenant-layers.md
     reason: (no reason given)
@@ -142,18 +142,21 @@ frictions:
   - description: "A pooled Duplication finding (merge-authority prose restated across several Skills' own SKILL.md files) turned out to already be tracked as the pending policy-as-data work in issue #864 (recorded in docs/research/rulebook-migration-table.md's PR-11 row) — this sweep correctly recognized it as known/pending rather than re-deciding it, but only because the fact-checking agent happened to surface that cross-reference."
     solution: No action needed this run; noting for future audit-docs runs so a similar already-tracked duplication isn't mistaken for a fresh, independently-fixable finding.
     severity: nit
-durationSec: 943
+  - description: Ran scripts/merge-pr.ts straight after check-conflicting-issues.ts without first posting pr-workflow.md step 4's verdict comment — the recipe says post it "before merging, every time," and merge-pr.ts doesn't do this itself ("still do step 4 ... around it"). Caught only after the merge, from get_comments coming back with no verdict trace.
+    solution: "Posted the verdict comment retroactively after merge. For next time: treat posting the verdict comment as the literal step immediately before invoking merge-pr.ts, not something to add after checking the audit trail."
+    severity: minor
+durationSec: 1187
 models:
-  claude-sonnet-5: 91
+  claude-sonnet-5: 128
 toolCounts:
-  Bash: 16
+  Bash: 20
   mcp__github__search_pull_requests: 2
   Agent: 5
   TaskCreate: 1
-  ReadNotifications: 5
-  Read: 4
-  ToolSearch: 1
-  Edit: 3
+  ReadNotifications: 7
+  Read: 6
+  ToolSearch: 2
+  Edit: 6
   mcp__github__search_issues: 1
   mcp__github__issue_write: 1
   mcp__github__create_pull_request: 1
@@ -161,6 +164,11 @@ toolCounts:
   Skill: 2
   Write: 1
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/architecture.md
   - docs/agents/issue-tracker.md
