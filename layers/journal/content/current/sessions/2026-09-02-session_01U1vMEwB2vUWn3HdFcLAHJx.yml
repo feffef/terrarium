@@ -1,0 +1,68 @@
+schemaVersion: 1
+session: session_01U1vMEwB2vUWn3HdFcLAHJx
+startedAt: 2026-09-02T02:05:14Z
+endedAt: 2026-09-02T02:18:42Z
+kind: autonomous
+goal: Run frictions-to-fixes scheduled sweep
+status: completed
+outcome: One friction fixed, PR merged
+summary: "Scheduled autonomous /frictions-to-fixes run (no live human). Dispatched a survey subagent to read the last 20 session logs and screen frictions against the tracker; only one candidate survived screening as never-fixed and worth a fix: prune-trial's \"~100 lines deleted\" bar reading as a fixed floor rather than a target that shrinks as the corpus tightens (2/20 recurrence, both sessions independently re-deriving the same correct reasoning). Filed issue #1104, dispatched a Sonnet impl agent in an isolated worktree to implement the recommended doc clarification, reviewed the resulting PR #1105 (clean gate, minimal 5-line diff matching the issue's recommendation, no conflicting-issue hits), posted the review verdict, and self-merged per the reviewer-agent tier in docs/agents/pr-workflow.md. Merge auto-closed #1104 via merge-pr.ts's self-heal. All steps were agent-initiated per the Skill's own instructions; no human input was received this session."
+prs:
+  - "1105"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe + reviewer-agent tier authority
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: verify exact current wording before filing the issue
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: this session's whole task
+  - name: dispatch-subagents
+    reason: brief + isolation mechanism for the impl agent
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: The survey subagent needed to go past a tracker keyword search (0 hits) into reading scripts/shell-reads.ts and shared/trace-fields.ts directly to correctly debunk a moderate-severity "detector bug" friction that was actually explained by subagent-trace folding (docsReadViaShell unioning in a dispatched subagent's reads) rather than a real detector gap.
+    solution: "Add a step to frictions-to-fixes' §1 survey brief: for any friction alleging a detector/tool bug on a session that also dispatched subagents, check the subagents field and the relevant detector source before trusting the friction's own root-cause guess at face value."
+    severity: minor
+durationSec: 808
+models:
+  claude-sonnet-5: 67
+toolCounts:
+  Bash: 7
+  Agent: 2
+  Read: 2
+  ToolSearch: 3
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
+  Skill: 3
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/prune-trial/SKILL.md
+docsReadViaShell:
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/agents/github-integration.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix prune-trial bar wording
+    model: sonnet
+gitBranch: claude/eager-ptolemy-dtyb1n
+entrypoint: remote_trigger
+cliVersion: 2.1.258
+trigger: frictions-to-fixes
+learnings:
+  - "This window (last 20 sessions) was unusually clean for frictions-to-fixes: almost every moderate/major friction logged had already been filed and fixed within the same window by the self-improvement loop itself, leaving only one genuinely never-fixed, worth-fixing candidate. The loop appears to be keeping up with its own backlog rather than accumulating one."
