@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01N7ZiXxpVtt8TdADBjhSqmh
 startedAt: 2026-09-02T17:32:02Z
-endedAt: 2026-09-02T17:48:43Z
+endedAt: 2026-09-02T17:53:36Z
 kind: interactive
 goal: "Blog post: Karen rants about issue #1069"
-status: in-review
-outcome: "PR #1110 opened, awaiting gate/merge"
-summary: "User ran /blog-post karen with a pinned topic (issue #1069, a \"correction\" of a Prune Trial verdict). Followed the blog-post Skill's candidate process: A0 rotation gate reported Karen ineligible (posted last) — flagged as an explicit user override per the Skill's own instructions, not silently overridden. Drafted three full candidates (all Karen, same topic, varying angle/standalone-vs-reaction). While fact-checking every citation against the repo's full unshallowed history (this session's clone started shallow; git cat-file -t on the accused commit reproduced the same false \"bad object\" issue #1069 reported), discovered the \"correction\" issue itself cites a second wrong commit — the real landing commit is a third one, meaning PR #1061's original verdict was not premature at all once checked against real history. An independent Sonnet reviewer (no repo access, given only the pasted drafts) picked the \"incident list\" framing candidate; revised it per the reviewer's notes (added plain-language framing, reduced SHA clutter) and shipped it. Gate green, PR opened and subscribed. All research, drafting, and verification steps were agent-initiated per the Skill's own procedure; the topic and persona were the only human-given inputs."
+status: completed
+outcome: "PR #1110 merged (8767bfb2)"
+summary: "User ran /blog-post karen with a pinned topic (issue #1069, a \"correction\" of a Prune Trial verdict). Followed the blog-post Skill's candidate process: A0 rotation gate reported Karen ineligible (posted last) — flagged as an explicit user override per the Skill's own instructions, not silently overridden. Drafted three full candidates (all Karen, same topic, varying angle/standalone-vs-reaction). While fact-checking every citation against the repo's full unshallowed history (this session's clone started shallow; git cat-file -t on the accused commit reproduced the same false \"bad object\" issue #1069 reported), discovered the \"correction\" issue itself cites a second wrong commit — the real landing commit is a third one, meaning PR #1061's original verdict was not premature at all once checked against real history. An independent Sonnet reviewer (no repo access, given only the pasted drafts) picked the \"incident list\" framing candidate; revised it per the reviewer's notes (added plain-language framing, reduced SHA clutter) and shipped it. Gate green, PR opened, verdict comment posted, merged via merge-pr.ts. All research, drafting, and verification steps were agent-initiated per the Skill's own procedure; the topic and persona were the only human-given inputs."
 prs:
   - "1110"
 docsRead:
@@ -22,6 +22,8 @@ docsRead:
     reason: prior post on the same ledger/trial territory
   - path: tests/unit/prune-trial-window.spec.ts
     reason: found the hardcoded-wrong-date receipt used in the winning post
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: blog-post
     reason: the invoked command
@@ -36,18 +38,18 @@ frictions:
   - description: The blog-post Skill's step 0 doesn't spell out how to handle a run where the user pins BOTH persona and topic (only "persona given" vs "no persona" are covered) — left A2/A3's topic-diversity requirement ambiguous for this run.
     solution: "Adapted in place: kept A0's rotation-conflict-flagging requirement, and varied only angle/standalone-vs-reaction across the three candidates instead of topic. Worth a small SKILL.md clarification for a pinned-topic run."
     severity: nit
-durationSec: 1001
+durationSec: 1294
 models:
-  claude-sonnet-5: 114
+  claude-sonnet-5: 140
 toolCounts:
-  ToolSearch: 2
-  Read: 10
+  ToolSearch: 3
+  Read: 11
   mcp__github__issue_read: 2
-  Bash: 27
+  Bash: 31
   mcp__github__search_pull_requests: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 4
   Write: 5
-  Edit: 10
+  Edit: 12
   Grep: 1
   Agent: 1
   mcp__github__list_pull_requests: 1
@@ -55,6 +57,9 @@ toolCounts:
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_review_write: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/karen/pages/2026-09-02-the-list-of-its-own-mistakes-is-already-out-of-date.md
 subagents:
