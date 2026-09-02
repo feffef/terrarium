@@ -50,18 +50,10 @@ self-improvement Skills can also grep it. Self-judged closure at PR-open needs n
 such friction.
 
 **Dispatched worktree-isolated impl agents must NOT self-invoke this Skill.**
-Such agents share the parent session id with the orchestrator and with each
-other, and this Skill writes to a single shared per-session scratch file — a
-second invocation silently clobbers the first, erasing the orchestrating
-session's own log content. The orchestrating session is the sole log author for
-the run; a dispatched impl agent just implements, pushes, and hands back the PR.
-This is now mechanically reinforced, not prose-only (issue #449 Gap 4):
-`log-session.ts --author` refuses to run from inside a linked git worktree
-(`isLinkedWorktree()`) unless `--allow-worktree` is passed explicitly — so a
-dispatched agent's own attempt fails loudly instead of silently overwriting.
-A dispatched impl agent's PR therefore carries the *parent* orchestrating
-session's id in its ADR-0017 footer by design, not an id of its own — and the
-orphan check already accounts for this by looking for *any* session-log
-reference to that id (the orchestrator's own log, not necessarily one keyed
-to that specific PR), so a footer id alone, with no matching log found yet,
-isn't itself evidence of an orphan (issue #931).
+They share the parent session id with the orchestrator, and this Skill writes
+to a single shared per-session scratch file — a second invocation would
+clobber the orchestrating session's own log. The orchestrating session is the
+sole log author for the run; a dispatched impl agent just implements, pushes,
+and hands back the PR. Mechanically enforced: `log-session.ts --author`
+refuses to run from inside a linked git worktree unless `--allow-worktree` is
+passed explicitly.
