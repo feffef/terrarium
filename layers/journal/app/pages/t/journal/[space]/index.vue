@@ -123,6 +123,12 @@ const skillsHeading = computed(() => skillsLabel(externalSkillTotal.value))
 const skillsSubtext = computed(() => skillsSub(platformSkills.value))
 const groupedSkills = computed(() => skillGroups(platformSkills.value))
 
+// The four stat tiles below only ever read THIS Space's own collections (see
+// the resolver comment atop this file), and archiving retains just the newest
+// RETAIN_DATES=7 dates on `current` (scripts/archive-journal-content.ts) —
+// so the tiles' scope tracks which Space is showing, not an explicit filter.
+const tilesHeadline = computed(() => (space === 'archived' ? 'Excluding the last week' : 'From the last week'))
+
 const title = computed(() => rootDoc.value?.title ?? `The Platform Journal — ${space}`)
 const lede = computed(() => rootDoc.value?.description ?? `The ${space} Space of the journal Tenant.`)
 
@@ -304,6 +310,7 @@ useSeoMeta({
     </div>
 
     <!-- State of this Space -->
+    <p class="tiles-headline">{{ tilesHeadline }}</p>
     <section class="tiles" aria-label="State of this Space">
       <JournalStatTile
         label="Sessions logged"
@@ -365,7 +372,7 @@ useSeoMeta({
           </div>
           <p class="panel-intro">
             Pain-points agents log about their own work — recorded so the
-            platform can improve. More logged is better, not worse.
+            platform can improve.
           </p>
           <JournalFrictionStrata :counts="frictionSeverityTotals" :total="totalFrictions" />
           <p v-if="totalFrictions" class="friction-note">
@@ -418,8 +425,8 @@ h1 {
 .intro { margin: 1.6rem 0 0; max-width: 68ch; font-size: 1.04rem; }
 .intro :deep(p) { margin: 0 0 0.8rem; color: var(--jd-muted); }
 .intro :deep(p:last-child) { margin-bottom: 0; }
-.intro :deep(a) { color: var(--jd-accent); text-decoration: none; }
-.intro :deep(a:hover) { text-decoration: underline; }
+.intro :deep(a) { color: var(--jd-accent); text-decoration: underline; text-underline-offset: 2px; }
+.intro :deep(a:hover) { color: var(--jd-accent-bright); }
 .intro :deep(strong) { color: var(--jd-ink); font-weight: 600; }
 .intro :deep(code) {
   font-family: var(--jd-mono);
@@ -516,11 +523,19 @@ h1 {
   vertical-align: middle;
 }
 
+.tiles-headline {
+  margin: 1.75rem 0 0.6rem;
+  font-family: var(--jd-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--jd-muted);
+}
 .tiles {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.9rem;
-  margin: 1.75rem 0 2.25rem;
+  margin: 0 0 2.25rem;
 }
 
 .pr-link { color: var(--jd-accent); text-decoration: none; }
@@ -583,8 +598,8 @@ h1 {
 .digest-body :deep(h1) { display: none; } /* the row already shows the date */
 .digest-body :deep(p) { margin: 0 0 0.7rem; color: var(--jd-muted); font-size: 0.95rem; line-height: 1.6; }
 .digest-body :deep(p:last-child) { margin-bottom: 0; }
-.digest-body :deep(a) { color: var(--jd-accent); text-decoration: none; }
-.digest-body :deep(a:hover) { text-decoration: underline; }
+.digest-body :deep(a) { color: var(--jd-accent); text-decoration: underline; text-underline-offset: 2px; }
+.digest-body :deep(a:hover) { color: var(--jd-accent-bright); }
 .digest-body :deep(strong) { color: var(--jd-ink); font-weight: 600; }
 .digest-body :deep(code) {
   font-family: var(--jd-mono);
