@@ -117,47 +117,6 @@ trials:
       outside the eligible set is flagged but still shipped, never refused or
       silently accepted.
   - problem: >
-      Five chartered Skills (audit-docs, audit-skills, blog-post, digest,
-      frictions-to-fixes) each re-derived `docs/agents/pr-workflow.md`'s own
-      landing mechanics — "subscribe to the PR, follow the recipe, `merge-pr.ts`
-      is the sole merge path, never `enable_pr_auto_merge`, a red gate is never
-      merged" — in their own "commit/push/open PR/self-merge" step, near-verbatim
-      each time, even though `pr-workflow.md` exists specifically so other docs
-      "could stay an index rather than restate" it (its own line 4, issue #448)
-      and the mechanics themselves are already Built (`scripts/merge-pr.ts`
-      polls-to-green as the sole path — rulebook-migration-table.md rows PR-01,
-      PR-03, PR-08). Collapsed each Skill's restatement to one pointer line —
-      "Subscribe on open and land via `docs/agents/pr-workflow.md`'s recipe once
-      green" — keeping only what's genuinely Skill-specific: the tier rationale
-      (why this Skill's content is low-risk) and its own out-of-scope escalation
-      condition. `pr-workflow.md` itself, CLAUDE.md's "Pushing is not landing"
-      bullet, and the per-tier merge-authority list are untouched — this trial
-      only touches the five downstream restatements.
-    territory:
-      paths:
-        - ".agents/skills/audit-docs/SKILL.md: step 8 (self-merge)"
-        - ".agents/skills/audit-skills/SKILL.md: step 8 bullets (self-merge)"
-        - ".agents/skills/blog-post/SKILL.md: step 7 bullets (self-merge)"
-        - ".agents/skills/digest/SKILL.md: step 7 bullets (self-merge)"
-        - ".agents/skills/frictions-to-fixes/SKILL.md: §6 step 3 (merge decision)"
-      keywords:
-        - self-merge
-        - merge-pr.ts
-        - enable_pr_auto_merge
-        - pr-workflow.md
-        - subscribe to the PR
-    opened: 2026-08-30
-    check: >
-      Damage is a session running one of these five Skills that, needing the
-      actual landing mechanics (which check to poll, why `enable_pr_auto_merge`
-      is never correct, what "red gate never merges" covers), stops at the
-      collapsed pointer line and acts on a wrong or incomplete merge step instead
-      of opening `docs/agents/pr-workflow.md` — or a session that can't find the
-      recipe at all because the pointer reads as vaguer than the old inline text.
-      NOT damage: a session opening `pr-workflow.md` before merging (that's the
-      intended single-home behavior working), or a Skill's own tier-specific
-      escalation bullet (kept, untouched) doing its job.
-  - problem: >
       CLAUDE.md's GitHub-provenance bullet (Working Conventions) narrated the
       commit-trailer guard's incident count and the github-provenance-guard's
       registry/fail-closed mechanics inline, even though `docs/agents/guards.md`
@@ -194,3 +153,57 @@ trials:
       behavior working), or a session relying on a guard's own deny message to
       fix a rejected call in the moment (ADR-0017's documented teaching surface
       doing its job).
+  - problem: >
+      CLAUDE.md's Working Conventions carried two bullets (the deferred-tool
+      `ToolSearch` rule and the `ScheduleWakeup` `/loop`-only rule) that
+      restated detail their own fail-closed `PreToolUse` guards already teach
+      live when they fire. `loop-only-tool-guard.ts`'s own doc comment on its
+      `instead` field says its per-situation alternatives list is "quoted
+      verbatim in the deny message, which is the rule's whole teaching surface
+      for an agent that has opened no doc" — exactly the "what to do instead,
+      by situation" list and the "not a harmless no-op" consequence narration
+      CLAUDE.md restated inline (verified live: this session's own
+      `ScheduleWakeup` call outside `/loop` was denied with that identical
+      alternatives list). `deferred-tool-guard.ts` similarly denies a call
+      whose arguments match a known foreign-tool signature (e.g. `Agent`'s
+      `prompt`/`subagent_type` borrowed for `TaskCreate`) with a corrective
+      message naming the mistake — so CLAUDE.md's specific worked example and
+      "`TaskCreate` and `Monitor`... recorded repeat offenders" aside were
+      narrating the exact case the guard now catches and names itself.
+      Compressed both bullets to the bare rule, the guard's existence, and the
+      pointer — dropping the restated alternatives list, the "not a harmless
+      no-op" elaboration, and the specific incident/example naming. The core
+      imperative in each ("load the schema first"; "`ScheduleWakeup` only
+      inside `/loop`") is untouched, since `deferred-tool-guard.ts` fails
+      *open* on unregistered confusion shapes — the general instruction still
+      carries real, guard-independent weight there, unlike the illustrative
+      detail cut. Net -10 lines.
+    territory:
+      paths:
+        - "CLAUDE.md: the deferred-tool `ToolSearch` bullet and the `ScheduleWakeup` bullet (Working Conventions)"
+      keywords:
+        - ToolSearch
+        - deferred tool
+        - deferred-tool-guard.ts
+        - ScheduleWakeup
+        - loop-only-tool-guard.ts
+    opened: 2026-09-03
+    proven: true
+    check: >
+      Damage is a session that, needing the actual alternative to
+      `ScheduleWakeup` for a wait/poll situation, or the actual reason a
+      guessed deferred-tool shape is risky, stops at the compressed bullet and
+      guesses wrong instead of either opening `docs/agents/guards.md` or
+      simply attempting the call and reading the guard's own deny message —
+      or a session that, having been denied, still "works around" the guard
+      because the compressed CLAUDE.md text reads as weaker guidance than the
+      guard's own refusal. NOT damage: a session that gets denied and follows
+      the deny message's own named alternative (the intended
+      teach-at-the-moment-of-failure design working, per
+      `loop-only-tool-guard.ts`'s own doc comment), or a session that opens
+      `docs/agents/guards.md` before asserting a guard's exact behaviour. A
+      Sonnet probe given only the compressed text correctly derived that
+      `ScheduleWakeup` is `/loop`-only (with `stop: true` exempt everywhere)
+      and that any deferred tool needs `ToolSearch` before its first call,
+      trusting the guard to catch and correct a live mistake rather than
+      needing the full worked example in advance.
