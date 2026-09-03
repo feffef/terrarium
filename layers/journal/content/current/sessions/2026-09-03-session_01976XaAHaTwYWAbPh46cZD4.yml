@@ -1,0 +1,77 @@
+schemaVersion: 1
+session: session_01976XaAHaTwYWAbPh46cZD4
+startedAt: 2026-09-03T22:54:04Z
+endedAt: 2026-09-03T23:06:25Z
+kind: interactive
+goal: Polish Journal history links, CSS, headlines
+status: in-review
+outcome: "PR #1121 opened, gate green"
+summary: "User directly asked for five Journal changes: link still-existing Tenants named in the History page as plain inline links (some Tenants have no other route in), make inline links across the Journal more visible via CSS, add a headline above the four key-number tiles naming the \"last week\" window on `current` and \"excluding the last week\" on `archived`, and remove/clarify the Friction signal panel's unsupported \"more logged is better\" claim. All five were explicitly human-instructed; implementation choices (exact link targets, wording, CSS values) were mine within that scope. Verified with pnpm gate:scoped (full L2 e2e suite green), pnpm validate:content, and screenshots of /t/journal/current, /t/journal/archived, and the History page before committing, pushing, and opening the gated PR per ADR-0003."
+prs:
+  - "1121"
+docsRead:
+  - path: layers/journal/content/current/pages/history.md
+    reason: the page whose tenant mentions needed linking
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: shared current/archived Space landing — tiles headline + friction copy live here
+  - path: layers/journal/app/assets/theme.css
+    reason: shared .jd-prose link styling used by the History page
+  - path: scripts/archive-journal-content.ts
+    reason: confirmed current retains only the newest 7 dates, grounding the tile headline wording
+  - path: layers/*/tenant.config.ts
+    reason: confirmed which Tenants still exist and their Space names for link targets
+  - path: layers/journal/content/archived/pages/index.md
+    reason: (no reason given)
+  - path: layers/journal/app/pages/t/journal/[space]/[...slug].vue
+    reason: (no reason given)
+  - path: layers/atlas/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/blog/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/midden/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/marquee/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/commons/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/atlas/app/pages/t/atlas/index.vue
+    reason: (no reason given)
+  - path: layers/blog/app/pages/t/blog/index.vue
+    reason: (no reason given)
+  - path: layers/midden/app/pages/t/midden/index.vue
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: closure trigger at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: Edit tool's old_string for the Commons link missed that the surrounding paragraph is a Markdown blockquote (`> ` prefix on every line), so the first attempt failed to match.
+    solution: Re-read the exact lines before editing text inside a blockquote or other prefixed block instead of assuming plain-paragraph formatting.
+    severity: nit
+  - description: curl + grep against the dev server's SSR HTML found nothing for the new headline/link text even though the page clearly rendered it (confirmed via Playwright screenshot) — Nuxt's dev SSR serializes content as a JS payload, not plain anchor/paragraph tags, so a plain-text grep against raw HTML is the wrong verification method.
+    solution: For a quick text-presence check against dev SSR output, grep loosely (case-insensitive, no tag assumptions) or search the payload data directly instead of assuming semantic HTML tags are present verbatim.
+    severity: nit
+durationSec: 741
+models:
+  claude-sonnet-5: 132
+toolCounts:
+  Grep: 12
+  Glob: 6
+  Read: 22
+  Edit: 11
+  Bash: 24
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/app/assets/theme.css
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - layers/journal/content/current/pages/history.md
+gitBranch: claude/journal-ui-content-updates-mvg66k
+entrypoint: remote_mobile
+cliVersion: 2.1.259
