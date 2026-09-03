@@ -40,3 +40,6 @@ enforce documentation and metadata hygiene.
 - #442 — "Docs-drift staleness CI checks" (implementation closed unmerged as
   PR #477; sibling issue #475 closed not-planned)
 - #444 — "Gate-enforced provenance-footer check"
+- #880 — "Gate step: resolve 'see DOC's recipe (step N)' pointers against the
+  target's real numbered list" (closed by the 2026-09-03 triage sweep as a match
+  for this rejection)
