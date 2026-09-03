@@ -1,0 +1,338 @@
+schemaVersion: 1
+session: session_01D2So9wRYyXYzJpdiLkoZsc
+startedAt: 2026-09-03T14:32:45Z
+endedAt: 2026-09-03T14:57:17Z
+kind: interactive
+goal: Brave full re-triage of the open backlog
+status: in-review
+outcome: 42 issues re-triaged; 16 closed, 20 agent-ready
+summary: "Human-instructed: the owner invoked /auto-triage with an explicit widened charter (be brave, decide alone, close outdated issues, push work to agents) and mid-run overrode the Skill's skip-AI-last-comment idempotency rule so every open issue got a real investigation. Dispatched one Sonnet subagent per issue (42) to research and draft; the orchestrator reviewed each recommendation, overrode 17 toward closure or ready-for-agent where the repo (mostly the rulebook migration table) already determined the design, and had each subagent apply its own comment and labels. Result: 16 closed, 20 ready-for-agent with briefs, 4 ready-for-human, 2 maps open. One agent-initiated repo change: appending closed #880 to the out-of-scope knowledge base, opened as PR #1120."
+prs:
+  - "1120"
+docsRead:
+  - path: .claude/skills/auto-triage/SKILL.md
+    reason: the sweep's own rules
+  - path: .claude/skills/triage/SKILL.md
+    reason: per-issue state machine
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: brave-but-bounded taxonomy
+  - path: docs/research/rulebook-migration-table.md
+    reason: already-determined designs for regression issues
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: scripts/list-open-issues.ts
+    reason: (no reason given)
+  - path: docs/adr/0022-standing-green-light.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: (no reason given)
+  - path: scripts/log-session.ts
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: layers/midden/content/trench/artifacts/the-phantom-skill.yml
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/archived/sessions/2026-08-09-session_01CV3dBwvj8RYuvmtTXczKTd.yml
+    reason: (no reason given)
+  - path: scripts/subagent-background-guard.ts
+    reason: (no reason given)
+  - path: scripts/subagent-background-guard.sh
+    reason: (no reason given)
+  - path: scripts/session-end.ts
+    reason: (no reason given)
+  - path: docs/adr/0004-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: scripts/merge-pr.ts
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: auto-triage
+    reason: the invoked sweep
+  - name: dispatch-subagents
+    reason: 42 parallel research subagents
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: 'Started history-dependent subagents on a shallow clone; the owner had to interrupt with "Unshallow first" and 7 subagents were cancelled and relaunched. Fourth recurrence of the #772 rule; this session moved #772 to ready-for-agent with a SessionStart unshallow as the locked fix.'
+    solution: "Land #772: SessionStart hook runs git fetch --unshallow; delete the prose rule."
+    severity: major
+  - description: auto-triage's idempotency rule (skip when the last comment is AI-authored) excluded 34 of 42 issues; the owner had to override it mid-run in prose because the Skill has no argument for a full re-triage.
+    solution: Give auto-triage an explicit full-sweep mode (an argument) that disables the skip rule for one run.
+    severity: moderate
+  - description: The Agent tool's 20-concurrent-subagent cap rejected 10 of 23 launches in one batch with no queueing; each had to be relaunched by hand as slots freed.
+    solution: dispatch-subagents should state the cap and recommend batches of at most 20 minus running agents.
+    severity: minor
+  - description: Several earlier triage passes escalated regression issues to ready-for-human without reading docs/research/rulebook-migration-table.md, which had already classified the exact rule (CM-32, FF-02, PR-10, GI-01, CM-38, GC-03); today's re-read collapsed those forks in minutes.
+    solution: "triage/auto-triage: for a 'prose rule didn't hold' regression, read the migration table row before recommending a state."
+    severity: moderate
+  - description: "The consolidation:before / consolidation:on-hold labels have no description on GitHub and no entry in docs/agents/triage-labels.md; their meaning lives only in map #862's body, so every subagent had to be briefed on it."
+    solution: Add one-line label descriptions on GitHub and a pointer row in triage-labels.md.
+    severity: nit
+durationSec: 1472
+models:
+  claude-fable-5-1: 199
+toolCounts:
+  Bash: 34
+  Read: 7
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__get_me: 1
+  mcp__github__issue_read: 1
+  Skill: 3
+  Write: 1
+  Agent: 60
+  SendMessage: 49
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+docsReadViaShell:
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - .agents/skills/triage/OUT-OF-SCOPE.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
+  - .agents/skills/wayfinder/SKILL.md
+  - docs/agents/pr-workflow.md
+  - docs/research/rulebook-migration-table.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/audit-docs/SKILL.md
+  - CONTEXT-MAP.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/adr/0027-prune-trials.md
+  - layers/midden/CONTEXT.md
+  - .agents/skills/midden-survey/SKILL.md
+  - layers/journal/CONTEXT.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - layers/commons/CONTEXT.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/proposals/879-gate-yml-thin-shell.md
+  - docs/proposals/README.md
+  - docs/proposals/659-fork-pr-gate-doorbell-token.md
+  - docs/proposals/445-ci-reuse-gate-scoped-classifier.md
+  - docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
+  - docs/agents/git-conventions.md
+  - docs/agents/github-integration.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/agents/domain.md
+  - .agents/skills/digest/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Triage #1114"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1106"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1092"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1069"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1063"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1053"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1043"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1037"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1037"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1018"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1008"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #993"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #984"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #976"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #933"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #926"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #886"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #880"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #873"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #835"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #869"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #868"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #866"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #865"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #864"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #862 (map)"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #829"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #772"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #766"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #736"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #724"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #694"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #688"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #677"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #674"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #666"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #659"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #450"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #445"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #441"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #439 (map)"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #279 (map)"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #236"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1114"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1106"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1092"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1069"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1063"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1053"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #1043"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #766"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #736"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #724"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #694"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #677"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #666"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #659"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #445"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #439 (map)"
+    model: sonnet
+  - type: general-purpose
+    task: "Triage #279 (map)"
+    model: sonnet
+gitBranch: claude/auto-triage-backlog-cleanup-ajncj7
+entrypoint: remote_mobile
+cliVersion: 2.1.259
+learnings:
+  - Most ready-for-human escalations in this backlog were not genuine forks; reading the repo's own migration table determined the design.
+ideas:
+  - "auto-triage full-sweep argument: `/auto-triage --all` disables the AI-last-comment skip for one run, so an owner-directed cleanup doesn't need a mid-run prose override."
