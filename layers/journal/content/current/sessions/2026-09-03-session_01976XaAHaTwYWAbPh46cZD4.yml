@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01976XaAHaTwYWAbPh46cZD4
 startedAt: 2026-09-03T22:54:04Z
-endedAt: 2026-09-03T23:06:25Z
+endedAt: 2026-09-03T23:52:48Z
 kind: interactive
 goal: Polish Journal history links, CSS, headlines
-status: in-review
-outcome: "PR #1121 opened, gate green"
-summary: "User directly asked for five Journal changes: link still-existing Tenants named in the History page as plain inline links (some Tenants have no other route in), make inline links across the Journal more visible via CSS, add a headline above the four key-number tiles naming the \"last week\" window on `current` and \"excluding the last week\" on `archived`, and remove/clarify the Friction signal panel's unsupported \"more logged is better\" claim. All five were explicitly human-instructed; implementation choices (exact link targets, wording, CSS values) were mine within that scope. Verified with pnpm gate:scoped (full L2 e2e suite green), pnpm validate:content, and screenshots of /t/journal/current, /t/journal/archived, and the History page before committing, pushing, and opening the gated PR per ADR-0003."
+status: completed
+outcome: "PR #1121 merged to main"
+summary: "User directly asked for five Journal changes: link still-existing Tenants named in the History page as plain inline links (some Tenants have no other route in), make inline links across the Journal more visible via CSS, add a headline above the four key-number tiles naming the \"last week\" window on `current` and \"excluding the last week\" on `archived`, and remove/clarify the Friction signal panel's unsupported \"more logged is better\" claim. All five were explicitly human-instructed; implementation choices (exact link targets, wording, CSS values) were mine within that scope. Verified with pnpm gate:scoped (full L2 e2e suite green), pnpm validate:content, and screenshots of /t/journal/current, /t/journal/archived, and the History page before committing, pushing, and opening the gated PR per ADR-0003. CI (safety-gate) passed on the first push, no review comments landed, and the human owner merged PR #1121 directly."
 prs:
   - "1121"
 docsRead:
@@ -40,6 +40,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/midden/app/pages/t/midden/index.vue
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: closure trigger at PR-open
@@ -52,22 +54,26 @@ frictions:
   - description: curl + grep against the dev server's SSR HTML found nothing for the new headline/link text even though the page clearly rendered it (confirmed via Playwright screenshot) — Nuxt's dev SSR serializes content as a JS payload, not plain anchor/paragraph tags, so a plain-text grep against raw HTML is the wrong verification method.
     solution: For a quick text-presence check against dev SSR output, grep loosely (case-insensitive, no tag assumptions) or search the payload data directly instead of assuming semantic HTML tags are present verbatim.
     severity: nit
-durationSec: 741
+durationSec: 3524
 models:
-  claude-sonnet-5: 132
+  claude-sonnet-5: 168
 toolCounts:
   Grep: 12
   Glob: 6
-  Read: 22
-  Edit: 11
-  Bash: 24
-  ToolSearch: 1
+  Read: 24
+  Edit: 13
+  Bash: 28
+  ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 5
+  SendUserFile: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/app/assets/theme.css
   - layers/journal/app/pages/t/journal/[space]/index.vue
