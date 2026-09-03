@@ -200,25 +200,15 @@ human asks for it outright.
 - Inspect files with the **Read tool, not `cat`** — the Edit tool refuses to edit
   a file it hasn't seen via Read, so `cat`-then-Edit forces a wasteful re-read.
 - **Before the first call to any deferred tool this session, load its schema via
-  `ToolSearch`** rather than guessing its shape from a similarly-named tool. A
-  deferred tool appears by name only, with no parameter schema, until `ToolSearch`
-  loads it — a guessed shape (e.g. borrowing `Agent`'s `prompt`/`subagent_type` for
-  `TaskCreate`) errors on the first call. A deceptively-obvious name is not an
-  exemption: `TaskCreate` and `Monitor` both read as self-evident, and both are
-  recorded repeat offenders — load the schema anyway. A `PreToolUse` guard
-  backstops this (`docs/agents/guards.md`, issue #612).
+  `ToolSearch`** rather than guessing its shape from a similarly-named tool — a
+  deceptively-obvious name is not an exemption. A `PreToolUse` guard catches the
+  known confusion shapes and denies with the fix (`docs/agents/guards.md`, issue
+  #612).
 - **`ScheduleWakeup` is valid in exactly one mode — inside a `/loop` session's
-  dynamic (self-paced) pacing. Never reach for it as a general-purpose wait,
-  heartbeat, or poll.** Outside `/loop` it is *not* a harmless no-op: a fired
-  wakeup delivers a spurious turn that can re-run this session's whole prompt.
-  Cancelling an already-scheduled wakeup with `stop: true` is exempt in every
-  mode. What to do instead, by situation: waiting on a dispatched Agent-tool
-  subagent needs **no** wait/poll tool at all — it self-notifies on completion;
-  waiting on a backgrounded Bash command needs none either — end the turn, the
-  harness delivers a task notification when it exits; polling
-  non-webhook-delivered external state such as CI/gate completion uses
-  `mcp__Claude_Code_Remote__send_later` to schedule your own check-in. A
-  fail-closed `PreToolUse` guard refuses the call outside `/loop`
+  dynamic (self-paced) pacing.** Never reach for it as a general-purpose
+  wait/heartbeat/poll; cancelling an already-scheduled wakeup with `stop: true`
+  is exempt in every mode. A fail-closed `PreToolUse` guard refuses any other use
+  and names the right alternative for your situation in its deny message
   (`docs/agents/guards.md`, issue #814).
 - **Don't state anything as settled unless you verified it fresh, this turn,
   against a primary source — an identifier, a claim, a count, or another

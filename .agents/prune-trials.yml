@@ -153,3 +153,57 @@ trials:
       behavior working), or a session relying on a guard's own deny message to
       fix a rejected call in the moment (ADR-0017's documented teaching surface
       doing its job).
+  - problem: >
+      CLAUDE.md's Working Conventions carried two bullets (the deferred-tool
+      `ToolSearch` rule and the `ScheduleWakeup` `/loop`-only rule) that
+      restated detail their own fail-closed `PreToolUse` guards already teach
+      live when they fire. `loop-only-tool-guard.ts`'s own doc comment on its
+      `instead` field says its per-situation alternatives list is "quoted
+      verbatim in the deny message, which is the rule's whole teaching surface
+      for an agent that has opened no doc" — exactly the "what to do instead,
+      by situation" list and the "not a harmless no-op" consequence narration
+      CLAUDE.md restated inline (verified live: this session's own
+      `ScheduleWakeup` call outside `/loop` was denied with that identical
+      alternatives list). `deferred-tool-guard.ts` similarly denies a call
+      whose arguments match a known foreign-tool signature (e.g. `Agent`'s
+      `prompt`/`subagent_type` borrowed for `TaskCreate`) with a corrective
+      message naming the mistake — so CLAUDE.md's specific worked example and
+      "`TaskCreate` and `Monitor`... recorded repeat offenders" aside were
+      narrating the exact case the guard now catches and names itself.
+      Compressed both bullets to the bare rule, the guard's existence, and the
+      pointer — dropping the restated alternatives list, the "not a harmless
+      no-op" elaboration, and the specific incident/example naming. The core
+      imperative in each ("load the schema first"; "`ScheduleWakeup` only
+      inside `/loop`") is untouched, since `deferred-tool-guard.ts` fails
+      *open* on unregistered confusion shapes — the general instruction still
+      carries real, guard-independent weight there, unlike the illustrative
+      detail cut. Net -10 lines.
+    territory:
+      paths:
+        - "CLAUDE.md: the deferred-tool `ToolSearch` bullet and the `ScheduleWakeup` bullet (Working Conventions)"
+      keywords:
+        - ToolSearch
+        - deferred tool
+        - deferred-tool-guard.ts
+        - ScheduleWakeup
+        - loop-only-tool-guard.ts
+    opened: 2026-09-03
+    proven: true
+    check: >
+      Damage is a session that, needing the actual alternative to
+      `ScheduleWakeup` for a wait/poll situation, or the actual reason a
+      guessed deferred-tool shape is risky, stops at the compressed bullet and
+      guesses wrong instead of either opening `docs/agents/guards.md` or
+      simply attempting the call and reading the guard's own deny message —
+      or a session that, having been denied, still "works around" the guard
+      because the compressed CLAUDE.md text reads as weaker guidance than the
+      guard's own refusal. NOT damage: a session that gets denied and follows
+      the deny message's own named alternative (the intended
+      teach-at-the-moment-of-failure design working, per
+      `loop-only-tool-guard.ts`'s own doc comment), or a session that opens
+      `docs/agents/guards.md` before asserting a guard's exact behaviour. A
+      Sonnet probe given only the compressed text correctly derived that
+      `ScheduleWakeup` is `/loop`-only (with `stop: true` exempt everywhere)
+      and that any deferred tool needs `ToolSearch` before its first call,
+      trusting the guard to catch and correct a live mistake rather than
+      needing the full worked example in advance.
