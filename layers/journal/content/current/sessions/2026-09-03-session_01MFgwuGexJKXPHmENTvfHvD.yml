@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01MFgwuGexJKXPHmENTvfHvD
 startedAt: 2026-09-03T04:09:19Z
-endedAt: 2026-09-03T04:26:49Z
+endedAt: 2026-09-03T14:27:49Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: "PR #1116 merged; #1117 awaits human review"
-summary: "Scheduled, unattended run of /audit-docs (no human prompt this session — a cron-fired routine). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the full doc tree, pooled 3 findings (Freshness and Concision came back empty), found no overlaps to dedupe, then dispatched one independent fact-checker that re-derived each claim from primary sources (2 CONFIRMED, 1 CONFIRMED-BUT with a corrected, softer framing). Fixed all three: dropped a stale hardcoded Tenant count from CONTEXT.md's glossary entry (contradicted the roster's \"six\") on the self-merging routine PR #1116 — gate green, verdict comment posted, landed via merge-pr.ts; added two ADR amendment-note clarifications (docs/adr/0003's exemption-scope-vs-merge-mechanics split, docs/adr/0004's human-only-file-list re-enumeration drift) on the separate human-reviewed escalation PR #1117, since any ADR touch is human-only to merge regardless of how bounded the edit is. #1117 is still open awaiting human review; a check-in is scheduled to keep babysitting it to merge/close."
+status: completed
+outcome: "Both PRs merged: #1116 self, #1117 by a human"
+summary: "Scheduled, unattended run of /audit-docs (no human prompt this session — a cron-fired routine). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the full doc tree, pooled 3 findings (Freshness and Concision came back empty), found no overlaps to dedupe, then dispatched one independent fact-checker that re-derived each claim from primary sources (2 CONFIRMED, 1 CONFIRMED-BUT with a corrected, softer framing). Fixed all three: dropped a stale hardcoded Tenant count from CONTEXT.md's glossary entry (contradicted the roster's \"six\") on the self-merging routine PR #1116 — gate green, verdict comment posted, landed via merge-pr.ts; added two ADR amendment-note clarifications (docs/adr/0003's exemption-scope-vs-merge-mechanics split, docs/adr/0004's human-only-file-list re-enumeration drift) on the separate human-reviewed escalation PR #1117, since any ADR touch is human-only to merge regardless of how bounded the edit is. #1117 stayed green and unchanged through three babysitting check-ins (1h, 2h, 6h) before a human merged it directly — no push from this session was needed after opening it. Both PRs are now merged; nothing left outstanding from this sweep."
 prs:
   - "1116"
   - "1117"
@@ -152,31 +152,32 @@ frictions:
   - description: Reached for ScheduleWakeup as a fallback heartbeat while four background review agents ran; the /loop-only guard correctly blocked it since this wasn't a /loop session.
     solution: CLAUDE.md already states the right pattern (no wait/poll tool needed for a dispatched Agent-tool subagent — it self-notifies); followed that instead and it worked cleanly.
     severity: nit
-durationSec: 1050
+durationSec: 37109
 models:
-  claude-sonnet-5: 149
+  claude-sonnet-5: 191
 toolCounts:
   Skill: 3
-  Bash: 22
+  Bash: 27
   ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__list_pull_requests: 1
   Agent: 5
   ScheduleWakeup: 1
-  ReadNotifications: 6
+  ReadNotifications: 12
   Read: 9
-  Edit: 4
+  Edit: 5
   mcp__github__get_file_contents: 1
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
   mcp__github__add_issue_comment: 2
   Write: 1
-  mcp__github__pull_request_read: 6
+  mcp__github__pull_request_read: 10
   PushNotification: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 4
   mcp__github__actions_list: 2
   mcp__github__pull_request_review_write: 1
   mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - CONTEXT.md
   - docs/adr/0004-objective-safety-gate.md
