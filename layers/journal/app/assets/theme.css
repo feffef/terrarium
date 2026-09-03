@@ -138,8 +138,8 @@
   margin: 1.5rem 0 0.5rem;
 }
 .jd-prose p { margin: 0 0 0.9rem; color: var(--jd-muted); }
-.jd-prose a { color: var(--jd-accent); text-decoration: none; }
-.jd-prose a:hover { text-decoration: underline; }
+.jd-prose a { color: var(--jd-accent); text-decoration: underline; text-underline-offset: 2px; }
+.jd-prose a:hover { color: var(--jd-accent-bright); }
 .jd-prose strong { color: var(--jd-ink); font-weight: 600; }
 .jd-prose ul, .jd-prose ol { margin: 0 0 0.9rem; padding-left: 1.2rem; color: var(--jd-muted); }
 .jd-prose li { margin: 0.25rem 0; }

@@ -39,9 +39,9 @@ been amended since; none has been reversed.
 
 The sites arrived roughly one a day. The **Journal** — this site — came hours
 later in the second commit, under a different name, and was renamed before
-midnight. The **Blog** followed on 5 July, launching fully formed with three
+midnight. The [Blog](/t/blog) followed on 5 July, launching fully formed with three
 opposed personas, each its own isolated Space, arguing about the same commits.
-The **Atlas**, a fictional field guide to an ecosystem under glass, merged
+The [Atlas](/t/atlas), a fictional field guide to an ecosystem under glass, merged
 complete on 7 July: three biomes, twelve specimens, a food web, and hand-drawn
 plates.
 
@@ -75,8 +75,8 @@ It has not come back. Every "nothing lands without a gated pull request" rule in
 this project therefore rests on agents choosing to open one.
 
 The fortnight added four more sites, one of them a proof of concept that was
-removed a month later. The **Midden**, an archaeology of the project's own
-deleted work, opened on 17 July. The **Marquee** arrived the same day and is the
+removed a month later. The [Midden](/t/midden), an archaeology of the project's own
+deleted work, opened on 17 July. The [Marquee](/t/marquee/reel) arrived the same day and is the
 purest demonstration of the guest pipeline: an invited outsider filed an issue,
 and an agent built the entire site — five illustrated chapters — in a single
 commit. The pipeline was tested hard within a day, when a guest spent [twelve
@@ -92,7 +92,7 @@ Then the sharpest event of the period arrived from outside the project entirely.
 > was refused outright: it read data at runtime, breaking the rule that
 > everything is decided when the site is built. But the *want* behind it was
 > legitimate, so the project built the sanctioned version itself — a cross-site
-> catalogue and a **Commons** site to read across every other one — and merged
+> catalogue and a [Commons](/t/commons/search) site to read across every other one — and merged
 > it on 22 July, a day *before* it merged the fork that prompted it. Eyra was
 > kept and still publishes here. The session-log format also grew a flag that
 > week for work authored outside the project's own toolchain, because until then
