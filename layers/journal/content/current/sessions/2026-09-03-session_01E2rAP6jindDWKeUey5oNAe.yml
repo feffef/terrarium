@@ -1,18 +1,20 @@
 schemaVersion: 1
 session: session_01E2rAP6jindDWKeUey5oNAe
 startedAt: 2026-09-03T00:15:37Z
-endedAt: 2026-09-03T00:20:16Z
+endedAt: 2026-09-03T00:23:59Z
 kind: autonomous
 goal: Run the scheduled /digest sweep
-status: in-review
-outcome: "PR #1111 opened, gate green"
-summary: "Autonomous scheduled /digest run, no human prompt. Branched off origin/main using the caller-pinned branch claude/compassionate-lovelace-hrj8xx per CLAUDE.md's checklist. scripts/digest.ts list found one closed UTC day (2026-09-02) without a Digest; authored it from digest.ts gather output (7 merged PRs, 27 commits, 8 completed sessions, 8 frictions). Ran the archive-journal-content.ts retention sweep (1 digest + 9 session logs moved current -> archived). pnpm gate:scoped ran the full gate (build + e2e, not skipped since content changed) and passed 79/79 e2e tests. Committed, pushed, opened gated PR #1111, and subscribed to its activity to babysit to merge per the digest Skill's self-merge-on-green step."
+status: completed
+outcome: "PR #1111 merged (8cb99b2)"
+summary: "Autonomous scheduled /digest run, no human prompt. Branched off origin/main using the caller-pinned branch claude/compassionate-lovelace-hrj8xx per CLAUDE.md's checklist. scripts/digest.ts list found one closed UTC day (2026-09-02) without a Digest; authored it from digest.ts gather output (7 merged PRs, 27 commits, 8 completed sessions, 8 frictions). Ran the archive-journal-content.ts retention sweep (1 digest + 9 session logs moved current -> archived). pnpm gate:scoped ran the full gate (build + e2e, not skipped since content changed) and passed 79/79 e2e tests. Committed, pushed, opened gated PR #1111, subscribed to its activity, and once CI reported green posted the pr-workflow.md step-4 verdict comment and landed it via merge-pr.ts (merge commit 8cb99b2) per the digest Skill's self-merge-on-green tier."
 prs:
   - "1111"
 docsRead:
   - path: .claude/skills/digest/SKILL.md
     reason: the Skill instructions this run followed
   - path: layers/journal/content/current/pages/digests/2026-09-01.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
 skillsUsed:
   - name: close-session
@@ -22,18 +24,25 @@ skillsUsed:
   - name: digest
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 280
+durationSec: 502
 models:
-  claude-sonnet-5: 46
+  claude-sonnet-5: 75
 toolCounts:
-  Bash: 14
-  ToolSearch: 2
+  Bash: 17
+  ToolSearch: 4
   mcp__github__list_pull_requests: 1
-  Read: 1
+  Read: 2
   Write: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  Edit: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-09-02.md
 gitBranch: claude/compassionate-lovelace-hrj8xx
