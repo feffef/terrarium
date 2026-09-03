@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01JRDSLrgqJ9k8cMamaTYUaR
 startedAt: 2026-09-03T11:13:35Z
-endedAt: 2026-09-03T11:26:17Z
+endedAt: 2026-09-03T11:30:16Z
 kind: autonomous
 goal: Run the scheduled /blog-post skill
-status: in-review
-outcome: "PR #1118 opened, awaiting CI/merge"
-summary: "Fully agent-initiated scheduled run of /blog-post, no human prompt this session. Rotation gate (scripts/blog-rotation.ts) forced Eyra as the only eligible Persona (starved past four posts; Karen posted most recently). Gathered material broadly (git log -100, ~20 recent session logs, all sibling Personas' recent posts), then drafted three fully-grounded, independently fact-checked standalone candidates in Eyra's voice: the guard-io.ts plumbing consolidation (issue #1080), a recurring self-review regression in this Skill's own outside-review step (issue #1114, a second occurrence of #981/PR #985), and a CONTEXT.md Tenant-count doc drift (PR #1116 self-merged vs. PR #1117 stuck on human review). A fresh outside-reader subagent (Sonnet, no repo access) picked the guard-io.ts post as most interesting on underlying-event weight, and named concrete jargon/citation gaps, which were closed in a revision pass before publishing. Opened PR #1118 with the full candidate-process provenance in the body, ran pnpm gate:scoped clean (79/79 e2e), and subscribed to PR activity per CLAUDE.md's babysit-to-merge discipline."
+status: completed
+outcome: "PR #1118 merged (1f39002)"
+summary: "Fully agent-initiated scheduled run of /blog-post, no human prompt this session. Rotation gate (scripts/blog-rotation.ts) forced Eyra as the only eligible Persona (starved past four posts; Karen posted most recently). Gathered material broadly (git log -100, ~20 recent session logs, all sibling Personas' recent posts), then drafted three fully-grounded, independently fact-checked standalone candidates in Eyra's voice: the guard-io.ts plumbing consolidation (issue #1080), a recurring self-review regression in this Skill's own outside-review step (issue #1114, a second occurrence of #981/PR #985), and a CONTEXT.md Tenant-count doc drift (PR #1116 self-merged vs. PR #1117 stuck on human review). A fresh outside-reader subagent (Sonnet, no repo access) picked the guard-io.ts post as most interesting on underlying-event weight, and named concrete jargon/citation gaps, which were closed in a revision pass before publishing. Opened PR #1118 with the full candidate-process provenance in the body, ran pnpm gate:scoped clean (79/79 e2e), and subscribed to PR activity per CLAUDE.md's babysit-to-merge discipline. CI gate went green ~4 minutes later; posted the pr-workflow.md step-4 verdict comment and landed it via merge-pr.ts (merge commit 1f39002) per blog-post's merge-on-green-gate tier. Unsubscribed and cancelled the scheduled check-in once merged."
 prs:
   - "1118"
 docsRead:
@@ -40,6 +40,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-09-03-session_01E2rAP6jindDWKeUey5oNAe.yml
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: blog-post
     reason: the run's own charter (scheduled, no persona pinned)
@@ -51,20 +53,25 @@ frictions:
   - description: An Edit call on a scratch draft failed to match old_string despite visually-identical text (likely an em-dash/unicode normalization mismatch), after a prior successful Edit on the same file.
     solution: Re-read the file and used Write to replace the whole file instead of chasing the exact byte mismatch — worked cleanly.
     severity: nit
-durationSec: 762
+durationSec: 1002
 models:
-  claude-sonnet-5: 116
+  claude-sonnet-5: 148
 toolCounts:
-  Bash: 30
-  Read: 20
+  Bash: 34
+  Read: 21
   Agent: 2
-  ToolSearch: 2
-  mcp__github__pull_request_read: 2
+  ToolSearch: 3
+  mcp__github__pull_request_read: 7
   Write: 6
-  Edit: 6
+  Edit: 8
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/eyra/pages/2026-09-03-five-guards-one-set-of-pipes.md
 docsReadViaShell:
