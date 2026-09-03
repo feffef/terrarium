@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01D2So9wRYyXYzJpdiLkoZsc
 startedAt: 2026-09-03T14:32:45Z
-endedAt: 2026-09-03T14:57:17Z
+endedAt: 2026-09-03T15:03:19Z
 kind: interactive
 goal: Brave full re-triage of the open backlog
-status: in-review
-outcome: 42 issues re-triaged; 16 closed, 20 agent-ready
-summary: "Human-instructed: the owner invoked /auto-triage with an explicit widened charter (be brave, decide alone, close outdated issues, push work to agents) and mid-run overrode the Skill's skip-AI-last-comment idempotency rule so every open issue got a real investigation. Dispatched one Sonnet subagent per issue (42) to research and draft; the orchestrator reviewed each recommendation, overrode 17 toward closure or ready-for-agent where the repo (mostly the rulebook migration table) already determined the design, and had each subagent apply its own comment and labels. Result: 16 closed, 20 ready-for-agent with briefs, 4 ready-for-human, 2 maps open. One agent-initiated repo change: appending closed #880 to the out-of-scope knowledge base, opened as PR #1120."
+status: completed
+outcome: 42 re-triaged, 16 closed, 20 agent-ready; PR merged
+summary: "Human-instructed: the owner invoked /auto-triage with an explicit widened charter (be brave, decide alone, close outdated issues, push work to agents) and mid-run overrode the Skill's skip-AI-last-comment idempotency rule so every open issue got a real investigation. Dispatched one Sonnet subagent per issue (42) to research and draft; the orchestrator reviewed each recommendation, overrode 17 toward closure or ready-for-agent where the repo (mostly the rulebook migration table) already determined the design, and had each subagent apply its own comment and labels. Result: 16 closed, 20 ready-for-agent with briefs, 4 ready-for-human, 2 maps open. One agent-initiated repo change: appending closed #880 to the out-of-scope knowledge base, PR #1120, gate green and merged by the owner within minutes."
 prs:
   - "1120"
 docsRead:
@@ -93,11 +93,11 @@ frictions:
   - description: "The consolidation:before / consolidation:on-hold labels have no description on GitHub and no entry in docs/agents/triage-labels.md; their meaning lives only in map #862's body, so every subagent had to be briefed on it."
     solution: Add one-line label descriptions on GitHub and a pointer row in triage-labels.md.
     severity: nit
-durationSec: 1472
+durationSec: 1834
 models:
-  claude-fable-5-1: 199
+  claude-fable-5-1: 218
 toolCounts:
-  Bash: 34
+  Bash: 38
   Read: 7
   ToolSearch: 3
   mcp__github__list_pull_requests: 1
@@ -111,6 +111,8 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
 docsReadViaShell:
   - .agents/skills/triage/SKILL.md
   - .agents/skills/triage/AGENT-BRIEF.md
