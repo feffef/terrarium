@@ -9,7 +9,11 @@ The chartered jobs below hold a bounded exemption from this ADR's "gated PR,
 human merge" default (ADR-0004's low-risk auto-merge tier, unless the *shape*
 column says otherwise). Single-homed here per CLAUDE.md's single-home rule —
 each dated amendment note below gists its exemption and points back to this
-table rather than restating the scope inline.
+table rather than restating the scope inline. This table is the home for each
+exemption's *scope*; `docs/agents/pr-workflow.md`'s "Per-tier merge authority"
+is the home for the *mechanics/tier* of how each row actually lands its PR
+(see the 2026-07-30 amendment below) — the two lists name overlapping Skills
+but answer different questions, and neither restates the other.
 
 | Skill | scope | date | PR |
 | --- | --- | --- | --- |

@@ -132,6 +132,14 @@ Prune Trials by ADR-0027
 > unfamiliar code. `frictions-to-fixes` — the reviewer-agent this axis is aimed
 > at (ADR-0003) — should point here rather than restating this list.
 
+> **Amended (2026-09-03, `/audit-docs`).** The 2026-07-10 and 2026-07-22
+> amendments above each had to hand-copy the human-only-surface file list, and
+> the second existed only to catch the first's copy back up with CLAUDE.md's
+> Ground rules after ADR-0025 added three files — restating the list here is
+> exactly the drift the single-home rule warns against. No future amendment
+> should re-enumerate that list: point to CLAUDE.md's Ground rules for the
+> current one instead.
+
 ## Context
 
 Both the human reviewer (now) and the scheduled review-agent (mid-term, ADR-0003)
