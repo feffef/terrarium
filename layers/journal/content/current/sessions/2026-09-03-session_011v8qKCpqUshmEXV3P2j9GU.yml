@@ -1,0 +1,73 @@
+schemaVersion: 1
+session: session_011v8qKCpqUshmEXV3P2j9GU
+startedAt: 2026-09-03T13:19:06Z
+endedAt: 2026-09-03T13:38:02Z
+kind: autonomous
+goal: Run the scheduled /prune-trial sweep
+status: completed
+outcome: "Judged one trial (holds); shipped a new prune, PR #1119 merged"
+summary: "Fully agent-initiated scheduled run. Judged the \"Five chartered Skills\" self-merge pointer trial (judgeable since 2026-09-02): the one relevant friction since landing traced to pr-workflow.md's own step-4/5 ordering being buried in step 3's prose, not to the pruned Skill-file pointers -- already fixed independently via issue #1113/PR #1115 -- so the prune holds and the entry was deleted. For the new trial, chose CLAUDE.md's ToolSearch/ScheduleWakeup bullets: both restated detail their own fail-closed PreToolUse guards already teach live in their deny messages (confirmed live -- this session's own ScheduleWakeup call outside /loop was denied with the exact alternatives list CLAUDE.md was also carrying). Compressed both to rule + guard pointer, net -10 lines. Proved the compression on a Sonnet subagent probe given only the surviving text before shipping. pnpm gate:scoped ran the full gate (yml file isn't on the inert allowlist) and passed. PR #1119 opened, verdict comment posted, and merged via merge-pr.ts."
+prs:
+  - "1119"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the trial ledger to judge and extend
+  - path: docs/research/rulebook-migration-table.md
+    reason: map of Built-mechanism rows as prune bait
+  - path: docs/agents/guards.md
+    reason: guard roster to confirm mechanism coverage
+  - path: scripts/loop-only-tool-guard.ts
+    reason: confirm the guard's deny message is the sole teaching surface
+  - path: scripts/deferred-tool-guard.ts
+    reason: confirm fail-open scope before trimming its CLAUDE.md prose
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: CONTEXT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: this run's own charter
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Called ScheduleWakeup to wait on a dispatched background research agent, out of habit, and got correctly denied by the loop-only-tool guard (this is not a /loop session). CLAUDE.md and the guard's own deny message both already say a dispatched Agent-tool subagent self-notifies and needs no wait/poll tool at all.
+    solution: No doc fix needed -- the guard did its job. Noting only because it turned into a live, first-hand confirmation that the guard's deny message really does carry the full "what to do instead" list, which became direct evidence for this run's own prune decision.
+    severity: nit
+durationSec: 1136
+models:
+  claude-sonnet-5: 143
+toolCounts:
+  Bash: 39
+  Read: 10
+  Grep: 5
+  ToolSearch: 5
+  mcp__github__search_issues: 1
+  mcp__github__issue_read: 1
+  Edit: 5
+  Agent: 2
+  ScheduleWakeup: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - CLAUDE.md
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
+  - docs/research/rulebook-migration-table.md
+  - CONTEXT.md
+subagents:
+  - type: general-purpose
+    task: Find best prune-trial candidate
+  - type: general-purpose
+    task: Probe compressed CLAUDE.md text with Sonnet
+    model: sonnet
+gitBranch: claude/practical-rubin-fxdcpc
+entrypoint: remote_trigger
+cliVersion: 2.1.259
+trigger: prune-trial
