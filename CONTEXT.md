@@ -26,7 +26,7 @@ A logically distinct product/site within the Platform, with its **own Vue/Nuxt
 components** and its own content model. Many Tenants coexist in the one Platform.
 Its distinguishing feature vs. a Space is that it owns *code/components* (its
 "fit-out"), not just content. See the **Tenants** roster below for the current
-four. "Multi-tenant" is used in the architectural
+count and roster. "Multi-tenant" is used in the architectural
 sense (isolated logical unit), not "external paying customer."
 
 A Tenant is **implemented as a Nuxt layer**. "Tenant" and "layer" are not
