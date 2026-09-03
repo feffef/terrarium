@@ -64,6 +64,13 @@ Its brief:
   fixes for #241/#425 landed in `docs/agents/github-integration.md`, "which the
   affected sessions had no reason to open" (CLAUDE.md), and the friction kept
   recurring until a `PreToolUse` guard replaced the prose.
+- **For a friction alleging a detector/tool/mechanism bug, check the
+  `subagents` field and read the relevant mechanism source before trusting
+  the friction's own root-cause guess.** A friction's self-diagnosis (logged
+  in the moment, without source access) is not itself evidence — e.g.
+  "detector over-credits reads" can be `foldSubagentTrace` correctly unioning
+  a dispatched subagent's reads rather than a real detector gap. Verify
+  against source before ranking it as a candidate.
 - **Group and rank.** Fold related/recurring frictions (shared root cause or single
   fix) into one candidate; rank by **recurrence and severity together** (severity
   is an ordered rank, not a number — weigh it qualitatively, never multiply it).

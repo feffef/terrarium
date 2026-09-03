@@ -42,8 +42,7 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
    until they resolve (green/red/timeout) and, on green, merges directly via
    `gh api`/REST, skipping `enable_pr_auto_merge` entirely rather than hitting
    its misleading-error round-trip and manually re-checking. Reach for it
-   instead of hand-rolling steps 3 and 5 yourself; still do step 4 (the
-   verdict comment) around it.
+   instead of hand-rolling steps 3 and 5 yourself.
 
    **A long CI/merge wait needs a standard check-in cadence, not an ad hoc
    one.** When babysitting a PR across a wait that's expected to span many
@@ -66,7 +65,12 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
    [`guest-contributions.md`](./guest-contributions.md) reserves for the human.
    A COMMENT-event review records the same verdict in both cases (issue #301,
    recurred as #853).
-5. `scripts/merge-pr.ts <pr-number>` is the **sole merge path** for every PR —
+5. **Before calling `merge-pr.ts`: step 4's verdict comment must already be
+   posted.** `merge-pr.ts` merges immediately on green with no wait for a
+   review trace — if step 4 hasn't run yet, the merge happens with nothing
+   posted.
+
+   `scripts/merge-pr.ts <pr-number>` is the **sole merge path** for every PR —
    pending-check or already-green alike — per step 3; it already polls to
    resolution and merges on green. **Never call `enable_pr_auto_merge`
    directly in this repo.** That tool is documented as being for arming ahead
