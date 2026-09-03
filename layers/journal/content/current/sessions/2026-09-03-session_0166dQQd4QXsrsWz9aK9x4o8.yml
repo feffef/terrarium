@@ -1,0 +1,69 @@
+schemaVersion: 1
+session: session_0166dQQd4QXsrsWz9aK9x4o8
+startedAt: 2026-09-03T02:04:59Z
+endedAt: 2026-09-03T02:20:52Z
+kind: autonomous
+goal: Run a frictions-to-fixes cycle
+status: completed
+outcome: 1 PR merged, 1 regression escalated
+summary: "Scheduled Routine fired /frictions-to-fixes with no live human input this turn (autonomous, per the Skill's own charter). Delegated the 20-session survey/screen to a subagent, which returned 3 simple never-fixed candidates (no hard ones this cycle) plus one regression. Filed issues #1112 and #1113 for the two candidates worth fixing (dropped a third, lone-nit mermaid-auto-render candidate per the Skill's own \"lone nit, non-trivial fix\" drop rule), dispatched one Sonnet impl agent in an isolated worktree that grouped both doc-only fixes into PR #1115, then reviewed the diff myself, posted the verdict comment, and merged via merge-pr.ts (green gate, no human-only surface touched). Filed #1114 for a regression (blog-post outside-review retyping a draft instead of reading it verbatim, recurring two weeks after #981/PR #985's fix) per the Skill's regression rule — not re-dispatched, alerted the user instead since a fix already failed to hold once. Every decision in this run (candidate selection, drop calls, merge) was this session's own judgement under the Skill's charter; no human was reachable or consulted mid-run."
+prs:
+  - "1115"
+docsRead:
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: the run's own charter, already inlined by the scheduler
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe
+  - path: .agents/prune-trials.yml
+    reason: screen candidates against open Prune Trial territory
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: worktree-isolated impl-agent dispatch brief checklist
+  - path: scripts/shell-reads.ts
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run's own charter
+  - name: dispatch-subagents
+    reason: brief + isolation mechanism for the impl agent
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Initially tried invoking frictions-to-fixes via the Skill tool even though the scheduler had already expanded the /frictions-to-fixes command inline into the turn — Skill tool refused (disable-model-invocation). Same shape as the already-open regression #1018 (\"Skill-tool-on-inlined-command-name isn't reaching scheduled command-only sessions\")."
+    solution: "Already tracked as #1018 — this run is another recurrence data point, not a new issue. Recovered immediately by proceeding directly from the already-inlined instructions instead of retrying the tool call."
+    severity: minor
+durationSec: 952
+models:
+  claude-sonnet-5: 80
+toolCounts:
+  Skill: 4
+  Agent: 2
+  ToolSearch: 3
+  mcp__github__search_issues: 3
+  Read: 2
+  Bash: 7
+  mcp__github__issue_write: 5
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 4
+  mcp__github__issue_read: 3
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Write: 1
+  PushNotification: 1
+filesEdited:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/pr-workflow.md
+docsReadViaShell:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - task: Fix two doc-only frictions as one PR
+    model: sonnet
+gitBranch: claude/eager-ptolemy-3wx0v0
+entrypoint: remote_trigger
+cliVersion: 2.1.259
+trigger: frictions-to-fixes
