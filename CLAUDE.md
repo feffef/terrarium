@@ -111,17 +111,12 @@ human asks for it outright.
   (below), but a PR touching it still needs a human to merge.
   `.github/actions/gate/action.yml` is the sharpest case — agents *can* push
   it, unlike `.github/workflows/*`, and still must not merge it.
-- **Skills** are generic, repo-committed, and first-class (ADR-0005). But the
-  **external pack Skills** — the ones keyed in `skills-lock.json` (installed from
-  `mattpocock/skills`) — are **off limits to edit**: their `SKILL.md` is not ours
-  to patch, because a re-install clobbers any local edit (ADR-0015). Treat those
-  files as read-only — layer repo-specific guidance in the Skill Inventory entry
-  (`role`/`importance`) or a doc that references them, never by editing the pack
-  file; a genuine improvement to a pack Skill belongs upstream. Only our own
-  Skills (those *not* in `skills-lock.json`) are agent-editable. This is
-  **gate-enforced** via `pnpm verify:skills-lock` (part of `pnpm gate`) — see
-  ADR-0015's amendment for the mechanism (what it pins, and the `--write` re-pin
-  step after a legitimate pack install).
+- **Skills** are generic, repo-committed, and first-class (ADR-0005). The
+  **external pack Skills** — keyed in `skills-lock.json` — are **off limits to
+  edit**: a re-install clobbers any local change, so a genuine improvement
+  belongs upstream and repo-specific guidance goes in the Skill Inventory entry
+  instead. **Gate-enforced** via `pnpm verify:skills-lock` — see ADR-0015's
+  amendment for the mechanism.
 - Runtime routing is by path prefix `/t/<tenant>/<space>/<slug>` (ADR-0006). The
   routing map is derived at build time from the manifests via `modules/routing.ts`
   and exposed as the `#routing` virtual module (ADR-0014) — no committed `GENERATED`

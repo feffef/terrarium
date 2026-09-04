@@ -109,13 +109,11 @@ and **(c) the subagent's own frictions** from the run.
 ## 2. Screen against fixes already shipped (the subagent's rules)
 
 Never re-fix what is already fixed. **First, drop what isn't ours to change:** a
-candidate whose only fix edits an **external pack Skill's `SKILL.md`** (any name
-keyed in `skills-lock.json`) is off limits — a re-install clobbers the edit, so the
-fix belongs upstream, not here (ADR-0015; CLAUDE.md "Skills … off limits to edit").
-Drop it with that reason (a repo-specific fit-note can still go to that Skill's
-Inventory entry, but that's `audit-skills`' job, not a friction fix). `pnpm gate`
-enforces this (`verify:skills-lock`) — an impl agent that edits a pack Skill's
-SKILL.md fails the gate, so screening it out here just avoids the wasted round-trip.
+candidate whose only fix edits an **external pack Skill's `SKILL.md`** is off
+limits (CLAUDE.md "Skills … off limits to edit"; ADR-0015) — the gate rejects it
+anyway, so screening it out here just avoids the wasted round-trip. A
+repo-specific fit-note still belongs in that Skill's Inventory entry, but that's
+`audit-skills`' job, not a friction fix.
 **Next, drop what is on trial:** a candidate whose fix would restore prose inside
 an open **Prune Trial**'s territory (`.agents/prune-trials.yml`) is not yours to
 retire — that friction *is* the trial's evidence, and re-legislating it destroys

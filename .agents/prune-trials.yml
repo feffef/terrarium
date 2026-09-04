@@ -24,6 +24,55 @@
 #            topic's tools correctly.
 trials:
   - problem: >
+      CLAUDE.md's Ground rules bullet on external pack Skills, and
+      `frictions-to-fixes/SKILL.md`'s §2 screening step, each independently
+      re-derived the same already-mechanized rule: don't edit an external
+      pack Skill's `SKILL.md` (`skills-lock.json`-keyed), because a re-install
+      clobbers the edit and `pnpm verify:skills-lock` (part of `pnpm gate`,
+      ADR-0015's 2026-07-11 amendment) already gate-enforces it. CLAUDE.md's
+      bullet additionally previewed the mechanism's internals ("what it pins,
+      and the `--write` re-pin step after a legitimate pack install") that
+      ADR-0015's own amendment text already states in full — a pointer
+      duplicating its referent's content, not just naming it. Compressed
+      CLAUDE.md's bullet to the rule, the one-line why, the two places to put
+      an improvement instead (upstream; the Skill Inventory entry), and a
+      bare pointer to ADR-0015 for the mechanism. Compressed
+      `frictions-to-fixes/SKILL.md`'s screening step to keep its own
+      locally-relevant reasoning (the gate would reject the edit anyway, so
+      screening it out here just avoids a wasted round-trip) while dropping
+      its restatement of the "why" and the `skills-lock.json` definition,
+      which CLAUDE.md already states and this step already cites by name.
+      Net -7 lines across the two files.
+    territory:
+      paths:
+        - "CLAUDE.md: the \"Skills … off limits to edit\" bullet (Ground rules)"
+        - ".agents/skills/frictions-to-fixes/SKILL.md: \"§2. Screen against fixes already shipped\", the external-pack-Skill paragraph"
+      keywords:
+        - skills-lock.json
+        - external pack Skill
+        - verify:skills-lock
+        - pack Skill's SKILL.md
+    opened: 2026-09-04
+    proven: true
+    check: >
+      Damage is a session that, needing the actual reason a pack Skill edit is
+      off limits or what `verify:skills-lock` actually pins, stops at either
+      compressed text and guesses wrong instead of opening ADR-0015 — or a
+      session that attempts to edit a pack Skill's `SKILL.md` because the
+      compressed bullet reads as less binding than the old one, or because
+      `frictions-to-fixes`'s trimmed screening step no longer names
+      `skills-lock.json` explicitly and the session can't recognize a
+      candidate as pack-owned. NOT damage: a session opening ADR-0015 before
+      asserting the mechanism's exact pinning/re-pin behaviour (the intended
+      single-home behaviour working), or a session hitting `pnpm
+      verify:skills-lock`'s own gate failure and fixing it from the failure
+      message rather than the doc. A Sonnet probe given only the compressed
+      text correctly derived that an external pack Skill's `SKILL.md` must
+      never be edited, that a genuine improvement goes upstream instead, that
+      a repo-specific note belongs in the Skill Inventory entry, and that the
+      gate (`verify:skills-lock`) would reject the edit regardless of the
+      screening step.
+  - problem: >
       Two Built-mechanism rows (`docs/research/rulebook-migration-table.md`'s
       CS-01 and LS-03) each carried prose narrating internal mechanism detail
       past what compliance needs. `close-session/SKILL.md`'s "dispatched
