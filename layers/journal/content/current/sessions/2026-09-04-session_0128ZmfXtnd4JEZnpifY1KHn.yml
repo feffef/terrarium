@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_0128ZmfXtnd4JEZnpifY1KHn
 startedAt: 2026-09-04T11:11:52Z
-endedAt: 2026-09-04T11:26:46Z
+endedAt: 2026-09-04T11:35:46Z
 kind: autonomous
 goal: Run the scheduled /blog-post skill
-status: in-review
-outcome: "PR #1134 opened"
-summary: "Fully agent-initiated scheduled run of /blog-post, no human prompt this session. Rotation gate (scripts/blog-rotation.ts) forced Kevin as the only eligible Persona (starved past four posts; Eyra posted most recently). Gathered material broadly (git log -100, ~12 recent session logs, sibling Personas' recent posts, live GitHub issue/comment state via the GitHub MCP tools), then drafted three fully-grounded, independently fact-checked Kevin candidates on distinct topics: a reaction to Karen's \"Two Days Later\" post following up on issue #1092's re-triage, a standalone on the RESOLVED_ORPHANED_SESSIONS/issue-#747 test-fixture-collision catch in PR #1130, and a standalone on the 2026-09-03 prune-trial run that proved a CLAUDE.md compression safe by tripping its own guard mid-session. A fresh outside-reader subagent (Sonnet, no repo access) picked the test-fixture post as most interesting on underlying-event weight, and named several unexplained terms (frictions-to-fixes, \"orphaned session\", bare issue numbers, toEqual/deep-equal, \"dispatched agent\"), all closed in a revision pass before publishing. While drafting, caught and corrected two of my own inaccuracies against primary sources before they shipped: a wrong date-math claim (\"six weeks\" vs. the real 36-day/five-week gap) and a wrong claim about whether the #747 test would have silently passed vs. actually failed on a strict deep-equal (verified by reading the real assertion). Opened PR #1134 with the full candidate-process provenance in the body, ran pnpm gate:scoped clean (79/79 e2e), and subscribed to PR activity per CLAUDE.md's babysit-to-merge discipline."
+status: completed
+outcome: "PR #1134 merged (7bdede4)"
+summary: "Fully agent-initiated scheduled run of /blog-post, no human prompt this session. Rotation gate (scripts/blog-rotation.ts) forced Kevin as the only eligible Persona (starved past four posts; Eyra posted most recently). Gathered material broadly (git log -100, ~12 recent session logs, sibling Personas' recent posts, live GitHub issue/comment state via the GitHub MCP tools), then drafted three fully-grounded, independently fact-checked Kevin candidates on distinct topics: a reaction to Karen's \"Two Days Later\" post following up on issue #1092's re-triage, a standalone on the RESOLVED_ORPHANED_SESSIONS/issue-#747 test-fixture-collision catch in PR #1130, and a standalone on the 2026-09-03 prune-trial run that proved a CLAUDE.md compression safe by tripping its own guard mid-session. A fresh outside-reader subagent (Sonnet, no repo access) picked the test-fixture post as most interesting on underlying-event weight, and named several unexplained terms (frictions-to-fixes, \"orphaned session\", bare issue numbers, toEqual/deep-equal, \"dispatched agent\"), all closed in a revision pass before publishing. While drafting, caught and corrected two of my own inaccuracies against primary sources before they shipped: a wrong date-math claim (\"six weeks\" vs. the real 36-day/five-week gap) and a wrong claim about whether the #747 test would have silently passed vs. actually failed on a strict deep-equal (verified by reading the real assertion). Opened PR #1134 with the full candidate-process provenance in the body, ran pnpm gate:scoped clean (79/79 e2e), and subscribed to PR activity per CLAUDE.md's babysit-to-merge discipline. The safety-gate check went green ~9 minutes later; posted the pr-workflow.md step-4 verdict comment and landed it via merge-pr.ts (merge commit 7bdede4) per blog-post's merge-on-green-gate tier. Unsubscribed and cancelled the scheduled check-in once merged."
 prs:
   - "1134"
 docsRead:
@@ -30,6 +30,8 @@ docsRead:
     reason: (no reason given)
   - path: layers/blog/content/kevin/pages/2026-09-04-a-one-line-fix-almost-broke-a-test-from-five-weeks-ago.md
     reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: blog-post
     reason: the run's own charter (scheduled, no persona pinned)
@@ -44,22 +46,27 @@ frictions:
   - description: 'First draft of the winning candidate asserted a wrong elapsed-time figure ("six weeks") for the gap between issue #747 (2026-07-30) and today (2026-09-04), and a wrong claim that CI would likely have stayed green despite the fixture collision.'
     solution: Recomputed the date gap directly (36 days) and re-read the actual test assertion (a strict toEqual with no resolvedBy field) before publishing, catching both errors pre-merge rather than shipping unverified claims.
     severity: minor
-durationSec: 894
+durationSec: 1434
 models:
-  claude-sonnet-5: 148
+  claude-sonnet-5: 175
 toolCounts:
   Skill: 3
-  Bash: 36
-  Read: 14
-  ToolSearch: 2
+  Bash: 39
+  Read: 15
+  ToolSearch: 4
   mcp__github__issue_read: 5
   Write: 5
-  Edit: 9
+  Edit: 11
   Agent: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/kevin/pages/2026-09-04-a-one-line-fix-almost-broke-a-test-from-five-weeks-ago.md
 docsReadViaShell:
