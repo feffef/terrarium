@@ -1,0 +1,168 @@
+schemaVersion: 1
+session: session_01GECLA4SFqyP9Mf2iWQRFKR
+startedAt: 2026-09-04T04:08:42Z
+endedAt: 2026-09-04T04:23:14Z
+kind: autonomous
+goal: Sweep docs for drift and fix bravely
+status: in-review
+outcome: 1 fix self-merged (#1131), 1 escalated (#1132)
+summary: "Scheduled /audit-docs Routine run, no live human prompt this session — the whole run is agent-initiated under the Skill's own standing charter. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the repo's docs; three came back clean, one (Single-home) found CLAUDE.md's git-mechanics bullet restating all six of docs/agents/git-conventions.md's rules instead of pointing at them, and one (Coherence) found docs/adr/0020-requester-trust-tiers.md still describing the authorAssociation auto-labeling CI check as speculative when it has actually shipped (.github/workflows/pr-authorassociation-label.yml, issue #443). Both fact-checked CONFIRMED by an independent checker agent. The CLAUDE.md fix is Live-tier and low-risk, so it landed as a self-merged PR (#1131, merged green via merge-pr.ts). The ADR-0020 fix touches a human-only-to-merge surface, so it rides a separate escalation PR (#1132, open, subscribed, awaiting human review) per ADR-0018's pure-factual- correction rule (direct in-place edit, no amendment banner needed)."
+prs:
+  - "1131"
+  - "1132"
+docsRead:
+  - path: CLAUDE.md
+    reason: single-home/duplication finding + fix
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: contradiction finding + fix
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: factual-correction vs decision-reversal rule for the ADR-0020 fix
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: amendment-banner format precedent
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe
+  - path: .github/workflows/pr-authorassociation-label.yml
+    reason: verify the ADR-0020 finding against the actual mechanism
+  - path: docs/agents/issue-tracker.md
+    reason: verify the ADR-0020 finding's corroborating built-state claim
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 872
+models:
+  claude-sonnet-5: 96
+toolCounts:
+  Bash: 17
+  Agent: 5
+  ScheduleWakeup: 1
+  Read: 6
+  Edit: 2
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__list_pull_requests: 1
+  Grep: 3
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  PushNotification: 1
+filesEdited:
+  - CLAUDE.md
+  - docs/adr/0020-requester-trust-tiers.md
+docsReadViaShell:
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/agents/issue-tracker.md
+  - docs/research/rulebook-migration-table.md
+  - CONTEXT.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/domain.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/guards.md
+  - docs/agents/git-conventions.md
+  - docs/agents/verifying-ui-changes.md
+  - layers/journal/CONTEXT.md
+  - layers/midden/CONTEXT.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/github-integration.md
+  - CONTEXT-MAP.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/triage-labels.md
+  - layers/blog/CONTEXT.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/research/making-repo-public.md
+  - docs/research/public-readiness-review.md
+  - docs/research/mermaid-server-side-rendering.md
+  - layers/atlas/CONTEXT.md
+  - layers/marquee/CONTEXT.md
+  - docs/proposals/README.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - .agents/skills/audit-docs/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Audit-docs Agent A: Freshness lens"
+  - type: general-purpose
+    task: "Audit-docs Agent B: Single-home lens"
+  - type: general-purpose
+    task: "Audit-docs Agent C: Concision lens"
+  - type: general-purpose
+    task: "Audit-docs Agent D: Coherence lens"
+  - type: general-purpose
+    task: Audit-docs fact-checker
+gitBranch: claude/festive-mayer-c3dmla
+entrypoint: remote_trigger
+cliVersion: 2.1.260
+trigger: audit-docs
