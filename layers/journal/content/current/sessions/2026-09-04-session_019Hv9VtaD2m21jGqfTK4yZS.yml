@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019Hv9VtaD2m21jGqfTK4yZS
 startedAt: 2026-09-04T13:16:15Z
-endedAt: 2026-09-04T13:28:10Z
+endedAt: 2026-09-04T13:33:13Z
 kind: autonomous
 goal: "Run scheduled /prune-trial: judge, then prune one"
-status: in-review
-outcome: No trial judgeable; pruned a smaller redundancy, PR open
-summary: "Scheduled /prune-trial run, entirely agent-initiated (no live human input this session). §1: ran scripts/prune-trial-window.ts against all four open trials in .agents/prune-trials.yml; all four reported \"not yet judgeable\" (earliest floor 2026-09-04T13:50:39Z, run started 13:16Z), so none closed. §2-3: searched docs/research/rulebook-migration-table.md and the corpus for a new prune outside the four trials' territory. Most obvious Built-mechanism/redundant-narration candidates were already claimed by the open trials; found a smaller but valid one — CLAUDE.md's external-pack-Skill bullet and frictions-to-fixes/SKILL.md's screening step both re-derived the pnpm verify:skills-lock rule (ADR-0015, gate-enforced), and CLAUDE.md previewed mechanism internals ADR-0015 already states in full. Compressed both, net -7 lines. §4: a Sonnet subagent given only the compressed text correctly derived all five intended behaviors. Ran pnpm gate:scoped (full gate, since .agents/prune-trials.yml is non-inert) — all steps passed including the 79-test e2e smoke suite. Pushed, opened PR #1135, subscribed to its activity."
+status: completed
+outcome: "No trial judgeable; pruned a smaller redundancy; PR #1135 merged"
+summary: "Scheduled /prune-trial run, entirely agent-initiated (no live human input this session). §1: ran scripts/prune-trial-window.ts against all four open trials in .agents/prune-trials.yml; all four reported \"not yet judgeable\" (earliest floor 2026-09-04T13:50:39Z, run started 13:16Z), so none closed. §2-3: searched docs/research/rulebook-migration-table.md and the corpus for a new prune outside the four trials' territory. Most obvious Built-mechanism/redundant-narration candidates were already claimed by the open trials; found a smaller but valid one — CLAUDE.md's external-pack-Skill bullet and frictions-to-fixes/SKILL.md's screening step both re-derived the pnpm verify:skills-lock rule (ADR-0015, gate-enforced), and CLAUDE.md previewed mechanism internals ADR-0015 already states in full. Compressed both, net -7 lines. §4: a Sonnet subagent given only the compressed text correctly derived all five intended behaviors. Ran pnpm gate:scoped (full gate, since .agents/prune-trials.yml is non-inert) — all steps passed including the 79-test e2e smoke suite. Pushed, opened PR #1135, subscribed to its activity, checked check-conflicting-issues.ts hits (none a real conflict), posted the verdict comment, and merged via scripts/merge-pr.ts on green gate (prune-trial's self-merge tier)."
 prs:
   - "1135"
 docsRead:
@@ -43,18 +43,18 @@ frictions:
   - description: Backgrounded `pnpm gate:scoped` with a shell `&` in one Bash call, then tried `wait <pid>` in a later Bash call — each Bash call is a fresh shell, so it can't wait on another shell's child and the wait returned instantly with nothing to show for it.
     solution: "Use the Bash tool's own `run_in_background: true` (tailing the log with `--pid=<pid>` to end on process exit) for anything needing a completion notification, never a shell `&` plus a later `wait` in a separate call."
     severity: nit
-durationSec: 715
+durationSec: 1018
 models:
-  claude-sonnet-5: 138
+  claude-sonnet-5: 179
 toolCounts:
-  Bash: 44
-  Read: 10
+  Bash: 49
+  Read: 11
   Grep: 1
-  Edit: 3
+  Edit: 4
   Agent: 1
   ListAgents: 1
-  ToolSearch: 2
-  ReadNotifications: 1
+  ToolSearch: 6
+  ReadNotifications: 3
   ScheduleWakeup: 1
   mcp__github__search_pull_requests: 1
   mcp__github__get_file_contents: 1
@@ -62,6 +62,10 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__issue_read: 3
+  mcp__github__add_issue_comment: 1
+  PushNotification: 2
 filesEdited:
   - CLAUDE.md
   - .agents/skills/frictions-to-fixes/SKILL.md
