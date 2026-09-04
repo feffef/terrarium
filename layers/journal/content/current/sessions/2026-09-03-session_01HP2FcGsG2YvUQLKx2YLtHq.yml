@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01HP2FcGsG2YvUQLKx2YLtHq
 startedAt: 2026-09-03T23:58:01Z
-endedAt: 2026-09-04T01:04:52Z
+endedAt: 2026-09-04T05:59:30Z
 kind: interactive
 goal: Add a Blog-highlights on-ramp page
-status: completed
-outcome: "Twelve-story page merged in PR #1122"
-summary: "Human-instructed throughout: the user asked for a fourth Journal on-ramp after \"How it got this way\", pointing newcomers at a dozen Blog posts, and specified the method — one Sonnet subagent per Persona, each reading that Persona's whole archive and returning a ranked ten. Four clarifying questions settled placement, merit-ranking with no per-Persona floor, a deliberate cross-Persona pairing, and theme grouping. Agent-initiated: the shared ranking rubric given to all four agents, the theme structure, and verifying every quote and story claim against the posts before writing. Full gate green; page and on-ramp card screenshot-verified."
+status: in-review
+outcome: "#1122 merged; follow-up #1133 in review"
+summary: "Human-instructed throughout: the user asked for a fourth Journal on-ramp after \"How it got this way\", pointing newcomers at a dozen Blog posts, and specified the method — one Sonnet subagent per Persona, each reading that Persona's whole archive and returning a ranked ten. Four clarifying questions settled placement, merit-ranking with no per-Persona floor, a deliberate cross-Persona pairing, and theme grouping. Agent-initiated: the shared ranking rubric given to all four agents, the theme structure, and verifying every quote and story claim against the posts before writing. Full gate green; page and on-ramp card screenshot-verified. #1122 merged. The user then flagged a real gap — the corpus's most-told arc, agents repeatedly failing to write their own session id, was absent — so a second human-instructed round added it as a four-part numbered sequence, cutting four Kevin entries to hold the page at twelve, on a branch restarted from the merged main (#1133)."
 prs:
   - "1122"
+  - "1133"
 docsRead:
   - path: CLAUDE.md
     reason: repo conventions and the PR/logging discipline
@@ -22,6 +23,8 @@ docsRead:
     reason: how on-ramp cards are sorted and rendered
   - path: layers/blog/app/components/blog/FeedItem.vue
     reason: confirming the real Blog route shape
+  - path: layers/journal/content/current/pages/highlights.md
+    reason: (read before editing)
   - path: layers/blog/content/eyra/pages/2026-07-20-i-brought-you-a-house-with-balconies.md
     reason: (no reason given)
   - path: layers/blog/content/eyra/pages/2026-07-24-i-read-my-own-baby-book-today.md
@@ -115,24 +118,31 @@ frictions:
   - description: Harness instructions forbid opening a PR unless asked; CLAUDE.md/ADR-0003 require auto-opening one after substantive committed work.
     solution: CLAUDE.md already resolves this explicitly in its own favour and asks that the tension be noted here. Followed the repo rule; noted for the user.
     severity: nit
-durationSec: 4010
+  - description: Per-Persona ranking plus a "penalise sequels" rubric structurally hid the corpus's biggest cross-Persona arc; the user had to name it.
+    solution: When curating across partitioned archives, run a second pass that clusters candidates by incident/theme across partitions before ranking, so a multi-post arc can be judged as one unit rather than as four penalised sequels.
+    severity: moderate
+  - description: Writing up a quote, I silently closed an ellipsis present in the source, making a near-verbatim quote subtly wrong.
+    solution: Re-ran the whole-page quote check before commit, which caught it. Same check the earlier round needed; argues for the verify-quotes script below.
+    severity: minor
+durationSec: 21688
 models:
-  claude-opus-5: 189
+  claude-opus-5: 258
 toolCounts:
-  Bash: 55
-  AskUserQuestion: 1
+  Bash: 74
+  AskUserQuestion: 2
   Skill: 3
   Agent: 4
   ToolSearch: 3
-  Write: 2
-  Read: 2
-  mcp__github__search_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  ReadNotifications: 5
-  mcp__github__pull_request_read: 7
-  mcp__Claude_Code_Remote__send_later: 2
+  Write: 3
+  Read: 4
+  mcp__github__search_pull_requests: 2
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  ReadNotifications: 6
+  mcp__github__pull_request_read: 8
+  mcp__Claude_Code_Remote__send_later: 3
   mcp__Claude_Code_Remote__delete_trigger: 1
+  Edit: 1
 filesEdited:
   - layers/journal/content/current/pages/highlights.md
 docsReadViaShell:
