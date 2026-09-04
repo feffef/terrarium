@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01GECLA4SFqyP9Mf2iWQRFKR
 startedAt: 2026-09-04T04:08:42Z
-endedAt: 2026-09-04T04:23:14Z
+endedAt: 2026-09-04T05:58:24Z
 kind: autonomous
 goal: Sweep docs for drift and fix bravely
-status: in-review
-outcome: 1 fix self-merged (#1131), 1 escalated (#1132)
-summary: "Scheduled /audit-docs Routine run, no live human prompt this session — the whole run is agent-initiated under the Skill's own standing charter. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the repo's docs; three came back clean, one (Single-home) found CLAUDE.md's git-mechanics bullet restating all six of docs/agents/git-conventions.md's rules instead of pointing at them, and one (Coherence) found docs/adr/0020-requester-trust-tiers.md still describing the authorAssociation auto-labeling CI check as speculative when it has actually shipped (.github/workflows/pr-authorassociation-label.yml, issue #443). Both fact-checked CONFIRMED by an independent checker agent. The CLAUDE.md fix is Live-tier and low-risk, so it landed as a self-merged PR (#1131, merged green via merge-pr.ts). The ADR-0020 fix touches a human-only-to-merge surface, so it rides a separate escalation PR (#1132, open, subscribed, awaiting human review) per ADR-0018's pure-factual- correction rule (direct in-place edit, no amendment banner needed)."
+status: completed
+outcome: "both fixes merged (#1131, #1132)"
+summary: "Scheduled /audit-docs Routine run, no live human prompt this session — the whole run is agent-initiated under the Skill's own standing charter. Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the repo's docs; three came back clean, one (Single-home) found CLAUDE.md's git-mechanics bullet restating all six of docs/agents/git-conventions.md's rules instead of pointing at them, and one (Coherence) found docs/adr/0020-requester-trust-tiers.md still describing the authorAssociation auto-labeling CI check as speculative when it has actually shipped (.github/workflows/pr-authorassociation-label.yml, issue #443). Both fact-checked CONFIRMED by an independent checker agent. The CLAUDE.md fix is Live-tier and low-risk, so it landed as a self-merged PR (#1131, merged green via merge-pr.ts). The ADR-0020 fix touches a human-only-to-merge surface, so it rode a separate escalation PR (#1132) per ADR-0018's pure-factual-correction rule (direct in-place edit, no amendment banner needed) — subscribed and babysat; a human merged it at 05:57Z with CI green and no conflicts."
 prs:
   - "1131"
   - "1132"
@@ -91,15 +91,15 @@ skillsUsed:
   - name: audit-docs
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 872
+durationSec: 6582
 models:
-  claude-sonnet-5: 96
+  claude-sonnet-5: 112
 toolCounts:
-  Bash: 17
+  Bash: 18
   Agent: 5
   ScheduleWakeup: 1
-  Read: 6
-  Edit: 2
+  Read: 7
+  Edit: 3
   ToolSearch: 1
   mcp__github__search_pull_requests: 1
   mcp__github__list_pull_requests: 1
@@ -113,6 +113,9 @@ toolCounts:
   Skill: 2
   Write: 1
   PushNotification: 1
+  ReadNotifications: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - CLAUDE.md
   - docs/adr/0020-requester-trust-tiers.md
