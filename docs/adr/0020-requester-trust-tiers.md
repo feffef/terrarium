@@ -135,8 +135,9 @@ turned on when the repo goes public:
   repo must keep using plain `pull_request`; see `docs/research/making-repo-public.md`.)
 - **Human-only merge for Public-originated PRs** (rule 3), detectable via
   `authorAssociation`.
-- *Possible future mechanical aid (not required by this ADR):* a CI check that
-  auto-labels each PR by `authorAssociation`, making the Trusted/Public split
+- **Mechanical aid, built:** `.github/workflows/pr-authorassociation-label.yml`
+  auto-labels each same-repo PR `trusted` when `authorAssociation` is
+  `OWNER`/`MEMBER`/`COLLABORATOR` (issue #443), making the Trusted/Public split
   visible on every PR rather than convention-only.
 
 ## Consequences
