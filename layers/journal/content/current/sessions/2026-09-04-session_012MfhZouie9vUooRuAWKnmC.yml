@@ -1,0 +1,100 @@
+schemaVersion: 1
+session: session_012MfhZouie9vUooRuAWKnmC
+startedAt: 2026-09-04T02:04:46Z
+endedAt: 2026-09-04T02:30:43Z
+kind: autonomous
+goal: Run scheduled frictions-to-fixes cycle
+status: completed
+outcome: 4 issues filed, 3 PRs merged
+summary: "Fully agent-initiated: a scheduled Routine fired /frictions-to-fixes with no human present this turn. Dispatched a survey subagent that read the latest 20 session logs, screened 35 friction entries against the tracker, and returned 4 never-fixed, low-risk candidates (all simple, none touching a human-only surface): auto-triage's idempotency rule has no full-sweep override, auto-triage doesn't consult the rulebook-migration-table before escalating a regression, no mechanical quote-verification helper exists, and RESOLVED_ORPHANED_SESSIONS was still empty despite two closed-wontfix orphan reports. Independently re-verified each claim against source before filing issues #1124-#1127. Dispatched 3 Sonnet impl agents in parallel worktrees (no file collisions), reviewed each PR's diff against its issue and CLAUDE.md conventions, posted a COMMENT-event review on each, and merged all three (#1128, #1129, #1130) via merge-pr.ts after green gates."
+prs:
+  - "1128"
+  - "1129"
+  - "1130"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: confirm the merge recipe (check-conflicting-issues, COMMENT review, merge-pr.ts)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "verify the two claimed doc gaps before filing issues #1124/#1125"
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: scripts/verify-mermaid.ts
+    reason: (no reason given)
+  - path: tests/unit/mermaid.spec.ts
+    reason: (no reason given)
+  - path: scripts/session-frictions.ts
+    reason: (no reason given)
+  - path: tests/unit/typecheck-coverage.spec.ts
+    reason: (no reason given)
+  - path: scripts/audit-skills.ts
+    reason: (read before editing)
+  - path: tests/unit/audit-skills.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the whole run's driving skill, delivered inline by the scheduled slash-command firing
+  - name: dispatch-subagents
+    reason: brief the survey subagent and the 3 parallel worktree-isolated impl agents
+  - name: close-session
+    reason: self-judged closure after all 3 dispatched PRs merged in-turn
+  - name: log-session
+    reason: record this log
+frictions:
+  - description: Called the Skill tool for frictions-to-fixes even though the scheduled firing had already inlined the skill's full body via <command-message>/<command-name> tags; the redundant call errored with disable-model-invocation.
+    solution: Recognize when a scheduled slash-command firing has already delivered a skill's full instructions inline, and proceed directly from that instead of also calling the Skill tool.
+    severity: nit
+  - description: The survey subagent's mcp__github__search_issues hit a rate limit (403) on three consecutive back-to-back semantic-search calls during tracker screening, requiring a sleep+retry.
+    solution: Pace/serialize search_issues calls rather than firing many in one turn, especially in a subagent doing heavy tracker due-diligence.
+    severity: minor
+  - description: search_issues does semantic, not substring, matching — several duplicate-check queries phrased close to a friction's own wording returned no near-miss result at all, so due diligence had to lean on grepping actual skill/script source instead of trusting tracker search.
+    solution: Treat a search_issues miss as weak evidence only (as this skill's own instructions already say) and always corroborate with a source grep before concluding never-fixed.
+    severity: minor
+  - description: Two skills share confusingly close names (`triage`, an external pack skill; `auto-triage`, our own) and were both read by the same session under review — name similarity alone isn't enough to judge whether a candidate fix is off-limits under ADR-0015.
+    solution: Always confirm the exact skills-lock.json key before ruling a Skill in/out of scope for a fix, never by name resemblance.
+    severity: minor
+  - description: "PR #1130's dispatched impl agent found that populating RESOLVED_ORPHANED_SESSIONS (#1127) coincidentally broke a pre-existing, unrelated issue-#747 regression test that reused the same real session id as a literal fixture without isolating the `resolved` map argument."
+    solution: When a fix populates a lookup map keyed by real production ids (session ids, issue numbers), grep existing test fixtures for literal reuse of those same ids before assuming the change is isolated.
+    severity: minor
+durationSec: 1557
+models:
+  claude-sonnet-5: 89
+toolCounts:
+  Skill: 4
+  ToolSearch: 3
+  Agent: 4
+  ScheduleWakeup: 1
+  Bash: 9
+  Read: 2
+  mcp__github__issue_read: 2
+  mcp__github__issue_write: 8
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_review_write: 3
+  mcp__github__unsubscribe_pr_activity: 1
+  Write: 1
+  PushNotification: 1
+filesEdited:
+  - .agents/skills/auto-triage/SKILL.md
+  - scripts/verify-quote.ts
+  - tests/unit/verify-quote.spec.ts
+  - scripts/audit-skills.ts
+  - tests/unit/audit-skills.spec.ts
+docsReadViaShell:
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: "Fix auto-triage SKILL.md gaps (#1124, #1125)"
+    model: sonnet
+  - type: general-purpose
+    task: Add quote-verification script (#1126)
+    model: sonnet
+  - type: general-purpose
+    task: Populate RESOLVED_ORPHANED_SESSIONS (#1127)
+    model: sonnet
+gitBranch: claude/eager-ptolemy-0um7s0
+entrypoint: remote_trigger
+cliVersion: 2.1.260
+trigger: frictions-to-fixes
