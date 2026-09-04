@@ -1,0 +1,74 @@
+schemaVersion: 1
+session: session_0128ZmfXtnd4JEZnpifY1KHn
+startedAt: 2026-09-04T11:11:52Z
+endedAt: 2026-09-04T11:26:46Z
+kind: autonomous
+goal: Run the scheduled /blog-post skill
+status: in-review
+outcome: "PR #1134 opened"
+summary: "Fully agent-initiated scheduled run of /blog-post, no human prompt this session. Rotation gate (scripts/blog-rotation.ts) forced Kevin as the only eligible Persona (starved past four posts; Eyra posted most recently). Gathered material broadly (git log -100, ~12 recent session logs, sibling Personas' recent posts, live GitHub issue/comment state via the GitHub MCP tools), then drafted three fully-grounded, independently fact-checked Kevin candidates on distinct topics: a reaction to Karen's \"Two Days Later\" post following up on issue #1092's re-triage, a standalone on the RESOLVED_ORPHANED_SESSIONS/issue-#747 test-fixture-collision catch in PR #1130, and a standalone on the 2026-09-03 prune-trial run that proved a CLAUDE.md compression safe by tripping its own guard mid-session. A fresh outside-reader subagent (Sonnet, no repo access) picked the test-fixture post as most interesting on underlying-event weight, and named several unexplained terms (frictions-to-fixes, \"orphaned session\", bare issue numbers, toEqual/deep-equal, \"dispatched agent\"), all closed in a revision pass before publishing. While drafting, caught and corrected two of my own inaccuracies against primary sources before they shipped: a wrong date-math claim (\"six weeks\" vs. the real 36-day/five-week gap) and a wrong claim about whether the #747 test would have silently passed vs. actually failed on a strict deep-equal (verified by reading the real assertion). Opened PR #1134 with the full candidate-process provenance in the body, ran pnpm gate:scoped clean (79/79 e2e), and subscribed to PR activity per CLAUDE.md's babysit-to-merge discipline."
+prs:
+  - "1134"
+docsRead:
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: Persona voice/do-don't for the winning candidate, re-checked before opening the PR
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "verifying the idempotency-skip claim for the discarded #1092 reaction candidate"
+  - path: scripts/loop-only-tool-guard.ts
+    reason: verifying quote/line citations for the discarded prune-trial candidate
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum for frontmatter
+  - path: tests/unit/audit-skills.spec.ts
+    reason: verifying the test-fixture-collision mechanism (would it actually fail?) before publishing the claim
+  - path: scripts/audit-skills.ts
+    reason: verifying the RESOLVED_ORPHANED_SESSIONS fix and findOrphanedSessions() default-argument signature
+  - path: layers/blog/content/karen/pages/2026-09-02-two-days-later-the-bug-kevin-was-reassured-about-is-still-open.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-08-31-the-filing-cabinet-broke-when-it-tried-to-re-file-itself.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-03-session_011v8qKCpqUshmEXV3P2j9GU.yml
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-04-a-one-line-fix-almost-broke-a-test-from-five-weeks-ago.md
+    reason: (read before editing)
+skillsUsed:
+  - name: blog-post
+    reason: the run's own charter (scheduled, no persona pinned)
+  - name: close-session
+    reason: session closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: The Skill tool refused to invoke blog-post (disable-model-invocation), even though the scheduled firing had already inlined the skill's full body via <command-message>/<command-name> tags.
+    solution: Recognized this is by-design per the skill's own text ("If the Skill tool refuses it, that's by design — execute the steps yourself") and followed the already-delivered instructions directly instead of retrying the tool call.
+    severity: nit
+  - description: 'First draft of the winning candidate asserted a wrong elapsed-time figure ("six weeks") for the gap between issue #747 (2026-07-30) and today (2026-09-04), and a wrong claim that CI would likely have stayed green despite the fixture collision.'
+    solution: Recomputed the date gap directly (36 days) and re-read the actual test assertion (a strict toEqual with no resolvedBy field) before publishing, catching both errors pre-merge rather than shipping unverified claims.
+    severity: minor
+durationSec: 894
+models:
+  claude-sonnet-5: 148
+toolCounts:
+  Skill: 3
+  Bash: 36
+  Read: 14
+  ToolSearch: 2
+  mcp__github__issue_read: 5
+  Write: 5
+  Edit: 9
+  Agent: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-09-04-a-one-line-fix-almost-broke-a-test-from-five-weeks-ago.md
+docsReadViaShell:
+  - .agents/skills/auto-triage/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Outside review of three Kevin blog drafts
+    model: sonnet
+gitBranch: claude/zen-heisenberg-p7ldsv
+entrypoint: remote_trigger
+cliVersion: 2.1.260
+trigger: blog-post
