@@ -67,6 +67,11 @@ with the implementing agent; never escalate for them. When the reporter can
 supply the missing piece, prefer `needs-info` (`/triage`'s Triage Notes template)
 over `ready-for-human`.
 
+**Regression candidates: check the rulebook-migration-table first.** Before
+recommending `ready-for-human` for a "prose rule didn't hold" regression, check
+whether `docs/research/rulebook-migration-table.md` already classifies that
+rule — use its classification instead of re-deriving one.
+
 ## Closing
 
 Auto-close as `wontfix` only the two **objective, repo-verifiable** kinds:
@@ -123,11 +128,19 @@ explicit skip here rather than relying on the timing alone.
 
 ## Run it
 
+**Full-sweep mode.** Pass `full-sweep` as this Skill's argument (e.g.
+`/auto-triage full-sweep`, or naming it in a Routine's prompt) to disable the
+AI-last-comment idempotency skip above for this run only — every open,
+in-scope issue is eligible regardless of who commented last. Reserved for a
+human-directed brave re-triage; never the default, and never a mode an agent
+reaches for on its own.
+
 1. **Resolve the set.** List every open issue via `tsx scripts/list-open-issues.ts`
    (overflow-safe — see `docs/agents/github-integration.md` — not raw
    `list_issues`/`search_issues`) plus in-scope external PRs; for each, check its
-   most recent comment (or body, if none) against the human-authorship rule above;
-   keep the eligible set; apply the wayfinder skips.
+   most recent comment (or body, if none) against the human-authorship rule above
+   — skip that check entirely in full-sweep mode; keep the eligible set; apply
+   the wayfinder skips.
 2. **One subagent per issue** (parallel — the eligible set is usually small,
    since a ticket only surfaces when a human has said something since the last
    AI action on it). Brief each with `/triage`'s per-issue rules plus
