@@ -1,0 +1,159 @@
+schemaVersion: 1
+session: session_01HP2FcGsG2YvUQLKx2YLtHq
+startedAt: 2026-09-03T23:58:01Z
+endedAt: 2026-09-04T00:22:24Z
+kind: interactive
+goal: Add a Blog-highlights on-ramp page
+status: in-review
+outcome: "Twelve-story page open as PR #1122"
+summary: "Human-instructed throughout: the user asked for a fourth Journal on-ramp after \"How it got this way\", pointing newcomers at a dozen Blog posts, and specified the method — one Sonnet subagent per Persona, each reading that Persona's whole archive and returning a ranked ten. Four clarifying questions settled placement, merit-ranking with no per-Persona floor, a deliberate cross-Persona pairing, and theme grouping. Agent-initiated: the shared ranking rubric given to all four agents, the theme structure, and verifying every quote and story claim against the posts before writing. Full gate green; page and on-ramp card screenshot-verified."
+prs:
+  - "1122"
+docsRead:
+  - path: CLAUDE.md
+    reason: repo conventions and the PR/logging discipline
+  - path: layers/blog/CONTEXT.md
+    reason: Persona definitions and who a post is for
+  - path: layers/journal/tenant.config.ts
+    reason: the onramp/onrampLabel/onrampBlurb schema
+  - path: layers/journal/content/current/pages/history.md
+    reason: house style for an on-ramp page
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: how on-ramp cards are sorted and rendered
+  - path: layers/blog/app/components/blog/FeedItem.vue
+    reason: confirming the real Blog route shape
+  - path: layers/blog/content/eyra/pages/2026-07-20-i-brought-you-a-house-with-balconies.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-07-24-i-read-my-own-baby-book-today.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-07-29-six-curators-came-back-before-breakfast.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-03-a-nameplate-ends-the-two-footer-fight.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-08-the-front-door-has-no-lock.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-14-the-house-was-undercounting-its-own-help.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-19-the-tool-that-stopped-trusting-githubs-word.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-23-a-wall-comes-down-on-purpose.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-25-the-guard-who-stood-at-a-door-nobody-walked-through.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-08-30-the-wall-i-watched-come-down-is-still-down.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-09-03-five-guards-one-set-of-pipes.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-05-after-themselves.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-05-here-we-go-again.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-06-the-guesses-didnt-stop.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-07-an-audience-of-zero.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-08-a-fix-for-a-bug-you-cant-find.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-09-zero-for-two.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-11-the-gate-that-broke-its-own-gate.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-12-a-year-of-fieldwork-by-dinnertime.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-12-interior-decorating.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-13-a-wrong-number-in-the-metric.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-14-gave-itself-permission.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-15-nobody-touched-a-keyboard.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-17-then-a-guy-asked-for-the-url.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-18-i-trust-duc-on-this-one.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-22-downgraded-twice-for-never-being-used.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-23-we-told-it-not-to-lie.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-26-the-lock-i-told-you-about-actually-caught-one.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-07-31-four-rounds-also-describes-a-rule-nobody-follows.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-04-we-fixed-it-twice-its-still-broken.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-07-the-local-safety-check-could-lie-to-you.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-12-172-minutes-apart.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-17-it-finished-everything-except-the-one-thing-that-mattered.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-22-the-review-step-where-the-reviewer-is-legally-barred-from-approving.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-26-the-honesty-ledger-nobody-could-actually-read.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-08-28-the-diagram-tool-failed-a-check-it-wrote-the-other-half-of.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-02-the-list-of-its-own-mistakes-is-already-out-of-date.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-02-two-days-later-the-bug-kevin-was-reassured-about-is-still-open.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: four parallel read-only Persona readers; briefs made self-contained per the Skill
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Subagent quotes were all verbatim, but one story summary credited agents with a backdating a human ordered in the PR — inverting the joke.
+    solution: Treat subagent prose as candidate material only; read every source post before committing a claim. Verified all twelve, which caught it.
+    severity: moderate
+  - description: Verifying 40 quotes with grep -F gave 5 false mismatches — markdown line-wrapping and an inline link, not bad quotes.
+    solution: Normalise whitespace and strip link markup before matching; a committed quote-checking script would make this mechanical.
+    severity: minor
+  - description: Harness instructions forbid opening a PR unless asked; CLAUDE.md/ADR-0003 require auto-opening one after substantive committed work.
+    solution: CLAUDE.md already resolves this explicitly in its own favour and asks that the tension be noted here. Followed the repo rule; noted for the user.
+    severity: nit
+durationSec: 1463
+models:
+  claude-opus-5: 154
+toolCounts:
+  Bash: 51
+  AskUserQuestion: 1
+  Skill: 3
+  Agent: 4
+  ToolSearch: 3
+  Write: 2
+  Read: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/highlights.md
+docsReadViaShell:
+  - layers/blog/CONTEXT.md
+subagents:
+  - type: general-purpose
+    task: Rank David blog posts
+    model: sonnet
+  - type: general-purpose
+    task: Rank Karen blog posts
+    model: sonnet
+  - type: general-purpose
+    task: Rank Kevin blog posts
+    model: sonnet
+  - type: general-purpose
+    task: Rank Eyra blog posts
+    model: sonnet
+gitBranch: claude/blog-highlights-sonnet-agents-voh97t
+entrypoint: remote_mobile
+cliVersion: 2.1.259
+learnings:
+  - A Blog post's route is /t/blog/<persona>/<file-stem>; the Persona Space slug is the link prefix, not part of the document path
+  - The Journal on-ramp is a two-column grid, so a fourth card is what squares it off rather than leaving a ragged row
+ideas:
+  - A scripts/verify-quotes.ts that checks a quoted line against its source file with whitespace and markdown-link normalisation, and reports miss/false-positive. Every citation-heavy Skill (blog-post, digest, midden-survey) currently re-implements this check by hand or skips it, and this session hit five false mismatches in one pass of forty quotes.
