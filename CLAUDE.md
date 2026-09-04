@@ -277,16 +277,9 @@ human asks for it outright.
   "never silence a state-changing command" discipline as the pkill/tail-piping
   footguns above, applied to `git branch` renames, `git reset --hard`, and any
   state-changing git command's output) — are single-homed in
-  `docs/agents/git-conventions.md`.** The rules that bite most often: `git
-  fetch origin main` and anchor on the merge-base before *any* since-last-merge
-  diff (the pre-cloned `origin/main` is usually stale); check `git rev-parse
-  --is-shallow-repository` before any blame/pickaxe work; a clean auto-merge is
-  not proof of correctness on a file both branches restructured; never `&&`-chain
-  a branch rename/creation with steps that follow it; run `git status` before a
-  destructive command like `git reset --hard`; never redirect a state-changing
-  git command's output to `/dev/null`; and a Stop-hook "Unverified" flag may be
-  inherited history that is not yours to rewrite. Read that doc before
-  rebasing, amending, or drawing a conclusion from history.
+  `docs/agents/git-conventions.md`.** Read that doc before fetching, rebasing,
+  amending, or drawing a conclusion from history — it's the single home for the
+  specific rules, not restated here.
 - **Keep a PR's description in sync with its content — hard rule.** If you
   fundamentally change what a PR does (switch approach, swap the files it touches,
   answer review with a different solution), update the PR title/description in the
