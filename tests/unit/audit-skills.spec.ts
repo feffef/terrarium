@@ -30,6 +30,7 @@ import {
   pickWindow,
   REC,
   RESCUED_GAP_HOURS,
+  RESOLVED_ORPHANED_SESSIONS,
   resolvedMisfilePath,
   SEP,
   tallyUsage,
@@ -757,6 +758,10 @@ describe('findOrphanedSessions()', () => {
 
   // End-to-end guard for issue #747, using the real commit shas/timestamps of
   // session_019aeaoPHYWMJVekmUvTMhQ9 — the orphan four daily sweeps suppressed.
+  // That same real session id is now also a `RESOLVED_ORPHANED_SESSIONS` entry
+  // (issue #1127, resolved by #736), so `resolved` is passed explicitly here
+  // as an empty map — this test is about the misfile-cleanup lever only, not
+  // the resolved-annotation one, and must stay isolated from the real default.
   it('still flags an orphan whose only added-then-deleted file was a doc, not a session log (issue #747)', () => {
     const refs: SessionTrailerRef[] = [
       { sha: '7623eac', date: '2026-07-22T20:31:22+00:00', session: 'session_019aeaoPHYWMJVekmUvTMhQ9' },
@@ -771,7 +776,7 @@ describe('findOrphanedSessions()', () => {
       },
       { sha: '7111d70', date: '2026-07-22T20:49:58+00:00', added: [], removed: ['docs/agents/github-footer-guard.md'] },
     ]
-    expect(findOrphanedSessions(refs, new Set(), changes).orphaned).toEqual([
+    expect(findOrphanedSessions(refs, new Set(), changes, new Map()).orphaned).toEqual([
       {
         session: 'session_019aeaoPHYWMJVekmUvTMhQ9',
         commits: ['7623eac', '7111d70'],
@@ -790,6 +795,19 @@ describe('findOrphanedSessions()', () => {
       { session: 'session_triaged', commits: ['c1'], date: '2026-07-10T00:00:00Z', resolvedBy: '#650' },
       { session: 'session_fresh', commits: ['c2'], date: '2026-07-12T00:00:00Z' },
     ])
+  })
+
+  it('annotates the two issue #1127 sessions with their resolving issue via the real default map', () => {
+    const refs: SessionTrailerRef[] = [
+      { sha: 'c1', date: '2026-07-10T00:00:00Z', session: 'session_019aeaoPHYWMJVekmUvTMhQ9' },
+      { sha: 'c2', date: '2026-07-11T00:00:00Z', session: 'session_01QdPGeF2hNwJLtnvzv1Rsi1' },
+    ]
+    expect(findOrphanedSessions(refs, new Set()).orphaned).toEqual([
+      { session: 'session_019aeaoPHYWMJVekmUvTMhQ9', commits: ['c1'], date: '2026-07-10T00:00:00Z', resolvedBy: '#736' },
+      { session: 'session_01QdPGeF2hNwJLtnvzv1Rsi1', commits: ['c2'], date: '2026-07-11T00:00:00Z', resolvedBy: '#1063' },
+    ])
+    expect(RESOLVED_ORPHANED_SESSIONS.get('session_019aeaoPHYWMJVekmUvTMhQ9')).toBe('#736')
+    expect(RESOLVED_ORPHANED_SESSIONS.get('session_01QdPGeF2hNwJLtnvzv1Rsi1')).toBe('#1063')
   })
 })
 

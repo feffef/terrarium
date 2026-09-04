@@ -118,7 +118,10 @@ export const RESOLVED_MANUALLY_RESCUED_CLOSURES: ReadonlyMap<string, string> = n
  *  `orphanedSessions` counterpart to `RESOLVED_MANUALLY_RESCUED_CLOSURES`
  *  (issue #447 item 4; `orphanedSessions` has no full-suppression mechanism
  *  of its own, so this annotation is its only cutoff lever). */
-export const RESOLVED_ORPHANED_SESSIONS: ReadonlyMap<string, string> = new Map()
+export const RESOLVED_ORPHANED_SESSIONS: ReadonlyMap<string, string> = new Map([
+  ['session_019aeaoPHYWMJVekmUvTMhQ9', '#736'],
+  ['session_01QdPGeF2hNwJLtnvzv1Rsi1', '#1063'],
+])
 /** Above this many session-file hits, `skillSessionFiles` caps that Skill's
  *  list to the newest `MAX_SKILL_SESSION_FILES` rather than handing Phase B
  *  (`audit-skills` SKILL.md step 4) an ever-growing full-file read — a
