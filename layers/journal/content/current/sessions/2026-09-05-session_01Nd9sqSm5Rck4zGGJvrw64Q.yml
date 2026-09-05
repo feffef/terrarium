@@ -1,0 +1,36 @@
+schemaVersion: 1
+session: session_01Nd9sqSm5Rck4zGGJvrw64Q
+startedAt: 2026-09-05T00:47:03Z
+endedAt: 2026-09-05T00:51:21Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: No Inventory changes warranted this run
+summary: "Fully agent-initiated scheduled run of the /audit-skills Skill, no human prompt. Gathered the scorecard (scripts/audit-skills.ts, 40-session window, orphan scan reachable and clean). Both orphanedSessions entries already carry resolvedBy cutoffs (#736, #1063) so nothing to re-file. orphanSuppressionLog held only resolved-annotation entries, correctly still listed, nothing suspicious. humanPromptedClosures and manuallyRescuedClosures were both empty, and misclassifiedKind had no flags. Screened all 4 regressionChecks brackets (auto-triage, close-session, frictions-to-fixes, log-session edits) at Phase A: each bracket either had the edited Skill's own kind of work absent from the after-window entirely (auto-triage, frictions-to-fixes), or friction count/severity stayed flat before vs. after (close-session/log-session: 4 frictions each side, same nit/minor mix) — no Phase B deep-read triggered. Reviewed importance/role for all 36 Inventory entries against usedIn: this window is dominated by scheduled maintenance sessions (digest/blog-post/ audit-docs/audit-skills/prune-trial/frictions-to-fixes, all correctly graded routine), with only 5 genuine non-maintenance sessions, none showing >=2 clear domain-fit absences for any Skill (the bright-line bar for a grade change). domain-modeling's recurring \"held as-is\" tension had no new in-window evidence to add this run. Concluded no Inventory YAML edit, no new/commented issue, and no new idea were justified by the evidence gathered, so no PR was opened (nothing substantive to gate per ADR-0003)."
+prs: []
+docsRead:
+  - path: .claude/skills/audit-skills/SKILL.md
+    reason: this run's own instructions
+skillsUsed:
+  - name: audit-skills
+    reason: this run is the /audit-skills sweep itself
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Called TaskCreate with a batched `tasks` array param, guessing its shape from a similarly-named multi-task pattern instead of loading its schema first.
+    solution: Always ToolSearch a deferred tool's schema before the first call, per CLAUDE.md's ToolSearch convention — don't infer shape from a plausible-looking param name.
+    severity: minor
+durationSec: 258
+models:
+  claude-sonnet-5: 46
+toolCounts:
+  Bash: 17
+  TaskCreate: 1
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-bl5c4w
+entrypoint: remote_trigger
+cliVersion: 2.1.261
+trigger: audit-skills
