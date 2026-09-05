@@ -1,0 +1,74 @@
+schemaVersion: 1
+session: session_01DBNnQjabLmCPhFUkhoq5nH
+startedAt: 2026-09-05T13:07:46Z
+endedAt: 2026-09-05T13:19:13Z
+kind: autonomous
+goal: Run the scheduled /prune-trial sweep
+status: in-review
+outcome: 2 trials judged holding; 1 new prune opened
+summary: "Scheduled, agent-initiated /prune-trial run — no live human input this session. Judged the two landed trials past their window (blog-post's A0 rotation-gate compression and CLAUDE.md's GitHub-provenance bullet compression): both hold, no matching frictions, gate failures, or regression issues since landing, so both entries were deleted. Chose a new prune under criterion 1 (a Built-row candidate): scripts/tail-pipe-guard.ts already ships and teaches, in its own deny message, almost the exact redirect-to-file-and-check-$? fix that CLAUDE.md's tail-pipe bullet spelled out across 11 lines, and docs/agents/guards.md's roster row already documents the guard's scope — so compressed the bullet to the rule, the why, the fix, and a pointer (net -5 lines), mirroring the already-landed ToolSearch/ScheduleWakeup compression. A dispatched Sonnet probe given only the surviving text correctly derived the fix and said it would follow the guard's deny message rather than route around it. Ran the full gate (non-inert path), pushed, opened PR #1166, and subscribed to its activity."
+prs:
+  - "1166"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: judge the open trials and append the new one
+  - path: docs/research/rulebook-migration-table.md
+    reason: find a Built-row prune candidate under criterion 1
+  - path: docs/agents/guards.md
+    reason: confirm tail-pipe-guard.ts's documented scope before pruning CLAUDE.md's duplicate explanation
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: this session's whole task
+  - name: close-session
+    reason: session closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: Called TaskCreate directly, guessing Agent-tool-shaped params (prompt/subagent_type) without first loading its schema via ToolSearch — denied by deferred-tool-guard.ts naming the fix. This is exactly the rule CLAUDE.md's compressed ToolSearch bullet states; I skipped it, mistakenly reaching for a task-list entry mid-task.
+    solution: Abandoned TaskCreate entirely (it wasn't actually needed) rather than retrying with ToolSearch first. The rule itself needs no change — this was a live miss of an already-clear instruction, worth recording as data for that rule's own still-open prune trial.
+    severity: minor
+  - description: prune-trial's own step-0 instruction ("Branch per CLAUDE.md's pre-checkout checklist before you edit anything") led me to reflexively cut a new branch off origin/main even though the session was already on its pinned branch (itself at origin/main's tip) — the exact CM-20/21 failure mode the just-judged GitHub-provenance-adjacent branch-off trial exists to prevent.
+    solution: Re-checked the outer harness's branch-pin instruction and CLAUDE.md's one-sentence rule before committing anything, deleted the stray branch, and returned to the pinned one — no damage landed. Worth a maintainer glance at whether prune-trial §0's phrasing should point at the CLAUDE.md rule rather than re-triggering a "cut a branch" reflex.
+    severity: minor
+durationSec: 687
+models:
+  claude-sonnet-5: 140
+toolCounts:
+  Bash: 33
+  Read: 9
+  ToolSearch: 5
+  mcp__github__search_issues: 2
+  Edit: 3
+  Write: 2
+  Grep: 4
+  Agent: 2
+  ScheduleWakeup: 1
+  TaskCreate: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+filesEdited:
+  - .agents/prune-trials.yml
+  - CLAUDE.md
+subagents:
+  - type: general-purpose
+    task: Probe compressed tail-pipe bullet
+    model: sonnet
+  - type: general-purpose
+    task: Probe compressed tail-pipe bullet
+    model: sonnet
+gitBranch: claude/practical-rubin-g8hrwy
+entrypoint: remote_trigger
+cliVersion: 2.1.261
+trigger: prune-trial
+learnings:
+  - ScheduleWakeup is valid only inside /loop's dynamic pacing; waiting on a dispatched Agent-tool subagent needs no wait/poll tool at all — just end the turn and let the task notification arrive.
+landedBy: Stop
