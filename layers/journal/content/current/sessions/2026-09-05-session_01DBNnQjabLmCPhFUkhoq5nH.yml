@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01DBNnQjabLmCPhFUkhoq5nH
 startedAt: 2026-09-05T13:07:46Z
-endedAt: 2026-09-05T13:19:13Z
+endedAt: 2026-09-05T13:21:32Z
 kind: autonomous
 goal: Run the scheduled /prune-trial sweep
-status: in-review
-outcome: 2 trials judged holding; 1 new prune opened
-summary: "Scheduled, agent-initiated /prune-trial run — no live human input this session. Judged the two landed trials past their window (blog-post's A0 rotation-gate compression and CLAUDE.md's GitHub-provenance bullet compression): both hold, no matching frictions, gate failures, or regression issues since landing, so both entries were deleted. Chose a new prune under criterion 1 (a Built-row candidate): scripts/tail-pipe-guard.ts already ships and teaches, in its own deny message, almost the exact redirect-to-file-and-check-$? fix that CLAUDE.md's tail-pipe bullet spelled out across 11 lines, and docs/agents/guards.md's roster row already documents the guard's scope — so compressed the bullet to the rule, the why, the fix, and a pointer (net -5 lines), mirroring the already-landed ToolSearch/ScheduleWakeup compression. A dispatched Sonnet probe given only the surviving text correctly derived the fix and said it would follow the guard's deny message rather than route around it. Ran the full gate (non-inert path), pushed, opened PR #1166, and subscribed to its activity."
+status: completed
+outcome: 2 trials judged holding; new prune merged
+summary: "Scheduled, agent-initiated /prune-trial run — no live human input this session. Judged the two landed trials past their window (blog-post's A0 rotation-gate compression and CLAUDE.md's GitHub-provenance bullet compression): both hold, no matching frictions, gate failures, or regression issues since landing, so both entries were deleted. Chose a new prune under criterion 1 (a Built-row candidate): scripts/tail-pipe-guard.ts already ships and teaches, in its own deny message, almost the exact redirect-to-file-and-check-$? fix that CLAUDE.md's tail-pipe bullet spelled out across 11 lines, and docs/agents/guards.md's roster row already documents the guard's scope — so compressed the bullet to the rule, the why, the fix, and a pointer (net -5 lines), mirroring the already-landed ToolSearch/ScheduleWakeup compression. A dispatched Sonnet probe given only the surviving text correctly derived the fix and said it would follow the guard's deny message rather than route around it. Ran the full gate (non-inert path), pushed, opened PR #1166, posted the verdict comment, and landed it via merge-pr.ts once CI resolved green (prune-trial's chartered self-merge tier)."
 prs:
   - "1166"
 docsRead:
@@ -34,15 +34,18 @@ frictions:
   - description: prune-trial's own step-0 instruction ("Branch per CLAUDE.md's pre-checkout checklist before you edit anything") led me to reflexively cut a new branch off origin/main even though the session was already on its pinned branch (itself at origin/main's tip) — the exact CM-20/21 failure mode the just-judged GitHub-provenance-adjacent branch-off trial exists to prevent.
     solution: Re-checked the outer harness's branch-pin instruction and CLAUDE.md's one-sentence rule before committing anything, deleted the stray branch, and returned to the pinned one — no damage landed. Worth a maintainer glance at whether prune-trial §0's phrasing should point at the CLAUDE.md rule rather than re-triggering a "cut a branch" reflex.
     severity: minor
-durationSec: 687
+  - description: prune-trial's own step-0 instruction ("Branch per CLAUDE.md's pre-checkout checklist before you edit anything") led me to reflexively cut a new branch off origin/main even though the session was already on its pinned branch (itself at origin/main's tip) — the exact CM-20/21 failure mode the still-open branch-off prune trial (opened 2026-09-05, not yet judgeable) exists to prevent.
+    solution: Re-checked the outer harness's branch-pin instruction and CLAUDE.md's one-sentence rule before committing anything, deleted the stray branch, and returned to the pinned one — no damage landed. Worth a maintainer glance at whether prune-trial §0's phrasing should point at the CLAUDE.md rule rather than re-triggering a "cut a branch" reflex; also worth citing when that trial is judged.
+    severity: minor
+durationSec: 827
 models:
-  claude-sonnet-5: 140
+  claude-sonnet-5: 160
 toolCounts:
-  Bash: 33
-  Read: 9
+  Bash: 36
+  Read: 10
   ToolSearch: 5
   mcp__github__search_issues: 2
-  Edit: 3
+  Edit: 6
   Write: 2
   Grep: 4
   Agent: 2
@@ -54,7 +57,8 @@ toolCounts:
   Skill: 2
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
-  ReadNotifications: 2
+  ReadNotifications: 4
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - CLAUDE.md
