@@ -11,6 +11,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
+  checkOwnShape,
   checkToolCall,
   denyOutputFor,
   formatGuardMessage,
@@ -68,6 +69,19 @@ describe('checkToolCall() — the pure core (issue #612)', () => {
     expect(checkToolCall('TaskCreate', undefined)).toBeNull()
     expect(checkToolCall('TaskCreate', 'a string')).toBeNull()
     expect(checkToolCall('TaskCreate', 42)).toBeNull()
+  })
+})
+
+describe('checkOwnShape() — the own-shape antipattern axis (issue #724)', () => {
+  it('denies TaskCreate called with an array-typed top-level value', () => {
+    expect(checkOwnShape('TaskCreate', { content: ['a', 'b'] })).toEqual({
+      tool: 'TaskCreate',
+      arrayKey: 'content',
+    })
+  })
+
+  it('allows a plain, non-array TaskCreate call', () => {
+    expect(checkOwnShape('TaskCreate', { title: 'T', description: 'D' })).toBeNull()
   })
 })
 

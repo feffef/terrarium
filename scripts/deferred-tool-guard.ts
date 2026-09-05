@@ -60,6 +60,55 @@ export const FOREIGN_SIGNATURES: readonly ForeignSignature[] = [
   { owner: 'Agent', requiredKeys: ['prompt', 'subagent_type'] },
 ]
 
+/** A second, narrower axis than `FOREIGN_SIGNATURES`: some deferred-tool
+ *  misuses don't borrow another tool's shape, they invent a batching
+ *  convenience (an array) the tool never had. Three post-guard recurrences
+ *  for `TaskCreate` all shared this one trait — a top-level array value —
+ *  which the key-presence model above cannot express (issue #724). */
+export interface OwnShapeAntipattern {
+  /** The tool a top-level array value is always wrong for. */
+  tool: string
+}
+
+/** Seed: `TaskCreate` takes one subject/description per call; every recorded
+ *  misuse (`content`, `tasks`, a bulk array — issue #724) batched many into a
+ *  single array instead. Add a row per newly observed offender, not a schema. */
+export const OWN_SHAPE_ANTIPATTERNS: readonly OwnShapeAntipattern[] = [{ tool: 'TaskCreate' }]
+
+export interface OwnShapeFinding {
+  tool: string
+  /** The top-level key whose value was an array. */
+  arrayKey: string
+}
+
+/** Flags a registered tool called with any top-level array value. Same
+ *  posture as `checkToolCall`: pure, never throws, fails open (issue #724). */
+export function checkOwnShape(
+  toolName: string,
+  toolInput: unknown,
+  antipatterns: readonly OwnShapeAntipattern[] = OWN_SHAPE_ANTIPATTERNS,
+): OwnShapeFinding | null {
+  if (toolInput === null || typeof toolInput !== 'object') return null
+  if (!antipatterns.some((a) => a.tool === toolName)) return null
+  const arrayKey = Object.entries(toolInput as Record<string, unknown>).find(([, v]) => Array.isArray(v))?.[0]
+  return arrayKey ? { tool: toolName, arrayKey } : null
+}
+
+/** Names the actual mistake (batching), not just "wrong shape" — in all
+ *  three recorded cases the agent guessed a convenience shape, not another
+ *  tool's (issue #724), so `formatGuardMessage`'s ToolSearch framing doesn't fit. */
+export function formatOwnShapeMessage(f: OwnShapeFinding): string {
+  return (
+    `Blocked (issue #724 deferred-tool guard): you called \`${f.tool}\` with an array under ` +
+    `\`${f.arrayKey}\`. ${f.tool} takes one subject/description per call, not a batched array — ` +
+    `call it once per item instead.`
+  )
+}
+
+export function denyOutputForOwnShape(finding: OwnShapeFinding | null): DenyOutput | null {
+  return finding ? buildDenyOutput(formatOwnShapeMessage(finding)) : null
+}
+
 export interface GuardFinding {
   /** The tool that was actually called (the wrong one). */
   calledTool: string
@@ -123,7 +172,9 @@ export function main(): void {
   const result = readHookPayload()
   if (result.kind !== 'ok') return // no stdin, blank stdin, bad JSON, or no tool_name — do not interfere
 
-  const output = denyOutputFor(checkToolCall(result.payload.tool_name, result.payload.tool_input))
+  const { tool_name, tool_input } = result.payload
+  const output =
+    denyOutputFor(checkToolCall(tool_name, tool_input)) ?? denyOutputForOwnShape(checkOwnShape(tool_name, tool_input))
   if (output) process.stdout.write(JSON.stringify(output))
 }
 

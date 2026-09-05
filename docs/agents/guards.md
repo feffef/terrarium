@@ -20,7 +20,7 @@ issue below rather than rephrasing the call until it passes.
 
 | Guard | Denies | Rule homed in | Issue |
 | --- | --- | --- | --- |
-| `deferred-tool-guard.ts` | a deferred tool called with another tool's argument shape | CLAUDE.md (load the schema via `ToolSearch` first) | #612; **#724 open** |
+| `deferred-tool-guard.ts` | a deferred tool called with another tool's argument shape, or `TaskCreate` called with a top-level array value | CLAUDE.md (load the schema via `ToolSearch` first) | #612, #724 |
 | `loop-only-tool-guard.ts` | `ScheduleWakeup` outside a `/loop` session — `stop: true` is exempt in every mode, since a cancel can only remove a pending wakeup | CLAUDE.md | #814 |
 | `subagent-background-guard.ts` | a **dispatched subagent** backgrounding a Bash command (`run_in_background: true`, or a bare `&` anywhere in the command text, `nohup … &` included), or calling `Monitor` to wait on one. Orchestrators are untouched | `dispatch-subagents` | #694, #964, #995 |
 | `commit-trailer-guard.ts` | a `git commit` whose message hand-types the ADR-0017 trailer the harness already lands | CLAUDE.md, ADR-0017 | #921 |
