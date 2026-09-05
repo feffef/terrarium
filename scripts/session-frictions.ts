@@ -141,18 +141,11 @@ export function survey(windowSize = DEFAULT_WINDOW, cwd = root): TriageSession[]
   return pickRecencyWindow(readSessions(cwd), windowSize)
 }
 
+// ── CLI ───────────────────────────────────────────────────────────────────────
+
 // Below common inline-capture caps (issue #976 cites ~30KB overflows), with
 // margin for the cap varying by caller.
 export const OUTPUT_FILE_THRESHOLD = 20_000
-
-/** True when `json` is large enough that main() must write it to a file
- *  instead of stdout (issue #976). */
-export function exceedsInlineCap(json: string): boolean {
-  return json.length > OUTPUT_FILE_THRESHOLD
-}
-
-// ── CLI ───────────────────────────────────────────────────────────────────────
-
 export const OUTPUT_FILE_PATH = join(tmpdir(), 'session-frictions-output.json')
 
 function fail(msg: string): never {
@@ -168,9 +161,9 @@ function main(): void {
   const sessions = survey(windowSize)
   const output = argv.includes('--compact') ? sessions.map(toCompactSession) : sessions
   const json = JSON.stringify(output, null, 2)
-  if (exceedsInlineCap(json)) {
+  if (json.length > OUTPUT_FILE_THRESHOLD) {
     writeFileSync(OUTPUT_FILE_PATH, json + '\n')
-    console.log(`session-frictions: ${sessions.length} sessions, ${json.length} bytes, written to ${OUTPUT_FILE_PATH}`)
+    process.stdout.write(`session-frictions: ${sessions.length} sessions, ${json.length} bytes, written to ${OUTPUT_FILE_PATH}\n`)
   } else {
     process.stdout.write(json + '\n')
   }

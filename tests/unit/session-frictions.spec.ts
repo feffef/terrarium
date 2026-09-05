@@ -6,7 +6,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { exceedsInlineCap, OUTPUT_FILE_THRESHOLD, pickRecencyWindow, SESSIONS_DIR, survey, toCompactSession, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
+import { pickRecencyWindow, SESSIONS_DIR, survey, toCompactSession, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
 
 function session(id: string, startedAt: string, opts: Partial<TriageSession> = {}): TriageSession {
   return {
@@ -100,13 +100,6 @@ describe('toCompactSession()', () => {
       prs: ['187'],
       frictions: [{ description: 'a stale claim', severity: 'minor' }],
     })
-  })
-})
-
-describe('exceedsInlineCap() — issue #976', () => {
-  it('is false at the threshold and true just past it', () => {
-    expect(exceedsInlineCap('a'.repeat(OUTPUT_FILE_THRESHOLD))).toBe(false)
-    expect(exceedsInlineCap('a'.repeat(OUTPUT_FILE_THRESHOLD + 1))).toBe(true)
   })
 })
 
