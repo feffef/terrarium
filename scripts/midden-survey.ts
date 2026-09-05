@@ -110,9 +110,8 @@ export function parseDeletionLog(raw: string): DeletionLog {
  * candidates, so screened before any judgment:
  *  - `layers/journal/content/` — session logs and digests are archived by
  *    moving files (ADR-0009's machinery), so deletions there are churn —
- *    EXCEPT its `skills/` subtree (the Skill Inventory), which is authored
- *    content and never archived by move (#1043: it was the reason `kind:
- *    skill` had never once appeared in a survey);
+ *    except its `skills/` subtree (the Skill Inventory), authored content
+ *    that is never archived by move (#1043);
  *  - `.claude/skills/` — symlinks mirroring `.agents/skills/`, where the real
  *    deletion (if any) already shows up.
  */

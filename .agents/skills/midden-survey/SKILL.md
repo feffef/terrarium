@@ -57,13 +57,12 @@ pagination/overflow guidance).
 
 - **Closed-unmerged PRs**: `mcp__github__search_pull_requests` with
   `repo:feffef/terrarium is:pr is:closed is:unmerged`, unqualified by date —
-  a `closed:>=<since>` bound under-reported a 4-PR window as 1 in #1043's run.
-  Filter to the survey window locally, on each result's own `closed_at`. A PR
-  **superseded by another PR that carried the same
-  change in** fails Gate B — note the successor and drop it. These PRs' head
-  refs are also the only place a **deleted branch** still surfaces —
-  `list_branches` sees live refs only — so a dead branch candidate usually
-  arrives here, wearing its PR.
+  a `closed:>=` bound silently under-reports (#1043). Filter to the survey
+  window locally, on each result's own `closed_at`. A PR **superseded by
+  another PR that carried the same change in** fails Gate B — note the
+  successor and drop it. These PRs' head refs are also the only place a
+  **deleted branch** still surfaces — `list_branches` sees live refs only —
+  so a dead branch candidate usually arrives here, wearing its PR.
 - **Dormant branches**: `mcp__github__list_branches`, screening out `main` and
   any branch with an **open** PR. Gate A for a branch additionally needs the
   inclusion bar's **dormancy floor** — `layers/midden/CONTEXT.md` owns the
