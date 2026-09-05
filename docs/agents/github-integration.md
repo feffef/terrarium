@@ -16,11 +16,13 @@ tools are guarded and the rule's operative statement.
 
 ## Bare angle brackets vanish from a rendered body
 
-**GitHub strips bare `<...>` text in a rendered issue/PR body as HTML markup.**
-The text simply disappears, with no error — it has silently eaten both a
-footer's own `<noreply@anthropic.com>` and an unrelated placeholder written in
-prose (e.g. `<slug>`). Wrap such placeholders in backticks, or verify the
-rendered body after posting (issue #779).
+**GitHub strips bare `<...>` text in a rendered issue/PR title or body as HTML
+markup.** The text simply disappears, with no error — it has silently eaten
+both a footer's own `<noreply@anthropic.com>` and an unrelated placeholder
+written in prose (e.g. `<slug>`). Use a fenced code block, not bare backticks
+— a single backtick wrap did not hold in a real recurrence (issue #779).
+`scripts/github-provenance-guard.ts` now denies a write carrying one before it
+posts (issue #886).
 
 ## Transient failures — retry before escalating
 
