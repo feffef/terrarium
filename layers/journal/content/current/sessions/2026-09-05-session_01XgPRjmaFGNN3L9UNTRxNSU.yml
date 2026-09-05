@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XgPRjmaFGNN3L9UNTRxNSU
 startedAt: 2026-09-05T06:36:15Z
-endedAt: 2026-09-05T09:27:20Z
+endedAt: 2026-09-05T10:23:01Z
 kind: interactive
 goal: Clear the ready-for-agent backlog autonomously
-status: completed
-outcome: 18 issues and a new rule merged
-summary: "Human asked to clear the ready-for-agent backlog over the weekend with background agents, at most three PRs in parallel, simplest possible solutions. After grilling, the human locked the plan: one branch per issue, Sonnet implements, Opus reviews, the orchestrator judges every review finding for simplicity and self-merges on green except ADR PRs; skip #926 (a Routine owns it) and #864 (deferred). 18 issues shipped through 19 PRs. Two locked designs were overturned in flight, agent-initiated but reported: #1092's REST search script (endpoint is proxy-blocked, became doc-only) and #666's branch-pin guard, which the human then replaced with deleting the instruction that caused the failures, plus a prune trial. The human also asked for a standing prune-first rule (PR 1160). A closing Sonnet docs audit over the day's changes found one stale ADR-0025 bullet, filed as issue #1161."
+status: in-review
+outcome: 18 issues merged, ADR fix awaiting human
+summary: "Human asked to clear the ready-for-agent backlog over the weekend with background agents, at most three PRs in parallel, simplest possible solutions. After grilling, the human locked the plan: one branch per issue, Sonnet implements, Opus reviews, the orchestrator judges every review finding for simplicity and self-merges on green except ADR PRs; skip #926 (a Routine owns it) and #864 (deferred). 18 issues shipped through 19 PRs. Two locked designs were overturned in flight, agent-initiated but reported: #1092's REST search script (endpoint is proxy-blocked, became doc-only) and #666's branch-pin guard, which the human then replaced with deleting the instruction that caused the failures, plus a prune trial. The human also asked for a standing prune-first rule (PR 1160). A closing Sonnet docs audit over the day's changes found one stale ADR-0025 bullet (#1161); fixed in PR 1162 on the human's ask, human-only to merge."
 prs:
   - "1142"
   - "1143"
@@ -27,6 +27,7 @@ prs:
   - "1158"
   - "1159"
   - "1160"
+  - "1162"
 docsRead:
   - path: CLAUDE.md
     reason: ground rules, human-only set, gate, PR discipline
@@ -208,16 +209,17 @@ frictions:
   - description: Review subagents whose worktree could not check out a branch already checked out elsewhere committed in the orchestrator's main checkout or in the implementer's worktree instead; shared branch refs then moved under those checkouts, leaving stale indexes that check:worktrees reported as uncommitted changes in 11 merged worktrees.
     solution: Give review subagents their own branch to check out (detached HEAD on the PR commit) rather than the PR branch, or have dispatch-subagents say so; treat a stale index whose HEAD is in origin/main as clean.
     severity: moderate
-durationSec: 10265
+durationSec: 13605
 models:
-  claude-fable-5-1: 703
+  claude-fable-5-1: 726
+  <synthetic>: 1
 toolCounts:
-  Bash: 110
+  Bash: 118
   ToolSearch: 4
   mcp__github__list_issues: 1
   mcp__github__list_pull_requests: 2
   Read: 4
-  mcp__github__issue_read: 16
+  mcp__github__issue_read: 18
   Skill: 3
   Agent: 39
   AskUserQuestion: 7
@@ -225,8 +227,8 @@ toolCounts:
   ReadNotifications: 99
   Edit: 40
   SendMessage: 22
-  mcp__github__subscribe_pr_activity: 2
-  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 3
+  mcp__github__create_pull_request: 2
 filesEdited:
   - .agents/skills/dispatch-subagents/SKILL.md
   - .agents/skills/blog-post/SKILL.md
@@ -301,6 +303,7 @@ docsReadViaShell:
   - docs/agents/github-integration.md
   - .agents/skills/frictions-to-fixes/SKILL.md
   - .agents/skills/audit-docs/SKILL.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
   - .agents/skills/log-session/SKILL.md
   - .agents/skills/close-session/SKILL.md
@@ -313,7 +316,6 @@ docsReadViaShell:
   - layers/midden/CONTEXT.md
   - CONTEXT.md
   - .agents/skills/dispatch-subagents/SKILL.md
-  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
   - .agents/skills/midden-survey/SKILL.md
   - docs/agents/git-conventions.md
   - docs/agents/domain.md
