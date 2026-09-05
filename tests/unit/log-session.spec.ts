@@ -283,7 +283,7 @@ describe('reportShellReads (the author-time verification report)', () => {
   })
 })
 
-describe('mergeAuthored() / writeScratch() — merge on re-fire (issue #688)', () => {
+describe('writeScratch() — merge on re-fire (issue #688)', () => {
   const pass1: AuthoredScratch = {
     session: 'session_01A',
     goal: 'Run /digest for 2026-07-24',
@@ -291,6 +291,7 @@ describe('mergeAuthored() / writeScratch() — merge on re-fire (issue #688)', (
     outcome: 'Digest authored, PR #680 merged green',
     summary: 'First firing did the work.',
     prs: ['680'],
+    learnings: ['auto-merge can report a false negative'],
     frictions: [{ description: 'auto-merge false negative', solution: 'poll again', severity: 'minor' }],
   }
   const pass2: AuthoredScratch = {
@@ -299,49 +300,36 @@ describe('mergeAuthored() / writeScratch() — merge on re-fire (issue #688)', (
     status: 'completed',
     outcome: 'No-op — nothing to move',
     summary: 'Second firing found nothing to do.',
-    prs: [],
-    frictions: [{ description: '/digest fired as a plain message', solution: 'name the Routine', severity: 'nit' }],
+    prs: ['680', '681'],
+    learnings: ['a Routine can fire twice in one session'],
+    frictions: [
+      { description: '/digest fired as a plain message', solution: 'name the Routine', severity: 'nit' },
+      pass1.frictions[0]!, // the same friction reported again — must not double up
+    ],
   }
+  const freshScratch = () => join(mkdtempSync(join(tmpdir(), 'log-session-scratch-')), 'pending.scratch.json')
 
-  it('passes a single pass through unchanged (no existing scratch)', () => {
-    expect(mergeAuthored(undefined, pass1)).toEqual(pass1)
+  it('writes a single pass byte-identically to the authored object', () => {
+    const abs = freshScratch()
+    writeScratch(pass1, abs)
+    expect(readFileSync(abs, 'utf8')).toBe(JSON.stringify(pass1, null, 2))
   })
 
-  it('unions frictions and prs, and takes the later pass for goal/status/outcome/summary', () => {
-    const merged = mergeAuthored(pass1, pass2)
+  it('merges a second pass: lists union (deduped), prose takes the later pass', () => {
+    const abs = freshScratch()
+    writeScratch(pass1, abs)
+    writeScratch(pass2, abs)
+    const merged = JSON.parse(readFileSync(abs, 'utf8'))
+    expect(merged.frictions).toEqual([...pass1.frictions, pass2.frictions[0]])
+    expect(merged.prs).toEqual(['680', '681'])
+    expect(merged.learnings).toEqual([...pass1.learnings!, ...pass2.learnings!])
     expect(merged.goal).toBe(pass2.goal)
-    expect(merged.status).toBe(pass2.status)
     expect(merged.outcome).toBe(pass2.outcome)
     expect(merged.summary).toBe(pass2.summary)
-    expect(merged.prs).toEqual(['680'])
-    expect(merged.frictions).toEqual([...pass1.frictions, ...pass2.frictions])
   })
 
-  it('dedups a friction reported again with the same description + severity', () => {
-    const merged = mergeAuthored(pass1, { ...pass2, frictions: [...pass2.frictions, pass1.frictions[0]!] })
-    expect(merged.frictions).toHaveLength(2) // pass1's friction survives once, not twice
-  })
-
-  it('dedups prs shared by both passes', () => {
-    const merged = mergeAuthored(pass1, { ...pass2, prs: ['680', '681'] })
-    expect(merged.prs).toEqual(['680', '681'])
-  })
-
-  it('writeScratch() on a fresh path is byte-identical to writing the authored object directly', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'log-session-scratch-'))
-    const scratchAbs = join(dir, 'pending.scratch.json')
-    writeScratch(pass1, scratchAbs)
-    expect(JSON.parse(readFileSync(scratchAbs, 'utf8'))).toEqual(pass1)
-  })
-
-  it('writeScratch() merges a second authoring pass with the first', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'log-session-scratch-'))
-    const scratchAbs = join(dir, 'pending.scratch.json')
-    writeScratch(pass1, scratchAbs)
-    writeScratch(pass2, scratchAbs)
-    const landed = JSON.parse(readFileSync(scratchAbs, 'utf8'))
-    expect(landed.prs).toEqual(['680'])
-    expect(landed.frictions).toHaveLength(2)
-    expect(landed.outcome).toBe(pass2.outcome)
+  it('replaces, never merges, a scratch left behind by a different session', () => {
+    const other = { ...pass2, session: 'session_01B' }
+    expect(mergeAuthored(pass1, other)).toEqual(other)
   })
 })

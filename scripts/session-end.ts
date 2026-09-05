@@ -19,8 +19,8 @@
 // validate against the frozen `sessions` schema, and — only if the result differs
 // from what is already on `main` (the diff-guard) — land it via the ADR-0009 push
 // machinery, then record the sentinel. Idempotent: re-invoking `log-session`
-// merges with, not replaces, the scratch (issue #688), so the next event
-// re-derives from the longer transcript and lands the merged log.
+// changes the scratch, so the next event re-derives from the longer transcript and
+// overwrites the single log file with the superset.
 //
 // This is gated code (it steps around the gate, ADR-0004/0009) — a normal PR.
 //
@@ -94,10 +94,9 @@ export interface HandlerResult {
  *  toolCounts), so keying on the stitched output would push to `main` on every
  *  turn once a scratch exists. Instead we key on the *authored scratch*: land when
  *  its bytes differ from the last-landed sentinel, no-op otherwise. Re-invoking
- *  `log-session` (a new friction / updated outcome) changes the scratch — merged
- *  with any earlier pass, issue #688 — so the next live event re-lands it: the
- *  "log when done, log again on a new event" semantics. Pure over the raw
- *  bytes: the testable core. */
+ *  `log-session` (a new friction / updated outcome) changes the scratch, so the
+ *  next live event re-lands the superset — exactly the "log when done, log again
+ *  on a new event" semantics. Pure over the raw bytes: the testable core. */
 export function scratchHashOf(scratchRaw: string): string {
   return createHash('sha256').update(scratchRaw).digest('hex')
 }

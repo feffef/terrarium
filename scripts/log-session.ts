@@ -192,30 +192,28 @@ function truncationError(hits: TruncatedScalar[]): string {
   return `authored YAML has value(s) truncated at an unquoted '#':\n${lines.join('\n')}`
 }
 
-/** A friction's dedup identity for `mergeAuthored` below: matching on
- *  description + severity together, since the authored shape carries no
- *  explicit id (issue #688's locked design allows one; none has proved
- *  necessary yet). */
+/** Dedup identity for a friction: the authored shape carries no explicit id
+ *  (issue #688's design allows adding one, in shared/schemas/session.ts). */
 function frictionKey(f: AuthoredScratch['frictions'][number]): string {
-  return `${f.description} ${f.severity}`
+  return `${f.description}::${f.severity}`
 }
 
-/** Merge a second same-session authoring pass with whatever is already on
- *  disk, so it stops silently erasing the first pass's authored half (issue
- *  #688). `frictions` and `prs` union (deduped); everything else — `goal`,
- *  `status`, `outcome`, `summary`, `docsRead`, `skillsUsed`, … — takes
- *  `incoming`'s value, since prose describes "where things stand now", not an
- *  accumulable fact. No `existing` scratch ⇒ `incoming` verbatim, so a single
- *  authoring pass (the common case) is unaffected. */
+const union = (a: string[] = [], b: string[] = []): string[] => [...new Set([...a, ...b])]
+
+/** Merge a second authoring pass with the first's scratch instead of erasing it
+ *  (issue #688). Lists union; prose takes `incoming`, the more current account.
+ *  A scratch left by a DIFFERENT session is replaced, not merged: the scratch is
+ *  one fixed path per checkout and nothing deletes it. */
 export function mergeAuthored(existing: AuthoredScratch | undefined, incoming: AuthoredScratch): AuthoredScratch {
-  if (!existing) return incoming
-  const seenFrictions = new Set(existing.frictions.map(frictionKey))
-  const frictions = [
-    ...existing.frictions,
-    ...incoming.frictions.filter((f) => !seenFrictions.has(frictionKey(f))),
-  ]
-  const prs = [...new Set([...(existing.prs ?? []), ...(incoming.prs ?? [])])]
-  return { ...incoming, frictions, prs }
+  if (!existing || existing.session !== incoming.session) return incoming
+  const seen = new Set(existing.frictions.map(frictionKey))
+  return {
+    ...incoming,
+    frictions: [...existing.frictions, ...incoming.frictions.filter((f) => !seen.has(frictionKey(f)))],
+    prs: union(existing.prs, incoming.prs),
+    learnings: union(existing.learnings, incoming.learnings),
+    ideas: union(existing.ideas, incoming.ideas),
+  }
 }
 
 /** Write the authored scratch to its canonical, gitignored home. Its existence is
