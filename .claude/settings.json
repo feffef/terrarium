@@ -37,6 +37,15 @@
         ]
       },
       {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pnpm exec tsx scripts/agent-background-flag-guard.ts || true"
+          }
+        ]
+      },
+      {
         "matcher": "Bash",
         "hooks": [
           {
