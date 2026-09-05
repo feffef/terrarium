@@ -1,0 +1,71 @@
+schemaVersion: 1
+session: session_01AkeZNYhhJB4hqXmNHj9e4H
+startedAt: 2026-09-05T02:04:47Z
+endedAt: 2026-09-05T02:20:55Z
+kind: autonomous
+goal: Run frictions-to-fixes on the latest 20 sessions
+status: completed
+outcome: 3 issues filed, 1 PR merged
+summary: "Fully agent-initiated scheduled run of the frictions-to-fixes skill, no human prompt at any point. Dispatched a subagent to survey the latest 20 session logs' frictions and screen them against the tracker; it returned 3 never-fixed, safe-surface, single-file doc candidates (dispatch-subagents lacking a rule to verify subagent-authored prose/attribution claims against source; dispatch-subagents not documenting the Agent tool's ~20-concurrent cap; triage-labels.md missing the consolidation:before/on-hold labels) plus a dropped list citing prior issues/PRs already covering the rest. Filed issues \"#1137, #1138, #1139\" for the three, dispatched one Sonnet impl agent in an isolated worktree to fix all three in a single grouped PR, reviewed the diff myself as the ADR-0003 reviewer-agent (minimal, matches each issue's recommended fix, no human-only surface touched, one advisory conflicting-issue hit eyeballed and dismissed as unrelated), posted the review verdict as a PR comment, and merged via merge-pr.ts — all three issues auto-closed (one needed the script's self-heal for a missed GitHub auto-close). No hard/multi-file candidates this cycle, so nothing was escalated to a human."
+prs:
+  - "1140"
+docsRead:
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: the run's own procedure
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe + per-tier merge authority
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: brief-authoring checklist for the impl dispatch
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (read before editing)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run itself
+  - name: dispatch-subagents
+    reason: dispatched the grouped doc-fix impl agent in a worktree
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 968
+models:
+  claude-sonnet-5: 97
+toolCounts:
+  Agent: 2
+  ToolSearch: 5
+  mcp__github__search_issues: 3
+  mcp__github__issue_read: 4
+  TaskCreate: 4
+  TaskUpdate: 9
+  mcp__github__issue_write: 6
+  Skill: 3
+  ReadNotifications: 2
+  Bash: 4
+  mcp__github__pull_request_read: 7
+  mcp__Claude_Code_Remote__send_later: 1
+  Read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Grep: 2
+  Write: 1
+filesEdited:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/triage-labels.md
+docsReadViaShell:
+  - docs/agents/triage-labels.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Grouped doc-fix PR for 3 frictions
+    model: sonnet
+gitBranch: claude/eager-ptolemy-w8v38o
+entrypoint: remote_trigger
+cliVersion: 2.1.261
+trigger: frictions-to-fixes
