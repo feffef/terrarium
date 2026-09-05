@@ -18,6 +18,10 @@ expensive or irreversible.
 Work that would grow the Platform waits: file it as an issue instead, unless a
 human asks for it outright.
 
+When a problem traces back to the Platform's own instructions, **prune first**:
+cut the instruction in a prune trial (ADR-0027) before extending it or guarding
+it with a tool.
+
 ## Read these first
 
 - **`CONTEXT-MAP.md`, then `CONTEXT.md`** — the domain model and ubiquitous
