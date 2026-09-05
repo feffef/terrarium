@@ -26,17 +26,27 @@ function commandTurn(name: string): Record<string, unknown> {
 }
 
 describe('checkSkillInlineCall() — the pure predicate (issue #1018)', () => {
-  it('DENIES: the recorded regression — a Skill call naming a skill this turn already inlined', () => {
+  it('DENIES: the recorded regression — a Skill call naming a skill this session already inlined', () => {
     const finding = checkSkillInlineCall({ skill: 'digest' }, [commandTurn('digest')])
     expect(finding?.name).toBe('digest')
     expect(finding?.undeterminable).toBe(false)
+  })
+
+  it('DENIES session-wide, not just on the turn that inlined it — the body stays inlined afterwards', () => {
+    const later = [
+      commandTurn('digest'),
+      { type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text: 'working' }] } },
+      { type: 'user', message: { role: 'user', content: [{ type: 'tool_result', content: 'output' }] } },
+      { type: 'user', message: { role: 'user', content: 'a later human turn about something else' } },
+    ]
+    expect(checkSkillInlineCall({ skill: 'digest' }, later)?.name).toBe('digest')
   })
 
   it('DENIES: the `command` argument shape, and a leading slash on the call side', () => {
     expect(checkSkillInlineCall({ command: '/audit-skills' }, [commandTurn('audit-skills')])?.name).toBe('audit-skills')
   })
 
-  it('ALLOWS: an ordinary interactive Skill call — no matching `<command-name>` block this turn', () => {
+  it('ALLOWS: an ordinary interactive Skill call — no matching `<command-name>` block this session', () => {
     expect(checkSkillInlineCall({ skill: 'domain-modeling' }, [commandTurn('digest')])).toBeNull()
     expect(checkSkillInlineCall({ skill: 'domain-modeling' }, [])).toBeNull()
   })
@@ -111,7 +121,7 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
     return { hook_event_name: 'PreToolUse', tool_name: 'Skill', tool_input: { skill }, transcript_path }
   }
 
-  it('END TO END: denies a skill named this turn\'s inlined `<command-name>` block', () => {
+  it('END TO END: denies a skill named this session\'s inlined `<command-name>` block', () => {
     const file = join(tmpdir(), 'skill-inline-guard-transcript-deny.jsonl')
     writeFileSync(file, `${JSON.stringify(commandTurn('digest'))}\n`)
     try {
@@ -123,7 +133,7 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
     }
   })
 
-  it('END TO END: stays silent for a skill never inlined this turn', () => {
+  it('END TO END: stays silent for a skill never inlined this session', () => {
     const file = join(tmpdir(), 'skill-inline-guard-transcript-allow.jsonl')
     writeFileSync(file, `${JSON.stringify(commandTurn('digest'))}\n`)
     try {

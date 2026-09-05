@@ -22,19 +22,19 @@
 //   tsx scripts/loop-only-tool-guard.ts                      # hook: payload on stdin
 //   tsx scripts/loop-only-tool-guard.ts --dry-run --tool ScheduleWakeup \
 //       [--mode loop|non-loop|undeterminable] [--transcript <p>] [--input '<json>']
-import { readFileSync } from 'node:fs'
 import {
   denyUninspectable,
   buildDenyOutput,
   flagValue,
   printDryRunResult,
   readHookPayload,
+  readTranscript,
   requireToolFlag,
   resolveDryRunInput,
   runIfMain,
   type DenyOutput,
 } from './guard-io.ts'
-import { commandSkillNames, parseTranscript } from './session-trace.ts'
+import { commandSkillNames } from './session-trace.ts'
 
 const LABEL = '/loop-only tool guard'
 const REF = 'issue #814'
@@ -170,15 +170,6 @@ export function formatGuardMessage(f: LoopToolFinding): string {
  *  `main` writes nothing and the call proceeds untouched. */
 export function denyOutputFor(finding: LoopToolFinding | null): DenyOutput | null {
   return finding ? buildDenyOutput(formatGuardMessage(finding)) : null
-}
-
-function readTranscript(path: string | undefined): Record<string, unknown>[] | null {
-  if (!path) return null
-  try {
-    return parseTranscript(readFileSync(path, 'utf8'))
-  } catch {
-    return null // unreadable — `undeterminable`, which denies
-  }
 }
 
 /** `--dry-run`: print the decision the hook would reach, and exit. Runs no tool

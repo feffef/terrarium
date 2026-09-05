@@ -117,7 +117,3 @@ new; don't re-diagnose any of these as a fresh problem.
   `outcome`/`summary` — e.g. "branch pushed, PR NOT opened — no GitHub write
   access this run" — so it surfaces to a human instead of reading as ordinary
   completion (issue #982).
-- A turn arriving with a `<command-name>` block (a scheduled Routine firing a
-  slash-command Skill) already has that Skill's full body pasted inline. This
-  is now a mechanically enforced `PreToolUse` guard, not prose to remember —
-  see `skill-inline-guard.ts` in `docs/agents/guards.md` (issues #999, #1018).

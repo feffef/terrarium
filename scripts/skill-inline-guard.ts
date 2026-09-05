@@ -1,7 +1,7 @@
 // Mechanical backstop for issue #1018: PR #1000's doc-only fix for issue #999
 // (don't call the `Skill` tool on a Skill whose body a `<command-name>` block
 // already pasted inline) never reaches a scheduled, command-only session —
-// none of the three recorded recurrences had procedural occasion to open the
+// none of the recorded recurrences had procedural occasion to open the
 // doc it lives in. Same failure shape as #814 (`loop-only-tool-guard.ts`),
 // same fix: a `PreToolUse` guard replaces the prose.
 //
@@ -13,19 +13,19 @@
 //   tsx scripts/skill-inline-guard.ts                        # hook: payload on stdin
 //   tsx scripts/skill-inline-guard.ts --dry-run --tool Skill \
 //       [--transcript <p>] [--input '<json>']
-import { readFileSync } from 'node:fs'
 import {
   denyUninspectable,
   buildDenyOutput,
   flagValue,
   printDryRunResult,
   readHookPayload,
+  readTranscript,
   requireToolFlag,
   resolveDryRunInput,
   runIfMain,
   type DenyOutput,
 } from './guard-io.ts'
-import { commandSkillNames, parseTranscript } from './session-trace.ts'
+import { commandSkillNames } from './session-trace.ts'
 
 const LABEL = 'Skill-inline guard'
 const REF = 'issue #1018'
@@ -36,22 +36,17 @@ export interface SkillInlineFinding {
   undeterminable: boolean
 }
 
-/** Every Skill name this transcript's user turns already delivered via a
- *  `<command-name>` block — reusing `commandSkillNames` exactly as
- *  `loop-only-tool-guard.ts`'s own `skillsInvokedBy` does for the identical
- *  signal, so the two guards can't drift on what "inlined" means. */
-function inlinedSkillNames(records: Record<string, unknown>[]): Set<string> {
-  const names = records
-    .filter((r) => r.type === 'user')
-    .flatMap((r) => commandSkillNames((r.message as { content?: unknown } | undefined)?.content))
-  return new Set(names)
-}
-
 /** The pure, unit-testable predicate: `(toolInput, records) → deny finding | null`.
  *  `records: null` means the transcript could not be read — fails CLOSED, per
  *  the roster convention (`docs/agents/guards.md`). A call naming no skill at
  *  all matches nothing and is never a finding: there is nothing to compare.
- *  Never throws; a non-object `toolInput` simply names no skill. */
+ *  Never throws; a non-object `toolInput` simply names no skill.
+ *
+ *  Scope is the whole session, not one turn: an inlined body stays inlined for
+ *  every later turn, and a tool_result record is a `user` record too, so
+ *  "the current turn" cannot be read off the transcript. `commandSkillNames` is
+ *  reused exactly as `loop-only-tool-guard.ts`'s own `skillsInvokedBy` does for
+ *  the identical signal, so the two guards can't drift on what "inlined" means. */
 export function checkSkillInlineCall(
   toolInput: unknown,
   records: Record<string, unknown>[] | null,
@@ -61,7 +56,10 @@ export function checkSkillInlineCall(
   const name = raw?.trim().replace(/^\//, '')
   if (!name) return null
   if (!records) return { name, undeterminable: true }
-  return inlinedSkillNames(records).has(name) ? { name, undeterminable: false } : null
+  const inlined = records
+    .filter((r) => r.type === 'user')
+    .flatMap((r) => commandSkillNames((r.message as { content?: unknown } | undefined)?.content))
+  return inlined.includes(name) ? { name, undeterminable: false } : null
 }
 
 /** Written for a reader who has opened no doc — that is what every recorded
@@ -76,11 +74,10 @@ export function formatGuardMessage(f: SkillInlineFinding): string {
     )
   }
   return (
-    `Blocked by the ${LABEL} (${REF}): this turn's \`<command-name>\` block already pasted "${f.name}"'s full ` +
-    `body inline — the harness delivers it that way precisely so you follow it directly, not so you re-fetch it. ` +
-    `Calling the \`Skill\` tool on it again is redundant at best, and a hard error at worst for a ` +
+    `Blocked by the ${LABEL} (${REF}): this session's \`<command-name>\` block already pasted "${f.name}"'s ` +
+    `full body inline, so calling \`Skill\` on it again is redundant at best, and a hard error at worst for a ` +
     `\`disable-model-invocation\` Skill.\n\n` +
-    `Follow the already-inlined body instead of calling \`Skill\` again.`
+    `Follow the already-inlined body instead.`
   )
 }
 
@@ -88,15 +85,6 @@ export function formatGuardMessage(f: SkillInlineFinding): string {
  *  untouched. */
 export function denyOutputFor(finding: SkillInlineFinding | null): DenyOutput | null {
   return finding ? buildDenyOutput(formatGuardMessage(finding)) : null
-}
-
-function readTranscript(path: string | undefined): Record<string, unknown>[] | null {
-  if (!path) return null
-  try {
-    return parseTranscript(readFileSync(path, 'utf8'))
-  } catch {
-    return null // unreadable — fails CLOSED
-  }
 }
 
 /** `--dry-run`: print the decision the hook would reach, and exit. */
