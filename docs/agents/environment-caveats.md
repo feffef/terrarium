@@ -117,11 +117,3 @@ new; don't re-diagnose any of these as a fresh problem.
   `outcome`/`summary` — e.g. "branch pushed, PR NOT opened — no GitHub write
   access this run" — so it surfaces to a human instead of reading as ordinary
   completion (issue #982).
-- **A turn that arrives with a `<command-name>` block (a scheduled Routine
-  firing a slash-command Skill) already has that Skill's full body pasted
-  inline — don't also call the `Skill` tool on it.** Doing so is redundant at
-  best, and a hard error at worst for a `disable-model-invocation` Skill (e.g.
-  `audit-docs`, `digest` are both command-only). Two sessions hit the error a
-  day apart and self-recovered by following the already-pasted body directly:
-  `session_01S47MF7UZZUq16PKU2YcTeE` (`/audit-docs`) and
-  `session_016EpQeWNhLAbXUm9gjBozHa` (`/digest`) (issue #999).

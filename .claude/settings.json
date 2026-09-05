@@ -28,6 +28,15 @@
         ]
       },
       {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pnpm exec tsx scripts/skill-inline-guard.ts || true"
+          }
+        ]
+      },
+      {
         "matcher": "Bash",
         "hooks": [
           {

@@ -12,6 +12,7 @@
 // file carries none of that, only the mechanical shape.
 import { readFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
+import { parseTranscript } from './session-trace.ts'
 
 /** The subset of the `PreToolUse` stdin payload every guard reads. */
 export interface PreToolUsePayload {
@@ -72,6 +73,17 @@ export function readHookPayload(): HookPayloadResult {
   }
   if (typeof payload.tool_name !== 'string') return { kind: 'no-tool' }
   return { kind: 'ok', payload: payload as ValidatedPayload }
+}
+
+/** The session transcript at `path`, parsed. `null` for a missing path or an
+ *  unreadable file — which a fail-closed guard denies on. */
+export function readTranscript(path: string | undefined): Record<string, unknown>[] | null {
+  if (!path) return null
+  try {
+    return parseTranscript(readFileSync(path, 'utf8'))
+  } catch {
+    return null
+  }
 }
 
 /** Denies a call a fail-CLOSED guard could not even inspect. A fail-OPEN guard
