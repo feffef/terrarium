@@ -84,6 +84,9 @@ The subagent cannot see this session's context, so the brief is self-contained:
   launches as a background async task regardless of the `run_in_background`
   parameter passed — plan to wait on the automatic task-notification for the
   subagent's result, not a synchronous inline return.
+- **The Agent tool caps at ~20 concurrent subagents.** Batch launches at most
+  (20 − currently-running agents) at a time, relaunching the remainder only as
+  slots free — a bigger batch gets rejected with no queueing (issue #1138).
 - **Decouple screenshot capture from gate completion.** A screenshot-capture
   agent shoots finals as soon as `pnpm build` succeeds, independent of whether
   `pnpm gate:scoped`/CI has finished — otherwise it blocks on the gate and never
@@ -122,6 +125,10 @@ The subagent cannot see this session's context, so the brief is self-contained:
   citations" feedback it produced didn't apply to the document that actually
   existed (issue #981). This is CLAUDE.md's "quote the line that supports it"
   discipline applied to brief-authoring specifically.
+- **A subagent's prose (summaries, narrative claims, attribution) is candidate
+  material only** — re-check any factual/attribution claim (who did what, in
+  what order) against the primary source it cites before it ships, not just its
+  verbatim quotes (issue #1137).
 - **A dispatched worktree-isolated impl agent must not self-invoke
   `close-session`/`log-session`** — see `close-session/SKILL.md` for why, and its
   mechanical enforcement.
