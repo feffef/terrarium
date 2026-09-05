@@ -118,13 +118,14 @@ The subagent cannot see this session's context, so the brief is self-contained:
   against a source the proxy blocks (`environment-caveats.md`) it cannot verify
   the claim at all, so it reports "unverified" on what you had disproven
   (issue #898).
-- **A review-subagent's prompt must be populated by reading the target scratch/draft
-  file's actual content (Read tool), never retyped or paraphrased from memory.**
-  Retyping drifts from the real file — a `/blog-post` run judged a reviewer against
-  a retyped candidate missing the real draft's markdown links, so the "missing
-  citations" feedback it produced didn't apply to the document that actually
-  existed (issue #981). This is CLAUDE.md's "quote the line that supports it"
-  discipline applied to brief-authoring specifically.
+- **Never paste a scratch/draft file's content into a review-subagent's prompt —
+  name the file's path and have the subagent `Read` it itself.** A dispatcher
+  copying content by hand has silently dropped it twice: retyping missed a
+  draft's markdown links once (issue #981), then again after the first fix only
+  narrowed "reading" from "retyping" — the copy step itself stayed the failure
+  mode (issue #1114). Where the reviewer must stay blind to the rest of the
+  repo, name the exact path(s) it may `Read` and forbid every other
+  `Read`/`Grep`/`Glob`/`Bash` call, rather than forbidding `Read` outright.
 - **A subagent's prose (summaries, narrative claims, attribution) is candidate
   material only** — re-check any factual/attribution claim (who did what, in
   what order) against the primary source it cites before it ships, not just its
