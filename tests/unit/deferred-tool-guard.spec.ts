@@ -73,15 +73,13 @@ describe('checkToolCall() — the pure core (issue #612)', () => {
 })
 
 describe('checkOwnShape() — the own-shape antipattern axis (issue #724)', () => {
-  it('denies TaskCreate called with an array-typed top-level value', () => {
-    expect(checkOwnShape('TaskCreate', { content: ['a', 'b'] })).toEqual({
-      tool: 'TaskCreate',
-      arrayKey: 'content',
-    })
+  it('names the array-typed key TaskCreate was batched with', () => {
+    expect(checkOwnShape('TaskCreate', { content: ['a', 'b'] })).toBe('content')
   })
 
-  it('allows a plain, non-array TaskCreate call', () => {
+  it('allows a plain TaskCreate call, and any array under an unregistered tool', () => {
     expect(checkOwnShape('TaskCreate', { title: 'T', description: 'D' })).toBeNull()
+    expect(checkOwnShape('Read', { content: ['a'] })).toBeNull()
   })
 })
 
@@ -125,6 +123,16 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
     })
     expect(deny?.hookSpecificOutput.permissionDecision).toBe('deny')
     expect(deny?.hookSpecificOutput.permissionDecisionReason).toContain('select:TaskCreate')
+  })
+
+  it('END TO END: blocks the own-shape recurrence — TaskCreate carrying a batched array (issue #724)', () => {
+    const deny = runHook({
+      hook_event_name: 'PreToolUse',
+      tool_name: 'TaskCreate',
+      tool_input: { content: [{ subject: 'a' }, { subject: 'b' }] },
+    })
+    expect(deny?.hookSpecificOutput.permissionDecision).toBe('deny')
+    expect(deny?.hookSpecificOutput.permissionDecisionReason).toContain('one item per call')
   })
 
   it('END TO END: stays silent (allows) a correctly-shaped call', () => {
