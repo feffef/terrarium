@@ -20,6 +20,8 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import {
+  bareAngleBracketSpan,
+  checkAngleBrackets,
   checkGithubProvenance,
   denyOutputFor,
   formatGuardMessage,
@@ -409,6 +411,59 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
   it('END TO END: a bare manual run with no stdin is not a tool call, and stays silent', () => {
     const out = execFileSync('pnpm', ['exec', 'tsx', SCRIPT], { cwd: root, input: '', encoding: 'utf8' }).trim()
     expect(out).toBe('')
+  })
+})
+
+describe('second condition — bare angle-bracket spans GitHub silently strips (#886)', () => {
+  it('denies a bare placeholder in the body', () => {
+    expect(checkAngleBrackets(COMMENT, { body: 'see path <placeholder> for the fix' })).toEqual({
+      tool: COMMENT,
+      field: 'body',
+      span: '<placeholder>',
+    })
+  })
+
+  it('denies a bare placeholder in the title', () => {
+    expect(checkAngleBrackets('mcp__github__create_pull_request', { title: 'fix <placeholder> handling', body: 'ok' })).toEqual({
+      tool: 'mcp__github__create_pull_request',
+      field: 'title',
+      span: '<placeholder>',
+    })
+  })
+
+  it('allows a placeholder inside backticks', () => {
+    expect(bareAngleBracketSpan('see `<placeholder>` in the path')).toBeNull()
+    expect(checkAngleBrackets(COMMENT, { body: 'see `<placeholder>` in the path' })).toBeNull()
+  })
+
+  it('allows a placeholder inside a fenced code block', () => {
+    expect(bareAngleBracketSpan('```\npath/<placeholder>/file\n```')).toBeNull()
+    expect(checkAngleBrackets(COMMENT, { body: '```\npath/<placeholder>/file\n```' })).toBeNull()
+  })
+
+  it('allows a real GitHub autolink', () => {
+    expect(bareAngleBracketSpan('see <https://claude.ai/code/session_REAL>')).toBeNull()
+    expect(checkAngleBrackets(COMMENT, { body: 'see <https://claude.ai/code/session_REAL>' })).toBeNull()
+  })
+
+  it('allows the raw HTML GitHub publishes rather than drops', () => {
+    expect(bareAngleBracketSpan('intro\n<!-- a note -->\nmore')).toBeNull()
+    expect(bareAngleBracketSpan('<details>\n<summary>Logs</summary>\nx\n</details>')).toBeNull()
+    expect(bareAngleBracketSpan('one<br>two')).toBeNull()
+  })
+
+  // The property, not a fixture: `guards.md` warns a negated-class regex that
+  // crosses newlines denies unrelated text on the next line.
+  it('never matches across a line break', () => {
+    expect(bareAngleBracketSpan('a <not\na tag> b')).toBeNull()
+  })
+
+  it('leaves the commit surface alone, whose mandated footer carries `<noreply@…>`', () => {
+    expect(
+      checkAngleBrackets('mcp__github__push_files', {
+        message: 'fix: x\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>',
+      }),
+    ).toBeNull()
   })
 })
 
