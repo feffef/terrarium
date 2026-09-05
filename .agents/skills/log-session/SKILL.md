@@ -42,10 +42,17 @@ broken external dependency) that could still let the goal resume later;
 `abandoned` — deliberately dropped, with no intent to resume this goal. Pick
 whichever actually describes what happened.
 
-Re-invoking is cheap and safe: authoring only rewrites the scratch, and the next
-live `Stop` (or, failing that, a `SessionEnd`/resume fallback) overwrites the
-single per-session log with a superset. So if you call closure and then more work happens, just
-**invoke again** to refresh the scratch — the last landed state wins.
+Re-invoking is cheap and safe: authoring merges with whatever you authored
+earlier this session — `frictions` and `prs` union, `goal`/`status`/`outcome`/
+`summary` take your latest wording — so a second pass for genuinely different
+work no longer erases the first (issue #688). So if you call closure and then more work happens, just
+**invoke again** to refresh the scratch — the next live `Stop` (or, failing
+that, a `SessionEnd`/resume fallback) lands the merged result.
+
+**The union only adds — it cannot remove or reword a friction or PR ref you
+already authored.** To correct one (not just add to the list), delete
+`.session-logs/pending.scratch.json` before re-authoring, so the next pass
+starts fresh instead of merging against the mistake.
 
 Be honest, **especially about friction** — a flattering log is worse than none.
 

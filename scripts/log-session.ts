@@ -192,11 +192,46 @@ function truncationError(hits: TruncatedScalar[]): string {
   return `authored YAML has value(s) truncated at an unquoted '#':\n${lines.join('\n')}`
 }
 
+/** A friction's dedup identity for `mergeAuthored` below: matching on
+ *  description + severity together, since the authored shape carries no
+ *  explicit id (issue #688's locked design allows one; none has proved
+ *  necessary yet). */
+function frictionKey(f: AuthoredScratch['frictions'][number]): string {
+  return `${f.description} ${f.severity}`
+}
+
+/** Merge a second same-session authoring pass with whatever is already on
+ *  disk, so it stops silently erasing the first pass's authored half (issue
+ *  #688). `frictions` and `prs` union (deduped); everything else — `goal`,
+ *  `status`, `outcome`, `summary`, `docsRead`, `skillsUsed`, … — takes
+ *  `incoming`'s value, since prose describes "where things stand now", not an
+ *  accumulable fact. No `existing` scratch ⇒ `incoming` verbatim, so a single
+ *  authoring pass (the common case) is unaffected. */
+export function mergeAuthored(existing: AuthoredScratch | undefined, incoming: AuthoredScratch): AuthoredScratch {
+  if (!existing) return incoming
+  const seenFrictions = new Set(existing.frictions.map(frictionKey))
+  const frictions = [
+    ...existing.frictions,
+    ...incoming.frictions.filter((f) => !seenFrictions.has(frictionKey(f))),
+  ]
+  const prs = [...new Set([...(existing.prs ?? []), ...(incoming.prs ?? [])])]
+  return { ...incoming, frictions, prs }
+}
+
 /** Write the authored scratch to its canonical, gitignored home. Its existence is
- *  the wrap-up signal the SessionEnd handler gates on; re-authoring overwrites it. */
+ *  the wrap-up signal the SessionEnd handler gates on; re-authoring merges with
+ *  whatever pass came before it in this same session (issue #688). */
 export function writeScratch(authored: AuthoredScratch, scratchAbs: string): void {
   mkdirSync(dirname(scratchAbs), { recursive: true })
-  writeFileSync(scratchAbs, JSON.stringify(authored, null, 2))
+  let existing: AuthoredScratch | undefined
+  if (existsSync(scratchAbs)) {
+    try {
+      existing = JSON.parse(readFileSync(scratchAbs, 'utf8')) as AuthoredScratch
+    } catch {
+      existing = undefined // a corrupt or partial scratch is treated as absent, never blocking re-authoring
+    }
+  }
+  writeFileSync(scratchAbs, JSON.stringify(mergeAuthored(existing, authored), null, 2))
 }
 
 /** True when `cwd` sits inside a LINKED git worktree — a checkout created by

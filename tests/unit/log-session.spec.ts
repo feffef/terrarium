@@ -2,7 +2,7 @@
 // (fetch → rebuild → push) is side-effecting and exercised via `--dry-run`; here we
 // pin the two guards that decide whether an entry is safe to land on `main`:
 // schema validation (the L1 stand-in) and the canonical `<date>-<session>.yml` filename.
-import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -11,10 +11,13 @@ import {
   expectedFilename,
   findTruncatedScalars,
   land,
+  mergeAuthored,
   reportShellReads,
   validateAuthored,
   validateEntry,
+  writeScratch,
 } from '../../scripts/log-session.ts'
+import type { AuthoredScratch } from '../../scripts/session-trace.ts'
 
 const valid = {
   session: 'session_01HNmYFFBMxwQufmpeXMqLHK',
@@ -277,5 +280,68 @@ describe('reportShellReads (the author-time verification report)', () => {
     expect(out).toContain('…and 4 more')
     // One rule line per rendered near-miss (each also echoes its command).
     expect(out.match(/not a reader command/g)?.length).toBe(5)
+  })
+})
+
+describe('mergeAuthored() / writeScratch() — merge on re-fire (issue #688)', () => {
+  const pass1: AuthoredScratch = {
+    session: 'session_01A',
+    goal: 'Run /digest for 2026-07-24',
+    status: 'completed',
+    outcome: 'Digest authored, PR #680 merged green',
+    summary: 'First firing did the work.',
+    prs: ['680'],
+    frictions: [{ description: 'auto-merge false negative', solution: 'poll again', severity: 'minor' }],
+  }
+  const pass2: AuthoredScratch = {
+    session: 'session_01A',
+    goal: 'Run /digest for 2026-07-25',
+    status: 'completed',
+    outcome: 'No-op — nothing to move',
+    summary: 'Second firing found nothing to do.',
+    prs: [],
+    frictions: [{ description: '/digest fired as a plain message', solution: 'name the Routine', severity: 'nit' }],
+  }
+
+  it('passes a single pass through unchanged (no existing scratch)', () => {
+    expect(mergeAuthored(undefined, pass1)).toEqual(pass1)
+  })
+
+  it('unions frictions and prs, and takes the later pass for goal/status/outcome/summary', () => {
+    const merged = mergeAuthored(pass1, pass2)
+    expect(merged.goal).toBe(pass2.goal)
+    expect(merged.status).toBe(pass2.status)
+    expect(merged.outcome).toBe(pass2.outcome)
+    expect(merged.summary).toBe(pass2.summary)
+    expect(merged.prs).toEqual(['680'])
+    expect(merged.frictions).toEqual([...pass1.frictions, ...pass2.frictions])
+  })
+
+  it('dedups a friction reported again with the same description + severity', () => {
+    const merged = mergeAuthored(pass1, { ...pass2, frictions: [...pass2.frictions, pass1.frictions[0]!] })
+    expect(merged.frictions).toHaveLength(2) // pass1's friction survives once, not twice
+  })
+
+  it('dedups prs shared by both passes', () => {
+    const merged = mergeAuthored(pass1, { ...pass2, prs: ['680', '681'] })
+    expect(merged.prs).toEqual(['680', '681'])
+  })
+
+  it('writeScratch() on a fresh path is byte-identical to writing the authored object directly', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'log-session-scratch-'))
+    const scratchAbs = join(dir, 'pending.scratch.json')
+    writeScratch(pass1, scratchAbs)
+    expect(JSON.parse(readFileSync(scratchAbs, 'utf8'))).toEqual(pass1)
+  })
+
+  it('writeScratch() merges a second authoring pass with the first', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'log-session-scratch-'))
+    const scratchAbs = join(dir, 'pending.scratch.json')
+    writeScratch(pass1, scratchAbs)
+    writeScratch(pass2, scratchAbs)
+    const landed = JSON.parse(readFileSync(scratchAbs, 'utf8'))
+    expect(landed.prs).toEqual(['680'])
+    expect(landed.frictions).toHaveLength(2)
+    expect(landed.outcome).toBe(pass2.outcome)
   })
 })
