@@ -100,9 +100,15 @@ catch the mistake in practice.
   the same target can still hit the oversized-result trap above; a quoted
   exact-string query reliably returns a small, precise result set instead
   (issue #932).
-- **Batching more than ~2 concurrent `search_issues`/`search_pull_requests`
-  calls can hit a 403 rate limit.** Cap parallel calls at ~2; on a 403, retry
-  sequentially after a short backoff (~49s) rather than re-batching (issue #952).
+- **Searching is the fragile path — prefer a repo-scoped listing.** GitHub's
+  `search/issues` endpoint is blocked for scripts here (the proxy binds a
+  session to repository-scoped endpoints, `repos/{owner}/{repo}/…`), so a
+  script escape can't do this; and the `search_issues`/`search_pull_requests`
+  MCP tools rate-limit with a 403 even after a few sequential calls — issue
+  #952's "~2 concurrent / ~49s backoff" numbers didn't hold (issue #1092). Use
+  `list_issues`/`list_pull_requests` or `tsx scripts/list-open-issues.ts` and
+  filter locally. If a search call is unavoidable and returns a 403, wait at
+  least a minute and retry it once, sequentially.
 - **`search_pull_requests` requires explicit `owner`/`repo` parameters** —
   unlike `search_issues`, it does not scope to the current repo implicitly.
   Omitting them searches across all of GitHub, returning cross-repo noise
