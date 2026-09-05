@@ -2,8 +2,8 @@ title: the `review` entry with no Skill behind it
 stratum: trial-pits
 condition: never-activated
 provenance:
-  kind: skill
-  name: review
+  kind: file
+  path: layers/journal/content/current/skills/review.yml
   continuityCheck: >-
     thirty-six skill definitions have ever been added to this repository and the
     same thirty-six are present today; no `review/` directory is among them, in any

@@ -2,8 +2,8 @@
 title: The Trench
 ---
 
-The trench is a single cut, taken straight down through the Platform's own spoil
-heap and read the way a dig reads any midden: by stratum, by condition, and by
+The trench is a single cut, taken straight down through what the Platform has
+discarded, and read the way a dig reads any midden: by stratum, by condition, and by
 what each layer was mostly throwing away while it was open. What surfaces here is
 not failure. It is the ordinary sediment of a platform that iterates in public —
 a routing map it stopped generating, an almanac it recut twice, spikes built to
