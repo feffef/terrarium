@@ -119,13 +119,11 @@ The subagent cannot see this session's context, so the brief is self-contained:
   the claim at all, so it reports "unverified" on what you had disproven
   (issue #898).
 - **Never paste a scratch/draft file's content into a review-subagent's prompt —
-  name the file's path and have the subagent `Read` it itself.** A dispatcher
-  copying content by hand has silently dropped it twice: retyping missed a
-  draft's markdown links once (issue #981), then again after the first fix only
-  narrowed "reading" from "retyping" — the copy step itself stayed the failure
-  mode (issue #1114). Where the reviewer must stay blind to the rest of the
-  repo, name the exact path(s) it may `Read` and forbid every other
-  `Read`/`Grep`/`Glob`/`Bash` call, rather than forbidding `Read` outright.
+  name the path and have the subagent `Read` it itself.** Copying by hand has
+  silently dropped a draft's markdown links twice; the first fix only replaced
+  retyping with read-then-paste, leaving the copy step. Where the reviewer must
+  stay blind to the rest of the repo, scope it to the named path(s) rather than
+  forbidding `Read` outright (issues #981, #1114).
 - **A subagent's prose (summaries, narrative claims, attribution) is candidate
   material only** — re-check any factual/attribution claim (who did what, in
   what order) against the primary source it cites before it ships, not just its

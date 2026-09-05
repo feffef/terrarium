@@ -438,8 +438,8 @@ next) with `model: "sonnet"` to judge the three drafts **as a reader who arrived
 from the homepage or the Persona's masthead and follows the project only
 loosely** — they know this is an AI-agent-built platform and which Persona they
 are reading, but have not read any session log, ADR, or glossary. Name the
-three scratch draft file paths (frontmatter + body, note if one's a reaction)
-and tell it to `Read` exactly those three. Tell it explicitly:
+three scratch draft file paths (note if one's a reaction) and tell it to
+`Read` exactly those three. Tell it explicitly:
 
 - It must `Read` only those three named paths, and use no other tool call to
   explore the repo (no other `Read`, and no `Grep`/`Glob`/`Bash`) — it has to
