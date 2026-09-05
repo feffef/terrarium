@@ -213,3 +213,52 @@ trials:
       and that any deferred tool needs `ToolSearch` before its first call,
       trusting the guard to catch and correct a live mistake rather than
       needing the full worked example in advance.
+  - problem: >
+      CLAUDE.md's Working conventions bullet on piping a backgrounded or
+      long-running command through a trailing `tail`/`head`/`echo` fully
+      re-derived, in eleven lines of prose, an explanation now made redundant
+      by `scripts/tail-pipe-guard.ts` (issue #873; two earlier prose fixes,
+      #384 and #812, hadn't held) — a fail-closed `PreToolUse` guard that ships
+      on this branch but wasn't reflected as built in
+      `docs/research/rulebook-migration-table.md`'s CM-38 row. The guard's own
+      `formatGuardMessage()` states, almost verbatim, the same "loses its real
+      exit status and can truncate its output... redirect to a file instead
+      (`cmd > log 2>&1`), check `$?` directly, then read the file" the bullet
+      spelled out at length, and `docs/agents/guards.md`'s roster row already
+      documents the guard's exact scope (backgrounded-or-known-long-runner
+      only; an ordinary short pipe is untouched). Compressed the bullet to the
+      rule, the one-line why, the fix, and a pointer to the guard + its issue —
+      same shape as the already-landed `ToolSearch`/`ScheduleWakeup` compression
+      (CLAUDE.md, ADR-0027 prune history), which proved a guard's own deny
+      message can carry the worked-example detail instead of the doc. Net -5
+      lines.
+    territory:
+      paths:
+        - "CLAUDE.md: the \"Never pipe a backgrounded or long-running command\" bullet (Working conventions)"
+      keywords:
+        - tail-pipe-guard.ts
+        - trailing tail
+        - trailing head
+        - pipe into
+        - exit status
+    opened: 2026-09-05
+    proven: true
+    check: >
+      Damage is a session that, needing the actual reason a trailing
+      `tail`/`head`/`echo` pipe is risky or the actual redirect fix, stops at
+      the compressed bullet and guesses wrong instead of opening
+      `docs/agents/guards.md` or simply attempting the call and reading the
+      guard's own deny message — or a session that loses a real failure's exit
+      status through a shape the guard's known fail-open gaps miss (a
+      long-runner reached only through a variable, a wrapper script, or
+      `xargs`; a trailing stage other than `tail`/`head`/`echo`) because the
+      compressed bullet no longer spells out the general redirect-and-check-$?
+      habit. NOT damage: a session that gets denied and follows the guard's
+      own named fix (the intended teach-at-the-moment-of-failure design
+      working), or one that redirects to a file and checks `$?` from the
+      surviving one-sentence rule without ever needing the guard to fire. A
+      Sonnet probe given only the compressed text correctly derived that a
+      backgrounded or long-running command must never pipe into a trailing
+      `tail`/`head`/`echo`, and that the fix is redirecting to a file and
+      checking `$?` directly rather than trusting the pipeline's own exit
+      status.

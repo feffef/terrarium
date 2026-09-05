@@ -244,17 +244,12 @@ it with a tool.
   `timeout`, splitting a step over 10 minutes, naming a completion marker when
   something must background anyway — are single-homed in
   `dispatch-subagents/SKILL.md`.
-- **Never pipe a backgrounded or long-running command through ANY trailing
-  command in a pipe/chain — `tail`/`head` are only the most common case — when
-  its exit status or full output matters.** A pipeline reports the *last*
-  command's exit status — `tail`'s, almost always 0 — not the piped command's,
-  so checking `$?` after `cmd | tail -N` can report success on a genuine
-  failure; the same trap applies to any other trailing command (e.g. a wrapped
-  command ending in `| echo done` reports `echo`'s exit status, not the
-  original command's), and `tail -N`/`head -N` can additionally truncate
-  before the section you actually need. Redirect to a file instead (`cmd >
-  log 2>&1`), check `$?` directly, and read the file in full — or truncate it
-  only after confirming exit status.
+- **Never pipe a backgrounded or long-running command through a trailing
+  `tail`/`head`/`echo` when its exit status or full output matters** — it
+  silently reports the trailing command's status, not the real one, and can
+  truncate output. Redirect to a file instead (`cmd > log 2>&1`), check `$?`
+  directly, then read the file. A `PreToolUse` guard catches the risky shape
+  and names this same fix (`docs/agents/guards.md`, issue #873).
 - **Git mechanics — staleness, history archaeology, commit hygiene, and the
   git-specific chaining/output-discarding footguns (the same "check first"/
   "never silence a state-changing command" discipline as the pkill/tail-piping
