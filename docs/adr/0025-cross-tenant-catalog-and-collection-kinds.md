@@ -174,8 +174,8 @@ A future cross-Tenant view is another Space here, not another Tenant.
   are *in* the contract, not per-Tenant conventions read by cast — renaming a
   manifest field can no longer silently drop a Tenant out of the Timeline,
   because the field is not the manifest's to declare anymore.
-- **Human-only to merge (ADR-0004).** `shared/kinds.ts`, `modules/catalog.ts`, and
-  `app/composables/catalog.ts` join `content.config.ts` / `shared/expand.ts` /
+- **Human-only to merge (ADR-0004).** `shared/kinds.ts`, `shared/schemas/`,
+  `modules/catalog.ts`, and `app/composables/catalog.ts` join `content.config.ts` / `shared/expand.ts` /
   `modules/routing.ts` / `shared/routing.ts` in the isolation-critical family —
   editable, but a PR touching them never auto-merges. An aggregator's own
   normalization (e.g. `layers/commons/app/composables/timeline.ts`) is
