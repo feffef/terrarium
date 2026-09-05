@@ -33,7 +33,7 @@ const scratch: AuthoredScratch = {
   goal: 'exercise the staging + gate paths',
   status: 'completed',
   outcome: 'ok',
-  summary: 'A synthetic scratch for the session-end staging + gate unit tests.',
+  summary: 'A synthetic scratch for the lander staging + gate unit tests.',
   frictions: [{ description: 'x', solution: 'y', severity: 'nit' }],
 }
 
