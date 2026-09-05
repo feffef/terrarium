@@ -8,6 +8,10 @@
 // core split from the shared stdin/`--dry-run`/bootstrap plumbing
 // (`guard-io.ts`, issue #1080).
 //
+// Fail-open by construction: a long-runner reached only through a variable, a
+// wrapper script or `xargs`, and a trailing stage other than `tail`/`head`/
+// `echo`, all pass — this reads a command string, not a shell AST.
+//
 // Usage:
 //   sh scripts/tail-pipe-guard.sh                     # the installed hook entry
 //   tsx scripts/tail-pipe-guard.ts                     # payload on stdin
@@ -18,17 +22,27 @@ const LABEL = 'tail-pipe guard'
 const REF = 'issue #873'
 
 const TRAILING_PIPE = /\|\s*(?:tail|head|echo)\b[^|]*$/
-const LONG_RUNNER = /\bpnpm\s+(?:gate\b|test\b|build\b|exec\s+(?:vitest|playwright)\b)/
+export const LONG_RUNNER = /\bpnpm\s+(?:gate\b|test\b|build\b|exec\s+(?:vitest|playwright)\b)/
 
-/** `null` unless the command pipes into a trailing `tail`/`head`/`echo` AND
- *  either backgrounds or names a known long-runner. Never throws. */
+/** What separates one statement from the next. Both regexes must hit the SAME
+ *  statement: matched across the whole command, a long-runner on an earlier
+ *  line denied an unrelated `git log … | head -5` on a later one (probed in
+ *  review; the cross-newline trap `workflow-edit-guard.ts`'s `SEG` also pays
+ *  for). */
+const STATEMENT = /[\n;]|&&|\|\|/
+
+/** `null` unless one statement pipes into a trailing `tail`/`head`/`echo` AND
+ *  the call either backgrounds or that statement names a known long-runner.
+ *  Never throws. */
 export function checkTailPipe(toolName: string, toolInput: unknown): 'backgrounded' | 'long-runner' | null {
   if (toolName !== 'Bash') return null
   const input = toolInput !== null && typeof toolInput === 'object' ? (toolInput as Record<string, unknown>) : {}
   const command = input.command
-  if (typeof command !== 'string' || !TRAILING_PIPE.test(command)) return null
+  if (typeof command !== 'string') return null
+  const piped = command.split(STATEMENT).filter((statement) => TRAILING_PIPE.test(statement))
+  if (piped.length === 0) return null
   if (input.run_in_background === true) return 'backgrounded'
-  return LONG_RUNNER.test(command) ? 'long-runner' : null
+  return piped.some((statement) => LONG_RUNNER.test(statement)) ? 'long-runner' : null
 }
 
 export function formatGuardMessage(): string {

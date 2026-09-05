@@ -25,6 +25,9 @@ describe('checkTailPipe() — the pure predicate (issue #873)', () => {
   it('ALLOWS: a short foreground command piped into tail/head', () => {
     expect(checkTailPipe('Bash', { command: 'git log --oneline | head -20' })).toBeNull()
     expect(checkTailPipe('Bash', { command: 'ls | head' })).toBeNull()
+    // Multi-line Bash is routine here: the long-runner is a DIFFERENT statement
+    // from the piped one, so matching the whole command would deny this.
+    expect(checkTailPipe('Bash', { command: 'pnpm build > build.log 2>&1\ngit log --oneline | head -5' })).toBeNull()
   })
 
   it('ALLOWS: no trailing pipe, and a non-Bash tool', () => {
