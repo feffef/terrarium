@@ -292,9 +292,11 @@ export function denyOutputFor(finding: ProvenanceFinding | null): DenyOutput | n
 
 // --- Angle-bracket stripping (issue #886) -----------------------------------
 
-/** A span GitHub renders as an autolink instead of stripping it — the one
- *  legitimate bare `<...>` shape (GitHub Flavored Markdown autolinks). */
-const AUTOLINK = /^(?:https?:\/\/|mailto:)/i
+/** A span GitHub renders rather than silently dropping: a GFM autolink, or one
+ *  of the HTML tags its sanitizer keeps. Denying these would wedge a legitimate
+ *  post — #886's brief bars a false positive that leaves a session unable to
+ *  publish. */
+const RENDERED = /^(?:https?:\/\/|mailto:|\/?(?:details|summary|br|img|kbd|sub|sup)\b)/i
 
 /** A `<...>` span, single-line only: `guards.md`'s test-quality note warns a
  *  negated-class regex that crosses newlines can match far more than
@@ -302,12 +304,15 @@ const AUTOLINK = /^(?:https?:\/\/|mailto:)/i
 const ANGLE_SPAN = /<([^<>\n]+)>/g
 
 /** The first bare, markup-sensitive `<...>` span in `text`, or `null`. Fenced
- *  code and inline backticks are stripped first — GitHub renders neither as
- *  markup, so a placeholder inside one is safe (#886). */
+ *  code, inline backticks and HTML comments are stripped first — GitHub
+ *  publishes all three verbatim, so a placeholder inside one is safe (#886). */
 export function bareAngleBracketSpan(text: string): string | null {
-  const withoutCode = text.replace(/```[\s\S]*?```/g, '').replace(/`[^`\n]*`/g, '')
+  const withoutCode = text
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/`[^`\n]*`/g, '')
+    .replace(/<!--[\s\S]*?-->/g, '')
   for (const match of withoutCode.matchAll(ANGLE_SPAN)) {
-    if (!AUTOLINK.test(match[1] ?? '')) return match[0]
+    if (!RENDERED.test(match[1] ?? '')) return match[0]
   }
   return null
 }
@@ -319,22 +324,23 @@ export interface AngleBracketFinding {
   span: string
 }
 
-/** Second condition on the same registry: does this call's title or authored-
- *  text field carry a span GitHub would silently strip? Titles are checked
- *  unconditionally rather than added to `ProvenanceTool` — the #880 failure
- *  hit both, and a tool with no `title` field simply has nothing there to
- *  match. */
+/** Second condition on the same registry: does this call's title or body carry
+ *  a span GitHub would silently strip? Only the `body` surface is at risk — a
+ *  commit message renders no markdown, and scanning one denied every compliant
+ *  MCP-API commit, since ADR-0017's own footer carries `<noreply@…>`. Titles
+ *  are checked unconditionally rather than added to `ProvenanceTool` — the #880
+ *  failure hit both, and a tool with no `title` has nothing there to match. */
 export function checkAngleBrackets(
   toolName: string,
   toolInput: unknown,
   registry: readonly ProvenanceTool[] = GITHUB_PROVENANCE_TOOLS,
 ): AngleBracketFinding | null {
   const entry = registry.find((r) => r.tool === toolName)
-  if (!entry) return null
+  if (!entry || (entry.surface ?? 'body') !== 'body') return null
   if (toolInput === null || typeof toolInput !== 'object') return null
   const input = toolInput as Record<string, unknown>
 
-  for (const field of [entry.field ?? 'body', 'title']) {
+  for (const field of ['body', 'title']) {
     const raw = input[field]
     if (typeof raw !== 'string') continue
     const span = bareAngleBracketSpan(raw)
@@ -350,8 +356,7 @@ export function formatAngleBracketMessage(f: AngleBracketFinding): string {
   return (
     `Blocked by the ADR-0017 provenance guard (#886): \`${f.tool}\`'s \`${f.field}\` contains a bare ` +
     `angle-bracket span, \`${f.span}\` — GitHub renders that as an unknown HTML tag and silently drops ` +
-    `it, no error shown. Wrap it in a fenced code block instead of bare backticks (a single backtick ` +
-    `wrap did not hold in a real recurrence):\n\n` +
+    `it, no error shown. Wrap it in a fenced code block:\n\n` +
     '```\n' +
     `${f.span}\n` +
     '```'
@@ -396,14 +401,11 @@ export function main(): void {
   }
 
   const groundTruthId = resolveGroundTruthFromTranscript(transcriptJsonl)
-  const provenanceFinding = checkGithubProvenance(payload.tool_name, payload.tool_input, groundTruthId)
-  if (provenanceFinding) {
-    process.stdout.write(JSON.stringify(denyOutputFor(provenanceFinding)))
-    return
-  }
-
-  const angleFinding = checkAngleBrackets(payload.tool_name, payload.tool_input)
-  if (angleFinding) process.stdout.write(JSON.stringify(buildDenyOutput(formatAngleBracketMessage(angleFinding))))
+  const angle = checkAngleBrackets(payload.tool_name, payload.tool_input)
+  const output =
+    denyOutputFor(checkGithubProvenance(payload.tool_name, payload.tool_input, groundTruthId)) ??
+    (angle && buildDenyOutput(formatAngleBracketMessage(angle)))
+  if (output) process.stdout.write(JSON.stringify(output))
 }
 
 runIfMain(import.meta.url, { main, label: LABEL, ref: REF })

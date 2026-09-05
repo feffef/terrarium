@@ -445,6 +445,26 @@ describe('second condition — bare angle-bracket spans GitHub silently strips (
     expect(bareAngleBracketSpan('see <https://claude.ai/code/session_REAL>')).toBeNull()
     expect(checkAngleBrackets(COMMENT, { body: 'see <https://claude.ai/code/session_REAL>' })).toBeNull()
   })
+
+  it('allows the raw HTML GitHub publishes rather than drops', () => {
+    expect(bareAngleBracketSpan('intro\n<!-- a note -->\nmore')).toBeNull()
+    expect(bareAngleBracketSpan('<details>\n<summary>Logs</summary>\nx\n</details>')).toBeNull()
+    expect(bareAngleBracketSpan('one<br>two')).toBeNull()
+  })
+
+  // The property, not a fixture: `guards.md` warns a negated-class regex that
+  // crosses newlines denies unrelated text on the next line.
+  it('never matches across a line break', () => {
+    expect(bareAngleBracketSpan('a <not\na tag> b')).toBeNull()
+  })
+
+  it('leaves the commit surface alone, whose mandated footer carries `<noreply@…>`', () => {
+    expect(
+      checkAngleBrackets('mcp__github__push_files', {
+        message: 'fix: x\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>',
+      }),
+    ).toBeNull()
+  })
 })
 
 describe('the no-ground-truth edge of a required-but-empty body', () => {
