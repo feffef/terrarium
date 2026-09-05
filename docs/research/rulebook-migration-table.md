@@ -250,7 +250,7 @@ blank.
 | --- | --- | --- | --- | --- | --- | --- |
 | GC-01 | `git fetch origin main` and anchor on the merge-base before any since-last-merge diff | Staleness | H (refusal) | none | Folded into `CM-21`'s guard — same fetch precondition, different consumer | M |
 | GC-02 | Scope a pickaxe search to `origin/main`, never `--all` | Staleness | H (refusal) | none | `PreToolUse` on `Bash`: deny `git log -S … --all` | S |
-| GC-03 | Run `git rev-parse --is-shallow-repository` **first**, before any blame/pickaxe/history-completeness work | Shallow clone | H (refusal) | **#772 open**, #703, #849 | See §3 — the strongest unbuilt refusal candidate in the corpus | S |
+| GC-03 | ~~Run `git rev-parse --is-shallow-repository` **first**, before any blame/pickaxe/history-completeness work~~ — deleted (#772): a `SessionStart` hook unshallows before a session's first turn, removing the precondition instead of mechanizing the check | Shallow clone | H (preventive repair, not refusal/post-hoc) | #772, #703, #849 | **Built** — `scripts/unshallow-on-start.ts`, wired in `.claude/settings.json`'s `SessionStart` | 0 |
 | GC-04 | Don't assume a nonempty merge-base — check, and be ready for an unrelated root | Staleness | H (refusal) | none | Same guard as GC-03; `scripts/gate.ts` already implements the refusal in code | S |
 | GC-05 | Re-fetch and rebase onto `origin/main` periodically during a long session, not only before pushing | Staleness | J | none | "Periodically" has no mechanizable trigger. Could become **D** — the merge-conflict notice already catches the failure | — |
 | GC-06 | Fetch and inspect before *starting* a user-directed edit on a PR — a concurrent session may have pushed it | Staleness | J | none | Requires knowing what the edit is | — |

@@ -84,6 +84,10 @@
           {
             "type": "command",
             "command": "pnpm install"
+          },
+          {
+            "type": "command",
+            "command": "pnpm exec tsx scripts/unshallow-on-start.ts || true"
           }
         ]
       },
