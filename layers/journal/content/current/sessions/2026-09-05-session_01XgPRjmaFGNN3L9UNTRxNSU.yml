@@ -1,0 +1,439 @@
+schemaVersion: 1
+session: session_01XgPRjmaFGNN3L9UNTRxNSU
+startedAt: 2026-09-05T06:36:15Z
+endedAt: 2026-09-05T09:08:17Z
+kind: interactive
+goal: Clear the ready-for-agent backlog autonomously
+status: in-review
+outcome: 18 issues landed, one rule PR open
+summary: "Human asked to clear the ready-for-agent backlog over the weekend with background agents, at most three PRs in parallel, simplest possible solutions. After grilling, the human locked the plan: one branch per issue, Sonnet implements, Opus reviews, the orchestrator judges every review finding for simplicity and self-merges on green except ADR PRs; skip #926 (a Routine owns it) and #864 (deferred). 18 issues shipped through 19 PRs. Two locked designs were overturned in flight, agent-initiated but reported: #1092's REST search script (endpoint is proxy-blocked, became doc-only) and #666's branch-pin guard, which the human then replaced with deleting the instruction that caused the failures, plus a prune trial. The human also asked for a standing prune-first rule (PR 1160)."
+prs:
+  - "1142"
+  - "1143"
+  - "1144"
+  - "1145"
+  - "1146"
+  - "1147"
+  - "1148"
+  - "1149"
+  - "1150"
+  - "1151"
+  - "1152"
+  - "1153"
+  - "1154"
+  - "1155"
+  - "1156"
+  - "1157"
+  - "1158"
+  - "1159"
+  - "1160"
+docsRead:
+  - path: CLAUDE.md
+    reason: ground rules, human-only set, gate, PR discipline
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe and merge-pr.ts as sole merge path
+  - path: docs/agents/issue-tracker.md
+    reason: supersession check and pinned-branch packaging rule
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: whether a guard with a spec is untested runtime behaviour
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: scripts/session-end.ts
+    reason: (read before editing)
+  - path: scripts/log-session.ts
+    reason: (read before editing)
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+  - path: .claude/settings.json
+    reason: (read before editing)
+  - path: shared/schemas/session.ts
+    reason: (read before editing)
+  - path: scripts/session-id-guard.ts
+    reason: (no reason given)
+  - path: tests/unit/session-end.spec.ts
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: scripts/branch-pin-guard.ts
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (read before editing)
+  - path: docs/agents/guards.md
+    reason: (read before editing)
+  - path: .agents/prune-trials.yml
+    reason: (read before editing)
+  - path: scripts/agent-background-flag-guard.ts
+    reason: (read before editing)
+  - path: scripts/guard-io.ts
+    reason: (read before editing)
+  - path: scripts/commit-trailer-guard.ts
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (read before editing)
+  - path: scripts/session-frictions.ts
+    reason: (read before editing)
+  - path: tests/unit/session-frictions.spec.ts
+    reason: (read before editing)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (read before editing)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (read before editing)
+  - path: tests/unit/log-session.spec.ts
+    reason: (read before editing)
+  - path: scripts/midden-survey.ts
+    reason: (read before editing)
+  - path: tests/unit/midden-survey.spec.ts
+    reason: (read before editing)
+  - path: scripts/tail-pipe-guard.ts
+    reason: (read before editing)
+  - path: scripts/tail-pipe-guard.sh
+    reason: (read before editing)
+  - path: tests/unit/tail-pipe-guard.spec.ts
+    reason: (read before editing)
+  - path: scripts/subagent-background-guard.sh
+    reason: (no reason given)
+  - path: scripts/workflow-edit-guard.sh
+    reason: (no reason given)
+  - path: scripts/workflow-edit-guard.ts
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (read before editing)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (read before editing)
+  - path: scripts/search-issues.ts
+    reason: (read before editing)
+  - path: tests/unit/search-issues.spec.ts
+    reason: (read before editing)
+  - path: scripts/list-open-issues.ts
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (read before editing)
+  - path: docs/agents/git-conventions.md
+    reason: (read before editing)
+  - path: scripts/unshallow-on-start.ts
+    reason: (read before editing)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/content/trench/pages/index.md
+    reason: (read before editing)
+  - path: layers/midden/content/trench/artifacts/the-phantom-skill.yml
+    reason: (read before editing)
+  - path: scripts/deferred-tool-guard.ts
+    reason: (read before editing)
+  - path: tests/unit/deferred-tool-guard.spec.ts
+    reason: (read before editing)
+  - path: scripts/loop-only-tool-guard.ts
+    reason: (read before editing)
+  - path: scripts/skill-inline-guard.ts
+    reason: (read before editing)
+  - path: tests/unit/skill-inline-guard.spec.ts
+    reason: (read before editing)
+  - path: scripts/github-provenance-guard.ts
+    reason: (read before editing)
+  - path: tests/unit/github-provenance-guard.spec.ts
+    reason: (read before editing)
+  - path: /home/user/terrarium/CLAUDE.md
+    reason: (read before editing)
+  - path: /home/user/terrarium/docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (read before editing)
+  - path: tests/unit/loop-only-tool-guard.spec.ts
+    reason: (no reason given)
+  - path: tests/unit/commit-trailer-guard.spec.ts
+    reason: (read before editing)
+  - path: scripts/provenance-footer.ts
+    reason: (read before editing)
+  - path: scripts/git-helpers.ts
+    reason: (read before editing)
+  - path: tests/unit/log-session-land.spec.ts
+    reason: (read before editing)
+  - path: tests/unit/log-session-push.spec.ts
+    reason: (no reason given)
+  - path: tests/unit/list-open-issues.spec.ts
+    reason: (no reason given)
+  - path: tests/unit/agent-background-flag-guard.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: grill-with-docs
+    reason: plan and order the backlog before dispatch
+  - name: dispatch-subagents
+    reason: worktree isolation and brief rules for 30 subagents
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Issue #1092's locked design was a script hitting GitHub's REST search endpoint, which returns 403 through the session proxy; the script could never run here. Converted the PR to doc-only after the reviewer probed it."
+    solution: Triage should probe an endpoint once before locking a script design on it; github-integration.md now records the block.
+    severity: moderate
+  - description: "Issue #865's locked design named scripts/session-trace.ts as a file to merge into the lander, but two of the lander's imports depend on it, an import cycle. The implementer refused with proof."
+    solution: Check the import graph before locking a "merge these files" design; one grep would have caught it.
+    severity: moderate
+  - description: 'Four guard implementations arrived over-built despite a "keep it small" brief: helpers with one caller, predicates that existed only to be tested, 14 tests for a boolean. Every Opus review cut 30 to 50 percent.'
+    solution: Brief implementers with a line budget and a test-count ceiling up front, as later dispatches did; consider adding that to dispatch-subagents.
+    severity: minor
+  - description: PR 1157 conflicted with PR 1156 on docs/research/rulebook-migration-table.md section 3 and its section 8 tally, because every guard PR is told to re-derive the same tally lines.
+    solution: Derive the tally by script or drop it, so parallel PRs stop colliding on the same lines.
+    severity: minor
+  - description: tests/unit/commit-trailer-guard.spec.ts writes a fixed temp filename, so concurrent gate runs in one container collide and one run fails; an implementer had to re-run the gate.
+    solution: Use a unique temp path per run in that spec.
+    severity: minor
+  - description: "Three implementers were blocked by the container's worktree-isolation guard on ordinary commands: redirected pnpm or git push, a literal \"Bash\" plus \"pnpm\" in one command, a heredoc mentioning git. Each cost round trips."
+    solution: Note the workaround (write a script file, run it) in docs/agents/environment-caveats.md.
+    severity: minor
+  - description: scripts/merge-pr.ts reported "failed to verify/close" on issues GitHub had already auto-closed a second earlier; harmless but each needed a manual check.
+    solution: Re-read issue state after a short delay before reporting a failure.
+    severity: nit
+durationSec: 9122
+models:
+  claude-fable-5-1: 637
+toolCounts:
+  Bash: 92
+  ToolSearch: 4
+  mcp__github__list_issues: 1
+  mcp__github__list_pull_requests: 2
+  Read: 4
+  mcp__github__issue_read: 16
+  Skill: 3
+  Agent: 38
+  AskUserQuestion: 7
+  Write: 4
+  ReadNotifications: 92
+  Edit: 39
+  SendMessage: 21
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__create_pull_request: 1
+filesEdited:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - scripts/log-session.ts
+  - tests/unit/log-session-land.spec.ts
+  - shared/schemas/session.ts
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/audit-docs/SKILL.md
+  - scripts/branch-pin-guard.ts
+  - tests/unit/branch-pin-guard.spec.ts
+  - CLAUDE.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/research/rulebook-migration-table.md
+  - .claude/settings.json
+  - .agents/prune-trials.yml
+  - docs/agents/issue-tracker.md
+  - scripts/tail-pipe-guard.ts
+  - scripts/tail-pipe-guard.sh
+  - docs/agents/guards.md
+  - tests/unit/tail-pipe-guard.spec.ts
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - scripts/session-frictions.ts
+  - tests/unit/session-frictions.spec.ts
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - .agents/skills/log-session/SKILL.md
+  - scripts/session-end.ts
+  - tests/unit/log-session.spec.ts
+  - .agents/skills/midden-survey/SKILL.md
+  - scripts/midden-survey.ts
+  - tests/unit/midden-survey.spec.ts
+  - docs/agents/domain.md
+  - scripts/branch-pin-guard.sh
+  - docs/agents/github-integration.md
+  - docs/agents/git-conventions.md
+  - scripts/unshallow-on-start.ts
+  - layers/midden/content/trench/pages/index.md
+  - layers/midden/content/trench/artifacts/the-phantom-skill.yml
+  - scripts/deferred-tool-guard.ts
+  - tests/unit/deferred-tool-guard.spec.ts
+  - scripts/agent-background-flag-guard.ts
+  - tests/unit/agent-background-flag-guard.spec.ts
+  - scripts/github-provenance-guard.ts
+  - tests/unit/github-provenance-guard.spec.ts
+  - /home/user/terrarium/CLAUDE.md
+  - scripts/guard-io.ts
+  - scripts/loop-only-tool-guard.ts
+  - scripts/skill-inline-guard.ts
+  - docs/agents/environment-caveats.md
+  - tests/unit/skill-inline-guard.spec.ts
+  - .session-logs/smoke-1155.scratch.json
+  - .session-logs/smoke-1155.jsonl
+  - .session-logs/smoke-1155.payload.json
+  - scripts/provenance-footer.ts
+  - scripts/git-helpers.ts
+  - tests/unit/commit-trailer-guard.spec.ts
+  - scripts/search-issues.ts
+  - tests/unit/search-issues.spec.ts
+docsReadViaShell:
+  - .agents/skills/grill-with-docs/SKILL.md
+  - .agents/skills/implement/SKILL.md
+  - .agents/skills/grilling/SKILL.md
+  - CONTEXT-MAP.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
+  - docs/agents/pr-workflow.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/agents/guards.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/github-integration.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - layers/midden/CONTEXT.md
+  - CONTEXT.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - .agents/skills/midden-survey/SKILL.md
+  - docs/agents/git-conventions.md
+  - docs/agents/domain.md
+subagents:
+  - type: general-purpose
+    task: Survey ready-for-agent backlog
+    model: sonnet
+  - type: general-purpose
+    task: "Implement issue #1106"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement issue #1053"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement issue #829"
+    model: sonnet
+  - type: general-purpose
+    task: "Review PR #1142"
+    model: opus
+  - type: general-purpose
+    task: "Implement issue #1114"
+    model: sonnet
+  - type: general-purpose
+    task: "Review PR #1143"
+    model: opus
+  - type: general-purpose
+    task: "Implement issue #1092"
+    model: sonnet
+  - type: general-purpose
+    task: "Review PR #1144"
+    model: opus
+  - type: general-purpose
+    task: "Implement issue #1043"
+    model: sonnet
+  - type: general-purpose
+    task: "Review PR #1145"
+    model: opus
+  - type: general-purpose
+    task: "Implement issue #993"
+    model: sonnet
+  - type: general-purpose
+    task: "Review PR #1146"
+    model: opus
+  - type: general-purpose
+    task: "Implement issue #766"
+    model: sonnet
+  - type: general-purpose
+    task: "Review PR #1147"
+    model: opus
+  - type: general-purpose
+    task: "Implement issue #688"
+    model: sonnet
+  - type: general-purpose
+    task: "Review PR #1148"
+    model: opus
+  - type: general-purpose
+    task: "Implement issue #976"
+    model: sonnet
+  - type: general-purpose
+    task: "Review PR #1149"
+    model: opus
+  - type: general-purpose
+    task: "Implement issue #886"
+    model: sonnet
+  - type: general-purpose
+    task: "Review PR #1150"
+    model: opus
+  - type: general-purpose
+    task: "Implement issue #724"
+    model: sonnet
+  - type: general-purpose
+    task: "Review PR #1151"
+    model: opus
+  - type: general-purpose
+    task: "Implement issue #1018"
+    model: sonnet
+  - type: general-purpose
+    task: "Review PR #1152"
+    model: opus
+  - type: general-purpose
+    task: "Review PR #1153"
+    model: opus
+  - type: general-purpose
+    task: "Review PR #1154"
+    model: opus
+  - type: general-purpose
+    task: "Implement issue #865"
+    model: opus
+  - type: general-purpose
+    task: "Implement issue #835"
+    model: sonnet
+  - type: general-purpose
+    task: "Implement issue #772"
+    model: sonnet
+  - type: general-purpose
+    task: "Review PR #1155"
+    model: opus
+  - type: general-purpose
+    task: "Review PR #1156"
+    model: opus
+  - type: general-purpose
+    task: "Review PR #1157"
+    model: opus
+  - type: general-purpose
+    task: "Implement issue #873"
+    model: sonnet
+  - type: general-purpose
+    task: "Review PR #1158"
+    model: opus
+  - type: general-purpose
+    task: "Implement issue #666"
+    model: opus
+  - type: general-purpose
+    task: "Review PR #1159"
+    model: opus
+  - type: general-purpose
+    task: "Review PR #1160"
+    model: opus
+gitBranch: claude/terrarium-agent-autonomy-028rdz
+entrypoint: remote_mobile
+cliVersion: 2.1.261
+learnings:
+  - The caller-pinned branch is already HEAD at session start; sessions lost it only because CLAUDE.md and four Skills told them to branch off main.
+  - GitHub's search API is blocked through the session proxy while repo-scoped endpoints work; rate limits on the MCP search tools were a red herring.
+ideas:
+  - Replace docs/research/rulebook-migration-table.md's hand-maintained section 8 tally with a script that parses the tables, so a PR touching one row cannot go stale or conflict on the summary.
+  - Add a line budget and test-count ceiling to the dispatch-subagents brief checklist for guard work; today's reviews show implementers reliably exceed both without one.
+landedBy: Stop
