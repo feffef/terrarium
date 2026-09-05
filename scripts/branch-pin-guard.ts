@@ -12,7 +12,9 @@
 // default: a false block on ordinary unpinned git work is worse than a missed
 // warning. So an unreadable transcript, an unknown starting branch, or a
 // `main`/`master` start all pass — as does `git worktree add … -b`, which
-// matches no branch-creating shape here, and a dispatched subagent, whose
+// matches no branch-creating shape here, `git checkout -B <x> origin/<x>`,
+// which re-points an existing branch rather than cutting a new one, and a
+// dispatched subagent, whose
 // payload carries the PARENT's transcript (`docs/agents/guards.md`) rather than
 // its own starting branch and fetches.
 //
@@ -39,14 +41,17 @@ import { bashCommandsOf } from './session-trace.ts'
 const LABEL = 'branch-pin guard'
 const REF = 'issue #666'
 
-/** Branch CREATION only, at the start of a statement. The `(?!-)` lookahead
- *  keeps `git branch -d`, `git branch --show-current` and `git branch -a` out;
- *  `git worktree add … -b` never reaches the keyword at all; and the leading
+/** Branch CREATION only, at the start of a statement, capturing the `-b`/`-B`
+ *  flag, the name, and the start point. The `(?!-)` lookahead keeps
+ *  `git branch -d`, `git branch --show-current` and `git branch -a` out;
+ *  `git worktree add … -b` never reaches the keyword at all; the leading
  *  boundary keeps a branch name merely *quoted* by another command (`echo git
- *  branch x`) from reading as a creation. */
-const CREATES_BRANCH = /(?:^|[\n;&|]\s*)git\s+(?:checkout\s+-[bB]|switch\s+-c|branch)\s+(?!-)(\S+)/
-const FETCHED_MAIN = /\bgit\s+fetch\b[^\n]*\borigin\b/
-const DEFAULT_BRANCH = /^(?:main|master)$/
+ *  branch x`) from reading as a creation; and the optional quote lets a quoted
+ *  name compare equal to the pin. */
+const CREATES_BRANCH =
+  /(?:^|[\n;&|]\s*)git\s+(?:checkout\s+(-[bB])|switch\s+-c|branch)\s+(?!-)["']?([^\s"']+)(?:\s+["']?([^\s"';&|]+))?/
+const FETCHED_ORIGIN = /\bgit\s+fetch\b[^\n]*\borigin\b/
+const DEFAULT_BRANCH = /^(?:origin\/)?(?:main|master)$/
 
 export type BranchPinFinding =
   | { kind: 'pin'; pinned: string; created: string }
@@ -71,12 +76,16 @@ export function checkBranchCreation(
   if (toolName !== 'Bash') return null
   const command = (toolInput as { command?: unknown } | null | undefined)?.command
   if (typeof command !== 'string' || !records) return null
-  const created = CREATES_BRANCH.exec(command)?.[1]
+  const [, flag, created, from] = CREATES_BRANCH.exec(command) ?? []
   if (!created) return null
+  // `-B` re-points an existing branch as often as it creates one — checking out
+  // a PR branch is `git checkout -B <x> origin/<x>` — so judge it only when it
+  // is cut from main.
+  if (flag === '-B' && from && !DEFAULT_BRANCH.test(from)) return null
 
   const pinned = startingBranch(records)
   if (pinned && !DEFAULT_BRANCH.test(pinned) && pinned !== created) return { kind: 'pin', pinned, created }
-  const fetched = FETCHED_MAIN.test(command) || bashCommandsOf(records).some((c) => FETCHED_MAIN.test(c))
+  const fetched = FETCHED_ORIGIN.test(command) || bashCommandsOf(records).some((c) => FETCHED_ORIGIN.test(c))
   return fetched ? null : { kind: 'no-fetch', created }
 }
 
@@ -85,7 +94,7 @@ export function checkBranchCreation(
 export function formatGuardMessage(f: BranchPinFinding): string {
   if (f.kind === 'no-fetch') {
     return (
-      `Blocked by the ${LABEL} (${REF}): no \`git fetch origin main\` was seen in this session, so ` +
+      `Blocked by the ${LABEL} (${REF}): no \`git fetch … origin\` was seen in this session, so ` +
       `\`${f.created}\` would be cut from a possibly stale \`main\`.\n\n` +
       `Run \`git fetch origin main\` first, then branch off \`origin/main\`.`
     )
@@ -93,9 +102,7 @@ export function formatGuardMessage(f: BranchPinFinding): string {
   return (
     `Blocked by the ${LABEL} (${REF}): this session started on \`${f.pinned}\` — the branch your caller ` +
     `pinned and the harness checked out for you — and \`${f.created}\` is a different name.\n\n` +
-    `Commit your work on \`${f.pinned}\` instead (\`git checkout ${f.pinned}\`). If it needs to be current, ` +
-    `rebase or merge \`origin/main\` into it rather than starting a new branch. Five recorded sessions ` +
-    `branched under a self-invented name; one pushed a whole PR to the wrong branch before noticing.`
+    `Use \`git checkout -B ${f.pinned} origin/main\` to work on the pinned branch, cut from the latest main.`
   )
 }
 
@@ -109,7 +116,8 @@ export function main(): void {
   const result = readHookPayload()
   if (result.kind !== 'ok') return
   const { payload } = result
-  if ('agent_id' in payload || 'agent_type' in payload) return
+  const agent = payload as { agent_id?: unknown; agent_type?: unknown }
+  if (typeof agent.agent_id === 'string' || typeof agent.agent_type === 'string') return
 
   const finding = checkBranchCreation(payload.tool_name, payload.tool_input, readTranscript(payload.transcript_path))
   if (finding) process.stdout.write(JSON.stringify(buildDenyOutput(formatGuardMessage(finding))))

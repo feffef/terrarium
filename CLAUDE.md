@@ -139,8 +139,8 @@ human asks for it outright.
   don't infer a feature from the branch name, prior commits, or a matching
   repo pattern.
 - **Before the first `git branch`/`checkout` in any session: fetch `origin
-  main`, then branch off it — keeping the caller-pinned branch the harness
-  checked out for you, if the session started on one.** `branch-pin-guard`
+  main`, then branch off it — under the caller-pinned name the harness checked
+  out for you, if the session started on one.** `branch-pin-guard`
   enforces both halves from git state and names the pinned branch when it
   refuses (`docs/agents/guards.md`, issue #666). This is the one canonical
   statement of that step; a chartered job's own Skill only points here.

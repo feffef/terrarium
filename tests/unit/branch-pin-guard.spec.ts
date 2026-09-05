@@ -35,6 +35,7 @@ describe('checkBranchCreation() — the pure predicate (issue #666)', () => {
       'git checkout -B claude/zen-heisenberg-k97op1 origin/main',
       'git switch -c claude/zen-heisenberg-k97op1',
       'git branch claude/zen-heisenberg-k97op1',
+      'git checkout -b "claude/zen-heisenberg-k97op1"',
     ]) {
       expect(checkBranchCreation('Bash', { command }, FETCHED)).toBeNull()
     }
@@ -50,6 +51,9 @@ describe('checkBranchCreation() — the pure predicate (issue #666)', () => {
   it('ALLOWS: `git worktree add … -b`, and every non-creating branch shape', () => {
     for (const command of [
       'git worktree add ../wt-a -b claude/subagent-a origin/main',
+      // `-B` off a non-main start point re-points an existing branch — this is
+      // how a review session checks out someone else's PR branch.
+      'git checkout -B claude/issue-999-other origin/claude/issue-999-other',
       'git branch -d stale/branch',
       'git branch --show-current',
       'git checkout claude/zen-heisenberg-k97op1',

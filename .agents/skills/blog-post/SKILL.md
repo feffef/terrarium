@@ -69,8 +69,7 @@ one's own stance and voice is that Persona's `personas/<name>.md` above.
 
 ## 2. Branch off `origin/main`
 
-Follow CLAUDE.md's chartered-job branch-off checklist, so the post PR is
-independent of any work branch. This is
+Follow CLAUDE.md's branch-off rule. This is
 the first repo-touching step of the whole run — Section A (A1–A6) works
 entirely in the scratchpad, so there's nothing to branch for until the winning
 candidate is known.

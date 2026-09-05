@@ -581,15 +581,13 @@ Three observations a human might act on:
 
 1. **The unbuilt fail-closed refusals are cheap and concentrated.** 40 hook rows
    are unbuilt, and **28 of them are cost `S`** — one script, one spec, one
-   matcher line, following a shape the repo has now executed many times. The four
-   named regression-class issues (§3) have all since been built, and have left
-   that set.
+   matcher line, following a shape `.claude/settings.json` now wires ten times.
 2. **No row earned a `drop`.** Six rows are flagged as defensible drop candidates
    (`CM-26`, `GC-13`, `GI-07`, `GI-09`, `PR-10`, `VU-06`) — each narrow,
    low-stakes, self-diagnosing — but dropping a rule is a decision about
    acceptable failure, which is the human's to make, not a classification. They
    are marked, not dropped.
-3. **Judgment-keep is 79 rows — 38% of the corpus — and it does not shrink much
+3. **Judgment-keep is 78 rows — 38% of the corpus — and it does not shrink much
    further.**
    The genuinely irreducible ones cluster tightly: verifying claims (`CM-30`,
    `BP-05`, `TL-10`), honest self-report (`LS-05`, `BP-01`), untrusted-input

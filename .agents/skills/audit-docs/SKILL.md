@@ -200,9 +200,8 @@ re-file an open one, and open with the provenance header (ADR-0017). This is the
 
 ## 1. Branch off `origin/main`
 
-Follow CLAUDE.md's chartered-job branch-off checklist (scan for a caller-pinned
-designated branch first, then branch off `origin/main`). Done when you are on a
-fresh branch off the latest `origin/main`.
+Follow CLAUDE.md's branch-off rule. Done when you are on a branch cut from the
+latest `origin/main`.
 
 ## 2. Inventory & classify
 

@@ -51,10 +51,9 @@ patch above, just batched by fix rather than by Skill.
 
 ## 1. Branch off `origin/main`
 
-Follow CLAUDE.md's chartered-job branch-off checklist, so the PR is
-independent of any work branch.
+Follow CLAUDE.md's branch-off rule.
 
-Done when you are on a fresh branch off the latest `origin/main`.
+Done when you are on a branch cut from the latest `origin/main`.
 
 ## 2. Gather the scorecard
 

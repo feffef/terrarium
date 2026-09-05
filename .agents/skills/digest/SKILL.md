@@ -29,10 +29,9 @@ for the boundary and the merge mechanics.
 
 ## 1. Branch off `origin/main`
 
-Follow CLAUDE.md's chartered-job branch-off checklist, so the digest PR is
-independent of any work branch.
+Follow CLAUDE.md's branch-off rule.
 
-Done when you are on a fresh branch off the latest `origin/main`.
+Done when you are on a branch cut from the latest `origin/main`.
 
 ## 2. Find the days to write
 
