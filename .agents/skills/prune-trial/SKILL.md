@@ -38,7 +38,8 @@ leave the entry alone and judge nothing.
 
 For each trial that has landed and is past its window: **apply** its `check`
 (prose, not a command), and read the Frictions logged since it landed
-(`scripts/session-frictions.ts`, redirected to a file), plus Gate failures and
+(`scripts/session-frictions.ts`, which writes large output to a file itself —
+issue #976), plus Gate failures and
 any issue filed since as a regression of an earlier fix — `frictions-to-fixes`
 files those, naming the fix that didn't hold.
 
