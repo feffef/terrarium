@@ -21,4 +21,8 @@ When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the 
 > trust — see ADR-0020, and, for the autonomous sweep specifically, the
 > `auto-triage` Skill's "standing green-light" section.
 
+> **Consolidation labels.** `consolidation:before` / `consolidation:on-hold`
+> pause an issue pending a consolidation pass — not one of the five canonical
+> roles above; see issue #862 for the full mechanics.
+
 Edit the right-hand column to match whatever vocabulary you actually use.
