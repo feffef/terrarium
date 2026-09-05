@@ -37,15 +37,11 @@ human asks for it outright.
   docs above: each `CONTEXT.md` glossary stays free of implementation detail
   (per-Tenant contexts add a short purpose narrative on top — ADR-0021), and it
   defines the 3-part test for *when* a decision earns an ADR — **hard to
-  reverse · surprising without context · a real trade-off**. Note: this repo
-  diverges from that skill's generic templates in three ways — every ADR uses the
-  fuller `Context / Decision / Consequences` form (not the skill's minimal
-  template); a `CONTEXT.md` is a `## Glossary` of `### Term` entries (not the
-  skill's `## Language`/`_Avoid_` layout); and the repo is multi-context with a
-  Platform context plus per-Tenant contexts co-located under `layers/` (ADR-0021;
-  the shape is documented in `docs/agents/domain.md`). Match the repo's actual
-  files. This repo's **rule of two** for new vocabulary is defined in
-  `docs/agents/domain.md`, complementing that skill's 3-part test.
+  reverse · surprising without context · a real trade-off**. This repo
+  diverges from that skill's generic templates in several ways — see
+  `docs/agents/domain.md` for the specifics. This repo's **rule of two** for
+  new vocabulary is also defined there, complementing that skill's 3-part
+  test.
 - **Which Skills to actually use** is curated in the journal Tenant's **Skill
   Inventory** (`layers/journal/content/current/skills/`, rendered at
   `/t/journal/current`; see `CONTEXT.md`'s glossary term for what it records) —
@@ -573,22 +569,8 @@ See the "Verifying UI changes" subsection under Self-verification above for the 
 
 ### Other research notes
 
-One-off grounding/reference notes, not living conventions: Nuxt/Nuxt Content
-primary-source facts for code-review claims
-(`docs/research/nuxt-content-review-grounding.md`), the generic mechanics and
-repo-specific findings behind the repo's 2026-07-11 flip to public
-(`docs/research/making-repo-public.md` and
-`docs/research/public-readiness-review.md`), GitHub Actions billing/limits
-on public vs. private repos (`docs/research/github-actions-public-vs-private-limits.md`),
-whether a GitHub repository ruleset can let session-log direct-to-`main`
-pushes (ADR-0009) bypass branch protection without breaking repo auto-merge —
-the tension in issue #348
-(`docs/research/github-branch-protection-vs-autonomous-log-commits.md`) — and
-what's actually possible for server-/build-side Mermaid rendering, grounding
-ADR-0024's pre-render decision (`docs/research/mermaid-server-side-rendering.md`),
-and every prose rule in
-this file, `docs/agents/*`, and the repo-authored Skills classified into the
-mechanize-or-drop buckets — the rulebook migration table the Wave-3 re-founding
-depends on, issue #867 (`docs/research/rulebook-migration-table.md`).
-For the line between this directory and a GitHub issue — verified reference vs.
-an unimplemented idea or proposal — see `docs/agents/issue-tracker.md`.
+One-off grounding/reference notes, not living conventions — read the
+`docs/research/` directory rather than a listing here that would go stale;
+each file's own opening states what question it answers. For the line
+between this directory and a GitHub issue — verified reference vs. an
+unimplemented idea or proposal — see `docs/agents/issue-tracker.md`.

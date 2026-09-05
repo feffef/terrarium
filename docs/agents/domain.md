@@ -18,11 +18,15 @@ the Tenant's own `layers/<tenant>/CONTEXT.md`, then the relevant ADRs) are
 single-homed in CLAUDE.md's "Read these first" — start there rather than here.
 
 Note the local shape (a deliberate, ADR-0021-recorded divergence from the
-`domain-modeling` Skill's generic templates): the root `CONTEXT.md` doubles as the
-Platform context *and* carries the Tenants roster, and each per-Tenant `CONTEXT.md`
-carries a purpose narrative on top of its glossary (the Skill's template is
-glossary-only). Pointers between these files are navigation, not duplication — the
-single-home rule forbids copying substantive content, not references. See
+`domain-modeling` Skill's generic templates, in three ways): every ADR here
+uses the fuller `Context / Decision / Consequences` form, not the Skill's
+minimal template; a `CONTEXT.md` is a `## Glossary` of `### Term` entries, not
+the Skill's `## Language`/`_Avoid_` layout; and the root `CONTEXT.md` doubles
+as the Platform context *and* carries the Tenants roster, with each
+per-Tenant `CONTEXT.md` carrying a purpose narrative on top of its glossary
+(the Skill's template is glossary-only). Pointers between these files are
+navigation, not duplication — the single-home rule forbids copying
+substantive content, not references. See
 `CONTEXT-MAP.md`'s **Decisions** section for where ADRs live today and why a
 demo Tenant's reason-to-exist is recorded in its `CONTEXT.md` rather than an ADR.
 
