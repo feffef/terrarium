@@ -133,14 +133,15 @@ mistake — that grep is a heuristic and its total is deliberately not stated he
 ## 3. The four named regression-class issues → their rows and mechanisms
 
 The ticket asks specifically that each of these map to a named row and a named
-mechanism. Two are **open**; **#835** is built, and **#772** is superseded by a
-shipped `SessionStart` unshallow hook.
+mechanism. **#666** and **#835** are built, **#772** is superseded by a shipped
+`SessionStart` unshallow hook, and only **#873**'s row is still written here as a
+proposal.
 
 | Issue | Rule row | Proposed mechanism | Why prose failed |
 | --- | --- | --- | --- |
 | **#835** — `run_in_background: false` confusion recurred | `CM-36` | **Built** — `scripts/agent-background-flag-guard.ts`, a fail-closed refusal. `PreToolUse` on `Agent`: the tool ignores `run_in_background: false`, so deny the call carrying it and say so — the parameter is a no-op that reads as a guarantee. | #810's fix reached only one of the two docs that state it; the affected sessions read neither. |
 | **#772** — shallow-clone check-first rule not holding (3rd attempt) | `GC-03` | **Fail-closed refusal.** `PreToolUse` on `Bash`: deny `git log -S`, `git blame`, and `git merge-base` when `git rev-parse --is-shallow-repository` is `true`, naming `--unshallow`. `scripts/gate.ts` already does exactly this check in code (`changedPaths()` unshallows; `changedPathsBetween()` refuses) — the guard generalizes a pattern the repo has already proven. **Superseded: shipped instead as a `SessionStart` unshallow hook — see `GC-03`.** | Three narrowing prose attempts; the rule fires at a moment (starting archaeology) that has no natural doc-reading trigger. |
-| **#666** — caller-pinned branch missed after #625's checklist fix | `CM-21` | **Fail-closed refusal, with a caveat.** `PreToolUse` on `Bash` matching `git checkout -b` / `git branch`: deny unless a `git fetch origin main` was observed this session. **Caveat:** the *pinned-name* half is not mechanizable this way — the pin lives in harness-injected prompt text the hook cannot read. A guard can enforce "you fetched first"; it cannot enforce "you used the pinned name". That residual is the honest finding. | The pin lives in a different part of context from `CLAUDE.md`, so its absence from the doc isn't evidence no pin exists — and the checklist is read after the mistake. |
+| **#666** — caller-pinned branch missed after #625's checklist fix | `CM-20`, `CM-21` | **Built** — `scripts/branch-pin-guard.ts`, a fail-**open** refusal. `PreToolUse` on `Bash` matching `git checkout -b` / `git switch -c` / `git branch <name>`: deny a name differing from the session's starting branch, and deny when no `git fetch … origin` was observed this session. The earlier caveat here was wrong: the pin is readable from git state (the transcript's first `gitBranch` records the branch the harness checked out at session start), so the pinned-name half is mechanizable too. | The pin lives in a different part of context from `CLAUDE.md`, so its absence from the doc isn't evidence no pin exists — and the checklist is read after the mistake. |
 | **#873** — tail/head exit-status piping (3rd recurrence, after #384 and #812) | `CM-38` | **Fail-closed refusal.** `PreToolUse` on `Bash`: deny a command that pipes into a trailing `tail`/`head`/`echo` **when `run_in_background: true`** or the piped command is a known long-runner (`pnpm gate*`, `pnpm test*`, `pnpm build`). Scoping to the backgrounded/long-running case is what keeps the false-positive rate near zero — an ordinary `ls \| head` is untouched. | Two prose fixes in two different homes; the trap is invisible at authoring time because the pipeline *succeeds*. |
 
 All four are the same shape: **a point-in-time behavioural rule whose violation is
@@ -212,8 +213,8 @@ blank.
 | CM-17 | Only the `pages` Collection is route-addressable | Ground rules | J | none | Enforced by the resolver at runtime; the *proposal-time* half is `DA-05` | — |
 | CM-18 | Requester trust is drawn at write access (ADR-0020) | Ground rules | J | none | Policy definition; the mechanical aid is the `trusted` label workflow | — |
 | CM-19 | An empty or missing task prompt is a hard stop-and-ask — never infer the task from the branch name | Working conventions | H (refusal) | none | `UserPromptSubmit`/`SessionStart` check: if the prompt body is empty and only a title is present, emit a blocking message. Cheap and unambiguous | S |
-| CM-20 | Scan your own task/system-prompt instructions for a caller-pinned branch **before** any `git branch`/`checkout` | Working conventions | J | **#666** (open) | **Not mechanizable** — the pin lives in harness-injected prompt text a hook cannot read. This is the residue half of `CM-21` | — |
-| CM-21 | `git fetch origin main` and branch off `origin/main` before starting work | Working conventions | H (refusal) | **#666** (open), #625 | `PreToolUse` on `Bash`: deny `git checkout -b`/`git branch <new>` unless a fetch was observed this session | M |
+| CM-20 | Keep the caller-pinned branch the harness checked out, rather than branching to a self-invented name | Working conventions | H (refusal) | **#666**, #625, #684 | **Built** — `scripts/branch-pin-guard.ts`, folded into `CM-21`'s guard: the pin is read from git state (the session's starting branch), not from prompt text | 0 |
+| CM-21 | `git fetch origin main` and branch off `origin/main` before starting work | Working conventions | H (refusal) | **#666**, #625 | **Built** — `scripts/branch-pin-guard.ts`, one guard with `CM-20`: both halves fire on the same branch-creating command | 0 |
 | CM-22 | Single-home every fact — one home, everywhere else points | Working conventions | J | none | The defining judgement call; `audit-docs`' Duplication lens is the post-hoc detector | — |
 | CM-23 | Never restate a Routine's schedule in a committed doc | Working conventions | G | #813 | **Built** — `scripts/validate-skill-cadence.ts` | 0 |
 | CM-24 | Never push a `.github/workflows/*` edit; route it through `docs/proposals/` | Working conventions | H (refusal) | #659 (open) | **Built** — `scripts/workflow-edit-guard.ts`, closing #897 | 0 |
@@ -529,20 +530,15 @@ Per the ticket, a rule that genuinely fits none of the five buckets belongs here
 with its reason, not in a bent bucket. The map's "Not yet specified" section names
 this residue as a finding it is waiting on.
 
-Only one row genuinely resists classification:
+No row resists classification.
 
-- **`CM-20` — "scan your own task/system-prompt instructions for a caller-pinned
-  designated branch."** It is not judgement (the answer is objective — either a
-  pin exists or it doesn't), not droppable (#666 is an open regression), and not
-  mechanizable in any of the three mechanism shapes: the pin lives in
-  harness-injected prompt text that a `PreToolUse` hook's payload does not carry,
-  the gate cannot see prompts, and a workflow stage can only re-state the
-  instruction to look. **It is a rule whose enforcement requires a capability the
-  harness does not expose.** The honest options are (a) leave it as prose and
-  accept recurrence, (b) enforce the adjacent, *reachable* half — `CM-21`'s
-  fetch-first precondition — and accept that the pinned-name half stays unguarded,
-  or (c) ask for a harness capability. This asset recommends (b), and recommends
-  saying so on #666 rather than attempting a fourth prose narrowing.
+`CM-20` — the caller-pinned branch — was listed here as the one residue, on the
+premise that the pin is only ever stated in harness-injected prompt text a hook
+cannot read. That premise was wrong: the harness *checks the pinned branch out*
+at session start, so the pin is in git state, and the transcript a `PreToolUse`
+payload already names records it. `scripts/branch-pin-guard.ts` (#666) reads it
+there. The lesson worth keeping is the one this row got wrong — before calling a
+rule unmechanizable, look for a second, observable trace of the same fact.
 
 Everything else lands in a bucket. Note in particular that `CM-32` ("a count is
 not a fact until every member is read", open regression #933) is *classified*
@@ -562,20 +558,18 @@ tables.)
 
 | Bucket | Rows | Of which already built (cost 0) |
 | --- | --- | --- |
-| **hook** — fail-closed refusal | 54 | 11 |
+| **hook** — fail-closed refusal | 55 | 16 |
 | **hook** — refusal + post-hoc detection (`CM-29`) | 1 | 0 |
 | **gate check** | 35 | 13 |
 | **workflow stage** | 39 | 18 |
-| **judgment-keep** | 79 | 1 |
+| **judgment-keep** | 78 | 1 |
 | **drop** (candidates flagged, none asserted) | 0 | — |
 | **residue** (§7) | 0 (see below) | — |
 
-43 of the 208 are already built. The `CM-03` reclassification from §6 is applied
-in the table's own row, so it is counted as `J` here, not `G`. `CM-20`'s own row
-Class is `J`, so it is already counted once, under **judgment-keep** — §7 discusses
-it separately as the one row whose judgement is itself residue-flavored, not as
-an additional row, so the residue bucket adds nothing on top and the buckets sum
-to 208, not 209.
+48 of the 208 are already built. The `CM-03` reclassification from §6 is applied
+in the table's own row, so it is counted as `J` here, not `G`. `CM-20` moved from
+**judgment-keep** to **hook** when `branch-pin-guard` was built (§7), and the
+residue bucket is now empty, so the buckets still sum to 208.
 
 Note that **post-hoc detection barely appears as a *proposal*** — only `CM-29`
 proposes it, and every other post-hoc mechanism in the repo (`check-worktrees`,
@@ -585,10 +579,11 @@ post-hoc detection is what the repo falls back to when no point-of-action exists
 
 Three observations a human might act on:
 
-1. **The unbuilt fail-closed refusals are cheap and concentrated.** 44 hook rows
-   are unbuilt, and **31 of them are cost `S`** — one script, one spec, one
-   matcher line, following a shape the repo has now executed five times. The four
-   named regression-class issues (§3) are all in that set.
+1. **The unbuilt fail-closed refusals are cheap and concentrated.** 40 hook rows
+   are unbuilt, and **28 of them are cost `S`** — one script, one spec, one
+   matcher line, following a shape the repo has now executed many times. The four
+   named regression-class issues (§3) have all since been built, and have left
+   that set.
 2. **No row earned a `drop`.** Six rows are flagged as defensible drop candidates
    (`CM-26`, `GC-13`, `GI-07`, `GI-09`, `PR-10`, `VU-06`) — each narrow,
    low-stakes, self-diagnosing — but dropping a rule is a decision about

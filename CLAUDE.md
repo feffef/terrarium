@@ -138,21 +138,12 @@ human asks for it outright.
   present) is a hard stop-and-ask signal.** Ask the user what they want —
   don't infer a feature from the branch name, prior commits, or a matching
   repo pattern.
-- **Before the first `git branch`/`checkout` in any session, run this
-  checklist, in order — don't skip straight to the fetch.** This applies to
-  every session, not only one that already reads as obviously chartered: a
-  session can't know it's chartered until step 1 has actually checked.
-  1. **Scan your own task / system-prompt instructions for a caller-pinned
-     designated branch, before running any `git branch`/`checkout`.** The pin
-     often lives in a harness-injected block, in a completely different part
-     of the context from CLAUDE.md or the Skill, so its absence from both of
-     those is not evidence no pin exists.
-  2. `git fetch origin main`.
-  3. Branch off `origin/main` — the pinned name from step 1 if one was found,
-     otherwise any descriptive name (the name doesn't matter when unpinned).
-  This is the one canonical statement of that step; a chartered job's own
-  Skill only needs to point here, not restate the fetch/branch/override
-  mechanics.
+- **Before the first `git branch`/`checkout` in any session: fetch `origin
+  main`, then branch off it — keeping the caller-pinned branch the harness
+  checked out for you, if the session started on one.** `branch-pin-guard`
+  enforces both halves from git state and names the pinned branch when it
+  refuses (`docs/agents/guards.md`, issue #666). This is the one canonical
+  statement of that step; a chartered job's own Skill only points here.
 - **Single-home every fact — one home, everywhere else points, never restates.**
   This file is the home for repo-wide conventions and an **index** into the ADRs — so
   where it would restate ADR detail, link the ADR instead of copying it (the
