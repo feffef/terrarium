@@ -83,7 +83,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -f .session-logs/pending.scratch.json ] && pnpm exec tsx scripts/session-end.ts || true"
+            "command": "[ -f .session-logs/pending.scratch.json ] && pnpm exec tsx scripts/log-session.ts --land || true"
           }
         ]
       }
@@ -94,7 +94,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -f .session-logs/pending.scratch.json ] && pnpm exec tsx scripts/session-end.ts || true"
+            "command": "[ -f .session-logs/pending.scratch.json ] && pnpm exec tsx scripts/log-session.ts --land || true"
           }
         ]
       }
@@ -105,7 +105,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pnpm exec tsx scripts/session-end.ts"
+            "command": "pnpm exec tsx scripts/log-session.ts --land"
           }
         ]
       }

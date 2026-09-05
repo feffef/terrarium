@@ -9,9 +9,9 @@
 // reused here rather than re-derived) and reports a mismatch.
 //
 // Pure core (`findSessionIdMismatches`) is kept separate from the git/hook I/O
-// (`readOwnCommits`), mirroring the `session-end.ts` `handle()` split and the
+// (`readOwnCommits`), mirroring the `handle()` split and the
 // `findTruncatedScalars`/`fail()` precedent in `log-session.ts`. This module's
-// own CLI exits non-zero on a mismatch; `scripts/session-end.ts` wires the
+// own CLI exits non-zero on a mismatch; `scripts/log-session.ts` wires the
 // pure check into the Stop-hook path but — per that script's own "never exit
 // non-zero, so a handler bug can't wedge teardown" rule — surfaces a mismatch
 // loudly (stderr + a recorded friction on the landed log) without failing the
@@ -135,7 +135,7 @@ function fail(msg: string): never {
 
 /** Standalone CLI: `tsx scripts/session-id-guard.ts [--transcript <path>]`.
  *  Exits non-zero on a mismatch (unlike the Stop-hook integration in
- *  `session-end.ts`, which is deliberately non-fatal to teardown) — this is
+ *  `log-session.ts`, which is deliberately non-fatal to teardown) — this is
  *  the entry point a future tighter boundary (e.g. a pre-push hook) could
  *  call directly for a hard failure. */
 function main(): void {

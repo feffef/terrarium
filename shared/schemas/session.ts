@@ -87,11 +87,16 @@ export const sessionSchema = z
     // our fixes don't touch — while the Sparks feed still surfaces its `ideas`
     // (a good idea is toolchain-agnostic) and drops only its `learnings`.
     external: z.boolean().optional(),
-    // True ONLY on the synthetic placeholder session-end.ts's recoverDroppedScratch
+    // True ONLY on the synthetic placeholder the lander's recoverDroppedScratch
     // lands when a scratch was authored then lost before it could land (issue #449
     // Gap 3). Gives consumers a structured way to exclude/label it. Absent on every
     // genuinely agent-authored log.
     droppedScratchRecovery: z.literal(true).optional(),
+    // Which hook registration performed this landing (`Stop`, `SessionEnd`,
+    // `SessionStart`). The stored evidence for retiring the two fallbacks —
+    // ADR-0009's 2026-09-05 amendment owns why the exit metric counts these
+    // rather than orphans. Absent on a hand-landed or pre-#865 log.
+    landedBy: z.string().optional(),
     // List EVERY friction — not just one or two. No `tag` yet: the taxonomy is
     // meant to emerge from clustering, once there is data.
     frictions: z.array(

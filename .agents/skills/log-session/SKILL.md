@@ -148,7 +148,7 @@ plain local CLI session with no CCR wrapper has no *other* id to disagree with i
 so there `CLAUDE_CODE_SESSION_ID` genuinely is canonical — see the note below.
 
 **This field is now a fallback, not the source of truth (issue #387/#449).**
-`scripts/session-end.ts`'s stitch resolves the ground-truth id itself and
+`scripts/log-session.ts`'s stitch resolves the ground-truth id itself and
 that resolved value always wins over whatever `session:` you typed here — a
 wrong typed value can no longer land a mis-filed log, it just gets silently
 corrected. Still type it correctly when you can: the two normally agree, and
@@ -167,8 +167,8 @@ It validates the interpretive fields and writes `.session-logs/pending.scratch.j
 takes it from here, **only if** the scratch exists, which is why authoring it *is*
 your "this session is done" signal.
 
-The helper is gated code (ADR-0009): changing `log-session.ts` / `session-trace.ts`
-/ `session-end.ts` is a normal PR.
+The helper is gated code (ADR-0009): changing `log-session.ts` or `session-trace.ts`
+is a normal PR.
 
 ## 3. Check the shell-read report
 
