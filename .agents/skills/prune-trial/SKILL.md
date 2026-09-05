@@ -38,9 +38,9 @@ leave the entry alone and judge nothing.
 
 For each trial that has landed and is past its window: **apply** its `check`
 (prose, not a command), and read the Frictions logged since it landed
-(`scripts/session-frictions.ts`, redirected to a file), plus Gate failures and
-any issue filed since as a regression of an earlier fix — `frictions-to-fixes`
-files those, naming the fix that didn't hold.
+(`scripts/session-frictions.ts` — large output goes to a file automatically),
+plus Gate failures and any issue filed since as a regression of an earlier
+fix — `frictions-to-fixes` files those, naming the fix that didn't hold.
 
 - `major` or `blocker` damage that traces to the trial → restore the
   **minimum**: the one goal-shaped line that would have prevented it, never the

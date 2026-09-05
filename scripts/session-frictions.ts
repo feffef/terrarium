@@ -16,18 +16,16 @@
 //   as JSON: id, file, startedAt, goal, outcome, prs, and every friction's
 //   description/solution/severity.
 //
-// A large --window value can produce output that exceeds the Bash tool's
-// inline-capture cap; the tool silently redirects the overflow to a spill
-// file rather than erroring, which is easy to miss. For --window values of
-// roughly 15 or more, redirect straight to a file instead of relying on
-// inline capture, e.g.:
-//   pnpm exec tsx scripts/session-frictions.ts --window 20 > /tmp/frictions.json
+// Output above OUTPUT_FILE_THRESHOLD is written to a file instead of stdout
+// (see main()), so a large --window can no longer blow a caller's inline-capture
+// cap (issue #976) — no caller-side redirect or --compact is required for safety.
 //
 // --compact drops the prose fields (goal/outcome/solution) that make the
 // default output large, keeping only id/file/startedAt/prs and each
-// friction's description/severity — a --window 20 --compact run comfortably
-// fits the inline-capture cap (issue #951).
-import { existsSync, readFileSync, readdirSync } from 'node:fs'
+// friction's description/severity, for a caller that wants a smaller read
+// regardless (issue #951).
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
@@ -145,6 +143,11 @@ export function survey(windowSize = DEFAULT_WINDOW, cwd = root): TriageSession[]
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
+// Below common inline-capture caps (issue #976 cites ~30KB overflows), with
+// margin for the cap varying by caller.
+export const OUTPUT_FILE_THRESHOLD = 20_000
+export const OUTPUT_FILE_PATH = join(tmpdir(), 'session-frictions-output.json')
+
 function fail(msg: string): never {
   console.error(`session-frictions: ${msg}`)
   process.exit(1)
@@ -157,7 +160,13 @@ function main(): void {
   if (!Number.isInteger(windowSize) || windowSize <= 0) fail('--window must be a positive integer')
   const sessions = survey(windowSize)
   const output = argv.includes('--compact') ? sessions.map(toCompactSession) : sessions
-  process.stdout.write(JSON.stringify(output, null, 2) + '\n')
+  const json = JSON.stringify(output, null, 2)
+  if (json.length > OUTPUT_FILE_THRESHOLD) {
+    writeFileSync(OUTPUT_FILE_PATH, json + '\n')
+    process.stdout.write(`session-frictions: ${sessions.length} sessions, ${json.length} bytes, written to ${OUTPUT_FILE_PATH}\n`)
+  } else {
+    process.stdout.write(json + '\n')
+  }
 }
 
 // Only run when executed directly (not when imported by the unit test).
