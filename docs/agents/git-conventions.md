@@ -50,11 +50,13 @@ On any file both branches actually restructured, read both sides **in full**,
 not just the (absent) conflict markers, before trusting the merge — especially
 after a rename or refactor on either side.
 
-## Rule out a shallow clone before any history archaeology
+## If a checkout is still shallow
 
-**Run `git rev-parse --is-shallow-repository` as the *first* step** before
-starting any blame/pickaxe/history-completeness work — not only once a result
-already looks wrong.
+A `SessionStart` hook (`scripts/unshallow-on-start.ts`) unshallows a shallow
+checkout before a session's first turn, so ordinary work should never meet one
+(issue #772). If the hook's fetch failed (offline, no network) and a checkout is
+somehow still shallow, know what it silently gets wrong before trusting history
+off it:
 
 A shallow clone's grafted, parent-less boundary commit makes every file it
 touches look newly-added, which reads as a real history rewrite when it's
