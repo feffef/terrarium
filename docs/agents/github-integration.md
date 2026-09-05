@@ -100,9 +100,13 @@ catch the mistake in practice.
   the same target can still hit the oversized-result trap above; a quoted
   exact-string query reliably returns a small, precise result set instead
   (issue #932).
-- **Batching more than ~2 concurrent `search_issues`/`search_pull_requests`
-  calls can hit a 403 rate limit.** Cap parallel calls at ~2; on a 403, retry
-  sequentially after a short backoff (~49s) rather than re-batching (issue #952).
+- **`search_issues`/`search_pull_requests` can hit a 403/429 rate limit even
+  under a small batch or a short sequential run** — issue #952's "~2
+  concurrent / ~49s backoff" numbers didn't hold on retry (issue #1092). Use
+  `tsx scripts/search-issues.ts <query> [--pulls]` instead: it hits the REST
+  search endpoint directly and retries on 403/429 with a real backoff loop, so
+  there's no number to self-apply. Reach for the raw MCP tools only when the
+  script can't run, and expect to retry by hand there too.
 - **`search_pull_requests` requires explicit `owner`/`repo` parameters** —
   unlike `search_issues`, it does not scope to the current repo implicitly.
   Omitting them searches across all of GitHub, returning cross-repo noise
@@ -119,7 +123,7 @@ catch the mistake in practice.
   here. Redirect the output to a file and slice it, or fetch a small tail
   first.
 
-## Script escapes — cheaper than the API for three common questions
+## Script escapes — cheaper than the API for four common questions
 
 - **"Which PRs merged recently, in what order, when" doesn't need
   `list_pull_requests`/`search_issues` at all** — `tsx scripts/recent-prs.ts [N]`
@@ -148,6 +152,12 @@ catch the mistake in practice.
   (issue #507). It is a standalone check today, not yet wired into any
   periodic sweep. Like `list-open-issues.ts`, it shares the same `gh`-less
   `GH_TOKEN`/`GITHUB_TOKEN` REST fallback (issue #505).
+- **A keyword/duplicate search over issues or PRs doesn't need
+  `search_issues`/`search_pull_requests` either** — `tsx scripts/search-issues.ts
+  <query> [--pulls]` hits the REST search endpoint directly, scoped to this repo,
+  and retries on a 403/429 with a real backoff loop instead of a number the
+  caller has to remember (issue #1092, correcting #952). Shares the same
+  `gh`/REST strategy switch as the three scripts above.
 
 ## Polling: gate status is not webhook-delivered
 
