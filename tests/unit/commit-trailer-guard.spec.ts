@@ -130,7 +130,7 @@ describe('checkCommitTrailer() — the pure predicate (issue #921)', () => {
   })
 
   it('ALLOWS: running the repo\'s own lander, which commits from inside a script', () => {
-    expect(checkCommitTrailer('Bash', { command: 'pnpm exec tsx scripts/session-end.ts' })).toBeNull()
+    expect(checkCommitTrailer('Bash', { command: 'pnpm exec tsx scripts/log-session.ts --land' })).toBeNull()
   })
 
   it('never touches another tool, whatever the input carries', () => {

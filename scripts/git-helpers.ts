@@ -98,7 +98,7 @@ export function unshallow(cwd: string, timeoutMs = UNSHALLOW_TIMEOUT_MS, quiet =
  *  `execFileSync` would raise on its own. What a caller does with that error
  *  is its own call: `merged-since.ts`/`recent-prs.ts` let it propagate as
  *  fatal (a result computed against an unconfirmed-fresh ref is worse than no
- *  result); `gate.ts`'s `changedPaths` and `session-end.ts`'s `mainVersion`
+ *  result); `gate.ts`'s `changedPaths` and `log-session.ts`'s `mainVersion`
  *  both catch it and degrade to best-effort instead.
  *
  *  `quiet` suppresses git's own progress lines (normally inherited to

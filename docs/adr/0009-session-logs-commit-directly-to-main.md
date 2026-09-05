@@ -299,6 +299,35 @@ at teardown via the `SessionEnd` hook" is no longer an accurate description of
 the common case** — the common case is landing live, mid-session, on `Stop`;
 `SessionEnd` only covers the sessions `Stop` missed.
 
+## One lander module, and the fallbacks' exit metric (2026-09-05, issue #865)
+
+> **Amended.** `scripts/session-end.ts` merged into `scripts/log-session.ts`.
+> One module now owns a log's whole life — validate the authored half, stitch it
+> with the trace, land it. The three registrations above are unchanged and all
+> three stay live; they call `log-session.ts --land`.
+
+`scripts/session-trace.ts` stays separate. It is the pure transcript extractor
+that `provenance-footer.ts`, `session-id-guard.ts`, `audit-skills.ts` and
+`loop-only-tool-guard.ts` read, and the first two are dependencies of the lander
+— folding it in would make the lander import itself.
+
+**Retiring the two fallbacks needs positive evidence, not an absence.** A
+session can recover out-of-band and drive `audit-skills`' `orphanedSessions` to
+zero with the fallbacks doing nothing at all (issue #927 did exactly that), so a
+raw orphan count cannot tell "the fallbacks were never needed" from "the
+fallbacks never fired". Every landing therefore records the registration that
+performed it, as `landedBy` on the entry itself — stored data, not commit
+archaeology:
+
+```
+grep -h '^landedBy:' layers/journal/content/current/sessions/*.yml | sort | uniq -c
+```
+
+Zero `SessionEnd`/`SessionStart` catches over a shakedown window is what retires
+them; anything above zero names the one still carrying weight. `landedBy` is
+provenance about *how* a log landed, so the diff-guard ignores it — a re-derive
+by a second registration never re-pushes an otherwise identical log.
+
 ## Closure invoked via a `close-session` front door
 
 > **Amended (2026-07-07, issue #215).** Refines *how the model is triggered to
@@ -424,10 +453,12 @@ sweep is a distinct follow-up, not silently folded in here).
 
 ## Bounded exception: repairing a clobbered same-session log (2026-07-25, issue #688)
 
-> **Amended.** The "superset" premise above holds only for the derived half — a
-> second `log-session` firing replaces the authored half wholesale — so one
+> **Amended.** The "superset" premise above held only for the derived half — a
+> second `log-session` firing *replaced* the authored half wholesale — so one
 > entry landed self-contradictory and was repaired by combining both authoring
-> passes, restoring only what its own git history already held. Like the
+> passes, restoring only what its own git history already held. That defect is
+> fixed at the mechanism now: `mergeAuthored` (PR #1151) unions the two passes
+> on re-fire, so the hand repair below stays the only one. Like the
 > truncation sweep above, this is one bounded correction of a mechanical
 > defect's fallout, not a licence to edit log prose for any other reason.
 

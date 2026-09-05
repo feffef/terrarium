@@ -1,8 +1,10 @@
-// Unit coverage for the landing handler's two #148 behaviors: it lands from a
-// gitignored staging copy (never the working tree), and the sentinel gate makes
-// re-runs on every live `Stop` cheap — landing only when the authored scratch
-// changes. The push plumbing itself is covered by log-session-push.spec.ts; here
-// `land` is stubbed so we observe *what path* it is handed and *when* it is called.
+// Unit coverage for the lander's landing half (merged from session-end.ts,
+// issue #865): its two #148 behaviors — it lands from a gitignored staging copy
+// (never the working tree), and the sentinel gate makes re-runs on every live
+// `Stop` cheap, landing only when the authored scratch changes — plus the
+// `landedBy` instrumentation. The push plumbing itself is covered by
+// log-session-push.spec.ts; here `land` is stubbed so we observe *what path* it
+// is handed and *when* it is called.
 import { existsSync, readFileSync, rmSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -15,10 +17,11 @@ import {
   isAlreadyLanded,
   recoverDroppedScratch,
   scratchHashOf,
+  SESSIONS_DIR,
   SESSION_ID_MISMATCH_FRICTION,
+  validateEntry,
   withSessionIdMismatchFriction,
-} from '../../scripts/session-end.ts'
-import { SESSIONS_DIR, validateEntry } from '../../scripts/log-session.ts'
+} from '../../scripts/log-session.ts'
 import { extractTrace, parseTranscript, stitch, STAGING_DIR, type AuthoredScratch } from '../../scripts/session-trace.ts'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -30,7 +33,7 @@ const scratch: AuthoredScratch = {
   goal: 'exercise the staging + gate paths',
   status: 'completed',
   outcome: 'ok',
-  summary: 'A synthetic scratch for the session-end staging + gate unit tests.',
+  summary: 'A synthetic scratch for the lander staging + gate unit tests.',
   frictions: [{ description: 'x', solution: 'y', severity: 'nit' }],
 }
 
@@ -110,6 +113,40 @@ describe('handle() — lands from gitignored staging, never the tree (#148)', ()
     expect(res.action).toBe('skipped-unchanged')
     expect(landFn).not.toHaveBeenCalled()
     expect(existsSync(stagingAbs)).toBe(false)
+  })
+})
+
+describe('landedBy — which hook registration landed the log (issue #865)', () => {
+  afterEach(() => rmSync(stagingAbs, { force: true }))
+
+  /** The staged YAML `handle()` hands to `land()`, for a given triggering registration. */
+  function landedYaml(landedBy: string | undefined, mainVersionFn: () => string | null): { res: ReturnType<typeof handle>; yaml: string } {
+    let yaml = ''
+    const res = handle(scratch, transcript, {
+      dryRun: false,
+      remote: 'origin',
+      env: {},
+      landedBy,
+      mainVersionFn,
+      landFn: ((_rel: string, abs: string) => {
+        yaml = readFileSync(abs, 'utf8')
+        return 'x'
+      }) as unknown as typeof import('../../scripts/log-session.ts').land,
+    })
+    return { res, yaml }
+  }
+
+  it('records the registration on the landed entry', () => {
+    expect(landedYaml('SessionEnd', () => null).yaml).toContain('landedBy: SessionEnd')
+  })
+
+  it('omits the field when no registration was named (the manual path)', () => {
+    expect(landedYaml(undefined, () => null).yaml).not.toContain('landedBy:')
+  })
+
+  it('does not re-land an otherwise-identical log just because a different registration re-derived it', () => {
+    const onMain = landedYaml('Stop', () => null).yaml
+    expect(landedYaml('SessionEnd', () => onMain).res.action).toBe('skipped-unchanged')
   })
 })
 

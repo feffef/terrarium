@@ -11,8 +11,8 @@
 // The pure core (`hasProvenanceFooter` / `computeFooterAction` / `applyFooter` /
 // `correctSessionTrailer` / `correctCoAuthorLine` / `applyCorrections` /
 // `provenanceFooter` / `isKnownModelName`) is kept separate from the
-// git-hook I/O (`main`), mirroring the `handle`/`main` split in
-// `session-end.ts`. `main()` FAILS OPEN: any error, missing transcript, or
+// git-hook I/O (`main`), mirroring the `handle`/`landMain` split in
+// `log-session.ts`. `main()` FAILS OPEN: any error, missing transcript, or
 // unresolvable session URL leaves the message untouched and the commit
 // proceeds — a guard bug must never wedge a commit (ADR-0017: a regression
 // degrades cleanly back to the manual-amend status quo, it is not a blocking

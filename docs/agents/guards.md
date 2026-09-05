@@ -32,7 +32,7 @@ issue below rather than rephrasing the call until it passes.
 | `session-id-guard.ts` | nothing: **post-hoc**. Reports a wrong session id on this session's own commits, at teardown | CLAUDE.md | #387 |
 
 `.claude/settings.json` wires all of these under `hooks.PreToolUse`, except
-`session-id-guard`, which `scripts/session-end.ts` calls.
+`session-id-guard`, which `scripts/log-session.ts` calls.
 
 ## Conventions every guard follows
 
