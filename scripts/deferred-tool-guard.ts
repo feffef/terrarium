@@ -60,6 +60,34 @@ export const FOREIGN_SIGNATURES: readonly ForeignSignature[] = [
   { owner: 'Agent', requiredKeys: ['prompt', 'subagent_type'] },
 ]
 
+/** Tools that take one item per call. Three post-guard recurrences for
+ *  `TaskCreate` batched many into a top-level array instead — a trait the
+ *  key-presence model above cannot express (issue #724). Add a name as a new
+ *  offender surfaces; the tool's real schema stays host-owned and unknown. */
+export const OWN_SHAPE_ANTIPATTERNS: readonly string[] = ['TaskCreate']
+
+/** The top-level key holding an array for a tool that never takes one, or
+ *  `null`. Same posture as `checkToolCall`: pure, never throws, fails open. */
+export function checkOwnShape(
+  toolName: string,
+  toolInput: unknown,
+  tools: readonly string[] = OWN_SHAPE_ANTIPATTERNS,
+): string | null {
+  if (toolInput === null || typeof toolInput !== 'object') return null
+  if (!tools.includes(toolName)) return null
+  return Object.entries(toolInput as Record<string, unknown>).find(([, v]) => Array.isArray(v))?.[0] ?? null
+}
+
+/** Names the batching mistake rather than `formatGuardMessage`'s foreign-shape
+ *  framing: every recorded case guessed a convenience shape, not another
+ *  tool's (issue #724). */
+export function formatOwnShapeMessage(toolName: string, arrayKey: string): string {
+  return (
+    `Blocked (issue #724 deferred-tool guard): you called \`${toolName}\` with an array under ` +
+    `\`${arrayKey}\`. It takes one item per call, not a batched array — call it once per item instead.`
+  )
+}
+
 export interface GuardFinding {
   /** The tool that was actually called (the wrong one). */
   calledTool: string
@@ -123,7 +151,11 @@ export function main(): void {
   const result = readHookPayload()
   if (result.kind !== 'ok') return // no stdin, blank stdin, bad JSON, or no tool_name — do not interfere
 
-  const output = denyOutputFor(checkToolCall(result.payload.tool_name, result.payload.tool_input))
+  const { tool_name, tool_input } = result.payload
+  const arrayKey = checkOwnShape(tool_name, tool_input)
+  const output =
+    denyOutputFor(checkToolCall(tool_name, tool_input)) ??
+    (arrayKey === null ? null : buildDenyOutput(formatOwnShapeMessage(tool_name, arrayKey)))
   if (output) process.stdout.write(JSON.stringify(output))
 }
 
