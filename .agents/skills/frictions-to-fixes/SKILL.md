@@ -200,10 +200,10 @@ human review at merge. Search the tracker first to avoid duplicates.
 **Before recommending "add a line to doc X", check that anyone reads doc X.**
 `pnpm exec tsx scripts/audit-skills.ts` reports `docReadCounts` — path → how many
 of the windowed sessions opened it. A doc sitting at **0** is where a prose fix
-goes to die. First ask whether the instruction that caused the friction can be
-pruned instead (CLAUDE.md, "Simplify first"); only then recommend a mechanism
-that reaches the session (a `PreToolUse` guard, a gate check, a line in a doc
-sessions demonstrably open), or move the rule to a home that is read. **A read count corroborates, never
+goes to die. Prune the instruction that caused it first (CLAUDE.md, "Simplify
+first"); failing that, recommend a mechanism that reaches the session (a
+`PreToolUse` guard, a gate check, a line in a doc sessions demonstrably open),
+or move the rule to a home that is read. **A read count corroborates, never
 carries, a finding** — `scripts/audit-skills.ts`'s `docReadCounts` docstring is
 the single home for why (three separate reasons it undercounts). Read it before
 citing a count.

@@ -20,8 +20,7 @@ human asks for it outright.
 
 When a problem traces back to the Platform's own instructions, **prune first**:
 cut the instruction in a prune trial (ADR-0027) before extending it or guarding
-it with a tool. A guard or a longer rule is the last resort, taken only after a
-trial shows the pruned text was load-bearing.
+it with a tool.
 
 ## Read these first
 
