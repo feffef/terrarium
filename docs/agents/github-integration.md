@@ -100,13 +100,15 @@ catch the mistake in practice.
   the same target can still hit the oversized-result trap above; a quoted
   exact-string query reliably returns a small, precise result set instead
   (issue #932).
-- **`search_issues`/`search_pull_requests` can hit a 403/429 rate limit even
-  under a small batch or a short sequential run** — issue #952's "~2
-  concurrent / ~49s backoff" numbers didn't hold on retry (issue #1092). Use
-  `tsx scripts/search-issues.ts <query> [--pulls]` instead: it hits the REST
-  search endpoint directly and retries on 403/429 with a real backoff loop, so
-  there's no number to self-apply. Reach for the raw MCP tools only when the
-  script can't run, and expect to retry by hand there too.
+- **Searching is the fragile path — prefer a repo-scoped listing.** GitHub's
+  `search/issues` endpoint is blocked for scripts here (the proxy binds a
+  session to repository-scoped endpoints, `repos/{owner}/{repo}/…`), so a
+  script escape can't do this; and the `search_issues`/`search_pull_requests`
+  MCP tools rate-limit with a 403 even after a few sequential calls — issue
+  #952's "~2 concurrent / ~49s backoff" numbers didn't hold (issue #1092). Use
+  `list_issues`/`list_pull_requests` or `tsx scripts/list-open-issues.ts` and
+  filter locally. If a search call is unavoidable and returns a 403, wait at
+  least a minute and retry it once, sequentially.
 - **`search_pull_requests` requires explicit `owner`/`repo` parameters** —
   unlike `search_issues`, it does not scope to the current repo implicitly.
   Omitting them searches across all of GitHub, returning cross-repo noise
@@ -123,7 +125,7 @@ catch the mistake in practice.
   here. Redirect the output to a file and slice it, or fetch a small tail
   first.
 
-## Script escapes — cheaper than the API for four common questions
+## Script escapes — cheaper than the API for three common questions
 
 - **"Which PRs merged recently, in what order, when" doesn't need
   `list_pull_requests`/`search_issues` at all** — `tsx scripts/recent-prs.ts [N]`
@@ -152,12 +154,6 @@ catch the mistake in practice.
   (issue #507). It is a standalone check today, not yet wired into any
   periodic sweep. Like `list-open-issues.ts`, it shares the same `gh`-less
   `GH_TOKEN`/`GITHUB_TOKEN` REST fallback (issue #505).
-- **A keyword/duplicate search over issues or PRs doesn't need
-  `search_issues`/`search_pull_requests` either** — `tsx scripts/search-issues.ts
-  <query> [--pulls]` hits the REST search endpoint directly, scoped to this repo,
-  and retries on a 403/429 with a real backoff loop instead of a number the
-  caller has to remember (issue #1092, correcting #952). Shares the same
-  `gh`/REST strategy switch as the three scripts above.
 
 ## Polling: gate status is not webhook-delivered
 
