@@ -67,12 +67,10 @@ draft wholly *as that Persona*. The Personas (universe = Blog Spaces): **david**
 `layers/blog/CONTEXT.md`'s "Why several Personas, not one voice" section; each
 one's own stance and voice is that Persona's `personas/<name>.md` above.
 
-## 2. Branch off `origin/main`
+## 2. Get on a working branch
 
-Follow CLAUDE.md's branch-off rule. This is
-the first repo-touching step of the whole run — Section A (A1–A6) works
-entirely in the scratchpad, so there's nothing to branch for until the winning
-candidate is known.
+CLAUDE.md's branch-off rule — the run's first repo-touching step, since
+Section A (A1–A6) works entirely in the scratchpad.
 
 ## 3. Gather material (read-only)
 

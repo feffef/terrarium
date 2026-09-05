@@ -138,12 +138,8 @@ human asks for it outright.
   present) is a hard stop-and-ask signal.** Ask the user what they want —
   don't infer a feature from the branch name, prior commits, or a matching
   repo pattern.
-- **Before the first `git branch`/`checkout` in any session: fetch `origin
-  main`, then branch off it — under the caller-pinned name the harness checked
-  out for you, if the session started on one.** `branch-pin-guard`
-  enforces both halves from git state and names the pinned branch when it
-  refuses (`docs/agents/guards.md`, issue #666). This is the one canonical
-  statement of that step; a chartered job's own Skill only points here.
+- **Work on the branch your session started on.** If that is `main`, fetch
+  `origin main` and cut a branch off it first — any name.
 - **Single-home every fact — one home, everywhere else points, never restates.**
   This file is the home for repo-wide conventions and an **index** into the ADRs — so
   where it would restate ADR detail, link the ADR instead of copying it (the

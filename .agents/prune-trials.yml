@@ -24,6 +24,44 @@
 #            topic's tools correctly.
 trials:
   - problem: >
+      CLAUDE.md's Working conventions carried a three-step branch-off
+      checklist — scan the task instructions for a caller-pinned designated
+      branch, `git fetch origin main`, then branch off `origin/main` — and
+      `blog-post`, `digest`, `audit-skills` and `audit-docs` each opened with
+      a "Branch off `origin/main`" step pointing at it. That instruction was
+      the cause of the failure it warned about (#666, #625, #684): the harness
+      already checks the pinned branch out at session start, so a session left
+      alone keeps it, and six recorded sessions left it only because the text
+      told them to cut a new branch off `origin/main`. Pruned to one sentence
+      — work on the branch your session started on; if that is `main`, cut one
+      off `origin/main` first, any name — and reduced each Skill's step to a
+      pointer at it. Net -24 lines across the five files.
+    territory:
+      paths:
+        - "CLAUDE.md: the branch-off bullet (Working conventions)"
+        - ".agents/skills/blog-post/SKILL.md: \"§2. Get on a working branch\""
+        - ".agents/skills/digest/SKILL.md: \"§1. Get on a working branch\""
+        - ".agents/skills/audit-skills/SKILL.md: \"§1. Get on a working branch\""
+        - ".agents/skills/audit-docs/SKILL.md: \"§1. Get on a working branch\""
+      keywords:
+        - branch off origin/main
+        - caller-pinned branch
+        - designated branch
+        - branch-off checklist
+        - git fetch origin main
+    opened: 2026-09-05
+    proven: false
+    check: >
+      Damage is a session that starts on a pinned `claude/*` branch and still
+      creates a differently named branch for its work, or a session that
+      starts on `main` and commits or pushes there instead of cutting a branch
+      first. NOT damage: a session that stays on its starting branch without
+      fetching (there is nothing to branch off), a subagent creating its own
+      worktree branch (the sanctioned isolation path), or a session cutting a
+      branch off `origin/main` because it genuinely started on `main`.
+      `proven: false` — this prune shipped from a dispatched review subagent
+      with no subagent tool of its own, so §4's Sonnet probe could not be run.
+  - problem: >
       CLAUDE.md's Ground rules bullet on external pack Skills, and
       `frictions-to-fixes/SKILL.md`'s §2 screening step, each independently
       re-derived the same already-mechanized rule: don't edit an external

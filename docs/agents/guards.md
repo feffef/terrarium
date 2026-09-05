@@ -28,7 +28,6 @@ issue below rather than rephrasing the call until it passes.
 | `commit-trailer-guard.ts` | a `git commit` whose message hand-types the ADR-0017 trailer the harness already lands | CLAUDE.md, ADR-0017 | #921 |
 | `workflow-edit-guard.ts` | a **write** into `.github/workflows/` — an `Edit`/`Write` path there, or a write-shaped `Bash` command. Reads pass, and `.github/actions/gate/action.yml` is untouched: agents may push that one (ADR-0026) | CLAUDE.md, `environment-caveats.md` | #897 |
 | `tail-pipe-guard.ts` | a `Bash` command piping into a trailing `tail`/`head`/`echo` when it also backgrounds (`run_in_background: true`) or is a known long-runner (`pnpm gate`/`test`/`build`, `pnpm exec vitest`/`playwright`). An ordinary short foreground pipe is untouched | CLAUDE.md | #873, #384, #812 |
-| `branch-pin-guard.ts` | a `Bash` command creating a branch whose name differs from the one this session started on — the caller's pin, read from the transcript's first `gitBranch` — or creating one before any `git fetch … origin`. **Fails OPEN**, unlike every guard below: a `main`/`master` start, an unreadable transcript, `git worktree add … -b`, and a dispatched subagent all pass | CLAUDE.md | #666, #625, #684 |
 | `github-provenance-guard.ts` | a GitHub body, or an MCP-API commit, missing this session's provenance in the shape its surface prescribes; also a title or body carrying a bare `<...>` span GitHub silently strips | ADR-0017 — the deny message is the agent-facing home | #886 |
 | `session-id-guard.ts` | nothing: **post-hoc**. Reports a wrong session id on this session's own commits, at teardown | CLAUDE.md | #387 |
 
@@ -38,12 +37,11 @@ issue below rather than rephrasing the call until it passes.
 ## Conventions every guard follows
 
 - **Fail closed.** An undeterminable context, an unparseable payload, or a crash
-  inside the guard **denies**. Two guards are the exception and fail **open**:
-  `deferred-tool-guard`, which has no context to be unsure about, and
-  `branch-pin-guard`, where a false block on ordinary unpinned git work would be
-  worse than a missed warning.
+  inside the guard **denies**. The one exception is `deferred-tool-guard`, which
+  has no context to be unsure about: it fails **open**, never blocking a call it
+  cannot positively identify.
 - **Matcher-scoped, never `"*"`.** Matching every tool would run a `tsx` process
-  (~0.3s) on the Read/Edit/Bash hot path. The five guards matching `Bash` (or
+  (~0.3s) on the Read/Edit/Bash hot path. The four guards matching `Bash` (or
   `Edit`/`Write`) add an `sh` pre-filter, so only a payload that could possibly
   match pays that start.
 - **Pure core split from the I/O, reachable by `--dry-run`, with a unit test in

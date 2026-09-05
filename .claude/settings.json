@@ -59,10 +59,6 @@
           {
             "type": "command",
             "command": "sh scripts/tail-pipe-guard.sh || true"
-          },
-          {
-            "type": "command",
-            "command": "sh scripts/branch-pin-guard.sh || true"
           }
         ]
       },

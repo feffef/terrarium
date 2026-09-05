@@ -142,7 +142,7 @@ function relativizer(records: Record<string, unknown>[]): (p: string) => string 
 }
 
 /** Every Bash command a transcript recorded, in order. */
-export function bashCommandsOf(records: Record<string, unknown>[]): string[] {
+function bashCommandsOf(records: Record<string, unknown>[]): string[] {
   const commands: string[] = []
   for (const rec of records) {
     const content = (rec.message as { content?: unknown } | undefined)?.content

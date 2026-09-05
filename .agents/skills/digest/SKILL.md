@@ -27,11 +27,9 @@ for the boundary and the merge mechanics.
 > **Simplify first** (CLAUDE.md) governs it if this run touches the Platform or
 > its agent instructions.
 
-## 1. Branch off `origin/main`
+## 1. Get on a working branch
 
-Follow CLAUDE.md's branch-off rule.
-
-Done when you are on a branch cut from the latest `origin/main`.
+CLAUDE.md's branch-off rule.
 
 ## 2. Find the days to write
 
