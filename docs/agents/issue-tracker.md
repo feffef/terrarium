@@ -43,7 +43,7 @@ tool surface.
   re-legislates the prose the trial is still weighing. A missing target file
   is not the only way an issue goes stale.
 - **A session picking up more than one issue under a single caller-pinned
-  branch (CLAUDE.md's branch-pin checklist) should flag that packaging
+  branch (CLAUDE.md's branch-off bullet) should flag that packaging
   constraint upfront and ask whether separate branches are allowed** — rather
   than silently bundling unrelated issues into one PR and discovering the
   objection only after push.

@@ -198,11 +198,9 @@ guess), leave that one finding, and move on. Search first (`search_issues`), nev
 re-file an open one, and open with the provenance header (ADR-0017). This is the
 *sole* reason to file — everything else, you fix.
 
-## 1. Branch off `origin/main`
+## 1. Get on a working branch
 
-Follow CLAUDE.md's chartered-job branch-off checklist (scan for a caller-pinned
-designated branch first, then branch off `origin/main`). Done when you are on a
-fresh branch off the latest `origin/main`.
+CLAUDE.md's branch-off rule.
 
 ## 2. Inventory & classify
 

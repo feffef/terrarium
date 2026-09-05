@@ -133,14 +133,15 @@ mistake — that grep is a heuristic and its total is deliberately not stated he
 ## 3. The four named regression-class issues → their rows and mechanisms
 
 The ticket asks specifically that each of these map to a named row and a named
-mechanism. Two are **open**; **#835** is built, and **#772** is superseded by a
-shipped `SessionStart` unshallow hook.
+mechanism. **#835** is built, **#772** is superseded by a shipped `SessionStart`
+unshallow hook, **#666** is resolved by deleting the instruction that caused it,
+and **#873**'s row is still written here as a proposal.
 
 | Issue | Rule row | Proposed mechanism | Why prose failed |
 | --- | --- | --- | --- |
 | **#835** — `run_in_background: false` confusion recurred | `CM-36` | **Built** — `scripts/agent-background-flag-guard.ts`, a fail-closed refusal. `PreToolUse` on `Agent`: the tool ignores `run_in_background: false`, so deny the call carrying it and say so — the parameter is a no-op that reads as a guarantee. | #810's fix reached only one of the two docs that state it; the affected sessions read neither. |
 | **#772** — shallow-clone check-first rule not holding (3rd attempt) | `GC-03` | **Fail-closed refusal.** `PreToolUse` on `Bash`: deny `git log -S`, `git blame`, and `git merge-base` when `git rev-parse --is-shallow-repository` is `true`, naming `--unshallow`. `scripts/gate.ts` already does exactly this check in code (`changedPaths()` unshallows; `changedPathsBetween()` refuses) — the guard generalizes a pattern the repo has already proven. **Superseded: shipped instead as a `SessionStart` unshallow hook — see `GC-03`.** | Three narrowing prose attempts; the rule fires at a moment (starting archaeology) that has no natural doc-reading trigger. |
-| **#666** — caller-pinned branch missed after #625's checklist fix | `CM-21` | **Fail-closed refusal, with a caveat.** `PreToolUse` on `Bash` matching `git checkout -b` / `git branch`: deny unless a `git fetch origin main` was observed this session. **Caveat:** the *pinned-name* half is not mechanizable this way — the pin lives in harness-injected prompt text the hook cannot read. A guard can enforce "you fetched first"; it cannot enforce "you used the pinned name". That residual is the honest finding. | The pin lives in a different part of context from `CLAUDE.md`, so its absence from the doc isn't evidence no pin exists — and the checklist is read after the mistake. |
+| **#666** — caller-pinned branch missed after #625's checklist fix | `CM-20`, `CM-21` | **Dropped, not mechanized** (PR #1159). No guard: the harness already checks the pinned branch out, so a session that is simply left alone keeps it. Sessions left it because our own text told them to branch off `origin/main`; deleting that instruction removes the cause the guard would have policed. | The pin lives in a different part of context from `CLAUDE.md`, so its absence from the doc isn't evidence no pin exists — and the checklist is read after the mistake. |
 | **#873** — tail/head exit-status piping (3rd recurrence, after #384 and #812) | `CM-38` | **Fail-closed refusal.** `PreToolUse` on `Bash`: deny a command that pipes into a trailing `tail`/`head`/`echo` **when `run_in_background: true`** or the piped command is a known long-runner (`pnpm gate*`, `pnpm test*`, `pnpm build`). Scoping to the backgrounded/long-running case is what keeps the false-positive rate near zero — an ordinary `ls \| head` is untouched. | Two prose fixes in two different homes; the trap is invisible at authoring time because the pipeline *succeeds*. |
 
 All four are the same shape: **a point-in-time behavioural rule whose violation is
@@ -212,8 +213,8 @@ blank.
 | CM-17 | Only the `pages` Collection is route-addressable | Ground rules | J | none | Enforced by the resolver at runtime; the *proposal-time* half is `DA-05` | — |
 | CM-18 | Requester trust is drawn at write access (ADR-0020) | Ground rules | J | none | Policy definition; the mechanical aid is the `trusted` label workflow | — |
 | CM-19 | An empty or missing task prompt is a hard stop-and-ask — never infer the task from the branch name | Working conventions | H (refusal) | none | `UserPromptSubmit`/`SessionStart` check: if the prompt body is empty and only a title is present, emit a blocking message. Cheap and unambiguous | S |
-| CM-20 | Scan your own task/system-prompt instructions for a caller-pinned branch **before** any `git branch`/`checkout` | Working conventions | J | **#666** (open) | **Not mechanizable** — the pin lives in harness-injected prompt text a hook cannot read. This is the residue half of `CM-21` | — |
-| CM-21 | `git fetch origin main` and branch off `origin/main` before starting work | Working conventions | H (refusal) | **#666** (open), #625 | `PreToolUse` on `Bash`: deny `git checkout -b`/`git branch <new>` unless a fetch was observed this session | M |
+| CM-20 | Work on the branch your session started on | Working conventions | J | **#666**, #625, #684 | **Resolved by deletion** (PR #1159), not by a mechanism: the harness already checks the pinned branch out, and the misses came from our own text telling sessions to branch off `origin/main` instead. That instruction is gone; nothing is left to enforce | — |
+| CM-21 | If the session started on `main`, cut a branch off `origin/main` first | Working conventions | J | **#666**, #625 | **Resolved by deletion** (PR #1159): what survives of the old fetch-and-branch step is one clause of `CM-20`'s bullet, with no mechanism proposed | — |
 | CM-22 | Single-home every fact — one home, everywhere else points | Working conventions | J | none | The defining judgement call; `audit-docs`' Duplication lens is the post-hoc detector | — |
 | CM-23 | Never restate a Routine's schedule in a committed doc | Working conventions | G | #813 | **Built** — `scripts/validate-skill-cadence.ts` | 0 |
 | CM-24 | Never push a `.github/workflows/*` edit; route it through `docs/proposals/` | Working conventions | H (refusal) | #659 (open) | **Built** — `scripts/workflow-edit-guard.ts`, closing #897 | 0 |
@@ -529,20 +530,14 @@ Per the ticket, a rule that genuinely fits none of the five buckets belongs here
 with its reason, not in a bent bucket. The map's "Not yet specified" section names
 this residue as a finding it is waiting on.
 
-Only one row genuinely resists classification:
+No row resists classification.
 
-- **`CM-20` — "scan your own task/system-prompt instructions for a caller-pinned
-  designated branch."** It is not judgement (the answer is objective — either a
-  pin exists or it doesn't), not droppable (#666 is an open regression), and not
-  mechanizable in any of the three mechanism shapes: the pin lives in
-  harness-injected prompt text that a `PreToolUse` hook's payload does not carry,
-  the gate cannot see prompts, and a workflow stage can only re-state the
-  instruction to look. **It is a rule whose enforcement requires a capability the
-  harness does not expose.** The honest options are (a) leave it as prose and
-  accept recurrence, (b) enforce the adjacent, *reachable* half — `CM-21`'s
-  fetch-first precondition — and accept that the pinned-name half stays unguarded,
-  or (c) ask for a harness capability. This asset recommends (b), and recommends
-  saying so on #666 rather than attempting a fourth prose narrowing.
+`CM-20` — the caller-pinned branch — was listed here as the one residue, as a
+rule no mechanism could reach. It needed none. The harness checks the pinned
+branch out at session start, so a session that is left alone keeps it; sessions
+left it because our own text told them to branch off `origin/main`. PR #1159
+deleted that instruction (#666). The lesson worth keeping is that a rule which
+resists every mechanism may be one the instructions themselves are breaking.
 
 Everything else lands in a bucket. Note in particular that `CM-32` ("a count is
 not a fact until every member is read", open regression #933) is *classified*
@@ -562,20 +557,19 @@ tables.)
 
 | Bucket | Rows | Of which already built (cost 0) |
 | --- | --- | --- |
-| **hook** — fail-closed refusal | 54 | 11 |
+| **hook** — fail-closed refusal | 53 | 14 |
 | **hook** — refusal + post-hoc detection (`CM-29`) | 1 | 0 |
 | **gate check** | 35 | 13 |
 | **workflow stage** | 39 | 18 |
-| **judgment-keep** | 79 | 1 |
+| **judgment-keep** | 80 | 1 |
 | **drop** (candidates flagged, none asserted) | 0 | — |
 | **residue** (§7) | 0 (see below) | — |
 
-43 of the 208 are already built. The `CM-03` reclassification from §6 is applied
-in the table's own row, so it is counted as `J` here, not `G`. `CM-20`'s own row
-Class is `J`, so it is already counted once, under **judgment-keep** — §7 discusses
-it separately as the one row whose judgement is itself residue-flavored, not as
-an additional row, so the residue bucket adds nothing on top and the buckets sum
-to 208, not 209.
+46 of the 208 are already built. The `CM-03` reclassification from §6 is applied
+in the table's own row, so it is counted as `J` here, not `G`. `CM-21` moved from
+**hook** to **judgment-keep** when PR #1159 deleted the instruction instead of
+guarding it (§7), and the residue bucket is now empty, so the buckets still sum
+to 208.
 
 Note that **post-hoc detection barely appears as a *proposal*** — only `CM-29`
 proposes it, and every other post-hoc mechanism in the repo (`check-worktrees`,
@@ -585,16 +579,15 @@ post-hoc detection is what the repo falls back to when no point-of-action exists
 
 Three observations a human might act on:
 
-1. **The unbuilt fail-closed refusals are cheap and concentrated.** 44 hook rows
-   are unbuilt, and **31 of them are cost `S`** — one script, one spec, one
-   matcher line, following a shape the repo has now executed five times. The four
-   named regression-class issues (§3) are all in that set.
+1. **The unbuilt fail-closed refusals are cheap and concentrated.** 40 hook rows
+   are unbuilt, and **28 of them are cost `S`** — one script, one spec, one
+   matcher line, following a shape `.claude/settings.json` now wires nine times.
 2. **No row earned a `drop`.** Six rows are flagged as defensible drop candidates
    (`CM-26`, `GC-13`, `GI-07`, `GI-09`, `PR-10`, `VU-06`) — each narrow,
    low-stakes, self-diagnosing — but dropping a rule is a decision about
    acceptable failure, which is the human's to make, not a classification. They
    are marked, not dropped.
-3. **Judgment-keep is 79 rows — 38% of the corpus — and it does not shrink much
+3. **Judgment-keep is 80 rows — 38% of the corpus — and it does not shrink much
    further.**
    The genuinely irreducible ones cluster tightly: verifying claims (`CM-30`,
    `BP-05`, `TL-10`), honest self-report (`LS-05`, `BP-01`), untrusted-input

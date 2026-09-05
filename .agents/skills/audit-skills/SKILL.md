@@ -49,12 +49,9 @@ gate step), **propose one collapsed suggestion naming every affected Skill**,
 not one near-duplicate entry per Skill — this is the same narrow-exception
 patch above, just batched by fix rather than by Skill.
 
-## 1. Branch off `origin/main`
+## 1. Get on a working branch
 
-Follow CLAUDE.md's chartered-job branch-off checklist, so the PR is
-independent of any work branch.
-
-Done when you are on a fresh branch off the latest `origin/main`.
+CLAUDE.md's branch-off rule.
 
 ## 2. Gather the scorecard
 
