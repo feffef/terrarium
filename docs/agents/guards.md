@@ -22,6 +22,7 @@ issue below rather than rephrasing the call until it passes.
 | --- | --- | --- | --- |
 | `deferred-tool-guard.ts` | a deferred tool called with another tool's argument shape | CLAUDE.md (load the schema via `ToolSearch` first) | #612; **#724 open** |
 | `loop-only-tool-guard.ts` | `ScheduleWakeup` outside a `/loop` session — `stop: true` is exempt in every mode, since a cancel can only remove a pending wakeup | CLAUDE.md | #814 |
+| `skill-inline-guard.ts` | a `Skill` call naming a Skill this turn's `<command-name>` block already delivered inline | `environment-caveats.md` | #999, #1018 |
 | `subagent-background-guard.ts` | a **dispatched subagent** backgrounding a Bash command (`run_in_background: true`, or a bare `&` anywhere in the command text, `nohup … &` included), or calling `Monitor` to wait on one. Orchestrators are untouched | `dispatch-subagents` | #694, #964, #995 |
 | `commit-trailer-guard.ts` | a `git commit` whose message hand-types the ADR-0017 trailer the harness already lands | CLAUDE.md, ADR-0017 | #921 |
 | `workflow-edit-guard.ts` | a **write** into `.github/workflows/` — an `Edit`/`Write` path there, or a write-shaped `Bash` command. Reads pass, and `.github/actions/gate/action.yml` is untouched: agents may push that one (ADR-0026) | CLAUDE.md, `environment-caveats.md` | #897 |
