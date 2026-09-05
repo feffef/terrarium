@@ -99,7 +99,8 @@ human asks for it outright.
   specifically (ADR-0004/ADR-0025), not an exhaustive list of every human-only
   file in the repo — "isolation logic" is a deliberately unpinned catch-all
   that also covers e.g. `shared/manifest.ts` (ADR-0025: defines the
-  `tenant_space_collection` key it calls "the unit of isolation") and the root
+  `tenant_space_collection` key it calls "the unit of isolation") and
+  `shared/schemas/` (ADR-0025's 2026-09-05 amendment) and the root
   `nuxt.config.ts` (ADR-0018 treats it as a
   human-only surface), and `.github/actions/gate/action.yml`, which holds the
   Gate's own steps (ADR-0026). Deciding whether a *novel* file belongs in this
@@ -337,7 +338,7 @@ layers/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Spa
 layers/<tenant>/tests/              # this Tenant's OWN tests (unit + e2e module) — see tests/README.md
 shared/manifest.ts                  # manifest types + defineTenant() + validation
 shared/kinds.ts                     # collection-kind registry: shared cross-Tenant minimum contracts (human-only, ADR-0025)
-shared/schemas/                     # shared cross-consumer Zod schemas: a shared kind's schema when it has one
+shared/schemas/                     # shared cross-consumer Zod schemas: a shared kind's schema when it has one (human-only, ADR-0025)
                                     #   (session kind contract, utcTimestamp; e.g. session.ts — the session-log shape, ADR-0009/0025)
 shared/expand.ts                    # pure manifest→keyed-collection expansion + catalogFrom() (expand(), L3-tested)
 shared/routing.ts                   # runtime route resolution: request → keyed collections (human-only, ADR-0006)
