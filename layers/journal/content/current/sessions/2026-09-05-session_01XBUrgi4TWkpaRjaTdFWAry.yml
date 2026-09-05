@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XBUrgi4TWkpaRjaTdFWAry
 startedAt: 2026-09-05T04:08:37Z
-endedAt: 2026-09-05T04:20:36Z
+endedAt: 2026-09-05T06:22:58Z
 kind: autonomous
 goal: Run scheduled /audit-docs sweep
-status: in-review
-outcome: One stale ADR cross-ref fixed, escalated
-summary: "Fired by a scheduled Routine with no live human present. Ran the /audit-docs Skill end to end: branched off origin/main (already current), dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over every Live-tier doc. Three lenses (six of eight sub-lenses) found nothing to fix — prior audit-docs/prune-trial runs had already kept the corpus clean. The Coherence lens surfaced one Ambiguity: ADR-0023's trust-signal note pointed to docs/agents/issue-tracker.md \"for the exact enum values,\" but that doc only re-points to ADR-0020, which actually holds the list — an unstated second hop. Fact-checked against the three primary sources (ADR-0023, issue-tracker.md, ADR-0020) before touching anything, then fixed in place per ADR-0018's pure-factual-correction rule (a stale cross-reference, not a decision reversal). Ran pnpm gate:scoped (green, inert single-md-file change). Because the fix touches an ADR — human-only to merge regardless of correction category (ADR-0004/0018) — and no self-mergeable finding existed this sweep, opened only one PR (#1141) on the escalation path, not the usual self-merged routine PR. Subscribed to its activity and will babysit to merge. No needs-triage issue filed — this was the sweep's sole finding and it was resolvable outright, not a genuine factual conflict."
+status: completed
+outcome: One stale ADR cross-ref fixed and merged
+summary: "Fired by a scheduled Routine with no live human present. Ran the /audit-docs Skill end to end: branched off origin/main (already current), dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over every Live-tier doc. Three lenses (six of eight sub-lenses) found nothing to fix — prior audit-docs/prune-trial runs had already kept the corpus clean. The Coherence lens surfaced one Ambiguity: ADR-0023's trust-signal note pointed to docs/agents/issue-tracker.md \"for the exact enum values,\" but that doc only re-points to ADR-0020, which actually holds the list — an unstated second hop. Fact-checked against the three primary sources (ADR-0023, issue-tracker.md, ADR-0020) before touching anything, then fixed in place per ADR-0018's pure-factual-correction rule (a stale cross-reference, not a decision reversal). Ran pnpm gate:scoped (green, inert single-md-file change). Because the fix touches an ADR — human-only to merge regardless of correction category (ADR-0004/0018) — and no self-mergeable finding existed this sweep, opened only one PR (#1141) on the escalation path, not the usual self-merged routine PR. Subscribed to its activity and will babysit to merge. No needs-triage issue filed — this was the sweep's sole finding and it was resolvable outright, not a genuine factual conflict. PR #1141 merged cleanly on the first gate run, with no review comments needing a response; confirmed on origin/main."
 prs:
   - "1141"
 docsRead:
@@ -153,24 +153,26 @@ frictions:
   - description: "Discovered as an aside (not this Skill's lens scope): two entries in .agents/prune-trials.yml (opened 2026-08-31 and 2026-09-01) are past ADR-0027's 3-day judgment window and still unjudged."
     solution: Run /prune-trial to judge the two overdue entries.
     severity: minor
-durationSec: 719
+durationSec: 8061
 models:
-  claude-sonnet-5: 84
+  claude-sonnet-5: 115
 toolCounts:
-  Bash: 18
+  Bash: 21
   Agent: 5
   TaskCreate: 1
   ScheduleWakeup: 1
-  ReadNotifications: 4
+  ReadNotifications: 9
   Read: 3
-  Edit: 1
-  ToolSearch: 1
+  Edit: 3
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 2
   PushNotification: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/adr/0023-guest-driven-demo-pipeline.md
 docsReadViaShell:
