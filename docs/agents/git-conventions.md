@@ -54,10 +54,9 @@ after a rename or refactor on either side.
 
 A `SessionStart` hook (`scripts/unshallow-on-start.ts`) unshallows a shallow
 checkout before a session's first turn, so ordinary work should never meet one
-(issue #772 — four rounds of "check first" prose didn't hold, so the
-precondition was removed instead). If the hook's fetch failed (offline, no
-network) and a checkout is somehow still shallow, know what it silently gets
-wrong before trusting history off it:
+(issue #772). If the hook's fetch failed (offline, no network) and a checkout is
+somehow still shallow, know what it silently gets wrong before trusting history
+off it:
 
 A shallow clone's grafted, parent-less boundary commit makes every file it
 touches look newly-added, which reads as a real history rewrite when it's
