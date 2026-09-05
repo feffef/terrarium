@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_016ahWmRcpKL7NJpcrtA8zPy
 startedAt: 2026-09-05T11:07:47Z
-endedAt: 2026-09-05T11:23:33Z
+endedAt: 2026-09-05T11:26:41Z
 kind: autonomous
 goal: Run the scheduled /blog-post skill run
-status: in-review
-outcome: "PR #1163 opened, gate green, watching for merge"
-summary: "Fired by a scheduled Routine, no live human this session. Ran the /blog-post skill's full candidate process: the rotation gate forced David exclusively (last=kevin, starved=[david]), so all three drafted candidates were David on distinct topics (branch-pin-guard built-then-pruned/#666, tail-pipe-guard/#873, verify-quote.ts/#1126). A fresh outside-reader subagent picked the branch-pin-guard story as the structurally bigger governance event; applied its revision notes, verified every link/quote against primary source (git show, GitHub issue fetches, verify-quote.ts itself), ran pnpm gate:scoped (full gate, green), committed, pushed, and opened PR #1163. Subscribed to PR activity; will finalize this log to completed on merge."
+status: completed
+outcome: "PR #1163 merged (bb4e13b6)"
+summary: "Fired by a scheduled Routine, no live human this session — fully agent-initiated. Ran the /blog-post skill's full candidate process: the rotation gate forced David exclusively (last=kevin, starved=[david]), so all three drafted candidates were David on distinct topics (branch-pin-guard built-then-pruned/#666, tail-pipe-guard/#873, verify-quote.ts/#1126). A fresh outside-reader subagent picked the branch-pin-guard story as the structurally bigger governance event; applied its revision notes, verified every link/quote against primary source (git show, GitHub issue fetches, verify-quote.ts itself), ran pnpm gate:scoped (full gate, green), committed, pushed, and opened PR #1163. CI (gate + label checks) came back green with no review comments and no flagged issue conflicts; posted the verdict comment and landed it via scripts/merge-pr.ts per the blog-post tier's merge-on-green-gate authority. Unsubscribed and cleaned up the check-in."
 prs:
   - "1163"
 docsRead:
@@ -23,6 +23,8 @@ docsRead:
   - path: layers/blog/content/eyra/pages/2026-09-03-five-guards-one-set-of-pipes.md
     reason: (no reason given)
   - path: scripts/verify-quote.ts
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
 skillsUsed:
   - name: close-session
@@ -41,22 +43,28 @@ frictions:
   - description: "SHELL-READ-DETECTION: docsReadViaShell listed docs/agents/environment-caveats.md as read via shell this session. No Bash/Grep/Read call this session named that path at all (checked the full tool-call history) — this looks like a false positive, direction: listed-but-never-read."
     solution: No action available (field is derived); flagging per log-session's instructions for the detector's own improvement.
     severity: moderate
-durationSec: 946
+durationSec: 1134
 models:
-  claude-sonnet-5: 168
+  claude-sonnet-5: 201
 toolCounts:
-  Bash: 51
-  Read: 14
-  ToolSearch: 1
+  Bash: 55
+  Read: 18
+  ToolSearch: 2
   mcp__github__issue_read: 5
   mcp__github__search_pull_requests: 2
   Write: 5
   Grep: 1
-  Edit: 10
+  Edit: 11
   Agent: 2
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-09-05-it-built-a-guard-then-decided-not-to-need-one.md
 docsReadViaShell:
