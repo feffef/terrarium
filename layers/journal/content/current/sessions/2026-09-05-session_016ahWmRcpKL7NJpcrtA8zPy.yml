@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_016ahWmRcpKL7NJpcrtA8zPy
 startedAt: 2026-09-05T11:07:47Z
-endedAt: 2026-09-05T11:26:41Z
-kind: autonomous
+endedAt: 2026-09-05T12:05:48Z
+kind: interactive
 goal: Run the scheduled /blog-post skill run
-status: completed
-outcome: "PR #1163 merged (bb4e13b6)"
-summary: "Fired by a scheduled Routine, no live human this session — fully agent-initiated. Ran the /blog-post skill's full candidate process: the rotation gate forced David exclusively (last=kevin, starved=[david]), so all three drafted candidates were David on distinct topics (branch-pin-guard built-then-pruned/#666, tail-pipe-guard/#873, verify-quote.ts/#1126). A fresh outside-reader subagent picked the branch-pin-guard story as the structurally bigger governance event; applied its revision notes, verified every link/quote against primary source (git show, GitHub issue fetches, verify-quote.ts itself), ran pnpm gate:scoped (full gate, green), committed, pushed, and opened PR #1163. CI (gate + label checks) came back green with no review comments and no flagged issue conflicts; posted the verdict comment and landed it via scripts/merge-pr.ts per the blog-post tier's merge-on-green-gate authority. Unsubscribed and cleaned up the check-in."
+status: in-review
+outcome: "PR #1163 merged, then corrected in PR #1164"
+summary: "Started as a scheduled Routine firing, no human prompt — agent-initiated throughout drafting. Ran the /blog-post skill's full candidate process: the rotation gate forced David exclusively (last=kevin, starved=[david]), so all three drafted candidates were David on distinct topics (branch-pin-guard built-then-pruned/#666, tail-pipe-guard/#873, verify-quote.ts/#1126). A fresh outside-reader subagent picked the branch-pin-guard story; applied its revision notes, ran pnpm gate:scoped (green), committed, pushed, and opened PR #1163, which landed clean via scripts/merge-pr.ts (blog-post tier, merge-on-green-gate). The published post claimed the session that built the branch-pin-guard also reasoned its way past it \"on its own\" toward deleting the instruction instead. A live human prompt after publish (a genuine post-kickoff prompt, making this session interactive, not autonomous) caught that this was backwards: PR #1159's own review says the reversal was \"on the human's design call.\" Re-verified against the PR #1159 review thread, rewrote the post with a same-day correction notice and corrected attribution, re-checked every quote with scripts/verify-quote.ts (catching two more punctuation-inside-quote-marks slips of my own), reran the gate (green), and opened PR #1164 to land the fix. Session stays in-review until #1164 merges."
 prs:
   - "1163"
+  - "1164"
 docsRead:
   - path: .claude/skills/blog-post/personas/david.md
     reason: David's stance/voice/do-don't list
@@ -25,6 +26,10 @@ docsRead:
   - path: scripts/verify-quote.ts
     reason: (no reason given)
   - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-09-05-it-built-a-guard-then-decided-not-to-need-one.md
+    reason: (read before editing)
+  - path: CONTEXT.md
     reason: (no reason given)
 skillsUsed:
   - name: close-session
@@ -43,28 +48,32 @@ frictions:
   - description: "SHELL-READ-DETECTION: docsReadViaShell listed docs/agents/environment-caveats.md as read via shell this session. No Bash/Grep/Read call this session named that path at all (checked the full tool-call history) — this looks like a false positive, direction: listed-but-never-read."
     solution: No action available (field is derived); flagging per log-session's instructions for the detector's own improvement.
     severity: moderate
-durationSec: 1134
+  - description: "Published a blog post (PR #1163) attributing the branch-pin-guard's build-then-delete reversal to the session's own autonomous reasoning ('reached past it on its own'). PR #1159's own review says the reversal was made 'on the human's design call' -- the opposite causal claim. I had read the session log's summary line naming the human's role during research, but drafted and shipped the post without re-deriving the PR's actual review thread, which stated it explicitly. A human caught it after publish."
+    solution: For any causal/agency claim ('X decided', 'the session reasoned', 'on its own'), check the PR's own review comments/timeline for an explicit human-vs-agent statement before publishing, not just the commit message (which is written in first-person-agent voice regardless of who actually directed the change) or a session log's compressed summary line. Treat 'agent-initiated but reported' language in a summary as a flag to go verify who initiated *which specific decision*, not a blanket agent-attribution.
+    severity: major
+durationSec: 3481
 models:
-  claude-sonnet-5: 201
+  claude-sonnet-5: 269
 toolCounts:
-  Bash: 55
-  Read: 18
+  Bash: 67
+  Read: 23
   ToolSearch: 2
   mcp__github__issue_read: 5
   mcp__github__search_pull_requests: 2
   Write: 5
-  Grep: 1
-  Edit: 11
+  Grep: 4
+  Edit: 18
   Agent: 2
-  mcp__github__create_pull_request: 2
-  mcp__github__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 2
   Skill: 2
-  ReadNotifications: 2
-  mcp__github__pull_request_read: 4
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 6
   mcp__Claude_Code_Remote__send_later: 1
   mcp__github__add_issue_comment: 1
   mcp__Claude_Code_Remote__delete_trigger: 1
   mcp__github__unsubscribe_pr_activity: 1
+  PushNotification: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-09-05-it-built-a-guard-then-decided-not-to-need-one.md
 docsReadViaShell:
