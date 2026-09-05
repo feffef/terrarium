@@ -56,8 +56,10 @@ Classify every surface **before** editing. This decides everything.
   in a *live* doc instead.
 
 A fourth bucket sits outside these three tiers and needs no classification:
-fictional Tenant content (e.g. Atlas), individual `docs/proposals/<N>-*.md`
-proposal bodies (`docs/proposals/README.md` itself stays Live, per above), and
+Tenant content that makes no claim about the Terrarium/Platform itself (see
+`CONTEXT-MAP.md`'s Relationships section for which Tenants qualify — today,
+Atlas and Marquee), individual `docs/proposals/<N>-*.md` proposal bodies
+(`docs/proposals/README.md` itself stays Live, per above), and
 `.out-of-scope/*.md` files are **excluded** from the sweep — skip them
 entirely.
 
