@@ -1,0 +1,207 @@
+schemaVersion: 1
+session: session_01XBUrgi4TWkpaRjaTdFWAry
+startedAt: 2026-09-05T04:08:37Z
+endedAt: 2026-09-05T04:20:36Z
+kind: autonomous
+goal: Run scheduled /audit-docs sweep
+status: in-review
+outcome: One stale ADR cross-ref fixed, escalated
+summary: "Fired by a scheduled Routine with no live human present. Ran the /audit-docs Skill end to end: branched off origin/main (already current), dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over every Live-tier doc. Three lenses (six of eight sub-lenses) found nothing to fix — prior audit-docs/prune-trial runs had already kept the corpus clean. The Coherence lens surfaced one Ambiguity: ADR-0023's trust-signal note pointed to docs/agents/issue-tracker.md \"for the exact enum values,\" but that doc only re-points to ADR-0020, which actually holds the list — an unstated second hop. Fact-checked against the three primary sources (ADR-0023, issue-tracker.md, ADR-0020) before touching anything, then fixed in place per ADR-0018's pure-factual-correction rule (a stale cross-reference, not a decision reversal). Ran pnpm gate:scoped (green, inert single-md-file change). Because the fix touches an ADR — human-only to merge regardless of correction category (ADR-0004/0018) — and no self-mergeable finding existed this sweep, opened only one PR (#1141) on the escalation path, not the usual self-merged routine PR. Subscribed to its activity and will babysit to merge. No needs-triage issue filed — this was the sweep's sole finding and it was resolvable outright, not a genuine factual conflict."
+prs:
+  - "1141"
+docsRead:
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: factual-correction vs decision-reversal rule for editing an ADR
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: site of the stale cross-reference being fixed
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: verifying it actually holds the authorAssociation enum list
+  - path: docs/agents/issue-tracker.md
+    reason: verifying it only re-points to ADR-0020 rather than stating the list
+  - path: .agents/prune-trials.yml
+    reason: excluding open Prune Trial territory from all four lenses
+  - path: docs/adr/0018-adr-amendment-convention.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's own Skill
+  - name: close-session
+    reason: PR-open closure trigger
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Discovered as an aside (not this Skill's lens scope): two entries in .agents/prune-trials.yml (opened 2026-08-31 and 2026-09-01) are past ADR-0027's 3-day judgment window and still unjudged."
+    solution: Run /prune-trial to judge the two overdue entries.
+    severity: minor
+durationSec: 719
+models:
+  claude-sonnet-5: 84
+toolCounts:
+  Bash: 18
+  Agent: 5
+  TaskCreate: 1
+  ScheduleWakeup: 1
+  ReadNotifications: 4
+  Read: 3
+  Edit: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+  PushNotification: 1
+filesEdited:
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+docsReadViaShell:
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - docs/agents/issue-tracker.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/research/mermaid-server-side-rendering.md
+  - docs/research/github-actions-public-vs-private-limits.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/research/making-repo-public.md
+  - CONTEXT.md
+  - CONTEXT-MAP.md
+  - docs/proposals/README.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/proposals/879-gate-yml-thin-shell.md
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - type: general-purpose
+    task: Check existing PRs and issues for audit-docs
+  - type: general-purpose
+    task: "Freshness lens: Drift + Orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: Duplication + Mis-location"
+  - type: general-purpose
+    task: "Concision lens: Verbose + Stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: Contradiction + Ambiguity"
+gitBranch: claude/festive-mayer-oy5f4p
+entrypoint: remote_trigger
+cliVersion: 2.1.261
+trigger: audit-docs
