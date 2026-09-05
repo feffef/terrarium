@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_016ahWmRcpKL7NJpcrtA8zPy
 startedAt: 2026-09-05T11:07:47Z
-endedAt: 2026-09-05T12:05:48Z
+endedAt: 2026-09-05T12:09:08Z
 kind: interactive
 goal: Run the scheduled /blog-post skill run
-status: in-review
-outcome: "PR #1163 merged, then corrected in PR #1164"
-summary: "Started as a scheduled Routine firing, no human prompt — agent-initiated throughout drafting. Ran the /blog-post skill's full candidate process: the rotation gate forced David exclusively (last=kevin, starved=[david]), so all three drafted candidates were David on distinct topics (branch-pin-guard built-then-pruned/#666, tail-pipe-guard/#873, verify-quote.ts/#1126). A fresh outside-reader subagent picked the branch-pin-guard story; applied its revision notes, ran pnpm gate:scoped (green), committed, pushed, and opened PR #1163, which landed clean via scripts/merge-pr.ts (blog-post tier, merge-on-green-gate). The published post claimed the session that built the branch-pin-guard also reasoned its way past it \"on its own\" toward deleting the instruction instead. A live human prompt after publish (a genuine post-kickoff prompt, making this session interactive, not autonomous) caught that this was backwards: PR #1159's own review says the reversal was \"on the human's design call.\" Re-verified against the PR #1159 review thread, rewrote the post with a same-day correction notice and corrected attribution, re-checked every quote with scripts/verify-quote.ts (catching two more punctuation-inside-quote-marks slips of my own), reran the gate (green), and opened PR #1164 to land the fix. Session stays in-review until #1164 merges."
+status: completed
+outcome: "PR #1163 merged; PR #1164 merged the correction"
+summary: "Started as a scheduled Routine firing, no human prompt — agent-initiated throughout drafting. Ran the /blog-post skill's full candidate process: the rotation gate forced David exclusively (last=kevin, starved=[david]), so all three drafted candidates were David on distinct topics (branch-pin-guard built-then-pruned/#666, tail-pipe-guard/#873, verify-quote.ts/#1126). A fresh outside-reader subagent picked the branch-pin-guard story; applied its revision notes, ran pnpm gate:scoped (green), committed, pushed, and opened PR #1163, which landed clean via scripts/merge-pr.ts (blog-post tier, merge-on-green-gate). The published post claimed the session that built the branch-pin-guard also reasoned its way past it \"on its own\" toward deleting the instruction instead. A live human prompt after publish (a genuine post-kickoff prompt, making this session interactive, not autonomous) caught that this was backwards: PR #1159's own review says the reversal was \"on the human's design call.\" Re-verified against the PR #1159 review thread, rewrote the post with a same-day correction notice and corrected attribution, re-checked every quote with scripts/verify-quote.ts (catching two more punctuation-inside-quote-marks slips of my own), reran the gate (green), opened PR #1164, posted a verdict comment, and landed it via scripts/merge-pr.ts. The corrected post is live."
 prs:
   - "1163"
   - "1164"
@@ -51,28 +51,28 @@ frictions:
   - description: "Published a blog post (PR #1163) attributing the branch-pin-guard's build-then-delete reversal to the session's own autonomous reasoning ('reached past it on its own'). PR #1159's own review says the reversal was made 'on the human's design call' -- the opposite causal claim. I had read the session log's summary line naming the human's role during research, but drafted and shipped the post without re-deriving the PR's actual review thread, which stated it explicitly. A human caught it after publish."
     solution: For any causal/agency claim ('X decided', 'the session reasoned', 'on its own'), check the PR's own review comments/timeline for an explicit human-vs-agent statement before publishing, not just the commit message (which is written in first-person-agent voice regardless of who actually directed the change) or a session log's compressed summary line. Treat 'agent-initiated but reported' language in a summary as a flag to go verify who initiated *which specific decision*, not a blanket agent-attribution.
     severity: major
-durationSec: 3481
+durationSec: 3681
 models:
-  claude-sonnet-5: 269
+  claude-sonnet-5: 292
 toolCounts:
-  Bash: 67
-  Read: 23
+  Bash: 70
+  Read: 27
   ToolSearch: 2
   mcp__github__issue_read: 5
   mcp__github__search_pull_requests: 2
   Write: 5
   Grep: 4
-  Edit: 18
+  Edit: 21
   Agent: 2
   mcp__github__create_pull_request: 3
   mcp__github__subscribe_pr_activity: 2
   Skill: 2
-  ReadNotifications: 3
-  mcp__github__pull_request_read: 6
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 8
   mcp__Claude_Code_Remote__send_later: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   mcp__Claude_Code_Remote__delete_trigger: 1
-  mcp__github__unsubscribe_pr_activity: 1
+  mcp__github__unsubscribe_pr_activity: 2
   PushNotification: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-09-05-it-built-a-guard-then-decided-not-to-need-one.md
