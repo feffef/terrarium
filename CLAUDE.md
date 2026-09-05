@@ -99,7 +99,8 @@ human asks for it outright.
   specifically (ADR-0004/ADR-0025), not an exhaustive list of every human-only
   file in the repo — "isolation logic" is a deliberately unpinned catch-all
   that also covers e.g. `shared/manifest.ts` (ADR-0025: defines the
-  `tenant_space_collection` key it calls "the unit of isolation") and the root
+  `tenant_space_collection` key it calls "the unit of isolation") and
+  `shared/schemas/` (ADR-0025's 2026-09-05 amendment) and the root
   `nuxt.config.ts` (ADR-0018 treats it as a
   human-only surface), and `.github/actions/gate/action.yml`, which holds the
   Gate's own steps (ADR-0026). Deciding whether a *novel* file belongs in this
