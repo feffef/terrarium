@@ -1,16 +1,18 @@
 schemaVersion: 1
 session: session_01HBWKmhu9u3BPZUmAM1RBgq
 startedAt: 2026-09-05T00:16:11Z
-endedAt: 2026-09-05T00:22:07Z
+endedAt: 2026-09-05T00:26:38Z
 kind: autonomous
 goal: Run the scheduled /digest sweep
-status: in-review
-outcome: "PR #1136 opened, gate green"
-summary: "Fully agent-initiated scheduled run of the /digest Skill. Found one backfill day (2026-09-04), gathered its data via scripts/digest.ts, and authored the day's Digest narrating a quiet day of scheduled sweeps whose sharpest friction was a Blog-highlights session's own source-summarization errors rather than anything it built. Ran the retention sweep, archiving 2026-08-28's digest and six session logs to current -> archived. pnpm gate:scoped passed green (full L2 smoke suite included). Opened PR #1136 and subscribed to its activity for babysitting through merge."
+status: completed
+outcome: "PR #1136 merged"
+summary: "Fully agent-initiated scheduled run of the /digest Skill. Found one backfill day (2026-09-04), gathered its data via scripts/digest.ts, and authored the day's Digest narrating a quiet day of scheduled sweeps whose sharpest friction was a Blog-highlights session's own source-summarization errors rather than anything it built. Ran the retention sweep, archiving 2026-08-28's digest and six session logs to current -> archived. pnpm gate:scoped passed green (full L2 smoke suite included). Opened PR #1136, posted the pre-merge verdict comment, and landed it via merge-pr.ts once CI's own gate went green (merge commit bb222e5)."
 prs:
   - "1136"
 docsRead:
   - path: layers/journal/content/current/pages/digests/2026-09-03.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
 skillsUsed:
   - name: close-session
@@ -20,18 +22,25 @@ skillsUsed:
   - name: digest
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 356
+durationSec: 627
 models:
-  claude-sonnet-5: 45
+  claude-sonnet-5: 76
 toolCounts:
-  Bash: 14
-  Read: 1
+  Bash: 17
+  Read: 3
   Write: 2
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_review_write: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Edit: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-09-04.md
 gitBranch: claude/compassionate-lovelace-xu5q9t
