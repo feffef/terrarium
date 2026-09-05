@@ -109,11 +109,15 @@ export function parseDeletionLog(raw: string): DeletionLog {
  * Paths whose deletion is process residue, not discarded work — never Midden
  * candidates, so screened before any judgment:
  *  - `layers/journal/content/` — session logs and digests are archived by
- *    moving files (ADR-0009's machinery), so deletions there are churn;
+ *    moving files (ADR-0009's machinery), so deletions there are churn —
+ *    EXCEPT its `skills/` subtree (the Skill Inventory), which is authored
+ *    content and never archived by move (#1043: it was the reason `kind:
+ *    skill` had never once appeared in a survey);
  *  - `.claude/skills/` — symlinks mirroring `.agents/skills/`, where the real
  *    deletion (if any) already shows up.
  */
 export function isNoisePath(path: string): boolean {
+  if (/^layers\/journal\/content\/[^/]+\/skills\//.test(path)) return false
   return path.startsWith('layers/journal/content/') || path.startsWith('.claude/skills/')
 }
 

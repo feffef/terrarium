@@ -120,6 +120,10 @@ describe('isNoisePath()', () => {
   it('screens .claude/skills symlink churn (mirrors .agents/skills)', () => {
     expect(isNoisePath('.claude/skills/old-skill')).toBe(true)
   })
+  it('does NOT screen the Skill Inventory, authored content under the same journal-content root (#1043)', () => {
+    expect(isNoisePath('layers/journal/content/current/skills/review.yml')).toBe(false)
+    expect(isNoisePath('layers/journal/content/archived/skills/old-entry.yml')).toBe(false)
+  })
   it('keeps ordinary source, doc, and config paths', () => {
     expect(isNoisePath('app/pages/index.vue')).toBe(false)
     expect(isNoisePath('docs/agents/github-footer-guard.md')).toBe(false)
