@@ -7,6 +7,12 @@ Status: Accepted
 > (#631). This ADR is the Decision half; #642 holds the fuller design narrative
 > and the alternatives weighed.
 
+> **Amended (2026-09-05).** `shared/schemas/` joins the "Human-only to merge"
+> family below, directory-scoped (issue #829): it supplies the contract values
+> `shared/kinds.ts` exports — the `session` kind's whole contract, the `page`
+> kind's `utcTimestamp` refinement — so a PR could otherwise widen or narrow a
+> kind's contract without touching `shared/kinds.ts` itself.
+
 ## Context
 
 Tenant collections are isolated, and that is a feature: each

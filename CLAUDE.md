@@ -337,7 +337,7 @@ layers/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Spa
 layers/<tenant>/tests/              # this Tenant's OWN tests (unit + e2e module) — see tests/README.md
 shared/manifest.ts                  # manifest types + defineTenant() + validation
 shared/kinds.ts                     # collection-kind registry: shared cross-Tenant minimum contracts (human-only, ADR-0025)
-shared/schemas/                     # shared cross-consumer Zod schemas: a shared kind's schema when it has one
+shared/schemas/                     # shared cross-consumer Zod schemas: a shared kind's schema when it has one (human-only, ADR-0025)
                                     #   (session kind contract, utcTimestamp; e.g. session.ts — the session-log shape, ADR-0009/0025)
 shared/expand.ts                    # pure manifest→keyed-collection expansion + catalogFrom() (expand(), L3-tested)
 shared/routing.ts                   # runtime route resolution: request → keyed collections (human-only, ADR-0006)
