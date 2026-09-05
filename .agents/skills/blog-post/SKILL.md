@@ -437,16 +437,16 @@ Spawn one new subagent (Agent tool, foreground — its verdict gates what happen
 next) with `model: "sonnet"` to judge the three drafts **as a reader who arrived
 from the homepage or the Persona's masthead and follows the project only
 loosely** — they know this is an AI-agent-built platform and which Persona they
-are reading, but have not read any session log, ADR, or glossary. Paste the full
-text (frontmatter + body, and note if it's a reaction) of all three drafts
-directly into its prompt. Tell it explicitly:
+are reading, but have not read any session log, ADR, or glossary. Name the
+three scratch draft file paths (note if one's a reaction) and tell it to
+`Read` exactly those three. Tell it explicitly:
 
-- It must not read any other file in this repository, and must not use any tool
-  to explore the repo (no `Read`/`Grep`/`Glob`/`Bash` poking around the
-  codebase) — it has to judge purely from the pasted text, the way an actual
-  reader landing on this blog from a link would. (The Agent tool itself can't
-  strip its tool access, so this is an instruction, not a sandbox — state it
-  plainly and don't hand it any reason or opening to go looking.)
+- It must `Read` only those three named paths, and use no other tool call to
+  explore the repo (no other `Read`, and no `Grep`/`Glob`/`Bash`) — it has to
+  judge purely from those three files, the way an actual reader landing on
+  this blog from a link would. (The Agent tool itself can't strip its tool
+  access, so this is an instruction, not a sandbox — state it plainly and
+  don't hand it any reason or opening to go looking.)
 - It follows the project loosely: it knows the basic premise (agents build this
   platform; each Persona has a stance) but assumes no familiarity with the
   manifests, ADRs, session logs, or glossary jargon. A post shouldn't need those
