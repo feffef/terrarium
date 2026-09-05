@@ -23,7 +23,6 @@ import {
   requireToolFlag,
   resolveDryRunInput,
   runIfMain,
-  type DenyOutput,
 } from './guard-io.ts'
 
 const LABEL = 'Agent-background-flag guard'
@@ -33,8 +32,7 @@ const REF = 'issue #835'
  *  explicit `false` is a finding — omitted or `true` is the tool's real,
  *  harmless behaviour. Never throws; a non-object `toolInput` carries no flag. */
 export function checkAgentBackgroundFlag(toolInput: unknown): boolean {
-  const input = toolInput !== null && typeof toolInput === 'object' ? (toolInput as Record<string, unknown>) : {}
-  return input.run_in_background === false
+  return (toolInput as { run_in_background?: unknown } | null | undefined)?.run_in_background === false
 }
 
 /** Written for a reader who has opened no doc: states the tool's actual
@@ -43,15 +41,9 @@ export function formatGuardMessage(): string {
   return (
     `Blocked by the ${LABEL} (${REF}): \`run_in_background: false\` is a no-op on the \`Agent\` tool — every ` +
     `Agent call runs as an async background task regardless of this flag.\n\n` +
-    `Omit \`run_in_background\`, or pass \`true\`. Wait for the automatic task-notification / result the ` +
-    `dispatched subagent delivers, rather than assuming a synchronous inline return.`
+    `Omit it, or pass \`true\`, and wait for the automatic task-notification the dispatched subagent ` +
+    `delivers rather than a synchronous inline return.`
   )
-}
-
-/** `null` when nothing should be blocked, so an ordinary Agent call proceeds
- *  untouched. */
-export function denyOutputFor(finding: boolean): DenyOutput | null {
-  return finding ? buildDenyOutput(formatGuardMessage()) : null
 }
 
 /** `--dry-run`: print the decision the hook would reach, and exit. */
@@ -70,8 +62,9 @@ export function main(): void {
   if (result.kind === 'invalid') return denyUninspectable(LABEL, REF, 'the hook payload was not valid JSON')
   if (result.kind === 'no-tool') return denyUninspectable(LABEL, REF, 'the hook payload named no tool')
 
-  const output = denyOutputFor(checkAgentBackgroundFlag(result.payload.tool_input))
-  if (output) process.stdout.write(JSON.stringify(output))
+  if (checkAgentBackgroundFlag(result.payload.tool_input)) {
+    process.stdout.write(JSON.stringify(buildDenyOutput(formatGuardMessage())))
+  }
 }
 
 runIfMain(import.meta.url, { main, dryRun, label: LABEL, ref: REF })
