@@ -1,0 +1,38 @@
+schemaVersion: 1
+session: session_015nMwJhNEcB5LHecgj6WUaK
+startedAt: 2026-09-06T00:46:20Z
+endedAt: 2026-09-06T00:51:57Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: No Inventory changes warranted this run
+summary: "Fully agent-initiated scheduled run of the audit-skills Skill, no human prompt this turn. Gathered scripts/audit-skills.ts's 40-session scorecard. Step 3: reviewed all 36 Inventory entries against usedIn/goal/summary evidence — every onDisk Skill is already inventoried (no missing/phantom entries) and no Skill had bright-line (>=2 session) evidence for a grade or role change this window, which is dominated by scheduled routine-Skill runs plus 7 interactive sessions whose skill choices already matched their work. Step 4: worked all 14 regressionChecks brackets. atlas-specimen/guest-build/guest-intake/midden-survey were zero-usedIn on both sides (no-signal, skipped per rule). audit-docs, audit-skills, blog-post and digest share one bracket (a repo-wide branch-off-fix commit) with elevated after-side friction, but it's diffuse across all four after-sessions regardless of which skill each used, so not attributable to any one Skill's edit. dispatch-subagents and prune-trial's brackets turned out to be edits authored mid-run by their own \"after\" session (session_01XgPRjmaFGNN3L9UNTRxNSU), so there's no real before/after guidance comparison; read both edits' diffs (cosmetic prose shortening, no behavior change) and the after-session's frictions, which were about unrelated dispatch mechanics and an already-separately-tracked prune-trial step-0 branching issue. auto-triage's bracket has no post-edit invocation to compare against. All landed as inconclusive; nothing acted on. Step 5: both orphanedSessions entries already carry resolvedBy cutoffs (#736, #1063) — read-only history, not re-filed. orphanScan was scanned:true (690 merged PRs, 545 with a session), so the 2-orphan count is trustworthy. orphanSuppressionLog held only the two resolved-annotation entries above (no misfile-cleanup entries to check). humanPromptedClosures and manuallyRescuedClosures were both empty (healthy). misclassifiedKind flagged one session (session_016ahWmRcpKL7NJpcrtA8zPy, the blog-post routine run) as kind:interactive despite entrypoint:remote_trigger — informational only per spec, noted here for awareness, no issue filed. Since no Inventory YAML changed, no PR was opened (step 8 only fires on a diff)."
+prs: []
+docsRead:
+  - path: .claude/skills/audit-skills/SKILL.md
+    reason: this run's own procedure
+  - path: layers/journal/content/current/sessions/2026-09-05-session_01XgPRjmaFGNN3L9UNTRxNSU.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this run's own scheduled procedure
+  - name: close-session
+    reason: self-judged closure
+  - name: log-session
+    reason: this log
+frictions: []
+durationSec: 336
+models:
+  claude-sonnet-5: 52
+toolCounts:
+  Bash: 24
+  Read: 1
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-i1fawn
+entrypoint: remote_trigger
+cliVersion: 2.1.261
+trigger: audit-skills
+ideas:
+  - scripts/audit-skills.ts's regressionChecks bracketing can pick a Skill's most-recent-SKILL.md-edit commit that was itself authored mid-run by a large session, then place that same session in the edit's own 'after' bracket (seen this run for both dispatch-subagents' and prune-trial's brackets, both authored by session_01XgPRjmaFGNN3L9UNTRxNSU). That's not a real before/after guidance comparison — the session used its own not-yet-applied-elsewhere edit on itself. Consider excluding the authoring session from its own edit's after-bracket, or flagging such brackets explicitly in the script's output so Phase A doesn't need to re-derive the confound by hand each time.
+landedBy: Stop
