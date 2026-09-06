@@ -87,6 +87,7 @@ const state = (overrides: Partial<WorktreeState> = {}): WorktreeState => ({
   isPrimary: false,
   dirty: false,
   unpushedCount: 0,
+  headMergedToMain: false,
   ...overrides,
 })
 
@@ -102,14 +103,14 @@ describe('sweep()', () => {
   it('flags a linked worktree with uncommitted changes', () => {
     const { failures } = sweep([state({ dirty: true, unpushedCount: 0 })])
     expect(failures).toEqual([
-      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: true, unpushed: false },
+      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: true, unpushed: false, mergedToMain: false },
     ])
   })
 
   it('flags a linked worktree with unpushed commits', () => {
     const { failures } = sweep([state({ dirty: false, unpushedCount: 2 })])
     expect(failures).toEqual([
-      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: false, unpushed: true },
+      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: false, unpushed: true, mergedToMain: false },
     ])
   })
 
@@ -136,6 +137,19 @@ describe('sweep()', () => {
       state({ dirty: true, unpushedCount: 0 }),
     ])
     expect(findings).toHaveLength(2)
+    expect(failures).toHaveLength(1)
+  })
+
+  it('excludes a dirty and unpushed linked worktree from failures when its HEAD is already merged into origin/main (issue #1169)', () => {
+    const { findings, failures } = sweep([state({ dirty: true, unpushedCount: 2, headMergedToMain: true })])
+    expect(failures).toEqual([])
+    expect(findings).toEqual([
+      { path: '/repo/.claude/worktrees/agent-x', branch: 'claude/foo', isPrimary: false, uncommitted: true, unpushed: true, mergedToMain: true },
+    ])
+  })
+
+  it('still flags a dirty linked worktree whose HEAD is NOT merged into origin/main', () => {
+    const { failures } = sweep([state({ dirty: true, headMergedToMain: false })])
     expect(failures).toHaveLength(1)
   })
 })
