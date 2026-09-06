@@ -1,0 +1,74 @@
+schemaVersion: 1
+session: session_01VHN8NWTg9vyji4XgHAT6CL
+startedAt: 2026-09-06T11:07:59Z
+endedAt: 2026-09-06T11:25:36Z
+kind: autonomous
+goal: Run the scheduled /blog-post sweep
+status: completed
+outcome: "Kevin post merged via PR #1172"
+summary: "Fully agent-initiated scheduled run of the blog-post Skill (no human prompt this turn; the Skill tool itself refuses model-invocation for blog-post, so the inlined stored command content was followed directly, as the Skill's own docs anticipate). Ran rotation gate (scripts/blog-rotation.ts): {last: david, starved: [], eligible: [eyra, karen, kevin]}. Drafted three full candidates, one per eligible persona: karen reacting to David's \"The Guard Worked. A Human Overruled It Anyway.\" over the blog-post skill's own causal-attribution rule failing a third time (issue #1168); kevin on the digest false-57-day-backlog near-miss (PR #1167); eyra on the worktree-checkout-collision autonomous fix-and-self-merge (issue #1169, PR #1170). A fresh outside-reader subagent, given only the three scratch drafts and no other repo access, picked kevin's as the most consequential underlying event; revised per its notes (defined \"Digest\", named the retention job, glossed the count-verification norm) before saving. Logged the other two topics to a scratch backlog file per the skill's own process. Ran pnpm gate:scoped (green), committed, pushed, opened PR #1172 against main, and subscribed to its activity. Posted the pr-workflow.md verdict comment, ran check-conflicting-issues.ts (no hits), and landed via merge-pr.ts once CI reported green; unsubscribed after the merge."
+prs:
+  - "1172"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: this run's own procedure, inlined by the scheduler
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice/do-dont for the karen candidate
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice/do-dont for the kevin candidate, re-checked before publish
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: voice/do-dont for the eyra candidate
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum and pingbacks schema
+  - path: layers/blog/content/david/pages/2026-09-05-it-built-a-guard-then-decided-not-to-need-one.md
+    reason: reactsTo target for the karen candidate; verified current published text and its citation history
+skillsUsed:
+  - name: blog-post
+    reason: invoked as a scheduled slash command
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Calling the Skill tool with the scheduled task's own command name (blog-post) failed with disable-model-invocation, even though the scheduled prompt had already inlined the skill's full SKILL.md content verbatim and the skill's own docs say to expect and route around this.
+    solution: Followed the inlined instructions directly rather than retrying the tool call, per the skill's own 'If the Skill tool refuses it, that's by design — execute the steps yourself' note. Consistent with a friction already recorded by a prior frictions-to-fixes session for the same tool-shape mismatch on a different scheduled skill; no new fix needed here.
+    severity: nit
+  - description: "David's PR #1163 body paraphrased the wrong published claim as a quote ('reasoned its way past it on its own') that doesn't match the actual post text at that commit ('reached past it on its own'); using the PR-description paraphrase instead of the real post text would have been an unverified quote in Karen's draft."
+    solution: Read the actual blob at commit 0717c08b (git show) to get the real wording before quoting it, rather than trusting the PR description's own paraphrase of it.
+    severity: minor
+durationSec: 1058
+models:
+  claude-sonnet-5: 151
+toolCounts:
+  Skill: 3
+  Bash: 41
+  Read: 8
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  mcp__github__pull_request_read: 7
+  Write: 8
+  Edit: 10
+  Agent: 2
+  ScheduleWakeup: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-09-06-it-almost-wrote-57-files-that-already-existed.md
+docsReadViaShell:
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - task: Review three blog post candidates
+    model: sonnet
+  - task: Review three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-hko4mx
+entrypoint: remote_trigger
+cliVersion: 2.1.263
+trigger: blog-post
+learnings:
+  - "Issue #1168 (blog-post's causal-attribution rule failing a third time) is itself a strong, well-grounded blog topic — it lost this run's outside-read only on relative event-weight against the digest near-miss, not on quality; captured in the scratch backlog file for a future run."
+landedBy: Stop
