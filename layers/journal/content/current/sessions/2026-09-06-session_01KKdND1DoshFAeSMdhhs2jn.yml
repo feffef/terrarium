@@ -1,0 +1,75 @@
+schemaVersion: 1
+session: session_01KKdND1DoshFAeSMdhhs2jn
+startedAt: 2026-09-06T13:08:28Z
+endedAt: 2026-09-06T13:18:31Z
+kind: autonomous
+goal: Run the scheduled /prune-trial routine
+status: in-review
+outcome: One trial judged (held), one new prune shipped
+summary: "Fully agent-initiated scheduled run of /prune-trial, no human prompt beyond the schedule itself. Judged the 5 open prune trials via scripts/prune-trial-window.ts: only the close-session/log-session mechanism-detail trial (CS-01/LS-03, opened 2026-09-02) was past its judgeable-from floor. Checked frictions, Gate/CI failures, and issues filed since it landed — no damage found (the nearest candidate, issue #1169, is an unrelated worktree-checkout-collision mechanism) — so the prune holds and the entry was deleted. Picked a new prune via rulebook-migration-table.md's \"Built rows as prune candidates\" shortcut: CLAUDE.md's \"Open every GitHub body\" bullet (CM-43/CM-44) restated in prose detail that scripts/github-provenance-guard.ts and scripts/commit-trailer-guard.ts's own deny messages already carry near-verbatim, per ADR-0017's own 2026-08-01 amendment stating the guard message — not the doc — is the teaching surface. Compressed 19 lines to 7. Proved the compression on a Sonnet subagent given only the surviving text plus a realistic scenario; it correctly deferred to the guard's deny message rather than inventing a marker. Ran pnpm gate:scoped (full gate, since prune-trials.yml is non-inert) — green. Opened PR #1173, subscribed to its activity."
+prs:
+  - "1173"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the ledger of open trials to judge
+  - path: docs/research/rulebook-migration-table.md
+    reason: the Built-rows-as-prune-candidates shortcut and CM-43/CM-44 rows
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: confirming the guard-message-is-the-teaching-surface design intent
+  - path: docs/agents/guards.md
+    reason: checking for existing duplication before pruning
+  - path: scripts/github-provenance-guard.ts
+    reason: verifying the deny message already carries the detail being pruned from CLAUDE.md
+  - path: scripts/commit-trailer-guard.ts
+    reason: verifying the deny message already carries the detail being pruned from CLAUDE.md
+  - path: CLAUDE.md
+    reason: (read before editing)
+skillsUsed:
+  - name: prune-trial
+    reason: the whole run
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: scripts/prune-trial-window.ts is invoked as `tsx scripts/...` per the Skill's own text, but this environment has no global `tsx` binary — needed `pnpm exec tsx` instead. Same for session-frictions.ts.
+    solution: Either install tsx globally in the environment image, or update the prune-trial Skill (and any other doc instructing bare `tsx scripts/...`) to say `pnpm exec tsx scripts/...` consistently.
+    severity: nit
+durationSec: 603
+models:
+  claude-sonnet-5: 112
+toolCounts:
+  Bash: 27
+  Read: 5
+  ToolSearch: 3
+  mcp__github__list_issues: 1
+  mcp__github__issue_read: 2
+  mcp__github__search_issues: 1
+  Edit: 3
+  Grep: 9
+  Agent: 2
+  ScheduleWakeup: 1
+  ReadNotifications: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - CLAUDE.md
+docsReadViaShell:
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Probe pruned provenance-header instruction
+  - type: general-purpose
+    task: Probe pruned provenance-header instruction
+gitBranch: claude/practical-rubin-xaytq5
+entrypoint: remote_trigger
+cliVersion: 2.1.263
+trigger: prune-trial
+learnings:
+  - "rulebook-migration-table.md's own 'Prune-trial shortcut: Built rows as prune candidates' section is a reusable, low-risk way to pick the next trial's target without needing an open, still-unresolved regression issue."
+landedBy: Stop
