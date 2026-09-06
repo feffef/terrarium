@@ -1,0 +1,61 @@
+schemaVersion: 1
+session: session_012QH8iFU6GnXoHDnWvAj5oH
+startedAt: 2026-09-06T00:16:03Z
+endedAt: 2026-09-06T00:25:04Z
+kind: autonomous
+goal: Run the scheduled /digest sweep
+status: in-review
+outcome: "Found and fixed a false 57-day backlog bug, PR #1167 open"
+summary: "Ran the scheduled /digest Skill (no human prompt this turn). `digest.ts list` reported 57 undigested days going back to 2026-07-04, which looked like a huge missed backlog. Investigated against git history before writing 57 digests: every one of those days already had a Digest written and later archived by the retention sweep — `existingDigestDays()` in scripts/digest.ts only scanned the current/ directory, not archived/, so an archived day looked undigested again forever. Fixed the scanner to check both directories (moved the ARCHIVED_DIGESTS_DIR constant into digest.ts, re-exported from archive-journal-content.ts to keep its existing test import working), added a regression test, then confirmed only 2026-09-05 was genuinely missing and wrote that one Digest. Ran the retention sweep (1 digest, 10 sessions archived). Gate green; opened PR #1167 and subscribed to its activity. This PR carries a script fix outside pure digest-page content, so per the digest Skill's self-merge boundary it is left open for human review rather than self-merged on green CI."
+prs:
+  - "1167"
+docsRead:
+  - path: scripts/digest.ts
+    reason: (read before editing)
+  - path: scripts/archive-journal-content.ts
+    reason: (read before editing)
+  - path: tests/unit/archive-journal-content.spec.ts
+    reason: (no reason given)
+  - path: tests/unit/digest.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: scripts/digest.ts's existingDigestDays() only scanned the current/ digests directory, so once the retention sweep moved a day's Digest to archived/ it looked undigested again — `list` would re-offer every already-archived day forever, compounding with each sweep.
+    solution: "Fixed in this session's PR #1167: scan both current/ and archived/ digest directories, with the archived-dir constant single-homed in digest.ts. Added a regression test covering the archived case."
+    severity: moderate
+  - description: Nearly proceeded to author 57 digest files for days that were already digested and archived, before checking git history to confirm the list command's output against a primary source.
+    solution: "Caught by following CLAUDE.md's verification rule: grepped git log for each flagged date's digest-file creation commit before trusting the tool's output, which surfaced the bug instead of duplicating content."
+    severity: nit
+durationSec: 541
+models:
+  claude-sonnet-5: 98
+toolCounts:
+  Skill: 3
+  Bash: 28
+  Read: 7
+  Edit: 7
+  Write: 2
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__get_file_contents: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  PushNotification: 1
+filesEdited:
+  - scripts/digest.ts
+  - scripts/archive-journal-content.ts
+  - tests/unit/digest.spec.ts
+  - layers/journal/content/current/pages/digests/2026-09-05.md
+gitBranch: claude/compassionate-lovelace-qonep3
+entrypoint: remote_trigger
+cliVersion: 2.1.261
+trigger: digest
+learnings:
+  - A Journal retention sweep that moves content between Spaces (current → archived) can silently break any script whose "does X exist" check only looks in one of the two locations — worth checking other current/archived dual-path logic for the same class of bug.
+landedBy: Stop
