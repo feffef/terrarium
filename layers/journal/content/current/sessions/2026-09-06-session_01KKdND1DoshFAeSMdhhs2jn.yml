@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01KKdND1DoshFAeSMdhhs2jn
 startedAt: 2026-09-06T13:08:28Z
-endedAt: 2026-09-06T13:18:31Z
+endedAt: 2026-09-06T13:22:57Z
 kind: autonomous
 goal: Run the scheduled /prune-trial routine
-status: in-review
-outcome: One trial judged (held), one new prune shipped
-summary: "Fully agent-initiated scheduled run of /prune-trial, no human prompt beyond the schedule itself. Judged the 5 open prune trials via scripts/prune-trial-window.ts: only the close-session/log-session mechanism-detail trial (CS-01/LS-03, opened 2026-09-02) was past its judgeable-from floor. Checked frictions, Gate/CI failures, and issues filed since it landed — no damage found (the nearest candidate, issue #1169, is an unrelated worktree-checkout-collision mechanism) — so the prune holds and the entry was deleted. Picked a new prune via rulebook-migration-table.md's \"Built rows as prune candidates\" shortcut: CLAUDE.md's \"Open every GitHub body\" bullet (CM-43/CM-44) restated in prose detail that scripts/github-provenance-guard.ts and scripts/commit-trailer-guard.ts's own deny messages already carry near-verbatim, per ADR-0017's own 2026-08-01 amendment stating the guard message — not the doc — is the teaching surface. Compressed 19 lines to 7. Proved the compression on a Sonnet subagent given only the surviving text plus a realistic scenario; it correctly deferred to the guard's deny message rather than inventing a marker. Ran pnpm gate:scoped (full gate, since prune-trials.yml is non-inert) — green. Opened PR #1173, subscribed to its activity."
+status: completed
+outcome: One trial judged (held), one new prune shipped and merged
+summary: "Fully agent-initiated scheduled run of /prune-trial, no human prompt beyond the schedule itself. Judged the 5 open prune trials via scripts/prune-trial-window.ts: only the close-session/log-session mechanism-detail trial (CS-01/LS-03, opened 2026-09-02) was past its judgeable-from floor. Checked frictions, Gate/CI failures, and issues filed since it landed — no damage found (the nearest candidate, issue #1169, is an unrelated worktree-checkout-collision mechanism) — so the prune holds and the entry was deleted. Picked a new prune via rulebook-migration-table.md's \"Built rows as prune candidates\" shortcut: CLAUDE.md's \"Open every GitHub body\" bullet (CM-43/CM-44) restated in prose detail that scripts/github-provenance-guard.ts and scripts/commit-trailer-guard.ts's own deny messages already carry near-verbatim, per ADR-0017's own 2026-08-01 amendment stating the guard message — not the doc — is the teaching surface. Compressed 19 lines to 7. Proved the compression on a Sonnet subagent given only the surviving text plus a realistic scenario; it correctly deferred to the guard's deny message rather than inventing a marker. Ran pnpm gate:scoped (full gate, since prune-trials.yml is non-inert) — green. Opened PR #1173, subscribed to its activity, babysat it through a green safety-gate check, posted the required verdict comment (prune-trial merges on green gate alone per pr-workflow.md), merged via merge-pr.ts, and unsubscribed."
 prs:
   - "1173"
 docsRead:
@@ -22,6 +22,8 @@ docsRead:
     reason: verifying the deny message already carries the detail being pruned from CLAUDE.md
   - path: scripts/commit-trailer-guard.ts
     reason: verifying the deny message already carries the detail being pruned from CLAUDE.md
+  - path: docs/agents/pr-workflow.md
+    reason: the land-a-gated-PR recipe and prune-trial's merge-on-green-gate-alone tier
   - path: CLAUDE.md
     reason: (read before editing)
 skillsUsed:
@@ -35,13 +37,16 @@ frictions:
   - description: scripts/prune-trial-window.ts is invoked as `tsx scripts/...` per the Skill's own text, but this environment has no global `tsx` binary — needed `pnpm exec tsx` instead. Same for session-frictions.ts.
     solution: Either install tsx globally in the environment image, or update the prune-trial Skill (and any other doc instructing bare `tsx scripts/...`) to say `pnpm exec tsx scripts/...` consistently.
     severity: nit
-durationSec: 603
+  - description: "No mcp__Claude_Code_Remote__send_later tool was available in this session's toolset, and ScheduleWakeup is guard-blocked outside /loop — so the only way to babysit PR #1173's CI was to end the turn and rely entirely on subscribe_pr_activity's webhook delivery, with no self-scheduled fallback check-in if a webhook silently failed to fire."
+    solution: It happened to work this run (the safety-gate green comment arrived promptly), but pr-workflow.md's own guidance to schedule send_later check-ins assumes a tool that wasn't present here — worth confirming whether that tool is meant to be available to scheduled /prune-trial runs specifically.
+    severity: minor
+durationSec: 869
 models:
-  claude-sonnet-5: 112
+  claude-sonnet-5: 149
 toolCounts:
-  Bash: 27
-  Read: 5
-  ToolSearch: 3
+  Bash: 32
+  Read: 6
+  ToolSearch: 8
   mcp__github__list_issues: 1
   mcp__github__issue_read: 2
   mcp__github__search_issues: 1
@@ -49,18 +54,22 @@ toolCounts:
   Grep: 9
   Agent: 2
   ScheduleWakeup: 1
-  ReadNotifications: 1
+  ReadNotifications: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
+  Write: 2
+  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_review_write: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - CLAUDE.md
 docsReadViaShell:
   - docs/research/rulebook-migration-table.md
   - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/pr-workflow.md
 subagents:
   - type: general-purpose
     task: Probe pruned provenance-header instruction
