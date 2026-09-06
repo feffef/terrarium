@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01VW1JfmfYGiy35goMGKNE8v
 startedAt: 2026-09-06T04:08:13Z
-endedAt: 2026-09-06T04:22:51Z
+endedAt: 2026-09-06T04:26:54Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: 3 fact-checked drift/contradiction/mis-location fixes, PR open
-summary: "Fully autonomous scheduled /audit-docs run, no human prompt at any point. Fanned out the four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the whole repo; pooled 3 candidate findings (one each from Freshness/Drift, Coherence/Contradiction, Single-home/Mis-location — Concision found nothing, a plausible outcome given this repo's own dense-prose norm); no overlaps to dedupe. An independent fact-checker agent re-derived all three against primary sources (actual file contents, git history, .claude/settings.json) and CONFIRMED all three. Fixed docs/research/rulebook-migration-table.md's four stale scripts/session-end.ts mentions (merged into log-session.ts by #865) and its CM-38 row/narrative, which still described the now-built scripts/tail-pipe-guard.ts (#873) as an open proposal; and added history.md to audit-docs/SKILL.md's own Live-tier enumeration of the journal's facing pages, which had genuinely omitted it (no other part of the skill's procedure caught the gap). pnpm gate:scoped ran green (floor only, both changed paths inert). Opened PR #1171 against main, subscribed to its activity, and closed per the skill's PR-open discipline. All work is agent-initiated per the schedule; no human steered any part of this run."
+status: completed
+outcome: 3 fact-checked drift/contradiction/mis-location fixes, PR merged
+summary: "Fully autonomous scheduled /audit-docs run, no human prompt at any point. Fanned out the four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the whole repo; pooled 3 candidate findings (one each from Freshness/Drift, Coherence/Contradiction, Single-home/Mis-location — Concision found nothing, a plausible outcome given this repo's own dense-prose norm); no overlaps to dedupe. An independent fact-checker agent re-derived all three against primary sources (actual file contents, git history, .claude/settings.json) and CONFIRMED all three. Fixed docs/research/rulebook-migration-table.md's four stale scripts/session-end.ts mentions (merged into log-session.ts by #865) and its CM-38 row/narrative, which still described the now-built scripts/tail-pipe-guard.ts (#873) as an open proposal; and added history.md to audit-docs/SKILL.md's own Live-tier enumeration of the journal's facing pages, which had genuinely omitted it (no other part of the skill's procedure caught the gap). pnpm gate:scoped ran green (floor only, both changed paths inert). Opened PR #1171 against main, subscribed to its activity, posted the pr-workflow.md verdict comment, and self-merged it via merge-pr.ts once the safety gate reported green (audit-docs is a merge-on-green-gate tier per docs/agents/pr-workflow.md). All work is agent-initiated per the schedule; no human steered any part of this run."
 prs:
   - "1171"
 docsRead:
@@ -18,9 +18,9 @@ docsRead:
     reason: (read before editing)
   - path: .agents/skills/audit-docs/SKILL.md
     reason: (read before editing)
-  - path: CLAUDE.md
-    reason: (no reason given)
   - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: CLAUDE.md
     reason: (no reason given)
   - path: CONTEXT.md
     reason: (no reason given)
@@ -186,25 +186,30 @@ skillsUsed:
   - name: audit-docs
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 878
+durationSec: 1121
 models:
-  claude-sonnet-5: 125
+  claude-sonnet-5: 164
 toolCounts:
-  Bash: 17
-  ToolSearch: 3
+  Bash: 21
+  ToolSearch: 5
   mcp__github__list_pull_requests: 1
-  Read: 8
+  Read: 11
   TaskCreate: 6
-  TaskUpdate: 11
+  TaskUpdate: 12
   Agent: 6
   ScheduleWakeup: 1
-  ReadNotifications: 1
-  Edit: 9
+  ReadNotifications: 3
+  Edit: 11
   Grep: 4
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/research/rulebook-migration-table.md
   - .agents/skills/audit-docs/SKILL.md
