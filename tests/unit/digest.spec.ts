@@ -1,11 +1,17 @@
 // Unit tests for the digest helper's pure core (ADR-0010) — the UTC-boundary,
 // day-attribution, PR-parsing and rollup logic where correctness bugs would hide.
 // The git/FS IO is a thin shell over these and is exercised by running the Skill.
-import { describe, expect, it } from 'vitest'
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { afterEach, describe, expect, it } from 'vitest'
 import {
+  ARCHIVED_DIGESTS_DIR,
   buildDayMaterials,
   closedUndigestedDays,
   dayIsClosed,
+  DIGESTS_DIR,
+  existingDigestDays,
   prFromCommit,
   utcDay,
   type Commit,
@@ -110,5 +116,21 @@ describe('closedUndigestedDays()', () => {
   })
   it('is empty when nothing is both closed and undigested', () => {
     expect(closedUndigestedDays(['2026-07-06'], new Set(), now)).toEqual([])
+  })
+})
+
+describe('existingDigestDays()', () => {
+  let dir: string
+  afterEach(() => rmSync(dir, { recursive: true, force: true }))
+
+  it('counts an archived digest as existing, not just a current one', () => {
+    dir = mkdtempSync(join(tmpdir(), 'digest-test-'))
+    mkdirSync(join(dir, DIGESTS_DIR), { recursive: true })
+    mkdirSync(join(dir, ARCHIVED_DIGESTS_DIR), { recursive: true })
+    writeFileSync(join(dir, DIGESTS_DIR, '2026-08-30.md'), '# current\n')
+    writeFileSync(join(dir, ARCHIVED_DIGESTS_DIR, '2026-07-15.md'), '# archived\n')
+    // A day whose Digest has already been swept to `archived` must not look
+    // undigested again — it fell off the `current`-only scan before this fix.
+    expect(existingDigestDays(dir)).toEqual(new Set(['2026-08-30', '2026-07-15']))
   })
 })

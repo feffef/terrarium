@@ -29,13 +29,11 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
 import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from './audit-skills.ts'
-import { DIGESTS_DIR } from './digest.ts'
+import { ARCHIVED_DIGESTS_DIR, DIGESTS_DIR } from './digest.ts'
+
+export { ARCHIVED_DIGESTS_DIR }
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-
-/** The other half of `DIGESTS_DIR` (digest.ts only names the `current` side —
- *  it never reads archived content, so it had no reason to define this). */
-export const ARCHIVED_DIGESTS_DIR = 'layers/journal/content/archived/pages/digests'
 
 /** How many dates' worth of each kind stay on `current` after a sweep — 7
  *  Digests, and every session log belonging to the newest 7 session dates. */
