@@ -34,7 +34,7 @@ Classify every surface **before** editing. This decides everything.
   `layers/<tenant>/CONTEXT.md`, our
   own Skills' `SKILL.md` + sibling files (`external: false`), and the **current
   journal's facing pages** —
-  `layers/journal/content/current/pages/{architecture,how-it-works,index}.md`, the
+  `layers/journal/content/current/pages/{architecture,history,how-it-works,index}.md`, the
   descriptive front a reader lands on. **Fix these.** (Audit their *source* `.md`;
   no rendering. `index.md` is only partially rendered by the dashboard, so a
   finding on its body may not surface at `/t/journal/current` — that's fine, the
@@ -208,7 +208,7 @@ Glob every `*.md` outside `node_modules`, plus each `.agents/skills/*/`. Sort ev
 surface into the three tiers above; a Skill's tier comes from whether it's keyed in
 `skills-lock.json` (Pack-generic if so, per ADR-0015 — `scripts/audit-skills.ts`
 derives the same `external` boolean from that membership check at runtime; no file
-stores a literal `external` field). The current journal's three facing
+stores a literal `external` field). The current journal's four facing
 pages are **Live**; its `pages/digests/*.md` are **Historical** (see the tiers
 above). Done when every surface is tiered.
 
