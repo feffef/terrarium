@@ -24,6 +24,10 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 /** The Journal paths this helper reads. Digests are pages under a subfolder (ADR-0010). */
 export const DIGESTS_DIR = 'layers/journal/content/current/pages/digests'
 export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
+/** Where the retention sweep (`archive-journal-content.ts`) moves aged-out Digests.
+ *  `existingDigestDays` must check here too — otherwise an archived day looks
+ *  undigested again and `list` re-offers it forever (issue found live, 2026-09-06). */
+export const ARCHIVED_DIGESTS_DIR = 'layers/journal/content/archived/pages/digests'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -206,14 +210,18 @@ function readSessions(cwd = root): { endedAt: Date; material: SessionMaterial }[
   return out
 }
 
-function existingDigestDays(cwd = root): Set<string> {
-  const dir = join(cwd, DIGESTS_DIR)
-  if (!existsSync(dir)) return new Set()
-  return new Set(
-    readdirSync(dir)
-      .filter((f) => /^\d{4}-\d{2}-\d{2}\.md$/.test(f))
-      .map((f) => f.slice(0, 10)),
-  )
+function digestDaysIn(dir: string): string[] {
+  if (!existsSync(dir)) return []
+  return readdirSync(dir)
+    .filter((f) => /^\d{4}-\d{2}-\d{2}\.md$/.test(f))
+    .map((f) => f.slice(0, 10))
+}
+
+export function existingDigestDays(cwd = root): Set<string> {
+  return new Set([
+    ...digestDaysIn(join(cwd, DIGESTS_DIR)),
+    ...digestDaysIn(join(cwd, ARCHIVED_DIGESTS_DIR)),
+  ])
 }
 
 // ── Commands ──────────────────────────────────────────────────────────────────
