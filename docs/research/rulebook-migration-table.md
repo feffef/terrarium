@@ -80,7 +80,7 @@ repo:
 - **Post-hoc detection** — a check that **reports an already-committed
   violation**, typically at teardown. Cheap and false-positive-tolerant, but the
   damage is done; it can only inform a later fix. `scripts/session-id-guard.ts`
-  is this shape (imported by `scripts/session-end.ts`, deliberately non-fatal), as
+  is this shape (imported by `scripts/log-session.ts`, deliberately non-fatal), as
   are `audit-skills`' `orphanedSessions` / `humanPromptedClosures` signals.
 
 Collapsing these would destroy the distinction the table exists to draw: several
@@ -135,14 +135,14 @@ mistake — that grep is a heuristic and its total is deliberately not stated he
 The ticket asks specifically that each of these map to a named row and a named
 mechanism. **#835** is built, **#772** is superseded by a shipped `SessionStart`
 unshallow hook, **#666** is resolved by deleting the instruction that caused it,
-and **#873**'s row is still written here as a proposal.
+and **#873** is built as `scripts/tail-pipe-guard.ts`.
 
 | Issue | Rule row | Proposed mechanism | Why prose failed |
 | --- | --- | --- | --- |
 | **#835** — `run_in_background: false` confusion recurred | `CM-36` | **Built** — `scripts/agent-background-flag-guard.ts`, a fail-closed refusal. `PreToolUse` on `Agent`: the tool ignores `run_in_background: false`, so deny the call carrying it and say so — the parameter is a no-op that reads as a guarantee. | #810's fix reached only one of the two docs that state it; the affected sessions read neither. |
 | **#772** — shallow-clone check-first rule not holding (3rd attempt) | `GC-03` | **Fail-closed refusal.** `PreToolUse` on `Bash`: deny `git log -S`, `git blame`, and `git merge-base` when `git rev-parse --is-shallow-repository` is `true`, naming `--unshallow`. `scripts/gate.ts` already does exactly this check in code (`changedPaths()` unshallows; `changedPathsBetween()` refuses) — the guard generalizes a pattern the repo has already proven. **Superseded: shipped instead as a `SessionStart` unshallow hook — see `GC-03`.** | Three narrowing prose attempts; the rule fires at a moment (starting archaeology) that has no natural doc-reading trigger. |
 | **#666** — caller-pinned branch missed after #625's checklist fix | `CM-20`, `CM-21` | **Dropped, not mechanized** (PR #1159). No guard: the harness already checks the pinned branch out, so a session that is simply left alone keeps it. Sessions left it because our own text told them to branch off `origin/main`; deleting that instruction removes the cause the guard would have policed. | The pin lives in a different part of context from `CLAUDE.md`, so its absence from the doc isn't evidence no pin exists — and the checklist is read after the mistake. |
-| **#873** — tail/head exit-status piping (3rd recurrence, after #384 and #812) | `CM-38` | **Fail-closed refusal.** `PreToolUse` on `Bash`: deny a command that pipes into a trailing `tail`/`head`/`echo` **when `run_in_background: true`** or the piped command is a known long-runner (`pnpm gate*`, `pnpm test*`, `pnpm build`). Scoping to the backgrounded/long-running case is what keeps the false-positive rate near zero — an ordinary `ls \| head` is untouched. | Two prose fixes in two different homes; the trap is invisible at authoring time because the pipeline *succeeds*. |
+| **#873** — tail/head exit-status piping (3rd recurrence, after #384 and #812) | `CM-38` | **Built** — `scripts/tail-pipe-guard.ts`, a fail-closed refusal. `PreToolUse` on `Bash`: deny a command that pipes into a trailing `tail`/`head`/`echo` **when `run_in_background: true`** or the piped command is a known long-runner (`pnpm gate*`, `pnpm test*`, `pnpm build`). Scoping to the backgrounded/long-running case is what keeps the false-positive rate near zero — an ordinary `ls \| head` is untouched. | Two prose fixes in two different homes; the trap is invisible at authoring time because the pipeline *succeeds*. |
 
 All four are the same shape: **a point-in-time behavioural rule whose violation is
 detectable from the tool call itself**. That is bucket 1's definition, and the
@@ -170,12 +170,12 @@ Plus, outside `PreToolUse`:
 | Mechanism | Shape | Rule |
 | --- | --- | --- |
 | `.githooks/commit-msg` → `scripts/provenance-footer.ts` | Auto-correction (fails open) | ADR-0017 commit trailer is appended/corrected repo-side |
-| `scripts/session-id-guard.ts` (via `scripts/session-end.ts`) | **Post-hoc detection**, non-fatal | A committed trailer names the wrong session |
+| `scripts/session-id-guard.ts` (via `scripts/log-session.ts`) | **Post-hoc detection**, non-fatal | A committed trailer names the wrong session |
 | `pnpm verify:skills-lock` (in `pnpm gate`) | Gate check | Never edit an external-pack Skill's `SKILL.md` (ADR-0015) |
 | `scripts/validate-skill-cadence.ts` (in `validate:content`) | Gate check | Never restate a Routine's schedule in a committed doc |
 | `scripts/validate-content.ts` / `-refs.ts` | Gate check | Per-Document schema + cross-Document referential integrity |
 | `scripts/check-worktrees.ts` (`pnpm check:worktrees`) | Post-hoc detection | No dispatched work left stranded |
-| Stop / SessionEnd hooks → `scripts/session-end.ts` | Workflow stage | The session log lands (ADR-0009) |
+| Stop / SessionEnd hooks → `scripts/log-session.ts` | Workflow stage | The session log lands (ADR-0009) |
 | `audit-skills`' `orphanedSessions` / `humanPromptedClosures` / `manuallyRescuedClosures` | Post-hoc detection | Sessions actually self-close and log |
 
 **Two of these are gate checks enforcing a documentation/metadata invariant** —
@@ -231,7 +231,7 @@ blank.
 | CM-35 | Run any process-killing teardown as its own command, never `&&`/`;`-chained | Working conventions | H (refusal) | #102, #183, #240 | Same guard as CM-34 — one script, two conditions | S |
 | CM-36 | Never append a trailing `&` to a Bash command already passed `run_in_background: true` | Working conventions | H (refusal) | **#835 open**, #810 | `PreToolUse` on `Bash`: deny when `run_in_background` is true and the command ends in `&`. See §3 | S |
 | CM-37 | A dispatched subagent must never background a Bash command | Working conventions | H (refusal) | #694 (open), #602, #712 | **Built** — `scripts/subagent-background-guard.sh` | 0 |
-| CM-38 | Never pipe a backgrounded/long-running command through a trailing command when exit status or full output matters | Working conventions | H (refusal) | **#873 open**, #384, #812 | See §3 — scope the deny to backgrounded or known-long-running commands | S |
+| CM-38 | Never pipe a backgrounded/long-running command through a trailing command when exit status or full output matters | Working conventions | H (refusal) | #873, #384, #812 | **Built** — `scripts/tail-pipe-guard.ts`, scoped to the backgrounded or known-long-running case | 0 |
 | CM-39 | Keep a PR's description in sync with its content | Working conventions | J | none | Requires judging whether the diff still matches the prose | — |
 | CM-40 | Pushing is not landing — babysit the PR to merged/abandoned, and subscribe on open without asking | Working conventions | W | none | A `close-session` stage: on PR-open, call `subscribe_pr_activity` and schedule the check-in cadence | S |
 | CM-41 | Invoke `close-session` at PR-open — the first session log | Working conventions | W | #483, #397, #411 | Partially detected post-hoc by `audit-skills`' closure-nudge signals. The refusal shape doesn't exist (there is no "session is ending" tool call to deny) | M |
@@ -414,7 +414,7 @@ each rule that carries independent normative force beyond its step ordering.
 | DS-11 | Resume a stopped subagent with `SendMessage`, never a fresh `Agent` call | §6 | H (refusal) | none | `PreToolUse` on `Agent`: warn when the new call's prompt closely matches a stopped agent's. Fuzzy — **J** is defensible | M |
 | LS-01 | Never author the derived half of a session log | log-session §1 | G | none | **Built** — `log-session.ts --author` validates the interpretive subset and rejects derived fields | 0 |
 | LS-02 | Quote any scalar containing `[`, `{`, `#`, or `,` | log-session §1 | G | #354 | **Built** — the `--author` step rejects an unquoted-`#` truncation loudly | 0 |
-| LS-03 | Recover the session id from your own system-prompt instructions, never `git log` or `CLAUDE_CODE_SESSION_ID` | log-session | G | #99, #387, #449 | **Built** — `session-end.ts` resolves ground truth itself and overrides the typed value | 0 |
+| LS-03 | Recover the session id from your own system-prompt instructions, never `git log` or `CLAUDE_CODE_SESSION_ID` | log-session | G | #99, #387, #449 | **Built** — `log-session.ts` resolves ground truth itself and overrides the typed value | 0 |
 | LS-04 | `summary` must state which work was human-instructed vs agent-initiated | log-session §1 | J | none | Content judgement; ADR-0003's audit trail depends on it | — |
 | LS-05 | Be honest, especially about friction — a flattering log is worse than none | log-session | J | none | The irreducible one. Everything the self-improvement loop mines rests on it | — |
 | CS-01 | A dispatched worktree-isolated impl agent must not self-invoke `close-session`/`log-session` | close-session | H (refusal) | #449 | **Built** — `log-session.ts --author` refuses from inside a linked worktree unless `--allow-worktree` | 0 |
