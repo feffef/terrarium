@@ -1,0 +1,93 @@
+schemaVersion: 1
+session: session_01NcTnaJGp2L4Jgnn8x68sYn
+startedAt: 2026-09-06T02:04:48Z
+endedAt: 2026-09-06T02:31:42Z
+kind: autonomous
+goal: Run the frictions-to-fixes sweep
+status: completed
+outcome: "1 fix merged (PR #1170), 1 regression escalated (#1168)"
+summary: "Fired entirely by a scheduled Routine running the /frictions-to-fixes command — no live human input during the run. Dispatched a survey subagent over the latest 20 session logs, which found one major regression (a blog-post causal-attribution rule failing a third time, ~9h after its second reinforcement merged) and one never-fixed moderate friction (review subagents colliding on an already-checked-out PR branch, polluting the wrong worktree). Verified the regression directly against primary sources (the session log, PRs #1163/#1164/#1165, issues #715/#1137, PR #1140, PR #1159's review thread) before filing issue #1168 recommending a human decide between a mechanical gate and a fourth prose tweak, and pushed a PushNotification alerting the user — the human design-call PR-workflow rule requires proactive escalation for regressions rather than a routine dispatch. Filed issue #1169 for the worktree-collision friction, dispatched a Sonnet impl agent (isolation: worktree) which implemented the fix (detached-HEAD guidance in dispatch-subagents/SKILL.md + a headMergedToMain exception in check-worktrees.ts's sweep()) and opened PR #1170. Reviewed the diff against the issue, ran check-conflicting-issues.ts, posted a COMMENT-event review verdict, then merged via merge-pr.ts (green gate) as the reviewer-agent tier. A separately-open PR #1167 (unrelated digest.ts fix) was left untouched since its own body explicitly asks for human review, not agent review. All actions (issue filing, dispatch, review, merge, notification) were agent-initiated under this run's standing ADR-0003 autonomy — no human was reachable to green-light any individual step, consistent with a scheduled autonomous run."
+prs:
+  - "1170"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: the land-a-gated-PR recipe (steps 1-6, per-tier merge authority)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: checked existing worktree bullets before writing the fix's brief and reviewing the diff for restatement
+  - path: layers/journal/content/current/sessions/2026-09-05-session_016ahWmRcpKL7NJpcrtA8zPy.yml
+    reason: (no reason given)
+  - path: scripts/check-worktrees.ts
+    reason: (read before editing)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: tests/unit/commit-trailer-guard.spec.ts
+    reason: (no reason given)
+  - path: scripts/merge-pr.ts
+    reason: (no reason given)
+  - path: scripts/shell-reads.ts
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: tests/unit/check-worktrees.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Calling the Skill tool with the scheduled task's own command name (frictions-to-fixes) failed with disable-model-invocation, even though the scheduled prompt had already inlined the skill's full SKILL.md content verbatim.
+    solution: For a scheduled trigger whose prompt already inlines a disable-model-invocation skill's content, skip the Skill tool call and follow the inlined instructions directly rather than attempting (and eating an error from) the tool call first.
+    severity: minor
+  - description: session-frictions.ts's compressed triage extract omits docsRead and subagents, so the survey subagent had to re-open each full session .yml by path (a separate Read) every time it needed to check whether a doc was actually opened before drafting.
+    solution: Add docsRead and subagents (or a derived boolean) to session-frictions.ts's per-record output so this check doesn't cost a second file read per candidate.
+    severity: minor
+  - description: About a third of this 20-session survey window's frictions were already resolved by an immediately-following session or PR inside the same window, including one caused by the previous frictions-to-fixes run itself — a window containing its own prior frictions-to-fixes run produces heavy self-resolution and a thin actionable tail.
+    solution: Consider excluding sessions before the last frictions-to-fixes run's own startedAt from the survey window (or shrinking the window when a prior run is found inside it), so the budget goes to genuinely unscreened frictions instead of re-confirming already-fixed ones.
+    severity: minor
+durationSec: 1613
+models:
+  claude-sonnet-5: 80
+toolCounts:
+  Skill: 3
+  Agent: 2
+  ToolSearch: 3
+  mcp__github__pull_request_read: 9
+  mcp__github__issue_read: 2
+  mcp__github__search_issues: 2
+  Bash: 10
+  Read: 3
+  mcp__github__issue_write: 2
+  PushNotification: 1
+  Grep: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - scripts/check-worktrees.ts
+  - tests/unit/check-worktrees.spec.ts
+docsReadViaShell:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/triage/SKILL.md
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/github-integration.md
+  - .agents/skills/blog-post/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix review-subagent worktree checkout collision
+    model: sonnet
+gitBranch: claude/eager-ptolemy-0yo8wu
+entrypoint: remote_trigger
+cliVersion: 2.1.261
+trigger: frictions-to-fixes
+landedBy: Stop
