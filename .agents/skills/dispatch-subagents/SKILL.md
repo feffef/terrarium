@@ -60,6 +60,12 @@ The subagent cannot see this session's context, so the brief is self-contained:
   hitting multiple parallel subagents in the same session. Don't assume the fresh
   worktree is on top of it: check that the worktree branch's HEAD matches
   `origin/<default-branch>`, and rebranch explicitly if it doesn't.
+- **A review subagent checking out a PR whose branch might already be checked
+  out elsewhere (e.g. the implementer's own mechanism-2 worktree for that same
+  PR) must check out the PR's commit SHA in detached HEAD, not the branch
+  name.** Git refuses a second branch checkout across worktrees; the observed
+  failure mode is the subagent falling back to committing in whichever
+  checkout it *can* write to instead of failing loudly (issue #1169).
 - **Commit + push before stopping, even mid-gate.** A subagent can end its turn —
   or die to an external "session limit" abort — leaving finished work **stranded**:
   uncommitted, and invisible to the orchestrator.
