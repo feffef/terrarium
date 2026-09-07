@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CzpMbQYLdRpNsDosbz66p7
 startedAt: 2026-09-07T04:09:14Z
-endedAt: 2026-09-07T04:19:53Z
+endedAt: 2026-09-07T04:23:30Z
 kind: autonomous
 goal: Run scheduled /audit-docs sweep
-status: in-review
-outcome: "Opened PR #1187 fixing one confirmed Drift finding"
-summary: "Scheduled, unattended run of the /audit-docs Skill (no human prompt this turn beyond the schedule firing it). Fanned out four paired-lens reviewer agents in parallel (Freshness: Drift+Orphan-addition; Single-home: Duplication+Mis-location; Concision: Verbose+Stale-narration; Coherence: Contradiction+Ambiguity). Only one finding survived dedup and fact-check: docs/research/github-branch-protection-vs-autonomous-log-commits.md still named the deleted scripts/session-end.ts (merged into scripts/log-session.ts by #865) in five places, missed by an earlier sweep (c1a334d) that fixed the same stale name elsewhere. Fact-checked directly against the current scripts/log-session.ts and the filesystem (confirmed session-end.ts absent) before fixing all five references. Ran pnpm gate:scoped (green, floor-only since the change was inert), committed, pushed, and opened gated PR #1187 with the ADR-0017 provenance header — had to retry once after the github-provenance-guard rejected the header's first shape/position. Subscribed to PR activity to babysit it to merge. No human-only surface touched; no needs-triage issue filed, since no unresolvable factual conflict came up. The other three lenses and the Orphan-addition half of Freshness reported zero findings, consistent with this repo's recent prune-trial/audit-docs activity already having addressed obvious drift, duplication, and verbosity."
+status: completed
+outcome: "Merged PR #1187 fixing one confirmed Drift finding"
+summary: "Scheduled, unattended run of the /audit-docs Skill (no human prompt this turn beyond the schedule firing it). Fanned out four paired-lens reviewer agents in parallel (Freshness: Drift+Orphan-addition; Single-home: Duplication+Mis-location; Concision: Verbose+Stale-narration; Coherence: Contradiction+Ambiguity). Only one finding survived dedup and fact-check: docs/research/github-branch-protection-vs-autonomous-log-commits.md still named the deleted scripts/session-end.ts (merged into scripts/log-session.ts by #865) in five places, missed by an earlier sweep (c1a334d) that fixed the same stale name elsewhere. Fact-checked directly against the current scripts/log-session.ts and the filesystem (confirmed session-end.ts absent) before fixing all five references. Ran pnpm gate:scoped (green, floor-only since the change was inert), committed, pushed, and opened gated PR #1187 with the ADR-0017 provenance header (retried once after the github-provenance-guard rejected the header's first shape/position). Subscribed to PR activity and scheduled a 60-minute check-in, but a webhook event reported the gate green a few minutes later, so followed docs/agents/pr-workflow.md's recipe immediately: verified check runs (label+gate both success), mergeable_state clean, check-conflicting-issues.ts clean, posted a COMMENT-event verdict review, then merged via scripts/merge-pr.ts (merge commit d863aea3). Cancelled the standby check-in and unsubscribed once merged. No human-only surface touched; no needs-triage issue filed, since no unresolvable factual conflict came up. The other three lenses and the Orphan-addition half of Freshness reported zero findings, consistent with this repo's recent prune-trial/audit-docs activity already having addressed obvious drift, duplication, and verbosity."
 prs:
   - "1187"
 docsRead:
@@ -14,6 +14,8 @@ docsRead:
     reason: avoid re-flagging deliberately-compressed CLAUDE.md territory
   - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
     reason: the one confirmed Drift finding
+  - path: docs/agents/pr-workflow.md
+    reason: the merge recipe and per-tier merge authority
   - path: CLAUDE.md
     reason: (no reason given)
   - path: docs/agents/environment-caveats.md
@@ -29,8 +31,6 @@ docsRead:
   - path: docs/agents/issue-tracker.md
     reason: (no reason given)
   - path: docs/agents/mdc-when-to-use.md
-    reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: docs/agents/tenant-layers.md
     reason: (no reason given)
@@ -136,28 +136,33 @@ skillsUsed:
   - name: close-session
     reason: closure at PR-open
   - name: log-session
-    reason: (no reason given)
+    reason: finalized status to completed after merge
 frictions:
   - description: First mcp__github__create_pull_request call was rejected by the ADR-0017 provenance guard for using the wrong header shape/position, even though the session id was correct
     solution: Guard's deny message named the exact required shape (🤖 [name](url) as the body's first paragraph); retried once with that shape and it passed
     severity: nit
-durationSec: 640
+durationSec: 857
 models:
-  claude-sonnet-5: 83
+  claude-sonnet-5: 113
 toolCounts:
-  Bash: 17
-  ToolSearch: 2
-  Read: 4
+  Bash: 20
+  ToolSearch: 4
+  Read: 5
   mcp__github__search_pull_requests: 1
-  Skill: 3
+  Skill: 4
   Agent: 4
   ScheduleWakeup: 1
   Edit: 6
   mcp__github__get_file_contents: 1
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Write: 1
+  Write: 2
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/research/github-branch-protection-vs-autonomous-log-commits.md
 docsReadViaShell:
