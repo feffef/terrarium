@@ -54,47 +54,17 @@ after a rename or refactor on either side.
 
 A `SessionStart` hook (`scripts/unshallow-on-start.ts`) unshallows a shallow
 checkout before a session's first turn, so ordinary work should never meet one
-(issue #772). If the hook's fetch failed (offline, no network) and a checkout is
-somehow still shallow, know what it silently gets wrong before trusting history
-off it:
-
-A shallow clone's grafted, parent-less boundary commit makes every file it
-touches look newly-added, which reads as a real history rewrite when it's
-actually a clone-depth artifact. The same boundary silently truncates any search
-over history before it, which makes a completeness claim ("searched everything
-since X, found nothing more") false.
-
-`git fetch --deepen <n>` (or `--unshallow`) to inspect the real history before
-concluding a file's history was rewritten, squashed, or re-rooted — or before
-asserting any completeness claim over history.
-
-### A shallow `merge-base` can be wrong, and its diff can OMIT files
-
-This is the sharper edge of the same problem, and it bites the *routine*
-operation CLAUDE.md asks for — "anchor on the merge-base before any
-since-last-merge diff" — not just history archaeology.
-
-In a shallow clone `git merge-base` answers off a truncated commit graph. When
-the true merge-base lies below the graft boundary but a merge commit keeps some
-*older* commit reachable, `merge-base` returns that older commit. The answer is
-an ordinary, fully-hydrated commit: **not** listed in `.git/shallow`, **not**
-parentless. Nothing about it looks wrong, so there is no way to detect the bad
-answer short of having the history that would make the question moot.
-
-The tempting conclusion — an older base only over-reports, so the diff is a
-harmless superset — is **false**. `git diff A..B` compares the two *endpoints*,
-not the path between them. A branch that reverts a change which landed between
-the wrong base and the true base restores that file to its wrong-base content,
-so it drops out of the diff entirely. Revert branches make this everyday.
-
-So a shallow `merge-base` diff can silently **under-report** what a branch
-touched. Anything gating on "what changed" — a scoped test run, a review scope,
-a risk classification — can therefore under-run. Complete the clone first
-(`git fetch --unshallow`), or refuse to answer; do not classify off the
-truncated graph. This is exactly what `scripts/gate.ts` does, in both
-directions: `changedPaths()` unshallows, and its CI sibling
-`changedPathsBetween()` refuses (issue #849; reproduced in
-`tests/unit/gate-shallow-base.spec.ts`).
+(issue #772). If it is ever still shallow (the hook's fetch failed — offline,
+no network), don't trust history off it: a shallow `merge-base` can silently
+resolve to an ordinary-looking but wrong commit, which can make a diff against
+it **under-report** what a branch touched — not just over-report — with a
+revert branch as the everyday case where that bites. Run `git fetch
+--unshallow` and verify before trusting any history-based conclusion (a
+rewrite/squash claim, a completeness claim, or a merge-base diff); refuse to
+answer rather than classify off the truncated graph. `scripts/gate.ts` does
+exactly this in both directions (`changedPaths()` unshallows,
+`changedPathsBetween()` refuses) — see it and issue #849 for the mechanics,
+`tests/unit/gate-shallow-base.spec.ts` for the regression case.
 
 ## Commit hygiene
 
