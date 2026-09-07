@@ -385,29 +385,44 @@ function closeIssue(strategy: FetchStrategy, owner: string, repo: string, issueN
   return closeIssueViaRest(owner, repo, issueNumber, envToken()!, cwd)
 }
 
+const realDelay = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
+
 /** Verify + close (via `issueCloser`) every issue `prBody` names with a
  *  closing keyword that is not already closed (via `issueStateReader`) —
  *  the issue #983 safety net. Errors on any one issue (a transient API
  *  failure, a since-deleted issue) are swallowed into `failed` rather than
  *  thrown, so one bad number never masks the merge's own success or blocks
  *  reconciling the rest. Injected reader/closer functions keep this
- *  independently testable without a real network call. */
+ *  independently testable without a real network call.
+ *
+ *  A single retry after `delay` guards against GitHub's own auto-close
+ *  racing this reconciliation (issue #1181) — `delay` defaults to a real
+ *  1.5s wait but is injectable so tests don't pay for it. */
 export async function reconcileClosingKeywords(
   prBody: string,
   issueStateReader: (issueNumber: number) => Promise<string> | string,
   issueCloser: (issueNumber: number) => Promise<void> | void,
+  delay: (ms: number) => Promise<void> = realDelay,
 ): Promise<{ closed: number[]; failed: number[] }> {
   const closed: number[] = []
   const failed: number[] = []
+  const verifyAndClose = async (issueNumber: number): Promise<void> => {
+    const state = await issueStateReader(issueNumber)
+    if (state === 'open') {
+      await issueCloser(issueNumber)
+      closed.push(issueNumber)
+    }
+  }
   for (const issueNumber of parseClosingKeywordIssues(prBody)) {
     try {
-      const state = await issueStateReader(issueNumber)
-      if (state === 'open') {
-        await issueCloser(issueNumber)
-        closed.push(issueNumber)
-      }
+      await verifyAndClose(issueNumber)
     } catch {
-      failed.push(issueNumber)
+      try {
+        await delay(1500)
+        await verifyAndClose(issueNumber)
+      } catch {
+        failed.push(issueNumber)
+      }
     }
   }
   return { closed, failed }
