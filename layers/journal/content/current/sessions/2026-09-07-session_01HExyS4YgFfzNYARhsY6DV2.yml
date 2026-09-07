@@ -1,17 +1,19 @@
 schemaVersion: 1
 session: session_01HExyS4YgFfzNYARhsY6DV2
 startedAt: 2026-09-07T00:15:39Z
-endedAt: 2026-09-07T00:21:26Z
+endedAt: 2026-09-07T00:26:04Z
 kind: autonomous
 goal: Run the scheduled /digest sweep
-status: in-review
-outcome: "2026-09-06 Digest authored, PR #1174 open"
-summary: "Fully agent-initiated scheduled run of the /digest Skill (no human prompt this session). Listed one undigested closed day (2026-09-06), gathered its PRs (#1167, #1170-#1173) and 6 sessions via scripts/digest.ts, and authored a narrative Digest page headlined by the prior day's own digest-sweep bug (it nearly re-authored 57 archived days). Ran the retention sweep (archive-journal-content.ts --write), which archived the 2026-08-30 digest and its 6 session logs. pnpm gate:scoped passed green (79/79 L2 smoke tests). Committed, pushed, opened PR #1174, and subscribed to its activity."
+status: completed
+outcome: "2026-09-06 Digest authored, PR #1174 merged"
+summary: "Fully agent-initiated scheduled run of the /digest Skill (no human prompt this session). Listed one undigested closed day (2026-09-06), gathered its PRs (#1167, #1170-#1173) and 6 sessions via scripts/digest.ts, and authored a narrative Digest page headlined by the prior day's own digest-sweep bug (it nearly re-authored 57 archived days). Ran the retention sweep (archive-journal-content.ts --write), which archived the 2026-08-30 digest and its 6 session logs. pnpm gate:scoped passed green (79/79 L2 smoke tests). Committed, pushed, opened PR #1174, and subscribed to its activity. CI gate went green with no review threads and no conflicting-issue hits; posted the pre-merge verdict comment and landed via merge-pr.ts under the digest tier's merge-on-green-gate authority (docs/agents/pr-workflow.md)."
 prs:
   - "1174"
 docsRead:
   - path: layers/journal/content/current/pages/digests/2026-09-05.md
     reason: digest format reference
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -23,20 +25,26 @@ frictions:
   - description: First `pnpm gate:scoped` invocation was blocked by the tail-pipe guard because it piped to `tail`; had to redirect to a file instead.
     solution: Redirect gate output to a file and check $? directly, per CLAUDE.md's own documented convention — this is expected guard behavior, not a bug.
     severity: nit
-durationSec: 347
+durationSec: 625
 models:
-  claude-sonnet-5: 52
+  claude-sonnet-5: 83
 toolCounts:
-  Bash: 17
-  Read: 1
+  Bash: 20
+  Read: 2
   Write: 2
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__get_file_contents: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  Edit: 1
+  Edit: 3
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-09-06.md
 gitBranch: claude/compassionate-lovelace-pm5su6
