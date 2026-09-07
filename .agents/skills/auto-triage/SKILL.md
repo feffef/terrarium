@@ -135,7 +135,7 @@ in-scope issue is eligible regardless of who commented last. Reserved for a
 human-directed brave re-triage; never the default, and never a mode an agent
 reaches for on its own.
 
-1. **Resolve the set.** List every open issue via `tsx scripts/list-open-issues.ts`
+1. **Resolve the set.** List every open issue via `pnpm exec tsx scripts/list-open-issues.ts`
    (overflow-safe — see `docs/agents/github-integration.md` — not raw
    `list_issues`/`search_issues`) plus in-scope external PRs; for each, check its
    most recent comment (or body, if none) against the human-authorship rule above

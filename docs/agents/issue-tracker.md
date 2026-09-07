@@ -42,6 +42,10 @@ tool surface.
   (`.agents/prune-trials.yml`, ADR-0027) — implementing over a trial
   re-legislates the prose the trial is still weighing. A missing target file
   is not the only way an issue goes stale.
+- **Before locking a design that merges, moves, or deletes a file, grep for its
+  importers and what it itself imports** — ruling out an import cycle before
+  implementation starts catches in one grep what surfaced only at
+  implementation time in issue #865 (#1176).
 - **A session picking up more than one issue under a single caller-pinned
   branch (CLAUDE.md's branch-off bullet) should flag that packaging
   constraint upfront and ask whether separate branches are allowed** — rather

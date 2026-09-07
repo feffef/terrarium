@@ -137,6 +137,11 @@ The subagent cannot see this session's context, so the brief is self-contained:
 - **A dispatched worktree-isolated impl agent must not self-invoke
   `close-session`/`log-session`** — see `close-session/SKILL.md` for why, and its
   mechanical enforcement.
+- **Name a rough size ceiling for a "simple" fix brief instead of relying on
+  "keep it small" alone** — e.g. "under ~50 lines / one new test" — and tell the
+  impl agent to flag back to the orchestrator rather than silently exceeding it.
+  Without a concrete anchor, an impl agent's own judgment of "small" runs high
+  (issue #1182).
 
 Done when every applicable line above appears **in the brief text** — not merely
 true in your head.

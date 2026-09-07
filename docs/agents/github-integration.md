@@ -108,7 +108,7 @@ catch the mistake in practice.
   script escape can't do this; and the `search_issues`/`search_pull_requests`
   MCP tools rate-limit with a 403 even after a few sequential calls — issue
   #952's "~2 concurrent / ~49s backoff" numbers didn't hold (issue #1092). Use
-  `list_issues`/`list_pull_requests` or `tsx scripts/list-open-issues.ts` and
+  `list_issues`/`list_pull_requests` or `pnpm exec tsx scripts/list-open-issues.ts` and
   filter locally. If a search call is unavoidable and returns a 403, wait at
   least a minute and retry it once, sequentially.
 - **`search_pull_requests` requires explicit `owner`/`repo` parameters** —
@@ -130,12 +130,12 @@ catch the mistake in practice.
 ## Script escapes — cheaper than the API for three common questions
 
 - **"Which PRs merged recently, in what order, when" doesn't need
-  `list_pull_requests`/`search_issues` at all** — `tsx scripts/recent-prs.ts [N]`
+  `list_pull_requests`/`search_issues` at all** — `pnpm exec tsx scripts/recent-prs.ts [N]`
   answers it straight from `git log origin/main` (number/title/merge-time only;
   `author`/`merged_by` are out of scope, since those need the API) with no
   overflow risk (issue #319).
 - **"What open issues exist right now" doesn't need `list_issues`/`search_issues`
-  either** — `tsx scripts/list-open-issues.ts [N]` answers it via `gh api` against
+  either** — `pnpm exec tsx scripts/list-open-issues.ts [N]` answers it via `gh api` against
   the REST `issues` endpoint (number/title/labels/updated-time only; body/comments/
   author are out of scope, same reasoning as `recent-prs.ts`) with no overflow risk
   (issue #494). It shells out to REST rather than `gh issue list` because the
@@ -148,7 +148,7 @@ catch the mistake in practice.
 - **An issue's newest AI comment can claim a triage-label transition its live
   labels never actually picked up** (e.g. issue #325's comment claimed `moved
   to ready-for-agent` while the issue stayed `ready-for-human`) — nothing
-  catches that mismatch automatically. `tsx scripts/check-triage-drift.ts [N]`
+  catches that mismatch automatically. `pnpm exec tsx scripts/check-triage-drift.ts [N]`
   cross-checks each open issue's most recent AI-authored comment (detected via
   an ADR-0017 authorship marker, not `author_association` — see the script's
   header comment for why that field can't be trusted here) against a small
