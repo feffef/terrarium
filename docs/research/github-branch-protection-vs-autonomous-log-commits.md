@@ -1,7 +1,7 @@
 # Branch protection vs. rulesets vs. autonomous session-log commits (issue #348)
 
 A reference note for the tension issue #348 names: ADR-0009 has
-`scripts/session-end.ts` push each session's log commit **directly to `main`**
+`scripts/log-session.ts` push each session's log commit **directly to `main`**
 (no PR — a deliberate, bounded exception, scoped to exactly one file under
 `layers/journal/content/current/sessions/`). Classic branch protection on
 `main` blocks that direct push. The maintainer removed protection on
@@ -22,9 +22,9 @@ the source file it was pulled from.
 
 **Repo-context check first** (why this matters for the "how narrow can the
 bypass be" question): the session-log push does **not** happen inside a
-GitHub Actions workflow. `scripts/session-end.ts` / `scripts/log-session.ts`
-run live, inside whatever session authored the log, and push over plain `git`
-using the credentials the session's own environment already has —
+GitHub Actions workflow. `scripts/log-session.ts` runs live, inside whatever
+session authored the log, and pushes over plain `git` using the credentials
+the session's own environment already has —
 `.claude/settings.json`'s hooks just invoke the script; there is no
 `GITHUB_TOKEN`-bearing workflow in the loop at all. Per **ADR-0017**
 ("Provenance footer…"), "this session's GitHub access is a managed connector
@@ -111,20 +111,20 @@ list — only **role**, **team**, or **app**. Combined with the repo-context
 fact above (the session's push is authenticated as **the repo owner's own
 personal GitHub account** — there is no distinct bot/App identity, ADR-0017),
 this means: the only bypass entry available today that lets
-`session-end.ts`'s push through is a **role** the owner already holds
+`log-session.ts`'s push through is a **role** the owner already holds
 (**Repository admin**, since the owner is the repo's admin) — or a **team**
 containing exactly the owner. Either way, that bypass entry is
 **indistinguishable from a bypass for the owner's own manual, human-typed
 pushes** to `main` — because it *is* the same GitHub identity making both
 kinds of push. **A bypass this repo can grant today cannot be scoped tighter
 than "the repo owner," full stop** — it is not possible to say "bypass only
-when the push comes from `session-end.ts`" without a distinct machine
+when the push comes from `log-session.ts`" without a distinct machine
 identity to name.
 
 **The only way to get true actor-only scoping** is to close the gap ADR-0017
 explicitly deferred to issue #124: provision a **distinct GitHub App**
 (installed on this repo only, `contents: write` scoped to it) or a
-**machine-user PAT**, and have `session-end.ts` push through *that* credential
+**machine-user PAT**, and have `log-session.ts` push through *that* credential
 instead of the session's own connector token. GitHub Apps **are** individually
 selectable in the bypass picker (per the eligible-actor list above), so that
 one App could be the *sole* bypass entry — bypassing for the automation and
