@@ -163,60 +163,6 @@ trials:
       gate (`verify:skills-lock`) would reject the edit regardless of the
       screening step.
   - problem: >
-      CLAUDE.md's Working Conventions carried two bullets (the deferred-tool
-      `ToolSearch` rule and the `ScheduleWakeup` `/loop`-only rule) that
-      restated detail their own fail-closed `PreToolUse` guards already teach
-      live when they fire. `loop-only-tool-guard.ts`'s own doc comment on its
-      `instead` field says its per-situation alternatives list is "quoted
-      verbatim in the deny message, which is the rule's whole teaching surface
-      for an agent that has opened no doc" — exactly the "what to do instead,
-      by situation" list and the "not a harmless no-op" consequence narration
-      CLAUDE.md restated inline (verified live: this session's own
-      `ScheduleWakeup` call outside `/loop` was denied with that identical
-      alternatives list). `deferred-tool-guard.ts` similarly denies a call
-      whose arguments match a known foreign-tool signature (e.g. `Agent`'s
-      `prompt`/`subagent_type` borrowed for `TaskCreate`) with a corrective
-      message naming the mistake — so CLAUDE.md's specific worked example and
-      "`TaskCreate` and `Monitor`... recorded repeat offenders" aside were
-      narrating the exact case the guard now catches and names itself.
-      Compressed both bullets to the bare rule, the guard's existence, and the
-      pointer — dropping the restated alternatives list, the "not a harmless
-      no-op" elaboration, and the specific incident/example naming. The core
-      imperative in each ("load the schema first"; "`ScheduleWakeup` only
-      inside `/loop`") is untouched, since `deferred-tool-guard.ts` fails
-      *open* on unregistered confusion shapes — the general instruction still
-      carries real, guard-independent weight there, unlike the illustrative
-      detail cut. Net -10 lines.
-    territory:
-      paths:
-        - "CLAUDE.md: the deferred-tool `ToolSearch` bullet and the `ScheduleWakeup` bullet (Working Conventions)"
-      keywords:
-        - ToolSearch
-        - deferred tool
-        - deferred-tool-guard.ts
-        - ScheduleWakeup
-        - loop-only-tool-guard.ts
-    opened: 2026-09-03
-    proven: true
-    check: >
-      Damage is a session that, needing the actual alternative to
-      `ScheduleWakeup` for a wait/poll situation, or the actual reason a
-      guessed deferred-tool shape is risky, stops at the compressed bullet and
-      guesses wrong instead of either opening `docs/agents/guards.md` or
-      simply attempting the call and reading the guard's own deny message —
-      or a session that, having been denied, still "works around" the guard
-      because the compressed CLAUDE.md text reads as weaker guidance than the
-      guard's own refusal. NOT damage: a session that gets denied and follows
-      the deny message's own named alternative (the intended
-      teach-at-the-moment-of-failure design working, per
-      `loop-only-tool-guard.ts`'s own doc comment), or a session that opens
-      `docs/agents/guards.md` before asserting a guard's exact behaviour. A
-      Sonnet probe given only the compressed text correctly derived that
-      `ScheduleWakeup` is `/loop`-only (with `stop: true` exempt everywhere)
-      and that any deferred tool needs `ToolSearch` before its first call,
-      trusting the guard to catch and correct a live mistake rather than
-      needing the full worked example in advance.
-  - problem: >
       CLAUDE.md's Working conventions bullet on piping a backgrounded or
       long-running command through a trailing `tail`/`head`/`echo` fully
       re-derived, in eleven lines of prose, an explanation now made redundant
@@ -265,3 +211,55 @@ trials:
       `tail`/`head`/`echo`, and that the fix is redirecting to a file and
       checking `$?` directly rather than trusting the pipeline's own exit
       status.
+  - problem: >
+      `docs/agents/git-conventions.md`'s "If a checkout is still shallow"
+      section carried 45 lines explaining a scenario the repo already prevents
+      mechanically: `scripts/unshallow-on-start.ts` (a `SessionStart` hook)
+      unshallows before a session's first turn, so the section's entire
+      audience is the narrow leftover case where that fetch itself failed
+      (offline, no network). Within that already-narrow case, the section then
+      spent two more paragraphs re-deriving, from first principles, exactly
+      what `scripts/gate.ts`'s own code comment states and cites by name
+      ("Why classifying off a shallow clone is unsafe at all:
+      docs/agents/git-conventions.md, and #849") — the grafted-parentless-
+      boundary mechanics, a worked revert-branch example of how a shallow
+      `merge-base` diff can silently under-report rather than over-report, and
+      a restatement of `changedPaths()`/`changedPathsBetween()`'s asymmetric
+      repair-vs-refuse behaviour that the script's own comments already carry
+      next to the code. Compressed to the rule (don't trust history off a
+      still-shallow clone; a shallow `merge-base` can under-report, not just
+      over-report, so unshallow and verify before any history-based
+      conclusion), the one-line why, the fix (`git fetch --unshallow`), and a
+      pointer to `scripts/gate.ts` + issue #849 +
+      `tests/unit/gate-shallow-base.spec.ts` for the mechanics — same shape as
+      the already-landed `ToolSearch`/`ScheduleWakeup` and tail-pipe-guard
+      compressions, applied here to a hook instead of a `PreToolUse` guard.
+      Net -30 lines.
+    territory:
+      paths:
+        - "docs/agents/git-conventions.md: \"If a checkout is still shallow\" section, including the \"A shallow `merge-base` can be wrong\" subsection"
+      keywords:
+        - shallow checkout
+        - unshallow-on-start.ts
+        - merge-base can be wrong
+        - grafted parentless
+        - under-report
+        - gate-shallow-base.spec.ts
+    opened: 2026-09-07
+    proven: true
+    check: >
+      Damage is a session that, having actually hit a still-shallow clone (the
+      unshallow hook's fetch failed) and needing to know what that silently
+      gets wrong, stops at the compressed section and either trusts a
+      merge-base-derived diff/history conclusion anyway or can't recall that
+      the failure mode is under-reporting (not just over-reporting, which
+      would read as the safer direction). NOT damage: a session that runs
+      `git fetch --unshallow` and re-verifies before trusting history off a
+      shallow clone, without ever needing the worked revert-branch mechanics
+      (the intended point-of-need pointer working), or a session that never
+      meets a shallow clone at all because the `SessionStart` hook did its
+      job. A Sonnet probe given only the compressed text correctly derived
+      that a still-shallow clone must never be trusted for a history-based
+      conclusion, that the fix is `git fetch --unshallow` before proceeding,
+      and that a shallow `merge-base` diff's failure mode is silently
+      under-reporting changes rather than only over-reporting them.
