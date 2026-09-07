@@ -81,6 +81,15 @@ Its brief:
   fix** should still be addressed — cheap, repeated papercuts add up and are worth
   retiring. What gets dropped is the lone, low-severity one-off (a single `nit`
   with a non-trivial fix), not every `nit`.
+- **The window often straddles the previous run.** The recency window commonly
+  reaches back before the last `frictions-to-fixes` run's own start, so a
+  sizeable chunk of its candidates are already resolved by an in-window fixing
+  session or PR — exactly the case the first bullet above tells you to screen
+  out fast. Anchor that screening on the previous run's approximate start time
+  rather than treating the whole window uniformly: find the most recent
+  frictions-to-fixes-filed issue in the tracker (its creation time approximates
+  that start) and treat frictions from sessions before it as the likeliest
+  already-resolved candidates.
 - **Screen against the tracker** — apply the §2 rules to every candidate.
 - **GitHub-MCP hygiene** (these are themselves recurring frictions — heed them):
   call the tools by their **fully-qualified `mcp__github__*` names** (bare names

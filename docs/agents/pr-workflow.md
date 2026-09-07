@@ -21,7 +21,7 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
 
 1. Run the safety gate (ADR-0004) and wait for it to finish — a red gate
    never merges, no exception.
-2. Run `tsx scripts/check-conflicting-issues.ts --pr <number>` (or `<base>
+2. Run `pnpm exec tsx scripts/check-conflicting-issues.ts --pr <number>` (or `<base>
    <head>` for a locally-resolvable diff) and eyeball any hits — it flags an
    *open* issue whose body names one of the PR's changed files alongside
    deletion-language ("delete", "remove", "unused", …), the mechanical
