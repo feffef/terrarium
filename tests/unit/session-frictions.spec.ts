@@ -16,6 +16,8 @@ function session(id: string, startedAt: string, opts: Partial<TriageSession> = {
     goal: 'g',
     outcome: 'o',
     prs: [],
+    docsRead: [],
+    subagents: [],
     frictions: [],
     ...opts,
   }
@@ -58,6 +60,8 @@ describe('toTriageSession()', () => {
       goal: 'fix the thing',
       outcome: 'PR',
       prs: [187],
+      docsRead: [{ path: 'docs/adr/0009-session-logs.md', reason: 'checked the schema' }],
+      subagents: [{ type: 'general-purpose', task: 'Survey frictions', model: 'sonnet' }],
       frictions: [
         { description: '  a   stale  claim  ', solution: 'fix it', severity: 'minor' },
       ],
@@ -69,6 +73,8 @@ describe('toTriageSession()', () => {
       goal: 'fix the thing',
       outcome: 'PR',
       prs: ['187'],
+      docsRead: [{ path: 'docs/adr/0009-session-logs.md', reason: 'checked the schema' }],
+      subagents: [{ type: 'general-purpose', task: 'Survey frictions', model: 'sonnet' }],
       frictions: [{ description: 'a stale claim', solution: 'fix it', severity: 'minor' }],
     })
   })
@@ -80,6 +86,8 @@ describe('toTriageSession()', () => {
       goal: '',
       outcome: '',
       prs: [],
+      docsRead: [],
+      subagents: [],
       frictions: [],
     })
   })
