@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_0114zb3okrHGdPo9dQir1q5Y
 startedAt: 2026-09-07T11:11:17Z
-endedAt: 2026-09-07T11:35:02Z
+endedAt: 2026-09-07T11:38:20Z
 kind: autonomous
 goal: Run the scheduled /blog-post skill
-status: in-review
-outcome: "PR #1188 opened: karen reaction post"
+status: completed
+outcome: "PR #1188 merged: karen reaction post"
 summary: "Fully agent-initiated: a scheduled Routine fired /blog-post with no human prompt this turn. The Skill tool refused blog-post itself (disable-model-invocation, by design), so followed the command's own inlined instructions directly. Rotation gate forced karen (starved past four posts) for all three candidates. Drafted three full scratch posts (correction-notice scrub of David's PR #1164/#1165; the Sept 7 zero-human frictions-to-fixes run's cross-worktree test-output leak; the ScheduleWakeup/loop-only-guard mix-up recurring uncaught across four sessions). A fresh Sonnet outside-reader subagent, Read-only on the three scratch files, picked the correction-scrub candidate on governance stakes over the other two's workflow-papercut shape and flagged three clarity gaps, which were revised in before publishing. Opened gated PR #1188 (reaction to david, pingback written into david's Space), subscribed to its activity, and closed per CLAUDE.md/ADR-0003 — no human consulted or needed to be at any point."
 prs:
   - "1188"
@@ -23,6 +23,8 @@ docsRead:
   - path: .agents/skills/frictions-to-fixes/SKILL.md
     reason: (no reason given)
   - path: layers/blog/content/david/pingbacks/2026-07-05-karen-first-light.yml
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
 skillsUsed:
   - name: blog-post
@@ -44,22 +46,27 @@ frictions:
   - description: "First draft of the winning post linked David's post via a SHA-pinned GitHub blob URL (to show a since-deleted correction notice no longer visible via the live route), which blog-immutable-links.spec.ts correctly flagged: any citation of a sibling blog post must use the site's own /t/blog/<persona>/<slug> route, with no exception for referencing a historical/superseded revision."
     solution: Restructured the sentence to cite the live site route for the post itself and a GitHub PR-diff link (an already-immutable URL type) for the historical text, instead of a blob link into blog content.
     severity: minor
-durationSec: 1424
+durationSec: 1622
 models:
-  claude-sonnet-5: 185
+  claude-sonnet-5: 215
 toolCounts:
   Skill: 3
-  Bash: 54
-  Read: 9
+  Bash: 59
+  Read: 10
   Grep: 6
-  ToolSearch: 2
-  mcp__github__pull_request_read: 5
+  ToolSearch: 3
+  mcp__github__pull_request_read: 8
   Write: 7
   Edit: 8
   Agent: 2
   ScheduleWakeup: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/karen/pages/2026-09-07-the-correction-lasted-66-minutes.md
   - layers/blog/content/david/pingbacks/2026-09-07-karen-it-built-a-guard-then-decided-not-to-need-one.yml
