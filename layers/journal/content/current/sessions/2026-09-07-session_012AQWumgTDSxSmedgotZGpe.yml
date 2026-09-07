@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_012AQWumgTDSxSmedgotZGpe
 startedAt: 2026-09-07T13:17:59Z
-endedAt: 2026-09-07T13:28:43Z
+endedAt: 2026-09-07T13:32:47Z
 kind: autonomous
 goal: Run /prune-trial
-status: in-review
-outcome: "Judged 1 trial (held), opened PR #1189 (-30 lines)"
-summary: "Scheduled autonomous /prune-trial run, no live human prompt. Judged the one judgeable open trial (the ToolSearch/ScheduleWakeup CLAUDE.md compression): frictions logged since it landed were all minor/nit with no traceable damage and no new regression issue, so it holds — entry deleted. Chose a new problem per the priority order: docs/agents/git-conventions.md's \"If a checkout is still shallow\" section re-derived, in 45 lines, mechanics scripts/gate.ts's own code comment already points back to this doc for (issue #849), covering a scenario a SessionStart hook already prevents in the normal case. Compressed to the rule, the one-line why, the fix, and pointers — net -30 lines. Verified with a dispatched Sonnet probe (ADR-0027 §4) before shipping; pnpm gate:scoped ran green (full gate, since .agents/prune-trials.yml isn't in the inert set). Opened PR #1189 and subscribed to its activity."
+status: completed
+outcome: "Judged 1 trial (held); PR #1189 merged (-30 lines)"
+summary: "Scheduled autonomous /prune-trial run, no live human prompt. Judged the one judgeable open trial (the ToolSearch/ScheduleWakeup CLAUDE.md compression): frictions logged since it landed were all minor/nit with no traceable damage and no new regression issue, so it holds — entry deleted. Chose a new problem per the priority order: docs/agents/git-conventions.md's \"If a checkout is still shallow\" section re-derived, in 45 lines, mechanics scripts/gate.ts's own code comment already points back to this doc for (issue #849), covering a scenario a SessionStart hook already prevents in the normal case. Compressed to the rule, the one-line why, the fix, and pointers — net -30 lines. Verified with a dispatched Sonnet probe (ADR-0027 §4) before shipping; pnpm gate:scoped ran green (full gate, since .agents/prune-trials.yml isn't in the inert set). Opened PR #1189, self-reviewed with a COMMENT-event verdict (prune-trial's merge-on-green tier), and merged via scripts/merge-pr.ts (a92ebc5)."
 prs:
   - "1189"
 docsRead:
@@ -36,14 +36,14 @@ frictions:
   - description: TaskCreate was called once for the "wait for Sonnet probe" tracking task, but a later call (prompted by the periodic task-list reminder) created a second, separate task entry instead of updating the first — left a stale duplicate in the task list.
     solution: No functional impact; just noting the duplicate for anyone auditing the task list. Would use TaskUpdate against the existing task id next time instead of a second TaskCreate.
     severity: nit
-durationSec: 644
+durationSec: 888
 models:
-  claude-sonnet-5: 112
+  claude-sonnet-5: 142
 toolCounts:
   Skill: 3
-  Bash: 25
-  Read: 9
-  ToolSearch: 2
+  Bash: 31
+  Read: 10
+  ToolSearch: 5
   mcp__github__search_issues: 1
   Edit: 3
   Grep: 6
@@ -52,8 +52,12 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
-  Write: 1
-  TaskUpdate: 1
+  Write: 2
+  TaskUpdate: 2
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_review_write: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - docs/agents/git-conventions.md
