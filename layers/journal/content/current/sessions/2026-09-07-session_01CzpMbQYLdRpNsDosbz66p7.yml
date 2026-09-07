@@ -1,0 +1,192 @@
+schemaVersion: 1
+session: session_01CzpMbQYLdRpNsDosbz66p7
+startedAt: 2026-09-07T04:09:14Z
+endedAt: 2026-09-07T04:19:53Z
+kind: autonomous
+goal: Run scheduled /audit-docs sweep
+status: in-review
+outcome: "Opened PR #1187 fixing one confirmed Drift finding"
+summary: "Scheduled, unattended run of the /audit-docs Skill (no human prompt this turn beyond the schedule firing it). Fanned out four paired-lens reviewer agents in parallel (Freshness: Drift+Orphan-addition; Single-home: Duplication+Mis-location; Concision: Verbose+Stale-narration; Coherence: Contradiction+Ambiguity). Only one finding survived dedup and fact-check: docs/research/github-branch-protection-vs-autonomous-log-commits.md still named the deleted scripts/session-end.ts (merged into scripts/log-session.ts by #865) in five places, missed by an earlier sweep (c1a334d) that fixed the same stale name elsewhere. Fact-checked directly against the current scripts/log-session.ts and the filesystem (confirmed session-end.ts absent) before fixing all five references. Ran pnpm gate:scoped (green, floor-only since the change was inert), committed, pushed, and opened gated PR #1187 with the ADR-0017 provenance header — had to retry once after the github-provenance-guard rejected the header's first shape/position. Subscribed to PR activity to babysit it to merge. No human-only surface touched; no needs-triage issue filed, since no unresolvable factual conflict came up. The other three lenses and the Orphan-addition half of Freshness reported zero findings, consistent with this repo's recent prune-trial/audit-docs activity already having addressed obvious drift, duplication, and verbosity."
+prs:
+  - "1187"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: avoid re-flagging deliberately-compressed CLAUDE.md territory
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: the one confirmed Drift finding
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: skills-lock.json
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
+    reason: (no reason given)
+  - path: docs/proposals/659-fork-pr-gate-doorbell-token.md
+    reason: (no reason given)
+  - path: docs/proposals/445-ci-reuse-gate-scoped-classifier.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: briefed the four parallel lens-review agents
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: First mcp__github__create_pull_request call was rejected by the ADR-0017 provenance guard for using the wrong header shape/position, even though the session id was correct
+    solution: Guard's deny message named the exact required shape (🤖 [name](url) as the body's first paragraph); retried once with that shape and it passed
+    severity: nit
+durationSec: 640
+models:
+  claude-sonnet-5: 83
+toolCounts:
+  Bash: 17
+  ToolSearch: 2
+  Read: 4
+  mcp__github__search_pull_requests: 1
+  Skill: 3
+  Agent: 4
+  ScheduleWakeup: 1
+  Edit: 6
+  mcp__github__get_file_contents: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+docsReadViaShell:
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/log-session/SKILL.md
+  - layers/blog/CONTEXT.md
+  - layers/atlas/CONTEXT.md
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/guards.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - .agents/skills/digest/SKILL.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/issue-tracker.md
+subagents:
+  - type: general-purpose
+    task: Docs audit — Freshness lens (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Docs audit — Single-home lens (Duplication + Mis-location)
+  - type: general-purpose
+    task: Docs audit — Concision lens (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Docs audit — Coherence lens (Contradiction + Ambiguity)
+gitBranch: claude/festive-mayer-3tgorn
+entrypoint: remote_trigger
+cliVersion: 2.1.263
+trigger: audit-docs
+landedBy: Stop
