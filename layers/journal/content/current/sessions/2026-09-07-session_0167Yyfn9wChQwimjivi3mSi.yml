@@ -1,0 +1,35 @@
+schemaVersion: 1
+session: session_0167Yyfn9wChQwimjivi3mSi
+startedAt: 2026-09-07T00:45:35Z
+endedAt: 2026-09-07T00:50:06Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: Clean audit, nothing to change
+summary: "Scheduled autonomous run of /audit-skills, no human prompt for any step. Gathered the scorecard via scripts/audit-skills.ts (40-session window, 36 Skills). Reviewed step 3's importance/role grading for every Skill against usedIn and window goals/kinds: no ≥2-session bright-line evidence for any promote/demote or role refresh this run (the window skews heavily toward repeat scheduled-Skill runs, leaving little fresh material for the low-frequency general-engineering Skills, whose current grades already match prior observations). Ran step 4's regression screen on all 14 regressionChecks brackets: several looked suspicious on the coarse before/after friction-severity screen (audit-skills, dispatch-subagents, auto-triage, digest), but reading the actual bracketed sessions' goals/skillsUsed showed each was either unrelated co-occurring sessions in the same time window or an absence of the Skill's own kind of work (never a regression) -- none reached Phase B. orphanedSessions (2 entries) both carry resolvedBy cutoffs (#736, #1063), so read-only history, not re-filed. orphanScan was scanned:true (696 merged PRs, 551 with session) -- a trustworthy sweep, not inconclusive. orphanSuppressionLog's 2 entries are both resolved-annotation matching the orphanedSessions entries exactly -- no over-broad misfile-cleanup to flag. humanPromptedClosures and manuallyRescuedClosures were both empty -- the healthy state, nothing to comment on the standing thread. misclassifiedKind flagged one session (session_016ahWmRcpKL7NJpcrtA8zPy, authored interactive but entrypoint remote_trigger) -- informational only per #449's spec, noted here for awareness, no issue filed. No Inventory edits, no issue filed/commented, no learnings/ideas beyond the one below. pnpm gate:scoped not run since there is no diff to gate; no PR opened."
+prs: []
+docsRead:
+  - path: .claude/skills/audit-skills/SKILL.md
+    reason: the run's own instructions
+skillsUsed:
+  - name: audit-skills
+    reason: invoked as a slash command
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 271
+models:
+  claude-sonnet-5: 44
+toolCounts:
+  Bash: 18
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-y6n30r
+entrypoint: remote_trigger
+cliVersion: 2.1.263
+trigger: audit-skills
+learnings:
+  - This run's 40-session window was almost entirely repeat scheduled-Skill runs (digest/prune-trial/blog-post/audit-docs/frictions-to-fixes/audit-skills), leaving very little fresh signal for step 3's bright-line grading of the low-frequency interactive/general-engineering Skills (code-review, implement, triage, wayfinder, tdd, etc.) -- their grades are still resting on observations from much earlier runs. Not actionable on its own, but worth a future run noticing if it persists.
+landedBy: Stop
