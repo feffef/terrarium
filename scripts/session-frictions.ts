@@ -30,6 +30,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
 import { isExternalSession } from '../shared/schemas/session.ts'
+import type { SubagentRef } from './session-trace.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -46,9 +47,15 @@ export interface TriageFriction {
   solution: string
   severity: string
 }
-/** The fields the frictions-to-fixes survey actually needs from one session log.
- *  `id`/`file` are carried on every record so a candidate can be traced back to
- *  its full log (summary, docsRead, learnings, …) when more context is needed. */
+export interface TriageDocRead {
+  path: string
+  reason: string
+}
+/** The fields the frictions-to-fixes survey actually needs from one session log,
+ *  including `docsRead`/`subagents` (issue #1178): judging a friction "doc not
+ *  opened" vs. "doc opened but ignored" needs both without a second full-file
+ *  read per candidate. `id`/`file` are still carried so a candidate can be
+ *  traced back to its full log (summary, learnings, …) when more is needed. */
 export interface TriageSession {
   id: string
   file: string
@@ -56,6 +63,8 @@ export interface TriageSession {
   goal: string
   outcome: string
   prs: string[]
+  docsRead: TriageDocRead[]
+  subagents: SubagentRef[]
   frictions: TriageFriction[]
 }
 
@@ -91,6 +100,8 @@ export function pickRecencyWindow(sessions: TriageSession[], n: number): TriageS
 export function toTriageSession(raw: Record<string, unknown>, file: string): TriageSession {
   const frictions = Array.isArray(raw.frictions) ? raw.frictions : []
   const prs = Array.isArray(raw.prs) ? raw.prs : []
+  const docsRead = Array.isArray(raw.docsRead) ? raw.docsRead : []
+  const subagents = Array.isArray(raw.subagents) ? raw.subagents : []
   return {
     id: String(raw.session ?? ''),
     file,
@@ -98,6 +109,17 @@ export function toTriageSession(raw: Record<string, unknown>, file: string): Tri
     goal: String(raw.goal ?? ''),
     outcome: String(raw.outcome ?? ''),
     prs: prs.map((p) => String(p)),
+    docsRead: docsRead.map((d: Record<string, unknown>) => ({
+      path: String(d.path ?? ''),
+      reason: String(d.reason ?? ''),
+    })),
+    subagents: subagents.map((s: Record<string, unknown>) => {
+      const ref: SubagentRef = {}
+      if (typeof s.type === 'string') ref.type = s.type
+      if (typeof s.task === 'string') ref.task = s.task
+      if (typeof s.model === 'string') ref.model = s.model
+      return ref
+    }),
     frictions: frictions.map((fr: Record<string, unknown>) => ({
       description: String(fr.description ?? '').replace(/\s+/g, ' ').trim(),
       solution: String(fr.solution ?? '').replace(/\s+/g, ' ').trim(),
