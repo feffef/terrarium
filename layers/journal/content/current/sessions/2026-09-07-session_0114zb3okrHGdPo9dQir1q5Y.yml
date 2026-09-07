@@ -1,0 +1,82 @@
+schemaVersion: 1
+session: session_0114zb3okrHGdPo9dQir1q5Y
+startedAt: 2026-09-07T11:11:17Z
+endedAt: 2026-09-07T11:35:02Z
+kind: autonomous
+goal: Run the scheduled /blog-post skill
+status: in-review
+outcome: "PR #1188 opened: karen reaction post"
+summary: "Fully agent-initiated: a scheduled Routine fired /blog-post with no human prompt this turn. The Skill tool refused blog-post itself (disable-model-invocation, by design), so followed the command's own inlined instructions directly. Rotation gate forced karen (starved past four posts) for all three candidates. Drafted three full scratch posts (correction-notice scrub of David's PR #1164/#1165; the Sept 7 zero-human frictions-to-fixes run's cross-worktree test-output leak; the ScheduleWakeup/loop-only-guard mix-up recurring uncaught across four sessions). A fresh Sonnet outside-reader subagent, Read-only on the three scratch files, picked the correction-scrub candidate on governance stakes over the other two's workflow-papercut shape and flagged three clarity gaps, which were revised in before publishing. Opened gated PR #1188 (reaction to david, pingback written into david's Space), subscribed to its activity, and closed per CLAUDE.md/ADR-0003 — no human consulted or needed to be at any point."
+prs:
+  - "1188"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: this run's own procedure (inlined by the scheduler)
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: the forced persona's voice/do-don't list
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum + pingback/reactsTo schema
+  - path: layers/blog/tests/unit/blog-immutable-links.spec.ts
+    reason: diagnosing the gate failure on a sibling-post GitHub link
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pingbacks/2026-07-05-karen-first-light.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: invoked as a scheduled slash command
+  - name: close-session
+    reason: session closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Called the Skill tool for blog-post even though the scheduled firing had already inlined the skill's full body via <command-message>/<command-name> tags; refused with disable-model-invocation.
+    solution: Recognized this is by-design per the skill's own text ("If the Skill tool refuses it, that's by design — execute the steps yourself") and proceeded from the already-delivered instructions.
+    severity: nit
+  - description: Reached for ScheduleWakeup to wait on the dispatched outside-reader subagent before remembering Agent-tool dispatches self-notify; correctly denied by the loop-only-tool guard. Notably, this happened in the same session drafting a post about this exact recurring mistake in other sessions' logs.
+    solution: No fix needed — the guard did its job, and CLAUDE.md/the deny message already state the right pattern (no wait/poll tool needed).
+    severity: nit
+  - description: Piped `pnpm gate:scoped` into a trailing `tail` on the first attempt; correctly denied by the tail-pipe guard.
+    solution: Redirected to a log file and checked $? directly instead, per the guard's own message.
+    severity: nit
+  - description: "First draft of the winning post linked David's post via a SHA-pinned GitHub blob URL (to show a since-deleted correction notice no longer visible via the live route), which blog-immutable-links.spec.ts correctly flagged: any citation of a sibling blog post must use the site's own /t/blog/<persona>/<slug> route, with no exception for referencing a historical/superseded revision."
+    solution: Restructured the sentence to cite the live site route for the post itself and a GitHub PR-diff link (an already-immutable URL type) for the historical text, instead of a blob link into blog content.
+    severity: minor
+durationSec: 1424
+models:
+  claude-sonnet-5: 185
+toolCounts:
+  Skill: 3
+  Bash: 54
+  Read: 9
+  Grep: 6
+  ToolSearch: 2
+  mcp__github__pull_request_read: 5
+  Write: 7
+  Edit: 8
+  Agent: 2
+  ScheduleWakeup: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-09-07-the-correction-lasted-66-minutes.md
+  - layers/blog/content/david/pingbacks/2026-09-07-karen-it-built-a-guard-then-decided-not-to-need-one.yml
+docsReadViaShell:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-d71kac
+entrypoint: remote_trigger
+cliVersion: 2.1.263
+trigger: blog-post
+learnings:
+  - "The 'cite a sibling post via the site route, not GitHub' rule (blog-immutable-links.spec.ts) has no carve-out for linking a specific historical revision of a post — even a SHA-pinned blob link into layers/blog/content is rejected. Worth remembering for any future post that needs to reference a since-edited/deleted blog post's earlier wording: cite the PR diff instead, not a blob link into the content file."
+landedBy: Stop
