@@ -165,9 +165,39 @@ describe('reconcileClosingKeywords()', () => {
       if (n === 2) throw new Error('boom')
       return 'open'
     })
-    const result = await reconcileClosingKeywords('Closes #1, #2, #3', reader, closer)
+    const result = await reconcileClosingKeywords('Closes #1, #2, #3', reader, closer, async () => {})
     expect(result.closed).toEqual([1, 3])
     expect(result.failed).toEqual([2])
+  })
+
+  it('retries once after a delay and succeeds, so a benign read-then-close race (issue #1181) never reaches `failed`', async () => {
+    const closer = vi.fn()
+    let attempts = 0
+    const reader = vi.fn((n: number) => {
+      if (n === 2) {
+        attempts += 1
+        if (attempts === 1) throw new Error('transient')
+      }
+      return 'open'
+    })
+    const delay = vi.fn(async () => {})
+    const result = await reconcileClosingKeywords('Closes #1, #2, #3', reader, closer, delay)
+    expect(result).toEqual({ closed: [1, 2, 3], failed: [] })
+    expect(delay).toHaveBeenCalledTimes(1)
+    expect(delay).toHaveBeenCalledWith(1500)
+  })
+
+  it('only records a failure once both the first attempt and the retry throw', async () => {
+    const closer = vi.fn()
+    const reader = vi.fn((n: number) => {
+      if (n === 2) throw new Error('still broken')
+      return 'open'
+    })
+    const delay = vi.fn(async () => {})
+    const result = await reconcileClosingKeywords('Closes #1, #2, #3', reader, closer, delay)
+    expect(result.closed).toEqual([1, 3])
+    expect(result.failed).toEqual([2])
+    expect(delay).toHaveBeenCalledTimes(1)
   })
 })
 
