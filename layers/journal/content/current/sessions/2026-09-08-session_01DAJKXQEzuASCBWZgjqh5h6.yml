@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01DAJKXQEzuASCBWZgjqh5h6
 startedAt: 2026-09-08T04:08:51Z
-endedAt: 2026-09-08T04:30:10Z
+endedAt: 2026-09-08T04:34:17Z
 kind: autonomous
 goal: Run scheduled /audit-docs sweep
-status: in-review
-outcome: "4 findings fixed, PR #1193 opened"
-summary: "Scheduled, unattended firing of the audit-docs Skill (no human prompt this session). Ran the full recipe: fanned out four paired-lens reviewer agents (Freshness/Drift+Orphan-addition, Single-home/Duplication+Mis-location, Concision/Verbose+Stale-narration, Coherence/Contradiction+Ambiguity) over the last 48h of git history and the full Live doc tier, pooled the findings (no overlaps needing dedup), then dispatched an independent fact-checker against primary sources. Concision found nothing solid. The other three lenses produced 4 CONFIRMED(-BUT) findings: a stale docsRead parenthetical in frictions-to-fixes/SKILL.md (superseded by #1178), a missed tsx->pnpm-exec-tsx call site in .agents/prune-trials.yml, a genuine restated-rationale duplication between CLAUDE.md and dispatch-subagents/ SKILL.md, and a missing \"Role (of a Skill)\" glossary entry in CONTEXT.md that CLAUDE.md's own Skill Inventory bullet already assumes exists. Fixed all four directly, ran pnpm gate:scoped (full gate triggered since .agents/prune-trials.yml is non-inert — lint/typecheck/validate:content/1501 unit tests/build/79 e2e all green), committed, pushed, and opened PR #1193 for self-merge (no human-only surface touched). No unresolvable factual conflict, so no needs-triage issue filed this run."
+status: completed
+outcome: "4 findings fixed, PR #1193 merged"
+summary: "Scheduled, unattended firing of the audit-docs Skill (no human prompt this session). Ran the full recipe: fanned out four paired-lens reviewer agents (Freshness/Drift+Orphan-addition, Single-home/Duplication+Mis-location, Concision/Verbose+Stale-narration, Coherence/Contradiction+Ambiguity) over the last 48h of git history and the full Live doc tier, pooled the findings (no overlaps needing dedup), then dispatched an independent fact-checker against primary sources. Concision found nothing solid. The other three lenses produced 4 CONFIRMED(-BUT) findings: a stale docsRead parenthetical in frictions-to-fixes/SKILL.md (superseded by #1178), a missed tsx->pnpm-exec-tsx call site in .agents/prune-trials.yml, a genuine restated-rationale duplication between CLAUDE.md and dispatch-subagents/ SKILL.md, and a missing \"Role (of a Skill)\" glossary entry in CONTEXT.md that CLAUDE.md's own Skill Inventory bullet already assumes exists. Fixed all four directly, ran pnpm gate:scoped (full gate triggered since .agents/prune-trials.yml is non-inert — lint/typecheck/validate:content/1501 unit tests/build/79 e2e all green), committed, pushed, and opened PR #1193 for self-merge (no human-only surface touched). No unresolvable factual conflict, so no needs-triage issue filed this run. CI (safety-gate, pr-authorassociation-label) went green on the head SHA, no review threads or merge conflicts, so per docs/agents/pr-workflow.md's audit-docs tier (merge on a green gate alone) posted a verdict comment and landed it via scripts/merge-pr.ts — merge commit aaf4f35."
 prs:
   - "1193"
 docsRead:
@@ -20,6 +20,8 @@ docsRead:
     reason: (read before editing)
   - path: CONTEXT.md
     reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
   - path: layers/journal/content/current/skills/dispatch-subagents.yml
     reason: (no reason given)
   - path: layers/journal/content/current/skills/prune-trial.yml
@@ -43,8 +45,6 @@ docsRead:
   - path: docs/agents/issue-tracker.md
     reason: (no reason given)
   - path: docs/agents/mdc-when-to-use.md
-    reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: docs/agents/tenant-layers.md
     reason: (no reason given)
@@ -129,21 +129,26 @@ frictions:
   - description: "SHELL-READ-DETECTION: docsReadViaShell attributed ~25 instruction docs (e.g. CONTEXT.md, docs/adr/0009-session-logs-commit-directly-to-main.md, .agents/skills/audit-skills/SKILL.md) to this session as shell-read, direction: false positive. This session never ran a shell command reading those literal paths itself — the detector appears to be matching shell-command-shaped text (e.g. `grep -rn '\\btsx\\b' README.md tests/README.md deploy/README.md docs/agents/*.md docs/research/*.md CL...`, visible verbatim in the \"Not counted\" list) that actually appeared inside a dispatched background Agent's own final report text, not a command this orchestrating session ran."
     solution: Scope the shell-read regex scan to this session's own Bash tool_use blocks, excluding the text content of Agent tool_result messages (which embed a subagent's self-narrated commands as prose, not this session's shell history).
     severity: moderate
-durationSec: 1279
+durationSec: 1526
 models:
-  claude-sonnet-5: 88
+  claude-sonnet-5: 126
 toolCounts:
   Skill: 3
-  Bash: 17
+  Bash: 21
   Agent: 9
-  ReadNotifications: 4
-  Read: 6
-  Edit: 5
-  ToolSearch: 1
+  ReadNotifications: 6
+  Read: 9
+  Edit: 8
+  ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Write: 1
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__actions_list: 2
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/SKILL.md
   - .agents/prune-trials.yml
