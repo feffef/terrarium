@@ -1,26 +1,22 @@
 schemaVersion: 1
 session: session_01Y81b9Ks8t2vG6AHGnraFZU
 startedAt: 2026-09-08T11:08:30Z
-endedAt: 2026-09-08T11:22:09Z
+endedAt: 2026-09-08T11:26:03Z
 kind: autonomous
 goal: Run scheduled /blog-post (no persona given)
-status: in-review
-outcome: "Eyra reaction post opened as PR #1194"
-summary: "Scheduled /blog-post run, no human in the loop and no persona pinned. Ran the A0 rotation gate (scripts/blog-rotation.ts), which forced Eyra as the only eligible Persona (last: karen, starved: eyra), so all three drafted candidates were hers. Gathered material broadly (git log -100, ~15 recent session logs, every Persona's recent posts), drafted three full candidates to scratch, and had a fresh outside-reader subagent (no other tool access) pick the strongest. It chose a reaction to David's \"The Guard Worked. A Human Overruled It Anyway.\" over two standalone drafts, judging the branch-pin-guard build-then-prune story (issue #666, PR #1159) more weighty than a meta post about the Journal's new blog on-ramp page or a small doc fix for cross-worktree gate-output collision (issue #1191). Revised the winner to close five reader-confusion gaps the reviewer named (unglossed \"harness\"/\"Skills\"/\"prune trial\", ambiguous review authorship, missing recap), verified every fact/quote/timestamp against primary sources (git show, the actual PR #1159 reviews via the GitHub API, .agents/prune-trials.yml at the relevant commit) rather than trusting David's post or the correcting commit message at face value, and caught two of my own numeric errors (a 28-minute gap I'd first written as \"eighteen minutes\", a 13.5-minute session I'd rounded wrong) before publishing. Wrote the post plus its pingback stub into david's Space, ran pnpm gate:scoped green, opened gated PR #1194, subscribed to its activity, and am now closing per CLAUDE.md/ADR-0003. All decisions this run (topic, persona, revision) were agent-made per the Routine's stored prompt; no live human input was received."
+status: completed
+outcome: "Eyra reaction post merged as PR #1194"
+summary: "Scheduled /blog-post run, no human in the loop and no persona pinned. Ran the A0 rotation gate (scripts/blog-rotation.ts), which forced Eyra as the only eligible Persona (last: karen, starved: eyra), so all three drafted candidates were hers. Gathered material broadly (git log -100, ~15 recent session logs, every Persona's recent posts), drafted three full candidates to scratch, and had a fresh outside-reader subagent (no other tool access) pick the strongest. It chose a reaction to David's \"The Guard Worked. A Human Overruled It Anyway.\" over two standalone drafts, judging the branch-pin-guard build-then-prune story (issue #666, PR #1159) more weighty than a meta post about the Journal's new blog on-ramp page or a small doc fix for cross-worktree gate-output collision (issue #1191). Revised the winner to close five reader-confusion gaps the reviewer named (unglossed \"harness\"/\"Skills\"/\"prune trial\", ambiguous review authorship, missing recap), verified every fact/quote/timestamp against primary sources (git show, the actual PR #1159 reviews via the GitHub API, .agents/prune-trials.yml at the relevant commit) rather than trusting David's post or the correcting commit message at face value, and caught two of my own numeric errors before publishing. Wrote the post plus its pingback stub into david's Space, ran pnpm gate:scoped green, opened gated PR #1194, subscribed to its activity, and closed per CLAUDE.md/ADR-0003. CI's gate went green, mergeable_state was clean, no review threads and no conflicting-issue hits, so posted a COMMENT-event self-review verdict and merged via scripts/merge-pr.ts (content-only low-risk tier, ADR-0003/0004) — no human approval needed for this tier. Unsubscribed and cancelled the standing check-in trigger once merged. All decisions this run (topic, persona, revision, merge) were agent-made per the Routine's stored prompt; no live human input was received at any point."
 prs:
   - "1194"
 docsRead:
-  - path: .claude/skills/blog-post/personas/eyra.md
-    reason: the voice to write in
   - path: .claude/skills/blog-post/personas/david.md
-    reason: the persona whose post this reacts to
-  - path: layers/blog/tenant.config.ts
-    reason: pages/pingbacks schema, curated blogTags enum
-  - path: layers/journal/content/current/pages/highlights.md
-    reason: candidate-1 topic source, read in full to verify every claim before drafting
+    reason: (no reason given)
   - path: .claude/skills/blog-post/personas/karen.md
     reason: (no reason given)
   - path: .claude/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/eyra.md
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-09-08-session_01RmWa4DvnfcuB2gJqTJubXJ.yml
     reason: (no reason given)
@@ -32,15 +28,17 @@ docsRead:
     reason: (no reason given)
   - path: layers/blog/content/david/pages/2026-09-05-it-built-a-guard-then-decided-not-to-need-one.md
     reason: (no reason given)
+  - path: layers/journal/content/current/pages/highlights.md
+    reason: (no reason given)
   - path: layers/journal/content/archived/sessions/2026-07-12-session_01NURtaEqKyf2f8vkRCMa7TN.yml
     reason: (no reason given)
 skillsUsed:
-  - name: blog-post
-    reason: the whole run
   - name: close-session
-    reason: session closure
+    reason: (no reason given)
   - name: log-session
-    reason: this log
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
 frictions:
   - description: First draft of the winning post said the guard-build-to-prune gap was 'eighteen minutes' and the gate-collision session was 'fifteen minutes'; both were wrong when checked against the actual timestamps (27:37 and 13.5 min respectively).
     solution: Computed both gaps explicitly from the fetched timestamps before finalizing (python3 datetime diff) instead of eyeballing the times I'd already read, per the skill's 'recompute every count fresh' rule. Caught before publishing, not after.
@@ -48,16 +46,16 @@ frictions:
   - description: "The A5 outside-reviewer subagent could not be dispatched with run_in_background:false as the blog-post Skill's A5 step literally instructs ('foreground — its verdict gates what happens next'); the Agent-background-flag guard (issue #835) blocks that flag unconditionally."
     solution: Omitted the flag and waited for the async completion notification instead, which the guard's own error message says is the correct pattern. No actual capability loss — same gating behavior, different wait mechanism. Worth a small wording fix in blog-post/SKILL.md's A5 step so it doesn't describe a blocked flag as the way to do it.
     severity: nit
-durationSec: 819
+durationSec: 1053
 models:
-  claude-sonnet-5: 125
+  claude-sonnet-5: 158
 toolCounts:
-  Bash: 35
+  Bash: 42
   Read: 13
   ToolSearch: 1
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 7
   Grep: 1
-  Write: 6
+  Write: 7
   Edit: 5
   Agent: 2
   ScheduleWakeup: 1
@@ -65,11 +63,17 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  PushNotification: 1
+  PushNotification: 2
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/david/pingbacks/2026-09-08-eyra-2026-09-05-it-built-a-guard-then-decided-not-to-need-one.yml
 docsReadViaShell:
   - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/pr-workflow.md
 subagents:
   - type: general-purpose
     task: Judge three blog post candidates
