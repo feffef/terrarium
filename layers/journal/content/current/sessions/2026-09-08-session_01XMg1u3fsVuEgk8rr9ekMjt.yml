@@ -1,0 +1,46 @@
+schemaVersion: 1
+session: session_01XMg1u3fsVuEgk8rr9ekMjt
+startedAt: 2026-09-08T00:15:38Z
+endedAt: 2026-09-08T00:21:26Z
+kind: autonomous
+goal: Run the scheduled /digest sweep
+status: in-review
+outcome: "2026-09-07 Digest authored, PR #1190 opened"
+summary: "Scheduled /digest run, no human in the loop. Listed one undigested closed UTC day (2026-09-07), authored its Digest from `scripts/digest.ts gather` output covering 8 PRs and 6 sessions (headlined by a frictions-to-fixes cycle that filed 8 issues and merged 4 fixes), ran the retention sweep archiving the 2026-08-31 digest and its 6 session logs, confirmed `pnpm gate:scoped` green, committed, pushed, and opened gated PR #1190 with the ADR-0017 provenance header. Subscribed to PR activity per CLAUDE.md's babysitting discipline."
+prs:
+  - "1190"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-09-06.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 348
+models:
+  claude-sonnet-5: 56
+toolCounts:
+  Bash: 14
+  Read: 2
+  Write: 2
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__get_file_contents: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-09-07.md
+gitBranch: claude/compassionate-lovelace-f1admg
+entrypoint: remote_trigger
+cliVersion: 2.1.263
+trigger: digest
+landedBy: Stop
