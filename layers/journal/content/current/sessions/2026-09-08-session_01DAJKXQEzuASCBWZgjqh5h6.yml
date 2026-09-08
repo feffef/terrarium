@@ -1,0 +1,201 @@
+schemaVersion: 1
+session: session_01DAJKXQEzuASCBWZgjqh5h6
+startedAt: 2026-09-08T04:08:51Z
+endedAt: 2026-09-08T04:30:10Z
+kind: autonomous
+goal: Run scheduled /audit-docs sweep
+status: in-review
+outcome: "4 findings fixed, PR #1193 opened"
+summary: "Scheduled, unattended firing of the audit-docs Skill (no human prompt this session). Ran the full recipe: fanned out four paired-lens reviewer agents (Freshness/Drift+Orphan-addition, Single-home/Duplication+Mis-location, Concision/Verbose+Stale-narration, Coherence/Contradiction+Ambiguity) over the last 48h of git history and the full Live doc tier, pooled the findings (no overlaps needing dedup), then dispatched an independent fact-checker against primary sources. Concision found nothing solid. The other three lenses produced 4 CONFIRMED(-BUT) findings: a stale docsRead parenthetical in frictions-to-fixes/SKILL.md (superseded by #1178), a missed tsx->pnpm-exec-tsx call site in .agents/prune-trials.yml, a genuine restated-rationale duplication between CLAUDE.md and dispatch-subagents/ SKILL.md, and a missing \"Role (of a Skill)\" glossary entry in CONTEXT.md that CLAUDE.md's own Skill Inventory bullet already assumes exists. Fixed all four directly, ran pnpm gate:scoped (full gate triggered since .agents/prune-trials.yml is non-inert — lint/typecheck/validate:content/1501 unit tests/build/79 e2e all green), committed, pushed, and opened PR #1193 for self-merge (no human-only surface touched). No unresolvable factual conflict, so no needs-triage issue filed this run."
+prs:
+  - "1193"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: checked open Prune Trial territory before any lens could flag terse rules
+  - path: scripts/session-frictions.ts
+    reason: verified Finding 1's Drift claim against the actual TriageSession fields
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: CONTEXT.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/dispatch-subagents.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/prune-trial.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/frictions-to-fixes.yml
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+  - path: scripts/workflow-edit-guard.ts
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: (invoked as a slash command)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "SHELL-READ-DETECTION: docsReadViaShell attributed ~25 instruction docs (e.g. CONTEXT.md, docs/adr/0009-session-logs-commit-directly-to-main.md, .agents/skills/audit-skills/SKILL.md) to this session as shell-read, direction: false positive. This session never ran a shell command reading those literal paths itself — the detector appears to be matching shell-command-shaped text (e.g. `grep -rn '\\btsx\\b' README.md tests/README.md deploy/README.md docs/agents/*.md docs/research/*.md CL...`, visible verbatim in the \"Not counted\" list) that actually appeared inside a dispatched background Agent's own final report text, not a command this orchestrating session ran."
+    solution: Scope the shell-read regex scan to this session's own Bash tool_use blocks, excluding the text content of Agent tool_result messages (which embed a subagent's self-narrated commands as prose, not this session's shell history).
+    severity: moderate
+durationSec: 1279
+models:
+  claude-sonnet-5: 88
+toolCounts:
+  Skill: 3
+  Bash: 17
+  Agent: 9
+  ReadNotifications: 4
+  Read: 6
+  Edit: 5
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/prune-trials.yml
+  - CLAUDE.md
+  - CONTEXT.md
+docsReadViaShell:
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/agents/environment-caveats.md
+  - CONTEXT.md
+  - CONTEXT-MAP.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/midden-survey/SKILL.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0004-safety-gate.md
+  - docs/adr/0018-adr-amendment-convention.md
+  - docs/adr/0022-standing-green-light.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/close-session/SKILL.md
+  - docs/agents/domain.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: Drift + Orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: Duplication + Mis-location"
+  - type: general-purpose
+    task: "Concision lens: Verbose + Stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: Contradiction + Ambiguity"
+  - type: general-purpose
+    task: "Freshness lens: Drift + Orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: Duplication + Mis-location"
+  - type: general-purpose
+    task: "Concision lens: Verbose + Stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: Contradiction + Ambiguity"
+  - type: general-purpose
+    task: Fact-check four audit-docs findings
+gitBranch: claude/festive-mayer-kasfbk
+entrypoint: remote_trigger
+cliVersion: 2.1.263
+trigger: audit-docs
+landedBy: Stop
