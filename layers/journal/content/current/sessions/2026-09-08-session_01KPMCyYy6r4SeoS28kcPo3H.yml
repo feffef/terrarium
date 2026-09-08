@@ -1,27 +1,23 @@
 schemaVersion: 1
 session: session_01KPMCyYy6r4SeoS28kcPo3H
 startedAt: 2026-09-08T13:17:25Z
-endedAt: 2026-09-08T13:26:06Z
+endedAt: 2026-09-08T13:29:16Z
 kind: autonomous
 goal: Run /prune-trial
-status: in-review
-outcome: 3 trials judged, 1 new prune shipped
-summary: "Scheduled, unprompted run of the prune-trial Skill (ADR-0027) — no human input this session. Ran scripts/prune-trial-window.ts and found 3 of 5 open trials past their judgeable window (branch-off checklist, external-pack- Skills, tail-pipe-guard). Judged each against scripts/session-frictions.ts output since its landing plus a dispatched subagent's GitHub issue search for filed regressions: no major/blocker damage traced to any of the three, only nit/minor frictions of guards firing as designed or a self-corrected miss. All three verdicts: prune holds, entries deleted. Chose a new problem via the rulebook-migration-table's criteria: CLAUDE.md restated session-logging mechanics (mechanical/interpretive split, Stop-hook timing, worktree-isolated-agent exception) that close-session/SKILL.md and log-session/SKILL.md already own in full, in two separate CLAUDE.md spots. Compressed both to the goal-shaped rule, net -22 lines, verified the surviving text alone via a dispatched Sonnet probe (it correctly derived every safety-critical action, punting only the deliberately- deferred mechanism detail). Full local gate green; PR #1195 opened and subscribed."
+status: completed
+outcome: 3 trials judged, 1 new prune merged
+summary: "Scheduled, unprompted run of the prune-trial Skill (ADR-0027) — no human input this session. Judged the 3 of 5 open trials past their judgeable window (branch-off checklist, external-pack-Skills, tail-pipe-guard) against frictions logged since each landed plus a GitHub issue search for filed regressions: no major/blocker damage traced to any of the three, only guards firing as designed or a self-corrected miss. All three verdicts: prune holds, entries deleted. Chose a new problem via the rulebook-migration-table's Built-rows shortcut: CLAUDE.md restated session-logging mechanics (mechanical/interpretive split, Stop-hook timing, worktree-isolated-agent exception) that close-session/SKILL.md and log-session/SKILL.md already own in full, in two separate CLAUDE.md spots. Compressed both to the goal-shaped rule, net -22 lines, verified the surviving text alone via a dispatched Sonnet probe. Full gate green (local and CI); PR #1195 merged (d4f43b07)."
 prs:
   - "1195"
 docsRead:
-  - path: .agents/prune-trials.yml
-    reason: the ledger to judge and edit
   - path: docs/research/rulebook-migration-table.md
-    reason: criterion-1 candidate search (Built rows as prune bait)
-  - path: .agents/skills/close-session/SKILL.md
-    reason: verify duplication target before pruning CLAUDE.md
-  - path: .agents/skills/log-session/SKILL.md
-    reason: verify duplication target before pruning CLAUDE.md
-  - path: docs/agents/pr-workflow.md
-    reason: check for a third duplication site — found none
+    reason: (no reason given)
   - path: CLAUDE.md
     reason: (read before editing)
+  - path: .agents/prune-trials.yml
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -33,11 +29,17 @@ frictions:
   - description: "This run's own step-0 branch-per-checklist instinct nearly repeated a previously-logged friction (session_01DBNnQjabLmCPhFUkhoq5nH, 2026-09-05): I created a new branch off origin/main via `git checkout -b` even though this session was already on its pinned branch at origin/main's tip, before catching it against the outer harness's branch-pin instruction and switching back."
     solution: "No damage landed (caught before any commit). Same root cause as the earlier recorded instance: prune-trial's own step-0 phrasing (\"Branch per CLAUDE.md's pre-checkout checklist\") still names a \"pre-checkout checklist\" that CLAUDE.md's own branch-off bullet no longer uses that name for (it was compressed to one sentence, judged in this same run). Worth a small follow-up: reword prune-trial's step-0 to point at CLAUDE.md's actual current wording instead of a retired term, since it has now independently misled two sessions."
     severity: minor
-durationSec: 521
+  - description: "This run's own step-0 branch-per-checklist instinct nearly repeated a previously-logged friction (session_01DBNnQjabLmCPhFUkhoq5nH, 2026-09-05): created a new branch off origin/main via `git checkout -b` even though this session was already on its pinned branch at origin/main's tip, before catching it and switching back."
+    solution: "No damage landed. Same root cause as the earlier recorded instance: prune-trial's own step-0 phrasing (\"Branch per CLAUDE.md's pre-checkout checklist\") still names a \"pre-checkout checklist\" that CLAUDE.md's own branch-off bullet no longer uses that name for (it was compressed to one sentence, judged in this same run). Worth a follow-up: reword prune-trial's step-0 to point at CLAUDE.md's current wording, since it has now independently misled two sessions."
+    severity: minor
+  - description: "Backgrounded `merge-pr.ts` with a trailing shell `&` on top of `run_in_background: true` (`pnpm exec tsx scripts/merge-pr.ts 1195 > log 2>&1 &`), exactly the anti-pattern CLAUDE.md's Working conventions warns against. The outer Bash call returned \"completed, exit code 0\" immediately (the fork succeeding), not when merge-pr.ts itself finished, so that signal was meaningless."
+    solution: "Caught it before trusting the false signal — verified with `ps aux` that the process was still actually running, then used a Monitor `until ! kill -0 <pid>` loop to get a real completion notification, per CLAUDE.md's own documented recovery. No bad action taken on the false signal. Next time: never add a trailing `&` when run_in_background is already true — just omit it."
+    severity: minor
+durationSec: 711
 models:
-  claude-sonnet-5: 144
+  claude-sonnet-5: 172
 toolCounts:
-  Bash: 45
+  Bash: 52
   Read: 8
   Agent: 3
   Edit: 5
@@ -46,11 +48,12 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
-  mcp__github__pull_request_read: 1
+  Write: 2
+  mcp__github__pull_request_read: 3
   mcp__github__add_issue_comment: 1
   Monitor: 1
   ScheduleWakeup: 1
+  ReadNotifications: 3
 filesEdited:
   - .agents/prune-trials.yml
   - CLAUDE.md
