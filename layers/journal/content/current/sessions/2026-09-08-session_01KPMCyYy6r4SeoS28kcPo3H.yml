@@ -1,0 +1,76 @@
+schemaVersion: 1
+session: session_01KPMCyYy6r4SeoS28kcPo3H
+startedAt: 2026-09-08T13:17:25Z
+endedAt: 2026-09-08T13:26:06Z
+kind: autonomous
+goal: Run /prune-trial
+status: in-review
+outcome: 3 trials judged, 1 new prune shipped
+summary: "Scheduled, unprompted run of the prune-trial Skill (ADR-0027) — no human input this session. Ran scripts/prune-trial-window.ts and found 3 of 5 open trials past their judgeable window (branch-off checklist, external-pack- Skills, tail-pipe-guard). Judged each against scripts/session-frictions.ts output since its landing plus a dispatched subagent's GitHub issue search for filed regressions: no major/blocker damage traced to any of the three, only nit/minor frictions of guards firing as designed or a self-corrected miss. All three verdicts: prune holds, entries deleted. Chose a new problem via the rulebook-migration-table's criteria: CLAUDE.md restated session-logging mechanics (mechanical/interpretive split, Stop-hook timing, worktree-isolated-agent exception) that close-session/SKILL.md and log-session/SKILL.md already own in full, in two separate CLAUDE.md spots. Compressed both to the goal-shaped rule, net -22 lines, verified the surviving text alone via a dispatched Sonnet probe (it correctly derived every safety-critical action, punting only the deliberately- deferred mechanism detail). Full local gate green; PR #1195 opened and subscribed."
+prs:
+  - "1195"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the ledger to judge and edit
+  - path: docs/research/rulebook-migration-table.md
+    reason: criterion-1 candidate search (Built rows as prune bait)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: verify duplication target before pruning CLAUDE.md
+  - path: .agents/skills/log-session/SKILL.md
+    reason: verify duplication target before pruning CLAUDE.md
+  - path: docs/agents/pr-workflow.md
+    reason: check for a third duplication site — found none
+  - path: CLAUDE.md
+    reason: (read before editing)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: "This run's own step-0 branch-per-checklist instinct nearly repeated a previously-logged friction (session_01DBNnQjabLmCPhFUkhoq5nH, 2026-09-05): I created a new branch off origin/main via `git checkout -b` even though this session was already on its pinned branch at origin/main's tip, before catching it against the outer harness's branch-pin instruction and switching back."
+    solution: "No damage landed (caught before any commit). Same root cause as the earlier recorded instance: prune-trial's own step-0 phrasing (\"Branch per CLAUDE.md's pre-checkout checklist\") still names a \"pre-checkout checklist\" that CLAUDE.md's own branch-off bullet no longer uses that name for (it was compressed to one sentence, judged in this same run). Worth a small follow-up: reword prune-trial's step-0 to point at CLAUDE.md's actual current wording instead of a retired term, since it has now independently misled two sessions."
+    severity: minor
+durationSec: 521
+models:
+  claude-sonnet-5: 144
+toolCounts:
+  Bash: 45
+  Read: 8
+  Agent: 3
+  Edit: 5
+  ToolSearch: 4
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  Monitor: 1
+  ScheduleWakeup: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - CLAUDE.md
+docsReadViaShell:
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/agents/pr-workflow.md
+  - CONTEXT.md
+subagents:
+  - type: general-purpose
+    task: Search GitHub issues for prune-trial regressions
+  - type: general-purpose
+    task: Search GitHub issues for prune-trial regressions
+  - type: general-purpose
+    task: Probe compressed session-logging text
+    model: sonnet
+gitBranch: claude/practical-rubin-4tiy3k
+entrypoint: remote_trigger
+cliVersion: 2.1.263
+trigger: prune-trial
+learnings:
+  - "docs/research/rulebook-migration-table.md's \"Prune-trial shortcut: Built rows as prune candidates\" section is a fast, targeted way to find criterion-1 candidates (prose whose mechanism is already built) without re-scanning the whole instruction corpus by hand."
+landedBy: Stop
