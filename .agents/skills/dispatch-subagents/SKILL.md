@@ -76,7 +76,14 @@ The subagent cannot see this session's context, so the brief is self-contained:
   an agent a well-formed log describing a **different** worktree's run, which it
   then quotes as its own. Two agents hit this independently in one dispatch, and
   the orchestrator published a wrong root-cause diagnosis built on the clobbered
-  output before the second report surfaced the real mechanism (issue #847).
+  output before the second report surfaced the real mechanism (issue #847). This
+  also applies to **gate/test command output specifically**, even when each
+  agent already has its own worktree: the brief must tell the subagent to
+  redirect `pnpm gate:scoped`/test output to a path unique to its own
+  worktree/agent id (e.g. `pnpm gate:scoped > /path/unique-to-agent/gate.log
+  2>&1`) — the shared container can still let a sibling's run bleed into
+  another agent's captured output, forcing PID-based verification to confirm
+  a clean pass (issue #1191).
 - **Run verification (`pnpm gate:scoped`, and any other check) in the foreground
   and wait** — no wake mechanism ever resumes a stopped subagent, so a
   `PreToolUse` guard denies it (`docs/agents/guards.md`, issue #694).
