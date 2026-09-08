@@ -272,14 +272,11 @@ it with a tool.
   session".) The land-a-gated-PR recipe, the per-tier merge authority list, and
   the `merge-pr.ts`-as-sole-merge-path mechanics now live in
   `docs/agents/pr-workflow.md` — read that before landing a PR.
-- **Opening the PR is the first session log.** The moment you open the gated PR
-  is a closure point: invoke `close-session` right then (it authors the log via
-  `log-session`). It's not finished; more commits and a re-fired log can follow
-  — re-invoking is safe, see "Logging your session" below for why — and see the
-  `log-session` Skill for the exact status semantics (`in-review` vs `completed`).
-  **Exception:** a dispatched worktree-isolated impl agent that opens a PR (e.g.
-  `frictions-to-fixes`' impl agents) must **not** self-invoke `close-session` —
-  see `close-session/SKILL.md` for why and its mechanical enforcement.
+- **Opening the PR is a closure point — invoke `close-session` right then.**
+  More commits and a re-fired log can follow; re-invoking is safe. A dispatched
+  worktree-isolated impl agent must **not** self-invoke it — see
+  `close-session/SKILL.md` for why and its mechanical enforcement, and
+  "Logging your session" below for the rest.
 - **Dispatching a subagent is a procedure, not a tool call — invoke the
   `dispatch-subagents` Skill before spawning one.** It single-homes the three
   worktree-isolation mechanisms and which to pick (they are easy to conflate),
@@ -444,34 +441,15 @@ prepare` emits a "Cannot extend config from layers/<tenant>/" warning.
 
 Every session ends with an honest **session log** in the Journal (ADR-0009,
 issue #2) — the raw signal the self-improvement Skills mine (see `CONTEXT.md`'s
-**Friction** term for which, and why). A log has two halves (ADR-0009
-amendment): a **mechanical** trace
-derived from the transcript by a committed hook — never self-reported — and an
-**interpretive** half only you can write. The **`log-session`** Skill owns the
-exact field-level split, how you author the interpretive half to a scratch
-file, and which hook derives and commits the rest to `main` **live, normally
-well before session teardown** — read it rather than this summary.
+**Friction** term for which, and why).
 
-**You self-judge closure — invoke the `close-session` Skill when the session is
-wrapping up.** `close-session` is the single **front door** for Session closure
-(CONTEXT.md's glossary term — see it there for the full definition): it runs
-the closing sequence — coherent state → gated-PR discipline (if any) → the
-session log, which it authors by calling `log-session`. Its trigger is
-deliberately **loose and early** ("am I winding down?"), so reach for it while
-you can still act rather than after checking out. No "are we done?" ask.
-
-Authoring the scratch *is* the "done" signal — the committed `Stop` hook lands it
-**only if** it exists, so a mid-work freeze logs nothing. Re-invoking is safe
-(see `log-session`'s own Skill for why) — so if you call closure and then do
-more, just invoke `close-session` again.
-
-Because authoring no longer commits and re-firing self-heals, both Skills are
-**model-invocable** — invoke `close-session` yourself at closure rather than on a
-human prompt (call `log-session` directly only to *amend* an already-written
-log). This mechanism serves autonomous sessions too: they close before ending, on
-purpose. Whether the affordance actually gets invoked is measurable — the
-`close-session` invocation rate is the signal that would justify (or retire) a
-heavier automatic safety net (ADR-0009).
+**Self-judge closure — invoke `close-session` yourself while you can still act**,
+loose and early ("am I winding down?"), never only on a human prompt. It runs the
+closing sequence and authors the log via `log-session`. Re-invoking is safe if
+more work follows — both Skills are model-invocable and self-heal for exactly
+that. `close-session`'s own Skill owns the mechanics: the mechanical/interpretive
+field split, when the `Stop` hook actually commits, and the worktree-isolated-
+agent exception — read it there rather than this summary.
 
 ## Status
 

@@ -76,142 +76,6 @@ trials:
       message — not some other doc — is what to read and follow when one of
       these is blocked.
   - problem: >
-      CLAUDE.md's Working conventions carried a three-step branch-off
-      checklist — scan the task instructions for a caller-pinned designated
-      branch, `git fetch origin main`, then branch off `origin/main` — and
-      `blog-post`, `digest`, `audit-skills` and `audit-docs` each opened with
-      a "Branch off `origin/main`" step pointing at it. That instruction was
-      the cause of the failure it warned about (#666, #625, #684): the harness
-      already checks the pinned branch out at session start, so a session left
-      alone keeps it, and six recorded sessions left it only because the text
-      told them to cut a new branch off `origin/main`. Pruned to one sentence
-      — work on the branch your session started on; if that is `main`, cut one
-      off `origin/main` first, any name — and reduced each Skill's step to a
-      pointer at it. Net -24 lines across the five files.
-    territory:
-      paths:
-        - "CLAUDE.md: the branch-off bullet (Working conventions)"
-        - ".agents/skills/blog-post/SKILL.md: \"§2. Get on a working branch\""
-        - ".agents/skills/digest/SKILL.md: \"§1. Get on a working branch\""
-        - ".agents/skills/audit-skills/SKILL.md: \"§1. Get on a working branch\""
-        - ".agents/skills/audit-docs/SKILL.md: \"§1. Get on a working branch\""
-      keywords:
-        - branch off origin/main
-        - caller-pinned branch
-        - designated branch
-        - branch-off checklist
-        - git fetch origin main
-    opened: 2026-09-05
-    proven: false
-    check: >
-      Damage is a session that starts on a pinned `claude/*` branch and still
-      creates a differently named branch for its work, or a session that
-      starts on `main` and commits or pushes there instead of cutting a branch
-      first. NOT damage: a session that stays on its starting branch without
-      fetching (there is nothing to branch off), a subagent creating its own
-      worktree branch (the sanctioned isolation path), or a session cutting a
-      branch off `origin/main` because it genuinely started on `main`.
-      `proven: false` — this prune shipped from a dispatched review subagent
-      with no subagent tool of its own, so §4's Sonnet probe could not be run.
-  - problem: >
-      CLAUDE.md's Ground rules bullet on external pack Skills, and
-      `frictions-to-fixes/SKILL.md`'s §2 screening step, each independently
-      re-derived the same already-mechanized rule: don't edit an external
-      pack Skill's `SKILL.md` (`skills-lock.json`-keyed), because a re-install
-      clobbers the edit and `pnpm verify:skills-lock` (part of `pnpm gate`,
-      ADR-0015's 2026-07-11 amendment) already gate-enforces it. CLAUDE.md's
-      bullet additionally previewed the mechanism's internals ("what it pins,
-      and the `--write` re-pin step after a legitimate pack install") that
-      ADR-0015's own amendment text already states in full — a pointer
-      duplicating its referent's content, not just naming it. Compressed
-      CLAUDE.md's bullet to the rule, the one-line why, the two places to put
-      an improvement instead (upstream; the Skill Inventory entry), and a
-      bare pointer to ADR-0015 for the mechanism. Compressed
-      `frictions-to-fixes/SKILL.md`'s screening step to keep its own
-      locally-relevant reasoning (the gate would reject the edit anyway, so
-      screening it out here just avoids a wasted round-trip) while dropping
-      its restatement of the "why" and the `skills-lock.json` definition,
-      which CLAUDE.md already states and this step already cites by name.
-      Net -7 lines across the two files.
-    territory:
-      paths:
-        - "CLAUDE.md: the \"Skills … off limits to edit\" bullet (Ground rules)"
-        - ".agents/skills/frictions-to-fixes/SKILL.md: \"§2. Screen against fixes already shipped\", the external-pack-Skill paragraph"
-      keywords:
-        - skills-lock.json
-        - external pack Skill
-        - verify:skills-lock
-        - pack Skill's SKILL.md
-    opened: 2026-09-04
-    proven: true
-    check: >
-      Damage is a session that, needing the actual reason a pack Skill edit is
-      off limits or what `verify:skills-lock` actually pins, stops at either
-      compressed text and guesses wrong instead of opening ADR-0015 — or a
-      session that attempts to edit a pack Skill's `SKILL.md` because the
-      compressed bullet reads as less binding than the old one, or because
-      `frictions-to-fixes`'s trimmed screening step no longer names
-      `skills-lock.json` explicitly and the session can't recognize a
-      candidate as pack-owned. NOT damage: a session opening ADR-0015 before
-      asserting the mechanism's exact pinning/re-pin behaviour (the intended
-      single-home behaviour working), or a session hitting `pnpm
-      verify:skills-lock`'s own gate failure and fixing it from the failure
-      message rather than the doc. A Sonnet probe given only the compressed
-      text correctly derived that an external pack Skill's `SKILL.md` must
-      never be edited, that a genuine improvement goes upstream instead, that
-      a repo-specific note belongs in the Skill Inventory entry, and that the
-      gate (`verify:skills-lock`) would reject the edit regardless of the
-      screening step.
-  - problem: >
-      CLAUDE.md's Working conventions bullet on piping a backgrounded or
-      long-running command through a trailing `tail`/`head`/`echo` fully
-      re-derived, in eleven lines of prose, an explanation now made redundant
-      by `scripts/tail-pipe-guard.ts` (issue #873; two earlier prose fixes,
-      #384 and #812, hadn't held) — a fail-closed `PreToolUse` guard that ships
-      on this branch but wasn't reflected as built in
-      `docs/research/rulebook-migration-table.md`'s CM-38 row. The guard's own
-      `formatGuardMessage()` states, almost verbatim, the same "loses its real
-      exit status and can truncate its output... redirect to a file instead
-      (`cmd > log 2>&1`), check `$?` directly, then read the file" the bullet
-      spelled out at length, and `docs/agents/guards.md`'s roster row already
-      documents the guard's exact scope (backgrounded-or-known-long-runner
-      only; an ordinary short pipe is untouched). Compressed the bullet to the
-      rule, the one-line why, the fix, and a pointer to the guard + its issue —
-      same shape as the already-landed `ToolSearch`/`ScheduleWakeup` compression
-      (CLAUDE.md, ADR-0027 prune history), which proved a guard's own deny
-      message can carry the worked-example detail instead of the doc. Net -5
-      lines.
-    territory:
-      paths:
-        - "CLAUDE.md: the \"Never pipe a backgrounded or long-running command\" bullet (Working conventions)"
-      keywords:
-        - tail-pipe-guard.ts
-        - trailing tail
-        - trailing head
-        - pipe into
-        - exit status
-    opened: 2026-09-05
-    proven: true
-    check: >
-      Damage is a session that, needing the actual reason a trailing
-      `tail`/`head`/`echo` pipe is risky or the actual redirect fix, stops at
-      the compressed bullet and guesses wrong instead of opening
-      `docs/agents/guards.md` or simply attempting the call and reading the
-      guard's own deny message — or a session that loses a real failure's exit
-      status through a shape the guard's known fail-open gaps miss (a
-      long-runner reached only through a variable, a wrapper script, or
-      `xargs`; a trailing stage other than `tail`/`head`/`echo`) because the
-      compressed bullet no longer spells out the general redirect-and-check-$?
-      habit. NOT damage: a session that gets denied and follows the guard's
-      own named fix (the intended teach-at-the-moment-of-failure design
-      working), or one that redirects to a file and checks `$?` from the
-      surviving one-sentence rule without ever needing the guard to fire. A
-      Sonnet probe given only the compressed text correctly derived that a
-      backgrounded or long-running command must never pipe into a trailing
-      `tail`/`head`/`echo`, and that the fix is redirecting to a file and
-      checking `$?` directly rather than trusting the pipeline's own exit
-      status.
-  - problem: >
       `docs/agents/git-conventions.md`'s "If a checkout is still shallow"
       section carried 45 lines explaining a scenario the repo already prevents
       mechanically: `scripts/unshallow-on-start.ts` (a `SessionStart` hook)
@@ -263,3 +127,54 @@ trials:
       conclusion, that the fix is `git fetch --unshallow` before proceeding,
       and that a shallow `merge-base` diff's failure mode is silently
       under-reporting changes rather than only over-reporting them.
+  - problem: >
+      CLAUDE.md restated session-logging mechanics that `close-session/SKILL.md`
+      and `log-session/SKILL.md` already own in full, in two separate spots: the
+      "Opening the PR is the first session log" bullet (Working conventions) and
+      the whole "Logging your session" section. Both re-explained detail already
+      stated, near-verbatim, by the two Skills themselves — the mechanical vs.
+      interpretive field split and the `Stop`-hook commit timing (verified against
+      `log-session/SKILL.md`'s own opening paragraphs, which state both in more
+      precise detail than CLAUDE.md's copy), the worktree-isolated-agent exception
+      and its mechanical enforcement (verified against `close-session/SKILL.md`'s
+      own closing paragraph, which states it identically), why re-invoking
+      self-heals, and the "self-judge closure, don't wait for a human prompt"
+      framing repeated a second time. `docs/agents/pr-workflow.md` carries none of
+      this (grepped, no hits), so the duplication was entirely CLAUDE.md
+      restating its own two Skills. Compressed both spots to the rule each
+      exists to state — open the PR, invoke `close-session`, re-invoking is safe,
+      a worktree-isolated impl agent must not self-invoke — with the mechanism
+      detail pointed at the Skills that already own it precisely. Net -22 lines.
+    territory:
+      paths:
+        - "CLAUDE.md: the \"Opening the PR is the first session log\" bullet (Working conventions)"
+        - "CLAUDE.md: the \"Logging your session\" section"
+      keywords:
+        - session log
+        - close-session
+        - log-session
+        - mechanical trace
+        - interpretive half
+        - re-invoking is safe
+        - worktree-isolated impl agent
+    opened: 2026-09-08
+    proven: true
+    check: >
+      Damage is a session that, having just opened a gated PR, doesn't invoke
+      `close-session` at all because the compressed bullet no longer spells out
+      why that moment matters, or a session that treats a second `close-session`
+      call after more work as unsafe/redundant instead of the expected pattern,
+      or — the sharpest failure — a dispatched worktree-isolated impl agent that
+      self-invokes `close-session` anyway because the compressed text no longer
+      states the consequence (clobbering the orchestrator's shared log) and so
+      reads the prohibition as optional. NOT damage: a session that opens
+      `close-session/SKILL.md` or `log-session/SKILL.md` before asserting the
+      exact mechanical/interpretive split or `Stop`-hook timing (the intended
+      single-home behaviour working), or one that never needed the pointer
+      because it already knew the mechanics. A Sonnet probe given only the
+      compressed text correctly derived that opening a gated PR is when to
+      invoke `close-session`, that re-invoking after more commits is the
+      expected safe pattern rather than something to avoid, and that a
+      worktree-isolated impl agent must never self-invoke it — deferring only
+      the *why* and the alternative mechanism to the named Skill files, which is
+      the intended point-of-need design, not a gap.
