@@ -238,12 +238,12 @@ it with a tool.
   anything. Use `Monitor`/`ps` plus a log completion marker to confirm the
   process actually finished instead of trusting the outer call's return.
 - **A dispatched subagent must never background a Bash command at all, or call
-  `Monitor` to wait on one** — no wake mechanism ever resumes a stopped
-  subagent, and a `PreToolUse` guard denies both (`docs/agents/guards.md`,
-  issue #694/#995). The mechanics — running in the foreground with an explicit
-  `timeout`, splitting a step over 10 minutes, naming a completion marker when
-  something must background anyway — are single-homed in
-  `dispatch-subagents/SKILL.md`.
+  `Monitor` to wait on one** — a `PreToolUse` guard denies both
+  (`docs/agents/guards.md`, issue #694/#995). The rationale (no wake mechanism
+  ever resumes a stopped subagent) and the mechanics — running in the
+  foreground with an explicit `timeout`, splitting a step over 10 minutes,
+  naming a completion marker when something must background anyway — are
+  single-homed in `dispatch-subagents/SKILL.md`.
 - **Never pipe a backgrounded or long-running command through a trailing
   `tail`/`head`/`echo` when its exit status or full output matters** — it
   silently reports the trailing command's status, not the real one, and can

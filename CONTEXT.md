@@ -195,6 +195,12 @@ Disuse *alone* never lowers a grade; a grade drops only on evidence that a Skill
 was **not used in sessions of the kind it serves** (opportunity missed, not merely
 absent).
 
+### Role (of a Skill)
+A Skill Inventory entry's plain-prose account of what the Skill is for and why
+it matters to this Platform — not a copy of the Skill's own description, and
+kept reference-free (no PR/issue/session ids). See `audit-skills/SKILL.md` for
+the exact length guideline and refresh rule.
+
 ### Agent Authorship
 Platform-wide invariant: **agents are the authors of record for essentially all
 content and code.** **Trusted** users (those with write access) converse, direct,

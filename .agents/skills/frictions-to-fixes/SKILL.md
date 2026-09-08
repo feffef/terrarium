@@ -49,8 +49,10 @@ Its brief:
   Claude-Code development (ADR-0009 amendment); you never see them here, so don't
   go hunting the raw corpus for them.
 - **For a friction a doc already covers, check whether that session read the
-  doc.** The full log's `docsRead` lists the paths the session opened (the
-  triage extract drops it — re-read the log via the record's `file`). This
+  doc.** Each triage record now carries `docsRead` directly (the paths the
+  session opened) — no need to re-read the full log for that; reach for the
+  record's `file` only when a candidate needs more context than the extract
+  carries. This
   splits one question into two very different frictions: **doc not opened** ⇒ a
   *discoverability* failure — the rule's home is wrong, or prose is the wrong
   mechanism entirely; **doc opened and the friction happened anyway** ⇒ the
