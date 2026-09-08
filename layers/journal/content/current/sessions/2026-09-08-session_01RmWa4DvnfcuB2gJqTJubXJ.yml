@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_01RmWa4DvnfcuB2gJqTJubXJ
+startedAt: 2026-09-08T02:04:34Z
+endedAt: 2026-09-08T02:18:04Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: completed
+outcome: 1 issue filed, 1 PR merged
+summary: "Scheduled autonomous frictions-to-fixes run (Routine-fired, no live human prompt). Dispatched a survey subagent to read the latest 20 session logs, screen frictions against the tracker (three prior frictions-to-fixes runs already covered most of the window), and rank never-fixed candidates. Only one genuine candidate survived screening: dispatch-subagents/SKILL.md's \"name every artifact uniquely\" bullet didn't call out gate/test command output specifically, and two dispatched impl agents in a prior session hit cross-process output contamination running pnpm gate:scoped concurrently across worktrees in the shared container. Filed issue #1191 with the recommended fix, dispatched a Sonnet impl agent (isolation: worktree) to extend the existing bullet, reviewed the resulting PR #1192 (clean 8-line diff, matched the recommendation, gate green), posted a COMMENT-event review per pr-workflow.md (can't self-approve), and merged via scripts/merge-pr.ts, which also closed #1191. Verified pnpm check:worktrees passes with nothing stranded. All actions this session were agent-initiated per the Routine's stored prompt; no live human input was received at any point."
+prs:
+  - "1192"
+docsRead:
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: the process this session ran
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: dispatch procedure + the file the fix targets
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe — sole merge path via merge-pr.ts, COMMENT not APPROVE
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the whole run
+  - name: dispatch-subagents
+    reason: briefed and dispatched the impl agent
+  - name: close-session
+    reason: session closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Tried to APPROVE-review PR #1192 as required by habit; GitHub rejected it since this toolchain's identity is the repo owner/PR author (docs/agents/pr-workflow.md already documents this exact failure, issue #301/#853)."
+    solution: Doc already covers it correctly; I just hadn't internalized it before the first attempt. Re-posted as a COMMENT-event review per the doc, which worked. No fix needed — this is expected behavior, not a gap.
+    severity: nit
+durationSec: 810
+models:
+  claude-sonnet-5: 61
+toolCounts:
+  Agent: 2
+  Read: 2
+  ToolSearch: 2
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 2
+  Skill: 3
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 6
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_review_write: 2
+  Bash: 3
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/dispatch-subagents/SKILL.md
+docsReadViaShell:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/guards.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix dispatch-subagents gate output collision doc
+gitBranch: claude/eager-ptolemy-oj3ssr
+entrypoint: remote_trigger
+cliVersion: 2.1.263
+trigger: frictions-to-fixes
+learnings:
+  - The 20-session frictions-to-fixes survey window regularly straddles 2-3 prior runs of the same Skill at this cadence, so most candidates are already screened; anchoring on the most recent frictions-to-fixes-filed issue's creation time to bound fast-screening (per the Skill's own guidance) worked well and left a thin, high-confidence actionable tail.
+landedBy: Stop
