@@ -168,10 +168,10 @@ it with a tool.
   (`docs/agents/guards.md`) now refuses the write itself before it ever reaches
   a commit — route it through the `docs/proposals/` drop-zone instead of pushing
   it or leaving it as ad hoc PR prose, and **read `docs/proposals/README.md`**
-  for the file format and the companion-change discipline. The underlying
-  OAuth-scope failure still triggers on the *commit*, not the push, and can
-  strand an entire branch if the guard's documented gaps let an edit through —
-  see `docs/agents/environment-caveats.md` for that sharp edge.
+  for the file format and the companion-change discipline. See
+  `docs/agents/environment-caveats.md` for the underlying mechanism (why the
+  failure triggers on the commit, not the push, and what it can strand) and
+  the guard's documented gaps.
 - **In TS/Vue code, an inline comment explains WHY, never WHAT — default to no
   comment at all, and when the why isn't obvious, point at the existing doc
   that owns it rather than restating the reasoning.** Well-named code already
