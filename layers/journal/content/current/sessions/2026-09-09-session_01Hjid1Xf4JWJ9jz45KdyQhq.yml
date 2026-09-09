@@ -1,0 +1,80 @@
+schemaVersion: 1
+session: session_01Hjid1Xf4JWJ9jz45KdyQhq
+startedAt: 2026-09-09T13:15:43Z
+endedAt: 2026-09-09T13:28:04Z
+kind: autonomous
+goal: Run a prune trial (/prune-trial)
+status: in-review
+outcome: One new trial pruned, gate green, PR open
+summary: "Scheduled autonomous /prune-trial run. Agent-initiated throughout, no human prompt this session. §1: checked the three open trials via scripts/prune-trial-window.ts — none had passed their 3-day judgeable-from window yet, so none were judged. §2-3: searched the instruction corpus (docs/research/rulebook-migration-table.md's Built-row shortcut, CLAUDE.md, docs/agents/*.md) for the next problem, avoiding the three open trials' territory (provenance/trailer, shallow-checkout, session-logging). Chose docs/agents/environment-caveats.md's \".github/workflows/*\" entry: 23 lines narrating a rejection scenario scripts/workflow-edit-guard.ts now prevents mechanically, with the guard's own deny message already stating the \"why\" near-verbatim. Compressed it plus CLAUDE.md's matching pointer bullet, net -16 lines. §4: proved the compressed text on a fresh Sonnet subagent given only the surviving excerpts plus a realistic scenario — it derived correct behavior on all four points asked. §5: ran the full pnpm gate:scoped (green, 79/79 e2e), committed with the ledger entry, pushed, opened PR #1203, subscribed to its activity."
+prs:
+  - "1203"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: judge open trials, then append the new ledger entry
+  - path: docs/research/rulebook-migration-table.md
+    reason: find the next problem via the Built-row shortcut
+  - path: docs/agents/guards.md
+    reason: checked for a candidate; ultimately not the chosen target
+  - path: docs/agents/environment-caveats.md
+    reason: the chosen prune target
+  - path: docs/agents/pr-workflow.md
+    reason: candidate — rejected, no guard holds those rules yet
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: candidate ADR — rejected, mostly protected Decision/Consequences
+  - path: scripts/workflow-edit-guard.ts
+    reason: verify the guard's deny message already states the why, before cutting it from prose
+  - path: scripts/gate.ts
+    reason: check an unrelated environment-caveats.md pointer wasn't about the same section
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (read before editing)
+skillsUsed:
+  - name: prune-trial
+    reason: (invoked as a slash command)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Ran `pnpm gate:scoped` backgrounded via `nohup ... &` on top of the Bash tool's own `run_in_background: true`, exactly the double- backgrounding footgun CLAUDE.md warns about — the outer call returned \"completed\" while the real gate.ts process (confirmed via `ps`) was still mid-run (lint had only just started)."
+    solution: Caught it by checking `ps` instead of trusting the notification, then polled the real PID directly (no trailing `&`) and waited for a self-written completion marker in the log before trusting green. CLAUDE.md's existing warning already covers this exactly; no doc change needed, just should have followed it the first time.
+    severity: minor
+durationSec: 741
+models:
+  claude-sonnet-5: 135
+toolCounts:
+  Skill: 3
+  Bash: 29
+  Read: 13
+  Grep: 5
+  Edit: 4
+  Agent: 2
+  ScheduleWakeup: 1
+  ReadNotifications: 1
+  Write: 2
+  ToolSearch: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - docs/agents/environment-caveats.md
+  - CLAUDE.md
+  - .agents/prune-trials.yml
+subagents:
+  - type: general-purpose
+    task: Probe compressed workflow-edit text
+    model: sonnet
+  - type: general-purpose
+    task: Probe compressed workflow-edit text
+    model: sonnet
+gitBranch: claude/practical-rubin-d0uy1o
+entrypoint: remote_trigger
+cliVersion: 2.1.266
+trigger: prune-trial
+learnings:
+  - scripts/workflow-edit-guard.ts's formatGuardMessage() already states the "commit not push" mechanic near-verbatim to what environment-caveats.md narrated in prose — confirming the guard's own deny message is the load-bearing teaching surface, not the doc, once a guard is built fail-closed before the commit.
+landedBy: Stop
