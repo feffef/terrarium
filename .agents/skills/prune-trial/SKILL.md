@@ -15,9 +15,9 @@ not by a rulebook they skim.** You get there by pruning, and you find out
 whether a prune was right the only honest way — by leaving it standing as a
 **trial** and letting real sessions deliver the verdict.
 
-One **new** trial per run — §1 may close several. Branch per CLAUDE.md's
-pre-`checkout` checklist before you
-edit anything. Everything below is mechanism; the goal above is the point.
+One **new** trial per run — §1 may close several. Branch off `main` per
+CLAUDE.md's Working conventions before you edit anything. Everything below is
+mechanism; the goal above is the point.
 
 ## 1. Judge the open trials
 
