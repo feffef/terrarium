@@ -1,0 +1,62 @@
+schemaVersion: 1
+session: session_01J3h1zU7gqjbSVfwve7cra3
+startedAt: 2026-09-09T00:46:27Z
+endedAt: 2026-09-09T01:02:13Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: "PR #1197 merged; one observations note added"
+summary: "Fully agent-initiated scheduled run of the /audit-skills Skill, no human prompt. Gathered the scorecard via scripts/audit-skills.ts (49 sessions considered, 40-session window). Step 3 (importance/role): no changes qualified — every absence signal in the window was a single session, short of the >=2-session bright-line bar, and the window was almost entirely routine self-improvement cycling with no sessions of the kind most other Skills serve; every on-disk Skill was already inventoried and vice versa. Step 2 signals were clean: orphanedSessions had 2 entries, both already resolvedBy-annotated (#736, #1063), orphanSuppressionLog checked out, closure-nudge signals (humanPromptedClosures/manuallyRescuedClosures) were empty, and misclassifiedKind flagged one session for awareness only (no issue, per spec). Step 4 regression watch screened 14 bracketed SKILL.md edits; 12 showed no signal. One (log-session's 2026-09-05 session-end.ts-merge refactor) showed an elevated after-bracket that Phase B traced to a real but single-occurrence moderate docsReadViaShell false-positive friction in session_016ahWmRcpKL7NJpcrtA8zPy — recorded as a log-session.yml observation, not filed as an issue (below bright-line, single instance). The other flagged bracket (session_01XgPRjmaFGNN3L9UNTRxNSU) turned out to be the edits' own authoring session doing an unrelated 18-issue batch-implementation run; read its full log and confirmed its frictions were about that work, not about the edited Skills. pnpm gate:scoped ran the full heavy layer (diff is under layers/, not the inert set) and passed green (79/79 L2 smoke tests), then committed, pushed, opened PR #1197, subscribed to its activity, posted the merge-tier verdict comment, and landed it via scripts/merge-pr.ts on green (audit-skills tier, merge-on-green-gate, ADR-0003/pr-workflow.md)."
+prs:
+  - "1197"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: check for an open prune trial in audit-skills' territory before starting
+  - path: docs/agents/pr-workflow.md
+    reason: landing recipe and per-tier merge authority
+  - path: layers/journal/content/current/sessions/2026-09-05-session_016ahWmRcpKL7NJpcrtA8zPy.yml
+    reason: Phase B deep-read for the log-session regression-watch bracket
+  - path: layers/journal/content/current/sessions/2026-09-05-session_01XgPRjmaFGNN3L9UNTRxNSU.yml
+    reason: Phase B deep-read to rule out a second bracketed session as a false positive
+  - path: layers/journal/content/current/skills/log-session.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/atlas-specimen.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this run's assigned Skill
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Piped pnpm gate:scoped into a trailing tail -80 to see the result; the tail-pipe guard (issue #873) correctly blocked it before running anything."
+    solution: Redirected to a log file and checked $? directly, as the guard's own deny message said to. No change needed — guard worked as intended, just cost one extra round trip.
+    severity: nit
+  - description: "This session's system-prompt attribution instructions told me to hand-write a Co-Authored-By/Claude-Session commit trailer; the repo's commit-trailer guard (issue #921) correctly refused it since the repo's own hook lands that trailer for me."
+    solution: Dropped the trailer from the commit message entirely and re-committed; the .githooks/commit-msg hook appended the correct trailer automatically. Worth noting the tension between generic harness attribution instructions and this repo's own convention, per CLAUDE.md's guard-message-is-the-teaching-surface design.
+    severity: nit
+durationSec: 946
+models:
+  claude-sonnet-5: 108
+toolCounts:
+  Bash: 34
+  ToolSearch: 5
+  mcp__github__search_pull_requests: 1
+  TaskCreate: 1
+  Read: 6
+  mcp__github__search_issues: 6
+  Glob: 1
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - layers/journal/content/current/skills/log-session.yml
+gitBranch: claude/upbeat-sagan-s1rp92
+entrypoint: remote_trigger
+cliVersion: 2.1.266
+trigger: audit-skills
+landedBy: Stop
