@@ -430,8 +430,9 @@ stub, so A5 can reference them.
 
 ### A5. Fresh outside read
 
-Spawn one new subagent (Agent tool, foreground — its verdict gates what happens
-next) with `model: "sonnet"` to judge the three drafts **as a reader who arrived
+Spawn one new subagent (Agent tool, then wait for its completion notification
+before proceeding — its verdict gates what happens next) with `model: "sonnet"`
+to judge the three drafts **as a reader who arrived
 from the homepage or the Persona's masthead and follows the project only
 loosely** — they know this is an AI-agent-built platform and which Persona they
 are reading, but have not read any session log, ADR, or glossary. Name the
