@@ -178,3 +178,52 @@ trials:
       worktree-isolated impl agent must never self-invoke it — deferring only
       the *why* and the alternative mechanism to the named Skill files, which is
       the intended point-of-need design, not a gap.
+  - problem: >
+      `docs/agents/environment-caveats.md`'s ".github/workflows/*" entry
+      spent 23 lines narrating a scenario `scripts/workflow-edit-guard.ts`
+      now mechanically prevents: a verbatim dump of the `git push`/contents-
+      API rejection text, a paragraph re-deriving "the sharp edge is the
+      commit, not the file" that the guard's own `formatGuardMessage` states
+      near-verbatim ("The sharp edge is the COMMIT, not the push. Agent
+      credentials lack the `workflow` OAuth scope, and the rejection is
+      evaluated over every commit in the ref update — so one workflow edit
+      committed alongside real work means you can push NONE of it..."), and
+      a debunking of a specific stale 2026-07-10 session-log claim that is
+      now unreachable anyway (the guard denies the write before a session
+      ever gets far enough to test the old claim). CLAUDE.md's own "Hitting
+      a needed .github/workflows/* edit?" bullet already pointed here for
+      "the underlying mechanism" and "the guard's documented gaps" — updated
+      in the same commit to point at the guard's deny message and
+      `guards.md`'s Known gaps instead, since that detail no longer lives
+      here. Same shape as the already-landed provenance/trailer compression.
+      Net -16 lines (CLAUDE.md + environment-caveats.md combined).
+    territory:
+      paths:
+        - "docs/agents/environment-caveats.md: the \".github/workflows/*\" bullet"
+        - "CLAUDE.md: the \"Hitting a needed .github/workflows/* edit?\" bullet (Working conventions)"
+      keywords:
+        - workflow-edit-guard.ts
+        - .github/workflows
+        - workflow OAuth scope
+        - the sharp edge is the commit
+        - docs/proposals
+        - issue #659
+        - issue #897
+    opened: 2026-09-09
+    proven: true
+    check: >
+      Damage is a session that, hitting a needed `.github/workflows/*` edit,
+      tries to push it anyway, tries to route around a workflow-edit-guard
+      denial instead of reading its deny message, bundles the workflow edit
+      into the same commit as unrelated real work (stranding that work when
+      the commit is refused), or can't find where to actually put the change
+      for a human to apply. NOT damage: a session that gets denied and reads
+      the guard's deny message rather than this doc for the why (the intended
+      point-of-need design working), or one that goes straight to
+      `docs/proposals/` without ever needing the mechanism explanation. A
+      Sonnet probe given only the compressed text correctly derived: don't
+      push the edit (the guard refuses it before a commit exists); don't
+      route around a denial — read the guard's deny message and follow it;
+      never let the workflow edit share a commit with unrelated real work,
+      since a refused commit strands the whole ref update; and the actual
+      destination is `docs/proposals/`, per its own README.

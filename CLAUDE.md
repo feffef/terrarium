@@ -168,10 +168,9 @@ it with a tool.
   (`docs/agents/guards.md`) now refuses the write itself before it ever reaches
   a commit — route it through the `docs/proposals/` drop-zone instead of pushing
   it or leaving it as ad hoc PR prose, and **read `docs/proposals/README.md`**
-  for the file format and the companion-change discipline. See
-  `docs/agents/environment-caveats.md` for the underlying mechanism (why the
-  failure triggers on the commit, not the push, and what it can strand) and
-  the guard's documented gaps.
+  for the file format and the companion-change discipline. If ever bypassed,
+  the guard's own deny message states why the failure lands on the commit, not
+  the push; `docs/agents/guards.md`'s Known gaps names what it can still miss.
 - **In TS/Vue code, an inline comment explains WHY, never WHAT — default to no
   comment at all, and when the why isn't obvious, point at the existing doc
   that owns it rather than restating the reasoning.** Well-named code already
