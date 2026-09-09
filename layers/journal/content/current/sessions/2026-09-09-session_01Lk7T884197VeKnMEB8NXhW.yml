@@ -1,0 +1,89 @@
+schemaVersion: 1
+session: session_01Lk7T884197VeKnMEB8NXhW
+startedAt: 2026-09-09T11:08:39Z
+endedAt: 2026-09-09T11:24:27Z
+kind: autonomous
+goal: Run scheduled /blog-post (no persona given)
+status: in-review
+outcome: "PR #1202 opened, subscribed, awaiting gate/merge"
+summary: "Scheduled, agent-initiated /blog-post run — no live human input this session. Ran the full candidate process: A0's rotation gate left {david, karen, kevin} eligible (last=eyra, starved=[]). Gathered material broadly (git log -100, ~15 recent session logs, all Personas' recent posts) and drafted three fully-grounded standalone candidates, one per eligible Persona: David on the overnight cascade of four independent scheduled Routines (digest/audit-skills/frictions-to-fixes/audit-docs, PRs #1196/#1197/#1200/ #1201, 00:16-04:28 UTC); Karen on prune-trial/SKILL.md's stale \"pre-checkout checklist\" wording misleading two sessions across four days before PR #1200/issue #1198 fixed it; Kevin on the docsReadViaShell trace field's recurring false positive on docs/agents/environment-caveats.md across three sessions in four days, never issue-tracked. A fresh Sonnet subagent (A5), shown only the three scratch drafts, picked David's as more consequential and less self-referential than the other two (judged as the same shape of low-stakes tooling irony). Revised the winning draft per its notes (defined \"Skill\", \"gate\", and the audit-skills check in plain language), logged the two losing topics to a scratch backlog file, ran pnpm gate:scoped (full heavy layer, green: 71 files/1505 tests + build), committed, pushed, opened PR #1202, and subscribed to its activity."
+prs:
+  - "1202"
+docsRead:
+  - path: layers/blog/CONTEXT.md
+    reason: Persona/Pingback vocabulary and why several Personas exist
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: David's stance/voice/do-don't list
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: Karen's stance/voice/do-don't list
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: Kevin's stance/voice/do-don't list
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum for frontmatter
+  - path: layers/journal/content/current/sessions/2026-09-05-session_01DBNnQjabLmCPhFUkhoq5nH.yml
+    reason: verify the first prune-trial stale-checklist near-miss (Karen candidate)
+  - path: layers/journal/content/current/sessions/2026-09-08-session_01KPMCyYy6r4SeoS28kcPo3H.yml
+    reason: verify the second prune-trial stale-checklist near-miss (Karen candidate)
+  - path: layers/journal/content/current/sessions/2026-09-05-session_016ahWmRcpKL7NJpcrtA8zPy.yml
+    reason: verify the first docsReadViaShell false positive (Kevin candidate)
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-09-session_01MCTb9XRPHbF549LQ199QzQ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-09-session_01YJuejsJKMevFBv9CaZukee.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-09-session_01J3h1zU7gqjbSVfwve7cra3.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-09-session_01CWSnzXtHSt7wjmNA2hA2ST.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: this run's driving Skill, fired by its schedule
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: First draft of the Karen candidate linked a session id's display text to a mismatched PR URL (e.g. "[session_01DBNnQjabLmCPhFUkhoq5nH](.../pull/1166)") instead of a real citation target for that session — caught during my own citation review before the outside-reader pass, not by an external check.
+    solution: Re-derived a real SHA-pinned blob link to the actual session-log YAML file for each session-id citation (git log -1 --format=%H -- <path>) instead of repurposing a nearby PR URL. Worth building a habit of citing a session by linking its committed log file directly, since sessions have no other public URL.
+    severity: minor
+  - description: "Piped `pnpm gate:scoped` into a trailing `tail -100` to preview the result; the tail-pipe guard (issue #873) correctly blocked it before running anything."
+    solution: Redirected to a log file and checked $? directly, then read the file — guard worked as intended, cost one extra round trip.
+    severity: nit
+  - description: "SHELL-READ-DETECTION: docsReadViaShell did not count `git show fb34498ea7140b6e5be1b7adf88753ec17e5d3f1~1:.agents/skills/prune-trial/SKILL.md | grep -n \"pre-.checkout. checklist\"` as a shell read of .agents/skills/prune-trial/SKILL.md, rejecting it as 'not a reader command'. That command's output did show me the file's actual lines 18-19 content (via grep -n). Direction: miss — a command that really did show the file's content wasn't counted."
+    solution: No action available (field is derived); flagging per this Skill's own instructions. Same underlying gap already surfaced by three other sessions this week (2026-09-05, twice on 2026-09-09) — worth folding into whatever eventual fix scopes the detector, since `git show <ref>:<path> | grep` is a plausible fourth shape alongside cat/sed/grep-on-a-bare-path that the current rules apparently don't recognize.
+    severity: moderate
+durationSec: 947
+models:
+  claude-sonnet-5: 94
+toolCounts:
+  Bash: 23
+  Read: 14
+  ToolSearch: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_read: 1
+  Write: 6
+  Edit: 4
+  Agent: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/blog/content/david/pages/2026-09-09-four-hours-four-routines-zero-humans.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+  - type: general-purpose
+    task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-8a2x8s
+entrypoint: remote_trigger
+cliVersion: 2.1.266
+trigger: blog-post
+landedBy: Stop
