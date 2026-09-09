@@ -1,0 +1,76 @@
+schemaVersion: 1
+session: session_01YJuejsJKMevFBv9CaZukee
+startedAt: 2026-09-09T02:04:34Z
+endedAt: 2026-09-09T02:19:17Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: completed
+outcome: 2 doc frictions filed, fixed, merged
+summary: "Scheduled, unprompted run of the frictions-to-fixes Skill. A subagent surveyed the latest 20 session logs' frictions and screened them against the tracker; most in-window frictions were already resolved by earlier in-window frictions-to-fixes runs (#1177, #1178/PR #1186, #1179/PR #1183, #1191/PR #1192) or were working-as-designed. Two never-fixed, low-severity doc frictions survived screening: a stale \"pre-checkout checklist\" reference in prune-trial/SKILL.md and a guard-blocked \"foreground\" wording in blog-post/SKILL.md's A5 step. Filed as issues #1198 and #1199, dispatched to a single Sonnet impl agent (worktree-isolated) which fixed both in one grouped PR (#1200), gate green. Reviewed the diff and check-conflicting-issues.ts's one advisory hit (a false positive against unrelated issue #1168) myself, posted a COMMENT-event review verdict, then merged via merge-pr.ts. No moderate/major/blocker candidates or regressions surfaced this cycle. All steps (survey, screening, issue filing, dispatch, review, merge) were agent-initiated per the Skill's own instructions; no human was present."
+prs:
+  - "1200"
+docsRead:
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: provenance header format for issue/PR bodies
+  - path: docs/agents/pr-workflow.md
+    reason: "merge recipe: review-before-merge, merge-pr.ts as sole merge path"
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: worktree dispatch mechanics for the impl agent brief
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: scripts/session-trace.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run's own driving Skill
+  - name: dispatch-subagents
+    reason: brief + worktree isolation for the impl agent
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "The survey subagent's report noted Grep's output_mode defaults to files_with_matches even when -C/-A/-B context flags are passed, silently no-op-ing them unless output_mode: \"content\" is also passed explicitly — cost it two wasted calls."
+    solution: "Either change Grep's tool contract so passing a context flag implies output_mode: content, or note this gotcha in a doc agents actually read before calling Grep with context flags."
+    severity: nit
+  - description: The survey subagent hit a hard GitHub API rate limit (403) mid-survey on one search_issues call and had to skip/retry with a different query.
+    solution: No repo-side fix apparent (external API limit); noting for visibility in case it recurs across sessions doing heavy tracker search in one run.
+    severity: nit
+durationSec: 883
+models:
+  claude-sonnet-5: 66
+toolCounts:
+  ToolSearch: 3
+  Agent: 2
+  Grep: 5
+  Read: 4
+  mcp__github__issue_write: 2
+  Skill: 3
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 3
+  Bash: 5
+  mcp__github__issue_read: 2
+  mcp__github__pull_request_review_write: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+docsReadViaShell:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/guards.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix two frictions-to-fixes doc issues
+    model: sonnet
+gitBranch: claude/eager-ptolemy-lvujpv
+entrypoint: remote_trigger
+cliVersion: 2.1.266
+trigger: frictions-to-fixes
+learnings:
+  - A quiet frictions-to-fixes cycle (no moderate+ findings, no regressions) is a valid and expected outcome, not a sign the survey under-delivered — three frictions-to-fixes runs landing inside one 20-session recency window means most candidates are pre-resolved by the time a new run starts.
+landedBy: Stop
