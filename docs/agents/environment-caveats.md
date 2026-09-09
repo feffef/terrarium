@@ -72,29 +72,14 @@ new; don't re-diagnose any of these as a fresh problem.
   the session.** Before concluding a Routine "didn't run" or "didn't fire,"
   check `last_fired_at` via `list_triggers` rather than relying on turn
   visibility (issue #834).
-- **An agent session cannot write `.github/workflows/*` by *any* path here, and
-  merely *committing* such an edit strands the entire branch.** Both credentials
-  were tested and both refuse:
-
-  ```
-  git push  → ! [remote rejected] refusing to allow an OAuth App to create or
-              update workflow `.github/workflows/gate.yml` without `workflow` scope
-  contents API (mcp__github__create_or_update_file, GitHub App token)
-            → PUT .../contents/.github/workflows/gate.yml: 404 Not Found
-  ```
-
-  The sharp edge is the **commit**, not the file. The rejection is evaluated
-  over every commit in the ref update, so a session that edits a workflow
-  alongside other work can then push **none** of it — and the only escape is
-  history surgery on a branch that by then may hold real work. So keep the
-  workflow edit out of the branch entirely rather than committing it and
-  discovering this at push time. `docs/proposals/`
-  ([README](../proposals/README.md)) owns the handoff convention, and
-  `workflow-edit-guard` ([guards](./guards.md)) now refuses the write outright.
-  `layers/journal/content/archived/sessions/2026-07-10-session_01QxEToo6MA65uDa4vo3AwCh.yml`
-  records the opposite ("both git push and the GitHub API can write
-  .github/workflows files to a feature branch") — that claim is **false**; don't
-  spend a cycle re-testing it (issue #659).
+- **An agent session cannot write `.github/workflows/*` here — no `workflow`
+  OAuth scope — and `workflow-edit-guard` ([guards](./guards.md)) now refuses
+  the write itself, before it ever reaches a commit.** If it's ever bypassed:
+  the sharp edge is the **commit**, not the push (the rejection covers the
+  whole ref update, stranding everything else in it too) — the guard's own
+  deny message is the teaching surface for that, read it rather than
+  re-deriving it. `docs/proposals/` ([README](../proposals/README.md)) is the
+  handoff convention for the edit itself (issue #659, #897).
 - **A local-only typecheck/build failure is usually stale install state, not a
   repo bug.** A past instance is on record in issue #940 for the curious, but
   it traced to a Tenant since removed, so that exact error can no longer
