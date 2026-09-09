@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01Hjid1Xf4JWJ9jz45KdyQhq
 startedAt: 2026-09-09T13:15:43Z
-endedAt: 2026-09-09T13:28:04Z
+endedAt: 2026-09-09T13:33:50Z
 kind: autonomous
 goal: Run a prune trial (/prune-trial)
-status: in-review
-outcome: One new trial pruned, gate green, PR open
+status: completed
+outcome: Trial pruned, merged to main
 summary: "Scheduled autonomous /prune-trial run. Agent-initiated throughout, no human prompt this session. §1: checked the three open trials via scripts/prune-trial-window.ts — none had passed their 3-day judgeable-from window yet, so none were judged. §2-3: searched the instruction corpus (docs/research/rulebook-migration-table.md's Built-row shortcut, CLAUDE.md, docs/agents/*.md) for the next problem, avoiding the three open trials' territory (provenance/trailer, shallow-checkout, session-logging). Chose docs/agents/environment-caveats.md's \".github/workflows/*\" entry: 23 lines narrating a rejection scenario scripts/workflow-edit-guard.ts now prevents mechanically, with the guard's own deny message already stating the \"why\" near-verbatim. Compressed it plus CLAUDE.md's matching pointer bullet, net -16 lines. §4: proved the compressed text on a fresh Sonnet subagent given only the surviving excerpts plus a realistic scenario — it derived correct behavior on all four points asked. §5: ran the full pnpm gate:scoped (green, 79/79 e2e), committed with the ledger entry, pushed, opened PR #1203, subscribed to its activity."
 prs:
   - "1203"
@@ -41,18 +41,18 @@ frictions:
   - description: "Ran `pnpm gate:scoped` backgrounded via `nohup ... &` on top of the Bash tool's own `run_in_background: true`, exactly the double- backgrounding footgun CLAUDE.md warns about — the outer call returned \"completed\" while the real gate.ts process (confirmed via `ps`) was still mid-run (lint had only just started)."
     solution: Caught it by checking `ps` instead of trusting the notification, then polled the real PID directly (no trailing `&`) and waited for a self-written completion marker in the log before trusting green. CLAUDE.md's existing warning already covers this exactly; no doc change needed, just should have followed it the first time.
     severity: minor
-durationSec: 741
+durationSec: 1087
 models:
-  claude-sonnet-5: 135
+  claude-sonnet-5: 155
 toolCounts:
   Skill: 3
-  Bash: 29
+  Bash: 34
   Read: 13
   Grep: 5
   Edit: 4
   Agent: 2
   ScheduleWakeup: 1
-  ReadNotifications: 1
+  ReadNotifications: 4
   Write: 2
   ToolSearch: 3
   mcp__github__search_pull_requests: 1
