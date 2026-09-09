@@ -1,0 +1,204 @@
+schemaVersion: 1
+session: session_01MCTb9XRPHbF549LQ199QzQ
+startedAt: 2026-09-09T04:09:23Z
+endedAt: 2026-09-09T04:25:52Z
+kind: autonomous
+goal: Run the scheduled audit-docs sweep
+status: in-review
+outcome: "One duplication fixed, PR #1201 opened"
+summary: "Scheduled /audit-docs run (no human prompt this turn — fired by a Routine). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the Live doc tier. Freshness, Concision, and Coherence returned zero confirmed findings after independent verification. Single-home surfaced two Duplication candidates; both were fact-checked against primary sources myself. Fixed the confirmed one (CLAUDE.md and docs/agents/environment-caveats.md both restated the workflows-edit commit/push-strand mechanism — trimmed CLAUDE.md to rule-plus-pointer). Deliberately left the second alone: the self-merge/ADR-0004 low-risk-tier rationale repeated across four chartered Skills' SKILL.md files is already tracked as issue #864 (CM-14/PR-11), which frames the real fix as a policy-as-data mechanism rather than a prose edit — judged that rewriting self-merge-eligibility wording in this same automated, self-merging pass carried more risk than value. No needs-triage issue filed; nothing rose to a genuine unresolvable factual conflict. Gate (gate:scoped floor) green. Opened PR #1201, subscribed to its activity."
+prs:
+  - "1201"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+  - path: docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
+    reason: (no reason given)
+  - path: docs/proposals/879-gate-yml-thin-shell.md
+    reason: (no reason given)
+  - path: docs/proposals/445-ci-reuse-gate-scoped-classifier.md
+    reason: (no reason given)
+  - path: docs/proposals/659-fork-pr-gate-doorbell-token.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: scripts/commit-trailer-guard.sh
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: scripts/deferred-tool-guard.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the sweep this session ran
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "SHELL-READ-DETECTION: docsReadViaShell false-positively attributed several files to my own shell commands that I never ran. .agents/skills/audit-skills/SKILL.md, .agents/skills/blog-post/SKILL.md, .agents/skills/frictions-to-fixes/SKILL.md, .agents/skills/prune-trial/SKILL.md, .agents/skills/digest/SKILL.md, and CONTEXT.md were read (if at all) only inside dispatched background subagents' own isolated transcripts, never shown to me directly via shell. docs/agents/pr-workflow.md was read via the Read tool, not a shell command. .agents/skills/close-session/SKILL.md, .agents/skills/log-session/SKILL.md, and .agents/skills/audit-docs/SKILL.md were shown to me via Skill-tool content injection, not a shell cat/grep. Direction: false positive — wrong reader (subagent, not me) or wrong mechanism (Read/Skill tool, not shell) attributed in every case."
+    solution: Scope the shell-read detector to the orchestrating session's own Bash tool calls, excluding dispatched-subagent transcripts, and don't classify Read-tool or Skill-tool content injection as a shell read.
+    severity: moderate
+durationSec: 989
+models:
+  claude-sonnet-5: 87
+toolCounts:
+  Bash: 22
+  Agent: 4
+  ScheduleWakeup: 1
+  Read: 5
+  Edit: 3
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - CLAUDE.md
+docsReadViaShell:
+  - CONTEXT-MAP.md
+  - docs/agents/environment-caveats.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - CONTEXT.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/research/nuxt-content-review-grounding.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: drift + orphan-addition"
+  - type: general-purpose
+    task: "Single-home lens: duplication + mis-location"
+  - type: general-purpose
+    task: "Concision lens: verbose + stale-narration"
+  - type: general-purpose
+    task: "Coherence lens: contradiction + ambiguity"
+gitBranch: claude/festive-mayer-h2f8ua
+entrypoint: remote_trigger
+cliVersion: 2.1.266
+trigger: audit-docs
+landedBy: Stop
