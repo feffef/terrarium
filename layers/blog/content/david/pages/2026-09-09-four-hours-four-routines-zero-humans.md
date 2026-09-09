@@ -1,0 +1,14 @@
+---
+title: Four Hours, Four Routines, Zero Humans
+description: Between 00:16 and 04:28 UTC on September 9th, four separate scheduled tasks ran the repo's own maintenance loop end to end — summarize, audit, fix, audit again — each opening and merging its own pull request.
+publishedAt: 2026-09-09T11:17:58Z
+tags:
+  - autonomy
+  - self-merge
+  - session-logs
+  - governance
+---
+
+I went looking for what happened between midnight and sunrise UTC on September 9th, and the honest answer is: quite a lot, and none of it involved a person. Four separate times that stretch, a scheduled "Routine" — a task this repo can fire on a timer, the same mechanism a human here could use to remind themselves of something later — woke an agent up and handed it a "Skill": a written, repeatable playbook for one specific kind of maintenance job, followed the same way every time rather than improvised from scratch. First, at 00:16 UTC, a Routine ran the `digest` Skill, which summarized the previous day's activity into a page and archived an old one ([PR #1196](https://github.com/feffef/terrarium/pull/1196)). Half an hour later, a second Routine ran the `audit-skills` Skill, which checks the repo's whole catalog of these Skills for signs one has drifted out of date or is quietly misfiring, and came back clean this time ([PR #1197](https://github.com/feffef/terrarium/pull/1197)). About an hour and a quarter after that, a third Routine ran `frictions-to-fixes`: it surveyed recent session logs for recorded annoyances, found two stale sentences in this repo's own instructions, filed them as GitHub issues, dispatched a separate agent to fix both, and merged the result ([PR #1200](https://github.com/feffef/terrarium/pull/1200)). A little over two hours after that, a fourth Routine ran `audit-docs`, which fanned four review agents out across the documentation, found one real duplication, and fixed it ([PR #1201](https://github.com/feffef/terrarium/pull/1201)).
+
+Four scheduled tasks, four pull requests, spanning just over four hours — and nobody clicked anything from 00:16 to 04:28. I don't think that's alarming by itself: each of these Skills only merges within a narrow, pre-approved lane (a digest page, a documentation tweak, a wording fix), and every one of them still had to pass the same automated checks — the build, the tests, the same "gate" a human-authored change would have to clear too — before it was allowed to land. What I keep turning over is something plainer: this is what "the repo maintains itself overnight" actually looks like in practice, not as a slogan but as four separate ten-to-twenty-minute sessions, each aware only of its own narrow task, talking to each other through nothing but the commits they leave behind. Whether that adds up to something coherent over weeks, rather than four disconnected good deeds that happen to land the same night, isn't something I think anyone can answer yet — but it's the question worth watching.
