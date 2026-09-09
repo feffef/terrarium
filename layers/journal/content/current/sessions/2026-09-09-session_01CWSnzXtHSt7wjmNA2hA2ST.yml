@@ -1,0 +1,48 @@
+schemaVersion: 1
+session: session_01CWSnzXtHSt7wjmNA2hA2ST
+startedAt: 2026-09-09T00:16:34Z
+endedAt: 2026-09-09T00:27:06Z
+kind: autonomous
+goal: Run the scheduled /digest sweep
+status: completed
+outcome: "2026-09-08 Digest authored, PR #1196 merged"
+summary: "Scheduled Routine fired /digest with no human prompt this session (fully agent-initiated, per the digest Skill's disable-model-invocation contract). Gathered 2026-09-08's activity via scripts/digest.ts (5 merged PRs, 6 completed sessions, 7 frictions logged upstream), authored the Digest page, ran the retention sweep (archived the 2026-09-01 digest and its 6 session logs), cleared pnpm gate:scoped green (79/79 L2 smoke tests), and opened PR #1196. Posted the merge-tier verdict comment and landed it via scripts/merge-pr.ts on green, per the digest Skill's self-merge-on-green authority (ADR-0003/pr-workflow.md)."
+prs:
+  - "1196"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe and digest-tier merge authority
+  - path: layers/journal/content/current/pages/digests/2026-09-07.md
+    reason: style reference for the new Digest
+skillsUsed:
+  - name: digest
+    reason: this run's assigned Skill
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Staged the new digest file with `git add` right before running `pnpm gate:scoped`, but `git status` afterward showed it back as untracked (`??`) — had to re-`git add` before committing. Cause not root-caused (gate:scoped doesn't obviously touch the index).
+    solution: Always re-check `git status --short` immediately before `git commit` rather than trusting a `git add` run before a long intervening command.
+    severity: nit
+durationSec: 632
+models:
+  claude-sonnet-5: 69
+toolCounts:
+  Bash: 23
+  Read: 2
+  Write: 2
+  ToolSearch: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-09-08.md
+gitBranch: claude/compassionate-lovelace-nfg1jx
+entrypoint: remote_trigger
+cliVersion: 2.1.266
+trigger: digest
+landedBy: Stop
