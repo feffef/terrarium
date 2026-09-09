@@ -11,4 +11,20 @@ role: >-
   Normally invoked *by* `close-session` (the closure front door), which authors
   the log as one step of its closing sequence; callable directly only to amend an
   already-written log.
-observations: []
+observations:
+  - date: 2026-09-09
+    note: >-
+      Suggestive-not-confirmed regression watch: log-session's most recent
+      SKILL.md-linked edit (253f5745, "merge session-end.ts into the
+      log-session lander", 2026-09-05) touches exactly the machinery that
+      derives the docsReadViaShell trace field. The first post-edit session
+      to log a related friction, session_016ahWmRcpKL7NJpcrtA8zPy (2026-09-05),
+      reported a moderate friction: "SHELL-READ-DETECTION: docsReadViaShell
+      listed docs/agents/environment-caveats.md as read via shell this
+      session. No Bash/Grep/Read call this session named that path at all
+      (checked the full tool-call history) — this looks like a false
+      positive, direction: listed-but-never-read." Single occurrence so far,
+      not the "≥2 sessions" pattern step 4 asks for before treating it as
+      confirmed — recorded here so a future run's Phase A screen has it if a
+      second instance turns up.
+
