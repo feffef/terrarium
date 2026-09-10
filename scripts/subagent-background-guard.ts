@@ -53,7 +53,7 @@ export interface BackgroundFinding {
  *  ANSI-C quoting (`$'...'`) aren't resolved, so a `&` inside one of those
  *  can still false-positive or false-negative — see docs/agents/guards.md
  *  for the residual list. */
-function hasBackgroundOperator(command: string): boolean {
+export function hasBackgroundOperator(command: string): boolean {
   const unquoted = command.replace(/'[^']*'|"(?:[^"\\]|\\.)*"|\\./g, '')
   const withoutOperators = unquoted.replace(/&&|[<>]&|&>/g, '')
   return withoutOperators.includes('&')
