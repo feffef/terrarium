@@ -24,58 +24,69 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      CLAUDE.md's Working conventions bullet on the GitHub provenance header
-      and commit trailer (backing CM-43/CM-44 in
-      `docs/research/rulebook-migration-table.md`) spelled out, in prose, the
-      exact detail ADR-0017's own 2026-08-01 amendment already says belongs
-      elsewhere: a worked placeholder-id example ("the id above is a
-      placeholder, never a real one — copying a real, id-shaped string from
-      context is the actual failure mode"), the model-name/session-url
-      resolution instruction, and the commit-trailer hand-write warning — all
-      of which `scripts/github-provenance-guard.ts`'s and
-      `scripts/commit-trailer-guard.ts`'s own deny messages already state
-      near-verbatim (verified by reading both scripts' `formatGuardMessage`-
-      style output: the provenance guard's message names the exact marker to
-      paste and warns "never predict or reconstruct a session id from
-      memory"; the trailer guard's message tells the agent to omit the
-      trailer entirely and let the hook land it). ADR-0017 itself documents
-      this design choice explicitly: "That message — not a doc — is the
-      rule's teaching surface, because every recorded recurrence happened to
-      a session that had prose available and did not apply it." Compressed
-      CLAUDE.md's bullet to the rule (open with the header; never hand-write
-      the trailer), the harness-footer carve-out, the guard's existence and
-      fail-closed posture, and a pointer to `docs/agents/guards.md` — same
-      shape as the already-landed `ToolSearch`/`ScheduleWakeup` and
-      tail-pipe-guard compressions. Net -12 lines.
+      `docs/adr/0003-agent-operating-model-and-governance.md`'s "Auto-merge
+      exemption ledger" section carried 12 dated amendment blockquotes (~120
+      lines) layered on top of a 6-row table that is itself the current,
+      load-bearing fact — the classic "narrowed repeatedly" shape this Skill's
+      §2 flags. Several amendments were pure narration of a ledger-row addition
+      the table's own `date` column already states (the 2026-07-09 audit-docs
+      grant, the 2026-07-09 audit-skills grant, the 2026-07-12 blog-post grant,
+      the 2026-07-25 digest archive-sweep-scope note — each just re-said "row
+      X was added/scoped on date Y", already visible in the table). One
+      amendment (2026-07-06, "digest auto-merges via `enable_pr_auto_merge`")
+      was flatly **superseded by a later amendment in the same file**
+      (2026-07-30: that mechanism is wrong, `merge-pr.ts`/`pr-workflow.md` is
+      now the sole path) — textbook prose that already failed, self-documented
+      in its own corpus. Compressed to: the table (untouched — it is the single
+      home for scope), the one amendment CLAUDE.md's Ground-rules bullet
+      explicitly points to for "the full rule and rationale" (2026-07-07,
+      PR auto-open — kept, lightly trimmed of restated rationale already
+      implicit in its own text), a single consolidated note carrying the three
+      facts the table doesn't hold (remit-vs-Skill, review-agent's live form,
+      `kind` is descriptive not a merge permission) plus a pointer to
+      `pr-workflow.md` for mechanics, and the three amendments that still state
+      a real, non-tabular policy addition (ADR-0020 Trusted green-light,
+      ADR-0022 auto-triage's one relaxation, ADR-0027 prune-trial's Human-only
+      reach) — each trimmed to its rule + pointer, since the cited ADR is each
+      one's own single home. Decision and Consequences untouched, per
+      ADR-0027's bound. Net -74 lines (214 → 140, one file).
     territory:
       paths:
-        - "CLAUDE.md: the \"Open every GitHub body\" bullet (Working conventions)"
+        - "docs/adr/0003-agent-operating-model-and-governance.md: the \"Auto-merge exemption ledger\" section's amendment blockquotes"
       keywords:
-        - provenance header
-        - session_EXAMPLE_NOT_A_REAL_ID
-        - commit trailer
-        - github-provenance-guard.ts
-        - commit-trailer-guard.ts
-    opened: 2026-09-06
+        - auto-merge exemption ledger
+        - chartered job
+        - remit
+        - review-agent
+        - kind field
+        - delegated
+        - enable_pr_auto_merge
+        - Trusted green-light
+    opened: 2026-09-10
     proven: true
     check: >
-      Damage is a session that, opening a GitHub body or committing, can't
-      produce a plausible first line / trailer decision from the compressed
-      bullet alone and either invents a session id from memory, hand-writes
-      the trailer anyway, or edits/duplicates the harness's own footer — or a
-      session that, hit by the guard's deny message, ignores it and keeps
-      guessing instead of reading and following it. NOT damage: a session
-      that gets denied and pastes the guard's own named marker verbatim (the
-      intended teach-at-the-moment-of-failure design working, per ADR-0017's
-      2026-08-01 amendment), or one that never needed the guard because it
-      already wrote the header correctly from the compressed rule. A Sonnet
-      probe given only the compressed text correctly derived that the
-      concrete marker text comes from the guard's deny message rather than
-      being invented, that the harness's own footer must be left untouched,
-      that a commit trailer must never be hand-written, and that a deny
-      message — not some other doc — is what to read and follow when one of
-      these is blocked.
-  - problem: >
+      Damage is a session that, needing to know whether/how a chartered Skill's
+      PR self-merges, can't find the answer from the compressed ledger (table +
+      amendments) and either invents a merge mechanism (e.g. calls
+      `enable_pr_auto_merge`, which the compressed text still explicitly names
+      as wrong), treats a session log's `kind: delegated` as itself a merge
+      grant, implements net-new work from a Public issue without a Trusted
+      green-light, or can't locate a specific Skill's auto-merge scope (it's in
+      the table, unchanged). NOT damage: a session that reads the table for
+      *scope* and `docs/agents/pr-workflow.md` for *mechanics* — the intended
+      single-home split, stated explicitly in both the section's opening
+      paragraph and the consolidated amendment — or one that opens ADR-0020 /
+      ADR-0022 / ADR-0027 for the full detail behind a pointer note instead of
+      finding it inline (the intended design). A Sonnet probe given only the
+      compressed file correctly named the exact merge mechanism and the
+      "never `enable_pr_auto_merge`" prohibition, correctly said a red gate on
+      a chartered Skill's own PR still needs a human/escalation (the ledger's
+      "bound is exact" line, not a self-fix-and-retry loop), correctly said a
+      Public issue is never itself an implementation green-light, correctly
+      said `kind: delegated` is descriptive vocabulary and not by itself a
+      merge grant, and correctly pointed to `pr-workflow.md`'s "Per-tier merge
+      authority" for whether a specific grant (audit-docs) is narrower than a
+      general low-risk-auto-merges policy.
       `docs/agents/git-conventions.md`'s "If a checkout is still shallow"
       section carried 45 lines explaining a scenario the repo already prevents
       mechanically: `scripts/unshallow-on-start.ts` (a `SessionStart` hook)
