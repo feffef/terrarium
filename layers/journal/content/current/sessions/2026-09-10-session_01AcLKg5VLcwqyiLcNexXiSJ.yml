@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01AcLKg5VLcwqyiLcNexXiSJ
 startedAt: 2026-09-10T02:04:49Z
-endedAt: 2026-09-10T06:02:53Z
+endedAt: 2026-09-10T06:06:06Z
 kind: interactive
 goal: Run frictions-to-fixes — turn session frictions into merged fixes
-status: in-review
-outcome: 1 fix merged (#1209), 1 guard fix escalated (#1210)
+status: completed
+outcome: "Both fixes merged — #1209 self-merged, #1210 human-merged"
 summary: "Scheduled `/frictions-to-fixes` run (autonomous kickoff, no human prompt at start). Delegated survey+screen of the latest 20 session logs to a subagent, which found only two live candidates after screening against the tracker — a smaller haul than usual, since the prior run (#1198/#1199, 2026-09-09) had recently cleared most of the backlog. Filed issue #1208 (no guard caught a main-session double-background: run_in_background:true stacked with a text-level `&`/`nohup … &`) and picked up the already-open issue #1206 (docsReadViaShell detector: a miss on `git show <ref>:<path>` reads, plus an investigated-but-unreproduced false-positive claim). Dispatched two Sonnet impl agents in isolated worktrees. PR #1209 (the #1206 fix) reviewed and self-merged — clean, minimal, no human-only surface touched. PR #1210 (the #1208 guard) reviewed as correct and well-tested but escalated to a human for merge, since every guard PR is human-only to merge per docs/agents/guards.md regardless of diff quality. Mid-session the user sent messages correcting my read of a ~3h stall in the second dispatched impl agent: they were NOT present/watching this scheduled run, got no proactive signal anything was stuck, and only discovered by chance — checking the Claude web interface for an unrelated reason — that a permission prompt for the impl agent's `.claude/settings.json` edit was sitting unapproved. They approved it manually. See the friction below."
 prs:
   - "1209"
@@ -72,26 +72,30 @@ frictions:
   - description: "A dispatched impl agent's edit to `.claude/settings.json` (wiring the new double-background-guard into `hooks.PreToolUse`, issue #1208) hit a permission prompt needing human approval, and stalled the impl agent for ~3h. This is a scheduled `frictions-to-fixes` run with no human watching — and none of this session's own tools (no wake, no signal back from a dispatched subagent's pending permission prompt) surfaced that anything was stuck. The user was NOT present; they discovered the stall only by chance, opening the Claude web interface for an unrelated reason and happening to notice this session's pending approval, which they then granted manually. Had they not happened to check, the dispatched agent would have stayed stalled indefinitely with nothing in this session able to detect or escalate it."
     solution: "Two angles worth a future frictions-to-fixes cycle: (1) narrower — check whether `.claude/settings.json` edits from a dispatched impl agent could be pre-approved (`fewer-permission-prompts`/`update-config` mechanism) specifically for guard-wiring fixes, since every such PR is human-reviewed and human-merged anyway — the approval gate currently sits earlier (mid-edit) than the repo's own human-only bar (at merge). (2) broader, and the real gap this correction surfaced — a scheduled/ autonomous session has no way to detect or surface that a dispatched subagent is blocked on an unapproved permission prompt; from the orchestrator's side the subagent just looks slow, not stuck. This is a platform-level quirk, not a repo bug, so it likely belongs in docs/agents/environment-caveats.md once someone can confirm the mechanism (or lack of one) rather than guessing here — and/or reported upstream as a product gap: a headless run silently stalling on a permission prompt with zero proactive signal is a structural risk for every scheduled Skill that dispatches subagents, not just this one."
     severity: major
-durationSec: 14284
+  - description: "A dispatched impl agent's edit to `.claude/settings.json` (wiring the new double-background-guard into `hooks.PreToolUse`, issue #1208) hit a permission prompt needing human approval, and stalled the impl agent for ~3h. This is a scheduled `frictions-to-fixes` run with no human watching — and none of this session's own tools (no wake, no signal back from a dispatched subagent's pending permission prompt) surfaced that anything was stuck. The user was NOT present; they discovered the stall only by chance, opening the Claude web interface for an unrelated reason and happening to notice this session's pending approval, which they then granted manually. Had they not happened to check, the dispatched agent would have stayed stalled indefinitely with nothing in this session able to detect or escalate it. Both PRs (#1209, #1210) subsequently merged — #1210 by a human, ~40 minutes after escalation."
+    solution: "Two angles worth a future frictions-to-fixes cycle: (1) narrower — check whether `.claude/settings.json` edits from a dispatched impl agent could be pre-approved (`fewer-permission-prompts`/`update-config` mechanism) specifically for guard-wiring fixes, since every such PR is human-reviewed and human-merged anyway — the approval gate currently sits earlier (mid-edit) than the repo's own human-only bar (at merge). (2) broader, and the real gap this correction surfaced — a scheduled/ autonomous session has no way to detect or surface that a dispatched subagent is blocked on an unapproved permission prompt; from the orchestrator's side the subagent just looks slow, not stuck. This is a platform-level quirk, not a repo bug, so it likely belongs in docs/agents/environment-caveats.md once someone can confirm the mechanism (or lack of one) rather than guessing here — and/or reported upstream as a product gap: a headless run silently stalling on a permission prompt with zero proactive signal is a structural risk for every scheduled Skill that dispatches subagents, not just this one."
+    severity: major
+durationSec: 14476
 models:
-  claude-sonnet-5: 120
+  claude-sonnet-5: 133
 toolCounts:
   Agent: 3
   ToolSearch: 3
-  mcp__github__issue_read: 1
+  mcp__github__issue_read: 2
   mcp__github__search_pull_requests: 2
   Read: 7
   mcp__github__search_issues: 1
   mcp__github__issue_write: 1
   Skill: 3
-  ReadNotifications: 6
-  mcp__github__pull_request_read: 9
-  Bash: 11
+  ReadNotifications: 7
+  mcp__github__pull_request_read: 10
+  Bash: 12
   mcp__github__add_issue_comment: 2
   mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
   Write: 2
-  Edit: 2
+  Edit: 4
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - scripts/shell-reads.ts
   - tests/unit/shell-reads.spec.ts
