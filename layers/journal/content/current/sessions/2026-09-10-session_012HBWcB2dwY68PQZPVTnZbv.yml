@@ -1,0 +1,198 @@
+schemaVersion: 1
+session: session_012HBWcB2dwY68PQZPVTnZbv
+startedAt: 2026-09-10T04:08:29Z
+endedAt: 2026-09-10T04:19:27Z
+kind: autonomous
+goal: Run scheduled audit-docs documentation sweep
+status: completed
+outcome: Clean sweep; sole finding blocked by open trial
+summary: Fully autonomous run, fired by a schedule with no live human in the loop. Fanned out the four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) over the whole Live/Historical/Pack-generic doc corpus. Three lenses returned clean; Single-home surfaced one Duplication (the ".github/workflows/*" edit-restriction rule restated in both CLAUDE.md and docs/agents/environment-caveats.md). An independent fact-check agent confirmed the duplication is real but found it sits entirely inside an open, unjudged prune trial (opened 2026-09-09) that already compressed this exact territory — editing it now would re-legislate a trial mid-verdict, which CLAUDE.md forbids. Per that rule, recorded it as a Friction instead of fixing it and left it for /prune-trial to judge. No doc changes, no commits, no PR — this sweep had nothing left to fix.
+prs: []
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0007-generated-config-committed-drift-checked.md
+    reason: (no reason given)
+  - path: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    reason: (no reason given)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: (invoked as a slash command)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The sole confirmed Duplication finding (the ".github/workflows/*" bullet restated in CLAUDE.md:166-173 and docs/agents/environment-caveats.md:75-82) falls inside an open, unjudged prune trial opened 2026-09-09 that already compressed this same territory once. Fixing it now would mean re-legislating pruned prose mid-trial, which CLAUDE.md's working conventions explicitly forbid.
+    solution: Left unfixed by design; the 2026-09-09 prune trial owns this territory until /prune-trial judges it. No audit-docs action needed beyond this note.
+    severity: minor
+  - description: The Single-home lens agent's sub-claim that workflow-edit-guard was the only two-homed row in docs/agents/guards.md's roster table was wrong — commit-trailer-guard.ts also lists two homes (CLAUDE.md, ADR-0017) in the same table. Only caught by the independent fact-check pass, not by the original reviewer.
+    solution: No fix needed this run (the underlying duplication finding was independently confirmed on its own merits and then correctly shelved for the prune trial); flagging as evidence the two-pass fact-check step is pulling its weight against lens-agent overreach.
+    severity: nit
+  - description: "SHELL-READ-DETECTION false positive: docsReadViaShell attributed 5 doc reads to this session (.agents/skills/log-session/SKILL.md, .agents/skills/audit-skills/SKILL.md, .agents/skills/frictions-to-fixes/SKILL.md, docs/agents/guards.md, docs/research/rulebook-migration-table.md) that this session never shell-read itself. This session's own Bash calls were only `git status`/`git branch`/`git log`/`git fetch` — no cat/grep/git-show on any of these 5 paths. The likely cause: the four dispatched lens-reviewer agents (and the fact-checker) ran their own cat/grep/git-show commands on these paths inside their own isolated subagent contexts, and the trace-derivation appears to be folding those subagent-transcript shell reads into the parent session's own docsReadViaShell set instead of scoping them to the subagent (or dropping them, since subagent reads already surface via the `subagents` field per ADR-0009)."
+    solution: Scope docsReadViaShell's transcript scan to the parent session's own tool calls, excluding shell commands that ran inside a dispatched Agent-tool subagent's isolated context — those are already captured by the derived `subagents` field.
+    severity: moderate
+durationSec: 657
+models:
+  claude-sonnet-5: 43
+toolCounts:
+  Skill: 3
+  Bash: 6
+  Agent: 9
+  ScheduleWakeup: 1
+  Write: 1
+  Edit: 1
+docsReadViaShell:
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/guards.md
+  - docs/research/rulebook-migration-table.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens doc audit (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens doc audit (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens doc audit (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens doc audit (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Freshness lens doc audit (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens doc audit (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens doc audit (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens doc audit (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check single duplication finding
+gitBranch: claude/festive-mayer-d18rle
+entrypoint: remote_trigger
+cliVersion: 2.1.267
+trigger: audit-docs
+landedBy: Stop
