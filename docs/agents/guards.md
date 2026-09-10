@@ -28,6 +28,7 @@ issue below rather than rephrasing the call until it passes.
 | `commit-trailer-guard.ts` | a `git commit` whose message hand-types the ADR-0017 trailer the harness already lands | CLAUDE.md, ADR-0017 | #921 |
 | `workflow-edit-guard.ts` | a **write** into `.github/workflows/` — an `Edit`/`Write` path there, or a write-shaped `Bash` command. Reads pass, and `.github/actions/gate/action.yml` is untouched: agents may push that one (ADR-0026) | CLAUDE.md, `environment-caveats.md` | #897 |
 | `tail-pipe-guard.ts` | a `Bash` command piping into a trailing `tail`/`head`/`echo` when it also backgrounds (`run_in_background: true`) or is a known long-runner (`pnpm gate`/`test`/`build`, `pnpm exec vitest`/`playwright`). An ordinary short foreground pipe is untouched | CLAUDE.md | #873, #384, #812 |
+| `double-background-guard.ts` | a `Bash` call stacking `run_in_background: true` on a text-level background operator in the command (a bare `&` anywhere, `nohup … &` included) — for **any** caller, main session included (no `detectAgentContext` gate at all, unlike `subagent-background-guard.ts`) | CLAUDE.md | #1208 |
 | `github-provenance-guard.ts` | a GitHub body, or an MCP-API commit, missing this session's provenance in the shape its surface prescribes; also a title or body carrying a bare `<...>` span GitHub silently strips | ADR-0017 — the deny message is the agent-facing home | #886 |
 | `session-id-guard.ts` | nothing: **post-hoc**. Reports a wrong session id on this session's own commits, at teardown | CLAUDE.md | #387 |
 
