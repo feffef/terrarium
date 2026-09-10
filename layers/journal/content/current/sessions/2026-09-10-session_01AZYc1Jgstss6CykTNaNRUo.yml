@@ -1,0 +1,56 @@
+schemaVersion: 1
+session: session_01AZYc1Jgstss6CykTNaNRUo
+startedAt: 2026-09-10T00:46:23Z
+endedAt: 2026-09-10T00:58:49Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: in-review
+outcome: "Confirmed regression filed as issue #1206, PR #1207 open"
+summary: "Autonomous scheduled /audit-skills run, no human prompt. Gathered the scorecard via scripts/audit-skills.ts (40-session window, 36 inventoried Skills, 14 regressionChecks brackets). Reviewed all 14 brackets for step 4's regression watch: two looked suggestive at Phase A (log-session, blog-post). Phase B deep-read (full-history grep plus reading every flagged session's full frictions) confirmed log-session's docsReadViaShell derived-trace field has produced 5 moderate SHELL-READ-DETECTION frictions since 2026-09-01 (one predating the 2026-09-05 lander-refactor edit that triggered the Phase A screen, so it's a pre-existing unfixed bug, not a fresh regression) — filed issue #1206 with full citations and a root-cause hypothesis, and appended the citing observations entry to log-session.yml. blog-post's Phase A signal turned out to be the same docsReadViaShell friction landing coincidentally in a blog-post session, not a real blog-post regression — dismissed with no action. Reviewed step 3 (importance/role) for all 36 Skills against this window's usedIn; found no ≥2-session bright-line evidence for any grade change and no un-inventoried on-disk or phantom Skills. Checked orphanedSessions (both entries already resolvedBy-cut), orphanSuppressionLog (both resolved-annotation, healthy), humanPromptedClosures/manuallyRescuedClosures (both empty), and misclassifiedKind's one flagged session (a genuine mid-session human prompt correctly reclassified it, not a bug). Diff is Inventory-only (log-session.yml), ran pnpm gate:scoped (full heavy gate triggered since the changed path isn't inert — 79/79 e2e green), committed, pushed, opened PR #1207, and subscribed to its activity for self-merge-on-green per this Skill's ADR-0004 low-risk content tier."
+prs:
+  - "1207"
+docsRead:
+  - path: layers/journal/content/current/skills/log-session.yml
+    reason: prior observations entry + role/grade before editing
+  - path: scripts/session-trace.ts
+    reason: "ground the docsReadViaShell mechanism before filing #1206"
+  - path: scripts/shell-reads.ts
+    reason: confirm the shell-read scan's command-extraction path
+  - path: CONTEXT.md
+    reason: Importance grade definitions for step 3
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: provenance header format for the filed issue/PR
+  - path: layers/journal/content/current/sessions/2026-09-05-session_016ahWmRcpKL7NJpcrtA8zPy.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: invoked as a slash command
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 745
+models:
+  claude-sonnet-5: 106
+toolCounts:
+  Bash: 34
+  Read: 4
+  Grep: 6
+  ToolSearch: 2
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 1
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - layers/journal/content/current/skills/log-session.yml
+docsReadViaShell:
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+gitBranch: claude/upbeat-sagan-mz6vpk
+entrypoint: remote_trigger
+cliVersion: 2.1.267
+trigger: audit-skills
+landedBy: Stop
