@@ -1,0 +1,120 @@
+schemaVersion: 1
+session: session_01AcLKg5VLcwqyiLcNexXiSJ
+startedAt: 2026-09-10T02:04:49Z
+endedAt: 2026-09-10T05:32:39Z
+kind: interactive
+goal: Run frictions-to-fixes — turn session frictions into merged fixes
+status: in-review
+outcome: 1 fix merged (#1209), 1 guard fix escalated (#1210)
+summary: "Scheduled `/frictions-to-fixes` run (autonomous kickoff, no human prompt at start). Delegated survey+screen of the latest 20 session logs to a subagent, which found only two live candidates after screening against the tracker — a smaller haul than usual, since the prior run (#1198/#1199, 2026-09-09) had recently cleared most of the backlog. Filed issue #1208 (no guard caught a main-session double-background: run_in_background:true stacked with a text-level `&`/`nohup … &`) and picked up the already-open issue #1206 (docsReadViaShell detector: a miss on `git show <ref>:<path>` reads, plus an investigated-but-unreproduced false-positive claim). Dispatched two Sonnet impl agents in isolated worktrees. PR #1209 (the #1206 fix) reviewed and self-merged — clean, minimal, no human-only surface touched. PR #1210 (the #1208 guard) reviewed as correct and well-tested but escalated to a human for merge, since every guard PR is human-only to merge per docs/agents/guards.md regardless of diff quality. Mid-session, the user (live, not scheduled) sent two messages: asking me to log that the double-background-guard's `.claude/settings.json` edit needed a human permission-prompt approval, then clarifying it was the settings.json edit itself needing approval, not merge authority — see the friction below."
+prs:
+  - "1209"
+  - "1210"
+docsRead:
+  - path: docs/agents/guards.md
+    reason: guard conventions — human-only-to-merge bar, roster shape
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe + per-tier authority (reviewer-agent tier)
+  - path: .agents/prune-trials.yml
+    reason: screen candidates against open prune-trial territory
+  - path: scripts/shell-reads.ts
+    reason: "assess #1206's fix scope before dispatch"
+  - path: scripts/session-trace.ts
+    reason: "assess #1206's false-positive hypothesis before dispatch"
+  - path: scripts/subagent-background-guard.ts
+    reason: "sibling guard shape to mirror for #1208's fix"
+  - path: shared/trace-fields.ts
+    reason: (no reason given)
+  - path: tests/unit/shell-reads.spec.ts
+    reason: (read before editing)
+  - path: tests/unit/session-trace.spec.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-08-session_01DAJKXQEzuASCBWZgjqh5h6.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-09-session_01MCTb9XRPHbF549LQ199QzQ.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-05-session_016ahWmRcpKL7NJpcrtA8zPy.yml
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/agents/guards.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/scripts/subagent-background-guard.ts
+    reason: (read before editing)
+  - path: /home/user/terrarium/scripts/guard-io.ts
+    reason: (no reason given)
+  - path: /home/user/terrarium/scripts/commit-trailer-guard.ts
+    reason: (no reason given)
+  - path: /home/user/terrarium/scripts/tail-pipe-guard.ts
+    reason: (no reason given)
+  - path: /home/user/terrarium/.claude/settings.json
+    reason: (no reason given)
+  - path: /home/user/terrarium/scripts/tail-pipe-guard.sh
+    reason: (no reason given)
+  - path: /home/user/terrarium/tests/unit/tail-pipe-guard.spec.ts
+    reason: (no reason given)
+  - path: /home/user/terrarium/scripts/subagent-background-guard.sh
+    reason: (no reason given)
+  - path: /home/user/terrarium/tests/unit/subagent-background-guard.spec.ts
+    reason: (no reason given)
+  - path: /home/user/terrarium/tests/unit/commit-trailer-guard.spec.ts
+    reason: (no reason given)
+  - path: .claude/settings.json
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: worktree isolation + brief checklist for the two impl agents
+  - name: close-session
+    reason: closure sequence
+  - name: log-session
+    reason: this log
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: "A dispatched impl agent's edit to `.claude/settings.json` (wiring the new double-background-guard into `hooks.PreToolUse`, issue #1208) hit a permission prompt that needed a live human to approve — not a merge-authority question, a mid-dispatch tool-permission gate. This run happened to have a human present to approve it; a fully unattended `frictions-to-fixes` firing would have stalled on it with no one to ask."
+    solution: Worth checking whether `.claude/settings.json` edits could be pre-approved for a dispatched impl agent specifically (via the `fewer-permission-prompts`/`update-config` mechanism) given every guard PR is human-reviewed and human-merged anyway — the approval gate is currently earlier (mid-edit) than where the repo's own human-only bar actually sits (at merge). Short of that, `dispatch-subagents`/this Skill could flag upfront that a guard-wiring fix will need a reachable human mid-dispatch, not just at review time.
+    severity: moderate
+durationSec: 12470
+models:
+  claude-sonnet-5: 104
+toolCounts:
+  Agent: 3
+  ToolSearch: 3
+  mcp__github__issue_read: 1
+  mcp__github__search_pull_requests: 2
+  Read: 6
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
+  Skill: 3
+  ReadNotifications: 5
+  mcp__github__pull_request_read: 9
+  Bash: 8
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Write: 1
+  Edit: 1
+filesEdited:
+  - scripts/shell-reads.ts
+  - tests/unit/shell-reads.spec.ts
+  - /home/user/terrarium/scripts/subagent-background-guard.ts
+  - scripts/subagent-background-guard.ts
+  - scripts/double-background-guard.ts
+  - scripts/double-background-guard.sh
+  - .claude/settings.json
+  - tests/unit/double-background-guard.spec.ts
+  - docs/agents/guards.md
+docsReadViaShell:
+  - CONTEXT.md
+  - docs/agents/guards.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix double-background guard gap (#1208)
+    model: sonnet
+  - type: general-purpose
+    task: Fix docsReadViaShell detector bugs (#1206)
+    model: sonnet
+gitBranch: claude/eager-ptolemy-lxb72v
+entrypoint: remote_trigger
+cliVersion: 2.1.267
+trigger: frictions-to-fixes
+landedBy: Stop
