@@ -27,4 +27,20 @@ observations:
       not the "≥2 sessions" pattern step 4 asks for before treating it as
       confirmed — recorded here so a future run's Phase A screen has it if a
       second instance turns up.
+  - date: 2026-09-10
+    note: >-
+      Confirmed regression watch, filed as issue #1206. Four more
+      SHELL-READ-DETECTION frictions turned up since the 2026-09-09 note above
+      (session_01EQQRCf2wcFwvTjRWs7tvL2, 2026-09-01, archived — predates the
+      2026-09-05 log-session edit, so this is a pre-existing, unfixed bug, not
+      a fresh regression from that edit; session_01DAJKXQEzuASCBWZgjqh5h6 and
+      session_01MCTb9XRPHbF549LQ199QzQ, both 2026-09-08/09, both describing
+      shell-command-shaped text from a dispatched subagent's own report prose
+      apparently being credited as this session's own shell read;
+      session_01Lk7T884197VeKnMEB8NXhW, 2026-09-09, the opposite miss — a
+      `git show <ref>:<path> | grep` pipeline not recognized as a reader
+      shape). All five are `moderate` severity. Grade/role unchanged — this is
+      a mechanism bug in the derived trace (`scripts/shell-reads.ts` /
+      `session-trace.ts`), not a Skill-doc issue this Skill's grade should
+      move on.
 
