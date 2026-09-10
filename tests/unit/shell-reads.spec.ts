@@ -56,6 +56,29 @@ describe('reader commands', () => {
   })
 })
 
+describe('git show <ref>:<path> — issue #1206\'s miss', () => {
+  it('counts a bare `git show <ref>:<path>` — it streams the blob regardless of a pipe', () => {
+    expect(paths('git show HEAD~1:.agents/skills/prune-trial/SKILL.md')).toEqual([
+      '.agents/skills/prune-trial/SKILL.md',
+    ])
+  })
+
+  it('counts it the same when piped into a filter — the read already happened upstream', () => {
+    expect(paths('git show HEAD~1:.agents/skills/prune-trial/SKILL.md | grep -n "some pattern"')).toEqual([
+      '.agents/skills/prune-trial/SKILL.md',
+    ])
+  })
+
+  it('does not fire for a git command with no colon-separated path', () => {
+    expect(paths('git show HEAD~1')).toEqual([])
+    expect(paths('git log docs/agents/guards.md')).toEqual([])
+  })
+
+  it('canonicalizes the extracted path like any other reader', () => {
+    expect(paths('git show HEAD:.claude/skills/tdd/SKILL.md')).toEqual(['.agents/skills/tdd/SKILL.md'])
+  })
+})
+
 describe('false positives', () => {
   it("rejects grep's first positional — it is the pattern, not a path", () => {
     expect(paths('grep -n "docs/agents/x.md" CLAUDE.md')).toEqual([])

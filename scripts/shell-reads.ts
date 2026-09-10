@@ -87,6 +87,26 @@ export interface ShellReadScan {
   nearMisses: NearMiss[]
 }
 
+/** `git show <ref>:<path>` dumps a blob straight to stdout — a content-revealing
+ *  read of `<path>` whether or not anything follows it in a pipe (issue #1206's
+ *  miss: `git` isn't in `READER_VERBS` at all, and the positional-path shape
+ *  every other reader uses doesn't apply — the path sits after a colon in
+ *  `show`'s own argument, not as a bare positional). Returns the raw path
+ *  portion (everything after the FIRST colon — a ref like `HEAD~1` never
+ *  contains one, so splitting once is exact), or `undefined` for any other
+ *  `git` invocation (`git log`, `git show <sha>` with no colon, …), which then
+ *  falls through to the ordinary "not a reader command" handling below. */
+function extractGitShowPath(tokens: Token[]): string | undefined {
+  if (tokens.length < 2 || tokens[1]!.quoted || tokens[1]!.text !== 'show') return undefined
+  for (const t of tokens.slice(2)) {
+    if (!t.quoted && t.text.startsWith('-')) continue
+    const idx = t.text.indexOf(':')
+    if (idx === -1) continue
+    return t.text.slice(idx + 1)
+  }
+  return undefined
+}
+
 /** `.claude/skills/x` and `.agents/skills/x` are the same file — the former is a
  *  symlink tree over the latter, and both spellings appear in agent commands.
  *  Without this, one file's reads split across two keys and both undercount. */
@@ -275,6 +295,16 @@ export function scanShellReads(commands: string[], rel: (p: string) => string = 
       }
       const noteAll = (rule: SkipRule, from = 1): void => {
         for (const t of tokens.slice(from)) note(fromReader, t.text, rule)
+      }
+
+      if (verb === 'git') {
+        const showPath = extractGitShowPath(tokens)
+        if (showPath !== undefined) {
+          const p = norm(showPath)
+          if (isInstructionDoc(p)) paths.add(p)
+          else if (isGlobbedInstructionDoc(p)) note(fromReader, showPath, 'not a literal path: glob or variable')
+          continue
+        }
       }
 
       if (!READER_VERBS.has(verb)) {
