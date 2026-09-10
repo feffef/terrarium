@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01M4K1RjuAqaFfrUCtDVpni3
 startedAt: 2026-09-10T13:14:13Z
-endedAt: 2026-09-10T13:27:56Z
+endedAt: 2026-09-10T13:32:12Z
 kind: autonomous
 goal: Run scheduled /prune-trial sweep
-status: in-review
-outcome: Judged 1 trial, opened 1 new prune
-summary: "Scheduled, unattended /prune-trial run — no human prompt. §1: judged the provenance-header/commit-trailer trial (landed 2026-09-06, past its window per scripts/prune-trial-window.ts) — read every friction logged since landing plus a tracker search for a regression; found none, every hit matched the trial's own \"guard worked as intended\" pattern, so the prune holds and the entry was deleted. The other three open trials aren't judgeable yet. §2/§3: opened a new trial compressing ADR-0003's \"Auto-merge exemption ledger\" — 12 amendment blockquotes down to a table + 4 notes, net -74 lines, cutting narration the table already states and one amendment flatly superseded by a later one in the same file. §4: proven on a Sonnet subagent given only the compressed text. Gate green, PR #1212 opened and subscribed. All agent-initiated, per the scheduled routine's own charter."
+status: completed
+outcome: Judged 1 trial, opened + merged 1 new prune
+summary: "Scheduled, unattended /prune-trial run — no human prompt. §1: judged the provenance-header/commit-trailer trial (landed 2026-09-06, past its window per scripts/prune-trial-window.ts) — read every friction logged since landing plus a tracker search for a regression; found none, every hit matched the trial's own \"guard worked as intended\" pattern, so the prune holds and the entry was deleted. The other three open trials aren't judgeable yet. §2/§3: opened a new trial compressing ADR-0003's \"Auto-merge exemption ledger\" — 12 amendment blockquotes down to a table + 4 notes, net -74 lines, cutting narration the table already states and one amendment flatly superseded by a later one in the same file. §4: proven on a Sonnet subagent given only the compressed text. Gate green, PR #1212 opened, subscribed, and self-merged per its chartered tier (prune-trial merges on green alone, ADR-0027's amendment to ADR-0004) after posting the verdict comment and checking for conflicting issues/review threads. All agent-initiated, per the scheduled routine's own charter."
 prs:
   - "1212"
 docsRead:
@@ -28,6 +28,8 @@ docsRead:
     reason: verified no dangling reference to the amendment content being compressed
   - path: CLAUDE.md
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: prune-trial
     reason: this run's own charter (scheduled)
@@ -45,22 +47,25 @@ frictions:
   - description: First `create_pull_request` call put the ADR-0017 provenance marker in the wrong shape/position; the github-provenance-guard correctly denied it and named the exact required shape.
     solution: Rewrote the body with the marker as the first line/own paragraph, per the guard's deny message. Passed on retry.
     severity: nit
-durationSec: 823
+durationSec: 1079
 models:
-  claude-sonnet-5: 124
+  claude-sonnet-5: 152
 toolCounts:
   Skill: 3
-  Bash: 29
-  ToolSearch: 3
+  Bash: 34
+  ToolSearch: 5
   mcp__github__search_issues: 1
-  Read: 13
-  Edit: 7
+  Read: 14
+  Edit: 9
   Grep: 2
   Agent: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_review_write: 1
 filesEdited:
   - .agents/prune-trials.yml
   - docs/adr/0003-agent-operating-model-and-governance.md
