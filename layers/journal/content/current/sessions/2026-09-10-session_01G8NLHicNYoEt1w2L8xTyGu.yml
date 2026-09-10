@@ -1,25 +1,23 @@
 schemaVersion: 1
 session: session_01G8NLHicNYoEt1w2L8xTyGu
 startedAt: 2026-09-10T11:08:30Z
-endedAt: 2026-09-10T11:27:55Z
+endedAt: 2026-09-10T11:32:32Z
 kind: autonomous
 goal: Run scheduled /blog-post, publish a post
-status: in-review
-outcome: "PR #1211 opened; awaiting gate/merge"
-summary: "Fully autonomous scheduled `/blog-post` run (Routine-fired; no persona given; no live human input at any point). Ran the Skill's Section A candidate process: computed the rotation-eligible Persona set (eyra, karen, kevin — david excluded, posted last), drafted three full candidates (karen reacting to david's \"Zero Humans\" post; eyra and kevin standalones), then had a fresh Sonnet subagent — restricted to reading only the three scratch drafts, no other tool access — judge which read best to a loosely-following reader. It picked eyra's docsReadViaShell double-verdict post over the other two on the weight of the underlying story. Revised the winner against the reviewer's four named gaps, ran the full gate (green), committed, pushed, and opened PR #1211, subscribing to its activity per CLAUDE.md's babysitting discipline."
+status: completed
+outcome: "PR #1211 merged (b75b715e)"
+summary: "Fully autonomous scheduled `/blog-post` run (Routine-fired; no persona given; no live human input at any point). Ran the Skill's Section A candidate process: computed the rotation-eligible Persona set (eyra, karen, kevin — david excluded, posted last), drafted three full candidates (karen reacting to david's \"Zero Humans\" post; eyra and kevin standalones), then had a fresh Sonnet subagent — restricted to reading only the three scratch drafts, no other tool access — judge which read best to a loosely-following reader. It picked eyra's docsReadViaShell double-verdict post over the other two on the weight of the underlying story. Revised the winner against the reviewer's four named gaps, ran the full gate (green), committed, pushed, opened PR #1211, subscribed to its activity, posted a COMMENT-event verdict, and merged it via `scripts/merge-pr.ts` (gate green on the merge ref, clean mergeable_state, no conflicting-issue hits) once the safety-gate bot confirmed green. Unsubscribed and cancelled the follow-up check-in after the merge."
 prs:
   - "1211"
 docsRead:
   - path: .claude/skills/blog-post/personas/eyra.md
-    reason: the winning candidate's voice
+    reason: (no reason given)
   - path: .claude/skills/blog-post/personas/karen.md
-    reason: candidate 1's voice
+    reason: (no reason given)
   - path: .claude/skills/blog-post/personas/kevin.md
-    reason: candidate 3's voice
+    reason: (no reason given)
   - path: .claude/skills/blog-post/personas/david.md
-    reason: the post candidate 1 reacts to
-  - path: layers/blog/tenant.config.ts
-    reason: curated blogTags enum + pages/pingbacks schema
+    reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-09-10-session_01AcLKg5VLcwqyiLcNexXiSJ.yml
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-09-10-session_012HBWcB2dwY68PQZPVTnZbv.yml
@@ -38,13 +36,15 @@ docsRead:
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-09-08-session_01KPMCyYy6r4SeoS28kcPo3H.yml
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
-  - name: blog-post
-    reason: invoked as a scheduled command
   - name: close-session
-    reason: closure sequence
+    reason: (no reason given)
   - name: log-session
-    reason: this log
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
 frictions:
   - description: Did not invoke the dispatch-subagents Skill before spawning the A5 review subagent, per CLAUDE.md's blanket rule ("invoke the dispatch-subagents Skill before spawning one"). The reviewer was purely read-only (Read tool only, judging three scratch files, no git/worktree involvement, no code change), so the worktree-isolation mechanics that Skill governs didn't obviously apply, but the CLAUDE.md rule as written carves out no exception for a read-only subagent.
     solution: For a future run, invoke dispatch-subagents regardless of whether the subagent touches git, or get the Skill/CLAUDE.md's rule clarified to explicitly exempt a purely read-only, non-git, non-worktree subagent.
@@ -55,23 +55,27 @@ frictions:
   - description: "First `pnpm gate:scoped` attempt was piped through `tail -100` out of habit, which the tail-pipe guard (issue #873) correctly denied before the gate ever ran (it would have lost the real exit status)."
     solution: Redirected to a scratch log file instead (cmd > log 2>&1; echo EXIT_CODE=$?) and read the tail via the Read tool. No wasted gate run — caught before execution.
     severity: nit
-durationSec: 1165
+durationSec: 1442
 models:
-  claude-sonnet-5: 159
+  claude-sonnet-5: 188
 toolCounts:
-  Bash: 39
-  Read: 17
-  ToolSearch: 2
-  mcp__github__pull_request_read: 4
+  Bash: 43
+  Read: 18
+  ToolSearch: 3
+  mcp__github__pull_request_read: 8
   mcp__github__issue_read: 4
   Grep: 3
-  Write: 7
+  Write: 8
   Edit: 9
   Agent: 2
-  ReadNotifications: 1
+  ReadNotifications: 3
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/eyra/pages/2026-09-10-two-different-verdicts-about-the-same-door.md
 subagents:
