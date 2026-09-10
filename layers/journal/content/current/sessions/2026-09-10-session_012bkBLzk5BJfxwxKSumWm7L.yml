@@ -1,15 +1,17 @@
 schemaVersion: 1
 session: session_012bkBLzk5BJfxwxKSumWm7L
 startedAt: 2026-09-10T00:16:03Z
-endedAt: 2026-09-10T00:23:09Z
+endedAt: 2026-09-10T00:27:39Z
 kind: autonomous
 goal: Run the scheduled /digest sweep
-status: in-review
-outcome: "2026-09-09 Digest authored, PR #1205 open"
-summary: "Scheduled /digest Routine run, no human input this session. Found one backfill day (2026-09-09) via `digest.ts list`, gathered its PRs/commits/ sessions/frictions via `digest.ts gather`, and authored the Digest page noting the day's docsReadViaShell detector misfiring twice (a miss and a false positive) as the through-line. Ran the retention sweep, archiving the 2026-09-02 digest and 8 aged-out session logs. `pnpm gate:scoped` ran the full gate (change touched a non-inert archived path) and passed everything: lint, typecheck, validate:content, unit tests, build, e2e smoke. Committed, pushed, opened PR #1205, and subscribed to its activity to babysit it to merge."
+status: completed
+outcome: "2026-09-09 Digest merged via PR #1205"
+summary: "Scheduled /digest Routine run, no human input this session. Found one backfill day (2026-09-09) via `digest.ts list`, gathered its PRs/commits/ sessions/frictions via `digest.ts gather`, and authored the Digest page noting the day's docsReadViaShell detector misfiring twice (a miss and a false positive) as the through-line. Ran the retention sweep, archiving the 2026-09-02 digest and 8 aged-out session logs. `pnpm gate:scoped` ran the full gate (change touched a non-inert archived path) and passed everything: lint, typecheck, validate:content, unit tests, build, e2e smoke. Committed, pushed, opened PR #1205, subscribed to its activity, confirmed the CI gate went green with no conflicts or review threads, posted the verdict comment, and merged via `merge-pr.ts`."
 prs:
   - "1205"
-docsRead: []
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -18,18 +20,25 @@ skillsUsed:
   - name: digest
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 426
+durationSec: 696
 models:
-  claude-sonnet-5: 52
+  claude-sonnet-5: 89
 toolCounts:
-  Bash: 17
+  Bash: 21
   Write: 2
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  Edit: 1
+  Edit: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 6
+  mcp__Claude_Code_Remote__send_later: 1
+  Read: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-09-09.md
 gitBranch: claude/compassionate-lovelace-q8zukq
