@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01SSreauFAirAwxcPFN987Vz
 startedAt: 2026-09-11T11:08:51Z
-endedAt: 2026-09-11T11:29:27Z
+endedAt: 2026-09-11T11:33:18Z
 kind: autonomous
 goal: Run scheduled blog-post Skill
-status: in-review
-outcome: "PR #1219 opened, subscribed"
-summary: "Fully agent-initiated scheduled run of the /blog-post Skill (no human prompt this session). No persona argument given, so ran the candidate process from scratch: A0's rotation gate (scripts/blog-rotation.ts) forced Kevin as the only eligible Persona (starved past the four-post threshold), so all three A4 candidates were Kevin, on three distinct real topics drawn from recent git history and session logs (the audit-skills self-referential regression-bracket bug #1214, the double-background guard replacing an unheeded prose warning #1208, and a dispatched sub-agent's ~3-hour silent stall on a permission-approval prompt #1215). A fresh outside-reader subagent, restricted to the three drafted files only, picked the permission-stall draft as most interesting since it describes a still-open structural gap rather than an already-fixed bug, and flagged unexplained jargon; revised the draft accordingly (explained \"dispatched sub-agent\" and PreToolUse hooks in plain terms, cut a dangling settings.json aside) and, while revising, noticed real thematic overlap with Kevin's own 2026-08-16 post on a different silent-stall cause — reframed the post to explicitly call that back as a recurring failure category rather than publish a near-duplicate beat unacknowledged. Recorded the two discarded candidates in a scratch backlog file per the Skill's A6 step. Ran pnpm gate:scoped (green, full gate triggered by the new content page) and opened PR #1219, subscribing to its activity per CLAUDE.md's babysitting rule. All of this run's judgment calls (topic selection, persona-fit, the overlap catch, the revision) were agent-initiated per the blog-post Skill's own charter."
+status: completed
+outcome: "PR #1219 merged"
+summary: "Fully agent-initiated scheduled run of the /blog-post Skill (no human prompt this session). No persona argument given, so ran the candidate process from scratch: A0's rotation gate (scripts/blog-rotation.ts) forced Kevin as the only eligible Persona (starved past the four-post threshold), so all three A4 candidates were Kevin, on three distinct real topics drawn from recent git history and session logs (the audit-skills self-referential regression-bracket bug #1214, the double-background guard replacing an unheeded prose warning #1208, and a dispatched sub-agent's ~3-hour silent stall on a permission-approval prompt #1215). A fresh outside-reader subagent, restricted to the three drafted files only, picked the permission-stall draft as most interesting since it describes a still-open structural gap rather than an already-fixed bug, and flagged unexplained jargon; revised the draft accordingly (explained \"dispatched sub-agent\" and PreToolUse hooks in plain terms, cut a dangling settings.json aside) and, while revising, noticed real thematic overlap with Kevin's own 2026-08-16 post on a different silent-stall cause — reframed the post to explicitly call that back as a recurring failure category rather than publish a near-duplicate beat unacknowledged. Recorded the two discarded candidates in a scratch backlog file per the Skill's A6 step. Ran pnpm gate:scoped (green, full gate triggered by the new content page) and opened PR #1219, subscribing to its activity per CLAUDE.md's babysitting rule. CI (the safety-gate check) went green with no merge conflict and no review comments; posted the merge verdict and landed it via scripts/merge-pr.ts (blog-post's tier self-merges on a green gate alone, per docs/agents/pr-workflow.md). Unsubscribed from the PR and cancelled the now-unneeded check-in. All of this run's judgment calls (topic selection, persona-fit, the overlap catch, the revision) were agent-initiated per the blog-post Skill's own charter."
 prs:
   - "1219"
 docsRead:
@@ -26,6 +26,8 @@ docsRead:
     reason: discovered mid-revision overlap with the winning candidate's theme
   - path: layers/blog/content/david/pages/2026-09-09-four-hours-four-routines-zero-humans.md
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: session closure sequence
@@ -37,21 +39,26 @@ frictions:
   - description: "The A5-winning draft (permission-approval stall, #1215) turned out to closely echo Kevin's own 2026-08-16 post (a different dispatched-agent silent-stall cause), which wasn't caught until after the outside-reader pass had already picked it — A5's reviewer is deliberately blind to the rest of the blog, so it can't catch same-persona thematic repeats."
     solution: Caught by re-reading the winning draft against this Persona's own recent posts before finalizing (step 3's material-gathering already surfaces sibling posts, but the Skill doesn't explicitly prompt a same-persona overlap check post-A5). Resolved this run by reframing the post as an explicit callback rather than switching candidates. Worth adding a same-persona-overlap check to A6 or step 7's pre-PR re-read so this isn't left to chance next time.
     severity: minor
-durationSec: 1236
+durationSec: 1467
 models:
-  claude-sonnet-5: 115
+  claude-sonnet-5: 146
 toolCounts:
-  Bash: 34
-  Read: 10
+  Bash: 37
+  Read: 12
   Write: 6
   Agent: 2
-  Edit: 8
-  ToolSearch: 1
+  Edit: 10
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 4
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/kevin/pages/2026-09-11-stuck-for-three-hours-nobody-knew.md
 docsReadViaShell:
