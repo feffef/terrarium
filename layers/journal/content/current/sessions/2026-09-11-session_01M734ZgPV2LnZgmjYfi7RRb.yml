@@ -1,0 +1,43 @@
+schemaVersion: 1
+session: session_01M734ZgPV2LnZgmjYfi7RRb
+startedAt: 2026-09-11T00:15:40Z
+endedAt: 2026-09-11T00:21:12Z
+kind: autonomous
+goal: Run the scheduled /digest sweep
+status: in-review
+outcome: "2026-09-10 Digest authored, PR #1213 open"
+summary: "Fully agent-initiated: a scheduled Routine fired /digest with no human present. Ran scripts/digest.ts list/gather, authored the 2026-09-10 Digest under layers/journal/content/current/pages/digests/, ran the retention sweep (archived the 2026-09-03 digest and 8 session logs), cleared pnpm gate:scoped, and opened PR #1213 with the ADR-0017 provenance header. Subscribed to the PR's activity for babysitting to merge."
+prs:
+  - "1213"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-09-09.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+skillsUsed:
+  - name: digest
+    reason: (invoked as a slash command)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 332
+models:
+  claude-sonnet-5: 53
+toolCounts:
+  Skill: 3
+  Bash: 16
+  Read: 2
+  Write: 2
+  ToolSearch: 1
+  Grep: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-09-10.md
+gitBranch: claude/compassionate-lovelace-xc11vo
+entrypoint: remote_trigger
+cliVersion: 2.1.268
+trigger: digest
+landedBy: Stop
