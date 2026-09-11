@@ -1,23 +1,25 @@
 schemaVersion: 1
 session: session_01BAp91Z4KzsPjPtdSuqmqxL
 startedAt: 2026-09-11T13:15:16Z
-endedAt: 2026-09-11T13:27:49Z
+endedAt: 2026-09-11T13:31:55Z
 kind: autonomous
 goal: Run scheduled /prune-trial sweep
-status: in-review
-outcome: "Ledger YAML fixed, 1 trial judged, PR #1220 open"
-summary: "Scheduled, no live human present. Judging step found .agents/prune-trials.yml was malformed (a missing `- problem:` list-item boundary had merged two trial entries, producing duplicate YAML keys that the strict `yaml` library rejects with a parse error) — fixed that first since it blocked the whole tool chain. Judged the one judgeable trial (git-conventions.md shallow-checkout, opened 2026-09-07): no frictions/issues touched its territory since landing, prune holds, entry deleted. Chose and shipped one new trial per §2/§3: compressed CLAUDE.md's \"Don't state anything as settled\" bullet 22→11 lines, the same narrated-incident-history shape already pruned from ADR-0003's ledger. Proved on a 4-scenario Sonnet probe (all correct). Gate green, PR #1220 opened and subscribed. All work agent-initiated per the scheduled task's own mandate."
+status: completed
+outcome: "Ledger YAML fixed, 1 trial judged, PR #1220 merged"
+summary: "Scheduled, no live human present. Judging step found .agents/prune-trials.yml was malformed (a missing `- problem:` list-item boundary had merged two trial entries, producing duplicate YAML keys that the strict `yaml` library rejects with a parse error) — fixed that first since it blocked the whole tool chain. Judged the one judgeable trial (git-conventions.md shallow-checkout, opened 2026-09-07): no frictions/issues touched its territory since landing, prune holds, entry deleted. Chose and shipped one new trial per §2/§3: compressed CLAUDE.md's \"Don't state anything as settled\" bullet 22->11 lines, the same narrated-incident-history shape already pruned from ADR-0003's ledger. Proved on a 4-scenario Sonnet probe (all correct). Gate green, PR #1220 opened, posted the required verdict comment, merged via merge-pr.ts (prune-trial's own green-gate merge authority), and unsubscribed. All work agent-initiated per the scheduled task's own mandate."
 prs:
   - "1220"
 docsRead:
   - path: .agents/prune-trials.yml
-    reason: the ledger this run judges and edits
+    reason: (read before editing)
   - path: docs/research/rulebook-migration-table.md
-    reason: found the CM-29..32 candidate per §2's criterion-1 bait
-  - path: docs/agents/github-integration.md
-    reason: considered as a candidate, ruled out — reference material, not narrated incident history
+    reason: (no reason given)
   - path: CLAUDE.md
     reason: (read before editing)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -32,26 +34,28 @@ frictions:
   - description: "scripts/commit-trailer-guard.sh should fail-closed on a hand-typed Co-Authored-By/Claude-Session trailer (issue #921) — confirmed by piping the exact real commit command through the guard standalone, which denied it correctly. But the actual Bash tool call carrying that same command (this session's own commit, forced by conflicting outer harness attribution instructions) was NOT denied — it committed with the hand-typed trailer intact. Landed values happened to be correct, so no wrong-id harm this time, but the fail-closed guarantee didn't hold live."
     solution: Not root-caused this session (no visibility into the real PreToolUse hook invocation, only into the guard script's own logic, which is correct in isolation). Flagging for investigation — possibly a transient `pnpm exec tsx` cold-start/env hiccup causing the `|| true` wrapper to swallow a script-level failure rather than a deny decision, which would mean the guard fails OPEN on its own crash instead of closed. Needs a session with hook-invocation visibility to reproduce.
     severity: major
-durationSec: 752
+durationSec: 999
 models:
-  claude-sonnet-5: 142
+  claude-sonnet-5: 169
 toolCounts:
-  Bash: 37
-  Read: 9
+  Bash: 42
+  Read: 10
   Edit: 4
-  ToolSearch: 3
+  ToolSearch: 4
   mcp__github__list_issues: 1
   Grep: 5
   Agent: 2
-  ReadNotifications: 2
+  ReadNotifications: 3
   mcp__github__search_issues: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
-  mcp__github__pull_request_read: 2
+  Write: 2
+  mcp__github__pull_request_read: 6
   PushNotification: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - CLAUDE.md
