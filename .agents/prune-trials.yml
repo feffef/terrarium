@@ -87,57 +87,6 @@ trials:
       merge grant, and correctly pointed to `pr-workflow.md`'s "Per-tier merge
       authority" for whether a specific grant (audit-docs) is narrower than a
       general low-risk-auto-merges policy.
-      `docs/agents/git-conventions.md`'s "If a checkout is still shallow"
-      section carried 45 lines explaining a scenario the repo already prevents
-      mechanically: `scripts/unshallow-on-start.ts` (a `SessionStart` hook)
-      unshallows before a session's first turn, so the section's entire
-      audience is the narrow leftover case where that fetch itself failed
-      (offline, no network). Within that already-narrow case, the section then
-      spent two more paragraphs re-deriving, from first principles, exactly
-      what `scripts/gate.ts`'s own code comment states and cites by name
-      ("Why classifying off a shallow clone is unsafe at all:
-      docs/agents/git-conventions.md, and #849") — the grafted-parentless-
-      boundary mechanics, a worked revert-branch example of how a shallow
-      `merge-base` diff can silently under-report rather than over-report, and
-      a restatement of `changedPaths()`/`changedPathsBetween()`'s asymmetric
-      repair-vs-refuse behaviour that the script's own comments already carry
-      next to the code. Compressed to the rule (don't trust history off a
-      still-shallow clone; a shallow `merge-base` can under-report, not just
-      over-report, so unshallow and verify before any history-based
-      conclusion), the one-line why, the fix (`git fetch --unshallow`), and a
-      pointer to `scripts/gate.ts` + issue #849 +
-      `tests/unit/gate-shallow-base.spec.ts` for the mechanics — same shape as
-      the already-landed `ToolSearch`/`ScheduleWakeup` and tail-pipe-guard
-      compressions, applied here to a hook instead of a `PreToolUse` guard.
-      Net -30 lines.
-    territory:
-      paths:
-        - "docs/agents/git-conventions.md: \"If a checkout is still shallow\" section, including the \"A shallow `merge-base` can be wrong\" subsection"
-      keywords:
-        - shallow checkout
-        - unshallow-on-start.ts
-        - merge-base can be wrong
-        - grafted parentless
-        - under-report
-        - gate-shallow-base.spec.ts
-    opened: 2026-09-07
-    proven: true
-    check: >
-      Damage is a session that, having actually hit a still-shallow clone (the
-      unshallow hook's fetch failed) and needing to know what that silently
-      gets wrong, stops at the compressed section and either trusts a
-      merge-base-derived diff/history conclusion anyway or can't recall that
-      the failure mode is under-reporting (not just over-reporting, which
-      would read as the safer direction). NOT damage: a session that runs
-      `git fetch --unshallow` and re-verifies before trusting history off a
-      shallow clone, without ever needing the worked revert-branch mechanics
-      (the intended point-of-need pointer working), or a session that never
-      meets a shallow clone at all because the `SessionStart` hook did its
-      job. A Sonnet probe given only the compressed text correctly derived
-      that a still-shallow clone must never be trusted for a history-based
-      conclusion, that the fix is `git fetch --unshallow` before proceeding,
-      and that a shallow `merge-base` diff's failure mode is silently
-      under-reporting changes rather than only over-reporting them.
   - problem: >
       CLAUDE.md restated session-logging mechanics that `close-session/SKILL.md`
       and `log-session/SKILL.md` already own in full, in two separate spots: the
@@ -238,3 +187,55 @@ trials:
       never let the workflow edit share a commit with unrelated real work,
       since a refused commit strands the whole ref update; and the actual
       destination is `docs/proposals/`, per its own README.
+  - problem: >
+      CLAUDE.md's "Don't state anything as settled" bullet (Working
+      conventions) bundled four sub-rules — identifier resolution, factual/
+      causal/behavioral claims, another session's hearsay, and set counts —
+      into 22 lines that itemized each case's own worked example and closed
+      with a bare `(Incident history: #387, #605, #628, #723, #738, #833,
+      #948, #871.)` citation: the same "narrowed repeatedly, self-documents
+      its own recurrence" shape already pruned from ADR-0003's auto-merge
+      ledger. The enforceable slice is already mechanized elsewhere and
+      single-homed there: `scripts/github-provenance-guard.ts` covers an
+      identifier/claim shipped in a GitHub body, `scripts/session-id-guard.ts`
+      covers a commit trailer naming the wrong session, and
+      `log-session/SKILL.md`'s "Recovering the id" section already owns the
+      session-id mechanics in more precise detail than this bullet's copy of
+      it. Compressed to one statement of the rule plus its single genuine
+      insight (recalling/inferring from context reads like resolution but is
+      capture) and the three one-line specializations (session id → the named
+      Skill section; hearsay → confirm with the human; count → read every
+      member), dropping the itemized case-by-case elaboration and the bare
+      issue-number citation — git history on this file is where that record
+      lives now. Net -11 lines (22 → 11, `CLAUDE.md` only).
+    territory:
+      paths:
+        - "CLAUDE.md: the \"Don't state anything as settled\" bullet (Working conventions)"
+      keywords:
+        - primary source
+        - reads like resolution but is capture
+        - confirmed out-of-band
+        - Recovering the id
+        - count is not a fact
+    opened: 2026-09-11
+    proven: true
+    check: >
+      Damage is a session that, needing to resolve an identifier, verify a
+      claim, weigh another session's say-so, or state a count, reads the
+      compressed bullet and either recalls/infers an identifier from context
+      instead of its actual source (a system-prompt value or a fresh tool
+      call), states a subagent's or its own unverified claim as settled fact,
+      treats another session's "confirmed out-of-band" message as itself
+      sufficient to proceed on a real decision, or reports a grep/keyword-match
+      count as a verified fact without reading the matched members. NOT
+      damage: a session that opens `log-session/SKILL.md`'s "Recovering the
+      id" section for the session-id mechanics instead of finding them
+      restated inline (the intended pointer working), or one that never hits
+      any of the four cases this run. A Sonnet probe given only the compressed
+      text correctly refused a plausible `git log`-sourced session id in favor
+      of the system-prompt value, correctly required independently verifying
+      a subagent's root-cause claim against the actual code before writing it
+      into a PR, correctly treated another session's "confirmed out-of-band"
+      claim as hearsay requiring direct human confirmation before a schema
+      migration, and correctly refused to state a grep-derived count as fact
+      without reading each matched session log first.

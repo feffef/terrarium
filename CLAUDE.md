@@ -188,28 +188,17 @@ it with a tool.
   is exempt in every mode. A fail-closed `PreToolUse` guard refuses any other use
   and names the right alternative for your situation in its deny message
   (`docs/agents/guards.md`, issue #814).
-- **Don't state anything as settled unless you verified it fresh, this turn,
-  against a primary source — an identifier, a claim, a count, or another
-  session's say-so.** An identifier (a line number, blob SHA, issue/PR number,
-  session id) comes from the matching tool call — a Read, `git rev-parse`, the
-  actual `issue_write` response — or, for a session id, from your own
-  system-prompt instructions verbatim per `log-session`'s "Recovering the id"
-  section; never recall or infer one from context (a subagent's report,
-  `git log` output, scorecard data already sitting there reads like
-  resolution but is capture). A factual, causal, or behavioral claim — a
-  bug's root cause, what a script or mechanism actually does, text already
-  sitting in your own context, or a claim about to be committed as a code
-  comment — needs a locally observable primary source (traced/executed code,
-  a grep, a quoted line) before it ships, whether the audience is external
-  (an issue, a PR, a post) or this session's own internal review. Another
-  session's unverifiable "confirmed out-of-band" claim is hearsay for an
-  internal decision, especially a security-relevant one — confirm with the
-  human directly rather than building on it. And a count of how many members
-  of a set match some property is not a fact until every member has actually
-  been read — a grep or keyword search only tells you what it matched, so
-  verify each flagged member or label the count heuristic/unverified before
-  it reaches a human. (Incident history: #387, #605, #628, #723, #738, #833,
-  #948, #871.)
+- **Don't state anything as settled — an identifier, a factual/causal/behavioral
+  claim, another session's say-so, or a count — unless you verified it fresh,
+  this turn, against a primary source.** Recalling or inferring one from
+  context (a subagent's report, `git log` output, data already sitting there)
+  reads like resolution but is capture. A session id specifically comes from
+  your own system-prompt instructions verbatim, per `log-session`'s
+  "Recovering the id" section — never `git log` or a remembered value.
+  Another session's unverifiable "confirmed out-of-band" claim is hearsay,
+  not a settled fact — confirm with the human instead. A count over a set
+  isn't a fact until every member has actually been read, not just matched
+  by a grep.
 - **This environment has several platform-level quirks that are not repo
   bugs — don't re-diagnose any of them as fresh problems.**
   `docs/agents/environment-caveats.md` is the single home and grows as new ones
