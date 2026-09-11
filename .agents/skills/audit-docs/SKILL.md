@@ -241,10 +241,10 @@ CONFIRMED(-BUT) with an accurate `file:line`.
 
 ## 6. Fix bravely
 
-Fix every surviving finding in place, deciding scope yourself; file a
-`needs-triage` issue **only** for an unresolvable factual conflict (search first,
-never re-file). Done when every confirmed finding is fixed or — for a true factual
-conflict — filed, with none left undecided.
+Fix every surviving finding in place, deciding scope yourself; escalation policy
+is above ("Fix bravely — escalate only a true factual conflict"). Done when every
+confirmed finding is fixed or — for a true factual conflict — filed, with none
+left undecided.
 
 ## 7. Clear the safety gate
 

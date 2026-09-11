@@ -173,12 +173,9 @@ for prose still asserting the old state, and fix it in the same pass.
   survey-report issue. The inclusion bar above is the judgment it applies;
   everything curatorial stays curator-authored.
 
-## A note on the post-MVP simplification
+## Visitor rendering
 
-The visitor experience was simplified after the MVP — each find now renders
-**open and flat** (the note and inscription visible on load, no accordion),
-using the corner stamp and the condition key (see Condition above). The
-underlying model (Site, Artifact, Dig season, the six Conditions, the
-inclusion bar) is unchanged; only its presentation is simpler.
-Full decision history — including which #515 sub-issue decisions this
-superseded (#523, #524, #527, #528) and why — is at issue #515.
+Each find renders **open and flat** (the note and inscription visible on load)
+using the corner stamp and the condition key (see Condition above). Full
+decision history — including which #515 sub-issue decisions led here (#523,
+#524, #527, #528) and why — is at issue #515.

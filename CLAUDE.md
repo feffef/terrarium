@@ -164,13 +164,9 @@ it with a tool.
 - **Don't restate a Routine's schedule in a committed doc** — it lives outside
   git and can change without a commit. Say a Skill *is* scheduled; never say *when*.
 - **Hitting a needed `.github/workflows/*` edit? You can't push it** (agent
-  sessions lack the `workflow` OAuth scope, ADR-0004), and `workflow-edit-guard`
-  (`docs/agents/guards.md`) now refuses the write itself before it ever reaches
-  a commit — route it through the `docs/proposals/` drop-zone instead of pushing
-  it or leaving it as ad hoc PR prose, and **read `docs/proposals/README.md`**
-  for the file format and the companion-change discipline. If ever bypassed,
-  the guard's own deny message states why the failure lands on the commit, not
-  the push; `docs/agents/guards.md`'s Known gaps names what it can still miss.
+  sessions lack the `workflow` OAuth scope, ADR-0004) — the OAuth-scope detail,
+  the `workflow-edit-guard` mechanism, and the `docs/proposals/` handoff are
+  single-homed in `docs/agents/environment-caveats.md`; read it there.
 - **In TS/Vue code, an inline comment explains WHY, never WHAT — default to no
   comment at all, and when the why isn't obvious, point at the existing doc
   that owns it rather than restating the reasoning.** Well-named code already
@@ -301,7 +297,7 @@ docs/proposals/                     # pending workflow-file changes for a human 
 layers/<tenant>/CONTEXT.md          # that Tenant's own vocabulary + purpose (ADR-0021)
 layers/<tenant>/tenant.config.ts    # the manifest an agent edits (declarative intent)
 layers/<tenant>/content/<space>/<collection>/…   # Documents, isolated per Space
-                                    #   (Tenant layers live under Nuxt's `layers/`, auto-extended — ADR-0018)
+                                    #   (Tenant layers live under Nuxt's `layers/` — see docs/agents/tenant-layers.md)
 layers/<tenant>/tests/              # this Tenant's OWN tests (unit + e2e module) — see tests/README.md
 shared/manifest.ts                  # manifest types + defineTenant() + validation
 shared/kinds.ts                     # collection-kind registry: shared cross-Tenant minimum contracts (human-only, ADR-0025)
@@ -430,11 +426,12 @@ stays above.
 To **add a Space or Collection**: edit the Tenant's `tenant.config.ts`. The keyed
 collections and the routing map update automatically — see Self-verification
 above. To **add a Tenant**: drop a `layers/<name>/` folder with a manifest and
-content, then run `pnpm install` (or `nuxt prepare`) to pick it up — Nuxt
-auto-extends every `layers/*`, so no `nuxt.config.ts` `extends` edit is needed
-(ADR-0018). Every Tenant layer needs its own `nuxt.config.ts` (even an empty
-`defineNuxtConfig({})`) to be a valid extendable layer — without one, `nuxt
-prepare` emits a "Cannot extend config from layers/<tenant>/" warning.
+content, then run `pnpm install` (or `nuxt prepare`) to pick it up — every
+`layers/*` auto-extends with no `nuxt.config.ts` `extends` edit needed (see
+`docs/agents/tenant-layers.md` for the mechanism, ADR-0018). Every Tenant
+layer needs its own `nuxt.config.ts` (even an empty `defineNuxtConfig({})`)
+to be a valid extendable layer — without one, `nuxt prepare` emits a "Cannot
+extend config from layers/<tenant>/" warning.
 
 ## Logging your session
 
