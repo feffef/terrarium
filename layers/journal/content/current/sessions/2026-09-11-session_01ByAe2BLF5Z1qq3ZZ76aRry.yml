@@ -1,0 +1,183 @@
+schemaVersion: 1
+session: session_01ByAe2BLF5Z1qq3ZZ76aRry
+startedAt: 2026-09-11T04:08:37Z
+endedAt: 2026-09-11T04:31:49Z
+kind: autonomous
+goal: Run scheduled audit-docs sweep
+status: completed
+outcome: 4 findings fixed, PR merged
+summary: "Fully agent-initiated scheduled run of the /audit-docs Skill (no human prompt this session). Classified doc surfaces into Live/Historical/ Pack-generic/excluded tiers, fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence), pooled their findings (2 Duplication, 1 Verbose, 1 Stale-narration; no overlaps to merge), fact-checked all four against primary sources via an independent checker (all CONFIRMED), and fixed each: single-homed the workflow-edit-guard detail into environment-caveats.md and the layers/* auto-extend fact into tenant-layers.md, collapsed a restated escalation policy in audit-docs/SKILL.md itself, and cut stale post-MVP narration from layers/midden/CONTEXT.md. No factual conflict needed a needs-triage issue; no fix touched a human-only surface. pnpm gate:scoped ran green (heavy layers included), and PR #1218 was opened, verdict-commented, and merged via merge-pr.ts under audit-docs's merge-on-green-gate-alone tier."
+prs:
+  - "1218"
+docsRead:
+  - path: CLAUDE.md
+    reason: tier rules, single-home rule, PR/merge conventions
+  - path: CONTEXT-MAP.md
+    reason: which Tenants make claims about the Terrarium (in/out of scope)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: the sweep's own procedure
+  - path: docs/agents/pr-workflow.md
+    reason: landing recipe and per-tier merge authority
+  - path: docs/agents/guards.md
+    reason: verify+fix the workflow-edit-guard roster row
+  - path: docs/agents/tenant-layers.md
+    reason: confirm it's the designated auto-extend home
+  - path: docs/agents/environment-caveats.md
+    reason: confirm it's the designated workflow-edit-guard home
+  - path: layers/midden/CONTEXT.md
+    reason: verify and cut stale MVP narration
+  - path: layers/midden/app/components/content/MiddenArtifact.vue
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: scripts/double-background-guard.ts
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-09-10.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: procedure for the four parallel read-only lens agents
+  - name: close-session
+    reason: session closure sequence
+  - name: log-session
+    reason: this log
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: audit-docs/SKILL.md itself carried a Verbose finding — its own step 6 restated the "Fix bravely" escalation policy verbatim with no new fact, caught by the Concision lens agent auditing its own procedure doc.
+    solution: Fixed in this run — step 6 now points back to the earlier section.
+    severity: nit
+durationSec: 1392
+models:
+  claude-sonnet-5: 142
+toolCounts:
+  Bash: 24
+  Skill: 3
+  Read: 9
+  ToolSearch: 3
+  TaskCreate: 8
+  Agent: 5
+  TaskUpdate: 14
+  Edit: 6
+  Grep: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - CLAUDE.md
+  - docs/agents/guards.md
+  - .agents/skills/audit-docs/SKILL.md
+  - layers/midden/CONTEXT.md
+docsReadViaShell:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - docs/agents/guards.md
+  - docs/agents/tenant-layers.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/agents/environment-caveats.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0004-safety-gate-and-tiered-autonomy.md
+  - docs/research/rulebook-migration-table.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/prune-trial/SKILL.md
+  - CONTEXT.md
+  - CONTEXT-MAP.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/guest-build/SKILL.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - type: general-purpose
+    task: "Freshness lens: Drift + Orphan-addition doc audit"
+  - type: general-purpose
+    task: "Single-home lens: Duplication + Mis-location doc audit"
+  - type: general-purpose
+    task: "Concision lens: Verbose + Stale-narration doc audit"
+  - type: general-purpose
+    task: "Coherence lens: Contradiction + Ambiguity doc audit"
+  - type: general-purpose
+    task: Fact-check 4 pooled doc-audit findings
+gitBranch: claude/festive-mayer-9xpvl3
+entrypoint: remote_trigger
+cliVersion: 2.1.268
+trigger: audit-docs
+learnings:
+  - layers/atlas and layers/marquee CONTEXT.md files stay Live/in-scope even though their tenant *content* (fiction / claims-nothing-about-the-Terrarium) is excluded from the sweep — the exclusion is content-specific, not tenant-wide.
+landedBy: Stop
