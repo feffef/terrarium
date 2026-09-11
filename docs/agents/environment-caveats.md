@@ -109,3 +109,24 @@ new; don't re-diagnose any of these as a fresh problem.
   `outcome`/`summary` — e.g. "branch pushed, PR NOT opened — no GitHub write
   access this run" — so it surfaces to a human instead of reading as ordinary
   completion (issue #982).
+- **A dispatched subagent's tool call that needs human permission approval
+  blocks indefinitely in an unattended/scheduled run, and nothing surfaces
+  that to the orchestrating session.** Observed directly: a scheduled
+  `frictions-to-fixes` run with no human watching dispatched an impl agent
+  whose `.claude/settings.json` edit (wiring a guard into `hooks.PreToolUse`
+  for issue #1208) hit an approval prompt; the agent stalled for **~3 hours**,
+  discovered only because the user happened to open the web UI for something
+  unrelated and approved it by hand (issue #1215). Confirmed: `PreToolUse`
+  hooks do fire for a dispatched subagent's own tool calls, same as for the
+  orchestrator (`guards.md`'s "Probed live" section) — but a *permission
+  approval* prompt is a different mechanism from a hook, one that waits on an
+  actual human click in the UI, not on hook resolution. **Not confirmed, and
+  not found documented anywhere in this repo:** any proactive wake-on-pending-
+  approval signal that could reach the orchestrating session while a dispatched
+  subagent sits blocked like this. Treat that as a real gap, not an
+  unconfirmed guess — the incident itself is the negative evidence: a chance
+  human glance at the web UI is what ended the stall, not any signal from the
+  orchestrator's own tools. This is a structural risk for any scheduled Skill
+  that dispatches subagents whose edits could need approval — not specific to
+  `.claude/settings.json` — so an unattended dispatcher should not read a
+  dispatched subagent's silence as merely "still working."
