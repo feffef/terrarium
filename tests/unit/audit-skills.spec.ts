@@ -285,6 +285,11 @@ describe('bracketSessions()', () => {
     expect(before).toEqual([])
     expect(after.map((s) => s.session)).toEqual(['a', 'b', 'c', 'd', 'e'])
   })
+
+  it('excludes the edit\'s own authoring session from its after bracket, but not an unrelated one at the same endedAt (issue #1214)', () => {
+    expect(bracketSessions(sessions, '2026-07-03T00:00:00Z', 10, 'c').after.map((s) => s.session)).toEqual(['d', 'e'])
+    expect(bracketSessions(sessions, '2026-07-03T00:00:00Z', 10, 'other').after.map((s) => s.session)).toEqual(['c', 'd', 'e'])
+  })
 })
 
 describe('buildRegressionChecks()', () => {
@@ -334,6 +339,18 @@ describe('buildRegressionChecks()', () => {
     ])
     const { checks } = buildRegressionChecks(sessions, edits, new Set(), 10, 2)
     expect(checks.map((c) => c.edit.sha)).toEqual(['s3', 's2'])
+  })
+
+  it('excludes an edit\'s own authoring session from its after bracket, keeping an unrelated same-time session (issue #1214)', () => {
+    const withAuthor = [
+      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z' }),
+      sess({ session: 'b', endedAt: '2026-07-05T00:00:00Z' }),
+    ]
+    const edits = new Map<string, SkillEdit[]>([
+      ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit', session: 'b' }]],
+    ])
+    const { checks } = buildRegressionChecks(withAuthor, edits, new Set())
+    expect(checks[0]).toMatchObject({ before: ['a'], after: [] })
   })
 
   it('dedupes a session referenced by more than one Skill\'s bracket into one pool entry', () => {
@@ -469,9 +486,16 @@ describe('buildSkillSessionFileTotals()', () => {
 })
 
 describe('parseSkillEditLog()', () => {
-  // Mirrors `git log --name-only --pretty=format:REC%H SEP %P SEP %aI SEP %s`.
-  function commitBlock(sha: string, parents: string, date: string, subject: string, paths: string[]): string {
-    return `${REC}${sha}${SEP}${parents}${SEP}${date}${SEP}${subject}\n${paths.join('\n')}`
+  // Mirrors `git log --name-only --pretty=format:REC%H SEP %P SEP %aI SEP %s SEP %b SEP`.
+  function commitBlock(
+    sha: string,
+    parents: string,
+    date: string,
+    subject: string,
+    paths: string[],
+    body = '',
+  ): string {
+    return `${REC}${sha}${SEP}${parents}${SEP}${date}${SEP}${subject}${SEP}${body}${SEP}\n${paths.join('\n')}`
   }
 
   it('attributes a normal (single-parent) commit to every Skill it touches', () => {
@@ -512,6 +536,18 @@ describe('parseSkillEditLog()', () => {
     expect(parseSkillEditLog(raw).get('close-session')).toEqual([
       { sha: 'c2', date: '2026-07-03T00:00:00Z', subject: 'real edit' },
     ])
+  })
+
+  it('recovers the authoring session id from the body\'s provenance header or legacy trailer', () => {
+    const raw = [
+      commitBlock('c1', 'p1', '2026-07-01T00:00:00Z', 'fix tdd', ['.agents/skills/tdd/SKILL.md'],
+        '🤖 [Claude](https://claude.ai/code/session_01Abc)\n\nfixes tdd'),
+      commitBlock('c2', 'p1', '2026-07-02T00:00:00Z', 'fix digest', ['.agents/skills/digest/SKILL.md'],
+        'fixes digest\n\nClaude-Session: https://claude.ai/code/session_01Xyz'),
+    ].join('\n')
+    const edits = parseSkillEditLog(raw)
+    expect(edits.get('tdd')).toEqual([{ sha: 'c1', date: '2026-07-01T00:00:00Z', subject: 'fix tdd', session: 'session_01Abc' }])
+    expect(edits.get('digest')).toEqual([{ sha: 'c2', date: '2026-07-02T00:00:00Z', subject: 'fix digest', session: 'session_01Xyz' }])
   })
 })
 
