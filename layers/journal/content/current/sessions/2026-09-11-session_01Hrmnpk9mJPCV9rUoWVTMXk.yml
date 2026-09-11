@@ -1,0 +1,96 @@
+schemaVersion: 1
+session: session_01Hrmnpk9mJPCV9rUoWVTMXk
+startedAt: 2026-09-11T02:05:01Z
+endedAt: 2026-09-11T02:32:59Z
+kind: autonomous
+goal: Run the frictions-to-fixes cycle
+status: completed
+outcome: 2 issues filed, 2 PRs merged
+summary: "Scheduled, unattended run of the frictions-to-fixes Skill (no human prompt at all this session). Dispatched a survey subagent to read the last 20 session logs and screen frictions against the tracker; it returned 2 never-fixed candidates plus a dropped list. Before filing anything, re-verified the subagent's key claims myself against primary sources (re-ran session-frictions.ts directly, read scripts/audit-skills.ts's bracketing code, checked closed issue #992 to confirm it was a distinct root cause) per CLAUDE.md's \"verify fresh this turn\" rule, rather than taking the subagent's report as settled. Filed issue #1214 (audit-skills regression-bracket self-authorship bug, simple) and #1215 (dispatched-subagent permission-prompt stall with no escalation signal, hard/doc+judgment-call). Dispatched one Sonnet impl agent per issue in its own worktree. Reviewed both resulting PRs myself (#1216, #1217) against gate status, mergeability, and the issue's recommended fix, posted a review comment on each per docs/agents/pr-workflow.md's recipe, and merged both on the reviewer-agent tier's own risk judgement (neither touched a human-only surface). #1215's Part 2 (a settings.json pre-approval trade-off) was deliberately left unresolved by its PR and the issue relabeled ready-for-human, since that is a genuine security-surface judgment call, not a mechanical fix. All of this run's actions (survey framing, candidate selection, issue filing, dispatch, review, merge) were agent-initiated per the frictions-to-fixes Skill's own charter — no human was present to direct any of it."
+prs:
+  - "1216"
+  - "1217"
+docsRead:
+  - path: docs/agents/triage-labels.md
+    reason: picking the right label for filed issues
+  - path: docs/agents/pr-workflow.md
+    reason: the land-a-gated-PR recipe and per-tier merge authority
+  - path: .agents/prune-trials.yml
+    reason: screening candidates against open prune trials
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: worktree isolation mechanism and brief checklist before dispatching impl agents
+  - path: scripts/audit-skills.ts
+    reason: (read before editing)
+  - path: docs/agents/environment-caveats.md
+    reason: (read before editing)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-09-10.md
+    reason: (no reason given)
+  - path: scripts/provenance-header.ts
+    reason: (no reason given)
+  - path: tests/unit/audit-skills.spec.ts
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: this run's own charter
+  - name: dispatch-subagents
+    reason: isolation mechanism + brief checklist for the two impl-agent dispatches
+  - name: close-session
+    reason: session closure at end of run
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "The survey subagent's report arrived tagged by the harness as \"instruction-shaped pattern(s): settings-json\" since it discussed .claude/settings.json permission trade-offs as legitimate finding content, requiring a manual read to confirm nothing in it was an actual injected instruction before treating it as data."
+    solution: No repo-side fix apparent — this is a harness-level heuristic guarding against subagent-report injection, working as designed on a borderline case (real content that happens to mention a sensitive filename). Worth no action unless it recurs often enough to be worth a note in dispatch-subagents about phrasing subagent briefs to avoid the trigger.
+    severity: nit
+  - description: Two frictions-to-fixes candidates this run both concerned scripts this Skill's own machinery depends on (session-frictions.ts's underlying audit-skills.ts bracketing) surfacing a second time after being merely recorded (not fixed) in a prior run — confirms the "note it, don't fix it yet" pattern from single-file-scope-only runs lets a known-but-cheap fix sit for a full cycle before being picked up.
+    solution: No action needed this run (this cycle is exactly the mechanism that picks such deferred fixes back up) — recording as a mild process observation, not a defect.
+    severity: nit
+durationSec: 1679
+models:
+  claude-sonnet-5: 126
+toolCounts:
+  Agent: 3
+  ToolSearch: 2
+  mcp__github__search_issues: 2
+  mcp__github__issue_read: 3
+  Grep: 4
+  Read: 8
+  Bash: 11
+  mcp__github__issue_write: 3
+  Skill: 3
+  ReadNotifications: 7
+  mcp__github__pull_request_read: 9
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  ScheduleWakeup: 1
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__add_issue_comment: 3
+  ListAgents: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Write: 1
+  TaskCreate: 1
+filesEdited:
+  - docs/agents/environment-caveats.md
+  - scripts/audit-skills.ts
+  - tests/unit/audit-skills.spec.ts
+docsReadViaShell:
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/environment-caveats.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix audit-skills self-authored bracket bug
+    model: sonnet
+  - type: general-purpose
+    task: Document subagent permission-stall caveat
+    model: sonnet
+gitBranch: claude/eager-ptolemy-cg1rp0
+entrypoint: remote_trigger
+cliVersion: 2.1.268
+trigger: frictions-to-fixes
+landedBy: Stop
