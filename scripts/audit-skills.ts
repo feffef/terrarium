@@ -222,6 +222,11 @@ export interface SkillEdit {
   sha: string
   date: string // commit author date, UTC ISO-8601 (git %aI)
   subject: string
+  /** The commit's authoring session id (ADR-0017 header or legacy trailer),
+   *  when recoverable — undefined for a human commit or one predating the
+   *  marker. `bracketSessions` excludes it from the edit's own `after`
+   *  bracket (issue #1214). */
+  session?: string
 }
 /** One own-Skill edit, bracketed by up to `n` sessions immediately before and
  *  after its commit date — raw material for judging whether behavior around a
@@ -488,10 +493,13 @@ export function bracketSessions(
   sessions: WindowSession[],
   editDate: string,
   n = REGRESSION_BRACKET,
+  excludeSession?: string,
 ): { before: WindowSession[]; after: WindowSession[] } {
   const sorted = [...sessions].sort((a, b) => a.endedAt.localeCompare(b.endedAt))
   const before = sorted.filter((s) => s.endedAt < editDate).slice(-n)
-  const after = sorted.filter((s) => s.endedAt >= editDate).slice(0, n)
+  // Excludes the edit's own authoring session — otherwise it necessarily ends
+  // at-or-after its own commit and brackets its own edit (issue #1214).
+  const after = sorted.filter((s) => s.endedAt >= editDate && s.session !== excludeSession).slice(0, n)
   return { before, after }
 }
 
@@ -515,7 +523,7 @@ export function buildRegressionChecks(
     if (external.has(name)) continue
     const recent = [...edits].sort((a, b) => b.date.localeCompare(a.date)).slice(0, maxEditsPerSkill)
     for (const edit of recent) {
-      const { before, after } = bracketSessions(allSessions, edit.date, n)
+      const { before, after } = bracketSessions(allSessions, edit.date, n, edit.session)
       if (before.length === 0 && after.length === 0) continue
       for (const s of before) pool.set(s.session, s)
       for (const s of after) pool.set(s.session, s)
@@ -534,20 +542,19 @@ export function parseSkillEditLog(raw: string, skillsDir = SKILLS_DIR): Map<stri
   const out = new Map<string, SkillEdit[]>()
   const prefix = `${skillsDir}/`
   for (const block of raw.split(REC).map((b) => b.trim()).filter(Boolean)) {
-    const lines = block.split('\n')
-    const header = lines[0] ?? ''
-    const [sha, parents, date, subject] = header.split(SEP)
+    const [sha, parents, date, subject, body = '', pathsBlock = ''] = block.split(SEP)
     if (!sha || !date) continue
     if (isParentlessBoundaryCommit(parents ?? '')) continue
+    const session = readProvenanceHeader(body)?.sessionId ?? legacyTrailerSession(body)
     const names = new Set<string>()
-    for (const path of lines.slice(1)) {
+    for (const path of pathsBlock.split('\n')) {
       if (!path.startsWith(prefix)) continue
       const name = path.slice(prefix.length).split('/')[0]
       if (name) names.add(name)
     }
     for (const name of names) {
       const list = out.get(name) ?? []
-      list.push({ sha, date, subject: subject ?? '' })
+      list.push({ sha, date, subject: subject ?? '', session })
       out.set(name, list)
     }
   }
@@ -1121,7 +1128,10 @@ function readSkillEdits(cwd = root): Map<string, SkillEdit[]> {
   try {
     raw = execFileSync(
       'git',
-      ['log', '--name-only', `--pretty=format:${REC}%H${SEP}%P${SEP}%aI${SEP}%s`, '--', SKILLS_DIR],
+      // %b (body) carries the commit's Claude-Session:/provenance marker, if
+      // any — the trailing SEP anchors where it ends and the file list begins
+      // (parseSkillEditLog), since the body itself can span several lines.
+      ['log', '--name-only', `--pretty=format:${REC}%H${SEP}%P${SEP}%aI${SEP}%s${SEP}%b${SEP}`, '--', SKILLS_DIR],
       { cwd, encoding: 'utf8' },
     )
   } catch {
