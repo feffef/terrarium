@@ -1,0 +1,61 @@
+schemaVersion: 1
+session: session_01RZkP17bCKKqBaa5zTv7unx
+startedAt: 2026-09-12T13:06:49Z
+endedAt: 2026-09-12T13:20:34Z
+kind: autonomous
+goal: Run scheduled /prune-trial
+status: completed
+outcome: "PR #1234 merged (531cbbf2)"
+summary: "Scheduled, unattended /prune-trial run (no human prompt this session). Judged the 2026-09-08 session-logging trial against frictions and GitHub issues logged since it landed (one via a dispatched research subagent) and found no damage — prune holds, entry deleted. Surveyed docs/research/rulebook-migration-table.md and the corpus for the next problem; chose docs/agents/environment-caveats.md, whose bullets had grown into full incident narrations on top of already-stated rules. Compressed every bullet except the .github/workflows/* one (owned by a still-open, unjudged trial, left untouched) to rule + workaround + issue pointer, net -64 lines. Proved it with a dispatched Sonnet probe given only the compressed text on two real scenarios (stalled dispatched subagent, session-resume state loss); both answered correctly. Ran pnpm gate:scoped (green), committed, pushed, opened PR #1234, subscribed to its activity, posted the verdict comment, and landed it via merge-pr.ts (prune-trial's merge-on-green tier, ADR-0003/0004/0027) once CI's gate went green."
+prs:
+  - "1234"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the open-trials ledger to judge and extend
+  - path: docs/research/rulebook-migration-table.md
+    reason: survey for the next prune candidate (criterion 1/2)
+  - path: docs/agents/environment-caveats.md
+    reason: chosen prune target — incident-history bloat
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe and prune-trial's merge-on-green tier
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: this run's governing procedure, delivered inline by the scheduler
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Called the Skill tool with skill: prune-trial out of habit at the start of the run; it errored because prune-trial is disable-model-invocation — the scheduler had already expanded the skill's full instructions inline into the turn, so the tool call was redundant."
+    solution: Recognized the inline content was the skill body and proceeded directly from it. No repo change needed — this is expected behavior for a scheduled slash-command run, just a habit to drop for this specific skill.
+    severity: nit
+durationSec: 825
+models:
+  claude-sonnet-5: 108
+toolCounts:
+  Skill: 3
+  Bash: 29
+  Agent: 2
+  Read: 6
+  Write: 3
+  Edit: 3
+  ToolSearch: 5
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+filesEdited:
+  - docs/agents/environment-caveats.md
+  - .agents/prune-trials.yml
+subagents:
+  - task: Check for close-session trial damage
+  - task: Sonnet probe for environment-caveats prune
+gitBranch: claude/practical-rubin-a536lq
+entrypoint: remote_trigger
+cliVersion: 2.1.269
+trigger: prune-trial
+landedBy: Stop
