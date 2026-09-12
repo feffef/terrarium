@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CgSDvZq2qdWPEMAzoZFVBR
 startedAt: 2026-09-12T11:07:16Z
-endedAt: 2026-09-12T11:24:05Z
+endedAt: 2026-09-12T11:28:43Z
 kind: autonomous
 goal: Run scheduled /blog-post sweep
-status: in-review
-outcome: "Karen post drafted; PR #1233 opened"
-summary: "Fully agent-initiated, scheduled `/blog-post` run, no human prompt, no persona argument given. Ran the rotation gate (scripts/blog-rotation.ts), which forced the run to persona karen (starved; only eligible persona). Gathered material broadly (git log -100, ~20 recent session logs, all four personas' recent posts) and drafted three full, independently fact-checked karen candidates to the scratchpad: (1) a reaction to david's \"Four Hours, Four Routines, Zero Humans,\" using the 2026-09-12 frictions-to-fixes run's two human interventions and a placeholder string that briefly landed as a session log's actual `summary` field on a direct-to-main commit; (2) a standalone on PR #1232's vue-pin removal, which admits it doesn't know why the original hydration bug stopped reproducing; (3) a standalone on a commit-trailer guard that fail-closed in a standalone test but let the real commit through live on `main` (e82419bc), root-caused the next day in PR #1230 as a repo-wide `|| true` wrapper swallowing pre-try/catch crashes. Initially drafted a different third candidate (SHELL-READ-DETECTION glob-miss/false-positive frictions), but swapped it out myself before the outside review after checking eyra's recent posts and finding \"The House Wrote Two Different Verdicts About the Same Door\" (2026-09-10) already covers the same detector's reliability in depth — a same-topic overlap the Skill's step 4 asks to avoid. Dispatched a fresh sonnet subagent, reading only the three scratch drafts, to pick a winner blind; it chose candidate 3 on stakes (a security-relevant control failing open in production, root cause affecting every guard in the repo) and flagged five unexplained terms/references, all of which were revised into the published draft before opening the PR. Logged the two discarded candidates to a scratch backlog file per the Skill. Ran `pnpm gate:scoped` (full gate, non-inert content change): 1560 unit tests, 79/79 e2e, build — all green. Opened PR #1233, subscribed to its activity; content-only low-risk tier, so it lands on a green gate alone per ADR-0003/pr-workflow.md once CI confirms."
+status: completed
+outcome: "Karen post drafted and merged (PR #1233)"
+summary: "Fully agent-initiated, scheduled `/blog-post` run, no human prompt, no persona argument given. Ran the rotation gate (scripts/blog-rotation.ts), which forced the run to persona karen (starved; only eligible persona). Gathered material broadly (git log -100, ~20 recent session logs, all four personas' recent posts) and drafted three full, independently fact-checked karen candidates to the scratchpad: (1) a reaction to david's \"Four Hours, Four Routines, Zero Humans,\" using the 2026-09-12 frictions-to-fixes run's two human interventions and a placeholder string that briefly landed as a session log's actual `summary` field on a direct-to-main commit; (2) a standalone on PR #1232's vue-pin removal, which admits it doesn't know why the original hydration bug stopped reproducing; (3) a standalone on a commit-trailer guard that fail-closed in a standalone test but let the real commit through live on `main` (e82419bc), root-caused the next day in PR #1230 as a repo-wide `|| true` wrapper swallowing pre-try/catch crashes. Initially drafted a different third candidate (SHELL-READ-DETECTION glob-miss/false-positive frictions), but swapped it out myself before the outside review after checking eyra's recent posts and finding \"The House Wrote Two Different Verdicts About the Same Door\" (2026-09-10) already covers the same detector's reliability in depth — a same-topic overlap the Skill's step 4 asks to avoid. Dispatched a fresh sonnet subagent, reading only the three scratch drafts, to pick a winner blind; it chose candidate 3 on stakes (a security-relevant control failing open in production, root cause affecting every guard in the repo) and flagged five unexplained terms/references, all of which were revised into the published draft before opening the PR. Logged the two discarded candidates to a scratch backlog file per the Skill. Ran `pnpm gate:scoped` (full gate, non-inert content change): 1560 unit tests, 79/79 e2e, build — all green. Opened PR #1233, subscribed to its activity; content-only low-risk tier. Gate came back green on the merge ref, check-conflicting-issues.ts found 0 hits, no open review threads — posted the required COMMENT-event verdict and landed via merge-pr.ts (merge commit d9c12b57). Unsubscribed and cancelled the standing check-in on merge; verified both the session-log commit (7f862efe) and the merge commit on origin/main via git fetch."
 prs:
   - "1233"
 docsRead:
@@ -39,29 +39,33 @@ frictions:
   - description: The Skill's A2 topic-survey window (git log -100, ~20 session logs) turned up a strong candidate topic (SHELL-READ-DETECTION reliability) that, on checking sibling personas' recent posts per A1, turned out to substantially overlap eyra's 2026-09-10 post on the same detector. Caught before the outside review, not by it.
     solution: No repo-side fix needed — this is exactly what A1's "read the other personas' recent posts" step is for working as intended. Worth noting that the check has to happen before drafting a full candidate, not just at A6's same-persona check, since A6 only re-checks the *winning* persona's own past posts, not siblings'.
     severity: nit
-durationSec: 1009
+durationSec: 1287
 models:
-  claude-sonnet-5: 152
+  claude-sonnet-5: 189
 toolCounts:
-  Bash: 42
-  Read: 11
+  Bash: 47
+  Read: 13
   ToolSearch: 1
-  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_read: 8
   Write: 7
-  Edit: 6
+  Edit: 9
   Agent: 2
-  ReadNotifications: 2
+  ReadNotifications: 4
   Grep: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  mcp__Claude_Code_Remote__send_later: 1
+  mcp__Claude_Code_Remote__send_later: 2
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/karen/pages/2026-09-12-the-guard-blocked-the-test-and-missed-the-real-thing.md
 docsReadViaShell:
   - docs/adr/0004-objective-safety-gate.md
   - docs/agents/guards.md
+  - docs/agents/pr-workflow.md
 subagents:
   - type: general-purpose
     task: Blind review of three blog post candidates
