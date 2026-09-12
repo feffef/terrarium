@@ -239,10 +239,12 @@ frictions were actually about this Skill's edited guidance rather than
 something unrelated, because it only has severities, not content. Treat a
 signal here as **suspected, not confirmed**. A bracket with zero `usedIn` on
 **both** sides is a no-signal case — skip it immediately rather than treating
-it as an inconclusive-but-real before/after comparison. The split is purely
-`endedAt` vs. the edit commit date, so a session whose `endedAt` lands close to
-that boundary can be bracketed on the wrong side of its actual work — when
-that's plausible, check the session's real invocation/work timing against the
+it as an inconclusive-but-real before/after comparison. The split is
+`endedAt` vs. the edit commit date, excluding the edit's own authoring session
+from its `after` bracket (issue #1214) — so a session whose `endedAt` lands
+close to that boundary can still be bracketed on the wrong side of its actual
+work — when that's plausible, check the session's real invocation/work timing
+against the
 edit's exact timestamp before trusting which side it fell on.
 
 **Phase B — deep-read, only for a suspected Skill.** Before judging anything,

@@ -20,7 +20,7 @@ issue below rather than rephrasing the call until it passes.
 
 | Guard | Denies | Rule homed in | Issue |
 | --- | --- | --- | --- |
-| `deferred-tool-guard.ts` | a deferred tool called with another tool's argument shape, or `TaskCreate` called with a top-level array value | CLAUDE.md (load the schema via `ToolSearch` first) | #612, #724 |
+| `deferred-tool-guard.ts` | a deferred tool called with another tool's argument shape, or `TaskCreate` called with a top-level array value — the predicate is general, but the hook is wired to fire only for a `TaskCreate` or `Monitor` call itself, so a wrongly-shaped call to any other tool name is not intercepted | CLAUDE.md (load the schema via `ToolSearch` first) | #612, #724 |
 | `loop-only-tool-guard.ts` | `ScheduleWakeup` outside a `/loop` session — `stop: true` is exempt in every mode, since a cancel can only remove a pending wakeup | CLAUDE.md | #814 |
 | `skill-inline-guard.ts` | a `Skill` call naming a Skill this session's `<command-name>` block already delivered inline | the deny message — the prose it replaces is retired | #999, #1018 |
 | `agent-background-flag-guard.ts` | an `Agent` call explicitly passing `run_in_background: false` — a no-op the tool silently ignores, running async regardless. Omitted or `true` is untouched | `dispatch-subagents/SKILL.md` | #810, #835 |
