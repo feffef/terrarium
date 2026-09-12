@@ -229,6 +229,10 @@ evidence, and observed-but-un-inventoried Skills have entries.
 
 ## 4. Watch for behavior regressions after a Skill's own edits
 
+**`skillsUsed` entries are `{name, reason}` objects, not bare strings** — any
+ad-hoc membership/comparison check against them (here or anywhere else in this
+run) must extract `.name` first, or it silently evaluates false.
+
 **Phase A — cheap screen.** Read `regressionChecks`, resolving `before`/`after`
 ids against `regressionSessions`. For each bracketed edit, compare the
 `before`/`after` sessions': did the Skill fire where its kind of work

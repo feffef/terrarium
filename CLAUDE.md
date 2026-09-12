@@ -262,7 +262,9 @@ it with a tool.
   `close-session/SKILL.md` for why and its mechanical enforcement, and
   "Logging your session" below for the rest.
 - **Dispatching a subagent is a procedure, not a tool call — invoke the
-  `dispatch-subagents` Skill before spawning one.** It single-homes the three
+  `dispatch-subagents` Skill before spawning one.** Exempt: a purely read-only
+  subagent that touches no git state and needs no worktree — dispatch it directly.
+  It single-homes the three
   worktree-isolation mechanisms and which to pick (they are easy to conflate),
   the self-contained brief checklist, the grill-the-shared-axis trigger, the
   post-dispatch `pnpm check:worktrees` verification, and the `SendMessage`

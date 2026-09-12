@@ -472,7 +472,11 @@ scratch-only — never a committed repo file, and it never affects the gate — 
 good-but-losing topic survives as a lead for a future run instead of being fully
 lost. Then discard the two drafts (and any of their scratch pingback stubs).
 Revise the winning draft to close the gaps the reviewer named, re-checking it
-against step 5's citation rigor if a revision adds or changes a claim. Then
+against step 5's citation rigor if a revision adds or changes a claim.
+**Also check the winning draft against this Persona's own recent posts
+(`layers/blog/content/<persona>/pages/*.md`) for thematic overlap** — A5's
+reviewer judges each draft blind to the rest of the blog, so it structurally
+can't catch a same-persona repeat; this is the only check that does. Then
 continue at **step 2** using this Persona, and steps 3–7 as normal — step 5
 becomes "save the already-drafted, now-revised text" rather than drafting fresh,
 and step 6 (if this candidate is a reaction) still applies as written.
