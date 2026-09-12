@@ -86,12 +86,13 @@ The subagent cannot see this session's context, so the brief is self-contained:
   a clean pass (issue #1191).
 - **Run verification (`pnpm gate:scoped`, and any other check) in the foreground
   and wait** — no wake mechanism ever resumes a stopped subagent, so a
-  `PreToolUse` guard denies it (`docs/agents/guards.md`, issue #694).
-  Where something must be backgrounded anyway, **name the concrete way to
-  confirm it finished** — a log-file completion marker, never the `Monitor`
-  tool (a `PreToolUse` guard denies any subagent's `Monitor` call outright,
-  issue #995) — not just "run it and wait": a subagent that checks once and
-  stops stalls on a still-running job, needing a `SendMessage` resume with the
+  `PreToolUse` guard denies backgrounding it outright, with no sanctioned
+  bypass (`docs/agents/guards.md`, issue #694). When a check might outrun one
+  foreground call anyway, **name the concrete way to confirm it finished** — a
+  log-file completion marker, never the `Monitor` tool (a `PreToolUse` guard
+  denies any subagent's `Monitor` call outright, issue #995) — not just "run it
+  and wait": a subagent that checks once and stops stalls on a still-running
+  job, needing a `SendMessage` resume with the
   log's actual tail pasted in (issue #602).
 - **The Agent tool ignores `run_in_background: false`.** Every Agent-tool call
   launches as a background async task regardless of the `run_in_background`

@@ -38,9 +38,9 @@ This repo's actual shape (ADR-0021) diverges from
 the generic `domain-modeling` template: the template puts contexts under
 `src/<context>/` with per-context `docs/adr/`; this repo co-locates each
 Tenant's `CONTEXT.md` under `layers/<tenant>/` (where the Tenants already live)
-and keeps every ADR at the root `docs/adr/`, because all decisions so far are
-Platform-wide. See CLAUDE.md's "Repo layout" for the authoritative full path
-list.
+and keeps every ADR at the root `docs/adr/` (see CONTEXT-MAP.md's Decisions
+section, pointed to above, for why). See CLAUDE.md's "Repo layout" for the
+authoritative full path list.
 
 ## Use the glossary's vocabulary
 

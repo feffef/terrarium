@@ -220,7 +220,9 @@ it with a tool.
   the outer call returns as soon as the detached shell forks, not when the
   actual long-running process finishes, and "completed" stops meaning
   anything. Use `Monitor`/`ps` plus a log completion marker to confirm the
-  process actually finished instead of trusting the outer call's return.
+  process actually finished instead of trusting the outer call's return. A
+  `PreToolUse` guard denies this stacking outright, for any caller
+  (`docs/agents/guards.md`, issue #1208).
 - **A dispatched subagent must never background a Bash command at all, or call
   `Monitor` to wait on one** — a `PreToolUse` guard denies both
   (`docs/agents/guards.md`, issue #694/#995). The rationale (no wake mechanism
