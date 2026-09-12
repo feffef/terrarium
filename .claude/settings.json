@@ -23,7 +23,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pnpm exec tsx scripts/loop-only-tool-guard.ts || true"
+            "command": "sh scripts/guard-wrap.sh loop-only-tool-guard -- pnpm exec tsx scripts/loop-only-tool-guard.ts"
           }
         ]
       },
@@ -32,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pnpm exec tsx scripts/skill-inline-guard.ts || true"
+            "command": "sh scripts/guard-wrap.sh skill-inline-guard -- pnpm exec tsx scripts/skill-inline-guard.ts"
           }
         ]
       },
@@ -41,7 +41,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pnpm exec tsx scripts/agent-background-flag-guard.ts || true"
+            "command": "sh scripts/guard-wrap.sh agent-background-flag-guard -- pnpm exec tsx scripts/agent-background-flag-guard.ts"
           }
         ]
       },
@@ -50,19 +50,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh scripts/subagent-background-guard.sh || true"
+            "command": "sh scripts/guard-wrap.sh subagent-background-guard -- sh scripts/subagent-background-guard.sh"
           },
           {
             "type": "command",
-            "command": "sh scripts/commit-trailer-guard.sh || true"
+            "command": "sh scripts/guard-wrap.sh commit-trailer-guard -- sh scripts/commit-trailer-guard.sh"
           },
           {
             "type": "command",
-            "command": "sh scripts/tail-pipe-guard.sh || true"
+            "command": "sh scripts/guard-wrap.sh tail-pipe-guard -- sh scripts/tail-pipe-guard.sh"
           },
           {
             "type": "command",
-            "command": "sh scripts/double-background-guard.sh || true"
+            "command": "sh scripts/guard-wrap.sh double-background-guard -- sh scripts/double-background-guard.sh"
           }
         ]
       },
@@ -71,7 +71,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pnpm exec tsx scripts/subagent-background-guard.ts || true"
+            "command": "sh scripts/guard-wrap.sh subagent-background-guard -- pnpm exec tsx scripts/subagent-background-guard.ts"
           }
         ]
       },
@@ -80,7 +80,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh scripts/workflow-edit-guard.sh || true"
+            "command": "sh scripts/guard-wrap.sh workflow-edit-guard -- sh scripts/workflow-edit-guard.sh"
           }
         ]
       },
@@ -89,7 +89,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pnpm exec tsx scripts/github-provenance-guard.ts || true"
+            "command": "sh scripts/guard-wrap.sh github-provenance-guard -- pnpm exec tsx scripts/github-provenance-guard.ts"
           }
         ]
       }
