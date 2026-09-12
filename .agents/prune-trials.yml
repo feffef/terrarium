@@ -88,57 +88,6 @@ trials:
       authority" for whether a specific grant (audit-docs) is narrower than a
       general low-risk-auto-merges policy.
   - problem: >
-      CLAUDE.md restated session-logging mechanics that `close-session/SKILL.md`
-      and `log-session/SKILL.md` already own in full, in two separate spots: the
-      "Opening the PR is the first session log" bullet (Working conventions) and
-      the whole "Logging your session" section. Both re-explained detail already
-      stated, near-verbatim, by the two Skills themselves — the mechanical vs.
-      interpretive field split and the `Stop`-hook commit timing (verified against
-      `log-session/SKILL.md`'s own opening paragraphs, which state both in more
-      precise detail than CLAUDE.md's copy), the worktree-isolated-agent exception
-      and its mechanical enforcement (verified against `close-session/SKILL.md`'s
-      own closing paragraph, which states it identically), why re-invoking
-      self-heals, and the "self-judge closure, don't wait for a human prompt"
-      framing repeated a second time. `docs/agents/pr-workflow.md` carries none of
-      this (grepped, no hits), so the duplication was entirely CLAUDE.md
-      restating its own two Skills. Compressed both spots to the rule each
-      exists to state — open the PR, invoke `close-session`, re-invoking is safe,
-      a worktree-isolated impl agent must not self-invoke — with the mechanism
-      detail pointed at the Skills that already own it precisely. Net -22 lines.
-    territory:
-      paths:
-        - "CLAUDE.md: the \"Opening the PR is the first session log\" bullet (Working conventions)"
-        - "CLAUDE.md: the \"Logging your session\" section"
-      keywords:
-        - session log
-        - close-session
-        - log-session
-        - mechanical trace
-        - interpretive half
-        - re-invoking is safe
-        - worktree-isolated impl agent
-    opened: 2026-09-08
-    proven: true
-    check: >
-      Damage is a session that, having just opened a gated PR, doesn't invoke
-      `close-session` at all because the compressed bullet no longer spells out
-      why that moment matters, or a session that treats a second `close-session`
-      call after more work as unsafe/redundant instead of the expected pattern,
-      or — the sharpest failure — a dispatched worktree-isolated impl agent that
-      self-invokes `close-session` anyway because the compressed text no longer
-      states the consequence (clobbering the orchestrator's shared log) and so
-      reads the prohibition as optional. NOT damage: a session that opens
-      `close-session/SKILL.md` or `log-session/SKILL.md` before asserting the
-      exact mechanical/interpretive split or `Stop`-hook timing (the intended
-      single-home behaviour working), or one that never needed the pointer
-      because it already knew the mechanics. A Sonnet probe given only the
-      compressed text correctly derived that opening a gated PR is when to
-      invoke `close-session`, that re-invoking after more commits is the
-      expected safe pattern rather than something to avoid, and that a
-      worktree-isolated impl agent must never self-invoke it — deferring only
-      the *why* and the alternative mechanism to the named Skill files, which is
-      the intended point-of-need design, not a gap.
-  - problem: >
       `docs/agents/environment-caveats.md`'s ".github/workflows/*" entry
       spent 23 lines narrating a scenario `scripts/workflow-edit-guard.ts`
       now mechanically prevents: a verbatim dump of the `git push`/contents-
@@ -239,3 +188,53 @@ trials:
       claim as hearsay requiring direct human confirmation before a schema
       migration, and correctly refused to state a grep-derived count as fact
       without reading each matched session log first.
+  - problem: >
+      `docs/agents/environment-caveats.md` had grown, bullet by bullet, into a
+      full incident history for each platform quirk — discovery dates, which
+      session/subagent caught it, human anecdotes, issue-closure detail (e.g.
+      "closed `not_planned`"), and redundant elaboration of a rule already
+      stated in its own bold lead sentence (e.g. a withdrawn-recommendation
+      paragraph narrating a guard that already makes the old wording
+      unreachable). The doc's own opening line already says "previously
+      diagnosed once... don't re-diagnose" — its purpose is a
+      don't-re-diagnose list, not an incident record — and CLAUDE.md already
+      calls it "the single home," so the narration had nowhere else to be
+      trimmed to. Compressed every bullet except the `.github/workflows/*` one
+      (owned by the still-open, unjudged 2026-09-09 prune trial) to its bold
+      rule plus the actionable workaround/command plus an issue-number
+      pointer, cutting the "when it happened, who caught it, how long it
+      took" detail — that lives in the cited issue and in this file's git
+      history. Net -64 lines (132 → 68, one file).
+    territory:
+      paths:
+        - "docs/agents/environment-caveats.md: every bullet except the \".github/workflows/*\" one"
+      keywords:
+        - Claude_Code_Remote
+        - permission stream closed
+        - session-resume event
+        - stale install state
+        - worktree-isolation guard false-positive
+        - unauthenticated mcp__github__
+        - permission approval blocks indefinitely
+    opened: 2026-09-12
+    proven: true
+    check: >
+      Damage is a session that, hitting one of these platform quirks fresh,
+      re-diagnoses it as a new problem instead of recognizing it from the
+      compressed bullet — spends real effort investigating "why did my
+      registered `/loop` job disappear" instead of re-verifying it via
+      `CronList`/subagent-liveness check after a resume, treats a stalled
+      dispatched subagent as merely slow rather than possibly stuck on an
+      unapproved permission prompt, re-derives the `raw.githubusercontent.com`
+      workaround from scratch, or routes a `Claude_Code_Remote` "permission
+      stream closed" retry through `ScheduleWakeup`. NOT damage: a session
+      that opens the cited issue for the full incident story instead of
+      finding it narrated inline (the intended design), or one that never
+      hits any of these quirks this run. A Sonnet probe given only the
+      compressed text, on a stuck-dispatched-subagent scenario, correctly
+      concluded 90 minutes of silence on a settings.json fix was likely a
+      permission-approval stall rather than "still working," stopped relying
+      on that subagent, and logged the situation honestly instead of waiting
+      indefinitely; on a session-resume scenario, it correctly re-verified a
+      registered `CronCreate` job and a backgrounded subagent's liveness
+      explicitly rather than assuming continuity across the resume.
