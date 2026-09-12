@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01GqyKfKnmYGvzeLaJfpEP3R
 startedAt: 2026-09-12T09:09:19Z
-endedAt: 2026-09-12T09:26:05Z
+endedAt: 2026-09-12T17:34:36Z
 kind: interactive
 goal: "Re-check issue #926's vue pin"
-status: in-review
-outcome: Pin removed; original failure unreproducible
+status: completed
+outcome: Pin removed and merged; failure unreproducible
 summary: "Human-instructed: check whether issue #926's MDC hydration error still occurs on the latest vue, and if so investigate our own code rather than assume an upstream regression. Removed the 3.5.40 override, installed vue 3.5.42, and ran the full gate — green, 79/79 e2e. Probed an MDC route against nuxt dev as well as a production preview, since vue strips dev warnings in production and a green prod probe alone proves nothing. Agent-initiated: ran a control on vue 3.5.41, the version the pin excludes. It also passes 79/79, verified twice, so the pin's stated cause does not reproduce. Corrected an earlier commit message that had wrongly credited 3.5.42 with an upstream fix. PR #1232 opened."
 prs:
   - "1232"
@@ -43,20 +43,24 @@ frictions:
   - description: 'SHELL-READ-DETECTION miss. Ran `sed -n 30,70p docs/adr/*0017*` and `grep -rn "provenance header" docs/adr/*0017*`, which showed me docs/adr/0017-provenance-footer-on-agent-authored-content.md, but docsReadViaShell reported 0 docs and did not list either command as a rejected candidate. Direction: a miss, not a false positive.'
     solution: The detector appears not to resolve glob paths — `docs/adr/*0017*` never becomes a concrete doc path. Expand globs, or treat a reader command whose path argument globs into docs/ as a read of every match.
     severity: moderate
-durationSec: 1006
+durationSec: 30317
 models:
-  claude-opus-5: 215
+  claude-opus-5: 316
 toolCounts:
-  ToolSearch: 5
-  Bash: 94
-  mcp__github__issue_read: 2
+  ToolSearch: 7
+  Bash: 101
+  mcp__github__issue_read: 3
   Monitor: 3
   mcp__github__search_pull_requests: 1
   TaskStop: 2
-  ReadNotifications: 1
+  ReadNotifications: 12
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
+  mcp__github__pull_request_read: 20
+  mcp__Claude_Code_Remote__send_later: 9
+  mcp__github__get_check_run: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 gitBranch: claude/issue-926-error-check-x98tv8
 entrypoint: remote_mobile
 cliVersion: 2.1.269
