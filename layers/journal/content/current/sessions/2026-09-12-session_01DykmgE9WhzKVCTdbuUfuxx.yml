@@ -1,0 +1,155 @@
+schemaVersion: 1
+session: session_01DykmgE9WhzKVCTdbuUfuxx
+startedAt: 2026-09-12T02:04:45Z
+endedAt: 2026-09-12T05:52:37Z
+kind: autonomous
+goal: Run scheduled frictions-to-fixes sweep
+status: in-review
+outcome: 3 fix PRs merged, 1 guard PR escalated to human
+summary: (see prior authored entry this session — unchanged, this pass only adds a SHELL-READ-DETECTION friction)
+prs:
+  - "1227"
+  - "1228"
+  - "1230"
+  - "1231"
+docsRead:
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+  - path: docs/adr/0017-github-provenance-header.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: scripts/guard-io.ts
+    reason: (no reason given)
+  - path: .claude/settings.json
+    reason: (read before editing)
+  - path: scripts/commit-trailer-guard.sh
+    reason: (no reason given)
+  - path: scripts/commit-trailer-guard.ts
+    reason: (no reason given)
+  - path: scripts/subagent-background-guard.sh
+    reason: (no reason given)
+  - path: scripts/tail-pipe-guard.sh
+    reason: (no reason given)
+  - path: scripts/double-background-guard.sh
+    reason: (no reason given)
+  - path: scripts/workflow-edit-guard.sh
+    reason: (no reason given)
+  - path: tests/unit/tail-pipe-guard.spec.ts
+    reason: (no reason given)
+  - path: scripts/guard-wrap.sh
+    reason: (read before editing)
+  - path: tests/unit/workflow-edit-guard.spec.ts
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: package.json
+    reason: (read before editing)
+  - path: /home/user/terrarium/scripts/prune-trial-window.ts
+    reason: (no reason given)
+  - path: /home/user/terrarium/scripts/validate-skill-cadence.ts
+    reason: (no reason given)
+  - path: /home/user/terrarium/scripts/validate-content-refs.ts
+    reason: (no reason given)
+  - path: /home/user/terrarium/package.json
+    reason: (no reason given)
+  - path: /home/user/terrarium/tests/README.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/.agents/prune-trials.yml
+    reason: (no reason given)
+  - path: /home/user/terrarium/tests/unit/validate-skill-cadence.spec.ts
+    reason: (no reason given)
+  - path: /home/user/terrarium/tests/unit/prune-trial-window.spec.ts
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: gate.log
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: "An impl agent's fix for #1223 needed to edit .claude/settings.json's guard wiring, which triggered a live interactive permission prompt with no human normally present during a scheduled routine run — the human had to notice and manually approve it after the fact."
+    solution: "Added a docs/agents/guards.md convention (and a frictions-to-fixes §3 pointer to it): a guard/.claude/settings.json-touching fix is never autonomously dispatched for implementation, only filed as an issue for a human-attended session to implement. Shipped in PR #1231 this same run."
+    severity: moderate
+  - description: frictions-to-fixes' §4 (as written before this run) filed a tracker issue for every selection, including ones this same run fully dispatches, reviews, and merges — opened only to be closed again by that same merge minutes later, per live human feedback mid-run.
+    solution: "Changed §4 so an issue is filed only for a hard/escalated selection expected to outlive the run; a simple selection's problem/evidence/fix goes straight into its PR description instead. Shipped in PR #1231 this same run."
+    severity: minor
+  - description: "SHELL-READ-DETECTION: the survey subagent reported scripts/session-frictions.ts's ~73KB/1863-line output exceeded the Read tool's single-call cap, needing a second paginated Read with an explicit offset to see the full 20-session window."
+    solution: No repo-side fix needed this time — cost one extra round trip. Worth watching if the windowed output keeps growing past the single-Read cap as more sessions accumulate.
+    severity: nit
+  - description: The survey subagent hit a GitHub API rate limit (403, ~19s reset) on one mcp__github__search_issues call, and again on a second call in the same cooldown window — the same transient-limit shape a prior survey subagent already logged.
+    solution: Resolved by waiting and retrying; no repo-side fix identified beyond what's already documented in docs/agents/github-integration.md.
+    severity: nit
+  - description: 'SHELL-READ-DETECTION: docsReadViaShell flagged docs/agents/guards.md as read via shell this session. I never ran a cat/grep/sed against that literal path — the only shell commands naming it were `git merge --ff-only origin/main` and `git stash pop`, whose output listed it only as a changed filename (e.g. "Auto-merging docs/agents/guards.md"), never its content. Its actual content reached me via the Read tool earlier, and again via an automatic system-injected "file changed on disk" notice after the merge — neither is a shell read.'
+    solution: "False positive, direction: over-counted. The detector likely treats any git command whose output lists a path (status/merge/diff --stat) as revealing that file's content, when a bare filename in a file list does not. Consider narrowing the heuristic to commands that print the file's actual body (cat/sed/head/tail/grep -A, or diff/show with content) rather than any command that merely names the path."
+    severity: moderate
+durationSec: 13672
+models:
+  claude-sonnet-5: 222
+toolCounts:
+  Bash: 47
+  Agent: 4
+  Read: 7
+  ToolSearch: 3
+  mcp__github__search_issues: 3
+  mcp__github__issue_write: 5
+  Skill: 3
+  ReadNotifications: 16
+  Edit: 7
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__pull_request_read: 16
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 4
+  Write: 2
+  PushNotification: 1
+filesEdited:
+  - docs/agents/guards.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - scripts/guard-wrap.sh
+  - .claude/settings.json
+  - tests/unit/guard-wrap.spec.ts
+  - /home/user/terrarium/scripts/validate-prune-trials.ts
+  - scripts/validate-prune-trials.ts
+  - package.json
+  - tests/unit/validate-prune-trials.spec.ts
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - CLAUDE.md
+docsReadViaShell:
+  - docs/agents/guards.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Batch doc fixes for 3 friction issues
+    model: sonnet
+  - type: general-purpose
+    task: Implement prune-trials.yml gate validation
+    model: sonnet
+  - type: general-purpose
+    task: Fix guard fail-open on crash gap
+    model: sonnet
+gitBranch: claude/eager-ptolemy-c9m8qr
+entrypoint: remote_trigger
+cliVersion: 2.1.269
+trigger: frictions-to-fixes
+landedBy: Stop
