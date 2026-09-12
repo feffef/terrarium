@@ -51,6 +51,12 @@ issue below rather than rephrasing the call until it passes.
   a branch by hand.
 - **Human-only to merge** (ADR-0004, 2026-07-30). Unit tests don't clear that
   bar: what they cannot observe is the *live* interception.
+- **Never dispatch an unattended/scheduled session to implement a guard change,
+  `.claude/settings.json`'s hook wiring included.** Editing it triggers an
+  interactive permission prompt with no human present to grant it during a
+  scheduled run — a routine that finds a guard-touching fix files the issue
+  with the recommended fix and stops there; a human-attended session
+  implements it.
 - **A unit test must assert the underlying property, not a handful of
   hand-picked substring fixtures.** A regex built on a negated character class
   can match across newlines, letting an unrelated verb on one line accidentally
