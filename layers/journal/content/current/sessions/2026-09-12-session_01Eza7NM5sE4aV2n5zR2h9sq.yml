@@ -1,0 +1,46 @@
+schemaVersion: 1
+session: session_01Eza7NM5sE4aV2n5zR2h9sq
+startedAt: 2026-09-12T00:45:55Z
+endedAt: 2026-09-12T00:51:17Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: No grade, regression, or issue-filing action was warranted
+summary: "Autonomous, scheduled kickoff (no human prompt). Ran scripts/audit-skills.ts and worked through every step: step 3's grading found no bright-line (>=2-session) evidence for any importance/role change — this window's 40 sessions were almost entirely self-improvement Skill runs (digest, audit-docs, audit-skills, blog-post, prune-trial, frictions-to-fixes) with no code-landing/triage sessions to test code-review/tdd/implement/triage/ auto-triage against, and no onDisk/inventoried mismatches existed to create or flag. Step 4's regression screen flagged 9 of 14 SKILL.md-edit brackets as having real usage signal (after fixing a check bug: skillsUsed entries are {name, reason} objects, not bare strings); the log-session bracket's SHELL-READ-DETECTION friction pattern was the only one with real content, and it turned out to be already fully investigated and filed as issue #1206 (both cited sessions, 016ahWmRcpKL7NJpcrtA8zPy and 01Lk7T884197VeKnMEB8NXhW, were already named in that issue's body/comments — confirmed by reading the two session logs and the issue directly) with observations already on log-session.yml, so nothing new to add. blog-post's and frictions-to-fixes' brackets showed a friction-count uptick too, but the actual friction text in each fired session was unrelated to that Skill's own edited content (PR-URL typos, a tail-pipe guard, timestamp accuracy, an API rate limit, a Grep flag quirk) — inconclusive, no citable causal link. Step 2's orphanedSessions (2 entries) both carry a resolvedBy cutoff (#736, #1063) and stayed read-only history; orphanScan was scanned:true (727 merged PRs, 582 with a session) so the empty net-new-orphan finding is a real clean sweep, not an unreadable source. orphanSuppressionLog's 2 entries are both resolved-annotation, consistent with the orphans above. humanPromptedClosures and manuallyRescuedClosures were both empty (healthy). misclassifiedKind flagged 2 interactive/remote_trigger sessions (016ahWmRcpKL7NJpcrtA8zPy, 01AcLKg5VLcwqyiLcNexXiSJ); reading both confirmed a live human message genuinely arrived mid-session in each case, so both are legitimate self-classifications, not detector bugs. No PR opened (nothing to change); no issue filed (nothing survived as new, citable, and not already tracked)."
+prs: []
+docsRead:
+  - path: layers/journal/content/current/skills/log-session.yml
+    reason: check whether this run's regression finding was already recorded
+  - path: docs/adr
+    reason: read all ADRs per CLAUDE.md before any planning work
+  - path: layers/journal/content/current/sessions/2026-09-05-session_016ahWmRcpKL7NJpcrtA8zPy.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-skills
+    reason: (invoked as a slash command)
+frictions:
+  - description: audit-skills.ts's skillsUsed entries are {name, reason} objects; a naive `name in session["skillsUsed"]` membership check (comparing a string against a list of dicts) always evaluates false, silently making every regression bracket in step 4 look like a false zero-usage no-signal case.
+    solution: Compare against {u["name"] for u in session["skillsUsed"]} instead. Worth a one-line note in audit-skills/SKILL.md or the scorecard's own field docs so a future run doesn't repeat the same silent miscount.
+    severity: minor
+durationSec: 321
+models:
+  claude-sonnet-5: 68
+toolCounts:
+  Bash: 26
+  Read: 2
+  ToolSearch: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_read: 2
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-5ngk6i
+entrypoint: remote_trigger
+cliVersion: 2.1.269
+trigger: audit-skills
+learnings:
+  - A regression bracket with usage on only one side of the edit (before=[] or after=[] because the skill never fired in that half) can't be judged at all, not just weakly — there's no baseline to compare against, distinct from the "zero usedIn on both sides" skip case the SKILL.md names explicitly (close-session, digest, dispatch-subagents this run).
+landedBy: Stop
