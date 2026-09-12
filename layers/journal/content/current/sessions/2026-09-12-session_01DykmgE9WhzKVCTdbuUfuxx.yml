@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01DykmgE9WhzKVCTdbuUfuxx
 startedAt: 2026-09-12T02:04:45Z
-endedAt: 2026-09-12T08:50:20Z
+endedAt: 2026-09-12T08:51:14Z
 kind: autonomous
 goal: Run scheduled frictions-to-fixes sweep
-status: in-review
-outcome: 3 fix PRs merged, 1 guard PR escalated to human
-summary: "Autonomous, scheduled kickoff (no human prompt) of the frictions-to-fixes self-improvement loop. Delegated the survey/screen of the last 20 session logs to a subagent, which returned 5 never-fixed candidates after screening out several already-fixed/open-already/on-trial ones. Filed 5 issues (#1222-#1226), dispatched 3 Sonnet impl agents in isolated worktrees (one grouped doc-fix PR closing #1224/#1225/#1226, and one PR each for the two hard selections: #1222 a prune-trials.yml YAML gate check, #1223 a guard fail-open-on-crash fix). Reviewed and merged the doc PR (#1227) and the prune-trials PR (#1228) myself after reading each diff and resolving two check-conflicting-issues.ts advisory hits as false positives. Escalated the guard-wiring PR (#1230, closing #1223) to the human per docs/agents/guards.md's human-only-to-merge convention for any guard change, regardless of diff quality — still open at session-closure time, gate green, no merge conflict. Mid-run, the human (watching live) gave two pieces of direct feedback I acted on immediately, outside the issue-tracker pipeline: (1) an impl agent's edit to .claude/settings.json required a live manual permission approval with no one normally present during a scheduled run — fixed by adding a guards.md convention that a guard/settings.json-touching fix is never autonomously dispatched, only filed as an issue, and pointing frictions-to-fixes at it; (2) filing-then-immediately-closing an issue for a selection this same run fixes and merges is pure overhead — changed frictions-to-fixes §4 so only hard/escalated selections get a tracker issue, simple ones carry their problem/evidence/fix straight into the PR description. Both changes shipped in my own PR (#1231, merged). A separate mistake, caught by the human after the fact: a mid-session log-session update call passed a literal placeholder string as the `summary` field, which silently replaced this properly authored summary in the committed log (scalar fields take the latest wording rather than merging, unlike list fields such as `frictions`) — corrected in this same session via a follow-up log-session call restoring the full summary. Final state at last check-in: #1227/#1228/#1231 merged, #1230 open awaiting human merge, #1223 still open (tied to #1230)."
+status: completed
+outcome: All 4 PRs merged, all 5 issues closed
+summary: "Autonomous, scheduled kickoff (no human prompt) of the frictions-to-fixes self-improvement loop. Delegated the survey/screen of the last 20 session logs to a subagent, which returned 5 never-fixed candidates after screening out several already-fixed/open-already/on-trial ones. Filed 5 issues (#1222-#1226), dispatched 3 Sonnet impl agents in isolated worktrees (one grouped doc-fix PR closing #1224/#1225/#1226, and one PR each for the two hard selections: #1222 a prune-trials.yml YAML gate check, #1223 a guard fail-open-on-crash fix). Reviewed and merged the doc PR (#1227) and the prune-trials PR (#1228) myself after reading each diff and resolving two check-conflicting-issues.ts advisory hits as false positives. Escalated the guard-wiring PR (#1230, closing #1223) to the human per docs/agents/guards.md's human-only-to-merge convention for any guard change, regardless of diff quality; the human merged it ~3 hours later during a scheduled check-in, with no new comments or conflicts in the interim. Mid-run, the human (watching live) gave two pieces of direct feedback I acted on immediately, outside the issue-tracker pipeline: (1) an impl agent's edit to .claude/settings.json required a live manual permission approval with no one normally present during a scheduled run — fixed by adding a guards.md convention that a guard/settings.json-touching fix is never autonomously dispatched, only filed as an issue, and pointing frictions-to-fixes at it; (2) filing-then-immediately-closing an issue for a selection this same run fixes and merges is pure overhead — changed frictions-to-fixes §4 so only hard/escalated selections get a tracker issue, simple ones carry their problem/evidence/fix straight into the PR description. Both changes shipped in my own PR (#1231, merged). A separate mistake, caught by the human after the fact: a mid-session log-session update call passed a literal placeholder string as the `summary` field, which silently replaced this properly authored summary in the committed log (scalar fields take the latest wording rather than merging, unlike list fields such as `frictions`) — corrected the same session via a follow-up log-session call restoring the full summary. Final state: all 4 PRs (#1227/#1228/#1230/#1231) merged, all 5 issues (#1222-#1226) closed."
 prs:
   - "1227"
   - "1228"
@@ -103,27 +103,28 @@ frictions:
   - description: A log-session update call mid-session passed a literal placeholder string ("(see prior authored entry this session — unchanged, this pass only adds a SHELL-READ-DETECTION friction)") as the `summary` field, intending it as a note-to-self about what changed in that pass. It was committed verbatim as the session's actual summary, silently replacing the real one — I hadn't registered that scalar fields take 'latest wording' (replace) while list fields like `frictions` union (merge), so a placeholder in a scalar field isn't additive the way a new friction entry is. Caught by the human reading the committed log, not by me.
     solution: Always re-pass the FULL current summary/goal/outcome text on every log-session update call, never a delta note — only list fields (frictions, prs, docsRead, skillsUsed) are safe to pass partially. Fixed in this same session via a follow-up call restoring the full summary.
     severity: moderate
-durationSec: 24335
+durationSec: 24389
 models:
-  claude-sonnet-5: 253
+  claude-sonnet-5: 270
 toolCounts:
-  Bash: 53
+  Bash: 57
   Agent: 4
   Read: 7
   ToolSearch: 3
   mcp__github__search_issues: 3
   mcp__github__issue_write: 5
   Skill: 3
-  ReadNotifications: 18
-  Edit: 7
+  ReadNotifications: 19
+  Edit: 8
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__pull_request_read: 18
-  mcp__github__issue_read: 1
+  mcp__github__issue_read: 2
   mcp__github__add_issue_comment: 4
-  Write: 3
+  Write: 4
   PushNotification: 1
   mcp__Claude_Code_Remote__send_later: 2
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/agents/guards.md
   - .agents/skills/frictions-to-fixes/SKILL.md
