@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019wQ8yZLmXaRCDjRnoVRMbB
 startedAt: 2026-09-12T04:08:08Z
-endedAt: 2026-09-12T04:25:49Z
+endedAt: 2026-09-12T04:29:03Z
 kind: autonomous
 goal: Run scheduled /audit-docs sweep
-status: in-review
-outcome: "Opened PR #1229 with 5 fact-checked doc fixes"
-summary: "Fully agent-initiated: a scheduled Routine fired /audit-docs with no human prompt. Dispatched the skill's four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across the Live/Historical doc tiers. Concision found nothing; the other three returned 5 findings, none overlapping. Fact-checked each myself against primary sources (current code, .claude/settings.json guard wiring, guard source files, git history, the journal's own history.md) before touching anything - all 5 CONFIRMED. Fixed: a stale audit-skills/SKILL.md description of bracketSessions missing the #1214 authoring-session exclusion; a CLAUDE.md guard bullet missing its citation (#1208) that sibling bullets already carry; a domain.md paragraph restating a fact it already pointed to earlier in the same file; a guards.md row overstating deferred-tool-guard.ts's actual TaskCreate| Monitor-only matcher scope; and dispatch-subagents/SKILL.md phrasing that read as a sanctioned guard bypass when the guard denies all backgrounding outright. No human-only surface touched, no genuine unresolvable conflict, so nothing escalated and no issue filed. Gate green (doc-only, inert)."
+status: completed
+outcome: "PR #1229 merged with 5 fact-checked doc fixes"
+summary: "Fully agent-initiated: a scheduled Routine fired /audit-docs with no human prompt. Dispatched the skill's four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across the Live/Historical doc tiers. Concision found nothing; the other three returned 5 findings, none overlapping. Fact-checked each myself against primary sources (current code, .claude/settings.json guard wiring, guard source files, git history, the journal's own history.md) before touching anything - all 5 CONFIRMED. Fixed: a stale audit-skills/SKILL.md description of bracketSessions missing the #1214 authoring-session exclusion; a CLAUDE.md guard bullet missing its citation (#1208) that sibling bullets already carry; a domain.md paragraph restating a fact it already pointed to earlier in the same file; a guards.md row overstating deferred-tool-guard.ts's actual TaskCreate| Monitor-only matcher scope; and dispatch-subagents/SKILL.md phrasing that read as a sanctioned guard bypass when the guard denies all backgrounding outright. No human-only surface touched, no genuine unresolvable conflict, so nothing escalated and no issue filed. Gate green (doc-only, inert). Posted a COMMENT-event verdict per pr-workflow.md, then merged via merge-pr.ts (audit-docs merges on a green gate alone, ADR-0003/0004)."
 prs:
   - "1229"
 docsRead:
@@ -183,22 +183,28 @@ frictions:
   - description: 'SHELL-READ-DETECTION miss: `grep -n "provenance header\|^Session:\|marker" docs/adr/0017*.md | head -30` was rejected as "not a literal path: glob or variable," but the glob resolved to exactly one real file (docs/adr/0017-provenance-footer-on-agent-authored-content.md) whose content I actually read and used (the PR-body provenance-header format).'
     solution: Have the detector resolve a glob against the working tree before rejecting it, and only reject when it matches zero or more-than-one file.
     severity: moderate
-durationSec: 1061
+durationSec: 1255
 models:
-  claude-sonnet-5: 110
+  claude-sonnet-5: 142
 toolCounts:
-  Bash: 32
-  ToolSearch: 1
+  Bash: 38
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__search_pull_requests: 1
   Agent: 8
   ScheduleWakeup: 1
   Read: 7
-  Edit: 6
+  Edit: 7
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/audit-skills/SKILL.md
   - CLAUDE.md
@@ -212,6 +218,7 @@ docsReadViaShell:
   - docs/agents/domain.md
   - .agents/skills/dispatch-subagents/SKILL.md
   - CONTEXT.md
+  - docs/agents/pr-workflow.md
   - .agents/skills/guest-build/SKILL.md
   - docs/agents/environment-caveats.md
   - docs/agents/tenant-layers.md
