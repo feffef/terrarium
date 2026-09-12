@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: session_01GqyKfKnmYGvzeLaJfpEP3R
+startedAt: 2026-09-12T09:09:19Z
+endedAt: 2026-09-12T09:26:05Z
+kind: interactive
+goal: "Re-check issue #926's vue pin"
+status: in-review
+outcome: Pin removed; original failure unreproducible
+summary: "Human-instructed: check whether issue #926's MDC hydration error still occurs on the latest vue, and if so investigate our own code rather than assume an upstream regression. Removed the 3.5.40 override, installed vue 3.5.42, and ran the full gate — green, 79/79 e2e. Probed an MDC route against nuxt dev as well as a production preview, since vue strips dev warnings in production and a green prod probe alone proves nothing. Agent-initiated: ran a control on vue 3.5.41, the version the pin excludes. It also passes 79/79, verified twice, so the pin's stated cause does not reproduce. Corrected an earlier commit message that had wrongly credited 3.5.42 with an upstream fix. PR #1232 opened."
+prs:
+  - "1232"
+docsRead:
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: provenance header format for the PR body
+  - path: tests/support/e2e.ts
+    reason: what expectCleanHydration actually asserts
+  - path: tests/e2e/smoke.spec.ts
+    reason: whether e2e runs dev or production
+  - path: app/components/content/ProsePre.vue
+    reason: our only Prose override, in MDC's async-wrapper path
+  - path: app/components/MermaidDiagram.vue
+    reason: checking for SSR/client divergence
+  - path: layers/atlas/app/composables/almanac.ts
+    reason: provide/inject across the ContentRenderer boundary
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Believed 3.5.42 fixed it upstream and committed that claim before the control on 3.5.41 came back and falsified it.
+    solution: Run the negative control before writing a causal claim anywhere, not after. A changelog entry that matches the symptom is a hypothesis, not evidence.
+    severity: moderate
+  - description: A green production probe cannot distinguish "bug fixed" from "vue dev warning compiled out"; nearly reported the prod result as proof.
+    solution: CLAUDE.md's verifying-ui-changes guidance could state that hydration/warning assertions need a dev build, since production strips vue's warn calls.
+    severity: minor
+  - description: Probe script in the scratchpad failed under tsx as .ts (top-level await, cjs output); had to copy it into the repo as .mts to run.
+    solution: Write ad-hoc probe scripts with an .mts extension, or note the constraint where scripts/screenshot.ts's ad-hoc-probe pattern is documented.
+    severity: nit
+  - description: Reading package.json's pnpm override does not tell you the installed version; a lockfile-respecting pnpm install kept vue at 3.5.40 after the override was removed.
+    solution: Verify a dependency experiment from the build output's own version constant, not from package.json or from the install command's exit code.
+    severity: nit
+  - description: 'SHELL-READ-DETECTION miss. Ran `sed -n 30,70p docs/adr/*0017*` and `grep -rn "provenance header" docs/adr/*0017*`, which showed me docs/adr/0017-provenance-footer-on-agent-authored-content.md, but docsReadViaShell reported 0 docs and did not list either command as a rejected candidate. Direction: a miss, not a false positive.'
+    solution: The detector appears not to resolve glob paths — `docs/adr/*0017*` never becomes a concrete doc path. Expand globs, or treat a reader command whose path argument globs into docs/ as a read of every match.
+    severity: moderate
+durationSec: 1006
+models:
+  claude-opus-5: 215
+toolCounts:
+  ToolSearch: 5
+  Bash: 94
+  mcp__github__issue_read: 2
+  Monitor: 3
+  mcp__github__search_pull_requests: 1
+  TaskStop: 2
+  ReadNotifications: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+gitBranch: claude/issue-926-error-check-x98tv8
+entrypoint: remote_mobile
+cliVersion: 2.1.269
+learnings:
+  - A pnpm `overrides` entry on `vue` also drags `@vue/compiler-sfc` to that version, so pinning the runtime does not by itself create a compiler/runtime skew
+  - MDCRenderer wraps any MDC component carrying a `setup` in `defineAsyncComponent(() => Promise.resolve(component))` on every render — all five of our MDC components use `<script setup>`, so all five take that path
+  - vue compiles its dev warnings out of production builds, so hydration-mismatch and resolveComponent warnings are invisible to a production preview probe
+ideas:
+  - "Teach the Routine behind #926 to run a negative control: before opening an un-pin PR, also test the pinned-out version and report whether the original failure still reproduces. A pin whose stated cause no longer reproduces is a different finding from a pin that upstream fixed, and only the control distinguishes them."
+  - Add a gate check that fails when the lockfile resolves two different versions of the same @vue/* package, since a compiler/runtime skew produces SSR-vs-client symptoms that read as upstream regressions and cost a bisect to diagnose.
+landedBy: Stop
