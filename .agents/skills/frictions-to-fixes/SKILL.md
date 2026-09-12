@@ -181,7 +181,10 @@ if your judgement differs, but don't re-derive the ranking from scratch.)
   redesign), **autonomous** (an agent lands it start-to-finish with no human
   decision mid-way), and **safe surface** (touches none of the human-only
   surfaces — CLAUDE.md's Ground rules, ADR-0004; those are never dispatched
-  here). These you review and merge yourself in §6.
+  here). A fix touching a guard or `.claude/settings.json`'s hook wiring is
+  never dispatched either, regardless of size — `docs/agents/guards.md`'s own
+  rule, since editing it needs a human-attended session. These you review and
+  merge yourself in §6.
 - **Hard (at most 2 per run).** A friction whose fix touches **2 or more
   files**, or one that turns on a **non-obvious design decision** even within a
   single file. These are still confined to safe surfaces —
@@ -198,15 +201,21 @@ Done when each selection names its evidence, is tagged **simple** or **hard**, a
 you can state in one line why it earns a fix (and, for a group, which frictions it
 subsumes).
 
-## 4. File the issues — one per selection, recommended solution named
+## 4. File issues only for what outlives this run
 
-File one issue on the tracker per **selection** from §3 (a group of related
-frictions is one issue, not several): the **problem** with its evidence (quote the
-logging sessions + severities — for a group, all of them), the **solutions** you
-weighed, and the **recommended** one. For a **simple** selection, the recommended
-option must be a single, unambiguous change — that is what §5 implements. For a
-**hard** selection, scope the intended change and note it is expected to need
-human review at merge. Search the tracker first to avoid duplicates.
+A **hard** selection (§3) is expected to need human review at merge (§6), so it
+can sit open past this run — file it as an issue on the tracker (a group of
+related frictions is one issue, not several): the **problem** with its evidence
+(quote the logging sessions + severities — for a group, all of them), the
+**solutions** you weighed, and the **recommended** one, scoped for what §5 should
+implement. Search the tracker first to avoid duplicates.
+
+A **simple** selection is dispatched, reviewed, and merged inside this same run
+(§5–§6) — filing an issue for it is pure overhead, opened only to be closed by
+its own merge minutes later with nothing durable left behind. **Skip the issue.**
+Carry the same problem/evidence/recommended-fix straight into §5's dispatch
+brief, and have the impl agent write it into the PR description instead — the
+merged PR is the record.
 
 **Before recommending "add a line to doc X", check that anyone reads doc X.**
 `pnpm exec tsx scripts/audit-skills.ts` reports `docReadCounts` — path → how many
@@ -219,8 +228,9 @@ carries, a finding** — `scripts/audit-skills.ts`'s `docReadCounts` docstring i
 the single home for why (three separate reasons it undercounts). Read it before
 citing a count.
 
-Done when every selection has an open issue with a clearly recommended solution,
-tagged simple or hard.
+Done when every **hard** selection has an open issue with a clearly recommended
+solution, and every **simple** selection has its problem/evidence/fix ready to
+hand straight to §5's dispatch brief with no issue filed for it.
 
 ## 5. Dispatch Sonnet impl agents — batch the doc fixes
 
@@ -231,10 +241,13 @@ invoke `dispatch-subagents` for the mechanism, the brief checklist, and the
 post-dispatch check:
 
 - **Doc-only fixes** (Markdown / prose — CLAUDE.md, a **repo-owned** SKILL, a Skill
-  Inventory entry): hand them **all to one agent as a single grouped PR** that
-  `Closes` every one of their issues. **Never an external pack Skill's `SKILL.md`**
+  Inventory entry): hand them **all to one agent as a single grouped PR**. These
+  are ordinarily **simple** selections with no issue filed (§4) — the PR
+  description carries each fix's problem/evidence/recommended-fix directly
+  instead of a `Closes #N`; a doc selection that came out **hard** still cites its
+  issue. **Never an external pack Skill's `SKILL.md`**
   (a `skills-lock.json` name) — those are off limits (screened out in §2). Many one-line doc PRs are pure review overhead; one batched PR is
-  cheaper to review and still traces back to each issue.
+  cheaper to review than several.
   - **The doc fix must itself clear `audit-docs`' house rules** — that Skill is
     the home for them (`audit-docs/SKILL.md`, not restated here), and since this
     Skill self-merges its doc commits too (§6), they hold to the same standard the
@@ -248,7 +261,9 @@ post-dispatch check:
     Put this in the doc-fix agent's brief.
 - **Code or config fixes**: one PR each — they carry distinct review and CI surface
   and shouldn't ride on each other. (A single issue that already grouped related
-  frictions is still one PR.)
+  frictions is still one PR.) A **simple** code/config selection carries its
+  problem/evidence/fix in the PR description with no issue to cite; a **hard**
+  one cites its issue and `Closes` it.
 
 Every agent's brief is self-contained: read the issue(s), branch from `origin/main`,
 implement the **recommended** option only, clear the **safety gate**, push, and open
@@ -269,8 +284,10 @@ impl agent disobeyed the sentence above, and don't log it as a fresh friction
 or `log-session`** — see `close-session/SKILL.md` for why and its mechanical
 enforcement.
 
-Done when every issue is covered by a pushed gated PR (doc issues by the one grouped
-PR, each code/config issue by its own), gate green, awaiting your review.
+Done when every selection is covered by a pushed gated PR (every simple doc fix by
+the one grouped PR, each other selection by its own), gate green, awaiting your
+review — a hard selection's PR cites and `Closes` its issue; a simple selection's
+PR carries its problem/evidence/fix inline with no issue behind it.
 
 **At PR-open (the dispatched PRs are pushed), invoke `close-session`** — your first log (`in-review`), before you review and merge in §6. This `in-review` log is a safety net for review/merge *not* finishing in the same turn (session limits, waiting on CI, etc.) — when every dispatched PR merges before the closing turn ends, skipping straight to one final `completed`-status close in §6 is fine, not a deviation.
 
