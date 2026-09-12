@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CuhMw7Gc5ox9C8pPgQFwXN
 startedAt: 2026-09-12T00:15:35Z
-endedAt: 2026-09-12T00:22:21Z
+endedAt: 2026-09-12T00:26:12Z
 kind: autonomous
 goal: Run scheduled /digest sweep
-status: in-review
-outcome: "2026-09-11 Digest authored, PR #1221 open"
-summary: "Fully agent-initiated scheduled run (no human prompt) of the /digest Skill. Listed one pending day (2026-09-11), gathered its PR/commit/session data via scripts/digest.ts, and authored a narrative Digest headlined by a friction from that day's log: a commit-trailer guard whose fail-closed guarantee held standalone but not on the live tool call that produced the commit. Ran the journal retention sweep (archived 1 digest, 7 session logs), cleared pnpm gate:scoped (full gate, all green), committed, pushed, and opened PR #1221 against main, then subscribed to its activity to babysit to merge."
+status: completed
+outcome: "2026-09-11 Digest merged via PR #1221"
+summary: "Fully agent-initiated scheduled run (no human prompt) of the /digest Skill. Listed one pending day (2026-09-11), gathered its PR/commit/session data via scripts/digest.ts, and authored a narrative Digest headlined by a friction from that day's log: a commit-trailer guard whose fail-closed guarantee held standalone but not on the live tool call that produced the commit. Ran the journal retention sweep (archived 1 digest, 7 session logs), cleared pnpm gate:scoped (full gate, all green), committed, pushed, and opened PR #1221 against main, subscribed to its activity, posted the digest-tier self-merge verdict per docs/agents/pr-workflow.md, and landed it via scripts/merge-pr.ts once CI's safety gate went green — merged as c2fec549. Unsubscribed on merge."
 prs:
   - "1221"
 docsRead:
@@ -26,11 +26,11 @@ skillsUsed:
   - name: digest
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 406
+durationSec: 637
 models:
-  claude-sonnet-5: 83
+  claude-sonnet-5: 106
 toolCounts:
-  Bash: 25
+  Bash: 31
   Read: 5
   Write: 2
   ToolSearch: 3
@@ -38,10 +38,12 @@ toolCounts:
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   Grep: 1
-  Edit: 1
+  Edit: 2
   mcp__github__pull_request_read: 1
   mcp__github__pull_request_review_write: 1
   ScheduleWakeup: 1
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-09-11.md
 gitBranch: claude/compassionate-lovelace-szb7e3
