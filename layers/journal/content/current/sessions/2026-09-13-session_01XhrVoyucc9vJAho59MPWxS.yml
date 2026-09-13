@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XhrVoyucc9vJAho59MPWxS
 startedAt: 2026-09-13T13:06:40Z
-endedAt: 2026-09-13T13:15:48Z
+endedAt: 2026-09-13T13:18:58Z
 kind: autonomous
 goal: Run scheduled /prune-trial sweep
-status: in-review
-outcome: "Judged 1 trial, opened + pushed 1 new prune (PR #1243)"
-summary: "Entirely agent-initiated scheduled run, no human prompt. Ran scripts/prune-trial-window.ts against the four open trials; only the 2026-09-09 workflow-edit-guard trial had landed and cleared its window. Checked scripts/session-frictions.ts output and the issue tracker since its landing commit for damage tracing to its territory — found none, so the prune holds; deleted its ledger entry. Chose a new problem per criterion 1 (prose that already failed): docs/adr/0004-objective-safety-gate.md had three amendment blocks re-litigating the human-only-surface file list, the same shape already pruned from ADR-0003's auto-merge ledger, with the third amendment explicitly admitting the first two had gone stale. Compressed to one amendment keeping the genuine fact plus a \"don't re-enumerate, point to CLAUDE.md\" rule, and one amendment stating only its own addition. Net -18 lines. Verified with a Sonnet probe given only the compressed text before shipping (all four questions answered correctly). Committed, pushed, opened PR #1243, subscribed to its activity."
+status: completed
+outcome: "Judged 1 trial, opened + merged 1 new prune (PR #1243)"
+summary: "Entirely agent-initiated scheduled run, no human prompt. Ran scripts/prune-trial-window.ts against the four open trials; only the 2026-09-09 workflow-edit-guard trial had landed and cleared its window. Checked scripts/session-frictions.ts output and the issue tracker since its landing commit for damage tracing to its territory — found none, so the prune holds; deleted its ledger entry. Chose a new problem per criterion 1 (prose that already failed): docs/adr/0004-objective-safety-gate.md had three amendment blocks re-litigating the human-only-surface file list, the same shape already pruned from ADR-0003's auto-merge ledger, with the third amendment explicitly admitting the first two had gone stale. Compressed to one amendment keeping the genuine fact plus a \"don't re-enumerate, point to CLAUDE.md\" rule, and one amendment stating only its own addition. Net -18 lines. Verified with a Sonnet probe given only the compressed text before shipping (all four questions answered correctly). Committed, pushed, opened PR #1243, subscribed to its activity, posted a COMMENT-event merge verdict, merged via scripts/merge-pr.ts on green gate (prune-trial's per-tier merge authority), and unsubscribed."
 prs:
   - "1243"
 docsRead:
@@ -45,22 +45,25 @@ frictions:
   - description: "SHELL-READ-DETECTION miss (over-counted): docsReadViaShell flagged `.agents/skills/blog-post/SKILL.md` as read via shell from `grep -n \"recurred\\|regression\\|previously\\|used to\\|earlier version\\|no longer\\|deprecated\\|superseded\\|historical\" .agents/skills/blog-post/SKILL.md .agents/skills/audit-skills/SKILL.md .agents/skills/frictions-to-fixes/SKILL.md docs/agents/guards.md`, but every line in that grep's actual output was from the other three files — none matched in blog-post/SKILL.md, so its content was never shown to me."
     solution: Same fix as the CONTEXT.md miss above — attribute a multi-file grep's reveal only to the files that actually appear in its output, not every file named in the command.
     severity: moderate
-durationSec: 548
+durationSec: 738
 models:
-  claude-sonnet-5: 118
+  claude-sonnet-5: 155
 toolCounts:
-  Bash: 28
-  ToolSearch: 5
+  Bash: 34
+  ToolSearch: 9
   Read: 11
   mcp__github__list_issues: 1
-  Edit: 6
+  Edit: 8
   Agent: 1
-  ReadNotifications: 1
+  ReadNotifications: 3
   ScheduleWakeup: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_review_write: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/adr/0004-objective-safety-gate.md
   - .agents/prune-trials.yml
@@ -72,6 +75,7 @@ docsReadViaShell:
   - docs/proposals/445-ci-reuse-gate-scoped-classifier.md
   - docs/adr/0017-provenance-footer-on-agent-authored-content.md
   - CONTEXT.md
+  - docs/agents/pr-workflow.md
 subagents:
   - type: general-purpose
     task: Probe compressed ADR-0004 human-only list
