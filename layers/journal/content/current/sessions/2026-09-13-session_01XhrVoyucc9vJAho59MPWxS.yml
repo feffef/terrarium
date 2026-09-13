@@ -1,0 +1,82 @@
+schemaVersion: 1
+session: session_01XhrVoyucc9vJAho59MPWxS
+startedAt: 2026-09-13T13:06:40Z
+endedAt: 2026-09-13T13:15:48Z
+kind: autonomous
+goal: Run scheduled /prune-trial sweep
+status: in-review
+outcome: "Judged 1 trial, opened + pushed 1 new prune (PR #1243)"
+summary: "Entirely agent-initiated scheduled run, no human prompt. Ran scripts/prune-trial-window.ts against the four open trials; only the 2026-09-09 workflow-edit-guard trial had landed and cleared its window. Checked scripts/session-frictions.ts output and the issue tracker since its landing commit for damage tracing to its territory — found none, so the prune holds; deleted its ledger entry. Chose a new problem per criterion 1 (prose that already failed): docs/adr/0004-objective-safety-gate.md had three amendment blocks re-litigating the human-only-surface file list, the same shape already pruned from ADR-0003's auto-merge ledger, with the third amendment explicitly admitting the first two had gone stale. Compressed to one amendment keeping the genuine fact plus a \"don't re-enumerate, point to CLAUDE.md\" rule, and one amendment stating only its own addition. Net -18 lines. Verified with a Sonnet probe given only the compressed text before shipping (all four questions answered correctly). Committed, pushed, opened PR #1243, subscribed to its activity."
+prs:
+  - "1243"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the ledger to judge and extend
+  - path: docs/research/rulebook-migration-table.md
+    reason: candidate search for criterion 1 (prose that already failed)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: the prune target
+  - path: docs/agents/guards.md
+    reason: checked as a possible prune target before ruling it out (already tight
+  - path: docs/agents/github-integration.md
+    reason: checked as a possible prune target before ruling it out
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: checked as a possible prune target before ruling it out (Decision/Consequences-heavy
+  - path: docs/proposals/445-ci-reuse-gate-scoped-classifier.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: the run itself
+  - name: dispatch-subagents
+    reason: exempt path used for the read-only §4 probe
+  - name: close-session
+    reason: closure sequence at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Hand-wrote the ADR-0017 Co-Authored-By/Claude-Session commit trailer per the outer session's attribution system-reminder, which conflicts with CLAUDE.md's "never hand-write it — the harness template and .githooks/commit-msg already land it" rule and its fail-closed guard. The commit succeeded anyway with the correct-looking trailer and no duplication, so no actual damage, but the instruction conflict itself is the friction.
+    solution: Repo convention should win over a generic outer-session attribution reminder when the two conflict; let the guard/hook supply the trailer by omitting it from the authored message next time.
+    severity: nit
+  - description: 'SHELL-READ-DETECTION miss (over-counted): docsReadViaShell flagged CONTEXT.md as read via shell, but the only shell command naming it — `grep -n -A15 "^\*\*Session\*\*\|### Session\b" CONTEXT.md | head -40` (and a second, similarly-scoped grep against `kind`/interactive/ delegated/autonomous) — returned zero matching lines both times ("Bash completed with no output"). No CONTEXT.md content ever reached me via shell; I read its Session-kind definition via a subsequent Read tool call at offset=92.'
+    solution: "Same direction as the already-tracked #1074 false-positive pattern: the detector should require the shell command's own stdout to be non-empty for the target path before attributing a read, not just that the command named the path."
+    severity: moderate
+  - description: "SHELL-READ-DETECTION miss (over-counted): docsReadViaShell flagged `.agents/skills/blog-post/SKILL.md` as read via shell from `grep -n \"recurred\\|regression\\|previously\\|used to\\|earlier version\\|no longer\\|deprecated\\|superseded\\|historical\" .agents/skills/blog-post/SKILL.md .agents/skills/audit-skills/SKILL.md .agents/skills/frictions-to-fixes/SKILL.md docs/agents/guards.md`, but every line in that grep's actual output was from the other three files — none matched in blog-post/SKILL.md, so its content was never shown to me."
+    solution: Same fix as the CONTEXT.md miss above — attribute a multi-file grep's reveal only to the files that actually appear in its output, not every file named in the command.
+    severity: moderate
+durationSec: 548
+models:
+  claude-sonnet-5: 118
+toolCounts:
+  Bash: 28
+  ToolSearch: 5
+  Read: 11
+  mcp__github__list_issues: 1
+  Edit: 6
+  Agent: 1
+  ReadNotifications: 1
+  ScheduleWakeup: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - docs/adr/0004-objective-safety-gate.md
+  - .agents/prune-trials.yml
+docsReadViaShell:
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/guards.md
+  - docs/proposals/445-ci-reuse-gate-scoped-classifier.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - CONTEXT.md
+subagents:
+  - type: general-purpose
+    task: Probe compressed ADR-0004 human-only list
+gitBranch: claude/practical-rubin-env0v5
+entrypoint: remote_trigger
+cliVersion: 2.1.270
+trigger: prune-trial
+landedBy: Stop
