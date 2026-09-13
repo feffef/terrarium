@@ -43,4 +43,19 @@ observations:
       a mechanism bug in the derived trace (`scripts/shell-reads.ts` /
       `session-trace.ts`), not a Skill-doc issue this Skill's grade should
       move on.
-
+  - date: 2026-09-13
+    note: >-
+      A sixth instance, found opportunistically while deep-reading
+      session_01DykmgE9WhzKVCTdbuUfuxx (2026-09-12) for an unrelated
+      dispatch-subagents regression screen: a moderate SHELL-READ-DETECTION
+      friction reports docs/agents/guards.md wrongly credited as
+      docsReadViaShell — the only shell commands naming that path were
+      `git merge --ff-only origin/main` and `git stash pop`, whose output
+      listed it only as a changed filename, never its content. This is a new
+      false-positive shape not yet covered by issue #1206's fix (#1209, the
+      `git show` miss) or its false-positive investigation (which confirmed
+      subagent-shell-read folding is working as designed) — a git
+      merge/stash file-list line is being treated as content-revealing the
+      same way a bare `cat`/`grep` path is. Added as a comment on #1206
+      rather than a new issue, per that thread's own "recurring problem is
+      evidence it's real" framing. Grade/role unchanged.
