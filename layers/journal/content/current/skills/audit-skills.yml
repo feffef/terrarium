@@ -14,3 +14,22 @@ observations:
       session_01LMmeZwRTneoFhdrJuR8bjm, session_0199v5EPwospBeRkjc2CdUiH, and
       session_01Cks11tHyf5hQsn3SJuJ6kn — matches role (grade/role unchanged;
       first observations entry for this Skill).
+  - date: 2026-09-13
+    note: >-
+      Idea, not acted on here (scripts/audit-skills.ts is code, out of this
+      Skill's Inventory-YAML-only mandate): this run's 40-session window is
+      now saturated by six rotating scheduled Routines (audit-docs,
+      audit-skills, blog-post, digest, frictions-to-fixes, prune-trial)
+      firing every 90min-2h, so `regressionChecks`'s nearest-N-chronological
+      bracketing frequently pulls in sessions that never invoked the edited
+      Skill at all — e.g. this run's dispatch-subagents bracket (edit
+      a9c8a5ef, 2026-09-12) had only 1 domain-matching session on each side
+      out of 5, and audit-docs's own bracket (edit 19675021, 2026-09-11) had
+      1 on one side and 0 on the other. The coarse severity/count comparison
+      in that case reflects whichever unrelated Skill's session happened to
+      land nearest in time, not the edited Skill's own behavior. Bracketing
+      by "nearest N sessions that actually named this Skill in skillsUsed"
+      instead of "nearest N chronologically" would make Phase A's signal
+      meaningful again under this cadence. Recorded as this run's idea too
+      (session log), since implementing it is code work outside this
+      Skill's own remit.
