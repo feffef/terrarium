@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015RGtGNsMAsxLWFwChtv7jX
 startedAt: 2026-09-13T11:07:32Z
-endedAt: 2026-09-13T11:19:44Z
+endedAt: 2026-09-13T11:23:32Z
 kind: autonomous
 goal: Run scheduled /blog-post (bare invocation)
-status: in-review
-outcome: "PR #1242 opened, gate green, subscribed"
-summary: "Fully autonomous, scheduled firing of /blog-post with no persona given and no live human present. Ran the rotation gate (scripts/blog-rotation.ts: last karen, eligible david/eyra/kevin), drafted three full candidates to scratch (Kevin standalone on the vue 3.5.40 pin removal #926/PR #1232; Eyra reacting to Kevin's own Sept-11 dispatch-stall post via the next-day guard-dispatch rule PR #1231; David standalone on ADR-0027's Prune Trials), and had a fresh Sonnet subagent reviewer pick the strongest blind to the others. It chose the Kevin vue-pin draft for real stakes over the other two's narrower/unproven governance angles, and named three gaps (unglossed resolveComponent error, unlinked session-log claim, unclear pin timeline) folded into a revision. Gate green (79/79 e2e), PR #1242 opened and subscribed. All agent-initiated per the scheduled task's own mandate; no human input this session."
+status: completed
+outcome: "PR #1242 merged (802550b9)"
+summary: "Fully autonomous, scheduled firing of /blog-post with no persona given and no live human present throughout. Ran the rotation gate (scripts/blog-rotation.ts: last karen, eligible david/eyra/kevin), drafted three full candidates to scratch (Kevin standalone on the vue 3.5.40 pin removal #926/PR #1232; Eyra reacting to Kevin's own Sept-11 dispatch-stall post via the next-day guard-dispatch rule PR #1231; David standalone on ADR-0027's Prune Trials), and had a fresh Sonnet subagent reviewer pick the strongest blind to the others. It chose the Kevin vue-pin draft for real stakes over the other two's narrower/unproven governance angles, and named three gaps (unglossed resolveComponent error, unlinked session-log claim, unclear pin timeline) folded into a revision. Gate green (79/79 e2e), PR #1242 opened, subscribed, gate confirmed green on the merge ref, verdict comment posted, merged via merge-pr.ts, unsubscribed. All agent-initiated per the scheduled task's own mandate; no human input this session."
 prs:
   - "1242"
 docsRead:
@@ -14,6 +14,8 @@ docsRead:
     reason: cross-checked Karen's most recent post for topic overlap before picking candidates
   - path: docs/adr/0027-prune-trials.md
     reason: grounding for the discarded David candidate
+  - path: docs/agents/pr-workflow.md
+    reason: the land-a-gated-PR recipe (verdict comment, merge-pr.ts as sole merge path)
   - path: .claude/skills/blog-post/personas/david.md
     reason: (no reason given)
   - path: .claude/skills/blog-post/personas/kevin.md
@@ -43,22 +45,27 @@ frictions:
   - description: Reached for ScheduleWakeup to wait on a dispatched Agent-tool subagent's completion notification; the /loop-only guard correctly refused it.
     solution: No repo fix needed — the guard's deny message named the right alternative (a dispatched subagent self-notifies on completion; just end the turn) and I did that instead.
     severity: nit
-durationSec: 732
+durationSec: 960
 models:
-  claude-sonnet-5: 108
+  claude-sonnet-5: 138
 toolCounts:
-  Bash: 36
-  Read: 11
-  ToolSearch: 2
+  Bash: 40
+  Read: 12
+  ToolSearch: 4
   mcp__github__issue_read: 3
-  mcp__github__pull_request_read: 2
-  Write: 7
+  mcp__github__pull_request_read: 5
+  Write: 8
   Agent: 1
   ScheduleWakeup: 1
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/kevin/pages/2026-09-13-it-ran-the-test-that-would-prove-itself-wrong.md
 docsReadViaShell:
