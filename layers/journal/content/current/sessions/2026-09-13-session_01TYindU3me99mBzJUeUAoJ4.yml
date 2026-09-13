@@ -1,0 +1,47 @@
+schemaVersion: 1
+session: session_01TYindU3me99mBzJUeUAoJ4
+startedAt: 2026-09-13T00:16:03Z
+endedAt: 2026-09-13T00:23:24Z
+kind: autonomous
+goal: Run the scheduled /digest sweep
+status: in-review
+outcome: "PR #1235 opened, gate green, subscribed"
+summary: "Fully agent-initiated: a scheduled Routine fired /digest with no human present. Ran scripts/digest.ts to find 2026-09-12 as the one closed UTC day missing a Digest, authored its catch-up page (leading with the fail-closed-guard-fix thread: #1230/#1231 closing the gap #1230's own predecessor day's Digest had flagged, plus the vue pin removal #1232 and the day's other shipped work), and ran the retention sweep, which moved 2026-09-05's digest and 7 session logs from current to archived. pnpm gate:scoped ran the full gate (a non-inert content change) and every step passed, including test:e2e. Committed both the Digest and the sweep in one commit, pushed, and opened PR #1235 (subscribed)."
+prs:
+  - "1235"
+docsRead:
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: PR-body provenance header format
+  - path: layers/journal/content/current/pages/digests/2026-09-11.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 441
+models:
+  claude-sonnet-5: 62
+toolCounts:
+  Bash: 18
+  Read: 4
+  Write: 2
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__add_issue_comment: 2
+  ScheduleWakeup: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-09-12.md
+gitBranch: claude/compassionate-lovelace-1hxyb1
+entrypoint: remote_trigger
+cliVersion: 2.1.270
+trigger: digest
+landedBy: Stop
