@@ -123,6 +123,12 @@ A screenshot captures whatever frame exists *now*. Two ways the frame is empty:
   route can catch a half-built page and read as a false-positive layout bug.
   Prefer built `preview` mode (or a selector wait) before trusting a `--dev`
   screenshot for diagnosis. (Sessions `…pm7Vkb`, `…Bhu3Y1`.)
+- **A green production `preview` probe is not proof a hydration-mismatch or
+  Vue dev-warning fix worked.** Those diagnostics are Vue dev-only and are
+  compiled out of production builds entirely, so a clean production run is
+  consistent with *either* "actually fixed" or "warning can't appear in this
+  build mode regardless." Verify this class of fix against a `--dev` build
+  instead (or in addition), checking the actual console/warning output.
 
 ### `<ClientOnly>` attaches its slot DOM *after* `onMounted`
 

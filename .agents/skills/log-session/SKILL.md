@@ -48,6 +48,13 @@ wording — and the next live `Stop` (or, failing that, a `SessionEnd`/resume
 fallback) lands the merged result. So if you call closure and then more work
 happens, just **invoke again**.
 
+**"Latest wording" means replace, verbatim, not append.** If you re-invoke
+mid-session with `summary: "just fixed the CI flake"` as a quick note, that
+string **becomes the entire summary** — it does not get tacked onto what you
+wrote before. Never pass a short delta/placeholder note as `summary` (or
+`goal`/`outcome`) on a re-invoke; write out the complete, current version of
+the field every time you set it, exactly as if authoring it fresh.
+
 **Merging only adds — it cannot remove or reword a friction you already
 authored.** To correct one, delete `.session-logs/pending.scratch.json` first,
 so the next pass starts fresh instead of merging against the mistake.
