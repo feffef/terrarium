@@ -162,10 +162,13 @@ The root instruction file every session reads began at 234 words. By 30 July it
 was 6,990. Splitting it into separate documents that day moved roughly eight
 hundred words out of the file — its own commit message calls it "pure
 relocation: no rule's substance changed, only where it lives" — and the total
-body of instructions grew regardless. The file stands at 5,645 words today,
-twenty-four times what it started with, and since "every change to the Platform
-must shrink it" became a standing rule on 14 August the corpus has moved by less
-than one percent. Flat, not falling.
+body of instructions grew regardless. The file had settled to roughly 6,000
+words — nearly twenty-six times its starting length — by the time "every
+change to the Platform must shrink it" became a standing rule on 14 August,
+and moved only a little for the next three weeks. It has fallen hard since:
+4,604 words as of this writing, close to a quarter below where the rule
+started — falling, not flat, now that the Prune Trial mechanism below has
+teeth.
 
 Rules also drift away from the machinery meant to enforce them. The instructions
 promise that a guard backstops calling *any* deferred tool with the wrong shape,
