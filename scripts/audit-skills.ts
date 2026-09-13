@@ -12,9 +12,9 @@
 //   Prints a scorecard: the window of sessions considered (newest first, each
 //   with a friction-severity summary), per-Skill usage/grade/description join,
 //   `regressionChecks` — each own Skill's most recent edit commit with the
-//   sessions immediately before/after it (session ids only; resolve against
-//   `regressionSessions`, deduped since the same session commonly brackets more
-//   than one Skill's edit) — `orphanedSessions` (issue #349; candidates come
+//   nearest sessions on each side whose `skillsUsed` actually names that Skill
+//   (session ids only; resolve against `regressionSessions`, deduped since the
+//   same session commonly brackets more than one Skill's edit) — `orphanedSessions` (issue #349; candidates come
 //   from every merged pull request's recorded originating session, with no
 //   time window at all, issue #738 — read `orphanScan` before reading an empty
 //   list as "no orphans"; a resolved same-run mis-file — a flagged commit's
@@ -228,14 +228,21 @@ export interface SkillEdit {
    *  bracket (issue #1214). */
   session?: string
 }
-/** One own-Skill edit, bracketed by up to `n` sessions immediately before and
- *  after its commit date — raw material for judging whether behavior around a
- *  Skill changed after a manual or `audit-docs` edit to its `SKILL.md`. Purely
- *  mechanical: it brackets, it does not conclude "regression" (ADR-0015).
- *  `before`/`after` are session ids, not full objects — look them up in the
- *  Scorecard's `regressionSessions` (deduped: the same session commonly
- *  brackets several Skills' edits, and embedding it once per check bloated the
- *  scorecard well past what's worth handing a Skill run in one shot). */
+/** One own-Skill edit, bracketed by up to `n` sessions on each side of its
+ *  commit date whose `skillsUsed` actually names the edited Skill — nearest
+ *  first, not merely nearest in time (issue #1237: with several rotating
+ *  scheduled Routines now firing every 90min-2h, the chronologically-nearest
+ *  sessions are usually a different Skill's, which made the old time-only
+ *  bracket mostly noise). A side shorter than `n` (including empty) means
+ *  that's genuinely all the domain-matching history available there — the
+ *  bracket never pads with unrelated, merely-nearby sessions to reach `n`.
+ *  Raw material for judging whether behavior around a Skill changed after a
+ *  manual or `audit-docs` edit to its `SKILL.md`. Purely mechanical: it
+ *  brackets, it does not conclude "regression" (ADR-0015). `before`/`after`
+ *  are session ids, not full objects — look them up in the Scorecard's
+ *  `regressionSessions` (deduped: the same session commonly brackets several
+ *  Skills' edits, and embedding it once per check bloated the scorecard well
+ *  past what's worth handing a Skill run in one shot). */
 export interface RegressionCheck {
   skill: string
   edit: SkillEdit
@@ -485,17 +492,27 @@ export function buildSkillRows(
   })
 }
 
-/** All sessions with `endedAt` strictly before `editDate` (up to `n`, nearest
- *  first) and all sessions at-or-after it (up to `n`, nearest first). Anchored
- *  at an arbitrary timestamp rather than "now", unlike `pickWindow` — an edit
- *  can sit outside the primary recency window entirely. */
+/** Of the sessions whose `skillsUsed` actually names `skillName`: those with
+ *  `endedAt` strictly before `editDate` (up to `n`, nearest first) and those
+ *  at-or-after it (up to `n`, nearest first). Anchored at an arbitrary
+ *  timestamp rather than "now", unlike `pickWindow` — an edit can sit outside
+ *  the primary recency window entirely. `sessions` is expected to be the full,
+ *  un-windowed corpus (as `buildRegressionChecks` passes it): the search for
+ *  domain-matching sessions is therefore already unbounded — a side coming
+ *  back shorter than `n` (including empty) means that's genuinely all the
+ *  matching history that exists there, not an artifact of a narrow search
+ *  (issue #1237). It never pads a short side with a domain-mismatched but
+ *  chronologically-nearer session — reporting the true, possibly-thin count
+ *  is more honest than diluting it with noise. */
 export function bracketSessions(
   sessions: WindowSession[],
   editDate: string,
+  skillName: string,
   n = REGRESSION_BRACKET,
   excludeSession?: string,
 ): { before: WindowSession[]; after: WindowSession[] } {
-  const sorted = [...sessions].sort((a, b) => a.endedAt.localeCompare(b.endedAt))
+  const domainMatch = sessions.filter((s) => s.skillsUsed.some((u) => u.name === skillName))
+  const sorted = domainMatch.sort((a, b) => a.endedAt.localeCompare(b.endedAt))
   const before = sorted.filter((s) => s.endedAt < editDate).slice(-n)
   // Excludes the edit's own authoring session — otherwise it necessarily ends
   // at-or-after its own commit and brackets its own edit (issue #1214).
@@ -504,11 +521,12 @@ export function bracketSessions(
 }
 
 /** For each own (non-external) Skill's `maxEditsPerSkill` most recent edit
- *  commits, bracket the sessions around it. Skips a Skill with no edits, and
- *  skips an edit with no session data on either side (nothing to compare).
- *  Returns checks referencing session ids plus the deduped pool of sessions
- *  those ids resolve against — the same session routinely brackets more than
- *  one Skill's edit, and embedding its full object every time is the single
+ *  commits, bracket the domain-matching sessions around it (`bracketSessions`).
+ *  Skips a Skill with no edits, and skips an edit with no domain-matching
+ *  session data on either side (nothing to compare). Returns checks
+ *  referencing session ids plus the deduped pool of sessions those ids
+ *  resolve against — the same session routinely brackets more than one
+ *  Skill's edit, and embedding its full object every time is the single
  *  biggest driver of scorecard size. */
 export function buildRegressionChecks(
   allSessions: WindowSession[],
@@ -523,7 +541,7 @@ export function buildRegressionChecks(
     if (external.has(name)) continue
     const recent = [...edits].sort((a, b) => b.date.localeCompare(a.date)).slice(0, maxEditsPerSkill)
     for (const edit of recent) {
-      const { before, after } = bracketSessions(allSessions, edit.date, n, edit.session)
+      const { before, after } = bracketSessions(allSessions, edit.date, name, n, edit.session)
       if (before.length === 0 && after.length === 0) continue
       for (const s of before) pool.set(s.session, s)
       for (const s of after) pool.set(s.session, s)
