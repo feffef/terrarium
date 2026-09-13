@@ -415,9 +415,7 @@ describe('docsReadViaShell (issue #1074)', () => {
     expect(scan.paths.sort()).toEqual(['CONTEXT.md', 'docs/agents/domain.md'])
   })
 
-  // Issue #1206: the advisory over this scan told the authoring agent to check
-  // every path against what IT ran, so correct delegated work read as a false
-  // positive and was repeatedly reported as a friction.
+  // Issue #1206: the advisory over this scan needs the split, not just the union.
   it('separates a path only a subagent read from the session’s own', () => {
     const scan = shellReadScanOf(withCwd('cat CONTEXT.md'), [withCwd('cat docs/agents/domain.md')])
     expect(scan.subagentPaths).toEqual(['docs/agents/domain.md'])

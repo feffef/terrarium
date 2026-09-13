@@ -183,14 +183,12 @@ is a normal PR.
 `cat`/`sed`/`grep` command streamed into this session's work (`docsReadViaShell`),
 and the candidates it *rejected* with the rule that rejected each. Read both lists
 against the session you just lived through: a rejected command that really did
-show you the file is a **miss**. (ADR-0009's shell-read amendment says why the
-rejects are printed at all.)
+show the file — to you or to a subagent you dispatched — is a **miss**.
+(ADR-0009's shell-read amendment says why the rejects are printed at all.)
 
 The field folds in what you **delegated**, exactly as `filesRead` does (issue
-#796) — a path the report marks *via a dispatched subagent* was shown to that
-subagent's shell, not yours. That is a correct entry: judging the list by what
-*you personally* ran is what made a run of sessions report correct entries as
-false positives (issue #1206).
+#796), and the report marks those paths — so read it against the session
+including its subagents, not against what you personally typed (issue #1206).
 
 **You cannot correct the field** — it is derived, and an authored
 `docsReadViaShell` is refused by name. A wrong result is reported as a Friction

@@ -281,10 +281,7 @@ describe('reportShellReads (the author-time verification report)', () => {
     expect(run('/repo', mkdtempSync(join(tmpdir(), 'shellread-empty-')))).toEqual([])
   })
 
-  // Issue #1206: this report's own instruction text asserted a parent-only
-  // criterion over a knowingly folded list, so a doc a dispatched subagent's
-  // shell really did read — a correct entry (FOLDED_TRACE_FIELDS) — read as a
-  // false positive, and the text then mandated a friction at floor severity.
+  // Issue #1206: a parent-only criterion asserted over a knowingly folded list.
   it('marks a path a dispatched subagent read, rather than claiming the session ran it', () => {
     const home = store('/repo', ['git merge --ff-only origin/main'], ['cat docs/agents/guards.md'])
     const out = run('/repo', home).join('\n')

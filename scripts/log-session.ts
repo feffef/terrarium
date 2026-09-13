@@ -144,9 +144,11 @@ const authoredScratchSchema = z
  *  generic error (issue #1074). */
 const DERIVED_ONLY_FIELDS: Record<string, string> = {
   docsReadViaShell:
-    'it is derived from the transcript and an agent may not correct it. If the detected list is wrong, ' +
-    "log a Friction instead — severity at least 'moderate', with the marker SHELL-READ-DETECTION, the " +
-    'command verbatim, the path expected, and whether it was a miss or a false positive.',
+    'it is derived from the transcript and an agent may not correct it. It covers what subagents this ' +
+    'session dispatched read, not only what the session itself ran, so a path you did not run is not ' +
+    "wrong on that ground alone. If it is wrong even so, log a Friction instead — severity at least 'moderate', " +
+    'with the marker SHELL-READ-DETECTION, the command verbatim, the path expected, and whether it was a ' +
+    'miss or a false positive.',
 }
 
 export function validateAuthored(
@@ -747,8 +749,8 @@ export function reportShellReads(cwd: string, log: (line: string) => void = cons
 
   log('')
   log(`  docsReadViaShell — ${scan.paths.length} instruction doc(s) detected as read via shell:`)
-  const folded = new Set(scan.subagentPaths)
-  for (const p of scan.paths) log(`    ${p}${folded.has(p) ? ' — via a dispatched subagent' : ''}`)
+  const delegatedOnly = new Set(scan.subagentPaths)
+  for (const p of scan.paths) log(`    ${p}${delegatedOnly.has(p) ? ' — via a dispatched subagent' : ''}`)
   if (scan.nearMisses.length) {
     log(`  Not counted (${scan.nearMisses.length}), and why:`)
     for (const m of scan.nearMisses.slice(0, NEAR_MISS_LIMIT)) {
@@ -759,7 +761,7 @@ export function reportShellReads(cwd: string, log: (line: string) => void = cons
       log(`    …and ${scan.nearMisses.length - NEAR_MISS_LIMIT} more`)
     }
   }
-  if (folded.size) {
+  if (delegatedOnly.size) {
     log('  A path marked "via a dispatched subagent" was read by that subagent\'s own shell,')
     log('  and is folded in by design (issue #796) — a correct entry, nothing to report.')
   }
