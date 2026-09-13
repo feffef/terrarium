@@ -88,55 +88,6 @@ trials:
       authority" for whether a specific grant (audit-docs) is narrower than a
       general low-risk-auto-merges policy.
   - problem: >
-      `docs/agents/environment-caveats.md`'s ".github/workflows/*" entry
-      spent 23 lines narrating a scenario `scripts/workflow-edit-guard.ts`
-      now mechanically prevents: a verbatim dump of the `git push`/contents-
-      API rejection text, a paragraph re-deriving "the sharp edge is the
-      commit, not the file" that the guard's own `formatGuardMessage` states
-      near-verbatim ("The sharp edge is the COMMIT, not the push. Agent
-      credentials lack the `workflow` OAuth scope, and the rejection is
-      evaluated over every commit in the ref update — so one workflow edit
-      committed alongside real work means you can push NONE of it..."), and
-      a debunking of a specific stale 2026-07-10 session-log claim that is
-      now unreachable anyway (the guard denies the write before a session
-      ever gets far enough to test the old claim). CLAUDE.md's own "Hitting
-      a needed .github/workflows/* edit?" bullet already pointed here for
-      "the underlying mechanism" and "the guard's documented gaps" — updated
-      in the same commit to point at the guard's deny message and
-      `guards.md`'s Known gaps instead, since that detail no longer lives
-      here. Same shape as the already-landed provenance/trailer compression.
-      Net -16 lines (CLAUDE.md + environment-caveats.md combined).
-    territory:
-      paths:
-        - "docs/agents/environment-caveats.md: the \".github/workflows/*\" bullet"
-        - "CLAUDE.md: the \"Hitting a needed .github/workflows/* edit?\" bullet (Working conventions)"
-      keywords:
-        - workflow-edit-guard.ts
-        - .github/workflows
-        - workflow OAuth scope
-        - the sharp edge is the commit
-        - docs/proposals
-        - issue #659
-        - issue #897
-    opened: 2026-09-09
-    proven: true
-    check: >
-      Damage is a session that, hitting a needed `.github/workflows/*` edit,
-      tries to push it anyway, tries to route around a workflow-edit-guard
-      denial instead of reading its deny message, bundles the workflow edit
-      into the same commit as unrelated real work (stranding that work when
-      the commit is refused), or can't find where to actually put the change
-      for a human to apply. NOT damage: a session that gets denied and reads
-      the guard's deny message rather than this doc for the why (the intended
-      point-of-need design working), or one that goes straight to
-      `docs/proposals/` without ever needing the mechanism explanation. A
-      Sonnet probe given only the compressed text correctly derived: don't
-      push the edit (the guard refuses it before a commit exists); don't
-      route around a denial — read the guard's deny message and follow it;
-      never let the workflow edit share a commit with unrelated real work,
-      since a refused commit strands the whole ref update; and the actual
-      destination is `docs/proposals/`, per its own README.
-  - problem: >
       CLAUDE.md's "Don't state anything as settled" bullet (Working
       conventions) bundled four sub-rules — identifier resolution, factual/
       causal/behavioral claims, another session's hearsay, and set counts —
@@ -238,3 +189,54 @@ trials:
       indefinitely; on a session-resume scenario, it correctly re-verified a
       registered `CronCreate` job and a backgrounded subagent's liveness
       explicitly rather than assuming continuity across the resume.
+  - problem: >
+      `docs/adr/0004-objective-safety-gate.md` had three amendment blocks doing
+      the ADR-0003-ledger thing: hand-copying the human-only-surface file list
+      (2026-07-10), then an amendment that existed *only* to catch that copy
+      back up after ADR-0025 added three files (2026-07-22), then a third
+      amendment (2026-09-03) whose entire content was "stop doing this, point
+      to CLAUDE.md's Ground rules instead" — the exact self-documented-failure
+      shape this Skill's §2 flags, and CLAUDE.md's Ground rules already *is*
+      the single home (it says so itself: "The pinned seven above are the
+      manifest-expansion/routing/catalog family"). Compressed the 2026-07-10
+      amendment to keep its one genuine fact (the Decision's "generator"
+      terminology is stale, per ADR-0013/ADR-0014) and drop the copied list;
+      trimmed 2026-07-22 to state only its own addition (three files, per
+      ADR-0025) instead of re-quoting the whole list to update it; deleted
+      2026-09-03 entirely, folding its "don't re-enumerate" instruction into
+      the 2026-07-10 amendment as the natural place for it. Decision and
+      Consequences untouched, per ADR-0027's bound. Net -18 lines (194 → 176,
+      one file).
+    territory:
+      paths:
+        - "docs/adr/0004-objective-safety-gate.md: the 2026-07-10, 2026-07-22, and 2026-09-03 amendment blocks"
+      keywords:
+        - human-only surface
+        - generator terminology
+        - shared/expand.ts
+        - shared/kinds.ts
+        - modules/catalog.ts
+        - app/composables/catalog.ts
+        - re-enumerate
+    opened: 2026-09-13
+    proven: true
+    check: >
+      Damage is a session that, needing the current human-only-surface file
+      list, reads ADR-0004's compressed amendments and either can't find it
+      (fails to follow the pointer to CLAUDE.md's Ground rules), treats the
+      now-shorter ADR-0004 text as itself authoritative and stale-copies it
+      into a fourth amendment (repeating exactly the failure this prune
+      fixes), or misses that `shared/kinds.ts`/`modules/catalog.ts`/
+      `app/composables/catalog.ts` are part of the human-only family because
+      the 2026-07-22 amendment no longer re-quotes the whole list next to
+      them. NOT damage: a session that opens CLAUDE.md's Ground rules for the
+      current complete list instead of finding it inline in the ADR (the
+      intended single-home design), or one that never needs this list this
+      run. A Sonnet probe given only the compressed ADR-0004 text correctly
+      named CLAUDE.md's Ground rules as the current authoritative list rather
+      than treating the ADR's own (now-partial) amendment text as complete,
+      correctly identified that the "generator" terminology in the Decision
+      section below is historical framing rather than a live mechanism, and
+      correctly refused to add a fourth list-restating amendment when asked
+      to record a new human-only file, instead extending CLAUDE.md's Ground
+      rules directly.

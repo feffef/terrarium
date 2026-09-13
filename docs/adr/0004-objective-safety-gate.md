@@ -28,17 +28,12 @@ Prune Trials by ADR-0027
 > surface is otherwise low-risk.
 
 > **Amended (2026-07-10).** The Decision's "generator" terminology below is
-> stale: [ADR-0013](0013-dynamic-content-config-committed-routing-map.md) made
-> `content.config.ts` an ordinary, hand-editable module (no generator produces
-> it), and [ADR-0014](0014-build-time-virtual-routing-module.md) deleted
-> `scripts/generate.ts` entirely — no "generator" exists anymore. Read the L0
-> bullet's "the generator produces `content.config.ts`", the Auto-merge
-> eligibility "generator, routing" phrase, and the Consequences' "generator
-> bug"/"generator/routing/isolation/CI" mentions below as historical framing
-> from before that split. The current human-only surface is named explicitly
-> in CLAUDE.md's Ground rules: `content.config.ts`, `shared/expand.ts`,
-> `modules/routing.ts`, `shared/routing.ts`, isolation logic, CI, and
-> governance/ADRs.
+> stale — [ADR-0013](0013-dynamic-content-config-committed-routing-map.md) and
+> [ADR-0014](0014-build-time-virtual-routing-module.md) removed it; read every
+> "generator"/"routing/isolation/CI" mention below as historical framing from
+> before that split. The current human-only surface is CLAUDE.md's Ground
+> rules — the single home; no amendment here should re-enumerate it (two later
+> amendments tried, and both went stale the next time the list changed).
 
 > **Amended (2026-07-07).** *Where the gate's tests live, as the Platform grows.*
 > A test is **homed with the code it exercises**: a Tenant-specific test lives in
@@ -109,14 +104,10 @@ Prune Trials by ADR-0027
 > is narrower than the general phrasing below implies.
 
 > **Amended by [ADR-0025](0025-cross-tenant-catalog-and-collection-kinds.md)
-> (2026-07-22).** The 2026-07-10 amendment's human-only-surface enumeration
-> above — `content.config.ts`, `shared/expand.ts`, `modules/routing.ts`,
-> `shared/routing.ts`, isolation logic, CI, and governance/ADRs — is missing
-> three files ADR-0025 joins to that same isolation-critical family:
-> `shared/kinds.ts`, `modules/catalog.ts`, and `app/composables/catalog.ts`.
-> CLAUDE.md's Ground rules already list all seven; this note brings this ADR's
-> own enumeration back in sync with it. See ADR-0025's Consequences for why
-> those three files carry the same never-auto-merge risk.
+> (2026-07-22).** `shared/kinds.ts`, `modules/catalog.ts`, and
+> `app/composables/catalog.ts` join the human-only surface, for the reasons in
+> ADR-0025's Consequences. (CLAUDE.md's Ground rules is where the full current
+> list lives — see the 2026-07-10 amendment above.)
 
 > **Amended (2026-07-30, `/audit-docs`).** *What counts as "changes
 > untested/untestable runtime behaviour"* (the 2026-07-06 amendment above) was
@@ -131,14 +122,6 @@ Prune Trials by ADR-0027
 > change with real test coverage does **not** clear the bar merely for touching
 > unfamiliar code. `frictions-to-fixes` — the reviewer-agent this axis is aimed
 > at (ADR-0003) — should point here rather than restating this list.
-
-> **Amended (2026-09-03, `/audit-docs`).** The 2026-07-10 and 2026-07-22
-> amendments above each had to hand-copy the human-only-surface file list, and
-> the second existed only to catch the first's copy back up with CLAUDE.md's
-> Ground rules after ADR-0025 added three files — restating the list here is
-> exactly the drift the single-home rule warns against. No future amendment
-> should re-enumerate that list: point to CLAUDE.md's Ground rules for the
-> current one instead.
 
 ## Context
 
