@@ -75,11 +75,16 @@ It prints JSON:
   them, never edits or drops one), its SKILL.md `description`, and `usedIn`
   (every windowed session that invoked it). Pass `--window N` to widen/narrow.
 - **`regressionChecks`** — for each of our own (non-external) Skills' single
-  most recent `SKILL.md` edit commit, the ids of the sessions immediately
-  before and after that commit's date (independent of the primary window
-  above — an edit can be older than the newest 40 sessions). Resolve ids
-  against **`regressionSessions`** — a deduped pool, since the same session
-  commonly brackets more than one Skill's edit.
+  most recent `SKILL.md` edit commit, the ids of the nearest sessions whose
+  `skillsUsed` actually names that Skill, before and after that commit's date
+  (independent of the primary window above — an edit can be older than the
+  newest 40 sessions, and the search itself is unbounded, not limited to that
+  window; issue #1237). A side shorter than the bracket size — including
+  empty — means that really is all the domain-matching history there is on
+  that side, not a narrow search: it's never padded with unrelated,
+  merely-nearby sessions. Resolve ids against **`regressionSessions`** — a
+  deduped pool, since the same session commonly brackets more than one Skill's
+  edit.
 - **`orphanedSessions`** — every session recorded as the origin of a **merged
   pull request** (its ADR-0017 header, or the legacy `Claude-Session:` footer)
   with **no** matching file anywhere in the sessions Collection (current or
@@ -234,22 +239,24 @@ ad-hoc membership/comparison check against them (here or anywhere else in this
 run) must extract `.name` first, or it silently evaluates false.
 
 **Phase A — cheap screen.** Read `regressionChecks`, resolving `before`/`after`
-ids against `regressionSessions`. For each bracketed edit, compare the
-`before`/`after` sessions': did the Skill fire where its kind of work
-recurred, and **did friction severity/count look worse after** (more entries,
-or a shift toward `moderate`/`major`/`blocker`)? This screen only catches
-*usage-rate* and *coarse friction-count* shifts — it can't tell you the
-frictions were actually about this Skill's edited guidance rather than
-something unrelated, because it only has severities, not content. Treat a
-signal here as **suspected, not confirmed**. A bracket with zero `usedIn` on
-**both** sides is a no-signal case — skip it immediately rather than treating
-it as an inconclusive-but-real before/after comparison. The split is
-`endedAt` vs. the edit commit date, excluding the edit's own authoring session
-from its `after` bracket (issue #1214) — so a session whose `endedAt` lands
-close to that boundary can still be bracketed on the wrong side of its actual
-work — when that's plausible, check the session's real invocation/work timing
-against the
-edit's exact timestamp before trusting which side it fell on.
+ids against `regressionSessions` — each already used the edited Skill
+(`bracketSessions` selects by `skillsUsed`, issue #1237), so there's no
+separate "did the Skill fire" check to make; a check exists at all only when
+at least one side has domain-matching history. For each bracketed edit,
+compare the `before`/`after` sessions: **did friction severity/count look
+worse after** (more entries, or a shift toward `moderate`/`major`/`blocker`)?
+This screen only catches *usage-rate* and *coarse friction-count* shifts — it
+can't tell you the frictions were actually about this Skill's edited guidance
+rather than something unrelated, because it only has severities, not content.
+Treat a signal here as **suspected, not confirmed**, and weigh a side shorter
+than the full bracket (including empty) as thinner evidence rather than a
+missing comparison to chase down — it's already the true count, not a
+narrowed search. The split is `endedAt` vs. the edit commit date, excluding
+the edit's own authoring session from its `after` bracket (issue #1214) — so a
+session whose `endedAt` lands close to that boundary can still be bracketed on
+the wrong side of its actual work — when that's plausible, check the
+session's real invocation/work timing against the edit's exact timestamp
+before trusting which side it fell on.
 
 **Phase B — deep-read, only for a suspected Skill.** Before judging anything,
 `Read` every file `skillSessionFiles[name]` lists — as much of that Skill's

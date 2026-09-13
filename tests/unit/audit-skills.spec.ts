@@ -260,42 +260,81 @@ describe('toSessionFile() — external exclusion (ADR-0009 amendment)', () => {
 })
 
 describe('bracketSessions()', () => {
+  const used = (name: string) => [{ name, reason: 'r' }]
   const sessions = [
-    sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z' }),
-    sess({ session: 'b', endedAt: '2026-07-02T00:00:00Z' }),
-    sess({ session: 'c', endedAt: '2026-07-03T00:00:00Z' }),
-    sess({ session: 'd', endedAt: '2026-07-04T00:00:00Z' }),
-    sess({ session: 'e', endedAt: '2026-07-05T00:00:00Z' }),
+    sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: used('our-skill') }),
+    sess({ session: 'b', endedAt: '2026-07-02T00:00:00Z', skillsUsed: used('our-skill') }),
+    sess({ session: 'c', endedAt: '2026-07-03T00:00:00Z', skillsUsed: used('our-skill') }),
+    sess({ session: 'd', endedAt: '2026-07-04T00:00:00Z', skillsUsed: used('our-skill') }),
+    sess({ session: 'e', endedAt: '2026-07-05T00:00:00Z', skillsUsed: used('our-skill') }),
   ]
 
   it('splits strictly-before vs at-or-after the edit date', () => {
-    const { before, after } = bracketSessions(sessions, '2026-07-03T00:00:00Z', 10)
+    const { before, after } = bracketSessions(sessions, '2026-07-03T00:00:00Z', 'our-skill', 10)
     expect(before.map((s) => s.session)).toEqual(['a', 'b'])
     expect(after.map((s) => s.session)).toEqual(['c', 'd', 'e'])
   })
 
   it('keeps only the n nearest sessions on each side', () => {
-    const { before, after } = bracketSessions(sessions, '2026-07-03T00:00:00Z', 1)
+    const { before, after } = bracketSessions(sessions, '2026-07-03T00:00:00Z', 'our-skill', 1)
     expect(before.map((s) => s.session)).toEqual(['b'])
     expect(after.map((s) => s.session)).toEqual(['c'])
   })
 
   it('returns empty brackets when the edit date falls outside all session dates', () => {
-    const { before, after } = bracketSessions(sessions, '2020-01-01T00:00:00Z', 10)
+    const { before, after } = bracketSessions(sessions, '2020-01-01T00:00:00Z', 'our-skill', 10)
     expect(before).toEqual([])
     expect(after.map((s) => s.session)).toEqual(['a', 'b', 'c', 'd', 'e'])
   })
 
   it('excludes the edit\'s own authoring session from its after bracket, but not an unrelated one at the same endedAt (issue #1214)', () => {
-    expect(bracketSessions(sessions, '2026-07-03T00:00:00Z', 10, 'c').after.map((s) => s.session)).toEqual(['d', 'e'])
-    expect(bracketSessions(sessions, '2026-07-03T00:00:00Z', 10, 'other').after.map((s) => s.session)).toEqual(['c', 'd', 'e'])
+    expect(bracketSessions(sessions, '2026-07-03T00:00:00Z', 'our-skill', 10, 'c').after.map((s) => s.session)).toEqual(['d', 'e'])
+    expect(bracketSessions(sessions, '2026-07-03T00:00:00Z', 'our-skill', 10, 'other').after.map((s) => s.session)).toEqual(['c', 'd', 'e'])
+  })
+
+  it('only brackets sessions whose skillsUsed actually names the edited Skill, not merely nearby ones (issue #1237)', () => {
+    const mixed = [
+      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: used('other-skill') }),
+      sess({ session: 'b', endedAt: '2026-07-02T00:00:00Z', skillsUsed: used('our-skill') }),
+      sess({ session: 'c', endedAt: '2026-07-04T00:00:00Z', skillsUsed: used('other-skill') }),
+      sess({ session: 'd', endedAt: '2026-07-05T00:00:00Z', skillsUsed: used('our-skill') }),
+    ]
+    const { before, after } = bracketSessions(mixed, '2026-07-03T00:00:00Z', 'our-skill', 10)
+    expect(before.map((s) => s.session)).toEqual(['b'])
+    expect(after.map((s) => s.session)).toEqual(['d'])
+  })
+
+  it('a `skillsUsed` entry naming a bare-string-like object without a matching `.name` never counts as a match', () => {
+    const s = sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: [{ name: 'unrelated', reason: 'r' }] })
+    const { before } = bracketSessions([s], '2026-07-03T00:00:00Z', 'our-skill', 10)
+    expect(before).toEqual([])
+  })
+
+  it('reports a side genuinely short of domain-matching history as-is, rather than padding it with a chronologically-nearer mismatch (issue #1237)', () => {
+    const thin = [
+      sess({ session: 'far', endedAt: '2026-06-01T00:00:00Z', skillsUsed: used('our-skill') }),
+      sess({ session: 'near-mismatch', endedAt: '2026-07-02T23:00:00Z', skillsUsed: used('other-skill') }),
+    ]
+    const { before } = bracketSessions(thin, '2026-07-03T00:00:00Z', 'our-skill', 5)
+    expect(before.map((s) => s.session)).toEqual(['far'])
+  })
+
+  it('returns an empty side when no session in the entire corpus ever used the Skill on that side (issue #1237)', () => {
+    const noneMatch = [
+      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: used('other-skill') }),
+      sess({ session: 'b', endedAt: '2026-07-05T00:00:00Z', skillsUsed: used('other-skill') }),
+    ]
+    const { before, after } = bracketSessions(noneMatch, '2026-07-03T00:00:00Z', 'our-skill', 5)
+    expect(before).toEqual([])
+    expect(after).toEqual([])
   })
 })
 
 describe('buildRegressionChecks()', () => {
+  const used = (name: string) => [{ name, reason: 'r' }]
   const sessions = [
-    sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z' }),
-    sess({ session: 'b', endedAt: '2026-07-05T00:00:00Z' }),
+    sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: used('our-skill') }),
+    sess({ session: 'b', endedAt: '2026-07-05T00:00:00Z', skillsUsed: used('our-skill') }),
   ]
 
   it('skips external (pack) Skills even if edits are known', () => {
@@ -316,6 +355,17 @@ describe('buildRegressionChecks()', () => {
     expect(buildRegressionChecks([], edits, new Set())).toEqual({ checks: [], sessions: [] })
   })
 
+  it('skips an edit whose Skill no session in the corpus ever used, even with plenty of chronologically-nearby sessions (issue #1237)', () => {
+    const unrelated = [
+      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: used('other-skill') }),
+      sess({ session: 'b', endedAt: '2026-07-05T00:00:00Z', skillsUsed: used('other-skill') }),
+    ]
+    const edits = new Map<string, SkillEdit[]>([
+      ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
+    ])
+    expect(buildRegressionChecks(unrelated, edits, new Set())).toEqual({ checks: [], sessions: [] })
+  })
+
   it('brackets an own Skill edit that falls within the session history, referencing sessions by id', () => {
     const edits = new Map<string, SkillEdit[]>([
       ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
@@ -324,6 +374,21 @@ describe('buildRegressionChecks()', () => {
     expect(checks).toHaveLength(1)
     expect(checks[0]).toMatchObject({ skill: 'our-skill', edit: { sha: 's1' }, before: ['a'], after: ['b'] })
     expect(pool.map((s) => s.session)).toEqual(['a', 'b'])
+  })
+
+  it('brackets only the domain-matching side when the other side has real but unrelated sessions nearby (issue #1237)', () => {
+    const mixed = [
+      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: used('our-skill') }),
+      sess({ session: 'x', endedAt: '2026-07-04T00:00:00Z', skillsUsed: used('other-skill') }),
+    ]
+    const edits = new Map<string, SkillEdit[]>([
+      ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
+    ])
+    const { checks, sessions: pool } = buildRegressionChecks(mixed, edits, new Set())
+    // 'x' never used our-skill, so the after bracket is honestly empty rather
+    // than padded with it — the check still fires because 'before' has data.
+    expect(checks[0]).toMatchObject({ before: ['a'], after: [] })
+    expect(pool.map((s) => s.session)).toEqual(['a'])
   })
 
   it('caps at the n most recent edits per Skill', () => {
@@ -343,8 +408,8 @@ describe('buildRegressionChecks()', () => {
 
   it('excludes an edit\'s own authoring session from its after bracket, keeping an unrelated same-time session (issue #1214)', () => {
     const withAuthor = [
-      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z' }),
-      sess({ session: 'b', endedAt: '2026-07-05T00:00:00Z' }),
+      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: used('our-skill') }),
+      sess({ session: 'b', endedAt: '2026-07-05T00:00:00Z', skillsUsed: used('our-skill') }),
     ]
     const edits = new Map<string, SkillEdit[]>([
       ['our-skill', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit', session: 'b' }]],
@@ -354,11 +419,15 @@ describe('buildRegressionChecks()', () => {
   })
 
   it('dedupes a session referenced by more than one Skill\'s bracket into one pool entry', () => {
+    const bothSkills = [
+      sess({ session: 'a', endedAt: '2026-07-01T00:00:00Z', skillsUsed: [...used('skill-one'), ...used('skill-two')] }),
+      sess({ session: 'b', endedAt: '2026-07-05T00:00:00Z', skillsUsed: [...used('skill-one'), ...used('skill-two')] }),
+    ]
     const edits = new Map<string, SkillEdit[]>([
       ['skill-one', [{ sha: 's1', date: '2026-07-03T00:00:00Z', subject: 'edit' }]],
       ['skill-two', [{ sha: 's2', date: '2026-07-04T00:00:00Z', subject: 'edit' }]],
     ])
-    const { checks, sessions: pool } = buildRegressionChecks(sessions, edits, new Set())
+    const { checks, sessions: pool } = buildRegressionChecks(bothSkills, edits, new Set())
     expect(checks).toHaveLength(2)
     // session 'b' brackets both edits (after s1, before s2) but appears once in the pool
     expect(pool.filter((s) => s.session === 'b')).toHaveLength(1)
