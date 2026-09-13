@@ -1,0 +1,54 @@
+schemaVersion: 1
+session: session_01NPk4WmPYmWcQWhWKCosyhU
+startedAt: 2026-09-13T00:45:37Z
+endedAt: 2026-09-13T01:02:32Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: "No grade changes; PR #1236 merged, #1206 comment added"
+summary: "Autonomous, scheduled kickoff (no human prompt) of the audit-skills self-improvement loop. Ran scripts/audit-skills.ts's scorecard over the 40-session window, which turned out to be unusually homogeneous: every session was one of six rotating scheduled Routines (audit-docs, audit-skills, blog-post, digest, frictions-to-fixes, prune-trial) plus two interactive sessions, with no implement/domain-modeling/triage/code-landing work in-window — so no step-3 bright-line grade/role changes applied (a Skill unused only because its kind of session didn't occur keeps its grade). orphanedSessions (2) both carried a resolvedBy cutoff, read-only; orphanSuppressionLog matched them; humanPromptedClosures/ manuallyRescuedClosures were both empty; misclassifiedKind flagged one session, noted for awareness only per #449's spec. Step 4's Phase A screened all 14 regressionChecks brackets; most had zero or one domain-matching session per side (the six-Routine rotation dilutes the nearest-N-chronological bracketing), recorded as an idea on audit-skills.yml. The one real Phase A signal (dispatch-subagents) went to Phase B and landed inconclusive after a full deep-read. While deep-reading that session, found a sixth docsReadViaShell false-positive (a new git-merge/stash file-list-mistaken-for-content shape) for the standing #1206 thread — commented there and appended log-session.yml's observations. Opened, gated, and self-merged PR #1236 (Inventory-YAML-only, per this Skill's own merge tier) citing both observations entries."
+prs:
+  - "1236"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe + merge tier
+  - path: CLAUDE.md
+    reason: branch/commit-trailer/PR-provenance conventions
+  - path: layers/journal/content/current/skills/log-session.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/audit-skills.yml
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-skills
+    reason: invoked as the scheduled Routine's own slash command
+  - name: close-session
+    reason: "PR already merged before closure, so logged status: completed directly"
+  - name: log-session
+    reason: author this entry
+frictions:
+  - description: audit-skills.ts's regressionChecks brackets by nearest-N-chronological session, not by whether that session actually invoked the edited Skill. With the window now saturated by six rotating scheduled Routines firing every 90min-2h, most brackets (audit-docs, audit-skills, blog-post, frictions-to-fixes, prune-trial, auto-triage) had zero or one domain-matching session per side, making the coarse Phase A severity/count comparison mostly noise from unrelated Skills' sessions rather than signal about the edited one.
+    solution: "Recorded as an idea on audit-skills.yml rather than fixed here (code change to scripts/audit-skills.ts, outside this Skill's Inventory-YAML-only mandate): bracket by nearest N sessions that actually named the edited Skill in skillsUsed, not nearest N chronologically."
+    severity: minor
+durationSec: 1015
+models:
+  claude-sonnet-5: 89
+toolCounts:
+  Bash: 32
+  Read: 5
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  Edit: 2
+  mcp__github__add_issue_comment: 2
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - layers/journal/content/current/skills/log-session.yml
+  - layers/journal/content/current/skills/audit-skills.yml
+gitBranch: claude/upbeat-sagan-lmhkbk
+entrypoint: remote_trigger
+cliVersion: 2.1.270
+trigger: audit-skills
+landedBy: Stop
