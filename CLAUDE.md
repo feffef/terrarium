@@ -347,8 +347,8 @@ pnpm gate:scoped        # local fast feedback — floor always; heavy layers onl
 pnpm gate:scoped --dry  # print the decision + planned steps, run nothing
 ```
 
-**Iterating on content only?** `pnpm validate:content` is a three-script chain
-(`scripts/validate-content.ts && scripts/validate-content-refs.ts && scripts/validate-skill-cadence.ts`)
+**Iterating on content only?** `pnpm validate:content` is a four-script chain
+(`scripts/validate-content.ts && scripts/validate-content-refs.ts && scripts/validate-skill-cadence.ts && scripts/validate-prune-trials.ts`)
 — the first actually runs each Document's data through its Collection's Zod schema
 (`.safeParse()`) against real content, which `pnpm build` never does (`pnpm build` only
 uses the schema to derive SQL column types — why: single-homed in
@@ -359,7 +359,9 @@ that isn't a real Specimen) and Atlas MDC structural invariants (unclosed contai
 phase-note/almanac cardinality — issue #446); the third flags a Skill Inventory entry
 that restates a Routine's schedule cadence (e.g. "runs daily") next to the word
 "Routine" — the "say a Skill *is* scheduled; never say *when*" convention above,
-previously unenforced (issue #813). `validate:content` checks every Tenant's content in
+previously unenforced (issue #813); the fourth strictly YAML-parses
+`.agents/prune-trials.yml` and fails on a malformed ledger (e.g. duplicate keys from
+a missing `- problem:` boundary, issue #1222). `validate:content` checks every Tenant's content in
 ~1-2s, without paying for `nuxt build` or `pnpm test:e2e`. It is the tightest inner loop
 — a subset of `gate:scoped`'s floor — for content-only edits, and **not a replacement
 for the CI gate**, which stays the mandatory merge gate (ADR-0004; see Ground rules
