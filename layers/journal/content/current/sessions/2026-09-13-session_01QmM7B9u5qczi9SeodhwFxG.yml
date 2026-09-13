@@ -1,0 +1,132 @@
+schemaVersion: 1
+session: session_01QmM7B9u5qczi9SeodhwFxG
+startedAt: 2026-09-13T07:06:35Z
+endedAt: 2026-09-13T07:53:01Z
+kind: interactive
+goal: Triage sweep, then fix shell-read advisory
+status: in-review
+outcome: "PR #1241 open, full gate green"
+summary: "Two human-instructed steps. `/auto-triage` swept 10 open issues and 0 open PRs; 8 were skipped (AI-authored last activity, or wayfinder:map), and two subagents triaged the eligible pair — #1206 to ready-for-agent, #1168 to ready-for-human. `/implement what's ready for agent` then built #1206's brief. Choosing #1206 over #864 was my judgment: #864 is wayfinder:grilling (HITL) and its body is open questions. Triage found the reported detector shapes were not bugs — the live defect was the author-time advisory judging a deliberately subagent-folded list by a parent-only criterion, and mandating a moderate friction when it failed. Fixed test-first, plus a near-miss canonicalization bug. Opening the PR was ADR-0003's automatic gated-PR step, not a separate ask."
+prs:
+  - "1241"
+docsRead:
+  - path: CLAUDE.md
+    reason: repo conventions, simplify-first, single-home
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: bravery bounds for the sweep
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: docsReadViaShell amendment and its consumer rule
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: brief format the subagents had to follow
+  - path: .agents/prune-trials.yml
+    reason: checked whether this session hit a live trial's territory
+  - path: scripts/shell-reads.ts
+    reason: (read before editing)
+  - path: scripts/session-trace.ts
+    reason: (read before editing)
+  - path: tests/unit/shell-reads.spec.ts
+    reason: (read before editing)
+  - path: tests/unit/session-trace.spec.ts
+    reason: (read before editing)
+  - path: tests/unit/log-session.spec.ts
+    reason: (read before editing)
+  - path: scripts/log-session.ts
+    reason: (read before editing)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (read before editing)
+  - path: .claude/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .claude/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: shared/trace-fields.ts
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+skillsUsed:
+  - name: auto-triage
+    reason: the sweep itself
+  - name: dispatch-subagents
+    reason: invoked before each parallel dispatch, per CLAUDE.md
+  - name: code-review
+    reason: "two-axis review of the #1206 fix"
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: (no reason given)
+  - name: implement
+    reason: (invoked as a slash command)
+frictions:
+  - description: A dispatched review subagent relayed another session's self-diagnosis as established fact, asserting a live bug my own reproduction had already ruled out.
+    solution: Falsified it against primary sources before acting. Territory of the open prune trial on CLAUDE.md's "Don't state anything as settled" bullet (opened 2026-09-11) — the compressed bullet held for me but not for the subagent, which is evidence for judging that trial.
+    severity: minor
+  - description: 'Twice I stated something as settled without verifying it: an unverified count ("six false reports") in committed prose, and three ADR filenames invented from their titles — the latter written INTO the friction that was itself about unverified claims.'
+    solution: Both caught before landing (the count pre-commit, the paths by `ls docs/adr/` before the log landed); the scratch had to be deleted and re-authored, since merging cannot reword a friction. Same territory as the trial named above — and the second instance shows the rule failing at exactly the moment the author believes they are applying it.
+    severity: minor
+  - description: "Issue #864 carries ready-for-agent while also carrying wayfinder:grilling, which ADR-0022 defines as HITL and routes to ready-for-human. The two labels contradict."
+    solution: Skipped it and flagged it rather than implementing an HITL ticket AFK. A later sweep should re-triage it to ready-for-human, or a human should confirm the grant was deliberate.
+    severity: minor
+  - description: "SHELL-READ-DETECTION, direction MISS. `sed -n 1,200p docs/adr/0022-*.md` streamed that ADR's full contents into the session, but it was rejected as \"not a literal path: glob or variable\". Same for `sed -n 1,60p docs/adr/0017-*.md` and `grep -n \"shell-read\" -i docs/adr/0009-*.md`. Expected paths: docs/adr/0022-autonomous-triage-sweep.md, docs/adr/0017-provenance-footer-on-agent-authored-content.md, docs/adr/0009-session-logs-commit-directly-to-main.md."
+    solution: "Likely by design rather than an extractor bug: `scanShellReads` is a pure function over transcript records with no filesystem access (ADR-0009), so it cannot know what a glob expanded to, and deliberately reports these as near-misses instead. A fix would need the shell's own expansion — e.g. crediting a single-file `docs/adr/NNNN-*.md` prefix glob when exactly one committed path matches. Recording per the report's floor rule; the `docs/adr/NNNN-*.md` shape is common enough in this repo to be worth a decision."
+    severity: moderate
+  - description: "The Edit tool could not match an old_string containing a literal `\0` escape sequence in the source; two attempts failed before falling back to a python rewrite."
+    solution: For a line carrying a backslash escape, verify the exact bytes first (`cat -A`) and use a scripted replacement rather than retyping the escape into the tool call.
+    severity: nit
+  - description: Piped `pnpm gate:scoped --dry` into `tail` and the tail-pipe guard denied it, costing a round trip.
+    solution: The guard's deny message named the fix exactly (redirect to a file, check `$?`, read the file); no doc change needed — the mechanism worked as designed.
+    severity: nit
+durationSec: 2785
+models:
+  claude-opus-5: 205
+toolCounts:
+  Bash: 68
+  Skill: 4
+  Agent: 4
+  Read: 11
+  Edit: 24
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  Write: 1
+filesEdited:
+  - tests/unit/shell-reads.spec.ts
+  - tests/unit/session-trace.spec.ts
+  - tests/unit/log-session.spec.ts
+  - scripts/shell-reads.ts
+  - scripts/session-trace.ts
+  - scripts/log-session.ts
+  - .agents/skills/log-session/SKILL.md
+docsReadViaShell:
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - .agents/skills/triage/OUT-OF-SCOPE.md
+  - docs/agents/triage-labels.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/guards.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/prune-trial/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Triage issue #1206"
+  - type: general-purpose
+    task: "Triage issue #1168"
+  - type: general-purpose
+    task: Standards axis review
+  - type: general-purpose
+    task: Spec axis review
+gitBranch: claude/auto-triage-gi6ple
+entrypoint: remote_mobile
+cliVersion: 2.1.270
+learnings:
+  - "`bashCommandsOf` extracts only a Bash tool_use's `input.command` — tool OUTPUT is never scanned, so a path appearing only in a command's output (e.g. git merge's \"Auto-merging <path>\") can never be credited to docsReadViaShell. This single fact falsifies two sessions' self-diagnoses on #1206."
+  - A `wayfinder:grilling` ticket can still carry `ready-for-agent`; the label pair is not mutually exclusive in practice, so an implement step must read the ticket type, not just the state label.
+ideas:
+  - "Give the shell-read advisory a `--explain <path>` mode that prints the exact command and record set (own transcript vs. which subagent) that credited a given path. Every recurring SHELL-READ-DETECTION friction on #1206 came from a session guessing at provenance it could not see; three separate sessions, plus a review subagent, each published a wrong mechanism from recollection. Provenance-on-demand turns that guess into a lookup and would retire the whole friction class, not just the parent-only wording this PR fixed."
+landedBy: Stop
