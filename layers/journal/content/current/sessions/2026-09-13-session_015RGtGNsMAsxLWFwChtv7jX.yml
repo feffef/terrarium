@@ -1,0 +1,76 @@
+schemaVersion: 1
+session: session_015RGtGNsMAsxLWFwChtv7jX
+startedAt: 2026-09-13T11:07:32Z
+endedAt: 2026-09-13T11:19:44Z
+kind: autonomous
+goal: Run scheduled /blog-post (bare invocation)
+status: in-review
+outcome: "PR #1242 opened, gate green, subscribed"
+summary: "Fully autonomous, scheduled firing of /blog-post with no persona given and no live human present. Ran the rotation gate (scripts/blog-rotation.ts: last karen, eligible david/eyra/kevin), drafted three full candidates to scratch (Kevin standalone on the vue 3.5.40 pin removal #926/PR #1232; Eyra reacting to Kevin's own Sept-11 dispatch-stall post via the next-day guard-dispatch rule PR #1231; David standalone on ADR-0027's Prune Trials), and had a fresh Sonnet subagent reviewer pick the strongest blind to the others. It chose the Kevin vue-pin draft for real stakes over the other two's narrower/unproven governance angles, and named three gaps (unglossed resolveComponent error, unlinked session-log claim, unclear pin timeline) folded into a revision. Gate green (79/79 e2e), PR #1242 opened and subscribed. All agent-initiated per the scheduled task's own mandate; no human input this session."
+prs:
+  - "1242"
+docsRead:
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: cross-checked Karen's most recent post for topic overlap before picking candidates
+  - path: docs/adr/0027-prune-trials.md
+    reason: grounding for the discarded David candidate
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-12-the-guard-blocked-the-test-and-missed-the-real-thing.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-11-session_01BAp91Z4KzsPjPtdSuqmqxL.yml
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-11-stuck-for-three-hours-nobody-knew.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-10-session_012HBWcB2dwY68PQZPVTnZbv.yml
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: invoked as a scheduled command
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Reached for ScheduleWakeup to wait on a dispatched Agent-tool subagent's completion notification; the /loop-only guard correctly refused it.
+    solution: No repo fix needed — the guard's deny message named the right alternative (a dispatched subagent self-notifies on completion; just end the turn) and I did that instead.
+    severity: nit
+durationSec: 732
+models:
+  claude-sonnet-5: 108
+toolCounts:
+  Bash: 36
+  Read: 11
+  ToolSearch: 2
+  mcp__github__issue_read: 3
+  mcp__github__pull_request_read: 2
+  Write: 7
+  Agent: 1
+  ScheduleWakeup: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-09-13-it-ran-the-test-that-would-prove-itself-wrong.md
+docsReadViaShell:
+  - docs/agents/guards.md
+  - docs/agents/environment-caveats.md
+subagents:
+  - task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-8kxxv1
+entrypoint: remote_trigger
+cliVersion: 2.1.270
+trigger: blog-post
+learnings:
+  - The blog-rotation.ts script's eligible/starved/last output is the sole source of truth for which Personas a bare /blog-post run may draw from — CLAUDE.md's own 'don't state anything as settled' bar applies to Persona choice, not just facts in the post body.
+landedBy: Stop
