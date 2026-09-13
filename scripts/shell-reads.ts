@@ -79,6 +79,10 @@ export type SkipRule =
 export interface NearMiss {
   command: string
   token: string
+  /** `token` canonicalized the way a counted path is, so a caller merging
+   *  several scans can compare the two — it cannot re-derive this itself, since
+   *  canonicalization needs the relativizer of the scan the token came from. */
+  path: string
   rule: SkipRule
 }
 
@@ -291,7 +295,7 @@ export function scanShellReads(commands: string[], rel: (p: string) => string = 
       const verb = tokens[0]!.text.replace(/^.*\//, '')
       const note = (into: NearMiss[], token: string, rule: SkipRule): void => {
         const p = norm(token)
-        if (isInstructionDoc(p) || isGlobbedInstructionDoc(p)) into.push({ command, token, rule })
+        if (isInstructionDoc(p) || isGlobbedInstructionDoc(p)) into.push({ command, token, path: p, rule })
       }
       const noteAll = (rule: SkipRule, from = 1): void => {
         for (const t of tokens.slice(from)) note(fromReader, t.text, rule)
@@ -365,8 +369,8 @@ export function scanShellReads(commands: string[], rel: (p: string) => string = 
   // the slots a genuinely different miss needs.
   const seen = new Set<string>()
   const missed = [...fromReader, ...fromOther].filter((m) => {
-    const key = `${norm(m.token)}\u0000${m.rule}`
-    if (paths.has(norm(m.token)) || seen.has(key)) return false
+    const key = `${m.path}\u0000${m.rule}`
+    if (paths.has(m.path) || seen.has(key)) return false
     seen.add(key)
     return true
   })

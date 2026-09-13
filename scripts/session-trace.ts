@@ -157,6 +157,14 @@ function bashCommandsOf(records: Record<string, unknown>[]): string[] {
   return commands
 }
 
+/** A merged scan, plus which of its paths no command in the session's OWN
+ *  transcript ran. The advisory needs that split: without it a reader cannot
+ *  tell a detector error from correctly folded delegated work, and was told to
+ *  report both as a friction (issue #1206). */
+export interface FoldedShellReadScan extends ShellReadScan {
+  subagentPaths: string[]
+}
+
 /** The shell-read scan WITH its near-misses, for the author-time advisory the
  *  `log-session` Skill prints (#1074's verification loop). `extractTrace` keeps
  *  only `.paths`; the rejected candidates exist to turn "did it miss one?" from
@@ -169,11 +177,22 @@ function bashCommandsOf(records: Record<string, unknown>[]): string[] {
 export function shellReadScanOf(
   records: Record<string, unknown>[],
   subagentRecordSets: Record<string, unknown>[][] = [],
-): ShellReadScan {
-  const scans = [records, ...subagentRecordSets].map((rs) => scanShellReads(bashCommandsOf(rs), relativizer(rs)))
+): FoldedShellReadScan {
+  const scanOf = (rs: Record<string, unknown>[]): ShellReadScan =>
+    scanShellReads(bashCommandsOf(rs), relativizer(rs))
+  const own = scanOf(records)
+  const scans = [own, ...subagentRecordSets.map(scanOf)]
   const paths = [...new Set(scans.flatMap((s) => s.paths))]
-  const seen = new Set(paths)
-  return { paths, nearMisses: scans.flatMap((s) => s.nearMisses).filter((m) => !seen.has(m.token)) }
+  const counted = new Set(paths)
+  const ownPaths = new Set(own.paths)
+  return {
+    paths,
+    subagentPaths: paths.filter((p) => !ownPaths.has(p)),
+    // Compare canonical path to canonical path: the raw token carries whichever
+    // spelling its own command used, so a token-keyed check re-listed a doc
+    // another record set had already counted (issue #1206).
+    nearMisses: scans.flatMap((s) => s.nearMisses).filter((m) => !counted.has(m.path)),
+  }
 }
 
 function dedup(xs: (string | undefined)[]): string[] {

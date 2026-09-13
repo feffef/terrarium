@@ -238,12 +238,20 @@ describe('reportShellReads (the author-time verification report)', () => {
     type: 'assistant',
     message: { content: [{ type: 'tool_use', name: 'Bash', input: { command } }] },
   })
-  function store(cwd: string, commands: string[]): string {
+  const jsonl = (cwd: string, commands: string[]): string =>
+    [{ type: 'user', cwd, message: { content: 'go' } }, ...commands.map(bash)]
+      .map((r) => JSON.stringify(r))
+      .join('\n')
+  function store(cwd: string, commands: string[], subagentCommands?: string[]): string {
     const home = mkdtempSync(join(tmpdir(), 'shellread-home-'))
     const dir = join(home, '.claude', 'projects', cwd.replace(/[/.]/g, '-'))
     mkdirSync(dir, { recursive: true })
-    const records = [{ type: 'user', cwd, message: { content: 'go' } }, ...commands.map(bash)]
-    writeFileSync(join(dir, 'session.jsonl'), records.map((r) => JSON.stringify(r)).join('\n'))
+    writeFileSync(join(dir, 'session.jsonl'), jsonl(cwd, commands))
+    if (subagentCommands) {
+      const subs = join(dir, 'session', 'subagents')
+      mkdirSync(subs, { recursive: true })
+      writeFileSync(join(subs, 'a.jsonl'), jsonl(cwd, subagentCommands))
+    }
     return home
   }
   const run = (cwd: string, home: string): string[] => {
@@ -271,6 +279,31 @@ describe('reportShellReads (the author-time verification report)', () => {
 
   it('degrades to silence when the transcript store is missing', () => {
     expect(run('/repo', mkdtempSync(join(tmpdir(), 'shellread-empty-')))).toEqual([])
+  })
+
+  // Issue #1206: a parent-only criterion asserted over a knowingly folded list.
+  it('marks a path a dispatched subagent read, rather than claiming the session ran it', () => {
+    const home = store('/repo', ['git merge --ff-only origin/main'], ['cat docs/agents/guards.md'])
+    const out = run('/repo', home).join('\n')
+    expect(out).toContain('docs/agents/guards.md — via a dispatched subagent')
+  })
+
+  it("leaves the session's own reads unmarked", () => {
+    const out = run('/repo', store('/repo', ['cat docs/agents/guards.md'], ['echo hi'])).join('\n')
+    expect(out).toContain('docs/agents/guards.md')
+    expect(out).not.toContain('via a dispatched subagent')
+  })
+
+  it('does not ask for a friction about a path a subagent legitimately read', () => {
+    const out = run('/repo', store('/repo', ['cat CONTEXT.md'], ['cat docs/agents/guards.md'])).join('\n')
+    // The old text — "check both lists against what you actually ran … if it
+    // listed one you never read, log a Friction" — is exactly what manufactured
+    // the false reports; a folded path is not something the reader ran.
+    expect(out).not.toMatch(/against what you actually ran/)
+    expect(out).toContain('folded in by design')
+    // A genuine error is still a friction, at the same floor.
+    expect(out).toContain('SHELL-READ-DETECTION')
+    expect(out).toMatch(/neither this session nor a subagent it dispatched/)
   })
 
   it('caps the near-miss list rather than burying the detected paths', () => {

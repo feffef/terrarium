@@ -243,6 +243,14 @@ describe('near-misses', () => {
     expect(miss?.token).toBe('docs/adr/*.md')
   })
 
+  it('carries the canonical path beside the raw token (issue #1206)', () => {
+    // A caller merging scans cannot re-derive this: canonicalization needs the
+    // relativizer of the record set the token came from, which only this scan holds.
+    const [miss] = scanShellReads(['ls ./.claude/skills/tdd/SKILL.md'], rel).nearMisses
+    expect(miss?.token).toBe('./.claude/skills/tdd/SKILL.md')
+    expect(miss?.path).toBe('.agents/skills/tdd/SKILL.md')
+  })
+
   it('collapses one file rejected the same way twice', () => {
     // `.claude/skills/x` and `.agents/skills/x` are one file; the report is
     // capped, so duplicate rows would crowd out a genuinely different miss.
