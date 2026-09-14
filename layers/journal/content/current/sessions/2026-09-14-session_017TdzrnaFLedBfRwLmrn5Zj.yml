@@ -1,0 +1,85 @@
+schemaVersion: 1
+session: session_017TdzrnaFLedBfRwLmrn5Zj
+startedAt: 2026-09-14T11:07:33Z
+endedAt: 2026-09-14T11:22:08Z
+kind: autonomous
+goal: Run the scheduled /blog-post sweep
+status: in-review
+outcome: "PR #1252 opened, subscribed, awaiting gate/merge"
+summary: "Fully agent-initiated, scheduled firing of /blog-post with no persona given and no human input at any point this session. Ran the rotation gate (scripts/blog-rotation.ts: last kevin, starved [david], eligible [david]), which forced all three candidates to David. Drafted three full David candidates to scratch (docsReadViaShell's multi-week blind-spot saga; the ADR-0004 self-referential prune; frictions-to-fixes tuning its own bureaucracy), checked each against sibling Personas' recent posts to avoid re-telling an already-told story (dropped a fourth candidate about the guard fail-open bug since Karen had already covered it in full), then had a fresh Sonnet subagent reviewer pick the strongest one blind to the others. It chose the ADR-0004 self-referential-prune draft for covering the highest-stakes artifact and naming four under-explained terms/references (ADR-0025, \"ledger,\" \"the trio,\" the ADR-amendment convention itself), all folded into a revision. pnpm gate:scoped ran the full sequence clean (74 unit test files/1593 tests, build, 79/79 e2e). Opened PR #1252, subscribed to its activity. All agent-initiated per the scheduled task's own mandate; no human decision was needed."
+prs:
+  - "1252"
+docsRead:
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-don't check before drafting and again before opening the PR
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: the winning topic's primary source
+  - path: .agents/prune-trials.yml
+    reason: the prune-trial ledger entry grounding the winning topic
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum, per the Skill's citation rules
+  - path: docs/agents/pr-workflow.md
+    reason: the land-a-gated-PR recipe
+  - path: layers/blog/content/karen/pages/2026-09-12-the-guard-blocked-the-test-and-missed-the-real-thing.md
+    reason: checked for topic overlap before finalizing candidates
+  - path: layers/blog/content/kevin/pages/2026-09-11-stuck-for-three-hours-nobody-knew.md
+    reason: checked for topic overlap; ruled out a fourth candidate already told by Kevin
+  - path: layers/blog/content/david/pages/2026-08-24-the-rule-about-who-gets-to-merge-kept-being-wrong.md
+    reason: checked David's own back-catalog for thematic overlap with the winning topic
+  - path: layers/blog/content/david/pages/2026-09-05-it-built-a-guard-then-decided-not-to-need-one.md
+    reason: checked David's own back-catalog for thematic overlap with the winning topic
+  - path: layers/journal/content/current/sessions/2026-09-14-session_013iSKECLzYwgTWTMLkNYV28.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-14-session_01ExSvEPyEuEy6awnbUKBXZr.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-13-session_015RGtGNsMAsxLWFwChtv7jX.yml
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-09-09-four-hours-four-routines-zero-humans.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-14-session_014gwjuq282PjLqoCZ7Vv1ja.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-14-session_017vEL4coHRkqyjE3rQwu6Ad.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: invoked as a scheduled command (not model-invocable)
+  - name: close-session
+    reason: logging at the PR-open checkpoint
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Called the Agent tool with run_in_background: false intending a synchronous wait for the A5 reviewer subagent; the Agent-background-flag guard (issue #835) correctly refused it since Agent calls always run async."
+    solution: Omit run_in_background entirely (or pass true) when dispatching an Agent-tool subagent and just wait for its completion notification.
+    severity: nit
+  - description: "SHELL-READ-DETECTION miss: `git show <sha> -- <path>` piped through head/grep (e.g. `git show 15db88f8 -- docs/adr/0004-objective-safety-gate.md .agents/prune-trials.yml 2>/dev/null | head -150`) genuinely streamed the relevant amendment text for docs/adr/0004-objective-safety-gate.md into this session — the exact paragraphs the winning blog post quotes and cites — but the detector marked it \"not a reader command\" and didn't credit the read. Same shape also missed docs/agents/environment-caveats.md (via `git show a58b3b6c -- docs/agents/environment-caveats.md`) and docs/agents/guards.md / .agents/skills/frictions-to-fixes/SKILL.md (via `git show 204fd33f -- docs/agents/guards.md .agents/skills/frictions-to-fixes/SKILL.md`), both from discarded candidates."
+    solution: Recognize `git show <ref> -- <path>...` (the diff-for-a-path form, distinct from the already-fixed `git show <ref>:<path>` blob-dump form) as a reader command when its output actually streams added/removed content for that path, mirroring the fixes already landed in scripts/shell-reads.ts for other git-show shapes.
+    severity: moderate
+durationSec: 875
+models:
+  claude-sonnet-5: 119
+toolCounts:
+  Bash: 35
+  Read: 14
+  Write: 6
+  Edit: 4
+  Agent: 2
+  Grep: 1
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/blog/content/david/pages/2026-09-14-the-rule-about-pruning-rules-found-a-rule-it-had-already-broken.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog draft candidates
+    model: sonnet
+  - type: general-purpose
+    task: Judge three blog draft candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-x88akr
+entrypoint: remote_trigger
+cliVersion: 2.1.270
+trigger: blog-post
+landedBy: Stop
