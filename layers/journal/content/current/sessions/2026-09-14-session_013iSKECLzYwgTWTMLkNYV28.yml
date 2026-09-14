@@ -1,15 +1,17 @@
 schemaVersion: 1
 session: session_013iSKECLzYwgTWTMLkNYV28
 startedAt: 2026-09-14T02:04:54Z
-endedAt: 2026-09-14T02:26:38Z
+endedAt: 2026-09-14T02:30:57Z
 kind: autonomous
 goal: Run frictions-to-fixes as review-agent
 status: in-review
-outcome: "PR #1249 open (gate running); #1247 queued"
-summary: "Fully autonomous scheduled run (frictions-to-fixes Routine), no human prompt this turn. Delegated survey+screen (steps 1-2) of the last 20 session logs to a subagent, which ranked frictions and checked the tracker/main for prior fixes. Filed three issues: #1246 and #1247 (both \"hard\" — 2+ files, non-obvious design — bugs in docsReadViaShell's shell-read detector: single-match-glob rejection, and grep-output-blind crediting) and #1248 (a guard/settings.json-touching candidate, filed for human visibility only per CLAUDE.md's human-only-surface rule — not dispatched). #1246 and #1247 overlap heavily on the same files/functions (scripts/shell-reads.ts, scripts/session-trace.ts), so per dispatch-subagents' same-file-collision rule I serialized them instead of dispatching in parallel: dispatched a Sonnet impl agent for #1246 first (worktree-isolated), which opened PR #1249 with a green local gate; #1247 is queued to dispatch once #1249 merges. Logging now at PR-open per CLAUDE.md; will finalize to `completed` once both PRs are reviewed and merged."
+outcome: "PR #1249 merged (#1246 closed); #1247's PR pending"
+summary: "Fully autonomous scheduled run (frictions-to-fixes Routine), no human prompt this turn. Delegated survey+screen (steps 1-2) of the last 20 session logs to a subagent, which ranked frictions and checked the tracker/main for prior fixes. Filed three issues: #1246 and #1247 (both \"hard\" — 2+ files, non-obvious design — bugs in docsReadViaShell's shell-read detector: single-match-glob rejection, and grep-output-blind crediting) and #1248 (a guard/settings.json-touching candidate, filed for human visibility only per CLAUDE.md's human-only-surface rule — not dispatched). #1246 and #1247 overlap heavily on the same files/functions (scripts/shell-reads.ts, scripts/session-trace.ts), so per dispatch-subagents' same-file-collision rule I serialized them instead of dispatching in parallel: dispatched a Sonnet impl agent for #1246 first (worktree-isolated), which opened PR #1249. Reviewed it (posted a COMMENT-event review verdict, per docs/agents/pr-workflow.md), confirmed gate green and no conflicting-issue hits, and merged via scripts/merge-pr.ts (closed #1246). Then dispatched a second Sonnet impl agent for #1247, branching from the now-updated main so it layers on top of #1246's fix instead of conflicting with it. Awaiting that PR to review and merge before finalizing this log to `completed`."
 prs:
   - "1249"
 docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
   - path: scripts/shell-reads.ts
     reason: (read before editing)
   - path: scripts/session-trace.ts
@@ -30,21 +32,23 @@ skillsUsed:
   - name: log-session
     reason: this log
 frictions: []
-durationSec: 1304
+durationSec: 1563
 models:
-  claude-sonnet-5: 48
+  claude-sonnet-5: 71
 toolCounts:
-  Agent: 2
-  ToolSearch: 2
-  Skill: 3
+  Agent: 3
+  ToolSearch: 3
+  Skill: 4
   mcp__github__search_issues: 3
   mcp__github__issue_read: 1
   mcp__github__issue_write: 6
-  ReadNotifications: 1
-  mcp__github__pull_request_read: 4
-  Write: 1
-  Bash: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 7
+  Write: 2
+  Bash: 4
   mcp__Claude_Code_Remote__send_later: 1
+  Read: 1
+  mcp__github__pull_request_review_write: 1
 filesEdited:
   - scripts/shell-reads.ts
   - scripts/session-trace.ts
@@ -59,6 +63,9 @@ subagents:
     task: Survey and screen session frictions
   - type: general-purpose
     task: Fix docsReadViaShell glob rejection
+    model: sonnet
+  - type: general-purpose
+    task: Fix docsReadViaShell grep output blindness
     model: sonnet
 gitBranch: claude/eager-ptolemy-cgk11i
 entrypoint: remote_trigger
