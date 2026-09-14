@@ -305,6 +305,77 @@ describe('near-misses', () => {
   })
 })
 
+describe('grep/rg output gates crediting (issue #1247)', () => {
+  // Both shapes below are the exact ones session 17's evidence named: a
+  // zero-match single-file grep that still got credited, and a multi-file grep
+  // where only some of the named files actually matched in the real output.
+  // `scanShellReads` only gates when a command carries its OUTPUT — a bare
+  // string command (every other describe block in this file) stays ungated.
+
+  it('does NOT credit a single-file grep that matched nothing', () => {
+    const scan = scanShellReads(
+      [{ command: 'grep -n "TODO" docs/agents/guards.md', output: '' }],
+      rel,
+    )
+    expect(scan.paths).toEqual([])
+    expect(scan.nearMisses.map((m) => m.rule)).toEqual(['grep/rg output does not show this file being read'])
+  })
+
+  it('credits a single-file grep once its output is non-empty', () => {
+    const scan = scanShellReads(
+      [{ command: 'grep -n "TODO" docs/agents/guards.md', output: 'docs/agents/guards.md:12:TODO fix this' }],
+      rel,
+    )
+    expect(scan.paths).toEqual(['docs/agents/guards.md'])
+  })
+
+  it('credits only the files a multi-file grep actually matched in its output', () => {
+    const scan = scanShellReads(
+      [
+        {
+          command: 'grep -rn "TODO" docs/agents/a.md docs/agents/b.md docs/agents/c.md docs/agents/d.md',
+          output: [
+            'docs/agents/a.md:3:TODO one',
+            'docs/agents/c.md:9:TODO two',
+            'docs/agents/c.md:20:TODO three',
+          ].join('\n'),
+        },
+      ],
+      rel,
+    )
+    expect(scan.paths.sort()).toEqual(['docs/agents/a.md', 'docs/agents/c.md'])
+    expect(scan.nearMisses.map((m) => m.path).sort()).toEqual(['docs/agents/b.md', 'docs/agents/d.md'])
+    expect(scan.nearMisses.every((m) => m.rule === 'grep/rg output does not show this file being read')).toBe(true)
+  })
+
+  it('does not gate rg\'s grouped (heading) output — the bare path as its own line', () => {
+    const scan = scanShellReads(
+      [
+        {
+          command: 'rg -n "TODO" docs/agents/a.md docs/agents/b.md',
+          output: 'docs/agents/a.md\n3:TODO one',
+        },
+      ],
+      rel,
+    )
+    expect(scan.paths).toEqual(['docs/agents/a.md'])
+  })
+
+  it('leaves cat/sed ungated regardless of output — they stream everything, never filter it', () => {
+    const scan = scanShellReads([{ command: 'cat docs/agents/guards.md', output: '' }], rel)
+    expect(scan.paths).toEqual(['docs/agents/guards.md'])
+  })
+
+  it('is a no-op when the caller supplies no output at all (a bare string command)', () => {
+    // Every other describe block in this file relies on exactly this: an
+    // un-paired command string is not gated, matching pre-#1247 behavior.
+    expect(paths('grep -n "TODO" docs/agents/a.md docs/agents/b.md')).toEqual([
+      'docs/agents/a.md',
+      'docs/agents/b.md',
+    ])
+  })
+})
+
 describe('no other consumer acts on the field', () => {
   // The rule is a decision, not an accident (ADR-0009's shell-read amendment):
   // nothing may read `docsReadViaShell` except the trace that derives it, the

@@ -452,6 +452,51 @@ describe('docsReadViaShell (issue #1074)', () => {
     const scan = shellReadScanOf(withCwd('cat CONTEXT.md'), [withCwd('ls docs/agents/guards.md')])
     expect(scan.nearMisses.map((m) => m.path)).toEqual(['docs/agents/guards.md'])
   })
+
+  // Issue #1247: `bashCommandsOf` pairs a Bash tool_use with its own
+  // tool_result by `tool_use_id`, and `scanShellReads` uses that output to
+  // gate a grep/rg's crediting — exercised here end-to-end through
+  // `extractTrace`, not just at `scanShellReads` (covered directly in
+  // tests/unit/shell-reads.spec.ts).
+  describe('grep output gating threads through the real transcript shape', () => {
+    const bashWithResult = (id: string, command: string, output: string): Record<string, unknown>[] => [
+      { type: 'assistant', timestamp: '2026-09-14T10:00:00.000Z', message: { model: 'claude-opus-5', content: [
+        { type: 'tool_use', id, name: 'Bash', input: { command } },
+      ] } },
+      { type: 'user', timestamp: '2026-09-14T10:00:01.000Z', message: { content: [
+        { type: 'tool_result', tool_use_id: id, content: output },
+      ] } },
+    ]
+    const records = (...turns: Record<string, unknown>[][]): Record<string, unknown>[] => [
+      { type: 'user', sessionId: 'session_01SH', cwd: '/repo', timestamp: '2026-09-14T09:59:00Z', message: { content: 'go' } },
+      ...turns.flat(),
+    ]
+
+    it('does not credit a zero-match single-file grep (session 17\'s first shape)', () => {
+      const trace = extractTrace(
+        records(bashWithResult('toolu_1', 'grep -n "TODO" docs/agents/guards.md', '')),
+      )
+      expect(trace.docsReadViaShell).toEqual([])
+    })
+
+    it('credits only the files a multi-file grep actually matched (session 17\'s second shape)', () => {
+      const trace = extractTrace(
+        records(
+          bashWithResult(
+            'toolu_2',
+            'grep -rn "TODO" docs/agents/a.md docs/agents/b.md docs/agents/c.md',
+            ['docs/agents/a.md:3:TODO one', 'docs/agents/c.md:9:TODO two'].join('\n'),
+          ),
+        ),
+      )
+      expect(trace.docsReadViaShell.sort()).toEqual(['docs/agents/a.md', 'docs/agents/c.md'])
+    })
+
+    it('still credits an ordinary cat, unaffected by the grep gate', () => {
+      const trace = extractTrace(records(bashWithResult('toolu_3', 'cat docs/agents/guards.md', '')))
+      expect(trace.docsReadViaShell).toEqual(['docs/agents/guards.md'])
+    })
+  })
 })
 
 describe('findLatestTranscript', () => {

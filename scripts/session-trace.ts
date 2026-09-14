@@ -33,7 +33,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
-import { scanShellReads, type ShellReadScan } from './shell-reads.ts'
+import { scanShellReads, type ShellCommand, type ShellReadScan } from './shell-reads.ts'
 
 export { FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 
@@ -141,16 +141,48 @@ function relativizer(records: Record<string, unknown>[]): (p: string) => string 
   return (p) => (cwd && p.startsWith(cwd + '/') ? p.slice(cwd.length + 1) : p)
 }
 
-/** Every Bash command a transcript recorded, in order. */
-function bashCommandsOf(records: Record<string, unknown>[]): string[] {
-  const commands: string[] = []
+/** The text a `tool_result` block actually carries — a plain string, or the
+ *  `text` blocks of an array (mirrors `userText` below, but for a tool_result's
+ *  own array shape: a `tool_reference` block, e.g., carries no text and
+ *  contributes nothing). */
+function toolResultText(content: unknown): string {
+  if (typeof content === 'string') return content
+  if (!Array.isArray(content)) return ''
+  return content
+    .filter((b): b is { type: string; text: string } =>
+      !!b && typeof b === 'object' && (b as { type?: string }).type === 'text'
+      && typeof (b as { text?: unknown }).text === 'string')
+    .map((b) => b.text)
+    .join('\n')
+}
+
+/** Every Bash command a transcript recorded, each paired with its own
+ *  `tool_result` output text — `scanShellReads` needs the OUTPUT, not just the
+ *  command, to gate a grep/rg's crediting on what it actually matched (issue
+ *  #1247). Paired by `tool_use_id`, not transcript order: a tool_result can
+ *  land several records after its tool_use. A command whose result is missing
+ *  (a torn transcript) pairs with `''` — the same as a real zero-output run,
+ *  which undercounts rather than guesses. */
+function bashCommandsOf(records: Record<string, unknown>[]): ShellCommand[] {
+  const outputs = new Map<string, string>()
   for (const rec of records) {
     const content = (rec.message as { content?: unknown } | undefined)?.content
     if (!Array.isArray(content)) continue
     for (const block of content) {
-      const b = block as { type?: string; name?: string; input?: { command?: unknown } }
+      const b = block as { type?: string; tool_use_id?: string; content?: unknown }
+      if (b?.type === 'tool_result' && typeof b.tool_use_id === 'string') {
+        outputs.set(b.tool_use_id, toolResultText(b.content))
+      }
+    }
+  }
+  const commands: ShellCommand[] = []
+  for (const rec of records) {
+    const content = (rec.message as { content?: unknown } | undefined)?.content
+    if (!Array.isArray(content)) continue
+    for (const block of content) {
+      const b = block as { type?: string; name?: string; id?: string; input?: { command?: unknown } }
       if (b?.type === 'tool_use' && b.name === 'Bash' && typeof b.input?.command === 'string') {
-        commands.push(b.input.command)
+        commands.push({ command: b.input.command, output: outputs.get(b.id ?? '') ?? '' })
       }
     }
   }
