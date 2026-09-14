@@ -1,24 +1,33 @@
 schemaVersion: 1
 session: session_013iSKECLzYwgTWTMLkNYV28
 startedAt: 2026-09-14T02:04:54Z
-endedAt: 2026-09-14T02:30:57Z
+endedAt: 2026-09-14T02:48:53Z
 kind: autonomous
 goal: Run frictions-to-fixes as review-agent
-status: in-review
-outcome: "PR #1249 merged (#1246 closed); #1247's PR pending"
-summary: "Fully autonomous scheduled run (frictions-to-fixes Routine), no human prompt this turn. Delegated survey+screen (steps 1-2) of the last 20 session logs to a subagent, which ranked frictions and checked the tracker/main for prior fixes. Filed three issues: #1246 and #1247 (both \"hard\" — 2+ files, non-obvious design — bugs in docsReadViaShell's shell-read detector: single-match-glob rejection, and grep-output-blind crediting) and #1248 (a guard/settings.json-touching candidate, filed for human visibility only per CLAUDE.md's human-only-surface rule — not dispatched). #1246 and #1247 overlap heavily on the same files/functions (scripts/shell-reads.ts, scripts/session-trace.ts), so per dispatch-subagents' same-file-collision rule I serialized them instead of dispatching in parallel: dispatched a Sonnet impl agent for #1246 first (worktree-isolated), which opened PR #1249. Reviewed it (posted a COMMENT-event review verdict, per docs/agents/pr-workflow.md), confirmed gate green and no conflicting-issue hits, and merged via scripts/merge-pr.ts (closed #1246). Then dispatched a second Sonnet impl agent for #1247, branching from the now-updated main so it layers on top of #1246's fix instead of conflicting with it. Awaiting that PR to review and merge before finalizing this log to `completed`."
+status: completed
+outcome: "Both fixes merged (#1249, #1250); #1248 filed for a human"
+summary: "Fully autonomous scheduled run (frictions-to-fixes Routine), no human prompt this turn. Delegated survey+screen (steps 1-2) of the last 20 session logs to a subagent, which ranked frictions and checked the tracker/main for prior fixes. Filed three issues: #1246 and #1247 (both \"hard\" — 2+ files, non-obvious design — bugs in docsReadViaShell's shell-read detector: single-match-glob rejection, and grep-output-blind crediting) and #1248 (a guard/settings.json-touching candidate for a missing dispatch-subagents-skip guard, filed for human visibility only per CLAUDE.md's human-only-surface rule — not dispatched, still open). #1246 and #1247 overlap heavily on the same files/functions (scripts/shell-reads.ts, scripts/session-trace.ts), so per dispatch-subagents' same-file-collision rule I serialized them instead of dispatching in parallel: dispatched a Sonnet impl agent for #1246 first (worktree-isolated), reviewed and merged its PR #1249 (posted a COMMENT-event review verdict per docs/agents/pr-workflow.md, gate green, no conflicting-issue hits), then dispatched a second Sonnet impl agent for #1247 branching from the updated main, reviewed and merged its PR #1250 the same way. Both issues closed via their merged PRs. All agent-authored autonomously; no human decision was needed since neither PR was high-risk."
 prs:
   - "1249"
+  - "1250"
 docsRead:
   - path: docs/agents/pr-workflow.md
     reason: (no reason given)
-  - path: scripts/shell-reads.ts
-    reason: (read before editing)
   - path: scripts/session-trace.ts
     reason: (read before editing)
-  - path: scripts/log-session.ts
+  - path: scripts/shell-reads.ts
     reason: (read before editing)
   - path: tests/unit/shell-reads.spec.ts
+    reason: (read before editing)
+  - path: tests/unit/session-trace.spec.ts
+    reason: (read before editing)
+  - path: .tmp-agent-logs/vitest-targeted.log
+    reason: (no reason given)
+  - path: .tmp-agent-logs/gate-dry.log
+    reason: (no reason given)
+  - path: .tmp-agent-logs/gate-scoped.log
+    reason: (no reason given)
+  - path: scripts/log-session.ts
     reason: (read before editing)
   - path: .agents/prune-trials.yml
     reason: (no reason given)
@@ -28,32 +37,36 @@ skillsUsed:
   - name: dispatch-subagents
     reason: worktree isolation + same-file-collision serialization
   - name: close-session
-    reason: logging at PR-open checkpoint
+    reason: logging at PR-open checkpoints and final closure
   - name: log-session
     reason: this log
-frictions: []
-durationSec: 1563
+frictions:
+  - description: "My own dispatch brief for both impl agents said \"run pnpm typecheck (or equivalent tsc --noEmit)\" as if interchangeable. The #1247 impl agent found `tsc --noEmit -p .` passed clean while the repo's actual `pnpm typecheck` script (`nuxt typecheck && tsc -p tsconfig.node.json`) caught two real type errors — an exactOptionalPropertyTypes mismatch and an array-widening issue under spread/flat — that the bare tsc invocation missed."
+    solution: Update frictions-to-fixes/SKILL.md's §5 dispatch-brief instruction to say "run pnpm typecheck — not a bare tsc --noEmit, which misses nuxt's own type checking in this repo" instead of presenting them as equivalent.
+    severity: minor
+durationSec: 2638
 models:
-  claude-sonnet-5: 71
+  claude-sonnet-5: 103
 toolCounts:
   Agent: 3
   ToolSearch: 3
   Skill: 4
   mcp__github__search_issues: 3
-  mcp__github__issue_read: 1
+  mcp__github__issue_read: 2
   mcp__github__issue_write: 6
-  ReadNotifications: 2
-  mcp__github__pull_request_read: 7
-  Write: 2
-  Bash: 4
-  mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 6
+  mcp__github__pull_request_read: 13
+  Write: 3
+  Bash: 7
+  mcp__Claude_Code_Remote__send_later: 2
   Read: 1
-  mcp__github__pull_request_review_write: 1
+  mcp__github__pull_request_review_write: 2
 filesEdited:
   - scripts/shell-reads.ts
   - scripts/session-trace.ts
-  - scripts/log-session.ts
   - tests/unit/shell-reads.spec.ts
+  - tests/unit/session-trace.spec.ts
+  - scripts/log-session.ts
 docsReadViaShell:
   - .agents/skills/log-session/SKILL.md
   - .agents/skills/frictions-to-fixes/SKILL.md
