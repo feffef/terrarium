@@ -1,0 +1,49 @@
+schemaVersion: 1
+session: session_017vEL4coHRkqyjE3rQwu6Ad
+startedAt: 2026-09-14T00:16:04Z
+endedAt: 2026-09-14T00:26:54Z
+kind: autonomous
+goal: Run the scheduled /digest sweep for 2026-09-13
+status: completed
+outcome: "Digest authored, retention sweep run, PR #1245 merged"
+summary: "Fully agent-initiated scheduled /digest run, no human prompt at any point. Listed the one closed UTC day pending (2026-09-13), gathered its data via scripts/digest.ts, and authored the Digest page with the shell-read advisory saga as the day's through-line (#1241's fix, then two later sessions each hitting a new false-positive shape in the same docsReadViaShell detector). Ran scripts/archive-journal-content.ts --write, archiving the 2026-09-06 digest and its 6 session logs. pnpm gate:scoped ran the full heavy layers (build/test/test:e2e, 79/79 passing) since the change touches layers/, all green. Committed, pushed, opened PR #1245 with the ADR-0017 provenance header, subscribed to its activity, posted the pre-merge verdict comment, then landed it via scripts/merge-pr.ts once CI went green (digest tier: merges on a green gate alone, per docs/agents/pr-workflow.md). Unsubscribed after merge."
+prs:
+  - "1245"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-09-12.md
+    reason: (no reason given)
+skillsUsed:
+  - name: digest
+    reason: this session's whole task
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "SHELL-READ-DETECTION miss: `grep -n -A5 \"provenance header\\|first line\" /home/user/terrarium/docs/adr/0017-*.md | head -60` genuinely streamed ADR-0017's provenance-header format (the exact `🤖 [Model](session URL)` line I then used verbatim in the PR body) into this session, but the detector rejected it as \"not a literal path: glob or variable\" and didn't count docs/adr/0017-*.md as read."
+    solution: Widen the detector's literal-path check to resolve a single-match glob (one file) to its concrete path before rejecting it, rather than rejecting every glob outright.
+    severity: moderate
+durationSec: 650
+models:
+  claude-sonnet-5: 74
+toolCounts:
+  Bash: 26
+  Read: 1
+  Write: 2
+  ToolSearch: 3
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Edit: 3
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-09-13.md
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
+gitBranch: claude/compassionate-lovelace-hu1czm
+entrypoint: remote_trigger
+cliVersion: 2.1.270
+trigger: digest
+landedBy: Stop
