@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_018TkcdW6hPvoq6D5EQLtYNR
 startedAt: 2026-09-14T13:14:03Z
-endedAt: 2026-09-14T13:25:24Z
+endedAt: 2026-09-14T13:29:12Z
 kind: autonomous
 goal: Run scheduled /prune-trial sweep
-status: in-review
-outcome: "1 trial judged (holds); ADR-0017 pruned -112 lines; PR #1253 open"
-summary: "Fully agent-initiated scheduled run, no live human input. Judged the 2026-09-10 ADR-0003 auto-merge-exemption-ledger trial: read every session friction since landing and searched issues for a chartered-Skill-merge regression, found none, so the prune holds and the entry was deleted. Chose a new prune target per the Skill's criterion 1 (prose that already failed): docs/adr/0017-provenance-footer-on-agent-authored-content.md carried ~155 lines of dated amendment blockquotes whose own last amendment states outright that four prose-only passes did not stop the recurrence it was fixing. Compressed to the current operative state plus pointers to CLAUDE.md/guards.md/git-conventions.md/github-integration.md, leaving Decision/Consequences untouched per ADR-0027's bound. Fixed a stale line-number citation in rulebook-migration-table.md that the prune broke. Proved the compressed text on a Sonnet subagent given only the surviving text (no deleted prose) against four realistic provenance scenarios; all four answers were correct. Gate green, PR #1253 opened and subscribed."
+status: completed
+outcome: "1 trial judged (holds); ADR-0017 pruned -112 lines; PR #1253 merged"
+summary: "Fully agent-initiated scheduled run, no live human input. Judged the 2026-09-10 ADR-0003 auto-merge-exemption-ledger trial: read every session friction since landing and searched issues for a chartered-Skill-merge regression, found none, so the prune holds and the entry was deleted. Chose a new prune target per the Skill's criterion 1 (prose that already failed): docs/adr/0017-provenance-footer-on-agent-authored-content.md carried ~155 lines of dated amendment blockquotes whose own last amendment states outright that four prose-only passes did not stop the recurrence it was fixing. Compressed to the current operative state plus pointers to CLAUDE.md/guards.md/git-conventions.md/github-integration.md, leaving Decision/Consequences untouched per ADR-0027's bound. Fixed a stale line-number citation in rulebook-migration-table.md that the prune broke. Proved the compressed text on a Sonnet subagent given only the surviving text (no deleted prose) against four realistic provenance scenarios; all four answers were correct. Gate green, PR #1253 opened, verdict comment posted, landed via scripts/merge-pr.ts, and merged."
 prs:
   - "1253"
 docsRead:
@@ -37,20 +37,24 @@ frictions:
   - description: "Called the Agent tool with run_in_background: false out of habit when dispatching the §4 Sonnet probe; the agent-background-flag guard (issue #835) correctly denied it since the parameter is a no-op on Agent."
     solution: No repo change needed — the guard worked exactly as designed. Retried by omitting the flag. A habit to drop, same shape a prior prune-trial session already logged for ScheduleWakeup out of habit.
     severity: nit
-durationSec: 681
+durationSec: 909
 models:
-  claude-sonnet-5: 105
+  claude-sonnet-5: 139
 toolCounts:
-  Bash: 24
+  Bash: 29
   Read: 12
-  ToolSearch: 3
+  ToolSearch: 6
   mcp__github__search_issues: 1
   Edit: 4
   Agent: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
+  Write: 2
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  Monitor: 1
 filesEdited:
   - .agents/prune-trials.yml
   - docs/adr/0017-provenance-footer-on-agent-authored-content.md
