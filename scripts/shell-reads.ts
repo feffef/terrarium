@@ -281,12 +281,33 @@ function showsNoContent(verb: string, tokens: Token[]): boolean {
  *  `rel` relativizes an absolute path the way the trace does, so `/repo/docs/x.md`
  *  and `docs/x.md` land on one key. Near-misses are ordered reader-segment first:
  *  a rejected token inside a real reader command is likelier to be a genuine
- *  extractor bug than a doc path mentioned by some other program. */
-export function scanShellReads(commands: string[], rel: (p: string) => string = (p) => p): ShellReadScan {
+ *  extractor bug than a doc path mentioned by some other program.
+ *
+ *  `resolveGlob` keeps this function itself fs-free and pure (unit-testable over
+ *  plain strings): when supplied, a token otherwise rejected as a glob/variable is
+ *  handed to it, and a single resolved match is credited exactly like a literal
+ *  path. `undefined` (0 or 2+ matches) falls through to today's near-miss — never
+ *  guessed between candidates (issue #1246). The real caller (session-trace.ts)
+ *  injects an `fs`-backed implementation; tests exercise the pure default. */
+export function scanShellReads(
+  commands: string[],
+  rel: (p: string) => string = (p) => p,
+  resolveGlob?: (token: string) => string | undefined,
+): ShellReadScan {
   const paths = new Set<string>()
   const fromReader: NearMiss[] = []
   const fromOther: NearMiss[] = []
   const norm = (t: string): string => canonicalizeInstructionPath(rel(t))
+  /** `p` is already in scope as a glob/variable shaped like an instruction doc
+   *  (the caller only reaches this after `isGlobbedInstructionDoc(p)`). Resolving
+   *  it can still land outside `INSTRUCTION_DOC_PATTERNS` if a caller's resolver
+   *  is loose, so the result is re-checked rather than trusted blindly. */
+  const resolveGlobbedDoc = (p: string): string | undefined => {
+    const resolved = resolveGlob?.(p)
+    if (resolved === undefined) return undefined
+    const canonical = canonicalizeInstructionPath(resolved)
+    return isInstructionDoc(canonical) ? canonical : undefined
+  }
 
   for (const command of commands) {
     for (const raw of segments(command)) {
@@ -306,7 +327,11 @@ export function scanShellReads(commands: string[], rel: (p: string) => string = 
         if (showPath !== undefined) {
           const p = norm(showPath)
           if (isInstructionDoc(p)) paths.add(p)
-          else if (isGlobbedInstructionDoc(p)) note(fromReader, showPath, 'not a literal path: glob or variable')
+          else if (isGlobbedInstructionDoc(p)) {
+            const resolved = resolveGlobbedDoc(p)
+            if (resolved !== undefined) paths.add(resolved)
+            else note(fromReader, showPath, 'not a literal path: glob or variable')
+          }
           continue
         }
       }
@@ -357,7 +382,11 @@ export function scanShellReads(commands: string[], rel: (p: string) => string = 
         }
         const p = norm(t.text)
         if (isInstructionDoc(p)) paths.add(p)
-        else if (isGlobbedInstructionDoc(p)) note(fromReader, t.text, 'not a literal path: glob or variable')
+        else if (isGlobbedInstructionDoc(p)) {
+          const resolved = resolveGlobbedDoc(p)
+          if (resolved !== undefined) paths.add(resolved)
+          else note(fromReader, t.text, 'not a literal path: glob or variable')
+        }
       }
     }
   }

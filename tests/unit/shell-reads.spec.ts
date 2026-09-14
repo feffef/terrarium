@@ -9,8 +9,10 @@ import { canonicalizeInstructionPath, isInstructionDoc, scanShellReads } from '.
 
 /** Mirrors the trace's own relativizer for an absolute in-repo path. */
 const rel = (p: string): string => (p.startsWith('/repo/') ? p.slice(6) : p)
-const paths = (cmd: string): string[] => scanShellReads([cmd], rel).paths.sort()
-const rules = (cmd: string): string[] => scanShellReads([cmd], rel).nearMisses.map((m) => m.rule)
+const paths = (cmd: string, resolveGlob?: (t: string) => string | undefined): string[] =>
+  scanShellReads([cmd], rel, resolveGlob).paths.sort()
+const rules = (cmd: string, resolveGlob?: (t: string) => string | undefined): string[] =>
+  scanShellReads([cmd], rel, resolveGlob).nearMisses.map((m) => m.rule)
 
 describe('scope', () => {
   it('admits the four instruction shapes', () => {
@@ -120,6 +122,39 @@ describe('false positives', () => {
   it('refuses a glob or variable rather than guessing which doc it named', () => {
     expect(paths('cat docs/adr/*.md')).toEqual([])
     expect(rules('cat docs/adr/*.md')).toEqual(['not a literal path: glob or variable'])
+  })
+})
+
+describe('resolveGlob — resolving a glob against the real tree (issue #1246)', () => {
+  // A stand-in for session-trace.ts's fs-backed resolver: it "sees" a fixed set
+  // of real files and returns the single match, mirroring what a real repo
+  // tree would do for `docs/adr/NNNN-*.md`-shaped tokens.
+  const REPO_FILES = ['docs/adr/0017-one-thing.md', 'docs/adr/0018-another-thing.md']
+  const fakeResolveGlob = (token: string): string | undefined => {
+    const source = token.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '[^/]*').replace(/\?/g, '[^/]')
+    const regex = new RegExp(`^${source}$`)
+    const matches = REPO_FILES.filter((f) => regex.test(f))
+    return matches.length === 1 ? matches[0] : undefined
+  }
+
+  it('credits a single-match glob — the exact miss #1246 reported', () => {
+    expect(paths('sed -n 30,70p docs/adr/0017-*.md', fakeResolveGlob)).toEqual(['docs/adr/0017-one-thing.md'])
+    expect(rules('sed -n 30,70p docs/adr/0017-*.md', fakeResolveGlob)).toEqual([])
+  })
+
+  it('keeps the existing near-miss for a zero-match glob — never invents a file', () => {
+    expect(paths('cat docs/adr/9999-*.md', fakeResolveGlob)).toEqual([])
+    expect(rules('cat docs/adr/9999-*.md', fakeResolveGlob)).toEqual(['not a literal path: glob or variable'])
+  })
+
+  it('keeps the existing near-miss for a multi-match glob — never guesses between candidates', () => {
+    expect(paths('cat docs/adr/*.md', fakeResolveGlob)).toEqual([])
+    expect(rules('cat docs/adr/*.md', fakeResolveGlob)).toEqual(['not a literal path: glob or variable'])
+  })
+
+  it('is a no-op when no resolveGlob is supplied — the pure default is unchanged', () => {
+    expect(paths('cat docs/adr/0017-*.md')).toEqual([])
+    expect(rules('cat docs/adr/0017-*.md')).toEqual(['not a literal path: glob or variable'])
   })
 })
 
