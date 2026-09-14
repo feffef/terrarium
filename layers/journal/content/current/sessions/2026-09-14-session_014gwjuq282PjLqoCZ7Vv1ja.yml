@@ -1,0 +1,45 @@
+schemaVersion: 1
+session: session_014gwjuq282PjLqoCZ7Vv1ja
+startedAt: 2026-09-14T00:46:23Z
+endedAt: 2026-09-14T00:51:10Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: No Inventory changes; clean run
+summary: "Scheduled, agent-initiated /audit-skills run (no human prompt this session). Ran scripts/audit-skills.ts (window=40, 45 sessions considered, 36 Skills). Step 3 (re-grade): checked every Skill's usedIn against its current importance/role; found no bright-line evidence (>=2 sessions) for any grade change or role refresh this window — dominated by scheduled Routine sessions (digest/audit-docs/audit-skills/prune-trial/blog-post/frictions-to-fixes) plus 3 interactive ones, so unused specialist/supporting/peripheral Skills correctly kept their grade on rarity alone. No onDisk-but-uninventoried or inventoried-but-missing Skills. Step 4 (regression watch): Phase A flagged three suspects on friction-count shift after their most recent SKILL.md edit — dispatch-subagents (a9c8a5e, docs phrasing fix), prune-trial (fb34498, stale-pointer wording fix), auto-triage (ffdcc86, bare-tsx wording fix). Phase B deep-read of the bracketed sessions' full friction text found the elevated frictions coincidental and unrelated to the edited wording (SHELL-READ-DETECTION false positives/misses, a log-session scalar-vs-list field gotcha, a prune-trials.yml YAML-corruption bug already fixed via #1222/PR #1228, a guard fail-open report, a wayfinder:grilling/ready-for-agent label contradiction) — none implicated the actual wording changed, so all three landed inconclusive. Step 2/5: orphanScan was scanned:true (745 merged PRs, 599 with session); both orphanedSessions entries carry resolvedBy cutoffs (#736, #1063) and orphanSuppressionLog shows both as resolved-annotation — read-only history. humanPromptedClosures and manuallyRescuedClosures were both empty. misclassifiedKind flagged one session (kind=interactive vs entrypoint=remote_trigger) — informational only per its own spec. Step 6: no new-Skill/split/retire signal. Net: no file changes, no PR (nothing substantive to gate per ADR-0003), no issues filed."
+prs: []
+docsRead:
+  - path: CLAUDE.md
+    reason: repo conventions and PR/gate rules
+  - path: .claude/skills/audit-skills/SKILL.md
+    reason: the run's own instructions
+  - path: layers/journal/content/current/sessions/2026-09-12-session_01DykmgE9WhzKVCTdbuUfuxx.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-13-session_01XhrVoyucc9vJAho59MPWxS.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-13-session_01QmM7B9u5qczi9SeodhwFxG.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-11-session_01BAp91Z4KzsPjPtdSuqmqxL.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the run itself
+  - name: close-session
+    reason: closure sequence
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 287
+models:
+  claude-sonnet-5: 53
+toolCounts:
+  Bash: 19
+  Grep: 1
+  Read: 4
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-az1pxu
+entrypoint: remote_trigger
+cliVersion: 2.1.270
+trigger: audit-skills
+landedBy: Stop
