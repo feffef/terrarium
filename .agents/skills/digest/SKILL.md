@@ -137,10 +137,9 @@ and open **one gated PR**. Keep the PR description in sync with what it
 contains (`CLAUDE.md`).
 
 Then **land it yourself once the CI gate is green** (ADR-0003 amendment;
-ADR-0004's content-only low-risk tier) — allowed **only** while the PR contains
-nothing beyond the digest scope (digest pages under `…/pages/digests/`, the
-`current` → `archived` moves step 5 produced, at most plus the index's
-editorial intro):
+ADR-0004's content-only low-risk tier) — allowed **only** while the PR stays
+within this Skill's ADR-0003 ledger-row scope
+(`docs/adr/0003-agent-operating-model-and-governance.md`):
 
 - Subscribe on open and land via `docs/agents/pr-workflow.md`'s recipe once
   green; if the failure isn't yours, leave the PR open and escalate to a

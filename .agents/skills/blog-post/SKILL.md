@@ -263,11 +263,12 @@ not a full transcript.
 **At PR-open, invoke `close-session`** — your first log (`in-review`).
 
 **Then let it land once the CI gate is green** (ADR-0003 amendment; ADR-0004's
-content-only low-risk tier). A blog post is squarely low-risk content — a new
-page under `layers/blog/content/<persona>/pages/`, at most plus one pingback stub
-under `layers/blog/content/<target>/pingbacks/` — and its editorial judgement was
-already spent in the A5 outside-read, so the merge decision is safely delegated to
-the objective gate:
+content-only low-risk tier) — allowed only while the PR stays within this
+Skill's ADR-0003 ledger-row scope
+(`docs/adr/0003-agent-operating-model-and-governance.md`). A blog post is
+squarely low-risk content, and its editorial judgement was already spent in
+the A5 outside-read, so the merge decision is safely delegated to the
+objective gate:
 
 - Subscribe on open and land via `docs/agents/pr-workflow.md`'s recipe once
   green; if the failure isn't the post's fault, leave the PR open and

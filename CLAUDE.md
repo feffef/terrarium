@@ -330,11 +330,12 @@ so this doc can't drift.
 
 **The authoritative gate is CI, which is *meant* to run the full `pnpm gate` on
 every PR** (`.github/workflows/gate.yml`) — the run that must go green to merge
-(ADR-0004 convention; whether GitHub itself mechanically enforces that is a
-separate, currently-unresolved question — see
-`docs/research/github-branch-protection-vs-autonomous-log-commits.md` for
-`main`'s actual branch-protection state), so you don't run the full gate
-locally yourself. **Known gap:** `gate.yml` currently runs a stale subset of
+(ADR-0004 convention; GitHub does not currently enforce that mechanically —
+`main` carries no branch protection or ruleset, so every "nothing lands
+without a gated PR" rule rests on agents choosing to open one. See
+`docs/research/github-branch-protection-vs-autonomous-log-commits.md` for the
+full history, and re-verify before relying on it — it's a dated snapshot, not
+a live check), so you don't run the full gate locally yourself. **Known gap:** `gate.yml` currently runs a stale subset of
 `pnpm gate` — see `docs/proposals/879-gate-yml-thin-shell.md` (which supersedes
 the earlier `630-add-verify-mermaid-to-gate-workflow.md`) for the fix and why,
 pending a human to apply it. Both the keyed collections
