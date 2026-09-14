@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_013iSKECLzYwgTWTMLkNYV28
+startedAt: 2026-09-14T02:04:54Z
+endedAt: 2026-09-14T02:26:38Z
+kind: autonomous
+goal: Run frictions-to-fixes as review-agent
+status: in-review
+outcome: "PR #1249 open (gate running); #1247 queued"
+summary: "Fully autonomous scheduled run (frictions-to-fixes Routine), no human prompt this turn. Delegated survey+screen (steps 1-2) of the last 20 session logs to a subagent, which ranked frictions and checked the tracker/main for prior fixes. Filed three issues: #1246 and #1247 (both \"hard\" — 2+ files, non-obvious design — bugs in docsReadViaShell's shell-read detector: single-match-glob rejection, and grep-output-blind crediting) and #1248 (a guard/settings.json-touching candidate, filed for human visibility only per CLAUDE.md's human-only-surface rule — not dispatched). #1246 and #1247 overlap heavily on the same files/functions (scripts/shell-reads.ts, scripts/session-trace.ts), so per dispatch-subagents' same-file-collision rule I serialized them instead of dispatching in parallel: dispatched a Sonnet impl agent for #1246 first (worktree-isolated), which opened PR #1249 with a green local gate; #1247 is queued to dispatch once #1249 merges. Logging now at PR-open per CLAUDE.md; will finalize to `completed` once both PRs are reviewed and merged."
+prs:
+  - "1249"
+docsRead:
+  - path: scripts/shell-reads.ts
+    reason: (read before editing)
+  - path: scripts/session-trace.ts
+    reason: (read before editing)
+  - path: scripts/log-session.ts
+    reason: (read before editing)
+  - path: tests/unit/shell-reads.spec.ts
+    reason: (read before editing)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run's own driving skill
+  - name: dispatch-subagents
+    reason: worktree isolation + same-file-collision serialization
+  - name: close-session
+    reason: logging at PR-open checkpoint
+  - name: log-session
+    reason: this log
+frictions: []
+durationSec: 1304
+models:
+  claude-sonnet-5: 48
+toolCounts:
+  Agent: 2
+  ToolSearch: 2
+  Skill: 3
+  mcp__github__search_issues: 3
+  mcp__github__issue_read: 1
+  mcp__github__issue_write: 6
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 4
+  Write: 1
+  Bash: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - scripts/shell-reads.ts
+  - scripts/session-trace.ts
+  - scripts/log-session.ts
+  - tests/unit/shell-reads.spec.ts
+docsReadViaShell:
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/guards.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix docsReadViaShell glob rejection
+    model: sonnet
+gitBranch: claude/eager-ptolemy-cgk11i
+entrypoint: remote_trigger
+cliVersion: 2.1.270
+trigger: frictions-to-fixes
+landedBy: Stop
