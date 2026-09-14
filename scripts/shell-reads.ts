@@ -75,6 +75,7 @@ export type SkipRule =
   | 'value bound to a flag'
   | 'redirect target: written, not read'
   | 'not a literal path: glob or variable'
+  | 'grep/rg output does not show this file being read'
 
 export interface NearMiss {
   command: string
@@ -277,6 +278,34 @@ function showsNoContent(verb: string, tokens: Token[]): boolean {
   })
 }
 
+/** A reader verb whose output is a FILTERED SUBSET of what it was given, so
+ *  which of its file arguments actually reached the session depends on the
+ *  command's own output (issue #1247) — `cat`/`sed`/etc. stream everything
+ *  they're pointed at and stay ungated. */
+const OUTPUT_FILTERED_VERBS = new Set(['grep', 'rg'])
+
+/** One command, optionally paired with the text its own `tool_result` carried.
+ *  A bare string means "output unknown" — gating is skipped, same as before
+ *  #1247, which is what every pre-existing caller/test still passes. The real
+ *  caller (session-trace.ts's `bashCommandsOf`) always supplies the pair. */
+export type ShellCommand = string | { command: string; output?: string }
+
+function normalizeShellCommand(entry: ShellCommand): { command: string; output?: string } {
+  return typeof entry === 'string' ? { command: entry } : entry
+}
+
+/** True when `output` shows `token` (the literal argument grep/rg was given)
+ *  was actually part of what matched — either grep's own multi-file
+ *  `<token>:<line>:<match>` prefix, or rg's default grouped format, whose
+ *  header line is the bare path with nothing after it (`--no-heading` makes rg
+ *  emit the grep-style prefix instead, also covered here). Scoped to these two
+ *  shapes deliberately (issue #1247) rather than the full space of grep/rg
+ *  flags that reshape output (`-H`, `--heading`, `-z`, …). */
+function outputMentionsFile(output: string, token: string): boolean {
+  const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return new RegExp(`(^|\\n)${escaped}(:|\\r?\\n|$)`).test(output)
+}
+
 /** Scan every Bash command of a session for shell-read instruction docs.
  *  `rel` relativizes an absolute path the way the trace does, so `/repo/docs/x.md`
  *  and `docs/x.md` land on one key. Near-misses are ordered reader-segment first:
@@ -288,9 +317,16 @@ function showsNoContent(verb: string, tokens: Token[]): boolean {
  *  handed to it, and a single resolved match is credited exactly like a literal
  *  path. `undefined` (0 or 2+ matches) falls through to today's near-miss — never
  *  guessed between candidates (issue #1246). The real caller (session-trace.ts)
- *  injects an `fs`-backed implementation; tests exercise the pure default. */
+ *  injects an `fs`-backed implementation; tests exercise the pure default.
+ *
+ *  Each `commands` entry may pair a command with its own `tool_result` output
+ *  text (issue #1247): a grep/rg invocation with more than one file positional
+ *  is then only credited for a file its output actually shows a match from, and
+ *  one with exactly one file positional only when the output is non-empty. A
+ *  bare string (no output known) skips this gate entirely, matching every
+ *  caller/test that predates #1247. */
 export function scanShellReads(
-  commands: string[],
+  commands: ShellCommand[],
   rel: (p: string) => string = (p) => p,
   resolveGlob?: (token: string) => string | undefined,
 ): ShellReadScan {
@@ -309,7 +345,8 @@ export function scanShellReads(
     return isInstructionDoc(canonical) ? canonical : undefined
   }
 
-  for (const command of commands) {
+  for (const entry of commands) {
+    const { command, output } = normalizeShellCommand(entry)
     for (const raw of segments(command)) {
       const tokens = unwrap(raw)
       if (tokens.length === 0) continue
@@ -349,9 +386,15 @@ export function scanShellReads(
         continue
       }
 
+      // Candidates this segment would credit, held back until the file-count/
+      // output gate below decides (issue #1247): grep/rg filter their input,
+      // so which of several given files actually reached the session depends
+      // on what the command actually matched, not the argument list alone.
+      const candidates: { path: string; token: string }[] = []
       let skipReason: SkipRule | null = null
       const patternSupplied = tokens.some((t) => !t.quoted && PATTERN_FLAGS.has(t.text))
       let positionals = 0
+      let fileCount = 0
       for (const t of tokens.slice(1)) {
         if (skipReason) {
           note(fromReader, t.text, skipReason)
@@ -380,13 +423,26 @@ export function scanShellReads(
           note(fromReader, t.text, 'first positional: a pattern or program, not a path')
           continue
         }
+        fileCount++
         const p = norm(t.text)
-        if (isInstructionDoc(p)) paths.add(p)
+        if (isInstructionDoc(p)) candidates.push({ path: p, token: t.text })
         else if (isGlobbedInstructionDoc(p)) {
           const resolved = resolveGlobbedDoc(p)
-          if (resolved !== undefined) paths.add(resolved)
+          if (resolved !== undefined) candidates.push({ path: resolved, token: t.text })
           else note(fromReader, t.text, 'not a literal path: glob or variable')
         }
+      }
+
+      // `output === undefined` means the caller has no tool_result to gate
+      // with (every pre-#1247 caller/test) — credit unconditionally, as before.
+      if (OUTPUT_FILTERED_VERBS.has(verb) && output !== undefined) {
+        for (const c of candidates) {
+          const confirmed = fileCount > 1 ? outputMentionsFile(output, c.token) : output.trim() !== ''
+          if (confirmed) paths.add(c.path)
+          else note(fromReader, c.token, 'grep/rg output does not show this file being read')
+        }
+      } else {
+        for (const c of candidates) paths.add(c.path)
       }
     }
   }
