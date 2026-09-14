@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01ExSvEPyEuEy6awnbUKBXZr
 startedAt: 2026-09-14T04:08:29Z
-endedAt: 2026-09-14T04:21:09Z
+endedAt: 2026-09-14T04:24:39Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep across all eight lenses
-status: in-review
-outcome: "Two confirmed findings fixed; PR #1251 open, self-merges on green"
-summary: "Fully agent-initiated, fired by a scheduled Routine with no human prompt. Dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) per the audit-docs Skill. Freshness and Concision reported nothing solid — the 48h window was already swept by two prior audit-docs runs and the corpus is under continuous self-audit. Single-home found a Duplication (ADR-0003's ledger table designates itself as the single home for each exempted Skill's auto-merge scope, but digest/SKILL.md and blog-post/SKILL.md each restated it in full). Coherence found a Contradiction (CLAUDE.md called main's branch-protection enforcement \"a separate, currently-unresolved question\" while its own cited research doc and the journal's history.md both state plainly that protection was removed 2026-07-11 and hasn't come back). Fact-checked both against primary sources, including a live check of GitHub's rules page (no rulesets configured on main) rather than trusting the dated docs alone. Both CONFIRMED, Live-tier, no human-only surface touched, so fixed directly — no issue filed, no genuine factual conflict. pnpm gate:scoped ran the full sequence and passed clean. Opened PR #1251, subscribed to its activity for self-merge on green gate per ADR-0003."
+status: completed
+outcome: "Two confirmed findings fixed; PR #1251 merged"
+summary: "Fully agent-initiated, fired by a scheduled Routine with no human prompt. Dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) per the audit-docs Skill. Freshness and Concision reported nothing solid — the 48h window was already swept by two prior audit-docs runs and the corpus is under continuous self-audit. Single-home found a Duplication (ADR-0003's ledger table designates itself as the single home for each exempted Skill's auto-merge scope, but digest/SKILL.md and blog-post/SKILL.md each restated it in full). Coherence found a Contradiction (CLAUDE.md called main's branch-protection enforcement \"a separate, currently-unresolved question\" while its own cited research doc and the journal's history.md both state plainly that protection was removed 2026-07-11 and hasn't come back). Fact-checked both against primary sources, including a live check of GitHub's rules page (no rulesets configured on main) rather than trusting the dated docs alone. Both CONFIRMED, Live-tier, no human-only surface touched, so fixed directly — no issue filed, no genuine factual conflict. pnpm gate:scoped ran the full sequence and passed clean. Opened PR #1251, subscribed to its activity, posted the verdict as a COMMENT-event review, ran check-conflicting-issues.ts (one advisory hit against an unrelated rule in the same file, eyeballed and cleared), then merge-pr.ts polled CI to green and merged (846cfb44). Unsubscribed after merge."
 prs:
   - "1251"
 docsRead:
@@ -20,13 +20,13 @@ docsRead:
     reason: verify the branch-protection Contradiction finding's cited source
   - path: layers/journal/content/current/pages/history.md
     reason: cross-check the branch-protection Contradiction finding's other side
+  - path: docs/agents/pr-workflow.md
+    reason: the land-a-gated-PR recipe (merge-pr.ts
   - path: .agents/skills/digest/SKILL.md
     reason: (read before editing)
   - path: .agents/skills/blog-post/SKILL.md
     reason: (read before editing)
   - path: docs/research/rulebook-migration-table.md
-    reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: CONTEXT.md
     reason: (no reason given)
@@ -144,14 +144,14 @@ skillsUsed:
   - name: audit-docs
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 760
+durationSec: 970
 models:
-  claude-sonnet-5: 115
+  claude-sonnet-5: 137
 toolCounts:
-  Bash: 22
+  Bash: 29
   Agent: 4
   TaskCreate: 1
-  ReadNotifications: 1
+  ReadNotifications: 3
   Read: 8
   ToolSearch: 7
   WebFetch: 1
@@ -161,10 +161,12 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Grep: 1
-  Write: 1
+  Write: 2
   mcp__github__issue_read: 1
   mcp__github__pull_request_read: 1
   mcp__github__pull_request_review_write: 1
+  ScheduleWakeup: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - CLAUDE.md
   - .agents/skills/digest/SKILL.md
