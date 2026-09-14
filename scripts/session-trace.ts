@@ -165,6 +165,30 @@ export interface FoldedShellReadScan extends ShellReadScan {
   subagentPaths: string[]
 }
 
+/** Resolves a glob/variable token against the real repo tree at `repoRoot`, for
+ *  `scanShellReads`'s injectable `resolveGlob` (issue #1246) — `scanShellReads`
+ *  itself stays fs-free, so only its real caller, here, touches disk. Handles
+ *  the shape every occurrence in the wild has taken: a literal directory prefix
+ *  plus a `*`/`?` wildcard in the FINAL path segment (`docs/adr/0017-*.md`).
+ *  A glob earlier in the path, or any other `GLOB_OR_VAR` character (a shell
+ *  variable's `$`/`` ` ``/`~`, or `[]`/`{}`), has no filesystem meaning to
+ *  resolve — it falls through to `undefined`, i.e. today's near-miss, same as
+ *  a 0- or 2+-match glob. Never guesses among several real matches. */
+function resolveGlobAgainstTree(repoRoot: string): (token: string) => string | undefined {
+  return (token) => {
+    const slash = token.lastIndexOf('/')
+    const dir = slash === -1 ? '' : token.slice(0, slash)
+    const filePattern = slash === -1 ? token : token.slice(slash + 1)
+    if (/[*?]/.test(dir)) return undefined
+    const dirAbs = join(repoRoot, dir)
+    if (!existsSync(dirAbs) || !statSync(dirAbs).isDirectory()) return undefined
+    const source = filePattern.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '[^/]*').replace(/\?/g, '[^/]')
+    const regex = new RegExp(`^${source}$`)
+    const matches = readdirSync(dirAbs).filter((name) => regex.test(name))
+    return matches.length === 1 ? (dir ? `${dir}/${matches[0]!}` : matches[0]!) : undefined
+  }
+}
+
 /** The shell-read scan WITH its near-misses, for the author-time advisory the
  *  `log-session` Skill prints (#1074's verification loop). `extractTrace` keeps
  *  only `.paths`; the rejected candidates exist to turn "did it miss one?" from
@@ -173,13 +197,20 @@ export interface FoldedShellReadScan extends ShellReadScan {
  *  Subagent transcripts belong here for the same reason `docsReadViaShell` is in
  *  `FOLDED_TRACE_FIELDS`: the value that LANDS folds them in, so an advisory
  *  scanning only the parent would ask the agent to verify a strict subset of what
- *  the log actually carries. */
+ *  the log actually carries.
+ *
+ *  `repoRoot`, when given, resolves a single-match glob/variable token against
+ *  the tree there (issue #1246) — the advisory runs at author time, with the
+ *  session's own repo checkout on disk, so a real resolution is sound here in a
+ *  way it would not be for a trace re-derived later against a since-changed tree. */
 export function shellReadScanOf(
   records: Record<string, unknown>[],
   subagentRecordSets: Record<string, unknown>[][] = [],
+  repoRoot?: string,
 ): FoldedShellReadScan {
+  const resolveGlob = repoRoot !== undefined ? resolveGlobAgainstTree(repoRoot) : undefined
   const scanOf = (rs: Record<string, unknown>[]): ShellReadScan =>
-    scanShellReads(bashCommandsOf(rs), relativizer(rs))
+    scanShellReads(bashCommandsOf(rs), relativizer(rs), resolveGlob)
   const own = scanOf(records)
   const scans = [own, ...subagentRecordSets.map(scanOf)]
   const paths = [...new Set(scans.flatMap((s) => s.paths))]

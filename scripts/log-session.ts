@@ -738,6 +738,7 @@ export function reportShellReads(cwd: string, log: (line: string) => void = cons
     scan = shellReadScanOf(
       parseTranscript(readFileSync(transcriptPath, 'utf8')),
       readSubagentJsonls(transcriptPath).map(parseTranscript),
+      cwd,
     )
   } catch {
     // Locating and reading the transcript is best-effort: a report that can't be
