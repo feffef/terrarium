@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_017TdzrnaFLedBfRwLmrn5Zj
 startedAt: 2026-09-14T11:07:33Z
-endedAt: 2026-09-14T11:22:08Z
+endedAt: 2026-09-14T11:25:32Z
 kind: autonomous
 goal: Run the scheduled /blog-post sweep
-status: in-review
-outcome: "PR #1252 opened, subscribed, awaiting gate/merge"
-summary: "Fully agent-initiated, scheduled firing of /blog-post with no persona given and no human input at any point this session. Ran the rotation gate (scripts/blog-rotation.ts: last kevin, starved [david], eligible [david]), which forced all three candidates to David. Drafted three full David candidates to scratch (docsReadViaShell's multi-week blind-spot saga; the ADR-0004 self-referential prune; frictions-to-fixes tuning its own bureaucracy), checked each against sibling Personas' recent posts to avoid re-telling an already-told story (dropped a fourth candidate about the guard fail-open bug since Karen had already covered it in full), then had a fresh Sonnet subagent reviewer pick the strongest one blind to the others. It chose the ADR-0004 self-referential-prune draft for covering the highest-stakes artifact and naming four under-explained terms/references (ADR-0025, \"ledger,\" \"the trio,\" the ADR-amendment convention itself), all folded into a revision. pnpm gate:scoped ran the full sequence clean (74 unit test files/1593 tests, build, 79/79 e2e). Opened PR #1252, subscribed to its activity. All agent-initiated per the scheduled task's own mandate; no human decision was needed."
+status: completed
+outcome: "PR #1252 merged (8bb32357)"
+summary: "Fully agent-initiated, scheduled firing of /blog-post with no persona given and no human input at any point this session. Ran the rotation gate (scripts/blog-rotation.ts: last kevin, starved [david], eligible [david]), which forced all three candidates to David. Drafted three full David candidates to scratch (docsReadViaShell's multi-week blind-spot saga; the ADR-0004 self-referential prune; frictions-to-fixes tuning its own bureaucracy), checked each against sibling Personas' recent posts to avoid re-telling an already-told story (dropped a fourth candidate about the guard fail-open bug since Karen had already covered it in full), then had a fresh Sonnet subagent reviewer pick the strongest one blind to the others. It chose the ADR-0004 self-referential-prune draft for covering the highest-stakes artifact and naming four under-explained terms/references (ADR-0025, \"ledger,\" \"the trio,\" the ADR-amendment convention itself), all folded into a revision. pnpm gate:scoped ran the full sequence clean (74 unit test files/1593 tests, build, 79/79 e2e). Opened PR #1252, subscribed to its activity, confirmed clean mergeable state and no open review threads, posted the pre-merge verdict as a COMMENT-event review, then landed it via scripts/merge-pr.ts once the safety-gate check reported green on the merge ref (merge commit 8bb32357). Unsubscribed after merge. All agent-initiated per the scheduled task's own mandate; no human decision was needed."
 prs:
   - "1252"
 docsRead:
@@ -54,23 +54,31 @@ frictions:
   - description: "SHELL-READ-DETECTION miss: `git show <sha> -- <path>` piped through head/grep (e.g. `git show 15db88f8 -- docs/adr/0004-objective-safety-gate.md .agents/prune-trials.yml 2>/dev/null | head -150`) genuinely streamed the relevant amendment text for docs/adr/0004-objective-safety-gate.md into this session — the exact paragraphs the winning blog post quotes and cites — but the detector marked it \"not a reader command\" and didn't credit the read. Same shape also missed docs/agents/environment-caveats.md (via `git show a58b3b6c -- docs/agents/environment-caveats.md`) and docs/agents/guards.md / .agents/skills/frictions-to-fixes/SKILL.md (via `git show 204fd33f -- docs/agents/guards.md .agents/skills/frictions-to-fixes/SKILL.md`), both from discarded candidates."
     solution: Recognize `git show <ref> -- <path>...` (the diff-for-a-path form, distinct from the already-fixed `git show <ref>:<path>` blob-dump form) as a reader command when its output actually streams added/removed content for that path, mirroring the fixes already landed in scripts/shell-reads.ts for other git-show shapes.
     severity: moderate
-durationSec: 875
+durationSec: 1079
 models:
-  claude-sonnet-5: 119
+  claude-sonnet-5: 154
 toolCounts:
-  Bash: 35
+  Bash: 40
   Read: 14
   Write: 6
-  Edit: 4
+  Edit: 6
   Agent: 2
   Grep: 1
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-09-14-the-rule-about-pruning-rules-found-a-rule-it-had-already-broken.md
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
 subagents:
   - type: general-purpose
     task: Judge three blog draft candidates
