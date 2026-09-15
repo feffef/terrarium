@@ -24,57 +24,60 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      CLAUDE.md's "Don't state anything as settled" bullet (Working
-      conventions) bundled four sub-rules — identifier resolution, factual/
-      causal/behavioral claims, another session's hearsay, and set counts —
-      into 22 lines that itemized each case's own worked example and closed
-      with a bare `(Incident history: #387, #605, #628, #723, #738, #833,
-      #948, #871.)` citation: the same "narrowed repeatedly, self-documents
-      its own recurrence" shape already pruned from ADR-0003's auto-merge
-      ledger. The enforceable slice is already mechanized elsewhere and
-      single-homed there: `scripts/github-provenance-guard.ts` covers an
-      identifier/claim shipped in a GitHub body, `scripts/session-id-guard.ts`
-      covers a commit trailer naming the wrong session, and
-      `log-session/SKILL.md`'s "Recovering the id" section already owns the
-      session-id mechanics in more precise detail than this bullet's copy of
-      it. Compressed to one statement of the rule plus its single genuine
-      insight (recalling/inferring from context reads like resolution but is
-      capture) and the three one-line specializations (session id → the named
-      Skill section; hearsay → confirm with the human; count → read every
-      member), dropping the itemized case-by-case elaboration and the bare
-      issue-number citation — git history on this file is where that record
-      lives now. Net -11 lines (22 → 11, `CLAUDE.md` only).
+      Four of CLAUDE.md's Working-conventions footgun bullets (ScheduleWakeup,
+      double-backgrounding, tail/head-piping, dispatched-subagent
+      backgrounding) each restated a fail-closed `PreToolUse` guard's own
+      rationale and mechanics in full, even though `docs/agents/guards.md`'s
+      own lead sentence already says "If a guard just denied your call, its
+      deny message is the instruction" — the same "narrated incident that a
+      built mechanism has since made redundant" shape flagged as
+      `prune-trial`'s criterion-1 bait in
+      `docs/research/rulebook-migration-table.md`'s CM-27/28/37/38 rows (all
+      four "Built", i.e. Cost: 0). The provenance-header bullet two entries
+      below already modeled the compressed shape ("the guard's own deny
+      message — not this doc — is the rule's teaching surface"); these four
+      hadn't caught up to it. Compressed each to the bold rule statement plus
+      a one-clause reason a reader can't get from the deny message alone
+      (ScheduleWakeup: `stop: true`'s exemption; double-backgrounding: what
+      "completed" stops meaning; tail-piping: wrong-status-not-truncation;
+      subagent-backgrounding: no wake mechanism resumes a stopped subagent)
+      plus the `docs/agents/guards.md` + issue-number pointer, dropping the
+      restated deny-message content and (for double-backgrounding) the
+      mechanism-internals explanation of *why* the guard denies it — agents
+      calling the tool this way no longer reach that code path to need it.
+      Left the pkill bullet and the git-mechanics pointer bullet untouched:
+      pkill has no guard (the prose + `scripts/preview.ts` substitute is the
+      only enforcement), and the git-mechanics bullet is already a bare
+      pointer. Net -10 lines (`CLAUDE.md` only).
     territory:
       paths:
-        - "CLAUDE.md: the \"Don't state anything as settled\" bullet (Working conventions)"
+        - "CLAUDE.md: the ScheduleWakeup, double-backgrounding, tail/head-piping, and dispatched-subagent-backgrounding bullets (Working conventions)"
       keywords:
-        - primary source
-        - reads like resolution but is capture
-        - confirmed out-of-band
-        - Recovering the id
-        - count is not a fact
-    opened: 2026-09-11
+        - backgrounds the inner shell
+        - no wake mechanism ever resumes
+        - names the fix
+        - deny message is the instruction
+    opened: 2026-09-15
     proven: true
     check: >
-      Damage is a session that, needing to resolve an identifier, verify a
-      claim, weigh another session's say-so, or state a count, reads the
-      compressed bullet and either recalls/infers an identifier from context
-      instead of its actual source (a system-prompt value or a fresh tool
-      call), states a subagent's or its own unverified claim as settled fact,
-      treats another session's "confirmed out-of-band" message as itself
-      sufficient to proceed on a real decision, or reports a grep/keyword-match
-      count as a verified fact without reading the matched members. NOT
-      damage: a session that opens `log-session/SKILL.md`'s "Recovering the
-      id" section for the session-id mechanics instead of finding them
-      restated inline (the intended pointer working), or one that never hits
-      any of the four cases this run. A Sonnet probe given only the compressed
-      text correctly refused a plausible `git log`-sourced session id in favor
-      of the system-prompt value, correctly required independently verifying
-      a subagent's root-cause claim against the actual code before writing it
-      into a PR, correctly treated another session's "confirmed out-of-band"
-      claim as hearsay requiring direct human confirmation before a schema
-      migration, and correctly refused to state a grep-derived count as fact
-      without reading each matched session log first.
+      Damage is a session that, needing to know *why* one of these four
+      footguns matters or what to do instead, reads the compressed bullet and
+      either can't find the pointer to `docs/agents/guards.md`/the guard's
+      deny message (so gives up rather than following it), or — for
+      double-backgrounding specifically — still doesn't know what alternative
+      to reach for (`Monitor`/`ps` plus a completion marker) because that
+      survived the trim. NOT damage: a session that is simply denied by the
+      guard and follows the deny message's own fix without needing the
+      now-shorter CLAUDE.md bullet at all (the intended design — the doc is a
+      secondary explanation, the guard is primary), or one that never hits any
+      of these four shapes this run. A Sonnet probe given only the compressed
+      text correctly named `Monitor`/`ps` plus a log completion marker as the
+      alternative to a stacked `&`, correctly said `stop: true` is the one
+      `ScheduleWakeup` call allowed outside a `/loop` session, correctly
+      recommended redirecting a long-running command's output to a file
+      instead of piping through `tail`, and correctly explained that a
+      dispatched subagent can't background a Bash command because nothing
+      would ever wake it back up.
   - problem: >
       `docs/agents/environment-caveats.md` had grown, bullet by bullet, into a
       full incident history for each platform quirk — discovery dates, which

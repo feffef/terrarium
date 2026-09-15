@@ -183,11 +183,9 @@ it with a tool.
   known confusion shapes and denies with the fix (`docs/agents/guards.md`, issue
   #612).
 - **`ScheduleWakeup` is valid in exactly one mode — inside a `/loop` session's
-  dynamic (self-paced) pacing.** Never reach for it as a general-purpose
-  wait/heartbeat/poll; cancelling an already-scheduled wakeup with `stop: true`
-  is exempt in every mode. A fail-closed `PreToolUse` guard refuses any other use
-  and names the right alternative for your situation in its deny message
-  (`docs/agents/guards.md`, issue #814).
+  dynamic (self-paced) pacing**; `stop: true` is exempt everywhere else. Guarded
+  (`docs/agents/guards.md`, issue #814) — the deny message names the right
+  alternative.
 - **Don't state anything as settled — an identifier, a factual/causal/behavioral
   claim, another session's say-so, or a count — unless you verified it fresh,
   this turn, against a primary source.** Recalling or inferring one from
@@ -215,27 +213,19 @@ it with a tool.
   isn't itself a failure signal. Recurred three times before the fix became a
   tool instead of more prose (#102 → #183 → #240).
 - **Never append a trailing shell `&` to a Bash command already passed with
-  `run_in_background: true`.** The tool already backgrounds the whole command
-  itself — adding `&` on top backgrounds the *inner* shell a second time, so
-  the outer call returns as soon as the detached shell forks, not when the
-  actual long-running process finishes, and "completed" stops meaning
-  anything. Use `Monitor`/`ps` plus a log completion marker to confirm the
-  process actually finished instead of trusting the outer call's return. A
-  `PreToolUse` guard denies this stacking outright, for any caller
-  (`docs/agents/guards.md`, issue #1208).
+  `run_in_background: true`** — it backgrounds the *inner* shell a second
+  time, so "completed" stops meaning the real process finished. Use
+  `Monitor`/`ps` plus a log completion marker instead. Guarded, for any
+  caller (`docs/agents/guards.md`, issue #1208).
 - **A dispatched subagent must never background a Bash command at all, or call
-  `Monitor` to wait on one** — a `PreToolUse` guard denies both
-  (`docs/agents/guards.md`, issue #694/#995). The rationale (no wake mechanism
-  ever resumes a stopped subagent) and the mechanics — running in the
-  foreground with an explicit `timeout`, splitting a step over 10 minutes,
-  naming a completion marker when something must background anyway — are
+  `Monitor` to wait on one** — no wake mechanism ever resumes a stopped
+  subagent. Guarded (`docs/agents/guards.md`, issue #694/#995); the mechanics
+  (foreground + `timeout`, splitting a step, a completion marker) are
   single-homed in `dispatch-subagents/SKILL.md`.
 - **Never pipe a backgrounded or long-running command through a trailing
   `tail`/`head`/`echo` when its exit status or full output matters** — it
-  silently reports the trailing command's status, not the real one, and can
-  truncate output. Redirect to a file instead (`cmd > log 2>&1`), check `$?`
-  directly, then read the file. A `PreToolUse` guard catches the risky shape
-  and names this same fix (`docs/agents/guards.md`, issue #873).
+  silently reports the wrong status and can truncate output. Guarded; the
+  deny message names the fix (`docs/agents/guards.md`, issue #873).
 - **Git mechanics — staleness, history archaeology, commit hygiene, and the
   git-specific chaining/output-discarding footguns (the same "check first"/
   "never silence a state-changing command" discipline as the pkill/tail-piping
