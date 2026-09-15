@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01FNrGSN6WVeXx5NumnDh8ko
 startedAt: 2026-09-15T04:08:30Z
-endedAt: 2026-09-15T04:22:19Z
+endedAt: 2026-09-15T04:27:33Z
 kind: autonomous
 goal: Run the scheduled audit-docs sweep
-status: in-review
-outcome: 3 duplication fixes, PR opened
-summary: "Scheduled, fully autonomous /audit-docs run (no human prompt). Fanned out four paired-lens reviewer agents in parallel (Freshness: Drift/Orphan-addition; Single-home: Duplication/Mis-location; Concision: Verbose/Stale-narration; Coherence: Contradiction/Ambiguity) over the repo's Live-tier docs, respecting the four currently-open prune-trial territories. Only the Single-home agent found candidates: three duplication cases. Fact-checked all three against primary sources directly (CONTEXT.md, docs/agents/environment-caveats.md, CLAUDE.md's Ground rules) myself rather than via a separate dispatched checker, given the low volume. Two confirmed and fixed: the external session-log flag's \"absent ⇒ internal\" semantic, restated in docs/agents/guest-contributions.md and .agents/skills/log-session/SKILL.md instead of pointing at CONTEXT.md's Session term; and docs/proposals/README.md re-deriving the workflow-OAuth-scope reason instead of pointing at environment-caveats.md. The third (trusted-label recap in guest-contributions.md) was judged a legitimate local restatement, not true duplication, and left alone. Ran pnpm gate:scoped (green, correctly classified inert), committed, pushed, and opened PR #1257, which self-merges on green per the ADR-0003 amendment since nothing touched a human-only surface."
+status: completed
+outcome: 3 duplication fixes, PR merged
+summary: "Scheduled, fully autonomous /audit-docs run (no human prompt). Fanned out four paired-lens reviewer agents in parallel (Freshness: Drift/Orphan-addition; Single-home: Duplication/Mis-location; Concision: Verbose/Stale-narration; Coherence: Contradiction/Ambiguity) over the repo's Live-tier docs, respecting the four currently-open prune-trial territories. Only the Single-home agent found candidates: three duplication cases. Fact-checked all three against primary sources directly (CONTEXT.md, docs/agents/environment-caveats.md, CLAUDE.md's Ground rules) myself rather than via a separate dispatched checker, given the low volume. Two confirmed and fixed: the external session-log flag's \"absent ⇒ internal\" semantic, restated in docs/agents/guest-contributions.md and .agents/skills/log-session/SKILL.md instead of pointing at CONTEXT.md's Session term; and docs/proposals/README.md re-deriving the workflow-OAuth-scope reason instead of pointing at environment-caveats.md. The third (trusted-label recap in guest-contributions.md) was judged a legitimate local restatement, not true duplication, and left alone. Ran pnpm gate:scoped (green, correctly classified inert), committed, pushed, opened PR #1257, posted the required pre-merge COMMENT verdict, and landed it via scripts/merge-pr.ts per docs/agents/pr-workflow.md's recipe (audit-docs is a merge-on-green-gate-alone tier, ADR-0003/0004) — merge commit 4513bf48."
 prs:
   - "1257"
 docsRead:
@@ -16,6 +16,8 @@ docsRead:
     reason: confirm which Tenant content is excluded from the sweep (no-claim content)
   - path: skills-lock.json
     reason: derive the external vs. our-own Skill tier boundary
+  - path: docs/agents/pr-workflow.md
+    reason: land recipe + per-tier merge authority for audit-docs
   - path: docs/agents/guest-contributions.md
     reason: (read before editing)
   - path: .agents/skills/log-session/SKILL.md
@@ -27,8 +29,6 @@ docsRead:
   - path: docs/adr/0003-agent-operating-model-and-governance.md
     reason: (no reason given)
   - path: docs/adr/0004-objective-safety-gate.md
-    reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: docs/agents/guards.md
     reason: (no reason given)
@@ -136,22 +136,28 @@ skillsUsed:
   - name: audit-docs
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 829
+durationSec: 1143
 models:
-  claude-sonnet-5: 87
+  claude-sonnet-5: 116
 toolCounts:
-  Bash: 22
-  Read: 5
+  Bash: 25
+  Read: 6
   Agent: 4
   ScheduleWakeup: 1
   Edit: 3
-  ToolSearch: 1
-  Glob: 2
+  ToolSearch: 3
+  Glob: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
+  Write: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/agents/guest-contributions.md
   - .agents/skills/log-session/SKILL.md
