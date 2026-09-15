@@ -60,8 +60,8 @@ has already built.
   allows.** The goal is honest coverage of what happened, not mimicking our exact
   mechanics.
 - **Mark it `external: true`.** The session log's `external` flag (ADR-0009
-  amendment) declares a foreign toolchain. Absent ⇒ internal; our own sessions
-  leave it absent.
+  amendment) declares a foreign toolchain — see `CONTEXT.md`'s **Session** term
+  for the absent-⇒-internal semantics.
 - **Self-improvement mining ignores it; ideas still surface.** See `CONTEXT.md`'s
   **Session** glossary term for the exact mining-exclusion and Sparks-feed
   behavior (ADR-0009 amendment, 2026-07-22).

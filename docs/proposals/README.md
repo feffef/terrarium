@@ -3,8 +3,8 @@
 ## Purpose
 
 This directory is the handoff for a `.github/workflows/*` change an agent
-can't push itself: agent sessions lack the `workflow` OAuth scope (ADR-0004),
-so they cannot push workflow files directly. Without a defined handoff, such a
+can't push itself (`docs/agents/environment-caveats.md` single-homes why — no
+`workflow` OAuth scope, ADR-0004). Without a defined handoff, such a
 change would sit as unstructured prose in a PR or issue body, with no
 consistent place for a human to find "what workflow edit is pending." An agent
 writes the intended change here instead; a human reads it and applies it by
