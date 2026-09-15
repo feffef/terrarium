@@ -1,0 +1,48 @@
+schemaVersion: 1
+session: session_01CJYjBLd8VZkXK7mxYiHgWb
+startedAt: 2026-09-15T00:16:16Z
+endedAt: 2026-09-15T00:21:43Z
+kind: autonomous
+goal: Run the scheduled /digest sweep for 2026-09-14
+status: in-review
+outcome: "Digest authored, retention sweep run, PR #1254 opened"
+summary: "Scheduled /digest run, no human prompt. scripts/digest.ts list showed one closed UTC day needing a digest, 2026-09-14. Gathered that day's PRs/commits/sessions/frictions and authored layers/journal/content/current/pages/digests/2026-09-14.md, narrating the shell-read detector fixes (#1249, #1250) and the ADR-0017 prune-trial (#1253) that landed hours after a blog post ironically caught the pruning rules breaking their own rule. Ran scripts/archive-journal-content.ts --write, which archived the 2026-09-07 digest and its 6 session logs; no index.md edit needed since the Journal landing is a live dashboard. pnpm gate:scoped ran in the background (~2 min; build+test+e2e all green, 79/79 e2e tests). Committed, pushed, and opened PR #1254 with the local gate already confirmed green, then subscribed to its activity; will land it via merge-pr.ts once CI's gate confirms green, per the digest Skill's step 7 self-merge eligibility."
+prs:
+  - "1254"
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: "Called ScheduleWakeup to wait on a backgrounded `pnpm gate:scoped` run, thinking of it as a generic wait/poll mechanism; the /loop-only guard (issue #814) correctly denied it since this isn't a /loop session."
+    solution: Should have just ended the turn per CLAUDE.md's own guidance ("waiting on a backgrounded Bash command → end the turn, the harness delivers a task notification"), which is what I did after the denial.
+    severity: nit
+  - description: A Stop-hook check (uncommitted-changes guard) fired demanding a commit+push while `pnpm gate:scoped` was still running in the background, before the digest Skill's step 6 (gate) had actually confirmed green — committed and pushed ahead of the local gate result, relying on CI as the authoritative backstop.
+    solution: Worked out fine here (gate came back green moments later), but the Skill's step ordering (gate, then commit) and this environment's end-of-turn Stop-hook (commit on any uncommitted change) can race when a heavy gate run crosses a turn boundary; worth a note in docs/agents/environment-caveats.md if it recurs.
+    severity: minor
+durationSec: 328
+models:
+  claude-sonnet-5: 75
+toolCounts:
+  Bash: 26
+  Write: 2
+  Read: 3
+  ScheduleWakeup: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-09-14.md
+docsReadViaShell:
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/guards.md
+gitBranch: claude/compassionate-lovelace-vmzk0h
+entrypoint: remote_trigger
+cliVersion: 2.1.271
+trigger: digest
+landedBy: Stop
