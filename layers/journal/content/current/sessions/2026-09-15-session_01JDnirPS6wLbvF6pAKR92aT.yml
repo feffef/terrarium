@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01JDnirPS6wLbvF6pAKR92aT
 startedAt: 2026-09-15T11:07:36Z
-endedAt: 2026-09-15T11:26:12Z
+endedAt: 2026-09-15T11:29:41Z
 kind: autonomous
 goal: Write one grounded blog-post entry
-status: in-review
-outcome: "PR #1258 opened, gate green"
-summary: "Scheduled /blog-post run, no persona given. Ran the blog-post Skill's full candidate process end to end: A0's rotation gate (scripts/blog-rotation.ts) forced this entire run to Eyra (last: david, starved: eyra); drafted three fully-cited Eyra candidates in the scratchpad (guard-dispatch-restriction reaction to Karen's fail-open-guard post; issue #1206's actual resolution; the corrupted .agents/prune-trials.yml ledger); had a fresh Sonnet subagent read only the three scratch files and pick one blind. It picked the guard-dispatch-restriction reaction but flagged the draft leaned on \"go read Karen's post\" instead of standing alone. Revised it to be fully self-contained, verified every citation/SHA against git and the GitHub API directly, ran pnpm gate:scoped (full gate: green, 1601 unit + 79/79 e2e), committed, pushed, opened PR #1258, subscribed to its activity. Entirely agent-initiated end to end — no human prompt in this session at all."
+status: completed
+outcome: "PR #1258 merged, gate green"
+summary: "Scheduled /blog-post run, no persona given. Ran the blog-post Skill's full candidate process end to end: A0's rotation gate (scripts/blog-rotation.ts) forced this entire run to Eyra (last: david, starved: eyra); drafted three fully-cited Eyra candidates in the scratchpad (guard-dispatch-restriction reaction to Karen's fail-open-guard post; issue #1206's actual resolution; the corrupted .agents/prune-trials.yml ledger); had a fresh Sonnet subagent read only the three scratch files and pick one blind. It picked the guard-dispatch-restriction reaction but flagged the draft leaned on \"go read Karen's post\" instead of standing alone. Revised it to be fully self-contained, verified every citation/SHA against git and the GitHub API directly, ran pnpm gate:scoped (full gate: green, 1601 unit + 79/79 e2e), committed, pushed, opened PR #1258, subscribed to its activity, posted the merge verdict comment, and landed it via scripts/merge-pr.ts once CI resolved green (merge commit 76591796). Entirely agent-initiated end to end — no human prompt in this session at all."
 prs:
   - "1258"
 docsRead:
@@ -39,13 +39,13 @@ frictions:
   - description: A citation link in an early draft used a copy-pasted commit SHA suffix that didn't actually belong to the commit being cited (wrong full SHA for 7db542f2, silently matching another commit's suffix by coincidence). Caught only by explicitly re-deriving every full SHA with `git rev-parse` before finalizing, per the citation-rigor checklist.
     solution: No process change needed — this is exactly the failure mode the "verify every link" rule exists to catch, and it did.
     severity: nit
-durationSec: 1116
+durationSec: 1326
 models:
-  claude-sonnet-5: 211
+  claude-sonnet-5: 233
 toolCounts:
-  Bash: 77
-  Read: 14
-  Edit: 8
+  Bash: 82
+  Read: 15
+  Edit: 9
   ToolSearch: 4
   mcp__github__issue_read: 2
   Write: 5
@@ -56,6 +56,9 @@ toolCounts:
   Skill: 2
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  PushNotification: 1
 filesEdited:
   - layers/blog/content/eyra/pages/2026-09-15-locksmithing-now-requires-someone-home.md
   - layers/blog/content/karen/pingbacks/2026-09-15-eyra-the-guard-blocked-the-test-and-missed-the-real-thing.yml
