@@ -81,6 +81,81 @@ describe('git show <ref>:<path> — issue #1206\'s miss', () => {
   })
 })
 
+describe('git show <ref> -- <path> — the diff form the colon-form miss (#1206) did not cover', () => {
+  it('counts a diff-form `git show` when the output actually shows a diff for that path', () => {
+    const scan = scanShellReads(
+      [
+        {
+          command: 'git show HEAD~1 -- docs/agents/guards.md',
+          output: [
+            'diff --git a/docs/agents/guards.md b/docs/agents/guards.md',
+            'index abc123..def456 100644',
+            '--- a/docs/agents/guards.md',
+            '+++ b/docs/agents/guards.md',
+            '@@ -1,2 +1,2 @@',
+            '-old line',
+            '+new line',
+          ].join('\n'),
+        },
+      ],
+      rel,
+    )
+    expect(scan.paths).toEqual(['docs/agents/guards.md'])
+  })
+
+  it('does not credit it when the output shows no diff for that path', () => {
+    const empty = scanShellReads([{ command: 'git show HEAD~1 -- docs/agents/guards.md', output: '' }], rel)
+    expect(empty.paths).toEqual([])
+    expect(empty.nearMisses.map((m) => m.rule)).toEqual(['git show diff does not touch this path'])
+
+    const otherFile = scanShellReads(
+      [
+        {
+          command: 'git show HEAD~1 -- docs/agents/guards.md',
+          output: ['diff --git a/docs/agents/other.md b/docs/agents/other.md', '+++ b/docs/agents/other.md'].join(
+            '\n',
+          ),
+        },
+      ],
+      rel,
+    )
+    expect(otherFile.paths).toEqual([])
+    expect(otherFile.nearMisses.map((m) => m.rule)).toEqual(['git show diff does not touch this path'])
+  })
+
+  it('credits unconditionally when output is unknown, matching every ungated caller', () => {
+    expect(paths('git show HEAD~1 -- docs/agents/guards.md')).toEqual(['docs/agents/guards.md'])
+  })
+
+  it('checks each of several paths after `--` independently', () => {
+    const scan = scanShellReads(
+      [
+        {
+          command: 'git show HEAD~1 -- docs/agents/guards.md docs/agents/git-conventions.md',
+          output: ['diff --git a/docs/agents/guards.md b/docs/agents/guards.md', '+++ b/docs/agents/guards.md'].join(
+            '\n',
+          ),
+        },
+      ],
+      rel,
+    )
+    expect(scan.paths).toEqual(['docs/agents/guards.md'])
+    expect(scan.nearMisses.map((m) => m.path)).toEqual(['docs/agents/git-conventions.md'])
+    expect(scan.nearMisses.map((m) => m.rule)).toEqual(['git show diff does not touch this path'])
+  })
+
+  it('leaves the colon form untouched', () => {
+    expect(paths('git show HEAD~1:.agents/skills/prune-trial/SKILL.md')).toEqual([
+      '.agents/skills/prune-trial/SKILL.md',
+    ])
+  })
+
+  it('still falls through for a plain `git show <sha>` with no `--` and no colon', () => {
+    expect(paths('git show HEAD~1')).toEqual([])
+    expect(rules('git show HEAD~1')).toEqual([])
+  })
+})
+
 describe('false positives', () => {
   it("rejects grep's first positional — it is the pattern, not a path", () => {
     expect(paths('grep -n "docs/agents/x.md" CLAUDE.md')).toEqual([])

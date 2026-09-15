@@ -76,6 +76,7 @@ export type SkipRule =
   | 'redirect target: written, not read'
   | 'not a literal path: glob or variable'
   | 'grep/rg output does not show this file being read'
+  | 'git show diff does not touch this path'
 
 export interface NearMiss {
   command: string
@@ -110,6 +111,37 @@ function extractGitShowPath(tokens: Token[]): string | undefined {
     return t.text.slice(idx + 1)
   }
   return undefined
+}
+
+/** `git show <ref> -- <path…>` (the diff form) — unlike the colon form above,
+ *  the path sits after a literal `--` separator, and `<ref>` may be omitted
+ *  entirely (`git show -- <path>` means HEAD). Returns every positional after
+ *  the FIRST bare `--`, or `undefined` when there is none (`git show <sha>`,
+ *  `git show --stat`, `git log`, …), which then falls through to "not a
+ *  reader command" like any other non-matching `git` invocation. A session on
+ *  2026-09-14 used exactly this shape to inspect historical changes to
+ *  instruction docs and went uncredited — neither #1206/PR #1241 (the colon
+ *  form) nor #1247/PR #1250 (grep/rg output-gating) covers it. */
+function extractGitShowDiffPaths(tokens: Token[]): string[] | undefined {
+  if (tokens.length < 2 || tokens[1]!.quoted || tokens[1]!.text !== 'show') return undefined
+  const sepIdx = tokens.findIndex((t) => !t.quoted && t.text === '--')
+  if (sepIdx < 2) return undefined
+  const rest = tokens.slice(sepIdx + 1).map((t) => t.text)
+  return rest.length > 0 ? rest : undefined
+}
+
+/** A `-- <path>` positional only reveals `path`'s CONTENT when the diff
+ *  actually has a hunk for it — the ref range given may not touch that path
+ *  at all — so this gates on the output exactly like `outputMentionsFile`
+ *  gates grep/rg (#1247), rather than crediting off the argument list alone.
+ *  Matches either diff's own `diff --git a/<path> b/<path>` header or the
+ *  path on a `+++`/`---` line, covering a rename where only one side matches. */
+function outputShowsGitDiffFor(output: string, path: string): boolean {
+  const escaped = path.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return (
+    new RegExp(`(^|\\n)diff --git a/${escaped} b/${escaped}(\\n|$)`).test(output) ||
+    new RegExp(`(^|\\n)(\\+\\+\\+|---) [ab]/${escaped}(\\t|\\n|$)`).test(output)
+  )
 }
 
 /** `.claude/skills/x` and `.agents/skills/x` are the same file — the former is a
@@ -368,6 +400,24 @@ export function scanShellReads(
             const resolved = resolveGlobbedDoc(p)
             if (resolved !== undefined) paths.add(resolved)
             else note(fromReader, showPath, 'not a literal path: glob or variable')
+          }
+          continue
+        }
+
+        const diffPaths = extractGitShowDiffPaths(tokens)
+        if (diffPaths !== undefined) {
+          for (const raw of diffPaths) {
+            const p = norm(raw)
+            const credit = (path: string): void => {
+              if (output === undefined || outputShowsGitDiffFor(output, raw)) paths.add(path)
+              else note(fromReader, raw, 'git show diff does not touch this path')
+            }
+            if (isInstructionDoc(p)) credit(p)
+            else if (isGlobbedInstructionDoc(p)) {
+              const resolved = resolveGlobbedDoc(p)
+              if (resolved !== undefined) credit(resolved)
+              else note(fromReader, raw, 'not a literal path: glob or variable')
+            }
           }
           continue
         }
