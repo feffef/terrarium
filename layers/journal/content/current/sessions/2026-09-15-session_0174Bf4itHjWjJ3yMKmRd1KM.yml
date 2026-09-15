@@ -1,0 +1,86 @@
+schemaVersion: 1
+session: session_0174Bf4itHjWjJ3yMKmRd1KM
+startedAt: 2026-09-15T02:04:34Z
+endedAt: 2026-09-15T02:27:45Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: completed
+outcome: 2 PRs merged, tracker fixed
+summary: "Scheduled frictions-to-fixes run — started by a schedule, no human prompt at any point. Dispatched a read-only subagent to survey the last 20 session logs and screen frictions against the GitHub tracker; it returned two never-fixed, simple candidates (a scripts/shell-reads.ts gap where the `git show <ref> -- <path>` diff form went uncredited, and a stale \"`tsc --noEmit` is equivalent to `pnpm typecheck`\" claim in this Skill's own §5 dispatch-brief wording) plus a tracker-hygiene item (issue #864 carried contradictory `ready-for-agent`/`wayfinder:grilling` labels — confirmed against ADR-0022 and auto-triage/SKILL.md that grilling tickets are HITL, and relabeled directly, no PR needed). Per §4's rule for simple selections, no issues were filed — problem/evidence/fix went straight into each PR description. Dispatched two Sonnet impl agents in separate isolated worktrees for the two code/doc fixes; personally reviewed both diffs against source (not just trusting the agents' self-reports), posted a COMMENT-event review on each PR, and merged both (#1255, #1256) via merge-pr.ts after confirming green CI. No hard or human-only-surface candidates this cycle. All decisions (candidate selection, review verdicts, the relabel, the merges) were agent-initiated under this Skill's own autonomy grant (ADR-0003's reviewer-agent tier) — no human was present to instruct or approve any of it."
+prs:
+  - "1255"
+  - "1256"
+docsRead:
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: fix wording for the doc-fix dispatch brief
+  - path: scripts/shell-reads.ts
+    reason: verify the git-show diff-form gap was real before dispatching the code fix, and again to review the diff
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "confirm wayfinder:grilling maps to ready-for-human before relabeling issue #864"
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: corroborate the HITL label mapping
+  - path: docs/agents/pr-workflow.md
+    reason: the land-a-gated-PR recipe (merge-pr.ts, review-before-merge, per-tier merge authority)
+  - path: docs/agents/triage-labels.md
+    reason: "check canonical label vocabulary before touching issue #864's labels"
+  - path: tests/unit/shell-reads.spec.ts
+    reason: (read before editing)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: this run's own process
+  - name: dispatch-subagents
+    reason: worktree isolation + brief checklist for the two impl-agent dispatches
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: scripts/session-frictions.ts (the survey step's own tool) only prints a one-line stdout summary ("written to /tmp/...") rather than the JSON records themselves — the survey subagent had to separately locate and read that /tmp path to get the actual data, an extra round-trip.
+    solution: Have the script print the JSON to stdout directly, or write it under the caller's own scratchpad instead of an ad hoc /tmp path.
+    severity: minor
+  - description: "The task-notification carrying the survey subagent's report was flagged by the harness as matching \"instruction-shaped pattern(s): settings-json\", prompting extra scrutiny of the content before trusting it. It was a false positive — the report only discussed .claude/settings.json as a human-only surface in ordinary prose, nothing directive was embedded."
+    solution: No repo-side fix identified; recording for recurrence tracking only.
+    severity: nit
+durationSec: 1392
+models:
+  claude-sonnet-5: 101
+toolCounts:
+  Agent: 3
+  Skill: 3
+  Grep: 10
+  Read: 3
+  Glob: 1
+  ToolSearch: 3
+  Bash: 10
+  mcp__github__issue_read: 1
+  mcp__github__issue_write: 1
+  mcp__github__add_issue_comment: 3
+  ReadNotifications: 5
+  mcp__github__pull_request_read: 6
+  Write: 1
+  Edit: 2
+filesEdited:
+  - scripts/shell-reads.ts
+  - tests/unit/shell-reads.spec.ts
+  - .agents/skills/frictions-to-fixes/SKILL.md
+docsReadViaShell:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/agents/verifying-ui-changes.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix frictions-to-fixes SKILL.md typecheck line
+    model: sonnet
+  - type: general-purpose
+    task: Fix shell-reads.ts git-show diff-form detection
+    model: sonnet
+gitBranch: claude/eager-ptolemy-20kq81
+entrypoint: remote_trigger
+cliVersion: 2.1.272
+trigger: frictions-to-fixes
+landedBy: Stop
