@@ -1,0 +1,80 @@
+schemaVersion: 1
+session: session_015DSdzQUMV99Sn8asUkP3UU
+startedAt: 2026-09-15T13:12:37Z
+endedAt: 2026-09-15T13:23:57Z
+kind: autonomous
+goal: Run scheduled prune-trial
+status: in-review
+outcome: "One trial judged (holds), one new trial opened as PR #1259"
+summary: "Scheduled /prune-trial run, no human prompt. §1: ran scripts/prune-trial-window.ts, found one judgeable trial (CLAUDE.md's \"Don't state anything as settled\" bullet, landed 2026-09-11). Surveyed Frictions logged since via scripts/session-frictions.ts (20 sessions) and searched the tracker for a regression issue (none). Found only minor, self-caught in-territory frictions (a subagent's unverified claim caught by the session's own reproduction; the same session twice stating an unverified count/invented filenames as settled, both caught pre-commit) — per the Skill's rule, minor/nit/silence means the prune holds, so deleted the ledger entry with no restoration. §2/§3: chose a new problem via docs/research/rulebook-migration-table.md's explicit \"Built rows as prune candidates\" pointer (its criterion-1 bait) — four CLAUDE.md Working-conventions bullets (ScheduleWakeup, double-backgrounding, tail/head-piping, dispatched-subagent-backgrounding) each fully restated their own already-Built fail-closed PreToolUse guard's rationale, despite guards.md's own \"the deny message is the instruction\" lead line and the already-compressed provenance-header bullet modeling the shorter shape. Compressed each to its rule plus the one clause the deny message doesn't carry, plus a guards.md+issue pointer; left the un-guarded pkill bullet and the already-minimal git-mechanics pointer untouched. Net -10 lines in CLAUDE.md. §4: dispatched a Sonnet subagent with only the surviving text and four scenarios; it answered all four correctly (proven: true). §5: pnpm gate:scoped ran the full gate (triggered because .agents/prune-trials.yml isn't in the inert set) — green end-to-end (lint, typecheck, validate:content, 1601 unit tests, build, 79-test e2e). Committed, pushed, opened PR #1259, subscribed to its activity. All of this was agent-initiated per the Skill's own automated instructions — no human steered any part of the problem selection or the prune itself."
+prs:
+  - "1259"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: judging open trials + writing the new entry
+  - path: docs/research/rulebook-migration-table.md
+    reason: criterion-1 candidate hunting - the Built-rows pointer
+  - path: docs/agents/guards.md
+    reason: verify which footgun bullets are actually guard-backed
+  - path: CLAUDE.md
+    reason: the four bullets being compressed
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: this session's own invoked Skill
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "pnpm gate:scoped --dry piped into `tail -40` was denied by the tail-pipe guard (issue #873) — habit from before that guard existed."
+    solution: Redirected to a file and read it directly, as the deny message said. No doc change needed; the guard worked as designed.
+    severity: nit
+  - description: 'SHELL-READ-DETECTION, direction MISS. `grep -rn "recurred\|recurr\|narrowed repeatedly\|self-documents its own recurrence" CLAUDE.md docs/agents/*.md .agents/skills/*/SKILL.md 2>/dev/null` genuinely streamed real content from `.agents/skills/audit-skills/SKILL.md` (lines 347/357) into this session, but the detector rejected it as "not a literal path: glob or variable" since the command names a glob, not the specific file.'
+    solution: "Same shape as session_01QmM7B9u5qczi9SeodhwFxG's recorded miss for `sed -n 1,200p docs/adr/0022-*.md` — the detector deliberately can't resolve a shell glob's actual match set (ADR-0009: pure function, no filesystem access). Recording per the report's floor rule; not acted on further since the matched content (one incidental line) played no role in this session's decisions."
+    severity: moderate
+durationSec: 680
+models:
+  claude-sonnet-5: 167
+toolCounts:
+  Bash: 44
+  ToolSearch: 3
+  mcp__github__search_issues: 1
+  Read: 12
+  Edit: 8
+  Grep: 4
+  Monitor: 2
+  ReadNotifications: 6
+  Agent: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - CLAUDE.md
+docsReadViaShell:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/research/rulebook-migration-table.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/log-session/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Prove compressed CLAUDE.md bullets on Sonnet
+    model: sonnet
+  - type: general-purpose
+    task: Prove compressed CLAUDE.md bullets on Sonnet
+    model: sonnet
+gitBranch: claude/practical-rubin-hgmuzx
+entrypoint: remote_trigger
+cliVersion: 2.1.272
+trigger: prune-trial
+landedBy: Stop
