@@ -157,24 +157,17 @@ absent `schemaVersion`.
 ## Automatic logging via a `SessionEnd` hook
 
 > **Amended (2026-07-06, this session).** Supersedes the *deferred end-of-session
-> trigger* left open in the Decision above. **Decision accepted; implementation is
-> a follow-up gated PR** — see "Not yet built" at the end.
+> trigger* left open in the Decision above. Shipped in the sections below
+> ("Landing mechanism as shipped" onward).
 
-**Why revisit.** Two frictions with the reminder-convention model: (1) a session
-must be *explicitly* wrapped up and logged, which is manual and easily skipped;
-(2) the self-reported fields (`docsRead`, `skillsUsed`, `startedAt`, `prs`) proved
-unreliable against ground truth — yet the session's **transcript jsonl** already
-records, deterministically, every tool call, file read, subagent, model, and
-exact timestamp.
-
-**What the web harness actually does (measured, CLI 2.1.201).** A passive probe
-hook found that on Claude Code on the web a **freeze/resume fires `SessionEnd`
-with `reason: "other"`** — *not* the documented `reason: "resume"` (that value is
-the CLI `--resume`/`--continue` path). Resume then fires `SessionStart
-source: "resume"` with **no approval prompt**. Consequence: **`reason` cannot
-distinguish a mid-session freeze from a true end** — both are `other`. Also:
-`SessionEnd` is fire-and-forget (cannot block, cannot prompt the model), and
-`SessionStart`/`SessionEnd` firings are not written to the transcript.
+**Why revisit.** The reminder-convention model requires an explicit, easily-skipped
+wrap-up, and its self-reported fields (`docsRead`, `skillsUsed`, `startedAt`,
+`prs`) proved unreliable against ground truth even though the session's
+transcript jsonl already records the same facts deterministically. `SessionEnd`
+alone can't carry the fix: it can't distinguish a mid-session freeze from a true
+end (both fire `reason: "other"` on the web harness), it's fire-and-forget
+(can't block or prompt the model), and its firings aren't written to the
+transcript.
 
 **Decision.**
 
@@ -263,15 +256,6 @@ distinguish a mid-session freeze from a true end** — both are `other`. Also:
   their `{path|name, reason}` shape is untouched. Nothing narrows, renames, or adds
   a required field, so **no `schemaVersion: 2` / `z.union` is needed.**
 
-**Not yet built (follow-up gated PR).** `scripts/session-trace.ts` (port of the
-validated proof-of-concept); the `SessionEnd` handler; the scratch-writing helper;
-the **`log-session` Skill update** (flip to model-invocable — drop
-`disable-model-invocation: true`; rewrite `description` as a closure trigger;
-author-to-scratch, no commit); the **`CLAUDE.md`** wrap-up guidance (self-judge
-closure → invoke `log-session`; drop the ask-the-human step); the committed
-`.claude/settings.json` hook entry; and the `sessions` schema change. Recorded here
-as **decided**, to land gated.
-
 ## Landing mechanism as shipped (PR #148)
 
 > **Amended (2026-07-06, PR #148).** The follow-up PR above shipped, but not as
@@ -333,16 +317,12 @@ by a second registration never re-pushes an otherwise identical log.
 > **Amended (2026-07-07, issue #215).** Refines *how the model is triggered to
 > author*, not how the log lands. **Nothing about the committer changes.**
 
-**The problem.** The mechanism above made logging *self-judged and
-model-invocable*: the agent should invoke `log-session` the moment its work is
-coherent. Interactive sessions still forget — they finish substantive work
-(commits, an opened PR) and never author the scratch, so the committer (which
-fires **only if** a scratch exists) commits nothing and the session leaves no
-honest log. Issue #215 recorded this recurring 2/20 in one window; the fix a
-prior run reached for — a general `Stop` hook that reminds/blocks when work
-happened but no scratch exists (issue #176's declined "option 2") — is
-**untested runtime behaviour the safety gate cannot vouch for (ADR-0004)** and
-reverses a prior deliberate decision, so it was escalated rather than built.
+**The problem.** Interactive sessions kept finishing substantive work and
+forgetting to author the scratch, so the committer (fires only if one exists)
+had nothing to land and the session left no honest log (issue #215, recurring
+2/20 in one window). A general reminder/block `Stop` hook (issue #176's
+declined "option 2") was rejected as untested runtime behaviour the safety
+gate can't vouch for (ADR-0004), reversing a prior deliberate decision.
 
 **Two `Stop`-hook roles, do not conflate them.** The word "`Stop` hook" covers
 two different things here:
@@ -402,13 +382,11 @@ two different things here:
 > amendment carves out one narrow, bounded, one-time exception — it does not
 > reopen a general "logs are mutable" door.
 
-**The problem.** PR #367 (2026-07-12) found that an authored `outcome`
-containing an unquoted ` #` (e.g. `outcome: PR #354 merged`) silently
-truncates at YAML-parse time — everything from the `#` onward is read as a
-comment and dropped. The guard added there stops it at author time going
-forward, but the back-catalog was never swept: issue #449 Gap 5 asked for
-exactly that sweep, with an explicit acceptance criterion that a repaired log
-validate against the frozen schema.
+**The problem.** An unquoted ` #` in an authored `outcome` (e.g. `outcome: PR
+#354 merged`) silently truncates at YAML-parse time — everything from the `#`
+onward reads as a comment (PR #367). The resulting guard stops it at author
+time going forward, but never swept the back-catalog; issue #449 Gap 5 asked
+for exactly that sweep.
 
 **Decision.** `scripts/sweep-truncated-sessions.ts` may correct the `outcome`
 field of an already-landed log — and *only* that field, for *only* this one
@@ -523,14 +501,10 @@ every internal session. House rules: `docs/agents/guest-contributions.md`.
 > explicitly named on either side of that split — an oversight this closes, not a
 > new principle.
 
-**The gap.** `stitch()` took `session` straight from the agent-typed
-`AuthoredScratch`, even though the mechanical trace already computes the same
-identity from the transcript. This is exactly the self-reported-field failure
-mode the `SessionEnd` hook section's whole split exists to avoid — and it landed
-a real incident: a session whose transcript carried a raw-UUID internal id (a
-plain local CLI session's own id, not the `session_01…` form a CCR/cloud session
-publishes in its claude.ai URL and GitHub PR footers) had its own log filed under
-the wrong identity, since nothing checked the typed value against ground truth.
+**The gap.** `stitch()` took `session` from the agent-typed scratch instead of
+the mechanical trace, missing the same self-reported-field failure mode the
+`SessionEnd` split above exists to avoid — once landing a log under the wrong
+identity (a raw-UUID local-CLI id typed in place of ground truth).
 
 **The fix.** `session` now resolves from ground truth: `CLAUDE_CODE_REMOTE_SESSION_ID`
 (env, normalized `cse_…` → `session_…`) when present — the id that actually
