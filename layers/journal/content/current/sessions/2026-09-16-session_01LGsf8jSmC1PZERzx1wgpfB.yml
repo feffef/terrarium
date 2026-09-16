@@ -1,0 +1,48 @@
+schemaVersion: 1
+session: session_01LGsf8jSmC1PZERzx1wgpfB
+startedAt: 2026-09-16T00:45:57Z
+endedAt: 2026-09-16T00:50:11Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: Clean run, no Inventory changes met the bright-line bar
+summary: "Fully agent-initiated scheduled run, no human prompt. Gathered the scorecard via scripts/audit-skills.ts (40-session window, 36 Skills; every onDisk Skill is inventoried and vice versa, no missing/phantom entries). Step 3: reviewed usedIn against goal/summary for every used Skill. This window is saturated with the standing scheduled Routines (digest/prune-trial/blog-post/audit-docs/ frictions-to-fixes/audit-skills all fired repeatedly) plus two interactive sessions, so current grades (close-session/log-session/dispatch-subagents at essential; the six Routine-driven Skills at routine) are all reconfirmed, and every 0-use specialist/supporting/peripheral Skill stayed unused only because no session of its matching domain occurred (not an absence-in-domain signal per CLAUDE.md's rarity rule) - no Inventory edits this run. Step 4: Phase A flagged three edits as suspected on friction-volume/severity shifts (dispatch-subagents 2026-09-12, auto-triage 2026-09-07, prune-trial 2026-09-09). Phase B deep-read of every bracketed session's full log found the moderate/major frictions all traced to an unrelated shell-reads.ts SHELL-READ-DETECTION regression already being fixed by separate frictions-to-fixes runs (issues #1246/#1247, PRs #1249/#1250/#1255/#1256) - none implicated these three Skills' own edited guidance. Concluded inconclusive for all three, wrote nothing. Step 2/5: orphanScan scanned=true (757 merged PRs, 611 with session) - healthy. orphanedSessions has 2 entries, both carrying a resolvedBy cutoff (#736, #1063) - read-only history, not re-filed. orphanSuppressionLog's 2 entries match exactly, no discrepancy. humanPromptedClosures and manuallyRescuedClosures both empty - healthy, nothing to add to the standing thread. misclassifiedKind flagged session_01AcLKg5VLcwqyiLcNexXiSJ (kind=interactive, entrypoint=remote_trigger) - informational only per spec, noted for awareness. No new/split/retire ideas this run. git status stayed clean throughout - no PR to open, nothing to gate."
+prs: []
+docsRead:
+  - path: layers/journal/content/current/skills
+    reason: the Skill Inventory this run audits
+  - path: layers/journal/content/current/sessions/2026-09-12-session_01DykmgE9WhzKVCTdbuUfuxx.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-13-session_01XhrVoyucc9vJAho59MPWxS.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-13-session_01QmM7B9u5qczi9SeodhwFxG.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-14-session_013iSKECLzYwgTWTMLkNYV28.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-15-session_0174Bf4itHjWjJ3yMKmRd1KM.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-11-session_01BAp91Z4KzsPjPtdSuqmqxL.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this run's own driving skill
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 255
+models:
+  claude-sonnet-5: 57
+toolCounts:
+  Bash: 18
+  Read: 6
+  Skill: 2
+  Write: 1
+docsReadViaShell:
+  - CONTEXT.md
+gitBranch: claude/upbeat-sagan-j9um8n
+entrypoint: remote_trigger
+cliVersion: 2.1.273
+trigger: audit-skills
+landedBy: Stop
