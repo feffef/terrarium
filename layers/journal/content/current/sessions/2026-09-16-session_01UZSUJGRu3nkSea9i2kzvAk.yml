@@ -1,0 +1,95 @@
+schemaVersion: 1
+session: session_01UZSUJGRu3nkSea9i2kzvAk
+startedAt: 2026-09-16T13:07:06Z
+endedAt: 2026-09-16T13:22:39Z
+kind: autonomous
+goal: Run /prune-trial
+status: in-review
+outcome: One trial judged, one new trial shipped as PR
+summary: "Scheduled autonomous /prune-trial run. Judged the environment-caveats.md trial (landed 2026-09-12, past its window): checked frictions, gate failures, and issues filed since for damage tracing to it and found none, so the prune holds and the entry was deleted. Chose docs/adr/0009 (the largest ADR, ~2.7x the next-largest, and one every session reads before planning/structural work) as this run's new problem: compressed investigation-narrative and a stale \"not yet built\" checklist across five amendment sections to their load-bearing facts plus issue/PR pointers, touching no Decision/Consequences block (ADR-0018's bound). Net -27 lines. Proved the prune by dispatching a Sonnet subagent with only the surviving text plus five real scenarios; it answered all five correctly. Ran the full pnpm gate:scoped (all green, 79/79 e2e), committed, pushed, and opened PR #1264, subscribed to its activity. No human prompt this run — every judgement (which trial, which problem, what to cut, the probe design) was this session's own call end to end."
+prs:
+  - "1264"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the open trials to judge and the schema for a new entry
+  - path: .claude/skills/prune-trial/SKILL.md
+    reason: the procedure this run follows
+  - path: docs/research/rulebook-migration-table.md
+    reason: criterion-1 candidate hunting (Built rows as prune bait)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: calibrating what a post-prune amendment-block looks like
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: verifying the Decision/Consequences-never-rewritten bound before touching ADR-0009
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: the file pruned this run
+  - path: CONTEXT.md
+    reason: Session/Session-closure/Friction glossary terms for classifying kind and writing this log
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: this run's whole procedure
+  - name: dispatch-subagents
+    reason: the §4 Sonnet-probe dispatch
+  - name: close-session
+    reason: PR-open closure trigger
+  - name: log-session
+    reason: authoring this entry
+frictions:
+  - description: Spent a large share of this run's budget manually reading candidate docs/Skills/ADRs one by one (dispatch-subagents, blog-post, several docs/agents/*.md, docs/adr/*.md) to hunt for a criterion-1/criterion-2 prune target, since the rulebook-migration-table's "Built rows as prune candidates" pointer only narrows to already-judged/already-open territory, not to what's left.
+    solution: A small script that, per Built row in the migration table, checks whether its Home (section) file is already covered by a judged or open trial and reports the uncovered remainder would turn this into a lookup instead of a manual reading sweep.
+    severity: minor
+  - description: Attempted `ScheduleWakeup` to wait on a long-running background gate command and a dispatched subagent, not realizing this scheduled /prune-trial run is not a `/loop` session — the loop-only tool guard correctly denied it.
+    solution: Used the guard's named alternatives instead (the subagent self-notifies; a Bash `until ! kill -0 <pid>; do sleep 10; done` polling loop passed with run_in_background:true for the gate command). No actual damage — the guard caught it before any bad effect.
+    severity: nit
+durationSec: 932
+models:
+  claude-sonnet-5: 193
+toolCounts:
+  Bash: 54
+  ToolSearch: 3
+  mcp__github__list_issues: 1
+  Read: 12
+  Edit: 8
+  mcp__github__issue_read: 1
+  Agent: 1
+  ScheduleWakeup: 1
+  ReadNotifications: 7
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  PushNotification: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+docsReadViaShell:
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0027-prune-trials.md
+  - CONTEXT.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - type: general-purpose
+    task: Probe compressed ADR-0009 text
+    model: sonnet
+gitBranch: claude/practical-rubin-pyb2i4
+entrypoint: remote_trigger
+cliVersion: 2.1.273
+trigger: prune-trial
+learnings:
+  - In this repo's ADR convention, "Decision and Consequences are never rewritten" (ADR-0018) applies per-block, not just to an ADR's original top-level sections — a later dated amendment's own "**Decision.**"/ "**Consequences.**"-headed prose is equally off-limits to a prune; only the narrative/investigative prose around those blocks (a "why revisit", "the problem", "the gap" preamble) is prunable.
+landedBy: Stop
