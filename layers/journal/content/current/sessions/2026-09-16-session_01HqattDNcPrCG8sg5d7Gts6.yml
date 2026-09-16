@@ -1,0 +1,72 @@
+schemaVersion: 1
+session: session_01HqattDNcPrCG8sg5d7Gts6
+startedAt: 2026-09-16T02:04:26Z
+endedAt: 2026-09-16T02:20:43Z
+kind: autonomous
+goal: Run the frictions-to-fixes cycle
+status: completed
+outcome: One friction fixed, PR merged
+summary: "Agent-initiated: fired by the frictions-to-fixes scheduled Routine, no live human prompt this turn. Followed the Skill's steps inline (the Skill tool itself refused re-invocation with disable-model-invocation, but the scheduled prompt already carried the full instructions). Dispatched a general-purpose subagent to survey the latest 20 session logs; three frictions-to-fixes runs had already fired inside that window, so almost every friction was already fixed or open-already. Only 2 never-fixed candidates survived screening. Judged candidate 2 (session-frictions.ts's file-spill round-trip) not worth a fresh dispatch: a prior PR (#815) deliberately scoped this to doc-only, and the round-trip is an inherent cost of the Bash tool's inline-capture cap, not a real code bug - dispatched none, recorded as a friction instead for the next cycle to reconsider. Dispatched one Sonnet impl agent (worktree-isolated) for candidate 1 - blog-post/SKILL.md's same-persona overlap check ran only after full drafting (A6), too late to save wasted drafting effort; added a lighter skim at A3, right after persona assignment, before A4's full draft. Reviewed the resulting PR #1261 myself (9-line diff, gate green, one advisory conflicting-issues hit eyeballed and dismissed as unrelated), posted the review verdict, and merged via merge-pr.ts."
+prs:
+  - "1261"
+docsRead:
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: this run's own instructions, delivered inline by the scheduler
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: target of the dispatched fix - located the A3/A4/A6 structure
+  - path: scripts/session-frictions.ts
+    reason: verified candidate 2's round-trip friction against the actual mechanism before deciding not to dispatch a fix
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: confirmed the exact PR-body provenance header format before reviewing the dispatched PR
+  - path: docs/agents/pr-workflow.md
+    reason: the merge recipe (check-conflicting-issues, review comment, merge-pr.ts)
+  - path: scripts/shell-reads.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: Skill tool refused it (disable-model-invocation); followed its already-inlined instructions directly instead of re-deriving the workflow
+  - name: dispatch-subagents
+    reason: brief checklist for the worktree-isolated impl agent
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The frictions-to-fixes Skill has disable-model-invocation set, so calling it via the Skill tool errors out even when the scheduler's own prompt already delivered the full skill text inline as this turn's instructions - momentarily looked like a hard blocker before realizing the instructions were already in context.
+    solution: "Not a bug: this is by design (the Skill is scheduler/user-invoked only). Worth a one-line note in the Skill's own header, or in the scheduled-task system-reminder shape, that a Skill-tool refusal here is expected and the already-delivered prompt IS the instructions to follow - would save a future session a moment of confusion."
+    severity: nit
+  - description: "scripts/session-frictions.ts's default (non-compact) output for a 20-session window still exceeds the inline-capture cap and spills to a file, forcing a second Read round-trip (itself sometimes paginated) - the 3rd/4th recurrence of a friction issue #811/#815 deliberately fixed as doc-only, not behavior-changing. The survey subagent hit it again live during this very run."
+    solution: No fix dispatched this run - judged the round-trip largely inherent to the Bash tool's inline-capture cap, and a speculative code change (e.g. an --out flag) wouldn't actually remove the two-step read. A genuine improvement, if one exists, would need to shrink the default payload below the threshold (e.g. a mode between --compact and full that keeps docsRead/subagents but drops the large goal/ outcome prose fields) - left as an open question for a future frictions-to-fixes run rather than dispatched speculatively.
+    severity: minor
+durationSec: 977
+models:
+  claude-sonnet-5: 59
+toolCounts:
+  Skill: 4
+  Agent: 2
+  Bash: 7
+  Read: 4
+  ReadNotifications: 2
+  ToolSearch: 1
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__issue_read: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/blog-post/SKILL.md
+docsReadViaShell:
+  - docs/agents/guards.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix blog-post overlap check timing
+    model: sonnet
+gitBranch: claude/eager-ptolemy-xt2i1s
+entrypoint: remote_trigger
+cliVersion: 2.1.273
+trigger: frictions-to-fixes
+landedBy: Stop
