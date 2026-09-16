@@ -406,6 +406,15 @@ For each of the three topics, decide independently:
   topic can be a strong standalone for one Persona and a strong reaction for
   another — pick per-topic, not globally.
 
+**As soon as a topic has its Persona** (given at step 0, or just assigned
+above), skim that Persona's own `layers/blog/content/<persona>/pages/*.md` for
+a topic/angle it's already substantively covered. This is a **light skim**,
+not a re-run of A6's full check — a quick scan for an obvious repeat, before
+A4 spends full drafting effort on it. If a candidate looks like a repeat, swap
+in a different angle or topic for that candidate now. This doesn't replace
+A6's post-draft thematic-overlap check — keep that as-is; it's the safety net
+that catches what this earlier skim misses once the actual draft text exists.
+
 ### A4. Draft all three, as scratch files only
 
 **Decision (issue #447 item 6): no cheap pre-screen precedes this** — every one
