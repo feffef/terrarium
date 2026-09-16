@@ -1,0 +1,230 @@
+schemaVersion: 1
+session: session_019QghEUG36tGWuhPUdM4t5Q
+startedAt: 2026-09-16T04:08:41Z
+endedAt: 2026-09-16T04:28:05Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: in-review
+outcome: One drift fix landed as a gated, self-mergeable PR
+summary: "Scheduled /audit-docs run, fully autonomous (no live human input this session). Read all 27 ADRs and .agents/prune-trials.yml, then dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel to sweep Live/Historical docs and our own Skills. Pooled three candidate findings (no overlaps to merge), dispatched an independent fact-checker, then personally re-verified each before fixing. Fixed one confirmed Drift: blog-post/SKILL.md's A4 step still claimed \"no cheap pre-screen precedes this\" after a prior PR (#1261) added an A3 same-Persona overlap skim that runs before A4 - narrowed A4's wording so the two sections no longer contradict. Declined a Mis-location finding on docs/research/rulebook-migration-table.md after checking its originating issue (#867), which explicitly asked for that doc to live in docs/research/ - the fact-checker's CONFIRMED-BUT verdict missed this primary source, so I overrode it. Declined a Verbose finding on docs/agents/github-integration.md - the duplicated issue_write warning is deliberate protective redundancy (no guard exists for that failure mode yet), same shape as CLAUDE.md's pkill saga. Ran pnpm gate:scoped (green), committed, pushed, and opened PR #1262, which self-merges on green per ADR-0003's audit-docs exemption."
+prs:
+  - "1262"
+docsRead:
+  - path: CLAUDE.md
+    reason: entry point + Ground rules for tier/scope definitions
+  - path: .agents/prune-trials.yml
+    reason: exclude in-trial territory from all four lenses
+  - path: CONTEXT-MAP.md
+    reason: Tenant relationships to classify Atlas/Marquee/Midden/Blog for the sweep
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: factual-correction vs decision-reversal rule for ADR edits
+  - path: docs/agents/issue-tracker.md
+    reason: docs/research/ vs GitHub-issue convention, to fact-check the mis-location finding
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: docs/adr/0013-dynamic-content-config-committed-routing-map.md
+    reason: (no reason given)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: (no reason given)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
+    reason: (no reason given)
+  - path: docs/proposals/879-gate-yml-thin-shell.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: (no reason given)
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: (no reason given)
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0007-generated-config-committed-drift-checked.md
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: (no reason given)
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: (no reason given)
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the run itself
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: The fact-checker's CONFIRMED-BUT verdict on the rulebook-migration-table.md mis-location finding didn't check the doc's originating issue (#867), which explicitly requested docs/research/ as the deliverable location - a decisive primary source it had available but didn't reach for.
+    solution: When fact-checking a Mis-location finding on a doc that names or implies an originating issue/PR, the checker should look that issue up before concluding the current home is wrong, not just check the general docs/research-vs-issue convention in isolation.
+    severity: moderate
+  - description: A dispatched fact-checker's tool output triggered the harness's instruction-shaped-content scanner (flagged 'settings-json'), neutralizing some tags; on inspection the content was benign (legitimate discussion of .claude/settings.json while checking whether a guard existed).
+    solution: No action needed this time since the content was benign, but worth recording as a case where the scanner's heuristic can fire on ordinary technical discussion of settings.json in a security-analysis context.
+    severity: nit
+durationSec: 1164
+models:
+  claude-sonnet-5: 106
+toolCounts:
+  Bash: 24
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  Read: 9
+  Agent: 5
+  ScheduleWakeup: 1
+  Edit: 1
+  mcp__github__search_issues: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__actions_list: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - .agents/skills/blog-post/SKILL.md
+docsReadViaShell:
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/agents/environment-caveats.md
+  - CONTEXT.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/making-repo-public.md
+  - docs/research/public-readiness-review.md
+  - .agents/skills/audit-docs/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Audit-docs Agent A: Freshness lens"
+  - type: general-purpose
+    task: "Audit-docs Agent B: Single-home lens"
+  - type: general-purpose
+    task: "Audit-docs Agent C: Concision lens"
+  - type: general-purpose
+    task: "Audit-docs Agent D: Coherence lens"
+  - type: general-purpose
+    task: Audit-docs fact-checker
+gitBranch: claude/festive-mayer-4v1l9z
+entrypoint: remote_trigger
+cliVersion: 2.1.273
+trigger: audit-docs
+learnings:
+  - "Issue #867 (which commissioned docs/research/rulebook-migration-table.md) explicitly asked for the deliverable to live in docs/research/ - a doc that looks proposal-shaped by convention can still be the intentional, requested home rather than drift."
+landedBy: Stop
