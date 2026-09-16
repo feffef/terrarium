@@ -1,0 +1,50 @@
+schemaVersion: 1
+session: session_019jqXtQ9Aro2z4RvrZZpJ1Y
+startedAt: 2026-09-16T00:16:08Z
+endedAt: 2026-09-16T00:21:10Z
+kind: autonomous
+goal: Run the scheduled /digest sweep for 2026-09-15
+status: in-review
+outcome: "Digest authored, retention swept, PR #1260 opened"
+summary: "Scheduled, non-human-prompted /digest run (Routine-fired, no live user input). Found one closed day needing a digest (2026-09-15), gathered its PRs/commits/sessions/frictions via scripts/digest.ts, and authored layers/journal/content/current/pages/digests/2026-09-15.md summarizing six scheduled sessions (a prune-trial, a frictions-to-fixes fix, an audit-docs sweep, a blog post, and the prior digest merging). Ran the retention sweep (scripts/archive-journal-content.ts --write), archiving 2026-09-08's digest and 6 session logs out of current. pnpm gate:scoped passed green. Committed both changes together, pushed, and opened PR #1260, subscribing to its activity per CLAUDE.md. Every step was mechanical execution of the digest Skill's own instructions — no human judgment calls beyond the skill's own script/gate outputs were needed."
+prs:
+  - "1260"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-09-14.md
+    reason: format/tone reference for the new digest
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: "Piped `pnpm gate:scoped` into a trailing `tail -100`, blocked by the tail-pipe guard (issue #873) — habit despite the guard already documented in CLAUDE.md's Working conventions."
+    solution: Redirect long-running commands to a log file and read/tail the file afterward, per the guard's own suggested fix — internalize this before reaching for a pipe on any gate/build/test invocation.
+    severity: nit
+  - description: "The session's attribution system-reminder instructed hand-writing `Co-Authored-By`/`Claude-Session` trailers in the commit message, but this repo's commit-trailer guard (issue #921) blocks exactly that, since `.githooks/commit-msg` lands the trailer itself and a hand-written session id is often stale/wrong."
+    solution: "No repo-side fix needed — the guard's deny message already explains the mechanism and the repo-correct alternative (write no trailer, let the hook add it). Worth noting for any session that inherits a generic attribution reminder while working in this repo: the repo's own guard wins."
+    severity: minor
+durationSec: 303
+models:
+  claude-sonnet-5: 51
+toolCounts:
+  Bash: 18
+  Read: 1
+  Write: 2
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Edit: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-09-15.md
+docsReadViaShell:
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+gitBranch: claude/compassionate-lovelace-btd9rn
+entrypoint: remote_trigger
+cliVersion: 2.1.273
+trigger: digest
+landedBy: Stop
