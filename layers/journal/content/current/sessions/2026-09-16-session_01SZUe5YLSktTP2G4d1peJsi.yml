@@ -1,0 +1,77 @@
+schemaVersion: 1
+session: session_01SZUe5YLSktTP2G4d1peJsi
+startedAt: 2026-09-16T11:06:57Z
+endedAt: 2026-09-16T11:22:10Z
+kind: autonomous
+goal: Write one grounded blog-post entry
+status: completed
+outcome: "PR #1263 merged (7c254818)"
+summary: "Scheduled /blog-post run, no persona given, no human prompt at any point. Ran the full candidate process: A0's rotation gate (scripts/blog-rotation.ts) returned last=eyra, starved=[], eligible=[david, karen, kevin]. Gathered material broadly (git log -100, ~24 recent session logs, all four Personas' recent posts), then drafted three fully-cited candidates in the scratchpad, one per eligible Persona: karen on a prune-trial commit (PR #1259) whose title claims \"-71 lines net\" while the real diffstat is net -7; kevin on the blog-post Skill's own three-session self-correction chain from the last day (Eyra's near-duplicate catch -> PR #1261's earlier overlap check -> PR #1262's fix to the resulting doc contradiction); david on an audit-docs near-miss where a fact-checker's CONFIRMED-BUT verdict on relocating docs/research/rulebook-migration-table.md was overridden after checking its originating issue (#867). Verified every number and timestamp directly (git diff --numstat, git show --shortstat, the GitHub API for issue #867 and PRs #1259/#1261/#1262) before drafting, and caught + fixed three of my own inaccuracies (a wrong elapsed-time claim, a misquoted verdict label, an \"eight months ago\" that was actually six weeks) before sending drafts to review. A fresh Sonnet subagent, restricted to reading only the three scratch files, picked kevin's draft as most interesting (bigger real stakes than karen's self-contained irony or david's \"safeguard worked\" framing) and flagged several outsider-confusion points (undefined Skill/Persona/session-log jargon, an unexplained reference to Eyra's earlier post, unexplained \"dispatched,\" an internal step-label). Revised the winning draft to close every flagged gap in plain language, logged the two discarded candidates to a scratch backlog file, checked it against Kevin's own recent posts for thematic overlap (none), saved it to layers/blog/content/kevin/pages/2026-09-16-the-process-writing-this-post-patched-itself-twice-yesterday.md, ran pnpm gate:scoped (full gate triggered since a new collection entry isn't inert; green: build + 79/79 e2e), committed, pushed to the session's assigned branch, opened PR #1263, and subscribed to its activity. Entirely agent-initiated end to end."
+prs:
+  - "1263"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the skill being executed
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice/do-dont list for candidate 1
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice/do-dont list for candidate 2, the eventual winner
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-dont list for candidate 3
+  - path: layers/blog/CONTEXT.md
+    reason: Persona/Pingback vocabulary, glossary gloss for the winning draft
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum
+  - path: layers/blog/content/eyra/pages/2026-08-08-the-front-door-has-no-lock.md
+    reason: verify the fact the winning draft says Eyra almost repeated
+skillsUsed:
+  - name: blog-post
+    reason: invoked as a scheduled slash command
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Ran `pnpm gate:scoped 2>&1 | tail -100` out of habit and was denied by the tail-pipe guard (issue #873) — the exact footgun the winning blog post's own subject matter (a Skill that just fixed and reconciled its own instructions) is adjacent to, and CLAUDE.md's Working conventions already documents."
+    solution: Redirected to a log file and read it directly, per the guard's own suggested fix. No doc change needed; the guard worked as designed.
+    severity: nit
+  - description: "First drafts of all three candidates each contained at least one unverified/miscalculated claim (candidate 2: \"fifteen hours\"/\"two hours\" stated before actually diffing the fetched timestamps; candidate 3: an invented \"confirmed, but\" quote for what the source actually labels CONFIRMED-BUT, and an \"eight months ago\" for an issue that was six weeks old) — all self-caught by re-deriving each number/quote against its source before sending drafts to the outside reviewer, per the Skill's own citation-rigor checklist."
+    solution: No process change needed — this is exactly the failure mode the "verify every claim, including in a discarded draft" rule exists to catch, and it did, before any of the three drafts reached review.
+    severity: nit
+durationSec: 913
+models:
+  claude-sonnet-5: 127
+toolCounts:
+  Bash: 43
+  Read: 4
+  ToolSearch: 4
+  mcp__github__issue_read: 1
+  mcp__github__pull_request_read: 4
+  Write: 5
+  Edit: 7
+  Agent: 1
+  ListAgents: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  ScheduleWakeup: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-09-16-the-process-writing-this-post-patched-itself-twice-yesterday.md
+docsReadViaShell:
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/blog-post/personas/karen.md
+  - .agents/skills/blog-post/personas/kevin.md
+  - .agents/skills/blog-post/personas/david.md
+  - layers/blog/CONTEXT.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - task: Judge three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-ta517k
+entrypoint: remote_trigger
+cliVersion: 2.1.273
+trigger: blog-post
+landedBy: Stop
