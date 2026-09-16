@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019QghEUG36tGWuhPUdM4t5Q
 startedAt: 2026-09-16T04:08:41Z
-endedAt: 2026-09-16T04:28:05Z
+endedAt: 2026-09-16T04:32:21Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: One drift fix landed as a gated, self-mergeable PR
-summary: "Scheduled /audit-docs run, fully autonomous (no live human input this session). Read all 27 ADRs and .agents/prune-trials.yml, then dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel to sweep Live/Historical docs and our own Skills. Pooled three candidate findings (no overlaps to merge), dispatched an independent fact-checker, then personally re-verified each before fixing. Fixed one confirmed Drift: blog-post/SKILL.md's A4 step still claimed \"no cheap pre-screen precedes this\" after a prior PR (#1261) added an A3 same-Persona overlap skim that runs before A4 - narrowed A4's wording so the two sections no longer contradict. Declined a Mis-location finding on docs/research/rulebook-migration-table.md after checking its originating issue (#867), which explicitly asked for that doc to live in docs/research/ - the fact-checker's CONFIRMED-BUT verdict missed this primary source, so I overrode it. Declined a Verbose finding on docs/agents/github-integration.md - the duplicated issue_write warning is deliberate protective redundancy (no guard exists for that failure mode yet), same shape as CLAUDE.md's pkill saga. Ran pnpm gate:scoped (green), committed, pushed, and opened PR #1262, which self-merges on green per ADR-0003's audit-docs exemption."
+status: completed
+outcome: "One drift fix landed and merged (PR #1262)"
+summary: "Scheduled /audit-docs run, fully autonomous (no live human input this session). Read all 27 ADRs and .agents/prune-trials.yml, then dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel to sweep Live/Historical docs and our own Skills. Pooled three candidate findings (no overlaps to merge), dispatched an independent fact-checker, then personally re-verified each before fixing. Fixed one confirmed Drift: blog-post/SKILL.md's A4 step still claimed \"no cheap pre-screen precedes this\" after a prior PR (#1261) added an A3 same-Persona overlap skim that runs before A4 - narrowed A4's wording so the two sections no longer contradict. Declined a Mis-location finding on docs/research/rulebook-migration-table.md after checking its originating issue (#867), which explicitly asked for that doc to live in docs/research/ - the fact-checker's CONFIRMED-BUT verdict missed this primary source, so I overrode it. Declined a Verbose finding on docs/agents/github-integration.md - the duplicated issue_write warning is deliberate protective redundancy (no guard exists for that failure mode yet), same shape as CLAUDE.md's pkill saga. Ran pnpm gate:scoped (green), committed, pushed, opened PR #1262, checked the advisory check-conflicting-issues hit (false positive, unrelated section of the same file), posted a COMMENT-event verdict, and merged via scripts/merge-pr.ts per ADR-0003's audit-docs self-merge exemption."
 prs:
   - "1262"
 docsRead:
@@ -20,6 +20,8 @@ docsRead:
     reason: factual-correction vs decision-reversal rule for ADR edits
   - path: docs/agents/issue-tracker.md
     reason: docs/research/ vs GitHub-issue convention, to fact-check the mis-location finding
+  - path: docs/agents/pr-workflow.md
+    reason: the land-a-gated-PR recipe and merge-pr.ts as sole merge path
   - path: .agents/skills/blog-post/SKILL.md
     reason: (read before editing)
   - path: docs/research/rulebook-migration-table.md
@@ -31,8 +33,6 @@ docsRead:
   - path: docs/adr/0003-agent-operating-model-and-governance.md
     reason: (no reason given)
   - path: docs/adr/0004-objective-safety-gate.md
-    reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: docs/adr/0020-requester-trust-tiers.md
     reason: (no reason given)
@@ -166,7 +166,7 @@ skillsUsed:
   - name: close-session
     reason: closure at PR-open
   - name: log-session
-    reason: this log
+    reason: this log, authored then finalized on merge
 frictions:
   - description: The fact-checker's CONFIRMED-BUT verdict on the rulebook-migration-table.md mis-location finding didn't check the doc's originating issue (#867), which explicitly requested docs/research/ as the deliverable location - a decisive primary source it had available but didn't reach for.
     solution: When fact-checking a Mis-location finding on a doc that names or implies an originating issue/PR, the checker should look that issue up before concluding the current home is wrong, not just check the general docs/research-vs-issue convention in isolation.
@@ -174,25 +174,30 @@ frictions:
   - description: A dispatched fact-checker's tool output triggered the harness's instruction-shaped-content scanner (flagged 'settings-json'), neutralizing some tags; on inspection the content was benign (legitimate discussion of .claude/settings.json while checking whether a guard existed).
     solution: No action needed this time since the content was benign, but worth recording as a case where the scanner's heuristic can fire on ordinary technical discussion of settings.json in a security-analysis context.
     severity: nit
-durationSec: 1164
+durationSec: 1421
 models:
-  claude-sonnet-5: 106
+  claude-sonnet-5: 134
 toolCounts:
-  Bash: 24
-  ToolSearch: 3
+  Bash: 28
+  ToolSearch: 4
   mcp__github__list_pull_requests: 1
-  Read: 9
+  Read: 10
   Agent: 5
   ScheduleWakeup: 1
-  Edit: 1
+  Edit: 2
   mcp__github__search_issues: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
-  mcp__github__pull_request_read: 1
+  Write: 2
+  mcp__github__pull_request_read: 3
   mcp__github__actions_list: 1
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 2
+  mcp__github__issue_read: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/blog-post/SKILL.md
 docsReadViaShell:
