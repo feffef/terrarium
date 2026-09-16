@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019jqXtQ9Aro2z4RvrZZpJ1Y
 startedAt: 2026-09-16T00:16:08Z
-endedAt: 2026-09-16T00:21:10Z
+endedAt: 2026-09-16T00:26:00Z
 kind: autonomous
 goal: Run the scheduled /digest sweep for 2026-09-15
-status: in-review
-outcome: "Digest authored, retention swept, PR #1260 opened"
-summary: "Scheduled, non-human-prompted /digest run (Routine-fired, no live user input). Found one closed day needing a digest (2026-09-15), gathered its PRs/commits/sessions/frictions via scripts/digest.ts, and authored layers/journal/content/current/pages/digests/2026-09-15.md summarizing six scheduled sessions (a prune-trial, a frictions-to-fixes fix, an audit-docs sweep, a blog post, and the prior digest merging). Ran the retention sweep (scripts/archive-journal-content.ts --write), archiving 2026-09-08's digest and 6 session logs out of current. pnpm gate:scoped passed green. Committed both changes together, pushed, and opened PR #1260, subscribing to its activity per CLAUDE.md. Every step was mechanical execution of the digest Skill's own instructions — no human judgment calls beyond the skill's own script/gate outputs were needed."
+status: completed
+outcome: "Digest authored, retention swept, PR #1260 merged"
+summary: "Scheduled, non-human-prompted /digest run (Routine-fired, no live user input). Found one closed day needing a digest (2026-09-15), gathered its PRs/commits/sessions/frictions via scripts/digest.ts, and authored layers/journal/content/current/pages/digests/2026-09-15.md summarizing six scheduled sessions (a prune-trial, a frictions-to-fixes fix, an audit-docs sweep, a blog post, and the prior digest merging). Ran the retention sweep (scripts/archive-journal-content.ts --write), archiving 2026-09-08's digest and 6 session logs out of current. pnpm gate:scoped passed green locally. Committed both changes together, pushed, and opened PR #1260, subscribing to its activity per CLAUDE.md. CI's own safety-gate check went green within minutes; check-conflicting-issues.ts found no hits, so per this repo's digest-tier merge authority (docs/agents/pr-workflow.md) posted a verdict comment and landed it via scripts/merge-pr.ts — merged as 7c3371c997396c31d3c4113e4addde40f5bbaa2a. Unsubscribed from the PR and cancelled the now-unneeded fallback check-in. Every step was mechanical execution of the digest Skill's own instructions plus the standard digest-tier merge recipe — no human judgment calls beyond the skill's own script/gate outputs were needed."
 prs:
   - "1260"
 docsRead:
@@ -26,23 +26,30 @@ frictions:
   - description: "The session's attribution system-reminder instructed hand-writing `Co-Authored-By`/`Claude-Session` trailers in the commit message, but this repo's commit-trailer guard (issue #921) blocks exactly that, since `.githooks/commit-msg` lands the trailer itself and a hand-written session id is often stale/wrong."
     solution: "No repo-side fix needed — the guard's deny message already explains the mechanism and the repo-correct alternative (write no trailer, let the hook add it). Worth noting for any session that inherits a generic attribution reminder while working in this repo: the repo's own guard wins."
     severity: minor
-durationSec: 303
+durationSec: 592
 models:
-  claude-sonnet-5: 51
+  claude-sonnet-5: 86
 toolCounts:
-  Bash: 18
+  Bash: 23
   Read: 1
   Write: 2
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  Skill: 2
-  Edit: 1
+  Skill: 3
+  Edit: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 6
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-09-15.md
 docsReadViaShell:
   - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/pr-workflow.md
 gitBranch: claude/compassionate-lovelace-btd9rn
 entrypoint: remote_trigger
 cliVersion: 2.1.273
