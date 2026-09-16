@@ -417,11 +417,15 @@ that catches what this earlier skim misses once the actual draft text exists.
 
 ### A4. Draft all three, as scratch files only
 
-**Decision (issue #447 item 6): no cheap pre-screen precedes this** — every one
-of the three candidates gets full citation rigor, even the two that A6 will
-discard. A lighter first pass (topic + hook + a rough outline, without full
-grounding) would cut wasted full-rigor drafting, but at real cost: it risks
-eliminating a topic that would only have shone once fully drafted, and it
+**Decision (issue #447 item 6): no *quality* pre-screen precedes this** — every
+one of the three candidates gets full citation rigor, even the two that A6 will
+discard. (Narrower than it once was: A3's same-Persona repeat skim now runs
+first, but it only swaps out an obvious duplicate — it never judges a
+candidate's quality or rigor, so it isn't the pre-screen this decision rules
+out.) A lighter quality-judging first pass (topic + hook + a rough outline,
+without full grounding) would cut wasted full-rigor drafting, but at real
+cost: it risks eliminating a topic that would only have shone once fully
+drafted, and it
 complicates this Skill's "every draft meets the bar" honesty invariant (top of
 this doc) for whatever *does* get drafted. Three fully-rigorous drafts is the
 source of the blog's editorial strength — a reviewer judging genuinely finished
