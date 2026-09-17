@@ -1,0 +1,72 @@
+schemaVersion: 1
+session: session_01KBP1ZAdd9aqNhvWr5au3wY
+startedAt: 2026-09-17T02:04:34Z
+endedAt: 2026-09-17T02:20:43Z
+kind: autonomous
+goal: Run frictions-to-fixes on recent sessions
+status: completed
+outcome: One PR shipped and merged, gate green
+summary: "Scheduled Routine fired the frictions-to-fixes skill (no live human prompt). Delegated the survey (steps 1-2) to a general-purpose subagent, which read the latest 20 session logs, grouped/ranked frictions, and screened each against the tracker (main, merged-since.ts, targeted issue search) — most of the window's frictions were already fixed in-window, guard-handled, or working-as-designed; the recurring tail-piping-guard nits were correctly left alone as they fall inside an open Prune Trial. Two never-fixed candidates survived: a moderate audit-docs fact-checker gap (missed an originating issue's explicit placement directive) and a recurring nit (harness scanner false-positiving on \"settings.json\" mentions, undocumented in environment-caveats.md). Both were simple doc-only fixes with no human-only surface, so no tracker issue was filed per the skill's rule; dispatched one Sonnet impl agent in its own worktree to batch both into a single grouped PR (#1266) with the problem/evidence/fix inlined in the PR body. Reviewed the diff myself as the reviewer-agent tier, confirmed CI green and mergeable_state clean, posted the review comment, and merged via merge-pr.ts. Verified no stranded worktrees and unsubscribed from the merged PR's activity."
+prs:
+  - "1266"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe (verdict comment before merge, merge-pr.ts as sole path)
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: worktree isolation + brief checklist for the impl-agent dispatch
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: scripts/session-frictions.ts
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/environment-caveats.md
+    reason: (read before editing)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run's own top-level procedure
+  - name: dispatch-subagents
+    reason: isolation mechanism + brief checklist for the impl agent
+  - name: close-session
+    reason: closure at PR-merge
+  - name: log-session
+    reason: this log
+frictions: []
+durationSec: 969
+models:
+  claude-sonnet-5: 57
+toolCounts:
+  Agent: 2
+  Skill: 3
+  ReadNotifications: 2
+  ToolSearch: 2
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  Read: 1
+  Bash: 5
+  mcp__github__add_issue_comment: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/agents/environment-caveats.md
+docsReadViaShell:
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/agents/guards.md
+  - docs/agents/environment-caveats.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Doc fixes for two frictions
+    model: sonnet
+gitBranch: claude/eager-ptolemy-t45bmv
+entrypoint: remote_trigger
+cliVersion: 2.1.274
+trigger: frictions-to-fixes
+landedBy: Stop
