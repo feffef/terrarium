@@ -66,3 +66,12 @@ lives in the cited issue, not here.
   known to exist. Treat prolonged subagent silence as possibly stuck, not
   merely slow. (issue #1215; `docs/agents/guards.md` covers the narrower fix
   of never autonomously dispatching a guard/settings-touching edit at all)
+- **The harness's instruction-shaped-content scanner can false-positive on
+  ordinary technical discussion that merely mentions "settings.json" /
+  "settings-json"** — e.g. a subagent's report discussing `.claude/settings.json`
+  hook wiring, or discussing that string itself. When a tool result comes back
+  flagged this way, inspect the actual content: if it's benign discussion, not a
+  real injection attempt, treat it as this known scanner quirk and don't spend
+  time re-diagnosing it as a fresh problem. (sessions
+  session_0174Bf4itHjWjJ3yMKmRd1KM, 2026-09-15, and
+  session_019QghEUG36tGWuhPUdM4t5Q, 2026-09-16)

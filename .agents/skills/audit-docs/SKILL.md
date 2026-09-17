@@ -166,7 +166,13 @@ The primary source depends on the lens: **Drift/Contradiction** verify against t
 convention (which doc actually owns the fact, and whether the named owner really
 holds it) — and, where a Mis-location finding **cites a read count**, against a
 re-run of `scripts/audit-skills.ts`, never a remembered or eyeballed figure
-(CLAUDE.md: a count is not a fact until the set has actually been read);
+(CLAUDE.md: a count is not a fact until the set has actually been read). A
+Mis-location finding needs one more check before it's CONFIRMED: if the target
+doc's header, commit message, or nearby context names or implies an
+originating issue/PR, read that issue/PR first — an explicit placement
+directive there overrides a general home-convention guess (a missed case:
+`docs/research/rulebook-migration-table.md`'s originating issue #867
+explicitly requested that location).
 **Verbose** against the **doc's own text** (is the fact genuinely
 stated twice?); **Orphan-addition** against the **git history** (was the surface
 really added inside the 48h window?) *and* the expected home (does it genuinely
