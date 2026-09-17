@@ -79,57 +79,6 @@ trials:
       dispatched subagent can't background a Bash command because nothing
       would ever wake it back up.
   - problem: >
-      `docs/adr/0004-objective-safety-gate.md` had three amendment blocks doing
-      the ADR-0003-ledger thing: hand-copying the human-only-surface file list
-      (2026-07-10), then an amendment that existed *only* to catch that copy
-      back up after ADR-0025 added three files (2026-07-22), then a third
-      amendment (2026-09-03) whose entire content was "stop doing this, point
-      to CLAUDE.md's Ground rules instead" — the exact self-documented-failure
-      shape this Skill's §2 flags, and CLAUDE.md's Ground rules already *is*
-      the single home (it says so itself: "The pinned seven above are the
-      manifest-expansion/routing/catalog family"). Compressed the 2026-07-10
-      amendment to keep its one genuine fact (the Decision's "generator"
-      terminology is stale, per ADR-0013/ADR-0014) and drop the copied list;
-      trimmed 2026-07-22 to state only its own addition (three files, per
-      ADR-0025) instead of re-quoting the whole list to update it; deleted
-      2026-09-03 entirely, folding its "don't re-enumerate" instruction into
-      the 2026-07-10 amendment as the natural place for it. Decision and
-      Consequences untouched, per ADR-0027's bound. Net -18 lines (194 → 176,
-      one file).
-    territory:
-      paths:
-        - "docs/adr/0004-objective-safety-gate.md: the 2026-07-10, 2026-07-22, and 2026-09-03 amendment blocks"
-      keywords:
-        - human-only surface
-        - generator terminology
-        - shared/expand.ts
-        - shared/kinds.ts
-        - modules/catalog.ts
-        - app/composables/catalog.ts
-        - re-enumerate
-    opened: 2026-09-13
-    proven: true
-    check: >
-      Damage is a session that, needing the current human-only-surface file
-      list, reads ADR-0004's compressed amendments and either can't find it
-      (fails to follow the pointer to CLAUDE.md's Ground rules), treats the
-      now-shorter ADR-0004 text as itself authoritative and stale-copies it
-      into a fourth amendment (repeating exactly the failure this prune
-      fixes), or misses that `shared/kinds.ts`/`modules/catalog.ts`/
-      `app/composables/catalog.ts` are part of the human-only family because
-      the 2026-07-22 amendment no longer re-quotes the whole list next to
-      them. NOT damage: a session that opens CLAUDE.md's Ground rules for the
-      current complete list instead of finding it inline in the ADR (the
-      intended single-home design), or one that never needs this list this
-      run. A Sonnet probe given only the compressed ADR-0004 text correctly
-      named CLAUDE.md's Ground rules as the current authoritative list rather
-      than treating the ADR's own (now-partial) amendment text as complete,
-      correctly identified that the "generator" terminology in the Decision
-      section below is historical framing rather than a live mechanism, and
-      correctly refused to add a fourth list-restating amendment when asked
-      to record a new human-only file, instead extending CLAUDE.md's Ground
-      rules directly.
-  - problem: >
       `docs/adr/0017-provenance-footer-on-agent-authored-content.md` carried
       ~155 lines of dated amendment blockquotes (2026-07-13 through
       2026-08-01, issues #346/#710/#723/#737/#784) narrating, step by step,
@@ -251,3 +200,55 @@ trials:
       hook was rejected as untested runtime behaviour rather than never
       considered, and correctly resolved a `session`-field disagreement in
       favor of the mechanical trace over the agent-typed value.
+  - problem: >
+      `docs/agents/github-integration.md` carried two rules with more prose than
+      they now need. "Bare angle brackets vanish from a rendered title or body"
+      narrated the #779 incident and a failed single-backtick-wrap attempt in
+      full, even though `scripts/github-provenance-guard.ts` (issue #886) now
+      denies the write before it posts — the same
+      narrated-incident-a-guard-has-since-made-redundant shape already pruned
+      from CLAUDE.md, ADR-0004, and ADR-0017. "`issue_write update` overwrites
+      the description — it is not a comment" was a standalone 12-line section
+      restating, almost word for word, what the mapping-table bullet three
+      paragraphs above it already said in one line — the doc's own text
+      admitted as much ("this callout exists because that placement wasn't
+      visible enough to catch the mistake in practice"), the self-documented
+      criterion-1 shape, though no guard covers this one. Compressed the first
+      to the rule plus the guard pointer; folded the second's warning (issue
+      #723) into the mapping-table bullet itself as the single home, deleting
+      the standalone section rather than keeping two copies of the same rule
+      in one file. A background search across the rest of the corpus (all
+      `docs/agents/*.md`, the 14 repo-authored Skills, every ADR's amendment
+      blocks) found nothing closer to the usual ~100-line target — the four
+      prior trials already cleared the larger built-guard/incident-narration
+      backlog. Net -15 lines, one file.
+    territory:
+      paths:
+        - "docs/agents/github-integration.md: the \"Bare angle brackets vanish\" section and the \"issue_write update overwrites the description\" section (folded into the mapping-table bullet)"
+      keywords:
+        - bare angle brackets
+        - issue_write update
+        - overwrites the description
+        - bareAngleBracketSpan
+    opened: 2026-09-17
+    proven: true
+    check: >
+      Damage is a session that, needing to comment on an issue without erasing
+      its description, reads the compressed mapping-table bullet and either
+      can't find the warning about `issue_write`'s `update`+`body` combination
+      (so overwrites a description the way issue #723 did), or, needing to
+      know what happens to a bare `<...>` placeholder in a GitHub body, reads
+      the compressed angle-brackets section and either doesn't know to wrap it
+      in a fenced code block or wrongly believes nothing catches it before
+      posting. NOT damage: a session that correctly names `add_issue_comment`
+      over `issue_write update` for a follow-up note, or correctly says the
+      angle-bracket guard (`github-provenance-guard.ts`, issue #886) catches
+      the write before it posts — the intended design — or one that never
+      needs either rule this run. A Sonnet probe given only the compressed
+      file text correctly named `add_issue_comment` (not `issue_write update`
+      with a `body`) as the safe way to comment, correctly cited issue #723
+      for why the latter is dangerous, correctly said a bare `<component-name>`
+      placeholder is silently stripped as HTML and must go in a fenced code
+      block (a single backtick wrap doesn't hold), and correctly identified
+      that `scripts/github-provenance-guard.ts` (issue #886) enforces the
+      angle-bracket rule mechanically rather than leaving it to memory.
