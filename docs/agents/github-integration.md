@@ -16,13 +16,10 @@ tools are guarded and the rule's operative statement.
 
 ## Bare angle brackets vanish from a rendered title or body
 
-**GitHub strips bare `<...>` text in a rendered issue/PR title or body as HTML
-markup.** The text simply disappears, with no error — it has silently eaten
-both a footer's own `<noreply@anthropic.com>` and an unrelated placeholder
-written in prose (e.g. `<slug>`) (issue #779). Use a fenced code block, not
-bare backticks — a single backtick wrap did not hold in a later recurrence.
-`scripts/github-provenance-guard.ts` now denies a write carrying one before it
-posts (issue #886).
+**GitHub silently strips bare `<...>` text in a rendered issue/PR title or
+body as HTML markup, no error shown.** Wrap it in a fenced code block — a
+single backtick wrap does not hold. `scripts/github-provenance-guard.ts`
+denies a write carrying one before it posts (issue #886).
 
 ## Transient failures — retry before escalating
 
@@ -49,25 +46,13 @@ each recipe class to its MCP equivalent:
   `update_pull_request` for PR state instead. When both labels and state need
   to change on a PR, that's two calls: labels via `issue_write`, state via
   `update_pull_request`.)
-- **Comment on an issue or PR** → `add_issue_comment` (not `issue_write`:
-  its `update` + `body` *overwrites the issue description*)
+- **Comment on an issue or PR** → `add_issue_comment` — never `issue_write`
+  with `method: update` and a `body`, which *overwrites the issue/PR
+  description* with no confirmation and no diff shown (issue #723)
 - **Read an issue, its comments, or sub-issues** → `issue_read`
 - **Read a PR or its diff** → `pull_request_read`
 - **List / search PRs** → `list_pull_requests` / `search_pull_requests`
 - **Link sub-issues** → `sub_issue_write`
-
-## `issue_write update` overwrites the description — it is not a comment
-
-**`issue_write` with `method: update` and a `body` field REPLACES the entire
-issue/PR description.** It does not append or annotate — the previous body is
-gone, with no confirmation and no diff shown. Never reach for it to add
-commentary; use `add_issue_comment` instead, which appends a new comment and
-leaves the description untouched. This already bit a session that intended to
-add a note and instead silently overwrote an issue's description, recovered
-only because the original text was preserved elsewhere (issue #723 is the
-incident record). The mapping-table row above states the same rule in one
-line — this callout exists because that placement wasn't visible enough to
-catch the mistake in practice.
 
 ## Overflow and precision traps
 
