@@ -1,0 +1,173 @@
+schemaVersion: 1
+session: session_01Nw4HjE4oULBA9P1a7EfrhM
+startedAt: 2026-09-17T04:08:19Z
+endedAt: 2026-09-17T04:21:10Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: completed
+outcome: Zero fixes — one finding fact-checked out
+summary: "Fanned out the four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across the Live/Historical/Pack-generic doc corpus per the audit-docs Skill. Freshness, Concision, and Coherence returned no findings. Single-home returned one candidate: the per-tier merge-authority policy allegedly duplicated across ~7 homes, including six Skills' SKILL.md files. An independent fact-checker verified it against primary sources and issue #864 (read directly via GitHub) and returned CONFIRMED-BUT: the general duplication is real but already tracked as an open, ready-for-human issue with an in-flight human-approved design (pointer amendments to ADR-0003/ADR-0004/ADR-0025/CLAUDE.md/CONTEXT.md/the Skill Inventory YAML, not the SKILL.md files). Six of the eight cited files were WRONG citations — those Skills already correctly state their own tier with a pointer back to docs/agents/pr-workflow.md, the intended pattern. Fixing as framed would have edited the wrong files and left the real, ADR-bound duplication untouched, and #864 already exists, so nothing new was filed. No PR opened: no substantive Live-tier change existed to gate or commit. This entire run was self-initiated by the audit-docs schedule; no human prompted or steered any part of it."
+prs: []
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
+    reason: (no reason given)
+  - path: docs/proposals/879-gate-yml-thin-shell.md
+    reason: (no reason given)
+  - path: docs/proposals/445-ci-reuse-gate-scoped-classifier.md
+    reason: (no reason given)
+  - path: docs/proposals/659-fork-pr-gate-doorbell-token.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: The Single-home lens reviewer cited 6 SKILL.md files as duplicating the merge-authority policy when each was actually correctly stating its own tier plus a pointer to docs/agents/pr-workflow.md — the intended single-home pattern, not a violation of it. It also didn't check whether the real duplication was already tracked before treating it as fresh.
+    solution: "Have future audit-docs Single-home-lens prompts instruct: before citing a Skill's SKILL.md as a Duplication instance, confirm the text fully restates the cross-cutting policy rather than stating the Skill's own specific tier with a correct pointer, and cross-check docs/research/rulebook-migration-table.md / issue #864 for whether the real duplication is already tracked and human-owned first."
+    severity: minor
+  - description: One background lens-reviewer's raw output tripped the harness's instruction-shaped-pattern guard (labeled settings-json), neutralizing control-tag-like text before relaying it. The underlying content was benign prose describing .claude/settings.json hook-matcher regex strings, not an actual injected instruction.
+    solution: No action needed this run; noting for corpus awareness in case the pattern-matcher keeps tripping on regex-like matcher strings across future audit-docs sweeps.
+    severity: nit
+durationSec: 771
+models:
+  claude-sonnet-5: 54
+toolCounts:
+  Bash: 8
+  Read: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  Agent: 9
+  ScheduleWakeup: 1
+  Skill: 2
+  Grep: 1
+  Write: 1
+docsReadViaShell:
+  - CONTEXT.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/research/rulebook-migration-table.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/research/nuxt-content-review-grounding.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/agents/guards.md
+subagents:
+  - task: "Freshness lens: drift + orphan-addition"
+  - task: "Single-home lens: duplication + mis-location"
+  - task: "Concision lens: verbose + stale-narration"
+  - task: "Coherence lens: contradiction + ambiguity"
+  - task: "Freshness lens: drift + orphan-addition"
+  - task: "Single-home lens: duplication + mis-location"
+  - task: "Concision lens: verbose + stale-narration"
+  - task: "Coherence lens: contradiction + ambiguity"
+  - task: Fact-check the merge-authority duplication finding
+gitBranch: claude/festive-mayer-q0rak3
+entrypoint: remote_trigger
+cliVersion: 2.1.274
+trigger: audit-docs
+landedBy: Stop
