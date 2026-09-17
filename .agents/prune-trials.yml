@@ -200,3 +200,55 @@ trials:
       hook was rejected as untested runtime behaviour rather than never
       considered, and correctly resolved a `session`-field disagreement in
       favor of the mechanical trace over the agent-typed value.
+  - problem: >
+      `docs/agents/github-integration.md` carried two rules with more prose than
+      they now need. "Bare angle brackets vanish from a rendered title or body"
+      narrated the #779 incident and a failed single-backtick-wrap attempt in
+      full, even though `scripts/github-provenance-guard.ts` (issue #886) now
+      denies the write before it posts — the same
+      narrated-incident-a-guard-has-since-made-redundant shape already pruned
+      from CLAUDE.md, ADR-0004, and ADR-0017. "`issue_write update` overwrites
+      the description — it is not a comment" was a standalone 12-line section
+      restating, almost word for word, what the mapping-table bullet three
+      paragraphs above it already said in one line — the doc's own text
+      admitted as much ("this callout exists because that placement wasn't
+      visible enough to catch the mistake in practice"), the self-documented
+      criterion-1 shape, though no guard covers this one. Compressed the first
+      to the rule plus the guard pointer; folded the second's warning (issue
+      #723) into the mapping-table bullet itself as the single home, deleting
+      the standalone section rather than keeping two copies of the same rule
+      in one file. A background search across the rest of the corpus (all
+      `docs/agents/*.md`, the 14 repo-authored Skills, every ADR's amendment
+      blocks) found nothing closer to the usual ~100-line target — the four
+      prior trials already cleared the larger built-guard/incident-narration
+      backlog. Net -15 lines, one file.
+    territory:
+      paths:
+        - "docs/agents/github-integration.md: the \"Bare angle brackets vanish\" section and the \"issue_write update overwrites the description\" section (folded into the mapping-table bullet)"
+      keywords:
+        - bare angle brackets
+        - issue_write update
+        - overwrites the description
+        - bareAngleBracketSpan
+    opened: 2026-09-17
+    proven: true
+    check: >
+      Damage is a session that, needing to comment on an issue without erasing
+      its description, reads the compressed mapping-table bullet and either
+      can't find the warning about `issue_write`'s `update`+`body` combination
+      (so overwrites a description the way issue #723 did), or, needing to
+      know what happens to a bare `<...>` placeholder in a GitHub body, reads
+      the compressed angle-brackets section and either doesn't know to wrap it
+      in a fenced code block or wrongly believes nothing catches it before
+      posting. NOT damage: a session that correctly names `add_issue_comment`
+      over `issue_write update` for a follow-up note, or correctly says the
+      angle-bracket guard (`github-provenance-guard.ts`, issue #886) catches
+      the write before it posts — the intended design — or one that never
+      needs either rule this run. A Sonnet probe given only the compressed
+      file text correctly named `add_issue_comment` (not `issue_write update`
+      with a `body`) as the safe way to comment, correctly cited issue #723
+      for why the latter is dangerous, correctly said a bare `<component-name>`
+      placeholder is silently stripped as HTML and must go in a fenced code
+      block (a single backtick wrap doesn't hold), and correctly identified
+      that `scripts/github-provenance-guard.ts` (issue #886) enforces the
+      angle-bracket rule mechanically rather than leaving it to memory.
