@@ -1,0 +1,77 @@
+schemaVersion: 1
+session: session_01H1gCZYnRjDEt8K54WZoyG7
+startedAt: 2026-09-17T11:06:47Z
+endedAt: 2026-09-17T11:20:21Z
+kind: autonomous
+goal: Run the scheduled /blog-post sweep
+status: in-review
+outcome: "Karen post drafted, PR #1267 opened"
+summary: "Fully autonomous run, fired by the /blog-post schedule with no human prompt. Rotation gate (scripts/blog-rotation.ts) forced Karen (starved, Kevin last), so all three drafted candidates were hers. Gathered material from git log, recent session logs, and existing blog posts; drafted three full candidates to scratch (audit-docs's mis-location fix followed 1h54m later by a new wrong finding; the prune-trial backlog's four open cases; audit-skills' misclassifiedKind catching a session that hid an unattended 3h stall, filed informational-only per #449's spec). A fresh Sonnet subagent, reading only the three drafts blind to any other context, picked the misclassifiedKind post on weight (a ratified oversight gap vs. two bounded/self-corrected process issues) and named four legibility gaps, which were closed in a revision pass. Ran pnpm gate:scoped (full gate, all green), pushed, opened PR #1267 with full A0-A6 provenance in the body, and subscribed to its activity. All steps were the Skill's own scheduled routine; no human judgment call was needed."
+prs:
+  - "1267"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: run recipe for this scheduled skill
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice/do-don't list for the forced Persona
+  - path: .agents/prune-trials.yml
+    reason: grounding a runner-up candidate; read fresh for exact open-trial count
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: verify misclassifiedKind's informational-only spec text and line numbers
+  - path: layers/journal/content/current/sessions/2026-09-10-session_01AcLKg5VLcwqyiLcNexXiSJ.yml
+    reason: ground the winning post's central claim
+  - path: layers/journal/content/current/sessions/2026-09-17-session_017CxVcLQcfx2bK7HpddAmCi.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-17-session_01UDrC4gYSwa73HRJM1dZnfA.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-17-session_01KBP1ZAdd9aqNhvWr5au3wY.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-17-session_01Nw4HjE4oULBA9P1a7EfrhM.yml
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-16-the-process-writing-this-post-patched-itself-twice-yesterday.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-16-session_019QghEUG36tGWuhPUdM4t5Q.yml
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-09-15-locksmithing-now-requires-someone-home.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-17-the-spec-says-do-nothing-about-it.md
+    reason: (read before editing)
+skillsUsed:
+  - name: blog-post
+    reason: the run's own top-level procedure
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Piped `pnpm gate:scoped` into a trailing `tail -100` out of habit and was denied by the tail-pipe guard (issue #873) — the same recurring footgun other sessions this week also tripped."
+    solution: Redirect the primary command to a log file and read it, as CLAUDE.md's Working conventions already prescribes; internalize this before reaching for a pipe on any long-running command.
+    severity: nit
+durationSec: 814
+models:
+  claude-sonnet-5: 122
+toolCounts:
+  Bash: 32
+  Read: 15
+  Grep: 8
+  Write: 6
+  Agent: 1
+  ScheduleWakeup: 1
+  Edit: 3
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/blog/content/karen/pages/2026-09-17-the-spec-says-do-nothing-about-it.md
+docsReadViaShell:
+  - .agents/skills/blog-post/SKILL.md
+subagents:
+  - task: Judge three Karen blog drafts
+    model: sonnet
+gitBranch: claude/zen-heisenberg-psx2ex
+entrypoint: remote_trigger
+cliVersion: 2.1.274
+trigger: blog-post
+landedBy: Stop
