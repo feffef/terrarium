@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01H1gCZYnRjDEt8K54WZoyG7
 startedAt: 2026-09-17T11:06:47Z
-endedAt: 2026-09-17T11:20:21Z
+endedAt: 2026-09-17T11:24:23Z
 kind: autonomous
 goal: Run the scheduled /blog-post sweep
-status: in-review
-outcome: "Karen post drafted, PR #1267 opened"
-summary: "Fully autonomous run, fired by the /blog-post schedule with no human prompt. Rotation gate (scripts/blog-rotation.ts) forced Karen (starved, Kevin last), so all three drafted candidates were hers. Gathered material from git log, recent session logs, and existing blog posts; drafted three full candidates to scratch (audit-docs's mis-location fix followed 1h54m later by a new wrong finding; the prune-trial backlog's four open cases; audit-skills' misclassifiedKind catching a session that hid an unattended 3h stall, filed informational-only per #449's spec). A fresh Sonnet subagent, reading only the three drafts blind to any other context, picked the misclassifiedKind post on weight (a ratified oversight gap vs. two bounded/self-corrected process issues) and named four legibility gaps, which were closed in a revision pass. Ran pnpm gate:scoped (full gate, all green), pushed, opened PR #1267 with full A0-A6 provenance in the body, and subscribed to its activity. All steps were the Skill's own scheduled routine; no human judgment call was needed."
+status: completed
+outcome: "Karen post merged via PR #1267"
+summary: "Fully autonomous run, fired by the /blog-post schedule with no human prompt. Rotation gate (scripts/blog-rotation.ts) forced Karen (starved, Kevin last), so all three drafted candidates were hers. Gathered material from git log, recent session logs, and existing blog posts; drafted three full candidates to scratch (audit-docs's mis-location fix followed 1h54m later by a new wrong finding; the prune-trial backlog's four open cases; audit-skills' misclassifiedKind catching a session that hid an unattended 3h stall, filed informational-only per #449's spec). A fresh Sonnet subagent, reading only the three drafts blind to any other context, picked the misclassifiedKind post on weight (a ratified oversight gap vs. two bounded/self-corrected process issues) and named four legibility gaps, which were closed in a revision pass. Ran pnpm gate:scoped (full gate, all green), pushed, opened PR #1267 with full A0-A6 provenance in the body, subscribed to its activity, scheduled a check-in, then the gate went green immediately (check-in fired early via the webhook event instead): posted a COMMENT-event verdict, ran check-conflicting-issues.ts (no hits), merged via scripts/merge-pr.ts, and unsubscribed. All steps were the Skill's own scheduled routine end to end; no human judgment call was needed anywhere in the run."
 prs:
   - "1267"
 docsRead:
@@ -47,26 +47,33 @@ frictions:
   - description: "Piped `pnpm gate:scoped` into a trailing `tail -100` out of habit and was denied by the tail-pipe guard (issue #873) — the same recurring footgun other sessions this week also tripped."
     solution: Redirect the primary command to a log file and read it, as CLAUDE.md's Working conventions already prescribes; internalize this before reaching for a pipe on any long-running command.
     severity: nit
-durationSec: 814
+durationSec: 1056
 models:
-  claude-sonnet-5: 122
+  claude-sonnet-5: 152
 toolCounts:
-  Bash: 32
-  Read: 15
+  Bash: 36
+  Read: 18
   Grep: 8
   Write: 6
   Agent: 1
   ScheduleWakeup: 1
-  Edit: 3
-  ToolSearch: 1
+  Edit: 4
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/karen/pages/2026-09-17-the-spec-says-do-nothing-about-it.md
 docsReadViaShell:
   - .agents/skills/blog-post/SKILL.md
+  - docs/agents/pr-workflow.md
 subagents:
   - task: Judge three Karen blog drafts
     model: sonnet
