@@ -1,0 +1,56 @@
+schemaVersion: 1
+session: session_016kftySUPzVircNy3TxuxvJ
+startedAt: 2026-09-18T00:16:05Z
+endedAt: 2026-09-18T00:26:01Z
+kind: autonomous
+goal: Run the scheduled /digest sweep for 2026-09-17
+status: completed
+outcome: "Digest authored, retention swept, PR #1269 merged"
+summary: "Fully agent-initiated scheduled run, no human prompt at start. Followed the /digest Skill: gathered 2026-09-17's activity via scripts/digest.ts (4 merged PRs, 6 completed sessions), authored the Digest at layers/journal/content/current/pages/digests/2026-09-17.md, ran the retention sweep (archived the 2026-09-10 digest and 6 session logs), cleared pnpm gate:scoped, and opened PR #1269 on the existing branch claude/compassionate-lovelace-q28zex (already at origin/main tip, so no new branch cut was needed). Subscribed to the PR, posted a verdict comment, ran merge-pr.ts, and it merged cleanly on green CI under the digest tier's merge-on-green-gate-alone authority."
+prs:
+  - "1269"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: the land-a-gated-PR recipe (conflict check, verdict comment, merge-pr.ts)
+  - path: docs/adr/0017-provenance-footer.md
+    reason: PR body header format
+  - path: layers/blog/content/karen/pages/2026-09-17-the-spec-says-do-nothing-about-it.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: "Piped `pnpm gate:scoped` into a trailing `tail -100` out of habit and was denied by the tail-pipe guard (issue #873) — the same recurring footgun several other sessions this week also logged (including in the very day just digested)."
+    solution: Redirected output to a log file instead and read it separately.
+    severity: nit
+durationSec: 596
+models:
+  claude-sonnet-5: 87
+toolCounts:
+  Bash: 34
+  Read: 1
+  Write: 2
+  ToolSearch: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  Skill: 2
+  Edit: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-09-17.md
+docsReadViaShell:
+  - docs/agents/github-integration.md
+  - docs/agents/pr-workflow.md
+gitBranch: claude/compassionate-lovelace-q28zex
+entrypoint: remote_trigger
+cliVersion: 2.1.275
+trigger: digest
+learnings:
+  - The digest tier's per-tier merge authority (docs/agents/pr-workflow.md) lets a /digest PR self-merge on a green gate alone with no extra risk review, unlike the reviewer-agent tier which also needs a risk judgement.
+landedBy: Stop
