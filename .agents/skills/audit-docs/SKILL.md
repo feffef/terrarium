@@ -108,7 +108,10 @@ The reasons it undercounts are single-homed in that field's docstring in
 `scripts/audit-skills.ts` — read them before citing a count.
 
 - **Duplication** — a fact restated in >1 place instead of single-homed. The home
-  keeps it; every copy becomes a pointer.
+  keeps it; every copy becomes a pointer. Before citing a finding, confirm the
+  flagged text actually **restates the policy's substance** — a file correctly
+  stating its own specific case (e.g. a Skill's own merge tier) plus a pointer
+  to the single home is the pattern working as intended, not a violation of it.
 - **Mis-location** — a fact living in the *wrong* home, or a whole file in the
   wrong directory. Two forms: (1) **prose** in the wrong doc — implementation
   detail in `CONTEXT.md` (glossary-only), a status narrative in `CLAUDE.md` (it
