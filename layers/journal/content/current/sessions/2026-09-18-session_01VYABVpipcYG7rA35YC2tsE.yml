@@ -1,0 +1,79 @@
+schemaVersion: 1
+session: session_01VYABVpipcYG7rA35YC2tsE
+startedAt: 2026-09-18T02:04:59Z
+endedAt: 2026-09-18T02:23:03Z
+kind: autonomous
+goal: Mine session frictions into merged fixes
+status: completed
+outcome: Two fix PRs reviewed and merged
+summary: "A scheduled Routine fired /frictions-to-fixes with no live human present. Delegated the survey/screening step to a read-only subagent, which read the latest 20 session logs, ranked candidates by recurrence/severity, and screened them against the GitHub tracker. It returned 2 never-fixed candidates (27 of 29 raw frictions were already fixed, tracked elsewhere, or one-off/worked-as-designed): a `scripts/shell-reads.ts` gap where a bare `git diff <path>` wasn't recognized as a genuine content-revealing read, and an `audit-docs` Duplication-lens false positive that cited 6 SKILL.md files as duplicating a policy when they were correctly single-homing it via a tier+pointer. Both were simple, safe-surface fixes with no tracker issue needed. Dispatched two Sonnet impl agents in isolated worktrees (per dispatch-subagents) to implement, gate, and open gated PRs #1271 and #1270 respectively. Reviewed both diffs myself as the ADR-0003 review-agent, posted COMMENT-event review verdicts, and merged both via scripts/merge-pr.ts on green CI. No step in this run was human-instructed — the scheduled prompt, survey, selection, dispatch, review, and merge were all agent-initiated end to end."
+prs:
+  - "1270"
+  - "1271"
+docsRead:
+  - path: CLAUDE.md
+    reason: Ground rules for human-only surfaces and PR/merge discipline
+  - path: docs/agents/pr-workflow.md
+    reason: the land-a-gated-PR recipe and per-tier merge authority
+  - path: scripts/session-frictions.ts
+    reason: (no reason given)
+  - path: scripts/shell-reads.ts
+    reason: (read before editing)
+  - path: tests/unit/shell-reads.spec.ts
+    reason: (read before editing)
+  - path: .test-shell-reads.log
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: scheduled Routine's inlined prompt; Skill tool itself refused (disable-model-invocation), so followed the inlined instructions directly
+  - name: dispatch-subagents
+    reason: worktree isolation + brief checklist for the two parallel impl agents
+  - name: close-session
+    reason: session closure at end of run
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Calling the frictions-to-fixes Skill via the Skill tool failed (disable-model-invocation) even though this turn was the scheduler firing that exact slash command — the full skill instructions were already inlined in the scheduled prompt, so the Skill-tool call was redundant and briefly looked like a blocker.
+    solution: By design per the skill's own model-invocation restriction; a prior session already logged and dropped the same friction as by-design. No process change needed — just follow the inlined instructions directly without calling the Skill tool when a scheduler delivers them.
+    severity: nit
+  - description: The survey subagent's `pnpm exec tsx scripts/session-frictions.ts` 20-session output (69KB) exceeded Bash's inline-capture cap and spilled to a fixed /tmp path, forcing a second read round-trip to inspect it in full.
+    solution: "Already a settled, doc-only-accepted cost per the #811/#951/#1178/#976 chain — not re-filed, consistent with that prior decision."
+    severity: nit
+durationSec: 1084
+models:
+  claude-sonnet-5: 64
+toolCounts:
+  Skill: 4
+  Agent: 4
+  ReadNotifications: 1
+  ToolSearch: 2
+  Bash: 11
+  ListAgents: 1
+  mcp__github__pull_request_read: 5
+  Read: 1
+  mcp__github__pull_request_review_write: 2
+  Write: 1
+filesEdited:
+  - scripts/shell-reads.ts
+  - tests/unit/shell-reads.spec.ts
+  - .agents/skills/audit-docs/SKILL.md
+docsReadViaShell:
+  - .agents/skills/audit-docs/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix shell-reads.ts git diff recognition
+    model: sonnet
+  - type: general-purpose
+    task: Fix audit-docs Single-home lens false positive
+    model: sonnet
+gitBranch: claude/eager-ptolemy-clmbot
+entrypoint: remote_trigger
+cliVersion: 2.1.275
+trigger: frictions-to-fixes
+landedBy: Stop
