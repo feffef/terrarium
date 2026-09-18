@@ -130,6 +130,22 @@ function extractGitShowDiffPaths(tokens: Token[]): string[] | undefined {
   return rest.length > 0 ? rest : undefined
 }
 
+/** `git diff [--stat] [--] <path…>` — a bare working-tree diff with no ref,
+ *  which streams the file's real added/removed content into the session just
+ *  like `git show -- <path>` does. Returns every non-flag positional, or
+ *  `undefined` for any other `git diff` invocation (no path at all), which
+ *  then falls through to "not a reader command" like any other non-matching
+ *  `git` call. A session on 2026-09-17 ran exactly this shape (`git diff
+ *  --stat <path> && git diff <path>`) and went uncredited despite the output
+ *  genuinely showing the diff — neither `extractGitShowPath` nor
+ *  `extractGitShowDiffPaths` covers `diff` at all, only `show`. */
+function extractGitDiffPaths(tokens: Token[]): string[] | undefined {
+  if (tokens.length < 2 || tokens[1]!.quoted || tokens[1]!.text !== 'diff') return undefined
+  const rest = tokens.slice(2).filter((t) => t.quoted || t.text !== '--')
+  const paths = rest.filter((t) => t.quoted || !t.text.startsWith('-')).map((t) => t.text)
+  return paths.length > 0 ? paths : undefined
+}
+
 /** A `-- <path>` positional only reveals `path`'s CONTENT when the diff
  *  actually has a hunk for it — the ref range given may not touch that path
  *  at all — so this gates on the output exactly like `outputMentionsFile`
@@ -404,7 +420,7 @@ export function scanShellReads(
           continue
         }
 
-        const diffPaths = extractGitShowDiffPaths(tokens)
+        const diffPaths = extractGitShowDiffPaths(tokens) ?? extractGitDiffPaths(tokens)
         if (diffPaths !== undefined) {
           for (const raw of diffPaths) {
             const p = norm(raw)
