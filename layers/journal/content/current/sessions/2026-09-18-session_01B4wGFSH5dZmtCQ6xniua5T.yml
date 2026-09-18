@@ -1,0 +1,107 @@
+schemaVersion: 1
+session: session_01B4wGFSH5dZmtCQ6xniua5T
+startedAt: 2026-09-18T13:11:29Z
+endedAt: 2026-09-18T13:22:50Z
+kind: autonomous
+goal: Run the scheduled prune-trial cycle
+status: in-review
+outcome: One trial judged, one new prune shipped
+summary: "Scheduled /prune-trial run. Judged the one trial past its window (ADR-0017 provenance-footer amendments): a background GitHub search and a review of frictions logged since landing found no damage, so the prune holds and the entry was deleted. For the new trial, a corpus-wide search found no clean criterion-1 (guard-made-redundant narration) candidate — the corpus is already unusually compressed. Fell back to criterion 2 (prose mass): compressed two narrative-heavy bullets in dispatch-subagents/SKILL.md (artifact-naming, scratch-paste) to rule plus citation, net -7 lines. Proved the compressed text on a Sonnet probe (three scenarios, all answered correctly) before shipping. Gate green locally, PR #1274 opened and subscribed. All work this run was self-initiated per the scheduled task prompt; no additional human instruction was given."
+prs:
+  - "1274"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the open-trials ledger to judge and extend
+  - path: docs/research/rulebook-migration-table.md
+    reason: Built-row roster to find a criterion-1 candidate
+  - path: docs/agents/pr-workflow.md
+    reason: checked for criterion-1 prose mass; ruled out as load-bearing
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: checked for criterion-1 prose mass; ruled out, amendments load-bearing
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: checked for criterion-1 prose mass; ruled out, amendments load-bearing
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: checked for criterion-1 prose mass; ruled out, unique architecture history
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: largest repo-authored Skill; ruled out, entirely operative
+  - path: .agents/skills/log-session/SKILL.md
+    reason: checked for narration-bait; none found
+  - path: docs/agents/github-integration.md
+    reason: checked non-excluded sections for narration-bait; none found
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: the file the chosen prune landed in
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: My first Edit attempt to delete the judged ADR-0017 ledger entry failed with "String to replace not found" because my copied old_string had a one-word mismatch ("shape" inserted) against the file's actual text.
+    solution: Re-Read the exact lines before retrying instead of relying on an earlier context copy; worked on retry with a small unique anchor edit first, then the full-block delete.
+    severity: nit
+  - description: Finding a genuine criterion-1 (guard-redundant narration) prune-trial candidate took a long, mostly-negative manual sweep (several full ADR and Skill reads) before a dispatched corpus-wide search confirmed the negative result and pointed at the best criterion-2 fallback.
+    solution: For a future prune-trial run, dispatch the full-corpus criterion-1 search first, before any manual file-by-file reading, rather than after — it would have saved a large share of this run's budget.
+    severity: minor
+durationSec: 681
+models:
+  claude-sonnet-5: 120
+toolCounts:
+  Bash: 20
+  Read: 14
+  Agent: 4
+  Grep: 5
+  Edit: 6
+  ScheduleWakeup: 1
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - .agents/skills/dispatch-subagents/SKILL.md
+docsReadViaShell:
+  - docs/agents/guards.md
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/git-conventions.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/github-integration.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/domain.md
+  - docs/agents/triage-labels.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+subagents:
+  - task: Search for issues/gate failures tied to ADR-0017 prune trial
+  - task: Search for issues/gate failures tied to ADR-0017 prune trial
+  - task: Find next prune-trial candidate in instruction corpus
+  - task: Probe pruned dispatch-subagents bullets on Sonnet
+    model: sonnet
+gitBranch: claude/practical-rubin-3us8ev
+entrypoint: remote_trigger
+cliVersion: 2.1.276
+trigger: prune-trial
+learnings:
+  - This repo's instruction corpus has already been pruned enough by prior /prune-trial runs that a clean criterion-1 (guard-made-redundant narration) hit is now the exception, not the default case to expect each run — criterion 2/3 fallbacks are the realistic common path going forward.
+landedBy: Stop
