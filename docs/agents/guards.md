@@ -42,7 +42,7 @@ issue below rather than rephrasing the call until it passes.
   has no context to be unsure about: it fails **open**, never blocking a call it
   cannot positively identify.
 - **Matcher-scoped, never `"*"`.** Matching every tool would run a `tsx` process
-  (~0.3s) on the Read/Edit/Bash hot path. The four guards matching `Bash` (or
+  (~0.3s) on the Read/Edit/Bash hot path. The five guards matching `Bash` (or
   `Edit`/`Write`) add an `sh` pre-filter, so only a payload that could possibly
   match pays that start.
 - **Pure core split from the I/O, reachable by `--dry-run`, with a unit test in

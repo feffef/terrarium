@@ -153,15 +153,20 @@ argument that they should have been bucket 1 from the start.
 
 ## 4. Already mechanized (the current surface)
 
-Read off the live configuration, not inferred. `.claude/settings.json` registers
-**six** `PreToolUse` guards as of this branch:
+Read off the live configuration, not inferred (`docs/agents/guards.md` is the
+current roster's home — re-check there, this count drifts). `.claude/settings.json`
+registers **ten** `PreToolUse` guards as of this branch:
 
 | Mechanism | Shape | Rule it enforces | Matcher |
 | --- | --- | --- | --- |
 | `scripts/deferred-tool-guard.ts` | Fail-closed refusal | Load a deferred tool's schema via `ToolSearch` first | `TaskCreate\|Monitor` |
 | `scripts/loop-only-tool-guard.ts` | Fail-closed refusal | `ScheduleWakeup` only inside `/loop` | `ScheduleWakeup` |
+| `scripts/skill-inline-guard.ts` | Fail-closed refusal | A `Skill` call naming a Skill this session's `<command-name>` block already delivered inline | `Skill` |
+| `scripts/agent-background-flag-guard.ts` | Fail-closed refusal | An `Agent` call must not pass the no-op `run_in_background: false` | `Agent` |
 | `scripts/subagent-background-guard.sh` | Fail-closed refusal | A subagent never backgrounds a Bash command | `Bash` |
 | `scripts/commit-trailer-guard.sh` | Fail-closed refusal | Never hand-write the ADR-0017 commit trailer (#921) | `Bash` |
+| `scripts/tail-pipe-guard.sh` | Fail-closed refusal | Never pipe a backgrounded/long-running command into a trailing `tail`/`head`/`echo` (#873) | `Bash` |
+| `scripts/double-background-guard.sh` | Fail-closed refusal | Never stack `run_in_background: true` on a text-level `&` (#1208) | `Bash` |
 | `scripts/github-provenance-guard.ts` | Fail-closed refusal | ADR-0017 provenance header on every GitHub body | 9 `mcp__github__*` tools |
 | `scripts/workflow-edit-guard.ts` | Fail-closed refusal | No agent write into `.github/workflows/` (#897) | `Edit\|Write\|Bash` |
 

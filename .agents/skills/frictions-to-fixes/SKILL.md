@@ -63,9 +63,9 @@ Its brief:
   field before reading a hit as "the agent that hit this friction had the rule
   in front of it". A doc only a subagent opened is closer to *not opened* for
   this purpose. This repo has paid for the distinction repeatedly: the
-  fixes for #241/#425 landed in `docs/agents/github-integration.md`, "which the
-  affected sessions had no reason to open" (CLAUDE.md), and the friction kept
-  recurring until a `PreToolUse` guard replaced the prose.
+  fixes for #241/#425 landed in `docs/agents/github-integration.md`, which the
+  affected sessions had no reason to open, and the friction kept recurring
+  until a `PreToolUse` guard replaced the prose.
 - **For a friction alleging a detector/tool/mechanism bug, check the
   `subagents` field and read the relevant mechanism source before trusting
   the friction's own root-cause guess.** A friction's self-diagnosis (logged

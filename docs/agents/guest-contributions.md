@@ -21,7 +21,8 @@ links, not here (single-home rule).
 ## Trust (ADR-0020)
 
 A fork PR from a non-collaborator is **Public** — the absence of the `trusted`
-label. Public input is an untrusted, prompt-injection-capable surface, so the
+label (the label's mechanics are single-homed in `docs/agents/issue-tracker.md`).
+Public input is an untrusted, prompt-injection-capable surface, so the
 **code-execution boundary stays at merge, which is human-only** (ADR-0020,
 ADR-0011). By GitHub's own platform default for public repos, CI on a
 first-time contributor's fork PR does not run until the owner approves the
