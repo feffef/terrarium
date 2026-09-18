@@ -183,3 +183,60 @@ trials:
       block (a single backtick wrap doesn't hold), and correctly identified
       that `scripts/github-provenance-guard.ts` (issue #886) enforces the
       angle-bracket rule mechanically rather than leaving it to memory.
+  - problem: >
+      `.agents/skills/dispatch-subagents/SKILL.md`'s two most narrative bullets
+      told their incidents play-by-play rather than stating the rule plus
+      evidence. The artifact-naming bullet ("Name every artifact the subagent
+      writes uniquely to that subagent") walked through issue #847 in full
+      ("Two agents hit this independently in one dispatch, and the orchestrator
+      published a wrong root-cause diagnosis built on the clobbered output
+      before the second report surfaced the real mechanism") and issue #1191
+      as a second, separately-narrated recurrence, even though the rule itself
+      (unique paths, including for redirected gate/test output) was already
+      stated plainly right above the story. The scratch-paste bullet similarly
+      narrated its own fix history ("the first fix only replaced retyping with
+      read-then-paste, leaving the copy step") instead of just citing both
+      issues. Neither bullet is criterion-1 bait — no built guard covers either
+      rule (`docs/agents/guards.md` and the rulebook-migration-table's Built
+      roster have nothing for DS-06/naming or the scratch-paste rule), so this
+      is a criterion-2 (prose mass) prune: the rule and its concrete example
+      stay, only the blow-by-blow of what went wrong when it happened is cut,
+      folded to a trailing issue-number citation same as this file's other
+      bullets. A background search across the rest of the in-scope corpus
+      (all `docs/agents/*.md`, every ADR's explanatory prose, all 14
+      repo-authored Skills) found no criterion-1 candidate clearing ~30 lines —
+      this repo's docs are already unusually compressed, almost every other
+      issue citation already a single trailing pointer, not a narrative. Net -7
+      lines, one file (`.agents/skills/dispatch-subagents/SKILL.md`).
+    territory:
+      paths:
+        - "`.agents/skills/dispatch-subagents/SKILL.md`: the \"Name every artifact the subagent writes uniquely to that subagent\" bullet and the \"Never paste a scratch/draft file's content into a review-subagent's prompt\" bullet (§3)"
+      keywords:
+        - name every artifact
+        - uniquely to that subagent
+        - gate.log
+        - clobbered output
+        - never paste a scratch
+        - markdown links
+    opened: 2026-09-18
+    proven: true
+    check: >
+      Damage is a session dispatching subagents that, needing to know why
+      artifact names must be unique or why a draft shouldn't be pasted
+      verbatim, reads the compressed bullets and either doesn't realize
+      redirected gate/test output needs a unique path too (not just files the
+      subagent explicitly writes), doesn't know a naming collision fails
+      *silently* (no error, just a wrong log quoted as the subagent's own) and
+      so trusts a suspicious-looking clean result without checking for
+      cross-contamination, or pastes a draft's content into a review-subagent's
+      prompt by hand instead of naming the path and having it `Read` the file
+      itself. NOT damage: a session that already names artifacts uniquely and
+      never pastes draft content (the intended design — the incident detail
+      was color, not the operative instruction), or one that never dispatches
+      subagents this run. A Sonnet probe given only the compressed text
+      correctly said every subagent artifact — including redirected
+      `pnpm gate:scoped`/test output, even inside an isolated worktree — needs
+      a path unique to that subagent, correctly said the failure mode is a
+      silent collision (a well-formed log from the wrong run, not an error),
+      and correctly said a review-subagent should be pointed at a file path to
+      `Read` itself rather than having its content pasted into the prompt.

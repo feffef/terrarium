@@ -70,20 +70,14 @@ The subagent cannot see this session's context, so the brief is self-contained:
   or die to an external "session limit" abort — leaving finished work **stranded**:
   uncommitted, and invisible to the orchestrator.
 - **Name every artifact the subagent writes uniquely to that subagent** — logs,
-  screenshots, scratch scripts. Dispatched subagents inherit the *orchestrator's*
-  scratchpad, not one of their own, so parallel agents all reaching for the
-  obvious `gate.log` overwrite each other. The collision does not error: it hands
-  an agent a well-formed log describing a **different** worktree's run, which it
-  then quotes as its own. Two agents hit this independently in one dispatch, and
-  the orchestrator published a wrong root-cause diagnosis built on the clobbered
-  output before the second report surfaced the real mechanism (issue #847). This
-  also applies to **gate/test command output specifically**, even when each
-  agent already has its own worktree: the brief must tell the subagent to
-  redirect `pnpm gate:scoped`/test output to a path unique to its own
-  worktree/agent id (e.g. `pnpm gate:scoped > /path/unique-to-agent/gate.log
-  2>&1`) — the shared container can still let a sibling's run bleed into
-  another agent's captured output, forcing PID-based verification to confirm
-  a clean pass (issue #1191).
+  screenshots, scratch scripts, and gate/test output paths (e.g. `pnpm
+  gate:scoped > /path/unique-to-agent/gate.log 2>&1`), even inside an
+  isolated worktree. Dispatched subagents inherit the *orchestrator's*
+  scratchpad, not one of their own, and the shared container can let a
+  sibling's run bleed into another's output — an un-prefixed path like
+  `gate.log` collides silently (no error; one agent just quotes another's run
+  as its own), so a collision needs PID-based re-verification to catch
+  (issues #847, #1191).
 - **Run verification (`pnpm gate:scoped`, and any other check) in the foreground
   and wait** — no wake mechanism ever resumes a stopped subagent, so a
   `PreToolUse` guard denies backgrounding it outright, with no sanctioned
@@ -134,10 +128,9 @@ The subagent cannot see this session's context, so the brief is self-contained:
   (issue #898).
 - **Never paste a scratch/draft file's content into a review-subagent's prompt —
   name the path and have the subagent `Read` it itself.** Copying by hand has
-  silently dropped a draft's markdown links twice; the first fix only replaced
-  retyping with read-then-paste, leaving the copy step. Where the reviewer must
-  stay blind to the rest of the repo, scope it to the named path(s) rather than
-  forbidding `Read` outright (issues #981, #1114).
+  silently dropped a draft's markdown links before (issues #981, #1114). Where
+  the reviewer must stay blind to the rest of the repo, scope it to the named
+  path(s) rather than forbidding `Read` outright.
 - **A subagent's prose (summaries, narrative claims, attribution) is candidate
   material only** — re-check any factual/attribution claim (who did what, in
   what order) against the primary source it cites before it ships, not just its
