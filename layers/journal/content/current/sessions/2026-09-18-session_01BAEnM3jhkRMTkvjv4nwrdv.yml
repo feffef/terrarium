@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01BAEnM3jhkRMTkvjv4nwrdv
 startedAt: 2026-09-18T04:08:38Z
-endedAt: 2026-09-18T04:20:40Z
+endedAt: 2026-09-18T04:24:54Z
 kind: autonomous
 goal: Run the scheduled audit-docs sweep
-status: in-review
-outcome: 4 findings fact-checked and fixed, PR opened
-summary: "Scheduled, unattended firing of /audit-docs (no human prompt at any point). Fanned out four read-only reviewer agents across the eight audit-docs lenses (Freshness, Single-home, Concision, Coherence) over the repo's Live-tier docs, pooled their findings, and fact-checked each against primary sources before fixing. Confirmed and fixed: a stale guard count in docs/research/rulebook-migration-table.md (\"six\" vs. the actual ten PreToolUse guards, missing four rows); a self-contradiction in docs/agents/guards.md (said four sh-pre-filtered guards, its own roster lists five); a Duplication in docs/agents/guest-contributions.md (restated the trusted-label mechanic instead of pointing at its home in issue-tracker.md); and a false citation in .agents/skills/frictions-to-fixes/SKILL.md (a quote attributed to CLAUDE.md that doesn't appear there — found this one myself while verifying a lead Agent C surfaced but didn't file). One Ambiguity candidate (Agent D: CLAUDE.md's isolation-logic catch-all has no mechanized criterion for a novel file) was left unfixed — the doc already discloses the gap honestly and points at the tracking issue (#864/CM-14), so patching it would mean inventing a criterion that doesn't exist. No factual conflict needed a needs-triage filing. pnpm gate:scoped green; committed, pushed, opened PR #1272 (self-merge eligible — no human-only surface touched), subscribed to its activity, left the audit-trail comment. All four fixes were agent-initiated (the routine's own mandate); no human steered any part of this run."
+status: completed
+outcome: 4 findings fact-checked, fixed, and merged
+summary: "Scheduled, unattended firing of /audit-docs (no human prompt at any point). Fanned out four read-only reviewer agents across the eight audit-docs lenses (Freshness, Single-home, Concision, Coherence) over the repo's Live-tier docs, pooled their findings, and fact-checked each against primary sources before fixing. Confirmed and fixed: a stale guard count in docs/research/rulebook-migration-table.md (\"six\" vs. the actual ten PreToolUse guards, missing four rows); a self-contradiction in docs/agents/guards.md (said four sh-pre-filtered guards, its own roster lists five); a Duplication in docs/agents/guest-contributions.md (restated the trusted-label mechanic instead of pointing at its home in issue-tracker.md); and a false citation in .agents/skills/frictions-to-fixes/SKILL.md (a quote attributed to CLAUDE.md that doesn't appear there — found this one myself while verifying a lead Agent C surfaced but didn't file). One Ambiguity candidate (Agent D: CLAUDE.md's isolation-logic catch-all has no mechanized criterion for a novel file) was left unfixed — the doc already discloses the gap honestly and points at the tracking issue (#864/CM-14), so patching it would mean inventing a criterion that doesn't exist. No factual conflict needed a needs-triage filing. pnpm gate:scoped green locally; committed, pushed, opened PR #1272, subscribed to its activity, left the audit-trail comment. CI (gate + label checks) went green, mergeable_state clean, no conflicting-issue hits; posted the verdict comment and landed via scripts/merge-pr.ts (merge commit 671efb33) — the audit-docs merge-on-green-gate tier per docs/agents/pr-workflow.md. All work was agent-initiated (the routine's own mandate); no human steered any part of this run."
 prs:
   - "1272"
 docsRead:
@@ -17,6 +17,8 @@ docsRead:
   - path: docs/agents/guards.md
     reason: (read before editing)
   - path: CONTEXT.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: CONTEXT-MAP.md
     reason: (no reason given)
@@ -41,8 +43,6 @@ docsRead:
   - path: docs/agents/issue-tracker.md
     reason: (no reason given)
   - path: docs/agents/mdc-when-to-use.md
-    reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: docs/agents/tenant-layers.md
     reason: (no reason given)
@@ -134,26 +134,31 @@ skillsUsed:
   - name: close-session
     reason: self-judged closure at PR-open
   - name: log-session
-    reason: recording this log
+    reason: recording this log, then finalizing it on merge
 frictions:
   - description: docs/research/rulebook-migration-table.md's "six PreToolUse guards" claim had drifted to ten without any of the four newer guards (added over several prior sessions/issues) being swept back into this reference table — a recurring "new mechanism, old census" gap in a doc whose own framing ("read off the live configuration, not inferred") invites readers to trust a stale count.
     solution: Added a one-line pointer in the fix ("re-check docs/agents/guards.md, this count drifts") so a future reader is nudged to the live roster instead of trusting a frozen number; a longer-term fix would be generating this specific count from settings.json rather than hand-counting it.
     severity: minor
-durationSec: 722
+durationSec: 977
 models:
-  claude-sonnet-5: 110
+  claude-sonnet-5: 143
 toolCounts:
-  Bash: 30
+  Bash: 34
   Agent: 4
-  Read: 6
+  Read: 7
   Edit: 4
-  ToolSearch: 2
+  ToolSearch: 4
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
   Skill: 2
-  Write: 1
+  Write: 2
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_review_write: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - docs/research/rulebook-migration-table.md
   - docs/agents/guards.md
