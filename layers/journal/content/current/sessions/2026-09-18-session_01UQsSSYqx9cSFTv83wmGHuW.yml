@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: session_01UQsSSYqx9cSFTv83wmGHuW
+startedAt: 2026-09-18T00:46:15Z
+endedAt: 2026-09-18T00:53:39Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: "Clean run: no Inventory changes, no issues, no ideas"
+summary: "Fully agent-initiated: a scheduled Routine fired /audit-skills with no human present. Gathered the scorecard (40-session window, 36 skills, GitHub reachable). Orphan/closure signals all clean: both orphanedSessions entries carry resolvedBy cutoffs already tracked (#736, #1063); humanPromptedClosures, manuallyRescuedClosures, and misclassifiedKind all empty. Phase A's friction-severity screen flagged 6 skills as regression suspects after their latest SKILL.md edit (auto-triage, close-session, digest, dispatch-subagents, log-session, prune-trial). Read auto-triage's one after-bracket session myself; dispatched three background read-only agents to deep-read the fuller histories for the other five. All 6 came back Inconclusive — no friction anywhere names the edited content; heavier post-edit friction counts trace to unrelated recurring noise (guard hits, SHELL-READ-DETECTION glob misses) present regardless of which skill a session used. Step 3's re-grade found no bright-line (>=2 session) evidence for any importance/role change: the window is saturated by 6 rotating scheduled sweeps whose usage already matches their 'routine' grade, and confirmed audit-docs's read-only reviewer-agent fan-out is correctly exempt from dispatch-subagents (not an absence signal). No onDisk/inventoried mismatches. Net: nothing to commit, no PR opened."
+prs: []
+docsRead:
+  - path: CONTEXT.md
+    reason: importance-grade definitions to check bright-line evidence
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: confirmed its reviewer agents are read-only (dispatch-subagents exemption)
+  - path: layers/journal/content/current/sessions/2026-09-13-session_01QmM7B9u5qczi9SeodhwFxG.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-12-session_01GqyKfKnmYGvzeLaJfpEP3R.yml
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-12-session_01DykmgE9WhzKVCTdbuUfuxx.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the sweep itself
+  - name: dispatch-subagents
+    reason: worktree-isolated read-only Phase B deep-read agents
+  - name: close-session
+    reason: self-judged closure, no PR to babysit
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 444
+models:
+  claude-sonnet-5: 74
+toolCounts:
+  Bash: 24
+  Read: 3
+  Agent: 3
+  Grep: 4
+  ReadNotifications: 2
+  Skill: 2
+  Write: 1
+docsReadViaShell:
+  - CONTEXT.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Deep-read close-session and log-session regression check
+  - type: general-purpose
+    task: Deep-read dispatch-subagents regression check
+  - type: general-purpose
+    task: Deep-read digest and prune-trial regression checks
+gitBranch: claude/upbeat-sagan-x6t4zt
+entrypoint: remote_trigger
+cliVersion: 2.1.275
+trigger: audit-skills
+landedBy: Stop
