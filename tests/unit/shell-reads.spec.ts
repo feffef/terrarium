@@ -156,6 +156,32 @@ describe('git show <ref> -- <path> — the diff form the colon-form miss (#1206)
   })
 })
 
+describe('bare `git diff [--stat] <path>` — a session on 2026-09-17 went uncredited here', () => {
+  it('counts `git diff --stat <path> && git diff <path>` when the output shows a real diff for it', () => {
+    const scan = scanShellReads(
+      [
+        {
+          command:
+            'git diff --stat docs/agents/github-integration.md && echo --- && git diff docs/agents/github-integration.md',
+          output: [
+            ' docs/agents/github-integration.md | 4 ++--',
+            '---',
+            'diff --git a/docs/agents/github-integration.md b/docs/agents/github-integration.md',
+            'index abc123..def456 100644',
+            '--- a/docs/agents/github-integration.md',
+            '+++ b/docs/agents/github-integration.md',
+            '@@ -1,2 +1,2 @@',
+            '-old line',
+            '+new line',
+          ].join('\n'),
+        },
+      ],
+      rel,
+    )
+    expect(scan.paths).toEqual(['docs/agents/github-integration.md'])
+  })
+})
+
 describe('false positives', () => {
   it("rejects grep's first positional — it is the pattern, not a path", () => {
     expect(paths('grep -n "docs/agents/x.md" CLAUDE.md')).toEqual([])
