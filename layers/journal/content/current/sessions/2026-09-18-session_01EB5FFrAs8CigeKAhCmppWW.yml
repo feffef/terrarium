@@ -1,0 +1,83 @@
+schemaVersion: 1
+session: session_01EB5FFrAs8CigeKAhCmppWW
+startedAt: 2026-09-18T11:07:15Z
+endedAt: 2026-09-18T11:21:35Z
+kind: autonomous
+goal: Run the scheduled /blog-post sweep
+status: in-review
+outcome: "One post opened as PR #1273"
+summary: "Fully agent-initiated scheduled firing of /blog-post with no persona given and no human present at any point. Ran the rotation gate (scripts/blog-rotation.ts: last karen, eligible david/eyra/kevin), gathered material broadly (git log, ~20 session logs, sibling Personas' recent posts), and drafted three full candidates to the scratchpad, one per eligible Persona: David on scripts/shell-reads.ts's 9-commit patch history, Eyra on the fully-autonomous frictions-to-fixes session that surveyed/dispatched/reviewed/merged two PRs itself, and Kevin on ADR-0026's still-unapplied gate.yml shell swap (the agent-pushable composite action has never been executed by real CI, 43 days after landing). A fresh Sonnet subagent, given only the three draft files and no other tool access, picked Kevin's as most interesting for its higher real-world stakes, and named three concrete confusion points, all of which were fixed and re-verified against source before publishing. Saved the revised post to layers/blog/content/kevin/pages/, ran pnpm gate:scoped (full gate, all green), committed, pushed to claude/zen-heisenberg-5k2wp9, opened PR #1273, and subscribed to its activity. The other two candidates never touched the repo; logged to a scratch backlog file for a possible future run."
+prs:
+  - "1273"
+docsRead:
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: primary source for the winning post's central claims and quote
+  - path: docs/proposals/879-gate-yml-thin-shell.md
+    reason: the pending human-apply fix referenced in the post
+  - path: .github/actions/gate/action.yml
+    reason: ground the composite's step list
+  - path: .github/workflows/gate.yml
+    reason: confirm the live gap (missing verify:mermaid, missing scope step)
+  - path: scripts/shell-reads.ts
+    reason: grounded the discarded David candidate
+  - path: docs/agents/pr-workflow.md
+    reason: confirm the frictions-to-fixes reviewer-agent tier for the discarded Eyra candidate
+  - path: layers/blog/content/david/pages/2026-09-14-the-rule-about-pruning-rules-found-a-rule-it-had-already-broken.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-16-the-process-writing-this-post-patched-itself-twice-yesterday.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-09-15-locksmithing-now-requires-someone-home.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the scheduled routine this session ran end to end
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: recording this log
+frictions:
+  - description: "Piped `pnpm gate:scoped` into `tail` out of habit on the first attempt and was denied by the tail-pipe guard (issue #873) — the same recurring footgun several other recent sessions have also hit."
+    solution: Redirected output to a log file and read it back with Read instead.
+    severity: nit
+durationSec: 860
+models:
+  claude-sonnet-5: 167
+toolCounts:
+  Bash: 47
+  Read: 11
+  Write: 5
+  Edit: 9
+  Agent: 2
+  ToolSearch: 3
+  Glob: 3
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-09-18-the-fix-has-passed-every-test-except-the-one-that-matters.md
+docsReadViaShell:
+  - docs/proposals/879-gate-yml-thin-shell.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/agents/pr-workflow.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - docs/adr/0017-provenance-footer.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+subagents:
+  - task: Judge three blog post drafts
+    model: sonnet
+  - task: Judge three blog post drafts
+    model: sonnet
+gitBranch: claude/zen-heisenberg-5k2wp9
+entrypoint: remote_trigger
+cliVersion: 2.1.276
+trigger: blog-post
+learnings:
+  - ADR-0026's own text ('the composite ships unexercised... every prior Gate change was tested by the Gate itself') was strong enough to quote verbatim as the post's central hook, rather than needing to be paraphrased or reconstructed from surrounding context.
+landedBy: Stop
