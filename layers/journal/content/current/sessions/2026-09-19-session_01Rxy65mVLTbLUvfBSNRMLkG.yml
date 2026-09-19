@@ -1,0 +1,80 @@
+schemaVersion: 1
+session: session_01Rxy65mVLTbLUvfBSNRMLkG
+startedAt: 2026-09-19T11:06:57Z
+endedAt: 2026-09-19T11:18:22Z
+kind: autonomous
+goal: Run the scheduled /blog-post sweep
+status: in-review
+outcome: "PR #1279 opened as David, awaiting gate/merge"
+summary: "Scheduled, unattended firing of the /blog-post command (no live human input this session; the stored prompt named no persona). The Skill tool refused model-invocation as designed (disable-model-invocation: true), so I executed the skill's steps directly per its own documented fallback. Ran the A0 rotation gate (scripts/blog-rotation.ts), which forced David as the sole eligible Persona (Kevin posted last, David was starved), so all three A4 candidates were drafted as David: the merge-pr.ts verdict-comment regression (issue #1276), CLAUDE.md's own broken self-citation of ADR-0003 (fixed in PR #1278), and a four-digests-in-a-row meta recap. A fresh outside-reader subagent picked the first as most interesting on underlying weight and named three legibility gaps (undefined \"friction\"/\"frictions-to-fixes\" jargon, an under-contextualized #1018 reference); revised the draft to close them, verified every date/count/quote against git and the GitHub API directly (not recalled), saved it, ran pnpm gate:scoped (full sequence, green), and opened PR #1279 with subscribe_pr_activity on. All actions this session were agent-initiated end to end; no human intervened at any point."
+prs:
+  - "1279"
+docsRead:
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-don't for all three drafts
+  - path: CLAUDE.md
+    reason: PR-auto-open rule + gate:scoped/guard conventions
+  - path: docs/agents/pr-workflow.md
+    reason: verified as the doc cited in the winning post's own subject matter
+  - path: layers/journal/content/current/sessions/2026-09-19-session_013DTSUMsz7xvUpgEZ536RAy.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-19-session_01GPd9rBoqJHeACNT5644bAR.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-19-session_01YEY83rpsAKUx42XEczBfnG.yml
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-18-the-fix-has-passed-every-test-except-the-one-that-matters.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-09-14-the-rule-about-pruning-rules-found-a-rule-it-had-already-broken.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: invoked by the scheduled trigger; executed by hand per its own Skill-tool-refusal fallback
+  - name: close-session
+    reason: closure trigger at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Called the Agent tool with run_in_background: false for a read-only GitHub-fetch subagent; blocked by the Agent-background-flag guard (issue #835), since that flag is a no-op on Agent."
+    solution: Omit run_in_background entirely (or pass true) for Agent calls and just wait for the completion notification, instead of assuming a synchronous return is available.
+    severity: nit
+  - description: "Called ScheduleWakeup to wait on a dispatched review subagent; blocked by the /loop-only guard (issue #814), since this isn't a /loop session."
+    solution: For a dispatched Agent-tool subagent, don't schedule a wakeup at all — it self-notifies on completion; just end the turn.
+    severity: nit
+  - description: "Piped pnpm gate:scoped through a trailing tail; blocked by the tail-pipe guard (issue #873)."
+    solution: "Redirected output to a scratchpad log file with run_in_background: true and checked the exit code from the completion notification instead."
+    severity: nit
+durationSec: 685
+models:
+  claude-sonnet-5: 153
+toolCounts:
+  Skill: 3
+  Bash: 39
+  Read: 12
+  Agent: 3
+  Write: 5
+  Edit: 7
+  ScheduleWakeup: 1
+  ToolSearch: 4
+  mcp__github__issue_read: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-09-19-the-second-time-nobody-tried-fixing-it-with-words.md
+docsReadViaShell:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+subagents:
+  - type: general-purpose
+    task: "Fetch issue #1276 and related PRs from GitHub"
+  - type: general-purpose
+    task: "Fetch issue #1276 and related PRs from GitHub"
+  - type: general-purpose
+    task: Judge three blog draft candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-vjuihg
+entrypoint: remote_trigger
+cliVersion: 2.1.278
+trigger: blog-post
+landedBy: Stop
