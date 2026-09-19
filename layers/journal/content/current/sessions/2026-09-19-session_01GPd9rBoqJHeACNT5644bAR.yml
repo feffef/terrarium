@@ -1,0 +1,82 @@
+schemaVersion: 1
+session: session_01GPd9rBoqJHeACNT5644bAR
+startedAt: 2026-09-19T02:04:32Z
+endedAt: 2026-09-19T02:21:00Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: completed
+outcome: One fix merged, one regression escalated
+summary: "Scheduled, unattended run of the frictions-to-fixes process (fired by a Routine, no live human prompt this turn). Dispatched a survey subagent to read the latest 20 session logs and screen frictions against the tracker; it returned one never-fixed \"simple\" candidate (prune-trial's candidate-hunting step turns into a budget-heavy manual sweep instead of a dispatched full-corpus search) and one regression (merge-pr.ts called on PR #1274 without the required verdict comment, the same failure #1113/#1115 already fixed once). Filed issue #1276 for the regression per the skill's own rule (a re-occurring failure goes to a human, not another automated prose fix) and sent a push notification alerting the user, since no one was watching this scheduled run live. Dispatched a Sonnet impl agent (worktree-isolated) for the simple fix; it opened PR #1277 with a 7-line reorder of prune-trial/SKILL.md's criterion 1. Reviewed the diff directly (small doc-only PR), confirmed the gate was green, posted the required verdict comment, and merged via merge-pr.ts. Verified no worktree was left stranded (pnpm check:worktrees passed). All actions this session were agent-initiated end-to-end per the Routine's stored prompt — no live human input was received at any point."
+prs:
+  - "1277"
+docsRead:
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: GitHub body provenance header format
+  - path: docs/agents/pr-workflow.md
+    reason: merge-pr.ts recipe and verdict-comment-before-merge rule
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: brief the impl agent on the exact section to fix
+  - path: layers/journal/content/current/sessions/2026-09-18-session_01VYABVpipcYG7rA35YC2tsE.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-17-session_01KBP1ZAdd9aqNhvWr5au3wY.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-16-session_01HqattDNcPrCG8sg5d7Gts6.yml
+    reason: (no reason given)
+  - path: scripts/tail-pipe-guard.ts
+    reason: (no reason given)
+  - path: scripts/skill-inline-guard.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: worktree isolation + brief checklist for the impl agent
+  - name: close-session
+    reason: session closure sequence
+  - name: log-session
+    reason: this log
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: The frictions-to-fixes skill's §1 anchor-finding step ("find the most recent frictions-to-fixes-filed issue" to bound the screening window) is stale once runs stop filing issues. The three most recent actual runs (2026-09-16/17/18) all produced only "simple" selections, which per the skill's own §4 file no issue — so the tracker's most recent matching issue (#1179, from 2026-09-07) understated recency by ~12 days. The survey subagent had to work around this by directly verifying prior runs' session logs and merged PRs instead.
+    solution: Update the anchor step to search recently-merged frictions-to-fixes PRs (or prior autonomous-kind session logs) rather than assuming an issue exists, since "no issue filed" is now the common case for simple-only runs.
+    severity: minor
+  - description: pnpm exec tsx scripts/session-frictions.ts's default 20-session window output (71,896 bytes) exceeded Bash's inline-capture cap during the survey subagent's run, spilling to a fixed /tmp path.
+    solution: "Already a repeatedly-settled, accepted cost per the #811/#951/#1178/#976 chain (doc-only fix, not worth re-litigating) — worked around this run by slicing the JSON with python3 instead of a second raw Read round-trip. Recording per the skill's instruction that a survey subagent's own frictions feed the next cycle."
+    severity: nit
+durationSec: 988
+models:
+  claude-sonnet-5: 71
+toolCounts:
+  Skill: 4
+  Agent: 2
+  ToolSearch: 2
+  mcp__github__search_issues: 2
+  Grep: 1
+  Glob: 1
+  Read: 3
+  mcp__github__issue_write: 1
+  Bash: 7
+  PushNotification: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/prune-trial/SKILL.md
+docsReadViaShell:
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Fix prune-trial candidate-hunting inefficiency
+    model: sonnet
+gitBranch: claude/eager-ptolemy-vj4q3h
+entrypoint: remote_trigger
+cliVersion: 2.1.277
+trigger: frictions-to-fixes
+landedBy: Stop
