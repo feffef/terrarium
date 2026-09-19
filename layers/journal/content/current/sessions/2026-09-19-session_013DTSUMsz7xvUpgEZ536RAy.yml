@@ -1,0 +1,52 @@
+schemaVersion: 1
+session: session_013DTSUMsz7xvUpgEZ536RAy
+startedAt: 2026-09-19T00:16:03Z
+endedAt: 2026-09-19T00:21:45Z
+kind: autonomous
+goal: Run the scheduled /digest sweep for 2026-09-18
+status: in-review
+outcome: "Digest authored, retention swept, PR #1275 opened"
+summary: "Scheduled /digest run with no human present. Gathered 2026-09-18's activity via scripts/digest.ts, authored the day's Digest (six merged PRs, six completed sessions), ran the retention sweep archiving the 2026-09-11 digest and its session logs, confirmed pnpm gate:scoped green, and opened PR #1275 against main. Subscribed to the PR's activity per CLAUDE.md. All steps were routine execution of the /digest Skill; no discretionary judgment calls beyond the narrative prose of the Digest itself."
+prs:
+  - "1275"
+docsRead:
+  - path: CLAUDE.md
+    reason: digest PR/ADR-0017/gate-scoped conventions
+  - path: docs/agents/pr-workflow.md
+    reason: self-merge boundary reference (not yet used — PR still awaiting green CI)
+  - path: layers/blog/content/kevin/pages/2026-09-18-the-fix-has-passed-every-test-except-the-one-that-matters.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: closure trigger at PR-open
+  - name: log-session
+    reason: this log
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran `pnpm gate:scoped` foregrounded with output piped through `grep` into a hand-picked `/tmp/gate_output_$$.log` path (not the session scratchpad) and a trailing `tail -100`; the command exceeded the 2-minute foreground timeout and auto-backgrounded, so the tail-piping guard never got a chance to catch the pattern CLAUDE.md warns against for backgrounded/long-running commands.
+    solution: "Run known-long commands like the full gate with `run_in_background: true` from the start, writing output to the scratchpad directory, and poll via Read/Monitor rather than chaining `grep`/`tail` onto a command whose exit status or full output matters."
+    severity: minor
+  - description: "Called `ScheduleWakeup` to poll a backgrounded Bash gate run and was correctly blocked by the /loop-only guard (issue #814) — this session is not a `/loop` session, so the tool was the wrong mechanism for waiting on a background task."
+    solution: For a backgrounded Bash command, just end the turn — the harness delivers a task-notification automatically. Reach for `send_later`/Routines only for external state the harness can't watch.
+    severity: nit
+durationSec: 342
+models:
+  claude-sonnet-5: 71
+toolCounts:
+  Bash: 21
+  Read: 2
+  Write: 2
+  ScheduleWakeup: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Edit: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-09-18.md
+gitBranch: claude/compassionate-lovelace-8qx3zz
+entrypoint: remote_trigger
+cliVersion: 2.1.277
+trigger: digest
+landedBy: Stop
