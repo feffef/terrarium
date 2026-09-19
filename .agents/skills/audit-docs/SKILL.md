@@ -194,10 +194,8 @@ link for a new orphaned doc, cut redundant filler, trim superseded-state narrati
 (carefully — rule-plus-pointer, never gutting the why), resolve the contradiction
 by making the prose match reality, pin the undefined threshold, retire a term
 whose premise is dead. Don't stop to ask how far to reach, and don't file an issue
-for a judgement call — **decide it and fix it.** Two fixes do *not* ride this
-brave, self-merged path — both escalate together into the one shared escalation PR
-(step 8): a **Mis-location file move that changes a journal page's route**, and an
-**Orphan-addition missing-amendment finding on an ADR** (a human-only surface).
+for a judgement call — **decide it and fix it.** Two fixes escalate instead of
+riding this brave, self-merged path — see step 8's list.
 
 **File a `needs-triage` issue for one thing only: a factual conflict you genuinely
 cannot resolve.** Two sources state contradictory facts and the primary sources
