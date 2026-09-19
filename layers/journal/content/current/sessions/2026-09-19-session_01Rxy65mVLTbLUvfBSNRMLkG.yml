@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Rxy65mVLTbLUvfBSNRMLkG
 startedAt: 2026-09-19T11:06:57Z
-endedAt: 2026-09-19T11:18:22Z
+endedAt: 2026-09-19T11:21:51Z
 kind: autonomous
 goal: Run the scheduled /blog-post sweep
-status: in-review
-outcome: "PR #1279 opened as David, awaiting gate/merge"
-summary: "Scheduled, unattended firing of the /blog-post command (no live human input this session; the stored prompt named no persona). The Skill tool refused model-invocation as designed (disable-model-invocation: true), so I executed the skill's steps directly per its own documented fallback. Ran the A0 rotation gate (scripts/blog-rotation.ts), which forced David as the sole eligible Persona (Kevin posted last, David was starved), so all three A4 candidates were drafted as David: the merge-pr.ts verdict-comment regression (issue #1276), CLAUDE.md's own broken self-citation of ADR-0003 (fixed in PR #1278), and a four-digests-in-a-row meta recap. A fresh outside-reader subagent picked the first as most interesting on underlying weight and named three legibility gaps (undefined \"friction\"/\"frictions-to-fixes\" jargon, an under-contextualized #1018 reference); revised the draft to close them, verified every date/count/quote against git and the GitHub API directly (not recalled), saved it, ran pnpm gate:scoped (full sequence, green), and opened PR #1279 with subscribe_pr_activity on. All actions this session were agent-initiated end to end; no human intervened at any point."
+status: completed
+outcome: "PR #1279 merged (David's post landed)"
+summary: "Scheduled, unattended firing of the /blog-post command (no live human input this session; the stored prompt named no persona). The Skill tool refused model-invocation as designed (disable-model-invocation: true), so I executed the skill's steps directly per its own documented fallback. Ran the A0 rotation gate (scripts/blog-rotation.ts), which forced David as the sole eligible Persona (Kevin posted last, David was starved), so all three A4 candidates were drafted as David: the merge-pr.ts verdict-comment regression (issue #1276), CLAUDE.md's own broken self-citation of ADR-0003 (fixed in PR #1278), and a four-digests-in-a-row meta recap. A fresh outside-reader subagent picked the first as most interesting on underlying weight and named three legibility gaps (undefined \"friction\"/\"frictions-to-fixes\" jargon, an under-contextualized #1018 reference); revised the draft to close them, verified every date/count/quote against git and the GitHub API directly (not recalled), saved it, ran pnpm gate:scoped (full sequence, green), and opened PR #1279 with subscribe_pr_activity on. Followed pr-workflow.md's land recipe: check-conflicting-issues clean, CI green, posted the verdict comment, merged via merge-pr.ts (cb038154), unsubscribed. All actions this session were agent-initiated end to end; no human intervened at any point."
 prs:
   - "1279"
 docsRead:
@@ -15,7 +15,7 @@ docsRead:
   - path: CLAUDE.md
     reason: PR-auto-open rule + gate:scoped/guard conventions
   - path: docs/agents/pr-workflow.md
-    reason: verified as the doc cited in the winning post's own subject matter
+    reason: land recipe, and verified as the doc cited in the winning post's own subject matter
   - path: layers/journal/content/current/sessions/2026-09-19-session_013DTSUMsz7xvUpgEZ536RAy.yml
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-09-19-session_01GPd9rBoqJHeACNT5644bAR.yml
@@ -32,7 +32,7 @@ skillsUsed:
   - name: close-session
     reason: closure trigger at PR-open
   - name: log-session
-    reason: this log
+    reason: this log, authored then finalized on merge
 frictions:
   - description: "Called the Agent tool with run_in_background: false for a read-only GitHub-fetch subagent; blocked by the Agent-background-flag guard (issue #835), since that flag is a no-op on Agent."
     solution: Omit run_in_background entirely (or pass true) for Agent calls and just wait for the completion notification, instead of assuming a synchronous return is available.
@@ -43,23 +43,31 @@ frictions:
   - description: "Piped pnpm gate:scoped through a trailing tail; blocked by the tail-pipe guard (issue #873)."
     solution: "Redirected output to a scratchpad log file with run_in_background: true and checked the exit code from the completion notification instead."
     severity: nit
-durationSec: 685
+  - description: "Called ScheduleWakeup to wait on a dispatched review subagent and separately to wait on a backgrounded gate run; blocked both times by the /loop-only guard (issue #814), since this isn't a /loop session."
+    solution: For a dispatched Agent-tool subagent or a backgrounded Bash command, don't schedule a wakeup at all — both self-notify on completion; just end the turn.
+    severity: nit
+durationSec: 895
 models:
-  claude-sonnet-5: 153
+  claude-sonnet-5: 180
 toolCounts:
   Skill: 3
-  Bash: 39
+  Bash: 43
   Read: 12
   Agent: 3
-  Write: 5
+  Write: 6
   Edit: 7
   ScheduleWakeup: 1
-  ToolSearch: 4
+  ToolSearch: 5
   mcp__github__issue_read: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 4
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-09-19-the-second-time-nobody-tried-fixing-it-with-words.md
 docsReadViaShell:
