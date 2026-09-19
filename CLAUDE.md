@@ -68,7 +68,9 @@ it with a tool.
   landing" below). Autonomy may *propose* freely but *implements* net-new only on human
   green-light (ADR-0003). **Opening that PR is automatic — don't ask** once a
   session has committed **substantive work** (ADR-0003's 2026-07-07 amendment
-  owns the full rule and rationale — read it there, not restated here).
+  established this default and the closure/babysitting rules that follow from
+  it — read it there for that; the operational specifics below are maintained
+  here, not in the ADR).
   **"Substantive work" means at least one commit on the feature branch
   beyond the session-log-only commit** (the ADR-0009 direct-to-`main` exception
   below) — a real code/content/doc change, not just exploration or reading. A
@@ -220,8 +222,8 @@ it with a tool.
 - **A dispatched subagent must never background a Bash command at all, or call
   `Monitor` to wait on one** — no wake mechanism ever resumes a stopped
   subagent. Guarded (`docs/agents/guards.md`, issue #694/#995); the mechanics
-  (foreground + `timeout`, splitting a step, a completion marker) are
-  single-homed in `dispatch-subagents/SKILL.md`.
+  (foreground-and-wait, a log completion marker, a `SendMessage` resume on
+  stall) are single-homed in `dispatch-subagents/SKILL.md`.
 - **Never pipe a backgrounded or long-running command through a trailing
   `tail`/`head`/`echo` when its exit status or full output matters** — it
   silently reports the wrong status and can truncate output. Guarded; the
