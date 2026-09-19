@@ -1,0 +1,131 @@
+schemaVersion: 1
+session: session_01YEY83rpsAKUx42XEczBfnG
+startedAt: 2026-09-19T04:08:14Z
+endedAt: 2026-09-19T04:23:21Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: in-review
+outcome: Three fact-checked fixes landed, PR opened
+summary: "A scheduled trigger fired the /audit-docs Skill with no human prompt this session. Ran the Skill's full pipeline: classified the doc corpus into Live/Historical/Pack-generic tiers, fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the last-48h git history and the full doc corpus, pooled their findings (no overlaps to merge), and dispatched an independent fact-checker against the three candidates that survived agent self-filtering. All three came back CONFIRMED (one with a corrected line range): a self-duplicated escalation list in audit-docs/SKILL.md, a false ADR-0003-ownership claim in CLAUDE.md for content only CLAUDE.md itself holds, and a broken CLAUDE.md pointer naming two mechanics dispatch-subagents/SKILL.md doesn't actually contain. Fixed all three in place (no human-only surface touched), ran pnpm gate:scoped green, committed, pushed, and opened PR #1278 with subscribe_pr_activity on. No needs-triage issue was filed. All work this session was agent-initiated end to end; no human intervened at any point."
+prs:
+  - "1278"
+docsRead:
+  - path: CLAUDE.md
+    reason: tier definitions, Ground rules, and the two fixed bullets
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: the Skill's own charter and its self-duplication finding
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: verifying the mis-location finding against the ADR's actual text
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: verifying the broken-pointer finding's target content
+  - path: CONTEXT.md
+    reason: Session kind classification for this log
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+  - path: scripts/deferred-tool-guard.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 907
+models:
+  claude-sonnet-5: 75
+toolCounts:
+  Bash: 17
+  Agent: 6
+  ScheduleWakeup: 1
+  Read: 3
+  Edit: 3
+  ToolSearch: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - .agents/skills/audit-docs/SKILL.md
+  - CLAUDE.md
+docsReadViaShell:
+  - .agents/skills/audit-docs/SKILL.md
+  - CONTEXT.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/research/rulebook-migration-table.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/agents/issue-tracker.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/close-session/SKILL.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/proposals/879-gate-yml-thin-shell.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/domain.md
+  - docs/agents/triage-labels.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/pr-workflow.md
+  - docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
+  - docs/proposals/659-fork-pr-gate-doorbell-token.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/agents/github-integration.md
+  - CONTEXT-MAP.md
+subagents:
+  - type: general-purpose
+    task: Freshness lens audit (Drift + Orphan-addition)
+  - type: general-purpose
+    task: Single-home lens audit (Duplication + Mis-location)
+  - type: general-purpose
+    task: Concision lens audit (Verbose + Stale-narration)
+  - type: general-purpose
+    task: Coherence lens audit (Contradiction + Ambiguity)
+  - type: general-purpose
+    task: Fact-check three audit-docs findings
+  - type: general-purpose
+    task: Fact-check three audit-docs findings
+gitBranch: claude/festive-mayer-srjy18
+entrypoint: remote_trigger
+cliVersion: 2.1.278
+trigger: audit-docs
+landedBy: Stop
