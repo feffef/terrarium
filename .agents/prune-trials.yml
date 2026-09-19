@@ -24,61 +24,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      Four of CLAUDE.md's Working-conventions footgun bullets (ScheduleWakeup,
-      double-backgrounding, tail/head-piping, dispatched-subagent
-      backgrounding) each restated a fail-closed `PreToolUse` guard's own
-      rationale and mechanics in full, even though `docs/agents/guards.md`'s
-      own lead sentence already says "If a guard just denied your call, its
-      deny message is the instruction" — the same "narrated incident that a
-      built mechanism has since made redundant" shape flagged as
-      `prune-trial`'s criterion-1 bait in
-      `docs/research/rulebook-migration-table.md`'s CM-27/28/37/38 rows (all
-      four "Built", i.e. Cost: 0). The provenance-header bullet two entries
-      below already modeled the compressed shape ("the guard's own deny
-      message — not this doc — is the rule's teaching surface"); these four
-      hadn't caught up to it. Compressed each to the bold rule statement plus
-      a one-clause reason a reader can't get from the deny message alone
-      (ScheduleWakeup: `stop: true`'s exemption; double-backgrounding: what
-      "completed" stops meaning; tail-piping: wrong-status-not-truncation;
-      subagent-backgrounding: no wake mechanism resumes a stopped subagent)
-      plus the `docs/agents/guards.md` + issue-number pointer, dropping the
-      restated deny-message content and (for double-backgrounding) the
-      mechanism-internals explanation of *why* the guard denies it — agents
-      calling the tool this way no longer reach that code path to need it.
-      Left the pkill bullet and the git-mechanics pointer bullet untouched:
-      pkill has no guard (the prose + `scripts/preview.ts` substitute is the
-      only enforcement), and the git-mechanics bullet is already a bare
-      pointer. Net -10 lines (`CLAUDE.md` only).
-    territory:
-      paths:
-        - "CLAUDE.md: the ScheduleWakeup, double-backgrounding, tail/head-piping, and dispatched-subagent-backgrounding bullets (Working conventions)"
-      keywords:
-        - backgrounds the inner shell
-        - no wake mechanism ever resumes
-        - names the fix
-        - deny message is the instruction
-    opened: 2026-09-15
-    proven: true
-    check: >
-      Damage is a session that, needing to know *why* one of these four
-      footguns matters or what to do instead, reads the compressed bullet and
-      either can't find the pointer to `docs/agents/guards.md`/the guard's
-      deny message (so gives up rather than following it), or — for
-      double-backgrounding specifically — still doesn't know what alternative
-      to reach for (`Monitor`/`ps` plus a completion marker) because that
-      survived the trim. NOT damage: a session that is simply denied by the
-      guard and follows the deny message's own fix without needing the
-      now-shorter CLAUDE.md bullet at all (the intended design — the doc is a
-      secondary explanation, the guard is primary), or one that never hits any
-      of these four shapes this run. A Sonnet probe given only the compressed
-      text correctly named `Monitor`/`ps` plus a log completion marker as the
-      alternative to a stacked `&`, correctly said `stop: true` is the one
-      `ScheduleWakeup` call allowed outside a `/loop` session, correctly
-      recommended redirecting a long-running command's output to a file
-      instead of piping through `tail`, and correctly explained that a
-      dispatched subagent can't background a Bash command because nothing
-      would ever wake it back up.
-  - problem: >
       `docs/adr/0009-session-logs-commit-directly-to-main.md` is by far the
       largest ADR (was 584 lines, ~2.7x the next-largest) — every session is
       instructed to read all ADRs before planning/structural work, so its size
@@ -240,3 +185,64 @@ trials:
       silent collision (a well-formed log from the wrong run, not an error),
       and correctly said a review-subagent should be pointed at a file path to
       `Read` itself rather than having its content pasted into the prompt.
+  - problem: >
+      `docs/agents/git-conventions.md`'s "If a checkout is still shallow"
+      section (`docs/research/rulebook-migration-table.md`'s `GC-03` row,
+      explicitly flagged there as a Built/Cost-0 prune candidate) restated a
+      rule that failed three times as prose (issues #772, #703, #849) before
+      the fix that actually stuck: a `SessionStart` hook
+      (`scripts/unshallow-on-start.ts`) that unshallows a checkout before a
+      session's first turn, removing the precondition instead of policing it.
+      The doc had already been trimmed once to lead with that hook, but its
+      tail still restated `scripts/gate.ts`'s own internal mechanism
+      (`changedPaths()`/`changedPathsBetween()` by name, plus the unit-test
+      path) and over-elaborated the "why unsafe" sentence with detail
+      (`silently resolve to an ordinary-looking but wrong commit`) beyond what
+      the fact itself needs. Verified before cutting that `scripts/gate.ts`'s
+      own header comment points *back* at this doc section for the "why
+      unsafe" explanation (`// Why classifying off a shallow clone is unsafe
+      at all: docs/agents/git-conventions.md, and #849`) — so the core fact
+      (a shallow merge-base can under-report a diff, not just over-report it)
+      is load-bearing and stayed; only the restated function names, the test
+      file, and the extra elaboration were cut, replaced with a single
+      pointer (`scripts/gate.ts` enforces the same rule in code, issue #849).
+      Grepped the repo for inbound references to the cut function-name/test-
+      path text first — none outside one archived session log. A smaller
+      prune than the four before it: this repo's `docs/agents/*.md` corpus is
+      already unusually compressed, and a background search across it plus
+      `CLAUDE.md`, every ADR's explanatory prose, and all repo-authored Skills
+      found no other unexcluded criterion-1 candidate near the ~100-line
+      target — the easy backlog four prior trials cleared is now thin. Net -6
+      lines, one file.
+    territory:
+      paths:
+        - "docs/agents/git-conventions.md: the \"If a checkout is still shallow\" section"
+      keywords:
+        - checkout is still shallow
+        - unshallow-on-start
+        - under-report
+        - changedPaths
+    opened: 2026-09-19
+    proven: true
+    check: >
+      Damage is a session that, needing to know what to do when a checkout is
+      unexpectedly still shallow, reads the compressed section and either
+      doesn't know to run `git fetch --unshallow` before trusting any
+      history-derived conclusion, doesn't know a shallow merge-base can
+      **under-report** a diff (not just over-report it, so a "clean" revert-
+      branch diff can hide real damage) and so trusts a suspiciously-clean
+      result, or doesn't know `scripts/gate.ts` already enforces the same
+      check in code and so treats it as a manual-only precaution. NOT damage:
+      a session that never meets a still-shallow checkout this run (the
+      `SessionStart` hook did its job), or one that correctly identifies the
+      hook and the fetch-unshallow fallback without needing the cut
+      function-name/test-path detail (the intended design — that detail
+      belongs in `scripts/gate.ts`'s own header, which already documents it).
+      A Sonnet probe given only the compressed text correctly said a
+      `SessionStart` hook (`scripts/unshallow-on-start.ts`) unshallows before
+      ordinary work starts, correctly said the fallback is `git fetch
+      --unshallow` before trusting any history-based conclusion if the hook
+      ever failed, correctly explained that a shallow merge-base's danger is
+      under-reporting a diff (not just over-reporting), citing a revert
+      branch as the case where that bites, and correctly said `scripts/gate.ts`
+      already enforces the same rule in code rather than leaving it to memory.

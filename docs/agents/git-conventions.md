@@ -52,19 +52,14 @@ after a rename or refactor on either side.
 
 ## If a checkout is still shallow
 
-A `SessionStart` hook (`scripts/unshallow-on-start.ts`) unshallows a shallow
-checkout before a session's first turn, so ordinary work should never meet one
-(issue #772). If it is ever still shallow (the hook's fetch failed — offline,
-no network), don't trust history off it: a shallow `merge-base` can silently
-resolve to an ordinary-looking but wrong commit, which can make a diff against
-it **under-report** what a branch touched — not just over-report — with a
-revert branch as the everyday case where that bites. Run `git fetch
---unshallow` and verify before trusting any history-based conclusion (a
-rewrite/squash claim, a completeness claim, or a merge-base diff); refuse to
-answer rather than classify off the truncated graph. `scripts/gate.ts` does
-exactly this in both directions (`changedPaths()` unshallows,
-`changedPathsBetween()` refuses) — see it and issue #849 for the mechanics,
-`tests/unit/gate-shallow-base.spec.ts` for the regression case.
+A `SessionStart` hook (`scripts/unshallow-on-start.ts`) unshallows before a
+session's first turn, so ordinary work should never meet one (issue #772). If
+it's ever still shallow (offline, the hook's fetch failed), don't trust
+history off it — a shallow `merge-base` can **under-report** a diff, not just
+over-report it (a revert branch is the common case where that bites). Run
+`git fetch --unshallow` and verify before trusting any history-based
+conclusion; refuse to answer rather than classify off the truncated graph.
+`scripts/gate.ts` enforces the same rule in code (issue #849).
 
 ## Commit hygiene
 
