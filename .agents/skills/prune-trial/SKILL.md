@@ -61,10 +61,13 @@ every candidate's full smear to rank them):
 
 1. **Prose that already failed.** A rule whose own failure is on the tracker —
    an issue filed because the rule didn't hold, or a rule narrowed repeatedly and
-   still not followed. `docs/research/rulebook-migration-table.md` indexes these
-   against the issues they failed on; start there, confirm on the tracker — but
-   its "excluded from rule-extraction" list is not out of your scope: a mechanism
-   record for a guard already built is often the largest prose mass going. Such a
+   still not followed. Dispatch a single subagent to search for one in a full
+   pass — the instruction corpus, `docs/research/rulebook-migration-table.md`
+   (its "excluded from rule-extraction" list included: a mechanism record for a
+   guard already built is often the largest prose mass going), and the tracker
+   — before reading any candidate file yourself; manual, one-by-one reading is
+   the fallback only if that search comes up empty or ambiguous, not the
+   starting point. Such a
    rule has proven **the prose** isn't load-bearing — not the behaviour, which
    may matter more than ever. Check what holds that behaviour now: a rule a wired
    guard, gate or test already enforces is the safest prune on the board; one
