@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01UqPZ9b8HC8s7eupAVCH86p
 startedAt: 2026-09-19T13:07:39Z
-endedAt: 2026-09-19T13:22:03Z
+endedAt: 2026-09-19T13:26:50Z
 kind: autonomous
 goal: Run the scheduled /prune-trial cycle
-status: in-review
-outcome: One trial judged (holds), one new trial opened
-summary: "Scheduled autonomous run, no human input this session. Ran /prune-trial's full cycle. §1: used scripts/prune-trial-window.ts to find only one of four open trials (the CLAUDE.md ScheduleWakeup/double-backgrounding/tail-piping/ dispatched-subagent-backgrounding bullet compression, landed 2026-09-15) was past its judging window. Reviewed frictions logged since landing plus a dispatched agent's GitHub issue search for regressions — all hits were severity nit, guards fired correctly, no damage traced to the trial. Verdict: holds; deleted its ledger entry. §2-3: dispatched a second agent to search the instruction corpus for the next criterion-1 candidate; it proposed docs/agents/git-conventions.md's shallow-checkout section (rulebook-migration-table's GC-03 row, a Built/Cost-0 row). Verified myself that scripts/gate.ts's own header comment cites this doc section as the home for the \"why unsafe\" explanation, so I preserved that core fact and only cut the restated implementation detail (function names, test path), after grepping for inbound references to the cut text. Net -6 lines, smaller than the four prior trials — an honest search found nothing near the usual ~100-line target. §4: a Sonnet probe given only the compressed text answered all four verification questions correctly. §5: gate:scoped ran full (the .yml ledger change isn't inert) and passed clean; opened PR #1280 and subscribed to its activity."
+status: completed
+outcome: One trial judged (holds); new trial's prune merged
+summary: "Scheduled autonomous run, no human input this session. Ran /prune-trial's full cycle. §1: used scripts/prune-trial-window.ts to find only one of four open trials (the CLAUDE.md ScheduleWakeup/double-backgrounding/tail-piping/ dispatched-subagent-backgrounding bullet compression, landed 2026-09-15) was past its judging window. Reviewed frictions logged since landing plus a dispatched agent's GitHub issue search for regressions — all hits were severity nit, guards fired correctly, no damage traced to the trial. Verdict: holds; deleted its ledger entry. §2-3: dispatched a second agent to search the instruction corpus for the next criterion-1 candidate; it proposed docs/agents/git-conventions.md's shallow-checkout section (rulebook-migration-table's GC-03 row, a Built/Cost-0 row). Verified myself that scripts/gate.ts's own header comment cites this doc section as the home for the \"why unsafe\" explanation, so I preserved that core fact and only cut the restated implementation detail (function names, test path), after grepping for inbound references to the cut text. Net -6 lines, smaller than the four prior trials — an honest search found nothing near the usual ~100-line target. §4: a Sonnet probe given only the compressed text answered all four verification questions correctly. §5: gate:scoped ran full (the .yml ledger change isn't inert) and passed clean; opened PR #1280 and subscribed to its activity. Babysat it to merge: CI (gate, label) went green within ~4 minutes, mergeable_state clean, no review threads, check-conflicting-issues.ts found no hits. Posted the verdict as a COMMENT-event review (never APPROVE, per pr-workflow.md) and landed via merge-pr.ts — prune-trial merges on a green gate alone per its per-tier authority. Merged as f1c1c979."
 prs:
   - "1280"
 docsRead:
@@ -26,6 +26,8 @@ docsRead:
     reason: confirmed the SessionStart hook's own header already carries the mechanism rationale
   - path: docs/agents/environment-caveats.md
     reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
   - path: docs/agents/tenant-layers.md
     reason: (no reason given)
 skillsUsed:
@@ -39,28 +41,31 @@ frictions:
   - description: The first criterion-1 candidate a dispatched research agent proposed (git-conventions.md's shallow-checkout section) looked strong on the agent's report alone, but my own verification found scripts/gate.ts's header comment cites that exact doc section as the canonical "why unsafe" explanation — meaning most of the prose was load-bearing, not narrative bloat, and a full rewrite as first drafted would have broken an inbound reference.
     solution: Always grep for inbound references to a candidate's text (docs, code comments, Skills) before pruning, not just after drafting the cut — the instructions already say to do this before committing, but doing the check earlier, before deciding scope, would have saved a discarded first-pass edit.
     severity: nit
-durationSec: 865
+durationSec: 1152
 models:
-  claude-sonnet-5: 186
+  claude-sonnet-5: 229
 toolCounts:
-  Bash: 39
+  Bash: 45
   Agent: 4
-  ReadNotifications: 17
-  Read: 9
-  Edit: 5
+  ReadNotifications: 19
+  Read: 10
+  Edit: 7
   Grep: 6
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   Write: 1
+  mcp__github__pull_request_read: 6
+  mcp__github__pull_request_review_write: 1
 filesEdited:
   - .agents/prune-trials.yml
   - docs/agents/git-conventions.md
 docsReadViaShell:
   - docs/agents/git-conventions.md
   - docs/agents/environment-caveats.md
+  - docs/agents/pr-workflow.md
   - docs/agents/mdc-when-to-use.md
   - .agents/skills/close-session/SKILL.md
 subagents:
