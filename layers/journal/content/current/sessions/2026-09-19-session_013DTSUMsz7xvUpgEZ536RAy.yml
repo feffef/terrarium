@@ -1,26 +1,26 @@
 schemaVersion: 1
 session: session_013DTSUMsz7xvUpgEZ536RAy
 startedAt: 2026-09-19T00:16:03Z
-endedAt: 2026-09-19T00:21:45Z
+endedAt: 2026-09-19T00:26:24Z
 kind: autonomous
 goal: Run the scheduled /digest sweep for 2026-09-18
-status: in-review
-outcome: "Digest authored, retention swept, PR #1275 opened"
-summary: "Scheduled /digest run with no human present. Gathered 2026-09-18's activity via scripts/digest.ts, authored the day's Digest (six merged PRs, six completed sessions), ran the retention sweep archiving the 2026-09-11 digest and its session logs, confirmed pnpm gate:scoped green, and opened PR #1275 against main. Subscribed to the PR's activity per CLAUDE.md. All steps were routine execution of the /digest Skill; no discretionary judgment calls beyond the narrative prose of the Digest itself."
+status: completed
+outcome: "Digest merged as PR #1275, gate green"
+summary: "Scheduled /digest run with no human present. Gathered 2026-09-18's activity via scripts/digest.ts, authored the day's Digest (six merged PRs, six completed sessions), ran the retention sweep archiving the 2026-09-11 digest and its session logs, confirmed pnpm gate:scoped green, and opened PR #1275 against main. Babysat it through CI: gate check went green with no review comments and a clean mergeable_state, posted the required verdict comment, and landed it via scripts/merge-pr.ts. All steps were routine execution of the /digest Skill; no discretionary judgment calls beyond the narrative prose of the Digest itself."
 prs:
   - "1275"
 docsRead:
   - path: CLAUDE.md
     reason: digest PR/ADR-0017/gate-scoped conventions
   - path: docs/agents/pr-workflow.md
-    reason: self-merge boundary reference (not yet used — PR still awaiting green CI)
+    reason: merge recipe + digest tier's merge-on-green-gate authority
   - path: layers/blog/content/kevin/pages/2026-09-18-the-fix-has-passed-every-test-except-the-one-that-matters.md
     reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: closure trigger at PR-open
   - name: log-session
-    reason: this log
+    reason: this log (authored, then finalized on merge)
   - name: digest
     reason: (invoked as a slash command)
 frictions:
@@ -30,21 +30,29 @@ frictions:
   - description: "Called `ScheduleWakeup` to poll a backgrounded Bash gate run and was correctly blocked by the /loop-only guard (issue #814) — this session is not a `/loop` session, so the tool was the wrong mechanism for waiting on a background task."
     solution: For a backgrounded Bash command, just end the turn — the harness delivers a task-notification automatically. Reach for `send_later`/Routines only for external state the harness can't watch.
     severity: nit
-durationSec: 342
+durationSec: 621
 models:
-  claude-sonnet-5: 71
+  claude-sonnet-5: 110
 toolCounts:
-  Bash: 21
+  Bash: 27
   Read: 2
-  Write: 2
+  Write: 3
   ScheduleWakeup: 1
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   Edit: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-09-18.md
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
 gitBranch: claude/compassionate-lovelace-8qx3zz
 entrypoint: remote_trigger
 cliVersion: 2.1.277
