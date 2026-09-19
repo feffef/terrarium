@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01YEY83rpsAKUx42XEczBfnG
 startedAt: 2026-09-19T04:08:14Z
-endedAt: 2026-09-19T04:23:21Z
+endedAt: 2026-09-19T04:27:21Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: Three fact-checked fixes landed, PR opened
-summary: "A scheduled trigger fired the /audit-docs Skill with no human prompt this session. Ran the Skill's full pipeline: classified the doc corpus into Live/Historical/Pack-generic tiers, fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the last-48h git history and the full doc corpus, pooled their findings (no overlaps to merge), and dispatched an independent fact-checker against the three candidates that survived agent self-filtering. All three came back CONFIRMED (one with a corrected line range): a self-duplicated escalation list in audit-docs/SKILL.md, a false ADR-0003-ownership claim in CLAUDE.md for content only CLAUDE.md itself holds, and a broken CLAUDE.md pointer naming two mechanics dispatch-subagents/SKILL.md doesn't actually contain. Fixed all three in place (no human-only surface touched), ran pnpm gate:scoped green, committed, pushed, and opened PR #1278 with subscribe_pr_activity on. No needs-triage issue was filed. All work this session was agent-initiated end to end; no human intervened at any point."
+status: completed
+outcome: Three fact-checked fixes landed and merged
+summary: "A scheduled trigger fired the /audit-docs Skill with no human prompt this session. Ran the Skill's full pipeline: classified the doc corpus into Live/Historical/Pack-generic tiers, fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the last-48h git history and the full doc corpus, pooled their findings (no overlaps to merge), and dispatched an independent fact-checker against the three candidates that survived agent self-filtering. All three came back CONFIRMED (one with a corrected line range): a self-duplicated escalation list in audit-docs/SKILL.md, a false ADR-0003-ownership claim in CLAUDE.md for content only CLAUDE.md itself holds, and a broken CLAUDE.md pointer naming two mechanics dispatch-subagents/SKILL.md doesn't actually contain. Fixed all three in place (no human-only surface touched), ran pnpm gate:scoped green, committed, pushed, and opened PR #1278 with subscribe_pr_activity on. Followed the standard pr-workflow.md land recipe (conflicting-issues check, verdict comment, merge-pr.ts) once CI reported green and mergeable_state was clean, then merged and unsubscribed. No needs-triage issue was filed. All work this session was agent-initiated end to end; no human intervened at any point."
 prs:
   - "1278"
 docsRead:
@@ -20,9 +20,9 @@ docsRead:
     reason: verifying the broken-pointer finding's target content
   - path: CONTEXT.md
     reason: Session kind classification for this log
-  - path: docs/agents/guards.md
-    reason: (no reason given)
   - path: docs/agents/pr-workflow.md
+    reason: the land-a-gated-PR recipe and per-tier merge authority
+  - path: docs/agents/guards.md
     reason: (no reason given)
   - path: docs/agents/environment-caveats.md
     reason: (no reason given)
@@ -60,27 +60,34 @@ skillsUsed:
   - name: audit-docs
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 907
+durationSec: 1147
 models:
-  claude-sonnet-5: 75
+  claude-sonnet-5: 115
 toolCounts:
-  Bash: 17
+  Bash: 24
   Agent: 6
   ScheduleWakeup: 1
   Read: 3
   Edit: 3
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
+  Write: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/audit-docs/SKILL.md
   - CLAUDE.md
 docsReadViaShell:
   - .agents/skills/audit-docs/SKILL.md
   - CONTEXT.md
+  - docs/agents/pr-workflow.md
   - .agents/skills/frictions-to-fixes/SKILL.md
   - docs/research/rulebook-migration-table.md
   - docs/adr/0027-prune-trials.md
@@ -104,7 +111,6 @@ docsReadViaShell:
   - docs/agents/tenant-layers.md
   - docs/agents/mdc-when-to-use.md
   - docs/agents/guest-contributions.md
-  - docs/agents/pr-workflow.md
   - docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
   - docs/proposals/659-fork-pr-gate-doorbell-token.md
   - docs/adr/0020-requester-trust-tiers.md
