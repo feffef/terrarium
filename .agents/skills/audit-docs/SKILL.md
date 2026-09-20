@@ -34,7 +34,7 @@ Classify every surface **before** editing. This decides everything.
   `layers/<tenant>/CONTEXT.md`, our
   own Skills' `SKILL.md` + sibling files (`external: false`), and the **current
   journal's facing pages** —
-  `layers/journal/content/current/pages/{architecture,history,how-it-works,index}.md`, the
+  `layers/journal/content/current/pages/{architecture,highlights,history,how-it-works,index}.md`, the
   descriptive front a reader lands on. **Fix these.** (Audit their *source* `.md`;
   no rendering. `index.md` is only partially rendered by the dashboard, so a
   finding on its body may not surface at `/t/journal/current` — that's fine, the

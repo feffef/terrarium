@@ -90,20 +90,20 @@ it with a tool.
 - All work must clear the **safety gate** (build/validate/isolation, ADR-0004).
   The manifest-expansion, routing, and cross-Tenant-catalog modules
   (`content.config.ts`, `shared/expand.ts`, `modules/routing.ts`,
-  `shared/routing.ts`, `shared/kinds.ts`, `modules/catalog.ts`,
+  `shared/routing.ts`, `shared/kinds.ts`, `shared/schemas/`, `modules/catalog.ts`,
   `app/composables/catalog.ts` — ADR-0025), isolation
   logic, CI, and governance/ADRs are **human-only** — never auto-merge changes
   touching them (ADR-0004's high-risk set, which also escalates a PR that
   introduces a new dependency or changes untested/untestable runtime
   behaviour — see ADR-0004's 2026-07-06 amendment for the exact axes); the sole
   exception is a `prune-trial` prune of an ADR's explanatory prose (ADR-0027).
-  The pinned seven above are the manifest-expansion/routing/catalog family
-  specifically (ADR-0004/ADR-0025), not an exhaustive list of every human-only
-  file in the repo — "isolation logic" is a deliberately unpinned catch-all
-  that also covers e.g. `shared/manifest.ts` (ADR-0025: defines the
-  `tenant_space_collection` key it calls "the unit of isolation") and
-  `shared/schemas/` (ADR-0025's 2026-09-05 amendment) and the root
-  `nuxt.config.ts` (ADR-0018 treats it as a
+  The pinned eight above are the manifest-expansion/routing/catalog family
+  specifically (ADR-0004/ADR-0025 — its 2026-09-05 amendment folds
+  `shared/schemas/` into this same family, directory-scoped), not an
+  exhaustive list of every human-only file in the repo — "isolation logic" is
+  a deliberately unpinned catch-all that also covers e.g. `shared/manifest.ts`
+  (ADR-0025: defines the `tenant_space_collection` key it calls "the unit of
+  isolation") and the root `nuxt.config.ts` (ADR-0018 treats it as a
   human-only surface), and `.github/actions/gate/action.yml`, which holds the
   Gate's own steps (ADR-0026). Deciding whether a *novel* file belongs in this
   catch-all is a standing judgement call, not yet mechanized — closing that
@@ -342,7 +342,7 @@ time — no regenerate step needed.
 
 ```
 pnpm install            # installs deps, then runs `nuxt prepare` (derives #routing + collections)
-pnpm gate:scoped        # local fast feedback — floor always; heavy layers only when the change isn't inert
+pnpm gate:scoped        # local fast feedback — see above for what it skips and why
 pnpm gate:scoped --dry  # print the decision + planned steps, run nothing
 ```
 
