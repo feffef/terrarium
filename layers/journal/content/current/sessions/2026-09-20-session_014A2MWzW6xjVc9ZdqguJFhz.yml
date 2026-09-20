@@ -1,0 +1,73 @@
+schemaVersion: 1
+session: session_014A2MWzW6xjVc9ZdqguJFhz
+startedAt: 2026-09-20T02:04:53Z
+endedAt: 2026-09-20T02:19:06Z
+kind: autonomous
+goal: Run a frictions-to-fixes cycle
+status: completed
+outcome: Two doc frictions fixed, PR merged
+summary: "Scheduled Routine fired the frictions-to-fixes Skill — no human prompt this turn. Dispatched a survey subagent over the latest 20 session logs; it found one already-tracked regression (issue #1276, no action needed) and two genuinely never-fixed, low-severity doc frictions: the Skill's own §1 anchor step for finding the previous run had gone stale (it pointed at filed tracker issues, but \"simple\" selections stopped filing issues, so the real previous run was ~12 days more recent than the anchor implied — the survey subagent hit this exact gap live), and a known-long command (gate:scoped) run in the foreground can auto-background on the 2-minute timeout and silently dodge the tail-piping PreToolUse guard. Both were simple, safe-surface selections per the Skill's ripeness test, so no issue was filed — dispatched one Sonnet impl agent (worktree-isolated) to batch both into a single doc-only PR (#1282). Reviewed the diff myself (verified the PR's `trigger` field claim against shared/schemas/session.ts and scripts/session-trace.ts before trusting it), confirmed gate green and no conflicting-issue hits, posted the review verdict comment, and merged via merge-pr.ts. No human-only surfaces touched; no escalation needed."
+prs:
+  - "1282"
+docsRead:
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: this run's own instructions
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe
+  - path: shared/schemas/session.ts
+    reason: verified the PR's trigger-field claim before trusting it
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: scripts/session-frictions.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-19-session_01GPd9rBoqJHeACNT5644bAR.yml
+    reason: (no reason given)
+  - path: gate-scoped.log
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions: []
+durationSec: 853
+models:
+  claude-sonnet-5: 67
+toolCounts:
+  Bash: 9
+  Agent: 3
+  Skill: 3
+  Read: 3
+  ScheduleWakeup: 1
+  ReadNotifications: 2
+  ToolSearch: 1
+  mcp__github__pull_request_read: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - CLAUDE.md
+docsReadViaShell:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/git-conventions.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Doc fixes for two frictions
+    model: sonnet
+gitBranch: claude/eager-ptolemy-vcwjuw
+entrypoint: remote_trigger
+cliVersion: 2.1.278
+trigger: frictions-to-fixes
+landedBy: Stop
