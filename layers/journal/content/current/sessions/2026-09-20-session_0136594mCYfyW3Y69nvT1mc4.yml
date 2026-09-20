@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_0136594mCYfyW3Y69nvT1mc4
 startedAt: 2026-09-20T04:08:14Z
-endedAt: 2026-09-20T04:22:14Z
+endedAt: 2026-09-20T04:25:01Z
 kind: autonomous
 goal: Run scheduled /audit-docs sweep
-status: in-review
-outcome: Six findings fixed, PR opened
-summary: "Scheduled Routine fired /audit-docs with no live human in this session. Fanned out four parallel lens-review agents (Freshness, Single-home, Concision, Coherence) across every Live-tier doc, pooled the findings (no overlaps to merge), then fact-checked each one myself against a primary source (an ADR's own amendment text, code, or git history) before fixing. Fixed all six confirmed findings, all Live-tier only: a stale facing-pages enumeration in audit-docs/SKILL.md, a duplicated transient-failure caveat, a redundant code comment restating the prose above it, two contradictions (CONTEXT.md vs ADR-0004 on who holds the human-only list; CLAUDE.md's pinned set vs ADR-0025 on shared/schemas/'s membership), and one misleading guards.md pointer. No factual conflict needed escalation. pnpm gate:scoped ran green (all changed paths inert), committed, pushed, and PR #1283 opened and subscribed per audit-docs' self-merge tier (ADR-0003/pr-workflow.md)."
+status: completed
+outcome: Six findings fixed, PR merged
+summary: "Scheduled Routine fired /audit-docs with no live human in this session. Fanned out four parallel lens-review agents (Freshness, Single-home, Concision, Coherence) across every Live-tier doc, pooled the findings (no overlaps to merge), then fact-checked each one myself against a primary source (an ADR's own amendment text, code, or git history) before fixing. Fixed all six confirmed findings, all Live-tier only: a stale facing-pages enumeration in audit-docs/SKILL.md, a duplicated transient-failure caveat, a redundant code comment restating the prose above it, two contradictions (CONTEXT.md vs ADR-0004 on who holds the human-only list; CLAUDE.md's pinned set vs ADR-0025 on shared/schemas/'s membership), and one misleading guards.md pointer. No factual conflict needed escalation. pnpm gate:scoped ran green (all changed paths inert), committed, pushed, and PR #1283 opened per audit-docs' self-merge tier (ADR-0003/pr-workflow.md). Dispatched a follow-up agent to run the land-a-gated-PR recipe: confirmed CI green and no conflicts, posted the required pre-merge verdict comment, then merged via scripts/merge-pr.ts. PR #1283 merged (6e9b67fd76972a7e85b9a77b983fd6c86989886c)."
 prs:
   - "1283"
 docsRead:
@@ -19,7 +19,7 @@ docsRead:
   - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
     reason: verify shared/schemas/'s family membership
   - path: docs/agents/pr-workflow.md
-    reason: land-a-gated-PR recipe + per-tier merge authority
+    reason: land-a-gated-PR recipe + per-tier merge authority, read again by the merge-driving subagent
   - path: docs/agents/guards.md
     reason: workflow-edit-guard pointer being fixed
   - path: docs/agents/github-integration.md
@@ -106,7 +106,7 @@ skillsUsed:
   - name: audit-docs
     reason: the sweep this whole session ran
   - name: dispatch-subagents
-    reason: briefed and dispatched the four lens-review agents
+    reason: briefed and dispatched the four lens-review agents, then the PR-landing agent
   - name: close-session
     reason: (no reason given)
   - name: log-session
@@ -124,20 +124,27 @@ frictions:
   - description: "Tried `pnpm gate:scoped > log 2>&1 &` with `run_in_background: true` stacked on top; blocked by double-background-guard."
     solution: Dropped the trailing backtick-ampersand, letting run_in_background:true alone background it.
     severity: nit
-durationSec: 840
+  - description: Tried "pnpm gate:scoped > log 2>&1 &" with run_in_background:true stacked on top; blocked by double-background-guard.
+    solution: Dropped the trailing backtick-ampersand, letting run_in_background:true alone background it.
+    severity: nit
+  - description: The dispatched PR-landing subagent tried to run scripts/merge-pr.ts with run_in_background:true and was blocked by subagent-background-guard (a dispatched subagent must never background a Bash command).
+    solution: It re-ran the same command in the foreground with a longer timeout instead, per the guard's own deny message — completed well within it.
+    severity: nit
+durationSec: 1007
 models:
-  claude-sonnet-5: 121
+  claude-sonnet-5: 143
 toolCounts:
-  Bash: 26
-  Agent: 7
+  Bash: 29
+  Agent: 8
   Grep: 4
   Read: 10
   ScheduleWakeup: 1
   Edit: 7
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
+  Write: 2
   PushNotification: 1
+  ReadNotifications: 4
 filesEdited:
   - .agents/skills/audit-docs/SKILL.md
   - docs/agents/github-integration.md
@@ -170,6 +177,7 @@ subagents:
   - task: "Audit-docs Agent C: Concision lens"
   - task: "Audit-docs Agent D: Coherence lens"
   - task: Open gated PR for audit-docs sweep
+  - task: "Drive audit-docs PR #1283 to merge"
 gitBranch: claude/festive-mayer-riz1nj
 entrypoint: remote_trigger
 cliVersion: 2.1.278
