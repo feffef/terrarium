@@ -24,59 +24,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      `docs/adr/0009-session-logs-commit-directly-to-main.md` is by far the
-      largest ADR (was 584 lines, ~2.7x the next-largest) — every session is
-      instructed to read all ADRs before planning/structural work, so its size
-      is a standing context tax. Several of its dated amendment sections carried
-      investigation-narrative and stale-todo prose alongside their operative
-      `**Decision.**`/`**Consequences.**` content: a "Why revisit"/"What the web
-      harness actually does (measured, CLI 2.1.201)" pair of paragraphs
-      re-deriving why `SessionEnd` alone doesn't work; a "Not yet built
-      (follow-up gated PR)" checklist for work the very next section ("Landing
-      mechanism as shipped") confirms already shipped; and three "**The
-      problem.**"/"**The gap.**"-labeled incident narrations (the close-session
-      front-door amendment, the truncation-sweep amendment, the `session`
-      reclassification amendment) that told the same fact in twice the words
-      the operative Decision/Consequences text next to them needed. Compressed
-      each to its load-bearing fact plus its issue/PR pointer, touched no
-      `**Decision.**`/`**Consequences.**` block anywhere (ADR-0018's bound:
-      that text is never rewritten), deleted the now-stale "Not yet built" list
-      outright (its own next section states it shipped), and fixed the one
-      cross-reference that pointed at it. Net -27 lines (584 → 557, one file).
-    territory:
-      paths:
-        - "docs/adr/0009-session-logs-commit-directly-to-main.md: the 'Why revisit'/'What the web harness actually does' paragraphs, the 'Not yet built' list, and the 'The problem'/'The gap' narrations in the close-session, truncation-sweep, and session-reclassification amendments"
-      keywords:
-        - Why revisit
-        - measured, CLI 2.1.201
-        - Not yet built
-        - landedBy
-        - reclassified as derived
-    opened: 2026-09-16
-    proven: true
-    check: >
-      Damage is a session that, needing to explain or act on the session-log
-      mechanism, reads the compressed prose and either can't answer why the
-      derived/authored field split exists (the self-reported fields were
-      unreliable even though the transcript already had the facts), doesn't
-      know that `SessionEnd` alone is insufficient (can't distinguish a freeze
-      from a true end, can't block/prompt, isn't in the transcript) and so
-      mis-diagnoses a missing log as a `SessionEnd`-only problem instead of
-      checking the `Stop`-hook-first fallback chain and a log's own `landedBy`
-      field, or treats the deleted "Not yet built" list as still describing
-      unshipped work. NOT damage: a session that reads the operative
-      Decision/Consequences text for the current mechanism instead of the
-      trimmed narrative preamble (the intended design), or one that never
-      needs this ADR this run. A Sonnet probe given only the compressed
-      ADR-0009 text correctly explained why session-log fields split into
-      derived-from-transcript vs. agent-authored, correctly named the
-      `Stop`-hook-first / `SessionEnd`-fallback / `SessionStart`-resume-fallback
-      chain (not "SessionEnd" alone) as what lands a log and `landedBy` as how
-      to tell which one fired, correctly said a general reminder/block `Stop`
-      hook was rejected as untested runtime behaviour rather than never
-      considered, and correctly resolved a `session`-field disagreement in
-      favor of the mechanical trace over the agent-typed value.
-  - problem: >
       `docs/agents/github-integration.md` carried two rules with more prose than
       they now need. "Bare angle brackets vanish from a rendered title or body"
       narrated the #779 incident and a failed single-backtick-wrap attempt in
