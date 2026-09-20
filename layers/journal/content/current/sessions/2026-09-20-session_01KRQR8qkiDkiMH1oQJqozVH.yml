@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01KRQR8qkiDkiMH1oQJqozVH
 startedAt: 2026-09-20T13:06:35Z
-endedAt: 2026-09-20T13:19:47Z
+endedAt: 2026-09-20T13:24:21Z
 kind: autonomous
 goal: Run scheduled /prune-trial pass
-status: in-review
+status: completed
 outcome: Judged 1 trial, shipped 1 new prune
-summary: "Fully agent-initiated scheduled run of the prune-trial Skill (ADR-0027); no live human input this session. §1: got real landing commits via scripts/prune-trial-window.ts for the 4 open trials, judged the one that landed cleanly (ADR-0009 amendment compression) as holding (no traceable damage in 22 post-landing session logs, no regression issue) and deleted its ledger entry. Independently re-verified each trial's landing commit with git log -S before trusting the tool and found the git-conventions trial's reported \"JUDGEABLE\" landing was a false positive (matched an older, unrelated, already-closed trial sharing the same opening clause) -- left it unjudged and filed #1285 on the script bug. §2-5: dispatched a full-corpus search for a criterion-1 candidate, found only one real hit (dispatch-subagents/SKILL.md's foreground-verification bullet duplicating subagent-background-guard.ts's own deny text), compressed it (-3 lines), probed the compressed text on a fresh Sonnet subagent (passed), ran the full pnpm gate:scoped (passed, all steps), and opened PR #1286 per ADR-0003's auto-open default. Subscribed to the PR's activity."
+summary: "Fully agent-initiated scheduled run of the prune-trial Skill (ADR-0027); no live human input this session. §1: got real landing commits via scripts/prune-trial-window.ts for the 4 open trials, judged the one that landed cleanly (ADR-0009 amendment compression) as holding (no traceable damage in 22 post-landing session logs, no regression issue) and deleted its ledger entry. Independently re-verified each trial's landing commit with git log -S before trusting the tool and found the git-conventions trial's reported \"JUDGEABLE\" landing was a false positive (matched an older, unrelated, already-closed trial sharing the same opening clause) -- left it unjudged and filed #1285 on the script bug. §2-5: dispatched a full-corpus search for a criterion-1 candidate, found only one real hit (dispatch-subagents/SKILL.md's foreground-verification bullet duplicating subagent-background-guard.ts's own deny text), compressed it (-3 lines), probed the compressed text on a fresh Sonnet subagent (passed), ran the full pnpm gate:scoped (passed, all steps), and opened PR #1286 per ADR-0003's auto-open default. Subscribed to its activity, babysat it through a green gate, posted the required COMMENT-event merge verdict (prune-trial tier merges on a green gate alone), and merged it via scripts/merge-pr.ts (e15ce006). PR merged, work landed."
 prs:
   - "1286"
 docsRead:
@@ -18,6 +18,8 @@ docsRead:
     reason: verifying the guard's live deny text line-by-line against the SKILL.md bullet before cutting
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: the file being pruned
+  - path: docs/agents/pr-workflow.md
+    reason: confirming prune-trial's green-gate-alone self-merge tier before merging
   - path: docs/research/rulebook-migration-table.md
     reason: (no reason given)
   - path: docs/agents/guards.md
@@ -25,8 +27,6 @@ docsRead:
   - path: docs/agents/environment-caveats.md
     reason: (no reason given)
   - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
-    reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: docs/agents/tenant-layers.md
     reason: (no reason given)
@@ -36,9 +36,9 @@ skillsUsed:
   - name: prune-trial
     reason: this session's whole task
   - name: close-session
-    reason: closure at PR-open
+    reason: closure at PR-open, re-invoked at merge
   - name: log-session
-    reason: recording this log
+    reason: recording this log, twice (in-review then completed)
 frictions:
   - description: "scripts/prune-trial-window.ts's git log -S search keys each open trial by only its raw problem: first line; when an older, already-judged trial about the same file/section happened to share that exact opening clause, the tool reported the CURRENT entry as landed 12 days early (JUDGEABLE, wrong commit/timestamp) instead of NOT FOUND. Caught only by manually re-running git log -S with a phrase unique to the current entry's body."
     solution: "Filed #1285: key the search on more than the first line, or detect >1 historical match for the same key and fall back to NOT FOUND/an explicit ambiguity warning instead of silently returning the earliest hit."
@@ -46,12 +46,12 @@ frictions:
   - description: Hand-wrote the Co-Authored-By/Claude-Session commit trailer in a git commit -m heredoc despite CLAUDE.md's explicit never-hand-write rule and the same near-miss appearing in this repo's own recent session frictions (session_0136594mCYfyW3Y69nvT1mc4, session_01Ura7j8GP9YrXedsQvMTLW9) -- the commit-trailer guard correctly blocked it.
     solution: No new fix needed -- the guard already exists and worked as designed; just a personal near-miss to log per its own convention.
     severity: minor
-durationSec: 792
+durationSec: 1066
 models:
-  claude-sonnet-5: 143
+  claude-sonnet-5: 181
 toolCounts:
-  Bash: 44
-  ToolSearch: 4
+  Bash: 52
+  ToolSearch: 6
   mcp__github__search_issues: 2
   Read: 5
   Edit: 3
@@ -64,13 +64,17 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
+  Write: 2
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_review_write: 1
 filesEdited:
   - .agents/prune-trials.yml
   - .agents/skills/dispatch-subagents/SKILL.md
 docsReadViaShell:
   - docs/agents/issue-tracker.md
   - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/pr-workflow.md
   - .agents/skills/close-session/SKILL.md
   - .agents/skills/log-session/SKILL.md
   - docs/adr/0004-objective-safety-gate.md
