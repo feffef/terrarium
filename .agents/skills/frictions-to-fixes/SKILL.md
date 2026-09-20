@@ -88,10 +88,12 @@ Its brief:
   sizeable chunk of its candidates are already resolved by an in-window fixing
   session or PR — exactly the case the first bullet above tells you to screen
   out fast. Anchor that screening on the previous run's approximate start time
-  rather than treating the whole window uniformly: find the most recent
-  frictions-to-fixes-filed issue in the tracker (its creation time approximates
-  that start) and treat frictions from sessions before it as the likeliest
-  already-resolved candidates.
+  rather than treating the whole window uniformly: find the most recent session
+  log with `trigger: frictions-to-fixes` (or, absent that, the most recent
+  merged PR matching this Skill's fix pattern via `merged-since.ts`) and treat
+  frictions from sessions before it as the likeliest already-resolved
+  candidates — a filed tracker issue is a weaker fallback signal, since a
+  "simple" selection (the common case, §4) files none.
 - **Screen against the tracker** — apply the §2 rules to every candidate.
 - **GitHub-MCP hygiene** (these are themselves recurring frictions — heed them):
   call the tools by their **fully-qualified `mcp__github__*` names** (bare names
