@@ -1,0 +1,177 @@
+schemaVersion: 1
+session: session_0136594mCYfyW3Y69nvT1mc4
+startedAt: 2026-09-20T04:08:14Z
+endedAt: 2026-09-20T04:22:14Z
+kind: autonomous
+goal: Run scheduled /audit-docs sweep
+status: in-review
+outcome: Six findings fixed, PR opened
+summary: "Scheduled Routine fired /audit-docs with no live human in this session. Fanned out four parallel lens-review agents (Freshness, Single-home, Concision, Coherence) across every Live-tier doc, pooled the findings (no overlaps to merge), then fact-checked each one myself against a primary source (an ADR's own amendment text, code, or git history) before fixing. Fixed all six confirmed findings, all Live-tier only: a stale facing-pages enumeration in audit-docs/SKILL.md, a duplicated transient-failure caveat, a redundant code comment restating the prose above it, two contradictions (CONTEXT.md vs ADR-0004 on who holds the human-only list; CLAUDE.md's pinned set vs ADR-0025 on shared/schemas/'s membership), and one misleading guards.md pointer. No factual conflict needed escalation. pnpm gate:scoped ran green (all changed paths inert), committed, pushed, and PR #1283 opened and subscribed per audit-docs' self-merge tier (ADR-0003/pr-workflow.md)."
+prs:
+  - "1283"
+docsRead:
+  - path: CLAUDE.md
+    reason: single home for the human-only file list + pinned-set text being fixed
+  - path: CONTEXT.md
+    reason: Human-only glossary term being fixed
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: verify its 2026-07-10 amendment names CLAUDE.md as the single home
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: verify shared/schemas/'s family membership
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe + per-tier merge authority
+  - path: docs/agents/guards.md
+    reason: workflow-edit-guard pointer being fixed
+  - path: docs/agents/github-integration.md
+    reason: duplication finding being fixed
+  - path: docs/agents/environment-caveats.md
+    reason: single home for the transient-failure caveat
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: the skill's own instructions, and the drift fix target
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (no reason given)
+  - path: .claude/settings.json
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: .github/workflows/gate.yml
+    reason: (no reason given)
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/highlights.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the sweep this whole session ran
+  - name: dispatch-subagents
+    reason: briefed and dispatched the four lens-review agents
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "A top-level system-reminder instructed hand-writing Co-Authored-By/ Claude-Session commit trailers, but this repo's commit-trailer-guard (issue #921) fail-closed refuses any hand-typed trailer — the harness template/commit-msg hook lands it instead."
+    solution: Omitted the trailer entirely on the actual commit; the hook appended the correct one. Repo convention should win over generic harness attribution instructions here — CLAUDE.md already says as much for other guards, worth a note if this recurs across sessions.
+    severity: minor
+  - description: Piped `pnpm gate:scoped --dry` into `tail -40` out of habit and was blocked by tail-pipe-guard.
+    solution: Ran the command without piping instead.
+    severity: nit
+  - description: Tried ScheduleWakeup to wait on four background lens-review agents; blocked by loop-only-tool-guard since this isn't a /loop session.
+    solution: Relied on the automatic task-notification each Agent-tool subagent sends on completion instead.
+    severity: nit
+  - description: "Tried `pnpm gate:scoped > log 2>&1 &` with `run_in_background: true` stacked on top; blocked by double-background-guard."
+    solution: Dropped the trailing backtick-ampersand, letting run_in_background:true alone background it.
+    severity: nit
+durationSec: 840
+models:
+  claude-sonnet-5: 121
+toolCounts:
+  Bash: 26
+  Agent: 7
+  Grep: 4
+  Read: 10
+  ScheduleWakeup: 1
+  Edit: 7
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  PushNotification: 1
+filesEdited:
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/agents/github-integration.md
+  - CLAUDE.md
+  - CONTEXT.md
+  - docs/agents/guards.md
+docsReadViaShell:
+  - CONTEXT.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/agents/guards.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/agents/git-conventions.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/guest-contributions.md
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/research/nuxt-content-review-grounding.md
+  - CONTEXT-MAP.md
+  - .agents/skills/close-session/SKILL.md
+subagents:
+  - task: Check GitHub for existing audit-docs PRs
+  - task: Check GitHub for existing audit-docs PRs
+  - task: "Audit-docs Agent A: Freshness lens"
+  - task: "Audit-docs Agent B: Single-home lens"
+  - task: "Audit-docs Agent C: Concision lens"
+  - task: "Audit-docs Agent D: Coherence lens"
+  - task: Open gated PR for audit-docs sweep
+gitBranch: claude/festive-mayer-riz1nj
+entrypoint: remote_trigger
+cliVersion: 2.1.278
+trigger: audit-docs
+landedBy: Stop
