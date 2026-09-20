@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01TVRWbJ12aLmvu44UDfiDFz
 startedAt: 2026-09-20T00:16:11Z
-endedAt: 2026-09-20T00:21:52Z
+endedAt: 2026-09-20T00:26:13Z
 kind: autonomous
 goal: Run the scheduled /digest sweep for 2026-09-19
-status: in-review
-outcome: "Digest authored, PR #1281 open, gate green"
-summary: "Fully autonomous scheduled run of the /digest skill, no human prompt beyond the schedule itself. Authored the 2026-09-19 Digest from scripts/digest.ts's gathered data (5 merged PRs, 5 completed sessions, 9 frictions), ran the journal retention sweep (moved 1 digest and 7 session logs dated 2026-09-12 from current to archived), cleared pnpm gate:scoped (full gate, since the archive-sweep rename touched a non-inert path), and opened PR #1281 against main. Subscribed to the PR's activity to babysit it to merge per CLAUDE.md."
+status: completed
+outcome: "Digest authored, PR #1281 merged with green gate"
+summary: "Fully autonomous scheduled run of the /digest skill, no human prompt beyond the schedule itself. Authored the 2026-09-19 Digest from scripts/digest.ts's gathered data (5 merged PRs, 5 completed sessions, 9 frictions), ran the journal retention sweep (moved 1 digest and 7 session logs dated 2026-09-12 from current to archived), cleared pnpm gate:scoped (full gate, since the archive-sweep rename touched a non-inert path), and opened PR #1281 against main. Subscribed to the PR's activity, confirmed CI's own gate check green with a clean mergeable_state and no open review threads, posted the required verdict comment, and landed it via merge-pr.ts (digest tier merges on a green gate alone per docs/agents/pr-workflow.md)."
 prs:
   - "1281"
 docsRead: []
@@ -21,21 +21,28 @@ frictions:
   - description: "Piped `pnpm gate:scoped` through `tee <log> | tail -100` to capture and preview output in one command; blocked by the tail-pipe guard (issue #873) since piping a long-running command through a trailing tail loses its real exit status."
     solution: Redirected to a file with `> log 2>&1`, checked `$?` directly, then read the file with the Read tool's offset/limit — the pattern the guard itself recommends.
     severity: nit
-durationSec: 341
+durationSec: 602
 models:
-  claude-sonnet-5: 56
+  claude-sonnet-5: 96
 toolCounts:
-  Bash: 18
+  Bash: 25
   Write: 2
   Read: 1
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  Edit: 1
+  Edit: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 6
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-09-19.md
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
 gitBranch: claude/compassionate-lovelace-i13px7
 entrypoint: remote_trigger
 cliVersion: 2.1.278
