@@ -161,12 +161,10 @@ each recipe class to its MCP equivalent:
 - **This polling advice is scoped to non-webhook-delivered state like CI —
   it does not apply to a dispatched Agent-tool subagent.** See CLAUDE.md's
   `ScheduleWakeup` rule for why.
-- **`mcp__Claude_Code_Remote__*` calls and `AskUserQuestion` can both fail with a
-  transient "permission stream closed before response received" error** —
-  retry once, then route around it (issue #145/#229/#359). These are harness
-  caveats rather than GitHub ones, mentioned here only because the polling
-  recipe above depends on them; full detail is single-homed in
-  [`environment-caveats.md`](./environment-caveats.md).
+- **This polling recipe depends on `mcp__Claude_Code_Remote__*` and
+  `AskUserQuestion` calls, which can both fail transiently** — see
+  [`environment-caveats.md`](./environment-caveats.md) for the "permission
+  stream closed" caveat and its fallback (issue #145/#229/#359).
 
 ## Resolving deferred tool names
 
