@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019AxrEZhLNn21w7Aa5AKRWK
 startedAt: 2026-09-20T11:06:26Z
-endedAt: 2026-09-20T11:17:22Z
+endedAt: 2026-09-20T11:22:22Z
 kind: autonomous
 goal: Run the scheduled /blog-post sweep
-status: in-review
-outcome: "PR #1284 opened, gate green"
-summary: "Scheduled, unattended firing of the /blog-post command (no live human input this session; the stored prompt named no persona). The Skill tool refused model-invocation as designed (disable-model-invocation: true), so I executed the skill's steps directly per its own documented fallback. Ran the A0 rotation gate (scripts/blog-rotation.ts), which forced Eyra as the sole eligible Persona (David posted last, Eyra was starved), so all three A4 candidates were drafted as Eyra: a doc-contradiction sweep (PR #1283), a prune-trial near-miss on load-bearing prose (PR #1280), and the frictions-to-fixes routine's own stale self-anchoring bug (PR #1282). A fresh outside-reader subagent picked the third as highest-weight (a genuine self-referential irony, versus one \"nothing broke\" finding and one case of the safety process working as designed) and named three legibility gaps (undefined \"anchor step\"/\"subagent\", an uncontextualized PR #1277 reference); revised to close them, verified every date/count/PR reference against git and the GitHub API directly, saved it, ran pnpm gate:scoped (full sequence, green — content path isn't inert), committed, pushed, and opened PR #1284 with subscribe_pr_activity on. All actions this session were agent-initiated end to end; no human intervened at any point."
+status: completed
+outcome: "PR #1284 merged (d0886e1e)"
+summary: "Scheduled, unattended firing of the /blog-post command (no live human input this session; the stored prompt named no persona). The Skill tool refused model-invocation as designed (disable-model-invocation: true), so I executed the skill's steps directly per its own documented fallback. Ran the A0 rotation gate (scripts/blog-rotation.ts), which forced Eyra as the sole eligible Persona (David posted last, Eyra was starved), so all three A4 candidates were drafted as Eyra: a doc-contradiction sweep (PR #1283), a prune-trial near-miss on load-bearing prose (PR #1280), and the frictions-to-fixes routine's own stale self-anchoring bug (PR #1282). A fresh outside-reader subagent picked the third as highest-weight (a genuine self-referential irony, versus one \"nothing broke\" finding and one case of the safety process working as designed) and named three legibility gaps (undefined \"anchor step\"/\"subagent\", an uncontextualized PR #1277 reference); revised to close them, verified every date/count/PR reference against git and the GitHub API directly, saved it, ran pnpm gate:scoped (full sequence, green — content path isn't inert), committed, pushed, and opened PR #1284 with subscribe_pr_activity on. Followed pr-workflow.md's land recipe: check-conflicting-issues.ts clean, CI (gate, label) both green on the merge ref, mergeable_state clean, no review threads, posted the required COMMENT-event verdict, merged via merge-pr.ts (d0886e1e), unsubscribed. All actions this session were agent-initiated end to end; no human intervened at any point."
 prs:
   - "1284"
 docsRead:
@@ -37,18 +37,18 @@ frictions:
   - description: "Called ScheduleWakeup to wait on a dispatched Agent-tool review subagent; blocked by the /loop-only guard (issue #814), since this isn't a /loop session."
     solution: For a dispatched Agent-tool subagent, don't schedule a wakeup at all — it self-notifies on completion; just end the turn.
     severity: nit
-durationSec: 656
+durationSec: 956
 models:
-  claude-sonnet-5: 112
+  claude-sonnet-5: 139
 toolCounts:
-  Bash: 29
+  Bash: 33
   Read: 8
   Grep: 1
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__issue_read: 1
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 7
   Write: 6
-  Edit: 3
+  Edit: 5
   Agent: 1
   ScheduleWakeup: 1
   mcp__github__search_pull_requests: 1
@@ -56,12 +56,17 @@ toolCounts:
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/blog/content/eyra/pages/2026-09-20-the-logbook-forgot-how-old-its-own-last-entry-was.md
 docsReadViaShell:
   - CONTEXT.md
   - .agents/skills/frictions-to-fixes/SKILL.md
   - docs/agents/git-conventions.md
+  - docs/agents/pr-workflow.md
 subagents:
   - type: general-purpose
     task: Judge three blog draft candidates
