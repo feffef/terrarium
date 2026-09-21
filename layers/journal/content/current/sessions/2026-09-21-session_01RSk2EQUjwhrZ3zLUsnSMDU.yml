@@ -1,15 +1,17 @@
 schemaVersion: 1
 session: session_01RSk2EQUjwhrZ3zLUsnSMDU
 startedAt: 2026-09-21T00:15:54Z
-endedAt: 2026-09-21T00:22:18Z
+endedAt: 2026-09-21T00:26:54Z
 kind: autonomous
 goal: Run the scheduled /digest sweep for 2026-09-20
-status: in-review
-outcome: "Digest authored, retention sweep run, PR #1287 open and gate green"
-summary: "Entirely agent-initiated scheduled run (no human prompt this session). Authored the 2026-09-20 Digest from scripts/digest.ts gather output (6 sessions, 5 merged PRs; sharpest friction a prune-trial-window.ts git-log false positive misreporting a trial as landed 12 days early), ran the retention sweep (archived the 2026-09-13 digest plus 7 same-day session logs), cleared pnpm gate:scoped (non-inert archive path triggered the full gate, all steps including test:e2e green), and opened PR #1287. Subscribed to the PR's activity; will land it once CI confirms green, per the digest Skill's ADR-0003 self-merge allowance."
+status: completed
+outcome: "Digest authored, retention sweep run, PR #1287 merged with green gate"
+summary: "Entirely agent-initiated scheduled run (no human prompt this session). Authored the 2026-09-20 Digest from scripts/digest.ts gather output (6 sessions, 5 merged PRs; sharpest friction a prune-trial-window.ts git-log false positive misreporting a trial as landed 12 days early), ran the retention sweep (archived the 2026-09-13 digest plus 7 same-day session logs), cleared pnpm gate:scoped (non-inert archive path triggered the full gate, all steps including test:e2e green), opened PR #1287, posted the pre-merge verdict comment, and landed it via merge-pr.ts once CI's gate check went green. Unsubscribed from PR activity and cancelled the follow-up check-in after the merge."
 prs:
   - "1287"
-docsRead: []
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -18,17 +20,24 @@ skillsUsed:
   - name: digest
     reason: (invoked as a slash command)
 frictions: []
-durationSec: 385
+durationSec: 660
 models:
-  claude-sonnet-5: 64
+  claude-sonnet-5: 101
 toolCounts:
-  Bash: 23
-  Write: 2
-  ToolSearch: 1
+  Bash: 26
+  Write: 3
+  ToolSearch: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 7
+  mcp__Claude_Code_Remote__send_later: 1
+  Read: 1
+  mcp__github__pull_request_review_write: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-09-20.md
 gitBranch: claude/compassionate-lovelace-y34xpx
