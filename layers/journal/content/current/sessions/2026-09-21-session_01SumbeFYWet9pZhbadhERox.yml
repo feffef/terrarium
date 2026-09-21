@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01SumbeFYWet9pZhbadhERox
 startedAt: 2026-09-21T13:14:58Z
-endedAt: 2026-09-21T13:26:54Z
+endedAt: 2026-09-21T13:31:43Z
 kind: autonomous
 goal: Run scheduled /prune-trial — judge trials, maybe prune one
-status: in-review
-outcome: Two trials judged (held); no new candidate found
-summary: "Scheduled, unprompted run of /prune-trial. Judged the two open trials past their 3-day window: docs/agents/github-integration.md's angle-brackets/ issue_write compression and docs/agents/git-conventions.md's shallow-checkout compression. Both held — no post-landing frictions traced to the compressed text (one unrelated nit found, plus no regression issues filed) — so both entries were deleted from .agents/prune-trials.yml. Dispatched a background subagent to search the full instruction corpus for a new problem worth pruning (criterion 1: prose whose own failure is on the tracker; criterion 2: prose mass); it reported nothing clears the bar this run, since five prior trials already cleared the easy backlog and the two live tracker regressions it found (#1276, #1168) have no enforcing mechanism yet, so pruning their already-minimal source prose would remove the only guidance that exists — the skill explicitly allows reporting nothing found rather than forcing a weak candidate. Ran pnpm exec tsx scripts/validate-prune-trials.ts and pnpm gate:scoped (build + full e2e passed) before opening PR #1291, then subscribed to its activity. Entirely agent-initiated per the scheduled task; no live human input this session."
+status: completed
+outcome: Two trials judged (held) and merged; no new prune
+summary: "Scheduled, unprompted run of /prune-trial. Judged the two open trials past their 3-day window: docs/agents/github-integration.md's angle-brackets/ issue_write compression and docs/agents/git-conventions.md's shallow-checkout compression. Both held — no post-landing frictions traced to the compressed text (one unrelated nit found, plus no regression issues filed) — so both entries were deleted from .agents/prune-trials.yml. Dispatched a background subagent to search the full instruction corpus for a new problem worth pruning (criterion 1: prose whose own failure is on the tracker; criterion 2: prose mass); it reported nothing clears the bar this run, since five prior trials already cleared the easy backlog and the two live tracker regressions it found (#1276, #1168) have no enforcing mechanism yet, so pruning their already-minimal source prose would remove the only guidance that exists — the skill explicitly allows reporting nothing found rather than forcing a weak candidate. Ran pnpm exec tsx scripts/validate-prune-trials.ts and pnpm gate:scoped (build + full e2e passed) before opening PR #1291, subscribed to its activity, then confirmed CI green (gate check), mergeable_state clean, no review threads, eyeballed one advisory check-conflicting-issues.ts hit as unrelated, posted the merge verdict comment, and landed via scripts/merge-pr.ts (prune-trial's green-gate-alone merge tier per pr-workflow.md). Entirely agent-initiated per the scheduled task; no live human input this session."
 prs:
   - "1291"
 docsRead:
@@ -16,6 +16,8 @@ docsRead:
     reason: territory of a judged trial
   - path: docs/agents/git-conventions.md
     reason: territory of a judged trial
+  - path: docs/agents/pr-workflow.md
+    reason: the land-a-gated-PR recipe and merge-authority tier
   - path: docs/research/rulebook-migration-table.md
     reason: (no reason given)
   - path: docs/agents/guards.md
@@ -23,8 +25,6 @@ docsRead:
   - path: docs/agents/mdc-when-to-use.md
     reason: (no reason given)
   - path: docs/agents/tenant-layers.md
-    reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: docs/agents/issue-tracker.md
     reason: (no reason given)
@@ -54,23 +54,28 @@ skillsUsed:
   - name: log-session
     reason: authoring this log
 frictions: []
-durationSec: 717
+durationSec: 1005
 models:
-  claude-sonnet-5: 75
+  claude-sonnet-5: 118
 toolCounts:
-  Bash: 19
-  ToolSearch: 1
+  Bash: 24
+  ToolSearch: 3
   mcp__github__search_issues: 4
-  Read: 2
+  Read: 3
   Edit: 2
   Agent: 1
   ScheduleWakeup: 1
-  ReadNotifications: 1
+  ReadNotifications: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
+  Write: 2
+  mcp__github__pull_request_read: 4
+  mcp__github__actions_list: 2
+  Monitor: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
 docsReadViaShell:
