@@ -392,8 +392,8 @@ an idea (most runs will have none — that's fine).
 
 ## 7. Clear the safety gate
 
-Run `pnpm gate:scoped` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
-it runs). Done when it's green.
+Run `pnpm gate:scoped` — step 1 of `docs/agents/pr-workflow.md`'s "Closing a
+self-merged chartered run" sequence. Done when it's green.
 
 ## 8. Commit, push, open the gated PR — self-merge Inventory-only changes on green
 
@@ -407,17 +407,14 @@ it runs). Done when it's green.
   refresh). A change riding on step 4's regression signal alone does not belong
   in this PR.
 - Commit (one run rides one commit/PR), push with retry, and open **one gated
-  PR** citing the evidence per entry.
-- Subscribe on open and land via `docs/agents/pr-workflow.md`'s recipe once
-  green — the same landing path `digest`/`audit-docs` use (ADR-0004's
-  low-risk content tier, ADR-0003/0015 — this Skill is the third name on that
-  exemption list). Leave a one-line PR comment citing the evidence per change
-  (pr-workflow.md step 4 says why).
-- **Escalate instead — leave the PR open for a human** — if the gate is red for
-  a reason that isn't yours, or the diff touches anything beyond Inventory YAML
-  (a human-only surface, or step 4-6 output that slipped in by mistake).
-
-**At PR-open, invoke `close-session`** — your first log (`in-review`).
+  PR** citing the evidence per entry, then follow
+  `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run"
+  sequence — this Skill is the third name on its low-risk-content exemption
+  list (ADR-0004/0003/0015). Leave a one-line PR comment citing the evidence
+  per change (pr-workflow.md step 4 says why).
+- **Escalate instead — leave the PR open for a human** — if the diff touches
+  anything beyond Inventory YAML (a human-only surface, or step 4-6 output
+  that slipped in by mistake).
 
 Done when the gate is green and the PR is merged (by you), or open and honestly escalated.
 

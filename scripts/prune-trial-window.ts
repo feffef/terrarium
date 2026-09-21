@@ -86,7 +86,11 @@ export function parseTrials(yamlText: string): Trial[] {
  *  output by position (both walk the same `- problem: >` occurrences); if
  *  that pairing were ever to drift, the failure mode is a `-S` miss, i.e.
  *  "NOT FOUND" — the fail-safe direction (ADR-0027: "silence is not
- *  evidence"), never a false-positive judgeable window. */
+ *  evidence"). That's not the only failure mode: two trials sharing the
+ *  same first line collide in the `-S` search itself and can return a
+ *  real but wrong landing commit with no warning — verify the returned
+ *  commit actually names this trial's own problem before trusting it
+ *  (issue #1285). */
 export function rawProblemFirstLines(yamlText: string): string[] {
   const lines: string[] = []
   const re = /-\s*problem:\s*>\s*\n\s+(.+)\n/g

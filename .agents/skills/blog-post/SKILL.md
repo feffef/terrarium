@@ -130,7 +130,8 @@ the page renders it. Ground every claim in something real from step 3.
 
 **Tags**: before drafting `tags`, read `layers/blog/tenant.config.ts`'s curated
 `blogTags` enum — draw every tag from it, don't infer plausible-sounding names
-from other posts; an out-of-vocabulary tag fails `pnpm validate:content`.
+from other posts; an out-of-vocabulary tag fails `pnpm validate:content`. Aim
+for 2-5 (the norm, not schema-enforced — CONTEXT.md's Tag term).
 
 `publishedAt` should be roughly **when the post is finalized and committed** —
 run `date -u +%Y-%m-%dT%H:%M:%SZ` right before saving, not a time picked earlier
@@ -248,8 +249,9 @@ do/don't list.** Confirm it actually reads *in that Persona's voice* and is
 isn't. Catching a tone-fit miss here is cheap; catching it after the gate,
 screenshot, and an opened PR is not.
 
-Run `pnpm gate:scoped` (CLAUDE.md's **Self-verification** section owns what it runs) —
-a new post adds no collection, but a malformed `reactsTo`/pingback fails L1.
+Run `pnpm gate:scoped` — step 1 of `docs/agents/pr-workflow.md`'s "Closing a
+self-merged chartered run" sequence — a new post adds no collection, but a
+malformed `reactsTo`/pingback fails L1.
 
 Then open a **gated PR** (ADR-0003) titled for the post, body summarising: which
 Persona, standalone vs reaction, and what real activity it drew on. Also note in
@@ -260,21 +262,14 @@ and — one line — the rotation state A0 read (who was `last`, who was starved
 the persona choice is auditable. That whole provenance is worth a few sentences,
 not a full transcript.
 
-**At PR-open, invoke `close-session`** — your first log (`in-review`).
-
-**Then let it land once the CI gate is green** (ADR-0003 amendment; ADR-0004's
-content-only low-risk tier) — allowed only while the PR stays within this
-Skill's ADR-0003 ledger-row scope
-(`docs/adr/0003-agent-operating-model-and-governance.md`). A blog post is
-squarely low-risk content, and its editorial judgement was already spent in
-the A5 outside-read, so the merge decision is safely delegated to the
-objective gate:
-
-- Subscribe on open and land via `docs/agents/pr-workflow.md`'s recipe once
-  green; if the failure isn't the post's fault, leave the PR open and
-  escalate to a human instead.
-- If anything **outside the blog-content scope** above rode into the PR, do
-  **not** run `merge-pr.ts` — leave it open for human review (ADR-0003's default).
+Follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run"
+sequence — allowed only while the PR stays within this Skill's ADR-0003
+ledger-row scope (`docs/adr/0003-agent-operating-model-and-governance.md`). A
+blog post is squarely low-risk content, and its editorial judgement was
+already spent in the A5 outside-read, so the merge decision is safely
+delegated to the objective gate. If anything **outside the blog-content
+scope** above rode into the PR, do **not** run `merge-pr.ts` — leave it open
+for human review (ADR-0003's default).
 
 Done when the PR has **merged with a green gate**, or — in the escalation case
 above — is open and honestly awaiting a human.

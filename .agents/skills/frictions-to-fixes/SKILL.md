@@ -1,6 +1,6 @@
 ---
 name: frictions-to-fixes
-description: Mine the Journal's session-log frictions and ship fixes autonomously — file up to 10 issues (at most 2 hard), dispatch Sonnet impl agents as gated PRs, then review-and-merge them yourself, escalating only genuinely high-risk changes to humans.
+description: Mine the Journal's session-log frictions and ship fixes autonomously — select up to 10 per run (at most 2 hard, the only ones that become issues), dispatch Sonnet impl agents as gated PRs, then review-and-merge them yourself, escalating only genuinely high-risk changes to humans.
 disable-model-invocation: true
 ---
 
