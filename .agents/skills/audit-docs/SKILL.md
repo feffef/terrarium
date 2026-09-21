@@ -255,19 +255,20 @@ left undecided.
 
 ## 7. Clear the safety gate
 
-Run `pnpm gate:scoped` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
-it runs). Most doc edits don't touch the build, but run it anyway — a Skill's
-frontmatter or a moved path can. Done when it's green.
+Run `pnpm gate:scoped` — step 1 of `docs/agents/pr-workflow.md`'s "Closing a
+self-merged chartered run" sequence. Most doc edits don't touch the build,
+but run it anyway — a Skill's frontmatter or a moved path can. Done when it's
+green.
 
 ## 8. Commit, push, open one gated PR, self-merge on green
 
-Commit the fixes (one run rides one commit/PR), push with retry, and open **one
-gated PR** listing what was fixed and any issue filed. **This PR self-merges on a
+Follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run"
+sequence. This run's own diff is the fixes (one run rides one commit/PR) plus
+any issue filed; the PR body lists what was fixed and any issue filed, and
+gets a one-line PR comment as the audit trail. **This PR self-merges on a
 green gate** (ADR-0003 amendment) — the reconciliations are fact-checked and
 touch no human-only surface, so this is ADR-0004's low-risk content tier (a
-second, bounded grant of the same kind as `digest`'s). Subscribe on open and
-land via `docs/agents/pr-workflow.md`'s recipe once green. Leave a one-line
-PR comment as the audit trail.
+second, bounded grant of the same kind as `digest`'s).
 
 **Keep human-only-surface fixes out of this PR — those escalate instead.** A fix
 that touches an ADR **at all** (either edit category, ADR-0018 — see the
@@ -282,11 +283,7 @@ separately human-reviewed PR** — not one PR per finding (see the Historical-ti
 note above) — subscribe to it, and babysit it to merge/close. **If a prior
 sweep's escalation PR is still open, unmerged, and touches the same file this
 sweep's finding also touches, extend that existing branch/PR instead of
-opening a competing one.** Likewise, if the gate is red for a reason that isn't
-yours, leave the PR open for a human rather than merging red — fix on the
-branch or escalate honestly instead.
-
-**At PR-open, invoke `close-session`** — your first log (`in-review`).
+opening a competing one.**
 
 Done when the PR is merged green, or open and honestly escalated.
 

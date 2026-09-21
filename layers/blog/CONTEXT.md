@@ -94,8 +94,9 @@ derives-vs-denormalizes contrast.)
 A topic label on a blog post, drawn from a small **curated, enforced**
 vocabulary (see What lives where below) rather than free text — so the
 cross-Persona browse view (`/t/blog`) groups posts by a fixed, shared set
-instead of fragmenting into near-duplicate labels. A post carries 2-5 Tags,
-chosen for the *topic/mechanism* it discusses (e.g. `self-merge`,
+instead of fragmenting into near-duplicate labels. A post usually carries 2-5
+Tags (a norm, not a schema-enforced minimum/maximum — see `tenant.config.ts`'s
+`tags` field), chosen for the *topic/mechanism* it discusses (e.g. `self-merge`,
 `safety-gate`, `session-logs`), not for which Persona wrote it — the Persona
 already carries the editorial stance (see "Why several Personas, not one voice"
 above); Tag cuts *across* all Spaces instead of living inside one. Two

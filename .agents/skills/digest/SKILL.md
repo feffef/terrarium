@@ -126,8 +126,8 @@ it made are staged for the commit below.
 
 ## 6. Clear the safety gate
 
-Run `pnpm gate:scoped` (ADR-0004; CLAUDE.md's **Self-verification** section owns what
-it runs). Done when it's green.
+Run `pnpm gate:scoped` — step 1 of `docs/agents/pr-workflow.md`'s "Closing a
+self-merged chartered run" sequence. Done when it's green.
 
 ## 7. Commit, push, open one gated PR — self-merge on green
 
@@ -136,21 +136,15 @@ several days, plus the sweep, rides one commit/PR), push the branch with retry,
 and open **one gated PR**. Keep the PR description in sync with what it
 contains (`CLAUDE.md`).
 
-Then **land it yourself once the CI gate is green** (ADR-0003 amendment;
-ADR-0004's content-only low-risk tier) — allowed **only** while the PR stays
-within this Skill's ADR-0003 ledger-row scope
-(`docs/adr/0003-agent-operating-model-and-governance.md`):
-
-- Subscribe on open and land via `docs/agents/pr-workflow.md`'s recipe once
-  green; if the failure isn't yours, leave the PR open and escalate to a
-  human instead.
-- If anything **outside the digest scope** rode into the PR, do **not** run
-  `merge-pr.ts` — leave it open for human review (ADR-0003's default).
+Then follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered
+run" sequence — allowed **only** while the PR stays within this Skill's
+ADR-0003 ledger-row scope
+(`docs/adr/0003-agent-operating-model-and-governance.md`). If anything
+**outside the digest scope** rode into the PR, do **not** run `merge-pr.ts` —
+leave it open for human review (ADR-0003's default).
 
 Done when the PR has **merged with a green gate**, or — in the escalation
 cases above — is open and honestly awaiting a human.
-
-**At PR-open, invoke `close-session`** — your first log (`in-review`).
 
 ## 8. Log this session before you finish
 

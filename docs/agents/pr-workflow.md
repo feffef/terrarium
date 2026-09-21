@@ -118,3 +118,24 @@ without `--force-with-lease` since it's effectively a new remote branch.
   `.agents/skills/guest-build/SKILL.md`'s "one hard subtraction" section and
   ADR-0023).
 - An ordinary work PR — merged by a human, never self-merged.
+
+## Closing a self-merged chartered run
+
+Every chartered Skill in the tier list above closes the same way once its own
+scope-specific work is staged — each Skill's own SKILL.md states only its
+delta from this sequence (what its diff must be limited to, and what to do
+when something rides outside that scope):
+
+1. Run `pnpm gate:scoped` (ADR-0004; CLAUDE.md's **Self-verification** section
+   owns what it runs). Done when it's green.
+2. Commit (one run rides one commit/PR), push with retry, and open **one
+   gated PR** scoped to that Skill's own diff.
+3. Subscribe on open and land via this doc's recipe once green.
+4. **At PR-open, invoke `close-session`** — your first log (`in-review`).
+5. If the gate is red for a reason that isn't yours, or anything outside the
+   Skill's own scope rode into the diff, leave the PR open and escalate to a
+   human instead of merging — never force a self-merge past scope or a red
+   gate.
+
+Log the session per CLAUDE.md's "Logging your session" section once the PR is
+merged or honestly left open.

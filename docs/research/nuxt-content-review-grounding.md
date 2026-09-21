@@ -199,7 +199,8 @@ Docs: `nuxt/nuxt` `docs/2.directory-structure/1.layers.md` and
   them to `_extends` (`@nuxt/kit/dist/index.mjs:793-798`) — the glob itself
   does not check for a config file, but the docs state the contract: "Every
   layer **must have** a `nuxt.config.ts` file to be recognized as a valid
-  layer, even if it's empty." (All three layers in this repo have one.)
+  layer, even if it's empty." (Every layer in this repo has one — see
+  `CONTEXT.md`'s Tenants roster for the current count.)
 - **Priority** (getting-started/14.layers.md "Layer Priority", highest first):
   1. **project files**, 2. **auto-scanned `~~/layers`** — "sorted
   alphabetically (**Z has higher priority than A**)", 3. **`extends` entries**

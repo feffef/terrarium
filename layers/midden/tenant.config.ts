@@ -55,6 +55,10 @@ const condition = z.enum(['fresh', 'intact', 'fragmentary', 'dissolved', 'never-
 //   - a `commit` path means "the path this commit touched", not "this path is
 //     retired" — so it screens only the deletion its own `hash` performed, and a
 //     later deletion of a path this commit merely edited stays a candidate (#761).
+//   - an "unapplied proposal" (the header comment above) isn't a `kind` of its
+//     own — it's catalogued by whichever concrete form it took: `file` for a
+//     `docs/proposals/*.md` file that never landed, `commit` for one that only
+//     ever lived as a session's committed work (e.g. `the-third-onramp.yml`).
 const provenance = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('pr'), number: z.number().int().positive(), merged: z.boolean(), url: z.string().url().optional(), continuityCheck: z.string().optional() }).strict(),
   z.object({ kind: z.literal('branch'), name: z.string(), url: z.string().url().optional(), continuityCheck: z.string().optional() }).strict(),
