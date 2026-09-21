@@ -1,0 +1,91 @@
+schemaVersion: 1
+session: session_01SumbeFYWet9pZhbadhERox
+startedAt: 2026-09-21T13:14:58Z
+endedAt: 2026-09-21T13:26:54Z
+kind: autonomous
+goal: Run scheduled /prune-trial — judge trials, maybe prune one
+status: in-review
+outcome: Two trials judged (held); no new candidate found
+summary: "Scheduled, unprompted run of /prune-trial. Judged the two open trials past their 3-day window: docs/agents/github-integration.md's angle-brackets/ issue_write compression and docs/agents/git-conventions.md's shallow-checkout compression. Both held — no post-landing frictions traced to the compressed text (one unrelated nit found, plus no regression issues filed) — so both entries were deleted from .agents/prune-trials.yml. Dispatched a background subagent to search the full instruction corpus for a new problem worth pruning (criterion 1: prose whose own failure is on the tracker; criterion 2: prose mass); it reported nothing clears the bar this run, since five prior trials already cleared the easy backlog and the two live tracker regressions it found (#1276, #1168) have no enforcing mechanism yet, so pruning their already-minimal source prose would remove the only guidance that exists — the skill explicitly allows reporting nothing found rather than forcing a weak candidate. Ran pnpm exec tsx scripts/validate-prune-trials.ts and pnpm gate:scoped (build + full e2e passed) before opening PR #1291, then subscribed to its activity. Entirely agent-initiated per the scheduled task; no live human input this session."
+prs:
+  - "1291"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the ledger being judged and pruned
+  - path: docs/agents/github-integration.md
+    reason: territory of a judged trial
+  - path: docs/agents/git-conventions.md
+    reason: territory of a judged trial
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: the scheduled task itself
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions: []
+durationSec: 717
+models:
+  claude-sonnet-5: 75
+toolCounts:
+  Bash: 19
+  ToolSearch: 1
+  mcp__github__search_issues: 4
+  Read: 2
+  Edit: 2
+  Agent: 1
+  ScheduleWakeup: 1
+  ReadNotifications: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - .agents/prune-trials.yml
+docsReadViaShell:
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Find prune-trial criterion-1 candidate
+gitBranch: claude/practical-rubin-wkuk2g
+entrypoint: remote_trigger
+cliVersion: 2.1.278
+trigger: prune-trial
+landedBy: Stop
