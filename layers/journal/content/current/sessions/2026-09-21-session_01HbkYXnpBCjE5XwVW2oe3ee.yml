@@ -1,0 +1,72 @@
+schemaVersion: 1
+session: session_01HbkYXnpBCjE5XwVW2oe3ee
+startedAt: 2026-09-21T11:07:04Z
+endedAt: 2026-09-21T11:22:19Z
+kind: autonomous
+goal: Run the scheduled /blog-post sweep
+status: in-review
+outcome: "PR #1290 opened (Karen)"
+summary: "Scheduled, unattended firing of the /blog-post command (no live human input this session; the stored prompt named no persona). The Skill tool refused model-invocation as designed (disable-model-invocation: true), so I executed the skill's steps directly per its own documented fallback. Ran the A0 rotation gate (scripts/blog-rotation.ts), which left david/karen/kevin eligible (eyra posted last). Gathered material from the last ~20 session logs and recent git history, then drafted three full candidates in the scratchpad: Karen on issue #1285 (prune-trial-window.ts's git log -S search colliding two trials sharing an opening line, stamping the wrong one JUDGEABLE against a commit that isn't its own — still open), Kevin on PR #1289's single-homing of a closing sequence duplicated across four Skills' SKILL.md files, and David on PR #1288's commit-trailer-guard.ts message fix. A fresh, tool-restricted outside-reader subagent picked Karen's on underlying weight (a live, unresolved safety-tool bug beats a doc dedup and a message-wording fix) and named legibility gaps (undefined ADR-0027/ JUDGEABLE/needs-triage, missing stakes); revised to close them, caught and fixed a wrong \"five days\" elapsed-time claim against the verified ~22 hours, and reproduced the underlying bug live by rerunning scripts/prune-trial-window.ts myself before publishing. Ran pnpm gate:scoped (full sequence — content isn't inert; green, including test:e2e's 79 tests), committed, pushed, and opened PR #1290 with subscribe_pr_activity on. All actions this session were agent-initiated end to end; no human intervened at any point."
+prs:
+  - "1290"
+docsRead:
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: voice/do-don't for all three drafts
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: voice/do-don't for all three drafts
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: voice/do-don't for all three drafts
+  - path: CLAUDE.md
+    reason: PR-auto-open rule, gate:scoped conventions
+  - path: layers/blog/tenant.config.ts
+    reason: curated blogTags enum for frontmatter
+  - path: docs/adr/0027-prune-trials.md
+    reason: grounding the prune-trial mechanism cited in the winning post
+skillsUsed:
+  - name: blog-post
+    reason: invoked by the scheduled trigger; executed by hand per its own Skill-tool-refusal fallback
+  - name: close-session
+    reason: closure trigger at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Ran `pnpm gate:scoped` in the foreground instead of starting it with run_in_background:true from the outset; it hit the 2-minute timeout and auto-backgrounded, the exact pattern CLAUDE.md warns silently reproduces the tail-piping guard's failure mode.
+    solution: Start any known-long command (full gate, gate:scoped, build, e2e) with run_in_background:true from the start, logging to the scratchpad, per CLAUDE.md's explicit instruction — no new fix needed, just a personal near-miss to log.
+    severity: nit
+  - description: "Called ScheduleWakeup once to wait after dispatching the A5 review subagent; blocked by the /loop-only guard (issue #814) since this isn't a /loop session."
+    solution: For a dispatched Agent-tool subagent, don't schedule a wakeup at all — it self-notifies on completion; just end the turn.
+    severity: nit
+durationSec: 915
+models:
+  claude-sonnet-5: 137
+toolCounts:
+  Bash: 44
+  Read: 6
+  ToolSearch: 2
+  mcp__github__issue_read: 1
+  Write: 6
+  Agent: 1
+  ScheduleWakeup: 1
+  Edit: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/blog/content/karen/pages/2026-09-21-the-safety-check-passed-by-lying.md
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+subagents:
+  - type: general-purpose
+    task: Judge three blog draft candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-nwppf7
+entrypoint: remote_trigger
+cliVersion: 2.1.278
+trigger: blog-post
+landedBy: Stop
