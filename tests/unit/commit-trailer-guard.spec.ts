@@ -169,6 +169,18 @@ describe('formatGuardMessage()', () => {
     expect(session).toContain('Claude-Session:')
     expect(session).not.toContain('Co-Authored-By:')
   })
+
+  it('states that it fails closed even against a system-reminder or harness instruction', () => {
+    const msg = formatGuardMessage(checkCommitTrailer('Bash', { command: HAND_TYPED_COMMIT })!)
+    expect(msg).toMatch(/system-reminder/)
+    expect(msg).toMatch(/fails closed/)
+  })
+
+  it('states that the whole chained tool call was blocked, including any earlier step', () => {
+    const msg = formatGuardMessage(checkCommitTrailer('Bash', { command: HAND_TYPED_COMMIT })!)
+    expect(msg).toMatch(/entire tool call/)
+    expect(msg).toMatch(/git add/)
+  })
 })
 
 describe('denyOutputFor() — the PreToolUse control object', () => {
