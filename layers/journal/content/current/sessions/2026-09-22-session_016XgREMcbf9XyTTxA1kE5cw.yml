@@ -1,0 +1,47 @@
+schemaVersion: 1
+session: session_016XgREMcbf9XyTTxA1kE5cw
+startedAt: 2026-09-22T00:45:38Z
+endedAt: 2026-09-22T00:51:44Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: "Clean run: no Inventory changes, no confirmed regressions"
+summary: "Fully agent-initiated scheduled /audit-skills run, no human prompt beyond the Routine firing. Gathered the scorecard via scripts/audit-skills.ts (40-session window, all 36 Skills onDisk and inventoried, no phantom or missing entries). Step 3: every Skill's grade/role already matched its usage evidence — the window is saturated by the six rotating scheduled Skills plus close-session/log-session/dispatch-subagents, all graded consistently with that; no unused-but-in-domain sessions existed to justify a demotion, and no bright-line (>=2 session) promotion signal existed either, so no .yml edits were warranted. Step 4: checked all 9 regressionChecks brackets; three showed a Phase-A signal worth a Phase-B deep-read (dispatch-subagents' and blog-post's single after-session, log-session's after-bracket carrying one new moderate friction) — read every bracketed session's full friction text and found each was about a different, coincidentally co-occurring concern (frictions-to-fixes' survey brief, a prune-trial glob-detection miss, a tail-pipe guard habit), never the edited Skill's own guidance, so all three landed Inconclusive per the Skill's own bucketing (write nothing). Step 2/5: orphanedSessions has 2 entries, both already carrying a `resolvedBy` cutoff (#736, #1063) — read-only history, not re-filed. orphanScan was `scanned: true` (787 merged PRs, 641 with session) — trustworthy, not an inconclusive run. orphanSuppressionLog's 2 entries are both `resolved-annotation`, consistent with the same two resolved orphans. humanPromptedClosures and manuallyRescuedClosures were both empty (healthy). misclassifiedKind was empty. With no citable change to make, no Inventory PR was opened this run (CLAUDE.md: a session that commits nothing beyond the session log isn't substantive and has nothing to gate)."
+prs: []
+docsRead:
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: this run's own instructions
+  - path: scripts/audit-skills.ts
+    reason: understanding docReadCounts/regressionChecks caveats before citing them
+  - path: layers/journal/content/current/sessions/2026-09-15-session_015DSdzQUMV99Sn8asUkP3UU.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-15-session_01JDnirPS6wLbvF6pAKR92aT.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-16-session_019jqXtQ9Aro2z4RvrZZpJ1Y.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: this session's own invoked Skill
+  - name: close-session
+    reason: closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Assumed the scorecard's per-session object used an `id` key when writing the first ad-hoc Python summary; it's actually `session` — a one-line fix once the KeyError surfaced.
+    solution: No doc change needed — self-caught immediately from the traceback.
+    severity: nit
+durationSec: 366
+models:
+  claude-sonnet-5: 61
+toolCounts:
+  Bash: 26
+  Read: 3
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-jizfvj
+entrypoint: remote_trigger
+cliVersion: 2.1.278
+trigger: audit-skills
+learnings:
+  - close-session/log-session/dispatch-subagents are used in nearly every autonomous session regardless of that session's actual work (they're mechanical closure/dispatch steps), so a Phase-A friction-severity shift in their regressionChecks bracket is disproportionately likely to be about whatever Skill that session was actually running, not about the edited essential Skill itself — Phase B's full deep-read is what actually separates the two, not the bracket alone. Worth remembering as the essential-Skill counterpart to the already-recorded rotating-Skill bracket-dilution idea (audit-skills.yml's 2026-09-13 observation).
+landedBy: Stop
