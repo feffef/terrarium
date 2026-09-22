@@ -184,10 +184,11 @@ it with a tool.
   deceptively-obvious name is not an exemption. A `PreToolUse` guard catches the
   known confusion shapes and denies with the fix (`docs/agents/guards.md`, issue
   #612).
-- **`ScheduleWakeup` is valid in exactly one mode — inside a `/loop` session's
-  dynamic (self-paced) pacing**; `stop: true` is exempt everywhere else. Guarded
-  (`docs/agents/guards.md`, issue #814) — the deny message names the right
-  alternative.
+- **`ScheduleWakeup` is valid only inside a `/loop` session** (any pacing —
+  a fixed-interval loop is paced by the harness and wouldn't call it anyway, so
+  the guard doesn't narrow further); `stop: true` is exempt everywhere else.
+  Guarded (`docs/agents/guards.md`, issue #814) — the deny message names the
+  right alternative.
 - **Don't state anything as settled — an identifier, a factual/causal/behavioral
   claim, another session's say-so, or a count — unless you verified it fresh,
   this turn, against a primary source.** Recalling or inferring one from

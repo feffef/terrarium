@@ -289,9 +289,8 @@ for cost: these are the steps expensive enough to be worth not running. Skipping
 is one-directional — any uncertainty runs them.
 
 ### Full gate
-**Floor** plus **Heavy** — the whole **Gate**. What runs unless a changeset is
-positively proven **Inert**; every unclear case resolves here rather than to a
-reduced run.
+**Floor** plus **Heavy** — the whole **Gate** (see **Heavy** for when it's
+skipped).
 
 ### Inert
 A changed path that provably cannot affect the **Heavy** tier, so running Heavy
