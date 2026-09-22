@@ -1,0 +1,50 @@
+schemaVersion: 1
+session: session_015n42X8PJWPrThzfgm7cUYF
+startedAt: 2026-09-22T02:04:53Z
+endedAt: 2026-09-22T02:12:21Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: completed
+outcome: No fixes ripe; filed one regression issue
+summary: "Fully agent-initiated scheduled frictions-to-fixes run, no human prompt beyond the Routine firing. Dispatched a read-only survey subagent to read the last 20 session logs' frictions and screen them against the GitHub tracker per the Skill's rules. Result: zero never-fixed candidates survived screening — every substantive friction in the window was already fixed in-window (3 cases, cited) or already tracked by an open issue (2 cases, #1276 and #1285), so no impl agents were dispatched and no PR was needed this run. The one actionable finding was a regression: PR #1282's CLAUDE.md doc fix (foreground-run known-long commands should use run_in_background:true) recurred twice after merging, in sessions that in one case had demonstrably read the doc anyway — proving a second doc-only pass would likely not hold either. Verified the regression myself (fetched PR #1282, confirmed merge time and fix content, re-read both recurring sessions' raw YAML frictions, confirmed no existing issue covers it) before filing issue #1293, recommending a mechanical PreToolUse guard (this Skill's own rule: guard authorship is human-only, never dispatchable) rather than a third prose attempt."
+prs: []
+docsRead:
+  - path: CLAUDE.md
+    reason: Ground rules for human-only surfaces and guard-authorship restriction
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: this run's own procedure
+  - name: close-session
+    reason: closure sequence
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Survey subagent's search_issues call with a long, unfocused natural-language query returned an oversized result that spilled to a scratch file instead of returning inline, requiring a re-run with a narrower query and restricted `fields`.
+    solution: Add explicit guidance to the GitHub-MCP-hygiene bullet in frictions-to-fixes/SKILL.md (or docs/agents/github-integration.md) to keep search_issues/search_pull_requests queries narrow and pass `fields` to restrict response size, not just for list_* pagination.
+    severity: minor
+durationSec: 448
+models:
+  claude-sonnet-5: 27
+toolCounts:
+  Bash: 4
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__search_issues: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__issue_write: 2
+  Skill: 2
+  Write: 1
+  PushNotification: 1
+docsReadViaShell:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/guards.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+  - type: general-purpose
+    task: Survey and screen session frictions
+gitBranch: claude/eager-ptolemy-u822qx
+entrypoint: remote_trigger
+cliVersion: 2.1.278
+trigger: frictions-to-fixes
+landedBy: Stop
