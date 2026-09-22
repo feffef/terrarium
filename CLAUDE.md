@@ -231,10 +231,8 @@ it with a tool.
   deny message names the fix (`docs/agents/guards.md`, issue #873).
 - **Start a command expected to run long (the full gate, `gate:scoped`, a
   build, an e2e run) with `run_in_background: true` from the outset**, logging
-  to the scratchpad directory — don't run it in the foreground and let it
-  auto-background on the 2-minute timeout, which never triggers the
-  tail-piping guard above and silently reproduces the same wrong-status
-  failure it exists to catch.
+  to the scratchpad directory — a foreground run can silently auto-background
+  at the 2-minute timeout with a wrong status (issue #1293).
 - **Git mechanics — staleness, history archaeology, commit hygiene, and the
   git-specific chaining/output-discarding footguns (the same "check first"/
   "never silence a state-changing command" discipline as the pkill/tail-piping
