@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01US9eNn2FWXen9Vxt7aQGsy
 startedAt: 2026-09-22T13:07:21Z
-endedAt: 2026-09-22T13:21:43Z
+endedAt: 2026-09-22T13:27:34Z
 kind: autonomous
 goal: Run the scheduled /prune-trial sweep
-status: in-review
-outcome: One trial judged (holds), one new trial opened
-summary: "Fully agent-initiated scheduled run, no human prompt this session. Ran scripts/prune-trial-window.ts to get real landing timestamps for the two open trials; only one (dispatch-subagents/SKILL.md's artifact-naming and scratch-paste bullets, landed 2026-09-18) had cleared its 3-day window. Checked session-frictions.ts output since landing and dispatched an agent to search for a regression issue filed against that territory; found neither, so the prune holds and the entry was deleted. Chose a new criterion-1 candidate via a background corpus survey: CLAUDE.md's \"start a long command with run_in_background: true from the outset\" bullet had already recurred twice per issue #1293 (one recurrence with docsRead confirming the bullet was read and the failure happened anyway). Pruned its trailing why-clause to a bare issue pointer (net -2 lines), left the operative instruction intact, and explicitly did not build the PreToolUse guard #1293 recommends (out of scope per the Skill's Bounds section — escalate, don't build unattended behaviour autonomously; #1293 already tracks it). Verified with a Sonnet probe given only the surviving text plus a real gate-run scenario, which correctly reconstructed all four operative details. pnpm validate:content and the full pnpm gate:scoped (ran in full since the ledger YAML isn't in the inert set) both passed. Opened PR #1296 and subscribed to its activity."
+status: completed
+outcome: One trial judged (holds), one opened and merged
+summary: "Fully agent-initiated scheduled run, no human prompt this session. Ran scripts/prune-trial-window.ts to get real landing timestamps for the two open trials; only one (dispatch-subagents/SKILL.md's artifact-naming and scratch-paste bullets, landed 2026-09-18) had cleared its 3-day window. Checked session-frictions.ts output since landing and dispatched an agent to search for a regression issue filed against that territory; found neither, so the prune holds and the entry was deleted. Chose a new criterion-1 candidate via a background corpus survey: CLAUDE.md's \"start a long command with run_in_background: true from the outset\" bullet had already recurred twice per issue #1293 (one recurrence with docsRead confirming the bullet was read and the failure happened anyway). Pruned its trailing why-clause to a bare issue pointer (net -2 lines), left the operative instruction intact, and explicitly did not build the PreToolUse guard #1293 recommends (out of scope per the Skill's Bounds section — escalate, don't build unattended behaviour autonomously; #1293 already tracks it). Verified with a Sonnet probe given only the surviving text plus a real gate-run scenario, which correctly reconstructed all four operative details. pnpm validate:content and the full pnpm gate:scoped (ran in full since the ledger YAML isn't in the inert set) both passed. Opened PR #1296, subscribed to its activity, and babysat it through CI (gate green, no conflicts, no open review threads). check-conflicting-issues.ts flagged one advisory hit (#1285) that was an unrelated tooling bug, not a real conflict. Posted the verdict as a COMMENT-event review, merged via merge-pr.ts (prune-trial's own tier merges on a green gate alone, per docs/agents/pr-workflow.md), and unsubscribed once merged."
 prs:
   - "1296"
 docsRead:
@@ -16,11 +16,11 @@ docsRead:
     reason: locating and pruning the failed foreground-timeout bullet
   - path: docs/agents/guards.md
     reason: confirming no guard yet covers the new trial's failure mode
+  - path: docs/agents/pr-workflow.md
+    reason: confirming prune-trial's merge-on-green-gate tier and the land recipe
   - path: docs/research/rulebook-migration-table.md
     reason: (no reason given)
   - path: docs/agents/environment-caveats.md
-    reason: (no reason given)
-  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: .agents/skills/blog-post/SKILL.md
     reason: (no reason given)
@@ -35,16 +35,16 @@ frictions:
   - description: "The corpus-survey subagent's top candidate write-up cited issue numbers and recurrence details that needed independent verification before trusting (per CLAUDE.md's \"don't state anything as settled unless verified fresh\" rule) — re-read issue #1293 directly via issue_read rather than taking the subagent's summary at face value."
     solution: No fix needed; this is the intended discipline working as designed — noting it so the pattern (always re-verify a subagent's cited issue/commit against the primary source before acting on it) stays visible.
     severity: nit
-durationSec: 863
+durationSec: 1213
 models:
-  claude-sonnet-5: 101
+  claude-sonnet-5: 135
 toolCounts:
-  Bash: 21
+  Bash: 26
   Agent: 3
   ScheduleWakeup: 1
-  ReadNotifications: 2
+  ReadNotifications: 4
   Grep: 7
-  ToolSearch: 4
+  ToolSearch: 7
   mcp__github__issue_read: 1
   Read: 2
   Edit: 2
@@ -52,11 +52,15 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
+  Write: 2
+  mcp__github__pull_request_read: 6
+  mcp__github__pull_request_review_write: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - CLAUDE.md
   - .agents/prune-trials.yml
 docsReadViaShell:
+  - docs/agents/pr-workflow.md
   - .agents/skills/prune-trial/SKILL.md
   - docs/agents/git-conventions.md
   - .agents/skills/blog-post/SKILL.md
