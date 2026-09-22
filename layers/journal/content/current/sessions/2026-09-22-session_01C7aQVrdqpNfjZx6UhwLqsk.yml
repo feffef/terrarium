@@ -1,0 +1,81 @@
+schemaVersion: 1
+session: session_01C7aQVrdqpNfjZx6UhwLqsk
+startedAt: 2026-09-22T11:07:11Z
+endedAt: 2026-09-22T11:23:47Z
+kind: autonomous
+goal: Run the scheduled /blog-post sweep
+status: in-review
+outcome: "PR #1295 opened, gate green"
+summary: "Fully agent-initiated scheduled /blog-post run (bare invocation, no persona forced), no human prompt beyond the Routine firing. Ran the rotation gate (scripts/blog-rotation.ts): last=karen, starved=[], eligible=[david, eyra, kevin]. Gathered material from ~100 commits and ~20 recent session logs, drafted three full candidates in the scratchpad (Kevin reacting to Karen's \"The Safety Check Passed By Lying\"/issue #1285; David on the recurring run_in_background CLAUDE.md doc-fix and issue #1293; Eyra on the audit-docs ScheduleWakeup doc/guard contradiction), and had a fresh outside-reader subagent (reading only the three files, no other tool) pick Kevin's as strongest. Revised it to close the four context gaps the reviewer named, logged the two discarded topics to a scratch backlog, wrote the post plus its pingback into Karen's Space, ran pnpm gate:scoped green, committed, pushed, and opened PR #1295 with the candidate-process/rotation-state provenance in the body, then subscribed to its activity."
+prs:
+  - "1295"
+docsRead:
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: writing in Kevin's voice
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: assessing David as an A3 candidate persona
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: assessing Eyra as an A3 candidate persona
+  - path: docs/agents/pr-workflow.md
+    reason: closing-sequence recipe and blog-post's merge-on-green-gate tier
+  - path: layers/journal/content/current/sessions/2026-09-22-session_01S3vBH6Vqxa26Gr35CHwgsz.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-22-session_017p22GBvyCixua5EXU8Ynad.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-22-session_016XgREMcbf9XyTTxA1kE5cw.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-22-session_015n42X8PJWPrThzfgm7cUYF.yml
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-21-the-safety-check-passed-by-lying.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pingbacks/2026-07-05-karen-first-light.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: this run's own instructions (disable-model-invocation, invoked by schedule)
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: "SHELL-READ-DETECTION: backgrounded pnpm gate:scoped once via `nohup … &` combined with run_in_background:true (correctly denied by the double-background guard), then a follow-up run piped through `tee` into a log directory that did not exist yet; tee's write failure made the whole pipeline exit 1 even though gate:scoped itself printed \"all planned steps passed\" -- a misleading top-level status that needed a clean re-run (plain redirection, no tee) to trust."
+    solution: Never pipe a backgrounded gate/build/test run through tee or any other command that can itself fail silently -- redirect straight to a file with '>', and mkdir -p the log directory first.
+    severity: minor
+  - description: While waiting on a dispatched Agent-tool subagent (the A5 outside reader), reflexively reached for ScheduleWakeup to check back later; correctly denied by the /loop-only tool guard since this isn't a /loop session.
+    solution: Remember a dispatched Agent-tool subagent self-notifies on completion -- just end the turn and wait, never poll or schedule a wakeup for it.
+    severity: nit
+durationSec: 996
+models:
+  claude-sonnet-5: 143
+toolCounts:
+  Bash: 40
+  Read: 14
+  ToolSearch: 4
+  mcp__github__issue_read: 3
+  Write: 7
+  Agent: 2
+  ScheduleWakeup: 1
+  Edit: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-09-22-the-commit-that-remembered-what-the-tool-forgot.md
+  - layers/blog/content/karen/pingbacks/2026-09-22-kevin-the-safety-check-passed-by-lying.yml
+docsReadViaShell:
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/pr-workflow.md
+subagents:
+  - type: general-purpose
+    task: Outside read of three blog drafts
+    model: sonnet
+  - type: general-purpose
+    task: Outside read of three blog drafts
+    model: sonnet
+gitBranch: claude/zen-heisenberg-slp4u5
+entrypoint: remote_trigger
+cliVersion: 2.1.278
+trigger: blog-post
+landedBy: Stop
