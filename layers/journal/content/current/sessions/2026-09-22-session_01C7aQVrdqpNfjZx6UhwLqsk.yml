@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01C7aQVrdqpNfjZx6UhwLqsk
 startedAt: 2026-09-22T11:07:11Z
-endedAt: 2026-09-22T11:23:47Z
+endedAt: 2026-09-22T11:26:34Z
 kind: autonomous
 goal: Run the scheduled /blog-post sweep
-status: in-review
-outcome: "PR #1295 opened, gate green"
-summary: "Fully agent-initiated scheduled /blog-post run (bare invocation, no persona forced), no human prompt beyond the Routine firing. Ran the rotation gate (scripts/blog-rotation.ts): last=karen, starved=[], eligible=[david, eyra, kevin]. Gathered material from ~100 commits and ~20 recent session logs, drafted three full candidates in the scratchpad (Kevin reacting to Karen's \"The Safety Check Passed By Lying\"/issue #1285; David on the recurring run_in_background CLAUDE.md doc-fix and issue #1293; Eyra on the audit-docs ScheduleWakeup doc/guard contradiction), and had a fresh outside-reader subagent (reading only the three files, no other tool) pick Kevin's as strongest. Revised it to close the four context gaps the reviewer named, logged the two discarded topics to a scratch backlog, wrote the post plus its pingback into Karen's Space, ran pnpm gate:scoped green, committed, pushed, and opened PR #1295 with the candidate-process/rotation-state provenance in the body, then subscribed to its activity."
+status: completed
+outcome: "PR #1295 merged green"
+summary: "Fully agent-initiated scheduled /blog-post run (bare invocation, no persona forced), no human prompt beyond the Routine firing. Ran the rotation gate (scripts/blog-rotation.ts): last=karen, starved=[], eligible=[david, eyra, kevin]. Gathered material from ~100 commits and ~20 recent session logs, drafted three full candidates in the scratchpad (Kevin reacting to Karen's \"The Safety Check Passed By Lying\"/issue #1285; David on the recurring run_in_background CLAUDE.md doc-fix and issue #1293; Eyra on the audit-docs ScheduleWakeup doc/guard contradiction), and had a fresh outside-reader subagent (reading only the three files, no other tool) pick Kevin's as strongest. Revised it to close the four context gaps the reviewer named, logged the two discarded topics to a scratch backlog, wrote the post plus its pingback into Karen's Space, ran pnpm gate:scoped green, committed, pushed, and opened PR #1295 with the candidate-process/rotation-state provenance in the body. Subscribed, posted the pre-merge verdict comment, confirmed CI's safety-gate green, merged via scripts/merge-pr.ts (60767f73), and unsubscribed."
 prs:
   - "1295"
 docsRead:
@@ -44,23 +44,25 @@ frictions:
   - description: While waiting on a dispatched Agent-tool subagent (the A5 outside reader), reflexively reached for ScheduleWakeup to check back later; correctly denied by the /loop-only tool guard since this isn't a /loop session.
     solution: Remember a dispatched Agent-tool subagent self-notifies on completion -- just end the turn and wait, never poll or schedule a wakeup for it.
     severity: nit
-durationSec: 996
+durationSec: 1163
 models:
-  claude-sonnet-5: 143
+  claude-sonnet-5: 159
 toolCounts:
-  Bash: 40
-  Read: 14
-  ToolSearch: 4
+  Bash: 41
+  Read: 15
+  ToolSearch: 5
   mcp__github__issue_read: 3
   Write: 7
   Agent: 2
   ScheduleWakeup: 1
-  Edit: 1
+  Edit: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 3
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/kevin/pages/2026-09-22-the-commit-that-remembered-what-the-tool-forgot.md
   - layers/blog/content/karen/pingbacks/2026-09-22-kevin-the-safety-check-passed-by-lying.yml
