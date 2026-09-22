@@ -150,7 +150,7 @@ issue #99), and **do not** use `CLAUDE_CODE_SESSION_ID` in a CCR/cloud session â
 a different, non-canonical UUID there (the local CLI transcript's own internal id,
 distinct from the CCR-level id this Skill's footer needs). The one exception: a
 plain local CLI session with no CCR wrapper has no *other* id to disagree with it,
-so there `CLAUDE_CODE_SESSION_ID` genuinely is canonical â€” see the note below.
+so there `CLAUDE_CODE_SESSION_ID` genuinely is canonical.
 
 **This field is now a fallback, not the source of truth (issue #387/#449).**
 `scripts/log-session.ts`'s stitch resolves the ground-truth id itself and
