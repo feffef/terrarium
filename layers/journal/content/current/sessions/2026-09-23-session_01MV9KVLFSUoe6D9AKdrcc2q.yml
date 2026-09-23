@@ -1,0 +1,49 @@
+schemaVersion: 1
+session: session_01MV9KVLFSUoe6D9AKdrcc2q
+startedAt: 2026-09-23T00:16:07Z
+endedAt: 2026-09-23T00:24:12Z
+kind: autonomous
+goal: Run the scheduled /digest sweep
+status: in-review
+outcome: Digest authored, sweep run, PR opened, gate green
+summary: "Entirely agent-initiated: fired by a scheduled Routine with no human prompt this session. Ran the /digest Skill for 2026-09-22, the one closed UTC day with activity and no digest yet. Authored the Digest from `scripts/digest.ts gather`'s output (4 merged PRs, 6 completed sessions, 8 frictions), ran the retention sweep (archived 1 aged-out digest + 6 session logs, all dated 2026-09-15), ran `pnpm gate:scoped` (escalated to the full gate since the sweep touched a non-inert content path; all steps including test:e2e passed), and opened PR #1297 scoped to exactly that diff. No index.md edit needed — the Journal dashboard is live. Subscribed to the PR's activity per CLAUDE.md."
+prs:
+  - "1297"
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-09-21.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: "Tried to background `pnpm gate:scoped` with both `nohup … &` in the command text AND `run_in_background: true` on the Bash call — denied by the double-background guard (issue #1208), which CLAUDE.md already warns against explicitly."
+    solution: "Re-ran with a plain foreground command and `run_in_background: true` alone, per the guard's own fix message."
+    severity: nit
+durationSec: 485
+models:
+  claude-sonnet-5: 99
+toolCounts:
+  Bash: 33
+  Read: 2
+  Write: 2
+  ToolSearch: 4
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-09-22.md
+docsReadViaShell:
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+gitBranch: claude/compassionate-lovelace-tbh5vk
+entrypoint: remote_trigger
+cliVersion: 2.1.280
+trigger: digest
+landedBy: Stop
