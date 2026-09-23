@@ -1,30 +1,26 @@
 schemaVersion: 1
 session: session_011Bc6anpFPFoyyRCizp9Zx3
 startedAt: 2026-09-23T04:01:31Z
-endedAt: 2026-09-23T04:16:29Z
+endedAt: 2026-09-23T04:20:31Z
 kind: autonomous
 goal: Scheduled /audit-docs sweep
-status: in-review
-outcome: "Opened self-mergeable PR #1300, gate green"
-summary: "Fully autonomous, scheduler-fired /audit-docs run — no human prompted any part of it. Dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the repo's Live-tier docs and 14 first-class Skills, respecting the two currently-open Prune Trials' territory. Pooled findings: 2 fixable (a Drift — prune-trial's SKILL.md still restated a closing sequence an earlier sweep single-homed into pr-workflow.md; a Contradiction — how-it-works.md claimed every friction becomes a filed issue when frictions-to-fixes's own SKILL.md skips filing for the common simple case), 1 informational Historical note (a blog post misquoting a commit, left untouched per the append-only rule), 1 out-of-charter code finding (a guard script's stale deny text), and 1 already-tracked Ambiguity (issue #864, no new finding needed). No overlapping findings, so no dedupe-merge was needed. A fifth, independent fact-checker agent re-derived all three doc/code-eligible claims from scratch against primary sources and confirmed all three. Fixed the two in-charter findings, ran gate:scoped (escalated to the full sequence, green), committed, pushed, and opened PR #1300, which self-merges on a green gate per ADR-0003. Subscribed to PR activity; will flip this log to completed on merge."
+status: completed
+outcome: "PR #1300 merged (e8a3bb8b), 2 confirmed findings fixed"
+summary: "Fully autonomous, scheduler-fired /audit-docs run — no human prompted any part of it. Dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the repo's Live-tier docs and 14 first-class Skills, respecting the two currently-open Prune Trials' territory. Pooled findings: 2 fixable (a Drift — prune-trial's SKILL.md still restated a closing sequence an earlier sweep single-homed into pr-workflow.md; a Contradiction — how-it-works.md claimed every friction becomes a filed issue when frictions-to-fixes's own SKILL.md skips filing for the common simple case), 1 informational Historical note (a blog post misquoting a commit, left untouched per the append-only rule), 1 out-of-charter code finding (a guard script's stale deny text, recorded as a friction), and 1 already-tracked Ambiguity (issue #864, no new finding needed). No overlapping findings, so no dedupe-merge was needed. A fifth, independent fact-checker agent re-derived all three doc/code-eligible claims from scratch against primary sources and confirmed all three. Fixed the two in-charter findings, ran gate:scoped (escalated to the full sequence, green), committed, pushed, and opened PR #1300. Posted a COMMENT-event verdict, ran check-conflicting-issues.ts (no hits), then merge-pr.ts polled CI to green and self-merged per ADR-0003 — merge commit e8a3bb8b. Unsubscribed from PR activity now that it's closed."
 prs:
   - "1300"
 docsRead:
-  - path: CLAUDE.md
-    reason: tier definitions, single-home rule, PR/merge discipline
   - path: .agents/prune-trials.yml
-    reason: territory to leave untouched
-  - path: docs/agents/pr-workflow.md
-    reason: verified the single-homed closing sequence prune-trial was missing
+    reason: (no reason given)
   - path: .agents/skills/prune-trial/SKILL.md
-    reason: found and fixed the stale restated closing text
-  - path: layers/journal/content/current/pages/how-it-works.md
-    reason: found and fixed the frictions-to-fixes contradiction
-  - path: .agents/skills/frictions-to-fixes/SKILL.md
-    reason: primary source for the actual simple/hard issue-filing split
+    reason: (read before editing)
   - path: .agents/skills/audit-docs/SKILL.md
     reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (read before editing)
   - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: scripts/loop-only-tool-guard.ts
     reason: (no reason given)
@@ -67,6 +63,8 @@ docsRead:
   - path: .agents/skills/atlas-specimen/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/guest-build/SKILL.md
     reason: (no reason given)
@@ -116,26 +114,28 @@ docsRead:
     reason: (no reason given)
   - path: docs/research/public-readiness-review.md
     reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
   - path: docs/research/mermaid-server-side-rendering.md
     reason: (no reason given)
   - path: docs/research/github-actions-public-vs-private-limits.md
     reason: (no reason given)
 skillsUsed:
-  - name: audit-docs
-    reason: this run's own charter
   - name: close-session
-    reason: self-judged closure at PR-open
+    reason: (no reason given)
   - name: log-session
-    reason: recording this log
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
 frictions:
   - description: scripts/loop-only-tool-guard.ts's header comment (~line 2) and formatGuardMessage's live deny text (~line 157) still say ScheduleWakeup is valid only in a /loop session's "dynamic, self-paced" mode, narrower than both the file's own detectSessionMode docstring and CLAUDE.md's already-corrected "any /loop session" rule (fixed by an earlier sweep, commit 85075efb) — a session blocked by this guard today is told the wrong, narrower rule.
     solution: Update scripts/loop-only-tool-guard.ts:2 and the deny message in formatGuardMessage (~line 157) to say "any /loop session" instead of "dynamic, self-paced mode," matching detectSessionMode's own accurate docstring. Out of audit-docs's doc-tiers charter (it's a .ts file), so left for frictions-to-fixes or a future audit-docs run.
     severity: moderate
-durationSec: 898
+durationSec: 1140
 models:
-  claude-sonnet-5: 107
+  claude-sonnet-5: 128
 toolCounts:
-  Bash: 26
+  Bash: 31
   ToolSearch: 3
   mcp__github__list_pull_requests: 1
   mcp__github__search_pull_requests: 1
@@ -145,9 +145,11 @@ toolCounts:
   Edit: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  Skill: 2
-  Write: 1
+  Skill: 3
+  Write: 2
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/prune-trial/SKILL.md
   - layers/journal/content/current/pages/how-it-works.md
