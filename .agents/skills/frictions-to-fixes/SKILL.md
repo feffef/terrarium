@@ -142,7 +142,9 @@ has it). `pnpm exec tsx scripts/merged-since.ts <friction session's startedAt>` 
 already-fixed/regression join into a direct comparison instead of manual
 git-timestamp archaeology. **Before landing on "Never fixed," run a targeted
 keyword search of the tracker using the friction's tool name and error-message
-text as query terms** (not a paraphrase or a topic-level guess) — the available
+text as query terms** (not a paraphrase or a topic-level guess; keep the query
+itself narrow per `docs/agents/github-integration.md`'s search-scoping guidance,
+not just at the start of this task) — the available
 search tools (e.g. `mcp__github__search_issues`) do natural-language semantic
 matching, not literal substring search, so a query miss is weaker evidence than
 a literal grep miss would be, and a loosely-worded query can still miss an issue
