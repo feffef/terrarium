@@ -24,62 +24,70 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      `.agents/skills/dispatch-subagents/SKILL.md`'s "Run verification... in the
-      foreground and wait" bullet (§3) spent about half its ten lines restating
-      what `scripts/subagent-background-guard.ts`'s own deny message
-      (`formatGuardMessage()`) already says verbatim when it fires: that no
-      wake mechanism resumes a stopped subagent, that the guard denies
-      backgrounding outright with no bypass, and the foreground/split/
-      `preview.ts` alternatives — the same
-      narrated-mechanism-a-guard-already-teaches-live shape already pruned
-      elsewhere (CLAUDE.md's Built-guard bullets, ADR-0017). The residual is
-      NOT covered by the guard's deny message and stayed: naming a log-file
-      completion marker as the concrete way to confirm a still-running check
-      finished, that `Monitor` is guard-denied too (issue #995) so it isn't a
-      valid substitute, and resuming a stalled subagent via `SendMessage` with
-      the log's actual tail pasted in (issue #602). Verified the guard's
-      current deny text line-by-line against the doc bullet before cutting —
-      only the duplicated half went. Grepped for inbound references to the cut
-      wording first (none, one unrelated similarly-worded CLAUDE.md bullet
-      about `Monitor`-on-Bash left untouched, own separate rule/territory). A
-      dispatched full-corpus search (rulebook-migration-table.md, guards.md's
-      built roster cross-referenced against every doc citing each guard, the
-      tracker for repeated-failure rules) found this the only candidate close
-      to criterion 1 — this repo's docs are already unusually compressed after
-      five prior trials; nothing else cleared even this modest bar. Net -3
-      lines, one file.
+      `docs/agents/pr-workflow.md`'s step 5 ("Before calling `merge-pr.ts`:
+      step 4's verdict comment must already be posted") already failed twice:
+      first as issue #1113, fixed by PR #1115 (merged 2026-09-03) which pulled
+      the ordering requirement into an explicit bolded precondition — then
+      regressed 15 days later as issue #1276 (filed 2026-09-19, still open),
+      where a session's own `docsRead` confirms it opened this exact doc that
+      session and still called `merge-pr.ts` on PR #1274 before posting the
+      verdict, merging before the session caught it. #1276 explicitly declines
+      a second doc-only wording pass ("not recommended given it already didn't
+      hold once") and instead flags a mechanical pre-merge check in
+      `merge-pr.ts` for human review — so, like the currently-open
+      run_in_background trial, this is criterion 1 with nothing built yet to
+      hold the behaviour (`merge-pr.ts` has no review/comment check today,
+      confirmed by reading the script). Distinguished this from the closely
+      related, and explicitly declined, CLAUDE.md "count over a set" bullet
+      (issue #933): that one was deliberately closed `wontfix` after a
+      dedicated research pass (`rulebook-migration-table.md`'s CM-32 row)
+      classified it "judgment-keep" and said re-narrowing the wording is the
+      wrong move — a considered, final verdict this Skill shouldn't relitigate.
+      #1276 carries no such closure; it's an open, unresolved flag, and the cut
+      here is compression (removing a redundant restatement), not the kind of
+      additional-warning wording pass #1276 argues against. Only the bolded
+      rule's trailing clause was restatement — "if step 4 hasn't run yet, the
+      merge happens with nothing posted" says nothing the bold sentence
+      doesn't already say — so kept the actual rule and the one piece of new
+      mechanism info (merges immediately on green, no wait), cut the
+      restatement, added an #1276 pointer in its place. Grepped the corpus for
+      other homes (frictions-to-fixes, issue-tracker.md, digest/audit-docs/
+      audit-skills/blog-post SKILL.md) — all point at step 4 or the general
+      recipe, none restate step 5's content, nothing else to touch. Net -1
+      line, one file — this corpus is thin after six prior trials; a dispatched
+      full-corpus search's other two candidates (the CLAUDE.md count bullet,
+      ruled out above; `blog-post/SKILL.md`'s causal-attribution rules, issue
+      #1168) were both already-tight text with a human-flagged mechanism
+      question, not prunable mass. Probed the compressed bullet alone on a
+      fresh Sonnet subagent before shipping: given only the surviving text plus
+      a one-line paraphrase of step 4's content, it correctly said to post the
+      verdict comment before calling `merge-pr.ts`, correctly said the PR
+      merges with no verdict trace if called first, and correctly said nothing
+      today enforces the ordering mechanically.
     territory:
       paths:
-        - "`.agents/skills/dispatch-subagents/SKILL.md`: the \"Run verification (`pnpm gate:scoped`...) in the foreground and wait\" bullet (§3)"
+        - "`docs/agents/pr-workflow.md`: step 5's \"Before calling `merge-pr.ts`: step 4's verdict comment must already be posted\" bullet"
       keywords:
-        - Run verification
-        - subagent background guard
-        - log-file completion marker
-        - completion signal
-        - log's actual tail
-    opened: 2026-09-20
+        - verdict comment must already be posted
+        - merge-pr.ts merges immediately on green
+        - issue #1276
+    opened: 2026-09-23
     proven: true
     check: >
-      Damage is a session dispatching subagents that, needing to know how to
-      handle a verification check that might outrun one foreground call, reads
-      the compressed bullet and either doesn't know a log-file marker (not
-      `Monitor`) is the way to confirm completion, tries `Monitor` anyway
-      believing it's a valid wait mechanism for a subagent (it's guard-denied,
-      issue #995), or resumes a stalled subagent with a bare `SendMessage`
-      instead of pasting the log's actual tail — guessing at where the check
-      landed instead of grounding the resume in real output. NOT damage: a
-      session that gets denied by the guard on an attempted background/
-      `Monitor` call and follows the guard's own deny message (the intended
-      teach-at-the-moment-of-failure design — the "why" and "foreground/split/
-      preview.ts" detail live there now, not in this doc), or one that never
-      dispatches subagents this run. A Sonnet probe given only the compressed
-      bullet correctly said the guard denies backgrounding `pnpm gate:scoped`
-      outright with no way for the subagent to background-and-check-later,
-      correctly named a log-file marker (not `Monitor`, which it explicitly
-      said is NOT a valid way to wait) as the completion signal, and correctly
-      said a stalled subagent is resumed via `SendMessage` with the log's
-      actual tail pasted in so the resume is grounded in real output rather
-      than guessed.
+      Damage is a session that lands a gated PR through this recipe and calls
+      `merge-pr.ts` to merge it before step 4's verdict comment/review is
+      already posted on the PR — the merge going through with no review trace.
+      NOT damage: a session that already posts the verdict before merging (the
+      intended, and only, order — nothing mechanically enforces it either way),
+      one that never lands a PR through this recipe this run, or a recurrence
+      identical in shape to the one #1276 already names (that issue's open
+      mechanical-check recommendation is the tracked response, not new evidence
+      for this trial). A Sonnet probe given only the compressed bullet (plus a
+      one-line paraphrase of step 4, since step 5 refers to it) correctly named
+      posting the verdict comment as the required next action before calling
+      `merge-pr.ts`, correctly said the PR merges with nothing posted if called
+      out of order, and correctly said no mechanical check exists today — the
+      ordering rests entirely on the agent following the bolded sentence.
   - problem: >
       CLAUDE.md's "Start a command expected to run long... with
       `run_in_background: true` from the outset" bullet (Working conventions,
