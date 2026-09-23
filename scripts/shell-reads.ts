@@ -456,7 +456,12 @@ export function scanShellReads(
       // output gate below decides (issue #1247): grep/rg filter their input,
       // so which of several given files actually reached the session depends
       // on what the command actually matched, not the argument list alone.
-      const candidates: { path: string; token: string }[] = []
+      // `matchText` is what to look for in that output — the raw argument for
+      // a literal path (what grep/rg actually echoes back), but the RESOLVED
+      // filename for a glob candidate, since the tool never echoes the glob
+      // pattern itself (issue #1298). `token` stays the raw argument text for
+      // near-miss reporting regardless.
+      const candidates: { path: string; token: string; matchText: string }[] = []
       let skipReason: SkipRule | null = null
       const patternSupplied = tokens.some((t) => !t.quoted && PATTERN_FLAGS.has(t.text))
       let positionals = 0
@@ -491,10 +496,10 @@ export function scanShellReads(
         }
         fileCount++
         const p = norm(t.text)
-        if (isInstructionDoc(p)) candidates.push({ path: p, token: t.text })
+        if (isInstructionDoc(p)) candidates.push({ path: p, token: t.text, matchText: t.text })
         else if (isGlobbedInstructionDoc(p)) {
           const resolved = resolveGlobbedDoc(p)
-          if (resolved !== undefined) candidates.push({ path: resolved, token: t.text })
+          if (resolved !== undefined) candidates.push({ path: resolved, token: t.text, matchText: resolved })
           else note(fromReader, t.text, 'not a literal path: glob or variable')
         }
       }
@@ -503,7 +508,7 @@ export function scanShellReads(
       // with (every pre-#1247 caller/test) — credit unconditionally, as before.
       if (OUTPUT_FILTERED_VERBS.has(verb) && output !== undefined) {
         for (const c of candidates) {
-          const confirmed = fileCount > 1 ? outputMentionsFile(output, c.token) : output.trim() !== ''
+          const confirmed = fileCount > 1 ? outputMentionsFile(output, c.matchText) : output.trim() !== ''
           if (confirmed) paths.add(c.path)
           else note(fromReader, c.token, 'grep/rg output does not show this file being read')
         }
