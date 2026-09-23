@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01MV9KVLFSUoe6D9AKdrcc2q
 startedAt: 2026-09-23T00:16:07Z
-endedAt: 2026-09-23T00:24:12Z
+endedAt: 2026-09-23T00:27:10Z
 kind: autonomous
 goal: Run the scheduled /digest sweep
-status: in-review
-outcome: Digest authored, sweep run, PR opened, gate green
-summary: "Entirely agent-initiated: fired by a scheduled Routine with no human prompt this session. Ran the /digest Skill for 2026-09-22, the one closed UTC day with activity and no digest yet. Authored the Digest from `scripts/digest.ts gather`'s output (4 merged PRs, 6 completed sessions, 8 frictions), ran the retention sweep (archived 1 aged-out digest + 6 session logs, all dated 2026-09-15), ran `pnpm gate:scoped` (escalated to the full gate since the sweep touched a non-inert content path; all steps including test:e2e passed), and opened PR #1297 scoped to exactly that diff. No index.md edit needed — the Journal dashboard is live. Subscribed to the PR's activity per CLAUDE.md."
+status: completed
+outcome: "PR #1297 merged, gate green"
+summary: "Entirely agent-initiated: fired by a scheduled Routine with no human prompt this session. Ran the /digest Skill for 2026-09-22, the one closed UTC day with activity and no digest yet. Authored the Digest from `scripts/digest.ts gather`'s output (4 merged PRs, 6 completed sessions, 8 frictions), ran the retention sweep (archived 1 aged-out digest + 6 session logs, all dated 2026-09-15), and ran `pnpm gate:scoped` (escalated to the full gate since the sweep touched a non-inert content path; all steps including test:e2e passed). Opened PR #1297 scoped to exactly that diff, subscribed to its activity, posted a verdict comment, and landed it via `merge-pr.ts` once CI's safety-gate check went green — merged clean, no conflicting-issue hits, no closing-keyword issues to reconcile."
 prs:
   - "1297"
 docsRead:
@@ -25,19 +25,20 @@ frictions:
   - description: "Tried to background `pnpm gate:scoped` with both `nohup … &` in the command text AND `run_in_background: true` on the Bash call — denied by the double-background guard (issue #1208), which CLAUDE.md already warns against explicitly."
     solution: "Re-ran with a plain foreground command and `run_in_background: true` alone, per the guard's own fix message."
     severity: nit
-durationSec: 485
+durationSec: 663
 models:
-  claude-sonnet-5: 99
+  claude-sonnet-5: 122
 toolCounts:
-  Bash: 33
+  Bash: 40
   Read: 2
-  Write: 2
+  Write: 3
   ToolSearch: 4
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-09-22.md
 docsReadViaShell:
