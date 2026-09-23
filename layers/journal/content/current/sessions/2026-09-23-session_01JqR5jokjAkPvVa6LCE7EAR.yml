@@ -1,0 +1,81 @@
+schemaVersion: 1
+session: session_01JqR5jokjAkPvVa6LCE7EAR
+startedAt: 2026-09-23T13:14:15Z
+endedAt: 2026-09-23T13:26:45Z
+kind: autonomous
+goal: Run scheduled /prune-trial sweep
+status: in-review
+outcome: Judged one trial, opened one new trial as PR
+summary: "Fully autonomous scheduled run of /prune-trial, no human prompt. Judged the one judgeable open trial (dispatch-subagents foreground-verification bullet, past its 3-day window): surveyed frictions and issues since landing, found silence, so the prune holds and the entry was deleted. Dispatched a background subagent to survey the corpus for a new criterion-1 candidate (prose that already failed), excluding both trials' territory. The top-ranked candidate it returned (CLAUDE.md's \"count over a set\" bullet, issue #933) turned out, on direct verification of the issue and its resolving comment, to have been deliberately closed wontfix after a dedicated research pass classified it \"judgment-keep\" and explicitly rejected further wording changes -- a considered, final human-adjacent verdict this run should not relitigate, so it was ruled out despite the subagent's ranking. Picked the runner-up instead: docs/agents/pr-workflow.md step 5's verdict-before-merge ordering rule (issue #1276, still open, regressed once already), pruned its one restated clause (-1 line), probed the compressed text on a fresh Sonnet subagent (passed), ran the full gate (green), and opened PR #1302. Subscribed to its activity. All of this was agent-initiated within the scheduled task's own instructions; no human steered any part of it."
+prs:
+  - "1302"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the ledger being judged and extended
+  - path: docs/agents/pr-workflow.md
+    reason: the file being pruned
+  - path: CLAUDE.md
+    reason: commit-trailer guard and Working conventions rules encountered
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: this run's own instructions
+  - name: close-session
+    reason: closure sequence
+  - name: log-session
+    reason: this log
+frictions:
+  - description: "Attempted the guard-recommended attribution trailer verbatim in a git commit per the system-reminder's instructions; the commit-trailer guard (issue #921) denied it, since this repo's own convention (hooks land the trailer) overrides that system-reminder."
+    solution: Omitted the trailer entirely on the retry and let the commit-msg hook add it, as the guard's deny message instructed.
+    severity: nit
+  - description: "A background subagent's top-ranked prune candidate (CLAUDE.md's \"count over a set\" bullet) looked correct on its face (issue #933 genuinely documents a regression) but turned out to be a deliberately-closed, considered verdict once I read the issue's resolving comment directly -- the subagent's report didn't flag that nuance."
+    solution: When a subagent's criterion-1 candidate cites a closed issue, always read the closing comment/reasoning directly before trusting the ranking -- a closed issue can carry a considered "don't touch this again" verdict that a title/summary-level report won't surface.
+    severity: minor
+durationSec: 750
+models:
+  claude-sonnet-5: 130
+toolCounts:
+  Bash: 35
+  ToolSearch: 2
+  mcp__github__list_issues: 1
+  Read: 6
+  Edit: 3
+  Agent: 3
+  ScheduleWakeup: 1
+  mcp__github__issue_read: 3
+  Grep: 5
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - docs/agents/pr-workflow.md
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - CONTEXT.md
+  - docs/agents/github-integration.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey corpus for failed-prose prune candidate
+  - type: general-purpose
+    task: Survey corpus for failed-prose prune candidate
+  - type: general-purpose
+    task: Probe compressed pr-workflow step 5 bullet
+gitBranch: claude/practical-rubin-povo1k
+entrypoint: remote_trigger
+cliVersion: 2.1.280
+trigger: prune-trial
+landedBy: Stop
