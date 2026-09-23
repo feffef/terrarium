@@ -1,0 +1,77 @@
+schemaVersion: 1
+session: session_01CqzQC6fpFdf6vpjQ8N1LnM
+startedAt: 2026-09-23T02:03:39Z
+endedAt: 2026-09-23T02:23:02Z
+kind: autonomous
+goal: Survey frictions, dispatch fixes, review, merge PRs
+status: completed
+outcome: Two simple fixes merged; no hard candidates
+summary: "Scheduled Routine fired frictions-to-fixes with no live human present, per this Skill's own scheduled operating mode. Delegated the survey+screen of the latest 20 session logs to a subagent, which found one never-fixed moderate candidate (a scripts/shell-reads.ts glob-token/output-confirmation bug, PR #1299) and flagged a cheap doc-discoverability gap (a search-scoping pointer in frictions-to-fixes/SKILL.md itself, PR #1298). No hard candidates surfaced. One known regression (issue #1293) had no new recurrence since it was filed by the prior run, so it was not re-escalated. Dispatched both as \"simple\" selections to separate Sonnet worktree-isolated impl agents in parallel (disjoint files, no shared axis). I reviewed each diff and gate result myself under the ADR-0003 reviewer-agent tier, posted a review comment on each, and merged both via merge-pr.ts once green. No PR needed my own hands-on code edits."
+prs:
+  - "1298"
+  - "1299"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: land-a-gated-PR recipe + reviewer-agent merge tier
+  - path: CLAUDE.md
+    reason: Ground rules, human-only surfaces, PR/session-log discipline
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: scripts/shell-reads.ts
+    reason: (read before editing)
+  - path: tests/unit/shell-reads.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: worktree isolation + brief checklist for the two parallel impl agents
+  - name: close-session
+    reason: closure sequence
+  - name: log-session
+    reason: this log
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: scripts/session-frictions.ts writes its JSON survey output to a hardcoded /tmp path regardless of stdout redirection; the survey subagent's redirect attempt got a 1-line summary instead of the JSON and had to notice the script's own printed path.
+    solution: Add an --out flag, or state the fixed-path behavior directly in frictions-to-fixes/SKILL.md's Step 1 script-invocation line so future survey subagents don't repeat the same double-take.
+    severity: nit
+  - description: First attempt to post a PR review via mcp__github__pull_request_review_write was blocked by the ADR-0017 provenance guard — my initial header line didn't match the required verbatim template.
+    solution: Guard's deny message named the exact fix; corrected and retried successfully. Teaching-surface-in-the-guard worked as intended, no doc gap.
+    severity: nit
+durationSec: 1164
+models:
+  claude-sonnet-5: 72
+toolCounts:
+  Agent: 3
+  Skill: 3
+  ReadNotifications: 7
+  ToolSearch: 1
+  Read: 3
+  Bash: 7
+  mcp__github__pull_request_read: 4
+  mcp__github__pull_request_review_write: 3
+  Write: 1
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - .claude/skills/frictions-to-fixes/SKILL.md
+  - scripts/shell-reads.ts
+  - tests/unit/shell-reads.spec.ts
+docsReadViaShell:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/github-integration.md
+subagents:
+  - type: general-purpose
+    task: Survey and screen session frictions
+    model: sonnet
+  - type: general-purpose
+    task: Fix shell-reads glob token bug
+    model: sonnet
+  - type: general-purpose
+    task: Fix frictions-to-fixes search-scoping doc gap
+    model: sonnet
+gitBranch: claude/eager-ptolemy-3rzawq
+entrypoint: remote_trigger
+cliVersion: 2.1.280
+trigger: frictions-to-fixes
+landedBy: Stop
