@@ -1,0 +1,192 @@
+schemaVersion: 1
+session: session_011Bc6anpFPFoyyRCizp9Zx3
+startedAt: 2026-09-23T04:01:31Z
+endedAt: 2026-09-23T04:16:29Z
+kind: autonomous
+goal: Scheduled /audit-docs sweep
+status: in-review
+outcome: "Opened self-mergeable PR #1300, gate green"
+summary: "Fully autonomous, scheduler-fired /audit-docs run — no human prompted any part of it. Dispatched four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) in parallel over the repo's Live-tier docs and 14 first-class Skills, respecting the two currently-open Prune Trials' territory. Pooled findings: 2 fixable (a Drift — prune-trial's SKILL.md still restated a closing sequence an earlier sweep single-homed into pr-workflow.md; a Contradiction — how-it-works.md claimed every friction becomes a filed issue when frictions-to-fixes's own SKILL.md skips filing for the common simple case), 1 informational Historical note (a blog post misquoting a commit, left untouched per the append-only rule), 1 out-of-charter code finding (a guard script's stale deny text), and 1 already-tracked Ambiguity (issue #864, no new finding needed). No overlapping findings, so no dedupe-merge was needed. A fifth, independent fact-checker agent re-derived all three doc/code-eligible claims from scratch against primary sources and confirmed all three. Fixed the two in-charter findings, ran gate:scoped (escalated to the full sequence, green), committed, pushed, and opened PR #1300, which self-merges on a green gate per ADR-0003. Subscribed to PR activity; will flip this log to completed on merge."
+prs:
+  - "1300"
+docsRead:
+  - path: CLAUDE.md
+    reason: tier definitions, single-home rule, PR/merge discipline
+  - path: .agents/prune-trials.yml
+    reason: territory to leave untouched
+  - path: docs/agents/pr-workflow.md
+    reason: verified the single-homed closing sequence prune-trial was missing
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: found and fixed the stale restated closing text
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: found and fixed the frictions-to-fixes contradiction
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: primary source for the actual simple/hard issue-filing split
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: scripts/loop-only-tool-guard.ts
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/highlights.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's own charter
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: recording this log
+frictions:
+  - description: scripts/loop-only-tool-guard.ts's header comment (~line 2) and formatGuardMessage's live deny text (~line 157) still say ScheduleWakeup is valid only in a /loop session's "dynamic, self-paced" mode, narrower than both the file's own detectSessionMode docstring and CLAUDE.md's already-corrected "any /loop session" rule (fixed by an earlier sweep, commit 85075efb) — a session blocked by this guard today is told the wrong, narrower rule.
+    solution: Update scripts/loop-only-tool-guard.ts:2 and the deny message in formatGuardMessage (~line 157) to say "any /loop session" instead of "dynamic, self-paced mode," matching detectSessionMode's own accurate docstring. Out of audit-docs's doc-tiers charter (it's a .ts file), so left for frictions-to-fixes or a future audit-docs run.
+    severity: moderate
+durationSec: 898
+models:
+  claude-sonnet-5: 107
+toolCounts:
+  Bash: 26
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  mcp__github__search_pull_requests: 1
+  Read: 6
+  Agent: 5
+  ScheduleWakeup: 1
+  Edit: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - .agents/skills/prune-trial/SKILL.md
+  - layers/journal/content/current/pages/how-it-works.md
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/research/public-readiness-review.md
+  - docs/research/rulebook-migration-table.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0004-objective-safety-gate.md
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - CONTEXT.md
+  - docs/proposals/README.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - docs/research/making-repo-public.md
+  - docs/research/github-actions-public-vs-private-limits.md
+subagents:
+  - type: general-purpose
+    task: "Audit-docs Agent A: Freshness"
+  - type: general-purpose
+    task: "Audit-docs Agent B: Single-home"
+  - type: general-purpose
+    task: "Audit-docs Agent C: Concision"
+  - type: general-purpose
+    task: "Audit-docs Agent D: Coherence"
+  - type: general-purpose
+    task: Audit-docs fact-checker
+gitBranch: claude/festive-mayer-stouef
+entrypoint: remote_trigger
+cliVersion: 2.1.280
+trigger: audit-docs
+landedBy: Stop
