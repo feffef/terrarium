@@ -257,6 +257,25 @@ describe('resolveGlob — resolving a glob against the real tree (issue #1246)',
     expect(paths('cat docs/adr/0017-*.md')).toEqual([])
     expect(rules('cat docs/adr/0017-*.md')).toEqual(['not a literal path: glob or variable'])
   })
+
+  it('credits a resolved glob in a multi-file grep whose output shows the RESOLVED name, never the glob text (issue #1298)', () => {
+    // The exact real-world trigger: `grep -rn "..." scripts/*.ts docs/adr/0017*.md`
+    // — a multi-file command where one glob argument resolves to a single real
+    // file, and the tool's output shows that file's real path, never the glob
+    // pattern that named it.
+    const scan = scanShellReads(
+      [
+        {
+          command: 'grep -rn "provenance header" scripts/*.ts docs/adr/0017*.md',
+          output: 'docs/adr/0017-one-thing.md:13:some provenance header line',
+        },
+      ],
+      rel,
+      fakeResolveGlob,
+    )
+    expect(scan.paths).toEqual(['docs/adr/0017-one-thing.md'])
+    expect(scan.nearMisses).toEqual([])
+  })
 })
 
 describe('writes are not reads', () => {
