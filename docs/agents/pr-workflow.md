@@ -66,9 +66,8 @@ overflow traps — see [`github-integration.md`](./github-integration.md).
    A COMMENT-event review records the same verdict in both cases (issue #301,
    recurred as #853).
 5. **Before calling `merge-pr.ts`: step 4's verdict comment must already be
-   posted.** `merge-pr.ts` merges immediately on green with no wait for a
-   review trace — if step 4 hasn't run yet, the merge happens with nothing
-   posted.
+   posted** — it merges immediately on green with no wait for a review trace
+   (issue #1276 tracks a mechanical check for this).
 
    `scripts/merge-pr.ts <pr-number>` is the **sole merge path** for every PR —
    pending-check or already-green alike — per step 3; it already polls to
