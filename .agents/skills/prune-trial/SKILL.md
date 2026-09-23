@@ -138,14 +138,11 @@ entry is what the verdict reads later. Never treat the step as satisfied.
 
 ## 5. Ship and record
 
-One PR, the line delta in its title. At PR-open, invoke `close-session` — your
-first log (`in-review`). **A dispatched worktree-isolated agent must not**: the
-log belongs to the session that dispatched it (`close-session/SKILL.md`).
-
-Then Gate green, and self-merge (`docs/agents/pr-workflow.md`). Your tier is
-bounded by **reversibility, not by file** (ADR-0003's ledger row): prose
-anywhere, a script's comments included. Changing what runs unattended is not a
-prune — escalate that.
+One PR, the line delta in its title. Follow `docs/agents/pr-workflow.md`'s
+"Closing a self-merged chartered run" sequence. Your tier is bounded by
+**reversibility, not by file** (ADR-0003's ledger row): prose anywhere, a
+script's comments included. Changing what runs unattended is not a prune —
+escalate that.
 
 ## Bounds
 

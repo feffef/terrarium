@@ -98,11 +98,13 @@ There are several of them because there are several different ways this project
 can rot, and they do not all announce themselves in the same way.
 
 **`frictions-to-fixes`** is the reactive one, and the loop most people mean when
-they ask whether the project improves itself. It reads the recent session logs,
-screens out frictions that have already been fixed, turns what is left into
-issues, dispatches separate agents to author the fixes, then reviews those pull
-requests and merges them — escalating anything genuinely risky to a human. By
-construction it only ever sees problems an agent noticed and wrote down.
+they ask whether the project improves itself. It reads the recent session logs
+and screens out frictions that have already been fixed. A simple fix is
+dispatched straight to a pull request; only the rare fix expected to need human
+review at merge gets filed as an issue first. Either way it reviews the
+resulting pull requests and merges them — escalating anything genuinely risky
+to a human. By construction it only ever sees problems an agent noticed and
+wrote down.
 
 That limit is worth naming, because a lot of rot is never reported by anyone. A
 document can quietly stop describing the code without a single session tripping
