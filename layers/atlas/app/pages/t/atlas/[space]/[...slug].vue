@@ -64,7 +64,7 @@ provideAlmanac({
   specimen: () => entry.value?.specimen.slug,
 })
 
-if (!entry.value) setResponseStatus(useRequestEvent(), 404)
+if (!entry.value) setResponseStatus(404)
 
 const title = computed(() => entry.value?.specimen.binomial ?? 'Not found')
 useSeoMeta({

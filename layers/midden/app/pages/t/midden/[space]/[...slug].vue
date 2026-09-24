@@ -64,7 +64,7 @@ const presentGrades = computed<Grade[]>(() => {
   return CONDITION_ORDER.filter((g) => present.has(g))
 })
 
-if (!site.value) setResponseStatus(useRequestEvent(), 404)
+if (!site.value) setResponseStatus(404)
 
 useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
 </script>

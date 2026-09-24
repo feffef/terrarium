@@ -27,7 +27,7 @@ const crumbs = computed(() =>
     .filter((s): s is string => Boolean(s)),
 )
 
-if (!page.value) setResponseStatus(useRequestEvent(), 404)
+if (!page.value) setResponseStatus(404)
 
 const title = computed(() => page.value?.title ?? 'Not found')
 useSeoMeta({

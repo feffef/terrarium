@@ -32,7 +32,7 @@ const meta = personaMeta(space)
 const post = computed(() => data.value?.post ?? null)
 const pingbacks = computed(() => data.value?.pingbacks ?? [])
 
-if (!post.value && !error.value) setResponseStatus(useRequestEvent(), 404)
+if (!post.value && !error.value) setResponseStatus(404)
 
 const title = computed(() => post.value?.title ?? 'Not found')
 // The .bl-page body class scopes the blog canvas (full-bleed background +
