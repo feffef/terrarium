@@ -64,7 +64,7 @@ useHead({ title: 'The Stores · The Midden' })
     <div class="midden-page midden-stores">
       <header class="midden-stores__head">
         <p class="tech midden-crumb">
-          <NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><span class="here">the stores</span>
+          <NuxtLink to="/">terrarium</NuxtLink><span class="sep">/</span><NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><span class="here">the stores</span>
         </p>
 
         <p class="sc midden-eyebrow">An excavation catalogue — storage</p>

@@ -1,59 +1,58 @@
 <script setup lang="ts">
-// The Midden's single landing (owner-directed post-MVP simplification, this
-// branch): ONE page rendered at BOTH `/t/midden` and `/t/midden/trench` — the two
-// former near-duplicate landings (a front door + a trench index) merged into one
-// `land → read` surface. A tight foreword, the ruled pull-quote, and a plain list
-// of the dig reports, under one full-bleed section drawing (TrenchFace.vue —
-// atmosphere only, no data). The condition legend left this page entirely
-// (owner-directed, final design): it re-homed as the sticky condition key beside
-// each dig report's finds (MiddenConditionKey.vue), where the words it defines
-// actually appear. The stats row, proportional season bars, and per-site tick
-// strips are gone.
+// The Midden's two landings, one layout (the Atlas pattern: a Tenant-root front
+// door plus a landing per Space). `front` (at `/t/midden`) carries the curator's
+// foreword and a doorway to each Space; without it (at `/t/midden/trench`) the
+// page is the trench itself — its own authored intro (`trench/pages/index.md`)
+// and the dig-report list. TrenchFace.vue is atmosphere only, no data.
 //
-// Presentation-only (ADR-0004): resolves the trench Space through the SAME shared,
-// unit-tested `resolveSpaceRoute` — hardcoding ('midden','trench') rather than
-// reading the route, because the front door `/t/midden` carries no `space` param.
-// The read is same-Space only: this Space's own `pages`.
-//
-// The foreword prose and the pull-quote are verbatim authored curator copy (the
-// former front-door `foreword1`/`foreword2` and the "corpse" line, itself the
-// inclusion bar from CONTEXT.md) — not placeholder.
+// Presentation-only (ADR-0004): resolves the trench Space through the SAME shared
+// `resolveSpaceRoute`, hardcoded because `/t/midden` carries no `space` param.
 import { resolveSpaceRoute } from '#shared/routing'
+
+const props = defineProps<{ front?: boolean }>()
 
 const resolved = resolveSpaceRoute('midden', 'trench', undefined)
 
-const { data } = await useAsyncData('midden-landing', async () => {
-  if (!resolved) return { sites: [] }
-  const pages = await queryCollection(resolved.pagesKey).all()
-  // The Space-root document (path '/') is the trench's own index prose, not a
-  // dig-report Site — the merged landing carries its own foreword, so it's excluded.
-  return {
-    sites: pages
-      .filter((p) => p.path !== '/')
-      .map((p, i) => ({
-        num: String(i + 1).padStart(2, '0'),
-        title: p.title ?? p.path.replace(/^\//, ''),
-        description: p.description as string | undefined,
-        href: `/t/midden/trench${p.path}`,
-      })),
+const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 'trench'}`, async () => {
+  if (!resolved) return { intro: null, count: 0, sites: [] }
+  if (props.front) {
+    const count = await queryCollection(resolved.pagesKey).where('path', '<>', '/').count()
+    return { intro: null, count, sites: [] }
   }
+  const pages = await queryCollection(resolved.pagesKey).all()
+  const sites = pages
+    .filter((p) => p.path !== '/')
+    .map((p, i) => ({
+      num: String(i + 1).padStart(2, '0'),
+      title: p.title ?? p.path.replace(/^\//, ''),
+      description: p.description as string | undefined,
+      href: `/t/midden/trench${p.path}`,
+    }))
+  return { intro: pages.find((p) => p.path === '/') ?? null, count: sites.length, sites }
 })
 
-const sites = computed(() => data.value?.sites ?? [])
+const rows = computed(() =>
+  props.front
+    ? [
+        { num: 'I', title: 'The Trench', description: `the open excavation — ${data.value?.count ?? 0} dig reports`, href: '/t/midden/trench' },
+        { num: 'II', title: 'The Stores', description: 'finds held off display, boxed by season', href: '/t/midden/stores' },
+      ]
+    : (data.value?.sites ?? []),
+)
 
-useHead({ title: 'The Midden' })
+useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
 </script>
 
 <template>
   <main class="midden">
     <div class="midden-page midden-landing midden-landing--masthead">
       <p class="tech midden-crumb">
-        <NuxtLink to="/">terrarium</NuxtLink><span class="sep">/</span><span class="here">the midden</span>
+        <NuxtLink to="/">terrarium</NuxtLink><span class="sep">/</span><template v-if="front"><span class="here">the midden</span></template><template v-else><NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><span class="here">trench</span></template>
       </p>
 
       <header class="midden-landing__head">
         <p class="sc midden-landing__eyebrow">An excavation catalogue</p>
-        <h1 class="doctitle midden-landing__title">The Midden</h1>
+        <h1 class="doctitle midden-landing__title">{{ front ? 'The Midden' : (data?.intro?.title ?? 'The Trench') }}</h1>
       </header>
     </div>
 
@@ -65,7 +64,7 @@ useHead({ title: 'The Midden' })
     </div>
 
     <div class="midden-page midden-landing midden-landing--body">
-      <div class="midden-landing__foreword">
+      <div v-if="front" class="midden-landing__foreword">
         <p>
           Every other quarter of this place shows the platform building. The Midden
           shows what it set down and walked away from — dead branches, pull requests
@@ -82,15 +81,18 @@ useHead({ title: 'The Midden' })
           &ldquo;You catalogue a corpse only where nothing living grew back.&rdquo;
         </p>
       </div>
+      <div v-else-if="data?.intro" class="midden-landing__foreword">
+        <ContentRenderer :value="data.intro" />
+      </div>
 
       <section class="midden-landing__section" aria-labelledby="midden-sites-head">
         <div class="midden-sechead">
-          <span id="midden-sites-head" class="hand midden-sechead__title">The dig reports</span>
+          <span id="midden-sites-head" class="hand midden-sechead__title">{{ front ? 'The excavation' : 'The dig reports' }}</span>
           <span class="midden-sechead__rule" />
-          <span class="mono midden-sechead__aside">{{ sites.length }} sites</span>
+          <span v-if="!front" class="mono midden-sechead__aside">{{ data?.count ?? 0 }} sites</span>
         </div>
-        <ol v-if="sites.length" class="midden-sites">
-          <li v-for="site in sites" :key="site.href" class="midden-sites__item">
+        <ol v-if="rows.length" class="midden-sites">
+          <li v-for="site in rows" :key="site.href" class="midden-sites__item">
             <NuxtLink :to="site.href" class="midden-sites__link">
               <span class="mono midden-sites__num">{{ site.num }}</span>
               <span class="midden-sites__body">
@@ -103,7 +105,7 @@ useHead({ title: 'The Midden' })
         </ol>
         <p v-else class="midden-empty">No sites catalogued yet.</p>
 
-        <p class="tech midden-landing__stores">
+        <p v-if="!front" class="tech midden-landing__stores">
           <NuxtLink to="/t/midden/stores">The stores — finds held off display →</NuxtLink>
         </p>
       </section>
@@ -141,14 +143,14 @@ useHead({ title: 'The Midden' })
   margin-top: 2.2rem;
   max-width: 58ch;
 }
-.midden-landing__foreword p {
+.midden-landing__foreword :deep(p) {
   margin: 1.2rem 0 0;
   font-family: var(--midden-serif);
   font-size: 1.09rem;
   line-height: 1.72;
   color: var(--midden-ink);
 }
-.midden-landing__foreword p:first-child { margin-top: 0; }
+.midden-landing__foreword :deep(p:first-child) { margin-top: 0; }
 .midden-landing__pull {
   margin-top: 2rem;
   padding-left: 1.1rem;

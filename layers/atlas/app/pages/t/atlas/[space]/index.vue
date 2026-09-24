@@ -78,7 +78,7 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
   <main class="atlas" :class="`atlas--${space}`">
     <div class="atlas-page">
       <p class="atlas-crumb">
-        <NuxtLink to="/t/atlas">The Atlas</NuxtLink><span class="sep">·</span><span class="here">{{ meta.name }}</span>
+        <NuxtLink to="/">terrarium</NuxtLink><span class="sep">·</span><NuxtLink to="/t/atlas">the atlas</NuxtLink><span class="sep">·</span><span class="here">{{ meta.name }}</span>
       </p>
 
       <header class="biome-head">
@@ -92,6 +92,11 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
       <section>
         <div class="atlas-sechead"><span class="atlas-eyebrow">The catalogue</span></div>
         <AtlasSpecimenIndex v-model:highlight="hoveredSpecimen" :specimens="specimens" :biome="space" />
+        <p class="catalogue-key">
+          The dots before each name are its colour signature; those after it, its rarity —
+          five for the everyday, fewer as it grows scarce, a lone ✦ for the mythic.
+          <a href="#on-rarity">The full scale</a>.
+        </p>
       </section>
 
       <section>
@@ -164,7 +169,7 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
         </ul>
       </section>
 
-      <section>
+      <section id="on-rarity">
         <div class="atlas-sechead"><span class="atlas-eyebrow">On rarity</span></div>
         <AtlasRarityLegend />
       </section>
@@ -182,6 +187,8 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
   margin: 0.5rem 0 0;
   text-wrap: balance;
 }
+.catalogue-key { margin: 0.8rem 0 0; font-size: 0.85rem; font-style: italic; color: var(--atlas-muted); }
+.catalogue-key a { color: inherit; }
 .biome-intro { margin-top: 1.1rem; max-width: 40rem; color: var(--atlas-muted); }
 .choreo { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.4rem; }
 .choreo li {

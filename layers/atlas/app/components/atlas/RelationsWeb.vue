@@ -36,7 +36,7 @@ const FIG_CY = 150
 const FIG_SCALE = 0.2
 
 interface Pt { x: number; y: number }
-interface Spoke { r: Relation; other: SpecimenView; x: number; y: number }
+interface Spoke { rs: Relation[]; other: SpecimenView; x: number; y: number }
 
 // Hand-tuned fan angles (degrees off horizontal) for the counts the data
 // actually holds (1–4 relations today); beyond that, spread evenly and let it
@@ -58,10 +58,17 @@ function fanAngles(n: number): number[] {
 // height (and the focus's own y) is derived, not fixed — a sparse web gets a
 // short plate instead of floating in empty paper.
 const view = computed(() => {
-  const paired = props.relations.flatMap((r) => {
+  // One medallion per counterpart: two relations with the same specimen (say,
+  // mimics it and is feared by it) share a spoke and get two strands.
+  const byOther = new Map<string, { rs: Relation[]; other: SpecimenView }>()
+  for (const r of props.relations) {
     const other = props.specimensBySlug[r.other]
-    return other ? [{ r, other }] : []
-  })
+    if (!other) continue
+    const spoke = byOther.get(r.other)
+    if (spoke) spoke.rs.push(r)
+    else byOther.set(r.other, { rs: [r], other })
+  }
+  const paired = [...byOther.values()]
   const angles = fanAngles(paired.length || 1)
   const half = RY * Math.max(0, ...angles.map((a) => Math.abs(Math.sin((a * Math.PI) / 180))))
   const fy = Math.round(Math.max(76, half + R + 18))
@@ -96,7 +103,7 @@ interface Strand { r: Relation; other: SpecimenView; d: string; rail: string; en
 
 const strands = computed<Strand[]>(() => {
   const F: Pt = { x: FX, y: view.value.fy }
-  return view.value.spokes.map((sp): Strand => {
+  return view.value.spokes.flatMap((sp) => sp.rs.map((r, j): Strand => {
     const S: Pt = { x: sp.x, y: sp.y }
     const dx = S.x - F.x
     const dy = S.y - F.y
@@ -107,13 +114,14 @@ const strands = computed<Strand[]>(() => {
     // bows up), echoing the food web's curved strands.
     let bx = -uy
     let by = ux
-    if (dy > 0.5 ? by < 0 : by > 0) {
+    // A second strand to the same spoke bows the other way.
+    if ((dy > 0.5 ? by < 0 : by > 0) !== (j % 2 === 1)) {
       bx = -bx
       by = -by
     }
     const qOff = Math.min(36, L * 0.11)
     const Q: Pt = { x: (F.x + S.x) / 2 + bx * qOff, y: (F.y + S.y) / 2 + by * qOff }
-    const out = sp.r.dir === 'out'
+    const out = r.dir === 'out'
     const pF = toward(F, Q, out ? RF + 2 : RF + 9)
     const pS = toward(S, Q, out ? R + 9 : R + 2)
     // The visible path runs in the arrow's direction (#71: `out` = the focus is
@@ -132,14 +140,14 @@ const strands = computed<Strand[]>(() => {
     const LIFT = 8
     const rail = `M${pt({ x: pF.x + ax * LIFT, y: pF.y + ay * LIFT })} Q${pt({ x: Q.x + ax * LIFT, y: Q.y + ay * LIFT })} ${pt({ x: pS.x + ax * LIFT, y: pS.y + ay * LIFT })}`
     return {
-      r: sp.r,
+      r,
       other: sp.other,
       d,
       rail,
       // Colored by the strand's actor, same convention as the food web.
       endStroke: out ? specimenAccent(props.specimen) : specimenAccent(sp.other),
     }
-  })
+  }))
 })
 
 function spokeEnter(slug: string) {
@@ -221,7 +229,7 @@ function spokeLeave() {
            name's column stays clear of every line -->
       <NuxtLink
         v-for="sp in view.spokes"
-        :key="`${sp.r.kind}-${sp.r.dir}-${sp.other.slug}`"
+        :key="sp.other.slug"
         v-slot="{ href, navigate }"
         :to="`/t/atlas/${biome}/${sp.other.slug}`"
         custom
@@ -229,7 +237,7 @@ function spokeLeave() {
         <a
           class="node-hit"
           :href="href"
-          :aria-label="`${sp.other.binomial}, ${specimen.binomial} ${sp.r.label} ${sp.other.binomial}`"
+          :aria-label="`${sp.other.binomial}, ${specimen.binomial} ${sp.rs.map((r) => r.label).join(' and ')} ${sp.other.binomial}`"
           @click="navigate"
           @mouseenter="spokeEnter(sp.other.slug)"
           @mouseleave="spokeLeave()"

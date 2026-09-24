@@ -31,20 +31,20 @@ export function registerMiddenE2E(): void {
       expect(html.toLowerCase()).toContain('midden')
     })
 
-    // Post-MVP simplification (owner-directed, this branch): `/t/midden` and
-    // `/t/midden/trench` render the SAME merged landing (mirror, not a redirect).
-    // The generic platform sweep covers the trench route's 200/<h1>/hydration
-    // shape; this pins the merged landing's own authored content — the foreword
-    // masthead ("The Midden") plus a real dig-report title from the site list
-    // (`the-generated-map.md`'s `title`) — which the sweep can't know to assert.
-    // The final merged design (owner-directed) removed the condition legend from
-    // the landing, so no grade definition text may render here — that text lives
-    // only in the dig-report page's condition key now (next test).
-    it('mirrors the merged landing at both routes with its authored content', async () => {
-      for (const route of ['/t/midden', '/t/midden/trench']) {
-        const html = await $fetch(route)
-        expect(html).toContain('The Midden')
-        expect(html).toContain('The Generated Map')
+    // `/t/midden` is the front door (foreword + a doorway per Space) and
+    // `/t/midden/trench` the trench landing (its own intro + the dig reports) —
+    // distinct pages, like the Atlas front door and its wings. Neither carries
+    // the condition legend: that lives only in the dig-report condition key.
+    it('keeps the front door and the trench landing distinct', async () => {
+      const front = await $fetch('/t/midden')
+      expect(front).toContain('The Midden')
+      expect(front).toContain('/t/midden/trench')
+      expect(front).toContain('/t/midden/stores')
+      expect(front).not.toContain('The Generated Map')
+      const trench = await $fetch('/t/midden/trench')
+      expect(trench).toContain('The Trench')
+      expect(trench).toContain('The Generated Map')
+      for (const html of [front, trench]) {
         expect(html).not.toContain('Condition key')
         // A definition string from utils/condition.ts's single-homed table.
         expect(html).not.toContain('Discarded so recently the edges are still sharp')

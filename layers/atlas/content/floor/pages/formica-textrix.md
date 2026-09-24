@@ -120,7 +120,7 @@ We have counted the traffic; we have not been permitted to audit the stores. Aft
 :::phase-note{of="deep-galleries"}
 The surface work thins by degrees until only the mending is left — the worn places kept sound by a column already half below our reach. Only in these dry-warm months does the column grant us anything like an absence: the surface workings stand empty for weeks together, the weaving carried on somewhere below the reach of our lamps, and still the empty galleries are found mended at the worn places, an entry the ledger files under industry, plainly, and the company has agreed to leave it there.
 
-::sighting{date="2026-12-07"}
+::sighting{date="2025-12-07"}
 ::
 
 We have never observed a weaver-ant at rest, and we do not conclude from this quiet that it rests now; only that it is better, in these weeks, at not being watched. It does not finish; it never finishes; it only goes where we cannot follow, and mends behind itself as it goes.

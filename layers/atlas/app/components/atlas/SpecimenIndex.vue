@@ -36,13 +36,12 @@ function rowLeave(slug: string) {
         @focus="rowEnter(s.slug)"
         @blur="rowLeave(s.slug)"
       >
-        <span class="swatches" aria-hidden="true">
+        <span class="swatches" aria-hidden="true" :title="s.signature?.gloss">
           <i v-for="c in (s.signature?.colors ?? [])" :key="c.hex" :style="{ background: c.hex }" />
         </span>
         <span class="naming">
           <span class="binomial">{{ s.binomial }}</span>
-          <span class="common"> · {{ s.common }}</span>
-          <span v-if="s.blurb" class="char">{{ s.blurb }}</span>
+          <span class="char">{{ s.blurb || s.common }}</span>
         </span>
         <AtlasRarityMark :grade="s.rarity" />
       </NuxtLink>
