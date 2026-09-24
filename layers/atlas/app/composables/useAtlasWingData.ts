@@ -25,7 +25,7 @@ export async function useAtlasWingData(
   key: string,
   ctx: Pick<SpaceContext<'atlas'>, 'pagesKey' | 'collections'>,
 ) {
-  const { data } = await useAsyncData(key, async () => {
+  const { data, error } = await useAsyncData(key, async () => {
     const pages = await queryCollection(ctx.pagesKey).all()
     const interactions = await queryCollection(ctx.collections.interactions).all()
     const observations = await queryCollection(ctx.collections.observations).all()
@@ -52,5 +52,5 @@ export async function useAtlasWingData(
     ),
   )
 
-  return { data, pages, edges, observations, specimensBySlug }
+  return { data, error, pages, edges, observations, specimensBySlug }
 }

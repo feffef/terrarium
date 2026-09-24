@@ -9,12 +9,18 @@
 // than another Tenant: each view aggregates ACROSS Tenants via `#catalog`, and
 // neither surfaces the Commons itself (the isolation default).
 import { describe, expect, it } from 'vitest'
-import { $fetch } from '@nuxt/test-utils/e2e'
+import { $fetch, fetch } from '@nuxt/test-utils/e2e'
 import { renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
 
 /** Register the commons Tenant's L2 assertions under the caller's active suite. */
 export function registerCommonsE2E(): void {
   describe('commons Tenant', () => {
+    it('redirects the Tenant root /t/commons to its main Space', async () => {
+      const res = await fetch('/t/commons', { redirect: 'manual' })
+      expect(res.status).toBe(302)
+      expect(res.headers.get('location')).toBe('/t/commons/search')
+    })
+
     // ── Search Space ──────────────────────────────────────────────────────────
     it('search: renders a corpus aggregated across multiple Tenants', async () => {
       const html = await $fetch('/t/commons/search')

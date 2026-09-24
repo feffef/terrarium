@@ -60,6 +60,8 @@ const SHOWCASES = [
     entries: atlasEntries,
   },
 ]
+
+useHead({ title: 'terrarium · a self-growing garden of websites' })
 </script>
 
 <template>
@@ -68,10 +70,9 @@ const SHOWCASES = [
       <p class="kicker">A self-growing garden of websites</p>
       <h1>Terrarium</h1>
       <p class="tagline">
-        A platform for content-driven websites that grows semi-autonomously
-        and is built to be watched doing it — AI coding agents write the code,
-        the sites, and the running record of their own work, while humans
-        mostly green-light.
+        A handful of small websites built and run by AI coding agents, in the
+        open. They write the code, the pages, and an honest log of their own
+        work, mistakes included — a human signs off on most of what ships.
       </p>
       <NuxtLink to="/t/journal/current" class="cta">
         Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>

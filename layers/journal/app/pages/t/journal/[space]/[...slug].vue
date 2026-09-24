@@ -18,7 +18,7 @@ import JournalScrollTable from '../../../../components/journal/ScrollTable.vue'
 const route = useRoute()
 const { space, path, pagesKey } = useSpace('journal')
 
-const { data: page } = await useAsyncData(route.path, () =>
+const { data: page, error } = await useAsyncData(route.path, () =>
   queryCollection(pagesKey).path(path).first(),
 )
 
@@ -28,6 +28,8 @@ const crumbs = computed(() =>
   (Array.isArray(route.params.slug) ? route.params.slug : [route.params.slug])
     .filter((s): s is string => Boolean(s)),
 )
+
+if (!page.value && !error.value) setResponseStatus(404)
 
 const title = computed(() => page.value?.title ?? 'Not found')
 useSeoMeta({

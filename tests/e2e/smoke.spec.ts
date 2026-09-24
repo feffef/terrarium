@@ -32,7 +32,7 @@
 // (issue #97).
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { $fetch, createPage, setup, url } from '@nuxt/test-utils/e2e'
+import { $fetch, createPage, fetch, setup, url } from '@nuxt/test-utils/e2e'
 import { entryRoutes, expectCleanHydration, mermaidPageRoutes, renderAndCollectErrors } from '../support/e2e.ts'
 import { findPreinstalledChromium, findSystemChrome } from '../../scripts/chromium-path.ts'
 import { registerJournalE2E } from '../../layers/journal/tests/e2e/journal.e2e.ts'
@@ -90,6 +90,7 @@ describe('L2 smoke render', async () => {
     it('renders the hero and lists the Blog, Midden, and Atlas showcases in order', async () => {
       const html = await $fetch('/')
       expect(html).toMatch(/<h1[ >]/)
+      expect(html).toMatch(/<title>terrarium · [^<]+<\/title>/)
       const blogAt = html.indexOf('The Blog')
       const middenAt = html.indexOf('The Midden')
       const atlasAt = html.indexOf('The Atlas')
@@ -102,6 +103,14 @@ describe('L2 smoke render', async () => {
 
     it('hydrates in a browser with no console/page errors', async () => {
       await expectCleanHydration('/')
+    })
+
+    it('404s a missing document or Tenant, with a link back home', async () => {
+      for (const route of ['/t/journal/current/nope', '/t/commons/search/nope', '/t/nope/nothing', '/t/nope', '/t/__proto__']) {
+        expect((await fetch(route)).status, route).toBe(404)
+      }
+      const html = await (await fetch('/t/nope/nothing', { headers: { accept: 'text/html' } })).text()
+      expect(html).toContain('Back to the terrarium')
     })
 
     it('links each showcase card to its Tenant front door, in order', async () => {

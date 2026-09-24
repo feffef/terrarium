@@ -11,12 +11,18 @@
 // component on that page can't ship silently (mirrors atlas.e2e.ts/
 // blog.e2e.ts's shape).
 import { describe, expect, it } from 'vitest'
-import { $fetch } from '@nuxt/test-utils/e2e'
+import { $fetch, fetch } from '@nuxt/test-utils/e2e'
 import { expectCleanHydration, renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
 
 /** Register the marquee Tenant's L2 assertions under the caller's active suite. */
 export function registerMarqueeE2E(): void {
   describe('marquee Tenant', () => {
+    it('redirects the Tenant root /t/marquee to its main Space', async () => {
+      const res = await fetch('/t/marquee', { redirect: 'manual' })
+      expect(res.status).toBe(302)
+      expect(res.headers.get('location')).toBe('/t/marquee/reel')
+    })
+
     it('hydrates a chapter with no unresolved components', async () => {
       await expectCleanHydration('/t/marquee/reel/captain-america-the-first-avenger')
     })

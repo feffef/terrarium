@@ -22,7 +22,7 @@ const route = useRoute()
 const { space, path, pagesKey, collections } = useSpace('midden')
 const siteSlug = computed(() => path.replace(/^\//, ''))
 
-const { data } = await useAsyncData(route.path, async () => {
+const { data, error } = await useAsyncData(route.path, async () => {
   const pages = await queryCollection(pagesKey).all()
   const site = pages.find((p) => p.path === path) ?? null
   // Only this site's own finds are needed — for the compact meta line below.
@@ -63,6 +63,8 @@ const presentGrades = computed<Grade[]>(() => {
   const present = new Set(siteArtifacts.value.map((a) => a.condition))
   return CONDITION_ORDER.filter((g) => present.has(g))
 })
+
+if (!site.value && !error.value) setResponseStatus(404)
 
 useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
 </script>
