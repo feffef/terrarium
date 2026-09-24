@@ -13,30 +13,31 @@ const props = defineProps<{ front?: boolean }>()
 
 const resolved = resolveSpaceRoute('midden', 'trench', undefined)
 
-const { data } = await useAsyncData('midden-landing', async () => {
-  if (!resolved) return { intro: null, sites: [] }
-  const pages = await queryCollection(resolved.pagesKey).all()
-  return {
-    intro: pages.find((p) => p.path === '/') ?? null,
-    sites: pages
-      .filter((p) => p.path !== '/')
-      .map((p, i) => ({
-        num: String(i + 1).padStart(2, '0'),
-        title: p.title ?? p.path.replace(/^\//, ''),
-        description: p.description as string | undefined,
-        href: `/t/midden/trench${p.path}`,
-      })),
+const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 'trench'}`, async () => {
+  if (!resolved) return { intro: null, count: 0, sites: [] }
+  if (props.front) {
+    const count = await queryCollection(resolved.pagesKey).where('path', '<>', '/').count()
+    return { intro: null, count, sites: [] }
   }
+  const pages = await queryCollection(resolved.pagesKey).all()
+  const sites = pages
+    .filter((p) => p.path !== '/')
+    .map((p, i) => ({
+      num: String(i + 1).padStart(2, '0'),
+      title: p.title ?? p.path.replace(/^\//, ''),
+      description: p.description as string | undefined,
+      href: `/t/midden/trench${p.path}`,
+    }))
+  return { intro: pages.find((p) => p.path === '/') ?? null, count: sites.length, sites }
 })
 
-const sites = computed(() => data.value?.sites ?? [])
 const rows = computed(() =>
   props.front
     ? [
-        { num: 'I', title: 'The Trench', description: `the open excavation — ${sites.value.length} dig reports`, href: '/t/midden/trench' },
+        { num: 'I', title: 'The Trench', description: `the open excavation — ${data.value?.count ?? 0} dig reports`, href: '/t/midden/trench' },
         { num: 'II', title: 'The Stores', description: 'finds held off display, boxed by season', href: '/t/midden/stores' },
       ]
-    : sites.value,
+    : (data.value?.sites ?? []),
 )
 
 useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
@@ -88,7 +89,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
         <div class="midden-sechead">
           <span id="midden-sites-head" class="hand midden-sechead__title">{{ front ? 'The excavation' : 'The dig reports' }}</span>
           <span class="midden-sechead__rule" />
-          <span v-if="!front" class="mono midden-sechead__aside">{{ sites.length }} sites</span>
+          <span v-if="!front" class="mono midden-sechead__aside">{{ data?.count ?? 0 }} sites</span>
         </div>
         <ol v-if="rows.length" class="midden-sites">
           <li v-for="site in rows" :key="site.href" class="midden-sites__item">
