@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_0198W2yA7utj1k3WEi5fWw35
 startedAt: 2026-09-24T11:05:06Z
-endedAt: 2026-09-24T11:22:42Z
+endedAt: 2026-09-24T11:25:21Z
 kind: autonomous
 goal: Write and open a blog-post PR
-status: in-review
-outcome: "PR #1308 opened, gate green"
-summary: "Scheduled /blog-post run, no human prompt this session. Ran the rotation gate (blog-rotation.ts), which forced david as the only eligible Persona. Drafted three full candidate posts to scratch (prune-trial track record, shell-reads.ts's ten-fix arc, audit-docs' declining sweep), had a fresh Sonnet subagent blind-review them, and it picked the prune-trial track record for its governance-level weight. Revised per its two confusion notes, saved the post, ran pnpm gate:scoped (escalated to the full gate, all green), committed, pushed, and opened PR #1308 with full candidate provenance in the body. Entirely agent-initiated end to end; no human steered or approved any step."
+status: completed
+outcome: "PR #1308 merged, gate green"
+summary: "Scheduled /blog-post run, no human prompt this session. Ran the rotation gate (blog-rotation.ts), which forced david as the only eligible Persona. Drafted three full candidate posts to scratch (prune-trial track record, shell-reads.ts's ten-fix arc, audit-docs' declining sweep), had a fresh Sonnet subagent blind-review them, and it picked the prune-trial track record for its governance-level weight. Revised per its two confusion notes, saved the post, ran pnpm gate:scoped (escalated to the full gate, all green), committed, pushed, and opened PR #1308 with full candidate provenance in the body, then landed it via the pr-workflow.md recipe (check-conflicting-issues clean, verdict comment posted, merge-pr.ts merged on green CI, mergeCommitSha 0c3c4cde005c). Entirely agent-initiated end to end; no human steered, approved, or prompted any step."
 prs:
   - "1308"
 docsRead:
@@ -57,15 +57,18 @@ frictions:
   - description: "SHELL-READ-DETECTION false positive: `sed -n '1,60p' docs/adr/0017-github-body-provenance.md 2>/dev/null || ls docs/adr/ | grep 0017` was credited as a read of docs/adr/0017-github-body-provenance.md. That file doesn't exist (the real one is 0017-provenance-footer-on-agent-authored-content.md); the sed silently failed to /dev/null and only the ls fallback's output was ever seen. No content of that path was shown to me in this session."
     solution: shell-reads.ts's sed handling doesn't account for `2>/dev/null || ls` swallowing a real failure — it credits the literal path argument without the output confirming the file was actually streamed. Same family as the existing `outputMentionsFile`/output-confirmation gate already added for grep/rg; sed's fixed-count reads may need a similar "command exit / non-empty stdout" check on this shape.
     severity: moderate
-durationSec: 1055
+  - description: "Started `scripts/merge-pr.ts` in the background before posting step 4's required verdict comment, violating pr-workflow.md's own ordering (\"before calling merge-pr.ts: step 4's verdict comment must already be posted\"). Also backgrounded it with a shell `&` instead of the run_in_background tool param, which CLAUDE.md's own convention prefers."
+    solution: Caught it immediately (CI wasn't green yet, so nothing had merged), killed the three known PIDs by exact PID — not pkill -f — then posted the verdict comment and re-ran merge-pr.ts properly in the foreground/ run_in_background-tracked way. No damage, but it was a real ordering miss on a rule I had literally just read minutes earlier.
+    severity: moderate
+durationSec: 1214
 models:
-  claude-sonnet-5: 188
+  claude-sonnet-5: 206
 toolCounts:
-  Bash: 65
-  Read: 15
+  Bash: 68
+  Read: 16
   Grep: 4
   Write: 6
-  Edit: 8
+  Edit: 10
   Agent: 1
   ScheduleWakeup: 1
   ToolSearch: 3
@@ -74,6 +77,8 @@ toolCounts:
   Skill: 2
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-09-24-twenty-three-deletions-on-trial-twenty-three-holds.md
 docsReadViaShell:
