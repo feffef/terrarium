@@ -1,0 +1,52 @@
+schemaVersion: 1
+session: session_01Phgz9xALxnQ1bJQ5ApAzBV
+startedAt: 2026-09-24T00:16:11Z
+endedAt: 2026-09-24T00:22:52Z
+kind: autonomous
+goal: Run the scheduled /digest sweep
+status: in-review
+outcome: "PR #1303 opened, gate green"
+summary: "Fully agent-initiated scheduled run (no live human prompt this session). Gathered the 2026-09-23 day's activity via scripts/digest.ts (6 merged PRs, 6 completed sessions, frictions rollup), authored the digest markdown at layers/journal/content/current/pages/digests/2026-09-23.md, and ran scripts/archive-journal-content.ts --write (archived the 2026-09-16 digest and its 6 session logs out of current). Ran pnpm gate:scoped — a non-inert path triggered the full gate (lint, typecheck, validate:content, unit tests, build, test:e2e), all green. Committed, pushed, and opened PR #1303 scoped to this digest's own diff; subscribed to its activity. Will land via merge-pr.ts once checks resolve, per the digest tier's green-gate-alone merge authority (docs/agents/pr-workflow.md)."
+prs:
+  - "1303"
+docsRead:
+  - path: .claude/skills/digest/SKILL.md
+    reason: the digest recipe this run follows step by step
+  - path: docs/agents/pr-workflow.md
+    reason: closing-a-self-merged-chartered-run sequence and merge-tier authority
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: "Double-backgrounding guard (issue #1208) fired on `nohup pnpm gate:scoped > log 2>&1 &` combined with run_in_background: true — CLAUDE.md already warns against this exact combination, but it's an easy default to reach for when trying to log a background gate run's output."
+    solution: "Use run_in_background: true alone with a plain foreground command (no trailing & / nohup) whenever a log file is also wanted."
+    severity: nit
+durationSec: 401
+models:
+  claude-sonnet-5: 90
+toolCounts:
+  Bash: 25
+  Write: 2
+  ToolSearch: 4
+  Monitor: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 1
+  Read: 1
+  Skill: 2
+  Edit: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-09-23.md
+docsReadViaShell:
+  - docs/agents/guards.md
+gitBranch: claude/compassionate-lovelace-c3d1hq
+entrypoint: remote_trigger
+cliVersion: 2.1.281
+trigger: digest
+landedBy: Stop
