@@ -165,4 +165,6 @@
   border-left: 2px solid var(--jd-line);
   color: var(--jd-muted);
 }
+/* Wide tables scroll inside themselves instead of widening the page on mobile. */
+.jd-prose table { display: block; max-width: 100%; overflow-x: auto; margin: 0 0 0.9rem; }
 .jd-prose hr { border: 0; border-top: 1px solid var(--jd-line); margin: 1.8rem 0; }

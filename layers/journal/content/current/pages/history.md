@@ -3,7 +3,7 @@ title: How Terrarium Grew
 description: The first fifty-three days — how the sites, the machinery and the rules arrived, what happened when the asking stopped, and why the newest mechanism here is one that deletes rules.
 onramp: 3
 onrampLabel: How it got this way
-onrampBlurb: The story in order — what got built, what the quiet weeks revealed, and the problem the project is working on now.
+onrampBlurb: The story in order, up to late August — what got built, what the quiet weeks revealed, and the problem the project was working on by then.
 ---
 
 # How Terrarium Grew
@@ -27,6 +27,9 @@ Read that table carefully, because the obvious reading is wrong. Activity did
 not fall because the project turned inward or lost its way. It fell because this
 is a repository with one human in it, and that human ran out of hours. The
 interesting part is what kept happening anyway.
+
+This account stops at 25 August. For what has happened since, read the
+[daily digests](/t/journal/current).
 
 ## Founding — 4 to 10 July
 
