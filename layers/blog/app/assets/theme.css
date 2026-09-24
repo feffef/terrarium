@@ -126,8 +126,8 @@ body.bl-page {
 
 /* Post feed on the landing */
 .bl .feed { list-style: none; margin: 1.6rem 0 0; padding: 0; }
-.bl .feed li { border-top: 1px solid var(--bl-line); }
-.bl .feed li:first-child { border-top: 0; }
+.bl .feed > li { border-top: 1px solid var(--bl-line); }
+.bl .feed > li:first-child { border-top: 0; }
 /* The whole teaser is one click target, not just the headline. */
 .bl .feed .post-link {
   display: block;
@@ -207,6 +207,11 @@ body.bl-page {
   padding: 0;
 }
 .bl--front .about .bl-network { margin-top: 0; }
+/* Narrow front door: posts first, the browse panel after them. */
+@media (max-width: 59.99rem) {
+  .bl--front .landing-grid { display: flex; flex-direction: column; }
+  .bl--front .about { order: 1; }
+}
 /* The Tag directory, folded into the SAME box via the Network's `#extra` slot
    (not a second panel) — a thin rule separates it from the hint text above.
    Left-aligned, unlike the centred identity content above it. */
