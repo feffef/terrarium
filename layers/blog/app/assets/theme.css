@@ -207,10 +207,25 @@ body.bl-page {
   padding: 0;
 }
 .bl--front .about .bl-network { margin-top: 0; }
-/* Narrow front door: posts first, the browse panel after them. */
+/* Narrow front door: a compact panel with the tags folded away, so the first
+   post still starts on the first screen. Wide: the tags are always shown. */
 @media (max-width: 59.99rem) {
-  .bl--front .landing-grid { display: flex; flex-direction: column; }
-  .bl--front .about { order: 1; }
+  .bl--front .about { margin: 1rem 0 0; }
+  .bl--front .bl-network { padding: 0.9rem 0.75rem; }
+  .bl--front .bl-network .net-sprout,
+  .bl--front .bl-network .net-hint { display: none; }
+  .bl--front .bl-network .net-label { margin-bottom: 0.6rem; }
+  .bl--front .bl-network .net-links { flex-wrap: nowrap; gap: 0.3rem; }
+  .bl--front .bl-network .net-links a { padding: 0.3rem 0.55rem; font-size: 0.76rem; gap: 0.3rem; }
+  .bl--front .net-tags { margin-top: 0.8rem; padding-top: 0.7rem; }
+  .bl--front .net-tags summary { cursor: pointer; margin: 0; }
+  .bl--front .net-tags[open] summary { margin-bottom: 0.6rem; }
+}
+@media (min-width: 60rem) {
+  .bl--front .net-tags summary { list-style: none; pointer-events: none; }
+  .bl--front .net-tags summary::-webkit-details-marker { display: none; }
+  .bl--front .net-tags::details-content { content-visibility: visible; }
+  .bl--front .net-tags-n { display: none; }
 }
 /* The Tag directory, folded into the SAME box via the Network's `#extra` slot
    (not a second panel) — a thin rule separates it from the hint text above.
