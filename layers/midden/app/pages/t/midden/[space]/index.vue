@@ -3,10 +3,10 @@
 // (CONTEXT.md: "The Stores"), so this route branches on the `space` param rather
 // than rendering one component unconditionally as it did when `trench` was the
 // only Space:
-//   /t/midden/trench  → the dig-report landing, also mirrored at `/t/midden`
+//   /t/midden/trench  → the dig-report landing
 //   /t/midden/stores  → the register of finds held off display
 // Each landing resolves its own Space, so neither needs route context passed in.
-// An unknown space falls through to the trench landing — the Tenant's front door.
+// An unknown space falls through to the trench landing.
 const route = useRoute()
 const space = computed(() => String(route.params.space ?? ''))
 </script>

@@ -149,12 +149,11 @@ for prose still asserting the old state, and fix it in the same pass.
   referent hash terminal for that same check unless a declared `removedIn`
   overrides it (a referent can instead be a birth record, as with the
   the-spawn-verb Artifact's coining commit).
-- **`layers/midden/app/components/midden/TrenchLanding.vue`** — the single
-  landing mirrored at both `/t/midden` and `/t/midden/trench`, carrying the
-  curatorial foreword an actual visitor reads (verbatim in-voice copy, not
-  this file's register), the pull-quote, and the dig-report list.
-  (`trench/pages/index.md` remains valid content but is no longer the
-  rendered landing intro.)
+- **`layers/midden/app/components/midden/TrenchLanding.vue`** — both
+  landings in one layout: at `/t/midden` (`front`) the curatorial foreword
+  (verbatim in-voice copy, not this file's register), the pull-quote, and a
+  doorway to each Space; at `/t/midden/trench` the trench's own intro
+  (`trench/pages/index.md`) and the dig-report list.
 - **`layers/midden/app/components/midden/ConditionKey.vue`** — the condition
   key: a slim sticky sidebar on each dig-report/stores page listing only the
   grades present in that report's finds and their one-line definitions
