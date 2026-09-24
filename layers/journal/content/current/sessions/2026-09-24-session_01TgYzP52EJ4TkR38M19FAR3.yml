@@ -1,0 +1,93 @@
+schemaVersion: 1
+session: session_01TgYzP52EJ4TkR38M19FAR3
+startedAt: 2026-09-24T20:52:03Z
+endedAt: 2026-09-24T22:13:32Z
+kind: interactive
+goal: Brave full-sweep auto-triage of open issues
+status: completed
+outcome: 13 issues triaged, 5 newly agent-ready
+summary: 'Human-instructed: /auto-triage "be brave and design a solution for each issue", then the human chose full-sweep (all 13 non-map issues) when asked. Normal eligibility would have surfaced only 4. Dispatched one read-only triage subagent per issue; each verified claims, designed a solution, set labels, and posted one comment. Outcome: ready-for-agent for #1285, #1276, #1244, #1168, #1248; ready-for-human with a recommended design for #1304, #1293, #864, #866, #868, #1215, #445; #869 skipped as blocked by #864. No code changes, no PR.'
+prs: []
+docsRead: []
+skillsUsed:
+  - name: auto-triage
+    reason: human-invoked sweep
+  - name: triage
+    reason: per-issue rules briefed to subagents
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "The #864 and #1276 subagents independently designed the same merge-pr.ts verdict-comment refusal; the parallel sweep has no cross-issue overlap pass before posting."
+    solution: auto-triage's roll-up step could flag designs touching the same file so the human sees the overlap; noted it in the report instead.
+    severity: nit
+  - description: "The skill says a Trusted user starting the sweep green-lights AFK work, but guards.md forbids unattended guard edits; #1304 had a finished design yet had to stay ready-for-human."
+    solution: No fix needed. The repo resolves it, but the auto-triage skill could point to guards.md's rule.
+    severity: nit
+durationSec: 4889
+models:
+  claude-opus-5-5: 63
+toolCounts:
+  Bash: 7
+  Grep: 1
+  AskUserQuestion: 1
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  Agent: 13
+  Skill: 2
+docsReadViaShell:
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/agents/triage-labels.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/research/rulebook-migration-table.md
+  - .agents/skills/triage/OUT-OF-SCOPE.md
+  - docs/proposals/README.md
+  - docs/proposals/879-gate-yml-thin-shell.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/guards.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/pr-workflow.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+subagents:
+  - type: general-purpose
+    task: "Triage issue #1304"
+  - type: general-purpose
+    task: "Triage issue #1293"
+  - type: general-purpose
+    task: "Triage issue #1285"
+  - type: general-purpose
+    task: "Triage issue #1276"
+  - type: general-purpose
+    task: "Triage issue #864"
+  - type: general-purpose
+    task: "Triage issue #1248"
+  - type: general-purpose
+    task: "Triage issue #1244"
+  - type: general-purpose
+    task: "Triage issue #1168"
+  - type: general-purpose
+    task: "Triage issue #1215"
+  - type: general-purpose
+    task: "Triage issue #866"
+  - type: general-purpose
+    task: "Triage issue #868"
+  - type: general-purpose
+    task: "Triage issue #869"
+  - type: general-purpose
+    task: "Triage issue #445"
+gitBranch: claude/auto-triage-solution-design-wv5n1c
+entrypoint: remote_mobile
+cliVersion: 2.1.282
+ideas:
+  - "Add a cross-issue overlap check to auto-triage's report step: list which files each Agent Brief touches and flag any file shared by two briefs, so conflicting parallel implementations (e.g. #864 and #1276 on merge-pr.ts) get sequenced before pickup."
+landedBy: Stop
