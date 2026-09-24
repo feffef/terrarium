@@ -342,6 +342,36 @@ function normalizeShellCommand(entry: ShellCommand): { command: string; output?:
   return typeof entry === 'string' ? { command: entry } : entry
 }
 
+/** `for VAR in <literal-list>; do … ; done` (issue #1305) — the header segment
+ *  `segments()` already splits out on its own (`;` separates it from `do`).
+ *  Matches only a BARE literal word list: any header value carrying a glob or
+ *  variable character (`GLOB_OR_VAR`) means the list isn't literal (e.g. a
+ *  `$(...)` command substitution or a nested expansion), so this returns
+ *  `undefined` and the segment falls through to ordinary handling — `for`
+ *  isn't a reader verb, so it is simply noted as 'not a reader command' like
+ *  any other non-matching command. Out of scope deliberately (#1305): `while`
+ *  loops, and a `for` whose list itself needs resolving. */
+function matchForHeader(tokens: Token[]): { varName: string; values: string[] } | undefined {
+  if (tokens.length < 4) return undefined
+  if (tokens[0]!.quoted || tokens[0]!.text !== 'for') return undefined
+  const varToken = tokens[1]!
+  if (varToken.quoted || !/^[A-Za-z_][A-Za-z0-9_]*$/.test(varToken.text)) return undefined
+  if (tokens[2]!.quoted || tokens[2]!.text !== 'in') return undefined
+  const values = tokens.slice(3)
+  if (values.some((t) => GLOB_OR_VAR.test(t.text))) return undefined
+  return { varName: varToken.text, values: values.map((t) => t.text) }
+}
+
+/** Substitutes every `$VAR`/`${VAR}` occurrence in a body segment's tokens with
+ *  one of the loop header's own literal values (issue #1305) — not filesystem
+ *  globbing, the loop's own list is the whole universe of what `$VAR` can be.
+ *  The negative lookahead stops `$p` from also eating `$path`: a real shell
+ *  would never treat the two as the same variable. */
+function substituteLoopVar(tokens: Token[], varName: string, value: string): Token[] {
+  const re = new RegExp(`\\$\\{${varName}\\}|\\$${varName}(?![A-Za-z0-9_])`, 'g')
+  return tokens.map((t) => ({ ...t, text: t.text.replace(re, value) }))
+}
+
 /** True when `output` shows `token` (the literal argument grep/rg was given)
  *  was actually part of what matched — either grep's own multi-file
  *  `<token>:<line>:<match>` prefix, or rg's default grouped format, whose
@@ -395,9 +425,10 @@ export function scanShellReads(
 
   for (const entry of commands) {
     const { command, output } = normalizeShellCommand(entry)
-    for (const raw of segments(command)) {
-      const tokens = unwrap(raw)
-      if (tokens.length === 0) continue
+
+    const handleSegment = (segTokens: Token[]): void => {
+      const tokens = unwrap(segTokens)
+      if (tokens.length === 0) return
       const verb = tokens[0]!.text.replace(/^.*\//, '')
       const note = (into: NearMiss[], token: string, rule: SkipRule): void => {
         const p = norm(token)
@@ -417,39 +448,39 @@ export function scanShellReads(
             if (resolved !== undefined) paths.add(resolved)
             else note(fromReader, showPath, 'not a literal path: glob or variable')
           }
-          continue
+          return
         }
 
         const diffPaths = extractGitShowDiffPaths(tokens) ?? extractGitDiffPaths(tokens)
         if (diffPaths !== undefined) {
-          for (const raw of diffPaths) {
-            const p = norm(raw)
+          for (const diffPath of diffPaths) {
+            const p = norm(diffPath)
             const credit = (path: string): void => {
-              if (output === undefined || outputShowsGitDiffFor(output, raw)) paths.add(path)
-              else note(fromReader, raw, 'git show diff does not touch this path')
+              if (output === undefined || outputShowsGitDiffFor(output, diffPath)) paths.add(path)
+              else note(fromReader, diffPath, 'git show diff does not touch this path')
             }
             if (isInstructionDoc(p)) credit(p)
             else if (isGlobbedInstructionDoc(p)) {
               const resolved = resolveGlobbedDoc(p)
               if (resolved !== undefined) credit(resolved)
-              else note(fromReader, raw, 'not a literal path: glob or variable')
+              else note(fromReader, diffPath, 'not a literal path: glob or variable')
             }
           }
-          continue
+          return
         }
       }
 
       if (!READER_VERBS.has(verb)) {
         for (const t of tokens) note(fromOther, t.text, 'not a reader command')
-        continue
+        return
       }
       if (isInPlaceEdit(verb, tokens)) {
         noteAll('in-place edit: written, not read')
-        continue
+        return
       }
       if (showsNoContent(verb, tokens)) {
         noteAll('no contents shown: -l/-q/-c reports only a name or a count')
-        continue
+        return
       }
 
       // Candidates this segment would credit, held back until the file-count/
@@ -515,6 +546,40 @@ export function scanShellReads(
       } else {
         for (const c of candidates) paths.add(c.path)
       }
+    }
+
+    /** The `for VAR in <literal-list>` header currently open across this
+     *  command's own segments (issue #1305) — `undefined` outside one. Never
+     *  carries over to the next `commands` entry: a loop can't span two
+     *  separate Bash invocations. */
+    let loop: { varName: string; values: string[] } | undefined
+    for (const raw of segments(command)) {
+      const header = matchForHeader(raw)
+      if (header) {
+        loop = header
+        continue
+      }
+
+      // The header always ends at the `;` before `do` (`segments()` splits on
+      // it), so a loop's body starts as its own segment led by `do` and ends
+      // when one is trailing `done` — both keywords, not part of the command
+      // substituted or run.
+      let body = raw
+      let closesLoop = false
+      if (loop) {
+        if (body[0] && !body[0].quoted && body[0].text === 'do') body = body.slice(1)
+        if (body.length > 0 && !body[body.length - 1]!.quoted && body[body.length - 1]!.text === 'done') {
+          closesLoop = true
+          body = body.slice(0, -1)
+        }
+      }
+
+      if (loop && body.length > 0) {
+        for (const value of loop.values) handleSegment(substituteLoopVar(body, loop.varName, value))
+      } else if (body.length > 0) {
+        handleSegment(body)
+      }
+      if (closesLoop) loop = undefined
     }
   }
 
