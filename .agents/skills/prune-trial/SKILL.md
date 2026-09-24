@@ -30,9 +30,6 @@ is earlier and is never the window's start. Run
 commit, timestamp, and window-close time — from `git log -S`, not a date to
 derive or recall by hand (a hand-derived one is how PR #1061 judged a
 trial a day early against a landing commit that turned out not to exist).
-Verify the returned commit actually names this trial's own problem before
-trusting it: two trials sharing an opening line can collide in the `-S`
-search and silently return the wrong one's commit (issue #1285).
 Quote its `landed:`/`judgeable from:` lines verbatim in the verdict commit —
 the latter is a floor, not a deadline: judging any time at or after it is
 fine (nothing guarantees this Skill runs at a precise time), only judging

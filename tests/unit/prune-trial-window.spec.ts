@@ -1,9 +1,13 @@
 // Unit tests for prune-trial-window's pure core — parsing, the raw-first-line
 // search-key extraction (the fix for the `-S` line-wrap miss), and the
-// three-day boundary math. The git shell (`findLandingCommit`) is exercised
-// by running the script directly against this repo's real ledger, not here.
+// three-day boundary math, plus `buildWindows` against a throwaway git repo.
+import { execFileSync } from 'node:child_process'
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import {
+  buildWindows,
   earliestJudgeableAtUtc,
   isJudgeable,
   parseTrials,
@@ -119,5 +123,40 @@ describe('selectTrials()', () => {
 
   it('returns nothing when no trial matches', () => {
     expect(selectTrials(pairs, 'no such text')).toEqual([])
+  })
+})
+
+describe('buildWindows() — landing commit', () => {
+  it('reports the newest -S match: add A, remove A, add B sharing its first line → B (issue #1285)', () => {
+    const repo = mkdtempSync(join(tmpdir(), 'prune-trial-window-'))
+    const git = (args: string[], date?: string) =>
+      execFileSync('git', ['-c', 'core.hooksPath=/dev/null', '-c', 'commit.gpgsign=false', '-c', 'user.name=t', '-c', 'user.email=t@t', ...args], {
+        cwd: repo,
+        encoding: 'utf8',
+        env: date ? { ...process.env, GIT_AUTHOR_DATE: date, GIT_COMMITTER_DATE: date } : process.env,
+      }).trim()
+    mkdirSync(join(repo, '.agents'))
+    const commit = (ledger: string, date: string) => {
+      writeFileSync(join(repo, '.agents/prune-trials.yml'), ledger)
+      git(['add', '-A'])
+      git(['commit', '-qm', date], date)
+      return git(['rev-parse', 'HEAD'])
+    }
+    const entry = (tail: string) => `trials:\n  - problem: >\n      Shared first line.\n      ${tail}\n    opened: 2026-09-01\n`
+    git(['init', '-q'])
+    commit(entry('Entry A.'), '2026-09-01T00:00:00Z')
+    commit('trials: []\n', '2026-09-05T00:00:00Z')
+    const landedB = commit(entry('Entry B.'), '2026-09-10T00:00:00Z')
+    git(['update-ref', 'refs/remotes/origin/main', 'HEAD'])
+
+    const trial = { problem: 'Shared first line. Entry B.', opened: '2026-09-01' }
+    const [found, missing] = buildWindows(
+      [{ trial, searchKey: 'Shared first line.' }, { trial, searchKey: 'Never in the ledger.' }],
+      new Date('2026-09-11T00:00:00Z'),
+      repo,
+    )
+    expect(found!.landing).toEqual({ hash: landedB, isoCommitTime: '2026-09-10T00:00:00.000Z' })
+    expect(found!.judgeableNow).toBe(false)
+    expect(missing!.landing).toBeNull()
   })
 })
