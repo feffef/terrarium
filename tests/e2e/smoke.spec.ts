@@ -87,19 +87,16 @@ describe('L2 smoke render', async () => {
   // it's outside the manifest-derived `entryRoutes` sweep above and asserted
   // here directly rather than via a per-Tenant `register…()` module.
   describe('root index page', () => {
-    it('renders the hero and lists the Commons, Blog, Midden, and Atlas showcases in order', async () => {
+    it('renders the hero and lists the Blog, Midden, and Atlas showcases in order', async () => {
       const html = await $fetch('/')
       expect(html).toMatch(/<h1[ >]/)
       expect(html).toMatch(/<title>Terrarium[^<]+<\/title>/)
-      const commonsAt = html.indexOf('The Commons')
-      expect(commonsAt).toBeGreaterThan(-1)
       const blogAt = html.indexOf('The Blog')
       const middenAt = html.indexOf('The Midden')
       const atlasAt = html.indexOf('The Atlas')
       expect(blogAt).toBeGreaterThan(-1)
       expect(middenAt).toBeGreaterThan(-1)
       expect(atlasAt).toBeGreaterThan(-1)
-      expect(commonsAt).toBeLessThan(blogAt)
       expect(blogAt).toBeLessThan(middenAt)
       expect(middenAt).toBeLessThan(atlasAt)
     })
@@ -129,7 +126,7 @@ describe('L2 smoke render', async () => {
         const hrefs = await page.locator('.explore-grid a.title-link').evaluateAll((els) =>
           els.map((el) => el.getAttribute('href')),
         )
-        expect(hrefs).toEqual(['/t/commons', '/t/blog', '/t/midden', '/t/atlas'])
+        expect(hrefs).toEqual(['/t/blog', '/t/midden', '/t/atlas'])
       } finally {
         await page.close()
       }

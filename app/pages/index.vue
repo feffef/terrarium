@@ -39,16 +39,6 @@ const middenEntries = [
 
 const SHOWCASES = [
   {
-    tenant: 'The Commons',
-    path: '/t/commons',
-    noun: 'views',
-    blurb: 'Every site at once — one search box over all of them, and one timeline of everything published and logged.',
-    entries: [
-      { name: 'Search', path: '/t/commons/search', note: 'find anything, on any site', accent: 'var(--root-accent)' },
-      { name: 'Timeline', path: '/t/commons/timeline', note: 'everything, newest first', accent: 'var(--root-muted)' },
-    ],
-  },
-  {
     tenant: 'The Blog',
     path: '/t/blog',
     noun: 'voices',
@@ -253,12 +243,12 @@ useHead({ title: 'Terrarium · a self-growing garden of websites' })
   color: var(--root-muted);
 }
 
-/* auto-fit, not a fixed column count: another Tenant joins the row (or wraps to
+/* auto-fit, not a fixed column count: a fourth Tenant joins the row (or wraps to
    a second row) without this file changing — the page grows by a grid cell, not
    by another full-width section. */
 .explore-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
   gap: 1rem;
   align-items: stretch;
 }
