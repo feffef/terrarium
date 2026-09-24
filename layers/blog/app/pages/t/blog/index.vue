@@ -63,6 +63,12 @@ const filteredPosts = computed(() =>
   selectedTag.value ? posts.value.filter((p) => p.tags?.includes(selectedTag.value!)) : posts.value,
 )
 
+// Closed on narrow screens unless a tag is active; CSS keeps it shown when wide,
+// and the mount check covers browsers without `::details-content`.
+const tagsOpen = ref(!!selectedTag.value)
+watch(selectedTag, (t) => { if (t) tagsOpen.value = true })
+onMounted(() => { if (matchMedia('(min-width: 60rem)').matches) tagsOpen.value = true })
+
 useHead({
   title: computed(() => (selectedTag.value ? `#${selectedTag.value} · blog` : 'blog · terrarium')),
   bodyAttrs: { class: 'bl-page' },
@@ -93,8 +99,8 @@ useSeoMeta({
       <aside class="about about--plain" aria-label="Browse the blog">
         <BlogNetwork current="">
           <template #extra>
-            <div class="net-tags">
-              <p class="net-tags-label">Browse by tag</p>
+            <details class="net-tags" :open="tagsOpen" @toggle="tagsOpen = ($event.target as HTMLDetailsElement).open">
+              <summary class="net-tags-label">Browse by tag<span class="net-tags-n"> ({{ tagCounts.length }})</span></summary>
               <nav class="tag-directory" aria-label="Browse by tag">
                 <NuxtLink to="/t/blog" class="tag-chip" :class="{ active: !selectedTag }">all</NuxtLink>
                 <NuxtLink
@@ -105,7 +111,7 @@ useSeoMeta({
                   :class="{ active: selectedTag === t }"
                 >{{ t }} <span class="tag-count">{{ count }}</span></NuxtLink>
               </nav>
-            </div>
+            </details>
           </template>
         </BlogNetwork>
       </aside>

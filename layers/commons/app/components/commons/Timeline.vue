@@ -24,7 +24,7 @@ function calendarDate(iso: string): string {
   <div class="tl">
     <p class="count">
       {{ entries.length }} {{ entries.length === 1 ? 'entry' : 'entries' }}
-      across {{ tenantCount }} {{ tenantCount === 1 ? 'tenant' : 'tenants' }}
+      across {{ tenantCount }} {{ tenantCount === 1 ? 'site' : 'sites' }}
     </p>
 
     <ol class="feed">
@@ -65,7 +65,7 @@ function calendarDate(iso: string): string {
 }
 .row {
   display: grid;
-  grid-template-columns: 6.5rem 1fr;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
   gap: 0.2rem 1rem;
   align-items: baseline;
   padding: 0.7rem 0.4rem;
@@ -91,6 +91,7 @@ function calendarDate(iso: string): string {
   font-weight: 600;
   font-size: 1rem;
   line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 .genre {
   display: inline-block;
@@ -137,7 +138,7 @@ function calendarDate(iso: string): string {
 }
 @media (max-width: 30rem) {
   .row {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.05rem;
   }
 }
