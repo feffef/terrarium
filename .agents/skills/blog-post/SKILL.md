@@ -185,40 +185,14 @@ post in **real, verifiable facts** and **link them** so readers can go look:
   recent activity and links the commits/PRs behind it; **Karen** links the specific
   commit/file that's sloppy or over-complicated; **Kevin** links the genuinely
   elegant commit/file that impressed him.
-- Never link something you didn't verify exists (`git log`, `gh`/GitHub MCP, or the
-  file on disk). A dead or wrong link is as bad as an invented fact.
-- **This rule isn't just for links — verify every factual claim**, not only the
-  ones you're linking. Re-derive any weekday, count, or date straight from `git`
-  or the file on disk before publishing (`git log --date=format:'%A'`, `wc -l`,
-  etc.) — a wrong number or weekday is as bad as an invented fact, and no gate
-  catches it.
-- **Any relative-time or "X ago"/elapsed-time claim must be computed from the
-  actually-fetched `created_at`/timestamp data** (or a diff against it) —
-  never estimated or recalled from memory while drafting.
-- **The same rigor extends to every commit-attributed claim: the exact SHA, the
-  actual author/model, and any occurrence count.** Verify each directly against
-  `git show`/`git log`/the GitHub API before it goes in the draft — never
-  recalled or estimated from memory while drafting.
-- **Provenance and causal claims get the same rigor as links.** Before attributing
-  intent ("X did this because…"), check **who actually authored/merged** the PR or
-  commit via `git log`/GitHub — not assumption. Before repeating a "why it broke" /
-  root-cause claim, cross-check it against the **authoritative issue or the code
-  itself**: a session log's interpretive half (`goal`/`outcome`/`frictions`) is an
-  **unverified self-report** and can be wrong, so don't launder it into the post as
-  established fact.
-- **A quoted excerpt (e.g. a deny message, an error string) and an
-  inferred/paraphrased summary of a linked PR/issue's actual content — as
-  opposed to its metadata — need the same verify-against-source treatment as a
-  link.** Check both against the real source or API content before the draft
-  is finalized.
-- **Recompute every count fresh from source right before finalizing, rather
-  than eyeballing an already-fetched list — and when two or more counts or
-  quantities land in the same paragraph, check that they're mutually
-  consistent.** Each number can individually trace to a real source and still
-  contradict a neighboring one if they measure different things (e.g. a line
-  count and a diffstat's insertions/deletions are not the same measurement) —
-  reconcile them explicitly in the prose if they legitimately differ, rather
-  than juxtaposing them unexplained.
+- **Re-derive every factual claim from its primary source before it ships —
+  whoever composed it, you included.** Links, counts, dates and weekdays,
+  relative times, SHAs, authors, quotes and paraphrases, causal claims: recompute
+  from `git`, the GitHub API, or the file on disk, never from memory, and
+  reconcile counts that share a paragraph. For "who decided" / "the session
+  reasoned" / "on its own", the authority is **the PR's own review comments and
+  timeline** — not a commit message (often in agent voice whoever directed the
+  change) or a session log's summary line. Step 7's fact-check holds this rule.
 - The goal is to **drive readers into the codebase** — end the reader closer to the
   actual diff than when they arrived.
 
@@ -249,6 +223,15 @@ do/don't list.** Confirm it actually reads *in that Persona's voice* and is
 isn't. Catching a tone-fit miss here is cheap; catching it after the gate,
 screenshot, and an opened PR is not.
 
+**Then fact-check it.** Spawn a fresh read-only subagent (`model: "sonnet"`,
+with repo and GitHub read access) given the saved post's path and step 5's
+verification rule. It lists every factual claim — every causal/agency sentence
+above all — checks each against its primary source, and returns one row per
+claim: claim · source checked · verdict `ok` / `wrong` / `unverifiable`. Fix or
+cut every `wrong` and `unverifiable` claim; don't argue the verdict. A
+causal/agency claim the PR's review thread or timeline can't settle is cut — kept
+anyway, it's the escalation case below.
+
 Run `pnpm gate:scoped` — step 1 of `docs/agents/pr-workflow.md`'s "Closing a
 self-merged chartered run" sequence — a new post adds no collection, but a
 malformed `reactsTo`/pingback fails L1.
@@ -259,7 +242,8 @@ the PR body that the post was chosen from three drafted candidates by an
 independent review pass, the topic (and, for a bare-invocation run, the Persona)
 of the other two candidates, the one-line reason the reviewer preferred this one,
 and — one line — the rotation state A0 read (who was `last`, who was starved) so
-the persona choice is auditable. That whole provenance is worth a few sentences,
+the persona choice is auditable, and the fact-check's tally ("N claims checked,
+M fixed or cut"). That whole provenance is worth a few sentences,
 not a full transcript.
 
 Follow `docs/agents/pr-workflow.md`'s "Closing a self-merged chartered run"
@@ -268,8 +252,9 @@ ledger-row scope (`docs/adr/0003-agent-operating-model-and-governance.md`). A
 blog post is squarely low-risk content, and its editorial judgement was
 already spent in the A5 outside-read, so the merge decision is safely
 delegated to the objective gate. If anything **outside the blog-content
-scope** above rode into the PR, do **not** run `merge-pr.ts` — leave it open
-for human review (ADR-0003's default).
+scope** above rode into the PR, or it keeps a causal/agency claim the
+fact-check left unresolved, do **not** run `merge-pr.ts` — leave it open for
+human review (ADR-0003's default).
 
 Done when the PR has **merged with a green gate**, or — in the escalation case
 above — is open and honestly awaiting a human.
