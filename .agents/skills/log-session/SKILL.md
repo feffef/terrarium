@@ -179,14 +179,11 @@ is a normal PR.
 
 `--author` prints what the shell-read detector found: the instruction docs a
 `cat`/`sed`/`grep` command streamed into this session's work (`docsReadViaShell`),
-and the candidates it *rejected* with the rule that rejected each. Read both lists
-against the session you just lived through: a rejected command that really did
-show the file — to you or to a subagent you dispatched — is a **miss**.
-(ADR-0009's shell-read amendment says why the rejects are printed at all.)
-
-The field folds in what you **delegated**, exactly as `filesRead` does (issue
-#796), and the report marks those paths — so read it against the session
-including its subagents, not against what you personally typed (issue #1206).
+each with the command that credited it and where it ran (this session or a named
+subagent — folded in by design, issue #796), and the candidates it *rejected* with
+the rule that rejected each. Check both lists against that evidence, not memory: a
+rejected command that really did show the file is a **miss**. (ADR-0009's
+shell-read amendment says why the rejects are printed at all.)
 
 **You cannot correct the field** — it is derived, and an authored
 `docsReadViaShell` is refused by name. A wrong result is reported as a Friction
