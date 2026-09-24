@@ -28,12 +28,12 @@ const results = computed(() => {
 <template>
   <div class="se">
     <label class="box">
-      <span class="visually-hidden">Search page titles and summaries across every site</span>
+      <span class="visually-hidden">Search page titles, summaries and site names</span>
       <input
         v-model="q"
         class="se-box"
         type="search"
-        placeholder="Search titles and summaries…"
+        placeholder="Search titles, summaries and sites…"
         autocomplete="off"
         spellcheck="false"
       >
