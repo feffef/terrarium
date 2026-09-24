@@ -1,0 +1,92 @@
+schemaVersion: 1
+session: session_01JZUXjjsa8NFaVy7dRoeG2k
+startedAt: 2026-09-24T13:14:16Z
+endedAt: 2026-09-24T13:28:38Z
+kind: autonomous
+goal: Run scheduled /prune-trial cycle
+status: completed
+outcome: No trial judged or opened
+summary: "Scheduled /prune-trial run. Section 1: both open trials (pr-workflow.md's merge-pr.ts step-5 ordering, issue #1276; CLAUDE.md's run_in_background- from-the-outset bullet, issue #1293) are still inside their 3-day window per scripts/prune-trial-window.ts (close 2026-09-25/26; today is 2026-09-24) — judged nothing, left both entries untouched. Section 2: dispatched two background subagents in sequence to search the full instruction corpus (CLAUDE.md, docs/agents/*.md, docs/adr/*, first-party Skills, rulebook-migration-table.md, the issue tracker) for a new prune candidate, excluding the two open trials' territory and the already-settled #933/CM-32 clause. Criterion 1 (prose that already failed) found nothing new — the pkill saga was already prune-trialed 2026-08-26 with little fresh mass left, the identifier-fabrication saga shares a paragraph with settled territory, and other candidates (pr-workflow.md's enable_pr_auto_merge, issue-tracker's closing-keyword rule) were one-incident originating stories, not repeated rule failures. Criterion 2 (prose mass) also found nothing clearing a meaningful bar: every large file checked (docs/agents/github-integration.md in full, guards.md, pr-workflow.md, tenant-layers.md, mdc-when-to-use.md, git-conventions.md, guest-contributions.md, environment-caveats.md, domain.md, the largest Skills) reads as many distinct non-inferable facts rather than one over-explained problem. I independently read CLAUDE.md and ADR-0009 (557 lines, by far the largest ADR) myself and reached the same conclusion: CLAUDE.md's densest bullets (the ADR-0003 auto-open-PR bullet, the ADR-0004 human-only pinned-files bullet) are dense because getting them wrong is expensive, matching CLAUDE.md's own \"spell out concrete steps only where wrong is costly\" principle; ADR-0009's amendment preambles read as necessary reasoning for actively-used mechanism decisions (log-session/ close-session depend on the detail), not restatement. All human-instructed: none of this was a direct ask — the schedule fired the skill verbatim and I ran its own decision procedure through to an honest \"nothing to prune\" conclusion rather than forcing a weak edit for the sake of shipping one. Made no commits; nothing to gate, no PR."
+prs: []
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the open-trials ledger
+  - path: CLAUDE.md
+    reason: candidate search for criterion-2 prose mass
+  - path: docs/agents/github-integration.md
+    reason: candidate search
+  - path: docs/agents/verifying-ui-changes.md
+    reason: candidate search
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: largest ADR
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: this session's whole task
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 862
+models:
+  claude-sonnet-5: 56
+toolCounts:
+  Bash: 12
+  Read: 5
+  Agent: 3
+  ReadNotifications: 2
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  Skill: 2
+  Write: 1
+docsReadViaShell:
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/github-integration.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Search corpus for failed-prose prune candidate
+  - type: general-purpose
+    task: Search corpus for failed-prose prune candidate
+  - type: general-purpose
+    task: Find largest prunable prose-mass candidate
+gitBranch: claude/practical-rubin-1r2ef5
+entrypoint: remote_trigger
+cliVersion: 2.1.281
+trigger: prune-trial
+ideas:
+  - /prune-trial's own ledger could record a lightweight "ran, found nothing" marker (distinct from a shipped trial entry) so a future run — or a human — can see the search cadence and consecutive-empty-run streak at a glance, the same way the Skill/Routine-retirement exception already uses "two empty runs in a row" as its own recalibration signal.
+landedBy: Stop
