@@ -19,14 +19,15 @@
 // `envToken`) is single-homed in `list-open-issues.ts` and imported below.
 //
 // Usage:  tsx scripts/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N]
-//   Polls the PR's head-commit check runs every `interval-ms` (default 15s)
+//   Refuses up front unless this session's verdict is on the PR (issue #1276).
+//   Then polls the PR's head-commit check runs every `interval-ms` (default 15s)
 //   until they resolve or `timeout-ms` (default 20 minutes) elapses, then:
 //     - all green  → merges via the given method (default `merge`, matching
 //       this repo's existing merge-commit convention) and prints the result.
 //     - any red    → prints the failing check names, does not merge.
 //     - timeout    → prints the still-unresolved state, does not merge.
-//   Exits 0 only when the merge actually happened; 1 otherwise (red, timeout,
-//   or a merge-call error) — an unmerged PR is a caller-actionable outcome,
+//   Exits 0 only when the merge actually happened; 1 otherwise (no verdict,
+//   red, timeout, or a merge-call error) — an unmerged PR is a caller-actionable outcome,
 //   not a script bug, but still worth a non-zero exit for CI/scripting.
 //
 // Closing-keyword reconciliation (issue #983): GitHub's own auto-close on
@@ -64,6 +65,9 @@ import {
   pickFetchStrategy,
   type FetchStrategy,
 } from './list-open-issues.ts'
+import { findTranscriptContents } from './provenance-footer.ts'
+import { hasAuthorshipMarker, readProvenanceHeader } from './provenance-header.ts'
+import { resolveGroundTruthFromTranscript } from './session-id-guard.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -91,7 +95,8 @@ export interface PollOptions {
 
 export interface MergeResult {
   pr: number
-  verdict: ChecksVerdict
+  /** `no-verdict`: refused before polling — see `hasVerdictFromSession`. */
+  verdict: ChecksVerdict | 'no-verdict'
   merged: boolean
   mergeCommitSha?: string
   message: string
@@ -135,6 +140,16 @@ export function failingCheckNames(runs: RawCheckRun[]): string[] {
  *  over `gh pr`) so this stays independently testable. */
 export function mergeMethodFlag(method: MergeMethod): string {
   return `--${method}`
+}
+
+/** Whether any PR review/comment body is a verdict this session posted
+ *  (`pr-workflow.md` step 4, issue #1276): an ADR-0017 marker, and — when the
+ *  session is known — a header naming it. An unresolvable session accepts any
+ *  marker rather than blocking a session whose environment lacks the id. */
+export function hasVerdictFromSession(bodies: string[], sessionId: string | null): boolean {
+  return bodies.some((b) =>
+    sessionId === null ? hasAuthorshipMarker(b) : readProvenanceHeader(b)?.sessionId === sessionId,
+  )
 }
 
 // ── Closing-keyword reconciliation (pure, issue #983) ────────────────────────
@@ -246,9 +261,8 @@ function mergePrViaGh(owner: string, repo: string, prNumber: number, mergeMethod
 // `curl`, not Node's built-in `fetch`: same proxy-auth reason
 // `poll-guest-tickets.ts`'s `curlGetPage` documents (issue #567). Unlike the
 // sibling scripts' `curlGetPage`, this also needs a `PUT` with a JSON body
-// (the merge call) — folded into one helper since neither of this script's
-// two REST reads (`pulls/{number}`, `commits/{sha}/check-runs`) need `Link`
-// pagination (a single PR's check-run set fits in one `per_page=100` page).
+// (the merge call) — folded into one helper since none of this script's REST
+// reads need `Link` pagination (one `per_page=100` page covers a PR).
 function curlRequestJson(
   method: 'GET' | 'PUT' | 'PATCH',
   url: string,
@@ -375,6 +389,23 @@ function readPrMeta(strategy: FetchStrategy, owner: string, repo: string, prNumb
   return readPrMetaViaRest(owner, repo, prNumber, envToken()!, cwd)
 }
 
+/** The PR's review and conversation-comment bodies — one `per_page=100` page
+ *  each, like the check runs. */
+function readVerdictBodies(strategy: FetchStrategy, owner: string, repo: string, prNumber: number, cwd: string): string[] {
+  return [`pulls/${prNumber}/reviews`, `issues/${prNumber}/comments`].flatMap((path) => {
+    const url = `repos/${owner}/${repo}/${path}`
+    const items =
+      strategy === 'gh'
+        ? (JSON.parse(
+            execFileSync('gh', ['api', '--method', 'GET', url, '-f', 'per_page=100'], { cwd, encoding: 'utf8' }),
+          ) as { body: string | null }[])
+        : (curlRequestJson('GET', `https://api.github.com/${url}?per_page=100`, envToken()!, cwd) as {
+            body: string | null
+          }[])
+    return items.map((i) => i.body ?? '')
+  })
+}
+
 function readIssueState(strategy: FetchStrategy, owner: string, repo: string, issueNumber: number, cwd: string): string {
   if (strategy === 'gh') return readIssueStateViaGh(owner, repo, issueNumber, cwd)
   return readIssueStateViaRest(owner, repo, issueNumber, envToken()!, cwd)
@@ -462,6 +493,19 @@ export async function mergePrWhenGreen(
     throw new Error('no GitHub access path available: `gh` is not installed and neither GH_TOKEN nor GITHUB_TOKEN is set')
   }
   const { owner, repo } = ownerRepo
+
+  const sessionId = resolveGroundTruthFromTranscript(findTranscriptContents(process.env) ?? '')
+  if (!hasVerdictFromSession(readVerdictBodies(strategy, owner, repo, prNumber, cwd), sessionId)) {
+    return {
+      pr: prNumber,
+      verdict: 'no-verdict',
+      merged: false,
+      message:
+        `refused: no review or comment on the PR carries this session's provenance header` +
+        `${sessionId ? ` (${sessionId})` : ''}. Post your step-4 verdict (docs/agents/pr-workflow.md) as a ` +
+        `COMMENT-event review or an issue comment — never APPROVE — then re-run.`,
+    }
+  }
 
   const { sha, body: prBody } = readPrMeta(strategy, owner, repo, prNumber, cwd)
   const { verdict, runs } = await pollUntilResolved(
