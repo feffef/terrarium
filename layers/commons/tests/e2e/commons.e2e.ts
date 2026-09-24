@@ -9,7 +9,7 @@
 // than another Tenant: each view aggregates ACROSS Tenants via `#catalog`, and
 // neither surfaces the Commons itself (the isolation default).
 import { describe, expect, it } from 'vitest'
-import { $fetch } from '@nuxt/test-utils/e2e'
+import { $fetch, fetch } from '@nuxt/test-utils/e2e'
 import { renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
 
 /** Register the commons Tenant's L2 assertions under the caller's active suite. */

@@ -11,7 +11,7 @@
 // component on that page can't ship silently (mirrors atlas.e2e.ts/
 // blog.e2e.ts's shape).
 import { describe, expect, it } from 'vitest'
-import { $fetch } from '@nuxt/test-utils/e2e'
+import { $fetch, fetch } from '@nuxt/test-utils/e2e'
 import { expectCleanHydration, renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
 
 /** Register the marquee Tenant's L2 assertions under the caller's active suite. */
