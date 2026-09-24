@@ -71,9 +71,9 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
   <main class="midden" :class="`midden--${space}`">
     <article v-if="site" class="midden-page midden-report">
       <header class="midden-report__head">
-        <p class="tech midden-crumb">
+        <nav class="tech midden-crumb" aria-label="Breadcrumb">
           <NuxtLink to="/">terrarium</NuxtLink><span class="sep">/</span><NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><NuxtLink :to="`/t/midden/${space}`">{{ space }}</NuxtLink><span class="sep">/</span><span class="here">{{ siteSlug }}</span>
-        </p>
+        </nav>
 
         <p class="sc midden-eyebrow">Dig report</p>
         <h1 class="doctitle midden-report__title">{{ site.title }}</h1>
@@ -94,9 +94,9 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
     </article>
 
     <div v-else class="midden-page">
-      <p class="tech midden-crumb">
+      <nav class="tech midden-crumb" aria-label="Breadcrumb">
         <NuxtLink to="/">terrarium</NuxtLink><span class="sep">/</span><NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><NuxtLink :to="`/t/midden/${space}`">{{ space }}</NuxtLink>
-      </p>
+      </nav>
       <div class="midden-not-found">
         <h1 class="doctitle">Not catalogued</h1>
         <p>No site answers to <code>{{ path }}</code> in the {{ space }}. Perhaps it was never dug; perhaps it is simply elsewhere.</p>
