@@ -147,3 +147,43 @@ trials:
       scratchpad directory, and correctly said the flag has to be set before
       starting the command, not added after — a command already running in
       the foreground can't be reclassified as backgrounded once launched.
+  - problem: >
+      CLAUDE.md's "Dispatching a subagent is a procedure, not a tool call —
+      invoke the `dispatch-subagents` Skill before spawning one" bullet
+      (Working conventions) already failed as issue #1248: a session read the
+      Skill's text (its log lists `dispatch-subagents/SKILL.md` under
+      `docsReadViaShell`) and still dispatched without invoking it — criterion
+      1, prose read and not followed. Nothing was damaged: that run used
+      `isolation: "worktree"`, merged both PRs and cleaned up. The harmful
+      outcomes of skipping the Skill are already partly held by
+      `agent-background-flag-guard.ts` and `subagent-background-guard.ts`, and
+      the Skill's own description triggers on "about to spawn one". Cut the
+      ~8-line bullet (a restated list of the Skill's contents plus a "paid for
+      by a session that lost work" justification) to one goal line — don't
+      strand work or race a shared checkout; the Skill is how; the read-only
+      exemption (#1226) kept — with an #1248 pointer. No guard built
+      (#1248's triage brief; rulebook-migration-table CM-42 wants warn-only
+      if ever). Grepped the corpus for the cut wording: no inbound references.
+      Net -5 lines, one file. The §4 Sonnet probe could not run — the
+      dispatched implementing agent had no subagent tool.
+    territory:
+      paths:
+        - "CLAUDE.md: the \"A subagent that touches git or needs a worktree must not strand work or race a shared checkout\" bullet (Working conventions)"
+      keywords:
+        - procedure, not a tool call
+        - invoke the `dispatch-subagents` Skill before spawning
+        - strand work or race a shared checkout
+        - issue #1248
+    opened: 2026-09-24
+    proven: false
+    check: >
+      Damage is a git-touching subagent dispatch that strands uncommitted work
+      (the subagent stops without committing/pushing and the work is lost or
+      has to be recovered by hand), races a shared checkout (parallel agents
+      editing one working tree without `isolation: 'worktree'`, clobbering or
+      mixing each other's changes), or loses a stopped subagent's work (no
+      resume, no recovery). NOT damage: a session that skips invoking the
+      `dispatch-subagents` Skill but dispatches correctly anyway — worktree
+      isolation, commit-before-stop, work landed (the #1248 case itself); a
+      read-only dispatch made directly; or a background/Monitor misuse the
+      existing guards already deny. Count only harm, not the missed Skill call.
