@@ -82,11 +82,12 @@ never auto-merged and falls back to ADR-0003's default (gated PR, human merge).
 > **Amended (2026-09-24).** `visitor-loop` joins the ledger above, and is the
 > first chartered job that implements **net-new** work. The owner scheduling
 > it is a **standing** Trusted green-light (as ADR-0022's is for triage) for
-> exactly **one** feature per run, the run's pick of its visitors' ideas,
-> bounded by the ledger row — not a general licence to birth
-> features. Why: the Platform is meant to be *self-growing*, and a feature a
-> blind visitor asked for is an outside enough trigger to stand in for a human
-> choosing each one.
+> each run's consensus fixes — every finding at least two of its visitors
+> raised — and for exactly **one** feature, the run's pick of its visitors'
+> ideas, all bounded by the ledger row — not a general licence to birth
+> features. Why: the Platform is meant to be *self-growing*, and a problem two
+> blind visitors hit, or a feature one asked for, is an outside enough trigger
+> to stand in for a human choosing each change.
 > Anything outside the row still waits for a human.
 
 ## Context
