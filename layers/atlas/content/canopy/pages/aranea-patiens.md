@@ -120,7 +120,7 @@ It hunts, in these weeks, only in the sense that it has arranged for hunting to 
 :::phase-note{of="taking-in"}
 As the misting lapses the great wheels come down, a bough at a time, and the silk is not discarded but eaten and carried inward, as savings against the lean months. A web taken in now will not be restrung until the damp comes back. The weaver reads the drying air a fortnight before we do, and begins its economies while the canopy still calls the season summer.
 
-::sighting{date="2026-10-03"}
+::sighting{date="2025-10-03"}
 ::
 
 After the great cleaning the work goes on in earnest, wheel by wheel, until the forks that hummed with silk all summer stand bare and the whole season's spinning has been carried inward as store, done without visible regret.

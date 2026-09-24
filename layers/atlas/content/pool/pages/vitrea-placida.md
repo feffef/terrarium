@@ -102,7 +102,7 @@ Late in the harvest the misting lapses with the keeper's holiday and the film st
 :::phase-note{of="slow-polish"}
 After the great cleaning the film thins in earnest, and the snail travels farther for less, which it does not appear to resent. It crosses ground it has already cleaned to reach ground it has not, polishing where there is little left to graze, until the light shortens past use.
 
-::sighting{date="2026-10-08"}
+::sighting{date="2025-10-08"}
 ::
 :::
 

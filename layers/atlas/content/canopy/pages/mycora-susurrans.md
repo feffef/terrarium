@@ -128,7 +128,7 @@ The misting lapses for a fortnight — coinciding, we note, with the keeper's ho
 :::phase-note{of="new-ground"}
 After the great cleaning everything re-arranges itself, and every bared surface the cleaning leaves is spoken for within the week, politely. The mold does not race for the new ground so much as arrive at it — already in residence before we have noticed the ground was free.
 
-::sighting{date="2026-10-18"}
+::sighting{date="2025-10-18"}
 ::
 
 By its close the fresh boughs sibilate like the old, and we have gone back to not recording the colonies at all.

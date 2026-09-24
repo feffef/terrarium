@@ -112,7 +112,7 @@ The fresh lattice is barely strung before the year's traffic begins to rise agai
 :::phase-note{of="thin-traffic"}
 As the misting lapses for the keeper's holiday and the glass runs dry, the traffic through the gap begins, by small degrees, to fall off with it. She keeps the post exactly as before: a slower night is not, to this creature, a lighter duty — she walks the same lattice, tests the same threads, and holds the same third thread against whatever the dry weeks send down it.
 
-::sighting{date="2026-10-13"}
+::sighting{date="2025-10-13"}
 ::
 
 After the great cleaning the crossings grow scarce in earnest, and here the whole point of her is made plain: she keeps the post regardless. There is little to admit and less to turn back, and she admits and turns back with the same care she gave the summer — at the narrowest way down through the western wall, which is to say the only one.
