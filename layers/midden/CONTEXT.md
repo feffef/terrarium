@@ -117,7 +117,7 @@ that fails Gate B — something moved, was renamed, or was superseded in place �
 is out of the Midden's scope entirely: the Midden records what the Platform
 discarded, never what it carried forward under a new shape.
 
-### Cataloguing discipline
+## Cataloguing discipline
 Grading `condition`, naming a `stratum`, and writing a `catalogNote` is
 curator work done against the primary source re-read fresh at its current
 revision — the actual PR, file, or diff — never against a survey-report issue
