@@ -1,21 +1,19 @@
 schemaVersion: 1
 session: session_01JoJbvtqQS2mYndK9DN7VXQ
 startedAt: 2026-09-24T04:01:13Z
-endedAt: 2026-09-24T04:13:12Z
+endedAt: 2026-09-24T04:17:23Z
 kind: autonomous
 goal: Run the scheduled /audit-docs sweep
-status: in-review
-outcome: "Opened PR #1307 with one fact-checked Glossary structure fix"
-summary: "Fully agent-initiated (fired by the audit-docs scheduled trigger, no human prompt this turn). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across the full Live-doc tier. Only one candidate finding survived: a Mis-location in layers/midden/CONTEXT.md, where a procedural \"Cataloguing discipline\" checklist was nested under the term-definitions-only Glossary heading. Independently fact-checked against ADR-0021, the domain-modeling Skill, every sibling Tenant CONTEXT.md, and the section's own origin (issue #1046/PR #1048) — verdict CONFIRMED-BUT: right file and prose, wrong structure. Fixed with a 1-line heading demotion (### to ##), no prose rewrite. pnpm gate:scoped ran the full gate (non-inert path) and went green. Opened PR #1307, subscribed to its activity, and will babysit it to merge per the audit-docs self-merge-on-green-gate tier. No Duplication/Verbose/Stale-narration/Contradiction/Ambiguity findings survived review, and no factual conflict warranted a needs-triage issue."
+status: completed
+outcome: "Merged PR #1307: Glossary structure fix in layers/midden/CONTEXT.md"
+summary: "Fully agent-initiated (fired by the audit-docs scheduled trigger, no human prompt this turn). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across the full Live-doc tier. Only one candidate finding survived: a Mis-location in layers/midden/CONTEXT.md, where a procedural \"Cataloguing discipline\" checklist was nested under the term-definitions-only Glossary heading. Independently fact-checked against ADR-0021, the domain-modeling Skill, every sibling Tenant CONTEXT.md, and the section's own origin (issue #1046/PR #1048) — verdict CONFIRMED-BUT: right file and prose, wrong structure. Fixed with a 1-line heading demotion (### to ##), no prose rewrite. pnpm gate:scoped ran the full gate (non-inert path) and went green; CI's safety-gate also went green. Opened PR #1307, posted the verdict comment, ran check-conflicting-issues.ts (no hits), merged via merge-pr.ts under the audit-docs self-merge-on-green-gate tier, and unsubscribed once merged. No Duplication/Verbose/Stale-narration/ Contradiction/Ambiguity findings survived review, and no factual conflict warranted a needs-triage issue."
 prs:
   - "1307"
 docsRead:
-  - path: docs/agents/pr-workflow.md
-    reason: self-merge tier + closing-a-chartered-run recipe
-  - path: docs/adr/0021-multi-context-domain-model.md
-    reason: verify the per-Tenant CONTEXT.md narrative-latitude grant
   - path: layers/midden/CONTEXT.md
-    reason: the file the confirmed finding lives in
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
   - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
     reason: (no reason given)
   - path: scripts/loop-only-tool-guard.ts
@@ -123,23 +121,25 @@ frictions:
   - description: "Freshness-lens reviewer surfaced a genuine Drift candidate outside this Skill's editable scope: scripts/loop-only-tool-guard.ts's header comment and live deny-message text (lines 1-2, 156-157) still frame the guard as covering only \"/loop session's dynamic, self-paced mode,\" even though a prior audit-docs sweep (commit 85075efb) already corrected CLAUDE.md and docs/research/rulebook-migration-table.md to the guard's actual broader predicate (\"any pacing\"). audit-docs' three-tier system only covers *.md/SKILL.md surfaces, so this code-comment/string drift could not be fixed or escalated within this run's charter."
     solution: Left as an observation for a future run or a human to pick up — file:line are scripts/loop-only-tool-guard.ts:1-2 and :156-157; the fix is to reword both to match the guard's own broader predicate.
     severity: minor
-durationSec: 719
+durationSec: 970
 models:
-  claude-sonnet-5: 90
+  claude-sonnet-5: 114
 toolCounts:
-  Bash: 15
+  Bash: 19
   Agent: 9
   ScheduleWakeup: 1
-  Read: 4
-  Edit: 1
+  Read: 5
+  Edit: 2
   Grep: 4
   ToolSearch: 2
   Glob: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 2
-  Write: 1
+  Skill: 3
+  Write: 2
   mcp__github__pull_request_review_write: 1
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/midden/CONTEXT.md
 docsReadViaShell:
