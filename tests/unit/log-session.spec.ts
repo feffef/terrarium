@@ -242,7 +242,7 @@ describe('reportShellReads (the author-time verification report)', () => {
     [{ type: 'user', cwd, message: { content: 'go' } }, ...commands.map(bash)]
       .map((r) => JSON.stringify(r))
       .join('\n')
-  function store(cwd: string, commands: string[], subagentCommands?: string[]): string {
+  function store(cwd: string, commands: string[], subagentCommands?: string[], meta?: string): string {
     const home = mkdtempSync(join(tmpdir(), 'shellread-home-'))
     const dir = join(home, '.claude', 'projects', cwd.replace(/[/.]/g, '-'))
     mkdirSync(dir, { recursive: true })
@@ -250,7 +250,8 @@ describe('reportShellReads (the author-time verification report)', () => {
     if (subagentCommands) {
       const subs = join(dir, 'session', 'subagents')
       mkdirSync(subs, { recursive: true })
-      writeFileSync(join(subs, 'a.jsonl'), jsonl(cwd, subagentCommands))
+      writeFileSync(join(subs, 'agent-a1.jsonl'), jsonl(cwd, subagentCommands))
+      if (meta !== undefined) writeFileSync(join(subs, 'agent-a1.meta.json'), meta)
     }
     return home
   }
@@ -281,17 +282,19 @@ describe('reportShellReads (the author-time verification report)', () => {
     expect(run('/repo', mkdtempSync(join(tmpdir(), 'shellread-empty-')))).toEqual([])
   })
 
-  // Issue #1206: a parent-only criterion asserted over a knowingly folded list.
-  it('marks a path a dispatched subagent read, rather than claiming the session ran it', () => {
-    const home = store('/repo', ['git merge --ff-only origin/main'], ['cat docs/agents/guards.md'])
-    const out = run('/repo', home).join('\n')
-    expect(out).toContain('docs/agents/guards.md — via a dispatched subagent')
+  // Issue #1244: each detected path shows its crediting command and where it ran.
+  it("shows the session's own crediting command", () => {
+    const out = run('/repo', store('/repo', ['cat   docs/agents/guards.md'], ['echo hi']))
+    expect(out).toContain('    docs/agents/guards.md')
+    expect(out).toContain('      [this session] cat docs/agents/guards.md')
   })
 
-  it("leaves the session's own reads unmarked", () => {
-    const out = run('/repo', store('/repo', ['cat docs/agents/guards.md'], ['echo hi'])).join('\n')
-    expect(out).toContain('docs/agents/guards.md')
-    expect(out).not.toContain('via a dispatched subagent')
+  it("names the subagent by its meta.json description, else its agent id", () => {
+    const meta = JSON.stringify({ description: 'Triage issue #869' })
+    const named = run('/repo', store('/repo', ['git status'], ['cat docs/agents/guards.md'], meta))
+    expect(named).toContain('      [subagent: Triage issue #869] cat docs/agents/guards.md')
+    const bare = run('/repo', store('/repo', ['git status'], ['cat docs/agents/guards.md'], '{not json'))
+    expect(bare).toContain('      [subagent: a1] cat docs/agents/guards.md')
   })
 
   it('does not ask for a friction about a path a subagent legitimately read', () => {

@@ -737,7 +737,7 @@ export function reportShellReads(cwd: string, log: (line: string) => void = cons
     if (!transcriptPath || !existsSync(transcriptPath)) return
     scan = shellReadScanOf(
       parseTranscript(readFileSync(transcriptPath, 'utf8')),
-      readSubagentJsonls(transcriptPath).map(parseTranscript),
+      readSubagentJsonls(transcriptPath).map((s) => ({ label: s.label, records: parseTranscript(s.jsonl) })),
       cwd,
     )
   } catch {
@@ -750,22 +750,22 @@ export function reportShellReads(cwd: string, log: (line: string) => void = cons
 
   log('')
   log(`  docsReadViaShell — ${scan.paths.length} instruction doc(s) detected as read via shell:`)
-  const delegatedOnly = new Set(scan.subagentPaths)
-  for (const p of scan.paths) log(`    ${p}${delegatedOnly.has(p) ? ' — via a dispatched subagent' : ''}`)
+  const oneLine = (command: string): string => command.replace(/\s+/g, ' ').slice(0, 100)
+  for (const [p, { command, source }] of scan.provenance) {
+    log(`    ${p}`)
+    log(`      [${source}] ${oneLine(command)}`)
+  }
   if (scan.nearMisses.length) {
     log(`  Not counted (${scan.nearMisses.length}), and why:`)
     for (const m of scan.nearMisses.slice(0, NEAR_MISS_LIMIT)) {
       log(`    ${m.token} — ${m.rule}`)
-      log(`      ${m.command.replace(/\s+/g, ' ').slice(0, 100)}`)
+      log(`      ${oneLine(m.command)}`)
     }
     if (scan.nearMisses.length > NEAR_MISS_LIMIT) {
       log(`    …and ${scan.nearMisses.length - NEAR_MISS_LIMIT} more`)
     }
   }
-  if (delegatedOnly.size) {
-    log('  A path marked "via a dispatched subagent" was read by that subagent\'s own shell,')
-    log('  and is folded in by design (issue #796) — a correct entry, nothing to report.')
-  }
+  log('  A subagent-credited path is folded in by design (issue #796).')
   log('  You cannot edit this field. Log a Friction for a doc it missed, or for a path that')
   log("  neither this session nor a subagent it dispatched read: severity at least 'moderate',")
   log('  marker SHELL-READ-DETECTION, the command verbatim, the path expected, and the direction.')
@@ -860,7 +860,7 @@ function landMain(argv: string[]): void {
         dryRun,
         remote: 'origin',
         landedBy,
-        subagentJsonls: readSubagentJsonls(transcriptPath),
+        subagentJsonls: readSubagentJsonls(transcriptPath).map((s) => s.jsonl),
       })
       if (result.action === 'landed' || result.action === 'dry-run') {
         console.error(
@@ -924,7 +924,7 @@ function landMain(argv: string[]): void {
     dryRun,
     remote: 'origin',
     landedBy,
-    subagentJsonls: readSubagentJsonls(transcriptPath),
+    subagentJsonls: readSubagentJsonls(transcriptPath).map((s) => s.jsonl),
   })
   switch (result.action) {
     case 'invalid':

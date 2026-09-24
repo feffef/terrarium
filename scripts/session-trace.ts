@@ -189,12 +189,16 @@ function bashCommandsOf(records: Record<string, unknown>[]): ShellCommand[] {
   return commands
 }
 
-/** A merged scan, plus which of its paths no command in the session's OWN
- *  transcript ran. The advisory needs that split: without it a reader cannot
- *  tell a detector error from correctly folded delegated work, and was told to
- *  report both as a friction (issue #1206). */
-export interface FoldedShellReadScan extends ShellReadScan {
-  subagentPaths: string[]
+/** A merged scan, plus where each path was credited: without that a reader
+ *  cannot tell a detector error from correctly folded delegated work, and
+ *  guesses a mechanism instead (issues #1206, #1244). */
+export interface FoldedShellReadScan extends Omit<ShellReadScan, 'creditedBy'> {
+  provenance: Map<string, { command: string; source: string }>
+}
+
+export interface LabelledRecords {
+  label: string
+  records: Record<string, unknown>[]
 }
 
 /** Resolves a glob/variable token against the real repo tree at `repoRoot`, for
@@ -237,24 +241,23 @@ function resolveGlobAgainstTree(repoRoot: string): (token: string) => string | u
  *  way it would not be for a trace re-derived later against a since-changed tree. */
 export function shellReadScanOf(
   records: Record<string, unknown>[],
-  subagentRecordSets: Record<string, unknown>[][] = [],
+  subagents: LabelledRecords[] = [],
   repoRoot?: string,
 ): FoldedShellReadScan {
   const resolveGlob = repoRoot !== undefined ? resolveGlobAgainstTree(repoRoot) : undefined
-  const scanOf = (rs: Record<string, unknown>[]): ShellReadScan =>
-    scanShellReads(bashCommandsOf(rs), relativizer(rs), resolveGlob)
-  const own = scanOf(records)
-  const scans = [own, ...subagentRecordSets.map(scanOf)]
-  const paths = [...new Set(scans.flatMap((s) => s.paths))]
-  const counted = new Set(paths)
-  const ownPaths = new Set(own.paths)
+  const scans = [{ label: 'this session', records }, ...subagents.map((s) => ({ ...s, label: `subagent: ${s.label}` }))]
+    .map(({ label, records: rs }) => ({ label, ...scanShellReads(bashCommandsOf(rs), relativizer(rs), resolveGlob) }))
+  const provenance: FoldedShellReadScan['provenance'] = new Map()
+  for (const s of scans) {
+    for (const [p, command] of s.creditedBy) if (!provenance.has(p)) provenance.set(p, { command, source: s.label })
+  }
   return {
-    paths,
-    subagentPaths: paths.filter((p) => !ownPaths.has(p)),
+    paths: [...provenance.keys()],
+    provenance,
     // Compare canonical path to canonical path: the raw token carries whichever
     // spelling its own command used, so a token-keyed check re-listed a doc
     // another record set had already counted (issue #1206).
-    nearMisses: scans.flatMap((s) => s.nearMisses).filter((m) => !counted.has(m.path)),
+    nearMisses: scans.flatMap((s) => s.nearMisses).filter((m) => !provenance.has(m.path)),
   }
 }
 
@@ -510,15 +513,25 @@ export function subagentTranscriptPaths(transcriptPath: string): string[] {
 /** Every subagent transcript beside `transcriptPath`, read tolerantly. Callers
  *  are a Stop hook and a CLI, neither of which should die over a sibling jsonl
  *  that vanished or won't read: one lost subagent costs its reads, not the
- *  whole trace. Single-homed here so the hook and the CLI can't diverge on it. */
-export function readSubagentJsonls(transcriptPath: string): string[] {
-  const out: string[] = []
+ *  whole trace. Single-homed here so the hook and the CLI can't diverge on it.
+ *  `label` is the sibling `.meta.json`'s dispatch `description`, else the agent id. */
+export function readSubagentJsonls(transcriptPath: string): { label: string; jsonl: string }[] {
+  const out: { label: string; jsonl: string }[] = []
   for (const p of subagentTranscriptPaths(transcriptPath)) {
+    let jsonl
     try {
-      out.push(readFileSync(p, 'utf8'))
+      jsonl = readFileSync(p, 'utf8')
     } catch {
-      /* skip this subagent's contribution */
+      continue
     }
+    let label = basename(p, '.jsonl').replace(/^agent-/, '')
+    try {
+      const { description } = JSON.parse(readFileSync(p.replace(/\.jsonl$/, '.meta.json'), 'utf8'))
+      if (typeof description === 'string' && description) label = description
+    } catch {
+      /* no readable meta: keep the agent id */
+    }
+    out.push({ label, jsonl })
   }
   return out
 }
@@ -654,7 +667,7 @@ function main(): void {
     process.exit(1)
   }
   const trace = extractTrace(parseTranscript(readFileSync(path, 'utf8')))
-  const folded = foldSubagentTrace(trace, readSubagentJsonls(path).map(parseTranscript))
+  const folded = foldSubagentTrace(trace, readSubagentJsonls(path).map((s) => parseTranscript(s.jsonl)))
   console.log(JSON.stringify(folded, null, 2))
 }
 

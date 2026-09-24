@@ -176,7 +176,7 @@ describe('readSubagentJsonls()', () => {
     // A directory named like a transcript: readdir lists it, readFileSync throws
     // on it — the hook must lose that one contribution, not the whole trace.
     mkdirSync(join(subs, 'agent-b.jsonl'))
-    expect(readSubagentJsonls(parent)).toEqual(['A'])
+    expect(readSubagentJsonls(parent)).toEqual([{ label: 'a', jsonl: 'A' }])
   })
 
   it('returns [] for a session that dispatched nobody', () => {
@@ -357,6 +357,7 @@ describe('docsReadViaShell (issue #1074)', () => {
     { type: 'user', sessionId: 'session_01SH', cwd: '/repo', timestamp: '2026-08-29T09:59:00Z', message: { content: 'go' } },
     ...commands.map(bashTurn),
   ]
+  const sub = (...commands: string[]) => ({ label: 'Triage #1', records: withCwd(...commands) })
 
   it('derives instruction docs from Bash commands, relativized like filesRead', () => {
     const trace = extractTrace(withCwd('sed -n "1,40p" /repo/docs/agents/guards.md'))
@@ -411,45 +412,44 @@ describe('docsReadViaShell (issue #1074)', () => {
     // over the parent alone would ask the agent to verify a strict subset of
     // its own log — and the unverifiable entries would be exactly the ones an
     // orchestrator is least able to judge.
-    const scan = shellReadScanOf(withCwd('cat CONTEXT.md'), [withCwd('cat docs/agents/domain.md')])
+    const scan = shellReadScanOf(withCwd('cat CONTEXT.md'), [sub('cat docs/agents/domain.md')])
     expect(scan.paths.sort()).toEqual(['CONTEXT.md', 'docs/agents/domain.md'])
   })
 
-  // Issue #1206: the advisory over this scan needs the split, not just the union.
-  it('separates a path only a subagent read from the session’s own', () => {
-    const scan = shellReadScanOf(withCwd('cat CONTEXT.md'), [withCwd('cat docs/agents/domain.md')])
-    expect(scan.subagentPaths).toEqual(['docs/agents/domain.md'])
+  // Issues #1206/#1244: the advisory needs each path's evidence, not just the union.
+  it('credits each path to the command and transcript that read it', () => {
+    const scan = shellReadScanOf(withCwd('cat CONTEXT.md'), [sub('cat docs/agents/domain.md')])
+    expect([...scan.provenance]).toEqual([
+      ['CONTEXT.md', { command: 'cat CONTEXT.md', source: 'this session' }],
+      ['docs/agents/domain.md', { command: 'cat docs/agents/domain.md', source: 'subagent: Triage #1' }],
+    ])
   })
 
-  it('attributes a path the session itself ran to the session, even when a subagent ran it too', () => {
-    const scan = shellReadScanOf(withCwd('cat CONTEXT.md'), [withCwd('cat CONTEXT.md')])
+  it('attributes a path the session itself ran to the session, even when a subagent ran it first', () => {
+    const scan = shellReadScanOf(withCwd('head CONTEXT.md'), [sub('cat CONTEXT.md')])
     expect(scan.paths).toEqual(['CONTEXT.md'])
-    expect(scan.subagentPaths).toEqual([])
-  })
-
-  it('folds nothing when no subagent transcript is scanned', () => {
-    expect(shellReadScanOf(withCwd('cat CONTEXT.md')).subagentPaths).toEqual([])
+    expect(scan.provenance.get('CONTEXT.md')).toEqual({ command: 'head CONTEXT.md', source: 'this session' })
   })
 
   it('does not call a path a near-miss when another record set counted it under a different spelling', () => {
     // `scanShellReads` already gets this right within one scan by comparing
     // canonicalized paths; merging scans compared a RAW token against
     // canonicalized paths, so an alternate spelling slipped back into the report.
-    const scan = shellReadScanOf(withCwd('cat docs/agents/guards.md'), [withCwd('echo ./docs/agents/guards.md')])
+    const scan = shellReadScanOf(withCwd('cat docs/agents/guards.md'), [sub('echo ./docs/agents/guards.md')])
     expect(scan.paths).toEqual(['docs/agents/guards.md'])
     expect(scan.nearMisses).toEqual([])
   })
 
   it('…and likewise across the .claude/skills ↔ .agents/skills pair', () => {
     const scan = shellReadScanOf(withCwd('cat .agents/skills/tdd/SKILL.md'), [
-      withCwd('ls .claude/skills/tdd/SKILL.md'),
+      sub('ls .claude/skills/tdd/SKILL.md'),
     ])
     expect(scan.paths).toEqual(['.agents/skills/tdd/SKILL.md'])
     expect(scan.nearMisses).toEqual([])
   })
 
   it('still reports a near-miss nothing counted anywhere', () => {
-    const scan = shellReadScanOf(withCwd('cat CONTEXT.md'), [withCwd('ls docs/agents/guards.md')])
+    const scan = shellReadScanOf(withCwd('cat CONTEXT.md'), [sub('ls docs/agents/guards.md')])
     expect(scan.nearMisses.map((m) => m.path)).toEqual(['docs/agents/guards.md'])
   })
 

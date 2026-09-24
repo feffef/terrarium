@@ -439,6 +439,14 @@ describe('heredoc edge cases', () => {
   })
 })
 
+it('keeps the first command that credited each path (issue #1244)', () => {
+  const scan = scanShellReads(['echo hi', 'cat docs/a.md docs/b.md', 'head docs/a.md'], rel)
+  expect([...scan.creditedBy]).toEqual([
+    ['docs/a.md', 'cat docs/a.md docs/b.md'],
+    ['docs/b.md', 'cat docs/a.md docs/b.md'],
+  ])
+})
+
 describe('near-misses', () => {
   it('omits a path that was counted elsewhere — the session has it either way', () => {
     const scan = scanShellReads(['cat docs/a.md', 'grep -n "docs/a.md" CLAUDE.md'], rel)

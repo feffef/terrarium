@@ -90,6 +90,9 @@ export interface NearMiss {
 
 export interface ShellReadScan {
   paths: string[]
+  /** Each counted path's first crediting command, so the advisory can show its
+   *  evidence instead of leaving a surprising entry to be guessed at (issue #1244). */
+  creditedBy: Map<string, string>
   nearMisses: NearMiss[]
 }
 
@@ -408,7 +411,7 @@ export function scanShellReads(
   rel: (p: string) => string = (p) => p,
   resolveGlob?: (token: string) => string | undefined,
 ): ShellReadScan {
-  const paths = new Set<string>()
+  const creditedBy = new Map<string, string>()
   const fromReader: NearMiss[] = []
   const fromOther: NearMiss[] = []
   const norm = (t: string): string => canonicalizeInstructionPath(rel(t))
@@ -425,6 +428,9 @@ export function scanShellReads(
 
   for (const entry of commands) {
     const { command, output } = normalizeShellCommand(entry)
+    const credit = (p: string): void => {
+      if (!creditedBy.has(p)) creditedBy.set(p, command)
+    }
 
     const handleSegment = (segTokens: Token[]): void => {
       const tokens = unwrap(segTokens)
@@ -442,10 +448,10 @@ export function scanShellReads(
         const showPath = extractGitShowPath(tokens)
         if (showPath !== undefined) {
           const p = norm(showPath)
-          if (isInstructionDoc(p)) paths.add(p)
+          if (isInstructionDoc(p)) credit(p)
           else if (isGlobbedInstructionDoc(p)) {
             const resolved = resolveGlobbedDoc(p)
-            if (resolved !== undefined) paths.add(resolved)
+            if (resolved !== undefined) credit(resolved)
             else note(fromReader, showPath, 'not a literal path: glob or variable')
           }
           return
@@ -455,14 +461,14 @@ export function scanShellReads(
         if (diffPaths !== undefined) {
           for (const diffPath of diffPaths) {
             const p = norm(diffPath)
-            const credit = (path: string): void => {
-              if (output === undefined || outputShowsGitDiffFor(output, diffPath)) paths.add(path)
+            const creditDiff = (path: string): void => {
+              if (output === undefined || outputShowsGitDiffFor(output, diffPath)) credit(path)
               else note(fromReader, diffPath, 'git show diff does not touch this path')
             }
-            if (isInstructionDoc(p)) credit(p)
+            if (isInstructionDoc(p)) creditDiff(p)
             else if (isGlobbedInstructionDoc(p)) {
               const resolved = resolveGlobbedDoc(p)
-              if (resolved !== undefined) credit(resolved)
+              if (resolved !== undefined) creditDiff(resolved)
               else note(fromReader, diffPath, 'not a literal path: glob or variable')
             }
           }
@@ -540,11 +546,11 @@ export function scanShellReads(
       if (OUTPUT_FILTERED_VERBS.has(verb) && output !== undefined) {
         for (const c of candidates) {
           const confirmed = fileCount > 1 ? outputMentionsFile(output, c.matchText) : output.trim() !== ''
-          if (confirmed) paths.add(c.path)
+          if (confirmed) credit(c.path)
           else note(fromReader, c.token, 'grep/rg output does not show this file being read')
         }
       } else {
-        for (const c of candidates) paths.add(c.path)
+        for (const c of candidates) credit(c.path)
       }
     }
 
@@ -591,9 +597,9 @@ export function scanShellReads(
   const seen = new Set<string>()
   const missed = [...fromReader, ...fromOther].filter((m) => {
     const key = `${m.path}\u0000${m.rule}`
-    if (paths.has(m.path) || seen.has(key)) return false
+    if (creditedBy.has(m.path) || seen.has(key)) return false
     seen.add(key)
     return true
   })
-  return { paths: [...paths], nearMisses: missed }
+  return { paths: [...creditedBy.keys()], creditedBy, nearMisses: missed }
 }
