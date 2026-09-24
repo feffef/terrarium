@@ -61,12 +61,13 @@ Branch `claude/visitor-loop-fixes-<YYYY-MM-DD>` from `origin/main`. Fix every
 consensus finding marked *fix*. Prove each one in the rendered DOM, before and
 after (`docs/agents/verifying-ui-changes.md`). Open the PR — its body carries
 the tally — then run **`/code-review`** on it, fixed point `origin/main`, with
-the tally as the spec. Fix every finding that is a real bug or breaks a
-documented standard (an ADR included) and push; re-review after each push
-until nothing blocking remains. Post the review verdict on the PR, then land it
+the tally as the spec. **Auto-fix every important finding yourself** — a real
+bug, a broken documented standard (an ADR included), an accessibility or
+honesty problem — never defer it to a human or a follow-up. Push, re-review,
+and repeat until nothing important remains. Post the review verdict on the PR, then land it
 per `docs/agents/pr-workflow.md` ("Closing a self-merged chartered run" and
 "The recipe"). Done when every *fix* item has DOM evidence, the last review
-has no blocking finding, and the PR is merged — or left open and escalated
+has no important finding left unfixed, and the PR is merged — or left open and escalated
 with the reason.
 
 ## 5. Feature PR
@@ -77,7 +78,7 @@ build the chosen feature — smallest version that a visitor would notice, in
 the site's existing voice and design. Tests where the Tenant already has them.
 Review and land it the same way as step 4, with the chosen idea as the spec.
 Done when the feature is visible on the rendered page, the last review has no
-blocking finding, and the PR is merged or escalated.
+important finding left unfixed, and the PR is merged or escalated.
 
 ## 6. File the rest, then close
 
