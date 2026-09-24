@@ -90,7 +90,7 @@ describe('L2 smoke render', async () => {
     it('renders the hero and lists the Blog, Midden, and Atlas showcases in order', async () => {
       const html = await $fetch('/')
       expect(html).toMatch(/<h1[ >]/)
-      expect(html).toMatch(/<title>Terrarium[^<]+<\/title>/)
+      expect(html).toMatch(/<title>terrarium · [^<]+<\/title>/)
       const blogAt = html.indexOf('The Blog')
       const middenAt = html.indexOf('The Midden')
       const atlasAt = html.indexOf('The Atlas')
@@ -106,17 +106,11 @@ describe('L2 smoke render', async () => {
     })
 
     it('404s a missing document or Tenant, with a link back home', async () => {
-      for (const route of ['/t/journal/current/nope', '/t/commons/search/nope', '/t/nope/nothing', '/t/nope']) {
+      for (const route of ['/t/journal/current/nope', '/t/commons/search/nope', '/t/nope/nothing', '/t/nope', '/t/__proto__']) {
         expect((await fetch(route)).status, route).toBe(404)
       }
       const html = await (await fetch('/t/nope/nothing', { headers: { accept: 'text/html' } })).text()
       expect(html).toContain('Back to the terrarium')
-    })
-
-    it('redirects a Tenant root with no front door to its first Space', async () => {
-      const res = await fetch('/t/commons', { redirect: 'manual' })
-      expect(res.status).toBe(302)
-      expect(res.headers.get('location')).toBe('/t/commons/search')
     })
 
     it('links each showcase card to its Tenant front door, in order', async () => {

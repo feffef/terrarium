@@ -3,7 +3,10 @@ import type { NuxtError } from '#app'
 
 const props = defineProps<{ error: NuxtError }>()
 const notFound = computed(() => props.error.statusCode === 404)
-useHead({ title: () => `${notFound.value ? 'Page not found' : 'Something went wrong'} · terrarium` })
+useHead({
+  title: () => `${notFound.value ? 'Page not found' : 'Something went wrong'} · terrarium`,
+  bodyAttrs: { style: 'margin: 0' },
+})
 </script>
 
 <template>
@@ -11,7 +14,7 @@ useHead({ title: () => `${notFound.value ? 'Page not found' : 'Something went wr
     <p class="code">{{ error.statusCode }}</p>
     <h1>{{ notFound ? 'This page doesn’t exist' : 'Something went wrong' }}</h1>
     <p class="note">
-      {{ notFound ? 'Nothing grows at this address — it may have moved, or never existed.' : error.statusMessage }}
+      {{ notFound ? 'Nothing grows at this address — it may have moved, or never existed.' : 'Something broke on our side. Try again in a moment.' }}
     </p>
     <a href="/" class="home" @click.prevent="clearError({ redirect: '/' })">← Back to the terrarium</a>
   </main>

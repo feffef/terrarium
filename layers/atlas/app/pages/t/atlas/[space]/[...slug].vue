@@ -20,7 +20,7 @@ import type { PhenologyPhase } from '../../../../utils/atlas'
 
 const route = useRoute()
 const { space, path, pagesKey, collections } = useSpace('atlas')
-const { data, edges, observations, specimensBySlug } = await useAtlasWingData(route.path, {
+const { data, error, edges, observations, specimensBySlug } = await useAtlasWingData(route.path, {
   pagesKey,
   collections,
 })
@@ -64,7 +64,7 @@ provideAlmanac({
   specimen: () => entry.value?.specimen.slug,
 })
 
-if (!entry.value) setResponseStatus(404)
+if (!entry.value && !error.value) setResponseStatus(404)
 
 const title = computed(() => entry.value?.specimen.binomial ?? 'Not found')
 useSeoMeta({

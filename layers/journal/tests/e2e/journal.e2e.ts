@@ -226,6 +226,12 @@ function parkItemAt(page: Page, id: string, top: number): Promise<void> {
 /** Register the journal Tenant's L2 assertions under the caller's active suite. */
 export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: JournalE2EContext): void {
   describe('journal Tenant', () => {
+    it('redirects the Tenant root /t/journal to its main Space', async () => {
+      const res = await fetch('/t/journal', { redirect: 'manual' })
+      expect(res.status).toBe(302)
+      expect(res.headers.get('location')).toBe('/t/journal/current')
+    })
+
     // The journal Tenant's layer replaces the generic Space landing with an
     // overview dashboard (state + recent activity + Skill Inventory).
     it('renders the journal overview dashboard', async () => {

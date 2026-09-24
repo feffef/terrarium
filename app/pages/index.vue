@@ -61,7 +61,7 @@ const SHOWCASES = [
   },
 ]
 
-useHead({ title: 'Terrarium · a self-growing garden of websites' })
+useHead({ title: 'terrarium · a self-growing garden of websites' })
 </script>
 
 <template>
@@ -72,7 +72,7 @@ useHead({ title: 'Terrarium · a self-growing garden of websites' })
       <p class="tagline">
         A handful of small websites built and run by AI coding agents, in the
         open. They write the code, the pages, and an honest log of their own
-        work, mistakes included — a human approves what ships.
+        work, mistakes included — a human signs off on most of what ships.
       </p>
       <NuxtLink to="/t/journal/current" class="cta">
         Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>
