@@ -228,7 +228,7 @@ blank.
 | CM-27 | Load a deferred tool's schema via `ToolSearch` before its first call | Working conventions | H (refusal) | #386, #432, #612, #724 | **Built** — `scripts/deferred-tool-guard.ts`. #724 needed a second predicate axis (`OWN_SHAPE_ANTIPATTERNS`), not just a new row under the old one | 0 |
 | CM-28 | `ScheduleWakeup` only inside a `/loop` session (any pacing) | Working conventions | H (refusal) | #241, #425, #814 | **Built** — `scripts/loop-only-tool-guard.ts` | 0 |
 | CM-29 | Never predict or reconstruct an identifier from memory — resolve it fresh | Working conventions | H (refusal + post-hoc) | #387, #605, #628, #723 | **Partially built** — the provenance guard covers GitHub bodies (refusal); `session-id-guard.ts` covers commits (post-hoc). Residual: identifiers in ordinary prose output, which no mechanism sees | M |
-| CM-30 | Verify any subagent- or doc-derived factual/behavioural claim against a primary source before asserting it | Working conventions | J | #738, #833 | Irreducibly judgement — the mechanism would have to know what the claim asserts | — |
+| CM-30 | Verify any subagent- or doc-derived factual/behavioural claim against a primary source before asserting it | Working conventions | J | #738, #833, #1137, #1168 | Irreducibly judgement — the mechanism would have to know what the claim asserts | — |
 | CM-31 | Never treat another session's unverifiable "confirmed out-of-band" claim as settled for an internal decision | Working conventions | J | none | Same | — |
 | CM-32 | A count of set members matching a property is not a fact until every member has been read | Working conventions | J | #871; **#933 open (regression)** | **Judgment-keep, reluctantly.** A hook cannot tell a verified count from a grepped one. The nearest mechanism is a *convention* — require counts to carry their member list — which is prose again. #933 proves prose isn't holding; this is the sharpest genuine-judgement residue in the corpus | — |
 | CM-33 | Don't re-diagnose the documented platform quirks as fresh problems | Working conventions | J | #288, #571, #794, #891, #229, #359, #834 | Recognition judgement | — |
@@ -417,6 +417,7 @@ each rule that carries independent normative force beyond its step ordering.
 | DS-09 | Check same-file collisions before parallel dispatch | §4 | W | #603 | A stage: diff the issues' plausible file sets before dispatching | M |
 | DS-10 | Run `pnpm check:worktrees` after dispatch | §5 | W | #427 | **Built**; the rule is to run it | 0 |
 | DS-11 | Resume a stopped subagent with `SendMessage`, never a fresh `Agent` call | §6 | H (refusal) | none | `PreToolUse` on `Agent`: warn when the new call's prompt closely matches a stopped agent's. Fuzzy — **J** is defensible | M |
+| DS-12 | A subagent's prose is candidate material — re-check its factual/attribution claims against the cited source before they ship | §3 | J | #1137 | The `CM-30` judgement, applied to subagent output | — |
 | LS-01 | Never author the derived half of a session log | log-session §1 | G | none | **Built** — `log-session.ts --author` validates the interpretive subset and rejects derived fields | 0 |
 | LS-02 | Quote any scalar containing `[`, `{`, `#`, or `,` | log-session §1 | G | #354 | **Built** — the `--author` step rejects an unquoted-`#` truncation loudly | 0 |
 | LS-03 | Recover the session id from your own system-prompt instructions, never `git log` or `CLAUDE_CODE_SESSION_ID` | log-session | G | #99, #387, #449 | **Built** — `log-session.ts` resolves ground truth itself and overrides the typed value | 0 |
@@ -459,7 +460,7 @@ each rule that carries independent normative force beyond its step ordering.
 | BP-02 | Pin a file/line GitHub link to a 40-char SHA, never `main` | blog-post §5 | G | none | A validator over `layers/blog/content/**/*.md`: flag `blob/main/`. **Zero false positives, trivially checkable** — the strongest unbuilt gate-check candidate | S |
 | BP-03 | Draw every tag from `blogTags`; an out-of-vocabulary tag fails validation | blog-post §5 | G | none | **Built** — the Zod enum in `validate:content` | 0 |
 | BP-04 | `publishedAt` is set at commit time; never future, never noticeably earlier | blog-post §5 | G | none | A validator comparing `publishedAt` against the commit date | S |
-| BP-05 | Verify every weekday, count, date, SHA, author, and relative-time claim against `git`/the API before drafting | blog-post §5 | J | none | The `CM-30` judgement, applied to editorial content | — |
+| BP-05 | Re-derive every factual claim, the drafter's own included, from its primary source; for who-decided claims, the PR's review thread/timeline | blog-post §5 | W | #715, #1137, #1168 | **Built** — step 7's fresh fact-check subagent returns claim · source · verdict; `wrong`/`unverifiable` is fixed or cut, and an unresolved causal claim blocks self-merge | 0 |
 | BP-06 | Draft three candidates and let a fresh outside reader pick — every run | blog-post §A | W | #447 | A workflow stage; already fully specified | 0 |
 | BP-07 | Rotation: never two posts in a row from one Persona; no Persona starved past four | blog-post §A0 | G | none | **Built** — `scripts/blog-rotation.ts` computes `{last, starved, eligible}` | 0 |
 | MS-01 | Refuse to survey on a shallow clone rather than under-report | midden-survey §1 | H (refusal) | none | **Built** — `scripts/midden-survey.ts` refuses. Same shape `GC-03` proposes generalizing | 0 |
@@ -595,7 +596,7 @@ Three observations a human might act on:
 3. **Judgment-keep is 80 rows — 38% of the corpus — and it does not shrink much
    further.**
    The genuinely irreducible ones cluster tightly: verifying claims (`CM-30`,
-   `BP-05`, `TL-10`), honest self-report (`LS-05`, `BP-01`), untrusted-input
+   `TL-10`), honest self-report (`LS-05`, `BP-01`), untrusted-input
    handling (`GI2-02`, `GU-02`), and single-homing (`CM-22`). These are the rules
    the whole self-improvement loop rests on, and none of them has a trigger a
    machine can see. The Wave-3 re-founding should plan to keep roughly this much
