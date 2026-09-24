@@ -1,14 +1,8 @@
 <script setup lang="ts">
-// A Midden Space index. The Midden has two Spaces with two different landings
-// (CONTEXT.md: "The Stores"), so this route branches on the `space` param rather
-// than rendering one component unconditionally as it did when `trench` was the
-// only Space:
-//   /t/midden/trench  → the dig-report landing
-//   /t/midden/stores  → the register of finds held off display
-// Each landing resolves its own Space, so neither needs route context passed in.
-// An unknown space falls through to the trench landing.
-const route = useRoute()
-const space = computed(() => String(route.params.space ?? ''))
+// A Midden Space index, branching on the Space: `stores` gets the register of
+// finds held off display (CONTEXT.md: "The Stores"), `trench` the dig-report
+// landing. useSpace 404s an unknown Space, as the Atlas wings do.
+const { space } = useSpace('midden')
 </script>
 
 <template>

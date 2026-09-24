@@ -31,10 +31,11 @@ const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 't
   return { intro: pages.find((p) => p.path === '/') ?? null, count: sites.length, sites }
 })
 
+const count = computed(() => data.value?.count ?? 0)
 const rows = computed(() =>
   props.front
     ? [
-        { num: 'I', title: 'The Trench', description: `the open excavation — ${data.value?.count ?? 0} dig reports`, href: '/t/midden/trench' },
+        { num: 'I', title: 'The Trench', description: `the open excavation — ${count.value} dig report${count.value === 1 ? '' : 's'}`, href: '/t/midden/trench' },
         { num: 'II', title: 'The Stores', description: 'finds held off display, boxed by season', href: '/t/midden/stores' },
       ]
     : (data.value?.sites ?? []),
@@ -46,9 +47,9 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
 <template>
   <main class="midden">
     <div class="midden-page midden-landing midden-landing--masthead">
-      <p class="tech midden-crumb">
+      <nav class="tech midden-crumb" aria-label="Breadcrumb">
         <NuxtLink to="/">terrarium</NuxtLink><span class="sep">/</span><template v-if="front"><span class="here">the midden</span></template><template v-else><NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><span class="here">trench</span></template>
-      </p>
+      </nav>
 
       <header class="midden-landing__head">
         <p class="sc midden-landing__eyebrow">An excavation catalogue</p>
@@ -89,7 +90,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
         <div class="midden-sechead">
           <span id="midden-sites-head" class="hand midden-sechead__title">{{ front ? 'The excavation' : 'The dig reports' }}</span>
           <span class="midden-sechead__rule" />
-          <span v-if="!front" class="mono midden-sechead__aside">{{ data?.count ?? 0 }} sites</span>
+          <span v-if="!front" class="mono midden-sechead__aside">{{ count }} site{{ count === 1 ? '' : 's' }}</span>
         </div>
         <ol v-if="rows.length" class="midden-sites">
           <li v-for="site in rows" :key="site.href" class="midden-sites__item">

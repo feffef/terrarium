@@ -12,7 +12,7 @@
 // assertion below is self-contained via `$fetch`/`renderAndCollectErrors`, so
 // there's nothing from the caller's suite this module needs threaded in.
 import { describe, expect, it } from 'vitest'
-import { $fetch } from '@nuxt/test-utils/e2e'
+import { $fetch, fetch } from '@nuxt/test-utils/e2e'
 import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 
 /** Register the midden Tenant's L2 assertions under the caller's active suite. */
@@ -49,6 +49,18 @@ export function registerMiddenE2E(): void {
         // A definition string from utils/condition.ts's single-homed table.
         expect(html).not.toContain('Discarded so recently the edges are still sharp')
       }
+    })
+
+    // The front door's count must match the trench's actual list (the Space
+    // index document is not a dig report).
+    it('counts the dig reports on the front door correctly', async () => {
+      const listed = ((await $fetch('/t/midden/trench')) as string).match(/class="midden-sites__item"/g)?.length ?? 0
+      expect(listed).toBeGreaterThan(0)
+      expect(await $fetch('/t/midden')).toContain(`the open excavation — ${listed} dig report${listed === 1 ? '' : 's'}`)
+    })
+
+    it('404s an unknown Midden Space', async () => {
+      expect((await fetch('/t/midden/no-such-space')).status).toBe(404)
     })
 
     // The dig-report page carries the condition key (owner-directed final
