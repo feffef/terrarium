@@ -18,6 +18,8 @@ const { data, status, error } = await useAsyncData(route.path, () => queryCollec
 
 const chapter = computed(() => data.value ?? null)
 
+if (!chapter.value && !error.value) setResponseStatus(useRequestEvent(), 404)
+
 const title = computed(() => chapter.value?.title ?? 'Not found')
 useHead(() => ({ title: `${title.value} · marquee`, bodyAttrs: { class: 'mq-page' } }))
 useSeoMeta({ description: () => chapter.value?.description })

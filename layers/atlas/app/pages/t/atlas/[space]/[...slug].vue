@@ -64,6 +64,8 @@ provideAlmanac({
   specimen: () => entry.value?.specimen.slug,
 })
 
+if (!entry.value) setResponseStatus(useRequestEvent(), 404)
+
 const title = computed(() => entry.value?.specimen.binomial ?? 'Not found')
 useSeoMeta({
   title: () => `${title.value} · The Atlas of the Terrarium`,

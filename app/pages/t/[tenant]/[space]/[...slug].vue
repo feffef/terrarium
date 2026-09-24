@@ -22,6 +22,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
     : []
   return { page, collections: sections }
 })
+if (!data.value?.page && !atRoot && !error.value) setResponseStatus(useRequestEvent(), 404)
 
 // Show only authored fields — drop Nuxt Content's built-in/page fields.
 const HIDDEN = new Set([

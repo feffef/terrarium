@@ -14,7 +14,7 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parse as parseYaml } from 'yaml'
 import { describe, expect, it } from 'vitest'
-import { $fetch } from '@nuxt/test-utils/e2e'
+import { $fetch, fetch } from '@nuxt/test-utils/e2e'
 import type { Locator, Page } from 'playwright-core'
 import { expectCleanHydration } from '../../../../tests/support/e2e.ts'
 import type { renderAndCollectErrors } from '../../../../tests/support/e2e.ts'
@@ -308,10 +308,12 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
 
     // The archived Space's Document routes are served by the SAME themed override
     // (not the generic catch-all) AND stay isolated: `/t/journal/archived/architecture`
-    // has no document, so it renders a *themed* not-found and must not leak
+    // has no document, so it renders a *themed* 404 and must not leak
     // `current`'s architecture body.
     it('serves archived Document routes themed and isolated', async () => {
-      const html = await $fetch('/t/journal/archived/architecture')
+      const res = await fetch('/t/journal/archived/architecture')
+      expect(res.status).toBe(404)
+      const html = await res.text()
       expect(html).toContain('class="jd"') // themed override reaches archived
       expect(html).toContain('aria-label="Breadcrumb"')
       expect(html).toContain('No document at') // no such doc in archived

@@ -32,7 +32,7 @@
 // (issue #97).
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { $fetch, createPage, setup, url } from '@nuxt/test-utils/e2e'
+import { $fetch, createPage, fetch, setup, url } from '@nuxt/test-utils/e2e'
 import { entryRoutes, expectCleanHydration, mermaidPageRoutes, renderAndCollectErrors } from '../support/e2e.ts'
 import { findPreinstalledChromium, findSystemChrome } from '../../scripts/chromium-path.ts'
 import { registerJournalE2E } from '../../layers/journal/tests/e2e/journal.e2e.ts'
@@ -87,21 +87,38 @@ describe('L2 smoke render', async () => {
   // it's outside the manifest-derived `entryRoutes` sweep above and asserted
   // here directly rather than via a per-Tenant `register…()` module.
   describe('root index page', () => {
-    it('renders the hero and lists the Blog, Midden, and Atlas showcases in order', async () => {
+    it('renders the hero and lists the Commons, Blog, Midden, and Atlas showcases in order', async () => {
       const html = await $fetch('/')
       expect(html).toMatch(/<h1[ >]/)
+      expect(html).toMatch(/<title>Terrarium[^<]+<\/title>/)
+      const commonsAt = html.indexOf('The Commons')
+      expect(commonsAt).toBeGreaterThan(-1)
       const blogAt = html.indexOf('The Blog')
       const middenAt = html.indexOf('The Midden')
       const atlasAt = html.indexOf('The Atlas')
       expect(blogAt).toBeGreaterThan(-1)
       expect(middenAt).toBeGreaterThan(-1)
       expect(atlasAt).toBeGreaterThan(-1)
+      expect(commonsAt).toBeLessThan(blogAt)
       expect(blogAt).toBeLessThan(middenAt)
       expect(middenAt).toBeLessThan(atlasAt)
     })
 
     it('hydrates in a browser with no console/page errors', async () => {
       await expectCleanHydration('/')
+    })
+
+    it('404s a missing document or Tenant, with a link back home', async () => {
+      for (const route of ['/t/journal/current/nope', '/t/commons/search/nope', '/t/nope/nothing', '/t/nope']) {
+        expect((await fetch(route)).status, route).toBe(404)
+      }
+      expect(await (await fetch('/t/nope/nothing')).text()).toContain('Back to the terrarium')
+    })
+
+    it('redirects a Tenant root with no front door to its first Space', async () => {
+      const res = await fetch('/t/commons', { redirect: 'manual' })
+      expect(res.status).toBe(302)
+      expect(res.headers.get('location')).toBe('/t/commons/search')
     })
 
     it('links each showcase card to its Tenant front door, in order', async () => {
@@ -111,7 +128,7 @@ describe('L2 smoke render', async () => {
         const hrefs = await page.locator('.explore-grid a.title-link').evaluateAll((els) =>
           els.map((el) => el.getAttribute('href')),
         )
-        expect(hrefs).toEqual(['/t/blog', '/t/midden', '/t/atlas'])
+        expect(hrefs).toEqual(['/t/commons', '/t/blog', '/t/midden', '/t/atlas'])
       } finally {
         await page.close()
       }
