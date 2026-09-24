@@ -95,6 +95,7 @@ export interface PageDoc {
   title?: string
   description?: string
   badge?: string
+  lead?: string
   summary?: string
   // Dashboard on-ramp opt-in (mirrors the `pages` schema): a page becomes a
   // "New here?" card by setting `onramp` to its sort order, with `onrampLabel`/

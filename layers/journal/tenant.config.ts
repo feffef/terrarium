@@ -33,6 +33,8 @@ export default defineTenant({
       schema: z.object({
         // `page` type already supplies path/title/description/body/seo.
         badge: z.string().optional(),
+        // A Space root's short plain lead, shown above the "New here?" cards.
+        lead: z.string().optional(),
         // Dashboard on-ramp opt-in (the "New here?" cards on the Space landing).
         // A page surfaces itself as a card by setting `onramp` to its sort order
         // (lowest first); `onrampLabel`/`onrampBlurb` carry the card's teaser copy,

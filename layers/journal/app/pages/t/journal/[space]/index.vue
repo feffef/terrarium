@@ -172,8 +172,10 @@ useSeoMeta({
       </div>
     </header>
 
-    <!-- Newcomer on-ramp: first after the masthead, so a newcomer sees the doors
-         before the longer intro and the data-heavy feed. -->
+    <p v-if="rootDoc?.lead" class="intro-lead">{{ rootDoc.lead }}</p>
+
+    <!-- Newcomer on-ramp: after the short lead that gives it context, before the
+         longer intro and the data-heavy feed. -->
     <section v-if="onrampCards.length" class="onramp" aria-label="Start here">
       <p class="onramp-lead">New here? Start with the short version:</p>
       <div class="onramp-cards">
@@ -423,6 +425,7 @@ h1 {
 .lede { margin: 0; max-width: 54ch; color: var(--jd-muted); font-size: 1.02rem; }
 
 .intro { margin: 1.6rem 0 0; max-width: 68ch; font-size: 1.04rem; }
+.intro-lead { margin: 1.6rem 0 0; max-width: 68ch; font-size: 1.08rem; color: var(--jd-ink); }
 .intro :deep(p) { margin: 0 0 0.8rem; color: var(--jd-muted); }
 .intro :deep(p:last-child) { margin-bottom: 0; }
 .intro :deep(a) { color: var(--jd-accent); text-decoration: underline; text-underline-offset: 2px; }
