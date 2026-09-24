@@ -1,0 +1,192 @@
+schemaVersion: 1
+session: session_01JoJbvtqQS2mYndK9DN7VXQ
+startedAt: 2026-09-24T04:01:13Z
+endedAt: 2026-09-24T04:13:12Z
+kind: autonomous
+goal: Run the scheduled /audit-docs sweep
+status: in-review
+outcome: "Opened PR #1307 with one fact-checked Glossary structure fix"
+summary: "Fully agent-initiated (fired by the audit-docs scheduled trigger, no human prompt this turn). Fanned out four paired-lens reviewer agents (Freshness, Single-home, Concision, Coherence) across the full Live-doc tier. Only one candidate finding survived: a Mis-location in layers/midden/CONTEXT.md, where a procedural \"Cataloguing discipline\" checklist was nested under the term-definitions-only Glossary heading. Independently fact-checked against ADR-0021, the domain-modeling Skill, every sibling Tenant CONTEXT.md, and the section's own origin (issue #1046/PR #1048) — verdict CONFIRMED-BUT: right file and prose, wrong structure. Fixed with a 1-line heading demotion (### to ##), no prose rewrite. pnpm gate:scoped ran the full gate (non-inert path) and went green. Opened PR #1307, subscribed to its activity, and will babysit it to merge per the audit-docs self-merge-on-green-gate tier. No Duplication/Verbose/Stale-narration/Contradiction/Ambiguity findings survived review, and no factual conflict warranted a needs-triage issue."
+prs:
+  - "1307"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: self-merge tier + closing-a-chartered-run recipe
+  - path: docs/adr/0021-multi-context-domain-model.md
+    reason: verify the per-Tenant CONTEXT.md narrative-latitude grant
+  - path: layers/midden/CONTEXT.md
+    reason: the file the confirmed finding lives in
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: scripts/loop-only-tool-guard.ts
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/highlights.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: .agents/skills/domain-modeling/CONTEXT-FORMAT.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/domain-modeling/SKILL.md
+    reason: (no reason given)
+  - path: scripts/audit-skills.ts
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: "Freshness-lens reviewer surfaced a genuine Drift candidate outside this Skill's editable scope: scripts/loop-only-tool-guard.ts's header comment and live deny-message text (lines 1-2, 156-157) still frame the guard as covering only \"/loop session's dynamic, self-paced mode,\" even though a prior audit-docs sweep (commit 85075efb) already corrected CLAUDE.md and docs/research/rulebook-migration-table.md to the guard's actual broader predicate (\"any pacing\"). audit-docs' three-tier system only covers *.md/SKILL.md surfaces, so this code-comment/string drift could not be fixed or escalated within this run's charter."
+    solution: Left as an observation for a future run or a human to pick up — file:line are scripts/loop-only-tool-guard.ts:1-2 and :156-157; the fix is to reword both to match the guard's own broader predicate.
+    severity: minor
+durationSec: 719
+models:
+  claude-sonnet-5: 90
+toolCounts:
+  Bash: 15
+  Agent: 9
+  ScheduleWakeup: 1
+  Read: 4
+  Edit: 1
+  Grep: 4
+  ToolSearch: 2
+  Glob: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_review_write: 1
+filesEdited:
+  - layers/midden/CONTEXT.md
+docsReadViaShell:
+  - docs/agents/pr-workflow.md
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/mdc-when-to-use.md
+  - CONTEXT.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/guards.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/proposals/README.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/domain-modeling/SKILL.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/research/github-actions-public-vs-private-limits.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/making-repo-public.md
+  - .agents/skills/midden-survey/SKILL.md
+  - docs/research/public-readiness-review.md
+subagents:
+  - type: general-purpose
+    task: "Audit-docs Agent A: Freshness"
+  - type: general-purpose
+    task: "Audit-docs Agent B: Single-home"
+  - type: general-purpose
+    task: "Audit-docs Agent C: Concision"
+  - type: general-purpose
+    task: "Audit-docs Agent D: Coherence"
+  - type: general-purpose
+    task: "Audit-docs Agent A: Freshness"
+  - type: general-purpose
+    task: "Audit-docs Agent B: Single-home"
+  - type: general-purpose
+    task: "Audit-docs Agent C: Concision"
+  - type: general-purpose
+    task: "Audit-docs Agent D: Coherence"
+  - type: general-purpose
+    task: Audit-docs fact-checker
+gitBranch: claude/festive-mayer-zrhjh1
+entrypoint: remote_trigger
+cliVersion: 2.1.281
+trigger: audit-docs
+landedBy: Stop
