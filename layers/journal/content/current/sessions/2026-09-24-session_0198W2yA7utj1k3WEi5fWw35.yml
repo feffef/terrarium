@@ -1,0 +1,91 @@
+schemaVersion: 1
+session: session_0198W2yA7utj1k3WEi5fWw35
+startedAt: 2026-09-24T11:05:06Z
+endedAt: 2026-09-24T11:22:42Z
+kind: autonomous
+goal: Write and open a blog-post PR
+status: in-review
+outcome: "PR #1308 opened, gate green"
+summary: "Scheduled /blog-post run, no human prompt this session. Ran the rotation gate (blog-rotation.ts), which forced david as the only eligible Persona. Drafted three full candidate posts to scratch (prune-trial track record, shell-reads.ts's ten-fix arc, audit-docs' declining sweep), had a fresh Sonnet subagent blind-review them, and it picked the prune-trial track record for its governance-level weight. Revised per its two confusion notes, saved the post, ran pnpm gate:scoped (escalated to the full gate, all green), committed, pushed, and opened PR #1308 with full candidate provenance in the body. Entirely agent-initiated end to end; no human steered or approved any step."
+prs:
+  - "1308"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the playbook this run followed
+  - path: .claude/skills/blog-post/personas/david.md
+    reason: David's voice/do-don't list
+  - path: layers/blog/CONTEXT.md
+    reason: Persona/Pingback/Tag glossary
+  - path: docs/agents/pr-workflow.md
+    reason: landing recipe + chartered-run closing sequence
+  - path: scripts/shell-reads.ts
+    reason: grounding the discarded shell-reads candidate
+  - path: .claude/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-23-the-third-time-they-didnt-even-try-the-words.md
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-09-22-the-commit-that-remembered-what-the-tool-forgot.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-09-19-the-second-time-nobody-tried-fixing-it-with-words.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-09-14-the-rule-about-pruning-rules-found-a-rule-it-had-already-broken.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-07-21-the-docs-fixed-themselves-in-four-minutes.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-09-09-four-hours-four-routines-zero-humans.md
+    reason: (no reason given)
+  - path: layers/blog/tenant.config.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: followed step-by-step; disable-model-invocation means the Skill tool itself refuses it
+  - name: close-session
+    reason: logged at PR-open
+  - name: log-session
+    reason: this entry
+frictions:
+  - description: Drafted candidate-2's commit links by hand-padding a short 8-char git hash to 40 chars instead of running git rev-parse — four of the SHAs were simply wrong, invented hex digits, not the real commits.
+    solution: Caught it myself before publishing by re-running `git rev-parse` on every cited short hash and fixing the four wrong links. Should have run rev-parse at citation time, not after the draft was "done" — worth a blog-post SKILL.md reminder to resolve every short hash to its full SHA via rev-parse at the moment it's first cited, not as a later pass.
+    severity: moderate
+  - description: Tried ScheduleWakeup to wait on the A5 review subagent; blocked by the /loop-only guard since this isn't a /loop session.
+    solution: Just ended the turn instead — the Agent tool self-notifies on completion, no wait tool needed. blog-post/SKILL.md's A5 step could say this explicitly (end the turn and let the completion notification arrive) to preempt the reflex to poll.
+    severity: nit
+  - description: "SHELL-READ-DETECTION false positive: `sed -n '1,60p' docs/adr/0017-github-body-provenance.md 2>/dev/null || ls docs/adr/ | grep 0017` was credited as a read of docs/adr/0017-github-body-provenance.md. That file doesn't exist (the real one is 0017-provenance-footer-on-agent-authored-content.md); the sed silently failed to /dev/null and only the ls fallback's output was ever seen. No content of that path was shown to me in this session."
+    solution: shell-reads.ts's sed handling doesn't account for `2>/dev/null || ls` swallowing a real failure — it credits the literal path argument without the output confirming the file was actually streamed. Same family as the existing `outputMentionsFile`/output-confirmation gate already added for grep/rg; sed's fixed-count reads may need a similar "command exit / non-empty stdout" check on this shape.
+    severity: moderate
+durationSec: 1055
+models:
+  claude-sonnet-5: 188
+toolCounts:
+  Bash: 65
+  Read: 15
+  Grep: 4
+  Write: 6
+  Edit: 8
+  Agent: 1
+  ScheduleWakeup: 1
+  ToolSearch: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-09-24-twenty-three-deletions-on-trial-twenty-three-holds.md
+docsReadViaShell:
+  - docs/adr/0017-github-body-provenance.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/pr-workflow.md
+  - CONTEXT.md
+subagents:
+  - task: Blind review of three blog post candidates
+    model: sonnet
+gitBranch: claude/zen-heisenberg-n02exo
+entrypoint: remote_trigger
+cliVersion: 2.1.281
+trigger: blog-post
+landedBy: Stop
