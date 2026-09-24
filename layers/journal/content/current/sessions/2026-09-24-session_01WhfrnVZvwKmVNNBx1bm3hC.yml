@@ -1,0 +1,50 @@
+schemaVersion: 1
+session: session_01WhfrnVZvwKmVNNBx1bm3hC
+startedAt: 2026-09-24T00:46:20Z
+endedAt: 2026-09-24T00:51:11Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: No Inventory changes warranted; all signals cleared
+summary: "Fully scheduler-fired /audit-skills run, no human prompt at any point. Gathered the scorecard via scripts/audit-skills.ts (40-session window, 36 Skills). orphanScan succeeded (797 merged PRs, 651 with a session); both orphanedSessions entries (session_019aeaoPHYWMJVekmUvTMhQ9, session_01QdPGeF2hNwJLtnvzv1Rsi1) carry resolvedBy cutoffs (#736, #1063) and orphanSuppressionLog shows both as resolved-annotation — read-only history, no re-filing. humanPromptedClosures and manuallyRescuedClosures were both empty (the healthy state) and misclassifiedKind was empty too. Phase A's regression screen flagged audit-docs and blog-post (both bracketing the same 2026-09-21 edit commit 03823388) for a friction-severity uptick after the edit; Phase B deep-read of all 7+7 session logs each Skill's skillSessionFiles listed showed the \"moderate\" frictions were about unrelated tooling/guard mechanics (docsReadViaShell glob/loop-variable misses, gate:scoped/tee piping, ScheduleWakeup misuse against dispatched subagents) with zero mention of the edited PR-closing-sequence content itself — judged inconclusive, nothing to act on. Re-graded importance/role for all 36 Skills against usedIn evidence: no onDisk/inventoried mismatches, no bright-line (>=2 session) signal for any grade or role change this run — the window is saturated by six rotating scheduled Routines, so most own-Skills at 0 usage (auto-triage, atlas-specimen, guest-build/intake, midden-survey) are absent only because their kind of session didn't occur, which the bright-line rule says never demotes. Working tree stayed clean throughout; no commit, no PR to open or gate."
+prs: []
+docsRead:
+  - path: layers/journal/content/current/skills/dispatch-subagents.yml
+    reason: spot-check role/importance accuracy against usage
+  - path: layers/journal/content/current/skills/audit-skills.yml
+    reason: "check prior observations, incl. the 2026-09-13 bracketing idea now resolved by issue #1237"
+  - path: layers/journal/content/current/sessions/2026-09-23-session_011Bc6anpFPFoyyRCizp9Zx3.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-22-session_01S3vBH6Vqxa26Gr35CHwgsz.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-20-session_0136594mCYfyW3Y69nvT1mc4.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-23-session_01YWMTQ7ZdjaYab177AJNWXx.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: invoked by schedule
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Called TaskCreate with a `tasks` array parameter (guessing its shape from context) without loading its schema via ToolSearch first, despite CLAUDE.md's explicit rule to do so for any deferred tool — got InputValidationError.
+    solution: Load a deferred tool's real schema via ToolSearch before the first call every time, even when a plan for its shape seems obvious.
+    severity: minor
+durationSec: 291
+models:
+  claude-sonnet-5: 64
+toolCounts:
+  Bash: 21
+  TaskCreate: 1
+  Read: 6
+  Skill: 2
+  Write: 1
+gitBranch: claude/upbeat-sagan-gv8lg7
+entrypoint: remote_trigger
+cliVersion: 2.1.281
+trigger: audit-skills
+learnings:
+  - "The regressionChecks bracketing fix from issue #1237 (domain-matched via skillsUsed, not nearest-chronological) is visibly working: several brackets this run were legitimately short or empty on one side (e.g. frictions-to-fixes's after-bracket, close-session's before-bracket) rather than being padded with unrelated Skills' sessions — confirms audit-skills.yml's 2026-09-13 idea was acted on and is paying off."
+landedBy: Stop
