@@ -10,13 +10,11 @@
 // timestamp — a single command's output to quote, not a date to derive by
 // hand.
 //
-// "Landed" means: the earliest commit on `origin/main` whose diff introduces
-// the trial's `problem:` text into `.agents/prune-trials.yml` — the same
-// commit that ships the entry ships the prune (SKILL.md §5: "Write the
-// trial's ledger entry as you prune, and commit it *with* the prune"). A
-// `git log -S` pickaxe search for that exact text, oldest match first, finds
-// it; `--reverse` is what makes the first hit the addition rather than some
-// later touch.
+// "Landed" means: the commit that ships the trial's ledger entry, which ships
+// the prune too (SKILL.md §5). It is the NEWEST `git log -S` match for the
+// entry's text: that commit set up the entry's current presence. A later
+// edit or a same-keyed entry can only make it later, and a later floor is the
+// safe direction (ADR-0027); the oldest match judged too early (issue #1285).
 //
 // The reported window is a FLOOR, not a deadline: the earliest instant a
 // judgment is valid, never a time a judgment is due. `/prune-trial` runs on a
@@ -86,11 +84,7 @@ export function parseTrials(yamlText: string): Trial[] {
  *  output by position (both walk the same `- problem: >` occurrences); if
  *  that pairing were ever to drift, the failure mode is a `-S` miss, i.e.
  *  "NOT FOUND" — the fail-safe direction (ADR-0027: "silence is not
- *  evidence"). That's not the only failure mode: two trials sharing the
- *  same first line collide in the `-S` search itself and can return a
- *  real but wrong landing commit with no warning — verify the returned
- *  commit actually names this trial's own problem before trusting it
- *  (issue #1285). */
+ *  evidence"). */
 export function rawProblemFirstLines(yamlText: string): string[] {
   const lines: string[] = []
   const re = /-\s*problem:\s*>\s*\n\s+(.+)\n/g
@@ -134,17 +128,15 @@ export function selectTrials(pairs: TrialWithSearchKey[], filterSubstr: string):
 
 const FIELD_SEP = '\x1f'
 
-/** The earliest `origin/main` commit whose diff of `.agents/prune-trials.yml`
- *  introduces `problemText` — i.e. the commit that shipped this trial's entry
- *  (and, per the Skill's own commit discipline, the prune it records). `null`
- *  when no such commit exists yet. */
+/** The newest `origin/main` commit that changed how often `problemText`
+ *  appears in the ledger (see the header). `null` when there is none. */
 function findLandingCommit(problemText: string, cwd = root): LandingCommit | null {
   const out = execFileSync(
     'git',
     [
       'log',
       'origin/main',
-      '--reverse',
+      '-1',
       `--format=%H${FIELD_SEP}%cI`,
       `-S${problemText}`,
       '--',
@@ -152,9 +144,7 @@ function findLandingCommit(problemText: string, cwd = root): LandingCommit | nul
     ],
     { cwd, encoding: 'utf8' },
   ).trim()
-  if (!out) return null
-  const [first = ''] = out.split('\n')
-  const [hash = '', isoCommitTime = ''] = first.split(FIELD_SEP)
+  const [hash = '', isoCommitTime = ''] = out.split(FIELD_SEP)
   if (!hash || !isoCommitTime) return null
   return { hash, isoCommitTime: new Date(isoCommitTime).toISOString() }
 }
