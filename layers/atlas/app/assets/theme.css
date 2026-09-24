@@ -341,7 +341,6 @@
 .atlas-index .swatches { display: inline-flex; gap: 3px; align-self: center; }
 .atlas-index .swatches i { width: 9px; height: 9px; border-radius: 50%; display: block; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15); }
 .atlas-index .naming .binomial { font-family: var(--atlas-display); font-style: italic; font-size: 1.14rem; }
-.atlas-index .naming .common { font-family: var(--atlas-label); font-size: 0.8rem; color: var(--atlas-muted); }
 .atlas-index .naming .char { display: block; font-size: 0.9rem; color: var(--atlas-muted); margin-top: 0.1rem; }
 .atlas-index .row:hover .naming .binomial { color: var(--biome-accent); }
 

@@ -43,9 +43,9 @@ useHead({ title: 'The Atlas of the Terrarium' })
 <template>
   <main class="atlas atlas-cover">
     <div class="atlas-page">
-      <p class="atlas-crumb">
+      <nav class="atlas-crumb" aria-label="Breadcrumb">
         <NuxtLink to="/">terrarium</NuxtLink><span class="sep">·</span><span class="here">the atlas</span>
-      </p>
+      </nav>
 
       <header class="cover">
         <p class="cover-orn" aria-hidden="true">~ · ~ · ~ · ~ · ~</p>

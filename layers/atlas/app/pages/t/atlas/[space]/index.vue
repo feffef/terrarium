@@ -77,9 +77,9 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
 <template>
   <main class="atlas" :class="`atlas--${space}`">
     <div class="atlas-page">
-      <p class="atlas-crumb">
+      <nav class="atlas-crumb" aria-label="Breadcrumb">
         <NuxtLink to="/">terrarium</NuxtLink><span class="sep">·</span><NuxtLink to="/t/atlas">the atlas</NuxtLink><span class="sep">·</span><span class="here">{{ meta.name }}</span>
-      </p>
+      </nav>
 
       <header class="biome-head">
         <p class="atlas-eyebrow">Wing {{ meta.numeral }} · {{ meta.character }}</p>
@@ -93,9 +93,8 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
         <div class="atlas-sechead"><span class="atlas-eyebrow">The catalogue</span></div>
         <AtlasSpecimenIndex v-model:highlight="hoveredSpecimen" :specimens="specimens" :biome="space" />
         <p class="catalogue-key">
-          The dots before each name are its colour signature; those after it, its rarity —
-          five for the everyday, fewer as it grows scarce, a lone ✦ for the mythic.
-          <a href="#on-rarity">The full scale</a>.
+          The dots before each name are its colour signature; those after it, its rarity,
+          read against the scale <a href="#on-rarity">on rarity</a> below.
         </p>
       </section>
 

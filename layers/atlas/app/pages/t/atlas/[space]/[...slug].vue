@@ -76,11 +76,11 @@ useSeoMeta({
 <template>
   <main class="atlas" :class="`atlas--${space}`" :style="sigStyle">
     <div class="atlas-page">
-      <p class="atlas-crumb">
+      <nav class="atlas-crumb" aria-label="Breadcrumb">
         <NuxtLink to="/">terrarium</NuxtLink><span class="sep">·</span><NuxtLink to="/t/atlas">the atlas</NuxtLink><span class="sep">·</span>
         <NuxtLink :to="`/t/atlas/${space}`">{{ meta.name }}</NuxtLink><span class="sep">·</span>
         <span class="here">{{ entry?.specimen.binomial ?? 'unknown' }}</span>
-      </p>
+      </nav>
 
       <article v-if="entry">
         <AtlasSpecimenPlate
