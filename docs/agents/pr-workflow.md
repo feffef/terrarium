@@ -105,8 +105,8 @@ without `--force-with-lease` since it's effectively a new remote branch.
 
 ## Per-tier merge authority
 
-- `digest` / `audit-docs` / `audit-skills` / `blog-post` — merge on a green
-  gate alone (ADR-0003/0004).
+- `digest` / `audit-docs` / `audit-skills` / `blog-post` / `visitor-loop` —
+  merge on a green gate alone (ADR-0003/0004).
 - `prune-trial` — merge on a green gate alone, and uniquely may prune ADR prose
   as part of a trial (ADR-0027's narrow amendment to ADR-0004).
 - `reviewer-agent` (`frictions-to-fixes`) — not purely mechanical: the

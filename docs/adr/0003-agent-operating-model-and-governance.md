@@ -23,6 +23,7 @@ but answer different questions, and neither restates the other.
 | `audit-skills` | Inventory-only content citing an existing evidence rule (ADR-0015) | 2026-07-09 | — |
 | `blog-post` | the post itself under `layers/blog/content/<persona>/pages/`, plus for a reaction one pingback stub under `…/pingbacks/` | 2026-07-12 | — |
 | `prune-trial` | prunes of agent-instruction prose anywhere in the rulebook, **including ADR prose** (ADR-0027's narrow amendment to ADR-0004), excluding an ADR's Decision and Consequences text — each shipped as a reversible trial; the warn-only hook a trial may write is in scope, hardening it to block is not | 2026-08-23 | #1021 |
+| `visitor-loop` | per run, one PR fixing the first-time-visitor findings at least two of its three visitors raised, and one PR building **one** feature picked from its visitors' ideas — both confined to existing Tenant layers (`layers/<tenant>/`: content, components, pages, styles, that Tenant's tests; a manifest edit only to add a field to an existing Collection) and non-human-only files under `app/`, plus the Skill's own `decisions.md`. Out of scope: a new Tenant, Space or Collection, a new dependency, any human-only file, agent instructions, and editing authored history (published posts, session logs, digests, Midden artifacts) | 2026-09-24 | — |
 
 Every row's bound is exact: content outside that scope, or a red gate, is
 never auto-merged and falls back to ADR-0003's default (gated PR, human merge).
@@ -77,6 +78,16 @@ never auto-merged and falls back to ADR-0003's default (gated PR, human merge).
 > fixed window and is judged by the sessions that follow it (ADR-0027 holds the
 > reasoning). Retiring a Skill or Routine stays outside it: that is filed as an
 > issue for a human, since no verdict could detect a mistaken retirement.
+
+> **Amended (2026-09-24).** `visitor-loop` joins the ledger above, and is the
+> first chartered job that implements **net-new** work. The owner scheduling
+> it is a **standing** Trusted green-light (as ADR-0022's is for triage) for
+> exactly **one** feature per run, the run's pick of its visitors' ideas,
+> bounded by the ledger row — not a general licence to birth
+> features. Why: the Platform is meant to be *self-growing*, and a feature a
+> blind visitor asked for is an outside enough trigger to stand in for a human
+> choosing each one.
+> Anything outside the row still waits for a human.
 
 ## Context
 
