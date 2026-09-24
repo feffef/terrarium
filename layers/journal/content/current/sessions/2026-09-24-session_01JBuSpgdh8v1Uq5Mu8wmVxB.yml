@@ -1,21 +1,23 @@
 schemaVersion: 1
 session: session_01JBuSpgdh8v1Uq5Mu8wmVxB
 startedAt: 2026-09-24T02:03:35Z
-endedAt: 2026-09-24T02:27:34Z
+endedAt: 2026-09-24T02:31:28Z
 kind: autonomous
 goal: Run frictions-to-fixes sweep
-status: in-review
-outcome: 1 PR opened (#1306), 1 issue filed for human (#1304)
-summary: "Scheduled, unattended frictions-to-fixes run (no human prompt). Dispatched a survey subagent to read the latest 20 session logs and screen against the tracker; the window was thin — after dropping prune-trial territory (double-backgrounding, already covered by open issue #1293 and an open Prune Trial due ~2026-09-25) and already-fixed items (PR #1298, PR #1299), only 2 never-fixed candidates survived, no regressions. Filed both as issues: #1304 (loop-only-tool-guard.ts's deny text still says \"dynamic, self-paced mode\", narrower than CLAUDE.md's corrected rule) and #1305 (scanShellReads doesn't resolve a $VAR read inside a literal `for VAR in a b c; do ...; done` shell loop). #1304 touches a PreToolUse guard script, which the Skill bars from unattended dispatch (\"editing it needs a human-attended session\") — filed for human attention rather than fixed here, and flagged in the run's completion notification. #1305 was dispatched to a Sonnet impl agent in an isolated worktree, which implemented the fix, added tests, ran the full gate green locally, and opened PR #1306 (Closes #1305). Reviewing/merging #1306 is this session's remaining work."
+status: completed
+outcome: "PR #1306 merged; issue #1304 filed for a human"
+summary: "Scheduled, unattended frictions-to-fixes run (no human prompt). Dispatched a survey subagent to read the latest 20 session logs and screen against the tracker; the window was thin — after dropping prune-trial territory (double-backgrounding, already covered by open issue #1293 and an open Prune Trial due ~2026-09-25) and already-fixed items (PR #1298, PR #1299), only 2 never-fixed candidates survived, no regressions. Filed both as issues: #1304 (loop-only-tool-guard.ts's deny text still says \"dynamic, self-paced mode\", narrower than CLAUDE.md's corrected rule) and #1305 (scanShellReads doesn't resolve a $VAR read inside a literal `for VAR in a b c; do ...; done` shell loop). #1304 touches a PreToolUse guard script, which the Skill bars from unattended dispatch (\"editing it needs a human-attended session\") — filed for human attention rather than fixed here, and surfaced in this run's completion notification rather than actioned autonomously. #1305 was dispatched to a Sonnet impl agent in an isolated worktree, which implemented the fix, added thorough test coverage, ran the full gate green locally, and opened PR #1306 (Closes #1305). This session then code-reviewed the diff itself (as the ADR-0003 reviewer-agent tier), confirmed the gate green on CI, posted a COMMENT-event review verdict, and merged via merge-pr.ts, which also self-healed GitHub's missed auto-close on #1305."
 prs:
   - "1306"
 docsRead:
   - path: docs/agents/guards.md
     reason: confirm loop-only-tool-guard.ts is a roster guard before deciding not to dispatch its fix
   - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
-    reason: exact GitHub-body provenance header format for filed issues
+    reason: exact GitHub-body provenance header format for filed issues and the PR review
   - path: docs/agents/triage-labels.md
     reason: pick ready-for-human vs ready-for-agent labels for the two filed issues
+  - path: docs/agents/pr-workflow.md
+    reason: "the land-a-gated-PR recipe and per-tier merge authority before merging #1306"
   - path: scripts/shell-reads.ts
     reason: (read before editing)
   - path: tests/unit/shell-reads.spec.ts
@@ -34,7 +36,7 @@ skillsUsed:
   - name: dispatch-subagents
     reason: brief + isolation mechanism for the shell-reads impl agent
   - name: close-session
-    reason: (no reason given)
+    reason: closure sequence at PR-open and again at merge
   - name: log-session
     reason: (no reason given)
 frictions:
@@ -44,24 +46,28 @@ frictions:
   - description: scripts/merged-since.ts mixes a non-JSON line into its output in some invocations, breaking strict JSON parsing of the captured file
     solution: either make merged-since.ts emit pure JSON when redirected, or document that consumers should grep rather than JSON.parse the raw output
     severity: minor
-durationSec: 1439
+durationSec: 1673
 models:
-  claude-sonnet-5: 62
+  claude-sonnet-5: 87
 toolCounts:
-  ToolSearch: 2
+  ToolSearch: 3
   Agent: 2
   ScheduleWakeup: 1
   mcp__github__search_issues: 2
-  Bash: 3
+  Bash: 6
   Grep: 2
   Glob: 1
-  Read: 2
+  Read: 3
   mcp__github__issue_write: 2
   Skill: 3
-  ReadNotifications: 1
-  mcp__github__pull_request_read: 5
-  Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 7
+  Write: 2
   mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_review_write: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  PushNotification: 1
 filesEdited:
   - scripts/shell-reads.ts
   - tests/unit/shell-reads.spec.ts
