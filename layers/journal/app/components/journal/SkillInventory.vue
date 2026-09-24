@@ -24,7 +24,7 @@ defineProps<{
             {{ s.name }}
             <span v-if="s.category === 'platform-operation'" class="po">platform-op</span>
           </div>
-          <p class="role">{{ s.role }}</p>
+          <MDC :value="s.role" tag="p" unwrap="p" class="role" />
         </div>
       </template>
 
@@ -67,6 +67,13 @@ defineProps<{
   padding: 0 0.3rem;
 }
 .role { margin: 0.25rem 0 0; font-size: 0.83rem; color: var(--jd-muted); font-family: var(--jd-serif); }
+.role :deep(code) {
+  font-family: var(--jd-mono);
+  font-size: 0.9em;
+  background: var(--jd-surface-2);
+  padding: 0.05em 0.3em;
+  border-radius: 4px;
+}
 .chips-inline { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .chip {
   font-family: var(--jd-mono);
