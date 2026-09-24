@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // The specimen index (#66): the biome's catalogue, read like a real one —
-// binomial (its color signature worn as a swatch trio), common name, one-line
-// character, and the rarity mark. Every row a doorway to the entry.
+// binomial (its color signature worn as a swatch trio), its one-line
+// character (which opens with the common name), and the rarity mark. Every row a doorway to the entry.
 //
 // `highlight` (#285, map #279): an optional externally-driven slug — the
 // biome landing wires this to the composite almanac wheel via
@@ -36,7 +36,11 @@ function rowLeave(slug: string) {
         @focus="rowEnter(s.slug)"
         @blur="rowLeave(s.slug)"
       >
-        <span class="swatches" aria-hidden="true" :title="s.signature?.gloss">
+        <span
+          class="swatches"
+          :title="s.signature?.gloss"
+          v-bind="s.signature?.gloss ? { role: 'img', 'aria-label': `colour signature: ${s.signature.gloss}` } : { 'aria-hidden': 'true' }"
+        >
           <i v-for="c in (s.signature?.colors ?? [])" :key="c.hex" :style="{ background: c.hex }" />
         </span>
         <span class="naming">
