@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01TgYzP52EJ4TkR38M19FAR3
 startedAt: 2026-09-24T20:52:03Z
-endedAt: 2026-09-24T22:21:45Z
+endedAt: 2026-09-24T22:27:48Z
 kind: interactive
 goal: Brave full-sweep auto-triage, then owner decisions
-status: in-review
-outcome: "13 triaged; 3 decisions made; PR #1309 open"
+status: completed
+outcome: "13 triaged; 3 decisions made; PR #1309 merged"
 summary: 'Human-instructed: /auto-triage "be brave and design a solution for each issue". Asked, the human chose full-sweep over all 13 non-map issues. One read-only triage subagent per issue. Result: #1285, #1276, #1244, #1168, #1248 are ready-for-agent; seven stay ready-for-human with posted designs; #869 was skipped as blocked. Then, human-instructed via /grill-with-docs, three decisions: #1276 is built before #864, which reuses its check; #1215 is closed not planned, with a new .out-of-scope note in PR #1309; #1293 waits for the open prune trial. Each decision is recorded as a comment on its issue.'
 prs:
   - "1309"
@@ -31,11 +31,11 @@ frictions:
   - description: My first commit hand-wrote the ADR-0017 trailer because the harness system prompt asks for it; the commit-trailer guard denied it, then the tail-pipe guard denied the retry.
     solution: Guards worked as designed; write commits with no trailer from the start, and redirect gate output to a file instead of piping it.
     severity: nit
-durationSec: 5382
+durationSec: 5745
 models:
-  claude-opus-5-5: 118
+  claude-opus-5-5: 135
 toolCounts:
-  Bash: 23
+  Bash: 25
   Grep: 1
   AskUserQuestion: 1
   ToolSearch: 3
@@ -50,6 +50,8 @@ toolCounts:
   mcp__github__issue_write: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 4
+  mcp__Claude_Code_Remote__delete_trigger: 1
 docsReadViaShell:
   - .agents/skills/triage/SKILL.md
   - docs/agents/issue-tracker.md
