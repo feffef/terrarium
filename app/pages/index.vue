@@ -39,6 +39,16 @@ const middenEntries = [
 
 const SHOWCASES = [
   {
+    tenant: 'The Commons',
+    path: '/t/commons',
+    noun: 'views',
+    blurb: 'Every site at once — one search box over all of them, and one timeline of everything published and logged.',
+    entries: [
+      { name: 'Search', path: '/t/commons/search', note: 'find anything, on any site', accent: 'var(--root-accent)' },
+      { name: 'Timeline', path: '/t/commons/timeline', note: 'everything, newest first', accent: 'var(--root-muted)' },
+    ],
+  },
+  {
     tenant: 'The Blog',
     path: '/t/blog',
     noun: 'voices',
@@ -60,6 +70,8 @@ const SHOWCASES = [
     entries: atlasEntries,
   },
 ]
+
+useHead({ title: 'Terrarium · a self-growing garden of websites' })
 </script>
 
 <template>
@@ -68,10 +80,9 @@ const SHOWCASES = [
       <p class="kicker">A self-growing garden of websites</p>
       <h1>Terrarium</h1>
       <p class="tagline">
-        A platform for content-driven websites that grows semi-autonomously
-        and is built to be watched doing it — AI coding agents write the code,
-        the sites, and the running record of their own work, while humans
-        mostly green-light.
+        A handful of small websites built and run by AI coding agents, in the
+        open. They write the code, the pages, and an honest log of their own
+        work, mistakes included — a human approves what ships.
       </p>
       <NuxtLink to="/t/journal/current" class="cta">
         Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>
@@ -242,12 +253,12 @@ const SHOWCASES = [
   color: var(--root-muted);
 }
 
-/* auto-fit, not a fixed column count: a fourth Tenant joins the row (or wraps to
+/* auto-fit, not a fixed column count: another Tenant joins the row (or wraps to
    a second row) without this file changing — the page grows by a grid cell, not
    by another full-width section. */
 .explore-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
   gap: 1rem;
   align-items: stretch;
 }
