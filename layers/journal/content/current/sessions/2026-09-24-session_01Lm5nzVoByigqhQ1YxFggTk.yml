@@ -1,0 +1,100 @@
+schemaVersion: 1
+session: session_01Lm5nzVoByigqhQ1YxFggTk
+startedAt: 2026-09-24T22:13:14Z
+endedAt: 2026-09-24T22:51:24Z
+kind: interactive
+goal: First-visitor walkthrough feedback, then quick fixes
+status: in-review
+outcome: Four themed visitor-fix PRs open, gates green locally
+summary: "Human-instructed throughout. The human asked for a dev server plus three subagents browsing the site as first-time visitors; I ran them and summarised their overlapping feedback in chat (human chose chat-only). The human then asked for subagents to design and implement every quick fix; after four clarifying answers (themed PRs, Marquee stays unlisted, re-date Atlas future dates into 2025, agent drafts tagline) I dispatched four worktree-isolated impl agents and opened their PRs: mobile layout (#1312), homepage + real 404s (#1316), Journal wording/rendering (#1317), Atlas + Midden (#1318). All cross-merge cleanly. Two judgement calls flagged for reviewers: a new tenant-root redirect page reading #routing, and the Midden split reversing an earlier owner decision."
+prs:
+  - "1312"
+  - "1316"
+  - "1317"
+  - "1318"
+docsRead:
+  - path: scripts/github-provenance-guard.ts
+    reason: (no reason given)
+  - path: layers/commons/app/components/commons/Timeline.vue
+    reason: (no reason given)
+  - path: layers/commons/app/components/commons/Search.vue
+    reason: (no reason given)
+  - path: layers/blog/app/assets/theme.css
+    reason: (read before editing)
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (no reason given)
+  - path: layers/journal/app/utils/dashboard.ts
+    reason: (read before editing)
+  - path: layers/journal/tests/unit/journal-dashboard.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: four parallel worktree-isolated impl agents
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "workflow-edit guard (issue #897) blocked a heredoc writing a brief to the scratchpad because the brief TEXT mentioned the CI workflows directory"
+    solution: Match the write target path, not any occurrence of the directory string inside heredoc content; worked around with the Write tool
+    severity: minor
+  - description: Finding the ADR-0017 PR-body provenance header format took three greps through guard and helper source before the first PR
+    solution: Put the literal header shape (robot emoji plus model link to session URL) in docs/agents/pr-workflow.md or the guard roster so it is known before the first attempt
+    severity: nit
+  - description: Re-dated Atlas observations shifted by exactly one year, so the record clusters in autumn 2025 then gaps Dec-Mar; the human asked for an even spread
+    solution: Brief should have stated the distribution target explicitly (e.g. roughly uniform across the year); flagged to the human for a follow-up decision
+    severity: minor
+durationSec: 2290
+models:
+  claude-opus-5-5: 90
+toolCounts:
+  AskUserQuestion: 2
+  Bash: 18
+  ToolSearch: 2
+  Agent: 7
+  Skill: 3
+  Write: 2
+  mcp__github__list_pull_requests: 1
+  Grep: 1
+  Read: 1
+  mcp__github__create_pull_request: 4
+  mcp__github__subscribe_pr_activity: 4
+  ReadNotifications: 4
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - layers/atlas/app/components/atlas/SpecimenIndex.vue
+  - layers/atlas/app/components/atlas/RelationsWeb.vue
+  - scripts/_probe-fix-c.ts
+  - layers/blog/app/assets/theme.css
+  - scripts/_probe-fixb.ts
+  - layers/journal/app/components/journal/SkillInventory.vue
+  - layers/journal/tests/e2e/journal.e2e.ts
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+docsReadViaShell:
+  - layers/commons/CONTEXT.md
+  - layers/atlas/CONTEXT.md
+  - layers/midden/CONTEXT.md
+subagents:
+  - type: general-purpose
+    task: First-time visitor walkthrough 1
+  - type: general-purpose
+    task: First-time visitor walkthrough 2
+  - type: general-purpose
+    task: First-time visitor walkthrough 3
+  - type: general-purpose
+    task: "Fix group A: homepage & 404s"
+  - type: general-purpose
+    task: "Fix group B: Journal wording & rendering"
+  - type: general-purpose
+    task: "Fix group C: Atlas & Midden"
+  - type: general-purpose
+    task: "Fix group D: Blog/Commons mobile"
+gitBranch: claude/elegant-dijkstra-1vf45r
+entrypoint: remote
+cliVersion: 2.1.282
+learnings:
+  - "An unquoted YAML value containing ' #' silently truncates in content too, not only in session logs (Midden find title; a Blog pingback blurb likely has the same bug)"
+ideas:
+  - "Add a validate:content check that flags any content YAML scalar whose raw source line contains an unquoted ' #', catching the truncation class that clipped the Midden find title and likely a Blog pingback blurb"
+landedBy: Stop
