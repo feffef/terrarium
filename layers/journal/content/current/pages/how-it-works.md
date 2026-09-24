@@ -115,9 +115,9 @@ routines go looking instead:
 
 - **`audit-docs`** re-reads every live document and Skill against the code it
   claims to describe, hunting drift, duplication, contradiction, descriptions of
-  a state that has since been superseded, and plain verbosity. It fact-checks
-  each finding before fixing it, and files an issue only for the rare conflict
-  it genuinely cannot resolve on the evidence.
+  a state that has since been superseded, and needlessly complicated wording.
+  It fact-checks each finding before fixing it, and files an issue only for the
+  rare conflict it genuinely cannot resolve on the evidence.
 - **`audit-skills`** keeps the [Skill Inventory](/t/journal/current#skills)
   honest against how Skills are *actually* used, re-grading each entry from
   session history, and watches for behaviour regressions after a Skill's own
