@@ -13,6 +13,8 @@
 // changed), then reads only that one (Tenant, Space)'s keyed `pages` collection.
 // Spaces cannot leak. `pagesKey` is already this Tenant's own literal `pages`
 // keys — derived from the generated `#routing` type (shared/routing.ts).
+import JournalScrollTable from '../../../../components/journal/ScrollTable.vue'
+
 const route = useRoute()
 const { space, path, pagesKey } = useSpace('journal')
 
@@ -49,7 +51,7 @@ useSeoMeta({
     </nav>
 
     <article v-if="page" class="jd-prose">
-      <ContentRenderer :value="page" />
+      <ContentRenderer :value="page" :components="{ table: JournalScrollTable }" />
     </article>
     <div v-else class="jd-prose">
       <h1>Not found</h1>

@@ -155,12 +155,10 @@ export function skillGroups(own: SkillDoc[]): { importance: Importance; skills: 
     .filter((g) => g.skills.length > 0)
 }
 
-// A Skill's `role` is authored with inline Markdown (`code`, *em*, **strong**).
-// Tokenized here rather than via <MDC>, which drops the space between adjacent
-// inline elements (`*by* \`x\`` renders as "byx").
+// Not <MDC>: it drops the space between adjacent inline elements.
 export function skillRoleParts(role: string): { kind: 'text' | 'code' | 'em' | 'strong'; text: string }[] {
   return role
-    .split(/(`[^`]+`|\*\*[^*]+\*\*|\*[^*\s][^*]*\*)/)
+    .split(/(`[^`]+`|(?<!\w)\*\*[^*\s](?:[^*]*[^*\s])?\*\*(?!\w)|(?<![\w*])\*[^*\s](?:[^*]*[^*\s])?\*(?![\w*]))/)
     .map((t, i) => {
       if (i % 2 === 0) return { kind: 'text' as const, text: t }
       if (t.startsWith('`')) return { kind: 'code' as const, text: t.slice(1, -1) }

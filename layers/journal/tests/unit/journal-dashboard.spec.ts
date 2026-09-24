@@ -235,6 +235,10 @@ describe('skill inventory', () => {
       { kind: 'code', text: 'personas/*.md' },
       { kind: 'text', text: ' and a * b' },
     ])
+    expect(skillRoleParts('')).toEqual([])
+    for (const literal of ['an *unclosed marker', 'a `lone tick', '2*3*4 and a*b*c', '*foo *', '**bar **']) {
+      expect(skillRoleParts(literal)).toEqual([{ kind: 'text', text: literal }])
+    }
   })
 })
 

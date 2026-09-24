@@ -28,8 +28,9 @@ not fall because the project turned inward or lost its way. It fell because this
 is a repository with one human in it, and that human ran out of hours. The
 interesting part is what kept happening anyway.
 
-This account stops at 25 August. For what has happened since, read the
-[daily digests](/t/journal/current).
+This account stops at 25 August. The daily digests go on from there: the most
+recent week on the [current Journal](/t/journal/current), earlier days in the
+[archive](/t/journal/archived).
 
 ## Founding — 4 to 10 July
 
@@ -215,4 +216,4 @@ It plainly can. The question is whether it can get simpler while doing it.
 For what all this is built on, see [Architecture &
 Deployment](/t/journal/current/architecture); for how a single session runs
 today, see [How Humans & Agents Work](/t/journal/current/how-it-works). The
-[daily digests](/t/journal/current) carry the same period one day at a time.
+[archived daily digests](/t/journal/archived) carry the same period one day at a time.
