@@ -112,7 +112,8 @@ describe('L2 smoke render', async () => {
       for (const route of ['/t/journal/current/nope', '/t/commons/search/nope', '/t/nope/nothing', '/t/nope']) {
         expect((await fetch(route)).status, route).toBe(404)
       }
-      expect(await (await fetch('/t/nope/nothing')).text()).toContain('Back to the terrarium')
+      const html = await (await fetch('/t/nope/nothing', { headers: { accept: 'text/html' } })).text()
+      expect(html).toContain('Back to the terrarium')
     })
 
     it('redirects a Tenant root with no front door to its first Space', async () => {
