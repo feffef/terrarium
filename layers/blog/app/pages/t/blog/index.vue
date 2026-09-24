@@ -63,12 +63,6 @@ const filteredPosts = computed(() =>
   selectedTag.value ? posts.value.filter((p) => p.tags?.includes(selectedTag.value!)) : posts.value,
 )
 
-// Closed on narrow screens unless a tag is active; CSS keeps it shown when wide,
-// and the mount check covers browsers without `::details-content`.
-const tagsOpen = ref(!!selectedTag.value)
-watch(selectedTag, (t) => { if (t) tagsOpen.value = true })
-onMounted(() => { if (matchMedia('(min-width: 60rem)').matches) tagsOpen.value = true })
-
 useHead({
   title: computed(() => (selectedTag.value ? `#${selectedTag.value} · blog` : 'blog · terrarium')),
   bodyAttrs: { class: 'bl-page' },
@@ -99,8 +93,19 @@ useSeoMeta({
       <aside class="about about--plain" aria-label="Browse the blog">
         <BlogNetwork current="">
           <template #extra>
-            <details class="net-tags" :open="tagsOpen" @toggle="tagsOpen = ($event.target as HTMLDetailsElement).open">
-              <summary class="net-tags-label">Browse by tag<span class="net-tags-n"> ({{ tagCounts.length }})</span></summary>
+            <!-- Rendered twice, one shown per width by CSS: a plain list when
+                 wide, a disclosure (closed unless a tag is active) when narrow. -->
+            <component
+              v-for="narrow in [false, true]"
+              :key="String(narrow)"
+              :is="narrow ? 'details' : 'div'"
+              class="net-tags"
+              :class="narrow ? 'net-tags--narrow' : 'net-tags--wide'"
+              :open="narrow ? !!selectedTag : undefined"
+            >
+              <component :is="narrow ? 'summary' : 'p'" class="net-tags-label">
+                Browse by tag<template v-if="narrow"> ({{ tagCounts.length }})</template>
+              </component>
               <nav class="tag-directory" aria-label="Browse by tag">
                 <NuxtLink to="/t/blog" class="tag-chip" :class="{ active: !selectedTag }">all</NuxtLink>
                 <NuxtLink
@@ -111,7 +116,7 @@ useSeoMeta({
                   :class="{ active: selectedTag === t }"
                 >{{ t }} <span class="tag-count">{{ count }}</span></NuxtLink>
               </nav>
-            </details>
+            </component>
           </template>
         </BlogNetwork>
       </aside>
