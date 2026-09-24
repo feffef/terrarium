@@ -1,35 +1,54 @@
 schemaVersion: 1
 session: session_01Lm5nzVoByigqhQ1YxFggTk
 startedAt: 2026-09-24T22:13:14Z
-endedAt: 2026-09-24T22:51:24Z
+endedAt: 2026-09-24T23:31:02Z
 kind: interactive
-goal: First-visitor walkthrough feedback, then quick fixes
+goal: First-visitor walkthrough, fixes, and daily visitor-loop Skill
 status: in-review
-outcome: Four themed visitor-fix PRs open, gates green locally
-summary: "Human-instructed throughout. The human asked for a dev server plus three subagents browsing the site as first-time visitors; I ran them and summarised their overlapping feedback in chat (human chose chat-only). The human then asked for subagents to design and implement every quick fix; after four clarifying answers (themed PRs, Marquee stays unlisted, re-date Atlas future dates into 2025, agent drafts tagline) I dispatched four worktree-isolated impl agents and opened their PRs: mobile layout (#1312), homepage + real 404s (#1316), Journal wording/rendering (#1317), Atlas + Midden (#1318). All cross-merge cleanly. Two judgement calls flagged for reviewers: a new tenant-root redirect page reading #routing, and the Midden split reversing an earlier owner decision."
+outcome: Six visitor-fix PRs merged; visitor-loop Skill PR open
+summary: "All human-instructed. Ran a dev server and three blind first-time-visitor subagents, summarised their feedback, then (human ask) dispatched four worktree-isolated impl agents for the quick fixes: #1312, #1316, #1317, #1318. Owner review reshaped three of them (blog mobile panel, no Commons card, Journal lead before the on-ramp). Human asked for /code-review: two-axis reviews of all four found real bugs (CSS specificity, ADR-0016 violation by a Platform catch-all route, dishonest history note, table a11y), fixed on the PRs or in follow-ups #1320/#1321; all six merged. Human then asked for a daily self-growing Skill: authored visitor-loop (three models, consensus fixes, best idea as feature, self-merge) with an ADR-0003 ledger row and standing green-light amendment the human chose explicitly; PR #1322 needs a human merge. Created the daily Routine at the human's request."
 prs:
   - "1312"
   - "1316"
   - "1317"
   - "1318"
+  - "1320"
+  - "1321"
+  - "1322"
 docsRead:
   - path: scripts/github-provenance-guard.ts
     reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (read before editing)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (read before editing)
   - path: layers/commons/app/components/commons/Timeline.vue
     reason: (no reason given)
   - path: layers/commons/app/components/commons/Search.vue
     reason: (no reason given)
   - path: layers/blog/app/assets/theme.css
     reason: (read before editing)
+  - path: layers/blog/app/pages/t/blog/index.vue
+    reason: (read before editing)
   - path: layers/journal/app/pages/t/journal/[space]/index.vue
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/journal/app/utils/dashboard.ts
     reason: (read before editing)
   - path: layers/journal/tests/unit/journal-dashboard.spec.ts
     reason: (read before editing)
+  - path: layers/journal/app/pages/t/journal/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (read before editing)
 skillsUsed:
   - name: dispatch-subagents
     reason: four parallel worktree-isolated impl agents
+  - name: code-review
+    reason: two-axis review of each visitor-fix PR
+  - name: writing-great-skills
+    reason: authoring the visitor-loop Skill
   - name: close-session
     reason: (no reason given)
   - name: log-session
@@ -39,42 +58,87 @@ frictions:
     solution: Match the write target path, not any occurrence of the directory string inside heredoc content; worked around with the Write tool
     severity: minor
   - description: Finding the ADR-0017 PR-body provenance header format took three greps through guard and helper source before the first PR
-    solution: Put the literal header shape (robot emoji plus model link to session URL) in docs/agents/pr-workflow.md or the guard roster so it is known before the first attempt
+    solution: Put the literal header shape in docs/agents/pr-workflow.md so it is known before the first attempt
     severity: nit
-  - description: Re-dated Atlas observations shifted by exactly one year, so the record clusters in autumn 2025 then gaps Dec-Mar; the human asked for an even spread
-    solution: Brief should have stated the distribution target explicitly (e.g. roughly uniform across the year); flagged to the human for a follow-up decision
+  - description: Four impl PRs were opened without any independent review; the human had to ask whether /code-review ran, and it then found real bugs including an ADR-0016 violation
+    solution: Run code-review on every dispatched impl PR before announcing it ready; the visitor-loop Skill should do the same before self-merge
+    severity: major
+  - description: "Owner merged #1312 while its review fixes were in flight; the impl agent then recreated the deleted branch by pushing to it, before the redirect message arrived"
+    solution: Before resuming an agent on a PR branch, check the PR is still open; tell agents to verify the remote branch exists before pushing
+    severity: moderate
+  - description: Impl brief let an agent add a Platform catch-all route without reading ADR-0016, which it contradicted; only the standards review caught it
+    solution: Dispatch briefs touching routes should require reading all ADRs (CLAUDE.md already says so for planning) — name the relevant ADRs explicitly
+    severity: moderate
+  - description: Re-dated Atlas observations shifted by exactly one year leave a sparse winter; the human asked for an even spread
+    solution: State the distribution target explicitly in the brief; left for a human decision
     severity: minor
-durationSec: 2290
+  - description: create_trigger stored no connectors and an empty sources list for the new Visitor Loop Routine, unlike the existing Routines
+    solution: Human should attach the Claude_Code_Remote connector and the repo in the routines UI; create Routines from a session holding the connector
+    severity: moderate
+durationSec: 4668
 models:
-  claude-opus-5-5: 90
+  claude-opus-5-5: 326
 toolCounts:
-  AskUserQuestion: 2
-  Bash: 18
-  ToolSearch: 2
-  Agent: 7
-  Skill: 3
-  Write: 2
+  AskUserQuestion: 6
+  Bash: 46
+  ToolSearch: 5
+  Agent: 15
+  Skill: 4
+  Write: 12
   mcp__github__list_pull_requests: 1
   Grep: 1
-  Read: 1
-  mcp__github__create_pull_request: 4
-  mcp__github__subscribe_pr_activity: 4
-  ReadNotifications: 4
+  Read: 6
+  mcp__github__create_pull_request: 7
+  mcp__github__subscribe_pr_activity: 7
+  ReadNotifications: 25
   mcp__Claude_Code_Remote__send_later: 1
+  SendMessage: 8
+  SendUserFile: 2
+  mcp__github__update_pull_request: 4
+  mcp__github__add_issue_comment: 3
+  mcp__github__get_job_logs: 1
+  mcp__Claude_Code_Remote__list_triggers: 1
+  Edit: 19
+  mcp__Claude_Code_Remote__create_trigger: 1
 filesEdited:
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/visitor-loop/decisions.md
+  - layers/journal/content/current/skills/visitor-loop.yml
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/agents/pr-workflow.md
   - layers/atlas/app/components/atlas/SpecimenIndex.vue
   - layers/atlas/app/components/atlas/RelationsWeb.vue
   - scripts/_probe-fix-c.ts
+  - scripts/_probe-fu.ts
   - layers/blog/app/assets/theme.css
+  - layers/blog/app/pages/t/blog/index.vue
+  - layers/commons/content/timeline/pages/index.md
   - scripts/_probe-fixb.ts
   - layers/journal/app/components/journal/SkillInventory.vue
   - layers/journal/tests/e2e/journal.e2e.ts
   - layers/journal/app/utils/dashboard.ts
   - layers/journal/tests/unit/journal-dashboard.spec.ts
+  - layers/journal/app/components/journal/ScrollTable.vue
+  - layers/journal/app/assets/theme.css
+  - layers/journal/app/pages/t/journal/[space]/[...slug].vue
+  - layers/journal/tenant.config.ts
+  - layers/journal/app/types/journal.ts
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - layers/journal/content/current/pages/index.md
 docsReadViaShell:
+  - .agents/skills/writing-great-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
   - layers/commons/CONTEXT.md
+  - docs/adr/0016-tenant-root-layer-routes.md
   - layers/atlas/CONTEXT.md
   - layers/midden/CONTEXT.md
+  - docs/agents/mdc-when-to-use.md
+  - layers/journal/CONTEXT.md
+  - CONTEXT.md
 subagents:
   - type: general-purpose
     task: First-time visitor walkthrough 1
@@ -90,11 +154,29 @@ subagents:
     task: "Fix group C: Atlas & Midden"
   - type: general-purpose
     task: "Fix group D: Blog/Commons mobile"
+  - type: general-purpose
+    task: "Standards review #1312"
+  - type: general-purpose
+    task: "Spec review #1312"
+  - type: general-purpose
+    task: "Standards review #1317"
+  - type: general-purpose
+    task: "Spec review #1317"
+  - type: general-purpose
+    task: "Standards review #1316"
+  - type: general-purpose
+    task: "Spec review #1316"
+  - type: general-purpose
+    task: "Standards review #1318"
+  - type: general-purpose
+    task: "Spec review #1318"
 gitBranch: claude/elegant-dijkstra-1vf45r
 entrypoint: remote
 cliVersion: 2.1.282
 learnings:
-  - "An unquoted YAML value containing ' #' silently truncates in content too, not only in session logs (Midden find title; a Blog pingback blurb likely has the same bug)"
+  - "An unquoted YAML value containing ' #' silently truncates in content too, not only in session logs"
+  - Equal-specificity CSS inside a media query loses to a later base rule; the Blog theme already warned about it in a comment the agent missed
 ideas:
-  - "Add a validate:content check that flags any content YAML scalar whose raw source line contains an unquoted ' #', catching the truncation class that clipped the Midden find title and likely a Blog pingback blurb"
+  - "Add a validate:content check that flags content YAML scalars with an unquoted ' #', catching the truncation class that clipped the Midden find title"
+  - Have visitor-loop run code-review on its own fix and feature PRs before merge-pr.ts, since today every impl PR needed review fixes
 landedBy: Stop
