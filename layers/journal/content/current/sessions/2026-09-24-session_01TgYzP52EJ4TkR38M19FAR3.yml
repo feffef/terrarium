@@ -1,21 +1,64 @@
 schemaVersion: 1
 session: session_01TgYzP52EJ4TkR38M19FAR3
 startedAt: 2026-09-24T20:52:03Z
-endedAt: 2026-09-24T22:27:48Z
+endedAt: 2026-09-24T22:50:06Z
 kind: interactive
-goal: Brave full-sweep auto-triage, then owner decisions
-status: completed
-outcome: "13 triaged; 3 decisions made; PR #1309 merged"
-summary: 'Human-instructed: /auto-triage "be brave and design a solution for each issue". Asked, the human chose full-sweep over all 13 non-map issues. One read-only triage subagent per issue. Result: #1285, #1276, #1244, #1168, #1248 are ready-for-agent; seven stay ready-for-human with posted designs; #869 was skipped as blocked. Then, human-instructed via /grill-with-docs, three decisions: #1276 is built before #864, which reuses its check; #1215 is closed not planned, with a new .out-of-scope note in PR #1309; #1293 waits for the open prune trial. Each decision is recorded as a comment on its issue.'
+goal: Triage sweep, owner decisions, then implement five issues
+status: in-review
+outcome: "4 PRs merged; #1314 and #1315 await review"
+summary: "All human-instructed. First a /auto-triage full sweep of 13 issues, with one triage subagent per issue. Then /grill-with-docs settled three decisions: #1276 before #864, #1215 closed not planned via PR #1309 (merged), and #1293 waits for its prune trial. Then /implement on the five ready-for-agent issues, as worktree-isolated impl agents on separate branches (the human approved extra branches). #1285 (PR #1310), #1276 (PR #1311) and #1244 (PR #1313) merged. #1168 (PR #1314) and #1248 (PR #1315, a prune trial) await human merge. I reviewed each diff by hand rather than with a full /code-review pass."
 prs:
   - "1309"
-docsRead: []
+  - "1310"
+  - "1311"
+  - "1313"
+  - "1314"
+  - "1315"
+docsRead:
+  - path: scripts/prune-trial-window.ts
+    reason: (read before editing)
+  - path: tests/unit/prune-trial-window.spec.ts
+    reason: (read before editing)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (read before editing)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: scripts/session-trace.ts
+    reason: (read before editing)
+  - path: scripts/log-session.ts
+    reason: (read before editing)
+  - path: scripts/shell-reads.ts
+    reason: (read before editing)
+  - path: /home/user/terrarium/.agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (read before editing)
+  - path: tests/unit/log-session.spec.ts
+    reason: (read before editing)
+  - path: tests/unit/session-trace.spec.ts
+    reason: (read before editing)
+  - path: tests/unit/shell-reads.spec.ts
+    reason: (read before editing)
+  - path: scripts/guard-wrap.sh
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: docs/research/rulebook-migration-table.md
+    reason: (read before editing)
+  - path: scripts/merge-pr.ts
+    reason: (read before editing)
+  - path: scripts/provenance-header.ts
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
   - name: grilling
+    reason: (no reason given)
+  - name: implement
+    reason: (no reason given)
+  - name: dispatch-subagents
     reason: (no reason given)
   - name: auto-triage
     reason: (invoked as a slash command)
@@ -31,27 +74,56 @@ frictions:
   - description: My first commit hand-wrote the ADR-0017 trailer because the harness system prompt asks for it; the commit-trailer guard denied it, then the tail-pipe guard denied the retry.
     solution: Guards worked as designed; write commits with no trailer from the start, and redirect gate output to a file instead of piping it.
     severity: nit
-durationSec: 5745
+  - description: "Dispatched impl subagents had no Agent tool, so neither #1168's nor #1248's required Sonnet probe could run inside the impl agent; the orchestrator had to run both."
+    solution: The prune-trial and blog-post probe steps could say the orchestrator runs the probe when a dispatched implementer can't spawn subagents; or dispatch-subagents could note that impl subagents lack Agent.
+    severity: minor
+  - description: "The #1248 Sonnet probe was contaminated: the probe subagent loaded the pre-prune CLAUDE.md from the checkout and quoted the deleted bullet, so it can't prove the surviving text alone (prune-trial §4). The entry stays proven: false."
+    solution: "prune-trial §4 needs a way to probe without the session's CLAUDE.md: run the probe in a worktree with the pruned CLAUDE.md checked out, or use a tool-less API call carrying only the surviving text."
+    severity: moderate
+  - description: The first commit hand-wrote the ADR-0017 trailer because the harness system prompt asks for it; the commit-trailer guard denied it, then the tail-pipe guard denied the retry.
+    solution: The guards worked as designed; write commits with no trailer from the start.
+    severity: nit
+  - description: "The #864 and #1276 triage subagents independently designed the same merge-pr.ts verdict check; the parallel sweep has no cross-issue overlap pass."
+    solution: auto-triage's report step could flag briefs touching the same file.
+    severity: nit
+durationSec: 7083
 models:
-  claude-opus-5-5: 135
+  claude-opus-5-5: 214
 toolCounts:
-  Bash: 25
+  Bash: 35
   Grep: 1
-  AskUserQuestion: 1
+  AskUserQuestion: 2
   ToolSearch: 3
   mcp__github__list_pull_requests: 1
-  Agent: 13
-  Skill: 3
+  Agent: 20
+  Skill: 5
   mcp__github__issue_read: 1
   mcp__github__add_issue_comment: 4
   Monitor: 1
   mcp__github__search_pull_requests: 1
-  mcp__github__create_pull_request: 1
+  mcp__github__create_pull_request: 6
   mcp__github__issue_write: 1
-  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  mcp__Claude_Code_Remote__send_later: 1
-  ReadNotifications: 4
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 6
+  mcp__Claude_Code_Remote__send_later: 2
+  ReadNotifications: 12
   mcp__Claude_Code_Remote__delete_trigger: 1
+  Read: 1
+filesEdited:
+  - tests/unit/prune-trial-window.spec.ts
+  - scripts/prune-trial-window.ts
+  - .agents/skills/prune-trial/SKILL.md
+  - CLAUDE.md
+  - scripts/shell-reads.ts
+  - scripts/session-trace.ts
+  - scripts/log-session.ts
+  - .agents/skills/log-session/SKILL.md
+  - tests/unit/log-session.spec.ts
+  - tests/unit/session-trace.spec.ts
+  - tests/unit/shell-reads.spec.ts
+  - .agents/skills/blog-post/SKILL.md
+  - docs/research/rulebook-migration-table.md
+  - tests/unit/merge-pr.spec.ts
+  - scripts/merge-pr.ts
 docsReadViaShell:
   - .agents/skills/triage/SKILL.md
   - docs/agents/issue-tracker.md
@@ -59,16 +131,16 @@ docsReadViaShell:
   - docs/agents/environment-caveats.md
   - docs/agents/guards.md
   - .agents/skills/triage/OUT-OF-SCOPE.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
   - .agents/skills/triage/AGENT-BRIEF.md
   - .agents/skills/auto-triage/SKILL.md
   - docs/agents/triage-labels.md
-  - .agents/skills/prune-trial/SKILL.md
   - docs/research/rulebook-migration-table.md
   - docs/proposals/README.md
   - docs/proposals/879-gate-yml-thin-shell.md
   - .agents/skills/frictions-to-fixes/SKILL.md
   - .agents/skills/digest/SKILL.md
-  - .agents/skills/blog-post/SKILL.md
   - .agents/skills/dispatch-subagents/SKILL.md
   - docs/adr/0003-agent-operating-model-and-governance.md
   - .agents/skills/log-session/SKILL.md
@@ -101,9 +173,26 @@ subagents:
     task: "Triage issue #869"
   - type: general-purpose
     task: "Triage issue #445"
+  - type: general-purpose
+    task: "Implement #1276 merge verdict check"
+  - type: general-purpose
+    task: "Implement #1285 prune-trial landing"
+  - type: general-purpose
+    task: "Implement #1244 shell-read evidence"
+  - type: general-purpose
+    task: "Implement #1168 blog-post fact-check"
+  - type: general-purpose
+    task: "Implement #1248 prune trial"
+  - type: general-purpose
+    task: "Sonnet probe for #1168 fact-check"
+    model: sonnet
+  - type: general-purpose
+    task: "Sonnet probe for #1248 prune"
+    model: sonnet
 gitBranch: claude/auto-triage-solution-design-wv5n1c
 entrypoint: remote_mobile
 cliVersion: 2.1.282
 ideas:
   - "Add a cross-issue overlap check to auto-triage's report step: list which files each Agent Brief touches and flag any file shared by two briefs, so conflicting parallel implementations (e.g. #864 and #1276 on merge-pr.ts) get sequenced before pickup."
+  - Give prune-trial a scripts/probe-prompt.ts that prints a self-contained, CLAUDE.md-free probe (the surviving text plus the scenario) for a tool-less model call, so a Sonnet probe can't be contaminated by the checkout's pre-prune instructions.
 landedBy: Stop
