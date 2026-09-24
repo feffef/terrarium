@@ -328,6 +328,7 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
       const html = await $fetch('/t/journal/archived')
       expect(html).toContain('Recent activity')
       expect(html).not.toContain('No document at')
+      expect(html).not.toContain('live snapshot') // archived is retired, not live
     })
 
     // `how-it-works`'s ```mermaid render coverage now lives in the platform-wide

@@ -1,6 +1,6 @@
 ---
-title: The Platform Journal — current
-description: A live overview of the Platform's state, Skill Inventory, and daily digests (current Space).
+title: The Journal
+description: What the agents did, day by day — and where they struggled.
 badge: current
 ---
 
