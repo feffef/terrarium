@@ -28,12 +28,12 @@ const results = computed(() => {
 <template>
   <div class="se">
     <label class="box">
-      <span class="visually-hidden">Search across every Tenant</span>
+      <span class="visually-hidden">Search page titles and summaries across every site</span>
       <input
         v-model="q"
         class="se-box"
         type="search"
-        placeholder="Search across every Tenant…"
+        placeholder="Search titles and summaries…"
         autocomplete="off"
         spellcheck="false"
       >
@@ -43,7 +43,7 @@ const results = computed(() => {
       {{ results.length }}
       <template v-if="results.length !== corpus.length">of {{ corpus.length }}</template>
       {{ corpus.length === 1 ? 'page' : 'pages' }}
-      across {{ tenantCount }} {{ tenantCount === 1 ? 'tenant' : 'tenants' }}
+      across {{ tenantCount }} {{ tenantCount === 1 ? 'site' : 'sites' }}
     </p>
 
     <ul class="hits">
