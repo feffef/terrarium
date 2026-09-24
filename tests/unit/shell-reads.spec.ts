@@ -226,6 +226,60 @@ describe('false positives', () => {
   })
 })
 
+describe('for VAR in <literal-list>; do … ; done — issue #1305', () => {
+  it('credits a read for each loop value — the exact reproducing case from the issue', () => {
+    const scan = scanShellReads(
+      [
+        'for p in david karen eyra; do echo "=== $p ==="; cat .claude/skills/blog-post/personas/$p.md; echo; done',
+      ],
+      rel,
+    )
+    expect(scan.paths.sort()).toEqual([
+      '.agents/skills/blog-post/personas/david.md',
+      '.agents/skills/blog-post/personas/eyra.md',
+      '.agents/skills/blog-post/personas/karen.md',
+    ])
+    expect(scan.nearMisses).toEqual([])
+  })
+
+  it('substitutes `${VAR}` braced form the same as bare `$VAR`', () => {
+    expect(paths('for p in a b; do cat docs/agents/${p}.md; done')).toEqual([
+      'docs/agents/a.md',
+      'docs/agents/b.md',
+    ])
+  })
+
+  it('does not credit a body that never reads the loop variable — echo is not a reader verb', () => {
+    // The exact decoy #1074 measured against: the loop genuinely runs, but the
+    // body only echoes the value rather than reading a file with it.
+    expect(paths('for p in "docs/agents/pr-workflow.md"; do echo $p; done')).toEqual([])
+  })
+
+  it('does not substitute a variable name that only shares a prefix', () => {
+    // `$p` must not also eat `$path` — a real shell treats them as unrelated.
+    expect(paths('for p in david; do cat docs/agents/$path.md; done')).toEqual([])
+  })
+
+  it('falls through to ordinary handling when the loop list is not a literal word list', () => {
+    // A `$(...)` command substitution is out of scope (#1305) — the header
+    // itself is then just an ordinary, non-reader `for` command.
+    expect(paths('for p in $(ls); do cat docs/agents/$p.md; done')).toEqual([])
+  })
+
+  it('keeps crediting a plain read before and after a loop in the same command', () => {
+    expect(
+      paths('cat docs/a.md; for p in x y; do cat docs/agents/$p.md; done; cat docs/b.md'),
+    ).toEqual(['docs/a.md', 'docs/agents/x.md', 'docs/agents/y.md', 'docs/b.md'].sort())
+  })
+
+  it('resets loop state between separate commands', () => {
+    // A `for` header in one Bash call must never leak into a later, unrelated
+    // call whose body happens to reference a same-named `$p`.
+    const scan = scanShellReads(['for p in a b; do echo $p; done', 'cat docs/agents/$p.md'], rel)
+    expect(scan.paths).toEqual([])
+  })
+})
+
 describe('resolveGlob — resolving a glob against the real tree (issue #1246)', () => {
   // A stand-in for session-trace.ts's fs-backed resolver: it "sees" a fixed set
   // of real files and returns the single match, mirroring what a real repo
