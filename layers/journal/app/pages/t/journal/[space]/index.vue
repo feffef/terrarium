@@ -129,7 +129,7 @@ const groupedSkills = computed(() => skillGroups(platformSkills.value))
 // so the tiles' scope tracks which Space is showing, not an explicit filter.
 const tilesHeadline = computed(() => (space === 'archived' ? 'Excluding the last week' : 'From the last week'))
 
-const title = computed(() => rootDoc.value?.title ?? `The Platform Journal — ${space}`)
+const title = computed(() => rootDoc.value?.title ?? `The Journal — ${space}`)
 const lede = computed(() => rootDoc.value?.description ?? `The ${space} Space of the journal Tenant.`)
 
 useSeoMeta({
@@ -165,20 +165,17 @@ useSeoMeta({
             <span class="dot" />{{ s }}
           </NuxtLink>
         </div>
-        <div class="snapshot">
+        <div v-if="space === 'current'" class="snapshot">
           <span class="live">live snapshot</span><br >
           updates as sessions are logged
         </div>
       </div>
     </header>
 
-    <!-- Free-form editorial intro — the root page's Markdown body -->
-    <section v-if="rootDoc" class="intro">
-      <ContentRenderer :value="rootDoc" />
-    </section>
+    <p v-if="rootDoc?.lead" class="intro-lead">{{ rootDoc.lead }}</p>
 
-    <!-- Newcomer on-ramp — the two explainer pages surfaced as visible doors, set
-         between the intro and the data-heavy digests/feed below. -->
+    <!-- Newcomer on-ramp: after the short lead that gives it context, before the
+         longer intro and the data-heavy feed. -->
     <section v-if="onrampCards.length" class="onramp" aria-label="Start here">
       <p class="onramp-lead">New here? Start with the short version:</p>
       <div class="onramp-cards">
@@ -187,6 +184,11 @@ useSeoMeta({
           <span class="onramp-blurb">{{ c.blurb }}</span>
         </NuxtLink>
       </div>
+    </section>
+
+    <!-- Free-form editorial intro — the root page's Markdown body -->
+    <section v-if="rootDoc" class="intro">
+      <ContentRenderer :value="rootDoc" />
     </section>
 
     <!-- Digests + Sparks band. On desktop a two-column grid puts Sparks to the
@@ -423,6 +425,7 @@ h1 {
 .lede { margin: 0; max-width: 54ch; color: var(--jd-muted); font-size: 1.02rem; }
 
 .intro { margin: 1.6rem 0 0; max-width: 68ch; font-size: 1.04rem; }
+.intro-lead { margin: 1.6rem 0 0; max-width: 68ch; font-size: 1.08rem; color: var(--jd-ink); }
 .intro :deep(p) { margin: 0 0 0.8rem; color: var(--jd-muted); }
 .intro :deep(p:last-child) { margin-bottom: 0; }
 .intro :deep(a) { color: var(--jd-accent); text-decoration: underline; text-underline-offset: 2px; }

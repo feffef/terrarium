@@ -155,6 +155,19 @@ export function skillGroups(own: SkillDoc[]): { importance: Importance; skills: 
     .filter((g) => g.skills.length > 0)
 }
 
+// Not <MDC>: it drops the space between adjacent inline elements.
+export function skillRoleParts(role: string): { kind: 'text' | 'code' | 'em' | 'strong'; text: string }[] {
+  return role
+    .split(/(`[^`]+`|(?<!\w)\*\*[^*\s](?:[^*]*[^*\s])?\*\*(?!\w)|(?<![\w*])\*[^*\s](?:[^*]*[^*\s])?\*(?![\w*]))/)
+    .map((t, i) => {
+      if (i % 2 === 0) return { kind: 'text' as const, text: t }
+      if (t.startsWith('`')) return { kind: 'code' as const, text: t.slice(1, -1) }
+      if (t.startsWith('**')) return { kind: 'strong' as const, text: t.slice(2, -2) }
+      return { kind: 'em' as const, text: t.slice(1, -1) }
+    })
+    .filter((p) => p.text)
+}
+
 // ── Session feed ─────────────────────────────────────────
 // Maps each SessionDoc to the display view the session card renders (formats
 // dates, counts frictions, truncates the session id), so the card stays a dumb

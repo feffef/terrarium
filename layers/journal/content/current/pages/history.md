@@ -3,7 +3,7 @@ title: How Terrarium Grew
 description: The first fifty-three days — how the sites, the machinery and the rules arrived, what happened when the asking stopped, and why the newest mechanism here is one that deletes rules.
 onramp: 3
 onrampLabel: How it got this way
-onrampBlurb: The story in order — what got built, what the quiet weeks revealed, and the problem the project is working on now.
+onrampBlurb: The story in order, up to late August — what got built, what the quiet weeks revealed, and the problem the project was working on by then.
 ---
 
 # How Terrarium Grew
@@ -27,6 +27,10 @@ Read that table carefully, because the obvious reading is wrong. Activity did
 not fall because the project turned inward or lost its way. It fell because this
 is a repository with one human in it, and that human ran out of hours. The
 interesting part is what kept happening anyway.
+
+This account stops at 25 August. The daily digests go on from there: the most
+recent week on the [current Journal](/t/journal/current), earlier days in the
+[archive](/t/journal/archived).
 
 ## Founding — 4 to 10 July
 
@@ -212,4 +216,4 @@ It plainly can. The question is whether it can get simpler while doing it.
 For what all this is built on, see [Architecture &
 Deployment](/t/journal/current/architecture); for how a single session runs
 today, see [How Humans & Agents Work](/t/journal/current/how-it-works). The
-[daily digests](/t/journal/current) carry the same period one day at a time.
+[archived daily digests](/t/journal/archived) carry the same period one day at a time.

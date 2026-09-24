@@ -165,4 +165,6 @@
   border-left: 2px solid var(--jd-line);
   color: var(--jd-muted);
 }
+/* JournalScrollTable's wrapper: a wide table scrolls instead of widening the page. */
+.jd-prose .jd-table-scroll { overflow-x: auto; }
 .jd-prose hr { border: 0; border-top: 1px solid var(--jd-line); margin: 1.8rem 0; }
