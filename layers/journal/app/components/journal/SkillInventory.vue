@@ -24,7 +24,14 @@ defineProps<{
             {{ s.name }}
             <span v-if="s.category === 'platform-operation'" class="po">platform-op</span>
           </div>
-          <MDC :value="s.role" tag="p" unwrap="p" class="role" />
+          <p class="role">
+            <template v-for="(p, i) in skillRoleParts(s.role)" :key="i">
+              <code v-if="p.kind === 'code'">{{ p.text }}</code>
+              <em v-else-if="p.kind === 'em'">{{ p.text }}</em>
+              <strong v-else-if="p.kind === 'strong'">{{ p.text }}</strong>
+              <template v-else>{{ p.text }}</template>
+            </template>
+          </p>
         </div>
       </template>
 
@@ -67,7 +74,7 @@ defineProps<{
   padding: 0 0.3rem;
 }
 .role { margin: 0.25rem 0 0; font-size: 0.83rem; color: var(--jd-muted); font-family: var(--jd-serif); }
-.role :deep(code) {
+.role code {
   font-family: var(--jd-mono);
   font-size: 0.9em;
   background: var(--jd-surface-2);

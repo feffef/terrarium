@@ -31,6 +31,7 @@ import {
   prUrl,
   sessionShortId,
   skillGroups,
+  skillRoleParts,
   skillsLabel,
   skillsSub,
   sessionToolEntries,
@@ -218,6 +219,22 @@ describe('skill inventory', () => {
     expect(groups[0]!.skills.map((s) => s.name)).toEqual(['add-space', 'edit-content']) // alpha within essential
     expect(groups[1]!.skills.map((s) => s.name)).toEqual(['digest'])
     expect(groups[2]!.skills.map((s) => s.name)).toEqual(['triage'])
+  })
+
+  it('skillRoleParts splits inline code/em/strong, keeping the spaces between them', () => {
+    expect(skillRoleParts('invoked *by* `close-session`, **always**')).toEqual([
+      { kind: 'text', text: 'invoked ' },
+      { kind: 'em', text: 'by' },
+      { kind: 'text', text: ' ' },
+      { kind: 'code', text: 'close-session' },
+      { kind: 'text', text: ', ' },
+      { kind: 'strong', text: 'always' },
+    ])
+    expect(skillRoleParts('see `personas/*.md` and a * b')).toEqual([
+      { kind: 'text', text: 'see ' },
+      { kind: 'code', text: 'personas/*.md' },
+      { kind: 'text', text: ' and a * b' },
+    ])
   })
 })
 
