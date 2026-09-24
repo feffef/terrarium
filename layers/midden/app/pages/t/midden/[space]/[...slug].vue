@@ -72,7 +72,7 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
     <article v-if="site" class="midden-page midden-report">
       <header class="midden-report__head">
         <p class="tech midden-crumb">
-          <NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><NuxtLink :to="`/t/midden/${space}`">{{ space }}</NuxtLink><span class="sep">/</span><span class="here">{{ siteSlug }}</span>
+          <NuxtLink to="/">terrarium</NuxtLink><span class="sep">/</span><NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><NuxtLink :to="`/t/midden/${space}`">{{ space }}</NuxtLink><span class="sep">/</span><span class="here">{{ siteSlug }}</span>
         </p>
 
         <p class="sc midden-eyebrow">Dig report</p>
@@ -95,7 +95,7 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
 
     <div v-else class="midden-page">
       <p class="tech midden-crumb">
-        <NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><NuxtLink :to="`/t/midden/${space}`">{{ space }}</NuxtLink>
+        <NuxtLink to="/">terrarium</NuxtLink><span class="sep">/</span><NuxtLink to="/t/midden">the midden</NuxtLink><span class="sep">/</span><NuxtLink :to="`/t/midden/${space}`">{{ space }}</NuxtLink>
       </p>
       <div class="midden-not-found">
         <h1 class="doctitle">Not catalogued</h1>
