@@ -151,9 +151,9 @@ reaches for on its own.
    preserves any `wayfinder:*` label. Each returns to you — not in its brief,
    which stays path-free — the repo files a `ready-for-agent` fix would touch.
 3. **Report** a one-line-per-issue roll-up (`#N | category | state | rationale |
-   action`). Where two `ready-for-agent` issues share a file, say so and comment
-   on the later one to implement it after the earlier lands, so parallel
-   pickups don't collide.
+   action`). Where two of this run's `ready-for-agent` issues share a file, say
+   so, and mark the higher-numbered one blocked by the other (`issue-tracker.md`'s
+   Blocking), so parallel pickups don't collide; it unblocks when that one closes.
 
 **Loop it** by firing this skill by name on an interval — a Routine (standing,
 survives teardown) or `/loop` (within a live session). Idempotency above keeps a

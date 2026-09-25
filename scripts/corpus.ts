@@ -3,18 +3,18 @@
 // hand-rolled parser.
 //
 // Usage:  tsx scripts/corpus.ts [--since YYYY-MM-DD] [--until YYYY-MM-DD] [--field <name>]
-//   Prints one JSON line per session, oldest first: { session, date, file, value }.
+//   Prints one JSON line per session, by date: { session, date, file, value }.
 //   `date` is the filename's (startedAt) date; `value` is the named top-level
 //   field, or the whole log without --field. Logs lacking the field are skipped.
 //   Pipe into `jq` for counts, e.g. `... --field ideas | jq -s 'map(.value | length) | add'`.
-import { readFileSync, readdirSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parseArgs } from 'node:util'
 import { parse as parseYaml } from 'yaml'
+import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from './audit-skills.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-export const SESSION_DIRS = ['layers/journal/content/archived/sessions', 'layers/journal/content/current/sessions']
 
 export interface SessionLog {
   file: string
@@ -49,7 +49,8 @@ export function queryCorpus(logs: SessionLog[], { since, until, field }: CorpusQ
  *  (scripts/archive-journal-content.ts) counts once, as its `current` copy. */
 function readLogs(cwd = root): SessionLog[] {
   const byName = new Map<string, SessionLog>()
-  for (const dir of SESSION_DIRS) {
+  for (const dir of [ARCHIVED_SESSIONS_DIR, SESSIONS_DIR]) {
+    if (!existsSync(join(cwd, dir))) continue
     for (const f of readdirSync(join(cwd, dir)).filter((f) => f.endsWith('.yml'))) {
       byName.set(f, { file: join(dir, f), data: parseYaml(readFileSync(join(cwd, dir, f), 'utf8')) ?? {} })
     }
