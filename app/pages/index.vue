@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { resolveSpaceRoute } from '#shared/routing'
-import type { BiomeMeta } from '../../layers/atlas/app/utils/biomes'
 
 // The showcase Tenants below the hero. Each one is ONE card, and its entries are
 // DERIVED from that Tenant's own single-homed list — `PERSONA_SLUGS`
@@ -94,14 +93,16 @@ function tenantLabel(tenant: string): string {
 
 // Atlas spotlight (visitor-loop feature, 2026-09-25): all three blind visitors
 // called the Atlas the site's standout, yet it sits two clicks deep from here.
-// One specimen, picked across every biome — same aggregation the Atlas's own
-// front door uses (layers/atlas/app/pages/t/atlas/index.vue), reused here
-// rather than re-derived. The pick rotates by UTC day, computed on every
-// request (this route isn't prerendered — ADR-0001's build-time-baked content
-// still gets served over ordinary per-request SSR), so it's an honest "today",
-// not a value frozen at the last build the way a prerendered page's would be.
+// One specimen, picked across every biome — the per-biome resolve-then-query
+// loop mirrors the shape the Atlas's own front door uses for its wing counts
+// (layers/atlas/app/pages/t/atlas/index.vue), though it reads full specimen
+// docs rather than stats, so it's re-derived here, not imported. The pick
+// rotates by UTC day, computed on every request (this route isn't
+// prerendered — ADR-0001's build-time-baked content still gets served over
+// ordinary per-request SSR), so it's an honest "today", not a value frozen
+// at the last build the way a prerendered page's would be.
 const { data: spotlight } = await useAsyncData('atlas-spotlight', async () => {
-  const picks: Array<{ specimen: ReturnType<typeof toSpecimenView>; biome: BiomeMeta }> = []
+  const picks: Array<{ specimen: ReturnType<typeof toSpecimenView>; biome: (typeof BIOMES)[number] }> = []
   for (const b of BIOMES) {
     const r = resolveSpaceRoute('atlas', b.slug, undefined)
     if (!r) continue
