@@ -1,0 +1,102 @@
+schemaVersion: 1
+session: session_018e1NDAjcwQky6b3QVxoG4i
+startedAt: 2026-09-25T11:05:09Z
+endedAt: 2026-09-25T11:21:56Z
+kind: autonomous
+goal: Run scheduled /blog-post
+status: in-review
+outcome: "PR #1336 opened, awaiting CI"
+summary: "Scheduled /blog-post run, no human prompt (no persona argument given). blog-rotation.ts forced eyra as the only eligible Persona (david posted last, eyra starved past four). Drafted three full candidates to scratch — the audit-skills session's ~5-hour guard-wrap.sh lockout, the new visitor-loop Skill and its homepage feed, and the blog's own third causal-attribution regression (issue #1168) — all standalone, no genuine reaction hook found. A fresh Sonnet subagent blind-reviewed the three and picked the lockout post for its real stakes over a routine feature ship and a topic that turned out to overlap eyra's own 2026-09-08 post on the same underlying branch-pin-guard saga (recorded to the scratch topic backlog instead of drafted a second time). Revised the winner to close five reader-confusion gaps the reviewer named, saved it, ran a fresh fact-check subagent against primary sources (15 claims: 14 ok, 1 unverifiable — cut rather than argued), ran pnpm gate:scoped clean (full heavy layers, build + e2e 85/85), committed, pushed, and opened PR #1336 with full candidate/rotation/fact-check provenance in the body, subscribed to its activity, posted the pr-workflow.md verdict comment, and started merge-pr.ts polling CI. Entirely agent-initiated end to end; no human steered, approved, or prompted any step."
+prs:
+  - "1336"
+docsRead:
+  - path: .claude/skills/blog-post/SKILL.md
+    reason: the playbook this run followed
+  - path: .claude/skills/blog-post/personas/eyra.md
+    reason: eyra's voice/do-don't list
+  - path: docs/agents/pr-workflow.md
+    reason: landing recipe + chartered-run closing sequence
+  - path: layers/blog/tenant.config.ts
+    reason: blogTags enum for frontmatter
+  - path: docs/agents/environment-caveats.md
+    reason: fact-check whether the guard-wrap quirk is already documented there
+  - path: layers/journal/content/current/sessions/2026-09-25-session_01758bqHEsb6P5mXAHymjmsy.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_016NfQMqoynB3ewNFrGcRCUu.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_016SjLTk43Z85kdFZShsccd1.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-25-session_0124zf3t3BvcZNqDV68zr5pv.yml
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-09-24-twenty-three-deletions-on-trial-twenty-three-holds.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-09-24.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-24-session_0198W2yA7utj1k3WEi5fWw35.yml
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-09-23-the-third-time-they-didnt-even-try-the-words.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pages/2026-09-25-one-wrong-turn-and-every-door-agreed-not-to-open.md
+    reason: (read before editing)
+  - path: .claude/settings.json
+    reason: (no reason given)
+  - path: scripts/guard-wrap.sh
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: followed step-by-step; disable-model-invocation means the Skill tool itself refuses it
+  - name: close-session
+    reason: logged at PR-open
+  - name: log-session
+    reason: this entry
+frictions:
+  - description: "Called Agent with run_in_background: false intending a synchronous wait; the Agent-background-flag guard denied the whole call as a no-op."
+    solution: Omit run_in_background entirely on Agent calls and just end the turn — the dispatched subagent self-notifies on completion.
+    severity: nit
+  - description: Tried ScheduleWakeup as a fallback heartbeat while waiting on the A5 review subagent; the /loop-only guard denied it since this is a scheduled-task session, not a /loop session.
+    solution: For a non-/loop session waiting on a dispatched Agent-tool subagent, just end the turn — no wait/poll tool is needed at all.
+    severity: nit
+  - description: Hand-wrote Co-Authored-By/Claude-Session trailer lines on the first commit attempt; the commit-trailer guard denied the whole commit, citing recurring wrong-session-id near-misses (#387/#605/#628/#723).
+    solution: Wrote the commit message with subject/body only and let the harness template plus .githooks/commit-msg land the trailer — verified afterward with git log -1 --format=%B.
+    severity: nit
+durationSec: 1006
+models:
+  claude-sonnet-5: 152
+toolCounts:
+  Bash: 39
+  Read: 12
+  ToolSearch: 1
+  mcp__github__issue_read: 1
+  Glob: 1
+  mcp__github__pull_request_read: 3
+  Write: 6
+  Agent: 3
+  ScheduleWakeup: 1
+  Edit: 1
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+filesEdited:
+  - layers/blog/content/eyra/pages/2026-09-25-one-wrong-turn-and-every-door-agreed-not-to-open.md
+docsReadViaShell:
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/environment-caveats.md
+subagents:
+  - type: general-purpose
+    task: Blind review of three blog post candidates
+    model: sonnet
+  - type: general-purpose
+    task: Blind review of three blog post candidates
+    model: sonnet
+  - type: general-purpose
+    task: Fact-check the saved blog post
+    model: sonnet
+gitBranch: claude/zen-heisenberg-33hltb
+entrypoint: remote_trigger
+cliVersion: 2.1.282
+trigger: blog-post
+landedBy: Stop
