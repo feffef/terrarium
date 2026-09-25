@@ -205,8 +205,8 @@ that plausibly *should* have), then set the grade per those definitions.
 - **Every grade change or `role` refresh gets an `observations` entry** —
   `{ date: <today, UTC>, note: <the citation — session ids, PR/issue numbers,
   usage counts> }`, appended (never overwriting an earlier entry, required on
-  every entry — `[]` when there's nothing to cite yet). A run that holds grade
-  and `role` as they were adds no entry (ADR-0015). This is where the
+  every entry — `[]` when there's nothing to cite yet). A run with nothing
+  citable for a Skill (no change, regression, or idea) adds no entry (ADR-0015). This is where the
   evidence for the change actually lives; `role` states the conclusion,
   `observations` carries the receipts. The rest of this doc's "append an
   observations entry" instructions (steps 4 and 6) reuse this same shape.

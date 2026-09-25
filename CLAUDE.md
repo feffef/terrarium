@@ -348,7 +348,7 @@ pnpm gate:scoped --dry  # print the decision + planned steps, run nothing
 **Iterating on content only?** `pnpm validate:content` is a four-script chain
 (`scripts/validate-content.ts && scripts/validate-content-refs.ts && scripts/validate-skill-cadence.ts && scripts/validate-prune-trials.ts`)
 — the first actually runs each Document's data through its Collection's Zod schema
-(`.safeParse()`) against real content, which `pnpm build` never does (`pnpm build` only
+(`.safeParse()`) against real content, and rejects a value an unquoted ` #` cut short, which `pnpm build` never does (`pnpm build` only
 uses the schema to derive SQL column types — why: single-homed in
 `docs/research/nuxt-content-review-grounding.md` §2, not re-derived here); the second
 catches what a per-document schema

@@ -11,6 +11,9 @@ observations:
     note: >-
       Collapsed from nine held-as-is runs, 2026-07-13 to 2026-08-17 (ADR-0015
       says a run with no change adds no entry). Each run found it used in 1 to 6
-      of its 40-session window and skipped in other code-landing sessions, with
-      no consistent single-issue or batch pattern. The bright-line bar was never
-      crossed, so role and grade held throughout.
+      of its 40-session window and skipped in other code-landing sessions. The
+      one real signal: on 07-17 and 08-11 every single-issue implementation used
+      it, but counter-examples kept it short of promotion (07-17's batch session
+      session_01Y11Fou1pRvTW2ucEt1dhX8, 08-17's single-issue fix
+      session_019YUfZGa9c7rath771qwBsh). The bright-line bar was never crossed,
+      so role and grade held throughout.

@@ -58,13 +58,13 @@ export interface ValidationReport {
   violations: SchemaViolation[]
 }
 
+const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/
+
 /** Split a Markdown file into its leading YAML frontmatter (between the first
  *  two `---` fences) and the body that follows. Frontmatter is `{}` when there
  *  is none. Exported so `validate-content-refs.ts` (issue #446) can read a
  *  page's MDC body without re-deriving this parse — single-homed here since
  *  `readFrontmatter` below is just this with the body discarded. */
-const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/
-
 export function splitFrontmatter(text: string): { frontmatter: Record<string, unknown>; body: string } {
   const m = text.match(FRONTMATTER)
   if (!m) return { frontmatter: {}, body: text }
