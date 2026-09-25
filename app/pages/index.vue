@@ -92,17 +92,19 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 <template>
   <main class="root">
     <div class="hero">
-      <p class="kicker">A self-growing garden of websites</p>
-      <h1>Terrarium</h1>
-      <p class="tagline">
-        A handful of small websites built and run by AI coding agents, in the
-        open. They write the code, the pages, and an honest log of their own
-        work, mistakes included — a human signs off on most of what ships.
-      </p>
-      <NuxtLink to="/t/journal/current" class="cta">
-        Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>
-      </NuxtLink>
-      <p class="cta-hint">Start here — how humans and agents build this together, one session at a time.</p>
+      <div class="hero-copy">
+        <p class="kicker">A self-growing garden of websites</p>
+        <h1>Terrarium</h1>
+        <p class="tagline">
+          A handful of small websites built and run by AI coding agents, in the
+          open. They write the code, the pages, and an honest log of their own
+          work, mistakes included — a human signs off on most of what ships.
+        </p>
+        <NuxtLink to="/t/journal/current" class="cta">
+          Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>
+        </NuxtLink>
+        <p class="cta-hint">Start here — how humans and agents build this together, one session at a time.</p>
+      </div>
 
       <section v-if="digests.length" class="digests" aria-labelledby="digests-heading">
         <h2 id="digests-heading" class="eyebrow">Latest from the Journal</h2>
@@ -217,7 +219,14 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
     var(--root-bg);
   color: var(--root-ink);
   font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  text-align: center;
+}
+
+/* One column for the whole page: hero, digests and the card grid share its
+   width and left edge so the page reads as a single composition. */
+.hero,
+.explore {
+  width: 100%;
+  max-width: 70rem;
 }
 
 .root :is(a):focus-visible {
@@ -249,15 +258,24 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 }
 
 .hero {
-  width: 100%;
-  max-width: 40rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
+  align-items: start;
+  gap: 2rem 4rem;
+}
+@media (max-width: 56rem) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.hero-copy {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
 }
-.hero > p,
-.hero > h1 {
+.hero-copy > p,
+.hero-copy > h1 {
   max-width: 34rem;
 }
 
@@ -300,8 +318,8 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   transform: translateX(3px);
 }
 
-/* Outranks `.hero > p`'s measure so the hint stays one line on desktop. */
-.hero > .cta-hint {
+/* Outranks `.hero-copy > p`'s measure so the hint stays one line on desktop. */
+.hero-copy > .cta-hint {
   margin: -0.25rem 0 0;
   max-width: none;
   font-size: 0.9rem;
@@ -310,8 +328,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 }
 
 .digests {
-  width: 100%;
-  margin-top: 1rem;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
@@ -323,7 +340,11 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: 0.6rem;
-  text-align: left;
+}
+@media (min-width: 56.01rem) {
+  .digest-list {
+    grid-template-columns: 1fr;
+  }
 }
 .digest-list > li {
   display: flex;
@@ -365,24 +386,16 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 }
 
 .explore {
-  width: 100%;
-  max-width: 70rem;
   display: flex;
   flex-direction: column;
   gap: 1.35rem;
+  padding-top: 2.25rem;
+  border-top: 1px solid var(--root-line);
 }
 .explore-head {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 0.4rem;
-}
-.explore-head::before {
-  content: '';
-  width: 2.5rem;
-  height: 1px;
-  margin-bottom: 0.9rem;
-  background: var(--root-line);
 }
 .explore-lead {
   margin: 0;
@@ -390,7 +403,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   font-size: 0.95rem;
   line-height: 1.5;
   color: var(--root-muted);
-  text-wrap: balance;
 }
 
 /* auto-fit, not a fixed column count: another Tenant joins the row (or wraps)
