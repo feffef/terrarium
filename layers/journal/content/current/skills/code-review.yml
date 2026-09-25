@@ -1,7 +1,7 @@
 name: code-review
 category: general-engineering
 importance: supporting
-installedSha256: 6a65cc61114f96db07ec41e3920e67c9c5bf70dd6e0901eb9460ebcb2bdc209f
+installedSha256: 47f4e52c21694def9c7c11cbfbf891ca35eac7a93e395797515be3c8a409ae50
 role: >-
   Review the working diff (Standards+Spec) before the gated PR (ADR-0003/0004).
   Adoption is inconsistent, not universal — used in some code-landing sessions

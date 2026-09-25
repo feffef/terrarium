@@ -1,7 +1,7 @@
 name: prototype
 category: general-engineering
 importance: supporting
-installedSha256: efa2a92a2f0f8e7d9d0ecb0cfc65ffd5748c73fa3a25fe164e1c8f426938fb52
+installedSha256: 714de632d116bb73f65cdb5a882db15b9369a6713b9a47c0fad827848f0bfbe3
 role: >-
   Builds a throwaway prototype to answer a design question (state model, logic,
   or UI). Named directly by `wayfinder` as a HITL ticket type, so it backs the

@@ -23,8 +23,9 @@
 //
 // `--write` regenerates the pins in the Inventory from the current tree (run it
 // after a legitimate pack install); the default (CI) mode verifies on-disk against
-// the pins and fails on any drift, missing file, uncatalogued pack Skill, or
-// unpinned entry.
+// the pins and fails on any drift, missing file, or unpinned entry. A pack Skill
+// with no Inventory entry yet is skipped: `audit-skills` creates its entry (and
+// so its pin) once the Skill is first observed in use.
 import { createHash } from 'node:crypto'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -55,10 +56,9 @@ export interface InventoryPin {
 
 export interface DriftFinding {
   name: string
-  /** `missing` — the SKILL.md is gone; `uncataloged` — a pack Skill with no
-   *  Inventory entry (create one); `unpinned` — entry exists but no
+  /** `missing` — the SKILL.md is gone; `unpinned` — entry exists but no
    *  installedSha256 (run `--write`); `drifted` — on-disk content ≠ pin. */
-  kind: 'missing' | 'uncataloged' | 'unpinned' | 'drifted'
+  kind: 'missing' | 'unpinned' | 'drifted'
   expected?: string
   actual?: string
 }
@@ -85,10 +85,7 @@ export function diffLock(
       continue
     }
     const entry = inv.get(name)
-    if (!entry?.cataloged) {
-      findings.push({ name, kind: 'uncataloged', actual })
-      continue
-    }
+    if (!entry?.cataloged) continue
     if (!entry.pin) {
       findings.push({ name, kind: 'unpinned', actual })
       continue
@@ -198,8 +195,6 @@ function reportLine(f: DriftFinding): string {
   switch (f.kind) {
     case 'missing':
       return `  MISSING      ${skill} — a pack Skill (in ${SKILLS_LOCK}) but not on disk`
-    case 'uncataloged':
-      return `  UNCATALOGED  ${f.name} — no Skill Inventory entry (${INVENTORY_DIR}/${f.name}.yml)`
     case 'unpinned':
       return `  UNPINNED     ${f.name} — Inventory entry has no installedSha256 (run \`pnpm verify:skills-lock --write\`)`
     case 'drifted':
@@ -212,7 +207,7 @@ function main(argv: string[]): void {
     const { pinned, uncataloged, missing } = write()
     console.log(
       `verify-skills-lock: pinned ${pinned.length} pack Skill(s) in the Skill Inventory` +
-        (uncataloged.length ? `; ${uncataloged.length} uncatalogued (add an entry): ${uncataloged.join(', ')}` : '') +
+        (uncataloged.length ? `; ${uncataloged.length} not yet in the Inventory, so unpinned: ${uncataloged.join(', ')}` : '') +
         (missing.length ? `; ${missing.length} missing on disk: ${missing.join(', ')}` : ''),
     )
     return

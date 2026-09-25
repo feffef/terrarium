@@ -1,5 +1,5 @@
 // Unit tests for the skills-lock integrity gate's pure core — the drift
-// classification (missing / uncataloged / unpinned / drifted / match) and the
+// classification (missing / uncatalogued-skip / unpinned / drifted / match) and the
 // line-preserving pin edit, where correctness bugs would hide. The file IO
 // (readExternalNames/readInventory/readOnDisk/write) is a thin wrapper over these,
 // exercised by running the script directly against the real tree
@@ -52,13 +52,13 @@ describe('diffLock()', () => {
     expect(res.findings).toEqual([{ name: 'beta', kind: 'missing' }])
   })
 
-  it('flags an UNCATALOGED pack skill (no Inventory entry at all)', () => {
+  it('skips a pack skill with no Inventory entry yet (audit-skills adds it on first use)', () => {
     const res = diffLock(
       names,
       inv({ alpha: { cataloged: true, pin: H_A } }), // beta absent from the Inventory map
       new Map([['alpha', H_A], ['beta', H_B]]),
     )
-    expect(res.findings).toEqual([{ name: 'beta', kind: 'uncataloged', actual: H_B }])
+    expect(res.findings).toEqual([])
   })
 
   it('flags an UNPINNED skill (entry exists but no installedSha256)', () => {

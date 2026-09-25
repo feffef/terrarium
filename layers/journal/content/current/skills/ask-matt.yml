@@ -1,7 +1,7 @@
 name: ask-matt
 category: general-engineering
 importance: peripheral
-installedSha256: c0609bf4626b7166fb54dd7fb0091682df05f0491c96ec566b0dc96ed97ea2fb
+installedSha256: b25d86fb36b1d294eeead5d7db529f86135f9671f2afcd607579a63bb2213769
 role: >-
   A router that suggests which Skill or flow fits a situation. Rarely the entry
   point here — agents are pointed straight at this Inventory and CLAUDE.md — so
