@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015eWJwr7PgaoTcnsWdDVGzG
 startedAt: 2026-09-25T06:02:16Z
-endedAt: 2026-09-25T06:07:38Z
+endedAt: 2026-09-25T07:01:27Z
 kind: interactive
 goal: Fix misleading homepage "Today in the terrarium" feed
-status: in-review
-outcome: "Renamed, dated, four entries; PR #1335 open"
-summary: "Human-instructed: the homepage feed headed \"Today in the terrarium\" listed digests from earlier days. On the human's ask (heading and date format confirmed via two clarifying questions) I renamed it \"Lately in the terrarium\", prefixed each entry with a short UTC date (Sep 24) so a digest saying \"today\" has context, and raised the count from 3 to 4. One file, app/pages/index.vue. gate:scoped passed and a preview screenshot confirmed the render. PR opened per ADR-0003's auto-open default."
+status: completed
+outcome: "Renamed, dated, four entries; PR #1335 merged"
+summary: "Human-instructed: the homepage feed headed \"Today in the terrarium\" listed digests from earlier days. On the human's ask (heading and date format confirmed via two clarifying questions) I renamed it \"Lately in the terrarium\", prefixed each entry with a short UTC date (Sep 24) so a digest saying \"today\" has context, and raised the count from 3 to 4. One file, app/pages/index.vue. gate:scoped passed and a preview screenshot confirmed the render. PR opened per ADR-0003 auto-open default; merged by the human."
 prs:
   - "1335"
 docsRead:
@@ -24,13 +24,13 @@ frictions:
   - description: ADR-0017 provenance guard rejected the first PR body for missing the model-name header line.
     solution: Put the provenance header first from the start; the guard's message gave the exact shape.
     severity: nit
-durationSec: 322
+durationSec: 3552
 models:
-  claude-opus-5-5: 38
+  claude-opus-5-5: 54
 toolCounts:
   Grep: 2
   Read: 2
-  Bash: 8
+  Bash: 10
   AskUserQuestion: 1
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
@@ -38,6 +38,8 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
   mcp__Claude_Code_Remote__send_later: 1
+  ReadNotifications: 4
+  mcp__Claude_Code_Remote__delete_trigger: 1
 gitBranch: claude/terrarium-headline-digest-yqha54
 entrypoint: remote_mobile
 cliVersion: 2.1.282
