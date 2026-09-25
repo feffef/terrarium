@@ -1,20 +1,54 @@
 schemaVersion: 1
 session: session_012xpPWzbsvqfVve5JC2NdxD
 startedAt: 2026-09-25T19:44:35Z
-endedAt: 2026-09-25T19:52:38Z
+endedAt: 2026-09-25T20:19:35Z
 kind: interactive
 goal: Plain-English digests, especially the headline
 status: in-review
-outcome: Digest skill reworded, seven digests rewritten
-summary: "Human-instructed: the user asked for the digest skill to use plain English instead of project jargon, especially in the headline summary. After three clarifying questions (reader = tech-literate outsider; keep the footer but word it plainly; also rewrite recent digests), I reworded step 3 of the digest SKILL.md, renamed the footer's Frictions tally to \"Problems noted\", and rewrote the seven digests in current (09-18 to 09-24) using only facts already in them. gate:scoped passed. Opened PR 1349."
+outcome: Skill reworded; seven digests regenerated as a dry run
+summary: 'All human-instructed. The user asked for plain-English digests; after clarifying questions I reworded digest SKILL.md step 3. The user then asked for a real dry run: 7 Sonnet agents regenerated 09-18..24 from session logs. The user asked for "Also shipped" for routine PRs plus noteworthy learnings/ideas (gather now passes those through). /code-review found schedule wording, length, and a 09-24 day-boundary mismatch; the user chose "scheduled" and a ~200-word limit, and I fixed the rest. Gate green, PR 1349 open.'
 prs:
   - "1349"
-docsRead: []
+docsRead:
+  - path: layers/journal/content/current/pages/digests/2026-09-24.md
+    reason: (read before editing)
+  - path: scripts/digest.ts
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-09-20.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/digests/2026-09-22.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/sessions/2026-09-19-session_013DTSUMsz7xvUpgEZ536RAy.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-19-session_01GPd9rBoqJHeACNT5644bAR.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-19-session_01Rxy65mVLTbLUvfBSNRMLkG.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-19-session_01UqPZ9b8HC8s7eupAVCH86p.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-19-session_01YEY83rpsAKUx42XEczBfnG.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-09-19.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/sessions/2026-09-24-session_01Lm5nzVoByigqhQ1YxFggTk.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-24-session_01Uur4mTZ7XYruzKvepmvh5G.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-09-23.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/digests/2026-09-18.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/digests/2026-09-21.md
+    reason: (read before editing)
 skillsUsed:
   - name: close-session
     reason: closure at PR-open
   - name: log-session
     reason: (no reason given)
+  - name: code-review
+    reason: (invoked as a slash command)
 frictions:
   - description: Commit was blocked because I hand-wrote the attribution trailer the harness system-reminder told me to add; the repo guard forbids it.
     solution: The guard's deny message explained it; re-committed without the trailer.
@@ -25,20 +59,75 @@ frictions:
   - description: The skill grew by 5 lines, which goes against the simplify-first rule, but a human asked for the change outright, which the rule allows.
     solution: None needed; noted in the PR.
     severity: nit
-durationSec: 482
+  - description: My first rewrite of the digests reworded the old digest text instead of summarising the session logs, so it wasn't a real dry run; the user had to ask again.
+    solution: When asked to show what a skill would produce, run the skill's real inputs rather than paraphrasing its old output.
+    severity: minor
+  - description: My first 'Also shipped' wording ('PRs the prose didn't mention') let every agent keep all PRs in the prose and drop the line; it took another round to state the intent (routine PRs out of the prose).
+    solution: Put the goal in the instruction, not just a mechanical rule.
+    severity: minor
+  - description: For the dry run I told agents to read session YAMLs by file-name date, which differs from gather's UTC end-time boundary; 09-24 got 10 sessions instead of 8 until the review caught it.
+    solution: Dry runs should use the skill's own gather output.
+    severity: moderate
+  - description: The skill's own example 'the daily docs check' broke CLAUDE.md's never-say-when rule for scheduled jobs, and four digests copied it; the cadence validator only scans the Skill Inventory, so it wasn't caught automatically.
+    solution: Fixed the wording; consider extending validate-skill-cadence to cover digests.
+    severity: minor
+durationSec: 2100
 models:
-  claude-opus-5-5: 41
+  claude-opus-5-5: 261
 toolCounts:
-  Bash: 13
-  AskUserQuestion: 1
-  ToolSearch: 1
+  Bash: 44
+  AskUserQuestion: 2
+  ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 5
+  mcp__Claude_Code_Remote__send_later: 1
+  Agent: 9
+  SendMessage: 17
+  Read: 3
+  mcp__github__update_pull_request: 2
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-09-20.md
+  - layers/journal/content/current/pages/digests/2026-09-22.md
+  - layers/journal/content/current/pages/digests/2026-09-19.md
+  - layers/journal/content/current/pages/digests/2026-09-24.md
+  - layers/journal/content/current/pages/digests/2026-09-23.md
+  - layers/journal/content/current/pages/digests/2026-09-18.md
+  - layers/journal/content/current/pages/digests/2026-09-21.md
 docsReadViaShell:
   - .agents/skills/digest/SKILL.md
+  - .agents/skills/writing-for-agents/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Digest 2026-09-18
+    model: sonnet
+  - type: general-purpose
+    task: Digest 2026-09-19
+    model: sonnet
+  - type: general-purpose
+    task: Digest 2026-09-20
+    model: sonnet
+  - type: general-purpose
+    task: Digest 2026-09-21
+    model: sonnet
+  - type: general-purpose
+    task: Digest 2026-09-22
+    model: sonnet
+  - type: general-purpose
+    task: Digest 2026-09-23
+    model: sonnet
+  - type: general-purpose
+    task: Digest 2026-09-24
+    model: sonnet
+  - type: general-purpose
+    task: Standards review
+  - type: general-purpose
+    task: Spec review
 gitBranch: claude/wizardly-heisenberg-gpbngi
 entrypoint: remote
 cliVersion: 2.1.282
+learnings:
+  - scripts/digest.ts gather reads only current/sessions, so backfilling an already-archived day returns no sessions.
 landedBy: Stop
