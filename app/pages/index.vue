@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { resolveSpaceRoute } from '#shared/routing'
+
 // The showcase Tenants below the hero. Each one is ONE card, and its entries are
 // DERIVED from that Tenant's own single-homed list — `PERSONA_SLUGS`
 // (layers/blog/app/utils/personas.ts) and `BIOMES` (layers/atlas/app/utils/biomes.ts)
@@ -89,6 +91,33 @@ function tenantLabel(tenant: string): string {
   return TENANT_LABELS[tenant] ?? tenant
 }
 
+// Atlas spotlight (visitor-loop feature, 2026-09-25): all three blind visitors
+// called the Atlas the site's standout, yet it sits two clicks deep from here.
+// One specimen, picked across every biome — the per-biome resolve-then-query
+// loop mirrors the shape the Atlas's own front door uses for its wing counts
+// (layers/atlas/app/pages/t/atlas/index.vue), though it reads full specimen
+// docs rather than stats, so it's re-derived here, not imported. The pick
+// rotates by UTC day, computed on every request (this route isn't
+// prerendered — ADR-0001's build-time-baked content still gets served over
+// ordinary per-request SSR), so it's an honest "today", not a value frozen
+// at the last build the way a prerendered page's would be.
+const { data: spotlight } = await useAsyncData('atlas-spotlight', async () => {
+  const picks: Array<{ specimen: ReturnType<typeof toSpecimenView>; biome: (typeof BIOMES)[number] }> = []
+  for (const b of BIOMES) {
+    const r = resolveSpaceRoute('atlas', b.slug, undefined)
+    if (!r) continue
+    const docs = await queryCollection(r.pagesKey).where('path', '<>', '/').all()
+    for (const d of docs) picks.push({ specimen: toSpecimenView(d), biome: b })
+  }
+  if (!picks.length) return null
+  picks.sort((a, b) => a.specimen.slug.localeCompare(b.specimen.slug))
+  const dayIndex = Math.floor(Date.now() / 86_400_000)
+  return picks[dayIndex % picks.length]!
+})
+const spotlightAccent = computed(
+  () => spotlight.value?.specimen.signature?.colors?.[0]?.hex ?? spotlight.value?.biome.accent,
+)
+
 useHead({ title: 'terrarium · a self-growing garden of websites' })
 </script>
 
@@ -120,6 +149,16 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         </li>
       </ul>
     </section>
+
+    <NuxtLink v-if="spotlight" :to="`/t/atlas/${spotlight.biome.slug}/${spotlight.specimen.slug}`" class="spotlight">
+      <span class="spotlight-dot" :style="{ background: spotlightAccent }" aria-hidden="true" />
+      <span class="spotlight-body">
+        <span class="spotlight-eyebrow">From the Atlas · {{ spotlight.biome.name }}</span>
+        <span class="spotlight-name"><em>{{ spotlight.specimen.binomial }}</em> — {{ spotlight.specimen.common }}</span>
+        <span v-if="spotlight.specimen.blurb && spotlight.specimen.blurb !== spotlight.specimen.common" class="spotlight-blurb">{{ spotlight.specimen.blurb }}</span>
+      </span>
+      <span class="spotlight-arrow" aria-hidden="true">→</span>
+    </NuxtLink>
 
     <section class="explore" aria-labelledby="explore-heading">
       <div class="explore-head">
@@ -308,6 +347,70 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Atlas spotlight (visitor-loop feature, 2026-09-25): the Atlas is buried two
+   clicks deep behind the Explore grid below, yet every visitor this run
+   called it out as the site's best part — this card surfaces one specimen of
+   it right on the front door. Styled like a wider `.fresh-item` row, not a
+   `.card`: it's a single pointer to go deeper, not another showcase list. */
+.spotlight {
+  width: 100%;
+  max-width: 34rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--root-line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--root-ink) 2%, transparent);
+  color: var(--root-ink);
+  text-decoration: none;
+  text-align: left;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.spotlight:hover {
+  border-color: color-mix(in srgb, var(--root-accent) 55%, var(--root-line));
+  transform: translateY(-2px);
+}
+.spotlight-dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+.spotlight-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.spotlight-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--root-accent);
+}
+.spotlight-name {
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+.spotlight-name em { font-style: italic; }
+.spotlight-blurb {
+  font-size: 0.85rem;
+  color: var(--root-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.spotlight-arrow {
+  flex: none;
+  margin-left: auto;
+  color: var(--root-accent);
+  transition: transform 0.15s ease;
+}
+.spotlight:hover .spotlight-arrow { transform: translateX(3px); }
 
 .explore {
   width: 100%;
