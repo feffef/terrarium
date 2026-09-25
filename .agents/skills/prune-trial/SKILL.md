@@ -105,13 +105,11 @@ means from a goal as readily as you can. A goal it can't act on isn't simpler,
 just shorter — and neither is a surviving rule now buried mid-paragraph where a
 skimmer will miss it.
 
-Around 100 lines **deleted** is the bar for the prune itself — the goal you
-write back and the ledger entry don't count against it. Clear it by retiring a whole problem,
-never by deleting the worked examples a weaker reader needs. The figure is a
-target expected to shrink as prior prunes clear the easy backlog, not a floor
-to force by padding scope — an honest search can legitimately turn up nothing
-near it. The "two runs in a row" signal under Bounds below is the same
-recalibration mechanism, not only a trigger for retiring a Skill.
+Aim for around 100 lines **deleted** (the goal you write back and the ledger
+entry don't count) by retiring a whole problem — never by padding scope or
+deleting the worked examples a weaker reader needs. **If the best candidate
+cuts fewer than ~10 lines, open no trial: end the run after §1.** A few lines
+don't repay a probe, a full Gate, a PR and three days of blocked territory.
 
 Write a hook **only when §4's probe fails, or when a landed trial's verdict in
 §1 showed real damage** — the two moments the behaviour has proven it needs
@@ -167,5 +165,5 @@ Two exceptions and one refusal:
 - **Retiring a Skill or a Routine, including your own** — file a `needs-triage`
   issue, never act; `audit-skills` records the same class of signal as an
   `ideas` entry, so look for one and cite it rather than filing twice. Nothing breaks when a Skill stops running, so no verdict could tell you
-  it was a mistake. Two runs in a row that find nothing worth ~100 lines is the
-  signal to file yours.
+  it was a mistake. Two runs in a row that open no trial is the signal to file
+  yours.
