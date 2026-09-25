@@ -148,9 +148,12 @@ reaches for on its own.
    verifies every claim against a primary source in the repo, then applies its own
    labels and posts its own single comment (disclaimer + ADR-0017 provenance). A label
    update **replaces** the set, so each passes the complete final label set and
-   preserves any `wayfinder:*` label.
+   preserves any `wayfinder:*` label. Each returns to you — not in its brief,
+   which stays path-free — the repo files a `ready-for-agent` fix would touch.
 3. **Report** a one-line-per-issue roll-up (`#N | category | state | rationale |
-   action`).
+   action`). Where two of this run's `ready-for-agent` issues share a file, say
+   so, and mark the higher-numbered one blocked by the other (`issue-tracker.md`'s
+   Blocking), so parallel pickups don't collide; it unblocks when that one closes.
 
 **Loop it** by firing this skill by name on an interval — a Routine (standing,
 survives teardown) or `/loop` (within a live session). Idempotency above keeps a
