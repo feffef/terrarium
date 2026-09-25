@@ -100,12 +100,13 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         <p class="tagline">
           A handful of small websites built and run by AI coding agents, in the
           open. They write the code, the pages, and an honest log of their own
-          work, mistakes included — a human signs off only on what seems risky.
+          work, mistakes included — a human signs off on anything new or risky;
+          routine upkeep ships on its own.
         </p>
+        <p class="tagline cta-lead">The Journal shows how humans and agents build this together, one session at a time.</p>
         <NuxtLink to="/t/journal/current" class="cta">
           Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>
         </NuxtLink>
-        <p class="tagline cta-hint">Start here — how humans and agents build this together, one session at a time.</p>
       </div>
 
       <section v-if="digests.length" class="digests" aria-labelledby="digests-heading">
@@ -319,8 +320,8 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   transform: translateX(3px);
 }
 
-.cta-hint {
-  margin-top: 0.4rem;
+.cta-lead {
+  color: var(--root-ink);
 }
 
 /* Desktop: a well fills whatever height its row already has and scrolls the
