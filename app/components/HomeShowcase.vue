@@ -179,7 +179,9 @@ const { listed, overflow } = listEntries(props.entries)
   color: var(--root-muted);
 }
 
+/* Fills the card to the row's height; the page keeps long teasers from setting it. */
 .teaser {
+  flex: 1;
   margin: 0.95rem 0.8rem 0.8rem;
   padding: 0.75rem 0.85rem 0.85rem;
   border: 1px solid var(--tile-panel-line);

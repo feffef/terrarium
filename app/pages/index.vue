@@ -43,9 +43,11 @@ const middenEntries = [
 // layers/commons/app/composables/timeline.ts) rather than re-deriving a second
 // cross-Tenant read of digests and posts.
 const { data: timelineData } = await useAsyncData('home-timeline', () => queryTimeline())
-const digests = computed(() => (timelineData.value ?? []).filter((e) => e.genre === 'digest').slice(0, 2))
+const digests = computed(() =>
+  (timelineData.value ?? []).filter((e) => e.genre === 'digest' && e.space === 'current'),
+)
 const blogPosts = computed(() =>
-  (timelineData.value ?? []).filter((e) => e.genre === 'post' && e.tenant === 'blog').slice(0, 2),
+  (timelineData.value ?? []).filter((e) => e.genre === 'post' && e.tenant === 'blog').slice(0, 10),
 )
 
 // UTC so SSR and hydration agree, and a digest (stamped end-of-day UTC) shows the day it covers.
@@ -108,14 +110,16 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 
       <section v-if="digests.length" class="digests" aria-labelledby="digests-heading">
         <h2 id="digests-heading" class="eyebrow">Latest from the Journal</h2>
-        <ul class="digest-list">
-          <li v-for="d in digests" :key="d.url">
-            <NuxtLink :to="d.url" class="digest">
-              <time class="digest-date" :datetime="d.when">{{ shortDate(d.when) }}</time>
-              <span class="digest-summary">{{ d.summary }}</span>
-            </NuxtLink>
-          </li>
-        </ul>
+        <div class="scroll-well">
+          <ul class="digest-list scroll-box">
+            <li v-for="d in digests" :key="d.url">
+              <NuxtLink :to="d.url" class="digest">
+                <time class="digest-date" :datetime="d.when">{{ shortDate(d.when) }}</time>
+                <span class="digest-summary">{{ d.summary }}</span>
+              </NuxtLink>
+            </li>
+          </ul>
+        </div>
       </section>
     </div>
 
@@ -136,17 +140,19 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           blurb="A plain-language read on the experiment — the same work seen as impressive, as flawed, plainly observed, or painted as a living place."
           :entries="blogEntries"
         >
-          <ul class="posts">
-            <li v-for="p in blogPosts" :key="p.url">
-              <NuxtLink :to="p.url" class="post" :style="{ '--ea': personaMeta(p.space).accent }">
-                <span class="post-meta">
-                  <span class="post-persona">{{ personaMeta(p.space).name }}</span>
-                  <time :datetime="p.when">{{ shortDate(p.when) }}</time>
-                </span>
-                <span class="post-title">{{ p.summary }}</span>
-              </NuxtLink>
-            </li>
-          </ul>
+          <div class="scroll-well">
+            <ul class="posts scroll-box">
+              <li v-for="p in blogPosts" :key="p.url">
+                <NuxtLink :to="p.url" class="post" :style="{ '--ea': personaMeta(p.space).accent }">
+                  <span class="post-meta">
+                    <span class="post-persona">{{ personaMeta(p.space).name }}</span>
+                    <time :datetime="p.when">{{ shortDate(p.when) }}</time>
+                  </span>
+                  <span class="post-title">{{ p.summary }}</span>
+                </NuxtLink>
+              </li>
+            </ul>
+          </div>
         </HomeShowcase>
 
         <HomeShowcase
@@ -189,7 +195,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           <NuxtLink v-if="find" :to="find.url" class="find">
             <span class="find-stamp">{{ conditionMeta(find.condition).label }}</span>
             <span class="find-title">{{ find.title }}</span>
-            <span class="find-note">{{ find.catalogNote }}</span>
+            <span class="scroll-well find-well"><span class="find-note scroll-box">{{ find.catalogNote }}</span></span>
             <span class="find-meta">{{ digSeasonOf(find.stratum)?.label ?? find.stratum }}</span>
           </NuxtLink>
         </HomeShowcase>
@@ -260,7 +266,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
-  align-items: start;
   gap: 2rem 4rem;
 }
 @media (max-width: 56rem) {
@@ -325,6 +330,36 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   font-size: 0.9rem;
   color: var(--root-muted);
   text-wrap: balance;
+}
+
+/* Desktop: a well fills whatever height its row already has and scrolls the
+   rest, so a long list never sets that height — the hero copy sets the digests'
+   row and the Atlas plate sets the cards'. Absolute positioning is what keeps
+   the list out of the row's height calculation. Phones stack everything, so
+   there each list shows its first three entries at natural height instead. */
+.scroll-well {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 56.01rem) {
+  .scroll-well {
+    position: relative;
+    min-height: 6rem;
+  }
+  .scroll-box {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+}
+@media (max-width: 56rem) {
+  .scroll-box > li:nth-child(n + 4) {
+    display: none;
+  }
 }
 
 .digests {
@@ -405,20 +440,24 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   color: var(--root-muted);
 }
 
-/* auto-fit, not a fixed column count: another Tenant joins the row (or wraps)
-   without this file's layout changing. */
+/* Three columns share one row (so the Atlas plate sets every card's height,
+   see .scroll-well) — or a single stacked column on phones. */
 .explore-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.1rem;
-  align-items: stretch;
+}
+@media (min-width: 56.01rem) {
+  .explore-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 /* ── Blog teaser ── */
 .posts {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 0.25rem 0 0;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -486,7 +525,8 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 
 /* ── Midden teaser: a catalogue slip with its condition stamp. ── */
 .find {
-  position: relative;
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -521,6 +561,13 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   -webkit-line-clamp: 7;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+@media (min-width: 56.01rem) {
+  .find-note {
+    display: block;
+    padding-right: 0.25rem;
+    overflow-y: auto;
+  }
 }
 .find-meta {
   font-family: var(--midden-typewriter);
