@@ -425,6 +425,11 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
         const intercepted = await page.evaluate(() => {
           const bad: string[] = []
           for (const goal of document.querySelectorAll('.feed .card .head .goal')) {
+            // Recent activity collapses to the newest 10 by default (v-show,
+            // not v-if, so a collapsed card still ships in SSR HTML) — its
+            // goal is offscreen/zero-size until "Show all" is clicked, so it
+            // has no meaningful hit-test target yet and isn't this guard's concern.
+            if ((goal.closest('.card') as HTMLElement | null)?.offsetParent === null) continue
             goal.scrollIntoView({ block: 'center' })
             const r = goal.getBoundingClientRect()
             const at = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)

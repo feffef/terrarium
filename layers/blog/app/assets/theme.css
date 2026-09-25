@@ -124,6 +124,46 @@ body.bl-page {
 .bl .sprig::before { background: linear-gradient(to left, var(--bl-line), transparent); }
 .bl .sprig::after { background: linear-gradient(to right, var(--bl-line), transparent); }
 
+/* Post-to-post navigation (visitor-loop fix, 2026-09-24). Same Persona, by
+   publish date; either side is optional (the oldest/newest post in a Persona
+   has only one neighbour). */
+.bl .post-nav { display: flex; gap: 1.2rem; margin-top: 1.6rem; }
+.bl .post-nav-link {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--bl-line);
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.bl .post-nav-link:hover { border-color: var(--bl-accent); color: var(--bl-accent); }
+.bl .post-nav-newer { text-align: right; align-items: flex-end; }
+.bl .post-nav-dir {
+  font-family: var(--bl-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--bl-faint);
+}
+.bl .post-nav-title {
+  font-family: var(--bl-serif);
+  font-size: 0.98rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bl .post-nav-spacer { flex: 1; }
+@media (max-width: 30rem) {
+  .bl .post-nav { flex-direction: column; }
+  .bl .post-nav-newer { text-align: left; align-items: flex-start; }
+  .bl .post-nav-spacer { display: none; }
+}
+
 /* Post feed on the landing */
 .bl .feed { list-style: none; margin: 1.6rem 0 0; padding: 0; }
 .bl .feed > li { border-top: 1px solid var(--bl-line); }

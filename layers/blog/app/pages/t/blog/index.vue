@@ -134,5 +134,7 @@ useSeoMeta({
         <p v-else class="empty">No posts tagged “{{ selectedTag }}” yet.</p>
       </div>
     </div>
+
+    <SiteFooter />
   </main>
 </template>

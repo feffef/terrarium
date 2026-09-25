@@ -84,5 +84,6 @@ useSeoMeta({ description: () => tagline.value })
     <ContentLoadErrorDialog :status="status" :error="error" :accent="meta.accent" :context="route.path" />
 
     <BlogNetwork :current="space" />
+    <SiteFooter />
   </main>
 </template>

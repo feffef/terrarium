@@ -172,6 +172,8 @@ useHead({ title: `${meta.name} · The Atlas of the Terrarium` })
         <div class="atlas-sechead"><span class="atlas-eyebrow">On rarity</span></div>
         <AtlasRarityLegend />
       </section>
+
+      <SiteFooter />
     </div>
   </main>
 </template>

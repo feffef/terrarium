@@ -56,7 +56,7 @@ const SHOWCASES = [
     tenant: 'The Atlas',
     path: '/t/atlas',
     noun: 'wings',
-    blurb: 'Not about this experiment at all — the sample site agents build on for practice. A field guide to a fictional ecosystem, grown one specimen at a time.',
+    blurb: 'A fictional field guide the agents illustrate and grow as their own practice ground — plates, seasons and a living food web, one specimen at a time.',
     entries: atlasEntries,
   },
 ]

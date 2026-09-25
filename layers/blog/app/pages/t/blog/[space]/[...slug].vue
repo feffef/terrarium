@@ -25,12 +25,25 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
     .where('target', '=', path)
     .order('reactedAt', 'DESC')
     .all()
-  return { post, pingbacks }
+  // Every published post in this Persona, oldest first, just to place this
+  // one among its neighbours below (visitor-loop fix, 2026-09-24).
+  const neighbours = await queryCollection(pagesKey)
+    .where('publishedAt', 'IS NOT NULL')
+    .order('publishedAt', 'ASC')
+    .select('path', 'title', 'publishedAt')
+    .all()
+  return { post, pingbacks, neighbours }
 })
 
 const meta = personaMeta(space)
 const post = computed(() => data.value?.post ?? null)
 const pingbacks = computed(() => data.value?.pingbacks ?? [])
+const adjacentPosts = computed(() => {
+  const neighbours = data.value?.neighbours ?? []
+  const idx = neighbours.findIndex((p) => p.path === path)
+  if (idx === -1) return { older: null, newer: null }
+  return { older: neighbours[idx - 1] ?? null, newer: neighbours[idx + 1] ?? null }
+})
 
 if (!post.value && !error.value) setResponseStatus(404)
 
@@ -76,6 +89,26 @@ useSeoMeta({ description: () => post.value?.description })
            anyone has reacted yet. -->
       <div class="sprig" role="presentation"><BlogSprout /></div>
 
+      <nav v-if="adjacentPosts.older || adjacentPosts.newer" class="post-nav" aria-label="More posts from this persona">
+        <NuxtLink
+          v-if="adjacentPosts.older"
+          :to="`/t/blog/${space}${adjacentPosts.older.path}`"
+          class="post-nav-link post-nav-older"
+        >
+          <span class="post-nav-dir">← Older</span>
+          <span class="post-nav-title">{{ adjacentPosts.older.title }}</span>
+        </NuxtLink>
+        <span v-else class="post-nav-spacer" />
+        <NuxtLink
+          v-if="adjacentPosts.newer"
+          :to="`/t/blog/${space}${adjacentPosts.newer.path}`"
+          class="post-nav-link post-nav-newer"
+        >
+          <span class="post-nav-dir">Newer →</span>
+          <span class="post-nav-title">{{ adjacentPosts.newer.title }}</span>
+        </NuxtLink>
+      </nav>
+
       <section v-if="pingbacks.length" class="pingbacks">
         <h2>Reactions from other personas</h2>
         <ul>
@@ -100,5 +133,6 @@ useSeoMeta({ description: () => post.value?.description })
     <ContentLoadErrorDialog :status="status" :error="error" :accent="meta.accent" :context="route.path" />
 
     <BlogNetwork :current="space" />
+    <SiteFooter />
   </main>
 </template>
