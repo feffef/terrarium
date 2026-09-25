@@ -120,8 +120,8 @@ treat it as the already-merged restart case above instead of pushing.
 
 - `digest` / `audit-docs` / `audit-skills` / `blog-post` / `visitor-loop` —
   merge on a green gate alone (ADR-0003/0004).
-- `prune-trial` — merge on a green gate alone, and uniquely may prune ADR prose
-  as part of a trial (ADR-0027's narrow amendment to ADR-0004).
+- `prune-trial` — merge on a green gate alone, and uniquely may rewrite ADRs,
+  keeping what they decided, as part of a trial (ADR-0027's narrow amendment to ADR-0004).
 - `reviewer-agent` (`frictions-to-fixes`) — not purely mechanical: the
   reviewing session's own risk judgement is also required, escalating a
   genuinely high-risk PR to a human even when the gate is green (ADR-0003).

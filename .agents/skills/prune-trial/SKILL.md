@@ -107,9 +107,11 @@ skimmer will miss it.
 
 Aim for around 100 lines **deleted** (the goal you write back and the ledger
 entry don't count) by retiring a whole problem — never by padding scope or
-deleting the worked examples a weaker reader needs. **If the best candidate
-cuts fewer than ~10 lines, open no trial: end the run after §1.** A few lines
-don't repay a probe, a full Gate, a PR and three days of blocked territory.
+deleting the worked examples a weaker reader needs. **When no problem clears
+that bar, rewrite one whole file instead** — one of our Skills, a doc or an
+ADR — in simpler words that stay exact: every rule and decision kept, the rest
+gone. Be brave: restructure it, merge its sections, reword all of it. The file
+is the trial's territory, with the same ledger entry and §4 probe as any prune.
 
 Write a hook **only when §4's probe fails, or when a landed trial's verdict in
 §1 showed real damage** — the two moments the behaviour has proven it needs
@@ -152,9 +154,10 @@ escalate that.
 
 Everything the Platform tells its agents is in scope: CLAUDE.md, CONTEXT.md,
 `docs/`, our own Skills including the scheduled ones, and the ADRs — ADR-0027
-grants that; ADR-0004's Human-only merge rule otherwise stands. In an ADR you
-prune the **explanatory prose only**: its Decision and Consequences are the
-historical record and are never rewritten (ADR-0018). Skip
+grants that; ADR-0004's Human-only merge rule otherwise stands. You may
+rewrite an ADR whole, Decision and Consequences included, as long as **what it
+decided does not change**: fold its amendments into the text and retell its
+history wherever that reads clearer. Skip
 `docs/proposals/<N>-*.md` and `.out-of-scope/*.md` — written for a human to
 apply once, not for agents to read.
 
