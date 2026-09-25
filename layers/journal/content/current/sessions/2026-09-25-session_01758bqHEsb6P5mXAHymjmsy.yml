@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01758bqHEsb6P5mXAHymjmsy
 startedAt: 2026-09-25T04:00:59Z
-endedAt: 2026-09-25T04:17:48Z
+endedAt: 2026-09-25T04:21:29Z
 kind: autonomous
 goal: Run scheduled /audit-docs sweep
-status: in-review
-outcome: 4 findings confirmed and fixed, PR open
-summary: "Scheduled firing of /audit-docs (no live human this session). Dispatched four parallel reviewer agents (Freshness, Single-home, Concision, Coherence) over the eight lenses, pooled their findings (no overlapping spans), then dispatched one independent fact-checker to re-derive each from primary sources before touching anything. All four surviving findings were CONFIRMED: a contradiction in CLAUDE.md about whether `.github/actions/gate/action.yml` is live (fixed to match ADR-0004/0026's own hedge), an ambiguity overstating the deferred-tool guard's coverage (narrowed to match docs/agents/guards.md), and a mis-located Mermaid authoring convention sitting in docs/agents/tenant-layers.md with nothing to do with Nuxt layers (moved to docs/research/mermaid-server-side-rendering.md, cascading a renumber into docs/research/rulebook-migration-table.md). A fifth confirmed finding (a stale issue-#1276 reference in docs/agents/pr-workflow.md) was left untouched because it sits inside an open Prune Trial's territory per the audit-docs Skill's own rule. Ran `pnpm gate:scoped` green, committed, pushed, and opened PR #1334 against main; subscribed to its activity to babysit to merge. All work this session was agent-initiated per the audit-docs Skill's own charter — no human green-light was needed or sought, matching its \"runs without interaction\" design."
+status: completed
+outcome: 4 findings confirmed, fixed, and merged
+summary: "Scheduled firing of /audit-docs (no live human this session). Dispatched four parallel reviewer agents (Freshness, Single-home, Concision, Coherence) over the eight lenses, pooled their findings (no overlapping spans), then dispatched one independent fact-checker to re-derive each from primary sources before touching anything. All four surviving findings were CONFIRMED: a contradiction in CLAUDE.md about whether `.github/actions/gate/action.yml` is live (fixed to match ADR-0004/0026's own hedge), an ambiguity overstating the deferred-tool guard's coverage (narrowed to match docs/agents/guards.md), and a mis-located Mermaid authoring convention sitting in docs/agents/tenant-layers.md with nothing to do with Nuxt layers (moved to docs/research/mermaid-server-side-rendering.md, cascading a renumber into docs/research/rulebook-migration-table.md). A fifth confirmed finding (a stale issue-#1276 reference in docs/agents/pr-workflow.md) was left untouched because it sits inside an open Prune Trial's territory per the audit-docs Skill's own rule. Ran `pnpm gate:scoped` green, committed, pushed PR #1334, posted the verdict comment, and merged it via merge-pr.ts once CI's safety-gate check went green (merge commit 3967df3d). All work this session was agent-initiated per the audit-docs Skill's own charter — no human green-light was needed or sought, matching its \"runs without interaction\" design."
 prs:
   - "1334"
 docsRead:
@@ -122,7 +122,7 @@ skillsUsed:
   - name: close-session
     reason: self-judged closure at PR-open
   - name: log-session
-    reason: record this log
+    reason: record this log, then finalize on merge
 frictions:
   - description: "Confirmed finding (docs/agents/pr-workflow.md step 5's stale \"issue #1276 tracks a mechanical check\" parenthetical — merge-pr.ts's hasVerdictFromSession() already closed that gap) fell inside .agents/prune-trials.yml's open pr-workflow.md trial territory, so it had to be left unedited per the audit-docs Skill's own rule rather than fixed in this PR."
     solution: Left for /prune-trial to judge; recorded here rather than re-legislating the pruned prose or filing a duplicate issue.
@@ -133,11 +133,11 @@ frictions:
   - description: Called ScheduleWakeup as a fallback check-in while waiting on the four background reviewer agents; the /loop-only guard denied it since this is a scheduled-task session, not a /loop session.
     solution: For a non-/loop session waiting on dispatched Agent-tool subagents, just end the turn — they self-notify on completion; no wait/poll tool is needed at all.
     severity: nit
-durationSec: 1009
+durationSec: 1229
 models:
-  claude-sonnet-5: 127
+  claude-sonnet-5: 145
 toolCounts:
-  Bash: 22
+  Bash: 26
   Agent: 9
   ScheduleWakeup: 1
   Read: 9
@@ -146,9 +146,11 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
-  Write: 1
+  Write: 2
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/agents/tenant-layers.md
   - docs/research/mermaid-server-side-rendering.md
