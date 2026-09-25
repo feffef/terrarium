@@ -61,6 +61,29 @@ const SHOWCASES = [
   },
 ]
 
+// "Today in the terrarium" (visitor-loop feature, 2026-09-25): the newest few
+// timestamped things across every Tenant, so the front door itself shows the
+// garden growing instead of only claiming it does. Reuses the Commons
+// Timeline's own normalization (`queryTimeline`, layers/commons/app/composables/timeline.ts)
+// rather than re-deriving a second cross-Tenant read here — this page just
+// trims it to a short, dated feed and drops the `session` genre (internal
+// jargon a first-time visitor doesn't need).
+const { data: timelineData } = await useAsyncData('home-timeline', () => queryTimeline())
+const freshest = computed(() => (timelineData.value ?? []).filter((e) => e.genre !== 'session').slice(0, 3))
+
+// The Timeline's own entries carry a raw Tenant slug; this page already has a
+// branded name for each Tenant it shows elsewhere (SHOWCASES above) — reuse
+// that voice here instead of surfacing the manifest slug verbatim.
+const TENANT_LABELS: Record<string, string> = {
+  journal: 'The Journal',
+  blog: 'The Blog',
+  midden: 'The Midden',
+  atlas: 'The Atlas',
+}
+function tenantLabel(tenant: string): string {
+  return TENANT_LABELS[tenant] ?? tenant
+}
+
 useHead({ title: 'terrarium · a self-growing garden of websites' })
 </script>
 
@@ -79,6 +102,18 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       </NuxtLink>
       <p class="cta-hint">Start here — what it is, how it works, and what the agents have shipped.</p>
     </div>
+
+    <section v-if="freshest.length" class="fresh" aria-labelledby="fresh-heading">
+      <h2 id="fresh-heading" class="fresh-heading">Today in the terrarium</h2>
+      <ul class="fresh-list">
+        <li v-for="e in freshest" :key="e.url + e.when" class="fresh-item">
+          <NuxtLink :to="e.url" class="fresh-link">
+            <span class="fresh-tenant">{{ tenantLabel(e.tenant) }}</span>
+            <span class="fresh-summary">{{ e.summary }}</span>
+          </NuxtLink>
+        </li>
+      </ul>
+    </section>
 
     <section class="explore" aria-labelledby="explore-heading">
       <div class="explore-head">
@@ -205,6 +240,50 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   font-size: 0.9rem;
   color: var(--root-muted);
 }
+
+.fresh {
+  width: 100%;
+  max-width: 34rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.fresh-heading {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--root-accent);
+}
+.fresh-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.fresh-link {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.15rem 0;
+  color: var(--root-ink);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.fresh-link:hover .fresh-summary { text-decoration: underline; text-decoration-color: var(--root-accent); }
+.fresh-tenant {
+  flex: none;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--root-accent);
+}
+.fresh-summary { color: var(--root-muted); overflow-wrap: anywhere; }
 
 .explore {
   width: 100%;
