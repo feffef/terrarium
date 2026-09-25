@@ -6,7 +6,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { pickRecencyWindow, SESSIONS_DIR, survey, toCompactSession, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
+import { OUTPUT_FILE_PATH, pickRecencyWindow, resolveOutputTarget, SESSIONS_DIR, survey, toCompactSession, toTriageSession, type TriageSession } from '../../scripts/session-frictions.ts'
 
 function session(id: string, startedAt: string, opts: Partial<TriageSession> = {}): TriageSession {
   return {
@@ -108,6 +108,17 @@ describe('toCompactSession()', () => {
       prs: ['187'],
       frictions: [{ description: 'a stale claim', severity: 'minor' }],
     })
+  })
+})
+
+describe('resolveOutputTarget() — --out CLI flag', () => {
+  it('keeps default behavior unchanged when --out is omitted', () => {
+    expect(resolveOutputTarget([], 10)).toBeNull()
+    expect(resolveOutputTarget([], 30_000)).toBe(OUTPUT_FILE_PATH)
+  })
+  it('lands the output at the given path when --out is provided, regardless of size', () => {
+    expect(resolveOutputTarget(['--out', '/scratch/out.json'], 10)).toBe('/scratch/out.json')
+    expect(resolveOutputTarget(['--window', '5', '--out', '/scratch/out.json'], 30_000)).toBe('/scratch/out.json')
   })
 })
 
