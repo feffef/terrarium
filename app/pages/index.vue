@@ -103,7 +103,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
           work, mistakes included — a human signs off on anything new or risky;
           routine upkeep ships on its own.
         </p>
-        <p class="tagline cta-lead">The Journal shows how humans and agents build this together, one session at a time.</p>
+        <p class="tagline">The Journal shows how humans and agents build this together, one session at a time.</p>
         <NuxtLink to="/t/journal/current" class="cta">
           Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>
         </NuxtLink>
@@ -320,9 +320,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   transform: translateX(3px);
 }
 
-.cta-lead {
-  color: var(--root-ink);
-}
 
 /* Desktop: a well fills whatever height its row already has and scrolls the
    rest, so a long list never sets that height — the hero copy sets the digests'
