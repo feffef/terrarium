@@ -54,6 +54,8 @@ export interface SessionMaterial {
   status: string
   prs: number[]
   frictions: SessionFriction[]
+  learnings: string[]
+  ideas: string[]
 }
 export interface DayMaterials {
   date: string
@@ -204,6 +206,8 @@ function readSessions(cwd = root): { endedAt: Date; material: SessionMaterial }[
           severity: String(fr.severity ?? ''),
           description: String(fr.description ?? '').replace(/\s+/g, ' ').trim(),
         })),
+        learnings: Array.isArray(raw.learnings) ? raw.learnings.map(String) : [],
+        ideas: Array.isArray(raw.ideas) ? raw.ideas.map(String) : [],
       },
     })
   }

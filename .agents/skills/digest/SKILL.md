@@ -53,7 +53,7 @@ pnpm exec tsx scripts/digest.ts gather <date>
 ```
 
 The JSON gives you `prs` (merged/referenced), `otherCommits` (direct-to-main
-work), `sessions` (goal/outcome/status + frictions), and a `rollup`. Author a
+work), `sessions` (goal/outcome/status, frictions, learnings, ideas), and a `rollup`. Author a
 short catch-up from it and save to
 `layers/journal/content/current/pages/digests/<date>.md`:
 
@@ -69,7 +69,7 @@ summary: <one plain sentence: what happened today — this feeds the index previ
 PRs as [#22](https://github.com/feffef/terrarium/pull/22), issues as
 [#2](https://github.com/feffef/terrarium/issues/2).>
 
-**Shipped:** [#22](…) tests for page links · [#21](…) review of recent problems
+**Also shipped:** [#22](…) tests for page links · [#21](…) review of recent problems
 **Sessions:** 3 (all completed) · **Problems noted:** 5 (2 minor, 3 trivial) — worst: <one line>.
 ```
 
@@ -79,7 +79,10 @@ Name things by what they do ("the daily docs check"), not by project names
 (`audit-docs`, Tenant, prune trial, Friction); leave out file, script and ADR
 names and git commands. The `summary` headline matters most — it must read
 clearly on its own. Lead with narrative, not a changelog; keep it short (~120
-words of prose), fold the counts into the one-line footer. **Keep the
+words of prose), fold the counts into the footer. **Also shipped** lists only
+the PRs the prose didn't mention (drop the line if there are none). A session's
+`learnings` or `ideas` earn a sentence only when a reader would find them
+genuinely interesting. **Keep the
 opening paragraph's first ~10 words plain prose — no backticks, links, or bold**:
 `layers/journal/tests/e2e/journal.e2e.ts`'s `digestBodySnippet()` literal-matches the first
 six rendered words against the rendered HTML, and MDC renders inline markdown

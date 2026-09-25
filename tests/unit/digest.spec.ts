@@ -84,10 +84,12 @@ describe('buildDayMaterials()', () => {
         { severity: 'nit', description: 'a' },
         { severity: 'minor', description: 'b' },
       ],
+      learnings: [], ideas: [],
     },
     {
       session: 's2', kind: 'interactive', goal: 'ship Y', outcome: 'done', status: 'completed',
       prs: [], frictions: [{ severity: 'nit', description: 'c' }],
+      learnings: [], ideas: [],
     },
   ]
   const m = buildDayMaterials('2026-07-04', commits, sessions)
