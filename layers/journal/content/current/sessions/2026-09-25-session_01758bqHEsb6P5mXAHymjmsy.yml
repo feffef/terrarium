@@ -1,0 +1,200 @@
+schemaVersion: 1
+session: session_01758bqHEsb6P5mXAHymjmsy
+startedAt: 2026-09-25T04:00:59Z
+endedAt: 2026-09-25T04:17:48Z
+kind: autonomous
+goal: Run scheduled /audit-docs sweep
+status: in-review
+outcome: 4 findings confirmed and fixed, PR open
+summary: "Scheduled firing of /audit-docs (no live human this session). Dispatched four parallel reviewer agents (Freshness, Single-home, Concision, Coherence) over the eight lenses, pooled their findings (no overlapping spans), then dispatched one independent fact-checker to re-derive each from primary sources before touching anything. All four surviving findings were CONFIRMED: a contradiction in CLAUDE.md about whether `.github/actions/gate/action.yml` is live (fixed to match ADR-0004/0026's own hedge), an ambiguity overstating the deferred-tool guard's coverage (narrowed to match docs/agents/guards.md), and a mis-located Mermaid authoring convention sitting in docs/agents/tenant-layers.md with nothing to do with Nuxt layers (moved to docs/research/mermaid-server-side-rendering.md, cascading a renumber into docs/research/rulebook-migration-table.md). A fifth confirmed finding (a stale issue-#1276 reference in docs/agents/pr-workflow.md) was left untouched because it sits inside an open Prune Trial's territory per the audit-docs Skill's own rule. Ran `pnpm gate:scoped` green, committed, pushed, and opened PR #1334 against main; subscribed to its activity to babysit to merge. All work this session was agent-initiated per the audit-docs Skill's own charter — no human green-light was needed or sought, matching its \"runs without interaction\" design."
+prs:
+  - "1334"
+docsRead:
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: the run's own charter
+  - path: .agents/prune-trials.yml
+    reason: check whether a confirmed finding's text sits in open trial territory before editing
+  - path: docs/agents/pr-workflow.md
+    reason: self-merge closing recipe
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: fact-check the action.yml hedge wording
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: fact-check the action.yml hedge wording
+  - path: docs/agents/guards.md
+    reason: fact-check the deferred-tool guard's actual scope
+  - path: docs/research/rulebook-migration-table.md
+    reason: update TL-08/09/10 rows after renumbering tenant-layers.md
+  - path: docs/agents/tenant-layers.md
+    reason: (read before editing)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: README.md
+    reason: (no reason given)
+  - path: CONTEXT.md
+    reason: (no reason given)
+  - path: CONTEXT-MAP.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: layers/atlas/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/blog/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/commons/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/marquee/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/midden/CONTEXT.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/highlights.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: this run's own charter
+  - name: close-session
+    reason: self-judged closure at PR-open
+  - name: log-session
+    reason: record this log
+frictions:
+  - description: "Confirmed finding (docs/agents/pr-workflow.md step 5's stale \"issue #1276 tracks a mechanical check\" parenthetical — merge-pr.ts's hasVerdictFromSession() already closed that gap) fell inside .agents/prune-trials.yml's open pr-workflow.md trial territory, so it had to be left unedited per the audit-docs Skill's own rule rather than fixed in this PR."
+    solution: Left for /prune-trial to judge; recorded here rather than re-legislating the pruned prose or filing a duplicate issue.
+    severity: nit
+  - description: "Launched the four parallel reviewer agents with `run_in_background: false` (intending a synchronous wait since all four results were needed before pooling); the Agent-background-flag guard denied the whole batch as a no-op, requiring a full retry of all four launches."
+    solution: Omit run_in_background entirely (or pass true) on Agent calls and rely on the automatic task-notification instead of the flag.
+    severity: nit
+  - description: Called ScheduleWakeup as a fallback check-in while waiting on the four background reviewer agents; the /loop-only guard denied it since this is a scheduled-task session, not a /loop session.
+    solution: For a non-/loop session waiting on dispatched Agent-tool subagents, just end the turn — they self-notify on completion; no wait/poll tool is needed at all.
+    severity: nit
+durationSec: 1009
+models:
+  claude-sonnet-5: 127
+toolCounts:
+  Bash: 22
+  Agent: 9
+  ScheduleWakeup: 1
+  Read: 9
+  Edit: 7
+  ToolSearch: 3
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  Write: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - docs/agents/tenant-layers.md
+  - docs/research/mermaid-server-side-rendering.md
+  - docs/research/rulebook-migration-table.md
+  - CLAUDE.md
+docsReadViaShell:
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/guards.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - layers/midden/CONTEXT.md
+  - .agents/skills/log-session/SKILL.md
+  - CONTEXT.md
+  - docs/proposals/README.md
+  - docs/proposals/630-add-verify-mermaid-to-gate-workflow.md
+  - docs/proposals/659-fork-pr-gate-doorbell-token.md
+  - docs/proposals/879-gate-yml-thin-shell.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/research/mermaid-server-side-rendering.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0004-objective-safety-gate.md
+subagents:
+  - type: general-purpose
+    task: "Audit-docs Agent A: Freshness"
+  - type: general-purpose
+    task: "Audit-docs Agent B: Single-home"
+  - type: general-purpose
+    task: "Audit-docs Agent C: Concision"
+  - type: general-purpose
+    task: "Audit-docs Agent D: Coherence"
+  - type: general-purpose
+    task: "Audit-docs Agent A: Freshness"
+  - type: general-purpose
+    task: "Audit-docs Agent B: Single-home"
+  - type: general-purpose
+    task: "Audit-docs Agent C: Concision"
+  - type: general-purpose
+    task: "Audit-docs Agent D: Coherence"
+  - type: general-purpose
+    task: Audit-docs fact-checker
+gitBranch: claude/festive-mayer-en36br
+entrypoint: remote_trigger
+cliVersion: 2.1.282
+trigger: audit-docs
+landedBy: Stop
