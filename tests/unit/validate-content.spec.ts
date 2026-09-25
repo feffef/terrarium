@@ -124,3 +124,27 @@ describe('validateContent() — multiple collections', () => {
     expect(report.violations[0]?.key).toBe('b')
   })
 })
+
+describe('validateContent() — values cut short by an unquoted `#`', () => {
+  const schema = z.object({ blurb: z.string() })
+
+  it('flags a data value and a page frontmatter value, naming the quoted fix', () => {
+    writeFileSync(join(dir, 'd.yml'), 'blurb: You called PR #631 mine\n')
+    writeFileSync(join(dir, 'p.md'), '---\nblurb: Closes #948 only\n---\nBody #1\n')
+    const report = validateContent(
+      [baseCollection('.', schema), { ...baseCollection('.', schema, '**/*.md'), key: 'pages', type: 'page' }],
+      dir,
+    )
+    expect(report.violations.map((v) => v.messages.join())).toEqual([
+      expect.stringContaining('"You called PR #631 mine"'),
+      expect.stringContaining('"Closes #948 only"'),
+    ])
+  })
+
+  it('passes a quoted value, and skips session logs (log-session guards those)', () => {
+    writeFileSync(join(dir, 'd.yml'), 'blurb: "You called PR #631 mine"\n')
+    expect(validateContent([baseCollection('.', schema)], dir).violations).toEqual([])
+    writeFileSync(join(dir, 'd.yml'), 'blurb: You called PR #631 mine\n')
+    expect(validateContent([{ ...baseCollection('.', schema), kind: 'session' }], dir).violations).toEqual([])
+  })
+})
