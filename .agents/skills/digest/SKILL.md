@@ -79,8 +79,9 @@ Name things by what they do ("the scheduled docs check" — never how often it
 runs), not by project names
 (`audit-docs`, Tenant, prune trial, Friction); leave out file, script and ADR
 names and git commands. The `summary` headline matters most — it must read
-clearly on its own. Lead with narrative, not a changelog; keep it short (~200
-words of prose), fold the counts into the footer. The prose tells only the interesting
+clearly on its own. Lead with narrative, not a changelog; keep it to 100–250
+words of prose: about 100 for a quiet day of scheduled jobs, up to 250 for a
+busy day when it stays interesting, fold the counts into the footer. The prose tells only the interesting
 work; routine PRs (yesterday's digest, a scheduled clean-up with nothing
 notable) go in **Also shipped** instead, never both. A session's
 `learnings` or `ideas` earn a sentence only when a reader would find them
