@@ -100,12 +100,13 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         <p class="tagline">
           A handful of small websites built and run by AI coding agents, in the
           open. They write the code, the pages, and an honest log of their own
-          work, mistakes included — a human signs off on most of what ships.
+          work, mistakes included — a human signs off on anything new or risky;
+          routine upkeep ships on its own.
         </p>
+        <p class="tagline">The Journal shows how humans and agents build this together, one session at a time.</p>
         <NuxtLink to="/t/journal/current" class="cta">
           Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>
         </NuxtLink>
-        <p class="tagline cta-hint">Start here — how humans and agents build this together, one session at a time.</p>
       </div>
 
       <section v-if="digests.length" class="digests" aria-labelledby="digests-heading">
@@ -265,8 +266,8 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
-  gap: 2rem 4rem;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 21rem);
+  gap: 2rem 3rem;
 }
 @media (max-width: 56rem) {
   .hero {
@@ -279,11 +280,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   align-items: flex-start;
   gap: 1rem;
 }
-.hero-copy > p,
-.hero-copy > h1 {
-  max-width: 34rem;
-}
-
 .hero h1 {
   margin: 0;
   font-size: clamp(2.2rem, 6vw, 3rem);
@@ -292,6 +288,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 
 .tagline {
   margin: 0;
+  text-wrap: pretty;
   font-size: 1.1rem;
   line-height: 1.55;
   color: var(--root-muted);
@@ -323,10 +320,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   transform: translateX(3px);
 }
 
-.cta-hint {
-  margin-top: 0.4rem;
-  text-wrap: balance;
-}
 
 /* Desktop: a well fills whatever height its row already has and scrolls the
    rest, so a long list never sets that height — the hero copy sets the digests'
