@@ -1,27 +1,35 @@
 schemaVersion: 1
 session: session_016NfQMqoynB3ewNFrGcRCUu
 startedAt: 2026-09-25T02:03:27Z
-endedAt: 2026-09-25T02:19:51Z
+endedAt: 2026-09-25T02:45:36Z
 kind: autonomous
 goal: Run frictions-to-fixes cycle
-status: in-review
-outcome: 4 PRs dispatched, awaiting review/merge
-summary: "Scheduled autonomous run of the frictions-to-fixes Skill (no human prompt this turn). Delegated survey/screening of the last 20 session logs to a general-purpose subagent, which returned 9 never-fixed candidates, 15 correctly screened out as already-fixed/open-already/off-limits, and no regressions. Selected 6 simple fixes (batched into a doc-only PR of 5 fixes, plus one code PR adding a --out flag to session-frictions.ts) and 2 hard fixes (capped at 2 per the Skill's rule), filed as issues #1327 and #1328 since they need extra review scrutiny at merge. Filed a third issue (#1329) for a tail-pipe-guard.ts gap that touches a guard file and per CLAUDE.md is never dispatched — left for a human-attended session. Dispatched 4 Sonnet impl agents in parallel worktrees, one per selection, verified no file collisions between them first. All work this turn is agent-initiated per the Skill's own charter (ADR-0003's review-agent role) — no direct human ask. Session closes in-review; will finalize to completed once the PRs are reviewed and merged in a follow-up turn."
-prs: []
+status: completed
+outcome: 4 PRs merged, 3 issues filed
+summary: "Scheduled autonomous run of the frictions-to-fixes Skill (no human prompt this turn). Delegated survey/screening of the last 20 session logs to a general-purpose subagent, which returned 9 never-fixed candidates, 15 correctly screened out as already-fixed/open-already/off-limits, and no regressions. Selected 6 simple fixes (batched into one doc-only PR of 5 fixes, plus one code PR adding a --out flag to session-frictions.ts) and 2 hard fixes (capped at 2 per the Skill's rule), filed as issues #1327 and #1328 for extra review scrutiny at merge. Filed a third issue (#1329) for a tail-pipe-guard.ts gap that touches a guard file and per CLAUDE.md is never dispatched — left open for a human-attended session. Dispatched 4 Sonnet impl agents in parallel worktrees, one per selection, after verifying no file collisions between them. Reviewed and merged all 4 PRs myself as the ADR-0003 review-agent (#1330 prune-trial probe isolation fix/closes #1328, #1331 session-frictions.ts --out flag, #1332 the 5-fix doc batch, #1333 shell-reads.ts ||-fallback attribution fix/closes #1327) — all gates green, no merge conflicts, no escalation needed; posted a review verdict comment on each before merging via merge-pr.ts. Notably, the #1333 impl agent diverged from the issue's literal recommended approach (widening the output-confirmation gate to more verbs) after discovering it broke 13 unrelated tests, and correctly narrowed to a smaller, verb-independent fix instead — good engineering judgment, verified against the diff before merging. All work this turn is agent-initiated per the Skill's own charter (ADR-0003's review-agent role) — no direct human ask at any point."
+prs:
+  - "1330"
+  - "1331"
+  - "1332"
+  - "1333"
 docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: (read before editing)
   - path: scripts/session-frictions.ts
-    reason: (no reason given)
+    reason: (read before editing)
   - path: tests/unit/session-frictions.spec.ts
-    reason: (no reason given)
+    reason: (read before editing)
   - path: tests/unit/recent-prs.spec.ts
     reason: (no reason given)
   - path: scripts/shell-reads.ts
+    reason: (read before editing)
+  - path: tests/unit/shell-reads.spec.ts
+    reason: (read before editing)
+  - path: scripts/session-trace.ts
     reason: (no reason given)
   - path: .agents/skills/prune-trial/SKILL.md
     reason: (read before editing)
   - path: CLAUDE.md
-    reason: (read before editing)
-  - path: docs/agents/pr-workflow.md
     reason: (read before editing)
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: (read before editing)
@@ -35,9 +43,9 @@ skillsUsed:
   - name: frictions-to-fixes
     reason: the Skill this run executes
   - name: close-session
-    reason: (no reason given)
+    reason: closure sequence
   - name: log-session
-    reason: (no reason given)
+    reason: recording this log
 frictions:
   - description: The survey subagent hit mcp__github__search_issues rate limiting (HTTP 403) whenever it issued 2+ search calls in the same batch, forcing it to serialize every subsequent tracker search one at a time.
     solution: Budget tracker-search calls in future frictions-to-fixes survey subagent briefs as strictly sequential, not parallel-batched.
@@ -45,19 +53,32 @@ frictions:
   - description: scripts/session-frictions.ts's JSON output (~74KB for a 20-session window) exceeded the Read tool's single-call inline cap, requiring a second Read with an offset to get the rest.
     solution: Expected/known given Read's pagination; note in the Skill's own instructions to budget ≥2 Read calls for the raw survey data, or land the --out flag PR from this run (adds a flag but doesn't itself fix chunking) plus consider a --compact-like size reduction in a future run.
     severity: nit
-durationSec: 984
+  - description: 'The doc-batch impl agent (af599b74f21a545cb) briefly ran `pnpm install` with run_in_background: true, violating the "a dispatched subagent must never background a Bash command" rule from dispatch-subagents/SKILL.md. It caught this itself immediately, did not call Monitor (also disallowed), and foreground-polled a log file instead — no work was stranded and nothing else was backgrounded for the rest of that session.'
+    solution: Self-corrected in the moment; no further fix needed here, but worth watching if this recurs across future dispatched agents — could indicate the rule needs to be stated more prominently near the top of the brief rather than in a later mechanics bullet.
+    severity: minor
+durationSec: 2529
 models:
-  claude-sonnet-5: 42
+  claude-sonnet-5: 152
 toolCounts:
   Agent: 5
   ScheduleWakeup: 1
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__search_issues: 3
   mcp__github__issue_write: 4
   Skill: 3
-  Write: 1
-  Bash: 1
+  Write: 2
+  Bash: 11
+  ReadNotifications: 10
+  mcp__github__pull_request_read: 21
+  mcp__Claude_Code_Remote__send_later: 4
+  Read: 1
+  mcp__github__add_issue_comment: 4
+  mcp__github__search_pull_requests: 2
 filesEdited:
+  - scripts/session-frictions.ts
+  - tests/unit/session-frictions.spec.ts
+  - scripts/shell-reads.ts
+  - tests/unit/shell-reads.spec.ts
   - .agents/skills/prune-trial/SKILL.md
   - CLAUDE.md
   - .agents/skills/dispatch-subagents/SKILL.md
@@ -89,4 +110,6 @@ gitBranch: claude/eager-ptolemy-kfx19h
 entrypoint: remote_trigger
 cliVersion: 2.1.282
 trigger: frictions-to-fixes
+learnings:
+  - A naive "widen the output-confirmation verb set" fix for a detector bug can silently change behavior for every caller that defaults a missing tool_result's output to '' instead of leaving it undefined — worth checking real callers' actual default-value conventions before widening a gate, not just the reported repro shape.
 landedBy: Stop
