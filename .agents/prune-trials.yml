@@ -187,3 +187,75 @@ trials:
       isolation, commit-before-stop, work landed (the #1248 case itself); a
       read-only dispatch made directly; or a background/Monitor misuse the
       existing guards already deny. Count only harm, not the missed Skill call.
+  - problem: >
+      `docs/adr/0017-provenance-footer-on-agent-authored-content.md`'s
+      amendment blockquote opened with its own incident-history narration —
+      "Amended repeatedly, 2026-07-13 through 2026-08-01 (issues #346, #710,
+      #723, #737, #784) — the mechanism narrowed each time prose alone didn't
+      hold; four prose-only passes across #723 didn't stop the recurrence, so
+      enforcement is now the rule's only agent-facing home." This self-flags
+      as criterion 1 as directly as any candidate in the corpus: five
+      successive prose-only amendments across five issues, by the text's own
+      account, failed to hold before enforcement was finally mechanized. That
+      enforcement is fully built and wired today —
+      `scripts/github-provenance-guard.ts` for GitHub bodies (including the
+      angle-bracket sub-case) and `.githooks/commit-msg` →
+      `scripts/provenance-footer.ts` / `scripts/commit-trailer-guard.sh` for
+      commits, both confirmed live in `docs/agents/guards.md`'s roster and
+      recorded `Built` in `docs/research/rulebook-migration-table.md`'s
+      CM-43/CM-44 rows — so the narration was pure incident-history restating
+      what the issue tracker and this file's own git history already hold,
+      not the operative rule. It also duplicated a fact CLAUDE.md's Working
+      Conventions bullet already states independently ("the guard's own deny
+      message — not this doc — is the rule's teaching surface"), so keeping
+      it here was restatement, not the only copy. Cut the narration to a bare
+      dates-plus-issues pointer ("git history on this file holds the
+      narrative") plus the one live fact worth keeping in this file too (the
+      guard, not this prose, is the agent-facing home) — never to a ruleless
+      line with no forwarding address. Left the rest of the amendment block
+      (header/trailer shapes, the guard's actual behaviour, the bot-identity
+      deferral) untouched — still-needed operative reference, not prunable
+      mass. Grepped the corpus for the deleted phrases ("four prose-only
+      passes", "mechanism narrowed each time", "intermediate attempts"): one
+      hit, an archived session log quoting the old text verbatim — the
+      record, not instructions, left alone. Net -2 lines, one file — smaller
+      than most prior trials' mass because this same file had already been
+      through one earlier `/prune-trial` cut (a *different*, 2026-07-20
+      amendment of this ADR, per `rulebook-migration-table.md`'s "provenance
+      6/20" row), so the corpus here was already thin. A dispatched
+      full-corpus search (instruction corpus +
+      `docs/research/rulebook-migration-table.md` + the issue tracker) ranked
+      three runner-ups below this one: ADR-0004's 2026-07-10 amendment note
+      (same shape, already terse and already resolved by a "single-home,
+      don't re-enumerate" convention); CM-29's identifier-prediction rule
+      (#387/#605/#628/#723 — genuinely still partially unmechanized, but
+      bundled in the same CLAUDE.md paragraph as CM-32's "count over a set"
+      bullet, already closed `wontfix` as a considered judgment-keep —
+      touching the paragraph risked relitigating that closed territory);
+      GI-01's angle-bracket bullet (issue #886 — good shape, but the doc
+      prose is already two lean sentences, little left to cut).
+    territory:
+      paths:
+        - "`docs/adr/0017-provenance-footer-on-agent-authored-content.md`: the amendment blockquote's opening incident-history sentence"
+      keywords:
+        - Amended repeatedly
+        - four prose-only passes
+        - didn't stop the recurrence
+        - issues #346, #710, #723, #737, #784
+    opened: 2026-09-25
+    proven: true
+    check: >
+      Damage is a session that needs to know *why* the ADR-0017 footer rule
+      is enforced by a guard rather than left to memory — e.g. justifying to
+      itself or a reviewer why hand-writing the footer still gets blocked
+      even after reading the ADR, or needing the amendment history to
+      understand the current shape — and can't get it from the compressed
+      pointer, the guard's own deny message, or git history on the file. NOT
+      damage: a session that simply follows the current footer/trailer shape
+      correctly, or gets blocked and self-corrects via the guard's deny
+      message, without ever needing the pruned narrative — the overwhelming
+      common case, and the one this rule is actually for. A Sonnet probe
+      given only the compressed text still correctly identified that
+      enforcement lives in the guard rather than the prose, and that the
+      issue tracker and this file's git history hold the amendment history if
+      ever needed.

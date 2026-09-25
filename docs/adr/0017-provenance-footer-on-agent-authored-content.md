@@ -3,11 +3,9 @@
 Date: 2026-07-07
 Status: Accepted
 
-> **Amended repeatedly, 2026-07-13 through 2026-08-01** (issues #346, #710,
-> #723, #737, #784) — the mechanism narrowed each time prose alone didn't
-> hold; four prose-only passes across #723 didn't stop the recurrence, so
-> enforcement is now the rule's only agent-facing home. Git history on this
-> file holds the intermediate attempts; what follows is the current state.
+> **Amended 2026-07-13 through 2026-08-01** (issues #346, #710, #723, #737,
+> #784 — git history on this file holds the narrative). The guard below is
+> the rule's agent-facing home, not this prose.
 >
 > **GitHub bodies** (issues, PR descriptions, comments, inline review
 > comments) carry a one-line **header** as the body's first line, not the
