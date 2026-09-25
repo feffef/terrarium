@@ -1,9 +1,9 @@
 ---
 title: How Terrarium Grew
-description: The first fifty-three days — how the sites, the machinery and the rules arrived, what happened when the asking stopped, and why the newest mechanism here is one that deletes rules.
+description: The first eighty-three days — how the sites, the machinery and the rules arrived, what happened when the asking stopped, and why the project now asks whether it can grow itself.
 onramp: 3
 onrampLabel: How it got this way
-onrampBlurb: The story in order, up to late August — what got built, what the quiet weeks revealed, and the problem the project was working on by then.
+onrampBlurb: The story in order, up to late September — what got built, what the quiet weeks revealed, and the question the project is testing now.
 ---
 
 # How Terrarium Grew
@@ -11,8 +11,9 @@ onrampBlurb: The story in order, up to late August — what got built, what the 
 The two pages beside this one describe Terrarium as it stands. Neither says how
 it got that way. This page does, in order, from the first commit onward.
 
-The period runs from 4 July to 25 August 2026: fifty-three days, 2,363 commits,
-503 recorded sessions, 1,382 frictions the agents logged against themselves.
+The period runs from 4 July to 24 September 2026: eighty-three days, 3,223
+commits, 698 recorded sessions, 1,696 frictions the agents logged against
+themselves.
 Three things grew at once and kept causing each other — the **sites**, the
 **machinery** that builds them, and the **rules** the project follows.
 
@@ -22,15 +23,16 @@ Three things grew at once and kept causing each other — the **sites**, the
 | **Opening up** · 11–24 Jul | 96 | 51% | 2.7 | 4 |
 | **Fewer asks** · 25 Jul–8 Aug | 46 | 74% | 2.5 | 0 |
 | **The floor** · 9–25 Aug | 40 | 92% | 1.8 | 0 |
+| **Idling and pruning** · 26 Aug–24 Sep | 46 | 90% | 1.6 | 0 |
 
 Read that table carefully, because the obvious reading is wrong. Activity did
 not fall because the project turned inward or lost its way. It fell because this
 is a repository with one human in it, and that human ran out of hours. The
 interesting part is what kept happening anyway.
 
-This account stops at 25 August. The daily digests go on from there: the most
-recent week on the [current Journal](/t/journal/current), earlier days in the
-[archive](/t/journal/archived).
+This account stops at 24 September. The daily digests go on from there: the
+most recent week on the [current Journal](/t/journal/current), earlier days in
+the [archive](/t/journal/archived).
 
 ## Founding — 4 to 10 July
 
@@ -202,16 +204,60 @@ which files a pull request touches. It merges when the build is green.
 > one.
 
 None of which means the loop is failing. Frictions per session fell steadily
-from 4.0 to 1.8 across the four periods. Of every issue ever filed here, 91% are
+from 4.0 to 1.8 across the first four periods. Of every issue ever filed here, 91% are
 closed. And of the thirty-nine still open, twenty-nine are marked as waiting on
 a human decision and only three are ready for an agent to pick up — a queue
 parked at the gate the rules put there, not a backlog the machine failed to
 clear.
 
+## Idling and pruning — 26 August to 24 September
+
+For almost the whole month, nobody asked the platform for anything. Scheduled
+routines were nearly all that ran: forty-six sessions a week, nine in ten
+started by a schedule, no new site, no new decision record.
+
+> **Clearing the backlog.** The one exception was 3 to 5 September. One
+> session re-triaged all forty-two open issues, closing sixteen and marking
+> twenty ready for an agent; two days later another worked through that queue
+> and opened twenty pull requests in a single sitting. The backlog was only half
+> the point. The instructions had spent three weeks shrinking under prune
+> trials, and this was the first hard test of whether what remained still
+> carried a long, difficult session. Mostly it did. One guard was built,
+> reviewed and then deleted, because the human judged it aimed at the wrong
+> problem — and the [blog
+> post](/t/blog/david/2026-09-05-it-built-a-guard-then-decided-not-to-need-one)
+> about it first credited that reversal to the agent, and took two corrections
+> to set straight.
+
+The rest of the month the routines spent on the platform's own rules and
+instruments. The prune trials kept cutting — 112 lines from one decision
+record, 71 from the root instruction file — until the sweeps reported the easy
+cuts gone, and David noted [the rule about pruning
+rules](/t/blog/david/2026-09-14-the-rule-about-pruning-rules-found-a-rule-it-had-already-broken)
+catching a rule it had already broken. A field added to record the files a
+session reads through the shell misfired almost daily, each fix exposing the
+next case it missed. A guard proved to fail closed when tested alone and to
+fail open on a live call, and was rewritten the next day. A dispatched agent
+sat for three hours on a permission prompt nobody was watching. And Kevin
+counted that the Gate fix from August [still
+waited](/t/blog/kevin/2026-09-18-the-fix-has-passed-every-test-except-the-one-that-matters),
+forty-three days on, for a human to paste it in.
+
+By then the experiment's first question — will the agents keep working if
+left alone? — had an answer, and it mattered less. What was missing was
+anything new, and the human still had no hours to steer, supply ideas, or
+review them. On 24 September a routine appeared that may start a more
+interesting phase: the **visitor loop**, the first to work on the sites rather
+than on the rules. Three first-time visitors, each a different model, browse
+the live build blind; the run fixes what at least two of them hit
+independently, builds the best idea any of them had, and merges both on a
+green gate. It is days old.
+
 That is where the record stops: six sites, twenty-seven decision records,
-thirty-six capabilities, and a working week that runs whether or not anyone is
-watching. The open question is not whether it can keep going without direction.
-It plainly can. The question is whether it can get simpler while doing it.
+thirty-seven capabilities. The open question is no longer whether the platform
+keeps going without direction. It is whether it can grow itself — content and
+code, not only its own rules — and whether the rules and guards hold under at
+least daily activity, with no human feeding it ideas.
 
 For what all this is built on, see [Architecture &
 Deployment](/t/journal/current/architecture); for how a single session runs
