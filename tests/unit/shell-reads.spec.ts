@@ -544,6 +544,8 @@ describe('grep/rg output gates crediting (issue #1247)', () => {
   })
 
   it('leaves cat/sed ungated regardless of output — they stream everything, never filter it', () => {
+    // Still true in the general case after #1327: only the specific `||`
+    // fallback shape below gates a non-grep/rg reader — see that block.
     const scan = scanShellReads([{ command: 'cat docs/agents/guards.md', output: '' }], rel)
     expect(scan.paths).toEqual(['docs/agents/guards.md'])
   })
@@ -555,6 +557,94 @@ describe('grep/rg output gates crediting (issue #1247)', () => {
       'docs/agents/a.md',
       'docs/agents/b.md',
     ])
+  })
+})
+
+describe('|| fallback attribution (issue #1327)', () => {
+  // The exact repro from the friction: a `sed` that names a path which does
+  // not exist, with its stderr thrown away, falling back to an `ls | grep`
+  // whose output is non-empty but shows nothing of the sed path at all.
+  it('does not credit the nonexistent path a sed names when its stderr is suppressed before ||', () => {
+    const scan = scanShellReads(
+      [
+        {
+          command:
+            "sed -n '1,60p' docs/adr/0017-github-body-provenance.md 2>/dev/null || ls docs/adr/ | grep 0017",
+          output: '0017-actual-adr-title.md',
+        },
+      ],
+      rel,
+    )
+    expect(scan.paths).toEqual([])
+    expect(scan.nearMisses.map((m) => m.path)).toEqual(['docs/adr/0017-github-body-provenance.md'])
+    expect(scan.nearMisses.map((m) => m.rule)).toEqual([
+      '|| fallback: stderr suppressed, output may belong to the other side',
+    ])
+  })
+
+  it('still credits the fallback side of the same shape when IT names an in-scope doc', () => {
+    const scan = scanShellReads(
+      [
+        {
+          command: "sed -n '1,60p' docs/adr/0017-nonexistent.md 2>/dev/null || cat docs/adr/0018-real.md",
+          output: 'the real content of 0018',
+        },
+      ],
+      rel,
+    )
+    expect(scan.paths).toEqual(['docs/adr/0018-real.md'])
+  })
+
+  it('does not treat a lone stderr-redirected reader as suppressed without a || fallback', () => {
+    // The suppression is specifically about MISATTRIBUTING another command's
+    // output — with no fallback to confuse it with, a real non-empty read
+    // still counts.
+    const scan = scanShellReads(
+      [{ command: "sed -n '1,5p' docs/agents/guards.md 2>/dev/null", output: 'line one' }],
+      rel,
+    )
+    expect(scan.paths).toEqual(['docs/agents/guards.md'])
+  })
+
+  it('treats a single | pipe differently from || — piping onward is not a fallback', () => {
+    const scan = scanShellReads(
+      [{ command: 'cat docs/agents/guards.md 2>/dev/null | head -5', output: 'line one' }],
+      rel,
+    )
+    expect(scan.paths).toEqual(['docs/agents/guards.md'])
+  })
+
+  it('also protects grep/rg — the naive non-empty check alone would still mis-credit this shape', () => {
+    // Without this check running FIRST, grep's own existing single-file gate
+    // (`output.trim() !== ''`) would still wrongly credit here: the fallback's
+    // output is non-empty, just not grep's.
+    const scan = scanShellReads(
+      [
+        {
+          command: 'grep -n "TODO" docs/adr/0017-nonexistent.md 2>/dev/null || ls docs/adr/ | grep 0017',
+          output: '0017-actual-adr-title.md',
+        },
+      ],
+      rel,
+    )
+    expect(scan.paths).toEqual([])
+    expect(scan.nearMisses.map((m) => m.rule)).toEqual([
+      '|| fallback: stderr suppressed, output may belong to the other side',
+    ])
+  })
+
+  it('does not suppress the primary side of || when its stderr is not redirected to /dev/null', () => {
+    // Deliberately narrow (documented tradeoff): without the `2>/dev/null`
+    // signal, this extractor cannot statically tell which side of `||` ran,
+    // so a `sed`/`cat`/`awk` on the primary side keeps its existing
+    // unconditional crediting. A genuine miss of this shape (a real failure
+    // that doesn't redirect stderr) is a known, accepted gap — see
+    // `redirectsStderrToDevNull`'s doc comment.
+    const scan = scanShellReads(
+      [{ command: "sed -n '1,5p' docs/agents/guards.md || ls docs/adr/", output: 'some ls output' }],
+      rel,
+    )
+    expect(scan.paths).toEqual(['docs/agents/guards.md'])
   })
 })
 
