@@ -1,0 +1,147 @@
+schemaVersion: 1
+session: session_01D67MxXweo1aWxEb3GhuEWk
+startedAt: 2026-09-25T18:30:57Z
+endedAt: 2026-09-25T19:18:52Z
+kind: interactive
+goal: Rework homepage and Journal front page
+status: in-review
+outcome: Homepage and Journal PRs open, both gated
+summary: "Human-instructed throughout. The owner rejected the visitor-loop's homepage CTA pointing at an explainer; recorded the ruling and repointed it to the Journal main page. A grilling session settled names: \"Ideas & learnings\", retiring \"Sparks\" everywhere (new Idea glossary term), plain teaser labels, and a Trench-only daily find. Three parallel prototypes; the owner picked C (rooms first), and two Fable passes polished and aligned it (PR 1346). A subagent built the Journal one-column page with Ideas and Skills sub-pages. The owner stopped it mid-run, so I finished it: external Skills with usage counts and explainer links (PR 1347, human-only files)."
+prs:
+  - "1346"
+  - "1347"
+docsRead:
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: owner rulings the homepage must respect
+  - path: CONTEXT.md
+    reason: Session/Idea/Importance terms for Sparks and skill counts
+  - path: layers/midden/CONTEXT.md
+    reason: Stores are off display, so Trench-only teaser
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief rules for four worktree subagents
+  - path: app/components/HomeShowcase.vue
+    reason: (read before editing)
+  - path: app/pages/index.vue
+    reason: (read before editing)
+  - path: tests/e2e/smoke.spec.ts
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (read before editing)
+  - path: layers/journal/tests/e2e/journal.e2e.ts
+    reason: (no reason given)
+  - path: layers/journal/tests/unit/journal-dashboard.spec.ts
+    reason: (no reason given)
+  - path: layers/journal/CONTEXT.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (read before editing)
+  - path: scripts/ideas.ts
+    reason: (no reason given)
+  - path: tests/unit/ideas.spec.ts
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: scripts/screenshot.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: grilling
+    reason: one-question-at-a-time resolution of naming and teaser choices
+  - name: domain-modeling
+    reason: Sparks vs Idea vocabulary, highlights name collision
+  - name: dispatch-subagents
+    reason: parallel prototype and impl agents in worktrees
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Opened PR 1346 without invoking close-session right then, as CLAUDE.md requires at PR-open; logged only after the second PR.
+    solution: Treat create_pull_request success as the trigger to call close-session in the same turn.
+    severity: minor
+  - description: Fable polish pass re-added teaser flex:1 stretch the owner had just rejected (empty panel space); caught on review and dropped by hand.
+    solution: Brief already said sized-to-content in summary but not in locked list first time; name rejected treatments explicitly as locked.
+    severity: minor
+  - description: Journal impl agent was stopped mid-gate; its final gate never finished, forcing me to take over its worktree and re-run the full gate.
+    solution: Agents should bank a gate log marker early; check:worktrees plus a pushed head made takeover cheap.
+    severity: minor
+  - description: Proposal B's edit to tests/e2e/smoke.spec.ts was permission-blocked, so all prototypes kept a stale card-order assertion that would have failed CI.
+    solution: Brief prototype agents that test edits may be denied and to report the needed test change, which I then made.
+    severity: nit
+  - description: First git commit hand-wrote trailers from the harness attribution reminder and was blocked by the commit-trailer guard.
+    solution: Guard worked as designed; the harness reminder conflicts with repo rule, already documented in CLAUDE.md.
+    severity: nit
+durationSec: 2875
+models:
+  claude-opus-5-5: 222
+toolCounts:
+  Bash: 55
+  Agent: 7
+  Skill: 3
+  ToolSearch: 3
+  SendMessage: 4
+  Read: 13
+  SendUserFile: 6
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 2
+  ReadNotifications: 4
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__update_pull_request: 1
+filesEdited:
+  - app/pages/index.vue
+  - scripts/.align-probe.ts
+  - app/components/HomeShowcase.vue
+  - scripts/tmp-home-c-dark.ts
+  - layers/journal/app/pages/t/journal/[space]/ideas.vue
+  - layers/journal/app/pages/t/journal/[space]/skills.vue
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - layers/journal/content/current/pages/index.md
+  - layers/journal/CONTEXT.md
+  - CONTEXT.md
+  - scripts/_polish-shots.ts
+  - _probe.ts
+  - dark-shot.tmp.ts
+docsReadViaShell:
+  - .agents/skills/visitor-loop/decisions.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - CONTEXT.md
+  - layers/journal/CONTEXT.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/agents/guest-contributions.md
+  - layers/midden/CONTEXT.md
+  - .agents/skills/teach/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/domain.md
+subagents:
+  - type: general-purpose
+    task: Journal main page ideas
+  - type: general-purpose
+    task: Homepage proposal A
+  - type: general-purpose
+    task: Homepage proposal B
+  - type: general-purpose
+    task: Homepage proposal C
+  - type: general-purpose
+    task: Slim Journal main page
+  - type: general-purpose
+    task: Polish homepage design
+    model: fable
+  - type: general-purpose
+    task: Align homepage hero with cards
+    model: fable
+gitBranch: claude/charming-allen-r5atja
+entrypoint: remote
+cliVersion: 2.1.282
+learnings:
+  - Atlas plate styles are global (the Atlas theme loads site-wide); only biome/signature vars need setting via signatureVars and --biome-accent to render a plate outside the Atlas.
+  - In the current Space, almost no sessions record external-pack Skills in skillsUsed (domain-modeling, graded essential, shows 0 of 49), so grade and recorded use have drifted apart.
+ideas:
+  - Have audit-skills compare each Inventory grade against the new per-Skill skillsUsed counts on the Journal Skills page and flag essential/specialist Skills with zero recorded use, to separate real disuse from under-reporting in log-session.
+landedBy: Stop
