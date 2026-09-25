@@ -1,0 +1,57 @@
+schemaVersion: 1
+session: session_0124zf3t3BvcZNqDV68zr5pv
+startedAt: 2026-09-25T00:46:04Z
+endedAt: 2026-09-25T05:49:14Z
+kind: autonomous
+goal: Run the scheduled /audit-skills sweep
+status: completed
+outcome: No Inventory changes; recovered from environment lockup
+summary: "Autonomous scheduled run, no human present. Gathered the audit-skills scorecard (scripts/audit-skills.ts, 40-session window) and reviewed all 37 Skill Inventory entries: no grade/role change met the ≥2-session bright-line bar; both orphanedSessions entries already carry resolvedBy tracking; closure-nudge signals were empty. The regression watch flagged dispatch-subagents and log-session after recent edits, but deep-reading the flagged sessions' friction text showed the frictions were unrelated to the edited content — nothing confirmed. Mid-session a Bash `cd` broke the tracked working directory, blocking every guard-wrapped tool (Bash/Edit/Write/Skill/Agent) until the session resumed; notified the user via push. No PR needed — nothing to commit."
+prs: []
+docsRead:
+  - path: CLAUDE.md
+    reason: repo conventions + branch rule
+  - path: docs/agents/environment-caveats.md
+    reason: checking if the cwd/guard lockup was a known quirk
+  - path: docs/agents/guards.md
+    reason: understanding guard-wrap.sh's fail-closed design
+  - path: .claude/settings.json
+    reason: confirming which tools the broken hook gated
+  - path: layers/journal/content/current/sessions/2026-09-24-session_01Lm5nzVoByigqhQ1YxFggTk.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-09-24-session_01TgYzP52EJ4TkR38M19FAR3.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: invoked as the scheduled Routine's slash command
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: A Bash `cd` into a subdirectory permanently changed the session's tracked working directory. Every PreToolUse guard hook (Bash, Edit, Write, Skill, Agent) invokes `sh scripts/guard-wrap.sh ...` via a path relative to that same tracked directory, so once it drifted off repo root every one of those hooks failed with "cannot open scripts/guard-wrap.sh" and denied the call — a catch-22, since there was no working Bash left to `cd` back or Skill/Agent left to delegate recovery to. Only Read/Grep/Glob/ToolSearch and non-gated MCP tools kept working. Notified the user via push and could not proceed until the session was later resumed, which reset the tracked directory and fixed every hook.
+    solution: Never `cd` in a Bash command — use absolute paths throughout, per the Bash tool's own guidance (already violated here). Longer-term, scripts/guard-wrap.sh's invocations in .claude/settings.json should resolve their own location independent of the caller's cwd (an absolute path, or self-locating via the script's own path) so a stray `cd` can't brick every guard-wrapped tool for the rest of a session.
+    severity: blocker
+durationSec: 18190
+models:
+  claude-sonnet-5: 77
+toolCounts:
+  Bash: 20
+  Grep: 3
+  Read: 5
+  Glob: 2
+  ToolSearch: 1
+  Skill: 3
+  Agent: 1
+  PushNotification: 1
+  Write: 1
+subagents:
+  - type: general-purpose
+    task: Diagnostic no-op test
+gitBranch: claude/upbeat-sagan-wi8c7d
+entrypoint: remote_trigger
+cliVersion: 2.1.282
+trigger: audit-skills
+ideas:
+  - Harden scripts/guard-wrap.sh (and its invocations in .claude/settings.json) to resolve its own script path independent of the caller's current working directory, so a stray `cd` in one Bash command can't fail every guard-wrapped tool (Bash/Edit/Write/Skill/Agent) closed for the rest of the session with no in-session recovery path.
+landedBy: Stop
