@@ -106,12 +106,16 @@ just shorter — and neither is a surviving rule now buried mid-paragraph where 
 skimmer will miss it.
 
 Aim for around 100 lines **deleted** (the goal you write back and the ledger
-entry don't count) by retiring a whole problem — never by padding scope or
-deleting the worked examples a weaker reader needs. **When no problem clears
-that bar, rewrite one whole file instead** — one of our Skills, a doc or an
-ADR — in simpler words that stay exact: every rule and decision kept, the rest
-gone. Be brave: restructure it, merge its sections, reword all of it. The file
-is the trial's territory, with the same ledger entry and §4 probe as any prune.
+entry don't count). Get there by retiring a whole problem. Never pad the scope,
+and never delete the worked examples a weaker reader needs.
+
+**You may also simplify the language of any Markdown file in scope** (see
+Bounds), alongside a prune or instead of one. Do this when no problem clears
+the bar. Rewrite the whole file if that helps: a Skill, a doc or an ADR. Use
+short sentences. Avoid project jargon. Prefer plain English. Keep every rule and
+decision; cut the rest. Be brave: restructure the file, merge its sections,
+reword all of it. The file is the trial's territory. It gets the same ledger
+entry and §4 probe as a prune.
 
 Write a hook **only when §4's probe fails, or when a landed trial's verdict in
 §1 showed real damage** — the two moments the behaviour has proven it needs
