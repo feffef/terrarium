@@ -80,9 +80,10 @@ const { listed, overflow } = listEntries(props.entries)
 .tile--blog {
   --tile-accent: var(--bl-accent);
   --tile-display: var(--bl-serif);
-  /* The Blog has no paper token of its own; a warm grey between its line and
-     page colours matches the weight of the Atlas and Midden papers. */
-  --tile-panel: color-mix(in srgb, var(--bl-line) 60%, var(--bl-bg));
+  /* The Blog has no paper token of its own: its warm grey, leant toward the
+     Midden's cream (a global token with its own dark pair) to sit with the
+     Atlas and Midden papers. */
+  --tile-panel: color-mix(in srgb, var(--midden-paper-2) 45%, color-mix(in srgb, var(--bl-line) 60%, var(--bl-bg)));
   --tile-panel-line: color-mix(in srgb, var(--bl-faint) 35%, var(--bl-line));
 }
 .tile--atlas {
