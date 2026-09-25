@@ -110,6 +110,8 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
           <NuxtLink to="/t/midden/stores">The stores — finds held off display →</NuxtLink>
         </p>
       </section>
+
+      <SiteFooter />
     </div>
   </main>
 </template>

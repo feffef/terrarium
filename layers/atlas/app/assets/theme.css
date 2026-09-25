@@ -480,6 +480,15 @@
 /* ── Food web (#70): the wanderable diagram ────────────────────────────────*/
 .atlas-web { position: relative; }
 .atlas-web svg { width: 100%; height: auto; display: block; overflow: visible; font-family: var(--atlas-data); }
+/* Below ~480px the diagram (and the relations web below it) would shrink its
+   10-13px labels to illegible sub-6px text, since the fixed viewBox scales
+   down with the container (visitor-loop fix, 2026-09-24). Hold the SVG at a
+   legible width and let the wrapper scroll sideways instead of shrinking
+   it further. */
+@media (max-width: 30rem) {
+  .atlas-web { overflow-x: auto; }
+  .atlas-web svg { width: auto; min-width: 30rem; }
+}
 .atlas-web .strand { stroke: var(--atlas-rule); fill: none; stroke-width: 1.25; transition: stroke 0.15s ease, stroke-width 0.15s ease; }
 .atlas-web .strand.mimics { stroke-dasharray: 2 4; }
 .atlas-web .strand.shelters { stroke-dasharray: 6 3; }

@@ -83,6 +83,12 @@ const sessions = computed<SessionDoc[]>(() => data.value?.sessions ?? [])
 // The wrapped functions (sessionCardViews, frictionTotals, …) are dashboard.ts
 // exports arriving via auto-import; each local name is distinct.
 const sessionCards = computed(() => sessionCardViews(sessions.value))
+// Recent activity defaults to the newest 10 cards (visitor-loop fix,
+// 2026-09-24). `v-show`, not a sliced list: every card still ships in the
+// SSR HTML (just hidden), so a deep-linked or test-asserted older session's
+// text is still there to find, only visually collapsed by default.
+const SESSIONS_VISIBLE = 10
+const showAllSessions = ref(false)
 const frictionSeverityTotals = computed(() => frictionTotals(sessions.value))
 const totalFrictions = computed(() => frictionCount(sessions.value))
 const sessionKindCounts = computed(() => kindCounts(sessions.value))
@@ -270,6 +276,7 @@ useSeoMeta({
           <h2>Sparks</h2>
           <span class="count">latest {{ ideaSparks.length }} idea{{ ideaSparks.length === 1 ? '' : 's' }}</span>
         </div>
+        <p class="panel-intro">Ideas agents jotted mid-session — not built yet, just noted.</p>
         <ol v-if="ideaSparks.length" class="spark-items">
           <li v-for="(item, i) in ideaSparks" :key="i" class="spark-item">
             <button
@@ -354,7 +361,8 @@ useSeoMeta({
         </div>
         <div v-if="sessionCards.length" class="cards">
           <JournalSessionCard
-            v-for="c in sessionCards"
+            v-for="(c, i) in sessionCards"
+            v-show="showAllSessions || i < SESSIONS_VISIBLE"
             :key="c.key"
             :card="c"
             :anchor="sessionAnchor(c.key)"
@@ -363,6 +371,14 @@ useSeoMeta({
           />
         </div>
         <p v-else class="empty">No sessions logged in this Space yet.</p>
+        <button
+          v-if="sessionCards.length > SESSIONS_VISIBLE && !showAllSessions"
+          type="button"
+          class="show-all-sessions"
+          @click="showAllSessions = true"
+        >
+          Show all {{ sessionCards.length }} sessions
+        </button>
       </section>
 
       <!-- Rail -->
@@ -398,6 +414,8 @@ useSeoMeta({
         </section>
       </aside>
     </div>
+
+    <SiteFooter />
   </main>
 </template>
 
@@ -682,6 +700,20 @@ h1 {
 
 .cards { display: flex; flex-direction: column; gap: 0.85rem; min-width: 0; }
 .empty { color: var(--jd-faint); font-size: 0.9rem; margin: 0; }
+
+.show-all-sessions {
+  display: block;
+  margin: 0.9rem 0 0;
+  padding: 0.5rem 0.9rem;
+  font-family: var(--jd-mono);
+  font-size: 0.78rem;
+  color: var(--jd-muted);
+  background: var(--jd-surface-2);
+  border: 1px solid var(--jd-line);
+  border-radius: var(--jd-radius);
+  cursor: pointer;
+}
+.show-all-sessions:hover { color: var(--jd-ink); border-color: var(--jd-accent); }
 
 .rail { display: flex; flex-direction: column; gap: 1.6rem; }
 .panel {

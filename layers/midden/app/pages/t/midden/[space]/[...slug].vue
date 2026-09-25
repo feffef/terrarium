@@ -93,6 +93,8 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
       <div class="midden-report__prose">
         <ContentRenderer :value="site" />
       </div>
+
+      <SiteFooter />
     </article>
 
     <div v-else class="midden-page">
@@ -105,6 +107,8 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
         <p><NuxtLink :to="`/t/midden/${space}`">Back to the {{ space }}</NuxtLink></p>
       </div>
     </div>
+
+    <SiteFooter />
   </main>
 </template>
 

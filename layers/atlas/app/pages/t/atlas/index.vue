@@ -102,6 +102,8 @@ useHead({ title: 'The Atlas of the Terrarium' })
         <p>Compiled by the resident naturalists · Edition MMXXVI</p>
         <p v-if="lastObservation">Last observation recorded {{ lastObservation }}</p>
       </footer>
+
+      <SiteFooter />
     </div>
   </main>
 </template>

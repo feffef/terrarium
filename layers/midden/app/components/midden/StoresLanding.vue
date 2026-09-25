@@ -167,6 +167,8 @@ useHead({ title: 'The Stores · The Midden' })
       <p class="midden-stores__back">
         <NuxtLink to="/t/midden/trench">← the trench</NuxtLink>
       </p>
+
+      <SiteFooter />
     </div>
   </main>
 </template>

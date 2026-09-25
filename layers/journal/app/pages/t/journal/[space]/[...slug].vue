@@ -59,5 +59,7 @@ useSeoMeta({
       <h1>Not found</h1>
       <p>No document at <code>{{ path }}</code> in journal/{{ space }}.</p>
     </div>
+
+    <SiteFooter />
   </main>
 </template>

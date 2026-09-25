@@ -148,6 +148,8 @@ useSeoMeta({
           <div class="atlas-sechead"><span class="atlas-eyebrow">Recent sightings</span></div>
           <AtlasFieldLog :observations="sightings" :specimens-by-slug="specimensBySlug" :biome="space" />
         </section>
+
+        <SiteFooter />
       </article>
 
       <div v-else class="atlas-prose not-found">
@@ -155,6 +157,8 @@ useSeoMeta({
         <p>No specimen answers to <code>{{ path }}</code> in {{ meta.name }}. Perhaps it was never here; perhaps it simply prefers to be elsewhere.</p>
         <p><NuxtLink :to="`/t/atlas/${space}`">Back to {{ meta.name }}</NuxtLink></p>
       </div>
+
+      <SiteFooter />
     </div>
   </main>
 </template>
