@@ -143,18 +143,6 @@ export function externalSkillCount(skills: SkillDoc[]): number {
   return skills.length - ownSkills(skills).length
 }
 
-// Headline label carries the external-pack count as a parenthetical so it never
-// reads as contradicting the headline number (the platform's OWN authored count).
-export function skillsLabel(externalCount: number): string {
-  return externalCount
-    ? `Platform Skills (+${externalCount} from an external pack)`
-    : 'Platform Skills'
-}
-
-export function skillsSub(own: SkillDoc[]): string {
-  return skillGroups(own).map((g) => `${g.skills.length} ${g.importance}`).join(' · ') || 'none yet'
-}
-
 // Own Skills grouped by importance (essential → routine → specialist →
 // supporting → peripheral), alpha within a group, empty groups dropped.
 export function skillGroups(own: SkillDoc[]): { importance: Importance; skills: SkillDoc[] }[] {

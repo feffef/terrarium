@@ -98,13 +98,19 @@ const referencedPrParts = computed(() => prRefsParts(referencedPrs.value))
 const notes = computed(() => sessionNotes(sessions.value))
 
 const platformSkills = computed(() => ownSkills(skills.value))
-const skillsHeading = computed(() => skillsLabel(externalSkillCount(skills.value)))
-const skillsSubtext = computed(() => skillsSub(platformSkills.value))
+const externalSkillTotal = computed(() => externalSkillCount(skills.value))
 
 // The stat tiles below only ever read THIS Space's own collections (see
 // the resolver comment atop this file), and archiving retains just the newest
 // RETAIN_DATES=7 dates on `current` (scripts/archive-journal-content.ts) —
 // so the tiles' scope tracks which Space is showing, not an explicit filter.
+// Zero kinds are dropped so the breakdown fits a fifth of the strip.
+const kindSubtext = computed(() =>
+  (['interactive', 'delegated', 'autonomous'] as const)
+    .filter((k) => sessionKindCounts.value[k])
+    .map((k) => `${sessionKindCounts.value[k]} ${k}`)
+    .join(' · '),
+)
 const tilesHeadline = computed(() => (space === 'archived' ? 'Excluding the last week' : 'From the last week'))
 
 const title = computed(() => rootDoc.value?.title ?? `The Journal — ${space}`)
@@ -211,24 +217,23 @@ useSeoMeta({
       </ul>
     </section>
 
-    <p class="ideas-link">
-      <NuxtLink :to="{ name: 'journal-ideas', params: { space } }">
-        {{ notes.ideas.length }} idea{{ notes.ideas.length === 1 ? '' : 's' }} and
-        {{ notes.learnings.length }} learning{{ notes.learnings.length === 1 ? '' : 's' }}
-        {{ space === 'current' ? 'noted this week' : 'noted in earlier weeks' }} →
-      </NuxtLink>
-    </p>
-
     <p class="tiles-headline">{{ tilesHeadline }}</p>
     <section class="tiles" aria-label="State of this Space">
       <JournalStatTile
         label="Sessions logged"
         :value="sessions.length"
-        :sub="`${sessionKindCounts.interactive} interactive · ${sessionKindCounts.delegated} delegated · ${sessionKindCounts.autonomous} autonomous`"
+        :sub="kindSubtext"
       />
-      <JournalStatTile :label="skillsHeading" :value="platformSkills.length">
+      <JournalStatTile label="Platform Skills" :value="platformSkills.length">
         <template #sub>
-          {{ skillsSubtext }} · <NuxtLink class="pr-link" :to="{ name: 'journal-skills', params: { space } }">browse →</NuxtLink>
+          <template v-if="externalSkillTotal">+{{ externalSkillTotal }} external · </template>
+          <NuxtLink class="pr-link" :to="{ name: 'journal-skills', params: { space } }">browse →</NuxtLink>
+        </template>
+      </JournalStatTile>
+      <JournalStatTile label="Ideas noted" :value="notes.ideas.length">
+        <template #sub>
+          {{ notes.learnings.length }} learning{{ notes.learnings.length === 1 ? '' : 's' }} ·
+          <NuxtLink class="pr-link" :to="{ name: 'journal-ideas', params: { space } }">browse →</NuxtLink>
         </template>
       </JournalStatTile>
       <JournalStatTile label="Frictions surfaced" :value="totalFrictions">
@@ -421,7 +426,7 @@ h1 {
 }
 .tiles {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.9rem;
   margin: 0 0 2.25rem;
 }
@@ -433,10 +438,7 @@ h1 {
 .feed { scroll-margin-top: 1.5rem; }
 
 .digests { margin-top: 1.75rem; }
-.ideas-link { margin: 1rem 0 0; font-family: var(--jd-mono); font-size: 0.82rem; }
-.ideas-link a { color: var(--jd-accent); text-decoration: none; }
-.ideas-link a:hover { text-decoration: underline; }
-.panel-intro { margin: 0 0 0.95rem; max-width: 72ch; color: var(--jd-muted); font-size: 0.92rem; line-height: 1.5; }
+.panel-intro { margin: 0 0 0.95rem; color: var(--jd-muted); font-size: 0.92rem; line-height: 1.5; }
 .digest-list { list-style: none; margin: 0; padding: 0; }
 /* scroll-margin-top: breathing room when a deep-linked digest is scrolled to the viewport top. */
 .digest { border-top: 1px solid var(--jd-line); scroll-margin-top: 1.5rem; }
