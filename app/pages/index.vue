@@ -237,13 +237,15 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   }
 }
 
-.eyebrow {
+.eyebrow,
+.kicker {
   margin: 0;
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--root-accent);
+  text-wrap: balance;
 }
 
 .hero {
@@ -257,15 +259,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 .hero > p,
 .hero > h1 {
   max-width: 34rem;
-}
-
-.kicker {
-  margin: 0;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--root-accent);
 }
 
 .hero h1 {
@@ -307,10 +300,13 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   transform: translateX(3px);
 }
 
-.cta-hint {
-  margin: 0;
+/* Outranks `.hero > p`'s measure so the hint stays one line on desktop. */
+.hero > .cta-hint {
+  margin: -0.25rem 0 0;
+  max-width: none;
   font-size: 0.9rem;
   color: var(--root-muted);
+  text-wrap: balance;
 }
 
 .digests {
@@ -394,6 +390,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   font-size: 0.95rem;
   line-height: 1.5;
   color: var(--root-muted);
+  text-wrap: balance;
 }
 
 /* auto-fit, not a fixed column count: another Tenant joins the row (or wraps)
