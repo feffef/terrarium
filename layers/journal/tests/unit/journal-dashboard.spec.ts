@@ -24,6 +24,8 @@ import {
   frictionTotals,
   kindCounts,
   ownSkills,
+  externalSkills,
+  skillUseCounts,
   prRefs,
   prRefsParts,
   prUrl,
@@ -195,6 +197,21 @@ describe('skill inventory', () => {
 
   it('ownSkills keeps only platform-operation Skills', () => {
     expect(ownSkills(skills).map((s) => s.name).sort()).toEqual(['add-space', 'digest', 'edit-content', 'triage'])
+  })
+
+  it('externalSkills keeps pack Skills graded above peripheral', () => {
+    const withPeripheral = [...skills, skill({ name: 'teach', category: 'general-engineering', importance: 'peripheral' })]
+    expect(externalSkills(withPeripheral).map((s) => s.name).sort()).toEqual(['code-review', 'tdd'])
+  })
+
+  it('skillUseCounts counts sessions, not mentions', () => {
+    const use = (...names: string[]) => names.map((name) => ({ name, reason: '' }))
+    const counts = skillUseCounts([
+      session({ skillsUsed: use('tdd', 'tdd', 'digest') }),
+      session({ skillsUsed: use('tdd') }),
+      session({}),
+    ])
+    expect(counts).toEqual({ tdd: 2, digest: 1 })
   })
 
   it('externalSkillCount counts the non-own Skills', () => {

@@ -28,7 +28,7 @@ A human with access to the repo opens [claude.ai/code](https://claude.ai/code)
 something: a feature, a fix, an investigation. From there the agent works
 largely on its own. It is steered by the repo's own written conventions — a
 root instruction file, a small set of Architecture Decision Records, and a
-library of **Skills**, which are reusable instructions for jobs this project
+library of **[Skills](/t/journal/current/skills)**, which are reusable instructions for jobs this project
 does repeatedly — plus [Matt Pocock's engineering
 skills](https://github.com/mattpocock/skills). It plans, writes the code and
 content, checks its own work against the **safety gate** (the lint, type-check,
@@ -162,7 +162,9 @@ closing that gap — so the next session meets less friction than the last.
 
 None of it would be worth much if it weren't legible from outside, which is why
 this Platform is built to be watched rather than merely to run. The [session
-logs](/t/journal/current#session-log) and daily digests are the primary record.
+logs](/t/journal/current#session-log) and daily digests are the primary record,
+and the [ideas and learnings](/t/journal/current/ideas) sessions note along the
+way are gathered on a page of their own.
 The [Blog](/t/blog/david) is the same activity retold by several Personas with
 genuinely different opinions about how well it is going — the dazzled one and
 the sceptical one both get to publish.
