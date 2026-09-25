@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_01TMgZyrN42pwudxkUdHLKwP
 startedAt: 2026-09-25T16:12:05Z
-endedAt: 2026-09-25T17:25:11Z
+endedAt: 2026-09-25T17:35:00Z
 kind: interactive
 goal: Review recent session ideas, implement the best
-status: completed
-outcome: "PRs #1339 and #1340 merged"
-summary: "Human asked me to survey all session-log ideas from the last 30 days (34 ideas across 206 logs) and name those that improve the project without adding complexity; I shortlisted five, noting four already built. Human then chose items 1-4 and explicitly approved the settings.json edit and collapsing audit-skills observations. Implemented: an unquoted-# truncation check in validate:content (found and fixed two live blog truncations), a guard-wiring unit test, hook commands cd to CLAUDE_PROJECT_DIR, and an audit-skills rule plus collapse of 17 held-as-is observations. The two live-content fixes were my own call. PR #1339 opened; human-only to merge. Human then ran /code-review (Standards + Spec subagents) and asked me to push four fixes; done in a second commit, full gate green. I verified and rejected one review finding (failed cd would fail open: dash exits 2, which blocks). Human said merge on green; the auto-mode classifier denied merge-pr.ts, so the human merged it on GitHub. Human then asked which ideas would add to the Platform; I ranked five, human picked three. One (shell-read --explain) was already built (62261eb8), so I built the other two after asking two design questions: scripts/corpus.ts (generic field query) and an auto-triage file-overlap check. PR #1340 opened. Human ran /code-review again and asked me to push its fixes (import session-dir constants, missing-dir guard, mark the later overlapping issue blocked rather than commenting); full gate green. After a session resume, human said merge on green; merge-pr.ts merged #1340. Human then asked me to file the deferred reader-consolidation refactor: issue #1342 (needs-triage, relates to map #862)."
+status: in-review
+outcome: "PRs #1339, #1340 merged; #1344 in review"
+summary: "Human asked me to survey all session-log ideas from the last 30 days (34 ideas across 206 logs) and name those that improve the project without adding complexity; I shortlisted five, noting four already built. Human then chose items 1-4 and explicitly approved the settings.json edit and collapsing audit-skills observations. Implemented: an unquoted-# truncation check in validate:content (found and fixed two live blog truncations), a guard-wiring unit test, hook commands cd to CLAUDE_PROJECT_DIR, and an audit-skills rule plus collapse of 17 held-as-is observations. The two live-content fixes were my own call. PR #1339 opened; human-only to merge. Human then ran /code-review (Standards + Spec subagents) and asked me to push four fixes; done in a second commit, full gate green. I verified and rejected one review finding (failed cd would fail open: dash exits 2, which blocks). Human said merge on green; the auto-mode classifier denied merge-pr.ts, so the human merged it on GitHub. Human then asked which ideas would add to the Platform; I ranked five, human picked three. One (shell-read --explain) was already built (62261eb8), so I built the other two after asking two design questions: scripts/corpus.ts (generic field query) and an auto-triage file-overlap check. PR #1340 opened. Human ran /code-review again and asked me to push its fixes (import session-dir constants, missing-dir guard, mark the later overlapping issue blocked rather than commenting); full gate green. After a session resume, human said merge on green; merge-pr.ts merged #1340. Human then asked me to file the deferred reader-consolidation refactor: issue #1342 (needs-triage, relates to map #862). Human then asked for the next ideas and to run two in background agents; one (audit-skills bracket confound) was already built (04010f9c, #1214), so only the prune-trial one ran: a worktree agent mined 33 prune-trial run logs and opened PR #1344 (a <10-line floor that ends a run without opening a trial; net -2 lines of Skill prose)."
 prs:
   - "1339"
   - "1340"
+  - "1344"
 docsRead:
   - path: CLAUDE.md
     reason: repo conventions
@@ -21,11 +22,15 @@ docsRead:
     reason: provenance header shape
   - path: .agents/skills/auto-triage/SKILL.md
     reason: (read before editing)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (read before editing)
 skillsUsed:
   - name: close-session
     reason: closure at PR open
   - name: log-session
     reason: this log
+  - name: dispatch-subagents
+    reason: (no reason given)
   - name: code-review
     reason: (invoked as a slash command)
   - name: context
@@ -58,22 +63,25 @@ frictions:
   - description: Recommended building shell-read --explain from a 13-day-old idea without first checking git history; it had shipped the day before (62261eb8), caught only when I started building.
     solution: Check git log -S / recent commits for each idea before recommending it, not just the files.
     severity: minor
-durationSec: 4386
+  - description: "Recommended the audit-skills bracket-confound idea as a top pick; it had been already fixed via #1214 (04010f9c). Second stale recommendation this session."
+    solution: Run git log -S on each idea's key phrase before ranking; corpus.ts could carry a resolved-by marker later.
+    severity: minor
+durationSec: 4975
 models:
-  claude-opus-5-5: 327
+  claude-opus-5-5: 368
 toolCounts:
-  Bash: 94
+  Bash: 103
   Edit: 4
-  AskUserQuestion: 4
+  AskUserQuestion: 6
   ToolSearch: 7
   mcp__github__list_pull_requests: 1
   Grep: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  Skill: 2
-  mcp__Claude_Code_Remote__send_later: 2
-  Agent: 4
-  ReadNotifications: 11
+  Skill: 3
+  mcp__Claude_Code_Remote__send_later: 3
+  Agent: 5
+  ReadNotifications: 12
   mcp__github__pull_request_read: 5
   mcp__github__update_pull_request: 2
   mcp__github__add_issue_comment: 2
@@ -88,6 +96,8 @@ filesEdited:
   - .agents/skills/auto-triage/SKILL.md
   - scripts/corpus.ts
   - tests/unit/corpus.spec.ts
+  - prune-agent-tab.mjs
+  - .agents/skills/prune-trial/SKILL.md
 docsReadViaShell:
   - .agents/skills/audit-skills/SKILL.md
   - docs/research/rulebook-migration-table.md
@@ -98,8 +108,10 @@ docsReadViaShell:
   - .agents/skills/triage/AGENT-BRIEF.md
   - docs/agents/issue-tracker.md
   - docs/agents/triage-labels.md
+  - .agents/skills/prune-trial/SKILL.md
   - docs/adr/0015-audit-skills-and-conditional-importance.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0027-prune-trials.md
 subagents:
   - type: general-purpose
     task: Standards review of PR diff
@@ -109,6 +121,8 @@ subagents:
     task: "Standards review of PR #1340"
   - type: general-purpose
     task: "Spec review of PR #1340"
+  - type: general-purpose
+    task: "Prune-trial cost: investigate + implement"
 gitBranch: claude/review-recent-ideas-yecu5n
 entrypoint: remote_mobile
 cliVersion: 2.1.282
