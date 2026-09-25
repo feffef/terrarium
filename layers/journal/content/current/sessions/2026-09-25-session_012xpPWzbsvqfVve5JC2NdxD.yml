@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_012xpPWzbsvqfVve5JC2NdxD
 startedAt: 2026-09-25T19:44:35Z
-endedAt: 2026-09-25T20:19:35Z
+endedAt: 2026-09-25T20:32:47Z
 kind: interactive
 goal: Plain-English digests, especially the headline
-status: in-review
+status: completed
 outcome: Skill reworded; seven digests regenerated as a dry run
-summary: 'All human-instructed. The user asked for plain-English digests; after clarifying questions I reworded digest SKILL.md step 3. The user then asked for a real dry run: 7 Sonnet agents regenerated 09-18..24 from session logs. The user asked for "Also shipped" for routine PRs plus noteworthy learnings/ideas (gather now passes those through). /code-review found schedule wording, length, and a 09-24 day-boundary mismatch; the user chose "scheduled" and a ~200-word limit, and I fixed the rest. Gate green, PR 1349 open.'
+summary: 'All human-instructed. The user asked for plain-English digests; after clarifying questions I reworded digest SKILL.md step 3. The user then asked for a real dry run: 7 Sonnet agents regenerated 09-18..24 from session logs. The user asked for "Also shipped" for routine PRs plus noteworthy learnings/ideas (gather now passes those through). /code-review found schedule wording, length, and a 09-24 day-boundary mismatch; the user chose "scheduled" and a ~200-word limit, and I fixed the rest. The user then set a 100-250 word range. PR 1349 merged.'
 prs:
   - "1349"
 docsRead:
@@ -71,23 +71,25 @@ frictions:
   - description: The skill's own example 'the daily docs check' broke CLAUDE.md's never-say-when rule for scheduled jobs, and four digests copied it; the cadence validator only scans the Skill Inventory, so it wasn't caught automatically.
     solution: Fixed the wording; consider extending validate-skill-cadence to cover digests.
     severity: minor
-durationSec: 2100
+durationSec: 2892
 models:
-  claude-opus-5-5: 261
+  claude-opus-5-5: 290
 toolCounts:
-  Bash: 44
+  Bash: 49
   AskUserQuestion: 2
   ToolSearch: 2
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  ReadNotifications: 5
+  ReadNotifications: 10
   mcp__Claude_Code_Remote__send_later: 1
   Agent: 9
   SendMessage: 17
   Read: 3
-  mcp__github__update_pull_request: 2
+  mcp__github__update_pull_request: 3
+  mcp__github__pull_request_read: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-09-20.md
   - layers/journal/content/current/pages/digests/2026-09-22.md
