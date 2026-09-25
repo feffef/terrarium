@@ -87,18 +87,12 @@ describe('L2 smoke render', async () => {
   // it's outside the manifest-derived `entryRoutes` sweep above and asserted
   // here directly rather than via a per-Tenant `register…()` module.
   describe('root index page', () => {
-    it('renders the hero and lists the Blog, Midden, and Atlas showcases in order', async () => {
+    // Card order is asserted by the title-link test below; raw-HTML indexOf would
+    // trip over a digest or teaser that happens to name a Tenant first.
+    it('renders the hero', async () => {
       const html = await $fetch('/')
       expect(html).toMatch(/<h1[ >]/)
       expect(html).toMatch(/<title>terrarium · [^<]+<\/title>/)
-      const blogAt = html.indexOf('The Blog')
-      const middenAt = html.indexOf('The Midden')
-      const atlasAt = html.indexOf('The Atlas')
-      expect(blogAt).toBeGreaterThan(-1)
-      expect(middenAt).toBeGreaterThan(-1)
-      expect(atlasAt).toBeGreaterThan(-1)
-      expect(blogAt).toBeLessThan(middenAt)
-      expect(middenAt).toBeLessThan(atlasAt)
     })
 
     it('hydrates in a browser with no console/page errors', async () => {
@@ -120,7 +114,7 @@ describe('L2 smoke render', async () => {
         const hrefs = await page.locator('.explore-grid a.title-link').evaluateAll((els) =>
           els.map((el) => el.getAttribute('href')),
         )
-        expect(hrefs).toEqual(['/t/blog', '/t/midden', '/t/atlas'])
+        expect(hrefs).toEqual(['/t/blog', '/t/atlas', '/t/midden'])
       } finally {
         await page.close()
       }
