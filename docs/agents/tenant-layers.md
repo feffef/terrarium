@@ -138,17 +138,7 @@ runs it) before `pnpm lint` — a stale `.nuxt` doesn't yet know the layer's
 `app/pages/` directory and mis-fires `vue/multi-word-component-names` on the
 layer's pages.
 
-## 4. Mermaid authoring: group lanes with `classDef stroke`, not `subgraph`
-
-When a fenced ` ```mermaid ` diagram (see §5 below for how these render) needs
-to visually group nodes into lanes, don't use `subgraph` for the grouping —
-subgraph boundaries **clip** any edge that crosses from one subgraph into
-another, silently hiding cross-lane arrows. Group visually instead via a
-`classDef` that sets a shared `stroke` (and/or `fill`) on the lane's nodes —
-this keeps every cross-lane edge intact while still reading as a distinct
-group.
-
-## 5. Content-component overrides (`components/content/`) resolve Platform-wide
+## 4. Content-component overrides (`components/content/`) resolve Platform-wide
 
 A same-named file under any layer's `components/content/` directory overrides
 the matching bundled `@nuxtjs/mdc` prose component — Nuxt flattens every
@@ -160,7 +150,7 @@ lives at the app root rather than in a Tenant's `layers/` directory precisely
 because the override is global: placing it in a Tenant layer would suggest a
 scoping that doesn't exist.
 
-## 6. Verify a routing claim against the layer's actual `pages/` tree, not prose search
+## 5. Verify a routing claim against the layer's actual `pages/` tree, not prose search
 
 Before asserting whether a route exists (in a review, a comment, or anywhere
 else), check the layer's actual `layers/<tenant>/…/pages/` directory directly

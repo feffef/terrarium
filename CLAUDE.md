@@ -104,9 +104,11 @@ it with a tool.
   a deliberately unpinned catch-all that also covers e.g. `shared/manifest.ts`
   (ADR-0025: defines the `tenant_space_collection` key it calls "the unit of
   isolation") and the root `nuxt.config.ts` (ADR-0018 treats it as a
-  human-only surface), and `.github/actions/gate/action.yml`, which holds the
-  Gate's own steps (ADR-0026). Deciding whether a *novel* file belongs in this
-  catch-all is a standing judgement call, not yet mechanized — closing that
+  human-only surface), and `.github/actions/gate/action.yml`, which will hold
+  the Gate's own steps once the `gate.yml` shell swap is hand-applied — until
+  then `gate.yml`'s own inline steps still run (ADR-0026). Deciding whether a
+  *novel* file belongs in this catch-all is a standing judgement call, not yet
+  mechanized — closing that
   gap needs issue #864's policy-as-data work first (tracked as CM-14/PR-11 in
   `docs/research/rulebook-migration-table.md`).
   Human-only constrains merging, not editing (`CONTEXT.md`'s `### Human-only`
@@ -181,9 +183,10 @@ it with a tool.
   a file it hasn't seen via Read, so `cat`-then-Edit forces a wasteful re-read.
 - **Before the first call to any deferred tool this session, load its schema via
   `ToolSearch`** rather than guessing its shape from a similarly-named tool — a
-  deceptively-obvious name is not an exemption. A `PreToolUse` guard catches the
-  known confusion shapes and denies with the fix (`docs/agents/guards.md`, issue
-  #612).
+  deceptively-obvious name is not an exemption. A `PreToolUse` guard catches this
+  for a `TaskCreate` or `Monitor` call specifically and denies with the fix
+  (`docs/agents/guards.md`, issue #612); it doesn't cover a wrongly-shaped call to
+  any other deferred tool, so the `ToolSearch`-first habit still carries those.
 - **`ScheduleWakeup` is valid only inside a `/loop` session** (any pacing —
   a fixed-interval loop is paced by the harness and wouldn't call it anyway, so
   the guard doesn't narrow further); `stop: true` is exempt everywhere else.

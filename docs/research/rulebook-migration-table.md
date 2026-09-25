@@ -347,9 +347,9 @@ of them and splitting would inflate the row count without adding a decision.
 | TL-05 | Define a layer's design tokens once, on the outermost wrapper | §2 | J | none | Design judgement | — |
 | TL-06 | Map a Tenant's tokens to the `--diagram-*` contract via `var(--…)`, never literal values | §2 | J | none | Authoring judgement | — |
 | TL-07 | Run `nuxt prepare` before `pnpm lint` after adding a layer | §3 | W | none | A preflight in the lint script — `pnpm lint` could depend on `nuxt prepare`. Cheap and complete | S |
-| TL-08 | Group Mermaid lanes with `classDef stroke`, never `subgraph` (it clips cross-lane edges) | §4 | G | none | A validator over fenced `mermaid` blocks: flag a `subgraph` with an edge crossing its boundary. `scripts/verify-mermaid.ts` already parses these | M |
-| TL-09 | Put a content-component override at the app root, not a Tenant layer — the override is Platform-wide | §5 | G | none | A validator: flag any `components/content/` directory under `layers/*`. Trivially checkable | S |
-| TL-10 | Verify a routing claim against the layer's actual `pages/` tree, never a prose grep | §6 | J | none | The claim-verification judgement of `CM-30`, applied to routes | — |
+| TL-08 | Group Mermaid lanes with `classDef stroke`, never `subgraph` (it clips cross-lane edges) | `docs/research/mermaid-server-side-rendering.md` (moved from tenant-layers.md §4, audit-docs 2026-09-25 — not a Nuxt-layer fact) | G | none | A validator over fenced `mermaid` blocks: flag a `subgraph` with an edge crossing its boundary. `scripts/verify-mermaid.ts` already parses these | M |
+| TL-09 | Put a content-component override at the app root, not a Tenant layer — the override is Platform-wide | §4 | G | none | A validator: flag any `components/content/` directory under `layers/*`. Trivially checkable | S |
+| TL-10 | Verify a routing claim against the layer's actual `pages/` tree, never a prose grep | §5 | J | none | The claim-verification judgement of `CM-30`, applied to routes | — |
 
 ### 5.8 `docs/agents/domain.md`
 
