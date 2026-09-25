@@ -61,7 +61,7 @@ const SHOWCASES = [
   },
 ]
 
-// "Today in the terrarium" (visitor-loop feature, 2026-09-25): the newest few
+// "Lately in the terrarium" (visitor-loop feature, 2026-09-25): the newest few
 // timestamped things across every Tenant, so the front door itself shows the
 // garden growing instead of only claiming it does. Reuses the Commons
 // Timeline's own normalization (`queryTimeline`, layers/commons/app/composables/timeline.ts)
@@ -69,7 +69,12 @@ const SHOWCASES = [
 // trims it to a short, dated feed and drops the `session` genre (internal
 // jargon a first-time visitor doesn't need).
 const { data: timelineData } = await useAsyncData('home-timeline', () => queryTimeline())
-const freshest = computed(() => (timelineData.value ?? []).filter((e) => e.genre !== 'session').slice(0, 3))
+const freshest = computed(() => (timelineData.value ?? []).filter((e) => e.genre !== 'session').slice(0, 4))
+
+// UTC so SSR and hydration agree, and a digest (stamped end-of-day UTC) shows the day it covers.
+function shortDate(when: string): string {
+  return new Date(when).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+}
 
 // The Timeline's own entries carry a raw Tenant slug; this page already has a
 // branded name for each Tenant it shows elsewhere (SHOWCASES above) — reuse
@@ -104,10 +109,11 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
     </div>
 
     <section v-if="freshest.length" class="fresh" aria-labelledby="fresh-heading">
-      <h2 id="fresh-heading" class="fresh-heading">Today in the terrarium</h2>
+      <h2 id="fresh-heading" class="fresh-heading">Lately in the terrarium</h2>
       <ul class="fresh-list">
         <li v-for="e in freshest" :key="e.url + e.when" class="fresh-item">
           <NuxtLink :to="e.url" class="fresh-link">
+            <time class="fresh-date" :datetime="e.when">{{ shortDate(e.when) }}</time>
             <span class="fresh-tenant">{{ tenantLabel(e.tenant) }}</span>
             <span class="fresh-summary">{{ e.summary }}</span>
           </NuxtLink>
@@ -282,6 +288,12 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--root-accent);
+}
+.fresh-date {
+  flex: none;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--root-muted);
 }
 .fresh-summary { color: var(--root-muted); overflow-wrap: anywhere; }
 
