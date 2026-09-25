@@ -1,7 +1,7 @@
 name: grilling
 category: general-engineering
 importance: supporting
-installedSha256: 4fc8087fb48b0174b4f02e03a5ab7e331830f921fd440c51393895902d22e445
+installedSha256: 10ff989e7498b23b5acb49d5048f11dcd906757d2f79c5cdf8a00001381296f2
 role: >-
   The one-question-at-a-time interrogation that stress-tests a plan or design
   before building — used standalone or as the engine inside `grill-with-docs`.

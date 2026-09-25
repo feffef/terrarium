@@ -50,4 +50,4 @@ inherited tooling.
 - Skills are code/instructions → changing one is a PR through the same safety
   gate. A Skill that edits the generator/isolation is high-risk (human-only).
 - The `codify` job grows this set; new Skills should follow the
-  `writing-great-skills` standard and land via PR like anything else.
+  `writing-for-agents` standard and land via PR like anything else.

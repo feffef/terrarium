@@ -1,0 +1,11 @@
+name: to-tickets
+category: general-engineering
+importance: supporting
+installedSha256: 5c9fba69845c2519b9b35b9af42ae5142c21f8ca15ac2123dc2722002c8058ae
+role: >-
+  Turn findings into tracked issues — the intake for net-new work that
+  governance requires a human to green-light (ADR-0003), and input to `triage`.
+observations:
+  - date: 2026-09-25
+    note: >-
+      Renamed upstream from `to-issues`; entry carried over with its grade.

@@ -1,7 +1,7 @@
 name: handoff
 category: general-engineering
 importance: peripheral
-installedSha256: 94bee8c16cbfcf9f1e15187f7e5d0d5a93c4adb7c512feceecaab80c8ff7c059
+installedSha256: 7c62de979fdc7ac32fb5ddb2146156c917f80ee070d30fadc9d40343c4b6ed25
 role: >-
   Compacts a conversation into a handoff doc for another agent. Overlaps the
   repo's own session-closure machinery (close-session / log-session,

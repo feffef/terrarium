@@ -41,6 +41,10 @@ Status: Accepted
 > gate, so this also closed the Inventory's coverage gap (8 pack Skills gained
 > entries).
 >
+> **Amended (2026-09-25).** A pack Skill with no Inventory entry yet no longer
+> fails the gate; it stays unpinned until `audit-skills` adds its entry on first
+> observed use. Entries record real use, so a freshly installed Skill gets none.
+>
 > **Amended (2026-07-13).** `role`'s "not a copy of the Skill's own description"
 > discipline held, but a second kind of drift crept in instead: several entries
 > (`atlas-specimen`, `audit-docs`, `code-review`, `diagnosing-bugs`, `implement`,

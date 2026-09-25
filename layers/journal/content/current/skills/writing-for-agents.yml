@@ -1,7 +1,7 @@
-name: writing-great-skills
+name: writing-for-agents
 category: general-engineering
 importance: peripheral
-installedSha256: 7c6ba7ec25bb2c0e173c52cdc2da878aef0b083ec19a9c1799934e480c8833cc
+installedSha256: 551adca942227b44192edba88acd4e8db911f0121ce58ad16944ccf6a896a74a
 role: >-
   The reference standard for authoring Skills, per `codify`'s planned remit.
   Pull remains inconsistent but has moved past judgement-only use: it has now
@@ -43,3 +43,6 @@ observations:
       guest-intake/guest-build pair cited 2026-07-17), but still only 1
       in-window occurrence — the ≥2-in-window bright-line bar for promotion
       isn't met this run; role and grade held as-is.
+  - date: 2026-09-25
+    note: >-
+      Renamed upstream from `writing-great-skills`; entry carried over with its grade.

@@ -1,7 +1,7 @@
 name: triage
 category: general-engineering
 importance: supporting
-installedSha256: d45827c299c021f77b0f146fefa3ee679b13f99e9a2ffdf48e8de2347adeefe1
+installedSha256: 623a2ed692bdc77d2090e2a3dea3b627dd722ad3bbaca0be83aada75292c8fc4
 role: >-
   Moves an issue or external PR through the triage state machine —
   categorise, verify, grill if needed, write an agent-ready brief, and decide

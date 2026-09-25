@@ -1,7 +1,7 @@
 name: setup-matt-pocock-skills
 category: general-engineering
 importance: peripheral
-installedSha256: a85441f31decd5705ade6b526206d60be129dbe926251c67213fe1649da5f197
+installedSha256: 2bcd89e97777cdb705914424e39c97d5db524c8eb4eafac8120778a07774f0ec
 role: >-
   One-time scaffolding of the engineering-skills config (issue tracker, triage
   labels, domain docs). Already run for this repo, so it matters only if that
