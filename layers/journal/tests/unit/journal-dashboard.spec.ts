@@ -32,8 +32,6 @@ import {
   sessionShortId,
   skillGroups,
   skillRoleParts,
-  skillsLabel,
-  skillsSub,
   sessionToolEntries,
 } from '../../app/utils/dashboard.ts'
 import type { Friction, SessionDoc, Severity, SkillDoc } from '../../app/types/journal.ts'
@@ -216,16 +214,6 @@ describe('skill inventory', () => {
 
   it('externalSkillCount counts the non-own Skills', () => {
     expect(externalSkillCount(skills)).toBe(2)
-  })
-
-  it('skillsLabel carries the external count only when non-zero', () => {
-    expect(skillsLabel(0)).toBe('Platform Skills')
-    expect(skillsLabel(2)).toBe('Platform Skills (+2 from an external pack)')
-  })
-
-  it('skillsSub joins non-empty importance buckets, else "none yet"', () => {
-    expect(skillsSub(ownSkills(skills))).toBe('2 essential · 1 routine · 1 supporting')
-    expect(skillsSub([])).toBe('none yet')
   })
 
   it('skillGroups orders essential → routine → specialist → supporting → peripheral, alpha within a group, dropping empties', () => {
