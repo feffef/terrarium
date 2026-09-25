@@ -11,7 +11,7 @@
 // dropped at this stage (summary, docsRead, learnings, …) can still be read in
 // full later — this is a triage extract, not a replacement for the source log.
 //
-// Usage:  tsx scripts/session-frictions.ts [--window N] [--compact]
+// Usage:  tsx scripts/session-frictions.ts [--window N] [--compact] [--out PATH]
 //   Prints the N most-recent sessions (by startedAt, oldest of the window first)
 //   as JSON: id, file, startedAt, goal, outcome, prs, and every friction's
 //   description/solution/severity.
@@ -24,6 +24,11 @@
 // default output large, keeping only id/file/startedAt/prs and each
 // friction's description/severity, for a caller that wants a smaller read
 // regardless (issue #951).
+//
+// --out PATH always writes the JSON to PATH instead of the shared tmpdir
+// default, regardless of size — for a caller that wants the output at a
+// specific location (e.g. its own scratchpad, to avoid colliding with a
+// parallel run) rather than the shared default.
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
@@ -170,6 +175,18 @@ export function survey(windowSize = DEFAULT_WINDOW, cwd = root): TriageSession[]
 export const OUTPUT_FILE_THRESHOLD = 20_000
 export const OUTPUT_FILE_PATH = join(tmpdir(), 'session-frictions-output.json')
 
+/** Where to send the JSON output: `--out PATH` always writes there, letting a
+ *  caller pick its own location instead of the shared tmpdir default (a
+ *  recurring session friction); otherwise falls back to the default only
+ *  once `jsonLength` exceeds the inline-capture threshold, unchanged from
+ *  prior behavior. `null` means stdout. */
+export function resolveOutputTarget(argv: string[], jsonLength: number): string | null {
+  const idx = argv.indexOf('--out')
+  const out = idx >= 0 ? argv[idx + 1] : undefined
+  if (out) return out
+  return jsonLength > OUTPUT_FILE_THRESHOLD ? OUTPUT_FILE_PATH : null
+}
+
 function fail(msg: string): never {
   console.error(`session-frictions: ${msg}`)
   process.exit(1)
@@ -183,9 +200,10 @@ function main(): void {
   const sessions = survey(windowSize)
   const output = argv.includes('--compact') ? sessions.map(toCompactSession) : sessions
   const json = JSON.stringify(output, null, 2)
-  if (json.length > OUTPUT_FILE_THRESHOLD) {
-    writeFileSync(OUTPUT_FILE_PATH, json + '\n')
-    process.stdout.write(`session-frictions: ${sessions.length} sessions, ${json.length} bytes, written to ${OUTPUT_FILE_PATH}\n`)
+  const target = resolveOutputTarget(argv, json.length)
+  if (target) {
+    writeFileSync(target, json + '\n')
+    process.stdout.write(`session-frictions: ${sessions.length} sessions, ${json.length} bytes, written to ${target}\n`)
   } else {
     process.stdout.write(json + '\n')
   }
