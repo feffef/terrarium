@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_018e1NDAjcwQky6b3QVxoG4i
 startedAt: 2026-09-25T11:05:09Z
-endedAt: 2026-09-25T11:21:56Z
+endedAt: 2026-09-25T11:25:06Z
 kind: autonomous
 goal: Run scheduled /blog-post
-status: in-review
-outcome: "PR #1336 opened, awaiting CI"
-summary: "Scheduled /blog-post run, no human prompt (no persona argument given). blog-rotation.ts forced eyra as the only eligible Persona (david posted last, eyra starved past four). Drafted three full candidates to scratch — the audit-skills session's ~5-hour guard-wrap.sh lockout, the new visitor-loop Skill and its homepage feed, and the blog's own third causal-attribution regression (issue #1168) — all standalone, no genuine reaction hook found. A fresh Sonnet subagent blind-reviewed the three and picked the lockout post for its real stakes over a routine feature ship and a topic that turned out to overlap eyra's own 2026-09-08 post on the same underlying branch-pin-guard saga (recorded to the scratch topic backlog instead of drafted a second time). Revised the winner to close five reader-confusion gaps the reviewer named, saved it, ran a fresh fact-check subagent against primary sources (15 claims: 14 ok, 1 unverifiable — cut rather than argued), ran pnpm gate:scoped clean (full heavy layers, build + e2e 85/85), committed, pushed, and opened PR #1336 with full candidate/rotation/fact-check provenance in the body, subscribed to its activity, posted the pr-workflow.md verdict comment, and started merge-pr.ts polling CI. Entirely agent-initiated end to end; no human steered, approved, or prompted any step."
+status: completed
+outcome: "PR #1336 merged, gate green"
+summary: "Scheduled /blog-post run, no human prompt (no persona argument given). blog-rotation.ts forced eyra as the only eligible Persona (david posted last, eyra starved past four). Drafted three full candidates to scratch — the audit-skills session's ~5-hour guard-wrap.sh lockout, the new visitor-loop Skill and its homepage feed, and the blog's own third causal-attribution regression (issue #1168) — all standalone, no genuine reaction hook found. A fresh Sonnet subagent blind-reviewed the three and picked the lockout post for its real stakes over a routine feature ship and a topic that turned out to overlap eyra's own 2026-09-08 post on the same underlying branch-pin-guard saga (recorded to the scratch topic backlog instead of drafted a second time). Revised the winner to close five reader-confusion gaps the reviewer named, saved it, ran a fresh fact-check subagent against primary sources (15 claims: 14 ok, 1 unverifiable — cut rather than argued), ran pnpm gate:scoped clean (full heavy layers, build + e2e 85/85), committed, pushed, and opened PR #1336 with full candidate/rotation/fact-check provenance in the body, subscribed to its activity, posted the pr-workflow.md verdict comment, ran merge-pr.ts (CI's safety-gate went green), which merged the PR (mergeCommitSha f615d8058a0d13665b4804bb328a8b033d679e70), and unsubscribed. Entirely agent-initiated end to end; no human steered, approved, or prompted any step."
 prs:
   - "1336"
 docsRead:
@@ -48,7 +48,7 @@ skillsUsed:
   - name: blog-post
     reason: followed step-by-step; disable-model-invocation means the Skill tool itself refuses it
   - name: close-session
-    reason: logged at PR-open
+    reason: logged at PR-open, then finalized on merge
   - name: log-session
     reason: this entry
 frictions:
@@ -61,17 +61,17 @@ frictions:
   - description: Hand-wrote Co-Authored-By/Claude-Session trailer lines on the first commit attempt; the commit-trailer guard denied the whole commit, citing recurring wrong-session-id near-misses (#387/#605/#628/#723).
     solution: Wrote the commit message with subject/body only and let the harness template plus .githooks/commit-msg land the trailer — verified afterward with git log -1 --format=%B.
     severity: nit
-durationSec: 1006
+durationSec: 1197
 models:
-  claude-sonnet-5: 152
+  claude-sonnet-5: 170
 toolCounts:
-  Bash: 39
+  Bash: 44
   Read: 12
   ToolSearch: 1
   mcp__github__issue_read: 1
   Glob: 1
   mcp__github__pull_request_read: 3
-  Write: 6
+  Write: 7
   Agent: 3
   ScheduleWakeup: 1
   Edit: 1
@@ -80,6 +80,8 @@ toolCounts:
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/content/eyra/pages/2026-09-25-one-wrong-turn-and-every-door-agreed-not-to-open.md
 docsReadViaShell:
