@@ -1,0 +1,84 @@
+schemaVersion: 1
+session: session_01MEnm7jvdH6UPpUjPfUraJW
+startedAt: 2026-09-25T13:18:05Z
+endedAt: 2026-09-25T13:31:45Z
+kind: autonomous
+goal: Run the scheduled /prune-trial routine
+status: in-review
+outcome: "New trial opened as PR #1338, gate green"
+summary: "Scheduled, unprompted run of /prune-trial (no human input this session). Checked the three open ledger trials against scripts/prune-trial-window.ts's real landing timestamps — none had cleared their 3-day window yet, so nothing was judged; all three stay open untouched. Dispatched a background subagent to full-corpus-search (instruction corpus + rulebook-migration-table.md + the issue tracker) for a new criterion-1 candidate (\"prose that already failed\") outside the three open trials' territory. It found docs/adr/0017-provenance-footer-on-agent-authored-content.md's amendment blockquote self-citing five prose-only passes (issues #346/#710/#723/#737/#784) that failed before enforcement was mechanized. Verified the underlying guards (scripts/github-provenance-guard.ts, .githooks/commit-msg) are fully built and wired, cut the incident-history narration to a bare pointer, wrote the ledger entry, and proved the prune per the Skill's §4 by dispatching a fresh Sonnet subagent against a detached git worktree at the post-prune commit — it correctly named the guard as the enforcing mechanism, correctly said history isn't recoverable from the file, and correctly quoted the current header shape. pnpm gate:scoped ran the full sequence (the .yml change isn't inert) and passed. Opened PR #1338, subscribed to its activity for babysitting to merge."
+prs:
+  - "1338"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: the open-trials ledger to judge and extend
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: the pruned file itself
+  - path: docs/agents/guards.md
+    reason: confirm github-provenance-guard.ts is built and wired
+  - path: docs/research/rulebook-migration-table.md
+    reason: confirm CM-43/CM-44 built status and check for restatements
+  - path: docs/agents/pr-workflow.md
+    reason: the self-merged chartered run closing sequence
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: this run's task, delivered inline by the scheduler
+  - name: dispatch-subagents
+    reason: read-only search/probe subagents dispatched directly per its own read-only exemption
+  - name: close-session
+    reason: closure at PR-open
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Called the Skill tool for `prune-trial` even though the scheduled task's prompt already contained the full skill text inline (per the command-name/command-message envelope) — the call was refused (disable-model-invocation, reserved for explicit user/scheduled invocation) since re-invoking a skill already delivered inline is redundant.
+    solution: For a scheduled task whose prompt already carries a skill's full body inline (command-name set), proceed directly from the delivered text instead of also calling Skill on it.
+    severity: nit
+durationSec: 820
+models:
+  claude-sonnet-5: 88
+toolCounts:
+  Skill: 3
+  Bash: 24
+  Agent: 3
+  Read: 2
+  Grep: 3
+  Edit: 3
+  ToolSearch: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/prune-trials.yml
+docsReadViaShell:
+  - docs/research/rulebook-migration-table.md
+  - docs/agents/github-integration.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/agents/guards.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0004-objective-safety-gate.md
+subagents:
+  - type: general-purpose
+    task: Find prose-that-already-failed prune candidate
+  - type: general-purpose
+    task: Find prose-that-already-failed prune candidate
+  - type: general-purpose
+    task: Probe pruned ADR-0017 text for comprehension
+    model: sonnet
+gitBranch: claude/practical-rubin-1qxik9
+entrypoint: remote_trigger
+cliVersion: 2.1.282
+trigger: prune-trial
+learnings:
+  - A scheduled task's stored prompt can arrive with the full skill body already inlined (command-message/command-name present) rather than needing a fresh Skill tool call to load it.
+landedBy: Stop
