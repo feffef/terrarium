@@ -76,6 +76,7 @@ export type SkipRule =
   | 'redirect target: written, not read'
   | 'not a literal path: glob or variable'
   | 'grep/rg output does not show this file being read'
+  | '|| fallback: stderr suppressed, output may belong to the other side'
   | 'git show diff does not touch this path'
 
 export interface NearMiss {
@@ -229,13 +230,17 @@ function stripHeredocs(command: string): string {
   return out
 }
 
-/** One command's tokens, split into pipeline/list segments. Quote-aware: the
- *  naive `split('|')` shreds a quoted alternation (`grep "a\|b" docs/x.md`) and
+/** One command's tokens, split into pipeline/list segments, each tagged with
+ *  whether it is immediately followed by `||` rather than an ordinary `|`
+ *  pipe or a `;`/`&&`/newline separator (issue #1327) — `handleSegment` needs
+ *  this to tell a `cmd1 || cmd2` fallback's primary side from a segment whose
+ *  output genuinely feeds the next command. Quote-aware: the naive
+ *  `split('|')` shreds a quoted alternation (`grep "a\|b" docs/x.md`) and
  *  orphans the path into a segment whose verb is a pattern fragment — #1074's
  *  prototype scored 1/2 until this existed. */
-function segments(rawCommand: string): Token[][] {
+function segments(rawCommand: string): { tokens: Token[]; followedByOr: boolean }[] {
   const command = stripHeredocs(rawCommand)
-  const out: Token[][] = []
+  const out: { tokens: Token[]; followedByOr: boolean }[] = []
   let tokens: Token[] = []
   let cur = ''
   let started = false
@@ -247,9 +252,9 @@ function segments(rawCommand: string): Token[][] {
     started = false
     quoted = false
   }
-  const endSegment = (): void => {
+  const endSegment = (followedByOr: boolean): void => {
     endToken()
-    if (tokens.length) out.push(tokens)
+    if (tokens.length) out.push({ tokens, followedByOr })
     tokens = []
   }
   for (let i = 0; i < command.length; i++) {
@@ -273,15 +278,24 @@ function segments(rawCommand: string): Token[][] {
       // A trailing comment is prose, not arguments: `cat a.md # see also b.md`
       // never showed b.md.
       while (i < command.length && command[i] !== '\n') i++
-      endSegment()
-    } else if (c === '|' || c === ';' || c === '&' || c === '(' || c === ')' || c === '\n') endSegment()
+      endSegment(false)
+    } else if (c === '|') {
+      // `||` doubles up: consume both chars as one operator and tag the
+      // segment it closes as the primary (failure-triggers-fallback) side.
+      const isOr = command[i + 1] === '|'
+      if (isOr) i++
+      endSegment(isOr)
+    } else if (c === '&') {
+      if (command[i + 1] === '&') i++
+      endSegment(false)
+    } else if (c === ';' || c === '(' || c === ')' || c === '\n') endSegment(false)
     else if (c === ' ' || c === '\t' || c === '\r') endToken()
     else {
       cur += c
       started = true
     }
   }
-  endSegment()
+  endSegment(false)
   return out
 }
 
@@ -332,7 +346,17 @@ function showsNoContent(verb: string, tokens: Token[]): boolean {
 /** A reader verb whose output is a FILTERED SUBSET of what it was given, so
  *  which of its file arguments actually reached the session depends on the
  *  command's own output (issue #1247) — `cat`/`sed`/etc. stream everything
- *  they're pointed at and stay ungated. */
+ *  they're pointed at and stay ungated *in the general case*.
+ *
+ *  Issue #1327 considered widening this set to `cat`/`sed`/`awk`/`head`/`tail`
+ *  too, but the real caller (`session-trace.ts`'s `bashCommandsOf`) pairs
+ *  EVERY Bash command with an output string, defaulting to `''` for one whose
+ *  `tool_result` is simply missing from a transcript (a torn transcript, or a
+ *  test fixture that never wires one up) — not `undefined`. Widening this set
+ *  would silently stop crediting every such command, which is a much bigger
+ *  behavior change than this issue's actual bug (a `cmd1 || cmd2` fallback
+ *  misattributing output) calls for. The `redirectsStderrToDevNull` check
+ *  below fixes that specific shape without touching this set at all. */
 const OUTPUT_FILTERED_VERBS = new Set(['grep', 'rg'])
 
 /** One command, optionally paired with the text its own `tool_result` carried.
@@ -387,6 +411,29 @@ function outputMentionsFile(output: string, token: string): boolean {
   return new RegExp(`(^|\\n)${escaped}(:|\\r?\\n|$)`).test(output)
 }
 
+/** `2>/dev/null`, attached or spaced — the shape a `cmd1 2>/dev/null ||
+ *  cmd2` fallback uses to fail silently (issue #1327). Detected structurally
+ *  from the command's own tokens rather than from `output`: the whole point
+ *  is that the shared `output` a `||` command carries could belong to either
+ *  side, so a command built to swallow its own stderr this way can't be
+ *  trusted to have produced that output at all — see the call site. */
+function redirectsStderrToDevNull(tokens: Token[]): boolean {
+  for (let i = 0; i < tokens.length; i++) {
+    const t = tokens[i]!
+    if (t.quoted) continue
+    const attached = /^2>>?(.+)$/.exec(t.text)
+    if (attached) {
+      if (attached[1] === '/dev/null') return true
+      continue
+    }
+    if (/^2>>?$/.test(t.text)) {
+      const next = tokens[i + 1]
+      if (next && !next.quoted && next.text === '/dev/null') return true
+    }
+  }
+  return false
+}
+
 /** Scan every Bash command of a session for shell-read instruction docs.
  *  `rel` relativizes an absolute path the way the trace does, so `/repo/docs/x.md`
  *  and `docs/x.md` land on one key. Near-misses are ordered reader-segment first:
@@ -405,7 +452,10 @@ function outputMentionsFile(output: string, token: string): boolean {
  *  is then only credited for a file its output actually shows a match from, and
  *  one with exactly one file positional only when the output is non-empty. A
  *  bare string (no output known) skips this gate entirely, matching every
- *  caller/test that predates #1247. */
+ *  caller/test that predates #1247. Issue #1327 adds a second, verb-independent
+ *  gate ahead of this one: it withholds credit from the primary side of a
+ *  `cmd1 <stderr to /dev/null> || cmd2` fallback, whose shared output may
+ *  really belong to `cmd2` — see `redirectsStderrToDevNull`. */
 export function scanShellReads(
   commands: ShellCommand[],
   rel: (p: string) => string = (p) => p,
@@ -432,7 +482,7 @@ export function scanShellReads(
       if (!creditedBy.has(p)) creditedBy.set(p, command)
     }
 
-    const handleSegment = (segTokens: Token[]): void => {
+    const handleSegment = (segTokens: Token[], followedByOr: boolean): void => {
       const tokens = unwrap(segTokens)
       if (tokens.length === 0) return
       const verb = tokens[0]!.text.replace(/^.*\//, '')
@@ -541,9 +591,19 @@ export function scanShellReads(
         }
       }
 
-      // `output === undefined` means the caller has no tool_result to gate
-      // with (every pre-#1247 caller/test) — credit unconditionally, as before.
-      if (OUTPUT_FILTERED_VERBS.has(verb) && output !== undefined) {
+      // A `cmd1 <stderr to /dev/null> || cmd2` fallback (issue #1327): `cmd1`
+      // is built to fail silently, so the shared `output` this command entry
+      // carries may really be `cmd2`'s — crediting `cmd1`'s candidates off it
+      // would launder the fallback's output onto files `cmd1` never showed.
+      // Checked ahead of, and for every verb, not just the ones the gate below
+      // covers: this is an attribution problem, not an output-filtering one.
+      if (followedByOr && output !== undefined && redirectsStderrToDevNull(tokens)) {
+        for (const c of candidates) {
+          note(fromReader, c.token, '|| fallback: stderr suppressed, output may belong to the other side')
+        }
+      } else if (OUTPUT_FILTERED_VERBS.has(verb) && output !== undefined) {
+        // `output === undefined` means the caller has no tool_result to gate
+        // with (every pre-#1247 caller/test) — credit unconditionally, as before.
         for (const c of candidates) {
           const confirmed = fileCount > 1 ? outputMentionsFile(output, c.matchText) : output.trim() !== ''
           if (confirmed) credit(c.path)
@@ -559,7 +619,8 @@ export function scanShellReads(
      *  carries over to the next `commands` entry: a loop can't span two
      *  separate Bash invocations. */
     let loop: { varName: string; values: string[] } | undefined
-    for (const raw of segments(command)) {
+    for (const seg of segments(command)) {
+      const raw = seg.tokens
       const header = matchForHeader(raw)
       if (header) {
         loop = header
@@ -581,9 +642,11 @@ export function scanShellReads(
       }
 
       if (loop && body.length > 0) {
-        for (const value of loop.values) handleSegment(substituteLoopVar(body, loop.varName, value))
+        for (const value of loop.values) {
+          handleSegment(substituteLoopVar(body, loop.varName, value), seg.followedByOr)
+        }
       } else if (body.length > 0) {
-        handleSegment(body)
+        handleSegment(body, seg.followedByOr)
       }
       if (closesLoop) loop = undefined
     }
