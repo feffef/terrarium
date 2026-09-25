@@ -3,7 +3,7 @@
 How to actually drive GitHub from a session — tool→operation mapping, the
 overflow and precision traps, and the polling rules. This is the *surface*;
 two workflow docs sit on top of it and own their own recipes:
-[`issue-tracker.md`](./issue-tracker.md) (issues, PRDs, triage) and
+[`issue-tracker.md`](./issue-tracker.md) (issues, specs, triage) and
 [`pr-workflow.md`](./pr-workflow.md) (landing a gated PR).
 
 Re-homed from `issue-tracker.md` and `pr-workflow.md`, which had each grown a

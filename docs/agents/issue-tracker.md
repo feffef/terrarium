@@ -1,14 +1,14 @@
 # Issue tracker: GitHub
 
 *Seeded from `.agents/skills/setup-matt-pocock-skills/issue-tracker-github.md`'s
-generic template and customized for this repo (the conventions, PRD and
+generic template and customized for this repo (the conventions, spec and
 wayfinding sections below are repo-specific, not part of the pack; the
 remote-session MCP-tool surface now lives in `github-integration.md`). Don't
 re-sync the two —
 this file is the live, repo-authoritative one; the pack template stays generic
 and reinstallable (ADR-0005).*
 
-Issues and PRDs for this repo live as GitHub issues. Use the `gh` CLI for all operations.
+Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all operations.
 
 ## No `gh`? See `github-integration.md`
 
@@ -23,7 +23,7 @@ tool surface.
 - **`docs/research/` vs. a GitHub issue.** `docs/research/` is for verified,
   primary-source-grounded reference material — facts gathered and checked. An
   unimplemented idea, design proposal, or open question belongs in a GitHub
-  issue instead — a PRD (see below) once it's substantial enough to decompose
+  issue instead — a spec (see below) once it's substantial enough to decompose
   into multiple user stories that need their own sub-issues; a plain issue
   otherwise.
 - **`/triage`'s redundancy check applies to every open issue, no exemptions.**
@@ -60,28 +60,28 @@ tool surface.
 
 Infer the repo from `git remote -v` — `gh` does this automatically when run inside a clone.
 
-## PRDs
+## Specs
 
-A PRD is an ordinary GitHub issue — no dedicated label. The precedent is #64
-(the Atlas PRD):
+A spec is an ordinary GitHub issue — no dedicated label. The precedent is #64
+(the Atlas spec):
 
-- **Label**: none. A PRD carries **no triage label** (not `needs-triage`, not
+- **Label**: none. A spec carries **no triage label** (not `needs-triage`, not
   `ready-for-agent`) while it's a concept document rather than actionable work —
   the triage-labels vocabulary (`docs/agents/triage-labels.md`) doesn't apply
   until the hold below clears.
-- **Sub-issue linking**: link each user story to the PRD as a **native GitHub
+- **Sub-issue linking**: link each user story to the spec as a **native GitHub
   sub-issue** (`sub_issue_write` / `gh api` on the sub-issues endpoint, same
   mechanism as [Wayfinding's child tickets](#wayfinding-operations)), *and* put
-  a `Part of #<prd>` line at the top of the child's body — the same
+  a `Part of #<spec>` line at the top of the child's body — the same
   belt-and-suspenders pattern used there, so the link still reads even where
   native sub-issues aren't rendered.
-- **Hold semantics**: a PRD that isn't yet actionable says so in its own body,
+- **Hold semantics**: a spec that isn't yet actionable says so in its own body,
   e.g. *"On hold: implementation starts only after \[condition] — read, discuss,
   refine the idea, don't build."* Every sub-issue **inherits the same hold** and
   repeats the on-hold line at the top of its own body, so a reader who lands
   directly on a user story sees the hold without having to open the parent.
   There is no label for "on hold" — the body text is the single source of truth
-  until the condition clears, at which point the PRD (and its sub-issues) pick
+  until the condition clears, at which point the spec (and its sub-issues) pick
   up ordinary triage labels like any other issue.
 
 ## Pull requests as a triage surface
