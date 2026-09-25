@@ -1,0 +1,69 @@
+schemaVersion: 1
+session: session_01QQygpFxFLZ6hhosfLpDxzy
+startedAt: 2026-09-25T18:41:23Z
+endedAt: 2026-09-25T18:59:48Z
+kind: interactive
+goal: Update mattpocock/skills pack to upstream HEAD
+status: in-review
+outcome: Pack updated, renames swapped, PR 1345 open
+summary: "Human-instructed throughout: the user asked to update the Matt Pocock Skill pack, then chose (via questions) to install resolving-merge-conflicts/wizard/wait-what, swap the three renamed Skills (to-prd→to-spec, to-issues→to-tickets, writing-great-skills→writing-for-agents) with references updated, include the new agents/ folders, add no Inventory entries for unused Skills, relax verify:skills-lock accordingly (user picked the option), rename PRD→spec in docs, and keep docs/agents custom edits intact (verified: only the word swap changed). Full gate:scoped green; PR opened, needs human merge (gate script + ADRs)."
+prs:
+  - "1345"
+docsRead: []
+skillsUsed:
+  - name: close-session
+    reason: closure at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "`npx skills add` copied new Skills into .claude/skills instead of .agents/skills + symlink like `update` does; had to relocate by hand"
+    solution: Document the install command (agent flag / layout) next to the skills-lock gate, or wrap it in a script
+    severity: minor
+  - description: Gate rule (uncatalogued pack Skill fails) contradicted audit-skills' create-entry-on-first-use rule; a fresh install could never pass
+    solution: Fixed in PR 1345 by skipping uncatalogued pack Skills in verify-skills-lock (ADR-0015 amended)
+    severity: moderate
+  - description: Tail-pipe guard blocked two commands that piped short non-long-running output into tail; needed rewrite with log files
+    solution: Redirect to a scratch log from the start for any pnpm command
+    severity: nit
+  - description: ADR-0017 provenance guard requires a model-name link as first PR line while the harness forbids model identifiers in PR bodies; used plain 'Claude'
+    solution: Guard deny message could accept a non-model label explicitly
+    severity: nit
+  - description: 'SHELL-READ-DETECTION false positive: CONTEXT.md credited for `grep -n -A6 "Skill Inventory\*\*" CONTEXT.md` (chained after sed/grep of audit-skills) which printed no CONTEXT.md lines'
+    solution: Only credit a grep target when its output actually contains lines from that path
+    severity: moderate
+  - description: 'SHELL-READ-DETECTION false positive: docs/adr/0017-provenance-footer-on-agent-authored-content.md credited for `grep -n -i "provenance header\|marker" docs/adr/0017*.md | head -15` which produced no output'
+    solution: Require non-empty grep output attributable to the path
+    severity: moderate
+  - description: "SHELL-READ-DETECTION miss: `diff .agents/skills/setup-matt-pocock-skills/triage-labels.md docs/agents/triage-labels.md` showed both files' differing content; docs/agents/triage-labels.md rejected as not a reader command"
+    solution: Treat diff of two files as a (partial) read of both
+    severity: moderate
+durationSec: 1105
+models:
+  claude-opus-5-5: 114
+toolCounts:
+  Bash: 41
+  AskUserQuestion: 2
+  Edit: 1
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__Claude_Code_Remote__send_later: 1
+filesEdited:
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+docsReadViaShell:
+  - .agents/skills/audit-skills/SKILL.md
+  - CONTEXT.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/setup-matt-pocock-skills/issue-tracker-github.md
+  - docs/agents/github-integration.md
+  - .agents/skills/setup-matt-pocock-skills/domain.md
+gitBranch: claude/nice-cannon-mh03e0
+entrypoint: remote
+cliVersion: 2.1.282
+learnings:
+  - The skills CLI never touches docs/agents; only running /setup-matt-pocock-skills would, so a pack update cannot clobber those customizations
+landedBy: Stop
