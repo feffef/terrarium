@@ -1,6 +1,6 @@
 ---
 title: The PR Closed One Issue Out of the Four It Named
-description: A merged pull request's own description said "Closes #948, #950, #952, #954." Only #948 actually closed. The other three are still sitting open right now, and nobody's found out why yet.
+description: "A merged pull request's own description said \"Closes #948, #950, #952, #954.\" Only #948 actually closed. The other three are still sitting open right now, and nobody's found out why yet."
 publishedAt: 2026-08-15T11:16:21Z
 tags: [bugs, self-review, session-logs]
 ---

@@ -35,6 +35,7 @@ import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
 import { expand, loadManifests, root, type ExpandedCollection } from '../shared/expand.ts'
+import { findTruncatedScalars } from './log-session.ts'
 
 /** Coerce a parsed YAML/JSON value into a plain object, or `{}` for anything
  *  else (`null`, a scalar, an array) — a Document's data is always a record. */
@@ -62,8 +63,10 @@ export interface ValidationReport {
  *  is none. Exported so `validate-content-refs.ts` (issue #446) can read a
  *  page's MDC body without re-deriving this parse — single-homed here since
  *  `readFrontmatter` below is just this with the body discarded. */
+const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/
+
 export function splitFrontmatter(text: string): { frontmatter: Record<string, unknown>; body: string } {
-  const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/)
+  const m = text.match(FRONTMATTER)
   if (!m) return { frontmatter: {}, body: text }
   return { frontmatter: asRecord(parseYaml(m[1] as string)), body: text.slice(m[0].length) }
 }
@@ -88,6 +91,16 @@ export function parseDocument(absPath: string): Record<string, unknown> {
   if (absPath.endsWith('.yml') || absPath.endsWith('.yaml')) return asRecord(parseYaml(raw))
   if (absPath.endsWith('.json')) return asRecord(JSON.parse(raw))
   throw new Error(`don't know how to parse "${absPath}" (unsupported extension)`)
+}
+
+/** Values an unquoted ` #` silently cut short. Session logs are skipped: `log-session`
+ *  already rejects this at authoring, and older logs are ADR-0009's bounded exception. */
+function truncations(absPath: string): string[] {
+  const raw = readFileSync(absPath, 'utf8')
+  const yamlText = absPath.endsWith('.md') ? (raw.match(FRONTMATTER)?.[1] ?? '') : raw
+  return findTruncatedScalars(yamlText).map(
+    (h) => `${h.keyPath}: parsed as ${JSON.stringify(h.value)} — an unquoted '#' dropped the rest. Quote it: ${JSON.stringify(h.full)}`,
+  )
 }
 
 /** Validate every Document in every expanded Collection that carries a schema.
@@ -119,17 +132,17 @@ export function validateContent(cols: ExpandedCollection[], projectRoot = root):
         })
         continue
       }
+      const messages = col.kind === 'session' ? [] : truncations(absPath)
       const res = schema.safeParse(data)
       if (!res.success) {
-        violations.push({
-          key: col.key,
-          file: join(col.cwdRel, rel),
-          messages: res.error.issues.map((i) => {
+        messages.push(
+          ...res.error.issues.map((i) => {
             const where = i.path.join('.')
             return where ? `${where}: ${i.message}` : i.message
           }),
-        })
+        )
       }
+      if (messages.length > 0) violations.push({ key: col.key, file: join(col.cwdRel, rel), messages })
     }
   }
 

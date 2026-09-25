@@ -16,82 +16,11 @@ role: >-
   adaptation (e.g. treating the full tree as the diff, or running the Skill
   per-directory).
 observations:
-  - date: 2026-07-13
+  - date: 2026-09-25
     note: >-
-      Used in 6 of this window's 40 sessions (e.g. the Atlas Sprint 2
-      orchestration, the Mermaid MDC component, the #369 implement) — but
-      skipped in most other code-landing sessions (digest/session-click fix,
-      almanac polish, journal scroll fix, self-merge-tier switch). A
-      spec-reviewer subagent fabricated a line number in #323, prompting the
-      citation-verification guidance now in role.
-  - date: 2026-07-14
-    note: >-
-      Used in 5 of this window's 40 sessions (session_014dmQsk's #383 fix,
-      session_01JGdaGG's whole-codebase review, session_018UBvEX's #369
-      triage+implement, session_01YV8CUy's Atlas Sprint 2 orchestration,
-      session_01TzvXVH's #364 Mermaid MDC) — still skipped in several other
-      code-landing "Fix ..." sessions this window (the flaky-gate-test fix,
-      the journal scroll/digest-styling fix, the YAML-truncation fix),
-      confirming the adoption pattern in role is still accurate.
-  - date: 2026-07-15
-    note: >-
-      Used in 2 of this window's 40 sessions (session_019nK3xJvkANqWMUjJLmqP6z's
-      #451 implement, session_01Y11Fou1pRvTW2ucEt1dhX8's ready-for-agent batch
-      implement) — skipped in 5 other code-landing sessions this window (the
-      runtime-git-read PoC tenant, the #443 authorAssociation labeling change,
-      the #437 review-comment fix, the mobile Recent-Activity-cards overflow
-      fix, the flaky-gate-test fix), the same inconsistent-adoption pattern.
-  - date: 2026-07-19
-    note: >-
-      Used in 7 of this window's 40 sessions (session_01GL5jaMXhfPa9X67WuQwPLi's
-      #505 fix, session_011KeHQLZULr1hhhsCrtyLpE's audit-check dismissal set,
-      session_01FxNovsJKNpdYKa8X3XRwqd's frictions-to-fixes dispatch review,
-      session_015PgK5s6dkbKrW7jagzTZRE's Midden Tenant redesign,
-      session_01Tj6TVeZmBVcyUteTqgvYgy's flaky e2e fix, session_019W471jzQDwoZmKzJKtE4vk's
-      #449 gaps, session_017dzPLRmeEMHeMswznBR9N4's ready-for-agent implement) —
-      still skipped in 3 other code-landing sessions this window
-      (session_01CWmywSYZ2iY919UuP4M2V9's 6-issue parallel-agent batch,
-      session_01G4rmUvezd1kADVdf5vcEyu's #236 fix, session_016rKpNdAWs7e5Vcz77FYm27's
-      route-listing removal), confirming the adoption pattern in role is still accurate.
-  - date: 2026-07-25
-    note: >-
-      Prior citations aged out; used in 2 of this window's 40 sessions
-      (session_01UyndUzweHYwzrs4nq3dvmQ's #447 implement,
-      session_01ForHuq2k1hbNTHkTBVCjpH's DISMISSED_HUMAN_PROMPTED_CLOSURES
-      addition) — still skipped in another code-landing session this window
-      (session_01MwR3JjEyr7jxHkC7xRpRzd's Cross-Tenant read model + Commons
-      aggregator build, which recorded ADR-0025 with no code-review
-      invocation), confirming the adoption pattern in role is still accurate.
-  - date: 2026-08-01
-    note: >-
-      Prior citations aged out; used in 4 of this window's 40 sessions
-      (session_019co5cuEAZNRrh8BWe9V4E8's dispatch-subagents extraction,
-      session_019jnggE1yiAs9FyakmE8qQN's provenance-guard fix,
-      session_019hdkXjoebyR8etKVNyjn7S's six-issue triage+implement batch,
-      session_01NTMpx8aVzhU9GPrEpVoASw's Midden ideas/surveyor/artifact-model
-      build) — still skipped in two other code-landing sessions this window
-      that each merged a PR (session_01R3PG8Komhz36po4FzR1WHc's PR #787
-      file-name-only provenance fix, session_01SvQWTmWHQ6JWFHQR68gemt's PR
-      #789 provenance-guard collapse), confirming the adoption pattern in
-      role is still accurate.
-  - date: 2026-08-11
-    note: >-
-      Prior citations aged out; used in 3 of this window's 40 sessions
-      (session_01LKDi3JUBBm6Mmqf1ubw23N's gate:scoped shallow-clone diff-base
-      fix, session_01ErWC7JVF6xz3CufXjGAN77's Gate-workflow agent-pushable
-      change, session_01GSfW8QbXfJYk1Lu5My1ytz's never-APPROVE PR-review
-      single-homing) — still skipped in two other code-landing sessions this
-      window that both used `implement` (session_01MCMjVrM3uSMPrqyoWUroFG's
-      #659 implement, session_01SuvMh3wC6nyykyAVQuYVb4's triage+implement
-      backlog sweep), confirming the adoption pattern in role is still
-      accurate.
-  - date: 2026-08-17
-    note: >-
-      Prior citations aged out; used in 2 of this window's 40 sessions
-      (session_01QMtUQrTK3LHJhs1rom6i2x's two-issue auto-triage+implement
-      batch, session_01X71ykRjGtfFC5g6mueF8mi's cross-session files-read
-      signal) — still skipped in two other code-landing sessions this window
-      that each merged a PR (session_01CV3dBwvj8RYuvmtTXczKTd's Nuxt/Vue
-      dependency-bisect fix PR #914, session_019YUfZGa9c7rath771qwBsh's
-      journal band-height-guard fix PR #913), confirming the adoption pattern
-      in role is still accurate.
+      Collapsed from eight held-as-is runs, 2026-07-13 to 2026-08-17 (ADR-0015
+      says a run with no change adds no entry). Each run found it used in 2 to 7
+      of its 40-session window and skipped in other code-landing sessions. The
+      bright-line bar was never crossed, so role and grade held throughout. A
+      spec-reviewer subagent fabricated a line number in #323, which prompted
+      the citation-verification guidance in role.
