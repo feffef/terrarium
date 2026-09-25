@@ -1,0 +1,161 @@
+schemaVersion: 1
+session: session_01X3GnBV8wPH4zeb4suiktD1
+startedAt: 2026-09-25T16:47:35Z
+endedAt: 2026-09-25T17:40:18Z
+kind: autonomous
+goal: Run visitor-loop's second daily fix+feature cycle
+status: completed
+outcome: "Two PRs merged: 5 fixes, one homepage feature"
+summary: "Scheduled visitor-loop run (no live human prompt) — the whole cycle was agent-initiated under ADR-0003's standing chartered green-light for this Skill. Served a fresh production build of origin/main, dispatched three blind first-time visitors (sonnet, fable, opus, no repo context), and tallied their findings. Five findings had independent two-visitor consensus: a duplicate SiteFooter render on Atlas specimen and Midden dig-report leaf pages (a same-day regression from the previous visitor-loop run's own PR), a missing mobile scroll affordance on the Atlas relations/food-web SVG, the homepage CTA landing first-time visitors on a 12,000px dashboard, an unevenly-shaped \"Lately\" feed, and an unpaginated 114-post Blog index. Verified each against the source and the rendered DOM before fixing, opened PR #1341, ran /code-review (both axes clean), and merged on a green gate. Then picked the strongest feature idea — opus and fable independently proposed near-identical \"Atlas specimen of the day\" cards, and all three visitors called the Atlas the site's standout — built a deterministic (server-computed, per-request) daily-rotating specimen spotlight on the homepage, opened PR #1343, fixed two judgement-call findings /code-review raised (an inaccurate \"reused\" comment and an avoidable cross-layer type import), and merged."
+prs:
+  - "1341"
+  - "1343"
+docsRead:
+  - path: CLAUDE.md
+    reason: repo conventions, human-only file list, PR/gate discipline
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: visitor-loop's chartered remit and ledger row
+  - path: docs/agents/pr-workflow.md
+    reason: merge recipe and per-tier auto-merge authority
+  - path: .claude/skills/visitor-loop/visitor-brief.md
+    reason: verbatim brief given to each dispatched visitor
+  - path: .claude/skills/visitor-loop/decisions.md
+    reason: owner's standing rulings to check the tally against
+  - path: layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/midden/app/pages/t/midden/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: layers/atlas/app/components/atlas/RelationsWeb.vue
+    reason: (no reason given)
+  - path: layers/atlas/app/components/atlas/FoodWeb.vue
+    reason: (no reason given)
+  - path: layers/atlas/app/assets/theme.css
+    reason: (read before editing)
+  - path: .scratch-verify/relweb-390-before.png
+    reason: (no reason given)
+  - path: .scratch-verify/relweb-390-full.png
+    reason: (no reason given)
+  - path: app/pages/index.vue
+    reason: (read before editing)
+  - path: layers/commons/app/composables/timeline.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-09-20.md
+    reason: (no reason given)
+  - path: layers/commons/app/components/commons/Timeline.vue
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/highlights.md
+    reason: (no reason given)
+  - path: .scratch-verify/home-lately-390.png
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/blog/app/pages/t/blog/index.vue
+    reason: (read before editing)
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (no reason given)
+  - path: app/composables/catalog.ts
+    reason: (no reason given)
+  - path: layers/atlas/app/pages/t/atlas/index.vue
+    reason: (no reason given)
+  - path: app/components/HomeShowcase.vue
+    reason: (no reason given)
+  - path: layers/blog/app/assets/theme.css
+    reason: (read before editing)
+  - path: .scratch-verify/after-home-lately-390.png
+    reason: (no reason given)
+  - path: .scratch-verify/after-relweb-390.png
+    reason: (no reason given)
+  - path: .scratch-verify/foodweb-390.png
+    reason: (no reason given)
+  - path: .scratch-verify/home-spotlight-390.png
+    reason: (no reason given)
+  - path: .scratch-verify/home-spotlight-1280.png
+    reason: (no reason given)
+  - path: .scratch-verify/home-spotlight-fixed-390.png
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: layers/atlas/app/composables/useAtlasWingData.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: visitor-loop
+    reason: this run's own chartered Skill
+  - name: code-review
+    reason: Standards+Spec review before landing each PR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Called ScheduleWakeup to wait on a background build early in the run; blocked by the /loop-only guard (issue #814) since this is a scheduled routine, not a /loop session."
+    solution: Ended the turn instead and let the background task notification resume the session, per the guard's own suggested alternative — no ScheduleWakeup needed for the rest of the run.
+    severity: nit
+  - description: A playwright verification script placed under the session scratchpad directory (outside the repo) failed with "Cannot find module playwright-core" — tsx resolves node_modules relative to the script's own file location, not cwd.
+    solution: Wrote verification scripts to a repo-local .scratch-verify/ directory instead (removed before every commit), matching where the repo's own node_modules resolves from.
+    severity: nit
+  - description: A homepage feature's own explanatory comment claimed the new per-biome aggregation was "reused" from the Atlas front door's loop when it was actually a separate, re-derived implementation — caught by /code-review's Standards axis, not by self-review before pushing.
+    solution: Corrected the comment to say the loop "mirrors" the front door's shape rather than claiming reuse, and read comments this literally before writing "reused"/"shared" language going forward.
+    severity: nit
+durationSec: 3163
+models:
+  claude-sonnet-5: 531
+toolCounts:
+  Bash: 145
+  Read: 43
+  ScheduleWakeup: 1
+  TaskCreate: 8
+  ToolSearch: 7
+  Agent: 7
+  TaskUpdate: 14
+  mcp__github__search_pull_requests: 1
+  mcp__github__search_issues: 2
+  mcp__github__pull_request_read: 4
+  Glob: 4
+  Write: 2
+  Edit: 19
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  Skill: 3
+  ReadNotifications: 10
+  mcp__github__add_issue_comment: 2
+  mcp__github__unsubscribe_pr_activity: 1
+  PushNotification: 1
+filesEdited:
+  - .scratch-verify/verify2.ts
+  - layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+  - layers/midden/app/pages/t/midden/[space]/[...slug].vue
+  - layers/atlas/app/assets/theme.css
+  - app/pages/index.vue
+  - layers/blog/app/pages/t/blog/index.vue
+  - layers/blog/app/assets/theme.css
+docsReadViaShell:
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/agents/pr-workflow.md
+  - layers/atlas/CONTEXT.md
+  - layers/blog/CONTEXT.md
+  - layers/midden/CONTEXT.md
+subagents:
+  - task: First-time visitor (sonnet)
+    model: sonnet
+  - task: First-time visitor (fable)
+    model: fable
+  - task: First-time visitor (opus)
+    model: opus
+  - type: general-purpose
+    task: "Standards axis review of PR #1341"
+  - type: general-purpose
+    task: "Spec axis review of PR #1341"
+  - type: general-purpose
+    task: "Standards axis review of PR #1343"
+  - type: general-purpose
+    task: "Spec axis review of PR #1343"
+gitBranch: claude/adoring-galileo-4x7c29
+entrypoint: remote_trigger
+cliVersion: 2.1.282
+trigger: visitor-loop
+learnings:
+  - Nuxt Content's `toSpecimenView()` defaults a specimen's `common` to `commonName ?? description` and its `blurb` straight to `description` — when a specimen's frontmatter sets `commonName` equal to `description` (true for ~5 of the Atlas's 15 specimens), naively rendering both fields prints the same short phrase twice; worth a manual equality check before showing both.
+  - A route with no explicit `routeRules`/prerender config in this repo's nuxt.config.ts is server-rendered per request even though its content is build-time-baked (ADR-0001) — confirmed by re-requesting the homepage twice and getting the same day-keyed value both times, then checking no prerender crawl covers it. This is what makes a server-computed "today"/"this week" rotation an honest claim rather than a value frozen at the last build.
+ideas:
+  - Add a small shared composable (e.g. in layers/atlas/app/composables/) for 'aggregate a kind's documents across every Space in a Tenant' — the per-biome resolve-then-query loop now exists, independently written, in both the Atlas front door (t/atlas/index.vue, for wing stats) and the homepage's Atlas spotlight (for full specimen docs). It's the same-Tenant/cross-Space counterpart to what queryAcrossTenants already gives cross-Tenant reads, and would remove the duplicated-shape judgement call code review keeps flagging on this pattern.
+landedBy: Stop
