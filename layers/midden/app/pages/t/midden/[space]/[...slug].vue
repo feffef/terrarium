@@ -93,8 +93,6 @@ useHead({ title: () => `${site.value?.title ?? 'Not found'} · The Midden` })
       <div class="midden-report__prose">
         <ContentRenderer :value="site" />
       </div>
-
-      <SiteFooter />
     </article>
 
     <div v-else class="midden-page">
