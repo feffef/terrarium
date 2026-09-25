@@ -1,0 +1,69 @@
+schemaVersion: 1
+session: session_01AqnkupUBsToN4SqTyWoe95
+startedAt: 2026-09-25T09:01:43Z
+endedAt: 2026-09-25T11:34:17Z
+kind: interactive
+goal: Extend Journal History page to late September
+status: in-review
+outcome: Fifth period section added; PR open
+summary: Human asked why the Journal History page ("How Terrarium Grew") was outdated, what happened in the missing month, and whether a Skill covers it. I read the 30 digests for 26 Aug–24 Sep, summarized the month, and found no Skill owns the page. The human then instructed a fifth period section and supplied the framing (the Sep burst as a backlog clear and stress test, the visitor loop as a turn toward self-growth under daily activity) and asked for background agents for exploration. A background agent recomputed stats with the method that reproduces existing rows. I wrote the section, fixed two wrong claims after checking them, passed gate:scoped, and opened PR 1337.
+prs:
+  - "1337"
+docsRead:
+  - path: layers/journal/content/current/pages/history.md
+    reason: the page being extended
+  - path: layers/journal/content/archived/pages/digests
+    reason: primary record of the missing month
+  - path: layers/blog/content/david/pages/2026-09-05-it-built-a-guard-then-decided-not-to-need-one.md
+    reason: verify branch-pin guard claim
+  - path: docs/adr/0017-agent-provenance-marking.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Drafted two claims from digest wording that were wrong (branch-pin guard "landed" when it was deleted; visitor loop touched "all six" sites when it was five); caught only by checking the primary sources afterwards.
+    solution: For narrative pages, verify every event claim against the PR or post itself before drafting, not after; digests compress away reversals.
+    severity: minor
+  - description: The first exploration turn ran in the foreground in the main context (a 54KB digest dump); the human had to ask for background agents.
+    solution: Delegate multi-file reading sweeps to a background agent by default and keep only conclusions in the main context.
+    severity: minor
+  - description: The History page had no owning Skill or refresh path, so it silently went a month stale while the digests kept running; the old header totals were also slightly off (503/1382 vs a recount of 502/1378).
+    solution: Consider having the digest Skill flag when the History page's end date falls more than N weeks behind, instead of adding a new Skill.
+    severity: minor
+  - description: The harness system prompt says not to open a PR unless asked; CLAUDE.md (ADR-0003) says to open one automatically. Followed CLAUDE.md as it instructs.
+    solution: None needed; CLAUDE.md already settles the precedence.
+    severity: nit
+  - description: 'SHELL-READ-DETECTION false positive: docs/agents/guards.md credited from `grep -n -i "branch-pin" docs/agents/guards.md | head -3` which printed zero matches (no subagent read it either).'
+    solution: "Credit a single-file grep only when its output actually contains a line from that file, as #1250 does for multi-file greps."
+    severity: moderate
+durationSec: 9153
+models:
+  claude-opus-5-5: 65
+toolCounts:
+  Bash: 20
+  Read: 5
+  Agent: 1
+  ScheduleWakeup: 1
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  Skill: 2
+docsReadViaShell:
+  - .agents/skills/ask-matt/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - docs/agents/guards.md
+  - CONTEXT.md
+  - .agents/skills/visitor-loop/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Compute history stats for 5th period
+gitBranch: claude/journal-history-gap-6fyck4
+entrypoint: remote_mobile
+cliVersion: 2.1.282
+ideas:
+  - Add a staleness check to the digest Skill that notes in its PR when history.md's "This account stops at" date is more than 3 weeks old, so the on-ramp page is refreshed by the human-invoked digest run instead of drifting silently.
+landedBy: Stop
