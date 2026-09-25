@@ -1,0 +1,92 @@
+schemaVersion: 1
+session: session_016NfQMqoynB3ewNFrGcRCUu
+startedAt: 2026-09-25T02:03:27Z
+endedAt: 2026-09-25T02:19:51Z
+kind: autonomous
+goal: Run frictions-to-fixes cycle
+status: in-review
+outcome: 4 PRs dispatched, awaiting review/merge
+summary: "Scheduled autonomous run of the frictions-to-fixes Skill (no human prompt this turn). Delegated survey/screening of the last 20 session logs to a general-purpose subagent, which returned 9 never-fixed candidates, 15 correctly screened out as already-fixed/open-already/off-limits, and no regressions. Selected 6 simple fixes (batched into a doc-only PR of 5 fixes, plus one code PR adding a --out flag to session-frictions.ts) and 2 hard fixes (capped at 2 per the Skill's rule), filed as issues #1327 and #1328 since they need extra review scrutiny at merge. Filed a third issue (#1329) for a tail-pipe-guard.ts gap that touches a guard file and per CLAUDE.md is never dispatched — left for a human-attended session. Dispatched 4 Sonnet impl agents in parallel worktrees, one per selection, verified no file collisions between them first. All work this turn is agent-initiated per the Skill's own charter (ADR-0003's review-agent role) — no direct human ask. Session closes in-review; will finalize to completed once the PRs are reviewed and merged in a follow-up turn."
+prs: []
+docsRead:
+  - path: scripts/session-frictions.ts
+    reason: (no reason given)
+  - path: tests/unit/session-frictions.spec.ts
+    reason: (no reason given)
+  - path: tests/unit/recent-prs.spec.ts
+    reason: (no reason given)
+  - path: scripts/shell-reads.ts
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: docs/agents/pr-workflow.md
+    reason: (read before editing)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: /home/user/terrarium/CLAUDE.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: worktree-isolation mechanics for 4 parallel impl agents
+  - name: frictions-to-fixes
+    reason: the Skill this run executes
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The survey subagent hit mcp__github__search_issues rate limiting (HTTP 403) whenever it issued 2+ search calls in the same batch, forcing it to serialize every subsequent tracker search one at a time.
+    solution: Budget tracker-search calls in future frictions-to-fixes survey subagent briefs as strictly sequential, not parallel-batched.
+    severity: minor
+  - description: scripts/session-frictions.ts's JSON output (~74KB for a 20-session window) exceeded the Read tool's single-call inline cap, requiring a second Read with an offset to get the rest.
+    solution: Expected/known given Read's pagination; note in the Skill's own instructions to budget ≥2 Read calls for the raw survey data, or land the --out flag PR from this run (adds a flag but doesn't itself fix chunking) plus consider a --compact-like size reduction in a future run.
+    severity: nit
+durationSec: 984
+models:
+  claude-sonnet-5: 42
+toolCounts:
+  Agent: 5
+  ScheduleWakeup: 1
+  ToolSearch: 1
+  mcp__github__search_issues: 3
+  mcp__github__issue_write: 4
+  Skill: 3
+  Write: 1
+  Bash: 1
+filesEdited:
+  - .agents/skills/prune-trial/SKILL.md
+  - CLAUDE.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+docsReadViaShell:
+  - docs/agents/guards.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/agents/pr-workflow.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Survey frictions and screen against tracker
+  - type: general-purpose
+    task: Batch doc fixes for 5 frictions
+    model: sonnet
+  - type: general-purpose
+    task: Add configurable output path to session-frictions.ts
+    model: sonnet
+  - type: general-purpose
+    task: Fix shell-reads.ts sed/cat/awk fallback crediting
+    model: sonnet
+  - type: general-purpose
+    task: Fix prune-trial Sonnet probe isolation
+    model: sonnet
+gitBranch: claude/eager-ptolemy-kfx19h
+entrypoint: remote_trigger
+cliVersion: 2.1.282
+trigger: frictions-to-fixes
+landedBy: Stop
