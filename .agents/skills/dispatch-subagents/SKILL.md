@@ -140,6 +140,13 @@ The subagent cannot see this session's context, so the brief is self-contained:
   impl agent to flag back to the orchestrator rather than silently exceeding it.
   Without a concrete anchor, an impl agent's own judgment of "small" runs high
   (issue #1182).
+- **When a brief touches routing or architecture, name the specific relevant
+  ADR(s) explicitly in the brief text** — don't rely on the impl agent
+  independently rediscovering which ADR applies. CLAUDE.md tells agents to read
+  all ADRs for *planning*, but a dispatch brief for implementation-only work can
+  skip that step entirely unless the brief itself names the ADR; one that didn't
+  let an agent add a Platform catch-all route contradicting ADR-0016, caught only
+  by a later standards review.
 
 Done when every applicable line above appears **in the brief text** — not merely
 true in your head.

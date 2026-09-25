@@ -219,7 +219,9 @@ it with a tool.
   `run_in_background: true`** — it backgrounds the *inner* shell a second
   time, so "completed" stops meaning the real process finished. Use
   `Monitor`/`ps` plus a log completion marker instead. Guarded, for any
-  caller (`docs/agents/guards.md`, issue #1208).
+  caller (`docs/agents/guards.md`, issue #1208). To log a backgrounded run,
+  just redirect — `pnpm gate:scoped > <scratch>/gate.log 2>&1` with
+  `run_in_background: true` is enough; no `&`/`nohup` needed.
 - **A dispatched subagent must never background a Bash command at all, or call
   `Monitor` to wait on one** — no wake mechanism ever resumes a stopped
   subagent. Guarded (`docs/agents/guards.md`, issue #694/#995); the mechanics

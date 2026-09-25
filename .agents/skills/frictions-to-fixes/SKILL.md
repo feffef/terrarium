@@ -140,7 +140,9 @@ has it). `pnpm exec tsx scripts/merged-since.ts <friction session's startedAt>` 
 `origin/main` commit landed after that instant (UTC-normalized, newest-first,
 `isMerge`-flagged) — scan it for the fixing commit/PR to turn the
 already-fixed/regression join into a direct comparison instead of manual
-git-timestamp archaeology. **Before landing on "Never fixed," run a targeted
+git-timestamp archaeology. (Redirect stdout and stderr separately when
+capturing its output — it writes diagnostics to stderr and its JSON result to
+stdout only; combining them breaks JSON parsing.) **Before landing on "Never fixed," run a targeted
 keyword search of the tracker using the friction's tool name and error-message
 text as query terms** (not a paraphrase or a topic-level guess; keep the query
 itself narrow per `docs/agents/github-integration.md`'s search-scoping guidance,

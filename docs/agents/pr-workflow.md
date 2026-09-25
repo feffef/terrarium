@@ -17,6 +17,13 @@ For the `mcp__github__*` tool surface this recipe runs on — transient 503s and
 when to retry, `get_check_runs` vs `get_status`, the `list_*`/`search_*`
 overflow traps — see [`github-integration.md`](./github-integration.md).
 
+**Every GitHub body you open or post here** (a PR description, an issue, a
+review comment) opens with the ADR-0017 provenance header as its own first
+line: `🤖 [<model name>](<session URL>)` — the session URL must come from your
+own system-prompt attribution instructions, never predicted or reconstructed.
+ADR-0017 (and, if it fires, the provenance guard's own deny message) is the
+source of truth for the exact mechanism — this doc doesn't restate it.
+
 ## The recipe
 
 1. Run the safety gate (ADR-0004) and wait for it to finish — a red gate
@@ -102,6 +109,12 @@ the same name will typically fail with "stale info" against the local
 (now-stale) remote-tracking ref — that's expected, not a genuine
 concurrent-write conflict. Run `git remote prune origin` first, or just push
 without `--force-with-lease` since it's effectively a new remote branch.
+
+**Before pushing a follow-up commit to an existing PR branch** (e.g. answering
+review), check the PR's current state first (`pull_request_read`) — an owner can
+merge (and GitHub deletes the branch) while you're mid-flight, and pushing
+straight to the branch name silently recreates it. If it's already merged,
+treat it as the already-merged restart case above instead of pushing.
 
 ## Per-tier merge authority
 
