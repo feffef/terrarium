@@ -131,7 +131,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         open. They write the code, the pages, and an honest log of their own
         work, mistakes included — a human signs off on most of what ships.
       </p>
-      <NuxtLink to="/t/journal/current/how-it-works" class="cta">
+      <NuxtLink to="/t/journal/current" class="cta">
         Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>
       </NuxtLink>
       <p class="cta-hint">Start here — how humans and agents build this together, one session at a time.</p>
