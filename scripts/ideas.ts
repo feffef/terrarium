@@ -1,6 +1,5 @@
-// The sparks helper (issue #440): the deterministic data layer behind the
-// journal dashboard's cross-session "Sparks" feed. It reads every session
-// log's `ideas`/`learnings` with session provenance and folds them into
+// The ideas helper (issue #440): a deterministic data layer that reads every
+// session log's `ideas`/`learnings` with session provenance and folds them into
 // clusters via a NAIVE, MECHANICAL keyword-overlap signal — no model or
 // semantic pass (the owner's green-light on #440 scoped this prototype to the
 // mechanical path only; a new runtime dependency would also escalate the
@@ -10,7 +9,7 @@
 // Mirrors `scripts/digest.ts`'s split: pure, unit-tested core (keyword
 // extraction, overlap scoring, clustering) behind a thin FS/CLI shell.
 //
-// Usage:  tsx scripts/sparks.ts gather [--threshold <n>]
+// Usage:  tsx scripts/ideas.ts gather [--threshold <n>]
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -22,25 +21,25 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
-export type SparkKind = 'idea' | 'learning'
+export type NoteKind = 'idea' | 'learning'
 
-export interface SessionSparkMaterial {
+export interface SessionNoteMaterial {
   session: string
   endedAt: string // ISO
   ideas: string[]
   learnings: string[]
 }
 
-export interface SparkRecord {
-  spark: string
-  kind: SparkKind
+export interface NoteRecord {
+  note: string
+  kind: NoteKind
   session: string
-  date: string // the session's endedAt (ISO) — when this spark was authored
+  date: string // the session's endedAt (ISO) — when this note was authored
 }
 
-export interface SparkCluster {
+export interface NoteCluster {
   label: string
-  sparks: SparkRecord[]
+  notes: NoteRecord[]
 }
 
 // ── Pure core (unit-tested) ───────────────────────────────────────────────────
@@ -62,9 +61,9 @@ const STOP_WORDS = new Set([
   'within', 'without', 'would', 'your',
 ])
 
-/** The significant, deduped keywords in a spark's free text: lowercased,
+/** The significant, deduped keywords in a note's free text: lowercased,
  *  punctuation-stripped, short/stop words dropped. */
-export function sparkKeywords(text: string): string[] {
+export function noteKeywords(text: string): string[] {
   const words = text
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, ' ')
@@ -82,7 +81,7 @@ export function keywordOverlap(a: string[], b: string[]): number {
   return union === 0 ? 0 : intersection / union
 }
 
-// Tuned empirically against the real session-log corpus (289 sparks as of
+// Tuned empirically against the real session-log corpus (289 notes as of
 // #440): 0.25 left 267/278 clusters as singletons (too tight to surface any
 // signal); 0.15 groups a meaningful ~10% into multi-item clusters — spot-
 // checked coherent (e.g. GitHub-authorship-identity learnings, permission-
@@ -116,7 +115,7 @@ export function clusterByKeywords<T extends { keywords: string[] }>(
 
 /** A cluster's label: its two most-shared keywords (frequency desc, then
  *  alpha) — a cheap stand-in for a real theme name. Falls back to "general"
- *  when every member's keywords stripped to nothing (all-stopword sparks). */
+ *  when every member's keywords stripped to nothing (all-stopword notes). */
 export function clusterLabel(items: { keywords: string[] }[]): string {
   const freq = new Map<string, number>()
   for (const item of items) for (const k of item.keywords) freq.set(k, (freq.get(k) ?? 0) + 1)
@@ -129,33 +128,33 @@ export function clusterLabel(items: { keywords: string[] }[]): string {
 
 /** Flatten every session's `ideas`/`learnings` into individually-provenanced
  *  records, preserving each array's authored order. */
-export function gatherSparkRecords(sessions: SessionSparkMaterial[]): SparkRecord[] {
-  const out: SparkRecord[] = []
+export function gatherNoteRecords(sessions: SessionNoteMaterial[]): NoteRecord[] {
+  const out: NoteRecord[] = []
   for (const s of sessions) {
-    for (const idea of s.ideas) out.push({ spark: idea, kind: 'idea', session: s.session, date: s.endedAt })
-    for (const learning of s.learnings) out.push({ spark: learning, kind: 'learning', session: s.session, date: s.endedAt })
+    for (const idea of s.ideas) out.push({ note: idea, kind: 'idea', session: s.session, date: s.endedAt })
+    for (const learning of s.learnings) out.push({ note: learning, kind: 'learning', session: s.session, date: s.endedAt })
   }
   return out
 }
 
-/** Sparks folded into clusters, biggest (most-recurring) first — the "what
- *  recurs" ordering the dashboard feed wants (#440). Ties broken by label. */
-export function buildSparkClusters(records: SparkRecord[], threshold = CLUSTER_THRESHOLD): SparkCluster[] {
-  const withKeywords = records.map((r) => ({ ...r, keywords: sparkKeywords(r.spark) }))
+/** Notes folded into clusters, biggest (most-recurring) first — the "what
+ *  recurs" ordering (#440). Ties broken by label. */
+export function buildNoteClusters(records: NoteRecord[], threshold = CLUSTER_THRESHOLD): NoteCluster[] {
+  const withKeywords = records.map((r) => ({ ...r, keywords: noteKeywords(r.note) }))
   return clusterByKeywords(withKeywords, threshold)
     .map((cluster) => ({
       label: clusterLabel(cluster),
-      sparks: cluster.map(({ keywords: _keywords, ...r }) => r),
+      notes: cluster.map(({ keywords: _keywords, ...r }) => r),
     }))
-    .sort((a, b) => b.sparks.length - a.sparks.length || a.label.localeCompare(b.label))
+    .sort((a, b) => b.notes.length - a.notes.length || a.label.localeCompare(b.label))
 }
 
-/** Reduce one parsed session log to its spark material, or `null` when it has
+/** Reduce one parsed session log to its note material, or `null` when it has
  *  nothing to gather. An EXTERNAL session (ADR-0009 amendment) keeps its `ideas`
  *  — a good idea is toolchain-agnostic — but drops its `learnings`, which reflect
  *  a different harness's development and don't generalize to ours. Internal
  *  sessions are unchanged (both fields kept). */
-export function readSparkMaterial(raw: Record<string, unknown>): SessionSparkMaterial | null {
+export function readNoteMaterial(raw: Record<string, unknown>): SessionNoteMaterial | null {
   const ideas = Array.isArray(raw.ideas) ? raw.ideas.map(String) : []
   const learnings = isExternalSession(raw)
     ? []
@@ -173,14 +172,14 @@ export function readSparkMaterial(raw: Record<string, unknown>): SessionSparkMat
 
 // ── Git / FS IO (thin shell) ──────────────────────────────────────────────────
 
-function readSessionSparkMaterials(cwd = root): SessionSparkMaterial[] {
+function readSessionNoteMaterials(cwd = root): SessionNoteMaterial[] {
   const dir = join(cwd, SESSIONS_DIR)
   if (!existsSync(dir)) return []
-  const out: SessionSparkMaterial[] = []
+  const out: SessionNoteMaterial[] = []
   for (const f of readdirSync(dir).filter((f) => f.endsWith('.yml'))) {
     const raw = parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>
     if (!raw || typeof raw !== 'object') continue
-    const material = readSparkMaterial(raw)
+    const material = readNoteMaterial(raw)
     if (material) out.push(material)
   }
   // Deterministic regardless of readdirSync's FS-dependent iteration order.
@@ -189,15 +188,15 @@ function readSessionSparkMaterials(cwd = root): SessionSparkMaterial[] {
 
 // ── Commands ──────────────────────────────────────────────────────────────────
 
-export function cmdGather(cwd = root, threshold = CLUSTER_THRESHOLD): { total: number; clusters: SparkCluster[] } {
-  const records = gatherSparkRecords(readSessionSparkMaterials(cwd))
-  return { total: records.length, clusters: buildSparkClusters(records, threshold) }
+export function cmdGather(cwd = root, threshold = CLUSTER_THRESHOLD): { total: number; clusters: NoteCluster[] } {
+  const records = gatherNoteRecords(readSessionNoteMaterials(cwd))
+  return { total: records.length, clusters: buildNoteClusters(records, threshold) }
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
 function fail(msg: string): never {
-  console.error(`sparks: ${msg}`)
+  console.error(`ideas: ${msg}`)
   process.exit(1)
 }
 

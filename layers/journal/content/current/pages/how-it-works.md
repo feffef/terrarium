@@ -118,7 +118,7 @@ routines go looking instead:
   a state that has since been superseded, and needlessly complicated wording.
   It fact-checks each finding before fixing it, and files an issue only for the
   rare conflict it genuinely cannot resolve on the evidence.
-- **`audit-skills`** keeps the [Skill Inventory](/t/journal/current#skills)
+- **`audit-skills`** keeps the [Skill Inventory](/t/journal/current/skills)
   honest against how Skills are *actually* used, re-grading each entry from
   session history, and watches for behaviour regressions after a Skill's own
   instructions have been edited. It never rewrites a Skill's text to fix what it

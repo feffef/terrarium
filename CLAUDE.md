@@ -48,7 +48,7 @@ it with a tool.
   test.
 - **Which Skills to actually use** is curated in the journal Tenant's **Skill
   Inventory** (`layers/journal/content/current/skills/`, rendered at
-  `/t/journal/current`; see `CONTEXT.md`'s glossary term for what it records) —
+  `/t/journal/current/skills`; see `CONTEXT.md`'s glossary term for what it records) —
   for every catalogued Skill, our own first-class Skills
   included, not only the ones from the external pack (ADR-0015). Treat it as the
   authoritative "use these" list: take these Skills seriously and prefer them

@@ -84,7 +84,7 @@ export const sessionSchema = z
     // stays valid under `.strict()`. Governs self-improvement mining (ADR-0009
     // amendment, 2026-07-22): `frictions-to-fixes` and `audit-skills` skip an
     // external session entirely — its frictions/skill-usage reflect a toolchain
-    // our fixes don't touch — while the Sparks feed still surfaces its `ideas`
+    // our fixes don't touch — while the ideas data layer still surfaces its `ideas`
     // (a good idea is toolchain-agnostic) and drops only its `learnings`.
     external: z.boolean().optional(),
     // True ONLY on the synthetic placeholder the lander's recoverDroppedScratch
@@ -106,9 +106,9 @@ export const sessionSchema = z
         severity: z.enum(['nit', 'minor', 'moderate', 'major', 'blocker']),
       }),
     ),
-    // Two OPTIONAL authored spark fields — see the `learnings`/`ideas` definitions
-    // on the Session glossary entry (CONTEXT.md). `.optional()`, not
-    // `.default([])`, so an empty log stays truly empty.
+    // Two OPTIONAL authored notes — see the Session and Idea glossary entries
+    // (CONTEXT.md). `.optional()`, not `.default([])`, so an empty log stays
+    // truly empty.
     learnings: z.array(z.string()).optional(),
     ideas: z.array(z.string()).optional(),
     // Field names a back-catalog sweep (issue #449 Gap 5) suspects were silently
@@ -121,7 +121,7 @@ export const sessionSchema = z
 /** True when a raw (parsed, not-yet-validated) session log was authored by an
  *  EXTERNAL harness — the `external: true` flag above. Single home for that check,
  *  shared by every self-improvement consumer that must exclude external sessions
- *  (`scripts/sparks.ts`, `scripts/audit-skills.ts`, `scripts/session-frictions.ts`;
+ *  (`scripts/ideas.ts`, `scripts/audit-skills.ts`, `scripts/session-frictions.ts`;
  *  ADR-0009 amendment, 2026-07-22). Absent/false/non-object ⇒ internal. */
 export function isExternalSession(raw: unknown): boolean {
   return typeof raw === 'object' && raw !== null && (raw as Record<string, unknown>).external === true

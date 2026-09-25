@@ -43,7 +43,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
           <!-- @click.stop: the whole head toggles the card; a PR chip navigates instead -->
           <a v-for="pr in card.prs" :key="pr" class="chip pr" :href="prUrl(pr)" @click.stop>PR {{ pr.startsWith('#') ? pr : '#' + pr }}</a>
           <span v-if="card.model" class="chip model" title="Model(s) that drove this session">{{ card.model }}</span>
-          <JournalFrictionStrata variant="inline" :counts="card.frictionCounts" :total="card.frictionTotal" />
+          <JournalFrictionStrata :counts="card.frictionCounts" :total="card.frictionTotal" />
           <span v-if="card.skills.length" class="skills">{{ card.skills.join(' · ') }}</span>
           <span class="sid">{{ card.sid }}</span>
           <span class="caret" aria-hidden="true">{{ expanded ? '▾' : '▸' }}</span>
@@ -92,14 +92,14 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 
           <div v-if="card.learnings.length" class="block">
             <h4>Learnings</h4>
-            <ul class="sparks">
+            <ul class="notes">
               <li v-for="(l, i) in card.learnings" :key="i">{{ l }}</li>
             </ul>
           </div>
 
           <div v-if="card.ideas.length" class="block">
             <h4>Ideas</h4>
-            <ul class="sparks">
+            <ul class="notes">
               <li v-for="(idea, i) in card.ideas" :key="i">{{ idea }}</li>
             </ul>
           </div>
@@ -285,8 +285,8 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
 .block li { font-size: 0.88rem; color: var(--jd-muted); line-height: 1.5; }
 .block code, .mono { font-family: var(--jd-mono); font-size: 0.82em; color: var(--jd-ink); }
 .frictions li { display: grid; grid-template-columns: max-content 1fr; gap: 0.6rem; align-items: baseline; }
-.sparks li { display: grid; grid-template-columns: max-content 1fr; gap: 0.55rem; align-items: baseline; }
-.sparks li::before { content: '›'; color: var(--jd-accent); font-weight: 600; }
+.notes li { display: grid; grid-template-columns: max-content 1fr; gap: 0.55rem; align-items: baseline; }
+.notes li::before { content: '›'; color: var(--jd-accent); font-weight: 600; }
 .sev {
   font-family: var(--jd-mono);
   font-size: 0.66rem;

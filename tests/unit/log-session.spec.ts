@@ -75,7 +75,7 @@ describe('validateEntry() — the L1 stand-in', () => {
   })
 
   it('accepts optional learnings/ideas string arrays, and a log that omits them', () => {
-    expect(validateEntry({ ...valid, learnings: ['inferred a thing'], ideas: ['a spark'] }).ok).toBe(true)
+    expect(validateEntry({ ...valid, learnings: ['inferred a thing'], ideas: ['an idea'] }).ok).toBe(true)
     expect('learnings' in valid).toBe(false) // absent is fine — they are optional
     expect(validateEntry(valid).ok).toBe(true)
   })

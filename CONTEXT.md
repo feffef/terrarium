@@ -83,9 +83,8 @@ goal, how far it got, what it read, which Skills it used, and every **Friction**
 it hit (see Session closure). It
 may also carry, *only when the work sparked them*, two optional notes: **learnings**
 (useful knowledge the session inferred during the work — not read from the repo,
-which would be a doc read — a Friction's positive twin) and **ideas** (an ambitious, concrete proposal for the
-Platform's or a Tenant's future — creative and specific enough that a later
-reader could turn it straight into a GitHub issue, not a vague hunch). A session may
+which would be a doc read — a Friction's positive twin) and **ideas** (see
+Idea). A session may
 span several branches or PRs, or none; its log is authored regardless
 of where the work went, or whether any code was committed at all. Session logs
 are ground truth, not a projection of repo state (see the Journal Tenant).
@@ -96,7 +95,7 @@ amendment for the first concrete instance). An external log is still a real, hon
 stays visible in the Timeline and dashboard; the schema marks it with an optional
 `external` flag (absent ⇒ internal — our own sessions leave it off). Its
 **Frictions** and **skills** are excluded from self-improvement mining, while its
-**ideas** (but not **learnings**) still surface in Sparks — see ADR-0009's
+**ideas** (but not **learnings**) still surface — see ADR-0009's
 external-sessions amendment for the exact split.
 
 Every session log records the Session's **kind** — where it sat on the autonomy
@@ -109,6 +108,14 @@ reminder — arrive as user messages but are **not** human prompts and never mak
 a Session interactive. Kind is descriptive of what happened, never a grant of
 authority: what a Session may merge is governed elsewhere and does not vary by
 kind.
+
+### Idea
+An optional note in a **session log**: an ambitious, concrete proposal for the
+Platform's or a Tenant's future — creative and specific enough that a later
+reader could turn it straight into a GitHub issue, not a vague hunch. An idea is
+not yet planned work, just noted. Ideas were previously titled "Sparks": where
+older digests and session logs say "Sparks", they mean ideas (early on,
+learnings too).
 
 ### Session closure
 The point at which a **Session**'s active work is **complete and in a coherent,

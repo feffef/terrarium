@@ -59,13 +59,13 @@ export interface SessionDoc {
   cliVersion?: string
   // Set only on a log authored by an EXTERNAL harness (ADR-0009 amendment) — a
   // different agent/toolchain. Absent ⇒ internal. The dashboard still renders an
-  // external session's record (and its ideas surface in Sparks); only the
-  // self-improvement mining excludes it (scripts/audit-skills.ts, sparks.ts).
+  // external session's record (and its ideas on the Ideas & learnings page); only the
+  // self-improvement mining excludes it (scripts/audit-skills.ts, ideas.ts).
   external?: boolean
   // Required: no `.default()` on `frictions` — the manifest forces every
   // session log to state its frictions explicitly (may be `[]`, not omitted).
   frictions: Friction[]
-  // Optional authored spark fields (tenant.config.ts): knowledge the session
+  // Optional authored note fields (tenant.config.ts): knowledge the session
   // inferred (`learnings`) and rough future-work ideas (`ideas`). Absent unless
   // the session actually noted one — never padded to `[]`.
   learnings?: string[]
@@ -134,7 +134,7 @@ export interface SessionCardView {
   docsRead: { path: string; reason: string }[]
   skillsUsed: { name: string; reason: string }[]
   frictions: Friction[]
-  // Authored spark fields — normalized to arrays (empty ⇒ the card hides them).
+  // Authored note fields — normalized to arrays (empty ⇒ the card hides them).
   learnings: string[]
   ideas: string[]
   // Mechanical trace, tucked behind in-card disclosures so the verbose lists
@@ -145,13 +145,11 @@ export interface SessionCardView {
   tools: { name: string; count: number }[]
 }
 
-// ── Sparks feed (issue #440) ──────────────────────────────
-// One authored idea, flattened out of its SessionDoc with the provenance the
-// dashboard needs to link back to that session's card. `kind` stays a union
-// for provenance even though the dashboard feed now surfaces only `idea`s (see
-// dashboard.ts's `latestIdeas`).
-export interface SparkItem {
-  spark: string
+// ── Ideas & learnings (issue #440) ───────────────────────
+// One authored idea or learning, flattened out of its SessionDoc with the
+// provenance needed to link back to that session's card.
+export interface NoteItem {
+  note: string
   kind: 'idea' | 'learning'
   session: string
   anchor: string
