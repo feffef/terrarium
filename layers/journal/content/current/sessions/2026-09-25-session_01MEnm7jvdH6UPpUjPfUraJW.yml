@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01MEnm7jvdH6UPpUjPfUraJW
 startedAt: 2026-09-25T13:18:05Z
-endedAt: 2026-09-25T13:31:45Z
+endedAt: 2026-09-25T13:39:09Z
 kind: autonomous
 goal: Run the scheduled /prune-trial routine
-status: in-review
-outcome: "New trial opened as PR #1338, gate green"
-summary: "Scheduled, unprompted run of /prune-trial (no human input this session). Checked the three open ledger trials against scripts/prune-trial-window.ts's real landing timestamps — none had cleared their 3-day window yet, so nothing was judged; all three stay open untouched. Dispatched a background subagent to full-corpus-search (instruction corpus + rulebook-migration-table.md + the issue tracker) for a new criterion-1 candidate (\"prose that already failed\") outside the three open trials' territory. It found docs/adr/0017-provenance-footer-on-agent-authored-content.md's amendment blockquote self-citing five prose-only passes (issues #346/#710/#723/#737/#784) that failed before enforcement was mechanized. Verified the underlying guards (scripts/github-provenance-guard.ts, .githooks/commit-msg) are fully built and wired, cut the incident-history narration to a bare pointer, wrote the ledger entry, and proved the prune per the Skill's §4 by dispatching a fresh Sonnet subagent against a detached git worktree at the post-prune commit — it correctly named the guard as the enforcing mechanism, correctly said history isn't recoverable from the file, and correctly quoted the current header shape. pnpm gate:scoped ran the full sequence (the .yml change isn't inert) and passed. Opened PR #1338, subscribed to its activity for babysitting to merge."
+status: completed
+outcome: "PR #1338 merged (952623c5)"
+summary: "Scheduled, unprompted run of /prune-trial (no human input this session). Checked the three open ledger trials against scripts/prune-trial-window.ts's real landing timestamps — none had cleared their 3-day window yet, so nothing was judged; all three stay open untouched. Dispatched a background subagent to full-corpus-search (instruction corpus + rulebook-migration-table.md + the issue tracker) for a new criterion-1 candidate (\"prose that already failed\") outside the three open trials' territory. It found docs/adr/0017-provenance-footer-on-agent-authored-content.md's amendment blockquote self-citing five prose-only passes (issues #346/#710/#723/#737/#784) that failed before enforcement was mechanized. Verified the underlying guards (scripts/github-provenance-guard.ts, .githooks/commit-msg) are fully built and wired, cut the incident-history narration to a bare pointer, wrote the ledger entry, and proved the prune per the Skill's §4 by dispatching a fresh Sonnet subagent against a detached git worktree at the post-prune commit — it correctly named the guard as the enforcing mechanism, correctly said history isn't recoverable from the file, and correctly quoted the current header shape. pnpm gate:scoped ran the full sequence (the .yml change isn't inert) and passed. Opened PR #1338, subscribed to its activity, confirmed CI green and no conflicts/reviews outstanding, posted the verdict comment (per the still-open trial on this exact ordering), and merged via merge-pr.ts."
 prs:
   - "1338"
 docsRead:
@@ -39,21 +39,25 @@ frictions:
   - description: Called the Skill tool for `prune-trial` even though the scheduled task's prompt already contained the full skill text inline (per the command-name/command-message envelope) — the call was refused (disable-model-invocation, reserved for explicit user/scheduled invocation) since re-invoking a skill already delivered inline is redundant.
     solution: For a scheduled task whose prompt already carries a skill's full body inline (command-name set), proceed directly from the delivered text instead of also calling Skill on it.
     severity: nit
-durationSec: 820
+durationSec: 1264
 models:
-  claude-sonnet-5: 88
+  claude-sonnet-5: 127
 toolCounts:
   Skill: 3
-  Bash: 24
+  Bash: 32
   Agent: 3
-  Read: 2
+  Read: 4
   Grep: 3
-  Edit: 3
-  ToolSearch: 2
+  Edit: 5
+  ToolSearch: 5
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 5
+  mcp__github__pull_request_review_write: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/adr/0017-provenance-footer-on-agent-authored-content.md
   - .agents/prune-trials.yml
