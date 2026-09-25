@@ -105,7 +105,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         <NuxtLink to="/t/journal/current" class="cta">
           Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>
         </NuxtLink>
-        <p class="cta-hint">Start here — how humans and agents build this together, one session at a time.</p>
+        <p class="tagline cta-hint">Start here — how humans and agents build this together, one session at a time.</p>
       </div>
 
       <section v-if="digests.length" class="digests" aria-labelledby="digests-heading">
@@ -126,7 +126,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
     <section class="explore" aria-labelledby="explore-heading">
       <div class="explore-head">
         <h2 id="explore-heading" class="eyebrow">Elsewhere in the terrarium</h2>
-        <p class="explore-lead">
+        <p class="tagline">
           Other ways in — each its own site, with its own voice and its own rooms to wander.
         </p>
       </div>
@@ -323,12 +323,8 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   transform: translateX(3px);
 }
 
-/* Outranks `.hero-copy > p`'s measure so the hint stays one line on desktop. */
-.hero-copy > .cta-hint {
-  margin: -0.25rem 0 0;
-  max-width: none;
-  font-size: 0.9rem;
-  color: var(--root-muted);
+.cta-hint {
+  margin-top: 0.4rem;
   text-wrap: balance;
 }
 
@@ -435,13 +431,6 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-}
-.explore-lead {
-  margin: 0;
-  max-width: 34rem;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: var(--root-muted);
 }
 
 /* Three columns share one row (so the Atlas plate sets every card's height,
