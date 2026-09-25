@@ -348,12 +348,16 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
     position: relative;
     min-height: 6rem;
   }
-  .scroll-box {
+  /* The fade says "more below"; the bottom padding lets the last entry
+     scroll clear of it. Specificity outranks each list's own padding. */
+  .scroll-well > .scroll-box {
     position: absolute;
     inset: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
     scrollbar-width: thin;
+    padding-bottom: 2.5rem;
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 2.5rem), transparent);
   }
 }
 @media (max-width: 56rem) {
