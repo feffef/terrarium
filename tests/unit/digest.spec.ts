@@ -13,6 +13,8 @@ import {
   DIGESTS_DIR,
   existingDigestDays,
   prFromCommit,
+  readSessions,
+  SESSIONS_DIR,
   utcDay,
   type Commit,
   type SessionMaterial,
@@ -84,10 +86,12 @@ describe('buildDayMaterials()', () => {
         { severity: 'nit', description: 'a' },
         { severity: 'minor', description: 'b' },
       ],
+      learnings: [], ideas: [],
     },
     {
       session: 's2', kind: 'interactive', goal: 'ship Y', outcome: 'done', status: 'completed',
       prs: [], frictions: [{ severity: 'nit', description: 'c' }],
+      learnings: [], ideas: [],
     },
   ]
   const m = buildDayMaterials('2026-07-04', commits, sessions)
@@ -132,5 +136,21 @@ describe('existingDigestDays()', () => {
     // A day whose Digest has already been swept to `archived` must not look
     // undigested again — it fell off the `current`-only scan before this fix.
     expect(existingDigestDays(dir)).toEqual(new Set(['2026-08-30', '2026-07-15']))
+  })
+})
+
+describe('readSessions()', () => {
+  let dir: string
+  afterEach(() => rmSync(dir, { recursive: true, force: true }))
+
+  it('passes learnings and ideas through, defaulting to empty', () => {
+    dir = mkdtempSync(join(tmpdir(), 'digest-test-'))
+    mkdirSync(join(dir, SESSIONS_DIR), { recursive: true })
+    writeFileSync(join(dir, SESSIONS_DIR, 'a.yml'),
+      'session: a\nendedAt: 2026-07-04T10:00:00Z\nfrictions: []\nlearnings: [L1]\nideas: [I1, I2]\n')
+    writeFileSync(join(dir, SESSIONS_DIR, 'b.yml'), 'session: b\nendedAt: 2026-07-04T11:00:00Z\n')
+    const bySession = Object.fromEntries(readSessions(dir).map((s) => [s.material.session, s.material]))
+    expect(bySession.a).toMatchObject({ learnings: ['L1'], ideas: ['I1', 'I2'] })
+    expect(bySession.b).toMatchObject({ learnings: [], ideas: [], frictions: [], prs: [] })
   })
 })

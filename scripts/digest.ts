@@ -54,6 +54,8 @@ export interface SessionMaterial {
   status: string
   prs: number[]
   frictions: SessionFriction[]
+  learnings: string[]
+  ideas: string[]
 }
 export interface DayMaterials {
   date: string
@@ -182,15 +184,15 @@ function readCommits(cwd = root): Commit[] {
     })
 }
 
-function readSessions(cwd = root): { endedAt: Date; material: SessionMaterial }[] {
+const list = (v: unknown): unknown[] => (Array.isArray(v) ? v : [])
+
+export function readSessions(cwd = root): { endedAt: Date; material: SessionMaterial }[] {
   const dir = join(cwd, SESSIONS_DIR)
   if (!existsSync(dir)) return []
   const out: { endedAt: Date; material: SessionMaterial }[] = []
   for (const f of readdirSync(dir).filter((f) => f.endsWith('.yml'))) {
     const raw = parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>
     if (!raw || typeof raw !== 'object') continue
-    const frictions = Array.isArray(raw.frictions) ? raw.frictions : []
-    const prs = Array.isArray(raw.prs) ? raw.prs : []
     out.push({
       endedAt: new Date(raw.endedAt as string | Date),
       material: {
@@ -199,11 +201,13 @@ function readSessions(cwd = root): { endedAt: Date; material: SessionMaterial }[
         goal: String(raw.goal ?? ''),
         outcome: String(raw.outcome ?? ''),
         status: String(raw.status ?? ''),
-        prs: prs.map((p) => Number(p)).filter((n) => !Number.isNaN(n)),
-        frictions: frictions.map((fr: Record<string, unknown>) => ({
+        prs: list(raw.prs).map((p) => Number(p)).filter((n) => !Number.isNaN(n)),
+        frictions: (list(raw.frictions) as Record<string, unknown>[]).map((fr) => ({
           severity: String(fr.severity ?? ''),
           description: String(fr.description ?? '').replace(/\s+/g, ' ').trim(),
         })),
+        learnings: list(raw.learnings).map(String),
+        ideas: list(raw.ideas).map(String),
       },
     })
   }

@@ -53,36 +53,47 @@ pnpm exec tsx scripts/digest.ts gather <date>
 ```
 
 The JSON gives you `prs` (merged/referenced), `otherCommits` (direct-to-main
-work), `sessions` (goal/outcome/status + frictions), and a `rollup`. Author a
+work), `sessions` (goal/outcome/status, frictions, learnings, ideas), and a `rollup`. Author a
 short catch-up from it and save to
 `layers/journal/content/current/pages/digests/<date>.md`:
 
 ```markdown
 ---
 title: Digest — <date>
-summary: <one–two sentence headline of the day — this feeds the index preview>
+summary: <one plain sentence: what happened today — this feeds the index preview>
 ---
 
 # <date>
 
-<1–3 short paragraphs: the day's story and through-line — what the Platform
-gained, anything notable or surprising. Link inline by number: PRs as
-[#22](https://github.com/feffef/terrarium/pull/22), issues as
+<1–3 short paragraphs: what changed and why it matters. Link inline by number:
+PRs as [#22](https://github.com/feffef/terrarium/pull/22), issues as
 [#2](https://github.com/feffef/terrarium/issues/2).>
 
-**Shipped:** [#22](…) route-resolver tests · [#21](…) friction analysis
-**Sessions:** 3 (all completed) · **Frictions:** 5 logged (2 minor, 3 nit) — sharpest: <one line>.
+**Also shipped:** [#22](…) tests for page links · [#21](…) review of recent problems
+**Sessions:** 3 (all completed) · **Problems noted:** 5 (2 minor, 3 trivial) — worst: <one line>.
 ```
 
-Write for a **human catching up**, not a changelog: lead with narrative, keep it
-short (~120 words of prose), fold the counts into the one-line footer. **Keep the
+Write in **plain English for someone who knows software but not this
+project**: they should understand what actually happened without the glossary.
+Name things by what they do ("the scheduled docs check" — never how often it
+runs), not by project names
+(`audit-docs`, Tenant, prune trial, Friction); leave out file, script and ADR
+names and git commands. The `summary` headline matters most — it must read
+clearly on its own. Lead with narrative, not a changelog; keep it to 100–250
+words of prose: about 100 for a quiet day of scheduled jobs, up to 250 for a
+busy day when it stays interesting. Fold the counts into the footer. The prose tells only the interesting
+work; routine PRs (yesterday's digest, a scheduled clean-up with nothing
+notable) go in **Also shipped** instead, never both. A session's
+`learnings` or `ideas` earn a sentence only when a reader would find them
+genuinely interesting. **Keep the
 opening paragraph's first ~10 words plain prose — no backticks, links, or bold**:
 `layers/journal/tests/e2e/journal.e2e.ts`'s `digestBodySnippet()` literal-matches the first
 six rendered words against the rendered HTML, and MDC renders inline markdown
 (e.g. a backtick code span) as an HTML tag, breaking that match (issue #903).
 **Include
-the frictions rollup** — visible self-improvement is the Journal's point — as a
-severity tally plus the 1–3 sharpest, never a dump of every nit. Issue/PR links
+the problems the sessions ran into** (their logged frictions) — visible
+self-improvement is the Journal's point — as a severity tally (nit = trivial)
+plus the 1–3 worst, never a dump of every small one. Issue/PR links
 are constructable from numbers; optionally enrich with issues active that day via
 the GitHub MCP, but degrade gracefully to git-only when it is unavailable.
 
