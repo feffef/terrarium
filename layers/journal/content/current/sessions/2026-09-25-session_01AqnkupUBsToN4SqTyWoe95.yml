@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01AqnkupUBsToN4SqTyWoe95
 startedAt: 2026-09-25T09:01:43Z
-endedAt: 2026-09-25T11:34:17Z
+endedAt: 2026-09-25T15:47:34Z
 kind: interactive
 goal: Extend Journal History page to late September
 status: in-review
-outcome: Fifth period section added; PR open
-summary: Human asked why the Journal History page ("How Terrarium Grew") was outdated, what happened in the missing month, and whether a Skill covers it. I read the 30 digests for 26 Aug–24 Sep, summarized the month, and found no Skill owns the page. The human then instructed a fifth period section and supplied the framing (the Sep burst as a backlog clear and stress test, the visitor loop as a turn toward self-growth under daily activity) and asked for background agents for exploration. A background agent recomputed stats with the method that reproduces existing rows. I wrote the section, fixed two wrong claims after checking them, passed gate:scoped, and opened PR 1337.
+outcome: Fifth period added, reframed after review
+summary: Human asked why the Journal History page ("How Terrarium Grew") was outdated, what happened in the missing month, and whether a Skill covers it. I read the 30 digests for 26 Aug–24 Sep, summarized the month, and found no Skill owns the page. The human then instructed a fifth period section and supplied the framing (the Sep burst as a backlog clear and stress test, the visitor loop as a turn toward self-growth under daily activity) and asked for background agents for exploration. A background agent recomputed stats with the method that reproduces existing rows. I wrote the section, fixed two wrong claims after checking them, passed gate:scoped, and opened PR 1337. On review the human rejected my title "Under load" (the month was idle routines); per their suggested structure I reframed it as "Idling and pruning" with the backlog clearing as a single-event callout and the visitor loop as a possible next phase.
 prs:
   - "1337"
 docsRead:
@@ -39,23 +39,32 @@ frictions:
   - description: 'SHELL-READ-DETECTION false positive: docs/agents/guards.md credited from `grep -n -i "branch-pin" docs/agents/guards.md | head -3` which printed zero matches (no subagent read it either).'
     solution: "Credit a single-file grep only when its output actually contains a line from that file, as #1250 does for multi-file greps."
     severity: moderate
-durationSec: 9153
+  - description: Titled the period "Under load" and led with bursts and incidents, misrepresenting a month that was almost entirely idle routines; the human had to correct the framing.
+    solution: Let the base-rate numbers (sessions/week, interactive share) set a period's headline before picking out notable events, as the Floor section does.
+    severity: minor
+durationSec: 24350
 models:
-  claude-opus-5-5: 65
+  claude-opus-5-5: 118
 toolCounts:
-  Bash: 20
+  Bash: 30
   Read: 5
   Agent: 1
   ScheduleWakeup: 1
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 7
+  mcp__Claude_Code_Remote__send_later: 5
+  mcp__github__pull_request_read: 4
+  AskUserQuestion: 1
+  mcp__github__update_pull_request: 1
 docsReadViaShell:
   - .agents/skills/ask-matt/SKILL.md
   - .agents/skills/digest/SKILL.md
   - docs/agents/guards.md
+  - docs/agents/pr-workflow.md
   - CONTEXT.md
   - .agents/skills/visitor-loop/SKILL.md
 subagents:
