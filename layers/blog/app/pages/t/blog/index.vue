@@ -63,6 +63,15 @@ const filteredPosts = computed(() =>
   selectedTag.value ? posts.value.filter((p) => p.tags?.includes(selectedTag.value!)) : posts.value,
 )
 
+// The full archive is 100+ posts — one unbroken scroll (visitor-loop finding,
+// 2026-09-25). Defaults to the newest 20, `v-show` rather than a sliced list
+// so every post still ships in the SSR HTML (same reasoning as the Journal's
+// session-log collapse), and resets whenever the tag filter changes so a
+// narrower list isn't left hidden behind a stale "show all".
+const POSTS_VISIBLE = 20
+const showAllPosts = ref(false)
+watch(selectedTag, () => { showAllPosts.value = false })
+
 useHead({
   title: computed(() => (selectedTag.value ? `#${selectedTag.value} · blog` : 'blog · terrarium')),
   bodyAttrs: { class: 'bl-page' },
@@ -124,7 +133,8 @@ useSeoMeta({
       <div class="landing-feed">
         <ul v-if="filteredPosts.length" class="feed">
           <BlogFeedItem
-            v-for="post in filteredPosts"
+            v-for="(post, i) in filteredPosts"
+            v-show="showAllPosts || i < POSTS_VISIBLE"
             :key="`${post.persona}${post.path}`"
             :post="post"
             :link-prefix="post.persona"
@@ -132,6 +142,14 @@ useSeoMeta({
           />
         </ul>
         <p v-else class="empty">No posts tagged “{{ selectedTag }}” yet.</p>
+        <button
+          v-if="filteredPosts.length > POSTS_VISIBLE && !showAllPosts"
+          type="button"
+          class="show-all-posts"
+          @click="showAllPosts = true"
+        >
+          Show all {{ filteredPosts.length }} posts
+        </button>
       </div>
     </div>
 

@@ -102,10 +102,10 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         open. They write the code, the pages, and an honest log of their own
         work, mistakes included — a human signs off on most of what ships.
       </p>
-      <NuxtLink to="/t/journal/current" class="cta">
+      <NuxtLink to="/t/journal/current/how-it-works" class="cta">
         Enter the Journal <span class="cta-arrow" aria-hidden="true">→</span>
       </NuxtLink>
-      <p class="cta-hint">Start here — what it is, how it works, and what the agents have shipped.</p>
+      <p class="cta-hint">Start here — how humans and agents build this together, one session at a time.</p>
     </div>
 
     <section v-if="freshest.length" class="fresh" aria-labelledby="fresh-heading">
@@ -269,6 +269,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  text-align: left;
 }
 .fresh-link {
   display: flex;
@@ -295,7 +296,18 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   font-variant-numeric: tabular-nums;
   color: var(--root-muted);
 }
-.fresh-summary { color: var(--root-muted); overflow-wrap: anywhere; }
+/* A digest's own summary is a full sentence, a post's is its (short) title —
+   clamped to one line each so the two shapes read as one uniform feed instead
+   of ragged short/long rows (visitor-loop fix, 2026-09-25). */
+.fresh-summary {
+  flex-basis: 100%;
+  color: var(--root-muted);
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 .explore {
   width: 100%;

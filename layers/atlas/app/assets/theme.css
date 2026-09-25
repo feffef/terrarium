@@ -484,10 +484,22 @@
    10-13px labels to illegible sub-6px text, since the fixed viewBox scales
    down with the container (visitor-loop fix, 2026-09-24). Hold the SVG at a
    legible width and let the wrapper scroll sideways instead of shrinking
-   it further. */
+   it further. The held width now routinely exceeds a phone viewport, so the
+   far side (an unlabeled node, in the worst case) sits past the fold with no
+   sign there's more to see — a fade hints at it (visitor-loop fix, 2026-09-25). */
 @media (max-width: 30rem) {
   .atlas-web { overflow-x: auto; }
   .atlas-web svg { width: auto; min-width: 30rem; }
+  .atlas-web::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 1.75rem;
+    background: linear-gradient(to right, transparent, var(--atlas-paper));
+    pointer-events: none;
+  }
 }
 .atlas-web .strand { stroke: var(--atlas-rule); fill: none; stroke-width: 1.25; transition: stroke 0.15s ease, stroke-width 0.15s ease; }
 .atlas-web .strand.mimics { stroke-dasharray: 2 4; }

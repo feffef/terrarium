@@ -211,6 +211,19 @@ body.bl-page {
 .bl .feed .excerpt { margin: 0; color: var(--bl-muted); font-size: 0.96rem; }
 .bl .feed .reply { font-family: var(--bl-mono); font-size: 0.72rem; color: var(--bl-accent); margin: 0 0 0.2rem; }
 .bl .empty { color: var(--bl-faint); font-style: italic; font-family: var(--bl-serif); }
+.bl .show-all-posts {
+  display: block;
+  margin: 1.1rem 0 0;
+  padding: 0.5rem 0.9rem;
+  font-family: var(--bl-mono);
+  font-size: 0.78rem;
+  color: var(--bl-muted);
+  background: none;
+  border: 1px solid var(--bl-line);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.bl .show-all-posts:hover { color: var(--bl-ink); border-color: var(--bl-accent); }
 
 /* Tag chips — on a feed teaser (below the click target) and on a post header. */
 .bl .tag-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; }

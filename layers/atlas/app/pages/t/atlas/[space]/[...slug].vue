@@ -148,8 +148,6 @@ useSeoMeta({
           <div class="atlas-sechead"><span class="atlas-eyebrow">Recent sightings</span></div>
           <AtlasFieldLog :observations="sightings" :specimens-by-slug="specimensBySlug" :biome="space" />
         </section>
-
-        <SiteFooter />
       </article>
 
       <div v-else class="atlas-prose not-found">
