@@ -15,7 +15,7 @@
 // distinct from the exports, or the bindings merge and vue-tsc rejects the
 // ambiguity (see dashboard.ts's header comment).
 import { routingMap } from '#routing'
-import type { SessionDoc, SkillDoc, SparkItem } from '../../../../types/journal'
+import type { SessionDoc, SkillDoc } from '../../../../types/journal'
 
 const route = useRoute()
 const tenant = 'journal'
@@ -95,41 +95,13 @@ const sessionKindCounts = computed(() => kindCounts(sessions.value))
 const referencedPrs = computed(() => prRefs(sessions.value))
 const referencedPrParts = computed(() => prRefsParts(referencedPrs.value))
 
-// Cross-session Sparks feed (issue #440) — the latest authored ideas across
-// every session, flattened newest-first and capped, and limited to the last
-// few days; see dashboard.ts's latestIdeas header for why it's ideas-only,
-// bounded, and recency-windowed.
-const ideaSparks = computed(() => latestIdeas(sessions.value))
-
-// Each idea carries a copy button that puts a ready-made `/grill-with-docs`
-// prompt (ideaGrillPrompt, auto-imported) on the clipboard, so a reader can
-// paste it straight into Claude to sharpen the idea. Keyed by index for the
-// "copied" flash — several ideas can share one session, so the row index, not
-// the session anchor, identifies which button was pressed.
-const copiedIdeaIndex = ref<number | null>(null)
-let copiedResetTimer: ReturnType<typeof setTimeout> | null = null
-const copyIdeaPrompt = async (item: SparkItem, i: number) => {
-  try {
-    await navigator.clipboard.writeText(ideaGrillPrompt(item))
-    copiedIdeaIndex.value = i
-    if (copiedResetTimer) clearTimeout(copiedResetTimer)
-    copiedResetTimer = setTimeout(() => (copiedIdeaIndex.value = null), 1600)
-  } catch {
-    // Clipboard unavailable (insecure origin, denied permission) — the button
-    // just doesn't confirm rather than surfacing an error.
-  }
-}
-onBeforeUnmount(() => {
-  if (copiedResetTimer) clearTimeout(copiedResetTimer)
-})
+const notes = computed(() => sessionNotes(sessions.value))
 
 const platformSkills = computed(() => ownSkills(skills.value))
-const externalSkillTotal = computed(() => externalSkillCount(skills.value))
-const skillsHeading = computed(() => skillsLabel(externalSkillTotal.value))
+const skillsHeading = computed(() => skillsLabel(externalSkillCount(skills.value)))
 const skillsSubtext = computed(() => skillsSub(platformSkills.value))
-const groupedSkills = computed(() => skillGroups(platformSkills.value))
 
-// The four stat tiles below only ever read THIS Space's own collections (see
+// The stat tiles below only ever read THIS Space's own collections (see
 // the resolver comment atop this file), and archiving retains just the newest
 // RETAIN_DATES=7 dates on `current` (scripts/archive-journal-content.ts) —
 // so the tiles' scope tracks which Space is showing, not an explicit filter.
@@ -197,128 +169,56 @@ useSeoMeta({
       <ContentRenderer :value="rootDoc" />
     </section>
 
-    <!-- Digests + Sparks band. On desktop a two-column grid puts Sparks to the
-         RIGHT of the Daily digests; on mobile it collapses to one column
-         (digests first, then Sparks) via the media query below.
-
-         Why a grid and not a float: an earlier float put Sparks in the SAME band
-         with a BFC digests, which coupled the two heights and broke the scroll-pin
-         e2e at wide viewports (PR #597). Here each column keeps its natural height
-         and the row tracks whichever one is taller.
-
-         WHICH column that is, is incidental, and nothing depends on the answer.
-         #597 read it as always the digests and #760 as always Sparks; it is
-         neither. The Sparks feed is windowed to the last few days and capped
-         (see dashboard.ts's latestIdeas), so it swings between one row and
-         fifteen wrapped ones from day to day, while the digests column tracks
-         seven retained multi-line summaries — so the taller of the two changes
-         with the day's content, and issue #906 stopped treating either side as
-         an invariant after ordinary `/digest` runs kept flipping it.
-
-         Both regimes are correct. Digests taller: collapsing one reflows the
-         content below and the scroll-pin absorbs it. Sparks taller: a digest
-         expands into existing slack and nothing moves, so there is nothing to
-         pin. The e2e proves the pin holds in THIS two-column layout either way,
-         by bounding Sparks so digests drives rather than waiting for the content
-         to land that way — see the sibling-collapse guards in
-         `layers/journal/tests/e2e/journal.e2e.ts`, and don't change these column
-         widths without re-reading them. -->
-    <div v-if="digests.length" class="digests-sparks">
-      <!-- Daily digests — a plain-language, day-by-day recap of project activity -->
-      <section class="panel digests">
-        <div class="section-head">
-          <h2>Daily digests</h2>
-          <span class="count">newest first</span>
-        </div>
-        <p class="panel-intro">
-          A plain recap of what changed across the project each day — click any day
-          to read the full story.
-        </p>
-        <ul class="digest-list">
-          <li
-            v-for="d in digests"
-            :id="digestAnchor(d.date)"
-            :key="d.doc.path"
-            class="digest"
-            :class="{ open: isOpen(digestAnchor(d.date)) }"
-          >
-            <!-- The copy control is a SIBLING of the row's disclosure, not a child
-                 of it — see JournalCopyLink's header for why (issue #450). -->
-            <div class="drow-wrap">
-              <JournalDisclosure
-                class="drow"
-                :expanded="isOpen(digestAnchor(d.date))"
-                @toggle="toggle(digestAnchor(d.date))"
-              >
-                <span class="digest-date">{{ d.date }}</span>
-                <span class="digest-summary">{{ d.summary }}</span>
-                <span class="caret" aria-hidden="true">{{ isOpen(digestAnchor(d.date)) ? '▾' : '▸' }}</span>
-              </JournalDisclosure>
-              <JournalCopyLink class="drow-copy" :anchor="digestAnchor(d.date)" what="digest" />
-            </div>
-            <Transition :css="false" @enter="expandOnEnter" @leave="expandOnLeave">
-              <div v-if="isOpen(digestAnchor(d.date))" class="digest-body-clip">
-                <div class="digest-body">
-                  <ContentRenderer :value="d.doc" />
-                </div>
-              </div>
-            </Transition>
-          </li>
-        </ul>
-      </section>
-
-      <!-- Sparks — the latest authored ideas across every session, flattened into
-           one dense, newest-first feed and capped (issue #440; ideas-only + bounded
-           per owner request — see dashboard.ts's latestIdeas header). Sits in the
-           right grid column, sticky so it stays in view alongside a long digest list. -->
-      <section class="panel sparks">
-        <div class="section-head">
-          <h2>Sparks</h2>
-          <span class="count">latest {{ ideaSparks.length }} idea{{ ideaSparks.length === 1 ? '' : 's' }}</span>
-        </div>
-        <p class="panel-intro">Ideas agents jotted mid-session — not built yet, just noted.</p>
-        <ol v-if="ideaSparks.length" class="spark-items">
-          <li v-for="(item, i) in ideaSparks" :key="i" class="spark-item">
-            <button
-              type="button"
-              class="spark-copy"
-              :class="{ copied: copiedIdeaIndex === i }"
-              :aria-label="`Copy a grill-with-docs prompt to refine this idea (from session ${item.session})`"
-              :title="copiedIdeaIndex === i ? 'Copied grill prompt' : 'Copy grill prompt for this idea'"
-              @click="copyIdeaPrompt(item, i)"
+    <section v-if="digests.length" class="panel digests">
+      <div class="section-head">
+        <h2>Daily digests</h2>
+        <span class="count">newest first</span>
+      </div>
+      <p class="panel-intro">
+        A plain recap of what changed across the project each day — click any day
+        to read the full story.
+      </p>
+      <ul class="digest-list">
+        <li
+          v-for="d in digests"
+          :id="digestAnchor(d.date)"
+          :key="d.doc.path"
+          class="digest"
+          :class="{ open: isOpen(digestAnchor(d.date)) }"
+        >
+          <!-- The copy control is a SIBLING of the row's disclosure, not a child
+               of it — see JournalCopyLink's header for why (issue #450). -->
+          <div class="drow-wrap">
+            <JournalDisclosure
+              class="drow"
+              :expanded="isOpen(digestAnchor(d.date))"
+              @toggle="toggle(digestAnchor(d.date))"
             >
-              <!-- A lightbulb doubled like the copy icon's two-sheet motif: a
-                   back bulb offset up-right, and a front bulb (surface-filled to
-                   notch the overlap) down-left. "Copy this idea." -->
-              <svg
-                class="spark-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-              >
-                <g transform="translate(5 0.5) scale(0.7)">
-                  <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
-                  <path d="M9 18h6" />
-                </g>
-                <g transform="translate(-0.5 5) scale(0.7)">
-                  <path
-                    d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"
-                    style="fill: var(--jd-surface)"
-                  />
-                  <path d="M9 18h6" />
-                  <path d="M10 21h4" />
-                </g>
-              </svg>
-            </button>
-            <span class="spark-text">{{ item.spark }}</span>
-            <button type="button" class="spark-src" @click="toggle(item.anchor)">
-              source <span aria-hidden="true">→</span>
-            </button>
-          </li>
-        </ol>
-        <p v-else class="empty">No ideas logged in this Space yet.</p>
-      </section>
-    </div>
+              <span class="digest-date">{{ d.date }}</span>
+              <span class="digest-summary">{{ d.summary }}</span>
+              <span class="caret" aria-hidden="true">{{ isOpen(digestAnchor(d.date)) ? '▾' : '▸' }}</span>
+            </JournalDisclosure>
+            <JournalCopyLink class="drow-copy" :anchor="digestAnchor(d.date)" what="digest" />
+          </div>
+          <Transition :css="false" @enter="expandOnEnter" @leave="expandOnLeave">
+            <div v-if="isOpen(digestAnchor(d.date))" class="digest-body-clip">
+              <div class="digest-body">
+                <ContentRenderer :value="d.doc" />
+              </div>
+            </div>
+          </Transition>
+        </li>
+      </ul>
+    </section>
 
-    <!-- State of this Space -->
+    <p class="ideas-link">
+      <NuxtLink :to="{ name: 'journal-ideas', params: { space } }">
+        {{ notes.ideas.length }} idea{{ notes.ideas.length === 1 ? '' : 's' }} and
+        {{ notes.learnings.length }} learning{{ notes.learnings.length === 1 ? '' : 's' }}
+        {{ space === 'current' ? 'noted this week' : 'noted in earlier weeks' }} →
+      </NuxtLink>
+    </p>
+
     <p class="tiles-headline">{{ tilesHeadline }}</p>
     <section class="tiles" aria-label="State of this Space">
       <JournalStatTile
@@ -326,16 +226,18 @@ useSeoMeta({
         :value="sessions.length"
         :sub="`${sessionKindCounts.interactive} interactive · ${sessionKindCounts.delegated} delegated · ${sessionKindCounts.autonomous} autonomous`"
       />
-      <JournalStatTile
-        :label="skillsHeading"
-        :value="platformSkills.length"
-        :sub="skillsSubtext"
-      />
-      <JournalStatTile
-        label="Frictions surfaced"
-        :value="totalFrictions"
-        :sub="`${frictionSeverityTotals.blocker} blockers · ${frictionSeverityTotals.major} major`"
-      />
+      <JournalStatTile :label="skillsHeading" :value="platformSkills.length">
+        <template #sub>
+          {{ skillsSubtext }} · <NuxtLink class="pr-link" :to="{ name: 'journal-skills', params: { space } }">browse →</NuxtLink>
+        </template>
+      </JournalStatTile>
+      <JournalStatTile label="Frictions surfaced" :value="totalFrictions">
+        <template #sub>
+          <JournalFrictionStrata :counts="frictionSeverityTotals" :total="totalFrictions">
+            {{ frictionSeverityTotals.blocker }} blockers · {{ frictionSeverityTotals.major }} major
+          </JournalFrictionStrata>
+        </template>
+      </JournalStatTile>
       <JournalStatTile
         label="PRs referenced"
         :value="referencedPrs.length"
@@ -352,68 +254,33 @@ useSeoMeta({
       </JournalStatTile>
     </section>
 
-    <div class="grid">
-      <!-- Recent activity -->
-      <section id="session-log" class="feed">
-        <div class="section-head">
-          <h2>Recent activity</h2>
-          <span class="count">session logs, newest first</span>
-        </div>
-        <div v-if="sessionCards.length" class="cards">
-          <JournalSessionCard
-            v-for="(c, i) in sessionCards"
-            v-show="showAllSessions || i < SESSIONS_VISIBLE"
-            :key="c.key"
-            :card="c"
-            :anchor="sessionAnchor(c.key)"
-            :expanded="isOpen(sessionAnchor(c.key))"
-            @toggle="toggle(sessionAnchor(c.key))"
-          />
-        </div>
-        <p v-else class="empty">No sessions logged in this Space yet.</p>
-        <button
-          v-if="sessionCards.length > SESSIONS_VISIBLE && !showAllSessions"
-          type="button"
-          class="show-all-sessions"
-          @click="showAllSessions = true"
-        >
-          Show all {{ sessionCards.length }} sessions
-        </button>
-      </section>
-
-      <!-- Rail -->
-      <aside class="rail">
-        <section class="panel">
-          <div class="section-head">
-            <h2>Friction signal</h2>
-            <span class="count">{{ totalFrictions }} across {{ sessions.length }} session{{ sessions.length === 1 ? '' : 's' }}</span>
-          </div>
-          <p class="panel-intro">
-            Pain-points agents log about their own work — recorded so the
-            platform can improve.
-          </p>
-          <JournalFrictionStrata :counts="frictionSeverityTotals" :total="totalFrictions" />
-          <p v-if="totalFrictions" class="friction-note">
-            Graded <span class="mono">nit → blocker</span>. These are
-            pain-points agents honestly log about their own work, recorded so
-            the platform can later spot recurring problems on its own.
-          </p>
-        </section>
-
-        <section id="skills" class="panel">
-          <div class="section-head">
-            <h2>Platform Skills</h2>
-            <span class="count">{{ platformSkills.length }} authored here</span>
-          </div>
-          <JournalSkillInventory v-if="groupedSkills.length" :groups="groupedSkills" />
-          <p v-else class="empty">No Platform Skills authored in this Space yet.</p>
-          <p v-if="externalSkillTotal" class="skill-note">
-            Backed by {{ externalSkillTotal }} general-engineering Skills from an
-            external pack — <span class="mono">used</span>, not evolved here.
-          </p>
-        </section>
-      </aside>
-    </div>
+    <section id="session-log" class="feed">
+      <div class="section-head">
+        <h2>Recent activity</h2>
+        <span class="count">session logs, newest first</span>
+      </div>
+      <div v-if="sessionCards.length" class="cards">
+        <!-- A deep-linked card stays visible even past the default cut. -->
+        <JournalSessionCard
+          v-for="(c, i) in sessionCards"
+          v-show="showAllSessions || i < SESSIONS_VISIBLE || isOpen(sessionAnchor(c.key))"
+          :key="c.key"
+          :card="c"
+          :anchor="sessionAnchor(c.key)"
+          :expanded="isOpen(sessionAnchor(c.key))"
+          @toggle="toggle(sessionAnchor(c.key))"
+        />
+      </div>
+      <p v-else class="empty">No sessions logged in this Space yet.</p>
+      <button
+        v-if="sessionCards.length > SESSIONS_VISIBLE && !showAllSessions"
+        type="button"
+        class="show-all-sessions"
+        @click="showAllSessions = true"
+      >
+        Show all {{ sessionCards.length }} sessions
+      </button>
+    </section>
 
     <SiteFooter />
   </main>
@@ -562,22 +429,13 @@ h1 {
 .pr-link { color: var(--jd-accent); text-decoration: none; }
 .pr-link:hover { text-decoration: underline; }
 
-.grid { display: grid; grid-template-columns: 1.7fr 1fr; gap: 1.6rem; align-items: start; }
-.feed, .rail { min-width: 0; }
-/* scroll-margin-top: breathing room when the intro's "full session-log feed" link scrolls here. */
+/* scroll-margin-top: breathing room when a "#session-log" link scrolls here. */
 .feed { scroll-margin-top: 1.5rem; }
 
-/* Digests + Sparks band. Mobile default: one column (digests, then Sparks) with
-   a gap. Desktop (≥901px, media query below): two columns with Sparks on the
-   RIGHT. `align-items: start` keeps each column its natural height, so the row
-   height tracks whichever column is taller — which one that is follows from the
-   day's content and is not relied on anywhere (see the template comment). */
-.digests-sparks {
-  margin-top: 1.75rem;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.75rem;
-}
+.digests { margin-top: 1.75rem; }
+.ideas-link { margin: 1rem 0 0; font-family: var(--jd-mono); font-size: 0.82rem; }
+.ideas-link a { color: var(--jd-accent); text-decoration: none; }
+.ideas-link a:hover { text-decoration: underline; }
 .panel-intro { margin: 0 0 0.95rem; max-width: 72ch; color: var(--jd-muted); font-size: 0.92rem; line-height: 1.5; }
 .digest-list { list-style: none; margin: 0; padding: 0; }
 /* scroll-margin-top: breathing room when a deep-linked digest is scrolled to the viewport top. */
@@ -631,53 +489,6 @@ h1 {
 }
 .digest-body :deep(ul) { margin: 0 0 0.7rem; padding-left: 1.1rem; color: var(--jd-muted); }
 
-/* Dense feed: tight rows separated by hairlines rather than gaps, so the
-   latest ideas stay compact instead of dominating the Space landing. Each row
-   is [copy-idea icon] · [idea text] · [session deep-link]. */
-.spark-items { list-style: none; margin: 0; padding: 0; }
-.spark-item {
-  display: grid;
-  grid-template-columns: max-content 1fr max-content;
-  gap: 0.1rem 0.7rem;
-  align-items: baseline;
-  padding: 0.32rem 0;
-  border-top: 1px solid var(--jd-line);
-  font-size: 0.84rem;
-  color: var(--jd-muted);
-  line-height: 1.4;
-}
-.spark-item:first-child { border-top: 0; }
-.spark-text { overflow-wrap: anywhere; }
-.spark-src {
-  font-family: var(--jd-mono);
-  font-size: 0.7rem;
-  color: var(--jd-faint);
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.spark-src:hover { color: var(--jd-accent); text-decoration: underline; }
-
-/* Copy-the-idea control: the combined lightbulb+copy glyph, no text label.
-   Nudged up a hair so the baseline-aligned grid sits it level with the text. */
-.spark-copy {
-  align-self: start;
-  display: inline-flex;
-  padding: 0;
-  margin-top: 0.05rem;
-  background: none;
-  border: none;
-  color: var(--jd-faint);
-  cursor: pointer;
-  transition: color 0.15s ease, transform 0.15s ease;
-}
-.spark-copy .spark-bulb { width: 1.05rem; height: 1.05rem; display: block; }
-.spark-copy:hover { color: var(--jd-accent); }
-.spark-copy.copied { color: var(--jd-accent); transform: scale(1.12); cursor: default; }
-.spark-copy:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px; border-radius: 4px; }
-
 .section-head {
   display: flex;
   align-items: baseline;
@@ -715,7 +526,6 @@ h1 {
 }
 .show-all-sessions:hover { color: var(--jd-ink); border-color: var(--jd-accent); }
 
-.rail { display: flex; flex-direction: column; gap: 1.6rem; }
 .panel {
   background: var(--jd-surface);
   border: 1px solid var(--jd-line);
@@ -723,35 +533,12 @@ h1 {
   padding: 1.1rem 1.15rem 1.2rem;
   box-shadow: var(--jd-shadow);
 }
-/* scroll-margin-top: breathing room when the intro's "Skills panel" link scrolls here. */
-#skills { scroll-margin-top: 1.5rem; }
-.friction-note { margin: 0.9rem 0 0; font-size: 0.82rem; color: var(--jd-muted); }
-.friction-note .mono { color: var(--jd-ink); }
-.skill-note { margin: 0.9rem 0 0; font-size: 0.8rem; color: var(--jd-muted); }
-.skill-note .mono { color: var(--jd-ink); }
-
-/* Desktop: Sparks to the RIGHT of the Daily digests. Sparks (col 2) is topped out
-   by `align-items: start` and made sticky so it trails alongside a long digest
-   list rather than leaving a tall gap. Either column may end up the taller one
-   and drive the row height — see the template comment. */
-@media (min-width: 901px) {
-  .digests-sparks {
-    grid-template-columns: 1fr clamp(300px, 32%, 360px);
-    gap: 1.6rem;
-    align-items: start;
-  }
-  .digests-sparks .sparks { position: sticky; top: 1rem; }
-}
 
 @media (max-width: 900px) {
   .tiles { grid-template-columns: repeat(2, 1fr); }
-  .grid { grid-template-columns: 1fr; }
   .masthead { grid-template-columns: 1fr; }
   .spaces { align-items: flex-start; }
   .snapshot { text-align: left; }
   .onramp-cards { grid-template-columns: 1fr; }
-}
-@media (max-width: 460px) {
-  .tiles { grid-template-columns: 1fr 1fr; }
 }
 </style>

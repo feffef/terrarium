@@ -1,30 +1,30 @@
-// Unit tests for the sparks helper's pure core (issue #440) — keyword
+// Unit tests for the ideas helper's pure core (issue #440) — keyword
 // extraction, overlap scoring, and the naive mechanical clustering signal.
 // The FS/CLI shell is exercised by running the script directly.
 import { describe, expect, it } from 'vitest'
 import {
-  buildSparkClusters,
+  buildNoteClusters,
   clusterByKeywords,
   clusterLabel,
-  gatherSparkRecords,
+  gatherNoteRecords,
   keywordOverlap,
-  readSparkMaterial,
-  sparkKeywords,
-  type SessionSparkMaterial,
-  type SparkRecord,
-} from '../../scripts/sparks.ts'
+  readNoteMaterial,
+  noteKeywords,
+  type SessionNoteMaterial,
+  type NoteRecord,
+} from '../../scripts/ideas.ts'
 
-describe('sparkKeywords()', () => {
+describe('noteKeywords()', () => {
   it('lowercases, strips punctuation, and drops short/stop words', () => {
-    expect(sparkKeywords('Investigate the worktree HEAD drift.')).toEqual(['drift', 'head', 'investigate', 'worktree'])
+    expect(noteKeywords('Investigate the worktree HEAD drift.')).toEqual(['drift', 'head', 'investigate', 'worktree'])
   })
 
   it('dedupes and sorts alphabetically', () => {
-    expect(sparkKeywords('worktree worktree Worktree drift')).toEqual(['drift', 'worktree'])
+    expect(noteKeywords('worktree worktree Worktree drift')).toEqual(['drift', 'worktree'])
   })
 
   it('returns an empty list when nothing survives the filter', () => {
-    expect(sparkKeywords('it was the that this')).toEqual([])
+    expect(noteKeywords('it was the that this')).toEqual([])
   })
 })
 
@@ -93,26 +93,26 @@ describe('clusterLabel()', () => {
   })
 })
 
-describe('gatherSparkRecords()', () => {
+describe('gatherNoteRecords()', () => {
   it('flattens ideas and learnings with session provenance, preserving authored order', () => {
-    const sessions: SessionSparkMaterial[] = [
+    const sessions: SessionNoteMaterial[] = [
       { session: 's1', endedAt: '2026-07-07T00:00:00Z', ideas: ['idea a', 'idea b'], learnings: ['learning a'] },
       { session: 's2', endedAt: '2026-07-08T00:00:00Z', ideas: [], learnings: ['learning b'] },
     ]
-    expect(gatherSparkRecords(sessions)).toEqual([
-      { spark: 'idea a', kind: 'idea', session: 's1', date: '2026-07-07T00:00:00Z' },
-      { spark: 'idea b', kind: 'idea', session: 's1', date: '2026-07-07T00:00:00Z' },
-      { spark: 'learning a', kind: 'learning', session: 's1', date: '2026-07-07T00:00:00Z' },
-      { spark: 'learning b', kind: 'learning', session: 's2', date: '2026-07-08T00:00:00Z' },
+    expect(gatherNoteRecords(sessions)).toEqual([
+      { note: 'idea a', kind: 'idea', session: 's1', date: '2026-07-07T00:00:00Z' },
+      { note: 'idea b', kind: 'idea', session: 's1', date: '2026-07-07T00:00:00Z' },
+      { note: 'learning a', kind: 'learning', session: 's1', date: '2026-07-07T00:00:00Z' },
+      { note: 'learning b', kind: 'learning', session: 's2', date: '2026-07-08T00:00:00Z' },
     ])
   })
 
   it('is empty for a session with neither field', () => {
-    expect(gatherSparkRecords([{ session: 's1', endedAt: '2026-07-07T00:00:00Z', ideas: [], learnings: [] }])).toEqual([])
+    expect(gatherNoteRecords([{ session: 's1', endedAt: '2026-07-07T00:00:00Z', ideas: [], learnings: [] }])).toEqual([])
   })
 })
 
-describe('readSparkMaterial()', () => {
+describe('readNoteMaterial()', () => {
   it('keeps both ideas and learnings for an internal session (external absent)', () => {
     const raw = {
       session: 's1',
@@ -120,7 +120,7 @@ describe('readSparkMaterial()', () => {
       ideas: ['idea a'],
       learnings: ['learning a'],
     }
-    expect(readSparkMaterial(raw)).toEqual({
+    expect(readNoteMaterial(raw)).toEqual({
       session: 's1',
       endedAt: '2026-07-20T00:00:00.000Z',
       ideas: ['idea a'],
@@ -136,7 +136,7 @@ describe('readSparkMaterial()', () => {
       ideas: ['toolchain-agnostic idea'],
       learnings: ['a Grok/Hermes-specific learning'],
     }
-    expect(readSparkMaterial(raw)).toEqual({
+    expect(readNoteMaterial(raw)).toEqual({
       session: 's-ext',
       endedAt: '2026-07-20T00:00:00.000Z',
       ideas: ['toolchain-agnostic idea'],
@@ -146,40 +146,40 @@ describe('readSparkMaterial()', () => {
 
   it('drops an external session that has ONLY learnings (nothing left to gather)', () => {
     const raw = { session: 's-ext', endedAt: '2026-07-20T00:00:00Z', external: true, learnings: ['x'] }
-    expect(readSparkMaterial(raw)).toBeNull()
+    expect(readNoteMaterial(raw)).toBeNull()
   })
 
   it('treats external:false the same as internal (both fields kept)', () => {
     const raw = { session: 's', endedAt: '2026-07-20T00:00:00Z', external: false, ideas: ['i'], learnings: ['l'] }
-    expect(readSparkMaterial(raw)).toMatchObject({ ideas: ['i'], learnings: ['l'] })
+    expect(readNoteMaterial(raw)).toMatchObject({ ideas: ['i'], learnings: ['l'] })
   })
 
-  it('returns null when a session has neither spark field', () => {
-    expect(readSparkMaterial({ session: 's', endedAt: '2026-07-20T00:00:00Z' })).toBeNull()
+  it('returns null when a session has neither note field', () => {
+    expect(readNoteMaterial({ session: 's', endedAt: '2026-07-20T00:00:00Z' })).toBeNull()
   })
 })
 
-describe('buildSparkClusters()', () => {
-  it('groups overlapping sparks and orders clusters biggest-first', () => {
-    const records: SparkRecord[] = [
-      { spark: 'stale worktree branch', kind: 'idea', session: 's1', date: '2026-07-07T00:00:00Z' },
-      { spark: 'digest UTC boundary bug', kind: 'learning', session: 's2', date: '2026-07-08T00:00:00Z' },
-      { spark: 'worktree branch stale head', kind: 'idea', session: 's3', date: '2026-07-09T00:00:00Z' },
+describe('buildNoteClusters()', () => {
+  it('groups overlapping notes and orders clusters biggest-first', () => {
+    const records: NoteRecord[] = [
+      { note: 'stale worktree branch', kind: 'idea', session: 's1', date: '2026-07-07T00:00:00Z' },
+      { note: 'digest UTC boundary bug', kind: 'learning', session: 's2', date: '2026-07-08T00:00:00Z' },
+      { note: 'worktree branch stale head', kind: 'idea', session: 's3', date: '2026-07-09T00:00:00Z' },
     ]
-    const clusters = buildSparkClusters(records, 0.4)
+    const clusters = buildNoteClusters(records, 0.4)
     expect(clusters).toHaveLength(2)
-    expect(clusters[0]!.sparks).toHaveLength(2) // the two worktree sparks, biggest cluster first
-    expect(clusters[0]!.sparks.map((s) => s.session)).toEqual(['s1', 's3'])
-    expect(clusters[1]!.sparks.map((s) => s.session)).toEqual(['s2'])
+    expect(clusters[0]!.notes).toHaveLength(2) // the two worktree notes, biggest cluster first
+    expect(clusters[0]!.notes.map((s) => s.session)).toEqual(['s1', 's3'])
+    expect(clusters[1]!.notes.map((s) => s.session)).toEqual(['s2'])
   })
 
   it('never leaks the internal keywords field onto the output records', () => {
-    const records: SparkRecord[] = [{ spark: 'a stale worktree', kind: 'idea', session: 's1', date: '2026-07-07T00:00:00Z' }]
-    const [cluster] = buildSparkClusters(records)
-    expect(Object.keys(cluster!.sparks[0]!)).toEqual(['spark', 'kind', 'session', 'date'])
+    const records: NoteRecord[] = [{ note: 'a stale worktree', kind: 'idea', session: 's1', date: '2026-07-07T00:00:00Z' }]
+    const [cluster] = buildNoteClusters(records)
+    expect(Object.keys(cluster!.notes[0]!)).toEqual(['note', 'kind', 'session', 'date'])
   })
 
   it('is empty for an empty input', () => {
-    expect(buildSparkClusters([])).toEqual([])
+    expect(buildNoteClusters([])).toEqual([])
   })
 })

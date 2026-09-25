@@ -14,18 +14,18 @@ import {
   digestAnchor,
   digestList,
   ideaGrillPrompt,
-  latestIdeas,
+  sessionNotes,
   sessionAnchor,
   sessionDurationMin,
   externalSkillCount,
   sessionWhen,
   sessionModelsLabel,
-  SPARK_FEED_DAYS,
-  SPARK_FEED_LIMIT,
   frictionCount,
   frictionTotals,
   kindCounts,
   ownSkills,
+  externalSkills,
+  skillUseCounts,
   prRefs,
   prRefsParts,
   prUrl,
@@ -199,6 +199,21 @@ describe('skill inventory', () => {
     expect(ownSkills(skills).map((s) => s.name).sort()).toEqual(['add-space', 'digest', 'edit-content', 'triage'])
   })
 
+  it('externalSkills keeps pack Skills graded above peripheral', () => {
+    const withPeripheral = [...skills, skill({ name: 'teach', category: 'general-engineering', importance: 'peripheral' })]
+    expect(externalSkills(withPeripheral).map((s) => s.name).sort()).toEqual(['code-review', 'tdd'])
+  })
+
+  it('skillUseCounts counts sessions, not mentions', () => {
+    const use = (...names: string[]) => names.map((name) => ({ name, reason: '' }))
+    const counts = skillUseCounts([
+      session({ skillsUsed: use('tdd', 'tdd', 'digest') }),
+      session({ skillsUsed: use('tdd') }),
+      session({}),
+    ])
+    expect(counts).toEqual({ tdd: 2, digest: 1 })
+  })
+
   it('externalSkillCount counts the non-own Skills', () => {
     expect(externalSkillCount(skills)).toBe(2)
   })
@@ -313,9 +328,9 @@ describe('sessionCardViews', () => {
   })
 
   it('surfaces authored learnings/ideas, and defaults them to [] when absent', () => {
-    const [with_] = sessionCardViews([session({ learnings: ['a thing'], ideas: ['a spark'] })])
+    const [with_] = sessionCardViews([session({ learnings: ['a thing'], ideas: ['an idea'] })])
     expect(with_!.learnings).toEqual(['a thing'])
-    expect(with_!.ideas).toEqual(['a spark'])
+    expect(with_!.ideas).toEqual(['an idea'])
     const [without] = sessionCardViews([session()])
     expect(without!.learnings).toEqual([])
     expect(without!.ideas).toEqual([])
@@ -341,70 +356,48 @@ describe('deep-link anchors', () => {
   })
 })
 
-describe('latestIdeas', () => {
-  // A fixed "now" so the recency window (SPARK_FEED_DAYS) is deterministic: the
-  // cutoff is exactly 2026-07-05T11:00:00Z, so all three fixture sessions (and
-  // the default-dated `many` sessions below) fall inside the window.
-  const NOW = new Date('2026-07-08T11:00:00Z').getTime()
-
-  // Deliberately passed newest-first, matching the SFC's real
-  // `.order('endedAt', 'DESC')` query — latestIdeas relies on that order to
-  // return the latest ideas with no re-sort of its own.
+describe('sessionNotes', () => {
+  // Passed newest-first, matching the SFCs' `.order('endedAt', 'DESC')` query —
+  // sessionNotes keeps that order rather than re-sorting.
   const sessions = [
-    session({ session: 's3', endedAt: '2026-07-07T11:00:00Z', ideas: ['idea three'], learnings: ['a learning'] }),
-    session({ session: 's2', endedAt: '2026-07-06T11:00:00Z', ideas: ['idea two-a', 'idea two-b'], learnings: [] }),
-    session({ session: 's1', endedAt: '2026-07-05T11:00:00Z', ideas: ['idea one'], learnings: ['another learning'] }),
+    session({ session: 's3', ideas: ['idea three'], learnings: ['a learning'] }),
+    session({ session: 's2', ideas: ['idea two-a', 'idea two-b'], learnings: [] }),
+    session({ session: 's1', ideas: ['idea one'], learnings: ['another learning'] }),
   ]
 
-  it('flattens ideas only (never learnings), preserving newest-first order', () => {
-    const ideas = latestIdeas(sessions, SPARK_FEED_LIMIT, NOW)
-    expect(ideas.map((i) => i.spark)).toEqual(['idea three', 'idea two-a', 'idea two-b', 'idea one'])
+  it('flattens ideas and learnings separately, preserving newest-first order', () => {
+    const { ideas, learnings } = sessionNotes(sessions)
+    expect(ideas.map((i) => i.note)).toEqual(['idea three', 'idea two-a', 'idea two-b', 'idea one'])
     expect(ideas.every((i) => i.kind === 'idea')).toBe(true)
+    expect(learnings.map((i) => i.note)).toEqual(['a learning', 'another learning'])
+    expect(learnings.every((i) => i.kind === 'learning')).toBe(true)
   })
 
-  it('carries each idea\'s session and deep-link anchor (no date/time)', () => {
-    const [first] = latestIdeas(sessions, SPARK_FEED_LIMIT, NOW)
-    expect(first).toEqual({
-      spark: 'idea three',
+  it('carries each note\'s session and deep-link anchor', () => {
+    expect(sessionNotes(sessions).ideas[0]).toEqual({
+      note: 'idea three',
       kind: 'idea',
       session: 's3',
       anchor: sessionAnchor('s3'),
     })
   })
 
-  it('drops ideas from sessions older than the recency window', () => {
-    const old = session({ session: 'stale', endedAt: '2026-07-01T11:00:00Z', ideas: ['ancient idea'] })
-    const ideas = latestIdeas([...sessions, old], SPARK_FEED_LIMIT, NOW)
-    expect(ideas.map((i) => i.spark)).not.toContain('ancient idea')
-    // A window of SPARK_FEED_DAYS days back from NOW keeps the in-window ideas.
-    expect(SPARK_FEED_DAYS).toBe(3)
-    expect(ideas.map((i) => i.session)).toEqual(['s3', 's2', 's2', 's1'])
+  it('keeps an external session\'s ideas but drops its learnings (ADR-0009)', () => {
+    const ext = session({ session: 'ext', external: true, ideas: ['outside idea'], learnings: ['outside learning'] })
+    const { ideas, learnings } = sessionNotes([ext, ...sessions])
+    expect(ideas.map((i) => i.note)).toContain('outside idea')
+    expect(learnings.map((i) => i.note)).not.toContain('outside learning')
   })
 
-  it('caps the feed at the given limit, keeping the latest and dropping the oldest', () => {
-    expect(latestIdeas(sessions, 2, NOW).map((i) => i.spark)).toEqual(['idea three', 'idea two-a'])
-  })
-
-  it('defaults to SPARK_FEED_LIMIT (15) ideas', () => {
-    expect(SPARK_FEED_LIMIT).toBe(15)
-    // Default endedAt is 2026-07-05T11:00:00Z — exactly on NOW's cutoff, so in-window.
-    const many = Array.from({ length: 18 }, (_, n) => session({ session: `s${n}`, ideas: [`idea ${n}`] }))
-    expect(latestIdeas(many, SPARK_FEED_LIMIT, NOW)).toHaveLength(15)
-    // the first 15 in feed order — i.e. the latest, dropping the tail
-    expect(latestIdeas(many, SPARK_FEED_LIMIT, NOW).at(-1)!.spark).toBe('idea 14')
-  })
-
-  it('is empty when no session in the feed authored an idea', () => {
-    expect(latestIdeas([session({ ideas: undefined, learnings: ['x'] })], SPARK_FEED_LIMIT, NOW)).toEqual([])
-    expect(latestIdeas([session({ ideas: [], learnings: ['x'] })], SPARK_FEED_LIMIT, NOW)).toEqual([])
-    expect(latestIdeas([])).toEqual([])
+  it('is empty when no session authored a note', () => {
+    expect(sessionNotes([session({ ideas: undefined, learnings: undefined })])).toEqual({ ideas: [], learnings: [] })
+    expect(sessionNotes([])).toEqual({ ideas: [], learnings: [] })
   })
 })
 
 describe('ideaGrillPrompt', () => {
   it('builds a ready-made /grill-with-docs prompt tagged with the session id, then the idea text', () => {
-    const now = new Date('2026-07-05T12:00:00Z').getTime()
-    const [idea] = latestIdeas([session({ session: 'session_01ABC', ideas: ['Auto-cluster ideas into issues'] })], SPARK_FEED_LIMIT, now)
+    const [idea] = sessionNotes([session({ session: 'session_01ABC', ideas: ['Auto-cluster ideas into issues'] })]).ideas
     expect(ideaGrillPrompt(idea!)).toBe(
       '/grill-with-docs to refine this idea from session session_01ABC:\n\nAuto-cluster ideas into issues',
     )

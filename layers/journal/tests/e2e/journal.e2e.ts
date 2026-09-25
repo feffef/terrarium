@@ -60,6 +60,18 @@ function currentSessionGoals(): { external: string | undefined; ordinary: string
   return { external, ordinary }
 }
 
+/** One idea from an ordinary `current` session, if any exists today — read live
+ *  for the same retention reason as currentSessionGoals(). */
+function currentSessionNotes(): { ordinaryIdea: string | undefined } {
+  const dir = join(repoRoot, SESSIONS_DIR)
+  for (const f of readdirSync(dir).filter((f) => f.endsWith('.yml'))) {
+    const raw = parseYaml(readFileSync(join(dir, f), 'utf8')) as Record<string, unknown>
+    const idea = Array.isArray(raw?.ideas) ? raw.ideas[0] : undefined
+    if (raw?.external !== true && typeof idea === 'string' && !/[<>&"']/.test(idea)) return { ordinaryIdea: idea }
+  }
+  return { ordinaryIdea: undefined }
+}
+
 /** A short, distinctive run of plain prose from a Digest's BODY (never its
  *  frontmatter `summary`, which the collapsed row already shows) — proves the
  *  body specifically preloads inline, not just the row's own headline. */
@@ -118,58 +130,6 @@ const PARK_TOP_PX = 600
 // `window.scrollTo` lands on a whole device pixel, so a park computed from a
 // fractional element offset settles a sub-pixel away from its target.
 const PARK_PRECISION_PX = 2
-
-// Below the digests+Sparks band's two-column breakpoint (see the `.digests-sparks`
-// media queries) the digests column is the sole driver of its own height, so
-// collapsing a digest reflows everything under it.
-const SINGLE_COLUMN_WIDTH = 900
-// A width comfortably inside the two-column regime, where the two columns share a
-// grid row and the taller of them drives its height.
-const TWO_COLUMN_WIDTH = 1280
-
-// Above the breakpoint the band's height driver is whichever column is taller,
-// and that is a property of the day's content, not of the layout: the Sparks feed
-// is windowed to the last SPARK_FEED_DAYS days and capped at SPARK_FEED_LIMIT
-// ideas, so it swings from a single row on a quiet window to fifteen wrapped rows
-// several times the digests column's height on a busy one. Both directions are
-// routinely reachable, which is why nothing here asserts one of them (issue #906,
-// after issue #760 pinned Sparks as the driver and ordinary `/digest` runs kept
-// flipping it back).
-//
-// The desktop pin path still needs deterministic coverage, so the guard below
-// CONSTRUCTS the only regime in which there is anything to pin — digests taller,
-// so collapsing one reflows the content under the band — instead of waiting for
-// the content to land that way. Bounding the Sparks column is the smallest lever
-// that does it: the column stays in flow and sticky, so the real desktop grid
-// (two tracks, `align-items: start`, sticky col 2) is what gets exercised.
-// `!important` is required — the SFC's scoped rule carries a `[data-v-…]`
-// attribute selector on top of the same two classes, so it outranks a plain
-// injected rule.
-const FORCE_DIGESTS_DRIVE_BAND
-  = '.digests-sparks .sparks { max-height: 120px !important; overflow: hidden !important }'
-
-interface BandGeometry {
-  /** The whole `.digests-sparks` band — one grid row, so this is the row height. */
-  band: number
-  digests: number
-  sparks: number
-  gridTemplateColumns: string
-  alignItems: string
-}
-function bandGeometryOf(page: Page): Promise<BandGeometry> {
-  return page.evaluate(() => {
-    const band = document.querySelector('.digests-sparks')!
-    const heightOf = (selector: string) => band.querySelector(selector)!.getBoundingClientRect().height
-    const style = getComputedStyle(band)
-    return {
-      band: band.getBoundingClientRect().height,
-      digests: heightOf(':scope > .digests'),
-      sparks: heightOf(':scope > .sparks'),
-      gridTemplateColumns: style.gridTemplateColumns,
-      alignItems: style.alignItems,
-    }
-  })
-}
 
 // Chromium's own scroll anchoring also absorbs a collapse above the clicked item,
 // and it gets there first — with it on, the item holds its position whether or not
@@ -233,12 +193,35 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
     })
 
     // The journal Tenant's layer replaces the generic Space landing with an
-    // overview dashboard (state + recent activity + Skill Inventory).
+    // overview dashboard, linking out to its Skills and Ideas & learnings pages.
     it('renders the journal overview dashboard', async () => {
       const html = await $fetch('/t/journal/current')
       expect(html).toContain('Recent activity')
-      expect(html).toContain('Friction signal')
-      expect(html).toContain('Platform Skills')
+      expect(html).toContain('Frictions surfaced')
+      expect(html).toContain('href="/t/journal/current/skills"')
+      expect(html).toContain('href="/t/journal/current/ideas"')
+    })
+
+    // The sub pages are static segments beside `[...slug].vue`; each must win
+    // that route, in every Space, and read only its own Space's collections.
+    it('serves the Skills and Ideas & learnings pages in both Spaces', async () => {
+      for (const space of ['current', 'archived']) {
+        const skills = await $fetch(`/t/journal/${space}/skills`)
+        expect(skills).toContain('class="jd"')
+        expect(skills).toContain('Platform Skills')
+        expect(skills).not.toContain('No document at')
+        const ideas = await $fetch(`/t/journal/${space}/ideas`)
+        expect(ideas).toContain('Ideas &amp; learnings')
+        expect(ideas).toContain('Learnings')
+        expect(ideas).not.toContain('No document at')
+      }
+      const { ordinaryIdea } = currentSessionNotes()
+      if (ordinaryIdea) expect(await $fetch('/t/journal/current/ideas')).toContain(ordinaryIdea)
+    })
+
+    it('hydrates the sub pages with no unresolved components', async () => {
+      await expectCleanHydration('/t/journal/current/skills')
+      await expectCleanHydration('/t/journal/current/ideas')
     })
 
     // Session cards are expand-on-click disclosures — sessions are a `data`
@@ -497,16 +480,12 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
     // pixel over tolerance would satisfy the premise while a fully-broken pin
     // missed the hold by a pixel. The real displacement is several hundred px, so
     // the margin is ample.
-    async function expectSiblingCollapseHeld(
-      width: number,
-      bandStyle?: string,
-    ): Promise<void> {
+    it('holds the clicked item at its pre-click position when a sibling above it collapses', async () => {
       const route = '/t/journal/current'
       const { page, errors } = await renderAndCollectErrors(route)
       try {
-        await page.setViewportSize({ width, height: 720 })
+        await page.setViewportSize({ width: 900, height: 720 })
         await page.addStyleTag({ content: DISABLE_SCROLL_ANCHORING })
-        if (bandStyle) await page.addStyleTag({ content: bandStyle })
         // Setup: open the digest that will later collapse. This open starts a pin of
         // its own, which openAndAwaitPin waits out before anything below is measured.
         await openAndAwaitPin(
@@ -543,10 +522,9 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
           .toBeLessThan(PARK_PRECISION_PX)
         expect(
           displacement,
-          `premise no longer holds at ${width}px: the sibling's collapse displaced the card by only ${displacement}px, `
+          `premise no longer holds: the sibling's collapse displaced the card by only ${displacement}px, `
           + `not clear of the ±${HOLD_TOLERANCE_PX}px tolerance by the required margin (need >${2 * HOLD_TOLERANCE_PX}px) `
-          + `— this guard would pass, or all but pass, with the pin removed. The digests column must drive its own `
-          + `height for a collapse to reflow anything below it${evidence}`,
+          + `— this guard would pass, or all but pass, with the pin removed${evidence}`,
         ).toBeGreaterThan(2 * HOLD_TOLERANCE_PX)
         expect(pin.scrolls, `the pin issued no counter-scroll, so nothing was compensated${evidence}`)
           .toBeGreaterThan(0)
@@ -554,67 +532,6 @@ export function registerJournalE2E({ entryRoutes, renderAndCollectErrors }: Jour
           .toBe(false)
         expect(after.top, `card did not hold its position${evidence}`).toBeGreaterThan(before.top - HOLD_TOLERANCE_PX)
         expect(after.top, `card did not hold its position${evidence}`).toBeLessThan(before.top + HOLD_TOLERANCE_PX)
-        expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
-      } finally {
-        await page.close()
-      }
-    }
-
-    // Below the breakpoint the band is one column, so the digests column drives its
-    // own height unconditionally and the scenario is the page's real behaviour.
-    it('holds the clicked item at its pre-click position when a sibling above it collapses', async () => {
-      await expectSiblingCollapseHeld(SINGLE_COLUMN_WIDTH)
-    })
-
-    // The same hold in the two-column desktop layout, whose sticky second column and
-    // shared grid row are a genuinely different reflow path from the stacked one
-    // above — and one the pin used to have no coverage of at all (issue #760).
-    //
-    // Whether a collapse displaces anything here depends on which column is taller,
-    // which is a daily property of the content rather than of the layout (see
-    // FORCE_DIGESTS_DRIVE_BAND). So this constructs the case that has something to
-    // pin instead of depending on the day: bound Sparks, and digests drives. When
-    // live content puts Sparks on top instead, a digest expands into existing slack
-    // and nothing moves — no bug, and nothing for the pin to do. Both regimes are
-    // therefore correct, which is exactly what issue #906 replaced #760's
-    // "Sparks must stay the driver" invariant with.
-    it('holds the clicked item when a sibling collapses in the two-column desktop band', async () => {
-      await expectSiblingCollapseHeld(TWO_COLUMN_WIDTH, FORCE_DIGESTS_DRIVE_BAND)
-    })
-
-    // The desktop guard above is only worth its runtime if it runs in the real
-    // two-column regime — a moved breakpoint or a renamed column class would leave
-    // it silently duplicating the single-column one, or bounding nothing. Assert
-    // the shape it assumes, with the same fixture applied.
-    it('exercises the desktop pin guard against the real two-column band', async () => {
-      const route = '/t/journal/current'
-      const { page, errors } = await renderAndCollectErrors(route)
-      try {
-        await page.setViewportSize({ width: TWO_COLUMN_WIDTH, height: 720 })
-        await page.addStyleTag({ content: FORCE_DIGESTS_DRIVE_BAND })
-        const band = await bandGeometryOf(page)
-        const evidence = `\n${JSON.stringify(band, null, 2)}`
-
-        expect(
-          band.gridTemplateColumns.split(' ').length,
-          `the band is not two-column at ${TWO_COLUMN_WIDTH}px, so the desktop guard is testing the stacked `
-          + `layout the ${SINGLE_COLUMN_WIDTH}px one already covers${evidence}`,
-        ).toBe(2)
-        expect(
-          band.alignItems,
-          `the columns are stretched to equal heights, so neither drives the row and bounding Sparks cannot `
-          + `create the displacement the desktop guard needs${evidence}`,
-        ).toBe('start')
-        expect(
-          band.digests - band.sparks,
-          `FORCE_DIGESTS_DRIVE_BAND no longer makes digests the taller column — check that its selector still `
-          + `matches the Sparks column and still outranks the SFC's scoped rule${evidence}`,
-        ).toBeGreaterThan(0)
-        expect(
-          band.band - band.digests,
-          `the band is taller than both its columns, so neither drives it and a collapse would reflow nothing`
-          + `${evidence}`,
-        ).toBeLessThan(1)
         expect(errors, `console/page errors on ${route}:\n${errors.join('\n')}`).toEqual([])
       } finally {
         await page.close()

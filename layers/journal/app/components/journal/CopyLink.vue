@@ -25,8 +25,8 @@ const copy = async () => {
     resetTimer = setTimeout(() => (copied.value = false), 1600)
   } catch {
     // Clipboard unavailable (insecure origin, denied permission) — the control
-    // just doesn't confirm rather than surfacing an error, matching the Sparks
-    // copy button on the Space landing.
+    // just doesn't confirm rather than surfacing an error, matching the idea
+    // copy button on the Ideas & learnings page.
   }
 }
 

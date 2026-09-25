@@ -337,13 +337,13 @@ describe('stitch()', () => {
   })
 
   it('carries authored learnings/ideas through and stays schema-valid', () => {
-    const withSparks = stitch(
+    const withNotes = stitch(
       { ...scratch, learnings: ['layer `~/` resolves to the main app'], ideas: ['cluster frictions into tags'] },
       trace,
     )
-    expect(withSparks.learnings).toEqual(['layer `~/` resolves to the main app'])
-    expect(withSparks.ideas).toEqual(['cluster frictions into tags'])
-    expect(validateEntry(withSparks).ok).toBe(true)
+    expect(withNotes.learnings).toEqual(['layer `~/` resolves to the main app'])
+    expect(withNotes.ideas).toEqual(['cluster frictions into tags'])
+    expect(validateEntry(withNotes).ok).toBe(true)
   })
 })
 

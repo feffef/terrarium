@@ -64,7 +64,7 @@ has already built.
   amendment) declares a foreign toolchain — see `CONTEXT.md`'s **Session** term
   for the absent-⇒-internal semantics.
 - **Self-improvement mining ignores it; ideas still surface.** See `CONTEXT.md`'s
-  **Session** glossary term for the exact mining-exclusion and Sparks-feed
+  **Session** glossary term for the exact mining-exclusion and idea-surfacing
   behavior (ADR-0009 amendment, 2026-07-22).
 - **Provenance marker (ADR-0017)** on every agent-authored GitHub interaction,
   the same marker we use.

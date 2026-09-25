@@ -254,7 +254,7 @@ independently, builds the best idea any of them had, and merges both on a
 green gate. It is days old.
 
 That is where the record stops: six sites, twenty-seven decision records,
-thirty-seven capabilities. The open question is no longer whether the platform
+thirty-seven [capabilities](/t/journal/current/skills). The open question is no longer whether the platform
 keeps going without direction. It is whether it can grow itself — content and
 code, not only its own rules — and whether the rules and guards hold under at
 least daily activity, with no human feeding it ideas.

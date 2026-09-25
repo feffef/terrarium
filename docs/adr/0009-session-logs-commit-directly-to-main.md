@@ -469,8 +469,8 @@ consumers split three ways:
   and `audit-skills` (via `scripts/audit-skills.ts`) drop an external session
   before it enters the corpus: no friction mining, no skill-usage tally, no
   regression/closure signal from it.
-- **Ideas kept, learnings dropped** — the Sparks data layer (`scripts/sparks.ts`,
-  `readSparkMaterial`) still gathers an external session's `ideas` but omits its
+- **Ideas kept, learnings dropped** — the ideas data layer (`scripts/ideas.ts`,
+  `readNoteMaterial`) still gathers an external session's `ideas` but omits its
   `learnings`.
 - **Unchanged** — internal (non-external) behaviour is byte-for-byte identical;
   external sessions remain visible in the Timeline/dashboard record.

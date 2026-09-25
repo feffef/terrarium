@@ -66,6 +66,6 @@ the Catalog rather than redefining it.
 - **Root `CONTEXT.md`** — the platform-wide concepts the Journal renders (session
   log, Skill Inventory, Session, Session closure, Friction, Agent Authorship, …)
   and the Tenants roster that points here.
-- **`layers/journal/app/pages/t/journal/[space]/index.vue`** — the actual
-  dashboard a visitor sees (stat tiles, digests, session feed, Skill Inventory,
-  Sparks), which is not a Markdown render of any single file.
+- **`layers/journal/app/pages/t/journal/[space]/`** — the pages a visitor sees:
+  `index.vue` (digests, stats, session feed), `skills.vue` (Skill Inventory) and
+  `ideas.vue` (ideas and learnings), none a Markdown render of any single file.

@@ -6,6 +6,7 @@ import type { Importance, SkillDoc } from '../../types/journal'
 
 defineProps<{
   groups: { importance: Importance; skills: SkillDoc[] }[]
+  uses?: Record<string, number>
 }>()
 </script>
 
@@ -23,6 +24,7 @@ defineProps<{
           <div class="name">
             {{ s.name }}
             <span v-if="s.category === 'platform-operation'" class="po">platform-op</span>
+            <span v-if="uses" class="uses">used in {{ uses[s.name] ?? 0 }} sessions</span>
           </div>
           <p class="role">
             <template v-for="(p, i) in skillRoleParts(s.role)" :key="i">
@@ -36,7 +38,7 @@ defineProps<{
       </template>
 
       <div v-else class="chips-inline">
-        <span v-for="s in g.skills" :key="s.name" class="chip">{{ s.name }}</span>
+        <span v-for="s in g.skills" :key="s.name" class="chip">{{ s.name }}<span v-if="uses" class="chip-uses" :title="`used in ${uses[s.name] ?? 0} sessions`"> · {{ uses[s.name] ?? 0 }}</span></span>
       </div>
     </div>
   </div>
@@ -73,6 +75,8 @@ defineProps<{
   border-radius: 4px;
   padding: 0 0.3rem;
 }
+.uses { margin-left: auto; font-size: 0.7rem; color: var(--jd-faint); }
+.chip-uses { color: var(--jd-faint); }
 .role { margin: 0.25rem 0 0; font-size: 0.83rem; color: var(--jd-muted); font-family: var(--jd-serif); }
 .role code {
   font-family: var(--jd-mono);

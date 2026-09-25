@@ -21,7 +21,7 @@
 // export below, and truly generic helpers stay module-private. This module,
 // for its part, never relies on auto-import itself: it stays dependency-free
 // and explicit.
-import type { Friction, Importance, SessionCardView, SessionDoc, Severity, SkillDoc, SparkItem } from '../types/journal'
+import type { Friction, Importance, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem } from '../types/journal'
 
 // ── Formatting helpers ───────────────────────────────────
 // Module-private: too generically named to put in the global auto-import
@@ -118,11 +118,25 @@ export function prRefsParts(refs: string[]): { shown: string[]; rest: number } {
 }
 
 // ── Skill Inventory ──────────────────────────────────────
-// The dashboard advertises only the Platform's OWN Skills — the platform-operation
-// ones it authors and evolves. The general-engineering pack is used, not evolved
-// here, so it is acknowledged as a count, not showcased.
+// OWN Skills are the platform-operation ones the Platform authors and evolves;
+// the general-engineering pack is used, not evolved here.
 export function ownSkills(skills: SkillDoc[]): SkillDoc[] {
   return skills.filter((s) => s.category === 'platform-operation')
+}
+
+// Pack Skills worth listing: everything graded above `peripheral`.
+export function externalSkills(skills: SkillDoc[]): SkillDoc[] {
+  return skills.filter((s) => s.category !== 'platform-operation' && s.importance !== 'peripheral')
+}
+
+// Sessions that used each Skill — shown beside the grade, never instead of it
+// (CONTEXT.md's Importance term: a grade is not a frequency).
+export function skillUseCounts(sessions: SessionDoc[]): Record<string, number> {
+  const counts: Record<string, number> = {}
+  for (const s of sessions) {
+    for (const name of new Set((s.skillsUsed ?? []).map((x) => x.name))) counts[name] = (counts[name] ?? 0) + 1
+  }
+  return counts
 }
 
 export function externalSkillCount(skills: SkillDoc[]): number {
@@ -238,48 +252,27 @@ export function digestAnchor(date: string): string {
   return `digest-${date}`
 }
 
-// ── Sparks feed (issue #440) ──────────────────────────────
-// Every session's authored `ideas` — rough future-work sparks — flattened into
-// one cross-session feed, each carrying the provenance to jump back to its
-// session's card. Ideas-only and capped by owner request: the earlier feed
-// folded in `learnings` too and keyword-clustered the whole corpus, which grew
-// long enough to dominate the entire Space landing. The dashboard now shows
-// just the latest `SPARK_FEED_LIMIT` ideas from the last `SPARK_FEED_DAYS`
-// days, densely, and without per-idea dates (owner request). (`scripts/sparks.ts`
-// keeps the full keyword-clustering path — the FS/CLI data layer for a future
-// ideas-to-issue promotion step — so that pipeline is unaffected by this
-// display-only trim.)
-//
-// Sourced only from the `sessions` already resolved for THIS Space (no
-// isolation logic here) — the caller passes the same `sessions.value` the
-// recent-activity feed uses, already newest-first (the SFC queries
-// `.order('endedAt', 'DESC')`), so flattening in encounter order and taking
-// the first `limit` yields the latest ideas with no re-sort of its own.
-export const SPARK_FEED_LIMIT = 15
-
-// The feed is a "what are we sparking on right now" view, not an archive: only
-// ideas from sessions in the last SPARK_FEED_DAYS days surface (owner request).
-// `now` is injected (defaulting to the wall clock) so the window is testable.
-export const SPARK_FEED_DAYS = 3
-const DAY_MS = 24 * 60 * 60 * 1000
-
-export function latestIdeas(sessions: SessionDoc[], limit = SPARK_FEED_LIMIT, now: number = Date.now()): SparkItem[] {
-  const cutoff = now - SPARK_FEED_DAYS * DAY_MS
-  const out: SparkItem[] = []
+// ── Ideas & learnings (issue #440) ───────────────────────
+// Every session's authored ideas and learnings, flattened in the caller's
+// newest-first session order, each carrying its session's deep-link anchor. An
+// external session keeps its ideas but not its learnings (ADR-0009's
+// external-sessions amendment).
+export function sessionNotes(sessions: SessionDoc[]): { ideas: NoteItem[]; learnings: NoteItem[] } {
+  const ideas: NoteItem[] = []
+  const learnings: NoteItem[] = []
   for (const s of sessions) {
-    if (new Date(s.endedAt).getTime() < cutoff) continue
     const anchor = sessionAnchor(s.session)
-    for (const idea of s.ideas ?? []) {
-      out.push({ spark: idea, kind: 'idea', session: s.session, anchor })
-    }
+    for (const note of s.ideas ?? []) ideas.push({ note, kind: 'idea', session: s.session, anchor })
+    if (s.external === true) continue
+    for (const note of s.learnings ?? []) learnings.push({ note, kind: 'learning', session: s.session, anchor })
   }
-  return out.slice(0, limit)
+  return { ideas, learnings }
 }
 
 // A ready-to-paste Claude prompt that hands one idea to the `/grill-with-docs`
 // Skill to sharpen it, tagged with the session it came from so the grilling can
 // pull that session's log for context. The dashboard's per-idea copy button
 // writes exactly this to the clipboard.
-export function ideaGrillPrompt(item: SparkItem): string {
-  return `/grill-with-docs to refine this idea from session ${item.session}:\n\n${item.spark}`
+export function ideaGrillPrompt(item: NoteItem): string {
+  return `/grill-with-docs to refine this idea from session ${item.session}:\n\n${item.note}`
 }

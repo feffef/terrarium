@@ -88,7 +88,7 @@ frictions:                         # REQUIRED (may be []) — list EVERY frictio
 learnings:                         # OPTIONAL — omit unless something sparked
   - Nuxt layer `~/` resolves to the main app, not the layer  # each a short string
 ideas:                             # OPTIONAL — omit unless something sparked
-  - Auto-cluster recurring `ideas` entries into GitHub issues weekly, so a spark doesn't die in a YAML file no one re-reads
+  - Auto-cluster recurring `ideas` entries into GitHub issues weekly, so an idea doesn't die in a YAML file no one re-reads
 ```
 
 - **`kind` is the autonomy spectrum — judged by who prompted, not by what the
@@ -97,9 +97,9 @@ ideas:                             # OPTIONAL — omit unless something sparked
   `CONTEXT.md` → **Session** — classify against that entry, not from memory.
   Kind is descriptive; it grants nothing (merge governance is ADR-0003's,
   unchanged by kind).
-- **`learnings`/`ideas` are optional sparks — leave them off unless the session
+- **`learnings`/`ideas` are optional notes — leave them off unless the session
   genuinely produced one.** Don't pad them; an empty session log carries neither.
-  Definitions live in `CONTEXT.md` → **Session** — don't restate them here.
+  Definitions live in `CONTEXT.md` → **Session** and **Idea** — don't restate them here.
   - `learnings` — a fact you read from a file is a `docsRead` entry, not a
     learning. Some things you'd log as a `nit` friction are better here —
     research/interactive sessions often end with learnings and no friction at all.
@@ -115,7 +115,7 @@ ideas:                             # OPTIONAL — omit unless something sparked
   marks a log authored by a *different* harness/toolchain (an external
   contributor's own agent — ADR-0009 amendment, 2026-07-22) — see `CONTEXT.md`'s
   **Session** term for the absent-⇒-internal semantics and the mining-exclusion/
-  Sparks split. This authoring path doesn't set it.
+  ideas split. This authoring path doesn't set it.
 - `docsRead`/`skillsUsed` are your **curated** picks (the ones worth a `reason`).
   You don't have to list everything you touched — the extractor folds observed
   reads in. A read you *do* cite keeps your `reason`; the rest get a derived
