@@ -96,7 +96,7 @@ it with a tool.
   touching them (ADR-0004's high-risk set, which also escalates a PR that
   introduces a new dependency or changes untested/untestable runtime
   behaviour — see ADR-0004's 2026-07-06 amendment for the exact axes); the sole
-  exception is a `prune-trial` prune of an ADR's explanatory prose (ADR-0027).
+  exception is a `prune-trial` rewrite of an ADR that keeps what it decided (ADR-0027).
   The pinned eight above are the manifest-expansion/routing/catalog family
   specifically (ADR-0004/ADR-0025 — its 2026-09-05 amendment folds
   `shared/schemas/` into this same family, directory-scoped), not an

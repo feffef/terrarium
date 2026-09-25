@@ -105,13 +105,17 @@ means from a goal as readily as you can. A goal it can't act on isn't simpler,
 just shorter — and neither is a surviving rule now buried mid-paragraph where a
 skimmer will miss it.
 
-Around 100 lines **deleted** is the bar for the prune itself — the goal you
-write back and the ledger entry don't count against it. Clear it by retiring a whole problem,
-never by deleting the worked examples a weaker reader needs. The figure is a
-target expected to shrink as prior prunes clear the easy backlog, not a floor
-to force by padding scope — an honest search can legitimately turn up nothing
-near it. The "two runs in a row" signal under Bounds below is the same
-recalibration mechanism, not only a trigger for retiring a Skill.
+Aim for around 100 lines **deleted** (the goal you write back and the ledger
+entry don't count). Get there by retiring a whole problem. Never pad the scope,
+and never delete the worked examples a weaker reader needs.
+
+**You may also simplify the language of any Markdown file in scope** (see
+Bounds), alongside a prune or instead of one. Do this when no problem clears
+the bar. Rewrite the whole file if that helps: a Skill, a doc or an ADR. Use
+short sentences. Avoid project jargon. Prefer plain English. Keep every rule and
+decision; cut the rest. Be brave: restructure the file, merge its sections,
+reword all of it. The file is the trial's territory. It gets the same ledger
+entry and §4 probe as a prune.
 
 Write a hook **only when §4's probe fails, or when a landed trial's verdict in
 §1 showed real damage** — the two moments the behaviour has proven it needs
@@ -154,9 +158,10 @@ escalate that.
 
 Everything the Platform tells its agents is in scope: CLAUDE.md, CONTEXT.md,
 `docs/`, our own Skills including the scheduled ones, and the ADRs — ADR-0027
-grants that; ADR-0004's Human-only merge rule otherwise stands. In an ADR you
-prune the **explanatory prose only**: its Decision and Consequences are the
-historical record and are never rewritten (ADR-0018). Skip
+grants that; ADR-0004's Human-only merge rule otherwise stands. You may
+rewrite an ADR whole, Decision and Consequences included, as long as **what it
+decided does not change**: fold its amendments into the text and retell its
+history wherever that reads clearer. Skip
 `docs/proposals/<N>-*.md` and `.out-of-scope/*.md` — written for a human to
 apply once, not for agents to read.
 
@@ -167,5 +172,5 @@ Two exceptions and one refusal:
 - **Retiring a Skill or a Routine, including your own** — file a `needs-triage`
   issue, never act; `audit-skills` records the same class of signal as an
   `ideas` entry, so look for one and cite it rather than filing twice. Nothing breaks when a Skill stops running, so no verdict could tell you
-  it was a mistake. Two runs in a row that find nothing worth ~100 lines is the
-  signal to file yours.
+  it was a mistake. Two runs in a row that open no trial is the signal to file
+  yours.

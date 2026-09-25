@@ -3,11 +3,11 @@
 Date: 2026-07-07
 Status: Accepted — ADR editing narrowed by ADR-0027
 
-> **Amended by [ADR-0027](0027-prune-trials.md) (2026-08-23).** The "never
-> auto-merged, regardless of category" rule below gains one category: a Prune
-> Trial may self-merge a prune of an ADR's **explanatory prose**. The
-> record-integrity rule is untouched and binds that Skill too — an ADR's
-> **Decision** and **Consequences** text is never rewritten in place, by anyone.
+> **Amended by [ADR-0027](0027-prune-trials.md) (2026-08-23, widened
+> 2026-09-25).** The "never auto-merged, regardless of category" rule below
+> gains one category: a Prune Trial may self-merge a rewrite of any ADR that
+> keeps what it decided — Decision and Consequences included, amendments folded
+> in. The record-integrity rule below binds every other edit.
 
 ## Context
 
@@ -124,9 +124,9 @@ This is a rule about **how** an ADR is edited, not about **who** may merge
 the edit. Every ADR PR — factual-correction or decision-reversal alike —
 still lands as an ordinary, human-reviewed PR and is never auto-merged; ADRs
 are a human-only-to-merge surface regardless of category (ADR-0004) — with the
-single exception added by ADR-0027 (2026-08-23): a Prune Trial self-merges a
-prune of the **explanatory prose only**, and the record-integrity rule above
-binds it like everyone else.
+single exception added by ADR-0027: a Prune Trial self-merges a rewrite of any
+ADR that keeps what it decided, and is exempt from the record-integrity rule
+above.
 Classifying a finding as a pure factual correction only changes whether the
 fix is an in-place edit or a new amendment section — it never changes the
 merge gate.
