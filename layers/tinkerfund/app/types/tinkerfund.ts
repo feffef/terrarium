@@ -14,7 +14,4 @@ export type TinkerfundStretchGoal = NonNullable<TinkerfundCampaign['stretchGoals
 export type TinkerfundComment = TinkerfundProdCommentsCollectionItem['comments'][number]
 export type TinkerfundPromotion = TinkerfundProdPromotionsCollectionItem
 
-/** What an "Add to cart" button asks for; the Cart story (#1383) takes it from here. */
-export type TinkerfundCartRequest =
-  | { campaign: string; reward: string; options: Record<string, string>; quantity: number }
-  | { campaign: string; addon: string; quantity: number }
+export type { TinkerfundCartRequest } from '../utils/cart'
